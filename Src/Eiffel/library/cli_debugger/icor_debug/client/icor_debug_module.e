@@ -8,7 +8,7 @@ indexing
 
 class
 	ICOR_DEBUG_MODULE
-	
+
 inherit
 
 	ICOR_OBJECT
@@ -21,13 +21,13 @@ inherit
 			out
 		end
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	init_icor is
-			-- 
+			--
 		do
 			Precursor
 			name := get_name
@@ -55,7 +55,7 @@ feature -- Dispose
 				internal_md_import := Void
 			end
 		end
-		
+
 feature {ICOR_EXPORTER} -- Meta Data queries
 
 	md_member_token_by_names (a_type_name: STRING; a_feat_name: STRING): INTEGER is
@@ -77,7 +77,7 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 		do
 			Result := interface_md_import.find_member (a_class_token, a_feat_name)
 		end
-		
+
 	md_feature_token (a_class_token: INTEGER; a_name: STRING): INTEGER is
 			-- Function or Method token
 		do
@@ -89,19 +89,19 @@ feature {ICOR_EXPORTER} -- Meta Data queries
 		do
 			Result := interface_md_import.get_typedef_props (a_class_token)
 		end
-		
+
 	md_member_name (a_feat_token: INTEGER): STRING is
 			-- (Feature) name for `a_feat_token'.
 		do
 			Result := interface_md_import.get_member_props (a_feat_token)
-		end		
-	
+		end
+
 feature {ICOR_EXPORTER} -- Access
 
 	name: STRING
-	
+
 	token: INTEGER
-	
+
 	module_name: STRING is
 			-- Only the module name
 			-- remove the path
@@ -126,13 +126,13 @@ feature {ICOR_DEBUG_MODULE} -- Restricted Access
 			last_call_success := cpp_get_MetaDataImport_interface (item, $p)
 			if p /= default_pointer then
 				debug ("debugger_icor_data")
-					io.put_string ("ICOR_DEBUG_MODULE.get_md_import_interface : called %N")					
-					io.put_string ("     for [" + module_name + "] %N")					
+					io.put_string ("ICOR_DEBUG_MODULE.get_md_import_interface : called %N")
+					io.put_string ("     for [" + module_name + "] %N")
 				end
 				create Result.make_by_pointer (p)
-			end			
+			end
 		end
-		
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_process: ICOR_DEBUG_PROCESS is
@@ -154,7 +154,7 @@ feature {ICOR_EXPORTER} -- Access
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 	get_assembly: ICOR_DEBUG_ASSEMBLY is
 			-- Reference to the ICorDebugAssembly
 		local
@@ -175,7 +175,7 @@ feature {ICOR_EXPORTER} -- Access
 			mp_name: MANAGED_POINTER
 		do
 			create mp_name.make (256 * 2)
-			
+
 			last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
 			Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
 		ensure
@@ -190,7 +190,7 @@ feature {ICOR_EXPORTER} -- Access
             --   the jitted version for functions in the module.  If bAllowJitOpts
             --   is true, then the jitter will generate code with certain (JIT-specific)
             --   optimizations.
-            --                                                                           
+            --
             --   JITDebug is enabled by default for all modules loaded when the
             --   debugger is active.  Programmatically enabling/disabling these
             --   settings will override global settings.
@@ -253,7 +253,7 @@ feature {ICOR_EXPORTER} -- Access
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 	get_token: INTEGER is
 		do
 			last_call_success := cpp_get_token (item, $Result)
@@ -313,8 +313,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetProcess"
-		end		
-		
+		end
+
 	frozen cpp_get_base_address (obj: POINTER; a_p: POINTER): INTEGER is
 		external
 			"[
@@ -333,7 +333,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetAssembly"
-		end		
+		end
 
 	frozen cpp_get_name (obj: POINTER; a_cchname: INTEGER; a_pcchname: POINTER; a_szname: POINTER): INTEGER is
 		external
@@ -343,7 +343,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetName"
-		end		
+		end
 
 	frozen cpp_enable_jit_debugging (obj: POINTER; a_bool1, a_bool2: INTEGER): INTEGER is
 		external
@@ -353,7 +353,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"EnableJITDebugging"
-		end		
+		end
 
 	frozen cpp_enable_class_load_callbacks (obj: POINTER; a_bool: INTEGER): INTEGER is
 		external
@@ -363,7 +363,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"EnableClassLoadCallbacks"
-		end		
+		end
 
 	frozen cpp_get_function_from_token (obj: POINTER; a_token: INTEGER; a_p_function: POINTER): INTEGER is
 		external
@@ -405,8 +405,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetMetaDataInterface"
-		end	
-	
+		end
+
 	frozen cpp_get_token (obj: POINTER; a_p: POINTER): INTEGER is
 		external
 			"[
@@ -425,7 +425,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"IsDynamic"
-		end		
+		end
 
 	frozen cpp_get_global_variable_value (obj: POINTER; a_index: INTEGER; a_p: POINTER): INTEGER is
 		external
@@ -445,7 +445,7 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"GetSize"
-		end	
+		end
 
 	frozen cpp_is_in_memory (obj: POINTER; a_result: POINTER): INTEGER is
 		external
@@ -455,8 +455,8 @@ feature {ICOR_EXPORTER} -- Implementation
 			]"
 		alias
 			"IsInMemory"
-		end	
-		
+		end
+
 feature {NONE} -- IID ...
 
 	cpp_get_MetaDataImport_interface (a_obj: POINTER; a_ptr: POINTER): INTEGER is
@@ -469,14 +469,14 @@ feature {NONE} -- IID ...
 		alias
 			"[
    				((ICorDebugModule*)$a_obj)->GetMetaDataInterface(IID_IMetaDataImport,
-                                           (IUnknown**)$a_ptr)				
+                                           (IUnknown**)$a_ptr)
 			]"
 		end
 
 feature {NONE} -- Internal data
 
 	internal_md_import: MD_IMPORT;
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

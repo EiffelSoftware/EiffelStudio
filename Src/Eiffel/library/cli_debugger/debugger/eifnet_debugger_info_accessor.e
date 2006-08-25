@@ -8,18 +8,18 @@ indexing
 
 class
 	EIFNET_DEBUGGER_INFO_ACCESSOR
-	
+
 inherit
-	
+
 	REFACTORING_HELPER
 
-	SHARED_IL_DEBUG_INFO_RECORDER 
-		export 
+	SHARED_IL_DEBUG_INFO_RECORDER
+		export
 			{NONE} all
-		end	
-	
-	EIFNET_STEP_REASON_CONSTANTS 
-		export 
+		end
+
+	COR_DEBUG_STEP_REASON_ENUM
+		export
 			{NONE} all
 		end
 
@@ -39,7 +39,7 @@ inherit
 		end
 
 	EIFNET_EXPORTER
-	
+
 feature {EIFNET_EXPORTER}
 
 	reset_info is
@@ -82,12 +82,12 @@ feature -- Status
 		do
 			Result := Eifnet_debugger_info.last_control_mode_is_stepping
 		end
-		
-		
+
+
 	last_exception_is_handled: BOOLEAN is
 		do
 			Result := Eifnet_debugger_info.last_exception_is_handled
-		end		
+		end
 
 feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
 
@@ -99,7 +99,7 @@ feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
 	managed_callback_is_exit_process (cb_id: INTEGER): BOOLEAN is
 		do
 			Result := Callback_info.managed_callback_is_exit_process (cb_id)
-		end	
+		end
 
 	managed_callback_is_step_complete (cb_id: INTEGER): BOOLEAN is
 		do
@@ -114,17 +114,17 @@ feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
 	managed_callback_is_eval_complete (cb_id: INTEGER): BOOLEAN is
 		do
 			Result := Callback_info.managed_callback_is_eval_complete (cb_id)
-		end	
+		end
 
 	managed_callback_is_eval_exception (cb_id: INTEGER): BOOLEAN is
 		do
 			Result := Callback_info.managed_callback_is_eval_exception (cb_id)
-		end	
-		
+		end
+
 	managed_callback_is_exception (cb_id: INTEGER): BOOLEAN is
 		do
 			Result := Callback_info.managed_callback_is_exception (cb_id)
-		end	
+		end
 
 feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
 
@@ -141,13 +141,13 @@ feature {EIFNET_EXPORTER} -- Restricted Bridge to EIFNET_DEBUGGER_INFO
 	last_managed_callback_is_eval_exception: BOOLEAN is
 		do
 			Result := managed_callback_is_eval_exception (last_managed_callback)
-		end	
-		
+		end
+
 	last_managed_callback_is_exception: BOOLEAN is
 		do
 			Result := managed_callback_is_exception (last_managed_callback)
 		end
-		
+
 feature -- Access
 
 	icor_debug_controller: ICOR_DEBUG_CONTROLLER is
@@ -170,11 +170,11 @@ feature -- Access
 		do
 			Result := Eifnet_debugger_info.runtime_module
 		end
-		
+
 	evaluation_icor_debug_exception: ICOR_DEBUG_VALUE is
 		do
 			Result := Eifnet_debugger_info.evaluation_icd_exception
-		end		
+		end
 
 feature -- Callstack related
 
@@ -182,7 +182,7 @@ feature -- Callstack related
 		do
 			Result := Eifnet_debugger_info.current_stack_info
 		end
-			
+
 	previous_stack_info: EIFNET_DEBUGGER_STACK_INFO is
 		do
 			Result := Eifnet_debugger_info.previous_stack_info
@@ -239,22 +239,22 @@ feature {NONE} -- Change by pointer
 		do
 			eifnet_debugger_info.set_last_icd_exception (p)
 		end
-		
+
 	set_last_evaluation_exception_by_pointer (p: POINTER) is
 		do
 			eifnet_debugger_info.set_last_evaluation_icd_exception (p)
-		end		
+		end
 
 	set_last_breakpoint_by_pointer (p: POINTER) is
 		do
 			eifnet_debugger_info.set_last_icd_breakpoint (p)
 		end
-		
+
 	set_last_thread_by_pointer (p: POINTER) is
 		do
 			eifnet_debugger_info.set_last_icd_thread (p)
 		end
-		
+
 	add_managed_thread_by_pointer (p: POINTER) is
 		do
 			eifnet_debugger_info.add_managed_thread_by_pointer (p)
@@ -262,7 +262,7 @@ feature {NONE} -- Change by pointer
 
 	remove_managed_thread_by_pointer (p: POINTER) is
 		do
-			eifnet_debugger_info.remove_managed_thread_by_pointer (p)			
+			eifnet_debugger_info.remove_managed_thread_by_pointer (p)
 		end
 
 feature {NONE} -- Change by value
@@ -271,14 +271,14 @@ feature {NONE} -- Change by value
 		do
 			eifnet_debugger_info.set_last_step_complete_reason (v)
 		end
-		
+
 	set_last_exception_handled (v: BOOLEAN) is
 		do
 			eifnet_debugger_info.set_last_exception_handled (v)
 		end
 
 feature {NONE} -- reset
-		
+
 	reset_last_controller_by_pointer (p: POINTER) is
 		do
 			if Eifnet_debugger_info.last_p_icd_controller.is_equal (p) then
@@ -291,7 +291,7 @@ feature {NONE} -- reset
 			if eifnet_debugger_info.last_p_icd_process.is_equal (p) then
 				set_last_process_by_pointer (default_pointer)
 			end
-		end		
+		end
 
 feature {EIFNET_EXPORTER} -- Stepping Access
 

@@ -25,57 +25,52 @@ inherit
 			init_icor
 		end
 
-create 
+	COR_DEBUG_MAPPING_RESULT_ENUM
+		undefine
+			out
+		end
+
+create
 	make_by_pointer
 
 feature {ICOR_EXPORTER} -- Access
 
 	init_icor is
-			-- 
+			--
 		do
 			Precursor
 			ip := get_ip
-		end		
+		end
 
 feature {ICOR_EXPORTER} -- Properties
 
 	ip: INTEGER
 
+	last_cordebugmapping_result: INTEGER
+
+	last_cordebugmapping_result_to_string: STRING is
+		do
+			Result := enum_cor_debug_mapping_result_to_string (last_cordebugmapping_result)
+		end
+
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_ip: INTEGER is
 			-- get OffSet
+			-- set `last_cordebugmapping_result' value
 		local
 			l_noffset: INTEGER
-			l_cordebugmapping_result: INTEGER
 		do
-			last_call_success := cpp_get_ip (item, $l_noffset, $l_cordebugmapping_result)
+			last_call_success := cpp_get_ip (item, $l_noffset, $last_cordebugmapping_result)
 			Result := l_noffset
 			debug ("DEBUGGER_EIFNET_DATA","DEBUGGER_TRACE_STEPPING")
 				io.error.put_string (generator + "::GetIP -> 0x" + l_noffset.to_hex_string
 							+ "  : MappingResult="
---							+"0x"+ l_cordebugmapping_result.to_hex_string
+							+ enum_cor_debug_mapping_result_to_string (last_cordebugmapping_result)
 					)
-				inspect l_cordebugmapping_result 
-				when 0x1 then io.error.put_string ("MAPPING_PROLOG"); 				
-				when 0x2 then io.error.put_string ("MAPPING_EPILOG"); 				
-				when 0x4 then io.error.put_string ("MAPPING_NO_INFO"); 				
-				when 0x8 then io.error.put_string ("MAPPING_UNMAPPED_ADDRESS"); 				
-				when 0x10 then io.error.put_string ("MAPPING_EXACT"); 				
-				when 0x20 then io.error.put_string ("MAPPING_APPROXIMATE"); 						
-				else io.error.put_string ("???")				
-				end
 				io.error.put_string ("%N")
 			end
---	typedef enum CorDebugMappingResult
---	{
---		MAPPING_PROLOG              = 0x1,
---		MAPPING_EPILOG              = 0x2,
---		MAPPING_NO_INFO             = 0x4,
---		MAPPING_UNMAPPED_ADDRESS    = 0x8,
---		MAPPING_EXACT               = 0x10,
---		MAPPING_APPROXIMATE         = 0x20,
---	} CorDebugMappingResult;
 		ensure
 			success: last_call_success = 0
 		end

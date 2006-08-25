@@ -166,13 +166,13 @@ feature -- Queries Feature
 		local
 			l_class_id: INTEGER
 			l_name_id: INTEGER
-			l_infos: TUPLE [INTEGER, INTEGER]
+			l_infos: TUPLE [class_id: INTEGER; name_id: INTEGER]
 			l_class_c: CLASS_C
 		do
 			l_infos := list_feature_info.item (a_feature_token)
 			if l_infos /= Void then
-				l_class_id := l_infos.integer_item (1)
-				l_name_id  := l_infos.integer_item (2)
+				l_class_id := l_infos.class_id
+				l_name_id  := l_infos.name_id
 				l_class_c := Il_debug_info.class_of_id (l_class_id)
 				Result := l_class_c.feature_table.item_id (l_name_id)
 				if Result = Void and then l_class_c.is_eiffel_class_c then

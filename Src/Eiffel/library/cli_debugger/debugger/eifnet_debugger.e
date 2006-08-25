@@ -639,7 +639,12 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					--| p_app_domain, p_class
 				p := dbg_cb_info_pointer_item (1) -- p_app_domain
 				set_last_controller_by_pointer (icor_debug_controller_interface (p))
-
+				debug ("debugger_trace_callback_data")
+					p := dbg_cb_info_pointer_item (2) -- p_app_class
+					if p /= Default_pointer then
+						io.error.put_string ("Loading class : " + Icor_objects_manager.icd_class (p).get_module.md_type_name (Icor_objects_manager.icd_class (p).get_token) + "%N")
+					end
+				end
 			when Cst_managed_cb_load_module then
 					--| p_app_domain, p_module
 				p := dbg_cb_info_pointer_item (1) -- p_app_domain
@@ -689,6 +694,11 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				i := dbg_cb_info_integer_item (4) -- a_reason
 				set_last_step_complete_reason (i)
 
+				debug ("debugger_trace_callback", "debugger_trace_callback_data")
+					io.error.put_string ("Last step complete reason : "
+						+ enum_cor_debug_step_reason_to_string (eifnet_debugger_info.last_step_complete_reason)
+						+ "%N")
+				end
 			when Cst_managed_cb_unload_assembly then
 					--| p_app_domain, p_assembly
 				p := dbg_cb_info_pointer_item (1) -- p_app_domain
@@ -863,7 +873,7 @@ feature {NONE} -- Callback actions
 		require
 			top_callstack_data_initialised: Eifnet_debugger_info.current_callstack_initialized
 		local
-			unknown_class_for_call_stack_stop: BOOLEAN
+			unknown_eiffel_info_for_call_stack_stop: BOOLEAN
 			inside_valid_feature_call_stack_stepping: BOOLEAN
 			is_valid_callstack_offset: BOOLEAN
 			execution_stopped: like execution_stopped_on_end_of_step_complete_callback
@@ -881,16 +891,13 @@ feature {NONE} -- Callback actions
 		do
 			dbg_info := Eifnet_debugger_info
 			l_current_stack_info := dbg_info.current_stack_info
-			debug ("debugger_trace_callstack")
-				dbg_info.debug_display_current_callstack_info
-			end
 
 				--| If we were stepping ...
 			debug ("DEBUGGER_TRACE_STEPPING")
 				print ("%N>=> StepComplete <=< %N")
 				print ("%T - last_control_mode         = "   + dbg_info.last_control_mode_as_string + "%N")
 				print ("%T - last_step_complete_reason = 0x" + dbg_info.last_step_complete_reason.to_hex_string)
-				print ("  ==> " + step_id_to_string (dbg_info.last_step_complete_reason) + "%N")
+				print ("  ==> " + enum_cor_debug_step_reason_to_string (dbg_info.last_step_complete_reason) + "%N")
 				print ("%N")
 			end
 
@@ -911,19 +918,31 @@ feature {NONE} -- Callback actions
 				check
 					module_name_valid: l_module_name /= Void and then not l_module_name.is_empty
 				end
-				if
-					l_module_name /= Void
-					and then not l_module_name.is_empty
-					and l_class_token > 0
+				if l_module_name = Void
+					or else l_module_name.is_empty
+					or else not l_il_debug_info.has_info_about_module (l_module_name)
 				then
-					unknown_class_for_call_stack_stop := not l_il_debug_info.has_class_info_about_module_class_token (l_module_name, l_class_token)
+					unknown_eiffel_info_for_call_stack_stop := True
+				else
+					unknown_eiffel_info_for_call_stack_stop := l_class_token <= 0
+						or else not l_il_debug_info.has_class_info_about_module_class_token (l_module_name, l_class_token)
 				end
-				if unknown_class_for_call_stack_stop then
+
+				if unknown_eiffel_info_for_call_stack_stop then
 					debug ("debugger_trace_stepping")
-						print ("[!] Unknown Class [0x" + l_class_token.to_hex_string + "] .. we'd better go out to breath %N")
-						print ("[!] module = " + l_module_name + "%N")
+						print ("[!] Unknown Eiffel info: %N")
+						if l_module_name /= Void then
+							print ("[!]    module=" + l_module_name + "%N")
+						end
+						print ("[!]    class = 0x" + l_class_token.to_hex_string + " %N")
 					end
-					call_do_step_out_on_cb
+					if not dbg_info.last_control_mode_is_step_into then
+						call_do_step_out_on_cb
+					elseif keep_stepping_into_dotnet_feature (l_current_stack_info) then
+						call_do_step_range_on_cb (True, <<[0, l_current_stack_info.current_il_code_size]>>)
+					else
+						call_do_step_out_on_cb
+					end
 				else
 					l_class_type := l_il_debug_info.class_type_for_module_class_token (l_module_name, l_class_token)
 					l_feat_token := l_current_stack_info.current_feature_token
@@ -969,8 +988,11 @@ feature {NONE} -- Callback actions
 						end
 					else
 						debug ("debugger_trace_stepping")
-							print ("[!] InValid or Unknown feature [0x" + l_class_token.to_hex_string + "::0x" + l_feat_token.to_hex_string + "].%N")
-							print ("[!] class = " + l_il_debug_info.class_name_for_class_token_and_module ( l_class_token, l_module_name) + "%N")
+							print ("[!] InValid or Unknown feature [0x"
+									+ l_class_token.to_hex_string
+									+ "::0x" + l_feat_token.to_hex_string + "].%N")
+							print ("[!] class = " + l_il_debug_info.class_name_for_class_token_and_module ( l_class_token, l_module_name)
+									+ "%N")
 							print ("[!] module = " + l_module_name + "%N")
 						end
 							--| We'll continue the stepping in the same mode
@@ -1025,6 +1047,51 @@ feature {NONE} -- Callback actions
 			if not Result then
 				call_do_continue_on_cb
 			end
+		end
+
+feature -- Specific case
+
+	enable_keep_stepping_into_dotnet_feature is
+		do
+			keep_stepping_into_dotnet_feature_enabled := True
+		end
+
+	disable_keep_stepping_into_dotnet_feature is
+		do
+			keep_stepping_into_dotnet_feature_enabled := False
+		end
+
+	keep_stepping_into_dotnet_feature_enabled: BOOLEAN
+
+	keep_stepping_into_dotnet_feature (l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO): BOOLEAN is
+		local
+			dbg_info: EIFNET_DEBUGGER_INFO
+			i: INTEGER
+			s: STRING
+			icdm: ICOR_DEBUG_MODULE
+--			icdc: ICOR_DEBUG_CLASS
+			icdf: ICOR_DEBUG_FUNCTION
+		do
+			Result := keep_stepping_into_dotnet_feature_enabled
+--			if not Result then
+--				dbg_info := Eifnet_debugger_info
+--				if l_current_stack_info.current_module_name /= Void then
+--					icdm := dbg_info.icor_debug_module (l_current_stack_info.current_module_name)
+--					if icdm /= Void then
+--						i := l_current_stack_info.current_feature_token
+--						if i /= 0 then
+--							icdf := icdm.get_function_from_token (i)
+--							if icdf /= Void then
+--								s := icdf.to_function_name
+--								Result := s /= Void and then s.is_case_insensitive_equal ("invoke")
+--								icdf.clean_on_dispose; icdf := Void
+--							end
+--						end
+
+--						icdm.clean_on_dispose; icdm := Void
+--					end
+--				end
+--			end
 		end
 
 feature -- Various continuing mode from callback

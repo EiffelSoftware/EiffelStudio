@@ -134,6 +134,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := is_watches_grids_layout_managed_preference.value
 		end
 
+	display_agent_details: BOOLEAN is
+		do
+			Result := display_agent_details_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	always_compile_before_debug_preference: BOOLEAN_PREFERENCE
@@ -157,6 +162,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	is_stack_grid_layout_managed_preference: BOOLEAN_PREFERENCE
 	is_debugged_grid_layout_managed_preference: BOOLEAN_PREFERENCE
 	is_watches_grids_layout_managed_preference: BOOLEAN_PREFERENCE
+	display_agent_details_preference: BOOLEAN_PREFERENCE
+
 	objects_tool_layout_preference: ARRAY_PREFERENCE
 
 	grid_column_layout_preference_for (grid_name: STRING): STRING_PREFERENCE is
@@ -202,6 +209,7 @@ feature -- Preference Strings
 	is_debugged_grid_layout_managed_string: STRING is "debugger.debugged_grid_layout_managed"
 	is_watches_grids_layout_managed_string: STRING is "debugger.watches_grids_layout_managed"
 	objects_tool_layout_string: STRING is "debugger.objects_tool_layout"
+	display_agent_details_string: STRING is "debugger.display_agent_details"
 	grid_column_layout_prefix: STRING is "debugger.grid_column_layout_"
 
 feature {NONE} -- Implementation
@@ -237,7 +245,7 @@ feature {NONE} -- Implementation
 			is_stack_grid_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_stack_grid_layout_managed_string, True)
 			is_debugged_grid_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_debugged_grid_layout_managed_string, True)
 			is_watches_grids_layout_managed_preference := l_manager.new_boolean_preference_value (l_manager, is_watches_grids_layout_managed_string, True)
-
+			display_agent_details_preference := l_manager.new_boolean_preference_value (l_manager, display_agent_details_string, False)
 			objects_tool_layout_preference := l_manager.new_array_preference_value (l_manager, objects_tool_layout_string, <<>>)
 		end
 
@@ -266,6 +274,7 @@ invariant
 	is_debugged_grid_layout_managed_preference_not_void: is_debugged_grid_layout_managed_preference /= Void
 	is_watches_grids_layout_managed_preference_not_void: is_watches_grids_layout_managed_preference /= Void
 	objects_tool_layout_preference_not_void: objects_tool_layout_preference /= Void
+	display_agent_details_preference_not_void: display_agent_details_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -8,20 +8,20 @@ indexing
 
 class
 	EIFNET_DEBUGGER_THREAD_INFO
-	
+
 inherit
 	DISPOSABLE
 		redefine
 			dispose
 		end
-		
+
 	ICOR_EXPORTER
-	
+
 	SHARED_EIFNET_DEBUGGER
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (p: POINTER) is -- ; icdth_id: INTEGER) is
@@ -47,7 +47,7 @@ feature -- Cleaning
 
 			clean_pending_steppers
 		end
-		
+
 	clean_pending_steppers is
 			-- Clean pending_steppers
 		local
@@ -64,7 +64,7 @@ feature -- Cleaning
 				pending_steppers.forth
 			end
 			pending_steppers.wipe_out
-		end		
+		end
 
 feature -- Access
 
@@ -92,18 +92,18 @@ feature -- Access
 		do
 			if not thread_details_fetched then
 				thread_details_fetched := True
-				
+
 				r := {ICOR_DEBUG_THREAD}.cpp_get_object (icd_thread_pointer, $p)
 				if p /= Default_pointer then
 					create l_icd.make_by_pointer (p)
 				end
-				
+
 				if l_icd /= Void then
 					create l_info.make (l_icd)
 					l_icdov := l_info.new_interface_debug_object_value
 					if l_icdov /= Void then
 						l_name_icd := l_icdov.get_field_value (
-											l_info.value_icd_class, 
+											l_info.value_icd_class,
 											eifnet_debugger.edv_external_formatter.token_Thread_m_Name
 										)
 						l_priority_icd := l_icdov.get_field_value (
@@ -121,9 +121,9 @@ feature -- Access
 						if l_priority_icd /= Void then
 							thread_priority := eifnet_debugger.edv_formatter.icor_debug_value_to_integer (l_priority_icd)
 							l_priority_icd.clean_on_dispose
-						end						
+						end
 					end
-					l_info.icd_prepared_value.clean_on_dispose					
+					l_info.icd_prepared_value.clean_on_dispose
 					l_info.clean
 					l_icd.clean_on_dispose
 				end
@@ -131,18 +131,18 @@ feature -- Access
 		ensure
 			thread_details_fetched
 		end
-		
+
 	get_thread_name is
 			-- Get thread's name
 		do
 			get_thread_details
 		end
-		
+
 	get_thread_priority is
 			-- Get thread's priority
 		do
 			get_thread_details
-		end	
+		end
 
 	icd_thread: ICOR_DEBUG_THREAD is
 		do
@@ -155,9 +155,9 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	new_stepper: ICOR_DEBUG_STEPPER is
-			-- 
+			--
 		local
 			l_frame: ICOR_DEBUG_FRAME
 			l_thread: ICOR_DEBUG_THREAD
@@ -170,14 +170,20 @@ feature -- Access
 			if l_thread /= Void then
 				l_frame := l_thread.get_active_frame
 				if l_thread.last_call_succeed and then l_frame /= Void then
-					l_stepper := l_frame.create_stepper			
+					l_stepper := l_frame.create_stepper
 					l_error := l_frame.last_call_success
 					l_frame.clean_on_dispose
 				else
 					l_stepper := l_thread.create_stepper
 					l_error := l_thread.last_call_success
-				end	
+				end
 				if l_error = 0 or l_error = 1 then
+--					l_stepper.set_unmapped_stop_mask (l_stepper.enum_cor_debug_unmapped_stop__stop_no_mapping_info)
+					l_stepper.set_unmapped_stop_mask (l_stepper.enum_cor_debug_unmapped_stop__stop_none)
+					l_stepper.set_unmapped_stop_mask (l_stepper.enum_cor_debug_unmapped_stop__stop_epilog)
+--					l_stepper.set_unmapped_stop_mask (l_stepper.enum_cor_debug_unmapped_stop__stop_other_unmapped)
+					l_stepper.set_intercept_mask (l_stepper.enum_cor_debug_intercept__intercept_none)
+--					l_stepper.set_intercept_mask (l_stepper.enum_cor_debug_intercept__interce)
 					Result := l_stepper
 					Result.add_ref
 					add_icd_stepper (Result.item)
@@ -185,8 +191,8 @@ feature -- Access
 			end
 		ensure
 			Result /= Void
-		end		
-		
+		end
+
 feature -- Change
 
 	add_icd_stepper (p: POINTER) is
@@ -202,14 +208,14 @@ feature -- Change
 			create s.make_by_pointer (p)
 			pending_steppers.put (s, p)
 		end
-		
+
 	has_icd_stepper (p: POINTER): BOOLEAN is
 		require
 			p /= Default_pointer
 		do
 			Result := pending_steppers.has (p)
 		end
-		
+
 	remove_icd_stepper (p: POINTER) is
 		require
 			p /= Default_pointer
@@ -221,10 +227,10 @@ feature -- Change
 			if s /= Void then
 				s.deactivate
 				s.clean_on_dispose
-			end			
+			end
 			pending_steppers.remove (p)
-		end		
-		
+		end
+
 feature {NONE} -- Implementation
 
 	thread_details_fetched: BOOLEAN
@@ -232,23 +238,23 @@ feature {NONE} -- Implementation
 
 	opo_icd_thread: ICOR_DEBUG_THREAD
 			-- Once per object for `icd_thread'
-		
+
 feature -- Properties
 
 	super_fluous_first_step_complete_message_suppressed: BOOLEAN
-	
+
 	stepping_for_startup: BOOLEAN
 
 	thread_id: INTEGER
-	
+
 	thread_name: STRING
-	
+
 	thread_priority: INTEGER
-	
+
 	icd_thread_pointer: POINTER
-	
+
 	last_icd_func_eval: ICOR_DEBUG_EVAL
-	
+
 	pending_steppers: HASH_TABLE [ICOR_DEBUG_STEPPER, POINTER]
 
 feature -- Disposable

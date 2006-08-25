@@ -62,7 +62,7 @@ feature -- reset
 
 feature -- Properties
 
-	static_type_id: INTEGER 
+	static_type_id: INTEGER
 			-- Static_type_id related to the CLASS_TYPE
 
 feature -- Access
@@ -97,7 +97,7 @@ feature -- Queries feature_token
 feature -- Recording Operation feature_token
 
 	record_feature_token (a_feature_token: INTEGER; a_feature_i: FEATURE_I) is
-			-- Record the correspondance  
+			-- Record the correspondance
 			-- a_feature_i.feature_name_id => a_feature_token.
 		require
 			token_valid: a_feature_token > 0
@@ -146,11 +146,11 @@ feature -- Queries once_tokens
 
 feature -- Recording Operation once_tokens
 
-	record_once_tokens (a_data_class_token, 
-					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER; 
+	record_once_tokens (a_data_class_token,
+					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
 					a_feature_i: FEATURE_I) is
-			-- Record the correspondance  
-			-- a_feature_i.feature_name_id => 
+			-- Record the correspondance
+			-- a_feature_i.feature_name_id =>
 			--			a_data_class_token,
 			--			a_once_done_token
 			--			a_once_result_token
@@ -186,7 +186,7 @@ feature -- Recording Operation once_tokens
 
 feature -- Queries IL Offsets
 
-	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]] is
+	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]] is
 			-- breakable_il_offsets associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -207,7 +207,7 @@ feature -- Queries IL Offsets
 
 feature -- Recording Operation
 
-	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]]): TUPLE [INTEGER, IL_OFFSET_SET] is
+	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]]): TUPLE [INTEGER, IL_OFFSET_SET] is
 			-- Breakable line info for `eiffel_line' inside `a_data'
 		do
 			from
@@ -215,7 +215,7 @@ feature -- Recording Operation
 			until
 				a_data.before or Result /= Void
 			loop
-				if a_data.item.integer_item (1) = a_eiffel_line then
+				if a_data.item.i = a_eiffel_line then
 					Result := a_data.item
 				else
 					a_data.back
@@ -234,15 +234,15 @@ feature -- Recording Operation
 			a_il_offset >= 0
 			a_eiffel_line >= 0
 		local
-			l_il_offset_list: ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]] 
-			l_line_info: TUPLE [INTEGER, IL_OFFSET_SET]
+			l_il_offset_list: ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]]
+			l_line_info: TUPLE [i: INTEGER; set: IL_OFFSET_SET]
 			l_offsets_info: IL_OFFSET_SET
 				-- bp index => [eiffel line number, [IL offsets, ...]]
 			l_feature_name_id: INTEGER
-		do		
+		do
 			l_feature_name_id := a_feature.feature_name_id
 
-			if 
+			if
 				l_feature_name_id = last_feature_name_id
 				and a_eiffel_line = last_eiffel_line_number
 			then
@@ -270,11 +270,11 @@ feature -- Recording Operation
 				l_line_info := [a_eiffel_line, l_offsets_info]
 				l_il_offset_list.extend (l_line_info)
 			else
-				l_offsets_info ?= l_line_info.item (2)
+				l_offsets_info := l_line_info.set
 			end
 			l_offsets_info.extend (a_il_offset)
 			debug ("debugger_il_info_trace")
-				io.error.put_string (" -> " + l_il_offset_list.count.out + "@" + l_line_info.integer_item (1).out  + "["+last_instruction_position.out+"]" +  ": " + l_il_offset_list.count.out + "%N")
+				io.error.put_string (" -> " + l_il_offset_list.count.out + "@" + l_line_info.i.out  + "["+last_instruction_position.out+"]" +  ": " + l_il_offset_list.count.out + "%N")
 			end
 		end
 
@@ -292,7 +292,7 @@ feature -- Cleaning operation
 			end
 		ensure
 			removed: not know_feature_token_from_feature (a_feature)
-		end	
+		end
 
 	clean_once_tokens (a_feature: FEATURE_I) is
 			-- Removed information related to `a_feature'
@@ -306,8 +306,8 @@ feature -- Cleaning operation
 			end
 		ensure
 			removed: not know_once_tokens_from_feature (a_feature)
-		end	
-	
+		end
+
 	clean_breakable_il_offset (a_feature: FEATURE_I) is
 			-- Removed information related to `a_feature'
 			-- regarding breakable il offsets.
@@ -327,7 +327,7 @@ feature {NONE} -- Storage Implementation
 	list_feature_token: HASH_TABLE [INTEGER, INTEGER]
 			-- {feature_name_id} => {feature_token}
 
-	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER, INTEGER, INTEGER], INTEGER] 
+	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER, INTEGER, INTEGER], INTEGER]
 			-- feature_tokens[_data_class|_done|_result|_exception] <= [feature_name_id]
 
 	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]], INTEGER]

@@ -12,15 +12,20 @@ class
 inherit
 	ICOR_OBJECT
 
-create 
+	COR_DEBUG_CHAIN_REASON_ENUM
+		undefine
+			out
+		end
+
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_thread: ICOR_DEBUG_THREAD is
 			-- Debuggee Thread for `a_thread_id'
 		local
-			p: POINTER			
+			p: POINTER
 		do
 			last_call_success := cpp_get_thread (item, $p)
 			if p /= default_pointer then
@@ -28,7 +33,7 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		ensure
 			success: last_call_success = 0
-		end	
+		end
 
 	get_active_frame: ICOR_DEBUG_FRAME is
 		local
@@ -132,6 +137,10 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
+	get_reason_to_string: STRING is
+		do
+			Result := enum_cor_debug_chain_reason_to_string (get_reason)
+		end
 
 feature {NONE} -- Implementation
 
@@ -143,7 +152,7 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"GetThread"
-		end		
+		end
 
 	cpp_get_active_frame (obj: POINTER; a_p: POINTER): INTEGER is
 		external

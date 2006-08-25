@@ -74,7 +74,7 @@ feature -- Update
 	exception_debug_value: ABSTRACT_DEBUG_VALUE is
 		require else
 			exception_occurred: exception_occurred
-			eifnet_debugger_exists: Eifnet_debugger /= Void
+			eifnet_debugger_exists: eifnet_debugger_initialized
 		local
 			icdv: ICOR_DEBUG_VALUE
 		do
@@ -87,7 +87,7 @@ feature -- Update
 
 	exception_occurred: BOOLEAN is
 		require else
-			eifnet_debugger_exists: Eifnet_debugger /= Void
+			eifnet_debugger_exists: eifnet_debugger_initialized
 		do
 			Result := Eifnet_debugger.exception_occurred
 		end
@@ -97,7 +97,7 @@ feature -- Update
 			-- if True => first chance
 			-- if False => The execution will terminate after.
 		require
-			eifnet_debugger_exists: Eifnet_debugger /= Void
+			eifnet_debugger_exists: eifnet_debugger_initialized
 		do
 			Result := Eifnet_debugger.last_exception_is_handled
 		end

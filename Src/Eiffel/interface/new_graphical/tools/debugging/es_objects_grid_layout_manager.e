@@ -13,8 +13,6 @@ inherit
 	ES_GRID_LAYOUT_MANAGER
 		redefine
 			record,
-
-
 			make,
 			restore,
 			restore_row_layout,

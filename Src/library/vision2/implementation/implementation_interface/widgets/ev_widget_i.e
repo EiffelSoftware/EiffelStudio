@@ -190,8 +190,6 @@ feature -- Status setting
 
 	set_default_key_processing_handler (a_handler: like default_key_processing_handler) is
 			-- Assign `default_key_processing_handler' to `a_handler'.
-		require
-			a_handler_not_void: a_handler /= Void
 		do
 			default_key_processing_handler := a_handler
 		end

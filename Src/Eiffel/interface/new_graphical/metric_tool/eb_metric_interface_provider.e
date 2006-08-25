@@ -321,8 +321,6 @@ feature -- Names
 			l_cnt: INTEGER
 			l_char: CHARACTER
 			done: BOOLEAN
-			l_int_formatter: FORMAT_INTEGER
-
 		do
 			if a_percent then
 				l_value := a_value * 100

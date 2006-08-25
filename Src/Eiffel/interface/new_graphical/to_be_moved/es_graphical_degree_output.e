@@ -16,6 +16,7 @@ inherit
 			display_message,
 			display_new_line,
 			display_degree,
+			display_degree_output,
 			put_start_degree,
 			put_end_degree,
 			finish_degree_output,
@@ -81,6 +82,13 @@ feature {NONE} -- Implementation
 					": " + a_name, percentage_calculation (to_go))
 			end
 			flush_output
+		end
+
+	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
+			-- Display degree `deg_nbr' with entity `a_class'.
+		do
+			Precursor (deg_nbr, to_go, total)
+			window_manager.display_message_and_percentage (deg_nbr, percentage_calculation (to_go))
 		end
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is

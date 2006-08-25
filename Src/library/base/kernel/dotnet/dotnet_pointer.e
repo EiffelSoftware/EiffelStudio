@@ -4,11 +4,14 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	external_name: "System.IntPtr"
+	assembly: "mscorlib"
 
-frozen external class
+frozen expanded external class
 	DOTNET_POINTER
 
 create {NONE}
+	default_create
 
 feature -- Statics
 

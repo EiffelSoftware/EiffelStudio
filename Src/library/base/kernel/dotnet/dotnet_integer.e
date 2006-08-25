@@ -4,24 +4,27 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	external_name: "System.Int32"
+	assembly: "mscorlib"
 
-frozen external class
+frozen expanded external class
 	DOTNET_INTEGER
 
 create {NONE}
+	default_create
 
 feature -- Statics
 
 	frozen from_string (s: SYSTEM_STRING): INTEGER is
 			-- (Static)
 			-- Converts the string representation of a number to its 32-bit
-			-- signed integer equivalent. 
+			-- signed integer equivalent.
 			--
 			-- Parameters:
 			--   s: A string containing a number to convert.
 			--
 			-- Returns:
-			--   A 32-bit signed integer equivalent to the number specified in s.  
+			--   A 32-bit signed integer equivalent to the number specified in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
@@ -46,7 +49,7 @@ feature -- Statics
 			--     permitted format of s.
 			--
 			-- Returns:
-			--   A 32-bit signed integer equivalent to the number specified in s.  
+			--   A 32-bit signed integer equivalent to the number specified in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
@@ -63,16 +66,16 @@ feature -- Statics
 
 	frozen from_string_with_format (s: SYSTEM_STRING; provider: IFORMAT_PROVIDER): INTEGER is
 			-- (Static)
-			-- Converts the string representation of a number in a specified 
+			-- Converts the string representation of a number in a specified
 			-- culture-specific format to its 32-bit signed integer equivalent.
 			--
 			-- Parameters:
 			--   s: A string containing a number to convert.
 			--   provider: An System.IFormatProvider that supplies culture-specific
-			--     formatting information about s. 
+			--     formatting information about s.
 			--
 			-- Returns:
-			--   A 32-bit signed integer equivalent to the number specified in s.  
+			--   A 32-bit signed integer equivalent to the number specified in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
@@ -95,10 +98,10 @@ feature -- Statics
 			--     System.Globalization.NumberStylesconstants that indicates the
 			--     permitted format of s.
 			--   provider: An System.IFormatProvider that supplies culture-specific
-			--     formatting information about s. 
+			--     formatting information about s.
 			--
 			-- Returns:
-			--   A 32-bit signed integer equivalent to the number specified in s.  
+			--   A 32-bit signed integer equivalent to the number specified in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.

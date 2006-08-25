@@ -4,18 +4,21 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	external_name: "System.Char"
+	assembly: "mscorlib"
 
-frozen external class
+frozen expanded external class
 	DOTNET_CHARACTER
 
 create {NONE}
+	default_create
 
 feature -- Statics
 
 	frozen numeric_value (c: CHARACTER): DOUBLE is
 			-- (Static)
 			-- Converts the specified numeric Unicode character to a
-			-- double-precision floating point number.  
+			-- double-precision floating point number.
 			--
 			-- Parameters:
 			--   c: A Unicode character.
@@ -32,7 +35,7 @@ feature -- Statics
 	frozen numeric_value_from_string (s: SYSTEM_STRING; index: INTEGER): DOUBLE is
 			-- Converts the numeric Unicode character at the specified
 			-- position in a specified string to a double-precision
-			-- floating point number.  
+			-- floating point number.
 			--
 			-- Parameters:
 			--   s: A System.String.
@@ -40,7 +43,7 @@ feature -- Statics
 			--
 			-- Returns:
 			--   The numeric value of the character at position index in
-			--   s if that character represents a number; otherwise, -1.  
+			--   s if that character represents a number; otherwise, -1.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
@@ -55,7 +58,7 @@ feature -- Statics
 	frozen unicode_category (c: CHARACTER): UNICODE_CATEGORY is
 			-- Categorizes a specified Unicode character into a group
 			-- identified by one of the System.Globalization.UnicodeCategory
-			-- values.  
+			-- values.
 			--
 			-- Parameters:
 			--   c: A Unicode character.
@@ -102,7 +105,7 @@ feature -- Statics
 			--   c: A Unicode character.
 			--
 			-- Returns:
-			--   true if c is a lowercase letter; otherwise, false.   
+			--   true if c is a lowercase letter; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -135,13 +138,13 @@ feature -- Statics
 	frozen is_upper (c: CHARACTER): BOOLEAN is
 			-- (Static)
 			-- Indicates whether the specified Unicode character is
-			-- categorized as an uppercase letter.  
+			-- categorized as an uppercase letter.
 			--
 			-- Parameters:
 			--   c: A Unicode character.
 			--
 			-- Returns:
-			-- true if c is an uppercase letter; otherwise, false.  
+			-- true if c is an uppercase letter; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -180,7 +183,7 @@ feature -- Statics
 			--   c: A Unicode character.
 			--
 			-- Returns:
-			--   true if c is white space; otherwise, false.   
+			--   true if c is white space; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -219,7 +222,7 @@ feature -- Statics
 			--   c: A Unicode character.
 			--
 			-- Returns:
-			--   true if c is a symbol character; otherwise, false.  
+			--   true if c is a symbol character; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -256,10 +259,10 @@ feature -- Statics
 			-- categorized as a decimal digit.
 			--
 			-- Parameters:
-			--   c: A Unicode character. 
+			--   c: A Unicode character.
 			--
 			-- Returns:
-			--   true if c is a decimal digit; otherwise, false. 
+			--   true if c is a decimal digit; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -298,7 +301,7 @@ feature -- Statics
 			--   c: A Unicode character.
 			--
 			-- Returns:
-			--   true if c is a separator character; otherwise, false.   
+			--   true if c is a separator character; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -316,7 +319,7 @@ feature -- Statics
 			--
 			-- Returns:
 			--   true if the character at position index in s is a separator
-			--   character; otherwise, false.   
+			--   character; otherwise, false.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
@@ -337,7 +340,7 @@ feature -- Statics
 			--   c: A Unicode character.
 			--
 			-- Returns:
-			--   true if c is an alphabetic letter; otherwise, false.   
+			--   true if c is an alphabetic letter; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -376,7 +379,7 @@ feature -- Statics
 			--   c: A Unicode character.
 			--
 			-- Returns:
-			--   true if c is a punctuation mark; otherwise, false.   
+			--   true if c is a punctuation mark; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -415,7 +418,7 @@ feature -- Statics
 			--   c: A Unicode character.
 			--
 			-- Returns:
-			--   true if c is a surrogate character; otherwise, false.   
+			--   true if c is a surrogate character; otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -490,11 +493,11 @@ feature -- Statics
 			-- as an alphabetic letter or a decimal digit.
 			--
 			-- Parameters:
-			--   c: A Unicode character. 
+			--   c: A Unicode character.
 			--
 			-- Returns:
 			--   true if c is an alphabetic letter or a decimal digit;
-			--   otherwise, false.   
+			--   otherwise, false.
 		external
 			"IL static signature (System.Char): System.Boolean use System.Char"
 		alias
@@ -513,7 +516,7 @@ feature -- Statics
 			--
 			-- Returns:
 			--   true if the character at position index in s is an
-			--   alphabetic character or a decimal digit; otherwise, false. 
+			--   alphabetic character or a decimal digit; otherwise, false.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
@@ -603,7 +606,7 @@ feature -- Statics
 	frozen to_upper (c: CHARACTER): CHARACTER is
 			-- (Static)
 			-- Converts the value of a Unicode character to its uppercase
-			-- equivalent.  
+			-- equivalent.
 			-- Parameters:
 			--   c: A Unicode character.
 			--
@@ -629,7 +632,7 @@ feature -- Statics
 			--
 			-- Returns:
 			--   The uppercase equivalent of c, modified according to
-			--   culture -or- the unchanged value of c, if c is already 
+			--   culture -or- the unchanged value of c, if c is already
 			--   uppercase or not alphabetic.
 			--
 			-- Exceptions:
@@ -650,7 +653,7 @@ feature -- Statics
 			--
 			-- Returns:
 			--   The lowercase equivalent of c -or- The unchanged value
-			--   of c, if c is already lowercase or not alphabetic.  
+			--   of c, if c is already lowercase or not alphabetic.
 		external
 			"IL static signature (System.Char): System.Char use System.Char"
 		alias

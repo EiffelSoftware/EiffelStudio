@@ -3,19 +3,21 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision$"
+	external_name: "System.Double"
+	assembly: "mscorlib"
 
-frozen external class
+frozen expanded external class
 	DOTNET_DOUBLE
 
 create {NONE}
+	default_create
 
 feature -- Statics
 
 	frozen is_infinity (d: DOUBLE): BOOLEAN is
 			-- (Static)
 			-- Returns a value indicating whether the specified number evaluates
-			-- to negative or positive infinity 
+			-- to negative or positive infinity
 			--
 			-- Parameters:
 			--   d: A double-precision floating point number.
@@ -39,7 +41,7 @@ feature -- Statics
 			--
 			-- Returns:
 			--   true if d evaluates to System.Double.PositiveInfinity; otherwise,
-			--   false. 
+			--   false.
 		external
 			"IL static signature (System.Double): System.Boolean use System.Double"
 		alias
@@ -56,7 +58,7 @@ feature -- Statics
 			--
 			-- Returns:
 			--   true if d evaluates to System.Double.NegativeInfinity; otherwise,
-			--   false. 
+			--   false.
 		external
 			"IL static signature (System.Double): System.Boolean use System.Double"
 		alias
@@ -66,7 +68,7 @@ feature -- Statics
 	frozen is_nan (d: DOUBLE): BOOLEAN is
 			-- (Static)
 			-- Returns a value indicating whether the specified number evaluates
-			-- to a value that is not a number (System.Double.NaN).  
+			-- to a value that is not a number (System.Double.NaN).
 			-- Parameters:
 			--   d: A double-precision floating point number.
 			--
@@ -92,7 +94,7 @@ feature -- Conversion
 			--     System.Globalization.NumberStylesconstants that indicate the
 			--     permitted format of s.
 			--  provider: An System.IFormatProvider that supplies culture-specific
-			--    formatting information about s. 
+			--    formatting information about s.
 			--  result_: A double-precision floating-point number equivalent to the
 			--    numeric value or symbol specified in s. If the return value is
 			--    false, result_ is set to zero.
@@ -134,10 +136,10 @@ feature -- Conversion
 			-- to its double-precision floating point number equivalent.
 			--
 			-- Parameters:
-			--   s: A string containing a number to convert. 
+			--   s: A string containing a number to convert.
 			--   style: The combination of one or more
 			--     System.Globalization.NumberStyles constants that indicate the
-			--     permitted format of s. 
+			--     permitted format of s.
 			--
 			-- Returns:
 			--   A double-precision floating point number equivalent to the numeric
@@ -158,7 +160,7 @@ feature -- Conversion
 			-- (Static)
 			-- Converts the string representation of a number in a specified
 			-- culture-specific format to its double-precision floating point
-			-- number equivalent.  
+			-- number equivalent.
 			--
 			-- Parameters:
 			--   s: A string containing a number to convert.

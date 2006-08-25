@@ -96,7 +96,6 @@ feature -- Access
 			bridge_ok: Result = implementation.blocking_window
 		end
 
-
 feature -- Status Setting
 
 	set_default_push_button (a_button: EV_BUTTON) is

@@ -32,7 +32,7 @@ feature
 		do
 			Precursor {TEXT_FORMATTER_DECORATOR} (a_source_class, feature_as)
 			e_feature := Void
-			breakpoint_index := 1
+			breakpoint_index := 0
 		end
 
 	init_feature_context (source, target: FEATURE_I;
@@ -43,7 +43,7 @@ feature
 		do
 			Precursor {TEXT_FORMATTER_DECORATOR} (source, target, feature_as)
 			e_feature := source.api_feature (source.written_in)
-			breakpoint_index := 1
+			breakpoint_index := 0
 		end
 
 feature {NONE}
@@ -54,6 +54,7 @@ feature {NONE}
 	put_breakable is
 			-- Create a breakable mark.
 		do
+			breakpoint_index := breakpoint_index + 1
 			if
 				e_feature /= Void and then
 				e_feature.is_debuggable
@@ -61,7 +62,6 @@ feature {NONE}
 				added_breakpoint := True
 				text_formatter.process_breakpoint (e_feature, breakpoint_index)
 			end
-			breakpoint_index := breakpoint_index + 1
 		end
 
 	emit_tabs is

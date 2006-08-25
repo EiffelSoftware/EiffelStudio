@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 	make (e_feature: E_FEATURE; break_index: INTEGER) is
 		require
 			not_feature_i_void: e_feature /= Void
+			valid_index: break_index > 0
 		do
 			routine := e_feature
 			index := break_index

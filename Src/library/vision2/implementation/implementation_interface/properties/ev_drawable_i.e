@@ -115,7 +115,14 @@ feature -- Element change
 				interface.clip_area.is_equal (an_area)
 		end
 
-	remove_clip_area is
+	set_clip_region (a_region: EV_REGION) is
+			-- Set region which will be refreshed.
+		require
+			a_region_not_void: a_region /= Void
+		deferred
+		end
+
+	remove_clipping is
 			-- Do not apply any clipping.
 		deferred
 		ensure

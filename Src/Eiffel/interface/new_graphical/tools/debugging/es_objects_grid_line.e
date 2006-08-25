@@ -1020,7 +1020,6 @@ feature {NONE} -- Agent filling
 			r: INTEGER
 			glab: EV_GRID_LABEL_ITEM
 			gf: EB_GRID_FEATURE_ITEM
-			s: STRING
 		do
 			grid := a_row.parent
 			from

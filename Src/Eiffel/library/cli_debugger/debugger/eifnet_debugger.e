@@ -938,7 +938,7 @@ feature {NONE} -- Callback actions
 					end
 					if not dbg_info.last_control_mode_is_step_into then
 						call_do_step_out_on_cb
-					elseif keep_stepping_into_dotnet_feature (l_current_stack_info) then
+					elseif keep_stepping_into_dotnet_feature_enabled then
 						call_do_step_range_on_cb (True, <<[0, l_current_stack_info.current_il_code_size]>>)
 					else
 						call_do_step_out_on_cb
@@ -1062,37 +1062,8 @@ feature -- Specific case
 		end
 
 	keep_stepping_into_dotnet_feature_enabled: BOOLEAN
-
-	keep_stepping_into_dotnet_feature (l_current_stack_info: EIFNET_DEBUGGER_STACK_INFO): BOOLEAN is
-		local
-			dbg_info: EIFNET_DEBUGGER_INFO
-			i: INTEGER
-			s: STRING
-			icdm: ICOR_DEBUG_MODULE
---			icdc: ICOR_DEBUG_CLASS
-			icdf: ICOR_DEBUG_FUNCTION
-		do
-			Result := keep_stepping_into_dotnet_feature_enabled
---			if not Result then
---				dbg_info := Eifnet_debugger_info
---				if l_current_stack_info.current_module_name /= Void then
---					icdm := dbg_info.icor_debug_module (l_current_stack_info.current_module_name)
---					if icdm /= Void then
---						i := l_current_stack_info.current_feature_token
---						if i /= 0 then
---							icdf := icdm.get_function_from_token (i)
---							if icdf /= Void then
---								s := icdf.to_function_name
---								Result := s /= Void and then s.is_case_insensitive_equal ("invoke")
---								icdf.clean_on_dispose; icdf := Void
---							end
---						end
-
---						icdm.clean_on_dispose; icdm := Void
---					end
---				end
---			end
-		end
+			-- Keep stepping into even if this is a pure dotnet feature ?
+			-- useful to get into agent call.
 
 feature -- Various continuing mode from callback
 

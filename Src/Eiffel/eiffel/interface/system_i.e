@@ -803,6 +803,26 @@ end
 			Result := class_types.item (type_id)
 		end
 
+	class_type_of_static_type_id (id: INTEGER): CLASS_TYPE is
+			-- Class type of static type id `id'.
+		local
+			cts: ARRAY [CLASS_TYPE]
+			i: INTEGER
+		do
+			cts := class_types
+			from
+				i := cts.lower
+			until
+				i > cts.upper or Result /= Void
+			loop
+				Result := cts @ i
+				if Result /= Void and then Result.static_type_id /= id then
+					Result := Void
+				end
+				i := i + 1
+			end
+		end
+
 	insert_class_type (class_type: CLASS_TYPE) is
 			-- Insert `class_type' in `class_types'.
 		require

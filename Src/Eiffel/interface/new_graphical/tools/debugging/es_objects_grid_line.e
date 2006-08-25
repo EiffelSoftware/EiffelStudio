@@ -1000,7 +1000,7 @@ feature {NONE} -- Filling
 
 feature {NONE} -- Agent filling
 
-	Grid_feature_style: EB_NAME_TYPE_FEATURE_STYLE is
+	Grid_feature_style: EB_NAME_SIGNATURE_FEATURE_STYLE is
 		once
 			create Result
 		end
@@ -1016,7 +1016,9 @@ feature {NONE} -- Agent filling
 			ag_ct_id: INTEGER
 			ag_fe_id: INTEGER
 			ag_ct: CLASS_TYPE
+			ag_ecc: EIFFEL_CLASS_C
 			ag_fe: E_FEATURE
+			ag_fi: FEATURE_I
 			r: INTEGER
 			glab: EV_GRID_LABEL_ITEM
 			gf: EB_GRID_FEATURE_ITEM
@@ -1034,11 +1036,20 @@ feature {NONE} -- Agent filling
 				then
 					if ag_ct_id = 0 and then vitem.name.is_equal ("class_id") then
 						ag_ct_id := vitem.value + 1
-						ag_ct := application.eiffel_system.system.class_type_of_id (ag_ct_id)
+						ag_ct := application.eiffel_system.system.class_type_of_static_type_id (ag_ct_id)
 					elseif ag_fe_id = 0 and then vitem.name.is_equal ("feature_id") then
 						ag_fe_id := vitem.value
 						if ag_ct /= Void and then ag_fe_id /= 0 then
 							ag_fe := ag_ct.associated_class.feature_with_feature_id (ag_fe_id)
+							if ag_fe = Void then
+								ag_ecc ?= ag_ct.associated_class
+								if ag_ecc /= Void then
+									ag_fi := ag_ecc.inline_agent_of_id (ag_fe_id)
+									if ag_fi /= Void then
+										ag_fe := ag_fi.api_feature (ag_ecc.class_id)
+									end
+								end
+							end
 						end
 					end
 				end
@@ -1055,11 +1066,8 @@ feature {NONE} -- Agent filling
 
 				create gf.make (create {QL_REAL_FEATURE}.make (ag_fe), Grid_feature_style)
 				lrow.set_item (Col_value_index, gf)
-
 			end
 		end
-
-
 
 feature {NONE} -- Implementation
 

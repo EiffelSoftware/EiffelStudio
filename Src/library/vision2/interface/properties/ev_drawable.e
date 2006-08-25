@@ -159,12 +159,23 @@ feature -- Element change
 			clip_area_assigned: clip_area.is_equal (an_area)
 		end
 
-	remove_clip_area is
+	set_clip_region (a_region: EV_REGION) is
+			-- Set region which will be refreshed.
+		require
+			not_destroyed: not is_destroyed
+			a_region_not_void: a_region /= Void
+		do
+			implementation.set_clip_region (a_region)
+		ensure
+			--clip_area_assigned: clip_area.is_equal (an_area)
+		end
+
+	remove_clip_area, remove_clippimg is
 			-- Do not apply any clipping.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.remove_clip_area
+			implementation.remove_clipping
 		ensure
 			clip_area_void: clip_area = Void
 		end

@@ -173,7 +173,7 @@ feature {NONE} -- Special childrens
 						l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, 10)
 						l_tokens_count := l_md_import.count_enum (l_enum_hdl)
 						if l_tokens_count > 0 then
-							if l_tokens_count > l_tokens.count then
+							if l_tokens_count > l_tokens.capacity - l_tokens.count then
 								l_tokens.resize (l_tokens.count + l_tokens_count)
 							end
 							from

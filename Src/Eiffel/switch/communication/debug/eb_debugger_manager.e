@@ -30,7 +30,6 @@ inherit
 
 	EB_SHARED_GRAPHICAL_COMMANDS
 
-
 	EB_SHARED_PREFERENCES
 
 create
@@ -51,6 +50,14 @@ feature {NONE} -- Initialization
 				maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
 				objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
 				debug_splitter_position := preferences.debug_tool_data.main_splitter_position
+
+				display_agent_details := preferences.debug_tool_data.display_agent_details
+				preferences.debug_tool_data.display_agent_details_preference.change_actions.extend (
+						agent (b: BOOLEAN_PREFERENCE)
+							do
+								display_agent_details := b.value
+							end
+					)
 
 				init_commands
 				create watch_tool_list.make
@@ -1224,6 +1231,10 @@ feature -- One time action
 			has_stopped_kamikaze_action: has_stopped_kamikaze_action
 			stopped_kamikaze_action_set: stopped_kamikaze_action.has (p)
 		end
+feature -- Options
+
+	display_agent_details: BOOLEAN
+			-- Do we display extra agent information ?
 
 feature {NONE} -- Implementation
 

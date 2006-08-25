@@ -17,9 +17,9 @@ class
 inherit
 	ICOR_OBJECT
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	is_active: BOOLEAN is
@@ -36,7 +36,56 @@ feature {ICOR_EXPORTER} -- Access
 			-- Desactivate the stepper
 		do
 			last_call_success := cpp_deactivate (item)
-		end		
+		end
+
+	set_intercept_mask (a_mask: INTEGER) is
+			--|     SetInterceptMask controls which intercept code will be stepped
+			--|     into by the stepper. If the bit for an interceptor is set, the
+			--|     stepper will complete with reason STEPPER_INTERCEPT when the
+			--|     given type of intercept occurs.  If the bit is cleared, the
+			--|     intercepting code will be skipped.
+			--|
+			--|     Note that SetInterceptMask may have unforeseen interactions
+			--|     with SetUnmappedStopMask (from the user's point of view).  For
+			--|     example, if the only visible (ie, non internal) portion of class
+			--|     init code lacks mapping info (STOP_NO_MAPPING_INFO) and
+			--|     STOP_NO_MAPPING_INFO isn't set, then we'll step over the class init.
+			--|
+			--|     By default, only INTERCEPT_NONE will be used.
+
+			--|    typedef enum CorDebugIntercept
+			--|    {
+			--|          INTERCEPT_NONE                = 0x0 ,
+			--|          INTERCEPT_CLASS_INIT          = 0x01,
+			--|          INTERCEPT_EXCEPTION_FILTER    = 0x02,
+			--|          INTERCEPT_SECURITY            = 0x04,
+			--|          INTERCEPT_CONTEXT_POLICY      = 0x08,
+			--|          INTERCEPT_INTERCEPTION        = 0x10,
+			--|          INTERCEPT_ALL                 = 0xffff
+			--|    } CorDebugIntercept;
+     	do
+			last_call_success := cpp_set_intercept_mask (item, a_mask)
+		end
+
+	set_unmapped_stop_mask (a_mask: INTEGER) is
+			--|
+			--| SetUnmappedStopMask controls whether the stepper
+			--| will stop in jitted code which is not mapped to IL.
+			--|
+			--| If the given flag is set, then that type of unmapped code
+			--| will be stopped in.  Otherwise stepping transparently continues.
+			--|
+			--| It should be noted that if one doesn't use a stepper to enter a
+			--| method (for example, the main() method of C++), then one
+			--| won't neccessarily step over prologs,etc.
+			--|
+			--| By default, STOP_OTHER_UNMAPPED will be used.
+			--|
+			--| STOP_UNMANAGED is only valid w/ interop debugging.
+			--|
+     	do
+			last_call_success := cpp_set_unmapped_stop_mask (item, a_mask)
+		end
 
 	step (a_b_step_in: BOOLEAN) is
 		do
@@ -47,19 +96,19 @@ feature {ICOR_EXPORTER} -- Access
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 	step_out is
 		do
 			debug ("debugger_eifnet_data")
 				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.StepOut %N")
 			end
-			
+
 			last_call_success := cpp_step_out (item)
 		ensure
 			success: last_call_success = 0
-		end		
+		end
 
-	step_range (a_b_step_in: BOOLEAN; a_ranges: ARRAY [TUPLE[INTEGER, INTEGER]]) is
+	step_range (a_b_step_in: BOOLEAN; a_ranges: ARRAY [TUPLE [INTEGER, INTEGER]]) is
 		require
 			a_ranges /= Void
 		local
@@ -72,7 +121,7 @@ feature {ICOR_EXPORTER} -- Access
 			debug ("debugger_eifnet_data")
 				io.error.put_string ("[enter] ICOR_DEBUG_STEPPER.StepRange ("+a_b_step_in.out+") %N")
 			end
-			
+
 			--| create table of 'a_ranges.count' struct COR_DEBUG_STEP_RANGE |--
 			l_size := sizeof_COR_DEBUG_STEP_RANGE
 			create l_mp_ranges.make (a_ranges.count * l_size)
@@ -82,16 +131,16 @@ feature {ICOR_EXPORTER} -- Access
 				i > a_ranges.upper
 			loop
 				l_item := a_ranges @ i
-				
+
 				--| Get address of the struct COR_DEBUG_STEP_RANGE |--
 				l_struct_ptr := l_mp_ranges.item + ((i - a_ranges.lower) * l_size)
-				
+
 				--| Set value of Struct |--
 				set_struct_start_offset (l_struct_ptr, l_item.integer_item (1))
 				set_struct_end_offset   (l_struct_ptr, l_item.integer_item (2))
-				
+
 				i := i + 1
-			end		
+			end
 			last_call_success := cpp_step_range (item, a_b_step_in.to_integer, l_mp_ranges.item, a_ranges.count)
 		ensure
 			success: last_call_success = 0
@@ -124,7 +173,27 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"Deactivate"
-		end		
+		end
+
+	cpp_set_intercept_mask (obj: POINTER; a_mask: INTEGER): INTEGER is
+		external
+			"[
+				C++ ICorDebugStepper signature(CorDebugIntercept): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"SetInterceptMask"
+		end
+
+	cpp_set_unmapped_stop_mask (obj: POINTER; a_mask: INTEGER): INTEGER is
+		external
+			"[
+				C++ ICorDebugStepper signature(CorDebugUnmappedStop): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"SetUnmappedStopMask"
+		end
 
 	cpp_step (obj: POINTER; a_b_step_in: INTEGER): INTEGER is
 		external
@@ -144,7 +213,7 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"StepOut"
-		end		
+		end
 
 	cpp_step_range (obj: POINTER; a_b_stepin: INTEGER; a_ranges: POINTER; a_count: INTEGER): INTEGER is
 		external
@@ -154,7 +223,7 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"StepRange"
-		end		
+		end
 
 	cpp_set_range_il (obj: POINTER; a_b_il: INTEGER): INTEGER is
 		external
@@ -164,6 +233,121 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"SetRangeIL"
+		end
+
+feature -- enum CorDebugIntercept
+
+	frozen enum_cor_debug_intercept__INTERCEPT_NONE: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"INTERCEPT_NONE"
+		end
+
+	frozen enum_cor_debug_intercept__INTERCEPT_CLASS_INIT: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"INTERCEPT_CLASS_INIT"
+		end
+
+	frozen enum_cor_debug_intercept__INTERCEPT_EXCEPTION_FILTER: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"INTERCEPT_EXCEPTION_FILTER"
+		end
+
+	frozen enum_cor_debug_intercept__INTERCEPT_SECURITY: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"INTERCEPT_SECURITY"
+		end
+
+	frozen enum_cor_debug_intercept__INTERCEPT_CONTEXT_POLICY: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"INTERCEPT_CONTEXT_POLICY"
+		end
+
+	frozen enum_cor_debug_intercept__INTERCEPT_INTERCEPTION: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"INTERCEPT_INTERCEPTION"
+		end
+
+	frozen enum_cor_debug_intercept__INTERCEPT_ALL: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"INTERCEPT_ALL"
+		end
+
+feature -- enum CorDebugUnmappedStop
+
+	--|    typedef enum CorDebugUnmappedStop
+	--|    {
+	--|        STOP_NONE               = 0x0,
+	--|        STOP_PROLOG             = 0x01,
+	--|        STOP_EPILOG             = 0x02,
+	--|        STOP_NO_MAPPING_INFO    = 0x04,
+	--|        STOP_OTHER_UNMAPPED     = 0x08,
+	--|        STOP_UNMANAGED          = 0x10,
+	--|
+	--|        STOP_ALL                = 0xffff,
+	--|
+	--|    } CorDebugUnmappedStop;
+
+	frozen enum_cor_debug_unmapped_stop__stop_none: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STOP_NONE"
+		end
+
+	frozen enum_cor_debug_unmapped_stop__stop_prolog: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STOP_PROLOG"
+		end
+
+	frozen enum_cor_debug_unmapped_stop__stop_epilog: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STOP_EPILOG"
+		end
+
+	frozen enum_cor_debug_unmapped_stop__stop_no_mapping_info: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STOP_NO_MAPPING_INFO"
+		end
+
+	frozen enum_cor_debug_unmapped_stop__stop_other_unmapped: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STOP_OTHER_UNMAPPED"
+		end
+
+	frozen enum_cor_debug_unmapped_stop__stop_unmanaged: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STOP_UNMANAGED"
+		end
+
+	frozen enum_cor_debug_unmapped_stop__stop_all: INTEGER is
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STOP_ALL"
 		end
 
 feature {NONE} -- External Struct implementation

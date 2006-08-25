@@ -68,6 +68,9 @@ inherit
 		end
 
 	SHARED_EIFNET_DEBUGGER
+		export
+			{NONE} all
+		end
 
 create
 	make_void,
@@ -786,7 +789,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_size: INTEGER
 		do
-			l_eifnet_debugger := Application.imp_dotnet.eifnet_debugger
+			l_eifnet_debugger := Eifnet_debugger
 
 			if dynamic_class /= Void then
 				sc8 := Eiffel_system.system.string_8_class.compiled_class
@@ -892,7 +895,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						if dynamic_class_type /= Void then
 							l_icdov := new_value_object_dotnet
 							if l_icdov /= Void then
-								Result := Application.imp_dotnet.eifnet_debugger.generating_type_value_from_object_value (
+								Result := Eifnet_debugger.generating_type_value_from_object_value (
 											value_frame_dotnet,
 											value_dotnet,
 											l_icdov,

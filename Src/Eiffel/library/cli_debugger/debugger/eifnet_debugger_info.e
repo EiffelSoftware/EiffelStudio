@@ -32,7 +32,7 @@ inherit
 
 	EIFNET_DEBUGGER_CONTROL_CONSTANTS
 
-	EIFNET_STEP_REASON_CONSTANTS
+	COR_DEBUG_STEP_REASON_ENUM
 
 create {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Creation
 	make
@@ -108,17 +108,19 @@ feature -- Current CallStack
 			l_fn: STRING
 		do
 			debug ("debugger_trace_callstack")
-				print ("Callback: stack info :%N")
-				l_mod := icor_debug_module (current_stack_info.current_module_name)
-
-				l_cn := l_mod.md_type_name (current_stack_info.current_class_token)
-				l_fn := l_mod.md_member_name (current_stack_info.current_feature_token)
-
-				print (" Current Call Stack %N")
-				print ("  Module  = " + l_mod.module_name + "%N")
-				print ("  Class   = " + l_cn + " : " + current_stack_info.current_class_token.to_hex_string + "%N")
-				print ("  Feature = " + l_fn + " : " + current_stack_info.current_feature_token.to_hex_string + "%N")
-				print ("  Offset  = " + current_stack_info.current_il_offset.to_hex_string + "%N")
+				if current_stack_info.current_module_name = Void then
+					print ("Callback: current stack stack info : EMPTY%N")
+				else
+					print ("Callback: current stack stack info :%N")
+					l_mod := icor_debug_module (current_stack_info.current_module_name)
+					l_cn := l_mod.md_type_name (current_stack_info.current_class_token)
+					l_fn := l_mod.md_member_name (current_stack_info.current_feature_token)
+					print ("   ~ Depth = " + current_stack_info.current_stack_pseudo_depth.out + "%N")
+					print ("   Module  = " + current_stack_info.current_module_name + "%N")
+					print ("   Class   = " + l_cn + " : " + current_stack_info.current_class_token.to_hex_string + "%N")
+					print ("   Feature = " + l_fn + " : " + current_stack_info.current_feature_token.to_hex_string + "%N")
+					print ("   Offset  = 0x" + current_stack_info.current_il_offset.to_hex_string + "%N")
+				end
 			end
 		end
 
@@ -197,6 +199,19 @@ feature -- Current CallStack
 							current_stack_info.set_current_il_offset          (l_il_frame.get_ip)
 							current_stack_info.set_current_stack_address      (l_code.get_address.to_hex_string)
 
+							debug("debugger_trace_callback")
+								io.error.put_string (generator + ".init_current_callstack: "
+									+ " chain: " + l_chain.get_reason_to_string
+									+ " frame: " + l_il_frame.last_cordebugmapping_result_to_string
+									+ "%N  ->"
+									+ "#" + current_stack_info.current_stack_pseudo_depth.out + " : "
+									+ "<0x" + current_stack_info.current_stack_address + "> "
+									+ "{" + l_module.md_type_name (current_stack_info.current_class_token) + "}."
+									+ l_module.md_member_name (current_stack_info.current_feature_token)
+									+ " -> 0x"+ current_stack_info.current_il_offset.to_hex_string
+									+ "%N")
+							end
+
 							l_frames.clean_on_dispose
 							l_il_code.clean_on_dispose
 							l_code.clean_on_dispose
@@ -207,6 +222,9 @@ feature -- Current CallStack
 					end
 				end
 				current_callstack_initialized := True
+				debug ("debugger_trace_callstack")
+					debug_display_current_callstack_info
+				end
 			end
 		ensure
 			current_callstack_initialized
@@ -980,9 +998,15 @@ feature -- JIT Module
 				l_module_key_name_tail.keep_tail (30)
 				io.error.put_string ("Load module [.. " + l_module_key_name_tail + "]%N")
 			end
+
+			if not il_debug_info_recorder.has_info_about_module (l_module_key_name) then
+				a_module.enable_jit_debugging (False, False)
+				a_module.enable_class_load_callbacks (False)
+			end
+
 			notify_new_module (l_module_key_name)
 
-			if mscorlid_module = Void then -- loaded_modules.is_empty then
+			if mscorlid_module = Void and then l_module_key_name.has_substring ("mscorlib") then -- loaded_modules.is_empty then
 					-- We have to deal with the MSCORLIB.DLL module
 					--| FIXME JFIAT : 2003/12/23 : check if MSCORLIB is really always the first loaded module
 				mscorlid_module := a_module

@@ -20,6 +20,15 @@ inherit
 			default_create, copy
 		end
 
+	EB_EDITOR_TOKEN_GRID_SUPPORT
+		rename
+			on_pick as on_pebble_function
+		undefine
+			default_create, copy
+		redefine
+			on_pebble_function
+		end
+
 create
 	make_with_name
 
@@ -55,7 +64,11 @@ feature {NONE} -- Initialization
 
 			row_expand_actions.extend (agent on_row_expand)
 			row_collapse_actions.extend (agent on_row_collapse)
-			set_item_pebble_function (agent on_pebble_function)
+
+--			set_item_pebble_function (agent on_pebble_function)
+			make_with_grid (Current)
+			enable_editor_token_pnd
+
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)
 			set_item_deny_cursor_function (agent on_pnd_deny_cursor_function)
 			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
@@ -63,6 +76,7 @@ feature {NONE} -- Initialization
 			enable_selection_on_single_button_click
 
 			create_kept_object_references
+
 		end
 
 feature {NONE} -- GRID Customization
@@ -189,15 +203,15 @@ feature -- Change with preferences
 					i > column_count
 				loop
 					t := column_layout (i)
-					s.append_string (t.item (1).out)
+					s.append_string (t.col_index.out)
 					s.append_character (';')
-					s.append_string (t.item (2).out)
+					s.append_string (t.is_displayed.out)
 					s.append_character (';')
-					s.append_string (t.item (3).out)
+					s.append_string (t.has_auto_resizing.out)
 					s.append_character (';')
-					s.append_string (t.item (4).out)
+					s.append_string (t.width.out)
 					s.append_character (';')
-					s.append_string (t.item (5).out)
+					s.append_string (t.title)
 					s.append_character (';')
 					i := i + 1
 				end
@@ -245,7 +259,7 @@ feature -- Change
 			s: STRING
 			col: EV_GRID_COLUMN
 		do
-			c := t.integer_item (1)
+			c := t.col_index
 			inspect c
 			when Col_name_id then
 				col_name_index := a_pos
@@ -260,21 +274,21 @@ feature -- Change
 			else
 			end
 			col := column (a_pos)
-			w := t.integer_item (4)
+			w := t.width
 			if w > 0 then
-				s ?= t.item (5)
+				s := t.title
 				col.set_title (s)
 				col.set_width (w)
 			end
-			if t.boolean_item (2) then
+			if t.is_displayed then
 				col.show
 			else
 				col.hide
 			end
-			set_auto_resizing_column (c, t.boolean_item (3))
+			set_auto_resizing_column (c, t.has_auto_resizing)
 		end
 
-	column_layout (c: INTEGER): TUPLE [INTEGER, BOOLEAN, BOOLEAN, INTEGER, STRING] is
+	column_layout (c: INTEGER): TUPLE [col_index:INTEGER; is_displayed:BOOLEAN; has_auto_resizing:BOOLEAN; width:INTEGER; title:STRING] is
 		require
 			c_positive: c > 0
 			c_not_greater_than_column_count: c <= column_count
@@ -409,6 +423,9 @@ feature {NONE} -- Actions implementation
 				and a_item /= Void
 			then
 				Result := grid_pebble_from_cell (a_item)
+				if Result = Void then
+					Result := Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}(a_item)
+				end
 			end
 		end
 

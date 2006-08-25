@@ -50,11 +50,6 @@ inherit
 			is_equal, copy, default_create
 		end
 
-	SHARED_EIFNET_DEBUGGER
-		undefine
-			is_equal, copy, default_create
-		end
-
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		undefine
 			default_create, copy, is_equal
@@ -602,7 +597,7 @@ feature -- Graphical changes
 			create Result
 		end
 
-	new_cell_value: ES_OBJECTS_GRID_CELL is
+	new_cell_value: ES_OBJECTS_GRID_VALUE_CELL is
 		do
 			create Result
 		end
@@ -868,6 +863,7 @@ feature {NONE} -- Filling
 
 			vlist: DS_LIST [ABSTRACT_DEBUG_VALUE]
 			l_row_index: INTEGER
+			dcl: like object_dynamic_class
 		do
 			row_attributes_filled := True
 				-- We remove the dummy item.
@@ -913,6 +909,14 @@ feature {NONE} -- Filling
 						grid.insert_new_row_parented (i, attributes_row)
 						grid.set_item (Col_name_index, i, es_glab)
 					end
+				end
+				dcl := object_dynamic_class
+				if
+					dcl /= Void
+					and then eb_debugger_manager.display_agent_details
+					and then dcl.conform_to (Application.Eiffel_system.System.routine_class.compiled_class)
+				then
+					fill_extra_attributes_for_agent (a_row, list_cursor)
 				end
 			end
 			if a_row.is_expandable and then not a_row.is_expanded then
@@ -993,6 +997,70 @@ feature {NONE} -- Filling
 		do
 			attach_debug_value_from_line_to_grid_row (a_row, dv, Void, a_title)
 		end
+
+feature {NONE} -- Agent filling
+
+	Grid_feature_style: EB_NAME_TYPE_FEATURE_STYLE is
+		once
+			create Result
+		end
+
+	fill_extra_attributes_for_agent (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]) is
+		require
+			a_row /= Void
+			list_cursor /= Void
+		local
+			lrow: EV_GRID_ROW
+			vitem: DEBUG_VALUE [INTEGER]
+			grid: EV_GRID
+			ag_ct_id: INTEGER
+			ag_fe_id: INTEGER
+			ag_ct: CLASS_TYPE
+			ag_fe: E_FEATURE
+			r: INTEGER
+			glab: EV_GRID_LABEL_ITEM
+			gf: EB_GRID_FEATURE_ITEM
+			s: STRING
+		do
+			grid := a_row.parent
+			from
+				list_cursor.start
+			until
+				list_cursor.after or ag_fe /= Void
+			loop
+				vitem ?= list_cursor.item
+				if
+					vitem /= Void
+					and then vitem.name /= Void
+				then
+					if ag_ct_id = 0 and then vitem.name.is_equal ("class_id") then
+						ag_ct_id := vitem.value + 1
+						ag_ct := application.eiffel_system.system.class_type_of_id (ag_ct_id)
+					elseif ag_fe_id = 0 and then vitem.name.is_equal ("feature_id") then
+						ag_fe_id := vitem.value
+						if ag_ct /= Void and then ag_fe_id /= 0 then
+							ag_fe := ag_ct.associated_class.feature_with_feature_id (ag_fe_id)
+						end
+					end
+				end
+				list_cursor.forth
+			end
+			if ag_fe /= Void then
+				r := 1
+				a_row.insert_subrow (r)
+				lrow := a_row.subrow (r)
+
+				create glab.make_with_text ("Agent")
+				glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
+				lrow.set_item (Col_name_index, glab)
+
+				create gf.make (create {QL_REAL_FEATURE}.make (ag_fe), Grid_feature_style)
+				lrow.set_item (Col_value_index, gf)
+
+			end
+		end
+
+
 
 feature {NONE} -- Implementation
 

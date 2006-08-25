@@ -1,5 +1,5 @@
 indexing
-	description : "Objects that ..."
+	description : "Objects that represent a cell"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author      : "$Author$"
@@ -7,31 +7,17 @@ indexing
 	revision    : "$Revision$"
 
 class
-	SHARED_EIFNET_DEBUGGER
+	ES_OBJECTS_GRID_VALUE_CELL
 
 inherit
-	EIFNET_EXPORTER
+	ES_OBJECTS_GRID_CELL
 
-feature {DBG_EVALUATOR_DOTNET} -- Access
+create
+	default_create,
+	make_with_text
 
-	Eifnet_debugger: EIFNET_DEBUGGER is
-			-- Initialize `Current'.
-		once
-			create Result.make
-			eifnet_debugger_initialized_cell.put (True)
-		end
+feature -- Query
 
-feature -- Status
-
-	eifnet_debugger_initialized: BOOLEAN is
-		do
-			Result := eifnet_debugger_initialized_cell.item
-		end
-
-	eifnet_debugger_initialized_cell: CELL [BOOLEAN] is
-		once
-			create Result.put (False)
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -65,4 +51,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class SHARED_EIFNET_DEBUGGER
+end

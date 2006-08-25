@@ -50,6 +50,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create {APPLICATION_EXECUTION}
 	make
 
@@ -60,6 +65,22 @@ feature {APPLICATION_EXECUTION} -- Initialization
 		do
 			Precursor
 			Eifnet_debugger.init
+			if preferences.debugger_data.keep_stepping_info_dotnet_feature then
+				eifnet_debugger.enable_keep_stepping_into_dotnet_feature
+			else
+				eifnet_debugger.disable_keep_stepping_into_dotnet_feature
+			end
+			preferences.debugger_data.keep_stepping_info_dotnet_feature_preference.change_actions.extend (
+				agent (p: BOOLEAN_PREFERENCE; ed: EIFNET_DEBUGGER)
+					do
+						if p.value then
+							ed.enable_keep_stepping_into_dotnet_feature
+						else
+							ed.disable_keep_stepping_into_dotnet_feature
+						end
+					end (?, eifnet_debugger)
+				)
+
 			agent_update_notify_on_after_stopped :=	agent real_update_notify_on_after_stopped
 		end
 
@@ -77,7 +98,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			-- Once the callback is done, when ec is back to life
 			-- it will process this notification.
 		require
-			not_alread_inside_notify: not Eifnet_debugger.callback_notification_processing
+			not_alread_inside_notify: not is_inside_callback_notification_processing
 		local
 			l_status: APPLICATION_STATUS_DOTNET
 			retried: BOOLEAN
@@ -179,6 +200,11 @@ feature -- Properties
 			Result ?= Application.status
 		end
 
+	is_inside_callback_notification_processing: BOOLEAN is
+		do
+			Result := Eifnet_debugger.callback_notification_processing
+		end
+
 feature {APPLICATION_EXECUTION} -- Properties
 
 	is_valid_object_address (addr: STRING): BOOLEAN is
@@ -193,7 +219,7 @@ feature -- Bridge to Debugger
 	exit_process_occurred: BOOLEAN is
 			-- Did the exit_process occurred ?
 		require
-			eifnet_debugger_exists: Eifnet_debugger /= Void
+			eifnet_debugger_exists: eifnet_debugger_initialized
 		do
 			Result := Eifnet_debugger.exit_process_occurred
 		end
@@ -951,9 +977,7 @@ feature {NONE} -- Events on notification
 
 			debug ("debugger_trace_callstack")
 				io.put_new_line
-				print (" ############################# %N")
-				print (" ### CallStack : Head level ## 0x" + dbg_info.last_step_complete_reason.to_hex_string + " ## %N")
-				print (" ############################# %N")
+				print (" ### CallStack : Head level ## 0x" + dbg_info.last_step_complete_reason.to_hex_string + " ### %N")
 --| uncomment next ligneto have different kind of debug output
 --				io.put_new_line
 --				print (frame_callstack_info (Eifnet_debugger.active_frame))
@@ -1120,6 +1144,7 @@ feature -- Call stack related
 
 			l_eiffel_bp_slot: INTEGER
 			l_il_offset: INTEGER
+			l_mapping: STRING
 		do
 			create l_output.make (100)
 			if a_frame = Void then
@@ -1157,11 +1182,13 @@ feature -- Call stack related
 
 					if l_class_type /= Void and then l_feature_i /= Void then
 						l_il_offset := l_frame_il.get_ip
+						l_mapping := l_frame_il.last_cordebugmapping_result_to_string
 						l_eiffel_bp_slot := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset(l_class_type, l_feature_i, l_il_offset)
 						l_output.append_string ("  + <"
 							+ l_eiffel_bp_slot.out
 							+ " | "
 							+ l_il_offset.out + ":0x" + l_il_offset.to_hex_string + "> "
+							+ "(mapping=" + l_mapping + ")"
 							+ l_class_name + "." + l_feature_name + "%N"
 							+ "%T0x"+l_class_token.to_hex_string
 							+ " :: 0x"+ l_feature_token.to_hex_string
@@ -1219,11 +1246,7 @@ feature -- Call stack related
 				loop
 					l_chain := l_chains @ c
 					if l_chain /= Void then
-
-						l_output := "%N ###################################################### %N"
-						l_output.append_string (" Callstack from Chain : " + l_chain.item.out + "%N")
-						l_output.append_string (" ###################################################### %N%N")
-
+						l_output := " ### Callstack from Chain : " + l_chain.item.out + " (" + l_chain.get_reason_to_string + ")###%N"
 						l_enum_frames := l_chain.enumerate_frames
 						if l_chain.last_call_succeed and then l_enum_frames.get_count > 0 then
 							l_enum_frames.reset

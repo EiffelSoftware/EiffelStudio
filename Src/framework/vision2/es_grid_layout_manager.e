@@ -65,7 +65,7 @@ feature -- Status
 
 feature -- Layout acces
 
-	layout: TUPLE [STRING, DS_LIST [TUPLE], ANY, BOOLEAN]
+	layout: TUPLE [id:STRING; subrows: DS_LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN]
 			--	TUPLE [id=STRING, subrows=DS_LIST [like layout]], value=ANY, visible_row=BOOLEAN]
 			-- ["A"
 			--    {
@@ -234,14 +234,14 @@ feature -- Access
 						print (":" + name + ": restore : session [" + gid + "] %N")
 					end
 
-					s ?= layout.item (1)
+					s := layout.id
 					if not s.is_equal (gid) then
 						debug ("es_grid_layout")
 							print (":" + name + ": different session -> " + s + " /= " + gid + "%N")
 						end
 						wipe_out
 					else
-						lst ?= layout.item (2)
+						lst := layout.subrows
 						if lst /= Void and then not lst.is_empty then
 							from
 								lst_curs := lst.new_cursor
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 			lst_curs: DS_LIST_CURSOR [like layout]
 		do
 			lay.put_reference (Void, 3)
-			lst ?= lay.item (2)
+			lst ?= lay.subrows
 			if lst /= Void then
 				lst_curs := lst.new_cursor
 				from
@@ -365,7 +365,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recorded_row_layout (a_row: EV_GRID_ROW): like layout is
+	recorded_row_layout (a_row: EV_GRID_ROW): TUPLE [id:STRING; subrows: DS_LIST [TUPLE]; value:ANY; is_visible_row: BOOLEAN] is
+			-- FIXME: compiler is complaining when using 'like layout' for Result type
 		local
 			r: INTEGER
 			lst: DS_LIST [TUPLE]
@@ -399,7 +400,7 @@ feature {NONE} -- Implementation
 							loop
 								lay := recorded_row_layout (a_row.subrow (r))
 								if positioning_enabled and then lay /= Void then
-									l_fvr := l_fvr or else lay.boolean_item (4)
+									l_fvr := l_fvr or else lay.is_visible_row
 								end
 								lst.put_last (lay)
 								r := r + 1
@@ -469,7 +470,7 @@ feature {NONE} -- Implementation
 					print (":" + name + ": restore_row_layout -> cancelled : " + a_row.index.out + "[" + string_id_for_lay (lay) + "] %N")
 				end
 			elseif a_row /= Void then
-				ts ?= lay.item (1)
+				ts := lay.id
 				if ts /= Void then
 					debug ("es_grid_layout")
 						print (":" + name + ": restore_row_layout -> [" + ts + "] ")
@@ -487,7 +488,7 @@ feature {NONE} -- Implementation
 
 								--| Is part of first visible row ?
 							if positioning_enabled then
-								tfvr := lay.boolean_item (4)
+								tfvr := lay.is_visible_row
 								if tfvr and grid.is_displayed then
 									debug ("es_grid_layout", "es_grid_layout_positioning")
 										print (" FirstVisibleRow[" + a_row.index.out + "] ")
@@ -512,7 +513,7 @@ feature {NONE} -- Implementation
 								end
 							end
 
-							lst ?= lay.item (2)
+							lst := lay.subrows
 							if
 								lst /= Void --| a non Void list, then should be expanded
 								and then a_row.is_expandable
@@ -544,7 +545,7 @@ feature {NONE} -- Implementation
 									r > a_row.subrow_count or lst_curs.after
 								loop
 									t ?= lst_curs.item
-									if t /= Void and then t.boolean_item (4) then
+									if t /= Void and then t.is_visible_row then
 										process_row_layout_restoring (a_row.subrow (r), t)
 										lst_curs.finish --| "first visible row's group found"
 									end
@@ -559,7 +560,7 @@ feature {NONE} -- Implementation
 									r > a_row.subrow_count or lst_curs.after
 								loop
 									t ?= lst_curs.item
-									if t /= Void and then not t.boolean_item (4) then
+									if t /= Void and then not t.is_visible_row then
 										process_row_layout_restoring (a_row.subrow (r), t)
 									end
 									lst_curs.forth
@@ -640,7 +641,7 @@ feature {NONE} -- Debugging
 
 	string_id_for_lay (lay: like layout): STRING is
 		do
-			Result ?= lay.item (1)
+			Result := lay.id
 			if Result = Void then
 				Result := ""
 			end
@@ -666,10 +667,10 @@ feature {NONE} -- Debugging
 			tu_lst_curs: DS_LIST_CURSOR [TUPLE]
 		do
 			Result := ":" + name + ": "
-			tu_s ?= a_layout.item (1)
-			tu_lst ?= a_layout.item (2)
-			tu_v := a_layout.item (3)
-			tu_fvr := a_layout.boolean_item (4)
+			tu_s := a_layout.id
+			tu_lst := a_layout.subrows
+			tu_v := a_layout.value
+			tu_fvr := a_layout.is_visible_row
 			if tu_v /= Void then
 				tu_v_s := tu_v.out
 				tu_v_s.keep_head (20)

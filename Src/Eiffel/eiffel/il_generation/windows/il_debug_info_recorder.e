@@ -471,7 +471,7 @@ feature {EIFFEL_CALL_STACK_DOTNET,
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_il_offset_list: ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]]
+			l_il_offset_list: ARRAYED_LIST [TUPLE [i:INTEGER; set: IL_OFFSET_SET]]
 			l_offsets_info: IL_OFFSET_SET
 		do
 			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
@@ -481,7 +481,7 @@ feature {EIFFEL_CALL_STACK_DOTNET,
 				until
 					l_il_offset_list.after or Result
 				loop
-					l_offsets_info ?= l_il_offset_list.item.item (2)
+					l_offsets_info := l_il_offset_list.item.set
 					Result := l_offsets_info.has (a_il_offset)
 					l_il_offset_list.forth
 				end
@@ -494,7 +494,7 @@ feature {EIFFEL_CALL_STACK_DOTNET,
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_il_offset_list: ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]]
+			l_il_offset_list: ARRAYED_LIST [TUPLE [i:INTEGER; set: IL_OFFSET_SET]]
 			l_offsets_info: IL_OFFSET_SET
 			l_offset_before: INTEGER
 			l_breakable_line: INTEGER
@@ -510,7 +510,7 @@ feature {EIFFEL_CALL_STACK_DOTNET,
 				until
 					l_il_offset_list.after
 				loop
-					l_offsets_info ?= l_il_offset_list.item.item (2)
+					l_offsets_info := l_il_offset_list.item.set
 					if not l_offsets_info.is_empty then
 						from
 							i := l_offsets_info.lower
@@ -566,7 +566,7 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Queries : IL Offset data
 			feat_not_void: a_feat /= Void
 		local
 			l_index: INTEGER
-			l_list: ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]]
+			l_list: ARRAYED_LIST [TUPLE [i: INTEGER; set: IL_OFFSET_SET]]
 		do
 			l_index := a_breakable_line_number + 1
 			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
@@ -575,7 +575,7 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Queries : IL Offset data
 				l_list /= Void
 				and then l_list.valid_index (l_index)
 			then
-				Result ?= l_list.i_th (l_index).item (2)
+				Result := l_list.i_th (l_index).set
 			else
 				Result:= Void
 			end
@@ -636,7 +636,7 @@ feature {NONE} -- line debug exploitation
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_il_offset_list: ARRAYED_LIST [ TUPLE [INTEGER, IL_OFFSET_SET]]
+			l_il_offset_list: ARRAYED_LIST [ TUPLE [i:INTEGER; set:IL_OFFSET_SET]]
 			l_offsets_info: IL_OFFSET_SET
 			i, upper: INTEGER
 		do
@@ -649,7 +649,7 @@ feature {NONE} -- line debug exploitation
 				until
 					l_il_offset_list.after
 				loop
-					l_offsets_info ?= l_il_offset_list.item.item (2)
+					l_offsets_info := l_il_offset_list.item.set
 					if not l_offsets_info.is_empty then
 						from
 							i := l_offsets_info.lower

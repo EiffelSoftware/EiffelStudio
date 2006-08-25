@@ -33,57 +33,97 @@ indexing
 	revision: "$Revision$"
 
 class
-	EIFNET_STEP_REASON_CONSTANTS
+	COR_DEBUG_STEP_REASON_ENUM
 
-feature {NONE} -- Initialization
+feature -- enum CorDebugStepReason
 
-	Step_normal: INTEGER is 0
+	frozen enum_cor_debug_step_reason__STEP_NORMAL: INTEGER is
 			-- that stepping completed normally, in the same function.
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STEP_NORMAL"
+		end
 
-	Step_return: INTEGER is 1
+	frozen enum_cor_debug_step_reason__STEP_RETURN: INTEGER is
 			-- that stepping continued normally, after the function returned.
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STEP_RETURN"
+		end
 
-	Step_call: INTEGER is 2
+
+	frozen enum_cor_debug_step_reason__STEP_CALL: INTEGER is
 			-- that stepping continued normally, at the start of a newly called function.
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STEP_CALL"
+		end
 
-	Step_exception_filter: INTEGER is 3
+
+	frozen enum_cor_debug_step_reason__STEP_EXCEPTION_FILTER: INTEGER is
 			-- that control passed to an exception filter after an exception was thrown.
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STEP_EXCEPTION_FILTER"
+		end
 
-	Step_exception_handler: INTEGER is 4
+
+	frozen enum_cor_debug_step_reason__STEP_EXCEPTION_HANDLER: INTEGER is
 			-- that control passed to an exception handler after an exception was thrown.
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STEP_EXCEPTION_HANDLER"
+		end
 
-	Step_intercept: INTEGER is 5
-			-- that control passed to an interceptor.  
 
-	Step_exit: INTEGER is 6
-			-- that the thread exited before the step completed. 
+	frozen enum_cor_debug_step_reason__STEP_INTERCEPT: INTEGER is
+			-- that control passed to an interceptor.
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STEP_INTERCEPT"
+		end
+
+
+	frozen enum_cor_debug_step_reason__STEP_EXIT: INTEGER is
+			-- that the thread exited before the step completed.
 			-- No more stepping can be performed with the stepper
+		external
+			"C++ macro use %"cli_headers.h%" "
+		alias
+			"STEP_EXIT"
+		end
+
 
 feature -- To String
 
-	step_id_to_string (step_id: INTEGER): STRING is
-			-- 
+	enum_cor_debug_step_reason_to_string (e: INTEGER): STRING is
+			--
 		do
-			inspect step_id
-			when  Step_normal then
-				Result := "normal"
-			when  Step_return then
-				Result := "return"
-			when  Step_call then
-				Result := "call"
-			when  Step_exception_filter then
-				Result := "exception_filter"
-			when  Step_exception_handler then
-				Result := "exception_handler"
-			when  Step_intercept then
-				Result := "intercept"
-			when  Step_exit then
-				Result := "exit"				
+			if e = enum_cor_debug_step_reason__STEP_NORMAL then
+				Result := "STEP_NORMAL"
+			elseif e = enum_cor_debug_step_reason__STEP_RETURN then
+				Result := "STEP_RETURN"
+			elseif e = enum_cor_debug_step_reason__STEP_CALL then
+				Result := "STEP_CALL"
+			elseif e = enum_cor_debug_step_reason__STEP_EXCEPTION_FILTER then
+				Result := "STEP_EXCEPTION_FILTER"
+			elseif e = enum_cor_debug_step_reason__STEP_EXCEPTION_HANDLER then
+				Result := "STEP_EXCEPTION_HANDLER"
+			elseif e = enum_cor_debug_step_reason__STEP_INTERCEPT then
+				Result := "STEP_INTERCEPT"
+			elseif e = enum_cor_debug_step_reason__STEP_EXIT then
+				Result := "STEP_EXIT"
 			else
-				Result := "Unknown"				
+				Result := "Unknown"
 			end
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

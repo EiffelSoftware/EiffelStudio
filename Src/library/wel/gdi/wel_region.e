@@ -118,7 +118,7 @@ feature -- Basic operations
 	combine (region: WEL_REGION; mode: INTEGER): WEL_REGION is
 			-- Combine `region' with the current one using `mode'.
 			-- See class WEL_RGN_CONSTANTS for `mode' values.
-		require	
+		require
 			exists: exists
 			region_not_void: region /= Void
 			region_exists: region.exists
@@ -126,7 +126,7 @@ feature -- Basic operations
 			create Result.make_empty
 			cwin_combine_rgn (Result.item , item, region.item, mode)
 		ensure
-			result_not_void: Result /= Void			
+			result_not_void: Result /= Void
 		end
 
 	offset (x_offset, y_offset: INTEGER) is
@@ -165,6 +165,17 @@ feature -- Status report
 			rect_not_void: rect /= Void
 		do
 			Result := cwin_rect_in_region (item, rect.item)
+		end
+
+feature -- Access
+
+	get_region_box: WEL_RECT
+			-- Retrieve the bounding rectangle of `Current'.
+		local
+			l_result: INTEGER
+		do
+			create Result.make (0, 0, 0, 0)
+			l_result := cwin_get_rgn_box (item, Result.item)
 		end
 
 feature {NONE} -- Externals
@@ -255,6 +266,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HRGN, int, int, int, int)"
 		alias
 			"SetRectRgn"
+		end
+
+	cwin_get_rgn_box (hrgn, rectn: POINTER): INTEGER
+			-- SDK GetRgnBox
+		external
+			"C [macro <wel.h>] (HRGN, LPRECT): EIF_INTEGER"
+		alias
+			"GetRgnBox"
 		end
 
 	Alternate: INTEGER is

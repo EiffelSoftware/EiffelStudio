@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Warning for obsolete features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -43,7 +43,7 @@ feature -- Access
 			Result := classes_defined and then
 				obsolete_feature /= Void
 		ensure then
-			valid_features: Result implies obsolete_feature /= Void	
+			valid_features: Result implies obsolete_feature /= Void
 		end
 
 feature -- Output
@@ -95,7 +95,7 @@ feature -- Setting
 			valid_associated_class: associated_class /= Void
 		do
 			if f /= Void then
-				a_feature := f.api_feature (associated_class.class_id)
+				a_feature := f.enclosing_feature.api_feature (associated_class.class_id)
 			end
 		end;
 

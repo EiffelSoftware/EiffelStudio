@@ -12,7 +12,7 @@ indexing
 deferred class FEATURE_CONFLICT_ERROR
 
 inherit
-	
+
 	EIFFEL_ERROR
 		redefine
 			build_explain, is_defined
@@ -37,8 +37,8 @@ feature {NONE} -- Creation
 				-- using parent class it will crash when trying to display the second
 				-- generic parameter which does not exist in B, only in A.
 			class_id := c.class_id
-			feature_1 := f1.api_feature (class_id)
-			feature_2 := f2.api_feature (class_id)
+			feature_1 := f1.enclosing_feature.api_feature (class_id)
+			feature_2 := f2.enclosing_feature.api_feature (class_id)
 		ensure
 			class_c_set: class_c = c
 			feature_1_set: feature_1 /= Void

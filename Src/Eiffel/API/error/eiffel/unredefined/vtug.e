@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error when a generic type has not the exact number %
 		%of generic parameters."
 	legal: "See notice at end of class."
@@ -8,7 +8,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VTUG 
+class VTUG
 
 inherit
 
@@ -88,7 +88,7 @@ feature {COMPILER_EXPORTER}
 	set_feature (f: FEATURE_I) is
 		do
 			if f /= Void then
-				e_feature := f.api_feature (f.written_in);
+				e_feature := f.enclosing_feature.api_feature (f.written_in);
 			end
 		end;
 

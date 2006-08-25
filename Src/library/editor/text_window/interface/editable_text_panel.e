@@ -698,7 +698,7 @@ feature {NONE} -- Mouse copy cut
 					editor_drawing_area.set_pointer_style (basic_pointer)
 					x_cur := (x_pos - left_margin_width) .max (1)
 					l_y_pos := y_pos - editor_viewport.y_offset
-					perform_changes :=  is_in_editor_panel (a_screen_x, a_screen_y) and then not position_is_in_selection (x_cur, l_y_pos, True)
+					perform_changes :=  not position_is_in_selection (x_cur, l_y_pos, True)
 					if perform_changes then
 						create cur.make_from_integer (1, text_displayed)
 						position_cursor (cur, x_cur, l_y_pos)

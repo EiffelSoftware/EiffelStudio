@@ -253,7 +253,23 @@ feature -- Element change
 			region.delete
 		end
 
-	remove_clip_area is
+	set_clip_region (a_region: EV_REGION) is
+			-- Set an area to clip to.
+			-- Set to Void when no clipping should be applied.
+		local
+			region: WEL_REGION
+			l_region_box: WEL_RECT
+		do
+			region ?= a_region.implementation
+				-- Set the clip area to the bounding area of the region.
+			l_region_box := region.get_region_box
+			create clip_area.make (l_region_box.x, l_region_box.y, l_region_box.width, l_region_box.height)
+			get_dc
+			dc.select_clip_region (region)
+			release_dc
+		end
+
+	remove_clipping is
 			-- Do not apply any clipping.
 		do
 			clip_area := Void

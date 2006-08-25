@@ -88,11 +88,6 @@ feature -- Access
 	changed: BOOLEAN
 			-- Has this class been modified? (as seen from the compiler)
 
-	set_date is
-			-- Set the new date.
-		deferred
-		end
-
 	compiled_class: CLASS_C
 			-- Compiled class
 

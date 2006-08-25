@@ -122,10 +122,12 @@ feature -- Access
 			bridge_ok: Result = implementation.real_target
 		end
 
-	default_key_processing_handler: PREDICATE [ANY, TUPLE [EV_KEY]] is
+	default_key_processing_handler: PREDICATE [ANY, TUPLE [EV_KEY]]
 			-- Agent used to determine whether the default key processing should occur for Current.
 			-- If agent returns True then default key processing continues as normal, False prevents
 			-- default key processing from occurring.
+		assign
+			set_default_key_processing_handler
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -285,7 +287,6 @@ feature -- Status setting
 			-- Assign `default_key_processing_handler' to `a_handler'.
 		require
 			not_destroyed: not is_destroyed
-			a_handler_not_void: a_handler /= Void
 		do
 			implementation.set_default_key_processing_handler (a_handler)
 		end

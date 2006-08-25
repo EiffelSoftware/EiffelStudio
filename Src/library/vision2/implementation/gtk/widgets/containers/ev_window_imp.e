@@ -438,41 +438,42 @@ feature {NONE} -- Implementation
 			l_app_imp: like app_implementation
 			a_focus_widget: EV_WIDGET_IMP
 			l_block_events: BOOLEAN
+			l_tab_controllable: EV_TAB_CONTROLLABLE_I
 		do
 			l_app_imp := app_implementation
-			if not has_modal_window then
-				Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press, True)
-					-- Fire the widget events.
-				a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
+			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press, True)
+				-- Fire the widget events.
+			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
 
-				if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
-					if a_key /= Void then
-						if a_focus_widget.default_key_processing_handler /= Void then
-							l_block_events := not a_focus_widget.default_key_processing_handler.item ([a_key])
-						end
-						if a_focus_widget.default_key_processing_blocked (a_key) then
-							-- Block event from losing focus should the widget want to keep it.
-							l_block_events := True
+			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
+				if a_key /= Void then
+					if a_focus_widget.default_key_processing_handler /= Void then
+						l_block_events := not a_focus_widget.default_key_processing_handler.item ([a_key])
+					end
+
+					if not l_block_events then
+							-- If tab controllable we must make sure that it will not lose the focus
+							-- if `is_tabable_from' is set to `False'.
+						l_tab_controllable ?= a_focus_widget
+						if l_tab_controllable /= Void and then not l_tab_controllable.is_tabable_from then
+							l_block_events := a_key.is_arrow or else a_key.code = {EV_KEY_CONSTANTS}.key_tab
 						end
 					end
-					if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
-						l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
-					else
-						a_focus_widget.on_key_event (a_key, a_key_string, a_key_press, False)
+					if l_block_events then
+						if a_key_press then
+							a_cs := l_app_imp.key_press_event_string
+						else
+							a_cs := l_app_imp.key_release_event_string
+						end
+							-- Block gtk from doing anything else with the key press, such as keyboard navigation.
+						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 					end
 				end
-			else
-				l_block_events := True
-			end
-
-			if l_block_events then
-				if a_key_press then
-					a_cs := l_app_imp.key_press_event_string
+				if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
+					l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
 				else
-					a_cs := l_app_imp.key_release_event_string
+					a_focus_widget.on_key_event (a_key, a_key_string, a_key_press, False)
 				end
-					-- Block gtk from doing anything else with the key press, such as keyboard navigation.
-				{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 			end
 		end
 

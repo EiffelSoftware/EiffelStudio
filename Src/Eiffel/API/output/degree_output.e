@@ -448,8 +448,10 @@ feature {SYSTEM_I} -- Implementation
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			total_number := total;
-			display_message (percentage_output (to_go) + deg_nbr);
-			display_new_line
+			if not is_output_quiet then
+				display_message (percentage_output (to_go) + deg_nbr);
+				display_new_line
+			end
 		end
 
 feature {NONE} -- Display implementation for redefinition by descendants.

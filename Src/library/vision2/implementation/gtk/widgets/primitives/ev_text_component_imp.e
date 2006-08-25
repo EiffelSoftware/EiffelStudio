@@ -20,7 +20,6 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			default_key_processing_blocked,
 			initialize,
 			background_color_pointer,
 			foreground_color_pointer
@@ -66,15 +65,6 @@ feature -- Resizing
 	font: EV_FONT is
 			-- Current font displayed by widget. (This can be removed if text component is made fontable)
 		deferred
-		end
-
-feature {EV_WINDOW_IMP}
-
-	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
-			--
-		do
-			-- We don't want to lose focus on up or down keys.
-			Result := a_key.code = {EV_KEY_CONSTANTS}.key_down or else a_key.code = {EV_KEY_CONSTANTS}.key_up
 		end
 
 feature {NONE} -- Implementation

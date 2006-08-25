@@ -43,7 +43,6 @@ inherit
 			visual_widget,
 			destroy,
 			on_key_event,
-			default_key_processing_blocked,
 			on_focus_changed,
 			has_focus,
 			set_focus,

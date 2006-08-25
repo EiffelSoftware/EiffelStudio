@@ -12,21 +12,17 @@ class
 
 inherit
 	EV_APPLICATION_I
-			export
-				{EV_PICK_AND_DROPABLE_IMP}
-					captured_widget
-				{EV_INTERMEDIARY_ROUTINES}
-					pointer_motion_actions_internal,
-					pointer_button_press_actions_internal,
-					pointer_double_press_actions_internal,
-					pointer_button_release_actions_internal
-			end
+		export
+			{EV_INTERMEDIARY_ROUTINES}
+				pointer_motion_actions_internal,
+				pointer_button_press_actions_internal,
+				pointer_double_press_actions_internal,
+				pointer_button_release_actions_internal
+		end
 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
 
 	EV_GTK_EVENT_STRINGS
-
-	EXCEPTIONS
 
 create
 	make
@@ -70,6 +66,9 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.gtk_object_sink (tooltips)
 				set_tooltip_delay (500)
 
+				stored_display_data := [default_pointer, 0, 0, 0]
+					-- Initialize display retrieval storage for use by motion actions.
+
 					-- Initialize the marshal object.
 				create gtk_marshal
 
@@ -83,7 +82,7 @@ feature {NONE} -- Initialization
 			else
 				-- We are unable to launch the gtk toolkit, probably due to a DISPLAY issue.
 				print ("EiffelVision application could not launch, check DISPLAY environment variable%N")
-				(create {EXCEPTIONS}).die (0)
+				die (0)
 			end
 		end
 
@@ -233,32 +232,47 @@ feature -- Basic operation
 			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
 		end
 
+	process_key_event (a_gdk_event: POINTER) is
+			-- Process key event `a_gdk_event'.
+		require
+			a_gdk_event_not_null: a_gdk_event /= default_pointer
+		local
+			l_stored_display_data: like stored_display_data
+		do
+			use_stored_display_data_for_keys := True
+				-- Update the stored display data to avoid round trips for display key access.
+			l_stored_display_data := stored_display_data
+			l_stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_key_struct_state (a_gdk_event), 4)
+
+			{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+
+			use_stored_display_data_for_keys := False
+		end
+
 	process_button_event (a_gdk_event: POINTER) is
 			-- Process button event `a_gdk_event'.
 		require
 			a_gdkevent_not_null: a_gdk_event /= default_pointer
 		local
 			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
-			l_gdk_window, l_gtk_widget: POINTER
+			l_gdk_window: POINTER
+			l_stored_display_data: like stored_display_data
 		do
+			use_stored_display_data := True
+			l_stored_display_data := stored_display_data
+			l_stored_display_data.put_pointer ({EV_GTK_EXTERNALS}.gdk_event_button_struct_window (a_gdk_event), 1)
+			l_stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer, 2)
+			l_stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer, 3)
+			l_stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_button_struct_state (a_gdk_event), 4)
+
 			if pick_and_drop_source /= Void then
 				l_pnd_item := pick_and_drop_source
 			elseif captured_widget /= Void then
 				l_pnd_item ?= captured_widget.implementation
 			else
-				if {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (a_gdk_event) = GDK_BUTTON_RELEASE then
-						-- Button release events need to be handled directly as they can occur on other widgets
-						-- an on non client areas.
-					l_gdk_window := {EV_GTK_EXTERNALS}.gdk_event_button_struct_window (a_gdk_event)
-					if l_gdk_window /= default_pointer then
-						{EV_GTK_EXTERNALS}.gdk_window_get_user_data (l_gdk_window, $l_gtk_widget)
-						if l_gtk_widget /= default_pointer then
-							l_pnd_item ?= eif_object_from_gtk_object (l_gtk_widget)
-						end
-					end
-				else
-						-- We retrieve the appropriate Vision2 widget that the mouse pointer is above.
-					l_pnd_item ?= gtk_widget_imp_at_pointer_position
+				l_gdk_window := l_stored_display_data.window
+				if l_gdk_window /= default_pointer then
+					l_pnd_item ?= gtk_widget_from_gdk_window (l_gdk_window)
 				end
 			end
 			if
@@ -273,10 +287,14 @@ feature -- Basic operation
 					0.5,
 					0.5,
 					0.5,
-					{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (a_gdk_event).truncated_to_integer,
-					{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (a_gdk_event).truncated_to_integer
+					{EV_GTK_EXTERNALS}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer,
+					{EV_GTK_EXTERNALS}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer
 				)
 			end
+
+			{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+
+			use_stored_display_data := False
 		end
 
 	process_gdk_events is
@@ -289,6 +307,7 @@ feature -- Basic operation
 			l_widget_imp: EV_WIDGET_IMP
 			l_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			l_no_more_events: BOOLEAN
+			i, l_widget_x, l_widget_y, l_screen_x, l_screen_y: INTEGER
 		do
 			from
 				l_motion_tuple := motion_tuple
@@ -304,29 +323,37 @@ feature -- Basic operation
 						grab_widget := {EV_GTK_EXTERNALS}.gtk_grab_get_current
 						if grab_widget = default_pointer then
 							grab_widget := event_widget
+						else
+--							print ("We have a grab widget%N")
 						end
 						inspect
 							{EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
 						when GDK_MOTION_NOTIFY then
 							debug ("GDK_EVENT")
-								print ("GDK_MOTION_NOTIFY%N")
+								print ("GDK_MOTION_NOTIFY")
 							end
+								-- Set up storage to avoid server roundtrips.
+							use_stored_display_data := True
+							l_screen_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer
+							l_screen_y := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+							stored_display_data.put_pointer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event), 1)
+							stored_display_data.put_integer (l_screen_x, 2)
+							stored_display_data.put_integer (l_screen_y, 3)
+							stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_state (gdk_event), 4)
+
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 
 							if not is_in_transport then
-								l_pnd_imp ?= gtk_widget_imp_at_pointer_position
-									-- This will force another motion notify as we have the motion hint flag set for all widgets.
 								if
 									captured_widget /= Void
 								then
 									l_pnd_imp ?= captured_widget.implementation
+								else
+									l_pnd_imp ?= gtk_widget_from_gdk_window (stored_display_data.window)
 								end
 							else
 								l_pnd_imp := pick_and_drop_source
-									-- The PND call to 'real_pointed_target' will force another motion notify if motion hinting is set.
-									-- Repetitive calling of gtk_widget_imp_at_pointer_position causes X server round trips that causes significant
-									-- lag over remote connections.
 							end
 
 							if l_pnd_imp /= Void then
@@ -336,52 +363,60 @@ feature -- Basic operation
 											pointer_motion_actions_internal.call (
 											[
 												l_widget_imp.interface,
-												{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
-												{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+												l_screen_x,
+												l_screen_y
 											]
 										)
 									end
 								end
 								if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM then
-									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - l_pnd_imp.screen_x, 1)
-									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer - l_pnd_imp.screen_y, 2)
+									if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget) = {EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event) then
+										l_widget_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer
+										l_widget_y := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_Y (gdk_event).truncated_to_integer
+									else
+											-- If the event we received is not from the associating widget window then we query its correct x and y values.
+										i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget), $l_widget_x, $l_widget_y)
+										l_widget_x := l_screen_x - l_widget_x
+										l_widget_y := l_screen_y - l_widget_y
+									end
+									l_motion_tuple.put_integer (l_widget_x, 1)
+									l_motion_tuple.put_integer (l_widget_y, 2)
 									l_motion_tuple.put_double (0.5, 3)
 									l_motion_tuple.put_double (0.5, 4)
 									l_motion_tuple.put_double (0.5, 5)
-									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, 6)
-									l_motion_tuple.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer, 7)
+									l_motion_tuple.put_integer (l_screen_x, 6)
+									l_motion_tuple.put_integer (l_screen_y, 7)
 									l_pnd_imp.on_pointer_motion (l_motion_tuple)
 								end
 							end
 							l_widget_imp := Void
 							l_pnd_imp := Void
+								-- Reset display data.
+							use_stored_display_data := False
+							update_display_data
 						when GDK_BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_BUTTON_PRESS%N")
 							end
 							l_call_event := False
-							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							process_button_event (gdk_event)
 						when GDK_2BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_2BUTTON_PRESS%N")
 							end
 							l_call_event := False
-							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							process_button_event (gdk_event)
 						when GDK_3BUTTON_PRESS then
 							debug ("GDK_EVENT")
 								print ("GDK_3BUTTON_PRESS%N")
 							end
 							l_call_event := False
-							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							process_button_event (gdk_event)
 						when GDK_BUTTON_RELEASE then
 							debug ("GDK_EVENT")
 								print ("GDK_BUTTON_RELEASE%N")
 							end
 							l_call_event := False
-							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							process_button_event (gdk_event)
 						when GDK_SCROLL then
 							debug ("GDK_EVENT")
@@ -468,12 +503,16 @@ feature -- Basic operation
 							debug ("GDK_EVENT")
 								print ("GDK_KEY_PRESS%N")
 							end
-							l_propagate_event := True
+							l_call_event := False
+							process_key_event (gdk_event)
+--							l_propagate_event := True
 						when GDK_KEY_RELEASE then
 							debug ("GDK_EVENT")
 								print ("GDK_KEY_RELEASE%N")
 							end
-							l_propagate_event := True
+							l_call_event := False
+							process_key_event (gdk_event)
+--							l_propagate_event := True
 						when GDK_DELETE then
 							debug ("GDK_EVENT")
 								print ("GDK_DELETE%N")
@@ -711,12 +750,51 @@ feature -- Implementation
 	keyboard_modifier_mask: INTEGER is
 			-- Mask representing current keyboard modifiers state.
 		local
+			l_display_data: like retrieve_display_data
+		do
+			if use_stored_display_data_for_keys then
+					-- If we are inside a key event then we can directly query the key data.
+				l_display_data := stored_display_data
+			else
+				l_display_data := retrieve_display_data
+			end
+			Result := l_display_data.mask
+		end
+
+	retrieve_display_data: TUPLE [window: POINTER; x, y: INTEGER; mask: INTEGER] is
+			-- Retrieve mouse and keyboard data from the display.
+		do
+			if not use_stored_display_data then
+					-- Update values with those from the X Server.
+				update_display_data
+			end
+			Result := stored_display_data
+		end
+
+	update_display_data is
+			-- Update stored values with current values.
+		local
 			temp_mask, temp_x, temp_y: INTEGER
 			temp_ptr: POINTER
+			l_stored_display_data: like stored_display_data
 		do
 			temp_ptr := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
-			Result := temp_mask
+			l_stored_display_data := stored_display_data
+			l_stored_display_data.put_pointer (temp_ptr, 1)
+			l_stored_display_data.put_integer (temp_x, 2)
+			l_stored_display_data.put_integer (temp_y, 3)
+			l_stored_display_data.put_integer (temp_mask, 4)
 		end
+
+	use_stored_display_data: BOOLEAN
+		-- Should prestored display data values be used when querying for display data.
+
+	use_stored_display_data_for_keys: BOOLEAN
+		-- Should prestored display data values be used when querying for key display data.
+
+	stored_display_data: like retrieve_display_data
+		-- Store for the previous call to 'retrieve_display_data'
+		-- This is needed to avoid unnecessary roundtrips.
 
 	enable_debugger is
 			-- Enable the Eiffel debugger.
@@ -752,16 +830,24 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
-			gdkwin, gtkwid, l_null: POINTER
+			gdkwin, l_null: POINTER
 		do
 			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
 			if gdkwin /= l_null then
-				{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
-				if gtkwid /= l_null then
-					Result ?= eif_object_from_gtk_object (gtkwid)
-					if Result /= Void and then Result.interface.is_destroyed then
-						Result := Void
-					end
+				Result := gtk_widget_from_gdk_window (gdkwin)
+			end
+		end
+
+	gtk_widget_from_gdk_window (a_gdk_window: POINTER): EV_GTK_WIDGET_IMP is
+			-- Gtk Widget implementation from GdkWindow.
+		local
+			gtkwid, l_null: POINTER
+		do
+			{EV_GTK_EXTERNALS}.gdk_window_get_user_data (a_gdk_window, $gtkwid)
+			if gtkwid /= l_null then
+				Result ?= eif_object_from_gtk_object (gtkwid)
+				if Result /= Void and then Result.interface.is_destroyed then
+					Result := Void
 				end
 			end
 		end

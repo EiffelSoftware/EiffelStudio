@@ -226,7 +226,13 @@ feature -- Duplication
 			if implementation = Void then
 				default_create
 			end
-			implementation.copy_pixmap (other)
+			if not other.is_destroyed then
+				implementation.copy_pixmap (other)
+			else
+					-- `other' has been destroyed so we satisfy post-conditions
+				implementation.set_size (other.implementation.width, other.implementation.height)
+				implementation.destroy
+			end
 		end
 
 feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation

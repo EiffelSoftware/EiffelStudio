@@ -444,14 +444,6 @@ feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
 	internal_minimum_height: INTEGER
 			-- Minimum height for the widget.
 
-feature {EV_WINDOW_IMP} -- Implementation
-
-	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
-			-- Used for drawing area to keep focus on all keys.
-		do
-			Result := False
-		end
-
 feature {EV_CONTAINER_IMP} -- Implementation
 
 	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is

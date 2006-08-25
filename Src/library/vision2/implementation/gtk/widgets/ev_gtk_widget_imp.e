@@ -25,17 +25,18 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	Gdk_events_mask: INTEGER is
 			-- Mask of all the gdk events the gdkwindow shall receive.
 		once
-			Result := {EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_KEY_RELEASE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
+			Result :=
+				{EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_KEY_RELEASE_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
+--				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 		end
 
 feature {NONE} -- Implementation
@@ -210,6 +211,10 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			l_window, l_widget: POINTER
 		do
+				-- If any previous widget has the capture then disable it.
+			if app_implementation.captured_widget /= Void then
+				app_implementation.captured_widget.disable_capture
+			end
 			if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				l_window := c_object
 --					l_widget := default_pointer -- This will unset any previous focused widget.

@@ -35,6 +35,9 @@ feature -- Event handling
 
 	idle_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when the application is otherwise idle.
+			-- Use of `idle_actions' is not thread-safe.  For thread-safe idle
+			-- actions handling use 'add_idle_action', `remove_idle_action'
+			-- or `do_once_on_idle' in conjunction with EV_THREAD_APPLICATION.
 		do
 			Result := implementation.idle_actions
 		ensure

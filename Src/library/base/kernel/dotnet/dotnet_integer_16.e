@@ -4,11 +4,14 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	external_name: "System.Int16"
+	assembly: "mscorlib"
 
-frozen external class
+frozen expanded external class
 	DOTNET_INTEGER_16
 
 create {NONE}
+	default_create
 
 feature -- Statics
 
@@ -99,7 +102,7 @@ feature -- Statics
 	frozen from_string_with_style_and_format (s: SYSTEM_STRING; style: NUMBER_STYLES; provider: IFORMAT_PROVIDER): INTEGER_16 is
 			-- (Static)
 			-- Converts the string representation of a number in a specified
-			-- style and culture-specific format to its System.Int16 equivalent.  
+			-- style and culture-specific format to its System.Int16 equivalent.
 			--
 			-- Parameters:
 			--   s: A string containinga number to convert. The string is
@@ -113,14 +116,14 @@ feature -- Statics
 			--     system culture is used.
 			--
 			-- Returns:
-			--   The System.Int16 value equivalent to the number contained in s.  
+			--   The System.Int16 value equivalent to the number contained in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.
 			--   System.FormatException: s is not of the correct format.
 			--   System.OverflowException: s represents a number less than
 			--     System.Int16.MinValue or greater than System.Int16.MaxValue.
-			--   System.ArgumentException: style is not a valid bitwise combination 
+			--   System.ArgumentException: style is not a valid bitwise combination
 			--     of System.Globalization.NumberStyles values.
 		external
 			"IL static signature (System.String, System.Globalization.NumberStyles, System.IFormatProvider): System.Int16 use System.Int16"

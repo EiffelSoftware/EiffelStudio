@@ -4,18 +4,21 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	external_name: "System.Boolean"
+	assembly: "mscorlib"
 
-frozen external class
+frozen expanded external class
 	DOTNET_BOOLEAN
 
 create {NONE}
+	default_create
 
 feature -- Statics
 
 	frozen false_string: SYSTEM_STRING is
 			-- (Static)
 			-- Represents the Boolean value false as a string.
-			-- This field is read-only.  
+			-- This field is read-only.
 		external
 			"IL static_field signature :System.String use System.Boolean"
 		alias
@@ -25,7 +28,7 @@ feature -- Statics
 	frozen true_string: SYSTEM_STRING is
 			-- (Static)
 			-- Represents the Boolean value true as a string.
-			-- This field is read-only.  
+			-- This field is read-only.
 		external
 			"IL static_field signature :System.String use System.Boolean"
 		alias

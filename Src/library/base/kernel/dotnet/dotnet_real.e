@@ -4,11 +4,14 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
+	external_name: "System.Single"
+	assembly: "mscorlib"
 
-frozen external class
+frozen expanded external class
 	DOTNET_REAL
 
 create {NONE}
+	default_create
 
 feature -- Statics
 
@@ -66,7 +69,7 @@ feature -- Statics
 	frozen is_nan (f: REAL): BOOLEAN is
 			-- (Static)
 			-- Returns a value indicating whether the specified number
-			-- evaluates to not a number (System.Single.NaN).  
+			-- evaluates to not a number (System.Single.NaN).
 			--
 			-- Parameters:
 			--   f: A single-precision floating point number.
@@ -108,7 +111,7 @@ feature -- Conversion
 	frozen from_string_with_style (s: SYSTEM_STRING; style: NUMBER_STYLES): REAL is
 			-- (Static)
 			-- Converts the string representation of a number in a specified style to
-			-- its single-precision floating point number equivalent.  
+			-- its single-precision floating point number equivalent.
 			--
 			-- Parameters:
 			--   s: A string representing a number to convert.
@@ -161,7 +164,7 @@ feature -- Conversion
 			-- (Static)
 			-- Converts the string representation of a number in a specified style
 			-- and culture-specific format to its single-precision floating point
-			-- number equivalent.  
+			-- number equivalent.
 			--
 			-- Parameters:
 			--   s: A string representing a number to convert.
@@ -169,11 +172,11 @@ feature -- Conversion
 			--     System.Globalization.NumberStylesconstants that indicate the
 			--     permitted format of s.
 			--   provider: An System.IFormatProvider that supplies culture-specific
-			--     formatting information about s. 
+			--     formatting information about s.
 			--
 			-- Returns:
 			--   A single-precision floating point number equivalent to the numeric
-			--   value or symbol specified in s.  
+			--   value or symbol specified in s.
 			--
 			-- Exceptions:
 			--   System.ArgumentNullException: s is null.

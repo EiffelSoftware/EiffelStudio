@@ -3993,6 +3993,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			create drawer.make_with_grid (Current)
 			create drawable
 			drawable.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
+			drawable.enable_tabable_from
+			drawable.enable_tabable_to
 			create vertical_scroll_bar
 			vertical_scroll_bar.hide
 			vertical_scroll_bar.set_leap (default_scroll_bar_leap)

@@ -5,14 +5,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class VUAR 
+class VUAR
 
 inherit
 	FEATURE_ERROR
 		redefine
 			is_defined
 		end
-	
+
 feature -- Properties
 
 	called_feature: E_FEATURE
@@ -50,7 +50,7 @@ feature -- Setting
 			valid_f: f /= Void
 			valid_class_id: class_id > 0
 		do
-			called_feature := f.api_feature (class_id)
+			called_feature := f.enclosing_feature.api_feature (class_id)
 		ensure
 			called_feature_not_void: called_feature /= Void
 		end

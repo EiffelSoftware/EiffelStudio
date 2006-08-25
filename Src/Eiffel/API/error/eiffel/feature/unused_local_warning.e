@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			a_feat_not_voiid: a_feat /= Void
 		do
 			associated_class := a_class
-			associated_feature := a_feat.api_feature (a_feat.written_in)
+			associated_feature := a_feat.enclosing_feature.api_feature (a_feat.written_in)
 			create unused_locals.make
 		ensure
 			associated_class_set: associated_class = a_class

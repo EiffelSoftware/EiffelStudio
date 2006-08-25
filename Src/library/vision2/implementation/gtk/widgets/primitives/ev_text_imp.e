@@ -26,7 +26,6 @@ inherit
 			create_change_actions,
 			dispose,
 			text_length,
-			default_key_processing_blocked,
 			visual_widget
 		end
 
@@ -483,12 +482,6 @@ feature -- Basic operation
 		end
 
 feature {NONE} -- Implementation
-
-	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
-			--	Does `a_key' require gtk default key processing to be blocked?
-		do
-			-- Do nothing
-		end
 
 	visual_widget: POINTER is
 			-- Pointer to the GtkWidget representing `Current'

@@ -171,16 +171,8 @@ feature -- "Save command" related features
 
 	save_text is
 			-- Launch the save command.
-		local
-			cst: CLASSC_STONE
 		do
 			save_cmd.execute
-			cst ?= stone
-			if cst /= Void then
-				Eiffel_project.Workbench.change_class (cst.class_i)
-				cst.class_i.set_date
-				Eiffel_project.Workbench.set_changed
-			end
 		end
 
 	perform_check_before_save is

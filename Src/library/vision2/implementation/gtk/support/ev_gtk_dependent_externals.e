@@ -10,6 +10,36 @@ class
 
 feature -- Externals
 
+	frozen gdk_region_intersect (a_region1, a_region2: POINTER) is
+		external
+			"C signature (GdkRegion*, GdkRegion*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_region_union (a_region1, a_region2: POINTER) is
+		external
+			"C signature (GdkRegion*, GdkRegion*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_region_subtract (a_region1, a_region2: POINTER) is
+		external
+			"C signature (GdkRegion*, GdkRegion*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_region_xor (a_region1, a_region2: POINTER) is
+		external
+			"C signature (GdkRegion*, GdkRegion*) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_region_copy (a_region: POINTER): POINTER
+		external
+			"C signature (GdkRegion*): GdkRegion* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_region_rectangle (a_rect: POINTER): POINTER
+		external
+			"C signature (GdkRectangle*): GdkRegion* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_window_set_accept_focus (a_window: POINTER; a_focus: BOOLEAN) is
 		external
 			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"

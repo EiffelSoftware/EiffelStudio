@@ -225,6 +225,9 @@ feature -- Status report
 			if not classes.after then
 				Result := True
 				found_group := classes.item_for_iteration.group
+				if not groups.has (found_group) then
+					found_group := found_group.target.lowest_used_in_library
+				end
 			else
 				found_group := Void
 			end

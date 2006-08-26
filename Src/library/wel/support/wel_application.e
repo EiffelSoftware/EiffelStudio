@@ -188,7 +188,9 @@ feature {NONE} -- Implementation
 									msg.dispatch
 								end
 							else
-								msg.translate_accelerator (main_w, accel)
+								if main_w.exists then
+									msg.translate_accelerator (main_w, accel)
+								end
 								if not msg.last_boolean_result then
 									msg.translate
 									msg.dispatch

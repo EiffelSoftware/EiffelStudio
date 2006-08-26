@@ -185,7 +185,7 @@ feature -- Execution
 
 				create l_output.make (100)
 				if is_c_compilation_running then
-					l_output.append (once "a C complication ")
+					l_output.append (once "a C Compilation ")
 				end
 				l_output.append (l_and_str)
 				if is_external_command_running then
@@ -209,7 +209,7 @@ feature -- Execution
 				create l_discard_msg.make (100)
 				l_discard_msg.append (once "Do not ask again, and always ")
 				if is_c_compilation_running then
-					l_discard_msg.append (once "cancel C compilation")
+					l_discard_msg.append (once "cancel C Compilation")
 				end
 				l_discard_msg.append (l_comma_str)
 

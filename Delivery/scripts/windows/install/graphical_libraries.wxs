@@ -472,6 +472,20 @@
 								<File Id="main_win.e287" Name="main_win.e" />
 							</Component>
 						</Directory>
+						<Directory Id="unicode" Name="unicode">
+							<Component Id="unicode" Guid="DB878037-2416-4b53-AA81-2359AA010ECB">
+								<File Id="application_ids_e" Name="APPLIC~1.E" LongName="application_ids.e" />
+								<File Id="display_text_e" Name="DISPLA~1.E" LongName="display_text.e" />
+								<File Id="main_win_e" Name="main_win.e" />
+								<File Id="resource_h" Name="resource.h" />
+								<File Id="unicode_rc" Name="unicode.rc" />
+								<File Id="unicode_demo_e" Name="UNICOD~1.E" LongName="unicode_demo.e" />
+								<File Id="unicode_demo_ecf" Name="UNICOD~2.ECF" LongName="unicode_demo.ecf" />
+								<File Id="wel_ime_composition_string_e" Name="WEL_IM~1.E" LongName="wel_ime_composition_string.e" />
+								<File Id="wel_input_method_editor_e" Name="WEL_IN~1.E" LongName="wel_input_method_editor.e" />
+								<File Id="wel_input_method_manager_e" Name="WEL_IN~2.E" LongName="wel_input_method_manager.e" />
+							</Component>
+						</Directory>
 					</Directory>
 					<Directory Id="vision251" Name="vision2">
 						<Directory Id="edraw" Name="edraw">

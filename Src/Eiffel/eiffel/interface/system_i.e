@@ -2745,7 +2745,7 @@ end
 			degree_message: STRING
 		do
 			create t.make (Current, byte_context)
-			degree_message := "Generation of auxiliary files"
+			degree_message := "Generating Auxiliary Files"
 			deg_output := Degree_output
 
 			deg_output.display_degree_output (degree_message, 10, 10)
@@ -3510,7 +3510,7 @@ feature -- Generation
 			degree_message: STRING
 		do
 			create t.make (Current, byte_context)
-			degree_message := "Generation of auxiliary files"
+			degree_message := "Generating Auxiliary Files"
 			deg_output := Degree_output
 
 				-- Address table

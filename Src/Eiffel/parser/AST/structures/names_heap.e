@@ -330,6 +330,7 @@ feature {NONE} -- Implementation: access
 			put ("callable") check found_item = callable_name_id end
 			put ("valid_operands") check found_item = valid_operands_name_id end
 			put ("set_rout_disp_final") check found_item = set_rout_disp_final_name_id end
+			put ("to_pointer") check found_item = to_pointer_name_id end
 		end
 
 invariant

@@ -132,6 +132,18 @@ feature -- Element change
 			clip_area := Void
 		end
 
+	set_clip_region (a_region: EV_REGION)
+			-- Assign a_region to the area which will be refreshed.
+		do
+			-- To be implemented
+		end
+
+	remove_clipping
+			-- Do not apply any clipping.
+		do
+			-- To be implemented
+		end
+
 	set_tile (a_pixmap: EV_PIXMAP) is
 			-- Set tile used to fill figures.
 			-- Set to Void to use `background_color' to fill.

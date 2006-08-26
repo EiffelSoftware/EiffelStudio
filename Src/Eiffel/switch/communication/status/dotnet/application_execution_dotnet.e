@@ -65,21 +65,23 @@ feature {APPLICATION_EXECUTION} -- Initialization
 		do
 			Precursor
 			Eifnet_debugger.init
-			if preferences.debugger_data.keep_stepping_info_dotnet_feature then
-				eifnet_debugger.enable_keep_stepping_into_dotnet_feature
-			else
-				eifnet_debugger.disable_keep_stepping_into_dotnet_feature
+			if preferences.debugger_data /= Void then
+				if preferences.debugger_data.keep_stepping_info_dotnet_feature then
+					eifnet_debugger.enable_keep_stepping_into_dotnet_feature
+				else
+					eifnet_debugger.disable_keep_stepping_into_dotnet_feature
+				end
+				preferences.debugger_data.keep_stepping_info_dotnet_feature_preference.change_actions.extend (
+					agent (p: BOOLEAN_PREFERENCE; ed: EIFNET_DEBUGGER)
+						do
+							if p.value then
+								ed.enable_keep_stepping_into_dotnet_feature
+							else
+								ed.disable_keep_stepping_into_dotnet_feature
+							end
+						end (?, eifnet_debugger)
+					)
 			end
-			preferences.debugger_data.keep_stepping_info_dotnet_feature_preference.change_actions.extend (
-				agent (p: BOOLEAN_PREFERENCE; ed: EIFNET_DEBUGGER)
-					do
-						if p.value then
-							ed.enable_keep_stepping_into_dotnet_feature
-						else
-							ed.disable_keep_stepping_into_dotnet_feature
-						end
-					end (?, eifnet_debugger)
-				)
 
 			agent_update_notify_on_after_stopped :=	agent real_update_notify_on_after_stopped
 		end

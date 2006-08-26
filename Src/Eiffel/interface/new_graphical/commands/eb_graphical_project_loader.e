@@ -481,6 +481,7 @@ feature {NONE} -- User interaction
 			-- If not Void, `a_target' is the one selected by user.
 		local
 			l_dialog: EV_DIALOG
+			l_error_dialog: EV_WARNING_DIALOG
 			l_list: EV_LIST
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
@@ -493,6 +494,14 @@ feature {NONE} -- User interaction
 				a_targets.start
 				if a_target = Void or else a_target.is_equal (a_targets.item_for_iteration) then
 					target_name := a_targets.item_for_iteration.twin
+					l_need_choice := False
+				end
+			end
+			if l_need_choice then
+				if a_targets.is_empty then
+					create l_error_dialog.make_with_text ("This project contains no compilable target.%NPlease open a different project.")
+					l_error_dialog.show_modal_to_window (parent_window)
+					has_error := True
 					l_need_choice := False
 				end
 			end

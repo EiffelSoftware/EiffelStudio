@@ -791,7 +791,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	}
 #else
 	if (egc_routdisp_fl == 0) {
-		egc_routdisp_fl = egc_routdisp;
+		egc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) egc_routdisp;
 	}
 #endif
 }

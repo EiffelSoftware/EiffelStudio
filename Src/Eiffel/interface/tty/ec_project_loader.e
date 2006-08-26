@@ -244,6 +244,14 @@ feature {NONE} -- User interaction
 				end
 			end
 			if l_need_choice then
+				if a_targets.is_empty then
+					io.put_string ("This project contains no compilable target.")
+					io.put_new_line
+					set_has_error
+					l_need_choice := False
+				end
+			end
+			if l_need_choice then
 				if a_target = Void then
 					io.put_string ("This project has more than one target or : ")
 				else

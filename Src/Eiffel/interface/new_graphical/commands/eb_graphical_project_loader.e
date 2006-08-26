@@ -487,6 +487,7 @@ feature {NONE} -- User interaction
 			l_hbox: EV_HORIZONTAL_BOX
 			l_select_button, l_button: EV_BUTTON
 			l_item: EV_LIST_ITEM
+			l_label: EV_LABEL
 			l_need_choice: BOOLEAN
 		do
 			l_need_choice := True
@@ -506,7 +507,14 @@ feature {NONE} -- User interaction
 				end
 			end
 			if l_need_choice then
-				create l_dialog.make_with_title ("Select a target")
+				create l_dialog.make_with_title ("Target Selection")
+
+				if a_target = Void then
+					create l_label.make_with_text ("Choose one target among: ")
+				else
+					create l_label.make_with_text ("Target `" + a_target + "' does not exist or is not compilable.%NChoose one target among:")
+				end
+				l_label.align_text_left
 				create l_list
 				from
 					a_targets.start
@@ -525,6 +533,8 @@ feature {NONE} -- User interaction
 				create l_vbox
 				l_vbox.set_border_width (default_border_size)
 				l_vbox.set_padding (small_padding_size)
+
+				l_vbox.extend (l_label)
 				l_vbox.extend (l_list)
 
 				create l_hbox

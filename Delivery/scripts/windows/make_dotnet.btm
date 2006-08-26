@@ -6,7 +6,11 @@ mkdir %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling .NET runtime
 cd %EIFFEL_SRC\Eiffel\eiffel\com_il_generation\core\run-time
-call nmake
+iff not defined WIN64 then
+call nmake dotnet_10
+else
+call nmake dotnet_20
+endiff
 copy EiffelSoftware.Runtime.dll %INSTALL_DIR\dotnet_binaries
 
 remtrace Compiling Eiffel Assembly Cache

@@ -17,6 +17,7 @@ inherit
 			display_new_line,
 			display_degree,
 			display_degree_output,
+			put_dead_code_removal_message,
 			put_start_degree,
 			put_end_degree,
 			finish_degree_output,
@@ -74,11 +75,11 @@ feature {NONE} -- Implementation
 		do
 			Precursor (deg_nbr, to_go, a_name)
 			if total_number > 1 then
-				window_manager.display_message_and_percentage (degree_short_description (current_degree)  +
+				window_manager.display_message_and_percentage (degree_description (current_degree)  +
 					" (" + (total_number - to_go + 1).out + "/" + total_number.out + "): " + a_name,
 					percentage_calculation (to_go))
 			else
-				window_manager.display_message_and_percentage (degree_short_description (current_degree) +
+				window_manager.display_message_and_percentage (degree_description (current_degree) +
 					": " + a_name, percentage_calculation (to_go))
 			end
 			flush_output
@@ -89,6 +90,18 @@ feature {NONE} -- Implementation
 		do
 			Precursor (deg_nbr, to_go, total)
 			window_manager.display_message_and_percentage (deg_nbr, percentage_calculation (to_go))
+		end
+
+	put_dead_code_removal_message (a_processed, to_go: INTEGER) is
+			-- Put message progress the start of dead code removal.
+		local
+			l_processed: INTEGER
+		do
+			Precursor (a_processed, to_go)
+			l_processed := processed
+			total_number := l_processed + to_go
+			window_manager.display_message_and_percentage (
+				"Removing Dead Features (" + l_processed.out + "/" + total_number.out + ")",  percentage_calculation (to_go))
 		end
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is

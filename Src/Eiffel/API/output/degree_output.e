@@ -152,10 +152,8 @@ feature -- Start output features
 	put_melting_changes_message  is
 			-- Put message indicating that melting changes is occurring.
 		do
-			if not is_output_quiet then
-				display_message (melting_changes_message);
-				display_new_line
-			end
+			display_message (melting_changes_message);
+			display_new_line
 		end;
 
 	put_freezing_message is
@@ -186,7 +184,7 @@ feature -- Start output features
 	put_initializing_documentation is
 			-- Start documentation generation.
 		do
-			display_message ("Initializing documentation");
+			display_message ("Initializing Documentation");
 			display_new_line;
 		end
 
@@ -217,7 +215,7 @@ feature -- Start output features
 	put_system_compiled is
 			-- Put message indicating that the system has been compiled.
 		do
-			display_message (once "System recompiled.")
+			display_message (once "System Recompiled.")
 			display_new_line
 		end
 
@@ -225,7 +223,7 @@ feature -- Start output features
 		local
 			l_msg: STRING
 		do
-			l_msg := once "Eiffel compilation manager%N%
+			l_msg := once "Eiffel Compilation Manager%N%
 				%  (version " + displayed_version_number + ")%N"
 			display_message (l_msg)
 		end
@@ -360,16 +358,18 @@ feature -- Output on per class
 			display_degree (degree_message (-3), nbr_to_go, a_class.name)
 		end
 
-	put_dead_code_removal_message (total_nbr, nbr_to_go: INTEGER) is
+	put_dead_code_removal_message (a_processed, nbr_to_go: INTEGER) is
 			-- Put message progress the start of dead code removal.
 		local
 			l_msg: STRING
 		do
-			processed := processed + total_nbr
-			l_msg := once "Features done: " + processed.out + once "%TFeatures to go: " + nbr_to_go.out
-			display_message (l_msg)
-			display_new_line
-			flush_output
+			processed := processed + a_processed
+			if not is_output_quiet then
+				l_msg := once "Features done: " + processed.out + once "%TFeatures to go: " + nbr_to_go.out
+				display_message (l_msg)
+				display_new_line
+				flush_output
+			end
 		end
 
 	put_case_cluster_message (a_name: STRING) is
@@ -555,8 +555,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	Melting_changes_message: STRING is "Melting Changes";
-	Freezing_system_message: STRING is "Freezing System";
+	Melting_changes_message: STRING is "Melting System Changes";
+	Freezing_system_message: STRING is "Freezing System Changes";
 	Removing_dead_code_message: STRING is "Removing Dead Code";
 	Case_class_message: STRING is "Analyzing Class ";
 	Case_cluster_message: STRING is "Analyzing Cluster ";
@@ -565,7 +565,6 @@ feature {NONE} -- Constants
 	Degree_output_string: STRING is "Degree ";
 	Cluster_output_string: STRING is " group ";
 	Class_output_string: STRING is " class ";
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1420,6 +1420,7 @@
 									<File Id="ev_pixel_buffer_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer.e" />
 									<File Id="ev_pixel_buffer_pixel.e" Name="EV_PIX~2.E" LongName="ev_pixel_buffer_pixel.e" />
 									<File Id="ev_pixel_iterator.e" Name="EV_PIX~3.E" LongName="ev_pixel_iterator.e" />
+									<File Id="ev_region_e" Name="EV_REG~1.E" LongName="ev_region.e" />
 								</Component>
 							</Directory>
 							<Directory Id="items" Name="items">
@@ -1822,6 +1823,7 @@
 										<File Id="ev_theme_window_e" Name="EV_THE~2.E" LongName="ev_theme_window.e" />
 										<File Id="ev_xp_theme_drawer_imp_e" Name="EV_XP_~1.E" LongName="ev_xp_theme_drawer_imp.e" />
 										<File Id="ev_pixel_buffer_imp_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer_imp.e" />
+										<File Id="ev_region_imp_e" Name="EV_REG~1.E" LongName="ev_region_imp.e" />
 									</Component>
 								</Directory>
 								<Directory Id="properties" Name="PROPER~1" LongName="properties">
@@ -2044,6 +2046,7 @@
 										<File Id="ev_rich_text_constants_i.e" Name="EV_RIC~9.E" LongName="ev_rich_text_constants_i.e" />
 										<File Id="rtf_format_i.e" Name="RTF_FO~1.E" LongName="rtf_format_i.e" />
 										<File Id="ev_pixel_buffer_i_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer_i.e" />
+										<File Id="ev_region_i_e" Name="EV_REG~1.E" LongName="ev_region_i.e" />
 									</Component>
 								</Directory>
 								<Directory Id="items30" Name="items">

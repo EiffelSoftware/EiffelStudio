@@ -266,7 +266,7 @@ static int curr_modify = NO_CURRMODIF;
 		break;
 	case RESUME:					/* Resume execution */
 		dbg_clear_exception_traces(); /* clear recorded exception traces */
-		if (!gc_stopped) gc_run();
+		if (!gc_stopped) eif_gc_run();
 		set_breakpoint_count (arg_2);
 		critical_stack_depth = (uint32) arg_3;
 		dstatus(arg_1);				/* Debugger status (DX_STEP, DX_NEXT,..) */
@@ -430,8 +430,8 @@ rt_public void stop_rqst(EIF_PSTREAM sp)
 #define st_excode	rq_stop.st_code
 #define st_wh		rq_stop.st_where
 
-	gc_stopped = (char) !gc_ison();
-	gc_stop();
+	gc_stopped = (char) !eif_gc_ison();
+	eif_gc_stop();
 
 	Request_Clean (rqst);
 	rqst.rq_type = STOPPED;				/* Stop request */

@@ -85,7 +85,7 @@ rt_shared	EIF_LW_MUTEX_TYPE *eif_memory_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
 
 
-rt_public void mem_free(EIF_REFERENCE object)
+rt_public void eif_mem_free(EIF_REFERENCE object)
 {
 	/* Unconditionally free object, if not in generational scavenge zone, in
 	 * which case the object will be either collected if it is really dead
@@ -105,10 +105,10 @@ rt_public void mem_free(EIF_REFERENCE object)
 		/* Manu: 08/21/2003: One could think that we should update `eiffel_usage'
 		 * here as it used to be done in the past. But here is why I decided not
 		 * to keep this. First `eiffel_usage' is just an information to help
-		 * find out when triggering a GC cycle, second people playing with `mem_free'
+		 * find out when triggering a GC cycle, second people playing with `eif_mem_free'
 		 * are simply crazy, I still don't understand why we keep this C features.
 		 * Third who cares if the `eiffel_usage' is actually higher, it will force
-		 * more collection, but you pay the price of using `mem_free'. Finally
+		 * more collection, but you pay the price of using `eif_mem_free'. Finally
 		 * updating `eiffel_usage' without using its mutex is not safe.
 		 */
 
@@ -125,7 +125,7 @@ rt_public void mem_free(EIF_REFERENCE object)
  * Compiled for speed or for memory?
  */
 
-rt_public void mem_speed(void)
+rt_public void eif_mem_speed(void)
 {
 	/* Dynamically set the allocation flag 'cc_for_speed' to true, to indicate
 	 * to that the user cares more about raw speed than memory consumption.
@@ -146,7 +146,7 @@ rt_public void mem_speed(void)
 #endif
 }
 
-rt_public void mem_slow(void)
+rt_public void eif_mem_slow(void)
 {
 	/* Dynamically set the allocation flag 'cc_for_speed; to false, which
 	 * indicates that the user cares more about low memory consumption than
@@ -162,9 +162,9 @@ rt_public void mem_slow(void)
 #endif
 }
 
-rt_public void mem_tiny(void)
+rt_public void eif_mem_tiny(void)
 {
-	/* Basically the same as mem_slow(), but scavenging zone are freed if they
+	/* Basically the same as eif_mem_slow(), but scavenging zone are freed if they
 	 * have been allocated.
 	 */
 
@@ -172,7 +172,7 @@ rt_public void mem_tiny(void)
 	if (gen_scavenge & GS_ON)	/* Generation scavenging turned on */
 		sc_stop();				/* Free 'to' and explode 'from' space */
 
-	mem_slow();					/* And force cc_for_speed to zero */
+	eif_mem_slow();					/* And force cc_for_speed to zero */
 
 	ENSURE("Scavenging disabled", gen_scavenge == GS_OFF);
 #endif
@@ -186,7 +186,7 @@ rt_public void mem_tiny(void)
 rt_private EIF_INTEGER m_largest = 0;
 #endif
 
-rt_public EIF_INTEGER mem_largest(void)
+rt_public EIF_INTEGER eif_mem_largest(void)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
@@ -196,7 +196,7 @@ rt_public EIF_INTEGER mem_largest(void)
 #endif
 }
 
-rt_public void mem_coalesc(void)
+rt_public void eif_mem_coalesc(void)
 {
 	/* Run a full coalescing on all the chunks managed by the run-time, both
 	 * C and Eiffel ones. This certainly can be a big help in reducing the
@@ -222,7 +222,7 @@ rt_public void mem_coalesc(void)
  * collections in the acollect() routine.
  */
 
-rt_public EIF_INTEGER mem_tget(void)
+rt_public EIF_INTEGER eif_mem_tget(void)
 {
 #ifdef ISE_GC
 	return th_alloc;			/* Current allocation threshold */
@@ -231,7 +231,7 @@ rt_public EIF_INTEGER mem_tget(void)
 #endif
 }
 
-rt_public void mem_tset(long int value)
+rt_public void eif_mem_tset(long int value)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
@@ -241,7 +241,7 @@ rt_public void mem_tset(long int value)
 #endif
 }
 
-rt_public long mem_pget(void)
+rt_public long eif_mem_pget(void)
 {
 #ifdef ISE_GC
 	return plsc_per;			/* Current full collection period */
@@ -250,7 +250,7 @@ rt_public long mem_pget(void)
 #endif
 }
 
-rt_public void mem_pset(long int value)
+rt_public void eif_mem_pset(long int value)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
@@ -263,7 +263,7 @@ rt_public void mem_pset(long int value)
 /*
  * Memory usage.
  */
-rt_public void mem_stat(EIF_POINTER item, EIF_INTEGER type)
+rt_public void eif_mem_stat(EIF_POINTER item, EIF_INTEGER type)
 {
 	/* Initialize the mem statistics `item' buffer. By copying the whole
 	 * structure atomically and then fetching the fields on the copy, we ensure
@@ -282,7 +282,7 @@ rt_public void mem_stat(EIF_POINTER item, EIF_INTEGER type)
  * GC statistics.
  */
 
-rt_public void gc_mon(char flag)
+rt_public void eif_gc_mon(char flag)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT
@@ -292,7 +292,7 @@ rt_public void gc_mon(char flag)
 #endif
 }
 
-rt_public void gc_stat(EIF_POINTER item, EIF_INTEGER type)
+rt_public void eif_gc_stat(EIF_POINTER item, EIF_INTEGER type)
 {
 	/* Initialize the GC statistics `item' buffer. By copying the whole structure
 	 * atomically and then fetching the fields on the copy, we ensure
@@ -320,7 +320,7 @@ rt_public void gc_stat(EIF_POINTER item, EIF_INTEGER type)
  * Is garbage collection enabled?
  */
 
-rt_public char gc_ison(void)
+rt_public char eif_gc_ison(void)
 {
 #ifdef ISE_GC
 	RT_GET_CONTEXT

@@ -650,8 +650,8 @@ rt_shared int scollect(int (*gc_func) (void), int i);				/* Collect with statist
 #endif /* ISE_GC */
 
 /* Stopping/restarting the GC */
-rt_public void gc_stop(void);				/* Stop the garbage collector */
-rt_public void gc_run(void);				/* Restart the garbage collector */
+rt_public void eif_gc_stop(void);				/* Stop the garbage collector */
+rt_public void eif_gc_run(void);				/* Restart the garbage collector */
 
 rt_public void reclaim(void);				/* Reclaim all the objects */
 #ifdef ISE_GC
@@ -1132,7 +1132,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
  * Garbage collector stop/run
  */
 
-rt_public void gc_stop(void)
+rt_public void eif_gc_stop(void)
 {
 	/* Stop the GC -- this should be used in case of emergency only, i.e.
 	 * in an exception handler or in a time-critical routine.
@@ -1150,13 +1150,13 @@ rt_public void gc_stop(void)
 #endif
 }
 
-rt_public void gc_run(void)
+rt_public void eif_gc_run(void)
 {
 	/* Restart the GC -- the garbage collector should always run excepted in
 	 * some critical operations, which should be rare. Anyway, after having
 	 * stopped it, here is the way to wake it up. Note that no collection
 	 * cycle is raised.
-	 * As for gc_stop(), the request is ignored while in the exception handler.
+	 * As for eif_gc_stop(), the request is ignored while in the exception handler.
 	 * The garbage collector is turned off in that case to avoid the dangling
 	 * reference problem--RAM.
 	 */

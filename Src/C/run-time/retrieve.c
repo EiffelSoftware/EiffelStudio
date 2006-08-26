@@ -777,7 +777,7 @@ rt_private void correct_object_mismatch (
 		EIF_REFERENCE object, EIF_REFERENCE values, type_table *conversions)
 {
 	EIF_GET_CONTEXT
-	volatile EIF_BOOLEAN collecting = gc_ison ();
+	volatile EIF_BOOLEAN collecting = eif_gc_ison ();
 	volatile EIF_BOOLEAN asserting = c_check_assert (EIF_FALSE);
 	jmp_buf exenv;
 
@@ -791,7 +791,7 @@ rt_private void correct_object_mismatch (
 			/* Restore assertion and GC status, and wean protected variable. */
 		c_check_assert (asserting);
 		if (collecting) {
-			gc_run ();
+			eif_gc_run ();
 		}
 		RT_GC_WEAN_N(2);
 		ereturn ();
@@ -800,10 +800,10 @@ rt_private void correct_object_mismatch (
 #ifdef RECOVERABLE_DEBUG
 		printf ("  calling correct_mismatch on %s [%p]\n", EIF_OBJECT_TYPE (object), object);
 #endif
-		gc_stop ();
+		eif_gc_stop ();
 		egc_correct_mismatch (object);
 		if (collecting)
-			gc_run ();
+			eif_gc_run ();
 		c_check_assert (asserting);
 		RT_GC_WEAN_N(2);
 		expop(&eif_stack);

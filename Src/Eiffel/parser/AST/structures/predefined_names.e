@@ -174,6 +174,7 @@ feature -- Constants
 	callable_name_id: INTEGER is 161
 	valid_operands_name_id: INTEGER is 162
 	set_rout_disp_final_name_id: INTEGER is 163
+	to_pointer_name_id: INTEGER is 164
 
 feature -- Classification
 

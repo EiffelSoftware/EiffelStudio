@@ -365,9 +365,9 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 #ifdef ISE_GC
 	char g_status;		/* Save GC status */
 
-	g_status = gc_ison();
+	g_status = eif_gc_ison();
 	if (g_status)
-		gc_stop();						/* Stop GC if enabled*/
+		eif_gc_stop();						/* Stop GC if enabled*/
 #endif
 
 	eif_equality_table = s_create(100);				/* Create search table */	
@@ -375,7 +375,7 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 
 #ifdef ISE_GC
 	if (g_status)
-		gc_run();						/* Enabled GC it was previously enabled */
+		eif_gc_run();						/* Enabled GC it was previously enabled */
 #endif
 
 	eif_rt_xfree((EIF_REFERENCE) (eif_equality_table->s_keys));	/* Free search table keys */

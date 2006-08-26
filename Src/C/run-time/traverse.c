@@ -755,8 +755,8 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		/* Now `l_found' is properly populated so let's create
 		 * SPECIAL objects of type `result_type' that we will return.
 		 * We turn off GC since we do not want objects to be moved. */
-	gc_stopped = !gc_ison();
-	gc_stop();
+	gc_stopped = !eif_gc_ison();
+	eif_gc_stop();
 	Result = spmalloc (CHRPAD ((rt_uint_ptr) l_found.count * (rt_uint_ptr) sizeof (EIF_REFERENCE)) + LNGPAD(2), EIF_FALSE);
 	zone = HEADER (Result);
 	ref = Result + (zone->ov_size & B_SIZE) - LNGPAD (2);
@@ -785,7 +785,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	free (l_marked.area);
 
 		/* Let's turn back the GC on */
-	if (!gc_stopped) gc_run();
+	if (!gc_stopped) eif_gc_run();
 
 	return Result;
 } 
@@ -937,8 +937,8 @@ rt_shared uint32 nomark(char *obj)
 	uint32 result;
 	char gc_stopped;
 
-	gc_stopped = !gc_ison();
-	gc_stop();
+	gc_stopped = !eif_gc_ison();
+	eif_gc_stop();
 
 	tbl = (struct htable *) cmalloc(sizeof(struct htable));
 	if (tbl == (struct htable *) 0)
@@ -947,7 +947,7 @@ rt_shared uint32 nomark(char *obj)
 		enomem();
 	result = chknomark(obj,tbl,0);
 	ht_free(tbl);
-	if (!gc_stopped) gc_run();
+	if (!gc_stopped) eif_gc_run();
 	return result;
 }
 

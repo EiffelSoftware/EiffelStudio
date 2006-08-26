@@ -106,8 +106,8 @@ RT_LNK ONCE_INDEX process_once_index (BODY_INDEX code_id);	/* Calculate index of
 RT_LNK void globalonceset(EIF_REFERENCE);			/* Recording of once function result */
 #endif
 RT_LNK void register_oms (EIF_REFERENCE *address);	/* Register an address of a once manifest string */
-RT_LNK void gc_stop(void);				/* Stop the garbage collector */
-RT_LNK void gc_run(void);				/* Restart the garbage collector */
+RT_LNK void eif_gc_stop(void);				/* Stop the garbage collector */
+RT_LNK void eif_gc_run(void);				/* Restart the garbage collector */
 
 #ifdef __cplusplus
 }

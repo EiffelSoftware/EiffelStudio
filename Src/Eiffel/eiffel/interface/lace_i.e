@@ -54,6 +54,13 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Is there an error?
 
+	is_precompile_invalid: BOOLEAN
+			-- Is the specified precompile invalid (configuration file can not be read or no library target)?
+			-- It is NOT invalid if it is not compiled or compiled with a different version.
+
+	is_precompilation_needed: BOOLEAN
+			-- Does the target have a precompile that needs to be (re)precompiled?
+
 feature -- Access
 
 	file_name: STRING
@@ -105,6 +112,9 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	precompile: CONF_PRECOMPILE
+			-- Precompile needed for building our target.
+
 feature -- Update from retrieved object.
 
 	update_from_retrieved_project (other: like Current) is
@@ -119,6 +129,48 @@ feature -- Update from retrieved object.
 			successful := True
 		end
 feature -- Status setting
+
+	check_precompile is
+			-- Check precompile and update `precompile', `is_precompile_invalid' and `is_precompilation_needed'.
+		require
+			valid_conf_system: conf_system /= Void
+			valid_target: target /= Void
+		local
+			l_load: CONF_LOAD
+			l_factory: CONF_COMP_FACTORY
+			l_project_location: PROJECT_DIRECTORY
+			l_epr: PROJECT_EIFFEL_FILE
+			l_epr_file: FILE_NAME
+		do
+				-- check if the precompile is valid
+			precompile := target.precompile
+			if precompile /= Void then
+				create l_factory
+				create l_load.make (l_factory)
+				l_load.retrieve_configuration (precompile.location.evaluated_path)
+				if l_load.is_error then
+					is_precompile_invalid := True
+				else
+					is_precompile_invalid := l_load.last_system.library_target = Void
+				end
+			end
+
+				-- check if it needs to be (re)precompiled
+			if precompile /= Void and then not is_precompile_invalid then
+				if precompile.eifgens_location /= Void then
+					create l_project_location.make (precompile.eifgens_location.evaluated_path, l_load.last_system.library_target.name)
+				else
+					create l_project_location.make (precompile.location.build_path ("", ""), l_load.last_system.library_target.name)
+				end
+				create l_epr_file.make_from_string (l_project_location.target_path)
+				l_epr_file.set_file_name (project_file_name)
+				create l_epr.make (l_epr_file)
+				l_epr.check_version_number (0)
+				is_precompilation_needed := l_epr.has_error
+			end
+		ensure
+			compilation_need_implies_ok: is_precompilation_needed implies precompile /= Void and not is_precompile_invalid
+		end
 
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.
@@ -1111,12 +1163,10 @@ feature {NONE} -- Implementation
 			vd77: VD77
 			vd78: VD78
 			l_file_name: STRING
-			l_user_options: USER_OPTIONS
 			l_precomp_r: PRECOMP_R
 			l_target: CONF_TARGET
 			l_old_target: CONF_TARGET
 			l_factory: CONF_COMP_FACTORY
-			l_target_options: TARGET_USER_OPTIONS
 			l_project_location: PROJECT_DIRECTORY
 		do
 			create l_factory
@@ -1139,19 +1189,14 @@ feature {NONE} -- Implementation
 				create vd78
 				Error_handler.insert_error (vd78)
 				Error_handler.raise_error
-			else
-					-- Retrieve the EIFGENs location (if specified or next to where the config file is).
-				create l_user_options.make (l_system.uuid, l_system.library_target.name)
-				l_target_options := l_user_options.target
-				if l_pre.eifgens_location /= Void then
-					l_target_options.set_last_location (l_pre.eifgens_location.evaluated_path)
-				else
-					l_target_options.set_last_location (l_pre.location.build_path ("", ""))
-				end
 			end
 
-				-- retrieve precompile project
-			create l_project_location.make (l_target_options.last_location, l_target_options.name)
+				-- retrieve precompile project (use EIFGENs location if specified, else next to the config file)
+			if l_pre.eifgens_location /= Void then
+				create l_project_location.make (l_pre.eifgens_location.evaluated_path, l_system.library_target.name)
+			else
+				create l_project_location.make (l_pre.location.build_path ("", ""), l_system.library_target.name)
+			end
 			create l_precomp_r
 			l_precomp_r.retrieve_precompiled (l_project_location)
 
@@ -1162,7 +1207,6 @@ feature {NONE} -- Implementation
 			l_old_target.set_all_libraries (l_target.all_libraries)
 			l_old_target.set_all_assemblies (l_target.all_assemblies)
 			universe.set_new_target (l_old_target)
-
 
 			universe.new_target_to_target
 

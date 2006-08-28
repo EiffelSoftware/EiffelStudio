@@ -186,25 +186,29 @@ feature -- Update
 			error_value := ok_value
 			create l_reader.make (storage)
 			l_reader.set_for_reading
-			storage.open_read
-			check_storage
-			if not has_error then
-				read_project_header (l_reader)
-				if not has_error then
-					if not project_version_number.is_equal (version_number) then
-						error_value := incompatible_value;
-					elseif precomp_id /= 0 and then precomp_id /= precompilation_id then
-						error_value := invalid_precompilation_value;
-					end
-				end
+			if not storage.exists or else not storage.is_readable or else storage.is_directory then
+				error_value := corrupt_value;
 			else
-					-- To satisfy postcondition.
-				create project_version_number.make_empty
+				storage.open_read
+				check_storage
+				if not has_error then
+					read_project_header (l_reader)
+					if not has_error then
+						if not project_version_number.is_equal (version_number) then
+							error_value := incompatible_value;
+						elseif precomp_id /= 0 and then precomp_id /= precompilation_id then
+							error_value := invalid_precompilation_value;
+						end
+					end
+				else
+						-- To satisfy postcondition.
+					create project_version_number.make_empty
+				end
+				storage.close
 			end
-			storage.close
 		ensure
-			error_means_incompatible: has_error implies (is_incompatible or is_corrupted)
-			valid_version_number: project_version_number /= Void
+			error_means_incompatible: has_error implies (is_incompatible or is_corrupted or is_invalid_precompilation)
+			valid_version_number: not has_error implies project_version_number /= Void
 		end;
 
 feature {NONE} -- Implementation

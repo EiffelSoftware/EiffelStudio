@@ -404,6 +404,17 @@ feature {NONE} -- Error reporting
 			output_manager.display_system_info
 		end
 
+	report_precompilation_error is
+			-- Report that the precompilation of a precompile did not work.
+		local
+			l_ev: EV_ERROR_DIALOG
+		do
+			l_ev := new_error_dialog
+			l_ev.set_text (warning_messages.w_project_build_precompile_error)
+			l_ev.show_modal_to_window (parent_window)
+			set_has_error
+		end
+
 feature {NONE} -- User interaction
 
 	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is
@@ -577,6 +588,19 @@ feature {NONE} -- User interaction
 				project_location := l_create.project_location
 				is_compilation_requested := l_create.compile_project
 			end
+		end
+
+	ask_compile_precompile is
+			-- Should a needed precompile be automatically built?
+		local
+			l_dial: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+		do
+			create l_dial.make_initialized (2, preferences.dialog_data.confirm_build_precompile_string, warning_messages.w_project_build_precompile, interface_names.l_Discard_build_precompile_dialog, preferences.preferences)
+			l_dial.set_ok_action (agent
+				do
+					is_user_wants_precompile := True
+				end)
+			l_dial.show_modal_to_window (parent_window)
 		end
 
 feature {NONE} -- Actions

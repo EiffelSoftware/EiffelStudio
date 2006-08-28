@@ -49,6 +49,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_FLAGS
+		export
+			{NONE} all
+		end
+
 feature -- Loading
 
 	open_project_file (a_file_name: STRING; a_target_name: STRING; a_project_path: STRING; from_scratch: BOOLEAN) is
@@ -168,8 +173,23 @@ feature -- Loading
 
 								-- Try to retrieve project if already compiled.
 							retrieve_or_create_project (a_project_path)
-							if not has_error and then is_compilation_requested then
-								compile_project
+							if not has_error and then is_recompile_from_scrach then
+									-- check if precompiles are ok, otherwise (re)create them
+								lace.check_precompile
+								if lace.is_precompile_invalid then
+-- print error message									
+								elseif lace.is_precompilation_needed then
+									ask_compile_precompile
+									if is_user_wants_precompile then
+										compile_precompile (lace.precompile)
+										if is_precompilation_error then
+											report_precompilation_error
+										end
+									end
+								end
+								if is_compilation_requested then
+									compile_project
+								end
 							end
 						else
 							is_project_ok := True
@@ -355,6 +375,12 @@ feature -- Status report
 			create l_dir.make (a_dir_name)
 			Result := l_dir.exists and then l_dir.is_readable
 		end
+
+	is_user_wants_precompile: BOOLEAN
+			-- Does the user want to compile the needed precompile?
+
+	is_precompilation_error: BOOLEAN
+			-- Was there an error during the generation of a needed precompile?
 
 feature {NONE} -- Status report
 
@@ -557,6 +583,30 @@ feature {NONE} -- Settings
 		deferred
 		end
 
+	compile_precompile (a_precompile: CONF_PRECOMPILE) is
+			-- Generate the precompile `a_precompile'.
+		require
+			a_precompile_not_void: a_precompile /= Void
+		local
+			l_prc_factory: PROCESS_FACTORY
+			l_prc_launcher: PROCESS
+			l_cmd: STRING
+		do
+			create l_cmd.make (50)
+			l_cmd.append ("ec -config ")
+			l_cmd.append (a_precompile.location.evaluated_path)
+			l_cmd.append (" -precompile -clean -c_compile -batch")
+
+			create l_prc_factory
+			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, Void)
+			l_prc_launcher.set_separate_console (is_gui)
+			l_prc_launcher.launch
+			if l_prc_launcher.launched then
+				l_prc_launcher.wait_for_exit
+				is_precompilation_error := l_prc_launcher.exit_code /= 0
+			end
+		end
+
 	find_target_name (a_proposed_target: STRING; a_targets: HASH_TABLE [CONF_TARGET, STRING]) is
 			-- Given `a_proposed_target', try to find it in `a_targets'. If not found or if `a_proposed_target'
 			-- is not valid, ask the user to choose a target among `a_targets'.
@@ -720,6 +770,11 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
+	report_precompilation_error is
+			-- Report that the precompilation of a precompile did not work.
+		deferred
+		end
+
 feature {NONE} -- User interaction
 
 	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is
@@ -753,6 +808,11 @@ feature {NONE} -- User interaction
 		deferred
 		ensure
 			project_location_set: not has_error implies project_location /= Void
+		end
+
+	ask_compile_precompile is
+			-- Should a needed precompile be automatically built?
+		deferred
 		end
 
 feature {NONE} -- Deletion

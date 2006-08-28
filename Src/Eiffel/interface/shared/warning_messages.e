@@ -118,6 +118,10 @@ feature -- Project file/directory warnings
 			Result.append (".%N")
 		end
 
+	w_project_build_precompile: STRING is "Project needs a precompile, should the precompile be built?"
+
+	w_project_build_precompile_error: STRING is "Could not generated needed precompile."
+
 	w_Project_interrupted (dir_name: STRING): STRING is
 		require
 			dir_name_not_void: dir_name /= Void

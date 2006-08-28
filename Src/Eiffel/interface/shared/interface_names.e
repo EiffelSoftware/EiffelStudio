@@ -554,6 +554,7 @@ feature -- Label texts
 	l_Diagram_delete_view_cmd: STRING is	"Do you really want to delete current view?"
 	l_Diagram_reset_view_cmd: STRING is		"Do you really want to reset current view?"
 	l_Discard_convert_project_dialog: STRING is	"Do not ask again, and always convert old projects"
+	l_Discard_build_precompile_dialog: STRING is "Do not ask again, and always build precompile"
 	l_Discard_finalize_assertions: STRING is "Do not ask again, and always discard assertions when finalizing"
 	l_Discard_finalize_precompile_dialog: STRING is "Don't ask me again and always finalize."
 	l_Discard_freeze_dialog: STRING is	"Do not ask again, and always compile C code"

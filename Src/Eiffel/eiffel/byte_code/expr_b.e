@@ -180,6 +180,22 @@ feature -- C generation
 		do
 		end
 
+	allocates_memory_for_type (target_type: TYPE_I): BOOLEAN is
+			-- Is memory allocated when expression is attached to a target of `target_type'?
+		require
+			target_type_not_void: target_type /= Void
+		local
+			expression_type: TYPE_I
+		do
+			expression_type := context.real_type (type)
+			if expression_type.is_expanded and then target_type.is_reference or else
+				target_type.is_true_expanded or else
+				expression_type.is_reference and then is_dynamic_clone_required (expression_type)
+			then
+				Result := True
+			end
+		end
+
 	unanalyze is
 			-- Undo the effect of analyze.
 		do

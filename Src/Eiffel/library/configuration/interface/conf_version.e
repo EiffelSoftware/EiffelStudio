@@ -10,6 +10,13 @@ class
 
 inherit
 	COMPARABLE
+		undefine
+			is_equal
+		redefine
+			out
+		end
+
+	ANY
 		redefine
 			out
 		end

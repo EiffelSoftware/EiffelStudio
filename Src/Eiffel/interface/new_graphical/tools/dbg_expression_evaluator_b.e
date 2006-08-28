@@ -1303,6 +1303,11 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+	dbg_expression_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR is
+		once
+			create Result
+		end
+
 	expression_byte_node_from_ast (exp: EXPR_AS): like expression_byte_node is
 			-- compute expression_byte_node from EXPR_AS `exp'
 		require
@@ -1316,8 +1321,8 @@ feature {NONE} -- Implementation
 				reset_error
 				error_handler.wipe_out
 				Ast_context.set_is_ignoring_export (True)
-				feature_checker.init (ast_context)
-				feature_checker.expression_type_check_and_code (context_feature, exp)
+				dbg_expression_checker.init (ast_context)
+				dbg_expression_checker.expression_type_check_and_code (context_feature, exp)
 				Ast_context.set_is_ignoring_export (False)
 
 				if error_handler.has_error then

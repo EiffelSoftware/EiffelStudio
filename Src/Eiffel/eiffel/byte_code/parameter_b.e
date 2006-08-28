@@ -83,7 +83,7 @@ feature
 
 	allocates_memory: BOOLEAN is
 		do
-			Result := expression.allocates_memory
+			Result := expression.allocates_memory or else expression.allocates_memory_for_type (attachment_type)
 		end
 
 	stored_register: REGISTRABLE is

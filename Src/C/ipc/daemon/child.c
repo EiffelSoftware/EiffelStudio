@@ -117,7 +117,7 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, int handle_meltpat
 	HANDLE child_event_r;				/* Event for signalling readability */
 	HANDLE child_event_w;				/* Event for signalling writeability */
 	HANDLE pp2c_write_to_dup;
-	CHAR   event_str[20];				/* Event name */
+	CHAR   event_str[128];				/* Event name */
 
 	BOOL	fSuccess;					/* Did CreateProcess succeed? */
 	PROCESS_INFORMATION	piProcInfo;

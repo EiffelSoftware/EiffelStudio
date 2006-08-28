@@ -79,7 +79,7 @@ rt_public int identify(char* id, HANDLE *p_ewbin, HANDLE *p_ewbout, HANDLE *p_ev
 	HANDLE eif_conoutfile, eif_coninfile;
 	HANDLE ewbin, ewbout;
 	HANDLE event_r, event_w;
-	CHAR   event_str [20];
+	CHAR   event_str [128];
 	DWORD wait;
 	SECURITY_ATTRIBUTES sa;
 	char c;

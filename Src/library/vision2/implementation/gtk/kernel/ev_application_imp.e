@@ -257,6 +257,8 @@ feature -- Basic operation
 			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
 			l_gdk_window: POINTER
 			l_stored_display_data: like stored_display_data
+			l_popup_parent: EV_POPUP_WINDOW_IMP
+			l_ignore_event: BOOLEAN
 		do
 			use_stored_display_data := True
 			l_stored_display_data := stored_display_data
@@ -292,7 +294,16 @@ feature -- Basic operation
 				)
 			end
 
-			{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+				-- This is used to prevent context menus in gtk widget such as GtkTextEntry from appearing in EV_POPUP_WINDOWS.
+			if l_pnd_item /= Void then
+				l_popup_parent ?= l_pnd_item.top_level_window_imp
+				if l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3  then
+					l_ignore_event := True
+				end
+			end
+			if not l_ignore_event then
+				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+			end
 
 			use_stored_display_data := False
 		end

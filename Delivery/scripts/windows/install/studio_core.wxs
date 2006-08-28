@@ -699,10 +699,10 @@
 										</Shortcut>
 										<Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="ISEEIF~1.2" LongName="EiffelStudio 5.7" Description="EiffelStudio development environment" Hotkey="0" Show="normal" />
 									</File>
-									<ProgId Id="estudio.project" Description="EiffelStudio project" Icon="ecf_icon" IconIndex="1" >
+									<ProgId Id="estudio_ecf.project" Description="EiffelStudio project" Icon="ecf_icon" IconIndex="1" >
 										<Extension Id="ecf">
-											<Verb Id="ecf1" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
-											<Verb Id="ecf2" Argument="-config &quot;%1&quot; -melt" Command="compile" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
+											<Verb Id="open" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
+											<Verb Id="compile" Argument="-config &quot;%1&quot; -melt" Command="compile" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
 										</Extension>
 									</ProgId>
 								</Component>

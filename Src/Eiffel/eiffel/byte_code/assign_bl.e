@@ -549,9 +549,9 @@ feature
 							-- as it has been validated by the Eiffel compiler.
 						target_c_type.generate_cast (buf)
 					end
-				end
-				if need_aging_tests then
-					if register /= Void and not register_for_metamorphosis then
+					if need_aging_tests and then
+						register /= Void and not register_for_metamorphosis
+					then
 						print_register
 					else
 						if is_bit_assignment then
@@ -559,27 +559,17 @@ feature
 							target.print_register
 							buf.put_character (')')
 						else
-							source_print_register
-						end
-					end
-					buf.put_character (';')
-					buf.put_new_line
-				elseif how = Simple_assignment then
-					if is_bit_assignment then
-						buf.put_string (gc_comma)
-						target.print_register
-						buf.put_character (')')
-					else
-						source_type := context.real_type (source.type)
-						if source_type.is_reference then
-								-- Support boxed expanded types.
-							if register_for_metamorphosis then
-								source.generate_dynamic_clone (Current, source_type)
+							source_type := context.real_type (source.type)
+							if how = Simple_assignment and then source_type.is_reference then
+									-- Support boxed expanded types.
+								if register_for_metamorphosis then
+									source.generate_dynamic_clone (Current, source_type)
+								else
+									source.generate_dynamic_clone (source, source_type)
+								end
 							else
-								source.generate_dynamic_clone (source, source_type)
+								source_print_register
 							end
-						else
-							source_print_register
 						end
 					end
 					buf.put_character (';')

@@ -260,6 +260,23 @@ rt_public void dexit(int code)
 	exit(code);
 }
 
+#ifdef EIF_ASSERTIONS
+#if defined(EIF_WINDOWS) && defined(_DEBUG)
+/* Uncomment the code below if you want to trap some runtime errors detected at runtime.
+   If you don't, then the application usually exits without a chance of debugging.
+/*
+void __cdecl report_failure(int code, void * unused)
+{
+	char s[512];
+	if (code == _SECERR_BUFFER_OVERRUN) {
+		printf("Buffer overrun detected! Program will end.\n");
+		scanf("Press a key\n%s", s);
+	}
+}
+*/
+#endif
+#endif
+
 rt_public int main (int argc, char **argv)
 {
 	/* This is the main entry point for the ISE daemon */
@@ -279,6 +296,10 @@ rt_public int main (int argc, char **argv)
 	tmpDbgFlag |= _CRTDBG_CHECK_ALWAYS_DF;
 
 	_CrtSetDbgFlag(tmpDbgFlag);
+
+/*
+	_set_security_error_handler(report_failure);
+*/
 #endif
 #endif
 

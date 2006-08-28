@@ -356,8 +356,8 @@ feature -- Implementation
 	real_pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
 		local
-			gdkwin, gtkwid: POINTER
-			a_x, a_y, temp_mask: INTEGER
+			gdkwin: POINTER
+			a_x, a_y: INTEGER
 			a_wid_imp: EV_PICK_AND_DROPABLE_IMP
 			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
 			a_row_imp: EV_PND_DEFERRED_ITEM

@@ -1337,13 +1337,13 @@ feature -- Access
 						if l_assign.expand_return then
 								-- Assignment in Result is expanded in a return instruction
 							tmp := False
-						else
+						elseif not l_assign.source.allocates_memory_for_type (real_type (l_assign.target.type)) then
 							reverse_b ?= l_assign
 								-- FIXME: Manu 05/31/2002: we should try to optimize
 								-- so that not all reverse assignment prevent the optimization
 								-- to be made.
 							call ?= l_assign.source
-							if call /= Void and then call.is_single and reverse_b = Void then
+							if call /= Void and then call.is_single and then reverse_b = Void then
 									-- Simple assignment of a single call
 								creation_expr ?= call
 								if creation_expr /= Void or has_invariant then
@@ -1379,7 +1379,7 @@ feature -- Access
 								end
 							else
 								expr_b ?= l_assign.source
-								tmp := expr_b.has_call or expr_b.allocates_memory
+								tmp := expr_b.has_call or expr_b.allocates_memory or else expr_b.allocates_memory_for_type (real_type (l_assign.target.type))
 							end
 						end
 					else

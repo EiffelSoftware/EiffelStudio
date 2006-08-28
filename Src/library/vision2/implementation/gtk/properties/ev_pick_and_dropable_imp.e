@@ -201,7 +201,7 @@ feature -- Implementation
 			app_imp := app_implementation
 			l_top_level_window_imp := top_level_window_imp
 			if l_top_level_window_imp /= Void and then not l_top_level_window_imp.has_modal_window then
-				if a_type /= {EV_GTK_EXTERNALS}.gdk_button_release_enum and then not app_imp.is_in_transport and then able_to_transport (a_button) then
+				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then not app_imp.is_in_transport and then able_to_transport (a_button) then
 						-- Retrieve/calculate pebble
 					call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
 					if pebble /= Void then

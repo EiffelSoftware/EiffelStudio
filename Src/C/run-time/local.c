@@ -7,19 +7,19 @@
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Runtime.
-			
+
 			Eiffel Software's Runtime is free software; you can
 			redistribute it and/or modify it under the terms of the
 			GNU General Public License as published by the Free
 			Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Runtime is distributed in the hope
 			that it will be useful,	but WITHOUT ANY WARRANTY;
 			without even the implied warranty of MERCHANTABILITY
 			or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Runtime; if not,
 			write to the Free Software Foundation, Inc.,
@@ -65,6 +65,7 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #include <stdio.h>
 
 #ifdef EIF_ASSERTIONS
+#define _DEBUG
 #if defined(EIF_WINDOWS) && defined (_DEBUG)
 #include <crtdbg.h>
 #endif
@@ -105,7 +106,7 @@ rt_public void epop(struct stack *stk, rt_uint_ptr nb_items)
 		 */
 
 		SIGBLOCK;			/* Entering critical section */
-		
+
 		top = stk->st_top;
 		for (s = stk->st_cur; nb_items > 0; /* empty */) {
 			arena = s->sk_arena;
@@ -316,14 +317,24 @@ rt_private int extend(struct stack *stk, rt_uint_ptr nb_items)
 #ifdef EIF_ASSERTIONS
 	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
 	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
-	 * to CRT routines. */	
+	 * to CRT routines. */
 /*
-void myInvalidParameterHandler(const wchar_t* expression,
-   const wchar_t* function, 
-   const wchar_t* file, 
-   unsigned int line, 
+void __cdecl myInvalidParameterHandler(const wchar_t* expression,
+   const wchar_t* function,
+   const wchar_t* file,
+   unsigned int line,
    uintptr_t pReserved)
 {
+}
+void __cdecl report_failure(int code, void * unused)
+{
+	char s[512];
+
+	if (code == _SECERR_BUFFER_OVERRUN) {
+		printf("Buffer overrun detected! Program will end.\n");
+		printf("I'm here\n");
+		scanf("Press a key\n%s", s);
+	}
 }
 */
 #endif
@@ -346,17 +357,10 @@ rt_shared void initstk(void)
 	char **top;
 #endif
 
-#ifdef EIF_WINDOWS
-#ifdef EIF_ASSERTIONS
-	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
-	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
-	 * to CRT routines. */	
-/*   _set_invalid_parameter_handler(myInvalidParameterHandler); */
-#endif
-#endif
 
 #ifdef EIF_ASSERTIONS
 #if defined(EIF_WINDOWS) && defined(_DEBUG)
+
 	int tmpDbgFlag = 0;
 	_CrtSetReportMode(_CRT_WARN, _CRTDBG_MODE_FILE);
 	_CrtSetReportFile(_CRT_WARN, _CRTDBG_FILE_STDOUT);
@@ -370,6 +374,14 @@ rt_shared void initstk(void)
 	tmpDbgFlag |= _CRTDBG_LEAK_CHECK_DF;
 	tmpDbgFlag |= _CRTDBG_CHECK_ALWAYS_DF;
 	_CrtSetDbgFlag(tmpDbgFlag);
+
+	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
+	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
+	 * to CRT routines. */
+/*
+	_set_invalid_parameter_handler(myInvalidParameterHandler);
+	_set_security_error_handler(report_failure);
+*/
 #endif
 #endif
 

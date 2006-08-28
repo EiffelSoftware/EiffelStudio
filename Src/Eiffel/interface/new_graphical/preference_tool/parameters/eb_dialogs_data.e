@@ -110,6 +110,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := confirm_convert_project_preference.value
 		end
 
+	confirm_build_precompile: BOOLEAN is
+			-- Should we display a dialog before building a needed precompile?
+		do
+			Result := confirm_build_precompile_preference.value
+		end
+
 	acknowledge_not_loaded: BOOLEAN is
 			-- Should we display a dialog warning that text is not editable
 			-- before it is completely loaded?
@@ -251,6 +257,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	confirm_convert_project_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before converting an old project?
 
+	confirm_build_precompile_preference: BOOLEAN_PREFERENCE
+			-- Should we display a dialog before building a needed precompile?
+
 	confirm_replace_all_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before replacing all?
 
@@ -320,6 +329,7 @@ feature -- Preference strings
 	confirm_clear_breakpoints_string: STRING is "interface.dialogs.confirm_clear_breakpoints"
 	confirm_ignore_all_breakpoints_string: STRING is "interface.dialogs.confirm_ignore_all_breakpoints"
 	confirm_convert_project_string: STRING is "interface.dialogs.confirm_convert_project"
+	confirm_build_precompile_string: STRING is "interface.dialogs.confirm_build_precompile"
 	confirm_replace_all_string: STRING is "interface.dialogs.confirm_replace_all"
 	confirm_remove_metric_string: STRING is "interface.dialogs.confirm_remove_metric"
 	confirm_save_metric_string: STRING is "interface.dialogs.confirm_save_metric"
@@ -386,6 +396,7 @@ feature {NONE} -- Implementation
 			confirm_clear_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_clear_breakpoints_string, True)
 			confirm_ignore_all_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_ignore_all_breakpoints_string, True)
 			confirm_convert_project_preference := l_manager.new_boolean_preference_value (l_manager, confirm_convert_project_string, True)
+			confirm_build_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_build_precompile_string, True)
 			confirm_remove_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_remove_metric_string, True)
 			confirm_save_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_metric_string, True)
 			acknowledge_not_loaded_preference := l_manager.new_boolean_preference_value (l_manager, acknowledge_not_loaded_string, True)
@@ -444,6 +455,7 @@ invariant
 	confirm_clear_breakpoints_preference_not_void: confirm_clear_breakpoints_preference /= Void
 	confirm_ignore_all_breakpoints_preference_not_void: confirm_ignore_all_breakpoints_preference /= Void
 	confirm_convert_project_preference_not_void: confirm_convert_project_preference /= Void
+	confirm_build_precompile_preference_not_void: confirm_build_precompile_preference /= Void
 	acknowledge_not_loaded_preference_not_void: acknowledge_not_loaded_preference /= Void
 	confirm_finalize_precompile_preference_not_void: confirm_finalize_precompile_preference /= Void
 	show_starting_dialog_preference_not_void: show_starting_dialog_preference /= Void

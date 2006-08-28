@@ -176,6 +176,15 @@ feature {NONE} -- Error reporting
 		do
 		end
 
+	report_precompilation_error is
+			-- Report that precompilation did not work.
+		do
+			io.put_string (warning_messages.w_project_build_precompile_error)
+			io.put_new_line
+			set_has_error
+		end
+
+
 feature {NONE} -- User interaction
 
 	ask_for_config_name (a_dir_name, a_file_name: STRING; a_action: PROCEDURE [ANY, TUPLE [STRING]]) is
@@ -329,6 +338,34 @@ feature {NONE} -- User interaction
 								l_answered := True
 							end
 						end
+					end
+				end
+			end
+		end
+
+	ask_compile_precompile is
+			-- Should a needed precompile be automatically built?
+		local
+			l_answered: BOOLEAN
+		do
+			if should_stop_on_prompt then
+				io.put_string ("You cannot choose if a needed precompile should be generated")
+				io.put_new_line
+				io.put_string ("because of the -stop/-batch option.")
+				io.put_new_line
+				set_has_error
+			else
+				from
+				until
+					l_answered
+				loop
+					io.put_string (warning_messages.w_project_build_precompile + " [y|n] ")
+					io.read_line
+					if io.last_string.item (1).as_lower = 'y' then
+						is_user_wants_precompile := True
+						l_answered := True
+					elseif io.last_string.item (1).as_lower = 'n' then
+						l_answered := True
 					end
 				end
 			end

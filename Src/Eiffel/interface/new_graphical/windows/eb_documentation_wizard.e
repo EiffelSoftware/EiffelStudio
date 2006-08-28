@@ -288,7 +288,7 @@ feature -- Miscellaneous
 			if not is_html and then html_specific_page (current_page) then
 				current_page := current_page + 1
 			end
-			if not (cluster_diagrams_selected and is_html) and then diagram_specific_page (current_page) then
+			if not cluster_diagrams_selected and then diagram_specific_page (current_page) then
 				current_page := current_page + 1
 			end
 			go_to_page (current_page)
@@ -301,7 +301,7 @@ feature -- Miscellaneous
 			if not is_html and then html_specific_page (current_page) then
 				current_page := current_page - 1
 			end
-			if not (cluster_diagrams_selected and is_html) and then diagram_specific_page (current_page) then
+			if not cluster_diagrams_selected and then diagram_specific_page (current_page) then
 				current_page := current_page - 1
 			end
 			go_to_page (current_page)

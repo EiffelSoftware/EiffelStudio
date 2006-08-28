@@ -70,9 +70,11 @@ feature {EV_WINDOW_IMP} -- Implementation
 			if shift_required and then not key.is_function and then not key.is_arrow then
 					-- We need to get the key val for the uppercase symbol
 				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, internal_gdk_key_code, $a_keymap_array, $n_keys)
-				{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
-				internal_gdk_key_code := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
-				{EV_GTK_EXTERNALS}.g_free (a_keymap_array)
+				if a_success then
+					{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
+					internal_gdk_key_code := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
+					{EV_GTK_EXTERNALS}.g_free (a_keymap_array)
+				end
 			end
 
 			if internal_gdk_key_code > 0 then

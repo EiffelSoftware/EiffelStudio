@@ -12,8 +12,8 @@ class
 inherit
 	EB_METRIC
 		redefine
-			make,
-			is_basic
+			is_basic,
+			is_just_line_counting
 		end
 
 	QL_METRIC_FACTORY
@@ -32,14 +32,6 @@ inherit
 create
 	make
 
-feature{NONE} -- Initialization
-
-	make (a_name: STRING; a_unit: like unit) is
-			-- Initialize `name' with `a_name', `unit' with `a_unit'.
-		do
-			Precursor (a_name, a_unit)
-		end
-
 feature -- Status report
 
 	is_result_domain_available: BOOLEAN is
@@ -51,6 +43,12 @@ feature -- Status report
 
 	is_basic: BOOLEAN is True
 			-- Is current a basic metric?
+
+	is_just_line_counting: BOOLEAN is
+			-- Is current metric a line counting metric?
+		do
+			Result := criteria = Void
+		end
 
 feature -- Metric calculation
 

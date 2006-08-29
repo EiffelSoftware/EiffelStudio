@@ -29,15 +29,13 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_1
 			create status_pixmap
 			create status_lbl
-			create l_ev_frame_1
 			create status_text
 			
 				-- Build widget structure.
 			extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (status_pixmap)
 			l_ev_horizontal_box_1.extend (status_lbl)
-			l_ev_horizontal_box_1.extend (l_ev_frame_1)
-			l_ev_frame_1.extend (status_text)
+			l_ev_horizontal_box_1.extend (status_text)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -59,7 +57,6 @@ feature {NONE}-- Initialization
 			status_pixmap.set_minimum_height (16)
 			status_lbl.set_text ("Status:")
 			status_lbl.align_text_left
-			l_ev_frame_1.set_style (1)
 			status_text.disable_edit
 			set_padding (3)
 			
@@ -83,7 +80,6 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_frame_1: EV_FRAME
 
 feature {NONE} -- Implementation
 

@@ -47,10 +47,10 @@ feature {NONE} -- Initialization
 		require
 			a_tool_attached: a_tool /= Void
 		do
+			set_metric_tool (a_tool)
 			create expression_generator.make
 			create change_actions
 			default_create
-			set_metric_tool (a_tool)
 			setup_editor
 		ensure
 			metric_tool_set: metric_tool = a_tool
@@ -65,47 +65,53 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT
 		do
+			create del_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
+			create move_up_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_subtract), True, False, False)
+			create move_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_add), True, False, False)
+
 				-- Initialize `metric_grid'.
 			create metric_grid
 			metric_grid.set_column_count_to (2)
 			metric_grid.enable_row_separators
 			metric_grid.enable_column_separators
-			metric_grid.enable_single_row_selection
+			metric_grid.enable_single_item_selection
 			metric_grid.column (1).set_title (metric_names.t_coefficient)
 			metric_grid.column (2).set_title (metric_names.t_metrics)
+			metric_grid.key_press_actions.extend (agent on_key_pressed)
+			metric_grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
+			metric_grid.item_drop_actions.extend (agent on_item_drop)
+			metric_grid.add_key_action (agent on_up, move_up_key_index)
+			metric_grid.add_key_action (agent on_down, move_down_key_index)
+			metric_grid.add_key_action (agent on_remove_metric, del_key_index)
+			metric_grid.add_key_shortcut (del_key_index, del_key_shortcut)
+			metric_grid.add_key_shortcut (move_up_key_index, move_up_shortcut)
+			metric_grid.add_key_shortcut (move_down_key_index, move_down_shortcut)
 			grid_area.extend (metric_grid)
 
 			up_btn.remove_text
 			up_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_up_icon)
+			up_btn.select_actions.extend (agent on_up)
+			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + move_up_shortcut.out + ")")
+
 			down_btn.remove_text
 			down_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_down_icon)
+			down_btn.select_actions.extend (agent on_down)
+			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + move_down_shortcut.out + ")")
+
 			remove_metric_btn.remove_text
 			remove_metric_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			remove_all_metric_btn.remove_text
 			remove_all_metric_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
-				-- Setup actions.
-			up_btn.select_actions.extend (agent on_up)
-			down_btn.select_actions.extend (agent on_down)
 			remove_all_metric_btn.select_actions.extend (agent on_remove_all_metrics)
 			remove_metric_btn.select_actions.extend (agent on_remove_metric)
-			metric_grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
-			metric_grid.item_drop_actions.extend (agent on_item_drop)
+			remove_metric_btn.set_tooltip (metric_names.f_del_row + " (" + del_key_shortcut.out + ")")
+			remove_all_metric_btn.set_tooltip (metric_names.f_clear_rows)
+
 			create l_text
 			expression_text.set_background_color (l_text.background_color)
 
-			metric_grid.add_key_action (agent on_up, move_up_key_index)
-			metric_grid.add_key_action (agent on_down, move_down_key_index)
-			metric_grid.add_key_action (agent on_remove_metric, del_key_index)
-			create del_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
-			create move_up_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_subtract), True, False, False)
-			create move_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_add), True, False, False)
-			metric_grid.add_key_shortcut (del_key_index, del_key_shortcut)
-			metric_grid.add_key_shortcut (move_up_key_index, move_up_shortcut)
-			metric_grid.add_key_shortcut (move_down_key_index, move_down_shortcut)
-			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + move_up_shortcut.out + ")")
-			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + move_down_shortcut.out + ")")
-			remove_metric_btn.set_tooltip (metric_names.f_del_row + " (" + del_key_shortcut.out + ")")
-			remove_all_metric_btn.set_tooltip (metric_names.f_clear_rows)
+			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
+			metric_definition_lbl.set_text (metric_names.t_metric_definition + ":")
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
 			ctrl_up_shortcut_attached: move_up_shortcut /= Void
@@ -132,7 +138,7 @@ feature -- Setting
 			load_metric_name_and_description (a_metric, mode = readonly_mode)
 			if a_metric = Void then
 					-- For new metric				
-				load_variable_metric (create {EB_METRIC_LINEAR}.make ("Unnamed linear metric", unit))
+				load_variable_metric (create {EB_METRIC_LINEAR}.make (metric_manager.next_metric_name_with_unit (unit), unit, uuid))
 			else
 				load_variable_metric (a_metric)
 			end
@@ -153,9 +159,23 @@ feature -- Setting
 			toolbar_area.disable_sensitive
 		end
 
+	attach_metric_selector (a_metric_selector: like metric_selector) is
+			-- Set `metric_selector' with `a_metric_selector'.
+		do
+			metric_selector := a_metric_selector
+		end
+
+	detach_metric_selector is
+			-- Detach `metric_selector'.
+		do
+			if metric_selector /= Void then
+				metric_selector := Void
+			end
+		end
+
 feature -- Access
 
-	data_in_row (a_row: EV_GRID_ROW): TUPLE [criterion_name: STRING; coefficient: STRING] is
+	data_in_row (a_row: EV_GRID_ROW): TUPLE [criterion_name: STRING; coefficient: STRING; uuid: UUID] is
 			-- Data in `a_row'
 		require
 			a_row_attached: a_row /= Void
@@ -163,6 +183,7 @@ feature -- Access
 		local
 			l_metric_item: EV_GRID_LABEL_ITEM
 			l_coefficient_item: EV_GRID_EDITABLE_ITEM
+			l_uuid: UUID
 		do
 			if a_row.data /= Void then
 				l_coefficient_item ?= a_row.item (1)
@@ -171,7 +192,9 @@ feature -- Access
 					l_coefficient_item /= Void
 					l_metric_item /= Void
 				end
-				Result := [l_metric_item.text.out, l_coefficient_item.text.out]
+				l_uuid ?= l_metric_item.data
+				check l_uuid /= Void end
+				Result := [l_metric_item.text.out, l_coefficient_item.text.out, l_uuid]
 			end
 		end
 
@@ -182,9 +205,9 @@ feature -- Access
 			l_coefficient_list: ARRAYED_LIST [DOUBLE]
 			l_index: INTEGER
 			l_count: INTEGER
-			l_data: TUPLE [metric: STRING; coefficient: STRING]
+			l_data: TUPLE [metric: STRING; coefficient: STRING; uuid: UUID]
 		do
-			create Result.make (name_area.name, unit)
+			create Result.make (name_area.name, unit, uuid)
 			Result.set_description (name_area.description)
 			create l_criterion_list.make (metric_grid.row_count - 1)
 			create l_coefficient_list.make (metric_grid.row_count - 1)
@@ -202,6 +225,7 @@ feature -- Access
 					else
 						Result.coefficient.extend (0)
 					end
+					Result.variable_metric_uuid.extend (l_data.uuid)
 				end
 				l_index := l_index + 1
 			end
@@ -227,18 +251,21 @@ feature -- Access
 
 feature{NONE} -- Implementation/Actions
 
-	load_metric_in_row (a_name: STRING; a_coefficient: STRING; a_row: EV_GRID_ROW) is
+	load_metric_in_row (a_name: STRING; a_coefficient: STRING; a_uuid: UUID; a_row: EV_GRID_ROW) is
 			-- Load metric named `a_name' with `a_coefficient' in `a_row'.
 		require
 			a_name_attached: a_name /= Void
 			a_row_attached: a_row /= Void
 			a_row_parented: a_row.parent /= Void
+			a_uuid_attached: a_uuid /= Void
 		local
 			l_coefficient_item: EV_GRID_EDITABLE_ITEM
-			l_metric_item: EV_GRID_LABEL_ITEM
+			l_metric_item: EV_GRID_COMBO_ITEM
 			l_metric: EB_METRIC
 		do
 			create l_coefficient_item.make_with_text (a_coefficient.out)
+
+				-- Setup variable metric item.
 			create l_metric_item.make_with_text (a_name)
 			l_metric_item.set_foreground_color (color_of_metric (a_name))
 			if metric_manager.has_metric (a_name) then
@@ -247,9 +274,15 @@ feature{NONE} -- Implementation/Actions
 			else
 				l_metric_item.set_pixmap (pixmaps.icon_pixmaps.general_error_icon)
 			end
+			bind_metric_item_menu (l_metric_item)
+			l_metric_item.pointer_double_press_actions.extend (agent on_pointer_press_on_variable_metric_item (l_metric_item, ?, ?, ?, ?, ?, ?, ?, ?))
+			l_metric_item.deactivate_actions.extend (agent on_variable_metric_deactivate (l_metric_item))
+			l_metric_item.set_data (a_uuid)
+				-- Setup coefficient item.
 			l_coefficient_item.pointer_double_press_actions.force_extend (agent l_coefficient_item.activate)
 			l_coefficient_item.deactivate_actions.extend (agent on_change)
 			l_coefficient_item.set_text_validation_agent (agent (a_text: STRING_32): BOOLEAN do Result := a_text.is_real end)
+
 			a_row.set_item (1, l_coefficient_item)
 			a_row.set_item (2, l_metric_item)
 			a_row.set_data (a_name)
@@ -281,22 +314,60 @@ feature{NONE} -- Implementation/Actions
 				l_row_index := l_row.index
 				metric_grid.insert_new_row (l_row_index)
 				l_row := metric_grid.row (l_row_index)
-				load_metric_in_row (l_metric.name, "1", l_row)
+				load_metric_in_row (l_metric.name, "1", l_metric.uuid, l_row)
 				metric_grid.remove_selection
 				l_row.enable_select
 				on_change
 			end
 		end
 
+	on_add_variable_metric (a_item: EV_GRID_LABEL_ITEM) is
+			-- Action to be performed to add selected metric in `metric_selector' into current linear definition area
+		require
+			a_item_attached: a_item /= Void
+			a_item_parented: a_item.parent /= Void
+			metric_selector_attached: metric_selector /= Void
+		local
+			l_row: EV_GRID_ROW
+			l_row_index: INTEGER
+			l_metric: EB_METRIC
+			l_metric_name: STRING
+			l_uuid: UUID
+		do
+			l_row_index := a_item.row.index
+			metric_grid.insert_new_row (l_row_index)
+			l_row := metric_grid.row (l_row_index)
+			l_metric_name := a_item.text
+			if metric_manager.has_metric (l_metric_name) then
+				l_metric := metric_manager.metric_with_name (l_metric_name)
+				l_uuid := l_metric.uuid
+			else
+				l_uuid := metric_manager.uuid_generator.generate_uuid
+			end
+			load_metric_in_row (l_metric_name, "1", l_uuid, l_row)
+			a_item.set_text ("...")
+			metric_grid.set_focus
+			metric_grid.remove_selection
+			l_row.enable_select
+			on_change
+		end
+
 	on_remove_metric is
 			-- Action to be performed when removing a selected row
 		local
 			l_row: EV_GRID_ROW
+			l_index: INTEGER
+			l_selected_items: LIST [EV_GRID_ITEM]
 		do
-			if not metric_grid.selected_rows.is_empty then
-				l_row := metric_grid.selected_rows.first
+			l_selected_items := metric_grid.selected_items
+			if not l_selected_items.is_empty then
+				l_row := l_selected_items.first.row
 				if l_row.data /= Void then
+					l_index := l_row.index
 					metric_grid.remove_row (l_row.index)
+					if l_index > 0 and then l_index <= metric_grid.row_count then
+						metric_grid.row (l_index).enable_select
+					end
 					on_change
 				end
 			end
@@ -317,7 +388,7 @@ feature{NONE} -- Implementation/Actions
 			l_row: EV_GRID_ROW
 			l_new_row: EV_GRID_ROW
 			l_index: INTEGER
-			l_data: TUPLE [metric: STRING; coefficient: STRING]
+			l_data: TUPLE [metric: STRING; coefficient: STRING; uuid: UUID]
 		do
 			if not metric_grid.selected_rows.is_empty then
 				l_row := metric_grid.selected_rows.first
@@ -326,7 +397,7 @@ feature{NONE} -- Implementation/Actions
 					metric_grid.insert_new_row (l_index - 1)
 					l_new_row := metric_grid.row (l_index - 1)
 					l_data := data_in_row (l_row)
-					load_metric_in_row (l_data.metric, l_data.coefficient, l_new_row)
+					load_metric_in_row (l_data.metric, l_data.coefficient, l_data.uuid, l_new_row)
 					metric_grid.remove_selection
 					l_new_row.enable_select
 					metric_grid.remove_row (l_row.index)
@@ -341,7 +412,7 @@ feature{NONE} -- Implementation/Actions
 			l_row: EV_GRID_ROW
 			l_new_row: EV_GRID_ROW
 			l_index: INTEGER
-			l_data: TUPLE [metric: STRING; coefficient: STRING]
+			l_data: TUPLE [metric: STRING; coefficient: STRING; uuid: UUID]
 		do
 			if not metric_grid.selected_rows.is_empty then
 				l_row := metric_grid.selected_rows.first
@@ -350,7 +421,7 @@ feature{NONE} -- Implementation/Actions
 					metric_grid.insert_new_row (l_index + 2)
 					l_new_row := metric_grid.row (l_index + 2)
 					l_data := data_in_row (l_row)
-					load_metric_in_row (l_data.metric, l_data.coefficient, l_new_row)
+					load_metric_in_row (l_data.metric, l_data.coefficient, l_data.uuid, l_new_row)
 					metric_grid.remove_selection
 					l_new_row.enable_select
 					metric_grid.remove_row (l_row.index)
@@ -368,6 +439,55 @@ feature{NONE} -- Implementation/Actions
 			on_definition_change
 		end
 
+	on_pointer_press_on_variable_metric_item (a_item: EV_GRID_ITEM; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Action to be performed when left-click on a variable metric item
+		require
+			a_item_attached: a_item /= Void
+		do
+			if a_button = 1 then
+				a_item.activate
+			end
+		end
+
+	on_variable_metric_deactivate (a_item: EV_GRID_LABEL_ITEM) is
+			-- Action to be performed when variable metric item is deactivated
+		require
+			a_item_attached: a_item /= Void
+			a_item_parented: a_item.parent /= Void
+		local
+			l_row: EV_GRID_ROW
+			l_coefficient_item: EV_GRID_EDITABLE_ITEM
+			l_uuid: UUID
+		do
+			l_row := a_item.row
+			l_coefficient_item ?= l_row.item (1)
+			l_uuid ?= a_item.data
+			check
+				l_coefficient_item /= Void
+				l_uuid /= Void
+			end
+			load_metric_in_row (a_item.text, l_coefficient_item.text, l_uuid, l_row)
+			metric_grid.remove_selection
+			metric_grid.set_focus
+			l_row.enable_select
+			on_change
+		end
+
+	on_key_pressed (a_key: EV_KEY) is
+			-- Action to be performed when `a_key' is pressed
+		require
+			a_key_attached: a_key /= Void
+		local
+			l_item_list: LIST [EV_GRID_ITEM]
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				l_item_list := metric_grid.selected_items
+				if l_item_list.count = 1 then
+					l_item_list.first.activate
+				end
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	load_variable_metric (a_metric: like metric) is
@@ -377,33 +497,90 @@ feature{NONE} -- Implementation
 		local
 			l_row: EV_GRID_ROW
 			l_grid_lbl: EV_GRID_LABEL_ITEM
+			l_variable_metric_list: LIST [STRING]
+			l_coefficient_list: LIST [DOUBLE]
+			l_uuid_list: LIST [UUID]
 		do
 			if metric_grid.row_count > 0 then
 				metric_grid.remove_rows (1, metric_grid.row_count)
 			end
 			from
-				a_metric.variable_metric.start
-				a_metric.coefficient.start
+				l_variable_metric_list := a_metric.variable_metric
+				l_coefficient_list := a_metric.coefficient
+				l_uuid_list := a_metric.variable_metric_uuid
+				l_variable_metric_list.start
+				l_coefficient_list.start
+				l_uuid_list.start
 			until
-				a_metric.variable_metric.after or a_metric.coefficient.after
+				a_metric.variable_metric.after
 			loop
 				metric_grid.insert_new_row (metric_grid.row_count + 1)
 				l_row := metric_grid.row (metric_grid.row_count)
-				load_metric_in_row (a_metric.variable_metric.item, a_metric.coefficient.item.out, l_row)
-				a_metric.variable_metric.forth
-				a_metric.coefficient.forth
+				load_metric_in_row (l_variable_metric_list.item, l_coefficient_list.item.out, l_uuid_list.item, l_row)
+				l_variable_metric_list.forth
+				l_coefficient_list.forth
+				l_uuid_list.forth
 			end
 
 				-- Insert new line.
+			insert_empty_row
+			resize_metric_grid
+		end
+
+	insert_empty_row is
+			-- Insert an empty row at the end of `metric_grid'.
+		local
+			l_row: EV_GRID_ROW
+			l_grid_lbl: EV_GRID_LABEL_ITEM
+			l_metric_item: EV_GRID_COMBO_ITEM
+		do
 			metric_grid.insert_new_row (metric_grid.row_count + 1)
 			l_row := metric_grid.row (metric_grid.row_count)
-			create l_grid_lbl.make_with_text ("...")
+				-- Setup coefficient item.
+			create l_grid_lbl
 			l_grid_lbl.set_tooltip (metric_names.f_drop_metric_here)
 			l_row.set_item (1, l_grid_lbl)
-			create l_grid_lbl.make_with_text ("...")
-			l_grid_lbl.set_tooltip (metric_names.f_drop_metric_here)
-			l_row.set_item (2, l_grid_lbl)
-			resize_metric_grid
+
+				-- Setup variable metric item.
+			create l_metric_item.make_with_text ("...")
+			l_metric_item.set_tooltip (metric_names.f_drop_metric_here)
+			l_metric_item.pointer_double_press_actions.extend (agent on_pointer_press_on_variable_metric_item (l_metric_item, ?, ?, ?, ?, ?, ?, ?, ?))
+			bind_metric_item_menu (l_metric_item)
+			l_row.set_item (2, l_metric_item)
+			l_metric_item.deactivate_actions.extend (agent on_add_variable_metric (l_metric_item))
+		end
+
+	bind_metric_item_menu (a_item: EV_GRID_COMBO_ITEM) is
+			-- Bind metric drop-down list into `a_item'.
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_metric_item: EV_GRID_COMBO_ITEM
+			l_metric: EB_METRIC
+			l_metric_table: HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT]
+			l_metric_list: LIST [EB_METRIC]
+			l_combo: EV_COMBO_BOX
+			l_list_item: EV_LIST_ITEM
+			l_metric_candidate: EB_METRIC
+			l_metric_name_array: ARRAY [STRING]
+			l_index: INTEGER
+		do
+			l_metric_table := metric_manager.ordered_metrics (metric_manager.ascending_order, False)
+			l_metric_list := l_metric_table.item (unit)
+			if l_metric_list /= Void and then not l_metric_list.is_empty then
+				create l_metric_name_array.make (1, l_metric_list.count)
+				from
+					l_metric_list.start
+					l_index := 1
+				until
+					l_metric_list.after
+				loop
+					l_metric_name_array.put (l_metric_list.item.name, l_index)
+					l_index := l_index + 1
+					l_metric_list.forth
+				end
+				a_item.set_item_strings (l_metric_name_array)
+			end
 		end
 
 	resize_metric_grid is

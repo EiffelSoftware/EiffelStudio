@@ -9,6 +9,9 @@ indexing
 class
 	EB_SELECT_SCOPE_DIALOG
 
+inherit
+	EB_METRIC_INTERFACE_PROVIDER
+
 create
 	make
 
@@ -21,6 +24,7 @@ feature{NONE} -- Implementation
 		do
 			set_add_scope_action (a_add_scope_action)
 			create class_dialog.make
+			class_dialog.set_title (metric_names.t_select_domain_scope)
 			class_dialog.set_cluster_add_action (agent on_add_cluster)
 			class_dialog.set_class_add_action (agent on_add_class)
 			class_dialog.set_folder_add_action (agent on_add_folder)

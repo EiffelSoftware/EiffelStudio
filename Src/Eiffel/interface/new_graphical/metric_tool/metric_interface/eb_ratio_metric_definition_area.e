@@ -47,13 +47,17 @@ feature {NONE} -- Initialization
 		require
 			a_tool_attached: a_tool /= Void
 		do
+			set_metric_tool (a_tool)
 			create expression_generator.make
 			create change_actions
 			default_create
-			set_metric_tool (a_tool)
+			create numerator_delayed_timer.make (agent on_numerator_text_change_confirmed, 500)
+			create denominator_delayed_timer.make (agent on_denominator_text_change_confirmed, 500)
 			setup_editor
 		ensure
 			metric_tool_set: metric_tool = a_tool
+			numerator_delayed_timer_attached: numerator_delayed_timer /= Void
+			denominator_delayed_timer_attached: denominator_delayed_timer /= Void
 		end
 
 	user_initialization is
@@ -65,15 +69,18 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT_FIELD
 		do
+			definition_frame.set_text (metric_names.t_metric_definition)
 			numerator_text.drop_actions.extend (agent on_drop (?, numerator_text))
 			numerator_text.set_accept_cursor (cursors.cur_metric)
 			numerator_text.set_deny_cursor (cursors.cur_x_metric)
 			numerator_text.set_tooltip (metric_names.f_drop_metric_here)
+			numerator_text.change_actions.extend (agent on_numerator_text_change)
 
 			denominator_text.drop_actions.extend (agent on_drop (?, denominator_text))
 			denominator_text.set_accept_cursor (cursors.cur_metric)
 			denominator_text.set_deny_cursor (cursors.cur_x_metric)
 			denominator_text.set_tooltip (metric_names.f_drop_metric_here)
+			denominator_text.change_actions.extend (agent on_denominator_text_change)
 
 			create l_text
 			numerator_text.set_background_color (l_text.background_color)
@@ -103,6 +110,8 @@ feature {NONE} -- Initialization
 --			denominator_target_pixmap.set_tooltip (interface_names.l_metric_drop_metric_here)
 			numerator_target_pixmap.hide
 			denominator_target_pixmap.hide
+
+			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
 		end
 
 feature -- Status report
@@ -122,13 +131,21 @@ feature -- Setting
 			-- Load `a_metric' in current editor.
 		do
 			load_metric_name_and_description (a_metric, mode = readonly_mode)
+			numerator_text.change_actions.block
+			denominator_text.change_actions.block
 			if a_metric /= Void then
 				numerator_text.set_text (a_metric.numerator_metric_name)
+				on_text_change_in_text_field (a_metric.numerator_metric_name, numerator_text, a_metric.numerator_metric_uuid)
 				denominator_text.set_text (a_metric.denominator_metric_name)
+				on_text_change_in_text_field (a_metric.denominator_metric_name, denominator_text, a_metric.denominator_metric_uuid)
 			else
 				numerator_text.set_text ("")
+				on_text_change_in_text_field ("", numerator_text, metric_manager.uuid_generator.generate_uuid)
 				denominator_text.set_text ("")
+				on_text_change_in_text_field ("", denominator_text, metric_manager.uuid_generator.generate_uuid)
 			end
+			numerator_text.change_actions.resume
+			denominator_text.change_actions.resume
 			on_change
 		end
 
@@ -136,25 +153,54 @@ feature -- Setting
 			-- Enable edit in current editor.
 		do
 			numerator_btn.enable_sensitive
+			numerator_text.key_press_actions.wipe_out
+			numerator_text.enable_edit
 			denominator_btn.enable_sensitive
+			denominator_text.enable_edit
+			denominator_text.key_press_actions.wipe_out
 		end
 
 	disable_edit is
 			-- Disable edit in current editor.
 		do
+			numerator_text.disable_edit
+			attach_non_editable_warning_to_text (metric_names.t_predefined_text_not_editable, numerator_text, metric_tool_window)
 			numerator_btn.disable_sensitive
+			denominator_text.disable_edit
+			attach_non_editable_warning_to_text (metric_names.t_predefined_text_not_editable, denominator_text, metric_tool_window)
 			denominator_btn.disable_sensitive
+		end
+
+	attach_metric_selector (a_metric_selector: like metric_selector) is
+			-- Set `metric_selector' with `a_metric_selector'.
+		do
+			metric_selector := a_metric_selector
+		end
+
+	detach_metric_selector is
+			-- Detach `metric_selector'.
+		do
+			metric_selector := Void
 		end
 
 feature -- Access
 
 	metric: EB_METRIC_RATIO is
 			-- Metric in current editor
+		local
+			l_num_uuid: UUID
+			l_den_uuid: UUID
 		do
-			create Result.make (name_area.name, unit)
+			create Result.make (name_area.name, unit, uuid)
 			Result.set_description (name_area.description)
 			Result.set_numerator_metric_name (numerator_text.text)
+			l_num_uuid ?= numerator_text.data
+			check l_num_uuid /= Void end
+			Result.set_numerator_metric_uuid (l_num_uuid)
 			Result.set_denominator_metric_name (denominator_text.text)
+			l_den_uuid ?= denominator_text.data
+			check l_den_uuid /= Void end
+			Result.set_denominator_metric_uuid (l_den_uuid)
 		end
 
 	metric_type: INTEGER is
@@ -187,7 +233,9 @@ feature {NONE} -- Actions
 		end
 
 	on_drop (a_pebble: ANY; a_place: EV_TEXT_FIELD) is
-			--
+			-- Action to be performed when `a_pebble' is dropped on `a_place'.
+		require
+			a_place_attached: a_place /= Void
 		local
 			l_metric: EB_METRIC
 		do
@@ -199,9 +247,40 @@ feature {NONE} -- Actions
 					else
 						a_place.set_foreground_color (red_color)
 					end
+					a_place.set_data (l_metric.uuid)
 					a_place.set_text (l_metric.name)
 				end
 				on_change
+			end
+		end
+
+	on_text_change_in_text_field (a_text: STRING; a_text_field: EV_TEXT_FIELD; a_uuid: UUID) is
+			-- Action to be performed when text in `a_text_field' changes to `a_text'
+			-- If `a_uuid' is True, set `data' of `a_text_field' with `a_uuid', else find a possible UUID and set it into `data' of `a_text_field'.
+		require
+			a_text_attached: a_text /= Void
+			a_text_field_attached: a_text_field /= Void
+		local
+			l_metric_manager: like metric_manager
+		do
+			l_metric_manager := metric_manager
+			if a_uuid /= Void then
+				a_text_field.set_data (a_uuid)
+			end
+			if l_metric_manager.has_metric (a_text) then
+				if l_metric_manager.is_metric_valid (a_text) then
+					a_text_field.set_foreground_color (black_color)
+				else
+					a_text_field.set_foreground_color (red_color)
+				end
+				if a_uuid = Void then
+					a_text_field.set_data (l_metric_manager.metric_with_name (a_text).uuid)
+				end
+			else
+				a_text_field.set_foreground_color (red_color)
+				if a_uuid = Void then
+					a_text_field.set_data (metric_manager.uuid_generator.generate_uuid)
+				end
 			end
 		end
 
@@ -224,6 +303,32 @@ feature {NONE} -- Actions
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				on_open_metric_menu (a_btn, a_text)
 			end
+		end
+
+	on_numerator_text_change is
+			-- Action to be performed when text changes in `numerator_text'
+		do
+			numerator_delayed_timer.request_call
+		end
+
+	on_denominator_text_change is
+			-- Action to be performed when text changes in `denominator_text'
+		do
+			denominator_delayed_timer.request_call
+		end
+
+	on_numerator_text_change_confirmed is
+			-- Action to be performed when text change in `numerator_text' is confirmed
+		do
+			on_text_change_in_text_field (numerator_text.text, numerator_text, Void)
+			on_change
+		end
+
+	on_denominator_text_change_confirmed is
+			-- Action to be performed when text change in `denominator_text' is confirmed
+		do
+			on_text_change_in_text_field (denominator_text.text, denominator_text, Void)
+			on_change
 		end
 
 feature{NONE} -- Implementation
@@ -258,6 +363,15 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	numerator_delayed_timer: ES_DELAYED_ACTION
+			-- Numerator metric text field delayed timer
+
+	denominator_delayed_timer: ES_DELAYED_ACTION;
+			-- Denominator metric text field delayed timer
+
+invariant
+	numerator_delayed_timer_attached: numerator_delayed_timer /= Void
+	denominator_delayed_timer_attached: denominator_delayed_timer /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

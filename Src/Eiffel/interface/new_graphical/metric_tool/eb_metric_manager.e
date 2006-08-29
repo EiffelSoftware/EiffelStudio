@@ -325,47 +325,24 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	next_metric_name (a_name_starter: STRING): STRING is
-			-- Next numbered metric name with starter `a_name_starter'
-			-- For example, if metric named "Unnamed metric#1" exists in `metrics',
-			-- `next_metric_name' with starter "Unnamed metric" will return "Unnamed metric#2"
+	next_metric_name_with_unit (a_unit: QL_METRIC_UNIT): STRING is
+			-- Next numbered metric name starting with "Unnamed" and with unit `a_unit'
 		require
-			a_name_starter_attached: a_name_starter /= Void
-			not_a_name_starter_is_empty: not a_name_starter.is_empty
-		local
-			l_metrics: like metrics
-			l_starter_cnt: INTEGER
-			l_item: EB_METRIC
-			l_name: STRING
-			l_largest_index: INTEGER
-			l_index_str: STRING
-			l_index: INTEGER
+			a_unit_attached: a_unit /= Void
 		do
-			l_metrics := metrics
-			l_starter_cnt := a_name_starter.count + 1
-			from
-				l_largest_index := 1
-				l_metrics.start
-			until
-				l_metrics.after
-			loop
-				l_item := l_metrics.item
-				l_name := l_item.name
-				if l_name.count > l_starter_cnt and then l_name.item (l_starter_cnt) = '#' then
-					l_index_str := l_name.substring (l_starter_cnt + 1, l_name.count)
-					if l_index_str.is_integer then
-						l_index := l_index_str.to_integer
-						if l_index >= l_largest_index then
-							l_largest_index := l_index + 1
-						end
-					end
-				end
-				l_metrics.forth
-			end
-			create Result.make (l_starter_cnt + 5)
-			Result.append (a_name_starter)
-			Result.append_character ('#')
-			Result.append (l_largest_index.out)
+			Result := next_metric_name ("Unnamed " + a_unit.name + " metric")
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	last_loaded_metric_archive: LIST [EB_METRIC_ARCHIVE_NODE]
+			-- Last loaded metric archive by `load_metric_archive'
+
+	uuid_generator: UUID_GENERATOR is
+			-- UUID generator
+		once
+			create Result
 		ensure
 			result_attached: Result /= Void
 		end
@@ -605,9 +582,10 @@ feature -- Metric management
 
 feature -- Metric archive
 
-	load_metric_archive (a_file_name: STRING): LIST [EB_METRIC_ARCHIVE_NODE] is
+	load_metric_archive (a_file_name: STRING) is
 			-- Load metric archive from file named `a_file_name'.
-			-- Void if error occurs.
+			-- Store result in `last_loaded_metric_archive'.
+			-- Set `last_loaded_metric_archive' to Void if error occurs.
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
@@ -618,7 +596,9 @@ feature -- Metric archive
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
 			parse_file (a_file_name, l_callback)
 			if not has_error then
-				Result := l_callback.archive.twin
+				last_loaded_metric_archive := l_callback.archive.twin
+			else
+				last_loaded_metric_archive := Void
 			end
 		end
 
@@ -779,6 +759,51 @@ feature{NONE} -- Implementation
 				end
 				a_metric_list.forth
 			end
+		end
+
+	next_metric_name (a_name_starter: STRING): STRING is
+			-- Next numbered metric name with starter `a_name_starter'
+			-- For example, if metric named "Unnamed metric#1" exists in `metrics',
+			-- `next_metric_name' with starter "Unnamed metric" will return "Unnamed metric#2"
+		require
+			a_name_starter_attached: a_name_starter /= Void
+			not_a_name_starter_is_empty: not a_name_starter.is_empty
+		local
+			l_metrics: like metrics
+			l_starter_cnt: INTEGER
+			l_item: EB_METRIC
+			l_name: STRING
+			l_largest_index: INTEGER
+			l_index_str: STRING
+			l_index: INTEGER
+		do
+			l_metrics := metrics
+			l_starter_cnt := a_name_starter.count + 1
+			from
+				l_largest_index := 1
+				l_metrics.start
+			until
+				l_metrics.after
+			loop
+				l_item := l_metrics.item
+				l_name := l_item.name
+				if l_name.count > l_starter_cnt and then l_name.item (l_starter_cnt) = '#' then
+					l_index_str := l_name.substring (l_starter_cnt + 1, l_name.count)
+					if l_index_str.is_integer then
+						l_index := l_index_str.to_integer
+						if l_index >= l_largest_index then
+							l_largest_index := l_index + 1
+						end
+					end
+				end
+				l_metrics.forth
+			end
+			create Result.make (l_starter_cnt + 5)
+			Result.append (a_name_starter)
+			Result.append_character ('#')
+			Result.append (l_largest_index.out)
+		ensure
+			result_attached: Result /= Void
 		end
 
 invariant

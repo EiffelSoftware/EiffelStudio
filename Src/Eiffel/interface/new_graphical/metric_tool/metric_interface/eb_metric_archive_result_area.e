@@ -33,6 +33,13 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_TOOL_INTERFACE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -44,7 +51,7 @@ feature {NONE} -- Initialization
 			a_tool_attached: a_tool /= Void
 			a_panel_attached: a_panel /= Void
 		do
-			metric_tool := a_tool
+			set_metric_tool (a_tool)
 			metric_panel := a_panel
 			default_create
 		ensure
@@ -308,9 +315,6 @@ feature -- Load archive
 		end
 
 feature -- Access
-
-	metric_tool: EB_METRIC_TOOL
-			-- Metric tool
 
 	metric_panel: EB_METRIC_PANEL
 			-- Metric panel to which current is attached			

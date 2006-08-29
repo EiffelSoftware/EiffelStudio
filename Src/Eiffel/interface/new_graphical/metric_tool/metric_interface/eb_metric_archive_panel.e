@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 		do
 				-- Setup domain selector.
 			create domain_selector.make (False)
-			domain_selector.set_minimum_width (100)
+			domain_selector.set_minimum_width (120)
 				-- Setup metric selector.
 			create metric_selector.make (True)
 			metric_selector.set_minimum_width (160)
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 			compare_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
 			browse_reference_archive_btn.select_actions.extend (agent on_open_new_archive (agent on_comparison_archive_selected (reference_metric_archive_text)))
 			browse_current_archive_btn.select_actions.extend (agent on_open_new_archive (agent on_comparison_archive_selected (current_metric_archive_text)))
-			compare_btn.select_actions.extend (agent on_compare_archives)
+			compare_btn.select_actions.extend (agent do show_feedback_dialog (metric_names.t_analysing_archive, agent on_compare_archives, metric_tool.feedback_dialog, metric_tool_window) end)
 			run_btn.set_tooltip (metric_names.f_start_archive)
 			stop_btn.set_tooltip (metric_names.f_stop_archive)
 			new_archive_browse_btn.set_tooltip (metric_names.f_select_exist_archive_file)
@@ -235,6 +235,27 @@ feature -- Actions
 	on_select is
 			-- Action to be performed when current panel is selected
 		do
+			if not is_selected then
+				set_is_selected (True)
+			end
+			if not is_up_to_date then
+				metric_selector.load_metrics (True)
+				metric_selector.try_to_selected_last_metric
+				if metric_selector.last_selected_metric = Void then
+					metric_selector.select_first_metric
+				end
+				if last_update_request = compilation_start_update_request then
+						-- This is an update when Eiffel compilation starts.
+					if is_archive_running then
+						on_stop_metric_evaluation_button_pressed
+					end
+					synchronize_when_compile_start
+				elseif last_update_request = compilation_stop_update_request then
+						-- This is an update when Eiffel compilation stops.
+					synchronize_when_compile_stop
+				end
+				set_is_up_to_date (True)
+			end
 		end
 
 	on_open_new_archive (a_selection_agent: PROCEDURE [ANY, TUPLE]) is
@@ -245,7 +266,7 @@ feature -- Actions
 		do
 			open_file_dialog.open_actions.wipe_out
 			open_file_dialog.open_actions.extend (a_selection_agent)
-			open_file_dialog.show_modal_to_window (metric_tool.development_window.window)
+			open_file_dialog.show_modal_to_window (metric_tool_window)
 		end
 
 	on_new_archive_file_name_selected is
@@ -274,16 +295,19 @@ feature -- Actions
 					new_archive_file_name_text.set_foreground_color (default_foreground_color)
 					new_archive_file_name_text.set_tooltip (tooltip_from_archive (a_archive))
 					is_new_archive_file_exists := True
+					clean_btn.set_tooltip (metric_names.f_clean_archive)
 				else
 					clean_btn.disable_sensitive
 					clean_btn.enable_select
 					new_archive_file_name_text.set_foreground_color (red_color)
 					new_archive_file_name_text.set_tooltip (metric_names.t_selected_archive_not_valid)
+					clean_btn.set_tooltip (metric_names.t_selected_archive_not_valid)
 				end
 				is_new_archive_file_selected := True
 			else
 				clean_btn.disable_select
 				clean_btn.disable_sensitive
+				clean_btn.set_tooltip ("")
 				new_archive_file_name_text.set_foreground_color (default_foreground_color)
 				new_archive_file_name_text.remove_tooltip
 				is_new_archive_file_selected := not new_archive_file_name_text.text.is_empty
@@ -324,7 +348,7 @@ feature -- Actions
 				if l_msg /= Void then
 					create l_error_dialog.make_with_text (l_msg)
 					l_error_dialog.set_buttons (<<metric_names.t_ok>>)
-					l_error_dialog.show_modal_to_window (metric_tool.development_window.window)
+					l_error_dialog.show_modal_to_window (metric_tool_window)
 				else
 					l_file_name := new_archive_file_name_text.text
 					create {ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE]} l_archive.make (l_selected_metrics.count)
@@ -506,25 +530,21 @@ feature -- Notification
 		local
 			l_data: BOOLEAN_REF
 		do
-			metric_selector.load_metrics (True)
-			metric_selector.try_to_selected_last_metric
-			if metric_selector.last_selected_metric = Void then
-				metric_selector.select_first_metric
-			end
+			set_is_up_to_date (False)
 			if a_data /= Void then
 				l_data ?= a_data
 				if l_data /= Void then
 					if l_data.item then
 							-- This is an update when Eiffel compilation starts.
-						if is_archive_running then
-							on_stop_metric_evaluation_button_pressed
-						end
-						synchronize_when_compile_start
+						set_last_update_request (compilation_start_update_request)
 					else
 							-- This is an update when Eiffel compilation stops.
-						synchronize_when_compile_stop
+						set_last_update_request (compilation_stop_update_request)
 					end
 				end
+			end
+			if is_selected then
+				on_select
 			end
 		end
 
@@ -562,7 +582,8 @@ feature {NONE} -- Implementation
 			l_file_name := a_text_field.text
 			create l_file.make (l_file_name)
 			if l_file.exists and then not l_file.is_directory then
-				l_archive := metric_manager.load_metric_archive (l_file_name)
+				show_feedback_dialog (metric_names.t_analysing_archive, agent metric_manager.load_metric_archive (l_file_name), metric_tool.feedback_dialog, metric_tool_window)
+				l_archive := metric_manager.last_loaded_metric_archive
 				a_action.call ([True, not metric_manager.has_error, l_archive])
 				metric_manager.clear_last_error
 			else
@@ -604,7 +625,8 @@ feature {NONE} -- Implementation
 		do
 			l_metric_manager := metric_manager
 			l_metric_manager.clear_last_error
-			l_archive := l_metric_manager.load_metric_archive (a_file_name)
+			l_metric_manager.load_metric_archive (a_file_name)
+			l_archive := l_metric_manager.last_loaded_metric_archive
 			if not l_metric_manager.has_error then
 				create Result.make (l_archive.count)
 				from
@@ -803,7 +825,7 @@ feature {NONE} -- Implementation
 			if file.exists then
 				create confirm_dialog.make_with_text_and_actions ("Remote file will be loaded in:%N" + file_name +
 								"%NThis file already exists. Overwrite?", actions_array)
-				confirm_dialog.show_modal_to_window (metric_tool.development_window.window)
+				confirm_dialog.show_modal_to_window (metric_tool_window)
 			end
 			if not file.exists or overwrite then
 				target_file := "file://" + file_name
@@ -812,22 +834,22 @@ feature {NONE} -- Implementation
 				transfer_manager_builder.add_transaction (a_url_address, target_file)
 				if not transfer_manager_builder.last_added_source_correct then
 					create error_dialog.make_with_text ("Unable to read remote file.%NPlease check URL:%N" + a_url_address)
-					error_dialog.show_modal_to_window (metric_tool.development_window.window)
+					error_dialog.show_modal_to_window (metric_tool_window)
 				elseif not transfer_manager_builder.last_added_target_correct then
 					create error_dialog.make_with_text ("Unable to load remote file in:%N" + file_name +
 											"Please make sure file does not exist or is writable.")
-					error_dialog.show_modal_to_window (metric_tool.development_window.window)
+					error_dialog.show_modal_to_window (metric_tool_window)
 				else
 					transfer_manager_builder.build_manager
-					metric_tool.development_window.window.set_pointer_style (metric_tool.development_window.Wait_cursor)
+					metric_tool_window.set_pointer_style (metric_tool.development_window.Wait_cursor)
 					transfer_manager_builder.transfer
-					metric_tool.development_window.window.set_pointer_style (metric_tool.development_window.Standard_cursor)
+					metric_tool_window.set_pointer_style (metric_tool.development_window.Standard_cursor)
 					if transfer_manager_builder.transfer_succeeded then
 						Result := file_name
 					else
 						create error_dialog.make_with_text ("Unable to transfer remote file.%NReason: "
 																+ transfer_manager_builder.error_reason)
-						error_dialog.show_modal_to_window (metric_tool.development_window.window)
+						error_dialog.show_modal_to_window (metric_tool_window)
 					end
 				end
 			end
@@ -872,7 +894,7 @@ feature -- Overwritting
 		do
 			create l_dlg.make_with_text (a_msg)
 			l_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
-			l_dlg.show_relative_to_window (metric_tool.development_window.window)
+			l_dlg.show_relative_to_window (metric_tool_window)
 		end
 
 	load_archive (a_file_name: STRING): LIST [EB_METRIC_ARCHIVE_NODE] is
@@ -881,7 +903,8 @@ feature -- Overwritting
 			a_file_name_attached: a_file_name /= Void
 		do
 			metric_manager.clear_last_error
-			Result := metric_manager.load_metric_archive (a_file_name)
+			metric_manager.load_metric_archive (a_file_name)
+			Result := metric_manager.last_loaded_metric_archive
 			is_last_load_successful := not metric_manager.has_error
 			if not is_last_load_successful then
 				display_error_message

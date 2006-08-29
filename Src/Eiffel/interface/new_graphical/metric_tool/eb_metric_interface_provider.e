@@ -18,6 +18,8 @@ inherit
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 
+	EV_SHARED_APPLICATION
+
 feature -- Metric menu
 
 	metric_menu: EV_MENU is
@@ -98,21 +100,39 @@ feature -- Names
 			-- List of units
 			-- The first argument in tuple is unit's name, the second is its pixmap.
 			-- If `a_all' is True, include compilation and ratio unit.
+		local
+			l_unit_list: LIST [QL_METRIC_UNIT]
+			l_unit: QL_METRIC_UNIT
 		do
 			create {ARRAYED_LIST [TUPLE [QL_METRIC_UNIT, EV_PIXMAP]]} Result.make (11)
-			Result.extend ([target_unit, pixmaps.icon_pixmaps.metric_unit_target_icon])
-			Result.extend ([group_unit, pixmaps.icon_pixmaps.metric_unit_group_icon])
-			Result.extend ([class_unit, pixmaps.icon_pixmaps.metric_unit_class_icon])
-			Result.extend ([generic_unit, pixmaps.icon_pixmaps.metric_unit_generic_icon])
-			Result.extend ([feature_unit, pixmaps.icon_pixmaps.metric_unit_feature_icon])
-			Result.extend ([argument_unit, pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon])
-			Result.extend ([local_unit, pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon])
-			Result.extend ([assertion_unit, pixmaps.icon_pixmaps.metric_unit_assertion_icon])
-			Result.extend ([line_unit, pixmaps.icon_pixmaps.metric_unit_line_icon])
-			if a_all then
-				Result.extend ([compilation_unit, pixmaps.icon_pixmaps.metric_unit_compilation_icon])
-				Result.extend ([ratio_unit, pixmaps.icon_pixmaps.metric_unit_ratio_icon])
+
+			from
+				l_unit_list := preferences.metric_tool_data.unit_order
+				l_unit_list.start
+			until
+				l_unit_list.after
+			loop
+				l_unit := l_unit_list.item
+				if not a_all and then (l_unit = compilation_unit or l_unit = ratio_unit) then
+				else
+					Result.extend ([l_unit, pixmap_from_unit (l_unit)])
+				end
+				l_unit_list.forth
 			end
+
+--			Result.extend ([target_unit, pixmaps.icon_pixmaps.metric_unit_target_icon])
+--			Result.extend ([group_unit, pixmaps.icon_pixmaps.metric_unit_group_icon])
+--			Result.extend ([class_unit, pixmaps.icon_pixmaps.metric_unit_class_icon])
+--			Result.extend ([generic_unit, pixmaps.icon_pixmaps.metric_unit_generic_icon])
+--			Result.extend ([feature_unit, pixmaps.icon_pixmaps.metric_unit_feature_icon])
+--			Result.extend ([argument_unit, pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon])
+--			Result.extend ([local_unit, pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon])
+--			Result.extend ([assertion_unit, pixmaps.icon_pixmaps.metric_unit_assertion_icon])
+--			Result.extend ([line_unit, pixmaps.icon_pixmaps.metric_unit_line_icon])
+--			if a_all then
+--				Result.extend ([compilation_unit, pixmaps.icon_pixmaps.metric_unit_compilation_icon])
+--				Result.extend ([ratio_unit, pixmaps.icon_pixmaps.metric_unit_ratio_icon])
+--			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -390,8 +410,98 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
+feature -- Dialog
 
+	show_warning_dialog (a_msg: STRING; a_window: EV_WINDOW) is
+			-- Show warning dialog to display `a_msg'.
+		require
+			a_msg_attached: a_msg /= Void
+			a_window_attached: a_window /= Void
+		local
+			l_dialog: EV_WARNING_DIALOG
+		do
+			create l_dialog.make_with_text (a_msg)
+			l_dialog.show_modal_to_window (a_window)
+		end
 
+feature -- Actions binding
+
+	attach_non_editable_warning_to_text (a_msg: STRING; a_text: EV_TEXT_COMPONENT; a_window: EV_WINDOW) is
+			-- Attach actions to display `a_msg' to `a_text'.
+			-- A warning dialog will be displayed when a key is pressed on `a_text'.
+		require
+			a_msg_attached: a_msg /= Void
+			a_text_attached: a_text /= Void
+			a_window_attached: a_window /= Void
+		do
+			a_text.key_press_actions.extend (agent on_key_pressed_on_non_editable_text_field (?, a_text, a_msg, a_window))
+		end
+
+feature -- Feedback dialog
+
+	show_feedback_dialog (a_msg: STRING; a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_INFORMATION_DIALOG; a_window: EV_WINDOW) is
+			-- Show a feedback information `a_dialog' modal to `a_window' to display information `a_msg'.
+			-- `a_agent' will be added into `on_show_actions' of that dialog.
+		require
+			a_msg_attached: a_msg /= Void
+			a_agent_attached: a_agent /= Void
+			a_dialog_attached: a_dialog /= Void
+			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
+			a_window_attached: a_window /= Void
+		do
+			a_dialog.set_text (a_msg)
+			a_dialog.show_actions.wipe_out
+			a_dialog.show_actions.extend (agent call_agent_and_then_hide (a_agent, a_dialog))
+			a_dialog.show_modal_to_window (a_window)
+		end
+
+feature{NONE} -- Implementation
+
+	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING; a_window: EV_WINDOW) is
+			-- Action to be performed when `a_key' is pressed
+		require
+			a_key_attached: a_key /= Void
+			a_text_attached: a_text /= Void
+			a_msg_attached: a_msg /= Void
+			a_window_attached: a_window /= Void
+		local
+			l_code: INTEGER
+		do
+			l_code := a_key.code
+			if
+				a_key.is_arrow or
+				a_key.is_function or
+				l_code = {EV_KEY_CONSTANTS}.key_tab or
+				l_code = {EV_KEY_CONSTANTS}.key_home or
+				l_code = {EV_KEY_CONSTANTS}.key_end or
+				l_code = {EV_KEY_CONSTANTS}.key_page_up or
+				l_code = {EV_KEY_CONSTANTS}.key_page_down or
+				l_code = {EV_KEY_CONSTANTS}.key_ctrl or
+				l_code = {EV_KEY_CONSTANTS}.key_alt or
+				l_code = {EV_KEY_CONSTANTS}.key_shift or
+				(ev_application.ctrl_pressed and then (l_code = {EV_KEY_CONSTANTS}.key_c))
+			then
+			elseif (ev_application.ctrl_pressed and then l_code = {EV_KEY_CONSTANTS}.key_a) then
+				if a_text.text_length > 0 then
+					a_text.select_all
+				end
+			else
+				show_warning_dialog (a_msg, a_window)
+			end
+		end
+
+	call_agent_and_then_hide (a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_DIALOG) is
+			-- Call `a_agent' and then hide `a_dialog'.
+		require
+			a_agent_attached: a_agent /= Void
+			a_dialog_attached: a_dialog /= Void
+			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
+		do
+			a_agent.call ([])
+			a_dialog.hide
+		ensure
+			a_dialog_destroyed: a_dialog.is_destroyed
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

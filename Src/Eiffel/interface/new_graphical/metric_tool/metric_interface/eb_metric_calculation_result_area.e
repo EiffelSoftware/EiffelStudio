@@ -82,6 +82,13 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_TOOL_INTERFACE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -93,17 +100,20 @@ feature {NONE} -- Initialization
 			a_tool_attached: a_tool /= Void
 			a_panel_attached: a_panel /= Void
 		do
-			metric_tool := a_tool
+			set_metric_tool (a_tool)
 			metric_panel := a_panel
+			on_show_percentage_change_from_outside_agent := agent on_show_percentage_change_from_outside
 			default_create
-
 			create content.make (2)
 			content.extend (create {HASH_TABLE [EV_GRID_ITEM, INTEGER]}.make (100))
 			content.extend (create {HASH_TABLE [EV_GRID_ITEM, INTEGER]}.make (100))
+			create invisible_items.make
+			is_first_display := True
 		ensure
 			metric_tool_attached: metric_tool = a_tool
 			metric_panel_attached: metric_panel /= Void
 			content_attached: content /= Void
+			invisible_items_attached: invisible_items /= Void
 		end
 
 	user_initialization is
@@ -115,6 +125,7 @@ feature {NONE} -- Initialization
 		local
 			l_item_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
 			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
+			l_text: EV_TEXT_FIELD
 		do
 				-- Setup `input_grid'.
 			create input_grid
@@ -141,12 +152,13 @@ feature {NONE} -- Initialization
 			editor_token_grid_support.synchronize_color_or_font_change_with_editor
 			editor_token_grid_support.synchronize_scroll_behavior_with_editor
 
-			create grid_wrapper.make (result_grid)
 			create l_item_sort_info.make (agent item_order_tester, ascending_order)
 			create l_path_sort_info.make (agent path_order_tester, ascending_order)
-			grid_wrapper.set_sort_action (agent sort_agent)
 			l_item_sort_info.enable_auto_indicator
 			l_path_sort_info.enable_auto_indicator
+
+			create grid_wrapper.make (result_grid)
+			grid_wrapper.set_sort_action (agent sort_agent)
 			grid_wrapper.set_sort_info (1, l_item_sort_info)
 			grid_wrapper.set_sort_info (2, l_path_sort_info)
 			grid_wrapper.enable_auto_sort_order_change
@@ -169,6 +181,29 @@ feature {NONE} -- Initialization
 			result_grid.drop_actions.extend (agent metric_panel.drop_cluster)
 			result_grid.drop_actions.extend (agent metric_panel.drop_class)
 			result_grid.drop_actions.extend (agent metric_panel.drop_feature)
+
+			create l_text
+			metric_name_text.set_background_color (l_text.background_color)
+			metric_name_text.pointer_double_press_actions.extend (agent on_pointer_double_click_on_metric_name_text)
+			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, metric_name_text, metric_tool_window)
+			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, value_text, metric_tool_window)
+			value_text.set_background_color (l_text.background_color)
+
+			update_warning_area.hide
+			update_warning_lbl.set_text (metric_names.t_result_not_up_to_date)
+			update_warning_lbl.set_tooltip (metric_names.f_run_metric_again)
+			update_warning_pixmap.copy (pixmaps.icon_pixmaps.general_warning_icon)
+			update_warning_pixmap.set_tooltip (metric_names.f_run_metric_again)
+			filter_invisible_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_filter_icon)
+			filter_invisible_item_btn.set_tooltip (metric_names.f_filter_result)
+			filter_invisible_item_btn.select_actions.extend (agent on_filter_result)
+			tool_bar.hide
+
+			show_percentage_btn.set_text ("%%")
+			show_percentage_btn.set_tooltip (metric_names.f_display_in_percentage)
+			show_percentage_btn.select_actions.extend (agent on_show_percentage_changes)
+			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.extend (on_show_percentage_change_from_outside_agent)
+			on_show_percentage_change_from_outside
 		ensure then
 			input_grid_attached: input_grid /= Void
 			editor_token_grid_support_attached: editor_token_grid_support /= Void
@@ -183,6 +218,10 @@ feature -- Result loading
 			a_metric_attached: a_metric /= Void
 			a_input_attached: a_input /= Void
 		do
+			if domain /= Void then
+				domain.wipe_out
+			end
+			invisible_items.wipe_out
 			load_metric_information (a_metric, a_value)
 			load_input_information (a_input)
 			load_detailed_result_information (a_result)
@@ -196,16 +235,27 @@ feature -- Result loading
 			l_tooltip: STRING
 		do
 			metric_name_text.set_text (a_metric.name)
-			l_tooltip := metric_tooltip (a_metric, True)
-			if not l_tooltip.is_empty then
-				metric_name_text.set_tooltip (l_tooltip)
+			if metric_manager.has_metric (a_metric.name) then
+				l_tooltip := metric_tooltip (a_metric, True)
+				if not l_tooltip.is_empty then
+					metric_name_text.set_tooltip (l_tooltip)
+				end
 			end
-			metric_name_text.pointer_double_press_actions.extend (agent on_pointer_double_click_on_metric_name_text)
 			type_name_text.set_text (displayed_name (name_of_metric_type (metric_type_id (a_metric))))
 			type_pixmap.copy (pixmap_from_metric_type (metric_type_id (a_metric)))
 			unit_name_text.set_text (displayed_name (a_metric.unit.name))
 			unit_pixmap.copy (pixmap_from_unit (a_metric.unit))
-			value_text.set_text (metric_value (a_value, False))
+			value_text.set_text (metric_value (a_value, a_metric.is_ratio and then show_percentage_btn.is_selected))
+			value_text.set_data (a_value)
+			if a_metric.is_ratio then
+				show_percentage_btn.enable_sensitive
+				if is_first_display then
+					is_first_display := False
+					show_percentage_btn.enable_select
+				end
+			else
+				show_percentage_btn.disable_sensitive
+			end
 		end
 
 	load_input_information (a_input: EB_METRIC_DOMAIN) is
@@ -261,10 +311,7 @@ feature{NONE} -- Implementation/Access
 	grid_wrapper: EVS_SEARCHABLE_COMPONENT [EB_METRIC_RESULT_ROW]
 			-- `result_grid' wrapper
 
-	metric_tool: EB_METRIC_TOOL
-			-- Metric tool
-
-	domain: DS_ARRAYED_LIST [EB_METRIC_RESULT_ROW]
+	domain: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
 			-- Domain to be displayed in Current
 
 	metric_panel: EB_METRIC_PANEL
@@ -286,7 +333,7 @@ feature{NONE} -- Implementation/Basic operation
 			result_grid.column (2).remove_pixmap
 			if a_domain /= Void then
 				result_grid.column (1).set_title (displayed_name (domain_type_name (a_domain)))
-				create domain.make (a_domain.count)
+				create domain.make
 				l_domain := domain
 				from
 					l_content := a_domain.content
@@ -312,13 +359,24 @@ feature{NONE} -- Implementation/Sorting
 		require
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
+		do
+			last_comparator := a_comparator
+			sort_domain (a_comparator)
+			refresh_grid
+		end
+
+	sort_domain (a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]) is
+			-- Sort `domain' using `a_comparator'.
+		require
+			a_comparator_attached: a_comparator /= Void
 		local
 			l_sorter: DS_QUICK_SORTER [EB_METRIC_RESULT_ROW]
+			l_domain: like domain
 		do
-			if domain /= Void then
+			l_domain := domain
+			if l_domain /= Void then
 				create l_sorter.make (a_comparator)
-				l_sorter.sort (domain)
-				refresh_grid
+				l_sorter.sort (l_domain)
 			end
 		end
 
@@ -612,6 +670,9 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	is_first_display: BOOLEAN
+			-- Is first display metric result?
+
 feature{NONE} -- Implementation
 
 	on_color_or_font_changed is
@@ -637,6 +698,106 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	on_filter_result is
+			-- Action to be performed when `filter_invisible_items_btn' is pressed.
+		do
+			if filter_invisible_item_btn.is_selected then
+				remove_invisible_items_from_domain
+			else
+				restore_invisible_items_to_domain
+			end
+			if last_comparator /= Void then
+				sort_domain (last_comparator)
+			end
+			refresh_grid
+		end
+
+	on_show_percentage_changes is
+			-- Action to be performed when selection status of `show_percentage_btn' changes
+		local
+			l_double: DOUBLE_REF
+		do
+			if show_percentage_btn.is_sensitive then
+				l_double ?= value_text.data
+				if l_double /= Void then
+					value_text.set_text (metric_value (l_double.item, show_percentage_btn.is_selected))
+				end
+			end
+			if preferences.metric_tool_data.is_percentage_for_ratio_displayed /= show_percentage_btn.is_selected then
+				preferences.metric_tool_data.display_percentage_for_ratio_preference.set_value (show_percentage_btn.is_selected)
+			end
+		end
+
+	on_show_percentage_change_from_outside is
+			-- Action to be performed when show percentage for ratio metric value is changed in preference setting window			
+		local
+			l_btn: like show_percentage_btn
+			l_double: DOUBLE_REF
+		do
+			l_btn := show_percentage_btn
+			if preferences.metric_tool_data.is_percentage_for_ratio_displayed then
+				l_btn.enable_select
+			else
+				l_btn.disable_select
+			end
+			if l_btn.is_sensitive then
+				l_double ?= value_text.data
+				if l_double /= Void then
+					value_text.set_text (metric_value (l_double.item, show_percentage_btn.is_selected))
+				end
+			end
+		end
+
+	invisible_items: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
+			-- List of invisible result rows
+
+	remove_invisible_items_from_domain is
+			-- Remove invisible items from `domain' and store them in `invisible_items'.
+		local
+			l_domain: like domain
+			l_invisible_items: like invisible_items
+			l_item: EB_METRIC_RESULT_ROW
+		do
+			l_domain := domain
+			l_invisible_items := invisible_items
+			if l_domain /= Void then
+				from
+					l_domain.start
+				until
+					l_domain.after
+				loop
+					l_item := l_domain.item_for_iteration
+					if not l_item.item.is_visible then
+						l_invisible_items.force_last (l_item)
+						l_domain.remove_at
+					else
+						l_domain.forth
+					end
+				end
+			end
+		end
+
+	restore_invisible_items_to_domain is
+			-- Restore invisible items in `invisible_items' to `domain'.
+		local
+			l_domain: like domain
+			l_invisible_items: like invisible_items
+		do
+			l_domain := domain
+			l_invisible_items := invisible_items
+			if not l_invisible_items.is_empty then
+				l_domain.finish
+				l_domain.extend_right (l_invisible_items)
+				l_invisible_items.wipe_out
+			end
+		end
+
+	last_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]
+			-- Last comparator
+
+	on_show_percentage_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_show_precentage_change_from_outside'
+
 feature -- Recycle
 
 	recycle is
@@ -648,16 +809,17 @@ feature -- Recycle
 			quick_search_bar := Void
 			editor_token_grid_support.desynchronize_color_or_font_change_with_editor
 			editor_token_grid_support.desynchronize_scroll_behavior_with_editor
+			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.prune_all (on_show_percentage_change_from_outside_agent)
 		end
 
 invariant
 	content_attached: content /= Void
-	metric_tool_attached: metric_tool /= Void
 	input_grid_attached: input_grid /= Void
 	result_grid_attached: result_grid /= Void
 	grid_wrapper_attached: grid_wrapper /= Void
 	editor_token_grid_support_attached: editor_token_grid_support /= Void
 	metric_panel_attached: metric_panel /= Void
+	invisible_items_attached: invisible_items /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

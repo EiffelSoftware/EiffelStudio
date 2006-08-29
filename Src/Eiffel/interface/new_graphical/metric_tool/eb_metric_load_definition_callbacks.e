@@ -173,11 +173,11 @@ feature{NONE} -- Process
 	process_basic_metric is
 			-- Process "basic_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING]
+			l_id: TUPLE [name: STRING; unit: STRING; uuid: UUID]
 		do
 			l_id := current_metric_identifier
 			if not has_error then
-				current_basic_metric := factory.new_basic_metric (l_id.name, unit_table.item (l_id.unit))
+				current_basic_metric := factory.new_basic_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid)
 				current_metric := current_basic_metric
 			end
 		end
@@ -185,11 +185,11 @@ feature{NONE} -- Process
 	process_linear_metric is
 			-- Process "linear_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING]
+			l_id: TUPLE [name: STRING; unit: STRING; uuid: UUID]
 		do
 			l_id := current_metric_identifier
 			if not has_error then
-				current_linear_metric := factory.new_linear_metric (l_id.name, unit_table.item (l_id.unit))
+				current_linear_metric := factory.new_linear_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid)
 				current_metric := current_linear_metric
 			end
 		end
@@ -197,14 +197,20 @@ feature{NONE} -- Process
 	process_ratio_metric is
 			-- Process "ratio_metric" definition list node.		
 		local
-			l_id: TUPLE [name: STRING; unit: STRING]
+			l_id: TUPLE [name: STRING; unit: STRING; uuid: UUID]
 			l_num: STRING
 			l_den: STRING
+			l_num_uuid_str: STRING
+			l_den_uuid_str: STRING
+			l_num_uuid: UUID
+			l_den_uuid: UUID
 		do
 			l_id := current_metric_identifier
 			if not has_error then
 				l_num := current_attributes.item (at_numerator)
 				l_den := current_attributes.item (at_denominator)
+				l_num_uuid_str := current_attributes.item (at_numerator_uuid)
+				l_den_uuid_str := current_attributes.item (at_denominator_uuid)
 				if l_num = Void then
 					set_parse_error_message ("Missing numerator metric for ratio metric")
 				end
@@ -212,7 +218,13 @@ feature{NONE} -- Process
 					set_parse_error_message ("Missing denominator metric for ratio metric")
 				end
 				if not has_error then
-					current_ratio_metric := factory.new_ratio_metric (l_id.name, unit_table.item (l_id.unit), l_num, l_den)
+					l_num_uuid := check_uuid_vadility (l_num_uuid_str, " for numerator metric in ratio metric %"" + l_id.name + "%"")
+				end
+				if not has_error then
+					l_den_uuid := check_uuid_vadility (l_den_uuid_str, " for denominator metric in ratio metric %"" + l_id.name + "%"")
+				end
+				if not has_error then
+					current_ratio_metric := factory.new_ratio_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid, l_num, l_num_uuid, l_den, l_den_uuid)
 					current_metric := current_ratio_metric
 				end
 			end
@@ -223,9 +235,12 @@ feature{NONE} -- Process
 		local
 			l_coefficient: STRING
 			l_metric: STRING
+			l_uuid_str: STRING
+			l_uuid: UUID
 		do
 			l_coefficient := internal_name (current_attributes.item (at_coefficient))
 			l_metric := internal_name (current_attributes.item (at_name))
+			l_uuid_str := current_attributes.item (at_uuid)
 			if l_metric = Void then
 				set_parse_error_message ("Missing metric name.")
 			end
@@ -242,6 +257,12 @@ feature{NONE} -- Process
 				end
 				current_linear_metric.coefficient.extend (l_coefficient.to_double)
 				current_linear_metric.variable_metric.extend (l_metric)
+			end
+			if not has_error then
+				l_uuid := check_uuid_vadility (l_uuid_str, " in metrc %"" + l_metric + "%"")
+				if not has_error then
+					current_linear_metric.variable_metric_uuid.extend (l_uuid)
+				end
 			end
 		end
 
@@ -646,29 +667,39 @@ feature{NONE} -- Implementation
 				-- basic_metric
 				-- * name
 				-- * unit
-			create l_attr.make (2)
+				-- * uuid				
+			create l_attr.make (3)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_unit, n_unit)
+			l_attr.force (at_uuid, n_uuid)
 			Result.force (l_attr, t_basic_metric)
 
 				-- linear_metric
 				-- * name
 				-- * unit
-			create l_attr.make (2)
+				-- * uuid
+			create l_attr.make (3)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_unit, n_unit)
+			l_attr.force (at_uuid, n_uuid)
 			Result.force (l_attr, t_linear_metric)
 
 				-- ratio_metric
 				-- * name
 				-- * unit
+				-- * uuid				
 				-- * numerator
+				-- * numerator uuid
 				-- * denominator
-			create l_attr.make (4)
+				-- * denominator uuid
+			create l_attr.make (7)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_unit, n_unit)
+			l_attr.force (at_uuid, n_uuid)
 			l_attr.force (at_numerator, n_numerator)
+			l_attr.force (at_numerator_uuid, n_numerator_uuid)
 			l_attr.force (at_denominator, n_denominator)
+			l_attr.force (at_denominator_uuid, n_denominator_uuid)
 			Result.force (l_attr, t_ratio_metric)
 
 				-- scope_ratio_metric
@@ -771,22 +802,27 @@ feature{NONE} -- Implementation
 			create l_attr.make (2)
 			l_attr.force (at_coefficient, n_coefficient)
 			l_attr.force (at_name, n_name)
+			l_attr.force (at_uuid, n_uuid)
 			Result.force (l_attr, t_variable_metric)
 		end
 
 feature{NONE} -- Implementation
 
-	current_metric_identifier: TUPLE [name: STRING; unit: STRING] is
+	current_metric_identifier: TUPLE [name: STRING; unit: STRING; uuid: UUID] is
 			-- Metric identifier of `current_metric'
 		local
 			l_name: STRING
 			l_unit: STRING
+			l_uuid_str: STRING
+			l_uuid: UUID
 		do
 			l_name := current_attributes.item (at_name)
 			l_unit := internal_name (current_attributes.item (at_unit))
-			if l_name = Void then
+			l_uuid_str := current_attributes.item (at_uuid)
+			if not has_error and then l_name = Void then
 				set_parse_error_message ("Missing name of metric")
-			else
+			end
+			if not has_error then
 				if l_unit = Void then
 					set_parse_error_message ("Missing unit for metric")
 				elseif not is_unit_valid (l_unit) then
@@ -794,7 +830,10 @@ feature{NONE} -- Implementation
 				end
 			end
 			if not has_error then
-				Result := [l_name, l_unit]
+				l_uuid := check_uuid_vadility (l_uuid_str, " in metric %"" + l_name + "%"")
+			end
+			if not has_error then
+				Result := [l_name, l_unit, l_uuid]
 			end
 		end
 
@@ -868,6 +907,26 @@ feature{NONE} -- Implementation
 			l_nary_cri ?= a_criterion
 			if l_nary_cri /= Void then
 				current_criterion_stack.extend (l_nary_cri)
+			end
+		end
+
+	check_uuid_vadility (a_uuid_str: STRING; a_msg: STRING): UUID is
+			-- Check vadility of `a_uuid_str'.
+			-- If valid, return an UUID object representing `a_uuid_str', otherwise, return Void.
+		require
+			a_msg_attached: a_msg /= Void
+		local
+			l_uuid: UUID
+		do
+			if a_uuid_str = Void then
+				set_parse_error_message ("Missing uuid " + a_msg)
+			else
+				create l_uuid
+				if not l_uuid.is_valid_uuid (a_uuid_str) then
+					set_parse_error_message  ("Invalid UUID %"" + a_uuid_str +"%"" + a_msg)
+				else
+					create Result.make_from_string (a_uuid_str)
+				end
 			end
 		end
 

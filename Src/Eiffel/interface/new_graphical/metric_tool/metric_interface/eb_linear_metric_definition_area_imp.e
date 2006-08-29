@@ -27,6 +27,7 @@ feature {NONE}-- Initialization
 			
 				-- Create all widgets.
 			create definition_area
+			create metric_definition_lbl
 			create grid_area
 			create toolbar_area
 			create l_ev_cell_1
@@ -44,6 +45,7 @@ feature {NONE}-- Initialization
 			
 				-- Build widget structure.
 			extend (definition_area)
+			definition_area.extend (metric_definition_lbl)
 			definition_area.extend (grid_area)
 			definition_area.extend (toolbar_area)
 			toolbar_area.extend (l_ev_cell_1)
@@ -72,9 +74,12 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
+			definition_area.set_padding (3)
+			definition_area.disable_item_expand (metric_definition_lbl)
 			definition_area.disable_item_expand (toolbar_area)
 			definition_area.disable_item_expand (l_ev_horizontal_box_1)
 			definition_area.disable_item_expand (l_ev_horizontal_box_2)
+			metric_definition_lbl.align_text_left
 			grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			grid_area.set_border_width (1)
 			toolbar_area.disable_item_expand (tool_bar)
@@ -108,7 +113,7 @@ feature -- Access
 	grid_area,
 	toolbar_area: EV_HORIZONTAL_BOX
 	definition_area: EV_VERTICAL_BOX
-	expression_lbl: EV_LABEL
+	metric_definition_lbl, expression_lbl: EV_LABEL
 
 feature {NONE} -- Implementation
 

@@ -79,8 +79,11 @@ feature{NONE} -- Initialization
 			a_tool_attached: a_tool /= Void
 		do
 			metric_tool := a_tool
-			default_create
 			create {QL_TARGET_DOMAIN_GENERATOR} domain_generator_internal
+			on_show_percentage_btn_change_from_outside_agent := agent on_show_percentage_btn_change_from_outside
+			on_filter_result_change_from_outside_agent := agent on_filter_result_change_from_outside
+			on_auto_go_to_result_change_from_outside_agent := agent on_auto_go_to_result_change_from_outside
+			default_create
 		ensure
 			metric_tool_set: metric_tool = a_tool
 			domain_generator_internal_attached: domain_generator_internal /= Void
@@ -159,6 +162,7 @@ feature {NONE} -- Initialization
 			choose_input_domain_lbl.set_text (metric_names.l_select_input_domain)
 			choose_metric_lbl.set_text (metric_names.l_select_metric)
 			metric_value_lbl.set_text (metric_names.e_value)
+			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, metric_value_text, metric_tool_window)
 			choose_input_domain_lbl.set_text (metric_names.t_select_source_domain)
 			choose_metric_lbl.set_text (metric_names.t_select_metric)
 
@@ -180,6 +184,17 @@ feature {NONE} -- Initialization
 			show_percent_btn.set_text ("%%")
 			show_percent_btn.set_tooltip (metric_names.f_display_in_percentage)
 			show_percent_btn.select_actions.extend (agent on_show_percentage_btn_change)
+
+			auto_go_to_result_btn.set_pixmap (pixmaps.icon_pixmaps.context_link_icon)
+			auto_go_to_result_btn.set_tooltip (metric_names.f_auto_go_to_result)
+			auto_go_to_result_btn.select_actions.extend (agent on_auto_go_to_result_change)
+
+			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.extend (on_show_percentage_btn_change_from_outside_agent)
+			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.extend (on_filter_result_change_from_outside_agent)
+			preferences.metric_tool_data.automatic_go_to_result_panel_preference.change_actions.extend (on_auto_go_to_result_change_from_outside_agent)
+			on_show_percentage_btn_change_from_outside
+			on_filter_result_change_from_outside
+			on_auto_go_to_result_change_from_outside
 		end
 
 feature -- Access
@@ -307,10 +322,15 @@ feature -- Actions
 			current_metric := a_metric
 			display_metric
 			if a_metric /= Void and then a_metric.is_ratio then
+				if show_percent_btn.data = Void then
+					if not show_percent_btn.is_selected then
+						show_percent_btn.enable_select
+					end
+					show_percent_btn.set_data (True)
+				end
 				show_percent_btn.enable_sensitive
 			else
 				show_percent_btn.disable_sensitive
-				show_percent_btn.disable_select
 			end
 		end
 
@@ -359,14 +379,14 @@ feature -- Actions
 				display_status_message ("")
 				is_metric_running := False
 				metric_value_text.set_data (l_value)
-				l_value_text := metric_value (l_value, show_percent_btn.is_selected)
+				l_value_text := metric_value (l_value, show_percent_btn.is_sensitive and then show_percent_btn.is_selected)
 				metric_value_text.set_text (l_value_text)
 				if l_metric.is_fill_domain_enabled then
 					metric_tool.register_metric_result_for_display (l_metric, domain_selector.domain, l_value, l_metric.last_result_domain)
 				else
 					metric_tool.register_metric_result_for_display (l_metric, domain_selector.domain, l_value, Void)
 				end
-				if a_detailed then
+				if auto_go_to_result_btn.is_selected then
 					metric_tool.go_to_result
 				end
 			end
@@ -406,6 +426,38 @@ feature -- Actions
 	on_select is
 			-- Action to be performed when current is selected
 		do
+			if not is_selected then
+				set_is_selected (True)
+			end
+			if not is_up_to_date then
+					-- Synchronize metric selector.
+				metric_selector.load_metrics (True)
+				metric_selector.try_to_selected_last_metric
+				if metric_selector.last_selected_metric = Void then
+					metric_selector.select_first_metric
+				end
+				if is_using_quick_metric then
+					on_metric_selected (quick_metric (Void, False))
+				else
+					current_metric := metric_selector.selected_metric
+				end
+					-- Synchronize domain selector.
+				domain_selector.refresh
+
+				if last_update_request = compilation_start_update_request then
+					synchronize_when_compile_start
+						-- This is an update when Eiffel compilation starts.
+						-- Terminate metric evaluation.					
+					if is_metric_running then
+						is_stopped_by_eiffel_compilation := True
+						on_stop_metric_evaluation_button_pressed
+					end
+				elseif last_update_request = compilation_stop_update_request then
+						-- This is an update when Eiffel compilation stops.
+					synchronize_when_compile_stop
+				end
+				set_is_up_to_date (True)
+			end
 		end
 
 	on_go_to_definition_button_pressed is
@@ -414,6 +466,7 @@ feature -- Actions
 			if is_using_quick_metric then
 				if current_metric /= Void then
 					metric_tool.go_to_definition (current_metric, True)
+					uuid_internal := Void
 				end
 			else
 				if
@@ -444,6 +497,7 @@ feature -- Actions
 			l_unit ?= unit_combo.selected_item.data
 			check l_unit /= Void end
 			metric_definer.set_unit (l_unit)
+			metric_definer.set_uuid (uuid)
 			metric_definer.load_metric (Void, False)
 		end
 
@@ -486,19 +540,77 @@ feature -- Actions
 
 	on_show_percentage_btn_change is
 			-- Action to be performed when selection status of `show_percentage_btn' changes
+		local
+			l_selected: BOOLEAN
 		do
-			refresh_metric_text (show_percent_btn.is_selected)
+			l_selected := show_percent_btn.is_selected
+			refresh_metric_text (l_selected)
+			if preferences.metric_tool_data.is_percentage_for_ratio_displayed  /= l_selected then
+				preferences.metric_tool_data.display_percentage_for_ratio_preference.set_value (l_selected)
+			end
 		end
 
-	refresh_metric_text (a_percentage: BOOLEAN) is
-			-- Refresh text displayed in metric value text field.
-			-- If `a_percentage' is True, display text in percentage.
+	on_show_percentage_btn_change_from_outside is
+			-- Action to be performed when show percentage for ratio metric value is changed in preference setting window			
 		local
-			l_double: DOUBLE_REF
+			l_btn: like show_percent_btn
 		do
-			l_double ?= metric_value_text.data
-			if l_double /= Void then
-				metric_value_text.set_text (metric_value (l_double, a_percentage))
+			l_btn := show_percent_btn
+			if preferences.metric_tool_data.is_percentage_for_ratio_displayed then
+				l_btn.enable_select
+			else
+				l_btn.disable_select
+			end
+			if l_btn.is_sensitive then
+				refresh_metric_text (l_btn.is_selected)
+			end
+		end
+
+	on_filter_result_change is
+			-- Action to be performed when selection status of `filter_result_btn' changes
+		local
+			l_selected: BOOLEAN
+		do
+			l_selected := filter_result_btn.is_selected
+			if preferences.metric_tool_data.is_invisible_result_filtered  /= l_selected then
+				preferences.metric_tool_data.filter_invisible_result_preference.set_value (l_selected)
+			end
+		end
+
+	on_filter_result_change_from_outside is
+			-- Action to be performed when selection status of `filter_result_btn' changes from preferences setting window
+		local
+			l_btn: like show_percent_btn
+		do
+			l_btn := filter_result_btn
+			if preferences.metric_tool_data.is_invisible_result_filtered then
+				l_btn.enable_select
+			else
+				l_btn.disable_select
+			end
+		end
+
+	on_auto_go_to_result_change is
+			-- Action to be performed when selection status of `auto_go_to_result_btn' changes
+		local
+			l_selected: BOOLEAN
+		do
+			l_selected := auto_go_to_result_btn.is_selected
+			if preferences.metric_tool_data.should_go_to_result_panel_automatically  /= l_selected then
+				preferences.metric_tool_data.automatic_go_to_result_panel_preference.set_value (l_selected)
+			end
+		end
+
+	on_auto_go_to_result_change_from_outside is
+			-- Action to be performed when selection status of `auto_go_to_result_btn' changes from preferences setting window
+		local
+			l_btn: like auto_go_to_result_btn
+		do
+			l_btn := auto_go_to_result_btn
+			if preferences.metric_tool_data.should_go_to_result_panel_automatically then
+				l_btn.enable_select
+			else
+				l_btn.disable_select
 			end
 		end
 
@@ -513,7 +625,8 @@ feature {NONE} -- Implementation
 			l_unit: QL_METRIC_UNIT
 		do
 			l_unit ?= unit_combo.selected_item.data
-			create l_metric.make (metric_manager.next_metric_name ("Unnamed metric"), l_unit)
+			check l_unit /= Void end
+			create l_metric.make (metric_manager.next_metric_name_with_unit (l_unit), l_unit, uuid)
 			if a_appliable then
 				l_metric.set_criteria (a_criterion)
 			else
@@ -596,6 +709,18 @@ feature -- Metric management
 			end
 		end
 
+	refresh_metric_text (a_percentage: BOOLEAN) is
+			-- Refresh text displayed in metric value text field.
+			-- If `a_percentage' is True, display text in percentage.
+		local
+			l_double: DOUBLE_REF
+		do
+			l_double ?= metric_value_text.data
+			if l_double /= Void then
+				metric_value_text.set_text (metric_value (l_double, a_percentage))
+			end
+		end
+
 feature{NONE} -- Implementation
 
 	initialize_unit is
@@ -653,6 +778,32 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	uuid: UUID is
+			-- Current UUID used for quick metric
+		local
+			l_uuid_generator: UUID_GENERATOR
+		do
+			if uuid_internal = Void then
+				create l_uuid_generator
+				uuid_internal := l_uuid_generator.generate_uuid
+			end
+			Result := uuid_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	uuid_internal: like uuid
+			-- Implementation of `uuid'		
+
+	on_show_percentage_btn_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_show_precentage_btn_change_from_outside'
+
+	on_filter_result_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_filter_result_change_from_outside'
+
+	on_auto_go_to_result_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_auto_to_result_change_from_outside'
+
 feature{NONE} -- Notification
 
 	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
@@ -662,34 +813,19 @@ feature{NONE} -- Notification
 		local
 			l_data: BOOLEAN_REF
 		do
-				-- Synchronize metric selector.
-			metric_selector.load_metrics (True)
-			metric_selector.try_to_selected_last_metric
-			if metric_selector.last_selected_metric = Void then
-				metric_selector.select_first_metric
-			end
-			if is_using_quick_metric then
-				on_metric_selected (quick_metric (Void, False))
-			else
-				current_metric := metric_selector.selected_metric
-			end
-				-- Synchronize domain selector.
-			domain_selector.refresh
+			set_is_up_to_date (False)
 			if a_data /= Void then
 				l_data ?= a_data
 				check l_data /= Void end
 				if l_data.item then
-					synchronize_when_compile_start
-						-- This is an update when Eiffel compilation starts.
-						-- Terminate metric evaluation.					
-					if is_metric_running then
-						is_stopped_by_eiffel_compilation := True
-						on_stop_metric_evaluation_button_pressed
-					end
+					set_last_update_request (compilation_start_update_request)
 				else
 						-- This is an update when Eiffel compilation stops.
-					synchronize_when_compile_stop
+					set_last_update_request (compilation_stop_update_request)
 				end
+			end
+			if is_selected then
+				on_select
 			end
 		end
 
@@ -698,6 +834,12 @@ feature -- Recycle
 	recycle is
 			-- To be called when the button has became useless.
 		do
+			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.prune_all (on_show_percentage_btn_change_from_outside_agent)
+			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.prune_all (on_filter_result_change_from_outside_agent)
+			preferences.metric_tool_data.automatic_go_to_result_panel_preference.change_actions.prune_all (on_auto_go_to_result_change_from_outside_agent)
+			on_show_percentage_btn_change_from_outside
+			on_filter_result_change_from_outside
+			on_auto_go_to_result_change_from_outside
 		end
 
 invariant

@@ -29,7 +29,6 @@ feature {NONE}-- Initialization
 			create name_area
 			create name_lbl
 			create name_text
-			create name_text_frame
 			create name_text_read_only
 			create type_area
 			create l_ev_cell_1
@@ -47,15 +46,13 @@ feature {NONE}-- Initialization
 			create description_area
 			create description_lbl
 			create description_text
-			create description_frame
 			create description_text_read_only
 			
 				-- Build widget structure.
 			extend (name_area)
 			name_area.extend (name_lbl)
 			name_area.extend (name_text)
-			name_area.extend (name_text_frame)
-			name_text_frame.extend (name_text_read_only)
+			name_area.extend (name_text_read_only)
 			name_area.extend (type_area)
 			type_area.extend (l_ev_cell_1)
 			type_area.extend (l_ev_horizontal_box_1)
@@ -72,8 +69,7 @@ feature {NONE}-- Initialization
 			extend (description_area)
 			description_area.extend (description_lbl)
 			description_area.extend (description_text)
-			description_area.extend (description_frame)
-			description_frame.extend (description_text_read_only)
+			description_area.extend (description_text_read_only)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -92,13 +88,12 @@ feature {NONE}-- Initialization
 			name_area.set_padding (3)
 			name_area.disable_item_expand (name_lbl)
 			name_area.disable_item_expand (name_text)
-			name_area.disable_item_expand (name_text_frame)
+			name_area.disable_item_expand (name_text_read_only)
 			name_area.disable_item_expand (type_area)
 			name_lbl.set_text ("Name:")
 			name_lbl.set_minimum_width (65)
 			name_lbl.align_text_left
 			name_text.set_minimum_width (150)
-			name_text_frame.set_style (1)
 			name_text_read_only.set_minimum_width (150)
 			name_text_read_only.disable_edit
 			type_area.set_padding (3)
@@ -137,8 +132,6 @@ feature {NONE}-- Initialization
 			description_lbl.set_text ("Description:")
 			description_lbl.set_minimum_width (65)
 			description_lbl.align_text_left
-			description_frame.set_minimum_height (22)
-			description_frame.set_style (1)
 			description_text_read_only.disable_edit
 			set_padding (5)
 			disable_item_expand (name_area)
@@ -163,7 +156,6 @@ feature -- Access
 	type_text, unit_lbl, unit_text, description_lbl: EV_LABEL
 	name_text, name_text_read_only,
 	description_text, description_text_read_only: EV_TEXT_FIELD
-	name_text_frame, description_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 

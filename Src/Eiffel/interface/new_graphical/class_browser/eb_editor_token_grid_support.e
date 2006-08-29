@@ -21,6 +21,8 @@ inherit
 
 	EVS_GRID_UTILITY
 
+	EV_SHARED_APPLICATION
+
 create
 	make_with_grid
 
@@ -249,20 +251,22 @@ feature{NONE} -- Pick and drop
 			l_stone: STONE
 			l_index: INTEGER
 		do
-			last_picked_item := Void
-			l_item ?= a_item
-			if l_item /= Void then
-				l_index := l_item.token_index_at_current_position
-				if l_index > 0 then
-					Result := l_item.editor_token_pebble (l_index)
-					l_stone ?= Result
-					if l_stone /= Void then
-						grid.remove_selection
-						grid.set_accept_cursor (l_stone.stone_cursor)
-						grid.set_deny_cursor (l_stone.x_stone_cursor)
-						l_item.set_last_picked_token (l_index)
-						l_item.redraw
-						last_picked_item := l_item
+			if not ev_application.ctrl_pressed then
+				last_picked_item := Void
+				l_item ?= a_item
+				if l_item /= Void then
+					l_index := l_item.token_index_at_current_position
+					if l_index > 0 then
+						Result := l_item.editor_token_pebble (l_index)
+						l_stone ?= Result
+						if l_stone /= Void then
+							grid.remove_selection
+							grid.set_accept_cursor (l_stone.stone_cursor)
+							grid.set_deny_cursor (l_stone.x_stone_cursor)
+							l_item.set_last_picked_token (l_index)
+							l_item.redraw
+							last_picked_item := l_item
+						end
 					end
 				end
 			end

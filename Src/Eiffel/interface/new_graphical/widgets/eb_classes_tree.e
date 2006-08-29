@@ -56,11 +56,6 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	CONF_REFACTORING
-		undefine
-			default_create, is_equal, copy
-		end
-
 	SHARED_WORKBENCH
 		undefine
 			default_create, is_equal, copy

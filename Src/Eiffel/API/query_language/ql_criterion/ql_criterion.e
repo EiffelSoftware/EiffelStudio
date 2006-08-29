@@ -59,8 +59,6 @@ inherit
 
 	REFACTORING_HELPER
 
-	CONF_REFACTORING
-
 feature -- Evaluate
 
 	is_satisfied_by (a_item: like item_type): BOOLEAN is

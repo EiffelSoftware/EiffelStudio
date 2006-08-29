@@ -15,8 +15,6 @@ inherit
 
 	EB_SHARED_MANAGERS
 
-	CONF_REFACTORING
-
 feature -- Access
 
 	progress_dialog: EB_PROGRESS_DIALOG is

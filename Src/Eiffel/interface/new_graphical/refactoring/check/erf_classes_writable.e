@@ -11,8 +11,6 @@ class
 inherit
 	ERF_CHECK
 
-	CONF_REFACTORING
-
 create
 	make
 

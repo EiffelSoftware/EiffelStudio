@@ -81,11 +81,6 @@ inherit
 			default_create, copy
 		end
 
-	CONF_REFACTORING
-		undefine
-			default_create, copy
-		end
-
 create
 	make_default
 

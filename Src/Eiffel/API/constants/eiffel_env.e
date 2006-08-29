@@ -453,6 +453,9 @@ feature -- Status
 			Result := Platform_constants.is_windows and then Eiffel_c_compiler.is_equal ("bcb")
 		end
 
+	is_unix_layout: BOOLEAN
+			-- Is eiffelstudio installed in the unix layout?
+
 feature -- Version limitation
 
 	has_case: BOOLEAN is True

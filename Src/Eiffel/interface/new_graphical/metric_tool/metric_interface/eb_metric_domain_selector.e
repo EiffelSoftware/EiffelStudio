@@ -33,13 +33,6 @@ inherit
 			copy
 		end
 
-	CONF_REFACTORING
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
-
 	EB_SHARED_ID_SOLUTION
 		undefine
 			default_create,

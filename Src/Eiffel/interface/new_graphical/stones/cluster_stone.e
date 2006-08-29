@@ -19,8 +19,6 @@ inherit
 			same_as
 		end
 
-	CONF_REFACTORING
-
 create
 	make,
 	make_subfolder
@@ -31,7 +29,6 @@ feature {NONE} -- Initialization
 		require
 			valid_cluster: clu /= Void
 		do
-			conf_todo_msg ("Check if realy make should be called and not make_subfolder")
 			group := clu
 			create path.make_empty
 		ensure
@@ -60,10 +57,6 @@ feature -- Access
 		require
 			is_cluster: is_cluster
 		do
-			conf_todo_msg ("[
-				There is nothing to be done here, what needs to be done is checking all callers that
-			 	they can call this routine.
-			  ]")
 			Result ?= group
 		ensure
 			cluster_i_not_void: Result /= Void

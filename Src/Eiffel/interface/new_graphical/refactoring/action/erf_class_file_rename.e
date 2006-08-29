@@ -17,8 +17,6 @@ inherit
 			redo
 		end
 
-	CONF_REFACTORING
-
 create
 	make
 

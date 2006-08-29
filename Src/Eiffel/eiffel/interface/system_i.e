@@ -862,7 +862,6 @@ end
 			l_target: CONF_TARGET
 			l_file: PLAIN_TEXT_FILE
 			l_file_name: FILE_NAME
-			l_env: EIFFEL_ENV
 			d1, d2: DATE_TIME
 			l_factory: CONF_COMP_FACTORY
 			l_state: CONF_STATE
@@ -872,7 +871,6 @@ end
 				create d1.make_now
 			end
 
-			create l_env
 			l_target := universe.new_target
 			check
 				l_target_not_void: l_target /= Void

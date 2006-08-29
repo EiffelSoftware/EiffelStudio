@@ -71,6 +71,21 @@ feature -- Status
 			end
 		end
 
+	set_precompile (a_is_dotnet: BOOLEAN) is
+			-- Set up the ISE_PRECOMP environment variable, depending on `a_is_dotnet'.
+		local
+			l_path: DIRECTORY_NAME
+		do
+			create l_path.make_from_string (eiffel_installation_dir_name)
+			l_path.extend_from_array (<<"precomp", "spec">>)
+			if a_is_dotnet then
+				l_path.extend ("dotnet")
+			else
+				l_path.extend (eiffel_platform)
+			end
+			execution_environment.put (l_path, ise_precomp_env)
+		end
+
 feature -- Status report
 
 	is_workbench: BOOLEAN is
@@ -97,6 +112,14 @@ feature -- Access: environment variable
 			Result := Execution_environment.get ("ISE_LIBRARY")
 		ensure
 			eiffel_library_not_void: Result /= Void
+		end
+
+	Eiffel_precomp: STRING is
+			-- ISE_PRECOMP name.
+		do
+			Result := Execution_environment.get ("ISE_PRECOMP")
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Eiffel_c_compiler: STRING is
@@ -468,6 +491,9 @@ feature -- Constants
 
 	ise_library_env: STRING is "ISE_LIBRARY"
 			-- Name of the ISE_LIBRARY environment variable.
+
+	ise_precomp_env: STRING is "ISE_PRECOMP"
+			-- Name of the ISE_PRECOMP environment variable.
 
 	library_directory_name: STRING is "library";
 			-- Name of the library directory.

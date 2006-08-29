@@ -411,6 +411,9 @@ feature {NONE} -- Implementation
 			end
 
 			project_location.set_target (target_name)
+
+				 -- set ISE_PRECOMP
+			set_precompile (target.setting_msil_generation)
 		ensure
 			target_name_set: target_name /= Void and then not target_name.is_empty
 			valid_target: conf_system.targets.has (target_name)

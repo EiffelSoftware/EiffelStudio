@@ -8,13 +8,12 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<precompile name="wel-mt_pre" location="$ISE_PRECOMP\wel-mt.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="dotnet" extends="common">
 		<setting name="msil_generation" value="true"/>
-		<precompile name="wel-mt_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\wel-mt.ecf"/>
 	</target>
 	<target name="classic" extends="common">
-		<precompile name="wel-mt_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel-mt.ecf"/>
 	</target>
 </system>

@@ -7,7 +7,7 @@
 			<warning name="obsolete_feature" enabled="false"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
-		<precompile name="vision2_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2.ecf"/>
+		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 	</target>

@@ -5,7 +5,7 @@
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<precompile name="base_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<cluster name="root_cluster" location="$ISE_EIFFEL\examples\com\wizard\e2idl\eproject"/>
 	</target>
 </system>

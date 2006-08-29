@@ -7,13 +7,12 @@
 		<setting name="multithreaded" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<precompile name="base-mt_pre" location="$ISE_PRECOMP\base-mt.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="dotnet" extends="common">
 		<setting name="msil_generation" value="true"/>
-		<precompile name="base-mt_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\base-mt.ecf"/>
 	</target>
 	<target name="classic" extends="common">
-		<precompile name="base-mt_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base-mt.ecf"/>
 	</target>
 </system>

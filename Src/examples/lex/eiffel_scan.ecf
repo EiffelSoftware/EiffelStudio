@@ -6,13 +6,12 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf"/>
+		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="classic" extends="common">
-		<precompile name="precompile" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
 	</target>
 	<target name="dotnet" extends="common">
 		<setting name="msil_generation" value="true"/>
-		<precompile name="base_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\base.ecf"/>
 	</target>
 </system>

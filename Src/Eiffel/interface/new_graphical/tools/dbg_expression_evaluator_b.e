@@ -764,10 +764,14 @@ feature {NONE} -- EXPR_B evaluation
 				notify_error_evaluation (Cst_error_call_on_void_target)
 			else
 				fi := feature_i_from_call_access_b_in_context (cl, a_attribute_b)
-				if tmp_target /= Void then
-					evaluate_attribute (tmp_target.value_address, tmp_target, fi)
+				if fi /= Void then
+					if tmp_target /= Void then
+						evaluate_attribute (tmp_target.value_address, tmp_target, fi)
+					else
+						evaluate_attribute (context_address, Void, fi)
+					end
 				else
-					evaluate_attribute (context_address, Void, fi)
+					notify_error_evaluation ("Error: issue with attribute " + a_attribute_b.attribute_name)
 				end
 			end
 		end
@@ -1375,7 +1379,13 @@ feature {NONE} -- Compiler helpers
 				Result := cl.feature_of_feature_id (a_call_access_b.feature_id)
 			else
 				wcl := system.class_of_id (a_call_access_b.written_in)
-				Result := wcl.feature_named (a_call_access_b.feature_name)
+				Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
+--				Result := wcl.feature_named (a_call_access_b.feature_name)
+				if Result = Void then
+						--| Better try to find the feature by any way
+					fixme ("We should redesign this part to do exactly what should be done")
+					Result := cl.feature_of_feature_id (a_call_access_b.feature_id)
+				end
 			end
 			if Result /= Void and then wcl /= cl then
 				Result := fi_version_of_class (Result, cl)

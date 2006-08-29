@@ -19,6 +19,8 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
+	EVS_GRID_UTILITY
+
 create
 	make_with_grid
 
@@ -140,6 +142,22 @@ feature -- Setting
 			editor_preferences.editor_font_preference.change_actions.prune_all (l_change_agent)
 			preferences.class_browser_data.odd_row_background_color_preference.change_actions.prune_all (l_change_agent)
 			preferences.class_browser_data.even_row_background_color_preference.change_actions.prune_all (l_change_agent)
+		end
+
+	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
+			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
+			-- Void if no item is found.
+		local
+			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_index: INTEGER
+		do
+			l_editor_token_item ?= grid_item_at_position (grid, a_x, a_y)
+			if l_editor_token_item /= Void then
+				l_index := l_editor_token_item.token_index_at_current_position
+				if l_index > 0 then
+					Result := l_editor_token_item.token_at_position (l_index)
+				end
+			end
 		end
 
 feature{NONE} -- Actions

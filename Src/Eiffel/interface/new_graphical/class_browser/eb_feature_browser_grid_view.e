@@ -93,10 +93,25 @@ feature -- Setting
 			-- Rebuild interface
 		local
 			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_FEATURE_BROWSER_GRID_ROW]
+			i: INTEGER
+			l_column: EV_GRID_COLUMN
 		do
 			if is_written_class_used then
 				grid.set_column_count_to (3)
-				grid.header.i_th (3).set_text (interface_names.l_version_from)
+--				from
+--					 i := 1
+--				until
+--					i > 3
+--				loop
+--					l_column := grid.column (i)
+--					if not l_column.is_displayed then
+--						l_column.show
+--					end
+--					i := i + 1
+--				end
+--				l_column.header_item
+				grid.column (3).header_item.set_text (interface_names.l_version_from)
+--				grid.header.i_th (3).set_text (interface_names.l_version_from)
 				create l_written_class_sort_info.make (agent written_class_tester, ascending_order)
 				l_written_class_sort_info.enable_auto_indicator
 				set_sort_info (3, l_written_class_sort_info)
@@ -454,7 +469,7 @@ feature -- Notification
 				if l_requested_width > 300 then
 					l_requested_width := 300
 				else
-					l_header_width := l_font.string_width (grid.header.i_th (1).text)
+					l_header_width := l_font.string_width (grid.column (1).header_item.text)
 					if l_requested_width < l_header_width then
 						l_requested_width := l_header_width + 30
 					else
@@ -466,7 +481,7 @@ feature -- Notification
 				if l_requested_width > 500 then
 					l_requested_width := 500
 				else
-					l_header_width := l_font.string_width (grid.header.i_th (2).text)
+					l_header_width := l_font.string_width (grid.column (2).header_item.text)
 					if l_requested_width < l_header_width then
 						l_requested_width := l_header_width + 30
 					else
@@ -474,7 +489,7 @@ feature -- Notification
 					end
 				end
 				grid.column (2).set_width (l_requested_width)
-				if grid.column_count > 2 then
+				if grid.column_count > 2 and then grid.column (3).is_displayed then
 					grid.column (3).resize_to_content
 				end
 			end

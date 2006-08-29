@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_DRAWING_AREA_I
 
 inherit
@@ -19,7 +19,7 @@ inherit
 			interface
 		end
 
-	EV_TAB_CONTROLLABLE_I
+	EV_TAB_CONTROLABLE_I
 		redefine
 			interface
 		end

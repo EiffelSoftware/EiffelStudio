@@ -211,6 +211,8 @@ feature -- Access: file name
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "help", "defaults">>)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Generation_templates_path: FILE_NAME is
@@ -227,6 +229,8 @@ feature -- Access: file name
 		once
 			create Result.make_from_string ("$ISE_EIFFEL")
 			Result.extend_from_array (<<"dotnet", "assemblies">>)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Default_class_file: FILE_NAME is
@@ -245,30 +249,48 @@ feature -- Access: file name
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "bitmaps">>)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	Cursor_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "bitmaps", "cursor">>)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	Library_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_library)
 			Result.extend (library_directory_name)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	Syntax_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "syntax">>)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	Help_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "help", "errors">>)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	Docs_path: DIRECTORY_NAME is
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend ("docs")
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	Bin_path: FILE_NAME is

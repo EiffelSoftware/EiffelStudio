@@ -258,33 +258,21 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	grid_item_at_position (a_x, a_y: INTEGER): EV_GRID_ITEM is
-			-- Item at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
-			-- Void if no item is found.
-		local
-			l_header_height: INTEGER
-		do
-			if grid.is_header_displayed then
-				l_header_height := grid.header.height
-			end
-			Result := grid.item_at_virtual_position (grid.virtual_x_position + a_x, grid.virtual_y_position + a_y - l_header_height)
-		end
-
-	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
-			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
-			-- Void if no item is found.
-		local
-			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_index: INTEGER
-		do
-			l_editor_token_item ?= grid_item_at_position (a_x, a_y)
-			if l_editor_token_item /= Void then
-				l_index := l_editor_token_item.token_index_at_current_position
-				if l_index > 0 then
-					Result := l_editor_token_item.token_at_position (l_index)
-				end
-			end
-		end
+--	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
+--			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
+--			-- Void if no item is found.
+--		local
+--			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
+--			l_index: INTEGER
+--		do
+--			l_editor_token_item ?= grid_item_at_position (a_x, a_y)
+--			if l_editor_token_item /= Void then
+--				l_index := l_editor_token_item.token_index_at_current_position
+--				if l_index > 0 then
+--					Result := l_editor_token_item.token_at_position (l_index)
+--				end
+--			end
+--		end
 
 	grid: ES_GRID
 			-- Grid used to display information

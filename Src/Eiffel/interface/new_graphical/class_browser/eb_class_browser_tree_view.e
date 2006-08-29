@@ -170,7 +170,7 @@ feature -- Actions
 			l_row: EB_CLASS_BROWSER_TREE_ROW
 		do
 			if a_button = 1 then
-				l_grid_item := grid_item_at_position (a_x, a_y)
+				l_grid_item := grid_item_at_position (grid, a_x, a_y)
 				if l_grid_item /= Void then
 					l_row ?= l_grid_item.row.data
 					if l_row /= Void and then l_row.is_collapsed then

@@ -15,6 +15,8 @@ deferred class
 inherit
 	EVS_UTILITY
 
+	EVS_GRID_UTILITY
+
 feature{NONE} -- Initialization
 
 	make (a_grid: like grid) is

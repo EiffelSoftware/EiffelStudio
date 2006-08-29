@@ -93,8 +93,8 @@ feature -- Setting
 			-- Rebuild interface
 		local
 			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_FEATURE_BROWSER_GRID_ROW]
-			i: INTEGER
-			l_column: EV_GRID_COLUMN
+--			i: INTEGER
+--			l_column: EV_GRID_COLUMN
 		do
 			if is_written_class_used then
 				grid.set_column_count_to (3)

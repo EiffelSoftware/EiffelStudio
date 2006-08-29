@@ -438,7 +438,7 @@ feature {NONE} -- Implementation
 			l_app_imp: like app_implementation
 			a_focus_widget: EV_WIDGET_IMP
 			l_block_events: BOOLEAN
-			l_tab_controllable: EV_TAB_CONTROLLABLE_I
+			l_tab_controlable: EV_TAB_CONTROLABLE_I
 		do
 			l_app_imp := app_implementation
 			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press, True)
@@ -454,8 +454,8 @@ feature {NONE} -- Implementation
 					if not l_block_events then
 							-- If tab controllable we must make sure that it will not lose the focus
 							-- if `is_tabable_from' is set to `False'.
-						l_tab_controllable ?= a_focus_widget
-						if l_tab_controllable /= Void and then not l_tab_controllable.is_tabable_from then
+						l_tab_controlable ?= a_focus_widget
+						if l_tab_controlable /= Void and then not l_tab_controlable.is_tabable_from then
 							l_block_events := a_key.is_arrow or else a_key.code = {EV_KEY_CONSTANTS}.key_tab
 						end
 					end

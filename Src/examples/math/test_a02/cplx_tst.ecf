@@ -8,7 +8,7 @@
 		<external_include location="$(ISE_LIBRARY)\library\math\clib"/>
 		<external_object location="$(ISE_LIBRARY)\library\math\clib\eifmathc.lib"/>
 		<external_object location="$(NAGCL04_32)\dll\nagc.lib"/>
-		<precompile name="precompile" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf" readonly="false"/>
+		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf" readonly="false"/>
 		<cluster name="bvp" location="$ISE_LIBRARY\library\math\bvp\"/>
 		<cluster name="eifmath" location="$ISE_LIBRARY\library\math\eifmath\"/>
 		<cluster name="integrat" location="$ISE_LIBRARY\library\math\integrat\"/>

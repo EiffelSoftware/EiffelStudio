@@ -5,7 +5,7 @@
 		<option warning="true">
 			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
-		<precompile name="precompile" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
+		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="desc" location="$ISE_LIBRARY\library\base\desc\general\"/>
 		<cluster name="desc32" location="$ISE_LIBRARY\library\base\desc\spec\win32\"/>

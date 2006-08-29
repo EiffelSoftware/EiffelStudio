@@ -52,7 +52,11 @@ feature -- Access
 	has_text: BOOLEAN is
 			-- Does the clipboard currently contain text?
 		do
+				-- The query may trigger pending signals which may cause side-effects so
+				-- we disable the marshaller.
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
 			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard)
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 		end
 
 	text: STRING_32 is
@@ -61,7 +65,11 @@ feature -- Access
 			utf8_string: EV_GTK_C_STRING
 			text_ptr: POINTER
 		do
+				-- The query may trigger pending signals which may cause side-effects so
+				-- we disable the marshaller.
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
 			text_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 			if text_ptr /= Default_pointer then
 				create utf8_string.make_from_pointer (text_ptr)
 				Result := utf8_string.string

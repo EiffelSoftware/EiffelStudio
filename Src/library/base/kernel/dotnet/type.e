@@ -47,7 +47,11 @@ feature -- Conversion
 			end
 			Result ?= l_obj
 		ensure
-			assigned_or_void: Result = obj or Result = Void
+			assigned_or_void: Result = obj or Result = default_value
+		end
+
+	default_value: G is
+		do
 		end
 
 feature -- Comparison

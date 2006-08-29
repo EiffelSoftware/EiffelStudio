@@ -6,6 +6,7 @@
 		</option>
 		<setting name="msil_generation" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<assembly name="math" location="math.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="parser_util" location="parserutils.dll" prefix="PARSER_"/>

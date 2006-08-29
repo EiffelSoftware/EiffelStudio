@@ -6,6 +6,7 @@
 		</option>
 		<setting name="msil_generation" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="winforms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
 		<assembly name="system.drawing" location="$ISE_DOTNET_FRAMEWORK\system.drawing.dll" prefix="DRAWING_"/>

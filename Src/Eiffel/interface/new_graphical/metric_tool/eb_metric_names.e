@@ -56,7 +56,7 @@ feature -- Titles
 	t_metric_is_not_valid: STRING is "is not valid"
 	t_selected_metric: STRING is "Selected metric"
 	t_selected_file_not_exists: STRING is "Specified file doesn't exist"
-	t_selected_archive_not_valid: STRING is "Metric archive in specified file is not valid"
+	t_selected_archive_not_valid: STRING is "Metric archive in specified file is not valid, it must be cleaned"
 	t_metric: STRING is "metric"
 	t_metric_name_can_not_be_empty: STRING is "Metric name cannot be empty"
 	t_remove_metric: STRING is "Remove metric "
@@ -74,6 +74,17 @@ feature -- Titles
 	t_input_domain: STRING is "Input domain"
 	t_result: STRING is "Results:"
 	t_input_domain_title: STRING is "Input domain:"
+	t_metric_criterion_definition: STRING is "Criterion definition:"
+	t_select_domain_scope: STRING is "Select domain scope"
+	t_predefined_text_not_editable: STRING is "Text not editable because current metric is predefined."
+	t_text_not_editable: STRING is "Text not editable."
+	t_metric_definition: STRING is "Metric definition"
+	t_checking_metric_vadility: STRING is "Checking metric vadility"
+	t_loading_metrics: STRING is "Loading metrics..."
+	t_analysing_archive: STRING is "Analysing metric archive(s)..."
+	t_saving_metrics: STRING is "Saving metrics..."
+	t_removing_metrics: STRING is "Removing metrics..."
+	t_result_not_up_to_date: STRING is "Current metric result may not be up-to-date"
 
 feature -- Labels
 
@@ -129,7 +140,10 @@ feature -- Tooltip
 	f_setup_criterion_domain: STRING is "Setup criterion domain properties"
 	f_setup_criterion_text: STRING is "Setup criterion text properties"
 	f_double_click_to_go_to_definition: STRING is "(Double click to go to definition)"
-	f_display_in_percentage: STRING is "Display result in percentage?";
+	f_display_in_percentage: STRING is "Display result in percentage? (Only applicable for ratio metrics)"
+	f_add_linear_variable_metric: STRING is "Add selected metric"
+	f_run_metric_again: STRING is "Evaluate metric again to get up-to-date result"
+	f_auto_go_to_result: STRING is "Automatically go to result panel after metric evaluation?";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

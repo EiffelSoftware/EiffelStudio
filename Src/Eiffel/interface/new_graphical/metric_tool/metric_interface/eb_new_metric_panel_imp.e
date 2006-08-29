@@ -38,7 +38,13 @@ feature {NONE}-- Initialization
 			create open_metric_file_btn
 			create reload_btn
 			create main_area
+			create metric_selector_panel
+			create select_metric_lbl
 			create metric_selector_area
+			create l_ev_horizontal_box_1
+			create l_ev_cell_1
+			create l_ev_vertical_box_1
+			create empty_lbl
 			create metric_definition_area
 			create no_metric_frame
 			create no_metric_area
@@ -57,8 +63,14 @@ feature {NONE}-- Initialization
 			metric_definition_toolbar.extend (open_metric_file_btn)
 			metric_definition_toolbar.extend (reload_btn)
 			extend (main_area)
-			main_area.extend (metric_selector_area)
-			main_area.extend (metric_definition_area)
+			main_area.extend (metric_selector_panel)
+			metric_selector_panel.extend (select_metric_lbl)
+			metric_selector_panel.extend (metric_selector_area)
+			main_area.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_cell_1)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (empty_lbl)
+			l_ev_vertical_box_1.extend (metric_definition_area)
 			metric_definition_area.extend (no_metric_frame)
 			no_metric_frame.extend (no_metric_area)
 			no_metric_area.extend (no_metric_lbl)
@@ -80,9 +92,17 @@ feature {NONE}-- Initialization
 			toolbar_area.disable_item_expand (new_metric_toolbar)
 			toolbar_area.disable_item_expand (metric_definition_toolbar)
 			metric_definition_toolbar.disable_vertical_button_style
-			main_area.set_padding (10)
-			main_area.disable_item_expand (metric_selector_area)
+			main_area.disable_item_expand (metric_selector_panel)
+			main_area.enable_item_expand (l_ev_horizontal_box_1)
+			metric_selector_panel.set_padding (3)
+			metric_selector_panel.disable_item_expand (select_metric_lbl)
+			select_metric_lbl.align_text_left
 			metric_selector_area.set_minimum_width (250)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
+			l_ev_cell_1.set_minimum_width (10)
+			l_ev_cell_1.set_minimum_height (5)
+			l_ev_vertical_box_1.set_padding (3)
+			l_ev_vertical_box_1.disable_item_expand (empty_lbl)
 			no_metric_area.set_border_width (10)
 			no_metric_area.disable_item_expand (no_metric_lbl)
 			no_metric_lbl.set_text ("No metric is selected.")
@@ -107,15 +127,20 @@ feature -- Access
 	new_metric_toolbar, metric_definition_toolbar: EV_TOOL_BAR
 	new_metric_btn, send_current_to_new_btn,
 	remove_metric_btn, save_metric_btn, open_metric_file_btn, reload_btn: EV_TOOL_BAR_BUTTON
+	main_area: EV_HORIZONTAL_SPLIT_AREA
 	toolbar_area,
-	main_area: EV_HORIZONTAL_BOX
-	metric_selector_area, metric_definition_area, no_metric_area: EV_VERTICAL_BOX
-	no_metric_lbl: EV_LABEL
+	metric_definition_area: EV_HORIZONTAL_BOX
+	metric_selector_panel, metric_selector_area, no_metric_area: EV_VERTICAL_BOX
+	select_metric_lbl,
+	empty_lbl, no_metric_lbl: EV_LABEL
 	no_metric_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
+	l_ev_cell_1: EV_CELL
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

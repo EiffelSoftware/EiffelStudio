@@ -16,14 +16,16 @@ inherit
 
 feature{NONE} -- Initialization
 
-	make (a_name: STRING; a_unit: like unit) is
-			-- Initialize `name' with `a_name', `unit' with `a_unit'.
+	make (a_name: STRING; a_unit: like unit; a_uuid: like uuid) is
+			-- Initialize `name' with `a_name', `unit' with `a_unit and `uuid' with `a_uuid'.
 		require
 			a_name_attached: a_name /= Void
 			a_unit_attached: a_unit /= Void
+			a_uuid_attached: a_uuid /= Void
 		do
 			set_name (a_name)
 			set_unit (a_unit)
+			set_uuid (a_uuid)
 		end
 
 feature -- Status report
@@ -66,6 +68,11 @@ feature -- Status report
 	should_result_be_filtered: BOOLEAN
 			-- Should result be filtered and only result items that are visible in the input domain are remained?
 
+	is_just_line_counting: BOOLEAN is
+			-- Is current metric a line counting metric?
+		do
+		end
+
 feature -- Access
 
 	name: STRING
@@ -83,6 +90,9 @@ feature -- Access
 
 	manager: EB_METRIC_MANAGER
 			-- Metric manager
+
+	uuid: UUID
+			-- UUID of current metric
 
 feature -- Setting
 
@@ -190,9 +200,20 @@ feature -- Setting
 			manager_set: manager = a_manager
 		end
 
+	set_uuid (a_uuid: like uuid) is
+			-- Set `uuid' with `a_uuid'.
+		require
+			a_uuid_attached: a_uuid /= Void
+		do
+			uuid := a_uuid
+		ensure
+			uuid_set: uuid = a_uuid
+		end
+
 invariant
 	name_attached: name /= Void
 	unit_attached: unit /= Void
+	uuid_attached: uuid /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

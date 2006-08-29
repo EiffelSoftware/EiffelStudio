@@ -18,15 +18,39 @@ inherit
 
 	EB_METRIC_INTERFACE_PROVIDER
 
-feature -- Access
-
-	metric_tool: EB_METRIC_TOOL
-			-- Metric tool panel
+	EB_METRIC_TOOL_INTERFACE
 
 feature -- Status report
 
 	is_up_to_date: BOOLEAN
-			-- Is metrics in `metric_selector' up-to-date?
+			-- Is current panel up-to-date?
+
+	is_valid_update_request (a_request: INTEGER): BOOLEAN is
+			-- Is `a_request' a valid update request?
+		do
+			Result :=
+				a_request = compilation_start_update_request or
+				a_request = compilation_stop_update_request or
+				a_request = load_metric_update_request
+		end
+
+	is_selected: BOOLEAN
+			-- Is current panel selected?
+
+feature -- Access
+
+	last_update_request: INTEGER
+			-- Type of last update request
+			-- See `compilation_start_update_request' and `compilation_stop_update_request' for more information.
+
+	compilation_start_update_request: INTEGER is 1
+			-- Update request when Eiffel compilation starts
+
+	compilation_stop_update_request: INTEGER is 2
+			-- Update request when Eiffel compilation stops
+
+	load_metric_update_request: INTEGER is 3
+			-- Update request when metric definition is loaded
 
 feature -- Basic operations
 
@@ -40,11 +64,39 @@ feature -- Basic operations
 		deferred
 		end
 
+	set_last_update_request (a_request: INTEGER) is
+			-- Set `last_update_request' with with `a_request'.
+		require
+			a_request_valid: is_valid_update_request (a_request)
+		do
+			last_update_request := a_request
+		ensure
+			last_update_request_set: last_update_request = a_request
+		end
+
+	set_is_up_to_date (b: BOOLEAN) is
+			-- Set `is_up_to_date' with `b'.
+		do
+			is_up_to_date := b
+		ensure
+			is_up_to_date_set: is_up_to_date = b
+		end
+
+	set_is_selected (b: BOOLEAN) is
+			-- Set `is_selected' with `b'.
+		do
+			is_selected := b
+		ensure
+			is_selected_set: is_selected = b
+		end
+
 feature -- Actions
 
 	on_select is
 			-- Action to be performed when current panel is selected
 		deferred
+		ensure
+			is_up_to_date: is_up_to_date
 		end
 
 	on_process_gui (a_item: QL_ITEM) is
@@ -105,9 +157,6 @@ feature{NONE} -- Implementation
 		do
 			metric_tool.display_error_message
 		end
-
-invariant
-	metric_tool_attached: metric_tool /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

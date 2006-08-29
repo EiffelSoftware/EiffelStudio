@@ -85,6 +85,17 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	variable_metric_uuid: LIST [UUID] is
+			-- 	UUID list of `varable_metric'
+		do
+			if variable_metric_uuid_internal = Void then
+				create {LINKED_LIST [UUID]} variable_metric_uuid_internal.make
+			end
+			Result := variable_metric_uuid_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is
@@ -117,10 +128,12 @@ feature{NONE} -- Implementation
 			Result := a_metric.value (a_scope).first.value * a_coefficient
 		end
 
+	variable_metric_uuid_internal: like variable_metric_uuid
+			-- Implementation of `variable_metric_uuid'
+
 invariant
 	coefficient_attached: coefficient /= Void
 	variable_metri_attached: variable_metric /= Void
-	coefficient_and_variable_metri_valid: coefficient.count = variable_metric.count
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

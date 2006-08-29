@@ -19,7 +19,28 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_TOOL_INTERFACE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
+create
+	make
+
 feature {NONE} -- Initialization
+
+	make (a_tool: like metric_tool) is
+			-- Initialize `metric' with `a_metric' mode with `a_mode' and `unit' with `a_unit'.
+		require
+			a_tool_attached: a_tool /= Void
+		do
+			set_metric_tool (a_tool)
+			default_create
+		ensure
+			metric_tool_set: metric_tool = a_tool
+		end
 
 	user_initialization is
 			-- Called by `initialize'.
@@ -30,11 +51,13 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT_FIELD
 		do
-			name_text_frame.hide
-			description_frame.hide
+			name_text_read_only.hide
+			description_text_read_only.hide
 			create l_text
 			name_text_read_only.set_background_color (l_text.background_color)
 			description_text_read_only.set_background_color (l_text.background_color)
+			attach_non_editable_warning_to_text (metric_names.t_predefined_text_not_editable, name_text_read_only, metric_tool_window)
+			attach_non_editable_warning_to_text (metric_names.t_predefined_text_not_editable, description_text_read_only, metric_tool_window)
 		end
 
 feature -- Status report
@@ -120,8 +143,8 @@ feature -- Basic operations
 			description_text.disable_edit
 			name_text.hide
 			description_text.hide
-			name_text_frame.show
-			description_frame.show
+			name_text_read_only.show
+			description_text_read_only.show
 		ensure
 			is_read_only_mode_enabled: is_read_only_mode_enabled
 		end
@@ -134,8 +157,8 @@ feature -- Basic operations
 			description_text.enable_edit
 			name_text.show
 			description_text.show
-			name_text_frame.hide
-			description_frame.hide
+			name_text_read_only.hide
+			description_text_read_only.hide
 		ensure
 			is_read_only_mode_disabled: not is_read_only_mode_enabled
 		end

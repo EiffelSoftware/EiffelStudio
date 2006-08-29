@@ -14,31 +14,34 @@ inherit
 
 feature -- metric creation
 
-	new_basic_metric (a_name: STRING; a_unit: QL_METRIC_UNIT): EB_METRIC_BASIC is
+	new_basic_metric (a_name: STRING; a_unit: QL_METRIC_UNIT; a_uuid: UUID): EB_METRIC_BASIC is
 			-- New basic metric
 		require
 			a_name_attached: a_name /= Void
 			a_unit_attached: a_unit /= Void
+			a_uuid_attached: a_uuid /= Void
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_linear_metric (a_name: STRING; a_unit: QL_METRIC_UNIT): EB_METRIC_LINEAR is
+	new_linear_metric (a_name: STRING; a_unit: QL_METRIC_UNIT; a_uuid: UUID): EB_METRIC_LINEAR is
 			-- New linear metric
 		require
 			a_name_attached: a_name /= Void
 			a_unit_attached: a_unit /= Void
+			a_uuid_attached: a_uuid /= Void
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_ratio_metric (a_name: STRING; a_unit: QL_METRIC_UNIT; a_num_name: STRING; a_den_name: STRING): EB_METRIC_RATIO is
+	new_ratio_metric (a_name: STRING; a_unit: QL_METRIC_UNIT; a_uuid: UUID; a_num_name: STRING; a_num_uuid: UUID; a_den_name: STRING; a_den_uuid: UUID): EB_METRIC_RATIO is
 			-- New ratio metric
 		require
 			a_name_attached: a_name /= Void
 			a_unit_attached: a_unit /= Void
+			a_uuid_attached: a_uuid /= Void
 			a_num_name_attached: a_num_name /= Void
 			a_den_name_attached: a_den_name /= Void
 		deferred

@@ -62,17 +62,19 @@ feature -- Callbacks
 			l_trans: HASH_TABLE [INTEGER, STRING]
 			l_tag: INTEGER
 		do
-			if current_tag.is_empty then
-				current_tag.extend (t_none)
-			end
-			l_trans := state_transitions_tag.item (current_tag.item)
-			if l_trans /= Void then
-				l_tag := l_trans.item (a_local_part)
-			end
-			if l_tag = 0 then
-				set_parse_error_message ("Invalid tag/tag position '"+a_local_part+"'")
-			else
-				current_tag.extend (l_tag)
+			if not has_error then
+				if current_tag.is_empty then
+					current_tag.extend (t_none)
+				end
+				l_trans := state_transitions_tag.item (current_tag.item)
+				if l_trans /= Void then
+					l_tag := l_trans.item (a_local_part)
+				end
+				if l_tag = 0 then
+					set_parse_error_message ("Invalid tag/tag position '"+a_local_part+"'")
+				else
+					current_tag.extend (l_tag)
+				end
 			end
 		end
 

@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 			create metric_name_list.make
 			create metric_name_row_table.make (30)
 			create input_cache.make (20)
+			create unit_row_list.make
 			default_create
 			enable_tooltip_contain_go_to_definition_message
 		ensure
@@ -65,6 +66,7 @@ feature {NONE} -- Initialization
 			metric_name_list_attached: metric_name_list /= Void
 			metric_name_row_table_attached: metric_name_row_table /= Void
 			input_cache_attached: input_cache /= Void
+			unit_row_list_attached: unit_row_list /= Void
 		end
 
 	user_initialization is
@@ -79,6 +81,7 @@ feature {NONE} -- Initialization
 
 			create metric_selected_actions
 			create group_selected_actions
+			create delete_key_pressed_actions
 			create double_click_actions
 				-- Initialize `metric_table'.
 			create metric_table.make (13)
@@ -126,6 +129,7 @@ feature {NONE} -- Initialization
 		ensure then
 			metric_selected_actions_attached: metric_selected_actions /= Void
 			group_selected_actions_attached: group_selected_actions /= Void
+			delete_key_pressed_actions_attached: delete_key_pressed_actions /= Void
 			metric_table_attached: metric_table /= Void
 			double_click_actions_attached: double_click_actions /= Void
 		end
@@ -137,6 +141,9 @@ feature -- Access
 
 	group_selected_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when a group item is selected
+
+	delete_key_pressed_actions: ACTION_SEQUENCE [TUPLE [a_metric: EB_METRIC]]
+			-- Actions to be performed when delete key is pressed on selected metric `a_metric'
 
 	double_click_actions: ACTION_SEQUENCE [TUPLE [STRING]]
 			-- Actions to be performed when double click on a metric item.
@@ -314,6 +321,7 @@ feature{NONE} -- Actions
 		local
 			l_selected_rows: LIST [EV_GRID_ROW]
 			l_checkbox_item: MA_GRID_CHECK_BOX_ITEM
+			l_metric: EB_METRIC
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				if is_selectable then
@@ -327,6 +335,11 @@ feature{NONE} -- Actions
 				end
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_escape then
 				input_cache.wipe_out
+			elseif a_key.code = {EV_KEY_CONSTANTS}.key_delete then
+				l_metric := selected_metric
+				if l_metric /= Void and then not delete_key_pressed_actions.is_empty then
+					delete_key_pressed_actions.call ([l_metric])
+				end
 			end
 		end
 
@@ -378,13 +391,14 @@ feature{NONE} -- Actions
 					l_row := l_grid.row (l_index)
 					if l_row.data /= Void then
 						l_metric ?= l_row.data
-						check l_metric /= Void end
-						l_name := l_metric.name
-						if l_name.count >= l_cache.count and then l_name.substring (1, l_cache.count).is_case_insensitive_equal (l_cache) then
-							l_grid.remove_selection
-							l_row.enable_select
-							l_row.ensure_visible
-							done := True
+						if l_metric /= Void then
+							l_name := l_metric.name
+							if l_name.count >= l_cache.count and then l_name.substring (1, l_cache.count).is_case_insensitive_equal (l_cache) then
+								l_grid.remove_selection
+								l_row.enable_select
+								l_row.ensure_visible
+								done := True
+							end
 						end
 					end
 					l_index := l_index + 1
@@ -399,6 +413,39 @@ feature{NONE} -- Actions
 			else
 				input_cache.wipe_out
 			end
+		end
+
+	on_change_unit_order (a_from_row: EV_GRID_ROW; a_to_row: EV_GRID_ROW) is
+			-- Move unit row `a_from_row' to `a_to_row'.
+		require
+			a_from_row_attached: a_from_row /= Void
+			a_from_row_exists: unit_row_list.has (a_from_row)
+			a_to_row_attached: a_to_row /= Void
+			a_to_row_exists: unit_row_list.has (a_to_row)
+		local
+			l_unit_row_list: like unit_row_list
+			l_unit_list: LINKED_LIST [QL_METRIC_UNIT]
+			l_from_unit: QL_METRIC_UNIT
+			l_to_unit: QL_METRIC_UNIT
+		do
+			l_from_unit ?= a_from_row.data
+			l_to_unit ?= a_to_row.data
+			check
+				l_from_unit /= Void
+				l_to_unit /= Void
+			end
+			l_unit_list := preferences.metric_tool_data.unit_order
+
+			l_unit_list.start
+			l_unit_list.search (l_from_unit)
+			check not l_unit_list.exhausted end
+			l_unit_list.remove
+
+			l_unit_list.start
+			l_unit_list.search (l_to_unit)
+			check not l_unit_list.exhausted end
+			l_unit_list.put_left (l_unit_list.item)
+			preferences.metric_tool_data.set_unit_order (l_unit_list)
 		end
 
 feature -- setting
@@ -576,7 +623,11 @@ feature -- Metric management
 			l_metric_list: LIST [EB_METRIC]
 			l_item: EV_GRID_LABEL_ITEM
 			l_unit_list: LIST [TUPLE [unit: QL_METRIC_UNIT; pixmap: EV_PIXMAP]]
+			l_unit: QL_METRIC_UNIT
+			l_unit_row_list: like unit_row_list
 		do
+			l_unit_row_list := unit_row_list
+			l_unit_row_list.wipe_out
 			if metric_grid.row_count > 0 then
 				metric_grid.remove_rows (1, metric_grid.row_count)
 			end
@@ -588,13 +639,16 @@ feature -- Metric management
 				until
 					l_unit_list.after
 				loop
-					l_metric_list := metric_table.item (l_unit_list.item.unit)
+					l_unit := l_unit_list.item.unit
+					l_metric_list := metric_table.item (l_unit)
 					if l_metric_list /= Void and then not l_metric_list.is_empty then
 						metric_grid.insert_new_row (metric_grid.row_count + 1)
 						l_row := metric_grid.row (metric_grid.row_count)
-						create l_item.make_with_text (displayed_name (l_unit_list.item.unit.name))
+						create l_item.make_with_text (displayed_name (l_unit.name))
 						l_item.set_pixmap (l_unit_list.item.pixmap)
 						l_row.set_item (1, l_item)
+						l_row.set_data (l_unit)
+						l_unit_row_list.extend (l_row)
 						l_metric_list.do_all (agent load_metric (?, l_row))
 						if l_row.is_expandable then
 							l_row.expand
@@ -822,15 +876,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	unit_row_list: LINKED_LIST [EV_GRID_ROW]
+			-- List of metric unit rows
+
 invariant
 	metric_selected_actions_attached: metric_selected_actions /= Void
 	group_selected_actions_attached: group_selected_actions /= Void
+	delete_key_pressed_actions_attached: delete_key_pressed_actions /= Void
 	metric_table_attached: metric_Table /= Void
 	selection_status_attached: selection_status /= Void
 	double_click_actions_attached: double_click_actions /= Void
 	metric_name_list_attached: metric_name_list /= Void
 	metric_name_row_table_attached: metric_name_row_table /= Void
 	input_cache_attached: input_cache /= Void
+	unit_row_list_attached: unit_row_list /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

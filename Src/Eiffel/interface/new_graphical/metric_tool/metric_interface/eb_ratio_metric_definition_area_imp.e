@@ -104,7 +104,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (numerator_text)
 			l_ev_horizontal_box_1.disable_item_expand (numerator_btn)
 			numerator_text.set_minimum_width (150)
-			numerator_text.disable_edit
 			l_ev_cell_1.set_minimum_width (5)
 			numerator_target_pixmap.set_minimum_width (16)
 			numerator_target_pixmap.set_minimum_height (16)
@@ -120,7 +119,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.disable_item_expand (denominator_text)
 			l_ev_horizontal_box_2.disable_item_expand (denominator_btn)
 			denominator_text.set_minimum_width (150)
-			denominator_text.disable_edit
 			l_ev_cell_2.set_minimum_width (5)
 			denominator_target_pixmap.set_minimum_width (16)
 			denominator_target_pixmap.set_minimum_height (16)

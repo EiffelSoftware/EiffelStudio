@@ -137,6 +137,9 @@ feature {NONE} -- Initialization
 			remove_criterion_btn.set_tooltip (metric_names.f_del_row + " (" + del_key_shortcut.out + ")")
 			indent_and_btn.set_tooltip (metric_names.f_indent_with_and_criterion + " (" + and_indent_shortcut.out + ")")
 			indent_or_btn.set_tooltip (metric_names.f_indent_with_or_criterion + " (" + or_indent_shortcut.out + ")")
+
+			criterion_lbl.set_text (metric_names.t_metric_criterion_definition)
+			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
 			ctrl_up_shortcut_attached: move_row_up_shortcut /= Void
@@ -157,11 +160,9 @@ feature -- Setting
 		do
 			mode := a_mode
 			if mode = readonly_mode then
---				add_criterion_btn.disable_sensitive
 				remove_criterion_btn.disable_sensitive
 				remove_all_criterion_btn.disable_sensitive
 			else
---				add_criterion_btn.enable_sensitive
 				remove_criterion_btn.enable_sensitive
 				remove_all_criterion_btn.enable_sensitive
 			end
@@ -221,12 +222,24 @@ feature -- Setting
 			combination_toolbar_area.disable_sensitive
 		end
 
+	attach_metric_selector (a_metric_selector: like metric_selector) is
+			-- Set `metric_selector' with `a_metric_selector'.
+		do
+			metric_selector := a_metric_selector
+		end
+
+	detach_metric_selector is
+			-- Detach `metric_selector'.
+		do
+			metric_selector := Void
+		end
+
 feature -- Access
 
 	metric: EB_METRIC_BASIC is
 			-- Metric in current editor
 		do
-			create Result.make (name_area.name, unit)
+			create Result.make (name_area.name, unit, uuid)
 			Result.set_description (name_area.description)
 			Result.set_criteria (combination_grid.criterion)
 		end

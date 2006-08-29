@@ -47,6 +47,12 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_TOOL_INTERFACE
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
 create
 	make
 
@@ -60,10 +66,13 @@ feature{NONE} -- Initialization
 		do
 			development_window := a_dev_window
 			metric_tool := a_metric_tool
+			set_metric_tool (a_metric_tool)
+			create panel_table.make (4)
 			default_create
 		ensure
 			development_window_set: development_window = a_dev_window
 			metric_tool_set: metric_tool = a_metric_tool
+			panel_list_attached: panel_table /= Void
 		end
 
 feature {NONE} -- Initialization
@@ -91,6 +100,12 @@ feature {NONE} -- Initialization
 			create detail_result_panel.make (metric_tool)
 			result_tab.extend (detail_result_panel)
 
+				-- Setup `panel_table'.
+			panel_table.put (metric_evaluation_panel, 1)
+			panel_table.put (new_metric_panel, 2)
+			panel_table.put (metric_archive_panel, 3)
+			panel_table.put (detail_result_panel, 4)
+
 				-- Setup tab names			
 			metric_notebook.set_item_text (metric_notebook.i_th (1), metric_names.t_evaluation_tab)
 			metric_notebook.set_item_text (metric_notebook.i_th (2), metric_names.t_definition_tab)
@@ -115,11 +130,12 @@ feature -- Access
 	detail_result_panel: EB_METRIC_RESULT_AREA
 			-- Detailed result panel
 
-	metric_tool: EB_METRIC_TOOL
-			-- Metric tool
-
 	metric_archive_panel: EB_METRIC_ARCHIVE_PANEL
 			-- Metric archive panel
+
+	panel_table: HASH_TABLE [EB_METRIC_PANEL, INTEGER]
+			-- Table of all panels in metric tool
+			-- Key is panel index in `metric_notebook', value is that panel
 
 feature -- Access
 
@@ -133,13 +149,23 @@ feature -- Actions
 
 	on_tab_change is
 			-- Action to be performed when selected tab changes
+		local
+			l_index: INTEGER
+			l_panel_table: like panel_table
 		do
-			if metric_notebook.selected_item = metric_evaluation_tab then
-				metric_evaluation_panel.on_select
-			elseif metric_notebook.selected_item = new_metric_tab then
-				new_metric_panel.on_select
-			elseif metric_notebook.selected_item = result_tab then
-				detail_result_panel.on_select
+			l_index := metric_notebook.selected_item_index
+			from
+				l_panel_table := panel_table
+				l_panel_table.start
+			until
+				l_panel_table.after
+			loop
+				if l_panel_table.key_for_iteration = l_index then
+					l_panel_table.item_for_iteration.on_select
+				else
+					l_panel_table.item_for_iteration.set_is_selected (False)
+				end
+				l_panel_table.forth
 			end
 		end
 
@@ -162,7 +188,7 @@ feature -- Basic operations
 
 invariant
 	development_window_attached: development_window /= Void
-	metric_tool_attached: metric_tool /= Void
+	panel_list_attached: panel_table /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

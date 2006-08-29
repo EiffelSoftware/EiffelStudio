@@ -12,6 +12,8 @@ deferred class
 inherit
 	EB_METRIC_INTERFACE_PROVIDER
 
+	EB_METRIC_TOOL_INTERFACE
+
 feature{NONE} -- Initialization
 
 	setup_editor is
@@ -23,14 +25,16 @@ feature{NONE} -- Initialization
 
 feature -- Basic operation
 
-	initialize_editor (a_metric: like metric; a_mode: INTEGER; a_unit: QL_METRIC_UNIT) is
+	initialize_editor (a_metric: like metric; a_mode: INTEGER; a_unit: QL_METRIC_UNIT; a_uuid: like uuid) is
 			-- Initialize current editor using `a_metric', `mode' with `a_mode' and `unit'with `a_unit'.
 		require
 			a_unit_attached: a_unit /= Void
 			a_mode_valid: is_mode_valid (a_mode)
+			a_uuid_attached: a_uuid /= Void
 		do
 			set_unit (a_unit)
 			set_mode (a_mode)
+			set_uuid (a_uuid)
 			load_metric (a_metric, a_mode = readonly_mode)
 		ensure
 			unit_set: unit = a_unit
@@ -56,16 +60,6 @@ feature -- Setting
 			unit := a_unit
 		ensure
 			unit_set: unit = a_unit
-		end
-
-	set_metric_tool (a_tool: like metric_tool) is
-			-- Set `metric_tool' with `a_tool'.
-		require
-			a_tool_attached: a_tool /= Void
-		do
-			metric_tool := a_tool
-		ensure
-			metric_tool_attached: metric_tool /= Void
 		end
 
 	load_metric (a_metric: like metric; a_read_only: BOOLEAN) is
@@ -115,6 +109,32 @@ feature -- Setting
 			-- Hide `name_area'.
 		do
 			name_area.hide
+		end
+
+	set_uuid (a_uuid: like uuid) is
+			-- Set `uuid' with `a_uuid'.
+		require
+			a_uuid_attached: a_uuid /= Void
+		do
+			uuid := a_uuid
+		ensure
+			uuid_set: uuid = a_uuid
+		end
+
+	attach_metric_selector (a_metric_selector: like metric_selector) is
+			-- Set `metric_selector' with `a_metric_selector'.
+		require
+			a_metric_selector_attached: a_metric_selector /= Void
+		deferred
+		ensure
+			metric_selector_set: metric_selector = a_metric_selector
+		end
+
+	detach_metric_selector is
+			-- Detach `metric_selector'.
+		deferred
+		ensure
+			metric_selector_detached: metric_selector = Void
 		end
 
 feature -- Access
@@ -169,9 +189,6 @@ feature -- Access
 	expression_generator: EB_METRIC_EXPRESSION_GENERATOR
 			-- Expression generator
 
-	metric_tool: EB_METRIC_TOOL
-			-- Metric tool
-
 	red_color: EV_COLOR is
 			-- Red color
 		once
@@ -192,7 +209,7 @@ feature -- Access
 			-- Name and description area
 		do
 			if name_area_internal = Void then
-				create name_area_internal
+				create name_area_internal.make (metric_tool)
 			end
 			Result := name_area_internal
 		end
@@ -201,7 +218,7 @@ feature -- Access
 			-- Area to display current metric status information
 		do
 			if status_area_internal = Void then
-				create status_area_internal
+				create status_area_internal.make (metric_tool)
 			end
 			Result := status_area_internal
 		ensure
@@ -214,6 +231,12 @@ feature -- Access
 
 	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `is_definition_changes' or `is_description_changes'
+
+	uuid: UUID
+			-- UUID of current edited metric
+
+	metric_selector: EB_METRIC_SELECTOR
+			-- Metric selector associated with current editor
 
 feature -- Actions
 
@@ -320,7 +343,7 @@ feature{NONE} -- Implementation
 					name_area.set_description ("")
 				end
 			else
-				name_area.set_name (metric_manager.next_metric_name ("Unnamed metric"))
+				name_area.set_name (metric_manager.next_metric_name_with_unit (unit))
 				name_area.set_description ("")
 			end
 		end

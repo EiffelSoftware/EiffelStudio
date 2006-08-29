@@ -398,7 +398,7 @@ feature{NONE} -- Implementation/Actions
 					if l_source_row /= Void then
 						l_source_data ?= l_source_row.data
 					end
-					if l_source_data /= Void and then l_dest_data /= Void then
+					if l_source_data /= Void and then l_dest_data /= Void and then l_source_row.index /= l_dest_row.index then
 						if l_dest_data.is_empty_row then
 								-- Item is dropped on an empty row, it will replace the empty row.
 							l_criterion := l_source_data.criterion
@@ -548,7 +548,7 @@ feature{NONE} -- Implementation
 					if l_source_row /= Void then
 						l_source_data ?= l_source_row.data
 					end
-					if l_source_data /= Void and then l_dest_data /= Void then
+					if l_source_data /= Void and then l_dest_data /= Void and then l_source_row.index /= l_dest_row.index then
 						if not l_source_data.is_empty_row then
 							Result := not is_parent_row (l_dest_row, l_source_row)
 						end

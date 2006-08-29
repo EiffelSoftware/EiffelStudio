@@ -29,6 +29,7 @@ feature {NONE}-- Initialization
 			create main_area
 			create definition_area
 			create combination_area
+			create criterion_lbl
 			create combination_grid_container
 			create combination_toolbar_area
 			create l_ev_cell_1
@@ -58,6 +59,7 @@ feature {NONE}-- Initialization
 			extend (main_area)
 			main_area.extend (definition_area)
 			definition_area.extend (combination_area)
+			combination_area.extend (criterion_lbl)
 			combination_area.extend (combination_grid_container)
 			combination_area.extend (combination_toolbar_area)
 			combination_toolbar_area.extend (l_ev_cell_1)
@@ -100,7 +102,10 @@ feature {NONE}-- Initialization
 			definition_area.set_padding (3)
 			definition_area.disable_item_expand (l_ev_horizontal_box_1)
 			definition_area.disable_item_expand (l_ev_horizontal_box_2)
+			combination_area.set_padding (3)
+			combination_area.disable_item_expand (criterion_lbl)
 			combination_area.disable_item_expand (combination_toolbar_area)
+			criterion_lbl.align_text_left
 			combination_grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			combination_grid_container.set_border_width (1)
 			combination_toolbar_area.disable_item_expand (indent_and_toolbar)
@@ -143,6 +148,7 @@ feature -- Access
 	combination_grid_container,
 	combination_toolbar_area: EV_HORIZONTAL_BOX
 	main_area, definition_area, combination_area: EV_VERTICAL_BOX
+	criterion_lbl,
 	expression_lbl: EV_LABEL
 
 feature {NONE} -- Implementation

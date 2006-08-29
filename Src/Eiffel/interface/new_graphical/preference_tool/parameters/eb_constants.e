@@ -8,9 +8,6 @@ indexing
 class
 	EB_CONSTANTS
 
-inherit
-	CONF_REFACTORING
-
 feature {NONE} -- Resources
 
 	Pixmaps: EB_SHARED_PIXMAPS is

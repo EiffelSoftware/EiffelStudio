@@ -10,8 +10,6 @@ deferred class
 	EB_METRIC
 
 inherit
-	CONF_REFACTORING
-
 	EB_METRIC_VISITABLE
 
 feature{NONE} -- Initialization

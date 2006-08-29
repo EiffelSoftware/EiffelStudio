@@ -20,7 +20,6 @@ feature {NONE} -- Implementation
 		require
 			a_group_not_void: a_group /= Void
 		do
-			conf_todo_msg ("Make sure that pixmap_from_group should be called and not pixmap_from_group_path.")
 			Result := pixmap_from_group_path (a_group, "")
 		ensure
 			result_not_void: Result /= Void

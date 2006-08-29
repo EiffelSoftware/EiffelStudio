@@ -24,8 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	CONF_REFACTORING
-
 feature {ERF_REFACTORING} -- Initialization
 
 	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES) is

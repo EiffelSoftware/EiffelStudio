@@ -177,19 +177,6 @@ feature {NONE} -- Initialization
 		do
 			internal_development_window_data := a_session_data
 			make
-				-- Attempt to reload last edited class of `Current'.
-			if a_session_data.file_name /= Void then
-				conf_todo
---				l_class_i := eiffel_universe.class_with_file_name (a_session_data.file_name)
-				if l_class_i /= Void and then l_class_i.compiled then
-						-- Create compiled class stone and target `Current' to it.
-					create l_class_c_stone.make (l_class_i.compiled_class)
-					set_stone_after_check (l_class_c_stone)
-					if a_session_data.editor_position > 0 then
-						editor_tool.text_area.display_line_when_ready (a_session_data.editor_position, False)
-					end
-				end
-			end
 			if context_tool /= Void then
 					-- Presumption is made that if the strings are not void then they represent
 					-- valid entities in the project.
@@ -313,9 +300,6 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (new_editor_cmd)
 
 			toolbarable_commands.extend (new_context_tool_cmd)
-
-			create open_cmd.make (Current)
-			toolbarable_commands.extend (open_cmd)
 
 			create save_cmd.make (Current)
 			toolbarable_commands.extend (save_cmd)
@@ -1308,11 +1292,6 @@ feature {NONE} -- Menu Building
 
 				-- New context tool
 			command_menu_item := New_context_tool_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			file_menu.extend (command_menu_item)
-
-				-- Open
-			command_menu_item := open_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			file_menu.extend (command_menu_item)
 
@@ -4097,10 +4076,8 @@ feature -- Recycle
 			recycle_menu
 			Precursor {EB_TOOL_MANAGER}
 			save_as_cmd.recycle
-			open_cmd.recycle
 			save_cmd.recycle
 			save_as_cmd := Void
-			open_cmd := Void
 			save_cmd := Void
 			command_controller.recycle
 			if refactoring_manager /= Void then
@@ -4709,7 +4686,6 @@ feature {NONE} -- Execution
 			if has_dll_generation then
 				show_dynamic_lib_tool.enable_sensitive
 			end
-			open_cmd.enable_sensitive
 			new_class_cmd.enable_sensitive
 			new_cluster_cmd.enable_sensitive
 			new_library_cmd.enable_sensitive
@@ -4737,7 +4713,6 @@ feature {NONE} -- Execution
 			if has_profiler then
 				show_profiler.disable_sensitive
 			end
-			open_cmd.disable_sensitive
 			new_class_cmd.disable_sensitive
 			new_cluster_cmd.disable_sensitive
 			new_library_cmd.disable_sensitive

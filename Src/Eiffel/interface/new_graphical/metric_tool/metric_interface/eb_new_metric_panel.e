@@ -26,13 +26,6 @@ inherit
 			default_create
 		end
 
-	CONF_REFACTORING
-		undefine
-			is_equal,
-			copy,
-			default_create
-		end
-
 	EB_METRIC_SHARED
 		undefine
 			is_equal,

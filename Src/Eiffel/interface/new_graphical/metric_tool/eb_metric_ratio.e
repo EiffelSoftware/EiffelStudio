@@ -16,8 +16,6 @@ inherit
 			is_ratio
 		end
 
-	CONF_REFACTORING
-
 	EXCEPTIONS
 
 create

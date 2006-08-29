@@ -13,8 +13,6 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
-	CONF_REFACTORING
-
 	DOCUMENT_HELPER
 
 feature -- Status setting
@@ -177,7 +175,6 @@ feature -- Access
 			a_text_formatter.add_new_line
 			a_text_formatter.add_new_line;
 
-			conf_todo_msg ("We may need more structured information for indexing of a group")
 					-- Generate indexes for a group.
 					-- We may need more structured information for indexing of a group.
 			a_text_formatter.process_keyword_text (ti_indexing_keyword, Void)
@@ -707,7 +704,6 @@ feature {NONE} -- Indexing clauses
 			create Result.make (20)
 			exc := excluded_indexing_items
 
-			conf_todo_msg ("Related to indexing generation of a group")
 			if a_group.description /= Void then
 				t := "description"
 				content := a_group.description

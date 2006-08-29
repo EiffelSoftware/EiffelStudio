@@ -22,8 +22,6 @@ inherit
 			is_linear
 		end
 
-	CONF_REFACTORING
-
 create
 	make
 

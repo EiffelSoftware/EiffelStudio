@@ -46,11 +46,6 @@ inherit
 			default_create
 		end
 
-	CONF_REFACTORING
-		undefine
-			default_create
-		end
-
 	CONF_ACCESS
 		undefine
 			default_create

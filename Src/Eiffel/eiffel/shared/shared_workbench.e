@@ -7,8 +7,6 @@ class SHARED_WORKBENCH
 inherit
 	SHARED_COMPILATION_MODES
 
-	CONF_REFACTORING
-
 feature -- Access
 
 	Workbench: WORKBENCH_I is

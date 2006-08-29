@@ -471,6 +471,7 @@ feature -- Third pass: byte code production and type check
 			byte_code_generated: BOOLEAN
 			inline_agent_byte_code: LINKED_LIST [BYTE_CODE]
 			old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
+			old_inline_agent_table: like inline_agent_table
 
 				-- Invariant
 			invar_clause: INVARIANT_AS
@@ -514,6 +515,8 @@ feature -- Third pass: byte code production and type check
 
 				feature_checker.init (ast_context)
 				feat_table.start
+
+				old_inline_agent_table := clone (inline_agent_table)
 			until
 				feat_table.after
 			loop
@@ -919,6 +922,8 @@ feature -- Third pass: byte code production and type check
 					--| The other servers are READ_SERVERs.
 
 				Tmp_ast_server.cache.wipe_out
+
+				inline_agent_table := old_inline_agent_table
 			end
 		end
 

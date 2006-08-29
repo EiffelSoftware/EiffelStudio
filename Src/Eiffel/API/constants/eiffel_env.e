@@ -186,9 +186,6 @@ feature -- Access: environment variable
 			platform_abstraction_not_void: Result /= Void
 		end
 
-	short_studio_name: STRING is "studio"
-			-- Short version of EiffelStudio name.
-
 feature -- Access: file name
 
 	Eiffel_preferences: STRING is
@@ -282,14 +279,6 @@ feature -- Access: file name
 		do
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
-		end
-
-	Default_precompiled_location: DIRECTORY_NAME is
-			-- Default location for the precompiled base
-			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"precomp", "spec", Eiffel_platform>>)
 		end
 
 	filter_path: DIRECTORY_NAME is
@@ -495,8 +484,11 @@ feature -- Constants
 	ise_precomp_env: STRING is "ISE_PRECOMP"
 			-- Name of the ISE_PRECOMP environment variable.
 
-	library_directory_name: STRING is "library";
+	library_directory_name: STRING is "library"
 			-- Name of the library directory.
+
+	short_studio_name: STRING is "studio";
+			-- Short version of EiffelStudio name.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

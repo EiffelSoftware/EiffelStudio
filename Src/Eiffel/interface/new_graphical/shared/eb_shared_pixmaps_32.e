@@ -76,8 +76,8 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 	pixmap_path: DIRECTORY_NAME is
 			-- Path to cursor pixmaps
 		once
-			create Result.make_from_string (eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "bitmaps", "png">>)
+			create Result.make_from_string (bitmaps_path)
+			Result.extend ("png")
 		end
 
 	pixmap_lookup_table: ES_PIXMAP_LOOKUP_TABLE is

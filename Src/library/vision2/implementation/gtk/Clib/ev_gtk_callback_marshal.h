@@ -27,6 +27,8 @@ void c_ev_gtk_callback_marshal_init
 
 void c_ev_gtk_callback_marshal_destroy ();
 
+void c_ev_gtk_callback_marshal_set_is_enabled (int);
+
 guint c_ev_gtk_callback_marshal_signal_connect
 	(GtkObject*, const gchar*, EIF_OBJECT, gboolean);
 

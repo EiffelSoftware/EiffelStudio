@@ -10,6 +10,7 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<library name="vision2_extensions" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>
+		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<assembly name="data" location="$ISE_DOTNET_FRAMEWORK\System.Data.dll" prefix="DATA_"/>
 		<assembly name="winforms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
 		<cluster name="root_cluster" location=".\"/>

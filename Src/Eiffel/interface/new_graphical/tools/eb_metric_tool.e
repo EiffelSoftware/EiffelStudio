@@ -50,6 +50,8 @@ feature -- Initialization
 			development_window.window_manager.compile_start_actions.extend (on_compile_start_agent)
 			set_tool_sensitive (False)
 			manager.add_observer (Current)
+			create feedback_dialog
+			feedback_dialog.set_buttons (<<>>)
 		end
 
 feature -- Actions
@@ -60,6 +62,10 @@ feature -- Actions
 			if workbench.system_defined and then workbench.is_already_compiled then
 				is_shown := True
 				if not is_compiling then
+					if not is_validation_checked then
+						check_metric_validation
+						set_is_validation_checked (True)
+					end
 					synchronize_after_compilation
 				end
 			end
@@ -111,22 +117,44 @@ feature -- Basic operations
 
 	go_to_result is
 			-- Go to result tab.
+		local
+			l_notebook: EV_NOTEBOOK
+			l_result_panel_index: INTEGER
 		do
-			metric_tool_interface.metric_notebook.select_item (metric_tool_interface.result_tab)
+			l_notebook := metric_tool_interface.metric_notebook
+			l_result_panel_index := metric_tool_interface.metric_result_tab_index
+			if l_notebook.selected_item_index = l_result_panel_index then
+				metric_tool_interface.panel_table.item (l_result_panel_index).on_select
+			else
+				l_notebook.select_item (metric_tool_interface.result_tab)
+			end
 		end
 
-	load_metrics (a_force: BOOLEAN) is
+	load_metrics (a_force: BOOLEAN; a_msg: STRING) is
 			-- Load metrics is they are not already loaded.
 			-- If `a_force' is True, load metrics even thought they are already loaded.
+			-- When loading metrics, `a_msg' will be displayed in a dialog.
+		require
+			a_msg_attached: a_msg /= Void
+			not_a_msg_is_empty: not a_msg.is_empty
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				if a_force or else not metric_manager.is_metric_loaded then
-					metric_manager.load_metrics
+					show_feedback_dialog (a_msg, agent metric_manager.load_metrics, feedback_dialog, development_window.window)
 					display_error_message
+					check_metric_validation
 					set_changed
 					notify (Void)
 				end
 			end
+		end
+
+	check_metric_validation is
+			-- Check metric validation.
+		do
+			development_window.window_manager.display_message (metric_names.t_checking_metric_vadility)
+			metric_manager.check_validation (True)
+			development_window.window_manager.display_message ("")
 		end
 
 	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN) is
@@ -135,12 +163,11 @@ feature -- Basic operations
 			a_metric_attached: a_metric /= Void
 			a_input_attached: a_input /= Void
 		do
-			metric_tool_interface.detail_result_panel.set_is_last_request_displayed (False)
+			metric_tool_interface.detail_result_panel.set_is_up_to_date (False)
 			metric_tool_interface.detail_result_panel.enable_metric_result_display
 			metric_tool_interface.detail_result_panel.set_last_metric (a_metric)
 			metric_tool_interface.detail_result_panel.set_last_value (a_value)
 			metric_tool_interface.detail_result_panel.set_last_source_domain (a_input)
-			metric_tool_interface.detail_result_panel.set_last_result_domain (a_result)
 			metric_tool_interface.detail_result_panel.set_last_result_domain (a_result)
 		end
 
@@ -149,7 +176,7 @@ feature -- Basic operations
 		require
 			archives_valid: not (ref_archive = Void and then cur_archive = Void)
 		do
-			metric_tool_interface.detail_result_panel.set_is_last_request_displayed (False)
+			metric_tool_interface.detail_result_panel.set_is_up_to_date (False)
 			metric_tool_interface.detail_result_panel.enable_archive_result_display
 			metric_tool_interface.detail_result_panel.set_last_reference_archive (ref_archive)
 			metric_tool_interface.detail_result_panel.set_last_current_archive (cur_archive)
@@ -168,6 +195,9 @@ feature -- Basic operations
 			l_dlg: EV_ERROR_DIALOG
 		do
 			if metric_manager.has_error then
+				if feedback_dialog.is_show_requested then
+					feedback_dialog.hide
+				end
 				create l_dlg.make_with_text (metric_manager.last_error.out)
 				l_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
 				l_dlg.show_relative_to_window (development_window.window)
@@ -190,12 +220,21 @@ feature -- Basic operations
 			-- System recompiled, synchronize all related parts in metric tool.
 		do
 			if not is_metrics_loaded then
-				load_metrics (False)
+				load_metrics (False, metric_names.t_loading_metrics)
 				metric_tool_interface.on_tab_change
 				display_error_message
 				is_metrics_loaded := True
+				set_is_validation_checked (True)
+			else
+				if is_shown then
+					check_metric_validation
+					set_is_validation_checked (True)
+				else
+					set_is_validation_checked (False)
+				end
 			end
-			metric_manager.check_validation (True)
+			development_window.window_manager.display_message (metric_names.t_checking_metric_vadility)
+			development_window.window_manager.display_message ("")
 			set_changed
 			notify (False)
 			is_up_to_date := True
@@ -224,6 +263,14 @@ feature -- Basic operations
 			metric_tool_interface.metric_notebook.i_th (a_tab_index).disable_sensitive
 		end
 
+	set_is_validation_checked (b: BOOLEAN) is
+			-- Set `is_validation_checked' with `b'.
+		do
+			is_validation_checked := b
+		ensure
+			is_validation_checked_set: is_validation_checked = b
+		end
+
 feature -- Access
 
 	development_window: EB_DEVELOPMENT_WINDOW
@@ -237,6 +284,9 @@ feature -- Access
 
 	on_compile_start_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_compile_start'
+
+	feedback_dialog: EV_INFORMATION_DIALOG
+			-- Dialog to display feedback
 
 feature -- Memory management
 
@@ -268,8 +318,10 @@ feature -- Status report
 			-- Is interface of metric tool up-to-date?
 
 	is_recompiled: BOOLEAN
-		-- Has system been recompiled?
+			-- Has system been recompiled?
 
+	is_validation_checked: BOOLEAN
+			-- Is metric validation checked?
 
 feature{NONE} -- Implementation
 
@@ -301,6 +353,10 @@ feature{NONE} -- Implementation
 				l_notebook.forth
 			end
 		end
+
+invariant
+	feedback_dialog_attached: feedback_dialog /= Void
+	not_feedback_dialog_is_destroyed: not feedback_dialog.is_destroyed
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -8,6 +8,9 @@ indexing
 class
 	EB_METRIC_TOOL_DATA
 
+inherit
+	QL_SHARED_UNIT
+
 create
 	make
 
@@ -38,15 +41,93 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := criterion_completion_list_height_preference.value
 		end
 
+	is_invisible_result_filtered: BOOLEAN is
+			-- Is invisible result item filtered?
+		do
+			Result := filter_invisible_result_preference.value
+		end
+
+	is_percentage_for_ratio_displayed: BOOLEAN is
+			-- Is percentage for ratio metric displayed?
+		do
+			Result := display_percentage_for_ratio_preference.value
+		end
+
+	should_go_to_result_panel_automatically: BOOLEAN is
+			-- Should go to result panel automatically after metric evaluation?
+		do
+			Result := automatic_go_to_result_panel_preference.value
+		end
+
+	unit_order: LINKED_LIST [QL_METRIC_UNIT] is
+			-- List of metric units in order
+		local
+			l_order_string: STRING
+			l_hash_code_list: LIST [STRING]
+			l_unit_table: like metric_tool_unit_table
+		do
+			l_order_string := unit_order_preference.value
+			l_hash_code_list := l_order_string.split (';')
+			l_unit_table := metric_tool_unit_table
+			create Result.make
+			from
+				l_hash_code_list.start
+			until
+				l_hash_code_list.after
+			loop
+				Result.extend (l_unit_table.item (l_hash_code_list.item.to_integer))
+				l_hash_code_list.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Setting
+
+	set_unit_order (a_unit_list: LIST [QL_METRIC_UNIT]) is
+			-- Set `unit_order_preference' with `a_unit_list'.
+		require
+			a_unit_list_attached: a_unit_list /= Void
+		local
+			l_unit_str: STRING
+			l_index: INTEGER
+			l_count: INTEGER
+		do
+			create l_unit_str.make (64)
+			from
+				l_index := 1
+				l_count := a_unit_list.count
+				a_unit_list.start
+			until
+				a_unit_list.after
+			loop
+				l_unit_str.append (a_unit_list.item.hash_code.out)
+				if l_index < l_count then
+					l_unit_str.append_character (';')
+				end
+				l_index := l_index + 1
+				a_unit_list.forth
+			end
+			unit_order_preference.set_value (l_unit_str)
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	criterion_completion_list_width_preference: INTEGER_PREFERENCE
 	criterion_completion_list_height_preference: INTEGER_PREFERENCE
+	filter_invisible_result_preference: BOOLEAN_PREFERENCE
+	display_percentage_for_ratio_preference: BOOLEAN_PREFERENCE
+	automatic_go_to_result_panel_preference: BOOLEAN_PREFERENCE
+	unit_order_preference: STRING_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
 	criterion_completion_list_width_string: STRING is "tools.metric_tool.criterion_completion_list_width"
 	criterion_completion_list_height_string: STRING is "tools.metric_tool.criterion_completion_list_height"
+	filter_invisible_result_string: STRING is "tools.metric_tool.filter_invisible_result"
+	display_percentage_for_ratio_string: STRING is "tools.metric_tool.display_percentage_for_ratio"
+	automatic_go_to_result_panel_string: STRING is "tools.metric_tool.automatic_go_to_result_panel"
+	unit_order_string: STRING is "tools.metric_tool.unit_order"
 
 feature {NONE} -- Implementation
 
@@ -58,12 +139,77 @@ feature {NONE} -- Implementation
 			create l_manager.make (preferences, "tools.metric_tool")
 			criterion_completion_list_height_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_height_string, 350)
 			criterion_completion_list_width_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_width_string, 240)
+			filter_invisible_result_preference := l_manager.new_boolean_preference_value (l_manager, filter_invisible_result_string, False)
+			display_percentage_for_ratio_preference := l_manager.new_boolean_preference_value (l_manager, display_percentage_for_ratio_string, True)
+			automatic_go_to_result_panel_preference := l_manager.new_boolean_preference_value (l_manager, automatic_go_to_result_panel_string, False)
+			unit_order_preference := l_manager.new_string_preference_value (l_manager, unit_order_string, initial_unit_order)
 			criterion_completion_list_width_preference.set_hidden (True)
 			criterion_completion_list_height_preference.set_hidden (True)
 		end
 
 	preferences: PREFERENCES
 			-- Preferences
+
+	metric_tool_unit_table: HASH_TABLE [QL_METRIC_UNIT, INTEGER] is
+			-- Table of metric units used in metric tool
+			-- Key is hash-code of a unit, value is that unit.
+		once
+			create Result.make (11)
+			Result.put (target_unit, target_unit.hash_code)
+			Result.put (group_unit, group_unit.hash_code)
+			Result.put (class_unit, class_unit.hash_code)
+			Result.put (generic_unit, generic_unit.hash_code)
+			Result.put (feature_unit, feature_unit.hash_code)
+			Result.put (assertion_unit, assertion_unit.hash_code)
+			Result.put (argument_unit, argument_unit.hash_code)
+			Result.put (local_unit, local_unit.hash_code)
+			Result.put (line_unit, line_unit.hash_code)
+			Result.put (compilation_unit, compilation_unit.hash_code)
+			Result.put (ratio_unit, ratio_unit.hash_code)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	initial_unit_order: STRING is
+			-- String representation initial metric unit order
+		do
+			create Result.make (64)
+
+			Result.append (class_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (feature_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (target_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (group_unit.hash_code.out)
+			Result.append_character (';')
+
+
+			Result.append (generic_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (assertion_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (argument_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (local_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (line_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (compilation_unit.hash_code.out)
+			Result.append_character (';')
+
+			Result.append (ratio_unit.hash_code.out)
+		ensure
+			result_attached: Result /= Void
+		end
 
 invariant
 	preferences_not_void: preferences /= Void

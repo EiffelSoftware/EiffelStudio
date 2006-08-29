@@ -31,10 +31,10 @@ output_libraries='standard mtstandard'
 link_line='lib -OUT:$@ $** $link_flags'
 #
 #
-optimize='-O2 -GS-'
-debug=''
-#optimize='-Od -GS'
-#debug='-Zi'
+#optimize='-O2 -GS-'
+#debug=''
+optimize='-Od -GS'
+debug='-Zi'
 
 link_flags=''
 warning_level='-W3 -Wp64 -D_CRT_SECURE_NO_DEPRECATE'

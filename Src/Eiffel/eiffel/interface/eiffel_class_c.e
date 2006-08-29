@@ -516,7 +516,7 @@ feature -- Third pass: byte code production and type check
 				feature_checker.init (ast_context)
 				feat_table.start
 
-				old_inline_agent_table := clone (inline_agent_table)
+				old_inline_agent_table := inline_agent_table.twin
 			until
 				feat_table.after
 			loop
@@ -2123,6 +2123,9 @@ feature {NONE} -- Backup implementation
 				l_system.store
 			end
 		end
+
+invariant
+	inline_agent_table_not_void: inline_agent_table /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

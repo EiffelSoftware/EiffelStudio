@@ -171,8 +171,6 @@ feature {NONE} -- Initialization
 	make_with_session_data (a_session_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
 			-- Recreate a previously existing development window using `a_session_data'.
 		local
-			l_class_i: CLASS_I
-			l_class_c_stone: CLASSC_STONE
 			l_cluster_string, l_class_string, l_feature_string: STRING
 		do
 			internal_development_window_data := a_session_data

@@ -118,6 +118,7 @@ feature -- Initialization
 						create l_loader
 						l_loader.set_should_stop_on_prompt (stop_on_error)
 						l_loader.set_ignore_user_configuration_file (not is_user_settings_requested)
+						l_loader.set_has_library_conversion (not has_no_library_conversion)
 						if old_project_file /= Void then
 							l_loader.open_project_file (old_project_file, Void, project_path, is_clean_requested)
 						elseif old_ace_file /= Void then
@@ -237,6 +238,9 @@ feature -- Properties
 	is_user_settings_requested: BOOLEAN
 			-- Should we compile without using the configuration file?
 
+	has_no_library_conversion: BOOLEAN
+			-- Should we not convert clusters into libraries?
+
 	help_messages: HASH_TABLE [STRING, STRING] is
 			-- Help message table
 		once
@@ -267,6 +271,7 @@ feature -- Properties
 			Result.put (suppliers_help, suppliers_cmd_name)
 			Result.put (target_help, target_cmd_name)
 			Result.put (use_settings_help, use_settings_cmd_name)
+			Result.put (no_library_help, no_library_cmd_name)
 			Result.put (version_help, version_cmd_name)
 			Result.put (batch_help, batch_cmd_name)
 			Result.put (clean_help, clean_cmd_name)
@@ -351,7 +356,7 @@ feature -- Output
 			io.put_string ("%
 				%%T-config config.ecf | -target target |%N%
 				%%T(obsolete) -ace Ace | (obsolete) -project Project_file_name |%N%
-				%%T-stop |%N%
+				%%T-stop | -no_library |%N%
 				%%T-project_path Project_directory_path | -file File]%N")
 		end
 
@@ -943,6 +948,10 @@ feature -- Update
 			elseif option.is_equal ("-use_settings") then
 					-- Compiler will read user configuration file for that project
 				is_user_settings_requested := True
+
+			elseif option.is_equal ("-no_library") then
+					-- Compiler will read user configuration file for that project
+				has_no_library_conversion := True
 
 			elseif option.is_equal ("-file") then
 				if current_option < argument_count then

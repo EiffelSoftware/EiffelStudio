@@ -467,6 +467,19 @@ feature -- Access: command name
 			Result.set_file_name ("estudio")
 		end
 
+	Ecdbgd_command_name: FILE_NAME is
+			-- Complete path to `ecdbgd'.
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
+			Result.set_file_name ("ecdbgd")
+			if Platform_constants.is_windows then
+				Result.add_extension ("exe")
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Status
 
 	has_borland: BOOLEAN is

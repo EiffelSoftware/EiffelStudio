@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	QL_ITEM
+		undefine
+			is_visible
+		end
 
 	SHARED_SERVER
 
@@ -65,15 +68,6 @@ feature -- Access
 			l_list := match_list_server.item (written_class.class_id)
 			check l_list /= Void end
 			Result := ast.first_token (l_list).line
-		end
-
-feature -- Status report
-
-	is_visible: BOOLEAN is
-			-- Is current item visible in the level where current is generated?
-		require
-			is_valid: is_valid_domain_item
-		deferred
 		end
 
 indexing

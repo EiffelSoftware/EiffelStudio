@@ -61,40 +61,36 @@ feature -- Launching
 				--| Launch Eiffel Debugger
 			if not ec_dbg_launched then
 				get_environment
-				if ise_eiffel = Void or else ise_platform = Void then
-					--| Error
-				else
-					if valid_ise_ecdbgd_executable then
-						create cmd.make_from_string (ise_ecdbgd_path)
-						if cmd.has (' ') then
-							cmd.prepend_character ('"')
-							cmd.append_character ('"')
-						end
-
-						create cs_cmd.make (cmd)
-						create cs_pname.make ("ecdbgd")
-
-						debug ("ipc")
-							io.put_string ("Launching ecDBDd : " + cmd + " (timeout=" + ise_timeout.out + ") %N")
-						end
-
-						r := c_launch_ecdbgd (cs_pname.item, cs_cmd.item, ise_timeout)
-						ec_dbg_launched := (r = 1)
-					else
-						ec_dbg_launched := False
+				if valid_ise_ecdbgd_executable then
+					create cmd.make_from_string (ise_ecdbgd_path)
+					if cmd.has (' ') then
+						cmd.prepend_character ('"')
+						cmd.append_character ('"')
 					end
-					if ec_dbg_launched then
-						init_connection (False)
-						if connection_failed then
-							ec_dbg_launched := False
-						else
-							check
-								ecdbgd_alive: is_ecdbgd_alive
-							end
-							send_rqst_2 (Rqst_set_ipc_param, ipc_current_process_id, ise_timeout)
 
-							start_ecdbgd_alive_checking
+					create cs_cmd.make (cmd)
+					create cs_pname.make ("ecdbgd")
+
+					debug ("ipc")
+						io.put_string ("Launching ecDBDd : " + cmd + " (timeout=" + ise_timeout.out + ") %N")
+					end
+
+					r := c_launch_ecdbgd (cs_pname.item, cs_cmd.item, ise_timeout)
+					ec_dbg_launched := (r = 1)
+				else
+					ec_dbg_launched := False
+				end
+				if ec_dbg_launched then
+					init_connection (False)
+					if connection_failed then
+						ec_dbg_launched := False
+					else
+						check
+							ecdbgd_alive: is_ecdbgd_alive
 						end
+						send_rqst_2 (Rqst_set_ipc_param, ipc_current_process_id, ise_timeout)
+
+						start_ecdbgd_alive_checking
 					end
 				end
 			end
@@ -114,12 +110,6 @@ feature -- Launching
 		local
 			s: STRING_8
 		do
-			ise_eiffel := Void
-			ise_platform := Void
-
-			ise_eiffel := Execution_environment.get (Ise_eiffel_varname)
-			ise_platform := Execution_environment.get (Ise_platform_varname)
-
 			ise_timeout := Preferences.debugger_data.classic_debugger_timeout
 			if ise_timeout <= 0 then
 				s := Execution_environment.get (Ise_timeout_varname)
@@ -137,14 +127,7 @@ feature -- Launching
 			if s /= Void then
 				create ise_ecdbgd_path.make_from_string (s)
 			else
-				if ise_eiffel /= Void and ise_platform /= Void then
-					create ise_ecdbgd_path.make_from_string (ise_eiffel)
-					ise_ecdbgd_path.extend_from_array (<<"studio", "spec", ise_platform, "bin" >>)
-					ise_ecdbgd_path.set_file_name (Ise_ecdbgd_default_name)
-					if is_windows then
-						ise_ecdbgd_path.add_extension ("exe")
-					end
-				end
+				ise_ecdbgd_path := Ecdbgd_command_name.twin
 			end
 		end
 
@@ -192,7 +175,6 @@ feature -- Status
 			Result := (c_is_ecdbgd_alive = 1)
 		end
 
-	ise_eiffel, ise_platform: STRING
 	ise_ecdbgd_path: FILE_NAME
 	ise_timeout: INTEGER
 
@@ -295,11 +277,8 @@ feature {NONE} -- Implementation
 
 feature {ANY} -- Constants
 
-	Ise_eiffel_varname: STRING is "ISE_EIFFEL"
-	Ise_platform_varname: STRING is "ISE_PLATFORM"
 	Ise_timeout_varname: STRING is "ISE_TIMEOUT"
 	Ise_ecdbgd_varname: STRING is "ISE_ECDBGD"
-	Ise_ecdbgd_default_name: STRING is "ecdbgd"
 
 feature {NONE} -- Externals
 

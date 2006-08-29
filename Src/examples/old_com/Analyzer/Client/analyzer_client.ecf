@@ -4,7 +4,7 @@
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
-		<precompile name="precompile" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel.ecf"/>
+		<precompile name="precompile" location="$ISE_PRECOMP\wel.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<library name="com" location="$ISE_LIBRARY\library\com\com.ecf">

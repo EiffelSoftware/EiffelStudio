@@ -10,7 +10,7 @@
 	</target>
 	<target name="dotnet" extends="common">
 		<setting name="msil_generation" value="true"/>
-		<precompile name="wel_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\wel.ecf"/>
+		<precompile name="wel_pre" location="$ISE_PRECOMP\wel.ecf"/>
 	</target>
 	<target name="classic" extends="common">
 	</target>

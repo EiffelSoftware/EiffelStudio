@@ -6,12 +6,12 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<cluster name="root_cluster" location="$ISE_LIBRARY\examples\time\calculator\"/>
 	</target>
 	<target name="classic" extends="common">
-		<precompile name="base_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
 	</target>
 	<target name="dotnet" extends="common">
-		<precompile name="base_pre" location="$ISE_EIFFEL\precomp\spec\dotnet\base.ecf"/>
+			<setting name="msil_generation" value="true"/>
 	</target>
 </system>

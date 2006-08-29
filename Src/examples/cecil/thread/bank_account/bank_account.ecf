@@ -26,7 +26,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<precompile name="base-mt_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base-mt.ecf"/>
+		<precompile name="base-mt_pre" location="$ISE_PRECOMP\base-mt.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf">
 			<visible class="BOOLEAN_REF"/>
 		</library>

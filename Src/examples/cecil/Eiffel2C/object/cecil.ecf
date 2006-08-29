@@ -25,7 +25,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<precompile name="base_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base.ecf"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>

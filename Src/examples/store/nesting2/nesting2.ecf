@@ -13,7 +13,7 @@
 	</target>
 	<target name="ingres" extends="common">
 		<setting name="multithreaded" value="true"/>
-		<precompile name="vision2-mt_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2-mt.ecf"/>
+		<precompile name="vision2-mt_pre" location="$ISE_PRECOMP\vision2-mt.ecf"/>
 		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres.ecf"/>
 		<cluster name="handle" location="..\Utilities\ingres\">
 			<file_rule>
@@ -25,7 +25,7 @@
 	</target>
 	<target name="sybase" extends="common">
 		<setting name="multithreaded" value="true"/>
-		<precompile name="vision2-mt_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2-mt.ecf"/>
+		<precompile name="vision2-mt_pre" location="$ISE_PRECOMP\vision2-mt.ecf"/>
 		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase.ecf"/>
 		<cluster name="handle" location="..\Utilities\sybase\">
 			<file_rule>
@@ -36,7 +36,7 @@
 		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
 	<target name="oracle" extends="common">
-		<precompile name="vision2_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2.ecf"/>
+		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle.ecf"/>
 		<cluster name="handle" location="..\Utilities\oracle\">
 			<file_rule>
@@ -47,7 +47,7 @@
 		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
 	<target name="odbc" extends="common">
-		<precompile name="vision2_pre" location="$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2.ecf"/>
+		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf"/>
 		<cluster name="handle" location="..\Utilities\odbc\">
 			<file_rule>

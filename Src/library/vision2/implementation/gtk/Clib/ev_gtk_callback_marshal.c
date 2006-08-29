@@ -33,6 +33,13 @@ void c_ev_gtk_callback_marshal_init (
         ev_gtk_callback_marshal = callback_marshal;
 }
 
+int c_ev_gtk_callback_marshal_is_enabled;
+
+void c_ev_gtk_callback_marshal_set_is_enabled (int enabled_state)
+{
+	c_ev_gtk_callback_marshal_is_enabled = enabled_state;
+}
+
 void c_ev_gtk_callback_marshal_destroy (void)
 		// Disconnect marshal from the eiffel system.
 {
@@ -47,12 +54,13 @@ void c_ev_gtk_callback_marshal (
         // Called by GTK when an `object' emits a signal,
         // Call an `agent' with `n_args' `args'.
 {
-	ev_gtk_callback_marshal (
-		eif_access (ev_gtk_callback_marshal_object),
-		eif_access ((EIF_OBJECT) closure->data),
-		(EIF_INTEGER) n_param_values - 1,
-		(EIF_POINTER) ((GValue*)param_values + 1)
-       	 );
+	if (c_ev_gtk_callback_marshal_is_enabled)
+		ev_gtk_callback_marshal (
+			eif_access (ev_gtk_callback_marshal_object),
+			eif_access ((EIF_OBJECT) closure->data),
+			(EIF_INTEGER) n_param_values - 1,
+			(EIF_POINTER) ((GValue*)param_values + 1)
+       	 	);
 }
 
 
@@ -107,12 +115,13 @@ int c_ev_gtk_callback_marshal_true_callback (EIF_OBJECT agent)
 		// GtkFunction that passes `agent' to ev_gtk_callback_marshal
 		// and returns TRUE
 {
-      ev_gtk_callback_marshal (
-          eif_access (ev_gtk_callback_marshal_object),
-          eif_access (agent),
-          0,
-          (EIF_POINTER) NULL
-      );
+      if (c_ev_gtk_callback_marshal_is_enabled)
+		ev_gtk_callback_marshal (
+          		eif_access (ev_gtk_callback_marshal_object),
+          		eif_access (agent),
+          		0,
+          		(EIF_POINTER) NULL
+      	);
       return TRUE;
 }
 
@@ -121,12 +130,13 @@ int c_ev_gtk_callback_marshal_true_event_callback (
 )
 		//
 {
-      ev_gtk_callback_marshal (
-          eif_access (ev_gtk_callback_marshal_object),
-          eif_access (agent),
-          0,
-          (EIF_POINTER) NULL
-      );
+      if (c_ev_gtk_callback_marshal_is_enabled)
+		ev_gtk_callback_marshal (
+          		eif_access (ev_gtk_callback_marshal_object),
+          		eif_access (agent),
+          		0,
+          		(EIF_POINTER) NULL
+      		);
       return TRUE;
 }
 

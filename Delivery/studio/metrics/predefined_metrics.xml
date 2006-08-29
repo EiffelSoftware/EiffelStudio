@@ -1,89 +1,89 @@
 <metric>
-	<basic_metric name="Classes" unit="class">
+	<basic_metric name="Classes" unit="class" uuid="B7719371-8424-4C40-8C97-024A2D69255D">
 		<description>Number of classes</description>
 	</basic_metric>
-	<basic_metric name="Deferred classes" unit="class">
+	<basic_metric name="Deferred classes" unit="class" uuid="EBA9B1D4-459B-4DAD-B81B-58434C4D44F1">
 		<description>Number of deferred classes</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_deferred" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Effective classes" unit="class">
+	<basic_metric name="Effective classes" unit="class" uuid="19866791-E8E4-4D0A-88D4-8D9AC47BC6CD">
 		<description>Number of effective classes</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_effective" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Uncompiled classes" unit="class">
+	<basic_metric name="Uncompiled classes" unit="class" uuid="385E1A6F-78EA-40AD-BECE-69AF29544D17">
 		<description>Number of uncompiled classes</description>
 		<criterion>
 			<normal_criterion negation="True" name="is_compiled" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Compiled classes" unit="class">
+	<basic_metric name="Compiled classes" unit="class" uuid="F8A149D2-9957-43F6-A1B4-7F8FF5388534">
 		<description>Number of compiled classes</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_compiled" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Generic classes" unit="class">
+	<basic_metric name="Generic classes" unit="class" uuid="881FB273-2D34-41FA-A862-7EEEBEEADA65">
 		<description>Number of generic classes</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_generic" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Expanded classes" unit="class">
+	<basic_metric name="Expanded classes" unit="class" uuid="32C6CD92-CE4F-4EDF-B606-73B7FE0817DC">
 		<description>Number of expanded classes</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_expanded" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Frozen classes" unit="class">
+	<basic_metric name="Frozen classes" unit="class" uuid="4CF6A51B-D167-436E-9622-116696B4BD63">
 		<description>Number of frozen classes</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_frozen" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Obsolete classes" unit="class">
+	<basic_metric name="Obsolete classes" unit="class" uuid="D33E359C-48A3-40E7-8C46-955541EEA8B4">
 		<description>Number of obsolete classes</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_obsolete" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Invariant Equipped classes" unit="class">
+	<basic_metric name="Invariant Equipped classes" unit="class" uuid="228D892F-25DD-4451-887C-EAD77177734B">
 		<description>Number of classes which have invariant</description>
 		<criterion>
 			<normal_criterion negation="False" name="has_invariant" scope="class"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Groups" unit="group">
+	<basic_metric name="Groups" unit="group" uuid="5A73786D-EDD3-4163-BB4C-EADB8230DB01">
 		<description>Number of groups</description>
 	</basic_metric>
-	<basic_metric name="Libraries" unit="group">
+	<basic_metric name="Libraries" unit="group" uuid="E0B90720-B4FC-4966-B965-ABD1D65D3D3B">
 		<description>Number of libraries</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_library" scope="group"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Clusters" unit="group">
+	<basic_metric name="Clusters" unit="group" uuid="E8189505-EE73-4AC2-81D0-BB08415434AD">
 		<description>Number of clusters</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_cluster" scope="group"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Assemblies" unit="group">
+	<basic_metric name="Assemblies" unit="group" uuid="8FBC549C-09F4-4CA6-BB84-2864CD135FA2">
 		<description>Number of assemblies</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_assembly" scope="group"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Features" unit="feature">
+	<basic_metric name="Features" unit="feature" uuid="0ECD8B48-7B15-41A3-BB0D-528976354A32">
 		<description>Number of features</description>
 		<criterion>
 			<normal_criterion negation="True" name="is_invariant_feature" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Attributes" unit="feature">
+	<basic_metric name="Attributes" unit="feature" uuid="CDAEB713-16CC-4D6E-8E5C-AFD721D261AB">
 		<description>Number of attributes</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -91,31 +91,31 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Commands" unit="feature">
+	<basic_metric name="Commands" unit="feature" uuid="9802D62D-091C-4411-8965-F8EE7112BCD4">
 		<description>Number of commands</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_command" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Deferred features" unit="feature">
+	<basic_metric name="Deferred features" unit="feature" uuid="3752E5E6-627A-4ED5-9C12-047CA094A58C">
 		<description>Number of deferred features</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_deferred" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Effective features" unit="feature">
+	<basic_metric name="Effective features" unit="feature" uuid="4BF68DB3-30CA-43CA-A9DA-EC8F5F027534">
 		<description>Number of effective features</description>
 		<criterion>
 			<normal_criterion negation="True" name="is_deferred" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Functions" unit="feature">
+	<basic_metric name="Functions" unit="feature" uuid="084ECF98-EDD1-45A8-9BBC-A13D507BB1BA">
 		<description>Number of functions</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_function" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Routines" unit="feature">
+	<basic_metric name="Routines" unit="feature" uuid="8C7CFA5B-FC98-4F68-A1C5-29ED8C8DB44E">
 		<description>Number of routines</description>
 		<criterion>
 			<or_criterion negation="False" name="or" scope="feature">				
@@ -124,13 +124,13 @@
 			</or_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Exported features" unit="feature">
+	<basic_metric name="Exported features" unit="feature" uuid="0A35F33C-608A-4E8F-BB3D-B9529E369D5B">
 		<description>Number of exported features</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_exported" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Uncommented features" unit="feature">
+	<basic_metric name="Uncommented features" unit="feature" uuid="77580B33-CE81-4418-8947-68FD319C2BD1">
 		<description>Number of features which don't have comments</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -140,25 +140,25 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="External features" unit="feature">
+	<basic_metric name="External features" unit="feature" uuid="E94B5099-5D46-4A28-9F6C-DC4C50FB0002">
 		<description>Number of external features</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_external" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Postcondition equipped features" unit="feature">
+	<basic_metric name="Postcondition equipped features" unit="feature" uuid="E1021A57-42DA-4148-9614-C0BC8A5EC02C">
 		<description>Number of features which have postconditions</description>
 		<criterion>
 			<normal_criterion negation="False" name="has_postcondition" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Precondition equipped features" unit="feature">
+	<basic_metric name="Precondition equipped features" unit="feature" uuid="11B35E8E-86CE-4A46-BF32-B873305E8FE7">
 		<description>Number of features which have precondtions</description>
 		<criterion>
 			<normal_criterion negation="False" name="has_precondition" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Assertion equipped features" unit="feature">
+	<basic_metric name="Assertion equipped features" unit="feature" uuid="E395EA23-84C0-4DA3-BEB0-DE8155E6960E">
 		<description>Number of features which have preconditions or postconditions</description>
 		<criterion>
 			<or_criterion negation="False" name="or" scope="feature">				
@@ -167,7 +167,7 @@
 			</or_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. assertion equipped features" unit="feature">
+	<basic_metric name="Imm. assertion equipped features" unit="feature" uuid="95111DFF-D643-4889-98AC-0FDACDA01CD8">
 		<description>Number of immediate feature which have assertions</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -179,7 +179,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. attributes" unit="feature">
+	<basic_metric name="Imm. attributes" unit="feature" uuid="9B21AFC0-81C4-4232-BC72-469BFC39F082">
 		<description>Number of immediate attributes</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -188,7 +188,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. commands" unit="feature">
+	<basic_metric name="Imm. commands" unit="feature" uuid="1F86F959-2FA3-4520-B0EC-B17D72A5003A">
 		<description>Number of immediate commands</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -197,7 +197,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. deferred features" unit="feature">
+	<basic_metric name="Imm. deferred features" unit="feature" uuid="BAC87068-9B35-4B76-B6C7-77E3192618CD">
 		<description>Number of immediate deferred features</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -206,7 +206,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. effective features" unit="feature">
+	<basic_metric name="Imm. effective features" unit="feature" uuid="26198C78-B01B-4A61-88C9-CD7FCD49FC79">
 		<description>Number of immediate effective features</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -215,7 +215,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. exported features" unit="feature">
+	<basic_metric name="Imm. exported features" unit="feature" uuid="0A55C4DC-F7E0-4878-94B5-C5CDB672ADB3">
 		<description>Number of immediate exported features</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -224,7 +224,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. external features" unit="feature">
+	<basic_metric name="Imm. external features" unit="feature" uuid="716DD73F-AB68-4C31-9214-911BBE954DA0">
 		<description>Number of immediate external features</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -233,7 +233,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. features" unit="feature">
+	<basic_metric name="Imm. features" unit="feature" uuid="4254A5BA-947F-4966-924E-C7053B1CCAC5">
 		<description>Number of immediate features</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -242,7 +242,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. functions" unit="feature">
+	<basic_metric name="Imm. functions" unit="feature" uuid="C6107301-C58B-43F3-A4E1-156BFD919CA7">
 		<description>Number of immediate functions</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -251,7 +251,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. routines" unit="feature">
+	<basic_metric name="Imm. routines" unit="feature" uuid="2F7297D0-59DF-4307-975F-B438CD25D8DA">
 		<description>Number of immediate routines</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -263,13 +263,13 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Generics" unit="generic">
+	<basic_metric name="Generics" unit="generic" uuid="67CE7E90-FCFC-4E4A-AEAC-F62E4566BAAA">
 		<description>Number of class generics</description>
 	</basic_metric>
-	<basic_metric name="Line of code" unit="line">
+	<basic_metric name="Line of code" unit="line" uuid="B723DCD4-C974-478B-AA97-793F5E186515">
 		<description>Number of lines</description>
 	</basic_metric>
-	<basic_metric name="Inherited features" unit="feature">
+	<basic_metric name="Inherited features" unit="feature" uuid="E9F65F10-60F4-4DD2-BD51-9C4271D4D1AE">
 		<description>Number of inherited features</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -278,22 +278,22 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Compilation" unit="compilation">
+	<basic_metric name="Compilation" unit="compilation" uuid="3F2C2EDA-0974-4767-AAA7-48FE2BA227E1">
 		<description>Number of Compilations</description>
 	</basic_metric>
-	<basic_metric name="Postcondition clauses" unit="assertion">
+	<basic_metric name="Postcondition clauses" unit="assertion" uuid="54529AD6-C934-4D4F-A61E-533172891D6C">
 		<description>Number of postcondition clauses</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_postcondition" scope="assertion"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Precondition clauses" unit="assertion">
+	<basic_metric name="Precondition clauses" unit="assertion" uuid="9185FD56-3969-4710-ADEC-7D0D257001CE">
 		<description>Number of precondition clauses</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_precondition" scope="assertion"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Feature assertions" unit="assertion">
+	<basic_metric name="Feature assertions" unit="assertion" uuid="C94D8BBC-81CC-46D5-802F-DFDD3585DA3C">
 		<description>Number of feature assertions (precondtions and postconditions)</description>
 		<criterion>
 			<or_criterion negation="False" name="or" scope="assertion">				
@@ -302,7 +302,7 @@
 			</or_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. feature assertions" unit="assertion">
+	<basic_metric name="Imm. feature assertions" unit="assertion" uuid="847D3527-92FD-4D95-9330-E94ADEB10F57">
 		<description>Number of immediate feature assertions (precondtions and postconditions)</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="assertion">				
@@ -314,7 +314,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. precondition clauses" unit="assertion">
+	<basic_metric name="Imm. precondition clauses" unit="assertion" uuid="77E2008F-E5D2-45EE-9D2A-0FE7B48894C4">
 		<description>Number of immediate precondition clauses</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="assertion">				
@@ -323,7 +323,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. postcondition clauses" unit="assertion">
+	<basic_metric name="Imm. postcondition clauses" unit="assertion" uuid="6E6453B1-5E45-4CED-A337-CC37357B2BCF">
 		<description>Number of immediate postcondition clauses</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="assertion">				
@@ -332,16 +332,16 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Formals" unit="argument">
+	<basic_metric name="Formals" unit="argument" uuid="BD6ADB82-8093-40E9-A428-FDD94B9842C9">
 		<description>Number of formals</description>
 	</basic_metric>
-	<basic_metric name="Invariants" unit="assertion">
+	<basic_metric name="Invariants" unit="assertion" uuid="84741692-277F-423E-8D07-DE5D825FF240">
 		<description>Number of invariant clauses</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_invariant" scope="assertion"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. invariants" unit="assertion">
+	<basic_metric name="Imm. invariants" unit="assertion" uuid="3DA1F0B6-908E-4D34-8649-ED76EF7A427E">
 		<description>Number of immediate invariant clauses</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="assertion">				
@@ -350,22 +350,22 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Locals" unit="local">
+	<basic_metric name="Locals" unit="local" uuid="61B82A9E-860A-46AD-8463-FD7FFFF4F461">
 		<description>Number of locals</description>
 	</basic_metric>
-	<basic_metric name="Imm. formals" unit="argument">
+	<basic_metric name="Imm. formals" unit="argument" uuid="5835F32B-736E-4C61-A9B6-3D4E286BA91D">
 		<description>Number of immediate formals</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_immediate" scope="argument"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. locals" unit="local">
+	<basic_metric name="Imm. locals" unit="local" uuid="3F827F68-810D-43E0-976B-0BB37D57E9CB">
 		<description>Number of immediate locals</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_immediate" scope="local"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Unused locals" unit="local">
+	<basic_metric name="Unused locals" unit="local" uuid="08E861B1-A8D6-4990-954B-333E61395316">
 		<description>Number of unused locals</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="local">				
@@ -374,7 +374,7 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. queries" unit="feature">
+	<basic_metric name="Imm. queries" unit="feature" uuid="7DA9856A-C9A3-4E17-9FF3-52BD71C3CFF5">
 		<description>Number of immediate queries</description>
 		<criterion>
 			<and_criterion negation="False" name="and" scope="feature">				
@@ -383,19 +383,19 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Queries" unit="feature">
+	<basic_metric name="Queries" unit="feature" uuid="DF60A4EF-0C23-4CFE-8039-EE05F5431232">
 		<description>Number of queries</description>
 		<criterion>
 			<normal_criterion negation="False" name="is_query" scope="feature"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Constrained generics" unit="generic">
+	<basic_metric name="Constrained generics" unit="generic" uuid="5437287D-41D6-4D9C-BB90-A71FD27B9FAC">
 		<description>Number of constraint generics</description>
 		<criterion>
 			<normal_criterion negation="False" name="has_constraint" scope="generic"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Clients" unit="class">
+	<basic_metric name="Clients" unit="class" uuid="A4272F1A-54C9-4ED4-AEFC-595C0DB87349">
 		<description>Number of clients</description>
 		<criterion>
 			<domain_criterion negation="False" name="supplier_is" scope="class">
@@ -405,7 +405,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Indirect clients" unit="class">
+	<basic_metric name="Indirect clients" unit="class" uuid="940EEA00-2B7E-4456-90CB-6B1A7C998913">
 		<description>Number of indirect clients</description>
 		<criterion>
 			<domain_criterion negation="False" name="indirect_client_is" scope="class">
@@ -415,7 +415,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Suppliers" unit="class">
+	<basic_metric name="Suppliers" unit="class" uuid="EA607F1D-A90A-4141-A39F-FCFC71962D05">
 		<description>Number of suppliers</description>
 		<criterion>
 			<domain_criterion negation="False" name="client_is" scope="class">
@@ -425,7 +425,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Indirect suppliers" unit="class">
+	<basic_metric name="Indirect suppliers" unit="class" uuid="E1CD0F6F-CCA1-4122-B418-1A4A9056B56D">
 		<description>Number of indirect suppliers</description>
 		<criterion>
 			<domain_criterion negation="False" name="indirect_client_is" scope="class">
@@ -435,7 +435,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Parents" unit="class">
+	<basic_metric name="Parents" unit="class" uuid="40575DA0-2114-4110-A23C-63B253FAA6FF">
 		<description>Number of parents</description>
 		<criterion>
 			<domain_criterion negation="False" name="heir_is" scope="class">
@@ -445,7 +445,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Indirect parents" unit="class">
+	<basic_metric name="Indirect parents" unit="class" uuid="D01F5CCE-9435-4A1A-81EA-D3E07604185F">
 		<description>Number of indirect parents</description>
 		<criterion>
 			<domain_criterion negation="False" name="indirect_heir_is" scope="class">
@@ -455,7 +455,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Heirs" unit="class">
+	<basic_metric name="Heirs" unit="class" uuid="B1B95017-69C2-4BAA-BB66-AE4742BA6CDD">
 		<description>Number of heirs</description>
 		<criterion>
 			<domain_criterion negation="False" name="parent_is" scope="class">
@@ -465,7 +465,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Indirect heris" unit="class">
+	<basic_metric name="Indirect heris" unit="class" uuid="8A69548B-F16E-40B3-ACFE-8A18688677F0">
 		<description>Number of indirect heirs</description>
 		<criterion>
 			<domain_criterion negation="False" name="indirect_parent_is" scope="class">
@@ -475,7 +475,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Descendants" unit="class">
+	<basic_metric name="Descendants" unit="class" uuid="FAC19DDA-F5B9-4D0C-8678-A7DC0CE7541E">
 		<description>Number of descendants</description>
 		<criterion>
 			<domain_criterion negation="False" name="ancestor_is" scope="class">
@@ -485,7 +485,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Dependents" unit="class">
+	<basic_metric name="Dependents" unit="class" uuid="70E9FF23-67C4-45C4-BD8C-F0A63D24CF4F">
 		<description>Number of dependants</description>
 		<criterion>
 			<or_criterion negation="False" name="or" scope="class">				
@@ -501,5 +501,6 @@
 				</domain_criterion>
 			</or_criterion>
 		</criterion>
-	</basic_metric>	
+	</basic_metric>		
 </metric>
+

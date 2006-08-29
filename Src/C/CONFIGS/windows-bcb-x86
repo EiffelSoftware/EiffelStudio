@@ -24,9 +24,9 @@ output_libraries='standard mtstandard'
 link_line='&$compiler_path\bin\tlib /p512 $@ +$**'
 #
 #
-optimize='-O2'
+#optimize='-O2'
 debug=''
-#optimize=''
+optimize='-Od'
 #debug='-v'
 warning_level='-w-8004 -w-8057'
 #

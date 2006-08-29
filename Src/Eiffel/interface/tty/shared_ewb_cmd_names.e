@@ -174,6 +174,8 @@ feature {NONE}
 
 	use_settings_cmd_name: STRING is "use_settings"
 
+	no_library_cmd_name: STRING is "no_library"
+
 	text_cmd_name: STRING is "text"
 
 	Total_sec_cmd_name: STRING is "total"

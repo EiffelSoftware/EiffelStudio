@@ -423,7 +423,6 @@ feature{NONE} -- Actions
 			a_to_row_attached: a_to_row /= Void
 			a_to_row_exists: unit_row_list.has (a_to_row)
 		local
-			l_unit_row_list: like unit_row_list
 			l_unit_list: LINKED_LIST [QL_METRIC_UNIT]
 			l_from_unit: QL_METRIC_UNIT
 			l_to_unit: QL_METRIC_UNIT

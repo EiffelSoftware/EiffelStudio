@@ -45,7 +45,7 @@ feature {NONE} -- Actions
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		do
 			name.set_text (a_name+"_pre")
-			location.set_text ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\"+a_file)
+			location.set_text ("$ISE_PRECOMP\"+a_file)
 		end
 
 	on_ok is

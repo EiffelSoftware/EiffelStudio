@@ -496,7 +496,6 @@ feature{NONE} -- Implementation
 			a_metric_attached: a_metric /= Void
 		local
 			l_row: EV_GRID_ROW
-			l_grid_lbl: EV_GRID_LABEL_ITEM
 			l_variable_metric_list: LIST [STRING]
 			l_coefficient_list: LIST [DOUBLE]
 			l_uuid_list: LIST [UUID]
@@ -555,13 +554,8 @@ feature{NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 		local
-			l_metric_item: EV_GRID_COMBO_ITEM
-			l_metric: EB_METRIC
 			l_metric_table: HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT]
 			l_metric_list: LIST [EB_METRIC]
-			l_combo: EV_COMBO_BOX
-			l_list_item: EV_LIST_ITEM
-			l_metric_candidate: EB_METRIC
 			l_metric_name_array: ARRAY [STRING]
 			l_index: INTEGER
 		do

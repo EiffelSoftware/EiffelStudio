@@ -258,9 +258,12 @@ feature -- Element change
 	equivalent_length (position, tab_number: INTEGER): INTEGER is
 			-- Length of a tabulation inserted after `position' in the text
 			-- as it would appear to the reader.
+		local
+			l_tab_length: INTEGER
 		do
 			if tab_number > 0 then
-				Result := tab_length * tab_number - ((position) \\ tab_length)
+				l_tab_length := tab_length
+				Result := l_tab_length * tab_number - ((position) \\ l_tab_length)
 			end
 		end
 
@@ -713,6 +716,8 @@ feature {NONE} -- Implementation
 	tab_length: INTEGER is
 		once
 			Result := text.tabulation_size
+		ensure
+			tab_length_non_negative: Result >= 1
 		end
 
 	text: SELECTABLE_TEXT

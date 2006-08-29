@@ -22,7 +22,7 @@ inherit
 create
 	make
 
-feature {EB_PREFERENCES} -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_preferences: PREFERENCES) is
 			-- Create
@@ -99,9 +99,14 @@ feature -- Value
 
 	tabulation_spaces: INTEGER is
 			-- Number of space characters in a tabulation.
-			-- TODO: neilc.  Make sure user does not enter 0 for this.
+			-- TODO: neilc.  Make sure user does not enter a negative value for this.
 		do
+			if tabulation_spaces_preference.value <= 0 then
+				tabulation_spaces_preference.set_value (1)
+			end
 			Result := tabulation_spaces_preference.value
+		ensure
+			tabulation_spaces_positive: Result > 0
 		end
 
 	automatic_update: BOOLEAN is
@@ -651,6 +656,10 @@ feature {NONE} -- Implementation
 			number_background_color_preference.set_auto_preference (normal_background_color_preference)
 			operator_background_color_preference.set_auto_preference (normal_background_color_preference)
 
+				-- Ensure that the value is never negative
+			if tabulation_spaces_preference.value <= 0 then
+				tabulation_spaces_preference.set_value (1)
+			end
 			tabulation_spaces_preference.change_actions.extend (agent update)
 			left_margin_width_preference.change_actions.extend (agent update)
 			show_line_numbers_preference.change_actions.extend (agent update)

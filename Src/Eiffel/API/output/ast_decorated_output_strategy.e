@@ -2900,9 +2900,9 @@ feature {NONE} -- Implementation
 			if l_as.clients /= Void then
 				l_as.clients.process (Current)
 			end
+			text_formatter_decorator.put_new_line
 			if l_as.feature_list /= Void then
 				text_formatter_decorator.indent
-				text_formatter_decorator.put_new_line
 				text_formatter_decorator.set_new_line_between_tokens
 				if text_formatter_decorator.is_flat_short then
 					format_creation_features (l_as.feature_list)
@@ -2931,30 +2931,28 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.set_separator (ti_comma)
 			text_formatter_decorator.set_space_between_tokens
 			l_export_status := export_status_generator.export_status (current_class, l_as)
-			if text_formatter_decorator.client = Void or else l_export_status.valid_for (text_formatter_decorator.client) then
-				from
-					l_as.clients.start
-				until
-					l_as.clients.after
-				loop
-					temp := l_as.clients.item
-					client_classi := universe.safe_class_named (temp, cluster)
-					if client_classi /= Void then
-						text_formatter_decorator.put_classi (client_classi)
-					else
-						text_formatter_decorator.add (temp.as_upper)
-					end
-					l_as.clients.forth
-					if not l_as.clients.after then
-						text_formatter_decorator.set_without_tabs
-						text_formatter_decorator.process_symbol_text (ti_comma)
-						text_formatter_decorator.put_space
-					end
+			from
+				l_as.clients.start
+			until
+				l_as.clients.after
+			loop
+				temp := l_as.clients.item
+				client_classi := universe.safe_class_named (temp, cluster)
+				if client_classi /= Void then
+					text_formatter_decorator.put_classi (client_classi)
+				else
+					text_formatter_decorator.add (temp.as_upper)
 				end
-				text_formatter_decorator.set_without_tabs
-				text_formatter_decorator.process_symbol_text (ti_r_curly)
-				text_formatter_decorator.commit
+				l_as.clients.forth
+				if not l_as.clients.after then
+					text_formatter_decorator.set_without_tabs
+					text_formatter_decorator.process_symbol_text (ti_comma)
+					text_formatter_decorator.put_space
+				end
 			end
+			text_formatter_decorator.set_without_tabs
+			text_formatter_decorator.process_symbol_text (ti_r_curly)
+			text_formatter_decorator.commit
 		end
 
 	process_case_as (l_as: CASE_AS) is

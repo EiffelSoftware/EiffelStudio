@@ -132,12 +132,6 @@
 				<platform value="windows"/>
 			</condition>
 		</cluster>
-		<cluster name="common_structured_text" location="$EIFFEL_SRC\library\editor\text_window\text\structure\structured_text\common\" recursive="true">
-			<file_rule>
-				<exclude>/text_formatter.e$</exclude>
-				<exclude>/structured_text.e$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="compiler_api_unix" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
@@ -186,16 +180,9 @@
 			</file_rule>
 		</cluster>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\documentation\" recursive="true"/>
-		<cluster name="eiffel_structured_text" location="$EIFFEL_SRC\Eiffel\API\structured_text\" recursive="true">
-			<file_rule>
-				<exclude>/common$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\">
 			<cluster name="interface_shared" location="$|shared\"/>
-			<cluster name="preference_tool" location="$|graphical\preference_tool\"/>
-			<cluster name="profile_tool" location="$|graphical\profile_tool\"/>
 			<cluster name="tty" location="$|tty\" recursive="true"/>
 		</cluster>
 		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true">

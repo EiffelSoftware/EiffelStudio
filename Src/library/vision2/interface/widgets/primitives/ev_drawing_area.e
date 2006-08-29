@@ -32,7 +32,7 @@ inherit
 			is_in_default_state
 		end
 
-	EV_TAB_CONTROLLABLE
+	EV_TAB_CONTROLABLE
 		redefine
 			implementation,
 			is_in_default_state

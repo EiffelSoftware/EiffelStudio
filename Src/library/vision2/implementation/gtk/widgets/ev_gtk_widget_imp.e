@@ -42,13 +42,20 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 feature {NONE} -- Implementation
 
 	initialize is
-			-- Initialize `c_object'
+			-- Initialize `c_object'.
+		local
+			l_visual_widget, l_c_object: POINTER
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
-			if {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
-				{EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
+			l_visual_widget := visual_widget
+			l_c_object := c_object
+			{EV_GTK_EXTERNALS}.gtk_widget_add_events (l_visual_widget, gdk_events_mask)
+			if l_visual_widget /= l_c_object then
+				{EV_GTK_EXTERNALS}.gtk_widget_add_events (l_c_object, gdk_events_mask)
+			end
+			if {EV_GTK_EXTERNALS}.gtk_is_window (l_c_object) then
+				{EV_GTK_EXTERNALS}.gtk_widget_realize (l_c_object)
 			else
-				{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (l_c_object)
 			end
 			set_is_initialized (True)
 		end

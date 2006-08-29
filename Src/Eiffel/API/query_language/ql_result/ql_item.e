@@ -338,6 +338,16 @@ feature -- Item type
 
 feature -- Status report
 
+	is_visible: BOOLEAN is
+			-- Is current item visible in the level where current is generated?
+		require
+			is_valid: is_valid_domain_item
+		do
+			Result := True
+		end
+
+feature -- Status report
+
 	scope: QL_SCOPE is
 			-- Scope of current
 		deferred

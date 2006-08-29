@@ -54,6 +54,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
 feature -- Loading
 
 	open_project_file (a_file_name: STRING; a_target_name: STRING; a_project_path: STRING; from_scratch: BOOLEAN) is
@@ -593,9 +598,13 @@ feature {NONE} -- Settings
 			l_cmd: STRING
 		do
 			create l_cmd.make (50)
-			l_cmd.append ("ec -config ")
+			l_cmd.append (ec_command_name)
+			l_cmd.append (" -config ")
 			l_cmd.append (a_precompile.location.evaluated_path)
 			l_cmd.append (" -precompile -clean -c_compile -batch")
+			if a_precompile.eifgens_location /= Void then
+				l_cmd.append (" -project_path "+a_precompile.eifgens_location.evaluated_path)
+			end
 
 			create l_prc_factory
 			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, Void)

@@ -6,16 +6,16 @@ indexing
 	keywords: "select, selected, selectable"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
-	EV_TAB_CONTROLLABLE
+
+deferred class
+	EV_TAB_CONTROLABLE
 
 inherit
 	EV_ANY
 		redefine
 			implementation
 		end
-	
+
 feature -- Status report
 
 	is_tabable_to: BOOLEAN is
@@ -77,8 +77,8 @@ feature -- Status setting
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
-	implementation: EV_TAB_CONTROLLABLE_I;
+
+	implementation: EV_TAB_CONTROLABLE_I;
 			-- Responsible for interaction with native graphics toolkit.
 
 indexing
@@ -95,5 +95,5 @@ indexing
 
 
 
-end -- class EV_TAB_CONTROLLABLE
+end -- class EV_TAB_CONTROLABLE
 

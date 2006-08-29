@@ -79,6 +79,7 @@ feature -- Formatting
 					if
 						eb_debugger_manager.application_is_executing
 						and then eb_debugger_manager.application_is_stopped
+						and then eb_debugger_manager.application.status.current_call_stack /= Void
 					then
 						stel  ?= eb_debugger_manager.application.status.current_call_stack_element
 						if

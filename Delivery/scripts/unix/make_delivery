@@ -85,8 +85,6 @@ remtrace vision2_tour
 exprt $DEFAULT_ORIGO_SVN/Delivery/vision2_tour vision2_tour 
 remtrace eifinit
 exprt $DEFAULT_ORIGO_SVN/Delivery/eifinit eifinit 
-remtrace install
-exprt $DEFAULT_ORIGO_SVN/Delivery/install install 
 remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec
@@ -100,8 +98,6 @@ fullrd net-mt
 fullrd parse
 fullrd vision
 cd $INSTALL_DIR
-remtrace wizards
-exprt $DEFAULT_ORIGO_SVN/Delivery/wizards wizards 
 remtrace C_library
 exprt $DEFAULT_ORIGO_SVN/Src/C_library C_library 
 cd $INSTALL_DIR

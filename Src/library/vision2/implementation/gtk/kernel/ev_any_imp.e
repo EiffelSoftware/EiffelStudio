@@ -183,6 +183,9 @@ feature {NONE} -- Implementation
 		local
 			l_c_object, l_null: POINTER
 		do
+				-- Disable the marshaller so we do not get C to Eiffel calls
+				-- during GC cycle otherwise bad things may happen.
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
 			if not is_in_final_collect then
 				l_c_object := c_object
 				if l_c_object /= l_null then
@@ -197,6 +200,9 @@ feature {NONE} -- Implementation
 				end
 			end
 			Precursor {IDENTIFIED}
+
+				-- Renable marshaller.
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 		end
 
 	c_object_dispose is
@@ -206,11 +212,18 @@ feature {NONE} -- Implementation
 		local
 			l_null: POINTER
 		do
+				-- Disable the marshaller so we do not get C to Eiffel calls
+				-- during GC cycle otherwise bad things may happen.
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
+
 				-- The object has been marked for destruction from its parent so we unref
 				-- so that gtk will reap back the memory.
 			{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
 			c_object := l_null
 			set_is_destroyed (True)
+
+				-- Renable marshaller.
+			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (True)
 		ensure
 			is_destroyed_set: is_destroyed
 			c_object_detached: c_object = default_pointer

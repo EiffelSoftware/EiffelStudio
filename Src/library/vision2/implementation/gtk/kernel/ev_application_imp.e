@@ -277,6 +277,18 @@ feature -- Basic operation
 					l_pnd_item ?= gtk_widget_from_gdk_window (l_gdk_window)
 				end
 			end
+
+				-- This is used to prevent context menus in gtk widget such as GtkTextEntry from appearing in EV_POPUP_WINDOWS.
+			if l_pnd_item /= Void then
+				l_popup_parent ?= l_pnd_item.top_level_window_imp
+				if l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3  then
+					l_ignore_event := True
+				end
+			end
+			if not l_ignore_event then
+				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+			end
+
 			if
 				l_pnd_item /= Void and then
 				{EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_item.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM
@@ -292,17 +304,6 @@ feature -- Basic operation
 					{EV_GTK_EXTERNALS}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer,
 					{EV_GTK_EXTERNALS}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer
 				)
-			end
-
-				-- This is used to prevent context menus in gtk widget such as GtkTextEntry from appearing in EV_POPUP_WINDOWS.
-			if l_pnd_item /= Void then
-				l_popup_parent ?= l_pnd_item.top_level_window_imp
-				if l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3  then
-					l_ignore_event := True
-				end
-			end
-			if not l_ignore_event then
-				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
 			end
 
 			use_stored_display_data := False

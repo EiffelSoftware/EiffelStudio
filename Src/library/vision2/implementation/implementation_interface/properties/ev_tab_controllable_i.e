@@ -1,21 +1,21 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision tab controlable. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "select, selectable"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
-	EV_TAB_CONTROLLABLE_I
+
+deferred class
+	EV_TAB_CONTROLABLE_I
 
 inherit
 	EV_ANY_I
 		redefine
 			interface
 		end
-	
+
 feature -- Status report
 
 	is_tabable_to: BOOLEAN is
@@ -60,7 +60,7 @@ feature -- Status setting
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_TAB_CONTROLLABLE;
+	interface: EV_TAB_CONTROLABLE;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 

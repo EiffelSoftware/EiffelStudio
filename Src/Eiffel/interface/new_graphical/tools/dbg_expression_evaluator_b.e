@@ -1331,7 +1331,7 @@ feature {NONE} -- Implementation
 					error_handler.wipe_out
 					Result := Void
 				else
-					Result ?= feature_checker.last_byte_node
+					Result ?= dbg_expression_checker.last_byte_node
 				end
 			else
 				ast_context.set_is_ignoring_export (False)

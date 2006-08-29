@@ -27,7 +27,6 @@ extern "C" {
 
 extern int return_hr_value;
 extern jmp_buf exenv;
-extern struct xstack eif_stack;
 
 #define ECATCH  struct ex_vect *exvect;\
   jmp_buf exenv;\
@@ -40,6 +39,7 @@ extern struct xstack eif_stack;
 #ifdef RTEOK 
   #define END_ECATCH exok()
 #else 
+extern struct xstack eif_stack;
   #define END_ECATCH expop (&eif_stack);\
             exok() 
 #endif

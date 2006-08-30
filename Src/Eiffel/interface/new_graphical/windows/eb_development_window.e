@@ -4537,12 +4537,6 @@ feature{EB_TOOL}
 	print_cmd: EB_PRINT_COMMAND
 			-- Command to print the content of editor with focus
 
-	eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD is
-			-- Command to display the eac browser
-		do
-			Result := Eb_debugger_manager.eac_browser_cmd
-		end
-
 	show_favorites_menu_item: EV_MENU_ITEM
 			-- Show/Hide favorites menu item.
 

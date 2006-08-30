@@ -974,7 +974,7 @@ feature {NONE} -- Implementation
 				-- new system without precompile, set value
 			elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
 				if l_s = Void then
-					l_s := l_factory.new_location_from_path ((create {EIFFEL_ENV}).assemblies_path, a_target).evaluated_directory
+					l_s := ((create {EIFFEL_ENV}).assemblies_path)
 				end
 				system.set_metadata_cache_path (l_s)
 			end

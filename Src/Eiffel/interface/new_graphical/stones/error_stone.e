@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Error object sent by the compiler to the workbench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		do
 			error_i := an_errori
 		end
- 
+
 feature -- Properties
 
 	error_i: ERROR
@@ -41,8 +41,8 @@ feature -- Access
 			Result := error_i.code
 		end
 
-	header: STRING is 
-		do 
+	header: STRING is
+		do
 			Result := code
 			if Result = Void then
 				create Result.make (0)
@@ -72,7 +72,7 @@ feature -- Access
 	file_name: FILE_NAME is
 			-- File where the help is
 		do
-			create Result.make_from_string (help_path)
+			create Result.make_from_string (error_path)
 			Result.set_file_name (error_i.help_file_name)
 		end
 

@@ -1187,9 +1187,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 	display_error_help_cmd: EB_ERROR_INFORMATION_CMD
 			-- Command to pop up a dialog giving help on compilation errors.
 
-	eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD
-			-- Command that displays the EAC browser tool.
-
 feature {EB_DEBUGGER_OBSERVER} -- Manager implementation
 
 	observers: ARRAYED_LIST [EB_DEBUGGER_OBSERVER]

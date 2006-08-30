@@ -13,7 +13,7 @@ inherit
 		rename
 			make as make_lite
 		redefine
-			command_option_configuration,
+			command_option_group_configuration,
 			extended_usage,
 			validate_arguments
 		end
@@ -65,26 +65,28 @@ feature {NONE} -- Usage
 			not_result_is_empty: not Result.is_empty
 		end
 
-	command_option_configuration: STRING is
+	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING is
 			-- Command line option configuration string (to display in usage)
 		local
 			l_suffix: STRING
 			l_arg: STRING
 			l_args: STRING
-		once
-			l_arg := loose_argument_name_arg
-			l_args := l_arg + "[" + l_arg + ", ...]"
-			l_suffix := Precursor {ARGUMENT_BASE_PARSER}
-			if l_suffix /= Void then
-				create Result.make (l_arg.count + l_suffix.count + 1)
-				Result.append (l_args)
-				Result.append_character (' ')
-				Result.append (l_suffix)
+		do
+			if not a_add_appurtenances then
+				Result := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_add_appurtenances, a_src_group)
 			else
-				Result := l_args
+				l_arg := loose_argument_name_arg
+				l_args := l_arg + "[" + l_arg + ", ...]"
+				l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_add_appurtenances, a_src_group)
+				if l_suffix /= Void then
+					create Result.make (l_arg.count + l_suffix.count + 1)
+					Result.append (l_args)
+					Result.append_character (' ')
+					Result.append (l_suffix)
+				else
+					Result := l_args
+				end
 			end
-		ensure then
-			result_attached: Result /= Void
 		end
 
 	extended_usage: STRING is

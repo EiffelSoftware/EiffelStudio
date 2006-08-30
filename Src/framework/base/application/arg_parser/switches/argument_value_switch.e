@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			arg_description_set: arg_description = a_arg_desc
 			is_value_optional_set: is_value_optional = a_val_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
-			not_hidden: not hidden
+			not_is_hidden: not is_hidden
 		end
 
 	make_hidden (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional) is
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			not_a_desc_is_empty: not a_desc.is_empty
 		do
 			make (a_name, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional)
-			hidden := True
+			is_hidden := True
 		ensure
 			name_set: name = a_name
 			description_set: description = a_desc
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			arg_description_set: arg_description = a_arg_desc
 			is_value_optional_set: is_value_optional = a_val_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
-			hidden: hidden
+			is_hidden: is_hidden
 		end
 
 feature -- Access
@@ -94,7 +94,7 @@ feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 			a_value_attached: a_value /= Void
 			not_a_value_is_empty: not a_value.is_empty
 		do
-			create Result.make_with_value (name, a_value)
+			create Result.make_with_value (name, a_value, Current)
 		ensure
 			result_attached: Result /= Void
 		end

@@ -475,7 +475,7 @@ feature -- Access
 			valid_result_with_rows_when_per_pixel_scrolling_with_no_overdraw: row_count > 0 and is_vertical_scrolling_per_item = False and
 				is_vertical_overscroll_enabled = False implies Result = 0
 			valid_result_with_fixed_height_rows_when_per_item_scrolling_and_no_overdraw: row_count > 0 and is_row_height_fixed and is_vertical_scrolling_per_item and
-				is_vertical_scrolling_per_item and row (row_count).virtual_y_position + row_height > viewable_height and not is_vertical_overscroll_enabled implies Result <= row_height
+				row (row_count).virtual_y_position + row_height > viewable_height and not is_vertical_overscroll_enabled implies Result <= row_height
 		end
 
 	virtual_width: INTEGER is
@@ -1037,7 +1037,6 @@ feature -- Status setting
 		do
 			if is_tree_enabled then
 				is_tree_enabled := False
-				adjust_hidden_node_count (- hidden_node_count)
 				set_vertical_computation_required (1)
 				redraw_client_area
 					-- Now reset all rows.
@@ -2280,7 +2279,6 @@ feature -- Element change
 						if a_parent_row_i.is_expanded then
 							a_parent_row_i.update_parent_expanded_node_counts_recursively (1)
 						end
-						adjust_hidden_node_count (1)
 						a_parent_row_i.subrows.go_i_th (current_subrow_index)
 						a_parent_row_i.subrows.put_left (current_row)
 						a_parent_row_i.update_subrow_indices (current_subrow_index)
@@ -2714,7 +2712,6 @@ feature -- Removal
 			create physical_column_indexes_internal.make (0)
 			last_vertical_scroll_bar_value := 0
 			last_horizontal_scroll_bar_value := 0
-			hidden_node_count := 0
 			displayed_column_count := 0
 			last_selected_item := Void
 			last_selected_row := Void
@@ -2748,7 +2745,11 @@ feature -- Measurements
 			-- a number of rows may be within a collapsed parent row, so these
 			-- are ignored
 		do
-			Result := row_count - hidden_node_count
+			if uses_row_offsets then
+				Result := computed_visible_row_count
+			else
+				Result := row_count
+			end
 		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
@@ -3004,7 +3005,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			counts_equal: column_offsets.count = column_count + 1
 		end
 
-	recompute_row_offsets (an_index: INTEGER) is
+recompute_row_offsets (an_index: INTEGER) is
 			-- Recompute contents of `row_offsets' from row index
 			-- `an_index' to `row_count'.
 		require
@@ -3026,7 +3027,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			l_rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
 			l_is_row_height_fixed: BOOLEAN
 			l_row_height: INTEGER
+			l_original_computed_visible_row_count: INTEGER
 		do
+			l_original_computed_visible_row_count := computed_visible_row_count
 			original_row_index := rows.index
 			if not is_tree_enabled then
 				index := an_index
@@ -3047,7 +3050,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					index := an_index
 				end
 			end
-			if not is_row_height_fixed or is_tree_enabled then
+			if uses_row_offsets then
 					-- Only perform recomputation if the rows do not all have the same height
 					-- or there is tree functionality enabled. Otherwise, we do not need to
 					-- use `row_offsets' and we can perform a shortcut.
@@ -3105,7 +3108,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					row_index > l_row_count
 				loop
 					current_item := l_rows.i_th (row_index)
-					if current_item /= Void and then current_item.subrow_count > 0 and not current_item.is_expanded then
+					if current_item /= Void and then ((current_item.subrow_count > 0 and not current_item.is_expanded) or not current_item.is_show_requested) then
 						from
 							j := row_index
 							k := j + current_item.subrow_count_recursive + 1
@@ -3115,25 +3118,33 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 							l_row_offsets.put_i_th (current_row_offset, j)
 							j := j + 1
 						end
-						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
-						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+						if current_item.is_show_requested then
+							l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+							l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+						end
 						row_index := k
-
 					else
 						l_row_offsets.put_i_th (current_row_offset, row_index)
 						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
 						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
 						row_index := row_index + 1
 					end
-					visible_count := visible_count + 1
-
+					if current_item.is_show_requested then
+						visible_count := visible_count + 1
 					if current_item /= Void and not l_is_row_height_fixed then
 						current_row_offset := current_row_offset + current_item.height
 					else
 							-- Use the default height here.
 						current_row_offset := current_row_offset + l_row_height
 					end
+					end
 				end
+				if visible_count /= l_original_computed_visible_row_count then
+						-- It is essential that we only modify `computed_visible_row_count'
+						-- if it has actually changed. Otherwise, we may not have a correct value.
+					computed_visible_row_count := visible_count
+				end
+
 					-- A final position is always stored in `row_offsets' which may be
 					-- queried to determine the total height of all rows.
 				l_row_offsets.put_i_th (current_row_offset, row_index)
@@ -3154,6 +3165,158 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count >= rows.count + 1
 			row_index_not_changed: old rows.index = rows.index
 		end
+
+
+--	recompute_row_offsets (an_index: INTEGER) is
+--			-- Recompute contents of `row_offsets' from row index
+--			-- `an_index' to `row_count'.
+--		require
+--			an_index_valid_when_rows_contained: row_count > 0 implies an_index >= 1 and an_index <= row_count
+--			an_index_valid_when_no_rows_contained: row_count = 0 implies an_index = 1
+--		local
+--			current_row_offset, j, k: INTEGER
+--			current_item: EV_GRID_ROW_I
+--			index: INTEGER
+--			visible_count: INTEGER
+--			row_index: INTEGER
+--			l_row_count: INTEGER
+--			l_parent_row_i: EV_GRID_ROW_I
+--			just_looped: BOOLEAN
+--			original_row_index: INTEGER
+--			l_row_indexes_to_visible_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+--			l_visible_indexes_to_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+--			l_row_offsets: EV_GRID_ARRAYED_LIST [INTEGER]
+--			l_rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
+--			l_is_row_height_fixed: BOOLEAN
+--			l_row_height: INTEGER
+--		do
+--			original_row_index := rows.index
+--			if not is_tree_enabled then
+--				index := an_index
+--			else
+--				if row_count > 0 then
+--						-- We only find the parent row when `Current' is
+--						-- not empty.
+--					from
+--						l_parent_row_i := row_internal (an_index)
+--					until
+--						l_parent_row_i.parent_row_i = Void
+--					loop
+--						l_parent_row_i := l_parent_row_i.parent_row_i
+--					end
+--					index := l_parent_row_i.index
+--				else
+--						-- `Current' is empty, so simply keep the same index.
+--					index := an_index
+--				end
+--			end
+--			if not is_row_height_fixed or is_tree_enabled then
+--					-- Only perform recomputation if the rows do not all have the same height
+--					-- or there is tree functionality enabled. Otherwise, we do not need to
+--					-- use `row_offsets' and we can perform a shortcut.
+--				if row_offsets = Void then
+--					create row_offsets
+--					create row_indexes_to_visible_indexes
+--					create visible_indexes_to_row_indexes
+--				else
+--					current_row_offset := row_offsets @ (index)
+--					rows.go_i_th (index)
+--					if index > 1 then
+--						if index < row_count then
+--							visible_count := row_indexes_to_visible_indexes.i_th (index)
+--						else
+--							check
+--								index_is_row_count: index = row_count
+--							end
+--								-- In this situation, we are adding a new row that has not already
+--								-- been computed. Now we set the visible count to the previous (and last)
+--								-- item and add one. Without this, we are unable to determine the
+--								-- visible row count.
+--							visible_count := row_indexes_to_visible_indexes.i_th (index - 1) + 1
+--						end
+--					else
+--							-- In this case, the feature has already been called when there are
+--							-- no rows in the grid. So, we reset these attributes to the start.
+--						visible_count := 0
+--					end
+--				end
+--					-- Ensure we enlarge our data structures to accomodate the totla number of rows.
+--					-- We do not reduce the size of these lists to avoid the performance overhead.
+--				if row_offsets.count < rows.count + 1 then
+--					row_offsets.resize (rows.count + 1)
+--					row_indexes_to_visible_indexes.resize (rows.count + 1)
+--					visible_indexes_to_row_indexes.resize (rows.count + 1)
+--				end
+
+--				from
+--					row_index := index
+
+--						-- We assign these attributes of the class to locals as this
+--						-- provides a speed improvement. It appears that this code is
+--						-- 20% faster when this is performed. It was tested with 1,000,000
+--						-- rows, expanding and collapsing the first. Julian
+--					l_row_count := rows.count
+--					l_row_indexes_to_visible_indexes := row_indexes_to_visible_indexes
+--					l_visible_indexes_to_row_indexes := visible_indexes_to_row_indexes
+--					l_rows := rows
+--					l_row_offsets := row_offsets
+--					l_is_row_height_fixed := is_row_height_fixed
+--					l_row_height := row_height
+--					just_looped := True
+
+--				until
+--					row_index > l_row_count
+--				loop
+--					current_item := l_rows.i_th (row_index)
+--					if current_item /= Void and then current_item.subrow_count > 0 and not current_item.is_expanded then
+--						from
+--							j := row_index
+--							k := j + current_item.subrow_count_recursive + 1
+--						until
+--							j = k
+--						loop
+--							l_row_offsets.put_i_th (current_row_offset, j)
+--							j := j + 1
+--						end
+--						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+--						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+--						row_index := k
+
+--					else
+--						l_row_offsets.put_i_th (current_row_offset, row_index)
+--						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+--						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+--						row_index := row_index + 1
+--					end
+--					visible_count := visible_count + 1
+
+--					if current_item /= Void and not l_is_row_height_fixed then
+--						current_row_offset := current_row_offset + current_item.height
+--					else
+--							-- Use the default height here.
+--						current_row_offset := current_row_offset + l_row_height
+--					end
+--				end
+--					-- A final position is always stored in `row_offsets' which may be
+--					-- queried to determine the total height of all rows.
+--				l_row_offsets.put_i_th (current_row_offset, row_index)
+--			else
+--				row_offsets := Void
+--			end
+
+
+--				-- Now move the virtual position so that it is restricted to the maximum
+--				-- row position. This is used so that when removing rows,  `virtual_x_position' remains valid.
+--			restrict_virtual_y_position_to_maximum
+
+--			if virtual_size_changed_actions_internal /= Void then
+--				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
+--			end
+--			rows.go_i_th (original_row_index)
+--		ensure
+--			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count >= rows.count + 1
+--			row_index_not_changed: old rows.index = rows.index
+--		end
 
 	restrict_virtual_y_position_to_maximum is
 			-- Ensure `virtual_y_position' is within the maximum permitted.
@@ -3495,24 +3658,14 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 	header: EV_GRID_HEADER
 		-- Header displayed at top of `Current'.
 
+	computed_visible_row_count: INTEGER
+		-- Total number of rows that are actually visible in `Current'.
+
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
 		-- Vertical scroll bar of `Current'.
 
 	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
 		-- Horizontal scroll bar of `Current'.
-
-	hidden_node_count: INTEGER
-		-- Total number of tree rows within `Current' that are not visible,
-		-- due to their parent row being collapsed. This is required for correctly
-		-- computing the vertical scroll bar.
-
-	adjust_hidden_node_count (adjustment: INTEGER) is
-			-- Adjust `hidden_node_count' by `adjustment'.
-		do
-			hidden_node_count := hidden_node_count + adjustment
-		ensure
-			hidden_node_count_set: hidden_node_count = old hidden_node_count + adjustment
-		end
 
 	tree_node_spacing: INTEGER is 3
 			-- Spacing value used around the expand/collapse node of a
@@ -6031,12 +6184,11 @@ invariant
 	internal_client_y_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies internal_client_y >= 0
 	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then is_horizontal_scroll_bar_show_requested and then not horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
 	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
-	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
+	row_heights_fixed_implies_row_offsets_void: is_initialized and then is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	displayed_column_count_not_greater_than_column_count: is_initialized implies displayed_column_count <= column_count
-	hidden_node_count_zero_when_tree_disabled: not is_tree_enabled implies hidden_node_count = 0
-	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0
-	hidden_node_count_no_greated_than_rows_less_one: is_initialized and then is_tree_enabled and row_count > 0 implies hidden_node_count <= row_count - 1
+	computed_visible_row_count_equals_row_when_not_users_row_offsets: is_initialized and then not uses_row_offsets implies visible_row_count = row_count
+	computed_visible_row_count_no_greater_than_rows: is_initialized implies visible_row_count <= row_count
 	tree_disabled_implies_visible_rows_equal_hidden_rows: is_initialized and then not is_tree_enabled implies row_count = visible_row_count
 	internal_viewport_positions_equal_to_viewports: is_initialized implies (viewport.x_offset = viewport_x_offset and viewport.y_offset = viewport_y_offset)
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void

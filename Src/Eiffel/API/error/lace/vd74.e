@@ -18,7 +18,8 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("Precompile was added to a compiled system.")
+			st.add_new_line
+			st.add ("Precompile was added to a compiled system.")
 			st.add_new_line
 		end
 

@@ -40,7 +40,7 @@ feature -- Output
 			else
 				a_text_formatter.add ("Cluster path: ")
 			end
-			a_text_formatter.add_string (cluster.location.evaluated_path)
+			a_text_formatter.add (cluster.location.evaluated_path)
 			a_text_formatter.add_new_line
 		end
 

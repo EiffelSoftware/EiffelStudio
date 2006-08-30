@@ -37,7 +37,8 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("Target with name "+target_name+" could not be found.");
+			st.add_new_line
+			st.add ("Target with name "+target_name+" could not be found.");
 			st.add_new_line
 		end;
 

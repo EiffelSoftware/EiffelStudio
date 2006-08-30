@@ -9,6 +9,10 @@ class
 	EC_LAUNCHER
 
 inherit
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 
 	PLATFORM
 
@@ -85,8 +89,8 @@ feature -- Launching
 					create s.make_empty
 
 					s.append_string ("*** estudio is using the following data : %N")
-					s.append_string (" ISE_EIFFEL: " + ise_eiffel + "%N")
-					s.append_string (" ISE_PLATFORM: " + ise_platform + "%N")
+					s.append_string (" ISE_EIFFEL: " + eiffel_installation_dir_name + "%N")
+					s.append_string (" ISE_PLATFORM: " + eiffel_platform + "%N")
 					s.append_string (" Path to ec: " + ec_path + "%N")
 					s.append_string (" Working directory: " + working_directory + "%N")
 					s.append_string (" Arguments: ")
@@ -228,8 +232,8 @@ feature -- Splash
 
 				splasher := new_splasher (s)
 
-				create fn.make_from_string (ise_eiffel)
-				fn.extend_from_array (<<"studio", "bitmaps", "png">>)
+				create fn.make_from_string (bitmaps_path)
+				fn.extend ("png")
 				fn.set_file_name ("splash.png")
 				if file_exists (fn) then
 					splasher.set_splash_pixmap_filename (fn)
@@ -331,12 +335,12 @@ feature -- Environment
 					elseif s.is_equal ("/ec_name") then
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
-							argument_variables.put (cmdline_argument (1), Ec_name_varname)
+							argument_variables.put (cmdline_argument (1), Ec_name_env)
 						end
 					elseif s.is_equal ("/ec_folder") then
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
-							argument_variables.put (cmdline_argument (1), Ec_fodler_varname)
+							argument_variables.put (cmdline_argument (1), ec_folder_env)
 						end
 					elseif s.is_equal ("/melted_path") then
 						cmdline_remove_head (1)
@@ -454,31 +458,8 @@ feature -- Environment
 		local
 			s: STRING
 		do
-			ise_eiffel := implementation.ise_eiffel_value
-			ise_platform := implementation.ise_platform_value
-
-				--| Get ec_name
-			ec_name := "ec"
-			if is_windows then
-				ec_name.append_string (".exe")
-			end
-			ec_name := get_environment_value (Ec_name_varname, ec_name)
-
-
-				--| Get ec directory
-			s := get_environment_value (Ec_fodler_varname, Void)
-			if s /= Void then
-				create ec_path.make_from_string (s)
-			end
-
-			if
-				ec_path = Void
-				and then ise_eiffel /= Void
-				and then ise_platform /= Void
-			then
-				create ec_path.make_from_string (ise_eiffel)
-				ec_path.extend_from_array (<<"studio", "spec", ise_platform, "bin">>)
-			end
+			check_environment_variable
+			ec_path := bin_path
 
 				--| Melted path if workbench ec
 			s := get_environment_value (Melted_path_varname, ec_path)
@@ -500,23 +481,6 @@ feature -- Environment
 		do
 			is_environment_valid := True
 			create m.make_empty
-			if ise_eiffel = Void then
-				is_environment_valid := False
-				m.append_string ("%N")
-				m.append_string ("Variable ISE_EIFFEL is not defined")
-			end
-
-			if not directory_exists (ise_eiffel) then
-				is_environment_valid := False
-				m.append_string ("%N")
-				m.append_string ("Variable ISE_EIFFEL does not point to a valid directory")
-			end
-
-			if ise_platform = Void then
-				is_environment_valid := False
-				m.append_string ("%N")
-				m.append_string ("Variable ISE_PLATFORM is not defined")
-			end
 
 			if
 				ec_path /= Void
@@ -541,18 +505,11 @@ feature -- Environment
 	is_environment_valid: BOOLEAN
 			-- Is current environment valid ?
 
-	ise_eiffel,
-	ise_platform,
-	ec_name: STRING
-	melted_path: DIRECTORY_NAME
 	ec_path: FILE_NAME
+	melted_path: DIRECTORY_NAME
 	working_directory: DIRECTORY_NAME
 
 feature {NONE} -- Constants
-
-	Ec_name_varname: STRING is "EC_NAME"
-
-	Ec_fodler_varname: STRING is "EC_FOLDER"
 
 	Melted_path_varname: STRING is "MELTED_PATH"
 

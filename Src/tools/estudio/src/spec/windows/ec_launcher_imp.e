@@ -11,8 +11,7 @@ class
 inherit
 	EC_LAUNCHER_I
 		redefine
-			error,
-			eif_getenv_from_app
+			error
 		end
 
 feature -- Access
@@ -22,32 +21,8 @@ feature -- Access
 		local
 			dlg: WEL_MSG_BOX
 		do
---			Precursor (m)
 			create dlg.make
 			dlg.error_message_box (Void, m, "estudio : error")
-		end
-
-	eif_getenv_from_app (vname, vapp: STRING): STRING is
-			-- Get environment variable from the environment, or the `vapp' registry key
-		local
-			reg: WEL_REGISTRY
-			key: WEL_REGISTRY_KEY_VALUE
-			s32: STRING_32
-		do
-			Result := Precursor (vname, vapp)
-			if Result = Void then
-				create reg
-				key := reg.open_key_value ("hkey_current_user\Software\ISE\Eiffel" + major_version_number.out + "\" + vapp, vname.as_lower)
-				if key = Void then
-					key := reg.open_key_value ("hkey_local_machine\Software\ISE\Eiffel" + major_version_number.out + "\" + vapp, vname.as_lower)
-				end
-				if key /= Void then
-					s32 := key.string_value
-					if s32 /= Void then
-						Result := s32.as_string_8
-					end
-				end
-			end
 		end
 
 indexing

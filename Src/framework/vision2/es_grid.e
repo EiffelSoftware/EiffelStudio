@@ -527,7 +527,7 @@ feature {NONE} -- column resizing impl
 			if delayed_last_column_auto_resizing = Void then
 				create delayed_last_column_auto_resizing.make (
 									agent ensure_last_column_use_all_width,
-									50
+									100
 							)
 			end
 		end

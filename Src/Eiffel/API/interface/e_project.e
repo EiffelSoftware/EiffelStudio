@@ -37,6 +37,8 @@ inherit
 			{NONE} all
 		end
 
+	COMPILER_EXPORTER
+
 feature -- Initialization
 
 	make (a_project_location: PROJECT_DIRECTORY) is
@@ -576,6 +578,11 @@ feature -- Update
 			able_to_compile: able_to_compile
 		do
 			is_finalizing := True
+
+				-- Add warning for non-optimal finalization.
+			if not is_final_code_optimal then
+				error_handler.insert_warning (create {FINALIZATION_WARNING})
+			end
 			melt
 			if successful then
 				Compilation_modes.set_is_finalizing
@@ -587,6 +594,7 @@ feature -- Update
 				is_compiling_ref.set_item (False)
 				Compilation_modes.reset_modes
 			end
+			error_handler.trace_warnings
 			Workbench.stop_compilation
 			is_finalizing := False
 		ensure

@@ -841,13 +841,13 @@ feature -- Implementation
 			Result := associated_class.feature_named (name)
 		end;
 
-feature {FEATURE_I} -- Setting
-
 	body_id_for_ast: INTEGER
 			-- Body id that should be used for retrieving the ast (by feature ast)
 		do
 			Result := body_index
 		end
+
+feature {FEATURE_I} -- Setting
 
 	set_written_in (i: INTEGER) is
 			-- Set `written_in' to `i'.

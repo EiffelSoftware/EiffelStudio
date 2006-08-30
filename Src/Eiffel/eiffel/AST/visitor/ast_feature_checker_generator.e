@@ -263,7 +263,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 			l_routine_as ?= a_body.content
 			if not is_inherited then
 				if l_routine_as /= Void then
-					if l_routine_as.is_deferred or l_routine_as.is_external then
+					if l_routine_as.is_deferred or l_routine_as.is_external or l_routine_as.is_once then
 						create l_vpir
 						l_vpir.set_class (context.current_class)
 						l_vpir.set_feature (context.current_feature)

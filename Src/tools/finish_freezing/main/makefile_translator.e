@@ -141,9 +141,6 @@ feature -- Access
 	precompile: BOOLEAN
 			-- Is this a precompilation?
 
-	concurrent: BOOLEAN
-			-- Is this a concurrent application?
-
 	multithreaded: BOOLEAN
 			-- Is this a multithreaded application?
 
@@ -1476,24 +1473,6 @@ feature {NONE}	-- substitutions
 				io.put_string("%Tsubst_library%N")
 			end
 
-			if concurrent then
-				library_name.append_character (' ')
-				default_net_lib := eiffel_dir.twin
-				default_net_lib.append (directory_separator)
-				default_net_lib.append ("library")
-				default_net_lib.append (directory_separator)
-				default_net_lib.append ("net")
-				default_net_lib.append (directory_separator)
-				default_net_lib.append ("spec")
-				default_net_lib.append (directory_separator)
-				default_net_lib.append (platform)
-				default_net_lib.append (directory_separator)
-				default_net_lib.append ("lib")
-				default_net_lib.append (directory_separator)
-				default_net_lib.append ("net.lib")
-				library_name.append (options.get_string ("eiffelnet_lib", default_net_lib))
-			end
-
 			line.replace_substring_all ("$library", "$(EIFLIB)")
 		end
 
@@ -1752,7 +1731,7 @@ feature {NONE} -- Implementation
 
 	get_libs (line_to_search: STRING): STRING is
 			-- look for precompiled libraries, also checks
-			-- if application uses concurrent Eiffel or multithreading mechanism
+			-- if application uses multithreading mechanism
 		local
 			line: STRING
 			next_precomp_lib: STRING
@@ -1802,11 +1781,6 @@ feature {NONE} -- Implementation
 						io.put_new_line
 					end
 				end
-
-				-- set concurrent if application uses concurrent Eiffel
-				if line.substring_index ("$concurrent_prefix", 1) > 0 then
-						concurrent := True
-					end
 
 				if not line.is_empty then
 					precomp_lib_start := line.substring_index (preobj, 1)

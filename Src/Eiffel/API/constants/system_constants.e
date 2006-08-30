@@ -89,24 +89,6 @@ feature {NONE}
 
 	Eiffelgens: STRING is "EIFGENs"
 
-	Eiffel_preferences: STRING is
-			-- Preferences location
-		local
-			fname: FILE_NAME
-		once
-			if {PLATFORM_CONSTANTS}.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" +
-					Major_version_number.out + Minor_version_number.out + "\ec\Preferences"
-			else
-				create fname.make_from_string (eiffel_env.eiffel_home)
-				fname.set_file_name (".ecrc" + Major_version_number.out + Minor_version_number.out)
-				Result := fname
-			end
-			if {EIFFEL_ENV}.is_workbench then
-				Result.append ("_wkbench")
-			end
-		end
-
 	Einit: STRING is "einit"
 
 	Emain: STRING is "emain"
@@ -203,7 +185,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- Version of the compiler
 		once
 				-- 0000 because it will be replace by the svn version number by the build script
-			create Result.make_version (5, 7, 0000, 0)
+			create Result.make_version (eiffel_env.major_version, eiffel_env.minor_version, 0000, 0)
 		end
 
 	Major_version_number: INTEGER is

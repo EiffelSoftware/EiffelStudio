@@ -1186,7 +1186,8 @@ feature {NONE} -- Usage
 		local
 			l_groups: like switch_groups
 			l_cfg: like command_option_group_configuration
-			l_switches: LIST [ARGUMENT_SWITCH]
+			l_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
+			l_switch: ARGUMENT_SWITCH
 			l_cursor: CURSOR
 		once
 			l_groups := switch_groups
@@ -1202,6 +1203,14 @@ feature {NONE} -- Usage
 				l_cursor := l_groups.cursor
 				from l_groups.start until l_groups.after loop
 					l_switches := create {ARRAYED_LIST [ARGUMENT_SWITCH]}.make_from_array (l_groups.item)
+						-- Add nologo switch, if not already added
+					l_switch := switch_of_name (nologo_switch)
+					if l_switch /= Void then
+						if not l_switches.has (l_switch) then
+							l_switches.extend (l_switch)
+						end
+					end
+
 					l_cfg := command_option_group_configuration (l_switches, True, l_switches)
 					if l_cfg /= Void then
 						Result.extend (l_cfg)
@@ -1243,6 +1252,7 @@ feature {NONE} -- Usage
 			l_prefix: CHARACTER
 			l_opt: BOOLEAN
 			l_opt_val: BOOLEAN
+			l_add_switch: BOOLEAN
 		do
 			if not a_group.is_empty then
 				if a_add_appurtenances then
@@ -1257,9 +1267,11 @@ feature {NONE} -- Usage
 				from a_group.start until a_group.after loop
 					l_switch := a_group.item
 					l_val_switch ?= l_switch
-					l_opt := l_switch.optional
+					l_opt := l_switch.optional and a_add_appurtenances
 					if not l_switch.name.is_equal (help_switch) and not l_switch.is_hidden then
-						if not a_add_appurtenances implies not a_src_group.has (l_switch) then
+						l_add_switch := not a_add_appurtenances implies (not a_src_group.has (l_switch) or l_switch.optional)
+						if l_add_switch then
+
 							if l_opt then
 								Result.append_character ('[')
 							end
@@ -1422,7 +1434,7 @@ feature {NONE} -- Switches
 				end)
 			result_contains_attached_valid_items: Result /= Void implies Result.linear_representation.for_all (agent (a_item: ARRAY [ARGUMENT_SWITCH]): BOOLEAN
 				do
-					Result := a_item.for_all (agent (a_item2: ARGUMENT_SWITCH): BOOLEAN do Result := a_item2 /= Void and then not a_item2.optional end)
+					Result := a_item.for_all (agent (a_item2: ARGUMENT_SWITCH): BOOLEAN do Result := a_item2 /= Void end)
 				end)
 --			not_result_contains_key_as_item: Result /= Void implies (agent (a_table: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]): BOOLEAN
 --				local

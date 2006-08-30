@@ -1060,7 +1060,7 @@ feature {NONE} -- File copying
 					l_pos := l_pos.max (l_path.last_index_of ('/', l_path.count))
 				else
 					l_pos := l_path.last_index_of (
-						platform_constants.directory_separator, l_path.count)
+						operating_environment.directory_separator, l_path.count)
 				end
 				if l_pos > 0 then
 					l_target_name.set_file_name (l_path.substring (l_pos + 1,

@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Finalize eiffel system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -62,10 +62,10 @@ feature {NONE} -- Execution
 		do
 			if Eiffel_project.is_read_only then
 				io.error.put_string ("Read-only project: cannot compile.%N")
-			elseif 
-				command_line_io.confirmed 
+			elseif
+				command_line_io.confirmed
 						("Finalizing implies some C compilation and linking.%
-							%%NDo you want to do it now") 
+							%%NDo you want to do it now")
 			then
 				io.put_string ("--> Keep assertions (y/n): ");
 				command_line_io.wait_for_return;
@@ -90,13 +90,6 @@ feature {NONE} -- Execution
 				if Eiffel_ace.file_name /= Void then
 					compile;
 					if Eiffel_project.successful then
-						if not Eiffel_project.is_final_code_optimal then
-							io.error.put_string 
-							("Warning: the finalized system might not be optimal%N%
-							%%Tin size and speed. In order to produce an optimal%N%
-							%%Texecutable, finalize the system from scratch and do%N%
-							%%Tnot use precompilation.%N%N");
-						end;
 						print_tail;
 						process_finish_freezing (True);
 					end

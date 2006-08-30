@@ -757,7 +757,11 @@ feature -- Status setting
 				is_show_requested := False
 				if parent_i /= Void then
 					parent_i.adjust_non_displayed_row_count (1)
-					parent_i.set_vertical_computation_required (index)
+					if parent_i.non_displayed_row_count = 1 then
+						parent_i.set_vertical_computation_required (1)
+					else
+						parent_i.set_vertical_computation_required (index)
+					end
 					parent_i.redraw
 				end
 			end
@@ -901,9 +905,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				update_parent_expanded_node_counts_recursively ( - (row_imp.expanded_subrow_count_recursive + 1))
 			end
 
-				-- Update the hidden node count in the parent grid.
-			parent_i.adjust_hidden_node_count ( - ((row_imp.subrow_count_recursive + 1) - row_imp.expanded_subrow_count_recursive))
-
 			parent_i.set_vertical_computation_required (index)
 			parent_i.redraw_client_area
 		ensure
@@ -963,9 +964,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				if is_expanded then
 					update_parent_expanded_node_counts_recursively (row_imp.expanded_subrow_count_recursive + 1)
 				end
-
-					-- Update the hidden node count in the parent grid.
-				parent_i.adjust_hidden_node_count ((row_imp.subrow_count_recursive + 1) - row_imp.expanded_subrow_count_recursive)
 
 				i := i + 1
 				l_subrow_index := l_subrow_index + 1
@@ -1111,14 +1109,6 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			update_parent_node_counts_recursively (-1)
 			if is_expanded then
 				update_parent_expanded_node_counts_recursively (-1)
-
-					-- The previous call to `update_parent_expanded_node_counts_recursively'
-					-- updates the hidden node count in parent. However, as the row has
-					-- actually been removed, we must undo this now.
-				fixme (Once "EV_GRID_ROW_I.update_for_subrow_removal Removed the need for the above mentioned work around.")
-				parent_i.adjust_hidden_node_count ( -1)
-			else
-				parent_i.adjust_hidden_node_count ( -1)
 			end
 			subrows.go_i_th (a_subrow.subrow_index)
 			subrows.remove
@@ -1262,9 +1252,6 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 				parent_row_imp.set_expanded_subrow_count_recursive (parent_row_imp.expanded_subrow_count_recursive + adjustment_value)
 				parent_row_imp := parent_row_imp.parent_row_i
 			end
-			if parent_row_imp = Void then
-				parent_i.adjust_hidden_node_count ( - adjustment_value)
-			end
 		end
 
 feature {EV_GRID_I} -- Implementation
@@ -1288,7 +1275,7 @@ feature {EV_ANY_I} -- Contract support
 
 	node_counts_correct: BOOLEAN is
 			-- Are the node counts for `Current' in a valid state?
-			-- This was originally written as class invaraints, but as the node setting
+			-- This was originally written as class invariants, but as the node setting
 			-- is performed recursively, we would need a global variable to turn this checking
 			-- off. Instead we now check this function from the postcondition of and feature
 			-- that may modify the expanded states of nodes.
@@ -1310,8 +1297,9 @@ feature {EV_ANY_I} -- Contract support
 				Result := Result and expanded_subrow_count_recursive >= 0
 			end
 			Result := Result and expanded_subrow_count_recursive <= subrow_count_recursive
-			if parent_i.is_tree_enabled then
-				Result := Result and parent_i.hidden_node_count <= parent_i.row_count - 1
+			if parent_i.uses_row_offsets then
+				Result := Result and parent_i.visible_row_count >= 0
+				Result := Result and parent_i.visible_row_count <= parent_i.row_count
 			end
 		end
 

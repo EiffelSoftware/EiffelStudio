@@ -178,12 +178,9 @@ feature {NONE} -- Compilation implementation
 		do
 			if start_c_compilation and then Eiffel_project.freezing_occurred and then not lace.compile_all_classes then
 				if Eiffel_project.freezing_occurred then
-					output_manager.add_string ("System had to be frozen to include new or modified externals.")
+					output_manager.add_string ("Eiffel System is being frozen to include new or modified externals.")
 					output_manager.add_new_line
 				end
-				output_manager.add_string ("Eiffel system recompiled")
-				output_manager.add_new_line
-
 				Eiffel_project.call_finish_freezing (True)
 			end
 		end

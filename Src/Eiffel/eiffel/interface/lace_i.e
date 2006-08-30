@@ -30,6 +30,10 @@ inherit
 		export
 			{NONE} all
 		end
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
 	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
 		export
 			{NONE} all

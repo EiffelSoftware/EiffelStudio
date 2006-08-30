@@ -21,6 +21,8 @@ inherit
 
 	EIFFEL_ENV
 
+	SYSTEM_CONSTANTS
+
 feature -- Properties
 
 	yank_window: YANK_WINDOW is

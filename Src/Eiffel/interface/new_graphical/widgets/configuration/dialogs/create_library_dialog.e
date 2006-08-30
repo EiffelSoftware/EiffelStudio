@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 						i > cnt
 					loop
 						l_lib_name := library_path.twin
-						l_lib_name.append_character (platform_constants.directory_separator)
+						l_lib_name.append_character (operating_environment.directory_separator)
 						l_lib_name.append (l_subdirs.item (i))
 						add_configs_in_dir (l_lib_name, library_directory_name+"\"+l_subdirs.item (i))
 						i := i +1

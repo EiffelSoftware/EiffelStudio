@@ -354,7 +354,7 @@ feature{NONE} -- Command substitution
 				if cv_cst /= Void then
 					l_dir := cv_cst.class_i.group.location.evaluated_directory
 					l_path := cv_cst.class_i.config_class.path
-					l_path.replace_substring_all ("/", directory_separator.out)
+					l_path.replace_substring_all ("/", operating_environment.directory_separator.out)
 					l_dir.append (l_path)
 					cmd.replace_substring_all (sub_string_list.i_th (sub_directory_name), l_dir)
 				else
@@ -859,17 +859,8 @@ feature {NONE} -- Implementation
 			command_field := Void
 		end
 
-	old_index: INTEGER
+	old_index: INTEGER;
 			-- Index of `Current' before we edited its properties.
-
-	directory_separator: CHARACTER is
-			-- Directory separator
-		local
-			l_obj: ANY
-		once
-			create l_obj
-			Result := l_obj.operating_environment.directory_separator
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

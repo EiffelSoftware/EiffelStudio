@@ -24,6 +24,11 @@ inherit
 
 	SYSTEM_CONSTANTS
 
+	EIFFEL_ENV
+		rename
+			platform as env_platform_constants
+		end
+
 	REFACTORING_HELPER
 
 	CONF_VALIDITY

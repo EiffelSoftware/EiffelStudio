@@ -35,6 +35,11 @@ inherit
 			{NONE} all
 		end
 
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 

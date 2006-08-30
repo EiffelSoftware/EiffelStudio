@@ -78,7 +78,7 @@ feature -- Access
 		do
 			Result := target_platform.is_equal ("all") or else
 				Eiffel_platform.is_equal (target_platform) or else
-				(platform_constants.is_windows and then target_platform.is_equal ("windows"))
+				(platform.is_windows and then target_platform.is_equal ("windows"))
 		end
 
 feature -- Status Setting

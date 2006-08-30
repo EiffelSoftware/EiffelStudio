@@ -3,14 +3,12 @@ indexing
 	status: "See notice at end of class."
 
 class BEURK_HEXER
-		
+
 obsolete
 	"Beurk Beurk Beurk"
-	
+
 inherit
-
 	PLATFORM
-
 
 feature {NONE}
 
@@ -77,7 +75,7 @@ feature {NONE}
 				i:= i + 1
 			end
 		end
-		
+
 	hex_to_pointer (s: STRING): POINTER is
 		require
 			s_not_void: s /= Void
@@ -93,7 +91,7 @@ feature {NONE}
 				($Result).memory_copy ($val_32, Pointer_bytes)
 			end
 		end
- 
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -35,7 +35,7 @@ feature -- Output
 			if not retried then
 					-- Create recursively the file name
 				from
-					c := Directory_separator
+					c := operating_environment.directory_separator
 					if is_windows then
 							-- For Windows we can have either `c:\' and the existence
 							-- does work on `c:\' only, not on `c:'. So we have to search

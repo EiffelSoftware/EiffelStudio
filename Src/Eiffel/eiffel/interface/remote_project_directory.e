@@ -13,6 +13,7 @@ class REMOTE_PROJECT_DIRECTORY
 
 inherit
 	EIFFEL_ENV
+	SYSTEM_CONSTANTS
 	SHARED_ERROR_HANDLER;
 	SHARED_ENV;
 	COMPILER_EXPORTER
@@ -157,14 +158,14 @@ feature -- Access
 			-- Full name of `preobj' object file
 		do
 			create Result.make_from_string (project_location.workbench_path)
-			Result.set_file_name (Platform_constants.Preobj)
+			Result.set_file_name (Preobj)
 		end
 
 	precompiled_driver: FILE_NAME is
 			-- Full name of the precompilation driver
 		do
 			create Result.make_from_string (project_location.workbench_path)
-			Result.set_file_name (Platform_constants.Driver)
+			Result.set_file_name (Driver)
 		end
 
 	assembly_driver (a_use_optimized_precompile: BOOLEAN): FILE_NAME is

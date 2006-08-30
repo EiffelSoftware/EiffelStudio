@@ -523,7 +523,7 @@ feature {NONE} -- Graphic interface
 				(not dir.is_empty and is_default_cluster_name_set) and then
 				(cluster_name.is_equal (default_cluster_name) or cluster_name.is_empty)
 			then
-				sep_index := dir.last_index_of (platform_constants.directory_separator,
+				sep_index := dir.last_index_of (operating_environment.directory_separator,
 					dir.count)
 				dir := dir.as_lower
 				dir.remove_head (sep_index)

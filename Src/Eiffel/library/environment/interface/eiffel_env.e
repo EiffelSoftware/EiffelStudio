@@ -9,11 +9,6 @@ indexing
 
 class EIFFEL_ENV
 
-inherit
-	SYSTEM_CONSTANTS
-
-	SHARED_EXEC_ENVIRONMENT
-
 feature -- Status
 
 	check_environment_variable is
@@ -49,7 +44,7 @@ feature -- Status
 				end
 			end
 
-			if Platform_constants.is_windows then
+			if Platform.is_windows then
 				temp := Eiffel_c_compiler
 				if (temp = Void) or else temp.is_empty then
 					io.error.put_string (p.Workbench_name)
@@ -59,8 +54,8 @@ feature -- Status
 			end
 
 				-- Make sure to define ISE_LIBRARY if not defined.
-			if Execution_environment.get (ise_library_env) = Void then
-				Execution_environment.put (eiffel_installation_dir_name, ise_library_env)
+			if environment.get (ise_library_env) = Void then
+				environment.put (eiffel_installation_dir_name, ise_library_env)
 			end
 
 				-- Check that `eiffel_home' exists.
@@ -83,12 +78,12 @@ feature -- Status
 			else
 				l_path.extend (eiffel_platform)
 			end
-			execution_environment.put (l_path, ise_precomp_env)
+			environment.put (l_path, ise_precomp_env)
 		end
 
 feature -- Status report
 
-	is_workbench: BOOLEAN is
+	frozen is_workbench: BOOLEAN is
 			-- Are we running the workbench version of the compiler?
 		external
 			"C inline use %"eif_eiffel.h%""
@@ -101,7 +96,7 @@ feature -- Access: environment variable
 	Eiffel_installation_dir_name: STRING is
 			-- Installation of ISE Eiffel name.
 		once
-			Result := Execution_environment.get ("ISE_EIFFEL")
+			Result := environment.get ("ISE_EIFFEL")
 		ensure
 			eiffel_installation_dir_name_not_void: Result /= Void
 		end
@@ -109,7 +104,7 @@ feature -- Access: environment variable
 	Eiffel_library: STRING is
 			-- ISE_LIBRARY name.
 		once
-			Result := Execution_environment.get ("ISE_LIBRARY")
+			Result := environment.get ("ISE_LIBRARY")
 		ensure
 			eiffel_library_not_void: Result /= Void
 		end
@@ -117,7 +112,7 @@ feature -- Access: environment variable
 	Eiffel_precomp: STRING is
 			-- ISE_PRECOMP name.
 		do
-			Result := Execution_environment.get ("ISE_PRECOMP")
+			Result := environment.get ("ISE_PRECOMP")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -125,15 +120,15 @@ feature -- Access: environment variable
 	Eiffel_c_compiler: STRING is
 			-- ISE_C_COMPILER name.
 		once
-			Result := Execution_environment.get ("ISE_C_COMPILER")
+			Result := environment.get ("ISE_C_COMPILER")
 		ensure
-			eiffel_c_compiler_not_void: platform_constants.is_windows implies Result /= Void
+			eiffel_c_compiler_not_void: platform.is_windows implies Result /= Void
 		end
 
 	Eiffel_platform: STRING is
 			-- ISE_PLATFORM name.
 		once
-			Result := Execution_environment.get ("ISE_PLATFORM")
+			Result := environment.get ("ISE_PLATFORM")
 		ensure
 			eiffel_platform_not_void: Result /= Void
 		end
@@ -141,20 +136,20 @@ feature -- Access: environment variable
 	Eiffel_defaults: STRING is
 			-- ISE_DEFAULTS name.
 		once
-			Result := Execution_environment.get ("ISE_DEFAULTS")
+			Result := environment.get ("ISE_DEFAULTS")
 		end
 
 	Eiffel_projects_directory: STRING is
 			-- ISE_PROJECRS name.
 		once
-			Result := Execution_environment.get ("ISE_PROJECTS")
+			Result := environment.get ("ISE_PROJECTS")
 		end
 
 	eiffel_home: DIRECTORY_NAME is
 			-- Name of directory containing Eiffel specific data.
 		once
 			create Result.make_from_string (Home)
-			if platform_constants.is_windows then
+			if platform.is_windows then
 				Result.extend ("EiffelStudio")
 			else
 				Result.extend (".ec")
@@ -166,7 +161,7 @@ feature -- Access: environment variable
 	Home: STRING is
 			-- HOME name.
 		once
-			Result := execution_environment.home_directory_name
+			Result := environment.home_directory_name
 			if Result = Void then
 				Result := ""
 			end
@@ -177,7 +172,7 @@ feature -- Access: environment variable
 	Platform_abstraction: STRING is
 			-- Abstraction between Windows and Unix.
 		once
-			if Platform_constants.is_windows then
+			if Platform.is_windows then
 				Result := "windows"
 			else
 				Result := "unix"
@@ -187,24 +182,6 @@ feature -- Access: environment variable
 		end
 
 feature -- Access: file name
-
-	Eiffel_preferences: STRING is
-			-- Preferences location
-		local
-			fname: FILE_NAME
-		once
-			if Platform_constants.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" +
-					Major_version_number.out + Minor_version_number.out + "\ec\Preferences"
-			else
-				create fname.make_from_string (eiffel_home)
-				fname.set_file_name (".ecrc" + Major_version_number.out + Minor_version_number.out)
-				Result := fname
-			end
-			if is_workbench then
-				Result.append ("_wkbench")
-			end
-		end
 
 	Templates_path: FILE_NAME is
 			-- Location of templates.
@@ -393,7 +370,7 @@ feature -- Access: file name
 	msil_culture_name: FILE_NAME is
 			-- Culture specification file
 		require
-			is_windows: Platform_constants.is_windows
+			is_windows: Platform.is_windows
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<"eifinit", short_studio_name, "spec", Platform_abstraction>>)
@@ -441,7 +418,7 @@ feature -- Access: command name
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
-			Result.set_file_name (Platform_constants.Finish_freezing_script)
+			Result.set_file_name (Finish_freezing_script)
 		end
 
 	Prelink_command_name: FILE_NAME is
@@ -473,7 +450,7 @@ feature -- Access: command name
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
 			Result.set_file_name ("ecdbgd")
-			if Platform_constants.is_windows then
+			if Platform.is_windows then
 				Result.add_extension ("exe")
 			end
 		ensure
@@ -485,7 +462,7 @@ feature -- Status
 	has_borland: BOOLEAN is
 			-- Is Borland C++ back-end C compiler?
 		once
-			Result := Platform_constants.is_windows and then Eiffel_c_compiler.is_equal ("bcb")
+			Result := Platform.is_windows and then Eiffel_c_compiler.is_equal ("bcb")
 		end
 
 	is_unix_layout: BOOLEAN
@@ -516,6 +493,10 @@ feature -- Version limitation
 
 feature -- Constants
 
+	Default_class_filename: STRING is "default.cls"
+
+	Default_config_file: STRING is "default.ecf"
+
 	ise_library_env: STRING is "ISE_LIBRARY"
 			-- Name of the ISE_LIBRARY environment variable.
 
@@ -527,6 +508,45 @@ feature -- Constants
 
 	short_studio_name: STRING is "studio";
 			-- Short version of EiffelStudio name.
+
+	Prelink_script: STRING is "prelink"
+
+	Eac_browser_file: STRING is "eac_browser.exe"
+
+	Executable_suffix: STRING is
+			-- Platform specific executable extension.
+		once
+			if not Platform.is_unix then
+				Result := "exe"
+			else
+				Result := ""
+			end
+		end
+
+	Finish_freezing_script: STRING is
+			-- Name of post-eiffel compilation processing to launch
+			-- C code.
+		once
+			if Platform.is_windows then
+				Result := "finish_freezing.exe"
+			else
+				Result := "finish_freezing"
+			end
+		end
+
+feature
+
+	platform: PLATFORM_CONSTANTS
+		once
+			create Result
+		end
+
+feature {NONE}
+
+	environment: EXECUTION_ENVIRONMENT
+		once
+			create Result
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

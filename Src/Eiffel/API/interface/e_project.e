@@ -27,6 +27,11 @@ inherit
 
 	SHARED_EIFFEL_PARSER
 
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	SHARED_ENV
 		export
 			{NONE} all
@@ -607,7 +612,7 @@ feature -- Update
 			end
 			create l_cmd.make_from_string (Freeze_command_name)
 			l_cmd.append (" -silent")
-			if comp_system.il_generation and (not platform_constants.is_windows_64_bits or Comp_system.force_32bits) then
+			if comp_system.il_generation and (not platform.is_windows_64_bits or Comp_system.force_32bits) then
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
@@ -630,7 +635,7 @@ feature -- Update
 			end
 			create l_cmd.make_from_string (Freeze_command_name)
 			l_cmd.append (" -silent")
-			if comp_system.il_generation and (not platform_constants.is_windows_64_bits or Comp_system.force_32bits) then
+			if comp_system.il_generation and (not platform.is_windows_64_bits or Comp_system.force_32bits) then
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
@@ -1058,7 +1063,7 @@ feature {NONE} -- Implementation
 					-- Target
 				create file_name.make_from_string (project_directory.workbench_path)
 				file_name.set_file_name (System.name)
-				app_name := Platform_constants.Executable_suffix
+				app_name := Executable_suffix
 				if not app_name.is_empty then
 					file_name.add_extension (app_name)
 				end

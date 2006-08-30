@@ -20,6 +20,11 @@ inherit
 
 	EIFFEL_ENV
 
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	SHARED_ERROR_BEHAVIOR
 
 feature -- Initialization
@@ -205,7 +210,7 @@ feature {NONE} -- Output
 				Eiffel_project.call_finish_freezing_and_wait (not finalized_dir)
 			else
 				io.error.put_string ("You must now run %"");
-				io.error.put_string (Platform_constants.Finish_freezing_script);
+				io.error.put_string (Finish_freezing_script);
 				io.error.put_string ("%" in:%N%T");
 				if finalized_dir then
 					io.error.put_string (project_location.final_path)

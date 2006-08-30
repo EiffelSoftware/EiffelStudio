@@ -79,6 +79,7 @@
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="false"/>
+		<library name="environment" location="$EIFFEL_SRC\Eiffel\library\environment\environment.ecf" readonly="false"/>
 		<library name="framework" location="$EIFFEL_SRC\framework\framework.ecf" readonly="false">
 			<class_option class="ELLIPSIS_PROPERTY">
 				<warning name="once_in_generic" enabled="false"/>

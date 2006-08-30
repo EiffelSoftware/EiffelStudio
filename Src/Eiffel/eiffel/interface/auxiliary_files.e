@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
 create
 	make
 

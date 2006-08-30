@@ -203,7 +203,9 @@ feature {NONE} -- Implementation of data retrieval
 					l_assembly := factory.new_assembly (mask_special_characters_config (l_name), an_assembly.assembly_name, current_target)
 				end
 			end
-			l_assembly.set_name_prefix (mask_special_characters_config (an_assembly.prefix_name))
+			if an_assembly.prefix_name /= Void and then not an_assembly.prefix_name.is_empty then
+				l_assembly.set_name_prefix (mask_special_characters_config (an_assembly.prefix_name))
+			end
 			current_target.add_assembly (l_assembly)
 		end
 

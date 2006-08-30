@@ -91,6 +91,31 @@ feature -- Status report
 			"EIF_IS_WORKBENCH"
 		end
 
+feature -- Version
+
+	major_version: NATURAL_16 is 5
+	minor_version: NATURAL_16 is 7
+
+feature -- Preferences
+
+	Eiffel_preferences: STRING is
+			-- Preferences location
+		local
+			fname: FILE_NAME
+		once
+			if platform.is_windows then
+				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" +
+					major_version.out + minor_version.out + "\ec\Preferences"
+			else
+				create fname.make_from_string (eiffel_home)
+				fname.set_file_name (".ecrc" + major_version.out + minor_version.out)
+				Result := fname
+			end
+			if is_workbench then
+				Result.append ("_wkbench")
+			end
+		end
+
 feature -- Access: environment variable
 
 	Eiffel_installation_dir_name: STRING is
@@ -428,12 +453,24 @@ feature -- Access: command name
 			Result.set_file_name (Prelink_script)
 		end
 
+	ec_name: STRING is
+		once
+			Result := environment.get (ec_name_env)
+			if Result = Void then
+				create Result.make (6)
+				Result.append ("ec")
+				if Platform.is_windows then
+					Result.append (".exe")
+				end
+			end
+		end
+
 	ec_command_name: FILE_NAME is
-			-- Complete path to `estudio'.
+			-- Complete path to `ec'.
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
-			Result.set_file_name ("ec")
+			Result.set_file_name (ec_name)
 		end
 
 	Estudio_command_name: FILE_NAME is
@@ -456,6 +493,21 @@ feature -- Access: command name
 		ensure
 			result_not_void: Result /= Void
 		end
+
+	ec_folder: DIRECTORY_NAME is
+			-- Path to the binaries.
+		local
+			l_p: STRING
+		once
+			l_p := environment.get (ec_folder_env)
+			if l_p /= Void then
+				create Result.make_from_string (l_p)
+			else
+				create Result.make_from_string (Eiffel_installation_dir_name)
+				Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
+			end
+		end
+
 
 feature -- Status
 
@@ -502,6 +554,12 @@ feature -- Constants
 
 	ise_precomp_env: STRING is "ISE_PRECOMP"
 			-- Name of the ISE_PRECOMP environment variable.
+
+	ec_name_env: STRING is "EC_NAME"
+			-- Name of the EC_NAME environment variable.
+
+	ec_folder_env: STRING is "EC_FOLDER"
+			-- Name of the EC_FOLDER environment variable.
 
 	library_directory_name: STRING is "library"
 			-- Name of the library directory.

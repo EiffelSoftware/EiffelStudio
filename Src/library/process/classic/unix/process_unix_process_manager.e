@@ -217,9 +217,10 @@ feature{PROCESS_IMP} -- Process management
 			-- if so, set `status' with reported process status.
 		local
 			l_status: INTEGER
-			l_status_available: BOOLEAN
+			l_status_available, l_success: BOOLEAN
 		do
-			unix_waitpid (pid, is_block, $l_status_available, $l_status, $is_last_wait_successful)
+			unix_waitpid (pid, is_block, $l_status_available, $l_status, $l_success)
+			is_last_wait_successful := l_success
 			if is_last_wait_successful then
 				is_status_available := l_status_available
 				status := l_status

@@ -275,6 +275,44 @@ feature -- Query
 			result_true: Result = not values.is_empty
 		end
 
+feature {NONE} -- Access
+
+	switch_of_name (a_name: STRING): ARGUMENT_SWITCH is
+			-- Retrieves a argument switch using its textual name
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		local
+			l_switches: like available_switches
+			l_cursor: CURSOR
+			l_cs: like case_sensitive
+			l_name: STRING
+			l_match_name: STRING
+		do
+			l_switches := available_switches
+			l_cursor := l_switches.cursor
+
+			l_cs := case_sensitive
+			if l_cs then
+				l_match_name := a_name
+			else
+				l_match_name := a_name.as_lower
+			end
+			from l_switches.start until l_switches.after or Result /= Void loop
+				if l_cs then
+					l_name := l_switches.item.name
+				else
+					l_name := l_switches.item.lower_case_name
+				end
+				if l_match_name.is_equal (l_name) then
+					Result := l_switches.item
+				else
+					l_switches.forth
+				end
+			end
+			l_switches.go_to (l_cursor)
+		end
+
 feature -- Status Report
 
 	case_sensitive: BOOLEAN
@@ -563,6 +601,8 @@ feature {NONE} -- Validation
 		local
 			l_switches: like available_switches
 			l_options: like options_of_name
+			l_switch_groups: like switch_groups
+			l_switch_appurtenances: like switch_appurtenances
 			l_values: like values
 			l_cursor: CURSOR
 			l_ocursor: CURSOR
@@ -595,6 +635,17 @@ feature {NONE} -- Validation
 				end
 			end
 
+			l_switch_groups := switch_groups
+			l_switch_appurtenances := switch_appurtenances
+			if l_switch_groups /= Void then
+				validate_switch_groups
+			end
+			if l_switch_appurtenances /= Void then
+				if not option_values.is_empty then
+					validate_switch_appurtenances
+				end
+			end
+
 			l_switches := available_switches
 			l_cursor := l_switches.cursor
 			from l_switches.start until l_switches.after loop
@@ -603,7 +654,7 @@ feature {NONE} -- Validation
 				l_options := options_of_name (l_switch.name)
 
 					-- Check optional
-				if not l_switch.optional and l_options.is_empty then
+				if (l_switch_groups = Void and l_switch_appurtenances = Void)and then not l_switch.optional and l_options.is_empty then
 					add_template_error (missing_switch_error, [l_switch.name])
 				elseif not l_options.is_empty then
 
@@ -665,6 +716,168 @@ feature {NONE} -- Validation
 			values_unmoved: values.cursor.is_equal (old values.cursor)
 		end
 
+	validate_switch_groups is
+			-- Validate all switch groups to ensure argument configuration is correct.
+		require
+			parsed: parsed
+			switch_groups_attached: switch_groups /= Void
+		local
+			l_extend_groups: ARRAYED_LIST [LIST [ARGUMENT_SWITCH]]
+			l_options: like option_values
+			l_switch: ARGUMENT_SWITCH
+			l_cursor: CURSOR
+			l_valid: BOOLEAN
+		do
+			l_extend_groups := expanded_switch_groups.twin
+
+				-- Check specified switches for a valid group match
+			l_options := option_values
+			l_cursor := l_options.cursor
+			from l_options.start until l_options.after loop
+				from l_extend_groups.start until l_extend_groups.is_empty or l_extend_groups.after loop
+					l_switch := l_options.item.switch
+					if not l_switch.is_special and then not l_extend_groups.item.has (l_switch) then
+						l_extend_groups.remove
+					else
+						l_extend_groups.forth
+					end
+				end
+				l_options.forth
+			end
+			l_options.go_to (l_cursor)
+
+			if l_extend_groups.is_empty then
+					-- No matching group
+				add_error (switch_group_unreconized_error)
+			else
+					-- Check optional
+				from l_extend_groups.start until l_extend_groups.after or l_valid loop
+					l_valid := l_extend_groups.item.for_all (agent (a_item: ARGUMENT_SWITCH; a_options: LIST [ARGUMENT_OPTION]): BOOLEAN
+						do
+							Result := a_item.optional or else has_option (a_item.name)
+						end (?, l_options))
+					l_extend_groups.forth
+				end
+				if not l_valid then
+						-- No matching group
+					add_error (switch_group_unreconized_error)
+				end
+			end
+		end
+
+	validate_switch_appurtenances is
+			-- Validate all switch appurtenances to ensure a specified switch has all its dependencies.
+		require
+			parsed: parsed
+			switch_appurtenances_attached: switch_appurtenances /= Void
+			not_option_values_is_empty: not option_values.is_empty
+		local
+			l_switch_appurtenances: like switch_appurtenances
+			l_appurtenances: ARRAY [ARGUMENT_SWITCH]
+			l_appurtenance: ARGUMENT_SWITCH
+			l_option: ARGUMENT_SWITCH
+			l_options: like option_values
+			l_cursor: CURSOR
+			l_count: INTEGER
+			i: INTEGER
+		do
+			l_switch_appurtenances := switch_appurtenances
+			l_options := option_values
+
+			l_cursor := l_options.cursor
+			from l_options.start until l_options.after loop
+				l_option := l_options.item.switch
+				if l_switch_appurtenances.has (l_option) then
+					l_appurtenances := l_switch_appurtenances [l_option]
+					l_count := l_appurtenances.count
+					from i := 1 until i > l_count loop
+						l_appurtenance := l_appurtenances [i]
+						if not l_appurtenance.is_special and then option_of_name (l_appurtenance.name) = Void then
+							add_template_error (missing_switch_dependency_error, [l_option.name, l_appurtenance.name])
+						end
+						i := i + 1
+					end
+				end
+				l_options.forth
+			end
+			l_options.go_to (l_cursor)
+		end
+
+	expanded_switch_groups: ARRAYED_LIST [LIST [ARGUMENT_SWITCH]] is
+			-- Expanded set of switch groups based on `switch_groups' and `switch_appurtenances'.
+		require
+			parsed: parsed
+			switch_groups_attached: switch_groups /= Void
+		local
+			l_groups: like switch_groups
+			l_cursor: CURSOR
+		do
+				-- Create extend switch groups
+			l_groups := switch_groups
+			create Result.make (l_groups.count)
+			l_cursor := l_groups.cursor
+			from l_groups.start until l_groups.after loop
+				Result.extend (expand_switch_group (l_groups.item))
+				l_groups.forth
+			end
+			l_groups.go_to (l_cursor)
+			check matching_counts: Result.count = l_groups.count end
+		ensure
+			result_attached: Result /= Void
+			result_count_equal: Result.count = switch_groups.count
+			result_contains_valid_items: Result.for_all (agent (a_item: LIST [ARGUMENT_SWITCH]): BOOLEAN do
+					Result := a_item /= Void and then not a_item.is_empty
+				end)
+			result_contains_attached_item_items: Result /= Void implies Result.for_all (agent (a_item: LIST [ARGUMENT_SWITCH]): BOOLEAN
+				do
+					Result := a_item.for_all (agent (a_item2: ARGUMENT_SWITCH): BOOLEAN
+						do
+							Result := a_item2 /= Void
+						end)
+				end)
+			switch_groups_unmoved: switch_groups.cursor.is_equal (old switch_groups.cursor)
+		end
+
+	expand_switch_group (a_group: ARRAY [ARGUMENT_SWITCH]): ARRAYED_LIST [ARGUMENT_SWITCH] is
+			-- Expands a group of switch `a_group' to include any item associated appurtenance switches.
+		require
+			a_group_attached: a_group /= Void
+			not_a_group_is_empty: not a_group.is_empty
+			a_group_contains_attached_items: a_group.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN do Result := a_item /= Void end)
+		local
+			l_switch_appurtenances: like switch_appurtenances
+			l_appurtenances: ARRAY [ARGUMENT_SWITCH]
+			l_switch: ARGUMENT_SWITCH
+			l_icount: INTEGER
+			l_jcount: INTEGER
+			i, j: INTEGER
+		do
+			create Result.make_from_array (a_group)
+			l_switch_appurtenances := switch_appurtenances
+			if l_switch_appurtenances /= Void then
+				l_icount := a_group.count
+				from i := 1 until i > l_icount loop
+					l_switch := a_group [i]
+					if l_switch_appurtenances.has (l_switch) then
+						l_appurtenances := l_switch_appurtenances [l_switch]
+						l_jcount := l_appurtenances.count
+						from j := 1 until j > l_jcount loop
+							l_switch := l_appurtenances [j]
+							if not Result.has (l_switch) then
+								Result.extend (l_switch)
+							end
+							j := j + 1
+						end
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+			result_count_equal_or_greater: Result.count >= a_group.count
+			result_contains_attached_items: Result.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN do Result := a_item /= Void end)
+		end
+
 feature {NONE} -- Error Handling
 
 	add_error (a_msg: STRING) is
@@ -698,16 +911,35 @@ feature {NONE} -- Output
 	display_usage is
 			-- Displays usage information
 		local
-			l_cfg: like command_option_configuration
+			l_cfgs: like command_option_configurations
+			l_cfg: STRING
+			l_cursor: CURSOR
 			l_ext: like extended_usage
+			l_name: STRING
 		do
-			io.put_string (once "USAGE: %N   ")
-			io.put_string (system_name)
+			l_name := system_name
+			io.put_string (once "USAGE: %N")
 
-			l_cfg := command_option_configuration
-			if l_cfg /= Void then
-				io.put_character (' ')
-				io.put_string  (l_cfg)
+
+			l_cfgs := command_option_configurations
+			if l_cfgs /= Void then
+				l_cursor := l_cfgs.cursor
+				from l_cfgs.start until l_cfgs.after loop
+					io.put_string ("   ")
+					io.put_string (l_name)
+					io.put_character (' ')
+					l_cfg := l_cfgs.item.twin
+					l_cfg.replace_substring_all ("%N", "%N" + create {STRING}.make_filled (' ', l_name.count + 1))
+					io.put_string (l_cfg)
+					if not l_cfgs.islast then
+						io.new_line
+					end
+					l_cfgs.forth
+				end
+				l_cfgs.go_to (l_cursor)
+			else
+				io.put_string ("   ")
+				io.put_string (l_name)
 			end
 
 			if has_visible_available_options then
@@ -840,7 +1072,7 @@ feature {NONE} -- Output
 				-- Retrieve option max length for alignment
 			l_cursor := l_options.cursor
 			from l_options.start until l_options.after loop
-				if not l_options.item.hidden then
+				if not l_options.item.is_hidden then
 					l_name := l_options.item.name
 					l_max_len := l_max_len.max (l_name.count)
 				end
@@ -949,65 +1181,134 @@ feature {NONE} -- Usage
 			not_result_is_empty: not Result.is_empty
 		end
 
-	command_option_configuration: STRING is
+	frozen command_option_configurations: ARRAYED_LIST [STRING] is
 			-- Command line option configuration string (to display in usage)
 		local
-			l_switches: like available_switches
+			l_groups: like switch_groups
+			l_cfg: like command_option_group_configuration
+			l_switches: LIST [ARGUMENT_SWITCH]
+			l_cursor: CURSOR
+		once
+			l_groups := switch_groups
+			create Result.make (10)
+			if l_groups = Void or else l_groups.is_empty then
+				l_switches := available_visible_switches
+				l_cfg := command_option_group_configuration (l_switches, True, l_switches)
+				if l_cfg /= Void then
+					Result.extend (l_cfg)
+				end
+			else
+				create Result.make (1024)
+				l_cursor := l_groups.cursor
+				from l_groups.start until l_groups.after loop
+					l_switches := create {ARRAYED_LIST [ARGUMENT_SWITCH]}.make_from_array (l_groups.item)
+					l_cfg := command_option_group_configuration (l_switches, True, l_switches)
+					if l_cfg /= Void then
+						Result.extend (l_cfg)
+					end
+					l_groups.forth
+				end
+				l_groups.go_to (l_cursor)
+				if Result.is_empty then
+					Result := Void
+				end
+			end
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_contains_valid_items: Result /= Void implies Result.for_all (agent (a_item: STRING): BOOLEAN
+				do
+					Result := a_item /= Void and then not a_item.is_empty
+				end)
+			available_switches_unmoved: available_switches.cursor.is_equal (old available_switches.cursor)
+			switch_groups_unmoved: switch_groups.cursor.is_equal (old switch_groups.cursor)
+		end
+
+	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING is
+			-- Command line option configuration string (to display in usage) for a specific group of options.
+		require
+			a_group_attached: a_group /= Void
+			not_a_group_is_empty: not a_group.is_empty
+			a_group_contains_attached_items: a_group.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN do Result := a_item /= Void end)
+			a_src_group_attached: a_src_group /= Void
+			not_a_src_group_is_empty: not a_src_group.is_empty
+			a_src_group_contains_attached_items: a_src_group.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN do Result := a_item /= Void end)
+			a_group_equals_a_src_group: a_add_appurtenances implies a_group = a_src_group
+		local
+			l_appurtenances: like switch_appurtenances
 			l_use_separated: like use_separated_switch_values
 			l_cursor: CURSOR
 			l_switch: ARGUMENT_SWITCH
 			l_val_switch: ARGUMENT_VALUE_SWITCH
+			l_cfg: STRING
 			l_prefix: CHARACTER
 			l_opt: BOOLEAN
 			l_opt_val: BOOLEAN
-		once
-			l_switches := available_visible_switches
-			if not l_switches.is_empty then
+		do
+			if not a_group.is_empty then
+				if a_add_appurtenances then
+					l_appurtenances := switch_appurtenances
+				end
+
 				l_prefix := switch_prefixes[1]
 				l_use_separated := use_separated_switch_values
+				create Result.make  (a_group.count * 12)
 
-				create Result.make  (l_switches.count * 10)
-				l_cursor := l_switches.cursor
-				from l_switches.start until l_switches.after loop
-					l_switch := l_switches.item
+				l_cursor := a_group.cursor
+				from a_group.start until a_group.after loop
+					l_switch := a_group.item
 					l_val_switch ?= l_switch
 					l_opt := l_switch.optional
-					if not l_switch.name.is_equal (help_switch) and not l_switch.hidden then
-						if l_opt then
-							Result.append_character ('[')
-						end
-						Result.append_character (l_prefix)
-						Result.append (l_switch.name)
-						if l_val_switch /= Void then
-							l_opt_val := l_val_switch.is_value_optional
-							if l_opt_val then
+					if not l_switch.name.is_equal (help_switch) and not l_switch.is_hidden then
+						if not a_add_appurtenances implies not a_src_group.has (l_switch) then
+							if l_opt then
 								Result.append_character ('[')
 							end
-							if l_use_separated then
-								Result.append (" <")
-							else
-								Result.append (":<")
+							Result.append_character (l_prefix)
+							Result.append (l_switch.name)
+							if l_val_switch /= Void then
+								l_opt_val := l_val_switch.is_value_optional
+								if l_opt_val then
+									Result.append_character ('[')
+								end
+								if l_use_separated then
+									Result.append (" <")
+								else
+									Result.append (":<")
+								end
+								Result.append (l_val_switch.arg_name)
+								Result.append_character ('>')
+								if l_opt_val then
+									Result.append_character (']')
+								end
 							end
-							Result.append (l_val_switch.arg_name)
-							Result.append_character ('>')
-							if l_opt_val then
+							if l_opt then
+									-- Add appurenances switches
+								if l_appurtenances /= Void and then l_appurtenances.has (l_switch) then
+									l_cfg := command_option_group_configuration (create {ARRAYED_LIST [ARGUMENT_SWITCH]}.make_from_array (l_appurtenances [l_switch]), False, a_src_group)
+									if l_cfg /= Void then
+										Result.append_character (' ')
+										Result.append (l_cfg)
+									end
+								end
 								Result.append_character (']')
 							end
+							if not a_group.islast then
+								Result.append_character (' ')
+							end
 						end
-						if l_opt then
-							Result.append_character (']')
-						end
-						if not l_switches.islast then
-							Result.append_character (' ')
-						end
+
 					end
-					l_switches.forth
+					a_group.forth
 				end
-				l_switches.go_to (l_cursor)
+				a_group.go_to (l_cursor)
+
+				if Result.is_empty then
+					Result := Void
+				end
 			end
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			available_switches_unmoved: available_switches.cursor.is_equal (available_switches.cursor)
+			a_group_unmoved: a_group.cursor.is_equal (old a_group.cursor)
 		end
 
 	extended_usage: STRING is
@@ -1031,6 +1332,7 @@ feature {NONE} -- Switches
 			-- Retrieve a list of available switch
 		local
 			l_switches: like switches
+			l_switch: ARGUMENT_SWITCH
 		once
 			l_switches := switches
 			if l_switches /= Void then
@@ -1038,11 +1340,16 @@ feature {NONE} -- Switches
 			else
 				create Result.make (2)
 			end
-			Result.extend (create {ARGUMENT_SWITCH}.make (nologo_switch, "Supresses copyright information.", True, False))
+
+			create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
+			l_switch.set_is_special
+			Result.extend (l_switch)
 			if l_switches /= Void then
 				Result.append (l_switches)
 			end
-			Result.extend (create {ARGUMENT_SWITCH}.make (help_switch, "Display usage information.", True, False))
+			create l_switch.make (help_switch, "Display usage information.", True, False)
+			l_switch.set_is_special
+			Result.extend (l_switch)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1061,7 +1368,7 @@ feature {NONE} -- Switches
 				l_cursor := l_switches.cursor
 				from l_switches.start until l_switches.after loop
 					l_switch := l_switches.item
-					if not l_switch.hidden then
+					if not l_switch.is_hidden then
 						Result.extend (l_switch)
 					end
 					l_switches.forth
@@ -1079,6 +1386,55 @@ feature {NONE} -- Switches
 		deferred
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_contains_attached_items: Result /= Void implies Result.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN
+				do
+					Result := a_item /= Void
+				end)
+		end
+
+	switch_groups: ARRAYED_LIST [ARRAY [ARGUMENT_SWITCH]] is
+			-- Valid switch grouping
+		once
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_contains_attached_items: Result /= Void implies Result.for_all (agent (a_item: ARRAY [ARGUMENT_SWITCH]): BOOLEAN
+				do
+					Result := a_item /= Void
+				end)
+			result_contains_attached_item_items: Result /= Void implies Result.for_all (agent (a_item: ARRAY [ARGUMENT_SWITCH]): BOOLEAN
+				do
+					Result := a_item.for_all (agent (a_item2: ARGUMENT_SWITCH): BOOLEAN
+						do
+							Result := a_item2 /= Void
+						end)
+				end)
+		end
+
+	switch_appurtenances: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH] is
+			-- Switch appurtenances (dependencies)
+			-- Note: Siwtch appurtenances are implictly added to a group where a switch is present
+		once
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
+			result_contains_attached_items: Result /= Void implies Result.linear_representation.for_all (agent (a_item: ARRAY [ARGUMENT_SWITCH]): BOOLEAN
+				do
+					Result := a_item /= Void
+				end)
+			result_contains_attached_valid_items: Result /= Void implies Result.linear_representation.for_all (agent (a_item: ARRAY [ARGUMENT_SWITCH]): BOOLEAN
+				do
+					Result := a_item.for_all (agent (a_item2: ARGUMENT_SWITCH): BOOLEAN do Result := a_item2 /= Void and then not a_item2.optional end)
+				end)
+--			not_result_contains_key_as_item: Result /= Void implies (agent (a_table: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]): BOOLEAN
+--				local
+--					l_cursor: CURSOR
+--				do
+--					Result := True
+--					l_cursor := a_table.cursor
+--					from a_table.start until a_table.after or not Result loop
+--						Result := not a_table.item_for_iteration.has (a_table.key_for_iteration)
+--					end
+--					a_table.go_to (l_cursor)
+--				end).item ([Result])
 		end
 
 feature {NONE} -- Formatting
@@ -1099,7 +1455,7 @@ feature {NONE} -- Formatting
 			result_ellipsed: Result.count <= ellipse_threshold
 		end
 
-	ellipse_threshold: NATURAL_8 is 15
+	ellipse_threshold: NATURAL_8 is 255
 			-- Maximum number of characters before ellipses (...) are used
 			-- to trim a region of text.
 
@@ -1173,6 +1529,8 @@ feature {NONE} -- Error Constants
 	missing_switch_error: STRING is "Switch '{1}' was not specified."
 	loose_argument_specified_error: STRING is "Arguments without a switch prefix are not valid arguments."
 	multiple_loose_argument_specified_error: STRING is "Only one argument without a switch prefix can be passed."
+	switch_group_unreconized_error: STRING is "The specified switches are not in a valid configuration."
+	missing_switch_dependency_error: STRING is "Switch '{1}' require the switch '{2}' be specified also."
 	invalid_switch_value_with_reason: STRING is "'{1}' is an invalid option for switch '{2}'.%N{3}"
 	invalid_loose_value_with_reason: STRING is "'{1}' is an invalid option.%N{2}"
 

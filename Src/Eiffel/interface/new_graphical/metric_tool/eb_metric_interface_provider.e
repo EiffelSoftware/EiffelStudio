@@ -499,8 +499,6 @@ feature{NONE} -- Implementation
 		do
 			a_agent.call ([])
 			a_dialog.hide
-		ensure
-			a_dialog_destroyed: a_dialog.is_destroyed
 		end
 
 indexing

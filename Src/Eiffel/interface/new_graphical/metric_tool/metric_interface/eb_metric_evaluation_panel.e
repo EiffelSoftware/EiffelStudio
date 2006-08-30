@@ -195,6 +195,7 @@ feature {NONE} -- Initialization
 			on_show_percentage_btn_change_from_outside
 			on_filter_result_change_from_outside
 			on_auto_go_to_result_change_from_outside
+			on_quick_metric_button_pressed
 		end
 
 feature -- Access

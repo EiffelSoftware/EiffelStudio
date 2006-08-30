@@ -104,6 +104,14 @@ inherit
 			default_create
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		undefine
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -265,6 +273,7 @@ feature {NONE} -- Agents
 		do
 			conf_system.store
 			conf_system.set_file_date
+			workbench.set_changed
 			hide
 
 			store_layout

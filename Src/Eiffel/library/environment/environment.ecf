@@ -4,6 +4,21 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<cluster name="interface" location="interface" recursive="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
+		<cluster name="interface" location="interface\" recursive="true"/>
+		<cluster name="unix" location="spec\unix\">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</cluster>
+		<cluster name="windows" location="spec\windows\">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</cluster>
 	</target>
 </system>

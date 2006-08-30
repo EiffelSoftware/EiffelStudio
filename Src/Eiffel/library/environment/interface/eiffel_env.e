@@ -121,7 +121,7 @@ feature -- Access: environment variable
 	Eiffel_installation_dir_name: STRING is
 			-- Installation of ISE Eiffel name.
 		once
-			Result := environment.get ("ISE_EIFFEL")
+			Result := environment.get_from_application ("ISE_EIFFEL", "ec")
 		ensure
 			eiffel_installation_dir_name_not_void: Result /= Void
 		end
@@ -145,7 +145,7 @@ feature -- Access: environment variable
 	Eiffel_c_compiler: STRING is
 			-- ISE_C_COMPILER name.
 		once
-			Result := environment.get ("ISE_C_COMPILER")
+			Result := environment.get_from_application ("ISE_C_COMPILER", "ec")
 		ensure
 			eiffel_c_compiler_not_void: platform.is_windows implies Result /= Void
 		end
@@ -153,7 +153,7 @@ feature -- Access: environment variable
 	Eiffel_platform: STRING is
 			-- ISE_PLATFORM name.
 		once
-			Result := environment.get ("ISE_PLATFORM")
+			Result := environment.get_from_application ("ISE_PLATFORM", "ec")
 		ensure
 			eiffel_platform_not_void: Result /= Void
 		end
@@ -300,9 +300,18 @@ feature -- Access: file name
 			-- Therefore it is not a once function since we need to create
 			-- a new instance each time it is called so that caller can then
 			-- calls `set_file_name' on returned object.
+		local
+			l_p: STRING
 		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
+			l_p := environment.get (ec_folder_env)
+			if l_p /= Void then
+				create Result.make_from_string (l_p)
+			else
+				create Result.make_from_string (Eiffel_installation_dir_name)
+				Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	filter_path: DIRECTORY_NAME is
@@ -494,21 +503,6 @@ feature -- Access: command name
 			result_not_void: Result /= Void
 		end
 
-	ec_folder: DIRECTORY_NAME is
-			-- Path to the binaries.
-		local
-			l_p: STRING
-		once
-			l_p := environment.get (ec_folder_env)
-			if l_p /= Void then
-				create Result.make_from_string (l_p)
-			else
-				create Result.make_from_string (Eiffel_installation_dir_name)
-				Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
-			end
-		end
-
-
 feature -- Status
 
 	has_borland: BOOLEAN is
@@ -601,7 +595,7 @@ feature
 
 feature {NONE}
 
-	environment: EXECUTION_ENVIRONMENT
+	environment: ENVIRONMENT_ACCESS
 		once
 			create Result
 		end

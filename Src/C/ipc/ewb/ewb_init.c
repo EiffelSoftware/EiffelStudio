@@ -94,11 +94,6 @@ rt_private void set_signal(void)
 #ifdef SIGTERM
 	signal(SIGTERM, handler);
 #endif
-#ifdef SIGCHLD
-	signal (SIGCHLD, SIG_IGN);
-#elif defined (SIGCLD)
-	signal (SIGCLD, SIG_IGN);
-#endif
 }
 
 rt_private Signal_t handler(int sig)

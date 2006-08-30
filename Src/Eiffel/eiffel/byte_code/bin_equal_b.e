@@ -9,6 +9,7 @@ inherit
 			register as left_register,
 			set_register as set_left_register
 		redefine
+			allocates_memory,
 			free_register, unanalyze, is_type_fixed,
 			is_commutative, print_register, type,
 			generate, analyze, is_unsafe, optimized_byte_node,
@@ -38,6 +39,19 @@ feature
 		do
 			Result := Boolean_c_type;
 		end;
+
+	allocates_memory: BOOLEAN is
+			-- Does the expression allocates memory ?
+		local
+			left_type: TYPE_I;
+			right_type: TYPE_I;
+		do
+			left_type := context.real_type (left.type);
+			right_type := context.real_type (right.type);
+			Result := Precursor or else
+				(left_type.is_basic and not (right_type.is_none or right_type.is_basic)) or else
+				(right_type.is_basic and not (left_type.is_none or left_type.is_basic))
+		end
 
 	generate_boolean_constant is
 		deferred
@@ -210,8 +224,10 @@ feature
 			elseif left_type.is_true_expanded or right_type.is_true_expanded or
 				left_register /= Void or right_register /= Void
 			then
-				generate_equal;
+				generate_negation
+				generate_equal
 			elseif left_type.is_bit or right_type.is_bit then
+				generate_negation
 				generate_bit_equal
 			elseif
 				left_type.is_reference and then

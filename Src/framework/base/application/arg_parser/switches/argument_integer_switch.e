@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			allow_multiple_set: allow_multiple = a_allow_mutliple
 			min_set: min = a_min
 			max_set: max = a_max
-			not_hidden: not hidden
+			not_is_hidden: not is_hidden
 		end
 
 	make_hidden_with_range (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional; a_min: like min; a_max: like max) is

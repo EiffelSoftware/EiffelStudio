@@ -172,9 +172,6 @@ feature -- Access
 	icons: EDITOR_ICONS
 			-- Editor icons
 
-	syntax_files_path: DIRECTORY_NAME
-			-- Path containing syntax definition files for highlighting
-
 feature -- Status Setting
 
 	set_cursors (a_cursors: like cursors) is

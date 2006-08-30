@@ -324,7 +324,7 @@ feature -- Generation
 						-- where `xxx' is either `exe' or `dll'.
 					l_file_name := System.name + "." + System.msil_generation_type + ".config"
 
-					l_source_name := (create {EIFFEL_ENV}).Generation_templates_path.twin
+					create l_source_name.make_from_string ((create {EIFFEL_ENV}).Generation_templates_path)
 					l_source_name.set_file_name ("assembly_config.xml")
 
 					if is_finalizing then

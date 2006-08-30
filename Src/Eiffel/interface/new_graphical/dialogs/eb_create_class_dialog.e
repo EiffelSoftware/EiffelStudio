@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			tmp: STRING
 		do
 			if not retried then
-				clf := Templates_path.twin
+				create clf.make_from_string (Templates_path)
 				if not empty_check.is_selected then
 					clf.set_file_name ("empty")
 				else

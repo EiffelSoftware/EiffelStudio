@@ -10,6 +10,13 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_ENV
+		rename
+			platform as platform_constants
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -26,27 +33,10 @@ feature -- Initialization
 			create object_dependent_directories.make (50)
 			create dependent_directories.make (55)
 
-			eiffel_dir := short_path (env.get ("ISE_EIFFEL"))
-			platform := env.get ("ISE_PLATFORM")
-			compiler := env.get ("ISE_C_COMPILER")
+			check_environment_variable
+			eiffel_dir := short_path (eiffel_installation_dir_name)
 
 			uses_precompiled := False
-
-			if eiffel_dir = Void or else eiffel_dir.is_empty then
-				error_msg := "ERROR: Key 'ISE_EIFFEL' was not found in registry!%N%N"
-				error := True
-			end
-
-			if platform = Void or else platform.is_empty then
-				error_msg := "ERROR: Key 'ISE_PLATFORM' was not found in registry!%N%N"
-				error := True
-			end
-
-			if compiler = Void or else compiler.is_empty then
-				error_msg := "ERROR: Key 'ISE_C_COMPILER' was not found in registry!%N%N"
-				error := True
-			end
-
 
 			if not error then
 				read_options
@@ -67,10 +57,10 @@ feature -- Initialization
 				end
 
 				smart_checking := options.get_boolean ("smart_checking", True)
-				if compiler.is_equal ("msc") and smart_checking then
+				if eiffel_c_compiler.is_equal ("msc") and smart_checking then
 						-- Visual Studio C compiler.
 					create vs_setup.make (a_force_32bit)
-				elseif compiler.is_equal ("bcb") then
+				elseif eiffel_c_compiler.is_equal ("bcb") then
 						-- Borland C compiler.
 					create borland_setup.make
 				end
@@ -88,17 +78,7 @@ feature -- Initialization
 		local
 			quick_prg: STRING
 		do
-			quick_prg := eiffel_dir.twin
-			quick_prg.append_character (operating_environment.directory_separator)
-			quick_prg.append ("studio")
-			quick_prg.append_character (operating_environment.directory_separator)
-			quick_prg.append ("spec")
-			quick_prg.append_character (operating_environment.directory_separator)
-			quick_prg.append (platform)
-			quick_prg.append_character (operating_environment.directory_separator)
-			quick_prg.append ("bin")
-			quick_prg.append_character (operating_environment.directory_separator)
-			quick_prg.append ("quick_finalize.exe")
+			quick_prg := Quick_finalize_command_name.twin
 
 			quick_prg.append (" . " + options.get_string ("obj_file_ext", "obj"))
 
@@ -147,12 +127,6 @@ feature -- Access
 	appl: STRING
 			-- Application name
 
-	platform: STRING
-			-- ISE_PLATFORM environment variable
-
-	compiler: STRING
-			-- ISE_C_COMPILER environment variable		
-
 	uses_precompiled: BOOLEAN
 
 	directory_separator: STRING
@@ -174,11 +148,9 @@ feature -- Execution
 			-- read options from config.eif
 		local
 			reader: RESOURCE_PARSER
-			filename: FILE_NAME -- the filename for the config.eif file
 		do
-			create filename.make_from_string (config_eif_fn)
 			create reader
-			reader.parse_file (filename, options)
+			reader.parse_file (Config_eif, options)
 		end
 
 	translate is
@@ -205,17 +177,7 @@ feature -- Execution
 			end
 
 				-- Launch distributed make.
-			eiffel_make := eiffel_dir.twin
-			eiffel_make.append_character (operating_environment.directory_separator)
-			eiffel_make.append ("studio")
-			eiffel_make.append_character (operating_environment.directory_separator)
-			eiffel_make.append ("spec")
-			eiffel_make.append_character (operating_environment.directory_separator)
-			eiffel_make.append (platform)
-			eiffel_make.append_character (operating_environment.directory_separator)
-			eiffel_make.append ("bin")
-			eiffel_make.append_character (operating_environment.directory_separator)
-			eiffel_make.append ("emake.exe")
+			eiffel_make := Emake_command_name.twin
 
 			eiffel_make.append (" -target %"")
 			eiffel_make.append (env.current_working_directory)
@@ -1446,9 +1408,7 @@ feature {NONE}	-- substitutions
 				io.put_string("%Tsubst_platform%N")
 			end
 
-			if platform /= Void and then not platform.is_empty then
-				line.replace_substring_all ("$(ISE_PLATFORM)", platform)
-			end
+			line.replace_substring_all ("$(ISE_PLATFORM)", eiffel_platform)
 		end
 
 	subst_compiler (line: STRING) is
@@ -1458,8 +1418,8 @@ feature {NONE}	-- substitutions
 				io.put_string("%Tsubst_compiler%N")
 			end
 
-			if compiler /= Void and then not compiler.is_empty then
-				line.replace_substring_all ("$(ISE_C_COMPILER)", compiler)
+			if platform_constants.is_windows then
+				line.replace_substring_all ("$(ISE_C_COMPILER)", eiffel_c_compiler)
 			end
 		end
 
@@ -1874,32 +1834,6 @@ feature {NONE} -- Implementation
 				if word.item (word.count) = '}' then
 					word.remove_tail (1)
 				end
-			end
-		end
-
-	config_eif_fn: STRING is
-			-- the full filename for the CONFIG.EIF file
-			-- currently: $ISE_EIFFEL|studio|spec|$ISE_PLATFORM|$ISE_C_COMPILER|config.eif
-		once
-			debug ("implementation")
-				io.put_string("%Tconfig_eif_fn = ")
-			end
-
-			Result := eiffel_dir.twin
-			Result.append_character (operating_environment.directory_separator)
-			Result.append ("studio")
-			Result.append_character (operating_environment.directory_separator)
-			Result.append ("config")
-			Result.append_character (operating_environment.directory_separator)
-			Result.append (platform)
-			Result.append_character (operating_environment.directory_separator)
-			Result.append (compiler)
-			Result.append_character (operating_environment.directory_separator)
-			Result.append ("config.eif")
-
-			debug ("implementation")
-				io.put_string(Result)
-				io.put_new_line
 			end
 		end
 

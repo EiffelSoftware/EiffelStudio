@@ -83,7 +83,6 @@ feature {NONE} -- Initialization
 	initialize_editor_context is
 			-- Here initialize editor contextual settings.  For example, set location of cursor pixmaps.
 		do
-			create syntax_files_path.make_from_string ((create {EIFFEL_ENV}).syntax_path)
 			set_cursors (create {EB_EDITOR_CURSORS})
 		end
 

@@ -91,7 +91,7 @@ feature {NONE} -- Usage
 	version: STRING is
 			-- Version number of application
 		once
-			Result := "5.7"
+			Result := {EIFFEL_ENV}.major_version.out + "." + {EIFFEL_ENV}.minor_version.out
 		end
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is

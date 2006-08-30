@@ -201,7 +201,7 @@ feature {EV_ANY_IMP} -- Window intermediary agent routines
 	on_window_close_request (a_c_object: POINTER) is
 			-- Close requested
 		local
-			a_window_imp: EV_WINDOW_IMP
+			a_window_imp: EV_GTK_WINDOW_IMP
 		do
 			a_window_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			check

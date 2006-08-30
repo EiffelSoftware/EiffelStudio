@@ -27,7 +27,7 @@ feature -- Access
 				create l_reg
 				l_key := l_reg.open_key_value ("hkey_current_user\Software\ISE\Eiffel57\" + a_app, a_var.as_lower)
 				if l_key = Void then
-					l_key := reg.open_key_value ("hkey_local_machine\Software\ISE\Eiffel57\" + a_app, a_var.as_lower)
+					l_key := l_reg.open_key_value ("hkey_local_machine\Software\ISE\Eiffel57\" + a_app, a_var.as_lower)
 				end
 				if l_key /= Void then
 					l_s32 := l_key.string_value

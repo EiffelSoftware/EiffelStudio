@@ -36,9 +36,10 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("Action could not be executed successfully:");
 			st.add_new_line
-			st.add_string (command);
+			st.add ("Action could not be executed successfully:");
+			st.add_new_line
+			st.add (command);
 			st.add_new_line;
 		end;
 

@@ -47,8 +47,9 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("Value of a setting could not be changed because the system is already compiled or uses a precompile: ");
-			st.add_string (setting);
+			st.add_new_line
+			st.add ("Value of a setting could not be changed because the system is already compiled or uses a precompile: ");
+			st.add (setting);
 			st.add_new_line
 			st.add ("Old: "+old_value)
 			st.add_new_line

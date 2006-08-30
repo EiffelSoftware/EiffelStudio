@@ -18,7 +18,8 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string (".NET compilation on a non .NET system.");
+			st.add_new_line
+			st.add (".NET compilation on a non .NET system.");
 			st.add_new_line;
 		end;
 

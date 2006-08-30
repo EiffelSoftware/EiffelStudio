@@ -19,7 +19,8 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("No target specified and more than one target.");
+			st.add_new_line
+			st.add ("No target specified and more than one target.");
 			st.add_new_line
 		end;
 

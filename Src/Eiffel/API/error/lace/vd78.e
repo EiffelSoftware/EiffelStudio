@@ -18,7 +18,8 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("Trying to use a precompile without a library target.")
+			st.add_new_line
+			st.add ("Trying to use a precompile without a library target.")
 			st.add_new_line
 		end
 

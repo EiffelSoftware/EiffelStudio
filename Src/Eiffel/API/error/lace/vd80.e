@@ -24,9 +24,8 @@ feature -- Output
 
 	build_explain (st: TEXT_FORMATTER) is
 		do
-			st.add_string ("Configuration warning:");
 			st.add_new_line
-			st.add_string (warning.out);
+			st.add (warning.out)
 			st.add_new_line;
 		end;
 

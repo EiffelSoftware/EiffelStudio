@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			allow_multiple_set: allow_multiple = a_allow_mutliple
 			flag_descriptions_set: flag_descriptions = a_flags
 			case_sensitive_flags_set: case_sensitive_flags = a_cs_flags
-			not_hidden: not hidden
+			not_is_hidden: not is_hidden
 		end
 
 	make_hidden (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple; a_arg_name: like arg_name; a_arg_desc: like arg_description; a_val_optional: like is_value_optional; a_flags: like flag_descriptions; a_cs_flags: like case_sensitive_flags) is
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			not_a_flags_is_empty: not a_flags.is_empty
 		do
 			make (a_name, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional, a_flags, a_cs_flags)
-			hidden := True
+			is_hidden := True
 		ensure
 			name_set: name = a_name
 			description_set: description = a_desc
@@ -73,7 +73,7 @@ feature {NONE} -- Initialization
 			allow_multiple_set: allow_multiple = a_allow_mutliple
 			flag_descriptions_set: flag_descriptions = a_flags
 			case_sensitive_flags_set: case_sensitive_flags = a_cs_flags
-			hidden: hidden
+			is_hidden: is_hidden
 		end
 
 feature -- Access
@@ -111,13 +111,13 @@ feature {ARGUMENT_LITE_PARSER} -- Factory Functions
 	create_option: ARGUMENT_FLAG_OPTION is
 			-- Creates a new argument option for switch
 		do
-			create Result.make (name, "", flags, case_sensitive_flags)
+			create Result.make (name, "", flags, case_sensitive_flags, Current)
 		end
 
 	create_value_option (a_value: STRING): ARGUMENT_FLAG_OPTION is
 			-- Creates a new argument option given a value `a_value'
 		do
-			create Result.make (name, a_value, flags, case_sensitive_flags)
+			create Result.make (name, a_value, flags, case_sensitive_flags, Current)
 		end
 
 feature {NONE} -- Usage

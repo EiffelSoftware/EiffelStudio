@@ -51,9 +51,27 @@ feature -- Text processing
 			-- Process default basic text `t'.
 		local
 			tok: EDITOR_TOKEN_TEXT
+			l_pos, l_previous: INTEGER
 		do
-			create tok.make (t)
-			last_line.append_token (tok)
+			l_pos := t.index_of ('%N', 1)
+			if l_pos > 0 then
+				from
+					l_previous := 1
+				until
+					l_pos = 0
+				loop
+					add (t.substring (l_previous, l_pos -1))
+					add_new_line
+					l_previous := l_pos + 1
+					l_pos := t.index_of ('%N', l_previous)
+				end
+				if l_previous < t.count then
+					add (t.substring (l_previous, t.count))
+				end
+			else
+				create tok.make (t)
+				last_line.append_token (tok)
+			end
 		end
 
 	process_string_text (t: STRING; url: STRING) is

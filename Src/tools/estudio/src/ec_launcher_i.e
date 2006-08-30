@@ -9,37 +9,12 @@ deferred
 class
 	EC_LAUNCHER_I
 
-inherit 
-	EXECUTION_ENVIRONMENT
-
-feature -- Constant
-
-	major_version_number: INTEGER is 57
-			-- Major version number
-			-- (for now only used on Windows to search in the registry keys).
-
 feature -- Access
 
 	error (m: STRING) is
 			-- notify error message `m'
 		do
 			io.error.put_string (m)
-		end
-
-	eif_getenv_from_app (vname, vapp: STRING): STRING is
-			-- Get environment variable from the environment, or the `vapp' registry key
-		do
-			Result := get (vname)
-		end
-
-	ise_eiffel_value: STRING is
-		do
-			Result := eif_getenv_from_app ("ISE_EIFFEL", "ec")
-		end
-
-	ise_platform_value: STRING is
-		do
-			Result := eif_getenv_from_app ("ISE_PLATFORM", "ec")
 		end
 
 indexing

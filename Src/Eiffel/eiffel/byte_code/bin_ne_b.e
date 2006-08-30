@@ -6,10 +6,9 @@ class BIN_NE_B
 inherit
 	BIN_EQUAL_B
 		redefine
-			generate_equal,
+			enlarged,
 			generate_negation,
-			generate_operator, enlarged,
-			generate_bit_equal
+			generate_operator
 		end;
 
 feature -- Visitor
@@ -39,20 +38,6 @@ feature
 		do
 			buffer.put_character ('!')
 		end
-
-	generate_equal is
-			-- Generate non-equality.
-		do
-			buffer.put_character ('!');
-			Precursor {BIN_EQUAL_B};
-		end;
-
-	generate_bit_equal is
-			-- Generate non-equality for bits.
-		do
-			buffer.put_character ('!');
-			Precursor {BIN_EQUAL_B};
-		end;
 
 	enlarged: EXPR_B is
 			-- Enlarge node

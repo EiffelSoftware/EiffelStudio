@@ -37,10 +37,15 @@ feature {NONE} -- Implementation
 			-- Initialize dialog
 		local
 			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING_32, BOOLEAN]]
+			l_app_imp: EV_APPLICATION_IMP
+			l_gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		do
 			Precursor {EV_GTK_WINDOW_IMP}
-			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (internal_id, ?, ?, ?)
+			l_app_imp := App_implementation
+			l_gtk_marshal := l_app_imp.gtk_marshal
+			on_key_event_intermediary_agent := agent (l_gtk_marshal).on_key_event_intermediary (internal_id, ?, ?, ?)
 			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			signal_connect_true (l_app_imp.delete_event_string, agent l_gtk_marshal.on_window_close_request (c_object))
 		end
 
 feature -- Access

@@ -19,6 +19,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_EXEC_ENVIRONMENT
+
 feature -- Access
 
 	tooltip: STRING is

@@ -34,11 +34,6 @@ inherit
 			{NONE} all
 		end
 
-	PLATFORM
-		export
-			{NONE} all
-		end
-
 	SK_CONST
 		export
 			{NONE} all

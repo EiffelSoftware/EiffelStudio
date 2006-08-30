@@ -37,10 +37,6 @@ feature {NONE}
 
 	Comp: STRING is "COMP"
 
-	Default_config_file: STRING is "default.ecf"
-
-	Default_class_filename: STRING is "default.cls"
-
 	Descriptor_file_suffix: CHARACTER is 'd'
 
 	Documentation: STRING is "Documentation"
@@ -59,7 +55,19 @@ feature {NONE}
 
 	Dot_profile_information: STRING is "pfi"
 
-	Eac_browser_file: STRING is "eac_browser.exe"
+	Driver: STRING is
+			-- Name of `driver' executable used to execute melted code.
+		once
+			if {PLATFORM_CONSTANTS}.is_windows then
+				create Result.make (15)
+				Result.append ((create {EIFFEL_ENV}).Eiffel_c_compiler)
+				Result.append ("\driver.exe")
+			elseif {PLATFORM_CONSTANTS}.is_vms then
+				Result := "driver.exe"
+			else
+				Result := "driver"
+			end
+		end
 
 	Epoly: STRING is "epoly"
 
@@ -80,6 +88,24 @@ feature {NONE}
 	Ehisto: STRING is "ehisto"
 
 	Eiffelgens: STRING is "EIFGENs"
+
+	Eiffel_preferences: STRING is
+			-- Preferences location
+		local
+			fname: FILE_NAME
+		once
+			if {PLATFORM_CONSTANTS}.is_windows then
+				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" +
+					Major_version_number.out + Minor_version_number.out + "\ec\Preferences"
+			else
+				create fname.make_from_string (eiffel_env.eiffel_home)
+				fname.set_file_name (".ecrc" + Major_version_number.out + Minor_version_number.out)
+				Result := fname
+			end
+			if {EIFFEL_ENV}.is_workbench then
+				Result.append ("_wkbench")
+			end
+		end
 
 	Einit: STRING is "einit"
 
@@ -115,7 +141,17 @@ feature {NONE}
 
 	Precomp_eif: STRING is "precomp.eif"
 
-	Prelink_script: STRING is "prelink"
+	Preobj: STRING is
+			-- Name of C library used in precompiled library.
+		once
+			if {PLATFORM_CONSTANTS}.is_windows then
+				Result := "precomp.lib"
+			elseif {PLATFORM_CONSTANTS}.is_unix then
+				Result := "preobj.o"
+			else
+				Result := "preobj.olb"
+			end
+		end
 
 	Profiler: STRING is "Profiler"
 
@@ -161,12 +197,7 @@ feature {NONE}
 
 	info_flag_end: STRING is "-- end of info"
 
-feature {NONE, AUXILIARY_FILES} -- Versioning
-
-	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number_tag: STRING is "version_number"
-	Ace_file_path_tag: STRING is "ace_file_path"
-			-- Tags used in project file header.
+feature {AUXILIARY_FILES} -- Versioning
 
 	Compiler_version_number: CONF_VERSION is
 			-- Version of the compiler
@@ -214,6 +245,19 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			-- Default: ""
 			-- This can be used by developper to add specific information
 			-- displayed on About dialog
+
+	Precompilation_id_tag: STRING is "precompilation_id"
+	Version_number_tag: STRING is "version_number"
+	Ace_file_path_tag: STRING is "ace_file_path";
+			-- Tags used in project file header.
+
+feature {NONE} -- Implementation
+
+	eiffel_env: EIFFEL_ENV is
+		once
+			create Result
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

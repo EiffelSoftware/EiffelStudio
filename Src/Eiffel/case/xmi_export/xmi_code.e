@@ -9,14 +9,22 @@ class
 	XMI_CODE
 
 inherit
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 
 create
 	make
 
 feature --Initialization
 
-	make is 
+	make is
 			-- Initialize the constant elements of code.
 		do
 			header := "<?xml version = '1.0' encoding = %'UTF-8%' ?>%N%
@@ -46,23 +54,23 @@ feature --Initialization
 				%    </XMI.documentation>%N%
 				%    <XMI.metamodel xmi.name = 'UML' xmi.version = '1.1'/>%N%
 				%  </XMI.header>%N")
-	
+
 			content_end := "       </Foundation.Core.Namespace.ownedElement>%N%
 	    		%</Model_Management.Model>  %N%
 			    %</XMI.content>%N"
-	
+
 			file_end := "</XMI>%N"
-	
+
 			extensions_start := "<XMI.extensions xmi.extender = '"
 			extensions_start.append (workbench_name)
 			extensions_start.append ("'>%N")
-	
+
 			extensions_end := "</XMI.extensions>%N"
 		end
 
 feature -- Access
 
-	header: STRING 
+	header: STRING
 			-- Header code of the XMI file.	
 
 	content_start (idref: INTEGER): STRING is

@@ -12,6 +12,11 @@ class
 inherit
 	EB_ERROR_MANAGER
 
+	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	EIFFEL_ENV
 		export
 			{NONE} all

@@ -20,6 +20,11 @@ inherit
 
 	SYSTEM_CONSTANTS
 
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -194,9 +199,9 @@ feature -- Access
 				create Result.make_from_string (project_location.final_path)
 			end
 			Result.set_file_name (name)
-			tmp := Platform_constants.Executable_suffix
+			tmp := Executable_suffix
 			if not tmp.is_empty then
-				Result.add_extension (Platform_constants.Executable_suffix)
+				Result.add_extension (Executable_suffix)
 			end
 		end;
 

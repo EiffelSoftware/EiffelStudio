@@ -31,7 +31,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 			-- Note: `a_location' should contains a directory `resources',
 			-- `pixmap' and `spec' (with a subdirectory per Operating System).
 		require
-			valid_location: 
-				a_location /= Void and then 
+			valid_location:
+				a_location /= Void and then
 				not a_location.is_empty and then
 				(create {DIRECTORY}.make (a_location)).exists
 		do
@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Execution
 
-	execute is	
+	execute is
 			-- Execute the wizard
 		local
 			temp_filename: FILE_NAME
@@ -103,16 +103,16 @@ feature {NONE} -- Implementation
 			wizard_exec_filename.extend ("spec")
 			wizard_exec_filename.extend (eiffel_platform)
 			wizard_exec_filename.set_file_name ("wizard")
-			if not Platform_constants.Executable_suffix.is_empty then
-				wizard_exec_filename.add_extension (Platform_constants.Executable_suffix)
+			if not Executable_suffix.is_empty then
+				wizard_exec_filename.add_extension (Executable_suffix)
 			end
-			
+
 			create wizard_exec_file.make (wizard_exec_filename)
 			if not (wizard_exec_file.exists and then wizard_exec_file.is_executable) then
 				set_error_message (Warning_messages.w_Unable_to_execute_wizard (wizard_exec_filename))
 				(create {EXCEPTIONS}).raise (Interface_names.Workbench_name+" Exception")
 			end
-			
+
 			create wizard_command.make (0)
 			wizard_command.append (wizard_exec_filename)
 			wizard_command.append (" ")
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 
 	wait_for_finish (callback_filename: STRING) is
 			-- Wait for the end of the Wizard, and collect the results.
-		local	
+		local
 			retry_count: INTEGER
 			finished: BOOLEAN
 			callback_file: PLAIN_TEXT_FILE
@@ -146,8 +146,8 @@ feature {NONE} -- Implementation
 					if not callback_file.last_string.is_empty and then callback_file.last_string.index_of ('=', 1) /= 0 then
 						analysed_line := analyse_line (callback_file.last_string)
 						result_parameters.extend (analysed_line)
-						if (analysed_line @ 1).is_equal ("success") and then 
-							not (analysed_line @ 2).is_equal ("<SUCCESS>") 
+						if (analysed_line @ 1).is_equal ("success") and then
+							not (analysed_line @ 2).is_equal ("<SUCCESS>")
 						then
 							finished := True
 							(analysed_line @ 2).to_lower

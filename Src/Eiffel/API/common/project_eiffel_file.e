@@ -20,6 +20,11 @@ inherit
 
 	SYSTEM_CONSTANTS
 
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
 create
 	make
 

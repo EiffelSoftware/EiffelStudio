@@ -47,6 +47,8 @@ inherit
 			{NONE} all
 		end
 
+	SYSTEM_CONSTANTS
+
 create
 	make
 

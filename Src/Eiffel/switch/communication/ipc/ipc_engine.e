@@ -9,8 +9,6 @@ class
 
 inherit
 
-	PLATFORM
-
 	ISED_X_SLAVE
 		export
 			{NONE} all
@@ -26,6 +24,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	SHARED_EXEC_ENVIRONMENT
 
 create
 	make

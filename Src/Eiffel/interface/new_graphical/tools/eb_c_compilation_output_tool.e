@@ -427,7 +427,7 @@ feature{NONE}	-- Implementation
 				l_end_with_separator := path_end_with_dir_separator (start_path)
 				l_name := start_path.twin
 				if not l_start_with_separator and not l_end_with_separator then
-					l_name.append_character (directory_separator)
+					l_name.append_character (operating_environment.directory_separator)
 				end
 				l_name.append (keyword)
 				create l_file.make (l_name)
@@ -440,7 +440,7 @@ feature{NONE}	-- Implementation
 					create l_path.make (start_path.count + 50)
 					l_path.append (start_path)
 					if not l_end_with_separator then
-						l_path.append (directory_separator.out)
+						l_path.append (operating_environment.directory_separator.out)
 					end
 					from
 						l_dir.readentry
@@ -501,15 +501,6 @@ feature{NONE} -- Implementation
 			-- Name of the command to execute in the shell dialog.
 		do
 			Result := preferences.misc_data.external_editor_command.twin
-		end
-
-	directory_separator: CHARACTER is
-			-- Directory separator
-		local
-			l_obj: ANY
-		once
-			create l_obj
-			Result := l_obj.operating_environment.directory_separator
 		end
 
 	path_end_with_dir_separator (path: STRING): BOOLEAN is

@@ -8,6 +8,9 @@ indexing
 class
 	ARGUMENT_SWITCH
 
+inherit
+	HASHABLE
+
 create
 	make,
 	make_hidden
@@ -32,7 +35,7 @@ feature {NONE} -- Initialization
 			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
-			not_hidden: not hidden
+			not_is_hidden: not is_hidden
 		end
 
 	make_hidden (a_name: like name; a_desc: like description; a_optional: like optional; a_allow_mutliple: like allow_multiple) is
@@ -44,13 +47,13 @@ feature {NONE} -- Initialization
 			not_a_desc_is_empty: not a_desc.is_empty
 		do
 			make (a_name, a_desc, a_optional, a_allow_mutliple)
-			hidden := True
+			is_hidden := True
 		ensure
 			name_set: name = a_name
 			description_set: description = a_desc
 			optional: optional = a_optional
 			allow_multiple_set: allow_multiple = a_allow_mutliple
-			hidden: hidden
+			is_hidden: is_hidden
 		end
 
 feature -- Access
@@ -64,8 +67,11 @@ feature -- Access
 	lower_case_name: STRING
 			-- Option name in lower-case
 
-	hidden: BOOLEAN
-			-- Indicate if switch should be hidden
+	hash_code: INTEGER
+			-- Hash code value
+		do
+			Result := name.hash_code
+		end
 
 feature -- Status Report
 
@@ -75,12 +81,28 @@ feature -- Status Report
 	allow_multiple: BOOLEAN
 			-- Indicated if mutiple occurances permitted
 
+	is_hidden: BOOLEAN
+			-- Indicate if switch should be hidden
+
+	is_special: BOOLEAN
+			-- Indicates if switch is to be treated with "special" care
+
+feature {ARGUMENT_BASE_PARSER} -- Status Setting
+
+	set_is_special is
+			-- Set switch to be special
+		do
+			is_special := True
+		ensure
+			is_special: is_special
+		end
+
 feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
 	create_option: ARGUMENT_OPTION is
 			-- Creates a new argument option for switch
 		do
-			create Result.make (name)
+			create Result.make (name, Current)
 		ensure
 			result_attached: Result /= Void
 		end

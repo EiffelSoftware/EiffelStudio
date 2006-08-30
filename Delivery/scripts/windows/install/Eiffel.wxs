@@ -53,7 +53,7 @@
 				</Directory>
 			</Directory>
 			<Directory Id="PersonalFolder" Name="PerFiles">
-				<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="Projects" >
+				<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="Eiffel Projects" >
 					<Component Id="PROJECTDIR" Guid="0281A275-2D0F-478b-B415-648EE707E271" KeyPath="yes" Win64="$(var.IsWin64)" >
 						<CreateFolder />
 						<RemoveFolder Id="PROJECTDIR" On="uninstall"/>

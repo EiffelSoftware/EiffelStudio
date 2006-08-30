@@ -19,11 +19,6 @@ inherit
 			make, description, tooltext
 		end
 
-	SHARED_ERROR_HANDLER
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -120,22 +115,8 @@ feature {NONE} -- Implementation
 			-- Launch the C compilation in the background.
 		do
 			if start_c_compilation then
-				if not Eiffel_project.is_final_code_optimal then
-					output_manager.add_string ("Warning: the finalized system might not be optimal")
-					output_manager.add_new_line
-					output_manager.add_string ("in size and speed. In order to produce an optimal")
-					output_manager.add_new_line
-					output_manager.add_string ("executable, finalize from a new project and do")
-					output_manager.add_new_line
-					output_manager.add_string ("not use precompilation or assertions.")
-					output_manager.add_new_line
-				else
-					output_manager.add_string ("Eiffel System recompiled")
-					output_manager.add_new_line
-				end
 				Eiffel_project.call_finish_freezing (False)
 			end
-
 		end
 
 feature {NONE} -- Implementation

@@ -14,29 +14,34 @@ create {ARGUMENT_SWITCH}
 
 feature {NONE} -- Initialization
 
-	make (a_name: like name) is
+	make (a_name: like name; a_switch: like switch) is
 			-- Initializes option with just a name `a_name'
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
+			a_switch_attached: a_switch /= Void
 		do
 			name  := a_name
+			switch := a_switch
 		ensure
 			name_set: name = a_name
+			switch_set: switch = a_switch
 		end
 
-	make_with_value (a_name: like name; a_value: like value) is
+	make_with_value (a_name: like name; a_value: like value; a_switch: like switch) is
 			-- Initializes option with a name and an associated value.
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
 			a_value_attached: a_value /= Void
+			a_switch_attached: a_switch /= Void
 		do
-			make (a_name)
+			make (a_name, a_switch)
 			value := a_value
 		ensure
 			name_set: name = a_name
 			value_set: value = a_value
+			switch_set: switch = a_switch
 		end
 
 feature -- Access
@@ -46,6 +51,9 @@ feature -- Access
 
 	value: STRING assign set_value
 			-- Option value, if any
+
+	switch: ARGUMENT_SWITCH
+			-- Switch associated with option
 
 feature {ARGUMENT_BASE_PARSER} -- Element Change
 
@@ -68,6 +76,7 @@ feature -- Status Report
 invariant
 	name_attached: name /= Void
 	not_name_is_empty: not name.is_empty
+	switch_attached: switch /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

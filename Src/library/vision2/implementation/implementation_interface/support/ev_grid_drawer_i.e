@@ -164,7 +164,7 @@ feature -- Basic operations
 
 
 
-					if grid.is_row_height_fixed and not grid.is_tree_enabled then
+					if not grid.uses_row_offsets then
 							-- If row heights are fixed we can calculate instead of searching.
 							-- Note that we cannot calculate if there is tree functionality enabled in
 							-- the grid as nodes may be expanded or collapsed.
@@ -228,24 +228,6 @@ feature -- Basic operations
 									first_row_index := row_counter
 									first_row_index_set := True
 								end
---								if first_row_index_set then
---									Result.extend (row_counter)
---								end
-
---								if not last_row_index_set and then (invalid_y_end) < i + current_height then
---									last_row_index := row_counter
---									last_row_index_set := True
---								end
---								if current_row /= Void then
---										-- If the mode is partially dynamic and a tree is enabled, it
---										-- is possible that the current row may not exist.
---									if current_row.subrow_count > 0 and not current_row.is_expanded then
---										if not first_row_index_set then
---											skipped_rows := skipped_rows + current_row.subrow_count_recursive
---										end
---										row_counter := row_counter + current_row.subrow_count_recursive
---									end
---								end
 								if first_row_index_set and current_row.is_show_requested then
 									Result.extend (row_counter)
 								end

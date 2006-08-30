@@ -65,7 +65,6 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #include <stdio.h>
 
 #ifdef EIF_ASSERTIONS
-#define _DEBUG
 #if defined(EIF_WINDOWS) && defined (_DEBUG)
 #include <crtdbg.h>
 #endif

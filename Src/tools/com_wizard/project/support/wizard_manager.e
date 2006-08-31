@@ -153,23 +153,21 @@ feature {NONE} -- Implementation
 			l_path, l_platform: STRING
 		do
 			if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
-				environment.set_abort (No_ise_eiffel)
+				check_environment_variable
 			else
-				l_platform := env.get ("ISE_PLATFORM")
-				env.put (l_platform, "ISE_PLATFORM")
 				l_path := env.get ("PATH")
 				l_path.append (";")
 				l_path.append (Eiffel_installation_dir_name)
 				l_path.append ("\studio\spec\windows\bin")
 				env.put (l_path, "PATH")
-				if use_bcb then
+				if has_borland then
 					l_path := env.get ("PATH")
 					l_path.append (";")
 					l_path.append (Eiffel_installation_dir_name)
 					l_path.append ("\BCC55\Bin")
 					env.put (l_path, "PATH")
 				end
-				if not use_bcb then
+				if not has_borland then
 					if smart_checking then
 						create l_vs_setup.make (False)
 						if not l_vs_setup.valid_vcvars then

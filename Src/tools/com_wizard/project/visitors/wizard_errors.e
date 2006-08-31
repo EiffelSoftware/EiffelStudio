@@ -10,9 +10,6 @@ class
 
 feature -- Error Codes
 
-	No_ise_eiffel: INTEGER is 1
-			-- ISE Eiffel not installed
-
 	User_stop: INTEGER is 2
 			-- User stopped generation
 
@@ -80,14 +77,13 @@ feature -- Status Report
 		do
 			Result := a_error >= 0 and a_error <= Error_table.count
 		end
-	
+
 feature {NONE} -- Implementation
 
 	Error_table: ARRAY [STRING] is
 			-- Error table
 		once
-			create Result.make (1, 17)
-			Result.put ("Could not find EiffelStudio installation", No_ise_eiffel)
+			create Result.make (1, 16)
 			Result.put ("Generation stopped by user", User_stop)
 			Result.put ("An exception was raised", Exception_raised)
 			Result.put ("Eiffel compilation failed", Eiffel_compilation_error)
@@ -105,7 +101,7 @@ feature {NONE} -- Implementation
 			Result.put ("Could not find MIDL compiler, do not use IDL file for COM definition", No_midl_compiler)
 			Result.put ("Could not create destination folder", Initialization_error)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

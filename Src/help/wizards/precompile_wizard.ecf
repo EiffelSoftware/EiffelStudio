@@ -11,6 +11,7 @@
 		<setting name="inlining_size" value="0"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\Eiffel\library\environment\environment.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="wizard" location="$ISE_LIBRARY\library\wizard\wizard.ecf"/>
 		<cluster name="precompile_wizard" location="$EIFFEL_SRC\help\wizards\eprecompile\"/>

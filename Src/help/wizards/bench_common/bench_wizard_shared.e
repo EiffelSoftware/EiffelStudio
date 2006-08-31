@@ -12,6 +12,11 @@ class
 inherit
 	ARGUMENTS
 
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
 feature -- Shared variables
 
 	callback_content: STRING is
@@ -21,7 +26,7 @@ feature -- Shared variables
 		once
 			if callback_filename /= Void then
 				create file.make_open_read (callback_filename)
-		
+
 					-- Read the file.
 				create Result.make (0)
 				from
@@ -99,13 +104,7 @@ feature -- Shared variables
 			rescued := True
 			retry
 		end
-		
-	Eiffel_projects_directory: STRING is
-			-- Directory where projects are created
-		once
-			Result := (create {EXECUTION_ENVIRONMENT}).get ("ISE_PROJECTS")
-		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

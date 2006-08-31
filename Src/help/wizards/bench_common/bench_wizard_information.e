@@ -99,12 +99,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Home: STRING is
-			-- HOME name.
-		once
-			Result := (create {EXECUTION_ENVIRONMENT}).get ("HOME")
-		end
-
 	project_path: STRING is
 			-- project path
 		do

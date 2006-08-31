@@ -9,7 +9,7 @@ class
 	ARGUMENT_FLAGS_VALIDATOR
 
 inherit
-	ARGUMENT_SWITCH_VALUE_VALIDATOR
+	ARGUMENT_VALUE_VALIDATOR
 		redefine
 			validate_value
 		end

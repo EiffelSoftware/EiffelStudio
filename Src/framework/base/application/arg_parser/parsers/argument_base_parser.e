@@ -1055,6 +1055,7 @@ feature {NONE} -- Output
 			l_def_prefix: CHARACTER
 			l_value_switches: ARRAYED_LIST [ARGUMENT_VALUE_SWITCH]
 			l_value_switch: ARGUMENT_VALUE_SWITCH
+			l_added_args: ARRAYED_LIST [STRING]
 			l_count: INTEGER
 			i: INTEGER
 		do
@@ -1143,6 +1144,9 @@ feature {NONE} -- Output
 			if not l_value_switches.is_empty then
 				io.put_string ("%NARGUMENTS:%N")
 
+				create l_added_args.make (l_value_switches.count)
+				l_added_args.compare_objects
+
 				l_max_len := 0
 				from l_value_switches.start until l_value_switches.after loop
 					l_name := l_value_switches.item.arg_name
@@ -1157,23 +1161,27 @@ feature {NONE} -- Output
 					l_value_switch := l_value_switches.item
 
 					l_arg_name := l_value_switch.arg_name
-					if l_max_len > l_arg_name.count then
-						create l_name.make_filled (' ', l_max_len - l_arg_name.count)
-					else
-						create l_name.make_empty
+					if not l_added_args.has (l_arg_name) then
+						if l_max_len > l_arg_name.count then
+							create l_name.make_filled (' ', l_max_len - l_arg_name.count)
+						else
+							create l_name.make_empty
+						end
+						l_name.insert_character ('<', 1)
+						l_name.insert_string (l_arg_name, 2)
+						l_name.insert_character ('>', l_arg_name.count + 2)
+
+						l_desc := l_value_switch.arg_description.twin
+						l_desc.replace_substring_all (l_nl, l_tabbed_nl)
+
+						io.put_string (tab_string)
+						io.put_string (l_name)
+						io.put_string (once ": ")
+						io.put_string (l_desc)
+						io.new_line
+
+						l_added_args.extend (l_arg_name)
 					end
-					l_name.insert_character ('<', 1)
-					l_name.insert_string (l_arg_name, 2)
-					l_name.insert_character ('>', l_arg_name.count + 2)
-
-					l_desc := l_value_switch.arg_description.twin
-					l_desc.replace_substring_all (l_nl, l_tabbed_nl)
-
-					io.put_string (tab_string)
-					io.put_string (l_name)
-					io.put_string (once ": ")
-					io.put_string (l_desc)
-					io.new_line
 					l_value_switches.forth
 				end
 			end

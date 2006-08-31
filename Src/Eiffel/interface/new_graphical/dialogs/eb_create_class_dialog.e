@@ -198,7 +198,9 @@ feature {NONE} -- Initialization
 			vb.set_border_width (Layout_constants.Small_border_size)
 			vb.extend (identification_frame)
 			vb.extend (properties_frame)
+			vb.disable_item_expand (properties_frame)
 			vb.extend (parents_frame)
+			vb.disable_item_expand (parents_frame)
 			extend_no_expand (vb, buttons_box)
 
 				-- Add the main container to the dialog.

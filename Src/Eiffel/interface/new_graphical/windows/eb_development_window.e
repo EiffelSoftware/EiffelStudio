@@ -3680,9 +3680,12 @@ feature {NONE} -- Implementation
 				else
 					if feat_as.ast /= Void then
 						begin_index := feat_as.ast.start_position
-						tmp_text := displayed_class.text.substring (1, begin_index)
-						offset := tmp_text.occurrences('%R')
-						editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
+						tmp_text := displayed_class.text
+						if tmp_text /= Void then
+							tmp_text := tmp_text.substring (1, begin_index)
+							offset := tmp_text.occurrences('%R')
+							editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
+						end
 					end
 				end
 			else

@@ -23,7 +23,8 @@ inherit
 		export
 			{NONE} values
 		undefine
-			extended_usage
+			extended_usage,
+			validate_loose_arguments
 		redefine
 			command_option_group_configuration,
 			validate_arguments

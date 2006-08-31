@@ -54,7 +54,7 @@ feature -- Status update
 			end
 
 				-- we are finished with the checks, the rest is some default setup
-			is_valid_environment := True
+			valid_cell.put (True)
 
 				-- Check that `eiffel_home' exists.
 			create l_file.make (eiffel_home)
@@ -86,17 +86,24 @@ feature -- Status update
 				l_path.extend (eiffel_platform)
 			end
 			environment.put (l_path, ise_precomp_env)
+			valid_precompile_cell.put (True)
 		ensure
 			is_valid_precompile_environment: is_valid_precompile_environment
 		end
 
 feature -- Status report
 
-	is_valid_environment: BOOLEAN
+	is_valid_environment: BOOLEAN is
 			-- Have the needed environment variables been set?
+		do
+			Result := valid_cell.item
+		end
 
-	is_valid_precompile_environment: BOOLEAN
+	is_valid_precompile_environment: BOOLEAN is
 			-- Has the precompile environment been set correctly?
+		do
+			Result := valid_precompile_cell.item
+		end
 
 	frozen is_workbench: BOOLEAN is
 			-- Are we running the workbench version of the compiler?
@@ -193,7 +200,7 @@ feature -- Access: Environment variables
 	Eiffel_projects_directory: STRING is
 			-- ISE_PROJECTS name.
 		once
-			Result := environment.get (ise_projects_env)
+			Result := environment.get_from_application (ise_projects_env, "ec")
 		end
 
 	Eiffel_home: DIRECTORY_NAME is
@@ -730,6 +737,18 @@ feature -- Constants
 feature {NONE} -- Environment access
 
 	environment: ENVIRONMENT_ACCESS
+		once
+			create Result
+		end
+
+feature {NONE} -- Implementation
+
+	valid_cell: CELL [BOOLEAN] is
+		once
+			create Result
+		end
+
+	valid_precompile_cell: CELL [BOOLEAN] is
 		once
 			create Result
 		end

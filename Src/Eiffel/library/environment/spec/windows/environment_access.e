@@ -13,10 +13,19 @@ inherit
 
 feature -- Access
 
+	get_from_current_application (a_var: STRING): STRING is
+			-- Get `a_var' from the current application.
+		require
+			a_var_ok: a_var /= Void and then not a_var.has ('%U')
+		do
+			Result := get_from_application (a_var, command_line.argument (0))
+		end
+
 	get_from_application (a_var, a_app: STRING): STRING is
 			-- Get `a_var' as if we were `a_app'.
 		require
 			a_var_ok: a_var /= Void and then not a_var.has ('%U')
+			a_app_ok: a_app /= Void and then not a_app.has ('%U')
 		local
 			l_reg: WEL_REGISTRY
 			l_key: WEL_REGISTRY_KEY_VALUE
@@ -25,9 +34,9 @@ feature -- Access
 			Result := get (a_var)
 			if Result = Void then
 				create l_reg
-				l_key := l_reg.open_key_value ("hkey_current_user\Software\ISE\Eiffel57\" + a_app, a_var.as_lower)
+				l_key := l_reg.open_key_value ("hkey_current_user\Software\ISE\Eiffel"+{EIFFEL_ENV}.major_version.out+{EIFFEL_ENV}.minor_version.out+"\" + a_app, a_var.as_lower)
 				if l_key = Void then
-					l_key := l_reg.open_key_value ("hkey_local_machine\Software\ISE\Eiffel57\" + a_app, a_var.as_lower)
+					l_key := l_reg.open_key_value ("hkey_local_machine\Software\ISE\Eiffel"+{EIFFEL_ENV}.major_version.out+{EIFFEL_ENV}.minor_version.out+"\" + a_app, a_var.as_lower)
 				end
 				if l_key /= Void then
 					l_s32 := l_key.string_value

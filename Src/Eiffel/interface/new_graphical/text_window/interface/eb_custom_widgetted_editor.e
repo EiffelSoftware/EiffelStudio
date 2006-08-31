@@ -274,8 +274,10 @@ feature {NONE} -- Quick search bar.
 	on_search_bar_lose_focus is
 			-- On search bar losing focus.
 		do
-			if not has_focus and not search_bar.has_focus_on_widgets then
-				hide_search_bar
+			if is_initialized then
+				if not has_focus and not search_bar.has_focus_on_widgets then
+					hide_search_bar
+				end
 			end
 		end
 

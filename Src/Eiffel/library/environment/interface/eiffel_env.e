@@ -136,7 +136,8 @@ feature -- Preferences
 		require
 			is_valid_environment: is_valid_environment
 		do
-			create Result.make_from_string (Studio_path)
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<"eifinit", short_studio_name>>)
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
 		ensure

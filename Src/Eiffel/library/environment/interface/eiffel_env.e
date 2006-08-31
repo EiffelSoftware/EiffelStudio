@@ -32,18 +32,6 @@ feature -- Status update
 				end
 			end
 
-			temp := environment.get_from_application (ise_platform_env, "ec")
-			if (temp = Void) or else temp.is_empty then
-				io.error.put_string (p.Workbench_name)
-				io.error.put_string (": the environment variable $"+ise_platform_env+" is not set%N")
-				(create {EXCEPTIONS}).die (-1)
-			else
-				create l_file.make (bin_path)
-				if not l_file.exists or not l_file.is_directory then
-					io.error.put_string ("WARNING: the path $"+ise_eiffel_env+"/studio/spec/$"+ise_platform_env+"/bin points to a non-existing directory.%N")
-				end
-			end
-
 			if Platform.is_windows then
 				temp := environment.get_from_application (ise_c_compiler_env, "ec")
 				if (temp = Void) or else temp.is_empty then
@@ -53,8 +41,21 @@ feature -- Status update
 				end
 			end
 
+			temp := environment.get_from_application (ise_platform_env, "ec")
+			if (temp = Void) or else temp.is_empty then
+				io.error.put_string (p.Workbench_name)
+				io.error.put_string (": the environment variable $"+ise_platform_env+" is not set%N")
+				(create {EXCEPTIONS}).die (-1)
+			else
+					-- we have now a valid environment, although we may have some warnings
+				valid_cell.put (True)
+				create l_file.make (bin_path)
+				if not l_file.exists or not l_file.is_directory then
+					io.error.put_string ("WARNING: the path $"+ise_eiffel_env+"/studio/spec/$"+ise_platform_env+"/bin points to a non-existing directory.%N")
+				end
+			end
+
 				-- we are finished with the checks, the rest is some default setup
-			valid_cell.put (True)
 
 				-- Check that `eiffel_home' exists.
 			create l_file.make (eiffel_home)
@@ -408,6 +409,8 @@ feature -- Access: file name
 		end
 
 	Bin_path: DIRECTORY_NAME is
+		require
+			is_valid_environment: is_valid_environment
 		local
 			l_p: STRING
 		do
@@ -419,7 +422,7 @@ feature -- Access: file name
 				Result.extend_from_array (<<"spec", Eiffel_platform, "bin">>)
 			end
 		ensure
-			result_not_void_or_empty: is_valid_environment implies Result /= Void and not Result.is_empty
+			result_not_void_or_empty: Result /= Void and not Result.is_empty
 		end
 
 	filter_path: DIRECTORY_NAME is

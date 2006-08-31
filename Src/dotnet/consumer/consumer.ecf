@@ -31,12 +31,13 @@
 			</condition>
 		</library>
 		<library name="ecchecker" location="$EIFFEL_SRC\tools\compliance_checker\ace\ecchecker.ecf" readonly="false"/>
+		<library name="environment" location="$EIFFEL_SRC\Eiffel\library\environment\environment.ecf"/>
 		<library name="logger" location="$EIFFEL_SRC\dotnet\helpers\logger\logger.ecf"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
+		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system.drawing" location="$ISE_DOTNET_FRAMEWORK\System.Drawing.dll" prefix="DRAWING_"/>
 		<assembly name="system.windows.forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-		<assembly name="system" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<cluster name="consumer" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
 			<condition>
 				<dotnet value="true"/>
@@ -86,8 +87,8 @@
 		<setting name="msil_clr_version" value="v1.0.3705"/>
 		<override name="cache_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\cache\dotnet1x\"/>
 		<override name="emitter_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\emitter\dotnet1x\"/>
-		<override name="notifier_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet1x\"/>
 		<override name="helpers_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\helpers\dotnet1x\"/>
+		<override name="notifier_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet1x\"/>
 	</target>
 	<target name="debug_20" extends="consumer_20">
 		<setting name="line_generation" value="true"/>

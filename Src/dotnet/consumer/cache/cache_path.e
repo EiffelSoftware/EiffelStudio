@@ -15,25 +15,30 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	CACHE_SETTINGS
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_CLR_VERSION
 		export
 			{NONE} all
 			{ANY} clr_version
 		end
-	
+
 	SHARED_LOGGER
 		export
 			{NONE} all
 		end
 
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
 feature {CACHE_READER} -- Access
-		
+
 	relative_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Path to folder containing `a_assembly' types relative to `Eac_path'
 		require
@@ -47,7 +52,7 @@ feature {CACHE_READER} -- Access
 			non_void_path: Result /= Void
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
-		
+
 	absolute_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Absolute path to folder containing `a_assembly' types.
 		require
@@ -138,27 +143,11 @@ feature {CACHE_READER} -- Access
 			if not retried then
 				l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 				if internal_eiffel_cache_path.item = Void then
-					Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
+					Result := eiffel_installation_dir_name
 					if Result = Void then
-						l_registry_key := {REGISTRY}.local_machine
-						l_registry_key := l_registry_key.open_sub_key ("SOFTWARE")
-						l_registry_key := l_registry_key.open_sub_key ("ISE")
-						l_registry_key := l_registry_key.open_sub_key ("Eiffel56")
-						
-						l_obj := Current
-						create l_file_info.make (l_obj.get_type.assembly.location)
-						l_str := l_file_info.name.substring (0, l_file_info.name.length - 4)
-						l_registry_key := l_registry_key.open_sub_key (l_str)
-						if l_registry_key /= Void then
-							l_obj := l_registry_key.get_value (Ise_key)
-							l_str ?= l_obj
-						else
-							l_str := (create {EXECUTION_ENVIRONMENT}).current_working_directory
-						end
-						check
-							l_str_not_void: l_str /= Void
-						end
-						Result := l_str
+						Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+					else
+						Result := Result.twin
 					end
 					check
 						Ise_eiffel_defined: Result /= Void
@@ -167,7 +156,7 @@ feature {CACHE_READER} -- Access
 						Result.append_character (l_dir_sep)
 					end
 					Result.append (eac_path)
-					
+
 						-- set internal EAC path to registry key
 					internal_eiffel_cache_path.put (Result)
 				else
@@ -189,7 +178,7 @@ feature {CACHE_READER} -- Access
 			end
 			retried := True
 			retry
-		end		
+		end
 
 	absolute_info_path: STRING is
 			-- Absolute path to EAC assemblies file info
@@ -204,15 +193,12 @@ feature {CACHE_READER} -- Access
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
 		end
-		
-	ise_key: STRING is "ISE_EIFFEL"
-			-- Environment variable $ISE_EIFFEL
 
 	eac_path: STRING is "dotnet\assemblies"
 			-- EAC path relative to $ISE_EIFFEL
 
 feature {EMITTER} -- Access
-		
+
 	relative_executing_env_path: STRING is
 			-- retrieve relative path for execting environment
 		local
@@ -220,13 +206,13 @@ feature {EMITTER} -- Access
 			l_dir_sep: CHARACTER
 		once
 			l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
-			
+
 			if conservative_mode then
 				l_name := short_cache_name
 			else
 				l_name := cache_name
 			end
-			
+
 			create Result.make (l_name.count + clr_version.count + 3)
 			Result.append (l_name)
 			Result.append_character (l_dir_sep)
@@ -237,8 +223,8 @@ feature {EMITTER} -- Access
 			not_result_is_empty: not Result.is_empty
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
-		
-		
+
+
 	internal_eiffel_cache_path: CELL [STRING] is
 			-- internal eiffel cache path
 		once
@@ -246,7 +232,7 @@ feature {EMITTER} -- Access
 		end
 
 feature {EMITTER} -- Element Change
-	
+
 	set_internal_eiffel_cache_path (a_path: STRING) is
 			-- set `internal_eiffel_cache_path' to 'a_path'
 		require
@@ -255,7 +241,7 @@ feature {EMITTER} -- Element Change
 		do
 			internal_eiffel_cache_path.put (a_path)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

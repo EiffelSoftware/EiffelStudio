@@ -232,12 +232,10 @@ feature -- Access: file name
 
 	Eiffel_installation_dir_name: DIRECTORY_NAME is
 			-- Installation of ISE Eiffel name.
-		require
-			is_valid_environment: is_valid_environment
 		once
 			create Result.make_from_string (environment.get_from_application (ise_eiffel_env, "ec"))
 		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
+			result_not_void_or_empty: is_valid_environment implies Result /= Void and not Result.is_empty
 		end
 
 	Eiffel_library: DIRECTORY_NAME is
@@ -788,4 +786,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_ENV
+end

@@ -8,47 +8,11 @@ indexing
 class
 	WIZARD_EXECUTION_ENVIRONMENT
 
-feature -- Access
-
-	use_bcb: BOOLEAN is
-			-- SHould wizard use Borland C compiler?
-		once
-			Result := Ise_c_compiler_value.is_equal ("bcb")
+inherit
+	EIFFEL_ENV
+		rename
+			environment as environment_access
 		end
-
-	Ise_c_compiler_value: STRING is
-			-- ISE_C_COMPILER value
-		once
-			Result := Env.get (Ise_c_compiler)
-			if Result = Void then
-				Result := "msc"
-				Env.put ("msc", Ise_c_compiler)
-			end
-		ensure
-			non_void_compiler: Result /= Void
-			valid_compiler: Result.is_equal ("msc") or Result.is_equal ("bcb")
-		end
-
-	Eiffel_installation_dir_name: STRING is
-			-- Path to Installation directory of ISE Eiffel
-		once
-			Result := Env.get ("ISE_EIFFEL")
-		end
-
-	eiffel_compiler: STRING is
-			-- Path to Eiffel compiler executable.
-		require
-			valid_installation: Eiffel_installation_dir_name /= Void
-		once
-			create Result.make (256)
-			Result.append (Eiffel_installation_dir_name)
-			Result.append ("\studio\spec\")
-			Result.append (Env.get ("ISE_PLATFORM"))
-			Result.append ("\bin\ec.exe")
-		end
-
-	Ise_c_compiler: STRING is "ISE_C_COMPILER"
-			-- ISE_C_COMPLIER environmnent variable.
 
 feature {NONE} -- Implementation
 

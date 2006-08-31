@@ -187,7 +187,7 @@ feature -- Basic operations
 			Result.append ("w" + c_to_obj (c_file_name) +
 							": " + c_file_name + "%N%
 							%	$(CC) $(CFLAGS) -DWORKBENCH	")
-			if not use_bcb then
+			if not has_borland then
 				Result.append (" -nologo ")
 			end
 			Result.append ("$(OUTPUT_CMD)$@ $?%N%N")

@@ -55,9 +55,8 @@ feature -- Basic Operations
 			l_string: STRING
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
-			Env.put (Eiffel_installation_dir_name, "ISE_EIFFEL")
 			create l_directory.make_open_read (a_folder_name)
-			if use_bcb then
+			if has_borland then
 				if l_directory.has_entry ("makefile.bcb") then
 					l_string := "make /f makefile.bcb"
 				end
@@ -79,7 +78,7 @@ feature -- Basic Operations
 			end
 			l_directory.close
 		end
-	
+
 	compile_file (a_file_name: STRING) is
 			-- Compile C file `a_file_name'.
 		require
@@ -142,7 +141,7 @@ feature {NONE} -- Implementation
 				retry
 			end
 		end
-		
+
 	C_compiler_command_line (a_file_name: STRING): STRING is
 			-- Cl command line used to compile Proxy Stub
 		do

@@ -3005,7 +3005,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			counts_equal: column_offsets.count = column_count + 1
 		end
 
-recompute_row_offsets (an_index: INTEGER) is
+	recompute_row_offsets (an_index: INTEGER) is
 			-- Recompute contents of `row_offsets' from row index
 			-- `an_index' to `row_count'.
 		require
@@ -3165,158 +3165,6 @@ recompute_row_offsets (an_index: INTEGER) is
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count >= rows.count + 1
 			row_index_not_changed: old rows.index = rows.index
 		end
-
-
---	recompute_row_offsets (an_index: INTEGER) is
---			-- Recompute contents of `row_offsets' from row index
---			-- `an_index' to `row_count'.
---		require
---			an_index_valid_when_rows_contained: row_count > 0 implies an_index >= 1 and an_index <= row_count
---			an_index_valid_when_no_rows_contained: row_count = 0 implies an_index = 1
---		local
---			current_row_offset, j, k: INTEGER
---			current_item: EV_GRID_ROW_I
---			index: INTEGER
---			visible_count: INTEGER
---			row_index: INTEGER
---			l_row_count: INTEGER
---			l_parent_row_i: EV_GRID_ROW_I
---			just_looped: BOOLEAN
---			original_row_index: INTEGER
---			l_row_indexes_to_visible_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
---			l_visible_indexes_to_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
---			l_row_offsets: EV_GRID_ARRAYED_LIST [INTEGER]
---			l_rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
---			l_is_row_height_fixed: BOOLEAN
---			l_row_height: INTEGER
---		do
---			original_row_index := rows.index
---			if not is_tree_enabled then
---				index := an_index
---			else
---				if row_count > 0 then
---						-- We only find the parent row when `Current' is
---						-- not empty.
---					from
---						l_parent_row_i := row_internal (an_index)
---					until
---						l_parent_row_i.parent_row_i = Void
---					loop
---						l_parent_row_i := l_parent_row_i.parent_row_i
---					end
---					index := l_parent_row_i.index
---				else
---						-- `Current' is empty, so simply keep the same index.
---					index := an_index
---				end
---			end
---			if not is_row_height_fixed or is_tree_enabled then
---					-- Only perform recomputation if the rows do not all have the same height
---					-- or there is tree functionality enabled. Otherwise, we do not need to
---					-- use `row_offsets' and we can perform a shortcut.
---				if row_offsets = Void then
---					create row_offsets
---					create row_indexes_to_visible_indexes
---					create visible_indexes_to_row_indexes
---				else
---					current_row_offset := row_offsets @ (index)
---					rows.go_i_th (index)
---					if index > 1 then
---						if index < row_count then
---							visible_count := row_indexes_to_visible_indexes.i_th (index)
---						else
---							check
---								index_is_row_count: index = row_count
---							end
---								-- In this situation, we are adding a new row that has not already
---								-- been computed. Now we set the visible count to the previous (and last)
---								-- item and add one. Without this, we are unable to determine the
---								-- visible row count.
---							visible_count := row_indexes_to_visible_indexes.i_th (index - 1) + 1
---						end
---					else
---							-- In this case, the feature has already been called when there are
---							-- no rows in the grid. So, we reset these attributes to the start.
---						visible_count := 0
---					end
---				end
---					-- Ensure we enlarge our data structures to accomodate the totla number of rows.
---					-- We do not reduce the size of these lists to avoid the performance overhead.
---				if row_offsets.count < rows.count + 1 then
---					row_offsets.resize (rows.count + 1)
---					row_indexes_to_visible_indexes.resize (rows.count + 1)
---					visible_indexes_to_row_indexes.resize (rows.count + 1)
---				end
-
---				from
---					row_index := index
-
---						-- We assign these attributes of the class to locals as this
---						-- provides a speed improvement. It appears that this code is
---						-- 20% faster when this is performed. It was tested with 1,000,000
---						-- rows, expanding and collapsing the first. Julian
---					l_row_count := rows.count
---					l_row_indexes_to_visible_indexes := row_indexes_to_visible_indexes
---					l_visible_indexes_to_row_indexes := visible_indexes_to_row_indexes
---					l_rows := rows
---					l_row_offsets := row_offsets
---					l_is_row_height_fixed := is_row_height_fixed
---					l_row_height := row_height
---					just_looped := True
-
---				until
---					row_index > l_row_count
---				loop
---					current_item := l_rows.i_th (row_index)
---					if current_item /= Void and then current_item.subrow_count > 0 and not current_item.is_expanded then
---						from
---							j := row_index
---							k := j + current_item.subrow_count_recursive + 1
---						until
---							j = k
---						loop
---							l_row_offsets.put_i_th (current_row_offset, j)
---							j := j + 1
---						end
---						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
---						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
---						row_index := k
-
---					else
---						l_row_offsets.put_i_th (current_row_offset, row_index)
---						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
---						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
---						row_index := row_index + 1
---					end
---					visible_count := visible_count + 1
-
---					if current_item /= Void and not l_is_row_height_fixed then
---						current_row_offset := current_row_offset + current_item.height
---					else
---							-- Use the default height here.
---						current_row_offset := current_row_offset + l_row_height
---					end
---				end
---					-- A final position is always stored in `row_offsets' which may be
---					-- queried to determine the total height of all rows.
---				l_row_offsets.put_i_th (current_row_offset, row_index)
---			else
---				row_offsets := Void
---			end
-
-
---				-- Now move the virtual position so that it is restricted to the maximum
---				-- row position. This is used so that when removing rows,  `virtual_x_position' remains valid.
---			restrict_virtual_y_position_to_maximum
-
---			if virtual_size_changed_actions_internal /= Void then
---				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
---			end
---			rows.go_i_th (original_row_index)
---		ensure
---			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count >= rows.count + 1
---			row_index_not_changed: old rows.index = rows.index
---		end
 
 	restrict_virtual_y_position_to_maximum is
 			-- Ensure `virtual_y_position' is within the maximum permitted.
@@ -3537,8 +3385,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if not is_locked then
 				col_x1 := a_column.virtual_x_position
 				drawable.redraw_rectangle (col_x1, viewport_y_offset, a_column.width, viewable_height)
+				redraw_locked
 			end
-			redraw_locked
 		end
 
 	redraw_from_column_to_end (a_column: EV_GRID_COLUMN_I) is
@@ -3554,18 +3402,18 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if not is_locked then
 				l_virtual_x_position := a_column.virtual_x_position
 				drawable.redraw_rectangle (l_virtual_x_position - (internal_client_x - viewport_x_offset), viewport_y_offset, viewable_width + internal_client_x - l_virtual_x_position, viewable_height)
-			end
-			from
-				l_locked_indexes := locked_indexes
-				l_locked_indexes.start
-			until
-				l_locked_indexes.off
-			loop
-				l_locked_row ?= l_locked_indexes.item
-				if l_locked_row /= Void then
-					l_locked_row.redraw_client_area
+				from
+					l_locked_indexes := locked_indexes
+					l_locked_indexes.start
+				until
+					l_locked_indexes.off
+				loop
+					l_locked_row ?= l_locked_indexes.item
+					if l_locked_row /= Void then
+						l_locked_row.redraw_client_area
+					end
+					l_locked_indexes.forth
 				end
-				l_locked_indexes.forth
 			end
 		end
 
@@ -3583,8 +3431,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				else
 					drawable.redraw_rectangle (viewport_x_offset, row_y1, viewable_width, a_row.height)
 				end
+				redraw_locked
 			end
-			redraw_locked
+
 		end
 
 	redraw_locked is

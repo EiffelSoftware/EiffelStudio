@@ -334,6 +334,10 @@ feature -- Status Report
 			-- Indicates if switch values are separated from their switch and not
 			-- qualified using a ':' (by default)
 
+	show_switch_arguments_inline: BOOLEAN assign set_show_switch_arguments_inline
+			-- Indiciate if argument switch value descriptions should be shown inline
+			-- with the argument description
+
 	suppress_logo: BOOLEAN
 			-- Should logo be suppressed?
 
@@ -376,6 +380,14 @@ feature -- Status Setting
 			use_separated_switch_values := a_use
 		ensure
 			use_separated_switch_values_set: use_separated_switch_values = a_use
+		end
+
+	set_show_switch_arguments_inline (a_show: like show_switch_arguments_inline) is
+			-- Sets `show_switch_arguments_inline' with `a_show'.
+		do
+			show_switch_arguments_inline := a_show
+		ensure
+			show_switch_arguments_inline_set: show_switch_arguments_inline = a_show
 		end
 
 feature -- Basic Operations
@@ -603,14 +615,12 @@ feature {NONE} -- Validation
 			l_options: like options_of_name
 			l_switch_groups: like switch_groups
 			l_switch_appurtenances: like switch_appurtenances
-			l_values: like values
 			l_cursor: CURSOR
 			l_ocursor: CURSOR
 			l_switch: ARGUMENT_SWITCH
 			l_val_switch: ARGUMENT_VALUE_SWITCH
 			l_value: STRING
 			l_validator: ARGUMENT_VALUE_VALIDATOR
-			l_needs_loose_arg: BOOLEAN
 			l_succ: BOOLEAN
 		do
 			l_switch_groups := switch_groups
@@ -708,19 +718,9 @@ feature {NONE} -- Validation
 			parsed: parsed
 			not_a_groups_is_empty: a_groups /= Void implies not a_groups.is_empty
 		local
-			l_switches: like available_switches
-			l_options: like options_of_name
-			l_switch_groups: like switch_groups
-			l_switch_appurtenances: like switch_appurtenances
 			l_values: like values
 			l_cursor: CURSOR
-			l_ocursor: CURSOR
-			l_switch: ARGUMENT_SWITCH
-			l_val_switch: ARGUMENT_VALUE_SWITCH
-			l_value: STRING
 			l_validator: ARGUMENT_VALUE_VALIDATOR
-			l_needs_loose_arg: BOOLEAN
-			l_succ: BOOLEAN
 		do
 			l_values := values
 			if not l_values.is_empty then
@@ -744,6 +744,9 @@ feature {NONE} -- Validation
 					end
 				end
 			end
+		ensure
+			a_groups_unmoved: a_groups.cursor.is_equal (old a_groups.cursor)
+			values_unmoved: values.cursor.is_equal (old values.cursor)
 		end
 
 	validate_switch_appurtenances is
@@ -1050,12 +1053,14 @@ feature {NONE} -- Output
 			l_name: STRING
 			l_arg_name: STRING
 			l_desc: STRING
+			l_arg_desc: STRING
 			l_prefixes: like switch_prefixes
 			l_prefix: STRING
 			l_def_prefix: CHARACTER
 			l_value_switches: ARRAYED_LIST [ARGUMENT_VALUE_SWITCH]
 			l_value_switch: ARGUMENT_VALUE_SWITCH
 			l_added_args: ARRAYED_LIST [STRING]
+			l_inline_args: like show_switch_arguments_inline
 			l_count: INTEGER
 			i: INTEGER
 		do
@@ -1112,6 +1117,8 @@ feature {NONE} -- Output
 
 			l_def_prefix := switch_prefixes[1]
 
+			l_inline_args := show_switch_arguments_inline
+
 				-- Output available options			
 			from l_options.start until l_options.after loop
 				l_opt := l_options.item
@@ -1128,7 +1135,23 @@ feature {NONE} -- Output
 				end
 				l_name.insert_string (l_arg_name, 1)
 
-				l_desc := l_opt.description.twin
+				create l_desc.make (256)
+				l_desc.append (l_opt.description)
+				if l_opt.optional then
+					l_desc.append (once " (Optional)")
+				end
+				if l_inline_args and then l_value_switch /= Void then
+					l_arg_name := l_value_switch.arg_name
+					l_desc.append (once "%N<")
+					l_desc.append (l_arg_name)
+					l_desc.append (once ">: ")
+					if l_value_switch.is_value_optional then
+						l_desc.append (once "(Optional) ")
+					end
+					l_arg_desc := l_value_switch.arg_description.twin
+					l_arg_desc.replace_substring_all ("%N", "%N" + create {STRING}.make_filled (' ', l_arg_name.count + 4))
+					l_desc.append (l_arg_desc)
+				end
 				l_desc.replace_substring_all (l_nl, l_tabbed_nl)
 
 				io.put_string (tab_string)
@@ -1141,7 +1164,7 @@ feature {NONE} -- Output
 			end
 			l_options.go_to (l_cursor)
 
-			if not l_value_switches.is_empty then
+			if not l_inline_args and then not l_value_switches.is_empty then
 				io.put_string ("%NARGUMENTS:%N")
 
 				create l_added_args.make (l_value_switches.count)

@@ -4758,7 +4758,7 @@ feature {NONE} -- Events
 			l_cs: CLASSI_STONE
 		do
 			l_cs ?= stone
-			if l_cs /= Void and then l_cs.class_i = a_class then
+			if l_cs /= Void and then l_cs.class_i.config_class = a_class then
 				set_file_name_from_stone (l_cs)
 			end
 		end

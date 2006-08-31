@@ -15,19 +15,26 @@ inherit
 		redefine
 			command_option_group_configuration,
 			extended_usage,
-			validate_arguments
+			validate_loose_arguments
 		end
 
 feature {NONE} -- Initialization
 
-	make (a_cs: like case_sensitive; a_usage_on_error: like display_usage_on_error) is
+	make (a_cs: like case_sensitive; a_usage_on_error: like display_usage_on_error; a_none: like accepts_no_loose_arguments) is
 			-- Initializes argument parser
 		do
 			make_lite (a_cs, True, True, a_usage_on_error)
+			accepts_no_loose_arguments := a_none
 		ensure
 			case_sensitive_set: case_sensitive = a_cs
 			display_usage_on_error_set: display_usage_on_error = a_usage_on_error
+			accepts_no_loose_arguments_set: accepts_no_loose_arguments = a_none
 		end
+
+feature -- Status Report
+
+	accepts_no_loose_arguments: BOOLEAN
+			-- Indicate if zero or more loose arguments are accepted
 
 feature {NONE} -- Usage
 
@@ -65,24 +72,30 @@ feature {NONE} -- Usage
 			not_result_is_empty: not Result.is_empty
 		end
 
-	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING is
+	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_show_loose: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING is
 			-- Command line option configuration string (to display in usage)
 		local
 			l_suffix: STRING
 			l_arg: STRING
 			l_args: STRING
 		do
-			if not a_add_appurtenances then
-				Result := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_add_appurtenances, a_src_group)
+			if not a_show_loose or not a_add_appurtenances then
+				Result := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_loose, a_add_appurtenances, a_src_group)
 			else
 				l_arg := loose_argument_name_arg
 				l_args := l_arg + "[" + l_arg + ", ...]"
-				l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_add_appurtenances, a_src_group)
+				l_suffix := Precursor {ARGUMENT_BASE_PARSER} (a_group, a_show_loose, a_add_appurtenances, a_src_group)
 				if l_suffix /= Void then
 					create Result.make (l_arg.count + l_suffix.count + 1)
-					Result.append (l_args)
-					Result.append_character (' ')
 					Result.append (l_suffix)
+					Result.append_character (' ')
+					if accepts_no_loose_arguments then
+						Result.append_character ('[')
+					end
+					Result.append (l_args)
+					if accepts_no_loose_arguments then
+						Result.append_character (']')
+					end
 				else
 					Result := l_args
 				end
@@ -106,13 +119,25 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Validation
 
-	validate_arguments is
-			-- Validates arguments to ensure they are configured correctly
+	validate_loose_arguments (a_groups: LIST [ARGUMENT_GROUP]) is
+			-- Validates loose arguments for applicable groups `a_groups'
+		local
+			l_needs_loose_arg: BOOLEAN
 		do
-			if not has_loose_argument or else values.first.is_empty then
-				add_template_error (no_loose_argument_error, [loose_argument_type.as_lower])
+			Precursor {ARGUMENT_BASE_PARSER} (a_groups)
+
+			l_needs_loose_arg := a_groups = Void or else a_groups.for_all (agent (a_item: ARGUMENT_GROUP): BOOLEAN
+				do
+					Result := a_item.accepts_loose_arguments
+				end)
+
+			if l_needs_loose_arg then
+				if not has_loose_argument or else values.first.is_empty then
+					if not accepts_no_loose_arguments then
+						add_template_error (no_loose_argument_error, [loose_argument_type.as_lower])
+					end
+				end
 			end
-			Precursor {ARGUMENT_BASE_PARSER}
 		end
 
 feature {NONE} -- Error Constants

@@ -527,7 +527,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP} -- Implementation
+feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 
 	has_modal_window: BOOLEAN
 			-- Does `Current' have a transient window that is modal to `Current'.

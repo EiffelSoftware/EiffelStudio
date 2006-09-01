@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	consume (ass: ASSEMBLY; a_loader: ASSEMBLY_LOADER) is
+	consume (ass: ASSEMBLY; a_loader: ASSEMBLY_LOADER; a_info_only: BOOLEAN) is
 			-- Consumes assembly `ass' into EAC.
 		require
 			non_void_assembly: ass /= Void
@@ -76,7 +76,11 @@ feature -- Basic Operations
 			assembly_mapping.put (last_index, ass.full_name)
 			assembly_mapping.compare_objects
 			build_referenced_assemblies (ass, a_loader)
-			prepare_consumed_types (ass)
+			if a_info_only then
+				create type_consumers.make (0)
+			else
+				prepare_consumed_types (ass)
+			end
 			serialize_consumed_types
 		end
 

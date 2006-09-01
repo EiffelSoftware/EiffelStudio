@@ -579,11 +579,11 @@ feature -- Update
 		do
 			is_finalizing := True
 
+			melt
 				-- Add warning for non-optimal finalization.
 			if not is_final_code_optimal then
 				error_handler.insert_warning (create {FINALIZATION_WARNING})
 			end
-			melt
 			if successful then
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)

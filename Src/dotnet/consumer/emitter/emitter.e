@@ -341,7 +341,7 @@ feature {NONE} -- Implementation
 			if exec_from_cli then
 				display_status ("Consuming '" + a_path + "' and all of it's dependencies.")
 			end
-			cache_writer.add_assembly (a_path)
+			cache_writer.add_assembly (a_path, False)
 		rescue
 			debug ("log_exceptions")
 				log_last_exception

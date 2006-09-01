@@ -11,15 +11,11 @@ class
 inherit
 	EMITTER
 		rename
-			make as make_emitter,
-			error_category as error_category_emitter,
-			error_message_table as error_message_table_emitter
+			make as make_emitter
 		export
 			{NONE} all
 			{CACHE_MANAGER} clr_version
-			{ANY} compact_and_clean_cache, cache_reader, cache_writer
-		undefine
-			start
+			{ANY} cache_reader, cache_writer
 		end
 
 	SHARED_ASSEMBLY_LOADER
@@ -27,9 +23,6 @@ inherit
 	CACHE_MANAGER_ERRORS
 		export
 			{NONE} all
-		select
-			error_category,
-			error_message_table
 		end
 
 create
@@ -91,7 +84,6 @@ feature -- Basic Oprtations
 			is_successful := True
 			last_error_message := ""
 
-			add_to_eac := True
 			l_assembly := assembly_loader.load_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
 			if l_assembly /= Void then
 				create l_resolver.make (create {ARRAYED_LIST [STRING]}.make (0))
@@ -118,8 +110,6 @@ feature -- Basic Oprtations
 		do
 			is_successful := True
 			last_error_message := ""
-
-			add_to_eac := True
 
 			l_paths := a_path.split (';')
 			create l_resolver.make (l_paths)
@@ -242,14 +232,6 @@ feature {NONE} -- Basic Operations
 		ensure
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty
-		end
-
-feature {NONE} -- Internal Agents
-
-	start is
-			-- dummy routine
-		do
-			--| no code!
 		end
 
 feature {NONE} -- Constants

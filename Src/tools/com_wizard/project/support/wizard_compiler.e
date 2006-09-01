@@ -218,7 +218,7 @@ feature -- Basic Operations
 			l_local_folder.append (W_code)
 			if a_folder.is_equal (Client) or component_empty (a_folder) then
 				l_local_folder.append_character (Directory_separator)
-				l_local_folder.append (eiffel_c_compiler)
+				l_local_folder.append (eiffel_layout.eiffel_c_compiler)
 			end
 			create l_directory.make (l_local_folder)
 			if l_directory.exists then
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			-- Eiffel compiler command line to precompile
 		do
 			create Result.make (100)
-			Result.append (ec_command_name)
+			Result.append (eiffel_layout.ec_command_name)
 			Result.append (" -precompile -c_compile -batch -config ")
 			Result.append (environment.ecf_file_name)
 		end
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 			-- Eiffel compiler command line to freeze
 		do
 			create Result.make (100)
-			Result.append (ec_command_name)
+			Result.append (eiffel_layout.ec_command_name)
 			Result.append (" -batch -clean -c_compile -config ")
 			Result.append (environment.ecf_file_name)
 		end
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 			-- Finish freezing command line
 		do
 			create Result.make (100)
-			Result.append (Eiffel_installation_dir_name + "\studio\spec\windows\bin\finish_freezing -silent")
+			Result.append (eiffel_layout.Freeze_command_name+" -silent")
 		end
 
 	Eifgen: STRING is "EIFGENs"

@@ -13,16 +13,25 @@ inherit
 			{NONE} non_used_command_line
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
 feature -- Initialization
 
 	make is
-			--
+			-- Creation
 		local
 			l_parser: ARGUMENT_PARSER
+			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
 		do
+			create l_layout
+			l_layout.check_environment_variable
+			set_eiffel_layout (l_layout)
 			create l_parser.make (False, False)
 			l_parser.execute (agent start (l_parser))
 		end

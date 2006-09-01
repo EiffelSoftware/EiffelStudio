@@ -12,7 +12,7 @@ class
 inherit
 	PATH_CONVERTER
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -35,8 +35,7 @@ feature -- Initialization
 			l_arg_string: STRING
 			l_file_name: FILE_NAME
 		do
-			check_environment_variable
-			eiffel_dir := eiffel_installation_dir_name
+			eiffel_dir := eiffel_layout.eiffel_installation_dir_name
 			create l_file_name.make_from_string (eiffel_dir)
 			l_file_name.extend ("BCC55")
 			l_file_name.extend ("BIN")

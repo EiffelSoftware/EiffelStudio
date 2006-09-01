@@ -56,7 +56,7 @@ feature -- Basic Operations
 			l_process_launcher: WEL_PROCESS_LAUNCHER
 		do
 			create l_directory.make_open_read (a_folder_name)
-			if has_borland then
+			if eiffel_layout.has_borland then
 				if l_directory.has_entry ("makefile.bcb") then
 					l_string := "make /f makefile.bcb"
 				end

@@ -24,13 +24,25 @@ inherit
 			launch as ev_launch
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
 feature {NONE} -- Creation
 
 	make is
+		local
+			l_layout: ESTUDIO_EIFFEL_LAYOUT
 		do
+			create l_layout
+				-- the user can define some variables on the command line so we do the check after we have handled this
+			set_eiffel_layout (l_layout)
 			default_create
 			Precursor
 			if not is_destroyed then

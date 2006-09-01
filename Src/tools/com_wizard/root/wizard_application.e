@@ -27,6 +27,14 @@ inherit
 			copy
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -39,7 +47,12 @@ feature {NONE} -- Initialization
 			l_clp: COMMAND_LINE_PARSER
 			l_valid_options: HASH_TABLE [LIST [STRING], STRING]
 			l_definition_file, l_text: STRING
+			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
+			create l_layout
+			l_layout.check_environment_variable
+			set_eiffel_layout (l_layout)
+
 			create l_cls.make (option_specifications)
 			create l_clp.make (l_cls)
 			l_clp.parse ((create {ARGUMENTS}).argument_array)

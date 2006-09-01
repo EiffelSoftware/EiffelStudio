@@ -170,8 +170,8 @@ feature -- Basic operations
 			if not obj_list.is_empty then
 				save_file (make_file (obj_list, wobj_list, a_library_name, wobj_generation, "msc"), "Makefile.msc")
 				save_file (make_file (obj_list, wobj_list, a_library_name, wobj_generation, "bcb"), "Makefile.bcb")
-				save_file ("set ISE_EIFFEL=" + Eiffel_installation_dir_name + "%Nnmake /f Makefile.msc", "make_msc.bat")
-				save_file ("set ISE_EIFFEL=" + Eiffel_installation_dir_name + "%N%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile.bcb", "make_bcb.bat")
+				save_file ("set ISE_EIFFEL=" + eiffel_layout.Eiffel_installation_dir_name + "%Nnmake /f Makefile.msc", "make_msc.bat")
+				save_file ("set ISE_EIFFEL=" + eiffel_layout.Eiffel_installation_dir_name + "%N%%ISE_EIFFEL%%\BCC55\bin\make /f Makefile.bcb", "make_bcb.bat")
 			end
 			Env.change_working_directory (a_working_directory)
 		end
@@ -187,7 +187,7 @@ feature -- Basic operations
 			Result.append ("w" + c_to_obj (c_file_name) +
 							": " + c_file_name + "%N%
 							%	$(CC) $(CFLAGS) -DWORKBENCH	")
-			if not has_borland then
+			if not eiffel_layout.has_borland then
 				Result.append (" -nologo ")
 			end
 			Result.append ("$(OUTPUT_CMD)$@ $?%N%N")

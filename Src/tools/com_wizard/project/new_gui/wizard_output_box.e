@@ -413,8 +413,7 @@ feature {NONE} -- Implementation
 			l_file: STRING
 		do
 			create Result.make (100)
-			Result.append (Eiffel_installation_dir_name)
-			Result.append ("\studio\spec\windows\bin\estudio ")
+			Result.append (eiffel_layout.estudio_command_name + " ")
 			create l_directory.make (a_folder)
 			if l_directory.exists then
 				from

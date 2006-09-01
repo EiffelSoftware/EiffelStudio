@@ -229,7 +229,7 @@ feature -- Access
 			Result.force ("runtime_io_exception", "runtime_io_exception")
 			Result.force ("com_exception", "com_exception")
 			Result.force ("error_messages", "error_messages")
-			
+
 			Result.force ("noerror", "noerror")
 			Result.force ("cache_e_first", "cache_e_first")
 			Result.force ("cache_e_last", "cache_e_last")
@@ -666,7 +666,7 @@ feature -- Access
 			Result.force ("GetIDsOfNames", "GetIDsOfNames")
 			Result.force ("Invoke", "Invoke")
 		end
-	
+
 	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is
 			-- List of Eiffel runtime macros.
 		once
@@ -994,9 +994,9 @@ feature -- Access
 			create Result.make (500)
 			Result.compare_objects
 
-			tmp_path := Eiffel_installation_dir_name + "\wizards\com\config\wizard_winapi_names.cfg"
+			tmp_path := eiffel_layout.Eiffel_installation_dir_name + "\wizards\com\config\wizard_winapi_names.cfg"
 
-			create a_directory.make (Eiffel_installation_dir_name + "\wizards\com\config")
+			create a_directory.make (eiffel_layout.Eiffel_installation_dir_name + "\wizards\com\config")
 			if a_directory.exists then
 				a_directory.open_read
 				if a_directory.has_entry ("wizard_winapi_names.cfg") then
@@ -1027,10 +1027,10 @@ feature -- Status report
 			non_void_name: a_name /= Void
 			valid_name: not a_name.is_empty
 		do
-			Result := c_keywords.has (a_name) or 
-					eiffel_runtime_macros.has (a_name) or 
+			Result := c_keywords.has (a_name) or
+					eiffel_runtime_macros.has (a_name) or
 					windows_api.has (a_name) or
-					generator_words.has (a_name) 
+					generator_words.has (a_name)
 		end
 
 

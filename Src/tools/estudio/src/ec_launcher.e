@@ -9,7 +9,7 @@ class
 	EC_LAUNCHER
 
 inherit
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -89,8 +89,8 @@ feature -- Launching
 					create s.make_empty
 
 					s.append_string ("*** estudio is using the following data : %N")
-					s.append_string (" ISE_EIFFEL: " + eiffel_installation_dir_name + "%N")
-					s.append_string (" ISE_PLATFORM: " + eiffel_platform + "%N")
+					s.append_string (" ISE_EIFFEL: " + eiffel_layout.eiffel_installation_dir_name + "%N")
+					s.append_string (" ISE_PLATFORM: " + eiffel_layout.eiffel_platform + "%N")
 					s.append_string (" Path to ec: " + ec_path + "%N")
 					s.append_string (" Working directory: " + working_directory + "%N")
 					s.append_string (" Arguments: ")
@@ -232,7 +232,7 @@ feature -- Splash
 
 				splasher := new_splasher (s)
 
-				create fn.make_from_string (bitmaps_path)
+				create fn.make_from_string (eiffel_layout.bitmaps_path)
 				fn.extend ("png")
 				fn.set_file_name ("splash.png")
 				if file_exists (fn) then
@@ -335,12 +335,12 @@ feature -- Environment
 					elseif s.is_equal ("/ec_name") then
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
-							argument_variables.put (cmdline_argument (1), Ec_name_env)
+							argument_variables.put (cmdline_argument (1), eiffel_layout.Ec_name_env)
 						end
 					elseif s.is_equal ("/ec_folder") then
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
-							argument_variables.put (cmdline_argument (1), ec_folder_env)
+							argument_variables.put (cmdline_argument (1), eiffel_layout.ec_folder_env)
 						end
 					elseif s.is_equal ("/melted_path") then
 						cmdline_remove_head (1)
@@ -458,14 +458,14 @@ feature -- Environment
 		local
 			s: STRING
 		do
-			check_environment_variable
-			ec_path := bin_path
+			eiffel_layout.check_environment_variable
+			create ec_path.make_from_string (eiffel_layout.bin_path)
 
 				--| Melted path if workbench ec
 			s := get_environment_value (Melted_path_varname, ec_path)
 			create working_directory.make_from_string (s)
 
-			ec_path.set_file_name (ec_name)
+			ec_path.set_file_name (eiffel_layout.ec_name)
 
 			if not working_directory.is_valid then
 				working_directory := Void

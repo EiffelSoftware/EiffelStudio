@@ -10,9 +10,7 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_ENV
-		rename
-			platform as platform_constants
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -33,8 +31,7 @@ feature -- Initialization
 			create object_dependent_directories.make (50)
 			create dependent_directories.make (55)
 
-			check_environment_variable
-			eiffel_dir := short_path (eiffel_installation_dir_name)
+			eiffel_dir := short_path (eiffel_layout.eiffel_installation_dir_name)
 
 			uses_precompiled := False
 
@@ -57,10 +54,10 @@ feature -- Initialization
 				end
 
 				smart_checking := options.get_boolean ("smart_checking", True)
-				if eiffel_c_compiler.is_equal ("msc") and smart_checking then
+				if eiffel_layout.eiffel_c_compiler.is_equal ("msc") and smart_checking then
 						-- Visual Studio C compiler.
 					create vs_setup.make (a_force_32bit)
-				elseif eiffel_c_compiler.is_equal ("bcb") then
+				elseif eiffel_layout.eiffel_c_compiler.is_equal ("bcb") then
 						-- Borland C compiler.
 					create borland_setup.make
 				end
@@ -78,7 +75,7 @@ feature -- Initialization
 		local
 			quick_prg: STRING
 		do
-			quick_prg := Quick_finalize_command_name.twin
+			quick_prg := eiffel_layout.Quick_finalize_command_name.twin
 
 			quick_prg.append (" . " + options.get_string ("obj_file_ext", "obj"))
 
@@ -150,7 +147,7 @@ feature -- Execution
 			reader: RESOURCE_PARSER
 		do
 			create reader
-			reader.parse_file (Config_eif, options)
+			reader.parse_file (eiffel_layout.Config_eif, options)
 		end
 
 	translate is
@@ -177,7 +174,7 @@ feature -- Execution
 			end
 
 				-- Launch distributed make.
-			eiffel_make := Emake_command_name.twin
+			eiffel_make := eiffel_layout.Emake_command_name.twin
 
 			eiffel_make.append (" -target %"")
 			eiffel_make.append (env.current_working_directory)
@@ -1408,7 +1405,7 @@ feature {NONE}	-- substitutions
 				io.put_string("%Tsubst_platform%N")
 			end
 
-			line.replace_substring_all ("$(ISE_PLATFORM)", eiffel_platform)
+			line.replace_substring_all ("$(ISE_PLATFORM)", eiffel_layout.eiffel_platform)
 		end
 
 	subst_compiler (line: STRING) is
@@ -1418,8 +1415,8 @@ feature {NONE}	-- substitutions
 				io.put_string("%Tsubst_compiler%N")
 			end
 
-			if platform_constants.is_windows then
-				line.replace_substring_all ("$(ISE_C_COMPILER)", eiffel_c_compiler)
+			if eiffel_layout.platform.is_windows then
+				line.replace_substring_all ("$(ISE_C_COMPILER)", eiffel_layout.eiffel_c_compiler)
 			end
 		end
 

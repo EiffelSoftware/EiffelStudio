@@ -9,9 +9,9 @@ class
 	WIZARD_EXECUTION_ENVIRONMENT
 
 inherit
-	EIFFEL_ENV
-		rename
-			environment as environment_access
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
 		end
 
 feature {NONE} -- Implementation

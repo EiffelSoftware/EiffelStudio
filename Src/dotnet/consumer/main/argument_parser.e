@@ -163,7 +163,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_switch, "Lists the content of the cache.", False, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Display verbose output.", True, False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (output_switch, "Location of Eiffel assembly cache to perform operations on.", True, False, "cache", "A location of an Eiffel assembly cache", False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Cleans and compacts an Eiffel cache.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Cleans and compacts an Eiffel cache.", False, False))
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]

@@ -1222,6 +1222,7 @@ feature -- Class info
 				define_custom_attribute (main_module.associated_assembly_token,
 					main_module.cls_compliant_ctor_token, cls_compliant_ca)
 			end
+			define_custom_attribute (main_module.associated_assembly_token, main_module.ise_eiffel_consumable_attr_ctor_token, eiffel_non_consumable_ca)
 		end
 
 	define_constructors (class_type: CLASS_TYPE; is_reference: BOOLEAN) is

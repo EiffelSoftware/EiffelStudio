@@ -1085,7 +1085,7 @@ feature {NONE} -- open new class
 						current_group := Universe.cluster_of_name (fname)
 					end
 					process_cluster
-				else
+				elseif Universe.target /= Void then
 					from
 						if is_general_group_acceptable then
 							cl := Universe.groups
@@ -1674,7 +1674,7 @@ feature {NONE} -- open new class
 			cluster_address.change_actions.block
 			last_caret_position := cluster_address.caret_position
 			str := cluster_address.text
-			if universe /= Void and then not str.is_empty and then (str @ (str.count) /= ' ') then
+			if universe /= Void and then universe.target /= Void and then not str.is_empty and then (str @ (str.count) /= ' ') then
 				str.left_adjust
 				str.right_adjust
 				str.to_lower

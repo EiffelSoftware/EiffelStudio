@@ -74,7 +74,7 @@ feature -- Clean Up
 
 feature -- Basic Operations
 
-	add_assembly (a_path: STRING) is
+	add_assembly (a_path: STRING; a_info_only: BOOLEAN) is
 			-- Add assembly at `a_path' and its dependencies into cache.
 		require
 			non_void_path: a_path /= Void
@@ -223,7 +223,7 @@ feature -- Basic Operations
 					if l_assembly = Void then
 						l_assembly := l_old_assembly
 					end
-					l_consumer.consume (l_assembly, assembly_loader)
+					l_consumer.consume (l_assembly, assembly_loader, a_info_only)
 					notifier.clear_notification
 
 					if not l_consumer.successful then
@@ -237,7 +237,7 @@ feature -- Basic Operations
 					end
 				end
 
-				if l_consumer.successful then
+				if not a_info_only and then l_consumer.successful then
 					{SYSTEM_DLL_TRACE}.write_line_string ("Processing assembly dependencies.")
 
 					l_names := l_assembly.get_referenced_assemblies
@@ -249,7 +249,7 @@ feature -- Basic Operations
 						l_name := l_names.item (i)
 						l_assembly := assembly_loader.load (l_name)
 						if l_assembly /= Void and then not (l_reader.is_assembly_in_cache (l_assembly.location, True) or else cache_reader.is_assembly_stale (l_assembly.location)) then
-							add_assembly (l_assembly.location)
+							add_assembly (l_assembly.location, a_info_only)
 							l_assembly_info_updated := True
 						end
 						i := i + 1

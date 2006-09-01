@@ -6,7 +6,7 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option trace="false" profile="false" debug="false" namespace="EiffelSoftware.MetadataConsumer">
-			<assertions precondition="true" postcondition="false" check="true" invariant="false" loop="false"/>
+			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="cls_compliant" value="false"/>
 		<setting name="console_application" value="true"/>
@@ -14,7 +14,8 @@
 		<setting name="dotnet_naming_convention" value="false"/>
 		<setting name="executable_name" value="EiffelSoftware.MetadataConsumer"/>
 		<setting name="il_verifiable" value="false"/>
-		<setting name="line_generation" value="false"/>
+		<setting name="line_generation" value="true"/>
+		<setting name="metadata_cache_path" value="C:\development\eiffel57\dotnet\reserved"/>
 		<setting name="msil_assembly_compatibility" value="None"/>
 		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<setting name="msil_generation" value="true"/>
@@ -24,7 +25,7 @@
 		<setting name="use_cluster_name_as_namespace" value="false"/>
 		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resx"/>
 		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf">
 			<condition>
 				<dotnet value="true"/>
@@ -46,6 +47,7 @@
 				<exclude>/interop$</exclude>
 				<exclude>/resources$</exclude>
 				<exclude>/dotnet1x$</exclude>
+				<exclude>main</exclude>
 			</file_rule>
 		</cluster>
 		<cluster name="consumer_classic" location="$EIFFEL_SRC\dotnet\consumer\" recursive="true">
@@ -78,13 +80,17 @@
 		</cluster>
 	</target>
 	<target name="consumer_20" extends="consumer_library">
-		<root class="EMITTER" feature="make"/>
-		<setting name="line_generation" value="false"/>
+		<root class="APPLICATION" feature="make"/>
+		<setting name="executable_name" value="emdc"/>
+		<setting name="line_generation" value="true"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<library name="arg_parser" location="C:\development57_eth\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>
+		<cluster name="main" location="C:\development57_eth\dotnet\consumer\main\"/>
 	</target>
 	<target name="consumer_10" extends="consumer_library">
 		<root class="EMITTER" feature="make"/>
 		<setting name="line_generation" value="false"/>
-		<setting name="msil_clr_version" value="v1.0.3705"/>
+		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<override name="cache_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\cache\dotnet1x\"/>
 		<override name="emitter_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\emitter\dotnet1x\"/>
 		<override name="helpers_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\helpers\dotnet1x\"/>

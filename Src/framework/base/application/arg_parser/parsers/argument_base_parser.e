@@ -37,6 +37,10 @@ feature -- Access
 			Result := internal_option_values
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_valid_items: Result.for_all (agent (a_item: ARGUMENT_OPTION): BOOLEAN
+				do
+					Result := a_item /= Void
+				end)
 		end
 
 	frozen values: LIST [STRING] is
@@ -47,12 +51,22 @@ feature -- Access
 			Result := internal_values
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_valid_items: Result.for_all (agent (a_item: STRING): BOOLEAN
+				do
+					Result := a_item /= Void and then not a_item.is_empty
+				end)
 		end
 
 	frozen error_messages: ARRAYED_LIST [STRING] is
 			-- Last error messages generated, if any
 		once
 			create Result.make (0)
+		ensure
+			result_attached: Result /= Void
+			result_contains_attached_valid_items: Result.for_all (agent (a_item: STRING): BOOLEAN
+				do
+					Result := a_item /= Void and then not a_item.is_empty
+				end)
 		end
 
 	frozen application_base: STRING is
@@ -135,6 +149,10 @@ feature -- Query
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_items: Result.for_all (agent (a_item: ARGUMENT_OPTION): BOOLEAN
+				do
+					Result := a_item /= Void
+				end)
 		end
 
 	options_values_of_name (a_name: STRING): LIST [STRING] is
@@ -165,6 +183,10 @@ feature -- Query
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_valid_items: Result.for_all (agent (a_item: STRING): BOOLEAN
+				do
+					Result := a_item /= Void and then not a_item.is_empty
+				end)
 		end
 
 	unique_options_values_of_name (a_name: STRING; a_ignore_case: BOOLEAN): LIST [STRING] is
@@ -216,6 +238,10 @@ feature -- Query
 			Result := l_result
 		ensure
 			result_attached: Result /= Void
+			result_contains_attached_valid_items: Result.for_all (agent (a_item: STRING): BOOLEAN
+				do
+					Result := a_item /= Void and then not a_item.is_empty
+				end)
 		end
 
 	option_of_name (a_name: STRING): ARGUMENT_OPTION is
@@ -554,7 +580,8 @@ feature {NONE} -- Parsing
 							add_template_error (invalid_switch_error, [ellipse_text (l_arg)])
 						end
 					else
-						if l_last_switch = Void then
+						l_value_switch ?= l_last_switch
+						if l_value_switch = Void then
 							if not l_arg.is_empty then
 									-- Create loose option
 								internal_values.extend (l_arg)
@@ -568,9 +595,8 @@ feature {NONE} -- Parsing
 							end
 							l_arg_option := internal_option_values.last
 							l_arg_option.value := l_arg
-							l_last_switch := Void
 						end
-
+						l_last_switch := Void
 					end
 					i := i + 1
 				end

@@ -33,8 +33,6 @@ inherit
 
 	SYSTEM_CONSTANTS
 
-	EIFFEL_ENV
-
 feature -- Status
 
 	is_changed: BOOLEAN

@@ -11,7 +11,6 @@ indexing
 class EWB_LOOP
 
 inherit
-
 	EWB_CMD
 		rename
 			name as loop_cmd_name,
@@ -19,9 +18,12 @@ inherit
 			abbreviation as loop_abb
 		end
 
-	EIFFEL_ENV
-
 	SYSTEM_CONSTANTS
+
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 feature -- Properties
 
@@ -48,16 +50,16 @@ feature -- Initialization
 			i: INTEGER
 		once
 			i := 2
-			if Has_profiler then
+			if eiffel_layout.Has_profiler then
 				i := i + 1
 			end
-			if Has_documentation_generation then
+			if eiffel_layout.Has_documentation_generation then
 				i := i + 3
 			end
 			create Result.make (1, i)
 			Result.set_is_main
 
-			if Has_documentation_generation then
+			if eiffel_layout.Has_documentation_generation then
 				Result.add_entry (
 					create {EWB_STRING}.make (class_cmd_name, class_help, class_abb, class_menu))
 			end
@@ -65,17 +67,17 @@ feature -- Initialization
 			Result.add_entry (
 				create {EWB_STRING}.make (compile_cmd_name, compile_help, compile_abb, compile_menu))
 
-			if Has_documentation_generation then
+			if eiffel_layout.Has_documentation_generation then
 				Result.add_entry (
 					create {EWB_STRING}.make (feature_cmd_name, feature_help, feature_abb, feature_menu))
 			end
 
 			Result.add_entry (create {EWB_STRING}.make (system_cmd_name, system_help, system_abb, system_menu))
-			if has_profiler then
+			if eiffel_layout.has_profiler then
 				Result.add_entry (
 					create {EWB_STRING}.make (profile_cmd_name, profile_help, profile_abb, profile_menu))
 			end
-			if has_documentation_generation then
+			if eiffel_layout.has_documentation_generation then
 				Result.add_entry (
 					create {EWB_STRING}.make (documentation_cmd_name, documentation_help,
 						documentation_abb, documentation_menu))
@@ -202,10 +204,10 @@ feature -- Initialization
 			i: INTEGER
 		once
 			i := 5
-			if Has_profiler then
+			if eiffel_layout.Has_profiler then
 				i := i + 2
 			end
-			if Has_documentation_generation then
+			if eiffel_layout.Has_documentation_generation then
 				i := i + 1
 			end
 			create Result.make (1, i)
@@ -215,15 +217,15 @@ feature -- Initialization
 			Result.put (feature_menu, 4)
 			Result.put (compile_menu, 5)
 			i := 6
-			if Has_profiler then
+			if eiffel_layout.Has_profiler then
 				Result.put (profile_menu, i)
 				i := i + 1
 			end
-			if Has_documentation_generation then
+			if eiffel_layout.Has_documentation_generation then
 				Result.put (documentation_menu, i)
 				i := i + 1
 			end
-			if Has_profiler then
+			if eiffel_layout.Has_profiler then
 				Result.put (switches_menu, i)
 				i := i + 1
 			end

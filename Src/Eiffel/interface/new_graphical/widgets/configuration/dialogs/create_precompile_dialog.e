@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 	fill_default_libraries is
 			-- Fill in default precompiles.
 		do
-			add_configs_in_dir (eiffel_precomp, Void)
+			add_configs_in_dir (eiffel_layout.eiffel_precomp, Void)
 		end
 
 indexing

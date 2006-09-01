@@ -33,6 +33,13 @@ inherit
 			default_create, copy
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -137,7 +144,7 @@ feature {NONE} -- Implementation
 			launcher: COMMAND_EXECUTOR
 		do
 			create launcher
-			launcher.execute ((create {EIFFEL_ENV}).Estudio_command_name)
+			launcher.execute (eiffel_layout.Estudio_command_name)
 			execute_die
 		end
 

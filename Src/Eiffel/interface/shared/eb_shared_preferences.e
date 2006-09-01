@@ -9,9 +9,6 @@ indexing
 class
 	EB_SHARED_PREFERENCES
 
-inherit
-	EIFFEL_ENV
-
 feature {ES, ES_GRAPHIC} -- Initialization
 
 	initialize_preferences (a_preferences: PREFERENCES; gui_mode: BOOLEAN) is

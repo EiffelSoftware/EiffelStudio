@@ -10,9 +10,14 @@ indexing
 class CONFIGURATION_LOADER
 
 inherit
-	EIFFEL_ENV;
-	SHARED_WORKBENCH;
+	SHARED_WORKBENCH
+
 	SHARED_EIFFEL_PROJECT
+
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 create
 	make_and_load
@@ -40,7 +45,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				create file_name.make_from_string (profile_path);
+				create file_name.make_from_string (eiffel_layout.profile_path);
 				file_name.extend (prof);
 
 				if not file_name.is_valid then

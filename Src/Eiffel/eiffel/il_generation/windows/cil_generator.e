@@ -42,6 +42,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -324,7 +329,7 @@ feature -- Generation
 						-- where `xxx' is either `exe' or `dll'.
 					l_file_name := System.name + "." + System.msil_generation_type + ".config"
 
-					create l_source_name.make_from_string ((create {EIFFEL_ENV}).Generation_templates_path)
+					create l_source_name.make_from_string (eiffel_layout.Generation_templates_path)
 					l_source_name.set_file_name ("assembly_config.xml")
 
 					if is_finalizing then

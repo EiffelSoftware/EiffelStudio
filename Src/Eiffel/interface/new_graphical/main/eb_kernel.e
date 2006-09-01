@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			l_app: EV_APPLICATION
 			fn: FILE_NAME
 			l_is_gui: BOOLEAN
+			l_layout: EC_EIFFEL_LAYOUT
 			--| uncomment the following line when profiling
 			--prof_setting: PROFILING_SETTING
 		do
@@ -66,7 +67,11 @@ feature {NONE} -- Initialization
 
 				-- Check that environment variables
 				-- are properly set.
-			check_environment_variable
+			if not is_eiffel_layout_defined then
+				create l_layout
+				l_layout.check_environment_variable
+				set_eiffel_layout (l_layout)
+			end
 
 				--| Initialization of the run-time, so that at the end of a store/retrieve
 				--| operation (like retrieving or storing the project, creating the CASEGEN
@@ -79,7 +84,7 @@ feature {NONE} -- Initialization
 			create pref_strs
 				-- Initialize pixmaps
 			pref_strs.Pixmaps_extension_cell.put ("png")
-			create fn.make_from_string (Bitmaps_path)
+			create fn.make_from_string (eiffel_layout.Bitmaps_path)
 			fn.extend ("png")
 			pref_strs.Pixmaps_path_cell.put (fn)
 

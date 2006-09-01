@@ -16,6 +16,11 @@ inherit
 			pixmap_lookup_table
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	mini_pixmaps: ES_PIXMAPS_10X10 is
@@ -190,7 +195,7 @@ feature -- Reading
 	pixmap_path: DIRECTORY_NAME is
 			-- (export status {NONE})
 		once
-			create Result.make_from_string ((create {EIFFEL_ENV}).bitmaps_path)
+			create Result.make_from_string (eiffel_layout.bitmaps_path)
 			Result.extend (pixmap_suffix)
 		end
 

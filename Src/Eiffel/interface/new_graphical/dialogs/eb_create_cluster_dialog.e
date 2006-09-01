@@ -40,13 +40,6 @@ inherit
 			default_create, copy
 		end
 
-	EIFFEL_ENV
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 	EB_VISION2_FACILITIES
 		export
 			{NONE} all

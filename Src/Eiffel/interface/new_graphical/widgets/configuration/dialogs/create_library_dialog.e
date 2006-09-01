@@ -33,12 +33,6 @@ inherit
 			default_create
 		end
 
-	EIFFEL_ENV
-		undefine
-			copy,
-			default_create
-		end
-
 	CONF_VALIDITY
 		undefine
 			copy,
@@ -60,6 +54,14 @@ inherit
 		end
 
 	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		undefine
@@ -310,9 +312,9 @@ feature {NONE} -- Implementation
 			l_lib_name: STRING
 		do
 				-- look for configuration files under $ISE_LIBRARY/library or $ISE_LIBRARY/library/somedirectory
-			create l_dir.make (Library_path)
+			create l_dir.make (eiffel_layout.Library_path)
 			if l_dir.is_readable then
-				add_configs_in_dir (Library_path, library_directory_name)
+				add_configs_in_dir (eiffel_layout.Library_path, eiffel_layout.library_directory_name)
 				l_subdirs := l_dir.directory_names
 				if l_subdirs /= Void then
 					from
@@ -321,10 +323,10 @@ feature {NONE} -- Implementation
 					until
 						i > cnt
 					loop
-						l_lib_name := library_path.twin
+						l_lib_name := eiffel_layout.library_path.twin
 						l_lib_name.append_character (operating_environment.directory_separator)
 						l_lib_name.append (l_subdirs.item (i))
-						add_configs_in_dir (l_lib_name, library_directory_name+"\"+l_subdirs.item (i))
+						add_configs_in_dir (l_lib_name, eiffel_layout.library_directory_name+"\"+l_subdirs.item (i))
 						i := i +1
 					end
 				end

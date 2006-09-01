@@ -14,8 +14,6 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
-	EIFFEL_ENV
-
 	CLASS_FORMAT_CONSTANTS
 		export
 			{NONE} all
@@ -28,6 +26,11 @@ inherit
 		end
 
 	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
+		end
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -325,7 +328,7 @@ feature -- Actions
 			fi: FILE_NAME
 			rf, wf: PLAIN_TEXT_FILE
 		do
-			create fi.make_from_string (filter_path)
+			create fi.make_from_string (eiffel_layout.filter_path)
 			fi.extend (fn)
 			create rf.make_open_read (fi)
 			rf.read_stream (rf.count)

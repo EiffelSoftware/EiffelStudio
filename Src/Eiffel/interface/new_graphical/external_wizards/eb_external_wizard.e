@@ -10,13 +10,6 @@ deferred class
 	EB_EXTERNAL_WIZARD
 
 inherit
-	ANY
-
-	EIFFEL_ENV
-		export
-			{NONE} all
-		end
-
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
@@ -33,6 +26,11 @@ inherit
 		end
 
 	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -101,10 +99,10 @@ feature {NONE} -- Implementation
 		do
 			create wizard_exec_filename.make_from_string (location)
 			wizard_exec_filename.extend ("spec")
-			wizard_exec_filename.extend (eiffel_platform)
+			wizard_exec_filename.extend (eiffel_layout.eiffel_platform)
 			wizard_exec_filename.set_file_name ("wizard")
-			if not Executable_suffix.is_empty then
-				wizard_exec_filename.add_extension (Executable_suffix)
+			if not eiffel_layout.Executable_suffix.is_empty then
+				wizard_exec_filename.add_extension (eiffel_layout.Executable_suffix)
 			end
 
 			create wizard_exec_file.make (wizard_exec_filename)

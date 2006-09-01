@@ -12,11 +12,6 @@ inherit
 			generate_additional_rules
 		end
 
-	EIFFEL_ENV
-		export
-			{NONE} all
-		end
-
 create
 	make
 

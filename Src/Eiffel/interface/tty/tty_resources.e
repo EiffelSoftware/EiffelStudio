@@ -13,9 +13,13 @@ inherit
 	SHARED_CONFIGURE_RESOURCES
 	SHARED_EIFFEL_PROJECT
 	TTY_CONSTANTS
-	EIFFEL_ENV
 
-create 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
+create
 	initialize
 
 feature {NONE} -- Initialization
@@ -38,14 +42,14 @@ feature {NONE} -- Initialization
 			error_msg: STRING
 		once
 			if retried then
-				error_msg := warning_messages.w_cannot_read_file (compiler_configuration)
+				error_msg := warning_messages.w_cannot_read_file (eiffel_layout.compiler_configuration)
 			else
-				create test_file.make (compiler_configuration)
+				create test_file.make (eiffel_layout.compiler_configuration)
 				if test_file.exists and test_file.is_readable then
 					create resource_parser
-					resource_parser.parse_file (compiler_configuration, configure_resources)
+					resource_parser.parse_file (eiffel_layout.compiler_configuration, configure_resources)
 				else
-					error_msg := compiler_configuration.twin
+					error_msg := eiffel_layout.compiler_configuration.twin
 					error_msg.append (Warning_messages.w_file_does_not_exist_execution_impossible)
 				end
 			end
@@ -64,7 +68,7 @@ feature -- Status report
 
 	error_occurred: BOOLEAN;
 			-- Did an error occur while reading the default preferences file ?
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

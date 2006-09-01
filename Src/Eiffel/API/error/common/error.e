@@ -8,9 +8,7 @@ indexing
 deferred class ERROR
 
 inherit
-	ANY
-
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -189,7 +187,7 @@ feature -- Output
 			f_name: FILE_NAME;
 			file: PLAIN_TEXT_FILE;
 		do
-			create f_name.make_from_string (error_path);
+			create f_name.make_from_string (eiffel_layout.error_path);
 			f_name.extend ("short");
 			f_name.set_file_name (help_file_name);
 			l_file_name := f_name

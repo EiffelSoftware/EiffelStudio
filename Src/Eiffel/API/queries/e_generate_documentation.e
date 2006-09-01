@@ -21,7 +21,7 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -109,7 +109,7 @@ feature -- Execution
 			dir: DIRECTORY
 			retried: BOOLEAN
 		do
-			if has_documentation_generation and not retried then
+			if eiffel_layout.has_documentation_generation and not retried then
 				create doc.make
 				doc.set_filter (filter_name)
 

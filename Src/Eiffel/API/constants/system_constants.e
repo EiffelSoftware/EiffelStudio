@@ -12,6 +12,11 @@ inherit
 
 	PRODUCT_NAMES
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature {NONE}
 
 	Additional_args: STRING is "arguments.wb"
@@ -60,7 +65,7 @@ feature {NONE}
 		once
 			if {PLATFORM_CONSTANTS}.is_windows then
 				create Result.make (15)
-				Result.append ((create {EIFFEL_ENV}).Eiffel_c_compiler)
+				Result.append (eiffel_layout.Eiffel_c_compiler)
 				Result.append ("\driver.exe")
 			elseif {PLATFORM_CONSTANTS}.is_vms then
 				Result := "driver.exe"
@@ -185,7 +190,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- Version of the compiler
 		once
 				-- 0000 because it will be replace by the svn version number by the build script
-			create Result.make_version (eiffel_env.major_version, eiffel_env.minor_version, 0000, 0)
+			create Result.make_version (eiffel_layout.major_version, eiffel_layout.minor_version, 0000, 0)
 		end
 
 	Major_version_number: INTEGER is
@@ -232,14 +237,6 @@ feature {AUXILIARY_FILES} -- Versioning
 	Version_number_tag: STRING is "version_number"
 	Ace_file_path_tag: STRING is "ace_file_path";
 			-- Tags used in project file header.
-
-feature {NONE} -- Implementation
-
-	eiffel_env: EIFFEL_ENV is
-		once
-			create Result
-		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

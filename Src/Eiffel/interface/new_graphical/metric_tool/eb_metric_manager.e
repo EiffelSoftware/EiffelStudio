@@ -18,7 +18,10 @@ inherit
 
 	PROJECT_CONTEXT
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -372,11 +375,11 @@ feature -- Metric management
 				metrics.wipe_out
 				metrics_vadility.wipe_out
 					-- Load predefined metrics.
-				create l_file.make (predefined_metrics_file)
+				create l_file.make (eiffel_layout.predefined_metrics_file)
 				if not l_file.exists then
-					create {EB_METRIC_ERROR_FILE} l_error.make ("Could not open file", predefined_metrics_file)
+					create {EB_METRIC_ERROR_FILE} l_error.make ("Could not open file", eiffel_layout.predefined_metrics_file)
 				else
-					load_metric_definitions (predefined_metrics_file, True)
+					load_metric_definitions (eiffel_layout.predefined_metrics_file, True)
 					if last_error /= Void then
 						l_error := last_error
 					end

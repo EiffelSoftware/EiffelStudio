@@ -12,7 +12,7 @@ class
 inherit
 	EB_EXTERNAL_WIZARD
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 					elseif (entry @ 1).is_equal ("description") then
 						set_description (wrap_word (entry @ 2, 70))
 					elseif (entry @ 1).is_equal ("location") then
-						location := New_project_wizards_path.twin
+						location := eiffel_layout.New_project_wizards_path.twin
 						location.extend (entry @ 2)
 					elseif (entry @ 1).is_equal ("platform") then
 						target_platform := entry.item (2).as_lower
@@ -77,8 +77,8 @@ feature -- Access
 			-- Is the target platform supported by the current platform?
 		do
 			Result := target_platform.is_equal ("all") or else
-				Eiffel_platform.is_equal (target_platform) or else
-				(platform.is_windows and then target_platform.is_equal ("windows"))
+				eiffel_layout.Eiffel_platform.is_equal (target_platform) or else
+				(eiffel_layout.platform.is_windows and then target_platform.is_equal ("windows"))
 		end
 
 feature -- Status Setting

@@ -27,8 +27,6 @@ inherit
 			process_class_menu_text
 		end
 
-	EIFFEL_ENV
-
 	SYSTEM_CONSTANTS
 
 	SHARED_TEXT_ITEMS
@@ -38,6 +36,11 @@ inherit
 	FILTER_PARSER
 
 	DOCUMENT_HELPER
+
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 create
 	make,
@@ -53,7 +56,7 @@ feature {NONE} -- Initialization
 			full_pathname: FILE_NAME
 		do
 			if not filtername.is_empty then
-				create full_pathname.make_from_string (filter_path)
+				create full_pathname.make_from_string (eiffel_layout.filter_path)
 				full_pathname.extend (filtername)
 				full_pathname.add_extension ("fil")
 				make_from_filename (full_pathname)

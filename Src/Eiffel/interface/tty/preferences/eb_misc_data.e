@@ -9,9 +9,6 @@ indexing
 class
 	EB_MISC_DATA
 
-inherit
-	EIFFEL_ENV
-
 create
 	make
 

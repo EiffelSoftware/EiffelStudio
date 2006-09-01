@@ -66,13 +66,6 @@ inherit
 			default_create, copy
 		end
 
-	EIFFEL_ENV
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 	ISE_DIRECTORY_UTILITIES
 		rename
 			raise as raise_exception,
@@ -84,6 +77,13 @@ inherit
 		end
 
 	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		undefine
@@ -503,15 +503,15 @@ feature {NONE} -- Implementation
 			l_project_location: STRING
 		do
 			if
-				Eiffel_projects_directory /= Void and then
-				not Eiffel_projects_directory.is_empty
+				eiffel_layout.Eiffel_projects_directory /= Void and then
+				not eiffel_layout.Eiffel_projects_directory.is_empty
 			then
-				l_project_location := Eiffel_projects_directory.twin
+				l_project_location := eiffel_layout.Eiffel_projects_directory.twin
 			else
 				if Platform_constants.is_windows then
 					l_project_location := Default_project_location_for_windows
 				else
-					l_project_location := Home
+					l_project_location := eiffel_layout.Home
 				end
 			end
 			if l_project_location @ l_project_location.count /= Operating_environment.Directory_separator then

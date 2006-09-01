@@ -20,7 +20,7 @@ inherit
 
 	SYSTEM_CONSTANTS
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -199,9 +199,9 @@ feature -- Access
 				create Result.make_from_string (project_location.final_path)
 			end
 			Result.set_file_name (name)
-			tmp := Executable_suffix
+			tmp := eiffel_layout.Executable_suffix
 			if not tmp.is_empty then
-				Result.add_extension (Executable_suffix)
+				Result.add_extension (eiffel_layout.Executable_suffix)
 			end
 		end;
 

@@ -54,7 +54,7 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -616,7 +616,7 @@ feature {NONE} -- Settings
 			l_cmd: STRING
 		do
 			create l_cmd.make (50)
-			l_cmd.append (ec_command_name)
+			l_cmd.append (eiffel_layout.ec_command_name)
 			l_cmd.append (" -config ")
 			l_cmd.append (a_precompile.location.evaluated_path)
 			l_cmd.append (" -precompile -clean -c_compile -batch")

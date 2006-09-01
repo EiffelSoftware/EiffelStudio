@@ -7,7 +7,10 @@ class
 	USER_OPTIONS_FACTORY
 
 inherit
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -34,10 +37,9 @@ feature -- Store/Retrieve
 			retried: BOOLEAN
 		do
 			if not retried then
-				create last_file_name.make_from_string (eiffel_home)
+				create last_file_name.make_from_string (eiffel_layout.eiffel_home)
 				last_file_name.extend (a_options.uuid.out)
-				check_and_create_eiffel_home
-				if successful then
+				if eiffel_layout.is_valid_home then
 					create l_file.make (last_file_name)
 					l_file.open_write
 					if l_file.is_writable then
@@ -72,9 +74,8 @@ feature -- Store/Retrieve
 		do
 			if not retried then
 				last_options := Void
-				create last_file_name.make_from_string (eiffel_home)
+				create last_file_name.make_from_string (eiffel_layout.eiffel_home)
 				last_file_name.extend (a_uuid.out)
-				check_and_create_eiffel_home
 					-- Even if we could not create `eiffel_home', we simply handle
 					-- it as if they were not user file. This is why `successful' is
 					-- set to `True' in all cases.
@@ -104,28 +105,6 @@ feature -- Store/Retrieve
 		do
 			a_options.targets.remove (a_target)
 			store (a_options)
-		end
-
-feature {NONE} -- Implementation
-
-	check_and_create_eiffel_home is
-			-- Check that `eiffel_home' exists and if not create it.
-		local
-			l_dir: DIRECTORY
-			retried: BOOLEAN
-		do
-			if not retried then
-				create l_dir.make (eiffel_home)
-				if not l_dir.exists then
-					l_dir.create_dir
-				end
-				successful := l_dir.exists
-			else
-				successful := False
-			end
-		rescue
-			retried := True
-			retry
 		end
 
 end

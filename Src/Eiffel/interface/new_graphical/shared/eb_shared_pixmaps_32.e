@@ -11,12 +11,12 @@ class
 inherit
 	EB_SHARED_PIXMAP_FACTORY
 
-	EIFFEL_ENV
+	EB_SHARED_PIXMAP_FACTORY
 		export
 			{NONE} all
 		end
 
-	EB_SHARED_PIXMAP_FACTORY
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -76,7 +76,7 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 	pixmap_path: DIRECTORY_NAME is
 			-- Path to cursor pixmaps
 		once
-			create Result.make_from_string (bitmaps_path)
+			create Result.make_from_string (eiffel_layout.bitmaps_path)
 			Result.extend ("png")
 		end
 

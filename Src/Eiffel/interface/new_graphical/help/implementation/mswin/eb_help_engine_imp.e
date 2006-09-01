@@ -8,15 +8,15 @@ class
 
 inherit
 	EB_HELP_ENGINE_I
-	
-	EIFFEL_ENV
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -36,13 +36,13 @@ feature -- Status Report
 		do
 			Result := internal_show_successful
 		end
-	
+
 	last_error_message: STRING is
 			-- Last error message, if any
 		do
 			Result := internal_error_message
 		end
-			
+
 feature -- Basic Operations
 
 	show (a_help_context: EB_HELP_CONTEXT) is
@@ -69,10 +69,10 @@ feature {NONE} -- Implementation
 	Generic_error_message: STRING is "Could not display the help topic, please check your Eiffel installation."
 			-- Error message displayed when topic could not be displayed
 
-	Url_prefix: STRING is 
+	Url_prefix: STRING is
 			-- URL prefix for $EiffelGraphicalCompiler$ help files
 		once
-			Result := Eiffel_installation_dir_name + "\docs\eiffel.chm::"
+			Result := eiffel_layout.Eiffel_installation_dir_name + "\docs\eiffel.chm::"
 		end
 
 indexing

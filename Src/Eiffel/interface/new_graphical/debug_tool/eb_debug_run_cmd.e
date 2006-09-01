@@ -32,11 +32,6 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_ENV
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_MANAGERS
 		export
 			{NONE} all

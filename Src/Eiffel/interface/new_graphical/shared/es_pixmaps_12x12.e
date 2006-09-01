@@ -7,7 +7,13 @@ indexing
 
 class
 	ES_PIXMAPS_12X12
-	
+
+inherit
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -24,7 +30,7 @@ feature {NONE} -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_file.make_from_string ((create {EIFFEL_ENV}).bitmaps_path)
+				create l_file.make_from_string (eiffel_layout.bitmaps_path)
 				l_file.set_subdirectory ("png")
 				l_file.set_file_name (a_name)
 			end
@@ -43,7 +49,7 @@ feature {NONE} -- Initialization
 			retried := True
 			retry
 		end
-		
+
 feature -- Access
 
 	pixel_width: INTEGER is 12
@@ -201,7 +207,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 1))
 		end
-		
+
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is

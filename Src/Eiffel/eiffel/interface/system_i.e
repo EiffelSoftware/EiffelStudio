@@ -58,13 +58,6 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_ENV
-		rename
-			platform as platform_constants
-		undefine
-			platform_constants
-		end
-
 	CONF_ACCESS
 
 create

@@ -31,10 +31,26 @@ inherit
 		export
 			{NONE} all
 		end
-
+		
 	EIFFEL_ENV
 		export
 			{NONE} all
+		end
+
+feature -- Access
+
+	absolute_consume_path: STRING is
+			-- Absolute path to EAC assemblies file info
+		require
+			non_void_clr_version: clr_version /= Void
+		once
+			create Result.make (eiffel_assembly_cache_path.count + eac_info_file_name.count + 1)
+			Result.append (eiffel_assembly_cache_path)
+			Result.append (relative_executing_env_path)
+			Result.prune_all_trailing ((create {OPERATING_ENVIRONMENT}).directory_separator)
+		ensure
+			non_void_result: Result /= Void
+			valid_result: not Result.is_empty
 		end
 
 feature {CACHE_READER} -- Access

@@ -24,7 +24,7 @@
 		</library>
 		<library name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration.ecf"/>
 		<library name="date_time" location="$EIFFEL_SRC\library\time\time.ecf"/>
-		<library name="environment" location="$EIFFEL_SRC\Eiffel\library\environment\environment.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="vision2" location="$EIFFEL_SRC\library\vision2\vision2.ecf"/>
 		<library name="vision2_extension" location="$EIFFEL_SRC\library\vision2_extension\vision2_extension.ecf"/>

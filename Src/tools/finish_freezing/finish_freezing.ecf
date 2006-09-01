@@ -12,7 +12,7 @@
 		<setting name="multithreaded" value="False"/>
 		<library name="arg_parser" location="${EIFFEL_SRC}\framework\base\application\arg_parser\arg_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="environment" location="$EIFFEL_SRC\Eiffel\library\environment\environment.ecf"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
 		<cluster name="finish_freezing" location="$EIFFEL_SRC\tools\finish_freezing\main\"/>
 		<cluster name="resources" location="$EIFFEL_SRC\Eiffel\interface\tty\resources\"/>

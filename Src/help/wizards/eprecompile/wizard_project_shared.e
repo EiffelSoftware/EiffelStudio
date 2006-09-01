@@ -10,7 +10,7 @@ class
 	WIZARD_PROJECT_SHARED
 
 inherit
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 
 feature {NONE} -- Constants
 
@@ -18,8 +18,8 @@ feature {NONE} -- Constants
 			-- Default location for the precompiled base
 			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
 		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"precomp", "spec", Eiffel_platform>>)
+			create Result.make_from_string (eiffel_layout.Eiffel_installation_dir_name)
+			Result.extend_from_array (<<"precomp", "spec", eiffel_layout.Eiffel_platform>>)
 		end
 
 	Interface_names: INTERFACE_NAMES is

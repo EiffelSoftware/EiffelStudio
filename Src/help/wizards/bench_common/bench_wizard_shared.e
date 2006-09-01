@@ -12,7 +12,7 @@ class
 inherit
 	ARGUMENTS
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end

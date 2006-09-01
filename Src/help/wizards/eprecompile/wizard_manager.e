@@ -16,6 +16,13 @@ inherit
 			prepare
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make_and_launch
 
@@ -23,7 +30,12 @@ feature -- Initialization
 
 	prepare is
 			-- Prepare the first window to be displayed.
+		local
+			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
+			create l_layout
+			set_eiffel_layout (l_layout)
+
 			Precursor
 		end
 

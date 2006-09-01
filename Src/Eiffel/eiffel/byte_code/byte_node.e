@@ -96,15 +96,17 @@ feature -- Eiffel source line information
 			l_buffer: like buffer
 		do
 			if not context.final_mode or else System.exception_stack_managed then
-				lnr := context.get_next_breakpoint_slot
-				check
-					lnr > 0
+				if context.current_feature /= Void and context.current_feature.supports_step_in then
+					lnr := context.get_next_breakpoint_slot
+					check
+						lnr > 0
+					end
+					l_buffer := buffer
+					l_buffer.put_string("RTHOOK(")
+					l_buffer.put_integer(lnr)
+					l_buffer.put_string(");")
+					l_buffer.put_new_line
 				end
-				l_buffer := buffer
-				l_buffer.put_string("RTHOOK(")
-				l_buffer.put_integer(lnr)
-				l_buffer.put_string(");")
-				l_buffer.put_new_line
 			end
 		end
 
@@ -115,12 +117,14 @@ feature -- Eiffel source line information
 			l_buffer: like buffer
 		do
 			if not context.final_mode or else System.exception_stack_managed then
-				l_buffer := buffer
-				l_buffer.put_string("RTHOOK(")
-				l_buffer.put_integer(
-					context.current_feature.number_of_breakpoint_slots)
-				l_buffer.put_string(");")
-				l_buffer.put_new_line
+				if context.current_feature /= Void and context.current_feature.supports_step_in then
+					l_buffer := buffer
+					l_buffer.put_string("RTHOOK(")
+					l_buffer.put_integer(
+						context.current_feature.number_of_breakpoint_slots)
+					l_buffer.put_string(");")
+					l_buffer.put_new_line
+				end
 			end
 		end
 
@@ -155,14 +159,16 @@ feature -- Eiffel source line information
 				-- Note: the line number is not increased !!
 
 			if not context.final_mode then
-				lnr := context.get_breakpoint_slot
-					-- if lnr = 0 or -1 then we do nothing.
-				if lnr > 0 then
-					l_buffer := buffer
-					l_buffer.put_string("RTNHOOK(")
-					l_buffer.put_integer(lnr)
-					l_buffer.put_string(");")
-					l_buffer.put_new_line
+				if context.current_feature /= Void and context.current_feature.supports_step_in then
+					lnr := context.get_breakpoint_slot
+						-- if lnr = 0 or -1 then we do nothing.
+					if lnr > 0 then
+						l_buffer := buffer
+						l_buffer.put_string("RTNHOOK(")
+						l_buffer.put_integer(lnr)
+						l_buffer.put_string(");")
+						l_buffer.put_new_line
+					end
 				end
 			end
 		end
@@ -170,7 +176,9 @@ feature -- Eiffel source line information
 	generate_melted_end_debugger_hook (ba: BYTE_ARRAY) is
 			-- Record the breakable point corresponding to the end of the feature.
 		do
-			ba.generate_melted_debugger_hook (context.current_feature.number_of_breakpoint_slots)
+			if context.current_feature /= Void and then context.current_feature.supports_step_in then
+				ba.generate_melted_debugger_hook (context.current_feature.number_of_breakpoint_slots)
+			end
 		end
 
 feature

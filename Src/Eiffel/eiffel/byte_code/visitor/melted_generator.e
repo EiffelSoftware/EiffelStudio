@@ -1922,11 +1922,13 @@ feature {NONE} -- Implementation
 		local
 			lnr: INTEGER
 		do
-			lnr := context.get_next_breakpoint_slot
-			check
-				valid_line: lnr > 0
+			if context.current_feature /= Void and then context.current_feature.supports_step_in then
+				lnr := context.get_next_breakpoint_slot
+				check
+					valid_line: lnr > 0
+				end
+				ba.generate_melted_debugger_hook (lnr)
 			end
-			ba.generate_melted_debugger_hook (lnr)
 		end
 
 	generate_melted_debugger_hook_nested is
@@ -1934,12 +1936,14 @@ feature {NONE} -- Implementation
 		local
 			l_line: INTEGER
 		do
-			l_line := context.get_breakpoint_slot
-			if l_line > 0 then
-					-- Generate a hook when there is really need for one.
-					-- (E.g. we do not need a hook for the code generation
-					-- of an invariant).
-				ba.generate_melted_debugger_hook_nested (l_line)
+			if context.current_feature /= Void and then context.current_feature.supports_step_in then
+				l_line := context.get_breakpoint_slot
+				if l_line > 0 then
+						-- Generate a hook when there is really need for one.
+						-- (E.g. we do not need a hook for the code generation
+						-- of an invariant).
+					ba.generate_melted_debugger_hook_nested (l_line)
+				end
 			end
 		end
 

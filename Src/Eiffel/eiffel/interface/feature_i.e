@@ -278,6 +278,12 @@ feature -- Access
 	inline_agent_nr: INTEGER
 		-- the number of this inline agent in the enclosing feature
 
+	supports_step_in: BOOLEAN
+		-- Is it possible to step into this feature or set breakpoints in it?
+		do
+			Result := not (enclosing_feature.is_invariant or else is_fake_inline_agent)
+		end
+
 feature -- Comparison
 
 	infix "<" (other: FEATURE_I): BOOLEAN is

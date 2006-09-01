@@ -258,6 +258,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 		local
 			l_routine_as: ROUTINE_AS
 			l_vpir: VPIR3
+			l_written_class: CLASS_C
 		do
 			break_point_slot_count := 0
 			l_routine_as ?= a_body.content
@@ -285,7 +286,9 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Internal type checking
 			reset
 			is_byte_node_enabled := a_is_byte_node_enabled
 			is_inherited := a_is_inherited
+			l_written_class := context.written_class
 			a_feature.check_types (context.current_feature_table)
+			context.set_written_class (l_written_class)
 			error_handler.checksum
 			if not is_inherited then
 				if a_feature.has_arguments then
@@ -2795,7 +2798,7 @@ feature -- Implementation
 					end
 				end
 				l_access ?= last_byte_node
-				if l_is_named_tuple or else l_feature.is_attribute then
+				if l_is_named_tuple or else l_feature.is_attribute or else l_feature.is_constant then
 					is_byte_node_enabled := False
 
 					compute_routine (l_table, l_feature, True, False, l_class.class_id, l_target_type, last_type,
@@ -2806,9 +2809,9 @@ feature -- Implementation
 						if l_is_named_tuple then
 							compute_named_tuple_fake_inline_agent (
 								l_as, l_named_tuple, l_label_pos, l_target_node, l_target_type, last_type)
-						else
-							compute_attribute_fake_inline_agent (
-								l_as,l_feature, l_target_node, l_target_type, last_type)
+						else 
+							compute_feature_fake_inline_agent (
+								l_as, l_feature, l_target_node, l_target_type, last_type)
 						end
 					end
 				else
@@ -4558,6 +4561,8 @@ feature -- Implementation
 				l_expr ?= last_byte_node
 				l_loop.set_stop (l_expr)
 			end
+
+			break_point_slot_count := break_point_slot_count + 1
 
 			if l_as.compound /= Void then
 					-- Type check the loop compound
@@ -6324,21 +6329,15 @@ feature {NONE} -- Agents
 			create Result.make (System.array_id, generics)
 		end
 
-	compute_attribute_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: FEATURE_I; a_target: BYTE_NODE;
+	compute_feature_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: FEATURE_I; a_target: BYTE_NODE;
 								   		a_target_type: TYPE_A; a_agent_type: TYPE_A)
-		is
-		local
-			l_attribute: ATTRIBUTE_B
 		do
-			create l_attribute
-			l_attribute.init (a_feature)
-			l_attribute.set_type (a_feature.type.type_i)
-			compute_fake_inline_agent (a_rc, l_attribute, a_feature.type, a_target, a_target_type, a_agent_type)
+			compute_fake_inline_agent (a_rc, a_feature.access (a_feature.type.type_i), a_feature.type, a_target,
+									   a_target_type, a_agent_type)
 		end
 
 	compute_named_tuple_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_named_tuple: NAMED_TUPLE_TYPE_A; a_label_pos: INTEGER;
 										   a_target: BYTE_NODE; a_target_type: TYPE_A; a_agent_type: TYPE_A)
-		is
 		local
 			l_tuple_access: TUPLE_ACCESS_B
 		do

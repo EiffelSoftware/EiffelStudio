@@ -79,17 +79,8 @@ feature -- Status update
 			-- Set up the ISE_PRECOMP environment variable, depending on `a_is_dotnet'.
 		require
 			is_valid_environment: is_valid_environment
-		local
-			l_path: DIRECTORY_NAME
 		do
-			create l_path.make_from_string (eiffel_installation_dir_name)
-			l_path.extend_from_array (<<"precomp", "spec">>)
-			if a_is_dotnet then
-				l_path.extend ("dotnet")
-			else
-				l_path.extend (eiffel_platform)
-			end
-			environment.put (l_path, ise_precomp_env)
+			environment.put (Eiffel_precomp_mode (a_is_dotnet), ise_precomp_env)
 			is_valid_precompile_environment := True
 		ensure
 			is_valid_precompile_environment: is_valid_precompile_environment
@@ -263,6 +254,22 @@ feature -- Access: file name
 			create Result.make_from_string (environment.get_from_application (ise_precomp_env, application_name))
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
+		end
+
+	Eiffel_precomp_mode (a_is_dotnet: BOOLEAN): DIRECTORY_NAME
+			-- Retrieve precomp location.
+		require
+			is_valid_environment: is_valid_environment
+		do
+			Result := eiffel_installation_dir_name.twin
+			Result.extend_from_array (<<"precomp", "spec">>)
+			if a_is_dotnet then
+				Result.extend ("dotnet")
+			else
+				Result.extend (eiffel_platform)
+			end
+		ensure
+			result_ok: Result /= Void and then not Result.is_empty
 		end
 
 	Studio_path: DIRECTORY_NAME is

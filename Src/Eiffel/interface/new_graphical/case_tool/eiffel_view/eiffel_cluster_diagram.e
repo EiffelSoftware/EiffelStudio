@@ -661,11 +661,11 @@ feature {NONE} -- Implementation
 				else
 					create new_cluster.make (class_cluster)
 					model.add_cluster (new_cluster)
-					l_array_redo.extend (agent parent.enable_needed_on_diagram)
-					l_array_undo.extend (agent parent.disable_needed_on_diagram)
+					l_array_redo.extend (agent new_cluster.enable_needed_on_diagram)
+					l_array_undo.extend (agent new_cluster.disable_needed_on_diagram)
 
 					create new_class.make (a_class)
-					es_cluster.extend (new_class)
+					new_cluster.extend (new_class)
 					model.add_node_relations (new_class)
 					update_cluster_legend
 					fig ?= figure_from_model (new_class)

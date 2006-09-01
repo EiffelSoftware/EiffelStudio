@@ -7,7 +7,13 @@ indexing
 
 class
 	${NAME}
-	
+
+inherit
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -24,7 +30,7 @@ feature {NONE} -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				create l_file.make_from_string ((create {EIFFEL_ENV}).bitmaps_path)
+				create l_file.make_from_string (eiffel_layout.bitmaps_path)
 				l_file.set_subdirectory ("png")
 				l_file.set_file_name (a_name)
 			end

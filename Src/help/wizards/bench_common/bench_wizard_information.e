@@ -16,6 +16,11 @@ inherit
 
 	BENCH_WIZARD_SHARED
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -23,17 +28,21 @@ feature {NONE} -- Initialization
 		local
 			l_dir: DIRECTORY
 			l_count: INTEGER
+			l_layout: WIZARD_EIFFEL_LAYOUT
 		do
+			create l_layout
+--			l_layout.check
+
 			compile_project := True
 			ace_location := ""
 
-			if Eiffel_projects_directory /= Void and then not Eiffel_projects_directory.is_empty then
-				project_location := Eiffel_projects_directory.twin
+			if eiffel_layout.Eiffel_projects_directory /= Void and then not eiffel_layout.Eiffel_projects_directory.is_empty then
+				project_location := eiffel_layout.Eiffel_projects_directory.twin
 			else
 				if not platform_is_unix then
 					project_location := "C:\projects"
 				else
-					project_location := Home
+					project_location := eiffel_layout.Home
 				end
 			end
 			from

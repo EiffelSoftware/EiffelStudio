@@ -19,11 +19,6 @@ inherit
 			default_create, copy
 		end
 
-	EIFFEL_ENV
-		undefine
-			default_create, copy
-		end
-
 	CLASS_FORMAT_CONSTANTS
 		undefine
 			default_create, copy
@@ -61,6 +56,13 @@ inherit
 		end
 
 	EB_SHARED_ID_SOLUTION
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		undefine
@@ -514,7 +516,7 @@ feature {NONE} -- Implementation
 			str_element: EV_LIST_ITEM
 			selected: INTEGER
 		do
-			create filter_dir.make (filter_path)
+			create filter_dir.make (eiffel_layout.filter_path)
 			if not filter_dir.exists then
 				list.wipe_out
 				create str_element

@@ -1,61 +1,54 @@
 indexing
+	description: "Provide access to eiffel environment information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
-	PRECOMP_INFO
+	EIFFEL_LAYOUT
 
-inherit
-	HASH_TABLE [INTEGER, STRING]
-		rename
-			make as ht_make
-		end
+feature -- Status
 
-	SHARED_WORKBENCH
-		undefine
-			copy, is_equal
-		end
-
-	SYSTEM_CONSTANTS
-		undefine
-			copy, is_equal
-		end
-
-create
-	make
-
-feature {NONE} -- Initialization
-
-	make (precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER];
-			check_license: BOOLEAN) is
-			-- Create a new structure containing precompilation info.
-		require
-			precomp_dirs_not_void: precomp_dirs /= Void
+	is_eiffel_layout_defined: BOOLEAN is
+			-- Has the layout been defined?
 		do
-			ht_make (precomp_dirs.count);
-			from precomp_dirs.start until precomp_dirs.after loop
-				force (precomp_dirs.key_for_iteration,
-					precomp_dirs.item_for_iteration.name);
-				precomp_dirs.forth
-			end
-			compiler_version := Version_number;
-			compilation_id := System.compilation_id
-			licensed := check_license
-			name := System.name
+			Result := eiffel_layout_cell.item /= Void
+		end
+
+feature -- Update
+
+	set_eiffel_layout (a_layout: like eiffel_layout) is
+			-- Set `eiffel_layout' to `a_layout'.
+		require
+			a_layout_ok: a_layout /= Void
+		do
+			eiffel_layout_cell.put (a_layout)
+		ensure
+			is_eiffel_layout_defined: is_eiffel_layout_defined
 		end
 
 feature -- Access
 
-	compilation_id: INTEGER
-			-- Precompilation identifier
+	eiffel_layout: EIFFEL_ENV is
+			-- Layout of eiffel.
+		require
+			is_eiffel_layout_defined: is_eiffel_layout_defined
+		do
+			Result := eiffel_layout_cell.item
+		ensure
+			Result_not_void: Result /= Void
+		end
 
-	compiler_version: STRING
-			-- Compiler version
+feature {NONE} -- Implementation
 
-	licensed: BOOLEAN
-			-- Is this precompilation protected by a license?
-
-	name: STRING;
-			-- Name of the precompiled system
+	eiffel_layout_cell: CELL [EIFFEL_ENV] is
+			-- Cell to hold the layout.
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -63,19 +56,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
@@ -88,5 +81,4 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-end -- class PRECOMP_INFO
+end

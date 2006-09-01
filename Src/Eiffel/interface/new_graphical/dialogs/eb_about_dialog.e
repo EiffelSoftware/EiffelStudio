@@ -32,7 +32,7 @@ inherit
 			default_create, copy
 		end
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		undefine
@@ -97,7 +97,7 @@ feature -- Initialization
 			eiffel_text_box.extend (registration_label)
 
 				-- Box with image + text + Borland logo
-			if has_borland then
+			if eiffel_layout.has_borland then
 				create borland_label.make_with_text (t_Borland)
 				borland_label.align_text_left
 				borland_label.set_background_color (White)
@@ -121,7 +121,7 @@ feature -- Initialization
 			create white_cell
 			white_cell.set_background_color (White)
 			texts_box.extend (white_cell) -- expandable item
-			if has_borland then
+			if eiffel_layout.has_borland then
 				texts_box.extend (borland_box)
 				texts_box.disable_item_expand (borland_box)
 			end
@@ -166,11 +166,11 @@ feature {NONE} -- Implementation
 			create Result.make (50)
 			Result.append ("Installation information:%N")
 			Result.append ("Version = " + t_version_info + "%N")
-			Result.append ("$ISE_EIFFEL = " + eiffel_installation_dir_name + "%N")
-			Result.append ("$ISE_LIBRARY = " + eiffel_library + "%N")
-			Result.append ("$ISE_PLATFORM = " + eiffel_platform)
+			Result.append ("$ISE_EIFFEL = " + eiffel_layout.eiffel_installation_dir_name + "%N")
+			Result.append ("$ISE_LIBRARY = " + eiffel_layout.eiffel_library + "%N")
+			Result.append ("$ISE_PLATFORM = " + eiffel_layout.eiffel_platform)
 			if platform_constants.is_windows then
-				Result.append ("%N$ISE_C_COMPILER = " + eiffel_c_compiler)
+				Result.append ("%N$ISE_C_COMPILER = " + eiffel_layout.eiffel_c_compiler)
 			end
 		end
 

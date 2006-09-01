@@ -82,7 +82,7 @@ inherit
 			default_create, copy
 		end
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		undefine
@@ -439,7 +439,7 @@ feature {NONE} -- Implementation
 			if not retried then
 				create available_wizards.make
 
-				create new_project_directory.make (new_project_wizards_path)
+				create new_project_directory.make (eiffel_layout.new_project_wizards_path)
 				entries := new_project_directory.linear_representation
 				from
 					entries.start
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 					extension.keep_tail(4)
 
 					if extension.is_equal (".dsc") then
-						create filename.make_from_string (new_project_wizards_path)
+						create filename.make_from_string (eiffel_layout.new_project_wizards_path)
 						filename.extend (entries.item)
 						create wizard.make_with_file (filename)
 						if wizard.target_platform_supported then
@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 					l_loader.compile_project
 				end
 			else
-				ebench_name := Estudio_command_name.twin
+				ebench_name := eiffel_layout.Estudio_command_name.twin
 				ebench_name.append (" -clean")
 				if dir_name /= Void and not dir_name.is_empty then
 					ebench_name.append (" -project_path %"")

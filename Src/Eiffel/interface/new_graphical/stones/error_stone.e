@@ -10,12 +10,15 @@ indexing
 class ERROR_STONE
 
 inherit
-
-	EIFFEL_ENV
 	FILED_STONE
 		redefine
 			help_text,
 			is_storable
+		end
+
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
 		end
 
 create
@@ -72,7 +75,7 @@ feature -- Access
 	file_name: FILE_NAME is
 			-- File where the help is
 		do
-			create Result.make_from_string (error_path)
+			create Result.make_from_string (eiffel_layout.error_path)
 			Result.set_file_name (error_i.help_file_name)
 		end
 

@@ -1,7 +1,6 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Lace controller
 
 class LACE_I
 
@@ -26,10 +25,6 @@ inherit
 		export
 			{NONE} all
 		end
-	EIFFEL_ENV
-		export
-			{NONE} all
-		end
 	SYSTEM_CONSTANTS
 		export
 			{NONE} all
@@ -39,6 +34,11 @@ inherit
 			{NONE} all
 		end
 	CONF_VALIDITY
+		export
+			{NONE} all
+		end
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 			project_location.set_target (target_name)
 
 				 -- set ISE_PRECOMP
-			set_precompile (target.setting_msil_generation)
+			eiffel_layout.set_precompile (target.setting_msil_generation)
 		ensure
 			target_name_set: target_name /= Void and then not target_name.is_empty
 			valid_target: conf_system.targets.has (target_name)
@@ -974,7 +974,7 @@ feature {NONE} -- Implementation
 				-- new system without precompile, set value
 			elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
 				if l_s = Void then
-					l_s := ((create {EIFFEL_ENV}).assemblies_path)
+					l_s := eiffel_layout.assemblies_path
 				end
 				system.set_metadata_cache_path (l_s)
 			end
@@ -1123,7 +1123,7 @@ feature {NONE} -- Implementation
 			l_s := l_settings.item (s_shared_library_definition)
 				-- If the release doesn't generate DLL's,
 				-- we do not take the option into account in the Ace.
-			if l_s /= Void and has_dll_generation then
+			if l_s /= Void and eiffel_layout.has_dll_generation then
 				system.set_dynamic_def_file (l_factory.new_location_from_full_path (l_s, a_target).evaluated_path)
 			end
 

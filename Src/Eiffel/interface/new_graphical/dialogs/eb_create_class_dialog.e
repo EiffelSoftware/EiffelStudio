@@ -32,13 +32,6 @@ inherit
 			default_create, copy
 		end
 
-	EIFFEL_ENV
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 	EB_VISION2_FACILITIES
 		export
 			{NONE} all
@@ -75,6 +68,13 @@ inherit
 		end
 
 	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		undefine
@@ -453,7 +453,7 @@ feature {NONE} -- Implementation
 			tmp: STRING
 		do
 			if not retried then
-				create clf.make_from_string (Templates_path)
+				create clf.make_from_string (eiffel_layout.Templates_path)
 				if not empty_check.is_selected then
 					clf.set_file_name ("empty")
 				else

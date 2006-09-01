@@ -55,6 +55,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_with_parent
@@ -98,7 +103,7 @@ feature -- Execution
 					create wd.make_with_text (warning_messages.w_file_not_exist (a_project_file_name))
 					wd.show_modal_to_window (parent_window)
 				else
-					ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
+					ebench_name := eiffel_layout.Estudio_command_name.twin
 					ebench_name.append (" ")
 					ebench_name.append (a_project_file_name)
 					launch_ebench (ebench_name)

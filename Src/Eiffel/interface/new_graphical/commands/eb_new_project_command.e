@@ -38,11 +38,6 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_ENV
-		export
-			{NONE} all
-		end
-
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all

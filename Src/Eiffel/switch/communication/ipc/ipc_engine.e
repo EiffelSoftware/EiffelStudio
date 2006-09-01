@@ -27,6 +27,11 @@ inherit
 
 	SHARED_EXEC_ENVIRONMENT
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -127,7 +132,7 @@ feature -- Launching
 			if s /= Void then
 				create ise_ecdbgd_path.make_from_string (s)
 			else
-				ise_ecdbgd_path := Ecdbgd_command_name.twin
+				ise_ecdbgd_path := eiffel_layout.Ecdbgd_command_name.twin
 			end
 		end
 

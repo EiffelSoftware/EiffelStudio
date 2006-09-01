@@ -111,17 +111,17 @@ inherit
 			{NONE} All
 		end
 
-	EIFFEL_ENV
-		export
-			{NONE} All
-		end
-
 	SHARED_TEXT_ITEMS
 		export
 			{NONE} All
 		end
 
 	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -323,12 +323,12 @@ feature {NONE} -- Initialization
 				-- Compilation
 			create c_workbench_compilation_cmd.make_workbench (Current)
 			create c_finalized_compilation_cmd.make_finalized (Current)
-			if has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				create show_dynamic_lib_tool.make
 				show_dynamic_lib_tool.set_menu_name (Interface_names.m_new_dynamic_lib)
 				show_dynamic_lib_tool.add_agent (agent show_dynamic_library_dialog)
 			end
-			if has_profiler then
+			if eiffel_layout.has_profiler then
 				create show_profiler
 			end
 
@@ -755,12 +755,12 @@ feature {NONE} -- Initialization
 				-- Initialize undo / redo accelerators
 			create undo_accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_z), True, False, False)
-			if has_case then
+			if eiffel_layout.has_case then
 				undo_accelerator.actions.extend (agent (context_tool.editor.undo_cmd).on_ctrl_z)
 			end
 			create redo_accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code (Key_y), True, False, False)
-			if has_case then
+			if eiffel_layout.has_case then
 				redo_accelerator.actions.extend (agent (context_tool.editor.redo_cmd).on_ctrl_y)
 			end
 			window.accelerators.extend (undo_accelerator)
@@ -1827,19 +1827,19 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
 
-			if has_documentation_generation or has_xmi_generation then
+			if eiffel_layout.has_documentation_generation or eiffel_layout.has_xmi_generation then
 					-- Separator -------------------------------------------------
 				project_menu.extend (create {EV_MENU_SEPARATOR})
 			end
 
-			if has_documentation_generation then
+			if eiffel_layout.has_documentation_generation then
 					-- Generate Documentation
 				command_menu_item := document_cmd.new_menu_item
 				add_recyclable (command_menu_item)
 				project_menu.extend (command_menu_item)
 			end
 
-			if has_xmi_generation then
+			if eiffel_layout.has_xmi_generation then
 					-- Export XMI
 				command_menu_item := export_cmd.new_menu_item
 				add_recyclable (command_menu_item)
@@ -1977,7 +1977,7 @@ feature {NONE} -- Menu Building
 				-- Separator --------------------------------------
 			tools_menu.extend (create {EV_MENU_SEPARATOR})
 
-			if has_profiler then
+			if eiffel_layout.has_profiler then
 					-- Profiler Window
 				command_menu_item := show_profiler.new_menu_item
 				add_recyclable (command_menu_item)
@@ -1989,7 +1989,7 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			tools_menu.extend (command_menu_item)
 
-			if has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 					-- Dynamic Library Window
 				command_menu_item := show_dynamic_lib_tool.new_menu_item
 				add_recyclable (command_menu_item)
@@ -2429,10 +2429,10 @@ feature -- Resource Update
 			enable_commands_on_project_created
 			context_tool.on_project_created
 			address_manager.on_project_created
-			if has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				show_dynamic_lib_tool.enable_sensitive
 			end
-			if has_profiler then
+			if eiffel_layout.has_profiler then
 				show_profiler.enable_sensitive
 			end
 		end
@@ -2456,10 +2456,10 @@ feature -- Resource Update
 			context_tool.on_project_unloaded
 			address_manager.on_project_unloaded
 			build_menu_bar
-			if has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				show_dynamic_lib_tool.disable_sensitive
 			end
-			if has_profiler then
+			if eiffel_layout.has_profiler then
 				show_profiler.disable_sensitive
 			end
 		end
@@ -4675,10 +4675,10 @@ feature {NONE} -- Execution
 	enable_commands_on_project_loaded is
 			-- Enable commands when a new project has been created and compiled
 		do
-			if has_profiler then
+			if eiffel_layout.has_profiler then
 				show_profiler.enable_sensitive
 			end
-			if has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				show_dynamic_lib_tool.enable_sensitive
 			end
 			new_class_cmd.enable_sensitive
@@ -4702,10 +4702,10 @@ feature {NONE} -- Execution
 	disable_commands_on_project_unloaded is
 			-- Enable commands when a project has been closed.
 		do
-			if has_dll_generation then
+			if eiffel_layout.has_dll_generation then
 				show_dynamic_lib_tool.disable_sensitive
 			end
-			if has_profiler then
+			if eiffel_layout.has_profiler then
 				show_profiler.disable_sensitive
 			end
 			new_class_cmd.disable_sensitive

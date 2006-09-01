@@ -8,9 +8,6 @@ indexing
 class
 	EB_RECENT_PROJECTS
 
-inherit
-	EIFFEL_ENV
-
 create
 	make
 

@@ -17,12 +17,12 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_ENV
+	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
 		end
 
-	EXECUTION_ENVIRONMENT
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -35,9 +35,9 @@ feature -- Execution
 			command: STRING
 		do
 			create command.make (50)
-			command.append (Precompilation_wizard_command_name)
+			command.append (eiffel_layout.Precompilation_wizard_command_name)
 			command.append (" ")
-			command.append (precompilation_wizard_resources_directory)
+			command.append (eiffel_layout.precompilation_wizard_resources_directory)
 			launch(command)
 		end
 

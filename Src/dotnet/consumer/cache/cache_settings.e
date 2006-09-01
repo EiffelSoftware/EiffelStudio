@@ -23,8 +23,8 @@ feature -- Access
 		once
 			create l_cr
 			Result := l_cr.eiffel_assembly_cache_path
-			Result := Result.replace_character (':', '_')
-			Result := Result.replace_character ('\', '_')
+			Result := Result.replace_character (':', '!')
+			Result := Result.replace_character ('\', '!')
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: Result.length > 0

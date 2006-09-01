@@ -80,9 +80,6 @@ feature -- Update
 		local
 			l_column_width1, l_column_width2: INTEGER
 		do
-			if is_displayed then
-				set_focus
-			end
 			if not is_destroyed and then column_count = 2 then
 				l_column_width1 := column (1).width
 				l_column_width2 := column (2).width

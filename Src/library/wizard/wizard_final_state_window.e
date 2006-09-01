@@ -49,9 +49,6 @@ feature -- Basic Operations
 
 	total, iteration: INTEGER
 
-	ebench_launcher: EBENCH_LAUNCHER
-		-- Class to launch ebench after the generation
-
 feature -- Access
 
 	is_final_state: BOOLEAN is TRUE

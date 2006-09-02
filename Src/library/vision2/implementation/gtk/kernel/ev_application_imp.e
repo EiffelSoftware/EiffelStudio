@@ -257,6 +257,7 @@ feature -- Basic operation
 			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
 			l_gdk_window: POINTER
 			l_stored_display_data: like stored_display_data
+			l_top_level_window_imp: EV_WINDOW_IMP
 			l_popup_parent: EV_POPUP_WINDOW_IMP
 			l_ignore_event: BOOLEAN
 		do
@@ -280,30 +281,35 @@ feature -- Basic operation
 
 				-- This is used to prevent context menus in gtk widget such as GtkTextEntry from appearing in EV_POPUP_WINDOWS.
 			if l_pnd_item /= Void then
-				l_popup_parent ?= l_pnd_item.top_level_window_imp
-				if l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3  then
-					l_ignore_event := True
-				end
-			end
-			if not l_ignore_event then
-				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+				l_top_level_window_imp ?= l_pnd_item.top_level_window_imp
+				l_popup_parent ?= l_top_level_window_imp
+
+					-- We do not want to propagate if right clicking in a popup parent (for activation focus handling)
+					-- or if the widget is insensitive or the top level window has a modal child.
+				l_ignore_event :=
+					l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3 or else
+					not ({EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_item.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) or else
+					l_top_level_window_imp /= Void and then l_top_level_window_imp.has_modal_window
 			end
 
-			if
-				l_pnd_item /= Void and then
-				{EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_item.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM
-			then
-				l_pnd_item.on_mouse_button_event (
-					{EV_GTK_EXTERNALS}.gdk_event_button_struct_type (a_gdk_event),
-					{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
-					{EV_GTK_EXTERNALS}.gdk_event_button_struct_y (a_gdk_event).truncated_to_integer,
-					{EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event),
-					0.5,
-					0.5,
-					0.5,
-					{EV_GTK_EXTERNALS}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer,
-					{EV_GTK_EXTERNALS}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer
-				)
+			if not l_ignore_event then
+
+					-- Fire the gtk event first.
+				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
+
+				if l_pnd_item /= Void then
+					l_pnd_item.on_mouse_button_event (
+						{EV_GTK_EXTERNALS}.gdk_event_button_struct_type (a_gdk_event),
+						{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (a_gdk_event).truncated_to_integer,
+						{EV_GTK_EXTERNALS}.gdk_event_button_struct_y (a_gdk_event).truncated_to_integer,
+						{EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event),
+						0.5,
+						0.5,
+						0.5,
+						{EV_GTK_EXTERNALS}.gdk_event_button_struct_x_root (a_gdk_event).truncated_to_integer,
+						{EV_GTK_EXTERNALS}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer
+					)
+				end
 			end
 
 			use_stored_display_data := False

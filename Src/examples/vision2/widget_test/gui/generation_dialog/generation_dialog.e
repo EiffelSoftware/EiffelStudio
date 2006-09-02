@@ -11,17 +11,17 @@ class
 
 inherit
 	GENERATION_DIALOG_IMP
-	
+
 	SHARED_TEST_CONTROLLER
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GENERATION_CONSTANTS
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	INSTALLATION_LOCATOR
 		undefine
 			default_create, copy, is_equal
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			cancel_button.select_actions.extend (agent hide)
 			directory_display.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 		end
-		
+
 feature -- Basic operation
 
 	set_message (a_text: STRING) is
@@ -55,7 +55,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-	
+
 	display_directory_dialog is
 			-- Called by `select_actions' of `select_directory_button'.
 		local
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not cancelled then
-				directory_display.set_text (Directory_dialog.directory)			
+				directory_display.set_text (Directory_dialog.directory)
 				ok_button.enable_sensitive
 			else
 				directory_display.remove_text
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			if contents.has (Test_controller.selected_test_name + ".e") then
 				clashing_files := clashing_files + Test_controller.selected_test_name + ".e" + "%N"
 			end
-			
+
 			if not clashing_files.is_empty then
 				clashing_files := "Conflict found in directory " + directory.name +
 				"%NThe following files already exist:%N%N" + clashing_files +
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			end
 			if installation_location = Void then
 				supress_generation := True
-				create error_dialog.make_with_text ("Unable to generate test as required files cannot be located.%NIf this tour was installed as part of the EiffelStudio installation, please ensure that ISE_EIFFEL is correctly set.%NIf this tour was installed separately, please ensure ISE_VISION2_TOUR is correctly set to the installation directory.")
+				create error_dialog.make_with_text ("Unable to generate test as required files cannot be located.%NIf this tour was installed as part of the EiffelStudio installation, please ensure that ISE_EIFFEL is correctly set.")
 				error_dialog.show_modal_to_window (Current)
 			end
 			if not supress_generation then
@@ -142,14 +142,14 @@ feature {NONE} -- Implementation
 			-- Called by `select_actions' of `cancel_button'.
 		do
 		end
-		
+
 	directory_dialog: EV_DIRECTORY_DIALOG is
 			-- Dialog used to retrieve directory for
 			-- generation.
 		once
 			create Result
 		end
-				
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -12,18 +12,14 @@ class
 feature -- Access
 
 	application_file_name: STRING is "test_application.e"
-	
+
 	common_test_file_name: STRING is "common_test.e"
-	
+
 	ace_file_name: STRING is
 		once
-			if (create {PLATFORM}).is_windows then
-				Result := "ace.Windows.ace"
-			else
-				Result := "ace.Unix.ace"
-			end
+			Result := "test.ecf"
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

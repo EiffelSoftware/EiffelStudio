@@ -11,10 +11,10 @@ indexing
 
 class
 	WIDGET_TEST_PROJECT_GENERATOR
-	
+
 inherit
 	INSTALLATION_LOCATOR
-	
+
 	GENERATION_CONSTANTS
 
 feature -- Access
@@ -34,7 +34,7 @@ feature -- Access
 			generate_test_file (project_name, widget_type)
 			generate_common_test
 		end
-		
+
 feature {NONE} -- Implementation
 
 	generate_ace_file (project_name: STRING) is
@@ -47,12 +47,7 @@ feature {NONE} -- Implementation
 		do
 			create filename.make_from_string (installation_location)
 			filename.extend ("templates")
-			if (create {PLATFORM}).is_windows then
-				filename.extend ("windows")
-			else
-				filename.extend ("unix")
-			end
-			filename.extend ("ace_template.ace")
+			filename.extend ("template.ecf")
 			create ace_template_file.make_open_read (filename)
 			ace_template_file.start
 			ace_template_file.read_stream (ace_template_file.count)
@@ -60,6 +55,7 @@ feature {NONE} -- Implementation
 			ace_template_file.close
 			add_generated_string (ace_text, project_name, "<PROJECT_NAME>")
 			add_generated_string (ace_text, current_generation_directory.name, "<PROJECT_LOCATION>")
+			add_generated_string (ace_text, (create {UUID_GENERATOR}).generate_uuid.out, "<UUID>")
 			create filename.make_from_string (current_generation_directory.name)
 			filename.extend (ace_file_name)
 			create ace_template_file.make (filename.out)
@@ -68,7 +64,7 @@ feature {NONE} -- Implementation
 			ace_template_file.putstring (ace_text)
 			ace_template_file.close
 		end
-		
+
 	generate_application_file (test_name: STRING) is
 			-- Generate an application file for thsi project.
 		local
@@ -93,7 +89,7 @@ feature {NONE} -- Implementation
 			application_template_file.putstring (application_text)
 			application_template_file.close
 		end
-		
+
 	generate_common_test is
 			-- Generate the common test file.
 		local
@@ -118,7 +114,7 @@ feature {NONE} -- Implementation
 			common_template_file.putstring (common_text)
 			common_template_file.close
 		end
-		
+
 	generate_test_file (test_name, widget_type: STRING) is
 			-- generate the file containing the test.
 		local
@@ -146,7 +142,7 @@ feature {NONE} -- Implementation
 			copy_required_pixmaps (test_text)
 			test_template_file.close
 		end
-		
+
 	copy_required_pixmaps (class_text: STRING) is
 			-- Copy pixmaps required by `class_text' as defined in the class header.
 		local
@@ -161,7 +157,7 @@ feature {NONE} -- Implementation
 			index_of_pixmaps_required := class_text.substring_index ("pixmaps_required:", 1)
 			if index_of_pixmaps_required > 0 then
 				index_of_start_quote := class_text.substring_index ("%"", index_of_pixmaps_required)
-				index_of_end_quote := class_text.substring_index ("%"", index_of_start_quote + 1)	
+				index_of_end_quote := class_text.substring_index ("%"", index_of_start_quote + 1)
 				string_to_process := class_text.substring (index_of_start_quote + 1, index_of_end_quote - 1)
 					-- Remove all spaces.
 				string_to_process.prune_all (' ')
@@ -189,7 +185,7 @@ feature {NONE} -- Implementation
 					file.read_stream (file.count)
 					file_contents := file.last_string
 					file.close
-					
+
 					create file_name.make_from_string (current_generation_directory.name)
 					file_name.extend ("image" + current_image_number.out + ".png")
 					create file.make (file_name.out)
@@ -200,8 +196,8 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-		
+
+
 	add_generated_string (a_class_text, new, tag: STRING) is
 			-- Replace `tag' in `class_text' with `new'.
 			-- If `new' is Void then add "".
@@ -216,7 +212,7 @@ feature {NONE} -- Implementation
 			a_class_text.replace_substring_all (tag, "")
 			a_class_text.insert_string (new, temp_index)
 		end
-		
+
 	current_generation_directory: DIRECTORY;
 		-- Directory in which to perform generation
 

@@ -8,37 +8,37 @@ indexing
 
 class
 	WIDGET_TEST_SHARED
-	
+
 inherit
 	INTERNAL
 		export
 			{NONE} all
 		end
-	
+
 	INSTALLATION_LOCATOR
 		export
 			{NONE} all
 		end
-	
+
 	EV_ANY_HANDLER
 		export
 			{NONE} all
 		end
 
 feature -- Access
-		
+
 	test_widget: EV_WIDGET is
 			-- `Result' is current widget for testing.
 		do
 			Result := test_widget_holder.widget
 		end
-		
+
 	test_widget_type: STRING is
 			-- `Result' is type of `test_widget'.
 		do
 			Result := class_name (test_widget)
 		end
-		
+
 	current_text_size: INTEGER is
 			-- Size of flat short text display.
 		do
@@ -65,7 +65,7 @@ feature -- Basic operation
 		ensure
 			test_widget_not_void: test_widget /= Void
 		end
-		
+
 	set_current_text_size (a_size: INTEGER) is
 			-- Assign `a_size' to `current_text_size'.
 		require
@@ -83,7 +83,7 @@ feature -- Basic operation
 		ensure
 			agent_added: widget_type_changed_agents.count = old widget_type_changed_agents.count + 1
 		end
-		
+
 	pixmap_by_name (a_name: STRING): EV_PIXMAP is
 			-- `Result' is a pixmap corresponding to `a_name'.
 		require
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 				widget_type_changed_agents.forth
 			end
 		end
-		
+
 	widget_type_changed_agents: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_WIDGET]]] is
 			-- A list of agents to be executed when the type of the current
 			-- test widget changes. A client may use `register_type_change_agent'
@@ -138,13 +138,13 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (4)
 		end
-		
+
 	application: EV_APPLICATION is
 			-- Once access to EV_APPLICATION.
 		once
 			Result := (create {EV_ENVIRONMENT}).application
 		end
-		
+
 	missing_files: ARRAYED_LIST [STRING] is
 			-- All files found to be missing by `pixmap_by_name'.
 			-- These are buffered, so that they may be detailled together,
@@ -152,17 +152,17 @@ feature {NONE} -- Implementation
 		once
 			Create Result.make (1)
 		end
-		
-	location_error_message: STRING is "If this tour was installed as part of the EiffelStudio installation, please ensure that ISE_EIFFEL is correctly set.%NIf installed separately, please ensure ISE_VISION2_TOUR is correctly set to the installation directory."
+
+	location_error_message: STRING is "If this tour was installed as part of the EiffelStudio installation, please ensure that ISE_EIFFEL is correctly set."
 		-- Error message detailing the envieonment variables that should be set.
-		
+
 	current_text_size_ref: INTEGER_REF is
 			-- Once access to the implementation of `current_text_size'.
 		once
 			create Result
 		end
-		
-		
+
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

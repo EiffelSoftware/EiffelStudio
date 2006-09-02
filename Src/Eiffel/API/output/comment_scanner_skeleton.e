@@ -157,8 +157,6 @@ feature {NONE} -- Implementation
 		local
 			l_text : like text
 			l_feat_name: STRING
-			l_infix_name: STRING
-			l_prefix_name: STRING
 			l_feat: E_FEATURE
 		do
 			l_text := text
@@ -173,21 +171,9 @@ feature {NONE} -- Implementation
 			l_feat := feature_by_name (l_feat_name)
 				-- We try infix and prefix
 			if l_feat = Void then
-				l_infix_name := once "infix %"" + l_feat_name + once "%""
-				l_feat := feature_by_name (l_infix_name)
-				if l_feat = Void then
-					l_prefix_name := once "prefix %"" + l_feat_name + once "%""
-					l_feat := feature_by_name (l_prefix_name)
-					if l_feat = Void then
-						add_text (l_feat_name, True)
-					else
-						text_formatter.process_operator_text (l_feat_name, l_feat)
-					end
-				else
-					text_formatter.process_operator_text (l_feat_name, l_feat)
-				end
+				add_text (l_text, True)
 			else
-				text_formatter.process_feature_text (l_feat_name, l_feat, False)
+				l_feat.append_name (text_formatter)
 			end
 		end
 

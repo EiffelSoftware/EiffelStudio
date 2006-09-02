@@ -11,6 +11,12 @@ indexing
 class
 	INSTALLATION_LOCATOR
 
+inherit
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	installation_location: STRING is
@@ -19,34 +25,14 @@ feature -- Access
 		local
 			file_location: STRING
 			directory_name: DIRECTORY_NAME
-		do	
-			file_location := execution_environment.get ("ISE_VISION2_TOUR")
-			if file_location = Void then
-				file_location := execution_environment.get ("ISE_EIFFEL")
-				if file_location /= Void then
-					create directory_name.make_from_string (file_location)
-					directory_name.extend ("vision2_tour")
-					if not valid_installation (directory_name.out) then
-						directory_name := Void
-					end
-				end
-			else
-				create directory_name.make_from_string (file_location)
-				if not valid_installation (directory_name.out) then
-					directory_name := Void
-				end
+		do
+			directory_name := eiffel_layout.eiffel_installation_dir_name.twin
+			directory_name.extend ("vision2_tour")
+			if not valid_installation (directory_name.out) then
+				directory_name := Void
 			end
 			if directory_name /= Void then
 				Result := directory_name.out
-			end
-		end
-		
-	has_environment_variables: BOOLEAN is
-			-- Does "ISE_VISION2_TOUR" or "ISE_EIFFEL" exist on this system?
-		do
-			Result := Execution_environment.get ("ISE_VISION2_TOUR") /= Void
-			if not result then
-				Result := Execution_environment.get ("ISE_EIFFEL") /= Void
 			end
 		end
 
@@ -69,21 +55,21 @@ feature {NONE} -- Implementation
 			if not directory.exists then
 				Result := False
 			end
-			
+
 			create filename.make_from_string (root_location)
 			filename.extend ("flatshort")
 			create directory.make (filename)
 			if not directory.exists then
 				Result := False
 			end
-			
+
 			create filename.make_from_string (root_location)
 			filename.extend ("templates")
 			create directory.make (filename)
 			if not directory.exists then
 				Result := False
 			end
-			
+
 			create filename.make_from_string (root_location)
 			filename.extend ("tests")
 			create directory.make (filename)
@@ -92,12 +78,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execution_environment: EXECUTION_ENVIRONMENT is
-			-- Once access to execution environment.
-		once
-			create Result
-		end
-		
 	image_extension: STRING is
 			-- Extension type of image formats on current platform.
 			-- either "png" or "ico"
@@ -106,9 +86,6 @@ feature {NONE} -- Implementation
 		ensure
 			Result_valid: Result.is_equal ("png")
 		end
-
-invariant
-	execution_environment_not_void: execution_environment /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

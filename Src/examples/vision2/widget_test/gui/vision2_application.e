@@ -12,21 +12,33 @@ class
 inherit
 	EV_APPLICATION
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make_and_launch
-	
+
 feature {NONE} -- Initialization
 
 	make_and_launch is
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
+		local
+			l_layout: VISION2_TOUR_LAYOUT
 		do
+			create l_layout
+			l_layout.check_environment_variable
+			set_eiffel_layout (l_layout)
 			default_create
 			create main_window
 			main_window.show
 			launch
 		end
-		
+
 feature {NONE} -- Implementation
 
 	main_window: MAIN_WINDOW;

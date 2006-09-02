@@ -695,21 +695,6 @@ feature -- Output
 		local
 			l_name: STRING
 		do
-			l_name := name.as_lower
-			if is_once or else is_constant then
-				l_name.put ((l_name @ 1).upper, 1)
-			end
-			a_text_formatter.add_feature (Current, l_name)
-		end
-
-	append_full_name (a_text_formatter: TEXT_FORMATTER) is
-			-- Append name of the feature in `a_text_formatter' in its complete form
-			-- (with infix and prefix keywords and alias names if any).
-		require
-			valid_st: a_text_formatter /= Void
-		local
-			a: like alias_name
-		do
 			if is_infix then
 				a_text_formatter.process_keyword_text (Ti_infix_keyword, Void)
 				a_text_formatter.add_space
@@ -723,16 +708,31 @@ feature -- Output
 				a_text_formatter.process_operator_text (extract_symbol_from_prefix (name), Current)
 				a_text_formatter.process_symbol_text (Ti_double_quote)
 			else
-				append_name (a_text_formatter)
-				a := alias_name
-				if a /= Void then
-					a_text_formatter.add_space
-					a_text_formatter.process_keyword_text (Ti_alias_keyword, Void)
-					a_text_formatter.add_space
-					a_text_formatter.process_symbol_text (Ti_double_quote)
-					a_text_formatter.process_operator_text (extract_alias_name (a), Current)
-					a_text_formatter.process_symbol_text (Ti_double_quote)
+				l_name := name.as_lower
+				if is_once or else is_constant then
+					l_name.put ((l_name @ 1).upper, 1)
 				end
+				a_text_formatter.add_feature (Current, l_name)
+			end
+		end
+
+	append_full_name (a_text_formatter: TEXT_FORMATTER) is
+			-- Append name of the feature in `a_text_formatter' in its complete form
+			-- (with infix and prefix keywords and alias names if any).
+		require
+			valid_st: a_text_formatter /= Void
+		local
+			a: like alias_name
+		do
+			append_name (a_text_formatter)
+			a := alias_name
+			if a /= Void then
+				a_text_formatter.add_space
+				a_text_formatter.process_keyword_text (Ti_alias_keyword, Void)
+				a_text_formatter.add_space
+				a_text_formatter.process_symbol_text (Ti_double_quote)
+				a_text_formatter.process_operator_text (extract_alias_name (a), Current)
+				a_text_formatter.process_symbol_text (Ti_double_quote)
 			end
 			if has_convert_mark then
 				a_text_formatter.add_space

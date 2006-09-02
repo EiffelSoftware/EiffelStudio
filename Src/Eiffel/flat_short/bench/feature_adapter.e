@@ -137,11 +137,21 @@ feature {NONE} -- Implementation
 		local
 			others: LINKED_LIST [STRING]
 			s: STRING
+			l_feature_name: FEATURE_NAME
+			l_name: STRING
 		do
 			create others.make
 			from names.start until names.after loop
 				if names.index /= exclude then
-					others.extend (names.item.visual_name)
+					l_feature_name:= names.item
+					if l_feature_name.is_infix then
+						l_name := "infix %"" + l_feature_name.visual_name + "%""
+					elseif l_feature_name.is_prefix then
+						l_name := "prefix %"" + l_feature_name.visual_name + "%""
+					else
+						l_name := l_feature_name.visual_name
+					end
+					others.extend (l_name)
 				end
 				names.forth
 			end
@@ -150,7 +160,9 @@ feature {NONE} -- Implementation
 			if class_name /= Void then
 				s := class_name.as_upper
 				Result.append (" in ")
+				Result.append ("{")
 				Result.append (s)
+				Result.append ("}")
 			end
 			Result.append (" as synonym of ")
 			from others.start until others.after loop

@@ -2031,64 +2031,72 @@ feature -- Implementation
 			l_instatiation_type: LIKE_CURRENT
 		do
 			if not is_inherited then
-				l_feat_ast := context.current_class.feature_with_name (current_feature.feature_name).ast
-
-					-- Check that feature has a unique name (vupr1)
-					-- Check that we're in the body of a routine (l_vupr1).
-				if
-					l_feat_ast.feature_names.count > 1 or
-					is_checking_precondition or is_checking_postcondition or is_checking_invariant
-				then
+				if current_feature.is_invariant or else current_feature.is_inline_agent  then
 					create l_vupr1
 					context.init_error (l_vupr1)
 					error_handler.insert_error (l_vupr1)
 						-- Cannot go on here.
 					error_handler.raise_error
-				end
+				else
+					l_feat_ast := context.current_class.feature_with_name (current_feature.feature_name).ast
 
-					-- Create table of routine ids of all parents which have
-					-- an effective precursor of the current feature.
-				l_pre_table := precursor_table (l_as)
-
-					-- Check that current feature is a redefinition.
-				if l_pre_table.count = 0 then
-					if l_as.parent_base_class /= Void then
-							-- The specified parent does not have
-							-- an effective precursor.
-						create l_vupr2
-						context.init_error (l_vupr2)
-						error_handler.insert_error (l_vupr2)
+						-- Check that feature has a unique name (vupr1)
+						-- Check that we're in the body of a routine (l_vupr1).
+					if
+						l_feat_ast.feature_names.count > 1 or
+						is_checking_precondition or is_checking_postcondition or is_checking_invariant
+					then
+						create l_vupr1
+						context.init_error (l_vupr1)
+						error_handler.insert_error (l_vupr1)
 							-- Cannot go on here.
 						error_handler.raise_error
-					else
-							-- No parent has an effective precursor
-							-- (not a redefinition)
+					end
+
+						-- Create table of routine ids of all parents which have
+						-- an effective precursor of the current feature.
+					l_pre_table := precursor_table (l_as)
+
+						-- Check that current feature is a redefinition.
+					if l_pre_table.count = 0 then
+						if l_as.parent_base_class /= Void then
+								-- The specified parent does not have
+								-- an effective precursor.
+							create l_vupr2
+							context.init_error (l_vupr2)
+							error_handler.insert_error (l_vupr2)
+								-- Cannot go on here.
+							error_handler.raise_error
+						else
+								-- No parent has an effective precursor
+								-- (not a redefinition)
+							create l_vupr3
+							context.init_error (l_vupr3)
+							error_handler.insert_error (l_vupr3)
+								-- Cannot go on here.
+							error_handler.raise_error
+						end
+					end
+
+						-- Check that an unqualified precursor construct
+						-- is not ambiguous.
+					if l_pre_table.count > 1 then
+							-- Ambiguous construct
 						create l_vupr3
 						context.init_error (l_vupr3)
 						error_handler.insert_error (l_vupr3)
 							-- Cannot go on here.
 						error_handler.raise_error
 					end
-				end
 
-					-- Check that an unqualified precursor construct
-					-- is not ambiguous.
-				if l_pre_table.count > 1 then
-						-- Ambiguous construct
-					create l_vupr3
-					context.init_error (l_vupr3)
-					error_handler.insert_error (l_vupr3)
-						-- Cannot go on here.
-					error_handler.raise_error
+						-- Table has exactly one entry.
+					l_pre_table.start
+					l_parent_type := l_pre_table.item.first
+					l_parent_class := l_parent_type.associated_class
+					l_feature_i := l_parent_class.feature_table.feature_of_rout_id (l_pre_table.item.second)
+					l_as.set_class_id (l_parent_class.class_id)
+					l_as.set_routine_ids (l_feature_i.rout_id_set)
 				end
-
-					-- Table has exactly one entry.
-				l_pre_table.start
-				l_parent_type := l_pre_table.item.first
-				l_parent_class := l_parent_type.associated_class
-				l_feature_i := l_parent_class.feature_table.feature_of_rout_id (l_pre_table.item.second)
-				l_as.set_class_id (l_parent_class.class_id)
-				l_as.set_routine_ids (l_feature_i.rout_id_set)
 			else
 				l_parent_class := system.class_of_id (l_as.class_id)
 				l_parent_type := l_parent_class.actual_type
@@ -2809,7 +2817,7 @@ feature -- Implementation
 						if l_is_named_tuple then
 							compute_named_tuple_fake_inline_agent (
 								l_as, l_named_tuple, l_label_pos, l_target_node, l_target_type, last_type)
-						else 
+						else
 							compute_feature_fake_inline_agent (
 								l_as, l_feature, l_target_node, l_target_type, last_type)
 						end

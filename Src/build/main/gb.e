@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 		local
 			environment_dialog: INVALID_ENVIRONMENT_DIALOG
 		do
+			check_environment_variable
 			default_create
 			initialize_eiffelbuild
 			components := new_build_components

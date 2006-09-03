@@ -256,7 +256,8 @@ feature -- Access
 			-- (if not, more optimal code is generated from
 			-- a new project and do not use precompilation).
 		do
-			Result := not Comp_system.poofter_finalization or else Comp_system.il_generation
+			Result := not workbench.system_defined or else
+				(not comp_system.poofter_finalization or comp_system.il_generation)
 		end
 
 	is_new: BOOLEAN is

@@ -13,6 +13,8 @@ feature -- Access
 			-- Shared access to the workbench
 		once
 			create Result
+		ensure
+			workbench_not_void: Result /= Void
 		end
 
 	System: SYSTEM_I is

@@ -207,9 +207,9 @@ feature -- Access: Environment variables
 		once
 			create Result.make_from_string (Home)
 			if platform.is_windows then
-				Result.extend ("EiffelStudio")
+				Result.extend ("EiffelSoftware")
 			else
-				Result.extend (".ec")
+				Result.extend (".es")
 			end
 		ensure
 			result_not_void: Result /= Void

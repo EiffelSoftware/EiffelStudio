@@ -13,7 +13,7 @@ inherit
 
 	EB_CONSTANTS
 
-	EIFFEL_ENV
+	EIFFEL_LAYOUT
 
 create
 	make
@@ -51,7 +51,7 @@ feature -- Basic Operations
 				last_error_message := Warning_messages.w_No_url_to_replace
 			else
 				cmd.append_character (' ')
-				root := docs_path.twin
+				root := eiffel_layout.docs_path.twin
 				create url.make_from_string (root)
 				url.extend ("docs")
 				url.set_file_name (a_help_context.url)

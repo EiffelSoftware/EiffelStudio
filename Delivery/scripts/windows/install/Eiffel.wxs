@@ -1305,7 +1305,7 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 		<Property Id="RemoveIcon">removico</Property>
 		<Property Id="RepairIcon">repairic</Property>
 
-		<Property Id="PRECOMPILEDLIBRARIES">base</Property>
+		<Property Id="PRECOMPILEDLIBRARIES">vision2</Property>
 		<Property Id="ISEPLATFORM">$(env.ISE_PLATFORM)</Property>
 		<Property Id="PROJECTDIR" Secure="yes" />
 		<Property Id="INSTALLDIR" Secure="yes" />

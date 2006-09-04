@@ -17,8 +17,6 @@ if [ ! -f PorterPackage_all.tar ]; then
 	tar cvf PorterPackage_all.tar PorterPackage
 fi
 
-cp -f PorterPackage_all.tar ~/
-
 ./compile_for_all_platforms &
 
 #Compile and build CDs for current platform

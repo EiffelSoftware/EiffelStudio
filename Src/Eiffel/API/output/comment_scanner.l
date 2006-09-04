@@ -31,7 +31,7 @@ CS		([^ \t\r\n\.\{\}\[\]`\'])
 S		(\{[A-Z]([A-Z]|_|{D})*\})
 EMAIL	{A}{CM}*{H}@{H}{CM}*(\.{CM}+)*
 URL		((www\.)|(https{0,1}:\/\/)|(ftp:\/\/)|(file:\/\/)){C}*
-FEATURE	(`.+\')
+FEATURE	(`[^`']+?\')
 CLASS	\{[A-Z]([A-Z]|{D}|_)*\}
 CLUSTER \[{C}+\]
 

@@ -39,7 +39,8 @@ feature -- Cleanup
 				end
 				if internal_gac_loader /= Void then
 					l_dom := internal_gac_loader.my_domain
-					if not l_dom.is_finalizing_for_unload then
+					if not my_domain.equals (l_dom) and then not l_dom.is_finalizing_for_unload then
+							-- Only unload app domain if called from another.
 						{APP_DOMAIN}.unload (l_dom)
 					end
 				end
@@ -214,7 +215,7 @@ feature -- Domain
 				internal_gac_loader := Result
 
 					-- Add event handler for parent domain unloads
-				l_new_dom.add_domain_unload (create {EVENT_HANDLER}.make (Current, $on_gac_domain_unloaded))
+				l_new_dom.add_domain_unload (create {EVENT_HANDLER}.make (Result, $on_gac_domain_unloaded))
 			end
 		ensure
 			result_attached: Result /= Void

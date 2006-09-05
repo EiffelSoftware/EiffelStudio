@@ -3932,8 +3932,6 @@ feature -- Implementation
 			l_check: CHECK_B
 			l_list: BYTE_LIST [BYTE_NODE]
 		do
-			break_point_slot_count := break_point_slot_count + 1
-
 			if l_as.check_list /= Void then
 				set_is_checking_check (True)
 				l_as.check_list.process (Current)

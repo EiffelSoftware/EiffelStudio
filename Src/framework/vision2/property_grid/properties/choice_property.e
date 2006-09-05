@@ -119,7 +119,7 @@ feature {NONE} -- Agents
 		do
 			create combo_popup
 			combo_popup.set_position (popup_window.x_position, popup_window.y_position + popup_window.height)
-			combo_popup.set_width (width)
+			combo_popup.set_width (popup_window.width)
 
 			create l_frame
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_etched_out)
@@ -145,10 +145,12 @@ feature {NONE} -- Agents
 			end
 			if item_strings.count < 10 then
 				combo_popup.set_height ((item_strings.count) * (combo_grid.row_height) + 4)
-				combo_grid.column (1).set_width (width-4)
+				combo_grid.column (1).set_width (popup_window.width)
+				combo_grid.hide_horizontal_scroll_bar
 			else
 				combo_popup.set_height (10 * (combo_grid.row_height) + 4)
-				combo_grid.column (1).set_width (width-21)
+				combo_grid.column (1).set_width (popup_window.width)
+				combo_grid.hide_horizontal_scroll_bar
 			end
 			combo_grid.set_minimum_height (0)
 			combo_grid.set_minimum_width (0)

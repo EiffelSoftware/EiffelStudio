@@ -92,6 +92,7 @@ feature -- Properties
 		do
 			convcur ?= other
 			Result := convcur /= Void and then class_i.is_equal (convcur.class_i)
+				and then equal (class_i.config_class.overriden_by, convcur.class_i.config_class.overriden_by)
 		end
 
 feature -- Access

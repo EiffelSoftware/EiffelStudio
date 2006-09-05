@@ -143,7 +143,8 @@ feature -- Tooltip
 	f_display_in_percentage: STRING is "Display result in percentage? (Only applicable for ratio metrics)"
 	f_add_linear_variable_metric: STRING is "Add selected metric"
 	f_run_metric_again: STRING is "Evaluate metric again to get up-to-date result"
-	f_auto_go_to_result: STRING is "Automatically go to result panel after metric evaluation?";
+	f_auto_go_to_result: STRING is "Automatically go to result panel after metric evaluation?"
+	f_press_esc_to_wipe_out: STRING is "Press ESC to wipe out";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

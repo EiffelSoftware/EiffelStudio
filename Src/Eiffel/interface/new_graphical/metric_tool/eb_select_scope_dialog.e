@@ -85,6 +85,16 @@ feature -- Setting
 			add_scope_action_set: add_scope_action = a_action
 		end
 
+	set_width (a_width: INTEGER) is
+			-- Set width of `class_dialog' with `a_width'.
+		require
+			a_width_non_negative: a_width >= 0
+		do
+			if not class_dialog.is_destroyed then
+				class_dialog.set_width (a_width)
+			end
+		end
+
 feature -- Actions
 
 	add_scope_action: PROCEDURE [ANY, TUPLE[ANY]]

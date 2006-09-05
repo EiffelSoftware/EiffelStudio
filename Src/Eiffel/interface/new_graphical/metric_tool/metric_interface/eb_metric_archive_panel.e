@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 		do
 				-- Setup domain selector.
 			create domain_selector.make (False)
-			domain_selector.set_minimum_width (120)
+			domain_selector.set_minimum_width (210)
 				-- Setup metric selector.
 			create metric_selector.make (True)
 			metric_selector.set_minimum_width (160)

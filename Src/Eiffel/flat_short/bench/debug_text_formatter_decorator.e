@@ -31,9 +31,9 @@ feature -- Execution
 				e_feature := a_target_feat
 				Precursor {FEAT_TEXT_FORMATTER_DECORATOR} (a_target_feat)
 			else
-				text_formatter.add_string ("No text could be generated.")
+				text_formatter.add ("No text could be generated.")
 				text_formatter.add_new_line
-				text_formatter.add_string ("Please make sure the system is correctly compiled.")
+				text_formatter.add ("Please make sure the system is correctly compiled.")
 			end
 		rescue
 			retried := True

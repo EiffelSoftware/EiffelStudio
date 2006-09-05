@@ -349,11 +349,11 @@ feature {NONE} -- User interaction
 			l_answered: BOOLEAN
 		do
 			if should_stop_on_prompt then
-				io.put_string ("You cannot choose if a needed precompile should be generated")
+				io.put_string ("Precompile will automatically be built")
 				io.put_new_line
 				io.put_string ("because of the -stop/-batch option.")
 				io.put_new_line
-				set_has_error
+				is_user_wants_precompile := True
 			else
 				from
 				until

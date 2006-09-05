@@ -543,12 +543,14 @@ feature {NONE} -- Settings
 						-- Project was somehow incompatible, and user may have selected to
 						-- override the existing project and recompile from scratch.
 					if should_override_project then
+						is_recompile_from_scrach := True
 						create_project (lace.project_path, False)
 						post_create_project
 					end
 				end
 			else
 					-- Project file did not exist.
+				is_recompile_from_scrach := True
 				create_project (lace.project_path, is_project_location_requested)
 				post_create_project
 			end

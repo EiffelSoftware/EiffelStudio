@@ -170,10 +170,10 @@ feature {NONE} -- Implementation
 			l_maximum_height := (l_screen.virtual_height - popup_window.y_position).max (0)
 			l_maximum_width := (l_screen.virtual_width - popup_window.x_position).max (0)
 			choice_list.column (1).set_width (left_border + l_maximum_width.min (
-				width.max (choice_list.column (1).required_width_of_item_span (1, choice_list.row_count))))
+				(popup_window.width - 2).max (choice_list.column (1).required_width_of_item_span (1, choice_list.row_count))))
 				-- +2 to take into account 2 pixels border of the vertical box.
 			popup_window.set_height (2 + l_maximum_height.min (choice_list.row_count * choice_list.row_height))
-			popup_window.set_width (2 + choice_list.column (1).width)
+			popup_window.set_width (popup_window.width.max (2 + choice_list.column (1).width))
 
 			choice_list.set_background_color (implementation.displayed_background_color)
 			popup_window.set_background_color (implementation.displayed_background_color)

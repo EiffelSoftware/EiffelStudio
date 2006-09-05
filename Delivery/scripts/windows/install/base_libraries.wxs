@@ -1659,6 +1659,8 @@
 						</Directory>
 						<Component Id="time2" Guid="FEFB58F4-B488-4948-BCF3-2F669FBC88C5">
 							<File Id="time_ecf" Name="time.ecf" />
+							<File Id="time_french.ecf" Name="TIME_F~1.ECF" LongName="time_french.ecf" />
+							<File Id="time_german.ecf" Name="TIME_G~1.ECF" LongName="time_german.ecf" />
 							<File Id="time_duration.e" Name="TIME_D~1.E" LongName="time_duration.e" KeyPath="yes" />
 							<File Id="date_validity_checker.e" Name="DATE_V~1.E" LongName="date_validity_checker.e" />
 							<File Id="date_time_value.e" Name="DACEE1~1.E" LongName="date_time_value.e" />

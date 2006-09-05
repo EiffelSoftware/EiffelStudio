@@ -24,6 +24,10 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Access
+
+	application_name: STRING is "ec";
+
 feature -- Status Report
 
 	last_show_successful: BOOLEAN

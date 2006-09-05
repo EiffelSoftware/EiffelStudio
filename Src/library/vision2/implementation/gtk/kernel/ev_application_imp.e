@@ -260,6 +260,7 @@ feature -- Basic operation
 			l_top_level_window_imp: EV_WINDOW_IMP
 			l_popup_parent: EV_POPUP_WINDOW_IMP
 			l_ignore_event: BOOLEAN
+			l_grab_widget: POINTER
 		do
 			use_stored_display_data := True
 			l_stored_display_data := stored_display_data
@@ -277,6 +278,14 @@ feature -- Basic operation
 				if l_gdk_window /= default_pointer then
 					l_pnd_item ?= gtk_widget_from_gdk_window (l_gdk_window)
 				end
+				l_grab_widget := {EV_GTK_EXTERNALS}.gtk_grab_get_current
+				if l_grab_widget /= default_pointer then
+						-- This is a popup window with keyboard and mouse grab.
+					l_popup_parent ?= eif_object_from_gtk_object (l_grab_widget)
+					if l_popup_parent /= Void and then l_pnd_item /= Void and then l_pnd_item.top_level_window_imp /= l_popup_parent then
+						l_pnd_item := l_popup_parent
+					end
+				end
 			end
 
 				-- This is used to prevent context menus in gtk widget such as GtkTextEntry from appearing in EV_POPUP_WINDOWS.
@@ -284,16 +293,15 @@ feature -- Basic operation
 				l_top_level_window_imp ?= l_pnd_item.top_level_window_imp
 				l_popup_parent ?= l_top_level_window_imp
 
-					-- We do not want to propagate if right clicking in a popup parent (for activation focus handling)
+					-- We do not want to propagate if right clicking in a popup parent (for activation focus handling) unless PND is activated.
 					-- or if the widget is insensitive or the top level window has a modal child.
 				l_ignore_event :=
-					l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3 or else
+					l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3 and then (l_pnd_item.pebble = Void and l_pnd_item.pebble_function = Void) or else
 					not ({EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_item.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) or else
 					l_top_level_window_imp /= Void and then l_top_level_window_imp.has_modal_window
 			end
 
 			if not l_ignore_event then
-
 					-- Fire the gtk event first.
 				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
 
@@ -736,17 +744,23 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
+	set_docking_source (a_source: EV_DOCKABLE_SOURCE_IMP) is
+			-- Set `docking_source' to `a_source'.
+		do
+			internal_docking_source := a_source
+		end
+
 	on_pick (a_source: EV_PICK_AND_DROPABLE_IMP; a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
 		do
-			pick_and_drop_source := a_source
+			internal_pick_and_drop_source := a_source
 			interface.pick_actions.call ([a_pebble])
 		end
 
 	on_drop (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
 		do
-			pick_and_drop_source := Void
+			internal_pick_and_drop_source := Void
 		end
 
 feature {EV_ANY_IMP} -- Implementation
@@ -759,11 +773,25 @@ feature -- Implementation
 	is_in_transport: BOOLEAN is
 			-- Is application currently in transport (either PND or docking)?
 		do
-			Result := pick_and_drop_source /= Void
+			Result := pick_and_drop_source /= Void or else docking_source /= Void
 		end
 
 	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
-		-- Source of pick and drop if any.
+			-- Source of pick and drop if any.
+		do
+			Result := internal_pick_and_drop_source
+		end
+
+	docking_source: EV_DOCKABLE_SOURCE_IMP
+			-- Source of docking if any.
+		assign
+			set_docking_source
+		do
+			Result := internal_docking_source
+		end
+
+	internal_pick_and_drop_source: like pick_and_drop_source
+	internal_docking_source: like docking_source
 
 	keyboard_modifier_mask: INTEGER is
 			-- Mask representing current keyboard modifiers state.

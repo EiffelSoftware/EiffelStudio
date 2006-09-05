@@ -9016,20 +9016,6 @@ feature
 			"button_actions"
 		end
 
-	frozen gtk_clist_struct_cell_mem_chunk (a_c_struct: POINTER): POINTER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
-		alias
-			"cell_mem_chunk"
-		end
-
-	frozen gtk_clist_struct_click_cell (a_c_struct: POINTER): POINTER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
-		alias
-			"&click_cell"
-		end
-
 	frozen gtk_clist_struct_clist_window (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
@@ -9182,13 +9168,6 @@ feature
 			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
 		alias
 			"row_list_end"
-		end
-
-	frozen gtk_clist_struct_row_mem_chunk (a_c_struct: POINTER): POINTER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
-		alias
-			"row_mem_chunk"
 		end
 
 	frozen gtk_clist_struct_rows (a_c_struct: POINTER): INTEGER is
@@ -12313,13 +12292,6 @@ feature
 			"bg_gc"
 		end
 
-	frozen set_gtk_clist_struct_cell_mem_chunk (a_c_struct: POINTER; a_cell_mem_chunk: POINTER) is
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList, GMemChunk*)"
-		alias
-			"cell_mem_chunk"
-		end
-
 	frozen set_gtk_clist_struct_clist_window (a_c_struct: POINTER; a_clist_window: POINTER) is
 		external
 			"C [struct <gtk/gtk.h>] (GtkCList, GdkWindow*)"
@@ -12444,13 +12416,6 @@ feature
 			"C [struct <gtk/gtk.h>] (GtkCList, GList*)"
 		alias
 			"row_list_end"
-		end
-
-	frozen set_gtk_clist_struct_row_mem_chunk (a_c_struct: POINTER; a_row_mem_chunk: POINTER) is
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList, GMemChunk*)"
-		alias
-			"row_mem_chunk"
 		end
 
 	frozen set_gtk_clist_struct_rows (a_c_struct: POINTER; a_rows: INTEGER) is

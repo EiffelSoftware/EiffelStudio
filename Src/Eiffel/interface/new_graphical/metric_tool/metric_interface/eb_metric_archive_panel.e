@@ -364,7 +364,7 @@ feature -- Actions
 						l_metric := metric_manager.metric_with_name (l_selected_metrics.item)
 						l_metric.disable_fill_domain
 						l_value := l_metric.value (l_source_domain).first.value
-						create l_archive_node.make (l_metric.name, metric_type_id (l_metric), create{DATE_TIME}.make_now, l_value, l_source_domain)
+						create l_archive_node.make (l_metric.name, metric_type_id (l_metric), create{DATE_TIME}.make_now, l_value, l_source_domain, l_metric.uuid.out)
 						l_archive.extend (l_archive_node)
 						l_selected_metrics.forth
 					end
@@ -607,7 +607,7 @@ feature {NONE} -- Implementation
 					a_list.after or Result /= Void
 				loop
 					if not metric_manager.is_metric_valid (a_list.item) then
-						Result := metric_names.t_metric + " %"" + a_list.item + "%" " + metric_names.t_metric_is_not_valid
+						Result := metric_names.t_metric + " %"" + a_list.item + "%" " + metric_names.t_metric_is_not_valid + "."
 					else
 						a_list.forth
 					end

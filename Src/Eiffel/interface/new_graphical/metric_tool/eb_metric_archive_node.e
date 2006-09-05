@@ -19,20 +19,23 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: like input_domain) is
+	make (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: like input_domain; a_uuid: STRING) is
 			-- Initialize `metric_name' with `a_metric_name', `metric_type' with `a_metric_type', `calculated_time' with `a_time',
-			-- `value' with `a_value' and `input_domain' with `a_input'.
+			-- `value' with `a_value', `input_domain' with `a_input' and `uuid' with `a_uuid'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
 			a_metric_type_valid: is_metric_type_valid (a_metric_type)
 			a_time_attached: a_time /= Void
 			a_input_attached: a_input /= Void
+			a_uuid_attached: a_uuid /= Void
+			a_uuid_valid: shared_uuid.is_valid_uuid (a_uuid)
 		do
 			set_metric_name (a_metric_name)
 			set_metric_type (a_metric_type)
 			set_calculated_time (a_time)
 			set_value (a_value)
 			set_input_domain (a_input)
+			set_uuid (create {UUID}.make_from_string (a_uuid))
 		end
 
 feature -- Access
@@ -52,6 +55,9 @@ feature -- Access
 
 	value: DOUBLE
 			-- Metric archive value
+
+	uuid: UUID
+			-- UUID of current metric
 
 feature -- Setting
 
@@ -101,6 +107,16 @@ feature -- Setting
 			value_set: value = a_value
 		end
 
+	set_uuid (a_uuid: like uuid) is
+			-- Set `uuid' with `a_uuid'.
+		require
+			a_uuid_attached: a_uuid /= Void
+		do
+			uuid := a_uuid
+		ensure
+			uuid_set: uuid = a_uuid
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is
@@ -114,6 +130,7 @@ invariant
 	metric_type_valid: is_metric_type_valid (metric_type)
 	calculated_time_attached: calculated_time /= Void
 	input_domain_attached: input_domain /= Void
+	uuid_attached: uuid /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

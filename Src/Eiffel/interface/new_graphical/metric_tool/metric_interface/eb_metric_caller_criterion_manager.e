@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Caller/callee criterion property manager used in metric criterion grid"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -28,6 +28,7 @@ feature -- Access
 		do
 			Result := Precursor
 			Result.dialog.property_area.only_current_version_checkbox.show
+			Result.dialog.set_grid (grid)
 		end
 
 feature -- Properties management
@@ -39,7 +40,7 @@ feature -- Properties management
 			if a_criterion.only_current_version then
 				property_item.dialog.property_area.only_current_version_checkbox.enable_select
 			else
-				property_item.dialog.property_area.only_current_version_checkbox.disable_select
+				property_item.dialog.property_area.descendant_version_checkbox.enable_select
 			end
 		end
 

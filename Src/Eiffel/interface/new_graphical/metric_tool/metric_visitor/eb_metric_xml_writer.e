@@ -14,6 +14,8 @@ inherit
 
 	EB_METRIC_XML_CONSTANTS
 
+	EB_METRIC_SHARED
+
 create
 	make
 
@@ -343,6 +345,7 @@ feature{NONE} -- Process
 			l_attr.put (l_type_name, n_type)
 			l_attr.put (a_item.calculated_time.out, n_time)
 			l_attr.put (a_item.value.out, n_value)
+			l_attr.put (a_item.uuid.out, n_uuid)
 			append_indent
 			append_start_tag (n_metric, l_attr)
 			append_new_line
@@ -361,24 +364,6 @@ feature -- Access
 
 	indent_level: INTEGER
 			-- Number of tab indent
-
-	uuid: UUID is
-			-- UUID
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
-feature -- Status report
-
-	is_uuid_valid (a_uuid: STRING): BOOLEAN is
-			-- Is `a_uuid' a valid UUID?
-		require
-			a_uuid_attached: a_uuid /= Void
-		do
-			Result := uuid.is_valid_uuid (a_uuid)
-		end
 
 feature{NONE} -- Implementation
 

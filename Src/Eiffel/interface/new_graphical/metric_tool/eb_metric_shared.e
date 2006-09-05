@@ -96,6 +96,24 @@ feature -- Status report
 			good_result: Result implies (a_mode = readonly_mode or a_mode = new_mode or a_mode = edit_mode)
 		end
 
+	is_uuid_valid (a_uuid: STRING): BOOLEAN is
+			-- Is `a_uuid' a valid UUID?
+		require
+			a_uuid_attached: a_uuid /= Void
+		do
+			Result := shared_uuid.is_valid_uuid (a_uuid)
+		end
+
+feature -- UUID
+
+	shared_uuid: UUID is
+			-- UUID
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

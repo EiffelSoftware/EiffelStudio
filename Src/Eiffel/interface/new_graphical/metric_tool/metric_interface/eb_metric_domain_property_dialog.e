@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 			property_area.only_current_version_checkbox.hide
 			element_container.extend (property_area)
 			show_actions.extend (agent on_show)
-			set_size (300, 350)
+			set_size (350, 350)
 			create ok_actions
 			create cancel_actions
 			create hide_actions

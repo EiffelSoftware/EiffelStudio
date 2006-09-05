@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			create metric_name_row_table.make (30)
 			create input_cache.make (20)
 			create unit_row_list.make
+			create delayed_timeout.make (agent delayed_search_metric, 10)
 			default_create
 			enable_tooltip_contain_go_to_definition_message
 		ensure
@@ -67,6 +68,7 @@ feature {NONE} -- Initialization
 			metric_name_row_table_attached: metric_name_row_table /= Void
 			input_cache_attached: input_cache /= Void
 			unit_row_list_attached: unit_row_list /= Void
+			delayed_timeout_attached: delayed_timeout /= Void
 		end
 
 	user_initialization is
@@ -110,7 +112,8 @@ feature {NONE} -- Initialization
 			l_sort_info.enable_auto_indicator
 			metric_grid_wrapper.set_sort_info (metric_column_index, l_sort_info)
 			metric_grid_wrapper.set_sort_action (agent sort_agent)
-			metric_grid.key_press_actions.extend (agent on_key_pressed)
+			metric_grid.key_press_actions.extend (agent on_key_pressed_for_metric_navigation (?, True))
+			metric_grid.key_press_string_actions.extend (agent on_key_string_pressed_for_metric_navigation (?, True))
 
 			tree_view_checkbox.remove_text
 			tree_view_checkbox.set_text (metric_names.t_group)
@@ -121,11 +124,14 @@ feature {NONE} -- Initialization
 			metric_grid.set_item_pebble_function (agent item_pebble_function)
 			metric_grid.enable_single_row_selection
 			metric_grid.row_select_actions.extend (agent on_row_selected)
-			metric_grid.key_press_string_actions.extend (agent on_string_key_pressed)
 
 			select_predefined_btn.set_tooltip (metric_names.f_select_predefined_metrics)
 			select_userdefined_btn.set_tooltip (metric_names.f_select_userdefined_metrics)
 			tree_view_checkbox.set_tooltip (metric_names.f_group_metric_by_unit)
+			cached_key_field.hide
+			cached_key_field.key_press_actions.extend (agent on_key_pressed_for_metric_navigation (?, False))
+			cached_key_field.change_actions.extend (agent on_text_change_in_cached_key_field)
+			cached_key_field.set_tooltip (metric_names.f_press_esc_to_wipe_out)
 		ensure then
 			metric_selected_actions_attached: metric_selected_actions /= Void
 			group_selected_actions_attached: group_selected_actions /= Void
@@ -236,6 +242,10 @@ feature -- Status report
 			-- Should tooltip of metric contain "go to definition" message?
 			-- Default: True
 
+	is_key_from_metric_grid: BOOLEAN;
+			-- Is key stroke from `metrc_grid'?
+			-- False indicates that key stroke is from `cached_key_field'.
+
 feature{NONE} -- Actions
 
 	on_tree_view_checkbox_selected is
@@ -314,17 +324,22 @@ feature{NONE} -- Actions
 			end
 		end
 
-	on_key_pressed (a_key: EV_KEY) is
-			-- Action to be performed when `a_key' is pressed in `metric_grid'
+	on_key_pressed_for_metric_navigation (a_key: EV_KEY; a_on_grid: BOOLEAN) is
+			-- Action to be performed `a_key' is pressed on `metric_grid' if `a_on_grid' is True,
+			-- otherwise on `cached_key_field'.
 		require
 			a_key_attached: a_key /= Void
 		local
+			l_code: INTEGER
+			l_metric: EB_METRIC
 			l_selected_rows: LIST [EV_GRID_ROW]
 			l_checkbox_item: MA_GRID_CHECK_BOX_ITEM
-			l_metric: EB_METRIC
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-				if is_selectable then
+			l_code := a_key.code
+			inspect
+				l_code
+			when {EV_KEY_CONSTANTS}.key_enter then
+				if a_on_grid and then is_selectable then
 					l_selected_rows := metric_grid.selected_rows
 					if l_selected_rows /= Void then
 						l_checkbox_item ?= l_selected_rows.first.item (1)
@@ -333,86 +348,66 @@ feature{NONE} -- Actions
 						end
 					end
 				end
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_escape then
+			when {EV_KEY_CONSTANTS}.key_escape then
 				input_cache.wipe_out
-			elseif a_key.code = {EV_KEY_CONSTANTS}.key_delete then
-				l_metric := selected_metric
-				if l_metric /= Void and then not delete_key_pressed_actions.is_empty then
-					delete_key_pressed_actions.call ([l_metric])
+				delayed_timeout.request_call
+				if a_on_grid then
+					cached_key_field.change_actions.block
+					cached_key_field.set_text (input_cache)
+					cached_key_field.change_actions.resume
+				end
+			when {EV_KEY_CONSTANTS}.key_back_space then
+				if not input_cache.is_empty then
+					input_cache.keep_head (input_cache.count - 1)
+					delayed_timeout.request_call
+					if a_on_grid then
+						cached_key_field.change_actions.block
+						cached_key_field.set_text (input_cache)
+						if not input_cache.is_empty then
+							cached_key_field.set_caret_position (input_cache.count)
+						end
+						cached_key_field.change_actions.resume
+					end
+				end
+			when {EV_KEY_CONSTANTS}.key_delete then
+				if a_on_grid then
+					l_metric := selected_metric
+					if l_metric /= Void and then not delete_key_pressed_actions.is_empty then
+						delete_key_pressed_actions.call ([l_metric])
+					end
+				end
+			else
+			end
+		end
+
+	on_key_string_pressed_for_metric_navigation (a_key: STRING_32; a_on_grid: BOOLEAN) is
+			-- Action to be performed `a_key' is pressed on `metric_grid' if `a_on_grid' is True,
+			-- otherwise on `cached_key_field'.
+		require
+			a_key_attached: a_key /= Void
+		do
+			if not a_key.is_equal (once "%N") then
+				if a_on_grid then
+					cached_key_field.change_actions.block
+				end
+				input_cache.append (a_key)
+				delayed_timeout.request_call
+				if a_on_grid then
+					cached_key_field.set_text (input_cache)
+					if not input_cache.is_empty then
+						cached_key_field.set_caret_position (input_cache.count)
+					end
+					cached_key_field.change_actions.resume
 				end
 			end
 		end
 
-	on_string_key_pressed (a_key: STRING_32) is
-			-- Action to be performed when a displayable key `a_key' is pressed in `metric_grid'.
-		require
-			a_key_attached: a_key /= Void
-		local
-			l_index, l_old_index: INTEGER
-			l_selected_rows: LIST [EV_GRID_ROW]
-			l_row: EV_GRID_ROW
-			l_metric: EB_METRIC
-			l_row_cnt: INTEGER
-			done: BOOLEAN
-			l_grid: like metric_grid
-			l_name: STRING
-			l_cache: STRING
-			l_twice: BOOLEAN
+	on_text_change_in_cached_key_field is
+			-- Action to be performed when text changed on `cached_key_field'
 		do
-			l_grid := metric_grid
-			l_selected_rows := l_grid.selected_rows
-			if not l_selected_rows.is_empty then
-				l_row := l_selected_rows.first
-				if l_row.data = Void then
-					l_row := Void
-				end
-			else
-				if not metric_name_list.is_empty then
-					l_row := l_grid.row (metric_name_row_table.item (metric_name_list.first))
-				end
-			end
-			if l_row = Void then
-				if not metric_name_list.is_empty then
-					l_row := l_grid.row (metric_name_row_table.item (metric_name_list.first))
-				end
-			end
-			if l_row /= Void then
-				input_cache.append (a_key)
-				l_metric ?= l_row.data
-				check l_metric /= Void end
-				from
-					l_index := l_row.index
-					l_old_index := l_index
-					l_row_cnt := l_grid.row_count
-					l_cache := input_cache
-				until
-					(l_twice and then l_index = l_old_index) or done
-				loop
-					l_row := l_grid.row (l_index)
-					if l_row.data /= Void then
-						l_metric ?= l_row.data
-						if l_metric /= Void then
-							l_name := l_metric.name
-							if l_name.count >= l_cache.count and then l_name.substring (1, l_cache.count).is_case_insensitive_equal (l_cache) then
-								l_grid.remove_selection
-								l_row.enable_select
-								l_row.ensure_visible
-								done := True
-							end
-						end
-					end
-					l_index := l_index + 1
-					if l_index > l_row_cnt then
-						l_index := 1
-						l_twice := True
-					end
-				end
-				if not done then
-					input_cache.wipe_out
-				end
-			else
-				input_cache.wipe_out
-			end
+			input_cache.wipe_out
+			input_cache.append (cached_key_field.text)
+			delayed_timeout.request_call
 		end
 
 	on_change_unit_order (a_from_row: EV_GRID_ROW; a_to_row: EV_GRID_ROW) is
@@ -878,6 +873,125 @@ feature {NONE} -- Implementation
 	unit_row_list: LINKED_LIST [EV_GRID_ROW]
 			-- List of metric unit rows
 
+	metric_found_background_color: EV_COLOR is
+			-- Background for `cached_key_field' when at least on metric is found using text of `cached_key_field'.
+		local
+			l_text: EV_TEXT_FIELD
+		do
+			create l_text
+			Result := l_text.background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	no_metric_found_background_color: EV_COLOR is
+			-- Background for `cached_key_field' when no metric is found using text of `cached_key_field'.
+		do
+			Result := preferences.search_tool_data.none_result_keyword_field_background_color
+		ensure
+			result_attached: Result /= Void
+		end
+
+	select_metric_starting_with_string (a_cached_string: STRING) is
+			-- Try to go to metric whose name starts with `a_cached_string'.
+			-- If no satosfied metric, selection in `metric_grid' won't change.
+		require
+			a_cached_string_attached: a_cached_string /= Void
+		local
+			l_index, l_old_index: INTEGER
+			l_selected_rows: LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_metric: EB_METRIC
+			l_row_cnt: INTEGER
+			done: BOOLEAN
+			l_grid: like metric_grid
+			l_name: STRING
+			l_cache: STRING
+			l_twice: BOOLEAN
+			l_parent_row: EV_GRID_ROW
+		do
+			if a_cached_string.is_empty then
+				if cached_key_field.is_displayed then
+					cached_key_field.set_background_color (metric_found_background_color)
+					if cached_key_field.has_focus then
+						metric_grid.set_focus
+					end
+					cached_key_field.hide
+				end
+			else
+				if not cached_key_field.is_displayed then
+					cached_key_field.show
+				end
+					-- Find the row to start search.
+				l_grid := metric_grid
+				l_selected_rows := l_grid.selected_rows
+				if not l_selected_rows.is_empty then
+					l_row := l_selected_rows.first
+					if l_row.data = Void then
+						l_row := Void
+					end
+				else
+					if not metric_name_list.is_empty then
+						l_row := l_grid.row (metric_name_row_table.item (metric_name_list.first))
+					end
+				end
+				if l_row = Void then
+					if not metric_name_list.is_empty then
+						l_row := l_grid.row (metric_name_row_table.item (metric_name_list.first))
+					end
+				end
+					-- Search for the first satisfied row.
+				if l_row /= Void then
+					from
+						l_index := l_row.index
+						l_old_index := l_index
+						l_row_cnt := l_grid.row_count
+						l_cache := input_cache
+					until
+						(l_twice and then l_index = l_old_index) or done
+					loop
+						l_row := l_grid.row (l_index)
+						if l_row.data /= Void then
+							l_metric ?= l_row.data
+							if l_metric /= Void then
+								l_name := l_metric.name
+								if l_name.count >= l_cache.count and then l_name.substring (1, l_cache.count).is_case_insensitive_equal (l_cache) then
+									l_parent_row := l_row.parent_row
+									if l_parent_row /= Void and then l_parent_row.is_expandable and then not l_parent_row.is_expanded then
+										l_parent_row.expand
+									end
+									l_grid.remove_selection
+									l_row.enable_select
+									l_row.ensure_visible
+									done := True
+								end
+							end
+						end
+						l_index := l_index + 1
+						if l_index > l_row_cnt then
+							l_index := 1
+							l_twice := True
+						end
+					end
+					if not done then
+						cached_key_field.set_background_color (no_metric_found_background_color)
+					else
+						cached_key_field.set_background_color (metric_found_background_color)
+					end
+				end
+			end
+		end
+
+	delayed_timeout: ES_DELAYED_ACTION
+			-- Delayed action used to react to key press in `metric_grid' or `cached_key_field'
+
+	delayed_search_metric is
+			-- Try to go to metric whose name starts with `input_cache'.
+			-- If no satosfied metric, selection in `metric_grid' won't change.
+		do
+			select_metric_starting_with_string (input_cache)
+		end
+
 invariant
 	metric_selected_actions_attached: metric_selected_actions /= Void
 	group_selected_actions_attached: group_selected_actions /= Void
@@ -889,6 +1003,7 @@ invariant
 	metric_name_row_table_attached: metric_name_row_table /= Void
 	input_cache_attached: input_cache /= Void
 	unit_row_list_attached: unit_row_list /= Void
+	delayed_timeout_attached: delayed_timeout /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

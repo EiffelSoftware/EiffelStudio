@@ -28,6 +28,7 @@ feature {NONE}-- Initialization
 				-- Create all widgets.
 			create metric_grid_area
 			create l_ev_horizontal_box_1
+			create cached_key_field
 			create l_ev_cell_1
 			create metric_selection_toolbar
 			create select_predefined_btn
@@ -39,6 +40,7 @@ feature {NONE}-- Initialization
 				-- Build widget structure.
 			extend (metric_grid_area)
 			extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (cached_key_field)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
 			l_ev_horizontal_box_1.extend (metric_selection_toolbar)
 			metric_selection_toolbar.extend (select_predefined_btn)
@@ -62,8 +64,10 @@ feature {NONE}-- Initialization
 			create color_constant_retrieval_functions.make (10)
 			metric_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			metric_grid_area.set_border_width (1)
+			l_ev_horizontal_box_1.disable_item_expand (cached_key_field)
 			l_ev_horizontal_box_1.disable_item_expand (metric_selection_toolbar)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_2)
+			cached_key_field.set_minimum_width (80)
 			l_ev_tool_bar_2.disable_vertical_button_style
 			disable_item_expand (l_ev_horizontal_box_1)
 			
@@ -83,6 +87,7 @@ feature -- Access
 	metric_selection_toolbar: EV_TOOL_BAR
 	select_predefined_btn, select_userdefined_btn, tree_view_checkbox: EV_TOOL_BAR_TOGGLE_BUTTON
 	metric_grid_area: EV_VERTICAL_BOX
+	cached_key_field: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 

@@ -26,11 +26,11 @@ feature {NONE}-- Initialization
 			Precursor {EV_VERTICAL_BOX}
 			
 				-- Create all widgets.
-			create l_ev_horizontal_box_1
+			create l_ev_horizontal_split_area_1
 			create archive_definition_frame
 			create l_ev_vertical_box_1
 			create definition_toolbar_area
-			create l_ev_horizontal_box_2
+			create l_ev_horizontal_box_1
 			create definition_toolbar
 			create run_btn
 			create stop_btn
@@ -40,15 +40,19 @@ feature {NONE}-- Initialization
 			create new_archive_file_name_text
 			create new_archive_browse_btn
 			create clean_btn
-			create l_ev_horizontal_box_3
+			create l_ev_horizontal_split_area_2
 			create l_ev_vertical_box_2
-			create l_ev_horizontal_box_4
+			create l_ev_horizontal_box_2
 			create source_domain_lbl
 			create domain_selection_area
+			create l_ev_horizontal_box_3
+			create l_ev_cell_1
 			create l_ev_vertical_box_3
-			create l_ev_horizontal_box_5
+			create l_ev_horizontal_box_4
 			create metric_lbl
 			create metric_selection_area
+			create l_ev_horizontal_box_5
+			create l_ev_cell_2
 			create archive_comparison_area
 			create comparison_area
 			create comparison_toolbar_area
@@ -67,30 +71,34 @@ feature {NONE}-- Initialization
 			create browse_current_archive_btn
 			
 				-- Build widget structure.
-			extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (archive_definition_frame)
+			extend (l_ev_horizontal_split_area_1)
+			l_ev_horizontal_split_area_1.extend (archive_definition_frame)
 			archive_definition_frame.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (definition_toolbar_area)
-			definition_toolbar_area.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (definition_toolbar)
+			definition_toolbar_area.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (definition_toolbar)
 			definition_toolbar.extend (run_btn)
 			definition_toolbar.extend (stop_btn)
 			definition_toolbar.extend (l_ev_tool_bar_separator_1)
-			l_ev_horizontal_box_2.extend (new_archive_file_area)
+			l_ev_horizontal_box_1.extend (new_archive_file_area)
 			new_archive_file_area.extend (new_archive_file_lbl)
 			new_archive_file_area.extend (new_archive_file_name_text)
 			new_archive_file_area.extend (new_archive_browse_btn)
 			new_archive_file_area.extend (clean_btn)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (l_ev_vertical_box_2)
-			l_ev_vertical_box_2.extend (l_ev_horizontal_box_4)
-			l_ev_horizontal_box_4.extend (source_domain_lbl)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_2)
+			l_ev_horizontal_split_area_2.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (source_domain_lbl)
 			l_ev_vertical_box_2.extend (domain_selection_area)
+			l_ev_horizontal_split_area_2.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (l_ev_cell_1)
 			l_ev_horizontal_box_3.extend (l_ev_vertical_box_3)
-			l_ev_vertical_box_3.extend (l_ev_horizontal_box_5)
-			l_ev_horizontal_box_5.extend (metric_lbl)
+			l_ev_vertical_box_3.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (metric_lbl)
 			l_ev_vertical_box_3.extend (metric_selection_area)
-			l_ev_horizontal_box_1.extend (archive_comparison_area)
+			l_ev_horizontal_split_area_1.extend (l_ev_horizontal_box_5)
+			l_ev_horizontal_box_5.extend (l_ev_cell_2)
+			l_ev_horizontal_box_5.extend (archive_comparison_area)
 			archive_comparison_area.extend (comparison_area)
 			comparison_area.extend (comparison_toolbar_area)
 			comparison_toolbar_area.extend (compare_toolbar)
@@ -120,14 +128,15 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			l_ev_horizontal_box_1.set_padding (15)
-			l_ev_horizontal_box_1.set_border_width (2)
+			l_ev_horizontal_split_area_1.disable_item_expand (archive_definition_frame)
+			l_ev_horizontal_split_area_1.enable_item_expand (l_ev_horizontal_box_5)
 			archive_definition_frame.set_text ("Archive Managament")
+			archive_definition_frame.set_minimum_width (550)
 			l_ev_vertical_box_1.set_padding (6)
 			l_ev_vertical_box_1.set_border_width (10)
 			l_ev_vertical_box_1.disable_item_expand (definition_toolbar_area)
-			l_ev_horizontal_box_2.set_padding (3)
-			l_ev_horizontal_box_2.disable_item_expand (definition_toolbar)
+			l_ev_horizontal_box_1.set_padding (3)
+			l_ev_horizontal_box_1.disable_item_expand (definition_toolbar)
 			new_archive_file_area.set_padding (3)
 			new_archive_file_area.disable_item_expand (new_archive_file_lbl)
 			new_archive_file_area.disable_item_expand (new_archive_browse_btn)
@@ -136,18 +145,24 @@ feature {NONE}-- Initialization
 			new_archive_file_lbl.align_text_left
 			new_archive_browse_btn.set_text ("...")
 			clean_btn.set_text ("Clean")
-			l_ev_horizontal_box_3.set_padding (5)
+			l_ev_horizontal_split_area_2.disable_item_expand (l_ev_vertical_box_2)
+			l_ev_horizontal_split_area_2.enable_item_expand (l_ev_horizontal_box_3)
+			l_ev_vertical_box_2.set_minimum_width (210)
 			l_ev_vertical_box_2.set_padding (3)
-			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_4)
-			l_ev_horizontal_box_4.set_padding (3)
-			l_ev_horizontal_box_4.disable_item_expand (source_domain_lbl)
+			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.set_padding (3)
+			l_ev_horizontal_box_2.disable_item_expand (source_domain_lbl)
 			source_domain_lbl.set_text ("Select source domain:")
 			source_domain_lbl.align_text_left
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_cell_1)
+			l_ev_cell_1.set_minimum_width (10)
 			l_ev_vertical_box_3.set_padding (3)
-			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_5)
-			l_ev_horizontal_box_5.set_padding (3)
-			l_ev_horizontal_box_5.disable_item_expand (metric_lbl)
+			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.set_padding (3)
+			l_ev_horizontal_box_4.disable_item_expand (metric_lbl)
 			metric_lbl.set_text ("Select Metrics:")
+			l_ev_horizontal_box_5.disable_item_expand (l_ev_cell_2)
+			l_ev_cell_2.set_minimum_width (10)
 			archive_comparison_area.set_text ("Archive Comparison")
 			comparison_area.set_padding (6)
 			comparison_area.set_border_width (10)
@@ -205,6 +220,9 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
+	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_horizontal_split_area_1,
+	l_ev_horizontal_split_area_2: EV_HORIZONTAL_SPLIT_AREA
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
 	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1,

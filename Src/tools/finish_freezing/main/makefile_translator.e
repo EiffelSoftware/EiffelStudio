@@ -1667,7 +1667,7 @@ feature {NONE} -- Implementation
 				end
 				Result := replacement
 			else
-				Result := env.get (word)
+				Result := eiffel_layout.get_environment (word)
 				if Result /= Void and then not Result.is_empty then
 					Result := short_path (Result.twin)
 				end

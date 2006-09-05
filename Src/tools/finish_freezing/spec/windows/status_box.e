@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make, make_fatal
 
@@ -83,7 +88,7 @@ feature -- Initialization
 
 				-- Display Command Line Console if asked
 			if c_error and then message_box_result = Idcancel then
-				comspec := env.get ("COMSPEC")
+				comspec := eiffel_layout.get_environment ("COMSPEC")
 				if comspec /= Void then
 					(create {PROCESS_LAUNCHER}).launch (comspec, env.current_working_directory)
 				end

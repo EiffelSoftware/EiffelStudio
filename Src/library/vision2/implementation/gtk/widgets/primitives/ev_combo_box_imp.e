@@ -243,6 +243,7 @@ feature {NONE} -- Implementation
 			-- Focus for `Current' has changed'.
 		local
 			a_toggle: POINTER
+			l_popup: EV_POPUP_WINDOW_IMP
 		do
 			if a_has_focus then
 				if is_list_shown then
@@ -251,6 +252,11 @@ feature {NONE} -- Implementation
 						-- Call list_hidden_actions.
 					if list_hidden_actions_internal /= Void then
 						list_hidden_actions_internal.call (Void)
+					end
+						-- We need to give capture back to the popup window.
+					l_popup ?= top_level_window_imp
+					if l_popup /= Void and then l_popup.is_show_requested then
+						l_popup.grab_keyboard_and_mouse
 					end
 				else
 					Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)

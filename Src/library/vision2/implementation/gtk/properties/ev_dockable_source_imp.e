@@ -30,17 +30,15 @@ feature -- Status setting
 				a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 				a_screen_x, a_screen_y: INTEGER)
 			is
-				-- Filter out double click events.
+				-- Filter out duplicate events.
 			do
-				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
-					if a_button = 1 and not dawaiting_movement and widget_imp_at_pointer_position = Current then
-							orig_cursor := pointer_style
-							original_x_offset := a_x.to_integer_16
-							original_y_offset := a_y.to_integer_16
-							original_screen_x := a_screen_x.to_integer_16
-							original_screen_y := a_screen_y.to_integer_16
-							dawaiting_movement := True
-					end
+				if not dawaiting_movement then
+					orig_cursor := pointer_style
+					original_x_offset := a_x.to_integer_16
+					original_y_offset := a_y.to_integer_16
+					original_screen_x := a_screen_x.to_integer_16
+					original_screen_y := a_screen_y.to_integer_16
+					dawaiting_movement := True
 				end
 			end
 
@@ -78,7 +76,7 @@ feature -- Status setting
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 
 	internal_enable_dockable is
 			-- Activate drag mechanism.
@@ -98,10 +96,9 @@ feature {NONE} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Initialize the pick/drag and drop mechanism.
 		do
-			--call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			enable_capture
+			App_implementation.docking_source := Current
 			initialize_transport (a_screen_x, a_screen_y, interface)
---			App_implementation.enable_is_in_transport
 		end
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
@@ -117,8 +114,9 @@ feature {NONE} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Terminate the pick and drop mechanism.
 		do
-			disable_capture
 			if not dawaiting_movement then
+				disable_capture
+				App_implementation.docking_source := Void
 				if orig_cursor /= Void then
 						-- Restore the cursor style of `Current' if necessary.
 					set_pointer_style (orig_cursor)
@@ -127,11 +125,8 @@ feature {NONE} -- Implementation
 				complete_dock
 				original_x_offset := -1
 				original_y_offset := -1
-				dawaiting_movement := False
---				App_implementation.disable_is_in_transport
-			elseif dawaiting_movement then
-				dawaiting_movement := False
 			end
+			dawaiting_movement := False
 		end
 
 	enable_capture is
@@ -155,13 +150,6 @@ feature {NONE} -- Implementation
 			-- as on some platforms, they end up in an invalid state, and need refreshing.
 		do
 			-- For now do nothing until further investigation has taken place.
-		end
-
-feature {NONE} -- Implementation
-
-	event_widget: POINTER is
-			-- Pointer to the GtkWidget to which the events are hooked up to
-		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -1053,7 +1053,7 @@ feature -- Description texts
 	e_Pretty_print: STRING is			"Display an expanded view of objects"
 	e_Print: STRING is					"Print the currently edited text"
 	e_Project_name: STRING is			"Name of the current project"
-	e_Project_settings: STRING is		"Change project settings"
+	e_Project_settings: STRING is		"Change project settings, right click to open external editor"
 	e_override_scan: STRING is			"Recompile override clusters"
 	e_Raise_all: STRING is				"Raise all windows"
 	e_Raise_all_unsaved: STRING is		"Raise all unsaved windows"

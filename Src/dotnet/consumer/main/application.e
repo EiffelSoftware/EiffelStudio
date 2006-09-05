@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 		do
 			create l_parser.make
 			l_parser.execute (agent start (l_parser))
-			io.read_line
 		end
 
 	start (a_parser: ARGUMENT_PARSER) is

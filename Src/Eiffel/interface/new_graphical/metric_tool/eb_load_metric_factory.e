@@ -169,14 +169,16 @@ feature -- Domain item creation
 
 feature -- Archive node creation
 
-	new_metric_arichive_node (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: EB_METRIC_DOMAIN): EB_METRIC_ARCHIVE_NODE is
+	new_metric_arichive_node (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: EB_METRIC_DOMAIN; a_uuid: STRING): EB_METRIC_ARCHIVE_NODE is
 			-- New metric archive node and initialize `metric_name' with `a_metric_name', `metric_type' with `a_metric_type', `calculated_time' with `a_time',
-			-- `value' with `a_value' and `input_domain' with `a_input'.
+			-- `value' with `a_value', `input_domain' with `a_input and `uuid' with `a_uuid'.
 		require
 			a_metric_name_attached: a_metric_name /= Void
 			a_metric_type_valid: is_metric_type_valid (a_metric_type)
 			a_time_attached: a_time /= Void
 			a_input_attached: a_input /= Void
+			a_uuid_attached: a_uuid /= Void
+			a_uuid_valid: shared_uuid.is_valid_uuid (a_uuid)
 		deferred
 		ensure
 			result_attached: Result /= Void

@@ -53,7 +53,7 @@ feature -- Titles
 	t_metric_not_saved: STRING is "Note: Metric is not saved."
 	t_select_archive: STRING is "Select a metric archive file"
 	t_metric_no_metric_selected: STRING is "No metric is selected"
-	t_metric_is_not_valid: STRING is "is not valid"
+	t_metric_is_not_valid: STRING is "is invalid"
 	t_selected_metric: STRING is "Selected metric"
 	t_selected_file_not_exists: STRING is "Specified file doesn't exist"
 	t_selected_archive_not_valid: STRING is "Metric archive in specified file is not valid, it must be cleaned"
@@ -85,6 +85,9 @@ feature -- Titles
 	t_saving_metrics: STRING is "Saving metrics..."
 	t_removing_metrics: STRING is "Removing metrics..."
 	t_result_not_up_to_date: STRING is "Current metric result may not be up-to-date"
+	t_feature_version_setting: STRING is "Feature version setting:"
+	t_only_current_version: STRING is "Only current version"
+	t_descendant_version: STRING is "Current version and all its descendant versions"
 
 feature -- Labels
 

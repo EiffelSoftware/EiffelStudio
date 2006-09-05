@@ -910,26 +910,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	check_uuid_vadility (a_uuid_str: STRING; a_msg: STRING): UUID is
-			-- Check vadility of `a_uuid_str'.
-			-- If valid, return an UUID object representing `a_uuid_str', otherwise, return Void.
-		require
-			a_msg_attached: a_msg /= Void
-		local
-			l_uuid: UUID
-		do
-			if a_uuid_str = Void then
-				set_parse_error_message ("Missing uuid " + a_msg)
-			else
-				create l_uuid
-				if not l_uuid.is_valid_uuid (a_uuid_str) then
-					set_parse_error_message  ("Invalid UUID %"" + a_uuid_str +"%"" + a_msg)
-				else
-					create Result.make_from_string (a_uuid_str)
-				end
-			end
-		end
-
 invariant
 	current_criterion_attached: current_criterion /= Void
 	current_attributes_attached: current_attributes /= Void

@@ -75,54 +75,6 @@ feature{NONE} -- Initialization
 			hide_dialog_actions: hide_dialog_actions /= Void
 		end
 
-	show_dialog is
-			-- Show text editor.
-		require
-			parent_window: parent_window /= Void
-			popup_window: popup_window /= Void
-			activated: is_activated
-		local
-			l_version: BOOLEAN_REF
-		do
-			if dialog.value = Void then
-				dialog.set_value ([domain, False])
-			else
-				l_version ?= dialog.value.item (2)
-				check l_version /= Void end
-				dialog.set_value ([domain, l_version.item])
-			end
-			dialog.show_relative_to_window (parent_window)
-		end
-
-	on_ok is
-			-- Action to be performed when "OK" button is pressed in `dialog'
-		local
-			l_domain: EB_METRIC_DOMAIN
-		do
-			l_domain ?= dialog.value.item (1)
-			check l_domain /= Void end
-			set_domain (l_domain)
-			dialog_ok_actions.call ([])
-		end
-
-	on_cancel is
-			-- Action to be performed when "Cancel" button is pressed in `dialog'
-		do
-			dialog_cancel_actions.call ([])
-		end
-
-	on_show is
-			-- Action to be performed when `dialog' is shown.
-		do
-			show_dialog_actions.call ([])
-		end
-
-	on_hide is
-			-- Action to be performed when `dialog' is hidden.		
-		do
-			hide_dialog_actions.call ([])
-		end
-
 feature -- Access
 
 	domain: EB_METRIC_DOMAIN
@@ -182,6 +134,21 @@ feature -- Access
 			-- Popup window used on activate.
 			-- Void when `Current' isn't beeing activated.					
 
+	parent_window: EV_WINDOW is
+			-- Return the parent window (if any), where the property has been put.
+		local
+			l_parent: EV_CONTAINER
+		do
+			from
+				l_parent := parent
+			until
+				Result /= Void or l_parent = Void
+			loop
+				Result ?= l_parent
+				l_parent := l_parent.parent
+			end
+		end
+
 feature -- Setting
 
 	set_domain (a_domain: like domain) is
@@ -239,6 +206,26 @@ feature -- Setting
 			try_call_setting_change_actions
 		ensure
 			font_assigned: font = a_font
+		end
+
+	show_dialog is
+			-- Show text editor.
+		require
+			parent_window: parent_window /= Void
+			popup_window: popup_window /= Void
+			activated: is_activated
+		local
+			l_version: BOOLEAN_REF
+		do
+			if dialog.value = Void then
+				dialog.set_value ([domain, False])
+			else
+				l_version ?= dialog.value.item (2)
+				check l_version /= Void end
+				dialog.set_value ([domain, l_version.item])
+			end
+			dialog.show_relative_to_window (parent_window)
+			dialog.set_focus
 		end
 
 feature{NONE} -- Implementation
@@ -475,6 +462,36 @@ feature{NONE} -- Actions
 			end
 		end
 
+	on_cancel is
+			-- Action to be performed when "Cancel" button is pressed in `dialog'
+		do
+			dialog_cancel_actions.call ([])
+		end
+
+	on_show is
+			-- Action to be performed when `dialog' is shown.
+		do
+			show_dialog_actions.call ([])
+		end
+
+	on_hide is
+			-- Action to be performed when `dialog' is hidden.		
+		do
+			hide_dialog_actions.call ([])
+			deactivate
+		end
+
+	on_ok is
+			-- Action to be performed when "OK" button is pressed in `dialog'
+		local
+			l_domain: EB_METRIC_DOMAIN
+		do
+			l_domain ?= dialog.value.item (1)
+			check l_domain /= Void end
+			set_domain (l_domain)
+			dialog_ok_actions.call ([])
+		end
+
 feature -- Events
 
 	ellipsis_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -509,21 +526,6 @@ feature {NONE} -- Implementation
 			Result.set_mask (l_mask)
 		ensure
 			Result_set: Result /= Void
-		end
-
-	parent_window: EV_WINDOW is
-			-- Return the parent window (if any), where the property has been put.
-		local
-			l_parent: EV_CONTAINER
-		do
-			from
-				l_parent := parent
-			until
-				Result /= Void or l_parent = Void
-			loop
-				Result ?= l_parent
-				l_parent := l_parent.parent
-			end
 		end
 
 	initialize_actions is

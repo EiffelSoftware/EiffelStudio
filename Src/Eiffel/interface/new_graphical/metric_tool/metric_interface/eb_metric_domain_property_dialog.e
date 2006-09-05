@@ -25,6 +25,13 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_MANAGERS
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 feature{NONE} -- Initialization
 
 	initialize is
@@ -66,7 +73,7 @@ feature{NONE} -- Actions
 				if l_version.item then
 					property_area.only_current_version_checkbox.enable_select
 				else
-					property_area.only_current_version_checkbox.disable_select
+					property_area.descendant_version_checkbox.enable_select
 				end
 			end
 		end
@@ -100,14 +107,34 @@ feature -- Access
 	property_area: EB_CALLER_PROPERTY_AREA
 			-- Property area
 
+	grid: ES_GRID
+			-- Grid which should retrieve focus after Current is hidden
+
 feature -- Status setting
 
 	hide is
 			-- Request that `Current' not be displayed even when its parent is.
 			-- If successful, make `is_show_requested' `False'.
+		local
+			l_grid: like grid
 		do
 			Precursor
+			l_grid := grid
+			if l_grid /= Void and then not l_grid.is_destroyed and then l_grid.is_displayed and then l_grid.is_sensitive then
+				l_grid.set_focus
+			end
+			window_manager.last_focused_development_window.window.set_focus
 			hide_actions.call ([])
+		end
+
+	set_grid (a_grid: like grid) is
+			-- Set `grid' with `a_grid'.
+		require
+			a_grid_attached: a_grid /= Void
+		do
+			grid := a_grid
+		ensure
+			grid_set: grid = a_grid
 		end
 
 invariant

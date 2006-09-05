@@ -71,6 +71,7 @@ feature{NONE} -- Initialization
 			item_drop_actions.extend (agent on_item_drop)
 			set_selected_rows_function (agent selected_rows_internal)
 			enable_default_tree_navigation_behavior (True, True, True, True)
+			key_press_string_actions.extend (agent on_key_string_pressed)
 		ensure then
 			tree_enabled: is_tree_enabled
 			change_actions_attached: change_actions /= Void
@@ -465,12 +466,46 @@ feature{NONE} -- Implementation/Actions
 			-- Action to be performed when `a_key' is pressed on Current
 		local
 			l_selected_items: LIST [EV_GRID_ITEM]
+			l_domain_criterion_item: EB_METRIC_DOMAIN_GRID_ITEM
+			l_grid_item: EV_GRID_ITEM
+			l_key_code: INTEGER
 		do
 			Precursor (a_key)
-			if a_key.code = {EV_KEY_CONSTANTS}.key_f2 or a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+			l_key_code := a_key.code
+			if l_key_code /= {EV_KEY_CONSTANTS}.key_tab then
+				if l_key_code = {EV_KEY_CONSTANTS}.key_f2 or l_key_code = {EV_KEY_CONSTANTS}.key_enter then
+					l_selected_items := selected_items
+					if not l_selected_items.is_empty then
+						l_grid_item := l_selected_items.first
+						l_grid_item.activate
+						l_domain_criterion_item ?= l_grid_item
+						if l_domain_criterion_item /= Void then
+							l_domain_criterion_item.show_dialog
+						end
+					end
+				end
+			end
+		end
+
+	on_key_string_pressed (a_string: STRING_32) is
+			-- Action to be performed when `a_string' is pressed on Current
+		require
+			a_string_attached: a_string /= Void
+		local
+			l_selected_items: LIST [EV_GRID_ITEM]
+			l_grid_editable_item: EV_GRID_EDITABLE_ITEM
+		do
+			if not (a_string.is_equal (once "%N") or a_string.is_equal (once "%T")) then
 				l_selected_items := selected_items
 				if not l_selected_items.is_empty then
 					l_selected_items.first.activate
+					l_grid_editable_item ?= l_selected_items.first
+					if l_grid_editable_item /= Void then
+						l_grid_editable_item.text_field.set_text (a_string)
+						if not a_string.is_empty then
+							l_grid_editable_item.text_field.set_caret_position (a_string.count + 1)
+						end
+					end
 				end
 			end
 		end

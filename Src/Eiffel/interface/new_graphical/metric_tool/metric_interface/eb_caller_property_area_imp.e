@@ -26,12 +26,26 @@ feature {NONE}-- Initialization
 			Precursor {EV_VERTICAL_BOX}
 			
 				-- Create all widgets.
+			create l_ev_vertical_box_1
+			create feature_vertion_lbl
+			create l_ev_horizontal_box_1
+			create l_ev_cell_1
+			create l_ev_vertical_box_2
 			create only_current_version_checkbox
+			create descendant_version_checkbox
+			create l_ev_cell_2
 			create criterion_domain_lbl
 			create domain_selector
 			
 				-- Build widget structure.
-			extend (only_current_version_checkbox)
+			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (feature_vertion_lbl)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_cell_1)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (only_current_version_checkbox)
+			l_ev_vertical_box_2.extend (descendant_version_checkbox)
+			l_ev_vertical_box_1.extend (l_ev_cell_2)
 			extend (criterion_domain_lbl)
 			extend (domain_selector)
 			
@@ -48,12 +62,22 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			only_current_version_checkbox.set_text ("Only current version")
+			l_ev_vertical_box_1.set_padding (3)
+			l_ev_vertical_box_1.disable_item_expand (feature_vertion_lbl)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_2)
+			feature_vertion_lbl.set_text ("Feature version setting:")
+			feature_vertion_lbl.align_text_left
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_2)
+			l_ev_cell_1.set_minimum_width (10)
+			l_ev_vertical_box_2.disable_item_expand (only_current_version_checkbox)
+			l_ev_vertical_box_2.disable_item_expand (descendant_version_checkbox)
+			l_ev_cell_2.set_minimum_height (10)
 			criterion_domain_lbl.set_text ("Criterion domain:")
 			criterion_domain_lbl.align_text_left
 			set_minimum_width (0)
 			set_padding (3)
-			disable_item_expand (only_current_version_checkbox)
+			disable_item_expand (l_ev_vertical_box_1)
 			disable_item_expand (criterion_domain_lbl)
 			
 			set_all_attributes_using_constants
@@ -69,9 +93,16 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	only_current_version_checkbox, descendant_version_checkbox: EV_RADIO_BUTTON
 	domain_selector: EB_METRIC_DOMAIN_SELECTOR
-	only_current_version_checkbox: EV_CHECK_BUTTON
+	feature_vertion_lbl,
 	criterion_domain_lbl: EV_LABEL
+
+feature {NONE} -- Implementation
+
+	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

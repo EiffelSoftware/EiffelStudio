@@ -12,6 +12,12 @@ class
 inherit
 	EB_CALLER_PROPERTY_AREA_IMP
 
+	EB_METRIC_INTERFACE_PROVIDER
+		undefine
+			is_equal,
+			default_create,
+			copy
+		end
 
 feature {NONE} -- Initialization
 
@@ -22,11 +28,14 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			feature_vertion_lbl.set_text (metric_names.t_feature_version_setting)
+			only_current_version_checkbox.set_text (metric_names.t_only_current_version)
+			descendant_version_checkbox.set_text (metric_names.t_descendant_version)
 		end
 
 feature {NONE} -- Implementation
 
-	
+
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

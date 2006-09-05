@@ -109,23 +109,50 @@ feature{NONE} -- Process
 			l_time: STRING
 			l_value: STRING
 			l_date: DATE_TIME
+			l_uuid_str: STRING
+			l_name: STRING
+			l_type_str: STRING
+			l_uuid: UUID
 		do
-			l_type := metric_type_id_from_name (current_attributes.item (at_type))
-			l_time := current_attributes.item (at_time)
-			l_value := current_attributes.item (at_value)
-			if l_type = 0 then
-				set_parse_error_message ("Invalid metric type %"" + current_attributes.item (at_type) + "%".")
-			end
+			l_name := current_attributes.item (at_name)
 			if not has_error then
-				create l_date.make_now
-				if not l_date.date_time_valid (l_time, l_date.default_format_string) then
-					set_parse_error_message ("Invalid time %"" + l_time + "%".")
+				if l_name = Void then
+					set_parse_error_message ("Metric name is missing.")
 				end
 			end
 			if not has_error then
-				if not l_value.is_real then
-					set_parse_error_message ("Invalid metric value %"" + l_time + "%".")
+				l_type_str := current_attributes.item (at_type)
+				if l_type_str = Void then
+					set_parse_error_message ("Metric type is missing in metric archive node %"" + l_name + "%"")
+				else
+					l_type := metric_type_id_from_name (l_type_str)
+					if l_type = 0 then
+						set_parse_error_message ("Metric type %"" + l_type_str +"%" is invalid.")
+					end
 				end
+			end
+			if not has_error then
+				l_time := current_attributes.item (at_time)
+				if l_time = Void then
+					set_parse_error_message ("Time is missing in metric archive node %"" + l_name + "%"")
+				else
+					create l_date.make_now
+					if not l_date.date_time_valid (l_time, l_date.default_format_string) then
+						set_parse_error_message ("Invalid time %"" + l_time + "%" in metric archive node %"" + l_name  + "%"")
+					end
+				end
+			end
+			if not has_error then
+				l_value := current_attributes.item (at_value)
+				if l_value = Void then
+					set_parse_error_message ("Metric archive value is missing in metric archive node %"" + l_name  + "%"")
+				elseif not l_value.is_real then
+					set_parse_error_message ("metric value %"" + l_time + "%" is invalid in metric archive node %"" + l_name + "%"")
+				end
+			end
+			if not has_error then
+				l_uuid_str := current_attributes.item (at_uuid)
+				l_uuid := check_uuid_vadility (l_uuid_str, " in archive node %"" + l_name + "%"")
 			end
 			if not has_error then
 				current_archive_node := factory.new_metric_arichive_node (
@@ -133,7 +160,8 @@ feature{NONE} -- Process
 					l_type,
 					create {DATE_TIME}.make_from_string_default (l_time),
 					l_value.to_double,
-					create {EB_METRIC_DOMAIN}.make)
+					create {EB_METRIC_DOMAIN}.make,
+					l_uuid_str)
 			end
 		end
 
@@ -219,11 +247,15 @@ feature{NONE} -- Implementation
 				-- metric archive node
 				-- * metric
 				-- * type
+				-- * time
+				-- * uuid
+				-- * value
 			create l_attr.make (2)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_type, n_type)
 			l_attr.force (at_time, n_time)
 			l_attr.force (at_value, n_value)
+			l_attr.force (at_uuid, n_uuid)
 			Result.force (l_attr, t_metric)
 
 				-- domain_item

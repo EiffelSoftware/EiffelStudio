@@ -18,6 +18,11 @@ inherit
 
 	PATH_CONVERTER
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -59,7 +64,7 @@ feature -- Initialization
 				l_batch_file.close
 				create l_process_launcher
 				l_process_launcher.run_hidden
-				l_com_spec := env.get ("ComSpec")
+				l_com_spec := eiffel_layout.get_environment ("ComSpec")
 				check
 					has_com_spec: l_com_spec /= Void
 				end
@@ -132,7 +137,7 @@ feature -- Implementation
 			l_local_var_values := variables.item (a_string).split (';')
 			if l_local_var_values /= Void and not l_local_var_values.is_empty then
 						-- Get the corresponding system environment variable if it existed before.
-				l_var_value := env.get (a_string)
+				l_var_value := eiffel_layout.get_environment (a_string)
 				if l_var_value /= Void then
 					l_system_var_values := l_var_value.split (';')
 				end

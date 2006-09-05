@@ -19,7 +19,7 @@ feature -- Status update
 			l_file: RAW_FILE
 			l_dir: DIRECTORY
 		do
-			temp := environment.get_from_application (ise_eiffel_env, application_name)
+			temp := get_environment (ise_eiffel_env)
 			create p
 			if (temp = Void) or else temp.is_empty then
 				io.error.put_string (p.Workbench_name)
@@ -33,7 +33,7 @@ feature -- Status update
 			end
 
 			if Platform.is_windows then
-				temp := environment.get_from_application (ise_c_compiler_env, application_name)
+				temp := get_environment (ise_c_compiler_env)
 				if (temp = Void) or else temp.is_empty then
 					io.error.put_string (p.Workbench_name)
 					io.error.put_string (": the environment variable $"+ise_c_compiler_env+" is not set%N")
@@ -41,7 +41,7 @@ feature -- Status update
 				end
 			end
 
-			temp := environment.get_from_application (ise_platform_env, application_name)
+			temp := get_environment (ise_platform_env)
 			if (temp = Void) or else temp.is_empty then
 				io.error.put_string (p.Workbench_name)
 				io.error.put_string (": the environment variable $"+ise_platform_env+" is not set%N")
@@ -68,7 +68,7 @@ feature -- Status update
 			end
 
 				-- Make sure to define ISE_LIBRARY if not defined.
-			if environment.get_from_application (ise_library_env, application_name) = Void then
+			if get_environment (ise_library_env) = Void then
 				environment.put (eiffel_installation_dir_name, ise_library_env)
 			end
 		ensure
@@ -115,6 +115,8 @@ feature -- Access
 	application_name: STRING is
 			-- Name of the application.
 		deferred
+		ensure
+			result_ok: Result /= Void and then not Result.is_empty
 		end
 
 feature -- Preferences
@@ -169,7 +171,7 @@ feature -- Access: Environment variables
 			is_valid_environment: is_valid_environment
 			windows: platform.is_windows
 		once
-			Result := environment.get_from_application (ise_c_compiler_env, application_name)
+			Result := get_environment (ise_c_compiler_env)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -179,7 +181,7 @@ feature -- Access: Environment variables
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := environment.get_from_application (ise_platform_env, application_name)
+			Result := get_environment (ise_platform_env)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -199,7 +201,7 @@ feature -- Access: Environment variables
 	Eiffel_projects_directory: STRING is
 			-- ISE_PROJECTS name.
 		once
-			Result := environment.get_from_application (ise_projects_env, application_name)
+			Result := get_environment (ise_projects_env)
 		end
 
 	Eiffel_home: DIRECTORY_NAME is
@@ -231,7 +233,7 @@ feature -- Access: file name
 	Eiffel_installation_dir_name: DIRECTORY_NAME is
 			-- Installation of ISE Eiffel name.
 		once
-			create Result.make_from_string (environment.get_from_application (ise_eiffel_env, application_name))
+			create Result.make_from_string (get_environment (ise_eiffel_env))
 		ensure
 			result_not_void_or_empty: is_valid_environment implies Result /= Void and not Result.is_empty
 		end
@@ -241,7 +243,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (environment.get_from_application (ise_library_env, application_name))
+			create Result.make_from_string (get_environment (ise_library_env))
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
 		end
@@ -251,7 +253,7 @@ feature -- Access: file name
 		require
 			is_valid_precompile_environment: is_valid_precompile_environment
 		do
-			create Result.make_from_string (environment.get_from_application (ise_precomp_env, application_name))
+			create Result.make_from_string (get_environment (ise_precomp_env))
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
 		end
@@ -426,7 +428,7 @@ feature -- Access: file name
 		local
 			l_p: STRING
 		do
-			l_p := environment.get_from_application (ec_folder_env, application_name)
+			l_p := get_environment (ec_folder_env)
 			if l_p /= Void then
 				create Result.make_from_string (l_p)
 			else
@@ -640,7 +642,7 @@ feature -- Access: names
 
 	ec_name: STRING is
 		once
-			Result := environment.get_from_application (ec_name_env, application_name)
+			Result := get_environment (ec_name_env)
 			if Result = Void then
 				create Result.make (6)
 				Result.append ("ec")
@@ -671,6 +673,14 @@ feature -- Status
 
 	is_unix_layout: BOOLEAN
 			-- Is eiffelstudio installed in the unix layout?
+
+feature -- Environment access
+
+	get_environment (a_var: STRING): STRING is
+			-- Get `a_var' from the environment, taking into account the `application_name' to lookup the defaults.
+		do
+			Result := environment.get_from_application (a_var, application_name)
+		end
 
 feature -- Version limitation
 

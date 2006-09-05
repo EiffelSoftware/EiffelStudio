@@ -181,6 +181,7 @@ feature -- Access
 			l_domain_item := domain_item
 			if l_domain_item.is_valid then
 				if l_domain_item.is_delayed_item then
+					l_writer.add_string (metric_names.t_input_domain)
 				else
 					if l_domain_item.is_folder_item then
 						l_group ?= l_domain_item.query_language_item

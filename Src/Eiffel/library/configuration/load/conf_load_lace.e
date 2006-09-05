@@ -132,7 +132,6 @@ feature -- Basic operation
 				end
 				current_options.set_warning (True)
 					-- disable some warnings by default
-				current_options.add_warning (w_vweq, False)
 				current_options.add_warning (w_vjrv, False)
 				current_options.add_warning (w_export_class_missing, False)
 				if current_options.warnings /= Void and then not current_options.warnings.has (w_old_verbatim_strings) then

@@ -14,8 +14,7 @@ inherit
 			propagate_background_color,
 			propagate_foreground_color,
 			lock_update,
-			unlock_update,
-			show_disconnected_from_window_manager
+			unlock_update
 		redefine
 			interface
 		end
@@ -27,8 +26,9 @@ inherit
 			initialize,
 			default_wm_decorations,
 			client_area,
-			set_focus,
 			show,
+			hide,
+			has_focus,
 			internal_enable_border,
 			internal_disable_border,
 			on_mouse_button_event
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_WINDOW_IMP}
 
 				-- This completely disconnects the window from the window manager.
---			{EV_GTK_EXTERNALS}.gdk_window_set_override_redirect ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True)
+			{EV_GTK_EXTERNALS}.gdk_window_set_override_redirect ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True)
 			disable_border
 			user_can_resize := False
 			set_background_color ((create {EV_STOCK_COLORS}).Dark_grey)
@@ -69,20 +69,20 @@ feature {NONE} -- Implementation
 	on_mouse_button_event (a_type: INTEGER_32; a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32) is
 		do
 			Precursor (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
---			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
---				if
---					a_screen_x >= x_position and then
---					a_screen_x <= (x_position + width) and then
---					a_screen_y >= y_position and then
---					a_screen_y <= (y_position + height)
---				then
---					grab_keyboard_and_mouse
---					print ("Call focus in actions%N")
---				else
---					release_keyboard_and_mouse
---					print ("Call focus out actions%N")
---				end
---			end
+			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum then
+				if
+					a_screen_x >= x_position and then
+					a_screen_x <= (x_position + width) and then
+					a_screen_y >= y_position and then
+					a_screen_y <= (y_position + height)
+				then
+					grab_keyboard_and_mouse
+				else
+						-- Emulate WM handling when clicking off window.
+					release_keyboard_and_mouse
+					{EV_GTK_EXTERNALS}.gtk_window_set_focus (c_object, default_pointer)
+				end
+			end
 		end
 
 	border_width: INTEGER is 2
@@ -100,25 +100,24 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (c_object, 0)
 		end
 
-	set_focus is
-			--
-		do
-			Precursor
---			grab_keyboard_and_mouse
-		end
-
 	show is
 			--
 		do
---			grab_keyboard_and_mouse
+			Precursor
+			grab_keyboard_and_mouse
+		end
+
+	hide is
+			--
+		do
+			release_keyboard_and_mouse
 			Precursor
 		end
 
-	show_disconnected_from_window_manager is
+	has_focus: BOOLEAN is
 			--
 		do
-			show
---			grab_keyboard_and_mouse
+			Result := {EV_GTK_EXTERNALS}.gtk_grab_get_current = c_object
 		end
 
 	default_wm_decorations: INTEGER is

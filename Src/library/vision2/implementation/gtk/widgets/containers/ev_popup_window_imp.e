@@ -31,7 +31,8 @@ inherit
 			has_focus,
 			internal_enable_border,
 			internal_disable_border,
-			on_mouse_button_event
+			on_mouse_button_event,
+			set_size
 		end
 
 create
@@ -59,12 +60,18 @@ feature {NONE} -- Initialization
 				-- This completely disconnects the window from the window manager.
 			{EV_GTK_EXTERNALS}.gdk_window_set_override_redirect ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), True)
 			disable_border
-			user_can_resize := False
-			set_background_color ((create {EV_STOCK_COLORS}).Dark_grey)
+			disable_user_resize
+			set_background_color ((create {EV_STOCK_COLORS}).black)
 			set_is_initialized (True)
 		end
 
 feature {NONE} -- Implementation
+
+	set_size (a_width, a_height: INTEGER)
+		do
+			Precursor (a_width, a_height)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_width, a_height)
+		end
 
 	on_mouse_button_event (a_type: INTEGER_32; a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32) is
 		do
@@ -85,7 +92,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	border_width: INTEGER is 2
+	border_width: INTEGER is 1
 		-- Border width of `Current'.
 
 	internal_enable_border is
@@ -111,7 +118,8 @@ feature {NONE} -- Implementation
 			--
 		do
 			release_keyboard_and_mouse
-			Precursor
+			Precursor;
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
 		end
 
 	has_focus: BOOLEAN is

@@ -31,7 +31,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
@@ -159,7 +159,9 @@ feature {CACHE_READER} -- Access
 			if not retried then
 				l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 				if internal_eiffel_cache_path.item = Void then
-					Result := eiffel_layout.eiffel_installation_dir_name
+					if is_eiffel_layout_defined then
+						Result := eiffel_layout.eiffel_installation_dir_name
+					end
 					if Result = Void then
 						Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 					else

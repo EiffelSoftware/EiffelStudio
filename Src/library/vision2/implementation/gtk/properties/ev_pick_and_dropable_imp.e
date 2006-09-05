@@ -33,8 +33,12 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 	on_pointer_motion (a_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]) is
 			-- Handle motion event for `Current'.
+		local
+			l_dockable_source: EV_DOCKABLE_SOURCE_IMP
+			l_call_events: BOOLEAN
 		do
-			if app_implementation.is_in_transport then
+			l_call_events := True
+			if app_implementation.pick_and_drop_source = Current then
 				execute (
 					a_motion_tuple.integer_32_item (1),
 					a_motion_tuple.integer_32_item (2),
@@ -44,7 +48,25 @@ feature {EV_APPLICATION_IMP} -- Implementation
 					a_motion_tuple.integer_32_item (6),
 					a_motion_tuple.integer_32_item (7)
 				)
-			elseif pointer_motion_actions_internal /= Void then
+				l_call_events := False
+			elseif is_dockable then
+				l_dockable_source ?= Current
+				if l_dockable_source.dawaiting_movement or else app_implementation.docking_source = Current then
+					l_dockable_source.dragable_motion (
+						a_motion_tuple.integer_32_item (1),
+						a_motion_tuple.integer_32_item (2),
+						a_motion_tuple.double_item (3),
+						a_motion_tuple.double_item (4),
+						a_motion_tuple.double_item (5),
+						a_motion_tuple.integer_32_item (6),
+						a_motion_tuple.integer_32_item (7)
+					)
+				end
+				if app_implementation.docking_source = Current then
+					l_call_events := False
+				end
+			end
+			if l_call_events and then pointer_motion_actions_internal /= Void then
 				pointer_motion_actions_internal.call (a_motion_tuple)
 			end
 		end
@@ -198,17 +220,18 @@ feature -- Implementation
 			l_cursor: EV_POINTER_STYLE
 			l_top_level_window_imp: EV_WINDOW_IMP
 			l_call_events: BOOLEAN
+			l_dockable_source: EV_DOCKABLE_SOURCE_IMP
 		do
 			l_call_events := True
 			app_imp := app_implementation
 			l_top_level_window_imp := top_level_window_imp
 			if l_top_level_window_imp /= Void then
 				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then not app_imp.is_in_transport then
-
 					if is_dockable and then a_button = 1 then
-						print ("Docking should be enabled%N")
-					end
-					if able_to_transport (a_button) then
+						l_dockable_source ?= Current
+						l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						l_call_events := False
+					elseif able_to_transport (a_button) then
 						-- Retrieve/calculate pebble
 						call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
 						if pebble /= Void then
@@ -241,9 +264,18 @@ feature -- Implementation
 						end
 					end
 				else
-					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.is_in_transport then
+					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then app_imp.pick_and_drop_source = Current then
 						end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						l_call_events := False
+					end
+					l_dockable_source ?= Current
+					if l_dockable_source /= Void and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
+						if l_dockable_source.dawaiting_movement or else app_imp.docking_source = Current then
+							if app_imp.docking_source = Current then
+								l_call_events := False
+							end
+							l_dockable_source.end_dragable (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						end
 					end
 				end
 				if l_call_events then

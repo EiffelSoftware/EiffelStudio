@@ -6,19 +6,12 @@
 	<IgnoreModularization Name="SELECTEDCCOMPILER" Type="Property" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Component Id="LocalMachineRegistry" Guid="E4C043A0-6236-4A40-A532-2F5EE81F5BDF" Win64="$(var.IsWin64)">
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry36" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\finish_freezing" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\wizard" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry39" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\ec" Name="ISE_EIFFEL" Value="[Application]" Id="registry46" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\finish_freezing" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry42" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\wizard" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry38" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\finish_freezing" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry43" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\ec" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry47" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel57" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel57" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel57" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry39" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel57" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry38" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\finish_freezing" Name="ISE_CFLAGS" Id="registry41" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\ec" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry48" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\wizard" Name="ISE_EIFFEL" Value="[Application]" Id="registry37" Type="string" />
 			</Component>
 			<Component Id="UserRegistry" Guid="9CABF13E-26F4-46d3-B72A-D5F0C008F790">
 				<Registry Root="HKCU" Key="Software\ISE\Eiffel57\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />

@@ -3,10 +3,6 @@
 	<Module Id="vision2_tour" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="5.7">
 		<Package Id="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Keywords="MergeModule, MSI, Database" Description="Vision2Tour" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Component Id="Registry" Guid="232839E5-2B6C-4AAA-866A-899685E51D46" Win64="$(var.IsWin64)">
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\vision2_tour" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry1" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\vision2_tour" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" Type="string" />
-			</Component>
 			<Directory Id="ProgramMenuFolder" Name=".">
 				<Directory Id="EiffelStudio" Name="EIFFEL~2" LongName="EiffelStudio 5.7">
 					<Component Id="EiffelStudio" Guid="E28A2EAF-EDD5-4905-BF1E-E54D5C148035">

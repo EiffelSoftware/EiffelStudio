@@ -479,10 +479,9 @@ feature -- Execution
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				output_manager.add_string (Warning_messages.w_Invalid_working_directory (working_dir))
 			else
-				Eb_debugger_manager.raise
 				app_exec := eb_debugger_manager.application
-
 				app_exec.run (l_cmd_line_arg, working_dir)
+				Eb_debugger_manager.raise
 				if app_exec.is_running then
 					output_manager.add_string ("System is running")
 					if app_exec.execution_mode = No_stop_points then

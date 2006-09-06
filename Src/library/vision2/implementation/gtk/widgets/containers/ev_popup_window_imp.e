@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	set_size (a_width, a_height: INTEGER)
 		do
 			Precursor (a_width, a_height)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_width, a_height)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_width.max (internal_minimum_width), a_height.max (internal_minimum_height))
 		end
 
 	on_mouse_button_event (a_type: INTEGER_32; a_x, a_y, a_button: INTEGER_32; a_x_tilt, a_y_tilt, a_pressure: REAL_64; a_screen_x, a_screen_y: INTEGER_32) is

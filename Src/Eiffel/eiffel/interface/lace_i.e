@@ -43,6 +43,11 @@ inherit
 			{NONE} all
 		end
 
+	CONF_FILE_DATE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -94,13 +99,8 @@ feature -- Access
 			-- Did configuration change (and is not group equivalent to the previous).
 
 	date_has_changed: BOOLEAN is
-		local
-			str: ANY
-			new_date: INTEGER
 		do
-			str := file_name.to_c
-			new_date := eif_date ($str)
-			Result := new_date /= date
+			Result := file_modified_date (file_name) /= date
 		end
 
 	user_options: USER_OPTIONS
@@ -220,11 +220,8 @@ feature -- Status setting
 
 	set_date_stamp is
 			-- Set `date' information to the current timestamp of the file.
-		local
-			ptr: ANY
 		do
-			ptr := file_name.to_c
-			date := eif_date ($ptr)
+			date := file_modified_date (file_name)
 		end
 
 	reset_date_stamp is
@@ -1283,14 +1280,6 @@ feature {NONE} -- Implementation
 
 			create l_il_env.make (system.clr_runtime_version)
 			l_il_env.register_environment_variable
-		end
-
-feature {NONE} -- Externals
-
-	eif_date (s: POINTER): INTEGER is
-			-- Time stamp primitive
-		external
-			"C"
 		end
 
 indexing

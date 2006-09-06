@@ -108,14 +108,14 @@ feature {NONE} -- Implementation
 		end
 
 	show is
-			--
+			-- Map the Window to the screen.
 		do
 			Precursor
 			grab_keyboard_and_mouse
 		end
 
 	hide is
-			--
+			-- Unmap the Window from the screen.
 		do
 			release_keyboard_and_mouse
 			Precursor;
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 		end
 
 	has_focus: BOOLEAN is
-			--
+			-- Does Current have the keyboard focus?
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_grab_get_current = c_object
 		end

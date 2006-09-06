@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_class is
+	add_class (a_with_brace: BOOLEAN) is
 			-- A class like {CLASS} encountered.
 		local
 			l_text : like text
@@ -188,12 +188,20 @@ feature {NONE} -- Implementation
 			check
 				l_text.count > 2
 			end
-			l_class_name := l_text.substring (2, l_text.count - 1)
+			if l_text.item (l_text.count) = '}' then
+				l_class_name := l_text.substring (2, l_text.count - 1)
+			else
+				l_class_name := l_text.substring (2, l_text.count - 3)
+			end
 			l_class := class_by_name (l_class_name)
 			if l_class /= Void then
-				text_formatter.process_symbol_text (ti_l_curly)
+				if a_with_brace then
+					text_formatter.process_symbol_text (ti_l_curly)
+				end
 				text_formatter.process_class_name_text (l_class_name, l_class, False)
-				text_formatter.process_symbol_text (ti_r_curly)
+				if a_with_brace then
+					text_formatter.process_symbol_text (ti_r_curly)
+				end
 				if l_class.is_compiled then
 					last_type := l_class.compiled_class.actual_type
 				end

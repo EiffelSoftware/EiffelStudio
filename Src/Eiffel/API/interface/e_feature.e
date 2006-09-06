@@ -725,14 +725,16 @@ feature -- Output
 			a: like alias_name
 		do
 			append_name (a_text_formatter)
-			a := alias_name
-			if a /= Void then
-				a_text_formatter.add_space
-				a_text_formatter.process_keyword_text (Ti_alias_keyword, Void)
-				a_text_formatter.add_space
-				a_text_formatter.process_symbol_text (Ti_double_quote)
-				a_text_formatter.process_operator_text (extract_alias_name (a), Current)
-				a_text_formatter.process_symbol_text (Ti_double_quote)
+			if not is_infix and then not is_prefix then
+				a := alias_name
+				if a /= Void then
+					a_text_formatter.add_space
+					a_text_formatter.process_keyword_text (Ti_alias_keyword, Void)
+					a_text_formatter.add_space
+					a_text_formatter.process_symbol_text (Ti_double_quote)
+					a_text_formatter.process_operator_text (extract_alias_name (a), Current)
+					a_text_formatter.process_symbol_text (Ti_double_quote)
+				end
 			end
 			if has_convert_mark then
 				a_text_formatter.add_space

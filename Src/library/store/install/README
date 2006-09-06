@@ -10,17 +10,23 @@ Installation
 
 3. Install the C-libraries:
 
-   Start your databases kernels if needed (most of the C-libraries are based
-   on DBMS libraries, but some of them use a precompiler which needs to access
-   the database kernel).
+	Start your databases kernels if needed (most of the C-libraries are based
+	on DBMS libraries, but some of them use a precompiler which needs to access
+	the database kernel).
 
-	type "finish_freezing" in the following directories:
+	Go in the directory specific to the handle you are using and perform the
+	following actions. For instance, for the ODBC handle:
 
-	$ISE_EIFFEL/library/time/Clib
-	$ISE_EIFFEL/library/store/support/Clib
+	* Windows:
+		cd %ISE_EIFFEL%\library\store\dbms\rdbms\odbc\Clib
 
-	and in the directory specific to the handle you are using. For instance,
-	for the Ingres handle:
+	 with the Borland C compiler:
+	 	make_bcb.bat
 
-	$ISE_EIFFEL/library/store/dbms/rdbms/ingres/Clib
+	 with the Microsoft C compiler:
+	 	make_msc.bat
+
+	* Unix:
+		cd $ISE_EIFFEL/library/store/dbms/rdbms/odbc/Clib
+		finish_freezing -library
 

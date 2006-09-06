@@ -1,21 +1,3 @@
-July 1999, Release: 5.1.010
-
---|----------------------------------------------------------------
---| EiffelStore: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 360 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
-
 The EiffelStore library provides a consistent set of 
 classes for writing object oriented Eiffel applications that need 
 to handle persistent objects.
@@ -47,11 +29,9 @@ The library interface consists of two sets:
 
 Example classes are located in $ISE_EIFFEL/examples/store
 
-EiffelStore 4.5 has currently only been tested with:
-		ISE-Eiffel Release 4.5
+EiffelStore has currently only been tested with:
+		EiffelStudio 5.7
    		Oracle8 8.0.4
-		Sybase Adaptive Server Enterprise for Windows NT Evaluation Copy Version 11.5
-		IngresII
 		ODBC 3.0
 
 Documentation
@@ -61,17 +41,3 @@ Documentation
 
 Then, to install EiffelStore external libraries, go to directory 
 $ISE_EIFFEL/library/store/install (a README file provides full instructions).
-
-Then, making sure that you have the requested database (Oracle,
-Sybase, etc) call: 
-   make_bcc or make_msc depending on which C compiler you are using (bcc for Borland
-   and msc for Microsoft).
-from inside this current EiffelStore directory.
-
-In the case of Oracle, make sure you are registered as an Oracle user.
-
-Note
-----
-If you are using EiffelStore with a specific RDBMS, read carefully
-the following file:
-   $ISE_LIBRARY/library/store/install/{basename}.txt

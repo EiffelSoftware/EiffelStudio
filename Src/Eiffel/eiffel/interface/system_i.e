@@ -871,6 +871,11 @@ end
 				create d1.make_now
 			end
 
+			if equal (universe.new_target, universe.target) then
+				lace.force_new_target
+				lace.recompile
+			end
+
 			l_target := universe.new_target
 			check
 				l_target_not_void: l_target /= Void

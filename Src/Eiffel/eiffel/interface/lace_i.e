@@ -65,6 +65,11 @@ feature -- Status
 	is_precompilation_needed: BOOLEAN
 			-- Does the target have a precompile that needs to be (re)precompiled?
 
+	is_force_new_target: BOOLEAN
+			-- Should a new target be created even if we didn't have any changes.
+			-- This also ignores warnings as it is expected that such warnings have already been added/reported
+			-- when real changes were done.
+
 feature -- Access
 
 	file_name: STRING
@@ -133,6 +138,14 @@ feature -- Update from retrieved object.
 			successful := True
 		end
 feature -- Status setting
+
+	force_new_target is
+			-- Set `is_force_new_target' to True.
+		do
+			is_force_new_target := True
+		ensure
+			is_force_new_target: is_force_new_target
+		end
 
 	check_precompile is
 			-- Check precompile and update `precompile', `is_precompile_invalid' and `is_precompilation_needed'.
@@ -247,6 +260,7 @@ feature -- Status setting
 			end
 
 			if
+				is_force_new_target or else
 				conf_system = Void or else
 				(universe.target = Void and universe.new_target = Void) or else
 				date_has_changed or else not successful or else
@@ -493,7 +507,7 @@ feature {NONE} -- Implementation
 			if universe.conf_system /= Void then
 				universe.conf_system.set_file_date
 			end
-			has_group_changed := universe.conf_system = Void or l_old_target = Void or else l_old_target.date_has_changed or not conf_system.is_group_equivalent (universe.conf_system)
+			has_group_changed := is_force_new_target or else universe.conf_system = Void or l_old_target = Void or else l_old_target.date_has_changed or not conf_system.is_group_equivalent (universe.conf_system)
 			if has_group_changed then
 					-- check if a precompile was modified
 				if l_old_target /= Void then
@@ -606,7 +620,7 @@ feature {NONE} -- Implementation
 					l_errors.forth
 				end
 				error_handler.raise_error
-			elseif l_parse_vis.last_warnings /= Void then
+			elseif not is_force_new_target and l_parse_vis.last_warnings /= Void then
 				from
 					l_errors := l_parse_vis.last_warnings
 					l_errors.start
@@ -732,8 +746,10 @@ feature {NONE} -- Implementation
 					l_b := l_s.to_boolean
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.cls_compliant and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-						create vd83.make (s_cls_compliant, system.cls_compliant.out, l_s)
-						Error_handler.insert_warning (vd83)
+						if not is_force_new_target then
+							create vd83.make (s_cls_compliant, system.cls_compliant.out, l_s)
+							Error_handler.insert_warning (vd83)
+						end
 					else
 						system.set_cls_compliant (l_b)
 					end
@@ -928,8 +944,10 @@ feature {NONE} -- Implementation
 					l_b := l_s.to_boolean
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-						create vd83.make (s_java_generation, system.il_generation.out, l_s)
-						Error_handler.insert_warning (vd83)
+						if not is_force_new_target then
+							create vd83.make (s_java_generation, system.il_generation.out, l_s)
+							Error_handler.insert_warning (vd83)
+						end
 					else
 						system.set_java_generation (l_b)
 					end
@@ -969,8 +987,10 @@ feature {NONE} -- Implementation
 				not (system.metadata_cache_path /= Void and then l_s.is_case_insensitive_equal (system.metadata_cache_path)) and then
 				(a_target.precompile /= Void or workbench.has_compilation_started)
 			then
-				create vd83.make (s_metadata_cache_path, system.metadata_cache_path, l_s)
-				Error_handler.insert_warning (vd83)
+				if not is_force_new_target then
+					create vd83.make (s_metadata_cache_path, system.metadata_cache_path, l_s)
+					Error_handler.insert_warning (vd83)
+				end
 				-- new system without precompile, set value
 			elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
 				if l_s = Void then
@@ -1007,8 +1027,10 @@ feature {NONE} -- Implementation
 					l_b := l_s.to_boolean
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-						create vd83.make (s_msil_generation, system.il_generation.out, l_s)
-						Error_handler.insert_warning (vd83)
+						if not not is_force_new_target then
+							create vd83.make (s_msil_generation, system.il_generation.out, l_s)
+							Error_handler.insert_warning (vd83)
+						end
 					elseif l_b and then not (create {IL_ENVIRONMENT}).is_dotnet_installed then
 						create vd86
 						Error_handler.insert_error (vd86)
@@ -1030,8 +1052,10 @@ feature {NONE} -- Implementation
 			if system.il_generation then
 					-- value can't change from a precompile or in a compiled system
 				if l_s /= Void and then not equal (system.clr_runtime_version, l_s) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-					create vd83.make (s_msil_clr_version, system.clr_runtime_version, l_s)
-					Error_handler.insert_warning (vd83)
+					if not is_force_new_target then
+						create vd83.make (s_msil_clr_version, system.clr_runtime_version, l_s)
+						Error_handler.insert_warning (vd83)
+					end
 				elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
 					set_clr_runtime_version (l_s)
 				end
@@ -1078,8 +1102,10 @@ feature {NONE} -- Implementation
 						l_b := l_s.to_boolean
 							-- value can't change from a precompile or in a compiled system
 						if l_b /= system.has_multithreaded and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-							create vd83.make (s_multithreaded, system.has_multithreaded.out, l_s)
-							Error_handler.insert_warning (vd83)
+							if not is_force_new_target then
+								create vd83.make (s_multithreaded, system.has_multithreaded.out, l_s)
+								Error_handler.insert_warning (vd83)
+							end
 						else
 							system.set_has_multithreaded (l_b)
 						end

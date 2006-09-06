@@ -19,19 +19,11 @@ inherit
 
 feature {NONE}
 
-	Additional_args: STRING is "arguments.wb"
-
 	Backup: STRING is "BACKUP"
 
 	Backup_info: STRING is "compilation_info.txt"
 
 	Studio_directory_list: STRING is "DIRECTORYLIST"
-
-	Studio_recent_files: STRING is "STUDIO_RECENT_FILES"
-
-	Casegen: STRING is "CASEGEN"
-
-	Case_storage: STRING is "Storage"
 
 	C_prefix: CHARACTER is 'C'
 			-- Prefix for C generated directories and object files
@@ -45,8 +37,6 @@ feature {NONE}
 	Descriptor_file_suffix: CHARACTER is 'd'
 
 	Documentation: STRING is "Documentation"
-
-	Dot: CHARACTER is '.'
 
 	Dot_c: STRING is ".c"
 
@@ -80,23 +70,11 @@ feature {NONE}
 
 	Ececil: STRING is "ececil"
 
-	Econform: STRING is "econform"
-
-	Edescriptor: STRING is "edesc"
-
-	Edispatch: STRING is "edisptch"
-
-	Edle: STRING is "edle"
-
 	Efrozen: STRING is "efrozen"
-
-	Ehisto: STRING is "ehisto"
 
 	Eiffelgens: STRING is "EIFGENs"
 
 	Einit: STRING is "einit"
-
-	Emain: STRING is "emain"
 
 	Eoption: STRING is "eoption"
 
@@ -122,8 +100,6 @@ feature {NONE}
 
 	Makefile_sh: STRING is "Makefile.SH"
 
-	updt_dle: STRING is "melted.dle";
-
 	Partials: STRING is "Partials"
 
 	Precomp_eif: STRING is "precomp.eif"
@@ -146,11 +122,7 @@ feature {NONE}
 
 	Removed_log_file_name: STRING is "REMOVED";
 
-	Static_log_file_name: STRING is "STATIC";
-
 	Translation_log_file_name: STRING is "TRANSLAT";
-
-	Updt: STRING is "melted.eif"
 
 	Finished_file_for_make: STRING is "finished"
 
@@ -179,8 +151,6 @@ feature {NONE}
 	Il_info_name: STRING is "il_info"
 			-- Eiffel Debug Info file (core name)
 			-- Used for IL code generation
-
-	info_flag_begin: STRING is "-- System name is "
 
 	info_flag_end: STRING is "-- end of info"
 
@@ -233,8 +203,6 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- This can be used by developper to add specific information
 			-- displayed on About dialog
 
-	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number_tag: STRING is "version_number"
 	Ace_file_path_tag: STRING is "ace_file_path";
 			-- Tags used in project file header.
 
@@ -270,4 +238,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class SYSTEM_CONSTANTS
+end

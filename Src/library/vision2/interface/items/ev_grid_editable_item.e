@@ -124,6 +124,7 @@ feature {NONE} -- Implementation
 			update_popup_dimensions (popup_window)
 
 			popup_window.show_actions.extend (agent initialize_actions)
+			--popup_window.set_height (text_field.minimum_height)
 		end
 
 	initialize_actions is
@@ -145,8 +146,10 @@ feature {NONE} -- Implementation
 					set_text (text_field.text)
 				end
 				Precursor {EV_GRID_LABEL_ITEM}
-				text_field.destroy
-				text_field := Void
+				if text_field /= Void then
+					text_field.destroy
+					text_field := Void
+				end
 			end
 		end
 

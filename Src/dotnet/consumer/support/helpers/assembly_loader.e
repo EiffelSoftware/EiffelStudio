@@ -215,7 +215,7 @@ feature -- Domain
 				internal_gac_loader := Result
 
 					-- Add event handler for parent domain unloads
-				l_new_dom.add_domain_unload (create {EVENT_HANDLER}.make (Result, $on_gac_domain_unloaded))
+				l_new_dom.add_domain_unload (new_gac_domain_unload_delelgate)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -279,6 +279,16 @@ feature {NONE} -- Implementation
 	internal_loaded_assemblies: like loaded_assemblies;
 			-- Cached version of `loaded_assemblies'
 			-- Note: Do not use directly!
+
+	new_gac_domain_unload_delelgate: EVENT_HANDLER is
+			-- Creates a new event handler to ensure generated code is verifiable.
+		require
+			requested_in_gac_domain: {APP_DOMAIN}.current_domain.friendly_name.equals (gac_domain_name)
+		do
+			create Result.make (Current, $on_gac_domain_unloaded)
+		ensure
+			result_attached: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

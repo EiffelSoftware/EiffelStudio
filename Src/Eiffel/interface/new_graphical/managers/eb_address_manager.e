@@ -607,7 +607,6 @@ feature -- Updating
 				address_dialog.hide
 			end
 			address_dialog.set_width (header_info.width)
-			address_dialog.set_height (header_info.height)
 			create l_screen
 			if a_x + address_dialog.width > l_screen.virtual_width then
 				l_x := l_screen.virtual_width - address_dialog.width

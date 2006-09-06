@@ -265,11 +265,6 @@ feature -- Execution
 			execute_with_c_compilation_flag (True)
 		end
 
-	give_up_comiple	is
-			-- Give up Eiffel compilation.
-		do
-		end
-
 	execute_without_c_compilation is
 			-- Recompile the project, but do not start C compilation.
 		do

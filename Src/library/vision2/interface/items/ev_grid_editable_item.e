@@ -124,7 +124,6 @@ feature {NONE} -- Implementation
 			update_popup_dimensions (popup_window)
 
 			popup_window.show_actions.extend (agent initialize_actions)
-			--popup_window.set_height (text_field.minimum_height)
 		end
 
 	initialize_actions is

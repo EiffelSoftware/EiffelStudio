@@ -25,12 +25,16 @@ feature -- Settings
 			-- Reset the counter
 		do
 			value := 0
+		ensure
+			value_set: value = 0
 		end
 
 	set_value (val: INTEGER) is
 			-- Assign `val' to `value'.
 		do
 			value := val
+		ensure
+			value_set: value = val
 		end
 
 indexing

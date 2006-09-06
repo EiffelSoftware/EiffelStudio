@@ -257,10 +257,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_allocated_width: INTEGER
 		do
 			l_minimum_width := real_minimum_width
-			l_allocated_width := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
-			if is_displayed and then {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
-				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
+			if is_show_requested or not {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				l_allocated_width := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+				if is_displayed and then {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_width < l_minimum_width then
+					{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
+					l_allocated_width := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+				end
 			end
 			Result := l_minimum_width.max (l_allocated_width)
 		end
@@ -272,10 +274,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			l_allocated_height: INTEGER
 		do
 			l_minimum_height := real_minimum_height
-			l_allocated_height := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
-			if is_displayed and then {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
-				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
+			if is_show_requested or not {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				l_allocated_height := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+				if is_displayed and then {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object) /= default_pointer and then l_allocated_height < l_minimum_height then
+					{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
+					l_allocated_height := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+				end
 			end
 			Result := l_minimum_height.max (l_allocated_height)
 		end

@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			l_compliant: BOOLEAN
 		do
 			l_compliant := True
-			l_attributes := a_provider.get_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, True)
+			l_attributes := {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, a_provider)
 			if l_attributes /= Void and then l_attributes.count > 0 then
 				from
 					l_enum := l_attributes.get_enumerator
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 
 			if l_compliant then
 				l_compliant := True
-				l_attributes := a_provider.get_custom_attributes ({EIFFEL_CONSUMABLE_ATTRIBUTE}, True)
+				l_attributes := {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, a_provider)
 				if l_attributes /= Void and then l_attributes.count > 0 then
 					from
 						l_enum := l_attributes.get_enumerator

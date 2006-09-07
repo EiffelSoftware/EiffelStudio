@@ -99,10 +99,6 @@ extern long *esize;		/* Size of object given DType */
 #endif
 
 
-#ifdef CONCURRENT_EIFFEL
-#define _concur_sep_obj_dtype scount
-#endif
-
 /*
  * Miscellaneous routines.
  */

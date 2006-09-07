@@ -57,41 +57,49 @@ create
 feature -- Initialization
 
 	make is
+			-- Initialization
+		local
+			l_layout: EC_EIFFEL_LAYOUT
+			l_eifgen_init: INIT_SERVERS
+			l_preference_access: PREFERENCES
+		do
+				-- Check that environment variables
+				-- are properly set.
+			if not is_eiffel_layout_defined then
+				create l_layout
+				l_layout.check_environment_variable
+				set_eiffel_layout (l_layout)
+			end
+
+				--| Initialization of the run-time, so that at the end of a store/retrieve
+				--| operation (like retrieving or storing the project, creating the CASEGEN
+				--| directory, generating the profile information, ...) the run-time is initialized
+				--| back to the values which permits the compiler to access correctly the EIFGEN
+				--| directory
+			create l_eifgen_init.make
+
+				-- Initialization of compiler resources.
+			create l_preference_access.make_with_defaults_and_location (
+				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
+			initialize_preferences (l_preference_access, False)
+
+			execute
+		end
+
+
+	execute is
 			-- Analyze the command line options and
 			-- execute the appropriate command.
 		local
 			temp: STRING
-			eifgen_init: INIT_SERVERS
 			new_resources: TTY_RESOURCES
 			file_degree_output: FILE_DEGREE_OUTPUT
 			compilation: EWB_COMP
 			ewb_loop: EWB_LOOP
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 			l_loader: EC_PROJECT_LOADER
-			preference_access: PREFERENCES
-			l_layout: EC_EIFFEL_LAYOUT
 		do
 			if not retried then
-					-- Check that environment variables
-					-- are properly set.
-				if not is_eiffel_layout_defined then
-					create l_layout
-					l_layout.check_environment_variable
-					set_eiffel_layout (l_layout)
-				end
-
-					--| Initialization of the run-time, so that at the end of a store/retrieve
-					--| operation (like retrieving or storing the project, creating the CASEGEN
-					--| directory, generating the profile information, ...) the run-time is initialized
-					--| back to the values which permits the compiler to access correctly the EIFGEN
-					--| directory
-				create eifgen_init.make
-
-					-- Initialization of compiler resources.
-				create preference_access.make_with_defaults_and_location (
-					<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
-				initialize_preferences (preference_access, False)
-
 						-- Read the resource files
 				create new_resources.initialize
 

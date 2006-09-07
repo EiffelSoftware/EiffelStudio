@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 				else
 					position := current_skeleton.position
 					expanded_desc ?= attr_desc
-					client_type := System.class_type_of_id (expanded_desc.type_id)
+					client_type := expanded_desc.class_type
 					client := client_type.associated_class
 					if System.il_generation then
 							-- In IL code generation, static fields are handled as Eiffel

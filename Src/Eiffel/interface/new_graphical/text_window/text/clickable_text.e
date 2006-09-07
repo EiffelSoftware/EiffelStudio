@@ -197,7 +197,6 @@ feature -- Initialization
 			cursor.go_end_line
 			enable_selection
 		ensure
-			has_selection
 			cursor_positioned: cursor.y_in_lines = l_num and cursor.line.eol_token = cursor.token
 			selection_cursor_positioned: selection_cursor.y_in_lines = l_num and selection_cursor.x_in_characters = 1
 		end

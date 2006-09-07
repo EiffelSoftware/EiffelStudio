@@ -32,7 +32,9 @@ inherit
 			internal_enable_border,
 			internal_disable_border,
 			on_mouse_button_event,
-			set_size
+			set_size,
+			grab_keyboard_and_mouse,
+			release_keyboard_and_mouse
 		end
 
 create
@@ -65,7 +67,27 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
+
+	grab_keyboard_and_mouse is
+			-- Perform a global mouse and keyboard grab.
+		do
+			if not has_fake_focus then
+				{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
+				Precursor
+			end
+		end
+
+	release_keyboard_and_mouse is
+			-- Release mouse and keyboard grab.
+		do
+			if not has_fake_focus then
+				{EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
+				Precursor
+			end
+		end
+
+feature {NONE} -- implementation
 
 	set_size (a_width, a_height: INTEGER)
 		do
@@ -127,8 +149,21 @@ feature {NONE} -- Implementation
 
 	has_focus: BOOLEAN is
 			-- Does Current have the keyboard focus?
+		local
+			l_fake_focus_parent: EV_FAKE_FOCUS_POPUP_WINDOW
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_grab_get_current = c_object
+			if not has_fake_focus then
+				Result := {EV_GTK_EXTERNALS}.gtk_grab_get_current = c_object
+			end
+		end
+
+	has_fake_focus: BOOLEAN
+			-- Is current a fake focus popup?
+		local
+			l_fake_focus_parent: EV_FAKE_FOCUS_POPUP_WINDOW
+		do
+			l_fake_focus_parent ?= interface
+			Result := l_fake_focus_parent /= Void
 		end
 
 	default_wm_decorations: INTEGER is

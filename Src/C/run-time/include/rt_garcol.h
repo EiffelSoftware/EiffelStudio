@@ -85,13 +85,7 @@ extern "C" {
 #define GS_OFF		0x00000001		/* Generation scavenging is off */
 
 #ifdef WORKBENCH
-#ifdef CONCURRENT_EIFFEL
-#define DISP(x,y) \
-	(x == scount)?sep_obj_dispose(y):call_disp(x,y)
-#else
 #define DISP(x,y) call_disp(x,y)
-#endif
-
 #else
 #define DISP(x,y) ((void *(*)())Dispose(x))(y)
 #endif

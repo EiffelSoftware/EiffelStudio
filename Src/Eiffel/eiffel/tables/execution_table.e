@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class."
 -- Table of execution units (either C routines or byte code arrays)
 
-class EXECUTION_TABLE 
+class EXECUTION_TABLE
 
 inherit
 	SEARCH_TABLE [EXECUTION_UNIT]
@@ -95,7 +95,7 @@ feature -- Element change
 		require
 			execution_unit_not_void: t /= Void
 		do
-			last_unit := item (t)	
+			last_unit := item (t)
 			if last_unit = Void then
 					-- New unit, we give a new `index'
 					-- and we insert it.
@@ -106,7 +106,7 @@ feature -- Element change
 					-- computed `EXECUTION_UNIT'.
 				t.set_index (last_unit.real_body_index)
 
-					-- And insert it in HASH_TABLE. 
+					-- And insert it in HASH_TABLE.
 					-- Warning: This is using the knowledge of SEARCH_TABLE
 					-- to replace equivalent item to `t' by `t'.
 				content.put (t, position)
@@ -211,7 +211,7 @@ feature {NONE} -- Search
 	Marker: EXECUTION_UNIT is
 			-- Marker for search
 		once
-			create Result.make (System.class_type_of_id (1))
+			create Result.make (System.any_class.compiled_class.types.first)
 			Result.set_body_index (1)
 		end
 
@@ -257,7 +257,7 @@ end
 				end
 
 				melted_list.forth
-			end;	
+			end;
 				-- End of execution table update
 			write_int (file.file_pointer, -1)
 

@@ -1236,6 +1236,7 @@ feature {NONE} -- Implementation
 			l_old_target.precompile.set_library_target (l_target)
 			l_old_target.set_all_libraries (l_target.all_libraries)
 			l_old_target.set_all_assemblies (l_target.all_assemblies)
+			l_old_target.system.set_application_target (l_old_target)
 			universe.set_new_target (l_old_target)
 
 			universe.new_target_to_target

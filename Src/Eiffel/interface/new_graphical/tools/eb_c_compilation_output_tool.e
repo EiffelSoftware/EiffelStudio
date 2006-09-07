@@ -265,7 +265,7 @@ feature -- Action
 					clear_output_btn.disable_sensitive
 				end
 			end
-			if not output_text.text.is_empty then
+			if output_text.text_length > 0 then
 				if not open_editor_btn.is_sensitive then
 					open_editor_btn.enable_sensitive
 				end

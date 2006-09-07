@@ -186,6 +186,9 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 			if l_gs /= Void or l_cs /= Void then
 				if l_gs /= Void then
 					l_group := l_gs.group
+					if l_group.is_cluster and l_group.is_used_library then
+						l_group := l_group.target.lowest_used_in_library
+					end
 					current_system := l_group.target.system
 					is_il_generation := l_group.target.setting_msil_generation
 					properties.reset
@@ -228,6 +231,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 				l_lib_use := l_group.target.used_in_libraries
 				if l_lib_use /= Void then
 					l_app_sys := l_group.target.application_target.system
+					l_writable := l_group.target.system = l_group.target.application_target.system
 					from
 						l_lib_use.start
 					until

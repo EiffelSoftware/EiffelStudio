@@ -147,8 +147,7 @@ feature -- C code generation
 			buf := buffer
 			l_ret_type := result_type
 
-			internal_name := encoder.feature_name (
-				System.class_type_of_id (context.current_type.type_id).static_type_id, body_index)
+			internal_name := generated_c_feature_name
 			buf.generate_function_signature (l_ret_type.c_type.c_string, internal_name,
 				True, context.header_buffer, argument_names, argument_types)
 

@@ -39,7 +39,7 @@ feature -- Access
 			-- Name of generated routine in C generated code
 		do
 			Result := Encoder.feature_name (
-				System.class_type_of_id (context.current_type.type_id).static_type_id,
+				context.current_type.static_type_id,
 				body_index)
 		end
 

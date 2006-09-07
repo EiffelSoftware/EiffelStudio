@@ -96,9 +96,7 @@ feature
 				-- Generate extern clauses for once manifest strings.
 			context.generate_once_manifest_string_import (once_manifest_string_count)
 
-			internal_name := Encoder.feature_name (
-				System.class_type_of_id (context.current_type.type_id).static_type_id,
-				body_index)
+			internal_name := Encoder.feature_name (context.current_type.static_type_id, body_index)
 
 			buf.generate_function_signature ("void", internal_name,
 					True, Context.header_buffer,

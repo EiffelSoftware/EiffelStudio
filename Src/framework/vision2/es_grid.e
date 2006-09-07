@@ -541,9 +541,12 @@ feature {NONE} -- column resizing impl
 			col: EV_GRID_COLUMN
 			c: INTEGER
 			w: INTEGER
+			l_column_text_width: INTEGER
+			l_font: EV_FONT
 		do
 			if row_count > 0 then
 				from
+					create l_font
 					auto_resized_columns.start
 				until
 					auto_resized_columns.after
@@ -553,6 +556,8 @@ feature {NONE} -- column resizing impl
 						col := column (c)
 						if col /= Void then
 							w := col.required_width_of_item_span (1, row_count) + Additional_pixels_for_column_width
+							l_column_text_width := l_font.string_width (col.header_item.text) + 5
+							w := w.max (l_column_text_width)
 							if w > 5 then
 								if w < col.width and col.index = column_count then
 									--| Do not resize smaller if it is last column

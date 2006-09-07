@@ -199,7 +199,7 @@ end
 				Extern_declarations.add_attribute_table (table_name)
 			else
 					-- Hardwire the offset
-				offset_class_type := system.class_type_of_id (typ.type_id)
+				offset_class_type := typ.associated_class_type
 					--| In this instruction, we put `False' as second
 					--| arguments. This means we won't generate anything if there is nothing
 					--| to generate. Remember that `True' is used in the generation of attributes

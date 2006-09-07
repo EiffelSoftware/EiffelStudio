@@ -13,7 +13,7 @@ VPIR, chapter 8.27.11
 
 		3 The Feature_body of a’s Attribute_or_routine is not of the Deferred form.
 
-		1 No formal argument or local variable of a has the same name as a feature of the
+		4 No formal argument or local variable of a has the same name as a feature of the
 		  enclosing class.
 
 

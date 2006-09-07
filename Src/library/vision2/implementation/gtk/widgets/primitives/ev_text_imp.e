@@ -15,7 +15,8 @@ inherit
 	EV_TEXT_I
 		redefine
 			interface,
-			text_length
+			text_length,
+			selected_text
 		end
 
 	EV_TEXT_COMPONENT_IMP
@@ -26,7 +27,8 @@ inherit
 			create_change_actions,
 			dispose,
 			text_length,
-			visual_widget
+			visual_widget,
+			selected_text
 		end
 
 	EV_FONTABLE_IMP
@@ -126,6 +128,27 @@ feature -- Status report
 			-- Index of the last character selected.
 		do
 			Result := selection_end_internal
+		end
+
+	selected_text: STRING_32 is
+			-- Text currently selected in `Current'.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER_32
+			l_char: POINTER
+		do
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				l_char := {EV_GTK_EXTERNALS}.gtk_text_iter_get_text (a_start_iter.item, a_end_iter.item)
+				if l_char /= default_pointer then
+					create Result.make_from_c (l_char)
+				else
+					create Result.make_empty
+				end
+			end
 		end
 
 feature -- Status setting

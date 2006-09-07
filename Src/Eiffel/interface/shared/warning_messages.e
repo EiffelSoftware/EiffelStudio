@@ -871,7 +871,7 @@ feature -- Refactoring
 
 	w_Feature_not_written_in_class: STRING is "Feature is not written in selected class."
 	w_Select_class_feature_to_rename: STRING is "Select class or feature to rename.%NEither use pick and drop or target the editor to the feature or class."
-	w_Select_feature_to_pull: STRING is "Select a feature to pull up.%NEither use pick and drop or target the editor to the featur to pull up."
+	w_Select_feature_to_pull: STRING is "Select a feature to pull up.%NEither use pick and drop or target the editor to the feature to pull up."
 
 feature -- Warning messages
 

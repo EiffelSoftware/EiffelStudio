@@ -230,7 +230,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				l_widget := visual_widget
 			end
 			{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, l_widget)
-			{EV_GTK_EXTERNALS}.gtk_window_present (l_window)
 		end
 
 	has_focus: BOOLEAN is

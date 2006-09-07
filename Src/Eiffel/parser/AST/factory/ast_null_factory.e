@@ -513,7 +513,7 @@ feature -- Access
 			inv: INVARIANT_AS;
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
-			he: BOOLEAN; ed: KEYWORD_AS): CLASS_AS
+			ed: KEYWORD_AS): CLASS_AS
 		is
 			-- New CLASS AST node
 		do

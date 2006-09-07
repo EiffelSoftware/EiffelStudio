@@ -317,9 +317,6 @@ feature -- Status report
 			Result := lace_class.options.is_warning_enabled (a_warning)
 		end
 
-	has_externals: BOOLEAN
-			-- Does current class have external declarations in its text?
-
 	has_external_ancestor_class: BOOLEAN is
 			-- Does current class have an external ancestor which is a class (not interface)?
 		local
@@ -755,9 +752,6 @@ feature -- Skeleton processing
 							if generic_class_type /= Void and then generic_class_type.type.has_actual (class_type.type) then
 								debug ("to_implement")
 									to_implement ("Recompilation could be done on a per-class-type rather than per-class basis.")
-								end
-								if generic_class_type.associated_class.has_externals then
-									system.set_freeze
 								end
 								generic_class_type.associated_class.melt_all
 							end
@@ -2000,14 +1994,6 @@ end
 			-- New class type for current class
 		do
 			create Result.make (data)
-			if has_externals then
-					-- When a new generic derivation of a class that
-					-- has some externals in its text is needed, we
-					-- need to freeze the code to properly generate
-					-- the call to the external routine.
-					-- Fixes eweasel test incr213.
-				System.set_freeze
-			end
 			if already_compiled then
 					-- Melt all the code written in the associated class of the new class type
 				melt_all

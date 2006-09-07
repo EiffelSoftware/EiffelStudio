@@ -1178,7 +1178,12 @@ feature -- Melting
 				tbl.after
 			loop
 				feature_i := tbl.item_for_iteration
+					-- External feature and inherited one don't need to be melted.
 				if feature_i.to_generate_in (Current) then
+					if feature_i.is_external then
+							-- Feature is external, we need to trigger a freeze
+						system.set_freeze
+					end
 					add_feature_to_melted_set (feature_i)
 				end
 				tbl.forth
@@ -1464,7 +1469,6 @@ feature {NONE} -- Class initialization
 			else
 				is_external := ast_b.is_external
 			end
-			has_externals := ast_b.has_externals
 			old_is_frozen := is_frozen
 			is_frozen := ast_b.is_frozen
 

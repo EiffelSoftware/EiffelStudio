@@ -706,13 +706,13 @@ feature -- Access
 			inv: INVARIANT_AS;
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
-			he: BOOLEAN; ed: KEYWORD_AS): CLASS_AS
+			ed: KEYWORD_AS): CLASS_AS
 		is
 			-- New CLASS AST node
 		do
 			if n /= Void and s /= Void and (co = Void or else not co.is_empty) and ed /= Void then
 				create Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, top_ind,
-				bottom_ind, g, p, c, co, f, inv, s, o, he, ed)
+				bottom_ind, g, p, c, co, f, inv, s, o, ed)
 			end
 		end
 

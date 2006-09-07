@@ -159,7 +159,6 @@ feature -- Initialization
 			feature_stack.wipe_out
 			add_feature_frame
 			is_supplier_recorded := True
-			has_externals := False
 			once_manifest_string_count := 0
 			counters.wipe_out
 			last_rsqure.wipe_out
@@ -187,9 +186,6 @@ feature -- Status report
 
 	entity_declaration_parser: BOOLEAN
 			-- Is current Eiffel parser a entity declaration parser ?
-
-	has_externals: BOOLEAN
-			-- Did last parse find external declarations?
 
 feature -- Parsing
 
@@ -558,7 +554,7 @@ feature {NONE} -- Actions
 				end
 			end
 			Result := ast_factory.new_class_as (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, is_par, first_ind,
-				last_ind, g, p, c, co, f, inv, s, o, has_externals, ed)
+				last_ind, g, p, c, co, f, inv, s, o, ed)
 		end
 
 feature {NONE} -- ID factory

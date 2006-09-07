@@ -7977,7 +7977,6 @@ end
 				else
 					yyval49 := ast_factory.new_external_as (yyvs50.item (yyvsp50), Void, yyvs12.item (yyvsp12), Void)
 				end
-				has_externals := True
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			
 if yy_parsing_status = yyContinue then

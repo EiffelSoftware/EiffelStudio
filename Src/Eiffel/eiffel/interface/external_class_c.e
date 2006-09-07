@@ -103,7 +103,6 @@ feature -- Initialization
 					Void,	-- invariant_part
 					create {SUPPLIERS_AS}.make,	-- suppliers
 					Void,	-- obsolete_message
-					True,	-- has_externals
 					create {KEYWORD_AS}.make_null
 					)
 				l_ast.set_class_id (class_id)

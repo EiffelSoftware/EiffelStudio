@@ -1241,7 +1241,6 @@ External: TE_EXTERNAL
 				else
 					$$ := ast_factory.new_external_as ($3, Void, $1, Void)
 				end
-				has_externals := True
 				set_has_old_verbatim_strings_warning (initial_has_old_verbatim_strings_warning)
 			}
 	;

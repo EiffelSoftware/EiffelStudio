@@ -1153,6 +1153,7 @@ feature {NONE} -- Filtering
 		do
 			a_row.set_data (a_preference)
 			a_row.select_actions.extend (agent show_preference_description (a_preference))
+			a_row.deselect_actions.extend (agent description_text.remove_text)
 			if a_preference.is_hidden then
 				a_row.item (1).set_foreground_color (hidden_fg_color)
 			end

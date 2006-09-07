@@ -76,10 +76,6 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #include <winbase.h>	/* To call `ExitProcess' */
 #endif
 
-#ifdef CONCURRENT_EIFFEL
-#include "eif_curextern.h"
-#endif
-
 #include "rt_main.h"	/* For debug_mode. */
 
 #include <stdlib.h>				/* For exit(), abort() */

@@ -29,6 +29,9 @@ feature -- Status update
 				create l_file.make (temp)
 				if not l_file.exists or not l_file.is_directory then
 					io.error.put_string ("WARNING: the environment variable $"+ise_eiffel_env+" points to a non-existing directory.%N")
+				else
+						-- put it into the environment for backward compatibility
+					environment.put (temp, ise_eiffel_env)
 				end
 			end
 
@@ -38,6 +41,9 @@ feature -- Status update
 					io.error.put_string (p.Workbench_name)
 					io.error.put_string (": the environment variable $"+ise_c_compiler_env+" is not set%N")
 					(create {EXCEPTIONS}).die (-1)
+				else
+						-- put it into the environment for backward compatibility
+					environment.put (temp, ise_c_compiler_env)
 				end
 			end
 
@@ -52,6 +58,9 @@ feature -- Status update
 				create l_file.make (bin_path)
 				if not l_file.exists or not l_file.is_directory then
 					io.error.put_string ("WARNING: the path $"+ise_eiffel_env+"/studio/spec/$"+ise_platform_env+"/bin points to a non-existing directory.%N")
+				else
+						-- put it into the environment for backward compatibility
+					environment.put (temp, ise_platform_env)
 				end
 			end
 

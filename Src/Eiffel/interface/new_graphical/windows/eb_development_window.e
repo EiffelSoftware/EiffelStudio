@@ -812,7 +812,7 @@ feature -- Access
 			class_stone: CLASSI_STONE
 		do
 			class_stone ?= stone
-			if class_stone /= Void and class_stone.is_valid then
+			if class_stone /= Void and then class_stone.is_valid then
 				Result := class_stone.class_name
 			end
 		end

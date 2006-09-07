@@ -69,7 +69,7 @@ feature -- Search
 				i > nb
 			loop
 				l_item := l_area.item (i)
-				if l_item.is_valid then
+				if l_item.is_consistent then
 					l_new_area.put (l_item, l_count)
 					l_count := l_count + 1
 				end

@@ -22,7 +22,7 @@ feature -- Creation of CLASS_TYPE skeleton
 			-- Instantiation of Current in `class_type'.
 		require
 			class_type_not_void: class_type /= Void
-			class_type_valid: class_type.type.is_valid
+			class_type_valid: class_type.type.is_consistent
 		do
 			from
 				create Result.make (count)

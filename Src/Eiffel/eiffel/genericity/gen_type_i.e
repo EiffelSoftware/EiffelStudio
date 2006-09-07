@@ -32,6 +32,7 @@ inherit
 			is_explicit,
 			is_identical,
 			is_standalone,
+			is_consistent,
 			is_valid,
 			make_full_type_byte_code_parameters,
 			make_gen_type_byte_code,
@@ -110,13 +111,22 @@ feature {GEN_TYPE_I} -- Settings
 
 feature -- Status Report
 
-	is_valid: BOOLEAN is
+	is_consistent: BOOLEAN is
 			-- Are all the base classes still in the system ?
 		do
 			Result := base_class /= Void and then
 				(base_class.generics /= Void and then
 					base_class.generics.count = meta_generic.count) and then
-				meta_generic.is_valid
+				meta_generic.is_consistent
+		end
+
+	is_valid (a_class: CLASS_C): BOOLEAN is
+			-- Is Current consistent and valid for `a_class'?
+		do
+			Result := base_class /= Void and then
+				(base_class.generics /= Void and then
+					base_class.generics.count = meta_generic.count) and then
+				meta_generic.is_valid (a_class)
 		end
 
 	duplicate: like Current is

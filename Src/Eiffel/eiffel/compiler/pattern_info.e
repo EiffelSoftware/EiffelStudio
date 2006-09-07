@@ -86,7 +86,7 @@ feature
 			good_argument: type /= Void
 			type_is_standalone: not type.type.is_anchored and not type.type.has_formal
 			consistency1: type.associated_class.conform_to (associated_class)
-			consistency2: pattern.has_formal (associated_class.actual_type) implies associated_class.meta_type (type).is_generic
+			pattern_valid: pattern.is_valid (associated_class)
 		do
 			Result := pattern
 			Result := Result.instantiation_in (associated_class.meta_type (type))

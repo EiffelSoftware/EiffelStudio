@@ -79,7 +79,7 @@ feature
 			loop
 				info := info_array.item_for_iteration
 				assoc_class := info.associated_class
-				if assoc_class /= Void and info.pattern.is_valid then
+				if assoc_class /= Void and info.pattern.is_valid (assoc_class) then
 					from
 						types := info.associated_class.types
 						types.start

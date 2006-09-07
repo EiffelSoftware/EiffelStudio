@@ -14,7 +14,7 @@ inherit
 		undefine
 			anchor_instantiation_in,
 			is_equal, generate_cid, il_type_name, generic_il_type_name, generate_cid_array,
-			generate_cid_init, is_anchored, is_explicit, is_standalone, is_valid,
+			generate_cid_init, is_anchored, is_explicit, is_standalone, is_consistent, is_valid,
 			has_true_formal, is_identical, generate_gen_type_il, make_full_type_byte_code_parameters,
 			has_actual, has_formal, same_as, make_gen_type_byte_code, duplicate,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,

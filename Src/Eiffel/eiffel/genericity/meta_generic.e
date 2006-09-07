@@ -53,8 +53,8 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
-			-- Are all the types valid ?
+	is_consistent: BOOLEAN is
+			-- Are all the types consistent?
 		local
 			i, nb: INTEGER
 		do
@@ -65,7 +65,27 @@ feature -- Status report
 			until
 				i > nb or else not Result
 			loop
-				Result := item (i).is_valid
+				Result := item (i).is_consistent
+				i := i + 1
+			end
+		end
+
+	is_valid (a_class: CLASS_C): BOOLEAN is
+			-- Are all the types valid for `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_valid: a_class.is_valid
+		local
+			i, nb: INTEGER
+		do
+			from
+				nb := count
+				i := 1
+				Result := True
+			until
+				i > nb or else not Result
+			loop
+				Result := item (i).is_valid (a_class)
 				i := i + 1
 			end
 		end

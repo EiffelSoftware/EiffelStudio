@@ -40,6 +40,7 @@ feature -- Execution
 			prev_class: CLASS_C
 			prev_cluster: CONF_GROUP
 			l_match_list: LEAF_AS_LIST
+			l_deep_twined: BOOLEAN
 		do
 			if not rescued then
 				prev_class := System.current_class
@@ -55,17 +56,8 @@ feature -- Execution
 				begin;
 				written_in_class := target_feat.written_class;
 				if written_in_class /= current_class then
-						-- The target_feat is the evaluated feature_i
-						-- from class `class_c' (args, and result type
-						-- are evaluated). Need the feature_i entry in
-						-- feature table of written_in_class
-						-- (the evaluation of args and result in the
-						-- written_in class of feature_).
-						-- The feature name of the ast structure where
-						-- it was defined can be used to retrieve
-						-- the source_feat.
-					source_feat := written_in_class.feature_named
-							(f_ast.feature_names.first.internal_name)
+						-- Retrieve source feature.
+					source_feat := a_target_feat.written_feature.associated_feature_i
 					if source_feat = Void then
 						-- Shouldn't happen - but just in case
 						source_feat := target_feat
@@ -77,10 +69,14 @@ feature -- Execution
 					-- We only display one name in a feature_as.
 				if f_ast.feature_names.count > 1 then
 					f_ast := replace_name_from_feature (f_ast.deep_twin, f_ast.feature_names.first, source_feat)
+					l_deep_twined := True
 				end
 					-- If the target feature is an undefined one, we create a fake ast.
 				if target_feat.is_deferred and then not source_feat.is_deferred then
-					f_ast := normal_to_deferred_feature_as (f_ast.deep_twin)
+					if not l_deep_twined then
+						f_ast := f_ast.deep_twin
+					end
+					f_ast := normal_to_deferred_feature_as (f_ast)
 				end
 				l_match_list := match_list_server.item (written_in_class.class_id)
 				if l_match_list /= Void then

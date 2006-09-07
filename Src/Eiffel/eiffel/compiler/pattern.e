@@ -51,12 +51,12 @@ feature
 			end;
 		end;
 
-	is_valid: BOOLEAN is
-			-- Is `Current' valid?
+	is_valid (a_class: CLASS_C): BOOLEAN is
+			-- Is `Current' valid for `a_class'?
 		local
 			n, i: INTEGER;
 		do
-			Result := result_type.is_valid
+			Result := result_type.is_valid (a_class)
 			if Result then
 				from
 					i := 1
@@ -64,7 +64,7 @@ feature
 				until
 					i > n or else not Result
 				loop
-					Result := argument_types.item (i).is_valid
+					Result := argument_types.item (i).is_valid (a_class)
 					i := i + 1
 				end
 			end
@@ -112,9 +112,9 @@ feature
 			end
 		end
 
-	has_formal (class_a: CL_TYPE_A): BOOLEAN is
+	has_formal: BOOLEAN is
 			-- Are there some formal generic parameters in the current
-			-- pattern consirered relative to class type `class_a'?
+			-- pattern?
 		local
 			i, nb: INTEGER;
 		do

@@ -166,7 +166,7 @@ end;
 						types.after
 					loop
 						class_type := types.item;
-						if not class_type.type.is_valid then
+						if not class_type.type.is_consistent then
 debug
 io.error.put_string ("Removing a type of ");
 io.error.put_string (a_class.name);

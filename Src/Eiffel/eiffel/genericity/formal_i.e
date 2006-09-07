@@ -10,7 +10,7 @@ class FORMAL_I
 inherit
 	TYPE_I
 		redefine
-			is_formal, same_as, has_true_formal, has_formal, instantiation_in,
+			is_formal, is_valid, same_as, has_true_formal, has_formal, instantiation_in,
 			complete_instantiation_in,
 			generated_id, is_explicit, generate_gen_type_il,
 			generate_cid, generate_cid_array, generate_cid_init,
@@ -71,6 +71,12 @@ feature -- Access
 
 	is_expanded: BOOLEAN
 			-- Is current constrained to be always an expanded?
+
+	is_valid (a_class: CLASS_C): BOOLEAN is
+			-- Is Current consistent and valid for `a_class'?
+		do
+			Result := a_class.is_generic and then position <= a_class.generics.count
+		end
 
 	hash_code: INTEGER is
 			-- Hash code for current type

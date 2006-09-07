@@ -18,7 +18,7 @@ inherit
 			generate_cid_init,
 			il_type_name,
 			generate_gen_type_instance,
-			is_valid
+			is_consistent, is_valid
 		end
 
 create
@@ -78,10 +78,16 @@ feature
 			end
 		end
 
-	is_valid: BOOLEAN is
+	is_consistent: BOOLEAN is
 			-- Are all the base classes still in the system ?
 		do
-			Result := base_class /= Void and then meta_generic.is_valid
+			Result := base_class /= Void and then meta_generic.is_consistent
+		end
+
+	is_valid (a_class: CLASS_C): BOOLEAN is
+			-- Is Current consistent and valid for `a_class'?
+		do
+			Result := base_class /= Void and then meta_generic.is_valid (a_class)
 		end
 
 	is_basic_uniform: BOOLEAN is

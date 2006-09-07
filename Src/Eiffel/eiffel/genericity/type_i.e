@@ -32,18 +32,11 @@ feature -- Access
 			-- Static Type id of `Current'.
 		require
 			il_generation: System.il_generation
-		local
-			cl_type: CL_TYPE_I
 		do
-			cl_type ?= Current
-			if cl_type /= Void then
-				Result := cl_type.associated_class_type.static_type_id
-			else
-				check
-					is_reference_at_least: is_reference
-				end
-				Result := System.system_object_class.compiled_class.types.first.static_type_id
+			check
+				is_reference_at_least: is_reference
 			end
+			Result := System.system_object_class.compiled_class.types.first.static_type_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -186,10 +179,19 @@ feature -- Access
 
 feature -- Status report
 
-	is_valid: BOOLEAN is
+	is_consistent: BOOLEAN is
 			-- Is the associated class still in the system ?
 		do
 			Result := True
+		end
+
+	is_valid (a_class: CLASS_C): BOOLEAN is
+			-- Is Current consistent and valid for `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_valid: a_class.is_valid
+		do
+			Result := is_consistent
 		end
 
 	is_void: BOOLEAN is

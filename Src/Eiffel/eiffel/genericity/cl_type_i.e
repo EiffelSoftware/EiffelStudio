@@ -32,7 +32,7 @@ inherit
 			is_generated_as_single_type,
 			is_reference,
 			is_separate,
-			is_valid,
+			is_consistent,
 			make_gen_type_byte_code,
 			same_as,
 			static_type_id
@@ -373,7 +373,7 @@ feature -- Status
 			end
 		end
 
-	is_valid: BOOLEAN is
+	is_consistent: BOOLEAN is
 			-- Is the base class still in the system and matches its specification?
 		local
 			l_base_class: like base_class

@@ -15,7 +15,7 @@ inherit
 		undefine
 			description, type_a
 		redefine
-			is_basic, is_reference, c_type, is_valid,
+			is_basic, is_reference, c_type, is_consistent,
 			generate_cecil_value, generic_il_type_name,
 			true_reference_type
 		end
@@ -79,7 +79,7 @@ feature -- Status report
 	is_basic: BOOLEAN is True
 			-- Type is a basic type.
 
-	is_valid: BOOLEAN is
+	is_consistent: BOOLEAN is
 			-- A Basic type is always in the system
 		do
 				-- Not a constant as TYPED_POINTER_I is using the version from GEN_TYPE_I

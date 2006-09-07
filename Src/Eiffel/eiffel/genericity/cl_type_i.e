@@ -34,7 +34,8 @@ inherit
 			is_separate,
 			is_valid,
 			make_gen_type_byte_code,
-			same_as
+			same_as,
+			static_type_id
 		end
 
 	SHARED_IL_CASING
@@ -228,6 +229,14 @@ feature -- Access
 			-- Type id of the correponding class type
 		do
 			Result := associated_class_type.type_id
+		end
+
+	static_type_id: INTEGER is
+			-- Type id of the correponding class type
+		require else
+			ok: True
+		do
+			Result := associated_class_type.static_type_id
 		end
 
 	sk_value: INTEGER is

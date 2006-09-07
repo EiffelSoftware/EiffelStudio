@@ -707,17 +707,14 @@ feature {NONE} -- Implementation
 			if not a_pref.change_actions.has (display_update_agent) then
 				a_pref.change_actions.extend (display_update_agent)
 			end
-			l_row.set_data (a_pref)
-			l_row.select_actions.extend (agent show_preference_description (a_pref))
+
+			initialize_row_for_preference (l_row, a_pref)
 
 				-- Add Items
 			l_row.set_item (1, preference_name_column (a_pref))
 			l_row.set_item (2, preference_type_column (a_pref))
 			l_row.set_item (3, preference_status_column (a_pref))
 			l_row.set_item (4, preference_value_column (a_pref))
-			if a_pref.is_hidden then
-				l_row.item (1).set_foreground_color (hidden_fg_color)
-			end
 		end
 
 	node_expanded (a_row: EV_GRID_ROW) is
@@ -907,18 +904,18 @@ feature {NONE} -- Implementation
 			filter_box.enable_sensitive
 			set_show_full_preference_name (True)
 			build_flat
-			update_matches
+			update_status_bar
 			view_toggle_button.set_text (once "Tree View")
 		end
 
 	enable_tree_view is
 			-- Enable view to tree (structured)
 		do
+			filter_box.disable_sensitive
 			grid.clear
 			grid.set_row_count_to (0)
 			grid.enable_tree
 			grid.disable_dynamic_content
-			filter_box.disable_sensitive
 			set_show_full_preference_name (False)
 			build_structured
 			update_status_bar
@@ -933,7 +930,6 @@ feature {NONE} -- Implementation
 			else
 				status_label.set_text (grid.row_count.out + " preferences")
 			end
-			status_label.refresh_now
 		end
 
 feature {NONE} -- Implementation
@@ -1143,12 +1139,27 @@ feature {NONE} -- Filtering
 
 	matches: LIST [PREFERENCE]
 
+	initialize_row_for_preference (a_row: EV_GRID_ROW; a_preference: PREFERENCE) is
+			-- Initialize `a_row' with `a_preference'.
+		require
+			a_row_not_void: a_row /= Void
+			a_preference_not_void: a_preference /= Void
+			a_row_not_initialized: a_row.data = Void
+		do
+			a_row.set_data (a_preference)
+			a_row.select_actions.extend (agent show_preference_description (a_preference))
+			if a_preference.is_hidden then
+				a_row.item (1).set_foreground_color (hidden_fg_color)
+			end
+		end
+
 	dynamic_content_function (c, r: INTEGER): EV_GRID_ITEM is
 			-- Function to compute the necessary EV_GRID_ITEM for grid co-ordinates c,r.
 		require
 			flat_mode: not grid.is_tree_enabled
 		local
 			l_preference: PREFERENCE
+			l_row: EV_GRID_ROW
 		do
 			l_preference ?= grid.row (r).data
 			if l_preference = Void then
@@ -1156,7 +1167,8 @@ feature {NONE} -- Filtering
 					--| grid indexes start at 1
 					--| list start at 1
 					l_preference := matches.i_th (r)
-					grid.row (r).set_data (l_preference)
+					l_row := grid.row (r)
+					initialize_row_for_preference (l_row, l_preference)
 				end
 			end
 

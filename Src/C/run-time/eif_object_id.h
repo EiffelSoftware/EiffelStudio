@@ -53,12 +53,6 @@ RT_LNK void eif_extend_object_id_stack (EIF_INTEGER nb_chunks);	/* extends of `n
 
 extern void print_object_id_stack (void);
 
-#ifdef CONCURRENT_EIFFEL
-extern EIF_INTEGER eif_separate_object_id(EIF_OBJECT object);	/* Get an id for the object, sequential search first */
-extern EIF_REFERENCE eif_separate_id_object(EIF_INTEGER id);	/* returns the object associated with the id */
-extern void eif_separate_object_id_free(EIF_INTEGER id);		/* removes the object from the stack */
-#endif
-
 #ifdef __cplusplus
 }
 #endif

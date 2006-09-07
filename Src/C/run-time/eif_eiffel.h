@@ -59,10 +59,6 @@
 #include "eif_macros.h"
 
 
-#ifdef CONCURRENT_EIFFEL
-#include "eif_curextern.h"
-#endif
-
 /* Platform definition */
 
 /* Thread definition */

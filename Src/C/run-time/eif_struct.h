@@ -212,10 +212,6 @@ extern struct p_interface *pattern;
 
 #endif
 
-#ifdef CONCURRENT_EIFFEL
-extern fnptr separate_pattern[];
-#endif
-
 #ifdef __cplusplus
 }
 #endif

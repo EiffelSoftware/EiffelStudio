@@ -893,11 +893,17 @@ feature {NONE} -- Implementation
 			rebuild
 		end
 
-	enable_flat_view is
-			-- Enable view to be flat
+	reset_grid_view is
 		do
 			grid.clear
 			grid.set_row_count_to (0)
+			description_text.remove_text
+		end
+
+	enable_flat_view is
+			-- Enable view to be flat
+		do
+			reset_grid_view
 			grid.disable_tree
 			grid.set_dynamic_content_function (agent dynamic_content_function)
 			grid.enable_partial_dynamic_content
@@ -911,9 +917,8 @@ feature {NONE} -- Implementation
 	enable_tree_view is
 			-- Enable view to tree (structured)
 		do
+			reset_grid_view
 			filter_box.disable_sensitive
-			grid.clear
-			grid.set_row_count_to (0)
 			grid.enable_tree
 			grid.disable_dynamic_content
 			set_show_full_preference_name (False)

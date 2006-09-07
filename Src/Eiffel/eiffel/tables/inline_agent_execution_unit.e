@@ -41,10 +41,10 @@ feature -- Access
 			f: FEATURE_AS
 		do
 			written_class ?= System.class_of_id (written_in)
-			if written_class /= Void and then
-				written_class.has_inline_agent_with_body_index (body_index)
-			and then
-				System.class_type_of_id (type_id) /= Void
+			if
+				written_class /= Void and then
+				written_class.has_inline_agent_with_body_index (body_index) and then
+				System.class_type_of_id (type_id) = class_type
 			then
 				written_type :=	class_type.written_type (written_class)
 				if written_type.is_precompiled then

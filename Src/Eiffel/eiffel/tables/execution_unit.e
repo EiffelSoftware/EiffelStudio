@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EXECUTION_UNIT 
+	EXECUTION_UNIT
 
 inherit
 	HASHABLE
@@ -57,6 +57,8 @@ feature {NONE} -- Initialization
 			cl_type_not_void: cl_type /= Void
 		do
 			class_type := cl_type
+		ensure
+			class_type_set: class_type = cl_type
 		end
 
 feature -- Access
@@ -130,8 +132,9 @@ feature -- Access
 			f: FEATURE_AS
 		do
 			written_class := System.class_of_id (written_in)
-			if written_class /= Void and then
-				System.class_type_of_id (type_id) /= Void
+			if
+				written_class /= Void and then
+				System.class_type_of_id (type_id) = class_type
 			then
 				written_type :=	class_type.written_type (written_class)
 				if written_type.is_precompiled then
@@ -197,7 +200,7 @@ feature -- Access
 			-- Do nothing
 		end
 
-	hash_code: INTEGER is 
+	hash_code: INTEGER is
 			-- Hash code
 		do
 			Result := class_type_id * Mask + body_index
@@ -265,7 +268,7 @@ feature -- Generation
 	compound_name: STRING is
 			-- Generate compound name
 		do
-			Result := Encoder.feature_name (class_type.static_type_id, body_index) 
+			Result := Encoder.feature_name (class_type.static_type_id, body_index)
 		end
 
 	generate_declaration (buffer: GENERATION_BUFFER) is
@@ -309,7 +312,10 @@ feature -- Debug
 
 feature {NONE} -- Implementation
 
-	Mask: INTEGER is 32768;
+	Mask: INTEGER is 32768
+
+invariant
+	class_type_not_void: class_type /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

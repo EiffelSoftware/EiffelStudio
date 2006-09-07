@@ -224,15 +224,6 @@ feature
 			Result := max_used - min_used + 1
 		end
 
-	has_type_id (type_id: INTEGER): BOOLEAN is
-			-- Is a non-deferred entry present at index greater
-			-- than `type_id' ?
-		require
-			positive: type_id > 0
-		do
-			Result := type_id = array_item (binary_search (type_id)).type_id
-		end
-
 	goto (type_id: INTEGER) is
 			-- Move cursor to the first entry of type_id `type_id'
 			-- associated to an effective class (non-deferred).

@@ -26,13 +26,24 @@ feature -- Access
 			arg_value_not_void: icd /= Void
 			arg_value_item_not_null: icd.item_not_null
 		do
-			Result := icd
+				--| On dotnet 2.0, we are faced very often to neutered object
+				--| then to minimize the issue, let's use the strong reference value
+				--| whenever it is possible.
+				--| We may optimize this to use the strong reference only
+				--| on neutered ICorDebugValue ...
+
+			if icd.strong_reference_value /= Void then
+				Result := icd.strong_reference_value
+			else
+				Result := icd
+			end
 			Result := strip_references (Result)
--- FIXME JFIAT 2004-07-06 : We should handle the case where last_strip_references_call_success reports
--- an error. And Return Void
--- for now, this is too many changes, and too big change
--- but we should check this
--- especially on whidbey
+				--| FIXME JFIAT 2004-07-06 : We should handle the case where last_strip_references_call_success reports
+				--| an error. And Return Void
+				--| for now, this is too many changes, and too big change
+				--| but we should check this especially on whidbey
+				--| Note: this fixme may be obsolete now since we use the strong reference value ...
+
 			Result := unbox_debug_value (Result)
 
 			if Result = icd then

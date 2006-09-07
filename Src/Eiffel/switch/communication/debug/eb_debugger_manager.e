@@ -234,14 +234,6 @@ feature -- Access
 			if raised then
 				l_tools := menuable_debugging_tools
 				if not l_tools.is_empty then
-					create mit.make_with_text ("Show/Hide tools")
-					mit.disable_sensitive
-					m.extend (mit)
-
-					create {EV_MENU_SEPARATOR} mit
-					mit.disable_sensitive
-					m.extend (mit)
-
 					from
 						i := l_tools.lower
 					until

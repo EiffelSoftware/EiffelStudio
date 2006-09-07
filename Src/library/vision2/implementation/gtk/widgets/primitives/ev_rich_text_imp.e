@@ -12,7 +12,8 @@ class
 inherit
 	EV_RICH_TEXT_I
 		undefine
-			text_length
+			text_length,
+			selected_text
 		redefine
 			interface,
 			next_change_of_character

@@ -40,7 +40,6 @@ feature {NONE} -- Initialization
 			inv: like invariant_part;
 			s: like suppliers;
 			o: like obsolete_message;
-			he: like has_externals;
 			ed: like end_keyword)
 		is
 			-- Create a new CLASS AST node.
@@ -67,7 +66,6 @@ feature {NONE} -- Initialization
 			features := f
 			invariant_part := inv
 			internal_invariant := inv
-			has_externals := he
 			if
 				invariant_part /= Void and then
 				invariant_part.assertion_list = Void
@@ -102,7 +100,6 @@ feature {NONE} -- Initialization
 			invariant_part_set: invariant_part /= Void implies invariant_part = inv
 			suppliers_set: suppliers = s
 			obsolete_message_set: obsolete_message = o
-			has_externals_set: has_externals = he
 			end_keyword_not_void: end_keyword = ed
 			internal_invariant_set: internal_invariant = inv
 			date_set: date = -1
@@ -340,9 +337,6 @@ feature -- Attributes
 
 	has_empty_invariant: BOOLEAN
 			-- Does class have an empty invariant clause?
-
-	has_externals: BOOLEAN
-			-- Does current class have an external declaration?
 
 	date: INTEGER
 			-- Date of file when last parsed.

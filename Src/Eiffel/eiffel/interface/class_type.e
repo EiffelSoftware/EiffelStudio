@@ -523,7 +523,7 @@ feature -- Conveniences
 					Result.forth
 				end
 				if not already_in then
-					Result.extend (System.class_type_of_id (parent_type.type_id))
+					Result.extend (parent_type.associated_class_type)
 				end
 
 				parents.forth
@@ -896,7 +896,8 @@ feature -- Generation
 			-- composite and has expanded we must initialize, as well
 			-- as some special header flags).
 		require
-			has_creation_routine
+			in_final_mode: byte_context.final_mode
+			has_creation_routine: has_creation_routine
 		local
 			i, nb_ref, position: INTEGER
 			exp_desc: EXPANDED_DESC

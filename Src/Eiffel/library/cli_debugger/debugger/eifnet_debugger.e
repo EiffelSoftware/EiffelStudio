@@ -642,7 +642,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				debug ("debugger_trace_callback_data")
 					p := dbg_cb_info_pointer_item (2) -- p_app_class
 					if p /= Default_pointer then
-						io.error.put_string ("Loading class : " + Icor_objects_manager.icd_class (p).get_module.md_type_name (Icor_objects_manager.icd_class (p).get_token) + "%N")
+						debugger_message ("Class loaded :%"" + Icor_objects_manager.icd_class (p).get_module.md_type_name (Icor_objects_manager.icd_class (p).get_token) + "%"")
 					end
 				end
 			when Cst_managed_cb_load_module then
@@ -653,10 +653,10 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				if p /= Default_pointer then
 					l_module := Icor_objects_manager.icd_module (p)
 					debug ("debugger_trace_callback_data")
-						io.error.put_string ("Loading module : " + l_module.get_name + "%N")
+						io.error.put_string ("Module loaded : %"" + l_module.get_name + "%" %N")
 					end
 					Eifnet_debugger_info.register_new_module (l_module)
-					debugger_message ("Load module : " + l_module.module_name)
+					debugger_message ("Module loaded : %"" + l_module.module_name + "%"")
 				end
 
 			when Cst_managed_cb_log_message then

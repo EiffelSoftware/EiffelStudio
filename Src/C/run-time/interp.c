@@ -69,10 +69,6 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_helpers.h"
 #include "eif_rout_obj.h"
 
-#ifdef CONCURRENT_EIFFEL
-#include "eif_curextern.h"
-#endif
-
 /*#define SEP_DEBUG */  /**/
 /*#define DEBUG 6 */ 	/**/
 /*#define TEST */ /**/
@@ -531,22 +527,6 @@ rt_private void interpret(int flag, int where)
 	int  volatile is_process_once;		/* Is once routine process-relative? */
 	RTSN;							/* Save nested flag */
  
-#ifdef CONCURRENT_EIFFEL
-	/* the following variable is used by Concurrent Eiffel */
-	char has_called_sep_feature =0;	/* Has the current feature called separate
-									* feature in its pre-condition?
-									*/
-	char has_reserved_new_born_sep = 0;	/* Is the new created separate object
-										 * created with a creation procedure?
-										*/
-#ifdef SEP_DEBUG
-	EIF_TYPE_ID sep_obj_id;			/* The data type id of the special class
-									* for separate object proxy.
-									*/
-	sep_obj_id = _concur_sep_obj_dtype;
-#endif
-#endif
-
 	saved_assertion = in_assertion;
 	is_once = 0;
 

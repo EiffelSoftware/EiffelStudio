@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			accepts_loose_argument := a_allow_loose
 			accepts_multiple_loose_arguments := a_allow_multi_loose
 			display_usage_on_error := a_usage_on_error
+			max_display_width := {NATURAL_16}.max_value
 		ensure
 			case_sensitive_set: case_sensitive = a_cs
 			accepts_loose_argument_set: (accepts_loose_arguments and not a_allow_multi_loose) implies accepts_loose_argument
@@ -94,6 +95,10 @@ feature -- Access
 	loose_argument_validator: ARGUMENT_VALUE_VALIDATOR assign set_loose_argument_validator
 			-- Validator used to validate any loose arguments
 
+	max_display_width: NATURAL_16 assign set_max_display_width
+			-- Maximum width of display used to display usage information
+			-- Note: Not yet implemented for use!
+
 feature -- Element change
 
 	set_loose_argument_validator (a_validator: like loose_argument_validator) is
@@ -105,6 +110,14 @@ feature -- Element change
 			loose_argument_validator := a_validator
 		ensure
 			loose_argument_validator_set: loose_argument_validator = a_validator
+		end
+
+	set_max_display_width (a_width: like max_display_width) is
+			-- Sets `max_display_width' with `a_width'
+		do
+			max_display_width := a_width
+		ensure
+			max_display_width_set: max_display_width = a_width
 		end
 
 feature -- Query
@@ -373,6 +386,9 @@ feature -- Status Report
 	parsed: BOOLEAN
 			-- Indicates of a parse has been performed
 
+	executed: BOOLEAN
+			-- Indiciate if execution has occurred (a call to `execute')
+
 	successful: BOOLEAN is
 			-- Indicates if parsing completed without errors
 		do
@@ -422,6 +438,7 @@ feature -- Basic Operations
 			-- Execute application using `a_agent', if all arguments are valid.
 		require
 			a_agent_attached: a_agent /= Void
+			not_executed: not executed
 		local
 			l_options: like option_values
 		do
@@ -447,6 +464,9 @@ feature -- Basic Operations
 				end
 				display_errors
 			end
+			executed := True
+		ensure
+			executed: executed
 		end
 
 feature {NONE} -- Basic Operations
@@ -929,7 +949,11 @@ feature {NONE} -- Validation
 				end
 			end
 
-			create Result.make (l_switches, a_group.accepts_loose_arguments)
+			if a_group.is_hidden then
+				create Result.make (l_switches, a_group.accepts_loose_arguments)
+			else
+				create Result.make_hidden (l_switches, a_group.accepts_loose_arguments)
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1269,14 +1293,25 @@ feature {NONE} -- Usage
 			-- Command line option configuration string (to display in usage)
 		local
 			l_groups: like switch_groups
+			l_group: ARGUMENT_GROUP
 			l_cfg: like command_option_group_configuration
 			l_switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			l_switch: ARGUMENT_SWITCH
 			l_cursor: CURSOR
+			l_empty_groups: BOOLEAN
 		once
 			l_groups := switch_groups
 			create Result.make (10)
-			if l_groups = Void or else l_groups.is_empty then
+			l_empty_groups := l_groups = Void or else l_groups.is_empty
+			if not l_empty_groups then
+				l_empty_groups := l_groups.for_all (agent (a_item: ARGUMENT_GROUP): BOOLEAN
+					require
+						a_item_attached: a_item /= Void
+					do
+						Result := a_item.is_hidden
+					end)
+			end
+			if l_empty_groups then
 				l_switches := available_visible_switches
 				l_cfg := command_option_group_configuration (l_switches, True, True, l_switches)
 				if l_cfg /= Void then
@@ -1284,20 +1319,25 @@ feature {NONE} -- Usage
 				end
 			else
 				create Result.make (1024)
+				Result.compare_objects
 				l_cursor := l_groups.cursor
 				from l_groups.start until l_groups.after loop
-					l_switches := create {ARRAYED_LIST [ARGUMENT_SWITCH]}.make_from_array (l_groups.item.switches)
-						-- Add nologo switch, if not already added
-					l_switch := switch_of_name (nologo_switch)
-					if l_switch /= Void then
-						if not l_switches.has (l_switch) then
-							l_switches.extend (l_switch)
+					l_group := l_groups.item
+					if not l_group.is_hidden then
+						l_switches := create {ARRAYED_LIST [ARGUMENT_SWITCH]}.make_from_array (l_group.switches)
+							-- Add nologo switch, if not already added
+						l_switch := switch_of_name (nologo_switch)
+						if l_switch /= Void then
+							if not l_switches.has (l_switch) then
+								l_switches.extend (l_switch)
+							end
 						end
-					end
 
-					l_cfg := command_option_group_configuration (l_switches, l_groups.item.accepts_loose_arguments, True, l_switches)
-					if l_cfg /= Void then
-						Result.extend (l_cfg)
+						l_cfg := command_option_group_configuration (l_switches, l_group.accepts_loose_arguments, True, l_switches)
+						if l_cfg /= Void and then not Result.has (l_cfg) then
+								-- With exclusion of hidden options command line groups may look the same.
+							Result.extend (l_cfg)
+						end
 					end
 					l_groups.forth
 				end
@@ -1435,12 +1475,13 @@ feature {NONE} -- Switches
 				create Result.make (2)
 			end
 
-			create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
-			l_switch.set_is_special
-			Result.extend (l_switch)
 			if l_switches /= Void then
 				Result.append (l_switches)
 			end
+
+			create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
+			l_switch.set_is_special
+			Result.extend (l_switch)
 			create l_switch.make (help_switch, "Display usage information.", True, False)
 			l_switch.set_is_special
 			Result.extend (l_switch)
@@ -1480,7 +1521,7 @@ feature {NONE} -- Switches
 		deferred
 		ensure
 			not_result_is_empty: Result /= Void implies not Result.is_empty
-			result_contains_attached_items: Result /= Void implies Result.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN
+			result_contains_valid_attached_items: Result /= Void implies Result.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN
 				do
 					Result := a_item /= Void
 				end)
@@ -1511,17 +1552,17 @@ feature {NONE} -- Switches
 				do
 					Result := a_item.for_all (agent (a_item2: ARGUMENT_SWITCH): BOOLEAN do Result := a_item2 /= Void end)
 				end)
---			not_result_contains_key_as_item: Result /= Void implies (agent (a_table: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]): BOOLEAN
---				local
---					l_cursor: CURSOR
---				do
---					Result := True
---					l_cursor := a_table.cursor
---					from a_table.start until a_table.after or not Result loop
---						Result := not a_table.item_for_iteration.has (a_table.key_for_iteration)
---					end
---					a_table.go_to (l_cursor)
---				end).item ([Result])
+			not_result_contains_key_as_item: Result /= Void implies (agent (a_table: HASH_TABLE [ARRAY [ARGUMENT_SWITCH], ARGUMENT_SWITCH]): BOOLEAN
+				local
+					l_cursor: CURSOR
+				do
+					Result := True
+					l_cursor := a_table.cursor
+					from a_table.start until a_table.after or not Result loop
+						Result := not a_table.item_for_iteration.has (a_table.key_for_iteration)
+					end
+					a_table.go_to (l_cursor)
+				end).item ([Result])
 		end
 
 feature {NONE} -- Formatting
@@ -1633,6 +1674,7 @@ invariant
 	internal_option_values_attached: parsed implies internal_option_values /= Void
 	internal_values_attached: parsed implies internal_values /= Void
 	parsed_means_successful: parsed implies successful
+	max_display_width_positive: max_display_width > 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

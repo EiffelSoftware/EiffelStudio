@@ -91,6 +91,15 @@ feature -- Status Setting
 			notify_form.notify_consume (a_message)
 		end
 
+	notify_info (a_message: STRING) is
+			-- Notifier user of an event
+		require
+			a_message_attached: a_message /= Void
+			not_a_message_is_empty: not a_message.is_empty
+		do
+			notify_form.notify_info (a_message)
+		end
+
 	clear_notification is
 			-- Clears last notification message.
 		require

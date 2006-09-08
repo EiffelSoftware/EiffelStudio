@@ -179,7 +179,7 @@ feature -- Output
 						loop
 							a_text_formatter.add_space
 							eiffel_name := creation_feature_list.item.internal_name
-							a_text_formatter.add (eiffel_name)
+							a_text_formatter.add_feature_name (eiffel_name, a_context_class)
 							creation_feature_list.forth
 							if not creation_feature_list.after then
 								a_text_formatter.process_symbol_text (ti_Comma)

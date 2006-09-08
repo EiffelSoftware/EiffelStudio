@@ -14,6 +14,8 @@ inherit
 	EV_RICH_TEXT_I
 		rename
 			last_load_successful as implementation_last_load_successful
+		undefine
+			selected_text
 		redefine
 			interface,
 			text_length

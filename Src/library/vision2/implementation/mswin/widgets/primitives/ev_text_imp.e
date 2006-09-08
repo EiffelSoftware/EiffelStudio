@@ -15,7 +15,8 @@ class
 inherit
 	EV_TEXT_I
 		redefine
-			interface
+			interface,
+			selected_text
 		end
 
 	EV_FONTABLE_IMP
@@ -34,7 +35,8 @@ inherit
 			caret_position,
 			insert_text,
 			on_key_down,
-			select_region
+			select_region,
+			selected_text
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -290,7 +292,6 @@ feature -- Status Report
 			-- Index of first character selected.
 		local
 			new_lines_to_start: INTEGER
-
 		do
 			new_lines_to_start := wel_text.substring (1, wel_selection_start).occurrences ('%R')
 			Result := wel_selection_start + 1 - new_lines_to_start
@@ -303,6 +304,21 @@ feature -- Status Report
 		do
 			new_lines_to_end := wel_text.substring (1, wel_selection_end).occurrences ('%R')
 			Result := wel_selection_end - new_lines_to_end
+		end
+
+	selected_text: STRING_32
+			-- Text currently selected in `Current'.
+		local
+			wel_sel: POINTER
+			start_pos, end_pos: INTEGER
+				-- starting and ending character positions of the
+				-- current selection in the edit control
+		do
+			wel_sel := cwin_send_message_result (wel_item, Em_getsel, to_wparam (0), to_lparam (0))
+			start_pos := cwin_hi_word (wel_sel)
+			end_pos := cwin_lo_word (wel_sel)
+			Result := wel_text.substring (start_pos.min (end_pos), end_pos.max (start_pos))
+			Result.prune_all ('%R')
 		end
 
 feature -- Status Settings

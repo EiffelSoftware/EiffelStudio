@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ASSEMBLY_LOADER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -40,6 +45,7 @@ feature {NONE} -- Initialization
 			l_verbose: BOOLEAN
 			l_cache_writer: CACHE_WRITER
 			l_writer: like writer
+			l_error: BOOLEAN
 		do
 			if a_parser.use_specified_cache then
 				create l_manager.make_with_path (a_parser.cache_path)
@@ -73,8 +79,7 @@ feature {NONE} -- Initialization
 						end (l_resolver, ?))
 				end
 				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
-
-				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+				assembly_loader.set_resolver (l_resolver)
 				from l_assemblies.start until l_assemblies.after loop
 					l_assembly := l_assemblies.item
 					{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Requesting consumption of assembly '{0}'.", l_assembly), "Info")
@@ -83,12 +88,16 @@ feature {NONE} -- Initialization
 					l_writer.put_string ("'...%N")
 					l_cache_writer.add_assembly (l_assembly, l_info_only)
 					if not l_cache_writer.successful then
-						display_error ("Assembly '" + l_assembly + "' could not be consumed!")
+						display_error ("   Warning: Assembly '" + l_assembly + "' could not be consumed!")
+						if l_cache_writer.error_message /= Void then
+							display_error ("   Reason: " + l_cache_writer.error_message)
+						end
 						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be consumed.", l_assembly), "Warning")
+						l_error := True
 					end
 					l_assemblies.forth
 				end
-
+				assembly_loader.set_resolver (Void)
 				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
 			elseif a_parser.remove_assemblies then
 				l_assemblies := a_parser.assemblies
@@ -101,8 +110,12 @@ feature {NONE} -- Initialization
 					l_writer.put_string ("'...%N")
 					l_cache_writer.unconsume_assembly (l_assembly)
 					if not l_manager.is_successful then
-						display_error ("Assembly '" + l_assembly + "' could not be removed (unconsumed)!")
+						display_error ("   Warning: Assembly '" + l_assembly + "' could not be removed (unconsumed)!")
+						if l_cache_writer.error_message /= Void then
+							display_error ("   Reason: " + l_cache_writer.error_message)
+						end
 						{SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("'{0}' could not be removed (unconsumed).", l_assembly), "Warning")
+						l_error := True
 					end
 					l_assemblies.forth
 				end
@@ -116,7 +129,16 @@ feature {NONE} -- Initialization
 			end
 
 			l_manager.unload
-			display_status ("Completed%N")
+			display_status ("%NCompleted.%N")
+
+			if a_parser.wait_for_user_interaction then
+				io.put_string ("Please press enter to exit...")
+				io.read_line
+			end
+
+			if l_error then
+				(create {EXCEPTIONS}).die (-1)
+			end
 		end
 
 feature {NONE} -- Output
@@ -149,7 +171,7 @@ feature {NONE} -- Output
 
 			l_writer.put_string ("Displaying contents of Eiffel Assembly Cache%N")
 			l_writer.put_string (a_manager.cache_reader.absolute_consume_path)
-			l_writer.put_string (":%N%N")
+			l_writer.put_string (":%N")
 
 			if not l_is_empty then
 				l_count := l_assemblies.count
@@ -160,9 +182,10 @@ feature {NONE} -- Output
 				end
 				from i := 1 until i > l_count loop
 					l_assembly := l_assemblies [i]
-					if l_assembly.is_consumed then
+					if l_assembly.is_consumed or a_verbose then
 						l_index := l_index + 1
 
+						l_writer.new_line
 						l_writer.put_string (l_sindex.substring (1, l_sindex.count - l_index.out.count))
 						l_writer.put_integer (l_index)
 						l_writer.put_string (once ": ")
@@ -185,9 +208,19 @@ feature {NONE} -- Output
 							l_writer.put_string (l_prefix)
 							l_writer.put_string (l_assembly.location)
 							l_writer.new_line
+							l_writer.put_string (l_prefix)
+							l_writer.put_string (once "Consumed status: ")
+							if l_assembly.is_consumed then
+								if l_assembly.has_info_only then
+									l_writer.put_string (once "partial")
+								else
+									l_writer.put_string (once "full")
+								end
+							else
+								l_writer.put_string (once "not consumed")
+							end
+							l_writer.new_line
 						end
-
-						l_writer.new_line
 					end
 					i := i + 1
 				end

@@ -146,14 +146,16 @@ feature -- Basic operations
 					Result ?= l_asms.item (a_name)
 				else
 					l_resolver := resolver
-					if not retried and l_resolver /= Void then
+					retried := l_resolver = Void
+					if not retried then
 							-- Use resolver to find best path possible	
-						l_fn := resolver.resolve_by_assembly_name ({APP_DOMAIN}.current_domain, a_name)
+						l_fn := l_resolver.resolve_by_assembly_name ({APP_DOMAIN}.current_domain, a_name)
 						if l_fn /= Void then
 							Result := load_from (l_fn)
 						end
+						retried := True
 					end
-					if Result = Void and (retried or l_fn = Void) then
+					if Result = Void and retried then
 							-- Fail safe.
 						Result := dotnet_load (a_name.to_string)
 					end

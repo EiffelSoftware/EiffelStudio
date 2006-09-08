@@ -353,8 +353,6 @@ feature -- Basic operation
 						grab_widget := {EV_GTK_EXTERNALS}.gtk_grab_get_current
 						if grab_widget = default_pointer then
 							grab_widget := event_widget
-						else
---							print ("We have a grab widget%N")
 						end
 						inspect
 							{EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)

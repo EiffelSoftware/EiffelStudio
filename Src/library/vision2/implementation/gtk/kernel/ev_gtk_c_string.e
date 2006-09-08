@@ -12,6 +12,8 @@ class
 inherit
 	DISPOSABLE
 
+	STRING_HANDLER
+
 create
 	set_with_eiffel_string, share_from_pointer, make_from_pointer
 
@@ -42,21 +44,24 @@ feature -- Access
 			l_ptr: MANAGED_POINTER
 			l_nat8: NATURAL_8
 			l_code: NATURAL_32
-			i, nb: INTEGER
+			i, nb, cnt: INTEGER
 		do
 			from
 				i := 0
+				cnt := 0
 				nb := string_length
 				l_ptr := shared_pointer_helper
 				l_ptr.set_from_pointer (item, nb)
 				create Result.make (nb)
+				Result.set_count (nb)
 			until
 				i = nb
 			loop
 				l_nat8 := l_ptr.read_natural_8 (i)
+				cnt := cnt + 1
 				if l_nat8 <= 127 then
 						-- Form 0xxxxxxx.
-					Result.extend (l_nat8.to_character_8)
+					Result.put (l_nat8.to_character_8, cnt)
 
 				elseif (l_nat8 & 0xE0) = 0xC0 then
 						-- Form 110xxxxx 10xxxxxx.
@@ -64,7 +69,7 @@ feature -- Access
 					i := i + 1
 					l_nat8 := l_ptr.read_natural_8 (i)
 					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.extend (l_code.to_character_32)
+					Result.put (l_code.to_character_32, cnt)
 
 				elseif (l_nat8 & 0xF0) = 0xE0 then
 					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
@@ -73,7 +78,7 @@ feature -- Access
 					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
 					l_nat8 := l_ptr.read_natural_8 (i + 2)
 					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.extend (l_code.to_character_32)
+					Result.put (l_code.to_character_32, cnt)
 					i := i + 2
 
 				elseif (l_nat8 & 0xF8) = 0xF0 then
@@ -85,26 +90,28 @@ feature -- Access
 					l_code := l_code | ((l_nat8 & 0x3F).to_natural_32 |<< 6)
 					l_nat8 := l_ptr.read_natural_8 (i + 3)
 					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
-					Result.extend (l_code.to_character_32)
+					Result.put (l_code.to_character_32, cnt)
 					i := i + 3
 
 				elseif (l_nat8 & 0xFC) = 0xF8 then
 					-- Starts with 111110xx
 					-- This seems to be a 5 bytes character,
 					-- but UTF-8 is restricted to 4, then substitute with a space
-					Result.extend (' ')
+					Result.put (' ', cnt)
 					i := i + 4
 
 				else
 					-- Starts with 1111110x
 					-- This seems to be a 6 bytes character,
 					-- but UTF-8 is restricted to 4, then substitute with a space
-					Result.extend (' ')
+					Result.put (' ', cnt)
 					i := i + 5
 
 				end
 				i := i + 1
 			end
+			Result.set_count (cnt)
+
 				-- Reset shared pointer.
 			l_ptr.set_from_pointer (default_pointer, 0)
 		end

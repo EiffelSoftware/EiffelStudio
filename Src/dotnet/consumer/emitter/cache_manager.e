@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_CACHE_MUTEX_GUARD
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_with_path
@@ -34,6 +39,11 @@ feature {NONE}-- Initialization
 	make is
 			-- create an instance of CACHE_MANAGER
 		do
+			if notifier = Void then
+				create notifier.make
+			end
+			guard.set_notifier (notifier)
+
 			is_successful := True
 			last_error_message := ""
 			create cache_writer.make
@@ -57,7 +67,12 @@ feature -- Clean Up
 			-- Unloads all loaded assemblies and releases any
 			-- resources. This is not a dispose so and cleaned up
 			-- resources should be able to be resurected.
+
 		do
+			if notifier /= Void then
+				notifier.dispose
+				notifier := Void
+			end
 			cache_writer.dispose
 			assembly_loader.release_cached_data
 		end
@@ -242,6 +257,11 @@ feature {NONE} -- Basic Operations
 feature {NONE} -- Constants
 
 	neutral_culture: STRING = "neutral"
+
+feature {NONE} -- Implementation
+
+	notifier: NOTIFIER
+			-- Notifier used to notifer user of cache operations.
 
 invariant
 	cache_writer_not_void: cache_writer /= Void

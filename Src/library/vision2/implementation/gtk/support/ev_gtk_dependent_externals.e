@@ -245,6 +245,18 @@ feature -- Externals
 			]"
 		end
 
+	frozen gtk_label_set_ellipsize (a_label: POINTER; a_mode: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MINOR_VERSION >= 6
+					gtk_label_set_ellipsize ((GtkLabel*) $a_label, (PangoEllipsizeMode) $a_mode);
+				#endif
+			]"
+		end
+
+
 	frozen pango_matrix_init (a_pango_matrix: TYPED_POINTER [POINTER]) is
 		external
 			"C inline use <gtk/gtk.h>"

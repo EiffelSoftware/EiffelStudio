@@ -215,7 +215,7 @@ feature -- Domain
 				internal_gac_loader := Result
 
 					-- Add event handler for parent domain unloads
-				l_new_dom.add_domain_unload (new_gac_domain_unload_delelgate)
+				l_new_dom.add_domain_unload (Result.new_gac_domain_unload_delelgate)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -260,9 +260,6 @@ feature {NONE} -- Lifetime service sponsorship
 
 feature {NONE} -- Implementation
 
-	gac_domain_name: SYSTEM_STRING = "ASSEMBLY_LOADER (GAC)"
-			-- Friendly name given to GAC domain.
-
 	loaded_assemblies: HASHTABLE is
 			-- Table of loaded assemblies
 		do
@@ -279,6 +276,11 @@ feature {NONE} -- Implementation
 	internal_loaded_assemblies: like loaded_assemblies;
 			-- Cached version of `loaded_assemblies'
 			-- Note: Do not use directly!
+
+feature {ASSEMBLY_LOADER} -- Implementation
+
+	gac_domain_name: SYSTEM_STRING = "ASSEMBLY_LOADER (GAC)"
+			-- Friendly name given to GAC domain.
 
 	new_gac_domain_unload_delelgate: EVENT_HANDLER is
 			-- Creates a new event handler to ensure generated code is verifiable.

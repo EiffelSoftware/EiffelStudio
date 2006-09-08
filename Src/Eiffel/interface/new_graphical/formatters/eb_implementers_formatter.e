@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 		do
 			browser.set_is_branch_id_used (True)
 			browser.set_is_written_class_used (False)
-			browser.set_is_signature_displayed (False)
+			browser.set_is_signature_displayed (True)
 			browser.set_is_version_from_displayed (True)
 			browser.set_feature_item (associated_feature)
 			browser.rebuild_interface

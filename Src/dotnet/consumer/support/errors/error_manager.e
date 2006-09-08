@@ -17,14 +17,14 @@ feature -- Access
 
 	last_error: INTEGER
 			-- Last error code
-	
+
 	last_error_context: STRING
 			-- Additional information on last error
 
 	error_message: STRING is
 			-- Error message for `last_error'
 		do
-			Result := error_message_table.item (last_error)
+			Result := error_message_table.item (last_error).twin
 			if Result /= Void and last_error_context /= Void then
 				Result.append (": " + last_error_context)
 			end
@@ -40,7 +40,7 @@ feature -- Status Report
 		do
 			Result := last_error = No_error
 		end
-		
+
 	is_valid_error_code (code: INTEGER): BOOLEAN is
 			-- Is `code' a valid error code?
 		do

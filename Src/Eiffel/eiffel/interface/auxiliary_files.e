@@ -725,7 +725,7 @@ feature -- Plug and Makefile file
 			buffer.put_string (";%N%Tegc_project_version = ")
 			buffer.put_integer (System.project_creation_time)
 
-				-- Generate the number of static dynamic types.
+				-- Generate the number of dynamic types.
 			buffer.put_string (";%N%Tscount = ")
 			buffer.put_integer (System.type_id_counter.value)
 			buffer.put_string (";%N%N")

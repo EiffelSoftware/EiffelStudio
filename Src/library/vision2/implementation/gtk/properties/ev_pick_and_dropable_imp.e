@@ -51,7 +51,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 				l_call_events := False
 			elseif is_dockable then
 				l_dockable_source ?= Current
-				if l_dockable_source.dawaiting_movement or else app_implementation.docking_source = Current then
+				if l_dockable_source.awaiting_movement or else app_implementation.docking_source = Current then
 					l_dockable_source.dragable_motion (
 						a_motion_tuple.integer_32_item (1),
 						a_motion_tuple.integer_32_item (2),
@@ -170,6 +170,8 @@ feature -- Implementation
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
 		do
+				-- Force any pending graphics calls.
+			{EV_GTK_EXTERNALS}.gdk_flush
 			update_pointer_style (pointed_target)
 			app_implementation.on_pick (Current, pebble)
 			if pick_actions_internal /= Void then
@@ -270,7 +272,7 @@ feature -- Implementation
 					end
 					l_dockable_source ?= Current
 					if l_dockable_source /= Void and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
-						if l_dockable_source.dawaiting_movement or else app_imp.docking_source = Current then
+						if l_dockable_source.awaiting_movement or else app_imp.docking_source = Current then
 							if app_imp.docking_source = Current then
 								l_call_events := False
 							end

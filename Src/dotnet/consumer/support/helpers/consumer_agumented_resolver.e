@@ -20,7 +20,13 @@ inherit
 			common_initialization as resolver_common_initialization
 		redefine
 			resolve_by_name,
-			get_assembly_name
+			get_assembly_name,
+			load_assembly
+		end
+
+	SHARED_ASSEMBLY_LOADER
+		export
+			{NONE} all
 		end
 
 create
@@ -99,7 +105,13 @@ feature -- Resolution
 			look_up_file_names_cursor_unmoved: look_up_file_names.cursor.is_equal (old look_up_file_names.cursor)
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
+
+	load_assembly (a_path: STRING): ASSEMBLY is
+			-- Attempts to load assembly from `a_path'
+		do
+			Result := assembly_loader.load_from (a_path)
+		end
 
 	get_assembly_name (a_path: STRING): ASSEMBLY_NAME is
 			-- Retrieve an assembly name from `a_path'

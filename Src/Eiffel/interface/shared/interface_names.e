@@ -326,7 +326,7 @@ feature -- Accelerator, focus label and menu name
 	f_History_back: STRING is			"Go back"
 	m_How_to_s: STRING is				"&How to's"
 	m_If_block: STRING is				"&Embed in %"if...%"%TCtrl+I"
-	m_Indent: STRING is					"&Indent S	election%TTab"
+	m_Indent: STRING is					"&Indent Selection%TTab"
 	m_Line_numbers: STRING is			"Toggle &Line Numbers"
 	f_Melt: STRING is					"Compile current project"
 	m_Melt_new: STRING is				"&Compile"

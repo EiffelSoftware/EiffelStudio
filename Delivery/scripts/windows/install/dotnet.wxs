@@ -30,7 +30,11 @@
 				<Directory Id="studio" Name="studio">
 					<Directory Id="spec" Name="spec">
 						<Directory Id="windows_dir" Name="$(env.ISE_PLATFORM)">
-							<Directory Id="lib" Name="lib" />
+							<Directory Id="lib" Name="lib" >
+								<Component Id="lib_runtime_removal" Guid="79A0A85D-63A5-41c3-B11B-735ED0D729DC">
+									<RemoveFile Id="lib_runtime_removal" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" On="uninstall" />
+								</Component>
+							</Directory>
 							<Directory Id="bin" Name="bin">
 								<Component Id="EiffelSoftware.Runtime.dll" Guid="747074F4-6EFD-48E9-88AC-E0AC1264C461">
 									<File Id="EiffelSoftware.Runtime.dll" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.Runtime.dll">

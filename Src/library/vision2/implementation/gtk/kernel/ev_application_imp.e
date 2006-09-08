@@ -257,6 +257,7 @@ feature -- Basic operation
 			l_pnd_item: EV_PICK_AND_DROPABLE_IMP
 			l_gdk_window: POINTER
 			l_stored_display_data: like stored_display_data
+			l_any_imp: EV_ANY_IMP
 			l_top_level_window_imp: EV_WINDOW_IMP
 			l_popup_parent: EV_POPUP_WINDOW_IMP
 			l_ignore_event: BOOLEAN
@@ -278,10 +279,16 @@ feature -- Basic operation
 				end
 				l_grab_widget := {EV_GTK_EXTERNALS}.gtk_grab_get_current
 				if l_grab_widget /= default_pointer then
-						-- This is a popup window with keyboard and mouse grab.
-					l_popup_parent ?= eif_object_from_gtk_object (l_grab_widget)
-					if l_popup_parent /= Void and then l_pnd_item /= Void and then l_pnd_item.top_level_window_imp /= l_popup_parent then
-						l_pnd_item := l_popup_parent
+						-- This may be a popup window with keyboard and mouse grab.
+					l_any_imp ?= eif_object_from_gtk_object (l_grab_widget)
+					if l_any_imp /= Void then
+						l_popup_parent ?= l_any_imp
+						if l_popup_parent /= Void and then l_pnd_item /= Void and then l_pnd_item.top_level_window_imp /= l_popup_parent then
+							l_pnd_item := l_popup_parent
+						end
+					else
+							-- A widget has the grab that is not under our control so we do not propagate button events.
+						l_pnd_item := Void
 					end
 				end
 			end
@@ -302,7 +309,6 @@ feature -- Basic operation
 			if not l_ignore_event then
 					-- Fire the gtk event first.
 				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_gdk_event)
-
 				if l_pnd_item /= Void then
 					l_pnd_item.on_mouse_button_event (
 						{EV_GTK_EXTERNALS}.gdk_event_button_struct_type (a_gdk_event),

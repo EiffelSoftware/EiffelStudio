@@ -254,6 +254,7 @@ feature {NONE} -- Implementation
 							if l_dep_as = Void then
 									-- create new assembly and process it
 								l_dep_as := assembly_from_consumed (l_cons_ass, an_assembly.target)
+								l_dep_as.set_is_dependency (True)
 								new_assemblies.force_last (l_dep_as)
 								build_assembly (l_dep_as)
 								build_dependencies (l_dep_as)
@@ -627,6 +628,7 @@ feature {NONE} -- retrieving information from cache
 			else
 				Result := factory.new_assembly_from_gac (an_assembly.name, an_assembly.name, an_assembly.version, an_assembly.culture, an_assembly.key, a_target)
 			end
+			Result.set_is_partially_consumed (an_assembly.has_info_only)
 		end
 
 feature {NONE} -- Consuming
@@ -638,9 +640,14 @@ feature {NONE} -- Consuming
 		local
 			l_a: CONF_ASSEMBLY
 			l_paths: STRING
+			l_path: STRING
+			l_unique_paths: ARRAYED_LIST [STRING]
 			l_emitter: like il_emitter
 			l_cursor: DS_HASH_SET_CURSOR [CONF_ASSEMBLY]
 		do
+			create l_unique_paths.make (10)
+			l_unique_paths.compare_objects
+
 			on_consume_assemblies
 			from
 				l_emitter := il_emitter
@@ -654,7 +661,13 @@ feature {NONE} -- Consuming
 				if l_a.is_non_local_assembly then
 					l_emitter.consume_assembly (l_a.assembly_name, l_a.assembly_version, l_a.assembly_culture, l_a.assembly_public_key_token)
 				else
-					l_paths.append (l_a.location.evaluated_path+";")
+					if not l_a.is_dependency then
+						l_path := l_a.location.evaluated_path.as_lower
+						if not l_unique_paths.has (l_path) then
+							l_unique_paths.extend (l_path)
+							l_paths.append (l_path + ";")
+						end
+					end
 				end
 				l_cursor.forth
 			end
@@ -677,9 +690,14 @@ feature {NONE} -- Consuming
 		local
 			l_a: CONF_ASSEMBLY
 			l_paths: STRING
+			l_path: STRING
+			l_unique_paths: ARRAYED_LIST [STRING]
 			l_cursor: DS_HASH_SET_CURSOR [CONF_ASSEMBLY]
 			l_emitter: like il_emitter
 		do
+			create l_unique_paths.make (10)
+			l_unique_paths.compare_objects
+
 			on_consume_assemblies
 			from
 				l_cursor := an_assemblies.new_cursor
@@ -690,7 +708,13 @@ feature {NONE} -- Consuming
 			loop
 				l_a := l_cursor.item
 				if not l_a.is_non_local_assembly then
-					l_paths.append (l_a.location.evaluated_path+";")
+					if not l_a.is_dependency then
+						l_path := l_a.location.evaluated_path.as_lower
+						if not l_unique_paths.has (l_path) then
+							l_unique_paths.extend (l_path)
+							l_paths.append (l_path + ";")
+						end
+					end
 				end
 				l_cursor.forth
 			end
@@ -777,6 +801,9 @@ feature {NONE} -- helpers
 			l_eac_file: FILE_NAME
 			l_file: RAW_FILE
 		do
+				-- Reset cached cache content
+			cache_content := Void
+
 			create l_eac_file.make_from_string (full_cache_path)
 			l_eac_file.set_file_name (cache_info_file)
 			create l_file.make (l_eac_file)

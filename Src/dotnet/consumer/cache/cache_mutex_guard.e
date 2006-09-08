@@ -13,7 +13,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	MUTEX_FACTORY
 		export
 			{NONE} all
@@ -38,7 +38,7 @@ feature -- Basic Operation
 			count_incremented: count = old count + 1
 			is_locked: is_locked
 		end
-		
+
 	unlock is
 			-- lock cache
 		require
@@ -62,13 +62,26 @@ feature -- Access
 		ensure
 			count_positive: count >= 0
 		end
-			
+
 	is_locked: BOOLEAN is
 			-- is cache locked?
 		do
 			Result := count > 0
 		end
-	
+
+	notifier: NOTIFIER
+			-- Notifier used to inform user of locks
+
+feature -- Element change
+
+	set_notifier (a_notifier: like notifier) is
+			-- Set `notifier' to `a_notifier'.
+		do
+			notifier := a_notifier
+		ensure
+			notifier_set: notifier = a_notifier
+		end
+
 feature -- DISPOSABLE
 
 	dispose is
@@ -79,15 +92,23 @@ feature -- DISPOSABLE
 				zero_count: count = 0
 			end
 		end
-			
+
 feature {NONE} -- Implementation
 
 	perform_locking is
 			-- performs locking
 		local
 			l_wait: BOOLEAN
+			l_notifier: like notifier
 		do
+			l_notifier := notifier
+			if l_notifier /= Void then
+				l_notifier.notify_info ("The assembly cache is currently locked by another consumer%N%NWaiting for access...")
+			end
 			l_wait := guard.wait_one
+			if l_notifier /= Void then
+				l_notifier.restore_last_notification
+			end
 		ensure
 			is_locked: is_locked
 		end
@@ -107,13 +128,13 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	internal_count: INTEGER_REF is
 			-- internal count
 		once
 			create Result
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

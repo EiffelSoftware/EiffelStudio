@@ -64,12 +64,6 @@ feature -- Clean Up
 	dispose is
 			-- Clean up used resources.
 		do
-			if notifier /= Void then
-				notifier.dispose
-				notifier := Void
-			end
-		ensure then
-			notifier_unattached: notifier = Void
 		end
 
 feature -- Basic Operations
@@ -128,12 +122,9 @@ feature -- Basic Operations
 		do
 			if not retried then
 				guard.lock
-				if notifier = Void then
-					create notifier.make
-				end
 
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Adding assembly (does not mean consuming) '{0}'.", a_path))
-				l_reason := "New Entry"
+				l_reason := "New entry"
 
 				l_reader := cache_reader
 				l_ca := l_reader.consumed_assembly_from_path (a_path)
@@ -141,6 +132,9 @@ feature -- Basic Operations
 					l_lower_path := {PATH}.get_full_path (a_path.as_lower)
 				else
 					l_lower_path := l_ca.location
+					if l_ca.has_info_only and not a_info_only then
+						l_reason := "Consuming extra information"
+					end
 				end
 
 				l_assembly := assembly_loader.load_from_gac_or_path (l_lower_path)
@@ -245,7 +239,9 @@ feature -- Basic Operations
 					end
 					l_consumer.set_destination_path (l_dir.name)
 
-					notifier.notify_consume (create {NOTIFY_MESSAGE}.make (l_ca, a_path, l_reason, cache_reader.eiffel_assembly_cache_path))
+					if notifier /= Void then
+						notifier.notify_consume (create {NOTIFY_MESSAGE}.make (l_ca, a_path, l_reason, cache_reader.eiffel_assembly_cache_path))
+					end
 
 						-- Load assembly from path, so path assembly is consumed.
 						-- MS resort to a load performance trick where they provide assemblies with no implementation
@@ -271,7 +267,9 @@ feature -- Basic Operations
 
 				if l_consumer.successful then
 					{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Processing assembly dependencies...%N%NAssembly: {0}.", a_path))
-					notifier.notify_info ("Synchronizing cache...")
+					if notifier /= Void then
+						notifier.notify_info ("Synchronizing cache...")
+					end
 
 					l_names := l_assembly.get_referenced_assemblies
 					from
@@ -289,13 +287,17 @@ feature -- Basic Operations
 						i := i + 1
 					end
 					if l_assembly_info_updated then
-						notifier.notify_info ({SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.eiffel_assembly_cache_path))
+						if notifier /= Void then
+							notifier.notify_info ({SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.eiffel_assembly_cache_path))
+						end
 						update_assembly_mappings (l_ca)
 						update_client_assembly_mappings (l_ca)
 					end
 				end
-				
-				notifier.clear_notification
+
+				if notifier /= Void then
+					notifier.clear_notification
+				end
 			else
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to consume assembly '{0}'.", a_path))
 
@@ -584,7 +586,7 @@ feature -- Basic Operations
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation	
 
 	remove_assembly_internal (a_path: STRING) is
 			-- Remove assembly identified by `a_path' and its clients from cache.
@@ -790,8 +792,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Notification
 
-	notifier: NOTIFIER
+	notifier: NOTIFIER is
 			-- Windows ballon tip notifier
+		do
+			Result := guard.notifier
+		ensure
+			result_attached: Result /= Void
+		end
 
 invariant
 	non_void_cache_reader: cache_reader /= Void

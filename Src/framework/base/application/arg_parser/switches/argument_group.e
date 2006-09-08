@@ -9,7 +9,8 @@ class
 	ARGUMENT_GROUP
 
 create
-	make
+	make,
+	make_hidden
 
 feature {NONE} -- Initialization
 
@@ -30,9 +31,34 @@ feature {NONE} -- Initialization
 		do
 			switches := a_switches
 			accepts_loose_arguments := a_loose
+			is_hidden := False
 		ensure
 			switches_set: switches = a_switches
 			accepts_loose_arguments_set: accepts_loose_arguments = a_loose
+			not_is_hidden: not is_hidden
+		end
+
+	make_hidden (a_switches: like switches; a_loose: like accepts_loose_arguments) is
+			-- Initializes an argument group that will no be show in usage
+		require
+			a_switches_attached: a_switches /= Void
+			a_switches_contained_attached_items: a_switches.for_all (agent (a_item: ARGUMENT_SWITCH): BOOLEAN
+				do
+					Result := a_item /= Void
+				end)
+			a_switches_contained_unique_items: a_switches.for_all (agent (a_arr: ARRAY [ARGUMENT_SWITCH]; a_item: ARGUMENT_SWITCH): BOOLEAN
+				require
+					a_item_attached: a_item /= Void
+				do
+					Result := a_arr.occurrences (a_item) = 1
+				end (a_switches, ?))
+		do
+			make (a_switches, a_loose)
+			is_hidden := True
+		ensure
+			switches_set: switches = a_switches
+			accepts_loose_arguments_set: accepts_loose_arguments = a_loose
+			is_hidden: is_hidden
 		end
 
 feature -- Access
@@ -44,6 +70,9 @@ feature -- Status report
 
 	accepts_loose_arguments: BOOLEAN
 			-- Indicates if loose arguments can be used in the group
+
+	is_hidden: BOOLEAN
+			-- Indicates if a usage group command should be generated
 
 invariant
 	switches_attached: switches /= Void

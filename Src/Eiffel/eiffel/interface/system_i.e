@@ -2098,11 +2098,7 @@ end
 
 	process_type_system is
 			-- Compute the type system
-		local
-			old_value: INTEGER
 		do
-			old_value := type_id_counter.value
-
 				-- ANY needs to be processed first so that it has static type
 				-- of 1.
 			if not any_class.compiled_class.has_types then
@@ -2123,11 +2119,6 @@ end
 
 				-- Compute the types.
 			Instantiator.process
-
-				-- If first compilation, re-order dynamic types
-			if old_value = 0 then
-				process_dynamic_types
-			end
 		end
 
 	process_conformance_table_for_type (set_or_reset_action: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]) is
@@ -2299,7 +2290,7 @@ end
 				write_int (file_pointer, rcoffset)
 				write_int (file_pointer, has_argument)
 
-					-- Write first the number of class types now available
+					-- Write first the number of dynamic types now available
 				write_int (file_pointer, type_id_counter.value)
 					-- Write the number of classes now available
 				write_int (file_pointer, class_counter.count)
@@ -2710,9 +2701,6 @@ feature -- Freeezing
 			end
 
 			address_table.update_ids
-				-- Re-process dynamic types
-			-- FIXME
-			--process_dynamic_types
 
 				-- Process the C pattern table
 debug ("ACTIVITY")
@@ -2833,9 +2821,12 @@ feature -- Final mode generation
 			retried: BOOLEAN
 			d1, d2: DATE_TIME
 			l_assertions: CONF_ASSERTIONS
+			l_type_id_mapping: ARRAY [INTEGER]
 		do
 			eiffel_project.terminate_c_compilation
 			if not retried and is_finalization_needed then
+				create l_type_id_mapping.make (0, static_type_id_counter.count)
+				process_dynamic_types (False, l_type_id_mapping)
 					-- Reset `disposable_descendants' since they can have changed
 					--| Note: That is important to recompute it, as this is a once
 					--| which is not stored in the project file, therefore if we
@@ -2929,9 +2920,6 @@ feature -- Final mode generation
 					end
 					tmp_opt_byte_server.flush
 
-					-- FIXME
-					--process_dynamic_types
-
 						-- Build conformance table for CLASS_TYPE instances. This is
 						-- needed for proper processing of computation of `is_polymorphic'
 						-- on polymorphic table and computation of expanded descendants.
@@ -2981,6 +2969,7 @@ feature -- Final mode generation
 
 					-- Clean `finalization_needed' tag from all CLASS_C
 				clean_finalization_tag
+				process_dynamic_types (True, l_type_id_mapping)
 				private_finalize := False
 			end
 		rescue
@@ -3002,6 +2991,11 @@ feature -- Final mode generation
 				-- Clean conformance table for CLASS_TYPE instances. We don't need
 				-- to store them on disk as they are recomputed at each finalization.
 			process_conformance_table_for_type (agent {CLASS_TYPE}.reset_conformance_table)
+
+				-- Reset `class_types'
+			if l_type_id_mapping /= Void then
+				process_dynamic_types (True, l_type_id_mapping)
+			end
 
 			if rescue_status.is_error_exception then
 				retried := True
@@ -3565,8 +3559,15 @@ feature -- Generation
 			t.generate_make_file
 		end
 
-	process_dynamic_types is
+	process_dynamic_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER]) is
 			-- Processing of the dynamic types.
+			-- This is only needed when finalizing because this is where it is important
+			-- to have `type_id' sorted in topological order. This solves eweasel test#exec256.
+		require
+			is_finalizing: compilation_modes.is_finalizing
+			a_backup_not_void: a_backup /= Void
+			a_backup_valid_for_restoring: is_restoring implies
+				(a_backup.lower >= 0 and a_backup.upper <= static_type_id_counter.count)
 		local
 			class_array: ARRAY [CLASS_C]
 			class_list: ARRAY [CLASS_C]
@@ -3574,65 +3575,78 @@ feature -- Generation
 			types: TYPE_LIST
 			i, nb: INTEGER
 		do
-				-- First re-process all the type id of instances of
-				-- CLASS_TYPE available in attribute list `types' of
-				-- instances of CLASS_C
-
-debug ("ACTIVITY")
-	io.error.put_string ("Process dynamic types%N")
-end
-				-- Sort the class_list by type id in `class_list'.
-			create class_list.make (1, max_class_id)
-			class_array := classes
-			nb := class_counter.count
-			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
-				if a_class /= Void then
-					class_list.put (a_class, a_class.topological_id)
-				end
-				i := i + 1
-			end
-
-			nb := max_class_id
-				-- Iteration on `class_list' in order to compute new type
-				-- id's
-			from
-				type_id_counter.set_value (0)	-- 0 = min_type_id - 1
-				i := 1
-			until
-				i > nb
-			loop
-					-- Types of the class
-				types := class_list.item (i).types
+			if is_restoring then
+					-- Restore modified types.
 				from
-					types.start
+					class_types.clear_all
+					class_array := classes
+					nb := class_counter.count
+					i := 1
 				until
-					types.after
+					i > nb
 				loop
-					reset_type_id (types.item)
-					types.forth
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						from
+							types := a_class.types
+							types.start
+						until
+							types.after
+						loop
+							reset_type_id (types.item, a_backup [types.item.static_type_id])
+							types.forth
+						end
+					end
+					i := i + 1
 				end
-				i := i + 1
+			else
+					-- We simply take types in their topological order from CLASS_C.topological_id
+					-- and then traverse the list and reset the dynamic type id.
+
+					-- Sort the class_list by type id in `class_list'.
+				create class_list.make (1, max_class_id)
+				class_array := classes
+				nb := class_counter.count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						class_list.put (a_class, a_class.topological_id)
+					end
+					i := i + 1
+				end
+
+					-- Iteration on `class_list' in order to compute new type id's
+				from
+					nb := max_class_id
+					class_types.clear_all
+					type_id_counter.set_value (0)
+					i := 1
+				until
+					i > nb
+				loop
+						-- Types of the class
+					types := class_list.item (i).types
+					from
+						types.start
+					until
+						types.after
+					loop
+						a_backup [types.item.static_type_id] := types.item.type_id
+						reset_type_id (types.item, type_id_counter.next)
+						types.forth
+					end
+					i := i + 1
+				end
 			end
 		end
 
-	reset_type_id (class_type: CLASS_TYPE) is
+	reset_type_id (class_type: CLASS_TYPE; an_id: INTEGER) is
 			-- Assign a new dynamic type id to `class_type'.
 		require
 			class_type_not_void: class_type /= Void
-		local
-			new_type_id: INTEGER
+			an_id_positive: an_id > 0
 		do
-			new_type_id := type_id_counter.next
-			class_type.set_type_id (new_type_id)
-debug ("ACTIVITY")
-	io.error.put_integer (new_type_id)
-	io.error.put_string (": ")
-	class_type.type.trace
-	io.error.put_string (" [")
-	io.error.put_integer (class_type.static_type_id)
-	io.error.put_string ("]%N")
-end
+			class_type.set_type_id (an_id)
 				-- Update `class_types'
 			insert_class_type (class_type)
 		end
@@ -3841,7 +3855,6 @@ end
 					nb_exp := skeleton.nb_expanded
 					buffer.put_integer (nb_ref + nb_exp)
 				else
-					-- FIXME process_dynamic_types TEMPORARILY removed
 					buffer.put_integer (0)
 				end
 
@@ -3889,7 +3902,7 @@ end
 				if cl_type /= Void then
 					cl_type.generate_parent_table (buffer, final_mode);
 					cid := cl_type.type.generated_id (final_mode);
-					used_ids.put (True, cid);
+					used_ids.force (True, cid);
 					if cid > max_id then
 						max_id := cid;
 					end
@@ -4622,10 +4635,6 @@ feature -- Pattern table generation
 					i > nb
 				loop
 					cl_type := class_types.item (i)
-
--- FIXME ???
--- cl_type cannot be Void if process_dynamic_types has been done in
--- freeze_system.
 					if cl_type /= Void then
 						buffer.put_character ('%T')
 						buffer.put_string (Encoder.init_name (cl_type.static_type_id))

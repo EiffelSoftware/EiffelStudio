@@ -69,8 +69,8 @@ feature -- Status update
 				-- Check that `eiffel_home' exists.
 			create l_file.make (eiffel_home)
 			if not l_file.exists or else not l_file.is_directory then
+				safe_create_dir (eiffel_home)
 				create l_dir.make (eiffel_home)
-				l_dir.create_dir
 				is_valid_home := l_dir.exists
 			else
 				is_valid_home := True
@@ -773,6 +773,23 @@ feature {NONE} -- Environment access
 	environment: ENVIRONMENT_ACCESS
 		once
 			create Result
+		end
+
+	safe_create_dir (a_dir: STRING) is
+			-- Try to create a directory `a_dir'.
+		require
+			a_dir_not_void: a_dir /= Void
+		local
+			l_dir: DIRECTORY
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_dir.make (a_dir)
+				l_dir.create_dir
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 indexing

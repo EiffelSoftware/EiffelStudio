@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 
 			create export_field
 			fill_export_field
-			export_field.set_minimum_width (60)
+			export_field.set_minimum_width_in_characters (4)
 			extend (export_field)
 
 			extend (new_label ("} -- "))
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 
 			create comment_field
 			fill_comment_field
-			comment_field.set_minimum_width (110)
+			comment_field.set_minimum_width_in_characters (9)
 			comment_field.set_text (fc_Access)
 			extend (comment_field)
 		end
@@ -129,7 +129,7 @@ feature {EV_ANY} -- Contract support
 			Result := (
 				not is_homogeneous and
 				border_width = 0 and
-				padding = 0			
+				padding = 0
 			)
 		end
 

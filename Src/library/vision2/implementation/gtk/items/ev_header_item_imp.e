@@ -62,6 +62,8 @@ feature -- Initialization
 			pixmapable_imp_initialize
 			textable_imp_initialize
 
+			{EV_GTK_EXTERNALS}.gtk_label_set_ellipsize (text_label, 3)
+
 			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, False, 0)

@@ -370,16 +370,12 @@ feature -- Basic operation
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 
-							if not is_in_transport then
-								if
-									captured_widget /= Void
-								then
-									l_pnd_imp ?= captured_widget.implementation
-								else
-									l_pnd_imp ?= gtk_widget_from_gdk_window (stored_display_data.window)
-								end
+							if
+								captured_widget /= Void
+							then
+								l_pnd_imp ?= captured_widget.implementation
 							else
-								l_pnd_imp := pick_and_drop_source
+								l_pnd_imp ?= gtk_widget_from_gdk_window (stored_display_data.window)
 							end
 
 							if l_pnd_imp /= Void then

@@ -74,9 +74,19 @@ feature -- Status Setting
 		require
 			a_message_attached: a_message /= Void
 		do
-			notify_string := {SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path)
-			if notify_string.length > 64 then
-				notify_string := notify_string.substring (0, 63)
+			notify_info ({SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path))
+		end
+
+	notify_info (a_message: SYSTEM_STRING) is
+			-- Notifier user of an event
+		require
+			a_message_attached: a_message /= Void
+			not_a_message_is_empty: a_message.length > 0
+		do
+			if a_message.length > 64 then
+				notify_string := a_message.substring (0, 63)
+			else
+				notify_string := a_message
 			end
 		end
 

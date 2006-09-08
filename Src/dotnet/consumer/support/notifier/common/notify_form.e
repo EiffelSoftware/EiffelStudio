@@ -13,6 +13,7 @@ inherit
 		redefine
 			initialize_component,
 			notify_consume,
+			notify_info,
 			clear_notification,
 			on_idle
 		end
@@ -37,10 +38,16 @@ feature -- Status Setting
 
 	notify_consume (a_message: NOTIFY_MESSAGE) is
 			-- Notifies user of a consume.
+		do
+			notify_info (a_message.message)
+		end
+
+	notify_info (a_messge: SYSTEM_STRING) is
+			-- Notifier user of an event
 		local
 			l_message: SYSTEM_STRING
 		do
-			l_message := a_message.message
+			l_message := a_messge
 			if l_message.length > 255 then
 				l_message := {SYSTEM_STRING}.concat (l_message.substring (0, 251), ({SYSTEM_STRING})["..."])
 			end

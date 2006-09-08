@@ -1062,7 +1062,7 @@ feature -- Access
 	output_value: STRING_32 is
 			-- String representation of the value of `Current'.
 			--| True
-			--| '/123/ :'C'
+			--| 97 'a'
 			--| 123
 			--| "value _string"
 			--| <0x12345678>
@@ -1075,16 +1075,14 @@ feature -- Access
 				Result := value_boolean.out
 			when Type_character then
 				create Result.make (10)
-				Result.append_character ('/')
 				Result.append_integer (value_character.code)
-				Result.append ("/ : %'")
+				Result.append (" '")
 				Result.append (Character_routines.char_text (value_character))
 				Result.append_character ('%'')
 			when Type_wide_character then
 				create Result.make (10)
-				Result.append_character ('/')
 				Result.append_string (value_wide_character.natural_32_code.out)
-				Result.append ("/ : %'")
+				Result.append (" '")
 				Result.append (Character_routines.wchar_text (value_wide_character))
 				Result.append_character ('%'')
 			when Type_natural_32 then
@@ -1134,43 +1132,62 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
+	to_minimal_hexa_representation (s: STRING): STRING is
+			-- Hexa representation of `s' representing the hexa string
+			-- from INTEGER.to_hex_string
+ 		require
+			s_not_empty: s /= Void and then s.count > 0
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > s.count or Result /= Void
+			loop
+				if s.item (i) /= '0' then
+					Result := s.substring (i, s.count)
+				end
+				i := i + 1
+			end
+			if Result = Void then
+				Result := "0"
+			end
+			Result.prepend (once "0x")
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	hexa_output_value: STRING_32 is
 			-- String representation of the value of `Current'.
 			--| True
-			--| '/123/ :'C'
+			--| 0x61 'a'
 			--| 123
 			--| "value _string"
 			--| <0x12345678>
 			--| Void
-		local
-			l_0x: STRING_32
 		do
-			l_0x := once "0x"
 			inspect type
 			when Type_character then
 				create Result.make (10)
-				Result.append_character ('/')
-				Result.append_string (l_0x)
-				Result.append_string (value_character.code.to_hex_string)
-				Result.append ("/ : %'")
+				Result.append_string (to_minimal_hexa_representation (value_character.code.to_hex_string))
+				Result.append (" '")
 				Result.append (Character_routines.char_text (value_character))
 				Result.append_character ('%'')
 			when Type_wide_character then
 				create Result.make (10)
-				Result.append_character ('/')
-				Result.append_string (l_0x)
-				Result.append_string (value_wide_character.code.to_hex_string)
-				Result.append ("/ : %'")
+				Result.append_string (to_minimal_hexa_representation (value_wide_character.code.to_hex_string))
+				Result.append (" '")
 				Result.append (Character_routines.wchar_text (value_wide_character))
 				Result.append_character ('%'')
 			when Type_natural_32 then
-				Result := l_0x + value_natural_32.to_hex_string
+				Result := to_minimal_hexa_representation (value_natural_32.to_hex_string)
 			when Type_natural_64 then
-				Result := l_0x + value_natural_64.to_hex_string
+				Result := to_minimal_hexa_representation (value_natural_64.to_hex_string)
 			when Type_integer_32 then
-				Result := l_0x + value_integer_32.to_hex_string
+				Result := to_minimal_hexa_representation (value_integer_32.to_hex_string)
 			when Type_integer_64 then
-				Result := l_0x + value_integer_64.to_hex_string
+				Result := to_minimal_hexa_representation (value_integer_64.to_hex_string)
 			else
 				Result := output_value
 			end

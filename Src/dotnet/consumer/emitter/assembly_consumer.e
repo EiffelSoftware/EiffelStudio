@@ -342,8 +342,8 @@ feature {NONE} -- Implementation
 						type := type_consumer.consumed_type
 						parent := type.parent
 						if parent /= Void then
-							l_is_value_type := parent.name.is_equal ("System.ValueType")
-							l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")
+							l_is_value_type := parent.name.is_equal (once "System.ValueType")
+							l_is_delegate := parent.name.is_equal (once "System.MulticastDelegate") or parent.name.is_equal (once "System.Delegate")
 						end
 
 							-- do not add base types in types.xml
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 							types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type, l_file_position)
 
 								-- Delete constructor of System.Object for compiler
-							if type.dotnet_name.is_equal ("System.Object") then
+							if type.dotnet_name.is_equal (once "System.Object") then
 								type.set_constructors (create {ARRAYED_LIST [CONSUMED_CONSTRUCTOR]}.make (0))
 							end
 							create s.make (destination_path.count + classes_file_name.count)

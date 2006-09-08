@@ -269,9 +269,7 @@ feature -- Basic operation
 			l_stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_button_struct_y_root (a_gdk_event).truncated_to_integer, 3)
 			l_stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_button_struct_state (a_gdk_event), 4)
 
-			if pick_and_drop_source /= Void then
-				l_pnd_item := pick_and_drop_source
-			elseif captured_widget /= Void then
+			if captured_widget /= Void then
 				l_pnd_item ?= captured_widget.implementation
 			else
 				l_gdk_window := l_stored_display_data.window

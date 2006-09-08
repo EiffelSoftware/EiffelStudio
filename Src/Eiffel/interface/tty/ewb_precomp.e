@@ -61,9 +61,9 @@ feature {NONE} -- Execution
 					process_finish_freezing (False)
 				end
 			else
-				io.error.put_string ("The project %"");
+				io.error.put_string ("There is already a project compiled in %"");
 				io.error.put_string (Eiffel_project.name);
-				io.error.put_string ("%" already exists.%N%
+				io.error.put_string ("%" %N%
 					%It needs to be deleted before a precompilation.%N");
 			end
 		end;

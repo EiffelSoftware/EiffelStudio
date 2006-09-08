@@ -107,14 +107,19 @@ feature -- Basic Oprtations
 		local
 			l_paths: LIST [STRING]
 			l_resolver: CONSUMER_AGUMENTED_RESOLVER
+			l_processed: ARRAYED_LIST [STRING]
 		do
 			is_successful := True
 			last_error_message := ""
 
 			l_paths := a_path.split (';')
+			l_paths.compare_objects
 			create l_resolver.make (l_paths)
 			l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
 			resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+
+			create l_processed.make (l_paths.count * 3)
+			l_processed.compare_objects
 
 			from
 				l_paths.start
@@ -123,7 +128,7 @@ feature -- Basic Oprtations
 			loop
 				l_resolver.add_resolve_path_from_file_name (l_paths.item)
 				assembly_loader.set_resolver (l_resolver)
-				add_assembly_to_eac (l_paths.item)
+				cache_writer.add_assembly_ex (l_paths.item, False, l_paths, l_processed)
 				assembly_loader.set_resolver (Void)
 				l_resolver.remove_resolve_path_from_file_name (l_paths.item)
 				l_paths.forth

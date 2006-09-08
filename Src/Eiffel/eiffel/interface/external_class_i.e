@@ -50,7 +50,9 @@ feature -- Access
 			l_reader := consumed_type_deserializer
 			if type_file /= Void and then (create {RAW_FILE}.make (type_file)).exists then
 				l_reader.deserialize (type_file, type_position)
-				Result ?= l_reader.deserialized_object
+				if l_reader.successful then
+					Result ?= l_reader.deserialized_object
+				end
 			end
 		end
 

@@ -60,11 +60,6 @@ feature -- Access
 
 feature -- Status report
 
-	valid_content: BOOLEAN is
-			-- Is user input valid for code generation?
-		do
-		end
-
 	is_function: BOOLEAN is True
 			-- Is `Current' a function editor?
 

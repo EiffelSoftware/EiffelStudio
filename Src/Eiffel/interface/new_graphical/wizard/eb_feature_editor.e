@@ -42,7 +42,12 @@ feature -- Status report
 
 	valid_content: BOOLEAN is
 			-- Is user input valid for code generation?
-		deferred
+		do
+			if feature_name_field /= Void then
+				Result := feature_name_field.is_valid
+			else
+				Result := True
+			end
 		end
 
 	is_procedure: BOOLEAN is
@@ -58,6 +63,27 @@ feature -- Status report
 	is_attribute: BOOLEAN is
 			-- Is `Current' an attribute editor?
 		do
+		end
+
+feature -- Error
+
+	show_error (a_parent_window: EV_WINDOW) is
+			-- Check that name class_name is a valid class name.
+			-- (export status {NONE})
+		require
+			not_valid: not valid_content
+			a_parent_window_not_void: a_parent_window /= Void
+			a_parent_window_not_destroyed: not a_parent_window.is_destroyed
+		local
+			cn: STRING_8
+			wd: EV_WARNING_DIALOG
+		do
+			check
+				field_not_void: feature_name_field /= Void
+				field_not_destroyed: not feature_name_field.is_destroyed
+			end
+			create wd.make_with_text (warning_messages.w_invalid_feature_name (feature_name_field.text))
+			wd.show_modal_to_window (a_parent_window)
 		end
 
 feature {NONE} -- Implementation

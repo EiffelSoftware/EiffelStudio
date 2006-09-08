@@ -119,11 +119,6 @@ feature -- Element change
 
 feature -- Status report
 
-	valid_content: BOOLEAN is
-			-- Is user input valid for code generation?
-		do
-		end
-
 	generate_setter_procedure: BOOLEAN is
 			-- Should a set-procedure be generated?
 		do

@@ -53,11 +53,6 @@ feature -- Access
 
 feature -- Status report
 
-	valid_content: BOOLEAN is
-			-- Is user input valid for code generation?
-		do
-		end
-
 	is_procedure: BOOLEAN is True;
 			-- Is `Current' a procedure editor?
 

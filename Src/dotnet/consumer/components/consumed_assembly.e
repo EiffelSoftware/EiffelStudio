@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			-- Set `location' with `loc'
 			-- Set `gac_path' with `gp'
 			-- Set `is_in_gac' with `a_in_gac'
+			-- set `has_info_only' with `a_info_only'
 		require
 			non_void_id: id /= Void
 			valid_id: not id.is_empty
@@ -53,6 +54,7 @@ feature {NONE} -- Initialization
 			gac_path := format_path (gp)
 			unique_id := id
 			is_in_gac := a_in_gac
+			has_info_only := True
 
 			folder_name := fn
 		ensure
@@ -65,6 +67,8 @@ feature {NONE} -- Initialization
 			gac_path_set: format_path (gp).is_equal (gac_path)
 			unique_id_set: unique_id = id
 			is_in_gac_set: is_in_gac = a_in_gac
+			has_info_only: has_info_only
+			not_is_consumed: not is_consumed
 		end
 
 feature -- Access
@@ -99,6 +103,9 @@ feature -- Access
 	is_in_gac: BOOLEAN
 			-- Indicates if assembly was consumed from GAC.
 
+	has_info_only: BOOLEAN
+			-- Indicates if only assembly info has been consumed (no types)
+
 	out: STRING is
 			-- New string containing terse printable representation
 			-- of current object
@@ -118,12 +125,18 @@ feature -- Access
 
 feature {CACHE_WRITER} -- Status Setting
 
-	set_is_consumed (a_consumed: BOOLEAN) is
+	set_is_consumed (a_consumed: BOOLEAN; a_only_info: BOOLEAN) is
 			-- Sets `is_consumed' to `a_consumed'
 		do
 			is_consumed := a_consumed
+			if a_consumed then
+				has_info_only := a_only_info
+			else
+				has_info_only := True
+			end
 		ensure
 			is_consumed_set: is_consumed = a_consumed
+			not_has_info_only: (not a_consumed implies not has_info_only) or a_consumed implies has_info_only = a_only_info
 		end
 
 	set_location (a_location: STRING) is

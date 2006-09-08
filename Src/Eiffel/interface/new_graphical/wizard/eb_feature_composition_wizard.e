@@ -242,7 +242,11 @@ feature {NONE} -- Implementation
 			-- OK button was clicked.
 		do
 			ok_clicked := True
-			hide
+			if feature_editor.valid_content then
+				hide
+			else
+				feature_editor.show_error (Current)
+			end
 		end
 
 	on_cancel is

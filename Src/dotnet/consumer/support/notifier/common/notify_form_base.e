@@ -75,6 +75,8 @@ feature -- Status Setting
 			a_message_attached: a_message /= Void
 		do
 			notify_info ({SYSTEM_STRING}.format ("Consuming assembly: {0}", a_message.assembly_path))
+		ensure
+			last_notification_set: last_notification = old notify_string
 		end
 
 	notify_info (a_message: SYSTEM_STRING) is
@@ -83,10 +85,23 @@ feature -- Status Setting
 			a_message_attached: a_message /= Void
 			not_a_message_is_empty: a_message.length > 0
 		do
+			last_notification := notify_string
 			if a_message.length > 64 then
 				notify_string := a_message.substring (0, 63)
 			else
 				notify_string := a_message
+			end
+		ensure
+			last_notification_set: last_notification = old notify_string
+		end
+
+	restore_last_notification is
+			-- Restores last message
+		do
+			if last_notification /= Void then
+				notify_info (last_notification)
+			else
+				clear_notification
 			end
 		end
 
@@ -94,6 +109,9 @@ feature -- Status Setting
 			-- Clears last notification message.
 		do
 			notify_string := "No current jobs to process."
+			last_notification := Void
+		ensure
+			last_notification_set: last_notification = Void
 		end
 
 feature -- Access
@@ -119,8 +137,13 @@ feature {NONE} -- Constants
 	tray_icon_resource_name: SYSTEM_STRING is "tray_icon"
 			-- Tray icon resource name
 
-	resource_name: SYSTEM_STRING is "consumer";
+	resource_name: SYSTEM_STRING is "consumer"
 			-- Consumer resources name
+
+feature {NONE} -- Implementation
+
+	last_notification: SYSTEM_STRING;
+			-- Last set notification
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

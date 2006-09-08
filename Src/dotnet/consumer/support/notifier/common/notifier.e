@@ -100,6 +100,12 @@ feature -- Status Setting
 			notify_form.notify_info (a_message)
 		end
 
+	restore_last_notification is
+			-- Restores last message
+		do
+			notify_form.restore_last_notification
+		end
+
 	clear_notification is
 			-- Clears last notification message.
 		require

@@ -42,11 +42,41 @@ feature -- Initialization
 			not_built: not is_built
 		local
 			l_ast: CLASS_AS
+			l_emitter: IL_EMITTER
+			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING_8]
+			l_assembly: CONF_ASSEMBLY
+			l_path: STRING
 		do
 				-- Initialize `external_class' which will be used later by
 				-- `initialize_from_xml_data', then it is discarded to save
 				-- some memory as we do not use it anymore.
 			external_class := lace_class.external_consumed_type
+			if external_class = Void and then assembly.is_partially_consumed then
+				degree_output.put_string ("   Consuming required auxiliary assembly...")
+
+					-- No class, try consume assembly
+				create l_path.make (256)
+				l_path.append (assembly.location.evaluated_path)
+				l_assemblies := universe.target.all_assemblies
+				if l_assemblies /= Void then
+						-- Note: All system assemblies are required because they are needed by the consumer
+						-- to resolve dependencies.
+					from l_assemblies.start until l_assemblies.after loop
+						l_assembly := l_assemblies.item_for_iteration
+						if not l_assembly.is_dependency then
+							l_path.append_character (';')
+							l_path.append (l_assembly.location.evaluated_path)
+						end
+						l_assemblies.forth
+					end
+					if not l_path.is_empty then
+						create l_emitter.make (system.metadata_cache_path, system.clr_runtime_version)
+						l_emitter.consume_assembly_from_path (l_path)
+						l_emitter.unload
+					end
+				end
+				external_class := lace_class.external_consumed_type
+			end
 
 			if external_class = Void then
 					-- For some reasons, the XML file could not be retried.

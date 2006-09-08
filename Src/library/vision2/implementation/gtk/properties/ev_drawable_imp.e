@@ -456,9 +456,8 @@ feature -- Drawing operations
 							-- Previous code for gtk 2.4 that set a clip area for text rendering.						
 						a_clip_area := gc_clip_area
 						set_clip_area (create {EV_RECTANGLE}.make (x, y, a_width, 10000))
-						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, -1)
+						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, 10000 * {EV_GTK_EXTERNALS}.pango_scale)
 					end
-
 				end
 
 				if a_angle /= 0 then

@@ -32,17 +32,17 @@ feature -- Status setting
 			is
 				-- Filter out duplicate events.
 			do
-				if not dawaiting_movement then
+				if not awaiting_movement then
 					orig_cursor := pointer_style
 					original_x_offset := a_x.to_integer_16
 					original_y_offset := a_y.to_integer_16
 					original_screen_x := a_screen_x.to_integer_16
 					original_screen_y := a_screen_y.to_integer_16
-					dawaiting_movement := True
+					awaiting_movement := True
 				end
 			end
 
-	dawaiting_movement: BOOLEAN
+	awaiting_movement: BOOLEAN
 	original_screen_x, original_screen_y: INTEGER_16
 
 	dragable_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -50,11 +50,11 @@ feature -- Status setting
 			--| This is executed every time the pointer is moved over
 			--| `Current' while pick/drag and drop is in process.
 		do
-			if dawaiting_movement then
+			if awaiting_movement then
 				if (original_screen_x - a_screen_x).abs > drag_and_drop_starting_movement or
 					(original_screen_y - a_screen_y).abs > drag_and_drop_starting_movement
 					then
-						dawaiting_movement := False
+						awaiting_movement := False
 						start_dragable (
 								a_x,
 								a_y,
@@ -114,7 +114,8 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Terminate the pick and drop mechanism.
 		do
-			if not dawaiting_movement then
+			awaiting_movement := False
+			if is_dock_executing then
 				disable_capture
 				App_implementation.docking_source := Void
 				if orig_cursor /= Void then
@@ -125,8 +126,9 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 				complete_dock
 				original_x_offset := -1
 				original_y_offset := -1
+				original_screen_x := -1
+				original_screen_y := -1
 			end
-			dawaiting_movement := False
 		end
 
 	enable_capture is

@@ -116,13 +116,16 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		do
 			awaiting_movement := False
 			if is_dock_executing then
-				disable_capture
-				App_implementation.docking_source := Void
+
 				if orig_cursor /= Void then
 						-- Restore the cursor style of `Current' if necessary.
-					set_pointer_style (orig_cursor)
+					internal_set_pointer_style (orig_cursor)
 					orig_cursor := Void
+				else
+					internal_set_pointer_style (default_pixmaps.standard_cursor)
 				end
+				disable_capture
+				App_implementation.docking_source := Void
 				complete_dock
 				original_x_offset := -1
 				original_y_offset := -1
@@ -142,6 +145,11 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		end
 
 	set_pointer_style (a_cursor: EV_POINTER_STYLE) is
+			-- Assign `a_cursor' to `pointer_style'
+		deferred
+		end
+
+	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE) is
 			-- Assign `a_cursor' to `pointer_style'
 		deferred
 		end

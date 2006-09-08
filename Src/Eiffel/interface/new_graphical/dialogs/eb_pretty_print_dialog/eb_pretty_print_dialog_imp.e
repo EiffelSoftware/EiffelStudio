@@ -41,6 +41,7 @@ feature {NONE}-- Initialization
 			create auto_set_slice_button
 			create l_ev_tool_bar_separator_2
 			create word_wrap_button
+			create copy_button
 			create editor
 			create l_ev_cell_1
 			create l_ev_horizontal_box_2
@@ -61,6 +62,7 @@ feature {NONE}-- Initialization
 			l_ev_tool_bar_1.extend (auto_set_slice_button)
 			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_2)
 			l_ev_tool_bar_1.extend (word_wrap_button)
+			l_ev_tool_bar_1.extend (copy_button)
 			l_ev_vertical_box_1.extend (editor)
 			l_ev_vertical_box_1.extend (l_ev_cell_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
@@ -84,6 +86,7 @@ feature {NONE}-- Initialization
 			set_slice_button.set_tooltip ("Set Slice Values")
 			auto_set_slice_button.set_tooltip ("Display Complete Object")
 			word_wrap_button.set_tooltip ("Enable Word Wrapping")
+			copy_button.set_tooltip ("Copy Text To Clipboard")
 			l_ev_cell_1.set_minimum_height (small_padding)
 			l_ev_horizontal_box_2.disable_item_expand (close_button)
 			close_button.set_text (close_string)
@@ -96,6 +99,7 @@ feature {NONE}-- Initialization
 			set_slice_button.select_actions.extend (agent set_slice_selected)
 			auto_set_slice_button.select_actions.extend (agent auto_slice_selected)
 			word_wrap_button.select_actions.extend (agent word_wrap_toggled)
+			copy_button.select_actions.extend (agent copy_button_selected)
 			close_button.select_actions.extend (agent close_action)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -114,7 +118,7 @@ feature -- Basic operation
 
 feature -- Access
 
-	set_slice_button, auto_set_slice_button: EV_TOOL_BAR_BUTTON
+	copy_button, set_slice_button, auto_set_slice_button: EV_TOOL_BAR_BUTTON
 	editor: EV_RICH_TEXT
 	word_wrap_button: EV_TOOL_BAR_TOGGLE_BUTTON
 	lower_slice_field,
@@ -168,6 +172,11 @@ feature {NONE} -- Implementation
 	
 	word_wrap_toggled is
 			-- Called by `select_actions' of `word_wrap_button'.
+		deferred
+		end
+
+	copy_button_selected is
+			-- Called by `select_actions' of `copy_button'.
 		deferred
 		end
 	

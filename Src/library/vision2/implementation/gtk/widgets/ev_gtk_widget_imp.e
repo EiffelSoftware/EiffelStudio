@@ -114,14 +114,14 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	width_request_string: EV_GTK_C_STRING is
 			-- Once string to pass to gtk.
-		do
-			Result := once "width-request"
+		once
+			Result := "width-request"
 		end
 
 	height_request_string: EV_GTK_C_STRING is
 			-- Once string to pass to gtk.
-		do
-			Result := once "height-request"
+		once
+			Result := "height-request"
 		end
 
 	minimum_width, real_minimum_width: INTEGER is

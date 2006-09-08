@@ -42,12 +42,12 @@ feature -- Access
 		end
 
 	pixmap: EV_PIXMAP is
-			-- Pixmap on which can be displayed a picture which 
+			-- Pixmap on which can be displayed a picture which
 			-- goes with the state.
 		do
 			Result := pixmap_cell.item
 		end
-		
+
 	pixmap_icon: EV_PIXMAP is
 			-- Pixmap for the small icon of the wizard
 		do
@@ -71,7 +71,7 @@ feature -- Element change
 			-- Set the main Window (i.e. the wizard window frame) to `a_wizard_window'
 		do
 			first_window_cell.put (Void)
-		ensure	
+		ensure
 			no_first_window: first_window = Void
 		end
 
@@ -134,7 +134,7 @@ feature -- Colors
 			Result.preferred_families.extend ("Verdana")
 			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")
-			Result.set_height (16)
+			Result.set_height_in_points (Result.height_in_points + 3)
 		end
 
 	Interior_title_font: EV_FONT is
@@ -147,7 +147,6 @@ feature -- Colors
 			Result.preferred_families.extend ("Tahoma")
 			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")
-			Result.set_height (11)
 		end
 
 	Interior_font: EV_FONT is
@@ -160,7 +159,6 @@ feature -- Colors
 			Result.preferred_families.extend ("Tahoma")
 			Result.preferred_families.extend ("Arial")
 			Result.preferred_families.extend ("Helvetica")
-			Result.set_height (11)
 		end
 
 	Title_border_width: INTEGER is
@@ -169,7 +167,7 @@ feature -- Colors
 			Result := dialog_unit_to_pixels (22)
 		end
 
-	Title_right_border_width: INTEGER is 
+	Title_right_border_width: INTEGER is
 			-- Border on the right of the title
 		do
 			Result := dialog_unit_to_pixels (5)
@@ -180,7 +178,7 @@ feature -- Colors
 		do
 			Result := dialog_unit_to_pixels (20)
 		end
-	
+
 	Interior_border_width: INTEGER is
 			-- Border on the left of the text in the core of the wizard.
 		do
@@ -196,7 +194,7 @@ feature {NONE} -- Implementation
 		end
 
 	pixmap_cell: CELL [EV_PIXMAP] is
-			-- Pixmap on which can be displayed a picture which 
+			-- Pixmap on which can be displayed a picture which
 			-- goes with the state.
 		once
 			create Result.put (Void)

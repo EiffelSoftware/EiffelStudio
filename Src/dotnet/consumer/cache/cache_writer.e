@@ -256,7 +256,6 @@ feature -- Basic Operations
 						l_assembly := l_old_assembly
 					end
 					l_consumer.consume (l_assembly, assembly_loader, a_info_only)
-					notifier.clear_notification
 
 					if not l_consumer.successful then
 						set_error (Consume_error, a_path)
@@ -271,7 +270,8 @@ feature -- Basic Operations
 				end
 
 				if l_consumer.successful then
-					{SYSTEM_DLL_TRACE}.write_line_string ("Processing assembly dependencies.")
+					{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Processing assembly dependencies...%N%NAssembly: {0}.", a_path))
+					notifier.notify_info ("Synchronizing cache...")
 
 					l_names := l_assembly.get_referenced_assemblies
 					from
@@ -289,10 +289,13 @@ feature -- Basic Operations
 						i := i + 1
 					end
 					if l_assembly_info_updated then
+						notifier.notify_info ({SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.eiffel_assembly_cache_path))
 						update_assembly_mappings (l_ca)
 						update_client_assembly_mappings (l_ca)
 					end
 				end
+				
+				notifier.clear_notification
 			else
 				{SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to consume assembly '{0}'.", a_path))
 

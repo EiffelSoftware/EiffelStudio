@@ -53,7 +53,7 @@ feature -- Defaults
 		once
 			create Result
 			Result.set_family (family_typewriter)
-			Result.set_height (20)
+			Result.set_height_in_points (Result.height_in_points + 5)
 			Result.set_weight (weight_bold)
 		end
 

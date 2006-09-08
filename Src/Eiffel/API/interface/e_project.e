@@ -251,15 +251,6 @@ feature -- Access
 				Comp_system.freezing_occurred
 		end
 
-	is_final_code_optimal: BOOLEAN is
-			-- Will the final code generate be optimal?
-			-- (if not, more optimal code is generated from
-			-- a new project and do not use precompilation).
-		do
-			Result := not workbench.system_defined or else
-				(not comp_system.poofter_finalization or comp_system.il_generation)
-		end
-
 	is_new: BOOLEAN is
 			-- Is the Current Project new?
 		local
@@ -580,9 +571,6 @@ feature -- Update
 
 			melt
 				-- Add warning for non-optimal finalization.
-			if not is_final_code_optimal then
-				error_handler.insert_warning (create {FINALIZATION_WARNING})
-			end
 			if successful then
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)

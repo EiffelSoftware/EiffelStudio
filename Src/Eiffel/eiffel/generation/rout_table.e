@@ -86,16 +86,10 @@ feature -- Status report
 				old_position := position
 				system_i := System
 
-					-- If it is not a poofter finalization
-					-- we have a quicker algorithm handy.
-				if not system_i.poofter_finalization then
-						-- Go to the entry of type id greater or equal than `type_id':
-						-- note that deferred feature have no entries in the tables
-					goto_used (type_id)
-					i := position
-				else
-					i := lower
-				end
+					-- Go to the entry of type id greater or equal than `type_id':
+					-- note that deferred feature have no entries in the tables
+				goto_used (type_id)
+				i := position
 
 					-- We never compute the value for this entry, so we need to do it
 				from
@@ -207,12 +201,8 @@ feature -- Code generation
 			system_i: like system
 		do
 			system_i := system
-			if not system_i.poofter_finalization then
-				goto_used (type_id)
-				i := position
-			else
-				i := lower
-			end
+			goto_used (type_id)
+			i := position
 			from
 				first_type := system_i.class_type_of_id (type_id)
 				nb := max_position

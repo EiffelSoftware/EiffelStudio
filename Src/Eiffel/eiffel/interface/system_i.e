@@ -241,13 +241,6 @@ feature -- Properties
 			-- Is it the first compilation of the system
 			-- using a precompiled library?
 
-	poofter_finalization: BOOLEAN
-			-- Will the next finalization be a poofter finalization?
-			-- i.e. not straight.
-			-- If it is not a poofter finalization we know how to
-			-- generate the routine tables much quicker (see classes
-			-- ATTR_TABLE and ROUT_TABLE)
-
 	new_class: BOOLEAN
 			-- Has a new class been inserted in the universe ?
 			-- It is different from moved because new_class is set
@@ -828,6 +821,8 @@ end
 		require
 			good_argument: class_type /= Void
 			index_big_enough: class_type.type_id > 0
+			no_class_type_present: class_types.valid_index (class_type.type_id) implies
+				class_types.item (class_type.type_id) = Void
 		local
 			type_id: INTEGER
 		do
@@ -1552,16 +1547,6 @@ feature -- Recompilation
 				-- The `new_classes' list is not used after the time
 				-- check. If it was successful, the list can be wiped out.
 			new_classes.wipe_out
-
-				-- If the finalization is still believed to
-				-- be straight at this point we need to pervert it
-				-- into being a poofter once and for all if if is not
-				-- the first compilation and if there are actual classes
-				-- to be parsed.
-			if not poofter_finalization then
-				poofter_finalization := not (first_compilation or else
-					Degree_5.is_empty)
-			end
 
 				-- Syntax analysis: This maybe add new classes to
 				-- the system (degree 5)
@@ -3573,7 +3558,8 @@ feature -- Generation
 			class_list: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			types: TYPE_LIST
-			i, nb: INTEGER
+			l_max_type_id, l_type_id, i, nb: INTEGER
+			l_class_is_finalized: BOOLEAN
 		do
 			if is_restoring then
 					-- Restore modified types.
@@ -3593,12 +3579,15 @@ feature -- Generation
 						until
 							types.after
 						loop
+							l_type_id := a_backup [types.item.static_type_id]
+							l_max_type_id := l_max_type_id.max (l_type_id)
 							reset_type_id (types.item, a_backup [types.item.static_type_id])
 							types.forth
 						end
 					end
 					i := i + 1
 				end
+				type_id_counter.set_value (l_max_type_id)
 			else
 					-- We simply take types in their topological order from CLASS_C.topological_id
 					-- and then traverse the list and reset the dynamic type id.
@@ -3625,14 +3614,23 @@ feature -- Generation
 					i > nb
 				loop
 						-- Types of the class
-					types := class_list.item (i).types
+					a_class := class_list.item (i)
+					types := a_class.types
+					l_class_is_finalized := not a_class.is_precompiled or else a_class.is_in_system
 					from
 						types.start
 					until
 						types.after
 					loop
 						a_backup [types.item.static_type_id] := types.item.type_id
-						reset_type_id (types.item, type_id_counter.next)
+						if l_class_is_finalized then
+								-- Only update `type_id' for types of classes which are really
+								-- part of the system for a finalization. Classes that are not
+								-- part of the system are not in `class_types' anymore and this
+								-- is why we don't bother updating their `type_id'. It will be
+								-- properly restored when `is_restoring' is True.
+							reset_type_id (types.item, type_id_counter.next)
+						end
 						types.forth
 					end
 					i := i + 1

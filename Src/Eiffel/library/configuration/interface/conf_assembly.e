@@ -113,6 +113,12 @@ feature -- Status
 	is_non_local_assembly: BOOLEAN
 			-- Was this assembly only specified by gac information (i.e. no location was set)?
 
+	is_partially_consumed: BOOLEAN
+			-- Indicates if assembly is only partially consumed
+
+	is_dependency: BOOLEAN
+			-- Indiciates if assembly is a dependency
+
 feature -- Access, stored in configuration file if location is empty
 
 	location: CONF_FILE_LOCATION
@@ -354,6 +360,24 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			end
 			Precursor (a_condition)
 			initialize_conditions
+		end
+
+	set_is_partially_consumed (b: like is_partially_consumed) is
+			-- Set `is_partially_consumed' to `b'
+		do
+			is_partially_consumed := b
+		ensure
+			is_partially_consumed_set: is_partially_consumed = b
+		end
+
+feature {CONF_ACCESS, EXTERNAL_CLASS_C} -- Update, stored in configuration file
+
+	set_is_dependency (b: like is_dependency) is
+			-- Set `is_dependency' with `set_is_dependency'
+		do
+			is_dependency := b
+		ensure
+			is_dependency_set: is_dependency = b
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only

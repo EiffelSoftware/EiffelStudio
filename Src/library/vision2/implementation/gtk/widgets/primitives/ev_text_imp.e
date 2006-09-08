@@ -135,7 +135,6 @@ feature -- Status report
 		local
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 			a_selected: BOOLEAN
-			a_start_offset, a_end_offset: INTEGER_32
 			l_char: POINTER
 		do
 			create a_start_iter.make

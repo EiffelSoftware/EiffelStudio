@@ -140,6 +140,14 @@ feature -- Status report
 			Result := has_option (output_switch)
 		end
 
+	wait_for_user_interaction: BOOLEAN is
+			-- Inidicate if user interaction is required before exiting
+		require
+			successful: successful
+		once
+			Result := has_option (halt_switch)
+		end
+
 feature {NONE} -- Usage
 
 	name: STRING = "Eiffel Assembly Metadata %"Consumer%""
@@ -156,24 +164,26 @@ feature {NONE} -- Usage
 			-- (export status {NONE})
 		once
 			create Result.make (3)
-			Result.extend (create {ARGUMENT_ASSEMBLY_SWITCH}.make (add_switch, "Adds a specified assemblies to the cache.", False, False, loose_argument_name, loose_argument_description, False))
+			Result.extend (create {ARGUMENT_ASSEMBLY_SWITCH}.make (add_switch, "Adds a specified assemblies to the cache.", False, True, loose_argument_name, loose_argument_description, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (info_only_switch, "Forces consumer to ignore all types in added assemblies.", True, False))
 			Result.extend (create {ARGUMENT_ASSEMBLY_SWITCH}.make (remove_switch, "Remove all specified assemblies from the cache.", False, False, loose_argument_name, loose_argument_description, False))
-			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (reference_switch, "Add a lookup reference path for dependency resolution.", True, False, "path", "A location on disk", False))
+			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (reference_switch, "Add a lookup reference path for dependency resolution.", True, True, "path", "A location on disk", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_switch, "Lists the content of the cache.", False, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Display verbose output.", True, False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (output_switch, "Location of Eiffel assembly cache to perform operations on.", True, False, "cache", "A location of an Eiffel assembly cache", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Cleans and compacts an Eiffel cache.", False, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make_hidden (halt_switch, "Waits for user to press enter before exiting.", True, False))
+
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
 			-- Valid switch grouping
 		once
-			create Result.make (5)
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (add_switch), switch_of_name (info_only_switch), switch_of_name (reference_switch), switch_of_name (output_switch), switch_of_name (verbose_switch)>>, False))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (remove_switch), switch_of_name (output_switch)>>, False))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_switch), switch_of_name (output_switch), switch_of_name (verbose_switch)>>, False))
-			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (clean_switch), switch_of_name (output_switch)>>, False))
+			create Result.make (4)
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (add_switch), switch_of_name (info_only_switch), switch_of_name (reference_switch), switch_of_name (output_switch), switch_of_name (verbose_switch), switch_of_name (halt_switch)>>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (remove_switch), switch_of_name (output_switch), switch_of_name (halt_switch)>>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (list_switch), switch_of_name (output_switch), switch_of_name (verbose_switch), switch_of_name (halt_switch)>>, False))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (clean_switch), switch_of_name (output_switch), switch_of_name (halt_switch)>>, False))
 		end
 
 feature {NONE} -- Switches
@@ -186,6 +196,7 @@ feature {NONE} -- Switches
 	verbose_switch: STRING = "v"
 	output_switch: STRING = "o"
 	clean_switch: STRING = "c"
+	halt_switch: STRING = "halt"
 			-- Switch names
 
 	loose_argument_name: STRING = "assembly"

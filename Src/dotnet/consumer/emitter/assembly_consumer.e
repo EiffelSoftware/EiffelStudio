@@ -76,12 +76,8 @@ feature -- Basic Operations
 			assembly_mapping.put (last_index, ass.full_name)
 			assembly_mapping.compare_objects
 			build_referenced_assemblies (ass, a_loader)
-			if a_info_only then
-				create type_consumers.make (0)
-			else
-				prepare_consumed_types (ass)
-			end
-			serialize_consumed_types
+			prepare_consumed_types (ass, a_info_only)
+			serialize_consumed_types (a_info_only)
 		end
 
 feature -- Access
@@ -174,7 +170,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	prepare_consumed_types (ass: ASSEMBLY) is
+	prepare_consumed_types (ass: ASSEMBLY; a_info_only: BOOLEAN) is
 			-- Build `consumed_types'.
 		require
 			non_void_assembly: ass /= Void
@@ -276,7 +272,12 @@ feature {NONE} -- Implementation
 					list.after
 				loop
 					type_name := list.item
-					create type_consumer.make (type_name.internal_type, type_name.eiffel_name)
+					if a_info_only then
+						create {TYPE_INFO_ONLY_CONSUMER}type_consumer.make (type_name.internal_type, type_name.eiffel_name)
+					else
+						create type_consumer.make (type_name.internal_type, type_name.eiffel_name)
+					end
+
 					type_consumers.put (type_consumer, type_name.eiffel_name)
 					if status_printer /= Void then
 						l_string_tuple.put ("Analyzed " +
@@ -297,7 +298,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	serialize_consumed_types is
+	serialize_consumed_types (a_info_only: BOOLEAN) is
 			-- Build `consumed_types'.
 		local
 			type_consumer: TYPE_CONSUMER
@@ -327,48 +328,59 @@ feature {NONE} -- Implementation
 			loop
 				type_consumer := type_consumers.item_for_iteration
 				type_consumers.remove (type_consumers.key_for_iteration)
-				type_consumer.initialize
-				if not type_consumer.initialized then
-						-- An error occured during the initialization of type.
-						-- Notice the problem on this specific type and try the next type.
-					if type_consumer.consumed_type.dotnet_name /= Void then
-						set_error (Type_initialization_error, "One of the features of " + type_consumer.consumed_type.dotnet_name +" is invalid.")
+				if not a_info_only then
+					type_consumer.initialize
+					if not type_consumer.initialized then
+							-- An error occured during the initialization of type.
+							-- Notice the problem on this specific type and try the next type.
+						if type_consumer.consumed_type.dotnet_name /= Void then
+							set_error (Type_initialization_error, "One of the features of " + type_consumer.consumed_type.dotnet_name +" is invalid.")
+						else
+							set_error (Type_initialization_error, "")
+						end
 					else
-						set_error (Type_initialization_error, "")
+						type := type_consumer.consumed_type
+						parent := type.parent
+						if parent /= Void then
+							l_is_value_type := parent.name.is_equal ("System.ValueType")
+							l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")
+						end
+
+							-- do not add base types in types.xml
+						if not is_base_type (type.dotnet_name) then
+							types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type, l_file_position)
+
+								-- Delete constructor of System.Object for compiler
+							if type.dotnet_name.is_equal ("System.Object") then
+								type.set_constructors (create {ARRAYED_LIST [CONSUMED_CONSTRUCTOR]}.make (0))
+							end
+							create s.make (destination_path.count + classes_file_name.count)
+							s.append (destination_path)
+							s.append (classes_file_name)
+
+							serializer.serialize (type, s, True)
+							l_file_position := serializer.last_file_position
+							if not serializer.successful and error_printer /= Void then
+								set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
+								l_string_tuple.put (error_message, 1)
+								error_printer.call (l_string_tuple)
+							else
+								if status_printer /= Void then
+									l_string_tuple.put ("Written " + s, 1)
+									status_printer.call (l_string_tuple)
+								end
+								if status_querier /= Void then
+									status_querier.call (l_empty_tuple)
+									done := status_querier.last_result
+								end
+							end
+						end
 					end
 				else
+						-- Consume only info
 					type := type_consumer.consumed_type
-					parent := type.parent
-					if parent /= Void then
-						l_is_value_type := parent.name.is_equal ("System.ValueType")
-						l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")
-					end
-						-- do not add base types in types.xml
 					if not is_base_type (type.dotnet_name) then
-							-- Delete constructor of System.Object for compiler
-						if type.dotnet_name.is_equal ("System.Object") then
-							type.set_constructors (create {ARRAYED_LIST [CONSUMED_CONSTRUCTOR]}.make (0))
-						end
-						create s.make (destination_path.count + classes_file_name.count)
-						s.append (destination_path)
-						s.append (classes_file_name)
-						types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type, l_file_position)
-						serializer.serialize (type, s, True)
-						l_file_position := serializer.last_file_position
-						if not serializer.successful and error_printer /= Void then
-							set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
-							l_string_tuple.put (error_message, 1)
-							error_printer.call (l_string_tuple)
-						else
-							if status_printer /= Void then
-								l_string_tuple.put ("Written " + s, 1)
-								status_printer.call (l_string_tuple)
-							end
-							if status_querier /= Void then
-								status_querier.call (l_empty_tuple)
-								done := status_querier.last_result
-							end
-						end
+						types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, False, False, 0)
 					end
 				end
 			end

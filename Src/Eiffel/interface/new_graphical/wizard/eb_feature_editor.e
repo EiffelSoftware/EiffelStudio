@@ -75,7 +75,6 @@ feature -- Error
 			a_parent_window_not_void: a_parent_window /= Void
 			a_parent_window_not_destroyed: not a_parent_window.is_destroyed
 		local
-			cn: STRING_8
 			wd: EV_WARNING_DIALOG
 		do
 			check

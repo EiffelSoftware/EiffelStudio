@@ -40,7 +40,6 @@ feature
 			-- Is the table polymorphic from entry indexed by `type_id' to
 			-- the maximum entry id ?
 		local
-			current_type_id: INTEGER;
 			entry: ATTR_ENTRY;
 			cl_type: CLASS_TYPE;
 			first_type: CLASS_TYPE
@@ -114,7 +113,7 @@ feature
 				if i = entry.type_id then
 					l_class_type := System.class_type_of_id (entry.type_id)
 					if l_attr_offset = Void then
-						l_buf.clear_all 
+						l_buf.clear_all
 							--| In this instruction, we put `True' as second arguments.
 							--| This means we will generate something if there is nothing to
 							--| generate (ie `0'). Remember that `False' is used in all other case

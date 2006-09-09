@@ -40,19 +40,31 @@ feature -- Access
 
 	text (a_item: EB_GRID_FEATURE_ITEM): LIST [EDITOR_TOKEN] is
 			-- Text of current style for `a_item'
+		local
+			l_ql_feature: QL_FEATURE
+			l_e_feature: E_FEATURE
+			l_writer: like token_writer
+			l_constant_as: CONSTANT_AS
 		do
-			token_writer.new_line
-			if a_item.associated_feature.is_real_feature then
+			l_writer := token_writer
+			l_writer.new_line
+			l_ql_feature := a_item.associated_feature
+			if l_ql_feature.is_real_feature then
+				l_e_feature := l_ql_feature.e_feature
 				if is_overload_name_used and then a_item.overload_name /= Void then
-					token_writer.process_feature_text (a_item.overload_name, a_item.associated_feature.e_feature, False)
-					a_item.associated_feature.e_feature.append_just_signature (token_writer)
+					l_writer.process_feature_text (a_item.overload_name, l_e_feature, False)
+					l_e_feature.append_just_signature (l_writer)
 				else
-					a_item.associated_feature.e_feature.append_signature (token_writer)
+					l_e_feature.append_signature (l_writer)
+					if l_e_feature.is_constant then
+						l_constant_as ?= l_e_feature.ast.body.content
+						l_constant_as.process (output_strategy (l_ql_feature.class_c))
+					end
 				end
 			else
-				token_writer.add (a_item.associated_feature.name)
+				l_writer.add (l_ql_feature.name)
 			end
-			Result := token_writer.last_line.content
+			Result := l_writer.last_line.content
 		end
 
 feature{NONE} -- Implementation
@@ -70,6 +82,16 @@ feature{NONE} -- Implementation
 				a_item.set_general_tooltip (l_tooltip)
 				a_item.general_tooltip.veto_tooltip_display_functions.extend (agent a_item.should_tooltip_be_displayed)
 			end
+		end
+
+	output_strategy (a_class: CLASS_C): AST_DECORATED_OUTPUT_STRATEGY is
+			-- Outputer used to print constant values.
+		require
+			a_class_c_attached: a_class /= Void
+		do
+			create Result.make (create {FEAT_TEXT_FORMATTER_DECORATOR}.make (a_class, token_writer))
+		ensure
+			result_attached: Result /= Void
 		end
 
 indexing

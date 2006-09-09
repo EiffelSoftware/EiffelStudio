@@ -23,6 +23,8 @@ feature -- Access
 			system_defined: Workbench.system_defined
 		once
 			Result := Workbench.system
+		ensure
+			system_not_void: Result /= Void
 		end
 
 	Universe: UNIVERSE_I is
@@ -31,6 +33,8 @@ feature -- Access
 			universe_defined: workbench.universe_defined
 		once
 			Result := Workbench.universe
+		ensure
+			universe_not_void: Result /= Void
 		end
 
 	Lace: LACE_I is

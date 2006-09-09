@@ -179,7 +179,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 				vuex.set_location (l_as.feature_name)
 				error_handler.insert_error (vuex)
 			elseif constant_i /= Void and then
-				type.same_as (constant_i.type) or (not constant_i.type.is_enum and then not type.is_enum and then constant_i.value.valid_type (type))
+				(type.same_as (constant_i.type) or (not constant_i.type.is_enum and then not type.is_enum and then constant_i.value.valid_type (type)))
 			then
 					-- Record dependencies
 				context.supplier_ids.extend (create {DEPEND_UNIT}.make (class_c.class_id, constant_i))

@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			a_min_less_than_max: a_min < a_max
 		do
 			make_with_range (a_name, a_desc, a_optional, a_allow_mutliple, a_arg_name, a_arg_desc, a_val_optional, a_min, a_max)
-			hidden := True
+			is_hidden := True
 		ensure
 			name_set: name = a_name
 			description_set: description = a_desc
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			allow_multiple_set: allow_multiple = a_allow_mutliple
 			min_set: min = a_min
 			max_set: max = a_max
-			hidden: hidden
+			is_hidden: is_hidden
 		end
 
 feature -- Access

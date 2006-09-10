@@ -32,9 +32,8 @@
 		<heading><size>2</size>.NET Support</heading>
 			<paragraph>To enable .NET support in EiffelStudio, it is necessary to install the Microsoft .NET Framework prior to starting the installation of EiffelStudio. EiffelStudio currently supports versions 1.0 and 1.1 of the .NET Framework. Partial support for the .NET Framework 2.0 beta has been added in this version of EiffelStudio.</paragraph>
 
-		<heading><size>2</size>What about Windows 95/98 and Me?</heading>
-			<paragraph>EiffelStudio will not run on Windows 95.<line_break></line_break>EiffelStudio will run on Windows 98 and Windows Me.
-			<line_break></line_break>EiffelStudio generated code runs on Windows 98/Me/NT/2000/XP and 2003.</paragraph>
+		<heading><size>2</size>What about Windows 95, 98 and Me?</heading>
+		<paragraph>EiffelStudio will not run on Windows 95, 98 and Me. Contact Eiffel Software directly if you need support for those OSes. EiffelStudio generated code could run on 95, 98 and Me if no UI is being used. If the UI is used it could run but it requires installing the Microsoft Layer for Unicode.</paragraph>
 
 		<heading><size>2</size>Starting EiffelStudio</heading>
 		<paragraph>Now everything should be properly installed and you should be able to run the compiler. You can now launch EiffelStudio from the Start menu or from the EiffelStudio shortcut on your desktop. If you are a new user to EiffelStudio, we recommend that you follow <link><url>../../general/guided_tour/studio/index.xml</url><label>the guided tour</label></link>.</paragraph>

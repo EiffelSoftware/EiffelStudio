@@ -91,6 +91,7 @@ feature -- Execution
 					init_feature_context (source_feat, target_feat, f_ast);
 
 					indent;
+					put_new_line
 					ast_output_strategy.format (f_ast)
 					if ast_output_strategy.has_error then
 						put_new_line

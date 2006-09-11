@@ -187,87 +187,89 @@ feature {NONE} -- Click ast exploration
 			class_name: STRING
 			has_parents: BOOLEAN
 		do
-			initialize_context
-			if current_class_i /= Void then
-				parents := current_class_as.parents
-				has_parents := parents /= Void
-				if has_parents then
-					create inherit_clauses.make (1, parents.count + 1)
-					from
-						parents.start
-						i := 1
-					until
-						parents.after
-					loop
-						inherit_clauses.put (parents.item.start_position, i)
-						parents.forth
-						i := i + 1
+			if is_ok_for_completion then
+				initialize_context
+				if current_class_i /= Void then
+					parents := current_class_as.parents
+					has_parents := parents /= Void
+					if has_parents then
+						create inherit_clauses.make (1, parents.count + 1)
+						from
+							parents.start
+							i := 1
+						until
+							parents.after
+						loop
+							inherit_clauses.put (parents.item.start_position, i)
+							parents.forth
+							i := i + 1
+						end
+						inherit_clauses.put (current_class_as.inherit_clause_insert_position, i)
+						inherit_clauses.sort
 					end
-					inherit_clauses.put (current_class_as.inherit_clause_insert_position, i)
-					inherit_clauses.sort
-				end
-				ast_list := current_class_as.click_list
-				if ast_list /= Void then
-					c := ast_list.count
-					create prov_list.make
-					from
-						pos := 1
-					until
-						pos > c
-					loop
-						a_click_ast := ast_list.i_th (pos)
-						clickable := a_click_ast.node
-						if clickable.is_class or else clickable.is_precursor then
-							a_class := clickable_info.associated_eiffel_class (current_class_i, clickable)
-							if a_class /= Void then
-								create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
-								clickable_position.set_class (a_class.name)
-								prov_list.extend (clickable_position)
-							end
-						elseif clickable.is_feature then
-							f_name ?= clickable
-							class_name := Void
-							if f_name /= Void and has_parents then
-								pos_in_txt := a_click_ast.start_position
-								if pos_in_txt < inherit_clauses @ i then
-									from
-										j := 1
-									until
-										j = i or else pos_in_txt < inherit_clauses @ j
-									loop
-										j := j + 1
-									end
-									if j /= 1 and then pos_in_txt < inherit_clauses @ j then
-										a_class := clickable_info.
-											associated_eiffel_class (current_class_i, parents.i_th (j - 1).type)
-										if a_class /= Void then
-											class_name := a_class.name
-										else
-											class_name := Void
+					ast_list := current_class_as.click_list
+					if ast_list /= Void then
+						c := ast_list.count
+						create prov_list.make
+						from
+							pos := 1
+						until
+							pos > c
+						loop
+							a_click_ast := ast_list.i_th (pos)
+							clickable := a_click_ast.node
+							if clickable.is_class or else clickable.is_precursor then
+								a_class := clickable_info.associated_eiffel_class (current_class_i, clickable)
+								if a_class /= Void then
+									create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
+									clickable_position.set_class (a_class.name)
+									prov_list.extend (clickable_position)
+								end
+							elseif clickable.is_feature then
+								f_name ?= clickable
+								class_name := Void
+								if f_name /= Void and has_parents then
+									pos_in_txt := a_click_ast.start_position
+									if pos_in_txt < inherit_clauses @ i then
+										from
+											j := 1
+										until
+											j = i or else pos_in_txt < inherit_clauses @ j
+										loop
+											j := j + 1
+										end
+										if j /= 1 and then pos_in_txt < inherit_clauses @ j then
+											a_class := clickable_info.
+												associated_eiffel_class (current_class_i, parents.i_th (j - 1).type)
+											if a_class /= Void then
+												class_name := a_class.name
+											else
+												class_name := Void
+											end
 										end
 									end
 								end
+								if class_name = Void then
+									class_name := current_class_i.name
+								end
+								create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
+								clickable_position.set_feature (class_name, clickable.feature_name)
+								prov_list.extend (clickable_position)
 							end
-							if class_name = Void then
-								class_name := current_class_i.name
-							end
-							create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
-							clickable_position.set_feature (class_name, clickable.feature_name)
-							prov_list.extend (clickable_position)
+							pos := pos + 1
 						end
-						pos := pos + 1
 					end
-				end
-				create clickable_position_list.make (1, prov_list.count)
-				from
-					prov_list.start
-					pos := 1
-				until
-					prov_list.after
-				loop
-					clickable_position_list.put (prov_list.item, pos)
-					pos := pos + 1
-					prov_list.forth
+					create clickable_position_list.make (1, prov_list.count)
+					from
+						prov_list.start
+						pos := 1
+					until
+						prov_list.after
+					loop
+						clickable_position_list.put (prov_list.item, pos)
+						pos := pos + 1
+						prov_list.forth
+					end
 				end
 			end
 		end
@@ -363,19 +365,21 @@ feature {NONE}-- Clickable/Editable implementation
 			line_not_void: line /= Void
 			token_in_line: line.has_token (token)
 		do
-			initialize_context
-			if current_class_c /= Void then
-				if not token_image_is_in_array (token, unwanted_symbols) then
-					current_feature_as := ft
-					current_token := token
-					searched_token := token
-					current_line := line
-					searched_line := line
-					error := False
-					find_expression_start
-					if not error then
-						last_was_constrained := False
-						Result := searched_feature
+			if is_ok_for_completion then
+				initialize_context
+				if current_class_c /= Void then
+					if not token_image_is_in_array (token, unwanted_symbols) then
+						current_feature_as := ft
+						current_token := token
+						searched_token := token
+						current_line := line
+						searched_line := line
+						error := False
+						find_expression_start
+						if not error then
+							last_was_constrained := False
+							Result := searched_feature
+						end
 					end
 				end
 			end
@@ -1543,12 +1547,19 @@ feature {NONE}-- Implementation
 
 feature {NONE} -- Implementation
 
+	is_ok_for_completion: BOOLEAN is
+			-- Can we perform completion?
+		do
+			Result := group /= Void and then group.is_valid
+			if Result then
+				Result := not workbench.is_compiling or else workbench.last_reached_degree < 6
+			end
+		end
+
 	initialize_context is
 			-- Initialize `current_class_i'.
 		require
-			group_is_not_void: group /= Void
-			group_is_valid: group.is_valid
-			workbench_is_not_compiling: not workbench.is_compiling or else workbench.last_reached_degree < 6
+			is_ok_for_completion: is_ok_for_completion
 		local
 			class_c: CLASS_C
 			l_classi: CLASS_I

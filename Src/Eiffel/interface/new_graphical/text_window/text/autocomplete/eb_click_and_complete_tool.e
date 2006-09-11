@@ -38,7 +38,7 @@ feature -- Initialization
 			content := a_content
 			is_ready := False
 			can_analyze_current_class := False
-			if not Workbench.is_compiling then
+			if is_ok_for_completion then
 				initialize_context
 				if current_class_c /= Void then
 					generate_ast (current_class_c, after_save)
@@ -195,36 +195,38 @@ feature -- Basic Operations
 			token		: EDITOR_TOKEN
 			line		: EIFFEL_EDITOR_LINE
 		do
-			initialize_context
-			if current_class_i /= Void then
-				token := cursor.token
-				line ?= cursor.line
-				a_position := token.pos_in_text
-				Result := stone_in_click_ast (a_position)
-				if Result = Void or else token_image_is_same_as_word (token, "precursor") then
-					if a_position >= invariant_index then
-						feat := described_feature (token, line, Void)
-					elseif click_possible (token) then
-						ft := feature_containing (token, line)
-						if ft /= Void then
-							inspect
-								feature_part_at (token, line)
-							when instruction_part then
-								feat := described_feature (token, line, ft)
-							when assertion_part then
-								feat := described_feature (token, line, ft)
-							when local_part then
-								feat := described_feature (token, line, ft)
-							else
+			if is_ok_for_completion then
+				initialize_context
+				if current_class_i /= Void then
+					token := cursor.token
+					line ?= cursor.line
+					a_position := token.pos_in_text
+					Result := stone_in_click_ast (a_position)
+					if Result = Void or else token_image_is_same_as_word (token, "precursor") then
+						if a_position >= invariant_index then
+							feat := described_feature (token, line, Void)
+						elseif click_possible (token) then
+							ft := feature_containing (token, line)
+							if ft /= Void then
+								inspect
+									feature_part_at (token, line)
+								when instruction_part then
+									feat := described_feature (token, line, ft)
+								when assertion_part then
+									feat := described_feature (token, line, ft)
+								when local_part then
+									feat := described_feature (token, line, ft)
+								else
+								end
 							end
 						end
-					end
-					if feat /= Void then
-						create {FEATURE_STONE} Result.make (feat)
+						if feat /= Void then
+							create {FEATURE_STONE} Result.make (feat)
+						end
 					end
 				end
+				reset_after_search
 			end
-			reset_after_search
 		end
 
 	go_to_left_position is

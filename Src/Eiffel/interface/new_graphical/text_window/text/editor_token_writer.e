@@ -77,15 +77,33 @@ feature -- Text processing
 	process_string_text (t: STRING; url: STRING) is
 			-- Process default basic text `t'.
 		local
-			tok: EDITOR_TOKEN_STRING
+			tok: EDITOR_TOKEN_TEXT
+			l_pos, l_previous: INTEGER
 			stone: URL_STONE
 		do
-			create tok.make (t)
-			if url /= Void then
-				create stone.make (url)
-				tok.set_pebble (stone)
+			l_pos := t.index_of ('%N', 1)
+			if l_pos > 0 then
+				from
+					l_previous := 1
+				until
+					l_pos = 0
+				loop
+					add_string (t.substring (l_previous, l_pos -1))
+					add_new_line
+					l_previous := l_pos + 1
+					l_pos := t.index_of ('%N', l_previous)
+				end
+				if l_previous < t.count then
+					add (t.substring (l_previous, t.count))
+				end
+			else
+				create tok.make (t)
+				if url /= Void then
+					create stone.make (url)
+					tok.set_pebble (stone)
+				end
+				last_line.append_token (tok)
 			end
-			last_line.append_token (tok)
 		end
 
 	process_comment_text (t: STRING; url: STRING) is

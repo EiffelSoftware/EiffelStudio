@@ -478,6 +478,7 @@ feature {NONE} -- Implementation
 			end
 			text_formatter_decorator.put_new_line
 			text_formatter_decorator.indent
+			text_formatter_decorator.put_new_line
 			text_formatter_decorator.set_new_line_between_tokens
 			text_formatter_decorator.set_separator (ti_empty)
 			f := l_as.features
@@ -1089,10 +1090,8 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			locals_for_current_feature.wipe_out
-			if text_formatter_decorator.is_feature_short then
-				text_formatter_decorator.put_new_line
-			else
-				text_formatter_decorator.put_new_line
+			text_formatter_decorator.put_new_line
+			if not text_formatter_decorator.is_feature_short then
 				if l_as.obsolete_message /= Void then
 					text_formatter_decorator.indent
 					text_formatter_decorator.process_keyword_text (ti_obsolete_keyword, Void)
@@ -1888,7 +1887,6 @@ feature {NONE} -- Implementation
 				current_class /= Void
 			end
 			text_formatter_decorator.begin
-			text_formatter_decorator.put_new_line
 			text_formatter_decorator.set_separator (ti_comma)
 			text_formatter_decorator.set_space_between_tokens
 			text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name, True)
@@ -2587,7 +2585,6 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.set_new_line_between_tokens
 				l_creators.process (Current)
 				text_formatter_decorator.process_filter_item (f_creators, False)
-				text_formatter_decorator.put_new_line
 			end
 			format_convert_clause (l_as.convertors)
 			processing_none_feature_part := False
@@ -2903,12 +2900,13 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.put_new_line
 			if l_as.feature_list /= Void then
 				text_formatter_decorator.indent
-				text_formatter_decorator.set_new_line_between_tokens
 				if text_formatter_decorator.is_flat_short then
 					format_creation_features (l_as.feature_list)
 				else
+					text_formatter_decorator.set_new_line_between_tokens
 					text_formatter_decorator.set_separator (ti_comma)
 					l_as.feature_list.process (Current)
+					text_formatter_decorator.put_new_line
 					text_formatter_decorator.put_new_line
 				end
 			end
@@ -3601,6 +3599,7 @@ feature {NONE} -- Implementation: helpers
 				feat_adapter := creators.item (item.internal_name)
 				if feat_adapter /= Void then
 					feat_adapter.format (text_formatter_decorator)
+					text_formatter_decorator.put_new_line
 				end
 				i := i + 1
 			end

@@ -980,24 +980,21 @@ feature {NONE} -- Implementation
 		local
 			character_string: STRING_32
 			l_key: EV_KEY
+			l_code: INTEGER
 		do
-			inspect character_code
-			when 8, 27, 127 then
-				-- Do not fire `key_press_string_actions' if Backspace, Esc or del
-				-- are pressed as they are not displayable charcters.
-			when 13 then
+			if character_code = 13 then
 					-- On Windows, the Enter key gives us "%R" but we need to
 					-- substitute this with "%N" which is the Eiffel newline character.
 				character_string := "%N"
-				if application_imp.key_press_string_actions_internal /= Void then
-					application_imp.key_press_string_actions_internal.call ([interface, character_string])
-				end
-				if key_press_string_actions_internal /= Void then
-					key_press_string_actions_internal.call ([character_string])
-				end
 			else
 				create character_string.make(1)
 				character_string.append_character(character_code.as_natural_32.to_character_32)
+			end
+			inspect character_code
+			when 8, 27, 127 then
+				-- Do not fire `key_press_string_actions' if Backspace, Esc or del
+				-- are pressed as they are not displayable characters.
+			else
 				if application_imp.key_press_string_actions_internal /= Void then
 					application_imp.key_press_string_actions_internal.call ([interface, character_string])
 				end
@@ -1006,9 +1003,12 @@ feature {NONE} -- Implementation
 				end
 			end
 			if default_key_processing_handler /= Void then
-				create l_key.make_with_code (wel_to_v2_table.item (character_code))
-				if not default_key_processing_handler.item ([l_key]) then
-					disable_default_processing
+				l_code := {WEL_API}.vk_key_scan (character_string.item (1))
+				if l_code /= -1 and then valid_wel_code (l_code) then
+					create l_key.make_with_code (key_code_from_wel (l_code))
+					if not default_key_processing_handler.item ([l_key]) then
+						disable_default_processing
+					end
 				end
 			end
 		end

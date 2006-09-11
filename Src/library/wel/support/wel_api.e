@@ -77,6 +77,16 @@ feature -- Shell
 			"Shell_NotifyIcon((DWORD) $a_message, (PNOTIFYICONDATA) $a_notify_icon_data_ptr)"
 		end
 
+feature -- Character codes
+
+	frozen vk_key_scan (a_char: CHARACTER_32): INTEGER_32 is
+			-- Given a character `a_char' gives us the key that triggers its generation.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_INTEGER_32) VkKeyScan ((TCHAR) $a_char);"
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -13,8 +13,6 @@ feature -- Notification
 
 	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
 			-- Notification from `a_observable' indicating that `a_data' changed.
-		require
-			a_observable_attached: a_observable /= Void
 		deferred
 		end
 

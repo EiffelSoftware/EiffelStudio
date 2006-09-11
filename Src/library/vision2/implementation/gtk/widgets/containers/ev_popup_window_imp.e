@@ -149,8 +149,6 @@ feature {NONE} -- implementation
 
 	has_focus: BOOLEAN is
 			-- Does Current have the keyboard focus?
-		local
-			l_fake_focus_parent: EV_FAKE_FOCUS_POPUP_WINDOW
 		do
 			if not has_fake_focus then
 				Result := {EV_GTK_EXTERNALS}.gtk_grab_get_current = c_object

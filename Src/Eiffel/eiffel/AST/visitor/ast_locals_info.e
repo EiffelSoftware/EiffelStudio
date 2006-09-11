@@ -33,7 +33,7 @@ inherit
 
 feature -- Access
 
-	local_table (a_class: CLASS_C; a_feature: FEATURE_I; a_node: FEATURE_AS): HASH_TABLE [LOCAL_INFO, STRING] is
+	local_table (a_class: CLASS_C; a_feature: FEATURE_I; a_node: BODY_AS): HASH_TABLE [LOCAL_INFO, STRING] is
 			-- Local table.
 		require
 			a_class_not_void: a_class /= Void

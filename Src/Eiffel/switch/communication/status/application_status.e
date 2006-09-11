@@ -264,8 +264,13 @@ feature -- Call Stack element related
 			-- Current call stack element being displayed.
 		require
 			current_call_stack /= Void
+		local
+			i: INTEGER
 		do
-			Result := current_call_stack.i_th (Application.current_execution_stack_number)
+			i := Application.current_execution_stack_number
+			if current_call_stack.valid_index (i) then
+				Result := current_call_stack.i_th (i)
+			end
 		end
 
 feature -- Thread related access

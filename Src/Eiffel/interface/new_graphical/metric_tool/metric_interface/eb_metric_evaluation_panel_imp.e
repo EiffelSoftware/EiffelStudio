@@ -47,6 +47,7 @@ feature {NONE}-- Initialization
 			create show_percent_btn
 			create l_ev_tool_bar_7
 			create auto_go_to_result_btn
+			create toolbar_empty_area
 			create l_ev_horizontal_split_area_1
 			create metric_source_domain_area
 			create choose_input_domain_lbl
@@ -59,7 +60,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_2
 			create l_ev_horizontal_split_area_2
 			create grid_wrapper
-			create l_ev_cell_3
+			create grid_wrapper_empty_area
 			create metric_definition_area
 			create quick_metric_empty_area
 			create unit_area
@@ -93,6 +94,7 @@ feature {NONE}-- Initialization
 			l_ev_tool_bar_6.extend (show_percent_btn)
 			toolbar_area.extend (l_ev_tool_bar_7)
 			l_ev_tool_bar_7.extend (auto_go_to_result_btn)
+			toolbar_area.extend (toolbar_empty_area)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
 			l_ev_horizontal_split_area_1.extend (metric_source_domain_area)
 			metric_source_domain_area.extend (choose_input_domain_lbl)
@@ -105,7 +107,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (l_ev_cell_2)
 			metric_selection_area.extend (l_ev_horizontal_split_area_2)
 			l_ev_horizontal_split_area_2.extend (grid_wrapper)
-			l_ev_horizontal_split_area_2.extend (l_ev_cell_3)
+			l_ev_horizontal_split_area_2.extend (grid_wrapper_empty_area)
 			main_area.extend (metric_definition_area)
 			metric_definition_area.extend (quick_metric_empty_area)
 			metric_definition_area.extend (unit_area)
@@ -138,6 +140,7 @@ feature {NONE}-- Initialization
 			toolbar_area.disable_item_expand (value_area)
 			toolbar_area.disable_item_expand (l_ev_tool_bar_4)
 			toolbar_area.disable_item_expand (l_ev_tool_bar_6)
+			toolbar_area.disable_item_expand (l_ev_tool_bar_7)
 			l_ev_tool_bar_1.disable_vertical_button_style
 			control_toolbar.disable_vertical_button_style
 			value_area.set_padding (3)
@@ -166,9 +169,9 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (choose_metric_lbl)
 			choose_metric_lbl.set_text ("Choose metric:")
 			l_ev_horizontal_split_area_2.disable_item_expand (grid_wrapper)
-			l_ev_horizontal_split_area_2.enable_item_expand (l_ev_cell_3)
+			l_ev_horizontal_split_area_2.enable_item_expand (grid_wrapper_empty_area)
 			grid_wrapper.set_minimum_width (0)
-			l_ev_cell_3.set_minimum_width (20)
+			grid_wrapper_empty_area.set_minimum_width (20)
 			metric_definition_area.set_padding (3)
 			metric_definition_area.disable_item_expand (quick_metric_empty_area)
 			metric_definition_area.disable_item_expand (unit_area)
@@ -202,16 +205,16 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	unit_combo: EV_COMBO_BOX
-	metric_definition_empty_area: EV_CELL
-	quick_metric_toolbar, control_toolbar: EV_TOOL_BAR
-	quick_metric_btn,
-	filter_result_btn, show_percent_btn, auto_go_to_result_btn: EV_TOOL_BAR_TOGGLE_BUTTON
-	run_metric_btn, run_with_detail_metric_btn,
-	stop_metric_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
-	toolbar_area, value_area, main_area, grid_wrapper,
-	quick_metric_empty_area, unit_area: EV_HORIZONTAL_BOX
-	metric_source_domain_area, metric_domain_selector_area,
-	metric_selection_area, metric_definition_area, criterion_area: EV_VERTICAL_BOX
+	toolbar_empty_area, grid_wrapper_empty_area, metric_definition_empty_area: EV_CELL
+	quick_metric_toolbar,
+	control_toolbar: EV_TOOL_BAR
+	quick_metric_btn, filter_result_btn, show_percent_btn, auto_go_to_result_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	run_metric_btn,
+	run_with_detail_metric_btn, stop_metric_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
+	toolbar_area,
+	value_area, main_area, grid_wrapper, quick_metric_empty_area, unit_area: EV_HORIZONTAL_BOX
+	metric_source_domain_area,
+	metric_domain_selector_area, metric_selection_area, metric_definition_area, criterion_area: EV_VERTICAL_BOX
 	metric_value_lbl,
 	choose_input_domain_lbl, choose_metric_lbl, unit_lbl: EV_LABEL
 	metric_value_text: EV_TEXT_FIELD
@@ -220,7 +223,7 @@ feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
 	l_ev_cell_1,
-	l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_cell_2: EV_CELL
 	l_ev_tool_bar_1, l_ev_tool_bar_4, l_ev_tool_bar_6, l_ev_tool_bar_7,
 	l_ev_tool_bar_8: EV_TOOL_BAR
 	l_ev_horizontal_split_area_1, l_ev_horizontal_split_area_2: EV_HORIZONTAL_SPLIT_AREA

@@ -59,14 +59,18 @@ feature {NONE}-- Initialization
 			create compare_toolbar
 			create compare_btn
 			create reference_archve_area
-			create reference_archive_lbl
 			create l_ev_horizontal_box_6
+			create reference_archive_lbl
+			create reference_empty_area
+			create l_ev_horizontal_box_7
 			create reference_metric_archive_text
 			create browse_reference_archive_btn
 			create comparison_empty_cell
 			create current_archive_area
+			create l_ev_horizontal_box_8
 			create current_archive_lbl
-			create l_ev_horizontal_box_7
+			create current_archive_empty_area
+			create l_ev_horizontal_box_9
 			create current_metric_archive_text
 			create browse_current_archive_btn
 			
@@ -104,16 +108,20 @@ feature {NONE}-- Initialization
 			comparison_toolbar_area.extend (compare_toolbar)
 			compare_toolbar.extend (compare_btn)
 			comparison_area.extend (reference_archve_area)
-			reference_archve_area.extend (reference_archive_lbl)
 			reference_archve_area.extend (l_ev_horizontal_box_6)
-			l_ev_horizontal_box_6.extend (reference_metric_archive_text)
-			l_ev_horizontal_box_6.extend (browse_reference_archive_btn)
+			l_ev_horizontal_box_6.extend (reference_archive_lbl)
+			l_ev_horizontal_box_6.extend (reference_empty_area)
+			reference_archve_area.extend (l_ev_horizontal_box_7)
+			l_ev_horizontal_box_7.extend (reference_metric_archive_text)
+			l_ev_horizontal_box_7.extend (browse_reference_archive_btn)
 			comparison_area.extend (comparison_empty_cell)
 			comparison_area.extend (current_archive_area)
-			current_archive_area.extend (current_archive_lbl)
-			current_archive_area.extend (l_ev_horizontal_box_7)
-			l_ev_horizontal_box_7.extend (current_metric_archive_text)
-			l_ev_horizontal_box_7.extend (browse_current_archive_btn)
+			current_archive_area.extend (l_ev_horizontal_box_8)
+			l_ev_horizontal_box_8.extend (current_archive_lbl)
+			l_ev_horizontal_box_8.extend (current_archive_empty_area)
+			current_archive_area.extend (l_ev_horizontal_box_9)
+			l_ev_horizontal_box_9.extend (current_metric_archive_text)
+			l_ev_horizontal_box_9.extend (browse_current_archive_btn)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -173,18 +181,19 @@ feature {NONE}-- Initialization
 			comparison_toolbar_area.disable_item_expand (compare_toolbar)
 			compare_toolbar.disable_vertical_button_style
 			reference_archve_area.set_padding (3)
-			reference_archve_area.disable_item_expand (reference_archive_lbl)
+			l_ev_horizontal_box_6.disable_item_expand (reference_archive_lbl)
 			reference_archive_lbl.set_text ("Select reference archive:")
 			reference_archive_lbl.align_text_left
-			l_ev_horizontal_box_6.set_padding (3)
-			l_ev_horizontal_box_6.disable_item_expand (browse_reference_archive_btn)
+			l_ev_horizontal_box_7.set_padding (3)
+			l_ev_horizontal_box_7.disable_item_expand (browse_reference_archive_btn)
 			browse_reference_archive_btn.set_text ("...")
 			comparison_empty_cell.set_minimum_height (15)
 			current_archive_area.set_padding (3)
+			l_ev_horizontal_box_8.disable_item_expand (current_archive_lbl)
 			current_archive_lbl.set_text ("Select current archive:")
 			current_archive_lbl.align_text_left
-			l_ev_horizontal_box_7.set_padding (3)
-			l_ev_horizontal_box_7.disable_item_expand (browse_current_archive_btn)
+			l_ev_horizontal_box_9.set_padding (3)
+			l_ev_horizontal_box_9.disable_item_expand (browse_current_archive_btn)
 			browse_current_archive_btn.set_text ("...")
 			
 			set_all_attributes_using_constants
@@ -200,18 +209,18 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	comparison_empty_cell: EV_CELL
-	new_archive_browse_btn, browse_reference_archive_btn, browse_current_archive_btn: EV_BUTTON
-	definition_toolbar,
-	compare_toolbar: EV_TOOL_BAR
-	run_btn, stop_btn, compare_btn: EV_TOOL_BAR_BUTTON
-	definition_toolbar_area, new_archive_file_area,
-	comparison_toolbar_area: EV_HORIZONTAL_BOX
-	domain_selection_area, metric_selection_area, comparison_area,
-	reference_archve_area, current_archive_area: EV_VERTICAL_BOX
+	reference_empty_area, comparison_empty_cell, current_archive_empty_area: EV_CELL
+	new_archive_browse_btn,
+	browse_reference_archive_btn, browse_current_archive_btn: EV_BUTTON
+	definition_toolbar, compare_toolbar: EV_TOOL_BAR
+	run_btn,
+	stop_btn, compare_btn: EV_TOOL_BAR_BUTTON
+	definition_toolbar_area, new_archive_file_area, comparison_toolbar_area: EV_HORIZONTAL_BOX
+	domain_selection_area,
+	metric_selection_area, comparison_area, reference_archve_area, current_archive_area: EV_VERTICAL_BOX
 	clean_btn: EV_CHECK_BUTTON
-	new_archive_file_lbl, source_domain_lbl,
-	metric_lbl, reference_archive_lbl, current_archive_lbl: EV_LABEL
+	new_archive_file_lbl,
+	source_domain_lbl, metric_lbl, reference_archive_lbl, current_archive_lbl: EV_LABEL
 	new_archive_file_name_text,
 	reference_metric_archive_text, current_metric_archive_text: EV_TEXT_FIELD
 	archive_definition_frame,
@@ -224,9 +233,10 @@ feature {NONE} -- Implementation
 	l_ev_horizontal_split_area_1,
 	l_ev_horizontal_split_area_2: EV_HORIZONTAL_SPLIT_AREA
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
-	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1,
-	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6, l_ev_horizontal_box_7,
+	l_ev_horizontal_box_8, l_ev_horizontal_box_9: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2,
+	l_ev_vertical_box_3: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

@@ -170,15 +170,37 @@ feature{NONE} -- Implementation
 			l_uuid: UUID
 		do
 			if a_uuid_str = Void then
-				set_parse_error_message ("Missing uuid " + a_msg)
+				set_parse_error_message ("Uuid is missing " + a_msg)
 			else
 				create l_uuid
 				if not l_uuid.is_valid_uuid (a_uuid_str) then
-					set_parse_error_message  ("Invalid UUID %"" + a_uuid_str +"%"" + a_msg)
+					set_parse_error_message  ("UUID %"" + a_uuid_str +"%" is invalid " + a_msg)
 				else
 					create Result.make_from_string (a_uuid_str)
 				end
 			end
+		end
+
+	quoted_name (a_name: STRING; a_prefix: STRING): STRING is
+			-- Quoted name of `a_name'.
+			-- If `a_prefix' is attached, add `a_prefix' before `a_name'.
+			-- For example, when `a_name' is "Classes", and `a_prefix' is "metric",
+			-- result will be: metric "Classes".
+		require
+			a_name_attached: a_name /= Void
+		do
+			if a_prefix /= Void then
+				create Result.make (a_name.count + a_prefix.count + 3)
+				Result.append (a_prefix)
+				Result.append_character (' ')
+			else
+				create Result.make (a_name.count + 2)
+			end
+			Result.append_character ('%"')
+			Result.append (a_name)
+			Result.append_character ('%"')
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature{NONE} -- Status report

@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			a_tool_attached: a_tool /= Void
 		do
 			metric_tool := a_tool
+			on_unit_order_change_agent := agent on_unit_order_change
 			default_create
 			set_is_up_to_date (True)
 		ensure
@@ -110,6 +111,8 @@ feature {NONE} -- Initialization
 			create l_text
 			dummy_text.set_background_color (l_text.background_color)
 			dummy_area.show
+
+				-- Delete following in docking EiffelStudio.			
 			dummy_text.drop_actions.extend (agent drop_cluster)
 			dummy_text.drop_actions.extend (agent drop_class)
 			dummy_text.drop_actions.extend (agent drop_feature)
@@ -218,6 +221,11 @@ feature -- Setting
 			last_current_archive := a_current_archive
 		ensure
 			last_current_archive_set: last_current_archive = a_current_archive
+		end
+
+	set_stone (a_stone: STONE) is
+			-- Notify that `a_stone' has been dropped on Current.
+		do
 		end
 
 feature -- Synchronization

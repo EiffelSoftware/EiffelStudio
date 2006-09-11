@@ -56,11 +56,60 @@ feature{NONE} -- Initialization
 			status_text.set_background_color (l_text.background_color)
 			status_lbl.set_text (metric_names.t_status)
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, status_text, metric_tool_window)
+			show_to_do_message_btn.set_pixmap (pixmaps.icon_pixmaps.command_error_info_icon)
+			show_to_do_message_btn.set_tooltip (metric_names.f_show_to_do_message)
+			show_to_do_message_btn.select_actions.extend (agent on_open_to_do_dialog (True))
 		end
 
-feature {NONE} -- Implementation
+feature -- Setting
 
+	set_to_do_message (a_error: EB_METRIC_ERROR) is
+			-- Set to-do message with `a_error'.`to_do'.
+		local
+			l_to_do: STRING
 
+		do
+			if a_error /= Void then
+				l_to_do := a_error.to_do
+			end
+			if l_to_do /= Void then
+				to_do_message := l_to_do.twin
+			else
+				to_do_message := Void
+			end
+			on_open_to_do_dialog (False)
+		end
+
+feature{NONE} -- Actions
+
+	on_open_to_do_dialog (a_force: BOOLEAN) is
+			-- Action to be performed to open a dialog to display help information about how to solve current metric definition error
+			-- If `a_force' is True, display `to_do_dialog', otherwise, don't display `to_do_dialog' if it is hidden.
+		do
+--			if to_do_message = Void then
+--				to_do_dialog.to_do_info_text.set_text ("")
+--			else
+--				to_do_dialog.to_do_info_text.set_text (to_do_message)
+--			end
+			to_do_dialog.load_text (to_do_message)
+			if not to_do_dialog.is_displayed and then a_force then
+				to_do_dialog.show_relative_to_window (metric_tool_window)
+			end
+		end
+
+feature{NONE} -- Impelementation
+
+	to_do_dialog: EB_METRIC_TO_DO_MESSAGE_DIALOG is
+			-- Dialog to display help information about hwo to solve current metric definition error
+		once
+			create Result.make (metric_tool)
+			Result.set_title (metric_names.t_metric_definition_error_wizard)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	to_do_message: STRING;
+			-- To do message
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

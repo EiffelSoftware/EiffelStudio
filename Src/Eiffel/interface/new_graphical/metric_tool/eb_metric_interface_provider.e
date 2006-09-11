@@ -20,6 +20,8 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+	SHARED_TEXT_ITEMS
+
 feature -- Metric menu
 
 	metric_menu: EV_MENU is
@@ -119,20 +121,6 @@ feature -- Names
 				end
 				l_unit_list.forth
 			end
-
---			Result.extend ([target_unit, pixmaps.icon_pixmaps.metric_unit_target_icon])
---			Result.extend ([group_unit, pixmaps.icon_pixmaps.metric_unit_group_icon])
---			Result.extend ([class_unit, pixmaps.icon_pixmaps.metric_unit_class_icon])
---			Result.extend ([generic_unit, pixmaps.icon_pixmaps.metric_unit_generic_icon])
---			Result.extend ([feature_unit, pixmaps.icon_pixmaps.metric_unit_feature_icon])
---			Result.extend ([argument_unit, pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon])
---			Result.extend ([local_unit, pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon])
---			Result.extend ([assertion_unit, pixmaps.icon_pixmaps.metric_unit_assertion_icon])
---			Result.extend ([line_unit, pixmaps.icon_pixmaps.metric_unit_line_icon])
---			if a_all then
---				Result.extend ([compilation_unit, pixmaps.icon_pixmaps.metric_unit_compilation_icon])
---				Result.extend ([ratio_unit, pixmaps.icon_pixmaps.metric_unit_ratio_icon])
---			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -247,6 +235,7 @@ feature -- Names
 			-- If `a_full_signature' is True, add full signature of `a_item', otherwise, just name.
 			-- If `a_associated_class' is True, and `a_item' is a feature item, class name will be prepended:
 			-- like LINKED_LIST.first.
+			-- {ANY}.out
 		require
 			a_item_attached: a_item /= Void
 			a_writer_attached: a_writer /= Void
@@ -274,8 +263,10 @@ feature -- Names
 					l_feature := l_invariant
 				end
 				if a_associated_class then
+					a_writer.process_symbol_text (ti_l_curly)
 					l_feature.class_c.append_name (a_writer)
-					a_writer.add_string (once ".")
+					a_writer.process_symbol_text (ti_r_curly)
+					a_writer.process_symbol_text (ti_dot)
 				end
 				if l_feature.is_real_feature then
 					if a_full_signature then
@@ -479,6 +470,7 @@ feature{NONE} -- Implementation
 				l_code = {EV_KEY_CONSTANTS}.key_ctrl or
 				l_code = {EV_KEY_CONSTANTS}.key_alt or
 				l_code = {EV_KEY_CONSTANTS}.key_shift or
+				l_code = {EV_KEY_CONSTANTS}.key_escape or
 				(ev_application.ctrl_pressed and then (l_code = {EV_KEY_CONSTANTS}.key_c))
 			then
 			elseif (ev_application.ctrl_pressed and then l_code = {EV_KEY_CONSTANTS}.key_a) then

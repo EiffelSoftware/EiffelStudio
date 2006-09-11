@@ -163,7 +163,7 @@ feature -- Loading
 					l_nary_cri.operands.after
 				loop
 					a_row.insert_subrow (a_row.subrow_count + 1)
- 					create l_row.make (l_nary_cri.operands.item, a_row.subrow (a_row.subrow_count), grid, is_read_only, scope)
+ 					create l_row.make (l_nary_cri.operands.item, a_row.subrow (a_row.subrow_count), grid, is_read_only, l_nary_cri.operands.item.scope)
 					register_subrow (l_row)
 					l_nary_cri.operands.forth
 				end

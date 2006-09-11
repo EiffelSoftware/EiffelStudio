@@ -36,6 +36,7 @@ feature {NONE}-- Initialization
 			create numerator_btn
 			create l_ev_cell_1
 			create numerator_target_pixmap
+			create numerator_empty_area
 			create denominator_area
 			create denominator_lbl
 			create l_ev_frame_2
@@ -44,11 +45,13 @@ feature {NONE}-- Initialization
 			create denominator_btn
 			create l_ev_cell_2
 			create denominator_target_pixmap
+			create denominator_empty_area
 			create expression_area
 			create l_ev_horizontal_box_3
 			create expression_lbl
-			create l_ev_cell_3
+			create expression_lbl_empty_area
 			create expression_text
+			create ratio_definition_empty_area
 			
 				-- Build widget structure.
 			extend (definition_frame)
@@ -61,6 +64,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (numerator_btn)
 			numerator_area.extend (l_ev_cell_1)
 			numerator_area.extend (numerator_target_pixmap)
+			numerator_area.extend (numerator_empty_area)
 			l_ev_vertical_box_1.extend (denominator_area)
 			denominator_area.extend (denominator_lbl)
 			denominator_area.extend (l_ev_frame_2)
@@ -69,11 +73,13 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.extend (denominator_btn)
 			denominator_area.extend (l_ev_cell_2)
 			denominator_area.extend (denominator_target_pixmap)
+			denominator_area.extend (denominator_empty_area)
 			extend (expression_area)
 			expression_area.extend (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_3.extend (expression_lbl)
-			l_ev_horizontal_box_3.extend (l_ev_cell_3)
+			l_ev_horizontal_box_3.extend (expression_lbl_empty_area)
 			expression_area.extend (expression_text)
+			extend (ratio_definition_empty_area)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -125,6 +131,7 @@ feature {NONE}-- Initialization
 			expression_area.set_padding (3)
 			expression_area.disable_item_expand (l_ev_horizontal_box_3)
 			expression_area.disable_item_expand (expression_text)
+			l_ev_horizontal_box_3.disable_item_expand (expression_lbl)
 			expression_lbl.set_text ("Expression:")
 			expression_lbl.align_text_left
 			expression_text.set_minimum_width (35)
@@ -148,23 +155,25 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	expression_text: EV_RICH_TEXT
+	numerator_empty_area, denominator_empty_area, expression_lbl_empty_area,
+	ratio_definition_empty_area: EV_CELL
 	numerator_btn, denominator_btn: EV_BUTTON
-	numerator_target_pixmap, denominator_target_pixmap: EV_PIXMAP
-	numerator_area,
-	denominator_area: EV_HORIZONTAL_BOX
+	numerator_target_pixmap,
+	denominator_target_pixmap: EV_PIXMAP
+	numerator_area, denominator_area: EV_HORIZONTAL_BOX
 	expression_area: EV_VERTICAL_BOX
-	numerator_lbl, denominator_lbl, expression_lbl: EV_LABEL
-	numerator_text,
-	denominator_text: EV_TEXT_FIELD
+	numerator_lbl,
+	denominator_lbl, expression_lbl: EV_LABEL
+	numerator_text, denominator_text: EV_TEXT_FIELD
 	definition_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
-	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_frame_1, l_ev_frame_2: EV_FRAME
+	l_ev_frame_1,
+	l_ev_frame_2: EV_FRAME
 
 feature {NONE} -- Implementation
 

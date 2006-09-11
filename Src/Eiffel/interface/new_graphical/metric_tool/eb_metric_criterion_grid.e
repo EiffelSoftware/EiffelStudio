@@ -125,6 +125,12 @@ feature -- Basic operation
 			is_read_only_set: is_read_only = a_read_only
 		end
 
+	load_undefinable_criteria is
+			-- Load undefinable criteria such as compliation basic metric.
+		do
+			is_criterion_loaded := True
+		end
+
 	clear_criterion is
 			-- Clear criterion loaded in Current
 		do
@@ -273,6 +279,7 @@ feature -- Basic operation
 			l_nary_cri: EB_METRIC_NARY_CRITERION
 			l_criterion: EB_METRIC_CRITERION
 			l_new_row: EB_METRIC_CRITERION_ROW
+			l_item: EV_GRID_ITEM
 		do
 			change_actions.block
 			l_data ?= a_row.data
@@ -295,7 +302,10 @@ feature -- Basic operation
 					l_parent_row.register_subrow (l_new_row)
 				end
 				remove_selection
-				l_new_row.grid_row.subrow (l_new_row.grid_row.subrow_count).enable_select
+				l_item := l_new_row.grid_row.subrow (l_new_row.grid_row.subrow_count).item (1)
+				if l_item /= Void then
+					l_item.enable_select
+				end
 			end
 			change_actions.resume
 			change_actions.call ([])
@@ -332,17 +342,7 @@ feature -- Access
 			end
 		end
 
-feature{NONE} -- Implementation/Actions
-
-	on_pointer_button_release (x, y, button: INTEGER; a_item: EV_GRID_ITEM) is
-			-- Action to be performed when pointer released
-		do
-			if button = 3 and then row_to_be_selected /= Void and then row_to_be_selected.parent = Current then
-				remove_selection
-				row_to_be_selected.enable_select
-				row_to_be_selected := Void
-			end
-		end
+feature -- Actions
 
 	on_item_drop (a_item: EV_GRID_ITEM; a_pebble: ANY) is
 			-- Action to be performed when `a_pebble' is dropped on `a_item'
@@ -459,6 +459,18 @@ feature{NONE} -- Implementation/Actions
 				end
 				change_actions.resume
 				change_actions.call ([])
+			end
+		end
+
+feature{NONE} -- Implementation/Actions
+
+	on_pointer_button_release (x, y, button: INTEGER; a_item: EV_GRID_ITEM) is
+			-- Action to be performed when pointer released
+		do
+			if button = 3 and then row_to_be_selected /= Void and then row_to_be_selected.parent = Current then
+				remove_selection
+				row_to_be_selected.enable_select
+				row_to_be_selected := Void
 			end
 		end
 

@@ -146,7 +146,12 @@ feature -- Formatting
 						l_msg.append (trace)
 					end
 					editor.put_string (l_msg)
---					editor.display_message (l_msg)
+					if not l_msg.is_empty and then l_msg.item (l_msg.count) /= '%N' then
+						editor.put_new_line
+					end
+						-- We have to call `refresh_now' because the text would only appear if
+						-- something causes an explicit refresh (e.g. moving a window).
+					editor.refresh_now
 				end
 				display_header
 			end

@@ -391,11 +391,11 @@ feature {NONE} -- Implementation
 
 	on_button_press (a_button_text: STRING_GENERAL) is
 			-- A button with text `a_button_text' has been pressed.
-		require
-			not_destroyed: not is_destroyed
 		do
 			selected_button := a_button_text
-			destroy
+			if not is_destroyed then
+				destroy
+			end
 		end
 
 	on_key_press (a_key: EV_KEY) is

@@ -436,7 +436,7 @@ feature {NONE} -- WEL Implementation
 		-- We have to have this flag, as Windows does not provide a message
 		-- which distinguishes between a normal resize or a restore.
 
-	copy_box_attributes (original_box, new_box: EV_BOX) is
+	copy_box_attributes (original_box, new_box: EV_VERTICAL_BOX) is
 			-- Copy all widgets from `original_box' to `new_box'
 			-- and set attributes.
 		require
@@ -445,12 +445,16 @@ feature {NONE} -- WEL Implementation
 			new_box_empty: new_box.is_empty
 		local
 			current_widget: EV_WIDGET
-			ub_imp: EV_VERTICAL_BOX_IMP
+			l_or_imp, l_ub_imp: EV_VERTICAL_BOX_IMP
 		do
 			fixme (once "[We should copy all attributes and action sequences.]")
-			ub_imp ?= new_box.implementation
-			if ub_imp.wel_item /= default_pointer then
+			l_ub_imp ?= new_box.implementation
+			if l_ub_imp.wel_item /= default_pointer then
 				from
+					l_or_imp ?= original_box.implementation
+						-- We remove `original_box' from Current as otherwise we would
+						-- be violating the `parent_contains_current' invariant.
+					l_or_imp.set_parent (Void)
 					original_box.start
 				until
 					original_box.is_empty
@@ -462,11 +466,11 @@ feature {NONE} -- WEL Implementation
 				new_box.set_padding (original_box.padding)
 				new_box.set_border_width (original_box.border_width)
 				check
-					ub_imp_not_void: ub_imp /= Void
+					ub_imp_not_void: l_ub_imp /= Void
 				end
-				ub_imp.on_parented
-				ub_imp.wel_set_parent (Current)
-				ub_imp.set_top_level_window_imp (Current)
+				l_ub_imp.on_parented
+				l_ub_imp.wel_set_parent (Current)
+				l_ub_imp.set_top_level_window_imp (Current)
 			end
 		ensure
 			old_and_new_counts_consistent: old original_box.count = new_box.count

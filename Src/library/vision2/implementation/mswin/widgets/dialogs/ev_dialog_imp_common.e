@@ -99,7 +99,6 @@ feature {NONE} -- Initialization
 		require
 			other_imp_not_void: a_other_imp /= Void
 		do
-			create post_creation_update_actions
 				-- Assign id of `a_other_imp' to `id'.
 			id := a_other_imp.id
 			other_imp := a_other_imp
@@ -309,26 +308,11 @@ feature {NONE} -- Implementation
 			user_interface_mode := other_imp.user_interface_mode
 			apply_center_dialog := other_imp.apply_center_dialog
 			call_show_actions := other_imp.call_show_actions
-			fixme (once "[
-				The `post_creation_update_actions are only here to enable the use of upper and lower bars
-				in the implementation of dialogs. Without this, upgrading the dialog's implementation
-				whith items in the bars caused problems internally.
-				]")
-			if post_creation_update_actions.is_empty then
-				create upper_bar
-				post_creation_update_actions.extend (agent copy_box_attributes (other_imp.upper_bar, upper_bar))
-				create lower_bar
-				post_creation_update_actions.extend (agent copy_box_attributes (other_imp.lower_bar, lower_bar))
-			end
+			create upper_bar
+			copy_box_attributes (other_imp.upper_bar, upper_bar)
+			create lower_bar
+			copy_box_attributes (other_imp.lower_bar, lower_bar)
 		end
-
-	post_creation_update_actions: ACTION_SEQUENCE [TUPLE []]
-		-- Action sequence to be fired after dialog is created and during initialization from
-		-- within `setup_dialog'. When we create a dialog, Windows calls us back with the
-		-- handle to the new dialog and upon receiving this, we call `setup_dialog'.
-		-- This action sequence is wiped out each time it is called so its contents should
-		-- only be used to defer execution until the dialog is created and be rebuilt each time
-		-- as required.
 
 	setup_dialog is
 			-- May be redefined to setup the dialog and its
@@ -338,8 +322,6 @@ feature {NONE} -- Implementation
 		do
 				-- Copy the attributes from the window to the dialog
 			copy_attributes
-			post_creation_update_actions.call (Void)
-			post_creation_update_actions.wipe_out
 			set_text (internal_title)
 
 				-- Move the children from the hidden window to the dialog.

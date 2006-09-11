@@ -105,7 +105,7 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
-			st.add (ti_bit_class)
+			st.process_keyword_text (ti_bit_class, Void)
 			st.add_space
 			st.add_int (bit_count)
 		end

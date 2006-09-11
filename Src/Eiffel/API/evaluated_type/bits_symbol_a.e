@@ -95,7 +95,7 @@ feature -- Output
 
 	ext_append_to (st: TEXT_FORMATTER; f: E_FEATURE) is
 		do
-			st.add (ti_Bit_class)
+			st.process_keyword_text (ti_Bit_class, Void)
 			st.add_space
 			st.add (names_heap.item (feature_name_id))
 		end

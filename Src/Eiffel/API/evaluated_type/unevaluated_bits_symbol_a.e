@@ -78,7 +78,7 @@ feature -- Output
 	ext_append_to (a_text_formatter: TEXT_FORMATTER; f: E_FEATURE) is
 			-- Append Current type to `st'.
 		do
-			a_text_formatter.add (ti_Bit_class)
+			a_text_formatter.process_keyword_text (ti_Bit_class, Void)
 			a_text_formatter.add_space
 			a_text_formatter.add_string (symbol)
 		end

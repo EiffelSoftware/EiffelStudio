@@ -192,7 +192,6 @@ feature {NONE} -- Implementation
 			Result.put (Key_space, Vk_space)
 			Result.put (Key_back_space, Vk_back)
 			Result.put (Key_enter, Vk_return)
-			Result.put (Key_enter, Vk_return)
 			Result.put (Key_escape, Vk_escape)
 			Result.put (Key_tab, Vk_tab)
 			Result.put (Key_tab, Vk_tab)

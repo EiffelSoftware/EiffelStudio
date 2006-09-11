@@ -48,6 +48,11 @@ feature -- Fake inherit from TWO_WAY_LIST
 		deferred
 		end
 
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' within allowable bounds?
+		deferred
+		end
+
 feature -- Properties
 
 	error_occurred: BOOLEAN is

@@ -1217,7 +1217,7 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 
 			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
-			f_as: FEATURE_AS
+			f_as: BODY_AS
 			l_byte_code: BYTE_CODE
 			l_ta: CL_TYPE_A
 			bak_byte_code: BYTE_CODE
@@ -1263,22 +1263,23 @@ feature {NONE} -- Implementation
 						bak_byte_code := Byte_context.byte_code
 
 						if on_context and then context_feature /= Void then
-								--| Locals
-							f_as := context_feature.body
-
 							Ast_context.set_current_feature (context_feature)
 
 							fixme ("jfiat [2004/10/16] : Seems pretty heavy computing ..")
 							l_byte_code := context_feature.byte_server.item (context_feature.body_index)
 							Byte_context.set_byte_code (l_byte_code)
 
-							l_ct_locals := locals_builder.local_table (context_class, context_feature, f_as)
-							if l_ct_locals /= Void then
-									--| if it failed .. let's continue anyway for now
+								--| Locals
+							f_as := context_feature.real_body
+							if f_as /= Void or True then
+								l_ct_locals := locals_builder.local_table (context_class, context_feature, f_as)
+								if l_ct_locals /= Void then
+										--| if it failed .. let's continue anyway for now
 
-									--| Last local return a new object
-									--| so there is no need to "twin" it
-								Ast_context.set_locals (l_ct_locals)
+										--| Last local return a new object
+										--| so there is no need to "twin" it
+									Ast_context.set_locals (l_ct_locals)
+								end
 							end
 						end
 							--| Compute and get `expression_byte_node'

@@ -7120,7 +7120,8 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			i, nb: INTEGER
 			l_class_type: CLASS_TYPE
 		do
-			if internal_class_types = Void then
+			Result := internal_class_types
+			if Result = Void then
 					-- Collect all class types in system and initialize `internal_class_types'.
 				from
 					i := System.class_types.lower
@@ -7138,10 +7139,9 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				end
 				internal_class_types := Result
 			end
-			Result := internal_class_types
 		ensure
-			class_types_not_void: class_types /= Void
-			class_types_not_empty: class_types.count > 0
+			class_types_not_void: Result /= Void
+			class_types_not_empty: Result.count > 0
 		end
 
 	feature_token (a_type_id, a_feature_id: INTEGER): INTEGER is

@@ -37,23 +37,32 @@ inherit
 			default_create
 		end
 
+	EB_SHARED_MANAGERS
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like metric_tool) is
+	make (a_tool: like metric_tool; a_panel: like metric_panel) is
 			-- Initialize `metric' with `a_metric' mode with `a_mode' and `unit' with `a_unit'.
 		require
 			a_tool_attached: a_tool /= Void
 		do
 			set_metric_tool (a_tool)
+			set_metric_panel (a_panel)
 			create expression_generator.make
 			create change_actions
 			default_create
 			setup_editor
 		ensure
 			metric_tool_set: metric_tool = a_tool
+			metric_panel_set: metric_panel = a_panel
 		end
 
 	user_initialization is
@@ -78,6 +87,7 @@ feature {NONE} -- Initialization
 			metric_grid.column (1).set_title (metric_names.t_coefficient)
 			metric_grid.column (2).set_title (metric_names.t_metrics)
 			metric_grid.key_press_actions.extend (agent on_key_pressed)
+			metric_grid.key_press_string_actions.extend (agent on_key_string_pressed)
 			metric_grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
 			metric_grid.item_drop_actions.extend (agent on_item_drop)
 			metric_grid.add_key_action (agent on_up, move_up_key_index)
@@ -112,6 +122,17 @@ feature {NONE} -- Initialization
 
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
 			metric_definition_lbl.set_text (metric_names.t_metric_definition + ":")
+
+				-- Delete following in docking EiffelStudio.
+			linear_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
+			linear_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
+			linear_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
+			linear_definition_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
+			linear_definition_empty_area.drop_actions.extend (agent metric_panel.drop_class)
+			linear_definition_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
+			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
+			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
+			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
 			ctrl_up_shortcut_attached: move_up_shortcut /= Void
@@ -171,6 +192,11 @@ feature -- Setting
 			if metric_selector /= Void then
 				metric_selector := Void
 			end
+		end
+
+	set_stone (a_stone: STONE) is
+			-- Notify that `a_stone' is dropped on Current.
+		do
 		end
 
 feature -- Access
@@ -470,6 +496,7 @@ feature{NONE} -- Implementation/Actions
 			metric_grid.remove_selection
 			metric_grid.set_focus
 			l_row.enable_select
+			window_manager.last_focused_development_window.window.set_focus
 			on_change
 		end
 
@@ -479,11 +506,49 @@ feature{NONE} -- Implementation/Actions
 			a_key_attached: a_key /= Void
 		local
 			l_item_list: LIST [EV_GRID_ITEM]
+			l_key_code: INTEGER
 		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+			l_key_code := a_key.code
+			inspect
+				l_key_code
+			when {EV_KEY_CONSTANTS}.key_enter then
 				l_item_list := metric_grid.selected_items
 				if l_item_list.count = 1 then
 					l_item_list.first.activate
+				end
+			else
+			end
+		end
+
+	on_key_string_pressed (a_string: STRING_32) is
+			-- Action to be performed when `a_string' is pressed
+		require
+			a_key_string_attached: a_string /= Void
+		local
+			l_selected_items: LIST [EV_GRID_ITEM]
+			l_grid_editable_item: EV_GRID_EDITABLE_ITEM
+			l_grid_combo_item: EV_GRID_COMBO_ITEM
+			l_text_component: EV_TEXT_COMPONENT
+		do
+			if not (a_string.is_equal (once "%N") or a_string.is_equal (once "%T")) then
+				l_selected_items := metric_grid.selected_items
+				if not l_selected_items.is_empty then
+					l_selected_items.first.activate
+					l_grid_editable_item ?= l_selected_items.first
+					if l_grid_editable_item /= Void then
+						l_text_component := l_grid_editable_item.text_field
+					else
+						l_grid_combo_item ?= l_selected_items.first
+						if l_grid_combo_item /= Void then
+							l_text_component := l_grid_combo_item.combo_box
+						end
+					end
+					if l_text_component /= Void then
+						l_text_component.set_text (a_string)
+						if not a_string.is_empty then
+							l_text_component.set_caret_position (a_string.count + 1)
+						end
+					end
 				end
 			end
 		end

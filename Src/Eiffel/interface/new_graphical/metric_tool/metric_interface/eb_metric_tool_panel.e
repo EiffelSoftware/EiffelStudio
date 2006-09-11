@@ -186,6 +186,17 @@ feature -- Basic operations
 			development_window := Void
 		end
 
+	set_stone (a_stone: STONE) is
+			-- Notify that `a_stone' has been dropp on metric panel.
+		local
+			l_panel: EB_METRIC_PANEL
+		do
+			l_panel := panel_table.item (metric_notebook.selected_item_index)
+			if l_panel /= Void then
+				l_panel.set_stone (a_stone)
+			end
+		end
+
 invariant
 	development_window_attached: development_window /= Void
 	panel_list_attached: panel_table /= Void

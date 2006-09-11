@@ -491,7 +491,7 @@ feature{NONE} -- Implementation
 		do
 			create Result.make (3)
 			Result.put (a_criterion.name, n_name)
-			Result.put (a_criterion.scope.name, n_scope)
+			Result.put (a_criterion.scope.name, n_unit)
 			Result.put (a_criterion.is_negation_used.out, n_negation)
 		ensure
 			result_attached: Result /= Void

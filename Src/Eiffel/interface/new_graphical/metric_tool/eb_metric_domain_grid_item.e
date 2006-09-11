@@ -37,6 +37,13 @@ inherit
 			is_equal
 		end
 
+	SHARED_TEXT_ITEMS
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -295,15 +302,28 @@ feature{NONE} -- Implementation
 				l_x := l_x + spacing
 				if l_item.is_feature_item and then l_item.is_valid then
 					l_feature ?= domain.item
+
+					l_text := ti_l_curly
+					a_drawable.set_foreground_color (color_of_domain_item (Void))
+					a_drawable.draw_text_top_left (l_x, l_y, l_text)
+					l_x := l_x + l_font.string_width (l_text)
+
 					l_class := l_feature.class_domain_item
 					l_text := l_class.string_representation
 					a_drawable.set_foreground_color (color_of_domain_item (l_class))
 					a_drawable.draw_text_top_left (l_x, l_y, l_text)
 					l_x := l_x + l_font.string_width (l_text)
-					l_text := "."
+
+					l_text := ti_r_curly
 					a_drawable.set_foreground_color (color_of_domain_item (Void))
 					a_drawable.draw_text_top_left (l_x, l_y, l_text)
 					l_x := l_x + l_font.string_width (l_text)
+
+					l_text := ti_dot
+					a_drawable.set_foreground_color (color_of_domain_item (Void))
+					a_drawable.draw_text_top_left (l_x, l_y, l_text)
+					l_x := l_x + l_font.string_width (l_text)
+
 				end
 				l_text := l_item.string_representation
 				a_drawable.set_foreground_color (color_of_domain_item (domain.item))
@@ -371,6 +391,7 @@ feature{NONE} -- Implementation
 		local
 			l_class: EDITOR_TOKEN_CLASS
 			l_feature: EDITOR_TOKEN_FEATURE
+			l_symbol: EDITOR_TOKEN_OPERATOR
 		do
 			if not is_selected then
 				if a_domain_item /= Void then
@@ -393,7 +414,8 @@ feature{NONE} -- Implementation
 						end
 					end
 				else
-					Result := colors.black
+					create l_symbol.make ("")
+					Result := l_symbol.text_color
 				end
 			else
 				if parent.has_focus then

@@ -90,6 +90,11 @@ feature -- Basic operations
 			is_selected_set: is_selected = b
 		end
 
+	set_stone (a_stone: STONE) is
+			-- Notify that `a_stone' has been dropped on Current.
+		deferred
+		end
+
 feature -- Actions
 
 	on_select is
@@ -107,6 +112,17 @@ feature -- Actions
 				display_status_message (metric_names.e_evaluating + a_item.path)
 			end
 		end
+
+	on_unit_order_change is
+			-- Action to ber performed when unit order changes
+		do
+			update (Void, Void)
+		end
+
+	on_unit_order_change_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_unit_order_change'
+
+feature -- Pick and drop
 
 	drop_class (st: CLASSI_STONE) is
 			-- Action to be performed when `st' is dropped on current panel.
@@ -156,6 +172,18 @@ feature{NONE} -- Implementation
 			-- Display last error message in `metric_manager'.
 		do
 			metric_tool.display_error_message
+		end
+
+	display_message (a_message: STRING) is
+			-- Display `a_message' in a prompt-out information dialog.
+		require
+			a_message_attached: a_message /= Void
+		local
+			l_dialog: EV_INFORMATION_DIALOG
+		do
+			create l_dialog.make_with_text (a_message)
+			l_dialog.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent l_dialog.destroy>>)
+			l_dialog.show_relative_to_window (metric_tool_window)
 		end
 
 indexing

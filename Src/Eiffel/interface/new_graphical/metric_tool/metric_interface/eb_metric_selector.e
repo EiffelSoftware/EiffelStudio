@@ -115,15 +115,24 @@ feature {NONE} -- Initialization
 			metric_grid.key_press_actions.extend (agent on_key_pressed_for_metric_navigation (?, True))
 			metric_grid.key_press_string_actions.extend (agent on_key_string_pressed_for_metric_navigation (?, True))
 
+			create move_unit_up_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_8), True, False, False)
+			create move_unit_down_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_2), True, False, False)
+
+			metric_grid.set_item_pebble_function (agent item_pebble_function)
+			metric_grid.enable_single_row_selection
+			metric_grid.row_select_actions.extend (agent on_row_selected)
+			metric_grid.add_key_action (agent on_move_unit (True, False), move_unit_up_key_index)
+			metric_grid.add_key_action (agent on_move_unit (False, True), move_unit_down_key_index)
+			metric_grid.add_key_shortcut (move_unit_up_key_index, move_unit_up_key_shortcut)
+			metric_grid.add_key_shortcut (move_unit_down_key_index, move_unit_down_key_shortcut)
+			metric_grid.item_drop_actions.extend (agent on_drop_unit)
+			metric_grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
+
 			tree_view_checkbox.remove_text
 			tree_view_checkbox.set_text (metric_names.t_group)
 			tree_view_checkbox.set_pixmap (pixmaps.icon_pixmaps.metric_group_icon)
 			tree_view_checkbox.enable_select
 			tree_view_checkbox.select_actions.extend (agent on_tree_view_checkbox_selected)
-
-			metric_grid.set_item_pebble_function (agent item_pebble_function)
-			metric_grid.enable_single_row_selection
-			metric_grid.row_select_actions.extend (agent on_row_selected)
 
 			select_predefined_btn.set_tooltip (metric_names.f_select_predefined_metrics)
 			select_userdefined_btn.set_tooltip (metric_names.f_select_userdefined_metrics)
@@ -132,6 +141,14 @@ feature {NONE} -- Initialization
 			cached_key_field.key_press_actions.extend (agent on_key_pressed_for_metric_navigation (?, False))
 			cached_key_field.change_actions.extend (agent on_text_change_in_cached_key_field)
 			cached_key_field.set_tooltip (metric_names.f_press_esc_to_wipe_out)
+
+			move_unit_up_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_up_icon)
+			move_unit_up_btn.set_tooltip (metric_names.f_move_unit_up + metric_names.f_rearrange_unit)
+			move_unit_up_btn.select_actions.extend (agent on_move_unit (True, False))
+
+			move_unit_down_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_down_icon)
+			move_unit_down_btn.set_tooltip (metric_names.f_move_unit_down + metric_names.f_rearrange_unit)
+			move_unit_down_btn.select_actions.extend (agent on_move_unit (False, True))
 		ensure then
 			metric_selected_actions_attached: metric_selected_actions /= Void
 			group_selected_actions_attached: group_selected_actions /= Void
@@ -289,9 +306,13 @@ feature{NONE} -- Actions
 						metric_selected_actions.call ([l_metric])
 					end
 				end
+				move_unit_up_btn.disable_sensitive
+				move_unit_down_btn.disable_sensitive
 			else
 					-- A group row is selected.
 				group_selected_actions.call ([])
+				move_unit_up_btn.enable_sensitive
+				move_unit_down_btn.enable_sensitive
 			end
 		end
 
@@ -386,7 +407,7 @@ feature{NONE} -- Actions
 		require
 			a_key_attached: a_key /= Void
 		do
-			if not a_key.is_equal (once "%N") then
+			if not a_key.is_equal (once "%N") and not a_key.is_equal (once "%T") then
 				if a_on_grid then
 					cached_key_field.change_actions.block
 				end
@@ -410,37 +431,69 @@ feature{NONE} -- Actions
 			delayed_timeout.request_call
 		end
 
-	on_change_unit_order (a_from_row: EV_GRID_ROW; a_to_row: EV_GRID_ROW) is
-			-- Move unit row `a_from_row' to `a_to_row'.
-		require
-			a_from_row_attached: a_from_row /= Void
-			a_from_row_exists: unit_row_list.has (a_from_row)
-			a_to_row_attached: a_to_row /= Void
-			a_to_row_exists: unit_row_list.has (a_to_row)
+	on_move_unit (a_up: BOOLEAN; a_after: BOOLEAN) is
+			-- Action to be performed to move a unit up if `a_up' is True, otherwise move down
 		local
-			l_unit_list: LINKED_LIST [QL_METRIC_UNIT]
-			l_from_unit: QL_METRIC_UNIT
-			l_to_unit: QL_METRIC_UNIT
+			l_selected_rows: LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_dest_row: EV_GRID_ROW
+			l_source_unit: QL_METRIC_UNIT
+			l_dest_unit: QL_METRIC_UNIT
+			l_start_index: INTEGER
+			l_end_index: INTEGER
+			l_offset: INTEGER
+			l_grid: like metric_grid
+			done: BOOLEAN
 		do
-			l_from_unit ?= a_from_row.data
-			l_to_unit ?= a_to_row.data
-			check
-				l_from_unit /= Void
-				l_to_unit /= Void
+			l_grid := metric_grid
+			l_selected_rows := l_grid.selected_rows
+			if not l_selected_rows.is_empty then
+				l_row := l_selected_rows.first
+				l_source_unit ?= l_row.data
+				if l_source_unit /= Void then
+					if a_up then
+						from
+							l_start_index := l_row.index - 1
+							l_end_index := 1
+						until
+							l_start_index < l_end_index or done
+						loop
+							l_dest_unit ?= l_grid.row (l_start_index).data
+							done := l_dest_unit /= Void
+							l_start_index := l_start_index - 1
+						end
+					else
+						from
+							l_start_index := l_row.index + 1
+							l_end_index := l_grid.row_count
+						until
+							l_start_index > l_end_index or done
+						loop
+							l_dest_unit ?= l_grid.row (l_start_index).data
+							done := l_dest_unit /= Void
+							l_start_index := l_start_index + 1
+						end
+					end
+					if l_dest_unit /= Void then
+						change_unit_order (l_source_unit, l_dest_unit, a_after)
+					end
+				end
 			end
-			l_unit_list := preferences.metric_tool_data.unit_order
-
-			l_unit_list.start
-			l_unit_list.search (l_from_unit)
-			check not l_unit_list.exhausted end
-			l_unit_list.remove
-
-			l_unit_list.start
-			l_unit_list.search (l_to_unit)
-			check not l_unit_list.exhausted end
-			l_unit_list.put_left (l_unit_list.item)
-			preferences.metric_tool_data.set_unit_order (l_unit_list)
 		end
+
+		on_drop_unit (a_item: EV_GRID_ITEM; a_unit: QL_METRIC_UNIT) is
+				-- Action to be performed when `a_unit' is dropped on `a_item'
+			require
+				a_item_attached: a_item /= Void
+				a_unit_attached: a_unit /= Void
+			local
+				l_dest_unit: QL_METRIC_UNIT
+			do
+				l_dest_unit ?= a_item.row.data
+				if l_dest_unit /= Void and then a_unit /= l_dest_unit then
+					change_unit_order (a_unit, l_dest_unit, True)
+				end
+			end
 
 feature -- setting
 
@@ -608,6 +661,7 @@ feature -- Metric management
 			end
 			metric_selected_actions.resume
 			group_selected_actions.resume
+			cached_key_field.set_text ("")
 		end
 
 	load_metric_in_grid is
@@ -803,6 +857,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: EV_GRID_LABEL_ITEM
 			l_metric: EB_METRIC
+			l_unit: QL_METRIC_UNIT
 		do
 			l_item ?= a_item
 			if l_item /= Void then
@@ -811,6 +866,9 @@ feature {NONE} -- Implementation
 					Result := l_metric
 					metric_grid.set_accept_cursor (cursors.cur_metric)
 					metric_grid.set_deny_cursor (cursors.cur_x_metric)
+				else
+					l_unit ?= l_item.row.data
+					Result := l_unit
 				end
 			end
 		end
@@ -991,6 +1049,66 @@ feature {NONE} -- Implementation
 		do
 			select_metric_starting_with_string (input_cache)
 		end
+
+		item_veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
+				-- Function to decide if `a_pebble' can be dropped on `a_item'
+			require
+				a_item_attached: a_item /= Void
+				a_pebble_attached: a_pebble /= Void
+			local
+				l_unit: QL_METRIC_UNIT
+				l_row_data: QL_METRIC_UNIT
+			do
+				l_unit ?= a_pebble
+				if l_unit /= Void then
+					l_row_data ?= a_item.row.data
+					Result := l_row_data /= l_unit
+				end
+			end
+
+	change_unit_order (a_source_unit: QL_METRIC_UNIT; a_dest_unit: QL_METRIC_UNIT; a_after: BOOLEAN) is
+			-- Change unit order:
+			-- Move `a_source_unit' after `a_dest_unit' if `a_after' is True, otherwise before.
+		require
+			a_source_unit_attached: a_source_unit /= Void
+			a_dest_unit_attached: a_dest_unit /= Void
+		local
+			l_unit_list: LINKED_LIST [QL_METRIC_UNIT]
+		do
+			l_unit_list := preferences.metric_tool_data.unit_order
+
+			l_unit_list.start
+			l_unit_list.search (a_source_unit)
+			if not l_unit_list.exhausted then
+				l_unit_list.remove
+
+				l_unit_list.start
+				l_unit_list.search (a_dest_unit)
+				if not l_unit_list.exhausted then
+					if a_after then
+						l_unit_list.put_right (a_source_unit)
+					else
+						l_unit_list.put_left (a_source_unit)
+					end
+
+					preferences.metric_tool_data.set_unit_order (l_unit_list)
+				end
+			end
+		end
+
+feature{NONE} -- Key shortcuts
+
+	move_unit_up_key_index: INTEGER is 128
+			-- Key shortcut index for moving unit up
+
+	move_unit_down_key_index: INTEGER is 129
+			-- Key shortcut index for moving unit down
+
+	move_unit_up_key_shortcut: ES_KEY_SHORTCUT
+			-- Key shortcut for moving unit up
+
+	move_unit_down_key_shortcut: ES_KEY_SHORTCUT
+			-- Key shortcut for moving unit down
 
 invariant
 	metric_selected_actions_attached: metric_selected_actions /= Void

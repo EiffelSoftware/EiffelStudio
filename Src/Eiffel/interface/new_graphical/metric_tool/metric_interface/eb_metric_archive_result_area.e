@@ -40,6 +40,13 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_COMPONENT
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
@@ -52,7 +59,7 @@ feature {NONE} -- Initialization
 			a_panel_attached: a_panel /= Void
 		do
 			set_metric_tool (a_tool)
-			metric_panel := a_panel
+			set_metric_panel (a_panel)
 			default_create
 		ensure
 			metric_tool_attached: metric_tool = a_tool
@@ -105,10 +112,10 @@ feature {NONE} -- Initialization
 			grid_area.extend (grid_wrapper.component_widget)
 			title_lbl.set_text (metric_names.t_archive_comparison_result)
 
+				-- Delete following in docking EiffelStudio.
 			result_grid.drop_actions.extend (agent metric_panel.drop_cluster)
 			result_grid.drop_actions.extend (agent metric_panel.drop_class)
 			result_grid.drop_actions.extend (agent metric_panel.drop_feature)
-
 			drop_actions.extend (agent metric_panel.drop_cluster)
 			drop_actions.extend (agent metric_panel.drop_class)
 			drop_actions.extend (agent metric_panel.drop_feature)
@@ -281,16 +288,16 @@ feature -- Load archive
 			l_type_name: STRING
 		do
 			if ref_node = Void then
-				create Result.make (cur_node.metric_name, name_of_metric_type (cur_node.metric_type), 0, False, cur_node.value, True)
+				create Result.make (cur_node.metric_name, name_of_metric_type (cur_node.metric_type), 0, False, cur_node.value, True, cur_node.calculated_time)
 			elseif cur_node = Void then
-				create Result.make (ref_node.metric_name, name_of_metric_type (ref_node.metric_type), ref_node.value, True, 0, False)
+				create Result.make (ref_node.metric_name, name_of_metric_type (ref_node.metric_type), ref_node.value, True, 0, False, ref_node.calculated_time)
 			else
 				if ref_node.metric_type /= cur_node.metric_type then
 					l_type_name := ""
 				else
 					l_type_name := name_of_metric_type (ref_node.metric_type)
 				end
-				create Result.make (ref_node.metric_name, l_type_name, ref_node.value, True, cur_node.value, True)
+				create Result.make (ref_node.metric_name, l_type_name, ref_node.value, True, cur_node.value, True, ref_node.calculated_time)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -313,11 +320,6 @@ feature -- Load archive
 		ensure
 			result_attached: Result /= Void
 		end
-
-feature -- Access
-
-	metric_panel: EB_METRIC_PANEL
-			-- Metric panel to which current is attached			
 
 feature {NONE} -- Implementation/Sorting
 

@@ -26,20 +26,29 @@ inherit
 			default_create
 		end
 
+	EB_METRIC_COMPONENT
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like metric_tool) is
+	make (a_tool: like metric_tool; a_panel: like metric_panel) is
 			-- Initialize `metric' with `a_metric' mode with `a_mode' and `unit' with `a_unit'.
 		require
 			a_tool_attached: a_tool /= Void
 		do
 			set_metric_tool (a_tool)
+			set_metric_panel (a_panel)
 			default_create
 		ensure
 			metric_tool_set: metric_tool = a_tool
+			metric_panel_set: metric_panel = a_panel
 		end
 
 	user_initialization is
@@ -58,6 +67,14 @@ feature {NONE} -- Initialization
 			description_text_read_only.set_background_color (l_text.background_color)
 			attach_non_editable_warning_to_text (metric_names.t_predefined_text_not_editable, name_text_read_only, metric_tool_window)
 			attach_non_editable_warning_to_text (metric_names.t_predefined_text_not_editable, description_text_read_only, metric_tool_window)
+
+			name_text.key_press_actions.extend (agent on_key_pressed (?, name_text))
+			description_text.key_press_actions.extend (agent on_key_pressed (?, description_text))
+
+				-- Delete following in docking EiffelStudio.
+			name_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
+			name_empty_area.drop_actions.extend (agent metric_panel.drop_class)
+			name_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
 		end
 
 feature -- Status report
@@ -161,6 +178,34 @@ feature -- Basic operations
 			description_text_read_only.hide
 		ensure
 			is_read_only_mode_disabled: not is_read_only_mode_enabled
+		end
+
+feature{NONE} -- Actions
+
+	on_key_pressed (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT) is
+			-- Action to be performed when `a_key' is pressed on `a_text'
+		require
+			a_key_attached: a_key /= Void
+			a_text_attached: a_text /= Void
+			not_a_text_is_destroyed: not a_text.is_destroyed
+		local
+			l_key_code: INTEGER
+		do
+			if ev_application.ctrl_pressed then
+				l_key_code := a_key.code
+				inspect
+					l_key_code
+				when {EV_KEY_CONSTANTS}.key_a then
+					if a_text.text.count > 0 then
+						a_text.select_all
+					end
+				when {EV_KEY_CONSTANTS}.key_c then
+					if a_text.has_selection then
+						ev_application.clipboard.set_text (a_text.selected_text)
+					end
+				else
+				end
+			end
 		end
 
 indexing

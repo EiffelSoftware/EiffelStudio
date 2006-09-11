@@ -297,6 +297,36 @@ feature -- Status report
 			result := a_domain.has (a_item)
 		end
 
+feature -- Actions
+
+	on_drop (a_any: ANY) is
+			-- Invoke when dropping a pebble to add an item to the scope.
+		local
+			l_classi_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_feature_stone: FEATURE_STONE
+			l_target_stone: TARGET_STONE
+			l_stone: STONE
+			l_domain: like domain
+		do
+			l_stone ?= a_any
+			l_domain := domain
+			if
+				l_stone /= Void and then
+				not l_domain.has_delayed_domain_item and then
+				not domain_has (l_domain, domain_item_from_stone (l_stone))
+			then
+				l_classi_stone ?= a_any
+				l_cluster_stone ?= a_any
+				l_feature_stone ?= a_any
+				l_target_stone ?= a_any
+				if l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void then
+					insert_domain_item (domain_item_from_stone (l_stone))
+					on_domain_change
+				end
+			end
+		end
+
 feature{NONE} -- Actions
 
 	on_remove_selected_scopes is
@@ -347,34 +377,6 @@ feature{NONE} -- Actions
 		do
 			if not scope_selection_dialog.is_displayed then
 				scope_selection_dialog.show (relative_window)
-			end
-		end
-
-	on_drop (a_any: ANY) is
-			-- Invoke when dropping a pebble to add an item to the scope.
-		local
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_feature_stone: FEATURE_STONE
-			l_target_stone: TARGET_STONE
-			l_stone: STONE
-			l_domain: like domain
-		do
-			l_stone ?= a_any
-			l_domain := domain
-			if
-				l_stone /= Void and then
-				not l_domain.has_delayed_domain_item and then
-				not domain_has (l_domain, domain_item_from_stone (l_stone))
-			then
-				l_classi_stone ?= a_any
-				l_cluster_stone ?= a_any
-				l_feature_stone ?= a_any
-				l_target_stone ?= a_any
-				if l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void then
-					insert_domain_item (domain_item_from_stone (l_stone))
-					on_domain_change
-				end
 			end
 		end
 

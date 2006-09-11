@@ -14,6 +14,8 @@ inherit
 
 	EB_METRIC_TOOL_INTERFACE
 
+	EB_METRIC_COMPONENT
+
 feature{NONE} -- Initialization
 
 	setup_editor is
@@ -137,6 +139,11 @@ feature -- Setting
 			metric_selector_detached: metric_selector = Void
 		end
 
+	set_stone (a_stone: STONE) is
+			-- Notify that `a_stone' is dropped on Current.
+		deferred
+		end
+
 feature -- Access
 
 	metric: EB_METRIC is
@@ -209,7 +216,7 @@ feature -- Access
 			-- Name and description area
 		do
 			if name_area_internal = Void then
-				create name_area_internal.make (metric_tool)
+				create name_area_internal.make (metric_tool, metric_panel)
 			end
 			Result := name_area_internal
 		end
@@ -371,10 +378,13 @@ feature{NONE} -- Implementation
 			if l_vadility = Void then
 				status_area.status_text.set_text (metric_names.t_metric_valid)
 				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_tick_icon)
+				status_area.show_to_do_message_btn.disable_sensitive
 			else
 				status_area.status_text.set_text (l_vadility.out)
 				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_error_icon)
+				status_area.show_to_do_message_btn.enable_sensitive
 			end
+			status_area.set_to_do_message (l_vadility)
 		end
 
 invariant

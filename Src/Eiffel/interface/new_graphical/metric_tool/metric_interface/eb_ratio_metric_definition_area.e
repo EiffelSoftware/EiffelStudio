@@ -42,12 +42,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like metric_tool) is
+	make (a_tool: like metric_tool; a_panel: like metric_panel) is
 			-- Initialize `metric_tool' with `a_tool'.
 		require
 			a_tool_attached: a_tool /= Void
 		do
 			set_metric_tool (a_tool)
+			set_metric_panel (a_panel)
 			create expression_generator.make
 			create change_actions
 			default_create
@@ -56,6 +57,7 @@ feature {NONE} -- Initialization
 			setup_editor
 		ensure
 			metric_tool_set: metric_tool = a_tool
+			metric_panel_set: metric_panel = a_panel
 			numerator_delayed_timer_attached: numerator_delayed_timer /= Void
 			denominator_delayed_timer_attached: denominator_delayed_timer /= Void
 		end
@@ -112,6 +114,20 @@ feature {NONE} -- Initialization
 			denominator_target_pixmap.hide
 
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
+
+				-- Delete following in docking EiffelStudio.
+			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
+			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
+			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
+			numerator_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
+			numerator_empty_area.drop_actions.extend (agent metric_panel.drop_class)
+			numerator_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
+			denominator_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
+			denominator_empty_area.drop_actions.extend (agent metric_panel.drop_class)
+			denominator_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
+			ratio_definition_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
+			ratio_definition_empty_area.drop_actions.extend (agent metric_panel.drop_class)
+			ratio_definition_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
 		end
 
 feature -- Status report
@@ -181,6 +197,11 @@ feature -- Setting
 			-- Detach `metric_selector'.
 		do
 			metric_selector := Void
+		end
+
+	set_stone (a_stone: STONE) is
+			-- Notify that `a_stone' is dropped on Current.
+		do
 		end
 
 feature -- Access

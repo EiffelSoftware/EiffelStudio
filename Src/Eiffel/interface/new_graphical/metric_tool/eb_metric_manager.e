@@ -141,6 +141,18 @@ feature -- Status report
 			Result := l_file.exists
 		end
 
+	is_last_predefined_metric_load_successful: BOOLEAN is
+			-- Is last predefined metric loading successful?
+		do
+			Result := last_predefined_metric_load_error = Void
+		end
+
+	is_last_userdefined_metric_load_successful: BOOLEAN is
+			-- Is last userdefined metric loading successful?
+		do
+			Result := last_userdefined_metric_load_error = Void
+		end
+
 feature -- Access
 
 	userdefined_metrics_file: STRING is
@@ -350,6 +362,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	last_predefined_metric_load_error: EB_METRIC_ERROR
+			-- Error information when load predefined metric definition the last time
+			-- Void if no error occurred.
+
+	last_userdefined_metric_load_error: EB_METRIC_ERROR
+			-- Error information when load userdefined metric definition the last time
+			-- Void if no error occurred.			
+
 feature -- Access/Sorting order
 
 	ascending_order: INTEGER is 1
@@ -368,6 +388,7 @@ feature -- Metric management
 		local
 			l_file: RAW_FILE
 			l_error: like last_error
+			l_error_str: STRING
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				clear_last_error
@@ -384,14 +405,40 @@ feature -- Metric management
 						l_error := last_error
 					end
 				end
+				if last_error /= Void then
+					last_predefined_metric_load_error := last_error
+				else
+					last_predefined_metric_load_error := Void
+				end
 
 					-- Load user-defined metrics.
 				create l_file.make (userdefined_metrics_file)
 				if l_file.exists then
 					load_metric_definitions (userdefined_metrics_file, False)
+				else
+					create {EB_METRIC_ERROR_FILE} l_error.make ("Could not open file", userdefined_metrics_file)
 				end
 				if not has_error and then l_error /= Void then
 					last_error := l_error
+				end
+				if last_error /= Void then
+					last_userdefined_metric_load_error := last_error
+				else
+					last_userdefined_metric_load_error := Void
+				end
+				if not is_last_predefined_metric_load_successful or not is_last_userdefined_metric_load_successful then
+					create l_error_str.make (256)
+					if not is_last_predefined_metric_load_successful then
+						l_error_str.append ("When loading predefined metrics: ")
+						l_error_str.append (last_predefined_metric_load_error.out)
+						l_error_str.append ("%NPredefined metrics not loaded.%N")
+					end
+					if not is_last_userdefined_metric_load_successful then
+						l_error_str.append ("When loading userdefined metrics: ")
+						l_error_str.append (last_userdefined_metric_load_error.out)
+						l_error_str.append ("%NUserdefined metrics not loaded.%N")
+					end
+					create {EB_METRIC_ERROR_PARSE} last_error.make_with_no_title (l_error_str)
 				end
 				is_metric_loaded := True
 				resume

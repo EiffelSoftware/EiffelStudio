@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a row to dispaly archive comparison result"
+	description: "Component which is attached to a metric panel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,79 +7,27 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_METRIC_ARCHIVE_RESULT_ROW
-
-create
-	make
-
-feature{NONE} -- Initialization
-
-	make (a_metric_name: like metric_name; a_type: like type; a_reference_value: DOUBLE; a_is_ref_set: BOOLEAN; a_current_value: DOUBLE; a_is_cur_set: BOOLEAN; a_time: DATE_TIME) is
-			-- Initialize.
-		require
-			a_metric_name_attached: a_metric_name /= Void
-			a_type_attached: a_type /= Void
-			a_time_attached: a_time /= Void
-		do
-			create metric_name.make_from_string (a_metric_name)
-			create type.make_from_string (a_type)
-			is_reference_value_set := a_is_ref_set
-			is_current_value_set := a_is_cur_set
-			reference_value := a_reference_value
-			current_value := a_current_value
-			difference := current_value - reference_value
-			if is_ratio_set then
-				ratio := current_value / reference_value
-			end
-		end
+	EB_METRIC_COMPONENT
 
 feature -- Access
 
-	metric_name: STRING
-			-- Metric name
+	metric_panel: EB_METRIC_PANEL
+			-- Metric panel to which current is attached
 
-	type: STRING
-			-- Metric type
+feature -- Setting
 
-	reference_value: DOUBLE
-			-- Reference value
-
-	current_value: DOUBLE
-			-- current value
-
-	difference: DOUBLE
-			-- Difference between `current_value' and `reference_value'
-
-	ratio: DOUBLE
-			-- Ratio of `current_value' and `reference_value'
-
-	time: DATE_TIME
-			-- Time when current metric archive is calculated
-
-feature -- Status report
-
-	is_reference_value_set: BOOLEAN
-			-- Is `reference_value' set?
-
-	is_current_value_set: BOOLEAN
-			-- Is `current_value' set?
-
-	is_difference_set: BOOLEAN is
-			-- Is `difference` set?
+	set_metric_panel (a_metric_panel: like metric_panel) is
+			-- Set `metric_panel' with `a_metric_panel'.
+		require
+			a_metric_panel_attached: a_metric_panel /= Void
 		do
-			Result := is_reference_value_set and is_current_value_set
-		end
-
-	is_ratio_set: BOOLEAN is
-			-- Is `ratio` set?
-		do
-			Result := (is_reference_value_set and is_current_value_set and then reference_value /= 0)
+			metric_panel := a_metric_panel
+		ensure
+			metric_panel_set: metric_panel = a_metric_panel
 		end
 
 invariant
-	metric_name_attached: metric_name /= Void
-	type_attached: type /= Void
-	time_attached: time /= Void
+	metric_panel_attached: metric_panel /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

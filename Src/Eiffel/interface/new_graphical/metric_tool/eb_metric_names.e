@@ -43,7 +43,7 @@ feature -- Titles
 	t_group: STRING is "Group"
 	t_metrics: STRING is "Metrics"
 	t_coefficient: STRING is "Coefficient"
-	t_metric_valid: STRING is "Metric is valid"
+	t_metric_valid: STRING is "Metric is valid."
 	t_save_metric: STRING is "Current metric has been modified, save it?"
 	t_discard_remove_prompt: STRING is "Do not ask me again and always remove selected metric"
 	t_discard_save_prompt: STRING is "Do not ask me again and always save modified metric"
@@ -88,6 +88,10 @@ feature -- Titles
 	t_feature_version_setting: STRING is "Feature version setting:"
 	t_only_current_version: STRING is "Only current version"
 	t_descendant_version: STRING is "Current version and all its descendant versions"
+	t_to_do: STRING is "To do:"
+	t_close: STRING is "Close"
+	t_metric_definition_error_wizard: STRING is "Metric definition error wizard"
+	t_metric_archive_calculation_finished: STRING is "Metric archive calculation finished."
 
 feature -- Labels
 
@@ -147,7 +151,11 @@ feature -- Tooltip
 	f_add_linear_variable_metric: STRING is "Add selected metric"
 	f_run_metric_again: STRING is "Evaluate metric again to get up-to-date result"
 	f_auto_go_to_result: STRING is "Automatically go to result panel after metric evaluation?"
-	f_press_esc_to_wipe_out: STRING is "Press ESC to wipe out";
+	f_press_esc_to_wipe_out: STRING is "Press ESC to wipe out"
+	f_move_unit_up: STRING is "Move metric unit up.%N"
+	f_move_unit_down: STRING is "Move metric unit down.%N"
+	f_rearrange_unit: STRING is "Or you can pick a metric unit and drop it on another metric to rearrange their order."
+	f_show_to_do_message: STRING is "Display a message about how to deal with the metric definition error";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

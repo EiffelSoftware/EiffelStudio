@@ -32,8 +32,10 @@ feature -- Access
 				property_item_internal.set_display_agent (agent display_value_agent)
 				property_item_internal.enable_text_editing
 				property_item_internal.set_value (["", False, False])
+				property_item_internal.set_text ("...")
 				property_item_internal.deactivate_actions.extend (agent on_deactivated)
 				property_item_internal.deactivate_actions.extend (agent change_actions.call ([]))
+				property_item_internal.activate_actions.extend (agent on_activated)
 				l_dialog.ok_actions.extend (agent change_actions.call ([]))
 				property_item_internal.set_tooltip (metric_names.f_insert_text_here)
 			end
@@ -113,6 +115,14 @@ feature{NONE} -- Actions
 				l_regx /= Void
 			end
 			property_item.set_value ([property_item.text, l_case.item, l_regx.item])
+		end
+
+	on_activated (a_window: EV_POPUP_WINDOW) is
+			-- Action to be performed when `property_item' is activated
+		require
+			a_window_attached: a_window /= Void
+		do
+
 		end
 
 feature{NONE} -- Implementation

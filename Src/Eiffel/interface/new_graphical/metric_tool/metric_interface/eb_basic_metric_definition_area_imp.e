@@ -29,10 +29,12 @@ feature {NONE}-- Initialization
 			create main_area
 			create definition_area
 			create combination_area
+			create l_ev_horizontal_box_1
 			create criterion_lbl
+			create lbl_empty_area
 			create combination_grid_container
 			create combination_toolbar_area
-			create l_ev_cell_1
+			create criterion_definition_empty_area
 			create indent_and_toolbar
 			create indent_and_btn
 			create indent_or_toolbar
@@ -49,20 +51,22 @@ feature {NONE}-- Initialization
 			create remove_criterion_btn
 			create remove_all_criterion_toolbar
 			create remove_all_criterion_btn
-			create l_ev_horizontal_box_1
-			create expression_lbl
-			create l_ev_cell_2
 			create l_ev_horizontal_box_2
+			create expression_lbl
+			create expression_lbl_empty_area
+			create l_ev_horizontal_box_3
 			create expression_text
 			
 				-- Build widget structure.
 			extend (main_area)
 			main_area.extend (definition_area)
 			definition_area.extend (combination_area)
-			combination_area.extend (criterion_lbl)
+			combination_area.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (criterion_lbl)
+			l_ev_horizontal_box_1.extend (lbl_empty_area)
 			combination_area.extend (combination_grid_container)
 			combination_area.extend (combination_toolbar_area)
-			combination_toolbar_area.extend (l_ev_cell_1)
+			combination_toolbar_area.extend (criterion_definition_empty_area)
 			combination_toolbar_area.extend (indent_and_toolbar)
 			indent_and_toolbar.extend (indent_and_btn)
 			combination_toolbar_area.extend (indent_or_toolbar)
@@ -79,11 +83,11 @@ feature {NONE}-- Initialization
 			remove_criterion_toolbar.extend (remove_criterion_btn)
 			combination_toolbar_area.extend (remove_all_criterion_toolbar)
 			remove_all_criterion_toolbar.extend (remove_all_criterion_btn)
-			definition_area.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (expression_lbl)
-			l_ev_horizontal_box_1.extend (l_ev_cell_2)
 			definition_area.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (expression_text)
+			l_ev_horizontal_box_2.extend (expression_lbl)
+			l_ev_horizontal_box_2.extend (expression_lbl_empty_area)
+			definition_area.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (expression_text)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -100,11 +104,12 @@ feature {NONE}-- Initialization
 			create color_constant_retrieval_functions.make (10)
 			main_area.set_padding (10)
 			definition_area.set_padding (3)
-			definition_area.disable_item_expand (l_ev_horizontal_box_1)
 			definition_area.disable_item_expand (l_ev_horizontal_box_2)
+			definition_area.disable_item_expand (l_ev_horizontal_box_3)
 			combination_area.set_padding (3)
-			combination_area.disable_item_expand (criterion_lbl)
+			combination_area.disable_item_expand (l_ev_horizontal_box_1)
 			combination_area.disable_item_expand (combination_toolbar_area)
+			l_ev_horizontal_box_1.disable_item_expand (criterion_lbl)
 			criterion_lbl.align_text_left
 			combination_grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			combination_grid_container.set_border_width (1)
@@ -121,7 +126,7 @@ feature {NONE}-- Initialization
 			up_toolbar.disable_vertical_button_style
 			down_toolbar.disable_vertical_button_style
 			remove_all_criterion_toolbar.disable_vertical_button_style
-			l_ev_horizontal_box_1.disable_item_expand (expression_lbl)
+			l_ev_horizontal_box_2.disable_item_expand (expression_lbl)
 			expression_lbl.set_text ("Expression:")
 			expression_lbl.align_text_left
 			expression_text.set_minimum_height (35)
@@ -141,10 +146,11 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	expression_text: EV_RICH_TEXT
-	indent_and_toolbar, indent_or_toolbar, up_toolbar, down_toolbar,
-	remove_criterion_toolbar, remove_all_criterion_toolbar: EV_TOOL_BAR
-	indent_and_btn, indent_or_btn,
-	up_btn, down_btn, remove_criterion_btn, remove_all_criterion_btn: EV_TOOL_BAR_BUTTON
+	lbl_empty_area, criterion_definition_empty_area, expression_lbl_empty_area: EV_CELL
+	indent_and_toolbar,
+	indent_or_toolbar, up_toolbar, down_toolbar, remove_criterion_toolbar, remove_all_criterion_toolbar: EV_TOOL_BAR
+	indent_and_btn,
+	indent_or_btn, up_btn, down_btn, remove_criterion_btn, remove_all_criterion_btn: EV_TOOL_BAR_BUTTON
 	combination_grid_container,
 	combination_toolbar_area: EV_HORIZONTAL_BOX
 	main_area, definition_area, combination_area: EV_VERTICAL_BOX
@@ -154,10 +160,9 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
-	l_ev_tool_bar_1,
-	l_ev_tool_bar_3: EV_TOOL_BAR
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_tool_bar_1, l_ev_tool_bar_3: EV_TOOL_BAR
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
 
 feature {NONE} -- Implementation
 

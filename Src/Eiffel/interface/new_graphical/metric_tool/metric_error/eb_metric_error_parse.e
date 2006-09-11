@@ -14,7 +14,8 @@ inherit
 
 create
 	default_create,
-	make
+	make,
+	make_with_no_title
 
 feature {NONE} -- Initialization
 
@@ -24,34 +25,43 @@ feature {NONE} -- Initialization
 			a_message_not_void: a_message /= Void
 		do
 			message := a_message
+			should_parser_error_be_displayed := True
+		end
+
+	make_with_no_title (a_message: STRING) is
+			-- Initialize with `a_message'.
+		require
+			a_message_not_void: a_message /= Void
+		do
+			make (a_message)
+			should_parser_error_be_displayed := False
 		end
 
 feature -- Access
 
 	text: STRING is
 		do
-			Result := "Parse error"
-			if file /= Void then
-				Result.append (" in "+file)
+			create Result.make (message.count + 20)
+			if should_parser_error_be_displayed then
+				Result.append (once "Parser error: ")
 			end
-			if message /= Void then
-				Result.append (": "+message)
-			end
+			Result.append (message)
 		end
+
+feature -- Status report
+
+		should_parser_error_be_displayed: BOOLEAN
+				-- Should "Parser error" be displayed before actual error message?
+				-- Default: True
 
 feature -- Update
 
-	set_file (a_file: STRING) is
-			-- Set config file with error to `a_file'.
-		do
-			file := a_file
-		end
-
-
 	set_message (a_message: STRING) is
 			-- Set the extended error message to `a_message'.
+		require
+			a_message_attached: a_message /= Void
 		do
-			message := a_message
+			create message.make_from_string (a_message)
 		end
 
 feature {NONE} -- Implementation
@@ -59,8 +69,8 @@ feature {NONE} -- Implementation
 	message: STRING
 			-- Error message
 
-	file: STRING;
-			-- File in which current error occured
+invariant
+	message_attached: message /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

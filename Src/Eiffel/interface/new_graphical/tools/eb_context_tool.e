@@ -214,7 +214,7 @@ feature -- Access
 			-- Compilation warning output display.
 
 	metrics: EB_METRIC_TOOL
-			--
+			-- Metric tool
 
 	address_manager: EB_ADDRESS_MANAGER
 			-- Manager for the header info.

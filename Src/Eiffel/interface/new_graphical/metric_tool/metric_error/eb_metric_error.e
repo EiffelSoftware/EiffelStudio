@@ -27,6 +27,24 @@ feature -- Access
 		do
 			Result := text
 		end
+
+	to_do: STRING
+			-- Information about how to do to deal with current error
+
+feature -- Setting
+
+	set_to_do (a_to_do: STRING) is
+			-- Set `to_do' with `a_to_do'.
+		do
+			if a_to_do /= Void then
+				create to_do.make_from_string (a_to_do)
+			else
+				to_do := Void
+			end
+		ensure
+			to_do_set: (a_to_do = Void implies to_do = Void) and (a_to_do /= Void implies (to_do /= Void and then to_do.is_equal (a_to_do)))
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -60,5 +78,5 @@ indexing
                 ]"
 
 
-		
+
 end

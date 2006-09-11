@@ -27,39 +27,43 @@ feature {NONE}-- Initialization
 			
 				-- Create all widgets.
 			create definition_area
+			create l_ev_horizontal_box_1
 			create metric_definition_lbl
+			create linear_lbl_empty_area
 			create grid_area
 			create toolbar_area
-			create l_ev_cell_1
+			create linear_definition_empty_area
 			create tool_bar
 			create up_btn
 			create down_btn
 			create l_ev_tool_bar_separator_1
 			create remove_metric_btn
 			create remove_all_metric_btn
-			create l_ev_horizontal_box_1
-			create expression_lbl
-			create l_ev_cell_2
 			create l_ev_horizontal_box_2
+			create expression_lbl
+			create expression_lbl_empty_area
+			create l_ev_horizontal_box_3
 			create expression_text
 			
 				-- Build widget structure.
 			extend (definition_area)
-			definition_area.extend (metric_definition_lbl)
+			definition_area.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (metric_definition_lbl)
+			l_ev_horizontal_box_1.extend (linear_lbl_empty_area)
 			definition_area.extend (grid_area)
 			definition_area.extend (toolbar_area)
-			toolbar_area.extend (l_ev_cell_1)
+			toolbar_area.extend (linear_definition_empty_area)
 			toolbar_area.extend (tool_bar)
 			tool_bar.extend (up_btn)
 			tool_bar.extend (down_btn)
 			tool_bar.extend (l_ev_tool_bar_separator_1)
 			tool_bar.extend (remove_metric_btn)
 			tool_bar.extend (remove_all_metric_btn)
-			definition_area.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (expression_lbl)
-			l_ev_horizontal_box_1.extend (l_ev_cell_2)
 			definition_area.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (expression_text)
+			l_ev_horizontal_box_2.extend (expression_lbl)
+			l_ev_horizontal_box_2.extend (expression_lbl_empty_area)
+			definition_area.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (expression_text)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -75,10 +79,11 @@ feature {NONE}-- Initialization
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
 			definition_area.set_padding (3)
-			definition_area.disable_item_expand (metric_definition_lbl)
-			definition_area.disable_item_expand (toolbar_area)
 			definition_area.disable_item_expand (l_ev_horizontal_box_1)
+			definition_area.disable_item_expand (toolbar_area)
 			definition_area.disable_item_expand (l_ev_horizontal_box_2)
+			definition_area.disable_item_expand (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_1.disable_item_expand (metric_definition_lbl)
 			metric_definition_lbl.align_text_left
 			grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			grid_area.set_border_width (1)
@@ -88,7 +93,7 @@ feature {NONE}-- Initialization
 			down_btn.set_text ("Down")
 			remove_metric_btn.set_text ("Remove")
 			remove_all_metric_btn.set_text ("Remove All")
-			l_ev_horizontal_box_1.disable_item_expand (expression_lbl)
+			l_ev_horizontal_box_2.disable_item_expand (expression_lbl)
 			expression_lbl.set_text ("Expression:")
 			expression_text.set_minimum_height (35)
 			expression_text.disable_edit
@@ -108,18 +113,19 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	expression_text: EV_RICH_TEXT
+	linear_lbl_empty_area, linear_definition_empty_area, expression_lbl_empty_area: EV_CELL
 	tool_bar: EV_TOOL_BAR
-	up_btn, down_btn, remove_metric_btn, remove_all_metric_btn: EV_TOOL_BAR_BUTTON
-	grid_area,
-	toolbar_area: EV_HORIZONTAL_BOX
+	up_btn,
+	down_btn, remove_metric_btn, remove_all_metric_btn: EV_TOOL_BAR_BUTTON
+	grid_area, toolbar_area: EV_HORIZONTAL_BOX
 	definition_area: EV_VERTICAL_BOX
-	metric_definition_lbl, expression_lbl: EV_LABEL
+	metric_definition_lbl,
+	expression_lbl: EV_LABEL
 
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
 
 feature {NONE} -- Implementation
 

@@ -79,14 +79,19 @@ feature{NONE} -- Initialization
 			a_tool_attached: a_tool /= Void
 		do
 			metric_tool := a_tool
+			on_stop_metric_evaluation_agent := agent on_stop_metric_evaluation
+			on_process_gui_agent := agent on_process_gui
 			create {QL_TARGET_DOMAIN_GENERATOR} domain_generator_internal
 			on_show_percentage_btn_change_from_outside_agent := agent on_show_percentage_btn_change_from_outside
 			on_filter_result_change_from_outside_agent := agent on_filter_result_change_from_outside
 			on_auto_go_to_result_change_from_outside_agent := agent on_auto_go_to_result_change_from_outside
+			on_unit_order_change_agent := agent on_unit_order_change
 			default_create
 		ensure
 			metric_tool_set: metric_tool = a_tool
 			domain_generator_internal_attached: domain_generator_internal /= Void
+			on_stop_metric_evaluation_agent_attached: on_stop_metric_evaluation_agent /= Void
+			on_process_gui_agent_attached: on_process_gui_agent /= Void
 		end
 
 feature {NONE} -- Initialization
@@ -101,7 +106,7 @@ feature {NONE} -- Initialization
 			l_text: EV_TEXT
 		do
 				-- Setup basic metric definition area.
-			create metric_definer.make (metric_tool)
+			create metric_definer.make (metric_tool, Current)
 			metric_definer.change_actions_internal.extend (agent on_definition_change)
 			metric_definer.hide_name_area
 			criterion_area.extend (metric_definer.widget)
@@ -169,10 +174,6 @@ feature {NONE} -- Initialization
 			filter_result_btn.set_tooltip (metric_names.f_filter_result)
 			filter_result_btn.set_pixmap (pixmaps.icon_pixmaps.metric_filter_icon)
 
-			metric_definition_empty_area.drop_actions.extend (agent drop_cluster)
-			metric_definition_empty_area.drop_actions.extend (agent drop_class)
-			metric_definition_empty_area.drop_actions.extend (agent drop_feature)
-
 			show_percent_btn.set_text ("%%")
 			show_percent_btn.set_tooltip (metric_names.f_display_in_percentage)
 			show_percent_btn.select_actions.extend (agent on_show_percentage_btn_change)
@@ -181,9 +182,21 @@ feature {NONE} -- Initialization
 			auto_go_to_result_btn.set_tooltip (metric_names.f_auto_go_to_result)
 			auto_go_to_result_btn.select_actions.extend (agent on_auto_go_to_result_change)
 
+				-- Delete following in Docking EiffelStudio.
+			toolbar_empty_area.drop_actions.extend (agent drop_cluster)
+			toolbar_empty_area.drop_actions.extend (agent drop_class)
+			toolbar_empty_area.drop_actions.extend (agent drop_feature)
+			grid_wrapper_empty_area.drop_actions.extend (agent drop_cluster)
+			grid_wrapper_empty_area.drop_actions.extend (agent drop_class)
+			grid_wrapper_empty_area.drop_actions.extend (agent drop_feature)
+			metric_definition_empty_area.drop_actions.extend (agent drop_cluster)
+			metric_definition_empty_area.drop_actions.extend (agent drop_class)
+			metric_definition_empty_area.drop_actions.extend (agent drop_feature)
+
 			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.extend (on_show_percentage_btn_change_from_outside_agent)
 			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.extend (on_filter_result_change_from_outside_agent)
 			preferences.metric_tool_data.automatic_go_to_result_panel_preference.change_actions.extend (on_auto_go_to_result_change_from_outside_agent)
+			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
 			on_show_percentage_btn_change_from_outside
 			on_filter_result_change_from_outside
 			on_auto_go_to_result_change_from_outside
@@ -305,6 +318,12 @@ feature -- Basic operations
 			metric_selector.enable_sensitive
 			filter_result_btn.enable_sensitive
 			metric_tool.enable_tab ({EB_METRIC_TOOL_PANEL}.metric_definition_tab_index)
+		end
+
+	set_stone (a_stone: STONE) is
+			-- Notify that `a_stone' has been dropped on Current.
+		do
+			domain_selector.on_drop (a_stone)
 		end
 
 feature -- Actions
@@ -644,16 +663,22 @@ feature {NONE} -- Implementation
 			-- If `a_start' is True, setup before metric evaluation, otherwise, setup after metric evaluation.
 		local
 			l_generator: like domain_generator_internal
+			l_tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]]
 		do
 			l_generator := domain_generator_internal
+			l_tick_actions := l_generator.tick_actions
 			if a_start then
 				l_generator.set_interval (20)
-				l_generator.tick_actions.wipe_out
-				l_generator.tick_actions.extend (agent on_stop_metric_evaluation)
-				l_generator.tick_actions.extend (agent on_process_gui)
+				if not l_tick_actions.has (on_process_gui_agent) then
+					l_tick_actions.extend (on_process_gui_agent)
+				end
+				if not l_tick_actions.has (on_stop_metric_evaluation_agent) then
+					l_tick_actions.extend (on_stop_metric_evaluation_agent)
+				end
 			else
-				l_generator.tick_actions.wipe_out
-				l_generator.set_interval (2000)
+				l_tick_actions.prune_all (on_stop_metric_evaluation_agent)
+				l_tick_actions.prune_all (on_process_gui_agent)
+				l_generator.set_interval (20)
 			end
 		end
 
@@ -665,6 +690,12 @@ feature {NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
+
+	on_stop_metric_evaluation_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
+			-- Agent of `stop_metric_evaluation_agnet'
+
+	on_process_gui_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
+			-- Agent of `process_gui'
 
 feature -- Metric management
 
@@ -830,6 +861,7 @@ feature -- Recycle
 			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.prune_all (on_show_percentage_btn_change_from_outside_agent)
 			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.prune_all (on_filter_result_change_from_outside_agent)
 			preferences.metric_tool_data.automatic_go_to_result_panel_preference.change_actions.prune_all (on_auto_go_to_result_change_from_outside_agent)
+			preferences.metric_tool_data.unit_order_preference.change_actions.prune_all (on_unit_order_change_agent)
 			on_show_percentage_btn_change_from_outside
 			on_filter_result_change_from_outside
 			on_auto_go_to_result_change_from_outside
@@ -838,6 +870,8 @@ feature -- Recycle
 invariant
 	metric_tool_attached: metric_tool /= Void
 	domain_generator_internal_attached: domain_generator_internal /= Void
+	on_stop_metric_evaluation_agent_attached: on_stop_metric_evaluation_agent /= Void
+	on_process_gui_agent_attached: on_process_gui_agent /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

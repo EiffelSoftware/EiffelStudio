@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			a_tool_attached: a_tool /= Void
 		do
 			metric_tool := a_tool
+			on_unit_order_change_agent := agent on_unit_order_change
 			default_create
 		ensure
 			metric_tool_set: metric_tool = a_tool
@@ -147,16 +148,23 @@ feature {NONE} -- Initialization
 			send_current_to_new_btn.select_actions.extend (agent on_copy_current_metric_to_a_new_metric)
 			send_current_to_new_btn.set_tooltip (metric_names.f_create_new_metric_using_current_data)
 
+				-- Delete following in docking EiffelStudio.
 			no_metric_area.drop_actions.extend (agent drop_cluster)
 			no_metric_area.drop_actions.extend (agent drop_class)
 			no_metric_area.drop_actions.extend (agent drop_feature)
-
 			toolbar_area.drop_actions.extend (agent drop_cluster)
 			toolbar_area.drop_actions.extend (agent drop_class)
 			toolbar_area.drop_actions.extend (agent drop_feature)
+			empty_lbl.drop_actions.extend (agent drop_cluster)
+			empty_lbl.drop_actions.extend (agent drop_class)
+			empty_lbl.drop_actions.extend (agent drop_feature)
+			metric_definition_area.drop_actions.extend (agent drop_cluster)
+			metric_definition_area.drop_actions.extend (agent drop_class)
+			metric_definition_area.drop_actions.extend (agent drop_feature)
 
 			select_metric_lbl.set_text (metric_names.t_select_metric)
 			empty_lbl.set_text ("   ")
+			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
 		end
 
 feature -- Status report
@@ -452,6 +460,14 @@ feature -- Basic operations
 			end
 		end
 
+	set_stone (a_stone: STONE) is
+			-- Notify that `a_stone' has been dropped on Current.
+		do
+			if current_metric_editor /= Void then
+				current_metric_editor.set_stone (a_stone)
+			end
+		end
+
 feature -- Notification
 
 	update (a_observable: QL_OBSERVABLE; a_data: ANY) is
@@ -554,17 +570,17 @@ feature{NONE} -- Implementation
 		do
 			if a_type = basic_metric_type then
 				if basic_metric_definition_area = Void then
-					create basic_metric_definition_area.make (metric_tool)
+					create basic_metric_definition_area.make (metric_tool, Current)
 				end
 				Result := basic_metric_definition_area
 			elseif a_type = linear_metric_type then
 				if linear_metric_defintion_area = Void then
-					create linear_metric_defintion_area.make (metric_tool)
+					create linear_metric_defintion_area.make (metric_tool, Current)
 				end
 				result := linear_metric_defintion_area
 			elseif a_type = ratio_metric_type then
 				if ratio_metric_definition_area = Void then
-					create ratio_metric_definition_area.make (metric_tool)
+					create ratio_metric_definition_area.make (metric_tool, Current)
 				end
 				Result := ratio_metric_definition_area
 			end
@@ -590,6 +606,7 @@ feature -- Recycle
 	recycle is
 			-- To be called when the button has became useless.
 		do
+			preferences.metric_tool_data.unit_order_preference.change_actions.prune_all (on_unit_order_change_agent)
 		end
 
 invariant

@@ -51,14 +51,14 @@ feature {NONE}-- Initialization
 			create update_warning_area
 			create update_warning_pixmap
 			create update_warning_lbl
-			create l_ev_cell_8
+			create information_bar_empty_area
 			create input_area
 			create input_lbl
 			create input_grid_area
 			create result_grid_holder
 			create l_ev_horizontal_box_1
 			create result_lable
-			create l_ev_cell_9
+			create l_ev_cell_8
 			create tool_bar
 			create filter_invisible_item_btn
 			create result_grid_area
@@ -89,14 +89,14 @@ feature {NONE}-- Initialization
 			metric_area.extend (update_warning_area)
 			update_warning_area.extend (update_warning_pixmap)
 			update_warning_area.extend (update_warning_lbl)
-			metric_area.extend (l_ev_cell_8)
+			metric_area.extend (information_bar_empty_area)
 			extend (input_area)
 			input_area.extend (input_lbl)
 			input_area.extend (input_grid_area)
 			extend (result_grid_holder)
 			result_grid_holder.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (result_lable)
-			l_ev_horizontal_box_1.extend (l_ev_cell_9)
+			l_ev_horizontal_box_1.extend (l_ev_cell_8)
 			l_ev_horizontal_box_1.extend (tool_bar)
 			tool_bar.extend (filter_invisible_item_btn)
 			result_grid_holder.extend (result_grid_area)
@@ -197,6 +197,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	information_bar_empty_area: EV_CELL
 	ratio_btn_toolbar, tool_bar: EV_TOOL_BAR
 	show_percentage_btn, filter_invisible_item_btn: EV_TOOL_BAR_TOGGLE_BUTTON
 	type_pixmap,
@@ -213,7 +214,7 @@ feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5,
-	l_ev_cell_6, l_ev_cell_7, l_ev_cell_8, l_ev_cell_9: EV_CELL
+	l_ev_cell_6, l_ev_cell_7, l_ev_cell_8: EV_CELL
 	l_ev_tool_bar_1: EV_TOOL_BAR
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 

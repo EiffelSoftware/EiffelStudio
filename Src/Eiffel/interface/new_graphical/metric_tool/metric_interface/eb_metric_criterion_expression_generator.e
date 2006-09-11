@@ -17,6 +17,8 @@ inherit
 
 	EB_METRIC_EXPRESSION_GENERATOR
 
+	EB_METRIC_INTERFACE_PROVIDER
+
 create
 	make
 
@@ -106,7 +108,7 @@ feature{NONE} -- Process
 				l_domain.forth
 			end
 			text_list.extend (")")
-			format_list.extend (l_format)
+			format_list.extend (normal_format)
 			append_negation_end (a_criterion)
 		end
 
@@ -256,12 +258,16 @@ feature{NONE} -- Process
 			-- Process `a_item'.
 		do
 			if not a_item.is_valid then
-				text_list.extend ("Invalid item")
+				text_list.extend (a_item.string_representation)
 				format_list.extend (error_format)
 			else
+				text_list.extend (ti_l_curly)
+				format_list.extend (operator_format)
 				process_class_domain_item (a_item.class_domain_item)
-				text_list.extend (".")
-				format_list.extend (normal_format)
+				text_list.extend (ti_r_curly)
+				format_list.extend (operator_format)
+				text_list.extend (ti_dot)
+				format_list.extend (operator_format)
 				last_domain_item_format := feature_format
 				process_domain_item (a_item)
 			end

@@ -63,7 +63,7 @@ feature -- Access
 
 feature -- Status report
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM is
 			-- Retrieve the Current row from `a_y' coordinate
 		do
 		end

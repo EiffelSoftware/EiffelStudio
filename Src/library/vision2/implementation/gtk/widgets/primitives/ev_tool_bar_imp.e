@@ -31,6 +31,8 @@ inherit
 			initialize
 		end
 
+	EV_PND_DEFERRED_ITEM_PARENT
+
 create
 	make
 
@@ -39,7 +41,7 @@ feature {NONE} -- Implementation
 	needs_event_box: BOOLEAN is
 			-- Does `a_widget' need an event box?
 		do
-			Result := False
+			Result := True
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -142,6 +144,27 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		end
 
 feature -- Implementation
+
+	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM
+			-- Return toolbar item corresponding to coordinates (`a_x', `a_y').
+		local
+			i: INTEGER
+			l_width: INTEGER
+			l_item_imp: EV_ITEM_IMP
+		do
+			from
+				i := 1
+			until
+				i > count or else Result /= Void
+			loop
+				l_item_imp ?= (child_array @ i).implementation
+				l_width := l_width + l_item_imp.width
+				if a_x < l_width then
+					Result ?= l_item_imp
+				end
+				i := i + 1
+			end
+		end
 
 	update_toolbar_style is
 			-- Set the style of `Current' relative to items

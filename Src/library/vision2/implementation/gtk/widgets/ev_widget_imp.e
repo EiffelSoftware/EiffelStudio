@@ -307,16 +307,6 @@ feature -- Access
 			end
 		end
 
-	pointer_position: EV_COORDINATE is
-			-- Position of the screen pointer relative to `Current'.
-		local
-			x, y, s: INTEGER
-			child: POINTER
-		do
-			child := {EV_GTK_EXTERNALS}.gdk_window_get_pointer ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $x, $y, $s)
-			create Result.set (x, y)
-		end
-
 feature -- Status setting
 
 	hide is

@@ -61,6 +61,9 @@ inherit
 		end
 
 	EV_PND_DEFERRED_ITEM_PARENT
+		redefine
+			call_selection_action_sequences
+		end
 
 create
 	make
@@ -973,7 +976,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			end
 		end
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM is
 			-- Returns the row at relative coordinate `a_y'
 		local
 			a_row_index: INTEGER

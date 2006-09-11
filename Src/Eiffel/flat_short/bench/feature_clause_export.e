@@ -103,7 +103,6 @@ feature -- Context output
 	format (ctxt: TEXT_FORMATTER_DECORATOR; comments: EIFFEL_COMMENTS) is
 			-- Reconstitute text.
 		local
-			not_first: BOOLEAN
 			l_feature_i: FEATURE_I
 		do
 			ctxt.process_filter_item (f_feature_clause, true)
@@ -132,10 +131,7 @@ feature -- Context output
 			until
 				features.after
 			loop
-				if not_first then
-					not_first := True;
-					ctxt.put_separator
-				end;
+				ctxt.put_new_line
 				l_feature_i := features.item.source_feature
 				if l_feature_i /= Void and then not l_feature_i.written_class.is_true_external then
 					features.item.format (ctxt);

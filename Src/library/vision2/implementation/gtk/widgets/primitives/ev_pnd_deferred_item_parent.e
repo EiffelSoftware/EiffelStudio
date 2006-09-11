@@ -11,8 +11,8 @@ deferred class
 
 feature {EV_ANY_I} -- Implementation
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
-			-- Retrieve the Current row from `a_y' coordinate
+	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+			-- Retrieve the Current row from (`a_x', `a_y') coordinate
 		deferred
 		end
 
@@ -32,7 +32,8 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
 	call_selection_action_sequences is
 			-- Call appropriate selection action sequences
-		deferred
+		do
+			-- By default do nothing, redefined in descendants.
 		end
 
 indexing

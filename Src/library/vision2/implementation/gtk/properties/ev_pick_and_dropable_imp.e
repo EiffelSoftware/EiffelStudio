@@ -402,7 +402,7 @@ feature -- Implementation
 			a_x, a_y: INTEGER
 			a_wid_imp: EV_PICK_AND_DROPABLE_IMP
 			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
-			a_row_imp: EV_PND_DEFERRED_ITEM
+			a_pnd_item: EV_PND_DEFERRED_ITEM
 			l_app_imp: like app_implementation
 		do
 			l_app_imp := app_implementation
@@ -428,9 +428,11 @@ feature -- Implementation
 					a_pnd_deferred_item_parent ?= a_wid_imp
 					if a_pnd_deferred_item_parent /= Void then
 							-- We need to explicitly search for PND deferred items
-						a_row_imp := a_pnd_deferred_item_parent.row_from_y_coord (a_y)
-						if a_row_imp /= Void and then l_app_imp.pnd_targets.has (a_row_imp.interface.object_id) then
-							Result := a_row_imp.interface
+							-- A server roundtrip is needed to get the coordinates relative to the PND target parent..
+						gdkwin := {EV_GTK_EXTERNALS}.gdk_window_get_pointer ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (a_wid_imp.c_object), $a_x, $a_y, default_pointer)
+						a_pnd_item := a_pnd_deferred_item_parent.item_from_coords (a_x, a_y)
+						if a_pnd_item /= Void and then l_app_imp.pnd_targets.has (a_pnd_item.interface.object_id) then
+							Result := a_pnd_item.interface
 						end
 					end
 				end
@@ -443,6 +445,17 @@ feature -- Implementation
 			create Result
 			interface.init_drop_actions (Result)
 		end
+
+	pointer_position: EV_COORDINATE is
+			-- Position of the screen pointer relative to `Current'.
+		local
+			x, y, s: INTEGER
+			child: POINTER
+		do
+			child := {EV_GTK_EXTERNALS}.gdk_window_get_pointer ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $x, $y, $s)
+			create Result.set (x, y)
+		end
+
 
 feature {EV_ANY_I} -- Implementation
 

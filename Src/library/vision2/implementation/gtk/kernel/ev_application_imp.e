@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.gtk_object_sink (tooltips)
 				set_tooltip_delay (500)
 
-				stored_display_data := [default_pointer, 0, 0, 0]
+				stored_display_data := [default_pointer, 0, 0, 0, 0, 0]
 					-- Initialize display retrieval storage for use by motion actions.
 
 					-- Initialize the marshal object.
@@ -228,10 +228,10 @@ feature -- Basic operation
 			stop_processing_requested := True
 		end
 
-	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
+	motion_tuple: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER; originating_x: INTEGER; originating_y: INTEGER] is
 			-- Tuple optimizations
 		once
-			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
+			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0, 0, 0]
 		end
 
 	process_key_event (a_gdk_event: POINTER) is
@@ -366,10 +366,14 @@ feature -- Basic operation
 							use_stored_display_data := True
 							l_screen_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer
 							l_screen_y := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+							l_widget_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer
+							l_widget_y := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_Y (gdk_event).truncated_to_integer
 							stored_display_data.put_pointer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event), 1)
 							stored_display_data.put_integer (l_screen_x, 2)
 							stored_display_data.put_integer (l_screen_y, 3)
 							stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_state (gdk_event), 4)
+							stored_display_data.put_integer (l_widget_x, 5)
+							stored_display_data.put_integer (l_widget_y, 6)
 
 							l_call_event := False
 							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
@@ -396,11 +400,8 @@ feature -- Basic operation
 									end
 								end
 								if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM then
-									if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget) = {EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event) then
-										l_widget_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer
-										l_widget_y := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_Y (gdk_event).truncated_to_integer
-									else
-											-- If the event we received is not from the associating widget window then we query its correct x and y values.
+									if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget) /= {EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event) then
+											-- If the event we received is not from the associating widget window then we remap its correct x and y values.
 										i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget), $l_widget_x, $l_widget_y)
 										l_widget_x := l_screen_x - l_widget_x
 										l_widget_y := l_screen_y - l_widget_y
@@ -807,7 +808,7 @@ feature -- Implementation
 			Result := l_display_data.mask
 		end
 
-	retrieve_display_data: TUPLE [window: POINTER; x, y: INTEGER; mask: INTEGER] is
+	retrieve_display_data: TUPLE [window: POINTER; x, y: INTEGER; mask: INTEGER; originating_x, originating_y: INTEGER] is
 			-- Retrieve mouse and keyboard data from the display.
 		do
 			if not use_stored_display_data then
@@ -830,6 +831,8 @@ feature -- Implementation
 			l_stored_display_data.put_integer (temp_x, 2)
 			l_stored_display_data.put_integer (temp_y, 3)
 			l_stored_display_data.put_integer (temp_mask, 4)
+			l_stored_display_data.put_integer (temp_x, 5)
+			l_stored_display_data.put_integer (temp_y, 6)
 		end
 
 	use_stored_display_data: BOOLEAN

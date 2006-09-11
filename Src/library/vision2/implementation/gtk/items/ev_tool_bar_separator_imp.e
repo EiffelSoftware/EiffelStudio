@@ -21,6 +21,13 @@ inherit
 			needs_event_box
 		end
 
+	EV_PND_DEFERRED_ITEM
+		undefine
+			create_drop_actions
+		redefine
+			interface
+		end
+
 create
 	make
 

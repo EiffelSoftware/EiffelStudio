@@ -49,6 +49,9 @@ inherit
 	EV_TREE_ACTION_SEQUENCES_IMP
 
 	EV_PND_DEFERRED_ITEM_PARENT
+		redefine
+			call_selection_action_sequences
+		end
 
 create
 	make
@@ -221,7 +224,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			if not avoid_item_events then
-				tree_item_imp := row_from_y_coord (a_y)
+				tree_item_imp := item_from_coords (a_x, a_y)
 				if tree_item_imp /= Void then
 					t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y]
 					if
@@ -245,7 +248,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor (a_motion_tuple)
 			if not app_implementation.is_in_transport and then a_motion_tuple.integer_item (2) > 0 and a_motion_tuple.integer_item (1) <= width then
-				a_row_imp := row_from_y_coord (a_motion_tuple.integer_item (2))
+				a_row_imp := item_from_coords (a_motion_tuple.integer_item (1), a_motion_tuple.integer_item (2))
 				if a_row_imp /= Void then
 					if a_row_imp.pointer_motion_actions_internal /= Void then
 						a_row_imp.pointer_motion_actions_internal.call (a_motion_tuple)
@@ -405,7 +408,7 @@ feature -- Implementation
 		is
 			-- Initialize a pick and drop transport.
 		do
-			pnd_row_imp := row_from_y_coord (a_y)
+			pnd_row_imp := item_from_coords (a_x, a_y)
 
 			if pnd_row_imp /= Void and then not pnd_row_imp.able_to_transport (a_button) then
 				pnd_row_imp := Void
@@ -528,7 +531,7 @@ feature -- Implementation
 
 feature {EV_TREE_NODE_IMP}
 
-	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
+	item_from_coords (a_x, a_y: INTEGER): EV_TREE_NODE_IMP is
 			-- Returns the row index at relative coordinate `a_y'.
 		local
 			a_tree_path, a_tree_column: POINTER

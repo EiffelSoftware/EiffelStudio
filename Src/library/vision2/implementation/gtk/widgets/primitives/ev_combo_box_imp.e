@@ -53,7 +53,8 @@ inherit
 			needs_event_box,
 			make,
 			interface,
-			insert_i_th
+			insert_i_th,
+			call_selection_action_sequences
 		end
 
 	EV_COMBO_BOX_ACTION_SEQUENCES_IMP

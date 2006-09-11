@@ -24,9 +24,10 @@ inherit
 			interface,
 			visual_widget,
 			initialize,
-			row_from_y_coord,
+			item_from_coords,
 			on_mouse_button_event,
-			row_height
+			row_height,
+			call_selection_action_sequences
 		end
 
 create
@@ -248,7 +249,7 @@ feature -- PND
 			end
 		end
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM is
 			-- Returns the row at relative coordinate `a_y'
 		local
 			a_row_index: INTEGER

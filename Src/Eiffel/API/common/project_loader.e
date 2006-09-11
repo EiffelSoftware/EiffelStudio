@@ -59,6 +59,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_OVERRIDDEN_METADATA_CACHE_PATH
+		export
+			{NONE} all
+		end
+
 feature -- Loading
 
 	open_project_file (a_file_name: STRING; a_target_name: STRING; a_project_path: STRING; from_scratch: BOOLEAN) is
@@ -616,12 +621,29 @@ feature {NONE} -- Settings
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 			l_cmd: STRING
+			l_mdcp: STRING
+			l_target: CONF_TARGET
 		do
+			l_target := a_precompile.target
 			create l_cmd.make (50)
 			l_cmd.append (eiffel_layout.ec_command_name)
 			l_cmd.append (" -config ")
 			l_cmd.append (a_precompile.location.evaluated_path)
 			l_cmd.append (" -precompile -clean -c_compile -batch")
+			if l_target.setting_msil_generation then
+				if l_target.setting_msil_use_optimized_precompile then
+					l_cmd.append (" -finalize")
+				end
+				l_mdcp := overridden_metadata_cache_path
+				if l_mdcp = Void then
+					l_mdcp := l_target.setting_metadata_cache_path
+				end
+				if l_mdcp /= Void and then not l_mdcp.is_empty then
+					l_cmd.append (" -metadata_cache_path %"")
+					l_cmd.append (l_mdcp)
+					l_cmd.append ("%"")
+				end
+			end
 			if a_precompile.eifgens_location /= Void then
 				l_cmd.append (" -project_path "+a_precompile.eifgens_location.evaluated_path)
 			end

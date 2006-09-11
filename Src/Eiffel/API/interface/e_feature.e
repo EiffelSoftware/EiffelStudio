@@ -70,6 +70,12 @@ feature -- Properties
 	has_convert_mark: BOOLEAN
 			-- Is convert mark specified for an operator alias?
 
+	has_alias_name: BOOLEAN is
+			-- Does current routine represent a routine with an alias?
+		do
+			Result := alias_name /= Void
+		end
+
 	assigner_name: STRING is
 			-- Name of the assigner procedure (if any)
 		do
@@ -749,7 +755,7 @@ feature -- Output
 		do
 			Result := extract_symbol_from_infix (name)
 		ensure
-			infix_symbol_not_void: infix_symbol /= Void
+			infix_symbol_not_void: Result /= Void
 		end
 
 	prefix_symbol : STRING is
@@ -759,7 +765,16 @@ feature -- Output
 		do
 			Result := extract_symbol_from_prefix (name)
 		ensure
-			prefix_symbol_not_void: prefix_symbol /= Void
+			prefix_symbol_not_void: Result /= Void
+		end
+
+	alias_symbol: STRING is
+		require
+			is_alias: has_alias_name
+		do
+			Result := extract_alias_name (alias_name)
+		ensure
+			alias_symbol_not_void: Result /= Void
 		end
 
 feature -- Output

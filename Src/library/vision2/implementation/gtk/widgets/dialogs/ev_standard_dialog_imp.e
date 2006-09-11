@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 	blocking_condition: BOOLEAN is
 			-- Condition which causes blocking to cease if enabled.
 		do
-			Result := is_destroyed or else selected_button /= Void
+			Result := is_destroyed or else selected_button /= Void or else app_implementation.is_destroyed
 		end
 
 	enable_closeable is

@@ -113,12 +113,18 @@ feature {NONE} -- Implementation
 	set_size (a_width, a_height: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
+		local
+			l_width, l_height: INTEGER
 		do
 			default_width := a_width
 			default_height := a_height
 				-- Both resizes are needed otherwise the original position gets reset on show.
-			{EV_GTK_EXTERNALS}.gdk_window_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_width.max (minimum_width), default_height.max (minimum_height))
-			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
+
+			l_width := minimum_width.max (a_width)
+			l_height := minimum_height.max (a_height)
+
+			{EV_GTK_EXTERNALS}.gdk_window_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_width, l_height)
+			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, l_width, l_height)
 		end
 
 	default_width, default_height: INTEGER
@@ -304,7 +310,7 @@ feature -- Basic operations
 	blocking_condition: BOOLEAN is
 			-- Condition when blocking ceases if enabled.
 		do
-			Result := is_destroyed or else not is_show_requested
+			Result := is_destroyed or else not is_show_requested or else app_implementation.is_destroyed
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES}

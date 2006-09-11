@@ -18,6 +18,8 @@ inherit
 				pointer_button_press_actions_internal,
 				pointer_double_press_actions_internal,
 				pointer_button_release_actions_internal
+			{EV_ANY_I, EV_INTERMEDIARY_ROUTINES}
+				is_destroyed
 		end
 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
@@ -201,7 +203,7 @@ feature -- Basic operation
 			from
 				stop_processing_requested := False
 			until
-				stop_processing_requested
+				stop_processing_requested or else is_destroyed
 			loop
 				event_loop_iteration (True)
 			end

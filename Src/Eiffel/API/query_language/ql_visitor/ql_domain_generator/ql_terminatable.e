@@ -59,16 +59,18 @@ feature -- Basic operations
 			-- Increase `internal_counter' by 1.
 		local
 			l_counter: like internal_counter
+			l_tick_actions: like tick_actions
 		do
 				-- We don't detect overflow here.
 				-- If internal_counter overflows, it just restarts from 0. (Jasonw)
 			l_counter := internal_counter + 1
 			internal_counter_cell.put (l_counter)
+			l_tick_actions := tick_actions
 			if
 				l_counter \\ interval = 0 and then
-				not tick_actions.is_empty
+				not l_tick_actions.is_empty
 			then
-				tick_actions.call ([a_item])
+				l_tick_actions.call ([a_item])
 			end
 		end
 

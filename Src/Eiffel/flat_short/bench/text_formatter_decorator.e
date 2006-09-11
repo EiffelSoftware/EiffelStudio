@@ -474,9 +474,6 @@ feature -- Execution
 				end
 
 				create format_registration.make (current_class, client)
-				if is_flat_short then
-					format_registration.initialize_creators
-				end
 
 				if not order_same_as_text then
 					format_registration.set_feature_clause_order (feature_clause_order)

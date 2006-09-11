@@ -38,14 +38,6 @@ feature -- Initialization
 			initialize;
 		end;
 
-	initialize_creators is
-			-- Initialize `creators'.
-		require
-			valid_target: target_class /= Void
-		do
-			creators := target_class.creators;
-		end;
-
 	initialize is
 			-- Initialize Current structures.
 		do
@@ -63,9 +55,6 @@ feature -- Properties
 
 	target_feature_table: FEATURE_TABLE;
 			-- Feature table for target_class
-
-	creators: HASH_TABLE [EXPORT_I, STRING]
-			-- Creators of `target_class'
 
 	current_class: CLASS_C;
 			-- Class being analyzed
@@ -240,15 +229,11 @@ end;
 		require
 			valid_feat_adapter: feat_adapter /= Void
 		local
-			target_feature: FEATURE_I;
-			tmp_creators: like creators
+			l_target_feature: FEATURE_I;
 		do
-			tmp_creators := creators;
-			if tmp_creators /= Void then
-				target_feature := feat_adapter.target_feature;
-				if tmp_creators.has (target_feature.feature_name) then
-					creation_table.put (feat_adapter, target_feature.feature_name)
-				end
+			l_target_feature := feat_adapter.target_feature
+			if target_class.valid_creation_procedure (l_target_feature.feature_name) then
+				creation_table.put (feat_adapter, l_target_feature.feature_name)
 			end
 		end;
 
@@ -334,7 +319,6 @@ feature -- Removal
 	wipe_out is
 			-- Wipe out Current structure.
 		do
-			creators := Void;
 			target_ast := Void;
 			target_feature_table := Void;
 			current_class := Void;

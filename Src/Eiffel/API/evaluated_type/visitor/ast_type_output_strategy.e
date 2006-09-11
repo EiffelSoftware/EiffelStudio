@@ -114,7 +114,7 @@ feature {TYPE_A} -- Visitors
 	process_bits_a (a_type: BITS_A) is
 			-- Process `a_type'.
 		do
-			text_formatter.add (ti_bit_class)
+			text_formatter.process_keyword_text (ti_bit_class, Void)
 			text_formatter.add_space
 			text_formatter.add_int (a_type.bit_count)
 		end
@@ -124,7 +124,7 @@ feature {TYPE_A} -- Visitors
 		local
 			l_feat : E_FEATURE
 		do
-			text_formatter.add (ti_Bit_class)
+			text_formatter.process_keyword_text (ti_Bit_class, Void)
 			text_formatter.add_space
 			l_feat := current_class.feature_with_rout_id (a_type.rout_id)
 			check
@@ -343,7 +343,7 @@ feature {TYPE_A} -- Visitors
 	process_unevaluated_bits_symbol_a (a_type: UNEVALUATED_BITS_SYMBOL_A) is
 			-- Process `a_type'.
 		do
-			text_formatter.add (ti_bit_class)
+			text_formatter.process_keyword_text (ti_bit_class, Void)
 			text_formatter.add_space
 			text_formatter.add (a_type.symbol)
 		end

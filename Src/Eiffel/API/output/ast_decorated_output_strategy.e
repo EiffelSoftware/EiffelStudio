@@ -1496,9 +1496,13 @@ feature {NONE} -- Implementation
 				l_feat := feature_in_class (l_expr_type.actual_type.associated_class, l_as.routine_ids)
 			end
 			if not has_error_internal then
-				if l_feat.is_prefix then
+				if l_feat.is_prefix or l_feat.has_alias_name then
 					if not expr_type_visiting then
-						l_name := l_feat.prefix_symbol
+						if l_feat.is_prefix then
+							l_name := l_feat.prefix_symbol
+						else
+							l_name := l_feat.alias_symbol
+						end
 						if in_bench_mode then
 							text_formatter_decorator.process_operator_text (l_name, l_feat)
 						elseif (l_name @ 1).is_alpha then
@@ -1644,8 +1648,12 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				if not has_error_internal then
 					check l_feat_not_void: l_feat /= Void end
-					if l_feat.is_infix then
-						l_name := l_feat.infix_symbol
+					if l_feat.is_infix or l_feat.has_alias_name then
+						if l_feat.is_infix then
+							l_name := l_feat.infix_symbol
+						else
+							l_name := l_feat.alias_symbol
+						end
 						text_formatter_decorator.put_space
 						if in_bench_mode then
 							text_formatter_decorator.process_operator_text (l_name, l_feat)

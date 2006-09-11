@@ -2810,8 +2810,10 @@ feature -- Final mode generation
 		do
 			eiffel_project.terminate_c_compilation
 			if not retried and is_finalization_needed then
-				create l_type_id_mapping.make (0, static_type_id_counter.count)
-				process_dynamic_types (False, l_type_id_mapping)
+				if not compilation_modes.is_precompiling then
+					create l_type_id_mapping.make (0, static_type_id_counter.count)
+					process_dynamic_types (False, l_type_id_mapping)
+				end
 					-- Reset `disposable_descendants' since they can have changed
 					--| Note: That is important to recompute it, as this is a once
 					--| which is not stored in the project file, therefore if we
@@ -2954,7 +2956,9 @@ feature -- Final mode generation
 
 					-- Clean `finalization_needed' tag from all CLASS_C
 				clean_finalization_tag
-				process_dynamic_types (True, l_type_id_mapping)
+				if l_type_id_mapping /= Void then
+					process_dynamic_types (True, l_type_id_mapping)
+				end
 				private_finalize := False
 			end
 		rescue

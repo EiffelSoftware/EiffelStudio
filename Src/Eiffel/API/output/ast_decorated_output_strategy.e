@@ -251,44 +251,53 @@ feature -- Roundtrip
 			l_old_e_feature: E_FEATURE
 			l_old_breakpoint_index: INTEGER
 			l_feat: FEATURE_I
+			l_leaf_list: LEAF_AS_LIST
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
+				if l_as.inl_rout_id > 0 then
+					text_formatter_decorator.process_keyword_text (ti_agent_keyword, Void)
 
-				create l_strategy.make_for_inline_agent (Current, l_as)
+					create l_strategy.make_for_inline_agent (Current, l_as)
 
-				l_old_feature_comments := text_formatter_decorator.feature_comments
-				l_old_arguments := text_formatter_decorator.arguments
-				l_old_target_feature := text_formatter_decorator.target_feature
-				l_old_source_feature := text_formatter_decorator.source_feature
-				l_old_e_feature := text_formatter_decorator.e_feature
-				l_old_breakpoint_index := text_formatter_decorator.breakpoint_index
+					l_old_feature_comments := text_formatter_decorator.feature_comments
+					l_old_arguments := text_formatter_decorator.arguments
+					l_old_target_feature := text_formatter_decorator.target_feature
+					l_old_source_feature := text_formatter_decorator.source_feature
+					l_old_e_feature := text_formatter_decorator.e_feature
+					l_old_breakpoint_index := text_formatter_decorator.breakpoint_index
 
-				l_feat := l_strategy.current_feature
+					l_feat := l_strategy.current_feature
 
-				text_formatter_decorator.restore_attributes ( Void, l_as.body.arguments, l_feat,
-															  l_strategy.source_feature, l_strategy, 0,
-															  l_feat.api_feature (l_feat.written_in))
+					text_formatter_decorator.restore_attributes ( Void, l_as.body.arguments, l_feat,
+																  l_strategy.source_feature, l_strategy, 0,
+																  l_feat.api_feature (l_feat.written_in))
 
-				l_as.body.process (l_strategy)
+					l_as.body.process (l_strategy)
 
-				text_formatter_decorator.restore_attributes ( l_old_feature_comments, l_old_arguments,
-															  l_old_target_feature, l_old_source_feature, Current,
-															  l_old_breakpoint_index, l_old_e_feature)
+					text_formatter_decorator.restore_attributes ( l_old_feature_comments, l_old_arguments,
+																  l_old_target_feature, l_old_source_feature, Current,
+																  l_old_breakpoint_index, l_old_e_feature)
 
-				if l_as.operands /= Void then
-					reset_last_class_and_type
-					text_formatter_decorator.process_symbol_text (ti_space)
-					text_formatter_decorator.begin
-					text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-					text_formatter_decorator.set_separator (ti_comma)
-					text_formatter_decorator.set_space_between_tokens
-					l_as.operands.process (Current)
-					text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-					text_formatter_decorator.commit
-				end
-				if not has_error_internal then
+					if l_as.operands /= Void then
+						reset_last_class_and_type
+						text_formatter_decorator.process_symbol_text (ti_space)
+						text_formatter_decorator.begin
+						text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
+						text_formatter_decorator.set_separator (ti_comma)
+						text_formatter_decorator.set_space_between_tokens
+						l_as.operands.process (Current)
+						text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
+						text_formatter_decorator.commit
+					end
 					last_type := expr_type (l_as)
+				else
+					has_error_internal := True
+					l_leaf_list	:= match_list_server.item (current_class.class_id)
+					if l_leaf_list /= Void and then l_as.is_text_available (l_leaf_list) then
+						text_formatter_decorator.add (l_as.text (l_leaf_list))
+					else
+						text_formatter_decorator.add ("unable_to_show_inline_agent")
+					end
 				end
 			else
 				if not has_error_internal then

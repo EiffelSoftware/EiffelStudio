@@ -46,53 +46,59 @@ feature -- Execution
 				prev_class := System.current_class
 				prev_cluster := Inst_context.group
 				target_feat := a_target_feat.associated_feature_i
-				execution_error := False
-				Error_handler.wipe_out
-				f_ast := target_feat.body
-				export_status := target_feat.export_status
-				initialize (text_formatter)
-				System.set_current_class (current_class);
-				Inst_context.set_group (current_class.group);
-				begin;
-				written_in_class := target_feat.written_class;
-				if written_in_class /= current_class then
-						-- Retrieve source feature.
-					source_feat := a_target_feat.written_feature.associated_feature_i
-					if source_feat = Void then
-						-- Shouldn't happen - but just in case
-						source_feat := target_feat
-					end
+				if target_feat = Void then
+						-- This could happen when trying to look at a feature which is not yet
+						-- part of the FEATURE_TABLE of a class. See bug#11168.
+					execution_error := True
 				else
-					source_feat := target_feat
-				end;
+					execution_error := False
+					Error_handler.wipe_out
+					f_ast := target_feat.body
+					export_status := target_feat.export_status
+					initialize (text_formatter)
+					System.set_current_class (current_class);
+					Inst_context.set_group (current_class.group);
+					begin;
+					written_in_class := target_feat.written_class;
+					if written_in_class /= current_class then
+							-- Retrieve source feature.
+						source_feat := a_target_feat.written_feature.associated_feature_i
+						if source_feat = Void then
+							-- Shouldn't happen - but just in case
+							source_feat := target_feat
+						end
+					else
+						source_feat := target_feat
+					end;
 
-					-- We only display one name in a feature_as.
-				if f_ast.feature_names.count > 1 then
-					f_ast := replace_name_from_feature (f_ast.deep_twin, f_ast.feature_names.first, source_feat)
-					l_deep_twined := True
-				end
-					-- If the target feature is an undefined one, we create a fake ast.
-				if target_feat.is_deferred and then not source_feat.is_deferred then
-					if not l_deep_twined then
-						f_ast := f_ast.deep_twin
+						-- We only display one name in a feature_as.
+					if f_ast.feature_names.count > 1 then
+						f_ast := replace_name_from_feature (f_ast.deep_twin, f_ast.feature_names.first, source_feat)
+						l_deep_twined := True
 					end
-					f_ast := normal_to_deferred_feature_as (f_ast)
-				end
-				l_match_list := match_list_server.item (written_in_class.class_id)
-				if l_match_list /= Void then
-					feature_comments := f_ast.comment (l_match_list)
-				end
-				create assert_server.make_for_feature (target_feat, f_ast);
-				init_feature_context (source_feat, target_feat, f_ast);
+						-- If the target feature is an undefined one, we create a fake ast.
+					if target_feat.is_deferred and then not source_feat.is_deferred then
+						if not l_deep_twined then
+							f_ast := f_ast.deep_twin
+						end
+						f_ast := normal_to_deferred_feature_as (f_ast)
+					end
+					l_match_list := match_list_server.item (written_in_class.class_id)
+					if l_match_list /= Void then
+						feature_comments := f_ast.comment (l_match_list)
+					end
+					create assert_server.make_for_feature (target_feat, f_ast);
+					init_feature_context (source_feat, target_feat, f_ast);
 
-				indent;
-				ast_output_strategy.format (f_ast)
-				if ast_output_strategy.has_error then
-					put_new_line
-					print_error
-				end
+					indent;
+					ast_output_strategy.format (f_ast)
+					if ast_output_strategy.has_error then
+						put_new_line
+						print_error
+					end
 
-				commit;
+					commit;
+				end
 			else
 				execution_error := True;
 				rescued := False

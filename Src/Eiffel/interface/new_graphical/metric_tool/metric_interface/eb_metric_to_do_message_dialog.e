@@ -53,8 +53,6 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			l_text: EV_TEXT
-			l_font: EV_FONT
-			l_font_size: INTEGER
 		do
 			create l_text
 			to_do_lbl.set_text (metric_names.t_to_do)

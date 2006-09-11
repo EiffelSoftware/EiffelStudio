@@ -436,12 +436,10 @@ feature{NONE} -- Actions
 		local
 			l_selected_rows: LIST [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
-			l_dest_row: EV_GRID_ROW
 			l_source_unit: QL_METRIC_UNIT
 			l_dest_unit: QL_METRIC_UNIT
 			l_start_index: INTEGER
 			l_end_index: INTEGER
-			l_offset: INTEGER
 			l_grid: like metric_grid
 			done: BOOLEAN
 		do

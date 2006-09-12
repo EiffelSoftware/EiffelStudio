@@ -197,6 +197,7 @@ feature -- Start output features
 			display_message ("Generating " + type);
 			display_new_line;
 			processed := 0;
+			current_degree := 0
 		end;
 
 	put_string (a_message: STRING) is

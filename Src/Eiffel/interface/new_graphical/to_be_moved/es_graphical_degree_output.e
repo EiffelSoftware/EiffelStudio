@@ -72,16 +72,25 @@ feature {NONE} -- Implementation
 
 	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
 			-- Display degree `deg_nbr' with entity `a_class'.
+		local
+			l_desc: STRING
 		do
 			Precursor (deg_nbr, to_go, a_name)
+			if current_degree = 0 then
+				l_desc := deg_nbr
+			else
+				l_desc := degree_description (current_degree)
+			end
+
 			if total_number > 1 then
-				window_manager.display_message_and_percentage (degree_description (current_degree)  +
+				window_manager.display_message_and_percentage (l_desc  +
 					" (" + (total_number - to_go + 1).out + "/" + total_number.out + "): " + a_name,
 					percentage_calculation (to_go))
 			else
-				window_manager.display_message_and_percentage (degree_description (current_degree) +
+				window_manager.display_message_and_percentage (l_desc +
 					": " + a_name, percentage_calculation (to_go))
 			end
+
 			flush_output
 		end
 

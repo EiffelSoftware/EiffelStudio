@@ -468,7 +468,6 @@ feature{NONE} -- Actions
 			l_editor_token: EDITOR_TOKEN
 			l_stone: STONE
 		do
-			-- Uncomment the following code
 			if a_button = 3 and then ev_application.ctrl_pressed then
 				l_editor_token := editor_token_at_position (a_x, a_y)
 				if l_editor_token /= Void then

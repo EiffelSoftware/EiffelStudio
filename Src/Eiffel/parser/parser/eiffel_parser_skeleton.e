@@ -699,30 +699,42 @@ feature {AST_FACTORY} -- Error handling
 			Error_handler.raise_error
 		end
 
-	report_integer_too_large_error (an_int: STRING) is
+	report_integer_too_large_error (a_type: TYPE_AS; an_int: STRING) is
 			-- `an_int', although only made up of digits, doesn't fit
 			-- in an INTEGER (i.e. greater than maximum_integer_value).
 		require
 			an_int_not_void: an_int /= Void
 		local
 			an_error: SYNTAX_ERROR
+			l_message: STRING
 		do
 			fixme ("Change plain syntax error to Integer_too_large error when the corresponding validity rule is available.")
-			create an_error.make (line, column, filename, "Integer value " + an_int + " is too large for any integer type.", False)
+			if a_type /= Void then
+				l_message := "Integer value " + an_int + " is too large for " + a_type.dump + "."
+			else
+				l_message := "Integer value " + an_int + " is too large for INTEGER_32."
+			end
+			create an_error.make (line, column, filename, l_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
 
-	report_integer_too_small_error (an_int: STRING) is
+	report_integer_too_small_error (a_type: TYPE_AS; an_int: STRING) is
 			-- `an_int', although only made up of digits, doesn't fit
 			-- in an INTEGER (i.e. less than minimum_integer_value).
 		require
 			an_int_not_void: an_int /= Void
 		local
 			an_error: SYNTAX_ERROR
+			l_message: STRING
 		do
 			fixme ("Change plain syntax error to Integer_too_small error when the corresponding validity rule is available.")
-			create an_error.make (line, column, filename, "Integer value " + an_int + " is too small for any integer type.", False)
+			if a_type /= Void then
+				l_message := "Integer value " + an_int + " is too small for " + a_type.dump + "."
+			else
+				l_message := "Integer value " + an_int + " is too small for INTEGER_32."
+			end
+			create an_error.make (line, column, filename, l_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end

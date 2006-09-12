@@ -219,9 +219,9 @@ feature -- Number AST creation
 				if sign_symbol = '-' then
 						-- Add `-' for a better reporting.
 					buffer.precede ('-')
-					a_psr.report_integer_too_small_error (buffer)
+					a_psr.report_integer_too_small_error (a_type, buffer)
 				else
-					a_psr.report_integer_too_large_error (buffer)
+					a_psr.report_integer_too_large_error (a_type, buffer)
 				end
 					-- Dummy code (for error recovery) follows:
 				Result := new_integer_as (a_type, False, "0", Void, s_as, 0, 0, 0, 0)

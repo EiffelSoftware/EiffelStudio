@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			parent ?= a_parent
 			set_mode (for_context_tool)
 			parent.history_manager.add_observer (Current)
-
+			enable_accept_general_group
 				-- Create the widget.
 			build_interface
 		end

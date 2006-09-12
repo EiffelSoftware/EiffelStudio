@@ -2425,29 +2425,19 @@ feature -- Removal
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
+			hide_column (a_column)
 			a_col_i := columns @ a_column
 
 				-- Remove association of column with `Current'
 			a_col_i.update_for_removal
-
 			columns.go_i_th (a_column)
 			columns.remove
 
 			update_grid_column_indices (a_column)
-
-			if a_col_i.is_displayed then
-				displayed_column_count := displayed_column_count - 1
-				header.go_i_th (a_column)
-				header.remove
-			end
-
 			update_index_of_first_item_dirty_row_flags (a_column)
 
 				-- Flag `physical_column_indexes' for recalculation
 			physical_column_indexes_dirty := True
-
-			set_horizontal_computation_required (a_column)
-			redraw_client_area
 		ensure
 			column_count_updated: column_count = old column_count - 1
 			old_column_removed: (old column (a_column)).parent = Void
@@ -2640,6 +2630,9 @@ feature -- Removal
 			current_column_count: INTEGER
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
+			if currently_active_item /= Void and then currently_active_item.parent = interface then
+				currently_active_item.deactivate
+			end
 			if is_row_selection_enabled then
 					-- In this case, it is possible that an empty row is selected
 					-- so just by iterating the items, the row is not unselected
@@ -3375,8 +3368,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if is_displayed then
 				if not is_locked then
 					drawable.redraw
+					redraw_locked
 				end
-				redraw_locked
 			end
 		end
 
@@ -4625,6 +4618,11 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			item_coordinates: EV_COORDINATE
 		do
 			pointed_item := drawer.item_at_position_strict (a_x, a_y)
+
+				-- Clear any previously activated items.
+			if currently_active_item /= Void and then currently_active_item.parent = interface then
+				currently_active_item.deactivate
+			end
 
 				-- We fire the pointer button press actions before the node or selection actions which may occur
 				-- as a result of this press.

@@ -169,7 +169,7 @@ feature {NONE} -- Implementation, attributes stored in configuration file
 
 feature {NONE} -- Implementation
 
-	--| The internal format uses the windows format (because we would otherwise loos the drive letter)
+	--| The internal format uses the windows format (because we would otherwise lose the drive letter)
 	--| directories are always terminated by a \
 
 	to_internal (a_path: STRING): STRING is
@@ -177,7 +177,6 @@ feature {NONE} -- Implementation
 		require
 			a_path_not_void: a_path /= Void
 		local
-			l_path: STRING
 			l_net_share: BOOLEAN
 		do
 			a_path.left_adjust

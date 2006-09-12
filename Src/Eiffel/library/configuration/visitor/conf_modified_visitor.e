@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 					end
 					l_classes.forth
 				end
-				if not is_force_rebuild then
+				if not is_error and then not is_force_rebuild then
 					a_group.set_classes (l_new_classes)
 				end
 			end

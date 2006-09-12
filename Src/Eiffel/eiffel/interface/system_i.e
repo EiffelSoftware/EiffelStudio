@@ -1148,13 +1148,11 @@ end
 			l_classes: ARRAYED_LIST [CONF_CLASS]
 			l_class: CLASS_I
 			l_conf_class: CONF_CLASS
-			l_rebuild: BOOLEAN
 			l_grp: CONF_GROUP
 			l_vis_check: CONF_CHECKER_VISITOR
 			l_errors: LIST [CONF_ERROR]
 			vd80: VD80
 			vd71: VD71
-			l_classdbl: CONF_ERROR_CLASSDBL
 		do
 			degree_output.put_start_degree_6
 
@@ -1191,34 +1189,12 @@ end
 					l_vis_modified.process_group_observer.extend (agent degree_output.put_process_group)
 					universe.target.process (l_vis_modified)
 
-					if l_vis_modified.is_error then
-						if l_vis_modified.last_errors.count = 1 then
-							l_classdbl ?= l_vis_modified.last_errors.first
-							if l_classdbl /= Void then
-								l_rebuild := True
-							end
-						end
-						if not l_rebuild then
-							from
-								l_errors := l_vis_modified.last_errors
-								l_errors.start
-							until
-								l_errors.after
-							loop
-								create vd71.make (l_errors.item)
-								Error_handler.insert_error (vd71)
-								l_errors.forth
-							end
-							Error_handler.checksum
-						end
-					end
-
-					if not (l_vis_modified.is_force_rebuild or l_rebuild) then
+					if not l_vis_modified.is_error and then not l_vis_modified.is_force_rebuild then
 						from
 							l_classes := l_vis_modified.modified_classes
 							l_classes.start
 						until
-							l_rebuild or l_classes.after
+							l_classes.after
 						loop
 							l_conf_class := l_classes.item
 							l_grp := l_conf_class.group

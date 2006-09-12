@@ -1152,7 +1152,6 @@ end
 			l_vis_check: CONF_CHECKER_VISITOR
 			l_errors: LIST [CONF_ERROR]
 			vd80: VD80
-			vd71: VD71
 		do
 			degree_output.put_start_degree_6
 

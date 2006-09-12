@@ -1252,7 +1252,7 @@ External_language:
 
 External_name: -- Empty
 			-- { $$ := Void }
-	|	TE_ALIAS Non_empty_string
+	|	TE_ALIAS Default_manifest_string
 			{
 				$$ := ast_factory.new_keyword_string_pair ($1, $2)
 			}

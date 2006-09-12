@@ -1,58 +1,57 @@
 /*
- * eif_config_h.vms (aka eif_config.h)
+	description: "Portability information for the Eiffel Software's Runtime."
+	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+			
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+*/
+
+/*
+ * config.vms (aka eif_config.h)
  * This file was produced by running the config_h.SH script, which
  * gets its values from config.sh, which is generally produced by
  * running Configure,
  * This file was originally produced by running Configure on Solaris,
  * by David Schwartz on 3-Dec-2001
  * and modified numerous times since then.
- * Most recently, on 12-Dec-2003 for Eiffel 5.4.0409
+ * Most recently, on 27-Jul-2006 for Eiffel 5.7.60489
  *
- *
- * Feel free to modify any of this as the need arises.  Note, however,
- * that running config_h.SH again will wipe out any changes you've made.
- * For a more permanent change edit config.sh and rerun config_h.SH.
- *
- * $Id$
  */
 
-/* Configuration time: Wed Feb  4 19:33:48 PDT 1998
- * Configured by: manuelt
- * Target system: OpenVMSAlpha (was sunos lannion 5.4 generic_101945-39 sun4m sparc)
- */
 
 #ifndef _config_h_
 #define _config_h_
-
-/* VMS:
- *	This symbol, if defined, indicates that the program is running under
- *	VMS.  It is currently only set in conjunction with the EUNICE symbol.
- */
-/* BSD:
- *	This symbol, if defined, indicates that the program is running under
- *	a BSD system.
- */
-/*#define VMS		/**/
-/*#define BSD		/**/
-
-/* VMS is predefined by the C compilers (DECC and VAXC) on VMS.
- * Defining it here would cause compilation warnings. 
- * Use the symbol EIF_VMS instead.
- */
-#if defined __VMS || defined __vms || defined VMS || defined vms
-#define EIF_VMS 0x1234
-#endif
-
-#ifndef EIF_VMS
-# error configuration error EIF_VMS not defined
-#endif
-
 
 /* ABORTSIG:
  *	This symbol holds the signal number (symbol) used by the abort() call. To
  *	actually define the signal symbol, <signal.h> should be included.
  */
-/*#define ABORTSIG SIGIOT		/* NC */
 #define ABORTSIG SIGABRT		/* NC */
 
 /* MEM_ALIGNBYTES:
@@ -73,25 +72,13 @@
 #if !defined(__DECC) && !defined(__STDC__)
 #define CAT2(a,b)a/* NC */b
 #define CAT3(a,b,c)a/* NC */b/* NC */c
-#define CAT4(a,b,c,d)a/* NC */b/* NC */c/* NC */d
-#define CAT5(a,b,c,d,e)a/* NC */b/* NC */c/* NC */d/* NC */e
-#define STRINGIFY(a)"a"
-		/* If you can get stringification with catify, tell me how! */
-#endif
-#if defined(__STDC__) || defined(__DECC)
+#else
 #define CAT2(a,b)a ## b
 #define CAT3(a,b,c)a ## b ## c
-#define CAT4(a,b,c,d)a ## b ## c ## d
-#define CAT5(a,b,c,d,e)a ## b ## c ## d ## e
-#define StGiFy(a)# a
-#define STRINGIFY(a)StGiFy(a)
-#define SCAT2(a,b)StGiFy(a) StGiFy(b)
-#define SCAT3(a,b,c)StGiFy(a) StGiFy(b) StGiFy(c)
-#define SCAT4(a,b,c,d)StGiFy(a) StGiFy(b) StGiFy(c) StGiFy(d)
-#define SCAT5(a,b,c,d,e)StGiFy(a) StGiFy(b) StGiFy(c) StGiFy(d) StGiFy(e)
 #endif
+
 #ifndef CAT2
-#include "Bletch: How does this C preprocessor catenate tokens?"
+#include "Warning: How does this C preprocessor catenate tokens?"
 #endif
 
 /* VAL_NOFILE:
@@ -101,18 +88,6 @@
  */
 #define VAL_NOFILE 64	/* Number of file descriptors */
 
-/* HAS_BCMP:
- *	This symbol is defined if the bcmp() routine is available to
- *	compare blocks of memory.
- */
-#define HAS_BCMP	/* NC */
-
-/* HAS_BCOPY:
- *	This symbol is defined if the bcopy() routine is available to
- *	copy blocks of memory.
- */
-#define HAS_BCOPY	/* NC */
-
 /* USE_BSDJMP:
  *	This symbol, if defined, indicates that the BSD _setjmp and _longjmp
  *	routines are available to do non-local gotos wihtout saving or restoring
@@ -120,23 +95,11 @@
  */
 /*#define USE_BSDJMP		/* NC */
 
-/* HAS_BZERO:
- *	This symbol is defined if the bzero() routine is available to
- *	set a memory block to 0.
- */
-#define HAS_BZERO	/* NC */
-
 /* HAS_CHOWN:
  *	This symbol, if defined, indicates that the chown routine is
  *	available.
  */
 #define HAS_CHOWN		/* NC */
-
-/* HAS_DLOPEN:
- *	This symbol, if defined, indicates that the dlopen routine is
- *	available.
- */
-/*#define HAS_DLOPEN		/* NC ***VMS REVIEW*** */
 
 /* HAS_DUP2:
  *	This symbol, if defined, indicates that the dup2 routine is
@@ -164,17 +127,18 @@
  *	than gettimeofday(2) anyway. The type "Timeval" should be used to
  *	refer to "struct timeb".
  */
+/*#define HAS_FTIME		/* NC */
+#ifdef HAS_FTIME
+#define Timeval struct timeb		/* Structure used by ftime() */
+#endif
+
 /* HAS_GETTIMEOFDAY:
  *	This symbol, if defined, indicates that the gettimeofday() system
  *	call is available for a sub-second accuracy clock. Usually, the file
  *	<sys/resource.h> needs to be included (see I_SYS_RESOURCE).
  *	The type "Timeval" should be used to refer to "struct timeval".
  */
-#define HAS_FTIME		/* NC */
 /*#define HAS_GETTIMEOFDAY	/* NC ***VMS REVIEW*** */
-#ifdef HAS_FTIME
-#define Timeval struct timeb		/* Structure used by ftime() */
-#endif
 #ifdef HAS_GETTIMEOFDAY
 #define Timeval struct timeval	/* Structure used by gettimeofday() */
 #endif
@@ -186,37 +150,17 @@
  */
 /*#define HAS_GETGROUPS		/* NC */
 
-/* HAS_GETHOSTID:
- *	This symbol, if defined, indicates that the gethostid system call is
- *	available to get the host id.
+/* Groups_t:
+ *	This symbol holds the type used for the second argument to
+ *	getgroups().  Usually, this is the same of gidtype, but
+ *	sometimes it isn't.  It can be int, ushort, uid_t, etc...
+ *	It may be necessary to include <sys/types.h> to get any
+ *	typedef'ed information.  This is only required if you have
+ *	getgroups().
  */
-/*#define HAS_GETHOSTID		/* NC */
-
-/* HAS_GETHOSTNAME:
- *	This symbol, if defined, indicates that the C program may use the
- *	gethostname() routine to derive the host name.  See also HAS_UNAME
- *	and PHOSTNAME.
- */
-/* HAS_UNAME:
- *	This symbol, if defined, indicates that the C program may use the
- *	uname() routine to derive the host name.  See also HAS_GETHOSTNAME
- *	and PHOSTNAME.
- */
-/* PHOSTNAME:
- *	This symbol, if defined, indicates that the C program may use the
- *	contents of PHOSTNAME as a command to feed to the popen() routine
- *	to derive the host name.  See also HAS_GETHOSTNAME and HAS_UNAME.
- *	Note that the command uses a fully qualified path, so that it is safe
- *	even if used by a process with super-user privileges.
- */
-#define HAS_GETHOSTNAME	/* NC */
-/*#define HAS_UNAME		/* NC */
-/*#define PHOSTNAME "/usr/ucb/hostname"	/* How to get the host name */
-
-/* HAS_GETOPT:
- *	This symbol, if defined, indicates that the getopt() routine exists.
- */
-#define HAS_GETOPT		/* NC */
+#ifdef HAS_GETGROUPS
+#define Groups_t $groupstype	/* Type for 2nd arg to getgroups() */
+#endif
 
 /* PAGESIZE_VALUE:
  *	This symbol holds the size in bytes of a system page (obtained via
@@ -230,27 +174,19 @@
  *	This symbol is defined if signal handlers needn't be reinstated after
  *	receipt of a signal.
  */
-/*#define SIGNALS_KEPT	/* based on dec c rtl ref man, signal() doc. */
+/*#define SIGNALS_KEPT	/* based on VMS CRTL Ref Man, signal() doc. */
 
 /* HAS_LINK:
  *	This symbol, if defined, indicates that the link routine is
  *	available to create hard links.
  */
-/*#define HAS_LINK	/* NC ***VMS REVIEW*** */
+#define HAS_LINK	/* NC ***VMS REVIEW*** */
 
 /* HAS_LSTAT:
  *	This symbol, if defined, indicates that the lstat routine is
  *	available to do file stats on symbolic links.
  */
 /*#define HAS_LSTAT		/* NC */
-
-/* HAS_MEMMOVE:
- *	This symbol, if defined, indicates that the memmove routine is available
- *	to copy potentially overlapping blocks of memory. This should be used
- *	only when HAS_SAFE_BCOPY is not defined. If neither is there, roll your
- *	own version.
- */
-#define HAS_MEMMOVE	/* NC */
 
 /* HAS_MKDIR:
  *	This symbol, if defined, indicates that the mkdir routine is available
@@ -259,20 +195,14 @@
  */
 #define HAS_MKDIR		/* NC */
 
-/* HAS_MKTIME:
- *	This symbol, if defined, indicates that the mktime routine is
- *	available.
- */
-/*#define HAS_MKTIME		/* NC */
-
 /* PIDCHECK:
  *	This symbol, if defined, means that the kill(pid, 0) will
  *	check for an active pid (i.e. the kernel will run all the
  *	necessary pid checks, but no signal is actually sent).
  */
-/* This works on VMS v7.0 or higher but only when _POSIX_EXIT is defined */
-/* Leave it off for now to allow earlier versions. */
-/*#define PIDCHECK		/* NC */
+/* This works on VMS V7.0 or higher but only when _POSIX_EXIT is defined; */
+/* Leave undefined for now to allow earlier versions. */
+/*#define PIDCHECK		/* ***VMS REVIEW*** */
 
 /* HAS_READDIR:
  *	This symbol, if defined, indicates that the readdir routine is
@@ -308,27 +238,18 @@
  */
 /*#define HAS_GETRUSAGE		/* NC */
 
-/* HAS_SAFE_BCOPY:
- *	This symbol, if defined, indicates that the bcopy routine is available
- *	to copy potentially overlapping memory blocks. Otherwise you should
- *	probably use memmove() or memcpy(). If neither is defined, roll your
- *	own version.
- */
-/*#define HAS_SAFE_BCOPY	/* NC */
-
-/* HAS_SAFE_MEMCPY:
- *	This symbol, if defined, indicates that the memcpy routine is available
- *	to copy potentially overlapping memory blocks. Otherwise you should
- *	probably use memmove() or memcpy(). If neither is defined, roll your
- *	own version.
- */
-#define HAS_SAFE_MEMCPY	/* NC */
-
 /* HAS_SBRK:
  *	This symbol, if defined, indicates that the sbrk system call is
  *	available to add/relase core. Always true on Unix.
  */
-/*#define HAS_SBRK	/* NC */
+/*#define HAS_SBRK	/* ***VMS REVIEW*** */
+
+/* HAS_SIGALTSTACK:
+ *	This symbol, if defined, indicates that the sigaltstack() routine is
+ *	available to set an alternative call stack. Otherwise it means that
+ *	a stack overflow will not be correctly handled.
+ */
+/*#define HAS_SIGALTSTACK		/* NC */
 
 /* HAS_SYS_SIGLIST:
  *	This symbol, if defined, indicates that the sys_siglist array is
@@ -347,74 +268,53 @@
  *	This symbol, if defined, indicates that BSD reliable signals are
  *	supported.
  */
+#define HAS_SIGVEC	/* NC */
+
 /* HAS_SIGVECTOR:
  *	This symbol, if defined, indicates that the sigvec() routine is called
  *	sigvector() instead, and that sigspace() is provided instead of
  *	sigstack().  This is probably only true for HP-UX.
  */
-#define HAS_SIGVEC	/* NC */
 /*#define HAS_SIGVECTOR	/* NC */
-
-/* HAS_SOCKET:
- *	This symbol, if defined, indicates that the BSD socket interface is
- *	supported.
- */
-#define HAS_SOCKET		/* NC */
-
-/* HAS_INDEX:
- *	This symbol is defined to indicate that the index()/rindex()
- *	functions are available for string searching.
- */
-/*#define HAS_INDEX	/* NC */
-
-/* USE_STRUCT_COPY:
- *	This symbol, if defined, indicates that this C compiler knows how
- *	to copy structures.  If undefined, you'll need to use a block copy
- *	routine of some sort instead.
- */
-#define	USE_STRUCT_COPY	/* NC */
-
-/* HAS_STRDUP:
- *	This symbol, if defined, indicates that the strdup routine is
- *	available to duplicate strings in memory. Otherwise, roll up
- *	your own...
- */
-#define HAS_STRDUP		/* NC */
 
 /* HAS_STRERROR:
  *	This symbol, if defined, indicates that the strerror routine is
  *	available to translate error numbers to strings. See the writeup
  *	of Strerror() in this file before you try to define your own.
  */
+#define HAS_STRERROR		/* NC */
+
 /* HAS_SYS_ERRLIST:
  *	This symbol, if defined, indicates that the sys_errlist array is
  *	available to translate error numbers to strings. The extern int
  *	sys_nerr gives the size of that table.
  */
+/*#define HAS_SYS_ERRLIST	/* NC */
+
 /* HAS_SYS_ERRNOLIST:
  *	This symbol, if defined, indicates that the sys_errnolist array is
  *	available to translate an errno code into its symbolic name (e.g.
  * ENOENT). The extern int sys_nerrno gives the size of that table.
  */
+/*#define HAS_SYS_ERRNOLIST	/* NC */
+
 /* Strerror:
  *	This preprocessor symbol is defined as a macro if strerror() is
  *	not available to translate error numbers to strings but sys_errlist[]
  *	array is there.
  */
-#define HAS_STRERROR		/* NC */
-/*#define HAS_SYS_ERRLIST	/* NC */
-/*#define HAS_SYS_ERRNOLIST	/* NC */
 #define Strerror(e) strerror(e)
 
 /* HAS_TIME:
  *	This symbol, if defined, indicates that the time() routine exists.
  */
+#define HAS_TIME		/* NC */
+
 /* Time_t:
  *	This symbol holds the type returned by time(). It can be long,
  *	or time_t on BSD sites (in which case <sys/types.h> should be
  *	included).
  */
-#define HAS_TIME		/* NC */
 #define Time_t time_t		/* Time type */
 
 /* HAS_TIMES:
@@ -437,18 +337,6 @@
  *	handler using "Signal_t handler(sig)".
  */
 #define Signal_t void	/* Signal handler's return type */
-
-/* Groups_t:
- *	This symbol holds the type used for the second argument to
- *	getgroups().  Usually, this is the same of gidtype, but
- *	sometimes it isn't.  It can be int, ushort, uid_t, etc... 
- *	It may be necessary to include <sys/types.h> to get any 
- *	typedef'ed information.  This is only required if you have
- *	getgroups().
- */
-#ifdef HAS_GETGROUPS
-#define Groups_t gid_t	/* Type for 2nd arg to getgroups() */
-#endif
 
 /* I_DIRENT:
  *	This symbol, if defined, indicates to the C program that it should
@@ -509,13 +397,7 @@
  *	This symbol, if defined, indicates to the C program that it should
  *	include <pwd.h>.
  */
-/*#define I_PWD		/* NC */
-
-/* I_STRING:
- *	This symbol, if defined, indicates to the C program that it should
- *	include <string.h> (USG systems) instead of <strings.h> (BSD systems).
- */
-#define I_STRING		/* NC */
+#define I_PWD		/* NC */
 
 /* I_SYS_DIR:
  *	This symbol, if defined, indicates to the C program that it should
@@ -527,7 +409,7 @@
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/file.h> to get definition of R_OK and friends.
  */
-#define I_SYS_FILE		/* NC */
+/*#define I_SYS_FILE		/* NC */
 
 /* I_SYS_NDIR:
  *	This symbol, if defined, indicates to the C program that it should
@@ -572,33 +454,42 @@
  *	This symbol, if defined, indicates to the C program that it should
  *	include <time.h>.
  */
+#define I_TIME		/* NC */
+
 /* I_SYS_TIME:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/time.h>.
  */
+/*#define I_SYS_TIME		/* NC */
+
 /* I_SYS_TIME_KERNEL:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/time.h> with KERNEL defined.
  */
-#define I_TIME		/* NC */
-/*#define I_SYS_TIME		/* NC */
 /*#define I_SYS_TIME_KERNEL		/* NC */
 
 /* I_UTIME:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <utime.h>.
  */
-/*#define I_UTIME		/* NC */
+#define I_UTIME		/* NC */
+
+/* I_SYSUTIME:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <sys/utime.h>.
+ */
+/*#define I_SYSUTIME		/* NC */
 
 /* I_STDARG:
  *	This symbol, if defined, indicates that <stdarg.h> exists and should
  *	be included.
  */
+#define I_STDARG		/* NC */
+
 /* I_VARARGS:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <varargs.h>.
  */
-#define I_STDARG		/* NC */
 /*#define I_VARARGS	/* NC */
 
 /* INTSIZE:
@@ -623,6 +514,8 @@
  *	If defined, this macro indicates that the C compiler can handle
  *	function prototypes.
  */
+#define	CAN_PROTOTYPE	/* NC */
+
 /* _:
  *	This macro is used to declare function parameters for folks who want
  *	to make declarations with prototypes using a different style than
@@ -630,28 +523,11 @@
  *
  *		int main _((int argc, char *argv[]));
  */
-#define	CAN_PROTOTYPE	/* NC */
 #ifdef CAN_PROTOTYPE
 #define	_(args) args
 #else
 #define	_(args) ()
 #endif
-
-/* register1:
- *	This symbol, along with register2, register3, etc. is either the word
- *	"register" or null, depending on whether the C compiler pays attention
- *	to this many register declarations.  The intent is that you don't have
- *	to order your register declarations in the order of importance, so you
- *	can freely declare register variables in sub-blocks of code and as
- *	function parameters.  Do not use register<n> more than once per routine.
- */
-#define register1 register		/* NC */
-#define register2 register		/* NC */
-#define register3 register		/* NC */
-#define register4 register		/* NC */
-#define register5 register		/* NC */
-#define register6 register		/* NC */
-#define register7 register		/* NC */
 
 /* HAS_SMART_SBRK:
  *	This symbol is defined when the sbrk() system call may be used with
@@ -728,50 +604,37 @@
  *	This symbol, if defined, indicates that the getpwuid system call is
  *	available
  */
+#define HAS_GETPWUID	/* NC */
+
 /* HAS_GETGRGID:
  *	This symbol, if defined, indicates that the getgrgid system call is
  *	available
  */
+/*#define HAS_GETGRGID	/* NC */
+
 /* HAS_GETEUID:
  *	This symbol, if defined, indicates that the geteuid system call is
  *	available
  */
-/*#define HAS_GETPWUID	/* NC */
-
-/*#define HAS_GETGRGID	/* NC */
-
 #define HAS_GETEUID	/* NC */
 
 /* HAS_UNLINK:
  *	This symbol, if defined, indicates that the unlink routine is
  *	available.
  */
-/*#define HAS_UNLINK	/* NC */
+/*#define HAS_UNLINK	/* ***VMS REVIEW*** (VMS JACKETS) */
 
 /* HAS_UTIME:
  *	This symbol, if defined, indicates that the utime routine is
  *	available.
  */
-/*#define HAS_UTIME	/* NC */
-
-/* I_DIRECT:
- *	This symbol, if defined, indicates to the C program that it should
- *	include <direct.h>.
- * This is a pseudo unit for the Watcom C compiler (DOS)
- */
-/*#define I_DIRECT		/* NC */
+#define HAS_UTIME	/* NC */
 
 /* I_FD_SET_SYS_SELECT:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/select.h> in order to get definition of struct fd_set.
  */
 /*#define I_FD_SET_SYS_SELECT	/* NC */
-
-/* I_NETNS_NS:
- *	This symbol, if defined, indicates to the C program that it should
- *	include <netns/ns.h>.
- */
-/*#define I_NETNS_NS		/* NC */
 
 /* I_TMVAL_SYS_SELECT:
  *	This symbol, if defined, indicates to the C program that it should
@@ -782,12 +645,6 @@
  */
 /*#define I_TMVAL_SYS_SELECT	/* NC */
 
-/* I_XM_PROTOCOLS:
- *	This symbol, if defined, indicates to the C program that it should
- *	include <Xm/Protocols.h>.
- */
-/*#define I_XM_PROTOCOLS		/* NC */
-
 /* MAY_PANIC:
  *	This symbol is defined if the run-time is to be compiled with extra
  *	consistency checks. Those checks make sure some "impossible" conditions
@@ -797,20 +654,54 @@
 #define MAY_PANIC	/* Extra run-time consistency checks */
 
 
+/*** New for Eiffel 5.1 -- dss ***/
 
-/* New for Eiffel 5.1 -- dss */
 
 /* USE_BSD_SIGNALS:
  * On some Unix, we need to define _BSD_SIGNALS (e.g IRIX*)
  */
-
 #undef USE_BSD_SIGNALS
+
+
+/*** New for Eiffel 5.6 -- dss ***/
+
+
+/* USE_TLS:
+ *  This symbol, if defined, indicates that thread-local storage specifier
+ *  can be used to access thread-local variables.
+ */
+/*#define USE_TLS	/* ***VMS REVIEW*** */
 
 /* INTEGER_64 display format:
  * 	This symbol is used in printf and others to display 64 bits signed
  *	integers.
  */
 #define EIF_INTEGER_64_DISPLAY "Ld"
-
-
+#define EIF_NATURAL_64_DISPLAY "Lu"
+#if __INITIAL_POINTER_SIZE > 32
+#define EIF_POINTER_DISPLAY "Lp"	/* 64 bit pointers */
+#else
+#define EIF_POINTER_DISPLAY "p"		/* 32 bit pointers */
 #endif
+
+/* INTEGER_64 constant definition: */
+#define RTI64C(x)	x##LL
+#define RTU64C(x)	x##ULL
+
+/* is VMS platform? */
+#if defined __VMS || defined __vms || defined VMS || defined vms
+#undef EIF_VMS
+#define EIF_VMS 1
+#endif
+
+#ifndef EIF_VMS
+# error configuration error EIF_VMS is not defined
+#endif
+
+/* Is 64 bits platform? */
+#if __INITIAL_POINTER_SIZE > 32
+#define   EIF_64_BITS
+#endif
+
+
+#endif /* _config_h_ */

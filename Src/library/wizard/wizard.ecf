@@ -19,13 +19,13 @@
 			<condition><platform value="windows"/></condition>
 		</external_object>
 
-		<cluster name="windows_wizard" location="$ISE_LIBRARY/library/wizard" recursive="true">
+		<cluster name="windows_wizard" location="." recursive="true">
 			<condition><platform value="windows"/></condition>
 			<file_rule>
 				<exclude>/\unix$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="unix_wizard" location="$ISE_LIBRARY/library/wizard" recursive="true">
+		<cluster name="unix_wizard" location="." recursive="true">
 			<condition><platform excluded_value="windows"/></condition>
 			<file_rule>
 				<exclude>/\mswin$</exclude>

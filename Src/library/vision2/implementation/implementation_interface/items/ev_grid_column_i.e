@@ -589,6 +589,7 @@ feature {EV_GRID_I} -- Implementation
 			end
 			clear
 			disable_select
+			set_is_displayed (False)
 			unparent
 		ensure
 			parent_i_unset: parent_i = Void

@@ -262,21 +262,19 @@ feature {NONE} -- Agents
 	on_cancel is
 			-- Quit without saving.
 		do
+			store_layout
 			is_canceled := True
 			hide
-
-			store_layout
 		end
 
 	on_ok is
 			-- Quit with saving
 		do
+			store_layout
 			conf_system.store
 			conf_system.set_file_date
 			workbench.set_changed
 			hide
-
-			store_layout
 		end
 
 feature {CONFIGURATION_SECTION} -- Layout components

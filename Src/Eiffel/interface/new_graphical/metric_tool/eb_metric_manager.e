@@ -414,9 +414,13 @@ feature -- Metric management
 					-- Load user-defined metrics.
 				create l_file.make (userdefined_metrics_file)
 				if l_file.exists then
-					load_metric_definitions (userdefined_metrics_file, False)
+					if l_file.is_readable  then
+						load_metric_definitions (userdefined_metrics_file, False)
+					else
+						create {EB_METRIC_ERROR_FILE} l_error.make ("Could not open file", userdefined_metrics_file)
+					end
 				else
-					create {EB_METRIC_ERROR_FILE} l_error.make ("Could not open file", userdefined_metrics_file)
+					last_userdefined_metric_load_error := Void
 				end
 				if not has_error and then l_error /= Void then
 					last_error := l_error

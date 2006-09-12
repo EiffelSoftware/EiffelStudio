@@ -1504,7 +1504,7 @@ feature {NONE} -- Menu Building
 			create cmd.make
 			cmd.set_menu_name (Interface_names.m_go_to)
 			cmd.add_agent (agent goto)
-			cmd.set_needs_editable (True)
+			cmd.set_needs_editable (False)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			add_recyclable (command_menu_item)

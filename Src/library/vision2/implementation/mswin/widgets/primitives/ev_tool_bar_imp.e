@@ -449,7 +449,7 @@ feature -- Element change
 				-- execution of `reset_button'.
 			if not is_in_reset_button then
 					-- We notify the change to integrate them if necessary
-				notify_change (2 + 1, Current)
+				notify_change (nc_minsize, Current)
 			end
 		end
 
@@ -463,7 +463,7 @@ feature -- Element change
 				-- Only perform resizing if we are not currently within
 				-- execution of `reset_button'.
 			if not is_in_reset_button then
-				notify_change (2 + 1, Current)
+				notify_change (nc_minsize, Current)
 			end
 				-- Now restore `private_pixmap' and
 				-- `private_grey_pixmap' if necessary.
@@ -615,7 +615,7 @@ feature -- Basic operation
 				unlock_window_update
 			end
 			is_in_reset_button := False
-			notify_change (2 + 1, Current)
+			notify_change (nc_minsize, Current)
 		end
 
 	is_in_reset_button: BOOLEAN

@@ -1157,7 +1157,7 @@ feature -- Status setting
 			set_text_limit (2560000)
 			set_default_font
 			if parent_imp /= Void then
-				parent_imp.notify_change (2 + 1, Current)
+				parent_imp.notify_change (nc_minsize, Current)
 			end
 			set_background_color (background_color)
 			enable_all_notifications

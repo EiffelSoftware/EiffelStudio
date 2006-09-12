@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"A common class for Mswindows containers with one child without%N%
 		%commitment to a WEL control."
 	legal: "See notice at end of class."
@@ -54,7 +54,7 @@ feature -- Status setting
 			end
 			Precursor {EV_CONTAINER_IMP}
 		end
-	
+
 feature -- Element change
 
 	remove is
@@ -71,7 +71,7 @@ feature -- Element change
 				item := Void
 				v_imp.set_parent (Void)
 				v_imp.on_orphaned
-				notify_change (2 + 1, Current)
+				notify_change (nc_minsize, Current)
 			end
 		end
 
@@ -91,7 +91,7 @@ feature -- Element change
 				end
 				item := v
 				v_imp.set_parent (interface)
-				notify_change (2 + 1, Current)
+				notify_change (nc_minsize, Current)
 				new_item_actions.call ([item])
 			end
 		end
@@ -138,13 +138,13 @@ feature -- Basic operations
 		end
 
 feature {EV_ANY_I} -- WEL Implementation
-		
+
 	index_of_child (child: EV_WIDGET_IMP): INTEGER is
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
 			Result := 1
 		end
-		
+
 	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
@@ -175,12 +175,12 @@ feature {EV_ANY_I} -- WEL Implementation
 				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
 		end
-		
+
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so notify `item_imp'.
 		do
 			if item_imp /= Void then
-				item_imp.update_for_pick_and_drop (starting)	
+				item_imp.update_for_pick_and_drop (starting)
 			end
 		end
 
@@ -220,7 +220,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				item_imp.ev_apply_new_size (client_x, client_y, client_width, client_height, True)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is

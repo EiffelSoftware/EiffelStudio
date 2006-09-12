@@ -36,13 +36,13 @@ inherit
 			disable_sensitive,
 			initialize
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
 			set_font
 		end
-		
+
 	EV_TEXT_ALIGNABLE_IMP
 		undefine
 			set_default_minimum_size
@@ -75,12 +75,12 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	WEL_THEME_PART_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 	WEL_THEME_GBS_CONSTANTS
 		export
 			{NONE} all
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 				-- Retrieve the theme for the frame (which is a special type of button).
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -132,7 +132,7 @@ feature -- Access
 		do
 			Result := (ev_width - client_x - Border_width).max (0)
 		end
-	
+
 	client_height: INTEGER is
 			-- Height of the client area.
 		do
@@ -146,7 +146,7 @@ feature -- Element change
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
 			update_text_size
-			notify_change (2 + 1, Current)
+			notify_change (nc_minsize, Current)
 			invalidate
 		end
 
@@ -182,10 +182,10 @@ feature -- Element change
 				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
 				update_text_size
 			end
-			notify_change (2 + 1, Current)
+			notify_change (nc_minsize, Current)
 			invalidate
 		end
-		
+
 	update_text_size is
 			-- Update `text_width' and `text_size' based on
 			-- current font.
@@ -205,7 +205,7 @@ feature -- Element change
 				text_width := t.integer_item (1)
 				text_height := t.integer_item (2)
 		end
-		
+
 
 feature -- Status setting
 
@@ -346,12 +346,12 @@ feature {NONE} -- WEL Implementation
 			color_imp: EV_COLOR_IMP
 		do
 			theme_drawer := application_imp.theme_drawer
-			
+
 			create memory_dc.make_by_dc (paint_dc)
 			create wel_bitmap.make_compatible (paint_dc, width, height)
 			memory_dc.select_bitmap (wel_bitmap)
 			wel_bitmap.dispose
-			
+
 				-- Cache value of `ev_width' and `ev_height' for
 				-- faster access
 			cur_width := ev_width
@@ -371,7 +371,7 @@ feature {NONE} -- WEL Implementation
 
 			create r.make (0,0,0,0)
 			bk_brush := background_brush
-			
+
 			theme_drawer.draw_widget_background (Current, memory_dc, invalid_rect, bk_brush)
 
 			if alignment = {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left then
@@ -397,25 +397,25 @@ feature {NONE} -- WEL Implementation
 				theme_drawer.draw_theme_background (open_theme, memory_dc, bp_groupbox, drawstate, r, Void, bk_brush)
 			else
 				draw_edge (memory_dc, r, wel_style, Bf_rect)
-				
+
 				if (wel_style & Bdr_raisedouter) = Bdr_raisedouter then
 						--| This is to work around a bug where the 3D highlight
 						--| does not seem to appear.
 					pen := highlight_pen
 					memory_dc.select_pen (pen)
 					memory_dc.line (
-						0,         text_height // 2, 
+						0,         text_height // 2,
 						cur_width, text_height // 2
 						)
 					memory_dc.line (
-						0, text_height // 2, 
+						0, text_height // 2,
 						0, cur_height - 1
 						)
 					memory_dc.unselect_pen
 					pen.delete
 				end
 			end
-			
+
 			r.set_rect (text_pos, 0, text_pos + text_width, text_height)
 			theme_drawer.draw_widget_background (Current, memory_dc, r, bk_brush)
 
@@ -433,7 +433,7 @@ feature {NONE} -- WEL Implementation
 				end
 				memory_dc.set_text_color (wel_foreground_color)
 				memory_dc.set_background_color (wel_background_color)
-				
+
 				create text_rect.make (text_pos, 0, text_pos + text_width, text_height)
 				if foreground_color_imp /= Void then
 					color_imp := foreground_color_imp
@@ -447,7 +447,7 @@ feature {NONE} -- WEL Implementation
 			memory_dc.delete
 			disable_default_processing
 		end
-		
+
 	on_wm_theme_changed is
 			-- `Wm_themechanged' message received by Windows so update current theming.
 		do
@@ -455,7 +455,7 @@ feature {NONE} -- WEL Implementation
 			application_imp.update_theme_drawer
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Button")
 		end
-		
+
 	open_theme: POINTER
 		-- Theme currently open for `Current'. May be Void while running on Windows versions that
 		-- do no support theming.

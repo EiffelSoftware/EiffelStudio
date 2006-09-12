@@ -247,35 +247,35 @@ feature {EV_ANY_I} -- Status settings
 			-- the box has the same size.
 		do
 			is_homogeneous := True
-			notify_change (2 + 1, Current)
+			notify_change (Nc_minsize, Current)
 		end
 
 	disable_homogeneous is
 			-- Disable homogeneous. Allow controls to take different sizes.
 		do
 			is_homogeneous := False
-			notify_change (2 + 1, Current)
+			notify_change (Nc_minsize, Current)
 		end
 	
 	set_row_spacing (value: INTEGER) is
 			-- Make `value' the new `row_spacing'.
 		do
 			row_spacing := value
-			notify_change (2, Current)
+			notify_change (nc_minheight, Current)
 		end
 
 	set_column_spacing (value: INTEGER) is
 			-- Make `value' the new `column_spacing'.
 		do
 			column_spacing := value
-			notify_change (1, Current)
+			notify_change (nc_minwidth, Current)
 		end
 
 	set_border_width (a_value: INTEGER) is
 			-- Spacing between edge of `Current' and items.
 		do
 			border_width := a_value
-			notify_change (2 + 1, Current)
+			notify_change (Nc_minsize, Current)
 		end
 
 	replace (v: like item) is
@@ -311,7 +311,7 @@ feature {EV_ANY_I} -- Status settings
 
 				-- We show the child and resize the container
 			child_imp.show
-			notify_change (1 + 2, Current)
+			notify_change (Nc_minsize, Current)
 			new_item_actions.call ([child])
 		end
 
@@ -321,7 +321,7 @@ feature {EV_ANY_I} -- Status settings
 			Precursor {EV_TABLE_I} (a_column, a_row)
 			initialize_columns (a_column)
 			initialize_rows (a_row)
-			notify_change (1 + 2, Current)
+			notify_change (Nc_minsize, Current)
 		end
 
 	
@@ -345,7 +345,7 @@ feature {EV_ANY_I} -- Status settings
 			ev_children.prune_all (tchild)
 
 				-- Update changes.
-			notify_change (2 + 1, Current)
+			notify_change (Nc_minsize, Current)
 				-- Update the parent of `child_imp'.
 			widget_imp.set_parent (Void)
 				-- Call on_orphaned.
@@ -366,7 +366,7 @@ feature {EV_ANY_I} -- Status settings
 			table_child := find_widget_child (child_imp)
 			table_child.set_attachment
 				(a_row - 1, a_column - 1, table_child.bottom_attachment - table_child.top_attachment + a_row - 1, table_child.right_attachment - table_child.left_attachment + a_column - 1)
-			notify_change (2 + 1, Current)
+			notify_change (Nc_minsize, Current)
 		end
 		
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
@@ -383,7 +383,7 @@ feature {EV_ANY_I} -- Status settings
 			table_child := find_widget_child (child_imp)
 			table_child.set_attachment
 				(table_child.top_attachment, table_child.left_attachment, table_child.top_attachment + row_span, table_child.left_attachment + column_span)
-			notify_change (2 + 1, Current)		
+			notify_change (Nc_minsize, Current)		
 		end
 		
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is

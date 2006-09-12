@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 				l_dir_prop.set_target (a_target)
 				l_dir_prop.set_description (conf_interface_names.group_location_description)
 				l_dir_prop.set_value (a_group.location.original_path)
-				l_dir_prop.validate_value_actions.extend (agent is_not_void_or_empty ({STRING_32}?))
+				l_dir_prop.validate_value_actions.extend (agent is_not_void ({STRING_32}?))
 				l_dir_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
 				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
 				properties.add_property (l_dir_prop)
@@ -139,7 +139,7 @@ feature {NONE} -- Implementation
 				l_file_prop.set_target (a_target)
 				l_file_prop.set_description (conf_interface_names.group_location_description)
 				l_file_prop.set_value (a_group.location.original_path)
-				l_file_prop.validate_value_actions.extend (agent is_not_void_or_empty ({STRING_32}?))
+				l_file_prop.validate_value_actions.extend (agent is_not_void ({STRING_32}?))
 				l_file_prop.change_value_actions.extend (agent update_group_location (a_group, ?, a_target))
 				l_file_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (True)))
 				if a_group.is_assembly then
@@ -355,7 +355,7 @@ feature {NONE} -- Configuration settings
 		local
 			l_location: CONF_LOCATION
 		do
-			if a_location /= Void and then not a_location.is_empty then
+			if a_location /= Void then
 				if a_group.is_cluster then
 					create {CONF_DIRECTORY_LOCATION}l_location.make (a_location, a_target)
 				elseif a_group.is_assembly then
@@ -375,7 +375,7 @@ feature {NONE} -- Configuration settings
 		local
 			l_location: CONF_DIRECTORY_LOCATION
 		do
-			if a_location /= Void and then not a_location.is_empty then
+			if a_location /= Void then
 				create l_location.make (a_location, a_target)
 				a_precompile.set_eifgens_location (l_location)
 			else

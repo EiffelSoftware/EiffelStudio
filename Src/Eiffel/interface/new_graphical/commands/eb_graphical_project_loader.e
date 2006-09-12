@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 			deletion_agent := agent on_delete_directory
 			cancel_agent := agent on_cancel_operation
 			is_project_location_requested := True
+			has_library_conversion := True
 		ensure
 			parent_window_set: parent_window = a_parent
 			is_project_location_requested_set: is_project_location_requested

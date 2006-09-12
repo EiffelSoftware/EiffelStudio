@@ -231,8 +231,8 @@ feature {NONE} -- Interface
 			column (3).set_title (grid_head_context)
 			column (4).set_title (grid_head_file_location)
 
-			column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
-			column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
+			column (1).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (1, ?, ?, ?, ?, ?, ?, ?, ?))
+			column (2).header_item.pointer_button_press_actions.extend (agent on_grid_header_click (2, ?, ?, ?, ?, ?, ?, ?, ?))
 
 			row_select_actions.extend (agent on_grid_row_selected)
 			set_item_pebble_function (agent grid_pebble_function)
@@ -394,7 +394,7 @@ feature {NONE} -- Stone
 
 feature {NONE} -- Sort data
 
-	on_grid_header_click (a_column_index: INTEGER) is
+	on_grid_header_click (a_column_index: INTEGER; a_x: INTEGER_32; a_y: INTEGER_32; a_button: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- User click on the column header of index `a_column_index'.
 		require
 			a_column_index_valid: column_index_valid (a_column_index)
@@ -402,25 +402,28 @@ feature {NONE} -- Sort data
 		local
 			l_item: MSR_TEXT_ITEM
 		do
-			if row_count > 1 and then header.pointed_divider_index = 0 then
-				if sorted_column = a_column_index then
-						-- We invert the sorting.
-					sorting_order := not sorting_order
-				else
-					sorted_column := a_column_index
-					sorting_order := False
-				end
-				if row_count > 0 then
-					l_item ?= multi_search_performer.item_matched.first
-					if l_item = Void then
-						if a_column_index = 1 then
-							multi_search_performer.sort_on (multi_search_performer.sort_by_class_name, sorting_order)
-							redraw_grid
-							select_current_row
-						elseif a_column_index = 2 then
-							multi_search_performer.sort_on (multi_search_performer.sort_by_found, sorting_order)
-							redraw_grid
-							select_current_row
+				-- only on left mouse button
+			if a_button = 1 then
+				if row_count > 1 and then header.pointed_divider_index = 0 then
+					if sorted_column = a_column_index then
+							-- We invert the sorting.
+						sorting_order := not sorting_order
+					else
+						sorted_column := a_column_index
+						sorting_order := False
+					end
+					if row_count > 0 then
+						l_item ?= multi_search_performer.item_matched.first
+						if l_item = Void then
+							if a_column_index = 1 then
+								multi_search_performer.sort_on (multi_search_performer.sort_by_class_name, sorting_order)
+								redraw_grid
+								select_current_row
+							elseif a_column_index = 2 then
+								multi_search_performer.sort_on (multi_search_performer.sort_by_found, sorting_order)
+								redraw_grid
+								select_current_row
+							end
 						end
 					end
 				end

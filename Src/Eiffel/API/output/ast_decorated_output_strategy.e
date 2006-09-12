@@ -2752,9 +2752,6 @@ feature {NONE} -- Implementation
 				l_formal_dec ?= l_as
 				check l_formal_dec_not_void: l_formal_dec /= Void end
 				l_type := l_formal_dec.constraint_type (current_class)
-				check
-					l_type_is_not_formal: not l_type.is_formal
-				end
 				if l_as.has_creation_constraint then
 					from
 						l_as.creation_feature_list.start
@@ -2762,16 +2759,25 @@ feature {NONE} -- Implementation
 						text_formatter_decorator.process_keyword_text (ti_create_keyword, Void)
 						text_formatter_decorator.put_space
 						feature_name ?= l_as.creation_feature_list.item
-						l_feat := l_type.associated_class.feature_with_name (feature_name.visual_name)
-						text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+						if not l_type.is_formal then
+							l_feat := l_type.associated_class.feature_with_name (feature_name.visual_name)
+							text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+						else
+							text_formatter_decorator.process_local_text (feature_name.visual_name)
+						end
 						l_as.creation_feature_list.forth
 					until
 						l_as.creation_feature_list.after
 					loop
 						text_formatter_decorator.process_symbol_text (ti_comma)
 						text_formatter_decorator.put_space
-						l_feat := l_type.associated_class.feature_with_name (feature_name.visual_name)
-						text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+						feature_name ?= l_as.creation_feature_list.item
+						if not l_type.is_formal then
+							l_feat := l_type.associated_class.feature_with_name (feature_name.visual_name)
+							text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+						else
+							text_formatter_decorator.process_local_text (feature_name.visual_name)
+						end
 						l_as.creation_feature_list.forth
 					end
 					text_formatter_decorator.put_space

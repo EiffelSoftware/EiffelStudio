@@ -123,23 +123,29 @@ feature -- Roundtrip/Comment
 
 	comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS is
 			-- Associated comment of current feature
-			-- Result affected by `bread_included'.
+			-- Result affected by `break_included'.
 		require
 			a_list_not_void: a_list /= Void
 		local
 			l_routine: ROUTINE_AS
 			l_end_index: INTEGER
 			l_retried: BOOLEAN
+			l_region: ERT_TOKEN_REGION
 		do
 			if not l_retried then
 				if is_constant or is_attribute then
-					Result := a_list.extract_comment (token_region (a_list))
+					l_region := token_region (a_list)
 				else
 					l_routine ?= body.content
 					check l_routine /= Void end
 					l_end_index := l_routine.first_token (a_list).index - 1
 					check first_token (a_list).index <= l_end_index end
-					Result := a_list.extract_comment (create{ERT_TOKEN_REGION}.make (first_token (a_list).index, l_end_index))
+					create l_region.make (first_token (a_list).index, l_end_index)
+				end
+				if a_list.valid_region (l_region) then
+					Result := a_list.extract_comment (l_region)
+				else
+					create Result.make
 				end
 			else
 				create Result.make

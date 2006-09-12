@@ -151,6 +151,7 @@ feature {NONE} -- Initialization
 			editor_token_grid_support.color_or_font_change_actions.extend (agent on_color_or_font_changed)
 			editor_token_grid_support.synchronize_color_or_font_change_with_editor
 			editor_token_grid_support.synchronize_scroll_behavior_with_editor
+			editor_token_grid_support.enable_ctrl_right_click_to_open_new_window
 
 			create l_item_sort_info.make (agent item_order_tester, ascending_order)
 			create l_path_sort_info.make (agent path_order_tester, ascending_order)

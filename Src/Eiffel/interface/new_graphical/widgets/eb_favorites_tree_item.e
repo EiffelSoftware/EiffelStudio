@@ -151,6 +151,7 @@ feature -- Status setting
 				end
 				forth
 			end
+			data.refresh
 			cl ?= data
 			if cl /= Void then
 				set_pebble (cl.associated_class_stone)

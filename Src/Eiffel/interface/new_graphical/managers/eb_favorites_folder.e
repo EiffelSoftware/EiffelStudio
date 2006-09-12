@@ -26,7 +26,7 @@ inherit
 
 create
 	make
-	
+
 create {EB_FAVORITES_FOLDER}
 	make_filled
 
@@ -46,7 +46,7 @@ feature -- Status
 	is_folder: BOOLEAN is True
 			-- Is the current item a folder ?
 
-	is_class: BOOLEAN is 
+	is_class: BOOLEAN is
 			-- Is the current item a class ?
 		do
 			Result := False
@@ -66,6 +66,12 @@ feature -- Element change
 		ensure
 			name_set: name.is_equal (a_new_name)
 		end
+
+	refresh is
+			-- Refresh this item.
+		do
+		end
+
 
 feature -- Basic operations
 

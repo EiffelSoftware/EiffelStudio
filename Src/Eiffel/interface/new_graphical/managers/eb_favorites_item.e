@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			if is_feature then
 				name := a_name.as_lower
 			else
-				name := a_name.as_upper				
+				name := a_name.as_upper
 			end
 			parent := a_parent
 		end
@@ -48,7 +48,7 @@ feature -- Status
 			-- Is the current item a folder?
 		deferred
 		end
-		
+
 	is_class: BOOLEAN is
 			-- Is the current item a class?
 		deferred
@@ -57,7 +57,7 @@ feature -- Status
 	is_feature: BOOLEAN is
 			-- Is the current item a feature?
 		deferred
-		end		
+		end
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Compare the names
@@ -72,6 +72,11 @@ feature -- Element change
 			-- Set `parent' to `a_parent'.
 		do
 			parent := a_parent
+		end
+
+	refresh is
+			-- Refresh current item.
+		deferred
 		end
 
 feature -- Interactivity

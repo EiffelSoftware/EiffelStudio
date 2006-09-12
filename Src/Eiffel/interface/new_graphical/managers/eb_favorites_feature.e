@@ -29,10 +29,10 @@ inherit
 
 create {EB_FAVORITES_FEATURE}
 	make
-	
+
 create {EB_FAVORITES_ITEM_LIST}
 	make_with_class_c
-	
+
 create
 	make_from_feature_stone
 
@@ -57,7 +57,7 @@ feature {NONE} -- Access
 			associated_class_c := a_stone.e_class
 			make (feature_name, a_parent)
 		end
-		
+
 	make_with_class_c (a_name: STRING; a_class_c: CLASS_C; a_parent: EB_FAVORITES_ITEM_LIST) is
 			-- Generate from the data associated to a feature stone and attach to `a_parent'
 		require
@@ -69,8 +69,8 @@ feature {NONE} -- Access
 			feature_name := a_name.as_lower
 			associated_class_c := a_class_c
 			make (feature_name, a_parent)
-		end		
-		
+		end
+
 feature -- Status
 
 	is_folder: BOOLEAN is False
@@ -81,6 +81,19 @@ feature -- Status
 
 	is_feature: BOOLEAN is True
 			-- Is the current item a feature ?
+
+feature -- Element change
+
+	refresh is
+			-- Refresh information.
+		local
+			l_stone: like associated_feature_stone
+		do
+			l_stone ?= associated_feature_stone.synchronized_stone
+			if l_stone /= Void then
+				make_from_feature_stone (l_stone, parent)
+			end
+		end
 
 feature -- Graphical interface
 
@@ -97,7 +110,7 @@ feature -- Graphical interface
 feature -- Convert
 
 	class_name: STRING
-	
+
 	feature_name: STRING
 
 	associated_e_feature: E_FEATURE
@@ -113,7 +126,7 @@ feature -- Convert
 				create {EB_FAVORITES_FEATURE_STONE} Result.make_from_favorite (Current)
 			end
 		end
-		
+
 feature -- Feature nature
 
 	is_deferred: BOOLEAN is
@@ -154,7 +167,7 @@ feature {NONE} -- Implementation
 				conv_class ?= parent
 				if conv_class /= Void then
 					associated_class_c := conv_class.associated_class_c
-				end				
+				end
 			end
 			if associated_class_c /= Void and associated_e_feature = Void then
 				associated_e_feature := associated_class_c.feature_with_name (feature_name)

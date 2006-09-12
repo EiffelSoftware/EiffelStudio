@@ -51,7 +51,7 @@ feature -- Element change
 	refresh is
 			-- Update `Current's contents.
 		do
-			-- Nothing to do since the favorites already took away all dead classes.
+			do_all (agent update_menu_item)
 		end
 
 	update_folder_item (m: EV_MENU_ITEM) is
@@ -322,6 +322,31 @@ feature -- Memory management
 		end
 
 feature {NONE} -- Implementation
+
+	update_menu_item (a_item: EV_MENU_ITEM) is
+			-- Update `a_item' and sub menu items.
+		local
+			l_class: EB_FAVORITES_CLASS
+			l_feature: EB_FAVORITES_FEATURE
+			l_menu: EV_MENU
+		do
+				-- update pixmap
+			l_class ?= a_item.data
+			if l_class /= Void then
+				update_class_item (l_class, a_item)
+			else
+				l_feature ?= a_item.data
+				if l_feature /= Void then
+					update_feature_item (l_feature, a_item)
+				end
+			end
+
+				-- update sub items
+			l_menu ?= a_item
+			if l_menu /= Void then
+				l_menu.do_all (agent update_menu_item)
+			end
+		end
 
 	get_menu_item_from_path (an_item: EV_MENU_ITEM; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_MENU_ITEM is
 			-- Get the menu item corresponding to the path `a_path'

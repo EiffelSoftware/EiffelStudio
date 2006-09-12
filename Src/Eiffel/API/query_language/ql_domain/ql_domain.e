@@ -621,6 +621,7 @@ feature{NONE} -- Implementation/Set operations
 		local
 			l_hash_set: DS_HASH_SET [like item_type]
 			l_content: like content
+			l_domain_content: LIST [like item_type]
 		do
 			create l_hash_set.make (count)
 			l_content := content
@@ -628,11 +629,12 @@ feature{NONE} -- Implementation/Set operations
 			l_hash_set.set_equality_tester (create {KL_EQUALITY_TESTER [like item_type]})
 			l_content.do_all (agent l_hash_set.force_last)
 			from
+				l_domain_content := a_domain.content
 				l_hash_set.start
 			until
 				l_hash_set.after
 			loop
-				a_domain.content.extend (l_hash_set.item_for_iteration)
+				l_domain_content.extend (l_hash_set.item_for_iteration)
 				l_hash_set.forth
 			end
 		end

@@ -16,7 +16,8 @@ inherit
 			is_class,
 			make,
 			string_representation,
-			mouse_cursor, Xmouse_cursor
+			mouse_cursor, Xmouse_cursor,
+			refresh
 		end
 
 	EB_CONSTANTS
@@ -84,6 +85,19 @@ feature -- Status
 
 	is_class: BOOLEAN is True
 			-- Is the current item a class ?			
+
+feature -- Element change
+
+	refresh is
+			-- Refresh this item.
+		local
+			l_stone: like associated_class_stone
+		do
+			l_stone := associated_class_stone.synchronized_stone
+			if l_stone /= Void then
+				make_from_class_stone (l_stone, parent)
+			end
+		end
 
 feature -- Graphical interface
 

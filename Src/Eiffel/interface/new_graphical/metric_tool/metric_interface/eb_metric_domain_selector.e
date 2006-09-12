@@ -87,7 +87,6 @@ feature {NONE} -- Initialization
 			l_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_METRIC_DOMAIN_ITEM_ROW]
 			l_border: EV_VERTICAL_BOX
 			l_colors: EV_STOCK_COLORS
-			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
 			create l_colors
 			create domain_change_actions

@@ -43,6 +43,7 @@
 #include "eif_interp.h"
 
 #define BCDB_TAG    't'
+#define BCDB_UNNAMED 'u'
 
 /*------------------------------------------------------------------*/
 
@@ -802,7 +803,7 @@ static  void    analyze_options ()
 
 		dbg_level = rchar ();
 
-		if (dbg_level == BCDB_TAG)
+		if (dbg_level == BCDB_TAG || dbg_level == BCDB_UNNAMED)
 		{
 			dbcount = rshort ();
 

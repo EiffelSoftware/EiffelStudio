@@ -586,7 +586,7 @@ feature{NONE} -- Initialization
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end
-			grid.pointer_button_press_actions.extend (agent on_pointer_right_click)
+			enable_ctrl_right_click_to_open_new_window
 			create filter_engine.make
 			filter_engine.set_empty_allowed (False)
 			filter_engine.set_multiline (False)

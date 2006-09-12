@@ -62,6 +62,26 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
+			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
+			-- Void if no item is found.
+		local
+			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_index: INTEGER
+		do
+			l_editor_token_item ?= grid_item_at_position (grid, a_x, a_y)
+			if l_editor_token_item /= Void then
+				l_index := l_editor_token_item.token_index_at_current_position
+				if l_index > 0 then
+					Result := l_editor_token_item.token_at_position (l_index)
+				end
+			end
+		end
+
+	last_picked_item: EV_GRID_ITEM
+			-- Last picked item	
+			-- Void if no item is picked.		
+
 feature -- Setting
 
 	enable_editor_token_pnd is
@@ -146,21 +166,20 @@ feature -- Setting
 			preferences.class_browser_data.even_row_background_color_preference.change_actions.prune_all (l_change_agent)
 		end
 
-	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
-			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
-			-- Void if no item is found.
-		local
-			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_index: INTEGER
+	enable_ctrl_right_click_to_open_new_window is
+			-- Enable that Ctrl+Right click will open a new development window to display stone conatined in current pointer hovered editor token.
 		do
-			l_editor_token_item ?= grid_item_at_position (grid, a_x, a_y)
-			if l_editor_token_item /= Void then
-				l_index := l_editor_token_item.token_index_at_current_position
-				if l_index > 0 then
-					Result := l_editor_token_item.token_at_position (l_index)
-				end
+			if not grid.pointer_button_press_actions.has (on_pointer_right_click_agent) then
+				grid.pointer_button_press_actions.extend (on_pointer_right_click_agent)
 			end
 		end
+
+	disable_ctrl_right_click_to_open_new_window is
+			-- Disable that Ctrl+Right click will open a new development window to display stone conatined in current pointer hovered editor token.
+		do
+			grid.pointer_button_press_actions.prune_all (on_pointer_right_click_agent)
+		end
+
 
 feature{NONE} -- Actions
 
@@ -220,6 +239,19 @@ feature{NONE} -- Actions
 				on_scroll_behavior_change_agent_internal := agent on_scroll_behavior_change
 			end
 			Result := on_scroll_behavior_change_agent_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	on_pointer_right_click_agent: PROCEDURE [ANY, TUPLE [INTEGER_32, INTEGER_32, INTEGER_32, REAL_64, REAL_64, REAL_64, INTEGER_32, INTEGER_32]] is
+			-- Agent of `on_pointer_right_click'
+		do
+			if on_pointer_right_click_agent_internal = Void then
+				on_pointer_right_click_agent_internal := agent on_pointer_right_click
+			end
+			Result := on_pointer_right_click_agent_internal
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature{NONE} -- Pick and drop
@@ -272,8 +304,23 @@ feature{NONE} -- Pick and drop
 			end
 		end
 
-	last_picked_item: EV_GRID_ITEM
-			-- Last picked item	
+	on_pointer_right_click (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Action to be performed when pointer right click on `grid'
+			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.
+		local
+			l_editor_token: EDITOR_TOKEN
+			l_stone: STONE
+		do
+			if a_button = 3 and then ev_application.ctrl_pressed then
+				l_editor_token := editor_token_at_position (a_x, a_y)
+				if l_editor_token /= Void then
+					l_stone ?= l_editor_token.pebble
+					if l_stone /= Void and then l_stone.is_valid then
+						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+					end
+				end
+			end
+		end
 
 feature{NONE} -- Implementation
 
@@ -294,6 +341,9 @@ feature{NONE} -- Implementation
 
 	on_scroll_behavior_change_agent_internal: like on_scroll_behavior_change_agent
 			-- Implementation of `on_scroll_behavior_change_agent'
+
+	on_pointer_right_click_agent_internal: like on_pointer_right_click_agent
+			-- Implementation of `on_pointer_right_click_agent'
 
 invariant
 	grid_attached: grid /= Void

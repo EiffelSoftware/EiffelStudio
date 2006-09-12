@@ -815,7 +815,7 @@ feature{NONE} -- Initialization
 			if drop_actions /= Void then
 				grid.drop_actions.fill (drop_actions)
 			end
-			grid.pointer_button_press_actions.extend (agent on_pointer_right_click)
+			enable_ctrl_right_click_to_open_new_window
 			grid.pointer_double_press_actions.extend (agent on_pointer_double_click)
 			grid.focus_in_actions.extend (agent on_grid_focus_in)
 			grid.focus_out_actions.extend (agent on_grid_focus_out)

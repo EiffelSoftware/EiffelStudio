@@ -26,7 +26,7 @@ feature -- Status setting
 	set_needs_editable (ed: BOOLEAN) is
 			-- Tell the command it requires the editor to be editable.
 		do
-			needs_editable := True
+			needs_editable := ed
 		end
 
 	update_status is
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 
 	is_loaded: BOOLEAN
 			-- Is a text loaded?
-			
+
 	is_editable: BOOLEAN;
 			-- Is the current text editable?
 

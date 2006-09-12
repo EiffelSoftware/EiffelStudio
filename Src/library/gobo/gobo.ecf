@@ -1,9 +1,6 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="gobo" uuid="ccb152f0-2d87-42af-ad4a-0d5514133c1a" library_target="gobo">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="gobo" uuid="CCB152F0-2D87-42AF-AD4A-0D5514133C1A" library_target="gobo">
 	<target name="gobo">
 		<description>gobo library</description>
-		<option>
-			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
-		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 			<exclude>/hact$</exclude>
@@ -17,47 +14,26 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/Documentation$</exclude>
 		</file_rule>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="true"/>		
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<assembly name="eiffelsoftware.runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
-		<cluster name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\library\kernel\" recursive="true"/>
-		<cluster name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\library\lexical\" recursive="true">
-			<file_rule>
-				<exclude>/regexp$</exclude>
-				<exclude>/lex$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="gobo_math" location="$ISE_LIBRARY\library\gobo\library\math\" recursive="true"/>
-		<cluster name="gobo_parse" location="$ISE_LIBRARY\library\gobo\library\parse\" recursive="true">
-			<file_rule>
-				<exclude>/generation$</exclude>
-				<exclude>/parser$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="gobo_pattern" location="$ISE_LIBRARY\library\gobo\library\pattern\" recursive="true"/>
-		<cluster name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\library\regexp\" recursive="true"/>
-		<cluster name="gobo_string" location="$ISE_LIBRARY\library\gobo\library\string\" recursive="true">
-			<file_rule>
-				<exclude>/formatter$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="gobo_structure" location="$ISE_LIBRARY\library\gobo\library\structure\" recursive="true"/>
-		<cluster name="gobo_time" location="$ISE_LIBRARY\library\gobo\library\time\" recursive="true">
-			<file_rule>
-				<exclude>/format$</exclude>
-				<exclude>/time_zone$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="gobo_tools" location="$ISE_LIBRARY\library\gobo\library\tools\" recursive="true" />
-		<cluster name="gobo_utility" location="$ISE_LIBRARY\library\gobo\library\utility\" recursive="true">
-			<file_rule>
-				<exclude>/command$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="gobo_xml" location="$ISE_LIBRARY\library\gobo\library\xml\" recursive="true">
+		<cluster name="gobo_kernel" location="library\kernel\" recursive="true"/>
+		<cluster name="gobo_lexical" location="library\lexical\" recursive="true"/>
+		<cluster name="gobo_math" location="library\math\" recursive="true"/>
+		<cluster name="gobo_parse" location="library\parse\" recursive="true"/>
+		<cluster name="gobo_pattern" location="library\pattern\" recursive="true"/>
+		<cluster name="gobo_regexp" location="library\regexp\" recursive="true"/>
+		<cluster name="gobo_string" location="library\string\" recursive="true"/>
+		<cluster name="gobo_structure" location="library\structure\" recursive="true"/>
+		<cluster name="gobo_time" location="library\time\" recursive="true"/>
+		<cluster name="gobo_tools" location="library\tools\" recursive="true"/>
+		<cluster name="gobo_utility" location="library\utility\" recursive="true"/>
+		<cluster name="gobo_xml" location="library\xml\" recursive="true">
 			<file_rule>
 				<exclude>/expat$</exclude>
-				<exclude>/xslt$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

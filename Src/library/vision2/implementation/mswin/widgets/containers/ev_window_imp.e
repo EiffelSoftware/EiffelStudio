@@ -1270,7 +1270,7 @@ feature {EV_ANY_I} -- Implementation
 			-- sizing dimensions and redraw.
 		do
 			set_style (new_style)
-			notify_change (2 + 1, Current)
+			notify_change (nc_minsize, Current)
 			if is_displayed then
 				invalidate
 			end

@@ -1085,7 +1085,7 @@ feature {NONE} -- Font implementation
 			else
 				cwin_send_message (wel_item, Wm_setfont, to_wparam (0), cwin_make_long (1, 0))
 			end
-			notify_change (2 + 1, Current)
+			notify_change (nc_minsize, Current)
 		end
 
 feature {EV_ANY_I} -- Implementation

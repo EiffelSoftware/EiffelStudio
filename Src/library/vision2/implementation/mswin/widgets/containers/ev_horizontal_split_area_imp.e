@@ -40,7 +40,7 @@ feature {NONE} -- Status Setting
 			first.implementation.on_parented
 			disable_item_expand (first)
 			first_imp.set_parent (interface)
-			notify_change (2 + 1, Current)
+			notify_change (nc_minsize, Current)
 			if second_visible then
 				set_split_position (minimum_split_position)
 			else
@@ -69,7 +69,7 @@ feature {NONE} -- Status Setting
 				--| and be sure it is correct. Then we call notify change
 				--| again after the split position has been set,
 				--| to reflect these changes.
-			notify_change (NC_minsize, Current)
+			notify_change (Nc_minsize, Current)
 			new_item_actions.call ([v])
 		end
 

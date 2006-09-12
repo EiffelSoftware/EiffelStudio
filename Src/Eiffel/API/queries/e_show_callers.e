@@ -83,6 +83,7 @@ feature -- Execution
 			l_domain ?= system_target_domain.new_domain (domain_generator)
 			check l_domain /= Void end
 			if not l_domain.is_empty then
+				l_domain := l_domain.distinct
 				l_domain.sort (agent feature_name_tester)
 				l_formatter := text_formatter
 				from

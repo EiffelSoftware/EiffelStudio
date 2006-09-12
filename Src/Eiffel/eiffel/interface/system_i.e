@@ -2785,7 +2785,7 @@ feature -- Final mode generation
 		do
 			eiffel_project.terminate_c_compilation
 			if not retried and is_finalization_needed then
-				if not compilation_modes.is_precompiling then
+				if not il_generation then
 					create l_type_id_mapping.make (0, static_type_id_counter.count)
 					process_dynamic_types (False, l_type_id_mapping)
 				end

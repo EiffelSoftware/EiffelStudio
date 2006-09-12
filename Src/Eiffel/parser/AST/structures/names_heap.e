@@ -54,7 +54,6 @@ feature -- Access
 			-- Id of `s' if inserted, otherwise 0.
 		require
 			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
 		do
 			lookup_table.search (s)
 			if lookup_table.found then
@@ -71,7 +70,6 @@ feature -- Access
 			-- Does current have `s'.
 		require
 			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
 		do
 			search (s)
 			Result := found
@@ -89,7 +87,6 @@ feature -- Status report
 			-- Search for `s' in Current.
 		require
 			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
 		do
 			lookup_table.search (s)
 			found := lookup_table.found
@@ -107,7 +104,6 @@ feature -- Element change
 			-- to location in Current.
 		require
 			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
 		do
 			lookup_table.search (s)
 			if lookup_table.found then

@@ -152,6 +152,8 @@ feature -- Roundtrip/Token
 			last_token_exists: last_token (a_list) /= Void
 		do
 			create Result.make (first_token (a_list).index, last_token (a_list).index)
+		ensure
+			token_region_not_void: Result /= Void
 		end
 
 feature -- Roundtrip/Text modification

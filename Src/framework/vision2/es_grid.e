@@ -498,7 +498,9 @@ feature {NONE} -- column resizing impl
 								resize_actions.block
 								virtual_size_changed_actions.block
 								last_col.set_width (viewable_width - col_left_x)
-								implementation.recompute_horizontal_scroll_bar
+									--| IEK This line does not seem to be needed and causes potential
+									--| infinite loops during resizing on gtk.
+								--implementation.recompute_horizontal_scroll_bar
 								virtual_size_changed_actions.resume
 								resize_actions.resume
 							end

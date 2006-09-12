@@ -244,7 +244,6 @@ feature -- Basic operations
 			-- Change the target of `Current'.
 			--| The implementation is delayed for optimization purposes.
 		do
-			metric_tool_interface.set_stone (a_stone)
 		end
 
 	set_focus is

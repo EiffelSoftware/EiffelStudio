@@ -1296,9 +1296,11 @@ feature {NONE} -- Implementation
 			--            "Unable to load the file".
 		local
 			dib: WEL_DIB
-			size_row: INTEGER
 			memory_dc: WEL_MEMORY_DC
 			s_dc: WEL_SCREEN_DC
+			l_header: WEL_BITMAP_INFO_HEADER
+			l_bitmap_info: WEL_BITMAP_INFO
+			l_quad: WEL_RGB_QUAD
 		do
 			if error_code = Loadpixmap_error_noerror then
 				inspect
@@ -1324,20 +1326,19 @@ feature {NONE} -- Implementation
 					private_height := private_bitmap.height
 
 				when Loadpixmap_rgb_data then
-						-- Compute the size of a row in bytes (here
-						-- we have 32 bits/color)
-					size_row := 4 * pixmap_width
-					create dib.make_by_content_pointer (
-						rgb_data,
-						size_row * pixmap_height + 40
-						)
+					create l_header.make
+					l_header.set_width (pixmap_width)
+					l_header.set_height (pixmap_height)
+					l_header.set_planes (1)
+					l_header.set_bit_count (32)
+					l_header.set_compression ({WEL_BI_COMPRESSION_CONSTANTS}.bi_rgb)
+					create l_bitmap_info.make (l_header, 0)
+						-- We have 4 here because it is 32 bits per pixel.
+					create dib.make_with_info_and_data (l_bitmap_info, rgb_data,
+						4 * pixmap_width * pixmap_height)
 					create s_dc
 					s_dc.get
-					create private_bitmap.make_by_dib(
-						s_dc,
-						dib,
-						Dib_colors_constants.Dib_rgb_colors
-						)
+					create private_bitmap.make_by_dib (s_dc, dib, Dib_colors_constants.Dib_rgb_colors)
 					private_bitmap_id := private_bitmap.object_id
 					private_bitmap.enable_reference_tracking
 					s_dc.release
@@ -1356,13 +1357,30 @@ feature {NONE} -- Implementation
 
 						-- Let's build the mask.
 					if alpha_data /= Default_pointer then
-							-- Compute the size of a row in bytes (here
-							-- we have 1 bit/color)
-						size_row := 4 * ((pixmap_width * 1 + 31) // 32)
-						create dib.make_by_content_pointer (
-							alpha_data,
-							size_row * pixmap_height + 40 + 8
-							)
+						create l_header.make
+						l_header.set_width (pixmap_width)
+						l_header.set_height (pixmap_height)
+						l_header.set_planes (1)
+						l_header.set_bit_count (1)
+						l_header.set_compression ({WEL_BI_COMPRESSION_CONSTANTS}.bi_rgb)
+						l_header.set_clr_used (2)
+						l_header.set_clr_important (2)
+						create l_bitmap_info.make (l_header, 2)
+						l_quad := l_bitmap_info.rgb_quad (0)
+						l_quad.set_red (0)
+						l_quad.set_green (0)
+						l_quad.set_blue (0)
+						l_quad.set_reserved (0)
+						l_quad := l_bitmap_info.rgb_quad (1)
+						l_quad.set_red (0xFF)
+						l_quad.set_green (0xFF)
+						l_quad.set_blue (0xFF)
+						l_quad.set_reserved (0xFF)
+							-- The size of a row is more difficult to compute here because we have 1 bit/color
+							-- and it needs to be 32-bit aligned.
+						create dib.make_with_info_and_data (l_bitmap_info, alpha_data,
+							(4 * ((pixmap_width + 31) // 32)) * pixmap_height)
+
 						create memory_dc.make
 						create private_mask_bitmap.make_by_dib (
 							memory_dc, dib,

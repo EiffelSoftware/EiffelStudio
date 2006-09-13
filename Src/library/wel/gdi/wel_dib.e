@@ -31,7 +31,8 @@ inherit
 create
 	make_by_file,
 	make_by_stream,
-	make_by_content_pointer
+	make_by_content_pointer,
+	make_with_info_and_data
 
 feature {NONE} -- Initialization
 
@@ -78,6 +79,8 @@ feature {NONE} -- Initialization
 		end
 
 	make_by_content_pointer (bits_ptr: POINTER; size: INTEGER) is
+		obsolete
+			"Use `make_with_info_and_data' which is a safer way to proceed."
 		do
 			create info_header.make
 
@@ -90,6 +93,25 @@ feature {NONE} -- Initialization
 		ensure
 			palette_not_void: palette /= Void
 			palette_exists: palette.exists
+		end
+
+	make_with_info_and_data (an_info: WEL_BITMAP_INFO; a_ptr: POINTER; a_size: INTEGER) is
+			-- Create a WEL_DIB section using data of `a_ptr' corresponding to `an_info'.
+		require
+			an_info_not_void: an_info /= Void
+			a_ptr_not_null: a_ptr /= default_pointer
+			a_size_positive: a_size > 0
+			rgb_data: an_info.header.compression = {WEL_BI_COMPRESSION_CONSTANTS}.bi_rgb
+			valid_size:
+				(4 * ((an_info.header.width * an_info.header.bit_count + 31) // 32)) * an_info.header.height = a_size
+		do
+			structure_size := a_size + an_info.structure_size
+			structure_make
+			item.memory_copy (an_info.item, an_info.structure_size)
+			(item + an_info.structure_size).memory_copy (a_ptr, a_size)
+			create info_header.make
+			info_header.memory_copy (item, info_header.structure_size)
+			calculate_palette
 		end
 
 feature -- Access
@@ -325,7 +347,7 @@ feature {NONE} -- Implementation
 		do
 			Result := info_header.bit_count = 32
 		end
-		
+
 	max_palette: INTEGER is 256
 
 	rgb_quad_size: INTEGER is

@@ -2805,7 +2805,7 @@ feature -- Final mode generation
 				byte_context.set_final_mode
 				l_assertions := universe.target.options.assertions
 				keep_assertions := keep_assert and then l_assertions /= Void and then l_assertions.has_assertions
-				set_is_precompile_finalized (True)
+				set_is_precompile_finalized (is_precompiled)
 
 				if il_generation then
 						-- Build conformance table for CLASS_TYPE instances. This is

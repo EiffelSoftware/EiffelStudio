@@ -87,10 +87,7 @@ feature -- Access
 			index_small_enough: index < rgb_quad_count
 			index_large_enough: index >= 0
 		do
-			create Result.make
-			Result.memory_copy (
-				cwel_bitmap_info_get_rgb_quad (item, index), 
-				c_size_of_rgb_quad)
+			create Result.make_by_pointer (cwel_bitmap_info_get_rgb_quad (item, index))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -128,8 +125,10 @@ feature -- Measurement
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)
 		do
+				-- It has to be `- 1' because in the size of `BITMAP_INFO' it already
+				-- contains one entry for a RGBQUAD.
 			Result := c_size_of_bitmap_info +
-				(rgb_quad_count * c_size_of_rgb_quad)
+				((rgb_quad_count - 1) * c_size_of_rgb_quad)
 		end
 
 feature -- Obsolete

@@ -109,7 +109,7 @@ feature -- Properties
 						and then not l_locals.is_empty
 					then
 						create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
-						Result.extend (error_value ("...", "unable to get the locals"))
+						Result.extend (error_value ("...", "Unable to get the locals"))
 					end
 				end
 			end
@@ -134,7 +134,7 @@ feature -- Properties
 						and then not l_args.is_empty
 					then
 						create {LINKED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
-						Result.extend (error_value ("...", "unable to get the arguments"))
+						Result.extend (error_value ("...", "Unable to get the arguments"))
 					end
 				end
 			end

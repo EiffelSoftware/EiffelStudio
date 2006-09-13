@@ -296,26 +296,32 @@ feature {NONE} -- Implementation
 				--l_count := rout.argument_count
 				l_count := retrieved_arguments_count
 				if l_count > 0 then
-					create args_list.make_filled (l_count)
-					from
-						arg_names := rout.argument_names
-						arg_types := rout.arguments
-						arg_names.start
-						arg_types.start
-						args_list.start
-					until
-						args_list.after
-					loop
-						value := unprocessed_l.item
-						value.set_name (arg_names.item)
-						if arg_types.item.has_associated_class then
-							value.set_static_class (arg_types.item.associated_class)
+					arg_types := rout.arguments
+					if arg_types = Void then
+						unprocessed_l.go_i_th (unprocessed_l.index + l_count)
+						create args_list.make (0)
+					else
+						create args_list.make_filled (l_count)
+						from
+							arg_types.start
+							arg_names := rout.argument_names
+							arg_names.start
+							args_list.start
+						until
+							args_list.after
+						loop
+							value := unprocessed_l.item
+							value.set_name (arg_names.item)
+							if arg_types.item.has_associated_class then
+								value.set_static_class (arg_types.item.associated_class)
+							end
+
+							args_list.replace (value)
+							args_list.forth
+							arg_types.forth
+							arg_names.forth
+							unprocessed_l.forth
 						end
-						args_list.replace (value)
-						args_list.forth
-						arg_names.forth
-						arg_types.forth
-						unprocessed_l.forth
 					end
 				end
 				if local_decl_grps /= Void then

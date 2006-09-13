@@ -13,7 +13,8 @@ inherit
 	EV_GRID_EDITABLE_ITEM
 		redefine
 			text_field,
-			activate_action
+			activate_action,
+			initialize_actions
 		end
 
 	EB_SHARED_PREFERENCES
@@ -50,6 +51,15 @@ feature {NONE} -- Implementation
 		do
 			preferences.metric_tool_data.criterion_completion_list_width_preference.set_value (a_width)
 			preferences.metric_tool_data.criterion_completion_list_height_preference.set_value (a_height)
+		end
+
+	initialize_actions is
+			-- Setup actions sequences of `Current'.
+		do
+			Precursor
+				-- Caret position needs to be set at the end for editing, this also removes
+				-- any text selection due to focusing of the text field.
+			text_field.set_caret_position (text_field.text_length + 1)
 		end
 
 	activate_action (popup_window: EV_POPUP_WINDOW) is

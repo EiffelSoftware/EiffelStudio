@@ -6571,16 +6571,16 @@ feature {NONE} -- Agents
 
 			a_feat.set_inline_agent (l_enclosing_feature.body_index, l_number)
 			if l_is_fake then
-				l_name := "fake inline-agent of "
-				l_name.append (l_enclosing_feature.feature_name)
+				l_name := "fake inline-agent"
 				l_name.append_character ('#')
 				l_name.append_integer (a_feat.body_index)
 			else
-				l_name := "inline-agent of "
-				l_name.append (l_enclosing_feature.feature_name)
+				l_name := "inline-agent"
 				l_name.append_character ('#')
 				l_name.append_integer (a_feat.inline_agent_nr)
 			end
+			l_name.append_string (" of ")
+			l_name.append (l_enclosing_feature.feature_name)
 			a_feat.set_feature_name (l_name)
 
 			if is_byte_node_enabled then

@@ -191,7 +191,11 @@ feature {NONE} -- Initialization Implementation
 
 					create l_menu
 					l_menu.extend (l_menu_item)
-					update_folder_item (l_menu)
+					if an_item.is_class then
+						update_class_item (a_class_item, l_menu)
+					else
+						update_folder_item (l_menu)
+					end
 
 					Result := l_menu
 				end

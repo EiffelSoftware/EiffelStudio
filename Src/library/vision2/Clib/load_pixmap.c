@@ -1337,9 +1337,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
 
 #ifdef EIF_WINDOWS
-		/* Examples in WEL and others recommend to always allocate 3 RGBQUAD for 32 bits per
-		 * pixel image. */	
-	pbi = (BITMAPINFO*) malloc (sizeof (BITMAPINFOHEADER) + 3 * sizeof(RGBQUAD));
+	pbi = (BITMAPINFO*) malloc (sizeof (BITMAPINFOHEADER));
 	pbi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	pbi->bmiHeader.biWidth = width;
 	pbi->bmiHeader.biHeight = height;
@@ -1372,18 +1370,6 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	pImage = pData;
 	pAlphaImage = pAlphaData;
 
-  // We should copy datas to header.
-  // Windows does not do this work for us.
-	memcpy (pData, &(pbi->bmiHeader), sizeof (BITMAPINFOHEADER));	
-	pData += sizeof (BITMAPINFOHEADER);
-	
-	memcpy (pAlphaData, &(pbi_mask->bmiHeader), sizeof (BITMAPINFOHEADER));
-	pAlphaData += sizeof (BITMAPINFOHEADER);
-		
-	// Color table
-	*((DWORD *)pAlphaData) = 0x00000000; pAlphaData += 4;	/* Index 0 (black) */
-	*((DWORD *)pAlphaData) = 0x00FFFFFF; pAlphaData += 4;	/* Index 1 (white) */
-	
 	iData = 0;
 		
 	for (row = height; row > 0; row--) {
@@ -1400,7 +1386,7 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 			*(pData + iData + 0) = *(pSrc + 2) * *(pSrc + 3) / 255;	/* B */           
 			*(pData + iData + 1) = *(pSrc + 1) * *(pSrc + 3) / 255;	/* G */
 			*(pData + iData + 2) = *(pSrc + 0) * *(pSrc + 3) / 255;/* R */
-			* (pData + iData + 3) = *(pSrc + 3); /* Alpha*/
+			*(pData + iData + 3) = *(pSrc + 3); /* Alpha*/
 			/* Copy the alpha channel */
 			if (*(pSrc + 3) > 0x7F) {
 				c_ev_set_bit(0, pAlphaData, iAlphaData);

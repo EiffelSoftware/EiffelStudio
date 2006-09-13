@@ -169,6 +169,14 @@ feature -- Properties
 			-- Do nothing
 		end;
 
+	has_return_value: BOOLEAN is
+			-- Does current return a value?
+		do
+			Result := is_constant or is_attribute or is_function
+		ensure
+			validity: Result implies (is_constant or is_attribute or is_function)
+		end
+
 	is_il_external: BOOLEAN
 			-- Is current feature an IL external one?
 

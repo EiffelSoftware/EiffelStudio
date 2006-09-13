@@ -27,8 +27,13 @@ feature -- Access
 
 	window_from: WEL_WINDOW is
 			-- Control sending message
+		local
+			l_hwnd, l_null: POINTER
 		do
-			Result := window_of_item (cwel_nmhdr_get_hwndfrom (item))
+			l_hwnd := cwel_nmhdr_get_hwndfrom (item)
+			if l_hwnd /= l_null then
+				Result := window_of_item (l_hwnd)
+			end
 		end
 
 	id_from: INTEGER is

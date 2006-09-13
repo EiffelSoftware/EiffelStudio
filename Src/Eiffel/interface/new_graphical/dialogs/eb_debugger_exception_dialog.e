@@ -35,6 +35,14 @@ inherit
 			default_create, copy
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+
 create
 	make, default_create --, make_with_window
 
@@ -173,9 +181,14 @@ feature {NONE} -- Implementation
 			sfd: EB_FILE_SAVE_DIALOG
 			text_file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
+			l_pref: STRING_PREFERENCE
 		do
 			if not retried then
-				create sfd.make_with_preference (preferences.dialog_data.last_saved_debugger_exception_directory_preference)
+				l_pref := preferences.dialog_data.last_saved_debugger_exception_directory_preference
+				if l_pref.value = Void or else l_pref.value.is_empty then
+					l_pref.set_value (eiffel_layout.eiffel_projects_directory)
+				end
+				create sfd.make_with_preference (l_pref)
 				set_dialog_filters_and_add_all (sfd, <<text_files_filter>>)
 				sfd.show_modal_to_window (window)
 				if not sfd.file_name.is_empty then

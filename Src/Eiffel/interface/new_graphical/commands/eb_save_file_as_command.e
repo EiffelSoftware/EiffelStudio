@@ -128,9 +128,14 @@ feature {EB_SAVE_FILE_COMMAND} -- Implementation
 			-- Save a file with the chosen name.
 		local
 			fsd: EB_FILE_SAVE_DIALOG
+			l_pref: STRING_PREFERENCE
 		do
 			if argument = Void then
-				create fsd.make_with_preference (preferences.dialog_data.last_saved_save_file_as_directory_preference)
+				l_pref := preferences.dialog_data.last_saved_save_file_as_directory_preference
+				if l_pref.value = Void or else l_pref.value.is_empty then
+					l_pref.set_value (eiffel_layout.eiffel_projects_directory)
+				end
+				create fsd.make_with_preference (l_pref)
 				fsd.save_actions.extend (agent execute_with_dialog (fsd))
 				fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else

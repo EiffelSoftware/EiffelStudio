@@ -61,6 +61,15 @@ inherit
 			default_create
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		undefine
+			copy,
+			is_equal,
+			default_create
+		end
+
 create
 	make
 
@@ -70,6 +79,8 @@ feature {NONE} -- Initialization
 			-- Initialize `metric_tool' with `a_tool'.
 		require
 			a_tool_attached: a_tool /= Void
+		local
+			l_pref: STRING_PREFERENCE
 		do
 			on_unit_order_change_agent := agent on_unit_order_change
 			on_stop_metric_evaluation_agent := agent on_stop_metric_evaluation
@@ -78,7 +89,11 @@ feature {NONE} -- Initialization
 			default_create
 
 				-- Setup `open_file_dialog'.
-			create open_file_dialog.make_with_preference (preferences.dialog_data.last_opened_metric_browse_archive_directory_preference)
+			l_pref := preferences.dialog_data.last_opened_metric_browse_archive_directory_preference
+			if l_pref.value = Void or else l_pref.value.is_empty then
+				l_pref.set_value (eiffel_layout.eiffel_projects_directory)
+			end
+			create open_file_dialog.make_with_preference (l_pref)
 			open_file_dialog.set_title (metric_names.t_select_archive)
 			open_file_dialog.filters.extend (["*.xml", "XML files"])
 			open_file_dialog.filters.extend (["*.*", "All files"])

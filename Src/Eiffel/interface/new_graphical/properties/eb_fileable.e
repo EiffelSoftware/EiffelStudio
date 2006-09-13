@@ -187,7 +187,7 @@ feature -- "Save command" related features
 
 feature -- Commands
 
-	open_cmd: EB_OPEN_FILE_COMMAND
+--	open_cmd: EB_OPEN_FILE_COMMAND
 		-- Command to open a file in the tool
 			-- patrickr Tuesday, 29 August 2006:
 			-- at the moment the open command doesn't do anything usefull but it may

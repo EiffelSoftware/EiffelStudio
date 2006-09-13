@@ -53,17 +53,11 @@ feature -- Initialization
 			-- Initialize the header item.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
-
-				-- Allow the column to be shrank to nothing
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
 			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
-
 			pixmapable_imp_initialize
 			textable_imp_initialize
-
 			{EV_GTK_EXTERNALS}.gtk_label_set_ellipsize (text_label, 3)
-
 			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, False, 0)
@@ -71,8 +65,7 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 
 			set_minimum_width (0)
-			set_maximum_width (32000)
-
+			maximum_width := 32000
 			align_text_left
 			enable_user_resize
 

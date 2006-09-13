@@ -151,6 +151,10 @@ feature -- Loading
 			property_manager.change_actions.extend (agent (grid.change_actions).call ([]))
 			property_manager.load_properties (a_criterion)
 			property_item := property_manager.property_item
+
+			if grid_row.subrow_count_recursive > 0 then
+				grid.remove_rows (grid_row.index + 1, grid_row.index + grid_row.subrow_count_recursive)
+			end
 			bind (a_row)
 
 				-- Load subrows.

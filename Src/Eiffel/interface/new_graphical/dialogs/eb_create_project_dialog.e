@@ -502,18 +502,7 @@ feature {NONE} -- Implementation
 		local
 			l_project_location: STRING
 		do
-			if
-				eiffel_layout.Eiffel_projects_directory /= Void and then
-				not eiffel_layout.Eiffel_projects_directory.is_empty
-			then
-				l_project_location := eiffel_layout.Eiffel_projects_directory.twin
-			else
-				if Platform_constants.is_windows then
-					l_project_location := Default_project_location_for_windows
-				else
-					l_project_location := eiffel_layout.Home
-				end
-			end
+			l_project_location := eiffel_layout.Eiffel_projects_directory.twin
 			if l_project_location @ l_project_location.count /= Operating_environment.Directory_separator then
 				l_project_location.append_character (Operating_environment.Directory_separator)
 			end
@@ -647,8 +636,6 @@ feature {NONE} -- Constants
 	Default_root_feature_name: STRING is "make"
 
 	Default_root_cluster_name: STRING is "root_cluster"
-
-	Default_project_location_for_windows: STRING is "C:\projects"
 
 	Invalid_ace_exception: STRING is "Invalid_ace"
 

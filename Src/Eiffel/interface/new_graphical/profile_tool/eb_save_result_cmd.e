@@ -15,6 +15,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -36,8 +41,13 @@ feature {EB_PROFILE_QUERY_WINDOW} -- Command Execution
 			-- Execute Current
 		local
 			fsd: EB_FILE_SAVE_DIALOG
+			l_pref: STRING_PREFERENCE
 		do
-			create fsd.make_with_preference (preferences.dialog_data.last_saved_profile_result_directory_preference)
+			l_pref := preferences.dialog_data.last_saved_profile_result_directory_preference
+			if l_pref.value = Void or else l_pref.value.is_empty then
+				l_pref.set_value (eiffel_layout.eiffel_projects_directory)
+			end
+			create fsd.make_with_preference (l_pref)
 			fsd.save_actions.extend (agent save_in (fsd))
 			fsd.show_modal_to_window (query_window)
 		end

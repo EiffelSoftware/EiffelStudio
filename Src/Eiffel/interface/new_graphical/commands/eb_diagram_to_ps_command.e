@@ -25,6 +25,11 @@ inherit
 			{NONE} all
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -51,10 +56,15 @@ feature -- Basic operations
 			test_file: RAW_FILE
 			error: INTEGER
 			wd: EV_WARNING_DIALOG
+			l_pref: STRING_PREFERENCE
 		do
 			if is_sensitive then
 				if error = 0 then
-					create dial.make_with_preference (preferences.dialog_data.last_saved_diagram_postscript_directory_preference)
+					l_pref := preferences.dialog_data.last_saved_diagram_postscript_directory_preference
+					if l_pref.value = Void or else l_pref.value.is_empty then
+						l_pref.set_value (eiffel_layout.eiffel_projects_directory)
+					end
+					create dial.make_with_preference (l_pref)
 					set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
 
 					if tool.class_graph /= Void then

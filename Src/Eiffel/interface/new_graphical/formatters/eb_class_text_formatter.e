@@ -76,6 +76,7 @@ feature -- Formatting
 					else
 						editor.clear_window
 						editor.put_string (Warning_messages.w_Formatter_failed)
+						editor.refresh_now
 					end
 					display_header
 				end

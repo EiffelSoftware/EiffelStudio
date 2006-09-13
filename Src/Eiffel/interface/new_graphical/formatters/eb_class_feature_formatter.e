@@ -47,13 +47,14 @@ feature{NONE} -- Implementation
 				l_class := query_class_item_from_class_c (associated_class)
 				l_domain ?= l_class.wrapped_domain.new_domain (domain_generator)
 				browser.set_start_class (l_class)
+				browser.set_trace (Void)
 				browser.update (Void, l_domain)
 			else
+				browser.set_start_class (Void)
+				browser.set_trace (exception_trace)
 				browser.update (Void, Void)
 			end
 		rescue
-			browser.set_start_class (Void)
-			browser.set_trace (exception_trace)
 			l_retried := True
 			retry
 		end

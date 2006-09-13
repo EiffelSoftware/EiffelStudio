@@ -66,7 +66,8 @@ feature -- Formatting
 				generate_text
 				if last_was_error then
 					editor.clear_window
-					editor.display_message (Warning_messages.W_formatter_failed)
+					editor.put_string (Warning_messages.W_formatter_failed)
+					editor.refresh_now
 				end
 				if has_breakpoints then
 					editor.enable_has_breakable_slots

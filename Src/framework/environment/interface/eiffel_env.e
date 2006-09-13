@@ -207,10 +207,23 @@ feature -- Access: Environment variables
 			result_not_void: Result /= Void
 		end
 
-	Eiffel_projects_directory: STRING is
+	Eiffel_projects_directory: DIRECTORY_NAME is
 			-- ISE_PROJECTS name.
+		local
+			l_tmp: STRING
 		once
-			Result := get_environment (ise_projects_env)
+			l_tmp := get_environment (ise_projects_env)
+			if
+				l_tmp = Void or else l_tmp.is_empty
+			then
+				if Platform.is_windows then
+					create Result.make_from_string (Default_project_location_for_windows)
+				else
+					Result := Home
+				end
+			else
+				create Result.make_from_string (l_tmp)
+			end
 		end
 
 	Eiffel_home: DIRECTORY_NAME is
@@ -226,12 +239,16 @@ feature -- Access: Environment variables
 			result_not_void: Result /= Void
 		end
 
-	Home: STRING is
+	Home: DIRECTORY_NAME is
 			-- HOME name.
+		local
+			l_tmp: STRING
 		once
-			Result := environment.home_directory_name
-			if Result = Void then
-				Result := ""
+			l_tmp := environment.home_directory_name
+			if l_tmp = Void then
+				create Result.make
+			else
+				create Result.make_from_string (l_tmp)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -725,6 +742,9 @@ feature -- File constants
 
 	short_studio_name: STRING is "studio";
 			-- Short version of EiffelStudio name.
+
+	Default_project_location_for_windows: STRING is "C:\projects"
+			-- Default project location on windows.
 
 feature -- Environment constants
 

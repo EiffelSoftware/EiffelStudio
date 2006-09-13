@@ -128,7 +128,7 @@ feature -- Measurement
 				-- It has to be `- 1' because in the size of `BITMAP_INFO' it already
 				-- contains one entry for a RGBQUAD.
 			Result := c_size_of_bitmap_info +
-				((rgb_quad_count - 1).max (0) * c_size_of_rgb_quad)
+				((rgb_quad_count - 1) * c_size_of_rgb_quad)
 		end
 
 feature -- Obsolete

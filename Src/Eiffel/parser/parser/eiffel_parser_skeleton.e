@@ -712,7 +712,7 @@ feature {AST_FACTORY} -- Error handling
 			if a_type /= Void then
 				l_message := "Integer value " + an_int + " is too large for " + a_type.dump + "."
 			else
-				l_message := "Integer value " + an_int + " is too large for INTEGER_32."
+				l_message := "Integer value " + an_int + " is too large for any integer type."
 			end
 			create an_error.make (line, column, filename, l_message, False)
 			Error_handler.insert_error (an_error)
@@ -732,7 +732,7 @@ feature {AST_FACTORY} -- Error handling
 			if a_type /= Void then
 				l_message := "Integer value " + an_int + " is too small for " + a_type.dump + "."
 			else
-				l_message := "Integer value " + an_int + " is too small for INTEGER_32."
+				l_message := "Integer value " + an_int + " is too small for any integer type."
 			end
 			create an_error.make (line, column, filename, l_message, False)
 			Error_handler.insert_error (an_error)

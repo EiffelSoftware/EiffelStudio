@@ -301,26 +301,25 @@ feature -- Access
 			e_class: CLASS_C
 		do
 			f := associated_feature_i;
-			check
-				feature_upto_date: f /= Void
-			end;
-			assert_id_set := f.assert_id_set;
-			if assert_id_set /= Void then
-				nb := assert_id_set.count;
-				create Result.make (nb);
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					inh_info := assert_id_set.item (i);
-					e_class := Eiffel_system.class_of_id (inh_info.written_in);
-					if e_class /= Void then
-						--| On the off chance that this information
-						--| is not upto date hence the check with void
-						Result.extend (e_class)
-					end;
-					i := i + 1
+			if f /= Void then
+				assert_id_set := f.assert_id_set;
+				if assert_id_set /= Void then
+					nb := assert_id_set.count;
+					create Result.make (nb);
+					from
+						i := 1
+					until
+						i > nb
+					loop
+						inh_info := assert_id_set.item (i);
+						e_class := Eiffel_system.class_of_id (inh_info.written_in);
+						if e_class /= Void then
+							--| On the off chance that this information
+							--| is not upto date hence the check with void
+							Result.extend (e_class)
+						end;
+						i := i + 1
+					end
 				end
 			end
 		end;
@@ -589,10 +588,9 @@ feature -- Access
 			f: FEATURE_I
 		do
 			f := associated_feature_i
-			check
-				feature_upto_date: f /= Void
+			if f /= Void then
+				Result := f.number_of_breakpoint_slots
 			end
-			Result := f.number_of_breakpoint_slots
 		end
 
 	first_breakpoint_slot_index: INTEGER is
@@ -601,10 +599,9 @@ feature -- Access
 			f: FEATURE_I
 		do
 			f := associated_feature_i
-			check
-				feature_upto_date: f /= Void
+			if f /= Void then
+				Result := f.first_breakpoint_slot_index
 			end
-			Result := f.first_breakpoint_slot_index
 		end
 
 feature -- Comparison

@@ -113,6 +113,7 @@ feature {NONE} -- Compilation implementation
 			if not Eiffel_project.is_compiling then
 				reset_debugger
 				Window_manager.on_compile
+				output_manager.clear
 				perform_compilation
 				display_eiffel_compilation_status
 				if Eiffel_project.successful then
@@ -263,12 +264,6 @@ feature -- Execution
 		do
 			output_manager.clear
 			execute_with_c_compilation_flag (True)
-		end
-
-	execute_without_c_compilation is
-			-- Recompile the project, but do not start C compilation.
-		do
-			execute_with_c_compilation_flag (False)
 		end
 
 feature {NONE} -- Execution

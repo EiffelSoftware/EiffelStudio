@@ -113,6 +113,11 @@ feature -- Basic operations
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			create menu
+			create item.make_with_text ("Breakpoint index: " + index.out)
+			item.disable_sensitive
+			menu.extend (item)
+			menu.extend (create {EV_MENU_SEPARATOR})
+
 				-- "Enable"
 			create item.make_with_text (Interface_names.m_Enable_this_bkpt)
 			item.select_actions.extend (agent Application.enable_breakpoint (routine, index))

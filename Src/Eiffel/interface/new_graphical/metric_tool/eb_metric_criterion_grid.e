@@ -215,6 +215,9 @@ feature -- Basic operation
 			end
 			if l_should_remove then
 				l_old_row_index := a_row.index
+				if a_row.subrow_count_recursive > 0 then
+					remove_rows (a_row.index + 1, a_row.index + a_row.subrow_count_recursive)
+				end
 				remove_row (a_row.index)
 				if row_count = 0 then
 					load_criterion (Void, scope, is_read_only)

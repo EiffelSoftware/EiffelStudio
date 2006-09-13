@@ -121,24 +121,16 @@
 	<PREF NAME="interface.dialogs.executing_command" DESCRIPTION="Display dialog while running an external command."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.file_open_and_save_dialogs_remember_last_directory" DESCRIPTION="File open and save dialogs each remember their last selected directory."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.last_opened_project_directory" DESCRIPTION="Directory of last project opened." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_opened_ace_directory" DESCRIPTION="Directory of last ace file opened." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_opened_dynamic_lib_directory" DESCRIPTION="Directory of last dynamic lib library opened." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_opened_metric_directory" DESCRIPTION="Directory of last metric opened." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_opened_file_directory" DESCRIPTION="Directory of last file opened." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_opened_system_ace_directory" DESCRIPTION="Directory of last system ace file opened." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_opened_import_metric_directory" DESCRIPTION="Directory of last imported metric opened." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_opened_local_assembly_directory" DESCRIPTION="Directory of last local assembly opened." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_opened_metric_browse_archive_directory" DESCRIPTION="Directory of last metric browse archive opened." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_opened_metric_update_archive_directory" DESCRIPTION="Directory of last metric update archive opened." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_dynamic_lib_directory" DESCRIPTION="Directory of last dynamic lib saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_call_stack_directory" DESCRIPTION="Directory of last call stack saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_debugger_exception_directory" DESCRIPTION="Directory of last debugger exception saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_diagram_postscript_directory" DESCRIPTION="Directory of last diagram postscript file saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_exception_directory" DESCRIPTION="Directory of last exception saved." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_saved_metric_new_archive_directory" DESCRIPTION="Directory of last new metric new archive." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_save_file_as_directory" DESCRIPTION="Directory of last save file as saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.last_saved_profile_result_directory" DESCRIPTION="Directory of last profile result saved." HIDDEN="True"><STRING></STRING></PREF>
-	<PREF NAME="interface.dialogs.last_saved_system_generate_key_directory" DESCRIPTION="Directory of last system generate key saved." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="interface.dialogs.project_settings_width" DESCRIPTION="Width of the project settings dialog." HIDDEN="True"><INTEGER>700</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_height" DESCRIPTION="Height of the project settings dialog." HIDDEN="True"><INTEGER>600</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.project_settings_position_x" DESCRIPTION="Screen x position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>

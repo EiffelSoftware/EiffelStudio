@@ -438,9 +438,9 @@ feature -- Metric management
 						l_error_str.append ("%NPredefined metrics not loaded.%N")
 					end
 					if not is_last_userdefined_metric_load_successful then
-						l_error_str.append ("When loading userdefined metrics: ")
+						l_error_str.append ("When loading user-defined metrics: ")
 						l_error_str.append (last_userdefined_metric_load_error.out)
-						l_error_str.append ("%NUserdefined metrics not loaded.%N")
+						l_error_str.append ("%NUser-defined metrics not loaded.%N")
 					end
 					create {EB_METRIC_ERROR_PARSE} last_error.make_with_no_title (l_error_str)
 				end

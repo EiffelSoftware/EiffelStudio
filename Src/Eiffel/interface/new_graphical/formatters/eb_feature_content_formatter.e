@@ -166,13 +166,14 @@ feature{NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
+				browser.set_trace (Void)
 				l_domain ?= system_target_domain.new_domain (domain_generator)
 				browser.update (Void, l_domain)
 			else
+				browser.set_trace (exception_trace)
 				browser.update (Void, Void)
 			end
 		rescue
-			browser.set_trace (exception_trace)
 			l_retried := True
 			retry
 		end

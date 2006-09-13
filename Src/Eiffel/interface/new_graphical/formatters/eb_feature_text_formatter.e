@@ -140,7 +140,7 @@ feature -- Formatting
 					editor.set_read_only (not editable)
 				else
 					editor.clear_window
-					l_msg := Warning_messages.w_Formatter_failed
+					l_msg := Warning_messages.w_Formatter_failed.twin
 					if trace /= Void then
 						l_msg.append ("%N")
 						l_msg.append (trace)

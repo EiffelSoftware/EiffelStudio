@@ -138,10 +138,12 @@ feature -- Setting
 
 	set_trace (a_msg: STRING) is
 			-- Set `trace' with `a_msg'.
-		require
-			a_msg_attached: a_msg /= Void
 		do
-			create trace.make_from_string (a_msg)
+			if a_msg = Void or else a_msg.is_empty then
+				trace := Void
+			else
+				create trace.make_from_string (a_msg)
+			end
 		end
 
 	set_focus is

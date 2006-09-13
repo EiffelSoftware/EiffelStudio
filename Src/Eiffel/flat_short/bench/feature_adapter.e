@@ -66,6 +66,7 @@ feature -- Element change
 			t_feat: FEATURE_I
 			rep_table: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER]
 			is_precompiled: BOOLEAN
+			is_unique: BOOLEAN
 		do
 			names := feature_as.feature_names;
 			if names.count > 1 then
@@ -84,7 +85,15 @@ feature -- Element change
 					new_feature_as.set_feature_names (eiffel_list);
 					create adapter;
 					adapter.register (new_feature_as, format_reg);
-					adapter.add_comment (synonym_comment (i, names, format_reg.current_class.name), is_precompiled);
+					if not new_feature_as.is_attribute then
+						adapter.add_comment (
+							synonym_comment (
+								i, names, format_reg.current_class.name,
+								new_feature_as.body /= Void and then new_feature_as.body.is_unique
+							),
+							is_precompiled
+						);
+					end
 					i := i + 1
 				end;
 			else
@@ -128,7 +137,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	synonym_comment (exclude: INTEGER; names: EIFFEL_LIST [FEATURE_NAME]; class_name: STRING): STRING is
+	synonym_comment (exclude: INTEGER; names: EIFFEL_LIST [FEATURE_NAME]; class_name: STRING; a_is_unique: BOOLEAN): STRING is
 			-- Create comment describing feature synonyms.
 			-- Do not include visual name with index `exclude'.
 		require
@@ -164,7 +173,11 @@ feature {NONE} -- Implementation
 				Result.append (s)
 				Result.append ("}")
 			end
-			Result.append (" as synonym of ")
+			if a_is_unique then
+				Result.append (" with other unique constants ")
+			else
+				Result.append (" as synonym of ")
+			end
 			from others.start until others.after loop
 				Result.extend ('`')
 				Result.append (others.item)

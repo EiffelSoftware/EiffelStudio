@@ -1098,6 +1098,9 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
+
+			is_inline_agent := current_feature.is_inline_agent
+
 			locals_for_current_feature.wipe_out
 			text_formatter_decorator.put_new_line
 			if not text_formatter_decorator.is_feature_short then
@@ -1111,16 +1114,17 @@ feature {NONE} -- Implementation
 				end
 			end
 			text_formatter_decorator.indent
-			text_formatter_decorator.indent
-			comments := text_formatter_decorator.feature_comments
-			if comments /= Void then
-				text_formatter_decorator.put_comments (comments)
-			end
-			text_formatter_decorator.put_origin_comment
-			text_formatter_decorator.exdent
-			text_formatter_decorator.set_first_assertion (True)
 
-			is_inline_agent := current_feature.is_inline_agent
+			if not is_inline_agent then
+				text_formatter_decorator.indent
+				comments := text_formatter_decorator.feature_comments
+				if comments /= Void then
+					text_formatter_decorator.put_comments (comments)
+				end
+				text_formatter_decorator.put_origin_comment
+				text_formatter_decorator.exdent
+			end
+			text_formatter_decorator.set_first_assertion (True)
 
 			if is_inline_agent then
 				create inline_agent_assertion.make_for_inline_agent (current_feature, l_as)
@@ -3822,7 +3826,7 @@ feature {NONE} -- Implementation: helpers
 		do
 			l_feat := feature_in_class (system.class_of_id (l_as.class_id), l_as.routine_ids)
 			if not has_error_internal then
-				if l_feat.is_function then
+				if l_feat.has_return_value then
 						-- generics are: base_type, open_types, result_type
 					create l_generics.make (1, 3)
 					l_generics.put (l_feat.type.actual_type, 3)

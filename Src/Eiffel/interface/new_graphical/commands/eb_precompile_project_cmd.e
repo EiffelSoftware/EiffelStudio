@@ -73,10 +73,10 @@ feature {NONE} -- Implementation
 			-- Launch the C compilation in the background.
 		do
 			if start_c_compilation then
-				output_manager.add_string ("Eiffel system recompiled")
+				output_manager.add_string ("Eiffel System Recompiled")
 				output_manager.add_new_line
 
-				output_manager.add_string ("Launching C compilation in background...")
+				output_manager.add_string ("Launching Background C Compilation...")
 				output_manager.add_new_line
 					-- Display message.
 				Eiffel_project.call_finish_freezing (True)

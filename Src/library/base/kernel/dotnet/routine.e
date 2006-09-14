@@ -119,13 +119,40 @@ feature -- Status report
 	is_equal (other: like Current): BOOLEAN is
 			-- Is associated routine the same as the one
 			-- associated with `other'.
+		local
+			int_ops, other_int_ops: like internal_operands
+			i: INTEGER
+			e, oe: ANY
+			vt: VALUE_TYPE
 		do
 				--| Do not compare implementation data
-			Result := {SYSTEM_OBJECT}.equals (internal_operands, other.internal_operands)
-				and then {SYSTEM_OBJECT}.equals (open_map, other.open_map)
-				and then (rout_disp = other.rout_disp)
+			Result := (rout_disp = other.rout_disp)
 				and then (target_object = other.target_object)
 				and then (is_cleanup_needed = other.is_cleanup_needed)
+				and then deep_equal (open_map, other.open_map)
+
+			if Result then 
+				int_ops := internal_operands
+				other_int_ops := other.internal_operands 
+				if int_ops.count = other_int_ops.count then
+					from i := int_ops.lower until not Result or else i > other_int_ops.upper loop
+						e := int_ops.item (i)	
+						oe := other_int_ops.item (i)
+						vt ?= e
+						if vt /= Void then
+							vt ?= oe
+							if vt /= Void then
+								Result := equal (e, oe)
+							else
+								Result := False
+							end
+						else
+							Result := e = oe
+						end
+						i := i + 1
+					end
+				end
+			end				
 		end
 
 	valid_operands (args: OPEN_ARGS): BOOLEAN is

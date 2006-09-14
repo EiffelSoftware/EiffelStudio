@@ -177,9 +177,7 @@ feature {NONE} -- Implementation
 	update_grid_columns is
 			-- Update the grid columns widths and borders depending on current display type
 		local
-			l_column: EV_GRID_COLUMN
 			l_preference: PREFERENCE
-			w: INTEGER
 			nb: INTEGER
 		do
 			nb := grid.row_count

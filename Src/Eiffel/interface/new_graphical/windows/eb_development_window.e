@@ -4252,13 +4252,16 @@ feature {NONE} -- Implementation: Editor commands
 			if context_refreshing_timer /= Void then
 				context_refreshing_timer.set_interval (0)
 			end
-			l_classc_stone ?= stone
-			if l_classc_stone /= Void then
-				l_feature := editor_tool.text_area.text_displayed.current_feature_containing
-				if l_feature /= Void then
-					set_editing_location_by_feature (l_feature)
-				else
-					set_editing_location_by_feature (Void)
+			if managed_main_formatters.first.selected then
+					-- We only do that for the clickable view
+				l_classc_stone ?= stone
+				if l_classc_stone /= Void then
+					l_feature := editor_tool.text_area.text_displayed.current_feature_containing
+					if l_feature /= Void then
+						set_editing_location_by_feature (l_feature)
+					else
+						set_editing_location_by_feature (Void)
+					end
 				end
 			end
 		end

@@ -73,6 +73,12 @@ feature -- Access
 		ensure
 			type_a_generator_not_void: Result /= Void
 		end
+		
+	type_output_strategy: AST_TYPE_OUTPUT_STRATEGY is
+			-- Visitor for type output.
+		once
+			create Result
+		end
 
 	value_i_generator: AST_VALUE_I_GENERATOR is
 			-- Visitor to check types.

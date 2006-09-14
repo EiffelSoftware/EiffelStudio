@@ -2674,8 +2674,7 @@ feature {NONE} -- Implementation
 			end
 			if not expr_type_visiting then
 				if last_type /= Void then
-					initialize_type_output_strategy
-					last_type.process (type_output_strategy)
+					type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
 				else
 					text_formatter_decorator.process_local_text (l_as.dump)
 				end
@@ -2690,8 +2689,7 @@ feature {NONE} -- Implementation
 			end
 			if not expr_type_visiting then
 				if last_type /= Void then
-					initialize_type_output_strategy
-					last_type.process (type_output_strategy)
+					type_output_strategy.process (last_type, text_formatter_decorator, current_class, current_feature)
 				else
 					text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
 					text_formatter_decorator.add_space
@@ -2707,8 +2705,7 @@ feature {NONE} -- Implementation
 				last_actual_local_type := last_type
 			end
 			if not expr_type_visiting then
-				initialize_type_output_strategy
-				like_current_type.process (type_output_strategy)
+				type_output_strategy.process (like_current_type, text_formatter_decorator, current_class, current_feature)
 			end
 		end
 
@@ -2737,7 +2734,6 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 				not_processing_locals: not processing_locals
 			end
-			initialize_type_output_strategy
 			if l_as.is_reference then
 				text_formatter_decorator.process_keyword_text (ti_reference_keyword, Void)
 				text_formatter_decorator.put_space
@@ -3728,20 +3724,6 @@ feature {NONE} -- Implementation: helpers
 			else
 				Result := a_type
 			end
-		end
-
-	initialize_type_output_strategy is
-			-- Reinitialize with current class and feature.
-		require
-			current_class_not_void: current_class /= Void
-		do
-			type_output_strategy.initialize (text_formatter_decorator, current_class, source_class, current_feature)
-		end
-
-	type_output_strategy: AST_TYPE_OUTPUT_STRATEGY is
-			-- Visitor for type output.
-		once
-			create Result.make (text_formatter_decorator, current_class, source_class, current_feature)
 		end
 
 	strip_type: GEN_TYPE_A is

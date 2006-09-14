@@ -32,22 +32,13 @@ inherit
 		end
 
 create
-	make
-
-feature {NONE} -- Initialization
-
-	make (a_text_formatter: TEXT_FORMATTER; a_class, a_source: CLASS_C; a_feature: FEATURE_I) is
-			--
-		require
-			a_text_formatter_not_void: a_text_formatter /= Void
-			a_class_not_void: a_class /= Void
-		do
-			initialize (a_text_formatter, a_class, a_source, a_feature)
-		end
+	default_create
 
 feature -- Initialization
 
-	initialize (a_text_formatter: TEXT_FORMATTER; a_class, a_source: CLASS_C; a_feature: FEATURE_I) is
+	process (a_type: TYPE_A; a_text_formatter: TEXT_FORMATTER; a_class: CLASS_C; a_feature: FEATURE_I) is
+			-- Output `a_type' into `a_text_formatter' using context of `a_class' and `a_feature'.
+			-- `a_feature' is only used when resolving anchors to argument.
 		require
 			a_text_formatter_not_void: a_text_formatter /= Void
 			a_class_not_void: a_class /= Void
@@ -55,9 +46,12 @@ feature -- Initialization
 			text_formatter := a_text_formatter
 			current_class := a_class
 			current_feature := a_feature
+			a_type.process (Current)
+			text_formatter := Void
+			current_class := Void
+			current_feature := Void
 		ensure
-			text_formatter_not_viod: text_formatter = a_text_formatter
-			current_class_not_void: current_class = a_class
+			no_state: text_formatter = Void and current_class = Void and current_feature = Void
 		end
 
 feature -- Access
@@ -73,16 +67,6 @@ feature -- Access
 
 feature {NONE} -- Helper
 
-	type_feature_i_from_ancestor (a_ancestor: CLASS_C; a_formal: FORMAL_A): TYPE_FEATURE_I is
-			-- Formal constraint class from `a_ancestor'
-			-- (export status {NONE})
-		local
-			l_type_feature_i: TYPE_FEATURE_I
-		do
-			l_type_feature_i := a_ancestor.formal_at_position (a_formal.position)
-			Result := l_type_feature_i
-		end
-
 	process_generic_in_gen_type (a_type: TYPE_A) is
 			-- Process generic in generic type.
 		require
@@ -90,22 +74,25 @@ feature {NONE} -- Helper
 		local
 			l_feature_i: TYPE_FEATURE_I
 			l_formal: FORMAL_A
-			l_class: CLASS_C
-			l_type: TYPE_A
 		do
 			if not a_type.is_formal then
 				a_type.process (Current)
 			else
 					-- Try solving a formal type.
 				l_formal ?= a_type
-				l_class := current_class
-				l_feature_i := type_feature_i_from_ancestor (l_class, l_formal)
-				l_feature_i := current_class.generic_features.item (l_feature_i.rout_id_set.first)
-				check
-					l_feature_i_not_void: l_feature_i /= Void
+				check l_formal_not_void: l_formal /= Void end
+				l_feature_i := current_class.formal_at_position (l_formal.position)
+				if l_feature_i /= Void then
+					l_feature_i := current_class.generic_features.item (l_feature_i.rout_id_set.first)
+					if l_feature_i /= Void then
+						l_feature_i.type.process (Current)
+					end
 				end
-				l_type := l_feature_i.type
-				l_type.process (Current)
+				if l_feature_i = Void then
+						-- Some errors occurred when trying to evaluate the type of the formal
+						-- in `current_class', simply display the formal without trying to resolve it.
+					a_type.process (Current)
+				end
 			end
 		end
 
@@ -124,13 +111,13 @@ feature {TYPE_A} -- Visitors
 		local
 			l_feat : E_FEATURE
 		do
-			text_formatter.process_keyword_text (ti_Bit_class, Void)
+			text_formatter.process_keyword_text (ti_bit_class, Void)
 			text_formatter.add_space
 			l_feat := current_class.feature_with_rout_id (a_type.rout_id)
 			check
 				l_feat_not_void: l_feat /= Void
 			end
-			text_formatter.process_feature_text (l_feat.name, l_feat, false)
+			text_formatter.process_feature_text (l_feat.name, l_feat, False)
 		end
 
 	process_boolean_a (a_type: BOOLEAN_A) is
@@ -147,6 +134,8 @@ feature {TYPE_A} -- Visitors
 
 	process_cl_type_a (a_type: CL_TYPE_A) is
 			-- Process `a_type'.
+		local
+			l_class: CLASS_C
 		do
 			if a_type.has_expanded_mark then
 				text_formatter.process_keyword_text (ti_expanded_keyword, Void)
@@ -158,7 +147,14 @@ feature {TYPE_A} -- Visitors
 				text_formatter.process_keyword_text (ti_separate_keyword, Void)
 				text_formatter.add_space
 			end
-			a_type.associated_class.append_name (text_formatter)
+			l_class := a_type.associated_class
+			if l_class /= Void  then
+				l_class.append_name (text_formatter)
+			else
+					-- Very rare case when a type refers to a class that has been removed
+					-- from the universe.
+				text_formatter.add ("Class_" + a_type.class_id.out + "_does_not_exist")
+			end
 		end
 
 	process_formal_a (a_type: FORMAL_A) is
@@ -181,7 +177,7 @@ feature {TYPE_A} -- Visitors
 			count := a_type.generics.count
 			if count > 0 then
 				text_formatter.add_space
-				text_formatter.process_symbol_text (ti_L_bracket)
+				text_formatter.process_symbol_text (ti_l_bracket)
 				from
 					i := 1
 				until
@@ -190,12 +186,12 @@ feature {TYPE_A} -- Visitors
 					process_generic_in_gen_type (a_type.generics.item (i))
 
 					if i /= count then
-						text_formatter.process_symbol_text (ti_Comma)
+						text_formatter.process_symbol_text (ti_comma)
 						text_formatter.add_space
 					end
 					i := i + 1
 				end
-				text_formatter.process_symbol_text (ti_R_bracket)
+				text_formatter.process_symbol_text (ti_r_bracket)
 			end
 		end
 
@@ -210,7 +206,7 @@ feature {TYPE_A} -- Visitors
 		do
 			text_formatter.process_keyword_text (ti_like_keyword, Void)
 			text_formatter.add_space
-			if current_feature /= Void then
+			if current_feature /= Void and then current_feature.argument_count <= a_type.position then
 				text_formatter.process_local_text (current_feature.arguments.item_name (a_type.position))
 			else
 				text_formatter.add (ti_argument_index)
@@ -266,7 +262,7 @@ feature {TYPE_A} -- Visitors
 			count := a_type.generics.count
 			if count > 0 then
 				text_formatter.add_space
-				text_formatter.process_symbol_text (ti_L_bracket)
+				text_formatter.process_symbol_text (ti_l_bracket)
 				from
 					i := 1
 				until
@@ -282,7 +278,7 @@ feature {TYPE_A} -- Visitors
 					end
 					i := i + 1
 				end
-				text_formatter.process_symbol_text (ti_R_bracket)
+				text_formatter.process_symbol_text (ti_r_bracket)
 			end
 		end
 

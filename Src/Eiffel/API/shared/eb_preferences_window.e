@@ -16,6 +16,8 @@ inherit
 			make,
 			hide,
 			on_close,
+			on_window_resize,
+			update_grid_columns,
 			preference_name_column,
 			preference_value_column,
 			grid,
@@ -151,7 +153,17 @@ feature -- Access
 			Precursor
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Events
+
+	on_window_resize is
+			-- Dialog was resized
+		local
+			l_width: INTEGER
+		do
+			l_width := grid.width - (grid.column (1).width + grid.column (2).width + grid.column (3).width)
+		end
+
+feature {NONE} -- Implementation
 
 	grid: ES_GRID
 			-- Grid
@@ -160,6 +172,28 @@ feature{NONE} -- Implementation
 		do
 			icon_up := icon_pixmaps.sort_acending_icon
 			icon_down := icon_pixmaps.sort_descending_icon
+		end
+
+	update_grid_columns is
+			-- Update the grid columns widths and borders depending on current display type
+		local
+			l_column: EV_GRID_COLUMN
+			l_preference: PREFERENCE
+			w: INTEGER
+			nb: INTEGER
+		do
+			nb := grid.row_count
+			if nb > 0 then
+				grid.row (1).enable_select
+				on_window_resize
+				l_preference ?= grid.row (1).data
+				if l_preference /= Void then
+					show_preference_description (l_preference)
+				end
+				if grid.is_displayed and grid.is_sensitive then
+					grid.set_focus
+				end
+			end
 		end
 
 indexing

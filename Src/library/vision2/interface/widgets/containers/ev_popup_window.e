@@ -21,6 +21,21 @@ inherit
 			is_border_enabled_default_state
 		end
 
+feature -- Status Setting
+
+	disconnect_from_window_manager is
+			-- Disconnect `Current' from Window manager.
+			-- This means that showing `Current' will not
+			-- grab focus from any other windows and will not
+			-- be focusable, this mode is useful for creating
+			-- custom tooltip windows.
+		require
+			not_destroyed: not is_destroyed
+			not_is_show_requested: not is_show_requested
+		do
+			implementation.disconnect_from_window_manager
+		end
+
 feature {NONE} -- Contract support
 
 	user_can_resize_default_state: BOOLEAN is

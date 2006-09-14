@@ -22,8 +22,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize argument parser
 		do
-			make_parser (False, False)
+			make_parser (False, False, False)
 			set_loose_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
+			set_use_separated_switch_values (True)
+			set_show_switch_arguments_inline (True)
 		end
 
 feature -- Access
@@ -73,7 +75,7 @@ feature {NONE} -- Usage
 	version: STRING is
 			-- Version number of application
 		once
-			Result := "1.2.1"
+			Result := "1.2.2"
 		end
 
 	loose_argument_name: STRING_8 is
@@ -85,7 +87,7 @@ feature {NONE} -- Usage
 	loose_argument_description: STRING_8 is
 			-- Description of lose argument, used in usage information
 		do
-			Result := "Configuration file, representing a pixmap matrix,%Nto generate an Eiffel class for."
+			Result := "Configuration file, representing a pixmap matrix, to generate an Eiffel class for."
 		end
 
 	loose_argument_type: STRING_8 is
@@ -97,9 +99,9 @@ feature {NONE} -- Usage
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH] is
 			-- Retrieve a list of available switch
-		do
+		once
 			create Result.make (3)
-			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (frame_switch, "Optional output file name", True, False, "file", "Frame template file path.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (frame_switch, "Optional specification of a frame template file", True, False, "file", "Frame template file path.", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "Optional class name for use in generated file", True, False, "name", "An Eiffel class name.", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Optional output file name", True, False, "filename", "File name to give output file.", False))
 		end

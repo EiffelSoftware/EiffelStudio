@@ -266,8 +266,8 @@
 	<basic_metric name="Generics" unit="generic" uuid="67CE7E90-FCFC-4E4A-AEAC-F62E4566BAAA">
 		<description>Number of class generics</description>
 	</basic_metric>
-	<basic_metric name="Line of code" unit="line" uuid="B723DCD4-C974-478B-AA97-793F5E186515">
-		<description>Number of lines</description>
+	<basic_metric name="Lines of code" unit="line" uuid="B723DCD4-C974-478B-AA97-793F5E186515">
+		<description>Number of lines of code</description>
 	</basic_metric>
 	<basic_metric name="Inherited features" unit="feature" uuid="E9F65F10-60F4-4DD2-BD51-9C4271D4D1AE">
 		<description>Number of inherited features</description>
@@ -465,7 +465,7 @@
 			</domain_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Indirect heris" unit="class" uuid="8A69548B-F16E-40B3-ACFE-8A18688677F0">
+	<basic_metric name="Indirect heirs" unit="class" uuid="8A69548B-F16E-40B3-ACFE-8A18688677F0">
 		<description>Number of indirect heirs</description>
 		<criterion>
 			<domain_criterion negation="False" name="indirect_parent_is" unit="class">

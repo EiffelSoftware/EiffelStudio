@@ -553,7 +553,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_show_window (item, Sw_show)
+			cwin_show_window (item, sw_show)
 		end
 
 	hide is
@@ -638,8 +638,7 @@ feature -- Status setting
 		do
 			has_heavy_capture := cwel_hook_mouse (item)
 		ensure
-			heavy_capture_set: has_heavy_capture
-			heavy_capture_activated: heavy_capture_activated
+			heavy_capture_set: has_heavy_capture implies heavy_capture_activated
 		end
 
 	release_capture is

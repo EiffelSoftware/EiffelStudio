@@ -21,13 +21,41 @@ feature {NONE} -- Implementation: type validation
 			-- If not valid, raise a compiler error and return Void.
 		local
 			l_type: TYPE_A
+			l_class_type: CLASS_TYPE_AS
 			l_vtct: VTCT
+			l_vd29: VD29
+			l_classes: LIST [CLASS_I]
+			l_cl: CLASS_I
 		do
 				-- Convert TYPE_AS into TYPE_A.
-			l_type := type_a_generator.evaluate_type (a_type, context.current_class)
-				-- Perform simple check that TYPE_A is valid.
+			l_type := type_a_generator.evaluate_type_if_possible (a_type, context.current_class)
 			if l_type = Void then
-						-- Check validity of type declaration for static access
+					-- Check about dependencies
+				l_class_type ?= a_type
+				if l_class_type /= Void then
+					l_classes := universe.classes_with_name (l_class_type.class_name)
+					if l_classes.count = 1 then
+						l_cl := l_classes.first
+						if l_cl.is_compiled then
+							l_type := type_a_generator.evaluate_type_if_possible (l_class_type, l_cl.compiled_class)
+						end
+					elseif l_classes.count > 1 then
+						create l_vd29
+						l_vd29.set_location (a_type.start_location)
+						l_vd29.set_root_class_name (l_class_type.class_name)
+
+						l_classes.start
+						l_vd29.set_cluster (l_classes.item.group)
+						l_classes.forth
+						l_vd29.set_second_cluster_name (l_classes.item.group.name)
+						error_handler.insert_error (l_vd29)
+						error_handler.raise_error
+					end
+				end
+			end
+
+				-- Check validity of type declaration for static access
+			if l_type = Void then
 				create l_vtct
 				l_vtct.set_class_name (a_type.dump)
 				l_vtct.set_location (a_type.start_location)

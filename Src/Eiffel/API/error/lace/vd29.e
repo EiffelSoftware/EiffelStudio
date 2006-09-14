@@ -35,7 +35,7 @@ feature -- Output
 			a_text_formatter.add_new_line
 		end;
 
-feature {SYSTEM_I} -- Setting
+feature {COMPILER_EXPORTER,SYSTEM_I} -- Setting
 
 	set_second_cluster_name (s: STRING) is
 		do

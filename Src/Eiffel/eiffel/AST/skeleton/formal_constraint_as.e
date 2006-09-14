@@ -163,9 +163,8 @@ feature -- Output
 					a_text_formatter.add_string (once "...")
 				else
 					l_type := constraint_type (a_context_class)
-					if l_type /= Void and then l_type.has_associated_class then
-						a_text_formatter.process_class_name_text (l_type.associated_class.name,
-																	l_type.associated_class.lace_class, False)
+					if l_type /= Void then
+						type_output_strategy.process (l_type, a_text_formatter, a_context_class, Void)
 					else
 						a_text_formatter.add_string (constraint.dump)
 					end

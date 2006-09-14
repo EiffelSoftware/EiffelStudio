@@ -5266,6 +5266,17 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			is_ctrl_pressed := a_application.ctrl_pressed
 			is_shift_pressed := a_application.shift_pressed
 
+				-- Clear up previous values in case they have been removed from the grid.
+			if last_selected_item /= Void and then last_selected_item.parent_i /= Current then
+				last_selected_item := Void
+			end
+			if last_selected_row /= Void and then last_selected_row.parent_i /= Current then
+				last_selected_row := Void
+			end
+			if shift_key_start_item /= Void and then shift_key_start_item.implementation.parent_i /= Current then
+				shift_key_start_item := Void
+			end
+
 			if not (a_item = Void and is_always_selected) then
 					-- If we are `is_item_always_selected' mode then clicking on Void items should have no effect
 				l_remove_selection := True
@@ -5292,8 +5303,8 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							-- The previous shift selection key has been removed from the grid so set existing one to Void.
 						shift_key_start_item := Void
 					end
-					-- Clear previous multiple selection
 
+						-- Clear previous multiple selection
 					if a_item /= Void and then shift_key_start_item /= Void then
 
 						shift_key_start_item_column_index := shift_key_start_item.column.index

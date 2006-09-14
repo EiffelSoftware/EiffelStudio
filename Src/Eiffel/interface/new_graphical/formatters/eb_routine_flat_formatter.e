@@ -88,7 +88,7 @@ feature -- Formatting
 						then
 							l_line := stel.break_index
 							if l_line > 0 then
-								editor.display_breakpoint_number_when_ready (l_line)
+								editor.display_breakpoint_number_when_ready (l_line, stel.routine.feature_id)
 									-- Refresh is needed on the margin because if we are showing the same
 									-- feature but from a different CALL_STACK_ELEMENT (case of recursive call)
 									-- we need to refresh it to show/hide the green arrow representing

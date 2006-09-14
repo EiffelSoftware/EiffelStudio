@@ -262,14 +262,14 @@ feature -- Possibly delayed operations
 			end
 		end
 
-	display_breakpoint_number_when_ready (bpn: INTEGER) is
+	display_breakpoint_number_when_ready (bpn: INTEGER; feat_id: INTEGER) is
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded			
 		do
 			if text_is_fully_loaded then
-				display_breakpoint_number (bpn)
+				display_breakpoint_number (bpn, feat_id)
 			else
-				after_reading_text_actions.extend(agent display_breakpoint_number (bpn))
+				after_reading_text_actions.extend(agent display_breakpoint_number (bpn, feat_id))
 			end
 		end
 
@@ -607,8 +607,8 @@ feature {NONE} -- Implementation
 			matching_customizable_commands_not_void: Result /= Void
 		end
 
-	display_breakpoint_number (bp_number: INTEGER) is
-			-- Show `bp_number'-th breakpoint.
+	display_breakpoint_number (bp_number: INTEGER; a_feat_id: INTEGER) is
+			-- Show `bp_number'-th breakpoint of feature represented by `a_feat_id'
 		require
 			bp_number_is_valid: bp_number > 0
 			text_completely_loaded: text_is_fully_loaded
@@ -624,7 +624,10 @@ feature {NONE} -- Implementation
 			loop
 				bp_token ?= ln.real_first_token
 				if bp_token /= Void and then bp_token.pebble /= Void then
-					bp_count := bp_count + 1
+					if bp_token.pebble.routine.feature_id = a_feat_id then
+						bp_count := bp_count + 1
+
+					end
 				end
 				line_index := line_index + 1
 				ln := ln.next

@@ -113,10 +113,13 @@ feature -- Status Report
 
 	is_consistent: BOOLEAN is
 			-- Are all the base classes still in the system ?
+		local
+			l_base_class: like base_class
 		do
-			Result := base_class /= Void and then
-				(base_class.generics /= Void and then
-					base_class.generics.count = meta_generic.count) and then
+			l_base_class := base_class
+			Result := l_base_class /= Void and then
+				(l_base_class.generics /= Void and then
+					l_base_class.generics.count = meta_generic.count) and then
 				meta_generic.is_consistent
 		end
 

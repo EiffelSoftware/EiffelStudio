@@ -57,6 +57,8 @@ feature -- Status report
 			-- Are all the types consistent?
 		local
 			i, nb: INTEGER
+			l_type: TYPE_I
+			l_cl_type: CL_TYPE_I
 		do
 			from
 				nb := count
@@ -65,7 +67,17 @@ feature -- Status report
 			until
 				i > nb or else not Result
 			loop
-				Result := item (i).is_consistent
+				l_type := item (i)
+				Result := l_type.is_consistent
+				if Result and not l_type.is_basic then
+					l_cl_type ?= l_type
+					if l_cl_type /= Void then
+							-- Ensure that type is still expanded. This fixes eweasel test#incr275
+							-- No need to do anything when there is a mark, it is taken care of in
+							-- `is_consistent' of CL_TYPE_I.
+						Result := (l_cl_type.has_no_mark implies l_cl_type.base_class.is_expanded)
+					end
+				end
 				i := i + 1
 			end
 		end

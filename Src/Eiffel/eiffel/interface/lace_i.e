@@ -630,9 +630,11 @@ feature {NONE} -- Implementation
 					l_errors.forth
 				end
 			end
+			is_force_new_target := False
 		ensure
 			application_target_set: not is_error implies a_target.application_target /= Void
 			all_libraries_set: not is_error implies a_target.all_libraries /= Void
+			not_force_new_target: not is_force_new_target
 		end
 
 	update_settings (a_target: CONF_TARGET) is

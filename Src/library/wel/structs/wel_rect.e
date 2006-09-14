@@ -404,8 +404,8 @@ feature {NONE} -- Externals
 		end
 
 invariant
-	positive_width: width >= 0
-	positive_height: height >= 0
+	positive_width: exists implies width >= 0
+	positive_height: exists implies height >= 0
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

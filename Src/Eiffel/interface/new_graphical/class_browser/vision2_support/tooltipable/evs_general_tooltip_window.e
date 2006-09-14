@@ -10,7 +10,7 @@ class
 	EVS_GENERAL_TOOLTIP_WINDOW
 
 inherit
-	EV_FAKE_FOCUS_POPUP_WINDOW
+	EV_POPUP_WINDOW
 		redefine
 			initialize,
 			is_in_default_state
@@ -30,6 +30,7 @@ feature{NONE} -- Initialization
 		do
 			disable_border
 			disable_user_resize
+			disconnect_from_window_manager
 			Precursor
 		end
 

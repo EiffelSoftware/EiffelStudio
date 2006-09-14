@@ -180,14 +180,17 @@ feature -- Code generation
 			rout_class := cl_type.associated_class_type.associated_class.eiffel_class_c
 			is_function := rout_class.class_id = system.function_class_id or else
 						   rout_class.class_id = system.predicate_class_id
+			is_predicate := rout_class.class_id = system.predicate_class_id
 
 			if is_function then
-				type := cl_type.true_generics.item (3)
+				if is_predicate then
+					type := create {BOOLEAN_I}
+				else
+					type := cl_type.true_generics.item (3)
+				end
 			else
 				type := create {VOID_I}
 			end
-
-			is_predicate := rout_class.class_id = system.predicate_class_id
 
 			a_bl ?= a
 			if a_bl /= Void then

@@ -1049,12 +1049,13 @@ feature {EV_ANY_I} -- Implementation
 			-- This implementation is learn from www.codeproject.com "Docking Toolbars in Plain C"
 		local
 			l_windows: LINEAR [EV_WINDOW]
-			l_tool_window: EV_FAKE_FOCUS_GROUPABLE
+			l_tool_window: EV_POPUP_WINDOW--FAKE_FOCUS_GROUPABLE
 			l_imp: EV_WINDOW_IMP
 			l_keep_alive: INTEGER
 			l_syn_others: BOOLEAN
-			l_test: EV_FAKE_FOCUS_GROUPABLE
+			l_test: EV_WINDOW--FAKE_FOCUS_GROUPABLE
 		do
+			--| Removed use of EV_FAKE_FOCUS windows.
 			l_keep_alive := wparam.to_integer_32
 			l_test ?= interface
 			if l_test /= Void then

@@ -1344,7 +1344,7 @@ feature -- Deferred features
 					Result := Current
 				end
 			else
-				if start_widget_searched_cell.item = search_pos then
+				if start_widget_searched_cell.item = 1 then
 						-- We have reached the original widget for the second time with the same search position
 						-- meaning there is no other widget to tab to and the original
 						-- widget must be returned.
@@ -1354,7 +1354,7 @@ feature -- Deferred features
 
 					-- Record the fact that we have reached the original
 					-- widget at least once.
-					start_widget_searched_cell.put (search_pos)
+					start_widget_searched_cell.put (1)
 				end
 			end
 			if Result = Void then

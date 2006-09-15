@@ -106,6 +106,8 @@ feature -- Target names and descriptions
 	target_dotnet_naming_convention_description: STRING is "Should names follow the .NET naming convention?"
 	target_dynamic_runtime_name: STRING is "Dynamic Runtime"
 	target_dynamic_runtime_description: STRING is "Should the generated executable use a shared library of the runtime?"
+	target_enforce_unique_class_names_name: STRING is "Enforce unique class names"
+	target_enforce_unique_class_names_description: STRING is "Enforce all class names to be system wide unique?"
 	target_exception_trace_name: STRING is "Exception Trace"
 	target_exception_trace_description: STRING is "Should a complete exception trace be generated in the finalized version?"
 	target_il_verifiable_name: STRING is "IL Verifiable"

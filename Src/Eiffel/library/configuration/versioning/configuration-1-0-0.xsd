@@ -136,6 +136,7 @@
 			  <xs:enumeration value = "dead_code_removal"/>
 			  <xs:enumeration value = "dotnet_naming_convention"/>
 			  <xs:enumeration value = "dynamic_runtime"/>
+			  <xs:enumeration value = "enforce_unique_class_names"/>
 			  <xs:enumeration value = "exception_trace"/>
 			  <xs:enumeration value = "executable_name"/>
 			  <xs:enumeration value = "force_32bits"/>
@@ -192,7 +193,9 @@
 			  <xs:enumeration value = "syntax"/>
 			  <xs:enumeration value = "old_verbatim_strings"/>
 			  <xs:enumeration value = "same_uuid"/>
+			  <xs:enumeration value = "export_class_missing"/>
 			  <xs:enumeration value = "vweq"/>
+			  <xs:enumeration value = "vjrv"/>
 			  <xs:enumeration value = "renaming_unknown_class"/>
 			  <xs:enumeration value = "option_unknown_class"/>
 	    </xs:restriction>

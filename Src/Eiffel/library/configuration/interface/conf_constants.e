@@ -66,6 +66,7 @@ feature -- Settings
 	s_dead_code_removal: STRING is "dead_code_removal"
 	s_dotnet_naming_convention: STRING is "dotnet_naming_convention"
 	s_dynamic_runtime: STRING is "dynamic_runtime"
+	s_enforce_unique_class_names: STRING is "enforce_unique_class_names"
 	s_exception_trace: STRING is "exception_trace"
 	s_executable_name: STRING is "executable_name"
 	s_full_type_checking: STRING is "full_type_checking"

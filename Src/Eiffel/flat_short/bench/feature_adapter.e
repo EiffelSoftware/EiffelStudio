@@ -66,7 +66,6 @@ feature -- Element change
 			t_feat: FEATURE_I
 			rep_table: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER]
 			is_precompiled: BOOLEAN
-			is_unique: BOOLEAN
 		do
 			names := feature_as.feature_names;
 			if names.count > 1 then

@@ -571,6 +571,7 @@ feature -- Label texts
 	l_Dropped_references: STRING is		"Dropped references"
 	l_Dummy: STRING is					"Should not be read"
 	l_Not_empty: STRING is				"Generate default feature clauses"
+	l_edit_project: STRING is			"Edit Project"
 	l_Elements: STRING is				"elements."
 	l_Enter_folder_name: STRING is		"Enter the name of the new folder: "
 	l_error: STRING is					"Error"

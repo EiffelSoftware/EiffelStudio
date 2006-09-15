@@ -33,6 +33,7 @@
 			<bold>Note</bold>: On Windows, the dynamic run-time is available only if you compile with the Microsoft Visual compiler.
 		</note>
 		<list ordered="false">
+			<item>Enforce unique class names: enforce all class names to be system wide unique?</item>
 			<item>Exception Trace: makes it possible to see a complete exception trace in a finalized application. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform. (C code generation mode only)</item>
 			<item>Inlining, Inlining Size: enables inlining on Eiffel features that can be inlined, i.e. whose size is less or equal to the specified size in the combo box. The size value given in parameter corresponds to the number of instructions as seen by the Eiffel compiler (for example a := b.f corresponds to 2 instructions). The inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as found in C or C++ compilers. (C code generation mode only)</item>
 			<item>Multithreaded: generates a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system. (C code generation mode only)</item>

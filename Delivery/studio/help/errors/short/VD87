@@ -1,0 +1,2 @@
+Configuration error: system has two classes with the same name and unique names are enforced.
+What to do: if both classes are needed, change name of one of them or do not enforce system wide unique classes.

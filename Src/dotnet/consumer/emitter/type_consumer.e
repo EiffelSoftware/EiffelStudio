@@ -56,8 +56,8 @@ feature {NONE} -- Initialization
 		do
 			create dotnet_name.make_from_cil (t.full_name)
 			parent_type := t.base_type
-			if parent_type /= Void and then is_consumed_type (parent_type) then
-				parent := referenced_type_from_type (parent_type)
+			if parent_type /= Void then
+				parent := referenced_type_from_type (consumed_parent (parent_type))
 			end
 			from
 				inter := t.get_interfaces
@@ -596,6 +596,27 @@ feature {NONE} -- Implementation
 					l_remover
 					)
 			end
+		end
+
+	consumed_parent (a_type: SYSTEM_TYPE): SYSTEM_TYPE is
+			-- Retrieves a consume parent of `a_type'.
+		require
+			a_type_attached: a_type /= Void
+		local
+			l_base: SYSTEM_TYPE
+		do
+			if is_consumed_type (a_type.assembly.get_type (a_type.full_name)) then
+				Result := a_type
+			else
+				l_base := a_type.base_type
+				if l_base /= Void then
+					Result := consumed_parent (l_base)
+				else
+					Result := {SYSTEM_OBJECT}
+				end
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 	solved_constructors (

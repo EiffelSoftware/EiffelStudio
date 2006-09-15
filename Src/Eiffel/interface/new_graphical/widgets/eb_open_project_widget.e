@@ -120,6 +120,7 @@ feature -- Status Setting
 			-- Make object sensitive to user input.
 		do
 			sensitive_container.enable_sensitive
+			edit_project_button.enable_sensitive
 			remove_project_button.enable_sensitive
 		end
 
@@ -127,6 +128,7 @@ feature -- Status Setting
 			-- Make object non-sensitive to user input.
 		do
 			sensitive_container.disable_sensitive
+			edit_project_button.disable_sensitive
 			remove_project_button.disable_sensitive
 			last_selected_row := Void
 		end
@@ -231,8 +233,8 @@ feature {NONE} -- Implementation: Graphical Access
 	projects_list: ES_GRID
 			-- List containing the last opened projects.
 
-	add_project_button, remove_project_button: EV_BUTTON
-			-- Buttons for adding, removing a project entry from list.
+	add_project_button, edit_project_button, remove_project_button: EV_BUTTON
+			-- Buttons for adding, editing, removing a project entry from list.
 
 	clean_button: EV_CHECK_BUTTON
 			-- Check button to recompile a project from scratch.
@@ -264,6 +266,24 @@ feature {NONE} -- State information
 		do
 			if has_selected_item then
 				l_item ?= projects_list.selected_rows.first.item (target_column_index)
+				if l_item /= Void then
+					Result := l_item.text
+				end
+			end
+			if Result = Void then
+				create Result.make_empty
+			end
+		ensure
+			selected_target_not_void: Result /= Void
+		end
+
+	selected_path: STRING_32 is
+			-- Path of selected configuration if any, empty string otherwise.
+		local
+			l_item: EV_GRID_LABEL_ITEM
+		do
+			if has_selected_item then
+				l_item ?= projects_list.selected_rows.first.item (path_column_index)
 				if l_item /= Void then
 					Result := l_item.text
 				end
@@ -317,6 +337,16 @@ feature {NONE} -- Initialization
 			add_project_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (add_project_button)
 			hb.disable_item_expand (add_project_button)
+			hb.extend (create {EV_CELL})
+			create edit_project_button.make_with_text_and_action (Interface_names.l_edit_project, agent edit_selected_project)
+			edit_project_button.set_minimum_width (l_minimum_size)
+			edit_project_button.set_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
+			edit_project_button.align_text_left
+			projects_list.row_deselect_actions.force_extend (agent edit_project_button.disable_sensitive)
+			projects_list.row_select_actions.force_extend (agent edit_project_button.enable_sensitive)
+			hb.extend (edit_project_button)
+			hb.disable_item_expand (edit_project_button)
+			hb.extend (create {EV_CELL})
 			create remove_project_button.make_with_text_and_action (Interface_names.l_remove_project, agent remove_project_from_list)
 			remove_project_button.set_minimum_width (l_minimum_size)
 			remove_project_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
@@ -325,7 +355,6 @@ feature {NONE} -- Initialization
 			projects_list.row_select_actions.force_extend (agent remove_project_button.enable_sensitive)
 			hb.extend (remove_project_button)
 			hb.disable_item_expand (remove_project_button)
-			hb.extend (create {EV_CELL})
 			open_project_vb.extend (hb)
 			open_project_vb.disable_item_expand (hb)
 
@@ -872,6 +901,37 @@ feature {NONE} -- Actions
 			fod.show_modal_to_window (parent_window)
 		end
 
+	edit_selected_project is
+			-- Edit selected project.
+		require
+			not_is_empty: not is_empty
+			has_selected_item: has_selected_item
+		local
+			l_fact: CONF_COMP_FACTORY
+			l_load: CONF_LOAD
+			l_system: CONF_SYSTEM
+			l_window: CONFIGURATION_WINDOW
+			l_wd: EV_WARNING_DIALOG
+			l_row: like last_selected_row
+		do
+			create l_fact
+			create l_load.make (l_fact)
+			l_load.retrieve_configuration (selected_path)
+			if l_load.is_error then
+				create l_wd.make_with_text (l_load.last_error.out)
+				l_wd.show_modal_to_window (parent_window)
+			else
+				l_system := l_load.last_system
+				l_system.targets.start
+				l_system.set_application_target (l_system.targets.item_for_iteration)
+				create l_window.make (l_system, l_fact, create {DS_ARRAYED_LIST [STRING]}.make_default)
+				l_window.show_modal_to_window (parent_window)
+				l_row := last_selected_row
+				last_selected_row := Void
+				on_project_selected (l_row)
+			end
+		end
+
 	remove_project_from_list is
 			-- Remove selected project from `project_lists'.
 		require
@@ -1166,6 +1226,7 @@ invariant
 	finalize_action_item_not_void: finalize_action_item /= Void
 	precompile_action_item_not_void: precompile_action_item /= Void
 	add_project_button_not_void: add_project_button /= Void
+	edit_project_button_not_void: edit_project_button /= Void
 	remove_project_button_not_void: remove_project_button /= Void
 
 indexing

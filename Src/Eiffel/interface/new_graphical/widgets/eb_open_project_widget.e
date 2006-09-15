@@ -337,7 +337,6 @@ feature {NONE} -- Initialization
 			add_project_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (add_project_button)
 			hb.disable_item_expand (add_project_button)
-			hb.extend (create {EV_CELL})
 			create edit_project_button.make_with_text_and_action (Interface_names.l_edit_project, agent edit_selected_project)
 			edit_project_button.set_minimum_width (l_minimum_size)
 			edit_project_button.set_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
@@ -346,7 +345,6 @@ feature {NONE} -- Initialization
 			projects_list.row_select_actions.force_extend (agent edit_project_button.enable_sensitive)
 			hb.extend (edit_project_button)
 			hb.disable_item_expand (edit_project_button)
-			hb.extend (create {EV_CELL})
 			create remove_project_button.make_with_text_and_action (Interface_names.l_remove_project, agent remove_project_from_list)
 			remove_project_button.set_minimum_width (l_minimum_size)
 			remove_project_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
@@ -355,6 +353,7 @@ feature {NONE} -- Initialization
 			projects_list.row_select_actions.force_extend (agent remove_project_button.enable_sensitive)
 			hb.extend (remove_project_button)
 			hb.disable_item_expand (remove_project_button)
+			hb.extend (create {EV_CELL})
 			open_project_vb.extend (hb)
 			open_project_vb.disable_item_expand (hb)
 

@@ -232,7 +232,7 @@ feature -- Status setting
 
 feature -- PND
 
-	row_index_from_y_coord (a_y: INTEGER): INTEGER is
+	row_index_from_coords (a_x, a_y: INTEGER): INTEGER is
 			-- Returns the row index at relative coordinate `a_y'.
 		local
 			a_tree_path, a_tree_column: POINTER
@@ -254,7 +254,7 @@ feature -- PND
 		local
 			a_row_index: INTEGER
 		do
-			a_row_index := row_index_from_y_coord (a_y)
+			a_row_index := row_index_from_coords (a_x, a_y)
 			if a_row_index > 0 then
 				Result ?= i_th (a_row_index).implementation
 			end
@@ -265,7 +265,7 @@ feature -- PND
 		local
 			a_row_index: INTEGER
 		do
-			a_row_index := row_index_from_y_coord (a_y)
+			a_row_index := row_index_from_coords (a_x, a_y)
 			if a_row_index > 0 then
 				pnd_row_imp ?= i_th (a_row_index).implementation
 				if not pnd_row_imp.able_to_transport (a_button) then

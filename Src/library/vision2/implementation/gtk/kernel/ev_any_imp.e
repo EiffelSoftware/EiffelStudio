@@ -186,18 +186,16 @@ feature {NONE} -- Implementation
 				-- Disable the marshaller so we do not get C to Eiffel calls
 				-- during GC cycle otherwise bad things may happen.
 			{EV_GTK_CALLBACK_MARSHAL}.c_ev_gtk_callback_marshal_set_is_enabled (False)
-			if not is_in_final_collect then
-				l_c_object := c_object
-				if l_c_object /= l_null then
-						-- Disconnect dispose signal for `c_object'.
-					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (l_c_object, internal_id)
-						-- Unref `c_object' so that is may get collected by gtk.
-					if {EV_GTK_EXTERNALS}.gtk_is_window (l_c_object) then
-							-- Windows need to be explicitly destroyed.
-						{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (l_c_object)
-					end
-					{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (l_c_object)
+			l_c_object := c_object
+			if l_c_object /= l_null then
+					-- Disconnect dispose signal for `c_object'.
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (l_c_object, internal_id)
+					-- Unref `c_object' so that is may get collected by gtk.
+				if {EV_GTK_EXTERNALS}.gtk_is_window (l_c_object) then
+						-- Windows need to be explicitly destroyed.
+					{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (l_c_object)
 				end
+				{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (l_c_object)
 			end
 			Precursor {IDENTIFIED}
 

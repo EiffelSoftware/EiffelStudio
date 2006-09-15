@@ -1023,7 +1023,44 @@ end
 				-- update/check root class
 			update_root_class
 
+				-- if enabled, check system wide uniqueness of class names
+			if l_target.setting_enforce_unique_class_names then
+				check_unique_class_names
+			end
+
 			is_force_rebuild := False
+		end
+
+	check_unique_class_names is
+			-- Check if all the classes in the system have unique names.
+		local
+			l_table: HASH_TABLE [CLASS_I, STRING]
+			l_classes: DS_HASH_SET [CLASS_I]
+			l_class: CLASS_I
+			l_name: STRING
+			l_vd87: VD87
+		do
+			from
+				l_classes := universe.all_classes
+				create l_table.make (l_classes.count)
+				l_classes.start
+			until
+				l_classes.after
+			loop
+				l_class := l_classes.item_for_iteration
+				l_name := l_class.name
+				if not l_class.config_class.does_override then
+					if not l_table.has (l_name) then
+						l_table.force (l_class, l_name)
+					else
+						is_force_rebuild := True
+						create l_vd87.make (l_table.found_item, l_class)
+						error_handler.insert_error (l_vd87)
+						error_handler.checksum
+					end
+				end
+				l_classes.forth
+			end
 		end
 
 	recheck_partly_removed (a_classes: ARRAYED_LIST [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]] ) is

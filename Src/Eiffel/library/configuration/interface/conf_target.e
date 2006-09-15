@@ -650,6 +650,12 @@ feature -- Access queries for settings
 			Result_not_void: Result /= Void
 		end
 
+	setting_enforce_unique_class_names: BOOLEAN
+			-- Valeu for the enforce_unique_class_names setting.
+		do
+			Result := setting_boolean (s_enforce_unique_class_names)
+		end
+
 	setting_exception_trace: BOOLEAN is
 			-- Value for the exception_trace setting.
 		do
@@ -1456,7 +1462,8 @@ feature -- Equality
 						equal (variables, other.variables) and then
 						equal (root, other.root) and then
 						equal (file_rule, other.file_rule) and then
-						equal (mapping, other.mapping)
+						equal (mapping, other.mapping) and then
+						other.setting_enforce_unique_class_names = setting_enforce_unique_class_names
 			if Result then
 				if precompile = Void then
 					Result := other.precompile = Void

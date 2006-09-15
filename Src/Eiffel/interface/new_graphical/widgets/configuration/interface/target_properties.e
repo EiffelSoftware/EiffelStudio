@@ -220,6 +220,11 @@ feature {NONE} -- Implementation
 			end
 			properties.add_property (l_bool_prop)
 
+			create l_bool_prop.make_with_value (conf_interface_names.target_enforce_unique_class_names_name, current_target.setting_enforce_unique_class_names)
+			l_bool_prop.set_description (conf_interface_names.target_enforce_unique_class_names_description)
+			add_boolean_setting_actions (l_bool_prop, s_enforce_unique_class_names, False)
+			properties.add_property (l_bool_prop)
+
 			create l_bool_prop.make_with_value (conf_interface_names.target_exception_trace_name, current_target.setting_exception_trace)
 			l_bool_prop.set_description (conf_interface_names.target_exception_trace_description)
 			add_boolean_setting_actions (l_bool_prop, s_exception_trace, False)

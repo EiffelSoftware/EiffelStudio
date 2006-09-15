@@ -143,6 +143,36 @@ feature {EV_ANY_IMP} -- Implementation
 	gtk_dependent_routines: EV_GTK_DEPENDENT_ROUTINES
 		-- Object used for exporting gtk version dependent routines to independent implementation.
 
+feature {EV_ANY_I} -- Implementation
+
+	symbol_from_symbol_name (a_symbol_name: STRING): POINTER
+			-- Return Symbol for symbol name `a_symbol_text'.
+		local
+			l_module: POINTER
+			l_symbol_name: EV_GTK_C_STRING
+			l_success: BOOLEAN
+			l_result: POINTER
+		do
+			l_module := main_module
+			if l_module /= default_pointer then
+				l_symbol_name := a_symbol_name
+				l_success := {EV_GTK_EXTERNALS}.g_module_symbol (l_module, l_symbol_name.item, $l_result)
+				if l_success then
+					Result := l_result
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	main_module: POINTER is
+			-- Module representing `Current' application instance.
+		do
+			if {EV_GTK_EXTERNALS}.gtk_min_ver >= 6 and then {EV_GTK_EXTERNALS}.g_module_supported then
+				Result := {EV_GTK_EXTERNALS}.g_module_open (default_pointer, 0)
+			end
+		end
+
 feature -- Access
 
 	ctrl_pressed: BOOLEAN is

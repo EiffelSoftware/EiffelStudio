@@ -88,7 +88,7 @@
 				<warning name="once_in_generic" enabled="false"/>
 			</class_option>
 		</library>
-		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="false">
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf">
 			<option>
 				<warning name="syntax" enabled="false"/>
 			</option>

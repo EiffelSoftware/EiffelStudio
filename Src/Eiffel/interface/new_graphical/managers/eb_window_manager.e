@@ -591,6 +591,27 @@ feature -- Actions on all windows
 			else
 				for_all (agent for_all (agent c_compilation_stop_action))
 			end
+
+			if
+				a_development_window.editor_tool.stone = Void and
+			then
+			   	eiffel_system.workbench.system_defined and
+			then
+			   	eiffel_system.system.root_class /= Void
+			then
+				a_development_window.editor_tool.set_stone (
+					create {CLASSI_STONE}.make (eiffel_system.system.root_class))
+				if
+					eiffel_system.workbench.universe_defined /= Void and
+				then
+					eiffel_system.universe.target /= Void and
+				then
+					eiffel_system.universe.target.clusters.count = 1
+				then
+					a_development_window.cluster_tool.show_current_class_cluster_cmd.execute
+				end
+			end
+
 			for_all (agent synchronize_action)
 		end
 

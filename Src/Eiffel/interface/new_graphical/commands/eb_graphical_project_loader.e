@@ -408,6 +408,12 @@ feature {NONE} -- Error reporting
 				-- because we were successful retrieving the project without
 				-- errors or conversion.
 			output_manager.display_system_info
+
+			window_manager.a_development_window.set_stone (create {CLASSI_STONE}.make (system.root_class))
+			window_manager.a_development_window.features_tool.synchronize
+			if universe.target.clusters.count = 1 then
+				window_manager.a_development_window.cluster_tool.show_current_class_cluster_cmd.execute
+			end
 		end
 
 	report_precompilation_error is

@@ -424,6 +424,7 @@ feature -- Drawing operations
 			a_pango_matrix, a_pango_context: POINTER
 			l_app_imp: like App_implementation
 			l_pango_renderer: POINTER
+			l_ellipsize_symbol: POINTER
 		do
 			if drawable /= default_pointer then
 				l_app_imp := App_implementation
@@ -447,10 +448,10 @@ feature -- Drawing operations
 				end
 
 				if a_width /= -1 then
-						-- We need to perform ellipsizing on text
-
-					if {EV_GTK_EXTERNALS}.gtk_min_ver >= 6 then
-						{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 3) -- PangoEllipsizeEnd
+						-- We need to perform ellipsizing on text if available, otherwise we clip.
+					l_ellipsize_symbol := pango_layout_set_ellipsize_symbol
+					if l_ellipsize_symbol /= default_pointer then
+						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
 						{EV_GTK_EXTERNALS}.pango_layout_set_width (a_pango_layout, a_width * {EV_GTK_EXTERNALS}.pango_scale)
 					else
 							-- Previous code for gtk 2.4 that set a clip area for text rendering.						
@@ -488,9 +489,8 @@ feature -- Drawing operations
 
 					-- Reset all changed values.
 				if a_width /= -1 then
-
-					if {EV_GTK_EXTERNALS}.gtk_min_ver >= 6 then
-						{EV_GTK_EXTERNALS}.pango_layout_set_ellipsize (a_pango_layout, 0) -- PangoEllipsizeNone
+					if l_ellipsize_symbol /= default_pointer then
+						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 0)
 					else
 							-- Restore clip area (used for gtk 2.4 implementation)
 						if a_clip_area /= Void then
@@ -509,6 +509,19 @@ feature -- Drawing operations
 					{EV_GTK_EXTERNALS}.pango_matrix_free (a_pango_matrix)
 				end
 			end
+		end
+
+	pango_layout_set_ellipsize_symbol: POINTER
+			-- Symbol for `pango_layout_set_ellipsize'.
+		once
+			Result := app_implementation.symbol_from_symbol_name ("pango_layout_set_ellipsize")
+		end
+
+	pango_layout_set_ellipsize_call (a_function: POINTER; a_layout: POINTER; a_ellipsize_mode: INTEGER)
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"(FUNCTION_CAST(void, (PangoLayout*, gint)) $a_function)((PangoLayout*) $a_layout, (gint) $a_ellipsize_mode);"
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is

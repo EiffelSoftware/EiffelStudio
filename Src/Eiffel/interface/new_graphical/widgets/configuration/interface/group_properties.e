@@ -172,28 +172,30 @@ feature {NONE} -- Implementation
 			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (True)))
 			properties.add_property (l_dial)
 
-				-- prefix
-			create l_text_prop.make (conf_interface_names.group_prefix_name)
-			l_text_prop.set_description (conf_interface_names.group_prefix_description)
-			l_text_prop.set_value (a_group.name_prefix)
-			l_text_prop.validate_value_actions.extend (agent (a_name: STRING): BOOLEAN
-				do
-					Result := a_name = Void or a_name.is_empty or (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_name)
-				end)
-			l_text_prop.change_value_actions.extend (agent a_group.set_name_prefix)
-			l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (True)))
-			properties.add_property (l_text_prop)
+			if not a_group.is_cluster then
+					-- prefix
+				create l_text_prop.make (conf_interface_names.group_prefix_name)
+				l_text_prop.set_description (conf_interface_names.group_prefix_description)
+				l_text_prop.set_value (a_group.name_prefix)
+				l_text_prop.validate_value_actions.extend (agent (a_name: STRING): BOOLEAN
+					do
+						Result := a_name = Void or a_name.is_empty or (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_name)
+					end)
+				l_text_prop.change_value_actions.extend (agent a_group.set_name_prefix)
+				l_text_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING}?, agent handle_value_changes (True)))
+				properties.add_property (l_text_prop)
 
-				-- renaming
-			create l_rename_prop.make_with_dialog (conf_interface_names.group_renaming_name, create {RENAMING_DIALOG})
-			l_rename_prop.set_description (conf_interface_names.group_renaming_description)
-			l_rename_prop.set_display_agent (agent output_renaming)
-			if a_group.renaming /= Void then
-				l_rename_prop.set_value (a_group.renaming)
+					-- renaming
+				create l_rename_prop.make_with_dialog (conf_interface_names.group_renaming_name, create {RENAMING_DIALOG})
+				l_rename_prop.set_description (conf_interface_names.group_renaming_description)
+				l_rename_prop.set_display_agent (agent output_renaming)
+				if a_group.renaming /= Void then
+					l_rename_prop.set_value (a_group.renaming)
+				end
+				l_rename_prop.change_value_actions.extend (agent a_group.set_renaming)
+				l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING, STRING]}?, agent handle_value_changes (True)))
+				properties.add_property (l_rename_prop)
 			end
-			l_rename_prop.change_value_actions.extend (agent a_group.set_renaming)
-			l_rename_prop.change_value_actions.extend (agent change_no_argument_wrapper ({EQUALITY_HASH_TABLE [STRING, STRING]}?, agent handle_value_changes (True)))
-			properties.add_property (l_rename_prop)
 
 				-- class options
 			if not a_group.is_assembly then

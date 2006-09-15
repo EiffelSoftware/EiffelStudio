@@ -1338,7 +1338,7 @@ feature {NONE}-- Implementation
 		do
 			l_feat := a_feature
 			type_a_checker.init_for_checking (l_feat, a_current_class, Void, Void)
-			Result := type_a_generator.evaluate_type (a_type, a_current_class)
+			Result := type_a_generator.evaluate_type_if_possible (a_type, a_current_class)
 			if Result /= Void then
 				Result := type_a_checker.solved (Result, a_type)
 			end

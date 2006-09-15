@@ -300,7 +300,7 @@ end;
 
 				-- Then the inherited invariants.
 			from
-				record_ancestors_of_class (target_class)
+				record_ancestors_of_class (target_class, Void)
 				ancestors.start
 			until
 				ancestors.after
@@ -424,7 +424,7 @@ end;
 			class_id: INTEGER
 		do
 			from
-				record_ancestors_of_class (current_class)
+				record_ancestors_of_class (current_class, Void)
 				ancestors.start
 			until
 				ancestors.after
@@ -512,25 +512,37 @@ end
 			register_class (current_ast)
 		end;
 
-	record_ancestors_of_class (a_class: CLASS_C) is
+	record_ancestors_of_class (a_class: CLASS_C; a_processed: SEARCH_TABLE [INTEGER]) is
 			-- Record all ancestores of `a_class' in `ancestors' .
+			-- Add processed class to `a_processed' if not Void.
 		require
 			class_not_void: a_class /= Void
 			ancestors_parents_not_void: ancestors /= Void
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
 			a_parent: CLASS_C
+			l_processed: SEARCH_TABLE [INTEGER]
 		do
 			from
+				l_processed := a_processed
+				if l_processed = Void then
+					create l_processed.make (5)
+				end
 				parents := a_class.parents;
 				parents.start
+					-- Add `a_class' to list of processed class, to avoid a crash
+					-- when a class inherits itself. Of course this is not valid, but
+					-- the current system could be in a compilation error state.
+					-- Fixes bug#11292.
+				l_processed.put (a_class.class_id)
 			until
 				parents.after
 			loop
 				a_parent := parents.item.associated_class;
-				if not ancestors.has (a_parent) then
+				if not l_processed.has (a_parent.class_id) then
+					l_processed.put (a_parent.class_id)
 					ancestors.extend (a_parent);
-					record_ancestors_of_class (a_parent)
+					record_ancestors_of_class (a_parent, l_processed)
 				end;
 				parents.forth
 			end

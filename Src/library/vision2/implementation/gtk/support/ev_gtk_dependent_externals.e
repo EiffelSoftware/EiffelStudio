@@ -10,6 +10,21 @@ class
 
 feature -- Externals
 
+	frozen g_module_supported: BOOLEAN
+		external
+			"C signature (): gboolean use <gmodule.h>"
+		end
+
+	frozen g_module_symbol (a_module, a_symbol_name: POINTER; a_symbol: TYPED_POINTER [POINTER]): BOOLEAN
+		external
+			"C signature (GModule*, gchar*, gpointer*): gboolean use <gmodule.h>"
+		end
+
+	frozen g_module_open (a_module_name: POINTER; a_flags: INTEGER): POINTER
+		external
+			"C signature (gchar*, GModuleFlags): GModule* use <gmodule.h>"
+		end
+
 	frozen gdk_region_intersect (a_region1, a_region2: POINTER) is
 		external
 			"C signature (GdkRegion*, GdkRegion*) use <gtk/gtk.h>"

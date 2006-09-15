@@ -39,7 +39,7 @@ feature -- Initialization
 
 			create list
 			list.hide_header
-			list.pointer_button_press_actions.extend (agent on_select)
+			list.pointer_double_press_actions.extend (agent on_select)
 			list.key_press_actions.extend (agent key_actions)
 
 			create vb

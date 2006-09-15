@@ -30,6 +30,7 @@ feature {NONE} -- Implementation: type validation
 				-- Convert TYPE_AS into TYPE_A.
 			l_type := type_a_generator.evaluate_type_if_possible (a_type, context.current_class)
 			if l_type = Void then
+				fixme ("2006-09-14: Is it correct to try to find the correct context ? Need more testing with class renaming. (Asked by Manu)")
 					-- Check about dependencies
 				l_class_type ?= a_type
 				if l_class_type /= Void then

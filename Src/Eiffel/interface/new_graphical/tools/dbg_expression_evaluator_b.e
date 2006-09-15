@@ -304,16 +304,33 @@ feature {NONE} -- EXPR_B evaluation
 			l_char: CHAR_VALUE_I
 			l_real: REAL_VALUE_I
 			l_string: STRING_VALUE_I
+			l_type: TYPE_I
+			l_cl: CLASS_C
 			-- ...
 		do
 			if a_value_i.is_integer then
 				l_integer ?= a_value_i
-				if l_integer.has_integer (32) then
-					create tmp_result_value.make_integer_32 (l_integer.integer_32_value,
-						system.integer_32_class.compiled_class)
+				l_type := l_integer.type
+				if l_type.type_a /= Void and then l_type.type_a.has_associated_class then
+					l_cl := l_type.type_a.associated_class
+					if l_type.is_natural then
+						if l_integer.has_natural (64) then
+							create tmp_result_value.make_natural_64 (l_integer.natural_64_value, l_cl)
+						else
+							create tmp_result_value.make_natural_32 (l_integer.natural_32_value, l_cl)
+						end
+					else
+						if l_integer.has_integer (64) then
+							create tmp_result_value.make_integer_64 (l_integer.integer_64_value, l_cl)
+						else
+							create tmp_result_value.make_integer_32 (l_integer.integer_32_value, l_cl)
+						end
+					end
 				else
+						--| This should not occur, but in case it does
+						--| let's display it as INTEGER_64
 					create tmp_result_value.make_integer_64 (l_integer.integer_64_value,
-						system.integer_64_class.compiled_class)
+							System.integer_64_class.compiled_class)
 				end
 			elseif a_value_i.is_string then
 				l_string ?= a_value_i
@@ -324,12 +341,12 @@ feature {NONE} -- EXPR_B evaluation
 					system.boolean_class.compiled_class)
 			elseif a_value_i.is_character then
 				l_char ?= a_value_i
-				if l_char.is_character_8 then
-					create tmp_result_value.make_character (l_char.character_value.to_character_8,
-						system.character_8_class.compiled_class)
-				else
+				if l_char.is_character_32 then
 					create tmp_result_value.make_wide_character (l_char.character_value,
-						system.character_32_class.compiled_class)
+						System.Character_32_class.compiled_class)
+				else
+					create tmp_result_value.make_character (l_char.character_value.to_character_8,
+						System.Character_8_class.compiled_class)
 				end
 			elseif a_value_i.is_real then
 				l_real ?= a_value_i

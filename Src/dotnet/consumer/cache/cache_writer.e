@@ -240,7 +240,7 @@ feature -- Basic Operations
 					l_consumer.set_destination_path (l_dir.name)
 
 					if notifier /= Void then
-						notifier.notify_consume (create {NOTIFY_MESSAGE}.make (l_ca, a_path, l_reason, cache_reader.eiffel_assembly_cache_path))
+						notifier.notify_consume (create {NOTIFY_MESSAGE}.make (l_ca, a_path, l_reason, cache_reader.absolute_consume_path))
 					end
 
 						-- Load assembly from path, so path assembly is consumed.
@@ -288,7 +288,7 @@ feature -- Basic Operations
 					end
 					if l_assembly_info_updated then
 						if notifier /= Void then
-							notifier.notify_info ({SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.eiffel_assembly_cache_path))
+							notifier.notify_info ({SYSTEM_STRING}.format ("Synchronizing cache...%N%NLocation: {0}", cache_reader.absolute_consume_path))
 						end
 						update_assembly_mappings (l_ca)
 						update_client_assembly_mappings (l_ca)

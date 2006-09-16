@@ -20,7 +20,7 @@ create
 
 feature -- Initialisation
 
-	make(number: INTEGER) is
+	make (number: INTEGER) is
 			-- Create a token composed of `number' spaces.
 		do
 			length := number

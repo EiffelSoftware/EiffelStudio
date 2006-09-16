@@ -35,11 +35,8 @@ feature -- Initialisation
 
 feature -- Status report
 
-	is_tabulation: BOOLEAN is
+	is_tabulation: BOOLEAN is True
 			-- Is current a tabulation token?
-		do
-			Result := True
-		end
 
 feature -- Width & Height
 

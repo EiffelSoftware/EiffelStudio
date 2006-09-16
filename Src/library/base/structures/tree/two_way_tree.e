@@ -310,8 +310,6 @@ feature {TWO_WAY_TREE} -- Implementation
 			Result.copy_node (n)
 		end
 
-feature {TREE} -- Implementation
-
 	copy_node (n: like Current) is
 			-- Copy content of `n' except tree data into Current.
 		do

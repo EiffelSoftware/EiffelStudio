@@ -384,7 +384,7 @@ feature -- Redefinition
 			Result := fixed_list.count
 		end
 
-feature {NONE} -- Implementation
+feature {FIXED_TREE} -- Implementation
 
 	clone_node (n: like Current): like Current is
 			-- Clone node `n'.
@@ -392,8 +392,6 @@ feature {NONE} -- Implementation
 			create Result.make (n.arity, n.item)
 			Result.copy_node (n)
 		end
-
-feature {TREE} -- Implementation
 
 	copy_node (n: like Current) is
 			-- Copy content of `n' except tree data into Current.

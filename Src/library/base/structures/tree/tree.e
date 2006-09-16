@@ -813,16 +813,6 @@ feature {NONE} -- Implementation
 				end
 		end
 
-	clone_node (n: like Current): like Current is
-			-- Clone node `n'.
-		require
-			not_void: n /= Void
-		deferred
-		ensure
-			result_is_root: Result.is_root
-			result_is_leaf: Result.is_leaf
-		end
-
 	copy_node (n: like Current) is
 			-- Copy content of `n' except tree data into Current.
 		require
@@ -836,6 +826,18 @@ feature {NONE} -- Implementation
 			same_item: item = old item
 			result_is_root: is_root
 			result_is_leaf: is_leaf
+		end
+
+feature {TREE} -- Implementation
+
+	clone_node (n: like Current): like Current is
+			-- Clone node `n'.
+		require
+			not_void: n /= Void
+		deferred
+		ensure
+			result_is_root: Result.is_root
+			result_is_leaf: Result.is_leaf
 		end
 
 invariant

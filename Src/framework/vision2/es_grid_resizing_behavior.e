@@ -140,8 +140,8 @@ feature {NONE} -- Actions
 							 l_visible_height := l_visible_height + grid.header.height
 						end
 
-						if x_pos >= 0 and x_pos < grid.virtual_width then
-							l_resize := grid.column_at_virtual_position (x_pos)
+						if l_x_pos >= 0 and l_x_pos < grid.virtual_width then
+							l_resize := grid.column_at_virtual_position (l_x_pos)
 						end
 						if l_resize /= Void and then (y_pos < l_visible_height) then
 							column_index := l_resize.index

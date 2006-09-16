@@ -18,6 +18,13 @@ inherit
 			make as array_make
 		end
 
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -59,9 +66,11 @@ feature -- Status report
 			i, nb: INTEGER
 			l_type: TYPE_I
 			l_cl_type: CL_TYPE_I
+			l_is_not_il_generation: BOOLEAN
 		do
 			from
 				nb := count
+				l_is_not_il_generation := not system.il_generation
 				i := 1
 				Result := True
 			until
@@ -69,7 +78,10 @@ feature -- Status report
 			loop
 				l_type := item (i)
 				Result := l_type.is_consistent
-				if Result and not l_type.is_basic then
+				if Result and l_is_not_il_generation and not l_type.is_basic then
+						-- As a temporary measure, this is only done in classic where a META_GENERIC
+						-- contains a class type only when a class is expanded. This is not the case
+						-- in .NET since for example we record all generic derivation of NATIVE_ARRAY.
 					l_cl_type ?= l_type
 					if l_cl_type /= Void then
 							-- Ensure that type is still expanded. This fixes eweasel test#incr275

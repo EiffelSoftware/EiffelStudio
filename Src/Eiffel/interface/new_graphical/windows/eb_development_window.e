@@ -3671,6 +3671,8 @@ feature {NONE} -- Implementation
 		local
 			begin_index, offset: INTEGER
 			tmp_text: STRING
+			l_feat_as: FEATURE_AS
+			l_names: EIFFEL_LIST [FEATURE_NAME]
 		do
 			if not feat_as.is_il_external then
 				if not managed_main_formatters.first.selected then
@@ -3678,8 +3680,17 @@ feature {NONE} -- Implementation
 						editor_tool.text_area.find_feature_named (feat_as.name)
 					end
 				else
-					if feat_as.ast /= Void then
-						begin_index := feat_as.ast.start_position
+					l_feat_as := feat_as.ast
+					if l_feat_as /= Void then
+						from
+							l_names := l_feat_as.feature_names
+							l_names.start
+						until
+							l_names.after or feat_as.name.is_case_insensitive_equal (l_names.item.internal_name)
+						loop
+							l_names.forth
+						end
+						begin_index := l_names.item.start_position
 						tmp_text := displayed_class.text
 						if tmp_text /= Void then
 							tmp_text := tmp_text.substring (1, begin_index)
@@ -4245,7 +4256,7 @@ feature {NONE} -- Implementation: Editor commands
 			-- Refresh address bar and features tool to relect
 			-- where in the code the cursor is located.
 		local
-			l_feature: FEATURE_AS
+			l_feature: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			l_classc_stone: CLASSC_STONE
 		do
 				-- we may have been called from a timer and have to deactivate the timer
@@ -4258,7 +4269,7 @@ feature {NONE} -- Implementation: Editor commands
 				if l_classc_stone /= Void then
 					l_feature := editor_tool.text_area.text_displayed.current_feature_containing
 					if l_feature /= Void then
-						set_editing_location_by_feature (l_feature)
+						set_editing_location_by_feature (l_feature.name)
 					else
 						set_editing_location_by_feature (Void)
 					end
@@ -4266,20 +4277,20 @@ feature {NONE} -- Implementation: Editor commands
 			end
 		end
 
-	set_editing_location_by_feature (a_feature: FEATURE_AS) is
-			-- Set editing location, feature tool and combo box changes according to `a_feature'.
+	set_editing_location_by_feature (a_feature_name: FEATURE_NAME) is
+			-- Set editing location, feature tool and combo box changes according to `a_feature_name'.
 		local
 			l_efeature: E_FEATURE
 			l_class_i: CLASS_I
 			l_classc: CLASS_C
 		do
-			if a_feature /= Void then
-				address_manager.set_feature_text_simply (a_feature.feature_names.first.internal_name)
+			if a_feature_name /= Void then
+				address_manager.set_feature_text_simply (a_feature_name.internal_name)
 				l_class_i := eiffel_universe.safe_class_named (class_name, group)
 				if l_class_i /= Void and then l_class_i.is_compiled then
 					l_classc := l_class_i.compiled_class
 					if l_classc.has_feature_table then
-						l_efeature := l_classc.feature_with_name (a_feature.feature_names.first.internal_name)
+						l_efeature := l_classc.feature_with_name (a_feature_name.internal_name)
 						if l_efeature /= Void and then l_efeature.written_in /= l_classc.class_id then
 							l_efeature := Void
 						end
@@ -4288,7 +4299,7 @@ feature {NONE} -- Implementation: Editor commands
 				if l_efeature /= Void then
 					seek_item_in_feature_tool (l_efeature)
 				else
-					features_tool.seek_ast_item_in_feature_tool (a_feature.feature_names.first.internal_name)
+					features_tool.seek_ast_item_in_feature_tool (a_feature_name.internal_name)
 				end
 			else
 				address_manager.set_feature_text_simply (once "")

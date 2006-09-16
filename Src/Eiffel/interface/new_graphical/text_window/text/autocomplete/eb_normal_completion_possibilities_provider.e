@@ -1,7 +1,7 @@
 indexing
 	description: "[
 			Objects that provider completion possiblities for normal use.
-			i.e. EB_CODE_COMPLETABLE_TEXT_FIELD which can auto complete names of features and classes"
+			i.e. EB_CODE_COMPLETABLE_TEXT_FIELD which can auto complete names of features and classes
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,7 +49,11 @@ feature -- Initialization
 			context_class_c := a_class_c
 			static := a_static
 			context_feature_as := a_feature_as
-			current_feature_as := a_feature_as
+			if a_feature_as /= Void then
+				current_feature_as := [a_feature_as, a_feature_as.feature_names.first]
+			else
+				current_feature_as := Void
+			end
 			completion_possibilities := Void
 			class_completion_possibilities := Void
 		ensure
@@ -86,7 +90,11 @@ feature -- Basic operation
 				context_class_c := eb_debugger_manager.debugging_class_c
 				context_feature_as := eb_debugger_manager.debugging_feature_as
 			end
-			current_feature_as := context_feature_as
+			if context_feature_as /= Void then
+				current_feature_as := [context_feature_as, context_feature_as.feature_names.first]
+			else
+				current_feature_as := Void
+			end
 			watching_line := text_field.current_line
 			if context_class_c /= Void then
 				current_class_i := context_class_c.lace_class

@@ -25,6 +25,7 @@ feature -- Initialization
 		local
 			class_c: CLASS_C
 			current_feature: E_FEATURE
+			l_feat_as: FEATURE_AS
 		do
 			current_class_c := feat.written_class
 			can_analyze_current_class := False
@@ -40,7 +41,8 @@ feature -- Initialization
 						if last_syntax_error = Void and then current_class_as /= Void then
 							current_feature := class_c.feature_with_name (current_feature_name)
 							if current_feature /= Void then
-								current_feature_as := current_feature.ast
+								l_feat_as := current_feature.ast
+								current_feature_as := [l_feat_as, l_feat_as.feature_names.first]
 								if feat.associated_class /= Void then
 									can_analyze_current_class := True
 								end
@@ -130,7 +132,7 @@ feature -- Analysis preparation
 			feature_name_image: STRING
 		do
 			if current_feature_as /= Void then
-				feature_name := current_feature_as.feature_names.i_th (1)
+				feature_name := current_feature_as.name
 				if feature_name.is_frozen then
 					feature_name_image := "frozen"
 				elseif feature_name.is_infix then
@@ -164,7 +166,7 @@ feature -- Analysis preparation
 			if token = Void or else current_feature_as = Void then
 				error := True
 			else
-				pos_in_file := current_feature_as.start_position
+				pos_in_file := current_feature_as.name.start_position
 			end
 			from
 			until
@@ -213,15 +215,10 @@ feature -- Analysis preparation
 									token := Void
 								end
 							end
-						else
-								-- It might be an operator name
-							token.set_pos_in_text (pos_in_file)
 						end
-					else
-							-- "Normal" text token
-						token.set_pos_in_text (pos_in_file)
 					end
 				end
+				token.set_pos_in_text (pos_in_file)
 				if token.next /= Void then
 					pos_in_file := token.length + pos_in_file
 					token := token.next

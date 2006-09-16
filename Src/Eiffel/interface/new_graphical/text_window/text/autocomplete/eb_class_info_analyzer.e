@@ -150,8 +150,8 @@ feature {NONE} -- Private Access
 	searched_line: EDITOR_LINE
 			-- line containing `searched_token'
 
-	current_feature_as: FEATURE_AS
-			-- `FEATURE_AS' corresponding to the feature containing `searched_token'
+	current_feature_as: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
+			-- `FEATURE_AS/FEATURE_NAME' corresponding to the feature containing `searched_token'
 
 feature {EB_ADDRESS_MANAGER} -- Private Access
 
@@ -369,7 +369,7 @@ feature {NONE}-- Clickable/Editable implementation
 				initialize_context
 				if current_class_c /= Void then
 					if not token_image_is_in_array (token, unwanted_symbols) then
-						current_feature_as := ft
+						current_feature_as := [ft, ft.feature_names.first]
 						current_token := token
 						searched_token := token
 						current_line := line
@@ -456,7 +456,7 @@ feature {NONE}-- Clickable/Editable implementation
 								skip_parenthesis ('{', '}')
 								if processed_type /= Void and then processed_type.associated_class /= Void then
 									if processed_type.associated_class.has_feature_table then
-										Result := processed_type.associated_class.feature_with_name (current_feature_as.feature_name)
+										Result := processed_type.associated_class.feature_with_name (current_feature_as.name.internal_name)
 									end
 								end
 							end
@@ -470,7 +470,7 @@ feature {NONE}-- Clickable/Editable implementation
 								loop
 									type := l_current_class_c.parents.item
 									if type.associated_class /= Void and then type.associated_class.has_feature_table then
-										Result := type.associated_class.feature_with_name (current_feature_as.feature_name)
+										Result := type.associated_class.feature_with_name (current_feature_as.name.internal_name)
 									end
 									l_current_class_c.parents.forth
 								end
@@ -1253,7 +1253,7 @@ feature {NONE}-- Implementation
 					current_feature_as /= Void and then l_current_class_c.has_feature_table
 				then
 					current_feature := l_current_class_c.feature_with_name (
-						current_feature_as.feature_name)
+						current_feature_as.name.internal_name)
 					if current_feature /= Void then
 						Result := current_feature.type
 						if Result /= Void and then Result.is_formal then
@@ -1617,7 +1617,7 @@ feature {NONE} -- Implementation
 				l_current_class_c := current_class_c
 				if l_current_class_c.has_feature_table then
 					if current_feature_as /= Void then
-						Result := l_current_class_c.feature_named (current_feature_as.feature_name)
+						Result := l_current_class_c.feature_named (current_feature_as.name.internal_name)
 					end
 				end
 					-- We hack here to avoid current feature void.

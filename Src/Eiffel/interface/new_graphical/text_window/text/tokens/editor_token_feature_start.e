@@ -18,11 +18,35 @@ inherit
 		end
 
 create
-	make
+	make, make_with_pos
+
+feature {NONE} -- Initialize
+
+	make_with_pos (a_text: STRING; a_start_pos, a_end_pos: INTEGER) is
+			-- Create a new token for feature starting at `a_start_pos'.
+		require
+			a_text_not_void: a_text /= Void
+			no_eal_in_text: not a_text.has ('%N')
+			a_start_pos_positive: a_start_pos > 0
+			a_end_pos_positive: a_end_pos > 0
+			a_end_pos_greater_than_a_start_pos: a_start_pos < a_end_pos
+		do
+			make (a_text)
+			start_position := a_start_pos
+			end_position := a_end_pos
+		ensure
+			start_position_set: start_position = a_start_pos
+			end_position_set: end_position = a_end_pos
+		end
 
 feature -- Access
 
 	feature_index_in_table: INTEGER
+			-- Index of FEATURE_AS node matching start of feature.
+
+	start_position, end_position: INTEGER
+			-- Position in text file where feature really starts and ends.
+			-- `start_position' might be less than `pos_in_text'.
 
 feature -- Status report
 

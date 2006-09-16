@@ -107,9 +107,6 @@ feature -- Analysis preparation
 							split_string := False
 						elseif token.image @ token.image.count /= '%"' then
 							split_string := True
-						else
-								-- It might be an operator name
-							token.set_pos_in_text (pos_in_file)
 						end
 					else
 						if not split_string then
@@ -119,8 +116,8 @@ feature -- Analysis preparation
 									-- we replace this text token with a "feature start token"
 								prev := token.previous
 								next := token.next
-								create {EDITOR_TOKEN_FEATURE_START} tfs.make (token.image)
-								tfs.set_pos_in_text (pos_in_file)
+								create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.image,
+									features_position.item.start_pos, features_position.item.end_pos)
 								tfs.set_feature_index_in_table (features_position.index)
 								if prev /= Void then
 									prev.set_next_token (tfs)
@@ -133,16 +130,17 @@ feature -- Analysis preparation
 									next.set_previous_token (tfs)
 								end
 								features_position.forth
-							else
-								token.set_pos_in_text (pos_in_file)
+								token := tfs
 							end
 						end
 					end
 				end
+				token.set_pos_in_text (pos_in_file)
 				pos_in_file := token.length + pos_in_file
 				token := token.next
 			end
 			if is_eol (token) then
+				token.set_pos_in_text (pos_in_file)
 				if file_standard_is_windows then
 					pos_in_file := pos_in_file + 2
 				else
@@ -189,6 +187,7 @@ feature -- Basic Operations
 	stone_at_position (cursor: TEXT_CURSOR): STONE is
 			-- Return stone associated with position pointed by `cursor', if any
 		local
+			l_content: TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME]
 			ft		: FEATURE_AS
 			feat		: E_FEATURE
 			a_position	: INTEGER
@@ -206,8 +205,9 @@ feature -- Basic Operations
 						if a_position >= invariant_index then
 							feat := described_feature (token, line, Void)
 						elseif click_possible (token) then
-							ft := feature_containing (token, line)
-							if ft /= Void then
+							l_content := feature_containing (token, line)
+							if l_content /= Void then
+								ft := l_content.feat_as
 								inspect
 									feature_part_at (token, line)
 								when instruction_part then
@@ -245,13 +245,15 @@ feature -- Status
 			file_standard_is_windows := value
 		end
 
-	feature_containing_cursor (a_cursor: TEXT_CURSOR): FEATURE_AS is
+	feature_containing_cursor (a_cursor: TEXT_CURSOR): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME] is
 			-- Feature containing current cursor if exits.
 			-- If not void returns.
 		do
-			if features_position /= Void and features_ast /= Void then
+			if features_ast /= Void then
 				Result := feature_containing (a_cursor.token, a_cursor.line)
 			end
+		ensure
+			valid_result: Result /= Void implies (Result.feat_as /= Void and Result.name /= Void)
 		end
 
 feature -- Retrieve information from ast
@@ -261,67 +263,50 @@ feature -- Retrieve information from ast
 		require
 			current_class_as_not_void: current_class_as /= Void
 		local
-			feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			feature_list: EIFFEL_LIST [FEATURE_AS]
-			index: INTEGER
-			insert: BOOLEAN
-			position, end_position: INTEGER
-			size: INTEGER
+			l_feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
+			l_feature_list: EIFFEL_LIST [FEATURE_AS]
+			l_is_first_name: BOOLEAN
+			l_body_end_position, l_names_end_position: INTEGER
+			l_names: EIFFEL_LIST [FEATURE_NAME]
+			l_feature: FEATURE_AS
 		do
-			feature_clauses := current_class_as.features
-			if feature_clauses /= Void then
+			l_feature_clauses := current_class_as.features
+			if l_feature_clauses /= Void then
+				create features_position.make (100)
+				create features_ast.make (100)
 				from
-					feature_clauses.start
+					l_feature_clauses.start
 				until
-					feature_clauses.after
+					l_feature_clauses.after
 				loop
-					if feature_clauses.item.features /= Void then
-						size := feature_clauses.item.features.count + size
-					end
-					feature_clauses.forth
-				end
-				create features_position.make (size)
-				create features_ast.make (size)
-				from
-					feature_clauses.start
-				until
-					feature_clauses.after
-				loop
-					if feature_clauses.item.features /= Void then
-						feature_list := feature_clauses.item.features
-						if feature_list /= Void then
-							from
-								feature_list.start
-							until
-								feature_list.after
-							loop
-								position := feature_list.item.start_position
-								end_position := feature_list.item.end_position
-								from
-									index := features_position.count
-								until
-									index <= 0 or insert
-								loop
-									if features_position.i_th (index).start_pos < position then
-										insert := True
-									else
-										index := index - 1
-									end
-								end
-								if index = features_position.count then
-									features_position.extend ([position, end_position])
-									features_ast.extend (feature_list.item)
-								else
-									features_position.go_i_th (index)
-									features_position.put_left ([position, end_position])
-									features_ast.go_i_th (index)
-									features_ast.put_left (feature_list.item)
-								end
-								feature_list.forth
+					l_feature_list := l_feature_clauses.item.features
+					from
+						l_feature_list.start
+					until
+						l_feature_list.after
+					loop
+						l_feature := l_feature_list.item
+						l_body_end_position := l_feature.end_position
+						from
+							l_names := l_feature.feature_names
+							l_names_end_position := l_names.end_position
+							l_is_first_name := True
+							l_names.start
+						until
+							l_names.after
+						loop
+							features_ast.extend ([l_feature, l_names.item])
+							if l_is_first_name then
+								l_is_first_name := False
+								features_position.extend ([l_names.item.start_position, l_body_end_position])
+							else
+								features_position.extend ([l_names.item.start_position, l_names_end_position])
 							end
+							l_names.forth
 						end
+						l_feature_list.forth
 					end
-					feature_clauses.forth
+					l_feature_clauses.forth
 				end
 			else
 				create features_position.make (0)
@@ -398,6 +383,7 @@ feature -- Click list update
 							from
 								if token.next /= Void then
 									pos_in_file := token.length + pos_in_file
+									token.set_pos_in_text (pos_in_file)
 									token := token.next
 								elseif line.next /= Void then
 									line := line.next
@@ -405,6 +391,7 @@ feature -- Click list update
 									if file_standard_is_windows then
 										pos_in_file := pos_in_file + 1
 									end
+									token.set_pos_in_text (pos_in_file)
 									token := line.first_token
 								end
 							invariant
@@ -414,6 +401,7 @@ feature -- Click list update
 							loop
 								if token.next /= Void then
 									pos_in_file := token.length + pos_in_file
+									token.set_pos_in_text (pos_in_file)
 									token := token.next
 								elseif line.next /= Void then
 									line := line.next
@@ -421,22 +409,20 @@ feature -- Click list update
 									if file_standard_is_windows then
 										pos_in_file := pos_in_file + 1
 									end
+									token.set_pos_in_text (pos_in_file)
 									token := line.first_token
 								else
 									token := Void
 								end
 							end
-						else
-								-- It might be an operator name
-							token.set_pos_in_text (pos_in_file)
 						end
 					else
 							-- "Normal" text token
 						if not features_position.after and then pos_in_file >= features_position.item.start_pos then
 							prev := token.previous
 							next := token.next
-							create {EDITOR_TOKEN_FEATURE_START} tfs.make (token.image)
-							tfs.set_pos_in_text (pos_in_file)
+							create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.image,
+								features_position.item.start_pos, features_position.item.end_pos)
 							tfs.set_feature_index_in_table (features_position.index)
 							if prev /= Void then
 								prev.set_next_token (tfs)
@@ -449,10 +435,12 @@ feature -- Click list update
 								next.set_previous_token (tfs)
 							end
 							features_position.forth
-						else
-							token.set_pos_in_text (pos_in_file)
+							token := tfs
 						end
 					end
+				end
+				if token /= Void then
+					token.set_pos_in_text (pos_in_file)
 				end
 				if token /= Void and then token.next /= Void then
 					pos_in_file := token.length + pos_in_file

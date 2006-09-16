@@ -14,9 +14,7 @@ inherit
 		redefine
 			display_selected,
 			display_half_selected,
-			pos_in_text,
 			is_text,
-			set_pos_in_text,
 			update_width
 		end
 
@@ -29,11 +27,11 @@ feature -- Initialisation
 
 	make (text: STRING) is
 		require
+			text_not_void: text /= Void
 			no_eol_in_text: not text.has ('%N')
 		do
 			image := text
 			length := text.count
-			pos_in_text := -1
 		ensure
 			image_not_void: image /= Void
 		end
@@ -313,16 +311,6 @@ feature -- implementation of clickable and editable text
 
 	is_text: BOOLEAN is True
 
-	pos_in_text: INTEGER
-			-- position of the token in the text in characters
-			-- Warning: To be used only by EB_CLICK_LIST
-
-	set_pos_in_text (pit: INTEGER) is
-			-- assign `pit' to `pos_in_text'
-		do
-			pos_in_text := pit
-		end
-
 feature {NONE} -- Implementation
 
 	display_with_colors(d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
@@ -419,6 +407,9 @@ feature {NONE} -- Implementation
 			lightness := sqrt (text_color.lightness)
 			create Result.make_with_rgb (lightness, lightness, lightness)
 		end
+
+invariant
+	image_not_void: image /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

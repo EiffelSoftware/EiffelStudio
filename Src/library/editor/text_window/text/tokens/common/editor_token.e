@@ -36,34 +36,17 @@ feature -- Access
 			-- on this token.
 			-- Only cursors are used in the class STONE.
 
-	is_margin_token: BOOLEAN is
-			-- Is the current token a margin token?
-			-- A margin token is a behavior token and does not
-			-- contain any editable text. An example of a beginning token is
-			-- the EDITOR_TOKEN_BREAKPOINT or EDITOR_TOKEN_LINE_NUMBER.  Default is False.
-		do
-		end
 
-feature -- Status Report
+feature -- Token type status Report
 
 	is_blank: BOOLEAN is
 			-- Is this a blank token?
 		do
-			Result := False
 		end
 
 	is_feature_start: BOOLEAN is
 		do
 		end
-
-	is_selectable: BOOLEAN
-			-- Is this token part of a group of selectable tokens?
-
-	is_highlighted: BOOLEAN
-			-- Is current highlighted?
-
-	is_fake: BOOLEAN
-			-- Is current fake?
 
 	is_new_line: BOOLEAN is
 			-- Is current a new line token?
@@ -75,7 +58,26 @@ feature -- Status Report
 		do
 		end
 
-feature -- Status setting
+	is_margin_token: BOOLEAN is
+			-- Is the current token a margin token?
+			-- A margin token is a behavior token and does not
+			-- contain any editable text. An example of a beginning token is
+			-- the EDITOR_TOKEN_BREAKPOINT or EDITOR_TOKEN_LINE_NUMBER.  Default is False.
+		do
+		end
+
+feature -- Status report
+
+	is_selectable: BOOLEAN
+			-- Is this token part of a group of selectable tokens?
+
+	is_highlighted: BOOLEAN
+			-- Is current highlighted?
+
+	is_fake: BOOLEAN
+			-- Is current fake?
+
+feature -- Status Setting
 
 	set_pebble (a_pebble: like pebble) is
 			-- Set `pebble' to `a_pebble'
@@ -83,20 +85,28 @@ feature -- Status setting
 			pebble := a_pebble
 		end
 
-	set_is_selectable (a_flag: BOOLEAN) is
-			-- Set `is_selectable' to `a_flag'
+	set_is_selectable (b: BOOLEAN) is
+			-- Set `is_selectable' to `b'
 		do
-			is_selectable := a_flag
+			is_selectable := b
 		ensure
-			value_set: is_selectable = a_flag
+			value_set: is_selectable = b
 		end
 
-	set_is_fake (a_fake: BOOLEAN) is
-			-- Set `is_fake' to `a_fake'.
+	set_highlighted (b: BOOLEAN) is
+			-- Highlight
 		do
-			is_fake := a_fake
+			is_highlighted := b
 		ensure
-			value_set: is_fake = a_fake
+			value_set: is_highlighted = b
+		end
+
+	set_is_fake (b: BOOLEAN) is
+			-- Set `is_fake' to `b'.
+		do
+			is_fake := b
+		ensure
+			value_set: is_fake = b
 		end
 
 feature -- Visitor
@@ -176,12 +186,6 @@ feature -- Display
 				-- by default, we call the normal `display' feature.
 				-- Redefine the feature to apply a different style.
 			display (d_y, device, panel)
-		end
-
-	set_highlighted (is_highighted: BOOLEAN) is
-			-- Highlight
-		do
-			is_highlighted := True
 		end
 
 feature -- Width & height
@@ -320,16 +324,17 @@ feature -- Implementation of clickable and editable text
 		do
 		end
 
-	pos_in_text: INTEGER is
-			-- position of the token in the text in characters
-			-- Warning: To be used only by EB_CLICK_LIST
-		do
-			Result := -1
-		end
+	pos_in_text: INTEGER
+			-- Position of the token in the text in characters
 
 	set_pos_in_text (pit: INTEGER) is
 			-- Does nothing : redefined in editor_token_text
+		require
+			pit_non_negative: pit >= 0
 		do
+			pos_in_text := pit
+		ensure
+			pos_in_text_set: pos_in_text = pit
 		end
 
 	platform_is_windows: BOOLEAN is

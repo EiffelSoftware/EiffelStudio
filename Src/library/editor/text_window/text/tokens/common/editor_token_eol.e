@@ -33,13 +33,8 @@ feature -- Initialisation
 
 feature -- Status report
 
-	is_new_line: BOOLEAN is
+	is_new_line: BOOLEAN is True
 			-- Is current a new line token?
-		do
-			Result := True
-		ensure then
-			good_result: Result
-		end
 
 feature -- Display
 

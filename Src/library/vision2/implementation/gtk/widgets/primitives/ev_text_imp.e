@@ -477,6 +477,16 @@ feature -- Basic operation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_scroll_to_iter (text_view, a_iter.item,  0.0, False, 0.0, 0.0)
 		end
 
+	scroll_to_end is
+			-- Scroll to the last line position of `Current'.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			create a_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (text_buffer, a_iter.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_scroll_to_iter (text_view, a_iter.item,  0.0, False, 0.0, 0.0)
+		end
+
 	enable_word_wrapping is
 			-- Enable word wrapping for `Current'
 		do

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CACHE_REFLECTION
 
 inherit
@@ -99,9 +99,9 @@ feature -- Access
 				ct := consumed_type (t)
 				if ct /= Void then
 					Result := ct.eiffel_name.twin
-				end				
+				end
 			end
-		end	
+		end
 
 	feature_name (t: SYSTEM_TYPE; dotnet_name: STRING; args: NATIVE_ARRAY [SYSTEM_TYPE]): STRING is
 			-- Eiffel name of .NET function `dotnet_name' from type `t' with arguments `args'.
@@ -113,7 +113,7 @@ feature -- Access
 		local
 			ct: CONSUMED_TYPE
 			crt: CONSUMED_REFERENCED_TYPE
-			fields: ARRAY [CONSUMED_FIELD] 
+			fields: ARRAY [CONSUMED_FIELD]
 			procedures: ARRAY [CONSUMED_PROCEDURE]
 			functions: ARRAY [CONSUMED_FUNCTION]
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
@@ -175,7 +175,7 @@ feature -- Access
 										j := 1
 										found := True
 									until
-										j > cargs.count or not found									
+										j > cargs.count or not found
 									loop
 										crt := cargs.item (j).type
 										found := crt.name.to_cil.equals (args.item (j - 1).full_name) and then
@@ -235,7 +235,7 @@ feature -- Access
 								Result := fields.item (i).eiffel_name
 							end
 							i := i + 1
-						end						
+						end
 					end
 					if not found then
 						functions := ct.functions
@@ -317,10 +317,10 @@ feature -- Access
 						i := 1
 						found := True
 					until
-						i > cargs.count or not found									
+						i > cargs.count or not found
 					loop
 						crt := cargs.item (i).type
-						found := crt.name.to_cil.equals (args.item (i - 1).full_name) 
+						found := crt.name.to_cil.equals (args.item (i - 1).full_name)
 						i := i + 1
 					end
 					if found then
@@ -340,7 +340,7 @@ feature -- Access
 			not_empty_dotnet_feature_name: not dotnet_feature_name.is_empty
 		local
 			ct: CONSUMED_TYPE
-			fields: ARRAY [CONSUMED_FIELD] 
+			fields: ARRAY [CONSUMED_FIELD]
 			procedures: ARRAY [CONSUMED_PROCEDURE]
 			functions: ARRAY [CONSUMED_FUNCTION]
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
@@ -412,7 +412,7 @@ feature -- Access
 								Result.extend (fields.item (i))
 							end
 							i := i + 1
-						end						
+						end
 					end
 				end
 			end

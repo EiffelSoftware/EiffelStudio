@@ -15,6 +15,11 @@ inherit
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
 
+	EB_CLUSTER_MANAGER_OBSERVER
+		export
+			{NONE} all
+		end
+
 	SHARED_WORKBENCH
 
 create
@@ -28,8 +33,6 @@ feature -- Basic operations
 			dial: CREATE_ASSEMBLY_DIALOG
 			wd: EV_WARNING_DIALOG
 			l_factory: CONF_COMP_FACTORY
-			l_target: CONF_TARGET
-			l_load: CONF_LOAD
 		do
 			if Workbench.is_already_compiled then
 				if
@@ -37,26 +40,16 @@ feature -- Basic operations
 					Workbench.last_reached_degree <= 5
 				then
 					create l_factory
-					create l_load.make (l_factory)
-					l_load.retrieve_configuration (universe.target.system.file_name)
-					if l_load.is_error then
-						create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (3))
-						wd.show_modal_to_window (target.window)
-					else
-						l_target := l_load.last_system.targets.item (universe.target.name)
-					end
-					if l_target = Void then
-						create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (3))
-						wd.show_modal_to_window (target.window)
-					else
-						create dial.make (l_target, l_factory)
-						dial.show_modal_to_window (target.window)
-						if dial.is_ok then
-							l_target.system.store
-						end
+					create dial.make (universe.target, l_factory)
+					dial.show_modal_to_window (target.window)
+					if dial.is_ok then
+						universe.target.system.store
+						lace.reset_date_stamp
+						system.force_rebuild
+						manager.refresh
 					end
 				else
-					create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (3))
+					create wd.make_with_text (Warning_messages.w_Unsufficient_compilation (5))
 					wd.show_modal_to_window (target.window)
 				end
 			else

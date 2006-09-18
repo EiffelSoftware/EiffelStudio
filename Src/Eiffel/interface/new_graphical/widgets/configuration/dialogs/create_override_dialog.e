@@ -56,6 +56,7 @@ feature {NONE} -- Actions
 					last_group := factory.new_override (name.text, l_loc, target)
 					if parent_cluster /= Void then
 						last_group.set_parent (parent_cluster)
+						last_group.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
 						parent_cluster.add_child (last_group)
 					end
 					target.add_override (last_group)

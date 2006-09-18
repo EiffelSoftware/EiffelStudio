@@ -295,6 +295,9 @@ feature {NONE} -- Actions
 					create wd.make_with_text (conf_interface_names.assembly_no_location)
 				else
 					last_group := factory.new_assembly (name.text, location.text, target)
+					last_group.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
+					last_group.set_dotnet_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
+					last_group.set_assembly_name ("unknown")
 					target.add_assembly (last_group)
 				end
 

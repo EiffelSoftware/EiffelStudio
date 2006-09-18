@@ -291,7 +291,7 @@ feature -- Resizing
 			-- similar to resize_column_to_content but check input first
 		do
 			if col /= Void and row_count > 0 then
-				safe_resize_column_to_content (col, include_header_text, only_visible_part)
+				resize_column_to_content (col, include_header_text, only_visible_part)
 			end
 		end
 

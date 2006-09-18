@@ -143,6 +143,49 @@ feature -- Change
 			scrolling_behavior.set_scrolling_common_line_count (i)
 		end
 
+	set_selected_rows_function (a_function: like selected_rows_function) is
+			-- Set `selected_rows_function' with `a_function'.
+		do
+			selected_rows_function_internal := a_function
+		ensure
+			selected_rows_function_set: selected_rows_function = a_function
+		end
+
+	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN) is
+			-- Enable default tree navigation behavior.
+			-- `a_expand' indicates if expanding a node should be enabled.
+			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
+			-- `a_collapse' indicates if collapsing a node should be enabled.
+			-- `a_collapse_recursive' indicates if collapsing a node recursively should be enabled.
+		do
+			if a_expand then
+				if expand_selected_rows_agent = Void then
+					set_expand_selected_rows_agent (agent expand_rows (False))
+				end
+				default_expand_rows_shortcuts.do_all (agent add_key_shortcut (expand_node_action_index, ?))
+			end
+			if a_expand_recursive then
+				if expand_selected_rows_recursive_agent = Void then
+					set_expand_selected_rows_recursive_agent (agent expand_rows (True))
+				end
+				default_expand_rows_recursive_shortcuts.do_all (agent add_key_shortcut (expand_node_recursive_action_index, ?))
+			end
+			if a_collapse then
+				if collapse_selected_rows_agent = Void then
+					set_collapse_selected_rows_agent (agent collapse_rows (False))
+				end
+				default_collapse_rows_shortcuts.do_all (agent add_key_shortcut (collapse_node_action_index, ?))
+			end
+			if a_collapse_recursive then
+				if collapse_selected_rows_recursive_agent = Void then
+					set_collapse_selected_rows_recursive_agent (agent collapse_rows (True))
+				end
+				default_collapse_rows_recursive_shortcuts.do_all (agent add_key_shortcut (collapse_node_recursive_action_index, ?))
+			end
+		end
+
+feature {NONE} -- Grid Events
+
 	on_key_pressed (k: EV_KEY) is
 			-- Action to be performed when `k' is pressed in Current.
 		local
@@ -200,6 +243,52 @@ feature -- Change
 			end
 		end
 
+	on_header_auto_width_resize is
+		local
+			div_index: INTEGER
+			col: EV_GRID_COLUMN
+		do
+			div_index := header.pointed_divider_index
+			if div_index > 0 and row_count > 0 then
+				col := column (div_index)
+				check col_not_void: col /= Void end
+				resize_column_to_content (col, False, ev_application.shift_pressed)
+			end
+		end
+
+feature -- Resizing
+
+	resize_column_to_content (col: EV_GRID_COLUMN; include_header_text, only_visible_part: BOOLEAN) is
+		require
+			col_not_void: col /= Void
+			grid_not_empty: row_count > 0
+		local
+			hw, w: INTEGER
+			hf: EV_FONT
+		do
+			if only_visible_part then
+				w := col.required_width_of_item_span (first_visible_row.index, last_visible_row.index)
+			else
+				w := col.required_width_of_item_span (1, row_count)
+			end
+			w := w + Additional_pixels_for_column_width
+			if is_header_displayed and include_header_text then
+				hf := header.font
+				check header_font_not_void: hf /= Void end
+				hw := hf.string_width (col.header_item.text) + Additional_pixels_for_header_item_width
+				w := w.max (hw)
+			end
+			if w > 5 then
+				if w < col.width and col.index = column_count then
+					--| Do not resize smaller if it is last column
+				else
+					col.set_width (w)
+				end
+			end
+		end
+
+feature -- Header menu
+
 	header_menu_on_column (col: EV_GRID_COLUMN): EV_MENU is
 			-- Menu related to `col'.
 		local
@@ -235,6 +324,13 @@ feature -- Change
 				mci.enable_select
 				mci.select_actions.extend (agent col.hide)
 				Result.extend (mci)
+				Result.extend (create {EV_MENU_SEPARATOR})
+				create mi.make_with_text ("Resize to content")
+				mi.select_actions.extend (agent resize_column_to_content (col, False, False))
+				Result.extend (mi)
+				create mi.make_with_text ("Resize to visible content")
+				mi.select_actions.extend (agent resize_column_to_content (col, False, True))
+				Result.extend (mi)
 			end
 
 			gm := grid_menu
@@ -284,65 +380,6 @@ feature -- Change
 				end
 				sm.extend (mci)
 				c := c + 1
-			end
-		end
-
-	on_header_auto_width_resize is
-		local
-			div_index: INTEGER
-			col: EV_GRID_COLUMN
-		do
-			div_index := header.pointed_divider_index
-			if div_index > 0 then
-				col := column (div_index)
-				if row_count > 0 then
-					if ev_application.shift_pressed then
-						col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + Additional_pixels_for_column_width)
-					else
-						col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + Additional_pixels_for_column_width)
-					end
-				end
-			end
-		end
-
-	set_selected_rows_function (a_function: like selected_rows_function) is
-			-- Set `selected_rows_function' with `a_function'.
-		do
-			selected_rows_function_internal := a_function
-		ensure
-			selected_rows_function_set: selected_rows_function = a_function
-		end
-
-	enable_default_tree_navigation_behavior (a_expand, a_expand_recursive, a_collapse, a_collapse_recursive: BOOLEAN) is
-			-- Enable default tree navigation behavior.
-			-- `a_expand' indicates if expanding a node should be enabled.
-			-- `a_expand_recursive' indicates if expanding a node recursively should be enabled.
-			-- `a_collapse' indicates if collapsing a node should be enabled.
-			-- `a_collapse_recursive' indicates if collapsing a node recursively should be enabled.
-		do
-			if a_expand then
-				if expand_selected_rows_agent = Void then
-					set_expand_selected_rows_agent (agent expand_rows (False))
-				end
-				default_expand_rows_shortcuts.do_all (agent add_key_shortcut (expand_node_action_index, ?))
-			end
-			if a_expand_recursive then
-				if expand_selected_rows_recursive_agent = Void then
-					set_expand_selected_rows_recursive_agent (agent expand_rows (True))
-				end
-				default_expand_rows_recursive_shortcuts.do_all (agent add_key_shortcut (expand_node_recursive_action_index, ?))
-			end
-			if a_collapse then
-				if collapse_selected_rows_agent = Void then
-					set_collapse_selected_rows_agent (agent collapse_rows (False))
-				end
-				default_collapse_rows_shortcuts.do_all (agent add_key_shortcut (collapse_node_action_index, ?))
-			end
-			if a_collapse_recursive then
-				if collapse_selected_rows_recursive_agent = Void then
-					set_collapse_selected_rows_recursive_agent (agent collapse_rows (True))
-				end
-				default_collapse_rows_recursive_shortcuts.do_all (agent add_key_shortcut (collapse_node_recursive_action_index, ?))
 			end
 		end
 
@@ -538,6 +575,10 @@ feature {NONE} -- column resizing impl
 			-- Additional width to add the column's content width during resizing
 			-- for better reading.
 
+	Additional_pixels_for_header_item_width: INTEGER is 20
+			-- Additional width to add the header item's content width during resizing
+			-- for better reading.
+
 	process_columns_auto_resizing is
 		local
 			col: EV_GRID_COLUMN
@@ -582,7 +623,7 @@ feature {NONE} -- column resizing impl
 
 	auto_resized_columns: LINKED_LIST [INTEGER]
 
-feature {NONE} -- Events
+feature {NONE} -- Auto Events
 
 	on_resize_events (ax, ay, aw, ah: INTEGER) is
 		do

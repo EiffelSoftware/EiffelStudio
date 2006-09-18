@@ -6,6 +6,12 @@
 		</option>
 		<precompile name="base_pre" location="$ISE_PRECOMP/base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<cluster name="$root_cluster_name" location="$root_cluster_location"/>
+		<cluster name="$root_cluster_name" location=".\" recursive="true">
+			<file_rule>
+				<exclude>EIFGENs</exclude>
+				<exclude>.svn</exclude>
+				<exclude>.cvs</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

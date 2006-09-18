@@ -25,7 +25,6 @@ feature -- Basic operations
 		do
 			result_id := a_result
 			cwin_end_dialog (item, a_result)
-			destroy_item_from_context (False)
 		end
 
 feature {NONE} -- Implementation
@@ -70,7 +69,7 @@ feature {NONE} -- Externals
 			-- SDK DialogBox
 		external
 			"C [macro <wel.h>] (HINSTANCE, LPCTSTR, HWND, %
-				%DLGPROC): EIF_INTEGER"
+				%DLGPROC): INT_PTR"
 		alias
 			"DialogBox"
 		end
@@ -78,7 +77,7 @@ feature {NONE} -- Externals
 	cwin_end_dialog (hwnd: POINTER; a_result: INTEGER) is
 			-- SDK EndDialog
 		external
-			"C [macro <wel.h>] (HWND, int)"
+			"C [macro <wel.h>] (HWND, INT_PTR)"
 		alias
 			"EndDialog"
 		end

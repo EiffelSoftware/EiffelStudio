@@ -42,39 +42,16 @@ feature -- Initialization
 			not_built: not is_built
 		local
 			l_ast: CLASS_AS
-			l_emitter: IL_EMITTER
-			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING_8]
-			l_assembly: CONF_ASSEMBLY
-			l_path: STRING
 		do
 				-- Initialize `external_class' which will be used later by
 				-- `initialize_from_xml_data', then it is discarded to save
 				-- some memory as we do not use it anymore.
 			external_class := lace_class.external_consumed_type
 			if external_class = Void and then assembly.is_partially_consumed then
-				degree_output.put_string ("   Consuming required auxiliary assembly...")
-
 					-- No class, try consume assembly
-				create l_path.make (256)
-				l_path.append (assembly.location.evaluated_path)
-				l_assemblies := universe.target.all_assemblies
-				if l_assemblies /= Void then
-						-- Note: All system assemblies are required because they are needed by the consumer
-						-- to resolve dependencies.
-					from l_assemblies.start until l_assemblies.after loop
-						l_assembly := l_assemblies.item_for_iteration
-						if not l_assembly.is_dependency then
-							l_path.append_character (';')
-							l_path.append (l_assembly.location.evaluated_path)
-						end
-						l_assemblies.forth
-					end
-					if not l_path.is_empty then
-						create l_emitter.make (system.metadata_cache_path, system.clr_runtime_version)
-						l_emitter.consume_assembly_from_path (l_path)
-						l_emitter.unload
-					end
-				end
+				fully_consume_assembly
+				
+					-- Now try retrieve class.
 				external_class := lace_class.external_consumed_type
 			end
 
@@ -1509,6 +1486,64 @@ feature {NONE} -- Implementation
 	prefix_infix_names: PREFIX_INFIX_NAMES is
 		once
 			create Result
+		end
+
+	fully_consume_assembly is
+			-- Fully consumes external class' assembly
+		require
+			assembly_attached: assembly /= Void
+			assembly_is_partially_consumed: assembly.is_partially_consumed
+		local
+			l_emitter: IL_EMITTER
+			l_man: CONF_CONSUMER_MANAGER
+			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING_8]
+			l_assembly: CONF_ASSEMBLY
+			l_path: STRING
+			l_asm: STRING
+			l_key: STRING
+		do
+				-- Create message
+			create l_asm.make (128)
+			l_asm.append (assembly.assembly_name)
+			l_asm.append (once ", Version=")
+			l_asm.append (assembly.assembly_version)
+			l_asm.append (once ", Culture=")
+			l_asm.append (assembly.assembly_culture)
+			l_key := assembly.assembly_public_key_token
+			l_asm.append (once ", PublicKeyToken=")
+			if l_key /= Void and then not l_key.is_empty then
+				l_asm.append (l_key)
+			else
+				l_asm.append ("null")
+			end
+			degree_output.put_string ("   Consuming required assembly '" + l_asm + "'...")
+
+
+			create l_path.make (256)
+
+			l_assemblies := universe.target.all_assemblies
+			if l_assemblies /= Void then
+					-- Note: All system assemblies are required because they are needed by the consumer
+					-- to resolve dependencies.
+				from l_assemblies.start until l_assemblies.after loop
+					l_assembly := l_assemblies.item_for_iteration
+					if not l_assembly.is_dependency then
+						l_path.append_character (';')
+						l_path.append (l_assembly.location.evaluated_path)
+					end
+					l_assemblies.forth
+				end
+				if not l_path.is_empty then
+					create l_emitter.make (system.metadata_cache_path, system.clr_runtime_version)
+					l_emitter.consume_assembly_from_path (assembly.location.evaluated_path, False, l_path)
+					create l_man.make (create {CONF_COMP_FACTORY}, system.metadata_cache_path, system.clr_runtime_version, create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default)
+					l_man.rebuild_classes (assembly, assembly.dotnet_classes)
+					assembly.set_is_partially_consumed (False)
+					l_emitter.unload
+				end
+			end
+		ensure
+			not_assembly_is_partially_consumed: not assembly.is_partially_consumed
 		end
 
 invariant

@@ -66,6 +66,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -114,6 +119,32 @@ feature -- Settings
 		do
 			ev_application.do_once_on_idle (
 				agent (window_manager.last_focused_development_window.melt_project_cmd).execute)
+		end
+
+	launch_precompile_process (a_command: STRING) is
+			-- Launch precompile process `a_command'.
+		local
+			l_prc_factory: PROCESS_FACTORY
+			l_prc_launcher: PROCESS
+			l_dialog: EB_EXTERNAL_OUTPUT_DIALOG
+		do
+			create l_prc_factory
+			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (a_command, Void)
+			l_prc_launcher.set_separate_console (False)
+			create l_dialog
+			l_dialog.set_title ("Precompilation Progress")
+			l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING; a_dialog: EB_EXTERNAL_OUTPUT_DIALOG)
+				do
+					ev_application.do_once_on_idle (agent a_dialog.append_text (a_string))
+				end (?, l_dialog))
+			l_prc_launcher.redirect_error_to_same_as_output
+			l_prc_launcher.set_on_exit_handler (agent l_dialog.hide)
+			l_prc_launcher.set_on_terminate_handler (agent l_dialog.hide)
+			l_prc_launcher.launch
+			if l_prc_launcher.launched then
+				l_dialog.show_modal_to_window (parent_window)
+				is_precompilation_error := l_prc_launcher.exit_code /= 0
+			end
 		end
 
 	open_project (in_new_studio: BOOLEAN) is

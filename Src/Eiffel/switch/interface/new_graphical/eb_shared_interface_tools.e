@@ -17,13 +17,6 @@ inherit
 
 feature -- Access
 
-	progress_dialog: EB_PROGRESS_DIALOG is
-			-- Progress dialog associated with the project.
-			-- It can be a graphical one or a text mode one.
-		do
-			Result := progress_dialog_cell.item
-		end
-
 	has_modified_classes: BOOLEAN is
 			-- Are there unsaved class texts in the interface?
 		do
@@ -56,25 +49,6 @@ feature {NONE} -- Element change
 			-- Set `a_recent_projects_manager' as Recent projects manager for $EiffelGraphicalCompiler$
 		do
 			Recent_projects_manager_cell.put (a_recent_projects_manager)
-		end
-
-	set_degree_output (a_progress_dialog: DEGREE_OUTPUT) is
-			-- Set `progress_dialog' to `a_progress_dialog'.
-			-- Set also `Eiffel_project' progress_dialog which needs to know
-			-- that we changed the kind of `progress_dialog'.
-		do
-			Eiffel_project.set_degree_output (a_progress_dialog)
-
-				-- If `process_dialog' is a graphical dialog then
-				-- Its parent has been specified.
-		end
-
-	set_progress_dialog (a_progress_dialog: EB_PROGRESS_DIALOG) is
-			-- Set `progress_dialog' to `a_progress_dialog'.
-			-- Set also `Eiffel_project' progress_dialog which needs to know
-			-- that we changed the kind of `progress_dialog'.
-		do
-			progress_dialog_cell.put (a_progress_dialog)
 		end
 
 feature {NONE} -- Shared tools access

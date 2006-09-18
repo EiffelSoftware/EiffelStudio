@@ -619,8 +619,6 @@ feature {NONE} -- Settings
 		require
 			a_precompile_not_void: a_precompile /= Void
 		local
-			l_prc_factory: PROCESS_FACTORY
-			l_prc_launcher: PROCESS
 			l_cmd: STRING
 			l_mdcp: STRING
 			l_target: CONF_TARGET
@@ -648,15 +646,14 @@ feature {NONE} -- Settings
 			if a_precompile.eifgens_location /= Void then
 				l_cmd.append (" -project_path "+a_precompile.eifgens_location.evaluated_path)
 			end
+			launch_precompile_process (l_cmd)
+		end
 
-			create l_prc_factory
-			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, Void)
-			l_prc_launcher.set_separate_console (is_gui)
-			l_prc_launcher.launch
-			if l_prc_launcher.launched then
-				l_prc_launcher.wait_for_exit
-				is_precompilation_error := l_prc_launcher.exit_code /= 0
-			end
+	launch_precompile_process (a_command: STRING) is
+			-- Launch precompile process `a_command'.
+		require
+			a_command_ok: a_command /= Void and then not a_command.is_empty
+		deferred
 		end
 
 	find_target_name (a_proposed_target: STRING; a_targets: HASH_TABLE [CONF_TARGET, STRING]) is

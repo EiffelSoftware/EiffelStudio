@@ -806,7 +806,9 @@ feature {NONE} -- Implementation
 			loop
 				Result.append (a_string.substring (prv_index, amp_index - 1))
 				prv_index := amp_index + 1
-				amp_index := a_string.index_of ('&', prv_index)
+					-- We search at `prv_index + 1' so that double ampersands are indeed
+					-- replaced by a single ampersand.
+				amp_index := a_string.index_of ('&', prv_index + 1)
 			end
 			Result.append (a_string.substring (prv_index, a_string.count))
 		end

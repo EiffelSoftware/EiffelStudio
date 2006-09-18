@@ -287,6 +287,14 @@ feature -- Resizing
 			end
 		end
 
+	safe_resize_column_to_content (col: EV_GRID_COLUMN; include_header_text, only_visible_part: BOOLEAN) is
+			-- similar to resize_column_to_content but check input first
+		do
+			if col /= Void and row_count > 0 then
+				safe_resize_column_to_content (col, include_header_text, only_visible_part)
+			end
+		end
+
 feature -- Header menu
 
 	header_menu_on_column (col: EV_GRID_COLUMN): EV_MENU is
@@ -326,10 +334,10 @@ feature -- Header menu
 				Result.extend (mci)
 				Result.extend (create {EV_MENU_SEPARATOR})
 				create mi.make_with_text ("Resize to content")
-				mi.select_actions.extend (agent resize_column_to_content (col, False, False))
+				mi.select_actions.extend (agent safe_resize_column_to_content (col, False, False))
 				Result.extend (mi)
 				create mi.make_with_text ("Resize to visible content")
-				mi.select_actions.extend (agent resize_column_to_content (col, False, True))
+				mi.select_actions.extend (agent safe_resize_column_to_content (col, False, True))
 				Result.extend (mi)
 			end
 

@@ -143,7 +143,7 @@ feature -- Basic operation
 			implementation.scroll_to_line (i)
 		end
 
-	scroll_to_end (i: INTEGER) is
+	scroll_to_end is
 			-- Ensure that the last line is visible in `Current'.
 		require
 			not_destroyed: not is_destroyed

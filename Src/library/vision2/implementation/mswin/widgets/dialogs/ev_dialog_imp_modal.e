@@ -85,7 +85,6 @@ feature {NONE} -- Implementation
 		do
 			result_id := a_result
 			cwin_end_dialog (wel_item, a_result)
-			destroy_item_from_context (False)
 		end
 
 feature {NONE} -- Implementation
@@ -94,7 +93,6 @@ feature {NONE} -- Implementation
 			-- Create the dialog
 		local
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
-			return_value: POINTER
 			err: WEL_ERROR
 		do
 				-- Initialise the common controls
@@ -104,18 +102,14 @@ feature {NONE} -- Implementation
 			register_dialog
 
 				-- Launch the right dialog box modal
-			result_id := 0
-			return_value := cwin_dialog_box_indirect (
+			result_id := cwin_dialog_box_indirect (
 				main_args.current_instance.item,
 				dlg_template.item,
 				a_parent.item,
 				cwel_dialog_procedure_address
 				)
 			debug ("VISION2_WINDOWS")
-				if
-					return_value = default_pointer or
-					return_value = cwel_integer_to_pointer (-1)
-				then
+				if result_id = 0 or result_id = -1 then
 					create err
 					err.display_last_error
 				end
@@ -130,7 +124,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	cwin_dialog_box_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): POINTER is
+	cwin_dialog_box_indirect (hinst, lptemplate, hparent, dlgprc: POINTER): INTEGER is
 				-- SDK DialogBoxIndirect
 			external
 				"C [macro <wel.h>] (HINSTANCE, LPCDLGTEMPLATE, HWND, DLGPROC): INT_PTR"
@@ -141,7 +135,7 @@ feature {NONE} -- Externals
 	cwin_end_dialog (hwnd: POINTER; a_result: INTEGER) is
 			-- SDK EndDialog
 		external
-			"C [macro <wel.h>] (HWND, int)"
+			"C [macro <wel.h>] (HWND, INT_PTR)"
 		alias
 			"EndDialog"
 		end

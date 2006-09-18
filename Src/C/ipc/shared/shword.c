@@ -46,6 +46,7 @@
 #include "eif_logfile.h"
 #include "shword.h"
 #include <string.h>
+#include <stdio.h>
 
 #define ARGV_NUMBER		5		/* Initial number of arguments expected */
 #define ARGV_INCREASE	10		/* Amount by which argument array increases */
@@ -181,10 +182,13 @@ rt_public char **shword(char *cmd)
 
 	int in_simple = 0;			/* Not in simple quotes */
 	int in_quote = 0;			/* Not in double quotes */
+	int was_closing_quote = 0;			/* Just closed a simple or double quoting */
 	int was_backslash = 0;		/* Previous character was a backslash */
 	char word[MAX_WORD_SIZE];	/* Where word is collected */
 	int pos;					/* Position within word[] buffer */
 	char c;						/* Current character */
+
+	fprintf(stderr,"dbg shword : cmd=%s\n", cmd);
 
 	if (-1 == init_argv())		/* Initialize array storing collected words */
 		return (char **) 0;		/* Cannot get a valid argv[] array */
@@ -202,6 +206,7 @@ rt_public char **shword(char *cmd)
 			}
 			if (c == '\'') {			/* Reached end of quoted string? */
 				in_simple = 0;
+				was_closing_quote = 1;
 				continue;				/* The ' is swallowed */
 			}
 		} else if (in_quote) {			/* In double quote */
@@ -212,6 +217,7 @@ rt_public char **shword(char *cmd)
 			}
 			if (c == '"') {				/* Un-escaped quote */
 				in_quote = 0;			/* Marks the end of the quoted string */
+				was_closing_quote = 1;
 				continue;				/* The " is swallowed */
 			}
 		}
@@ -239,17 +245,21 @@ rt_public char **shword(char *cmd)
 #endif
 			break;
 		default:
-			if (in_simple || in_quote)
+			if (in_simple || in_quote) {
 				word[pos++] = c;
-			else if (is_separator(c)) {	/* Reached the end of a word */
-				if (pos > 0) {			/* Adjacent separators are skipped */
+			} else if (is_separator(c)) {	/* Reached the end of a word */
+				if (pos > 0 || was_closing_quote) {			/* Adjacent separators are skipped */
 					word[pos] = '\0';	/* Ensure it forms a string */
+					fprintf(stderr, "dbg shword : add_argv -> %s \n", word);
 					add_argv(word);		/* Record word */
 					pos = 0;			/* Ready for next word */
+					was_closing_quote = 0;
 				}
 			} else
 				word[pos++] = c;		/* Record character */
 		}
+		was_closing_quote = 0;	/* The line is not reached when 'continue' is called,
+					   then reset `was_closing_quote' */
 	}
 
 	if (pos > 0) {				/* Record last word, if any */

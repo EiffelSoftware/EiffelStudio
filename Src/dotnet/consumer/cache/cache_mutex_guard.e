@@ -5,10 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CACHE_MUTEX_GUARD
 
 inherit
+	SYSTEM_OBJECT
+	
 	CACHE_SETTINGS
 		export
 			{NONE} all

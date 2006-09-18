@@ -5,10 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CACHE_WRITER
 
 inherit
+	SYSTEM_OBJECT
+	
 	CALLBACK_INTERFACE
 
 	CACHE_ERRORS
@@ -281,7 +283,7 @@ feature -- Basic Operations
 						l_assembly := assembly_loader.load (l_name)
 						if l_assembly /= Void and then not a_processed.has (l_assembly.location) and then not (l_reader.is_assembly_in_cache (l_assembly.location, True) or else cache_reader.is_assembly_stale (l_assembly.location)) then
 								-- Adds only lookup info
-							add_assembly_ex (l_assembly.location, a_other_assemblies = Void or else not a_other_assemblies.has (l_assembly.location.to_lower), a_other_assemblies, a_processed)
+							add_assembly_ex (l_assembly.location, a_info_only or else (a_other_assemblies = Void or else not a_other_assemblies.has (l_assembly.location.to_lower)), a_other_assemblies, a_processed)
 							l_assembly_info_updated := True
 						end
 						i := i + 1

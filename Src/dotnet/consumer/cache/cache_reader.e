@@ -9,6 +9,8 @@ class
 	CACHE_READER
 
 inherit
+	SYSTEM_OBJECT
+
 	CACHE_PATH
 		export
 			{ANY} all

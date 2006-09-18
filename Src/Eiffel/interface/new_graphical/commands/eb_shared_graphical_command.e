@@ -69,6 +69,13 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	Discover_melt_cmd: EB_DISCOVER_AND_MELT_COMMAND is
+			-- Command to find unreferenced externally added classes and recompile.
+		once
+			create Result.make
+			Result.disable_sensitive
+		end
+
 	Melt_project_cmd: EB_MELT_PROJECT_COMMAND is
 			-- Command to melt a system.
 		once

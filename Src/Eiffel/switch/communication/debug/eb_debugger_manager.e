@@ -1376,6 +1376,7 @@ feature {NONE} -- Implementation
 			run_finalized_cmd.enable_sensitive
 			toolbarable_commands.extend (run_finalized_cmd)
 			toolbarable_commands.extend (override_scan_cmd)
+			toolbarable_commands.extend (discover_melt_cmd)
 
 				-- Disable commands if no project is loaded
 			if not Eiffel_project.manager.is_project_loaded then

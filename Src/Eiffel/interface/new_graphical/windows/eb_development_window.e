@@ -1759,6 +1759,11 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
 
+				-- Discover melt
+			command_menu_item := discover_melt_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			project_menu.extend (command_menu_item)
+
 				-- Override scan
 			command_menu_item := override_scan_cmd.new_menu_item
 			add_recyclable (command_menu_item)

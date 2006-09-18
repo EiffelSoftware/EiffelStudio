@@ -46,7 +46,6 @@
 #include "eif_logfile.h"
 #include "shword.h"
 #include <string.h>
-#include <stdio.h>
 
 #define ARGV_NUMBER		5		/* Initial number of arguments expected */
 #define ARGV_INCREASE	10		/* Amount by which argument array increases */
@@ -188,8 +187,6 @@ rt_public char **shword(char *cmd)
 	int pos;					/* Position within word[] buffer */
 	char c;						/* Current character */
 
-	fprintf(stderr,"dbg shword : cmd=%s\n", cmd);
-
 	if (-1 == init_argv())		/* Initialize array storing collected words */
 		return (char **) 0;		/* Cannot get a valid argv[] array */
 
@@ -250,7 +247,6 @@ rt_public char **shword(char *cmd)
 			} else if (is_separator(c)) {	/* Reached the end of a word */
 				if (pos > 0 || was_closing_quote) {			/* Adjacent separators are skipped */
 					word[pos] = '\0';	/* Ensure it forms a string */
-					fprintf(stderr, "dbg shword : add_argv -> %s \n", word);
 					add_argv(word);		/* Record word */
 					pos = 0;			/* Ready for next word */
 					was_closing_quote = 0;

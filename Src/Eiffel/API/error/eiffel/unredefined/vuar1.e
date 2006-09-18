@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Error for calling a feature with the wrong number of arguments."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VUAR1 
+class VUAR1
 
 inherit
 
@@ -21,6 +21,8 @@ feature -- Properties
 	subcode: INTEGER is 1;
 
 	argument_count: INTEGER;
+
+	formal_count: INTEGER;
 
 	called_local: STRING;
 
@@ -45,7 +47,7 @@ feature -- Output
 				a_text_formatter.add ("Number of actuals: ");
 				a_text_formatter.add_int (argument_count);
 				a_text_formatter.add (" Number of formals: ");
-				a_text_formatter.add_int (called_feature.argument_count);
+				a_text_formatter.add_int (formal_count);
 			elseif called_local /= Void then
 				a_text_formatter.add ("Local variable name: ");
 				a_text_formatter.add (called_local);
@@ -61,6 +63,11 @@ feature {COMPILER_EXPORTER} -- Setting
 	set_argument_count (i: INTEGER) is
 		do
 			argument_count := i
+		end;
+
+	set_formal_count(i: INTEGER) is
+		do
+			formal_count := i
 		end;
 
 	set_local_name (s: STRING) is

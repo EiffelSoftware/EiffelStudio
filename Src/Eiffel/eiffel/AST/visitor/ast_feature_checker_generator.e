@@ -1087,6 +1087,7 @@ feature -- Implementation
 						context.init_error (l_vuar1)
 						l_vuar1.set_called_feature (l_feature, l_last_id)
 						l_vuar1.set_argument_count (l_actual_count)
+						l_vuar1.set_formal_count (l_feature.argument_count)
 						l_vuar1.set_location (l_feature_name)
 						error_handler.insert_error (l_vuar1)
 							-- Cannot go on here: too dangerous

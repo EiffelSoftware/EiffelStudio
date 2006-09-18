@@ -370,7 +370,7 @@ feature -- Basic operation
 	scroll_to_end is
 			-- Scroll the console to the bottom.
 		do
-			output_text.scroll_to_line (output_text.line_count)
+			output_text.scroll_to_end
 		end
 
 	set_focus is

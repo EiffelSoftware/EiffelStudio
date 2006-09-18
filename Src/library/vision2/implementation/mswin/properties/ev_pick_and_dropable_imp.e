@@ -652,6 +652,10 @@ feature {EV_ANY_I} -- Implementation
 			inspect application_imp.capture_type
 			when {EV_APPLICATION_IMP}.Capture_heavy then
 				set_heavy_capture
+				if not has_heavy_capture then
+						-- If wel_hook.dll is not available the we fallback to an application wide capture.
+					set_capture
+				end
 			when {EV_APPLICATION_IMP}.Capture_normal then
 				set_capture
 			end
@@ -662,7 +666,11 @@ feature {EV_ANY_I} -- Implementation
 		do
 			inspect application_imp.capture_type
 			when {EV_APPLICATION_IMP}.Capture_heavy then
-				release_heavy_capture
+				if has_heavy_capture then
+					release_heavy_capture
+				else
+					release_capture
+				end
 			when {EV_APPLICATION_IMP}.Capture_normal then
 				release_capture
 			end
@@ -681,6 +689,10 @@ feature {EV_ANY_I} -- Implementation
 			-- recursively checks the parents of `Currents'.
 
 	set_heavy_capture is
+		deferred
+		end
+
+	has_heavy_capture: BOOLEAN is
 		deferred
 		end
 

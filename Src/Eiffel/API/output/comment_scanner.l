@@ -22,17 +22,16 @@ create
 %option nodefault
 
 D		[0-9]
-H		([0-9]|[A-F]|[a-f])
-A		([a-z]|[A-Z])
-X		([a-z]|[A-Z]|[0-9]|_)
+H		[0-9a-zA-Z]
+A		[a-zA-Z]
+X		[a-zA-Z0-9_]
 C		([^ \t\r\n])
 CM		([^ \t\r\n\.])
 CS		([^ \t\r\n\.\{\}\[\]`\'])
-S		(\{[A-Z]([A-Z]|_|{D})*\})
 EMAIL	{A}{CM}*{H}@{H}{CM}*(\.{CM}+)*
 URL		((www\.)|(https{0,1}:\/\/)|(ftp:\/\/)|(file:\/\/)){C}*
 FEATURE	(`[^`']+?\')
-CLASS	\{[A-Z]([A-Z]|{D}|_)*\}
+CLASS	\{{A}{X}*\}
 CLUSTER \[{C}+\]
 
 %%

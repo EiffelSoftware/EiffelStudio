@@ -137,6 +137,7 @@ feature {NONE} -- Implementation
 			l_text := text
 			l_feat_name := l_text.twin
 			l_feat_name.keep_tail (l_text.count - 1)
+			l_feat_name.to_lower
 			l_feat := feature_by_name (l_feat_name)
 			if l_feat /= Void then
 				text_formatter.process_symbol_text (ti_dot)
@@ -168,12 +169,16 @@ feature {NONE} -- Implementation
 			if current_class /= Void then
 				last_type := current_class.actual_type
 			end
-			l_feat := feature_by_name (l_feat_name)
+			l_feat := feature_by_name (l_feat_name.as_lower)
 				-- We try infix and prefix
 			if l_feat = Void then
 				add_text (l_text, True)
 			else
-				l_feat.append_name (text_formatter)
+				if last_is_alias then
+					l_feat.append_full_name (text_formatter)
+				else
+					l_feat.append_name (text_formatter)
+				end
 			end
 		end
 
@@ -193,6 +198,7 @@ feature {NONE} -- Implementation
 			else
 				l_class_name := l_text.substring (2, l_text.count - 3)
 			end
+			l_class_name.to_upper
 			l_class := class_by_name (l_class_name)
 			if l_class /= Void then
 				if a_with_brace then
@@ -341,14 +347,34 @@ feature {NONE} -- Helpers
 			-- Return feature in current class with `name'. `Void' if not in system.
 		local
 			cc: CLASS_C
+			l_feature_i: FEATURE_I
+			l_f_table: FEATURE_TABLE
 		do
+			last_is_alias := False
 			if last_type /= Void then
 				cc := last_type.associated_class
 			end
 			if cc /= Void then
-				Result := cc.feature_with_name (name)
+				if not name.is_empty and then cc.has_feature_table then
+					l_f_table := cc.feature_table
+					if l_f_table.is_mangled_alias_name (name) then
+							-- Lookup for alias feature
+						l_feature_i := l_f_table.alias_item (name)
+						last_is_alias := l_feature_i /= Void
+					else
+							-- Lookup for identifier feature
+						l_feature_i := l_f_table.item (name)
+						last_is_alias := False
+					end
+					if l_feature_i /= Void then
+						Result := l_feature_i.api_feature (cc.class_id)
+					end
+				end
 			end
 		end
+
+	last_is_alias: BOOLEAN;
+			-- Is last feature by `feature_by_name' an alias?
 
 invariant
 	invariant_clause: True -- Your invariant here

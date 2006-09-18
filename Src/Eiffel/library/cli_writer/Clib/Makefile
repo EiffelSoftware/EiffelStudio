@@ -42,7 +42,7 @@ cli_debugger_callback.obj:  cli_debugger_callback.cpp cli_debugger_callback.h Ma
 cli_debugger_callback_id.obj:  cli_debugger_callback_id.cpp cli_debugger_callback_id.h Makefile
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger_callback_id.cpp
 
-OBJ_WRITER = cli_writer.obj ise_vs_fusion_support.obj metadata_consumer.obj
+OBJ_WRITER = cli_writer.obj metadata_consumer.obj
 OBJ_DEBUGGER = cli_debugger.obj cli_debugger_callback.obj cli_debugger_callback_id.obj cli_debugger_utils.obj
 
 cli_writer.lib: $(OBJ_WRITER)

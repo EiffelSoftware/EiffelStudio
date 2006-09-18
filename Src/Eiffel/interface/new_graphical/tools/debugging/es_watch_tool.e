@@ -689,13 +689,19 @@ feature {NONE} -- Event handling
 		end
 
 	remove_expression_row (row: EV_GRID_ROW) is
+		require
+			row_not_void: row /= Void
 		local
 			l_item: like watched_item_from
 		do
 			l_item ?= watched_item_from (row)
-			watched_items.prune_all (l_item)
-			watches_grid.row (row.index).clear
-			watches_grid.remove_row (row.index)
+			if l_item /= Void then
+				l_item.unattach
+				watched_items.prune_all (l_item)
+			end
+--| bug#11272 : using the next line raises display issue:
+--|			watches_grid.remove_row (row.index)
+			watches_grid.remove_rows (row.index, row.index + row.subrow_count_recursive)
 		end
 
 	on_element_drop (s: CLASSC_STONE) is
@@ -1230,6 +1236,8 @@ feature {NONE} -- Implementation
 		end
 
 	watched_item_from (row: EV_GRID_ROW): ES_OBJECTS_GRID_EXPRESSION_LINE is
+		require
+			row_not_void: row /= Void
 		local
 			ctlr: ES_GRID_ROW_CONTROLLER
 		do

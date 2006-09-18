@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CACHE_MANAGER
 
 inherit
@@ -86,7 +86,7 @@ feature -- Access
 
 feature -- Basic Oprtations
 
-	consume_assembly (a_name, a_version, a_culture, a_key: STRING) is
+	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN) is
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -106,7 +106,7 @@ feature -- Basic Oprtations
 				l_resolver.add_resolve_path_from_file_name (l_assembly.location)
 				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 				assembly_loader.set_resolver (l_resolver)
-				add_assembly_to_eac (l_assembly.location)
+				cache_writer.add_assembly_ex (l_assembly.location, a_info_only, Void, create {ARRAYED_LIST [STRING]}.make (0))
 				assembly_loader.set_resolver (Void)
 				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
 			end
@@ -114,7 +114,7 @@ feature -- Basic Oprtations
 			successful: is_successful
 		end
 
-	consume_assembly_from_path (a_path: STRING) is
+	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: STRING) is
 			-- Consume assembly located `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -123,13 +123,25 @@ feature -- Basic Oprtations
 			l_paths: LIST [STRING]
 			l_resolver: CONSUMER_AGUMENTED_RESOLVER
 			l_processed: ARRAYED_LIST [STRING]
+			l_refs: LIST [STRING]
+			l_files: ARRAYED_LIST [STRING]
 		do
 			is_successful := True
 			last_error_message := ""
 
 			l_paths := a_path.split (';')
 			l_paths.compare_objects
-			create l_resolver.make (l_paths)
+
+			create l_files.make (30)
+			l_files.append (l_paths)
+
+			if a_references /= Void then
+					-- For now, references are file references!
+				l_refs := a_references.split (';')
+				l_files.append (l_refs)
+			end
+
+			create l_resolver.make (l_files)
 			l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
 			resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 
@@ -143,7 +155,7 @@ feature -- Basic Oprtations
 			loop
 				l_resolver.add_resolve_path_from_file_name (l_paths.item)
 				assembly_loader.set_resolver (l_resolver)
-				cache_writer.add_assembly_ex (l_paths.item, False, l_paths, l_processed)
+				cache_writer.add_assembly_ex (l_paths.item, a_info_only, l_paths, l_processed)
 				assembly_loader.set_resolver (Void)
 				l_resolver.remove_resolve_path_from_file_name (l_paths.item)
 				l_paths.forth

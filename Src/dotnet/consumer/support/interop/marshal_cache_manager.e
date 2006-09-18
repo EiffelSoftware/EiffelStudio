@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	MARSHAL_CACHE_MANAGER
 
 inherit
@@ -36,12 +36,10 @@ feature -- Access
 
 feature -- Basic Exportations
 
-	initialize (a_clr_version: SYSTEM_STRING) is
+	initialize is
 			-- initialize the object using default path to EAC
 		require
 			not_already_initialized: not is_initialized
-			not_void_clr_version: a_clr_version /= Void
-			valid_clr_version: a_clr_version.length > 0
 		do
 			create implementation.make
 			internal_is_initialized := True
@@ -49,17 +47,12 @@ feature -- Basic Exportations
 			current_initialized: is_initialized
 		end
 
-	initialize_with_path (a_path, a_clr_version: SYSTEM_STRING) is
+	initialize_with_path (a_path: SYSTEM_STRING) is
 			-- initialize object with path to specific EAC and initializes it if not already done.
 		require
 			not_already_initialized: not is_initialized
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
-			not_void_clr_version: a_clr_version /= Void
-			valid_clr_version: a_clr_version.length > 0
-			path_exists: (create {DIRECTORY}.make (create {STRING}.make_from_cil (a_path))).exists
-		local
-			cr: CACHE_READER
 		do
 			create implementation.make_with_path (a_path)
 			internal_is_initialized := True
@@ -67,7 +60,7 @@ feature -- Basic Exportations
 			current_initialized: is_initialized
 		end
 
-	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING) is
+	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING; a_info_only: BOOLEAN) is
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -75,78 +68,17 @@ feature -- Basic Exportations
 			non_void_name: a_name /= Void
 			valid_name: a_name.length > 0
 		do
-			implementation.consume_assembly (a_name, a_version, a_culture, a_key)
+			implementation.consume_assembly (a_name, a_version, a_culture, a_key, a_info_only)
 		end
 
-	consume_assembly_from_path (a_path: SYSTEM_STRING) is
+	consume_assembly_from_path (a_path: SYSTEM_STRING; a_info_only: BOOLEAN; a_references: SYSTEM_STRING) is
 			-- Consume assembly located `a_path'
 		require
 			current_initialized: is_initialized
 			non_void_path: a_path /= Void
 			valid_path: a_path.length > 0
 		do
-			implementation.consume_assembly_from_path (a_path)
-		end
-
-	relative_folder_name (a_name, a_version, a_culture, a_key: SYSTEM_STRING): SYSTEM_STRING is
-			-- returns the relative path to an assembly using at least `a_name'
-		require
-			current_initialized: is_initialized
-			non_void_name: a_name /= Void
-			valid_name: a_name.length > 0
-		do
-			Result := implementation.relative_folder_name (a_name, a_version, a_culture, a_key)
-		ensure
-			non_void_result: Result /= Void
-			non_empty_result: Result.length > 0
-		end
-
-	relative_folder_name_from_path (a_path: SYSTEM_STRING): SYSTEM_STRING is
-			-- Relative path to consumed assembly metadata given `a_path'
-		require
-			current_initialized: is_initialized
-			non_void_path: a_path /= Void
-			valid_path: a_path.length > 0
-			path_exists: (create {FILE_INFO}.make (a_path)).exists
-		do
-			Result := implementation.relative_folder_name_from_path (a_path)
-		ensure
-			non_void_result: Result /= Void
-			valid_result: Result.length > 0
-		end
-
-	assembly_info_from_path (a_path: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
-			-- retrieve a local assembly's information
-		require
-			current_initialized: is_initialized
-			non_void_path: a_path /= Void
-			valid_path: a_path.length > 0
-		local
-			l_ca: CONSUMED_ASSEMBLY
-		do
-			l_ca := implementation.assembly_info_from_path (a_path)
-			if l_ca /= Void then
-				create Result.make (l_ca)
-			end
-		end
-
-	assembly_info (a_name: SYSTEM_STRING; a_version: SYSTEM_STRING; a_culture: SYSTEM_STRING; a_key: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
-			-- retrieve a assembly's information
-		require
-			current_initialized: is_initialized
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: a_name.length > 0
-			a_version_attached: a_version /= Void
-			not_a_version_is_empty: a_version.length > 0
-			not_a_cultureis_empty: a_culture /= Void implies a_culture.length > 0
-			not_a_name_is_empty: a_key /= Void implies a_key.length > 0
-		local
-			l_ca: CONSUMED_ASSEMBLY
-		do
-			l_ca := implementation.assembly_info (a_name, a_version, a_culture, a_key)
-			if l_ca /= Void then
-				create Result.make (l_ca)
-			end
+			implementation.consume_assembly_from_path (a_path, a_info_only, a_references)
 		end
 
 	prepare_for_unload is

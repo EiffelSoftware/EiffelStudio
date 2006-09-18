@@ -143,6 +143,14 @@ feature -- Basic operation
 			implementation.scroll_to_line (i)
 		end
 
+	scroll_to_end (i: INTEGER) is
+			-- Ensure that the last line is visible in `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.scroll_to_end
+		end
+
 	search (str: STRING_GENERAL; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.

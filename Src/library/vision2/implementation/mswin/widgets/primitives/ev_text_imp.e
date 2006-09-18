@@ -439,6 +439,12 @@ feature -- Basic operation
 			scroll (0, i - first_visible_line - 1)
 		end
 
+	scroll_to_end is
+			-- Ensure that the last line is visible in `Current'.
+		do
+			scroll_to_line (line_count)
+		end
+
 feature {NONE} -- Implementation
 
 	convert_string (a_string: STRING_GENERAL): STRING_32 is

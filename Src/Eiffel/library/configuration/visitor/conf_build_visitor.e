@@ -259,8 +259,10 @@ feature -- Visit nodes
 		ensure then
 			all_assemblies_set: (not is_error and then a_target.application_target = a_target) implies a_target.all_assemblies /= Void
 		rescue
-			l_retried := True
-			retry
+			if equal (tag_name, configuration_error_tag) then
+				l_retried := True
+				retry
+			end
 		end
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is

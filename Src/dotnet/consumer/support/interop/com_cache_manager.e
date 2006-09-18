@@ -4,31 +4,18 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	class_metadata:
+	metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
 		create {CLASS_INTERFACE_ATTRIBUTE}.make ({CLASS_INTERFACE_TYPE}.none) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-94DE-490F-AFD8-0B54ACE9702F") end
+		create {GUID_ATTRIBUTE}.make ("E1FFE1AC-0705-465B-9BC4-8428F0B0F96D") end
 
-class
+frozen class
 	COM_CACHE_MANAGER
 
 inherit
+	SYSTEM_OBJECT
+
 	I_COM_CACHE_MANAGER
-		redefine
-			initialize,
-			initialize_with_path,
-			unload,
-			consume_assembly,
-			consume_assembly_from_path,
-			relative_folder_name,
-			relative_folder_name_from_path,
-			assembly_info_from_assembly,
-			is_successful,
-			is_initialized,
-			last_error_message,
-			clr_version,
-			eac_path
-		end
 
 	ISPONSOR
 
@@ -48,7 +35,7 @@ feature -- Access
 
 feature -- Basic Exportations
 
-	initialize (a_clr_version: SYSTEM_STRING) is
+	initialize is
 			-- initialize the object using default path to EAC
 		local
 			l_sub: AR_RESOLVE_SUBSCRIBER
@@ -58,8 +45,6 @@ feature -- Basic Exportations
 			create l_resolver.make_with_name ("Initializing Resolver")
 			l_sub.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 
-			clr_version := a_clr_version
-
 				-- Turn of all security to prevent any security exceptions
 			{SECURITY_MANAGER}.set_security_enabled (False)
 
@@ -68,7 +53,7 @@ feature -- Basic Exportations
 			{APP_DOMAIN}.current_domain.add_domain_unload (create {EVENT_HANDLER}.make (Current, $on_unload_top_level_domain))
 		end
 
-	initialize_with_path (a_path, a_clr_version: SYSTEM_STRING) is
+	initialize_with_path (a_path: SYSTEM_STRING) is
 			-- initialize object with path to specific EAC and initializes it if not already done.
 		local
 			cr: CACHE_READER
@@ -77,7 +62,7 @@ feature -- Basic Exportations
 			create cr
 			cr.set_internal_eiffel_cache_path (eac_path)
 
-			initialize (a_clr_version)
+			initialize
 			if not cr.is_initialized then
 				(create {EIFFEL_SERIALIZER}).serialize (
 					cr.new_cache_info (cr.absolute_info_path),
@@ -104,75 +89,25 @@ feature -- Basic Exportations
 			end
 		end
 
-	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING) is
+	consume_assembly (a_name, a_version, a_culture, a_key: SYSTEM_STRING; a_info_only: BOOLEAN) is
 			-- consume an assembly using it's display name parts.
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do
 			l_impl := new_marshalled_cache_manager
-			l_impl.consume_assembly (a_name, a_version, a_culture, a_key)
+			l_impl.consume_assembly (a_name, a_version, a_culture, a_key, a_info_only)
 			update_current (l_impl)
 		end
 
-	consume_assembly_from_path (a_path: SYSTEM_STRING) is
+	consume_assembly_from_path (a_path: SYSTEM_STRING; a_info_only: BOOLEAN; a_references: SYSTEM_STRING) is
 			-- Consume assembly located `a_path'
 		local
 			l_impl: MARSHAL_CACHE_MANAGER
 		do
 			l_impl := new_marshalled_cache_manager
-			l_impl.consume_assembly_from_path (a_path)
+			l_impl.consume_assembly_from_path (a_path, a_info_only, a_references)
 			update_current (l_impl)
-		end
-
-	relative_folder_name (a_name, a_version, a_culture, a_key: SYSTEM_STRING): SYSTEM_STRING is
-			-- returns the relative path to an assembly using at least `a_name'
-		local
-			l_impl: MARSHAL_CACHE_MANAGER
-		do
-			l_impl := new_marshalled_cache_manager
-			Result := l_impl.relative_folder_name (a_name, a_version, a_culture, a_key)
-
-			update_current (l_impl)
-		end
-
-	relative_folder_name_from_path (a_path: SYSTEM_STRING): SYSTEM_STRING is
-			-- Relative path to consumed assembly metadata given `a_path'
-		local
-			l_impl: MARSHAL_CACHE_MANAGER
-		do
-			l_impl := new_marshalled_cache_manager
-			Result := l_impl.relative_folder_name_from_path (a_path)
-
-			update_current (l_impl)
-		end
-
-	assembly_info_from_assembly (a_path: SYSTEM_STRING): I_COM_ASSEMBLY_INFORMATION is
-			-- retrieve a local assembly's information
-		local
-			l_impl: MARSHAL_CACHE_MANAGER
-		do
-			l_impl := new_marshalled_cache_manager
-			Result := l_impl.assembly_info_from_path (a_path)
-
-			update_current (l_impl)
-			if Result = Void then
-				{ISE_RUNTIME}.raise (create {COM_EXCEPTION}.make ("No assembly found", e_fail_code))
-			end
-		end
-
-	assembly_info (a_name: SYSTEM_STRING; a_version: SYSTEM_STRING; a_culture: SYSTEM_STRING; a_key: SYSTEM_STRING): I_COM_ASSEMBLY_INFORMATION is
-			-- retrieve a assembly's information
-		local
-			l_impl: MARSHAL_CACHE_MANAGER
-		do
-			l_impl := new_marshalled_cache_manager
-			Result := l_impl.assembly_info (a_name, a_version, a_culture, a_key)
-
-			update_current (l_impl)
-			if Result = Void then
-				{ISE_RUNTIME}.raise (create {COM_EXCEPTION}.make ("No assembly found", e_fail_code))
-			end
 		end
 
 feature {NONE} -- Event Handlers
@@ -283,9 +218,9 @@ feature {NONE} -- Implementation
 				l_subscription.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
 
 				if eac_path = Void then
-					l_marshal.initialize (clr_version)
+					l_marshal.initialize
 				else
-					l_marshal.initialize_with_path (eac_path, clr_version)
+					l_marshal.initialize_with_path (eac_path)
 				end
 				if l_marshal.is_initialized then
 					internal_marshalled_cache_manager := Result
@@ -295,12 +230,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			new_cache_manager_not_void: Result /= Void
-		end
-
-	clr_version: SYSTEM_STRING
-			-- Version of CLR used to emit data
-		indexing
-			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
 
 	eac_path: SYSTEM_STRING

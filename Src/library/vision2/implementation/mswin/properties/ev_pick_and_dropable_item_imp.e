@@ -108,6 +108,8 @@ feature -- Access
 	check_drag_and_drop_release (a_x, a_y: INTEGER) is
 			-- End transport if in drag and drop.
 			--| Releasing the left button ends drag and drop.
+		local
+			l_original_top_level_window_imp: like original_top_level_window_imp
 		do
 			original_x := -1
 			original_y := -1
@@ -120,7 +122,10 @@ feature -- Access
 				pnd_original_parent.set_item_source (Void)
 				pnd_original_parent.set_item_source_false
 			else
-				original_top_level_window_imp.move_to_foreground
+				l_original_top_level_window_imp := original_top_level_window_imp
+				if l_original_top_level_window_imp /= Void then
+					l_original_top_level_window_imp.move_to_foreground
+				end
 			end
 		end
 
@@ -157,6 +162,12 @@ feature -- Access
 			-- Works on all windows threads.
 		do
 			pnd_original_parent.set_heavy_capture
+		end
+
+	has_heavy_capture: BOOLEAN is
+			-- Does `parent' have a heavy capture?
+		do
+			Result := pnd_original_parent.has_heavy_capture
 		end
 
 	release_heavy_capture is

@@ -5,10 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	NOTIFY_MESSAGE
 
 inherit
+	SYSTEM_OBJECT
+	
 	NOTIFY_FUNCTIONS
 		export
 			{NONE} all

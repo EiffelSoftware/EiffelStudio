@@ -5,10 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	OVERLOAD_SOLVER
 
 inherit
+	SYSTEM_OBJECT
+	
 	REFLECTION
 
 	NAME_FORMATTER

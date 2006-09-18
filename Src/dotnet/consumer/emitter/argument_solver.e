@@ -9,6 +9,8 @@ class
 	ARGUMENT_SOLVER
 
 inherit
+	SYSTEM_OBJECT
+
 	NAME_FORMATTER
 
 	SHARED_ASSEMBLY_MAPPING
@@ -53,7 +55,7 @@ feature -- Access
 		ensure
 			non_void_arguments: Result /= Void
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

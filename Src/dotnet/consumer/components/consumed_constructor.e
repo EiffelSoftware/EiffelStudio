@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSUMED_CONSTRUCTOR
 
 inherit
@@ -59,13 +59,13 @@ feature -- Access
 
 	is_frozen: BOOLEAN is True
 			-- A constructor cannot be redefined.
-			
+
 	is_constructor: BOOLEAN is True
 			-- A constructor is a constructor.
 
 	dotnet_name: STRING is ".ctor"
 			-- Name of a .NET constructor.
-			
+
 	dotnet_eiffel_name: STRING is "make"
 			-- Eiffelized name of .NET constructor.
 
@@ -91,7 +91,7 @@ feature {NONE} -- Access
 
 	a: like arguments
 			-- Internal data for `arguments'.
-	
+
 	p: like is_public;
 			-- Internal data for `is_public'.
 

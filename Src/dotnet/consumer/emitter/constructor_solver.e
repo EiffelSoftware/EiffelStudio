@@ -5,19 +5,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSTRUCTOR_SOLVER
 
 inherit
 	COMPARABLE
-	
+
 	ARGUMENT_SOLVER
 		rename
 			arguments as solved_arguments
 		undefine
 			is_equal
 		end
-		
+
 	NAME_FORMATTER
 		undefine
 			is_equal
@@ -70,7 +70,7 @@ feature -- Comparison
 		do
 			Result := arguments.count < other.arguments.count
 		end
-		
+
 feature {TYPE_CONSUMER} -- Element settings
 
 	set_name (n: like name) is
@@ -83,7 +83,7 @@ feature {TYPE_CONSUMER} -- Element settings
 		ensure
 			name_set: name = n
 		end
-		
+
 feature {CONSTRUCTOR_SOLVER} -- Implementation
 
 	internal_constructor: CONSTRUCTOR_INFO;

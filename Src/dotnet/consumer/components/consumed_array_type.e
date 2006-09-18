@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSUMED_ARRAY_TYPE
 
 inherit
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			id_set: assembly_id = id
 			element_type_set: element_type = t
 		end
-		
+
 feature -- Access
 
 	element_type: CONSUMED_REFERENCED_TYPE is

@@ -5,12 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	METHOD_SOLVER
 
 inherit
 	COMPARABLE
-	
+
 	NAME_FORMATTER
 		undefine
 			is_equal
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			arguments_set: arguments /= Void
 		end
 
-		
+
 feature -- Access
 
 	dotnet_name: STRING is
@@ -66,7 +66,7 @@ feature -- Access
 		do
 			create Result.make_from_cil (internal_method.name)
 		end
-		
+
 	starting_resolution_name: STRING is
 			-- .NET Name used to perform overloading resolution
 		do
@@ -96,7 +96,7 @@ feature -- Access
 
 	is_get_property: BOOLEAN
 			-- Is getter method of a property?
-		
+
 	is_conversion_operator: BOOLEAN
 			-- Is Current a conversion operator?
 
@@ -122,9 +122,9 @@ feature -- Comparison
 			else
 				Result := arguments.count < other.arguments.count
 			end
-			
+
 		end
-		
+
 feature {METHOD_SOLVER, OVERLOAD_SOLVER} -- Implementation
 
 	internal_method: METHOD_INFO

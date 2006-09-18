@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	TYPE_NAME_SOLVER
 
 inherit
@@ -33,14 +33,14 @@ feature -- Access
 
 	weight: INTEGER
 			-- Weight used to compare instances
-	
+
 	dot_array: NATIVE_ARRAY [CHARACTER] is
 			-- <<.>>
 		once
 			create Result.make (1)
 			Result.put (0, '.')
 		end
-	
+
 	simple_name: STRING
 			-- Simple type name (without namespace)
 
@@ -59,7 +59,7 @@ feature -- Element Settings
 		ensure
 			name_set: eiffel_name = name
 		end
-		
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -104,6 +104,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
 
 end -- class TYPE_NAME_SOLVER

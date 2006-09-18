@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSUMED_ASSEMBLY_MAPPING
 
 create

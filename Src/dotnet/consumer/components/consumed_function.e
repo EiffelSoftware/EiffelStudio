@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSUMED_FUNCTION
 
 inherit
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 				f := f | {FEATURE_ATTRIBUTE}.Is_infix
 			end
 			if pref then
-				f := f | {FEATURE_ATTRIBUTE}.Is_prefix				
+				f := f | {FEATURE_ATTRIBUTE}.Is_prefix
 			end
 		ensure
 			eiffel_name_set: eiffel_name = en
@@ -78,7 +78,7 @@ feature -- Status report
 		do
 			Result := f & {FEATURE_ATTRIBUTE}.Is_infix = {FEATURE_ATTRIBUTE}.Is_infix
 		end
-			
+
 	is_prefix: BOOLEAN is
 			-- Is function a prefix feature?
 		do

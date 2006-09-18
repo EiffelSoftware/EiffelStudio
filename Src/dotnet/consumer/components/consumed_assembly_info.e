@@ -3,7 +3,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class
+frozen class
 	CONSUMED_ASSEMBLY_INFO
 
 create

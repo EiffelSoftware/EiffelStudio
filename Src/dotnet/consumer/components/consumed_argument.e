@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSUMED_ARGUMENT
 
 inherit
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			dotnet_name_set: dotnet_name = dn
 			type_set: type = ct
 		end
-		
+
 feature -- Access
 
 	dotnet_name: STRING is
@@ -46,13 +46,13 @@ feature -- Access
 		do
 			Result := d
 		end
-	
+
 	eiffel_name: STRING is
 			-- Eiffel name
 		do
 			Result := e
 		end
-	
+
 	type: CONSUMED_REFERENCED_TYPE is
 			-- Variable type
 		do
@@ -66,7 +66,7 @@ feature {NONE} -- Access
 
 	e: like eiffel_name
 			-- Internal data storage for `eiffel_name'.
-			
+
 	t: like type
 			-- Internal data storage for `type'.
 

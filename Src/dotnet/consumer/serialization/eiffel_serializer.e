@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	EIFFEL_SERIALIZER
 
 inherit
@@ -28,7 +28,7 @@ feature -- Status report
 
 	error_message: STRING
 			-- Reason for failure
-			
+
 	last_file_position: INTEGER
 			-- Position after last serialization
 

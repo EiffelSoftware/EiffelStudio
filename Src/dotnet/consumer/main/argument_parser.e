@@ -5,10 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	ARGUMENT_PARSER
 
 inherit
+	SYSTEM_OBJECT
+	
 	ARGUMENT_OPTION_PARSER
 		rename
 			make as make_parser

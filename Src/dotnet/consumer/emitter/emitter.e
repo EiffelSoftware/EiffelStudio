@@ -13,6 +13,8 @@ class
 	EMITTER
 
 inherit
+	SYSTEM_OBJECT
+
 	CACHE_PATH
 		export
 			{NONE} all

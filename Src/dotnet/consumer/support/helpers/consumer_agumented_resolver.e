@@ -9,10 +9,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSUMER_AGUMENTED_RESOLVER
 
 inherit
+	SYSTEM_OBJECT
+	
 	AR_RESOLVER
 		rename
 			make as resolver_make,

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSUMED_NESTED_TYPE
 
 inherit
@@ -16,7 +16,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (dn, en: STRING; is_inter, is_abstract, is_sealed, is_value_type, is_enumerator: BOOLEAN;
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			interfaces_set: interfaces = inter
 			enclosing_type_set: enclosing_type = a_type
 		end
-		
+
 feature -- Access
 
 	enclosing_type: CONSUMED_REFERENCED_TYPE

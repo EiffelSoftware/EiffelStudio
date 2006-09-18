@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	CONSUMED_EVENT
 
 inherit
@@ -49,10 +49,10 @@ feature -- ConsumerWrapper functions
 
 	is_event: BOOLEAN is True
 			-- Is `Current' a .Net Event.
-		
+
 	is_property_or_event: BOOLEAN is True
 			-- Is 'Current' a .NET Property or Event?
-		
+
 	is_public: BOOLEAN is
 			-- Is `Current' public.
 		do
@@ -81,7 +81,7 @@ feature -- Access
 		do
 			Result := a
 		end
-	
+
 	remover: CONSUMED_PROCEDURE is
 			-- Property setter procedure
 		do
@@ -95,16 +95,16 @@ feature -- Access
 		end
 
 feature {NONE} -- Access
-	
+
 	a: like adder
 			-- Internal data for `adder'.
-	
+
 	r: like remover
 			-- Internal data for `remover'.
-	
+
 	i: like raiser
 			-- Internal data for `raiser'.
-	
+
 	p: like is_public;
 			-- Internal data for `is_public'.
 

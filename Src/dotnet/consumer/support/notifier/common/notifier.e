@@ -5,10 +5,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	NOTIFIER
 
 inherit
+	SYSTEM_OBJECT
+	
 	IDISPOSABLE
 
 create

@@ -9,10 +9,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	ASSEMBLY_CONSUMER
 
 inherit
+	SYSTEM_OBJECT
+
 	ASSEMBLY_CONSUMPTION_ERRORS
 
 	REFLECTION
@@ -384,6 +386,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+
 			create mapping.make (assembly_ids)
 			serializer.serialize (types, destination_path + Assembly_types_file_name, False)
 			serializer.serialize (mapping, destination_path + Assembly_mapping_file_name, False)

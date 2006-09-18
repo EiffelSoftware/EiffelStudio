@@ -369,7 +369,11 @@ feature {NONE}-- Clickable/Editable implementation
 				initialize_context
 				if current_class_c /= Void then
 					if not token_image_is_in_array (token, unwanted_symbols) then
-						current_feature_as := [ft, ft.feature_names.first]
+						if ft /= Void then
+							current_feature_as := [ft, ft.feature_names.first]
+						else
+							current_feature_as := Void
+						end
 						current_token := token
 						searched_token := token
 						current_line := line

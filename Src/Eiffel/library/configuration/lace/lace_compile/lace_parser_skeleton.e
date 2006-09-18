@@ -222,6 +222,7 @@ feature {NONE} -- Error handling
 			-- A syntax error has been detected.
 			-- Print error message.
 		do
+			set_last_syntax_error (a_message + " (line "+line.out+", column "+column.out+")")
 		end
 
 indexing

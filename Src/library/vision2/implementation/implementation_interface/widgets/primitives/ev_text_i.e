@@ -117,6 +117,11 @@ feature -- Basic operation
 		deferred
 		end
 
+	scroll_to_end is
+			-- Ensure that the last line is visible in `Current'.
+		deferred
+		end
+
 feature -- Assertions
 
 	valid_line_index (i: INTEGER): BOOLEAN is

@@ -135,8 +135,13 @@ feature {NONE} -- Implementation
 		require
 			is_error: is_error
 		do
-			raise ("Configuration error")
+			raise (configuration_error_tag)
 		end
+
+feature {NONE} -- Implementation
+
+	configuration_error_tag: STRING is "Configuration error";
+			-- Tag used when raising an exception error.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

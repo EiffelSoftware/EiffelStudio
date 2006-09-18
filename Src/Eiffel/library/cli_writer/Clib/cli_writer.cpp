@@ -73,7 +73,7 @@ rt_public EIF_POINTER new_cache_manager ()
 	HRESULT hr;
 	EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER *pICM = NULL;
 
-	hr = CoCreateInstance (CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACHE_MANAGER, NULL,
+	hr = CoCreateInstance (CLSID_EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER, NULL,
 		CLSCTX_INPROC_SERVER, IID_EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER, (void **) & pICM);
 
 	CHECK (hr, "Could not instansiate COM Object CLSID_EiffelSoftware_MetadataConsumer_Interop_Impl_COM_CACHE_MANAGER")
@@ -106,26 +106,6 @@ rt_public EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags)
 	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "Could not create ICorRuntimeHost or already initialized");
 
 	return pHost;
-}
-
-/*
-feature -- Fusion Support API
-*/
-
-//FusionSupport------------------------------------------------------------------------------
-
-rt_public EIF_POINTER new_fusion_support ()
-	/* Create new instance of IFusionSupport */
-{
-	HRESULT hr;
-	IFusionSupport *ifs;
-
-	hr = CoCreateInstance (CLSID_FusionSupport, NULL,
-		CLSCTX_INPROC_SERVER, IID_IFusionSupport, (void **) & ifs);
-
-	CHECK (hr, "Could not create IFusionSupport")
-
-	return ifs;
 }
 
 /*

@@ -1713,7 +1713,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_tokens := internal_constructor_token
 			Result := l_tokens.item (a_type_id)
 			if Result = 0 then
-				define_default_constructor (class_types.item (a_type_id), True)
+				define_default_constructor (il_code_generator.class_types.item (a_type_id), True)
 				Result := l_tokens.item (a_type_id)
 			end
 		ensure
@@ -1781,7 +1781,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		do
 			Result := internal_invariant_token.item (a_type_id)
 			if Result = 0 then
- 				l_class_type := class_types.item (a_type_id)
+ 				l_class_type := il_code_generator.class_types.item (a_type_id)
 
 					-- Generate reference to invariant defined in a different assembly.
 				l_sig := method_sig
@@ -1820,7 +1820,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				check
 					is_generated: is_generated
 				end
-				l_class_type := class_types.item (a_type_id)
+				l_class_type := il_code_generator.class_types.item (a_type_id)
 				if l_class_type.is_external then
 					generate_external_class_mapping (l_class_type)
 				elseif a_type_id = l_class_type.static_type_id then
@@ -1949,19 +1949,6 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_def or else
 				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_ref or else
 				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_spec
-		end
-
-	class_types: ARRAY [CLASS_TYPE] is
-			-- List all class types in system indexed using both `implementation_id' and
-			-- `static_type_id'.
-		do
-			if internal_class_types = Void then
-				internal_class_types := il_code_generator.class_types
-			end
-			Result := internal_class_types
-		ensure
-			class_types_not_void: Result /= Void
-			class_types_not_empty: Result.count > 0
 		end
 
 	feature_token (a_type_id, a_feature_id: INTEGER): INTEGER is

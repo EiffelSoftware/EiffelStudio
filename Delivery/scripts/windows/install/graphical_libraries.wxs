@@ -1664,7 +1664,6 @@
 									<File Id="ev_positioned.e" Name="EV_POS~4.E" LongName="ev_positioned.e" />
 									<File Id="ev_containable.e" Name="EV_CON~3.E" LongName="ev_containable.e" />
 									<File Id="ev_fontable.e" Name="EV_FON~6.E" LongName="ev_fontable.e" />
-									<File Id="ev_fake_focus_groupable.e" Name="EV_FAK~1.E" LongName="ev_fake_focus_groupable.e" />
 									<File Id="ev_dockable_source.e" Name="EV_DOC~A.E" LongName="ev_dockable_source.e" />
 									<File Id="ev_dockable_target.e" Name="EV_DOC~B.E" LongName="ev_dockable_target.e" />
 									<File Id="ev_deselectable.e" Name="EV_DES~2.E" LongName="ev_deselectable.e" />
@@ -1692,7 +1691,6 @@
 										<File Id="ev_directory_dialog.e" Name="EV_DIR~3.E" LongName="ev_directory_dialog.e" />
 										<File Id="ev_dialog.e" Name="EV_DIA~6.E" LongName="ev_dialog.e" />
 										<File Id="ev_untitled_dialog.e" Name="EV_UNT~1.E" LongName="ev_untitled_dialog.e" />
-										<File Id="ev_fake_focus_dialog.e" Name="EV_FAK~1.E" LongName="ev_fake_focus_dialog.e" />
 										<File Id="ev_information_dialog.e" Name="EV_INF~1.E" LongName="ev_information_dialog.e" />
 										<File Id="ev_error_dialog.e" Name="EV_ERR~1.E" LongName="ev_error_dialog.e" />
 										<File Id="ev_dockable_dialog.e" Name="EV_DOC~9.E" LongName="ev_dockable_dialog.e" />
@@ -1726,7 +1724,6 @@
 										<File Id="ev_widget_list.e" Name="EV_WID~9.E" LongName="ev_widget_list.e" />
 										<File Id="ev_status_bar.e" Name="EV_STA~6.E" LongName="ev_status_bar.e" />
 										<File Id="ev_cell.e" Name="ev_cell.e" />
-										<File Id="ev_fake_focus_popup_window.e" Name="EV_FAK~1.E" LongName="ev_fake_focus_popup_window.e" />
 									</Component>
 								</Directory>
 								<Directory Id="primitives31" Name="PRIMIT~3" LongName="primitives">
@@ -3083,6 +3080,13 @@
 									<File Id="ev_thread_event_e" Name="EV_THR~2.E" LongName="ev_thread_event.e" />
 									<File Id="ev_thread_severity_constants_e" Name="EV_THR~3.E" LongName="ev_thread_severity_constants.e" />
 									<File Id="ev_thread_worker_e" Name="EV_THR~4.E" LongName="ev_thread_worker.e" />
+								</Component>
+							</Directory>
+							<Directory Id="docking" Name="docking">
+								<Component Id="docking" Guid="CE4FB439-7794-42b6-8444-8A9C8CA4DA7C">
+									<File Id="ev_fake_focus_dialog.e" Name="EV_FAK~1.E" LongName="ev_fake_focus_dialog.e" />
+									<File Id="ev_fake_focus_groupable.e" Name="EV_FAK~2.E" LongName="ev_fake_focus_groupable.e" />
+									<File Id="ev_fake_focus_popup_window.e" Name="EV_FAK~3.E" LongName="ev_fake_focus_popup_window.e" />
 								</Component>
 							</Directory>
 						</Directory>

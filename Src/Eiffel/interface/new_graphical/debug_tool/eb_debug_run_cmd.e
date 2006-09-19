@@ -104,7 +104,7 @@ feature -- Execution
 	execute_with_mode (execution_mode: INTEGER) is
 			-- Launch program in debugger with mode `execution_mode'.
 		local
-			cd: EV_CONFIRMATION_DIALOG
+			wd: EV_WARNING_DIALOG
 			app_exec: APPLICATION_EXECUTION
 			l_dial: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			l_wb: WORKBENCH_I
@@ -133,16 +133,20 @@ feature -- Execution
 							-- The last compilation was not successful.
 							-- It is VERY dangerous to launch the debugger in these conditions.
 							-- However, forbidding it completely may be too frustating.
-						create cd.make_with_text (Warning_messages.w_Debug_not_compiled)
-						cd.button ("OK").select_actions.extend (agent launch_application)
-						cd.show_modal_to_window (Window_manager.last_focused_window.window)
+						create wd.make_with_text (Warning_messages.w_Debug_not_compiled)
+						wd.set_buttons (<<interface_names.b_ok, interface_names.b_cancel>>)
+						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application)
+						wd.set_default_push_button (wd.button (interface_names.b_cancel))
+						wd.show_modal_to_window (Window_manager.last_focused_window.window)
 					elseif not Debugger_manager.can_debug then
 							-- A class was removed since the last compilation.
 							-- It is VERY dangerous to launch the debugger in these conditions.
 							-- However, forbidding it completely may be too frustating.
-						create cd.make_with_text (Warning_messages.w_Removed_class_debug)
-						cd.button ("OK").select_actions.extend (agent launch_application)
-						cd.show_modal_to_window (Window_manager.last_focused_window.window)
+						create wd.make_with_text (Warning_messages.w_Removed_class_debug)
+						wd.set_buttons (<<interface_names.b_ok, interface_names.b_cancel>>)
+						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application)
+						wd.set_default_push_button (wd.button (interface_names.b_cancel))
+						wd.show_modal_to_window (Window_manager.last_focused_window.window)
 					else
 						launch_application
 					end

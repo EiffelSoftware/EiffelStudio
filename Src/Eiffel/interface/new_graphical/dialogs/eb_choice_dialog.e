@@ -11,9 +11,6 @@ class
 
 inherit
 	EV_POPUP_WINDOW
-		redefine
-			show
-		end
 
 	EV_COMMAND
 		undefine
@@ -38,7 +35,6 @@ feature -- Initialization
 			callback := ctf
 
 			create list
-			list.hide_header
 			list.pointer_double_press_actions.extend (agent on_select)
 			list.key_press_actions.extend (agent key_actions)
 
@@ -51,13 +47,7 @@ feature -- Initialization
 
 			enable_user_resize
 			show_actions.extend (agent on_shown)
-		end
-
-feature --
-
-	show is
-		do
-			Precursor {EV_POPUP_WINDOW}
+			list.hide_header
 		end
 
 feature
@@ -90,7 +80,7 @@ feature
 
 				-- We allow bounds for the list width of 70 and 150 pixels.
 				-- +20 for taking into account pixmap size.
-			--list.set_minimum_width (list.column (1).width))
+			list.set_minimum_width ((list.column (1).width + list.vertical_scroll_bar.width).min (List_maximum_width))
 				-- We allow bounds for the list height of 50 and 300 pixels.
 				-- + 1 because there may be a space between list items.
 			char_height := (create {EV_FONT}).height + 1
@@ -130,11 +120,19 @@ feature
 			list.focus_out_actions.extend (agent one_lost_focus)
 			focus_out_actions.wipe_out
 			focus_out_actions.extend (agent one_lost_focus)
+
+			if not {PLATFORM}.is_windows then
+					--| FIXME This is a workaround for gtk to make sure that the viewport holding the drawable
+					--| is always resized as this is not the case in some scenarios.
+					--| When the problem is resolved in EV_GRID/EV_VIEWPORT then this code should be removed.
+				list.show_header
+				list.hide_header
+			end
 		end
 
 feature {NONE} -- Properties
 
-	list: EV_GRID
+	list: ES_GRID
 
 	callback: PROCEDURE [ANY, TUPLE [INTEGER]]
 			-- Command who calls `Current'
@@ -193,12 +191,9 @@ feature {NONE} -- Implementation
 	List_minimum_width: INTEGER is 70
 	List_maximum_width: INTEGER is 400
 	List_minimum_height: INTEGER is 50
-	List_maximum_height: INTEGER is 400
+	List_maximum_height: INTEGER is 400;
 		-- Bounds for the displayed list.
 
-invariant
-
---	list_exists: list /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

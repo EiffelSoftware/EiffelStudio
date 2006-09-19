@@ -3677,6 +3677,7 @@ feature {NONE} -- Implementation
 			begin_index, offset: INTEGER
 			tmp_text: STRING
 			l_feat_as: FEATURE_AS
+			l_feature: E_FEATURE
 			l_names: EIFFEL_LIST [FEATURE_NAME]
 		do
 			if not feat_as.is_il_external then
@@ -3685,17 +3686,37 @@ feature {NONE} -- Implementation
 						editor_tool.text_area.find_feature_named (feat_as.name)
 					end
 				else
-					l_feat_as := feat_as.ast
+					if displayed_class.is_compiled then
+							-- We need to adapt E_FEATURE to the current displayed class
+							-- since we could manipulate the E_FEATURE of a descendant class
+							-- whose name is different from its definition in the displayed_class.
+							-- Fixes bug#11330.
+						l_feature := feat_as.ancestor_version (displayed_class.compiled_class)
+						if l_feature = Void then
+								-- It should not happen, but maybe the system is in a very unstable state.
+							l_feature := feat_as
+						end
+					else
+						l_feature := feat_as
+					end
+					l_feat_as := l_feature.ast
 					if l_feat_as /= Void then
 						from
 							l_names := l_feat_as.feature_names
 							l_names.start
 						until
-							l_names.after or feat_as.name.is_case_insensitive_equal (l_names.item.internal_name)
+							l_names.after or else
+							l_feature.name.is_case_insensitive_equal (l_names.item.internal_name)
 						loop
 							l_names.forth
 						end
-						begin_index := l_names.item.start_position
+						if not l_names.after then
+							begin_index := l_names.item.start_position
+						else
+								-- Something wrong happened, the feature does not exist anymore.
+								-- We simply take the position of the first one.
+							begin_index := l_names.start_position
+						end
 						tmp_text := displayed_class.text
 						if tmp_text /= Void then
 							tmp_text := tmp_text.substring (1, begin_index)

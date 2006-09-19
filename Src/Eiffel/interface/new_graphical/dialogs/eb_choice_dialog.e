@@ -2,7 +2,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-	desciption: "Window where the user can make choice."
+	desciption: "Window where the user can choose from a list of options."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,11 +27,12 @@ create
 
 feature -- Initialization
 
-	make_default (ctf: like callback) is
+	make_default (a_parent_window: EV_WINDOW; ctf: like callback) is
 			-- Make a choice window, and set a callback procedure.
 		local
 			vb: EV_VERTICAL_BOX
 		do
+			parent_window := a_parent_window
 			callback := ctf
 
 			create list
@@ -150,6 +151,11 @@ feature {NONE} -- Implementation
 				list.focus_out_actions.wipe_out
 				focus_out_actions.wipe_out
 				destroy
+				if not parent_window.is_destroyed and then parent_window.is_displayed then
+						-- This forces the window manager to refocus to the window that popped up `Current'.
+					parent_window.show
+				end
+				parent_window := Void
 			end
 		end
 
@@ -192,6 +198,10 @@ feature {NONE} -- Implementation
 	List_maximum_height: INTEGER is 400;
 		-- Bounds for the displayed list.
 
+feature {NONE} -- Implementation
+
+	parent_window: EV_WINDOW;
+		-- Window that `Current' is shown from.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

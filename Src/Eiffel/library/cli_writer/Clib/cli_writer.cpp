@@ -1,6 +1,5 @@
 #define _WIN32_DCOM
 #include "cli_writer.h"
-#include "vs_support.h"
 #include "metadata_consumer.h"
 #include <objbase.h>
 #include <cor.h>

@@ -46,8 +46,6 @@ feature -- Element update
 			-- Also remove the parent node if it is empty and is not a cluster.
 		local
 			l_parent: like group
-			l_tree_parent: EV_TREE_NODE_LIST
-			i: INTEGER
 		do
 			target.remove_cluster (group.name)
 			l_parent := group.parent

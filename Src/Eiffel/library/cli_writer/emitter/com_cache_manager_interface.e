@@ -22,31 +22,24 @@ create
 
 feature -- Initialization
 
-	initialize (a_clr_version: UNI_STRING) is
+	initialize is
 			-- Initialize current.
-		require
-			a_clr_version_not_void: a_clr_version /= Void
-		local
-			l_ver: BSTR_STRING
 		do
-			create l_ver.make_by_uni_string (a_clr_version)
-			last_call_success := c_initialize (item, l_ver.item)
+			last_call_success := c_initialize (item)
 			is_initialized := last_call_success = 0
 		ensure
 			success: last_call_success = 0
 		end
 
-	initialize_with_path (a_path, a_clr_version: UNI_STRING) is
+	initialize_with_path (a_path: UNI_STRING) is
 			-- Initialize current with `a_path' as ISE_EIFFEL var.
 		require
 			a_path_not_void: a_path /= Void
-			a_clr_version_not_void: a_clr_version /= Void
 		local
-			l_path, l_ver: BSTR_STRING
+			l_path: BSTR_STRING
 		do
 			create l_path.make_by_uni_string (a_path)
-			create l_ver.make_by_uni_string (a_clr_version)
-			last_call_success := c_initialize_with_path (item, l_path.item, l_ver.item)
+			last_call_success := c_initialize_with_path (item, l_path.item)
 			is_initialized := last_call_success = 0
 		ensure
 			success: last_call_success = 0
@@ -87,7 +80,7 @@ feature -- Access
 
 feature -- Basic Oprtations
 
-	consume_assembly (a_name, a_version, a_culture, a_key: UNI_STRING) is
+	consume_assembly (a_name, a_version, a_culture, a_key: UNI_STRING; a_info_only: BOOLEAN) is
 			-- Consume an assembly into the EAC from at least `a_name'
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require
@@ -117,12 +110,12 @@ feature -- Basic Oprtations
 				create bstr_key.make_by_pointer (default_pointer)
 			end
 
-			last_call_success := c_consume_assembly (item, bstr_name.item, bstr_version.item, bstr_culture.item, bstr_key.item)
+			last_call_success := c_consume_assembly (item, bstr_name.item, bstr_version.item, bstr_culture.item, bstr_key.item, a_info_only)
 		ensure
 			success: last_call_success = 0
 		end
 
-	consume_assembly_from_path (a_path: UNI_STRING) is
+	consume_assembly_from_path (a_path: UNI_STRING; a_info_only: BOOLEAN; a_references: UNI_STRING) is
 			-- consume assembly found at 'apath' and all of its dependacies into EAC.
 			-- GAC dependacies will be put into the EAC
 		require
@@ -131,125 +124,14 @@ feature -- Basic Oprtations
 			valid_path: not a_path.is_empty
 		local
 			bstr_path: BSTR_STRING
+			bstr_refs: BSTR_STRING
 		do
 			create bstr_path.make_by_uni_string (a_path)
-			last_call_success := c_consume_assembly_from_path (item, bstr_path.item)
-		ensure
-			success: last_call_success = 0
-		end
-
-	relative_folder_name (a_name, a_version, a_culture, a_key: UNI_STRING): UNI_STRING is
-			-- Retrieves relative path to an assembly using at least `a_name'
-		require
-			initialized: is_initialized
-			non_void_name: a_name /= Void
-			valid_name: not a_name.is_empty
-		local
-			bstr_name: BSTR_STRING
-			bstr_version: BSTR_STRING
-			bstr_culture: BSTR_STRING
-			bstr_key: BSTR_STRING
-			res: POINTER
-		do
-			create bstr_name.make_by_uni_string (a_name)
-			if a_version /= Void then
-				create bstr_version.make_by_uni_string (a_version)
+			if a_references /= Void then
+				create bstr_refs.make_by_uni_string (a_references)
+				last_call_success := c_consume_assembly_from_path (item, bstr_path.item, a_info_only, bstr_refs.item)
 			else
-				create bstr_version.make_by_pointer (default_pointer)
-			end
-			if a_culture /= Void then
-				create bstr_culture.make_by_uni_string (a_culture)
-			else
-				create bstr_culture.make_by_pointer (default_pointer)
-			end
-			if a_key /= Void then
-				create bstr_key.make_by_uni_string (a_key)
-			else
-				create bstr_key.make_by_pointer (default_pointer)
-			end
-
-			last_call_success := c_relative_folder_name (item, bstr_name.item, bstr_version.item, bstr_culture.item, bstr_key.item, $res)
-
-			if res /= default_pointer then
-				create Result.make_by_pointer (res)
-			end
-
-		ensure
-			success: last_call_success = 0
-		end
-
-	relative_folder_name_from_path (a_path: UNI_STRING): UNI_STRING is
-			-- Retrieves relative path to an assembly at `a_path' metadata.
-		require
-			initialized: is_initialized
-			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
-		local
-			bstr_path: BSTR_STRING
-			res: POINTER
-		do
-			create bstr_path.make_by_uni_string (a_path)
-			last_call_success := c_relative_folder_name_from_path (item, bstr_path.item, $res)
-			if res /= default_pointer then
-				create Result.make_by_pointer (res)
-			end
-		ensure
-			success: last_call_success = 0
-		end
-
-	assembly_info_from_assembly (a_path: UNI_STRING): COM_ASSEMBLY_INFORMATION is
-			-- retrieve the assembly information from a assembly
-		require
-			initialized: is_initialized
-			non_void_path: a_path /= Void
-			valid_path: a_path.length > 0
-		local
-			bstr_path: BSTR_STRING
-			res: POINTER
-		do
-			create bstr_path.make_by_uni_string (a_path)
-			last_call_success := c_assembly_info_from_assembly (item, bstr_path.item, $res)
-
-			if res /= default_pointer then
-				create Result.make_by_pointer (res)
-			end
-		ensure
-			success: last_call_success = 0
-		end
-
-	assembly_info (a_name, a_version, a_culture, a_key: UNI_STRING): COM_ASSEMBLY_INFORMATION is
-			-- retrieve the assembly information from a assembly's fusion name
-		require
-			initialized: is_initialized
-			non_void_name: a_name /= Void
-			valid_name: not a_name.is_empty
-		local
-			bstr_name: BSTR_STRING
-			bstr_version: BSTR_STRING
-			bstr_culture: BSTR_STRING
-			bstr_key: BSTR_STRING
-			res: POINTER
-		do
-			create bstr_name.make_by_uni_string (a_name)
-			if a_version /= Void then
-				create bstr_version.make_by_uni_string (a_version)
-			else
-				create bstr_version.make_by_pointer (default_pointer)
-			end
-			if a_culture /= Void then
-				create bstr_culture.make_by_uni_string (a_culture)
-			else
-				create bstr_culture.make_by_pointer (default_pointer)
-			end
-			if a_key /= Void then
-				create bstr_key.make_by_uni_string (a_key)
-			else
-				create bstr_key.make_by_pointer (default_pointer)
-			end
-			last_call_success := c_assembly_info (item, bstr_name.item, bstr_version.item, bstr_culture.item, bstr_key.item, $res)
-
-			if res /= default_pointer then
-				create Result.make_by_pointer (res)
+				last_call_success := c_consume_assembly_from_path (item, bstr_path.item, a_info_only, default_pointer)
 			end
 		ensure
 			success: last_call_success = 0
@@ -265,18 +147,18 @@ feature -- Basic Oprtations
 
 feature {NONE} -- Implementation
 
-	c_initialize (ap, ver: POINTER): INTEGER is
+	c_initialize (ap: POINTER): INTEGER is
 			-- initialize COM object
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature ():EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"initialize"
 		end
 
-	c_initialize_with_path (ap:POINTER; ap2, ver: POINTER): INTEGER is
+	c_initialize_with_path (ap:POINTER; ap2: POINTER): INTEGER is
 			-- initialize COM object with alternative ISE_EIFFEL path ?
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR):EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR):EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"initialize_with_path"
 		end
@@ -305,53 +187,21 @@ feature {NONE} -- Implementation
 			"last_error_message"
 		end
 
-	c_consume_assembly (ap, a_name, a_version, a_culture, a_key: POINTER): INTEGER is
+	c_consume_assembly (ap, a_name, a_version, a_culture, a_key: POINTER; a_info_only: BOOLEAN): INTEGER is
 			-- Consume an assembly into the EAC from at least `a_name'
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR): EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL): EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"consume_assembly"
 		end
 
-	c_consume_assembly_from_path (ap, a_path: POINTER): INTEGER is
+	c_consume_assembly_from_path (ap, a_path: POINTER; a_info_only: BOOLEAN; a_references: POINTER): INTEGER is
 			-- Consume referenced assembly `a_path' an all of its dependacies into EAC
 		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR): EIF_INTEGER use %"metadata_consumer.h%""
+			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, VARIANT_BOOL, BSTR): EIF_INTEGER use %"metadata_consumer.h%""
 		alias
 			"consume_assembly_from_path"
-		end
-
-	c_relative_folder_name (ap, a_name, a_version, a_culture, a_key: POINTER; aret_val:POINTER): INTEGER is
-			-- Retireve the name of the folder for the given assembly using at least `a_name'
-		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR, BSTR*): EIF_INTEGER use %"metadata_consumer.h%""
-		alias
-			"relative_folder_name"
-		end
-
-	c_relative_folder_name_from_path (ap, a_path: POINTER; a_ret_val: POINTER): INTEGER is
-			-- Retireve the name of the folder for the given assembly at `a_path'
-		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR*): EIF_INTEGER use %"metadata_consumer.h%""
-		alias
-			"relative_folder_name_from_path"
-		end
-
-	c_assembly_info_from_assembly (ap, a_path: POINTER; a_ret_val: POINTER): INTEGER is
-			--  retrieve the assembly information from a assembly
-		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION**):EIF_INTEGER use %"metadata_consumer.h%""
-		alias
-			"assembly_info_from_assembly"
-		end
-
-	c_assembly_info (ap, a_name, a_version, a_culture, a_key: POINTER; aret_val:POINTER): INTEGER is
-			-- retrieve the assembly information from an assembly's fusion name
-		external
-			"C++ EiffelSoftware_MetadataConsumer_Interop_I_COM_CACHE_MANAGER signature (BSTR, BSTR, BSTR, BSTR, EiffelSoftware_MetadataConsumer_Interop_I_COM_ASSEMBLY_INFORMATION**):EIF_INTEGER use %"metadata_consumer.h%""
-		alias
-			"assembly_info"
 		end
 
 	c_unload (ap: POINTER): INTEGER is

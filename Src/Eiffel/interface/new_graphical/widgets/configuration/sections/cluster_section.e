@@ -47,17 +47,14 @@ feature -- Element update
 		local
 			l_parent: like group
 			l_tree_parent: EV_TREE_NODE_LIST
+			i: INTEGER
 		do
 			target.remove_cluster (group.name)
 			l_parent := group.parent
 			if l_parent /= Void then
 				l_parent.remove_child (group)
-				l_tree_parent := parent
-				l_tree_parent.start
-				l_tree_parent.prune (Current)
-			else
-				Precursor
 			end
+			Precursor
 		end
 
 	set_children (a_children: ARRAYED_LIST [like group]) is

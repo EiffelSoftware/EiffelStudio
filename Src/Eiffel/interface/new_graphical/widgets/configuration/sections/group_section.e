@@ -93,18 +93,22 @@ feature {NONE} -- Implementation
 			-- Remove `Current' from the tree where it is displayed.
 			-- Also remove the parent node if it is empty.
 		local
+			l_parent_head: TARGET_GROUPS_BASE_SECTION
 			l_parent, l_grand_parent: EV_TREE_NODE_LIST
 			l_par_node, l_grand_par_node: EV_TREE_NODE
+			i: INTEGER
 		do
 			l_parent := parent
 			l_parent.start
+			i := l_parent.index_of (Current, 1)
 			l_parent.prune (Current)
 			l_par_node ?= l_parent
 			check
 				correct_parent: l_par_node /= Void
 			end
-			if l_parent.is_empty then
-				l_grand_parent := l_par_node.parent
+			l_parent_head ?= l_parent
+			if l_parent_head /= Void and then l_parent_head.is_empty then
+				l_grand_parent := l_parent_head.parent
 				l_grand_parent.start
 				l_grand_parent.prune (l_par_node)
 				l_grand_par_node ?= l_grand_parent
@@ -112,6 +116,10 @@ feature {NONE} -- Implementation
 					correct_grand_parent: l_grand_par_node /= Void
 				end
 				l_grand_par_node.enable_select
+			elseif l_par_node.count >= i then
+				l_par_node.i_th (i).enable_select
+			elseif i-1 > 0 then
+				l_par_node.i_th (i-1).enable_select
 			else
 				l_par_node.enable_select
 			end

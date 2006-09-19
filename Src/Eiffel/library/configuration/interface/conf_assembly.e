@@ -362,6 +362,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			initialize_conditions
 		end
 
+feature {CONF_ACCESS, EXTERNAL_CLASS_C} -- Update, stored in configuration file
+
 	set_is_partially_consumed (b: like is_partially_consumed) is
 			-- Set `is_partially_consumed' to `b'
 		do
@@ -369,8 +371,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		ensure
 			is_partially_consumed_set: is_partially_consumed = b
 		end
-
-feature {CONF_ACCESS, EXTERNAL_CLASS_C} -- Update, stored in configuration file
 
 	set_is_dependency (b: like is_dependency) is
 			-- Set `is_dependency' with `set_is_dependency'

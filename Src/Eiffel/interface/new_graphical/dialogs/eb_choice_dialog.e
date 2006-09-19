@@ -77,14 +77,12 @@ feature
 				name_list.forth
 			end
 			list.column (1).resize_to_content
-
-				-- We allow bounds for the list width of 70 and 150 pixels.
-				-- +20 for taking into account pixmap size.
-			list.set_minimum_width ((list.column (1).width + list.vertical_scroll_bar.width).min (List_maximum_width))
-				-- We allow bounds for the list height of 50 and 300 pixels.
-				-- + 1 because there may be a space between list items.
 			char_height := (create {EV_FONT}).height + 1
-			list.set_minimum_height (((List_maximum_height).min (name_list.count * char_height + 40)).max (List_minimum_height))
+
+			list.set_minimum_size (
+				(list.column (1).width + list.vertical_scroll_bar.width).min (List_maximum_width),
+				((List_maximum_height).min (name_list.count * char_height + 40)).max (List_minimum_height)
+			)
 		end
 
 	execute (it: EV_GRID_ITEM)

@@ -233,7 +233,7 @@ feature {TYPE_A} -- Visitors
 			check
 				l_feat_not_void: l_feat /= Void
 			end
-			text_formatter.add_feature (l_feat, a_type.feature_name)
+			text_formatter.add_feature (l_feat, l_feat.name)
 		end
 
 	process_manifest_integer_a (a_type: MANIFEST_INTEGER_A) is

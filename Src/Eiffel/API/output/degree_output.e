@@ -562,7 +562,7 @@ feature {NONE} -- Constants
 	Case_class_message: STRING is "Analyzing Class ";
 	Case_cluster_message: STRING is "Analyzing Cluster ";
 	Document_class_message: STRING is "Generating Class ";
-	Consume_assemblies_message: STRING is "Consuming Assemblies";
+	Consume_assemblies_message: STRING is "Pre-consuming Assembly Types";
 	Degree_output_string: STRING is "Degree ";
 	Cluster_output_string: STRING is " group ";
 	Class_output_string: STRING is " class ";

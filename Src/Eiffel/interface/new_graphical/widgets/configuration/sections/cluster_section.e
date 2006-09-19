@@ -13,7 +13,6 @@ inherit
 		redefine
 			context_menu,
 			group,
-			ask_remove_group,
 			remove_group,
 			update_toolbar_sensitivity
 		end
@@ -28,25 +27,26 @@ feature -- Access
 
 feature -- Element update
 
-	ask_remove_group is
-			-- Ask for confirmation and remove `Current'.
-		local
-			l_wd: EV_WARNING_DIALOG
-		do
-			if group.children /= Void and then not group.children.is_empty then
-				create l_wd.make_with_text (conf_interface_names.target_remove_group_children (group.name))
-				l_wd.show_modal_to_window (configuration_window)
-			else
-				Precursor {GROUP_SECTION}
-			end
-		end
-
 	remove_group is
-			-- Remove `Current' from the configuration and from the tree where it is displayed.
+			-- Remove `Current' and all children from the configuration and from the tree where it is displayed.
 			-- Also remove the parent node if it is empty and is not a cluster.
 		local
 			l_parent: like group
+			l_cs: like Current
 		do
+				-- remove children
+			from
+				start
+			until
+				after
+			loop
+				l_cs ?= item
+				check cluster_section: l_cs /= Void end
+				l_cs.remove_group
+				forth
+			end
+
+				-- remove current
 			target.remove_cluster (group.name)
 			l_parent := group.parent
 			if l_parent /= Void then

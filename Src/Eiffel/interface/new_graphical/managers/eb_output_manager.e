@@ -21,6 +21,12 @@ feature -- Basic Operations / Generic purpose
 		deferred
 		end
 
+	clear_general is
+			-- Clear the general window.
+		do
+			clear
+		end
+
 	scroll_to_end is
 			-- Scroll to end of text.
 		deferred

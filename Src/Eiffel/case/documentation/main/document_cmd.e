@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 				if wizard.cluster_diagrams_selected then
 					doc.set_diagram_views (wizard.diagram_views)
 				end
-				output_manager.clear
+				output_manager.clear_general
 				window_manager.display_message ("")
 				l_str := "Documentation Generated in " + wizard.directory.name
 				output_manager.start_processing (true)

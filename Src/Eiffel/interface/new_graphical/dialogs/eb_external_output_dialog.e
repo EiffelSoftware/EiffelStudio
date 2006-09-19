@@ -44,7 +44,7 @@ feature -- Update
 			-- Append `a_text' to the displayed text.
 		do
 			text_field.append_text (a_text)
-			text_field.scroll_to_line (text_field.line_count)
+			text_field.scroll_to_end
 		end
 
 invariant

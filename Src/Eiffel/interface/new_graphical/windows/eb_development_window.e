@@ -905,22 +905,6 @@ feature -- Pulldown Menus
 	debugging_tools_menu: EV_MENU
 			-- Debugging tools menu item
 
-	active_menus (erase: BOOLEAN) is
-			-- Enable all the menus and if `erase' clean
-			-- the content of the Project tool.
-		do
-			compile_menu.enable_sensitive
-			if erase then
-				output_manager.clear
-			end
-		end
-
-	disable_menus is
-			-- Disable all the menus.
-		do
-			compile_menu.disable_sensitive
-		end
-
 	update_debug_menu is
 			-- Update debug menu
 		do

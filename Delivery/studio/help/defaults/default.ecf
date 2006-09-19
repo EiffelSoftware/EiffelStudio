@@ -10,7 +10,7 @@
 			<file_rule>
 				<exclude>EIFGENs</exclude>
 				<exclude>.svn</exclude>
-				<exclude>.cvs</exclude>
+				<exclude>CVS</exclude>
 			</file_rule>
 		</cluster>
 	</target>

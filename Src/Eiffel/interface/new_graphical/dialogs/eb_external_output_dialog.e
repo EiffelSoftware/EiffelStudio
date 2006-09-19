@@ -42,8 +42,12 @@ feature -- Update
 
 	append_text (a_text: STRING) is
 			-- Append `a_text' to the displayed text.
+		local
+			l_txt: like a_text
 		do
-			text_field.append_text (a_text)
+			l_txt := a_text.twin
+			l_txt.prune_all ('%R')
+			text_field.append_text (l_txt)
 			text_field.scroll_to_end
 		end
 

@@ -467,13 +467,27 @@ feature -- Status setting
 
 feature -- Basic operation
 
-	scroll_to_line (i: INTEGER) is
-			-- Scroll `Current' to line number `i'
+	scroll_to_line (a_line: INTEGER) is
+			-- Scroll `Current' to line number `a_line'
 		local
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			i: INTEGER
+			l_success: BOOLEAN
 		do
 			create a_iter.make
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_line (text_buffer, a_iter.item, i - 1)
+			if has_word_wrapping then
+				from
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+					i := 1
+				until
+					i = a_line
+				loop
+					l_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+					i := i + 1
+				end
+			else
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_line (text_buffer, a_iter.item, a_line - 1)
+			end
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_scroll_to_iter (text_view, a_iter.item,  0.0, False, 0.0, 0.0)
 		end
 

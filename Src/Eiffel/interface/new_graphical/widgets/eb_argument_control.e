@@ -42,6 +42,13 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -245,7 +252,11 @@ feature {NONE} -- GUI
 				agent (v: EV_KEY)
 					do
 						if v.code = {EV_KEY_CONSTANTS}.key_tab then
-							add_button.set_focus
+							if ev_application.shift_pressed then
+								argument_check.set_focus
+							else
+								add_button.set_focus
+							end
 						end
 					end)
 			arguments_box.extend (current_argument)

@@ -357,7 +357,7 @@ feature -- Execution
 									<<agent c_compile>>)
 								cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 							else
-								Output_manager.clear
+								Output_manager.clear_general
 
 								launch_program := True
 								if app_exec.has_breakpoints and then app_exec.is_ignoring_stop_points then
@@ -455,7 +455,7 @@ feature -- Execution
 		do
 			if not eb_debugger_manager.application_is_executing then
 					-- First time we launch the program, we clear the output tool.
-				output_manager.clear
+				output_manager.clear_general
 			end
 
 				--| Getting well formatted workind directory path

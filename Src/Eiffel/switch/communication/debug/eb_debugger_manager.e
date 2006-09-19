@@ -872,7 +872,7 @@ feature -- Debugging events
 
 			Application.status.set_max_depth (maximum_stack_depth)
 				-- Test whether application was really launched.
-			output_manager.clear
+			output_manager.clear_general
 			output_manager.display_application_status
 
 				-- Modify the debugging window display.

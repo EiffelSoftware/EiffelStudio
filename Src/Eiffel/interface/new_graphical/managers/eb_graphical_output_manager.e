@@ -39,7 +39,8 @@ inherit
 			add,
 			add_string,
 			add_new_line,
-			set_context_group
+			set_context_group,
+			clear_general
 		end
 
 	EB_SHARED_DEBUG_TOOLS
@@ -113,6 +114,21 @@ feature -- Basic Operations / Generic purpose
 			end
 		end
 
+	clear_general is
+			-- Clear the window.
+		do
+			from
+				managed_output_tools.start
+			until
+				managed_output_tools.after
+			loop
+				if managed_output_tools.item.is_general then
+					managed_output_tools.item.clear
+				end
+				managed_output_tools.forth
+			end
+		end
+
 	process_errors (errors: LINKED_LIST [ERROR]) is
 			-- Print `errors' on all output tools.
 		do
@@ -148,7 +164,7 @@ feature -- Basic Operations / Information message
 		do
 			force_display
 			if Workbench.is_already_compiled then
-				clear
+				clear_general
 			end
 			start_processing (false)
 			if Workbench.is_already_compiled then
@@ -159,7 +175,7 @@ feature -- Basic Operations / Information message
 			end_processing
 
 			if l_error then
-				clear
+				clear_general
 			end
 		end
 
@@ -178,7 +194,7 @@ feature -- Basic Operations / Information message
 			l_error: BOOLEAN
 		do
 				-- Build the text
-			clear
+			clear_general
 			start_processing (true)
 			if eb_debugger_manager.application_is_executing then
 				eb_debugger_manager.Application.status.display_status (Current)
@@ -187,7 +203,7 @@ feature -- Basic Operations / Information message
 				add_new_line
 				l_error := structured_system_info (Current)
 				if l_error then
-					clear
+					clear_general
 					add ("System not launched")
 					add_new_line
 				end
@@ -203,7 +219,7 @@ feature -- Basic Operations / Information message
 			app_exec: APPLICATION_EXECUTION
 		do
 				-- Build text.
-			clear
+			clear_general
 			start_processing (true)
 			app_exec := eb_debugger_manager.application
 			if  not app_exec.has_breakpoints then

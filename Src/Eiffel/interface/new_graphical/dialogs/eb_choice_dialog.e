@@ -33,6 +33,7 @@ feature -- Initialization
 			vb: EV_VERTICAL_BOX
 		do
 			parent_window := a_parent_window
+				-- Parent window may be Void.
 			callback := ctf
 
 			create list
@@ -151,7 +152,7 @@ feature {NONE} -- Implementation
 				list.focus_out_actions.wipe_out
 				focus_out_actions.wipe_out
 				destroy
-				if not parent_window.is_destroyed and then parent_window.is_displayed then
+				if parent_window /= Void and then not parent_window.is_destroyed and then parent_window.is_displayed then
 						-- This forces the window manager to refocus to the window that popped up `Current'.
 					parent_window.show
 				end

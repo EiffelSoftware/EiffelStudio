@@ -43,139 +43,8 @@ feature -- Status report
 			end
 		end
 
-	assembly_found: BOOLEAN
-			-- Was last research with `retrieve_assembly_info' successful?
-
-feature -- Access
-
-	name: STRING is
-			-- Version of current assembly.
-		require
-			assembly_found: assembly_found
-		do
-			check
-				False
-			end
-		end
-
-	version: STRING is
-			-- Version of current assembly.
-		require
-			assembly_found: assembly_found
-		do
-			check
-				False
-			end
-		end
-
-	culture: STRING is
-			-- Culture of current assembly.
-		require
-			assembly_found: assembly_found
-		do
-			check
-				False
-			end
-		end
-
-	public_key_token: STRING is
-			-- Culture of current assembly.
-		require
-			assembly_found: assembly_found
-		do
-			check
-				False
-			end
-		end
-
-	is_in_gac: BOOLEAN is
-			-- Was assembly consumed in GAC
-		require
-			assembly_found: assembly_found
-		do
-			check
-				False
-			end
-		end
-
-	is_consumed: BOOLEAN is
-			-- Has assembly been consumed
-		require
-			assembly_found: assembly_found
-		do
-			check
-				False
-			end
-		end
-		
-	consumed_folder_name: STRING is
-			-- Path to consumed assembly folder
-		require
-			assembly_found: assembly_found
-		do
-			check
-				False
-			end
-		end	
-
 feature -- Retrieval
 
-	relative_folder_name (a_name, a_version, a_culture, a_key: STRING): STRING is
-			-- returns the relative path to an assembly using at least `a_name'
-		require
-			non_void_name: a_name /= Void
-			valid_name: not a_name.is_empty
-		do
-			check
-				False
-			end
-		ensure
-			non_void_result: Result /= Void
-			non_empty_result: not Result.is_empty
-		end
-		
-	relative_folder_name_from_path (a_path: STRING): STRING is
-			-- Relative path to consumed assembly metadata given `a_path'
-		require
-			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
-			path_exists: (create {RAW_FILE}.make (a_path)).exists
-		do	
-			check
-				False
-			end
-		ensure
-			non_void_result: Result /= Void
-			non_empty_result: not Result.is_empty
-		end
-
-	retrieve_assembly_info (a_path: STRING) is
-			-- Retrieve data about assembly stored at `an_assembly'.
-		require
-			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
-		do
-			check
-				False
-			end
-		end
-		
-	retrieve_assembly_info_by_fusion_name (a_name, a_version, a_culture, a_key: STRING) is
-			-- Retrieve data about assembly stored using an assembly's fusion name.
-
-		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
-			a_version_attached: a_version /= Void
-			not_a_version_is_empty: not a_version.is_empty
-			not_a_culture_is_empty: a_culture /= Void implies not a_culture.is_empty
-			not_a_key_is_empty: a_key /= Void implies not a_key.is_empty
-		do
-			check
-				False
-			end
-		end
-	
 	unload is
 			-- unload all used resources
 		do
@@ -186,7 +55,7 @@ feature -- Retrieval
 
 feature -- XML generation
 
-	consume_assembly_from_path (a_path: STRING) is
+	consume_assembly_from_path (a_path: STRING; a_info_only: BOOLEAN; a_references: STRING) is
 			-- Consume local assembly `a_assembly' and all of its dependencies into EAC
 		require
 			exists: exists
@@ -198,7 +67,7 @@ feature -- XML generation
 			end
 		end
 
-	consume_assembly (a_name, a_version, a_culture, a_key: STRING) is
+	consume_assembly (a_name, a_version, a_culture, a_key: STRING; a_info_only: BOOLEAN) is
 			-- consume an assembly into the EAC from assemblyy defined by
 			-- "`a_name', Version=`a_version', Culture=`a_culture', PublicKeyToken=`a_key'"
 		require

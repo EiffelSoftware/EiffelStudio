@@ -141,6 +141,15 @@ feature -- Basic Oprtations
 				l_files.append (l_refs)
 			end
 
+				-- Prune all empty paths
+			from l_files.start until l_files.after loop
+				if l_files.item.is_empty then
+					l_files.remove
+				else
+					l_files.forth
+				end
+			end
+
 			create l_resolver.make (l_files)
 			l_resolver.add_resolve_path ({RUNTIME_ENVIRONMENT}.get_runtime_directory)
 			resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)

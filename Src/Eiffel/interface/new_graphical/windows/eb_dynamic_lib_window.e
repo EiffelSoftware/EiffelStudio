@@ -869,7 +869,7 @@ feature {NONE} -- Implementation: Creation routine selection
 				if feature_names.count = 1 then
 					process_creation_routine_callback (1)
 				else
-					create choice.make_default (agent process_creation_routine_callback (?))
+					create choice.make_default (window, agent process_creation_routine_callback (?))
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names, feature_pixmaps)
 					choice.set_position (window.screen_x + window.width // 3, window.screen_y + window.height // 3)

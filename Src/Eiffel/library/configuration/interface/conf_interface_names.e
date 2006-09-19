@@ -339,11 +339,7 @@ feature -- Misc
 
 	target_remove_group (a_group: STRING): STRING is
 		do
-			Result := "Are you sure you want to remove "+a_group+"?"
-		end
-	target_remove_group_children (a_group: STRING): STRING is
-		do
-			Result := a_group+" cannot be removed because it has sub clusters."
+			Result := "Are you sure you want to remove "+a_group+" and any children of it?"
 		end
 	target_remove_external (a_external: STRING): STRING is
 		do

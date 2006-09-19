@@ -156,7 +156,9 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			retried_count := retried_count + 1
-			retry
+			if retried_count < 2 then
+				retry
+			end
 		end
 
 	new_marshalled_cache_manager_object: OBJECT_HANDLE is

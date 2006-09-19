@@ -427,7 +427,7 @@ feature {NONE} -- Implementation
 						Result := type.associated_class
 					end
 					last_type := type
-				elseif is_create then
+				elseif prev_token /= Void and is_create then
 					if found_class /= Void then
 							-- Looks like it was a creation expression since `found_class' was computed.
 						Result := found_class
@@ -653,6 +653,7 @@ feature {NONE} -- Implementation
 	feature_containing (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): TUPLE [feat_as: FEATURE_AS; name: FEATURE_NAME] is
 			-- Feature containing `a_token' in class text.  If token is not in a feature return Void.
 		require
+			a_token_not_void: a_token /= Void
 			features_ast_not_void: features_ast /= Void
 		local
 			token: EDITOR_TOKEN

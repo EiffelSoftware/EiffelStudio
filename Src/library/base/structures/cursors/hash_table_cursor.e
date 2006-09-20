@@ -44,12 +44,6 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
 end -- class HASH_TABLE_CURSOR
 
 

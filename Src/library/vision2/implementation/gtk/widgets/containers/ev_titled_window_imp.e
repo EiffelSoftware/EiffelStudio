@@ -26,8 +26,7 @@ inherit
 			make,
 			default_wm_decorations,
 			is_displayed,
-			initialize,
-			initialize_client_area
+			initialize
 		end
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -57,17 +56,6 @@ feature {NONE} -- Initialization
 			app_imp := app_implementation
 			Precursor {EV_WINDOW_IMP}
 			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, False)
-		end
-
-	initialize_client_area is
-			-- Setup client area of window
-		do
-			Precursor {EV_WINDOW_IMP}
-			accel_box := {EV_GTK_EXTERNALS}.gtk_menu_item_new
-			{EV_GTK_EXTERNALS}.gtk_container_add (accel_box, {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
-			{EV_GTK_EXTERNALS}.gtk_widget_show (accel_box)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (accel_box, 0, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, accel_box, False, False, 0)
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation

@@ -482,6 +482,13 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
 			app_implementation.window_oids.extend (internal_id)
+
+				-- Initialize accelerators box.
+			accel_box := {EV_GTK_EXTERNALS}.gtk_menu_item_new
+			{EV_GTK_EXTERNALS}.gtk_container_add (accel_box, {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
+			{EV_GTK_EXTERNALS}.gtk_widget_show (accel_box)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (accel_box, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, accel_box, False, False, 0)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation

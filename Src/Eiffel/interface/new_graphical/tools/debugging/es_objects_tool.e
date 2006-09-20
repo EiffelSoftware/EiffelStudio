@@ -1232,15 +1232,20 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		end
 
 	remove_debugged_object_line (gline: ES_OBJECTS_GRID_LINE) is
+		require
+			gline_not_void: gline /= Void
 		local
 			row: EV_GRID_ROW
 			g: like objects_grid
 		do
 			row := gline.row
+			gline.unattach
 			displayed_objects.prune_all (gline)
 			g := gline.parent_grid
 			if g /= Void then
-				g.remove_row (row.index)
+--| bug#11272 : using the next line raises display issue:
+--|				g.remove_row (row.index)
+				g.remove_rows (row.index, row.index + row.subrow_count_recursive)
 			end
 		end
 

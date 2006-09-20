@@ -931,6 +931,26 @@ feature -- Update
 			l_text_area: EB_SMART_EDITOR
 		do
 			during_synchronization := True
+			if
+				stone = Void and then
+				eiffel_project.system_defined and then
+				eiffel_project.initialized and then
+				eiffel_system.workbench.is_already_compiled and then
+				eiffel_system.workbench.last_reached_degree <= 5 and then
+				eiffel_system.root_cluster /= Void and then
+				eiffel_system.root_class_name /= Void
+			then
+				if eiffel_system.root_class.is_compiled then
+					stone := create {CLASSC_STONE}.make (eiffel_system.system.root_class.compiled_class)
+				else
+					stone := create {CLASSI_STONE}.make (eiffel_system.system.root_class)
+				end
+				if
+					eiffel_system.universe.target.clusters.count = 1
+				then
+					cluster_tool.show_current_class_cluster_cmd.execute
+				end
+			end
 			favorites_manager.refresh
 			context_tool.synchronize
 			cluster_tool.synchronize

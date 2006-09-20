@@ -438,11 +438,7 @@ feature {NONE} -- Error reporting
 				-- errors or conversion.
 			output_manager.display_system_info
 
-			window_manager.a_development_window.set_stone (create {CLASSI_STONE}.make (system.root_class))
-			window_manager.a_development_window.features_tool.synchronize
-			if universe.target.clusters.count = 1 then
-				window_manager.a_development_window.cluster_tool.show_current_class_cluster_cmd.execute
-			end
+			window_manager.last_focused_development_window.synchronize
 		end
 
 	report_precompilation_error is

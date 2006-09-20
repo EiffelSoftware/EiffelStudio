@@ -228,14 +228,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			else
 				l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
 				l_widget := visual_widget
+				if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_widget) & {EV_GTK_EXTERNALS}.gtk_can_focus_enum /= {EV_GTK_EXTERNALS}.gtk_can_focus_enum then
+					l_widget := default_pointer
+				end
 			end
-
-				-- If widget can receive focus then set the focus, otherwise (as with labels and containers) lose the focus from the previous widget.
-			if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_widget) & {EV_GTK_EXTERNALS}.gtk_can_focus_enum = {EV_GTK_EXTERNALS}.gtk_can_focus_enum then
-				{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, l_widget)
-			else
-				{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, default_pointer)
-			end
+			{EV_GTK_EXTERNALS}.gtk_window_set_focus (l_window, l_widget)
 		end
 
 	has_focus: BOOLEAN is

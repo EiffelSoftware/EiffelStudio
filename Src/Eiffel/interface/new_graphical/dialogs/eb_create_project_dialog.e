@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			extend (vb)
-			set_width (Layout_constants.Dialog_unit_to_pixels (350))
+			set_width (Layout_constants.Dialog_unit_to_pixels (500))
 
 				--| Setting default buttons
 			set_default_push_button (ok_b)

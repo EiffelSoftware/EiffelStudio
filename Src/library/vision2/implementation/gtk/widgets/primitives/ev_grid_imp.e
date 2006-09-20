@@ -38,7 +38,8 @@ inherit
 			enable_capture,
 			disable_capture,
 			has_capture,
-			set_default_colors
+			set_default_colors,
+			set_default_key_processing_handler
 		redefine
 			interface,
 			initialize,

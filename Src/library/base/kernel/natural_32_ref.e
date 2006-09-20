@@ -442,8 +442,8 @@ feature -- Conversion
 			Result := item.to_character_8
 		end
 
-	to_character_32: WIDE_CHARACTER is
-			-- Returns corresponding ASCII character to `item' value.
+	to_character_32: CHARACTER_32 is
+			-- Returns corresponding CHARACTER_32 to `item' value.
 		require
 			valid_character: is_valid_character_32_code
 		do

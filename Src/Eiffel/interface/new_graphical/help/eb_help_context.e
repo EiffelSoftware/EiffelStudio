@@ -26,12 +26,12 @@ feature {NONE} -- Initialization
 			-- Set `url' with concatenation of base URL identified by `a_base_id' and `a_url'.
 			-- See `EB_HELP_CONTEXTS_BASES' for valid `a_base_id' values.
 		require
-			valid_url: is_valid_url (a_url)
+			url_not_void: a_url /= Void
 			valid_base: is_valid_base_id (a_base_id)
 		do
 			url := base_url (a_base_id) + a_url
 		end
-			
+
 	make_absolute (a_url: STRING) is
 			-- Set `url' with `a_url'.
 		require

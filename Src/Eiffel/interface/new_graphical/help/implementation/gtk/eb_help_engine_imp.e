@@ -57,7 +57,6 @@ feature -- Basic Operations
 				cmd.append_character (' ')
 				root := eiffel_layout.docs_path.twin
 				create url.make_from_string (root)
-				url.extend ("docs")
 				url.set_file_name (a_help_context.url)
 				if (create {DIRECTORY}.make (url)).exists then
 					url.set_file_name ("index")

@@ -2550,10 +2550,9 @@ feature -- Removal
 				-- is collapsed. If you do not start the recompute from the parent row, `row_offsets'
 				-- may not be computed correctly and the grid drawing will be incorrect.
 			set_vertical_computation_required ((lower_index - 1).max (1))
-			recompute_vertical_scroll_bar
 			unlock_update
-			last_vertical_scroll_bar_value := 0
 			reset_internal_grid_attributes
+			recompute_vertical_scroll_bar
 		ensure
 			row_count_consistent: row_count = (old row_count) - (upper_index - lower_index + 1)
 			lower_row_removed: (old row (lower_index)).parent = Void

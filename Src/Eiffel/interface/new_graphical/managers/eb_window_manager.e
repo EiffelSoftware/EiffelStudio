@@ -593,22 +593,6 @@ feature -- Actions on all windows
 				for_all (agent for_all (agent c_compilation_stop_action))
 			end
 
-			if
-				eiffel_project.system_defined and then
-				eiffel_project.initialized and then
-				eiffel_system.workbench.is_already_compiled and then
-				eiffel_system.workbench.last_reached_degree <= 5 and then
-				a_development_window.editor_tool.stone = Void
-			then
-				a_development_window.editor_tool.set_stone (
-					create {CLASSI_STONE}.make (eiffel_system.system.root_class))
-				if
-					eiffel_system.universe.target.clusters.count = 1
-				then
-					a_development_window.cluster_tool.show_current_class_cluster_cmd.execute
-				end
-			end
-
 			for_all (agent synchronize_action)
 		end
 

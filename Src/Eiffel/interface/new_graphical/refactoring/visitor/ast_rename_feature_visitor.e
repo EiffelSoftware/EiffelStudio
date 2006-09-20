@@ -110,10 +110,12 @@ feature {NONE} -- Visitor implementation
 				-- we only have to do this stuff if we are a descendant
 			if is_descendant then
 				l_atom := l_as.lower
+				safe_process (l_atom)
 				if l_atom.is_id and then l_atom.string_value.is_case_insensitive_equal (old_feature_name) then
 					l_atom.replace_text (new_feature_name, match_list)
 				end
 				l_atom := l_as.upper
+				safe_process (l_atom)
 				if l_atom /= Void and then l_atom.is_id and then l_atom.string_value.is_case_insensitive_equal (old_feature_name) then
 					l_atom.replace_text (new_feature_name, match_list)
 				end

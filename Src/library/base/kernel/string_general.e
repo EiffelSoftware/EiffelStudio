@@ -224,7 +224,7 @@ feature -- Conversion
 		end
 
 	as_string_32, to_string_32: STRING_32 is
-			-- Convert `Current' as a STRING_8.
+			-- Convert `Current' as a STRING_32.
 		local
 			i, nb: INTEGER
 		do
@@ -244,7 +244,7 @@ feature -- Conversion
 				end
 			end
 		ensure
-			as_string_8_not_void: Result /= Void
+			as_string_32_not_void: Result /= Void
 			identity: (is_string_32 and Result = Current) or (not is_string_32 and Result /= Current)
 		end
 

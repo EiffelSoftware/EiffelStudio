@@ -454,14 +454,14 @@ feature -- Plug and Makefile file
 			equal_name :=
 				Encoder.feature_name (any_cl.types.first.static_type_id,
 					any_cl.feature_table.item_id (Names_heap.equal_name_id).body_index).twin
-			buffer.put_string ("extern void ")
+			buffer.put_string ("extern EIF_BOOLEAN ")
 			buffer.put_string (equal_name)
 			buffer.put_string ("();%N")
 
 			twin_name :=
 				Encoder.feature_name (any_cl.types.first.static_type_id,
 					any_cl.feature_table.item_id (Names_heap.twin_name_id).body_index).twin
-			buffer.put_string ("extern void ")
+			buffer.put_string ("extern EIF_REFERENCE ")
 			buffer.put_string (twin_name)
 			buffer.put_string ("();%N")
 

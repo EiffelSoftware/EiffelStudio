@@ -190,7 +190,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 						l_group := l_group.target.lowest_used_in_library
 					end
 					current_system := l_group.target.system
-					is_il_generation := l_group.target.setting_msil_generation
 					properties.reset
 					add_group_properties (l_group, l_group.target)
 					properties.column(1).set_width (properties.column (1).required_width_of_item_span (1, properties.row_count) + 3)
@@ -201,7 +200,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 						l_group := l_group.target.lowest_used_in_library
 					end
 					current_system := l_group.target.system
-					is_il_generation := l_group.target.setting_msil_generation
 					l_class_options := l_group.changeable_class_options (l_cs.class_name)
 					create l_inh_options
 					l_inh_options.merge (l_class_options)
@@ -220,7 +218,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					l_name_prop.set_value (l_cs.file_name)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
-					add_misc_option_properties (l_class_options, l_inh_options, True)
+					add_misc_option_properties (l_class_options, l_inh_options, True, l_group.target.setting_msil_generation)
 					add_assertion_option_properties (l_class_options, l_inh_options, True)
 					add_warning_option_properties (l_class_options, l_inh_options, True)
 					add_debug_option_properties (l_class_options, l_inh_options, True)

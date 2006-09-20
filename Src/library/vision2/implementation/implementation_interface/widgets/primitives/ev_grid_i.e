@@ -2461,7 +2461,6 @@ feature -- Removal
 		local
 			a_row_i: EV_GRID_ROW_I
 			subrow_count_recursive: INTEGER
-			l_row_index: INTEGER
 		do
 				-- Retrieve row from the grid
 			a_row_i := row_internal (a_row)

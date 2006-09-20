@@ -65,37 +65,6 @@ feature -- Access
 	current_feature: FEATURE_I
 			-- Current feature where type appears.
 
-feature {NONE} -- Helper
-
-	process_generic_in_gen_type (a_type: TYPE_A) is
-			-- Process generic in generic type.
-		require
-			a_type_not_void: a_type /= Void
-		local
-			l_feature_i: TYPE_FEATURE_I
-			l_formal: FORMAL_A
-		do
-			if not a_type.is_formal then
-				a_type.process (Current)
-			else
-					-- Try solving a formal type.
-				l_formal ?= a_type
-				check l_formal_not_void: l_formal /= Void end
-				l_feature_i := current_class.formal_at_position (l_formal.position)
-				if l_feature_i /= Void then
-					l_feature_i := current_class.generic_features.item (l_feature_i.rout_id_set.first)
-					if l_feature_i /= Void then
-						l_feature_i.type.process (Current)
-					end
-				end
-				if l_feature_i = Void then
-						-- Some errors occurred when trying to evaluate the type of the formal
-						-- in `current_class', simply display the formal without trying to resolve it.
-					a_type.process (Current)
-				end
-			end
-		end
-
 feature {TYPE_A} -- Visitors
 
 	process_bits_a (a_type: BITS_A) is
@@ -183,8 +152,7 @@ feature {TYPE_A} -- Visitors
 				until
 					i > count
 				loop
-					process_generic_in_gen_type (a_type.generics.item (i))
-
+					a_type.generics.item (i).process (Current)
 					if i /= count then
 						text_formatter.process_symbol_text (ti_comma)
 						text_formatter.add_space
@@ -271,7 +239,7 @@ feature {TYPE_A} -- Visitors
 					text_formatter.process_local_text (a_type.label_name (i))
 					text_formatter.process_symbol_text (ti_colon)
 					text_formatter.add_space
-					process_generic_in_gen_type (a_type.generics.item (i))
+					a_type.generics.item (i).process (Current)
 					if i /= count then
 						text_formatter.process_symbol_text (ti_semi_colon)
 						text_formatter.add_space

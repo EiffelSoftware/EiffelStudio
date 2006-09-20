@@ -28,9 +28,6 @@ feature -- Access
 	properties: PROPERTY_GRID
 			-- Grid where properties get added.
 
-	is_il_generation: BOOLEAN
-			-- IL generation enabled?
-
 	debug_clauses: DS_ARRAYED_LIST [STRING]
 			-- Possible debug clauses.
 
@@ -56,7 +53,7 @@ feature {NONE} -- Implementation
 			-- default is to do nothing
 		end
 
-	add_misc_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
+	add_misc_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits, a_il_generation: BOOLEAN) is
 			-- Add option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -113,7 +110,7 @@ feature {NONE} -- Implementation
 			end
 			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_namespace))
 			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
-			if not is_il_generation then
+			if not a_il_generation then
 				l_string_prop.enable_readonly
 			end
 			properties.add_property (l_string_prop)

@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 
 			properties.current_section.expand
 
-			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
+			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation)
 
 			create l_bool_prop.make_with_value (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
 			l_bool_prop.set_description (conf_interface_names.target_line_generation_description)
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		local
 			l_string_prop: STRING_PROPERTY [STRING_32]
 			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
-			l_extends: BOOLEAN
+			l_extends, l_il_generation: BOOLEAN
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_pf_choices: ARRAYED_LIST [STRING_32]
 			l_dir_prop: DIRECTORY_PROPERTY
@@ -181,6 +181,9 @@ feature {NONE} -- Implementation
 		do
 				-- does `current_target' extend something?
 			l_extends := current_target.extends /= Void
+
+				-- il generation?
+			l_il_generation := current_target.setting_msil_generation
 
 			properties.add_section (conf_interface_names.section_advanced)
 
@@ -207,7 +210,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_dead_code_removal_name, current_target.setting_dead_code_removal)
 			l_bool_prop.set_description (conf_interface_names.target_dead_code_removal_description)
 			add_boolean_setting_actions (l_bool_prop, s_dead_code_removal, True)
-			if is_il_generation then
+			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -215,7 +218,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_dynamic_runtime_name, current_target.setting_dynamic_runtime)
 			l_bool_prop.set_description (conf_interface_names.target_dynamic_runtime_description)
 			add_boolean_setting_actions (l_bool_prop, s_dynamic_runtime, False)
-			if is_il_generation then
+			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -228,7 +231,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_exception_trace_name, current_target.setting_exception_trace)
 			l_bool_prop.set_description (conf_interface_names.target_exception_trace_description)
 			add_boolean_setting_actions (l_bool_prop, s_exception_trace, False)
-			if is_il_generation then
+			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -236,7 +239,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_inlining_name, current_target.setting_inlining)
 			l_bool_prop.set_description (conf_interface_names.target_inlining_description)
 			add_boolean_setting_actions (l_bool_prop, s_inlining, True)
-			if is_il_generation then
+			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -245,7 +248,7 @@ feature {NONE} -- Implementation
 			l_string_prop.set_description (conf_interface_names.target_inlining_size_description)
 			add_string_setting_actions (l_string_prop, s_inlining_size, "")
 			l_string_prop.validate_value_actions.extend (agent valid_inlining_size)
-			if is_il_generation then
+			if l_il_generation then
 				l_string_prop.enable_readonly
 			end
 			properties.add_property (l_string_prop)
@@ -253,7 +256,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_multithreaded_name, current_target.setting_multithreaded)
 			l_bool_prop.set_description (conf_interface_names.target_multithreaded_description)
 			add_boolean_setting_actions (l_bool_prop, s_multithreaded, False)
-			if is_il_generation then
+			if l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -282,7 +285,7 @@ feature {NONE} -- Implementation
 			create l_file_prop.make (conf_interface_names.target_shared_library_definition_name)
 			l_file_prop.set_description (conf_interface_names.target_shared_library_definition_description)
 			add_string_setting_actions (l_file_prop, s_shared_library_definition, "")
-			if is_il_generation then
+			if l_il_generation then
 				l_file_prop.enable_readonly
 			end
 			l_file_prop.add_filters (definition_files_filter, definition_files_description)
@@ -302,7 +305,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_msil_use_optimized_precompile_name, current_target.setting_msil_use_optimized_precompile)
 			l_bool_prop.set_description (conf_interface_names.target_msil_use_optimized_precompile_description)
 			add_boolean_setting_actions (l_bool_prop, s_msil_use_optimized_precompile, False)
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -310,7 +313,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_use_cluster_name_as_namespace_name, current_target.setting_use_cluster_name_as_namespace)
 			l_bool_prop.set_description (conf_interface_names.target_use_cluster_name_as_namespace_description)
 			add_boolean_setting_actions (l_bool_prop, s_use_cluster_name_as_namespace, True)
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -318,7 +321,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_use_all_cluster_name_as_namespace_name, current_target.setting_use_all_cluster_name_as_namespace)
 			l_bool_prop.set_description (conf_interface_names.target_use_all_cluster_name_as_namespace_description)
 			add_boolean_setting_actions (l_bool_prop, s_use_all_cluster_name_as_namespace, True)
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -326,7 +329,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_dotnet_naming_convention_name, current_target.setting_dotnet_naming_convention)
 			l_bool_prop.set_description (conf_interface_names.target_dotnet_naming_convention_description)
 			add_boolean_setting_actions (l_bool_prop, s_dotnet_naming_convention, False)
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -334,7 +337,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_il_verifiable_name, current_target.setting_il_verifiable)
 			l_bool_prop.set_description (conf_interface_names.target_il_verifiable_description)
 			add_boolean_setting_actions (l_bool_prop, s_il_verifiable, True)
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -342,7 +345,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_cls_compliant_name, current_target.setting_cls_compliant)
 			l_bool_prop.set_description (conf_interface_names.target_cls_compliant_description)
 			add_boolean_setting_actions (l_bool_prop, s_cls_compliant, True)
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -350,7 +353,7 @@ feature {NONE} -- Implementation
 			create l_dir_prop.make (conf_interface_names.target_metadata_cache_path_name)
 			l_dir_prop.set_description (conf_interface_names.target_metadata_cache_path_description)
 			add_string_setting_actions (l_dir_prop, s_metadata_cache_path, "")
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_dir_prop.enable_readonly
 			end
 			properties.add_property (l_dir_prop)
@@ -359,7 +362,7 @@ feature {NONE} -- Implementation
 			l_string_prop.set_description (conf_interface_names.target_msil_classes_per_module_description)
 			add_string_setting_actions (l_string_prop, s_msil_classes_per_module, "")
 			l_string_prop.validate_value_actions.extend (agent valid_classes_per_module)
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_string_prop.enable_readonly
 			end
 			properties.add_property (l_string_prop)
@@ -380,7 +383,7 @@ feature {NONE} -- Implementation
 
 			l_choice_prop.set_description (conf_interface_names.target_msil_clr_version_description)
 			add_string_setting_actions (l_choice_prop, s_msil_clr_version, "")
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_choice_prop.enable_readonly
 			end
 			properties.add_property (l_choice_prop)
@@ -388,7 +391,7 @@ feature {NONE} -- Implementation
 			create l_choice_prop.make_with_choices (conf_interface_names.target_msil_generation_type_name, <<"exe", "dll">>)
 			l_choice_prop.set_description (conf_interface_names.target_msil_generation_type_description)
 			add_string_setting_actions (l_choice_prop, s_msil_generation_type, "")
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_choice_prop.enable_readonly
 			end
 			properties.add_property (l_choice_prop)
@@ -401,7 +404,7 @@ feature {NONE} -- Implementation
 			end
 			l_key_file_prop.set_il_version (l_il_version)
 			add_string_setting_actions (l_key_file_prop, s_msil_key_file_name, "")
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_key_file_prop.enable_readonly
 			end
 			l_key_file_prop.add_filters (strong_name_key_files_filter, strong_name_key_files_description)
@@ -411,7 +414,7 @@ feature {NONE} -- Implementation
 			create l_bool_prop.make_with_value (conf_interface_names.target_force_32bits_name, current_target.setting_force_32bits)
 			l_bool_prop.set_description (conf_interface_names.target_force_32bits_description)
 			add_boolean_setting_actions (l_bool_prop, s_force_32bits, False)
-			if not current_target.setting_msil_generation then
+			if not l_il_generation then
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
@@ -541,7 +544,6 @@ feature {NONE} -- Configuration setting
 			else
 				current_target.update_setting (s_msil_generation, "true")
 			end
-			is_il_generation := current_target.setting_msil_generation
 		end
 
 	set_string_setting (a_name: STRING; a_default: STRING; a_value: STRING) is

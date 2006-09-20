@@ -165,22 +165,20 @@ feature {NONE} -- Implementation
 					is_force_rebuild or l_classes.after
 				loop
 					l_class := l_classes.item_for_iteration
-					if l_class.is_compiled or l_class.does_override then
-							-- check for changes
-						l_class.check_changed
-						if l_class.is_error or else l_class.is_renamed or l_class.is_removed then
-							l_class.reset_error
-							is_force_rebuild := True
-						else
-							if l_class.is_modified then
-								if l_class.is_compiled then
-										-- Invariant of CONF_CLASS tell us that it cannot be an override class.
-									if not l_class.is_overriden then
-										modified_classes.extend (l_class)
-									end
-								elseif l_class.does_override then
-									l_class.overrides.do_if (agent modified_classes.extend, agent {CONF_CLASS}.is_compiled)
+						-- check for changes
+					l_class.check_changed
+					if l_class.is_error or else l_class.is_renamed or l_class.is_removed then
+						l_class.reset_error
+						is_force_rebuild := True
+					else
+						if l_class.is_modified then
+							if l_class.is_compiled then
+									-- Invariant of CONF_CLASS tell us that it cannot be an override class.
+								if not l_class.is_overriden then
+									modified_classes.extend (l_class)
 								end
+							elseif l_class.does_override then
+								l_class.overrides.do_if (agent modified_classes.extend, agent {CONF_CLASS}.is_compiled)
 							end
 						end
 					end

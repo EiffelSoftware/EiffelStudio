@@ -131,12 +131,10 @@ feature -- Settings
 			create l_prc_factory
 			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (a_command, Void)
 			l_prc_launcher.set_separate_console (False)
+			l_prc_launcher.set_hidden (True)
 			create l_dialog
 			l_dialog.set_title ("Precompilation Progress")
-			l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING; a_dialog: EB_EXTERNAL_OUTPUT_DIALOG)
-				do
-					ev_application.do_once_on_idle (agent a_dialog.append_text (a_string))
-				end (?, l_dialog))
+			l_prc_launcher.redirect_output_to_agent (agent l_dialog.append_in_gui_thread)
 			l_prc_launcher.redirect_error_to_same_as_output
 			l_prc_launcher.set_on_exit_handler (agent l_dialog.hide)
 			l_prc_launcher.set_on_terminate_handler (agent l_dialog.hide)

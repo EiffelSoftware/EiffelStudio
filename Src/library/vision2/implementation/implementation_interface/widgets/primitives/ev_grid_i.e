@@ -18,6 +18,7 @@ inherit
 		redefine
 			interface,
 			drop_actions,
+			set_default_key_processing_handler,
 			has_focus,
 			set_focus,
 			set_pebble,
@@ -557,6 +558,13 @@ feature -- Access
 			else
 				Result := internal_tooltip.twin
 			end
+		end
+
+	set_default_key_processing_handler (a_handler: like default_key_processing_handler) is
+			-- Assign `default_key_processing_handler' to `a_handler'.
+		do
+			default_key_processing_handler := a_handler
+			drawable.default_key_processing_handler := a_handler
 		end
 
 	has_capture: BOOLEAN is
@@ -2457,27 +2465,9 @@ feature -- Removal
 		do
 				-- Retrieve row from the grid
 			a_row_i := row_internal (a_row)
-
-				-- Firstly handle subnode removal recursively
+				-- Remove row and its subrows
 			subrow_count_recursive := a_row_i.subrow_count_recursive
-			from
-				l_row_index := a_row + subrow_count_recursive
-			until
-				l_row_index = a_row
-			loop
-				set_vertical_computation_required ((l_row_index - 1).max (1))
-				internal_remove_row (row_internal (l_row_index))
-				l_row_index := l_row_index - 1
-			end
-
-
-				-- Note that the recomputation is performed from the row before `lower_index'.
-				-- This is to handle the case where you remove all of the subrows of a row that
-				-- is collapsed. If you do not start the recompute from the parent row, `row_offsets'
-				-- may not be computed correctly and the grid drawing will be incorrect.
-			set_vertical_computation_required ((a_row - 1).max (1))
-			internal_remove_row (a_row_i)
-			redraw_client_area
+			remove_rows (a_row, a_row + subrow_count_recursive)
 		ensure
 			row_count_updated: row_count = old row_count - (old row (a_row).subrow_count_recursive + 1)
 			old_row_removed: (old row (a_row)).parent = Void
@@ -2570,28 +2560,6 @@ feature -- Removal
 			lower_row_removed: (old row (lower_index)).parent = Void
 			upper_row_removed: (old row (upper_index)).parent = Void
 			to_implement_assertion (once "middle_rows_removed from lower to upper all old rows parent = Void")
-		end
-
-	internal_remove_row (a_row: EV_GRID_ROW_I) is
-			-- Perform internal settings required for removal of `a_row'.
-		require
-			a_row_not_void: a_row /= Void
-		local
-			l_row_index: INTEGER
-		do
-				-- Remove row and its corresponding data from `rows' and `internal_row_data'				
-			l_row_index := a_row.index
-
-				-- Unset internal data.
-			a_row.update_for_removal
-			rows.go_i_th (l_row_index)
-			rows.remove
-			internal_row_data.go_i_th (l_row_index)
-			internal_row_data.remove
-
-			update_grid_row_indices (l_row_index)
-		ensure
-			node_counts_correct_in_parent: old (a_row.parent_row_i) /= Void implies (old a_row.parent_row_i).node_counts_correct
 		end
 
 	clear is
@@ -4052,10 +4020,17 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			header_viewport.set_minimum_height (header.height)
 			header.set_minimum_width (maximum_header_width)
 			header_viewport.set_item_size (maximum_header_width, header.height)
-			create fixed
-			fixed.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
-			viewport.extend (fixed)
-			fixed.extend (drawable)
+
+			if {PLATFORM}.is_windows then
+					-- Needed for custom widget insertion implementation.
+				create fixed
+				fixed.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
+				viewport.extend (fixed)
+				fixed.extend (drawable)
+			else
+				viewport.extend (drawable)
+			end
+
 			extend (horizontal_box)
 
 				-- Now connect all of the events to `drawable' which will be used to propagate events to the `interface'.
@@ -4513,7 +4488,8 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 		-- A spacer to separate the corners of the scroll bars.
 
 	fixed: EV_FIXED
-		-- Main widget contained in `Current' used to manipulate the individual widgets required.
+		-- Main widget contained in `Current' used for custom widget insertion for descendent implementations.
+		-- Currently MSWin only.
 
 	default_header_height: INTEGER is 16
 		-- Default height applied to `header'.

@@ -594,6 +594,8 @@ feature -- Actions on all windows
 			end
 
 			if
+				eiffel_project.system_defined and then
+				eiffel_project.initialized and then
 				eiffel_system.workbench.is_already_compiled and then
 				eiffel_system.workbench.last_reached_degree <= 5 and then
 				a_development_window.editor_tool.stone = Void

@@ -155,51 +155,36 @@ feature {NONE} -- Implementation
 			a_group_not_void: a_group /= Void
 		local
 			l_class: CONF_CLASS
-			l_new_classes, l_classes: HASH_TABLE [CONF_CLASS, STRING]
-			l_name: STRING
-			l_err: CONF_ERROR
+			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			l_classes := a_group.classes
 			if l_classes /= Void then
-				create l_new_classes.make (l_classes.count)
 				from
 					l_classes.start
 				until
-					l_classes.after or is_force_rebuild
+					is_force_rebuild or l_classes.after
 				loop
 					l_class := l_classes.item_for_iteration
-						-- check for changes
-					l_class.check_changed
-					if l_class.is_renamed or l_class.is_removed then
-						is_force_rebuild := True
-					else
-						if l_class.is_compiled then
-								-- Invariant of CONF_CLASS tell us that it cannot be an override class.
-							if l_class.is_error then
-								l_err := l_class.last_error
-								l_class.reset_error
-								add_and_raise_error (l_err)
-							end
-							if l_class.is_overriden then
-								l_class.actual_class.check_changed
-								if l_class.actual_class.is_modified then
-									modified_classes.extend (l_class)
-								end
-							elseif l_class.is_modified then
-								modified_classes.extend (l_class)
-							end
-						end
-						l_name := l_class.renamed_name
-						if not l_new_classes.has (l_name) then
-							l_new_classes.force (l_class, l_name)
+					if l_class.is_compiled or l_class.does_override then
+							-- check for changes
+						l_class.check_changed
+						if l_class.is_error or else l_class.is_renamed or l_class.is_removed then
+							l_class.reset_error
+							is_force_rebuild := True
 						else
-							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, l_new_classes.found_item.full_file_name, l_class.full_file_name, a_group.target.system.file_name))
+							if l_class.is_modified then
+								if l_class.is_compiled then
+										-- Invariant of CONF_CLASS tell us that it cannot be an override class.
+									if not l_class.is_overriden then
+										modified_classes.extend (l_class)
+									end
+								elseif l_class.does_override then
+									l_class.overrides.do_if (agent modified_classes.extend, agent {CONF_CLASS}.is_compiled)
+								end
+							end
 						end
 					end
 					l_classes.forth
-				end
-				if not is_error and then not is_force_rebuild then
-					a_group.set_classes (l_new_classes)
 				end
 			end
 		end

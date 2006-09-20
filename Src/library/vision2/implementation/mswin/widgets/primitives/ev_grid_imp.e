@@ -10,7 +10,7 @@ indexing
 
 class
 	EV_GRID_IMP
-	
+
 inherit
 
 	EV_CELL_IMP
@@ -35,29 +35,30 @@ inherit
 			set_deny_cursor,
 			enable_capture, disable_capture,
 			has_capture,
-			set_default_colors
+			set_default_colors,
+			set_default_key_processing_handler
 		redefine
 			initialize,
 			destroy,
 			set_background_color,
 			set_foreground_color
 		end
-	
+
 	EV_GRID_I
 		redefine
 			interface
 		select
 			interface
 		end
-		
+
 	WEL_SHARED_TEMPORARY_OBJECTS
 		export
 			{NONE} all
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -81,7 +82,7 @@ feature {NONE} -- Initialization
 			color_imp ?= non_focused_selection_text_color.implementation
 			color_imp.set_with_system_id (wel_color_constants.color_btntext)
 		end
-		
+
 feature -- Access
 
 	string_size (s: STRING_GENERAL; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER]) is
@@ -113,7 +114,7 @@ feature -- Access
 				screen_dc.quick_release
 			end
 		end
-		
+
 feature {NONE} -- Status setting
 
 	set_background_color (color: EV_COLOR) is
@@ -128,7 +129,7 @@ feature {NONE} -- Status setting
 		do
 			foreground_color_imp ?= color.implementation
 			redraw_client_area
-		end		
+		end
 
 feature {NONE} -- Implementation
 
@@ -137,13 +138,13 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_CELL_IMP}
 		end
-		
+
 	extra_text_spacing: INTEGER is
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
 		do
 			Result := 3
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GRID;

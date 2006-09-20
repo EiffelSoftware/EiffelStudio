@@ -40,6 +40,10 @@ feature {NONE} -- Initialization
 			vbox: EV_VERTICAL_BOX
 		do
 			create choice_list
+			choice_list.default_key_processing_handler := agent (a_key: EV_KEY): BOOLEAN
+				do
+					Result := not a_key.is_arrow and not (a_key.code = {EV_KEY_CONSTANTS}.key_tab)
+				end
 			choice_list.enable_single_row_selection
 			choice_list.key_press_string_actions.extend (agent on_char)
 			choice_list.key_press_actions.extend (agent on_key_down)

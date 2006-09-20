@@ -48,12 +48,6 @@ feature {NONE} -- GUI elements
 
 feature -- Update
 
-	clear_text is
-			-- Clear displayed text.
-		do
-			text_field.set_text ("")
-		end
-
 	append_text (a_text: STRING) is
 			-- Append `a_text' to the displayed text.
 		local

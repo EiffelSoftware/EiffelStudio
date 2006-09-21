@@ -147,11 +147,11 @@ feature -- Launching
 	close_ecdbgd is
 			-- Close the Eiffel debugger's daemon
 		local
-			n: INTEGER
+			r, n: INTEGER
 		do
 			stop_ecdbgd_alive_checking
 			if is_ecdbgd_alive then
-				Close_debugger_request.send
+				r := c_close_ecdbgd (0)
 
 				from
 					n := 0
@@ -256,11 +256,6 @@ feature {NONE} -- ecdbgd status
 
 feature {NONE} -- Implementation
 
-	close_debugger_request: EWB_REQUEST is
-		once
-			create Result.make ({IPC_SHARED}.Rqst_close_debugger)
-		end
-
 	Process_factory: PROCESS_FACTORY is
 		once
 			create Result
@@ -293,6 +288,14 @@ feature {NONE} -- Externals
 			"C signature (char* , char* , int ): int"
 		alias
 			"launch_ecdbgd"
+		end
+
+	c_close_ecdbgd (timeout: INTEGER): INTEGER is
+			-- close classic Eiffel debugger component
+		external
+			"C signature (int ): int"
+		alias
+			"close_ecdbgd"
 		end
 
 	ipc_current_process_id: INTEGER is

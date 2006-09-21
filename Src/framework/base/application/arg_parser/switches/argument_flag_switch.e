@@ -111,13 +111,23 @@ feature {ARGUMENT_LITE_PARSER} -- Factory Functions
 	create_option: ARGUMENT_FLAG_OPTION is
 			-- Creates a new argument option for switch
 		do
-			create Result.make (name, "", flags, case_sensitive_flags, Current)
+			create Result.make (name, "", create {ARRAYED_LIST [CHARACTER]}.make (0), case_sensitive_flags, Current)
 		end
 
 	create_value_option (a_value: STRING): ARGUMENT_FLAG_OPTION is
 			-- Creates a new argument option given a value `a_value'
+		local
+			l_flags: ARRAYED_LIST [CHARACTER]
 		do
-			create Result.make (name, a_value, flags, case_sensitive_flags, Current)
+			create l_flags.make (a_value.count)
+			a_value.linear_representation.do_all (agent (a_item: CHARACTER; a_flags: ARRAYED_LIST [CHARACTER])
+				require
+					not_a_item_is_null: a_item /= '%U'
+					a_flags_attached: a_flags /= Void
+				do
+					a_flags.extend (a_item)
+				end (?, l_flags))
+			create Result.make (name, a_value, l_flags, case_sensitive_flags, Current)
 		end
 
 feature {NONE} -- Usage
@@ -150,9 +160,7 @@ feature {NONE} -- Usage
 				Result.append_character (c)
 				Result.append (once ": ")
 				Result.append (a_flags [c])
-				if not l_list.islast then
-					Result.append_character ('%N')
-				end
+				Result.append_character ('%N')
 				l_list.forth
 			end
 		ensure

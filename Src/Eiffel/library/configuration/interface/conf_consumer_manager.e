@@ -327,8 +327,9 @@ feature {NONE} -- Implementation
 						assemblies.force (an_assembly, l_guid)
 						old_assemblies.remove (l_guid)
 
-							-- get guids of referenced assemblies
+							-- get guids of referenced assemblies and reset the dependencies, they will get added later on
 						l_as_deps := l_other_assembly.dependencies
+						l_other_assembly.set_dependencies (Void)
 						if l_as_deps = Void then
 							create l_as_deps.make (0)
 						end

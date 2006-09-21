@@ -15,4 +15,4 @@ class
 inherit
 	<INHERITED_CLASS_NAME>
 	
-end -- class <CLASS_NAME>
+end

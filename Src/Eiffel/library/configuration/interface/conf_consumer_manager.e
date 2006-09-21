@@ -219,7 +219,6 @@ feature {NONE} -- Implementation
 			i, cnt: INTEGER
 			l_cons_ass: CONSUMED_ASSEMBLY
 		do
-			create l_reader
 
 			l_guid := an_assembly.guid
 			l_deps := dependencies.item (l_guid)
@@ -227,6 +226,7 @@ feature {NONE} -- Implementation
 				-- do we already have information about the dependencies?
 			if l_deps = Void then
 					-- we have to get the dependencies from the reference file
+				create l_reader
 				create l_reference_file.make_from_string (an_assembly.consumed_path)
 				l_reference_file.set_file_name (referenced_assemblies_info_file)
 				l_reader.deserialize (l_reference_file, 0)
@@ -304,6 +304,7 @@ feature {NONE} -- Implementation
 				end
 				an_assembly.set_dotnet_classes (l_other_assembly.dotnet_classes)
 				set_renamed_classes (an_assembly, l_other_assembly)
+				an_assembly.set_date (l_other_assembly.date)
 			else
 					-- see if we have information about this assembly from a previous compilation
 				l_other_assembly := old_assemblies.item (l_guid)
@@ -355,7 +356,6 @@ feature {NONE} -- Implementation
 					rebuild_classes (an_assembly, Void)
 					assemblies.force (an_assembly, l_guid)
 				end
-				an_assembly.set_date (cache_modified_date)
 			end
 		ensure
 			an_assembly_valid: an_assembly.is_valid
@@ -450,6 +450,7 @@ feature {EXTERNAL_CLASS_C} -- Information building
 			check
 				consumed_assembly_types: l_types /= Void
 			end
+			an_assembly.set_date (file_modified_date (l_types_file))
 
 				-- add classes
 			if l_old_dotnet_classes /= Void then

@@ -22,24 +22,14 @@ feature {NONE} -- Initialization
 			set_size (500, 500)
 
 			create text_field
-			extend (text_field)
 			text_field.disable_word_wrapping
 			text_field.disable_edit
+			extend (text_field)
 
 			create mutex.make
-			create text_to_append.make_empty
 			create action_queue
 
 			create timer.make_with_interval (100)
-			timer.actions.extend (agent
-				do
-					mutex.lock
-					if not text_to_append.is_empty then
-						append_text (text_to_append)
-						text_to_append.wipe_out
-					end
-					mutex.unlock
-				end)
 			timer.actions.extend (agent
 				do
 					mutex.lock
@@ -76,7 +66,7 @@ feature -- Update
 			-- Append `a_text to the displayed text in the gui thread.
 		do
 			mutex.lock
-			text_to_append.append (a_text)
+			action_queue.extend (agent append_text (a_text))
 			mutex.unlock
 		end
 
@@ -90,10 +80,8 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	text_to_append: STRING
-			-- Text for updating text from an other thread.
-
 	action_queue: ACTION_SEQUENCE [TUPLE []]
+			-- Actions to execute in the gui thread.
 
 	timer: EV_TIMEOUT
 			-- Timer for updating text from an other thread.
@@ -102,6 +90,6 @@ feature {NONE} -- Implementation
 			-- Mutex for updating text from an other thread.
 
 invariant
-	initialized: text_field /= Void and mutex /= Void and text_to_append /= Void
+	initialized: text_field /= Void and mutex /= Void and action_queue /= Void
 
 end

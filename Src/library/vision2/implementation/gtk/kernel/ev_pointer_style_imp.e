@@ -152,8 +152,8 @@ feature -- Implementation
 				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.Gdk_size_sb_v_double_arrow_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
 				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
-
-
+			when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
+				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_question_arrow_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
 				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
@@ -203,7 +203,7 @@ feature -- Implementation
 	gdk_pixbuf: POINTER
 		-- Pixbuf used for pointer style implementation.
 
-feature {EV_ANY_HANDLER} -- Implementation
+feature {EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 
 	predefined_cursor_code: INTEGER;
 		-- Predefined cursor code used for selecting platform cursors.

@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 						an_item ?= new_selection.item.implementation
 						newly_selected_items.extend (an_item)
 					end
-					previous_selection.prune (new_selection.item)
+					previous_selection.prune_all (new_selection.item)
 					new_selection.forth
 				end
 				from

@@ -10,17 +10,17 @@ class
 
 inherit
 	GB_INPUT_FIELD
-	
+
 	GB_SHARED_PREFERENCES
 		undefine
 			copy, is_equal, default_create
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
-	
+
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_COLOR]]; a_validate_agent: FUNCTION [ANY, TUPLE [EV_COLOR], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
@@ -52,12 +52,12 @@ feature {NONE} -- Initialization
 			execution_agent := an_execution_agent
 				-- Store `a_validate_agent'.
 			validate_agent := a_validate_agent
-			
+
 			set_padding_width (object_editor_vertical_padding_width)
-			
+
 			create horizontal_box
 			horizontal_box.set_padding_width (object_editor_padding_width)
-			
+
 			create color_area
 			color_area.pointer_double_press_actions.force_extend (agent color_area_double_clicked)
 			color_area.expose_actions.force_extend (agent color_area.clear)
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			color_area_parent.extend (color_area)
 			horizontal_box.extend (color_area_parent)
 			horizontal_box.disable_item_expand (color_area_parent)
-			
+
 			create select_button.make_with_text (select_button_text)
 			create tool_bar
 			tool_bar.extend (select_button)
@@ -85,9 +85,9 @@ feature {NONE} -- Initialization
 			horizontal_box.extend (tool_bar)
 			horizontal_box.disable_item_expand (tool_bar)
 			extend (horizontal_box)
-			
+
 			color_area_parent.set_minimum_width (tool_bar.height)
-			
+
 			a_parent.extend (Current)
 			populate_constants
 		ensure
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			validate_agent_not_void: validate_agent /= Void
 			internal_gb_ev_any_not_void: internal_gb_ev_any /= Void
 		end
-		
+
 feature -- Access
 
 	type: STRING is
@@ -103,10 +103,10 @@ feature -- Access
 		once
 			Result := color_constant_type
 		end
-		
+
 	color_area: EV_DRAWING_AREA
 		-- Area in which current color is displayed.
-		
+
 	color_area_parent: EV_FRAME
 		-- parent for `color_area'.
 
@@ -132,7 +132,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 					blocked_list_item := list_item
 				end
 				enable_constant_mode
-				
+
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
@@ -142,7 +142,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				list_item.select_actions.resume
 				if blocked_list_item /= Void then
 					blocked_list_item.deselect_actions.resume
-				end	
+				end
 			else
 				constants_button.select_actions.block
 				constants_button.disable_select
@@ -158,13 +158,13 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 
 	execution_agent: PROCEDURE [ANY, TUPLE [EV_COLOR]]
 		-- Agent to execute command associated with value entered into `Current'.
-		
+
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main box used in creation of `Current'.
-		
+
 	select_button: EV_TOOL_BAR_BUTTON
 		-- Button used to select a color.
-		
+
 	spacing_cell: EV_CELL
 		-- Cell used to space buttons.
 
@@ -190,7 +190,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			constants_combo_box.remove_selection
 			spacing_cell.show
 		end
-		
+
 
 	enable_constant_mode is
 			-- Ensure constant entry fields are hidden.
@@ -206,8 +206,8 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				constants_combo_box.first.enable_select
 			end
 		end
-		
-		
+
+
 	populate_constants  is
 			-- Populate all constants.
 		require
@@ -229,7 +229,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				list_item.set_pixmap (color_constants.item.small_pixmap)
 				list_item.set_data (color_constants.item)
 				add_to_list_alphabetically (constants_combo_box, list_item)
-				
+
 				list_item.deselect_actions.block
 				list_item.disable_select
 				list_item.deselect_actions.resume
@@ -249,7 +249,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				add_select_item
 			end
 		end
-	
+
 	list_item_selected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected from `constants_combo_box'.
 		local
@@ -263,7 +263,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 					data_was_constant: constant /= Void
 				end
 				validate_agent.call ([constant.value])
-			
+
 				if validate_agent.last_result then
 					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
 					constant.add_referer (constant_context)
@@ -273,7 +273,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 						remove_select_item
 					end
 				else
-					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again, preferences.preferences)
+					create warning_dialog.make_initialized (1, preferences.dialog_data.show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again, preferences.preferences)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_ok_action (agent do_nothing)
 					warning_dialog.set_title ("Invalid Constant Selected")
@@ -309,9 +309,9 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				execute_agent (color_dialog.color)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	accept_color_stone (stone: GB_COLOR_STONE) is
 			-- Set color of `Current', based on settings of `stone'.
 		require
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 		do
 			execute_agent (stone.color)
 		end
-		
+
 	color_area_double_clicked is
 			-- `color_area' has been double clicked, so permit a user to select a color manually.
 		do

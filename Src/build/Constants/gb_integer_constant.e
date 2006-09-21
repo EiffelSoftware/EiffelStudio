@@ -9,26 +9,29 @@ indexing
 
 class
 	GB_INTEGER_CONSTANT
-	
+
 inherit
 	GB_CONSTANT
-	
+
 create
 	make_with_name_and_value
-	
+
 feature {NONE} -- Initialization
 
-	make_with_name_and_value (a_name: STRING; a_value: INTEGER) is
+	make_with_name_and_value (a_name: STRING; a_value: INTEGER; a_components: like components) is
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
 			a_name_valid: a_name /= Void
+			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			name := a_name.twin
 			value := a_value
 			create referers.make (4)
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value = a_value
+			components_set: components = a_components
 		end
 
 feature -- Access
@@ -38,16 +41,16 @@ feature -- Access
 		once
 			Result := Integer_constant_type
 		end
-		
+
 	value: INTEGER
 		-- Value of `Current'.
-		
+
 	value_as_string: STRING is
 			-- Value represented by `Current' as a STRING.
 		do
 			Result := value.out
 		end
-		
+
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
 			-- Representation of `Current' as a multi column list row.
 		do
@@ -68,7 +71,7 @@ feature -- Status setting
 		ensure
 			value_set: a_value = value
 		end
-		
+
 feature {GB_CONSTANTS_DIALOG} -- Implementation
 
 	can_modify_to_value (new_value: INTEGER): BOOLEAN is
@@ -85,7 +88,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 				referers.off or not Result
 			loop
 				constant_context := referers.item
-					
+
 					validate_agent ?= new_gb_ev_any (constant_context).validate_agents.item (constant_context.attribute)
 					check
 						validate_agent_not_void: validate_agent /= Void
@@ -95,7 +98,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 				referers.forth
 			end
 		end
-		
+
 	modify_value (new_value: INTEGER) is
 			-- Modify `value' to `new_value' and update all referers.
 		local

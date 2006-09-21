@@ -884,16 +884,6 @@ feature -- Preferences
 
 	delete_warning2: STRING is " will be deleted.%N%NAre you sure you wish to perform this?"
 
-	show_repeated_absolute_constant_warning: STRING is "show_repeated_absolute_constant_warning"
-
-	show_invalid_constant_selection_warning: STRING is "show_invalid_constant_selection_warning"
-
-	show_constant_manifest_conversion_warning: STRING is "show_constant_manifest_conversion_warning"
-
-	show_project_location_changed_warning: STRING is "show_project_location_changed_warning"
-
-	show_adding_existing_directory_warning: STRING is "show_adding_existing_directory_warning"
-
 feature -- Prompts
 
 	select_directory_location_modify_string: STRING is "Please select new location for directory constant %""

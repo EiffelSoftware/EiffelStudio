@@ -115,7 +115,7 @@ feature -- Basic operations
 						end
 						components.system_status.set_current_project (project_settings)
 						if not directory_of_file (file_name).is_equal (project_settings.project_location) then
-							create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
+							create discardable_error_dialog.make_initialized (1, preferences.dialog_data.show_project_location_changed_warning,
 								"The location of the .bpr file has changed from " + project_settings.project_location + " to " + directory_of_file (file_name) + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
 								"Do not show again and always check for `system_interface.xml' in the current directory",
 								preferences.preferences)
@@ -208,7 +208,7 @@ feature -- Basic operations
 									-- to the location referenced in the file. If it is, we need to update the
 									-- location, so we can find `system_interface.xml' correctly in the new location.
 								if not dialog.file_path.is_equal (project_settings.project_location) then
-									create discardable_error_dialog.make_initialized (1, show_project_location_changed_warning,
+									create discardable_error_dialog.make_initialized (1, preferences.dialog_data.show_project_location_changed_warning,
 										"The location of the .bpr file has changed from " + project_settings.project_location + " to " + dialog.file_path + ".%N%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory%NEiffelBuild will now attempt to load `system_interface.xml'.",
 										"Do not show again and always check for `system_interface.xml' in the current directory",
 										preferences.preferences)

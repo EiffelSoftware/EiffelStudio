@@ -39,7 +39,13 @@ feature {GB_XML_STORE} -- Output
 			-- Generate an XML representation of `Current' in `element'.
 		do
 			if first.pixmap_path /= Void or uses_constant (pixmap_path_string) then
-				add_string_element (element, pixmap_path_string, objects.first.pixmap_path)
+					-- Special handling here of Void, because we cannot convert a Void STRING_32 into
+					-- a Void STRING_8.
+				if objects.first.pixmap_path = Void then
+					add_string_element (element, pixmap_path_string, Void)
+				else
+					add_string_element (element, pixmap_path_string, objects.first.pixmap_path)
+				end
 			end
 		end
 		

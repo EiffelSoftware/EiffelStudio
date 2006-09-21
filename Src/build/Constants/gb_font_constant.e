@@ -7,32 +7,35 @@ indexing
 
 class
 	GB_FONT_CONSTANT
-	
+
 inherit
 	GB_CONSTANT
-	
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		end
-	
+
 create
 	make_with_name_and_value
-	
+
 feature {NONE} -- Initialization
 
-	make_with_name_and_value (a_name: STRING; a_value: EV_FONT) is
+	make_with_name_and_value (a_name: STRING; a_value: EV_FONT; a_components: like components) is
 			-- 	Assign `a_name' to `name' and `a_value' to `value'.
 		require
 			a_name_valid: a_name /= Void and then a_value /= Void
 			a_value_valid: a_value /= Void and then a_value /= Void
+			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			name := a_name.twin
 			value := a_value
 			create referers.make (4)
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value.is_equal (a_value)
+			components_set: components = a_components
 		end
 
 	type: STRING is
@@ -42,16 +45,16 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-		
+
 	value: EV_FONT
 		-- Value of `Current'.
-		
+
 	value_as_string: STRING is
 			-- Value represented by `Current' as a STRING.
 		do
 			Result := build_string_from_font (value)
 		end
-		
+
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
 			-- Representation of `Current' as a multi column list row.
 		do
@@ -73,7 +76,7 @@ feature -- Status setting
 		ensure
 			value_set: a_value = value
 		end
-		
+
 feature {GB_CONSTANTS_DIALOG} -- Implementation
 
 	modify_value (new_value: EV_FONT) is

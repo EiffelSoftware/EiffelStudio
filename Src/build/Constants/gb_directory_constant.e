@@ -8,21 +8,23 @@ indexing
 
 class
 	GB_DIRECTORY_CONSTANT
-	
+
 inherit
 	GB_CONSTANT
-	
+
 create
 	make_with_name_and_value
-	
+
 feature {NONE} -- Initialization
 
-	make_with_name_and_value (a_name, a_value: STRING) is
+	make_with_name_and_value (a_name, a_value: STRING; a_components: like components) is
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
 			a_name_valid: a_name /= Void and then a_value /= Void
 			a_value_valid: a_value /= Void and then a_value /= Void
+			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			name := a_name.twin
 			value := a_value.twin
 			create referers.make (4)
@@ -30,6 +32,7 @@ feature {NONE} -- Initialization
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value.is_equal (a_Value) and value /= a_value
+			components_set: components = a_components
 		end
 
 feature -- Access
@@ -42,13 +45,13 @@ feature -- Access
 
 	value: STRING
 		-- Value of `Current'.
-		
+
 	value_as_string: STRING is
 			-- Value represented by `Current' as a STRING.
 		do
 			Result := value.twin
 		end
-		
+
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
 			-- Representation of `Current' as a multi column list row.
 		do
@@ -59,7 +62,7 @@ feature -- Access
 			Result.extend (value)
 			Result.set_data (Current)
 		end
-		
+
 	cross_referers: ARRAYED_LIST [GB_CONSTANT]
 		-- All constants dependent on `Current'.
 
@@ -74,7 +77,7 @@ feature -- Status setting
 		ensure
 			value_set: a_value = value
 		end
-		
+
 	add_cross_referer (cross_referer: GB_CONSTANT) is
 			-- Add `cross_referer' to `cross_referers'.
 		require
@@ -84,7 +87,7 @@ feature -- Status setting
 		ensure
 			has_cross_referer: cross_referers.has (cross_referer)
 		end
-	
+
 	remove_cross_referer (cross_referer: GB_CONSTANT) is
 			-- Remove `cross_referer' from `cross_referers'.
 		require
@@ -94,9 +97,9 @@ feature -- Status setting
 		ensure
 			not_has_cross_referer: not cross_referers.has (cross_referer)
 		end
-		
+
 feature {GB_CONSTANTS_DIALOG} -- Implementation
-		
+
 	modify_value (new_value: STRING) is
 			-- Modify `value' to `new_value' and update all referers.
 		local

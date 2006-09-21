@@ -17,6 +17,7 @@ inherit
 feature -- Access
 
 	text: STRING is
+			-- Error text.
 		do
 			if file /= Void then
 				Result := "Parse error in "+file+": Invalid regexp: "+regexp
@@ -36,6 +37,7 @@ feature -- Update
 feature {NONE} -- Implementation
 
 	regexp: STRING;
+		-- Incorrect regular expression.
 
 
 indexing

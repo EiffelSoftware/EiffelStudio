@@ -14,6 +14,7 @@ inherit
 feature -- Access
 
 	text: STRING is "Could not initialize Eiffel Assembly Cache in specified path.";
+		-- Error text.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

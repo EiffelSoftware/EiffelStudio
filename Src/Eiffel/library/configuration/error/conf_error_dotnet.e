@@ -26,6 +26,7 @@ feature {NONE} -- Creation
 feature -- Access
 
 	text: STRING;
+		-- The error message.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

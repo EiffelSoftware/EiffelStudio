@@ -582,16 +582,18 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, not stored in configurati
 	classes_by_filename: HASH_TABLE [like class_type, STRING]
 			-- Classes index by filename
 
-feature {NONE} -- Class type anchor
+feature {NONE} -- Type anchors
 
 	class_type: CONF_CLASS
+			-- Class type anchor.
 
 feature {NONE} -- Implementation
 
 	internal_hash_code: INTEGER
-			-- Cashed value of the hash_code
+			-- Cached value of the hash_code
 
 	reverse_classes_cache: HASH_TABLE [STRING, like class_type]
+			-- Cache for speedup of `name_by_class' lookups.
 
 feature {CONF_ACCESS} -- Stored in configuration file
 

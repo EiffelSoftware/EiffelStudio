@@ -499,9 +499,10 @@ feature {NONE} -- Implementation
 			renamed_name_set: renamed_name /= Void and then not renamed_name.is_empty
 		end
 
-feature {NONE} -- Type anchor
+feature {NONE} -- Type anchors
 
 	class_type: CONF_CLASS
+			-- Class type anchor.
 
 invariant
 	name_ok: name /= Void and then not name.is_empty

@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 
 			create mutex.make
 			create text_to_append.make_empty
+			create action_queue
 
 			create timer.make_with_interval (100)
 			timer.actions.extend (agent
@@ -39,6 +40,16 @@ feature {NONE} -- Initialization
 					end
 					mutex.unlock
 				end)
+			timer.actions.extend (agent
+				do
+					mutex.lock
+					if not action_queue.is_empty then
+						action_queue.call (Void)
+						action_queue.wipe_out
+					end
+					mutex.unlock
+				end
+			)
 		end
 
 feature {NONE} -- GUI elements
@@ -69,10 +80,20 @@ feature -- Update
 			mutex.unlock
 		end
 
+	hide_in_gui_thread is
+			-- Hide dialog in the gui thread.
+		do
+			mutex.lock
+			action_queue.extend (agent hide)
+			mutex.unlock
+		end
+
 feature {NONE} -- Implementation
 
 	text_to_append: STRING
 			-- Text for updating text from an other thread.
+
+	action_queue: ACTION_SEQUENCE [TUPLE []]
 
 	timer: EV_TIMEOUT
 			-- Timer for updating text from an other thread.

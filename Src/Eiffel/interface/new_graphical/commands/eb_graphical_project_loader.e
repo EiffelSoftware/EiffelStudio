@@ -136,8 +136,8 @@ feature -- Settings
 			l_dialog.set_title ("Precompilation Progress")
 			l_prc_launcher.redirect_output_to_agent (agent l_dialog.append_in_gui_thread)
 			l_prc_launcher.redirect_error_to_same_as_output
-			l_prc_launcher.set_on_exit_handler (agent l_dialog.hide)
-			l_prc_launcher.set_on_terminate_handler (agent l_dialog.hide)
+			l_prc_launcher.set_on_exit_handler (agent l_dialog.hide_in_gui_thread)
+			l_prc_launcher.set_on_terminate_handler (agent l_dialog.hide_in_gui_thread)
 			l_prc_launcher.launch
 			if l_prc_launcher.launched then
 				l_dialog.show_modal_to_window (parent_window)

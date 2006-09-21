@@ -760,6 +760,7 @@ feature -- Metric management
 				l_grid_row.set_item (metric_column_index, l_grid_item)
 				if is_selectable then
 					create l_check_item.make_with_boolean (selection_status.item (a_metric.name.as_lower))
+					l_check_item.initialize_for_tree
 					l_check_item.selected_changed_actions.extend (agent on_selection_change)
 					l_check_item.set_data (a_metric)
 					l_grid_row.set_item (1, l_check_item)
@@ -770,6 +771,7 @@ feature -- Metric management
 				metric_name_row_table.force (a_row.index, a_metric.name)
 				if is_selectable then
 					create l_check_item.make_with_boolean (selection_status.item (a_metric.name.as_lower))
+					l_check_item.initialize_for_tree
 					l_check_item.selected_changed_actions.extend (agent on_selection_change)
 					l_check_item.set_data (a_metric)
 					a_row.set_item (1, l_check_item)

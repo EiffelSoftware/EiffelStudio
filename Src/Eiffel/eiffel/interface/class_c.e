@@ -3087,10 +3087,11 @@ feature {COMPILER_EXPORTER} -- Setting
 feature -- Genericity
 
 	formal_at_position (n: INTEGER): TYPE_FEATURE_I is
-			-- Find first FORMAL_ATTRIBUTE_I in `generic_features' that
+			-- Find first TYPE_FEATURE_I in `generic_features' that
 			-- matches position `n'.
 		require
 			has_formal: is_generic
+			generic_features_computed: generic_features /= Void
 		local
 			l_formals: like generic_features
 			l_formal: FORMAL_A
@@ -3234,7 +3235,7 @@ feature -- Genericity
 				end
 			else
 					-- FIXME: Manu 01/02/2002. Add assertion that shows
-					-- that all FORMAL_ATTRIBUTE_I.type of `l_generic_features'
+					-- that all TYPE_FEATURE_I.type of `l_generic_features'
 					-- are not instances of FORMAL_I.
 			end
 

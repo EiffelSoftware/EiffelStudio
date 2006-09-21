@@ -93,12 +93,49 @@ feature {NONE} -- Initialization
 			l_pixbuf: POINTER
 		do
 			a_pointer_style_imp ?= a_pointer_style.implementation
-			l_pixbuf := a_pointer_style_imp.gdk_pixbuf
-			if l_pixbuf /= default_pointer then
-				set_pixmap_from_pixbuf (a_pointer_style_imp.gdk_pixbuf)
+
+			if a_pointer_style_imp.predefined_cursor_code /= -1 then
+				-- We are building from a stock cursor.
+				inspect
+					a_pointer_style_imp.predefined_cursor_code
+				when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.busy_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.wait_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.crosshair_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.help_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.ibeam_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizeall_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizens_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.standard_cursor_xpm)
+				else
+					set_size (a_pointer_style.width, a_pointer_style.height)
+					clear
+				end
 			else
-				set_size (a_pointer_style.width, a_pointer_style.height)
-				clear
+				l_pixbuf := a_pointer_style_imp.gdk_pixbuf
+				if l_pixbuf /= default_pointer then
+					set_pixmap_from_pixbuf (a_pointer_style_imp.gdk_pixbuf)
+				else
+					set_size (a_pointer_style.width, a_pointer_style.height)
+					clear
+				end
 			end
 		end
 

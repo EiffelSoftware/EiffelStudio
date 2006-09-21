@@ -442,12 +442,13 @@ feature -- Basic Operations
 		local
 			l_options: like option_values
 		do
-			if not suppress_logo then
-				display_logo
-			end
-
 			parse_arguments
+
 			if successful then
+				if not suppress_logo then
+					display_logo
+				end
+
 				if display_help then
 					display_usage
 				else
@@ -459,6 +460,7 @@ feature -- Basic Operations
 					end
 				end
 			else
+				display_logo
 				if display_usage_on_error then
 					display_usage
 				end
@@ -646,8 +648,8 @@ feature {NONE} -- Post Processing
 			successful: successful
 			parsed: parsed
 		do
-			suppress_logo := not options_of_name (nologo_switch).is_empty
-			display_help := not options_of_name (help_switch).is_empty
+			suppress_logo := has_option (nologo_switch)
+			display_help := has_option (help_switch)
 		end
 
 feature {NONE} -- Validation
@@ -999,7 +1001,6 @@ feature {NONE} -- Output
 		do
 			l_name := system_name
 			io.put_string (once "USAGE: %N")
-
 
 			l_cfgs := command_option_configurations
 			if l_cfgs /= Void then
@@ -1353,7 +1354,13 @@ feature {NONE} -- Usage
 					Result := a_item /= Void and then not a_item.is_empty
 				end)
 			available_switches_unmoved: available_switches.cursor.is_equal (old available_switches.cursor)
-			switch_groups_unmoved: switch_groups.cursor.is_equal (old switch_groups.cursor)
+			switch_groups_unmoved: (agent (a_new, a_old: like switch_groups): BOOLEAN
+				do
+					Result := a_old = Void
+					if not Result then
+						Result := a_new.cursor.is_equal (a_old.cursor)
+					end
+				end).item ([switch_groups, old switch_groups])
 		end
 
 	command_option_group_configuration (a_group: LIST [ARGUMENT_SWITCH]; a_show_loose: BOOLEAN; a_add_appurtenances: BOOLEAN; a_src_group: LIST [ARGUMENT_SWITCH]): STRING is

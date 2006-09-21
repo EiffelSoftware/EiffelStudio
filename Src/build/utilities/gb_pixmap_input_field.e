@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			biggest_ratio: REAL
 			a_pixmap: EV_PIXMAP
 			a_pixmapable: EV_PIXMAPABLE
-			a_path: STRING_32
+			a_path: STRING_GENERAL
 		do
 			a_pixmap ?= first
 			if a_pixmap /= Void then

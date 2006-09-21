@@ -30,9 +30,6 @@
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="false"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
 		<cluster name="build" location="$EIFFEL_SRC\build\" recursive="true">
-			<option>
-				<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-			</option>
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/templates$</exclude>

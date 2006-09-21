@@ -438,8 +438,12 @@ feature {NONE} -- Implementation
 						l_value := {SYSTEM_CONVERT}.to_double (l_value)
 					when {TYPE_CODE}.single then
 						l_value := {SYSTEM_CONVERT}.to_single (l_value)
+					when {TYPE_CODE}.char then
+						l_value := {SYSTEM_CONVERT}.to_char (l_value)
+					when {TYPE_CODE}.boolean then
+						l_value := {SYSTEM_CONVERT}.to_boolean (l_value)
 					else
-						l_value := {SYSTEM_CONVERT}.to_int_16 (l_value)
+						l_value := {SYSTEM_CONVERT}.to_int_32 (l_value)
 					end
 				end
 				create {CONSUMED_LITERAL_FIELD} Result.make (

@@ -31,6 +31,9 @@ feature {NONE} -- Initialization
 			widget_not_void: a_widget /= Void
 			title_not_void: a_title /= Void
 		do
+			debug ("explorer_bar")
+				print (generator + ".make ( .. %""+a_title+"%") %N")
+			end
 			is_closeable := closeable
 			is_maximizable := True
 			is_minimizable := True
@@ -90,17 +93,28 @@ feature {NONE} -- Initialization
 
 				-- Connect actions required to update `Current' which its state
 				-- has been changed in `parent'.
-			parent.minimize_actions.extend (agent internal_set_minimized_wrapper)
-			parent.maximize_actions.extend (agent internal_set_maximized_wrapper)
-			parent.restore_actions.extend (agent internal_set_restored_wrapper)
-			parent.close_actions.extend (agent close_wrapper)
+			internal_minimize_action := agent internal_set_minimized_wrapper 
+			parent.minimize_actions.extend (internal_minimize_action)
+			internal_maximize_action := agent internal_set_maximized_wrapper
+			parent.maximize_actions.extend (internal_maximize_action)
+			internal_restore_action := agent internal_set_restored_wrapper
+			parent.restore_actions.extend (internal_restore_action)
+			internal_close_action := agent close_wrapper
+			parent.close_actions.extend (internal_close_action)
+
 		end
+
+feature {NONE} -- Internal actions
+
+	internal_close_action,
+	internal_minimize_action,
+	internal_maximize_action,
+	internal_restore_action : PROCEDURE [ANY, TUPLE [EV_WIDGET]]
 
 feature -- Access
 
 	widget: EV_WIDGET
 			-- Widget.
-
 
 	associated_command: EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 				-- Command associated with Current.
@@ -181,9 +195,14 @@ feature -- Status Setting
 
 	close is
 			-- Hide/Close current
+		require
+			parent_not_void: parent /= Void
 		local
 			selectable_command: EB_SELECTABLE
 		do
+			debug ("explorer_bar")
+				print (generator + ".close -> " + title + "%N")
+			end
 			if is_visible then
 				parent.remove (widget)
 			end
@@ -250,6 +269,9 @@ feature -- Status Setting
 			external_window: EV_WINDOW
 			a_widget: EV_WIDGET
 		do
+			debug ("explorer_bar")
+				print (generator + ".show -> " + title + "%N")
+			end
 			parent.explorer_bar_manager.lock_update
 			is_maximized := False
 			is_minimized := False
@@ -411,6 +433,16 @@ feature -- Status Setting
 					parent.remove (widget)
 				end
 				associated_command := Void
+
+				parent.minimize_actions.prune_all (internal_minimize_action)
+				internal_minimize_action := Void
+				parent.maximize_actions.prune_all (internal_maximize_action)
+				internal_maximize_action := Void
+				parent.restore_actions.prune_all (internal_restore_action)
+				internal_restore_action := Void
+				parent.close_actions.prune_all (internal_close_action)
+				internal_close_action := Void
+
 				show_actions.wipe_out
 				show_actions := Void
 				parent.prune_item (Current)

@@ -8,40 +8,40 @@ indexing
 
 class
 	GB_XML_IMPORT
-	
+
 inherit
-	
+
 	GB_XML_UTILITIES
 		export
 			{NONE} all
-		end	
-	
+		end
+
 	GB_EVENT_UTILITIES
 		export
 			{NONE} all
 		end
-	
+
 	INTERNAL
 		export
 			{NONE} all
-		end	
-	
+		end
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 			{ANY} item_string
-		end	
-	
+		end
+
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	GB_SHARED_DEFERRED_BUILDER
 		export
 			{NONE} all
-		end	
-		
+		end
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
@@ -51,12 +51,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	XM_CALLBACKS_FILTER_FACTORY
 		export
-			{NONE} all 
+			{NONE} all
 		end
-		
+
 	GB_ID_COMPRESSOR
 		export
 			{NONE} all
@@ -66,12 +66,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 create
 	make_with_components
 
 feature -- Basic operation
-		
+
 	import (file_name: STRING) is
 			-- Import EiffelBuild ".bpr" file named `file_name'.
 		require
@@ -94,9 +94,9 @@ feature -- Basic operation
 
 				-- Update all ids, to avoid clashes between the two sets.
 			shift_all_ids_upwards
-			
+
 			create a_file_name.make_from_string (file_name)
-			load_and_parse_xml_file (a_file_name)			
+			load_and_parse_xml_file (a_file_name)
 			if parser.is_correct then
 				import_system
 				components.object_handler.update_all_associated_objects
@@ -107,14 +107,14 @@ feature -- Basic operation
 			if initial_selection /= Void then
 				initial_selection.tree_item.enable_select
 			end
-			
+
 			components.system_status.disable_loading_project
 			components.system_status.resume
 			components.system_status.mark_as_dirty
 			components.events.import_project_finish_actions.call (Void)
-			
+
 			if import_dialog.change_list.text.is_empty then
-				remove_load_output	
+				remove_load_output
 			else
 				load_timer.destroy
 				components.status_bar.set_status_text ("")
@@ -123,7 +123,7 @@ feature -- Basic operation
 		end
 
 feature {GB_OBJECT_HANDLER} -- Implementation
-		
+
 	build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Build a new window representing `window', represented in
 			-- directory `directory_name'. if `directory_name' is
@@ -170,7 +170,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 							is_processing_window := True
 							process_names (current_element)
 							is_processing_window := False
-							
+
 								-- Now strip the root window tag, as we do not want to
 								-- change the root window while importing.
 							cursor := current_element.new_cursor
@@ -188,21 +188,21 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
-							extract_event_information (current_element, an_object)						
-						else						
+							extract_event_information (current_element, an_object)
+						else
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
-						
+
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
 						gb_ev_any.set_components (components)
 						gb_ev_any.set_object (an_object)
-						
+
 							-- Ensure that the new class exists.
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-						
+
 							-- Add the appropriate objects to `objects'.
 						gb_ev_any.add_object (an_object.object)
 							-- Now that we support widgets at the top level, we must
@@ -213,7 +213,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						else
 							gb_ev_any.add_object (an_object.display_object)
 						end
-						
+
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
 						end
@@ -238,7 +238,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			components.object_handler.add_object (object, new_object, pos)
 			modify_from_xml (element, new_object)
 		end
-		
+
 	process_names (element: XM_ELEMENT) is
 			-- Update name stored in `element', if any, and only if
 			-- name has changed.
@@ -261,7 +261,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						not is_processing_window and all_constant_names.has (current_name) then
 							element.start
 							el := element.element_by_name (Name_string)
-							element.delete (el)					
+							element.delete (el)
 							new_name := unique_name_from_hash_table (all_names_pre_import, current_name)
 							add_element_containing_string (element, Name_string, new_name)
 							import_dialog.add_output ("Object '" + current_name + "' renamed to '" + new_name + "'")
@@ -272,7 +272,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-		
+
 	build_new_object (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Build a new object from information in `element' into `object'.
 		require
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 			modify_from_xml (element, new_object)
 			components.object_handler.add_object_to_objects (new_object)
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Update properties of `object' based on information in `element'.
 		require
@@ -320,20 +320,20 @@ feature {NONE} -- Implementation
 							process_names (current_element)
 							object.modify_from_xml (current_element)
 						else
-						
+
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
-						
+
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
 						gb_ev_any.set_components (components)
 						gb_ev_any.set_object (object)
-						
+
 							-- Ensure that the new class exists.
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-						
+
 							-- Add the appropriate objects to `objects'.
 						gb_ev_any.add_object (object.object)
 						display_object ?= object.display_object
@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 						else
 							gb_ev_any.add_object (display_object.child)
 						end
-						
+
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
 						end
@@ -390,23 +390,23 @@ feature {NONE} -- Implementation
 				element.forth
 			end
 		end
-		
+
 	all_names_pre_import: HASH_TABLE [STRING, STRING]
 		-- All names in currently open project, all object and constant names.
-	
+
 	all_constant_names: HASH_TABLE [STRING, STRING]
 		-- Names of all constants in open project.
-	
+
 	renamed_constants: HASH_TABLE [STRING, STRING]
 		-- All constants in project that is being imported. The key is the
 		-- original name, and the data starts as the original name, but if clashes
 		-- occur, the data is changed to the new name. This permits easy lookup
 		-- of constant names to be changed.
-	
+
 	all_names_post_import: HASH_TABLE [STRING, STRING]
 		-- All constant names and object names in original project, plus the names of
 		-- all objects in the merged system. Constants in the merged system are not included.
-		
+
 	import_system is
 			-- Import a system from the parsed XML file.
 		local
@@ -445,7 +445,7 @@ feature {NONE} -- Implementation
 				all_constant_names.put (constant_names.item, constant_names.item)
 				constant_names.forth
 			end
-			
+
 				-- Firstly must prepass all constants to determine for clashes.
 				-- All clashes are stored in `renamed_constants'
 			parse_for_names (pipe_callback.document.root_element)
@@ -460,7 +460,7 @@ feature {NONE} -- Implementation
 					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
 						current_type := current_element.attribute_by_name (type_string).value
-						
+
 						if current_type.is_equal (Constants_string) then
 							constants_element := current_element
 							from
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 
 				-- Now insert all names of original project into `all_names_post_import'.
 			all_names_pre_import.linear_representation.do_all (agent add_to_post_import_names)
-				
+
 				-- We now check for clashes between the constants in the imported project, and the original system.
 				-- As constants are global, they may not clash with any object name at any level.
 			all_constants := renamed_constants.linear_representation
@@ -501,10 +501,10 @@ feature {NONE} -- Implementation
 				end
 				all_constants.forth
 			end
-			
+
 				--  Now update all constant references in the imported XML file, to remove any clashes.
 				-- `renamed_constants' holds a list of original names as keys, and the new names that must replace them.
-				
+
 			application_element := Pipe_callback.document.root_element
 			from
 				application_element.start
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 							loop
 								constant_item_element ?= constants_element.item_for_iteration
 								if constant_item_element /= Void then
-									
+
 									full_information := get_unique_full_info (constant_item_element)
 									element_info := full_information @ (Constant_name_string)
 										-- We check that the constant is included in `renamed_constants', and that the
@@ -540,8 +540,8 @@ feature {NONE} -- Implementation
 										constant_item_element.delete (an_element)
 										add_element_containing_string (constant_item_element, Constant_name_string, renamed_constants.item (element_info.data))
 										import_dialog.add_output ("Constant '" + element_info.data + "' renamed to '" + renamed_constants.item (element_info.data) + "'")
-										
-										
+
+
 											-- Now update the pointed directory, if it is a pixmap constant,
 											-- as the directory to which it points may have been renamed.
 										element_info := full_information @ (Type_string)
@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 				end
 				application_element.forth
 			end
-			
+
 				-- Now iterate through all XML, and update all constant references to use the new names.
 				-- For example, every property that uses a constant has the name of the constant
 				-- listed in a constant element. For every one of these found in the complete system,
@@ -591,7 +591,7 @@ feature {NONE} -- Implementation
 				end
 				application_element.forth
 			end
-			
+
 				-- Now actually perform the building of the objects from the imported project file.
 				-- At this point, all prepass stages of the XML have been completed, and the XML
 				-- representation of the imported project has been updated to avoid any clashes.
@@ -602,11 +602,11 @@ feature {NONE} -- Implementation
 				-- they are current after the load.
 				--| FIXME why is this needed?
 			components.tools.widget_selector.update_displayed_names
-			
+
 				-- Build any constants that were deferred.
 			components.constants.build_deferred_elements
 		end
-		
+
 	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Create the directory and window structure represented by `an_element' into `parent_node_list'.
 		require
@@ -675,19 +675,19 @@ feature {NONE} -- Implementation
 							loop
 								constant_item_element ?= current_element.item_for_iteration
 								if constant_item_element /= Void then
-									components.constants.build_constant_from_xml (constant_item_element)	
+									components.constants.build_constant_from_xml (constant_item_element)
 								end
 								current_element.forth
 							end
 						else
-							build_window (current_element, parent_common_item)							
+							build_window (current_element, parent_common_item)
 						end
 					end
 				end
 				an_element.forth
 			end
 		end
-		
+
 	update_constant_references_in_xml (element: XM_ELEMENT) is
 			-- Recursively update all constant references (e.g. properties using
 			-- a paticular constant) in `element'.
@@ -716,7 +716,7 @@ feature {NONE} -- Implementation
 							full_information := get_unique_full_info (current_element)
 							element_info := full_information @ (Constant_string)
 							if element_info /= Void then
-								
+
 									-- Only perform the modification of the XML, if the name has really changed.
 								if renamed_constants.has (element_info.data) and renamed_constants.item (element_info.data) /= element_info.data then
 									an_element := current_element.element_by_name (Constant_string)
@@ -727,14 +727,14 @@ feature {NONE} -- Implementation
 							end
 						end
 						current_element.go_to (cursor)
-						
+
 						-- perform recursion, as every element in the structure must be visited.
 					update_constant_references_in_xml (current_element)
 				end
 				element.forth
 			end
 		end
-		
+
 	add_to_post_import_names (s: STRING) is
 			-- Add `s' to `all_names_post_import'.
 		require
@@ -772,7 +772,7 @@ feature {NONE} -- Implementation
 				element.forth
 			end
 		end
-		
+
 	retrieve_names (element: XM_ELEMENT) is
 			-- Retrieve name if any from `element' and insert in `all_names_post_import'.
 		require
@@ -814,21 +814,18 @@ feature {NONE} -- Implementation
 		require
 			file_name_not_void: a_filename /= Void
 		local
-			file: RAW_FILE
-			buffer: STRING
+			file: KL_BINARY_INPUT_FILE
 			l_concat_filter: XM_CONTENT_CONCATENATOR
 		do
-			create file.make_open_read (a_filename)
-			create buffer.make (file.count) 
-			file.start
-			file.read_stream (file.count)
-			buffer := file.last_string
+			create file.make (a_filename)
+			file.open_read
 			create l_concat_filter.make_null
 			create parser.make
 			parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, pipe_callback.start>>))
-			parser.parse_from_string (buffer)
+			parser.parse_from_stream (file)
+			file.close
 		end
-		
+
 	pipe_callback: XM_TREE_CALLBACKS_PIPE is
 			-- Create unique callback pipe.
 		once
@@ -836,7 +833,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	initialize_load_output is
 			-- Create `load_timer' and associate an
 			-- action with it.
@@ -846,7 +843,7 @@ feature {NONE} -- Implementation
 		 	components.status_bar.set_status_text ("Importing    -")
 		 	environment.application.process_events
 		end
-		
+
 	update_status_bar is
 			-- Refresh message displayed on status bar, to show
 			-- that processing is still occurring.
@@ -864,18 +861,18 @@ feature {NONE} -- Implementation
 				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 1) + "--")
 			end
 		end
-		
+
 	remove_load_output is
 			--  Destroy `load_timer' and display a final
 			-- timed message on the status bar.
 		do
 			load_timer.destroy
-			components.status_bar.set_timed_status_text ("Import successful")			
+			components.status_bar.set_timed_status_text ("Import successful")
 		end
-		
+
 	is_processing_window: BOOLEAN
 		-- Is the current processed element representing a window?
-		
+
 	import_dialog: GB_IMPORT_DIALOG
 		-- A dialog to display results of recent import.
 
@@ -884,7 +881,7 @@ feature {NONE} -- Implementation
 
 	parser: XM_EIFFEL_PARSER
 		-- XML tree parser.
-		
+
 	document: XM_DOCUMENT;
 		-- XML document generated from created window.
 

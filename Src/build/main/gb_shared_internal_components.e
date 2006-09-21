@@ -9,19 +9,19 @@ indexing
 
 class
 	GB_SHARED_INTERNAL_COMPONENTS
-	
+
 inherit
-	
+
 	GB_INTERFACE_CONSTANTS
 		export
 			{NONE} all
 		end
-		
-	GB_EIFFEL_ENV
+
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
-	
+
 feature -- Access
 
 	new_build_components: GB_INTERNAL_COMPONENTS is
@@ -32,7 +32,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	initialize_eiffelbuild is
 			-- Initialize EiffelBuild for client type access.
 			-- This initializes the preferences, creates any required windows
@@ -44,12 +44,12 @@ feature -- Access
 			directory_name: DIRECTORY_NAME
 		do
 				-- Initialize `pixmap_location' constant.
-			create directory_name.make_from_string (Bitmaps_path)
+			create directory_name.make_from_string (eiffel_layout.bitmaps_path)
 			directory_name.extend ("png")
 			pixmap_location_cell.put (directory_name)
 				-- Initialization of preferences.
 			create shared_preferences
-			create preference_access.make_with_defaults_and_location (<<shared_preferences.default_xml_file>>, shared_preferences.eiffel_preferences)
+			create preference_access.make_with_defaults_and_location (<<shared_preferences.default_xml_file>>, eiffel_layout.eiffel_preferences)
 			shared_preferences.initialize_preferences (preference_access)
 		end
 

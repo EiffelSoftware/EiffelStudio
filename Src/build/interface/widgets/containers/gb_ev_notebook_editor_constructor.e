@@ -77,7 +77,10 @@ feature -- Access
 			until
 				first.off
 			loop
-				create pixmap_entry.make (Current, Result, Item_pixmap_string + first.index.out, "", "Pixmap", agent set_pixmap (?, ?, first.index), agent validate (?, ?), agent return_pixmap (first.index), agent return_pixmap_path (first.index), components)
+				create pixmap_entry.make (Current, Result, Item_pixmap_string + first.index.out, "",
+					"Pixmap", agent set_pixmap (?, ?, first.index), agent validate,
+					agent return_pixmap (first.index),
+					agent return_pixmap_path (first.index), components)
 				pixmap_entries.extend (pixmap_entry)
 				first.forth
 			end
@@ -149,7 +152,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING): BOOLEAN is
+	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN is
 			-- Validate pixmap `a_pixmap' with path `pixmap_path'.
 		do
 			--| No validation is currently performed on pixmaps, so return True
@@ -167,7 +170,7 @@ feature {NONE} -- Implementation
 			Result := notebook_tab.pixmap
 		end
 
-	return_pixmap_path (index: INTEGER): STRING is
+	return_pixmap_path (index: INTEGER): STRING_GENERAL is
 			-- `Result' is path used to retrieve pixmap.
 		do
 			Result := objects.first.pixmap_paths.item (index)
@@ -211,7 +214,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_pixmap (a_pixmap: EV_PIXMAP; path: STRING; index: INTEGER) is
+	set_pixmap (a_pixmap: EV_PIXMAP; path: STRING_GENERAL; index: INTEGER) is
 			-- Set `a_pixmap' to notebook tab of item indexed by `index' within notebook.
 			-- If `a_pixmap' is Void, remove the pixmap.
 		do
@@ -220,7 +223,7 @@ feature {NONE} -- Implementation
 			enable_project_modified
 		end
 
-	actual_set_pixmap (an_object: GB_OBJECT; a_pixmap: EV_PIXMAP; path: STRING; index: INTEGER) is
+	actual_set_pixmap (an_object: GB_OBJECT; a_pixmap: EV_PIXMAP; path: STRING_GENERAL; index: INTEGER) is
 			-- Set `a_pixmap' to notebook tab for `an_object' of item indexed by `index' within notebook.
 			-- If `a_pixmap' is Void, remove the pixmap.
 		require

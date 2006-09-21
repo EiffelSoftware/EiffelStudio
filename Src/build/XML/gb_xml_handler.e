@@ -99,9 +99,8 @@ feature -- Basic operations
 			-- Load previously stored components in `component_document',
 			-- or create `component_document' if no component file exists.
 		local
-			file: RAW_FILE
+			file: KL_BINARY_INPUT_FILE
 			an_element, component_element: XM_ELEMENT
-			buffer: STRING
 			parser: XM_EIFFEL_PARSER
 		do
 			check
@@ -111,13 +110,10 @@ feature -- Basic operations
 			if file.exists then
 					-- Load the existing file into `component document'
 				create parser.make
-				file.make_open_read (component_filename)
-				create buffer.make (file.count)
-				file.start
-				file.read_stream (file.count)
-				buffer := file.last_string
 				parser.set_callbacks (pipe_callback.start)
-				parser.parse_from_string (buffer)
+				file.open_read
+				parser.parse_from_stream (file)
+				file.close
 				component_document := pipe_callback.document
 				an_element ?= component_document.first
 				component_element ?= an_element.first
@@ -257,7 +253,7 @@ feature {NONE} -- Implementation
 	component_filename: FILE_NAME is
 			-- Location of component file.
 		do
-			create Result.make_from_string ((create {GB_EIFFEL_ENV}).Eiffel_installation_dir_name)
+			create Result.make_from_string (eiffel_layout.eiffel_installation_dir_name)
 			Result.extend ("build")
 			Result.extend ("components")
 			Result.extend ("components.xml")

@@ -8,43 +8,43 @@ indexing
 
 deferred class
 	GB_EV_PIXMAP_EDITOR_CONSTRUCTOR
-	
+
 inherit
 	GB_EV_COMMON_PIXMAP_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
 		end
-		
+
 	GB_EV_PIXMAP_HANDLER
 		undefine
 			default_create
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		end
-		
+
 feature -- Access
 
 	ev_type: EV_PIXMAP
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING is "EV_PIXMAP"
 			-- String representation of object_type modifyable by `Current'.
-		
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
 			pixmap_input_field.update_constant_display (first.twin)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	initialize_agents is
@@ -54,8 +54,8 @@ feature {NONE} -- Implementation
 			execution_agents.put (agent execute, pixmap_path_string)
 			validate_agents.put (agent validate, pixmap_path_string)
 		end
-		
-	execute (a_pixmap: EV_PIXMAP; pixmap_path: STRING) is
+
+	execute (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL) is
 			-- Asssign `a_pixmap' located at `pixmap_path' to all representations of `Current'.
 			-- If `a_pixmap' is Void, remove pixmap and path.
 		do
@@ -69,14 +69,14 @@ feature {NONE} -- Implementation
 				for_all_objects (agent {EV_PIXMAP}.disable_pixmap_exists)
 			end
 		end
-		
-	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING): BOOLEAN is
+
+	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING_GENERAL): BOOLEAN is
 			-- Validate pixmap `a_pixmap' with path `pixmap_path'.
 		do
 				--| No validation is currently performed on pixmaps, so return True
 			Result := True
 		end
-		
+
 	return_pixmap: EV_PIXMAP is
 			-- `Result' is pixmap used for `Current'.
 		do
@@ -87,8 +87,8 @@ feature {NONE} -- Implementation
 				Result := objects.first.twin
 			end
 		end
-		
-	return_pixmap_path: STRING is
+
+	return_pixmap_path: STRING_GENERAL is
 			-- `Result' is path used to retrieve pixmap.
 		do
 			Result := objects.first.pixmap_path

@@ -8,56 +8,59 @@ indexing
 
 class
 	GB_PIXMAP_CONSTANT
-	
+
 inherit
 	GB_CONSTANT
 		redefine
 			generate_xml
 		end
-		
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		end
-	
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		end
-		
+
 create
 	make_with_name_and_value
-	
+
 create {GB_PIXMAP_SETTINGS_DIALOG}
 	set_attributes
-	
+
 feature {NONE} -- Initialization
 
 	make_with_name_and_value (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
-			a_name_valid: a_name /= Void
+			a_name_not_void: a_name /= Void
+			a_value_not_void: a_value /= Void
+			a_directory_not_void: a_directory /= Void
+			a_filename_not_void: a_filename /= Void
+			a_components_not_void: a_components /= Void
 		do
-			components := a_components
-			name := a_name.twin
-			value := a_value.twin
-			directory := a_directory.twin
-			filename := a_filename.twin
-			is_absolute := absolute
-			create referers.make (4)
+			set_attributes (a_name, a_value, a_directory, a_filename, absolute, a_components)
 			retrieve_pixmap_image
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value.is_equal (a_Value) and value /= a_value
 		end
-		
+
 feature {GB_PIXMAP_SETTINGS_DIALOG}
-		
-	set_attributes (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN) is
+
+	set_attributes (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
-			a_name_valid: a_name /= Void and then a_value /= Void
+			a_name_not_void: a_name /= Void
+			a_value_not_void: a_value /= Void
+			a_directory_not_void: a_directory /= Void
+			a_filename_not_void: a_filename /= Void
+			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			name := a_name.twin
 			value := a_value.twin
 			directory := a_directory.twin
@@ -70,7 +73,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value.is_equal (a_Value) and value /= a_value
 		end
-		
+
 	convert_to_full is
 			-- Convert representation of a pixmap constant, `Current', into
 			-- a fully referenced constant with a context.
@@ -92,7 +95,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 			create referers.make (4)
 			retrieve_pixmap_image
 		end
-		
+
 
 feature -- Access
 
@@ -111,15 +114,15 @@ feature -- Access
 	value: STRING
 		-- Value of `Current' as full file location to referenced pixmap.
 		-- only set if `is_absolute' is True.
-	
+
 	directory: STRING
 		-- Name of directory constant using comprising `Current'.
 		-- Not set if `is_absolute'.
-		
+
 	filename: STRING
 		-- Name of file name constants comprising `Current'.
 		-- Not set if `is_absolute'.
-		
+
 	value_as_string: STRING is
 			-- Value represented by `Current' as a STRING.
 			-- If not absolute, then `Result' is evaluated full path.
@@ -143,13 +146,13 @@ feature -- Access
 				Result := directory_value + Directory_seperator.out + filename
 			end
 		end
-		
+
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
 			-- Representation of `Current' as a multi column list row.
 		do
 			create Result
 			Result.set_pixmap (small_pixmap)
-			Result.extend (name)			
+			Result.extend (name)
 			Result.extend (type)
 			if is_absolute then
 				Result.extend ("Absolute : " + value)
@@ -211,7 +214,7 @@ feature {NONE} -- Implementation
 
 	retrieve_pixmap_image is
 			-- Retrieve actual image of pixmap represented by `Current'.
-		local 
+		local
 			file: RAW_FILE
 			file_name: FILE_NAME
 			directory_constant: GB_DIRECTORY_CONSTANT
@@ -229,7 +232,7 @@ feature {NONE} -- Implementation
 					small_pixmap := pixmap.twin
 				end
 			else
-				directory_constant := components.constants.directory_constant_by_name (directory)	
+				directory_constant := components.constants.directory_constant_by_name (directory)
 				check
 					directory_constant_found: directory_constant /= Void
 				end

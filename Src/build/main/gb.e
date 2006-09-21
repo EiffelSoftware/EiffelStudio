@@ -37,14 +37,14 @@ inherit
 			copy, default_create
 		end
 
-	GB_EIFFEL_ENV
+	GB_SHARED_INTERNAL_COMPONENTS
 		export
 			{NONE} all
 		undefine
-			copy, default_create
+			default_create, copy, is_equal
 		end
 
-	GB_SHARED_INTERNAL_COMPONENTS
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		undefine
@@ -66,14 +66,19 @@ feature {NONE} -- Initialization
 			-- system never gets compiled with more than one command option available.
 		local
 			environment_dialog: INVALID_ENVIRONMENT_DIALOG
+			l_env: GB_EIFFEL_ENV
 		do
-			check_environment_variable
+				-- Initialize the environment
+			create l_env
+			l_env.check_environment_variable
+			set_eiffel_layout (l_env)
+
 			default_create
 			initialize_eiffelbuild
 			components := new_build_components
 			components.tools.set_main_window (create {GB_MAIN_WINDOW}.make_with_components (components))
 				-- Ensure that the preferences are initialized correctly.
-			if environment_variables_warning = Void then
+			if eiffel_layout.is_valid_environment then
 					-- Only launch EiffelBuild if the required environment variables are
 					-- available, otherwise we must display a fatal error message.
 
@@ -92,36 +97,6 @@ feature {NONE} -- Initialization
 					post_launch_actions.extend (agent display_tip_of_the_day)
 					launch
 				end
-			else
-					-- The necessary environment variables are not present, so
-					-- display a warning dialog instead of launching EiffelBuild.
-				create environment_dialog
-				environment_dialog.warning_label.set_text ("EiffelBuild was unable to launch for the following reasons: %N%N" + environment_variables_warning + "%N%NPlease check your installation.")
-				environment_dialog.show
-				launch
-			end
-		end
-
-	environment_variables_warning: STRING is
-			-- `Result' is warning message indicating missing environment
-			-- variables, or `Void' if none are missing.
-		local
-			temp: STRING
-		once
-			Result := ""
-			temp := eiffel_installation_dir_name
-			if temp = Void or else temp.is_empty then
-				Result.append ("The Environment variable $ISE_EIFFEL is not set.")
-			end
-			temp := eiffel_platform
-			if temp = Void or else temp.is_empty then
-				if not result.is_empty then
-					Result.append ("%N")
-				end
-				Result.append ("The Environment variable $ISE_PLATFORM is not set.")
-			end
-			if Result.is_empty then
-				Result := Void
 			end
 		end
 

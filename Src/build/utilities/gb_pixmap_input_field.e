@@ -19,9 +19,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING]];
-		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP], BOOLEAN]; a_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP];
-		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]; a_components: GB_INTERNAL_COMPONENTS) is
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING;
+		an_execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL]];
+		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL], BOOLEAN];
+		a_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP];
+		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING_GENERAL];
+		a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -105,7 +108,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 			list_item: EV_LIST_ITEM
 			has_pixmap: BOOLEAN
 			pixmap: EV_PIXMAP
-			l_pixmap_path: STRING
+			l_pixmap_path: STRING_GENERAL
 			error_label: EV_LABEL
 			blocked_list_item: EV_LIST_ITEM
 		do
@@ -132,10 +135,8 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 					blocked_list_item.deselect_actions.resume
 				end
 			else
-				pixmap_path_agent.call (Void)
-				l_pixmap_path := pixmap_path_agent.last_result
-				return_pixmap_agent.call (Void)
-				pixmap := return_pixmap_agent.last_result
+				l_pixmap_path := pixmap_path_agent.item (Void)
+				pixmap := return_pixmap_agent.item (Void)
 				has_pixmap := pixmap /= Void
 
 				constants_button.select_actions.block
@@ -211,7 +212,7 @@ feature {NONE} -- Implementation
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
 
-	execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP]]
+	execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL]]
 		-- Agent to execute command associated with value entered into `Current'.
 
 	validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP], BOOLEAN]
@@ -219,7 +220,7 @@ feature {NONE} -- Implementation
 
 	return_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP]
 
-	pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]
+	pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING_GENERAL]
 
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main horizontal box used in construction of `Current'.
@@ -329,8 +330,7 @@ feature {NONE} -- Implementation
 			error_dialog: EV_WARNING_DIALOG
 			must_add_pixmap: BOOLEAN
 		do
-			pixmap_path_agent.call (Void)
-			must_add_pixmap := pixmap_path_agent.last_result = Void
+			must_add_pixmap := pixmap_path_agent.item (Void) = Void
 			if not constants_button.is_selected and then must_add_pixmap then
 				from
 					create dialog
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	execute_agent (new_value: EV_PIXMAP; new_path: STRING) is
+	execute_agent (new_value: EV_PIXMAP; new_path: STRING_GENERAL) is
 			-- call `execution_agent'. `new_value' may be Void
 			-- in the case where we must remove the pixmap.
 		do

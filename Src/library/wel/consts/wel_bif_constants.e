@@ -58,7 +58,7 @@ feature -- Access
 			-- See class WEL_WINDOWS_VERSION. Is not defined as external
 			-- because it is not yet included in latest versions of "shlobj.h".
 
-	Bif_validate: INTEGER is 32;
+	Bif_validate: INTEGER is 32
 			-- Requires Shell32.dll Version 4.71 or greater. If the user types an
 			-- invalid name into the edit box, the browse dialog will call
 			-- the application's BrowseCallbackProc with the
@@ -69,7 +69,7 @@ feature -- Access
 			-- Use the new dialog layout with the ability to resize
 			-- Caller needs to call OleInitialize() before using this API
 				
-	Bif_nonewfolderbutton : INTEGER is 512
+	Bif_nonewfolderbutton : INTEGER is 512;
 			-- Do not add the "New Folder" button to the dialog.
 			-- Only applicable with BIF_NEWDIALOGSTYLE.
 

@@ -249,6 +249,7 @@ feature {NONE} -- Implementation
 feature {CONF_FILE_RULE} -- Implementation, merging
 
 	exclude_regexp: LINKED_SET [RX_PCRE_REGULAR_EXPRESSION]
+			-- The compiled regexp objects of the strings.
 	include_regexp: LINKED_SET [RX_PCRE_REGULAR_EXPRESSION]
 			-- The compiled regexp objects of the strings.
 

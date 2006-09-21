@@ -602,10 +602,13 @@ feature {NONE} -- Implementation
 feature {NONE} -- Cached informations
 
 	accessible_groups_cache: like accessible_groups
+			-- Cached version of `accessible_groups'.
 	class_by_name_cache: HASH_TABLE [like class_by_name, STRING]
+			-- Cached version of `class_by_name' lookup.
 	name_by_class_cache: HASH_TABLE [like name_by_class, CONF_CLASS]
+			-- Cached version of `name_by_class' lookup.
 	cached_mapping: like internal_mapping
-			-- Special classes name mapping cash, has the fully merge version of the mapping.
+			-- Special classes name mapping cache, has the fully merge version of the mapping.
 
 invariant
 	internal_file_rule_not_void: internal_file_rule /= Void

@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING;
+		-- The error message.
 
 
 indexing

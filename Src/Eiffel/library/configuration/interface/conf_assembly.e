@@ -280,12 +280,14 @@ feature -- Access queries
 		end
 
 	options: CONF_OPTION is
+			-- Options of this assembly.
 		once
 				-- assemblies have no options
 			create Result
 		end
 
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
+			-- Options of classes in the assembly.
 		once
 				-- classes in assemblies have no options
 			create Result.make (0)
@@ -482,10 +484,12 @@ feature {NONE} -- Implementation
 feature {NONE} -- Caches
 
 	accessible_groups_cache: like accessible_groups
+			-- Cached information of `accessible_groups'.
 
-feature {NONE} -- Class type anchor
+feature {NONE} -- Type anchors
 
 	class_type: CONF_CLASS;
+			-- Class type anchor
 
 invariant
 	guid_set: classes_set implies guid /= Void and then not guid.is_empty

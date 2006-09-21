@@ -39,6 +39,7 @@ feature -- Status
 			-- Was the last `store' operation successful?
 
 	date_has_changed: BOOLEAN is
+			-- Did the file modification date of the configuration file change?
 		do
 			Result := file_modified_date (file_name) /= file_date
 		end
@@ -279,10 +280,6 @@ feature -- Visit
 		do
 			a_visitor.process_system (Current)
 		end
-
-feature -- Dummy
-
-	compile_all_classes: BOOLEAN
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation
 

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING;
+		-- Error text.
 
 
 indexing

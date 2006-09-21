@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING is
+			-- Error text.
 		do
 			Result := "Parse error"
 			if file /= Void then
@@ -57,9 +58,13 @@ feature -- Update
 feature {NONE} -- Implementation
 
 	message: STRING
+		-- Error text.
 	file: STRING
+		-- File with error.
 	row: INTEGER
+		-- Row of error.
 	column: INTEGER;
+		-- Column of error.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -11,8 +11,11 @@ class
 feature {NONE} -- Constants
 
 	Header: STRING is "<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>"
+		-- xml header
 	Namespace: STRING is "http://www.eiffel.com/developers/xml/configuration-1-0-0"
+		-- configuration namespace
 	Schema: STRING is
+		-- schema location
 		once
 			Result := Namespace +" http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
 		end

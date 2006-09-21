@@ -17,6 +17,7 @@ inherit
 feature {NONE} -- Initialization
 
 	text: STRING is
+			-- Error text.
 		do
 			if file /= Void then
 				Result := "Parse error in "+file+": An override was overriden"
@@ -39,6 +40,7 @@ feature -- Update
 feature {NONE} -- Implementation
 
 	group: STRING;
+		-- Group that is not defined.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING;
+		-- Error text.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

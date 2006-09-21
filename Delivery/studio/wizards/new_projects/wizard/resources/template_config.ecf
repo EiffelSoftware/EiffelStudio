@@ -9,7 +9,7 @@
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.ecf"/>
 		<library name="wizard" location="$ISE_LIBRARY/library/wizard/wizard.ecf"/>
-		<cluster name="root_cluster" location="${FL_WIZARD_PATH}" recursive="true">
+		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
 				<exclude>EIFGENs</exclude>
 				<exclude>.svn</exclude>

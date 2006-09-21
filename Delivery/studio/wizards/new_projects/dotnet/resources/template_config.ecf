@@ -10,7 +10,14 @@
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="${FL_APPLICATION_TYPE}"/>
 		${FL_CLR_VERSION}
+		<precompile name="base_pre" location="$ISE_PRECOMP/base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<cluster name="root_cluster" location="${FL_LOCATION}"/>
+		<cluster name="root_cluster" location=".\" recursive="true">
+			<file_rule>
+				<exclude>EIFGENs</exclude>
+				<exclude>.svn</exclude>
+				<exclude>CVS</exclude>
+			</file_rule>
+		</cluster>
 	</target>
 </system>

@@ -1,31 +1,31 @@
 indexing
 	description: "[
-	Objects that provide access to constants, possibly loaded from a files.
-	Each constant is generated into two features: both a query and a storage
-	feature. For example, for a STRING constant named `my_string', the following
-	features are generated: my_string: STRING and my_string_cell: CELL [STRING].
-	`my_string' simply returns the current item of `my_string_cell'. By seperating
-	the constant access in this way, it is possible to change the constant's value
-	by either redefining `my_string' in descendent classes or simply performing
-	my_string_cell.put ("new_string") as required.
-	If you are loading the constants from a file and you wish to reload a different set
-	of constants for your interface (e.g. for multi-language support), you may perform
-	this in the following way:
-	
-	set_file_name ("my_constants_file.text")
-	reload_constants_from_file
-	
-	and then for each generated widget, call `set_all_attributes_using_constants' to reset
-	the newly loaded constants into the attribute settings of each widget that relies on constants.
-	
-	Note that if you wish your constants file to be loaded from a specific location,
-	you may redefine `initialize_constants' to handle the loading of the file from
-	an alternative location.
-	
-	Note that if you have selected to load constants from a file, and the file cannot
-	be loaded, you will get a precondition violation when attempting to access one
-	of the constants that should have been loaded. Therefore, you must ensure that either the
-	file is accessible or you do not specify to load from a file.
+			Objects that provide access to constants, possibly loaded from a files.
+			Each constant is generated into two features: both a query and a storage
+			feature. For example, for a STRING constant named `my_string', the following
+			features are generated: my_string: STRING and my_string_cell: CELL [STRING].
+			`my_string' simply returns the current item of `my_string_cell'. By seperating
+			the constant access in this way, it is possible to change the constant's value
+			by either redefining `my_string' in descendent classes or simply performing
+			my_string_cell.put ("new_string") as required.
+			If you are loading the constants from a file and you wish to reload a different set
+			of constants for your interface (e.g. for multi-language support), you may perform
+			this in the following way:
+			
+			set_file_name ("my_constants_file.text")
+			reload_constants_from_file
+			
+			and then for each generated widget, call `set_all_attributes_using_constants' to reset
+			the newly loaded constants into the attribute settings of each widget that relies on constants.
+			
+			Note that if you wish your constants file to be loaded from a specific location,
+			you may redefine `initialize_constants' to handle the loading of the file from
+			an alternative location.
+			
+			Note that if you have selected to load constants from a file, and the file cannot
+			be loaded, you will get a precondition violation when attempting to access one
+			of the constants that should have been loaded. Therefore, you must ensure that either the
+			file is accessible or you do not specify to load from a file.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -117,16 +117,28 @@ feature -- Access
 			set_with_named_file (Result.item, a_file_name)
 		end
 
-	system_window_title: STRING is
-			-- `Result' is STRING constant named `system_window_title'.
+	large_padding: INTEGER is
+			-- `Result' is INTEGER constant named `large_padding'.
 		do
-			Result := system_window_title_cell.item
+			Result := large_padding_cell.item
 		end
 
-	system_window_title_cell: CELL [STRING] is
-			--`Result' is once access to a cell holding vale of `system_window_title'.
+	large_padding_cell: CELL [INTEGER] is
+			--`Result' is once access to a cell holding vale of `large_padding'.
 		once
-			create Result.put ("Project Configuration")
+			create Result.put (12)
+		end
+
+	close_text: STRING is
+			-- `Result' is STRING constant named `close_text'.
+		do
+			Result := close_text_cell.item
+		end
+
+	close_text_cell: CELL [STRING] is
+			--`Result' is once access to a cell holding vale of `close_text'.
+		once
+			create Result.put ("Close")
 		end
 
 	modify_pixmap_dialog_title: STRING is
@@ -175,18 +187,6 @@ feature -- Access
 			--`Result' is once access to a cell holding vale of `new_button_add_text'.
 		once
 			create Result.put ("Add")
-		end
-
-	pixmap_location: STRING is
-			-- `Result' is DIRECTORY constant named `pixmap_location'.
-		do
-			Result := pixmap_location_cell.item
-		end
-
-	pixmap_location_cell: CELL [STRING] is
-			--`Result' is once access to a cell holding vale of `pixmap_location'.
-		once
-			create Result.put ("D:\Eiffel54\build\bitmaps\png")
 		end
 
 	medium_padding: INTEGER is
@@ -240,6 +240,18 @@ feature -- Access
 			create a_file_name.make_from_string (pixmap_location)
 			a_file_name.set_file_name ("icon_component_display_view_color.png")
 			set_with_named_file (Result.item, a_file_name)
+		end
+
+	system_window_title: STRING is
+			-- `Result' is STRING constant named `system_window_title'.
+		do
+			Result := system_window_title_cell.item
+		end
+
+	system_window_title_cell: CELL [STRING] is
+			--`Result' is once access to a cell holding vale of `system_window_title'.
+		once
+			create Result.put ("Project Configuration")
 		end
 
 	constants_dialog_title: STRING is
@@ -312,18 +324,6 @@ feature -- Access
 			create Result.put ("Tip of the Day")
 		end
 
-	cancel_button_text: STRING is
-			-- `Result' is STRING constant named `cancel_button_text'.
-		do
-			Result := cancel_button_text_cell.item
-		end
-
-	cancel_button_text_cell: CELL [STRING] is
-			--`Result' is once access to a cell holding vale of `cancel_button_text'.
-		once
-			create Result.put ("Cancel")
-		end
-
 	negative: INTEGER is
 			-- `Result' is INTEGER constant named `negative'.
 		do
@@ -360,16 +360,16 @@ feature -- Access
 			create Result.put ("Modify")
 		end
 
-	close_text: STRING is
-			-- `Result' is STRING constant named `close_text'.
+	pixmap_location: STRING is
+			-- `Result' is DIRECTORY constant named `pixmap_location'.
 		do
-			Result := close_text_cell.item
+			Result := pixmap_location_cell.item
 		end
 
-	close_text_cell: CELL [STRING] is
-			--`Result' is once access to a cell holding vale of `close_text'.
+	pixmap_location_cell: CELL [STRING] is
+			--`Result' is once access to a cell holding vale of `pixmap_location'.
 		once
-			create Result.put ("Close")
+			create Result.put ("C:\apps\Eiffel57\build\bitmaps\png")
 		end
 
 	large_spacing_width: INTEGER is
@@ -408,16 +408,16 @@ feature -- Access
 			create Result.put ("Pixmap Selection")
 		end
 
-	large_padding: INTEGER is
-			-- `Result' is INTEGER constant named `large_padding'.
+	cancel_button_text: STRING is
+			-- `Result' is STRING constant named `cancel_button_text'.
 		do
-			Result := large_padding_cell.item
+			Result := cancel_button_text_cell.item
 		end
 
-	large_padding_cell: CELL [INTEGER] is
-			--`Result' is once access to a cell holding vale of `large_padding'.
+	cancel_button_text_cell: CELL [STRING] is
+			--`Result' is once access to a cell holding vale of `cancel_button_text'.
 		once
-			create Result.put (12)
+			create Result.put ("Cancel")
 		end
 
 feature -- Access
@@ -607,5 +607,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GB_INTERFACE_CONSTANTS_IMP
+end

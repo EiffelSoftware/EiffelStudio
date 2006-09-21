@@ -32,8 +32,8 @@ feature {NONE} -- Initialization
 			-- Create `Current' with directory named `a_directory'.
 		require
 			a_directory_not_void: a_directory /= Void
-			void_parent_implies_widget_selector: parent_directory = Void implies a_directory.parent = components.tools.widget_selector
-			non_void_parent_correct: parent_directory /= Void implies a_directory.parent /= components.tools.widget_selector
+			void_parent_implies_widget_selector: parent_directory = Void implies a_directory.parent = a_components.tools.widget_selector
+			non_void_parent_correct: parent_directory /= Void implies a_directory.parent /= a_components.tools.widget_selector
 		do
 			components := a_components
 			components.history.cut_off_at_current_position

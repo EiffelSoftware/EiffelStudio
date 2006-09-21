@@ -210,4 +210,4 @@ feature {NONE} -- Constant setting
 			Result := an_integer
 		end
 
-end -- class <CLASS_NAME>
+end

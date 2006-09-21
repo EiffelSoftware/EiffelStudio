@@ -30,4 +30,4 @@ feature {NONE} -- Implementation
 	main_window: <MAIN_WINDOW>
 		-- Main window of `Current'.
 
-end -- class <APPLICATION>
+end

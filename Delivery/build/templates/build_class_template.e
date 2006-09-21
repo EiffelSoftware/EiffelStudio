@@ -27,5 +27,4 @@ feature {NONE} -- Implementation
 
 	<EVENT_DECLARATION>	
 
-end -- class <CLASS_NAME>
-
+end

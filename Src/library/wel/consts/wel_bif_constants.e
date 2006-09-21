@@ -46,14 +46,14 @@ feature -- Access
 			-- function can set the status text by sending messages to the
 			-- dialog box.
 
- 	Bif_usenewui: INTEGER is 80
+	Bif_usenewui: INTEGER is 80
 			-- Use the new user-interface. Setting this flag provides the
 			-- user with a larger dialog box that can be resized. It has
 			-- several new capabilities including: drag and drop capability
 			-- within the dialog box, reordering, context menus, new folders,
- 			-- delete, and other context menu commands. To use this flag,
- 			-- you must call OleInitialize or CoInitialize before
- 			-- calling SHBrowseForFolder.
+			-- delete, and other context menu commands. To use this flag,
+			-- you must call OleInitialize or CoInitialize before
+			-- calling SHBrowseForFolder.
 			-- IMPORTANT: to use, requires SHELL32.DLL version 5.00 or higher.
 			-- See class WEL_WINDOWS_VERSION. Is not defined as external
 			-- because it is not yet included in latest versions of "shlobj.h".
@@ -64,6 +64,14 @@ feature -- Access
 			-- the application's BrowseCallbackProc with the
 			-- BFFM_VALIDATEFAILED message. This flag is ignored if
 			-- BIF_EDITBOX is not specified.
+
+	Bif_newdialogstyle : INTEGER is 64
+			-- Use the new dialog layout with the ability to resize
+			-- Caller needs to call OleInitialize() before using this API
+				
+	Bif_nonewfolderbutton : INTEGER is 512
+			-- Do not add the "New Folder" button to the dialog.
+			-- Only applicable with BIF_NEWDIALOGSTYLE.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			not_a_name_is_empty: not a_name.is_empty
 			a_value_attached: a_value /= Void
 			a_flags_attached: a_flags /= Void
-			not_a_flags_is_empty: not a_flags.is_empty
 			a_switch_attached: a_switch /= Void
 		do
 			make_with_value (a_name, a_value, a_switch)

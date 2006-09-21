@@ -180,6 +180,11 @@ feature {NONE} -- Implementation
 			l_preference: PREFERENCE
 			nb: INTEGER
 		do
+			if grid.is_tree_enabled then
+					-- If structured view is enabled then we autosize the columns
+				Precursor
+			end
+			grid.process_events_and_idle
 			nb := grid.row_count
 			if nb > 0 then
 				grid.row (1).enable_select

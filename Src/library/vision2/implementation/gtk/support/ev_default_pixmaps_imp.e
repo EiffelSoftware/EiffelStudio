@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-feature {EV_ANY_HANDLER} -- Externals
+feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 
 	frozen information_pixmap_xpm: POINTER is
 		external

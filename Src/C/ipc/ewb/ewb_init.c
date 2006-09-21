@@ -51,6 +51,12 @@
 #include <string.h>
 #include <signal.h>
 
+#ifndef EIF_WINDOWS
+/* for pid related functions */
+#include <unistd.h>
+#include <sys/wait.h>
+#endif
+
 /* Data declaration */
 
 extern unsigned int TIMEOUT;		/* Time out for interprocess communications */
@@ -59,6 +65,10 @@ rt_public struct ewb_flags ewb_data = {	/* Internal ewb's flags */
 	(unsigned int) 0,	/* d_sent */
 	(STREAM *) 0,		/* d_cs */
 };
+
+/* Extern function declaration */
+#include "rqst_const.h"
+extern void send_rqst_0 (long int code);
 
 
 #ifdef EIF_WINDOWS
@@ -191,6 +201,30 @@ rt_public int launch_ecdbgd (char* progn, char* cmd, int eif_timeout)
 #endif
 	
 	return 1;
+}
+
+rt_public int close_ecdbgd (int eif_timeout) 
+{
+#ifndef EIF_WINDOWS
+	pid_t child_pid, wpid;
+	int status;
+#endif
+	send_rqst_0 (CLOSE_DBG);
+#ifdef EIF_WINDOWS
+	return 0;
+#else
+	child_pid = (pid_t) ewb_data.d_ecdbgd;
+	if (child_pid > 0) {
+		wpid = waitpid(child_pid, &status, WNOHANG | WUNTRACED
+#ifdef WCONTINUED       /* Not all implementations support this */
+			| WCONTINUED
+#endif
+	        );	
+		return wpid;
+	} else {
+		return 0;
+	}
+#endif
 }
 
 rt_private void init_signals (void)

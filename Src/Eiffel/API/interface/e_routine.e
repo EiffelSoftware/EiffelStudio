@@ -74,7 +74,7 @@ feature -- Access
 				routine_as ?=
 					inline_agent_lookup.lookup_inline_agent_of_feature (
 						Body_server.item (enclosing_body_id), inline_agent_nr).content
-			else
+			elseif body_index > 0 then
 				routine_as ?= Body_server.item (body_index).body.content;
 			end
 			if routine_as /= Void then

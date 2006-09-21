@@ -36,6 +36,14 @@ feature {NONE} -- Initialization
 			a_bool_set: a_bool = internal_selected
 		end
 
+feature -- Status Setting
+
+	initialize_for_tree is
+			-- Draw tree line to check box.
+		do
+			tree_line_enabled := True
+		end
+
 feature -- Access
 
 	selected: BOOLEAN assign set_selected is
@@ -62,6 +70,9 @@ feature -- Events
 			-- Actions when user clicked the check box.
 
 feature {NONE} -- Implementation
+
+	tree_line_enabled: BOOLEAN
+		-- Should a tree line be drawn all the way to the check box.
 
 	handle_pointer_pressed is
 			-- Handle user press event.
@@ -149,9 +160,9 @@ feature {NONE} -- Implementation
 		local
 			l_start_x, l_start_y: INTEGER
 		do
-			l_start_x := figure_start_x
-			l_start_y := figure_start_y
-			a_drawable.draw_segment (l_start_x + a_coordinate.x, l_start_y +a_coordinate.y, l_start_x + a_coordinate.x, l_start_y + a_coordinate.y + 2)
+			l_start_x := figure_start_x + 2 - check_box_line_width
+			l_start_y := figure_start_y + 2 - check_box_line_width
+			a_drawable.draw_segment (l_start_x + a_coordinate.x, l_start_y + a_coordinate.y, l_start_x + a_coordinate.x, l_start_y + a_coordinate.y + 2)
 		end
 
 	draw_unselected (a_drawable: EV_DRAWABLE) is
@@ -162,14 +173,20 @@ feature {NONE} -- Implementation
 			else
 				a_drawable.set_foreground_color (black_color)
 			end
-			a_drawable.set_line_width (2)
+
+			if tree_line_enabled then
+				-- Draw a tree line up to the start of the check box.
+				a_drawable.set_line_width (1)
+				a_drawable.draw_segment (0, a_drawable.height // 2, (figure_start_x - tree_line_margin_width).max (0), a_drawable.height // 2)
+			end
+			a_drawable.set_line_width (check_box_line_width)
 			a_drawable.draw_rectangle (figure_start_x, figure_start_y, check_figure_size, check_figure_size)
 		end
 
 	figure_start_x: INTEGER is
 			-- The start x position of the figure.
 		do
-			Result := (width - check_figure_size) // 2
+			Result := (width - check_figure_size - margin_width).max (tree_line_margin_width)
 		end
 
 	figure_start_y: INTEGER is
@@ -189,14 +206,30 @@ feature {NONE} -- Implementation
 
 	white_color: EV_COLOR is
 			-- White color
-		do
-			Result := (create {EV_STOCK_COLORS}).white
+		once
+			create Result.make_with_rgb (1, 1, 1)
 		end
 
 	black_color: EV_COLOR is
 			-- Black color
+		once
+			create Result.make_with_rgb (0, 0, 0)
+		end
+
+	margin_width: INTEGER is 3
+		-- Space between box and next item
+
+	tree_line_margin_width: INTEGER is 3
+		-- Space between tree line and box.
+
+	check_box_line_width: INTEGER is
+			-- Line width for drawing check box.
 		do
-			Result := (create {EV_STOCK_COLORS}).black
+			if {PLATFORM}.is_windows then
+				Result := 2
+			else
+				Result := 1
+			end
 		end
 
 invariant

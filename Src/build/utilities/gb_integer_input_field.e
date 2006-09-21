@@ -11,17 +11,17 @@ class
 
 inherit
 	GB_INPUT_FIELD
-	
+
 	GB_SHARED_PREFERENCES
 		undefine
 			copy, is_equal, default_create
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
-	
+
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
@@ -61,7 +61,7 @@ feature -- Basic operations
 		do
 			text_field.set_text (a_text)
 		end
-		
+
 feature -- Access
 
 	type: STRING is
@@ -75,7 +75,7 @@ feature -- Access
 		do
 			Result := text_field.text
 		end
-		
+
 feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 
 	update_constant_display (a_value: STRING) is
@@ -96,7 +96,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 					blocked_list_item := list_item
 				end
 				enable_constant_mode
-			
+
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 
 	text_field: EV_TEXT_FIELD
 		-- Text field usd for user input.
-	
+
 	value_on_entry: STRING
 		-- Contents of `text_field' when focus in is received.
 
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 		do
 			execution_agent.call ([new_value])
 		end
-		
+
 	set_initial is
 			-- Assign text of text field to `value_on_entry'.
 		require
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 		do
 			value_on_entry := text_field.text
 		end
-		
+
 	process is
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
 			-- Initialize text field for entry.
 		require
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			execution_agent := an_execution_agent
 				-- Store `a_validate_agent'.
 			validate_agent := a_validate_agent
-			
+
 			a_parent.extend (Current)
 			create horizontal_box
 			horizontal_box.set_padding_width (object_editor_padding_width)
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			text_field.show
 			constants_combo_box.remove_selection
 		end
-		
+
 	enable_constant_mode is
 			-- Ensure constant entry fields are displayed.
 		do
@@ -261,11 +261,11 @@ feature {NONE} -- Implementation
 				create list_item.make_with_text (integer_constants.item.name)
 				list_item.set_data (integer_constants.item)
 				add_to_list_alphabetically (constants_combo_box, list_item)
-				
+
 				list_item.deselect_actions.block
 				list_item.disable_select
 				list_item.deselect_actions.resume
-				
+
 				if internal_type /= Void then
 					if internal_gb_ev_any.object.constants.has (lookup_string) and
 						integer_constants.item = internal_gb_ev_any.object.constants.item (lookup_string).constant then
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 				add_select_item
 			end
 		end
-		
+
 	list_item_selected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected from `constants_combo_box'.
 		local
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 					data_was_constant: constant /= Void
 				end
 				validate_agent.call ([constant.value])
-			
+
 				if validate_agent.last_result then
 					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
 					constant.add_referer (constant_context)
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 						remove_select_item
 					end
 				else
-					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again, preferences.preferences)
+					create warning_dialog.make_initialized (1, preferences.dialog_data.show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again, preferences.preferences)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_ok_action (agent do_nothing)
 					warning_dialog.set_title ("Invalid Constant Selected")
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	list_item_deselected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been deselected from `constants_combo_box'.
 		local
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 				constant_context.destroy
 			end
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

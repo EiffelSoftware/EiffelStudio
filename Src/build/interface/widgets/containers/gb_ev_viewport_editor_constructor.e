@@ -139,12 +139,11 @@ feature {NONE} -- Implementation
 			check
 				object_was_viewport: viewport /= Void
 			end
-			viewport.set_item_width (width)
+			if viewport.readable then
+				viewport.set_item_width (width)
+			end
 			viewport ?= an_object.real_display_object
-			if viewport /= Void then
-				check
-					object_was_viewport: viewport /= Void
-				end
+			if viewport /= Void and then viewport.readable then
 				viewport.set_item_width (width.max (viewport.item.width))
 			end
 		end
@@ -177,12 +176,11 @@ feature {NONE} -- Implementation
 			check
 				object_was_viewport: viewport /= Void
 			end
-			viewport.set_item_height (height)
+			if viewport.readable then
+				viewport.set_item_height (height)
+			end
 			viewport ?= an_object.real_display_object
-			if viewport /= Void then
-				check
-					object_was_viewport: viewport /= Void
-				end
+			if viewport /= Void and then viewport.readable then
 				viewport.set_item_height (height.max (viewport.item.height))
 			end
 		end

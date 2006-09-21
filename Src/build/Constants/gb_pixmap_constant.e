@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value.is_equal (a_Value) and value /= a_value
+			components_set: components = a_components
 		end
 
 feature {GB_PIXMAP_SETTINGS_DIALOG}
@@ -72,6 +73,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value.is_equal (a_Value) and value /= a_value
+			components_set: components = a_components
 		end
 
 	convert_to_full is
@@ -185,7 +187,7 @@ feature {GB_PIXMAP_SETTINGS_DIALOG, GB_DIRECTORY_CONSTANT} -- Implementation
 			-- Rebuild representations of `Current', and update all referers within system.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
-			execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING]]
+			execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING_GENERAL]]
 			file_name: FILE_NAME
 		do
 			if is_absolute then

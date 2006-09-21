@@ -220,7 +220,7 @@ feature {NONE} -- Implementation
 					warning_dialog.show_modal_to_window (Current)
 					if not warning_dialog.cancelled then
 						added_directory_name := warning_dialog.directory_name
-						create directory_constant.make_with_name_and_value (added_directory_name, file_path)
+						create directory_constant.make_with_name_and_value (added_directory_name, file_path, components)
 						create add_constant_command.make (directory_constant, components)
 						add_constant_command.execute
 						pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute, components)
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 						(components.constants.directory_constant_by_name (pixmap_constant.directory.as_lower) = Void) then
 							-- No directory exists matching the specified name, so make it and create the pixmap relative to it.
 					--	add_relative_directory_and_constant (pixmap_constant, pixmap_constant.directory)
-					create directory_constant.make_with_name_and_value (pixmap_constant.directory, file_path)
+					create directory_constant.make_with_name_and_value (pixmap_constant.directory, file_path, components)
 					create add_constant_command.make (directory_constant, components)
 					add_constant_command.execute
 				else
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 								constant_matching_absolute := components.constants.matching_absolute_pixmap_constant (pixmap_constant.value)
 								if constant_matching_absolute /= Void then
 										-- If an absolute constant already exists, warn for duplication
-									create confirmation_dialog.make_initialized (2, show_repeated_absolute_constant_warning, "An absolute pixmap constant named %"" +
+									create confirmation_dialog.make_initialized (2, preferences.dialog_data.show_repeated_absolute_constant_warning, "An absolute pixmap constant named %"" +
 										constant_matching_absolute + "%" already references this image file.%NAre you sure you wish to add another?", "Do not show this dialog again, and always add.",
 										preferences.preferences)
 									confirmation_dialog.set_icon_pixmap (Icon_build_window @ 1)
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 			directory_constant: GB_DIRECTORY_CONSTANT
 			add_constant_command: GB_COMMAND_ADD_CONSTANT
 		do
-			create directory_constant.make_with_name_and_value (directory_name, file_path)
+			create directory_constant.make_with_name_and_value (directory_name, file_path, components)
 			create add_constant_command.make (directory_constant, components)
 			add_constant_command.execute
 			pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, directory_name, pixmap_constant.filename, pixmap_constant.is_absolute, components)

@@ -488,19 +488,19 @@ feature {NONE} -- Implementation
 				-- As only one entry field may be parented, we check the
 				-- `parent' to determine which one must be validated
 			if string_input.parent /= Void then
-				create add_constant_command.make (create {GB_STRING_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, string_input.text), components)
+				create add_constant_command.make (create {GB_STRING_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, string_input.text, components), components)
 				add_constant_command.execute
 				string_input.remove_text
 				new_button.disable_sensitive
 			elseif integer_input.parent /= Void then
-				create add_constant_command.make (create {GB_INTEGER_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, integer_input.value), components)
+				create add_constant_command.make (create {GB_INTEGER_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, integer_input.value, components), components)
 				add_constant_command.execute
 				new_button.disable_sensitive
 			elseif directory_input.parent /= Void then
 				create a_directory_dialog
 				a_directory_dialog.show_modal_to_window (Current)
 				if not a_directory_dialog.directory.is_empty then
-					create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_directory_dialog.directory), components)
+					create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_directory_dialog.directory, components), components)
 					add_constant_command.execute
 					name_field.remove_text
 				end
@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 				create a_color_dialog
 				a_color_dialog.show_modal_to_window (Current)
 				if not a_color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-					create add_constant_command.make (create {GB_COLOR_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_color_dialog.color), components)
+					create add_constant_command.make (create {GB_COLOR_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_color_dialog.color, components), components)
 					add_constant_command.execute
 					name_field.remove_text
 				end
@@ -516,7 +516,7 @@ feature {NONE} -- Implementation
 				create a_font_dialog
 				a_font_dialog.show_modal_to_window (Current)
 				if not a_font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-					create add_constant_command.make (create {GB_FONT_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_font_dialog.font), components)
+					create add_constant_command.make (create {GB_FONT_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_font_dialog.font, components), components)
 					add_constant_command.execute
 					name_field.remove_text
 				end
@@ -573,7 +573,9 @@ feature {NONE} -- Implementation
 				end
 					-- Now update the representation of the constant in the list.
 				row := constants_list.i_th (modify_constant_index)
+				row.put_i_th (color_constant.value_for_list, 3)
 				row.set_pixmap (color_constant.small_pixmap)
+				color_input.set_text (color_constant.value_for_list)
 			elseif font_constant /= Void then
 				create a_font_dialog
 				a_font_dialog.set_title (select_font_location_modify_string + font_constant.name + "%"")
@@ -582,6 +584,9 @@ feature {NONE} -- Implementation
 				if not a_font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 					font_constant.modify_value (a_font_dialog.font)
 				end
+				row := constants_list.i_th (modify_constant_index)
+				row.put_i_th (font_constant.value_as_string, 3)
+				font_input.set_text (font_constant.value_as_string)
 			elseif directory_constant /= Void then
 				create directory_dialog
 				directory_dialog.set_title (select_directory_location_modify_string + directory_constant.name + "%"")
@@ -702,7 +707,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if not constant.referers.is_empty and not referers_dialog_already_displayed and not cross_referers_dialog_already_displayed then
-						create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "One or more constants are still referenced by objects in the system.%NIf you delete then, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.", preferences.preferences)
+						create warning_dialog.make_initialized (2, preferences.dialog_data.show_constant_manifest_conversion_warning, "One or more constants are still referenced by objects in the system.%NIf you delete then, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.", preferences.preferences)
 						warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 						warning_dialog.set_ok_action (agent do_nothing)
 						warning_dialog.set_title ("Constant still referenced")
@@ -745,7 +750,7 @@ feature {NONE} -- Implementation
 						end
 					end
 				if not constant.referers.is_empty and not cross_referers_dialog_already_displayed then
-					create warning_dialog.make_initialized (2, show_constant_manifest_conversion_warning, "Constant named `" + constant.name + "' is still referenced by one or more objects in the system.%NIf you delete it, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.", preferences.preferences)
+					create warning_dialog.make_initialized (2, preferences.dialog_data.show_constant_manifest_conversion_warning, "Constant named `" + constant.name + "' is still referenced by one or more objects in the system.%NIf you delete it, all references will be converted to manifest values.%NAre you sure you wish to perform this?", "Always convert, and do not show again.", preferences.preferences)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					warning_dialog.set_ok_action (agent do_nothing)
 					warning_dialog.set_title ("Constant still referenced")

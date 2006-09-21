@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- assign `a_components' to `components'.
 		require
 			a_name_not_void: a_name /= Void
-			a_components_not_void: components = a_components
+			a_components_not_void: a_components /= Void
 		do
 			components := a_components
 			default_create

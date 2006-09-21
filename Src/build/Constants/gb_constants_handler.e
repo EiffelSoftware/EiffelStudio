@@ -530,19 +530,19 @@ feature {NONE} -- Implementation
 			font_constant: GB_FONT_CONSTANT
 		do
 			if type.is_equal (Integer_constant_type) then
-				create integer_constant.make_with_name_and_value (name, value.to_integer)
+				create integer_constant.make_with_name_and_value (name, value.to_integer, components)
 				add_integer (integer_constant)
 			elseif type.is_equal (String_constant_type) then
-				create string_constant.make_with_name_and_value (name, value)
+				create string_constant.make_with_name_and_value (name, value, components)
 				add_string (string_constant)
 			elseif type.is_equal (Directory_constant_type) then
-				create directory_constant.make_with_name_and_value (name, value)
+				create directory_constant.make_with_name_and_value (name, value, components)
 				add_directory (directory_constant)
 			elseif type.is_equal (color_constant_type) then
-				create color_constant.make_with_name_and_value (name, build_color_from_string (value))
+				create color_constant.make_with_name_and_value (name, build_color_from_string (value), components)
 				add_color (color_constant)
 			elseif type.is_equal (font_constant_type) then
-				create font_constant.make_with_name_and_value (name, build_font_from_string (value))
+				create font_constant.make_with_name_and_value (name, build_font_from_string (value), components)
 				add_font (font_constant)
 			end
 		end

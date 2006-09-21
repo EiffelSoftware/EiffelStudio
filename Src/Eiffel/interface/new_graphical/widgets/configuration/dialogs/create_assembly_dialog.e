@@ -126,6 +126,7 @@ feature {NONE} -- Initialization
 				-- name
 			create vb2
 			vb.extend (vb2)
+			vb.disable_item_expand (vb2)
 			vb2.set_padding (small_padding_size)
 			vb2.set_border_width (small_border_size)
 
@@ -141,6 +142,7 @@ feature {NONE} -- Initialization
 				-- location
 			create vb2
 			vb.extend (vb2)
+			vb.disable_item_expand (vb2)
 			vb2.set_padding (small_padding_size)
 			vb2.set_border_width (small_border_size)
 
@@ -185,7 +187,11 @@ feature {NONE} -- Initialization
 
 			set_minimum_width (300)
 
-			show_actions.extend (agent name.set_focus)
+			if not assemblies.is_empty then
+				show_actions.extend (agent assemblies.set_focus)
+			else
+				show_actions.extend (agent name.set_focus)
+			end
 		end
 
 feature {NONE} -- GUI elements

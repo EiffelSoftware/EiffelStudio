@@ -14,7 +14,7 @@ inherit
 			{NONE} all
 		end
 
-create {ERROR_SHARED_ERROR_MANAGER}
+create
 	make
 
 feature {NONE} -- Implementation
@@ -60,10 +60,9 @@ feature -- Query
 		require
 			not_successful: not successful
 		do
-			Result := last_error.description
-			last_error := Void
+			Result := pop_last_error.description
 		ensure
-			last_error_is_void: last_error = Void
+			last_error_is_void: successful implies last_error = Void
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
@@ -76,7 +75,7 @@ feature -- Query
 			Result := last_error
 			last_error := Void
 		ensure
-			last_error_is_void: last_error = Void
+			last_error_is_void: successful implies last_error = Void
 		end
 
 	pop_warning: ERROR_WARNING_INFO is
@@ -120,6 +119,22 @@ feature -- Status Setting
 
 feature -- Basic Operations
 
+	reset is
+			-- Reset error manager
+		local
+			l_err: ERROR_ERROR_INFO
+		do
+			from until successful loop
+				l_err := pop_last_error
+			end
+			from until not has_warnings loop
+				l_err := pop_warning
+			end
+		ensure
+			successful: successful
+			not_has_warnings: not has_warnings
+		end
+
 	raise_on_error is
 			-- checks state a raises an exception if not `successful'
 		do
@@ -133,7 +148,7 @@ feature -- Basic Operations
 			end
 		end
 
-	trace_error (a_printer: ERROR_PRINTER) is
+	trace_last_error (a_printer: ERROR_PRINTER) is
 			-- Traces error and outputs it to `a_printer'
 			-- Default implementation pop `last_error' so state will become successful
 			-- after calling.

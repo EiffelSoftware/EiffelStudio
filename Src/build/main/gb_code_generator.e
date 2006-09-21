@@ -29,11 +29,6 @@ inherit
 			{NONE} all
 		end
 
-	GB_EIFFEL_ENV
-		export
-			{NONE} all
-		end
-
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all

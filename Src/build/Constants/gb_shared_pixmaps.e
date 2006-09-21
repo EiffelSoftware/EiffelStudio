@@ -14,7 +14,7 @@ inherit
 			implementation as stock_pixmaps_implementation
 		end
 
-	GB_EIFFEL_ENV
+	EIFFEL_LAYOUT
 		export
 			{NONE} all
 		end
@@ -26,9 +26,7 @@ feature -- Pngs
 		local
 			file_name: FILE_NAME
 		once
-			create file_name.make_from_string ((create {GB_EIFFEL_ENV}).Eiffel_installation_dir_name)
-			file_name.extend ("build")
-			file_name.extend ("bitmaps")
+			create file_name.make_from_string (eiffel_layout.bitmaps_path)
 			file_name.extend ("png")
 			file_name.extend ("bm_about.png")
 			create Result
@@ -331,7 +329,7 @@ feature {NONE} -- Update
 	Bitmap_path: DIRECTORY_NAME is
 			-- Path for Bmp/Xpm for Windows/Unix.
 		once
-			create Result.make_from_string ((create {GB_EIFFEL_ENV}).Bitmaps_path)
+			create Result.make_from_string (eiffel_layout.bitmaps_path)
 			Result.extend (Pixmap_suffix)
 		end
 

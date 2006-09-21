@@ -206,12 +206,12 @@ feature {NONE} -- Implementation
 				end
 				if relative_constant_radio_button.is_selected then
 					if relative_directory_combo.text.is_empty then
-						pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, file_path, file_title, False)
+						pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, file_path, file_title, False, components)
 					else
-						pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, relative_directory_combo.text, file_title, False)
+						pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, relative_directory_combo.text, file_title, False, components)
 					end
 				else
-					pixmap_constant.set_attributes (absolute_text.text, pixmap_constant.value, file_path, file_title, True)
+					pixmap_constant.set_attributes (absolute_text.text, pixmap_constant.value, file_path, file_title, True, components)
 				end
 				if not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and
 					components.constants.matching_directory_constant_name (file_path) = Void then
@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 						create directory_constant.make_with_name_and_value (added_directory_name, file_path)
 						create add_constant_command.make (directory_constant, components)
 						add_constant_command.execute
-						pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
+						pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute, components)
 					else
 						cancelled := True
 					end
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 					if components.constants.matching_directory_constant_name (pixmap_constant.directory) /= Void and not pixmap_constant.is_absolute then
 							-- A directory matches the name set for the directory of this relative pixmap, so
 							-- create a pixmap relative to this.
-						pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, components.constants.matching_directory_constant_name (pixmap_constant.directory), pixmap_constant.filename, pixmap_constant.is_absolute)
+						pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, components.constants.matching_directory_constant_name (pixmap_constant.directory), pixmap_constant.filename, pixmap_constant.is_absolute, components)
 --					else
 --						check
 --							directory_is_constant: constants.directory_constant_by_name (pixmap_constant.directory) /= Void
@@ -275,12 +275,12 @@ feature {NONE} -- Implementation
 							-- item, as it will not be up to date.
 						if relative_constant_radio_button.is_selected then
 							if relative_directory_combo.text.is_empty then
-								pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, file_path, pixmap_constant.filename, False)
+								pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, file_path, pixmap_constant.filename, False, components)
 							else
-								pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, relative_directory_combo.text, pixmap_constant.filename, False)
+								pixmap_constant.set_attributes (relative_text.text, pixmap_constant.value, relative_directory_combo.text, pixmap_constant.filename, False, components)
 							end
 						else
-							pixmap_constant.set_attributes (absolute_text.text, pixmap_constant.value, pixmap_constant.directory, pixmap_constant.filename, True)
+							pixmap_constant.set_attributes (absolute_text.text, pixmap_constant.value, pixmap_constant.directory, pixmap_constant.filename, True, components)
 						end
 					end
 					if pixmap_list.is_item_checked (pixmap_list.item) then
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 							elseif not pixmap_constant.is_absolute and pixmap_constant.directory.is_equal (file_path) and added_directory_name /= Void then
 									-- If constant is relative, no directory name has been specified, and a directory has already been selected from
 									-- `warning_dialog', add the constant relative to that directory. May only occur if multiple pixmaps are being added.
-								pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
+								pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, added_directory_name, pixmap_constant.filename, pixmap_constant.is_absolute, components)
 								add_relative_constant (pixmap_constant)
 							elseif (components.constants.matching_directory_constant_name (pixmap_constant.directory.as_lower) = Void) and
 								(components.constants.directory_constant_by_name (pixmap_constant.directory.as_lower) = Void) then
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 								if components.constants.matching_directory_constant_name (pixmap_constant.directory) /= Void then
 										-- A directory matches the name set for the directory of this relative pixmap, so
 										-- create a pixmap relative to this.
-									pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, components.constants.matching_directory_constant_name (pixmap_constant.directory), pixmap_constant.filename, pixmap_constant.is_absolute)
+									pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, components.constants.matching_directory_constant_name (pixmap_constant.directory), pixmap_constant.filename, pixmap_constant.is_absolute, components)
 								else
 									check
 										directory_is_constant: components.constants.directory_constant_by_name (pixmap_constant.directory) /= Void
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			create directory_constant.make_with_name_and_value (directory_name, file_path)
 			create add_constant_command.make (directory_constant, components)
 			add_constant_command.execute
-			pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
+			pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, directory_name, pixmap_constant.filename, pixmap_constant.is_absolute, components)
 			add_relative_constant (pixmap_constant)
 			check
 				cross_referer_set: directory_constant.cross_referers.has (pixmap_constant)
@@ -568,7 +568,7 @@ feature {NONE} -- Implementation
 					if not pixmap_paths.has (dialog.file_name) then
 						pixmap_list.check_item (list_item)
 					end
-					create pixmap_constant.set_attributes (get_unique_pixmap_name (file_title), "", file_path, file_title, False)
+					create pixmap_constant.set_attributes (get_unique_pixmap_name (file_title), "", file_path, file_title, False, components)
 					list_item.set_data (pixmap_constant)
 					display_pixmap_info (list_item)
 					list_item.select_actions.extend (agent display_pixmap_info (list_item))
@@ -676,7 +676,7 @@ feature {NONE} -- Implementation
 						create list_item.make_with_text (current_filename)
 						list_item.set_pixmap (pixmap)
 						pixmap_list.extend (list_item)
-						create pixmap_constant.set_attributes (get_unique_pixmap_name (current_filename), filename, directory.name, current_filename, False)
+						create pixmap_constant.set_attributes (get_unique_pixmap_name (current_filename), filename, directory.name, current_filename, False, components)
 						list_item.set_data (pixmap_constant)
 						if not pixmap_paths.has (filename.string) then
 							pixmap_list.check_item (list_item)
@@ -777,7 +777,7 @@ feature {NONE} -- Implementation
 				data_was_pixmap_constant: pixmap_constant /= Void
 			end
 			if absolute_constant_radio_button.is_selected and not absolute_text.foreground_color.is_equal (red) then
-				pixmap_constant.set_attributes (absolute_text.text.as_lower, pixmap_constant.value, pixmap_constant.directory, pixmap_constant.filename, True)
+				pixmap_constant.set_attributes (absolute_text.text.as_lower, pixmap_constant.value, pixmap_constant.directory, pixmap_constant.filename, True, components)
 					-- Add new name to `exising_names' so clashes may be determined.
 				existing_names.put (pixmap_constant.name, pixmap_constant.name)
 			elseif not relative_text.foreground_color.is_equal (red) and not relative_directory_combo.foreground_color.is_equal (red) then
@@ -787,7 +787,7 @@ feature {NONE} -- Implementation
 				if directory_location.is_empty then
 					directory_location := pixmap_constant.directory
 				end
-				pixmap_constant.set_attributes (relative_text.text.as_lower, pixmap_constant.value, directory_location, pixmap_constant.filename, False)
+				pixmap_constant.set_attributes (relative_text.text.as_lower, pixmap_constant.value, directory_location, pixmap_constant.filename, False, components)
 					-- Add new name to `exising_names' so clashes may be determined.
 				existing_names.put (pixmap_constant.name, pixmap_constant.name)
 			end

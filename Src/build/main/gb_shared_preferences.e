@@ -9,11 +9,11 @@ class
 	GB_SHARED_PREFERENCES
 
 inherit
-	GB_EIFFEL_ENV
-		export
-			{NONE} all
-			{GB_SHARED_INTERNAL_COMPONENTS} eiffel_preferences
-		end
+	ANY
+
+	EIFFEL_LAYOUT
+		export {NONE} all
+	end
 
 feature -- Initialization
 
@@ -45,7 +45,7 @@ feature -- Access
 	default_xml_file: FILE_NAME is
 			-- General system level resource specification XML file.			
 		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
+			create Result.make_from_string (eiffel_layout.eiffel_installation_dir_name)
 			Result.extend ("build")
 			Result.extend ("config")
 			Result.extend ("default.xml")

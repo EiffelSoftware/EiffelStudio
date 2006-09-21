@@ -25,11 +25,6 @@ inherit
 			default_create
 		end
 
-	GB_EIFFEL_ENV
-		redefine
-			default_create
-		end
-
 feature -- Access
 
 	default_create is

@@ -62,10 +62,7 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (window.new_library_cmd.new_mini_toolbar_item)
 			mini_toolbar.extend (window.new_assembly_cmd.new_mini_toolbar_item)
 			mini_toolbar.extend (window.new_class_cmd.new_mini_toolbar_item)
---| This button is not really necessary and it takes some place in the mini toolbar.
---			create sep
---			mini_toolbar.extend (sep)
---			mini_toolbar.extend (window.delete_class_cluster_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (window.delete_class_cluster_cmd.new_mini_toolbar_item)
 			create sep
 			mini_toolbar.extend (sep)
 			but := show_current_class_cluster_cmd.new_mini_toolbar_item

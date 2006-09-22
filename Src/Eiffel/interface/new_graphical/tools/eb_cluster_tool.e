@@ -22,6 +22,11 @@ inherit
 
 	SHARED_WORKBENCH
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -60,7 +65,9 @@ feature {NONE} -- Initialization
 			create mini_toolbar
 			mini_toolbar.extend (window.new_cluster_cmd.new_mini_toolbar_item)
 			mini_toolbar.extend (window.new_library_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (window.new_assembly_cmd.new_mini_toolbar_item)
+			if eiffel_layout.default_il_environment.is_dotnet_installed then
+				mini_toolbar.extend (window.new_assembly_cmd.new_mini_toolbar_item)
+			end
 			mini_toolbar.extend (window.new_class_cmd.new_mini_toolbar_item)
 			mini_toolbar.extend (window.delete_class_cluster_cmd.new_mini_toolbar_item)
 			create sep

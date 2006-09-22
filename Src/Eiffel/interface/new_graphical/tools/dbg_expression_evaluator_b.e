@@ -302,7 +302,6 @@ feature {NONE} -- EXPR_B evaluation
 		require
 			a_value_i_not_void: a_value_i /= Void
 		local
-			expr_b: EXPR_B
 			l_integer: INTEGER_CONSTANT
 			l_bit: BIT_VALUE_I
 			l_char: CHAR_VALUE_I

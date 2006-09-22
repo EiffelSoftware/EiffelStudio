@@ -236,7 +236,7 @@ feature -- Activation
 				l_sub.start
 				l_sub.forth
 			until
-				l_sub.after
+				l_sub.after or a_folder = Void
 			loop
 				a_folder := find_subfolder_in (l_sub.item, a_folder)
 				if a_folder /= Void and then a_folder.is_expandable and not a_folder.is_expanded then

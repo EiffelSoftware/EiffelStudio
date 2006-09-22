@@ -62,6 +62,7 @@ feature
 		local
 			lr: EV_GRID_LABEL_ITEM
 			char_height: INTEGER
+			l_width, l_height: INTEGER
 		do
 			list.wipe_out
 			from
@@ -81,10 +82,9 @@ feature
 			list.column (1).resize_to_content
 			char_height := (create {EV_FONT}).height + 1
 
-			list.set_minimum_size (
-				(list.column (1).width + list.vertical_scroll_bar.width).min (List_maximum_width),
-				((List_maximum_height).min (name_list.count * char_height + 40)).max (List_minimum_height)
-			)
+			l_width := (list.column (1).width + list.vertical_scroll_bar.width).min (List_maximum_width)
+			l_height := ((List_maximum_height).min (name_list.count * char_height + 40)).max (List_minimum_height)
+			list.set_minimum_size (l_width, l_height)
 		end
 
 	execute (it: EV_GRID_ITEM)

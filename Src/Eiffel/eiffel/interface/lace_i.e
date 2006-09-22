@@ -1030,7 +1030,7 @@ feature {NONE} -- Implementation
 							create vd83.make (s_msil_generation, system.il_generation.out, l_s)
 							Error_handler.insert_warning (vd83)
 						end
-					elseif l_b and then not (create {IL_ENVIRONMENT}).is_dotnet_installed then
+					elseif l_b and then not eiffel_layout.default_il_environment.is_dotnet_installed then
 						create vd86
 						Error_handler.insert_error (vd86)
 					else

@@ -50,7 +50,7 @@ feature -- Initialization
 			if external_class = Void and then assembly.is_partially_consumed then
 					-- No class, try consume assembly
 				fully_consume_assembly
-				
+
 					-- Now try retrieve class.
 				external_class := lace_class.external_consumed_type
 			end
@@ -1293,7 +1293,6 @@ feature {NONE} -- Implementation
 			c_not_void: c /= Void
 		local
 			l_result: CLASS_I
-			l_classes: ARRAYED_LIST [EXTERNAL_CLASS_I]
 			l_class: CLASS_C
 			l_is_array: BOOLEAN
 			l_generics: ARRAY [TYPE_A]
@@ -1319,10 +1318,7 @@ feature {NONE} -- Implementation
 						System.native_array_class.compiled_class.class_id, l_generics)
 				end
 			else
-				l_classes := assembly.class_by_dotnet_name (l_type_name, True)
-				if not l_classes.is_empty then
-					l_result := l_classes.first
-				end
+				l_result := assembly.class_by_dotnet_name (l_type_name, c.assembly_id)
 				if l_result = Void then
 						-- Case where this is a class from `mscorlib' that is in fact
 						-- written as an Eiffel class, e.g. INTEGER, ....

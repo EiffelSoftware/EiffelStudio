@@ -70,7 +70,6 @@ feature -- Access
 			l_name: STRING
 			l_is_array: BOOLEAN
 			l_array_type: CONSUMED_ARRAY_TYPE
-			l_list: ARRAYED_LIST [EXTERNAL_CLASS_I]
 		do
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
@@ -85,11 +84,7 @@ feature -- Access
 							-- written as an Eiffel class, e.g. INTEGER, ....
 					Result := basic_type_mapping.item (l_name)
 					if Result = Void then
-						l_list := assembly.class_by_dotnet_name (l_name, True)
-						check
-							l_list_not_empty: not l_list.is_empty
-						end
-						Result := l_list.first
+						Result := assembly.class_by_dotnet_name (l_name, c.assembly_id)
 					end
 				end
 			end

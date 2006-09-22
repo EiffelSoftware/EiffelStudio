@@ -626,9 +626,9 @@ feature {NONE} -- Settings
 			l_target := a_precompile.target
 			create l_cmd.make (50)
 			l_cmd.append (eiffel_layout.ec_command_name)
-			l_cmd.append (" -config ")
+			l_cmd.append (" -config %"")
 			l_cmd.append (a_precompile.location.evaluated_path)
-			l_cmd.append (" -precompile -clean -c_compile -batch")
+			l_cmd.append ("%" -precompile -clean -c_compile -batch")
 			if l_target.setting_msil_generation then
 				if l_target.setting_msil_use_optimized_precompile then
 					l_cmd.append (" -finalize")

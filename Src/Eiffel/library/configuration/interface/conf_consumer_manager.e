@@ -351,6 +351,7 @@ feature {NONE} -- Implementation
 							end
 							l_as_deps.forth
 						end
+						an_assembly.set_date (l_other_assembly.date)
 					end
 				else
 					rebuild_classes (an_assembly, Void)
@@ -358,6 +359,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		ensure
+			an_assmebly_date_valid: an_assembly.date > 0
 			an_assembly_valid: an_assembly.is_valid
 			an_assembly_classes_set: an_assembly.classes_set
 		end
@@ -511,6 +513,8 @@ feature {EXTERNAL_CLASS_C} -- Information building
 
 			an_assembly.set_classes (l_new_classes)
 			an_assembly.set_dotnet_classes (l_new_dotnet_classes)
+		ensure
+			date_set: an_assembly.date > 0
 		end
 
 feature {NONE} -- retrieving information from cache

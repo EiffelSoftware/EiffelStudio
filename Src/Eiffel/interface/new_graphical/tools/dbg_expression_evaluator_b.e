@@ -245,7 +245,7 @@ feature {NONE} -- EXPR_B evaluation
 					end
 				end
 			else
-				evaluate_value_i (l_value_i)
+				evaluate_value_i (l_value_i, Void)
 			end
 		end
 
@@ -298,9 +298,13 @@ feature {NONE} -- EXPR_B evaluation
 			end
 		end
 
-	evaluate_value_i (a_value_i: VALUE_I) is
+	evaluate_value_i (a_value_i: VALUE_I; cl: CLASS_C) is
+		require
+			a_value_i_not_void: a_value_i /= Void
 		local
+			expr_b: EXPR_B
 			l_integer: INTEGER_CONSTANT
+			l_bit: BIT_VALUE_I
 			l_char: CHAR_VALUE_I
 			l_real: REAL_VALUE_I
 			l_string: STRING_VALUE_I
@@ -308,54 +312,79 @@ feature {NONE} -- EXPR_B evaluation
 			l_cl: CLASS_C
 			-- ...
 		do
+			l_cl := cl
 			if a_value_i.is_integer then
 				l_integer ?= a_value_i
 				l_type := l_integer.type
-				if l_type.type_a /= Void and then l_type.type_a.has_associated_class then
+				if
+					l_cl = Void
+					and then l_type.type_a /= Void
+					and then l_type.type_a.has_associated_class
+				then
 					l_cl := l_type.type_a.associated_class
+				end
+				if l_cl /= Void then
 					if l_type.is_natural then
-						if l_integer.has_natural (64) then
-							create tmp_result_value.make_natural_64 (l_integer.natural_64_value, l_cl)
-						else
+						if l_integer.has_natural (32) then
 							create tmp_result_value.make_natural_32 (l_integer.natural_32_value, l_cl)
+						else
+							create tmp_result_value.make_natural_64 (l_integer.natural_64_value, l_cl)
 						end
 					else
-						if l_integer.has_integer (64) then
-							create tmp_result_value.make_integer_64 (l_integer.integer_64_value, l_cl)
-						else
+						if l_integer.has_integer (32) then
 							create tmp_result_value.make_integer_32 (l_integer.integer_32_value, l_cl)
+						else
+							create tmp_result_value.make_integer_64 (l_integer.integer_64_value, l_cl)
 						end
 					end
 				else
 						--| This should not occur, but in case it does
 						--| let's display it as INTEGER_64
-					create tmp_result_value.make_integer_64 (l_integer.integer_64_value,
-							System.integer_64_class.compiled_class)
+					l_cl := System.integer_64_class.compiled_class
+					create tmp_result_value.make_integer_64 (l_integer.integer_64_value, l_cl)
 				end
 			elseif a_value_i.is_string then
 				l_string ?= a_value_i
-				create tmp_result_value.make_manifest_string (l_string.string_value,
-					system.string_8_class.compiled_class)
+				if l_cl = Void then
+					l_cl := System.string_8_class.compiled_class
+				end
+				create tmp_result_value.make_manifest_string (l_string.string_value, l_cl)
 			elseif a_value_i.is_boolean then
-				create tmp_result_value.make_boolean (a_value_i.boolean_value,
-					system.boolean_class.compiled_class)
+				if l_cl = Void then
+					l_cl := System.boolean_class.compiled_class
+				end
+				create tmp_result_value.make_boolean (a_value_i.boolean_value, l_cl)
 			elseif a_value_i.is_character then
 				l_char ?= a_value_i
 				if l_char.is_character_32 then
-					create tmp_result_value.make_wide_character (l_char.character_value,
-						System.Character_32_class.compiled_class)
+					if l_cl = Void then
+						l_cl := System.Character_32_class.compiled_class
+					end
+					create tmp_result_value.make_wide_character (l_char.character_value, l_cl)
 				else
-					create tmp_result_value.make_character (l_char.character_value.to_character_8,
-						System.Character_8_class.compiled_class)
+					if l_cl = Void then
+						l_cl := System.Character_8_class.compiled_class
+					end
+					create tmp_result_value.make_character (l_char.character_value.to_character_8, l_cl)
 				end
-			elseif a_value_i.is_real then
+			elseif a_value_i.is_real_32 then
 				l_real ?= a_value_i
-				if l_real.is_real_32 then
-					create tmp_result_value.make_real (l_real.real_32_value, system.real_32_class.compiled_class)
-				else
-					create tmp_result_value.make_double (l_real.real_64_value, system.real_64_class.compiled_class)
+				if l_cl = Void then
+					l_cl := System.real_32_class.compiled_class
 				end
---			elseif a_value_i.is_bit then
+				create tmp_result_value.make_real (l_real.real_32_value, l_cl)
+			elseif a_value_i.is_real_64 then
+				l_real ?= a_value_i
+				if l_cl = Void then
+					l_cl := System.real_64_class.compiled_class
+				end
+				create tmp_result_value.make_double (l_real.real_32_value, l_cl)
+			elseif a_value_i.is_bit then
+				l_bit ?= a_value_i
+				if l_cl = Void then
+					l_cl := System.bit_class.compiled_class
+				end
+				create tmp_result_value.make_bits (l_bit.bit_value, l_cl.class_signature, l_cl);
 			else
 				notify_error_not_implemented (a_value_i.generator + Cst_error_not_yet_ready)
 			end
@@ -550,7 +579,7 @@ feature {NONE} -- EXPR_B evaluation
 									l_v_i := l_e_b.evaluate
 									if l_v_i /= Void then
 										l_supported	:= True
-										evaluate_value_i (l_v_i)
+										evaluate_value_i (l_v_i, Void)
 									end
 								end
 							end
@@ -979,11 +1008,9 @@ feature {NONE} -- Concrete evaluation
 		do
 			cv_cst_i ?= f
 			if cv_cst_i /= Void then
-				evaluate_value_i (cv_cst_i.value)
+				evaluate_value_i (cv_cst_i.value, cv_cst_i.type.associated_class)
 			else
-				prepare_evaluation
-				Dbg_evaluator.evaluate_constant (f)
-				retrieve_evaluation
+				notify_error_evaluation ("Unknown constant type for " + Cst_feature_name_left_limit + f.feature_name + Cst_feature_name_right_limit)
 			end
 		end
 

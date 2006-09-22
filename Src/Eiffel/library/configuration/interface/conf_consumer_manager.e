@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 	cache_modified_date: INTEGER
 		-- Modification date of the information about one assembly, set by `is_cache_up_to_date'.
 
-	dependencies: HASH_TABLE [ARRAYED_LIST [STRING], STRING]
+	dependencies: HASH_TABLE [ARRAYED_LIST [TUPLE [guid: STRING; assembly_id: INTEGER]], STRING]
 		-- List of dependencies (guids) of assemblies that have been reused.
 
 	old_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
@@ -210,7 +210,7 @@ feature {NONE} -- Implementation
 			dependencies_ok: dependencies /= Void
 		local
 			l_dep_as: CONF_ASSEMBLY
-			l_deps: ARRAYED_LIST [STRING]
+			l_deps: ARRAYED_LIST [TUPLE [guid: STRING; assembly_id: INTEGER]]
 			l_guid, l_dep_guid: STRING
 			l_reader: EIFFEL_DESERIALIZER
 			l_reference_file: FILE_NAME
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 								build_assembly (l_dep_as)
 								build_dependencies (l_dep_as)
 							end
-							an_assembly.add_dependency (l_dep_as)
+							an_assembly.add_dependency (l_dep_as, i)
 						end
 						i := i + 1
 					end
@@ -271,11 +271,11 @@ feature {NONE} -- Implementation
 				until
 					l_deps.after
 				loop
-					l_dep_as := assemblies.item (l_deps.item)
+					l_dep_as := assemblies.item (l_deps.item.guid)
 					check
 						assembly_built: l_dep_as /= Void and then l_dep_as.classes_set
 					end
-					an_assembly.add_dependency (l_dep_as)
+					an_assembly.add_dependency (l_dep_as, l_deps.item.assembly_id)
 
 					l_deps.forth
 				end
@@ -289,8 +289,8 @@ feature {NONE} -- Implementation
 		local
 			l_guid: STRING
 			l_other_assembly: CONF_ASSEMBLY
-			l_deps: ARRAYED_LIST [STRING]
-			l_as_deps: DS_HASH_SET [CONF_ASSEMBLY]
+			l_deps: ARRAYED_LIST [TUPLE [guid: STRING; assembly_id: INTEGER]]
+			l_as_deps: HASH_TABLE [CONF_ASSEMBLY, INTEGER]
 			l_as: CONF_ASSEMBLY
 		do
 			update_assembly_information (an_assembly)
@@ -332,24 +332,26 @@ feature {NONE} -- Implementation
 						l_as_deps := l_other_assembly.dependencies
 						l_other_assembly.set_dependencies (Void)
 						if l_as_deps = Void then
-							create l_as_deps.make (0)
-						end
-						create l_deps.make (l_as_deps.count)
-						dependencies.force (l_deps, l_guid)
-						from
-							l_as_deps.start
-						until
-							l_as_deps.after
-						loop
-							l_as := l_as_deps.item_for_iteration
-							l_deps.force (l_as.guid)
-								-- add dependencies to the set of new classes if they are not yet there
-							if not new_assemblies.has (l_as) then
-								l_as.revalidate
-								l_as.set_target (an_assembly.target)
-								new_assemblies.force_last (l_as)
+							create l_deps.make (0)
+							dependencies.force (l_deps, l_guid)
+						else
+							create l_deps.make (l_as_deps.count)
+							dependencies.force (l_deps, l_guid)
+							from
+								l_as_deps.start
+							until
+								l_as_deps.after
+							loop
+								l_as := l_as_deps.item_for_iteration
+								l_deps.force ([l_as.guid, l_as_deps.key_for_iteration])
+									-- Add dependencies to the set of new classes if they are not yet there
+								if not new_assemblies.has (l_as) then
+									l_as.revalidate
+									l_as.set_target (an_assembly.target)
+									new_assemblies.force_last (l_as)
+								end
+								l_as_deps.forth
 							end
-							l_as_deps.forth
 						end
 						an_assembly.set_date (l_other_assembly.date)
 					end

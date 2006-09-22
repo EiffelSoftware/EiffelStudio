@@ -150,8 +150,8 @@ feature -- Access, in compiled only
 	consumed_path: STRING
 			-- The path to the consumed assembly.
 
-	dependencies: DS_HASH_SET [CONF_ASSEMBLY]
-			-- Dependencies on other assemblies.
+	dependencies: HASH_TABLE [CONF_ASSEMBLY, INTEGER]
+			-- Dependencies on other assemblies indexed by their assembly ID.
 
 	date: INTEGER
 			-- Date of last modification of the cached information.
@@ -164,7 +164,15 @@ feature -- Access queries
 		do
 			if accessible_groups_cache = Void then
 				if dependencies /= Void then
-					accessible_groups_cache := dependencies
+					from
+						create accessible_groups_cache.make (dependencies.count)
+						dependencies.start
+					until
+						dependencies.after
+					loop
+						accessible_groups_cache.put (dependencies.item_for_iteration)
+						dependencies.forth
+					end
 				else
 					create accessible_groups_cache.make (0)
 				end
@@ -246,37 +254,22 @@ feature -- Access queries
 					end
 				end
 			end
+		ensure then
+			Result_empty_or_one_element: Result.is_empty or Result.count = 1
 		end
 
-	class_by_dotnet_name (a_class: STRING; a_dependencies: BOOLEAN): ARRAYED_LIST [like class_type] is
+	class_by_dotnet_name (a_class: STRING; a_dependency_index: INTEGER): like class_type is
 			-- Get class by dotnet name.
 		require
 			a_class_ok: a_class /= Void and then not a_class.is_empty
 			classes_set: classes_set
-		local
-			l_class: like class_type
-			l_dep: CONF_ASSEMBLY
 		do
-			create Result.make (1)
-			l_class := dotnet_classes.item (a_class)
-			if l_class /= Void then
-				Result.extend (l_class)
+			if dependencies /= Void and then dependencies.has (a_dependency_index) then
+				check not_void: dependencies.found_item /= Void end
+				Result := dependencies.found_item.dotnet_classes.item (a_class)
+			else
+				Result := dotnet_classes.item (a_class)
 			end
-			if a_dependencies and dependencies /= Void then
-				from
-					dependencies.start
-				until
-					dependencies.after
-				loop
-					l_dep := dependencies.item_for_iteration
-					if l_dep.classes_set then
-						Result.append (l_dep.class_by_dotnet_name (a_class, False))
-					end
-					dependencies.forth
-				end
-			end
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 	options: CONF_OPTION is
@@ -424,15 +417,15 @@ feature {CONF_ACCESS} -- Update, in compiled only
 			consumed_path_set: consumed_path = a_path
 		end
 
-	add_dependency (an_assembly: CONF_ASSEMBLY) is
+	add_dependency (an_assembly: CONF_ASSEMBLY; an_index: INTEGER) is
 			-- Add a dependency on `an_assembly'.
 		require
 			an_assembly_not_void: an_assembly /= Void
 		do
 			if dependencies = Void then
-				create dependencies.make_default
+				create dependencies.make (an_index)
 			end
-			dependencies.force (an_assembly)
+			dependencies.force (an_assembly, an_index)
 		end
 
 	set_dependencies (a_dependencies: like dependencies) is

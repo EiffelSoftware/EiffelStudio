@@ -3269,7 +3269,7 @@ feature {NONE} -- Implementation
 						else
 								-- if a feature_stone has been dropped
 								-- scroll to the corresponding feature in the basic text format
-							if not during_synchronization then
+							if not during_synchronization and then feature_stone.e_feature /= Void then
 								scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
 							end
 						end

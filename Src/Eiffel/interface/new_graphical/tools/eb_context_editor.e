@@ -295,33 +295,57 @@ feature {NONE} -- Initialization
 			create draw_commands.make
 			create view_commands.make
 
--- TODO: Remove and make create class in standart toolbar pick and dropable
+-- TODO: Remove and make create class in standard toolbar pick and dropable
 			draw_commands.extend (create_class_cmd)
 			draw_commands.extend (create_new_links_cmd)
+			draw_commands.extend (Void)
 			draw_commands.extend (delete_cmd)
+			draw_commands.extend (remove_anchor_cmd)
 			draw_commands.extend (trash_cmd)
+			draw_commands.extend (Void)
 			draw_commands.extend (change_color_cmd)
 			draw_commands.extend (link_tool_cmd)
 			draw_commands.extend (fill_cluster_cmd)
-			draw_commands.extend (diagram_to_ps_cmd)
 
-			draw_commands.extend (remove_anchor_cmd)
+			draw_commands.extend (toggle_quality_cmd)
+			draw_commands.extend (select_depth_cmd)
+			draw_commands.extend (Void)
+
+			draw_commands.extend (toggle_force_cmd)
+			draw_commands.extend (force_settings_cmd)
+			draw_commands.extend (Void)
+
+			draw_commands.extend (zoom_in_cmd)
+			draw_commands.extend (fit_to_screen_cmd)
+			draw_commands.extend (zoom_out_cmd)
+
+			from
+				create drawing_toolbar
+				draw_commands.start
+			until
+				draw_commands.after
+			loop
+				if draw_commands.item /= Void then
+					drawing_toolbar.extend (draw_commands.item)
+				else
+					drawing_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
+				end
+				draw_commands.forth
+			end
+
+			--| As we now have two levels we no longer need customizable toolbars.
+--			custom_toolbar := preferences.diagram_tool_data.retrieve_diagram_toolbar (draw_commands)
 
 			view_commands.extend (toggle_selected_classes_ancestors_cmd)
 			view_commands.extend (toggle_selected_classes_descendents_cmd)
 			view_commands.extend (toggle_selected_classes_clients_cmd)
 			view_commands.extend (toggle_selected_classes_suppliers_cmd)
-
-
-			custom_toolbar := preferences.diagram_tool_data.retrieve_diagram_toolbar (draw_commands)
-
-
-				-- Extending `Void' to list will generate a toolbar separator in its place.
-
-			view_commands.extend (center_diagram_cmd)
-			view_commands.extend (toggle_uml_cmd)
 			view_commands.extend (Void)
 
+				-- Extending `Void' to list will generate a toolbar separator in its place.
+			view_commands.extend (diagram_to_ps_cmd)
+			view_commands.extend (center_diagram_cmd)
+			view_commands.extend (toggle_uml_cmd)
 			view_commands.extend (toggle_cluster_cmd)
 			view_commands.extend (toggle_cluster_legend_cmd)
 			view_commands.extend (Void)
@@ -334,19 +358,6 @@ feature {NONE} -- Initialization
 			view_commands.extend (undo_cmd)
 			view_commands.extend (history_cmd)
 			view_commands.extend (redo_cmd)
-			view_commands.extend (Void)
-
-			view_commands.extend (toggle_quality_cmd)
-			view_commands.extend (select_depth_cmd)
-			view_commands.extend (Void)
-
-			view_commands.extend (toggle_force_cmd)
-			view_commands.extend (force_settings_cmd)
-			view_commands.extend (Void)
-
-			view_commands.extend (zoom_in_cmd)
-			view_commands.extend (fit_to_screen_cmd)
-			view_commands.extend (zoom_out_cmd)
 
 			from
 				create view_toolbar
@@ -377,9 +388,9 @@ feature {NONE} -- Initialization
 				extend_shortcut_table (delete_view_cmd.accelerator)
 			end
 
-			custom_toolbar.update_toolbar
-			drawing_bar.extend (custom_toolbar.widget)
-			drawing_bar.disable_item_expand (custom_toolbar.widget)
+			drawing_toolbar.update_toolbar
+			drawing_bar.extend (drawing_toolbar.widget)
+			drawing_bar.disable_item_expand (drawing_toolbar.widget)
 
 			create zoom_cell
 
@@ -396,9 +407,6 @@ feature {NONE} -- Initialization
 			h_box.disable_item_expand (zoom_selector)
 
 			zoom_cell.extend (h_box)
-
---			view_bar.extend (zoom_cell)
---			view_bar.disable_item_expand (zoom_cell)
 
 			create customize_area
 			drawing_bar.extend (customize_area)
@@ -444,7 +452,6 @@ feature {NONE} -- Initialization
 			view_bar.extend (view_menu)
 			view_bar.disable_item_expand (view_menu)
 
-			customize_area.pointer_button_release_actions.extend (agent on_customize)
 		end
 
 
@@ -1213,8 +1220,8 @@ feature -- Memory management
 			if development_window.editor_tool.text_area /= Void then
 				development_window.editor_tool.text_area.remove_observer (Current)
 			end
-			custom_toolbar.recycle
-			custom_toolbar := Void
+			drawing_toolbar.recycle
+			drawing_toolbar := Void
 			view_toolbar.recycle
 			view_toolbar := Void
 			recycle_commands
@@ -1539,28 +1546,6 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_customize (
-		a_x: INTEGER;
-		a_y: INTEGER;
-		a_button: INTEGER;
-		a_x_tilt: DOUBLE;
-		a_y_tilt: DOUBLE;
-		a_pressure: DOUBLE;
-		a_screen_x: INTEGER;
-		a_screen_y: INTEGER) is
-			-- The user clicked on customizable toolbar.
-		local
-			mi: EV_MENU_ITEM
-		do
-			if a_button = 3 then
-				create toolbar_menu
-				create mi.make_with_text ("Customize...")
-				toolbar_menu.extend (mi)
-				mi.select_actions.extend (agent customize_toolbar)
-				toolbar_menu.show
-			end
-		end
-
 	on_history_do_command is
 			-- An undoable command has been done.
 			-- Enable `undo_cmd'.
@@ -1724,11 +1709,6 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 		do
 			if not cancelled then
 
---				progress_dialog.set_title ("Loading view")
---				progress_dialog.set_message ("Diagram for " + view_selector.text)
---				progress_dialog.enable_cancel
---				progress_dialog.show
-
 				if is_force_directed_used then
 					disable_force_directed
 				end
@@ -1879,16 +1859,8 @@ feature {NONE} -- Implementation
 			-- Was a class edited through the Diagram.
 			-- (Add remove feature, add remove inheritance link)
 
-	customize_toolbar is
-			-- Customize diagram toolbar.
-		do
-			custom_toolbar.customize
-			preferences.diagram_tool_data.save_diagram_toolbar (custom_toolbar)
-			reset_tool_bar_toggles
-		end
-
 	view_toolbar: EB_TOOLBAR
-	custom_toolbar: EB_TOOLBAR
+	drawing_toolbar: EB_TOOLBAR
 			-- Part of toolbar that can be customized.
 
 	area: EV_DRAWING_AREA is

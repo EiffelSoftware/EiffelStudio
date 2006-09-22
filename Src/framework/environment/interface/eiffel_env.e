@@ -714,6 +714,8 @@ feature -- IL environment
 			-- Default il environment, using the newest available runtime.
 		once
 			create Result
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Version limitation

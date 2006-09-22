@@ -440,6 +440,7 @@ feature -- Feedback dialog
 			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
 			a_window_attached: a_window /= Void
 		do
+			a_dialog.set_title (a_msg)
 			a_dialog.set_text (a_msg)
 			a_dialog.show_actions.wipe_out
 			a_dialog.show_actions.extend (agent call_agent_and_then_hide (a_agent, a_dialog))
@@ -489,7 +490,7 @@ feature{NONE} -- Implementation
 			a_dialog_attached: a_dialog /= Void
 			not_a_dialog_is_destroyed: not a_dialog.is_destroyed
 		do
-			a_agent.call ([])
+			a_agent.call (Void)
 			a_dialog.hide
 		end
 

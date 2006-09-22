@@ -285,7 +285,7 @@ feature -- Generation
 				loop
 					l_as := l_assemblies.item_for_iteration
 					if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
-						copy_to_local (l_as.location.evaluated_path)
+						copy_to_local (l_as.location.build_path ("", l_as.location.original_file))
 						l_has_local := True
 					end
 					l_assemblies.forth

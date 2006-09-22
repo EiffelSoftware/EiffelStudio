@@ -2167,7 +2167,7 @@ feature -- Stone process
 						-- we attempt to scroll to the feature without asking to save the file
 						-- except if it is during a resynchronization, in which case we do not scroll at all.
 					if editor_tool.text_area.text_is_fully_loaded then
-						if not during_synchronization then
+						if not during_synchronization and then feature_stone.e_feature /= Void then
 							scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
 							feature_stone_already_processed := True
 						else

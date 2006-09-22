@@ -708,6 +708,14 @@ feature -- Environment access
 			Result := environment.get_from_application (a_var, application_name)
 		end
 
+feature -- IL environment
+
+	default_il_environment: IL_ENVIRONMENT is
+			-- Default il environment, using the newest available runtime.
+		once
+			create Result
+		end
+
 feature -- Version limitation
 
 	has_case: BOOLEAN is True

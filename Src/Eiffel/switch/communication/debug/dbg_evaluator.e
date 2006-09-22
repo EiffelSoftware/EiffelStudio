@@ -150,61 +150,6 @@ feature -- Concrete evaluation
 			effective_evaluate_once_function (f)
 		end
 
-	evaluate_constant (f: FEATURE_I) is
-			-- Find the value of constant feature `f'.
-		require
-			valid_feature: f /= Void
-			is_constant: f.is_constant
-		local
-			cv_cst: CONSTANT_I
-			val: VALUE_I
-			int_val: INTEGER_CONSTANT
-			real_val: REAL_VALUE_I
-			char_val: CHAR_VALUE_I
---			wchar_value: CHAR_VALUE_I
-			bit_val: BIT_VALUE_I
-		do
-			cv_cst ?= f
-			if cv_cst /= Void then
-				val := cv_cst.value
-				last_result_static_type := cv_cst.type.associated_class
-				if val.is_integer then
-					int_val ?= val
-					if int_val.has_natural (64) then
-						create last_result_value.make_natural_64 (int_val.natural_64_value, last_result_static_type);
-					elseif int_val.has_integer (64) then
-						create last_result_value.make_integer_64 (int_val.integer_64_value, last_result_static_type);
-					else
-						create last_result_value.make_integer_32 (int_val.integer_32_value, last_result_static_type);
-					end
-				elseif val.is_real_32 then
-					real_val ?= val
-					create last_result_value.make_real (real_val.real_32_value, last_result_static_type);
-				elseif val.is_real_64 then
-					real_val ?= val
-					create last_result_value.make_double (real_val.real_64_value, last_result_static_type);
-				elseif val.is_boolean then
-					create last_result_value.make_boolean (val.boolean_value, last_result_static_type);
-				elseif val.is_character then
-					char_val ?= val
-					if char_val.is_character_8 then
-						create last_result_value.make_character (char_val.character_value.to_character_8, last_result_static_type);
-					else
-						create last_result_value.make_wide_character (char_val.character_value, last_result_static_type);
-					end
-				elseif val.is_string then
-					create last_result_value.make_manifest_string (val.string_value, last_result_static_type);
-				elseif val.is_bit then
-					bit_val ?= val
-					create last_result_value.make_bits (bit_val.bit_value, last_result_static_type.class_signature, last_result_static_type);
-				else
-					notify_error_evaluation ("Unknown constant type for " + cv_cst.feature_name)
-				end
-			else
-				notify_error_evaluation ("Unknown constant type for " + f.feature_name)
-			end
-		end
-
 	evaluate_attribute (a_addr: STRING; a_target: DUMP_VALUE; f: FEATURE_I) is
 			-- Evaluate attribute feature
 		local
@@ -262,7 +207,7 @@ feature -- Concrete evaluation
 				print ("%Taddr="); print (a_addr); print ("%N")
 				if a_target /= Void then
 					print ("%Ttarget=not Void : [")
-					print (a_target.output_for_debugger)
+					print (a_target.full_output)
 					print ("] %N")
 				else
 					print ("%Ttarget=Void %N")

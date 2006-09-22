@@ -132,7 +132,6 @@ feature {NONE} -- Initialization
 			end
 			notebook.set_tab_position (notebook.tab_bottom)
 			notebook.selection_actions.extend (agent on_tab_changed)
-			notebook.set_minimum_size (400, 50)
 
 			class_view.set_parent_notebook (notebook)
 			feature_view.set_parent_notebook (notebook)

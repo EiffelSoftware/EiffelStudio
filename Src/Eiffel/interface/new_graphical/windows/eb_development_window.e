@@ -1966,7 +1966,9 @@ feature {NONE} -- Menu Building
 				-- New Assembly command.
 			command_menu_item := new_assembly_cmd.new_menu_item
 			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
+			if eiffel_layout.default_il_environment.is_dotnet_installed then
+				tools_menu.extend (command_menu_item)
+			end
 
 				-- New Class command.
 			command_menu_item := new_class_cmd.new_menu_item

@@ -117,11 +117,10 @@ feature {NONE} -- Initialization
 				-- Setup metric list grid.	
 			create metric_selector.make (False)
 			grid_wrapper.extend (metric_selector)
-			grid_wrapper.set_minimum_width (250)
+			grid_wrapper.set_minimum_width (200)
 
 				-- Setup domain selector.
 			create domain_selector
-			domain_selector.set_minimum_width (240)
 			domain_selector.disable_delayed_domain
 			metric_domain_selector_area.extend (domain_selector)
 			domain_selector.domain_change_actions.extend (agent on_domain_change)
@@ -653,7 +652,7 @@ feature {NONE} -- Implementation
 			-- Domain selector
 
 	metric_selector: EB_METRIC_SELECTOR
-			-- Metric selecotr
+			-- Metric selector
 
 	metric_definer: EB_BASIC_METRIC_DEFINITION_AREA
 			-- Basic metric definition area

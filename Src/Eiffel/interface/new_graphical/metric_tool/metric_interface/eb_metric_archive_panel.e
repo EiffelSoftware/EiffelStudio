@@ -116,10 +116,10 @@ feature {NONE} -- Initialization
 		do
 				-- Setup domain selector.
 			create domain_selector.make (False)
-			domain_selector.set_minimum_width (210)
+			--domain_selector.set_minimum_width (210)
 				-- Setup metric selector.
 			create metric_selector.make (True)
-			metric_selector.set_minimum_width (160)
+			--metric_selector.set_minimum_width (160)
 			metric_selector.double_click_actions.extend (agent on_pointer_double_click_on_metric_item)
 
 				-- Setup toolbar.

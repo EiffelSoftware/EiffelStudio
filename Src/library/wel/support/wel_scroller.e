@@ -207,13 +207,13 @@ feature -- Status report
 	valid_maximal_horizontal_position (a_position: INTEGER): BOOLEAN is
 			-- Is `a_position' valid for setting the `horizontal_position'.
 		do
-			Result := a_position <= (maximal_horizontal_position - (horizontal_page - 1).max (0))
+			Result := a_position <= (maximal_horizontal_position - (horizontal_page - 1).max (0)).max (0)
 		end
 
 	valid_maximal_vertical_position (a_position: INTEGER): BOOLEAN is
 			-- Is `a_position' valid for setting the `vertical_position'.
 		do
-			Result := a_position <= (maximal_vertical_position - (vertical_page - 1).max (0))
+			Result := a_position <= (maximal_vertical_position - (vertical_page - 1).max (0)).max (0)
 		end
 
 feature -- Element change

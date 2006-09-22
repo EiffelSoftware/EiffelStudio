@@ -338,7 +338,10 @@ feature -- Status report
 					if l_namespace /= Void then
 						Result := l_namespace
 					else
-						Result := group.name.twin
+						Result := ""
+					end
+					if system.use_cluster_as_namespace then
+						Result.append ("."+group.name)
 					end
 
 					if System.use_all_cluster_as_namespace then

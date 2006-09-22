@@ -32,6 +32,8 @@ feature -- Creation
 			default_create
 			editor := a_text_panel
 			initialize_line_number_label_text
+			line_number_text.focus_in_actions.extend (agent line_number_text.select_all)
+			show_actions.extend (agent line_number_text.set_focus)
 		ensure
 			editor_set: editor = a_text_panel
 		end

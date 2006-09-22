@@ -24,7 +24,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
-			
+
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create toolbar_area
@@ -71,7 +71,7 @@ feature {NONE}-- Initialization
 			create metric_definition_empty_area
 			create criterion_area
 			create l_ev_horizontal_box_2
-			
+
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (toolbar_area)
@@ -118,7 +118,7 @@ feature {NONE}-- Initialization
 			unit_area.extend (metric_definition_empty_area)
 			metric_definition_area.extend (criterion_area)
 			metric_definition_area.extend (l_ev_horizontal_box_2)
-			
+
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -152,7 +152,7 @@ feature {NONE}-- Initialization
 			l_ev_tool_bar_7.disable_vertical_button_style
 			l_ev_horizontal_split_area_1.disable_item_expand (metric_source_domain_area)
 			l_ev_horizontal_split_area_1.enable_item_expand (main_area)
-			metric_source_domain_area.set_minimum_width (250)
+			metric_source_domain_area.set_minimum_width (200)
 			metric_source_domain_area.set_minimum_height (0)
 			metric_source_domain_area.set_padding (3)
 			metric_source_domain_area.disable_item_expand (choose_input_domain_lbl)
@@ -163,7 +163,7 @@ feature {NONE}-- Initialization
 			main_area.set_minimum_height (0)
 			main_area.disable_item_expand (l_ev_cell_1)
 			l_ev_cell_1.set_minimum_width (10)
-			metric_selection_area.set_minimum_width (250)
+			metric_selection_area.set_minimum_width (200)
 			metric_selection_area.set_padding (3)
 			metric_selection_area.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.disable_item_expand (choose_metric_lbl)
@@ -190,9 +190,9 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.set_minimum_height (21)
 			set_padding (5)
 			set_border_width (5)
-			
+
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -240,12 +240,12 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is
@@ -265,7 +265,7 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants is
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -301,7 +301,7 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants is
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
@@ -319,7 +319,7 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants is
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
@@ -335,9 +335,9 @@ feature {NONE} -- Constant setting
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants is
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
@@ -355,7 +355,7 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants is
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -366,7 +366,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -379,7 +379,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER is
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

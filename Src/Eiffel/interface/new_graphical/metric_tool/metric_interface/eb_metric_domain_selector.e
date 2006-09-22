@@ -125,7 +125,7 @@ feature {NONE} -- Initialization
 			l_border.set_background_color (l_colors.black)
 			create grid
 			grid.set_column_count_to (1)
-			grid.set_minimum_width (200)
+			grid.set_minimum_width (100)
 			grid.enable_multiple_row_selection
 
 			create grid_support.make_with_grid (grid)

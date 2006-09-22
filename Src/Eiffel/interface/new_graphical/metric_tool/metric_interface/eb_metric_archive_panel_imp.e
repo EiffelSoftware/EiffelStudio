@@ -24,7 +24,7 @@ feature {NONE}-- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_VERTICAL_BOX}
-			
+
 				-- Create all widgets.
 			create l_ev_horizontal_split_area_1
 			create archive_definition_frame
@@ -73,7 +73,7 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_9
 			create current_metric_archive_text
 			create browse_current_archive_btn
-			
+
 				-- Build widget structure.
 			extend (l_ev_horizontal_split_area_1)
 			l_ev_horizontal_split_area_1.extend (archive_definition_frame)
@@ -122,7 +122,7 @@ feature {NONE}-- Initialization
 			current_archive_area.extend (l_ev_horizontal_box_9)
 			l_ev_horizontal_box_9.extend (current_metric_archive_text)
 			l_ev_horizontal_box_9.extend (browse_current_archive_btn)
-			
+
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
 			create integer_constant_set_procedures.make (10)
@@ -138,10 +138,9 @@ feature {NONE}-- Initialization
 			create color_constant_retrieval_functions.make (10)
 			l_ev_horizontal_split_area_1.disable_item_expand (archive_definition_frame)
 			l_ev_horizontal_split_area_1.enable_item_expand (l_ev_horizontal_box_5)
-			archive_definition_frame.set_text ("Archive Managament")
-			archive_definition_frame.set_minimum_width (550)
+			archive_definition_frame.set_text ("Archive Management")
 			l_ev_vertical_box_1.set_padding (6)
-			l_ev_vertical_box_1.set_border_width (10)
+			--l_ev_vertical_box_1.set_border_width (10)
 			l_ev_vertical_box_1.disable_item_expand (definition_toolbar_area)
 			l_ev_horizontal_box_1.set_padding (3)
 			l_ev_horizontal_box_1.disable_item_expand (definition_toolbar)
@@ -155,7 +154,7 @@ feature {NONE}-- Initialization
 			clean_btn.set_text ("Clean")
 			l_ev_horizontal_split_area_2.disable_item_expand (l_ev_vertical_box_2)
 			l_ev_horizontal_split_area_2.enable_item_expand (l_ev_horizontal_box_3)
-			l_ev_vertical_box_2.set_minimum_width (210)
+			l_ev_vertical_box_2.set_minimum_width (200)
 			l_ev_vertical_box_2.set_padding (3)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.set_padding (3)
@@ -195,9 +194,9 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_9.set_padding (3)
 			l_ev_horizontal_box_9.disable_item_expand (browse_current_archive_btn)
 			browse_current_archive_btn.set_text ("...")
-			
+
 			set_all_attributes_using_constants
-			
+
 				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -247,12 +246,12 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is
@@ -272,7 +271,7 @@ feature {NONE} -- Constant setting
 				string_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_integer_constants is
 			-- Set all attributes relying on integer constants to the current
 			-- value of the associated constant.
@@ -308,7 +307,7 @@ feature {NONE} -- Constant setting
 				integer_interval_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_pixmap_constants is
 			-- Set all attributes relying on pixmap constants to the current
 			-- value of the associated constant.
@@ -326,7 +325,7 @@ feature {NONE} -- Constant setting
 				pixmap_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_attributes_using_font_constants is
 			-- Set all attributes relying on font constants to the current
 			-- value of the associated constant.
@@ -342,9 +341,9 @@ feature {NONE} -- Constant setting
 				f := font_constant_retrieval_functions.i_th (font_constant_set_procedures.index).last_result
 				font_constant_set_procedures.item.call ([f])
 				font_constant_set_procedures.forth
-			end	
+			end
 		end
-		
+
 	set_attributes_using_color_constants is
 			-- Set all attributes relying on color constants to the current
 			-- value of the associated constant.
@@ -362,7 +361,7 @@ feature {NONE} -- Constant setting
 				color_constant_set_procedures.forth
 			end
 		end
-		
+
 	set_all_attributes_using_constants is
 			-- Set all attributes relying on constants to the current
 			-- calue of the associated constant.
@@ -373,7 +372,7 @@ feature {NONE} -- Constant setting
 			set_attributes_using_font_constants
 			set_attributes_using_color_constants
 		end
-					
+
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
 	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
@@ -386,7 +385,7 @@ feature {NONE} -- Constant setting
 	font_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_FONT]]
 	color_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_COLOR]]]
 	color_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], EV_COLOR]]
-	
+
 	integer_from_integer (an_integer: INTEGER): INTEGER is
 			-- Return `an_integer', used for creation of
 			-- an agent that returns a fixed integer value.

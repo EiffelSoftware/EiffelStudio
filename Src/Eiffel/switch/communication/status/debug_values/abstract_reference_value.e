@@ -122,9 +122,15 @@ feature -- Output
 	kind: INTEGER is
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
+		local
+			cl: CLASS_C
 		do
 			if not is_null then
 				Result := Reference_value
+				cl := dynamic_class
+				if cl /= Void and then cl.is_expanded then
+					Result := Expanded_value
+				end
 			else
 				Result := Void_value
 			end

@@ -24,10 +24,15 @@ feature -- Basic operations
 			-- `result_id' will contain `a_result'.
 		do
 			result_id := a_result
+			is_result_id_set := True
 			cwin_end_dialog (item, a_result)
+			destroy_item_from_context (False)
 		end
 
 feature {NONE} -- Implementation
+
+	is_result_id_set: BOOLEAN
+			-- Is `result_id' set in `terminate'?
 
 	internal_dialog_make (a_parent: WEL_WINDOW; an_id: INTEGER;
 			a_name: STRING_GENERAL) is
@@ -35,29 +40,35 @@ feature {NONE} -- Implementation
 		local
 			c_name: WEL_STRING
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
+			l_result_id: INTEGER
 		do
 				-- Initialise the common controls
 			create common_controls_dll.make
+			is_result_id_set := False
 
 			register_dialog
 			if a_name /= Void then
 				-- Load by name
 				create c_name.make (a_name)
-				result_id := cwin_dialog_box (
+				l_result_id := cwin_dialog_box (
 					main_args.resource_instance.item,
 					c_name.item,
 					parent_item,
 					cwel_dialog_procedure_address)
 			else
 				-- Load by id
-				result_id := cwin_dialog_box (
+				l_result_id := cwin_dialog_box (
 					main_args.resource_instance.item,
 					cwin_make_int_resource (an_id),
 					parent_item,
 					cwel_dialog_procedure_address)
 			end
-			if result_id = -1 then
-				destroy_item
+			if not is_result_id_set then
+				result_id := l_result_id
+			end
+			if l_result_id = -1  then
+					-- The called fail, so we need to reclaim resources.
+				destroy_item_from_context (False)
 			end
 		end
 

@@ -15,8 +15,28 @@
 			<bold>Interface modifications</bold>
 		</paragraph>
 		<list ordered="false">
+			<item><bold>STRING_GENERAL</bold> - All string operations now take STRING_GENERAL instead of STRING, this allows for mixing and matching of 8 and 32-bit string objects and allows for 32bit Unicode values, the return value is always STRING_32</item>
+			<item>
+				<bold>EV_APPLICATION</bold> 
+				<list ordered="false">
+					<item>Added action sequences for querying global user events such as pointer clicks and motion</item>
+					<item>Vision2 is now thread-aware with the addition of thread-safe 'add_idle_action' and 'do_once_on_idle' that allow threads to add agents to update the main GUI thread in a safe manner</item>
+				</list>
+			</item>
+			<item>
+				<bold>EV_POINTER_STYLE</bold> - Added new pointer style class for setting the style of the mouse pointer, EV_CURSOR will be made obsolete, in the future animated cursors and transparency will be available
+			</item>
+			<item>
+				<bold>EV_PIXEL_BUFFER</bold> - New class for loading/querying and setting RGBA values from disk
+			</item>
 			<item>
 				<bold>EV_FIXED</bold> - Now item positions may be set to negative values within the fixed widget
+			</item>
+			<item>
+				<bold>EV_BITMAP</bold> - New class for setting 1 bit masks on EV_PIXMAP via set_mask
+			</item>
+			<item>
+				<bold>EV_TEXT</bold> - Added 'scroll_to_end' to scroll down so that the last line is visible
 			</item>
 			<item>
 				<bold>EV_WIDGET</bold> - Added 'refresh_now' that allows for immediate redraw of a widget without having to wait for the event loop to repaint it.  A useful example of this is when calling 'set_text' on EV_LABEL during heavy computation 
@@ -35,6 +55,8 @@
 					<item>Corrected `not_row_height_variable_and_vertical_scrolling_per_pixel' precondition of `enable_partial_dynamic_content'.</item>
 					<item>Fixed bug which caused an internal exception within the grid when `is_tree_enabled' and `is_content_partially_dynamic'.</item>
 					<item>Strengthened preconditions of `insert_new_row_parented' to prevent you inserting a new row at an index within a subtree structure of one of the existing subrows, as in that case, it is impossible for the parent to be the desired row.</item>
+					<item>Added capability to hide rows in the grid</item>
+					<item>Added ability for locking the position of rows and columns in the grid</item>
 				</list>
 			</item>
 			<item>
@@ -64,7 +86,7 @@
 			<item>
 				<bold>Platform independent</bold>
 				<list ordered="false">
-					<item/>
+					<item><bold>EV_GRID</bold> - Fixed refresh issues and certain crashes when removing items from grid</item>
 				</list>
 			</item>
 			<item>
@@ -93,14 +115,26 @@
 						<bold>EV_COMBO_BOX</bold> - Fixed bug in `key_press_actions' which were called twice when you pressed the up or down arrow keys.
 					</item>
 					<item>
-						<bold>EV_TITLED_WINDOW</bold> - `title' was returning `Void' if you had not explicitly set a `title'.
+						<bold>EV_TITLED_WINDOW</bold>
+						<list ordered="false">
+							<item>`title' was returning `Void' if you had not explicitly set a `title'.</item>
+							<item>Fixed raise to work when process is not in the foreground, the window will now flash in the window selector</item>
+						</list>
 					</item>
 				</list>
 			</item>
 			<item>
 				<bold>Gtk</bold>
 				<list ordered="false">
-					<item/>
+					<item><bold>EV_DIALOG</bold> - Fixed modal dialogs so that they behave the same as on Windows so that show_modal_to_window is indeed only modal to the parent window</item>
+					<item> - Mouse events now only go to the widget that the mouse is currently interacting with</item>
+					<item><bold>EV_FONT</bold> - Fixed bug where font names were being matched on substring, meaning that Sans would match with San Serif</item>
+					<item><bold>EV_TEXT</bold> - Fixed and optimized calls relating to display lines versus actual lines</item>
+					<item> - Fixed potential instability due to signal marshal calls being made during object dispose</item>
+					<item> - Completely overhauled event handling implementation to use less resources and be much more optimal</item>
+					<item><bold>EV_POPUP_WINDOW</bold>Completely rewrote popup window implementation to be not dependent on the window manager, this means that they will work in all scenarios with WM intervention</item>
+					<item><bold>EV_ACCELERATOR</bold> - Fixed crashes caused by certain accelerator combinations</item>
+					<item><bold>EV_TOOL_BAR_BUTTON</bold> - Toolbar buttons are now accepted as Pick and Drop targets</item>
 				</list>
 			</item>
 		</list>

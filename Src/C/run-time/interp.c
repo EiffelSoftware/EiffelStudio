@@ -1931,7 +1931,7 @@ rt_private void interpret(int flag, int where)
 			case SK_INT16: if (lower->it_int16 <= last->it_int16 && last->it_int16 <= upper->it_int16) { IC += offset; } break;
 			case SK_INT32: if (lower->it_int32 <= last->it_int32 && last->it_int32 <= upper->it_int32) { IC += offset; } break;
 			case SK_INT64: if (lower->it_int64 <= last->it_int64 && last->it_int64 <= upper->it_int64) { IC += offset; } break;
-			case SK_CHAR: if (lower->it_char <= last->it_char && last->it_char <= upper->it_char) { IC += offset; } break;
+			case SK_CHAR: if (lower->it_wchar <= (EIF_WIDE_CHAR) last->it_char && (EIF_WIDE_CHAR) last->it_char <= upper->it_wchar) { IC += offset; } break;
 			case SK_WCHAR: if (lower->it_wchar <= last->it_wchar && last->it_wchar <= upper->it_wchar) { IC += offset; } break;
 			default:
 				eif_panic(MTC "invalid inspect type");

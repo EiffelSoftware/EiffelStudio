@@ -408,7 +408,7 @@
 	<basic_metric name="Indirect clients" unit="class" uuid="940EEA00-2B7E-4456-90CB-6B1A7C998913">
 		<description>Number of indirect clients</description>
 		<criterion>
-			<domain_criterion negation="False" name="indirect_client_is" unit="class">
+			<domain_criterion negation="False" name="indirect_supplier_is" unit="class">
 				<domain>
 					<domain_item type="delayed" id=""></domain_item>
 				</domain>

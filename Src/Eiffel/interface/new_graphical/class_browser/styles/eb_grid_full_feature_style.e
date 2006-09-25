@@ -45,6 +45,7 @@ feature -- Access
 			l_e_feature: E_FEATURE
 			l_writer: like token_writer
 			l_constant_as: CONSTANT_AS
+			l_output_strategy: like output_strategy
 		do
 			l_writer := token_writer
 			l_writer.new_line
@@ -58,7 +59,10 @@ feature -- Access
 					l_e_feature.append_signature (l_writer)
 					if l_e_feature.is_constant then
 						l_constant_as ?= l_e_feature.ast.body.content
-						l_constant_as.process (output_strategy (l_ql_feature.class_c))
+						l_output_strategy := output_strategy (l_ql_feature.class_c)
+						l_output_strategy.set_current_class (l_ql_feature.class_c)
+						l_output_strategy.set_source_class (l_ql_feature.e_feature.written_class)
+						l_constant_as.process (l_output_strategy)
 					end
 				end
 			else

@@ -47,7 +47,6 @@ extern "C" {
  * Routine declarations
  */
 
-RT_LNK EIF_BOOLEAN eif_xequal(EIF_REFERENCE ref1, EIF_REFERENCE ref2);			/* Equality with no conformance constraint */
 RT_LNK EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFERENCE source);			/* Standard equality on standard objects */
 extern EIF_BOOLEAN eiso(EIF_REFERENCE target, EIF_REFERENCE source);				/* Standard isomorphism on normal objects */
 extern EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENCE source);				/* Standard isomorphism on special objects */

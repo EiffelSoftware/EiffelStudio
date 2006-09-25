@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			tests_button.select_actions.extend (agent update_tool_bar_radio_buttons (tests_button))			
 			documentation_button.select_actions.extend (agent update_tool_bar_radio_buttons (documentation_button))
 			main_notebook.selection_actions.extend (agent update_buttons)
-			modify_text_size.set_value (11)
+			modify_text_size.set_value (8)
 
 				-- Initialize button pixmaps.
 			initialize_pixmaps

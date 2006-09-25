@@ -99,6 +99,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor (deg_nbr, to_go, total)
 			window_manager.display_message_and_percentage (deg_nbr, percentage_calculation (to_go))
+			flush_output
 		end
 
 	put_dead_code_removal_message (a_processed, to_go: INTEGER) is
@@ -111,6 +112,7 @@ feature {NONE} -- Implementation
 			total_number := l_processed + to_go
 			window_manager.display_message_and_percentage (
 				"Removing Dead Features (" + l_processed.out + "/" + total_number.out + ")",  percentage_calculation (to_go))
+			flush_output
 		end
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is

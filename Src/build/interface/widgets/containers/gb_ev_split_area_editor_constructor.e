@@ -14,7 +14,7 @@ inherit
 		undefine
 			default_create
 		end
-	
+
 	INTERNAL
 		undefine
 			default_create
@@ -24,10 +24,10 @@ feature -- Access
 
 	ev_type: EV_SPLIT_AREA
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING is "EV_SPLIT_AREA"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -40,14 +40,14 @@ feature -- Access
 			create second_expanded.make_with_text ("Is second expanded?")
 			second_expanded.set_tooltip (gb_ev_split_area_is_item_expanded_tooltip)
 			Result.extend (second_expanded)
-			
+
 				-- Connect events
 			first_expanded.select_actions.extend (agent update_first_expanded)
 			second_expanded.select_actions.extend (agent update_second_expanded)
-			
+
 			update_attribute_editor
 		end
-		
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 			-- contain all agents required for modification of `Current.
 		do
 		end
-		
+
 	update_first_expanded is
 			-- Update expanded state of first item.
 		do
@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			for_all_instance_referers (object, agent actual_update_first_expanded (?))
 			enable_project_modified
 		end
-		
+
 	update_second_expanded is
 			-- Update expanded state of second item.
 		do
@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			for_all_instance_referers (object, agent actual_update_second_expanded (?))
 			enable_project_modified
 		end
-		
+
 	actual_update_first_expanded (an_object: GB_OBJECT) is
 			-- Update expanded state of first item for `an_object'.
 		require
@@ -101,21 +101,21 @@ feature {NONE} -- Implementation
 			split_area: EV_SPLIT_AREA
 		do
 			if first_expanded.is_selected then
-				second_expanded.disable_select
 				split_area ?= an_object.object
-				split_area.disable_item_expand (split_area.second)
 				split_area.enable_item_expand (split_area.first)
 				split_area ?= an_object.real_display_object
-				split_area.disable_item_expand (split_area.second)
 				split_area.enable_item_expand (split_area.first)
 			else
+				if not second_expanded.is_selected then
+					second_expanded.enable_select
+				end
 				split_area ?= an_object.object
 				split_area.disable_item_expand (split_area.first)
 				split_area ?= an_object.real_display_object
 				split_area.disable_item_expand (split_area.first)
 			end
 		end
-		
+
 	actual_update_second_expanded (an_object: GB_OBJECT) is
 			-- Update expanded state of second item for `an_object'.
 		require
@@ -124,27 +124,27 @@ feature {NONE} -- Implementation
 			split_area: EV_SPLIT_AREA
 		do
 			if second_expanded.is_selected then
-				first_expanded.disable_select
 				split_area ?= an_object.object
-				split_area.disable_item_expand (split_area.first)
 				split_area.enable_item_expand (split_area.second)
 				split_area ?= an_object.real_display_object
-				split_area.disable_item_expand (split_area.first)
 				split_area.enable_item_expand (split_area.second)
 			else
+				if not first_expanded.is_selected then
+					first_expanded.enable_select
+				end
 				split_area ?= an_object.object
 				split_area.disable_item_expand (split_area.second)
 				split_area ?= an_object.real_display_object
 				split_area.disable_item_expand (split_area.second)
-			end	
+			end
 		end
-	
+
 	first_expanded: EV_CHECK_BUTTON
 	second_expanded: EV_CHECK_BUTTON
-	
+
 	is_item_expanded_string: STRING is "Is_item_expanded";
-	
-		
+
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

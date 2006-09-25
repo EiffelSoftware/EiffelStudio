@@ -92,13 +92,13 @@ rt_private void string_inspect(EIF_OBJ object);				/* String object inspection *
 rt_private void load_bc(int slots, int amount);				/* Load byte code information */
 rt_private long sp_lower, sp_upper;						/* Special objects' bounds to be inspected */
 rt_private rt_uint_ptr dthread_id;					/* Thread id used to precise current thread in debugger */
-rt_private rt_uint_ptr dthread_id_saved;			/* Thread id used to backup previous current thread in debugger */
 
 rt_private void set_check_assert (int v) ;	/* Set current assertion checking off/on */
 extern char *simple_out(struct item *);	/* Out routine for simple time (from run-time) */
 
 /* debugging macro */
 #ifdef EIF_THREADS
+rt_private rt_uint_ptr dthread_id_saved;			/* Thread id used to backup previous current thread in debugger */
 #define dthread_prepare() 														\
 		CHECK("Thread context must be cleared", dthread_id_saved == 0); 		\
 		dthread_id_saved = dbg_switch_to_thread(dthread_id);

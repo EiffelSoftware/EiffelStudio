@@ -12,29 +12,29 @@ class
 
 inherit
 	MAIN_WINDOW_IMP
-	
+
 	WIDGET_TEST_SHARED
 		undefine
 			copy, default_create, is_equal
 		end
-		
+
 	SHARED_TEST_CONTROLLER
 		undefine
 			copy, default_create, is_equal
 		end
-		
+
 	GENERATION_CONSTANTS
 		undefine
 			copy, default_create, is_equal
 		end
-		
+
 	EXECUTION_ENVIRONMENT
 		rename
 			put as execution_environment_put
 		undefine
 			copy, default_create, is_equal
 		end
-		
+
 	INSTALLATION_LOCATOR
 		undefine
 			copy, default_create, is_equal
@@ -56,9 +56,9 @@ feature {NONE} -- Initialization
 			register_type_change_agent (agent clear_idle_actions)
 				-- Clear any agents from the idle actions, as a new widget
 				-- type is being selected.
-				
+
 			register_type_change_agent (agent update_title)
-			
+
 				-- The first type change agent that we register locks the update, so
 				-- that the user does not see the changes taking place.
 			register_type_change_agent (agent lock_current)
@@ -66,59 +66,59 @@ feature {NONE} -- Initialization
 				-- Create the type selector and parent.
 			create type_selector
 			widget_selector_parent.extend (type_selector)
-			
+
 				-- Create the test controller.
 			test_controller.set_class_output (test_class_display)
 			controller_parent.extend (test_controller)
-			
+
 				-- Create the documentation display
 			create documentation_display.make_with_text (flat_short_display)
 			register_type_change_agent (agent documentation_display.update_for_type_change)
 
-			
+
 			create event_selector.make_with_list_and_handler (event_selector_list, event_handler)
 			register_type_change_agent (agent event_selector.rebuild)
-			
+
 				-- Register a change agent which parents the new test widget.
 			register_type_change_agent (agent parent_test_widget)
-			
+
 				-- Register a change agent which removes the start up screen.
 			register_type_change_agent (agent remove_first_screen)
-			
+
 				-- Create the editor and parent.
 			create editor
 			object_editor_parent.extend (editor)
 
-			
+
 				-- The last type change agent we register unlocks the current
 				-- window, so that we can see any changes to the interface.
 			register_type_change_agent (agent unlock_current)
-			
+
 				-- Ensure that the three tool bar buttons behave as radio buttons.
-			properties_button.select_actions.extend (agent update_tool_bar_radio_buttons (properties_button))			
-			tests_button.select_actions.extend (agent update_tool_bar_radio_buttons (tests_button))			
+			properties_button.select_actions.extend (agent update_tool_bar_radio_buttons (properties_button))
+			tests_button.select_actions.extend (agent update_tool_bar_radio_buttons (tests_button))
 			documentation_button.select_actions.extend (agent update_tool_bar_radio_buttons (documentation_button))
 			main_notebook.selection_actions.extend (agent update_buttons)
 			modify_text_size.set_value (8)
 
 				-- Initialize button pixmaps.
 			initialize_pixmaps
-			
+
 				-- Set up search tool
 			search_tool.associate_text_entry (search_field)
 				-- Disable search tool if installation incorrect.
 			if installation_location = Void then
 				search_parent_box.disable_sensitive
 			end
-			
+
 				-- Connect missing pixmaps to show_actions.
 			application.post_launch_actions.extend (agent display_missing_pixmaps)
-			
+
 				-- Ensure word wrapping is not on for the displayed texts.
 			flat_short_display.disable_word_wrapping
-			
+
 			show_actions.extend (agent main_split_area.set_split_position (300))
-			
+
 			setup_initial_screen
 		end
 
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 		do
 			set_title ("Vision2 Demo - " + a_widget.generating_type)
 		end
-		
+
 
 	clear_idle_actions (a_widget: EV_WIDGET) is
 			-- Clear `idle_actions' from EV_APPLICATION.
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			-- `widget_holder'.
 		do
 			widget_holder.wipe_out
-			
+
 				-- We must now rebuild `widget_holder' to ensure
 				-- that no minimum size settings still apply. This
 				-- will ensure that each test will be at the default size,
@@ -179,12 +179,12 @@ feature {NONE} -- Implementation
 			vertical_spacing_box.put_left (widget_holder)
 			scrollable_widget_area.set_item_height (310)
 			scrollable_widget_area.set_item_width (310)
-			
+
 			widget_holder.extend (a_widget)
 				-- Now clear recorded events, as a widget has changed.
 			clear_events
 		end
-		
+
 	select_all_events is
 			-- Select all events in `event_selector_list'.
 		do
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 				event_selector_list.forth
 			end
 		end
-		
+
 	clear_all_events is
 			-- Clear all events in `event_selector_list'.
 		do
@@ -210,19 +210,19 @@ feature {NONE} -- Implementation
 				event_selector_list.forth
 			end
 		end
-		
+
 	clear_events is
 			-- Reset `event_selector_list'.
 		do
-			event_handler.reset	
+			event_handler.reset
 		end
-		
+
 	event_handler: ORDERED_STRING_HANDLER is
 			-- Once access to an ORDERED_STRING_HANDLER.
 		once
 			create Result.make_with_textable (event_output)
 		end
-		
+
 	setup_initial_screen is
 			-- Display initial start up scren which will be displayed until a
 			-- widget type is selected.
@@ -234,46 +234,51 @@ feature {NONE} -- Implementation
 			main_split_area.prune (main_box)
 			create label.make_with_text ("Please select a widget to begin exploration")
 			main_split_area.extend (label)
-			
+
 				-- Ensure the widget selection tree does not expand as `Current' is widened.
 			main_split_area.disable_item_expand (main_split_area.first)
 			label.set_background_color ((create {EV_STOCK_COLORS}).white)
 		end
-		
+
 	remove_first_screen (v: EV_WIDGET) is
 			-- Remove initial start up screen.
 			-- Note that this is called every time the widget type
 			-- changes, but will do nothing after the first time.
+		local
+			l_pos: INTEGER
 		do
 			if not main_split_area.has (main_box) then
+				l_pos := main_split_area.split_position
 				main_split_area.go_to_second
 				main_split_area.replace (main_box)
+				main_split_area.disable_item_expand (main_split_area.first)
+				main_split_area.set_split_position (l_pos.max (main_split_area.minimum_split_position).min (main_split_area.maximum_split_position))
 			end
-			
+
 				-- Now enable the tool bar buttons.
 			properties_button.enable_sensitive
 			properties_button.enable_select
 			tests_button.enable_sensitive
 			documentation_button.enable_sensitive
-				
+
 		ensure
 			main_split_area.has (main_box)
 		end
-		
+
 	lock_current (v: EV_WIDGET) is
 			-- Calls `lock_update' but with a signature that allows
 			-- it to be registered as a type change agent.
 		do
 			lock_update
 		end
-		
+
 	unlock_current (v: EV_WIDGET) is
 			-- Calls `unlock_update' but with a signature that allows
 			-- it to be registered as a type change agent.
 		do
 			unlock_update
 		end
-		
+
 	update_tool_bar_radio_buttons (selected_button: EV_TOOL_BAR_TOGGLE_BUTTON) is
 			-- Simulate radio button behaviour on the three buttons in
 			-- the separate tool bars.
@@ -308,7 +313,7 @@ feature {NONE} -- Implementation
 				file_generate.disable_sensitive
 			end
 		end
-		
+
 	update_buttons is
 			-- Update tool bar buttons to track notebook selections.
 		do
@@ -370,10 +375,10 @@ feature {NONE} -- Implementation
 			create generation_dialog
 			generation_dialog.set_message ("You have selected to generate the " + Test_controller.selected_test_name +
 			"%N%NThe following files will be generated:%N" + application_file_name + "%N" + ace_file_name + "%N" + Common_test_file_name + "%N" +
-			Test_controller.selected_test_name + ".e%N%NPlease specify a directory and then click %"Ok%" to generate the project:")	
+			Test_controller.selected_test_name + ".e%N%NPlease specify a directory and then click %"Ok%" to generate the project:")
 			generation_dialog.show_modal_to_window (Current)
 		end
-		
+
 	close_test is
 			-- Close `Current' and destroy application.
 		do
@@ -390,21 +395,21 @@ feature {NONE} -- Implementation
 				search_tool.disable_case_matching
 			end
 		end
-		
+
 	start_search is
 			-- User has selected `search_button' so start
 			-- a search
 		do
 			search_tool.search (search_field.text)
 		end
-		
+
 	search_tool: SEARCH_TOOL is
 			-- Once access to a SEARCH_TOOL which allows
 			-- an EV_TEXT to be searched.
 		once
 			Create Result.make_with_ev_text (flat_short_display)
 		end
-		
+
 	documentation_display: DOCUMENTATION_DISPLAY;
 		-- A tool to display the documentation.
 

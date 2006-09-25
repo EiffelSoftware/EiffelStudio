@@ -14,7 +14,7 @@ inherit
 		undefine
 			default_create
 		end
-	
+
 	INTERNAL
 		undefine
 			default_create
@@ -24,10 +24,10 @@ feature -- Access
 
 	ev_type: EV_BOX
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING is "EV_BOX"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -41,15 +41,18 @@ feature -- Access
 			create check_buttons.make (0)
 			create Result.make_with_components (components)
 			initialize_attribute_editor (result)
-				-- We need the child of the display objects here,
-				-- not the actual object itself.
-			second := objects @ (2).item
-			
+
+			if objects.valid_index (2) then
+					-- We need the child of the display objects here,
+					-- not the actual object itself.
+				second := objects.i_th (2)
+			end
+
 			create is_homogeneous_check.make_with_text ("Is_homogeneous?")
 			Result.extend (is_homogeneous_check)
 			is_homogeneous_check.select_actions.extend (agent update_homogeneous)
 			is_homogeneous_check.select_actions.extend (agent update_editors)
-			
+
 			create padding_entry.make (Current, Result, padding_string, gb_ev_box_padding_width, gb_ev_box_padding_width_tooltip,
 				agent set_padding (?), agent valid_input (?), components)
 			create border_entry.make (Current, Result, border_string, gb_ev_box_border_width, gb_ev_box_border_width_tooltip,
@@ -67,7 +70,7 @@ feature -- Access
 				loop
 					first_item := first.i_th (counter)
 					if second /= Void then
-						second_item := second.i_th (counter)	
+						second_item := second.i_th (counter)
 					end
 					create check_button.make_with_text (class_name (first_item))
 					check_button.set_pebble_function (agent retrieve_pebble (first_item))
@@ -79,13 +82,13 @@ feature -- Access
 					counter := counter + 1
 				end
 			end
-			
+
 			update_attribute_editor
 
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
-		
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -102,7 +105,7 @@ feature -- Access
 			end
 			border_entry.update_constant_display (first.border_width.out)
 			padding_entry.update_constant_display (first.padding_width.out)
-			
+
 			from
 				check_buttons.start
 			until
@@ -116,7 +119,7 @@ feature -- Access
 				end
 				check_buttons.item.select_actions.resume
 				check_buttons.forth
-			end			
+			end
 			is_homogeneous_check.select_actions.resume
 		end
 
@@ -131,7 +134,7 @@ feature {NONE} -- Implementation
 			execution_agents.put (agent set_border (?), Border_string)
 			validate_agents.put (agent valid_input (?), Border_string)
 		end
-		
+
 	update_widget_expanded (check_button: EV_CHECK_BUTTON; index: INTEGER) is
 			-- Change the expanded status of `index' item based on status of `check_button'.
 		require
@@ -142,7 +145,7 @@ feature {NONE} -- Implementation
 			for_all_instance_referers (object, agent actual_update_widget_expanded (?, check_button.is_selected, index))
 			enable_project_modified
 		end
-		
+
 	actual_update_widget_expanded (an_object: GB_OBJECT; is_expanded: BOOLEAN; index: INTEGER) is
 			-- Updated expanded state of item` index' within `an_object' to reflect `is_expanded'.
 		require
@@ -203,13 +206,13 @@ feature {NONE} -- Implementation
 			for_all_objects (agent {EV_BOX}.set_padding_width (value))
 			update_editors
 		end
-		
+
 	valid_input (value: INTEGER): BOOLEAN is
 			-- Is `value' a valid padding?
 		do
 			Result := value >= 0
 		end
-		
+
 	set_border (value: INTEGER) is
 			-- Update property `border' on all items in `objects'.
 		require
@@ -222,15 +225,15 @@ feature {NONE} -- Implementation
 	is_homogeneous_check: EV_CHECK_BUTTON
 
 	border_entry, padding_entry: GB_INTEGER_INPUT_FIELD
-	
+
 	Is_homogeneous_string: STRING is "Is_homogeneous"
 	Padding_string: STRING is "Padding"
 	Border_string: STRING is "Border"
 	Is_item_expanded_string: STRING is "Is_item_expanded"
-	
+
 	check_buttons: ARRAYED_LIST [EV_CHECK_BUTTON];
 		-- All check buttons created to handle `disable_item_expand'.
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

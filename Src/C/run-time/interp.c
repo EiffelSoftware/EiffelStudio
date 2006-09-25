@@ -1923,12 +1923,12 @@ rt_private void interpret(int flag, int where)
 			last = otop();				/* Get the inspect expression value */
 			offset = get_int32(&IC);		/* Get the jump value */
 			switch (last->type) {
-			case SK_UINT8: if (lower->it_uint8 <= (EIF_NATURAL_32) last->it_uint8 && (EIF_NATURAL_32) last->it_uint8 <= upper->it_uint8) { IC += offset; } break;
-			case SK_UINT16: if (lower->it_uint16 <= (EIF_NATURAL_32) last->it_uint16 && (EIF_NATURAL_32) last->it_uint16 <= upper->it_uint16) { IC += offset; } break;
+			case SK_UINT8: if (lower->it_uint32 <= (EIF_NATURAL_32) last->it_uint8 && (EIF_NATURAL_32) last->it_uint8 <= upper->it_uint32) { IC += offset; } break;
+			case SK_UINT16: if (lower->it_uint32 <= (EIF_NATURAL_32) last->it_uint16 && (EIF_NATURAL_32) last->it_uint16 <= upper->it_uint32) { IC += offset; } break;
 			case SK_UINT32: if (lower->it_uint32 <= (EIF_NATURAL_32) last->it_uint32 && (EIF_NATURAL_32) last->it_uint32 <= upper->it_uint32) { IC += offset; } break;
 			case SK_UINT64: if (lower->it_uint64 <= last->it_uint64 && last->it_uint64 <= upper->it_uint64) { IC += offset; } break;
-			case SK_INT8: if (lower->it_int8 <= (EIF_INTEGER_32) last->it_int8 && (EIF_INTEGER_32) last->it_int8 <= upper->it_int8) { IC += offset; } break;
-			case SK_INT16: if (lower->it_int16 <= (EIF_INTEGER_32) last->it_int16 && (EIF_INTEGER_32) last->it_int16 <= upper->it_int16) { IC += offset; } break;
+			case SK_INT8: if (lower->it_int32 <= (EIF_INTEGER_32) last->it_int8 && (EIF_INTEGER_32) last->it_int8 <= upper->it_int32) { IC += offset; } break;
+			case SK_INT16: if (lower->it_int32 <= (EIF_INTEGER_32) last->it_int16 && (EIF_INTEGER_32) last->it_int16 <= upper->it_int32) { IC += offset; } break;
 			case SK_INT32: if (lower->it_int32 <= (EIF_INTEGER_32) last->it_int32 && (EIF_INTEGER_32) last->it_int32 <= upper->it_int32) { IC += offset; } break;
 			case SK_INT64: if (lower->it_int64 <= last->it_int64 && last->it_int64 <= upper->it_int64) { IC += offset; } break;
 			case SK_CHAR: if (lower->it_wchar <= (EIF_WIDE_CHAR) last->it_char && (EIF_WIDE_CHAR) last->it_char <= upper->it_wchar) { IC += offset; } break;

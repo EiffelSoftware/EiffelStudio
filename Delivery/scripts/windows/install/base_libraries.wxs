@@ -325,22 +325,6 @@
 								<File Id="countables.e" Name="COUNTA~3.E" LongName="countables.e" />
 							</Component>
 						</Directory>
-						<Directory Id="desc32" Name="desc-32">
-							<Component Id="desc32" Guid="B2A9330E-0030-4E85-9510-4D1DF2D2CD4E">
-								<File Id="testdesc.lib" Name="testdesc.lib" KeyPath="yes" />
-								<File Id="readme.txt" Name="readme.txt" />
-								<File Id="makefile.m41" Name="makefile.m" />
-								<File Id="test_ecf" Name="test.ecf" />
-								<File Id="testdesc.c" Name="testdesc.c" />
-								<File Id="test.e" Name="test.e" />
-								<File Id="test.rc" Name="test.rc" />
-								<File Id="make.bat" Name="make.bat" />
-								<File Id="test.ico" Name="test.ico" />
-							</Component>
-							<Component Id="testdesc.dll" Guid="310573C5-22B6-43B7-9C47-3419F32A3277">
-								<File Id="testdesc.dll" Name="testdesc.dll" KeyPath="yes" />
-							</Component>
-						</Directory>
 						<Directory Id="structures3" Name="STRUCT~2" LongName="structures">
 							<Component Id="structures3" Guid="BCCC07C6-7211-4C81-A00B-BEA9C619410B">
 								<File Id="mbsts.e" Name="mbsts.e" KeyPath="yes" />

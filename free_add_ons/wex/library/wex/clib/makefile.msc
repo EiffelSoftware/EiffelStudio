@@ -1,7 +1,7 @@
 # cwex.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -c -Ox -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS = -c -Ox -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 .cpp.obj:
 	$(CC) $(CFLAGS) $<

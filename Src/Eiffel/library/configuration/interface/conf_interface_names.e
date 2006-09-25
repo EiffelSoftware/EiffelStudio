@@ -497,7 +497,7 @@ feature -- Parse errors
 		end
 	e_parse_invalid_value (an_attribute: STRING): STRING is
 		do
-			Result := "Invalid (empty) value for '"+an_attribute+"'"
+			Result := "Invalid or empty value for '"+an_attribute+"'"
 		end
 	e_parse_invalid_attribute (an_attribute: STRING): STRING is
 		do

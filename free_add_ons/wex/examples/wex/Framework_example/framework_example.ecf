@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="framework_example" uuid="F9E183D7-1FC1-4050-A6D4-7EA63A2E9717">
+	<target name="framework_example">
+		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="false" loop="false"/>
+		</option>
+		<external_include location="$(ISE_EIFFEL)\free_add_ons\wex\library\Wex\spec\windows\include"/>
+		<external_include location="$(ISE_EIFFEL)\free_add_ons\wex\library\Wex\clib"/>
+		<external_object location="winmm.lib"/>
+		<external_object location="$(ISE_EIFFEL)\free_add_ons\wex\library\Wex\clib\cwex.lib"/>
+		<precompile name="wel_pre" location="$ISE_PRECOMP\wel.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<cluster name="root_cluster" location=".\"/>
+		<cluster name="wex_framework" location="$ISE_EIFFEL\free_add_ons\wex\library\wex\framework\"/>
+		<cluster name="wex_mci_consants" location="$ISE_EIFFEL\free_add_ons\wex\library\wex\Mci_constants\"/>
+		<cluster name="wex_mci_devices" location="$ISE_EIFFEL\free_add_ons\wex\library\wex\Mci_devices\"/>
+		<cluster name="wex_mci_structures" location="$ISE_EIFFEL\free_add_ons\wex\library\wex\Mci_structures\"/>
+		<cluster name="wex_mci_support" location="$ISE_EIFFEL\free_add_ons\wex\library\wex\Mci_support\"/>
+		<cluster name="wex_splash" location="$ISE_EIFFEL\free_add_ons\wex\library\wex\splash\"/>
+		<cluster name="wex_window_extras" location="$ISE_EIFFEL\free_add_ons\wex\library\wex\window_extras\"/>
+		<cluster name="wex_windows" location="$ISE_EIFFEL\free_add_ons\wex\library\wex\windows\"/>
+	</target>
+</system>

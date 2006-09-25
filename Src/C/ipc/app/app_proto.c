@@ -975,7 +975,7 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 			{
 				int32 dtype = Dtype(o_ref);
 				app_twrite (&dtype, sizeof(int32));
-				rec_inspect(o_ref);
+				app_twrite (&o_ref, sizeof(EIF_POINTER));
 			}
 			break;
 		default:
@@ -1078,14 +1078,19 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 			if (flags & EO_COMP) {
 					/* Special of expanded object. */
 				for (o_ref = object + OVERHEAD + (sp_start * elem_size),
-									sp_index = sp_start; sp_index <= sp_end;
-									sp_index++, o_ref += elem_size) {
+							sp_index = sp_start; sp_index <= sp_end;
+							sp_index++, o_ref += elem_size) {
 					sprintf(buffer, "%ld", sp_index);
 					app_twrite (buffer, strlen(buffer));
 					sk_type = SK_EXP;
 					app_twrite (&sk_type, sizeof(uint32));
 					dtype = Dtype(o_ref);
 					app_twrite (&dtype, sizeof(int32));
+/* For SPECIAL object containing expanded objects
+ * we need to send the data right away, since there is no (hector) address associated with
+ * the expanded objects, there are known from the SPECIAL object + index, 
+ * and that's it. So there is no sense to send this "fake" address
+ * 					app_twrite (&o_ref, sizeof(EIF_POINTER)); */
 					rec_inspect(o_ref);
 				}
 			} else if (!(flags & EO_REF)) {
@@ -1161,8 +1166,8 @@ rt_private void rec_sinspect(EIF_REFERENCE object, EIF_BOOLEAN skip_items)
 				EIF_BOOLEAN is_special = EIF_FALSE;
 				uint32 sk_type = SK_REF;
 				for (o_ref = (char *) ((char **)object + sp_start),
-							sp_index = sp_start; sp_index <= sp_end; sp_index++,
-							o_ref = (char *) ((char **)o_ref + 1)) {
+							sp_index = sp_start; sp_index <= sp_end; 
+							sp_index++, o_ref = (char *) ((char **)o_ref + 1)) {
 					sprintf(buffer, "%ld", sp_index);
 					app_twrite (buffer, strlen(buffer));
 					reference = *(char **)o_ref;

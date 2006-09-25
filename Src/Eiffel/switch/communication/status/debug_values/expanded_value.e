@@ -13,9 +13,8 @@ class
 inherit
 
 	REFERENCE_VALUE
-		rename
-			make_attribute as ref_make_attribute
 		redefine
+			make_attribute,
 			set_hector_addr, append_to,
 			append_type_and_value,
 			type_and_value, expandable,
@@ -30,18 +29,14 @@ create {DEBUG_VALUE_EXPORTER}
 feature {DEBUG_VALUE_EXPORTER}
 
 	make_attribute (attr_name: like name; a_class: like e_class;
-			type: like dynamic_type_id) is
-		require
+			type: like dynamic_type_id; addr: like address) is
+		require else
 			not_attr_name_void: attr_name /= Void
 		do
-			name := attr_name;
-			dynamic_type_id := type;
-			if a_class /= Void then
-				e_class := a_class;
-				is_attribute := True;
-			end;
+			Precursor {REFERENCE_VALUE} (attr_name, a_class, type, addr)
+			is_null := False
 			create attributes.make (10)
-		end;
+		end
 
 feature -- Property
 
@@ -91,7 +86,7 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
-			create Result.make_expanded_object (dynamic_class)
+			create Result.make_expanded_object (address, dynamic_class)
 		end
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output

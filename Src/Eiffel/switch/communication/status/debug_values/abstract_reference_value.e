@@ -37,6 +37,11 @@ feature -- Properties
 	is_null: BOOLEAN
 			-- Value represents Void element
 
+feature -- Expanded status
+
+	is_expanded: BOOLEAN
+			-- Is Current value an expanded object ?
+
 feature {ABSTRACT_DEBUG_VALUE} -- Output
 
 	append_type_and_value (st: TEXT_FORMATTER) is
@@ -128,7 +133,7 @@ feature -- Output
 			if not is_null then
 				Result := Reference_value
 				cl := dynamic_class
-				if cl /= Void and then cl.is_expanded then
+				if is_expanded then
 					Result := Expanded_value
 				end
 			else

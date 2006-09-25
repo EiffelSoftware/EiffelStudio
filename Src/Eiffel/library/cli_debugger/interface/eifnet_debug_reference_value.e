@@ -63,6 +63,8 @@ feature {NONE} -- Initialization
 				address := icd_value_info.address_as_hex_string
 				if dynamic_class_type = Void then
 					is_external_type := True
+				else
+					is_expanded := dynamic_class_type.is_expanded
 				end
 			end
 			register_dotnet_data

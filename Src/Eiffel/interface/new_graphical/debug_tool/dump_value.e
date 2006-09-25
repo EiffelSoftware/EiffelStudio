@@ -222,17 +222,17 @@ feature -- Initialization
 			type /= Type_unknown
 		end
 
-	make_expanded_object (dtype: CLASS_C) is
+	make_expanded_object (addr: STRING; dtype: CLASS_C) is
 			-- Make an expanded object item of type `dtype'.
 		require
 			dtype_not_void: dtype /= Void
 		do
 			init
-			value_address := Void
+			value_address := addr
 			type := Type_expanded_object
 			dynamic_class := dtype
 		ensure
-			value_address_set: value_address = Void
+			value_address_set: value_address = addr
 			type_set: type = type_expanded_object
 			dynamic_class_set: dynamic_class = dtype
 		end

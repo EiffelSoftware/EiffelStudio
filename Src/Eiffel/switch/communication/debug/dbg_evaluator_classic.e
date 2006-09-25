@@ -58,75 +58,65 @@ feature {DBG_EVALUATOR} -- Interface
 			fi := f
 			Init_recv_c
 
-			if
-				a_target /= Void
-				and then not a_target.dynamic_class.is_basic
-				and then a_target.dynamic_class.is_expanded
-			then
-				fixme ("must change the runtime to allow expression evaluation on expanded object !")
-				notify_error_evaluation ("Current restriction: unable to evaluate expression on expanded object")
-			else
-				if params /= Void and then not params.is_empty then
-					prepare_parameters (ctype, realf, params)
-					parameters_reset
-				end
-					-- Send the target object.
-				if a_target = Void then
-					if a_addr /= Void then
-						send_ref_value (hex_to_pointer (a_addr))
-					else
-						notify_error_evaluation ("Can not evaluate (non once) function %"{"
-								+ fi.written_class.name_in_upper + "}." + fi.feature_name
-								+ "%" on Void object or Class name")
-					end
+			if params /= Void and then not params.is_empty then
+				prepare_parameters (ctype, realf, params)
+				parameters_reset
+			end
+				-- Send the target object.
+			if a_target = Void then
+				if a_addr /= Void then
+					send_ref_value (hex_to_pointer (a_addr))
 				else
-					dmp := a_target
-					if dmp.is_basic then
-						fi := realf
-						par := par + 4
-					end
-					dmp.classic_send_value
+					notify_error_evaluation ("Can not evaluate (non once) function %"{"
+							+ fi.written_class.name_in_upper + "}." + fi.feature_name
+							+ "%" on Void object or Class name")
+				end
+			else
+				dmp := a_target
+				if dmp.is_basic then
+					fi := realf
+					par := par + 4
+				end
+				dmp.classic_send_value
+			end
+
+			if not error_occurred then
+					-- Send the final request.
+				if fi.is_external then
+					par := par + 1
 				end
 
-				if not error_occurred then
-						-- Send the final request.
-					if fi.is_external then
-						par := par + 1
-					end
-
-					if fi.written_class.is_precompiled then
-						par := par + 2
-						rout_info := System.rout_info_table.item (fi.rout_id_set.first)
-						send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+				if fi.written_class.is_precompiled then
+					par := par + 2
+					rout_info := System.rout_info_table.item (fi.rout_id_set.first)
+					send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+				else
+					fixme ("it seems the runtime/debug is not designed to call precursor ...")
+					if orig_class.is_expanded and then orig_class.is_basic then
+							--| Take care of "2 > 3"
+						wclt := fi.written_type (ctype)
 					else
-						fixme ("it seems the runtime/debug is not designed to call precursor ...")
-						if orig_class.is_expanded and then orig_class.is_basic then
-								--| Take care of "2 > 3"
-							wclt := fi.written_type (ctype)
-						else
-							wclt := ctype
-						end
-
-						send_rqst_3_integer (Rqst_dynamic_eval, fi.feature_id, wclt.static_type_id - 1, par)
-					end
-						-- Receive the Result.
-					recv_value (Current)
-					if is_exception_trace then
-						get_exception_trace
-						notify_error (Cst_error_exception_during_evaluation,
-								"Exception occurred during evaluation"
-								+ " of {" + fi.written_class.name_in_upper + "}." + fi.feature_name + ": %N"
-								+ exception_trace
-								)
-						reset_recv_value
-					else
-						if item /= Void then
-							item.set_hector_addr
-							last_result_value := item.dump_value
-							clear_item
-						end
+						wclt := ctype
 					end
 
+					send_rqst_3_integer (Rqst_dynamic_eval, fi.feature_id, wclt.static_type_id - 1, par)
+				end
+					-- Receive the Result.
+				recv_value (Current)
+				if is_exception_trace then
+					get_exception_trace
+					notify_error (Cst_error_exception_during_evaluation,
+							"Exception occurred during evaluation"
+							+ " of {" + fi.written_class.name_in_upper + "}." + fi.feature_name + ": %N"
+							+ exception_trace
+							)
+					reset_recv_value
+				else
+					if item /= Void then
+						item.set_hector_addr
+						last_result_value := item.dump_value
+						clear_item
+					end
 				end
 			end
 		end

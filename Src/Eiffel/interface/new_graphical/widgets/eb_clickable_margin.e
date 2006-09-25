@@ -25,7 +25,8 @@ feature -- Initialization
 			-- Build margin drawable area
 		do
 			Precursor {MARGIN_WIDGET}
-			margin_area.pointer_button_press_actions.extend (agent on_mouse_button_down)
+			margin_area.pointer_button_press_actions.extend (agent on_mouse_button_event (True, ?, ?, ?, ?, ?, ?, ?, ?))
+			margin_area.pointer_button_release_actions.extend (agent on_mouse_button_event (False, ?, ?, ?, ?, ?, ?, ?, ?))
 			hide_breakpoints
 		end
 
@@ -143,28 +144,27 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Events
 
-	on_mouse_button_down (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_mouse_button_event (a_press: BOOLEAN; abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Process single click on mouse buttons.			
 		local
 			ln: EIFFEL_EDITOR_LINE
 			l_number: INTEGER
 			bkstn: BREAKABLE_STONE
 		do
-			if button = 1 then
+				-- The context menu has to be displayed on button release otherwise it may disappear straight away on mouse click.
+			if (button = 1 and then a_press) or else (button = 3 and then not a_press) then
 				l_number := (y_pos - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
-
 				if l_number <= text_panel.number_of_lines then
 					ln ?= text_panel.text_displayed.line (l_number)
 					bkstn ?= ln.real_first_token.pebble
 					if bkstn /= Void then
-						bkstn.toggle_bkpt
+						if button = 1 then
+							bkstn.toggle_bkpt
+							text_panel.set_focus
+						elseif button = 3 then
+							bkstn.display_bkpt_menu
+						end
 					end
-					text_panel.on_mouse_button_down (0, y_pos, 1, 0, 0, 0, a_screen_x, a_screen_y)
-					text_panel.set_focus
-				end
-			elseif button = 3 then
-				if not text_panel.text_displayed.is_empty then
-					text_panel.on_click_in_text (abs_x_pos - width, y_pos, 3, a_screen_x, a_screen_y)
 				end
 			end
 		end

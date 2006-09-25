@@ -32,7 +32,7 @@ class test
 		<heading>
 			<size>3</size>Compiling the example
 		</heading>
-		<paragraph>Since the example is using the `test.java' class, the first step is to compile the java class using the `javac' command line utility from the JDK. Once it is done, copy the `test.class' either in $ISE_EIFFEL\examples\Eiffel2Java\EIFGEN\W_code or in $ISE_EIFFEL\examples\Eiffel2Java\EIFGEN\F_code depending on your compilation mode (freezing vs. finalizing).</paragraph>
+		<paragraph>Since the example is using the `test.java' class, the first step is to compile the java class using the `javac' command line utility from the JDK. Once it is done, copy the `test.class' either in $ISE_EIFFEL\examples\Eiffel2Java\EIFGENs\classic\W_code or in $ISE_EIFFEL\examples\Eiffel2Java\EIFGENs\classic\F_code depending on your compilation mode (freezing vs. finalizing).</paragraph>
 		<heading>
 			<size>3</size>Running the example
 		</heading>

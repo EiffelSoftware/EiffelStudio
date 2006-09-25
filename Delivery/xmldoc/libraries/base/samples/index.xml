@@ -9,10 +9,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<output output="studio">
-			<paragraph> Version: 5.6</paragraph>
-			<paragraph> Availability: Basic Package.</paragraph>
-		</output>
 		<list ordered="false">
 			<item><link><url>10_calculator/index.xml</url><label>Calculator</label></link></item>
 		</list>

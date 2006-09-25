@@ -9,41 +9,23 @@
 					<size>2</size>Compiling
 				</heading>
 				<paragraph> To compile the example: </paragraph>
-				<list ordered="false">
-					<item>Launch EiffelStudio. </item>
-					<item>Select 
-						<bold>Use existing Ace (control file)</bold> and click 
-						<bold>OK</bold>. 
-					</item>
-					<item>Browse to 
-						<italic>$ISE_EIFFEL\examples\web\basic\</italic>. 
-					</item>
-					<item>Choose 
-						<italic>Ace.ace</italic> on Windows platforms or 
-						<italic>Ace.ace</italic> on Unix platforms. 
-					</item>
-					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
-					<item>Click 
-						<bold>OK</bold>.
-					</item>
-				</list>
+			<list ordered="false">
+				<item>Launch EiffelStudio. </item>
+				<item>Click <bold>Add project</bold></item>
+				<item>Browse to 
+					<italic>$ISE_EIFFEL\examples\web\basic\</italic>.
+				</item>
+				<item>Choose <italic>web.ecf</italic></item>
+				<item>Choose the location where the project will be compiled, by default the same directory containing the configuration file. </item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
 				<paragraph>
 					<heading>
 						<size>2</size>Installing
 					</heading>
-					<paragraph>The workbench version of the example (i.e. the version        compiled either by melting or freezing) relies on the file 
-						<italic>        web_demo.melted</italic> to execute properly. However the process is        launched by the web server which means that this file will not be in the        
-						<italic>path</italic> of the application. It is possible to set a registry entry        that will tell the Eiffel runtime where to find this file. The sample includes the file 
-						<italic>web.reg</italic>        that you can edit by replacing the line:
-					</paragraph>
-					<code>"MELT_PATH"="c:\\eiffel55\\examples\\web\\basic\\EIFGEN\\W_code"</code>
-					<paragraph>        with the path to the 
-						<italic>W_Code</italic> folder where you have compiled the        example (the 
-						<italic>W_Code</italic> folder is located underneath the 
-						<italic>Eifgen</italic>        folder). Once you have edited the file, simply double click it to        register the changes in the registry (click 
-						<italic>Yes </italic>when prompted).
-					</paragraph>
-					<paragraph>        You should then copy the file 
+					<paragraph>You should copy the file 
 						<italic>web_demo.exe</italic> in the 
 						<italic>cgi_bin</italic>        directory of your web server and the file 
 						<italic>sample.html</italic> in a        directory on the web server.

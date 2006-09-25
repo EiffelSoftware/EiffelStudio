@@ -55,5 +55,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class VISION2_APPLICATION
+end

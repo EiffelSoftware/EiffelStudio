@@ -14,18 +14,12 @@
 			</paragraph>
 			<list ordered="false">
 				<item>Launch EiffelStudio. </item>
-				<item>Select 
-					<bold>Use existing Ace (control file)</bold> and click 
-					<bold>OK</bold>. 
-				</item>
+				<item>Click <bold>Add project</bold></item>
 				<item>Browse to 
-					<italic>$ISE_EIFFEL\examples\net\two_mach\client\</italic>. 
+					<italic>$ISE_EIFFEL\examples\net\two_mach\client\</italic>.
 				</item>
-				<item>Choose 
-					<italic>Ace.mswin.ace</italic> on Windows platforms or 
-					<italic>Ace.unix.ace</italic> on Unix platforms. 
-				</item>
-				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+				<item>Choose <italic>our_client.ecf</italic></item>
+				<item>Choose the location where the project will be compiled, by default the same directory containing the configuration file. </item>
 				<item>Click 
 					<bold>OK</bold>.
 				</item>
@@ -34,30 +28,16 @@
 				<italic>server</italic> project: 
 			</paragraph>
 			<list ordered="false">
-				<item>Launch EiffelBench. </item>
-				<item>Select 
-					<bold>Use existing Ace (control file)</bold> and click 
-					<bold>OK</bold>. 
-				</item>
+				<item>Launch EiffelStudio. </item>
+				<item>Click <bold>Add project</bold></item>
 				<item>Browse to 
-					<italic>$ISE_EIFFEL\examples\net\two_mach\server\</italic>. 
+					<italic>$ISE_EIFFEL\examples\net\two_mach\server\</italic>.
 				</item>
-				<item>Choose 
-					<italic>Ace.mswin.ace</italic> on Windows platforms or 
-					<italic>Ace.unix.ace</italic> on Unix platforms. 
-				</item>
-				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+				<item>Choose <italic>our_server.ecf</italic></item>
+				<item>Choose the location where the project will be compiled, by default the same directory containing the configuration file. </item>
 				<item>Click 
 					<bold>OK</bold>.
 				</item>
 			</list>
-			<paragraph>
-				<heading>
-					<size>2</size>Running
-				</heading>
-				<heading>
-					<size>2</size>Under the Hood
-				</heading>
-			</paragraph>
 		</paragraph>
 	</paragraph></document>

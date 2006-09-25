@@ -44,6 +44,8 @@ feature {NONE} -- Implementation
 
 	eiffel_layout_cell: CELL [EIFFEL_ENV] is
 			-- Cell to hold the layout.
+		indexing
+			once_status: global
 		once
 			create Result
 		ensure

@@ -10,52 +10,52 @@ class
 
 feature -- Error Codes
 
-	User_stop: INTEGER is 2
+	User_stop: INTEGER is 1
 			-- User stopped generation
 
-	Exception_raised: INTEGER is 3
+	Exception_raised: INTEGER is 2
 			-- An exception was raised
 
-	Eiffel_compilation_error: INTEGER is 4
+	Eiffel_compilation_error: INTEGER is 3
 			-- Eiffel compilation error
 
-	Idl_generation_error: INTEGER is 5
+	Idl_generation_error: INTEGER is 4
 			-- IDL generation error
 
-	External_program_failed: INTEGER is 6
+	External_program_failed: INTEGER is 5
 			-- External program (C compiler) failed
 
-	Makefile_write_error: INTEGER is 7
+	Makefile_write_error: INTEGER is 6
 			-- Makefile could not be written to disk
 
-	File_write_error: INTEGER is 8
+	File_write_error: INTEGER is 7
 			-- File could not be written to disk
 
-	No_type_library: INTEGER is 9
+	No_type_library: INTEGER is 8
 			-- No type library
 
-	No_c_compiler: INTEGER is 10
+	No_c_compiler: INTEGER is 9
 			-- C compiler not found
 
-	Class_not_in_project: INTEGER is 11
+	Class_not_in_project: INTEGER is 10
 			-- Facade class not in Eiffel project
 
-	C_compilation_failed: INTEGER is 12
+	C_compilation_failed: INTEGER is 11
 			-- C compilation failed
 
-	Idl_compilation_failed: INTEGER is 13
+	Idl_compilation_failed: INTEGER is 12
 			-- IDL compilation failed
 
-	Link_failed: INTEGER is 14
+	Link_failed: INTEGER is 13
 			-- C link failed
 
-	Destination_folder_cleanup_error: INTEGER is 15
+	Destination_folder_cleanup_error: INTEGER is 14
 			-- Destination folder cleanup error
 
-	No_midl_compiler: INTEGER is 16
+	No_midl_compiler: INTEGER is 15
 			-- No MIDL compiler but using IDL
 
-	Initialization_error: INTEGER is 17
+	Initialization_error: INTEGER is 16
 			-- Could not create destination folder
 
 feature -- Access

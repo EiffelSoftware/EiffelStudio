@@ -839,6 +839,7 @@
 							<Shortcut Id="eiffel.chm1" Directory="Documentation" Name="EIFFEL~1" LongName="Eiffel Developer Help Center" Description="Main documentation, covering Eiffel, ISE libraries and ISE tools" Hotkey="0" Show="normal" />
 						</File>
 						<Shortcut Id="ResourceBench_Documentation" Directory="Documentation" Name="RESOUR~1" LongName="ResourceBench Documentation" Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[#eiffel.chm]::/tools/resource_bench/index.html" Hotkey="0" Show="normal" />
+						<Shortcut Id="EiffelCOM_Wizard" Directory="Documentation" Name="EIFFEL~2" LongName="EiffelCOM Wizard Documentation" Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[#eiffel.chm]::/tools/wizards/com/index.html" Hotkey="0" Show="normal" />
 					</Component>
 				</Directory>
 			</Directory>

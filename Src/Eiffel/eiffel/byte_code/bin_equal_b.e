@@ -73,13 +73,6 @@ feature
 			generate_equal_end
 		end
 
-	generate_equal is
-			-- Generate equality if one side at least is an expanded
-		do
-			buffer.put_string ("RTEQ(");
-			generate_equal_end;
-		end;
-
 	generate_equal_end is
 			-- Generate last portion of equality.
 		do
@@ -95,13 +88,6 @@ feature
 				right_register.print_register;
 			end;
 			buffer.put_character (')');
-		end;
-
-	generate_bit_equal is
-			-- Generate equality if one side at least is a bit.
-		do
-			buffer.put_string ("RTEB(");
-			generate_equal_end
 		end;
 
 	right_register: REGISTRABLE is
@@ -225,10 +211,10 @@ feature
 				left_register /= Void or right_register /= Void
 			then
 				generate_negation
-				generate_equal
+				generate_equal_macro ("RTEQ")
 			elseif left_type.is_bit or right_type.is_bit then
 				generate_negation
-				generate_bit_equal
+				generate_equal_macro ("RTEB")
 			elseif
 				left_type.is_reference and then
 				right_type.is_reference and then

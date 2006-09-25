@@ -1140,7 +1140,7 @@ RT_LNK int fcount;
 #define RTPOF(p,o)		(EIF_POINTER)((EIF_POINTER *)(((char *)(p))+(o)))
 #define	RTST(c,d,i,n)	striparr(c,d,i,n);
 #define RTXA(x,y)		eif_xcopy(x, y)
-#define RTEQ(x,y)		eif_xequal(x, y)
+#define RTEQ(x,y)		egc_equal((x),(x),(y))
 #define RTCEQ(x,y)		(((x) && eif_is_boxed_expanded(HEADER(x)->ov_flags) && (y) && eif_is_boxed_expanded(HEADER(y)->ov_flags) && eif_gen_conf((int16) Dftype(x), (int16) Dftype(y)))? egc_equal((x),(x),(y)): (x)==(y))
 #define RTIE(x)			((x) != (EIF_REFERENCE) 0 ? eif_is_nested_expanded(HEADER(x)->ov_flags) : 0)
 #define RTOF(x)			(HEADER(x)->ov_size & B_SIZE)

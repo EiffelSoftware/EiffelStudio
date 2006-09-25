@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 		require
 			gb_ev_any_not_void: any /= Void
 			a_parent_not_void: a_parent /= Void
-			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
+			label_text_not_void_or_empty: label_text /= Void
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
 		local

@@ -51,8 +51,9 @@ feature {NONE} -- Initialization
 				address := a_reference.out
 				is_null := (address = Void)
 				dynamic_type_id := id;
-			end;
-		end;
+			end
+			get_is_expanded
+		end
 
 	make_attribute (attr_name: like name; a_class: like e_class;
 						type: like dynamic_type_id; addr: like address) is
@@ -67,6 +68,7 @@ feature {NONE} -- Initialization
 			dynamic_type_id := type;
 			address := addr
 			is_null := (address = Void)
+			get_is_expanded
 		end;
 
 feature -- Access
@@ -106,6 +108,18 @@ feature -- Access
 				l_cl := static_class
 			end
 			create Result.make_object (address, l_cl)
+		end
+
+feature -- Expanded status
+
+	get_is_expanded is
+		local
+			l_cl: CLASS_C
+		do
+			l_cl := dynamic_class
+			if l_cl /= Void then
+				is_expanded := dynamic_class.is_expanded
+			end
 		end
 
 feature {NONE} -- Output value
@@ -178,7 +192,7 @@ feature {NONE} -- Implementation
 				address := keep_object_as_hector_address (address);
 			end
 			is_null := (address = Void)
-		end;
+		end
 
 feature {NONE} -- Property
 

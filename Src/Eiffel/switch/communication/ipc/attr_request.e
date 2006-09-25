@@ -129,16 +129,16 @@ feature -- Update
 						-- with the way we retrieve a special object in recv_attributes.
 					address := to_pointer (c_tread)
 					capacity := to_integer (c_tread)
-					recv_attributes (attributes, Void)
+					recv_attributes (attributes, Void, True)
 					debug ("DEBUG_RECV")
 						io.error.put_string ("And being back again in `send'.%N")
 					end
 				else
 					create attributes.make (capacity)
 					if Eiffel_system.valid_dynamic_id (object_type_id) then
-						recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (object_type_id))
+						recv_attributes (attributes, Eiffel_system.class_of_dynamic_id (object_type_id), False)
 					else
-						recv_attributes (attributes, Void)
+						recv_attributes (attributes, Void, False)
 					end
 					sort_debug_values (attributes)
 				end
@@ -158,7 +158,7 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C) is
+	recv_attributes (attr_list: DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]; e_class: CLASS_C; container_is_special: BOOLEAN) is
 			-- Receive `e_class attribute info from application and
 			-- store it in `attr_list'.
 		local
@@ -232,16 +232,23 @@ feature {NONE} -- Implementation
 					create {BITS_VALUE} attr.make_attribute (attr_name, e_class, c_tread)
 				when Sk_exp then
 					type_id := to_integer (c_tread) + 1;
-					create exp_attr.make_attribute (attr_name, e_class, type_id);
-					attr := exp_attr;
-					if Eiffel_system.valid_dynamic_id (type_id) then
-						recv_attributes (exp_attr.attributes,
-							Eiffel_system.class_of_dynamic_id (type_id))
+					if container_is_special then
+						--| If expanded contained in SPECIAL, it doesn't have a specific (hector) address
+						--| and is only addressed via the SPECIAL object and the index
+						--| Then in this case we receive its attributes right away
+						create exp_attr.make_attribute (attr_name, e_class, type_id, Void);
+						attr := exp_attr
+						if Eiffel_system.valid_dynamic_id (type_id) then
+							recv_attributes (exp_attr.attributes, Eiffel_system.class_of_dynamic_id (type_id), False)
+						else
+							recv_attributes (exp_attr.attributes, Void, False)
+						end;
+							--| FIXME JFIAT: we need to sort it right away to keep same behavior
+						sort_debug_values (exp_attr.attributes)
 					else
-						recv_attributes (exp_attr.attributes, Void)
-					end;
-					--| FIXME JFIAT: we need to sort it right away to keep same behavior
-					sort_debug_values (exp_attr.attributes)
+						p := to_pointer (c_tread)
+						create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, type_id, p.out);
+					end
 
 				when Sk_ref then
 						-- Is this a special object?

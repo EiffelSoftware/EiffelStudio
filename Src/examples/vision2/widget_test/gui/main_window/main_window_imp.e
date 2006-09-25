@@ -100,7 +100,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_3
 			create modify_text_size
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			set_menu_bar (l_ev_menu_bar_1)
 			l_ev_menu_bar_1.extend (file_menu)
 			file_menu.extend (file_generate)
@@ -180,7 +180,6 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			file_menu.set_text ("File")
 			file_generate.disable_sensitive
 			file_generate.set_text ("Generate")
@@ -212,6 +211,8 @@ feature {NONE}-- Initialization
 			documentation_button.disable_sensitive
 			documentation_button.set_text ("Documentation")
 			documentation_button.set_tooltip ("Display flatshort of currently selected widget class")
+			main_split_area.disable_item_expand (widget_selector_parent)
+			main_split_area.enable_item_expand (main_box)
 			widget_selector_parent.set_minimum_width (150)
 			main_box.disable_item_expand (l_ev_label_1)
 			l_ev_label_1.align_text_left
@@ -246,7 +247,7 @@ feature {NONE}-- Initialization
 			l_ev_notebook_1.set_item_text (l_ev_horizontal_box_3, "Events")
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_vertical_box_4)
 			event_selector_list.set_minimum_width (150)
-			l_ev_vertical_box_4.set_padding_width (10)
+			l_ev_vertical_box_4.set_padding (10)
 			l_ev_vertical_box_4.set_border_width (10)
 			l_ev_vertical_box_4.disable_item_expand (select_all)
 			l_ev_vertical_box_4.disable_item_expand (clear_all)
@@ -254,12 +255,13 @@ feature {NONE}-- Initialization
 			select_all.set_tooltip ("Select all events")
 			clear_all.set_text ("Clear All")
 			clear_all.set_tooltip ("Clear all events")
-			test_class_display.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
+			l_ev_vertical_split_area_1.disable_item_expand (l_ev_horizontal_box_4)
+			l_ev_vertical_split_area_1.enable_item_expand (l_ev_horizontal_box_5)
 			test_class_display.disable_edit
 			flat_short_display_parent.disable_item_expand (search_parent_box)
 			search_parent_box.disable_item_expand (l_ev_frame_2)
 			l_ev_frame_1.set_text ("Search")
-			l_ev_horizontal_box_6.set_padding_width (10)
+			l_ev_horizontal_box_6.set_padding (10)
 			l_ev_horizontal_box_6.set_border_width (2)
 			l_ev_horizontal_box_6.disable_item_expand (search_field)
 			l_ev_horizontal_box_6.disable_item_expand (search_button)
@@ -276,11 +278,11 @@ feature {NONE}-- Initialization
 			modify_text_size.set_value (4)
 			set_minimum_width (800)
 			set_minimum_height (600)
-			set_title ("Vision2 Tour")
+			set_title ("Vision2 Demo")
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 			file_generate.select_actions.extend (agent perform_generation)
 			file_exit.select_actions.extend (agent close_test)
 			help_about.select_actions.extend (agent display_about_dialog)
@@ -407,7 +409,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING
+			s: STRING_GENERAL
 		do
 			from
 				string_constant_set_procedures.start
@@ -522,8 +524,8 @@ feature {NONE} -- Constant setting
 			set_attributes_using_color_constants
 		end
 					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING]]
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_GENERAL]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
@@ -553,5 +555,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class MAIN_WINDOW_IMP
+end

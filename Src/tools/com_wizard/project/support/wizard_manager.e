@@ -165,10 +165,12 @@ feature {NONE} -- Implementation
 			end
 			if not eiffel_layout.has_borland then
 				if smart_checking then
-					create l_vs_setup.make (False)
-					if not l_vs_setup.valid_vcvars then
-						Environment.set_abort (No_c_compiler)
-					end
+					-- patrickr 09/25/2006 Don't abort as they user may have setup the path already,
+					-- a warning would be nice
+--					create l_vs_setup.make (False)
+--					if not l_vs_setup.valid_vcvars then
+--						Environment.set_abort (No_c_compiler)
+--					end
 				end
 			end
 		end

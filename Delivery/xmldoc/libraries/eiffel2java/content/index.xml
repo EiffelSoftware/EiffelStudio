@@ -4,25 +4,25 @@
 		<heading>
 			<size>2</size>Introduction
 		</heading>
-		<paragraph>The Java interface allows you to call Java routines or attributes from your Eiffel code. It uses the Java Native Interface (JNI) provided by the Java Development Kit (JDK) 1.1.8. You can get more information about the JNI at: </paragraph>
+		<paragraph>The Java interface allows you to call Java routines or attributes from your Eiffel code. It uses the Java Native Interface (JNI) provided by the Java Development Kit (JDK). You can get more information about the JNI at: </paragraph>
 		<paragraph>
 			<link>
-				<url>http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.xml</url>
-				<label>http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html</label>
+				<url>http://java.sun.com/j2se/1.5.0/docs/guide/jni/</url>
+				<label>http://java.sun.com/j2se/1.5.0/docs/guide/jni/</label>
 			</link>
 		</paragraph>
 		<heading>
 			<size>3</size>Requirements
 		</heading>
 		<list ordered="false">
-			<item>JDK 1.1.8 should be correctly set up (download it at 
+			<item>JDK 1.1.8 or newer should be correctly set up (download it at 
 				<link>
-					<url>http://java.sun.com/products/jdk/1.1/index.xml</url>
-					<label>http://java.sun.com/products/jdk/1.1/index.html</label>
+					<url>http://java.sun.com/javase/downloads/index.jsp</url>
+					<label>http://java.sun.com/javase/downloads/index.jsp</label>
 				</link>)
 			</item>
 			<item>The environment variable CLASSPATH should defined (check with the JDK documentation on how to do so) and that it contains the Java classes you want to access.</item>
-			<item>The environment variable JDK_HOME should be set to the installation directory of the JDK (e.g. D:\apps\jdk1.1.8).</item>
+			<item>The environment variables should be setup correctly. See $ISE_EIFFEL\library\Eiffel2Java\README.txt for information how to do this..</item>
 		</list>
 		<heading>
 			<size>3</size>Borland users

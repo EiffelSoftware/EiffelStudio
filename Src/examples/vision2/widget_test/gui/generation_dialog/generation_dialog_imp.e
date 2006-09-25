@@ -45,7 +45,7 @@ feature {NONE}-- Initialization
 			create ok_button
 			create cancel_button
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (message_label)
@@ -70,7 +70,6 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			l_ev_vertical_box_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
@@ -78,7 +77,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.set_border_width (10)
 			message_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_horizontal_box_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_ev_horizontal_box_2.set_padding_width (10)
+			l_ev_horizontal_box_2.set_padding (10)
 			l_ev_horizontal_box_2.set_border_width (10)
 			l_ev_horizontal_box_2.disable_item_expand (select_directory_button)
 			select_directory_button.set_text ("Select Directory")
@@ -87,7 +86,7 @@ feature {NONE}-- Initialization
 			l_ev_cell_1.set_minimum_height (25)
 			l_ev_horizontal_box_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_horizontal_box_3.set_minimum_width (87)
-			l_ev_horizontal_box_3.set_padding_width (10)
+			l_ev_horizontal_box_3.set_padding (10)
 			l_ev_horizontal_box_3.set_border_width (10)
 			l_ev_horizontal_box_3.disable_item_expand (ok_button)
 			l_ev_horizontal_box_3.disable_item_expand (cancel_button)
@@ -102,7 +101,7 @@ feature {NONE}-- Initialization
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 			select_directory_button.select_actions.extend (agent display_directory_dialog)
 			ok_button.select_actions.extend (agent ok_pressed)
 			cancel_button.select_actions.extend (agent cancel_pressed)
@@ -161,7 +160,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING
+			s: STRING_GENERAL
 		do
 			from
 				string_constant_set_procedures.start
@@ -276,8 +275,8 @@ feature {NONE} -- Constant setting
 			set_attributes_using_color_constants
 		end
 					
-	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING]]
+	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_GENERAL]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
@@ -307,5 +306,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class GENERATION_DIALOG_IMP
+end

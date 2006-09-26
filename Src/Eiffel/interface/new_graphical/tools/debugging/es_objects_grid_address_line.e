@@ -155,7 +155,11 @@ feature -- Graphical changes
 				set_value (object_value)
 				set_type (object_type_representation)
 				set_address (object_address)
-				set_pixmap (pixmaps.icon_pixmaps.debugger_object_eiffel_icon)
+				if object_dynamic_class /= Void and then object_dynamic_class.is_expanded then
+					set_pixmap (icons [expanded_value])
+				else
+					set_pixmap (icons [reference_value])
+				end
 				row.ensure_expandable
 				expand_actions.extend (agent on_row_expand)
 				collapse_actions.extend (agent on_row_collapse)

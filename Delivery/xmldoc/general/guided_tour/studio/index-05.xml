@@ -18,58 +18,42 @@
 		</image_link>
 		<paragraph>As this is our first project we want to 
 			<code>
-				<keyword>Open existing Ace (control file)</keyword>.
-			</code> The three possibilities are:
+				<keyword>Add Project</keyword>.
+			</code> We could also
 		</paragraph>
 		<list ordered="false">
 			<item>"
 				<code>
-					<keyword>Create a new project</keyword>
+					<keyword>Create  project</keyword>
 				</code>", which would let you select one among the common schemes -- basic application, graphical Windows application, graphical multi-platform application, Microsoft .NET application -- and set up everything for you.
 			</item>
 			<item>"
 				<code>
-					<keyword>Open existing Ace (control file)</keyword>
-				</code>", which finds the setup in a control file, called an Assembly of Classes in Eiffel or Ace.
-			</item>
-			<item>"
-				<code>
-					<keyword>Open compiled project</keyword>
-				</code>", which will work once you have compiled a project.
+					<keyword>Open project</keyword>
+				</code>", which would let you open a previously added project..
 			</item>
 		</list>
-		<paragraph>In future sessions you'll probably use the first option for a new project, as it takes care of generating everything for you, and the third option for an existing project. Right now, though, we want you (like an expert EiffelStudio user!) to use an existing Ace that exists precisely for the purpose of this Tour. So please select the second option</paragraph>
-		<code_block>	<keyword>Open existing Ace (control file)</keyword></code_block>
-		<paragraph>and click 
-			<code>
-				<keyword>Next</keyword>
-			</code>. This brings up a File Explorer inviting you to select an Ace file. The file you want is, depending on your platform, one of
-		</paragraph>
+		<paragraph>In future sessions you'll probably use the first option for a new project, as it takes care of generating everything for you, and the second option for an existing project.</paragraph>
+		<paragraph>Right now you first have to add the project, so click on <code>Add Project</code>. This brings up a File Explorer inviting you to select an ECF file. The file you want is </paragraph>
 		<code_block>
-	<keyword>$ISE_EIFFEL\examples\studio\tour\Ace.mswin.ace</keyword>
-	<keyword>$ISE_EIFFEL/examples/studio/tour/Ace.unix.ace</keyword>
+	<keyword>$ISE_EIFFEL\examples\studio\tour\simple.ecf</keyword>
 </code_block>
-		<paragraph>(the first one for Windows, the second for Unix; remember that 
+		<paragraph>remember that 
 			<code>
 				<keyword>$ISE_EIFFEL</keyword>
 			</code> stands for the location of the Eiffel installation, such as 
 			<code>
 				<keyword>C:\Eiffel50</keyword>
-			</code> ; Ace files are normally marked by the 
+			</code> ; ECF files are normally marked by the 
 			<code>
-				<keyword>.ace</keyword>
-			</code> file extension). For VMS, select the Unix variant.
+				<keyword>.ecf</keyword>
+			</code> file extension).
 		</paragraph>
 		<paragraph>Use the File Explorer to go to the directory 
 			<code>
 				<keyword>$ISE_EIFFEL/examples/studio/tour/</keyword>
-			</code> and select the appropriate file, 
-			<code>
-				<keyword> mswin.ace</keyword>
-			</code> or 
-			<code>
-				<keyword>unix.ace</keyword>
-			</code>, for your platform. A confirmation window comes up:
+			</code> and select the appropriate file.
+			You will then be back on the startup dialog.
 		</paragraph>
 		<image_link>
 			<url>index-3.png</url>
@@ -81,33 +65,17 @@
 		</image_link>
 		<paragraph>Click 
 			<code>
-				<keyword>OK</keyword>
-			</code> to confirm. This selects the Ace file and starts compilation of your project.
+				<keyword>Open</keyword>
+			</code> to confirm. This starts compilation of your project.
 		</paragraph>
 		<paragraph>During Eiffel compilation, a progress bar displays the successive compilation steps, or "degrees". The bulk of our little project is the EiffelBase library, which the EiffelStudio installation procedure has precompiled; so just now there's only a few extra classes to compile, and the process is almost instantaneous on a state-of-the-art computer. Even if you had to compile the EiffelBase classes, EiffelStudio compilation is so fast that you would hardly have the time to read the "degree" messages; you can see them later in compilations of bigger classes and systems.</paragraph>
 		<note>
 			<italic>On an IBM Thinkpad, Pentium III 850 MHz, 256 MB, running Windows 2000 Professional, Eiffel compilation takes about 9 seconds for the entire Guided Tour system including non-precompiled EiffelBase. </italic>
 		</note>
 		<paragraph>After Eiffel compilation completes you will see the message</paragraph>
-		<code_block>	<keyword>System had to be frozen to include new externals.</keyword>
-	<keyword>Eiffel compilation system recompiled.</keyword>
-	<keyword>Background C compilation launched</keyword></code_block>
-		<paragraph>At this stage you can start using EiffelStudio, e. g. for browsing, but since C compilation won't take long either (about 15 seconds on our test machine), it's just as well to let it finish. C compilation messages will appear:</paragraph>
-		<list ordered="false">
-			<item>On Windows, in a new console.</item>
-			<item>On Unix, in the window from which you launched EiffelStudio.</item>
-		</list>
-		<paragraph>Why C compilation? Eiffel Software's implementation of Eiffel under some circumstances uses C as intermediate code for its compiler's generated code, and relies on a C compiler to process the result. On Windows you will by default use the command-line Borland compiler (included with the EiffelStudio delivery); you may replace it by another, such as Visual C/C++ from Microsoft (available directly from Eiffel Software) if you wish. On Unix you will use the resident C compiler.</paragraph>
-		<paragraph>EiffelStudio reports that the C compilation has terminated:</paragraph>
-		<image_link>
-			<url>index-4.png</url>
-			<target>screenshots</target>
-			<image>
-				<url>index-4.png</url>
-				<width>100</width>
-			</image>
-		</image_link>
-		<paragraph>Congratulations! You have successfully compiled your first Eiffel project. More precisely it's been both "melted" and "frozen". Strange terminology, you may think; in a little while we'll see why these compilation steps are called that way.</paragraph>
+		<code_block>	<keyword>Eiffel Compilation Succeeded</keyword></code_block>
+		<paragraph>At this stage your project is finished compiled and you can start using EiffelStudio.</paragraph>
+		<paragraph>Congratulations! You have successfully compiled your first Eiffel project. More precisely it's been both "melted". Strange terminology, you may think; in a little while we'll see why these compilation steps are called that way.</paragraph>
 		<heading>
 			<size>2</size>
 			<content>Executing the system</content>

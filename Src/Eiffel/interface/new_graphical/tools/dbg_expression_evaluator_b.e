@@ -1325,7 +1325,6 @@ feature {NONE} -- Implementation
 								--| at this point the context class is TEST, 
 								--| and the context feature is `check_assert (BOOLEAN)'
 								--| but TEST doesn't conform to ISE_RUNTIME.
-									is using
 								l_cl := context_feature.written_class
 								prepare_contexts (l_cl, Void)
 								System.set_current_class (l_cl)

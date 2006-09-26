@@ -309,11 +309,11 @@ feature {NONE} -- Implementation
 			user_interface_mode := other_imp.user_interface_mode
 			apply_center_dialog := other_imp.apply_center_dialog
 			call_show_actions := other_imp.call_show_actions
-			fixme (once "[
+			fixme (once "{
 				The `post_creation_update_actions are only here to enable the use of upper and lower bars
 				in the implementation of dialogs. Without this, upgrading the dialog's implementation
 				whith items in the bars caused problems internally.
-				]")
+				}")
 			if post_creation_update_actions.is_empty then
 				create upper_bar
 				post_creation_update_actions.extend (agent copy_box_attributes (other_imp.upper_bar, upper_bar))

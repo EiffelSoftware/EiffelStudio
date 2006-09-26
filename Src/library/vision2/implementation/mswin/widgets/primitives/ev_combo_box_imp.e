@@ -280,9 +280,7 @@ feature -- Status report
 			sel_end: INTEGER
 		do
 			--Result := cwin_hi_word (cwin_send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0)))
-			fixme (once "[
-				Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.
-			]")
+			fixme (once "Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.")
 			cwin_send_message (edit_item, Em_getsel, to_wparam (0), $sel_end)
 			Result := sel_end
 		end

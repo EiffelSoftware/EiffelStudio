@@ -7,7 +7,7 @@
 			<url>/images/eiffelstudio/dialogs_and_wizards/startup_dialog.png</url>
 		</image>
 		<paragraph>Under 
-			<bold>Create a new project</bold>, several options are offered, which depend on the package of EiffelStudio you have and on the platform you are on.
+			<bold>Create project</bold>, several options are offered, which depend on the platform you are on.
 		</paragraph>
 		<list ordered="false">
 			<item>
@@ -25,7 +25,7 @@
 				<link>
 					<url>/libraries/vision2/00_introduction.xml</url>
 					<label>Eiffel Vision2 library</label>
-				</link>. This is the perfect choice to start a platform-independent graphic application, or even any graphic application, since EiffelVision2 is easier to use than platform-specific libraries. This option is available on all platforms and all packages.
+				</link>. This is the perfect choice to start a platform-independent graphic application, or even any graphic application, since EiffelVision2 is easier to use than platform-specific libraries. This option is available on all platforms.
 			</item>
 			<item>
 				<bold>WEL application</bold> generates a project using the 
@@ -53,11 +53,6 @@
 			<link>
 				<url>20_retrieving_a_project_from_an_ace_file.xml</url>
 				<label>Retrieving a project from an Ace file</label>
-			</link>
-			<line_break/> 
-			<link>
-				<url>30_opening_an_existing_project.xml</url>
-				<label>Opening a compiled project</label>
 			</link>
 		</seealso>
 	</paragraph></document>

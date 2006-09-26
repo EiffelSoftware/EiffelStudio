@@ -607,6 +607,12 @@ feature {NONE} -- User interaction
 				l_dialog.set_default_cancel_button (l_button)
 				l_dialog.set_default_push_button (l_select_button)
 
+				l_dialog.show_actions.extend (agent (a_list: EV_LIST)
+					require
+						a_list_not_void: a_list /= Void
+					do
+						a_list.set_focus
+					end (l_list))
 				l_dialog.show_modal_to_window (parent_window)
 			end
 		end

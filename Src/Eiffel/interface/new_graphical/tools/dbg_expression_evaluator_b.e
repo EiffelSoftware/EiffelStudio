@@ -1251,6 +1251,22 @@ feature {NONE} -- Implementation
 			Result := dbg_evaluator.dump_value_at_address (addr)
 		end
 
+	prepare_contexts (cl: CLASS_C; ct: CLASS_TYPE) is
+		require
+			cl_not_void: cl /= Void
+			ct_associated_to_cl: ct /= Void implies ct.associated_class.is_equal (cl)
+		local
+			l_ta: CL_TYPE_A
+		do
+			if ct /= Void then
+				l_ta := ct.type.type_a
+			else
+				l_ta := cl.actual_type
+			end
+			Ast_context.initialize (cl, l_ta, cl.feature_table)
+			Inst_context.set_group (cl.group)
+		end
+
 	get_expression_byte_node is
 			-- get expression byte node depending of the context
 		require
@@ -1262,9 +1278,8 @@ feature {NONE} -- Implementation
 			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
 			f_as: BODY_AS
 			l_byte_code: BYTE_CODE
-			l_ta: CL_TYPE_A
 			bak_byte_code: BYTE_CODE
-			bak_cc: CLASS_C
+			bak_cc, l_cl: CLASS_C
 		do
 			expression_byte_node_computed := True
 			if not retried then
@@ -1292,13 +1307,7 @@ feature {NONE} -- Implementation
 					if context_class /= Void then
 						ast_context.clear_all
 							--| Prepare Compiler context
-						if context_class_type /= Void then
-							l_ta := context_class_type.type.type_a
-						else
-							l_ta := context_class.actual_type
-						end
-						ast_context.initialize (context_class, l_ta, context_class.feature_table)
-						Inst_context.set_group (context_class.group)
+						prepare_contexts (context_class, context_class_type)
 
 						bak_cc := System.current_class
 						System.set_current_class (context_class)
@@ -1306,6 +1315,23 @@ feature {NONE} -- Implementation
 						bak_byte_code := Byte_context.byte_code
 
 						if on_context and then context_feature /= Void then
+							if not context_class.conform_to (context_feature.written_class) then
+								debug ("debugger_trace_eval_data")
+									print ("Context class {"+ context_class.name_in_upper
+											+"} does not has context feature %""+context_feature.feature_name+"%"%N")
+								end
+								--| This issue occurs for instance in {TEST}.twin 
+								--| where {ISE_RUNTIME}check_assert (boolean) is called
+								--| at this point the context class is TEST, 
+								--| and the context feature is `check_assert (BOOLEAN)'
+								--| but TEST doesn't conform to ISE_RUNTIME.
+									is using
+								l_cl := context_feature.written_class
+								prepare_contexts (l_cl, Void)
+								System.set_current_class (l_cl)
+							else
+								l_cl := context_class
+							end
 							Ast_context.set_current_feature (context_feature)
 
 							fixme ("jfiat [2004/10/16] : Seems pretty heavy computing ..")
@@ -1315,7 +1341,7 @@ feature {NONE} -- Implementation
 								--| Locals
 							f_as := context_feature.real_body
 							if f_as /= Void or True then
-								l_ct_locals := locals_builder.local_table (context_class, context_feature, f_as)
+								l_ct_locals := locals_builder.local_table (l_cl, context_feature, f_as)
 								if l_ct_locals /= Void then
 										--| if it failed .. let's continue anyway for now
 
@@ -1351,11 +1377,6 @@ feature {NONE} -- Implementation
 			retry
 		end
 
-	dbg_expression_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR is
-		once
-			create Result
-		end
-
 	expression_byte_node_from_ast (exp: EXPR_AS): like expression_byte_node is
 			-- compute expression_byte_node from EXPR_AS `exp'
 		require
@@ -1370,6 +1391,13 @@ feature {NONE} -- Implementation
 				error_handler.wipe_out
 				Ast_context.set_is_ignoring_export (True)
 				dbg_expression_checker.init (ast_context)
+				debug ("debugger_trace_eval_data")
+					print (generator + ".expression_byte_node_from_ast (..) %N")
+					print ("   Ast_context -> {"
+							+ ast_context.current_class.name_in_upper
+							+ "}." + ast_context.current_feature.feature_name
+							+ "%N")
+				end
 				dbg_expression_checker.expression_type_check_and_code (context_feature, exp)
 				Ast_context.set_is_ignoring_export (False)
 
@@ -1408,6 +1436,11 @@ feature {NONE} -- Implementation
 
 	internal_expression_byte_node: like expression_byte_node
 
+	dbg_expression_checker: AST_DEBUGGER_EXPRESSION_CHECKER_GENERATOR is
+		once
+			create Result
+		end
+
 feature {NONE} -- Compiler helpers
 
 	feature_i_from_call_access_b_in_context (cl: CLASS_C; a_call_access_b: CALL_ACCESS_B): FEATURE_I is
@@ -1424,7 +1457,6 @@ feature {NONE} -- Compiler helpers
 			else
 				wcl := system.class_of_id (a_call_access_b.written_in)
 				Result := wcl.feature_of_rout_id (a_call_access_b.routine_id)
---				Result := wcl.feature_named (a_call_access_b.feature_name)
 				if Result = Void then
 						--| Better try to find the feature by any way
 					fixme ("We should redesign this part to do exactly what should be done")

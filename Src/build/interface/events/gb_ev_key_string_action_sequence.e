@@ -19,7 +19,7 @@ feature -- Access
 			-- All argument types of action sequence represented by `Current'.
 		once
 			create Result.make (0)
-			Result.extend ("STRING")
+			Result.extend ("STRING_32")
 		end
 
 	argument_names: ARRAYED_LIST [STRING] is

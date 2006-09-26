@@ -73,6 +73,8 @@ export EIFFEL_SRC
 
 ./doc_builder -gen /xml2help -o /studio -t /web_simple -nohtml $DOCUMENT_DIR/xmldoc/projects/documentation.dpr
 
+mv output_log.txt $DOCUMENT_DIR/output_log.txt
+
 move /tmp/doc_builder/Help $INSTALL_DIR/docs
 rm -rf $INSTALL_DIR/docs/docs_settings.xml
 

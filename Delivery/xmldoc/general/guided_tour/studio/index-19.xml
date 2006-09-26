@@ -91,11 +91,11 @@
 				<content>Executing a finalized system outside of EiffelStudio</content>
 			</heading>
 			<paragraph>A finalized system can be executed on any computer of the appropriate platform; it doesn't need EiffelStudio. The executable version is in the directory</paragraph>
-			<code_block>	project_directory<keyword>/EIFGEN/F_code</keyword></code_block>
+			<code_block>	project_directory<keyword>/EIFGENs/</keyword><string>target_name</string><keyword>/F_code</keyword></code_block>
 			<paragraph>where 
 				<code>
 					<string>project_directory</string>
-				</code> is the project's directory. The name of the executable file is 
+				</code> is the project's directory and <code><string>target_name</string></code> ist the name of the target. The name of the executable file is 
 				<code>
 					<string>system_name</string>
 				</code>
@@ -104,9 +104,12 @@
 				</code>, where 
 				<code>
 					<string>system_name</string>
-				</code> is the name that you have assigned to your system in the project settings (reflected in the Ace file).
+				</code> is the name that you have assigned to your system in the project settings (reflected in the ECF file).
 			</paragraph>
-			<paragraph>The name of our Guided Tour system is 
+			<paragraph>The target of the Guided Tour system is 
+				<code>
+					<string>classic</string>
+				</code> and the name is 
 				<code>
 					<string>simple</string>
 				</code>, so you can locate 
@@ -118,7 +121,7 @@
 					<keyword>exe</keyword>
 				</code> in 
 				<code>
-					<keyword>EIFGEN/F_code</keyword>
+					<keyword>EIFGENs/classic/F_code</keyword>
 				</code> for your project, and run it stand-alone if you like.
 			</paragraph>
 			<paragraph>If you run the system from a command line, and it requires arguments ( 
@@ -146,7 +149,7 @@
 					<string>project_directory</string>
 				</code>
 				<code>
-					<keyword>/EIFGEN/W_code</keyword>
+					<keyword>/EIFGENs/</keyword><string>target_name</string><keyword>/W_code</keyword>
 				</code>.
 			</paragraph>
 		</div>

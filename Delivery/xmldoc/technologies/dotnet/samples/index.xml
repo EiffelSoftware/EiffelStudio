@@ -10,7 +10,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>In this chapter you will find a series of examples that will permit to you to understand the bases of programming with Dotnet.</paragraph>
-		<paragraph>However, you should be familiar with Object-Oriented programming model.</paragraph>
+		<paragraph>However, you should be familiar with Object-Oriented programming model. Almost all other examples can also be built for .NET if the dotnet target is choosen instead of classic.</paragraph>
 		<heading>
 			<size>2</size>Console sample
 		</heading>

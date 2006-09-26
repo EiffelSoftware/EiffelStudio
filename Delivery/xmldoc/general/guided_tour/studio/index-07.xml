@@ -47,12 +47,15 @@
 		<note>
 			<italic>If some parts are too small, just resize the window to arrive at something like what's on the figure. When it first comes up, EiffelStudio initially uses a fairly small window, because it's designed to run on a 800x600 display, although of course a bigger display is recommended. But as soon as you have resized it, EiffelStudio will come up, in the next session, with the size you've set.</italic>
 		</note>
-		<paragraph>You can see four panes, marked on the figure: 
+		<paragraph>You can see five panes, marked on the figure: 
 			<code>
 				<keyword>Features</keyword>
 			</code>, 
 			<code>
 				<keyword>Class</keyword>
+			</code>, 
+			<code>
+				<keyword>Properties</keyword>
 			</code>, 
 			<code>
 				<keyword>Clusters</keyword>
@@ -158,10 +161,22 @@
 					<keyword>Class</keyword>
 				</code>, 
 				<code>
-					<keyword>Features</keyword>
+					<keyword>Feature</keyword>
 				</code>, 
 				<code>
-					<keyword>Metrics</keyword>
+					<keyword>Metric</keyword>
+				</code>, 
+				<code>
+					<keyword>External Output</keyword>
+				</code>, 
+				<code>
+					<keyword>C Output</keyword>
+				</code>, 
+				<code>
+					<keyword>Errors</keyword>
+				</code>, 
+				<code>
+					<keyword>Warnings</keyword>
 				</code>.
 			</item>
 		</list>
@@ -169,7 +184,6 @@
 			<size>2</size>
 			<content>A peek at diagram</content>
 		</heading>
-		<paragraph>Note: The diagram tool is unavailable in the free version of EiffelStudio.</paragraph>
 		<paragraph>There's indeed a lot in the Context Tool, too much to see right now, but to feed our curiosity let's just take a peek at the Diagram View. Click the 
 			<code>
 				<keyword>Diagram</keyword>
@@ -272,28 +286,29 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>An Eiffel system, as you know, is organized into clusters, which you can structure hierarchically into subclusters. Here we see the top two clusters: 
+		<paragraph>An Eiffel system, as you know, is organized into clusters and libraries (and assemblies on some .NET systems), clusters can be structured hierarchically into subclusters. Here we see one cluster: 
 			<code>
-				<string>base</string>
-			</code>, containing the EiffelBase library; and 
-			<code>
-				<string>root</string>
-			</code>, containing the few classes specific to our Guided Tour system. Let's go into 
+				<string>root_cluster</string>
+			</code>, containing the few classes specific to our Guided Tour system. There are also two libraries <code><string>precompile</string></code> which does not provide any classes and <code><string>base</string></code> 
+			which provides the base classes. 	Let's go into 
 			<code>
 				<string>base</string>
 			</code>, ISE's open-source library of fundamental reusable mechanisms. Click the little 
 			<code>
 				<keyword>+</keyword>
-			</code> sign to the left of its name; this expands the first level of the 
-			<code>
-				<string>base</string>
-			</code> cluster, to show its four subclusters: 
+			</code> sign to the left of its name; this expands the clusters and libraries in the base library. Expand now the base cluster and you will see the its six subclusters: 
 			<code>
 				<string>event</string>
 			</code> for event handling, 
 			<code>
 				<string>kernel</string>
 			</code> for the Kernel Library, 
+			<code>
+				<string>refactoring</string>
+			</code> for help with refactoring,
+			<code>
+				<string>serialization</string>
+			</code> for serialization, 
 			<code>
 				<string>structures</string>
 			</code> for the Data Structure Library, and 

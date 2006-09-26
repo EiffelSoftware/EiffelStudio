@@ -695,7 +695,7 @@ feature {NONE} -- Implementation
 				current_token := a_token
 				l_done := False
 			until
-				current_token = Void or l_done
+				(current_token = Void or else current_token.next = Void) or l_done
 			loop
 				if current_token.is_feature_start then
 					tfs2 ?= current_token

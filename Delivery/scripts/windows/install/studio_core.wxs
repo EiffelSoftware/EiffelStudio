@@ -711,7 +711,7 @@
 								</Component>
 								<Component Id="h2e.exe" Guid="70827559-3A13-4F64-9E8E-6A9462E31FDC">
 									<File Id="h2e.exe" Name="h2e.exe" KeyPath="yes">
-										<Shortcut Id="C constants to Eiffel class generator" Directory="Tools9" Name="h2e.exe" Description="A tool to extract constant definitions into Eiffel classes" Hotkey="0" Show="normal" />
+										<Shortcut Id="he2.exe" Directory="Tools9" Name="h2e.exe" LongName="C constants to Eiffel class generator" Description="A tool to extract constant definitions into Eiffel classes" Hotkey="0" Show="normal" />
 									</File>
 								</Component>
 								<Component Id="legacy.exe" Guid="B3A1D6E5-0085-42BB-817F-BF1B315BE839">

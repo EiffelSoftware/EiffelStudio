@@ -115,7 +115,7 @@
 		</Feature>
 		
 		<CustomAction Id="is_gdi_plus_installed" BinaryKey="setup_dll" DllEntry="is_gdi_plus_installed" />
-		<CustomAction Id="is_cd_key_valid" BinaryKey="setup_dll" DllEntry="is_cd_key_valid" " />
+		<CustomAction Id="is_cd_key_valid" BinaryKey="setup_dll" DllEntry="is_cd_key_valid" />
 		<CustomAction Id="retrieve_cd_key" BinaryKey="setup_dll" DllEntry="retrieve_cd_key" />
 		<CustomAction Id="prepare_finalize_setup" BinaryKey="setup_dll" DllEntry="prepare_finalize_setup" />
 		<CustomAction Id="finalize_setup" BinaryKey="setup_dll" DllEntry="finalize_setup" Execute="deferred" />

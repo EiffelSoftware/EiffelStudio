@@ -534,7 +534,7 @@ feature {NONE} -- Implementation attribute processing
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_no_name)
 			else
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
 			end
 		end
 

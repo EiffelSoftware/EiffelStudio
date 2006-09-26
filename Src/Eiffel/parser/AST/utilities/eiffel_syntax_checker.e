@@ -64,7 +64,7 @@ feature -- Status report
 			from
 				i := 2
 			until
-				i > s.count or not Result
+				not Result or else i > s.count
 			loop
 				cc := s.item (i)
 				Result := cc.is_alpha or cc.is_digit or cc = '_'
@@ -82,7 +82,7 @@ feature -- Status report
 			from
 				i := 2
 			until
-				i > s.count or not Result
+				not Result or else i > s.count
 			loop
 				cc := s.item (i)
 				Result := cc.is_alpha or cc.is_digit or cc = '_' or cc = '.' or cc = '-'
@@ -118,7 +118,7 @@ feature -- Status report
 			from
 				i := 2
 			until
-				i > op.count or not Result
+				not Result or else i > op.count
 			loop
 				cc := op.item (i)
 				Result := cc.is_alpha or cc.is_digit or free_operators_characters.has (cc)

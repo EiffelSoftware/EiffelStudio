@@ -14,12 +14,8 @@ set SVN_VERSION=%@EXECSTR[bash set_version.sh %DEFAULT_ORIGO_SVN]
 cdd %INIT_DIR\install
 iff .%ISE_PLATFORM%.==.win64. then
 	set IS_WIN64=yes
-	rem No need to copy the 64 bits version of the dll since final release of 64bits OS
-	rem will load 32 bits version of assembly when compiled for 32 bits only.
-	copy %INIT_DIR%\wix\winterop.dll-x86 %INIT_DIR\wix\winterop.dll
 else
 	set IS_WIN64=no
-	copy %INIT_DIR%\wix\winterop.dll-x86 %INIT_DIR\wix\winterop.dll
 endiff
 
 rem To get rid of the CNDL1044 warnings about possible problems with shortnames.

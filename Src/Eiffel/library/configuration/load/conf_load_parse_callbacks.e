@@ -363,7 +363,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_readonly.is_boolean then
 						last_system.set_readonly (l_readonly.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
 					end
 				end
 			elseif l_name = Void then
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_abstract.is_boolean then
 						current_target.set_abstract (l_abstract.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("abstract"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("abstract"))
 					end
 				end
 				if current_library_target /= Void and then l_name.is_equal (current_library_target) then
@@ -680,7 +680,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_readonly.is_boolean then
 						current_library.set_readonly (l_readonly.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
 					end
 				end
 				if l_prefix /= Void then
@@ -727,7 +727,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_readonly.is_boolean then
 						current_library.set_readonly (l_readonly.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
 					end
 				end
 				if l_prefix /= Void then
@@ -785,7 +785,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_readonly.is_boolean then
 						current_assembly.set_readonly (l_readonly.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
 					end
 				end
 				if l_prefix /= Void then
@@ -834,7 +834,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_readonly.is_boolean then
 						current_cluster.set_readonly (l_readonly.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
 					end
 				end
 				if l_prefix /= Void then
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_recursive.is_boolean then
 						current_cluster.set_recursive (l_recursive.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("recursive"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("recursive"))
 					end
 				end
 				if l_parent /= Void then
@@ -893,7 +893,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_readonly.is_boolean then
 						current_cluster.set_readonly (l_readonly.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
 					end
 				end
 				if l_prefix /= Void then
@@ -903,7 +903,7 @@ feature {NONE} -- Implementation attribute processing
 					if l_recursive.is_boolean then
 						current_cluster.set_recursive (l_recursive.to_boolean)
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("recursive"))
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("recursive"))
 					end
 				end
 				if l_parent /= Void then
@@ -937,6 +937,8 @@ feature {NONE} -- Implementation attribute processing
 				current_option.add_debug (l_name.as_lower, l_enabled.to_boolean)
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_debug_no_name)
+			elseif not l_enabled.is_boolean then
+				set_parse_error_message (conf_interface_names.e_parse_invalid_value ("enabled"))
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_debug (l_name))
 			end
@@ -959,6 +961,8 @@ feature {NONE} -- Implementation attribute processing
 				end
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_warning_no_name)
+			elseif not l_enabled.is_boolean then
+				set_parse_error_message (conf_interface_names.e_parse_invalid_value ("enabled"))
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_warning (l_name))
 			end
@@ -984,7 +988,7 @@ feature {NONE} -- Implementation attribute processing
 						l_assert.enable_precondition
 					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("precondition"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("precondition"))
 				end
 			end
 			if l_post /= Void then
@@ -993,7 +997,7 @@ feature {NONE} -- Implementation attribute processing
 						l_assert.enable_postcondition
 					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("postcondition"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("postcondition"))
 				end
 			end
 			if l_chk /= Void then
@@ -1002,7 +1006,7 @@ feature {NONE} -- Implementation attribute processing
 						l_assert.enable_check
 					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("check"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("check"))
 				end
 			end
 			if l_inv /= Void then
@@ -1011,7 +1015,7 @@ feature {NONE} -- Implementation attribute processing
 						l_assert.enable_invariant
 					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("invariant"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("invariant"))
 				end
 			end
 			if l_loop /= Void then
@@ -1020,7 +1024,7 @@ feature {NONE} -- Implementation attribute processing
 						l_assert.enable_loop
 					end
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("loop"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("loop"))
 				end
 			end
 			current_option.set_assertions (l_assert)
@@ -1067,35 +1071,35 @@ feature {NONE} -- Implementation attribute processing
 				if l_trace.is_boolean then
 					current_option.set_trace (l_trace.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("trace"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("trace"))
 				end
 			end
 			if l_profile /= Void then
 				if l_profile.is_boolean then
 					current_option.set_profile (l_profile.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("profile"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("profile"))
 				end
 			end
 			if l_optimize /= Void then
 				if l_optimize.is_boolean then
 					current_option.set_optimize (l_optimize.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("optimize"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("optimize"))
 				end
 			end
 			if l_debug /= Void then
 				if l_debug.is_boolean then
 					current_option.set_debug (l_debug.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("debug"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("debug"))
 				end
 			end
 			if l_warning /= Void then
 				if l_warning.is_boolean then
 					current_option.set_warning (l_warning.to_boolean)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("warning"))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("warning"))
 				end
 			end
 			if l_namespace /= Void then

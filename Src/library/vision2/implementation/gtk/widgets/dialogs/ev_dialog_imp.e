@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			-- Call the cancel actions if dialog is closeable.
 		do
 			Precursor {EV_TITLED_WINDOW_IMP}
-			if is_dialog_closeable and then not App_implementation.is_in_transport then
+			if not has_modal_window and then is_dialog_closeable and then not App_implementation.is_in_transport then
 				if internal_default_cancel_button /= Void and then
 					internal_default_cancel_button.is_sensitive-- and then
 					--internal_default_cancel_button.is_displayed

@@ -528,13 +528,13 @@ feature {NONE} -- Implementation
 					child_imp_not_void: child_imp /= Void
 				end
 				if from_on_size then
-						-- The code below is like the one from `set_move_and_size' except that
-						-- we always call `wel_move_and_resize' as otherwise the hidden notebook
-						-- items don't get a proper size.
-					child_imp.child_cell.move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height)
-					child_imp.wel_move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_displayed)
+					child_imp.set_move_and_size (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height)
 				else
 					child_imp.ev_apply_new_size (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_displayed)
+				end
+				if not child_imp.is_show_requested then
+						-- Hidden notebook items don't get a proper size if we don't force a resizing.
+					child_imp.wel_move_and_resize (tab_rect.x, tab_rect.y, tab_rect.width, tab_rect.height, child_imp.is_displayed)
 				end
 				i := i + 1
 			end

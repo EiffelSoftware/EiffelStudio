@@ -164,8 +164,12 @@ feature -- Visit nodes
 			l_consumer_manager: CONF_CONSUMER_MANAGER
 			l_old_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
 			l_retried: BOOLEAN
+			l_error_count: INTEGER
 		do
 			if not l_retried then
+				if last_errors /= Void then
+					l_error_count := last_errors.count
+				end
 				current_system := a_target.system
 
 				if old_target /= Void then
@@ -259,7 +263,9 @@ feature -- Visit nodes
 		ensure then
 			all_assemblies_set: (not is_error and then a_target.application_target = a_target) implies a_target.all_assemblies /= Void
 		rescue
-			if equal (tag_name, configuration_error_tag) then
+				-- If we have added a new configuration error, we retry, otherwise we let the
+				-- caller handle the exception.
+			if last_errors /= Void and then last_errors.count /= l_error_count then
 				l_retried := True
 				retry
 			end

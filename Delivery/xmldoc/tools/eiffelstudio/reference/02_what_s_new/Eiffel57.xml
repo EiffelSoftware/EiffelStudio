@@ -15,6 +15,8 @@
 				<item>New configuration system. It brings a new dimension to the way you manage multiple projects and also simplifying it.</item>
 				<item>Improved display of clusters, libraries and assemblies.</item>
 				<item>Added ability to see more relations in the diagram tool. For example, you can select a class and choose to see its descendants in the diagram.</item>
+				<item>If a project that needs a precompile is opened and the precompile does not exist it will automatically be compiled.</item>
+				<item>New projects use precompiles by default which speeds up the first compilation a lot.</item>
 			</list>
 			<heading><size>3</size>Changes</heading>
 			<list ordered="false">

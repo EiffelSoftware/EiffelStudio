@@ -21,7 +21,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-		<link/>This third tutorial describes how to access a COM component. It will build a client of the 
+		<link/>The third tutorial describes how to access a COM component. It will build a client of the 
 		<class_name>StringManipulator</class_name> component built in the first tutorial.
 		<heading>
 			<size>2</size> Step by step instructions

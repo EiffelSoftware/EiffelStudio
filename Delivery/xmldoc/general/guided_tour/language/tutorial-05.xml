@@ -165,7 +165,8 @@
 		<paragraph>To build the system and execute it:</paragraph>
 		<list ordered="false">
 			<item>Start EiffelStudio</item>
-			<item>When prompted, ask EiffelStudio to build a system for you; specify 
+			<item>Create a new <italic>Basic application</italic> project</item>
+			<item>Specify 
 				<code>
 					<class_name>HELLO</class_name>
 				</code> as the "root class" and 

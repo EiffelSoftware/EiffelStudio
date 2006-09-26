@@ -10,6 +10,12 @@
 			</item>
 			<item>
 				<link>
+					<url>12_adding_a_library.xml</url>
+					<label>Adding a library</label>
+				</link>
+			</item>
+			<item>
+				<link>
 					<url>20_adding_a_class.xml</url>
 					<label>Adding a class</label>
 				</link>

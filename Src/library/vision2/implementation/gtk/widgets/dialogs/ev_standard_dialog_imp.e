@@ -153,6 +153,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			user_clicked_ok := True
 			selected_button := internal_accept
+			hide
 			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
@@ -160,6 +161,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Close window and call action sequence.
 		do
 			selected_button := ev_cancel
+			hide
 			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 

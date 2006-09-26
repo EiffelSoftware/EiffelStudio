@@ -746,7 +746,7 @@ feature {NONE} -- Implementation
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.cls_compliant and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 						if not is_force_new_target then
-							create vd83.make (s_cls_compliant, system.cls_compliant.out, l_s)
+							create vd83.make (s_cls_compliant, system.cls_compliant.out.as_lower, l_s)
 							Error_handler.insert_warning (vd83)
 						end
 					else
@@ -944,7 +944,7 @@ feature {NONE} -- Implementation
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 						if not is_force_new_target then
-							create vd83.make (s_java_generation, system.il_generation.out, l_s)
+							create vd83.make (s_java_generation, system.il_generation.out.as_lower, l_s)
 							Error_handler.insert_warning (vd83)
 						end
 					else
@@ -1026,8 +1026,8 @@ feature {NONE} -- Implementation
 					l_b := l_s.to_boolean
 						-- value can't change from a precompile or in a compiled system
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
-						if not not is_force_new_target then
-							create vd83.make (s_msil_generation, system.il_generation.out, l_s)
+						if not is_force_new_target then
+							create vd83.make (s_msil_generation, system.il_generation.out.as_lower, l_s)
 							Error_handler.insert_warning (vd83)
 						end
 					elseif l_b and then not eiffel_layout.default_il_environment.is_dotnet_installed then
@@ -1102,7 +1102,7 @@ feature {NONE} -- Implementation
 							-- value can't change from a precompile or in a compiled system
 						if l_b /= system.has_multithreaded and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 							if not is_force_new_target then
-								create vd83.make (s_multithreaded, system.has_multithreaded.out, l_s)
+								create vd83.make (s_multithreaded, system.has_multithreaded.out.as_lower, l_s)
 								Error_handler.insert_warning (vd83)
 							end
 						else

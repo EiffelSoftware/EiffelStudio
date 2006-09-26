@@ -11,7 +11,7 @@
 							<File Id="root_class.e90" Name="ROOT_C~6.E" LongName="root_class.e" />
 							<File Id="eiffel2java.ecf" Name="EIFFEL~1.ECF" LongName="eiffel2java.ecf" />
 							<File Id="test.class" Name="TEST~1.CLA" LongName="test.class" />
-							<File Id="Readme91" Name="README.txt" />
+							<File Id="Readme91" Name="README" />
 						</Component>
 					</Directory>
 					<Directory Id="lex8" Name="lex">
@@ -1033,7 +1033,7 @@
 							<File Id="shared_jni_environment.e" Name="SHARED~4.E" LongName="shared_jni_environment.e" />
 							<File Id="java_float_array.e" Name="JAVA_F~1.E" LongName="java_float_array.e" />
 							<File Id="java_entity.e" Name="JAVA_E~1.E" LongName="java_entity.e" />
-							<File Id="Readme89" Name="README" />
+							<File Id="Readme89" Name="README.txt" />
 						</Component>
 						<Directory Id="structures4" Name="STRUCT~3" LongName="structures">
 							<Component Id="structures4" Guid="E85311E4-C404-43F3-BE4E-6F284D36E40A">

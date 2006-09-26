@@ -125,7 +125,7 @@ feature -- Status setting
 		do
 			fst ?= new_stone
 				-- If `new_stone' is a feature stone, take the associated class.
-			if fst /= Void then
+			if fst /= Void and then fst.e_feature /= Void then
 				create cst.make (fst.e_feature.associated_class)
 			else
 				cst ?= new_stone

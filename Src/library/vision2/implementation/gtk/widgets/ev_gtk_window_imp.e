@@ -244,10 +244,9 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
 			block
 
---			l_window_imp.decrease_modal_window_count
---			set_blocking_window (Void)
-				-- This is performed when `Current' is hidden.
-
+				-- No need to call `set_blocking_window' to Void since this is done when
+				-- current is hidden.
+	
 			if not l_window_imp.is_destroyed then
 				if not (l_window_already_modal or l_window_has_modal_window) then
 					l_window_imp.set_modal_window_group (default_pointer)

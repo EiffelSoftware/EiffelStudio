@@ -298,11 +298,11 @@ feature {NONE} -- Implementation of data retrieval
 					current_target.add_cluster (current_cluster)
 				end
 				if a_cluster.is_library then
-					current_cluster.enable_readonly
-					current_cluster.enable_recursive
+					current_cluster.set_readonly (True)
+					current_cluster.set_recursive (True)
 				end
 				if a_cluster.is_recursive then
-					current_cluster.enable_recursive
+					current_cluster.set_recursive (True)
 				end
 				if a_cluster.has_parent then
 					if not current_target.clusters.has (a_cluster.parent_name) then

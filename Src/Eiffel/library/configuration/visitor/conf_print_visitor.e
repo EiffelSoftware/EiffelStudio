@@ -55,6 +55,9 @@ feature -- Visit nodes
 			append_text (" xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
 			append_text (" xsi:schemaLocation=%""+Schema+"%"")
 			append_text (" name=%""+escape_xml (a_system.name)+"%" uuid=%""+a_system.uuid.out+"%"")
+			if not a_system.is_readonly then
+				append_text (" readonly=%"false%"")
+			end
 			l_target := a_system.library_target
 			if l_target /= Void then
 				append_text (" library_target=%""+escape_xml (l_target.name)+"%"")
@@ -829,8 +832,8 @@ feature {NONE} -- Implementation
 			append_text (" location=%""+escape_xml (l_str)+"%"")
 			if not a_group.is_library and a_group.internal_read_only then
 				append_text (" readonly=%"true%"")
-			elseif a_group.is_library and not a_group.internal_read_only then
-				append_text (" readonly=%"false%"")
+			elseif a_group.is_library and a_group.is_readonly_set then
+				append_text (" readonly=%""+a_group.is_readonly.out.as_lower+"%"")
 			end
 			l_str := a_group.name_prefix
 			if l_str /= Void and then not l_str.is_empty then

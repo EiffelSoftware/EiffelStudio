@@ -71,16 +71,22 @@ feature {NONE} -- Implementation
 				if a_window /= Void then
 					win_imp ?= a_window.implementation
 					l_window := win_imp.c_object
+					internal_blocking_window := win_imp
+				else
+					internal_blocking_window := Void
 				end
 				{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, l_window)
+			else
+				internal_blocking_window := Void
 			end
-			internal_blocking_window := a_window
 		end
 
 	blocking_window: EV_WINDOW is
 			-- Window this dialog is a transient for.
 		do
-			Result := internal_blocking_window
+			if internal_blocking_window /= Void and then not internal_blocking_window.is_destroyed then
+				Result := internal_blocking_window.interface
+			end
 		end
 
 	window_position_enum: INTEGER is
@@ -94,7 +100,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_blocking_window: EV_WINDOW
+	internal_blocking_window: EV_WINDOW_IMP
 			-- Window that `Current' is relative to.
 			-- Implementation
 
@@ -195,6 +201,22 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
 
+	hide is
+			-- Hide `Current'.
+		do
+			if
+				internal_blocking_window /= Void and then
+				not internal_blocking_window.is_destroyed and then
+				internal_blocking_window.is_show_requested then
+					internal_blocking_window.decrease_modal_window_count
+
+			end
+			set_blocking_window (Void)
+		end
+
+	blocking_window_has_modal_window: BOOLEAN
+		-- Does the blocking window have already have a modal window.
+
 	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show `Current' modal with respect to `a_window'.
 		local
@@ -205,7 +227,7 @@ feature {NONE} -- Implementation
 		do
 			l_window_imp ?= a_window.implementation
 			l_window_already_modal := l_window_imp.is_modal
-			l_window_has_modal_window := l_window_imp.has_modal_window
+			l_window_has_modal_window := l_window_imp.modal_window_count > 0
 			if l_window_already_modal or l_window_has_modal_window then
 				l_window_group := l_window_imp.modal_window_group
 			else
@@ -214,21 +236,17 @@ feature {NONE} -- Implementation
 			end
 			set_modal_window_group (l_window_group)
 
-			l_window_imp.set_has_modal_window (True)
+			l_window_imp.increase_modal_window_count
 			if not l_window_has_modal_window then
 				l_window_imp.disallow_window_manager_focus
 			end
 			show_relative_to_window (a_window)
 			{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
-
 			block
 
-			if not l_window_has_modal_window then
-				l_window_imp.allow_window_manager_focus
-				l_window_imp.set_has_modal_window (False)
-			end
-
-			set_blocking_window (Void)
+--			l_window_imp.decrease_modal_window_count
+--			set_blocking_window (Void)
+				-- This is performed when `Current' is hidden.
 
 			if not l_window_imp.is_destroyed then
 				if not (l_window_already_modal or l_window_has_modal_window) then

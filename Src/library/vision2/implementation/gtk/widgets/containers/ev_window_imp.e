@@ -52,7 +52,8 @@ inherit
 			interface,
 			on_key_event,
 			has_focus,
-			show
+			show,
+			hide
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -225,8 +226,8 @@ feature -- Status setting
 				a_x_pos := x_position
 				a_y_pos := y_position
 				disable_capture
-				set_blocking_window (Void)
-				Precursor;
+				Precursor {EV_GTK_WINDOW_IMP}
+				Precursor {EV_CELL_IMP};
 					-- Setting positions so that if `Current' is reshown then it reappears in the same place, as on Windows.
 				set_position (a_x_pos, a_y_pos)
 			end
@@ -513,15 +514,33 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {EV_GTK_WINDOW_IMP, EV_PICK_AND_DROPABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 
+	modal_window_count: INTEGER
+		-- Number of windows modal to current.
+
+	increase_modal_window_count
+			-- Increase modal window count.
+		do
+			if modal_window_count = 0 then
+				disallow_window_manager_focus
+			end
+			modal_window_count := modal_window_count + 1
+		end
+
+	decrease_modal_window_count
+			-- Decrease modal window count.
+		require
+			modal_window_count_decreasable: modal_window_count > 0
+		do
+			modal_window_count := modal_window_count - 1
+			if modal_window_count = 0 then
+				allow_window_manager_focus
+			end
+		end
+
 	has_modal_window: BOOLEAN
 			-- Does `Current' have a transient window that is modal to `Current'.
-
-	set_has_modal_window (a_bool: BOOLEAN) is
-			-- Set `has_modal_window' to `a_bool'.
-		require
-		--	not_set: a_bool = not has_modal_window
 		do
-			has_modal_window := a_bool
+			Result := modal_window_count > 0
 		end
 
 	allow_window_manager_focus is

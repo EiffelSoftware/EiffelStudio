@@ -545,6 +545,10 @@ feature -- Parse errors
 		do
 			Result := "Invalid setting tag "+a_setting
 		end
+	e_parse_incorrect_setting_value	(a_setting: STRING): STRING is
+		do
+			Result := "Invalid value for setting "+a_setting
+		end
 
 	e_parse_incorrect_file_rule: STRING is "Invalid file_rule tag."
 

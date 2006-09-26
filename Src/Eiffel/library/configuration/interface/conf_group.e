@@ -370,23 +370,23 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: renaming.has (an_old_name) and then renaming.item (an_old_name) = a_new_name
 		end
 
-
-	enable_readonly is
-			-- Set `internal_readonly' to true.
-		do
-			internal_read_only := True
-		ensure
-			is_readonly: is_readonly
-		end
-
 	set_readonly (b: BOOLEAN) is
 			-- Set `internal_readonly' bo `b'.
 		do
+			is_readonly_set := True
 			internal_read_only := b
 		ensure
+			readonly_set: is_readonly_set
 			internal_read_only_set: internal_read_only = b
 		end
 
+	set_readonly_set (b: BOOLEAN) is
+			-- Set `is_readonly_set' bo `b'.
+		do
+			is_readonly_set := b
+		ensure
+			readonly_set: is_readonly_set = b
+		end
 
 	set_options (a_option: like internal_options) is
 			-- Set `a_option'.
@@ -547,6 +547,9 @@ feature -- Visit
 		end
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in configuration file
+
+	is_readonly_set: BOOLEAN
+			-- Has a readonly status been set on this group?
 
 	internal_options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this group itself.

@@ -94,6 +94,7 @@ feature -- Visit nodes
 				a_group.set_options (new_group.internal_options)
 				a_group.set_class_options (new_group.internal_class_options)
 				a_group.set_readonly (new_group.internal_read_only)
+				a_group.set_readonly_set (new_group.is_readonly_set)
 				if a_group.is_cluster then
 					l_cluster ?= a_group
 					l_cluster_new ?= new_group

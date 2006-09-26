@@ -449,22 +449,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_recursive_set: is_recursive = a_enabled
 		end
 
-	enable_recursive is
-			-- Set `is_recursive' to true.
-		do
-			is_recursive := True
-		ensure
-			is_recursive: is_recursive
-		end
-
-	disable_recursive is
-			-- Set `is_recursive' to false.
-		do
-			is_recursive := False
-		ensure
-			not_is_recursive: not is_recursive
-		end
-
 	set_dependencies (a_dependencies: like internal_dependencies) is
 			-- Set `a_dependencies'.
 		do

@@ -346,11 +346,12 @@ feature {NONE} -- Implementation attribute processing
 	process_system_attributes is
 			-- Process attributes of a system tag.
 		local
-			l_name, l_uuid: STRING
+			l_name, l_uuid, l_readonly: STRING
 			l_uu: UUID
 		do
 			l_name := current_attributes.item (at_name)
 			l_uuid := current_attributes.item (at_uuid)
+			l_readonly := current_attributes.item (at_readonly)
 			current_library_target := current_attributes.item (at_library_target)
 			if current_library_target /= Void then
 				current_library_target.to_lower
@@ -358,6 +359,13 @@ feature {NONE} -- Implementation attribute processing
 			if is_valid_system_name (l_name) and then l_uuid /= Void and then check_uuid (l_uuid) then
 				create l_uu.make_from_string (l_uuid)
 				last_system := factory.new_system (l_name.as_lower, l_uu)
+				if l_readonly /= Void then
+					if l_readonly.is_boolean then
+						last_system.set_readonly (l_readonly.to_boolean)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
+					end
+				end
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_system_no_name)
 			elseif not is_valid_system_name (l_name) then
@@ -674,8 +682,6 @@ feature {NONE} -- Implementation attribute processing
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
 					end
-				else
-					current_library.set_readonly (True)
 				end
 				if l_prefix /= Void then
 					current_library.set_name_prefix (l_prefix)
@@ -723,8 +729,6 @@ feature {NONE} -- Implementation attribute processing
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
 					end
-				else
-					current_library.set_readonly (True)
 				end
 				if l_prefix /= Void then
 					current_library.set_name_prefix (l_prefix)
@@ -779,9 +783,7 @@ feature {NONE} -- Implementation attribute processing
 				current_group := current_assembly
 				if l_readonly /= Void then
 					if l_readonly.is_boolean then
-						if l_readonly.to_boolean then
-							current_assembly.enable_readonly
-						end
+						current_assembly.set_readonly (l_readonly.to_boolean)
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
 					end
@@ -830,9 +832,7 @@ feature {NONE} -- Implementation attribute processing
 				current_group := current_cluster
 				if l_readonly /= Void then
 					if l_readonly.is_boolean then
-						if l_readonly.to_boolean then
-							current_cluster.enable_readonly
-						end
+						current_cluster.set_readonly (l_readonly.to_boolean)
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
 					end
@@ -842,9 +842,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 				if l_recursive /= Void then
 					if l_recursive.is_boolean then
-						if l_recursive.to_boolean then
-							current_cluster.enable_recursive
-						end
+						current_cluster.set_recursive (l_recursive.to_boolean)
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("recursive"))
 					end
@@ -893,9 +891,7 @@ feature {NONE} -- Implementation attribute processing
 				current_group := current_cluster
 				if l_readonly /= Void then
 					if l_readonly.is_boolean then
-						if l_readonly.to_boolean then
-							current_cluster.enable_readonly
-						end
+						current_cluster.set_readonly (l_readonly.to_boolean)
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("readonly"))
 					end
@@ -905,9 +901,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 				if l_recursive /= Void then
 					if l_recursive.is_boolean then
-						if l_recursive.to_boolean then
-							current_cluster.enable_recursive
-						end
+						current_cluster.set_recursive (l_recursive.to_boolean)
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("recursive"))
 					end
@@ -1730,10 +1724,12 @@ feature {NONE} -- Implementation state transitions
 				-- system
 				-- * name
 				-- * uuid
+				-- * readonly
 				-- * library_target
-			create l_attr.make (3)
+			create l_attr.make (4)
 			l_attr.force (at_name, "name")
 			l_attr.force (at_uuid, "uuid")
+			l_attr.force (at_readonly, "readonly")
 			l_attr.force (at_library_target, "library_target")
 			Result.force (l_attr, t_system)
 

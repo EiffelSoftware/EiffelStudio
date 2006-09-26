@@ -48,11 +48,19 @@ feature -- Status
 		local
 			l_lib: like Current
 		do
-			Result := internal_read_only
+			if is_readonly_set then
+				Result := internal_read_only
+			elseif library_target /= Void then
+				Result := library_target.system.is_readonly
+			else
+				Result := True
+			end
 			if not Result and then is_used_library then
 				l_lib := find_current_in_application_target
 				if l_lib /= Void then
 					Result := l_lib.is_readonly
+				elseif library_target /= Void then
+					Result := library_target.system.is_readonly
 				else
 					Result := True
 				end

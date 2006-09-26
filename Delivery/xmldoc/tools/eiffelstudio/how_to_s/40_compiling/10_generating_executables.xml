@@ -10,10 +10,9 @@
 		</paragraph>
 		<paragraph>There is a command for all compilation modes in the 
 			<bold>Project</bold> menu, under the entries 
-			<bold>Melt</bold>, 
+			<bold>Compile</bold>, 
 			<bold>Freeze</bold> and 
 			<bold>Finalize</bold>. There is also a 
-			<bold>Quick compile</bold> command, that only melts the classes that have been edited in EiffelStudio since the last compilation. You may want to use it as long as no classes are edited outside EiffelStudio.
 		</paragraph>
 		<paragraph>These commands are also available in the 
 			<bold>Project</bold> toolbar
@@ -25,9 +24,6 @@
 			</image>,
 			<image>
 				<url>/images/eiffelstudio/icons/icon_finalize_color.gif</url>
-			</image>,
-			<image>
-				<url>/images/eiffelstudio/icons/icon_quick_compile_color.gif</url>
 			</image>.
 		</paragraph>
 		<paragraph>To solve the errors that occur during the Eiffel compilation, use the 

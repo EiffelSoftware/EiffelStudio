@@ -477,6 +477,7 @@ feature -- Access
 			l_depend_unit: DEPEND_UNIT
 			l_system: like eiffel_system
 			l_class_c: CLASS_C
+			l_e_feature: E_FEATURE
 		do
 			create Result.make
 			l_system := eiffel_system
@@ -489,9 +490,16 @@ feature -- Access
 					fdep.after
 				loop
 					l_depend_unit := fdep.item
-					if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
-						l_class_c := l_system.class_of_id (l_depend_unit.class_id)
-						Result.extend ([l_class_c, l_class_c.feature_with_rout_id (l_depend_unit.rout_id).name])
+					if l_depend_unit.rout_id /= 0 then
+						if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
+							l_class_c := l_system.class_of_id (l_depend_unit.class_id)
+							if l_class_c /= Void then
+								l_e_feature := l_class_c.feature_with_rout_id (l_depend_unit.rout_id)
+								if l_e_feature /= Void then
+									Result.extend ([l_class_c, l_e_feature.name])
+								end
+							end
+						end
 					end
 					fdep.forth
 				end

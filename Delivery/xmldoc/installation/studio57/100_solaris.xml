@@ -9,7 +9,7 @@
 				<row><cell><bold>Memory</bold></cell><cell>512MB of RAM (1GB recommended).</cell></row>
 				<row><cell><bold>Hard Disk</bold></cell><cell>500MB of hard disk space (1GB recommended).</cell></row>
 				<row><cell><bold>Drive</bold></cell><cell>CD-ROM or DVD drive (not required when downloading EiffelStudio).</cell></row>
-				<row><cell><bold>Display</bold></cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor.</cell></row>
+				<row><cell><bold>Display</bold></cell><cell>1024 x 768 or higher resolution video adapter and monitor.</cell></row>
 				<row><cell><bold>Peripherals</bold></cell><cell>Keyboard and mouse or compatible pointing device.</cell></row>
 				<row><cell><bold>ISE_PLATFORM</bold></cell><cell><bold>solaris-sparc</bold> for 32 bits version of Solaris on Sparc processor, <bold>solaris-sparc-64</bold> for 64 bits versions, <bold>solaris-x86</bold> and <bold>solaris-x86-64</bold> for the Intel processor on 32 and 64 bits.</cell></row>
 			</table>

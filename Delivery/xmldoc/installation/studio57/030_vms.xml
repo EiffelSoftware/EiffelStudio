@@ -10,7 +10,7 @@
 				<row><cell><bold>Memory</bold></cell><cell>512MB of RAM (1GB recommended).</cell></row>
 				<row><cell><bold>Hard Disk</bold></cell><cell>1GB free disk space on an ODS-5 formatted volume, plus an additional 1GB of free space while performing the software installation.</cell></row>
 				<row><cell><bold>Drive</bold></cell><cell>CD-ROM or DVD drive (not required when downloading EiffelStudio).</cell></row>
-				<row><cell><bold>Display</bold></cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor.</cell></row>
+				<row><cell><bold>Display</bold></cell><cell>1024 x 768 or higher resolution video adapter and monitor.</cell></row>
 				<row><cell><bold>Peripherals</bold></cell><cell>Keyboard and mouse or compatible pointing device.</cell></row>
 			</table>
 		</paragraph>

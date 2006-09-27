@@ -523,7 +523,10 @@ feature {NONE} -- Implementation attribute processing
 		local
 			l_name, l_value: STRING
 		do
-			l_name := current_attributes.item (at_name).as_lower
+			l_name := current_attributes.item (at_name)
+			if l_name /= Void then
+				l_name.to_lower
+			end
 			l_value := current_attributes.item (at_value)
 			if l_name /= Void and l_value /= Void then
 				if valid_setting (l_name) then
@@ -937,7 +940,7 @@ feature {NONE} -- Implementation attribute processing
 				current_option.add_debug (l_name.as_lower, l_enabled.to_boolean)
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_debug_no_name)
-			elseif not l_enabled.is_boolean then
+			elseif l_enabled /= Void and then not l_enabled.is_boolean then
 				set_parse_error_message (conf_interface_names.e_parse_invalid_value ("enabled"))
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_debug (l_name))
@@ -953,7 +956,7 @@ feature {NONE} -- Implementation attribute processing
 		do
 			l_name := current_attributes.item (at_name)
 			l_enabled := current_attributes.item (at_enabled)
-			if l_name /= Void and l_enabled /= Void and then l_enabled.is_boolean then
+			if l_name /= Void and then l_enabled /= Void and then l_enabled.is_boolean then
 				if valid_warning (l_name) then
 					current_option.add_warning (l_name, l_enabled.to_boolean)
 				else
@@ -961,7 +964,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 			elseif l_name = Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_warning_no_name)
-			elseif not l_enabled.is_boolean then
+			elseif l_enabled /= Void and then not l_enabled.is_boolean then
 				set_parse_error_message (conf_interface_names.e_parse_invalid_value ("enabled"))
 			else
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_warning (l_name))

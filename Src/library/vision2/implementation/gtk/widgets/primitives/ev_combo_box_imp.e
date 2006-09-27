@@ -108,6 +108,7 @@ feature {NONE} -- Initialization
 		do
 			a_selected_item := selected_item
 			if is_list_shown then
+					-- Make sure that the list is hidden from the screen before calling selection actions.
 				{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
 			end
 			if a_selected_item /= Void then
@@ -180,18 +181,8 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	has_focus: BOOLEAN is
+	has_focus: BOOLEAN
 			-- Does widget have the keyboard focus?
-		local
-			a_toggle: POINTER
-		do
-			Result := Precursor {EV_TEXT_FIELD_IMP}
-				-- Check to see if the toggle button is depressed, if it is then the combo must have the focus
-			return_combo_toggle (container_widget, $a_toggle)
-			if not Result and a_toggle /= default_pointer then
-				Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle)
-			end
-		end
 
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected, for a multiple
@@ -260,6 +251,7 @@ feature {NONE} -- Implementation
 						l_popup.grab_keyboard_and_mouse
 					end
 				else
+					has_focus := True
 					Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
 				end
 			else
@@ -268,6 +260,7 @@ feature {NONE} -- Implementation
 						-- We have a "popup" action.
 					is_list_shown := True
 				else
+					has_focus := False
 					Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
 				end
 			end
@@ -305,9 +298,23 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			a_toggle: POINTER
 		do
 			return_combo_toggle (container_widget, $a_toggle)
-			if a_toggle /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle) then
-				if drop_down_actions_internal /= Void then
-					drop_down_actions_internal.call (Void)
+			if a_toggle /= default_pointer then
+				if {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle) then
+					if not has_focus then
+						is_list_shown := True
+					end
+					if drop_down_actions_internal /= Void then
+						drop_down_actions_internal.call (Void)
+					end
+				else
+						-- Make sure that the combo box is fully popped down.
+					{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
+					if not has_focus then
+						is_list_shown := False
+						if list_hidden_actions_internal /= Void then
+							list_hidden_actions_internal.call (Void)
+						end
+					end
 				end
 			end
 		end

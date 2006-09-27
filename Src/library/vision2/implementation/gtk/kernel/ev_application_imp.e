@@ -903,6 +903,9 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 				Result := {EV_ANY_IMP}.eif_object_from_c (gtkwid)
 				gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 			end
+			if Result /= Void and then Result.interface.is_destroyed then
+				Result := Void
+			end
 		end
 
 	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP is
@@ -925,9 +928,6 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			{EV_GTK_EXTERNALS}.gdk_window_get_user_data (a_gdk_window, $gtkwid)
 			if gtkwid /= l_null then
 				Result ?= eif_object_from_gtk_object (gtkwid)
-				if Result /= Void and then Result.interface.is_destroyed then
-					Result := Void
-				end
 			end
 		end
 

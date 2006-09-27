@@ -227,7 +227,6 @@ feature -- Status setting
 				a_y_pos := y_position
 				disable_capture
 				Precursor {EV_GTK_WINDOW_IMP}
-				Precursor {EV_CELL_IMP};
 					-- Setting positions so that if `Current' is reshown then it reappears in the same place, as on Windows.
 				set_position (a_x_pos, a_y_pos)
 			end

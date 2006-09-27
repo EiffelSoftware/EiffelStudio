@@ -3026,7 +3026,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					current_row_offset := row_offsets @ (index)
 					rows.go_i_th (index)
 					if index > 1 then
-						if index < row_count then
+						if index < last_row_count_in_recompute_row_offsets then
 							visible_count := row_indexes_to_visible_indexes.i_th (index)
 						else
 							check
@@ -3125,10 +3125,15 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				virtual_size_changed_actions_internal.call ([virtual_width, virtual_height])
 			end
 			rows.go_i_th (original_row_index)
+
+			last_row_count_in_recompute_row_offsets := l_row_count
 		ensure
 			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count >= rows.count + 1
 			row_index_not_changed: old rows.index = rows.index
 		end
+
+ 	last_row_count_in_recompute_row_offsets: INTEGER
+ 		-- The row count of `Current' last time `recompute_row_offsets' was called.
 
 	restrict_virtual_y_position_to_maximum is
 			-- Ensure `virtual_y_position' is within the maximum permitted.

@@ -7,9 +7,9 @@
 				<row><cell><bold>Computer/Processor</bold></cell><cell>PC with 300 MHz or higher Pentium II class processor or equivalent recommended.</cell></row>
 				<row><cell><bold>Operating System</bold></cell><cell>Windows NT/2000/XP/2003 (.NET support is for Microsoft Windows 2000, XP and 2003 only).</cell></row>
 				<row><cell><bold>Memory</bold></cell><cell>512MB of RAM (1GB recommended).</cell></row>
-				<row><cell><bold>Hard Disk</bold></cell><cell>500MB of hard disk space (1GB recommended).  Hard disk space requirements will vary depending on configuration; custom installation choices may require more or less space. Space required for installation of the Microsoft .NET Framework will also be required.</cell></row>
+				<row><cell><bold>Hard Disk</bold></cell><cell>500MB of hard disk space (1GB recommended). Hard disk space requirements will vary depending on configuration; custom installation choices may require more or less space. Space required for installation of the Microsoft .NET Framework will also be required.</cell></row>
 				<row><cell><bold>Drive</bold></cell><cell>CD-ROM drive (not required when downloading EiffelStudio).</cell></row>
-				<row><cell><bold>Display</bold></cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor.</cell></row>
+				<row><cell><bold>Display</bold></cell><cell>1024 x 768 or higher resolution video adapter and monitor.</cell></row>
 				<row><cell><bold>Peripherals</bold></cell><cell>Keyboard and mouse or compatible pointing device.</cell></row>
 				<row><cell><bold>ISE_PLATFORM</bold></cell><cell><bold>windows</bold> for 32 bits version of Windows, <bold>win64</bold> for 64 bits version of Windows.</cell></row>
 			</table>

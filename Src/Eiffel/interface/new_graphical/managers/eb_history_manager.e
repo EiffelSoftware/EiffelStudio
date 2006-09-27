@@ -194,7 +194,7 @@ feature -- Element change
 			index_active := index_active + 1
 			notify_observers (notify_move, Void, index_active)
 			target.advanced_set_stone (active)
-			if not target.stone.is_equal (active) then
+			if not equal (target.stone, active) then
 					-- The user cancelled the set_stone.
 					-- We must go back to our previous position.
 				index_active := initial
@@ -228,7 +228,7 @@ feature -- Element change
 			index_active := index_active - 1
 			notify_observers (notify_move, Void, index_active)
 			target.advanced_set_stone (active)
-			if not target.stone.is_equal (active) then
+			if not equal (target.stone, active) then
 					-- The user cancelled the set_stone.
 					-- We must go back to our previous position.
 				index_active := initial

@@ -456,7 +456,7 @@ feature -- Stone management
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			if st.is_valid then
+			if st /= Void and then st.is_valid then
 				conv_dev ?= manager
 				if conv_dev /= Void then
 					if conv_dev.unified_stone then

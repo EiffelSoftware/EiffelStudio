@@ -31,7 +31,7 @@ feature
 
 		-- To get a typical compilation error, remove the two dashes
 		-- at the beginning of the next line:
-	-- inv: INVALID
+	-- inv: INVALID;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

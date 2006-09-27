@@ -212,6 +212,7 @@ feature {NONE} -- Implementation
 
 			end
 			set_blocking_window (Void)
+			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
 	blocking_window_has_modal_window: BOOLEAN
@@ -246,7 +247,7 @@ feature {NONE} -- Implementation
 
 				-- No need to call `set_blocking_window' to Void since this is done when
 				-- current is hidden.
-	
+
 			if not l_window_imp.is_destroyed then
 				if not (l_window_already_modal or l_window_has_modal_window) then
 					l_window_imp.set_modal_window_group (default_pointer)

@@ -1,3 +1,10 @@
+--!-----------------------------------------------------------------------------
+--! Cayenne filter for EiffelStudio documentation output.
+--!-----------------------------------------------------------------------------
+--! $Date$
+--! $Revision$
+--!-----------------------------------------------------------------------------
+
 -- EFF (Eiffel Filter Format) for EiffelStudio
 
 --  Construct				|Appearance
@@ -71,3 +78,10 @@ require					|*
 %,					| * 
 %--					|#comment#
 
+--!-----------------------------------------------------------------------------
+--! Eiffel Software
+--! 356 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Website http://www.eiffel.com
+--! Customer support http://support.eiffel.com
+--!-----------------------------------------------------------------------------

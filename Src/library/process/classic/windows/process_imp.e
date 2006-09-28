@@ -48,8 +48,9 @@ feature{NONE} -- Initialization
 				until
 					args.after
 				loop
-					command_line.append (" ")
+					command_line.append (" %"")
 					command_line.append (args.item)
+					command_line.append ("%"")
 					arguments.extend (args.item)
 					args.forth
 				end

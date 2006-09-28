@@ -12,6 +12,13 @@ inherit
 			initialize
 		end
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -53,12 +60,19 @@ feature -- Update
 			-- Append `a_text' to the displayed text.
 		local
 			l_txt: like a_text
+			l_line: INTEGER
 		do
 			if is_displayed then
 				l_txt := a_text.twin
 				l_txt.prune_all ('%R')
 				text_field.append_text (l_txt)
-				text_field.scroll_to_end
+
+				fixme ("Remove this code and use scroll_to_end once scroll_to_end is fixed on windows")
+				l_line := text_field.line_count-3
+				if l_line > 0 then
+					text_field.scroll_to_line (l_line)
+				end
+--				text_field.scroll_to_end
 			end
 		end
 

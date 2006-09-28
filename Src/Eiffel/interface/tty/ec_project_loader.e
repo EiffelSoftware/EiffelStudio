@@ -35,14 +35,14 @@ feature {NONE} -- Settings
 			-- Nothing to be done, as it is handled later in batch mode.
 		end
 
-	launch_precompile_process (a_command: STRING) is
+	launch_precompile_process (a_arguments: LIST [STRING]) is
 			-- Launch precompile process `a_command'.
 		local
 			l_prc_factory: PROCESS_FACTORY
 			l_prc_launcher: PROCESS
 		do
 			create l_prc_factory
-			l_prc_launcher := l_prc_factory.process_launcher_with_command_line (a_command, Void)
+			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, a_arguments, Void)
 			l_prc_launcher.set_separate_console (False)
 			l_prc_launcher.launch
 			if l_prc_launcher.launched then

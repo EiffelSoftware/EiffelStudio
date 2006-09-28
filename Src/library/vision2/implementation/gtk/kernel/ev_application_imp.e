@@ -450,6 +450,8 @@ feature -- Basic operation
 									l_motion_tuple.put_integer (l_screen_y, 7)
 									l_pnd_imp.on_pointer_motion (l_motion_tuple)
 								end
+							else
+								{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 							end
 							l_widget_imp := Void
 							l_pnd_imp := Void

@@ -43,7 +43,7 @@ feature -- Roundtrip/Token
 	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
 			-- First token in current AST node
 		do
-			if a_list = Void then
+			if indexing_keyword = Void then
 				Result := Precursor{EIFFEL_LIST} (a_list)
 			else
 				Result := indexing_keyword.first_token (a_list)

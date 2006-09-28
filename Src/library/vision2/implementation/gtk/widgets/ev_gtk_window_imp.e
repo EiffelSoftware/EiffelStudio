@@ -197,58 +197,48 @@ feature {NONE} -- Implementation
 	show is
 			-- Request that `Current' be displayed when its parent is.
 		do
-			{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			if not is_show_requested then
+				{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			end
 		end
 
 	hide is
 			-- Hide `Current'.
 		do
-			if
-				internal_blocking_window /= Void and then
-				not internal_blocking_window.is_destroyed and then
-				internal_blocking_window.is_show_requested then
+			if is_show_requested then
+				if
+					is_modal and then
+					internal_blocking_window /= Void and then
+					not internal_blocking_window.is_destroyed and then
+					internal_blocking_window.is_show_requested
+				then
 					internal_blocking_window.decrease_modal_window_count
-
+				end
+				is_modal := False
+				set_blocking_window (Void)
+				{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 			end
-			set_blocking_window (Void)
-			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
-	blocking_window_has_modal_window: BOOLEAN
-		-- Does the blocking window have already have a modal window.
+	is_modal: BOOLEAN
+		-- Is `Current' modal?
 
 	show_modal_to_window (a_window: EV_WINDOW) is
 			-- Show `Current' modal with respect to `a_window'.
 		local
 			l_window_imp: EV_WINDOW_IMP
-			l_window_group: POINTER
-			l_window_already_modal: BOOLEAN
-			l_window_has_modal_window: BOOLEAN
 		do
 			l_window_imp ?= a_window.implementation
-			l_window_already_modal := l_window_imp.is_modal
-			l_window_has_modal_window := l_window_imp.modal_window_count > 0
-			if l_window_already_modal or l_window_has_modal_window then
-				l_window_group := l_window_imp.modal_window_group
-			else
-				l_window_group := {EV_GTK_EXTERNALS}.gtk_window_group_new
-				l_window_imp.set_modal_window_group (l_window_group)
-			end
-			set_modal_window_group (l_window_group)
-
+			is_modal := True
 			l_window_imp.increase_modal_window_count
 			show_relative_to_window (a_window)
-			{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
 			block
-
+			is_modal := False
 				-- No need to call `set_blocking_window' to Void since this is done when
 				-- current is hidden.
 
 			if not l_window_imp.is_destroyed then
-				if not (l_window_already_modal or l_window_has_modal_window) then
-					l_window_imp.set_modal_window_group (default_pointer)
-				end
 				if l_window_imp.is_show_requested then
 						-- Get window manager to always show parent window.
 						-- This is a hack in case parent window was minimized and restored
@@ -258,44 +248,7 @@ feature {NONE} -- Implementation
 					{EV_GTK_EXTERNALS}.gtk_window_present (l_window_imp.c_object)
 				end
 			end
-			{EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
-			set_modal_window_group (default_pointer)
-
-			if l_window_already_modal then
-				{EV_GTK_EXTERNALS}.gtk_grab_add (l_window_imp.c_object)
-			end
-
-			if not (l_window_already_modal or l_window_has_modal_window) then
-					-- We only unref from the first nested call.
-				{EV_GTK_EXTERNALS}.object_unref (l_window_group)
-			end
 		end
-
-
-feature {EV_GTK_WINDOW_IMP} -- Implementation
-
-	is_modal: BOOLEAN is
-			-- Is `Current' shown modal to another window?
-		do
-			Result := modal_window_group /= default_pointer
-		end
-
-	set_modal_window_group (a_window_group: POINTER) is
-			-- Set `modal_window_group' to `a_window_group'.
-		do
-				-- Remove from previous group if any.
-			if modal_window_group /= default_pointer then
-				{EV_GTK_EXTERNALS}.gtk_window_group_remove_window (modal_window_group, c_object)
-			end
-				-- Add to new window group if any.
-			if a_window_group /= default_pointer then
-				{EV_GTK_EXTERNALS}.gtk_window_group_add_window (a_window_group, c_object)
-			end
-			modal_window_group := a_window_group
-		end
-
-	modal_window_group: POINTER
-		-- Window group used for modal behavior.
 
 feature -- Basic operations
 

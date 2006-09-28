@@ -484,16 +484,17 @@ feature -- Basic operation
 							debug ("GDK_EVENT")
 								print ("GDK_PROXIMITY_IN%N")
 							end
-							--l_propagate_event := True
+--							l_propagate_event := True
 						when GDK_PROXIMITY_OUT then
 							debug ("GDK_EVENT")
 								print ("GDK_PROXIMITY_OUT%N")
 							end
-							--l_propagate_event := True
+--							l_propagate_event := True
 						when GDK_PROPERTY_NOTIFY then
 							debug ("GDK_EVENT")
 								print ("GDK_PROPERTY_NOTIFY%N")
 							end
+							l_propagate_event := True
 						when GDK_EXPOSE then
 								-- This is only called on gtk 1.2 as expose compression is
 								-- performed in gdk with 2.x and above.
@@ -620,10 +621,11 @@ feature -- Basic operation
 								l_event_handled := {EV_GTK_EXTERNALS}.gtk_widget_event (event_widget, gdk_event)
 							end
 						end
-						{EV_GTK_EXTERNALS}.gdk_event_free (gdk_event)
 					else
-						--|FIXME May have to handle INCR event
+							--| Handle events not associated with a gtk widget.
+						{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
 					end
+					{EV_GTK_EXTERNALS}.gdk_event_free (gdk_event)
 				else
 					l_no_more_events := True
 				end

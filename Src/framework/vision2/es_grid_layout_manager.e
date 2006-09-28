@@ -314,11 +314,16 @@ feature {NONE} -- Implementation
 		end
 
 	global_identification: STRING is
+		local
+			s: STRING
 		do
 			Result := name.twin
 			if global_identification_agent /= Void then
-				Result.append_string ("::")
-				Result.append_string (global_identification_agent.item (Void))
+				s := global_identification_agent.item (Void)
+				if s /= Void then
+					Result.append_string ("::")
+					Result.append_string (s)
+				end
 			end
 		end
 

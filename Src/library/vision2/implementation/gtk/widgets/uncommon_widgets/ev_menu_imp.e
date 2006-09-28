@@ -60,7 +60,7 @@ feature -- Basic operations
 			pc := (create {EV_SCREEN}).pointer_position
 			bw := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
 			if not interface.is_empty then
-				c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time)
+				app_implementation.do_once_on_idle (agent c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time))
 			end
 		end
 
@@ -69,9 +69,10 @@ feature -- Basic operations
 			-- of `a_widget'.
 		do
 			if not interface.is_empty then
-				c_gtk_menu_popup (list_widget,
+				app_implementation.do_once_on_idle (agent c_gtk_menu_popup (list_widget,
 					a_widget.screen_x + a_x,
 					a_widget.screen_y + a_y, 0, {EV_GTK_EXTERNALS}.gtk_get_current_event_time)
+				)
 			end
 		end
 

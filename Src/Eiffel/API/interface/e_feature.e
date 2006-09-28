@@ -273,20 +273,22 @@ feature -- Access
 			rout_id: INTEGER
 		do
 			ris := rout_id_set
-			from
-				n := ris.lower
-				nb := ris.count
-			until
-				n > nb or else Result /= Void
-			loop
-				rout_id := ris.item (n)
-				if
-					rout_id /= 0 and then an_ancestor.is_valid
-					and then an_ancestor.has_feature_table
-				then
-					Result := an_ancestor.feature_with_rout_id (rout_id)
+			if ris /= Void then
+				from
+					n := ris.lower
+					nb := ris.count
+				until
+					n > nb or else Result /= Void
+				loop
+					rout_id := ris.item (n)
+					if
+						rout_id /= 0 and then an_ancestor.is_valid
+						and then an_ancestor.has_feature_table
+					then
+						Result := an_ancestor.feature_with_rout_id (rout_id)
+					end
+					n := n + 1
 				end
-				n := n + 1
 			end
 		end
 

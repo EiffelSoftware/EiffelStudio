@@ -335,7 +335,7 @@ feature -- Element change
 feature -- Iteration
 
 	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
-			-- Apply `action' to every non-void item.
+			-- Apply `action' to every item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		require
@@ -360,7 +360,7 @@ feature -- Iteration
 		end
 
 	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
-			-- Apply `action' to every non-void item that satisfies `test'.
+			-- Apply `action' to every item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
 		require
@@ -411,7 +411,7 @@ feature -- Iteration
 		end
 
 	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
-			-- Is `test' true for all non-void items?
+			-- Is `test' true for all items?
 		require
 			test_not_void: test /= Void
 		local

@@ -238,9 +238,6 @@ feature {NONE} -- Implementation
 			set_modal_window_group (l_window_group)
 
 			l_window_imp.increase_modal_window_count
-			if not l_window_has_modal_window then
-				l_window_imp.disallow_window_manager_focus
-			end
 			show_relative_to_window (a_window)
 			{EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
 			block

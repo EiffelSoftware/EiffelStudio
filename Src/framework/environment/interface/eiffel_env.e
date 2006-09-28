@@ -116,8 +116,8 @@ feature -- Status report
 
 feature -- Version
 
-	Major_version: NATURAL_16 is 5
-	Minor_version: NATURAL_16 is 7
+	Major_version: NATURAL_16 is 6
+	Minor_version: NATURAL_16 is 0
 
 feature -- Access
 

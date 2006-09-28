@@ -313,8 +313,8 @@ feature {NONE} -- Implementation
 					if path /= Void then
 						item_file.append_character ('/')
 						item_file.append (path)
+						item_file.append_character ('/')
 					end
---					item_file.append_character ('/')
 					item_file.append (cf.model.class_i.name.as_lower)
 					item_file.append ("_chart.html")
 					bbox := cf.bounding_box

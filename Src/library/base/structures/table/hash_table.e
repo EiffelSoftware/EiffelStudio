@@ -1102,6 +1102,7 @@ feature {NONE} -- Implementation
 			first_deleted_position: INTEGER
 			stop: BOOLEAN
 			l_keys: like keys
+			l_key: H
 			l_deleted_marks: like deleted_marks
 		do
 			first_deleted_position := Impossible_position
@@ -1129,15 +1130,18 @@ feature {NONE} -- Implementation
 						end
 							-- Go to next increment.
 						l_pos := (l_pos + increment) \\ l_capacity
-					elseif l_keys.item (l_pos) = default_key then
-						stop := True
-						control := Not_found_constant
-					elseif l_keys.item (l_pos).is_equal (key) then
-						stop := True
-						control := Found_constant
 					else
-							-- Go to next increment.
-						l_pos := (l_pos + increment) \\ l_capacity
+						l_key := l_keys.item (l_pos)
+						if l_key = default_key then
+							stop := True
+							control := Not_found_constant
+						elseif l_key.same_type (key) and then l_key.is_equal (key) then
+							stop := True
+							control := Found_constant
+						else
+								-- Go to next increment.
+							l_pos := (l_pos + increment) \\ l_capacity
+						end
 					end
 				end
 				position := l_pos

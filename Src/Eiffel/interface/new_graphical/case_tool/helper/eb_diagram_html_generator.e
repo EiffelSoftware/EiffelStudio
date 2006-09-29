@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			projector := world_cell.projector
 		end
 
-feature {CONTEXT_DIAGRAM} -- Access
+feature {NONE} -- Access
 
 	projector: EIFFEL_PROJECTOR
 			-- Projector of generated diagram on `pixmap'.

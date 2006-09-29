@@ -79,9 +79,9 @@ feature -- Titles
 	t_predefined_text_not_editable: STRING is "Text not editable because current metric is predefined."
 	t_text_not_editable: STRING is "Text not editable."
 	t_metric_definition: STRING is "Metric definition"
-	t_checking_metric_vadility: STRING is "Checking metric vadility"
+	t_checking_metric_vadility: STRING is "Checking metric validity"
 	t_loading_metrics: STRING is "Loading metrics..."
-	t_analysing_archive: STRING is "Analysing metric archive(s)..."
+	t_analysing_archive: STRING is "Analyzing metric archive(s)..."
 	t_saving_metrics: STRING is "Saving metrics..."
 	t_removing_metrics: STRING is "Removing metrics..."
 	t_result_not_up_to_date: STRING is "Current metric result may not be up-to-date"
@@ -115,7 +115,7 @@ feature -- Tooltip
 	f_reload_metrics: STRING is "Reload metrics"
 
 	f_start_archive: STRING is "Start metric archive evaluation"
-	f_stop_archive: STRING is "Stope metric archive evaluation"
+	f_stop_archive: STRING is "Stop metric archive evaluation"
 	f_select_exist_archive_file: STRING is "Select an existing metric archive file"
 	f_clean_archive: STRING is "Clean archive?"
 

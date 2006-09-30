@@ -19,6 +19,11 @@
 		<setting name="line_generation" value="false"/>
 		<setting name="multithreaded" value="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf">
+			<option>
+				<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
+			</option>
+		</library>
 		<cluster name="base_ext" location="${EIFFEL_SRC}\framework\base\" recursive="true">
 			<option warning="true">
 			</option>

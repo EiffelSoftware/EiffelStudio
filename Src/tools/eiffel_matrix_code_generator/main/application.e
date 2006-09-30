@@ -8,12 +8,6 @@ indexing
 class
 	APPLICATION
 
-inherit
-	ERROR_SHARED_ERROR_MANAGER
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -42,58 +36,100 @@ feature {NONE} -- Initialization
 			l_doc: INI_DOCUMENT
 			l_frame_text: STRING
 			l_generator: MATRIX_FILE_GENERATOR
+			l_cls_generator: MATRIX_EIFFEL_CLASS_GENERATOR
+			l_ico_generator: MATRIX_ICON_GENERATOR
 			l_printer: ERROR_CUI_PRINTER
+			l_pixmap: EV_PIXMAP
+			l_error_manager: like error_manager
 			retried: BOOLEAN
 		do
 			if not retried then
 					-- Set ini document
+				if a_parser.use_slice_mode then
+					create l_ico_generator.make
+					l_generator := l_ico_generator
+				else
+					create l_cls_generator.make
+					l_generator := l_cls_generator
+				end
+				l_error_manager := l_generator
+				error_manager := l_error_manager
+
 				l_source_fn := a_parser.ini_file_option
 				l_doc := open_ini_document (l_source_fn)
 				if l_doc /= Void then
-						-- Set frame file option
-					l_opt := a_parser.frame_file_option
-					create l_fn.make
-					if l_opt /= Void then
-						l_fn.set_file_name (l_opt.value)
+
+					if a_parser.use_slice_mode then
+						(create {EV_APPLICATION}).do_nothing
+							-- Try loading pixmap. If not create a blank one.
+						l_pixmap := (agent (a_fn: STRING): EV_PIXMAP
+							local
+								retried_il: BOOLEAN
+							do
+								if not retried_il then
+									create Result
+									Result.set_with_named_file (a_fn)
+								else
+									create Result.make_with_size (10, 10)
+									error_manager.add_error (create {ERROR_INVALID_MATRIX_PNG}.make_with_context ([a_fn]), False)
+								end
+							rescue
+								retried_il := True
+								retry
+							end).item ([a_parser.slice_matrix])
+						if l_error_manager.successful then
+							l_ico_generator.generate (l_doc, a_parser.png_slices_locations, l_pixmap)
+						end
 					else
-						l_fn.set_directory (a_parser.application_base)
-						l_fn.set_subdirectory (frame_folder)
-						l_fn.set_file_name (frame_file)
-					end
-					l_frame_text := open_frame_file (l_fn)
-					if l_frame_text /= Void and then not l_frame_text.is_empty then
-							-- Set output file name option
-						l_opt := a_parser.output_file_name_option
+							-- Set frame file option
+						l_opt := a_parser.frame_file_option
+						create l_fn.make
 						if l_opt /= Void then
-							l_output_fn := l_opt.value
+							l_fn.set_file_name (l_opt.value)
+						else
+							l_fn.set_directory (a_parser.application_base)
+							l_fn.set_subdirectory (frame_folder)
+							l_fn.set_file_name (frame_file)
 						end
+						l_frame_text := open_frame_file (l_fn)
+						if l_frame_text /= Void and then not l_frame_text.is_empty then
+								-- Set output file name option
+							l_opt := a_parser.output_file_name_option
+							if l_opt /= Void then
+								l_output_fn := l_opt.value
+							end
 
-							-- Set class name option
-						l_opt := a_parser.class_name_option
-						if l_opt /= Void then
-							l_class_name := l_opt.value
+								-- Set class name option
+							l_opt := a_parser.class_name_option
+							if l_opt /= Void then
+								l_class_name := l_opt.value
+							end
+
+							l_cls_generator.generate (l_doc, l_frame_text, l_class_name, l_output_fn)
 						end
-
-						create l_generator.make
-						l_generator.generate (l_doc, l_frame_text, l_class_name, l_output_fn)
 					end
 				else
-					error_manager.set_last_error (create {ERROR_INVALID_INI_FILE}.make_with_context ([l_source_fn]), False)
+					l_error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make_with_context ([l_source_fn]), False)
 				end
 			end
 
 			create l_printer
-			if not error_manager.successful then
-				error_manager.trace_error (l_printer)
+			if not l_error_manager.successful then
+				l_error_manager.trace_errors (l_printer)
 			else
-				if error_manager.has_warnings then
-					error_manager.trace_warnings (l_printer)
+				if l_error_manager.has_warnings then
+					l_error_manager.trace_warnings (l_printer)
 					io.new_line
 				end
 				check l_generator_attached: l_generator /= Void end
 				io.put_string ("Generation successful.%N")
-				io.put_string ("Output generated into file: '")
-				io.put_string (l_generator.generated_file_name)
+				if a_parser.use_slice_mode then
+					io.put_string ("Output tiles generated into folder: '")
+					io.put_string (a_parser.png_slices_locations)
+				else
+					io.put_string ("Output generated into file: '")
+					io.put_string (l_cls_generator.generated_file_name)
+				end
 				io.put_string ("'%N%N")
 			end
 		rescue
@@ -109,6 +145,7 @@ feature {NONE} -- Basic Operations
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
 			a_file_name_exists: (create {PLAIN_TEXT_FILE}.make (a_file_name)).exists
+			error_manager_attached: error_manager /= Void
 		local
 			l_file: PLAIN_TEXT_FILE
 			l_reader: INI_DOCUMENT_READER
@@ -121,7 +158,7 @@ feature {NONE} -- Basic Operations
 				if l_reader.successful then
 					Result := l_reader.read_document
 				else
-					error_manager.set_last_error (create {ERROR_INVALID_INI_FILE}.make_with_context ([a_file_name]), False)
+					error_manager.add_error (create {ERROR_INVALID_INI_FILE}.make_with_context ([a_file_name]), False)
 				end
 			end
 			if l_file /= Void and then not l_file.is_closed then
@@ -137,6 +174,7 @@ feature {NONE} -- Basic Operations
 		require
 			a_file_name_attached: a_file_name /= Void
 			not_a_file_name_is_empty: not a_file_name.is_empty
+			error_manager_attached: error_manager /= Void
 		local
 			l_file: PLAIN_TEXT_FILE
 			l_line: STRING
@@ -157,11 +195,11 @@ feature {NONE} -- Basic Operations
 						end
 					end
 				else
-					error_manager.set_last_error (create {ERROR_INVALID_FRAME_FILE}.make_with_context ([a_file_name]), False)
+					error_manager.add_error (create {ERROR_INVALID_FRAME_FILE}.make_with_context ([a_file_name]), False)
 					Result := Void
 				end
 			else
-				error_manager.set_last_error (create {ERROR_FRAME_FILE_NOT_READABLE}.make_with_context ([a_file_name]), False)
+				error_manager.add_error (create {ERROR_FRAME_FILE_NOT_READABLE}.make_with_context ([a_file_name]), False)
 				Result := Void
 			end
 			if l_file /= Void and then not l_file.is_closed then
@@ -171,6 +209,11 @@ feature {NONE} -- Basic Operations
 			retried := True
 			retry
 		end
+
+feature {NONE} -- Implementation
+
+	error_manager: MULTI_ERROR_MANAGER
+			-- Error manager used to report errors
 
 feature {NONE} -- Constants
 

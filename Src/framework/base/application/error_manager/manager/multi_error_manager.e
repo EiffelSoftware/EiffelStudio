@@ -28,8 +28,8 @@ feature {NONE} -- Implementation
 	make is
 			-- Create a new error manager
 		do
-			Precursor {ERROR_MANAGER}
 			create internal_errors.make
+			Precursor {ERROR_MANAGER}
 		end
 
 feature -- Access

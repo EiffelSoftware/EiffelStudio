@@ -14,7 +14,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	WIZARD_CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -31,7 +31,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create menu
 			create file_menu
@@ -111,7 +111,7 @@ feature {NONE}-- Initialization
 			create second_generate_button
 			create l_ev_cell_4
 			create output_box
-			
+
 				-- Build_widget_structure.
 			set_menu_bar (menu)
 			menu.extend (file_menu)
@@ -191,7 +191,7 @@ feature {NONE}-- Initialization
 			general_options_bottom_buttons_box.extend (second_generate_button)
 			general_options_bottom_buttons_box.extend (l_ev_cell_4)
 			notebook.extend (output_box)
-			
+
 			file_menu.set_text ("File")
 			exit_menu_item.set_text ("Exit")
 			help_menu.set_text ("Help")
@@ -223,7 +223,7 @@ feature {NONE}-- Initialization
 			project_types_padding_cell.set_minimum_width (30)
 			com_client_project_radio_button.set_text ("Access an existing COM component")
 			com_server_project_radio_button.set_text ("Create a new COM component")
-			eiffel_project_radio_button.set_text ("Add a COM interface to an existing Eiffel project")
+			eiffel_project_radio_button.set_text ("Add a COM interface to an existing (non-.NET) Eiffel project")
 			general_settings_frame.set_text ("Component Information")
 			general_settings_box.set_padding_width (7)
 			general_settings_box.set_border_width (7)
@@ -300,7 +300,7 @@ feature {NONE}-- Initialization
 			second_generate_button.set_minimum_width (100)
 			l_ev_cell_4.set_minimum_width (100)
 			set_title ("EiffelCOM Wizard 2.0")
-			
+
 				--Connect events.
 			exit_menu_item.select_actions.extend (agent on_exit)
 			help_menu_item.select_actions.extend (agent on_help)
@@ -380,97 +380,97 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 	on_exit is
 			-- Called by `select_actions' of `exit_menu_item'.
 		deferred
 		end
-	
+
 	on_help is
 			-- Called by `select_actions' of `help_menu_item'.
 		deferred
 		end
-	
+
 	on_about is
 			-- Called by `select_actions' of `about_menu_item'.
 		deferred
 		end
-	
+
 	on_project_button_select is
 			-- Called by `select_actions' of `project_button'.
 		deferred
 		end
-	
+
 	on_select_com_client is
 			-- Called by `select_actions' of `com_client_project_radio_button'.
 		deferred
 		end
-	
+
 	on_select_com_server is
 			-- Called by `select_actions' of `com_server_project_radio_button'.
 		deferred
 		end
-	
+
 	on_select_eiffel_project is
 			-- Called by `select_actions' of `eiffel_project_radio_button'.
 		deferred
 		end
-	
+
 	on_generate is
 			-- Called by `select_actions' of `first_generate_button'.
 		deferred
 		end
-	
+
 	on_next is
 			-- Called by `select_actions' of `next_button'.
 		deferred
 		end
-	
+
 	on_select_in_process is
 			-- Called by `select_actions' of `in_process_radio_button'.
 		deferred
 		end
-	
+
 	on_select_out_of_process is
 			-- Called by `select_actions' of `out_of_process_radio_button'.
 		deferred
 		end
-	
+
 	on_select_compile_c is
 			-- Called by `select_actions' of `compile_c_code_check_button'.
 		deferred
 		end
-	
+
 	on_select_compile_eiffel is
 			-- Called by `select_actions' of `compile_eiffel_check_button'.
 		deferred
 		end
-	
+
 	on_select_cleanup is
 			-- Called by `select_actions' of `cleanup_radio_button'.
 		deferred
 		end
-	
+
 	on_select_backup is
 			-- Called by `select_actions' of `backup_radio_button'.
 		deferred
 		end
-	
+
 	on_select_overwrite is
 			-- Called by `select_actions' of `overwrite_radio_button'.
 		deferred
 		end
-	
+
 	on_previous is
 			-- Called by `select_actions' of `previous_button'.
 		deferred
 		end
-	
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

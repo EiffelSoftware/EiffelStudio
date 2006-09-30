@@ -150,7 +150,7 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "Optional class name for use in generated file", True, False, "name", "An Eiffel class name.", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Optional output file name", True, False, "file", "File name to give output file.", False))
 
-			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (slice_switch, "Indicates to perform a slicing operation on a matrix PNG file.", True, False, "file", "File name to an associated matrix PNG file.", False))
+			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (slice_switch, "Indicates to perform a slicing operation on a matrix PNG file.", False, False, "file", "File name to an associated matrix PNG file.", False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (pngs_switch, "Specified the location to save sliced PNGs into.", True, False, "dir", "Location to store PNG slices into.", False))
 		end
 

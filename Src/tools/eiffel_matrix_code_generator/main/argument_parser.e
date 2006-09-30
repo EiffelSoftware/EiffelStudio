@@ -12,6 +12,8 @@ inherit
 	ARGUMENT_SINGLE_PARSER
 		rename
 			make as make_parser
+		redefine
+			switch_groups
 		end
 
 create
@@ -44,6 +46,7 @@ feature -- Access
 			-- Frame template file path option
 		require
 			successful: successful
+			not_use_slice_mode: not use_slice_mode
 		do
 			Result := option_of_name (frame_switch)
 		end
@@ -52,6 +55,7 @@ feature -- Access
 			-- Class name option
 		require
 			successful: successful
+			not_use_slice_mode: not use_slice_mode
 		do
 			Result := option_of_name (class_switch)
 		end
@@ -60,8 +64,49 @@ feature -- Access
 			-- Generated output file name option
 		require
 			successful: successful
+			not_use_slice_mode: not use_slice_mode
 		do
 			Result := option_of_name (output_switch)
+		end
+
+	slice_matrix: STRING is
+			-- Location of PNG matix that needs to be sliced
+		require
+			successful: successful
+			use_slice_mode: use_slice_mode
+		do
+			Result := option_of_name (slice_switch).value
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_exists: (create {RAW_FILE}.make (Result)).exists
+		end
+
+	png_slices_locations: STRING is
+			-- Location of where to store PNG slices.
+		require
+			successful: successful
+			use_slice_mode: use_slice_mode
+		do
+			if has_option (pngs_switch) then
+				Result := option_of_name (pngs_switch).value
+			else
+				Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_exists: (create {DIRECTORY}.make (Result)).exists
+		end
+
+feature -- Status report
+
+	use_slice_mode: BOOLEAN is
+			-- Indicates if tool should be used in slicing mode (slices a matrix into icons)
+		require
+			successful: successful
+		do
+			Result := has_option (slice_switch)
 		end
 
 feature {NONE} -- Usage
@@ -101,21 +146,38 @@ feature {NONE} -- Usage
 			-- Retrieve a list of available switch
 		once
 			create Result.make (3)
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (frame_switch, "Optional specification of a frame template file", True, False, "file", "Frame template file path.", False))
+			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (frame_switch, "Optional specification of a frame template file", True, False, "file", "Frame template file path.", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (class_switch, "Optional class name for use in generated file", True, False, "name", "An Eiffel class name.", False))
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Optional output file name", True, False, "filename", "File name to give output file.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (output_switch, "Optional output file name", True, False, "file", "File name to give output file.", False))
+
+			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (slice_switch, "Indicates to perform a slicing operation on a matrix PNG file.", True, False, "file", "File name to an associated matrix PNG file.", False))
+			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (pngs_switch, "Specified the location to save sliced PNGs into.", True, False, "dir", "Location to store PNG slices into.", False))
+		end
+
+	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP]
+			-- Valid switch grouping
+		do
+			create Result.make (2)
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (frame_switch), switch_of_name (class_switch), switch_of_name (output_switch)>>, True))
+			Result.extend (create {ARGUMENT_GROUP}.make (<<switch_of_name (slice_switch), switch_of_name (pngs_switch)>>, True))
 		end
 
 feature {NONE} -- Option Names
 
-	frame_switch: STRING is "frame"
+	frame_switch: STRING = "frame"
 		-- Frame file switch
 
-	class_switch: STRING is "class"
+	class_switch: STRING = "class"
 		-- Alt class name switch
 
-	output_switch: STRING is "output";
+	output_switch: STRING = "output"
 		-- Alt output file name switch
+
+	slice_switch: STRING = "slice"
+		-- Location of a PNG matix
+
+	pngs_switch: STRING = "pngs";
+		-- Location where sliced pngs will be stored
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

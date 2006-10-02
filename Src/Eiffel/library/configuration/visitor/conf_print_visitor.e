@@ -695,6 +695,9 @@ feature {NONE} -- Implementation
 				if an_options.is_warning_configured then
 					append_text (" warning=%""+an_options.is_warning.out.as_lower+"%"")
 				end
+				if an_options.is_msil_application_optimize_configured then
+					append_text (" msil_application_optimize=%""+an_options.is_msil_application_optimize.out.as_lower+"%"")
+				end
 				l_str := an_options.namespace
 				if l_str /= Void and then not l_str.is_empty then
 					append_text (" namespace=%""+escape_xml (l_str)+"%"")

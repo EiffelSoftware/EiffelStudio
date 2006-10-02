@@ -237,6 +237,8 @@ feature -- Target names and descriptions
 
 	cluster_recursive_name: STRING is "Recursive"
 	cluster_recursive_description: STRING is "Are sub folders recursively included?"
+	cluster_hidden_name: STRING is "Hidden"
+	cluster_hidden_description: STRING is "Is this a hidden cluster that can not be used if the system is used as a library?"
 	cluster_dependencies_name: STRING is "Dependencies"
 	cluster_dependencies_description: STRING is "Groups this cluster depends on."
 	cluster_visible_name: STRING is "Visible Classes"

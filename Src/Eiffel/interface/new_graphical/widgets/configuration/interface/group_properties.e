@@ -122,6 +122,13 @@ feature {NONE} -- Implementation
 				l_bool_prop.change_value_actions.extend (agent l_cluster.set_recursive)
 				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))
 				properties.add_property (l_bool_prop)
+
+					-- hidden
+				create l_bool_prop.make_with_value (conf_interface_names.cluster_hidden_name, l_cluster.is_hidden)
+				l_bool_prop.set_description (conf_interface_names.cluster_hidden_description)
+				l_bool_prop.change_value_actions.extend (agent l_cluster.set_hidden)
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (True)))
+				properties.add_property (l_bool_prop)
 			end
 
 				-- location

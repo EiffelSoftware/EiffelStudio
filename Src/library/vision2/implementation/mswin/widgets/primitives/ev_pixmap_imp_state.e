@@ -83,9 +83,11 @@ feature -- Saving
 			mem_dc: WEL_MEMORY_DC
 			a_wel_bitmap: WEL_BITMAP
 			a_fn: C_STRING
-			char_array: WEL_CHARACTER_ARRAY
+			l_area: ANY
 			a_width, a_height: INTEGER
 			l_raw_image_data: like raw_image_data
+			l_managed_pointer: MANAGED_POINTER
+			l_area_ptr: POINTER
 		do
 			bmp_format ?= a_format
 			png_format ?= a_format
@@ -101,7 +103,6 @@ feature -- Saving
 				a_wel_bitmap.decrement_reference
 			elseif png_format /= Void then
 				create a_fn.make (a_filename)
-				create char_array.make (l_raw_image_data)
 				if png_format.scale_height /= 0 then
 					a_height := png_format.scale_height
 				else
@@ -113,7 +114,14 @@ feature -- Saving
 				else
 					a_width := l_raw_image_data.width
 				end
-				c_ev_save_png (char_array.item, a_fn.item, l_raw_image_data.width,
+				if {PLATFORM}.is_dotnet then
+					create l_managed_pointer.make_from_array (l_raw_image_data)
+					l_area_ptr := l_managed_pointer.item
+				else
+					l_area := l_raw_image_data.to_c
+					l_area_ptr := $l_area
+				end
+				c_ev_save_png (l_area_ptr, a_fn.item, l_raw_image_data.width,
 					l_raw_image_data.height, a_width, a_height, png_format.color_mode)
 			end
 			save_with_format (a_format, a_filename, l_raw_image_data)
@@ -137,42 +145,73 @@ feature -- Misc.
 	raw_image_data: EV_RAW_IMAGE_DATA is
 			-- RGBA representation of `Current'.
 		local
-			mem_dc: WEL_MEMORY_DC
+			mask_dc, mem_dc: WEL_MEMORY_DC
 			a_width: INTEGER
 			array_offset, array_size: INTEGER
-			array_area: SPECIAL [CHARACTER]
-			col_Ref_item: integer
-			temp_alpha: CHARACTER
-			temp_alpha_int: INTEGER
-			mem_dc_item: POINTER
-			tmp_bitmap: WEL_BITMAP
+			array_area: SPECIAL [NATURAL_8]
+			col_Ref_item: NATURAL_32
+			mask_dc_item, mem_dc_item: POINTER
+			tmp_mask_bitmap, tmp_bitmap: WEL_BITMAP
+			l_has_mask: BOOLEAN
+			l_x, l_y: INTEGER
 		do
 			create Result.make_with_alpha_zero (width, height)
 			create mem_dc.make
 			tmp_bitmap := get_bitmap
 			mem_dc.select_bitmap (tmp_bitmap)
+			l_has_mask := has_mask
+			if l_has_mask then
+				create mask_dc.make
+				tmp_mask_bitmap := get_mask_bitmap
+				mask_dc.select_bitmap (tmp_mask_bitmap)
+				mask_dc_item := mask_dc.item
+			end
+
 			Result.set_originating_pixmap (interface)
 			from
 				a_width := width * 4
 				array_size := a_width * height
 				array_area := Result.area
 				mem_dc_item := mem_dc.item
-				temp_alpha_int := 255
-				temp_alpha := temp_alpha_int.to_character_8
 			until
 				array_offset = array_size
 			loop
+				l_x := (array_offset \\ (a_width) // 4)
+				l_y := ((array_offset) // a_width)
 				col_ref_item := cwin_get_pixel (
 						mem_dc_item,
-						(array_offset \\ (a_width) // 4),
-						((array_offset) // a_width)
+						l_x,
+						l_y
 				)
-				array_area.put (cwin_get_r_value (col_ref_item).to_character_8, array_offset)
-				array_area.put (cwin_get_g_value (col_ref_item).to_character_8, array_offset + 1)
-				array_area.put (cwin_get_b_value (col_ref_item).to_character_8, array_offset + 2)
-				array_area.put (temp_alpha, array_offset + 3)
+				array_area.put (get_rvalue (col_ref_item), array_offset)
+				array_area.put (get_gvalue (col_ref_item), array_offset + 1)
+				array_area.put (get_bvalue (col_ref_item), array_offset + 2)
+				if l_has_mask then
+					col_ref_item := cwin_get_pixel (
+						mask_dc_item,
+						l_x,
+						l_y
+					)
+						-- If mask color is 1 then pixel is opaque, so we use 255 for the mask value.
+					if get_rvalue (col_ref_item) /= 0 then
+						array_area.put (255, array_offset + 3)
+					else
+						array_area.put (0, array_offset + 3)
+					end
+				else
+					array_area.put (255, array_offset + 3)
+				end
+
 				array_offset := array_offset + 4
 			end
+
+			if l_has_mask then
+				mask_dc.unselect_bitmap
+				mask_dc.delete
+				tmp_mask_bitmap.decrement_reference
+				tmp_mask_bitmap := Void
+			end
+
 			mem_dc.unselect_bitmap
 			mem_dc.delete
 			tmp_bitmap.decrement_reference
@@ -301,7 +340,32 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 
 feature {NONE} -- External
 
-	cwin_get_pixel (hdc: POINTER; x, y: INTEGER): INTEGER is
+	get_rvalue (color: NATURAL_32): NATURAL_8 is
+			-- SDK GetRValue
+		external
+			"C [macro <windows.h>] (DWORD): BYTE"
+		alias
+			"GetRValue"
+		end
+
+	get_gvalue (color: NATURAL_32): NATURAL_8 is
+			-- SDK GetGValue
+		external
+			"C [macro <windows.h>] (DWORD): BYTE"
+		alias
+			"GetGValue"
+		end
+
+	get_bvalue (color: NATURAL_32): NATURAL_8 is
+			-- SDK GetBValue
+		external
+			"C [macro <windows.h>] (DWORD): BYTE"
+		alias
+			"GetBValue"
+		end
+
+
+	cwin_get_pixel (hdc: POINTER; x, y: INTEGER): NATURAL_32 is
 			-- SDK GetPixel
 		external
 			"C [macro <windows.h>] (HDC, int, int): COLORREF"

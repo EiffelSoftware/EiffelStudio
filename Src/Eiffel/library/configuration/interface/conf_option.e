@@ -30,11 +30,15 @@ feature -- Status
 	is_warning_configured: BOOLEAN
 			-- Is `is_warning' configured?
 
+	is_msil_application_optimize_configured: BOOLEAN
+			-- Is `is_msil_application_optimize' configured?
+
 	is_empty: BOOLEAN is
 			-- Is `Current' empty? No settings are set?
 		do
 			Result := not (is_profile_configured or is_trace_configured or is_optimize_configured or is_debug_configured or
-				is_warning_configured or assertions /= Void or namespace /= Void or warnings /= Void or debugs /= Void )
+				is_warning_configured or is_msil_application_optimize_configured or assertions /= Void or namespace /= Void or
+				warnings /= Void or debugs /= Void )
 		end
 
 feature -- Status update
@@ -74,6 +78,12 @@ feature -- Status update
 			is_warning := False
 		end
 
+	usset_msil_application_optimize is
+			-- Unset .NET application optimizations
+		do
+			is_msil_application_optimize_configured := False
+			is_msil_application_optimize := False
+		end
 
 feature -- Access, stored in configuration file
 
@@ -97,6 +107,9 @@ feature -- Access, stored in configuration file
 
 	is_warning: BOOLEAN
 			-- Show warnings?
+
+	is_msil_application_optimize: BOOLEAN
+			-- Do .NET specific application optimizations?
 
 	description: STRING
 			-- A description about the options.
@@ -229,6 +242,17 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_warning_configured: is_warning_configured
 		end
 
+	set_msil_application_optimize (a_enabled: BOOLEAN) is
+			-- Set `is_msil_application_optimize' to `a_enable'.
+			-- Enabled/disables .NET application optimizations in general.
+		do
+			is_msil_application_optimize_configured := True
+			is_msil_application_optimize := a_enabled
+		ensure
+			is_msil_application_optimize_set: is_msil_application_optimize = a_enabled
+			is_msil_application_optimize_configured: is_msil_application_optimize_configured
+		end
+
 	set_description (a_description: like description) is
 			-- Set `description' to `a_description'.
 		do
@@ -297,6 +321,10 @@ feature -- Merging
 				if not is_warning_configured then
 					is_warning_configured := other.is_warning_configured
 					is_warning := other.is_warning
+				end
+				if not is_msil_application_optimize_configured then
+					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured
+					is_msil_application_optimize := other.is_msil_application_optimize
 				end
 			end
 		end

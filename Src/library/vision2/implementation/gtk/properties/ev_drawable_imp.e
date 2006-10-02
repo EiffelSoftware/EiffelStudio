@@ -874,7 +874,7 @@ feature {NONE} -- Implementation
 		alias
 			"[
 				{
-				int x, y;
+				guint32 x, y;
 
 				GdkPixbuf *pixbuf, *mask;
 
@@ -885,13 +885,13 @@ feature {NONE} -- Implementation
 				{
 					guchar *src, *dest;
 
-					src = gdk_pixbuf_get_pixels (mask) + y * gdk_pixbuf_get_rowstride (mask);
-					dest = gdk_pixbuf_get_pixels (pixbuf) + y * gdk_pixbuf_get_rowstride (pixbuf);
+					src = (gdk_pixbuf_get_pixels (mask) + (y * gdk_pixbuf_get_rowstride (mask)));
+					dest = (gdk_pixbuf_get_pixels (pixbuf) + (y * gdk_pixbuf_get_rowstride (pixbuf)));
 
 					for (x = 0; x < gdk_pixbuf_get_width (pixbuf); x++)
 					{
-						if (src [0] == 0)
-							dest [3] = 0;
+						if (src [0] == (guchar)0)
+							dest [3] = (guchar)0;
 
 						src += 4;
 						dest += 4;

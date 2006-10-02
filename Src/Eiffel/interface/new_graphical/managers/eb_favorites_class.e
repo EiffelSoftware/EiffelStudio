@@ -93,9 +93,12 @@ feature -- Element change
 		local
 			l_stone: like associated_class_stone
 		do
-			l_stone := associated_class_stone.synchronized_stone
+			l_stone := associated_class_stone
 			if l_stone /= Void then
-				make_from_class_stone (l_stone, parent)
+				l_stone := l_stone.synchronized_stone
+				if l_stone /= Void then
+					make_from_class_stone (l_stone, parent)
+				end
 			end
 		end
 

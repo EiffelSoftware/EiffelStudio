@@ -245,6 +245,8 @@ feature {NONE} -- Interface
 				-- Select/Unselect behavior
 			g.row_select_actions.extend (agent on_objects_row_selected)
 			g.row_deselect_actions.extend (agent on_objects_row_deselected)
+
+			g.set_pre_activation_action (agent pre_activate_cell)
 		end
 
 	build_mini_toolbar is
@@ -807,7 +809,7 @@ feature {NONE} -- grid Layout Implementation
 	keep_object_reference_fixed (addr: STRING) is
 		do
 			if debugger_manager.application_is_executing then
-				application.status.keep_object_for_gui (addr)
+				application.status.keep_object (addr)
 			end
 		end
 
@@ -1607,7 +1609,7 @@ feature {NONE} -- Impl : Stack objects grid
 					and then not ev_application.shift_pressed
 				then
 					if grid.selected_rows.count > 0 then
-						ost ?= grid.grid_pebble_from_row (grid.selected_rows.first)
+						ost ?= grid.grid_pebble_from_row_and_column (grid.selected_rows.first, Void)
 						pretty_print_cmd.set_stone (ost)
 					end
 				end

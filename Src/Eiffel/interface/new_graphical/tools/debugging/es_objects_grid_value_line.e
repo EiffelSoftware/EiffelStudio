@@ -19,7 +19,7 @@ inherit
 			object,
 			reset_special_attributes_values,
 			recycle,
-			get_object_stone_properties
+			get_items_stone_properties
 		end
 
 create
@@ -76,24 +76,27 @@ feature -- Properties
 	object_dynamic_class: CLASS_C is
 		do
 			Result := object.dynamic_class
+			if Result = Void then
+				Result := object.static_class
+			end
 		end
 
 	object_spec_capacity: INTEGER
 
-feature -- Object stone
+feature {NONE} -- Object stone
 
-	get_object_stone_properties is
+	get_items_stone_properties is
 
 		local
 			cl: CLASS_C
-			fost: FEATURED_OBJECT_STONE
 			fst: FEATURE_STONE
 			ostn: STRING
 			addr: STRING
 			feat: E_FEATURE
+			t: like internal_item_stone_data_i_th
 		do
 			Precursor
-			if internal_object_stone = Void and then related_line /= Void then
+			if related_line /= Void then
 				ostn := object_name
 				if ostn /= Void then
 					cl := related_line.object_dynamic_class
@@ -101,16 +104,18 @@ feature -- Object stone
 						feat := cl.feature_with_name (ostn)
 						if feat /= Void then
 							addr := related_line.object_address
+							create t
 							if addr /= Void then
-								create fost.make (addr, feat)
-								internal_object_stone_accept_cursor := fost.stone_cursor
-								internal_object_stone_deny_cursor := fost.X_stone_cursor
-								internal_object_stone := fost
+								create {FEATURED_OBJECT_STONE} fst.make (addr, feat)
 							else
 								create fst.make (feat)
-								internal_object_stone_accept_cursor := fst.stone_cursor
-								internal_object_stone_deny_cursor := fst.X_stone_cursor
-								internal_object_stone := fst
+							end
+							t.stone := fst
+							t.accept_cursor := fst.stone_cursor
+							t.deny_cursor := fst.X_stone_cursor
+							internal_items_stone_data[col_name_index] := t
+							if internal_items_stone_data[0] = Void then
+								internal_items_stone_data[0] := t
 							end
 						end
 					end

@@ -131,11 +131,6 @@ feature -- Objects kept from session to session
 			end
 		end
 
-	keep_object_for_gui	(add: STRING) is
-		do
-			keep_object (add)
-		end
-
 feature -- Call Stack List management
 
 	reset_call_stack_list is

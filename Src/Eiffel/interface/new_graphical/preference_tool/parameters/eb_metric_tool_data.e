@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			criterion_completion_list_width_preference := l_manager.new_integer_preference_value (l_manager, criterion_completion_list_width_string, 240)
 			filter_invisible_result_preference := l_manager.new_boolean_preference_value (l_manager, filter_invisible_result_string, False)
 			display_percentage_for_ratio_preference := l_manager.new_boolean_preference_value (l_manager, display_percentage_for_ratio_string, True)
-			automatic_go_to_result_panel_preference := l_manager.new_boolean_preference_value (l_manager, automatic_go_to_result_panel_string, False)
+			automatic_go_to_result_panel_preference := l_manager.new_boolean_preference_value (l_manager, automatic_go_to_result_panel_string, True)
 			unit_order_preference := l_manager.new_string_preference_value (l_manager, unit_order_string, initial_unit_order)
 			criterion_completion_list_width_preference.set_hidden (True)
 			criterion_completion_list_height_preference.set_hidden (True)

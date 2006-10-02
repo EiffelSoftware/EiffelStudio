@@ -3029,9 +3029,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						if index < last_row_count_in_recompute_row_offsets then
 							visible_count := row_indexes_to_visible_indexes.i_th (index)
 						else
-							check
-								index_is_row_count: index = row_count
-							end
+							--| FIXME This check no longer holds in all circumstances due to
+							--| `last_row_count_in_recompute_row_offsets' change.
+--							check
+--								index_is_row_count: index = row_count
+--							end
 								-- In this situation, we are adding a new row that has not already
 								-- been computed. Now we set the visible count to the previous (and last)
 								-- item and add one. Without this, we are unable to determine the

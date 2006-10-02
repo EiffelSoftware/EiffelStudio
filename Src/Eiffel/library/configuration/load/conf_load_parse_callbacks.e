@@ -1075,13 +1075,14 @@ feature {NONE} -- Implementation attribute processing
 			group: a_class_option implies current_group /= Void
 			target: current_target /= Void
 		local
-			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class, l_warning: STRING
+			l_trace, l_profile, l_optimize, l_debug, l_namespace, l_class, l_warning, l_msil_application_optimize: STRING
 		do
 			l_trace := current_attributes.item (at_trace)
 			l_profile := current_attributes.item (at_profile)
 			l_optimize := current_attributes.item (at_optimize)
 			l_debug := current_attributes.item (at_debug)
 			l_warning := current_attributes.item (at_warning)
+			l_msil_application_optimize := current_attributes.item (at_msil_application_optimize)
 			l_namespace := current_attributes.item (at_namespace)
 			l_class := current_attributes.item (at_class)
 
@@ -1120,6 +1121,9 @@ feature {NONE} -- Implementation attribute processing
 				else
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("warning"))
 				end
+			end
+			if l_msil_application_optimize /= Void and then l_msil_application_optimize.is_boolean then
+				current_option.set_msil_application_optimize (l_msil_application_optimize.to_boolean)
 			end
 			if l_namespace /= Void then
 				current_option.set_namespace (l_namespace)
@@ -1820,6 +1824,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_optimize, "optimize")
 			l_attr.force (at_debug, "debug")
 			l_attr.force (at_warning, "warning")
+			l_attr.force (at_msil_application_optimize, "msil_application_optimize")
 			l_attr.force (at_namespace, "namespace")
 			Result.force (l_attr, t_option)
 
@@ -2107,7 +2112,8 @@ feature {NONE} -- Implementation constants
 	at_type,
 	at_eifgens_location,
 	at_warning,
-	at_hidden: INTEGER is unique
+	at_hidden,
+	at_msil_application_optimize: INTEGER is unique
 
 feature -- Assertions
 

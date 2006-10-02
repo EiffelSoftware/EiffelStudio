@@ -250,14 +250,11 @@ feature {NONE} -- Implementation
 				if l_key /= Void then
 					l_value := target.variables.item (l_key.as_lower)
 					if l_value = Void then
-						l_value := target.environ_variables.item (l_key.as_lower)
+						l_value := execution_environment.variable_value (l_key)
 						if l_value = Void then
-							l_value := execution_environment.variable_value (l_key)
-							if l_value = Void then
-								l_value := ""
-							end
-							target.environ_variables.force (l_value, l_key.as_lower)
+							l_value := ""
 						end
+						target.environ_variables.force (l_value, l_key.as_lower)
 					end
 					Result.replace_substring (to_internal (l_value), i, j)
 				end

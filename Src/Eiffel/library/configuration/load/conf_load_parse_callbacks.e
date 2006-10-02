@@ -816,7 +816,7 @@ feature {NONE} -- Implementation attribute processing
 		require
 			target: current_target /= Void
 		local
-			l_name, l_location, l_readonly, l_prefix, l_recursive: STRING
+			l_name, l_location, l_readonly, l_prefix, l_recursive, l_hidden: STRING
 			l_parent: CONF_CLUSTER
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
@@ -825,6 +825,7 @@ feature {NONE} -- Implementation attribute processing
 			l_readonly := current_attributes.item (at_readonly)
 			l_prefix := current_attributes.item (at_prefix)
 			l_recursive := current_attributes.item (at_recursive)
+			l_hidden := current_attributes.item (at_hidden)
 			if l_name /= Void then
 				l_name.to_lower
 			end
@@ -838,6 +839,13 @@ feature {NONE} -- Implementation attribute processing
 						current_cluster.set_readonly (l_readonly.to_boolean)
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
+					end
+				end
+				if l_hidden /= Void then
+					if l_hidden.is_boolean then
+						current_cluster.set_hidden (l_hidden.to_boolean)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("hidden"))
 					end
 				end
 				if l_prefix /= Void then
@@ -876,7 +884,7 @@ feature {NONE} -- Implementation attribute processing
 		require
 			target: current_target /= Void
 		local
-			l_name, l_location, l_readonly, l_prefix, l_recursive: STRING
+			l_name, l_location, l_readonly, l_prefix, l_recursive, l_hidden: STRING
 			l_parent: CONF_CLUSTER
 		do
 			l_name := current_attributes.item (at_name)
@@ -884,6 +892,7 @@ feature {NONE} -- Implementation attribute processing
 			l_readonly := current_attributes.item (at_readonly)
 			l_prefix := current_attributes.item (at_prefix)
 			l_recursive := current_attributes.item (at_recursive)
+			l_hidden := current_attributes.item (at_hidden)
 			if l_name /= Void then
 				l_name.to_lower
 			end
@@ -897,6 +906,13 @@ feature {NONE} -- Implementation attribute processing
 						current_cluster.set_readonly (l_readonly.to_boolean)
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
+					end
+				end
+				if l_hidden /= Void then
+					if l_hidden.is_boolean then
+						current_cluster.set_hidden (l_hidden.to_boolean)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("hidden"))
 					end
 				end
 				if l_prefix /= Void then
@@ -1880,12 +1896,14 @@ feature {NONE} -- Implementation state transitions
 				-- cluster/override
 				-- -everything from library
 				-- * recursive
-			create l_attr.make (5)
+				-- * hidden
+			create l_attr.make (6)
 			l_attr.force (at_name, "name")
 			l_attr.force (at_location, "location")
 			l_attr.force (at_readonly, "readonly")
 			l_attr.force (at_prefix, "prefix")
 			l_attr.force (at_recursive, "recursive")
+			l_attr.force (at_hidden, "hidden")
 			Result.force (l_attr, t_cluster)
 			Result.force (l_attr, t_override)
 
@@ -2088,7 +2106,8 @@ feature {NONE} -- Implementation constants
 	at_working_directory,
 	at_type,
 	at_eifgens_location,
-	at_warning: INTEGER is unique
+	at_warning,
+	at_hidden: INTEGER is unique
 
 feature -- Assertions
 

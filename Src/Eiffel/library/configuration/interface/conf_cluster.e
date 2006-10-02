@@ -57,6 +57,9 @@ feature -- Access, stored in configuration file
 	is_recursive: BOOLEAN
 			-- Are subdirectories included recursively?
 
+	is_hidden: BOOLEAN
+			-- Is this a hidden cluster that can not be used if the cluster is used in a library.
+
 	parent: CONF_CLUSTER
 			-- An optional parent cluster.
 
@@ -449,6 +452,14 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			is_recursive_set: is_recursive = a_enabled
 		end
 
+	set_hidden (a_enabled: BOOLEAN) is
+			-- Set `is_hidden' to `a_enabled'.
+		do
+			is_hidden := a_enabled
+		ensure
+			is_hidden_set: is_hidden = a_enabled
+		end
+
 	set_dependencies (a_dependencies: like internal_dependencies) is
 			-- Set `a_dependencies'.
 		do
@@ -528,7 +539,8 @@ feature -- Equality
 		do
 			Result := Precursor (other) and then equal (dependencies, other.dependencies) and then
 						file_rule.is_equal (other.file_rule) and then equal (visible, other.visible) and then
-						is_recursive = other.is_recursive and then equal (mapping, other.mapping)
+						is_recursive = other.is_recursive and then is_hidden = other.is_hidden and then
+						equal (mapping, other.mapping)
 		end
 
 feature -- Visit

@@ -323,7 +323,11 @@ feature -- Visit nodes
 			end
 
 			create current_classes.make (Classes_per_cluster)
-			l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent {CONF_CLUSTER}.classes_set)
+			l_target.clusters.linear_representation.do_if (agent merge_classes ({CONF_CLUSTER} ?), agent (a_cluster: CONF_CLUSTER): BOOLEAN
+				do
+					Result := a_cluster.classes_set and then not a_cluster.is_hidden
+				end
+			)
 				-- do renaming prefixing if necessary
 			l_ren := a_library.renaming
 			if l_ren /= Void then

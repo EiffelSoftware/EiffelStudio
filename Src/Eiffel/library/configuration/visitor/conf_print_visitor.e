@@ -901,6 +901,9 @@ feature {NONE} -- Implementation
 			if a_cluster.is_recursive then
 				append_text (" recursive=%"true%"")
 			end
+			if a_cluster.is_hidden then
+				append_text (" hidden=%"true%"")
+			end
 		end
 
 	append_val_cluster (a_cluster: CONF_CLUSTER) is

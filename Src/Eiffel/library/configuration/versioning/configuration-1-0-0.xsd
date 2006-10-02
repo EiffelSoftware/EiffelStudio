@@ -376,6 +376,7 @@
 					<xs:element name="mapping" type="mapping" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 				<xs:attribute name="recursive" type="xs:boolean" use="optional"/>
+				<xs:attribute name="hidden" type="xs:boolean" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

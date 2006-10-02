@@ -72,14 +72,12 @@ feature -- Command
 		local
 			l_pixmap_imp: EV_PIXMAP_IMP
 			l_pixbuf: POINTER
-			l_gdkpix, l_gdkmask: POINTER
 		do
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver >= 2 then
 				create Result
 				l_pixmap_imp ?= Result.implementation
 				l_pixbuf := {EV_GTK_EXTERNALS}.gdk_pixbuf_new_subpixbuf (gdk_pixbuf, a_rect.x, a_rect.y, a_rect.width, a_rect.height)
-				{EV_GTK_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (l_pixbuf, $l_gdkpix, $l_gdkmask, 255)
-				l_pixmap_imp.set_pixmap (l_gdkpix, l_gdkmask)
+				l_pixmap_imp.set_pixmap_from_pixbuf (l_pixbuf)
 				{EV_GTK_EXTERNALS}.object_unref (l_pixbuf)
 			else
 				Result := internal_pixmap.sub_pixmap (a_rect)

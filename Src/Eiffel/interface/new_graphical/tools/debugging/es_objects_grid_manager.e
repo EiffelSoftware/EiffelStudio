@@ -34,6 +34,27 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 				)
 		end
 
+	pre_activate_cell (ei: EV_GRID_ITEM) is
+			-- Process special operation before cell `ei' get activated
+		local
+			evi: ES_OBJECTS_GRID_VALUE_CELL
+			ost: OBJECT_STONE
+			p: ES_OBJECTS_GRID
+		do
+			if pretty_print_cmd /= Void then
+				evi ?= ei
+				if evi /= Void and then evi.is_parented and then evi.row /= Void then
+					p ?= ei.parent
+					if p /= Void then
+						ost ?= p.grid_pebble_from_cell (evi)
+						if ost /= Void and then pretty_print_cmd.accepts_stone (ost) then
+							evi.set_button_action (agent pretty_print_cmd.set_stone (ost))
+						end
+					end
+				end
+			end
+		end
+
 feature -- ES grid specific
 
 	toggle_expanded_state_of_selected_rows (a_grid: EV_GRID) is

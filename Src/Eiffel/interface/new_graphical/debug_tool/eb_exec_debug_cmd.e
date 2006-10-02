@@ -26,7 +26,7 @@ create
 
 feature -- Initialization
 
-	make (a_manager: like debugger_manager) is
+	make (a_manager: like eb_debugger_manager) is
 			-- Initialize `Current'.
 		do
 			Precursor (a_manager)

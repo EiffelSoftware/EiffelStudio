@@ -29,10 +29,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like debugger_manager) is
+	make (a_manager: like eb_debugger_manager) is
 			-- Initialize `Current' and associate it with `a_manager'.
 		do
-			debugger_manager := a_manager
+			eb_debugger_manager := a_manager
 		end
 
 feature -- Formatting
@@ -55,7 +55,7 @@ feature -- Formatting
 
 feature -- Properties
 
-	debugger_manager: EB_DEBUGGER_MANAGER
+	eb_debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
 	tooltip: STRING is
@@ -99,23 +99,23 @@ feature {NONE} -- Implementation
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			if not executed_from_widget and not debugger_manager.raised then
+			if not executed_from_widget and not eb_debugger_manager.raised then
 					-- The debugging window has not been updated yet.
 					-- If a shortcut was used, the corresponding window
 					-- must have the focus.
 				conv_dev ?= window_manager.last_focused_window
 				if conv_dev /= Void then
-					debugger_manager.set_debugging_window (conv_dev)
+					eb_debugger_manager.set_debugging_window (conv_dev)
 				else
 					debug  end
-					debugger_manager.set_debugging_window (Window_manager.a_development_window)
+					eb_debugger_manager.set_debugging_window (Window_manager.a_development_window)
 				end
 			end
-			debugger_manager.debug_run_cmd.execute_with_mode (a_execution_mode)
-			if not debugger_manager.application_is_executing then
+			eb_debugger_manager.debug_run_cmd.execute_with_mode (a_execution_mode)
+			if not eb_debugger_manager.application_is_executing then
 					-- The application was not launched for some reason
 					-- (a compilation was running, the user didn't want to launch it after all,...)
-				debugger_manager.set_debugging_window (Void)
+				eb_debugger_manager.set_debugging_window (Void)
 			end
 			debug
 				executed_from_widget := False
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			dev: EB_DEVELOPMENT_WINDOW
 		do
 			executed_from_widget := False
-			if not debugger_manager.raised then
+			if not eb_debugger_manager.raised then
 					-- We try to find from which window we were launched.
 				from
 					trigger := widget
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 				end
 				window ?= trigger
 				if window /= Void then
-					debugger_manager.set_debugging_window (
+					eb_debugger_manager.set_debugging_window (
 						window_manager.development_window_from_window (window)
 					)
 					executed_from_widget := True
@@ -158,13 +158,13 @@ feature {NONE} -- Implementation
 					end
 					dev ?= Window_manager.last_focused_window
 					if dev /= Void then
-						debugger_manager.set_debugging_window (dev)
+						eb_debugger_manager.set_debugging_window (dev)
 						executed_from_widget := True
 					else
 						debug ("DEBUGGER_INTERFACE")
 							io.put_string ("Could not find the last focused window (dixit EB_EXEC_FORMAT_CMD)%N")
 						end
-						debugger_manager.set_debugging_window (Window_manager.a_development_window)
+						eb_debugger_manager.set_debugging_window (Window_manager.a_development_window)
 						if Window_manager.a_development_window /= Void then
 							executed_from_widget := True
 						end

@@ -16,7 +16,7 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 	EV_SHARED_APPLICATION
 		undefine
 			copy, default_create
@@ -46,20 +46,61 @@ feature -- Access
 
 	data: ANY
 
-	pebble: ANY is
+	item_pebble_details (i: INTEGER): TUPLE [pebble: ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE] is
 		do
 		end
-		
+
+	item_pebble (i: INTEGER): ANY is
+		local
+			t: like item_pebble_details
+		do
+			t := item_pebble_details (i)
+			if t /= Void then
+				Result := t.pebble
+			end
+		end
+
+	item_pnd_accept_cursor (i: INTEGER): EV_POINTER_STYLE is
+		require
+			item_pebble (i) /= Void
+		local
+			t: like item_pebble_details
+		do
+			t := item_pebble_details (i)
+			if t /= Void then
+				Result := t.accept_cursor
+			end
+		end
+
+	item_pnd_deny_cursor (i: INTEGER): EV_POINTER_STYLE is
+		require
+			item_pebble (i) /= Void
+		local
+			t: like item_pebble_details
+		do
+			t := item_pebble_details (i)
+			if t /= Void then
+				Result := t.deny_cursor
+			end
+		end
+
+	pebble: ANY is
+		do
+			Result := item_pebble (0)
+		end
+
 	pnd_accept_cursor: EV_POINTER_STYLE is
 		require
 			pebble /= Void
 		do
+			Result := item_pnd_accept_cursor (0)
 		end
 
 	pnd_deny_cursor: EV_POINTER_STYLE is
 		require
 			pebble /= Void
 		do
+			Result := item_pnd_deny_cursor (0)
 		end
 
 feature -- Change

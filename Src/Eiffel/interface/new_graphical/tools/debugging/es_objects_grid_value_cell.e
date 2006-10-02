@@ -11,13 +11,118 @@ class
 
 inherit
 	ES_OBJECTS_GRID_CELL
+		redefine
+			initialize,
+			activate_action, deactivate,
+			initialize_actions
+		end
+
+	EB_SHARED_PIXMAPS
+		rename
+			implementation as pixmaps_impl
+		undefine
+			copy, default_create
+		end
 
 create
 	default_create,
 	make_with_text
 
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialize.
+		do
+			Precursor
+		end
+
 feature -- Query
 
+	initialize_actions is
+			-- Setup the actions sequences when the item is shown.
+		do
+			Precursor
+			text_field.focus_out_actions.wipe_out
+			text_field.focus_out_actions.extend (agent focus_lost)
+			if button /= Void then
+				button.focus_out_actions.extend (agent focus_lost)
+				button.select_actions.extend (button_action)
+				button.select_actions.extend (agent deactivate)
+			end
+		end
+
+	activate_action (popup_window: EV_POPUP_WINDOW) is
+			-- `Current' has been requested to be updated via `popup_window'.
+		local
+			hb: EV_HORIZONTAL_BOX
+			h: INTEGER
+		do
+			Precursor (popup_window)
+			if button_action /= Void then
+				h := text_field.height
+--				h := popup_window.height
+				popup_window.prune_all (text_field)
+				create hb
+				hb.extend (text_field)
+				create button
+				button.set_pixmap (Mini_pixmaps.debugger_expand_info_icon)
+				hb.extend (button)
+				hb.disable_item_expand (button)
+
+				popup_window.extend (hb)
+				button.set_minimum_height (h)
+			end
+			is_activated := True
+		end
+
+	deactivate is
+			-- Cleanup from previous call to activate.
+		do
+			Precursor
+			is_activated := True
+			if button /= Void then
+				if button.parent /= Void then
+					button.parent.destroy
+				end
+				button.destroy
+				button := Void
+			end
+		end
+
+feature -- Properties
+
+	button_action: PROCEDURE [ANY, TUPLE]
+			-- Actions called if the button is pressed.	
+
+	is_activated: BOOLEAN
+			-- Is the property activated?
+
+	button: EV_BUTTON
+
+feature -- Change
+
+	set_button_action (v: like button_action) is
+		do
+			button_action := v
+		end
+
+feature {NONE} -- Impl
+
+	focus_lost
+			-- Check if no other element in the popup has the focus.
+		do
+			if is_activated and then not has_focus and then is_parented then
+				deactivate
+			end
+		end
+
+	has_focus: BOOLEAN
+			-- Does this property have the focus?
+		require
+			is_activated
+		do
+			Result := text_field.has_focus or (button /= Void and then button.has_focus)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

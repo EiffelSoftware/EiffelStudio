@@ -204,6 +204,25 @@ feature -- Debugging events
 			debugging_operation_id := debugging_operation_id + 1
 		end
 
+feature -- Debuggee Objects management
+
+	release_object_references (kobjs: LIST [STRING]) is
+		local
+			st: APPLICATION_STATUS
+		do
+			if Application_is_executing then
+				st := Application.status
+				from
+					kobjs.start
+				until
+					kobjs.after
+				loop
+					st.release_object (kobjs.item)
+					kobjs.forth
+				end
+			end
+		end
+
 invariant
 
 	Application /= Void and then Application.debugger_manager = Current

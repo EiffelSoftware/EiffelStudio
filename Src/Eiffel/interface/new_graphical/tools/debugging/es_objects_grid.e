@@ -393,26 +393,69 @@ feature -- Menu
 
 feature -- Query
 
-	grid_pebble_from_cell (a_cell: EV_GRID_ITEM): ANY is
-			-- Return pebble which may be contained in `a_cell'
-		do
-				--| Nota: At this point we could try to return
-				--| special stone depending of the clicked cell
-			Result := grid_pebble_from_row (a_cell.row)
-		end
-
-	grid_pebble_from_row (a_row: EV_GRID_ROW): ANY is
-			-- Return pebble which may be contained in `a_row'
+	grid_pnd_details_from_row_and_column (a_row: EV_GRID_ROW; a_col: EV_GRID_COLUMN):
+				TUPLE [pebble:ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE] is
+			-- Return pnd details which may be contained in `a_row' related to `a_col'.
 		local
 			ctler: ES_GRID_ROW_CONTROLLER
 		do
 			if a_row /= Void then
 				ctler ?= a_row.data
 				if ctler /= Void then
-					Result := ctler.pebble
+					if a_col /= Void then
+						Result := ctler.item_pebble_details (a_col.index)
+					else
+						Result := ctler.item_pebble_details (0)
+					end
 				end
 			end
 		end
+
+	grid_pebble_from_cell (a_cell: EV_GRID_ITEM): ANY is
+			-- Return pebble which may be contained in `a_cell'.
+		require
+			a_cell_not_void: a_cell /= Void
+		do
+			Result := grid_pebble_from_row_and_column (a_cell.row, a_cell.column)
+		end
+
+	grid_pebble_from_row_and_column (a_row: EV_GRID_ROW; a_col: EV_GRID_COLUMN): ANY is
+			-- Return pebble which may be contained in `a_row' related to `a_col'.
+		local
+			t: like grid_pnd_details_from_row_and_column
+		do
+			t := grid_pnd_details_from_row_and_column (a_row, a_col)
+			if t /= Void then
+				Result := t.pebble
+			end
+		end
+
+	grid_accept_cursor_from_cell (a_cell: EV_GRID_ITEM): EV_POINTER_STYLE is
+			-- Return accept_cursor which may be contained in `a_row' related to `a_col'.
+		require
+			a_cell_not_void: a_cell /= Void
+		local
+			t: like grid_pnd_details_from_row_and_column
+		do
+			t := grid_pnd_details_from_row_and_column (a_cell.row, a_cell.column)
+			if t /= Void then
+				Result := t.accept_cursor
+			end
+		end
+
+	grid_deny_cursor_from_cell (a_cell: EV_GRID_ITEM): EV_POINTER_STYLE is
+			-- Return deny_cursor which may be contained in `a_row' related to `a_col'.
+		require
+			a_cell_not_void: a_cell /= Void
+		local
+			t: like grid_pnd_details_from_row_and_column
+		do
+			t := grid_pnd_details_from_row_and_column (a_cell.row, a_cell.column)
+			if t /= Void then
+				Result := t.deny_cursor
+			end
+		end
+
 
 feature {NONE} -- Actions implementation
 
@@ -430,26 +473,22 @@ feature {NONE} -- Actions implementation
 		end
 
 	on_pnd_accept_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE is
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
 		do
-			if a_item /= Void then
-				ctler ?= a_item.row.data
-				if ctler /= Void then
-					Result := ctler.pnd_accept_cursor
-				end
+			if
+				not ev_application.ctrl_pressed
+				and a_item /= Void
+			then
+				Result := grid_accept_cursor_from_cell (a_item)
 			end
 		end
 
 	on_pnd_deny_cursor_function (a_item: EV_GRID_ITEM): EV_POINTER_STYLE is
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
 		do
-			if a_item /= Void then
-				ctler ?= a_item.row.data
-				if ctler /= Void then
-					Result := ctler.pnd_deny_cursor
-				end
+			if
+				not ev_application.ctrl_pressed
+				and a_item /= Void
+			then
+				Result := grid_deny_cursor_from_cell (a_item)
 			end
 		end
 
@@ -460,7 +499,7 @@ feature {NONE} -- Actions implementation
 			if ab = 1 then
 				ei ?= a_item
 				if ei /= Void then
-					ei.activate
+					activate_grid_item (ei)
 				end
 			end
 		end
@@ -529,6 +568,27 @@ end
 			end
 		end
 
+feature {NONE} -- Grid items activation
+
+	activate_grid_item (ei: EV_GRID_ITEM) is
+		require
+			ei /= Void
+		do
+			if pre_activation_action /= Void then
+				pre_activation_action.call ([ei])
+			end
+			ei.activate
+		end
+
+	pre_activation_action: PROCEDURE [ANY, TUPLE [EV_GRID_ITEM]]
+
+feature -- Grid items activation change
+
+	set_pre_activation_action (v: like pre_activation_action) is
+		do
+			pre_activation_action := v
+		end
+
 feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
 
 	create_kept_object_references is
@@ -541,32 +601,15 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
 
 	clear_kept_object_references is
 		do
-			release_object_references (kept_object_references)
+			Debugger_manager.release_object_references (kept_object_references)
 			kept_object_references.wipe_out
-		end
-
-	release_object_references (kobjs: LIST [STRING]) is
-		local
-			st: APPLICATION_STATUS
-		do
-			if debugger_manager.application_is_executing then
-				st := debugger_manager.application.status
-				from
-					kobjs.start
-				until
-					kobjs.after
-				loop
-					st.release_object (kobjs.item)
-					kobjs.forth
-				end
-			end
 		end
 
 	keep_object_in_debugger_for_gui_need (add: STRING) is
 		do
 			if not kept_object_references.has (add) then
 				Kept_object_references.extend (add)
-				debugger_manager.application.status.keep_object_for_gui (add)
+				Debugger_manager.application.status.keep_object (add)
 			end
 		end
 
@@ -738,7 +781,7 @@ feature -- Layout manager
 				layout_manager.record
 
 					--| Post recording
-				release_object_references (old_kept)
+				Debugger_manager.release_object_references (old_kept)
 			end
 		end
 

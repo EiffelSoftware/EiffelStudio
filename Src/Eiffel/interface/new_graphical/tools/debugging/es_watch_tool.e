@@ -111,6 +111,8 @@ feature {NONE} -- Initialization
 			esgrid.key_press_actions.extend (agent key_pressed)
 			esgrid.key_press_string_actions.extend (agent string_key_pressed)
 
+			esgrid.set_pre_activation_action (agent pre_activate_cell)
+
 			watches_grid := esgrid
 			initialize_watches_grid_layout (preferences.debug_tool_data.is_watches_grids_layout_managed_preference)
 
@@ -829,7 +831,7 @@ feature {NONE} -- Event handling
 						and not ev_application.shift_pressed
 					then
 						if watches_grid.selected_rows.count > 0 then
-							ost ?= watches_grid.grid_pebble_from_row (watches_grid.selected_rows.first)
+							ost ?= watches_grid.grid_pebble_from_row_and_column (watches_grid.selected_rows.first, Void)
 							pretty_print_cmd.set_stone (ost)
 						end
 					end
@@ -1048,7 +1050,7 @@ feature {NONE} -- grid Layout Implementation
 	keep_object_reference_fixed (addr: STRING) is
 		do
 			if debugger_manager.application_is_executing then
-				application.status.keep_object_for_gui (addr)
+				application.status.keep_object (addr)
 			end
 		end
 

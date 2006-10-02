@@ -118,6 +118,7 @@
 		<xs:attribute name="debug" type="xs:boolean" use="optional"/>
 		<xs:attribute name="warning" type="xs:boolean" use="optional"/>
 		<xs:attribute name="namespace" type="xs:string" use="optional"/>
+		<xs:attribute name="msil_application_optimize" type="xs:boolean" use="optional" />
 	</xs:complexType>
 
 	<xs:complexType name="setting">

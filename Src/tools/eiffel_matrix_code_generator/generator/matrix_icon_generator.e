@@ -68,7 +68,7 @@ feature {NONE} -- Icon generation
 			if not retried then
 				create l_fn.make
 				l_fn.set_directory (a_location)
-				l_fn.set_file_name (a_prefix.as_lower + a_name.as_lower + tile_suffix.as_lower + ".png")
+				l_fn.set_file_name (format_eiffel_name (a_prefix + a_name + tile_suffix) + ".png")
 				l_pixmap := a_matrix.sub_pixmap (pixel_rectangle (a_x, a_y, a_pw, a_ph))
 				retried := l_pixmap = Void
 				if not retried then

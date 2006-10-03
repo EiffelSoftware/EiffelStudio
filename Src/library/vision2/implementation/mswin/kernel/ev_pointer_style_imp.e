@@ -74,12 +74,9 @@ feature {NONE} -- Initlization
 
 	init_predefined (a_constants: INTEGER) is
 			-- Initialized a predefined cursor.
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			destroy_gdi_objects
 			build_default_icon (to_windows_constants (a_constants))
-			create l_env
 		end
 
 feature -- Command
@@ -151,21 +148,14 @@ feature -- Query
 
 	x_hotspot: INTEGER is
 			-- Specifies the x-coordinate of a cursor's hot spot.
-		local
-			l_icon_info: WEL_ICON_INFO
 		do
-			l_icon_info := wel_cursor.get_icon_info
-			Result := l_icon_info.x_hotspot
-			l_icon_info.delete
+			Result := wel_cursor.x_hotspot
 		end
 
 	y_hotspot: INTEGER is
 			-- Specifies the y-coordinate of a cursor's hot spot.
-		local
-			l_icon_info: WEL_ICON_INFO
 		do
-			l_icon_info := wel_cursor.get_icon_info
-			Result := l_icon_info.y_hotspot
+			Result := wel_cursor.y_hotspot
 		end
 
 	to_windows_constants (a_constants: INTEGER): POINTER is

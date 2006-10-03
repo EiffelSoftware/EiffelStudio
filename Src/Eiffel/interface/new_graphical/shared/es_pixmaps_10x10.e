@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			retried := True
 			retry
 		end
-
+		
 feature -- Access
 
 	pixel_width: INTEGER is 10
@@ -159,6 +159,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 1))
 		end
+
 	frozen sort_accending_icon: EV_PIXMAP is
 			-- Access to 'accending' pixmap.
 		once
@@ -194,6 +195,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (11, 1))
 		end
+
 	frozen general_blank_icon: EV_PIXMAP is
 			-- Access to 'blank' pixmap.
 		once
@@ -337,6 +339,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 2))
 		end
+
 	frozen debugger_callstack_depth_icon: EV_PIXMAP is
 			-- Access to 'callstack depth' pixmap.
 		once
@@ -396,6 +399,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (5, 3))
 		end
+
 	frozen breakpoints_enable_icon: EV_PIXMAP is
 			-- Access to 'enable' pixmap.
 		once
@@ -419,6 +423,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 3))
 		end
+
 	frozen callstack_send_to_external_editor_icon: EV_PIXMAP is
 			-- Access to 'send to external editor' pixmap.
 		once
@@ -430,6 +435,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (8, 3))
 		end
+
 	frozen new_feature_icon: EV_PIXMAP is
 			-- Access to 'feature' pixmap.
 		once
@@ -513,6 +519,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 4))
 		end
+
 	frozen completion_remember_size_icon: EV_PIXMAP is
 			-- Access to 'remember size' pixmap.
 		once
@@ -596,6 +603,7 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (7, 5))
 		end
+
 	frozen bon_persistent_icon: EV_PIXMAP is
 			-- Access to 'persistent' pixmap.
 		once
@@ -644,6 +652,7 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (4, 6))
 		end
 
+		
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is

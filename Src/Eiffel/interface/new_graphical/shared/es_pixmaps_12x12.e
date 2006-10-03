@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			retried := True
 			retry
 		end
-
+		
 feature -- Access
 
 	pixel_width: INTEGER is 12
@@ -208,6 +208,7 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (12, 1))
 		end
 
+		
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is

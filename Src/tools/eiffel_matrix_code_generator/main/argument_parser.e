@@ -120,7 +120,7 @@ feature {NONE} -- Usage
 	version: STRING is
 			-- Version number of application
 		once
-			Result := "1.2.2"
+			Result := "1.3.1"
 		end
 
 	loose_argument_name: STRING_8 is

@@ -770,7 +770,7 @@ feature {NONE} -- error handling
 			raise (an_error.out)
 		end
 
-feature {NONE} -- il emitter
+feature {EXTERNAL_CLASS_C} -- il emitter
 
 	il_emitter: IL_EMITTER is
 			-- Instance of IL_EMITTER

@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		local
 			a_buffer: EV_PIXMAP;
 		do
-			create a_buffer.make_with_size (a_drawing_area.width.max (1) * buffer_scale_factor, a_drawing_area.height.max (1) * buffer_scale_factor)
+			create a_buffer
 			create drawable_cell.put (a_buffer)
 			make_with_drawable_widget_and_buffer (
 				a_world,
@@ -58,15 +58,22 @@ feature {NONE} -- Initialization
 			a_drawing_area.expose_actions.extend (agent on_paint)
 			a_drawing_area.resize_actions.extend (agent resize_buffer)
 			create drawable_position
+
+			recenter_agent := agent
+				do
+					if not area_centered then
+						move_buffer
+					end
+				end
 		end
 
 feature -- Access
 
-	buffer_scale_factor: INTEGER is 2
-			-- The buffer is `buffer_scale_factor' times biger than the window.
+	buffer_scale_factor: REAL_32 is 1.5
+			-- The buffer is `buffer_scale_factor' times bigger than the window.
 
 	offset_x: INTEGER is
-			-- Everyting is drawen offset_x pixels to the right.
+			-- Everyting is drawn offset_x pixels to the right.
 		do
 			Result := -drawable_position.x
 		end
@@ -130,7 +137,7 @@ feature -- Element change
 				move_buffer
 			elseif area_centered then
 				area_centered := False
-				ev_application.idle_actions.extend (recenter_agent)
+				ev_application.do_once_on_idle (recenter_agent)
 			end
 			update
 		end
@@ -249,8 +256,8 @@ feature {NONE} -- Implementation
 		do
 			area_centered := True
 			create buffer_bounds.make (
-				area_x - area.width * (Buffer_scale_factor - 1) // 2,
-				area_y - area.height * (Buffer_scale_factor - 1) // 2,
+				(area_x - area.width * (Buffer_scale_factor - 1) / 2).rounded,
+				(area_y - area.height * (Buffer_scale_factor - 1) / 2).rounded,
 				drawable.width,
 				drawable.height
 				)
@@ -267,12 +274,8 @@ feature {NONE} -- Implementation
 			buffer ?= drawable
 			if
 				buffer /= Void
-					and then
-				(buffer.width < area_width * Buffer_scale_factor
-					or else
-				buffer.height < area_height * Buffer_scale_factor)
 			then
-				buffer.set_size (area_width.max (1) * Buffer_scale_factor, area_height.max (1) * Buffer_scale_factor)
+				buffer.reset_for_buffering ((area_width.max (1) * Buffer_scale_factor).rounded, (area_height.max (1) * Buffer_scale_factor).rounded)
 			end
 			move_buffer
 			update
@@ -291,20 +294,8 @@ feature {NONE} -- Implementation
 				area_y + area.height < drawable_position.y + drawable.height
 		end
 
-	recenter_agent: PROCEDURE [ANY, TUPLE] is
+	recenter_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent for recentering on idle.
-		once
-			Result := agent recenter_area
-		end
-
-	recenter_area is
-			-- Move buffer so that `area' is at its center.
-		do
-			if not area_centered then
-				move_buffer
-			end
-			ev_application.idle_actions.prune_all (recenter_agent)
-		end
 
 	area_centered: BOOLEAN
 			-- Is `area' showing the central part of `drawable', i.e. the buffer ?

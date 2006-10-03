@@ -146,6 +146,8 @@ feature -- Element change
 						bitmap_ids_index.put (last_position, l_id)
 						image_id_to_bitmap_id_index.put (l_id, last_position)
 					end
+				else
+					internal_add_pixmap (a_pixmap)
 				end
 			else
 				internal_add_pixmap (a_pixmap)

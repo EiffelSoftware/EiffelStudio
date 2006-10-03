@@ -200,12 +200,7 @@ feature {NONE} -- Processing
 			l_bsuffix := buffer_suffix
 
 				-- Create feature prefix
-			l_section ?= a_item.container
-			l_label := section_label (l_section)
-			create l_prefix.make (l_label.count + 1)
-			l_prefix.append (l_label)
-			l_prefix.prune_all_trailing ('_')
-			l_prefix.append_character ('_')
+			l_prefix := tile_prefix (a_item)
 
 			l_name := a_item.name
 			l_name.to_lower

@@ -46,6 +46,27 @@ feature -- Access
 
 feature {NONE} -- Access
 
+	tile_prefix (a_literal: INI_LITERAL): STRING is
+			-- Retrieves a tile prefix for `a_literal'
+		require
+			a_literal_attached: a_literal /= Void
+		local
+			l_section: INI_SECTION
+			l_label: STRING
+		do
+			l_section ?= a_literal.container
+			check
+				l_section_attached: l_section /= Void
+			end
+			l_label := section_label (l_section)
+			create Result.make (l_label.count + 1)
+			Result.append (l_label)
+			Result.prune_all_trailing ('_')
+			Result.append_character ('_')
+		ensure
+			result_attached: Result /= Void
+		end
+
 	tile_suffix: STRING is
 			-- Retrieves buffer tile name suffix
 		do
@@ -55,7 +76,6 @@ feature {NONE} -- Access
 			end
 		ensure
 			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
 feature -- Status report

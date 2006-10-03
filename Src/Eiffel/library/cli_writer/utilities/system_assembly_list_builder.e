@@ -116,6 +116,34 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	assemblies_properties: LIST [ASSEMBLY_PROPERTIES] is
+			-- A flat list of assembly properties
+		local
+			l_files: like assemblies
+			l_cursor: CURSOR
+			l_result: ARRAYED_LIST [ASSEMBLY_PROPERTIES]
+			l_props: ASSEMBLY_PROPERTIES
+			l_reader: ASSEMBLY_PROPERTIES_READER
+		do
+			l_files := assemblies
+			create l_result.make (l_files.count)
+			if not l_files.is_empty then
+				create l_reader.make
+				l_cursor := l_files.cursor
+				from l_files.start until l_files.after loop
+					l_props := l_reader.retrieve_assembly_properties (l_files.item)
+					if l_props /= Void then
+						l_result.extend (l_props)
+					end
+					l_files.forth
+				end
+				l_files.go_to (l_cursor)
+			end
+			Result := l_result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Registry Searching
 
 	folders_from_path (a_reg_path: STRING_32): ARRAYED_LIST [STRING_32]

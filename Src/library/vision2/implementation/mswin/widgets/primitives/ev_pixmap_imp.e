@@ -1671,7 +1671,7 @@ feature {NONE} -- Implementation
 					-- Copy the first half of `icon_mask_bitmap' into
 					-- `mask_bitmap'			
 				mem2_dc.bit_blt (0, 0, new_width, new_height,
-					mem1_dc, 0, 0, Raster_operations_constants.Srccopy)
+					mem1_dc, 0, 0, Raster_operations_constants.notsrccopy)
 
 					-- Free memory				
 				mem2_dc.unselect_bitmap

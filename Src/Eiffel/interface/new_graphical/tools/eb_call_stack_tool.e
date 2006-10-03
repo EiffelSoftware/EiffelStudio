@@ -699,7 +699,7 @@ feature {NONE} -- Implementation
 --			one_line: Result /= Void and then (not Result.has ('%R') and not Result.has ('%N'))
 		end
 
-	exception_message_text: STRING is
+	exception_message_text: STRING_32 is
 			-- Text corresponding to the current exception.
 		local
 			dotnet_status: APPLICATION_STATUS_DOTNET

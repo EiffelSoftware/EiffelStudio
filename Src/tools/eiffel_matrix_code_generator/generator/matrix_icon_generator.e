@@ -49,11 +49,12 @@ feature -- Basic Operations
 
 feature {NONE} -- Icon generation
 
-	generate_icon (a_name: STRING; a_location: STRING; a_x, a_y, a_pw, a_ph: NATURAL; a_matrix: EV_PIXMAP) is
+	generate_icon (a_name: STRING; a_prefix: STRING; a_location: STRING; a_x, a_y, a_pw, a_ph: NATURAL; a_matrix: EV_PIXMAP) is
 			-- Generates a single icon tile in `a_matrix'
 		require
 			a_name_attached: a_name /= Void
 			not_a_name_is_empty: not a_name.is_empty
+			a_prefix_attached: a_prefix /= Void
 			a_location_attached: a_location /= Void
 			not_a_location_is_empty: not a_location.is_empty
 			a_location_exists: (create {DIRECTORY}.make (a_location)).exists
@@ -67,7 +68,7 @@ feature {NONE} -- Icon generation
 			if not retried then
 				create l_fn.make
 				l_fn.set_directory (a_location)
-				l_fn.set_file_name (a_name.as_lower + tile_suffix + ".png")
+				l_fn.set_file_name (a_prefix.as_lower + a_name.as_lower + tile_suffix.as_lower + ".png")
 				l_pixmap := a_matrix.sub_pixmap (pixel_rectangle (a_x, a_y, a_pw, a_ph))
 				retried := l_pixmap = Void
 				if not retried then
@@ -87,7 +88,7 @@ feature {NONE} -- Processing
 	process_literal_item (a_item: INI_LITERAL; a_x: NATURAL_32; a_y: NATURAL_32) is
 			-- Processes a literal from an INI matrix file.
 		do
-			generate_icon (a_item.name, png_location, a_x, a_y, pixel_width, pixel_height, matrix)
+			generate_icon (a_item.name, tile_prefix (a_item), png_location, a_x, a_y, pixel_width, pixel_height, matrix)
 		end
 
 feature {NONE} -- Implementation

@@ -69,9 +69,13 @@ feature {NONE} -- Initialization
 			l_lbl: EV_LABEL
 			l_il_env: IL_ENVIRONMENT
 			l_alb: SYSTEM_ASSEMBLY_LIST_BUILDER
-			l_assemblies: LIST  [STRING]
+			l_locales: LIST [STRING]
+			l_properties: LIST [ASSEMBLY_PROPERTIES]
+			l_property: ASSEMBLY_PROPERTIES
 			l_item: EV_LIST_ITEM
-			l_path, l_name: STRING
+			l_name: STRING
+			l_culture: STRING
+			l_key: STRING
 		do
 			Precursor
 
@@ -107,17 +111,43 @@ feature {NONE} -- Initialization
 			if l_il_env.is_dotnet_installed then
 				create l_alb.make (l_il_env.dotnet_framework_path, l_il_env.version)
 				from
-					l_assemblies := l_alb.assemblies
-					l_assemblies.start
+					l_properties := l_alb.assemblies_properties
+					l_properties.start
 				until
-					l_assemblies.after
+					l_properties.after
 				loop
-					l_path := l_assemblies.item
-					l_name := name_from_location (l_path)
+					l_property := l_properties.item
+					create l_name.make (300)
+					l_name.append (l_property.name)
+					l_name.append (once ", Version=")
+					l_name.append (l_property.version_string)
+					if l_property.is_neutral_locale then
+						l_culture := once "Neutral"
+					else
+						l_locales := l_property.locales
+						create l_culture.make (5 * l_locales.count)
+						from l_locales.start until l_locales.after loop
+							l_culture.append (l_locales.item)
+							if not l_locales.islast then
+								l_culture.append (once " | ")
+							end
+							l_locales.forth
+						end
+					end
+					l_name.append (once ", Culture=")
+					l_name.append (l_culture)
+					if l_property.is_signed then
+						l_key := l_property.public_key_token_string
+					else
+						l_key := once "Null"
+					end
+					l_name.append (once ", PublicKeyToken=")
+					l_name.append (l_key)
 					create l_item.make_with_text (l_name)
-					l_item.select_actions.extend (agent fill_assembly (l_name, l_path))
+					l_item.select_actions.extend (agent fill_assembly (l_name, l_property.location))
+					l_item.set_pixmap (pixmaps.icon_pixmaps.folder_assembly_icon)
 					assemblies.extend (l_item)
-					l_assemblies.forth
+					l_properties.forth
 				end
 
 				sort_assemblies
@@ -185,7 +215,7 @@ feature {NONE} -- Initialization
 			l_btn.select_actions.extend (agent on_cancel)
 			set_default_width_for_button (l_btn)
 
-			set_minimum_width (300)
+			set_minimum_width (440)
 
 			if not assemblies.is_empty then
 				show_actions.extend (agent assemblies.set_focus)
@@ -222,8 +252,10 @@ feature {NONE} -- Actions
 		local
 			l_il_env: IL_ENVIRONMENT
 			l_loc: STRING
+			l_parts: LIST [STRING]
 		do
-			name.set_text (a_name)
+			l_parts := a_name.split (',')
+			name.set_text (l_parts.first.as_lower)
 
 			if target.setting_msil_clr_version.is_empty then
 				create l_il_env

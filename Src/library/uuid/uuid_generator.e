@@ -1,5 +1,9 @@
 indexing
 	description: "Generates uuids according to RFC 4122, Variant 1 0, Version 4."
+	remark: "[
+		This generator was designed for a single threaded case.
+		In a multithreaded environment only one UUID_GENERATOR should be created and then be shared among all threads.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

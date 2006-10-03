@@ -20,17 +20,24 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Initializes reader
+		local
+			l_dis: like dispenser
 		do
-			exists := c_initialize ($dispenser) = 0
+			c_initialize ($l_dis).do_nothing
+			dispenser := l_dis
 		end
 
 feature -- Clean up
 
 	dispose is
 			-- Cleans up any allocated resources
+		local
+			l_dis: like dispenser
 		do
 			if exists then
-				c_uninitialize ($dispenser)
+				l_dis := dispenser
+				c_uninitialize ($l_dis)
+				dispenser := default_pointer
 			end
 		ensure then
 			not_exists: not exists
@@ -91,8 +98,11 @@ feature -- Basic operations
 
 feature -- Status report
 
-	exists: BOOLEAN
+	exists: BOOLEAN is
 			-- Indicates if reader was successfully initialized and is read for use.
+		do
+			Result := dispenser /= default_pointer
+		end
 
 feature {NONE} -- Implementation
 
@@ -111,7 +121,7 @@ feature {NONE} -- Externals
 				BOOL fWasInit = FALSE;
 				HRESULT hr = S_OK;
 				
-				hr = CoInitialize (NULL);
+				hr = CoInitializeEE (NULL);
 				if (SUCCEEDED (hr))
 				{
 					fWasInit = (S_OK == hr); // COM was initialized here, make sure to uinit.
@@ -124,7 +134,7 @@ feature {NONE} -- Externals
 					else if (fWasInit)
 					{
 						// Clean up
-						CoUninitialize();
+						CoUninitializeEE(FALSE);
 					}
 				}
 				return hr;

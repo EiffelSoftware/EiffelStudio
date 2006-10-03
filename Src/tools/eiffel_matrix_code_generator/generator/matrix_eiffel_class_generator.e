@@ -280,39 +280,7 @@ feature {NONE} -- Buffers
 
 feature {NONE} -- Formatting
 
-	format_eiffel_name (a_name: STRING): STRING is
-			-- Formats `a_name' into an Eiffel name
-		require
-			a_name_attached: a_name /= Void
-			not_a_name_is_empty: not a_name.is_empty
-		local
-			l_count: INTEGER
-			c: CHARACTER
-			i: INTEGER
-		do
-			l_count := a_name.count
-			create Result.make (l_count)
-
-			from i := 1	 until i > l_count loop
-				c := a_name.item (i)
-				if c.is_alpha or (i > 1 and c.is_digit or c = '_') then
-					Result.append_character (c)
-				elseif i > 1 then
-					Result.append_character ('_')
-				else
-					Result.append ("x_")
-				end
-				i := i + 1
-			end
-
-			from l_count := -1 until l_count = Result.count loop
-				Result.replace_substring_all ("__", "_")
-				l_count := Result.count
-			end
-		ensure
-			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
-		end
+	
 
 feature {NONE} -- Implementation
 

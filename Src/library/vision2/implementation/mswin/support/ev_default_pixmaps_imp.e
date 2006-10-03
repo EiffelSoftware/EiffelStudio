@@ -130,7 +130,7 @@ feature -- Default cursors
 	Wait_cursor: EV_POINTER_STYLE is
 			-- Hourglass
 		do
-			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.wait_cursor)
 		end
 
 feature {NONE} -- Implementation

@@ -646,6 +646,17 @@ feature {NONE} -- User interaction
 			l_dial.show_modal_to_window (parent_window)
 		end
 
+	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
+			-- Should new environment values be accepted?
+		local
+			l_cd: EV_CONFIRMATION_DIALOG
+		do
+			create l_cd.make_with_text (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val))
+			l_cd.set_buttons_and_actions (<<"Yes", "No">>,
+				<<agent do is_update_environment := True end, agent do is_update_environment := False end>>)
+			l_cd.show_modal_to_window (parent_window)
+		end
+
 feature {NONE} -- Actions
 
 	deleting_dialog: EV_DIALOG

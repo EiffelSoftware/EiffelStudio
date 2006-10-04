@@ -708,6 +708,20 @@ feature -- Environment access
 			Result := environment.get_from_application (a_var, application_name)
 		end
 
+feature -- Environment update
+
+	set_environment (a_value, a_var: STRING) is
+			-- Update environment variable `a_key' to be `a_value'.
+		require
+			a_var_ok: a_var /= Void and then not a_var.is_empty and then not a_var.has ('%U')
+			a_value_ok: a_value /= Void and then not a_value.has ('%U')
+		do
+			environment.put (a_value, a_var)
+		ensure
+			value_updated: get_environment (a_var).is_equal (a_value)
+		end
+
+
 feature -- IL environment
 
 	default_il_environment: IL_ENVIRONMENT is

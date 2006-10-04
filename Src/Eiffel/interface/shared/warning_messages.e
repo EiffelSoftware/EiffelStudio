@@ -864,6 +864,13 @@ feature -- Project creation, retrieval, ...
 				%Please choose a valid and writable directory."
 		end
 
+	w_Environment_changed (a_key, a_old_val, a_new_val: STRING): STRING is
+		do
+			Result := "Environment variable '"+a_key+"' has changed%N%N%
+				%Old value: "+a_old_val+"%NNew value: "+a_new_val+"%N%N%
+				%Should the new value be used?"
+		end
+
 feature -- Refactoring
 
 	w_Feature_not_written_in_class: STRING is "Feature is not written in selected class."

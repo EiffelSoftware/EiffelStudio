@@ -387,6 +387,35 @@ feature {NONE} -- User interaction
 			end
 		end
 
+	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
+			-- Should new environment values be accepted?
+		local
+			l_answered: BOOLEAN
+		do
+			if should_stop_on_prompt then
+				io.put_string ("New environment value for "+a_key+" will be used")
+				io.put_new_line
+				io.put_string ("because of the -stop/-batch option.")
+				io.put_new_line
+			else
+				from
+				until
+					l_answered
+				loop
+					io.put_string (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val))
+					io.put_string (" [y|n] ")
+					io.read_line
+					if io.last_string.item (1).as_lower = 'y' then
+						is_update_environment := True
+						l_answered := True
+					elseif io.last_string.item (1).as_lower = 'n' then
+						is_update_environment := False
+						l_answered := True
+					end
+				end
+			end
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

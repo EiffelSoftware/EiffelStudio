@@ -280,6 +280,9 @@ feature -- Option names and descriptions
 	option_trace_name: STRING is "Trace"
 	option_trace_description: STRING is "Display name of all called features during execution?"
 
+	option_msil_application_optimize_name: STRING is "Apply Application Optimizations"
+	option_msil_application_optimize_description: STRING is "Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation."
+
 	option_namespace_name: STRING is ".NET Namespace"
 	option_namespace_description: STRING is "Namespace for .NET"
 

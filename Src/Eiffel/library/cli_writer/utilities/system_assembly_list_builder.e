@@ -128,7 +128,7 @@ feature -- Access
 			l_files := assemblies
 			create l_result.make (l_files.count)
 			if not l_files.is_empty then
-				create l_reader.make
+				create l_reader.make (clr_version)
 				l_cursor := l_files.cursor
 				from l_files.start until l_files.after loop
 					l_props := l_reader.retrieve_assembly_properties (l_files.item)

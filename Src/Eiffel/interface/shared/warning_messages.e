@@ -120,7 +120,7 @@ feature -- Project file/directory warnings
 
 	w_project_build_precompile: STRING is "Project needs a precompile, should the precompile be built?"
 
-	w_project_build_precompile_error: STRING is "Could not generated needed precompile."
+	w_project_build_precompile_error: STRING is "Could not generate needed precompile."
 
 	w_Project_interrupted (dir_name: STRING): STRING is
 		require

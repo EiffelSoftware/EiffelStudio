@@ -78,7 +78,7 @@ feature -- Status update
 			is_warning := False
 		end
 
-	usset_msil_application_optimize is
+	unset_msil_application_optimize is
 			-- Unset .NET application optimizations
 		do
 			is_msil_application_optimize_configured := False

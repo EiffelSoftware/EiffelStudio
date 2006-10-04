@@ -240,6 +240,7 @@ feature {NONE} -- Actions
 						last_group.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
 						parent_cluster.add_child (last_group)
 					end
+					last_group.set_recursive (True)
 					target.add_cluster (last_group)
 					is_ok := True
 					destroy

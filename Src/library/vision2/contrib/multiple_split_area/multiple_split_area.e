@@ -455,7 +455,9 @@ feature -- Status setting
 			original_index := linear_representation.index_of (a_widget, 1)
 			if not is_item_external (a_widget) then
 				if not is_item_minimized (a_widget) then
-					stored_splitter_widths.put_i_th (stored_splitter_widths.first + stored_splitter_widths.i_th (original_index), 1)
+					if stored_splitter_widths.count > 2 then
+						stored_splitter_widths.put_i_th (stored_splitter_widths.first + stored_splitter_widths.i_th (original_index), 1)
+					end
 				end
 				stored_splitter_widths.go_i_th (original_index)
 				stored_splitter_widths.remove

@@ -2840,6 +2840,12 @@ feature -- Final mode generation
 
 					-- Set the generation mode in final mode
 				byte_context.set_final_mode
+
+				if il_generation then
+					create l_type_id_mapping.make (0, static_type_id_counter.count)
+					process_optimized_single_types (False, l_type_id_mapping)
+				end
+
 				l_assertions := universe.target.options.assertions
 				keep_assertions := keep_assert and then l_assertions /= Void and then l_assertions.has_assertions
 				set_is_precompile_finalized (is_precompiled)
@@ -2969,7 +2975,11 @@ feature -- Final mode generation
 					-- Clean `finalization_needed' tag from all CLASS_C
 				clean_finalization_tag
 				if l_type_id_mapping /= Void then
-					process_dynamic_types (True, l_type_id_mapping)
+					if il_generation then
+						process_optimized_single_types (True, l_type_id_mapping)
+					else
+						process_dynamic_types (True, l_type_id_mapping)
+					end
 				end
 				private_finalize := False
 			end
@@ -3648,6 +3658,54 @@ feature -- Generation
 							reset_type_id (types.item, type_id_counter.next)
 						end
 						types.forth
+					end
+					i := i + 1
+				end
+			end
+		end
+
+	process_optimized_single_types (is_restoring: BOOLEAN; a_backup: ARRAY [INTEGER]) is
+			-- Modifies the implementation ids of all class marked as now being single genereation types.
+			--
+			-- The purpose of this routine is to temporarly set an applicable type's implementation id to
+			-- a static id. This is require for finalizing and optimizing .NET types, where non-single types
+			-- may be generated a single types during finalization.			
+		require
+			is_finalizing: compilation_modes.is_finalizing
+			il_generation: il_generation
+			a_backup_not_void: a_backup /= Void
+			a_backup_valid_for_restoring: is_restoring implies
+				(a_backup.lower >= 0 and a_backup.upper <= static_type_id_counter.count)
+		local
+			class_array: ARRAY [CLASS_C]
+			class_list: ARRAY [CLASS_C]
+			a_class: CLASS_C
+			types: TYPE_LIST
+			l_max_type_id, l_type_id, i, l_count: INTEGER
+			l_class_is_finalized: BOOLEAN
+
+			l_types: like class_types
+			l_type: CLASS_TYPE
+		do
+			if is_restoring then
+				l_types := class_types
+				l_count := l_types.count
+				from i := 1 until i = l_count loop
+					l_type := l_types[i]
+					if l_type /= Void and then not l_type.is_precompiled and then not l_type.is_external and then l_type.is_generated_as_single_type then
+						l_type.set_implementation_id (a_backup[i])
+					end
+					i := i + 1
+				end
+			else
+				l_types := class_types
+				l_count := l_types.count
+				from i := 1 until i = l_count loop
+					l_type := l_types[i]
+					if l_type /= Void and then not l_type.is_precompiled and then not l_type.is_external  and then l_type.is_generated_as_single_type then
+						a_backup.put (l_type.implementation_id, i)
+							-- Set implementation id to static id for .NET types that have been marked a single.
+						l_type.set_implementation_id (l_type.static_type_id)
 					end
 					i := i + 1
 				end

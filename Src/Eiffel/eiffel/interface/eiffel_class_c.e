@@ -1483,7 +1483,7 @@ feature {NONE} -- Class initialization
 			else
 				is_external := ast_b.is_external
 			end
-			old_is_frozen := is_frozen
+			old_is_frozen := internal_is_frozen
 			internal_is_frozen := ast_b.is_frozen
 
 			if (old_parents /= Void and then old_is_frozen /= internal_is_frozen) then

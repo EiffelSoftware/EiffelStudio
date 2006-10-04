@@ -3,8 +3,7 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<external_library location="mscorsn.lib"/>
-		<external_library location="mscoree.lib"/>
+		<external_object location="mscoree.lib"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>

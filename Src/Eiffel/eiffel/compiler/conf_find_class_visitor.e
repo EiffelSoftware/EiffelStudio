@@ -68,16 +68,18 @@ feature -- Visit nodes
 					-- The order is important, we first apply the renaming and then the prefix.
 				l_renaming := an_assembly.renaming
 				l_prefix := an_assembly.name_prefix
+				l_old_name := name
 				if l_renaming /= Void or l_prefix /= Void then
-					l_old_name := name.twin
-					if l_renaming /= Void and then l_renaming.has (name) then
-						name := l_renaming.found_item.twin
+					if l_renaming /= Void and then l_renaming.has (l_old_name) then
+							-- We do not `twin' the result, it is only done if there is a prefix.
+						name := l_renaming.found_item
 					end
 					if l_prefix /= Void then
+							-- We have to duplicate `name' since we are modifying it and don't
+							-- want to mess up the original object.
+						name := name.twin
 						name.prepend (l_prefix)
 					end
-				else
-					l_old_name := name
 				end
 				retrieve_from_group (an_assembly)
 				name := l_old_name

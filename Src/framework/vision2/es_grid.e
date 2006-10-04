@@ -597,7 +597,7 @@ feature {NONE} -- column resizing impl
 		do
 			if row_count > 0 then
 				from
-					create l_font
+					l_font := header.font
 					auto_resized_columns.start
 				until
 					auto_resized_columns.after

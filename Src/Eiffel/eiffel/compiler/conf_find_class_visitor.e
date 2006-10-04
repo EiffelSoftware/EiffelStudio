@@ -56,10 +56,31 @@ feature -- Visit nodes
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
+		local
+			l_renaming: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_prefix, l_old_name: STRING
 		do
 			if not assemblies_done.has (an_assembly.guid) then
 				assemblies_done.force (an_assembly.guid)
+					-- We cannot directly look at the classes of the assembly, because they
+					-- have the renaming and prefix applied. So we apply those to the searched
+					-- name and then search for it.
+					-- The order is important, we first apply the renaming and then the prefix.
+				l_renaming := an_assembly.renaming
+				l_prefix := an_assembly.name_prefix
+				if l_renaming /= Void or l_prefix /= Void then
+					l_old_name := name.twin
+					if l_renaming /= Void and then l_renaming.has (name) then
+						name := l_renaming.found_item.twin
+					end
+					if l_prefix /= Void then
+						name.prepend (l_prefix)
+					end
+				else
+					l_old_name := name
+				end
 				retrieve_from_group (an_assembly)
+				name := l_old_name
 			end
 		end
 

@@ -52,7 +52,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon of the section.
 		once
-			Result := pixmaps.icon_pixmaps.folder_target_icon
+			Result := pixmaps.icon_pixmaps.top_level_folder_targets_icon
 		end
 
 feature -- Element update

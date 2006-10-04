@@ -246,7 +246,7 @@ feature {NONE} -- Compilation
 	perform_compilation is
 			-- Melt eiffel project.
 		do
-			Eiffel_project.melt
+			Eiffel_project.discover_melt
 		end
 
 	save_project_again is

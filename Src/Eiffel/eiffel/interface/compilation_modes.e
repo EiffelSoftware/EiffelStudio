@@ -12,7 +12,7 @@ feature -- Properties
 
 	is_freezing, is_finalizing,
 	is_precompiling, is_quick_melt,
-	is_override_scan: BOOLEAN
+	is_override_scan, is_discover: BOOLEAN
 			-- Type of compilation.
 
 feature -- Update
@@ -47,6 +47,15 @@ feature -- Update
 			is_precompiling := b
 		end
 
+	set_is_discover is
+			-- Set `is_discover' to `True'.
+		do
+			is_discover := True
+		ensure
+			is_discover: is_discover
+		end
+
+
 feature -- Setting
 
 	reset_modes is
@@ -56,6 +65,7 @@ feature -- Setting
 			is_freezing := False
 			is_finalizing := False
 			is_precompiling := False
+			is_discover := False
 		end
 
 indexing

@@ -13,6 +13,11 @@ inherit
 
 	DOCUMENTATION_FACILITIES
 
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	context_group: CONF_GROUP is
@@ -26,9 +31,18 @@ feature -- Element change
 	set_context_group (a_group: like context_group) is
 			-- Set `context_group' with `a_group'.
 		do
-			internal_context_group := a_group
+				-- Because assemblies do not really handle renaming properly (basically we use the first
+				-- assembly that matches to display the name, and if you use the same assembly more than
+				-- once with different renamings the displayed name is one of the renaiming).
+				-- This fix is a temporary hack until assemblies are properly treated.
+			fixme ("Handle assemblies properly")
+			if a_group /= Void and then not a_group.is_assembly then
+				internal_context_group := a_group
+			else
+				internal_context_group := Void
+			end
 		ensure
-			internal_context_group_set: internal_context_group = a_group
+			internal_context_group_set: internal_context_group = a_group or internal_context_group = Void
 		end
 
 feature -- Operation

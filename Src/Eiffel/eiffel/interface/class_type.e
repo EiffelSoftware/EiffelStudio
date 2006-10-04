@@ -371,6 +371,19 @@ feature -- Settings
 			is_dotnet_name := System.dotnet_naming_convention
 		end
 
+feature {SYSTEM_I} -- Setting
+
+	set_implementation_id (i: like implementation_id) is
+			-- Set `implementation_id' with `i'
+		require
+			il_generation: system.il_generation
+			i_positive: i > 0
+		do
+			implementation_id := i
+		ensure
+			implementation_id_set: implementation_id = i
+		end
+
 feature -- Update
 
 	reset_conformance_table is

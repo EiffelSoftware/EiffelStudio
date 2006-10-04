@@ -41,11 +41,12 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent remove_class)
 			drop_actions.extend (agent remove_folder)
 
-
 			if an_item.is_class then
 					-- ...or a class.
 				conv_class ?= an_item
-				set_pebble (conv_class.associated_class_stone)
+				if conv_class.associated_class_stone /= Void then
+					set_pebble (conv_class.associated_class_stone)
+				end
 				if conv_class.associated_class_i /= Void then
 					set_pixmap (pixmap_from_class_i (conv_class.associated_class_i))
 				else

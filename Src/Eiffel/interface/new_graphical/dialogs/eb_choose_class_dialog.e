@@ -124,8 +124,10 @@ feature {NONE} -- Vision2 events
 			selected_class_name := class_name_entry.text.as_upper
 			selected := not selected_class_name.is_empty
 			if selected then -- User typed a class name.
-				loclist := Eiffel_universe.classes_with_name (selected_class_name)
-				if loclist.is_empty then -- No class has such a name.
+				if eiffel_universe.target /= Void then
+					loclist := Eiffel_universe.classes_with_name (selected_class_name.as_upper)
+				end
+				if loclist /= Void and then loclist.is_empty then -- No class has such a name.
 					class_name_entry.set_text (Interface_names.l_Unknown_class_name)
 					class_name_entry.set_focus
 					class_name_entry.select_all

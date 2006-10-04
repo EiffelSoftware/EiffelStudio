@@ -821,145 +821,20 @@ feature -- Events
 
 	load_favorites is
 			-- Try to initialize the favorites with the 'preferences.wb' file.
-		local
-			fn: FILE_NAME
-			pref: PLAIN_TEXT_FILE
-			retried: BOOLEAN
 		do
-			if not retried then
-				create fn.make_from_string (project_location.location)
-				fn.set_file_name ("preferences.wb")
-				create pref.make (fn)
-				if pref.exists then
-					pref.open_read
-					pref.read_stream (pref.count)
-					pref.close
-					favorites.make_with_string (pref.last_string)
-					if favorites.loading_error then
-							-- The file is corrupted, delete it.
-						pref.delete
-					end
-				end
-			else
-				-- Do nothing. Something is wrong (maybe we dont have rights on the favorites file...)
-			end
-		rescue
-			retried := True
-			retry
+			favorites.make_with_string (eiffel_project.lace.user_options.target.favorites)
 		end
 
 	save_favorites is
 			-- Try to save the favorites' state within the 'preferences.wb' file.
 		local
-			fn: FILE_NAME
-			pref: PLAIN_TEXT_FILE
-			retried: BOOLEAN
+			l_user_opts: TARGET_USER_OPTIONS
+			l_user_factory: USER_OPTIONS_FACTORY
 		do
-			if not retried then
-				create fn.make_from_string (project_location.location)
-				fn.set_file_name ("preferences.wb")
-				create pref.make (fn)
-				if pref.exists then
-					pref.open_write
-					pref.put_string (favorites.string_representation)
-					pref.close
-				else
-					pref.create_read_write
-					pref.put_string (favorites.string_representation)
-					pref.close
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	load_session is
-			-- Try to recreate previous project session, if any.
-		local
-			i, window_count: INTEGER
-			l_raw_file: RAW_FILE
-			l_reader: SED_MEDIUM_READER_WRITER
-			l_sed_facilities: SED_STORABLE_FACILITIES
-			fn: FILE_NAME
-			l_session: ES_SESSION
-			retried: BOOLEAN
-			l_managed_windows: like managed_windows
-		do
-			if not retried then
-					-- Attempt to load the 'session.wb' file from the project directory.
-					-- If load fails then do nothing.
-				create fn.make_from_string (project_location.location)
-				fn.set_file_name ("session.wb")
-				create l_raw_file.make (fn)
-				if l_raw_file.exists then
-					l_raw_file.open_read
-					create l_reader.make (l_raw_file)
-					l_reader.set_for_reading
-					create l_sed_facilities
-					l_session ?= l_sed_facilities.retrieved (l_reader, True)
-					l_raw_file.close
-
-						-- Recreate previous session from retrieved session data.
-					if l_session /= Void then
-							-- Remove any existing managed windows.
-						l_managed_windows := managed_windows.twin
-
-						from
-							i := 1
-						until
-							i > l_managed_windows.count
-						loop
-							if l_managed_windows [i] /= Void then
-								destroy_window (l_managed_windows [i])
-							end
-							i := i + 1
-						end
-
-						from
-							window_count := l_session.window_session_data.count
-							i := 1
-						until
-							i > window_count
-						loop
-							create_window_from_session_data (l_session.window_session_data.i_th (i))
-							i := i + 1
-						end
-					end
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end
-
-	save_session is
-			-- Try to store current session data.
-		local
-			l_raw_file: RAW_FILE
-			l_writer: SED_MEDIUM_READER_WRITER
-			l_sed_facilities: SED_STORABLE_FACILITIES
-			fn: FILE_NAME
-			l_session: ES_SESSION
-			retried: BOOLEAN
-		do
-			if not retried then
-					-- Attempt to save the 'session.wb' file to the current project directory.
-					-- If save cannot be made then do nothing.
-				create l_session
-				for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.save_layout_to_session (l_session))
-				create fn.make_from_string (project_location.location)
-				fn.set_file_name ("session.wb")
-				create l_raw_file.make_open_write (fn)
-				create l_writer.make (l_raw_file)
-				l_writer.set_for_writing
-				create l_sed_facilities
-				l_sed_facilities.basic_store (l_session, l_writer, False)
-				l_raw_file.close
-			end
-		rescue
-			retried := True
-			retry
+			l_user_opts := eiffel_project.lace.user_options.target
+			l_user_opts.set_favorites (favorites.string_representation)
+			create l_user_factory
+			l_user_factory.store (eiffel_project.lace.user_options)
 		end
 
 	on_compile is

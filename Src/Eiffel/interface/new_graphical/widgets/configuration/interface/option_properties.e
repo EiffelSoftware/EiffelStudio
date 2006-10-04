@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 			-- default is to do nothing
 		end
 
-	add_misc_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits, a_il_generation: BOOLEAN) is
+	add_misc_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN) is
 			-- Add option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
 		require
 			an_options_not_void: an_options /= Void
@@ -61,7 +61,6 @@ feature {NONE} -- Implementation
 			properties_not_void: properties /= Void
 		local
 			l_bool_prop: BOOLEAN_PROPERTY
-			l_string_prop: STRING_PROPERTY [STRING_32]
 		do
 			properties.add_section (conf_interface_names.section_general)
 
@@ -102,18 +101,6 @@ feature {NONE} -- Implementation
 				end
 			end
 			properties.add_property (l_bool_prop)
-
-			create l_string_prop.make (conf_interface_names.option_namespace_name)
-			l_string_prop.set_description (conf_interface_names.option_namespace_description)
-			if an_options.namespace /= Void then
-				l_string_prop.set_value (an_options.namespace)
-			end
-			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_namespace))
-			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
-			if not a_il_generation then
-				l_string_prop.enable_readonly
-			end
-			properties.add_property (l_string_prop)
 
 			properties.current_section.expand
 		end
@@ -309,6 +296,52 @@ feature {NONE} -- Implementation
 
 				debug_clauses.forth
 			end
+
+			properties.current_section.expand
+		end
+
+	add_dotnet_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits, a_il_generation: BOOLEAN) is
+			-- Add .NET option properties which may come from `an_options' (defined on the node itself) itself or from `an_inherited_options' (final value after inheritance).
+		require
+			an_options_not_void: an_options /= Void
+			an_inherited_options_not_void: an_inherited_options /= Void
+			properties_not_void: properties /= Void
+		local
+			l_bool_prop: BOOLEAN_PROPERTY
+			l_string_prop: STRING_PROPERTY [STRING_32]
+		do
+			properties.add_section (conf_interface_names.section_dotnet)
+
+			create l_string_prop.make (conf_interface_names.option_namespace_name)
+			l_string_prop.set_description (conf_interface_names.option_namespace_description)
+			if an_options.namespace /= Void then
+				l_string_prop.set_value (an_options.namespace)
+			end
+			l_string_prop.change_value_actions.extend (agent simple_wrapper ({STRING_32}?, agent an_options.set_namespace))
+			l_string_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
+			if not a_il_generation then
+				l_string_prop.enable_readonly
+			end
+			properties.add_property (l_string_prop)
+
+			create l_bool_prop.make_with_value (conf_interface_names.option_msil_application_optimize_name, an_inherited_options.is_msil_application_optimize)
+			l_bool_prop.set_description (conf_interface_names.option_msil_application_optimize_description)
+			l_bool_prop.change_value_actions.extend (agent an_options.set_msil_application_optimize)
+			if a_inherits then
+				l_bool_prop.set_refresh_action (agent an_inherited_options.is_msil_application_optimize)
+				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_msil_application_optimize)
+				l_bool_prop.use_inherited_actions.extend (agent l_bool_prop.enable_inherited)
+				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent l_bool_prop.enable_overriden))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+
+				if an_options.is_msil_application_optimize_configured then
+					l_bool_prop.enable_overriden
+				else
+					l_bool_prop.enable_inherited
+				end
+			end
+			properties.add_property (l_bool_prop)
 
 			properties.current_section.expand
 		end

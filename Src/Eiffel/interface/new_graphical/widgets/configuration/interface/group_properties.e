@@ -161,7 +161,8 @@ feature {NONE} -- Implementation
 
 				-- options
 			if not a_group.is_assembly then
-				add_misc_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.target.setting_msil_generation)
+				add_misc_option_properties (a_group.changeable_internal_options, a_group.options, True)
+				add_dotnet_option_properties (a_group.changeable_internal_options, a_group.options, True, a_group.target.setting_msil_generation)
 				add_assertion_option_properties (a_group.changeable_internal_options, a_group.options, True)
 				add_warning_option_properties (a_group.changeable_internal_options, a_group.options, True)
 				add_debug_option_properties (a_group.changeable_internal_options, a_group.options, True)

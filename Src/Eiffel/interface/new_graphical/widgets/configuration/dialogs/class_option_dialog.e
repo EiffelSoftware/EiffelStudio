@@ -208,7 +208,8 @@ feature {NONE} -- Agents
 			lock_update
 
 			properties.reset
-			add_misc_option_properties (l_opts, l_inh_opts, True, True)
+			add_misc_option_properties (l_opts, l_inh_opts, True)
+			add_dotnet_option_properties (l_opts, l_inh_opts, True, True)
 			add_assertion_option_properties (l_opts, l_inh_opts, True)
 			add_warning_option_properties (l_opts, l_inh_opts, True)
 			add_debug_option_properties (l_opts, l_inh_opts, True)

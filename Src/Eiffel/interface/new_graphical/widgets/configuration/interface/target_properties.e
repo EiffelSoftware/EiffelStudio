@@ -149,12 +149,15 @@ feature {NONE} -- Implementation
 
 			properties.current_section.expand
 
-			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation)
+			add_misc_option_properties (current_target.changeable_internal_options, current_target.options, l_extends)
 
 			create l_bool_prop.make_with_value (conf_interface_names.target_line_generation_name, current_target.setting_line_generation)
 			l_bool_prop.set_description (conf_interface_names.target_line_generation_description)
 			add_boolean_setting_actions (l_bool_prop, s_line_generation, False)
 			properties.add_property (l_bool_prop)
+
+			add_dotnet_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation)
+			
 		ensure
 			properties_not_void: properties /= Void
 		end

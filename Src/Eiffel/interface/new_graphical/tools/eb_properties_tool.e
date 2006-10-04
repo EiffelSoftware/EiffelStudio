@@ -218,7 +218,8 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					l_name_prop.set_value (l_cs.file_name)
 					l_name_prop.enable_readonly
 					properties.add_property (l_name_prop)
-					add_misc_option_properties (l_class_options, l_inh_options, True, l_group.target.setting_msil_generation)
+					add_misc_option_properties (l_class_options, l_inh_options, True)
+					add_dotnet_option_properties (l_class_options, l_inh_options, True, l_group.target.setting_msil_generation)
 					add_assertion_option_properties (l_class_options, l_inh_options, True)
 					add_warning_option_properties (l_class_options, l_inh_options, True)
 					add_debug_option_properties (l_class_options, l_inh_options, True)

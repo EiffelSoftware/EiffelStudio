@@ -119,7 +119,7 @@ feature {NONE} -- Initialization
 					l_property := l_properties.item
 					create l_name.make (300)
 					l_name.append (l_property.name)
-					l_name.append (once ", Version=")
+					l_name.append (once ", ")
 					l_name.append (l_property.version_string)
 					if l_property.is_neutral_locale then
 						l_culture := once "Neutral"
@@ -134,14 +134,14 @@ feature {NONE} -- Initialization
 							l_locales.forth
 						end
 					end
-					l_name.append (once ", Culture=")
+					l_name.append (once ", ")
 					l_name.append (l_culture)
 					if l_property.is_signed then
 						l_key := l_property.public_key_token_string
 					else
 						l_key := once "Null"
 					end
-					l_name.append (once ", PublicKeyToken=")
+					l_name.append (once ", ")
 					l_name.append (l_key)
 					create l_item.make_with_text (l_name)
 					l_item.select_actions.extend (agent fill_assembly (l_name, l_property.location))

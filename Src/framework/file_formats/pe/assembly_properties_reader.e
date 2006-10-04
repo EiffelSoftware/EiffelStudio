@@ -16,13 +16,38 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialize
 
-	make is
-			-- Initializes reader
+	make (a_runtime_version: STRING) is
+			-- Initialize Current. Initialize `exists' accordingly.
+		require
+			a_runtime_version_not_void: a_runtime_version /= Void
+			not_a_runtime_version_is_empty: not a_runtime_version.is_empty
 		local
+			l_reg: WEL_REGISTRY
+			l_val: WEL_REGISTRY_KEY_VALUE
+			l_p: POINTER
+			l_loc: STRING
+			l_dll: WEL_DLL
 			l_dis: like dispenser
 		do
+			create l_reg
+			l_p := l_reg.open_key ({WEL_REGISTRY}.hkey_local_machine, "SOFTWARE\Microsoft\.NETFramework", {WEL_REGISTRY_ACCESS_MODE}.key_read)
+			if l_p /= default_pointer then
+				l_val := l_reg.key_value (l_p, "InstallRoot")
+				if l_val.type = {WEL_REGISTRY_KEY_VALUE}.reg_sz then
+					l_loc := l_val.string_value
+					l_loc.prune_all_trailing ('\')
+					l_loc.prune_all_trailing ('/')
+					if (create {DIRECTORY}.make (l_loc)).exists then
+						l_loc.append ("\" + a_runtime_version + "\mscorsn.dll")
+						create l_dll.make ("mscorsn.dll")
+						strong_name_retriveable := l_dll.exists
+					end
+				end
+				l_reg.close_key (l_p)
+			end
+
 			c_initialize ($l_dis).do_nothing
 			dispenser := l_dis
 		end
@@ -63,6 +88,7 @@ feature -- Basic operations
 			l_flags: NATURAL_64
 			l_key: ARRAY [NATURAL_8]
 			l_bytes: MANAGED_POINTER
+			l_p: POINTER
 			l_bytes_len: NATURAL_64
 			l_len: INTEGER
 			l_res: INTEGER
@@ -75,17 +101,21 @@ feature -- Basic operations
 				l_name_len := 512
 
 				create l_name.make_empty ((l_name_len + 2).to_integer_32)
-				create l_bytes.make ((l_bytes_len).to_integer_32)
 				create l_amd.make
 
 				l_res := cpp_assembly_props (l_scope, $l_hash, l_name.item, $l_name_len, $l_flags, l_amd)
 				if l_res = 0 then
-					if cpp_token (l_fn.item, l_bytes.item, $l_bytes_len) then
-						l_len := l_bytes_len.to_integer_32
-						create l_key.make (1, l_len)
-						from until i = l_len  loop
-							l_key.put (l_bytes.read_natural_8 (i), i + 1)
-							i := i + 1
+					if strong_name_retriveable then
+						if strong_name_token_from_assembly (l_fn.item, $l_p, $l_bytes_len) then
+							create l_bytes.make_from_pointer (l_p, l_bytes_len.to_integer_32)
+							l_len := l_bytes_len.to_integer_32
+							create l_key.make (1, l_len)
+							from until i = l_len  loop
+								l_key.put (l_bytes.read_natural_8 (i), i + 1)
+								i := i + 1
+							end
+							strong_name_free_buffer (l_p)
+							l_p := default_pointer
 						end
 					end
 
@@ -105,6 +135,9 @@ feature -- Status report
 		end
 
 feature {NONE} -- Implementation
+
+	strong_name_retriveable: BOOLEAN
+			-- Inidicates if strong name can be retrieved
 
 	dispenser: POINTER
 			-- Pointer to a IMetadataDespenser interface, when /= default_pointer
@@ -224,23 +257,31 @@ feature {NONE} -- Externals
 			]"
 		end
 
-	cpp_token (a_fn: POINTER; a_bytes: POINTER; a_bytes_len: TYPED_POINTER [NATURAL_64]): BOOLEAN is
-			-- Retrieves a strong name token from an assembly.
+	strong_name_token_from_assembly (a_container_name: POINTER; a_key_blob: TYPED_POINTER [POINTER];
+			a_key_blob_size: TYPED_POINTER [NATURAL_64]): BOOLEAN is
+			-- Retrieve the public portion of a key pair.
+		require
+			strong_name_retriveable: strong_name_retriveable
 		external
-			"C++ inline use %"strongname.h%""
-		alias
 			"[
-				BYTE* pToken = NULL;
-				ULONG cbToken = 0;
-			
-				if (StrongNameTokenFromAssembly ((LPWSTR)$a_fn, &pToken, &cbToken)) {
-					*$a_bytes_len = (EIF_NATURAL) min ((ULONG)*$a_bytes_len, cbToken);
-					memcpy ($a_bytes, pToken, (ULONG)*$a_bytes_len);
-					return TRUE;
-				} else {
-					return FALSE;
-				}
+				dllwin mscorsn.dll signature (LPCWSTR, BYTE**, ULONG*): EIF_BOOLEAN
+				use <StrongName.h>
 			]"
+		alias
+			"StrongNameTokenFromAssembly"
+		end
+
+	strong_name_free_buffer (a_key_blob: POINTER) is
+			-- Retrieve the public portion of a key pair.
+		require
+			strong_name_retriveable: strong_name_retriveable
+		external
+			"[
+				dllwin mscorsn.dll signature (BYTE*)
+				use <StrongName.h>
+			]"
+		alias
+			"StrongNameFreeBuffer"
 		end
 
 indexing

@@ -68,7 +68,7 @@ feature -- Initialization
 				is_deferred := external_class.is_deferred
 				is_expanded := external_class.is_expanded
 				is_enum := external_class.is_enum
-				is_frozen := external_class.is_frozen
+				internal_is_frozen := external_class.is_frozen
 
 					-- Initializes inheritance structure
 				process_parents
@@ -1514,7 +1514,6 @@ feature {NONE} -- Implementation
 			end
 			degree_output.put_string ("   Consuming required assembly '" + l_asm + "'...")
 
-
 			create l_path.make (256)
 
 			l_assemblies := universe.target.all_assemblies
@@ -1530,12 +1529,14 @@ feature {NONE} -- Implementation
 					l_assemblies.forth
 				end
 				if not l_path.is_empty then
-					create l_emitter.make (system.metadata_cache_path, system.clr_runtime_version)
-					l_emitter.consume_assembly_from_path (assembly.location.evaluated_path, False, l_path)
 					create l_man.make (create {CONF_COMP_FACTORY}, system.metadata_cache_path, system.clr_runtime_version, create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default)
-					l_man.rebuild_classes (assembly, assembly.dotnet_classes)
-					assembly.set_is_partially_consumed (False)
-					l_emitter.unload
+					l_emitter := l_man.il_emitter
+					if l_emitter.exists and then l_emitter.is_initialized then
+						l_emitter.consume_assembly_from_path (assembly.location.evaluated_path, False, l_path)
+						l_man.rebuild_classes (assembly, assembly.dotnet_classes)
+						assembly.set_is_partially_consumed (False)
+						l_emitter.unload
+					end
 				end
 			end
 		ensure

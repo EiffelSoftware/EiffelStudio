@@ -54,6 +54,9 @@ feature -- Access
 	working_directory: STRING
 			-- Working directory.
 
+	favorites: STRING
+			-- String representation of the favorites.
+
 feature -- Update
 
 	set_last_location (a_location: like last_location) is
@@ -118,6 +121,14 @@ feature -- Update
 			working_directory := a_directory
 		ensure
 			working_directory_set: working_directory = a_directory
+		end
+
+	set_favorites (a_favorites: like favorites) is
+			-- Set `favorites' to `a_favorites'.
+		do
+			favorites := a_favorites
+		ensure
+			favorites_set: favorites = a_favorites
 		end
 
 invariant

@@ -21,7 +21,7 @@
 		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel57\ec" Name="ISE_C_COMPILER" Type="raw" Win64="$(var.IsWin64)" /></Property>
 		<Condition Message="This installation can only run in full UI mode.">Installed OR UILevel = 5</Condition>
 
-		<Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+		<Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" CompressionLevel="high" />
 		<Property Id='DiskPrompt' Value="EiffelStudio 5.7 Installation [1]" />
 
 		<Directory Id="TARGETDIR" Name="SourceDir">

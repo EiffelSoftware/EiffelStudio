@@ -5,6 +5,7 @@
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="multithreaded" value="true"/>
+		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base-mt.ecf"/>

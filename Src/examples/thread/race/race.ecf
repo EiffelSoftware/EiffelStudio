@@ -5,9 +5,10 @@
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="multithreaded" value="true"/>
+		<setting name="console_application" value="true"/>
+		<precompile name="base-mt_pre" location="$ISE_PRECOMP\base-mt.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
-		<precompile name="base-mt_pre" location="$ISE_PRECOMP\base-mt.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="dotnet" extends="common">

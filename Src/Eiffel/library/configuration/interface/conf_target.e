@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			create internal_assemblies.make (0)
 
 			create internal_file_rule.make (0)
+			internal_file_rule.compare_objects
 
 			create internal_external_include.make (1)
 			create internal_external_object.make (1)

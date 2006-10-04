@@ -2842,16 +2842,24 @@ feature -- Multiple editor management
 	update_paste_cmd is
 			-- Update `editor_paste_cmd'. To be performed when an editor grabs the focus.
 		do
-			if
-				not current_editor.is_empty and then
-				current_editor.is_editable and then
-				current_editor.clipboard.has_text
-			then
-				editor_paste_cmd.enable_sensitive
-			else
-				editor_paste_cmd.disable_sensitive
+			if update_paste_cmd_agent = Void then
+				update_paste_cmd_agent := agent do
+					if
+						not current_editor.is_empty and then
+						current_editor.is_editable and then
+						current_editor.clipboard.has_text
+					then
+						editor_paste_cmd.enable_sensitive
+					else
+						editor_paste_cmd.disable_sensitive
+					end
+				end
 			end
+			ev_application.do_once_on_idle (update_paste_cmd_agent)
 		end
+
+	update_paste_cmd_agent: PROCEDURE [ANY, TUPLE]
+		-- Agent used for updating the paste command.
 
 feature {NONE} -- Multiple editor management
 

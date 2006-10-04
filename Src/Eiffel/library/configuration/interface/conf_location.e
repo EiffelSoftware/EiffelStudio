@@ -254,7 +254,8 @@ feature {NONE} -- Implementation
 						if l_value = Void then
 							l_value := ""
 						end
-						target.environ_variables.force (l_value, l_key.as_lower)
+							-- we don't want to update stored values, this is done when the project is loaded
+						target.environ_variables.put (l_value, l_key.as_lower)
 					end
 					Result.replace_substring (to_internal (l_value), i, j)
 				end

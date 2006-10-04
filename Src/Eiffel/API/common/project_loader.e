@@ -408,6 +408,9 @@ feature -- Status report
 	is_precompilation_error: BOOLEAN
 			-- Was there an error during the generation of a needed precompile?
 
+	is_update_environment: BOOLEAN
+			-- Should changed environment variables be used?
+
 feature {NONE} -- Status report
 
 	is_config_file_name_valid: BOOLEAN is
@@ -516,7 +519,7 @@ feature {NONE} -- Settings
 				Eiffel_project.make (compiler_project_location)
 
 				if not eiffel_project.error_occurred then
-						-- Nothing to be done here
+					check_used_environemnt
 					report_project_loaded_successfully
 				else
 					if Eiffel_project.retrieval_error then
@@ -559,6 +562,41 @@ feature {NONE} -- Settings
 				is_recompile_from_scrach := True
 				create_project (lace.project_path, is_project_location_requested)
 				post_create_project
+			end
+		end
+
+	check_used_environemnt is
+			-- Check if the current environment values still have the same values as the ones stored in the project settings.
+		local
+			l_envs: HASH_TABLE [STRING, STRING]
+			l_key, l_old_val, l_new_val: STRING
+			l_cd: EV_CONFIRMATION_DIALOG
+		do
+			if
+				eiffel_project.system_defined and then eiffel_project.initialized and then
+				eiffel_system.workbench.is_already_compiled and then
+				eiffel_system.workbench.last_reached_degree <= 5
+			then
+				from
+					l_envs := eiffel_system.workbench.universe.target.environ_variables
+					l_envs.start
+				until
+					l_envs.after
+				loop
+					l_key := l_envs.key_for_iteration
+					l_old_val := l_envs.item_for_iteration
+					l_new_val := eiffel_layout.get_environment (l_key)
+					if not equal (l_new_val, l_old_val) then
+						ask_environment_update (l_key, l_old_val, l_new_val)
+						if is_update_environment then
+							l_envs.force (l_new_val, l_key)
+							system.force_rebuild
+						else
+							eiffel_layout.set_environment (l_old_val, l_key)
+						end
+					end
+					l_envs.forth
+				end
 			end
 		end
 
@@ -863,6 +901,14 @@ feature {NONE} -- User interaction
 
 	ask_compile_precompile is
 			-- Should a needed precompile be automatically built?
+		deferred
+		end
+
+	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
+			-- Should new environment values be accepted?
+		require
+			a_key_ok: a_key /= Void and then not a_key.is_empty and then not a_key.has ('%U')
+			a_old_val_ok: a_old_val /= Void and then not a_old_val.has ('%U')
 		deferred
 		end
 

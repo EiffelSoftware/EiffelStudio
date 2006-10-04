@@ -22,7 +22,7 @@ inherit
 			linear_representation as cell_linear_representation
 		export {NONE}
 			cell_replace,
-			cell_put, cell_has,
+			cell_put,
 			cell_prune,
 			cell_item,
 			cell_extend,
@@ -33,12 +33,13 @@ inherit
 			fill,
 			is_inserted,
 			prune_all
+			{EV_ANY_I} cell_has
 		redefine
 			implementation,
 			create_implementation,
 			full
 		end
-	
+
 feature -- Access
 
 	implementation_window: WEL_WINDOW is
@@ -49,7 +50,7 @@ feature -- Access
 		do
 			Result := implementation.implementation_window
 		end
-		
+
 	item: WEL_WINDOW is
 			-- `Result' is WEL_WINDOW contained in `Current'.
 		require
@@ -57,13 +58,13 @@ feature -- Access
 		do
 			Result := implementation.item
 		end
-	
+
 	full: BOOLEAN is
 			-- Is there no element?
 		do
 			Result := item /= Void
 		end
-		
+
 	has (v: WEL_WINDOW): BOOLEAN is
 			-- Is `v' contained in `Current'?
 		require
@@ -71,7 +72,7 @@ feature -- Access
 		do
 			Result := (v /= Void and then item = v)
 		end
-		
+
 	linear_representation: LINEAR [like item] is
 			-- Representation as a linear structure
 		local
@@ -85,7 +86,7 @@ feature -- Access
 		end
 
 feature -- Status setting
-		
+
 	wipe_out is
 			-- Remove `child_item'.
 		require
@@ -94,7 +95,7 @@ feature -- Status setting
 		do
 			implementation.replace (Void)
 		end
-		
+
 	put, replace  (a_window: WEL_WINDOW) is
 			-- Replace `child_item' with `a_window'.
 		require
@@ -104,13 +105,13 @@ feature -- Status setting
 		do
 			implementation.replace (a_window)
 		end
-		
+
 	extend (an_item: like item) is
 			-- Ensure that structure includes `an_item'.
-		do	
+		do
 			replace (an_item)
 		end
-		
+
 	prune (v: WEL_WINDOW) is
 			-- Remove `v' if contained.
 		require
@@ -122,7 +123,7 @@ feature -- Status setting
 		ensure
 			v_not_contained: not has (v)
 		end
-		
+
 feature -- Event handling
 
 	wel_message_actions: EV_WEL_MESSAGE_ACTION_SEQUENCE is
@@ -132,7 +133,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-	
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_WEL_CONTAINER_I
@@ -143,9 +144,9 @@ feature {NONE} -- Implementation
 	create_implementation is
 			-- Create implementation of `Current'.
 		do
-			create {EV_WEL_CONTAINER_IMP} implementation.make (Current) 
+			create {EV_WEL_CONTAINER_IMP} implementation.make (Current)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

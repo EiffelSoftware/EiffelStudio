@@ -274,14 +274,11 @@ feature {NONE} -- Actions
 			-- Draw column spanned text.
 		local
 			l_text: STRING
-			l_font: EV_FONT
 		do
 			a_drawable.set_foreground_color (separator_color)
 			a_drawable.fill_rectangle (0, 0, a_drawable.width, a_drawable.height)
 			a_drawable.set_foreground_color (foreground_color)
-			create l_font
-			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-			a_drawable.set_font (l_font)
+			a_drawable.set_font (bold_font)
 
 			if an_item.column.index = 1 then
 				l_text ?= an_item.data
@@ -418,7 +415,6 @@ feature {NONE} -- Actions
 			end
 		end
 
-
 feature -- Type anchors
 
 	row_type: PROPERTY_ROW
@@ -444,6 +440,15 @@ feature {NONE} -- Implementation
 
 	expanded_section_store: HASH_TABLE [BOOLEAN, STRING]
 			-- Expanded status of the sections.
+
+feature {NONE} -- Once
+
+	bold_font: EV_FONT is
+			-- Bold standard font.
+		once
+			create Result
+			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+		end
 
 invariant
 	expanded_section_store_not_void: expanded_section_store /= Void

@@ -11,7 +11,7 @@ class SHARED_EWB_CMD_NAMES
 
 feature {NONE}
 
-	ace_cmd_name: STRING is "ace"
+	ace_cmd_name: STRING is "config"
 
 	add_subquery_cmd_name: STRING is "add"
 

@@ -16,7 +16,7 @@ inherit
 			default_create
 		end
 
-create 
+create
 	make,
 	default_create
 
@@ -99,9 +99,12 @@ feature -- Access
 		do
 		end
 
+	ise_dotnet_framework_env: STRING is "ISE_DOTNET_FRAMEWORK"
+		-- .NET framework environment variable
+
 	version: STRING
 			-- Currently selected version, if none `default_version'.
-	
+
 feature -- Query
 
 	use_cordbg (a_string: STRING): BOOLEAN is
@@ -110,21 +113,21 @@ feature -- Query
 			a_string_not_void: a_string /= Void
 		do
 		end
-		
+
 	use_dbgclr (a_string: STRING): BOOLEAN is
 			-- Should Current use DbgCLR.exe?
 		require
 			a_string_not_void: a_string /= Void
 		do
 		end
-	
+
 	Dotnet_debugger_path (a_debug: STRING): STRING is
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
 			a_debug_not_void: a_debug /= Void
 		do
-		end	
-	
+		end
+
 invariant
 	version_not_void: version /= Void
 

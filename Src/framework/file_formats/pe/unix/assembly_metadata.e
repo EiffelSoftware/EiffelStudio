@@ -65,9 +65,6 @@ feature -- Access
 
 	locales: LIST [STRING_8] is
 			-- A list of locale names conforming to the RFC1766 specification specifying the locales.
-		local
-			l_p: POINTER
-			l_str: WEL_STRING
 		do
 			check False end
 		ensure

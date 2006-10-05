@@ -63,7 +63,7 @@ feature -- Initialization
 					default_create
 				end
 
-				if a_string.substring_index (name, 1) = 1 then
+				if a_string /= Void and then a_string.substring_index (name, 1) = 1 then
 					analyzed_string := a_string.substring (name.count + 2, a_string.count)
 					analyzed_string := initialize_with_string (analyzed_string)
 				else

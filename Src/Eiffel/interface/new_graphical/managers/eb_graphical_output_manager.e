@@ -171,6 +171,7 @@ feature -- Basic Operations / Information message
 				l_error := structured_system_info (Current)
 			else
 				add ("No compiled project")
+				add_new_line
 			end
 			end_processing
 

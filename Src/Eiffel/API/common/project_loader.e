@@ -570,7 +570,6 @@ feature {NONE} -- Settings
 		local
 			l_envs: HASH_TABLE [STRING, STRING]
 			l_key, l_old_val, l_new_val: STRING
-			l_cd: EV_CONFIRMATION_DIALOG
 		do
 			if
 				eiffel_project.system_defined and then eiffel_project.initialized and then

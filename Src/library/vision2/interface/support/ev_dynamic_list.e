@@ -201,14 +201,14 @@ feature -- Cursor movement
 
 feature -- Element change
 
-	append (s: SEQUENCE [G]) is
+	append (s: SEQUENCE [like item]) is
 			-- Append a copy of `s'. Do not move cursor.
 		require
 			not_destroyed: not is_destroyed
 			extendible: extendible
 			sequence_not_void: s /= Void
 			sequence_not_current: s /= Current
-			not_parented: not s.there_exists (agent (v: G): BOOLEAN do Result := v.parent /= Void end)
+			not_parented: not s.there_exists (agent (v: like item): BOOLEAN do Result := v.parent /= Void end)
 		do
 			implementation.append (s)
 		ensure

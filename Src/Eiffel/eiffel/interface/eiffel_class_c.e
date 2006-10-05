@@ -1414,6 +1414,8 @@ feature {NONE} -- Class initialization
 				elseif ast_b.bottom_indexes /= Void then
 					private_external_name := ast_b.bottom_indexes.external_name
 					set_is_enum (ast_b.bottom_indexes.enum_type /= Void)
+				else
+					private_external_name := Void
 				end
 				if private_external_name = Void then
 					if ast_b.external_class_name /= Void then

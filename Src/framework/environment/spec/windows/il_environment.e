@@ -16,7 +16,7 @@ inherit
 
 create
 	make, default_create
-	
+
 feature {NONE} -- Initialization
 
 	make (a_version: STRING) is
@@ -50,15 +50,18 @@ feature -- Initialization
 		do
 			if is_dotnet_installed then
 				create l_exec
-				l_exec.put (dotnet_framework_path, "ISE_DOTNET_FRAMEWORK")
+				l_exec.put (dotnet_framework_path, ise_dotnet_framework_env)
 			end
 		end
 
 feature -- Access
 
+	ise_dotnet_framework_env: STRING is "ISE_DOTNET_FRAMEWORK"
+			-- .NET framework environment variable
+
 	version: STRING
 			-- Currently selected version, if none `default_version'.
-			
+
 	default_version: STRING is
 			-- Default runtime version if `version' was not specified.
 			-- Semantic is to take the most recent version of the run-time.
@@ -84,7 +87,7 @@ feature -- Access
 		do
 			Result := installed_runtimes.has (version)
 		end
-		
+
 	installed_runtimes: DS_ARRAYED_LIST [STRING] is
 			-- List all installed version of the runtime.
 		local
@@ -145,7 +148,7 @@ feature -- Access
 				Result := l_file_name
 			end
 		end
-		
+
 	dotnet_framework_sdk_path: STRING is
 			-- Path to .NET Framework SDK directory of version `version'.
 			-- Void if not installed.
@@ -167,10 +170,10 @@ feature -- Access
 						Result := key.string_value
 					end
 				end
-				reg.close_key (p)		
+				reg.close_key (p)
 			end
 		end
-		
+
 	Dotnet_framework_sdk_bin_path: STRING is
 			-- Path to bin directory of .NET Framework SDK of version `version'.
 		local
@@ -186,19 +189,19 @@ feature -- Access
 		end
 
 feature -- Query
-	
+
 	use_cordbg (a_string: STRING): BOOLEAN is
 			-- Should Current use cordbg.exe?
 		do
 			Result := a_string /= Void and then a_string.is_equal ("cordbg")
 		end
-		
+
 	use_dbgclr (a_string: STRING): BOOLEAN is
 			-- Should Current use DbgCLR.exe?
 		do
 			Result := a_string /= Void and then a_string.is_equal ("DbgCLR")
 		end
-	
+
 	Dotnet_debugger_path (a_debug: STRING): STRING is
 			-- The path to the .NET debugger associated with 'a_debug'.
 		require
@@ -209,16 +212,16 @@ feature -- Query
 			if use_cordbg (a_debug) then
 				l_path := Dotnet_framework_sdk_bin_path
 				if l_path /= Void then
-					Result := l_path + a_debug + ".exe"					
+					Result := l_path + a_debug + ".exe"
 				end
 			elseif use_dbgclr (a_debug) then
 				l_path := Dotnet_framework_sdk_path
-				if l_path /= Void then				
+				if l_path /= Void then
 					Result := l_path + "GuiDebug\" + a_debug + ".exe"
 				end
-			end	
+			end
 		end
-		
+
 	resource_compiler: STRING is
 			-- Path to `resgen' tool from .NET Framework SDK.
 		local
@@ -229,7 +232,7 @@ feature -- Query
 				Result := l_path + "resgen.exe"
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	sdk_keys: HASH_TABLE [STRING, STRING] is
@@ -242,7 +245,7 @@ feature {NONE} -- Implementation
 		ensure
 			sdk_keys_not_void: Result /= Void
 		end
-		
+
 	dotnet_runtime_path: STRING is
 			-- Path to where .NET runtimes are installed. It can be a once since this value is
 			-- not dependent on `version'.
@@ -267,15 +270,15 @@ feature {NONE} -- Implementation
 		ensure
 			no_ending_separator: Result /= Void implies Result.item (Result.count) /= Operating_environment.Directory_separator
 		end
-		
+
 feature -- Constants
 
 	v1_0: STRING is "v1.0"
 			-- Version number of v1.0 of Microsoft .NET
-			
+
 	v1_1: STRING is "v1.1"
 			-- Version number of v1.1 of Microsoft .NET
-			
+
 	v2_0: STRING is "v2.0"
 			-- Version number of v2.0 of Microsoft .NET
 
@@ -283,7 +286,7 @@ feature {NONE} -- Constants
 
 	runtime_root_key: STRING is "InstallRoot"
 			-- Name of key specifiying where runtimes are installed.
-	
+
 invariant
 	version_not_void: version /= Void
 

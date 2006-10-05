@@ -586,7 +586,7 @@ feature {NONE} -- Settings
 					l_key := l_envs.key_for_iteration
 					l_old_val := l_envs.item_for_iteration
 					l_new_val := eiffel_layout.get_environment (l_key)
-					if not equal (l_new_val, l_old_val) then
+					if not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_framework_env) and then not equal (l_new_val, l_old_val) then
 						ask_environment_update (l_key, l_old_val, l_new_val)
 						if is_update_environment then
 							if l_new_val /= Void then

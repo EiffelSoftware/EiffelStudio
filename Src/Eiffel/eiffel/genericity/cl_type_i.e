@@ -160,6 +160,8 @@ feature -- Access
 			l_class_c: like base_class
 			l_is_precompiled: BOOLEAN
 			l_cl_type: like associated_class_type
+			l_alias_name: STRING
+			l_dot_pos: INTEGER
 		do
 			l_class_c := base_class
 			if is_external then
@@ -167,6 +169,7 @@ feature -- Access
 			else
 				l_is_precompiled := l_class_c.is_precompiled
 				if l_is_precompiled then
+						-- Reuse the name that was computed at precompilation time.
 					l_cl_type := associated_class_type
 					l_is_precompiled := l_cl_type.is_precompiled
 					if l_is_precompiled then
@@ -177,12 +180,50 @@ feature -- Access
 					if l_class_c.external_class_name.is_equal (l_class_c.name) then
 						Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
 					else
+							-- Special case when an external name has been specified.
 						Result := l_class_c.external_class_name.twin
-						if a_prefix /= Void then
-							if Result.item (Result.count) /= '.' then
-								Result.append_character ('.')
+						Result.left_adjust
+						Result.right_adjust
+							-- Remove leading `.' since it is not a valid .NET name.
+						from
+						until
+							Result.is_empty or else Result.item (1) /= '.'
+						loop
+							Result.remove_head (1)
+						end
+							-- Remove trailing `.' since it is not a valid .NET name.
+						from
+						until
+							Result.is_empty or else Result.item (Result.count) /= '.'
+						loop
+							Result.remove_tail (1)
+						end
+						if Result.is_empty then
+								-- External name is invalid since empty, we use the normal
+								-- way of generating the .Net name
+							Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
+						else
+							if a_prefix /= Void then
+								l_dot_pos := Result.last_index_of ('.', Result.count)
+								if l_dot_pos = 0 then
+									Result.prepend_character ('.')
+									Result.prepend (a_prefix)
+								else
+									check
+											-- Because there are no more leading or trailing `.'.
+										valid_l_dot_pos: l_dot_pos > 1 and l_dot_pos < Result.count
+									end
+									l_alias_name := Result.substring (l_dot_pos + 1, Result.count)
+									check
+										l_alias_name_not_empty: not l_alias_name.is_empty
+									end
+									Result.keep_head (l_dot_pos)
+									l_alias_name := internal_il_base_type_name (l_alias_name)
+									Result.append (a_prefix)
+									Result.append_character ('.')
+									Result.append (l_alias_name)
+								end
 							end
-							Result.append (a_prefix)
 						end
 					end
 				end
@@ -622,13 +663,28 @@ feature {NONE} -- Implementation
 			-- with namespace specification
 		require
 			a_base_name_not_void: a_base_name /= Void
+			a_base_name_not_empty: not a_base_name.is_empty
+		do
+			Result := internal_il_base_type_name (a_base_name)
+				-- Result needs to be in lower case because that's
+				-- what our casing conversion routines require to perform
+				-- a good job.
+			Result.to_lower
+			Result := il_casing.type_name (base_class.original_class.actual_namespace, a_prefix, Result, System.dotnet_naming_convention)
+		ensure
+			internal_il_type_name_not_void: Result /= Void
+			internal_il_type_name_not_empty: not Result.is_empty
+		end
+
+	frozen internal_il_base_type_name (a_base_name: STRING): STRING is
+			-- Given `a_base_name' provides its updated name depending on its usage.
+		require
+			a_base_name_not_void: a_base_name /= Void
+			a_base_name_not_empty: not a_base_name.is_empty
 		local
 			l_base_class: like base_class
 		do
 			l_base_class := base_class
-				-- Result needs to be in lower case because that's
-				-- what our casing conversion routines require to perform
-				-- a good job.
 			if is_expanded and then not l_base_class.is_expanded then
 				create Result.make (6 + a_base_name.count)
 				Result.append ("value_")
@@ -639,11 +695,9 @@ feature {NONE} -- Implementation
 				create Result.make (a_base_name.count)
 			end
 			Result.append (a_base_name)
-			Result.to_lower
-			Result := il_casing.type_name (l_base_class.original_class.actual_namespace, a_prefix, Result, System.dotnet_naming_convention)
 		ensure
-			internal_il_type_name_not_void: Result /= Void
-			internal_il_type_name_not_empty: not Result.is_empty
+			internal_il_base_type_name_not_void: Result /= Void
+			internal_il_base_type_name_not_empty: not Result.is_empty
 		end
 
 feature {CL_TYPE_A, TUPLE_CLASS_B} -- Implementation: class type declaration marks

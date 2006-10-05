@@ -744,6 +744,9 @@ feature {NONE} -- Initialization
 					end
 				end
 
+					-- Check if this is a constructor
+				l_constructor ?= l_member
+
 				if l_member.is_static then
 					if l_member.is_attribute then
 						if l_return_type.associated_class.is_enum then
@@ -923,7 +926,6 @@ feature {NONE} -- Initialization
 				l_feat.set_written_in (l_written_type.class_id)
 
 					-- Add creation routine to `creators' if any.
-				l_constructor ?= l_member
 				if l_constructor /= Void then
 						-- Special case for value type where creation routines
 						-- are simply generated as normal feature and cannot be used

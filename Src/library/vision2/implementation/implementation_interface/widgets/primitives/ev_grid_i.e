@@ -5119,8 +5119,10 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			a_sel_row: EV_GRID_ROW
 			items_spanning: ARRAYED_LIST [INTEGER]
 			l_index_of_first_item: INTEGER
-			l_previously_expanded, l_ignore_column_navigation: BOOLEAN
+			l_previously_expanded, l_expansion_status_changed: BOOLEAN
+			l_make_item_visible: BOOLEAN
 		do
+
 			if is_selection_keyboard_handling_enabled then
 					-- Handle the selection events
 				if is_row_selection_enabled then
@@ -5146,21 +5148,24 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					-- Check to see if column navigation should be ignored if selected row expansion status has changed during the key actions.
 				if prev_sel_item /= Void and then prev_sel_item.is_parented then
 					if l_previously_expanded then
-						l_ignore_column_navigation := not prev_sel_item.row.is_expanded
+						l_expansion_status_changed := not prev_sel_item.row.is_expanded
 					else
-						l_ignore_column_navigation := prev_sel_item.row.is_expanded
+						l_expansion_status_changed := prev_sel_item.row.is_expanded
 					end
 				end
 						-- We always want to find an item above or below for row selection
-				if prev_sel_item /= Void and then prev_sel_item.is_parented then
+				if not l_expansion_status_changed and then prev_sel_item /= Void and then prev_sel_item.is_parented then
 					a_sel_row := prev_sel_item.row
 					inspect
 						a_key.code
 					when {EV_KEY_CONSTANTS}.Key_down then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
+						l_make_item_visible := vertical_scroll_bar.is_displayed
 					when {EV_KEY_CONSTANTS}.Key_up then
 						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
+						l_make_item_visible := vertical_scroll_bar.is_displayed
 					when {EV_KEY_CONSTANTS}.Key_right then
+						l_make_item_visible := horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key right shouldn't affect row selection
 							if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
@@ -5168,13 +5173,14 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							else
 								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
 							end
-						elseif not l_ignore_column_navigation then
+						elseif l_make_item_visible then
 							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
 							if not items_spanning.is_empty then
 								(columns @ (items_spanning @ 1)).ensure_visible
 							end
 						end
 					when {EV_KEY_CONSTANTS}.Key_left then
+						l_make_item_visible := horizontal_scroll_bar.is_displayed
 						if not is_row_selection_enabled then
 								-- Key left shouldn't affect row selection
 							if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
@@ -5182,7 +5188,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							else
 								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
 							end
-						elseif not l_ignore_column_navigation then
+						elseif l_make_item_visible then
 								-- If the row has children then
 							if virtual_x_position > 0 then
 								items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
@@ -5195,6 +5201,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						-- Do nothing
 					end
 				elseif a_key.code = {EV_KEY_CONSTANTS}.Key_down then
+					l_make_item_visible := vertical_scroll_bar.is_displayed
 					if column_count >= 1 then
 						a_sel_item := find_next_item_in_column (column (1), 0, True, True)
 					end
@@ -5209,6 +5216,33 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 						last_selected_item.disable_select
 					end
 					handle_newly_selected_item (a_sel_item, 0, True)
+
+					if a_sel_item /= currently_active_item and then l_make_item_visible then
+							-- We don't want to scroll the grid if an item is being activated.
+						if is_row_selection_enabled then
+							a_sel_item.row.ensure_visible
+						else
+								-- We must be careful to only scroll the grid in a single direction if the column
+								-- or row of an item is locked
+							if a_sel_item.row.is_locked then
+								if a_sel_item.column.is_locked and a_sel_item.column.implementation.locked_column.locked_index > a_sel_item.row.implementation.locked_row.locked_index then
+									a_sel_item.row.ensure_visible
+								else
+									a_sel_item.column.ensure_visible
+								end
+							elseif a_sel_item.column.is_locked then
+								if a_sel_item.row.is_locked and a_sel_item.row.implementation.locked_row.locked_index > a_sel_item.column.implementation.locked_column.locked_index then
+									a_sel_item.column.ensure_visible
+								else
+									a_sel_item.row.ensure_visible
+								end
+							else
+									-- Here, the column or row is not locked, so scroll in both directions
+								a_sel_item.ensure_visible
+							end
+						end
+					end
+
 					if is_row_selection_enabled then
 						last_selected_row := a_sel_item.row.implementation
 					end
@@ -5381,32 +5415,6 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			if
 				a_item /= Void
 			then
-				if a_item /= currently_active_item and then from_key_press then
-						-- We don't want to scroll the grid if an item is being activated.
-						-- or via mouse click.
-					if is_row_selection_enabled then
-						a_item.row.ensure_visible
-					else
-							-- We must be careful to only scroll the grid in a single direction if the column
-							-- or row of an item is locked
-						if a_item.row.is_locked then
-							if a_item.column.is_locked and a_item.column.implementation.locked_column.locked_index > a_item.row.implementation.locked_row.locked_index then
-								a_item.row.ensure_visible
-							else
-								a_item.column.ensure_visible
-							end
-						elseif a_item.column.is_locked then
-							if a_item.row.is_locked and a_item.row.implementation.locked_row.locked_index > a_item.column.implementation.locked_column.locked_index then
-								a_item.column.ensure_visible
-							else
-								a_item.row.ensure_visible
-							end
-						else
-								-- Here, the column or row is not locked, so scroll in both directions
-							a_item.ensure_visible
-						end
-					end
-				end
 				a_item.enable_select
 					-- Reset the last selected item so that multiple selection works from previous position.
 				if last_selected_row /= Void then
@@ -6028,12 +6036,12 @@ invariant
 	internal_client_y_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies internal_client_y >= 0
 	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then is_horizontal_scroll_bar_show_requested and then not horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
 	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
-	row_heights_fixed_implies_row_offsets_void: is_initialized and then is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
+	row_heights_fixed_implies_row_offsets_void: is_initialized and then not uses_row_offsets implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	displayed_column_count_not_greater_than_column_count: is_initialized implies displayed_column_count <= column_count
 	computed_visible_row_count_equals_row_when_not_users_row_offsets: is_initialized and then not uses_row_offsets implies visible_row_count = row_count
 	computed_visible_row_count_no_greater_than_rows: is_initialized implies visible_row_count <= row_count
-	tree_disabled_implies_visible_rows_equal_hidden_rows: is_initialized and then not is_tree_enabled implies row_count = visible_row_count
+	tree_disabled_implies_visible_rows_equal_hidden_rows: is_initialized and then not is_tree_enabled implies row_count - non_displayed_row_count = visible_row_count
 	internal_viewport_positions_equal_to_viewports: is_initialized implies (viewport.x_offset = viewport_x_offset and viewport.y_offset = viewport_y_offset)
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 

@@ -397,6 +397,7 @@ feature {NONE} -- User interaction
 				io.put_new_line
 				io.put_string ("because of the -stop/-batch option.")
 				io.put_new_line
+				is_update_environment := True
 			else
 				from
 				until

@@ -82,10 +82,7 @@ feature {NONE} -- Implementation
 			if l_as.clients.count = 1 and then ("NONE").is_equal (l_as.clients.first) then
 			   last_export_status := export_none
 			else
-				create l_client_i
-				l_client_i.set_clients (l_as.clients)
-					-- Current class in second pass...
-				l_client_i.set_written_in (current_class.class_id)
+				create l_client_i.make (l_as.clients, current_class.class_id)
 				create l_export_set.make
 				l_export_set.compare_objects
 				l_export_set.put (l_client_i)

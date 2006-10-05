@@ -180,7 +180,7 @@ feature -- Access
 				current_string.is_empty
 			loop
 				Result.extend (current_string)
-				current_pos := current_pos + current_string.count + 1
+				current_pos := current_pos + (current_string.count + 1) * character_size
 				l_str.share_from_pointer (current_pos)
 				current_string := l_str.string
 			end

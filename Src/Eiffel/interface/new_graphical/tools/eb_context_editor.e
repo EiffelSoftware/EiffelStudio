@@ -315,9 +315,9 @@ feature {NONE} -- Initialization
 			draw_commands.extend (force_settings_cmd)
 			draw_commands.extend (Void)
 
-			draw_commands.extend (zoom_in_cmd)
-			draw_commands.extend (fit_to_screen_cmd)
 			draw_commands.extend (zoom_out_cmd)
+			draw_commands.extend (fit_to_screen_cmd)
+			draw_commands.extend (zoom_in_cmd)
 
 			from
 				create drawing_toolbar

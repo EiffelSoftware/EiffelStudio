@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 							l_value := ""
 						end
 							-- we don't want to update stored values, this is done when the project is loaded
-						target.environ_variables.put (l_value, l_key.as_lower)
+						target.environ_variables.put (l_value, l_key)
 					end
 					Result.replace_substring (to_internal (l_value), i, j)
 				end

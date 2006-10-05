@@ -865,9 +865,16 @@ feature -- Project creation, retrieval, ...
 		end
 
 	w_Environment_changed (a_key, a_old_val, a_new_val: STRING): STRING is
+		local
+			l_new: STRING
 		do
+			if a_new_val = Void then
+				l_new := "<unset>"
+			else
+				l_new := a_new_val
+			end
 			Result := "Environment variable '"+a_key+"' has changed%N%N%
-				%Old value: "+a_old_val+"%NNew value: "+a_new_val+"%N%N%
+				%Old value: "+a_old_val+"%NNew value: "+l_new+"%N%N%
 				%Should the new value be used?"
 		end
 

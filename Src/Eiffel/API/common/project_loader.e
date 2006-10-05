@@ -589,7 +589,11 @@ feature {NONE} -- Settings
 					if not equal (l_new_val, l_old_val) then
 						ask_environment_update (l_key, l_old_val, l_new_val)
 						if is_update_environment then
-							l_envs.force (l_new_val, l_key)
+							if l_new_val /= Void then
+								l_envs.force (l_new_val, l_key)
+							else
+								l_envs.remove (l_key)
+							end
 							system.force_rebuild
 						else
 							eiffel_layout.set_environment (l_old_val, l_key)

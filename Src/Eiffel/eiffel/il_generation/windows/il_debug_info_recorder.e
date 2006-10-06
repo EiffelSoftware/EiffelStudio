@@ -144,15 +144,18 @@ feature {CIL_CODE_GENERATOR} -- Access
 		do
 			if context.workbench_mode then
 				save (il_info_file_name)
+				is_recording := False
 			else
 				save (final_il_info_file_name)
 					--| Switch back current IL debug info to Workbench
 					--| since it is more likely ES will use it for debugging
 					--| Now we checked the current info are related to workbench
 					--| but it is safer to reload workbench version here too.
-				load_workbench_data
+				is_recording := False
+					--| this feature already set is_recording to False
+					--| but it is safer/cleaner to set to False before
+				load_data_for_debugging
 			end
-			is_recording := False
 		ensure
 			is_outside_recording: not is_recording
 		end

@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 		do
 			l_system := a_target.system.name
 			l_target := a_target.name
-			l_file := l_system+"-"+a_target.system.uuid.out+"-"+l_target+"-"+a_action+"-"
+			l_file := l_system+"-"+a_target.system.uuid.out+"-"+l_target+"-"+a_action
 
 			create l_args.make (10)
 			l_args.extend ("-config")

@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 					folder_list := override_header
 				elseif clusteri.is_cluster then
 					folder_list := cluster_header
-				elseif clusteri.is_assembly then
+				elseif clusteri.is_assembly or clusteri.is_physical_assembly then
 					folder_list := assembly_header
 				elseif clusteri.is_library then
 					folder_list := library_header

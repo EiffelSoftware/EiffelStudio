@@ -34,6 +34,7 @@ feature -- Visit nodes
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_c_opt: HASH_TABLE [CONF_OPTION, STRING]
 			l_map: HASH_TABLE [STRING, STRING]
+			l_vg: CONF_VIRTUAL_GROUP
 		do
 			l_classes := a_group.classes
 			check
@@ -43,20 +44,23 @@ feature -- Visit nodes
 
 				-- check renamings
 			if a_group.options.is_warning_enabled (w_renaming_unknown_class) then
-				l_ren := a_group.renaming
-				if l_ren /= Void then
-					from
-						l_ren.start
-					until
-						l_ren.after
-					loop
-						l_name := l_ren.key_for_iteration
-							-- do not use mapping because renaming already deals with changing names in the system,
-							-- also applying mapping would make things too confusing
-						if not l_classes.has (l_ren.item_for_iteration) or else not l_classes.found_item.name.is_equal (l_name) then
-							add_error (create {CONF_ERROR_RENAM}.make (l_name, a_group.target.system.file_name))
+				l_vg ?= a_group
+				if l_vg /= Void then
+					l_ren := l_vg.renaming
+					if l_ren /= Void then
+						from
+							l_ren.start
+						until
+							l_ren.after
+						loop
+							l_name := l_ren.key_for_iteration
+								-- do not use mapping because renaming already deals with changing names in the system,
+								-- also applying mapping would make things too confusing
+							if not l_classes.has (l_ren.item_for_iteration) or else not l_classes.found_item.name.is_equal (l_name) then
+								add_error (create {CONF_ERROR_RENAM}.make (l_name, a_group.target.system.file_name))
+							end
+							l_ren.forth
 						end
-						l_ren.forth
 					end
 				end
 			end

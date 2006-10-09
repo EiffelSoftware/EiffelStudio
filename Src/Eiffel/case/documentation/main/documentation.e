@@ -197,11 +197,7 @@ feature -- Actions
 									l_classes.after
 								loop
 									l_class := l_classes.item_for_iteration
-									if l_class.is_class_assembly then
-										filter.set_context_group (Void)
-									else
-										filter.set_context_group (l_class.group)
-									end
+									filter.set_context_group (l_class.group)
 									if l_class.is_compiled then
 										deg.put_case_class_message (l_class)
 										deg.flush_output

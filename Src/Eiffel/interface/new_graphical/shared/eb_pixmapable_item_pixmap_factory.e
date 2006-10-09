@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 					else
 						Result := pixmaps.icon_pixmaps.folder_blank_icon
 					end
-				elseif a_group.is_assembly then
+				elseif a_group.is_assembly or a_group.is_physical_assembly then
 					Result := pixmaps.icon_pixmaps.folder_namespace_icon
 				else
 					check should_not_reach: false end
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 					else
 						Result := pixmaps.icon_pixmaps.folder_library_icon
 					end
-				elseif a_group.is_assembly then
+				elseif a_group.is_assembly or a_group.is_physical_assembly then
 					Result := pixmaps.icon_pixmaps.folder_assembly_icon
 				else
 					check should_not_reach: false end

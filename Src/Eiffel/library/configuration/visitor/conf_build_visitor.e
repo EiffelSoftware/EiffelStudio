@@ -162,7 +162,7 @@ feature -- Visit nodes
 			l_pre: CONF_PRECOMPILE
 			l_old_group: CONF_GROUP
 			l_consumer_manager: CONF_CONSUMER_MANAGER
-			l_old_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+			l_old_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]
 			l_retried: BOOLEAN
 			l_error_count: INTEGER
 		do
@@ -217,7 +217,7 @@ feature -- Visit nodes
 						if old_target /= Void then
 							l_old_assemblies := old_target.all_assemblies.twin
 						end
-						create l_consumer_manager.make (factory, assembly_cache_folder, il_version, added_classes, removed_classes, modified_classes)
+						create l_consumer_manager.make (factory, assembly_cache_folder, il_version, application_target, added_classes, removed_classes, modified_classes)
 						l_consumer_manager.consume_assembly_observer.append (consume_assembly_observer)
 						l_consumer_manager.build_assemblies (new_assemblies, l_old_assemblies)
 						if l_consumer_manager.is_error then
@@ -240,7 +240,7 @@ feature -- Visit nodes
 							end
 						end
 					else
-						a_target.set_all_assemblies (create {HASH_TABLE [CONF_ASSEMBLY, STRING]}.make (0))
+						a_target.set_all_assemblies (create {HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]}.make (0))
 					end
 
 						-- overrides can only be in the application target, must be done at the very end
@@ -276,9 +276,6 @@ feature -- Visit nodes
 		local
 			l_file: RAW_FILE
 		do
-			if not state.is_dotnet then
-				add_and_raise_error (create {CONF_ERROR_DOTNET}.make (an_assembly.target.system.file_name))
-			end
 				-- if it is a local assembly, check that the file exists
 			if not an_assembly.is_non_local_assembly then
 				create l_file.make (an_assembly.location.evaluated_path)
@@ -552,10 +549,9 @@ feature {NONE} -- Implementation
 		local
 			l_file: KL_BINARY_INPUT_FILE
 			l_class: CONF_CLASS
-			l_name, l_tmp: STRING
+			l_name: STRING
 			l_full_file: STRING
 			l_pc: ARRAYED_LIST [STRING]
-			l_renamings: HASH_TABLE [STRING, STRING]
 			l_file_name: STRING
 			l_done: BOOLEAN
 		do
@@ -576,7 +572,7 @@ feature {NONE} -- Implementation
 						add_and_raise_error (l_class.last_error)
 						-- don't update renamed classes, instead handle them on the class name basis
 					elseif not l_class.is_renamed then
-						l_name := l_class.renamed_name
+						l_name := l_class.name
 						if l_class.is_compiled and l_class.is_modified then
 							modified_classes.force (l_class)
 						end
@@ -602,22 +598,13 @@ feature {NONE} -- Implementation
 							-- get class name
 						classname_finder.parse (l_file)
 						l_file.close
-						l_tmp := classname_finder.classname
-						if l_tmp = Void then
+						l_name := classname_finder.classname
+						if l_name = Void then
 							add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file, a_cluster.target.system.file_name))
-						elseif l_tmp.is_case_insensitive_equal ("NONE") then
+						elseif l_name.is_case_insensitive_equal ("NONE") then
 							add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file, a_cluster.target.system.file_name))
 						else
-							l_tmp.to_upper
-							l_renamings := a_cluster.renaming
-							if l_renamings /= Void and then l_renamings.has (l_tmp) then
-								l_name := l_renamings.found_item
-							else
-								l_name := l_tmp.twin
-							end
-							if a_cluster.name_prefix /= Void then
-								l_name.prepend (a_cluster.name_prefix)
-							end
+							l_name.to_upper
 
 								-- partial classes					
 							if classname_finder.is_partial_class then
@@ -638,9 +625,6 @@ feature {NONE} -- Implementation
 									add_and_raise_error (l_class.last_error)
 								end
 								added_classes.force (l_class)
-								check
-									name_same: l_name.is_equal (l_class.renamed_name)
-								end
 								if current_classes.has (l_name) then
 									add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 								else
@@ -665,34 +649,6 @@ feature {NONE} -- Implementation
 			a_group_not_void: a_group /= Void
 		do
 			current_classes.merge (a_group.classes)
-		end
-
-	get_class_name (a_file: STRING; a_group: CONF_GROUP): STRING is
-			-- Compute the renamed classname from `a_file' in `a_group'.
-		local
-			l_file: KL_BINARY_INPUT_FILE
-			l_name: STRING
-			l_renamings: HASH_TABLE [STRING, STRING]
-		do
-			create l_file.make (a_file)
-			if l_file.exists then
-				l_file.open_read
-				classname_finder.parse (l_file)
-				if classname_finder.classname = Void then
-					add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file, a_group.target.system.file_name))
-				end
-				l_name := classname_finder.classname.as_upper
-				l_renamings := a_group.renaming
-				if l_renamings /= Void then
-					Result := l_renamings.item (l_name)
-				end
-				if Result = Void then
-					Result := l_name.twin
-				end
-				if a_group.name_prefix /= Void then
-					Result.prepend (a_group.name_prefix)
-				end
-			end
 		end
 
 	process_removed (a_groups: HASH_TABLE [CONF_GROUP, STRING]) is
@@ -889,15 +845,12 @@ feature {NONE} -- Implementation
 					if l_class.is_error then
 						add_and_raise_error (l_class.last_error)
 					else
-						check
-							correct_renamed_name: l_class.renamed_name.is_equal (l_name)
-						end
 						if l_class.is_always_compile then
 							added_classes.force (l_class)
 						end
 					end
 				end
-				current_classes.force (l_class, l_class.renamed_name)
+				current_classes.force (l_class, l_class.name)
 
 				partial_classes.forth
 			end

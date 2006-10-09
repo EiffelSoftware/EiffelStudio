@@ -120,9 +120,8 @@ feature {NONE} -- Implementation
 			class_stone: CLASSI_STONE
 		do
 			cluster_stone ?= a_any
-			if cluster_stone /= Void then
-				Result := not cluster_stone.group.is_assembly
-			else
+			Result := cluster_stone /= Void
+			if not Result then
 				class_stone ?= a_any
 				Result := class_stone /= Void
 			end

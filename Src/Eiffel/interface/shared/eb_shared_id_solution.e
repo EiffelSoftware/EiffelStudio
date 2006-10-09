@@ -95,11 +95,23 @@ feature -- Access (Group)
 			-- target_uuid + name_sep + group_name
 		require
 			a_group_not_void: a_group /= Void
+		local
+			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 		do
-			create Result.make (50)
-			Result.append (id_of_target (a_group.target))
-			Result.extend (name_sep)
-			Result.append (encode (a_group.name))
+			if a_group.is_physical_assembly then
+				create Result.make (50)
+				l_phys_as ?= a_group
+				check
+					assembly: l_phys_as /= Void
+				end
+				Result.append ("assembly@")
+				Result.append (l_phys_as.guid)
+			else
+				create Result.make (50)
+				Result.append (id_of_target (a_group.target))
+				Result.extend (name_sep)
+				Result.append (encode (a_group.name))
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -111,14 +123,24 @@ feature -- Access (Group)
 		local
 			group_name: STRING
 			l_target: CONF_TARGET
+			l_pos: INTEGER
 		do
-			last_group_name := Void
-			l_target := target_of_id (a_id)
-			if strings.count >= group_id_sections then
-				group_name := decode (strings.i_th (group_id_sections))
-				last_group_name := group_name
-				if l_target /= Void then
-					Result := l_target.groups.item (group_name)
+			l_pos := a_id.index_of ('@', 1)
+			if l_pos > 0 then
+				if a_id.substring (1, l_pos-1).is_equal ("assembly") then
+					Result := universe.target.all_assemblies.item (a_id.substring (l_pos+1, a_id.count))
+					last_group_name := Result.name
+				end
+			end
+			if Result = Void then
+				last_group_name := Void
+				l_target := target_of_id (a_id)
+				if strings.count >= group_id_sections then
+					group_name := decode (strings.i_th (group_id_sections))
+					last_group_name := group_name
+					if l_target /= Void then
+						Result := l_target.groups.item (group_name)
+					end
 				end
 			end
 		end

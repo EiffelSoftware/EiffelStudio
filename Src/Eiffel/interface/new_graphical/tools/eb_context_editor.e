@@ -1344,7 +1344,7 @@ feature {EB_CONTEXT_TOOL} -- Context tool
 							is_synchronization_needed := False
 						end
 					else
-						if cluster_stone /= Void and then not cluster_stone.group.is_assembly then
+						if cluster_stone /= Void then
 							-- create a cluster view
 							if
 								is_rebuild_world_needed or else

@@ -50,9 +50,11 @@ feature -- Statusupdate
 			l_classes: LIST [CONF_CLASS]
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
+			l_assembly: CONF_ASSEMBLY
+			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 			l_class_i: CLASS_I
 			l_lib_target: CONF_TARGET
-			l_ass_dep: HASH_TABLE [CONF_ASSEMBLY, INTEGER]
+			l_ass_dep: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, INTEGER]
 			l_libs: LIST [CONF_GROUP]
 			l_cls: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_cls_lst: ARRAYED_LIST [CONF_CLUSTER]
@@ -124,21 +126,35 @@ feature -- Statusupdate
 
 				-- handle assemblies
 			elseif is_assembly then
-				l_ass_dep := actual_assembly.dependencies
+				l_assembly := actual_assembly
+				if l_assembly.physical_assembly /= Void then
+					l_ass_dep := l_assembly.physical_assembly.dependencies
+				end
 				if l_ass_dep /= Void then
 					assemblies := build_groups (l_ass_dep.linear_representation)
 				else
 					create assemblies.make_default
 				end
 
-				name_prefix := actual_group.name_prefix
+				name_prefix := l_assembly.name_prefix
 				if name_prefix = Void then
 					create name_prefix.make_empty
 				end
-				renaming := actual_group.renaming
+				renaming := l_assembly.renaming
 				if renaming = Void then
 					create renaming.make (0)
 				end
+			elseif is_physial_assembly then
+				l_phys_as ?= actual_group
+				l_ass_dep := l_phys_as.dependencies
+				if l_ass_dep /= Void then
+					assemblies := build_groups (l_ass_dep.linear_representation)
+				else
+					create assemblies.make_default
+				end
+
+				create name_prefix.make_empty
+				create renaming.make (0)
 			end
 
 				-- handle classes
@@ -207,7 +223,7 @@ feature -- Access
 		local
 			l_sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			l_library_target: CONF_TARGET
-			l_assembly_deps: HASH_TABLE [CONF_ASSEMBLY, INTEGER]
+			l_assembly_deps: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, INTEGER]
 		do
 			Result := (actual_group.classes /= Void and then not actual_group.classes.is_empty)
 			if not Result then
@@ -215,8 +231,8 @@ feature -- Access
 					l_sub_clusters := actual_cluster.sub_clusters
 					Result :=  l_sub_clusters /= Void and then not l_sub_clusters.is_empty or
 						actual_cluster.is_recursive
-				elseif is_assembly then
-					l_assembly_deps := actual_assembly.dependencies
+				elseif is_assembly and then actual_assembly.physical_assembly /= Void then
+					l_assembly_deps := actual_assembly.physical_assembly.dependencies
 					Result := l_assembly_deps /= Void and then not l_assembly_deps.is_empty
 				elseif is_library then
 					l_library_target := actual_library.library_target
@@ -256,7 +272,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
-	actual_assembly: ASSEMBLY_I is
+	actual_assembly: CONF_ASSEMBLY is
 			-- assembly associated to `Current'.
 		require
 			is_assembly: is_assembly
@@ -293,6 +309,13 @@ feature -- Access
 			Result := actual_group.is_assembly
 		end
 
+	is_physial_assembly: BOOLEAN is
+			-- Does `Current' represent a physical assembly?
+		require
+			actual_group_not_void: actual_group /= Void
+		do
+			Result := actual_group.is_physical_assembly
+		end
 
 feature -- Status setting
 
@@ -386,7 +409,7 @@ feature {NONE} -- Implementation
 				l_lst.force_last (l_cl)
 
 					-- for assembly namespaces add the path to the folders mapping
-				if is_assembly then
+				if is_assembly or is_physial_assembly then
 					l_path_comp := l_path.split ('/')
 					check
 						at_least_one_element: l_path_comp.count >= 1

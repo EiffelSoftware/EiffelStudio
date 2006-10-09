@@ -9,10 +9,9 @@ class
 	CONF_ASSEMBLY
 
 inherit
-	CONF_PHYSICAL_GROUP
+	CONF_VIRTUAL_GROUP
 		redefine
 			classes_set,
-			make,
 			process,
 			is_assembly,
 			class_by_name,
@@ -22,50 +21,14 @@ inherit
 			class_type,
 			is_readonly,
 			accessible_groups,
-			accessible_classes,
-			add_condition,
 			location
 		end
-
-	CONF_FILE_DATE
-		undefine
-			is_equal
-		end
-
 
 create {CONF_FACTORY}
 	make,
 	make_from_gac
 
 feature {NONE} -- Initialization
-
-	initialize_conditions is
-			-- Restrict to platform dotnet
-		local
-			l_cond: CONF_CONDITION
-		do
-			if internal_conditions = Void then
-				create internal_conditions.make (1)
-				internal_conditions.force (default_condition)
-			else
-				from
-					internal_conditions.start
-				until
-					internal_conditions.after
-				loop
-					l_cond := internal_conditions.item
-					l_cond.set_dotnet (True)
-					internal_conditions.forth
-				end
-			end
-		end
-
-	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
-			-- Create
-		do
-			Precursor (a_name.as_lower, a_location, a_target)
-			initialize_conditions
-		end
 
 	make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key: STRING; a_target: CONF_TARGET) is
 			-- Create.
@@ -77,8 +40,6 @@ feature {NONE} -- Initialization
 			an_assembly_key_not_void: an_assembly_key /= Void
 			a_target_not_void: a_target /= Void
 		do
-			initialize_conditions
-			is_in_gac := True
 			target := a_target
 			is_valid := True
 			set_name (a_name.as_lower)
@@ -97,9 +58,8 @@ feature -- Status
 	classes_set: BOOLEAN is
 			-- Are the classes set?
 		do
-			Result := classes /= Void and dotnet_classes /= Void
+			Result := classes /= Void
 		end
-
 
 	is_assembly: BOOLEAN is
 			-- Is this an assembly?
@@ -107,22 +67,16 @@ feature -- Status
 			Result := True
 		end
 
-	is_in_gac: BOOLEAN
-			-- Is this assembly in gac?
-
 	is_non_local_assembly: BOOLEAN
 			-- Was this assembly only specified by gac information (i.e. no location was set)?
 
-	is_partially_consumed: BOOLEAN
-			-- Indicates if assembly is only partially consumed
+feature -- Access, stored in configuration file
 
-	is_dependency: BOOLEAN
-			-- Indiciates if assembly is a dependency
-
-feature -- Access, stored in configuration file if location is empty
+	is_readonly: BOOLEAN is True
+			-- Assemblies are always read only.
 
 	location: CONF_FILE_LOCATION
-			-- Assembly location.
+			-- Location of the assembly.
 
 	assembly_name: STRING
 			-- Name of the assembly.
@@ -136,75 +90,23 @@ feature -- Access, stored in configuration file if location is empty
 	assembly_public_key_token: STRING
 			-- Public key of the assembly.
 
-	is_readonly: BOOLEAN is True
-			-- Assemblies are always read only.
-
 feature -- Access, in compiled only
 
-	dotnet_classes: HASH_TABLE [like class_type, STRING]
-			-- Same as `classes' but indexed by the dotnet name.
-
-	guid: STRING
-			-- A unique id.
-
-	consumed_path: STRING
-			-- The path to the consumed assembly.
-
-	dependencies: HASH_TABLE [CONF_ASSEMBLY, INTEGER]
-			-- Dependencies on other assemblies indexed by their assembly ID.
-
-	date: INTEGER
-			-- Date of last modification of the cached information.
+	physical_assembly: CONF_PHYSICAL_ASSEMBLY
+			-- Physical assembly that contains all the (unrenamed) classes.
 
 feature -- Access queries
 
 	accessible_groups: DS_HASH_SET [CONF_GROUP] is
 			-- Groups that are accessible within `Current'.
-			-- Dependencies if we have them, else nothing.
 		do
-			if accessible_groups_cache = Void then
-				if dependencies /= Void then
-					from
-						create accessible_groups_cache.make (dependencies.count)
-						dependencies.start
-					until
-						dependencies.after
-					loop
-						accessible_groups_cache.put (dependencies.item_for_iteration)
-						dependencies.forth
-					end
-				else
-					create accessible_groups_cache.make (0)
-				end
-			end
-			Result := accessible_groups_cache
-		end
-
-	accessible_classes: like classes is
-			-- Classes that are accessible within `Current'.
-		local
-			l_groups: like accessible_groups
-			l_grp: CONF_GROUP
-		do
-			Result := Precursor
-			l_groups := accessible_groups
-			from
-				l_groups.start
-			until
-				l_groups.after
-			loop
-				l_grp := l_groups.item_for_iteration
-				if l_grp.classes_set then
-					Result.merge (l_grp.classes)
-				end
-				l_groups.forth
-			end
+			Result := physical_assembly.accessible_groups
 		end
 
 	mapping: EQUALITY_HASH_TABLE [STRING, STRING] is
 			-- Special classes name mapping (eg. STRING => STRING_32).
 		once
-				-- there are no mappings for assemblies
+				-- There are no mappings for assemblies
 			create Result.make (0)
 		end
 
@@ -258,20 +160,6 @@ feature -- Access queries
 			Result_empty_or_one_element: Result.is_empty or Result.count = 1
 		end
 
-	class_by_dotnet_name (a_class: STRING; a_dependency_index: INTEGER): like class_type is
-			-- Get class by dotnet name.
-		require
-			a_class_ok: a_class /= Void and then not a_class.is_empty
-			classes_set: classes_set
-		do
-			if dependencies /= Void and then dependencies.has (a_dependency_index) then
-				check not_void: dependencies.found_item /= Void end
-				Result := dependencies.found_item.dotnet_classes.item (a_class)
-			else
-				Result := dotnet_classes.item (a_class)
-			end
-		end
-
 	options: CONF_OPTION is
 			-- Options of this assembly.
 		once
@@ -288,17 +176,22 @@ feature -- Access queries
 
 	sub_group_by_name (a_name: STRING): CONF_GROUP is
 			-- Return assembly dependency with `a_name' if there is any.
+		local
+			l_deps: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, INTEGER_32]
 		do
-			if dependencies /= Void then
+			if physical_assembly /= Void then
+				l_deps := physical_assembly.dependencies
+			end
+			if l_deps /= Void then
 				from
-					dependencies.start
+					l_deps.start
 				until
-					Result /= Void or dependencies.after
+					Result /= Void or l_deps.after
 				loop
-					if dependencies.item_for_iteration.name.is_equal (a_name) then
-						Result := dependencies.item_for_iteration
+					if l_deps.item_for_iteration.name.is_equal (a_name) then
+						Result := l_deps.item_for_iteration
 					end
-					dependencies.forth
+					l_deps.forth
 				end
 			end
 		end
@@ -337,107 +230,18 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			assembly_public_key_token_set: assembly_public_key_token = a_public_key
 		end
 
-	set_is_in_gac (b: like is_in_gac) is
-			-- Set `is_in_gac' to `b'.
-		do
-			is_in_gac := b
-		ensure
-			is_in_gac_set: is_in_gac = b
-		end
-
-	add_condition (a_condition: CONF_CONDITION) is
-			-- Add `a_condition'.
-		do
-				-- remove the default condition
-			if internal_conditions /= Void then
-				internal_conditions.start
-				internal_conditions.prune (default_condition)
-			end
-			Precursor (a_condition)
-			initialize_conditions
-		end
-
-feature {CONF_ACCESS, EXTERNAL_CLASS_C} -- Update, stored in configuration file
-
-	set_is_partially_consumed (b: like is_partially_consumed) is
-			-- Set `is_partially_consumed' to `b'
-		do
-			is_partially_consumed := b
-		ensure
-			is_partially_consumed_set: is_partially_consumed = b
-		end
-
-	set_is_dependency (b: like is_dependency) is
-			-- Set `is_dependency' with `set_is_dependency'
-		do
-			is_dependency := b
-		ensure
-			is_dependency_set: is_dependency = b
-		end
-
 feature {CONF_ACCESS} -- Update, in compiled only
 
-	set_target (a_target: like target) is
-			-- Set `target' to `a_target'.
+	set_physical_assembly (a_assembly: like physical_assembly) is
+			-- Set `physical_assembly' to `a_assembly'.
 		require
-			a_target_not_void: a_target /= Void
+			a_assembly_not_void: a_assembly /= Void
 		do
-			target := a_target
+			physical_assembly := a_assembly
+			physical_assembly.add_assembly (Current)
 		ensure
-			target_set: target = a_target
-		end
-
-	set_dotnet_classes (a_classes: like dotnet_classes) is
-			-- Set `dotnet_classes' to `a_classes'.
-		require
-			a_classes_not_void: a_classes /= Void
-		do
-			dotnet_classes := a_classes
-		ensure
-			dotnet_classes_set: dotnet_classes = a_classes
-		end
-
-	set_guid (a_guid: like guid) is
-			-- Set `guid' to `a_guid'
-		require
-			a_guid_ok: a_guid /= Void and then not a_guid.is_empty
-		do
-			guid := a_guid
-		ensure
-			guid_set: guid = a_guid
-		end
-
-	set_consumed_path (a_path: STRING) is
-			-- Set `consumed_path' to `a_path'.
-		require
-			a_path_not_void: a_path /= Void
-		do
-			consumed_path := a_path
-		ensure
-			consumed_path_set: consumed_path = a_path
-		end
-
-	add_dependency (an_assembly: CONF_ASSEMBLY; an_index: INTEGER) is
-			-- Add a dependency on `an_assembly'.
-		require
-			an_assembly_not_void: an_assembly /= Void
-		do
-			if dependencies = Void then
-				create dependencies.make (an_index)
-			end
-			dependencies.force (an_assembly, an_index)
-		end
-
-	set_dependencies (a_dependencies: like dependencies) is
-			-- Set `dependencies' to `a_dependencies'.
-		do
-			dependencies := a_dependencies
-		end
-
-	set_date (a_date: like date) is
-			-- Set `date' to `a_date'.
-		do
-			date := a_date
+			physical_assembly_set: physical_assembly = a_assembly
+			physical_assembly_backlink: physical_assembly.assemblies.has (Current)
 		end
 
 feature -- Equality
@@ -450,7 +254,8 @@ feature -- Equality
 				Result := equal (assembly_name, other.assembly_name) and
 					equal (assembly_version, other.assembly_version) and
 					equal (assembly_culture, other.assembly_culture) and
-					equal (assembly_public_key_token, other.assembly_public_key_token)
+					equal (assembly_public_key_token, other.assembly_public_key_token) and
+					equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming)
 			end
 		end
 
@@ -463,30 +268,10 @@ feature -- Visit
 			a_visitor.process_assembly (Current)
 		end
 
-feature {NONE} -- Implementation
-
-	default_condition: CONF_CONDITION is
-			-- Default condition that restricts assemblies to .NET
-		once
-			create Result.make
-			Result.set_dotnet (True)
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-feature {NONE} -- Caches
-
-	accessible_groups_cache: like accessible_groups
-			-- Cached information of `accessible_groups'.
-
 feature {NONE} -- Type anchors
 
 	class_type: CONF_CLASS;
 			-- Class type anchor
-
-invariant
-	guid_set: classes_set implies guid /= Void and then not guid.is_empty
-	consumed_path_set: classes_set implies consumed_path /= Void and then not consumed_path.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

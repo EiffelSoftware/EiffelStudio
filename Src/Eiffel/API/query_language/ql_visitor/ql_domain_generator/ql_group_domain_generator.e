@@ -72,8 +72,7 @@ feature -- Process
 			elseif l_conf_group.is_library then
 				l_library ?= l_conf_group
 				process_groups_from_target (l_library.library_target, a_item, agent evaluate_item)
-			elseif l_conf_group.is_assembly then
-				l_assembly ?= l_conf_group
+			elseif l_conf_group.is_assembly or l_conf_group.is_physical_assembly then
 				l_group_set := l_cluster.dependencies
 				if l_group_set /= Void then
 					process_groups_from_list (l_group_set, a_item)

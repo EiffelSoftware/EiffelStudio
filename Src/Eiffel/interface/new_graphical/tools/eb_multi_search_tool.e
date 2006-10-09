@@ -1487,7 +1487,7 @@ feature -- Custom search scope
 		local
 			l_item: EV_LIST_ITEM
 		do
-			if not a_group.is_assembly then
+			if not a_group.is_assembly and not a_group.is_physical_assembly then
 				l_item := scope_list.retrieve_item_by_data (a_group, false)
 				if l_item = Void then
 					create l_item.make_with_text (a_group.name)

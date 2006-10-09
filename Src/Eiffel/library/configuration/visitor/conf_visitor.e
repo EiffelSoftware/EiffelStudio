@@ -58,6 +58,13 @@ feature -- Visit nodes
 		deferred
 		end
 
+	process_physical_assembly (an_assembly: CONF_PHYSICAL_ASSEMBLY) is
+			-- Visit `an_assembly'.
+		require
+			an_assembly_not_void: an_assembly /= Void
+		deferred
+		end
+
 	process_library (a_library: CONF_LIBRARY) is
 			-- Visit `a_library'.
 		require

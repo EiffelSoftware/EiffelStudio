@@ -416,7 +416,7 @@ feature -- Element change
 										until
 											l_lib_usage.after
 										loop
-											l_lib_usage.item.classes.remove (a_class.renamed_name)
+											l_lib_usage.item.classes.remove (a_class.name)
 											l_lib_usage.forth
 										end
 									end
@@ -427,7 +427,7 @@ feature -- Element change
 										create l_classes.make (1)
 										new_cluster.set_classes (l_classes)
 									end
-									new_cluster.classes.force (a_class, a_class.renamed_name)
+									new_cluster.classes.force (a_class, a_class.name)
 
 										-- force a rebuild to handle the rest
 									system.force_rebuild
@@ -743,7 +743,7 @@ feature {NONE} -- Implementation
 					parent_cluster_sons := overrides
 				elseif clusteri.is_cluster then
 					parent_cluster_sons := clusters
-				elseif clusteri.is_assembly then
+				elseif clusteri.is_assembly or clusteri.is_physical_assembly then
 					parent_cluster_sons := assemblies
 				elseif clusteri.is_library then
 					parent_cluster_sons := libraries
@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 				elseif parent_cluster.is_library then
 					if clusteri.is_cluster then
 						parent_cluster_sons := parent_cluster.clusters
-					elseif clusteri.is_assembly then
+					elseif clusteri.is_assembly or clusteri.is_physical_assembly then
 						parent_cluster_sons := parent_cluster.assemblies
 					elseif clusteri.is_library then
 						parent_cluster_sons := parent_cluster.libraries

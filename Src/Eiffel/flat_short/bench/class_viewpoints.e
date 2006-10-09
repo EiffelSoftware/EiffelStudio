@@ -95,36 +95,29 @@ feature {NONE} -- Implementation
 	calculate_viewpoints is
 			-- Calculate all viewpoints for `conf_group'
 		local
-			l_lib_list: ARRAYED_LIST [CONF_LIBRARY]
-			l_library: CONF_LIBRARY
-			l_renamed: BOOLEAN
-			l_sorted_list: SORTABLE_ARRAY [CONF_GROUP]
+			l_list: ARRAYED_LIST [CONF_VIRTUAL_GROUP]
+			l_phys_as: CONF_PHYSICAL_ASSEMBLY
+			l_as: CONF_ASSEMBLY
 			l_view_points: ARRAYED_LIST [CONF_GROUP]
 		do
-			l_lib_list := conf_group.target.used_in_libraries
-			if l_lib_list /= Void then
-				create l_sorted_list.make (1, l_lib_list.count)
-				l_sorted_list.compare_objects
-				from
-					l_lib_list.start
-				until
-					l_lib_list.after
-				loop
-					l_library := l_lib_list.item
-					l_sorted_list.put (l_library, l_lib_list.index)
-					if (l_library.name_prefix /= Void and then not l_library.name_prefix.is_empty) or
-					(conf_class /= Void and then l_library.renaming /= Void and then l_library.renaming.has (conf_class.name))
-					then
-						l_renamed := True
-					end
-					l_lib_list.forth
-	            end
-				has_renamed_view_point := l_renamed
-				l_sorted_list.sort
-				create l_view_points.make_from_array (l_sorted_list)
+			l_list := conf_group.target.used_in_libraries
+			if l_list /= Void then
+				l_view_points := calculate_sorted_viewpoints (l_list)
 				if conf_group.is_cluster then
 					l_view_points.put_front (conf_group)
 				end
+			elseif conf_group.classes_set and then conf_group.is_assembly then
+				l_as ?= conf_group
+				check
+					assembly: l_as /= Void
+				end
+				l_view_points := calculate_sorted_viewpoints (l_as.physical_assembly.assemblies)
+			elseif conf_group.is_physical_assembly then
+				l_phys_as ?= conf_group
+				check
+					assembly: l_phys_as /= Void
+				end
+				l_view_points := calculate_sorted_viewpoints (l_phys_as.assemblies)
 			else
 				has_renamed_view_point := False
 				create l_view_points.make (1)
@@ -133,6 +126,34 @@ feature {NONE} -- Implementation
 			view_points := l_view_points
 		ensure
 			view_points_not_void: view_points /= Void
+		end
+
+	calculate_sorted_viewpoints (a_list: ARRAYED_LIST [CONF_VIRTUAL_GROUP]): ARRAYED_LIST [CONF_GROUP] is
+			-- Compute sorted viewpoints for `a_list'.
+		local
+			l_renamed: BOOLEAN
+			l_sorted_list: SORTABLE_ARRAY [CONF_GROUP]
+			l_vg: CONF_VIRTUAL_GROUP
+		do
+			create l_sorted_list.make (1, a_list.count)
+			l_sorted_list.compare_objects
+			from
+				a_list.start
+			until
+				a_list.after
+			loop
+				l_vg := a_list.item
+				l_sorted_list.put (l_vg, a_list.index)
+				if (l_vg.name_prefix /= Void and then not l_vg.name_prefix.is_empty) or
+				(conf_class /= Void and then l_vg.renaming /= Void and then l_vg.renaming.has (conf_class.name))
+				then
+					l_renamed := True
+				end
+				a_list.forth
+            end
+			has_renamed_view_point := l_renamed
+			l_sorted_list.sort
+			create Result.make_from_array (l_sorted_list)
 		end
 
 indexing

@@ -197,36 +197,35 @@ feature -- Status report
 	is_class_in_group (a_class: CLASS_I): BOOLEAN is
 			-- Does `a_class' belongs to one of the group in `groups'.
 		local
---			l_group: CONF_GROUP
---			l_cursor: DS_ARRAYED_LIST_CURSOR [CONF_GROUP]
+			l_phys_as: CONF_PHYSICAL_ASSEMBLY
+			l_assemblies: ARRAYED_LIST [CONF_ASSEMBLY]
 			l_index: INTEGER
 		do
---			from
---				l_cursor := groups.new_cursor
---				l_cursor.start
---			until
---				l_cursor.after or Result
---			loop
---				l_group := l_cursor.item
---				if l_group.classes_set then
---					Result := l_group.class_by_name (a_class.name, False).has (a_class.config_class)
---					if Result then
---						found_group := l_group
---					end
---				end
---				l_cursor.forth
---			end
---			if not Result then
---				found_group := Void
---			end
 			l_index := classes.index
 			classes.start
 			classes.search_forth (a_class.config_class)
 			if not classes.after then
 				Result := True
 				found_group := classes.item_for_iteration.group
+					-- if the class is in the list of classes there has to be a group that is included
 				if not groups.has (found_group) then
-					found_group := found_group.target.lowest_used_in_library
+					if found_group.is_physical_assembly then
+						l_phys_as ?= found_group
+						check
+							assembly: l_phys_as /= Void
+						end
+						from
+							l_assemblies := l_phys_as.assemblies
+							l_assemblies.start
+						until
+							groups.has (found_group) or l_assemblies.after
+						loop
+							found_group := l_assemblies.item
+							l_assemblies.forth
+						end
+					else
+						found_group := found_group.target.lowest_used_in_library
+					end
 				end
 			else
 				found_group := Void

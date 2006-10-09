@@ -22,7 +22,7 @@ feature -- Output
 			-- Display the cluster name
 		do
 			if cluster /= Void then
-				if cluster.is_assembly then
+				if cluster.is_assembly or cluster.is_physical_assembly then
 					a_text_formatter.add ("Assembly cluster name: ")
 				else
 					a_text_formatter.add ("Cluster name: ")
@@ -35,7 +35,7 @@ feature -- Output
 	put_cluster_path (a_text_formatter: TEXT_FORMATTER) is
 			-- Display the cluster path
 		do
-			if cluster.is_assembly then
+			if cluster.is_assembly or cluster.is_physical_assembly then
 				a_text_formatter.add ("Assembly details: ")
 			else
 				a_text_formatter.add ("Cluster path: ")

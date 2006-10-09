@@ -270,8 +270,8 @@ feature -- Generation
 			l_precomp: REMOTE_PROJECT_DIRECTORY
 			l_viop: VIOP
 			l_use_optimized_precomp: BOOLEAN
-			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
-			l_as: CONF_ASSEMBLY
+			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]
+			l_as: CONF_PHYSICAL_ASSEMBLY
 			l_state: CONF_STATE
 		do
 			if not retried then

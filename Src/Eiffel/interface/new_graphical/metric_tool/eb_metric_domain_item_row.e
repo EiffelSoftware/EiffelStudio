@@ -57,7 +57,7 @@ feature{NONE} -- Initialization
 				elseif domain_item.is_group_item then
 					l_group := group_of_id (domain_item.id)
 					create cluster_stone.make (l_group)
-					if l_group.is_assembly then
+					if l_group.is_assembly or l_group.is_physical_assembly then
 						index := 4
 					elseif l_group.is_library then
 						index := 3

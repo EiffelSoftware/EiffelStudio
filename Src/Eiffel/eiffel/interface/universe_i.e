@@ -308,14 +308,23 @@ feature -- Access
 			an_assembly_not_empty: not an_assembly.is_empty
 			a_dotnet_name_not_void: a_dotnet_name /= Void
 			a_dotnet_name_not_empty: not a_dotnet_name.is_empty
+			target_not_void: target /= Void
 		local
-			l_assembly: CONF_ASSEMBLY
-			l_vis: CONF_FIND_ASSEMBLY_VISITOR
+			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]
+			l_assembly: CONF_PHYSICAL_ASSEMBLY
 		do
-			create l_vis.make
-			l_vis.set_name (an_assembly)
-			if l_vis.found_assemblies.count = 1 then
-				l_assembly := l_vis.found_assemblies.item
+			from
+				l_assemblies := target.all_assemblies
+			until
+				l_assembly /= Void or l_assemblies.after
+			loop
+				l_assembly := l_assemblies.item_for_iteration
+				if not l_assembly.assembly_name.is_case_insensitive_equal (an_assembly) then
+					l_assembly := Void
+				end
+				l_assemblies.forth
+			end
+			if l_assembly /= Void then
 				l_assembly.dotnet_classes.search (a_dotnet_name)
 				if l_assembly.dotnet_classes.found then
 					Result ?= l_assembly.dotnet_classes.found_item

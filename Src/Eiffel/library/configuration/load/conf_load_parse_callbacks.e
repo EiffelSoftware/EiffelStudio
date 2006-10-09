@@ -816,14 +816,13 @@ feature {NONE} -- Implementation attribute processing
 		require
 			target: current_target /= Void
 		local
-			l_name, l_location, l_readonly, l_prefix, l_recursive, l_hidden: STRING
+			l_name, l_location, l_readonly, l_recursive, l_hidden: STRING
 			l_parent: CONF_CLUSTER
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			l_name := current_attributes.item (at_name)
 			l_location := current_attributes.item (at_location)
 			l_readonly := current_attributes.item (at_readonly)
-			l_prefix := current_attributes.item (at_prefix)
 			l_recursive := current_attributes.item (at_recursive)
 			l_hidden := current_attributes.item (at_hidden)
 			if l_name /= Void then
@@ -847,9 +846,6 @@ feature {NONE} -- Implementation attribute processing
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("hidden"))
 					end
-				end
-				if l_prefix /= Void then
-					current_cluster.set_name_prefix (l_prefix)
 				end
 				if l_recursive /= Void then
 					if l_recursive.is_boolean then
@@ -914,9 +910,6 @@ feature {NONE} -- Implementation attribute processing
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("hidden"))
 					end
-				end
-				if l_prefix /= Void then
-					current_cluster.set_name_prefix (l_prefix)
 				end
 				if l_recursive /= Void then
 					if l_recursive.is_boolean then
@@ -1055,11 +1048,16 @@ feature {NONE} -- Implementation attribute processing
 			group: current_group /= Void
 		local
 			l_old_name, l_new_name: STRING
+			l_virtual_group: CONF_VIRTUAL_GROUP
 		do
+			l_virtual_group ?= current_group
+			check
+				virtual_group: l_virtual_group /= Void
+			end
 			l_old_name := current_attributes.item (at_old_name)
 			l_new_name := current_attributes.item (at_new_name)
 			if l_old_name /= Void and l_new_name /= Void then
-				current_group.add_renaming (l_old_name.as_upper, l_new_name.as_upper)
+				l_virtual_group.add_renaming (l_old_name.as_upper, l_new_name.as_upper)
 			elseif l_old_name /= Void then
 				set_parse_error_message (conf_interface_names.e_parse_incorrect_renaming_no_new (l_old_name))
 			elseif l_new_name /= Void then
@@ -1703,11 +1701,12 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_trans, t_precompile)
 
 				-- cluster
-				-- -everything from library/precompile
+				-- -everything from library/precompile except renaming
 				-- => file_rule
 				-- => mapping
 				-- => uses
 				-- => cluster
+			l_trans.remove ("renaming")
 			l_trans.force (t_file_rule, "file_rule")
 			l_trans.force (t_mapping, "mapping")
 			l_trans.force (t_uses, "uses")
@@ -1899,14 +1898,13 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_attr, t_assembly)
 
 				-- cluster/override
-				-- -everything from library
+				-- -everything from library except prefix
 				-- * recursive
 				-- * hidden
 			create l_attr.make (6)
 			l_attr.force (at_name, "name")
 			l_attr.force (at_location, "location")
 			l_attr.force (at_readonly, "readonly")
-			l_attr.force (at_prefix, "prefix")
 			l_attr.force (at_recursive, "recursive")
 			l_attr.force (at_hidden, "hidden")
 			Result.force (l_attr, t_cluster)

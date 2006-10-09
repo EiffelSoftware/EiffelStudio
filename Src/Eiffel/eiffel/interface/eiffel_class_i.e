@@ -23,16 +23,9 @@ inherit
 
 	COMPILER_EXPORTER
 
-	DEBUG_OUTPUT
-		rename
-			debug_output as name_in_upper
-		end
-
 	CONF_CLASS
 		rename
 			file_name as base_name,
-			name as original_name,
-			renamed_name as name,
 			check_changed as set_date,
 			group as cluster
 		export

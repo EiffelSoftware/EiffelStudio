@@ -27,6 +27,8 @@ inherit
 
 	CONF_ACCESS
 
+	DEBUG_OUTPUT
+
 create {CONF_FACTORY}
 	make
 
@@ -71,10 +73,6 @@ feature -- Access, in compiled only, not stored to configuration file
 
 	name: STRING
 			-- Class name without any renamings.
-
-	renamed_name: STRING
-			-- Name with renamings/prefix of the own cluster applied.
-			-- But not with the renamings due to use as library applied.
 
 	options: CONF_OPTION is
 			-- Options (Debuglevel, assertions, ...)
@@ -206,7 +204,7 @@ feature -- Access
 		do
 				-- compute hash code on demand
 			if internal_hash_code = 0 then
-				internal_hash_code := renamed_name.hash_code
+				internal_hash_code := name.hash_code
 			end
 			Result := internal_hash_code
 		end
@@ -351,12 +349,9 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 		do
 			is_rebuilding := True
 
-			l_old_name := renamed_name.twin
+			l_old_name := name.twin
 			group := a_group
-			set_renamed_name
-			if
-				not equal (l_old_name, renamed_name)
-			then
+			if not equal (l_old_name, name)	then
 				is_renamed := True
 				date := 0
 			end
@@ -423,7 +418,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 						is_renamed := True
 						if not is_rebuilding then
 							name := l_name
-							set_renamed_name
 						end
 					end
 				end
@@ -461,6 +455,15 @@ feature -- Comparison
 			Result := name < other.name
 		end
 
+feature -- Output
+
+	debug_output: STRING is
+			-- Generate a nice representation of Current to be seen
+			-- in debugger.
+		do
+			Result := name
+		end
+
 feature {NONE} -- Implementation
 
 	is_rebuilding: BOOLEAN
@@ -479,26 +482,6 @@ feature {NONE} -- Implementation
 			last_error := an_error
 		end
 
-	set_renamed_name is
-			-- Set `renamed_name' from `name'.
-		require
-			name_set: name /= Void and then not name.is_empty
-			group_set: group /= Void
-		local
-			l_renamings: HASH_TABLE [STRING, STRING]
-		do
-			renamed_name := name.twin
-			l_renamings := group.renaming
-			if l_renamings /= Void and then l_renamings.has (renamed_name) then
-				renamed_name := l_renamings.item (renamed_name).twin
-			end
-			if group.name_prefix /= Void then
-				renamed_name.prepend (group.name_prefix)
-			end
-		ensure
-			renamed_name_set: renamed_name /= Void and then not renamed_name.is_empty
-		end
-
 feature {NONE} -- Type anchors
 
 	class_type: CONF_CLASS
@@ -507,8 +490,6 @@ feature {NONE} -- Type anchors
 invariant
 	name_ok: name /= Void and then not name.is_empty
 	name_upper: name.is_equal (name.as_upper)
-	renamed_name_ok: renamed_name /= Void and then not renamed_name.is_empty
-	renamed_name_upper: renamed_name.is_equal (renamed_name.as_upper)
 	file_name_not_void: file_name /= Void
 	group_not_void: group /= Void
 	path_not_void: path /= Void

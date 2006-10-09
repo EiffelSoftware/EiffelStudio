@@ -195,7 +195,7 @@ feature{NONE} -- Implementation
 			-- Agent to test if `a_item' is assembly
 			-- Require compiled: True
 		do
-			Result := a_item.group.is_assembly
+			Result := a_item.group.is_assembly or a_item.group.is_physical_assembly
 		end
 
 	is_cluster_agent (a_item: QL_GROUP): BOOLEAN is

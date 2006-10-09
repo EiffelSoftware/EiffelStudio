@@ -16,7 +16,7 @@ feature -- Factory
 			a_filename_not_empty: not a_filename.is_empty
 		local
 			l_sec: WEL_SECURITY_ATTRIBUTES
-			l_str: C_STRING
+			l_str: WEL_STRING
 		do
 			create l_sec.make
 			l_sec.set_inherit_handle (True)
@@ -28,7 +28,7 @@ feature -- Factory
 				{WEL_FILE_CONSTANTS}.open_existing,
 				{WEL_FILE_CONSTANTS}.file_attribute_normal, default_pointer)
 		end
-		
+
 	create_file_inheritable (a_filename: STRING; is_append: BOOLEAN): POINTER is
 			-- If not `is_append' create a file `a_filename' and overwrite if it exists.
 			-- Otherwise append to existing file.
@@ -37,7 +37,7 @@ feature -- Factory
 			a_filename_not_empty: not a_filename.is_empty
 		local
 			l_sec: WEL_SECURITY_ATTRIBUTES
-			l_str: C_STRING
+			l_str: WEL_STRING
 			l_mode: INTEGER
 			l_null: TYPED_POINTER [INTEGER]
 		do
@@ -55,12 +55,12 @@ feature -- Factory
 				l_sec.item,
 				l_mode,
 				{WEL_FILE_CONSTANTS}.file_flag_write_through, default_pointer)
-				
+
 			if is_append then
 				cwin_set_file_pointer (Result, 0, l_null, {WEL_FILE_CONSTANTS}.file_end)
 			end
 		end
-		
+
 	create_pipe_write_inheritable: TUPLE [POINTER, POINTER] is
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: INTEGER]
@@ -72,7 +72,7 @@ feature -- Factory
 				Result := [l_read, l_write]
 			end
 		end
-		
+
 	create_pipe_read_inheritable: TUPLE [POINTER, POINTER] is
 			-- Create pipe where `write' part of pipe can be written to.
 			-- Actual type is TUPLE [read, write: INTEGER]
@@ -84,7 +84,7 @@ feature -- Factory
 				Result := [l_read, l_write]
 			end
 		end
-		
+
 feature -- Status report
 
 	last_write_successful: BOOLEAN
@@ -109,7 +109,7 @@ feature -- Status setting
 		do
 			Result := cwin_close_handle (a_handle)
 		end
-		
+
 feature -- Input
 
 	read_stream (a_handle: POINTER; a_count: INTEGER) is
@@ -134,7 +134,7 @@ feature -- Input
 				last_string := Void
 			end
 		end
-		
+
 	read_line (a_handle: POINTER) is
 			-- Read a line or until end of pipe is encountered.
 			-- Put number of read bytes in `last_read_bytes'.
@@ -159,17 +159,17 @@ feature -- Input
 					last_read_successful := False
 					last_string := Void
 				end
-				
+
 			end
 		end
-		
+
 feature -- Element change
 
 	duplicate_handle (a_handle: POINTER; a_duplicated_handle: TYPED_POINTER [POINTER]) is
 			-- Duplicate `a_handle', mostly used for:
 			-- We've set the SA so the pipe handles are inheritable.  However,
 			-- we only want the write end of the pipe inheritable, so we use
-			-- DuplicateHandle to change the Inheritability of the read 
+			-- DuplicateHandle to change the Inheritability of the read
 			-- handle.
 		external
 			"C inline use <windows.h>"
@@ -186,14 +186,14 @@ feature -- Element change
 				CloseHandle($a_handle);
 			]"
 		end
-		
+
 	flush (a_handle: POINTER) is
 			-- Flush buffered data.
 		do
 			if cwin_flush_file_buffers (a_handle) then
 			end
 		end
-		
+
 	put_string (a_handle: POINTER; a_string: STRING) is
 			-- Write `a_string' to `a_handle'.
 			-- Put number of written bytes in `last_written_bytes'.
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 		alias
 			"CloseHandle"
 		end
-		
+
 	cwin_set_file_pointer (a_handle: POINTER; a_dist_to_move: INTEGER; a_dist_to_move_high: TYPED_POINTER [INTEGER]; a_method: INTEGER) is
 			-- Move File pointer to given location
 		external

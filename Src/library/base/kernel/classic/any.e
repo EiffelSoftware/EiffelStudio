@@ -23,6 +23,8 @@ feature -- Access
 			-- (base class of the type of which it is a direct instance)
 		do
 			Result := {ISE_RUNTIME}.c_generator ($Current)
+		ensure
+			generator_not_void: Result /= Void
 		end
 
  	generating_type: STRING is
@@ -30,6 +32,8 @@ feature -- Access
 			-- (type of which it is a direct instance)
  		do
  			Result := {ISE_RUNTIME}.c_generating_type ($Current)
+ 		ensure
+ 			generating_type_not_void: Result /= Void
  		end
 
 feature -- Status report
@@ -221,6 +225,7 @@ feature -- Duplication
 		do
 			Result ?= {ISE_RUNTIME}.c_deep_clone ($Current)
 		ensure
+			deep_twin_not_void: Result /= Void
 			deep_equal: deep_equal (Current, Result)
 		end
 
@@ -276,6 +281,8 @@ feature -- Output
 		once
 			create Result
 			Result.set_output_default
+		ensure
+			io_not_void: Result /= Void
 		end
 
 	out, frozen tagged_out: STRING is
@@ -283,6 +290,8 @@ feature -- Output
 			-- of current object
 		do
 			Result := {ISE_RUNTIME}.c_tagged_out (Current)
+		ensure
+			out_not_void: Result /= Void
 		end
 
 	print (some: ANY) is
@@ -300,6 +309,8 @@ feature -- Platform
 			-- Objects available from the operating system
 		once
 			create Result
+		ensure
+			operating_environment_not_void: Result /= Void
 		end
 
 feature {NONE} -- Initialization

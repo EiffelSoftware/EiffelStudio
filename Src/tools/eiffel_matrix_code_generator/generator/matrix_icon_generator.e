@@ -12,6 +12,9 @@ class
 
 inherit
 	MATRIX_FILE_GENERATOR
+		redefine
+			reset
+		end
 
 create
 	make
@@ -24,6 +27,19 @@ feature {NONE} -- Access
 	matrix: EV_PIXMAP
 			-- Full matrix PNG
 
+feature {NONE} -- Basic Operations
+
+	reset is
+			-- Resets generator
+		do
+			Precursor {MATRIX_FILE_GENERATOR}
+			png_location := Void
+			matrix := Void
+		ensure then
+			png_location_unattached: png_location = Void
+			matrix_unattached: matrix = Void
+		end
+
 feature -- Basic Operations
 
 	generate (a_doc: INI_DOCUMENT; a_output: STRING; a_matrix: EV_PIXMAP) is
@@ -35,16 +51,8 @@ feature -- Basic Operations
 		do
 			reset
 			png_location := a_output
-			process (a_doc, agent (a_matrix2: EV_PIXMAP)
-				local
-					l_matrix: like matrix
-				do
-					if successful then
-						create l_matrix.make_with_size (((pixel_width + 1) * (width + 1)).to_integer_32, ((pixel_height + 1) * (height + 1)).to_integer_32)
-						l_matrix.draw_sub_pixmap (0, 0, a_matrix2, create {EV_RECTANGLE}.make (0, 0, a_matrix2.width, a_matrix2.height))
-						matrix := l_matrix
-					end
-				end (a_matrix), Void)
+			matrix := a_matrix
+			process (a_doc, Void, Void)
 		end
 
 feature {NONE} -- Icon generation

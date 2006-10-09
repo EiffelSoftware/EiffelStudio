@@ -1030,7 +1030,7 @@ feature {NONE} -- Implementation
 			if l_cc_stone /= Void or l_cluster_stone /= Void or l_class_stone /= Void then
 				Result := True
 				if l_cluster_stone /= Void then
-					if l_cluster_stone.group.is_assembly then
+					if l_cluster_stone.group.is_assembly or l_cluster_stone.group.is_physical_assembly then
 						Result := False
 					end
 				end

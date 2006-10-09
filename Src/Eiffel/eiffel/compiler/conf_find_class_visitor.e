@@ -13,6 +13,7 @@ inherit
 		redefine
 			make,
 			process_assembly,
+			process_physical_assembly,
 			process_library,
 			process_precompile,
 			process_cluster,
@@ -56,33 +57,18 @@ feature -- Visit nodes
 
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
-		local
-			l_renaming: EQUALITY_HASH_TABLE [STRING, STRING]
-			l_prefix, l_old_name: STRING
 		do
-			if not assemblies_done.has (an_assembly.guid) then
-				assemblies_done.force (an_assembly.guid)
-					-- We cannot directly look at the classes of the assembly, because they
-					-- have the renaming and prefix applied. So we apply those to the searched
-					-- name and then search for it.
-					-- The order is important, we first apply the renaming and then the prefix.
-				l_renaming := an_assembly.renaming
-				l_prefix := an_assembly.name_prefix
-				l_old_name := name
-				if l_renaming /= Void or l_prefix /= Void then
-					if l_renaming /= Void and then l_renaming.has (l_old_name) then
-							-- We do not `twin' the result, it is only done if there is a prefix.
-						name := l_renaming.found_item
-					end
-					if l_prefix /= Void then
-							-- We have to duplicate `name' since we are modifying it and don't
-							-- want to mess up the original object.
-						name := name.twin
-						name.prepend (l_prefix)
-					end
-				end
-				retrieve_from_group (an_assembly)
-				name := l_old_name
+			if an_assembly.classes_set then
+				an_assembly.physical_assembly.process (Current)
+			end
+		end
+
+	process_physical_assembly (a_assembly: CONF_PHYSICAL_ASSEMBLY) is
+			-- Visist `a_assembly'.
+		do
+			if not assemblies_done.has (a_assembly.guid) then
+				assemblies_done.put (a_assembly.guid)
+				retrieve_from_group (a_assembly)
 			end
 		end
 

@@ -20,7 +20,6 @@ inherit
 			is_cluster,
 			is_readonly,
 			accessible_groups,
-			accessible_classes,
 			location
 		end
 
@@ -354,29 +353,6 @@ feature -- Access queries
 			Result := accessible_groups_cache
 		end
 
-	accessible_classes: like classes is
-			-- Classes that are accessible within `Current'.
-		local
-			l_groups: like accessible_groups
-			l_grp: CONF_GROUP
-		do
-			Result :=  Precursor
-			l_groups := accessible_groups
-			if l_groups /= Void then
-				from
-					l_groups.start
-				until
-					l_groups.after
-				loop
-					l_grp := l_groups.item_for_iteration
-					if l_grp.classes_set then
-						Result.merge (l_grp.classes)
-					end
-					l_groups.forth
-				end
-			end
-		end
-
 	sub_group_by_name (a_name: STRING): CONF_GROUP is
 			-- Return sub cluster with `a_name' if there is any.
 		do
@@ -598,8 +574,6 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Cached informations
 
-	accessible_groups_cache: like accessible_groups
-			-- Cached version of `accessible_groups'.
 	class_by_name_cache: HASH_TABLE [like class_by_name, STRING]
 			-- Cached version of `class_by_name' lookup.
 	name_by_class_cache: HASH_TABLE [like name_by_class, CONF_CLASS]

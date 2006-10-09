@@ -14,6 +14,7 @@ inherit
 			process_cluster,
 			process_override,
 			process_assembly,
+			process_physical_assembly,
 			process_library,
 			process_precompile
 		end
@@ -50,7 +51,6 @@ feature -- Visit nodes
 			-- Visit `a_precompile'.
 		do
 			if a_precompile.library_target /= Void then
-
 				retrieve_recursively (a_precompile.library_target)
 			end
 		end
@@ -58,11 +58,20 @@ feature -- Visit nodes
 	process_assembly (an_assembly: CONF_ASSEMBLY) is
 			-- Visit `an_assembly'.
 		do
-			if an_assembly.guid /= Void and then not assemblies_done.has (an_assembly.guid) then
-				assemblies_done.force (an_assembly.guid)
-				retrieve_from_group (an_assembly)
+			if an_assembly.classes_set then
+				an_assembly.physical_assembly.process (Current)
 			end
 		end
+
+	process_physical_assembly (a_assembly: CONF_PHYSICAL_ASSEMBLY) is
+			-- Visit `a_assembly'.
+		do
+			if not assemblies_done.has (a_assembly.guid) then
+				assemblies_done.put (a_assembly.guid)
+				retrieve_from_group (a_assembly)
+			end
+		end
+
 
 	process_cluster (a_cluster: CONF_CLUSTER) is
 			-- Visit `a_cluster'.

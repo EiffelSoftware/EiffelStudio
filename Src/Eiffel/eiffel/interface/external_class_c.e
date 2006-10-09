@@ -1496,8 +1496,8 @@ feature {NONE} -- Implementation
 		local
 			l_emitter: IL_EMITTER
 			l_man: CONF_CONSUMER_MANAGER
-			l_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING_8]
-			l_assembly: CONF_ASSEMBLY
+			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING_8]
+			l_assembly: CONF_PHYSICAL_ASSEMBLY
 			l_path: STRING
 			l_asm: STRING
 			l_key: STRING
@@ -1528,17 +1528,16 @@ feature {NONE} -- Implementation
 					l_assembly := l_assemblies.item_for_iteration
 					if not l_assembly.is_dependency then
 						l_path.append_character (';')
-						l_path.append (l_assembly.location.evaluated_path)
+						l_path.append (l_assembly.consumed_assembly.location)
 					end
 					l_assemblies.forth
 				end
 				if not l_path.is_empty then
-					create l_man.make (create {CONF_COMP_FACTORY}, system.metadata_cache_path, system.clr_runtime_version, create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default)
+					create l_man.make (create {CONF_COMP_FACTORY}, system.metadata_cache_path, system.clr_runtime_version, assembly.target,  create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default, create {DS_HASH_SET [CONF_CLASS]}.make_default)
 					l_emitter := l_man.il_emitter
 					if l_emitter.exists and then l_emitter.is_initialized then
-						l_emitter.consume_assembly_from_path (assembly.location.evaluated_path, False, l_path)
-						l_man.rebuild_classes (assembly, assembly.dotnet_classes)
-						assembly.set_is_partially_consumed (False)
+						l_emitter.consume_assembly_from_path (assembly.consumed_assembly.location, False, l_path)
+						l_man.rebuild_assembly (assembly)
 						l_emitter.unload
 					end
 				end

@@ -200,7 +200,7 @@ feature{NONE} -- Implementation
 						end
 					end
 				end
-			elseif a_group.is_library or a_group.is_assembly then
+			elseif a_group.is_library or a_group.is_assembly or a_group.is_physical_assembly then
 				l_target := a_group.target
 				if l_target.system = l_target.application_target.system then
 					l_target := l_target.application_target

@@ -50,7 +50,7 @@ feature -- Helper
 						Result := l_name
 					end
 				end
-			elseif a_group.is_library or a_group.is_assembly then
+			elseif a_group.is_library or a_group.is_assembly or a_group.is_physical_assembly then
 				l_target := a_group.target
 				l_libs := l_target.used_in_libraries
 				if l_libs /= Void and then not l_libs.is_empty then
@@ -99,7 +99,7 @@ feature -- Helper
 						Result := a_name
 					end
 				end
-			elseif a_group.is_library or a_group.is_assembly then
+			elseif a_group.is_library or a_group.is_assembly or a_group.is_physical_assembly then
 				Result := a_name
 			end
 		ensure

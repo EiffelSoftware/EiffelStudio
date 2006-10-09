@@ -27,8 +27,6 @@ inherit
 		rename
 			check_changed as set_date,
 			file_name as base_name,
-			name as original_name,
-			renamed_name as name,
 			group as cluster
 		undefine
 			is_compiled

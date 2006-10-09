@@ -143,7 +143,7 @@ feature -- Access, in compiled only, not stored to configuration file
 	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
 			-- All libraries in current system.
 
-	all_assemblies: HASH_TABLE [CONF_ASSEMBLY, STRING]
+	all_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]
 			-- All assemblies in current system.
 
 feature -- Access queries

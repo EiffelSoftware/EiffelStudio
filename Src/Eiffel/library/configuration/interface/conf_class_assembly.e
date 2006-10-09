@@ -22,7 +22,7 @@ create {CONF_FACTORY}
 
 feature {NONE} -- Implementation
 
-	make_assembly_class (a_name, a_dotnet_name: STRING; an_assembly: CONF_ASSEMBLY; a_position: INTEGER) is
+	make_assembly_class (a_name, a_dotnet_name: STRING; an_assembly: like group; a_position: INTEGER) is
 			-- Create.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -33,8 +33,6 @@ feature {NONE} -- Implementation
 		do
 			group := an_assembly
 			name := a_name
-				-- assembly classes are shared between different assemblies and the renamings are only on the assemblies
-			renamed_name := a_name
 			dotnet_name := a_dotnet_name
 			type_position := a_position
 			create file_name.make_empty
@@ -84,7 +82,7 @@ feature -- Access
 	dotnet_name: STRING
 			-- Dotnet name.
 
-	group: CONF_ASSEMBLY
+	group: CONF_PHYSICAL_ASSEMBLY
 			-- The assembly this class belongs to.
 
 feature {NONE} -- Implementation

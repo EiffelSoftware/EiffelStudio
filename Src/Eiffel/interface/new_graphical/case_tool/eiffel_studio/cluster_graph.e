@@ -135,7 +135,7 @@ feature -- Element change
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 			l_class: CLASS_I
 		do
-			if cluster.group.is_cluster then
+			if not cluster.group.is_library then
 				l_classes := cluster.group.classes
 				if l_classes /= Void then
 					create {ARRAYED_LIST [EG_LINKABLE]} last_included_classes.make (l_classes.count)
@@ -339,13 +339,9 @@ feature {NONE} -- Implementation
 					until
 						l_groups.after
 					loop
-						if not l_groups.item_for_iteration.is_assembly then
-							Result := Result + number_of_subclusters (l_groups.item_for_iteration, depth - 1) + 1
-						end
+						Result := Result + number_of_subclusters (l_groups.item_for_iteration, depth - 1) + 1
 						l_groups.forth
 					end
-				elseif a_group.is_assembly then
-					check error: false end
 				end
 			end
 		end
@@ -400,24 +396,28 @@ feature {NONE} -- Implementation
 					until
 						l_groups.after
 					loop
-						if not l_groups.item_for_iteration.is_assembly then
-							create es_cluster.make (l_groups.item_for_iteration)
-							add_cluster (es_cluster)
-							if l_status_bar /= Void and status_bar then
-								l_status_bar.display_progress_value (
-									l_status_bar.current_progress_value + 1
-								)
+						if l_groups.item_for_iteration.is_cluster then
+							l_cluster ?= l_groups.item_for_iteration
+							check
+								cluster: l_cluster /= Void
 							end
-							if include_class then
-								include_all_classes (es_cluster)
+							if not l_cluster.is_hidden then
+								create es_cluster.make (l_groups.item_for_iteration)
+								add_cluster (es_cluster)
+								if l_status_bar /= Void and status_bar then
+									l_status_bar.display_progress_value (
+										l_status_bar.current_progress_value + 1
+									)
+								end
+								if include_class then
+									include_all_classes (es_cluster)
+								end
+								a_group.extend (es_cluster)
+								explore_subclusters (es_cluster, depth - 1, include_class, status_bar)
 							end
-							a_group.extend (es_cluster)
-							explore_subclusters (es_cluster, depth - 1, include_class, status_bar)
 						end
 						l_groups.forth
 					end
-				elseif l_group.is_assembly then
-					check error: false end
 				end
 			end
 		end

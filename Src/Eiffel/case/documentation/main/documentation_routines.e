@@ -890,7 +890,7 @@ feature {NONE} -- Implementation
 		do
 			if a_group.is_library then
 				Result := "Library"
-			elseif a_group.is_assembly then
+			elseif a_group.is_assembly or a_group.is_physical_assembly then
 				Result := "Assembly"
 			else
 				Result := "Cluster"

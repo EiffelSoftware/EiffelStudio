@@ -234,7 +234,7 @@ feature -- Comparison
 			if not Result then
 				create l_file.make (l_path)
 				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
-		end
+			end
 		end
 
 	has_same_ready_formatted_path (a_path: STRING): BOOLEAN is
@@ -252,7 +252,7 @@ feature -- Comparison
 			if not Result then
 				create l_file.make (a_path)
 				Result := l_file.same_file (location) or else l_file.same_file (gac_path)
-		end
+			end
 		end
 
 	has_same_gac_information (a_name: like name; a_version: like version; a_culture: like culture; a_key: like key): BOOLEAN is
@@ -277,6 +277,7 @@ feature {NONE} -- Constants
 			-- Neutral culture name.
 
 invariant
+	valid_unique_id: unique_id /= Void and then not unique_id.is_empty
 	non_void_assembly_name: name /= Void
 	not_name_is_empty: not name.is_empty
 	non_void_assembly_version: version /= Void

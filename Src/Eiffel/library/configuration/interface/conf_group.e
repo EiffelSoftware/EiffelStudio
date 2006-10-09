@@ -22,6 +22,8 @@ inherit
 
 	HASHABLE
 
+	DEBUG_OUTPUT
+
 feature {NONE} -- Initialization
 
 	make (a_name: like name; a_location: like location; a_target: CONF_TARGET) is
@@ -68,6 +70,11 @@ feature -- Status
 
 	is_assembly: BOOLEAN is
 			-- Is this an assembly?
+		once
+		end
+
+	is_physical_assembly: BOOLEAN is
+			-- Is this a physical assembly?
 		once
 		end
 
@@ -118,12 +125,6 @@ feature -- Access, stored in configuration file
 
 	location: CONF_LOCATION
 			-- The location of the group.
-
-	name_prefix: STRING
-			-- An optional name prefix for this group.
-
-	renaming: EQUALITY_HASH_TABLE [STRING, STRING]
-			-- Mapping of renamed classes from the old name to the new name.
 
 	is_readonly: BOOLEAN is
 			-- Is this group read only?
@@ -254,7 +255,8 @@ feature -- Access queries
 
 	accessible_groups: DS_HASH_SET [CONF_GROUP] is
 			-- Groups that are accessible within `Current'.
-			-- Dependencies if we have them, else everything except `Current'.
+		require
+			classes_set: classes_set
 		once
 			create Result.make_default
 		ensure
@@ -265,8 +267,25 @@ feature -- Access queries
 			-- Classes that are accessible within `Current'.
 		require
 			classes_set: classes_set
+		local
+			l_groups: like accessible_groups
+			l_grp: CONF_GROUP
 		do
 			Result :=  classes.twin
+			l_groups := accessible_groups
+			if l_groups /= Void then
+				from
+					l_groups.start
+				until
+					l_groups.after
+				loop
+					l_grp := l_groups.item_for_iteration
+					if l_grp.classes_set then
+						Result.merge (l_grp.classes)
+					end
+					l_groups.forth
+				end
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -333,41 +352,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			location := a_location
 		ensure
 			location_set: location = a_location
-		end
-
-	set_name_prefix (a_name_prefix: like name_prefix) is
-			-- Set `name_prefix' to `a_name_prefix'.
-		do
-			name_prefix := a_name_prefix
-			if name_prefix /= Void then
-				name_prefix.to_upper
-			end
-		ensure
-			name_prefix_set: name_prefix = a_name_prefix
-		end
-
-	set_renaming (a_renaming: like renaming) is
-			-- Set `renaming' to `a_renaming'.
-		do
-			renaming := a_renaming
-		ensure
-			renaming_set: renaming = a_renaming
-		end
-
-	add_renaming (an_old_name, a_new_name: STRING) is
-			-- Add a renaming.
-		require
-			an_old_name_ok: an_old_name /= Void and then not an_old_name.is_empty
-			an_old_name_upper: an_old_name.is_equal (an_old_name.as_upper)
-			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
-			a_new_name_upper: a_new_name.is_equal (a_new_name.as_upper)
-		do
-			if renaming = Void then
-				create renaming.make (1)
-			end
-			renaming.force (a_new_name, an_old_name)
-		ensure
-			added: renaming.has (an_old_name) and then renaming.item (an_old_name) = a_new_name
 		end
 
 	set_readonly (b: BOOLEAN) is
@@ -493,7 +477,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					l_classes.after
 				loop
 					l_overrider := l_classes.item_for_iteration
-					l_ovs := class_by_name (l_overrider.renamed_name, False)
+					l_ovs := class_by_name (l_overrider.name, False)
 					if l_ovs /= Void and then l_ovs.count > 0 then
 						l_overridee := l_ovs.first
 						if l_overridee.is_overriden then
@@ -534,7 +518,6 @@ feature -- Equality
 			-- Is `other' and `Current' the same with respect to the group layout?
 		do
 			Result := name.is_equal (other.name) and then location.is_equal (other.location) and then
-						equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming) and then
 						equal (internal_conditions, other.internal_conditions)
 		end
 
@@ -544,6 +527,15 @@ feature -- Visit
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_group (Current)
+		end
+
+feature -- Output
+
+	debug_output: STRING is
+			-- Generate a nice representation of Current to be seen
+			-- in debugger.
+		do
+			Result := name
 		end
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in configuration file
@@ -598,6 +590,9 @@ feature {NONE} -- Implementation
 	reverse_classes_cache: HASH_TABLE [STRING, like class_type]
 			-- Cache for speedup of `name_by_class' lookups.
 
+	accessible_groups_cache: like accessible_groups
+			-- Cached version of `accessible_groups'.
+
 feature {CONF_ACCESS} -- Stored in configuration file
 
 	internal_read_only: BOOLEAN
@@ -607,7 +602,6 @@ invariant
 	name_ok: name /= Void and then not name.is_empty
 	location_not_void: location /= Void
 	target_not_void: target /= Void
-	name_prefix_upper: name_prefix /= Void implies name_prefix.is_equal (name_prefix.as_upper)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

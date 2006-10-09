@@ -3351,6 +3351,7 @@ feature {NONE} -- Implementation
 			a_path_not_void: a_path /= Void
 		local
 			l_assembly: CONF_ASSEMBLY
+			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 			l_cluster: CONF_CLUSTER
 			l_sorted_cluster: EB_SORTED_CLUSTER
 			l_subclu: DS_LIST [EB_SORTED_CLUSTER]
@@ -3376,15 +3377,27 @@ feature {NONE} -- Implementation
 				check
 					assembly: l_assembly /= Void
 				end
+				if l_assembly.physical_assembly /= Void then
+					l_format_context.process_indexing_tag_text ("assembly_name")
+					l_format_context.set_without_tabs
+					l_format_context.process_symbol_text (ti_colon)
+					l_format_context.put_space
+					l_format_context.put_quoted_string_item (l_assembly.physical_assembly.assembly_name)
+					l_format_context.put_new_line
+				end
 
+				l_format_context.process_indexing_tag_text ("assembly")
+			elseif a_group.is_physical_assembly then
+				l_phys_as ?= a_group
+				check
+					assembly: l_phys_as /= Void
+				end
 				l_format_context.process_indexing_tag_text ("assembly_name")
 				l_format_context.set_without_tabs
 				l_format_context.process_symbol_text (ti_colon)
 				l_format_context.put_space
-				l_format_context.put_quoted_string_item (l_assembly.assembly_name)
+				l_format_context.put_quoted_string_item (l_phys_as.assembly_name)
 				l_format_context.put_new_line
-
-				l_format_context.process_indexing_tag_text ("assembly")
 			elseif a_group.is_override then
 				l_format_context.process_indexing_tag_text ("override")
 				l_cluster ?= a_group

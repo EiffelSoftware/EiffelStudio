@@ -9,14 +9,13 @@ class
 	ASSEMBLY_I
 
 inherit
-	CONF_ASSEMBLY
+	CONF_PHYSICAL_ASSEMBLY
 		redefine
 			class_type
 		end
 
 create
-	make,
-	make_from_gac
+	make_from_consumed
 
 feature -- Access
 

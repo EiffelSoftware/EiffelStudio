@@ -60,6 +60,11 @@ feature -- Visit nodes
 		do
 		end
 
+	process_physical_assembly (an_assembly: CONF_PHYSICAL_ASSEMBLY) is
+			-- Visit `an_assembly'.
+		do
+		end
+
 	process_library (a_library: CONF_LIBRARY) is
 			-- Visit `a_library'.
 		do

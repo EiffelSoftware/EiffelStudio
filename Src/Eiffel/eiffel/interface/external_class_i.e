@@ -23,8 +23,6 @@ inherit
 	CONF_CLASS_ASSEMBLY
 		rename
 			file_name as base_name,
-			name as original_name,
-			renamed_name as name,
 			group as assembly,
 			check_changed as set_date
 		undefine

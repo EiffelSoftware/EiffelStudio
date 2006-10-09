@@ -328,6 +328,9 @@
 			</file_rule>
 		</cluster>
 		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true">
+			<option>
+				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="false"/>
+			</option>
 			<file_rule>
 				<exclude>/dotnet$</exclude>
 			</file_rule>

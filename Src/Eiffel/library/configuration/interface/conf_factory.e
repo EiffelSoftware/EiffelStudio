@@ -177,7 +177,7 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-	new_class_assembly (a_name, a_dotnet_name: STRING; an_assembly: CONF_ASSEMBLY; a_position: INTEGER): CONF_CLASS_ASSEMBLY is
+	new_class_assembly (a_name, a_dotnet_name: STRING; an_assembly: CONF_PHYSICAL_ASSEMBLY; a_position: INTEGER): CONF_CLASS_ASSEMBLY is
 			-- Create a `CONF_CLASS_ASSEMBLY' object.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -229,6 +229,18 @@ feature
 			a_target_not_void: a_target /= Void
 		do
 			create Result.make_from_gac (a_name, an_assembly_name, an_assembly_version, an_assembly_culture, an_assembly_key, a_target)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_physical_assembly (a_consumed: CONSUMED_ASSEMBLY; a_cache_path: DIRECTORY_NAME; a_target: CONF_TARGET): CONF_PHYSICAL_ASSEMBLY is
+			-- Create a `CONF_PHYSICAL_ASSEMBLY' object.
+		require
+			a_consumed_not_void: a_consumed /= Void
+			a_cache_path_not_void: a_cache_path /= Void
+			a_target_not_void: a_target /= Void
+		do
+			create Result.make_from_consumed (a_consumed, a_cache_path, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end

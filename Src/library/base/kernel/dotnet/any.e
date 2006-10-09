@@ -24,7 +24,7 @@ feature -- Access
 		do
 			Result := {ISE_RUNTIME}.generator (Current)
 		ensure
-			result_not_void: Result /= Void
+			generator_not_void: Result /= Void
 		end
 
  	frozen generating_type: STRING is
@@ -33,7 +33,7 @@ feature -- Access
  		do
 			Result := {ISE_RUNTIME}.generating_type (Current)
  		ensure
- 			result_not_void: Result /= Void
+ 			generating_type_not_void: Result /= Void
  		end
 
 feature -- Status report
@@ -236,6 +236,7 @@ feature -- Duplication
 		do
 			Result ?= {ISE_RUNTIME}.deep_twin (Current)
 		ensure
+			deep_twin_not_void: Result /= Void
 			deep_equal: deep_equal (Current, Result)
 		end
 
@@ -291,6 +292,8 @@ feature -- Output
 		once
 			create Result
 			Result.set_output_default
+		ensure
+			io_not_void: Result /= Void
 		end
 
 	out, frozen tagged_out: STRING is
@@ -298,6 +301,8 @@ feature -- Output
 			-- of current object
 		do
 			Result := generating_type
+		ensure
+			out_not_void: Result /= Void
 		end
 
 	print (some: ANY) is
@@ -315,6 +320,8 @@ feature -- Platform
 			-- Objects available from the operating system
 		once
 			create Result
+		ensure
+			operating_environment_not_void: Result /= Void
 		end
 
 feature {NONE} -- Initialization

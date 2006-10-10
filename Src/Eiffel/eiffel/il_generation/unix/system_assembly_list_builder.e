@@ -61,6 +61,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	assemblies_properties: LIST [ASSEMBLY_PROPERTIES] is
+			-- A flat list of assembly properties
+		do
+			check False end
+		ensure
+			result_attached: Result /= Void
+		end
+
 invariant
 	framework_folder_attached: framework_folder /= Void
 	not_framework_folder_is_empty: not framework_folder.is_empty

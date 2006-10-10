@@ -385,7 +385,7 @@ end
 			old_feature_i, new_feature_i: FEATURE_I
 			feature_name_id: INTEGER
 			propagators, melted_propagators: TWO_WAY_SORTED_SET [DEPEND_UNIT]
-			removed_features: SEARCH_TABLE [FEATURE_I]
+			removed_features: SEARCH_TABLE [INTEGER]
 			depend_unit: DEPEND_UNIT
 			external_i: EXTERNAL_I
 			propagate_feature: BOOLEAN
@@ -473,7 +473,7 @@ debug ("ACTIVITY")
 	io.error.put_string (old_feature_i.feature_name)
 	io.error.put_new_line
 end
-						removed_features.put (old_feature_i)
+						removed_features.put (old_feature_i.body_index)
 						propagate_feature := True
 					end
 				end
@@ -528,11 +528,12 @@ end
 				loop
 	debug ("ACTIVITY")
 		io.error.put_string ("%Tfeature of id ")
-		io.error.put_integer (removed_feature_ids.item)
+		io.error.put_integer (removed_feature_ids.item.routine_id)
 		io.error.put_string (" (removed by `update_table' is propagated to clients%N")
 	end
-					create depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item)
+					create depend_unit.make_no_dead_code (feat_tbl_id, removed_feature_ids.item.routine_id)
 					propagators.put (depend_unit)
+					removed_features.put (removed_feature_ids.item.body_id)
 					removed_feature_ids.forth
 				end
 				removed_feature_ids := Void
@@ -604,15 +605,15 @@ end
 					-- There is no need for a corresponding "reactivate" here
 					-- since it will be done in by pass2 in `feature_unit' if need be
 
-					removed_feature_ids.extend (f.rout_id_set.first)
+					removed_feature_ids.extend ([f.rout_id_set.first, f.body_index])
 					remove (key_for_iteration)
 				end
 				forth
 			end
 		end
 
-	removed_feature_ids: LINKED_LIST [INTEGER]
-			-- Set of routine_ids removed by `update_table'
+	removed_feature_ids: LINKED_LIST [TUPLE[routine_id, body_id: INTEGER]]
+			-- Set of routine_id and body_id removed by `update_table'
 			--| It will be used for incrementality (propagation of pass3)
 
 	check_table is

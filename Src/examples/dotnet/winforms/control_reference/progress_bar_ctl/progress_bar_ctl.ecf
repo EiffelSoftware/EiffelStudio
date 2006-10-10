@@ -11,6 +11,6 @@
 		<assembly name="winforms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
 		<assembly name="system.drawing" location="$ISE_DOTNET_FRAMEWORK\system.drawing.dll" prefix="DRAWING_"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
-		<cluster name="root_cluster" location="$ISE_LIBRARY\examples\dotnet\winforms\control_reference\progress_bar_ctl\"/>
+		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

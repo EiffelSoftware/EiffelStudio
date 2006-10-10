@@ -9,6 +9,6 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="desc" location="$ISE_LIBRARY\library\base\desc\general\"/>
 		<cluster name="desc32" location="$ISE_LIBRARY\library\base\desc\spec\win32\"/>
-		<cluster name="root_cluster" location="$ISE_LIBRARY\examples\base\desc-32\"/>
+		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

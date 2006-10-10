@@ -2,11 +2,11 @@ indexing
 	description: "Tree view example."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	
+
 class
 	TREE_VIEW_CTL
 
-inherit 
+inherit
 	WINFORMS_FORM
 		rename
 			make as make_form,
@@ -27,10 +27,10 @@ feature {NONE} -- Initialization
 			-- Entry point.
 		do
 			initialize_components
-			
+
 			fill_directory_tree
 			image_list_combo_box.set_selected_index (1)
-			
+
 			{WINFORMS_APPLICATION}.run_form (Current)
 		end
 
@@ -38,28 +38,28 @@ feature -- Access
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER
 			-- System.ComponentModel.Container	
-			
+
 	directory_tree: WINFORMS_TREE_VIEW
 			-- System.Windows.Forms.TreeView directory_tree
-	
+
 	image_list_1, image_list_2: WINFORMS_IMAGE_LIST
-			-- System.Windows.Forms.ImageList 
+			-- System.Windows.Forms.ImageList
 
 	grp_tree_view: WINFORMS_GROUP_BOX
-			-- System.Windows.Forms.GroupBox 
-			
+			-- System.Windows.Forms.GroupBox
+
 	check_box_1, check_box_2, check_box_3, check_box_4, check_box_5, check_box_6, check_box_7 :WINFORMS_CHECK_BOX
-			-- System.Windows.Forms.CheckBox 
-	
-	image_list_combo_box: WINFORMS_COMBO_BOX	
-			-- System.Windows.Forms.ComboBox 
-			
+			-- System.Windows.Forms.CheckBox
+
+	image_list_combo_box: WINFORMS_COMBO_BOX
+			-- System.Windows.Forms.ComboBox
+
 	label_1, label_2: WINFORMS_LABEL
 			-- System.Windows.Forms.Label
 
 	indent_up_down: WINFORMS_NUMERIC_UP_DOWN
 			-- System.Windows.Forms.NumericUpDown
-			
+
 	tool_tip: WINFORMS_TOOL_TIP
 			-- System.Windows.Forms.ToolTip
 
@@ -351,7 +351,7 @@ feature {NONE} -- Implementation
 					i = sub_directories.count
 				loop
 					directory_name := sub_directories.item (i).name
-					return := node.nodes.add_tree_node (create {DIRECTORY_NODE}.make_from_text (directory_name))
+					return := node.nodes.add (create {DIRECTORY_NODE}.make_from_text (directory_name))
 					i := i + 1
 				end
 			end
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 				l_ptr := {MARSHAL}.string_to_h_global_ansi (l_drive)
 				if l_ext.get_drive_type (l_ptr) = Drive_fixed then
 					create root.make_from_text (drives.item (i))
-					return := directory_tree.nodes.add_tree_node (root)
+					return := directory_tree.nodes.add (root)
 					add_directories (root)
 				end
 				{MARSHAL}.free_h_global (l_ptr)
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 		end
 
 	check_box_2_click (sender: SYSTEM_OBJECT; args: EVENT_ARGS) is
-			-- Event to enable hot tracking 
+			-- Event to enable hot tracking
 		do
 			directory_tree.set_hot_tracking (check_box_2.checked)
 		end

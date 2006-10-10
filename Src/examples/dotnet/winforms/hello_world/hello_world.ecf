@@ -8,6 +8,6 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<assembly name="winforms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-		<cluster name="root_cluster" location="$ISE_LIBRARY\examples\dotnet\winforms\hello_world\"/>
+		<cluster name="root_cluster" location=".\"/>
 	</target>
 </system>

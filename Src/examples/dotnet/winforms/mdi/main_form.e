@@ -6,7 +6,7 @@ indexing
 class
 	MAIN_FORM
 
-inherit 
+inherit
 	WINFORMS_FORM
 		rename
 			make as make_form
@@ -48,9 +48,9 @@ feature {NONE} -- Initialization
 				{WINFORMS_SHORTCUT}.ctrl_x)
 			mi_exit.set_merge_order (110)
 
-			res := mi_file.menu_items.add_menu_item (mi_add_doc)
+			res := mi_file.menu_items.add (mi_add_doc)
 			res := mi_file.menu_items.add ("-")     --  Gives us a seperator
-			res := mi_file.menu_items.add_menu_item (mi_exit)
+			res := mi_file.menu_items.add (mi_exit)
 
 				-- Add Window Menu
 			mi_window := main_menu.menu_items.add ("&Window")
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 
 			{WINFORMS_APPLICATION}.run_form (Current)
 		ensure
-		
+
 		end
 
 feature -- Access
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				if components /= Void then
-					components.dispose	
+					components.dispose
 				end
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 		local
 			doc: DOCUMENT
 		do
-			window_count := window_count + 1 
+			window_count := window_count + 1
 			create doc.make_with_name ("Document " + window_count.out)
 			doc.set_mdi_parent (Current)
 			doc.show

@@ -39,12 +39,12 @@ feature {NONE} -- Initialization
 
 				-- Add File Menu
 			mi_file := main_menu.menu_items.add ("&File")
-			res := mi_file.menu_items.add_menu_item (
+			res := mi_file.menu_items.add (
 				create {WINFORMS_MENU_ITEM}.make ("&Open...",
 					create {EVENT_HANDLER}.make (Current, $file_open_clicked),
 					{WINFORMS_SHORTCUT}.ctrl_o))
 			res := mi_file.menu_items.add ("-")
-			res := mi_file.menu_items.add_menu_item (
+			res := mi_file.menu_items.add (
 				create {WINFORMS_MENU_ITEM}.make ("E&xit",
 					create {EVENT_HANDLER}.make (Current, $file_exit_clicked),
 					{WINFORMS_SHORTCUT}.ctrl_x))
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 
 				-- Add Format to label context menu
 				-- Note have to add a clone because menus can't belong to 2 parents
-			res := label_1_context_menu.menu_items.add_menu_item (mi_format.clone_menu)
+			res := label_1_context_menu.menu_items.add (mi_format.clone_menu)
 
 				--  Set up the context menu items - we use these to check and uncheck items
 			l_menu_item := label_1_context_menu.menu_items.item (0)

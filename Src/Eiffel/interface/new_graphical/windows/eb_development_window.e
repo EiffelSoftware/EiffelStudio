@@ -4339,13 +4339,15 @@ feature {NONE} -- Implementation: Editor commands
 		do
 			if a_feature_name /= Void then
 				address_manager.set_feature_text_simply (a_feature_name.internal_name)
-				l_class_i := eiffel_universe.safe_class_named (class_name, group)
-				if l_class_i /= Void and then l_class_i.is_compiled then
-					l_classc := l_class_i.compiled_class
-					if l_classc.has_feature_table then
-						l_efeature := l_classc.feature_with_name (a_feature_name.internal_name)
-						if l_efeature /= Void and then l_efeature.written_in /= l_classc.class_id then
-							l_efeature := Void
+				if class_name /= Void and group /= Void then
+					l_class_i := eiffel_universe.safe_class_named (class_name, group)
+					if l_class_i /= Void and then l_class_i.is_compiled then
+						l_classc := l_class_i.compiled_class
+						if l_classc.has_feature_table then
+							l_efeature := l_classc.feature_with_name (a_feature_name.internal_name)
+							if l_efeature /= Void and then l_efeature.written_in /= l_classc.class_id then
+								l_efeature := Void
+							end
 						end
 					end
 				end

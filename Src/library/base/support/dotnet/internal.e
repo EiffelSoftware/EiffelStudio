@@ -192,7 +192,7 @@ feature -- Access
 
 	Reference_type: INTEGER is 1
 
-	character_8_type, Character_type: INTEGER is 2
+	character_8_type, character_type: INTEGER is 2
 
 	Boolean_type: INTEGER is 3
 
@@ -212,7 +212,7 @@ feature -- Access
 
 	Integer_64_type: INTEGER is 11
 
-	character_32_type, Wide_character_type: INTEGER is 12
+	character_32_type, wide_character_type: INTEGER is 12
 
 	natural_8_type: INTEGER is 13
 
@@ -367,7 +367,8 @@ feature -- Access
 			l_int16: INTEGER_16
 			l_int32: INTEGER
 			l_int64: INTEGER_64
-			l_char: CHARACTER
+			l_char: CHARACTER_8
+			l_wchar: CHARACTER_32
 			l_boolean: BOOLEAN
 			l_real: REAL
 			l_double: DOUBLE
@@ -382,9 +383,13 @@ feature -- Access
 				l_pointer ?= l_obj
 				Result := l_pointer
 
-			when Character_type then
+			when character_8_type then
 				l_char ?= l_obj
 				Result := l_char
+
+			when character_32_type then
+				l_wchar ?= l_obj
+				Result := l_wchar
 
 			when Boolean_type then
 				l_boolean ?= l_obj
@@ -684,13 +689,24 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	character_field (i: INTEGER; object: ANY): CHARACTER is
+	character_8_field, character_field (i: INTEGER; object: ANY): CHARACTER_8 is
 			-- Character value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			character_field: field_type (i, object) = Character_type
+			character_8_field: field_type (i, object) = character_8_type
+		do
+			Result ?= internal_field (i, object, dynamic_type (object))
+		end
+
+	character_32_field (i: INTEGER; object: ANY): CHARACTER_32 is
+			-- Character value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			character_32_field: field_type (i, object) = character_32_type
 		do
 			Result ?= internal_field (i, object, dynamic_type (object))
 		end
@@ -860,13 +876,24 @@ feature -- Element change
 			internal_set_reference_field (i, object, value)
 		end
 
-	set_character_field (i: INTEGER; object: ANY; value: CHARACTER) is
+	set_character_8_field, set_character_field (i: INTEGER; object: ANY; value: CHARACTER_8) is
 			-- Set character value of `i'-th field of `object' to `value'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			character_field: field_type (i, object) = Character_type
+			character_8_field: field_type (i, object) = character_8_type
+		do
+			internal_set_reference_field (i, object, value)
+		end
+
+	set_character_32_field (i: INTEGER; object: ANY; value: CHARACTER_32) is
+			-- Set character value of `i'-th field of `object' to `value'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			character_32_field: field_type (i, object) = character_32_type
 		do
 			internal_set_reference_field (i, object, value)
 		end
@@ -1704,7 +1731,7 @@ feature {NONE} -- Implementation
 
 			create l_list.make (1)
 			create l_basic_type.make
-			l_basic_type.set_type (({CHARACTER}).to_cil.type_handle)
+			l_basic_type.set_type (({CHARACTER_8}).to_cil.type_handle)
 			l_list.extend (l_basic_type)
 			Result.put (l_list, "CHARACTER_8")
 
@@ -1756,7 +1783,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_from_capacity (10)
 			Result.set_item (({POINTER}).to_cil, Pointer_type)
-			Result.set_item (({CHARACTER}).to_cil, Character_type)
+			Result.set_item (({CHARACTER_8}).to_cil, character_8_type)
 			Result.set_item (({BOOLEAN}).to_cil, Boolean_type)
 			Result.set_item (({REAL}).to_cil, real_32_type)
 			Result.set_item (({DOUBLE}).to_cil, real_64_type)

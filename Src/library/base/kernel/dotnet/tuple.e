@@ -49,7 +49,8 @@ feature -- Access
 				-- If not, then we simply get the element.
 			inspect item_code (index)
 			when boolean_code then Result := boolean_item (index)
-			when character_code then Result := character_item (index)
+			when character_8_code then Result := character_8_item (index)
+			when character_32_code then Result := character_32_item (index)
 			when real_64_code then Result := double_item (index)
 			when real_32_code then Result := real_item (index)
 			when pointer_code then Result := pointer_item (index)
@@ -84,11 +85,20 @@ feature -- Access
 			Result ?= native_array.item (index)
 		end
 
-	character_item (index: INTEGER): CHARACTER is
+	character_8_item, character_item (index: INTEGER): CHARACTER_8 is
 			-- Character item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_character: is_character_item (index)
+			is_character_8: is_character_8_item (index)
+		do
+			Result ?= native_array.item (index)
+		end
+
+	character_32_item (index: INTEGER): CHARACTER_32 is
+			-- Character item at `index'.
+		require
+			valid_index: valid_index (index)
+			is_character_32: is_character_32_item (index)
 		do
 			Result ?= native_array.item (index)
 		end
@@ -241,33 +251,33 @@ feature -- Status report
 
 	hash_code: INTEGER is
 			-- Hash code value
-		local 
-			i, nb: INTEGER 
+		local
+			i, nb: INTEGER
 			l_item: SYSTEM_OBJECT
 			l_key: HASHABLE
-		do 
+		do
 			from
 				i := 1
 				nb := count
 			until
-				i > nb 
+				i > nb
 			loop
-				l_item := native_array.item (i) 
+				l_item := native_array.item (i)
 				if is_reference_item (i) then
 					l_key ?= l_item
-					if l_key /= Void then 
-						Result := Result + l_key.hash_code * internal_primes.i_th (i) 
+					if l_key /= Void then
+						Result := Result + l_key.hash_code * internal_primes.i_th (i)
 					end
 				else
 						-- A basic type
 					Result := Result + l_item.get_hash_code * internal_primes.i_th (i)
 				end
-				i := i + 1 
-			end 
+				i := i + 1
+			end
 				-- Ensure it is a positive value.
 			Result := Result.hash_code
-		end 
-		
+		end
+
 	valid_index (k: INTEGER): BOOLEAN is
 			-- Is `k' a valid key?
 		do
@@ -339,7 +349,7 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
+
 	put_boolean (v: BOOLEAN; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -348,16 +358,25 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
-	put_character (v: CHARACTER; index: INTEGER) is
+
+	put_character_8, put_character (v: CHARACTER_8; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
-			valid_type: is_character_item (index)
+			valid_type: is_character_8_item (index)
 		do
 			native_array.put (index, v)
 		end
-		
+
+	put_character_32 (v: CHARACTER_32; index: INTEGER) is
+			-- Put `v' at position `index' in Current.
+		require
+			valid_index: valid_index (index)
+			valid_type: is_character_32_item (index)
+		do
+			native_array.put (index, v)
+		end
+
 	put_real_64, put_double (v: DOUBLE; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -366,7 +385,7 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
+
 	put_real_32, put_real (v: REAL; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -375,7 +394,7 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
+
 	put_pointer (v: POINTER; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -393,7 +412,7 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
+
 	put_natural_16 (v: NATURAL_16; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -411,7 +430,7 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
+
 	put_natural_64 (v: NATURAL_64; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -429,7 +448,7 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
+
 	put_integer_8 (v: INTEGER_8; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -438,7 +457,7 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
+
 	put_integer_16 (v: INTEGER_16; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -447,7 +466,7 @@ feature -- Element change
 		do
 			native_array.put (index, v)
 		end
-		
+
 	put_integer_64 (v: INTEGER_64; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
@@ -467,12 +486,20 @@ feature -- Type queries
 			Result := (generic_typecode (index) = boolean_code)
 		end
 
-	is_character_item (index: INTEGER): BOOLEAN is
-			-- Is item at `index' a CHARACTER?
+	is_character_8_item, is_character_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a CHARACTER_8?
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (generic_typecode (index) = character_code)
+			Result := (generic_typecode (index) = character_8_code)
+		end
+
+	is_character_32_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a CHARACTER_32?
+		require
+			valid_index: valid_index (index)
+		do
+			Result := (generic_typecode (index) = character_32_code)
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN is
@@ -608,10 +635,18 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_character: BOOLEAN is
-			-- Are all items of type CHARACTER?
+	is_uniform_character_8, is_uniform_character: BOOLEAN is
+			-- Are all items of type CHARACTER_8?
 		do
-			Result := is_tuple_uniform (character_code)
+			Result := is_tuple_uniform (character_8_code)
+		ensure
+			yes_if_empty: (count = 0) implies Result
+		end
+
+	is_uniform_character_32: BOOLEAN is
+			-- Are all items of type CHARACTER_32?
+		do
+			Result := is_tuple_uniform (character_32_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -828,12 +863,12 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	character_arrayed: ARRAY [CHARACTER] is
+	character_8_arrayed, character_arrayed: ARRAY [CHARACTER_8] is
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
 		require
-			is_uniform_character: is_uniform_character
+			is_uniform_character_8: is_uniform_character_8
 		local
 			i, cnt: INTEGER
 		do
@@ -844,7 +879,7 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				Result.put (character_item (i), i)
+				Result.put (character_8_item (i), i)
 				i := i + 1
 			end
 		ensure
@@ -1014,7 +1049,7 @@ feature -- Access
 
 	reference_code: NATURAL_8 is 0x00
 	boolean_code: NATURAL_8 is 0x01
-	character_code: NATURAL_8 is 0x02
+	character_8_code, character_code: NATURAL_8 is 0x02
 	real_64_code: NATURAL_8 is 0x03
 	real_32_code: NATURAL_8 is 0x04
 	pointer_code: NATURAL_8 is 0x05
@@ -1026,9 +1061,10 @@ feature -- Access
 	natural_16_code: NATURAL_8 is 0x0B
 	natural_32_code: NATURAL_8 is 0x0C
 	natural_64_code: NATURAL_8 is 0x0D
+	character_32_code, wide_character_code: NATURAL_8 is 0x0E
 	any_code: NATURAL_8 is 0xFF
 			-- Code used to identify type in tuple.
-		
+
 feature {TUPLE} -- Implementation
 
 	native_array: NATIVE_ARRAY [SYSTEM_OBJECT]
@@ -1098,7 +1134,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_from_capacity (10)
 			Result.set_item (({BOOLEAN}).to_cil, boolean_code)
-			Result.set_item (({CHARACTER}).to_cil, character_code)
+			Result.set_item (({CHARACTER_8}).to_cil, character_8_code)
 			Result.set_item (({DOUBLE}).to_cil, real_64_code)
 			Result.set_item (({REAL}).to_cil, real_32_code)
 			Result.set_item (({POINTER}).to_cil, pointer_code)
@@ -1112,13 +1148,13 @@ feature {NONE} -- Implementation
 			Result.set_item (({INTEGER}).to_cil, integer_32_code)
 			Result.set_item (({INTEGER_64}).to_cil, integer_64_code)
 		end
-		
+
 	codemap: NATIVE_ARRAY [SYSTEM_TYPE] is
 			-- Conversion between `code' type and SYSTEM_TYPE object.
 		once
 			create Result.make (128)
 			Result.put (boolean_code, {BOOLEAN})
-			Result.put (character_code, {CHARACTER})
+			Result.put (character_8_code, {CHARACTER_8})
 			Result.put (real_64_code, {DOUBLE})
 			Result.put (real_32_code, {REAL})
 			Result.put (pointer_code, {POINTER})
@@ -1135,7 +1171,7 @@ feature {NONE} -- Implementation
 
 	internal_primes: PRIMES is
 			-- For quick access to prime numbers.
-		once 
+		once
 			create Result
 		end
 

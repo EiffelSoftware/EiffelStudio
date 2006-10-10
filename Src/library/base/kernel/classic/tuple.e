@@ -36,8 +36,8 @@ feature -- Access
 		do
 			inspect eif_item_type ($Current, index)
 			when boolean_code then Result := eif_boolean_item ($Current, index)
-			when character_code then Result := eif_character_item ($Current, index)
-			when wide_character_code then Result := eif_wide_character_item ($Current, index)
+			when character_8_code then Result := eif_character_8_item ($Current, index)
+			when character_32_code then Result := eif_character_32_item ($Current, index)
 			when real_64_code then Result := eif_real_64_item ($Current, index)
 			when real_32_code then Result := eif_real_32_item ($Current, index)
 			when pointer_code then Result := eif_pointer_item ($Current, index)
@@ -71,22 +71,22 @@ feature -- Access
 			Result := eif_boolean_item ($Current, index)
 		end
 
-	character_item (index: INTEGER): CHARACTER is
+	character_8_item, character_item (index: INTEGER): CHARACTER_8 is
 			-- Character item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_character: is_character_item (index)
+			is_character_8: is_character_8_item (index)
 		do
-			Result := eif_character_item ($Current, index)
+			Result := eif_character_8_item ($Current, index)
 		end
 
-	wide_character_item (index: INTEGER): WIDE_CHARACTER is
+	character_32_item, wide_character_item (index: INTEGER): CHARACTER_32 is
 			-- Character item at `index'.
 		require
 			valid_index: valid_index (index)
-			is_wide_character: is_wide_character_item (index)
+			is_character_32: is_character_32_item (index)
 		do
-			Result := eif_wide_character_item ($Current, index)
+			Result := eif_character_32_item ($Current, index)
 		end
 
 	real_64_item, double_item (index: INTEGER): DOUBLE is
@@ -204,8 +204,8 @@ feature -- Status report
 			loop
 				inspect eif_item_type($Current, i)
 				when boolean_code then l_hash := eif_boolean_item ($Current, i).hash_code
-				when character_code then l_hash := eif_character_item ($Current, i).hash_code
-				when wide_character_code then l_hash := eif_wide_character_item ($Current, i).hash_code
+				when character_8_code then l_hash := eif_character_8_item ($Current, i).hash_code
+				when character_32_code then l_hash := eif_character_32_item ($Current, i).hash_code
 				when real_64_code then l_hash := eif_real_64_item ($Current, i).hash_code
 				when real_32_code then l_hash := eif_real_32_item ($Current, i).hash_code
 				when pointer_code then l_hash := eif_pointer_item ($Current, i).hash_code
@@ -265,8 +265,8 @@ feature -- Status report
 			else
 				inspect eif_item_type ($Current, index)
 				when boolean_code then l_b ?= v; Result := l_b /= Void
-				when character_code then l_c ?= v; Result := l_c /= Void
-				when wide_character_code then l_wc ?= v; Result := l_wc /= Void
+				when character_8_code then l_c ?= v; Result := l_c /= Void
+				when character_32_code then l_wc ?= v; Result := l_wc /= Void
 				when real_64_code then l_d ?= v; Result := l_d /= Void
 				when real_32_code then l_r ?= v; Result := l_r /= Void
 				when pointer_code then l_p ?= v; Result := l_p /= Void
@@ -278,7 +278,7 @@ feature -- Status report
 				when integer_16_code then l_i16 ?= v; Result := l_i16 /= Void
 				when integer_32_code then l_i32 ?= v; Result := l_i32 /= Void
 				when integer_64_code then l_i64 ?= v; Result := l_i64 /= Void
-				when Reference_code then	
+				when Reference_code then
 						-- Let's check that type of `v' conforms to specified type of `index'-th
 						-- arguments of current TUPLE.
 					create l_int
@@ -322,8 +322,8 @@ feature -- Element change
 		do
 			inspect eif_item_type ($Current, index)
 			when boolean_code then eif_put_boolean_item_with_object ($Current, index, $v)
-			when character_code then eif_put_character_item_with_object ($Current, index, $v)
-			when wide_character_code then eif_put_wide_character_item_with_object ($Current, index, $v)
+			when character_8_code then eif_put_character_8_item_with_object ($Current, index, $v)
+			when character_32_code then eif_put_character_32_item_with_object ($Current, index, $v)
 			when real_64_code then eif_put_real_64_item_with_object ($Current, index, $v)
 			when real_32_code then eif_put_real_32_item_with_object ($Current, index, $v)
 			when pointer_code then eif_put_pointer_item_with_object ($Current, index, $v)
@@ -357,22 +357,22 @@ feature -- Element change
 			eif_put_boolean_item ($Current, index, v)
 		end
 
-	put_character (v: CHARACTER; index: INTEGER) is
+	put_character_8, put_character (v: CHARACTER_8; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
-			valid_type: is_character_item (index)
+			valid_type: is_character_8_item (index)
 		do
-			eif_put_character_item ($Current, index, v)
+			eif_put_character_8_item ($Current, index, v)
 		end
 
-	put_wide_character (v: WIDE_CHARACTER; index: INTEGER) is
+	put_character_32, put_wide_character (v: CHARACTER_32; index: INTEGER) is
 			-- Put `v' at position `index' in Current.
 		require
 			valid_index: valid_index (index)
-			valid_type: is_wide_character_item (index)
+			valid_type: is_character_32_item (index)
 		do
-			eif_put_wide_character_item ($Current, index, v)
+			eif_put_character_32_item ($Current, index, v)
 		end
 
 	put_real_64, put_double (v: DOUBLE; index: INTEGER) is
@@ -484,20 +484,20 @@ feature -- Type queries
 			Result := (eif_item_type ($Current, index) = boolean_code)
 		end
 
-	is_character_item (index: INTEGER): BOOLEAN is
-			-- Is item at `index' a CHARACTER?
+	is_character_8_item, is_character_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a CHARACTER_8?
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_item_type ($Current, index) = character_code)
+			Result := (eif_item_type ($Current, index) = character_8_code)
 		end
 
-	is_wide_character_item (index: INTEGER): BOOLEAN is
-			-- Is item at `index' a WIDE_CHARACTER?
+	is_character_32_item, is_wide_character_item (index: INTEGER): BOOLEAN is
+			-- Is item at `index' a CHARACTER_32?
 		require
 			valid_index: valid_index (index)
 		do
-			Result := (eif_item_type ($Current, index) = wide_character_code)
+			Result := (eif_item_type ($Current, index) = character_32_code)
 		end
 
 	is_double_item (index: INTEGER): BOOLEAN is
@@ -633,18 +633,18 @@ feature -- Type queries
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_character: BOOLEAN is
-			-- Are all items of type CHARACTER?
+	is_uniform_character_8, is_uniform_character: BOOLEAN is
+			-- Are all items of type CHARACTER_8?
 		do
-			Result := is_tuple_uniform (character_code)
+			Result := is_tuple_uniform (character_8_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
 
-	is_uniform_wide_character: BOOLEAN is
-			-- Are all items of type WIDE_CHARACTER?
+	is_uniforme_character_32, is_uniform_wide_character: BOOLEAN is
+			-- Are all items of type CHARACTER_32?
 		do
-			Result := is_tuple_uniform (wide_character_code)
+			Result := is_tuple_uniform (character_32_code)
 		ensure
 			yes_if_empty: (count = 0) implies Result
 		end
@@ -859,7 +859,7 @@ feature -- Conversion
 			same_items: -- Items are the same in same order
 		end
 
-	character_arrayed: ARRAY [CHARACTER] is
+	character_8_arrayed, character_arrayed: ARRAY [CHARACTER_8] is
 			-- Items of Current as array
 		obsolete
 			"Will be removed in future releases"
@@ -875,7 +875,7 @@ feature -- Conversion
 			until
 				i > cnt
 			loop
-				Result.put (character_item (i), i)
+				Result.put (character_8_item (i), i)
 				i := i + 1
 			end
 		ensure
@@ -1057,7 +1057,7 @@ feature -- Access
 
 	reference_code: NATURAL_8 is 0x00
 	boolean_code: NATURAL_8 is 0x01
-	character_code: NATURAL_8 is 0x02
+	character_8_code, character_code: NATURAL_8 is 0x02
 	real_64_code: NATURAL_8 is 0x03
 	real_32_code: NATURAL_8 is 0x04
 	pointer_code: NATURAL_8 is 0x05
@@ -1069,7 +1069,7 @@ feature -- Access
 	natural_16_code: NATURAL_8 is 0x0B
 	natural_32_code: NATURAL_8 is 0x0C
 	natural_64_code: NATURAL_8 is 0x0D
-	wide_character_code: NATURAL_8 is 0x0E
+	character_32_code, wide_character_code: NATURAL_8 is 0x0E
 	any_code: NATURAL_8 is 0xFF
 			-- Code used to identify type in TUPLE.
 
@@ -1128,13 +1128,13 @@ feature {NONE} -- Externals: Access
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_character_item (obj: POINTER; pos: INTEGER): CHARACTER is
+	eif_character_8_item (obj: POINTER; pos: INTEGER): CHARACTER_8 is
 			-- Character item at position `pos' in tuple `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_wide_character_item (obj: POINTER; pos: INTEGER): WIDE_CHARACTER is
+	eif_character_32_item (obj: POINTER; pos: INTEGER): CHARACTER_32 is
 			-- Wide character item at position `pos' in tuple `obj'.
 		external
 			"C macro use %"eif_rout_obj.h%""
@@ -1220,13 +1220,13 @@ feature {NONE} -- Externals: Setting
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_put_character_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+	eif_put_character_8_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
 			-- Set character item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_put_wide_character_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
+	eif_put_character_32_item_with_object (obj: POINTER; pos: INTEGER; v: POINTER) is
 			-- Set wide character item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
@@ -1310,14 +1310,14 @@ feature {NONE} -- Externals: Setting
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_put_character_item (obj: POINTER; pos: INTEGER; v: CHARACTER) is
-			-- Set character item at position `pos' in tuple `obj' with `v'.
+	eif_put_character_8_item (obj: POINTER; pos: INTEGER; v: CHARACTER_8) is
+			-- Set character_8 item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end
 
-	eif_put_wide_character_item (obj: POINTER; pos: INTEGER; v: WIDE_CHARACTER) is
-			-- Set wide character item at position `pos' in tuple `obj' with `v'.
+	eif_put_character_32_item (obj: POINTER; pos: INTEGER; v: CHARACTER_32) is
+			-- Set character_32 item at position `pos' in tuple `obj' with `v'.
 		external
 			"C macro use %"eif_rout_obj.h%""
 		end

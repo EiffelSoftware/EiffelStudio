@@ -7,7 +7,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="msil_generation" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<precompile name="pre_base" locatio="$ISE_PRECOMP\base.ecf"/>
+		<precompile name="pre_base" location="$ISE_PRECOMP\base.ecf"/>
 		<assembly name="data" location="$ISE_DOTNET_FRAMEWORK\System.Data.dll" prefix="DATA_"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>

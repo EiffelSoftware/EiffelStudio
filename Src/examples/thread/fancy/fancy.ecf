@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="fancy" uuid="08B228C6-96BF-4E66-B590-549E944C283B">
 	<target name="common" abstract="true">
-		<root class="APPLICATION" feature="make"/>
+		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
 		<setting name="multithreaded" value="true"/>
+		<precompile name="wel-mt_pre" location="$ISE_PRECOMP\wel-mt.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<precompile name="wel-mt_pre" location="$ISE_PRECOMP\wel-mt.ecf"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>
 	<target name="dotnet" extends="common">

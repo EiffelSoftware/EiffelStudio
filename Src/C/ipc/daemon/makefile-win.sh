@@ -34,19 +34,16 @@ all:: ecdbgd.exe
 $microsoftecdbgd.exe: $(LIBS) ecdbgd.lmk
 	link $(LDFLAGS) $(LIBS) -SUBSYSTEM:WINDOWS -OUT:$@ @ecdbgd.lmk
 
-ecdbgd.res: ecdbgd.rc
-	$resource_compiler -r ecdbgd.rc
-
-ecdbgd.lmk: $(DBGOBJECTS) ecdbgd.res
+ecdbgd.lmk: $(DBGOBJECTS)
 	echo $(DBGOBJECTS) > ecdbgd.lmk
-	echo GDI32.LIB ADVAPI32.LIB USER32.LIB ecdbgd.res >> ecdbgd.lmk
+	echo GDI32.LIB ADVAPI32.LIB USER32.LIB >> ecdbgd.lmk
 
 $borlandecdbgd.exe: $(LIBS) ecdbgd.lbk
 	ilink32 @ecdbgd.lbk
 
-ecdbgd.lbk: $(DBGOBJECTS) ecdbgd.res
+ecdbgd.lbk: $(DBGOBJECTS)
 	del ecdbgd.lbk
 	echo $compiler_path\lib\c0w32.$obj $(DBGOBJECTS), \
-	ecdbgd.exe,, CW32 IMPORT32 $(LIBS),,ecdbgd.res >> ecdbgd.lbk
+	ecdbgd.exe,, CW32 IMPORT32 $(LIBS),, >> ecdbgd.lbk
 
 listen.$obj: ..\shared\select.h

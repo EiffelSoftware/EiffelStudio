@@ -84,12 +84,19 @@ feature -- Tag
 			-- if `current_tag' is <member> then retrieve name of member.
 		local
 			l_name: STRING
+			l_uc_string: STRING
 		do
 			if tag_started and current_tag.item.is_equal ("member") then
 				check
 					name_attribute: a_local_part.is_equal ("name")
 				end
-				create l_name.make_from_string (a_value)
+					-- if we have a unicode string, convert it into a normal string
+				l_uc_string ?= a_value
+				if l_uc_string /= Void then
+					l_name := l_uc_string.string
+				else
+					l_name := a_value.twin
+				end
 				l_name.keep_tail (l_name.count - 2)
 				current_xml_member.set_name (l_name)
 				tag_started := False

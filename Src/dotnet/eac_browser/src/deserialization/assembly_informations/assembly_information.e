@@ -58,6 +58,7 @@ feature -- Initialization
 					-- error
 				else
 					create l_parser.make
+					l_parser.set_string_mode_mixed
 					member_parser.set_parser (l_parser)
 					l_parser.set_callbacks (standard_callbacks_pipe (<<member_parser>>))
 					l_parser.parse_from_stream (l_xml_file)

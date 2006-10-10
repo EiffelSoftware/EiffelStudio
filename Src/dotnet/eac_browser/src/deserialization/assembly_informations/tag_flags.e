@@ -28,7 +28,7 @@ feature -- Access
 	assembly_str: STRING is "assembly"
 	members_str: STRING is "members"
 	member_str: STRING is "member"
-	
+
 	c_str: STRING is "c"
 	code_str: STRING is "code"
 	example_str: STRING is "example"
@@ -39,15 +39,17 @@ feature -- Access
 	para_str: STRING is "para"
 	param_ref_str: STRING is "paramref"
 	permission_str: STRING is "permission"
+	ipermission_str: STRING is "ipermission"
 	remarks_str: STRING is "remarks"
 	returns_str: STRING is "returns"
 	see_str: STRING is "see"
 	see_also_str: STRING is "seealso"
 	summary_str: STRING is "summary"
 	value_str: STRING is "value"
-	
+
 		-- Attributes
 	name_str: STRING is "name"
+	class_str: STRING is "class"
 	cref_str: STRING is "cref"
 	file_str: STRING is "file"
 	path_str: STRING is "path"

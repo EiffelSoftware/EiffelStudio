@@ -653,7 +653,6 @@ feature {NONE} -- Initialization
 			l_enum_ext: IL_ENUM_EXTENSION_I
 			l_all_export: EXPORT_ALL_I
 			l_none_export: EXPORT_NONE_I
-			l_family_export: EXPORT_SET_I
 			l_feat_arg: FEAT_ARG
 			l_names_heap: like Names_heap
 			l_list: ARRAYED_LIST [INTEGER]

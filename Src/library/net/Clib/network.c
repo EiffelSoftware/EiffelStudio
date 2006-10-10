@@ -385,8 +385,26 @@ void host_address_from_name (EIF_POINTER addr, EIF_POINTER name)
 	hp = gethostbyname((char *) name);
 #endif
 
-	if (hp == (struct hostent *) 0)
+	if (hp == (struct hostent *) 0) {
+#ifdef EIF_WINDOWS
 		eif_net_check(EIFNET_ERROR_HAPPENED);
+#else
+			/* On Unix, `gethostbyname' does not set errno, but h_errno. This is why
+			 * we cannot use `eif_net_check'. */
+		errno = h_errno;
+		if (h_errno == HOST_NOT_FOUND) {
+			eraise ("The specified host is unknown.", EN_ISE_IO);
+		} else if (h_errno == NO_ADDRESS || h_errno == NO_DATA) {
+			eraise ("The requested name is valid but does not have an IP address.", EN_ISE_IO);
+		} else if (h_errno == NO_RECOVERY) {
+			eraise ("A non-recoverable name server error occurred.", EN_ISE_IO);
+		} else if (h_errno == TRY_AGAIN) {
+			eraise ("A temporary error occurred on an authoritative name server. Try again later.", EN_ISE_IO);
+		} else {
+			eio();
+		}
+#endif
+	}
 
 	((struct in_addr *) addr)->s_addr = ((struct in_addr *) (hp->h_addr))->s_addr;
 }

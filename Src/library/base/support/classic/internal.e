@@ -373,15 +373,26 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-	character_field (i: INTEGER; object: ANY): CHARACTER is
-			-- Character value of `i'-th field of `object'
+	character_8_field, character_field (i: INTEGER; object: ANY): CHARACTER_8 is
+			-- CHARACTER_8 value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			character_field: field_type (i, object) = Character_type
+			character_8_field: field_type (i, object) = Character_8_type
 		do
-			Result := c_character_field (i - 1, $object)
+			Result := c_character_8_field (i - 1, $object)
+		end
+
+	character_32_field (i: INTEGER; object: ANY): CHARACTER_32 is
+			-- CHARACTER_32 value of `i'-th field of `object'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			character_32_field: field_type (i, object) = Character_32_type
+		do
+			Result := c_character_32_field (i - 1, $object)
 		end
 
 	boolean_field (i: INTEGER; object: ANY): BOOLEAN is
@@ -551,15 +562,26 @@ feature -- Element change
 			c_set_real_64_field (i - 1, $object, value)
 		end
 
-	set_character_field (i: INTEGER; object: ANY; value: CHARACTER) is
+	set_character_8_field, set_character_field (i: INTEGER; object: ANY; value: CHARACTER_8) is
 			-- Set character value of `i'-th field of `object' to `value'
 		require
 			object_not_void: object /= Void
 			index_large_enough: i >= 1
 			index_small_enough: i <= field_count (object)
-			character_field: field_type (i, object) = Character_type
+			character_field: field_type (i, object) = Character_8_type
 		do
-			c_set_character_field (i - 1, $object, value)
+			c_set_character_8_field (i - 1, $object, value)
+		end
+
+	set_character_32_field (i: INTEGER; object: ANY; value: CHARACTER_32) is
+			-- Set character 32 value of `i'-th field of `object' to `value'
+		require
+			object_not_void: object /= Void
+			index_large_enough: i >= 1
+			index_small_enough: i <= field_count (object)
+			character_field: field_type (i, object) = Character_32_type
+		do
+			c_set_character_32_field (i - 1, $object, value)
 		end
 
 	set_boolean_field (i: INTEGER; object: ANY; value: BOOLEAN) is
@@ -819,12 +841,20 @@ feature {NONE} -- Implementation
 			"ei_exp_type"
 		end
 
-	c_character_field (i: INTEGER; object: POINTER): CHARACTER is
+	c_character_8_field (i: INTEGER; object: POINTER): CHARACTER_8 is
 			-- Character value of `i'-th field of `object'
 		external
 			"C macro signature (long, EIF_REFERENCE): EIF_CHARACTER use %"eif_internal.h%""
 		alias
 			"ei_char_field"
+		end
+
+	c_character_32_field (i: INTEGER; object: POINTER): CHARACTER_32 is
+			-- Character value of `i'-th field of `object'
+		external
+			"C macro signature (long, EIF_REFERENCE): EIF_WIDE_CHAR use %"eif_internal.h%""
+		alias
+			"ei_char_32_field"
 		end
 
 	c_boolean_field (i: INTEGER; object: POINTER): BOOLEAN is
@@ -977,11 +1007,18 @@ feature {NONE} -- Implementation
 			"ei_set_double_field"
 		end
 
-	c_set_character_field (i: INTEGER; object: POINTER; value: CHARACTER) is
+	c_set_character_8_field (i: INTEGER; object: POINTER; value: CHARACTER_8) is
 		external
 			"C macro signature (long, EIF_REFERENCE, EIF_CHARACTER) use %"eif_internal.h%""
 		alias
 			"ei_set_char_field"
+		end
+
+	c_set_character_32_field (i: INTEGER; object: POINTER; value: CHARACTER_32) is
+		external
+			"C macro signature (long, EIF_REFERENCE, EIF_CHARACTER) use %"eif_internal.h%""
+		alias
+			"ei_set_char_32_field"
 		end
 
 	c_set_boolean_field (i: INTEGER; object: POINTER; value: BOOLEAN) is

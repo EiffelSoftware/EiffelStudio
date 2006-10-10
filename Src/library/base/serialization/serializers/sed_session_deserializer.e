@@ -371,8 +371,10 @@ feature {NONE} -- Implementation
 				when {INTERNAL}.boolean_type then
 					l_int.set_boolean_field (l_new_offset, an_obj, l_deser.read_boolean)
 
-				when {INTERNAL}.character_type then
-					l_int.set_character_field (l_new_offset, an_obj, l_deser.read_character_8)
+				when {INTERNAL}.character_8_type then
+					l_int.set_character_8_field (l_new_offset, an_obj, l_deser.read_character_8)
+				when {INTERNAL}.character_32_type then
+					l_int.set_character_32_field (l_new_offset, an_obj, l_deser.read_character_32)
 
 				when {INTERNAL}.natural_8_type then
 					l_int.set_natural_8_field (l_new_offset, an_obj, l_deser.read_natural_8)
@@ -439,7 +441,9 @@ feature {NONE} -- Implementation
 			loop
 				inspect l_deser.read_natural_8
 				when {TUPLE}.boolean_code then l_tuple.put_boolean (l_deser.read_boolean, i)
-				when {TUPLE}.character_code then l_tuple.put_character (l_deser.read_character_8, i)
+
+				when {TUPLE}.character_8_code then l_tuple.put_character_8 (l_deser.read_character_8, i)
+				when {TUPLE}.character_32_code then l_tuple.put_character_32 (l_deser.read_character_32, i)
 
 				when {TUPLE}.natural_8_code then l_tuple.put_natural_8 (l_deser.read_natural_8, i)
 				when {TUPLE}.natural_16_code then l_tuple.put_natural_16 (l_deser.read_natural_16, i)
@@ -477,7 +481,9 @@ feature {NONE} -- Implementation
 		do
 			inspect a_item_type
 			when {INTERNAL}.boolean_type then create {SPECIAL [BOOLEAN]} Result.make (a_count)
-			when {INTERNAL}.character_type then create {SPECIAL [CHARACTER]} Result.make (a_count)
+
+			when {INTERNAL}.character_8_type then create {SPECIAL [CHARACTER_8]} Result.make (a_count)
+			when {INTERNAL}.character_32_type then create {SPECIAL [CHARACTER_32]} Result.make (a_count)
 
 			when {INTERNAL}.natural_8_type then create {SPECIAL [NATURAL_8]} Result.make (a_count)
 			when {INTERNAL}.natural_16_type then create {SPECIAL [NATURAL_16]} Result.make (a_count)
@@ -509,7 +515,8 @@ feature {NONE} -- Implementation
 			an_index_non_negative: an_index >= 0
 		local
 			l_spec_boolean: SPECIAL [BOOLEAN]
-			l_spec_character: SPECIAL [CHARACTER]
+			l_spec_character_8: SPECIAL [CHARACTER_8]
+			l_spec_character_32: SPECIAL [CHARACTER_32]
 			l_spec_natural_8: SPECIAL [NATURAL_8]
 			l_spec_natural_16: SPECIAL [NATURAL_16]
 			l_spec_natural_32: SPECIAL [NATURAL_32]
@@ -529,11 +536,15 @@ feature {NONE} -- Implementation
 				check l_spec_boolean_not_void: l_spec_boolean /= Void end
 				decode_special_boolean (l_spec_boolean)
 
-			when {INTERNAL}.character_type then
-				l_spec_character ?= an_obj
-				check l_spec_character_not_void: l_spec_character /= Void end
-				decode_special_character (l_spec_character)
+			when {INTERNAL}.character_8_type then
+				l_spec_character_8 ?= an_obj
+				check l_spec_character_8_not_void: l_spec_character_8 /= Void end
+				decode_special_character_8 (l_spec_character_8)
 
+			when {INTERNAL}.character_32_type then
+				l_spec_character_32 ?= an_obj
+				check l_spec_character_32_not_void: l_spec_character_32 /= Void end
+				decode_special_character_32 (l_spec_character_32)
 
 			when {INTERNAL}.natural_8_type then
 				l_spec_natural_8 ?= an_obj
@@ -616,8 +627,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	decode_special_character (a_spec: SPECIAL [CHARACTER]) is
-			-- Decode SPECIAL [CHARACTER].
+	decode_special_character_8 (a_spec: SPECIAL [CHARACTER_8]) is
+			-- Decode SPECIAL [CHARACTER_8].
 		require
 			a_spec_not_void: a_spec /= Void
 		local
@@ -631,6 +642,25 @@ feature {NONE} -- Implementation
 				i = nb
 			loop
 				a_spec.put (l_deser.read_character_8, i)
+				i := i + 1
+			end
+		end
+
+	decode_special_character_32 (a_spec: SPECIAL [CHARACTER_32]) is
+			-- Decode SPECIAL [CHARACTER_32].
+		require
+			a_spec_not_void: a_spec /= Void
+		local
+			i, nb: INTEGER
+			l_deser: like deserializer
+		do
+			from
+				l_deser := deserializer
+				nb := a_spec.count
+			until
+				i = nb
+			loop
+				a_spec.put (l_deser.read_character_32, i)
 				i := i + 1
 			end
 		end

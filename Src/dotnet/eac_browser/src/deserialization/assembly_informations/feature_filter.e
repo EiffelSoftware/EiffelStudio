@@ -17,7 +17,7 @@ inherit
 
 create
 	make
-	
+
 feature -- Initialization
 
 	make is
@@ -40,7 +40,7 @@ feature -- Access
 			-- Temporary attribute.
 
 feature {NONE} -- Access
-	
+
 	a_parameter: PARAMETER_INFORMATION
 			-- Temporary attribute.
 
@@ -60,7 +60,7 @@ feature
 			retried: BOOLEAN
 		do
 			if not retried then
-				current_tag.extend (a_local_part)
+				current_tag.extend (a_local_part.as_lower)
 			end
 		rescue
 			retried := True
@@ -83,9 +83,9 @@ feature
 							l_name.keep_head (index - 1)
 						end
 						current_comment.append (l_name)
-					end	
+					end
 					if a_local_part.is_equal (lang_str) then
-						current_comment.append (a_value)						
+						current_comment.append (a_value)
 					end
 				elseif current_tag.last.is_equal (member_str) then
 					a_member.reset
@@ -123,6 +123,10 @@ feature
 						a_local_part.is_equal (Cref_str)
 					end
 					current_comment.append (a_value)
+				elseif current_tag.last.is_equal (IPermission_str) then
+					if a_local_part.is_equal (Class_str) then
+						current_comment.append (a_value)
+					end
 				elseif current_tag.last.is_equal (Include_str) then
 					check
 						a_local_part.is_equal (File_str) or a_local_part.is_equal (Path_str)
@@ -227,7 +231,7 @@ feature {NONE} -- Formatter
 		once
 			create Result
 		end
-		
+
 invariant
 	non_void_a_member: a_member /= Void
 	non_void_a_parameter: a_parameter /= Void

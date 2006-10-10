@@ -315,6 +315,7 @@ feature -- Access
 		do
 			from
 				l_assemblies := target.all_assemblies
+				l_assemblies.start
 			until
 				l_assembly /= Void or l_assemblies.after
 			loop

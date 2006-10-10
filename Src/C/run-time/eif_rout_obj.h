@@ -201,8 +201,8 @@ RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is
 #define eif_tuple_item_type(item)			((EIF_TYPED_ELEMENT *) (item))->type
 #define eif_reference_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.rarg
 #define eif_boolean_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.barg
-#define eif_character_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.carg
-#define eif_wide_character_tuple_item(item)	((EIF_TYPED_ELEMENT *) (item))->element.wcarg
+#define eif_character_8_tuple_item(item)	((EIF_TYPED_ELEMENT *) (item))->element.carg
+#define eif_character_32_tuple_item (item)	((EIF_TYPED_ELEMENT *) (item))->element.wcarg
 #define eif_real_64_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.darg
 #define eif_natural_8_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.u8arg
 #define eif_natural_16_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.u16arg
@@ -220,8 +220,8 @@ RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is
 
 /* Macro for accessing tuple element value */
 #define eif_boolean_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.barg
-#define eif_character_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg
-#define eif_wide_character_item(tuple,pos)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg
+#define eif_character_8_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg
+#define eif_character_32_item(tuple,pos)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg
 #define eif_real_64_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg
 #define eif_natural_8_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u8arg
 #define eif_natural_16_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u16arg
@@ -237,8 +237,8 @@ RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is
 
 /* Conveniences */
 #define EIF_BOOLEAN_ITEM eif_boolean_item
-#define EIF_CHARACTER_ITEM eif_character_item
-#define EIF_WIDE_CHARACTER_ITEM eif_wide_character_item
+#define EIF_CHARACTER_8_ITEM eif_character_8_item
+#define EIF_CHARACTER_32_ITEM eif_character_32_item
 #define EIF_REAL_64_ITEM eif_real_64_item
 #define EIF_NATURAL_8_ITEM eif_natural_8_item
 #define EIF_NATURAL_16_ITEM eif_natural_16_item
@@ -255,8 +255,8 @@ RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is
 /* Macro for setting tuple element value from a reference object
  * `val' should not be Void */
 #define eif_put_boolean_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.barg = *(EIF_BOOLEAN *)(val)
-#define eif_put_character_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = *(EIF_CHARACTER *)(val)
-#define eif_put_wide_character_item_with_object(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = *(EIF_WIDE_CHAR *)(val)
+#define eif_put_character_8_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = *(EIF_CHARACTER *)(val)
+#define eif_put_character_32_item_with_object(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = *(EIF_WIDE_CHAR *)(val)
 #define eif_put_real_64_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg = *(EIF_REAL_64 *)(val)
 #define eif_put_natural_8_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u8arg = *(EIF_NATURAL_8 *)(val)
 #define eif_put_natural_16_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u16arg = *(EIF_NATURAL_16 *)(val)
@@ -272,8 +272,8 @@ RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is
 
 /* Macro for setting tuple element value */
 #define eif_put_boolean_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.barg = (EIF_BOOLEAN)(val)
-#define eif_put_character_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = (EIF_CHARACTER)(val)
-#define eif_put_wide_character_item(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = (EIF_WIDE_CHAR)(val)
+#define eif_put_character_8_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = (EIF_CHARACTER)(val)
+#define eif_put_character_32_item(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = (EIF_WIDE_CHAR)(val)
 #define eif_put_real_64_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg = (EIF_REAL_64)(val)
 #define eif_put_natural_8_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u8arg = (EIF_NATURAL_8)(val)
 #define eif_put_natural_16_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.u16arg = (EIF_NATURAL_16)(val)
@@ -286,6 +286,18 @@ RT_LNK void rout_obj_call_function_dynamic (int stype_id, int feature_id, int is
 #define eif_put_pointer_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.parg = (EIF_POINTER)(val)
 #define eif_put_real_32_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg = (EIF_REAL_32)(val)
 #define eif_put_reference_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.rarg = (EIF_REFERENCE) (val); RTAR((EIF_REFERENCE) (tuple), (EIF_REFERENCE) (val))
+
+/* Obsolete macro kept for backward compatibility. */
+#define eif_character_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.carg
+#define eif_wide_character_tuple_item(item)	((EIF_TYPED_ELEMENT *) (item))->element.wcarg
+#define eif_character_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg
+#define eif_wide_character_item(tuple,pos)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg
+#define EIF_CHARACTER_ITEM eif_character_item
+#define EIF_WIDE_CHARACTER_ITEM eif_wide_character_item
+#define eif_put_character_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = *(EIF_CHARACTER *)(val)
+#define eif_put_wide_character_item_with_object(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = *(EIF_WIDE_CHAR *)(val)
+#define eif_put_character_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = (EIF_CHARACTER)(val)
+#define eif_put_wide_character_item(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = (EIF_WIDE_CHAR)(val)
 
 #ifdef __cplusplus
 }

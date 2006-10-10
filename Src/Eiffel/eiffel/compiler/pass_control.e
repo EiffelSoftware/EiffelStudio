@@ -3,18 +3,18 @@ indexing
 	status: "See notice at end of class."
 -- Controller of a compiler pass for a class
 
-class PASS_CONTROL 
+class PASS_CONTROL
 
 
 create
 
 	make
 
-	
-feature 
 
-	removed_features: SEARCH_TABLE [FEATURE_I];
-			-- Table of the features written in a class and removed
+feature
+
+	removed_features: SEARCH_TABLE [INTEGER];
+			-- Table of the body ids of the features written in a class and removed
 			-- from a compilation to another one.
 			-- [Useful for updating dependances for incremental type
 			-- check.]

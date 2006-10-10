@@ -73,7 +73,7 @@ feature -- Access
 	inline_agent_table: HASH_TABLE [FEATURE_I, INTEGER]
 			-- Table of inline agents indexed by their alias names
 
-	remove_inline_agents_of_feature (a_feature_i: FEATURE_I; a_removed: HASH_TABLE [FEATURE_I, INTEGER]) is
+	remove_inline_agents_of_feature (body_id: INTEGER; a_removed: HASH_TABLE [FEATURE_I, INTEGER]) is
 			-- Removes all the inline agents of a given feature
 		local
 			l_feat: FEATURE_I
@@ -84,7 +84,7 @@ feature -- Access
 				inline_agent_table.after
 			loop
 				l_feat := inline_agent_table.item_for_iteration
-				if l_feat.enclosing_body_id = a_feature_i.body_index then
+				if l_feat.enclosing_body_id = body_id then
 					if a_removed /= Void then
 							-- for each removed inline-agent feature we safe its
 							-- routine id along with its inline_agent_nr
@@ -479,7 +479,7 @@ feature -- Third pass: byte code production and type check
 			new_suppliers: like suppliers
 			feature_name_id: INTEGER
 			f_suppliers: FEATURE_DEPENDANCE
-			removed_features: SEARCH_TABLE [FEATURE_I]
+			removed_features: SEARCH_TABLE [INTEGER]
 			type_check_error: BOOLEAN
 			check_local_names_needed: BOOLEAN
 			byte_code_generated: BOOLEAN
@@ -602,7 +602,7 @@ feature -- Third pass: byte code production and type check
 								-- Type check
 							Error_handler.mark
 							create old_inline_agents.make (1)
-							remove_inline_agents_of_feature (feature_i, old_inline_agents)
+							remove_inline_agents_of_feature (feature_i.body_index, old_inline_agents)
 							ast_context.set_old_inline_agents (old_inline_agents)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
@@ -713,7 +713,7 @@ feature -- Third pass: byte code production and type check
 						then
 							error_handler.mark
 							create old_inline_agents.make (1)
-							remove_inline_agents_of_feature (feature_i, old_inline_agents)
+							remove_inline_agents_of_feature (feature_i.body_index, old_inline_agents)
 							ast_context.set_old_inline_agents (old_inline_agents)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
@@ -772,7 +772,7 @@ feature -- Third pass: byte code production and type check
 				end
 				if invariant_feature /= Void then
 					ast_context.set_old_inline_agents (Void)
-					remove_inline_agents_of_feature (invariant_feature, Void)
+					remove_inline_agents_of_feature (invariant_feature.body_index, Void)
 				end
 				if f_suppliers /= Void then
 					new_suppliers.remove_occurrence (f_suppliers)
@@ -812,7 +812,7 @@ feature -- Third pass: byte code production and type check
 					Error_handler.mark
 
 					create old_inline_agents.make (1)
-					remove_inline_agents_of_feature (invariant_feature, old_inline_agents)
+					remove_inline_agents_of_feature (invariant_feature.body_index, old_inline_agents)
 					ast_context.set_old_inline_agents (old_inline_agents)
 					feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
@@ -879,12 +879,11 @@ feature -- Third pass: byte code production and type check
 				until
 					removed_features.after
 				loop
-					feature_i := removed_features.item_for_iteration
+					body_index := removed_features.item_for_iteration
 
-					remove_inline_agents_of_feature (feature_i, Void)
+					remove_inline_agents_of_feature (body_index, Void)
 					ast_context.set_old_inline_agents (Void)
 
-					body_index := feature_i.body_index
 					f_suppliers := dependances.item (body_index)
 					if f_suppliers /= Void then
 						if new_suppliers = Void then

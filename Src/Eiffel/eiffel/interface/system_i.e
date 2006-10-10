@@ -3677,13 +3677,7 @@ feature -- Generation
 			a_backup_valid_for_restoring: is_restoring implies
 				(a_backup.lower >= 0 and a_backup.upper <= static_type_id_counter.count)
 		local
-			class_array: ARRAY [CLASS_C]
-			class_list: ARRAY [CLASS_C]
-			a_class: CLASS_C
-			types: TYPE_LIST
-			l_max_type_id, l_type_id, i, l_count: INTEGER
-			l_class_is_finalized: BOOLEAN
-
+			i, l_count: INTEGER
 			l_types: like class_types
 			l_type: CLASS_TYPE
 		do

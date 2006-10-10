@@ -1,2 +1,9 @@
-estudio ICON estudio.ico
+#define Application_icon	1
+#define Project_icon		2
+#define Document_icon		3
 
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+Application_icon	ICON	DISCARDABLE	"estudio.ico"
+Project_icon		ICON	DISCARDABLE	"estudio_ecf.ico"
+Document_icon		ICON	DISCARDABLE	"estudio_e.ico"

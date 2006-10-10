@@ -66,7 +66,7 @@ feature -- Element change
 			traversing_mode_set: is_traversing_mode_set
 			breadth_first_mode: internal.class_name (traversable).is_equal ("OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE")
 		end
-		
+
 	set_depth_first_traversing_mode is
 			-- Change graph traversing to depth first.
 		do
@@ -162,13 +162,13 @@ feature {NONE} -- Implementation: Access
 
 	object_indexes: SED_OBJECTS_TABLE
 			-- Mapping between object and their associated index.
-	
+
 	breadth_first_traversable: SED_OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE is
 			-- Return an instance of OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE.
 		once
 			Result := create {SED_OBJECT_GRAPH_BREADTH_FIRST_TRAVERSABLE}
 		end
-		
+
 	depth_first_traversable: SED_OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE is
 			-- Return an instance of OBJECT_GRAPH_DEPTH_FIRST_TRAVERSABLE.
 		once
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			l_int: like internal
 			l_ser: like serializer
 			l_object_indexes: like object_indexes
-			l_spec_mapping: like special_type_mapping			
+			l_spec_mapping: like special_type_mapping
 			i, nb: INTEGER
 			l_dtype, l_spec_item_type: INTEGER
 			l_obj: ANY
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 				l_ser := serializer
 				l_object_indexes := object_indexes
 				l_spec_mapping := special_type_mapping
-	
+
 				from
 					l_array := a_list
 					l_area := l_array.area
@@ -225,16 +225,16 @@ feature {NONE} -- Implementation
 				loop
 					l_obj := l_area.item (i)
 					i := i + 1
-	
+
 						-- Get object data.
 					l_dtype := l_int.dynamic_type (l_obj)
-	
+
 						-- Write object dtype.
 					l_ser.write_compressed_natural_32 (l_dtype.to_natural_32)
-	
+
 						-- Write object reference ID.
 					l_ser.write_compressed_natural_32 (l_object_indexes.index (l_obj))
-	
+
 						-- Write object flags, then data.
 					if l_int.is_special (l_obj) then
 							-- Write special flag.
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 				serializer.write_compressed_natural_32 (0)
 			end
 		end
-		
+
 	encode_normal_object (an_object: ANY; a_dtype: INTEGER) is
 			-- Encode normal object.
 		require
@@ -388,8 +388,10 @@ feature {NONE} -- Implementation
 				when {INTERNAL}.boolean_type then
 					l_ser.write_boolean (l_int.boolean_field (i, an_object))
 
-				when {INTERNAL}.character_type then
-					l_ser.write_character_8 (l_int.character_field (i, an_object))
+				when {INTERNAL}.character_8_type then
+					l_ser.write_character_8 (l_int.character_8_field (i, an_object))
+				when {INTERNAL}.character_32_type then
+					l_ser.write_character_32 (l_int.character_32_field (i, an_object))
 
 				when {INTERNAL}.natural_8_type then
 					l_ser.write_natural_8 (l_int.natural_8_field (i, an_object))
@@ -448,7 +450,9 @@ feature {NONE} -- Implementation
 				l_ser.write_natural_8 (l_code)
 				inspect l_code
 				when {TUPLE}.boolean_code then l_ser.write_boolean (a_tuple.boolean_item (i))
-				when {TUPLE}.character_code then l_ser.write_character_8 (a_tuple.character_item (i))
+
+				when {TUPLE}.character_8_code then l_ser.write_character_8 (a_tuple.character_8_item (i))
+				when {TUPLE}.character_32_code then l_ser.write_character_32 (a_tuple.character_32_item (i))
 
 				when {TUPLE}.natural_8_code then l_ser.write_natural_8 (a_tuple.natural_8_item (i))
 				when {TUPLE}.natural_16_code then l_ser.write_natural_16 (a_tuple.natural_16_item (i))
@@ -485,7 +489,8 @@ feature {NONE} -- Implementation
 			a_item_type_non_negative: a_item_type >= 0
 		local
 			l_spec_boolean: SPECIAL [BOOLEAN]
-			l_spec_character: SPECIAL [CHARACTER]
+			l_spec_character_8: SPECIAL [CHARACTER_8]
+			l_spec_character_32: SPECIAL [CHARACTER_32]
 			l_spec_natural_8: SPECIAL [NATURAL_8]
 			l_spec_natural_16: SPECIAL [NATURAL_16]
 			l_spec_natural_32: SPECIAL [NATURAL_32]
@@ -505,10 +510,15 @@ feature {NONE} -- Implementation
 				check l_spec_boolean_not_void: l_spec_boolean /= Void end
 				encode_special_boolean (l_spec_boolean)
 
-			when {INTERNAL}.character_type then
-				l_spec_character ?= an_object
-				check l_spec_character_not_void: l_spec_character /= Void end
-				encode_special_character (l_spec_character)
+			when {INTERNAL}.character_8_type then
+				l_spec_character_8 ?= an_object
+				check l_spec_character_8_not_void: l_spec_character_8 /= Void end
+				encode_special_character_8 (l_spec_character_8)
+
+			when {INTERNAL}.character_32_type then
+				l_spec_character_32 ?= an_object
+				check l_spec_character_32_not_void: l_spec_character_32 /= Void end
+				encode_special_character_32 (l_spec_character_32)
 
 			when {INTERNAL}.natural_8_type then
 				l_spec_natural_8 ?= an_object
@@ -594,8 +604,8 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
-	encode_special_character (a_spec: SPECIAL [CHARACTER]) is
+
+	encode_special_character_8 (a_spec: SPECIAL [CHARACTER_8]) is
 			-- Encode `a_spec'.
 		require
 			a_spec_not_void: a_spec /= Void
@@ -613,7 +623,26 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
+	encode_special_character_32 (a_spec: SPECIAL [CHARACTER_32]) is
+			-- Encode `a_spec'.
+		require
+			a_spec_not_void: a_spec /= Void
+		local
+			i, nb: INTEGER
+			l_ser: like serializer
+		do
+			from
+				nb := a_spec.count
+				l_ser := serializer
+			until
+				i = nb
+			loop
+				l_ser.write_character_32 (a_spec.item (i))
+				i := i + 1
+			end
+		end
+
 	encode_special_natural_8 (a_spec: SPECIAL [NATURAL_8]) is
 			-- Encode `a_spec'.
 		require
@@ -632,7 +661,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_natural_16 (a_spec: SPECIAL [NATURAL_16]) is
 			-- Encode `a_spec'.
 		require
@@ -651,7 +680,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_natural_32 (a_spec: SPECIAL [NATURAL_32]) is
 			-- Encode `a_spec'.
 		require
@@ -670,7 +699,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_natural_64 (a_spec: SPECIAL [NATURAL_64]) is
 			-- Encode `a_spec'.
 		require
@@ -689,7 +718,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_integer_8 (a_spec: SPECIAL [INTEGER_8]) is
 			-- Encode `a_spec'.
 		require
@@ -708,7 +737,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_integer_16 (a_spec: SPECIAL [INTEGER_16]) is
 			-- Encode `a_spec'.
 		require
@@ -727,7 +756,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_integer_32 (a_spec: SPECIAL [INTEGER]) is
 			-- Encode `a_spec'.
 		require
@@ -746,7 +775,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_integer_64 (a_spec: SPECIAL [INTEGER_64]) is
 			-- Encode `a_spec'.
 		require
@@ -765,7 +794,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_real_32 (a_spec: SPECIAL [REAL]) is
 			-- Encode `a_spec'.
 		require
@@ -784,7 +813,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_real_64 (a_spec: SPECIAL [DOUBLE]) is
 			-- Encode `a_spec'.
 		require
@@ -803,7 +832,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_pointer (a_spec: SPECIAL [POINTER]) is
 			-- Encode `a_spec'.
 		require
@@ -822,7 +851,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	encode_special_reference (a_spec: SPECIAL [ANY]) is
 			-- Encode `a_spec'.
 		require
@@ -838,7 +867,7 @@ feature {NONE} -- Implementation
 				encode_reference (a_spec.item (i))
 				i := i + 1
 			end
-		end		
+		end
 
 invariant
 	internal_not_void: internal /= Void

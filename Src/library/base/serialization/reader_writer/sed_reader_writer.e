@@ -77,6 +77,14 @@ feature -- Access
 			Result := l_nat8.to_character_8
 		end
 
+	read_character_32: CHARACTER_32 is
+			-- Read next 32-bits character
+		require
+			is_ready: is_ready_for_reading
+		do
+			Result := read_natural_32.to_character_32
+		end
+
 	read_string_8: STRING is
 			-- Read next 8-bits sequence of character
 		require
@@ -239,12 +247,20 @@ feature -- Access
 
 feature -- Element change
 
-	write_character_8 (v: CHARACTER) is
+	write_character_8 (v: CHARACTER_8) is
 			-- Write `v'.
 		require
 			is_ready: is_ready_for_writing
 		do
 			write_natural_8 (v.code.to_natural_8)
+		end
+
+	write_character_32 (v: CHARACTER_32) is
+			-- Write `v'.
+		require
+			is_ready: is_ready_for_writing
+		do
+			write_natural_32 (v.natural_32_code)
 		end
 
 	write_string_8 (v: STRING) is

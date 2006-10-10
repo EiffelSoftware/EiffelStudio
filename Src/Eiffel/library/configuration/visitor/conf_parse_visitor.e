@@ -115,10 +115,10 @@ feature -- Visit nodes
 				l_uuid := l_load.last_uuid
 				l_target := libraries.item (l_uuid)
 				if l_target /= Void then
+					a_library.set_library_target (l_target)
 					if level + 1 < l_target.system.level then
 						l_target.system.set_level (level + 1)
 					end
-					a_library.set_library_target (l_target)
 					a_library.set_uuid (l_uuid)
 					create l_comparer
 

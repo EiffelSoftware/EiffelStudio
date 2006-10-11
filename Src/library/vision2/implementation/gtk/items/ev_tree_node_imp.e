@@ -83,7 +83,7 @@ feature -- Status report
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
 
-feature -- Status setting
+feature {EV_ANY_I} -- Status setting
 
 	enable_select is
 			-- Select `Current' in its parent.

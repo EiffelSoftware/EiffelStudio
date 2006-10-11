@@ -166,11 +166,9 @@ feature -- Element change
 			a_region_not_void: a_region /= Void
 		do
 			implementation.set_clip_region (a_region)
-		ensure
-			--clip_area_assigned: clip_area.is_equal (an_area)
 		end
 
-	remove_clip_area, remove_clippimg is
+	remove_clip_area, remove_clipping is
 			-- Do not apply any clipping.
 		require
 			not_destroyed: not is_destroyed

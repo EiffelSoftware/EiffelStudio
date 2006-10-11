@@ -138,11 +138,13 @@ feature{NONE} -- Implementation
 		do
 			l_text := a_item.text
 			check l_text /= Void end
-			Result := l_text.occurrences ('%N')
-			l_count := l_text.count
-			l_last_new_line_position := l_text.last_index_of ('%N', l_count)
-			if l_last_new_line_position /= l_count then
-				Result := Result + 1.0
+			if not l_text.is_empty then
+				Result := l_text.occurrences ('%N')
+				l_count := l_text.count
+				l_last_new_line_position := l_text.last_index_of ('%N', l_count)
+				if l_last_new_line_position /= l_count then
+					Result := Result + 1.0
+				end
 			end
 		end
 

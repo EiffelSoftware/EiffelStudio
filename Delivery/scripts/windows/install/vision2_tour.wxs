@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="vision2_tour" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="5.7">
+	<Module Id="vision2_tour" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="6.0">
 		<Package Id="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Keywords="MergeModule, MSI, Database" Description="Vision2Tour" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramMenuFolder" Name=".">
-				<Directory Id="EiffelStudio" Name="EIFFEL~2" LongName="EiffelStudio 5.7">
+				<Directory Id="EiffelStudio" Name="EIFFEL~2" LongName="EiffelStudio 6.0">
 					<Component Id="EiffelStudio" Guid="E28A2EAF-EDD5-4905-BF1E-E54D5C148035">
 						<CreateFolder />
 						<RemoveFolder Id="EiffelStudio" On="uninstall"/>

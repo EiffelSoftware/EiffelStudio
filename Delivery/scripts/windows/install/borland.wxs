@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="borland" Guid="F059032B-DE8E-4178-BC2F-48C6AC4218A0" Language="0" Version="5.7">
+	<Module Id="borland" Guid="F059032B-DE8E-4178-BC2F-48C6AC4218A0" Language="0" Version="6.0">
 		<Package Id="F059032B-DE8E-4178-BC2F-48C6AC4218A0" Keywords="C compiler, Borland, MergeModule, MSI, Database" Description="Borland C++ 5.5" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
 	<Directory Id="TARGETDIR" Name="SourceDir">
 		<Directory Id="Application" Name=".">

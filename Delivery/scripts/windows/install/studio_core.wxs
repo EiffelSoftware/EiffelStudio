@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="studio_core" Guid="4A841F9A-85D3-4E04-8E5E-FF7153737FDC" Language="0" Version="5.7">
+	<Module Id="studio_core" Guid="4A841F9A-85D3-4E04-8E5E-FF7153737FDC" Language="0" Version="6.0">
 		<Package Id="4A841F9A-85D3-4E04-8E5E-FF7153737FDC" Keywords="MergeModule, MSI, Database" Description="EiffelCompilerFiles" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
-	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
-	<IgnoreModularization Name="SELECTEDCCOMPILER" Type="Property" />
+		<IgnoreModularization Name="PROJECTDIR" Type="Property" />
+		<IgnoreModularization Name="SELECTEDCCOMPILER" Type="Property" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Component Id="LocalMachineRegistry" Guid="E4C043A0-6236-4A40-A532-2F5EE81F5BDF" Win64="$(var.IsWin64)">
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry39" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry38" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\finish_freezing" Name="ISE_CFLAGS" Id="registry41" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel57\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel60" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel60" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel60" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry39" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel60" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry38" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel60\finish_freezing" Name="ISE_CFLAGS" Id="registry41" Type="string" />
+				<Registry Root="HKLM" Key="Software\ISE\Eiffel60\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" Type="string" />
 			</Component>
 			<Component Id="UserRegistry" Guid="9CABF13E-26F4-46d3-B72A-D5F0C008F790">
-				<Registry Root="HKCU" Key="Software\ISE\Eiffel57\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />
-				<Registry Root="HKCU" Key="Software\ISE\Eiffel57\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" Type="string" />
+				<Registry Root="HKCU" Key="Software\ISE\Eiffel60\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />
+				<Registry Root="HKCU" Key="Software\ISE\Eiffel60\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" Type="string" />
 			</Component>
 			<Directory Id="DesktopFolder" Name="." />
 			<Directory Id="ProgramMenuFolder" Name=".">
-				<Directory Id="EiffelStudio" Name="EIFFEL~5" LongName="EiffelStudio 5.7">
+				<Directory Id="EiffelStudio" Name="EIFFEL~5" LongName="EiffelStudio 6.0">
 					<Component Id="EiffelStudio" Guid="96C73318-4E9A-414E-A2DE-222E40C1D981">
 						<CreateFolder />
 						<RemoveFolder Id="EiffelStudio" On="uninstall"/>
@@ -688,15 +688,22 @@
 							<Directory Id="bin8" Name="bin">
 								<Component Id="estudio.exe" Guid="80B6C77B-41F5-4346-B02F-E00153176E46">
 									<File Id="estudio.exe" Name="estudio.exe" KeyPath="yes">
-										<Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="EIFFEL~1.2" LongName="EiffelStudio 5.7" Description="EiffelStudio development environment" Hotkey="0"	Show="normal">
-											<Icon Id="ecf_icon" src="$(env.INSTALL_DIR)\studio\spec\$(env.ISE_PLATFORM)\bin\ecdbgd.exe" />
-										</Shortcut>
-										<Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="ISEEIF~1.2" LongName="EiffelStudio 5.7" Description="EiffelStudio development environment" Hotkey="0" Show="normal" />
+										<Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="EIFFEL~1.2" LongName="EiffelStudio 6.0" Description="EiffelStudio development environment" Hotkey="0"	Show="normal" />
+										<Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="ISEEIF~1.2" LongName="EiffelStudio 6.0" Description="EiffelStudio development environment" Hotkey="0" Show="normal" />
 									</File>
-									<ProgId Id="estudio_ecf.project" Description="EiffelStudio project" Icon="ecf_icon" IconIndex="1" >
+									<ProgId Id="estudio_ecf.project" Description="EiffelStudio Project" Icon="[#estudio.exe]" IconIndex="1" >
 										<Extension Id="ecf">
-											<Verb Id="open" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
-											<Verb Id="compile" Argument="-config &quot;%1&quot; -melt" Command="compile" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
+											<MIME ContentType="text/xml" />
+											<Verb Id="open" Argument="&quot;%1&quot;" Command="Open" Target="&quot;[#estudio.exe]&quot;" />
+											<Verb Id="compile" Argument="-config &quot;%1&quot; -melt" Command="Compile" Target="&quot;[#estudio.exe]&quot;" />
+											<Verb Id="precompile" Argument="-config &quot;%1&quot; -precompile" Command="Precompile" Target="&quot;[#estudio.exe]&quot;" />
+											<Verb Id="freeze" Argument="-config &quot;%1&quot; -freeze" Command="Freeze" Target="&quot;[#estudio.exe]&quot;" />
+											<Verb Id="finalize" Argument="-config &quot;%1&quot; -finalize" Command="Finalize" Target="&quot;[#estudio.exe]&quot;" />
+										</Extension>
+									</ProgId>
+									<ProgId Id="estudio_e.class" Description="Eiffel Classes" Icon="[#estudio.exe]" IconIndex="2" >
+										<Extension Id="e" >
+											<MIME ContentType="text/plain" />
 										</Extension>
 									</ProgId>
 								</Component>

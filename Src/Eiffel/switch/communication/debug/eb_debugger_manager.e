@@ -21,7 +21,8 @@ inherit
 			on_application_resumed,
 			on_application_before_stopped,
 			on_application_just_stopped,
-			on_application_quit
+			on_application_quit,
+			implementation
 		end
 
 	EB_CONSTANTS
@@ -41,7 +42,6 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor
-			create implementation
 
 			can_debug := True
 			if not eiffel_project.batch_mode then

@@ -194,8 +194,8 @@ feature {ES_OBJECTS_GRID, ES_OBJECTS_GRID_MANAGER} -- Grid and row attachement
 				row.set_background_color (Void)
 			end
 
-			expand_actions.wipe_out
-			collapse_actions.wipe_out
+			set_expand_action (Void)
+			set_collapse_action (Void)
 
 			row_items_filled := False
 			row_attributes_filled := False
@@ -800,7 +800,6 @@ feature {NONE} -- Filling
 		local
 			i: INTEGER
 			grid: EV_GRID
-			ctler: ES_GRID_ROW_CONTROLLER
 			glab: EV_GRID_LABEL_ITEM
 		do
 			row_items_filled := True
@@ -816,11 +815,8 @@ feature {NONE} -- Filling
 				attributes_row.set_item (1, glab)
 
 					--| Add expand actions.
-				create ctler
-				ctler.expand_actions.extend (agent on_row_expand)
-				ctler.collapse_actions.extend (agent on_row_collapse)
-
-				attributes_row.set_data (ctler)
+				attributes_row.expand_actions.extend (agent on_row_expand (attributes_row))
+				attributes_row.collapse_actions.extend (agent on_row_collapse (attributes_row))
 				attributes_row.ensure_expandable
 			end
 			if has_once_functions then
@@ -833,10 +829,8 @@ feature {NONE} -- Filling
 				onces_row.set_item (1, glab)
 
 					--| Add expand actions.
-				create ctler
-				ctler.expand_actions.extend (agent on_row_expand)
-				ctler.collapse_actions.extend (agent on_row_collapse)
-				onces_row.set_data (ctler)
+				onces_row.expand_actions.extend (agent on_row_expand (onces_row))
+				onces_row.collapse_actions.extend (agent on_row_collapse (onces_row))
 				onces_row.ensure_expandable
 			end
 			if a_row.is_expandable and then not a_row.is_expanded then

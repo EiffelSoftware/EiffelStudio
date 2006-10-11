@@ -109,6 +109,11 @@ feature
 			"C"
 		end;
 
+	c_send_sized_str (str: POINTER; size: INTEGER) is
+		external
+			"C"
+		end;
+
 	c_send_str (str: POINTER) is
 		external
 			"C"

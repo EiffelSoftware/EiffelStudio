@@ -78,11 +78,6 @@ feature -- Reset
 				--| Debugger Error
 			reset_debugger_error
 
-				--| Param   |--
-			param_arguments := Void
-			param_executable := Void
-			param_directory := Void
-
 				--| Various |--
 			current_stack_info := Void
 			previous_stack_info := Void
@@ -699,40 +694,6 @@ feature {NONE} -- COM Object
 				end
 				last_evaluation_icd_exception_updated := True
 			end
-		end
-
-feature -- Debuggee Session Parameters
-
-	param_directory: STRING
-			-- Directory from where the debugger runs the process
-
-	param_executable: STRING
-			-- Filename to the executable to debug
-
-	param_arguments: STRING
-			-- Arguments
-
-feature -- Change Debuggee Session Parameters
-
-	set_param_directory (a_dir: STRING) is
-			-- Set the working directory parameter  to `a_dir'
-			-- used for launching application
-		do
-			param_directory := a_dir
-		end
-
-	set_param_executable (a_exec: STRING) is
-			-- Set the executable parameter  to `a_exec'
-			-- used for launching application
-		do
-			param_executable := a_exec
-		end
-
-	set_param_arguments (a_arg: STRING) is
-			-- Set the arguments parameter  to `a_arg'
-			-- used for launching application
-		do
-			param_arguments := a_arg
 		end
 
 feature -- JIT notification

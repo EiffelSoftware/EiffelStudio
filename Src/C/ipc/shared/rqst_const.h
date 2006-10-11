@@ -87,8 +87,9 @@
 #define SET_IPC_PARAM 45		/* set IPC parameters value (pid, timeout in seconds, ...) */
 #define CLEAR_BREAKPOINTS 46	/* Clear breakpoints table */
 #define DBG_EXCEPTION_TRACE 47	/* Get exception trace by id */
+#define APPLICATION_ENV	48		/* Send current env to launch application */
 
-#define MAX_REQUEST_TYPE 47		/* To update with new value of max request type. */
+#define MAX_REQUEST_TYPE 48		/* To update with new value of max request type. */
 
 
 /* Acknowledgments codes */

@@ -450,6 +450,7 @@ feature -- Execution
 		local
 			wd: EV_WARNING_DIALOG
 			working_dir: STRING
+			environment_vars: like application_environment_variables
 			l_cmd_line_arg: STRING
 			app_exec: APPLICATION_EXECUTION
 		do
@@ -460,6 +461,7 @@ feature -- Execution
 
 				--| Getting well formatted workind directory path
 			working_dir := application_working_directory
+			environment_vars := application_environment_variables
 
 				--| Building the command line argument
 			l_cmd_line_arg := current_cmd_line_argument
@@ -484,9 +486,9 @@ feature -- Execution
 				output_manager.add_string (Warning_messages.w_Invalid_working_directory (working_dir))
 			else
 					-- Raise debugger before launching.
-				Eb_debugger_manager.raise;
+				Eb_debugger_manager.raise
 				app_exec := eb_debugger_manager.application
-				app_exec.run (l_cmd_line_arg, working_dir)
+				app_exec.run (l_cmd_line_arg, working_dir, environment_vars)
 				if app_exec.is_running then
 					output_manager.add_string ("System is running")
 					if app_exec.execution_mode = No_stop_points then

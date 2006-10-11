@@ -92,6 +92,9 @@ feature {IPC_ENGINE} -- Request constants
 	Rqst_application_cwd: INTEGER is 40
 			-- Set current directory for application.
 
+	Rqst_application_env: INTEGER is 48
+			-- Set current env for application.
+
 	Rqst_overflow_detection: INTEGER is 41
 			-- Set the call stack depth at which we warn the user.
 

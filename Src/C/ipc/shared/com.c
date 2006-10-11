@@ -214,7 +214,7 @@ rt_public void send_info(EIF_PSTREAM sp, int code)
 	send_packet(sp, &rqst);
 }
 
-rt_public int send_str(EIF_PSTREAM sp, char *buffer)
+rt_public int send_sized_str(EIF_PSTREAM sp, char *buffer, int size)
            		/* The stream descriptor */
              	/* Where the string is held */
 {
@@ -223,7 +223,6 @@ rt_public int send_str(EIF_PSTREAM sp, char *buffer)
 	 */
 
 	Request pack;			/* The request */
-	size_t size;				/* Size of the string (without final null) */
 
 	/* Here is the protocol used to send the string: the size of the string
 	 * is sent as an opaque data structure (field op_size). If the length
@@ -234,7 +233,6 @@ rt_public int send_str(EIF_PSTREAM sp, char *buffer)
 	 */
 
 	Request_Clean (pack);
-	size = strlen(buffer);			/* Length of string */
 	pack.rq_type = EIF_OPAQUE;
 	CHECK("valid size", size <= INT32_MAX);
 	pack.rq_opaque.op_size = size;	/* Send length without final null */
@@ -285,6 +283,19 @@ rt_public int send_str(EIF_PSTREAM sp, char *buffer)
 	}
 
 	return 0;		/* Ok, string was sent */
+}
+
+rt_public int send_str(EIF_PSTREAM sp, char *buffer)
+           		/* The stream descriptor */
+             	/* Where the string is held */
+{
+	/* Send the string held in the buffer to the remote process and return
+	 * 0 if ok, -1 if the string was not sent.
+	 */
+
+	size_t size;				/* Size of the string (without final null) */
+	size = strlen(buffer);			/* Length of string */
+	return send_sized_str (sp, buffer, (int) size);
 }
 
 rt_public char *recv_str(EIF_PSTREAM sp, size_t *sizeptr)

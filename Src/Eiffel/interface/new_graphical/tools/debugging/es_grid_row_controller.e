@@ -13,38 +13,37 @@ class
 	ES_GRID_ROW_CONTROLLER
 inherit
 	EV_GRID_HELPER
-		redefine
-			default_create
-		end
 
 	EV_SHARED_APPLICATION
 		undefine
-			copy, default_create
+			copy
 		end
 
 create
 	default_create
 
-feature {NONE} -- Initialization
-
-	default_create is
-			-- Initialize `Current'.
-		do
-			create expand_actions
-			create collapse_actions
-		end
-
 feature -- Change
 
 	reset_row_actions is
 		do
-			expand_actions.wipe_out
-			collapse_actions.wipe_out
+			expand_action := Void
+			collapse_action := Void
 		end
 
-feature -- Access
+feature -- Properties
 
 	data: ANY
+
+feature -- Settings
+
+	set_data (v: like data) is
+		do
+			data := v
+		ensure
+			data = v
+		end
+
+feature -- Pebble
 
 	item_pebble_details (i: INTEGER): TUPLE [pebble: ANY; accept_cursor: EV_POINTER_STYLE; deny_cursor: EV_POINTER_STYLE] is
 		do
@@ -105,32 +104,55 @@ feature -- Access
 
 feature -- Change
 
-	set_data (v: like data) is
+	set_expand_action (a: like expand_action) is
 		do
-			data := v
-		ensure
-			data = v
+			expand_action := a
+		end
+
+	set_collapse_action (a: like collapse_action) is
+		do
+			collapse_action := a
+		end
+
+	set_key_pressed_action (a: like key_pressed_action) is
+		do
+			key_pressed_action := a
 		end
 
 feature -- Actions
 
-	call_expand_actions (r: EV_GRID_ROW) is
+	call_expand_action (r: EV_GRID_ROW) is
 		do
-			expand_actions.call ([r])
+			if expand_action /= Void then
+				expand_action.call ([r])
+			end
 		end
 
-	expand_actions: EV_GRID_ROW_ACTION_SEQUENCE
-
-	call_collapse_actions (r: EV_GRID_ROW) is
+	call_collapse_action (r: EV_GRID_ROW) is
 		do
-			collapse_actions.call ([r])
+			if collapse_action /= Void then
+				collapse_action.call ([r])
+			end
 		end
 
-	collapse_actions: EV_GRID_ROW_ACTION_SEQUENCE
+	call_key_pressed_action (k: EV_KEY) is
+		do
+			if key_pressed_action /= Void then
+				key_pressed_action.call ([k])
+			end
+		end
 
-invariant
-	collapse_actions /= Void
-	expand_actions /= Void
+feature {NONE} -- Implementation
+
+	expand_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]
+			-- Action to be perform on row expanded.
+
+	collapse_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]];
+			-- Action to be perform on row collapsed.
+
+	key_pressed_action: PROCEDURE [ANY, TUPLE [EV_KEY]];
+			-- Action to be perform on key pressed.
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -64,24 +64,24 @@ feature {NONE} -- Initialization
 			run := cmd
 
 				-- Build Dialog GUI
-			create arguments_control.make (Current)
-			extend (execution_frame)
+			create debugging_options_control.make (Current)
+			build_interface
 			key_press_actions.extend (agent escape_check (?))
 			focus_in_actions.extend (agent on_window_focused)
 			close_request_actions.extend (agent on_cancel)
 		end
 
-	execution_frame: EV_HORIZONTAL_BOX is
-			-- Frame containing all execution option
+	build_interface is
 		local
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
 			b: EV_BUTTON
 			cell: EV_CELL
 		do
-			create Result
+			create execution_frame
+
 			create hbox
-			hbox.extend (arguments_control)
+			hbox.extend (debugging_options_control)
 			hbox.set_border_width (Layout_constants.Small_border_size)
 			hbox.set_padding (Layout_constants.Small_padding_size)
 
@@ -123,10 +123,14 @@ feature {NONE} -- Initialization
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)
 
-			Result.extend (hbox)
+			execution_frame.extend (hbox)
+			extend (execution_frame)
 		end
 
 feature -- GUI
+
+	execution_frame: EV_HORIZONTAL_BOX
+			-- Frame containing all execution option
 
 	run_button,
 	run_and_close_button: EV_BUTTON
@@ -137,7 +141,7 @@ feature -- Status Setting
 	update is
 			-- Update.
 		do
-			arguments_control.update
+			debugging_options_control.update
 		end
 
 feature {NONE} -- Actions
@@ -151,13 +155,13 @@ feature {NONE} -- Actions
 	on_ok is
 	 		-- Action to take when user presses 'OK' button.
 		do
-			arguments_control.store_arguments
+			debugging_options_control.store_dbg_options
 			hide
 		end
 
 feature {NONE} -- Properties
 
-	arguments_control: EB_ARGUMENT_CONTROL
+	debugging_options_control: EB_DEBUGGING_OPTIONS_CONTROL
 			-- Widget holding all arguments information.
 
 	run: PROCEDURE [ANY, TUPLE]
@@ -167,8 +171,8 @@ feature {NONE} -- Implementation
 	on_window_focused is
 			-- Acion to be taken when window gains focused.
 		do
-			if arguments_control.is_displayed then
-				arguments_control.set_focus
+			if debugging_options_control.is_displayed then
+				debugging_options_control.set_focus
 			end
 		end
 
@@ -192,13 +196,13 @@ feature {NONE} -- Implementation
 
 	execute is
 		do
-			arguments_control.store_arguments
+			debugging_options_control.store_dbg_options
 			run.call (Void)
 		end
 
 	execute_and_close is
 		do
-			arguments_control.store_arguments
+			debugging_options_control.store_dbg_options
 			run.call (Void)
 			hide
 		end
@@ -239,7 +243,7 @@ feature {NONE} -- Observing event handling.
 		end
 
 invariant
-	argument_control_not_void: arguments_control /= Void
+	argument_control_not_void: debugging_options_control /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

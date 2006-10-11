@@ -50,6 +50,7 @@ extern int recv_packet(EIF_PSTREAM s, Request *rqst, BOOL reset);/* Receive data
 extern int recv_packet(EIF_PSTREAM s, Request *rqst);	/* Receive data from client */
 #endif
 
+extern int send_sized_str(EIF_PSTREAM sp, char *buffer, int size);				/* Send string to the remote process */
 extern int send_str(EIF_PSTREAM sp, char *buffer);				/* Send string to the remote process */
 extern char *recv_str(EIF_PSTREAM sp, size_t *sizeptr);			/* Receive string from the remote process */
 extern void trace_request(char *status, Request *rqst);		/* Trace received request */

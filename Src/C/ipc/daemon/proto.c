@@ -92,6 +92,7 @@ rt_private void set_ipc_ewb_pid(int pid);						/* Set IPC ewb pid value */
 rt_private void set_ipc_timeout(unsigned int t);				/* Set IPC TIMEOUT value */
 rt_private void start_app(EIF_PSTREAM sp);						/* Start Eiffel application */
 rt_private void get_application_cwd (EIF_PSTREAM sp);			/* Get application cwd */
+rt_private void get_application_env (EIF_PSTREAM sp);			/* Get application env */
 rt_public void drqsthandle(EIF_PSTREAM);							/* General request processor */
 #ifdef EIF_WINDOWS
 rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst, BOOL reset);	/* Request reception */
@@ -106,6 +107,7 @@ rt_private IDRF dbg_idrf;				/* IDR filters used for serializing */
 rt_private char dbg_idrf_initialized = (char) 0;	/* IDR filter already initialized ? */
 rt_private int interrupted;			/* Has application been asked to be interrupted */
 rt_private char *current_directory = NULL;	/* Directory where application is launched */
+rt_private char *current_app_env = NULL;	/* Environment in which application is launched */
 
 extern void dexit(int code);				/* Daemon exiting procedure */
 
@@ -186,6 +188,9 @@ rt_private void dprocess_request(EIF_PSTREAM sp, Request *rqst)
 		break;
 	case APPLICATION_CWD:	/* Current directory where application will be launched */
 		get_application_cwd(sp);	
+		break;
+	case APPLICATION_ENV:	/* Current environment in which application will be launched */
+		get_application_env(sp);	
 		break;
 	case APPLICATION:		/* Start application */
 		interrupted = FALSE;
@@ -796,6 +801,21 @@ rt_private void get_application_cwd (EIF_PSTREAM sp)
 	}
 }
 
+rt_private void get_application_env (EIF_PSTREAM sp)
+{
+
+	current_app_env = recv_str(sp, NULL);		/* Get command */
+
+
+		/* If current app env is '' we reset the value to NULL,
+		 * meaning that we won't look at the value of `current_app_env' */
+	if (strlen (current_app_env) == 0) {
+		free(current_app_env);
+		current_app_env = NULL;
+	}
+}
+
+
 rt_private void set_ipc_ewb_pid(int pid)
 {
 #ifdef EIF_WINDOWS
@@ -836,9 +856,9 @@ rt_private void start_app(EIF_PSTREAM sp)
 #ifdef EIF_WINDOWS
 		/* First argument is 0 because we are not launching the compiler, but
 		 * an application being debugged by the Eiffel debugger. */
-	cp = spawn_child("app", 0, cmd, current_directory, 1, &process_handle, &process_id);	/* Start up children */
+	cp = spawn_child("app", 0, cmd, current_directory, current_app_env, 1, &process_handle, &process_id);	/* Start up children */
 #else
-	cp = spawn_child("app", cmd, current_directory, 1, &pid);	/* Start up children */
+	cp = spawn_child("app", cmd, current_directory, current_app_env, 1, &pid);	/* Start up children */
 #endif
 
 	free(cmd);
@@ -847,6 +867,11 @@ rt_private void start_app(EIF_PSTREAM sp)
 		free(current_directory);
 		current_directory = NULL;
 	}
+	if (current_app_env) {
+		free(current_app_env);
+		current_app_env = NULL;
+	}
+	
 
 #ifdef EIF_WINDOWS
 	if (cp != (STREAM *) 0) {

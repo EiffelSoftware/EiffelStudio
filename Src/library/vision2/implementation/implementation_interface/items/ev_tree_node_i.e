@@ -79,13 +79,12 @@ feature -- Status report
 		deferred
 		end
 
-feature -- Status setting
+feature {EV_TREE_NODE} -- Status setting
 
 	set_expand (flag: BOOLEAN) is
 			-- Expand `Current' if `flag', otherwise collapse it.
 		require
-			in_tree: parent_tree /= Void
-			is_expandable: count > 0
+			is_expandable: interface.is_expandable
 		deferred
 		ensure
 			state_set: is_expanded = flag
@@ -123,7 +122,7 @@ feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 		deferred
 		end
 
-feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
+feature {EV_ANY_I, EV_TREE_NODE} -- Implementation
 
 	interface: EV_TREE_NODE;
 

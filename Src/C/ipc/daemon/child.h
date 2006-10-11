@@ -44,9 +44,9 @@ extern "C" {
 #endif
 
 #ifdef EIF_WINDOWS
-extern STREAM *spawn_child(char *id, int is_ec, char *cmd, char *cwd, char *env, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id);
+extern STREAM *spawn_child(char *id, int is_ec, char *cmd, char *cwd, char **envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id);
 #else
-extern STREAM *spawn_child(char *id, char *cmd, char *cwd, char *env, int handle_meltpath, Pid_t *child_pid);
+extern STREAM *spawn_child(char *id, char *cmd, char *cwd, char **envir, int handle_meltpath, Pid_t *child_pid);
 #endif
 
 #ifdef __cplusplus

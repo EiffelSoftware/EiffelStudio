@@ -98,9 +98,9 @@ rt_private void create_dummy_window (void);
 #endif
 
 #ifdef EIF_WINDOWS
-rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *cmd, char *cwd, char *envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *cmd, char *cwd, char **envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
 #else
-rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char *envir, int handle_meltpath, Pid_t *child_pid)
+rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char **envir, int handle_meltpath, Pid_t *child_pid)
 #endif
           			/* The child command process */
                  	/* Where pid of the child is written */

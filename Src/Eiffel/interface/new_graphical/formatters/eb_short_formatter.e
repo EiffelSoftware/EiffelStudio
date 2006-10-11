@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 		do
-			if not retried and associated_class /= Void then
+			if not retried then
 				set_is_with_breakable
 				if not is_dotnet_mode then
 					editor.handle_before_processing (false)

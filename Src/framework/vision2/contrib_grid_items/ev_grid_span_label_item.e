@@ -36,12 +36,16 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING_32
+			-- Item's spanned text
 
 	font: EV_FONT
+			-- Text's font.
 
 	pixmap: EV_PIXMAP
+			-- Master pixmap.
 
 	required_width: INTEGER is
+			-- Require width when resize_to_content occurs.
 		do
 			Result := Precursor
 			if is_master and pixmap /= Void then
@@ -55,8 +59,10 @@ feature -- Properties
 			-- Is Current the master's spawn item ?
 
 	span_master_column: INTEGER
+			-- Master item's column index
 
 	extra_space_after_pixmap: INTEGER is 5
+			-- Space between pixmap and text.
 
 feature -- change
 
@@ -152,9 +158,13 @@ feature {NONE} -- Implementation
 				a_drawable.set_foreground_color (fg)
 
 				if is_master then
-					a_drawable.set_font (font)
+					if font /= Void then
+						a_drawable.set_font (font)
+					end
 				else
-					a_drawable.set_font (m.font)
+					if m.font /= Void then
+						a_drawable.set_font (m.font)
+					end
 					check
 						column.index > span_master_column
 					end

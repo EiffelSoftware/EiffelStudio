@@ -245,7 +245,7 @@ feature{NONE} -- Implementation
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 		do
-			Result := a_item.group.is_used_library
+			Result := a_item.group.is_used_in_library
 		end
 
 	is_class_set_agent (a_item: QL_GROUP): BOOLEAN is

@@ -140,7 +140,7 @@ feature -- Access queries
 
 				-- if used as library, get options from application level
 				-- either if the library is defined there or otherwise directly from the application target
-			if is_used_library then
+			if is_used_in_library then
 				l_lib := find_parent_library_in_application_target
 				if l_lib /= Void then
 					Result := l_lib.options
@@ -173,7 +173,7 @@ feature -- Access queries
 		do
 				-- if used as library, get options from application level
 				-- either if the library is defined there or otherwise directly from the application target
-			if is_used_library then
+			if is_used_in_library then
 				l_lib := find_parent_library_in_application_target
 				if l_lib /= Void then
 					Result := l_lib.class_options.twin
@@ -376,7 +376,7 @@ feature -- Access queries
 			l_lib: CONF_LIBRARY
 		do
 			Result := internal_read_only
-			if not Result and then is_used_library then
+			if not Result and then is_used_in_library then
 				-- if used as library and the library defined in the application target itself, take value from there
 				-- else it is read only.
 				l_lib := find_parent_library_in_application_target

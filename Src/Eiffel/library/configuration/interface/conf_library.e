@@ -55,7 +55,7 @@ feature -- Status
 			else
 				Result := True
 			end
-			if not Result and then is_used_library then
+			if not Result and then is_used_in_library then
 				l_lib := find_current_in_application_target
 				if l_lib /= Void then
 					Result := l_lib.is_readonly
@@ -123,7 +123,7 @@ feature -- Access queries
 		do
 				-- if used as library, get options from application level
 				-- either if the library is defined there or otherwise directly from the application target
-			if is_used_library then
+			if is_used_in_library then
 				l_lib := find_current_in_application_target
 				if l_lib /= Void then
 					Result := l_lib.options
@@ -147,7 +147,7 @@ feature -- Access queries
 		do
 				-- if used as library, get options from application level
 				-- either if the library is defined there or otherwise directly from the application target
-			if is_used_library then
+			if is_used_in_library then
 				l_lib := find_current_in_application_target
 				if l_lib /= Void then
 					Result := l_lib.class_options

@@ -19,7 +19,7 @@ feature {DEBUGGER_MANAGER} -- Access
 			ws: WEL_STRING
 			k,v: STRING_32
 			s: STRING_32
-			i, c: INTEGER
+			i: INTEGER
 			lst: LIST [STRING_32]
 		do
 

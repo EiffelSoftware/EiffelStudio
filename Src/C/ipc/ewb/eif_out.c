@@ -355,6 +355,11 @@ rt_public EIF_BOOLEAN recv_dead (void)
 	}
 }
 
+rt_public void c_send_sized_str (char *s, int size)
+{
+	send_sized_str (ewb_sp, s, size);
+}
+
 rt_public void c_send_str (char *s)
 {
 	send_str (ewb_sp, s);

@@ -8,6 +8,9 @@ indexing
 class
 	EB_DEBUGGER_MANAGER_IMP
 
+inherit
+	DEBUGGER_MANAGER_IMP
+	
 create {EB_DEBUGGER_MANAGER}
 	default_create
 

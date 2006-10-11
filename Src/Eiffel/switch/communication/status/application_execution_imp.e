@@ -82,7 +82,7 @@ feature {APPLICATION_EXECUTION} -- Implementation
 
 feature {APPLICATION_EXECUTION} -- Execution
 
-	run (args, cwd: STRING) is
+	run (args, cwd: STRING; env: STRING_GENERAL) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that

@@ -27,6 +27,7 @@ feature -- Initialization
 			not Application_initialized
 		do
 			build_shared_application_execution (Current)
+			create implementation
 		ensure
 			Application_initialized
 		end
@@ -122,6 +123,13 @@ feature -- Access
 			application_is_executing: application_is_executing
 		do
 			Result := Application.status.current_thread_id
+		end
+
+	environment_variables_table: HASH_TABLE [STRING_32, STRING_32] is
+		do
+			Result := implementation.environment_variables_table
+		ensure
+			Result /= Void
 		end
 
 feature -- Change
@@ -222,6 +230,10 @@ feature -- Debuggee Objects management
 				end
 			end
 		end
+
+feature {NONE} -- specific implementation
+
+	implementation: DEBUGGER_MANAGER_IMP;
 
 invariant
 

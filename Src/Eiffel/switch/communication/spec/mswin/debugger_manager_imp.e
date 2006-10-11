@@ -1,76 +1,77 @@
 indexing
-	description	: "Mechanism to call an action when a file/pipe is changed.%N%
-				  %GTK Implementation."
+	description: "implementation for DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	EB_IO_WATCHER_IMP
+	DEBUGGER_MANAGER_IMP
 
-inherit
-	ANY
-		redefine
-			default_create
-		end
-
-create
+create {DEBUGGER_MANAGER}
 	default_create
 
-feature {NONE} -- Initialization
+feature {DEBUGGER_MANAGER} -- Access
 
-	default_create is
+	environment_variables_table: HASH_TABLE [STRING_32, STRING_32] is
+		local
+			p: POINTER
+			ws: WEL_STRING
+			k,v: STRING_32
+			s: STRING_32
+			i, c: INTEGER
+			lst: LIST [STRING_32]
 		do
-			--create io_watcher
-			--io_watcher.set_medium(a_medium)
-			is_destroyed := False
+
+			p := cwin_get_environment_strings
+			if p /= Default_pointer then
+				create ws.share_from_pointer (p)
+				lst := ws.null_separated_strings
+				from
+					create Result.make (lst.count)
+					lst.start
+				until
+					lst.after
+				loop
+					s := lst.item
+					if s /= Void and then not s.is_empty then
+						i := s.index_of ('=', 1)
+						if i > 1 then
+							k := s.substring (1, i - 1)
+							if i < s.count then
+								v := s.substring (i + 1, s.count)
+								Result.force (v, k)
+							end
+						end
+					end
+					lst.forth
+				end
+				cwin_free_environment_strings (p)
+			end
 		end
 
-feature -- Access
+feature {NONE} -- Externals
 
-	action: PROCEDURE [ANY, TUPLE] -- is
-			-- Callback feature called with the file/pipe is changed.
---		do
---			if io_watcher.read_actions.empty then
---				Result := Void
---			else
---				Result := io_watcher.read_actions.first
---			end
---		end
-
-feature -- Element change
-
-	destroy is
-		do
-			TO IMPLEMENT !!! jfiat
-			is_destroyed := True
+	cwin_get_environment_strings: POINTER is
+			-- GetEnvironmentStrings
+		external
+			"[
+				C signature(): EIF_POINTER
+				use "windows.h"
+			]"
+		alias
+			"GetEnvironmentStrings"
 		end
 
-	is_destroyed: BOOLEAN
-
-	set_action (an_action: like action) is
-			-- Set `an_action' as callback feature.
-		require
-			an_agent_not_void: an_action /= Void
-		do
-			action := an_action
-
-			--io_watcher.read_actions.wipe_out
-			--io_watcher.extend (an_action)
-		ensure
-			agent_set: action = an_action
-		end
-
-	remove_action is
-			-- Remove the current action
-		do
-			action := Void
-
-			-- io_watcher.read_actions.wipe_out
-		ensure
-			no_action: action = Void
+	cwin_free_environment_strings (p: POINTER) is
+			-- GetEnvironmentStrings
+		external
+			"[
+				C signature(LPTCH)
+				use "windows.h"
+			]"
+		alias
+			"FreeEnvironmentStrings"
 		end
 
 indexing
@@ -105,6 +106,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- EB_IO_WATCHER_IMP
-
-
+end

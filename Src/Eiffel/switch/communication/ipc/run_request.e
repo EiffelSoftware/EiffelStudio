@@ -28,6 +28,9 @@ feature -- Status report
 	working_directory: STRING
 			-- Directory in which `application_name' will be launched.
 
+	environment_variables: STRING
+			-- Environment in which `application_name' will be launched.
+
 	ipc_timeout: INTEGER
 			-- Timeout used in IPC communication between dbg and app.
 
@@ -51,6 +54,16 @@ feature -- Status setting
 			working_directory := s
 		ensure
 			working_directory_set: working_directory = s
+		end
+
+	set_environment_variables (s: STRING) is
+			-- Assign `s' to `environment_variables'.
+		require
+			s_not_void: s /= Void
+		do
+			environment_variables := s
+		ensure
+			environment_variables_set: environment_variables = s
 		end
 
 	set_ipc_timeout (t: INTEGER) is
@@ -94,11 +107,20 @@ feature {NONE} -- Implementation
 			c_string: C_STRING
 		do
 				-- Initialize sending of working directory
-			send_rqst_0 (Rqst_application_cwd)
+			if working_directory /= Void then
+				send_rqst_0 (Rqst_application_cwd)
+					-- Send working directory of application
+				create c_string.make (working_directory)
+				c_send_str (c_string.item)
+			end
 
-				-- Send working directory of application
-			create c_string.make (working_directory)
-			c_send_str (c_string.item)
+				-- Initialize sending of environment
+			if environment_variables /= Void and then environment_variables.count > 0 then
+				send_rqst_0 (Rqst_application_env)
+				-- Send environment of application
+				create c_string.make (environment_variables)
+				c_send_sized_str (c_string.item, environment_variables.count)
+			end
 
 				-- Start the application (in debug mode).
 			send_rqst_0 (Rqst_application)

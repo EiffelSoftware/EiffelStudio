@@ -476,8 +476,8 @@ feature -- Graphical changes
 								l_tooltip.append_string ("VALUE: " + res + "%N")
 								if not last_dump_value.is_basic and not last_dump_value.is_void then
 									row.ensure_expandable
-									expand_actions.extend (agent on_row_expand)
-									collapse_actions.extend (agent on_row_collapse)
+									set_expand_action (agent on_row_expand)
+									set_collapse_action (agent on_row_collapse)
 								end
 							else
 								res := ""

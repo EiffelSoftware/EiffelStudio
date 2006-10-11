@@ -235,7 +235,7 @@ feature -- Bridge to Debugger
 
 feature -- Execution
 
-	run (args, cwd: STRING) is
+	run (args, cwd: STRING; env: STRING_GENERAL) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -251,14 +251,11 @@ feature -- Execution
 			if Eifnet_debugger.is_debugging then
 				app := Eiffel_system.application_name (True)
 
-				Eifnet_debugger.set_debug_param_directory (cwd)
-				Eifnet_debugger.set_debug_param_executable (app)
-				Eifnet_debugger.set_debug_param_arguments (args)
-
 				process_before_running
 				Application.build_status
 
-				Eifnet_debugger.do_run
+				Eifnet_debugger.do_run (app, cwd, args, env)
+
 
 				if not Eifnet_debugger.last_dbg_call_succeed then
 						-- This means we had issue creating process

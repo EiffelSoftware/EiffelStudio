@@ -98,9 +98,9 @@ rt_private void create_dummy_window (void);
 #endif
 
 #ifdef EIF_WINDOWS
-rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *cmd, char *cwd, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
+rt_public STREAM *spawn_child(char* id, int is_new_console_requested, char *cmd, char *cwd, char *envir, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
 #else
-rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, int handle_meltpath, Pid_t *child_pid)
+rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, char *envir, int handle_meltpath, Pid_t *child_pid)
 #endif
           			/* The child command process */
                  	/* Where pid of the child is written */
@@ -369,13 +369,14 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, int handle_meltpat
 	} else {
 		l_startup_flags = CREATE_NEW_CONSOLE;
 	}
+	/* if ever we pass Unicode envir: l_startup_flags = l_startup_flags | CREATE_UNICODE_ENVIRONMENT; */
 	fSuccess = CreateProcess (exe_path,	/* Command 	*/
 		cmdline,			/* Command line */
 		NULL,				/* Process security attribute */
 		NULL,				/* Primary thread security attributes */
 		TRUE,				/* Handles are inherited */
 		l_startup_flags,	/* Creation flags */
-		NULL,				/* Use parent's environment */
+		envir,				/* Use parent's environment */
 		startpath,			/* Use cmd's current directory */
 		&siStartInfo,		/* STARTUPINFO pointer */
 		&piProcInfo);		/* for PROCESS_INFORMATION */
@@ -530,9 +531,18 @@ rt_public STREAM *spawn_child(char* id, char *cmd, char *cwd, int handle_meltpat
 
 #ifdef EIF_VMS
 /*DEBUG*/		ipcvms_fd_dump ("before execv (spawn child): pc2p[%d,%d], pp2c[%d,%d]", pc2p[0],pc2p[1],pp2c[0],pp2c[1]);
+
+		if (envir == NULL) {
 			execv(argv[0], argv);
+		} else {
+			execve(argv[0], argv, envir);
+		}
 #else
+		if (envir == NULL) {
 			execvp(argv[0], argv);
+		} else {
+			execve(argv[0], argv, envir);
+		}
 #endif
 			print_err_msg(stderr,"ERROR could not launch '%s'", argv[0]);
 #ifdef USE_ADD_LOG

@@ -161,8 +161,8 @@ feature -- Graphical changes
 					set_pixmap (icons [reference_value])
 				end
 				row.ensure_expandable
-				expand_actions.extend (agent on_row_expand)
-				collapse_actions.extend (agent on_row_collapse)
+				set_expand_action (agent on_row_expand)
+				set_collapse_action (agent on_row_collapse)
 				if display then
 					row.expand
 				end

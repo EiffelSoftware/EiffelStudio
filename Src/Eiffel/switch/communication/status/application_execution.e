@@ -485,11 +485,19 @@ feature -- Access
 		end
 
 	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
-			-- Make the breakpoint located at (`f',`i') unconditional.
+			-- Breakpoint's condition located at (`f',`i').
 		require
 			valid_breakpoint: is_breakpoint_set (f, i)
 		do
 			Result := debug_info.condition (f, i)
+		end
+
+	breakpoint (f: E_FEATURE; i: INTEGER): BREAKPOINT is
+			-- Breakpoint located at (`f',`i').
+		require
+			valid_breakpoint: is_breakpoint_set (f, i)
+		do
+			Result := debug_info.breakpoint (f, i)
 		end
 
 	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
@@ -708,7 +716,7 @@ feature -- Removal
 
 feature -- Execution
 
-	run (args, cwd: STRING) is
+	run (args, cwd: STRING; env: HASH_TABLE [STRING_32, STRING_32]) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -720,9 +728,12 @@ feature -- Execution
 			app_not_running: not is_running
 			application_exists: exists
 			non_negative_interrupt: interrupt_number >= 0
+		local
+			l_envstr: STRING_32
 		do
 			on_application_before_launching
-			implementation.run (args, cwd)
+			l_envstr := environment_variables_to_string (environment_variables_updated_with (env))
+			implementation.run (args, cwd, l_envstr)
 		ensure
 			successful_app_is_not_stopped: is_running implies not is_stopped
 		end
@@ -903,12 +914,110 @@ feature -- Setting
 			set: current_execution_stack_number = i
 		end
 
+
+feature {SHARED_DEBUG, SHARED_APPLICATION_EXECUTION, ES_BREAKPOINTS_TOOL} -- Properties
+
+	debug_info: DEBUG_INFO
+
 feature -- Implementation
 
 	resynchronize_breakpoints is
 			-- Resychronize the breakpoints after a compilation.
 		do
 			debug_info.resynchronize_breakpoints
+		end
+
+feature -- Environment related
+
+	environment_variables_updated_with (env: HASH_TABLE [STRING_32, STRING_32]): HASH_TABLE [STRING_32, STRING_32] is
+			-- String representation of the Environment variables
+		local
+			k,v: STRING_32
+		do
+			if env /= Void and then not env.is_empty then
+				Result := debugger_manager.environment_variables_table
+				if Result = Void then
+					fixme ("Environment_variables table should not be Void")
+					create Result.make (env.count)
+				end
+
+				from
+					env.start
+				until
+					env.after
+				loop
+					k := env.key_for_iteration
+					v := env.item_for_iteration
+					if k /= Void and then v /= Void then
+						Result.force (v, k)
+					end
+					env.forth
+				end
+			end
+		ensure
+			Result = Void implies (env = Void or else env.is_empty)
+		end
+
+	Environment_variables_sorter: DS_SORTER [STRING_32] is
+			-- String_32 sorter.
+		local
+			l_comp: KL_COMPARABLE_COMPARATOR [STRING_32]
+		once
+			create l_comp.make
+			create {DS_QUICK_SORTER [STRING_32]} Result.make (l_comp)
+		end
+
+	sorted_keys_from_environment_variables (env: HASH_TABLE [STRING_32, STRING_32]): DS_LIST[STRING_32] is
+			-- Sorted keys of `env'.
+		local
+			k: STRING_32
+		do
+			if env /= Void and then not env.is_empty then
+				from
+					create {DS_ARRAYED_LIST [STRING_32]} Result.make (env.count)
+					env.start
+				until
+					env.after
+				loop
+					k := env.key_for_iteration
+					if k /= Void and then not k.is_empty then
+						Result.put_last (k)
+					end
+					env.forth
+				end
+				Result.sort (Environment_variables_sorter)
+			end
+		end
+
+	environment_variables_to_string (env: HASH_TABLE [STRING_32, STRING_32]): STRING_32 is
+			-- String representation of the Environment variables
+		local
+			k,v: STRING_32
+			lst: DS_LIST [STRING_32]
+		do
+			if env /= Void and then not env.is_empty then
+				lst := sorted_keys_from_environment_variables (env)
+
+				create Result.make (512)
+				from
+					lst.start
+				until
+					lst.after
+				loop
+					k := lst.item_for_iteration
+					v := env.item (k)
+					if k /= Void and then v /= Void then
+						Result.append (k)
+						Result.append_character ('=')
+						Result.append (v)
+						Result.append_character ('%U')
+					end
+					lst.forth
+				end
+				Result.append_character ('%U')
+			end
+		ensure
+			Result = Void implies (env = Void or else env.is_empty)
 		end
 
 feature {DEAD_HDLR, RUN_REQUEST, APPLICATION_EXECUTION_IMP} -- Setting
@@ -934,10 +1043,6 @@ feature {DEAD_HDLR, RUN_REQUEST, APPLICATION_EXECUTION_IMP} -- Setting
 		ensure
 			is_not_running: not is_running
 		end
-
-feature {SHARED_DEBUG, SHARED_APPLICATION_EXECUTION, ES_BREAKPOINTS_TOOL}
-
-	debug_info: DEBUG_INFO
 
 feature -- Implementation
 

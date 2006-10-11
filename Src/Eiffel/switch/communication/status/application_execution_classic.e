@@ -70,7 +70,7 @@ feature {APPLICATION_EXECUTION} -- Properties
 
 feature -- Execution
 
-	run (args, cwd: STRING) is
+	run (args, cwd: STRING; env: STRING_GENERAL) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -78,9 +78,13 @@ feature -- Execution
 			-- due to the time_out (see `eiffel_timeout_message').
 			-- Before running the application you must check
 			-- to see if the debugged information is up to date.
+		require else
+			cwd_not_void: cwd /= Void
+			env_not_void: env /= Void
 		local
 			app: STRING
 			l_status: APPLICATION_STATUS
+			l_env_s8: STRING_8
 		do
 			Ipc_engine.launch_ec_dbg
 			if Ipc_engine.ec_dbg_launched then
@@ -91,6 +95,14 @@ feature -- Execution
 				end
 				run_request.set_application_name (app)
 				run_request.set_working_directory (cwd)
+				if env /= Void then
+					fixme ("[
+						Try to use UNICODE for environment variables in debugger. 
+						But for now the classic debugger would not allow that.
+						]")				
+					l_env_s8 := env.as_string_8
+				end
+				run_request.set_environment_variables (l_env_s8)
 				run_request.set_ipc_timeout (ipc_engine.ise_timeout)
 				run_request.send
 				l_status := status

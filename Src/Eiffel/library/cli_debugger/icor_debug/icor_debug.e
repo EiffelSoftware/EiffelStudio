@@ -15,12 +15,12 @@ inherit
 			dispose
 		end
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
-	initialize is 
+	initialize is
 		do
 			last_call_success := cpp_initialize (item)
 		end
@@ -45,8 +45,8 @@ feature {ICOR_EXPORTER} -- Access
  			retried := True
  			retry
 		end
-	
-	create_process (a_command_line, a_working_directory: STRING): POINTER is 
+
+	create_process (a_command_line, a_working_directory: STRING; a_env: STRING_GENERAL): POINTER is
 			-- Pointer on the freshly creared ICorDebugProcess
 		require
 			non_void_command_line: a_command_line /= Void
@@ -57,19 +57,36 @@ feature {ICOR_EXPORTER} -- Access
 			icordebug_process: POINTER
 			l_hr: INTEGER
 			create_flags: INTEGER
+			p_cmd,
+			p_cwd,
+			p_env: POINTER
 		do
 			create process_info.make
+
+				--| Flags
 			create_flags := create_flags | cwin_create_new_console
 --			create_flags := create_flags | cwin_debug_only_this_process
-			last_call_success := cpp_createprocess (item, 
+
+				--| Parameters
+			p_cmd := (create {UNI_STRING}.make (a_command_line)).item
+			p_cwd := (create {UNI_STRING}.make (a_working_directory)).item
+			if a_env /= Void and then not a_env.is_empty then
+				if a_env.is_string_32 then
+					create_flags := create_flags | cwin_create_unicode_environment
+				end
+				p_env := (create {C_STRING}.make (a_env)).item
+			end
+
+				--| Call
+			last_call_success := cpp_createprocess (item,
 										Default_pointer,
-										(create {UNI_STRING}.make (a_command_line)).item,
+										p_cmd,
 										Default_pointer,
 										Default_pointer,
 										(True).to_integer,
 										create_flags,
-										Default_pointer,
-										(create {UNI_STRING}.make (a_working_directory)).item,
+										p_env,
+										p_cwd,
 										startup_info.item,
 										process_info.item,
 										cwin_debug_no_specials_options,
@@ -161,12 +178,12 @@ feature {NONE} -- Implementation
 			"Initialize"
 		end
 
-	cpp_createprocess (obj: POINTER; 
+	cpp_createprocess (obj: POINTER;
 						a_name, a_cmdline, a_sec_process_attrib, a_sec_thread_attrib: POINTER;
 						a_inherit_handle: INTEGER;
 						a_flag: INTEGER;
 						a_environnement, a_directory, a_startup_info, a_process_info: POINTER;
-					 	a_cordebug_createprocess_flags: INTEGER; 
+					 	a_cordebug_createprocess_flags: INTEGER;
 						icordebugprocess: POINTER
 						): INTEGER is
 			-- Call `ICorDebug->CreateProcess'.
@@ -202,7 +219,7 @@ feature {NONE} -- Implementation
 		alias
 			"SetManagedHandler"
 		end
-		
+
 	cpp_set_unmanaged_handler (obj: POINTER; a_icordebug_unmanaged_callback: POINTER): INTEGER is
 		external
 			"[
@@ -211,7 +228,7 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"SetUnmanagedHandler"
-		end		
+		end
 
 	cpp_get_process (obj: POINTER; a_process_id: INTEGER; a_p_process: POINTER): INTEGER is
 		external
@@ -221,7 +238,7 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"GetProcess"
-		end		
+		end
 
 feature { EIFNET_DEBUGGER} -- Implementation exported to EIFNET_DEBUGGER
 
@@ -251,10 +268,10 @@ feature {NONE} -- Implementation routines
 
 	last_icd_unmanaged_callback: ICOR_DEBUG_UNMANAGED_CALLBACK
 		-- Last ICorDebugUnmanagedCallback associated with Current
-	
+
 	process_info: WEL_PROCESS_INFO
 			-- Process information
-	
+
 	startup_info: WEL_STARTUP_INFO is
 			-- Process startup information
 		do
@@ -263,28 +280,37 @@ feature {NONE} -- Implementation routines
 		end
 
 	cwin_create_new_console: INTEGER is
-				-- SDK CREATE_NEW_CONSOLE constant
-			external
-				"C macro use %"cli_headers.h%" "
-			alias
-				"CREATE_NEW_CONSOLE"
-			end
+			-- SDK CREATE_NEW_CONSOLE constant
+		external
+			"C macro use %"cli_headers.h%" "
+		alias
+			"CREATE_NEW_CONSOLE"
+		end
+
+	cwin_create_unicode_environment: INTEGER is
+			-- SDK CREATE_UNICODE_ENVIRONMENT constant
+			-- Environment variables passed to new process uses Unicode characters instead of ANSI characters.
+		external
+			"C macro use %"cli_headers.h%" "
+		alias
+			"CREATE_UNICODE_ENVIRONMENT"
+		end
 
 	cwin_debug_only_this_process: INTEGER is
-				-- SDK DEBUG_ONLY_THIS_PROCESS constant
-			external
-				"C macro use %"cli_headers.h%" "
-			alias
-				"DEBUG_ONLY_THIS_PROCESS"
-			end
+			-- SDK DEBUG_ONLY_THIS_PROCESS constant
+		external
+			"C macro use %"cli_headers.h%" "
+		alias
+			"DEBUG_ONLY_THIS_PROCESS"
+		end
 
 	cwin_debug_no_specials_options: INTEGER is
-				-- SDK DEBUG_NO_SPECIAL_OPTIONS constant
-			external
-				"C macro use %"cli_headers.h%" "
-			alias
-				"DEBUG_NO_SPECIAL_OPTIONS"
-			end
+			-- SDK DEBUG_NO_SPECIAL_OPTIONS constant
+		external
+			"C macro use %"cli_headers.h%" "
+		alias
+			"DEBUG_NO_SPECIAL_OPTIONS"
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1137,13 +1137,13 @@ feature -- Interaction with .Net Debugger
 			eif_debug_display ("[EIFDBG] " + a_title)
 		end
 
-	do_create_process is
+	do_create_process (cmd, cwd, args: STRING; env: STRING_GENERAL) is
 			-- Create Process
 		local
 			l_icd_process: POINTER
 			n: INTEGER
 		do
-			l_icd_process := icor_debug.create_process (debug_param_executable + " " + debug_param_arguments, debug_param_directory)
+			l_icd_process := icor_debug.create_process (cmd + " " + args, cwd, env)
 			if icor_debug.last_call_succeed then
 				n := {CLI_COM}.add_ref (l_icd_process)
 				set_last_controller_by_pointer (l_icd_process)
@@ -1151,10 +1151,10 @@ feature -- Interaction with .Net Debugger
 			end
 		end
 
-	do_run is
+	do_run (cmd, cwd, args: STRING; env: STRING_GENERAL) is
 			-- Start the process to debug
 		do
-			do_create_process
+			do_create_process (cmd, cwd, args, env)
 			waiting_debugger_callback ("run process")
 			last_dbg_call_success := icor_debug.last_call_success
 		end
@@ -1366,49 +1366,11 @@ feature -- Stepping Access
 			Result := icor_debug_controller /= Void and then icor_debug_thread /= Void
 		end
 
-feature -- Debuggee Session Parameters
-
-	debug_param_directory: STRING is
-			-- Directory from where the debugger runs the process
-		do
-			Result := Eifnet_debugger_info.param_directory
-		end
-
-	debug_param_executable: STRING is
-			-- Filename to the executable to debug
-		do
-			Result := Eifnet_debugger_info.param_executable
-		end
-
-	debug_param_arguments: STRING is
-			-- Arguments
-		do
-			Result := Eifnet_debugger_info.param_arguments
-		end
-
-feature -- Change Debuggee Session Parameters
-
-	set_debug_param_directory (a_dir: STRING) is
-		do
-			Eifnet_debugger_info.set_param_directory (a_dir)
-		end
-
-	set_debug_param_executable (a_exec: STRING) is
-		do
-			Eifnet_debugger_info.set_param_executable (a_exec)
-		end
-
-	set_debug_param_arguments (a_arg: STRING) is
-		do
-			Eifnet_debugger_info.set_param_arguments (a_arg)
-		end
-
 feature -- Tracer
 
 	eif_debug_display (msg: STRING) is
 		do
 		end
-
 
 feature -- Bridge to EIFNET_DEBUGGER_INFO
 

@@ -513,7 +513,7 @@ feature {NONE} -- Actions implementation
 		do
 			ctler ?= a_row.data
 			if ctler /= Void then
-				ctler.call_expand_actions (a_row)
+				ctler.call_expand_action (a_row)
 				process_columns_auto_resizing
 			end
 			request_columns_auto_resizing
@@ -528,7 +528,7 @@ feature {NONE} -- Actions implementation
 		do
 			ctler ?= a_row.data
 			if ctler /= Void then
-				ctler.call_collapse_actions (a_row)
+				ctler.call_collapse_action (a_row)
 			end
 			request_columns_auto_resizing
 		end

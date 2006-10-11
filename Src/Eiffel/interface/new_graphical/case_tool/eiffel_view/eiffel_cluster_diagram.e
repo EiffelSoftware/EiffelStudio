@@ -890,42 +890,60 @@ feature {NONE} -- Implementation
 		local
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
-			l_libs: ARRAYED_LIST [CONF_LIBRARY]
+			l_as: CONF_ASSEMBLY
+			l_phys_as: CONF_PHYSICAL_ASSEMBLY
+			l_assemblies: ARRAYED_LIST [CONF_ASSEMBLY]
 		do
 			l_cluster ?= a_cluster
 			l_lib ?= a_cluster
+			l_as ?= a_cluster
+			l_phys_as ?= a_cluster
 			if l_cluster /= Void then
 				if l_cluster.parent /= Void then
 					Result := model.cluster_from_interface (l_cluster.parent)
 				else
-					create Result.make (5)
-					l_libs := l_cluster.target.used_in_libraries
-					if l_libs /= Void then
-						from
-							l_libs.start
-						until
-							l_libs.after
-						loop
-							Result.append (model.cluster_from_interface (l_libs.item))
-							l_libs.forth
-						end
-					end
+					Result := library_usage_parents (l_cluster.target)
 				end
 			elseif l_lib /= Void then
+				Result := library_usage_parents (l_lib.target)
+			elseif l_as /= Void then
+				Result := library_usage_parents (l_as.target)
+			elseif l_phys_as /= Void then
 				create Result.make (5)
-				l_libs := l_lib.target.used_in_libraries
-				if l_libs /= Void then
-					from
-						l_libs.start
-					until
-						l_libs.after
-					loop
-						Result.append (model.cluster_from_interface (l_libs.item))
-						l_libs.forth
-					end
+				from
+					l_assemblies := l_phys_as.assemblies
+					l_assemblies.start
+				until
+					l_assemblies.after
+				loop
+					Result.append (model.cluster_from_interface (l_assemblies.item))
+					l_assemblies.forth
 				end
 			else
 				check error: False end
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	library_usage_parents (a_target: CONF_TARGET): ARRAYED_LIST [ES_CLUSTER] is
+			-- Return groups because of library usage of `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			l_libs: ARRAYED_LIST [CONF_LIBRARY]
+		do
+			create Result.make (5)
+			l_libs := a_target.used_in_libraries
+			if l_libs /= Void then
+				from
+					l_libs.start
+				until
+					l_libs.after
+				loop
+					Result.append (model.cluster_from_interface (l_libs.item))
+					l_libs.forth
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void

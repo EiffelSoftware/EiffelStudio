@@ -17,8 +17,9 @@ feature -- Visit nodes
 			-- Visit `a_system'.
 		local
 			l_targets: ARRAYED_LIST [CONF_TARGET]
+			l_retried: BOOLEAN
 		do
-			if not is_error then
+			if not l_retried then
 				from
 					l_targets := a_system.target_order
 					l_targets.start
@@ -30,7 +31,10 @@ feature -- Visit nodes
 				end
 			end
 		rescue
-			retry
+			if is_error then
+				l_retried := True
+				retry
+			end
 		end
 
 	process_target (a_target: CONF_TARGET) is

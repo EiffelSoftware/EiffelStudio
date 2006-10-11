@@ -53,11 +53,13 @@ feature -- Access
 		do
 			check is_compiled end
 			l_list := match_list_server.item (written_class.class_id)
-			check l_list /= Void end
-			Result := ast.original_text (l_list)
+			if l_list /= Void then
+				Result := ast.original_text (l_list)
+			else
+				Result := ""
+			end
 		ensure
 			result_attached: Result /= Void
-			not_result_is_empty: not Result.is_empty
 		end
 
 	first_line: INTEGER is

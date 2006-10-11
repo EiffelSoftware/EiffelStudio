@@ -323,10 +323,16 @@ feature{NONE} -- Implementation
 			not_compiled: not is_compiled
 		local
 			l_retried: BOOLEAN
+			l_text: STRING
 		do
 			if not l_retried then
-				roundtrip_eiffel_parser.parse_from_string (class_i.text)
-				Result := roundtrip_eiffel_parser.root_node.original_text (roundtrip_eiffel_parser.match_list)
+				l_text := class_i.text
+				if l_text /= Void then
+					roundtrip_eiffel_parser.parse_from_string (l_text)
+					Result := roundtrip_eiffel_parser.root_node.original_text (roundtrip_eiffel_parser.match_list)
+				else
+					Result := ""
+				end
 			end
 		ensure
 			result_attached: Result /= Void

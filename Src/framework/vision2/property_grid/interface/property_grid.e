@@ -120,21 +120,19 @@ feature -- Update
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		local
 			l_row: EV_GRID_ROW
-			l_item: EV_GRID_DRAWABLE_ITEM
+			l_item: EV_GRID_SPAN_LABEL_ITEM
 		do
 			if not sections.has (a_name) then
 				insert_new_row (row_count + 1)
 				l_row := row (row_count)
-				create l_item
-				l_item.expose_actions.extend (agent redraw_text (?, l_item))
-				l_item.set_data (a_name)
+				create l_item.make_master (1)
+				l_item.set_font (bold_font)
+				l_item.set_text (a_name)
 				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
 				l_item.select_actions.extend (agent clear_description)
 				l_row.set_item (1, l_item)
 
-				create l_item
-				l_item.expose_actions.extend (agent redraw_text (?, l_item))
-				l_item.set_data (a_name)
+				create l_item.make_span (1)
 				l_item.activate_actions.extend (agent switch_expand_section (l_row, ?))
 				l_item.select_actions.extend (agent clear_description)
 				l_row.set_item (2, l_item)
@@ -267,25 +265,6 @@ feature {NONE} -- Actions
 		do
 			if not sections.has_item (grid_item.row) then
 				Precursor {ES_GRID}(drawable, grid_item, a_column_index, a_row_index)
-			end
-		end
-
-	redraw_text (a_drawable: EV_DRAWABLE; an_item: EV_GRID_DRAWABLE_ITEM) is
-			-- Draw column spanned text.
-		local
-			l_text: STRING
-		do
-			a_drawable.set_foreground_color (separator_color)
-			a_drawable.fill_rectangle (0, 0, a_drawable.width, a_drawable.height)
-			a_drawable.set_foreground_color (foreground_color)
-			a_drawable.set_font (bold_font)
-
-			if an_item.column.index = 1 then
-				l_text ?= an_item.data
-				a_drawable.draw_text_top_left (3, 3, l_text)
-			else
-				l_text ?= an_item.data
-				a_drawable.draw_text_top_left (3 - (column (1).width - an_item.row.item (1).horizontal_indent), 3, l_text)
 			end
 		end
 

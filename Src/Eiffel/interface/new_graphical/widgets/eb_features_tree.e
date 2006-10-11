@@ -247,21 +247,19 @@ feature {EB_FEATURES_TOOL} -- Implementation
 			tree_item: EV_TREE_ITEM
 			name: STRING
 			expand_tree: BOOLEAN
-			class_text: STRING
 			retried: BOOLEAN
 			l_dev_win: EB_DEVELOPMENT_WINDOW
 			l_clauses: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
 		do
 			if not retried then
 				expand_tree := preferences.feature_tool_data.expand_feature_tree
-				class_text := features_tool.current_compiled_class.text
 				l_dev_win := Window_manager.last_focused_development_window
 				if l_dev_win /= Void then
 					l_clauses := l_dev_win.get_feature_clauses (a_class.name)
 				end
 				if l_clauses.is_empty then
 					extend (create {EV_TREE_ITEM}.make_with_text (Interface_names.l_compile_first))
-				elseif class_text /= Void then
+				else
 					from
 						l_clauses.start
 					until
@@ -295,11 +293,6 @@ feature {EB_FEATURES_TOOL} -- Implementation
 						extend (create {EV_TREE_ITEM}.make_with_text (
 							Warning_messages.w_no_feature_to_display))
 					end
-				else
-					wipe_out
-					extend (create {EV_TREE_ITEM}.make_with_text (
-						Warning_messages.w_cannot_read_file (
-							features_tool.current_compiled_class.file_name)))
 				end
 			else
 				wipe_out

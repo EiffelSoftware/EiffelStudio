@@ -186,7 +186,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 			if l_gs /= Void or l_cs /= Void then
 				if l_gs /= Void then
 					l_group := l_gs.group
-					if l_group.is_cluster and l_group.is_used_library then
+					if l_group.is_cluster and l_group.is_used_in_library then
 						l_group := l_group.target.lowest_used_in_library
 					end
 					current_system := l_group.target.system
@@ -196,7 +196,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 					properties.set_expanded_section_store (group_section_expanded_status)
 				elseif l_cs /= Void then
 					l_group := l_cs.class_i.group
-					if l_group.is_used_library then
+					if l_group.is_used_in_library then
 						l_group := l_group.target.lowest_used_in_library
 					end
 					current_system := l_group.target.system

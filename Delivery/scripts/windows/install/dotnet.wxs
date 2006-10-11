@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="dotnet" Guid="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Language="0" Version="5.7">
+	<Module Id="dotnet" Guid="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Language="0" Version="6.0">
 		<Package Id="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Keywords="MergeModule, MSI, Database" Description="Eiffel for .NET Support" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Component Id="registry" Guid="1E275E79-401F-4B47-A0DE-E1B839C1D8F0" Win64="$(var.IsWin64)" >

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="$(var.ISE_MODULE_NAME)" Guid="E23C87E4-4376-4D45-85C1-B2234AB7AF68" Language="0" Version="5.7">
+	<Module Id="$(var.ISE_MODULE_NAME)" Guid="E23C87E4-4376-4D45-85C1-B2234AB7AF68" Language="0" Version="6.0">
 		<Package Id="E23C87E4-4376-4D45-85C1-B2234AB7AF68" Keywords="MergeModule, MSI, Database" Description="$(var.ISE_PRODUCT_NAME)" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="Application" Name="." >

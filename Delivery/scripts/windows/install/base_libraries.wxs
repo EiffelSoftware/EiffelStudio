@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="base_libraries" Guid="4004275F-B3A3-4A76-A234-BE50E5C3382A" Language="0" Version="5.7">
+	<Module Id="base_libraries" Guid="4004275F-B3A3-4A76-A234-BE50E5C3382A" Language="0" Version="6.0">
 		<Package Id="4004275F-B3A3-4A76-A234-BE50E5C3382A" Keywords="MergeModule, MSI, Database" Description="Base libraries" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" Comments="Base libraries" />
 	<Directory Id="TARGETDIR" Name="SourceDir">
 		<Directory Id="Application" Name=".">

@@ -129,7 +129,9 @@ feature -- Access (Group)
 			if l_pos > 0 then
 				if a_id.substring (1, l_pos-1).is_equal ("assembly") then
 					Result := universe.target.all_assemblies.item (a_id.substring (l_pos+1, a_id.count))
-					last_group_name := Result.name
+					if Result /= Void then
+						last_group_name := Result.name
+					end
 				end
 			end
 			if Result = Void then

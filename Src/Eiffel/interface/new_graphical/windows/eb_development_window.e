@@ -3079,7 +3079,7 @@ feature {NONE} -- Implementation
 
 						-- class stone was dropped
 					create class_file.make (new_class_stone.class_i.file_name)
-					class_text_exists := class_file.exists
+					class_text_exists := class_file.exists or else new_class_stone.class_i.is_external_class
 					feature_stone ?= a_stone
 						--| We have to create a classi_stone to check whether the stones are really similar.
 						--| Otherwise a redefinition of same_as may be called.

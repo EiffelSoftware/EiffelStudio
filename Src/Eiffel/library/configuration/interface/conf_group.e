@@ -479,7 +479,8 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 					if l_ovs /= Void and then l_ovs.count > 0 then
 						l_overridee := l_ovs.first
 						if l_overridee.is_overriden then
-							set_error (create {CONF_ERROR_MULOVER}.make (l_overridee.name))
+							set_error (create {CONF_ERROR_MULOVER}.make (l_overridee.name, l_overridee.full_file_name,
+									l_overridee.actual_class.full_file_name, l_overrider.full_file_name))
 						else
 							l_overridee.set_overriden_by (l_overrider)
 							l_overrider.add_does_override (l_overridee)

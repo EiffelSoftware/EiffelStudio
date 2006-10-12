@@ -16,12 +16,18 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: STRING) is
+	make (a_class, a_location, a_first, a_second: STRING) is
 			-- Create.
 		require
 			a_class_not_void: a_class /= Void
+			a_location_not_void: a_location /= Void
+			a_first_not_void: a_first /= Void
+			a_second_not_void: a_second /= Void
 		do
-			text := "Class "+a_class.as_upper+" is overriden by multiple classes."
+			text := "Found multiple overrides for class "+a_class+"%N"
+						+"Original: "+a_location+"%N"
+						+"First override: "+a_first+"%N"
+						+"Second override:"+a_second+"%N"
 		end
 
 feature -- Access

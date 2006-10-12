@@ -218,6 +218,7 @@ feature {NONE} -- Implementation
 				Result := old_assemblies.item (l_guid)
 				if Result /= Void then
 					old_assemblies.remove (l_guid)
+					Result.set_target (application_target)
 						-- has the assembly been modified?
 					if Result.has_date_changed then
 							-- update information

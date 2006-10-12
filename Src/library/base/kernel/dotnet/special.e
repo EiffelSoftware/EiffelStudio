@@ -44,7 +44,8 @@ feature {NONE} -- Initializaiton
 		do
 			internal_native_array ?= an_array.clone
 		ensure
-			native_array_set: native_array.equals (an_array)
+				-- Commented because `equals' in .NET does not compare the content of arrays.
+--			native_array_set: native_array.equals (an_array)
 		end
 
 feature -- Access

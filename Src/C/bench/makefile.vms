@@ -1,12 +1,14 @@
 ########################################################################
-# Makefile generated from Makefile.SH on Fri Nov 18 08:54:49 PST 1994
+# Makefile.VMS generated from Makefile.SH on Fri Nov 18 08:54:49 PST 1994
+# .../C/bench/Makefile.VMS
 # hand edited for C/bench on VMS
-
+# $Id$
+########################################################################
 SHELL = /bin/sh
 JMAKE = jmake
-TOP = [-]
-CURRENT = [.platform
-DIR = $(CURRENT)]
+#TOP = [-]
+CURRENT = bench
+#DIR = [.bench]
 
 ########################################################################
 # Parameters set by Configure -- edit config.sh if changes are needed
@@ -26,7 +28,7 @@ SED = /bin/sed
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  $(LSRC)
+SOURCES =  \$(LSRC) \$(PSTORE)
 OBJECTS =  $(LOBJ)
 
 ########################################################################
@@ -51,51 +53,76 @@ all :: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-# define vms specific symbols for compiling, etc.
-#include $(TOP)makeinc.vms
-include [-]makeinc.vms
-# to compile for debugging, say	    make <target> "DEBUG_CFLAGS=/debug/noopt"
-# to compile for distribution, say  make <target> "DEBUG_CFLAGS="
-#                              or   make <target> "DEBUG_CFLAGS=/opt"
-
-LIBRUN = ../run-time
-
 #DPFLAGS = /prefix=all/incl=([-],[-.run-time])
 #CINCLUDES = /incl=($(TOP),[-.run-time],[-.run-time.include],[-.minilzo])
-CINCLUDES = /incl=($(DECC_INCLUDES),[-.run-time],[-.run-time.include],[-.minilzo],[-.idrs])
+#CINCLUDES = /incl=($(DECC_INCLUDES),[-.run-time],[-.run-time.include],[-.minilzo],[-.idrs])
+CINCLUDES = [-.run-time],[-.run-time.include],[-.minilzo],[-.idrs]
+#CDEFINES = BENCH_TEST
+
 # Presumably, these modules are used only by es3
 DPFLAGS = $(CINCLUDES)$(CDEFINES)
-CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
+#CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
 
-LSRC = pstore.c pretrieve.c date.c encode.c offset.c byte.c
-
-LOBJ = $(patsubst %.c,%.obj,$(LSRC))
-DEPEND = makefile
-$(LOBJ) :: $(DEPEND)		# make objects depend on this makefile 
+# define vms specific symbols for compiling, etc.
+include EIFFEL_SRC:[C]makeinc.VMS
 
 
-#THISLIB = platform.olb
+# Files used to build the daemon
+LSRC = byte.c date.c encode.c offset.c minilzo.c
+PSTORE = pstore.c pretrieve.c
+
+# Derived object file names
+FOBJ = byte.obj date.obj encode.obj offset.obj minilzo.obj pstore.obj pretrieve.obj 
+WOBJ = byte.obj date.obj encode.obj offset.obj minilzo.obj pstore.obj_wk pretrieve.obj_wk
+#MT_FOBJ = MTbyte.obj MTdate.obj MTencode.obj MToffset.obj MTminilzo.obj MTpstore.obj MTpretrieve.obj 
+#MT_WOBJ = MTbyte.obj MTdate.obj MTencode.obj MToffset.obj MTminilzo.obj MTwpstore.obj MTwpretrieve.obj 
+
+LOBJ = $(FOBJ) $(WOBJ) $(MT_FOBJ) $(MT_WOBJ)
+
+DEPENDENCIES = $(TOP)/eif_config.h $(TOP)/eif_portable.h $(TOP)/eif_confmagic.h $(MAKEFILE_DEPENDENCIES) 
+$(LOBJ) : $(DEPENDENCIES)	# make objects depend on local Makefile
+
+
 THISLIB = compiler.olb
-LIBS = $(THISLIB)
+MTLIB = compiler_MT.olb		# this is a hack, fix it later
+WKLIB = compiler_wk.olb
+LIBS = $(THISLIB) $(MTLIB) $(WKLIB)
 
 all :: $(LIBS)
 complete : FORCE all
 FORCE:
 
-LISTINGS = $(patsubst %.obj,%.lis,$(LOBJ)) $(patsubst %.obj,%.lis,$(LOBJ_CS))
-listings : $(DEPEND) $(LISTINGS)
-#listings : $(patsubst %.obj,%.lis,$(LOBJ)) $(patsubst %.obj,%.lis,$(LOBJ_CS))
-	@write sys$$output "listings = $(LISTINGS)"
+#LISTINGS = $(patsubst %.obj,%.lis,$(LOBJ))
+LISTINGS = $(patsubst %.obj,%.lis,$(FOBJ)) $(patsubst %.obj_wk,%.lis_wk,$(WOBJ)) $(patsubst %.obj,%.lis,$(MT_FOBJ)) $(patsubst %.obj,%.lis,$(MT_WOBJ)) 
+$(LISTINGS) : $(MAKEFILE_DEPENDENCIES) 
+listings : $(LISTINGS)
+#	@write sys$$output "listings = $(LISTINGS)"
+#	@write sys$$output "Dependents: $^"
 
-local_realclean::
-#	$(RM) libplatform.a
-	$(RM) *.obj;* # , $(THISLIB);*
 
-#$(THISLIB) :: $(LOBJ)
-$(THISLIB) :: $(LOBJ) # $(DEPEND)
-#	libr/create $@ $(LOBJ)
-#	libr/create $@ $(patsubst %.obj,%.obj$(COMMA),$(LOBJ)) nl:
+local_realclean ::
+	-$(RM) *.obj*;*,*.olb;*
+	if f$$search("*.dia") .nes. "" then $(RM) *.dia;*
+
+$(LIBs) : $(MAKEFILE_DEPENDENCIES)
+all :: compiler.olb
+
+compiler.olb : $(FOBJ)
 	libr/create $@ $^
+	@-purge/nolog $@,*.obj*
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+# this is a hack, fix it later
+$(MTLIB) : $(THISLIB)
+	backup/log $?;0 $@
+	-purge/nolog $@
+
+$(WKLIB) : $(WOBJ)
+	libr/create $@ $^
+	@-purge/nolog $@,*.obj*
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+.SUFFIXES : .obj_wk
 
 
 depend:: ../mkdep
@@ -126,7 +153,7 @@ clobber: local_clobber
 
 local_clean::
 #	$(RM) core *~ *.o
-	-$(RM) *.obj;*,*.dia;*,*.olb;*
+	-$(RM) *.obj*;*,*.dia;*,*.olb;*
 
 local_realclean:: local_clean
 
@@ -153,6 +180,12 @@ tags::
 local_clobber::
 	$(RM) tags
 
+
+show ::
+	@write sys$$output "$(CURRENT): $$(LOBJ) = $(LOBJ)"
+	@write sys$$output "$(CURRENT): $$(WOBJ) = $(WOBJ)"
+	@write sys$$output "$(CURRENT): $$(LISTINGS) = $(LISTINGS)"
+
 ########################################################################
 # Empty rules for directories with no sub-directories -- do not edit
 
@@ -175,6 +208,7 @@ Makefiles.SH::
 ########################################################################
 # Dependencies generated by make depend
 # DO NOT DELETE THIS LINE -- make depend relies on it
+minilzo.obj : minilzo.c minilzo.h lzoconf.h 
 names.obj :  names.c
 names.obj : [-]eif_portable.h
 names.obj : [-]eif_confmagic.h

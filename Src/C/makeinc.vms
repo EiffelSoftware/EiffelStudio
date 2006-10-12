@@ -1,22 +1,96 @@
 #######################################################################
-# makeinc.vms (EIFFEL_SRC:[C]makeinc.vms) - vms/axp
-# top level makeinc.vms
+# Makeinc.VMS (EIFFEL_SRC:[C]Makeinc.VMS) - vms/axp (Eiffel 5.6.0503)
+# top level Makeinc.VMS for Eiffel 5.7.xxx (32/64 bit)
 # $Id$
+#
+#######################################################################
+# Rules for individual Makefile.VMS:
+# CURRENT = (unix) relative path
+# DIR = VMS absolute path
+# CINCLUDES
+# CDEFINES
 #######################################################################
 #
 # Boy, I sure do wish this worked.
 #DECC_FLAGS_OPENVMSVAX = /vax
 #DECC_FLAGS_OPENVMSAXP = /axp
 #DECC_FLAGS = $(DECC_FLAGS_)$(PLATFORM)
-MY_PLATFORM = vms-axp
-# I _really_ wish this could come from the environment!
-#PLATFORM = OpenVMSAXP
-ISE_PLATFORM = VMSAlpha
-VMS_JACKETS = "EIFFEL_SRC/C_library/VMS/Porting_A4"
+#MY_PLATFORM = vms-axp
 
-TOP = [C]
-#DECC_INCLUDES = [],$(TOP),vms_jackets_root:[include]
-DECC_INCLUDES = vms_jackets_root:[include],$(TOP),[]
+# used for replacing spaces with commas: $(subst $(SPACE),$(COMMA),$(OBJECTS))
+EMPTY :=
+SPACE := $(EMPTY) $(EMPTY)
+COMMA := ,
+
+# used for dependencies in local makefiles: name of local makefile
+EIFFEL_SRC_C_TOP = /EIFFEL_SRC/C
+ifeq ($(TOP),)
+TOP = $(EIFFEL_SRC_C_TOP)
+TOPDIR = EIFFEL_SRC:[C
+endif
+LOCAL_MAKEFILE = $(TOP)/$(CURRENT)/Makefile.VMS
+MAKEFILE_DEPENDENCIES = $(subst :,\:,$(MAKEFILE_LIST))
+#EXTRA_DEPENDENCIES = [C]eif_config.h [C]eif_portable.h [C.run-time]eif_size.h [C.run-time]eif_vmsdef.h $(MAKEFILE_DEPENDENCIES) 
+EXTRA_DEPENDENCIES = [C]eif_config.h [C]eif_portable.h $(MAKEFILE_DEPENDENCIES) 
+
+# Individual Makefiles should define (if necessary) CDEFINES, CINCLUDES as comma separated lists;
+# this file constructs DECC_INCLUDES and DECC_DEFINES
+# see .c.obj rule below.
+
+ifeq ($(TOP),$(EIFFEL_SRC_C_TOP))
+DECC_INCLUDES = VMS_JACKETS_INCLUDE,$(TOPDIR)]
+else
+DECC_INCLUDES = VMS_JACKETS_INCLUDE,ISE_EIFFEL:[studio.spec.$(ISE_PLATFORM).include]
+endif
+
+ifneq "$(CINCLUDES)" ""
+DECC_INCLUDES += ,$(CINCLUDES)
+endif
+ifneq ($(MY_CINCLUDES),)
+DECC_INCLUDES += ,$(MY_CINCLUDES)
+endif
+
+#TOP_CDEFINES = EIF_THREADSxxx
+
+ifneq ($(TOP_CDEFINES),)
+DECC_DEFINES = $(TOP_CDEFINES)
+endif
+
+ifneq ($(CDEFINES),)
+ifneq ($(DECC_DEFINES),)
+DECC_DEFINES += ,$(CDEFINES)
+else
+DECC_DEFINES = $(CDEFINES)
+endif
+endif
+
+ifneq ($(DECC_DEFINES),)
+DECC_DEFINES_MT := $(DECC_DEFINES),EIF_THREADS
+DECC_DEFINES_WORKBENCH := $(DECC_DEFINES),WORKBENCH
+DECC_DEFINES_MT_WORKBENCH := $(DECC_DEFINES),EIF_THREADS,WORKBENCH
+DECC_DEFINES_NOHOOK := $(DECC_DEFINES),NOHOOK
+DECC_DEFINES_MT_NOHOOK := $(DECC_DEFINES),EIF_THREADS,NOHOOK
+else
+DECC_DEFINES_MT = EIF_THREADS
+DECC_DEFINES_WORKBENCH := WORKBENCH
+DECC_DEFINES_MT_WORKBENCH := EIF_THREADS,WORKBENCH
+DECC_DEFINES_NOHOOK := NOHOOK
+DECC_DEFINES_MT_NOHOOK := EIF_THREADS,NOHOOK
+endif
+
+ifneq ($(MY_CDEFINES),)
+ifneq ($(DECC_DEFINES),)
+DECC_DEFINES += ,$(MY_CDEFINES)
+else
+DECC_DEFINES = $(MY_CDEFINES)
+endif
+DECC_DEFINES_MT += ,$(MY_CDEFINES)
+DECC_DEFINES_WORKBENCH += ,$(MY_CDEFINES)
+DECC_DEFINES_MT_WORKBENCH += ,$(MY_CDEFINES)
+DECC_DEFINES_NOHOOK += ,$(MY_CDEFINES)
+DECC_DEFINES_MT_NOHOOK += ,$(MY_CDEFINES)
+endif
+
 
 
 # Make is supposed to pick up "environment variables" which, on VMS,
@@ -27,25 +101,60 @@ DECC_INCLUDES = vms_jackets_root:[include],$(TOP),[]
 AR = libr/create
 COPY = copy
 LINKFLAGS = $(DEBUG_LINKFLAGS)$(EIF_LINKFLAGS)$(MY_LINKFLAGS)
-MKDIR = create/directory/vers=3
+MKDIR = create/directory/version_limit=3
 
 
 # symbols for C compiles
+#CC = cc
+DECC_OBJFLAGS = /prefix=all/name=(as_is,short)/float=ieee/ieee=denorm
+ifeq ($(ISE_PLATFORM),VMSAlpha)
+CC = cc/decc
+else ifeq ($(ISE_PLATFORM),VMSAlpha32)
+CC = cc/decc
+else ifeq ($(ISE_PLATFORM),VMSAlpha64)
+CC = cc/decc
+DECC_OBJFLAGS := $(DECC_OBJFLAGS)/point=64
+else
+CC = cc/ERROR: ISE_PLATFORM_UNDEFINED
+endif
+
+
 # to compile for debugging:	make <target> "DEBUG_CFLAGS=/debug/noopt"
-# to compile for distribution:	make <target> "DEBUG_CFLAGS="
-#			or	make <target> "DEBUG_CFLAGS=/opt"
-# (DEC C default is /optimize /nodebug)
-#DEBUG_CFLAGS = 
+# to compile for distribution:	make <target> "DEBUG_CFLAGS=<optflags>"
+#   where <optflags> is empty or any combination of /opt, /nowarn, etc.
+#   (DEC C default is /optimize /nodebug [actually, /debug=[traceback,nosymbols)]
+#   Other useful DEC C compilation flags:
+#	/check
+DEBUG_CFLAGS = /debug/noopt
 # temp, while debugging - dss
-DEBUG_CFLAGS = /debug/noopt # /check=(uninit,point=all)/diag
+#DEBUG_CFLAGS = /debug/noopt/check=(uninit,point=all)
 
 # definitions and rules for compiling C sources into objects
 # individual makefiles define the CFLAGS macro with local requirements
 # the following flags are required for using Eiffel built with GTK.
 # See GTK Release Notes for more information.
 #DECC_FLAGS = /prefix=all/name=as_is$(DEBUG_CFLAGS)
-DECC_FLAGS = /prefix=all/name=(as_is,shorten)/float=ieee/ieee=denorm $(DEBUG_CFLAGS)$(EIF_CFLAGS)$(MY_CFLAGS)
+#DECC_FLAGS = /prefix=all/name=(as_is,shorten)/float=ieee/ieee=denorm $(DEBUG_CFLAGS)$(EIF_CFLAGS)$(MY_CFLAGS)
 #DECC_FLAGS = /diag/prefix=all$(DEBUG_CFLAGS)$(EIF_CFLAGS)
+DECC_FLAGS = $(DECC_OBJFLAGS)$(DEBUG_CFLAGS)$(EIF_CFLAGS)
+
+# Individual Makefiles should define (if necessary) CDEFINES, CINCLUDES as comma separated lists
+# We want MY_CFLAGS to be after all others
+
+#CFLAGS = $(DECC_FLAGS)/INCLUDE=($(DECC_INCLUDES),$(CINCLUDES),$(MY_CINCLUDES))/DEFINE=($(DECC_DEFINES),$(CDEFINES),$(MY_CDEFINES))
+CFLAGS	    = $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES))
+CFLAGS_MT = $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES)) /DEFINE=($(DECC_DEFINES_MT))
+CFLAGS_WK   = $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES)) /DEFINE=($(DECC_DEFINES_WORKBENCH))
+CFLAGS_WORKBENCH = $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES)) /DEFINE=($(DECC_DEFINES_WORKBENCH))
+CFLAGS_NOHOOK = $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES)) /DEFINE=($(DECC_DEFINES_NOHOOK))
+ifneq ($(DECC_DEFINES),)
+CFLAGS += /DEFINE=($(DECC_DEFINES))
+endif
+
+# default for generating list file.
+# To see full text of include files, override with  "LISTFLAGS=/show=(expan,cross,include)"
+#LISTFLAGS = /show=(cross_reference,expansion,include)
+LISTFLAGS = /show=(cross,expan)
 
 #GTK_PATH = EIFFEL_SRC:[C_library.VMS.GTK_1210]
 GTK_PATHU = /EIFFEL_SRC/C_library/VMS/gtk_1210
@@ -53,37 +162,113 @@ GTK_CFLAGS =
 #GTK_CINCLUDES = "/ISE_EIFFEL/gtk128/gtk","/ISE_EIFFEL/gtk128/glib"
 GTK_CINCLUDES = "$(GTK_PATHU)/gtk","$(GTK_PATHU)/glib"
 GTK_LINKFLAGS = $(GTK_PATH)VMS_LINK.OPT/OPT
-# the following is for testing porpoises only
-#TOP_CDEFINES = "top_cdefines=YoDude"
 
-# The following allows different flags for case-sensitive, if necessary.
-# It may be overriden by individual makefiles
-#CSSUF = _CS
-#CFLAGS_CS = $(CFLAGS)
-CSSUF =
 
-.c.obj : 
-	$(CC) $</obj=$@ $(CFLAGS) 
+#.SUFFIXES : .lis .i .obji .dia
+.PRECIOUS : %.lis %.i
 
+
+#.c.obj :
+%.obj : %.c
+	$(CC) $</obj=$@ $(CFLAGS) $(MY_CFLAGS)
+
+#MT%.obj : %.c -- doesn't work with gmake 3.81 on VMS; gmake must be doing a lowercase coercion somewhere
+mt%.obj : %.c
+	$(CC) $</obj=$@ $(CFLAGS_MT) $(MY_CFLAGS)
+%.obj_mt : %.c
+	$(CC) $</obj=$@ $(CFLAGS_MT) $(MY_CFLAGS)
+
+w%.obj : %.c
+	$(CC) $</obj=$@ $(CFLAGS_WORKBENCH) $(MY_CFLAGS)
+%.obj_wk : %.c
+	$(CC) $</obj=$@ $(CFLAGS_WORKBENCH) $(MY_CFLAGS)
+
+b%.obj : %.c
+	$(CC) $</obj=$@ $(CFLAGS_NOHOOK) $(MY_CFLAGS)
+%.obj_b : %.c
+	$(CC) $</obj=$@ $(CFLAGS_NOHOOK) $(MY_CFLAGS)
+
+%.lis : %.c
+	$(CC)/noobj $< $(CFLAGS) /list=$@$(LISTFLAGS) $(MY_CFLAGS)$(MY_LISTFLAGS)
+mt%.lis : %.c
+	$(CC)/noobj $< $(CFLAGS_MT) /list=$@$(LISTFLAGS) $(MY_CFLAGS)$(MY_LISTFLAGS)
+w%.lis : %.c
+	$(CC)/noobj $< $(CFLAGS_WORKBENCH) /list=$@$(LISTFLAGS) $(MY_CFLAGS)$(MY_LISTFLAGS)
+
+
+# suffix rules are obsolete; replace with pattern rules (as above)
+#.c.obj_wk :
+#	$(CC) $</obj=$@ $(CFLAGS_WK) $(MY_CFLAGS)/NONONO
+
+.c.lis :
+	-$(CC)/noobj $< $(CFLAGS)/list=$@ $(LISTFLAGS) $(MY_CFLAGS)$(MY_LISTFLAGS)
 
 # Rule to generate preprocessed output. Needs include file list macro.
-.SUFFIXES : .i .obji .lis  # .i$(CSSUF) .lis$(CSSUF)
-#.PRECIOUS : .i .lis  # .i$(CSSUF) .lis$(CSSUF)
 .c.i :
-#	- $(CC) $< $(CFLAGS)/nolist/noobj/nodiag/preprocess=$@ 
-	$(CC) $(CINCLUDES)$(CDEFINES) $< /noobj/preprocess=$@
-.c.lis : 
-#	- $(CC) $</list=$@ $(CFLAGS)/noobj/nodiag/show=expan$(LISTFLAGS)$(MY_LISTFLAGS)
-	- $(CC) $</list=$@ $(CFLAGS)/noobj/show=expan$(LISTFLAGS)$(MY_LISTFLAGS)
+	$(CC)/noobj $</preprocess=$@/comment $(DECC_INCLUDES)$(DECC_DEFINES) $(MY_CFLAGS)
 
-#ifneq ($(CSSUF),)
-#.c.i$(CSSUF) :
-##	$(CC) $(CINCLUDES) $(CDEFINES) $</noobj/preprocess=$@
-#	$(CC) $< $(CFLAGS$(CSSUF))/noobj/nodiag/preprocess=$@
-#.c.lis$(CSSUF) :
-#	$(CC) $</list=$@/noobj $(CFLAGS$(CSSUF)) 
-#endif
+# compiler diagnostics file
+.c.dia :
+	-$(CC) $< $(CFLAGS)/diag/noobj $(MY_CFLAGS)
 
+# generate object file from intermediate (preprocessed output) file
 .i.obji :
-	$(CC) $</obj=$@ $(CFLAGS)
+	$(CC) $</obj=$@ $(CFLAGS) $(MY_CFLAGS)
 
+
+# force "all" to be the default target 
+# it needs a :: here to ensure that it runs all the rules in individual Makefile.VMS.
+# if it has a :: here, must not have a : in individual Makefile.VMS files
+all ::
+#	write sys$$output "[C]Makeinc.VMS  $@: $$(CURRENT) = $(CURRENT), $$(LOCAL_MAKEFILE) = $(LOCAL_MAKEFILE)"
+
+dump : show
+
+show_macro :
+	@write sys$$output "[C]Makeinc.VMS $@: $$($(SHOW)) = $($(SHOW))"
+
+
+show ::
+	@write sys$$output "[C]Makeinc.VMS $@: $$(ISE_PLATFORM) = ""$(ISE_PLATFORM)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(TOP) = ""$(TOP)""  $$(TOPDIR) = ""$(TOPDIR)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(CURDIR) = ""$(CURDIR)""  $$(CURRENT) = ""$(CURRENT)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(LOCAL_MAKEFILE) = ""$(LOCAL_MAKEFILE)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(MAKE) = ""$(MAKE)""  $$(MAKEFLAGS) = ""$(MAKEFLAGS)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(MAKEFILE_LIST) = ""$(MAKEFILE_LIST)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(MAKEFILES) = ""$(MAKEFILES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(MAKEFILE_DEPENDENCIES) = ""$(MAKEFILE_DEPENDENCIES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(EXTRA_DEPENDENCIES) = ""$(EXTRA_DEPENDENCIES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(ALL_DEPENDENCIES) = ""$(ALL_DEPENDENCIES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(LOCAL_DEPENDENCIES) = ""$(LOCAL_DEPENDENCIES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(MAKEINC_DEPENDENCIES)  = ""$(MAKEINC_DEPENDENCIES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(DECC_INCLUDES) = ""$(DECC_INCLUDES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(CINCLUDES) = ""$(CINCLUDES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(TOP_CDEFINES) = ""$(TOP_CDEFINES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(CDEFINES) = ""$(CDEFINES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(strip $$(CDEFINES)) = ""$(strip $(CDEFINES))"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(strip CDEFINES) = ""$(strip CDEFINES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(origin CDEFINES) = ""$(origin CDEFINES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(LOCAL_CDEFINES) = ""$(LOCAL_CDEFINES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(MY_CDEFINES) = ""$(MY_CDEFINES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(DECC_DEFINES) = ""$(DECC_DEFINES)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(DECC_DEFINES_WORKBENCH) = ""$(DECC_DEFINES_WORKBENCH)"""
+ifeq ($(CDEFINES),)
+	@write sys$$output "CDEFINES blank"
+else
+	@write sys$$output "CDEFINES nonblank"
+endif
+ifdef CDEFINES
+	@write sys$$output "CDEFINES defined"
+else
+	@write sys$$output "CDEFINES undefined"
+endif
+#ifeq ($(CDEFINES),)
+#	@write sys$$output "CDEFINES blank"
+#else
+#	@write sys$$output "CDEFINES nonblank"
+#endif
+	@write sys$$output "[C]Makeinc.VMS $@: $$(DECC_FLAGS) = ""$(DECC_FLAGS)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(CFLAGS) = ""$(CFLAGS)"""
+	@write sys$$output "[C]Makeinc.VMS $@: $$(LOCAL_MAKEFILE): $(LOCAL_MAKEFILE)"
+
+# end EIFFEL_SRC:[C]Makeinc.VMS

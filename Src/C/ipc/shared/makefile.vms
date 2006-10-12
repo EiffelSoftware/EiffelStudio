@@ -1,15 +1,15 @@
 ########################################################################
 # Makefile generated from Makefile.SH on Fri Nov 18 08:54:02 PST 1994
-#   .../C/ipc/shared/makefile
-#
+#   .../C/ipc/shared/Makefile.vms
+# $Id$
 
 SHELL = /bin/sh
 JMAKE = jmake
 #TOP = ../..
-TOP = [--]
-TOPDIR = ../..
+#TOP = [C]
+#TOPDIR = ../..
 #TOP = $(TOPDIR)]
-CURRENT = [.ipc.shared]
+CURRENT = ipc/shared
 #DIR = [.ipc.shared]
 
 ########################################################################
@@ -56,41 +56,22 @@ OBJECTS =  $(LOBJ)
 ########################################################################
 # Start of Jmakefile
 
-# define vms specific symbols for compiling, etc.
-#include eiffelc:makeinc.vms
-include ../makeinc.vms		# ipc common definitions
-
-# to compile for debugging, say	    make <target> "DEBUG_CFLAGS=/debug/noopt"
-# to compile for distribution, say  make <target> "DEBUG_CFLAGS="
-#                              or   make <target> "DEBUG_CFLAGS=/opt"
 #DPFLAGS = /prefix=all/incl=($(TOP),$(LIBRUN),$(LIBIDR))
 
 #CINCLUDES = /INCL=($(TOP),[--.run-time],[--idrs],[--.run-time.include])
-CINCLUDES = /INCL=($(DECC_INCLUDES),[--.run-time],[--.idrs],[--.run-time.include])
+#CINCLUDES = [--.run-time],[--.idrs],[--.run-time.include]
+
 #CDEFINES = /define=(WORKBENCH,USE_ADD_LOG,DEBUG)
-LOCAL_CDEFINES = WORKBENCH
-#CDEFINES = /define=($(IPC_CDEFINES)$(LOCAL_CDEFINES))
-ifneq ($(LOCAL_CDEFINES),)
-ifneq ($(IPC_CDEFINES),)
-CDEFINES = /DEF=($(LOCAL_CDEFINES),$(IPC_CDEFINES))
-else
-CDEFINES = /DEF=($(LOCAL_CDEFINES))
-endif
-else
-ifneq ($(IPC_CDEFINES),)
-CDEFINES = /DEF=($(IPC_CDEFINES))
-else
-#CDEFINES = 
-endif
-endif
+CDEFINES = WORKBENCH,EIF_IPC
 
-DPFLAGS = $(CINCLUDES)$(CDEFINES)
-CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
-
-THIS_MAKEFILE = Makefile
-MAKEINC_DEPENDENCIES = ../makeinc.vms ../../makeinc.vms	    # EIFFEL_SRC:[C.ipc]makeinc.vms EIFFEL_SRC:[C]makeinc.vms 
+# define vms specific symbols for compiling, etc.
+include EIFFEL_SRC:[C.IPC]Makeinc.VMS
 
 
+#DPFLAGS = $(CINCLUDES)$(CDEFINES)
+#CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
+
+LOCAL_DEPENDENCIES = $(MAKEFILE_DEPENDENCIES) $(TOP)/eif_config.h $(TOP)/eif_portable.h $(TOP)/eif_confmagic.h
 
 #LIBRUN = [--.run-time]
 #LIBIDR = [--.idrs]
@@ -98,56 +79,49 @@ MAKEINC_DEPENDENCIES = ../makeinc.vms ../../makeinc.vms	    # EIFFEL_SRC:[C.ipc]
 LSRC =	ipcvms.c    \
 	com.c identify.c lock.c logfile.c network.c \
 	select.c shword.c stack.c stream.c system.c \
-	transfer.c rqst_idrs.c \
-	#ipcvms.c # vms_select.c
+	transfer.c rqst_idrs.c
 
 #LOBJ = ipcvms.obj  \
-	com.obj identify.obj lock.obj logfile.obj network.obj \
-	select.obj shword.obj stack.obj stream.obj system.obj \
-	transfer.obj rqst_idrs.obj \
-	# ipcvms.obj # vms_select.obj
+#	com.obj identify.obj lock.obj logfile.obj network.obj \
+#	select.obj shword.obj stack.obj stream.obj system.obj \
+#	transfer.obj rqst_idrs.obj
 
 LOBJ = $(patsubst %.c,%.obj,$(LSRC))
-#LOBJ_CS = $(patsubst %.c,%.obj_cs,$(LSRC))
 
-# LOBJ target with comma separator, not necessary if $^ target used
-#LOBJS = com.obj,identify.obj,lock.obj,logfile.obj,network.obj,\
-	select.obj,shword.obj,stack.obj,stream.obj,system.obj,\
-	transfer.obj,rqst_idrs.obj,\
-	ipcvms.obj  # vms_select.obj
+$(OBJECTS) : ipcvms.h $(EXTRA_DEPENDENCIES)
 
-# make all objects dependent on ipcvms.h tho' not all need it
-$(LOBJ) $(LOBJ_CS) : ipcvms.h
-# ditto this makefile and make include files
-$(LOBJ) $(LOBJ_CS) : $(THIS_MAKEFILE) $(MAKEINC_DEPENDENCIES)
 
 LIBS	= ipc.olb # ipc.olb_cs
 
 all :: $(LIBS)
-#	@write sys$$output "Making libraries $(LIBS) $^"
-#	@write sys$$output "Making libraries  $^"
 
 local_realclean ::
 	-$(RM) *.olb;*
 	
+LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
+$(LISTINGS) : $(EXTRA_DEPENDENCIES)
+listings : $(LISTINGS)
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
-show_decc :
-	@write sys$$output "DECC_FLAGS=$(DECC_FLAGS)"
+
+
+#LOBJ = ipcvms.obj com.obj
 
 ipc.olb : $(LOBJ)
 #	$(RM) $@
 #	$(AR) $@ $(LOBJS)
 #	$(RANLIB) $@
+#	write sys$$output "$(LOCAL_MAKEFILE): $@: $$? = $?"
+#	write sys$$output "$(LOCAL_MAKEFILE): $@: $$^ = $^"
 	libr/create/insert $@ $^
-	-purge $@
+	@-purge/nolog *.obj
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
-ipc.olb_cs : $(LOBJ_CS)
-	libr/create/insert $@ $^
 
 #depend :: ../../mkdep
 
 #../../mkdep:
-	@echo "You have to run Configure in $(TOP) first."; exit 1
+#	@echo "You have to run Configure in $(TOP) first."; exit 1
 
 depend ::
 	($(SED) '/^# DO NOT DELETE/q' Makefile && \
@@ -218,10 +192,34 @@ Makefiles ::
 
 Makefiles.SH ::
 
+show_decc :
+	@write sys$$output "DECC_FLAGS=$(DECC_FLAGS)"
+
+show ::
+	@write sys$$output "**********************************************************************"
+	@write sys$$output "$(LOCAL_MAKEFILE): show: $$(DIR) = $(DIR)"
+	@write sys$$output "  $$(SOURCES) = $(SOURCES)"
+	@write sys$$output "  $$(MAKEFILE_LIST) = $(MAKEFILE_LIST)"
+	@write sys$$output "  $$(MAKEFILE_DEPENDENCIES) = $(MAKEFILE_DEPENDENCIES)"
+	@write sys$$output "  $$(EXTRA_DEPENDENCIES) = $(EXTRA_DEPENDENCIES)"
+	@write sys$$output "$(LOCAL_MAKEFILE) $@: $$(CDEFINES) = ""$(CDEFINES)"""
+	@write sys$$output "$(LOCAL_MAKEFILE) $@: $$(DECC_DEFINES) = ""$(DECC_DEFINES)"""
+ifeq ($(CDEFINES),)
+	@write sys$$output "CDEFINES blank"
+else
+	@write sys$$output "CDEFINES nonblank"
+endif
+ifdef CDEFINES
+	@write sys$$output "CDEFINES defined"
+else
+	@write sys$$output "CDEFINES undefined"
+endif
+
+
 ########################################################################
 # Dependencies generated by make depend
 # DO NOT DELETE THIS LINE -- make depend relies on it
-ipcvms.obj : ipcvms.c ipcvms.h ipcvmsdef.h 
+ipcvms.obj : ipcvms.c ipcvms.h ipcvmsdef.h [--.run-time]eif_vmsdef.h
 ipcvms.obj : ../../eif_config.h ../../eif_portable.h ../../eif_confmagic.h
 #vms_select.obj : vms_select.c
 #vms_select.obj : vms_socket.h
@@ -230,19 +228,19 @@ ipcvms.obj : ../../eif_config.h ../../eif_portable.h ../../eif_confmagic.h
 #vms_select.obj : ../../eif_portable.h
 #vms_select.obj : ../../eif_confmagic.h
 com.obj : com.c
-com.obj : $(TOPDIR)/eif_config.h
-com.obj : $(TOP)eif_portable.h
-com.obj : $(TOP)eif_confmagic.h
+com.obj : $(TOP)/eif_config.h
+com.obj : $(TOP)/eif_portable.h
+com.obj : $(TOP)/eif_confmagic.h
 com.obj : request.h
 com.obj : rqst_const.h
 com.obj : stack.h
-com.obj : $(TOPDIR)/run-time/eif_except.h
+com.obj : $(TOP)/run-time/eif_except.h
 com.obj : ../../run-time/eif_malloc.h
-com.obj : $(TOPDIR)/run-time/eif_garcol.h
-com.obj : $(TOPDIR)/run-time/eif_struct.h
-com.obj : $(TOPDIR)/run-time/eif_plug.h
-com.obj : $(TOPDIR)/run-time/eif_interp.h
-com.obj : $(TOPDIR)/run-time/eif_struct.h
+com.obj : $(TOP)/run-time/eif_garcol.h
+com.obj : $(TOP)/run-time/eif_struct.h
+com.obj : $(TOP)/run-time/eif_plug.h
+com.obj : $(TOP)/run-time/eif_interp.h
+com.obj : $(TOP)/run-time/eif_struct.h
 com.obj : com.h
 com.obj : stream.h
 identify.obj : identify.c
@@ -342,3 +340,4 @@ rqst_idrs.obj : ../../run-time/eif_struct.h
 rqst_idrs.obj : ../../idrs/idrs.h
 rqst_idrs.obj : rqst_idrs.h
 rqst_idrs.obj : ../../idrs/idrs.h
+

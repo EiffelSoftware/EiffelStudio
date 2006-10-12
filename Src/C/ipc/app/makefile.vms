@@ -1,6 +1,7 @@
 ########################################################################
-# Makefile generated from Makefile.SH on Fri Nov 18 08:53:49 PST 1994
+# Makefile.VMS generated from Makefile.SH on Fri Nov 18 08:53:49 PST 1994
 #   .../C/ipc/app/makefile
+# $Id$
 
 SHELL = /bin/sh
 JMAKE = jmake
@@ -64,7 +65,7 @@ include [-]makeinc.vms		# ipc common definitions
 #LDFLAGS = $(LIBDIR)$(LIBNAME)
 CINCLUDES = /INCL=($(TOP),$(LIBDIR),[--.run-time],[--.run-time.include],$(LIBIDR))
 CINCLUDES = /INCL=($(DECC_INCLUDES),$(LIBDIR),[--.run-time],[--.run-time.include],$(LIBIDR))
-LOCAL_CDEFINES = WORKBENCH
+LOCAL_CDEFINES = WORKBENCH,EIF_IPC
 ifneq ($(LOCAL_CDEFINES),)
 ifneq ($(IPC_CDEFINES),)
 CDEFINES = /DEF=($(LOCAL_CDEFINES),$(IPC_CDEFINES))
@@ -102,7 +103,8 @@ OBJ = $(patsubst %.c,%.obj,$(LIB))
 #OBJ_CS = $(patsubst %.c,%.obj_cs,$(LIB))
 LOBJ = $(OBJ)
 
-$(OBJ) $(LOBJ) $(OBJ_CS) : makefile   # make objects depend on this makefile 
+#$(OBJ) $(LOBJ) $(OBJ_CS) : $(LOCAL_MAKEFILE)   # make objects depend on this makefile 
+$(OBJ) $(LOBJ) : $(LOCAL_MAKEFILE)   # make objects depend on this makefile 
 
 all :: network.olb
 
@@ -140,6 +142,11 @@ depend::
 
 all:: $(OBJ)
 
+listings : $(patsubst %.c,%.lis,$(SOURCES))
+
+show_decc :
+	@write sys$$output "DECC_FLAGS=$(DECC_FLAGS)"
+
 local_realclean::
 #	$(RM) $(OBJ)
 	-delete/log *.obj;*,*.dia;*
@@ -149,8 +156,8 @@ local_realclean::
 $(LIBDIR)$(LIBNAME): .FORCE
 	@echo "Checking $(LIBNAME) in $(LIBDIR)..."
 #	cd $(LIBDIR); $(MAKE) $(LIBNAME)
-#	@\@ipcshr:make.com $(LIBDIR)$(LIBNAME)
-	@\@[-.shared]make.com $(LIBDIR)$(LIBNAME)
+#	@\@[-.shared]make.com $(LIBDIR)$(LIBNAME)
+	\@[c]make.vms $(LIBDIR)$(LIBNAME)
 	@echo "Continuing in $(CURRENT)..."
 
 network.olb:: $(LIBDIR)$(LIBNAME)
@@ -159,7 +166,8 @@ $(LIBIDR)$(LIBIDRNAME): .FORCE
 	@echo "Checking $(LIBIDRNAME) in $(LIBIDR)..."
 #	cd $(LIBIDR); $(MAKE) $(LIBIDRNAME)
 #	@\@idrs:make.com $(LIBIDR)$(LIBIDRNAME)
-	@\@[--.idrs]make.com $(LIBIDR)$(LIBIDRNAME)
+#	@\@[--.idrs]make.com $(LIBIDR)$(LIBIDRNAME)
+	@\@[c]make.vms $(LIBIDR)$(LIBIDRNAME)
 	@echo "Continuing in $(CURRENT)..."
 
 network.olb:: $(LIBIDR)$(LIBIDRNAME)
@@ -252,7 +260,7 @@ app_proto.obj : app_proto.c
 app_proto.obj : ../../eif_config.h
 app_proto.obj : ../../eif_portable.h
 app_proto.obj : ../../eif_confmagic.h
-app_proto.obj : ../../run-time/eif_err_msg.h
+app_proto.obj : ../../run-time/include/rt_err_msg.h
 app_proto.obj : ../shared/request.h
 app_proto.obj : ../shared/rqst_const.h
 app_proto.obj : ../shared/stack.h
@@ -278,7 +286,7 @@ app_proto.obj : ../shared/stream.h
 app_proto.obj : ../shared/transfer.h
 app_proto.obj : ../shared/ewbio.h
 app_proto.obj : ../shared/stack.h
-app_proto.obj : ../../idrs/idrf.h
+#app_proto.obj : ../../idrs/idrf.h
 app_proto.obj : ../../idrs/idrs.h
 app_proto.obj : ../../run-time/eif_debug.h
 app_proto.obj : ../../run-time/eif_except.h

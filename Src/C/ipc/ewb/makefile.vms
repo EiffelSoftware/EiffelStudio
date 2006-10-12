@@ -1,6 +1,7 @@
 ########################################################################
 # Makefile generated from Makefile.SH on Fri Nov 18 08:53:57 PST 1994
-#   .../C/ipc/ewb/makefile
+#   .../C/ipc/ewb/makefile.VMS
+# $Id$
 
 SHELL = /bin/sh
 JMAKE = jmake
@@ -25,8 +26,8 @@ SED = /bin/sed
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  $(SRC)
-OBJECTS =  $(OBJ)
+SOURCES =  $(LSRC)
+OBJECTS =  $(LOBJ)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -52,46 +53,28 @@ all:: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-# define vms specific symbols for compiling, etc.
-#include eiffelc:makeinc.vms
-include [-]makeinc.vms	    # use ipc common definitions
-
-# to compile for debugging, say	    make <target> "DEBUG_CFLAGS=/debug/noopt"
-# to compile for distribution, say  make <target> "DEBUG_CFLAGS="
-#                              or   make <target> "DEBUG_CFLAGS=/opt"
 #CINCLUDES   = /INCL=($(TOP),[-.shared],[--.run-time],[--.run-time.include],[--.idrs])
-CINCLUDES   = /INCL=($(DECC_INCLUDES),[-.shared],[--.run-time],[--.run-time.include],[--.idrs])
-#LOCAL_CDEFINES = "DEBUG=1"
-ifneq ($(LOCAL_CDEFINES),)
-ifneq ($(IPC_CDEFINES),)
-CDEFINES = /DEF=($(LOCAL_CDEFINES),$(IPC_CDEFINES))
-else
-CDEFINES = /DEF=($(LOCAL_CDEFINES))
-endif
-else
-ifneq ($(IPC_CDEFINES),)
-CDEFINES = /DEF=($(IPC_CDEFINES))
-else
-#CDEFINES = 
-endif
-endif
+#CINCLUDES   = /INCL=($(DECC_INCLUDES),[-.shared],[--.run-time],[--.run-time.include],[--.idrs])
+CINCLUDES = [C.IPC.SHARED]
+
+CDEFINES = EIF_IPC # "DEBUG=1"
 
 #JCFLAGS = $(DPFLAGS) $(CDEFINES) $(DEBUG_CFLAGS)
 DPFLAGS  = $(CINCLUDES) $(CDEFINES)
 CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
 
+# define vms specific symbols for compiling, etc.
+#include eiffelc:makeinc.vms
+include EIFFEL_SRC:[C.ipc]Makeinc.VMS	    # use ipc common definitions
+
 # Files used to build the daemon
-#SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c new.c ewb_dumped.c
-SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
+LSRC = ewb_proto.c eproto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
 
 # Derived object file names
-#OBJ =	ewb_proto.obj eewb_proto.obj eif_in.obj eif_out.obj ewb_init.obj new.obj \
-	ewb_dumped.obj
+LOBJ = $(patsubst %.c,%.obj,$(LSRC))
 
-OBJ = $(patsubst %.c,%.obj,$(SRC))
-#OBJ_CS = $(patsubst %.c,%.obj_cs,$(SRC))
+$(OBJECTS) : $(EXTRA_DEPENDENCIES)
 
-$(OBJ) $(OBJ_CS) : makefile   # make objects depend on this makefile 
 
 # Where shared archive is located (path and name)
 LIBDIR = [-.shared]
@@ -112,20 +95,24 @@ depend::
 	cp Makefile.new Makefile
 	$(RM) Makefile.new
 
-all:: ewb.olb # libewb.olb_cs
+all :: ewb.olb
+
+LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
+$(LISTINGS) : $(EXTRA_DEPENDENCIES)
+listings : $(LISTINGS)
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 local_realclean::
 	$(RM) ewb.olb;*
 
-ewb.olb: $(OBJ)
+ewb.olb : $(LOBJ)
 #	$(RM) $@
-#	$(AR) $@ $(OBJ)
+#	$(AR) $@ $(LOBJ)
 #	$(RANLIB) $@
-#	libr/create $@ *.obj
 	libr/create $@ $^
+	@-purge/nolog *.obj
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
-#libewb.olb_cs: $(OBJ_CS)
-#	libr/create $@ $^
 
 ########################################################################
 # Common rules for all Makefiles -- do not edit
@@ -208,7 +195,7 @@ ewb_proto.obj : ../../eif_portable.h
 ewb_proto.obj : ../../run-time/eif_interp.h
 ewb_proto.obj : ../../eif_portable.h
 ewb_proto.obj : ../../run-time/eif_struct.h
-ewb_proto.obj : ../../idrs/idrf.h
+#ewb_proto.obj : ../../idrs/idrf.h
 ewb_proto.obj : ../../idrs/idrs.h
 ewb_proto.obj : ../shared/rqst_idrs.h
 ewb_proto.obj : ../../idrs/idrs.h

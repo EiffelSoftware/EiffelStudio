@@ -1,7 +1,7 @@
 ########################################################################
+# Makefile.VMS for .../C/run-time
+# $Id$
 # Makefile generated from Makefile.SH on Fri Nov 18 08:54:54 PST 1994
-#tnh replace \ line continuation with -
-#
 #
 # makefile for EIFFEL_SRC:[C.RUN-TIME] ($EIFFEL_SRC/C/run-time)
 # drastically modified dss
@@ -9,60 +9,36 @@
 
 SHELL = /bin/sh
 JMAKE = jmake
-TOP = [C]
 CURRENT = run-time
-#tnhDIR = run-time/
-#tnhINSTALL = [-]install
-#INSTALL = dka200 : [vms.eiffel3.C.install]
+DIR = [C.run-time]
 
 ########################################################################
 # Parameters set by Configure -- edit config.sh if changes are needed
 
-#tnhAR = ar rc
 AR = libr/create
 CC = cc
 CTAGS = ctags
-#tnhJCFLAGS = $(CFLAGS) -O	# -O does optimizing
 JCFLAGS = $(CFLAGS) /jcflag
 # default for vms is optimize turned on
-#tnhJLDFLAGS = $(LDFLAGS) -O 	# no optimize option with link
 JLDFLAGS = $(LDFLAGS) 
 L = 1
-#tnhLIBS = -lnsl -lm
 LINT = lint
-#tnhLN = /bin/ln
 LN = copy/nolog
 MANSRC = /usr/local/man/man1
-#tnhMAKE = make
-#tnhMKDEP = /home/tomh/Eiffel3/C/mkdep $(DPFLAGS) --
 MKDEP = eiffelc : mkdep --
-#tnhMV = /bin/mv
 MV = rename/nolog 
-#tnhRANLIB = /usr/bin/ranlib	# no equivalent
 RANLIB = dir/date			# just do a directory listing
-#tnhRM = /bin/rm -f
 RM = purge/nolog
 SCRIPTDIR = /usr/local/bin
-#tnhSED = /bin/sed
 SED = edit
 
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  $(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c main.c
-#tnh Other VMS make had trouble with forward references
-#tnhSOURCES =  x2c.c debug.c interp.c option.c update.c wbench.c main.c
-OBJECTS =  $(ROBJ) $(WKOBJ) $(EOBJ) x2c.obj debug.obj interp.obj option.obj update.obj wbench.obj main.obj
+#OBJECTS =  $(ROBJ) $(WKOBJ) $(EOBJ) x2c.obj debug.obj interp.obj option.obj update.obj wbench.obj main.obj
+OBJECTS =  $(VMS_OBJ) $(LOBJ) x2c.obj $(MT_LOBJ) # $(WOBJ) $(EOBJ) x2c.obj # option.obj main.obj # # $(MT_WOBJ)
 LSCRIPTS =  eif_size.h
-
-########################################################################
-# New suffixes and associated building rules -- edit with care
-
-#tnh.c.o : 
-#.c.obj : 
-#tnh	$(RM) $@
-#tnh	$(CC) -c $(CFLAGS) $<
-#	$(CC)/obj=$@ $(CFLAGS) $<
+SOURCES =  $(VMS_SRC) $(LSRC) $(OTHER) $(WADD) x2c.c
 
 
 
@@ -81,189 +57,322 @@ all :: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-
-# define vms specific symbols for compiling, etc.
-#include $(TOP)makeinc.vms
-include EIFFEL_SRC:[C]MAKEINC.VMS
-
-# to compile for debugging, say	    make <target> "DEBUG_CFLAGS=/debug/noopt"
-# to compile for distribution, say  make <target> "DEBUG_CFLAGS="
-#				or  make <target> "DEBUG_CFLAGS=/opt"
-#DEBUG_CFLAGS = /debug/noopt #dss
-#DEBUG_CFLAGS = #dss
-
-#tnhCFLAGS = -I$(TOP)
-#CFLAGS = /include=$(TOP)/prefix=all/names=as_is
-#tnhNETWORK_OBJ = [-]ipc/app/network.o
-NETWORK_OBJ = [-.ipc.app]network.olb
-
-#CINCL1	    = $(TOP),[],[.include],[C_library.VMS.PORTING]
-#CINCL1	    = $(TOP),[],[.include]
-CINCL1	    = $(DECC_INCLUDES),[-.ipc.app],[.include],[-.idrs]
-CINCLUDES   = /incl=($(CINCL1))
-CINCLUDES_WK = /incl=($(CINCL1),[--.ipc.app])
-CINCLUDES_WK = $(CINCLUDES)
-CINCLUDES_APP = $(CINCLUDES_WK)
-
 #DPFLAGS = $(CINCLUDES)$(CDEFINES)
 DPFLAGS = $(CDEFINES)
 # This macro is used by the specialized .c.xxxobj rules in this file
 # it does not define the include path, because it differs for some files
-CFLAGS_NOINC = $(DECC_FLAGS)$(DPFLAGS)
+#CFLAGS_NOINC = $(DECC_FLAGS)$(DPFLAGS)
 # This macro is provided ONLY for the standard .c.obj rule in makeinc.vms
-CFLAGS = $(CFLAGS_NOINC)$(CINCLUDES)
+#CFLAGS = $(CFLAGS_NOINC)$(CINCLUDES)
 
-# Macro used to enforce dependencies on the makefile itself.
-# I wish there was a built-in macro for the makefile name
-#MAKEFILEDEP = makefile
+CINCLUDES = [C.ipc.app],[],[.include],[C.idrs]
 
-.SUFFIXES : .robj .wobj .wkobj .eobj # .bobj
-#.SUFFIXES : .robj_cs .rolb_cs
-
-# regular files are built
-# these are for runtime files
-.c.robj : 
-	$(CC) $</obj=$@ $(CFLAGS_NOINC)$(CINCLUDES)
-#.c.robj_cs : 
-#	$(CC) $</obj=$@ $(CFLAGS_CS)$(CINCLUDES)/name=as_is
-
-# these are files in common in wkbench.olb and ebench.olb
-.c.wobj : 
-	$(CC) $</obj=$@ $(CFLAGS_NOINC)$(CINCLUDES)/DEFINE=WORKBENCH
-
-.c.wkobj : 
-	$(CC) $</obj=$@ $(CINCLUDES_WK)$(CFLAGS_NOINC)/DEFINE=WORKBENCH 
-
-.c.eobj : 
-	$(CC) $</obj=$@ $(CFLAGS_NOINC)$(CINCLUDES)/DEFINE=(WORKBENCH,NOHOOK
-
-# these should probably be called .wkobj or .wobj
-# they are only present in the workbench version?
-debug.wobj : debug.c
-#	$(CC) $*.c $(CFLAGS_NOINC)$(CINCLUDES)/DEF=WORKBENCH $(CINCLUDES_APP)
-	$(CC) $</obj=$@ $(CFLAGS_NOINC) /DEF=WORKBENCH $(CINCLUDES_APP)
-
-interp.wobj : interp.c
-#	$(CC) $*.c $(CFLAGS_NOINC)$(CINCLUDES)/DEF=WORKBENCH
-	$(CC) $</obj=$@ $(CFLAGS_NOINC)$(CINCLUDES)/DEF=WORKBENCH
-
-# eifv4 has workbench code in option.c
-#option.obj : option.c
-#	$(CC) $*.c $(CFLAGS_NOINC)$(CINCLUDES)/DEF=WORKBENCH
-
-update.obj : update.c
-	$(CC) $*.c $(CFLAGS_NOINC)$(CINCLUDES)/DEF=WORKBENCH
-
-wbench.obj : wbench.c
-	$(CC) $*.c $(CFLAGS_NOINC)$(CINCLUDES)/DEF=WORKBENCH
+# define vms specific symbols for compiling, etc.
+include EIFFEL_SRC:[C]Makeinc.VMS
 
 
-#LSRC =	console.c path_name.c \
+IDRS_OBJ = [C.idrs]idrs.obj
+MTIDRS_OBJ = [C.idrs]idrs.obj_MT
+NETWORK_OBJ = [C.ipc.app]network.olb
+#MTNETWORK_OBJ = [C.ipc.app]network.obj_MT
+
+#EXTRA_DEPENDENCIES = [C]eif_config.h [C]eif_portable.h []eif_size.h []eif_vmsdef.h $(MAKEFILE_DEPENDENCIES) 
+
+VMS_SRC = eifrtvms.c vms_names.c
+VMS_OBJ = $(patsubst %.c,%.obj,$(VMS_SRC))
+#LISTINGS = $(patsubst %.obj,%.lis,$(VMS_OBJ)) $(patsubst %.obj,%.lis,$(LOBJ)) # $(patsubst %.obj_wk,%.lis_wk,$(WOBJ)) # $(patsubst %.obj,%.lis,$(MT_FOBJ)) $(patsubst %.obj,%.lis,$(MT_WOBJ)) 
+LISTINGS = $(patsubst %.c,%.lis,$(SOURCES))
+
 LSRC = malloc.c garcol.c local.c except.c store.c retrieve.c \
-        hash.c traverse.c hashin.c tools.c internal.c plug.c \
+	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
-	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
-	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-        run_idr.c path_name.c object_id.c eif_threads.c eif_project.c\
-	eif_rw_lock.c gen_conf.c rout_obj.c eif_type_id.c
+	hector.c cecil.c bits.c file.c dir.c misc.c \
+	error.c umain.c memory.c argv.c boolstr.c search.c \
+	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c\
+	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
+	option.c compress.c console.c
 
 OTHER = main.c except.c
 
 WADD = debug.c interp.c update.c wbench.c
 
+
+
+
+# WOBJ needs work
+WOBJ_EXTRA = \
+	$(IDRS_OBJ) \
+	$(LIB_IPC_ARCH) \
+	$(NETWORK_OBJ) 
+WOBJ =		    \
+	debug.obj_wk \
+	interp.obj_wk \
+	update.obj_wk \
+	wbench.obj_wk \
+	malloc.obj_wk \
+	garcol.obj_wk \
+	local.obj_wk \
+	store.obj_wk \
+	retrieve.obj_wk \
+	hash.obj_wk \
+	traverse.obj_wk \
+	hashin.obj_wk \
+	tools.obj_wk \
+	internal.obj_wk \
+	plug.obj_wk \
+	copy.obj_wk \
+	equal.obj_wk \
+	lmalloc.obj_wk \
+	out.obj_wk \
+	timer.obj_wk \
+	urgent.obj_wk \
+	sig.obj_wk \
+	hector.obj_wk \
+	cecil.obj_wk \
+	bits.obj_wk \
+	file.obj_wk \
+	dir.obj_wk \
+	misc.obj_wk \
+	error.obj_wk \
+	umain.obj_wk \
+	memory.obj_wk \
+	argv.obj_wk \
+	boolstr.obj_wk \
+	search.obj_wk \
+	run_idr.obj_wk \
+	path_name.obj_wk \
+	object_id.obj_wk \
+	eif_threads.obj_wk \
+	eif_project.obj_wk \
+	eif_rw_lock.obj_wk \
+	gen_conf.obj_wk \
+	eif_type_id.obj_wk \
+	rout_obj.obj_wk \
+	option.obj_wk \
+	compress.obj_wk \
+	console.obj_wk \
+	main.obj_wk \
+	except.obj_wk 
+
+LOBJ_EXTRA = \
+	$(IDRS_OBJ)
+LOBJ = \
+	malloc.obj \
+	garcol.obj \
+	local.obj \
+	store.obj \
+	retrieve.obj \
+	hash.obj \
+	traverse.obj \
+	hashin.obj \
+	tools.obj \
+	internal.obj \
+	plug.obj \
+	copy.obj \
+	equal.obj \
+	lmalloc.obj \
+	out.obj \
+	timer.obj \
+	urgent.obj \
+	sig.obj \
+	hector.obj \
+	cecil.obj \
+	bits.obj \
+	file.obj \
+	dir.obj \
+	misc.obj \
+	error.obj \
+	umain.obj \
+	memory.obj \
+	argv.obj \
+	boolstr.obj \
+	search.obj \
+	run_idr.obj \
+	path_name.obj \
+	object_id.obj \
+	eif_threads.obj \
+	eif_project.obj \
+	eif_rw_lock.obj \
+	gen_conf.obj \
+	eif_type_id.obj \
+	rout_obj.obj \
+	option.obj \
+	compress.obj \
+	console.obj \
+	main.obj \
+	except.obj 
+
+
+
+# EOBJ needs work
+EOBJ_EXTRA = \
+	$(IDRS_OBJ) \
+	$(LIB_IPC_ARCH) \
+	$(EWB_PROTO_OBJ)
+EOBJ = \
+	debug.obj \
+	interp.obj \
+	update.obj \
+	wbench.obj \
+	wmalloc.obj \
+	wgarcol.obj \
+	wlocal.obj \
+	wstore.obj \
+	wretrieve.obj \
+	whash.obj \
+	wtraverse.obj \
+	whashin.obj \
+	wtools.obj \
+	winternal.obj \
+	wplug.obj \
+	wcopy.obj \
+	wequal.obj \
+	wlmalloc.obj \
+	wout.obj \
+	wtimer.obj \
+	wurgent.obj \
+	wsig.obj \
+	whector.obj \
+	wcecil.obj \
+	wbits.obj \
+	wfile.obj \
+	wdir.obj \
+	wmisc.obj \
+	werror.obj \
+	wumain.obj \
+	wmemory.obj \
+	wargv.obj \
+	wboolstr.obj \
+	wsearch.obj \
+	wrun_idr.obj \
+	wpath_name.obj \
+	wobject_id.obj \
+	weif_threads.obj \
+	weif_project.obj \
+	weif_rw_lock.obj \
+	wgen_conf.obj \
+	weif_type_id.obj \
+	wrout_obj.obj \
+	woption.obj \
+	wcompress.obj \
+	wconsole.obj \
+	bmain.obj \
+	bexcept.obj 
+
+MT_LOBJ_EXTRA = \
+	$(MTIDRS_OBJ) 
+MT_LOBJ = \
+	malloc.obj_MT \
+	garcol.obj_MT \
+	local.obj_MT \
+	store.obj_MT \
+	retrieve.obj_MT \
+	hash.obj_MT \
+	traverse.obj_MT \
+	hashin.obj_MT \
+	tools.obj_MT \
+	internal.obj_MT \
+	plug.obj_MT \
+	copy.obj_MT \
+	equal.obj_MT \
+	lmalloc.obj_MT \
+	out.obj_MT \
+	timer.obj_MT \
+	urgent.obj_MT \
+	sig.obj_MT \
+	hector.obj_MT \
+	cecil.obj_MT \
+	bits.obj_MT \
+	file.obj_MT \
+	dir.obj_MT \
+	misc.obj_MT \
+	error.obj_MT \
+	umain.obj_MT \
+	memory.obj_MT \
+	argv.obj_MT \
+	boolstr.obj_MT \
+	search.obj_MT \
+	run_idr.obj_MT \
+	path_name.obj_MT \
+	object_id.obj_MT \
+	eif_threads.obj_MT \
+	eif_project.obj_MT \
+	eif_rw_lock.obj_MT \
+	gen_conf.obj_MT \
+	eif_type_id.obj_MT \
+	rout_obj.obj_MT \
+	option.obj_MT \
+	compress.obj_MT \
+	console.obj_MT \
+	main.obj_MT \
+	except.obj_MT 
+
+
+
+
+
+
+
+
 NETWORK = network.olb
 
-#WSRC =	console.c path_name.c \
-#	wmath.c wmalloc.c wgarcol.c wlocal.c wexcept.c \
-#	wstore.c wretrieve.c whash.c wtraverse.c whashin.c \
-#	wtools.c winternal.c wplug.c wcopy.c wequal.c \
-#	wlmalloc.c wout.c wtimer.c wurgent.c wsig.c whector.c \
-#	wcecil.c wbits.c wfile.c wdir.c wstring.c wmisc.c \
-#	wpattern.c werror.c wumain.c wmemory.c wargv.c \
-#	wboolstr.c wsearch.c wmain.c wrun_idr.c wobject_id.c \
-
-#ESRC =	console.c path_name.c # bmain.c bexcept.c \
-#	wmath.c wmalloc.c wgarcol.c wlocal.c \
-#	wstore.c wretrieve.c whash.c wtraverse.c whashin.c \
-#	wtools.c winternal.c wplug.c wcopy.c wequal.c \
-#	wlmalloc.c wout.c wtimer.c wurgent.c wsig.c whector.c \
-#	wcecil.c wbits.c wfile.c wdir.c wstring.c wmisc.c \
-#	wpattern.c werror.c wumain.c wmemory.c wargv.c \
-#	wboolstr.c wsearch.c wrun_idr.c wobject_id.c \
-
-# common objects (with spaces and commas)
-#COMOBJ	= compress.obj console.obj path_name.obj rout_obj.obj eif_type_id.obj eifrtvms.obj vms_names.obj
-#COMOBJC = compress.obj,console.obj,path_name.obj,rout_obj.obj,eif_type_id.obj,eifrtvms.obj,vms_names.obj
-COMOBJ	= compress.obj console.obj rout_obj.obj eif_type_id.obj eifrtvms.obj vms_names.obj
-COMOBJC = compress.obj,console.obj,rout_obj.obj,eif_type_id.obj,eifrtvms.obj,vms_names.obj
-#COMOBJ_CS = console.obj_cs path_name.obj_cs
-#COMOBJC_CS = console.obj_cs,path_name.obj_cs
-
-# objects for runtime.olb
-ROBJ =	$(COMOBJ) \
-	gen_conf.robj \
-        malloc.robj garcol.robj local.robj except.robj \
-        store.robj retrieve.robj hash.robj traverse.robj hashin.robj \
-        tools.robj internal.robj plug.robj copy.robj equal.robj \
-        lmalloc.robj out.robj  timer.robj urgent.robj sig.robj hector.robj \
-        cecil.robj bits.robj file.robj dir.robj string.robj misc.robj \
-        pattern.robj error.robj umain.robj memory.robj argv.robj \
-        boolstr.robj search.robj main.robj run_idr.robj path_name.robj object_id.robj \
-	option.robj eif_project.robj
-
-# object common to wkbench.olb and ebench.olb 
-# (basically, all wkbench/excl=(main,except)
-WEOBJ	= console.obj \
-	gen_conf.wobj \
-        malloc.wobj garcol.wobj local.wobj \
-        store.wobj retrieve.wobj hash.wobj traverse.wobj hashin.wobj \
-        tools.wobj internal.wobj plug.wobj copy.wobj equal.wobj \
-        lmalloc.wobj out.wobj timer.wobj urgent.wobj sig.wobj hector.wobj \
-        cecil.wobj bits.wobj file.wobj dir.wobj string.wobj misc.wobj \
-        pattern.wobj error.wobj umain.wobj memory.wobj argv.wobj \
-        boolstr.wobj search.wobj run_idr.wobj path_name.wobj object_id.wobj \
-	debug.wobj interp.wobj option.wobj update.wobj wbench.wobj eif_project.wobj \
-	$(NETWORK_OBJ)
-
-# objects for wkbench.olb only
-WKOBJ =	$(WEOBJ) main.wkobj except.wkobj \
-	$(NETWORK_OBJ)
 
 
-# objects for ebench.olb
-EOBJ1 =	$(WEOBJ) except.eobj main.eobj 
-EOBJ_save = console.obj \
-        malloc.wobj garcol.wobj local.wobj store.wobj \
-        retrieve.wobj hash.wobj traverse.wobj hashin.wobj tools.wobj \
-        internal.wobj plug.wobj copy.wobj equal.wobj lmalloc.wobj out.wobj \
-        timer.wobj urgent.wobj sig.wobj hector.wobj cecil.wobj bits.wobj \
-        file.wobj dir.wobj string.wobj misc.wobj pattern.wobj error.wobj \
-        umain.wobj memory.wobj argv.wobj boolstr.wobj search.wobj \
-        except.bobj main.bobj run_idr.wobj object_id.wobj \
-	debug.obj interp.obj option.obj update.obj wbench.obj
 
 
-all :: eif_size.h
 
-eif_size.h : size.vms
+
+# convenience targets
+libs : runtime #wkbench
+lib : runtime #wkbench
+runtime : finalized
+finalized : finalized.olb MTfinalized.olb
+wkbench : wkbench.olb
+#no no no finalized.olb wkbench.olb : $(MAKEFILE_DEPENDENCIES)
+
+
+$(VMS_OBJ) : $(EXTRA_DEPENDENCIES)
+$(OBJECTS) : $(EXTRA_DEPENDENCIES)
+$(LOBJ) $(VMS_OBJ) : $(EXTRA_DEPENDENCIES)
+$(MT_LOBJ) : $(EXTRA_DEPENDENCIES)
+
+# ancillary targets; need to be created before any compilation is done
+all :: ancillary
+
+ancillary : eif_size.h
+
+eif_size.h : size.vms ### nono $(LOCAL_MAKEFILE)
+#	backup $?;0 $@/new/log	# backup preserves dates; we dont want that here
 	copy $? $@ 
 
-#size : size.exe size.obj size.vms
+.PHONY : size size.exe
+size : size.exe # size.obj size.vms
 
-size.exe : size.obj
+size.exe : size.obj # eif_size.h
 
 size.obj : size.vms
-	$(CC) $*.vms $(CFLAGS_NOINC)$(CINCLUDES)/DEF=(TEST,WORKBENCH)
-
+#	$(CC) size.vms $(CFLAGS_NOINC)$(CINCLUDES) $(MY_CFLAGS)/DEFINE=(TEST,WORKBENCH)
+	$(CC) $? $(DECC_FLAGS) /INCLUDE=($(DECC_INCLUDES)) $(MY_CFLAGS) /DEFINE=(TEST,WORKBENCH)
+	delete size.obj;    # delete obj file to always force size.vms to be recompiled
     
+eifrtvms_test:
+	CC/debug/noopt/diag $(CFLAGS) eifrtvms/obj=eifrtvms_test.obj /define=(TEST) $(MY_CFLAGS)
+	LINK/debug eifrtvms_test.obj,path_name.robj,[c.ipc.shared]ipc/libr,vms_jackets_root:[source]vms_jackets_dbg.olb/libr
+
+eifrtvms.lis vms_names.lis : $(EXTRA_DEPENDENCIES)
+
+$(LISTINGS) : $(EXTRA_DEPENDENCIES) 
+listings : $(LISTINGS)
+#	@write sys$$output "listings = $(LISTINGS)"
+#	@write sys$$output "Dependents: $^"
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+	
+
 local_realclean :: 
 	$(RM) eif_size.h
 
-#tnhsize.h : size_h.SH
-#tnh	/bin/sh size_h.SH
 
-#tnhinstall :: $(SCRIPTS) $(LSCRIPTS)
-install :: $(LSCRIPTS)
+xxxinstall :: $(LSCRIPTS)
 	@for file in $(SCRIPTS) $(LSCRIPTS); do \
 	case '${MFLAGS}' in *[i]*) set +e;; esac; \
 	(set -x; $(INSTALL) -c -m 555 $$file $(SCRIPTDIR)); \
@@ -281,64 +390,84 @@ install.man :: size_h.man
 deinstall.man :: 
 	$(RM) $(MANSRC)/size.h.$(L)
 
-MARKER=build.marker
-$(MARKER) : $(MAKEFILEDEP) # makefile $(MAKEFILE)
-	open/write bld $@
-#	@-close bld
-	@purge/nolog $@
+EIFLIB = ise_eiffel\:[studio.spec.$(ISE_PLATFORM).lib]
+eiflib : $(EIFLIB)finalized.olb $(EIFLIB)MTfinalized.olb
 
-#tnhall :: runtime.a
-all :: runtime.olb
+eiflib_finalized : $(EIFLIB)finalized.olb
+
+$(EIFLIB)finalized.olb : []finalized.olb
+	copy $^ $(EIFLIB)
+
+$(EIFLIB)MTfinalized.olb : []MTfinalized.olb
+	copy $^ $(EIFLIB)
+
+
+all :: finalized.olb
+
+local_realclean ::
+	$(RM) finalized.olb;*
+
+finalized.olb : $(VMS_OBJ) $(LOBJ)
+	libr/create/insert $@ $^
+	libr/insert $@ $(LOBJ_EXTRA)
+	libr/insert $@ [-.ipc.shared]shword.obj,system.obj	! needed by eifrtvms
+##	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] ! eiflib: 
+	@purge/nolog *.*obj*
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+#	copy/log $@ MTfinalized.olb
+#	copy/log $@,MTfinalized.olb ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
+#	copy/log $@,MTfinalized.olb ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib]
+#	@-purge/nolog $@,MTfinalized.olb,*.obj*,ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib]*.olb
+
+all :: MTfinalized.olb
+
+#MTfinalized.olb : finalized.olb
+#	copy $^ $@
+MTfinalized.olb : $(VMS_OBJ) $(MT_LOBJ)
+	libr/create/insert $@ $^
+	libr/insert $@ $(MT_LOBJ_EXTRA)
+	libr/insert $@ [-.ipc.shared]shword.obj,system.obj	! needed by eifrtvms
+##	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] ! eiflib: 
+	@purge/nolog *.*obj*
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+#	copy/log $@ MTfinalized.olb
+#	copy/log $@,MTfinalized.olb ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
+#	copy/log $@,MTfinalized.olb ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib]
+#	@-purge/nolog $@,MTfinalized.olb,*.obj*,ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib]*.olb
+
+
+#all :: runtime.olb
 
 local_realclean :: 
-#tnh	$(RM) runtime.a
 #	$(RM) runtime.olb
 
-$(ROBJ) $(COMOBJ) : $(MARKER)
+#$(ROBJ) $(COMOBJ) : $(MARKER)
 
-#tnhruntime.a : $(ROBJ)
-runtime.olb :: $(ROBJ) $(COMOBJ)
-#tnh	$(RM) $@
-#tnh	$(AR) $@ $(ROBJ)    this doesn't work, need commas and line too long
+runtime.olb : $(ROBJ) $(COMOBJ)
 #	$(AR) $@ *.obj
 #	rename $@ eiflib: 
 #	rename/nolog *.obj *.robj/excl=(console.obj,path_name.obj)
 #	$(RANLIB) $@
 #	libr/create/insert $@ $^	# doesn't work, line too long
 	libr/create/insert $@ $(COMOBJC), *.robj
-	copy $@ eiflib: 
+	libr/insert $@ [-.ipc.shared]shword.obj,system.obj
+	libr/insert $@ [-.idrs]idrs.obj
+	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
 
-#all : runtime.olb_cs
-#runtime.olb_cs : $(MAKEFILEDEP) # makefile
-#ROBJ_CS = $(patsubst %.robj,%.robj_cs,$(ROBJ))
-#$(COMOBJ_CS) $(ROBJ_CS) : $(MARKER)
-#
-#runtime.olb_cs : $(COMOBJ_CS) $(ROBJ_CS)
-#	libr/create/insert $@ $(COMOBJC_CS), *.robj_cs
-#	copy $@ eiflib: 
-##	write sys$$output "COMOBJC = $(COMOBJC)"
-##	write sys$$output "COMOBJC_CS = $(COMOBJC_CS)"
 
-all :: wkbench.olb
+#all :: wkbench.olb
 
 local_realclean :: 
 	$(RM) wkbench.olb
 
-$(WKOBJ) : $(MARKER)
+#$(WKOBJ) : $(MARKER)
 
-wkbench.olb :: $(WKOBJ) $(COMOBJ) 
-#tnh	$(AR) $@ $(WOBJC)
-#	$(AR) $@ *.obj,[-.ipc.app]*.obj,[-.ipc.shared]*.obj,[-.idrs]*.obj
-#	rename $@ eiflib: 
-#	rename/nolog *.obj *.wobj /excl=(console.obj,path_name.obj)
-#	$(RANLIB) $@
-#	libr/create/insert $@ $^
+wkbench.olb : $(WKOBJ) $(COMOBJ) 
 	libr/create/insert $@ $(COMOBJC), *.wkobj,*.wobj
-	libr/insert $@ [-.ipc.app]*.obj,[-.ipc.shared]*.obj,[-.idrs]*.obj
-	copy $@ eiflib: 
+	libr/insert $@ [-.ipc.app]*.obj,[-.ipc.shared]*.obj,[-.idrs]idrs.obj
+	copy $@ ise_eiffel:[studio.spec.$(ISE_PLATFORM).lib] 
 
-all :: ebench.olb
-
+#all :: ebench.olb
 
 
 local_realclean :: 
@@ -348,7 +477,6 @@ local_realclean ::
 #*.eobj : $(MARKER)
 
 ebench.olb : $(EOBJ)
-#tnh	$(AR) $@ $(EOBJC)
 #	$(AR) $@ *.obj
 #	rename/nolog bmain.obj,bexcept.obj *.eobj
 #	$(RANLIB) $@
@@ -357,41 +485,26 @@ ebench.olb : $(EOBJ)
 
 
 
+
+
 all :: x2c.exe
 
 local_realclean :: 
 	$(RM) x2c.exe
 
+#x2c.obj : x2c.c # $(MAKEFILE_DEPENDENCIES)
+#	$(CC) $</obj=$@ /NOOBJ $(DECC_FLAGS) /INCLUDE=
+
 x2c.exe : x2c.obj
-#	$(RM) $@
-#	if test -f $@; then $(MV) $@ $@~; else exit 0; fi
-#	if fsearch($@).nes."" then $(MV) $@ $@~; else exit 0; fi
-#tnh	$(CC) -o $@ x2c.obj $(JLDFLAGS) $(LIBS)
-	link /exe=$@ $(JLDFLAGS) x2c.obj,ISE_EIFFEL:[C_library.VMS.Porting.LIB]VMS_JACKETS.OLB/libr
+	link /exe=$@ x2c.obj,ISE_EIFFEL:[C_library.VMS.Porting.LIB]VMS_JACKETS.OLB/libr
 
-all :: $(TOP)eif_config.h $(TOP)eif_portable.h $(TOP)eif_confmagic.h
 
-# convenience targets
-runtime : runtime.olb wkbench.olb
-lib : runtime
-EXTRA_DEPENDENCIES = Makefile [-]eif_config.h
-runtime.olb :: Makefile
-wkbench.olb :: Makefile
+#all :: $(TOP)eif_config.h $(TOP)eif_portable.h $(TOP)eif_confmagic.h
+
 
 local_realclean :: 
 #	$(RM) config.h portable.h confmagic.h
 
-#tnhconfig.h : $(TOP)/config.h
-#tnh	$(RM) $@
-#tnh	$(LN) $(TOP)/config.h .
-
-#tnhconfmagic.h : $(TOP)/confmagic.h
-#tnh	$(RM) $@
-#tnh	$(LN) $(TOP)/confmagic.h .
-
-#tnhportable.h : $(TOP)/portable.h
-#tnh	$(RM) $@
-#tnh	$(LN) $(TOP)/portable.h .
 
 #depend :: [-]mkdep
 depend :: [-]mkdep.exe
@@ -411,380 +524,14 @@ depend ::
 lint : 
 	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
 
-wmath.c : math.c
-#	$(RM) wmath.c
-	$(LN) math.c wmath.c
-remove :: 
-	$(RM) wmath.c
 
-wmalloc.c : malloc.c
-#	$(RM) wmalloc.c
-	$(LN) malloc.c wmalloc.c
-remove :: 
-	$(RM) wmalloc.c
+###
+### Manual dependencies 
+###
 
-wgarcol.c : garcol.c
-#	$(RM) wgarcol.c
-	$(LN) garcol.c wgarcol.c
-remove :: 
-	$(RM) wgarcol.c
+vms_names.obj : eif_setup.h
 
-wlocal.c : local.c
-#	$(RM) wlocal.c
-	$(LN) local.c wlocal.c
-remove :: 
-	$(RM) wlocal.c
-
-wexcept.c : except.c
-#	$(RM) wexcept.c
-	$(LN) except.c wexcept.c
-remove :: 
-	$(RM) wexcept.c
-
-wstore.c : store.c
-#	$(RM) wstore.c
-	$(LN) store.c wstore.c
-remove :: 
-	$(RM) wstore.c
-
-wretrieve.c : retrieve.c
-#	$(RM) wretrieve.c
-	$(LN) retrieve.c wretrieve.c
-remove :: 
-	$(RM) wretrieve.c
-
-wrun_idr.c : run_idr.c
-#	$(RM) wrun_idr.c
-	$(LN) run_idr.c wrun_idr.c
-remove :: 
-	$(RM) wrun_idr.c
-
-whash.c : hash.c
-#	$(RM) whash.c
-	$(LN) hash.c whash.c
-remove :: 
-	$(RM) whash.c
-
-wtraverse.c : traverse.c
-#	$(RM) wtraverse.c
-	$(LN) traverse.c wtraverse.c
-remove :: 
-	$(RM) wtraverse.c
-
-whashin.c : hashin.c
-#	$(RM) whashin.c
-	$(LN) hashin.c whashin.c
-remove :: 
-	$(RM) whashin.c
-
-wtools.c : tools.c
-#	$(RM) wtools.c
-	$(LN) tools.c wtools.c
-remove :: 
-	$(RM) wtools.c
-
-winternal.c : internal.c
-#	$(RM) winternal.c
-	$(LN) internal.c winternal.c
-remove :: 
-	$(RM) winternal.c
-
-wplug.c : plug.c
-#	$(RM) wplug.c
-	$(LN) plug.c wplug.c
-remove :: 
-	$(RM) wplug.c
-
-wcopy.c : copy.c
-#	$(RM) wcopy.c
-	$(LN) copy.c wcopy.c
-remove :: 
-	$(RM) wcopy.c
-
-wequal.c : equal.c
-#	$(RM) wequal.c
-	$(LN) equal.c wequal.c
-remove :: 
-	$(RM) wequal.c
-
-wlmalloc.c : lmalloc.c
-#	$(RM) wlmalloc.c
-	$(LN) lmalloc.c wlmalloc.c
-remove :: 
-	$(RM) wlmalloc.c
-
-wout.c : out.c
-#	$(RM) wout.c
-	$(LN) out.c wout.c
-remove :: 
-	$(RM) wout.c
-
-wtimer.c : timer.c
-#	$(RM) wtimer.c
-	$(LN) timer.c wtimer.c
-remove :: 
-	$(RM) wtimer.c
-
-wurgent.c : urgent.c
-#	$(RM) wurgent.c
-	$(LN) urgent.c wurgent.c
-remove :: 
-	$(RM) wurgent.c
-
-wsig.c : sig.c
-#	$(RM) wsig.c
-	$(LN) sig.c wsig.c
-remove :: 
-	$(RM) wsig.c
-
-whector.c : hector.c
-#	$(RM) whector.c
-	$(LN) hector.c whector.c
-remove :: 
-	$(RM) whector.c
-
-wcecil.c : cecil.c
-#	$(RM) wcecil.c
-	$(LN) cecil.c wcecil.c
-remove :: 
-	$(RM) wcecil.c
-
-wbits.c : bits.c
-#	$(RM) wbits.c
-	$(LN) bits.c wbits.c
-remove :: 
-	$(RM) wbits.c
-
-wfile.c : file.c
-#	$(RM) wfile.c
-	$(LN) file.c wfile.c
-remove :: 
-	$(RM) wfile.c
-
-wdir.c : dir.c
-#	$(RM) wdir.c
-	$(LN) dir.c wdir.c
-remove :: 
-	$(RM) wdir.c
-
-wstring.c : string.c
-#	$(RM) wstring.c
-	$(LN) string.c wstring.c
-remove :: 
-	$(RM) wstring.c
-
-wmisc.c : misc.c
-#	$(RM) wmisc.c
-	$(LN) misc.c wmisc.c
-remove :: 
-	$(RM) wmisc.c
-
-wpattern.c : pattern.c
-#	$(RM) wpattern.c
-	$(LN) pattern.c wpattern.c
-remove :: 
-	$(RM) wpattern.c
-
-werror.c : error.c
-#	$(RM) werror.c
-	$(LN) error.c werror.c
-remove :: 
-	$(RM) werror.c
-
-wumain.c : umain.c
-#	$(RM) wumain.c
-	$(LN) umain.c wumain.c
-remove :: 
-	$(RM) wumain.c
-
-wmemory.c : memory.c
-#	$(RM) wmemory.c
-	$(LN) memory.c wmemory.c
-remove :: 
-	$(RM) wmemory.c
-
-wargv.c : argv.c
-#	$(RM) wargv.c
-	$(LN) argv.c wargv.c
-remove :: 
-	$(RM) wargv.c
-
-wboolstr.c : boolstr.c
-#	$(RM) wboolstr.c
-	$(LN) boolstr.c wboolstr.c
-remove :: 
-	$(RM) wboolstr.c
-
-wsearch.c : search.c
-#	$(RM) wsearch.c
-	$(LN) search.c wsearch.c
-remove :: 
-	$(RM) wsearch.c
-
-wmain.c : main.c
-#	$(RM) wmain.c
-	$(LN) main.c wmain.c
-remove :: 
-	$(RM) wmain.c
-
-wobject_id.c : object_id.c
-#	$(RM) wobject_id.c
-	$(LN) object_id.c wobject_id.c
-remove :: 
-#	$(RM) wobject_id.c
-
-
-wmath.obj : wmath.c
-#tnh	$(CC) -c $(JCFLAGS)/DEF=WORKBENCH $*.c
-#tnh get rid of all -c options
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wmalloc.obj : wmalloc.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wgarcol.obj : wgarcol.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wlocal.obj : wlocal.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wexcept.obj : wexcept.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wstore.obj : wstore.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wretrieve.obj : wretrieve.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wrun_idr.obj : wrun_idr.c
-#tnh	$(CC) $(JCFLAGS) /inc=($(TOP),[-.idrs]/DEF=WORKBENCH $*.c
-#	$(CC) /inc=($(TOP),[-.idrs])/names=as_is/prefix=all/DEF=WORKBENCH $*.c
-	$(CC) /inc=($(TOP),[-.idrs])/prefix=all/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-whash.obj : whash.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wtraverse.obj : wtraverse.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-whashin.obj : whashin.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wtools.obj : wtools.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-winternal.obj : winternal.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wplug.obj : wplug.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wcopy.obj : wcopy.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wequal.obj : wequal.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wlmalloc.obj : wlmalloc.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wout.obj : wout.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wtimer.obj : wtimer.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wurgent.obj : wurgent.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wsig.obj : wsig.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-whector.obj : whector.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wcecil.obj : wcecil.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wbits.obj : wbits.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wfile.obj : wfile.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wdir.obj : wdir.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wstring.obj : wstring.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wmisc.obj : wmisc.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wpattern.obj : wpattern.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-werror.obj : werror.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wumain.obj : wumain.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wmemory.obj : wmemory.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wargv.obj : wargv.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wboolstr.obj : wboolstr.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wsearch.obj : wsearch.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wmain.obj : wmain.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
-
-wobject_id.obj : wobject_id.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH $*.c
-	$(RM) $*.c
+# all listfiles
 
 
 
@@ -795,39 +542,32 @@ work : wkbench.olb
 
 .FORCE : 
 
-[-.ipc.app]network.olb : .FORCE
+[-.ipc.app]network.olb ::  .FORCE
 #	@echo "Checking "network.olb" in "[-]ipc/app"..."
 	@echo "Checking network.olb in [-.ipc]app..."
-	@\@[-.ipc.app]make.com
+#	@\@[-.ipc.app]make.com
+	\@[c]make.vms [-.ipc.app]
 	@echo "Continuing in $(CURRENT)..."
 #	@SHOW DEFAULT
 
-network.olb : [-.ipc.app]network.olb
+network.olb :: [-.ipc.app]network.olb
 
-network.olb : 
-	dirl $(NETWORK_OBJ)
+network.olb :: 
+	directory $(NETWORK_OBJ)
 
-bmain.c : main.c
-#	$(RM) bmain.c
-	$(LN) main.c bmain.c
-remove :: 
-#	$(RM) bmain.c
+[-.idrs]idrs.olb ::  .FORCE
+	@echo "Checking idrs.olb in [-.idrs]..."
+#	@\@[-.idrs]make.com
+	\@[c]make.vms [-.idrs]
+	@echo "Continuing in $(CURRENT)..."
+	@SHOW DEFAULT
 
+idrs.olb :: [-.idrs]idrs.olb
 
-bmain.obj : bmain.c
-	$(CC) $(JCFLAGS)/DEF=WORKBENCH/DEF=NOHOOK $*.c
-	$(RM) $*.c
-
-bexcept.c : except.c
-#	$(RM) bexcept.c
-	$(LN) except.c bexcept.c
-remove :: 
-#	$(RM) bexcept.c
+idrs.olb :: 
+	directory $(IDRS_OBJ)
 
 
-bexcept.obj : bexcept.c
-	$(CC) $(CFLAGS_NOINC)/DEF=WORKBENCH/DEF=NOHOOK $*.c
-#	$(RM) $*.c
 
 
 TESTS = mram gram lram eram sram
@@ -863,6 +603,15 @@ local_realclean ::
 local_clobber :: 
 	$(RM) test
 
+show ::
+	@write sys$$output "**********************************************************************"
+	write sys$$output  "$(LOCAL_MAKEFILE) ($(DIR)): show:"
+	write sys$$output  "  $$(SOURCES) = $(SOURCES)"
+	write sys$$output  "  $$(WOBJ) = $(WOBJ)"
+	write sys$$output "  $$(EXTRA_DEPENDENCIES) = $(EXTRA_DEPENDENCIES)"
+	@write sys$$output "**********************************************************************"
+
+
 ########################################################################
 # Common rules for all Makefiles -- do not edit
 
@@ -891,8 +640,8 @@ Makefile.SH : Jmakefile
 	$(JMAKE)/DEF=TOPDIR=$(TOP)/DEF=CURDIR=$(CURRENT) ; \
 	else touch $@; exit 0; fi
 
-Makefile : Makefile.SH
-	/bin/sh Makefile.SH
+#Makefile : Makefile.SH
+#	/bin/sh Makefile.SH
 
 tags :: 
 	$(CTAGS) -w *.[ch]
@@ -922,22 +671,20 @@ Makefiles.SH ::
 
 ########################################################################
 # manually generated dependencies
-TOP_LEVEL_INCLUDES = [-]eif_config.h [-]eif_portable.h [-]eif_confmagic.h Makefile
-eifrtvms.obj : eifrtvms.c $(TOP_LEVEL_INCLUDES)
-
+#eifrtvms.obj :: eifrtvms.c $(EXTRA_DEPENDENCIES) 
+#$(ROBJ) :: $(EXTRA_DEPENDENCIES)
+#$(WKOBJ) :: $(EXTRA_DEPENDENCIES)
+#$(EOBJ1) :: $(EXTRA_DEPENDENCIES)
+#eif_threads.obj : eif_threads.h [.include]rt_threads.h $(EXTRA_DEPENDENCIES) 
 
 ########################################################################
 # Dependencies generated by make depend
 # DO NOT DELETE THIS LINE -- make depend relies on it
-#math.obj : math.c
-#math.obj : [-]eif_config.h
-#math.obj : [-]eif_portable.h
-#math.obj : [-]eif_confmagic.h
 malloc.obj : malloc.c
 malloc.obj : [-]eif_config.h
 malloc.obj : [-]eif_portable.h
 malloc.obj : [-]eif_confmagic.h
-malloc.obj : eiffel.h
+malloc.obj : eif_eiffel.h
 malloc.obj : eif_out.h
 malloc.obj : eif_file.h
 malloc.obj : eif_macros.h
@@ -961,875 +708,3 @@ malloc.obj : eif_except.h
 malloc.obj : eif_plug.h
 malloc.obj : eif_local.h
 malloc.obj : eif_sig.h
-garcol.obj : garcol.c
-garcol.obj : [-]eif_config.h
-garcol.obj : [-]eif_portable.h
-garcol.obj : [-]eif_confmagic.h
-garcol.obj : eif_malloc.h
-garcol.obj : eif_garcol.h
-garcol.obj : eif_struct.h
-garcol.obj : eif_plug.h
-garcol.obj : timer.h
-garcol.obj : eif_macros.h
-garcol.obj : eif_garcol.h
-garcol.obj : eif_except.h
-garcol.obj : eif_garcol.h
-garcol.obj : eif_local.h
-garcol.obj : eif_copy.h
-garcol.obj : eif_plug.h
-garcol.obj : eif_hector.h
-garcol.obj : eif_cecil.h
-garcol.obj : eif_plug.h
-garcol.obj : eif_garcol.h
-garcol.obj : eif_size.h
-garcol.obj : eif_sig.h
-garcol.obj : eif_urgent.h
-garcol.obj : eif_search.h
-garcol.obj : eif_eiffel.h
-garcol.obj : eif_out.h
-garcol.obj : eif_eif_file.h
-garcol.obj : eif_dir.h
-local.obj : local.c
-local.obj : [-]eif_config.h
-local.obj : [-]eif_portable.h
-local.obj : [-]eif_confmagic.h
-local.obj : eif_malloc.h
-local.obj : eif_garcol.h
-local.obj : eif_struct.h
-local.obj : eif_plug.h
-local.obj : eif_except.h
-local.obj : eif_garcol.h
-local.obj : eif_urgent.h
-local.obj : eif_local.h
-local.obj : eif_hector.h
-local.obj : eif_cecil.h
-local.obj : eif_sig.h
-except.obj : except.c
-except.obj : [-]eif_config.h
-except.obj : [-]eif_portable.h
-except.obj : [-]eif_confmagic.h
-except.obj : eif_except.h
-except.obj : eif_malloc.h
-except.obj : eif_garcol.h
-except.obj : eif_struct.h
-except.obj : eif_plug.h
-except.obj : eif_local.h
-except.obj : eif_urgent.h
-except.obj : eif_sig.h
-except.obj : eif_macros.h
-except.obj : eif_garcol.h
-except.obj : eif_except.h
-except.obj : eif_local.h
-except.obj : eif_copy.h
-except.obj : eif_plug.h
-except.obj : eif_hector.h
-except.obj : eif_cecil.h
-except.obj : eif_plug.h
-except.obj : eif_garcol.h
-except.obj : eif_size.h
-except.obj : eif_debug.h
-except.obj : eif_err_msg.h
-store.obj : store.c
-store.obj : [-]eif_config.h
-store.obj : [-]eif_portable.h
-store.obj : [-]eif_confmagic.h
-store.obj : eif_macros.h
-store.obj : eif_malloc.h
-store.obj : eif_garcol.h
-store.obj : eif_struct.h
-store.obj : eif_plug.h
-store.obj : eif_except.h
-store.obj : eif_garcol.h
-store.obj : eif_local.h
-store.obj : eif_copy.h
-store.obj : eif_plug.h
-store.obj : eif_hector.h
-store.obj : eif_cecil.h
-store.obj : eif_size.h
-store.obj : eif_except.h
-store.obj : store.h
-store.obj : traverse.h
-store.obj : eif_struct.h
-store.obj : bits.h
-store.obj : run_idr.h
-retrieve.obj : retrieve.c
-retrieve.obj : [-]eif_config.h
-retrieve.obj : [-]eif_portable.h
-retrieve.obj : [-]eif_confmagic.h
-retrieve.obj : eif_macros.h
-retrieve.obj : eif_malloc.h
-retrieve.obj : eif_garcol.h
-retrieve.obj : eif_struct.h
-retrieve.obj : eif_plug.h
-retrieve.obj : eif_except.h
-retrieve.obj : eif_local.h
-retrieve.obj : eif_copy.h
-retrieve.obj : eif_hector.h
-retrieve.obj : eif_cecil.h
-retrieve.obj : eif_size.h
-retrieve.obj : retrieve.h
-retrieve.obj : eif_hashin.h
-retrieve.obj : eif_store.h
-retrieve.obj : eif_bits.h
-retrieve.obj : eif_run_idr.h
-retrieve.obj : [-.parsing.shared]limits.h
-hash.obj : hash.c
-hash.obj : [-]eif_config.h
-hash.obj : [-]eif_portable.h
-hash.obj : [-]eif_confmagic.h
-hash.obj : tools.h
-hash.obj : hash.h
-traverse.obj : traverse.c
-traverse.obj : [-]eif_config.h
-traverse.obj : [-]eif_portable.h
-traverse.obj : [-]eif_confmagic.h
-traverse.obj : eif_garcol.h
-traverse.obj : eif_struct.h
-traverse.obj : eif_plug.h
-traverse.obj : eif_malloc.h
-traverse.obj : eif_macros.h
-traverse.obj : eif_except.h
-traverse.obj : eif_local.h
-traverse.obj : eif_copy.h
-traverse.obj : eif_hector.h
-traverse.obj : eif_cecil.h
-traverse.obj : eif_size.h
-traverse.obj : eif_store.h
-traverse.obj : eif_hashin.h
-traverse.obj : eif_traverse.h
-hashin.obj : hashin.c
-hashin.obj : [-]eif_config.h
-hashin.obj : [-]eif_portable.h
-hashin.obj : [-]eif_confmagic.h
-hashin.obj : eif_tools.h
-hashin.obj : eif_hashin.h
-hashin.obj : eif_malloc.h
-tools.obj : tools.c
-tools.obj : eif_tools.h
-tools.obj : [-]eif_config.h
-tools.obj : [-]eif_portable.h
-tools.obj : [-]eif_confmagic.h
-internal.obj : internal.c
-internal.obj : [-]eif_config.h
-internal.obj : [-]eif_portable.h
-internal.obj : [-]eif_confmagic.h
-internal.obj : eif_eiffel.h
-internal.obj : eif_out.h
-internal.obj : eif_file.h
-internal.obj : eif_macros.h
-internal.obj : eif_malloc.h
-internal.obj : eif_garcol.h
-internal.obj : eif_struct.h
-internal.obj : eif_plug.h
-internal.obj : eif_except.h
-internal.obj : eif_local.h
-internal.obj : eif_copy.h
-internal.obj : eif_hector.h
-internal.obj : eif_cecil.h
-internal.obj : eif_size.h
-internal.obj : eif_dir.h
-internal.obj : eif_macros.h
-plug.obj : plug.c
-plug.obj : eif_plug.h
-plug.obj : [-]eif_config.h
-plug.obj : [-]eif_portable.h
-plug.obj : [-]eif_confmagic.h
-plug.obj : eif_malloc.h
-plug.obj : eif_eiffel.h
-plug.obj : eif_out.h
-plug.obj : eif_file.h
-plug.obj : eif_macros.h
-plug.obj : eif_garcol.h
-plug.obj : eif_struct.h
-plug.obj : eif_plug.h
-plug.obj : eif_except.h
-plug.obj : eif_local.h
-plug.obj : eif_copy.h
-plug.obj : eif_hector.h
-plug.obj : eif_cecil.h
-plug.obj : eif_size.h
-plug.obj : eif_dir.h
-plug.obj : eif_macros.h
-plug.obj : eif_option.h
-plug.obj : eif_macros.h
-plug.obj : eif_interp.h
-plug.obj : [-]eif_portable.h
-plug.obj : eif_struct.h
-plug.obj : eif_hashin.h
-plug.obj : [-]eif_config.h
-plug.obj : eif_bits.h
-plug.obj : eif_plug.h
-copy.obj : copy.c
-copy.obj : eif_copy.h
-copy.obj : [-]eif_confmagic.h
-copy.obj : eif_traverse.h
-copy.obj : eif_hector.h
-copy.obj : eif_cecil.h
-copy.obj : eif_plug.h
-copy.obj : eif_garcol.h
-copy.obj : eif_struct.h
-copy.obj : eif_hash.h
-copy.obj : eif_macros.h
-copy.obj : eif_malloc.h
-copy.obj : eif_except.h
-copy.obj : eif_local.h
-copy.obj : eif_copy.h
-copy.obj : eif_size.h
-copy.obj : eif_eiffel.h
-copy.obj : eif_out.h
-copy.obj : eif_file.h
-copy.obj : eif_dir.h
-copy.obj : eif_struct.h
-copy.obj : eif_local.h
-equal.obj : equal.c
-equal.obj : eif_equal.h
-equal.obj : [-]eif_config.h
-equal.obj : [-]eif_portable.h
-equal.obj : [-]eif_confmagic.h
-equal.obj : eif_struct.h
-equal.obj : eif_traverse.h
-equal.obj : eif_hector.h
-equal.obj : eif_cecil.h
-equal.obj : eif_plug.h
-equal.obj : eif_garcol.h
-equal.obj : eif_macros.h
-equal.obj : eif_malloc.h
-equal.obj : eif_except.h
-equal.obj : eif_local.h
-equal.obj : eif_copy.h
-equal.obj : eif_size.h
-equal.obj : eif_eiffel.h
-equal.obj : eif_out.h
-equal.obj : eif_file.h
-equal.obj : eif_dir.h
-equal.obj : eif_tools.h
-equal.obj : eif_eif_search.h
-lmalloc.obj : lmalloc.c
-lmalloc.obj : [-]eif_config.h
-lmalloc.obj : [-]eif_portable.h
-lmalloc.obj : [-]eif_confmagic.h
-lmalloc.obj : eif_malloc.h
-lmalloc.obj : eif_garcol.h
-lmalloc.obj : eif_struct.h
-lmalloc.obj : eif_plug.h
-out.obj : out.c
-out.obj : eif_out.h
-out.obj : [-]eif_config.h
-out.obj : [-]eif_portable.h
-out.obj : [-]eif_confmagic.h
-out.obj : eif_plug.h
-out.obj : eif_eiffel.h
-out.obj : eif_out.h
-out.obj : eif_file.h
-out.obj : eif_macros.h
-out.obj : eif_malloc.h
-out.obj : [-]eif_portable.h
-out.obj : eif_garcol.h
-out.obj : [-]eif_portable.h
-out.obj : eif_struct.h
-out.obj : [-]eif_config.h
-out.obj : [-]eif_portable.h
-out.obj : eif_plug.h
-out.obj : eif_except.h
-out.obj : [-]eif_portable.h
-out.obj : eif_garcol.h
-out.obj : eif_local.h
-out.obj : eif_copy.h
-out.obj : [-]eif_portable.h
-out.obj : eif_plug.h
-out.obj : eif_hector.h
-out.obj : eif_cecil.h
-out.obj : eif_plug.h
-out.obj : eif_garcol.h
-out.obj : eif_size.h
-out.obj : [-]eif_config.h
-out.obj : eif_dir.h
-out.obj : eif_macros.h
-out.obj : eif_macros.h
-out.obj : eif_struct.h
-out.obj : eif_macros.h
-out.obj : eif_hashin.h
-out.obj : [-]eif_config.h
-out.obj : [-]eif_portable.h
-out.obj : eif_except.h
-out.obj : eif_sig.h
-out.obj : eif_hector.h
-out.obj : eif_bits.h
-out.obj : [-]eif_portable.h
-out.obj : eif_plug.h
-timer.obj : timer.c
-timer.obj : eif_timer.h
-timer.obj : [-]eif_config.h
-timer.obj : [-]eif_portable.h
-timer.obj : [-]eif_confmagic.h
-urgent.obj : urgent.c
-urgent.obj : [-]eif_config.h
-urgent.obj : [-]eif_portable.h
-urgent.obj : [-]eif_confmagic.h
-urgent.obj : eif_urgent.h
-urgent.obj : [-]eif_config.h
-urgent.obj : [-]eif_portable.h
-sig.obj : sig.c
-sig.obj : [-]eif_config.h
-sig.obj : [-]eif_portable.h
-sig.obj : [-]eif_confmagic.h
-sig.obj : eif_except.h
-sig.obj : [-]eif_portable.h
-sig.obj : eif_malloc.h
-sig.obj : [-]eif_portable.h
-sig.obj : eif_garcol.h
-sig.obj : [-]eif_portable.h
-sig.obj : eif_struct.h
-sig.obj : [-]eif_config.h
-sig.obj : [-]eif_portable.h
-sig.obj : eif_plug.h
-sig.obj : [-]eif_config.h
-sig.obj : [-]eif_portable.h
-sig.obj : eif_sig.h
-hector.obj : hector.c
-hector.obj : [-]eif_config.h
-hector.obj : eif_malloc.h
-hector.obj : [-]eif_portable.h
-hector.obj : [-]eif_confmagic.h
-hector.obj : eif_garcol.h
-hector.obj : [-]eif_portable.h
-hector.obj : eif_struct.h
-hector.obj : [-]eif_config.h
-hector.obj : [-]eif_portable.h
-hector.obj : eif_plug.h
-hector.obj : [-]eif_config.h
-hector.obj : [-]eif_portable.h
-hector.obj : eif_except.h
-hector.obj : [-]eif_portable.h
-hector.obj : eif_garcol.h
-hector.obj : eif_cecil.h
-hector.obj : eif_plug.h
-hector.obj : eif_hector.h
-hector.obj : eif_cecil.h
-hector.obj : eif_garcol.h
-cecil.obj : cecil.c
-cecil.obj : [-]eif_config.h
-cecil.obj : eif_malloc.h
-cecil.obj : [-]eif_portable.h
-cecil.obj : [-]eif_confmagic.h
-cecil.obj : eif_garcol.h
-cecil.obj : [-]eif_portable.h
-cecil.obj : eif_struct.h
-cecil.obj : [-]eif_config.h
-cecil.obj : [-]eif_portable.h
-cecil.obj : eif_plug.h
-cecil.obj : [-]eif_config.h
-cecil.obj : [-]eif_portable.h
-cecil.obj : eif_cecil.h
-cecil.obj : eif_plug.h
-cecil.obj : eif_hector.h
-cecil.obj : eif_cecil.h
-cecil.obj : eif_garcol.h
-cecil.obj : eif_struct.h
-cecil.obj : eif_tools.h
-cecil.obj : [-]eif_config.h
-cecil.obj : [-]eif_portable.h
-cecil.obj : eiffel.h
-cecil.obj : [-]eif_config.h
-cecil.obj : eif_out.h
-cecil.obj : [-]eif_portable.h
-cecil.obj : eif_file.h
-cecil.obj : eif_macros.h
-cecil.obj : [-]eif_config.h
-cecil.obj : eif_garcol.h
-cecil.obj : eif_except.h
-cecil.obj : [-]eif_portable.h
-cecil.obj : eif_garcol.h
-cecil.obj : eif_local.h
-cecil.obj : eif_copy.h
-cecil.obj : [-]eif_portable.h
-cecil.obj : eif_plug.h
-cecil.obj : eif_hector.h
-cecil.obj : eif_size.h
-cecil.obj : [-]eif_config.h
-cecil.obj : eif_dir.h
-cecil.obj : eif_macros.h
-cecil.obj : eif_macros.h
-cecil.obj : eif_macros.h
-bits.obj : bits.c
-bits.obj : [-]eif_config.h
-bits.obj : eif_garcol.h
-bits.obj : [-]eif_portable.h
-bits.obj : [-]eif_confmagic.h
-bits.obj : eif_struct.h
-bits.obj : [-]eif_config.h
-bits.obj : [-]eif_portable.h
-bits.obj : eif_plug.h
-bits.obj : [-]eif_config.h
-bits.obj : [-]eif_portable.h
-bits.obj : eif_malloc.h
-bits.obj : [-]eif_portable.h
-bits.obj : eif_cecil.h
-bits.obj : eif_plug.h
-bits.obj : eif_macros.h
-bits.obj : [-]eif_config.h
-bits.obj : eif_garcol.h
-bits.obj : eif_except.h
-bits.obj : [-]eif_portable.h
-bits.obj : eif_garcol.h
-bits.obj : eif_local.h
-bits.obj : eif_copy.h
-bits.obj : [-]eif_portable.h
-bits.obj : eif_plug.h
-bits.obj : eif_hector.h
-bits.obj : eif_cecil.h
-bits.obj : eif_garcol.h
-bits.obj : eif_size.h
-bits.obj : [-]eif_config.h
-bits.obj : bits.h
-bits.obj : [-]eif_portable.h
-bits.obj : eif_plug.h
-bits.obj : eif_local.h
-bits.obj : eif_plug.h
-bits.obj : eif_except.h
-file.obj : file.c
-file.obj : [-]eif_config.h
-file.obj : [-]eif_portable.h
-file.obj : [-]eif_confmagic.h
-file.obj : eif_except.h
-file.obj : [-]eif_portable.h
-file.obj : eif_malloc.h
-file.obj : [-]eif_portable.h
-file.obj : eif_garcol.h
-file.obj : [-]eif_portable.h
-file.obj : eif_struct.h
-file.obj : [-]eif_config.h
-file.obj : [-]eif_portable.h
-file.obj : eif_plug.h
-file.obj : [-]eif_config.h
-file.obj : [-]eif_portable.h
-file.obj : eif_plug.h
-file.obj : eif_err_msg.h
-file.obj : eif_file.h
-file.obj : eif_macros.h
-file.obj : [-]eif_config.h
-file.obj : eif_garcol.h
-file.obj : eif_except.h
-file.obj : eif_local.h
-file.obj : eif_copy.h
-file.obj : [-]eif_portable.h
-file.obj : eif_plug.h
-file.obj : eif_hector.h
-file.obj : eif_cecil.h
-file.obj : eif_plug.h
-file.obj : eif_garcol.h
-file.obj : eif_size.h
-file.obj : [-]eif_config.h
-dir.obj : dir.c
-dir.obj : [-]eif_config.h
-dir.obj : [-]eif_portable.h
-dir.obj : [-]eif_confmagic.h
-dir.obj : eif_file.h
-dir.obj : eif_macros.h
-dir.obj : [-]eif_config.h
-dir.obj : eif_malloc.h
-dir.obj : [-]eif_portable.h
-dir.obj : eif_garcol.h
-dir.obj : [-]eif_portable.h
-dir.obj : eif_struct.h
-dir.obj : [-]eif_config.h
-dir.obj : [-]eif_portable.h
-dir.obj : eif_plug.h
-dir.obj : [-]eif_config.h
-dir.obj : [-]eif_portable.h
-dir.obj : eif_except.h
-dir.obj : [-]eif_portable.h
-dir.obj : eif_garcol.h
-dir.obj : eif_local.h
-dir.obj : eif_copy.h
-dir.obj : [-]eif_portable.h
-dir.obj : eif_plug.h
-dir.obj : eif_hector.h
-dir.obj : eif_cecil.h
-dir.obj : eif_plug.h
-dir.obj : eif_garcol.h
-dir.obj : eif_size.h
-dir.obj : [-]eif_config.h
-dir.obj : eif_dir.h
-dir.obj : eif_macros.h
-dir.obj : eif_plug.h
-string.obj : string.c
-string.obj : [-]eif_config.h
-string.obj : [-]eif_portable.h
-string.obj : [-]eif_confmagic.h
-misc.obj : misc.c
-misc.obj : [-]eif_portable.h
-misc.obj : [-]eif_config.h
-misc.obj : [-]eif_confmagic.h
-misc.obj : eif_misc.h
-misc.obj : eif_cecil.h
-misc.obj : eif_plug.h
-misc.obj : [-]eif_config.h
-misc.obj : [-]eif_portable.h
-misc.obj : eif_malloc.h
-misc.obj : [-]eif_portable.h
-misc.obj : eif_macros.h
-misc.obj : [-]eif_config.h
-misc.obj : eif_garcol.h
-misc.obj : [-]eif_portable.h
-misc.obj : eif_struct.h
-misc.obj : [-]eif_config.h
-misc.obj : [-]eif_portable.h
-misc.obj : eif_plug.h
-misc.obj : eif_except.h
-misc.obj : [-]eif_portable.h
-misc.obj : eif_garcol.h
-misc.obj : eif_local.h
-misc.obj : eif_copy.h
-misc.obj : [-]eif_portable.h
-misc.obj : eif_plug.h
-misc.obj : eif_hector.h
-misc.obj : eif_cecil.h
-misc.obj : eif_garcol.h
-misc.obj : eif_size.h
-misc.obj : [-]eif_config.h
-misc.obj : eif_cecil.h
-pattern.obj : pattern.c
-pattern.obj : [-]eif_config.h
-pattern.obj : [-]eif_portable.h
-pattern.obj : [-]eif_confmagic.h
-pattern.obj : eif_malloc.h
-pattern.obj : [-]eif_portable.h
-pattern.obj : eif_hector.h
-pattern.obj : eif_cecil.h
-pattern.obj : eif_plug.h
-pattern.obj : [-]eif_config.h
-pattern.obj : [-]eif_portable.h
-pattern.obj : eif_garcol.h
-pattern.obj : [-]eif_portable.h
-pattern.obj : eif_struct.h
-pattern.obj : [-]eif_config.h
-pattern.obj : [-]eif_portable.h
-pattern.obj : eif_plug.h
-pattern.obj : eif_except.h
-pattern.obj : [-]eif_portable.h
-pattern.obj : eif_garcol.h
-error.obj : error.c
-error.obj : [-]eif_config.h
-error.obj : [-]eif_portable.h
-error.obj : [-]eif_confmagic.h
-error.obj : eif_except.h
-error.obj : [-]eif_portable.h
-error.obj : eif_malloc.h
-error.obj : [-]eif_portable.h
-error.obj : eif_garcol.h
-error.obj : [-]eif_portable.h
-error.obj : eif_struct.h
-error.obj : [-]eif_config.h
-error.obj : [-]eif_portable.h
-error.obj : eif_plug.h
-error.obj : [-]eif_config.h
-error.obj : [-]eif_portable.h
-umain.obj : umain.c
-memory.obj : memory.c
-memory.obj : [-]eif_config.h
-memory.obj : [-]eif_portable.h
-memory.obj : [-]eif_confmagic.h
-memory.obj : eif_malloc.h
-memory.obj : [-]eif_portable.h
-memory.obj : eif_garcol.h
-memory.obj : [-]eif_portable.h
-memory.obj : eif_struct.h
-memory.obj : [-]eif_config.h
-memory.obj : [-]eif_portable.h
-memory.obj : eif_plug.h
-memory.obj : [-]eif_config.h
-memory.obj : [-]eif_portable.h
-memory.obj : eif_except.h
-memory.obj : [-]eif_portable.h
-memory.obj : eif_garcol.h
-memory.obj : eif_macros.h
-memory.obj : [-]eif_config.h
-memory.obj : eif_garcol.h
-memory.obj : eif_except.h
-memory.obj : eif_local.h
-memory.obj : eif_copy.h
-memory.obj : [-]eif_portable.h
-memory.obj : eif_plug.h
-memory.obj : eif_hector.h
-memory.obj : eif_cecil.h
-memory.obj : eif_plug.h
-memory.obj : eif_garcol.h
-memory.obj : eif_size.h
-memory.obj : [-]eif_config.h
-argv.obj : argv.c
-argv.obj : [-]eif_config.h
-argv.obj : [-]eif_portable.h
-argv.obj : [-]eif_confmagic.h
-argv.obj : eif_malloc.h
-argv.obj : [-]eif_portable.h
-argv.obj : eif_plug.h
-argv.obj : [-]eif_config.h
-argv.obj : [-]eif_portable.h
-boolstr.obj : boolstr.c
-boolstr.obj : [-]eif_config.h
-boolstr.obj : [-]eif_portable.h
-boolstr.obj : [-]eif_confmagic.h
-search.obj : search.c
-search.obj : [-]eif_config.h
-search.obj : [-]eif_portable.h
-search.obj : [-]eif_confmagic.h
-search.obj : search.h
-search.obj : tools.h
-search.obj : [-]eif_config.h
-search.obj : [-]eif_portable.h
-console.obj : console.c
-console.obj : [-]eif_config.h
-console.obj : [-]eif_portable.h
-console.obj : [-]eif_confmagic.h
-console.obj : eif_file.h
-console.obj : eif_macros.h
-console.obj : [-]eif_config.h
-console.obj : eif_malloc.h
-console.obj : [-]eif_portable.h
-console.obj : eif_garcol.h
-console.obj : [-]eif_portable.h
-console.obj : eif_struct.h
-console.obj : [-]eif_config.h
-console.obj : [-]eif_portable.h
-console.obj : eif_plug.h
-console.obj : [-]eif_config.h
-console.obj : [-]eif_portable.h
-console.obj : eif_except.h
-console.obj : [-]eif_portable.h
-console.obj : eif_garcol.h
-console.obj : eif_local.h
-console.obj : eif_copy.h
-console.obj : [-]eif_portable.h
-console.obj : eif_plug.h
-console.obj : eif_hector.h
-console.obj : eif_cecil.h
-console.obj : eif_plug.h
-console.obj : eif_garcol.h
-console.obj : eif_size.h
-console.obj : [-]eif_config.h
-run_idr.obj : run_idr.c
-run_idr.obj : [-]eif_config.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : [-]eif_confmagic.h
-run_idr.obj : eif_err_msg.h
-run_idr.obj : eiffel.h
-run_idr.obj : [-]eif_config.h
-run_idr.obj : eif_out.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : eif_file.h
-run_idr.obj : eif_macros.h
-run_idr.obj : [-]eif_config.h
-run_idr.obj : eif_malloc.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : eif_garcol.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : eif_struct.h
-run_idr.obj : [-]eif_config.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : eif_plug.h
-run_idr.obj : [-]eif_config.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : eif_except.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : eif_garcol.h
-run_idr.obj : eif_local.h
-run_idr.obj : eif_copy.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : eif_plug.h
-run_idr.obj : eif_hector.h
-run_idr.obj : eif_cecil.h
-run_idr.obj : eif_plug.h
-run_idr.obj : eif_garcol.h
-run_idr.obj : eif_size.h
-run_idr.obj : [-]eif_config.h
-run_idr.obj : eif_dir.h
-run_idr.obj : eif_macros.h
-run_idr.obj : eif_macros.h
-run_idr.obj : eif_bits.h
-run_idr.obj : [-]eif_portable.h
-run_idr.obj : eif_plug.h
-run_idr.obj : [-.idrs]idrf.h
-run_idr.obj : [-.idrs]idrs.h
-x2c.obj : x2c.c
-x2c.obj : [-]eif_config.h
-x2c.obj : eif_size.h
-x2c.obj : [-]eif_config.h
-x2c.obj : eif_err_msg.h
-debug.obj : debug.c
-debug.obj : [-]eif_config.h
-debug.obj : [-]eif_portable.h
-debug.obj : [-]eif_confmagic.h
-debug.obj : eif_macros.h
-debug.obj : [-]eif_config.h
-debug.obj : eif_malloc.h
-debug.obj : [-]eif_portable.h
-debug.obj : eif_garcol.h
-debug.obj : [-]eif_portable.h
-debug.obj : eif_struct.h
-debug.obj : [-]eif_config.h
-debug.obj : [-]eif_portable.h
-debug.obj : eif_plug.h
-debug.obj : [-]eif_config.h
-debug.obj : [-]eif_portable.h
-debug.obj : eif_except.h
-debug.obj : [-]eif_portable.h
-debug.obj : eif_garcol.h
-debug.obj : eif_local.h
-debug.obj : eif_copy.h
-debug.obj : [-]eif_portable.h
-debug.obj : eif_plug.h
-debug.obj : eif_hector.h
-debug.obj : eif_cecil.h
-debug.obj : eif_plug.h
-debug.obj : eif_garcol.h
-debug.obj : eif_size.h
-debug.obj : [-]eif_config.h
-debug.obj : eif_debug.h
-debug.obj : eif_hashin.h
-debug.obj : [-]eif_config.h
-debug.obj : [-]eif_portable.h
-debug.obj : eif_sig.h
-debug.obj : eif_struct.h
-debug.obj : eif_local.h
-debug.obj : eif_out.h
-debug.obj : [-]eif_portable.h
-debug.obj : eif_hector.h
-interp.obj : interp.c
-interp.obj : [-]eif_config.h
-interp.obj : [-]eif_portable.h
-interp.obj : [-]eif_confmagic.h
-interp.obj : eif_interp.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_struct.h
-interp.obj : [-]eif_config.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_malloc.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_plug.h
-interp.obj : [-]eif_config.h
-interp.obj : [-]eif_portable.h
-interp.obj : eiffel.h
-interp.obj : [-]eif_config.h
-interp.obj : eif_out.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_file.h
-interp.obj : eif_macros.h
-interp.obj : [-]eif_config.h
-interp.obj : eif_garcol.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_struct.h
-interp.obj : eif_plug.h
-interp.obj : eif_except.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_garcol.h
-interp.obj : eif_local.h
-interp.obj : eif_copy.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_plug.h
-interp.obj : eif_hector.h
-interp.obj : eif_cecil.h
-interp.obj : eif_plug.h
-interp.obj : eif_garcol.h
-interp.obj : eif_size.h
-interp.obj : [-]eif_config.h
-interp.obj : eif_dir.h
-interp.obj : eif_macros.h
-interp.obj : eif_macros.h
-interp.obj : eif_macros.h
-interp.obj : eif_hashin.h
-interp.obj : [-]eif_config.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_cecil.h
-interp.obj : eif_hector.h
-interp.obj : eif_except.h
-interp.obj : eif_local.h
-interp.obj : eif_copy.h
-interp.obj : eif_debug.h
-interp.obj : eif_sig.h
-interp.obj : eif_bits.h
-interp.obj : [-]eif_portable.h
-interp.obj : eif_plug.h
-option.obj : option.c
-option.obj : [-]eif_config.h
-option.obj : eif_struct.h
-option.obj : [-]eif_config.h
-option.obj : [-]eif_portable.h
-option.obj : [-]eif_confmagic.h
-option.obj : option.h
-update.obj : update.c
-update.obj : eif_macros.h
-update.obj : [-]eif_config.h
-update.obj : eif_malloc.h
-update.obj : [-]eif_portable.h
-update.obj : [-]eif_confmagic.h
-update.obj : eif_garcol.h
-update.obj : [-]eif_portable.h
-update.obj : eif_struct.h
-update.obj : [-]eif_config.h
-update.obj : [-]eif_portable.h
-update.obj : eif_plug.h
-update.obj : [-]eif_config.h
-update.obj : [-]eif_portable.h
-update.obj : eif_except.h
-update.obj : [-]eif_portable.h
-update.obj : eif_garcol.h
-update.obj : eif_local.h
-update.obj : eif_copy.h
-update.obj : [-]eif_portable.h
-update.obj : eif_plug.h
-update.obj : eif_hector.h
-update.obj : eif_cecil.h
-update.obj : eif_plug.h
-update.obj : eif_garcol.h
-update.obj : eif_size.h
-update.obj : [-]eif_config.h
-update.obj : eif_struct.h
-update.obj : eif_hashin.h
-update.obj : [-]eif_config.h
-update.obj : [-]eif_portable.h
-update.obj : eif_except.h
-update.obj : update.h
-update.obj : eif_cecil.h
-update.obj : misc.h
-update.obj : eif_cecil.h
-update.obj : eif_err_msg.h
-wbench.obj : wbench.c
-wbench.obj : [-]eif_config.h
-wbench.obj : eif_macros.h
-wbench.obj : eif_malloc.h
-wbench.obj : [-]eif_portable.h
-wbench.obj : [-]eif_confmagic.h
-wbench.obj : eif_garcol.h
-wbench.obj : eif_struct.h
-wbench.obj : eif_plug.h
-wbench.obj : eif_except.h
-wbench.obj : eif_garcol.h
-wbench.obj : eif_local.h
-wbench.obj : eif_copy.h
-wbench.obj : eif_hector.h
-wbench.obj : eif_cecil.h
-wbench.obj : eif_size.h
-wbench.obj : eif_garcol.h
-wbench.obj : eif_struct.h
-wbench.obj : eif_hashin.h
-wbench.obj : [-]eif_config.h
-wbench.obj : [-]eif_portable.h
-wbench.obj : eif_except.h
-wbench.obj : eif_wbench.h
-wbench.obj : eif_interp.h
-wbench.obj : [-]eif_portable.h
-wbench.obj : eif_struct.h
-wbench.obj : eif_plug.h
-main.obj : main.c
-main.obj : [-]eif_config.h
-main.obj : [-]eif_portable.h
-main.obj : [-]eif_confmagic.h
-main.obj : eif_urgent.h
-main.obj : eif_garcol.h
-main.obj : eif_struct.h
-main.obj : eif_plug.h
-main.obj : eif_except.h
-main.obj : eif_malloc.h
-main.obj : eif_sig.h
-main.obj : eif_err_msg.h

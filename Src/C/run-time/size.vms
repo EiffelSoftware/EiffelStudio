@@ -1,16 +1,41 @@
 /*
+	description: "size.vms: Platform specific sizes of basic elements (VMS version)."
+	date:		"$Date$"
+	revision:	"$Revision$"
+	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Runtime.
+			
+			Eiffel Software's Runtime is free software; you can
+			redistribute it and/or modify it under the terms of the
+			GNU General Public License as published by the Free
+			Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Runtime is distributed in the hope
+			that it will be useful,	but WITHOUT ANY WARRANTY;
+			without even the implied warranty of MERCHANTABILITY
+			or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Runtime; if not,
+			write to the Free Software Foundation, Inc.,
+			51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
 
-  ####      #    ######  ######          #    #
- #          #        #   #               #    #
- #          #        #   #               #    #
-  ####      #       #    #####           ######
-      #     #      #     #               #    #
- #    #     #     #      #        ###    #    #
-  ####      #    ######  ######   ###    #    #
 
+	--- size.vms  (eif_size.h for VMS) ---
 	Size of basic types and access macros.
-	--- size.vms -- eif_size.h for VMS ---
-    $Id$
 
 */
 
@@ -23,25 +48,34 @@
 CONFIGURATION ERROR EIF_VMS NOT DEFINED
 #else	/* this extends almost to the end of the file */
 
+#if __INITIAL_POINTER_SIZE	/* compiled with /POINTER_SIZE specification */
+#define EIF_VMS_PTRSIZ	( __INITIAL_POINTER_SIZE/8 )		/* Size of void*, char* */
+#else
+#define EIF_VMS_PTRSIZ	4		/* Size of void*, char* */
+#endif /* __INITIAL_POINTER_SIZE */
+
 /* Basic sizes */
 #ifdef __alpha	/* Alpha hardware dependent values */
-#define ALIGN		8		/* Alignment restrictions */
-#define DBLSIZ		8		/* Size of double */
+#define EIF_ALIGN	8		/* Alignment restrictions */
+#define R64SIZ		8		/* Size of double */
 #define I64SIZ		8		/* Size of integer 64 bits */
-#define FLTSIZ		4		/* Size of float */
-#define REFSIZ		4		/* Size of char * */
+#define R32SIZ		4		/* Size of float */
+#define REFSIZ		EIF_VMS_PTRSIZ	/* Size of char* */
+/* Should be $longsize but for now it is 32 bits only. */
 #define LNGSIZ		4		/* Size of long */
-#define I16SIZ		2		/* Size of wide char, integer 16 bits */
-#define CHRSIZ		1		/* Size of char, integer 8 bits */
-#define PTRSIZ		4		/* Size of a function pointer: FIXME */
-
-#else	/* VAX hardware dependent values */
-CONFIGURATION ERROR SIZE.VMS VAX SIZES NOT DEFINED
-#define ALIGN		8		/* Alignment restrictions */
-#endif	/* __alpha or vax */
-
+#define I16SIZ		2	    	/* Size of integer 16 bits */
+#define CHRSIZ		1		/* Size of char */
+#define PTRSIZ		EIF_VMS_PTRSIZ	/* Size of a function pointer */
 #define BYTSIZ		8		/* Size of a byte, in bits */
 #define BITLONG (BYTSIZ * LNGSIZ) /* Number of bits in a long */
+#define LNGPAD_2	8 	/* Computed version of LNGPAD (2) on VMS/Alpha (s.b. 1 on VMS/VAX) */
+
+#else	/* other (VAX? IA64?): hardware dependent values */
+CONFIGURATION ERROR SIZE.VMS VAX HARDWARE DEPENDENT SIZES NOT DEFINED
+#define EIF_ALIGN	1		/* Alignment restrictions */
+#define LNGPAD_2	1		/* Computed version of LNGPAD (2) on VMS/VAX) */
+#endif	/* __alpha */
+
 
 /* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
  * This means some garbage bits may be found at the end of the bit field.
@@ -52,28 +86,25 @@ CONFIGURATION ERROR SIZE.VMS VAX SIZES NOT DEFINED
 #define BIT_UNIT	(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
 #define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
 #define BITACS(n)	((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
-#define BITOFF(n)	(((BITACS(n)/ALIGN)+((BITACS(n)%ALIGN)?1:0))*ALIGN)
+#define BITOFF(n)	(((BITACS(n)/EIF_ALIGN)+((BITACS(n)%EIF_ALIGN)?1:0))*EIF_ALIGN)
 
-#define REFPAD(n) (((((n)*REFSIZ)/ALIGN)+((((n)*REFSIZ)%ALIGN)?1:0))*ALIGN)
-#define CHRPAD(n) (((((n)*CHRSIZ)/ALIGN)+((((n)*CHRSIZ)%ALIGN)?1:0))*ALIGN)
-#define I16PAD(n) (((((n)*I16SIZ)/ALIGN)+((((n)*I16SIZ)%ALIGN)?1:0))*ALIGN)
-#define LNGPAD(n) (((((n)*LNGSIZ)/ALIGN)+((((n)*LNGSIZ)%ALIGN)?1:0))*ALIGN)
-#define FLTPAD(n) (((((n)*FLTSIZ)/ALIGN)+((((n)*FLTSIZ)%ALIGN)?1:0))*ALIGN)
-#define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
-#define I64PAD(n) (((((n)*I64SIZ)/ALIGN)+((((n)*I64SIZ)%ALIGN)?1:0))*ALIGN)
-#define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
-
-
-#define LNGPAD_2	8 	/* Computed version of LNGPAD (2) on VMS/Alpha (s.b. 1 on VMS/VAX) */
+#define REFPAD(n) (((((n)*REFSIZ)/EIF_ALIGN)+((((n)*REFSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define CHRPAD(n) (((((n)*CHRSIZ)/EIF_ALIGN)+((((n)*CHRSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define I16PAD(n) (((((n)*I16SIZ)/EIF_ALIGN)+((((n)*I16SIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define LNGPAD(n) (((((n)*LNGSIZ)/EIF_ALIGN)+((((n)*LNGSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define R32PAD(n) (((((n)*R32SIZ)/EIF_ALIGN)+((((n)*R32SIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define I64PAD(n) (((((n)*I64SIZ)/EIF_ALIGN)+((((n)*I64SIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define R64PAD(n) (((((n)*R64SIZ)/EIF_ALIGN)+((((n)*R64SIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
+#define PTRPAD(n) (((((n)*PTRSIZ)/EIF_ALIGN)+((((n)*PTRSIZ)%EIF_ALIGN)?1:0))*EIF_ALIGN)
 
 	/* Macros used to access fields in the object */
 #define REFACS(n) ((n)*REFSIZ)
 #define CHRACS(n) ((n)*CHRSIZ)
 #define I16ACS(n) ((n)*I16SIZ)
 #define LNGACS(n) ((n)*LNGSIZ)
-#define FLTACS(n) ((n)*FLTSIZ)
-#define DBLACS(n) ((n)*DBLSIZ)
+#define R32ACS(n) ((n)*R32SIZ)
 #define I64ACS(n) ((n)*I64SIZ)
+#define R64ACS(n) ((n)*R64SIZ)
 #define PTRACS(n) ((n)*PTRSIZ)
 
 
@@ -81,10 +112,29 @@ CONFIGURATION ERROR SIZE.VMS VAX SIZES NOT DEFINED
 #ifdef TEST
 
 #include <stdio.h>
-
+#define PRINT(expr)		printf (#expr " == %d\n", expr)
+#define PRINT2(prefix,expr)	printf (prefix #expr " == %d\n", expr)
 int main (int argc, char* argv[])
 {
-    printf ("LNGPAD_2 == LNGPAD(2) == %d\n", LNGPAD(2));
+	printf ("LNGPAD_2 == LNGPAD(2) == %d\n", LNGPAD(2)); 
+	PRINT2 ("LNGPAD_2 == ", LNGPAD(2));
+	PRINT (R64SIZ);
+	PRINT (R32SIZ);
+	PRINT (I64SIZ);
+	PRINT (LNGSIZ);
+	PRINT (I16SIZ);
+	PRINT (CHRSIZ);
+	PRINT (REFSIZ);
+	PRINT (PTRSIZ);
+
+#if REFSIZ == 4
+	printf ("Compile time: REFSIZ is 4.\n", REFSIZ);
+#elif REFSIZ == 8
+	printf ("Compile time: REFSIZ is %d.\n", REFSIZ);
+#else
+	printf ("Compile time: REFSIZ is %d (not 4 or 8 at preprocessor time).\n", REFSIZ);
+#endif
+
 }
 #endif  /* TEST */
 

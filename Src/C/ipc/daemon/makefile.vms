@@ -1,8 +1,10 @@
-# ...C/ipc/daemon/makefile
+########################################################################
+# ...C/ipc/daemon/Makefile.VMS
+# $Id$
 #
 
 #TOP = [--]
-CURRENT= [.ipc.daemon]
+CURRENT= ipc/daemon
 DIR = $(CURRENT)
 
 #CC = cc
@@ -38,68 +40,48 @@ OBJECTS =  \$(OBJ)
 
 .FORCE_DEPEND::
 
-all:: .FORCE_DEPEND
+#all :: .FORCE_DEPEND
 
 ########################################################################
 # Start of Jmakefile
 
-# define vms specific symbols for compiling, etc.
-#include EIFFEL_SRC:[C.ipc]]makeinc.vms
-include ../makeinc.vms		# ipc common definitions
+#CINCLUDES = [C.IDRS],[C.IPC.SHARED],[C.RUN-TIME],[C.RUN-TIME.INCLUDE]
+CINCLUDES = [C.IPC.SHARED]
+#CDEFINES = IPC_DAEMON	# -- for testing Makefile only
 
-# to compile for debugging, say	    make <target> "DEBUG_CFLAGS=/debug/noopt"
-# to compile for distribution, say  make <target> "DEBUG_CFLAGS=/opt"
-#                              or   make <target> "DEBUG_CFLAGS="
+# Where shared archive is located (path and name)
+LIBIPC = $(TOP)/ipc/shared
+LIBIDR = $(TOP)/idrs
+
 #DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
 #DPFLAGS = /incl=(eiffelc:,$(LIBDIR),$(LIBRUN),$(LIBIDR) )
-#CFLAGS = /prefix=(all,except="select")/names=as_is/debug/noopt $(DPFLAGS)
-#CFLAGS = /prefix=(all)/names=as_is/debug/noopt/diag $(DPFLAGS)
 #CFLAGS = /prefix=(all) $(DPFLAGS) $(CDEFINES) $(DEBUG_CFLAGS) 
 #CFLAGS = $(DPFLAGS) $(CDEFINES) $(DEBUG_CFLAGS)
-#CINCLUDES = /incl=($(TOP),$(LIBDIR),$(LIBRUN),$(LIBIDR))
-CINCLUDES = /incl=($(DECC_INCLUDES),$(LIBDIR),$(LIBRUN),$(LIBIDR))
-#CDEFINES = /define=(USE_ADD_LOG,LOGGING_LEVEL=100)
-
-ifneq ($(LOCAL_CDEFINES),)
-ifneq ($(IPC_CDEFINES),)
-CDEFINES = /DEF=($(LOCAL_CDEFINES),$(IPC_CDEFINES))
-else
-CDEFINES = /DEF=($(LOCAL_CDEFINES))
-endif
-else
-ifneq ($(IPC_CDEFINES),)
-CDEFINES = /DEF=($(IPC_CDEFINES))
-else
-#CDEFINES = 
-endif
-endif
 
 DPFLAGS = $(CINCLUDES)$(CDEFINES)
-CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
+#CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
 #CFLAGS_CS = /ipcdmn_cs_not_required
+
+LOCAL_DEPENDENCIES = $(MAKEFILE_DEPENDENCIES) #$(TOP)/eif_config.h $(TOP)/eif_portable.h $(TOP)/eif_confmagic.h
+ALL_DEPENDENCIES   = $(MAKEFILE_DEPENDENCIES) #$(TOP)/eif_config.h $(TOP)/eif_portable.h $(TOP)/eif_confmagic.h
+
+# define vms specific symbols for compiling, etc.
+include EIFFEL_SRC:[C.ipc]Makeinc.VMS		# ipc common definitions
+
+
 
 # Files used to build the daemon
 SRC = child.c listen.c main.c proto.c # putenv.c
-#MSRC = main.c
 
 # Derived object file names. Case sensitive versions not required
-#OBJ = \
-	child.obj \
-	listen.obj \
-	main.obj \
-	proto.obj \
-	# putenv.obj 
-
 OBJ = $(patsubst %.c,%.obj,$(SRC) $(MSRC))
 
-
-
 # make all objects dependent on ipcvms.h tho' not all need it
-$(OBJ) : [-.shared]ipcvms.h 
-#$(OBJ) : makefile   # ditto this makefile 
+$(OBJ) : $(TOP)/ipc/shared/ipcvms.h $(LOCAL_DEPENDENCIES)
 
 
 LDFLAGS = $(LIBARCH) $(LIBIDRARCH)
+
 # Where shared archive is located (path and name)
 LIBDIR = [-.shared]
 LIBNAME = ipc.olb
@@ -109,7 +91,6 @@ LIBIDR = [--.idrs]
 LIBIDRNAME = idr.olb
 LIBIDRARCH = $(LIBIDR)$(LIBIDRNAME)
 LIBDAEMON = daemon.olb
-
 
 
 # define some useful targets
@@ -123,6 +104,9 @@ local : this
 
 library : $(LIBDAEMON)
 
+LISTINGS = $(patsubst %.c,%.lis,$(SRC))
+listings : $(LISTINGS) $(LOCAL_DEPENDENCIES)
+
 #estudio : daemon
 
 objects : $(OBJ)
@@ -134,15 +118,22 @@ objects : $(OBJ)
 # local stuff to be rebuilt without checking other libraries
 #estudio.exe estudiodbg.exe : $(LIBARCH)
 #estudio.exe : $(LIBIDRARCH)
-all :: $(LIBARCH) $(LIBIDRARCH)
+
+#all :: $(LIBARCH) $(LIBIDRARCH)
+
+#$(LIBDAEMON) : $(LOCAL_DEPENDENCIES)
+
+$(LIBDAEMON) : $(OBJ) 
+#	libr/create $(LIBDAEMON) $(OBJC)
+#	libr/create $@ $^
+	libr/create $@ $^
+	-purge/nolog $@,*.obj
+	-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+
 all :: estudio.exe estudiodbg.exe 
 
-$(LIBDAEMON): $(OBJ) 
-#	libr/create $(LIBDAEMON) $(OBJC)
-	libr/create $@ $^
-
-
-#estudio_exe: $(OBJ) library
+#estudio_exe : $(OBJ) library
 #estudio.exe : $(LIBDAEMON)
 daemon : $(LIBDAEMON)
 #	$(RM) $@
@@ -151,13 +142,14 @@ daemon : $(LIBDAEMON)
 #	libr/create $(LIBDAEMON) $(OBJC)
 #	link/exe=$@/map=estudio.map main.obj,[]$(LIBDAEMON)/libr,
 	link/exe=estudio.exe/map=estudio.map/full/cross $(LINKFLAGS)  \
-	    $(LIBDAEMON)/incl="main"/libr, [-.shared]ipc.olb/libr, [--.idrs]idr.olb/libr, \
-	    [--.run-time]runtime.olb/incl=(eifrtvms), \
-	    eiffel_src:[c_library.vms.porting.lib]vms_jackets.opt/opt
+		$(LIBDAEMON)/incl="main"/libr, [-.shared]ipc.olb/libr, [--.idrs]idr.olb/libr, \
+		[--.run-time]runtime.olb/incl=(eifrtvms), \
+		eiffel_src:[c_library.vms.porting.lib]vms_jackets.opt/opt
 	link/debug/exe=estudiodbg.exe/map=estudiodbg.map $(LINKFLAGS) \
-	    $(LIBDAEMON)/incl="main"/libr, [-.shared]ipc.olb/libr, [--.idrs]idr.olb/libr, \
-	    [--.run-time]runtime/incl=(eifrtvms), \
-	    eiffel_src:[c_library.vms.porting.lib]vms_jackets.opt/opt
+		$(LIBDAEMON)/incl="main"/libr, [-.shared]ipc.olb/libr, [--.idrs]idr.olb/libr, \
+		[--.run-time]runtime/incl=(eifrtvms), \
+		eiffel_src:[c_library.vms.porting.lib]vms_jackets.opt/opt
+	-purge/nolog *.exe,*.map
 
 debug : estudiodbg_exe
 
@@ -260,7 +252,7 @@ Makefiles.SH::
 
 ########################################################################
 # manual dependencies
-$(OBJ) : $(TOP)eif_config.h $(TOP)eif_portable.h 
+$(OBJ) : $(LOCAL_DEPENDENCIES) # $(TOP)eif_config.h $(TOP)eif_portable.h 
 
 ########################################################################
 # Dependencies generated by make depend
@@ -269,3 +261,54 @@ $(OBJ) : $(TOP)eif_config.h $(TOP)eif_portable.h
 # Put nothing here or make depend will gobble it up
 #.FORCE_DEPEND::
 #	echo "You must run 'make depend' in $(TOP) first."; exit 1
+
+show ::
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(MAKEFILE_DEPENDENCIES) = ""$(MAKEFILE_DEPENDENCIES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(LOCAL_DEPENDENCIES) = ""$(LOCAL_DEPENDENCIES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(CINCLUDES) = ""$(CINCLUDES)"""
+ifeq ($(CINCLUDES),)
+	@write sys$$output "CINCLUDES blank"
+else
+	@write sys$$output "CINCLUDES nonblank"
+endif
+ifdef CINCLUDES
+	@write sys$$output "CINCLUDES defined"
+else
+	@write sys$$output "CINCLUDES undefined"
+endif
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(DECC_INCLUDES) = ""$(DECC_INCLUDES)"""
+
+show_more ::
+#	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(ISE_PLATFORM) = ""$(ISE_PLATFORM)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(TOP) = ""$(TOP)""  $$(TOPDIR) = ""$(TOPDIR)""  $$(CURRENT) = ""$(CURRENT)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(CURDIR) = ""$(CURDIR)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(LOCAL_MAKEFILE) = ""$(LOCAL_MAKEFILE)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(MAKE) = ""$(MAKE)""  $$(MAKEFLAGS) = ""$(MAKEFLAGS)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(MAKEFILE_LIST) = ""$(MAKEFILE_LIST)"""
+#	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(MAKEFILES) = ""$(MAKEFILES)"""
+#	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(MAKEINC_DEPENDENCIES)  = ""$(MAKEINC_DEPENDENCIES)"""
+#	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(MAKEFILE_DEPENDENCIES) = ""$(MAKEFILE_DEPENDENCIES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(TOP_CDEFINES) = ""$(TOP_CDEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(CDEFINES) = ""$(CDEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(CDEFINES) = ""$(CDEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(strip $$(CDEFINES)) = ""$(strip $(CDEFINES))"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(strip CDEFINES) = ""$(strip CDEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(origin CDEFINES) = ""$(origin CDEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(LOCAL_CDEFINES) = ""$(LOCAL_CDEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(MY_CDEFINES) = ""$(MY_CDEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(DECC_DEFINES) = ""$(DECC_DEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(CDEFINES) = ""$(CDEFINES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(CINCLUDES) = ""$(CINCLUDES)"""
+	@write sys$$output "$(CURDIR)Makefile.VMS $@: $$(DECC_INCLUDES) = ""$(DECC_INCLUDES)"""
+ifeq ($(CDEFINES),)
+	@write sys$$output "CDEFINES blank"
+else
+	@write sys$$output "CDEFINES nonblank"
+endif
+ifdef CDEFINES
+	@write sys$$output "CDEFINES defined"
+else
+	@write sys$$output "CDEFINES undefined"
+endif
+
+

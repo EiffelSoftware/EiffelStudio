@@ -47,7 +47,7 @@ feature -- Debugging settings
 	use_arguments: BOOLEAN is
 			-- Use arguments?
 		do
-			Result := last_profile_index >= 0
+			Result := last_profile_index > 0
 		end
 
 	arguments: ARRAYED_LIST [like last_argument]
@@ -57,7 +57,7 @@ feature -- Debugging settings
 	last_profile: TUPLE [title:STRING; cwd:STRING; args:STRING; env:HASH_TABLE [STRING_32, STRING_32]] is
 			-- List of profiles used by current project.
 		do
-			if last_profile_index >= 0 then
+			if last_profile_index > 0 then
 				Result := profiles [last_profile_index]
 			end
 		end
@@ -69,7 +69,7 @@ feature -- Debugging settings
 	last_argument: STRING is
 			-- Last used argument.
 		do
-			if last_profile_index >= 0 then
+			if last_profile_index > 0 then
 				Result := last_profile.args
 			end
 		end
@@ -77,7 +77,7 @@ feature -- Debugging settings
 	working_directory: STRING is
 			-- Working directory.
 		do
-			if last_profile_index >= 0 then
+			if last_profile_index > 0 then
 				Result := last_profile.cwd
 			end
 		end
@@ -85,7 +85,7 @@ feature -- Debugging settings
 	dbg_environment: HASH_TABLE [STRING_32, STRING_32] is
 			-- Environment for debugging.
 		do
-			if last_profile_index >= 0 then
+			if last_profile_index > 0 then
 				Result := last_profile.env
 			end
 		end

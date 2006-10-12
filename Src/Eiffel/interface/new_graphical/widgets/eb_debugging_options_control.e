@@ -137,6 +137,8 @@ feature {NONE} -- Retrieval
 				else
 					enable_profiles_button.disable_select
 				end
+			else
+				enable_profiles_button.enable_select
 			end
 		end
 
@@ -227,6 +229,7 @@ feature {NONE} -- Display profiles impl
 			vb.disable_item_expand (hb)
 			hb.set_padding_width (layout_constants.small_padding_size)
 			create add_button.make_with_text_and_action ("Add Profile", agent add_new_profile)
+			add_button.disable_sensitive
 --			add_button.set_minimum_width (layout_constants.default_button_width)
 
 			create enable_profiles_button.make_with_text ("Enable Profiles")
@@ -234,6 +237,7 @@ feature {NONE} -- Display profiles impl
 --			enable_profiles_button.set_minimum_width (layout_constants.default_button_width)
 
 			create remove_button.make_with_text_and_action ("Remove Profile", agent remove_selected_profile)
+			remove_button.disable_sensitive
 --			remove_button.set_minimum_width (layout_constants.default_button_width)
 
 			hb.extend (add_button)
@@ -469,10 +473,8 @@ feature -- Data change
 		end
 
 	change_env_on (v: HASH_TABLE [STRING_32, STRING_32]; p: like profile_from_row) is
-		require
-			v /= Void
 		do
-			if v.is_empty then
+			if v = Void or else v.is_empty then
 				p.env := Void
 			else
 				p.env := v
@@ -511,8 +513,12 @@ feature {NONE} -- Button Actions
 			if not enable_profiles_button.is_selected then
 				profiles_grid.remove_selection
 				set_sensitive_state_on_grid (profiles_grid, False)
+				add_button.disable_sensitive
+				remove_button.disable_sensitive
 			else
 				set_sensitive_state_on_grid (profiles_grid, True)
+				add_button.enable_sensitive
+				remove_button.enable_sensitive
 			end
 		end
 
@@ -1045,7 +1051,7 @@ feature {NONE} -- Environment actions
 				and not ev_application.alt_pressed
 				and not ev_application.shift_pressed
 			then
-				a_row.enable_select
+--				a_row.enable_select
 
 				create m.make_with_text ("Environment variables")
 				gei ?= a_row.item (1)
@@ -1137,10 +1143,12 @@ feature {NONE} -- Environment actions
 			end
 			r := a_row.index
 			g := a_row.parent
-			g.remove_row (r)
-			if r > 1 then
+			if r < g.row_count and then g.row(r).parent_row = r.parent_row then
+				g.select_row (r)
+			elseif r > 1 then
 				g.select_row (r - 1)
 			end
+			g.remove_row (r)
 			change_env_on (p.env, p)
 		end
 
@@ -1184,20 +1192,6 @@ feature {NONE} -- Implementation
 			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 		end
 
-	Selected_background_color: EV_COLOR
-		local
-			c1,c2: EV_COLOR
-		once
-			c1 := profiles_grid.separator_color
-			c2 := profiles_grid.focused_selection_color
---			create Result.make_with_8_bit_rgb (190,255,190)
-			create Result.make_with_8_bit_rgb (
-					(c1.red_8_bit + c2.red_8_bit) // 2,
-					(c1.green_8_bit + c2.green_8_bit) // 2,
-					(c1.blue_8_bit + c2.blue_8_bit) // 2
-				)
-		end
-
 	override_color: EV_COLOR is
 			-- Background color for values that do override.
 		once
@@ -1216,7 +1210,6 @@ feature {NONE} -- Implementation
 		do
 			create acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_tab),
 							False, False, False)
---			acc.actions.extend (agent gi.enable_select)
 			acc.actions.extend (agent gi.activate)
 			pop.accelerators.extend (acc)
 		end

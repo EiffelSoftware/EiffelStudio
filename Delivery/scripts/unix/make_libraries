@@ -52,6 +52,8 @@ if [ "$1" = "gtk" ]; then
 	# Copy GTK 1.2 implementation over gtk directory
 	echo ""
 fi
+remtrace vision2_extension
+exprt $DEFAULT_ORIGO_SVN/Src/library/vision2_extension vision2_extension
 remtrace web
 exprt $DEFAULT_ORIGO_SVN/Src/library/web web 
 remtrace wel

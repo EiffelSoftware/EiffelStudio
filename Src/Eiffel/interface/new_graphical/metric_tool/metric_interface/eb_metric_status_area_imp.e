@@ -110,7 +110,7 @@ feature {NONE} -- Constant setting
 			-- Set all attributes relying on string constants to the current
 			-- value of the associated constant.
 		local
-			s: STRING_32
+			s: STRING_GENERAL
 		do
 			from
 				string_constant_set_procedures.start
@@ -226,7 +226,7 @@ feature {NONE} -- Constant setting
 		end
 					
 	string_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [STRING_GENERAL]]]
-	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_32]]
+	string_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], STRING_GENERAL]]
 	integer_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [INTEGER]]]
 	integer_constant_retrieval_functions: ARRAYED_LIST [FUNCTION [ANY, TUPLE [], INTEGER]]
 	pixmap_constant_set_procedures: ARRAYED_LIST [PROCEDURE [ANY, TUPLE [EV_PIXMAP]]]
@@ -245,4 +245,4 @@ feature {NONE} -- Constant setting
 			Result := an_integer
 		end
 
-end -- class EB_METRIC_STATUS_AREA_IMP
+end

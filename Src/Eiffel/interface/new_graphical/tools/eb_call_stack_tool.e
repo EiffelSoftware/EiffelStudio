@@ -747,13 +747,21 @@ feature {NONE} -- Implementation
 			create l_tooltip.make (10)
 
 			e_cse ?= elem
+
 				--| Routine name
-			l_feature_info := elem.routine_name.twin
+			l_feature_info := elem.routine_name
+			if l_feature_info /= Void then
+				l_feature_info := l_feature_info.twin
+			else
+				create l_feature_info.make_empty
+			end
 			l_tooltip.append_string (l_feature_info)
 
-					--| Class name
+				--| Class name
 			l_class_info := elem.class_name
-			l_tooltip.prepend_string ("{" + l_class_info + "}")
+			if l_class_info /= Void then
+				l_tooltip.prepend_string ("{" + l_class_info + "}.")
+			end
 
 				--| Break Index
 			l_breakindex_info := elem.break_index.out

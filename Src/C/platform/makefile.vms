@@ -1,6 +1,6 @@
 ########################################################################
 # Makefile generated from Makefile.SH on Fri Nov 18 08:54:49 PST 1994
-#   .../C/plat/makefile
+#   .../C/plat/makefile.vms
 
 SHELL = /bin/sh
 JMAKE = jmake
@@ -51,12 +51,6 @@ all :: .FORCE_DEPEND
 ########################################################################
 # Start of Jmakefile
 
-# define vms specific symbols for compiling, etc.
-include $(TOP)makeinc.vms
-# to compile for debugging, say	    make <target> "DEBUG_CFLAGS=/debug/noopt"
-# to compile for distribution, say  make <target> "DEBUG_CFLAGS="
-#                              or   make <target> "DEBUG_CFLAGS=/opt"
-
 LIBRUN = ../run-time
 
 #DPFLAGS = /prefix=all/incl=([-],[-.run-time])
@@ -65,16 +59,15 @@ CINCLUDES = /incl=($(DECC_INCLUDES),[-.run-time],[-.run-time.include])
 DPFLAGS = $(CINCLUDES)$(CDEFINES)
 CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
 
-LSRC = names.c sizes.c commands.c
+# define vms specific symbols for compiling, etc.
+include EIFFEL_SRC:[C]makeinc.vms
 
-#LOBJ = \
-#	names.obj \
-#	sizes.obj \
-#	commands.obj
 
+LSRC = names.c commands.c
 LOBJ = $(patsubst %.c,%.obj,$(LSRC))
 #LOBJ_CS = $(patsubst %.c,%.obj_cs,$(LSRC))
-DEPEND = makefile
+DEPEND = $(LOCAL_MAKEFILE) # [C]makeinc.vms
+
 $(LOBJ) : $(DEPEND)		# make objects depend on this makefile 
 #$(LOBJ_CS) : $(DEPEND)		# make objects depend on this makefile 
 
@@ -82,28 +75,30 @@ $(LOBJ) : $(DEPEND)		# make objects depend on this makefile
 THISLIB = platform.olb
 LIBS = $(THISLIB) # $(THISLIB)_cs
 
-all :: $(LIBS)
+all : $(LIBS)
 complete : FORCE all
 FORCE:
 
-LISTINGS = $(patsubst %.obj,%.lis,$(LOBJ)) $(patsubst %.obj,%.lis,$(LOBJ_CS))
-listings : $(DEPEND) $(LISTINGS)
-#listings : $(patsubst %.obj,%.lis,$(LOBJ)) $(patsubst %.obj,%.lis,$(LOBJ_CS))
+objects : $(LOBJ)
+
+LISTINGS = $(patsubst %.obj,%.lis,$(LOBJ)) # $(patsubst %.obj,%.lis,$(LOBJ_CS))
+$(LISTINGS) : $(DEPEND) [C]eif_config.h [C]eif_portable.h [C]eif_confmagic.h
+listings : $(LISTINGS) $(DEPEND)
 	@write sys$$output "listings = $(LISTINGS)"
+
 
 local_realclean::
 #	$(RM) libplatform.a
 	$(RM) platform.olb;*
 
+
 #COMMA = ,
-$(THISLIB) :: $(LOBJ) $(DEPEND)
-$(THISLIB) :: $(LOBJ)
+$(THISLIB) : $(LOBJ)
 #	libr/create $@ $(LOBJ)
 #	libr/create $@ $(patsubst %.obj,%.obj$(COMMA),$(LOBJ)) nl:
 	libr/create $@ $^
 
-#$(THISLIB)_cs :: $(LOBJ) $(DEPEND)
-#$(THISLIB)_cs :: $(LOBJ)
+#$(THISLIB)_cs : $(LOBJ) $(DEPEND)
 #	libr/create $@ $^
 
 depend:: ../mkdep

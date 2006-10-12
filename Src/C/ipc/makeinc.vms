@@ -5,32 +5,32 @@
 # 
 #
 
-#CC = ipc_cc
+CC = ipc_cc
 
 # common stuff for building the ipc libraries
+#IPC_CINCLUDES = [C.IPC.SHARED],[C.RUN-TIME],[C.RUN-TIME.INCLUDE],[C.IDRS]
+IPC_CINCLUDES = [C.RUN-TIME],[C.RUN-TIME.INCLUDE],[C.IDRS]
+ifneq ($(IPC_CINCLUDES),)
+  ifneq ($(CINCLUDES),)
+    CINCLUDES +=,$(IPC_CINCLUDES)
+  else
+    CINCLUDES = $(IPC_CINCLUDES)
+  endif
+endif
+
+# define this to enable IPC logging
+#IPC_LOG_ENABLE = USE_ADD_LOG,LOGGING_LEVEL=100
+IPC_CDEFINES = $(IPC_LOG_ENABLE)
+ifneq ($(IPC_CDEFINES),)
+  ifneq ($(CDEFINES),)
+    CDEFINES += ,$(IPC_CDEFINES)
+  else
+    CDEFINES = $(IPC_CDEFINES)
+  endif
+endif
 
 # define vms specific symbols for compiling, etc.
 include EIFFEL_SRC:[C]makeinc.vms
 
 
-#CC = cc/debug/noopt
-#DEBUG_CFLAGS = /debug/noopt
-#IPC_CDEFINES = USE_ADD_LOG,LOGGING_LEVEL=100
-
-# define this to enable IPC logging
-#IPC_LOG_ENABLE = USE_ADD_LOG,LOGGING_LEVEL=100
-
-
-ifneq ($(IPC_LOG_ENABLE),)
-ifneq ($(TOP_CDEFINES),)
-IPC_CDEFINES = $(IPC_LOG_ENABLE),$(TOP_CDEFINES)
-else
-IPC_CDEFINES = $(IPC_LOG_ENABLE)
-endif
-else
-ifneq ($(TOP_CDEFINES),)
-IPC_CDEFINES = $(TOP_CDEFINES)
-else
-IPC_CDEFINES = 
-endif
-endif
+

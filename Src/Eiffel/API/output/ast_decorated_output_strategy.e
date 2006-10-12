@@ -2761,7 +2761,9 @@ feature {NONE} -- Implementation
 						feature_name ?= l_as.creation_feature_list.item
 						if not l_type.is_formal then
 							l_feat := l_type.associated_class.feature_with_name (feature_name.visual_name)
-							text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+							if l_feat /= Void then
+								text_formatter_decorator.process_feature_text (feature_name.visual_name, l_feat, False)
+							end
 						else
 							text_formatter_decorator.process_local_text (feature_name.visual_name)
 						end

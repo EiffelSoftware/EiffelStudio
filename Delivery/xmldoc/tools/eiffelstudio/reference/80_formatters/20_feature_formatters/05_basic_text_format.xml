@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>Basic text view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/view_editor_feature_icon.png</url>
 			</image>displays the text of the current feature as it is written in the enclosing class.
 			<line_break/>It does not work with 
 			<link>

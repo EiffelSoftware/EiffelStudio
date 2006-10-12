@@ -10,11 +10,11 @@
 	<paragraph>
 		<paragraph> This sample shows you how to set up your first 
 			<link>
-				<url>/libraries/wel/reference/support/wel_application_chart.xml</url>
+				<url>/libraries/wel/reference/wel_application_chart.xml</url>
 				<label>WEL_APPLICATION</label>
 			</link> consisting of a single 
 			<link>
-				<url>/libraries/wel/reference/windows/wel_frame_window_chart.xml</url>
+				<url>/libraries/wel/reference/wel_frame_window_chart.xml</url>
 				<label>WEL_FRAME_WINDOW</label>
 			</link>. This is one of the simplest WEL applications you can write, and the output is shown below: 
 		</paragraph>
@@ -63,11 +63,11 @@
 		</heading>
 		<paragraph>Although this system does nothing except create and display a 
 			<link>
-				<url>/libraries/wel/reference/windows/wel_frame_window_chart.xml</url>
+				<url>/libraries/wel/reference/wel_frame_window_chart.xml</url>
 				<label>WEL_FRAME_WINDOW</label>
 			</link>, it shows how to set up your first 
 			<link>
-				<url>/libraries/wel/reference/support/wel_application_chart.xml</url>
+				<url>/libraries/wel/reference/wel_application_chart.xml</url>
 				<label>WEL_APPLICATION</label>
 			</link>. 
 		</paragraph>
@@ -76,7 +76,7 @@
 				<label>TUTORIAL_STEP1</label>
 			</link> which inherits 
 			<link>
-				<url>/libraries/wel/reference/support/wel_application_chart.xml</url>
+				<url>/libraries/wel/reference/wel_application_chart.xml</url>
 				<label>WEL_APPLICATION</label>
 			</link> and redefines <code><feature_name>main_window</feature_name></code>
 		</paragraph>

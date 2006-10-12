@@ -12,23 +12,23 @@
 				<label>class flat view</label>
 			</link>). Breakpoints can be in three different states: enabled ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpenabled.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_enabled_icon.png</url>
 			</image> ), disabled ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpdisabled.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_disabled_icon.png</url>
 			</image> ), or not set ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpslot.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_slot_icon.png</url>
 			</image> ). Only enabled breakpoints will stop the application when they are encountered. By default, breakpoints are not set. Disabled breakpoints are useful to temporarily discard a breakpoint, while keeping the possibility to put it back quickly. Enabled and disabled breakpoints can have an associated an associated 
 			<link>
 				<url>40_conditional_breakpoints.xml</url>
 				<label>condition</label>
-			</link>.They are then shown as 
+			</link>. They are then shown as 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpenabled_condition.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_enabled_conditional_icon.png</url>
 			</image> and 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpdisabled_condition.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_disabled_conditional_icon.png</url>
 			</image>.
 		</paragraph>
 		<paragraph>Left-clicking on a breakpoint in a flat view changes the state of the breakpoint: it switches from not set to enabled, from enabled to not set, and from disabled to enabled. Removing a conditional breakpoint discards its condition.</paragraph>

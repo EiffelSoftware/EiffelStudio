@@ -29,20 +29,7 @@
 			</item>
 		</list>
 		<paragraph>
-			<span>The metric tool provides an easy way to create, update or compare archives. By clicking on
-				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_sorter_color.gif</url>
-					<border>0</border>
-				</image> , the following dialog pops up:
-			</span>
-		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/archive.png</url>
-				<border>0</border>
-			</image>
+			The metric tool provides an easy way to create, update or compare archives in the Metric Archive tab. Simply select to archives.
 		</paragraph>
 		<paragraph>The metric tool automatically creates a sub folder named "Metrics" in the current location of the loaded project. It is recommended, but not compulsory, to save created archives in that folder, since it has been provided for metric needs.</paragraph>
 		<span/>

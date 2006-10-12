@@ -1,0 +1,22 @@
+<document title="Managing criterion" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Metric,new,criterion,define</meta_content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>When defining a metric you can choose a complex criterion, made of other criteria and combined with boolean operators (and/or/not).</paragraph>
+		<paragraph>To build such a complex criterion, you first need to enter a criterion in the list. Then select this criterion and choose either the <bold>and</bold> operator (the inverted V button) or the <bold>or</bold> operator (the V button).</paragraph>
+		<note><bold>Tip</bold>: To obtain the negation of a criterion, simply type <bold>not</bold> in front of it. The icon of the criterion will change accordingly.</note>
+		<paragraph>Once this is done, the tool automatically insert a new row with the selected operator where the criterion was, and inserts the criterion as sub-element.</paragraph>
+		<paragraph>Now you can chose the other criterion to comple the combination. The result of your combination can be seen in the Expression text field.</paragraph>
+		<paragraph>You can combine more than one operator to build complex boolean expressions. Also if the order in which criteria appear is not satisfactory you can either use pick and drop or simpy the up/down button to reorder them.</paragraph>
+		<note><bold>Note</bold>: The operators are not limited to 2 criteria, they can be more.</note>
+		<seealso><bold>See also</bold><line_break />
+			<link><url>../../../how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/00_introduction.xml</url><label>Defining new metrics</label></link>
+		</seealso>
+	</paragraph>
+</document>

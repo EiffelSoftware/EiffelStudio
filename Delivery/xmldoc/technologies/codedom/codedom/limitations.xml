@@ -8,8 +8,6 @@
 		
 		The current implementation of the Eiffel CodeDom Provider does not support parsing Eiffel source code 
 		to produce a CodeDom tree. Only code generation and compilation are supported in the current release. 
-		If you would like to be notified when parsing is supported in the Eiffel CodeDom Provider please send us 
-		a note at <link><url>mailto:info@eiffel.com</url><label>info@eiffel.com</label></link>.
 
 		<heading>
 			<size>2</size>

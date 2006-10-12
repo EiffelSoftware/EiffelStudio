@@ -46,5 +46,41 @@
 					<label>Iconifying and restoring a cluster</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>80_display_quality.xml</url>
+					<label>Change the Display Quality</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>81_physics_mode.xml</url>
+					<label>Turn on Physics Mode</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>82_bon_uml_mode.xml</url>
+					<label>Switching between BON and UML View</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>83_anchor.xml</url>
+					<label>Anchoring</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>84_physics_dialog.xml</url>
+					<label>Adjusting Physics Settings</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>85_cluster_legend.xml</url>
+					<label>Using the Cluster Legend</label>
+				</link>
+			</item>
 		</list>
 	</paragraph></document>

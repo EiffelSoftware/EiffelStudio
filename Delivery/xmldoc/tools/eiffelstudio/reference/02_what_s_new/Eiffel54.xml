@@ -124,7 +124,7 @@
 				<item>Renamed <code><class_name>THREAD</class_name></code> and <code><class_name>MUTEX</class_name></code> into <code><class_name>SYSTEM_THREAD</class_name></code> and <code><class_name>SYSTEM_MUTEX</class_name></code> to avoid name conflicts with EiffelThread.</item>
 			</list>
 		<paragraph>
-			<link><url>index.xml</url><label>Click here to check out what was new in previous versions</label></link>
+			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>
 		</paragraph>
 	</paragraph>
 </document>

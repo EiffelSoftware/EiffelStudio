@@ -3,11 +3,11 @@
 	<paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/task_options.png</url>
 				<alt_text>Tasks dialog</alt_text>
 			</image>
 		</paragraph>
-		<paragraph>It is possible to have a command executed before/after a compilation.</paragraph>
+		<paragraph>It is possible to have a command executed before/after an eiffel compilation.</paragraph>
 		Tasks have these properties:
 		<list ordered="false">
 			<item>Command: command to execute</item>

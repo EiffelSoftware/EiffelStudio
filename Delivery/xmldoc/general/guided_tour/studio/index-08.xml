@@ -31,20 +31,10 @@
 			</code>
 			<italic>, just retarget one, as you know how to do this now, for example by typing the name followed by Enter in the Class Field at the top left.</italic>
 		</note>
-		<paragraph>First let's give ourselves more space. Right now we don't need the Cluster Tree and Feature Tree panes. Get rid of them by clicking the corresponding buttons on the top toolbar:</paragraph>
-		<div>
-			<image_link>
-				<url>index-25.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-25.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
-		<paragraph>You can get these panes back later by clicking the same buttons again.</paragraph>
+		<paragraph>First let's give ourselves more space. Right now we don't need the Cluster Tree, Feature Tree and Properties panes. Get rid of them by clicking the close buttons on the top right corner of the panes.</paragraph>
+		<paragraph>You can get these panes back later by clicking the buttons in the toolbar or by going to the View, Tools Menu.</paragraph>
 		<note>
-			<italic>Another way to hide a pane is to click its Close icon, the little cross mark highlighted (for the Features Tree pane) on the left in the last figure.</italic>
+			<italic>Another way to hide a pane is to click on the button in the toolbar or by unselecting them in the View, Tools Menu.</italic>
 		</note>
 		<paragraph>Two panes remain, showing the Editing Tool and the Context Tool.</paragraph>
 		<div>
@@ -62,11 +52,7 @@
 			<size>2</size>
 			<content>The Class Tab</content>
 		</heading>
-		<paragraph>Note: The diagram and metrics tool is unavailable in the free version of EiffelStudio.</paragraph>
-		<paragraph>The first tab we'll look at is the Class Tab. You'll find it at the bottom of the Context Tool:</paragraph>
-		<image>
-			<url>index-27.png</url>
-		</image>
+		<paragraph>The first tab we'll look at is the Class Tab. You'll find it at the bottom of the Context Tool.</paragraph>
 		<paragraph>This gives you access to many forms of information about the current class -- the target of the Development Window. A set of buttons at the top of the Context Tool enables you to display a number of 
 			<bold>views</bold> of the class. The currently highlighted button indicates the default view: 
 			<code>
@@ -74,16 +60,6 @@
 			</code>. You can see the others' names by moving the cursor over the various view icons, 
 			<bold>without clicking</bold>, and reading the tooltips.
 		</paragraph>
-		<div>
-			<image_link>
-				<url>index-28.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-28.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
 		<paragraph>The view currently displayed, 
 			<code>
 				<keyword>Ancestors</keyword>
@@ -191,43 +167,14 @@
 				</code>. (Now is not the time.)
 			</item>
 		</list>
-		<paragraph>This view is called "clickable" because, as we'll see later, every syntactical element on it is a hyperlink, which you can use for browsing. Here is the beginning of the 
-			<code>
-				<string>LIST</string>
-			</code> class text in 
-			<code>
-				<keyword>Clickable</keyword>
-			</code> view:
-		</paragraph>
-		<div>
-			<image_link>
-				<url>index-31.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-31.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
+		<paragraph>This view is called "clickable" because, as we'll see later, every syntactical element on it is a hyperlink, which you can use for browsing. </paragraph>
 		<paragraph>After 
 			<code>
 				<keyword>Clickable</keyword>
 			</code> comes the 
 			<code>
 				<keyword>Flat</keyword>
-			</code> view button. The layout of the result is similar:
-		</paragraph>
-		<div>
-			<image_link>
-				<url>index-32.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-32.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
-		<paragraph>The flat form of a class is the reconstructed class text including not only what's declared in the class itself but also everything that it inherits from its ancestors, direct or indirect. This applies to the flat form's features, which include ancestor features, but also to contracts: the flat form's invariant includes all clauses from ancestors' invariants, and the preconditions are expanded to take 
+			</code> view button. The layout of the result is similar. The flat form of a class is the reconstructed class text including not only what's declared in the class itself but also everything that it inherits from its ancestors, direct or indirect. This applies to the flat form's features, which include ancestor features, but also to contracts: the flat form's invariant includes all clauses from ancestors' invariants, and the preconditions are expanded to take 
 			<code>
 				<keyword>require else</keyword>
 			</code> and 
@@ -296,24 +243,6 @@
 				<keyword>Flat Contract</keyword>
 			</code>. Based on Eiffel's principles of Design by Contract, they document the interface properties of a class. Unlike the previous two, they do not show actual Eiffel texts, but information useful for client classes.
 		</paragraph>
-		<paragraph>Here is the beginning of the 
-			<code>
-				<keyword>Contract</keyword>
-			</code> view for our example class 
-			<code>
-				<string>LIST</string>
-			</code>:
-		</paragraph>
-		<div>
-			<image_link>
-				<url>index-33.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-33.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
 		<paragraph>The contract form (also known as the 
 			<bold>short form</bold> of a class) is the class text deprived of any internal detail to retain interface information only. It discards any feature that's not exported (available to all clients); for the retained features, it discards the implementation -- 
 			<code>
@@ -364,18 +293,8 @@
 			</code> button shows the (empty) list of clients of 
 			<code>
 				<string>LIST</string>
-			</code> :
+			</code>.
 		</paragraph>
-		<div>
-			<image_link>
-				<url>index-34.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-34.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
 		<paragraph>No class of this system directly uses 
 			<code>
 				<string>LIST</string>
@@ -388,18 +307,8 @@
 			</code> of 
 			<code>
 				<string>LIST</string>
-			</code> :
+			</code>.
 		</paragraph>
-		<div>
-			<image_link>
-				<url>index-35.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-35.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
 		<paragraph>The only two classes that 
 			<code>
 				<string>LIST</string>
@@ -408,7 +317,7 @@
 				<string>BOOLEAN</string>
 			</code> and 
 			<code>
-				<string>INTEGER</string>
+				<string>INTEGER_32</string>
 			</code>. In Eiffel, as you may remember, all types are defined by classes, even those describing such elementary values as integers and booleans.
 		</paragraph>
 		<heading>
@@ -417,7 +326,7 @@
 		</heading>
 		<paragraph>Let's resist the natural urge to go see now what the classes 
 			<code>
-				<string>INTEGER</string>
+				<string>INTEGER_32</string>
 			</code> and 
 			<code>
 				<string>BOOLEAN</string>

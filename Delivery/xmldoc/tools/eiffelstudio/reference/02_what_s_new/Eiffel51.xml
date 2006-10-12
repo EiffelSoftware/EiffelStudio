@@ -13,7 +13,7 @@
 			<item>Editor now supports drag-and-drop of the selection.</item>
 			<item>When debugging a project from EiffelStudio, the current directory will be your project directory. It is a change from previous version where:
 				<list ordered="false">
-					<item>on Windows, it used to be launched in the EIFGEN\W_code of your project directory</item>
+					<item>on Windows, it used to be launched in the W_code subdirectory of your project directory</item>
 					<item>on Unix, it used to be launched from the same directory where `estudio' (or `ebench') was launched.</item>
 				</list>
 			</item>
@@ -93,11 +93,7 @@
 				</link>.
 			</item>
 		</list>
-		<paragraph> </paragraph>
 		<paragraph>
-			<link>
-				<url>Eiffel50.xml</url>
-				<label>Click here to check out what was new in Eiffel 5.0</label>
-			</link>
+			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>
 		</paragraph>
 	</paragraph></document>

@@ -28,7 +28,8 @@
 			<link>
 				<url>20_slice_size_command.xml</url>
 				<label>set slice size command</label>
-			</link> with <link><url>/libraries/base/reference/kernel/classic/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects or <class_name>NATIVE_ARRAY</class_name> (dotnet) objects.
+			</link> with <link><url>/libraries/base/reference/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects or 
+			<link><url>/libraries/base/reference/native_array_chart.xml</url><label><class_name>NATIVE_ARRAY</class_name></label></link> (dotnet) objects.
 		</paragraph>
 	<paragraph>
 	<paragraph><bold>Specific case for .NET system :</bold></paragraph>

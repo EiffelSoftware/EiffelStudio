@@ -23,15 +23,15 @@ output_file="/output_path/OUTPUT"
 cd /your_project_path
 
 #Launch Eiffel compilation
-ec -batch -ace Ace.ace -finalize -c_compile 2&gt; $output_file
+ec -batch -config config.ecf -finalize -c_compile 2&gt; $output_file
 
 #Since only C compilation for finalized code is done
 #Launch C compilation for frozen code
 
-cd EIFGEN/W_code
+cd EIFGENs/target_name/W_code
 finish_freezing &gt; $output_file</code_block>
 		</paragraph>
-		<paragraph>It will go the directory where your project is located and compile your Eiffel code using the `Ace.ace' file located in your project directory and compile automatically the C code. All outputs will be stored in the file `/output_path/OUTPUT'.</paragraph>
+		<paragraph>It will go the directory where your project is located and compile your Eiffel code using the `config.ecf' file located in your project directory and compile automatically the C code. All outputs will be stored in the file `/output_path/OUTPUT'.</paragraph>
 		<paragraph>
 			<bold>Note:</bold> All output from 
 			<bold>ec</bold> are going to the error output, so do not forget to redirect the error output when you want to see the result.
@@ -42,14 +42,14 @@ finish_freezing &gt; $output_file</code_block>
 		<paragraph>
 			<code_block>
 rem Launch Eiffel compilation
-ec -batch -ace Ace.ace -finalize -c_compile &gt; c:\output_path\OUTPUT
+ec -batch -config config.ecf -finalize -c_compile &gt; c:\output_path\OUTPUT
 
 rem Since only C compilation for finalized code is done
 rem Launch C compilation for frozen code
-cd EIFGEN\W_code
+cd EIFGENs\target_name\W_code
 finish_freezing &gt; c:\output_path\OUTPUT</code_block>
 		</paragraph>
-		<paragraph>It will go the directory where your project is located and compile your Eiffel code using the `Ace.ace' file located in your project directory and compile automatically the C code. All outputs will be stored in the file `c:\output_path/OUTPUT'.</paragraph>
+		<paragraph>It will go the directory where your project is located and compile your Eiffel code using the `config.ecf' file located in your project directory and compile automatically the C code. All outputs will be stored in the file `c:\output_path/OUTPUT'.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

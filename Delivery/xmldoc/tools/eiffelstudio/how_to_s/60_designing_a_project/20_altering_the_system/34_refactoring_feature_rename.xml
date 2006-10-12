@@ -8,13 +8,12 @@
 			<item>Drop it in the 
 				<bold>Rename Feature/Class</bold> hole.				
 				<image>
+					<url>/images/eiffelstudio/icons/16x16/refactor_rename_icon.png</url>
 				</image>
 			</item>
 			<item>After a compilation the 
 				<bold>Refactoring: Feature Rename</bold> dialog appears. You can enter a new name.
 				<paragraph>				
-					<image>
-					</image>
 				</paragraph>
 			</item>
 			<item>You can choose between these options:

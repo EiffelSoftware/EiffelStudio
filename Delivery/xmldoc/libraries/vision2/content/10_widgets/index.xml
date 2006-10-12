@@ -12,7 +12,7 @@
 		</heading>
 		<paragraph> A Widget is the fundamental building block of your applications GUI, components such as Windows, Buttons and Labels are examples of such. The widget set of Vision2 provides you with the flexibility to easily create powerful graphical applications. All widgets in Vision2 inherit from 
 			<link>
-				<url>/libraries/vision2/reference/interface/widgets/ev_widget_chart.xml</url>
+				<url>/libraries/vision2/reference/ev_widget_chart.xml</url>
 				<label> EV_WIDGET</label>
 			</link> and the features provided in 
 			<class_name> EV_WIDGET</class_name> may be called on any widget. 
@@ -27,7 +27,7 @@
 					<label>Primitives</label>
 				</link>         -- These are elements of the user interface that are mainly         responsible for interaction with the user, such as an 
 				<link>
-					<url>/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.xml</url>
+					<url>/libraries/vision2/reference/ev_button_chart.xml</url>
 					<label>EV_BUTTON</label>
 				</link>.
 			</item>
@@ -37,7 +37,7 @@
 					<label>Containers</label>
 				</link>         -- These are used to contain other widgets and position them         in a certain way, such as an 
 				<link>
-					<url>/libraries/vision2/reference/interface/widgets/containers/ev_vertical_box_chart.xml</url>
+					<url>/libraries/vision2/reference/ev_vertical_box_chart.xml</url>
 					<label> EV_VERTICAL_BOX         </label>
 				</link> that stacks its         children one by one vertically.
 			</item>
@@ -53,7 +53,7 @@
 		</heading>
 		<paragraph>All widgets in Vision2 are based around the default_create mechanism    in Eiffel. This means that all that needs to be done to create a widget    is to declare a reference to a type (such as 
 			<link>
-				<url>../../reference/interface/widgets/primitives/ev_button_chart.xml</url>
+				<url>../../reference/ev_button_chart.xml</url>
 				<label>EV_BUTTON</label>
 			</link>) and then call    create on that reference. An example of this is as follows.
 		</paragraph>
@@ -63,7 +63,7 @@
 </code_block>
 		<paragraph>Along with the default creation, Vision2 also includes a few    convenience creation functions. Examples of this are    make_with_text for all widgets that may have text associated with them    (those that inherit from 
 			<link>
-				<url>../../reference/interface/properties/ev_textable_chart.xml</url>
+				<url>../../reference/ev_textable_chart.xml</url>
 				<label> EV_TEXTABLE</label>
 			</link>), this saves a call to set_text    upon default creation of the textable widget.
 		</paragraph>
@@ -81,14 +81,14 @@
 		<heading>
 			<size>2</size>Sizing
 		</heading>
-		<paragraph> As <link><url>../../reference/interface/widgets/primitives/ev_primitive_chart.xml</url><label>EV_PRIMITIVE</label></link> is of type <link><url>../../reference/interface/widgets/ev_widget_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size: set_minimum_width, set_minimum_height and set_minimum_size. </paragraph>
+		<paragraph> As <link><url>../../reference/ev_primitive_chart.xml</url><label>EV_PRIMITIVE</label></link> is of type <link><url>../../reference/ev_widget_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size: set_minimum_width, set_minimum_height and set_minimum_size. </paragraph>
 		<paragraph> The minimum size of a widget is the smallest possible size that it can possibly be inside its parent container. If an 
 			<link>
-				<url>../../reference/interface/widgets/primitives/ev_button_chart.xml</url>
+				<url>../../reference/ev_button_chart.xml</url>
 				<label>EV_BUTTON</label>
 			</link> was created and set with a minimum_size of width/height (100, 100), if this button was inserted in to an 
 			<link>
-				<url>../../reference/interface/widgets/containers/ev_horizontal_box_chart.xml</url>
+				<url>../../reference/ev_horizontal_box_chart.xml</url>
 				<label> EV_HORIZONTAL_BOX</label>
 			</link>, then the box's size could never be below (100, 100) or it would break the minimum size of the button. 
 			<bold>The size of a container must always be greater or equal to the minimum sizes of its children.</bold>

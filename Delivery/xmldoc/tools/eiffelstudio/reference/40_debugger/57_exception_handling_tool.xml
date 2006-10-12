@@ -1,0 +1,25 @@
+<document title="Exceptions handling tool" output="studio">
+	<meta_data/>
+<paragraph>	
+	<paragraph>This tool is used to precise whether the debugger stops or continues on specific exceptions.<line_break/>
+	    To show this tool, go to menu : <bold>Debug > Exception handling</bold> .<line_break/>
+	    Note their are two versions of this tool, one for Classic system, and one for Dotnet system.
+	    </paragraph>
+
+<heading><size>2</size>Exception handling for classic system</heading>
+<paragraph>		If the "exception handling" is enabled, by double clicking on a row, you choose to stop (default) or continue on the corresponding exception. 
+		In the following picture, we stop on every exception except the "Rescue exception".</paragraph>
+		<paragraph><alignment>center</alignment><image><url>../../../../images/eiffelstudio/debugger/exceptions_handling_classic.png</url><alt_text>Exception handling tool for classic</alt_text></image></paragraph>
+<paragraph>
+	    </paragraph>
+	    
+<heading><size>2</size>Exception handling for dotnet system</heading>
+<paragraph>		If the "exception handling" is enabled, you can precise which exception you want to catch or to ignore, for that you add a list of rules (regular expressions) which will be evaluated from the top to the bottom if needed.
+		In the following picture, we tell the debugger to ignore any exception, but to stop if the Exception name starts by "EiffelSoftware.Runtime.", this means ignore any non Eiffel exceptions (alias Ingore external exceptions).
+		 For each line you can choose "Disabled" to <italic>comment</italic> the current rule.</paragraph>
+		<paragraph><alignment>center</alignment><image><url>../../../../images/eiffelstudio/debugger/exceptions_handling_dotnet.png</url><alt_text>Exception handling tool for dotnet</alt_text></image></paragraph>
+<paragraph>
+	    </paragraph>	    
+		
+ 	</paragraph>
+</document>

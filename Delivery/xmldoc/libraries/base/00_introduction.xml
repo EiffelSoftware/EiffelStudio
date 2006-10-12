@@ -36,11 +36,5 @@
 					<label>Support</label>
 				</link> cluster provides helper classes for specific needs. These needs include basic math support, random numbers generation, and a few other topics such as the list of ASCII constants.
 			</item>
-			<item>The 
-				<link>
-					<url>content/40_desc/index.xml</url>
-					<label>Dynamic External Shared Call (DESC)</label>
-				</link> cluster provides mechanisms to call DLL functions at runtime.
-			</item>
 		</list>
 	</paragraph></document>

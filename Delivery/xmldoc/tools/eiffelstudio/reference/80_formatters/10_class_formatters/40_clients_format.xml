@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The clients view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_clients_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/class_clients_icon.png</url>
 			</image>displays all the classes which are using features of the current class, and thus rely on its 
 			<link>
 				<url>25_interface_format.xml</url>

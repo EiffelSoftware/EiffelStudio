@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The contract view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_contract_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/view_contracts_icon.png</url>
 			</image>displays the contracts of all written-in features of the current class. It is available either through the 
 			<link>
 				<url>/tools/eiffelstudio/reference/20_editor/index.xml</url>

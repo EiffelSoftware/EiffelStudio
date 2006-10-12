@@ -10,9 +10,9 @@
 		<paragraph>Try to keep the number of classes and objects in your system as low as possible to ensure maximum efficiency. This should never hinder the design of the system, though.</paragraph>
 		<paragraph>You can also use the functionality provided by the 
 			<link>
-				<url>/libraries/base/reference/kernel/classic/memory_chart.xml</url>
-				<label>MEMORY class</label>
-			</link> to tweak the garbage collector behavior according to your needs. However, be careful with this, since providing erroneous parameters might lead to memory leaks, huge memory consumption, or on the contrary a dramatic slow down of the application. If you are not entirely sure what a parameter is for, avoid changing it. The default values should fit for most standard applications.
+				<url>/libraries/base/reference/memory_chart.xml</url>
+				<label>MEMORY</label>
+			</link> class to tweak the garbage collector behavior according to your needs. However, be careful with this, since providing erroneous parameters might lead to memory leaks, huge memory consumption, or on the contrary a dramatic slow down of the application. If you are not entirely sure what a parameter is for, avoid changing it. The default values should fit for most standard applications.
 		</paragraph>
 		<paragraph>On top of that, EiffelStudio provides powerful optimizations, some being done automatically, others being configurable. To obtain a maximum efficiency, it is recommended to 
 			<link>
@@ -22,30 +22,27 @@
 		</paragraph>
 		<paragraph>In the 
 			<link>
-				<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
-				<label>Project Settings dialog advanced tab</label>
+				<url>/tools/eiffelstudio/reference/25_project_settings/050_advanced_general.xml</url>
+				<label>Project Settings dialog advanced section</label>
 			</link>, try experimenting with the 
 			<bold>Inlining</bold> option, and setting the maximum size of features that should be inlined. Only Eiffel features are inlined by this option, to see how to inline the C functions you may be using in your program, please refer to your C compiler documentation.
 		</paragraph>
 		<paragraph>In the 
 			<link>
-				<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
-				<label>Project Settings advanced tab</label>
+				<url>/tools/eiffelstudio/reference/25_project_settings/050_advanced_general.xml</url>
+				<label>Project Settings dialog advanced section</label>
 			</link>, enabling the 
 			<bold>Dead code removal</bold> will help produce smaller executables.
 		</paragraph>
 		<paragraph>Removing the 
 			<bold>Execution Trace</bold> will optimize the executable in size and speed, but in case of crash no information will be available.
 		</paragraph>
-		<paragraph>You can also enable the 
-			<bold>Array optimization</bold> option to slightly speed up array access.
-		</paragraph>
 		<paragraph>All these options are located in the 
 			<link>
-				<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
+				<url>/tools/eiffelstudio/reference/25_project_settings/050_advanced_general.xml</url>
 				<label>Project Settings</label>
-			</link> dialog, under the 
-			<bold>Advanced</bold> tab. They are only effective during finalizations.
+			</link> dialog, in the 
+			<bold>Advanced</bold> section. They are only effective during finalizations.
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>

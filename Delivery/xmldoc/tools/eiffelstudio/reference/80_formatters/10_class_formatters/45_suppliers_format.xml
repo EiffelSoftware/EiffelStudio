@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The suppliers view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_suppliers_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/class_supliers_icon.png</url>
 			</image>displays all the classes from which the current class is calling features.
 			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 

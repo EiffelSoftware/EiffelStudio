@@ -27,11 +27,11 @@
 		<list ordered="false">
 			<item>If the pebble you are dragging is not crossed, you can right-click again to confirm the pick-and-drop and so effectively send the dragged development object to the targeted component. For a class, a droppable pebble looks like this:
 				<image>
-					<url>/images/eiffelstudio/icons/icon_class_color.gif</url>
+					<url>/images/eiffelstudio/icons/cursors/context_class_cursor.png</url>
 				</image>
 				<paragraph>Right-clicking when the pebble is crossed will only stop the pick-and-drop because the component you are hovering with the mouse does not accept your development object. For a class, a not droppable pebble looks like this:
 					<image>
-						<url>/images/eiffelstudio/icons/Xclass.png</url>
+						<url>/images/eiffelstudio/icons/cursors/context_disabled_class_cursor.png</url>
 					</image>
 				</paragraph>
 			</item>

@@ -46,14 +46,8 @@
 			</item>
 			<item>
 				<link>
-					<url>70_scopes_scope_types.xml</url>
+					<url>70_scopes.xml</url>
 					<label>Scopes, scope types</label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>80_basic_scope_type.xml</url>
-					<label>Basic scope type</label>
 				</link>
 			</item>
 			<item>

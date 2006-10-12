@@ -24,7 +24,7 @@
 			<item>Pick-and-drop the item you want to remove in the 
 				<bold>Delete</bold> hole.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_delete_icon.png</url>
 				</image> For links, the associated Eiffel code will be removed from the class text. Clusters and classes will be deleted from disk!
 			</item>
 		</list>

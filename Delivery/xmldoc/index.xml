@@ -78,6 +78,10 @@
 					<link>
 						<url>tools/eiffelstudio/index.xml</url>
 						<label>here</label>
+					</link>  and information about the installation 
+					<link>
+						<url>installation/index.xml</url>
+						<label>here</label>
 					</link>.
 					<heading>
 						<size>2</size>Library documentation

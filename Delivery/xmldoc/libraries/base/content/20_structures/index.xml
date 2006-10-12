@@ -11,28 +11,28 @@
 		<paragraph>  The data structures cluster of EiffelBase includes classes that cover a wide  range of data structures classes for you to reuse in your systems. The cluster  is divided into a number of subclusters. Each subcluster contains one or more 
 			<bold>deferred</bold> classes, which provide the general high-level abstractions;  other classes in the cluster inherit from the deferred ones.
 		</paragraph>
-		<paragraph>  The highest-level class is 
+		<paragraph>  The highest-level class is
 			<link>
-				<url>../../reference/structures/access/container_chart.xml</url>
+				<url>../../reference/container_chart.xml</url>
 				<label>  CONTAINER</label>
 			</link>, with the following heirs:
 		</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
-					<url>../../reference/structures/access/collection_chart.xml</url>
+					<url>../../reference/collection_chart.xml</url>
 					<label>COLLECTION</label>
 				</link>, which describes containers through their access properties (defining how  to access a container's items, forexample through an index or according to  a last-in, first-out policy).
 			</item>
 			<item>
 				<link>
-					<url>../../reference/structures/traversing/traversable_chart.xml</url>
+					<url>../../reference/traversable_chart.xml</url>
 					<label>TRAVERSABLE</label>
 				</link>, which considers their traversal properties, such as sequential or hierarchical.
 			</item>
 			<item>
 				<link>
-					<url>../../reference/structures/storage/box_chart.xml</url>
+					<url>../../reference/box_chart.xml</url>
 					<label>BOX</label>
 				</link>,  which describes their storage properties, such as being bounded or unbounded.
 			</item>

@@ -63,7 +63,7 @@
 			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
 				<cell>Ctrl+F</cell>
-				<cell>Display the Search tool and give the focus to the "Search for..." text field.
+				<cell>Display the quick search bar and give the focus to the "Search for..." text field.
 					<line_break/>This shortcut may be customized.
 				</cell>
 			</row>
@@ -75,13 +75,25 @@
 			</row>
 			<row>
 				<cell>F3</cell>
-				<cell>Search the next occurrence of currently selected text or, if there<line_break/> is no selection, of the last searched expression.
+				<cell>Search the next occurrence of the last searched expression.
 					<line_break/>This shortcut may be customized.
 				</cell>
 			</row>
 			<row>
 				<cell>Shift+F3</cell>
 				<cell>Search the previous occurrence the last searched expression.
+					<line_break/>This shortcut may be customized.
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+F3</cell>
+				<cell>Search the next occurrence of the current selected expression.
+					<line_break/>This shortcut may be customized.
+				</cell>
+			</row>
+			<row>
+				<cell>Ctrl+Shift+F3</cell>
+				<cell>Search the previous occurrence the current selected expression.
 					<line_break/>This shortcut may be customized.
 				</cell>
 			</row>
@@ -147,10 +159,12 @@
 				<cell>Melt the system. This is the standard way to compile a  debuggable system.</cell>
 			</row>
 			<row>
-				<cell>Shift+F7</cell>
-				<cell>Melt classes that have been edited in EiffelStudio since the last  compilation.<line_break/>
-				This is the recommended way to compile a  debuggable system as long as<line_break/>
-				classes are not modified outside EiffelStudio.</cell>
+				<cell>Alt+F8</cell>
+				<cell>Look for externally added, unreferenced classes and recompile. This is normally not needed if classes are added in EiffelStudio or if they are referenced by another class that is in the system.</cell>
+			</row>
+			<row>
+				<cell>Shift+F8</cell>
+				<cell>Only check override clusters for changed classes and recompile.</cell>
 			</row>
 			<row>
 				<cell>Ctrl+F7</cell>
@@ -202,17 +216,8 @@
 		<table>
 			<row><cell><bold>Key shortcut</bold></cell><cell><bold>Purpose</bold></cell></row>
 			<row>
-				<cell>
-					<italic>- File shortcuts -</italic>
-				</cell>
-			</row>
-			<row>
 				<cell>Ctrl+S</cell>
 				<cell>Save the file currently edited in the editor.</cell>
-			</row>
-			<row>
-				<cell>Ctrl+O</cell>
-				<cell>Open a class file.</cell>
 			</row>
 			<row>
 				<cell>Ctrl+N</cell>

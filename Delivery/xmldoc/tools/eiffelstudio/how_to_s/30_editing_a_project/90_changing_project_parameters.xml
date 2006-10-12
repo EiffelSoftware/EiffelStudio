@@ -12,7 +12,7 @@
 		<list ordered="false">
 			<item>Click
 				<image>
-					<url>/images/eiffelstudio/icons/icon_system_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/tool_config_icon.png</url>
 				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>

@@ -27,42 +27,28 @@
 		<list ordered="false">
 			<item>History back and forth arrows
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_back_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_previous_icon.png</url>
 				</image> and
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_forth_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_next_icon.png</url>
 				</image>
 			</item>
 			<item>Fields where the current class or feature name is displayed</item>
 			<item>View icons to change the view displayed in the editor
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_editor_icon.png</url>
 				</image>,
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_format_clickable_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_clickable_icon.png</url>
 				</image>,
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_format_flat_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_flat_icon.png</url>
 				</image>,
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_format_contract_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_contracts_icon.png</url>
 				</image> and
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_format_interface_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_flat_contracts_icon.png</url>
 				</image>
 			</item>
 		</list>

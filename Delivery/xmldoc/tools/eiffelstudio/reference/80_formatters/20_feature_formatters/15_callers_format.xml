@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The callers view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_feature_callers_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/feature_callers_icon.png</url>
 			</image> display all the features which are calling the current feature. It is possible to choose in the preferences if callers of the descendants should be displayed too (they are by default).
 		</paragraph>
 		<seealso>

@@ -15,10 +15,9 @@
 			</table>
 		</paragraph>
 		<heading><size>2</size>Prerequisites</heading>
-		<paragraph>Before installing EiffelStudio 5.7, it is necessary to install X11 for Mac OS X and the X11 SDK. Both are available with the OS X CD or from the Apple web site at:
+		<paragraph>Before installing EiffelStudio 5.7, it is necessary to install X11 for Mac OS X and the X11 SDK. They are available with the OS X CD. For more details check the Apple web site at:
 			<list ordered="false">
-				<item><link><url>http://www.apple.com/macosx/x11/</url><label>http://www.apple.com/macosx/x11/</label></link></item>
-				<item><link><url> http://www.apple.com/macosx/x11/download/</url><label>http://www.apple.com/macosx/x11/download/</label></link></item>
+				<item><link><url>http://www.apple.com/macosx/features/x11/</url><label>http://www.apple.com/macosx/features/x11/</label></link></item>
 			</list>
 			<paragraph>You also need to install the latest Apple Developer Tools (XCode) available as part of Mac OS X (Tiger or above)</paragraph>
 		</paragraph>

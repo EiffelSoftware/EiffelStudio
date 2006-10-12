@@ -31,35 +31,12 @@
 		<paragraph>or</paragraph>
 		<list ordered="false">
 			<item>Launch a new EiffelStudio session,</item>
-			<item>Select 
-				<bold>Open existing Ace</bold>,
-				<image>
-					<height>40</height>
-					<width>209</width>
-					<url>/images/eiffelstudio/open_existing_ace.png</url>
-				</image>.
+			<item>Select your project</item>
+			<item>Change the action to 
+				<bold>Precompile</bold>,
 			</item>
 			<item>Click 
-				<bold>Next</bold>,
-			</item>
-			<item>Select the Ace file of the library you want to precompile,</item>
-			<item>Give a location where to put the precompiled library,</item>
-			<item>Uncheck the 
-				<bold>Compile the generated project</bold> checkbox in the next dialog:
-			</item>
-		</list>
-		<paragraph>
-			<image>
-				<height>251</height>
-				<width>350</width>
-				<url>/images/eiffelstudio/dialogs_and_wizards/choose_existing_ace.png</url>
-			</image>
-		</paragraph>
-		<list ordered="false">
-			<item>Click OK</item>
-			<item>Choose 
-				<bold>Precompile</bold> in the 
-				<bold>Project</bold> menu.
+				<bold>Open</bold>
 			</item>
 		</list>
 		<paragraph>To generate a dynamically linked C library using Eiffel code:</paragraph>
@@ -72,18 +49,18 @@
 			</item>
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
+					<url>/tools/eiffelstudio/reference/25_project_settings/050_advanced_general.xml</url>
 					<label>Project Settings</label>
 				</link> dialog,
 			</item>
 			<item>In the 
-				<bold>Advanced</bold> tab, check 
-				<bold>Shared library definition</bold>,
+				<bold>Advanced</bold> section, set the   
+				<bold>Shared Library Definition</bold>,
 			</item>
 			<item>Enter the name of the definition you created in the first step(including the path if necessary),</item>
 			<item>Compile the current project.</item>
 		</list>
-		<paragraph>The generated C library should be located in the EIFGEN|W_code directory in the directory of your project.</paragraph>
+		<paragraph>The generated C library should be located in the EIFGENs|target_name|W_code directory in the directory of your project.</paragraph>
 		<paragraph>To generate a C library from a C compiler, please refer to the documentation of your C compiler.</paragraph>
 		<seealso>
 			<bold>See Also</bold>

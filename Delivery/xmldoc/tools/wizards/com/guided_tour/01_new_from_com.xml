@@ -24,26 +24,26 @@
 		<class_name>IString</class_name> that includes the functions 
 		<feature_name>ReplaceSubstring</feature_name> and 
 		<feature_name>PruneAll</feature_name> corresponding respectively to the features 
-		<code>
+		<feature_name>
 			<link>
-				<url>../../../../libraries/base/reference/kernel/string_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
+				<url>../../../../libraries/base/reference/string_8_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
 				<label>replace_substring</label>
 			</link>
-		</code> and 
-		<code>
+		</feature_name> and 
+		<feature_name>
 			<link>
-				<url>../../../../libraries/base/reference/kernel/string_chart.xml</url><anchor_name>f_prune_all</anchor_name>
+				<url>../../../../libraries/base/reference/string_8_chart.xml</url><anchor_name>f_prune_all</anchor_name>
 				<label>prune_all</label>
 			</link>
-		</code> of the class 
-		<code>
+		</feature_name> of the class 
+		<class_name>
 			<link>
-				<url>../../../../libraries/base/reference/kernel/string_chart.xml</url>
+				<url>../../../../libraries/base/reference/string_8_chart.xml</url>
 				<label>
 					<class_name>STRING</class_name>
 				</label>
 			</link>
-		</code> from the EiffelBase library. <class_name>IString</class_name> also exposes the property 
+		</class_name> from the EiffelBase library. <class_name>IString</class_name> also exposes the property 
 		<feature_name>String</feature_name> which represents the manipulated string. The property can be set or read.
 		<heading>
 			<size>2</size> Step by step instructions

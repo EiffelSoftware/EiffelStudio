@@ -13,9 +13,9 @@
 			<link>
 				<url>20_current_level_information.xml</url>
 				<label>other debug tools</label>
-			</link> refer, is represented by a green arrow <image><url>../../../../../images/eiffelstudio/icons/icon_green_arrow.gif</url></image>. 
+			</link> refer, is represented by a green arrow <image><url>../../../../../images/eiffelstudio/icons/16x16/callstack_active_arrow_icon.png</url></image>. 
 		<line_break></line_break>
-			- Clicking on a call stack element represented by an empty arrow <image><url>../../../../../images/eiffelstudio/icons/icon_eiffel_stack.png</url></image>, or picking it and dropping it onto either the call stack list or the locals view defines it as being the current call stack element. 
+			- Clicking on a call stack element represented by an empty arrow <image><url>../../../../../images/eiffelstudio/icons/16x16/callstack_empty_arrow_icon.png</url></image>, or picking it and dropping it onto either the call stack list or the locals view defines it as being the current call stack element. 
 			<line_break></line_break>
 			- The call stack elements with no pixmap are called external call stack elements, they represent a call stack out of Eiffel, for instance a true dotnet call stack.
 			<line_break></line_break>
@@ -26,7 +26,7 @@
 				<url>30_supported_exceptions.xml</url>
 				<label>supported exceptions</label>
 			</link>.
-		<paragraph>The button <image><url>../../../../../images/eiffelstudio/icons/icon_pretty_print_16.gif</url></image> is used to open the Exception dialog which show the exception details. For instance a call on Void target in a dotnet system would popup : 
+		<paragraph>The button <image><url>../../../../../images/eiffelstudio/icons/16x16/debug_exception_dialog_icon.png</url></image> is used to open the Exception dialog which show the exception details. For instance a call on Void target in a dotnet system would popup : 
 		</paragraph>
 		<paragraph><alignment>center</alignment>
 		<image><url>../../../../../images/eiffelstudio/debugger/exception_dialog.png</url></image>
@@ -38,13 +38,13 @@
 		</paragraph>
 		</paragraph>
 			
-		<paragraph>In the toolbar, the button gives the possibility to 
+		<paragraph>In the toolbar, the button <image><url>../../../../../images/eiffelstudio/icons/10x10/general_save_icon.png</url></image> gives the possibility to 
 			<link>
 				<url>40_save_call_stack.xml</url>
 				<label>save the call stack</label>
 			</link> to a text file. The 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_set_stack_depth_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/10x10/debugger_callstack_depth_icon.png</url>
 			</image> button makes it possible to choose which call stack depth should be displayed in the list (the default is to display the 100 top stack elements, but it is configurable with the same button).
 		</paragraph>
 		</paragraph>

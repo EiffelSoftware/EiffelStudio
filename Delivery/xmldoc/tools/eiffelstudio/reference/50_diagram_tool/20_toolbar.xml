@@ -1,17 +1,17 @@
 <document title="Diagram toolbar" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>The customizable toolbar of the diagram contains these buttons by default:</paragraph>
+		<paragraph>The toolbar of the diagram contains these buttons:</paragraph>
 		<list ordered="false">
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_center_diagram_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_target_cluster_or_class_icon.png</url>
 				</image>Target to cluster or class
 				<line_break/> Drop a class or a cluster on this icon to build the corresponding diagram.
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_inherit_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_inheritance_link_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/30_managing_links/10_new_inheritance_link.xml</url>
@@ -21,7 +21,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_class_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_class_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/10_new_class.xml</url>
@@ -31,7 +31,7 @@
 			</item>	
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_undo_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_undo_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/15_history.xml</url>
@@ -41,7 +41,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_cmd_history_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_undo_history_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/15_history.xml</url>
@@ -52,7 +52,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_redo_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_redo_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/15_history.xml</url>
@@ -62,7 +62,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_recycle_bin_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_reset_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/30_remove_from_view.xml</url>
@@ -72,7 +72,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_color_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_choose_color_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/40_change_color.xml</url>
@@ -82,17 +82,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_class_header_color.gif</url>
-				</image>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/30_class_header.xml</url>
-					<label>Change class name and generics</label>
-				</link>
-				<line_break/> Drop class bubbles in this hole if you want to change a name and/or formal generics.
-			</item>
-			<item>
-				<image>
-					<url>/images/eiffelstudio/icons/icon_fill_cluster_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_fill_cluster_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/60_retrieve_all.xml</url>
@@ -102,7 +92,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_select_depth_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_depth_of_relations_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/20_select_depth.xml</url>
@@ -113,7 +103,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_zoom_out_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_zoom_out_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/50_zooming.xml</url>
@@ -123,7 +113,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_zoom_fit_to_screen_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_fit_to_screen_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/50_zooming.xml</url>
@@ -133,7 +123,7 @@
 			</item>			
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_zoom_in_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_zoom_in_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/50_zooming.xml</url>
@@ -143,7 +133,7 @@
 			</item>		
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_inherit_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_inheritance_link_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
@@ -153,7 +143,7 @@
 			</item>
 				<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_supplier_link_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
@@ -163,7 +153,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_display_labels_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_show_labels_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
@@ -173,7 +163,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_export_to_png_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_export_to_png_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/60_to_image.xml</url>
@@ -181,42 +171,39 @@
 				</link>
 				<line_break/> Click to generate a .png file from current view.
 			</item>
-		</list>
-		The toolbar may also be configured to contain these buttons:
-		<list ordered="false">	
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_toggle_quality_color.png</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_toggle_quality_icon.png</url>
 				</image>
 				Toggles the drawing quality.
 			</item>		
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_toggle_force_color.png</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_toogle_physics_icon.png</url>
 				</image>
 				Toggles the physics mode on and off.
 			</item>	
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_uml_color.png</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_view_uml_icon.png</url>
 				</image>
 				Toggles view between BON notation and UML.
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_remove_anchor_color.png</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_anchor_icon.png</url>
 				</image>
 				Allows to anchor or unanchor a class/cluster figure.
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_physics_settings_color.png</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_physics_settings_icon.png</url>
 				</image>
 				Displays physics settings dialog to control physics behavour.
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_delete_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/40_remove_from_system.xml</url>
@@ -227,19 +214,13 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_display_legend_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_show_legend_icon.png</url>
 				</image>	
 				Toggle cluster color legend.
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_display_cluster_color.gif</url>
-				</image>
-				Toggle cluster boundaries to and from view.
-			</item>
-			<item>
-				<image>
-					<url>/images/eiffelstudio/icons/icon_straight_arrows_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_force_right_angles_icon.png</url>
 				</image>
 				<link>
 					<url>../../how_to_s/60_designing_a_project/30_managing_links/40_link_tool.xml</url>
@@ -247,12 +228,6 @@
 				</link>
 				<line_break/> Click on this button to toggle right angles on all links in the view. Drop a link on it to bring up the link tool for that link.
 			</item>		
-			<item>
-				<image>
-					<url>/images/eiffelstudio/icons/icon_super_cluster_color.gif</url>
-				</image>Target to enclosing cluster
-				<line_break/> Re-centers the diagram on the parent cluster.
-			</item>
 		</list>
 		In addition to these toolbar buttons there is also a drop down list for selecting various zoom percentages on the current view, and a view list for switching between previously saved views/layouts of various parts of the system.
 	</paragraph></document>

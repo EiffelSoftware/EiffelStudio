@@ -51,6 +51,19 @@
 			</item>
 			<item>
 				<link>
+					<url>55_threads_tool.xml</url>
+					<label>Threads information</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>57_exception_handling_tool.xml</url>
+					<label>Exception caching handler tool</label>
+				</link>
+			</item>
+
+			<item>
+				<link>
 					<url>60_stack_overflow_prevention.xml</url>
 					<label>Stack overflow prevention</label>
 				</link>

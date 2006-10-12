@@ -22,7 +22,7 @@
 				<label>thread library</label>
 			</link> provides ways to handle threads safely inside an Eiffel program. Make sure you 
 			<link>
-				<url>../30_editing_a_project/10_adding_a_cluster.xml</url>
+				<url>../30_editing_a_project/12_adding_a_library.xml</url>
 				<label>add</label>
 			</link> it to your project if you want to use threads.
 		</paragraph>
@@ -30,16 +30,15 @@
 		<list ordered="false">
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
+					<url>/tools/eiffelstudio/reference/25_project_settings/050_advanced_general.xml</url>
 					<label>Project Settings</label>
 				</link> dialog.
 			</item>
 			<item>In the 
-				<bold>Advanced</bold> tab, check the 
-				<bold>multi threaded runtime</bold> option.
+				<bold>Advanced</bold> section, enable 
+				<bold>Multithreaded</bold> option.
 			</item>
 			<item>Click 
-				<bold>Apply</bold> or 
 				<bold>OK</bold>.
 			</item>
 			<item>You must 
@@ -58,11 +57,6 @@
 			<link>
 				<url>15_generating_libraries.xml</url>
 				<label>Creating libraries</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>../30_editing_a_project/10_adding_a_cluster.xml</url>
-				<label>Adding classes and clusters from Eiffel libraries without precompiling the library</label>
 			</link>
 		</seealso>
 	</paragraph></document>

@@ -21,20 +21,20 @@
 				<label>remove object command</label>
 			</link> 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/10x10/general_delete_icon.png</url>
 			</image> and the 
 			<link>
 				<url>20_slice_size_command.xml</url>
 				<label>set slice size command</label>
 			</link> 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/10x10/debugger_set_sizes_icon.png</url>
 			</image>.
 </paragraph><paragraph>	
 		
 			The third command 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_expand_string_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/10x10/debugger_expand_info_icon.png</url>
 			</image> can give an 
 			<link>
 				<url>25_expanded_display_tool.xml</url>
@@ -45,7 +45,7 @@
 </paragraph><paragraph>
 			And the last command 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_numeric_format_very_small_color.png</url>
+				<url>../../../../../images/eiffelstudio/icons/10x10/debugger_show_hex_value_icon.png</url>
 			</image> switch the display of integer values between decimal and hexadecimal format.
 
 		</paragraph>

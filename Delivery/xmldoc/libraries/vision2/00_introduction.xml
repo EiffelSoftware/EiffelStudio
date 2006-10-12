@@ -1,6 +1,7 @@
 <document title="EiffelVision Introduction">
+	<meta_data/>
 	<paragraph>
-		<paragraph>   The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called 
+		<paragraph>The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called 
 			<link>
 				<url>/libraries/vision2/content/10_widgets/index.xml</url>
 				<label>widgets</label>
@@ -121,9 +122,6 @@
 			<size>2</size>Implementation
 		</heading>
 		<paragraph>  For flexibility, EiffelVision is built using the bridge pattern. This means that every platform-dependent component of the library consist of two classes, plus an implementation class for each platform (currently two). One is the 
-			<link>
-				<url>/libraries/vision2/reference/interface/index.xml</url>
-				<label>interface</label>
-			</link>. All the features of interfaces do nothing except delegate the call to the implementation object which is coupled to it. This object has the static type of the implementation-interface with the name of the interface class, with _I appended to it. From this implementation-interface, implementation classes inherit to implement platform-specific features. 
+			<cluster_name>interface</cluster_name>. All the features of interfaces do nothing except delegate the call to the implementation object which is coupled to it. This object has the static type of the implementation-interface with the name of the interface class, with _I appended to it. From this implementation-interface, implementation classes inherit to implement platform-specific features. 
 		</paragraph>
 	</paragraph></document>

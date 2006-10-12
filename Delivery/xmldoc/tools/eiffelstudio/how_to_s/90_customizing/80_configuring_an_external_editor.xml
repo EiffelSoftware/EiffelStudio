@@ -12,7 +12,7 @@
 		<link>
 			<url>../../reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 			<label>dropping a pebble</label>
-		</link> on the external editor toolbar button(<image><url>../../../../images/eiffelstudio/icons/icon_shell_color.gif</url></image>), you can launch an external editor. By default, this editor is VI on Unix and Notepad on Windows. You can tell EiffelStudio to launch another editor by editing the preferences.
+		</link> on the external editor toolbar button(<image><url>../../../../images/eiffelstudio/icons/16x16/command_send_to_external_editor_icon.png</url></image>), you can launch an external editor. By default, this editor is VI on Unix and Notepad on Windows. You can tell EiffelStudio to launch another editor by editing the preferences.
 		<paragraph>To do so, first open the 
 			<link>
 				<url>../../reference/85_preferences/eiffelstudio/index.xml</url>

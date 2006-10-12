@@ -14,22 +14,19 @@
 				<bold>New window</bold> in the 
 				<bold>File</bold> menu or on
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_development_tool_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_window_icon.png</url>
 				</image> make an new window appear. In this window, the editor and the context tool will be visible.
 			</item>
 			<item>Clicking on 
 				<bold>New editor window</bold> in the 
 				<bold>File</bold> menu or on
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_editor_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_editor_icon.png</url>
 				</image> does the same as the previous command but the context tool is minimized in the new window.
 			</item>
 			<item>Clicking on 
 				<bold>New context window</bold> in the 
-				<bold>File</bold> menu or on
-				<image>
-					<url>/images/eiffelstudio/icons/icon_new_context_window_color.gif</url>
-				</image> make this time a new window with a minimized editor appear.
+				<bold>File</bold> menu make this time a new window with a minimized editor appear.
 			</item>
 		</list>
 		<div>

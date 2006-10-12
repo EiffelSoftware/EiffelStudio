@@ -16,7 +16,7 @@
 			<item>Select the button 
 				<bold>Create new client/supplier links</bold>.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_supplier_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_supplier_link_icon.png</url>
 				</image>
 			</item>
 			<item>Start pick-and-drop on the class where the feature should be added.</item>

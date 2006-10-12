@@ -38,7 +38,7 @@
 				<list ordered="true">
 					<item>Launch EiffelStudio.</item>
 					<item>Select <bold>Use existing Ace (control file)</bold> and click <bold>OK</bold></item>
-					<item>Browse to <italic>$ISE_EIFFEL\examples\dotnet\calculator\</italic></item>
+					<item>Browse to <italic>$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc</italic></item>
 					<item>Choose the Ace file for the version of the .net framework you are running</item>
 					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
 					<item>Click <bold>OK</bold>.</item>
@@ -56,12 +56,6 @@
 		<paragraph>The application uses two local external assemblies, math.dll and parserutils.dll. </paragraph>
 		<paragraph>parserutils parses the command line entered, and checks if it is of the form operand1 operator operand2. math.dll calculates the actual result of the command line. </paragraph>
 		<paragraph>For the parserutils.dll, we have been obliged to introduce the prefix "parser_" to avoid conflicts between name classes. </paragraph>
-		<paragraph>
-			<image>
-				<url>/images/dotnet_samples/calculator_local_assemblies.png</url>
-				<alt_text>Local assemblies</alt_text>
-			</image>
-		</paragraph>
 		<paragraph>This sample contains the following classes:</paragraph>
 		<list ordered="false">
 			<item>

@@ -11,7 +11,7 @@
 				<label>C++</label>
 			</link> and 
 			<link>
-				<url>30_java_externals.xml</url>
+				<url>../../../../../libraries/eiffel2java/content/index.xml</url>
 				<label>Java</label>
 			</link>. This makes it possible to use powerful libraries written in other languages while still benefiting from the use of Eiffel for the frame of the program.
 		</paragraph>

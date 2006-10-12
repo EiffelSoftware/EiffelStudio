@@ -109,5 +109,11 @@
 					<label>Text (gdi plus)</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>winform/simple_data_binding.xml</url>
+					<label>Simple data binding</label>
+				</link>
+			</item>
 		</list>
 	</paragraph></document>

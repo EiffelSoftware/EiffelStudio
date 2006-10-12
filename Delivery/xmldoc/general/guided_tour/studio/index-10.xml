@@ -19,18 +19,8 @@
 		<paragraph>If the Features Tool is not visible, bring it back by clicking the 
 			<code>
 				<keyword>Features</keyword>
-			</code> button on the top toolbar, used earlier to remove it:
+			</code> button on the top toolbar, used earlier to remove it.
 		</paragraph>
-		<div>
-			<image_link>
-				<url>index-50.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-50.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
 		<paragraph>(Another way is through the menu entry 
 			<code>
 				<keyword>View</keyword>
@@ -90,28 +80,8 @@
 			<size>2</size>
 			<content>Basic feature information</content>
 		</heading>
-		<paragraph>Now let's look at the feature views. Click the Feature Tab at the bottom of the Context Tool:</paragraph>
-		<div>
-			<image_link>
-				<url>index-53.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-53.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
-		<paragraph>This brings up basic information on the selected feature in the Context Tool:</paragraph>
-		<div>
-			<image_link>
-				<url>index-54.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-54.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
+		<paragraph>Now let's look at the feature views. Click the Feature Tab at the bottom of the Context Tool.</paragraph>
+		<paragraph>This brings up basic information on the selected feature in the Context Tool.</paragraph>
 		<paragraph>The bottom Context Tool shows one of the Feature views, by default 
 			<code>
 				<keyword>Flat</keyword>
@@ -129,18 +99,8 @@
 		<paragraph>
 			<code>
 				<keyword>Flat</keyword>
-			</code> is just one of the available Feature Views, shown by the buttons on the Feature View toolbar:
+			</code> is just one of the available Feature Views, shown by the buttons on the Feature View toolbar
 		</paragraph>
-		<div>
-			<image_link>
-				<url>index-54.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-54.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
 		<paragraph>
 			<code>
 				<keyword>Text</keyword>
@@ -243,18 +203,8 @@
 			<paragraph>Now click the next view button, 
 				<code>
 					<keyword>Implementers</keyword>
-				</code> :
+				</code>. 
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-57.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-57.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>This is a very useful view, showing all the ancestors and descendants of 
 				<code>
 					<string>LIST</string>
@@ -285,18 +235,8 @@
 				</code> from 
 				<code>
 					<string>MULTI_ARRAY_LIST</string>
-				</code>, so that you can see the implementation of the routine in that class:
+				</code>, so that you can see the implementation of the routine in that class.
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-58.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-58.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>You can get rid of this new Development Window (just close it, but don't exit EiffelStudio!) and come back to the original Development Window, where we still have two unexplored views, 
 				<code>
 					<keyword>Ancestor versions</keyword>
@@ -309,18 +249,8 @@
 				</code> from 
 				<code>
 					<string>LIST</string>
-				</code>:
+				</code>.
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-59.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-59.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>The format is self-explanatory: for each ancestor of 
 				<code>
 					<string>LIST</string>

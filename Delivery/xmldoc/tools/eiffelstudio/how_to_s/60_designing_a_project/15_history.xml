@@ -24,13 +24,13 @@
 			<item>To undo the last action, click 
 				<bold>Undo last action</bold>.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_undo_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_undo_icon.png</url>
 				</image>
 			</item>
 			<item>To redo the last action, click 
 				<bold>Redo last action</bold>.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_redo_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_redo_icon.png</url>
 				</image>
 			</item>
 			<item>To undo all actions up until a specific action:
@@ -38,7 +38,7 @@
 					<item>Click the 
 						<bold>History tool</bold> button.
 						<image>
-							<url>/images/eiffelstudio/icons/icon_cmd_history_color.gif</url>
+							<url>/images/eiffelstudio/icons/16x16/general_undo_history_icon.png</url>
 						</image>
 					</item>
 					<item>The 

@@ -34,7 +34,7 @@
 			<item>
 				<bold>New window</bold>: this command (
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_development_tool_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_window_icon.png</url>
 				</image>) creates a new empty development window. Note that it is also possible to 
 				<link>
 					<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
@@ -44,13 +44,13 @@
 			<item>
 				<bold>Minimize all</bold>: this command (
 				<image>
-					<url>/images/eiffelstudio/icons/icon_minimize_all_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/windows_minimize_all_icon.png</url>
 				</image>) iconifies all development windows.
 			</item>
 			<item>
 				<bold>Raise all</bold>: this command (
 				<image>
-					<url>/images/eiffelstudio/icons/icon_restore_all_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/windows_raise_all_icon.png</url>
 				</image>) raises all minimized development windows.
 			</item>
 			<item>

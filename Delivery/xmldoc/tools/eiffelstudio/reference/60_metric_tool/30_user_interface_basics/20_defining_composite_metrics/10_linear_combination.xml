@@ -2,20 +2,10 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>Notation: E k<sub_script>i</sub_script>.m<sub_script>i</sub_script> (where the i are real values)</paragraph>
-		<paragraph>Applicability: all the m<sub_script>i</sub_script> are metrics with the same unit <italic>u</italic> other than RATIO</paragraph>
+		<paragraph>Applicability: all the m<sub_script>i</sub_script> are metrics with the same unit <italic>u</italic></paragraph>
 		<paragraph>Semantics: weighted sum</paragraph>
 		<paragraph>Resulting unit: <italic>u</italic></paragraph>
-		<paragraph>The metric tool provides a command for defining linear metrics. Button 
-			<image>
-				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
-			</image>pops-up the following dialog. Select the linear tab to obtain:
-		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/linear.png</url>
-			</image>
-		</paragraph>
-		<paragraph>and to define any linear metrics.</paragraph>
+		<paragraph>The metric tool provides a command for defining linear metrics.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/> 

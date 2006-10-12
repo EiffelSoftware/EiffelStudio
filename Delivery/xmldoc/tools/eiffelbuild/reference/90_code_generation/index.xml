@@ -80,10 +80,10 @@
 				</link>, then all the classes listed above in "Generated classes" are generated, along with the following:
 			</paragraph>
 			<list ordered="false">
-				<item>Two ace files, "ace.Unix.ace" for unix based platforms, and "ace.Windows.ace" for Windows platforms.</item>
+				<item>A project configuration file called "build_project.ecf".</item>
 				<item>An application class which launches the root window of the project.</item>
 			</list>
-			<paragraph>The generated files comprise a complete project, complete with .ace files, enabling you to compile and execute the generated system as is. The following diagram illustrates the hierarchy of the generated project, showing only the root window of the project:</paragraph>
+			<paragraph>The generated files comprise a complete project with a configuration file enabling you to compile and execute the generated system as is. The following diagram illustrates the hierarchy of the generated project, showing only the root window of the project:</paragraph>
 			<paragraph>
 				<image>
 					<url>/images/eiffelbuild/screenshots/complete_project_diagram.png</url>

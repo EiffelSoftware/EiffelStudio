@@ -19,7 +19,7 @@
 		<note>
 			<bold>Note</bold>: 
 			<italic>The Run-time information record</italic> has to be located in the 
-			<italic>EIFGEN\W_code</italic> directory of your project.
+			<italic>EIFGENs/target_name/W_code</italic> directory of your project.
 		</note>
 		<paragraph>
 			<line_break/>
@@ -37,7 +37,7 @@
 			</link> if the provided 
 			<italic>Run-time information record</italic> is valid. If the 
 			<italic>Run-time information record</italic> is not valid or is not located in the 
-			<italic>EIFGEN\W_code</italic> directory of the project, you will go to the 
+			<italic>EIFGENs/target_name/W_code</italic> directory of the project, you will go to the 
 			<bold>Run-time Information Record Error state</bold> as shown below.
 		</paragraph>
 		<line_break/>

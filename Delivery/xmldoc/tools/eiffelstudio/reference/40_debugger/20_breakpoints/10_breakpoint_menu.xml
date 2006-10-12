@@ -15,19 +15,19 @@
 				<label>Breakpoints</label>
 			</link> are there symbolized as circles, of a different appearance depending on their state: enabled ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpenabled.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_enabled_icon.png</url>
 			</image> ), disabled ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpdisabled.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_disabled_icon.png</url>
 			</image> ) or not set ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpslot.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_slot_icon.png</url>
 			</image> ). A small question mark in the circle (
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpenabled_condition.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_enabled_conditional_icon.png</url>
 			</image>, 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bpdisabled_condition.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/12x12/bp_disabled_conditional_icon.png</url>
 			</image> )indicates 
 			<link>
 				<url>40_conditional_breakpoints.xml</url>

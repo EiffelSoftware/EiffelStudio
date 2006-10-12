@@ -21,7 +21,7 @@
 		<heading>
 			<size>3</size>Accessing Input Values
 		</heading>
-		<paragraph>The browser sends in the 
+		<paragraph>The browser sends in the
 			<italic>In</italic> a stream containing the data relative to the user entry and selection at the applications starts. EiffelWeb stores each data element and its associated name within a Hash-Table, the feature form_data of class    CGI_INTERFACE. You can access their values from your code with the interface defined in class CGI_FORMS, which allows you to retrieve text entries, to know whether a button was pressed or not, etc.
 		</paragraph>
 		<heading>
@@ -51,17 +51,17 @@
 		<heading>
 			<size>3</size>Complex Headers
 		</heading>
-		<paragraph>The Eiffel-Web application has the possibility to send a selection of different HTTP headers. They can be found in class CGI_RESPONSE_HEADER. In particular, it is advised to generate a status for each request, the value of the most common ones may be found in class     CGI_ 
+		<paragraph>The Eiffel-Web application has the possibility to send a selection of different HTTP headers. They can be found in class CGI_RESPONSE_HEADER. In particular, it is advised to generate a status for each request, the value of the most common ones may be found in class     CGI_
 			<link>
-				<url>/libraries/web/reference/cgi_facilities/cgi_common_status_types_chart.xml</url>
+				<url>/libraries/web/reference/cgi_common_status_types_chart.xml</url>
 				<label>COMMON_STATUS_TYPE</label>
 			</link>.
 		</paragraph>
 		<heading>
 			<size>3</size>Debugging facilities
 		</heading>
-		<paragraph>Design by Contract is one of the greatest strengths of the Eiffel language. When you usually run your application from EiffelStudio, you are notified when an assertion is violated and the tool offers different options in order to be able to find out its sources (feature and class tools, object inspectors, etc). However this cannot be applied to an EiffelWeb application, since it has to be    run on the server. 
-			<line_break/>Therefore, EiffelWeb provides its own facilities for debugging. To test your classes at run-time, all you need to do is to set the Boolean feature    is_debug_mode to 
+		<paragraph>Design by Contract is one of the greatest strengths of the Eiffel language. When you usually run your application from EiffelStudio, you are notified when an assertion is violated and the tool offers different options in order to be able to find out its sources (feature and class tools, object inspectors, etc). However this cannot be applied to an EiffelWeb application, since it has to be    run on the server.
+			<line_break/>Therefore, EiffelWeb provides its own facilities for debugging. To test your classes at run-time, all you need to do is to set the Boolean feature    is_debug_mode to
 			<code>
 				<symbol>True</symbol>
 			</code> in your root class (which should inherit from    CGI_INTERFACE). When your application crashes (because of an assertion ora bug), the exception trace will be displayed on the screen.

@@ -134,7 +134,7 @@
 			<item>Fixed a bug that caused compiler to crash when finalizing a code that looks like 
 <code_block><keyword>if</keyword> <keyword>true</keyword> <keyword>then</keyword> [<keyword>else</keyword>(<keyword>if</keyword>) ...] <keyword>end</keyword></code_block>
 i.e. has empty compound for a primary condition which is a constant <code><keyword>true</keyword></code>.</item>
-			<item>Fixed a bug in processing <code>Ace</code> option <code><keyword>precompiled</keyword></code> that caused a compiler to crash when no option value was provided.</item>
+			<item>Fixed a bug in processing configuration option <code><keyword>precompiled</keyword></code> that caused a compiler to crash when no option value was provided.</item>
 			<item>Fixed a bug in incremental recompilation when multi-branch validity rules are violated in one class because constant attribute used in the multi-branch instruction is changed in another class, that declares them, into a non-constant feature.</item>
 			<item>Fixed multiple bugs in feature basic text view that caused truncated or extraneous output.</item>
 			<item>Fixed bug where if an actual generic parameter was an anchor, then if the type containing this actual was used for assignment attempt or for creation we would use an incorrect type for the actual generic. We were using the type of the anchor in the class were the code was written, instead of actually re-evaluating the type of the anchor for each descendant class.</item>

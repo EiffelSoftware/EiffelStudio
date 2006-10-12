@@ -21,23 +21,16 @@
 		<list ordered="false">
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/10_general.xml</url>
+					<url>/tools/eiffelstudio/reference/25_project_settings/040_target_groups.xml</url>
 					<label>Project Settings</label>
 				</link> dialog.
 			</item>
-			<item>In the 
-				<bold>General</bold> tab, enter the location of the precompiled library you want to use in the 
-				<bold>Precompiled Library</bold> field.
-			</item>
-			<item>Click 
-				<bold>Apply</bold> or 
-				<bold>OK</bold>.
-			</item>
+			<item>Add a new precompile group to your target.</item>
 			<item>You must 
 				<link>
 					<url>10_generating_executables.xml</url>
 					<label>recompile</label>
-				</link> your project for the changes to take effect.
+				</link> your project from scratch for the changes to take effect.
 			</item>
 		</list>
 		<note>
@@ -47,21 +40,13 @@
 		<list ordered="false">
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/50_externals.xml</url>
+					<url>/tools/eiffelstudio/reference/25_project_settings/080_advanced_externals.xml</url>
 					<label>Project Settings</label>
 				</link> dialog.
 			</item>
-			<item>In the 
-				<bold>Externals</bold> tab, in the 
-				<bold>Include path</bold> field, type the paths of the header files needed to use the library (pressing the 
-				<bold>Add</bold> button for each).
-			</item>
-			<item>In the 
-				<bold>Object file</bold> field, type the object files needed to use the library (pressing the 
-				<bold>Add</bold> button for each). These files can be either library files (.lib, .a, etc) or object files (.obj, .o, etc)
-			</item>
+			<item>Add an include external for the directory where the header files needed to use the library are.</item>
+			<item>Add an object external for each object file needed to use the library. These files can be either library files (.lib, .a, etc) or object files (.obj, .o, etc)	</item>
 			<item>Click 
-				<bold>Apply</bold> or 
 				<bold>OK</bold>.
 			</item>
 			<item>You must 

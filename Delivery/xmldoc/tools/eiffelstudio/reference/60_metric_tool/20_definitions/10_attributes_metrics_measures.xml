@@ -19,13 +19,7 @@
 			<bold>metric</bold> is an attribute whose values are numbers (integers or reals), expressed relative to a certain 
 			<bold>unit</bold> specified as part of the metric definition.
 		</note>
-		<paragraph>Examples of metrics include the number of source lines of a program (product) and the total cost of a project (process).</paragraph>
-		<paragraph>The metric tool provides by default a set of metrics, they are available in the following metric menu:</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/metricmenu.png</url>
-			</image>
-		</paragraph>
+		<paragraph>Examples of metrics include the number of source lines of a program (product) and the total cost of a project (process). The metric tool provides by default a set of metrics, they are available in the Metric Evaluation tab of the metric tool</paragraph>
 		<paragraph>Attributes other than metrics will be called "qualitative":</paragraph>
 		<note>
 			<bold>Qualitative attribute</bold>: A 

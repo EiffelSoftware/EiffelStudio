@@ -87,5 +87,8 @@
 			<item>Changed signature of non exported routine <feature_name>cwin_destroy_window</feature_name> from <class_name>WEL_WINDOW</class_name> to now return a value.</item>
 			<item>Fixed issues when using WEL in a multithreaded application. It would crash if a non WEL thread was trying to destroy a WEL window.</item>
 		</list>
+		<paragraph>
+			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>
+		</paragraph>
 	</paragraph>
 </document>

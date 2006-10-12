@@ -29,7 +29,6 @@
 			<size>2</size>
 			<content>Documentation filters</content>
 		</heading>
-		<note>Note: Exporting documentation is not possible if you are using the free version of EiffelStudio.</note>
 		<paragraph>Let's see how documentation works by starting to generate it for our Guided Tour system -- which really means for EiffelBase, since that's what it mostly consists of. The HTML result is available as part of the present documentation (we'll tell you where in just a minute), so you don't have to regenerate it unless you want to. Indeed we'll show you when to click 
 			<code>
 				<keyword>Cancel</keyword>
@@ -131,7 +130,7 @@
 			</code> extension that it finds in a subdirectory of the installation:
 		</paragraph>
 		<code_block>
-			<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
+			<keyword>$ISE_EIFFEL/studio/filters</keyword>
 		</code_block>
 		<paragraph>To define a new filter, simply add a file to this directory. Filters are expressed in a simple notation called EFF ( 
 			<span>Eiffel Filter Format</span> ), general enough to support a wide variety of tools for text processing, project management, Web publishing etc. The best way to define a new filter is usually to start from an existing one and adapt it. You will find the specification of EFF at the end of this manual, 
@@ -162,10 +161,7 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>This is to let you decide which clusters of your system the documentation will include. Initially all clusters -- down to the level of nested subclusters, for example 
-			<code>
-				<keyword>base.structures.list</keyword>
-			</code> -- appear in the 
+		<paragraph>This is to let you decide which clusters of your system the documentation will include. Initially all clusters/libraries appear in the 
 			<code>
 				<keyword>Include</keyword>
 			</code> list on the right; but you might want to exclude some standard libraries or other clusters from the documentation.
@@ -321,7 +317,7 @@
 			</code> on the last dialog.
 		</paragraph>
 		<note>
-			<italic>If you prefer to produce your own, click "Finish". For our example system the process takes 7 minutes on the Thinkpad configuration mentioned earlier, and generates a 48 megabyte documentation directory.</italic>
+			<italic>If you prefer to produce your own, click "Finish". For our example system the process takes 7 minutes on the Thinkpad configuration mentioned earlier, and generates a 82 megabyte documentation directory.</italic>
 		</note>
 		<heading>
 			<size>2</size>
@@ -329,7 +325,7 @@
 		</heading>
 		<paragraph>Let's take a look at the generated documentation. We start with the root of the generated documentation, 
 			<code>
-				<keyword>index-09A/index.xml</keyword>
+				<keyword>Documentation/index.html</keyword>
 			</code> :
 		</paragraph>
 		<div>
@@ -375,19 +371,10 @@
 				</image>
 			</image_link>
 		</div>
-		<paragraph>Note the convention for denoting nested clusters: 
+		<paragraph> Click 
 			<code>
 				<keyword>BASE</keyword>
-			</code>, 
-			<code>
-				<keyword>BASE.STRUCTURES</keyword>
-			</code>, 
-			<code>
-				<keyword>BASE.STRUCTURES.LIST</keyword>
-			</code>. Click 
-			<code>
-				<keyword>BASE.STRUCTURES.LIST</keyword>
-			</code> to see details of the List cluster of EiffelBase where (under EiffelStudio) we had found the class 
+			</code> to see details of the EiffelBase library where (under EiffelStudio) we had found the class 
 			<code>
 				<string>LIST</string>
 			</code> used as example in the preceding sections:
@@ -429,7 +416,7 @@
 			</code> -- which you could also obtain by clicking its name on one of the preceding diagrams, or typing it in the 
 			<code>
 				<keyword>Go to</keyword>
-			</code> field -- just click its bubble (left on the figure, third from the top):
+			</code> field -- just click its bubble:
 		</paragraph>
 		<div>
 			<image_link>
@@ -509,7 +496,7 @@
 					<label> Chapter 19, "Appendix"</label>
 				</link>.
 				<code_block>
-	<keyword>$ISE_EIFFEL/examples/studio/filters</keyword>
+	<keyword>$ISE_EIFFEL/studio/filters</keyword>
 				</code_block>
 			</item>
 		</list>

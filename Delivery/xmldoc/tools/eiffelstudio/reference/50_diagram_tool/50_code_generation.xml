@@ -113,6 +113,6 @@
 </code_block>	
 			</item>
 			<item>When removing a client link, only the matching function or attribute is removed. Any additionally generated set-feature or invariant is not removed.</item>
-			<item>When removing a cluster, the associated directory is not erased, but the reference to the cluster is removed from the Ace file. At this time, it is not possible to create a cluster using the diagram tool, only to remove one.  </item>
+			<item>When removing a cluster, the associated directory is not erased, but the reference to the cluster is removed from the configuration file. At this time, it is not possible to create a cluster using the diagram tool, only to remove one.  </item>
 		</list>
 	</paragraph></document>

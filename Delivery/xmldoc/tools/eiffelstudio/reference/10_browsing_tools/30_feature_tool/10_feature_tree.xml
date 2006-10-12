@@ -22,17 +22,17 @@
 		<list ordered="false">
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_feature_clause_any.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/folder_features_all_icon.png</url>
 				</image>means features are exported to all classes
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_feature_clause_some.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/folder_features_some_icon.png</url>
 				</image>means features are exported to some classes
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_feature_clause_none.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/folder_features_none_icon.png</url>
 				</image>means features are not exported
 			</item>
 		</list>
@@ -40,27 +40,32 @@
 		<list ordered="false">
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_attribute_symbol.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_attribute_icon.png</url>
 				</image>for attributes
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_once_symbol.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_once_icon.png</url>
 				</image>for once and constant features
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_deferred_feature.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_deferred_icon.png</url>
 				</image>for deferred features
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_external_feature.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_external_icon.png</url>
 				</image>for external features
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_feature_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_frozen_routine_icon.png</url>
+				</image>for frozen features
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/16x16/feature_routine_icon.png</url>
 				</image>for normal Eiffel routines
 			</item>
 		</list>

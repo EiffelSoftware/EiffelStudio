@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The external view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_externals_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/class_features_external_icon.png</url>
 			</image>displays all the external features of the current class.
 			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 

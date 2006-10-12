@@ -12,7 +12,7 @@
 			<item>To create a new class pick from the 
 				<bold>Create a new class</bold> button.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_class_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_class_icon.png</url>
 				</image> Then drop on the diagram where you want to place the class bubble. A dialog now appears where you can enter a name and specify the cluster.
 			</item>
 		</list>

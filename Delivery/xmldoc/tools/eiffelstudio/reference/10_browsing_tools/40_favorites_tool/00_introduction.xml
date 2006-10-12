@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The favorites tool (
 			<image>
-				<url>/images/eiffelstudio/icons/icon_favorites_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/tool_favorites_icon.png</url>
 			</image>) gives a quick access to often used classes and features. These may be either classes of a library or classes that are often being modified. They are project-wide, which means they are shared by all development windows working on the same project.
 		</paragraph>
 		<paragraph>

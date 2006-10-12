@@ -17,13 +17,13 @@
 		<paragraph>These commands are also available in the 
 			<bold>Project</bold> toolbar
 			<image>
-				<url>/images/eiffelstudio/icons/icon_compile_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/project_melt_icon.png</url>
 			</image>,
 			<image>
-				<url>/images/eiffelstudio/icons/icon_freeze_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/project_freeze_icon.png</url>
 			</image>,
 			<image>
-				<url>/images/eiffelstudio/icons/icon_finalize_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/project_finalize_icon.png</url>
 			</image>.
 		</paragraph>
 		<paragraph>To solve the errors that occur during the Eiffel compilation, use the 

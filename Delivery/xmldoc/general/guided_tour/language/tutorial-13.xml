@@ -196,7 +196,7 @@
 			</span> and 
 			<span>
 				<link>
-					<url>http://www.eiffel.com/doc/manuals/language/style/style.  pdf</url>
+					<url>http://www.eiffel.com/doc/manuals/language/style/style.pdf</url>
 					<label>PDF</label>
 				</link>
 			</span> forms.  These rules are an integral part of the Eiffel method; in quality software, there is no such thing as a detail.  Applying them systematically promotes consistency between projects in the Eiffel world, enhances reusability, and facilitates everyone's work.  

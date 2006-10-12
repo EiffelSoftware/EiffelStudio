@@ -16,20 +16,8 @@
 			</item>
 			<item>
 				<link>
-					<url>20_updating_an_archive.xml</url>
-					<label>Updating an existing archive</label>
-				</link>
-			</item>
-			<item>
-				<link>
 					<url>30_comparing_to_an_archive.xml</url>
 					<label>Comparing to an archive</label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>40_evaluating_a_metric_over_an_archive.xml</url>
-					<label>Evaluating a metric over an archive</label>
 				</link>
 			</item>
 		</list>

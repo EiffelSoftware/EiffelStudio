@@ -14,7 +14,7 @@
 				<content>Compilation is automatic</content>
 			</heading>
 			<paragraph>Any speed issue aside, the most important property of the compilation process is that it is entirely automatic.</paragraph>
-			<paragraph>You've seen it from the beginning of this Tour: all the information the compiler has -- obtained from an Ace file, as here, or generated automatically by the other options -- is the name of the root class and the list of directories holding Eiffel clusters. In fact it only needs these directories for non-precompiled clusters; here, since we are using precompiled EiffelBase, the only directory we are required to specify is the one containing the root cluster, denoted simply as " <span>.</span> " (current directory) since, to simplify things, we've started EiffelStudio from the Tour's own root cluster directory.
+			<paragraph>You've seen it from the beginning of this Tour: all the information the compiler has -- obtained from a configuration file, as here, or generated automatically by the other options -- is the name of the root class and the list of directories holding Eiffel clusters. In fact it only needs these directories for non-precompiled clusters; here, since we are using precompiled EiffelBase, the only directory we are required to specify is the one containing the root cluster, denoted simply as " <span>.</span> " (current directory) since, to simplify things, we've started EiffelStudio from the Tour's own root cluster directory.
 			</paragraph>
 			<paragraph>The compiler takes care of the rest, in particular of finding all the classes that must be compiled.</paragraph>
 			<paragraph>There is never any need, when compiling Eiffel systems, to supply "Make files", "include files", or other manual descriptions of inter-module dependencies.</paragraph>
@@ -229,20 +229,8 @@ The time to re-process a system after a change should be a function of the logic
 				<item>It can be executed directly. This is what happens during melting: while the rest of your system, the frozen part, is executed in the form produced by Eiffel compilation generation and C-compilation of the result, the melted part is interpreted "as is" without further translation.</item>
 				<item>It can be compiled into C for further processing.</item>
 			</list>
-			<paragraph>Internally, the melted code is in a file 
-				<code>
-					<string>simple</string>
-				</code>
-				<span>.</span>
-				<code>
-					<keyword>melted</keyword>
-				</code> (where 
-				<code>
-					<string>simple</string>
-				</code> is our project's name) in the subdirectory 
-				<code>
-					<keyword>EIFGEN/W_CODE</keyword>
-				</code> of the project directory. The file is not human-readable, but as you add elements to your software and melt you watch its size grow. Whenever you freeze, it's emptied.
+			<paragraph>Internally, the melted code is in a file <string>simple</string>.<keyword>melted</keyword> (where <string>simple</string> is our project's name) in the subdirectory 
+				<keyword>EIFGENs/simple/W_CODE</keyword> of the project directory. The file is not human-readable, but as you add elements to your software and melt you watch its size grow. Whenever you freeze, it's emptied.
 			</paragraph>
 			<paragraph>On the Microsoft .NET implementation of EiffelStudio, bytecode is replaced by that platform's own internal code, MSIL.</paragraph>
 		</div>

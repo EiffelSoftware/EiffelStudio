@@ -342,6 +342,16 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, in compiled only
 
+	set_target (a_target: like target) is
+			-- Set `target' to `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		do
+			target := a_target
+		ensure
+			target_set: target = a_target
+		end
+
 	set_consumed_assembly (a_consumed: like consumed_assembly) is
 			-- Set `consumed_assembly' to `a_consumed'.
 		require

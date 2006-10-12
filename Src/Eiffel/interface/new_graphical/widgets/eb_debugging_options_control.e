@@ -1143,7 +1143,7 @@ feature {NONE} -- Environment actions
 			end
 			r := a_row.index
 			g := a_row.parent
-			if r < g.row_count and then g.row(r).parent_row = r.parent_row then
+			if r < g.row_count and then g.row(r + 1).parent_row = a_row.parent_row then
 				g.select_row (r)
 			elseif r > 1 then
 				g.select_row (r - 1)

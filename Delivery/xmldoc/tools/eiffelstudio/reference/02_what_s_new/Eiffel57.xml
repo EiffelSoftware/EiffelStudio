@@ -6,16 +6,16 @@
 		<heading><size>2</size>Graphical environment</heading>
 			<heading><size>3</size>What's new</heading>
 			<list ordered="false">
-				<item>Dual licensing of eiffelStudio both commercial and open-source.</item>
+				<item>Dual licensing of EiffelStudio both commercial and open-source.</item>
 				<item>Refactoring facilities: renaming and feature pull-up.</item>
-				<item>Metric engine. It let you define more advanced metrics. This is the first result of our new query engine.</item>
+				<item>Metric engine. It lets you define more advanced metrics. This is the first result of our new query engine.</item>
 				<item>UUID library for generating UUID.</item>
 				<item>Process library for launching, waiting, redirecting outputs of processes.</item>
-				<item>Configuration system. It brings a new dimension to the way you manage multiple projects and also simplifying it.</item>
+				<item>Configuration system. It brings a new dimension to the way you manage multiple projects and simplifies it.</item>
 			</list>		
 			<heading><size>3</size>Improvements</heading>
 			<list ordered="false">
-				<item>Output of C compilations now appears within the EiffelStudio environment.</item>
+				<item>Output of C compilation now appears within the EiffelStudio environment.</item>
 				<item>Improved tool for launching external commands from within the EiffelStudio environment.</item>
 				<item>Introduced basic support for Unicode in Eiffel libraries, namely EiffelBase, EiffelVision2 and WEL.</item>
 				<item>Improved display of clusters, libraries and assemblies.</item>
@@ -68,26 +68,25 @@
 			<item><class_name>STRING</class_name>, <class_name>STRING_8</class_name>, <class_name>STRING_32</class_name> and <class_name>STRING_GENERAL</class_name>:
 				<list ordered="false">
 					<item>Added Unicode support through the addition of STRING_32. For the moment Unicode support is limited to the data-structure.</item>
-					<item>Added <class_name>STRING_GENERAL</class_name>, a common ancestor to <class_name>STRING_8</class_name> and <class_name>STRING_32</class_name>. It is useful if you want to handle both ASCII and Unicode
-						string. For example this facility is used in EiffelVision2 and WEL.
+					<item>Added <class_name>STRING_GENERAL</class_name>, a common ancestor to <class_name>STRING_8</class_name> and <class_name>STRING_32</class_name>. It is useful if you want to handle both ASCII and Unicode string. For example this facility is used in EiffelVision2 and WEL.
 					</item>
 					<item><class_name>STRING</class_name> can be either <class_name>STRING_8</class_name> or <class_name>STRING_32</class_name> depending on your configuration. Default is <class_name>STRING_8</class_name>.</item>
 					<item>Added <feature_name>is_integer_xx</feature_name>, <feature_name>is_natural_xx</feature_name>, <feature_name>to_integer_xx</feature_name> and <feature_name>to_natural_xx</feature_name> where xx stands for 8, 16, 32 or 64.</item>
 					<item>Added <feature_name>is_number_sequence</feature_name> which is semantically identical to the behavior of <feature_name>is_integer</feature_name> in 5.6. Changed behavior of <feature_name>is_integer</feature_name> to check that it fits into a 32-bit integer value.</item>
-					<item>Updated <feature_name>is_double</feature_name>, <feature_name>is_real</feature_name>, <feature_name>is_real_32</feature_name>, <feature_name>is_real_64</feature_name> so that the specification allow optional integral part or decimal part, but not both (as per the ECMA specification of a real constant). This fixes the bug where <code>1.e-4</code> was not considered a valid floating point value.</item>
+					<item>Updated <feature_name>is_double</feature_name>, <feature_name>is_real</feature_name>, <feature_name>is_real_32</feature_name>, <feature_name>is_real_64</feature_name> so that the specification allows optional integral part or decimal part, but not both (as per the ECMA specification of a real constant). This fixes the bug where <code>1.e-4</code> was not considered a valid floating point value.</item>
 					<item>Changed behavior of <feature_name>is_boolean</feature_name>  to match the ELKS specification which says the lower case version of the string should either be true or false.</item>
 					<item>Fixed issue in <feature_name>from_c_substring</feature_name> which would not properly if argument <code>start_pos</code> was greater than 1.</item>
 				</list>
 			</item>
 			<item><class_name>CHARACTER</class_name>, <class_name>CHARACTER_8</class_name> and <class_name>CHARACTER_32</class_name>:
 				<list ordered="false">
-					<item>Removed <class_name>WIDE_CHARACTER</class_name> and <class_name>WIDE_CHARACTER_REF</class_name>, they are replaced by <class_name>CHARACTER_32</class_name> and <class_name>CHARACTER_32_REF</class_name>.</item>
+					<item>Removed <class_name>WIDE_CHARACTER</class_name> and <class_name>WIDE_CHARACTER_REF</class_name>; they are replaced by <class_name>CHARACTER_32</class_name> and <class_name>CHARACTER_32_REF</class_name>.</item>
 				</list>
 			</item>
 			<item><class_name>REAL_32</class_name> and <class_name>REAL_64</class_name>:
 				<list ordered="false">
 					<item>Renamed <class_name>REAL</class_name> into <class_name>REAL_32</class_name>, and <class_name>DOUBLE</class_name> into <class_name>REAL_64</class_name>. <class_name>REAL</class_name> can be either <class_name>REAL_32</class_name> or <class_name>REAL_64</class_name> depending on your configuration. Default is <class_name>REAL_32</class_name>.</item>
-					<item>Added <feature_name>rounded_xxx</feature_name>, <feature_name>floor_xxx</feature_name> and <feature_name>ceiling_xxx</feature_name> where xxx is the current floating point type, as the version returning an <class_name>INTEGER</class_name> are definitely not precise for large numbers.</item>
+					<item>Added <feature_name>rounded_xxx</feature_name>, <feature_name>floor_xxx</feature_name> and <feature_name>ceiling_xxx</feature_name> where xxx is the current floating point type, as the version returning an <class_name>INTEGER</class_name> is definitely not precise for large numbers.</item>
 				</list>
 			</item>
 			<item>SED serialization facility:

@@ -249,7 +249,7 @@ feature -- Status report
 
 			if ink_width > 0 then
 				left_off := ink_x
-				right_off := ink_width - log_width
+				right_off := left_off + ink_width - log_width
 			end
 
 			Result := reusable_string_size_tuple

@@ -950,7 +950,7 @@ feature {NONE} -- Implementation
 							set_error_message ("Precursor class locating failed.")
 						end
 					end
-				else
+				elseif l_current_feature.precursors /= Void then
 					l_parent_class := l_current_feature.precursors.last
 				end
 				if l_parent_class /= Void then

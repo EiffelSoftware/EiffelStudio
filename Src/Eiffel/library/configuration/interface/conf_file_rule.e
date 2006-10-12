@@ -214,6 +214,9 @@ feature {NONE} -- Implementation
 				loop
 					create l_regexp.make
 					l_regexp.compile (exclude.item)
+					if {PLATFORM}.is_windows then
+						l_regexp.set_caseless (True)
+					end
 					if not l_regexp.is_compiled then
 						create l_er
 						l_er.set_regexp (exclude.item)

@@ -53,7 +53,7 @@
 					<code><compiler_error>VTCG</compiler_error></code> error, though it should accept the classes.
 				</paragraph>
 			</item>
-			<item>Fixed a crash when one of the following command lines was used in a directory with no existing project that contains a file named "Ace":
+			<item>Fixed a crash when one of the following command lines was used in a directory with no existing project that contains no default configuration file:
 				<code_block>ec -flat      -all
 ec -short     -all
 ec -flatshort -all

@@ -491,7 +491,7 @@
 			</link>) are the standard form of library documentation, used extensively, for example, in the book 
 			<span>
 				<link>
-					<url>http://www.eiffel.com/doc/page.xml</url><anchor_name>rs</anchor_name>
+					<url>http://www.eiffel.com/doc/page.html</url><anchor_name>rs</anchor_name>
 					<label>Reusable Software</label>
 				</link>
 			</span> (see bibliography). Assertions play a central role in such documentation by expressing the terms of the contract. As demonstrated 

@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The ancestors view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_ancestors_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/class_ancestors_icon.png</url>
 			</image>displays all the classes from which the current class inherits, directly or not, using a tree-like indented layout.
 			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 

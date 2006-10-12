@@ -23,7 +23,7 @@
 						<label>Accelerator</label>
 					</link> - Demonstrates the use of an 
 					<link>
-						<url>/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.xml</url>
+						<url>/libraries/vision2/reference/ev_accelerator_chart.xml</url>
 						<label>EV_ACCELERATOR</label>
 					</link>.
 				</item>
@@ -33,11 +33,11 @@
 						<label>Cursor</label>
 					</link> - Demonstrates how to modify the displayed 
 					<link>
-						<url>/libraries/vision2/reference/interface/kernel/ev_cursor_chart.xml</url>
+						<url>/libraries/vision2/reference/ev_cursor_chart.xml</url>
 						<label>EV_CURSOR</label>
 					</link> for an 
 					<link>
-						<url>/libraries/vision2/reference/interface/widgets/ev_widget_chart.xml</url>
+						<url>/libraries/vision2/reference/ev_widget_chart.xml</url>
 						<label>EV_WIDGET</label>
 					</link>.
 				</item>
@@ -45,19 +45,26 @@
 					<link>
 						<url>/libraries/vision2/samples/gauges/index.xml</url>
 						<label>Gauges</label>
-					</link> - Demonstrates different types of EV_GAUGE.
+					</link> - Demonstrates different types of <link>
+						<url>/libraries/vision2/reference/ev_gauge_chart.xml</url>
+						<label>EV_GAUGE</label></link>.
 				</item>
 				<item>
 					<link>
 						<url>/libraries/vision2/samples/standard_dialogs/index.xml</url>
 						<label>Standard_dialogs</label>
-					</link> - Demonstrates different types of EV_STANDARD_DIALOG.
+					</link> - Demonstrates different types of <link>
+						<url>/libraries/vision2/reference/ev_standard_dialog_chart.xml</url>
+						<label>EV_STANDARD_DIALOG</label>
+					</link>.
 				</item>
 				<item>
 					<link>
 						<url>/libraries/vision2/samples/viewport/index.xml</url>
 						<label>Viewport</label>
-					</link> - Demonstrates EV_VIEWPORT.
+					</link> - Demonstrates <link>
+						<url>/libraries/vision2/reference/ev_viewport_chart.xml</url>
+						<label>EV_VIEWPORT</label></link>.
 				</item>
 			</list>
 		</paragraph>

@@ -43,17 +43,14 @@
 		<list ordered="false">
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
-					<label>System Settings</label>
+					<url>/tools/eiffelstudio/reference/25_project_settings/070_advanced_debug.xml</url>
+					<label>Project Settings</label>
 				</link> dialog.
 			</item>
 			<item>In the 
-				<bold>Debug/Profile</bold> tab, the 
-				<bold>enable debug</bold> checkbox affects the system globally.
+				<bold>Debug</bold> section, you can enable/disable the debug clauses.
 			</item>
-			<item>The list under it gives the possibility to enable or disable each debug clause separately, through a context menu that appears when right-clicking on them.</item>
 			<item>Click 
-				<bold>Apply</bold> or 
 				<bold>OK</bold>.
 			</item>
 			<item>You must 

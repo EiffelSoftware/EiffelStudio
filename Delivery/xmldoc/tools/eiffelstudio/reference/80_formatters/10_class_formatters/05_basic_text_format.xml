@@ -10,7 +10,7 @@
 	<paragraph>
 		<paragraph>Basic text view
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/view_editor_icon.png</url>
 			</image> is the only editable view; this is why it is only available through the 
 			<link>
 				<url>/tools/eiffelstudio/reference/20_editor/index.xml</url>

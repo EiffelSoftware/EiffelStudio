@@ -45,12 +45,6 @@
 				</link>
 			</item>
 			<item>
-				<link>
-					<url>50_technology/20_lace_syntax.xml</url>
-					<label>Lace syntax</label>
-				</link>
-			</item>
-			<item>
 					<link>
 						<url>60_version_history/index.xml</url>
 						<label>Version History</label>

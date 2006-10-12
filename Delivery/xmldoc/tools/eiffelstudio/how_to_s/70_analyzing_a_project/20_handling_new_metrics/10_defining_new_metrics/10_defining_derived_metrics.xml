@@ -8,62 +8,34 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>To define a derived metric, you must have already clicked on
-			<image>
-				<border>0</border>
-				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
-			</image> of the "Metric" tab in the context tool. Select then the "Derived" tab of the "New metric" dialog:
-		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/derived.png</url>
-				<border>0</border>
-			</image>
-		</paragraph>
+		<paragraph>To define a derived metric, you must select the<bold> Metric Definition</bold> tab and click the <bold>New metric</bold> button. A menu appears asking you the kind of metric you want to define. 
+		Select <bold>Basic metric</bold> and then the type of the results you are looking for (i.e. Class, Feature, Line, ...). Once done, you can perform the following steps:</paragraph>
 		<list ordered="true">
-			<item>Enter a name in the "New metric name" field.</item>
+			<item>Enter a name for the metric in the "Name" field. Next to the field you will see the type of metric as well as the unit for this metric.</item>
+			<item>Enter a description for the metric. The description is shown as a tooltip when you navigate the list of available metrics.</item>
 			<item>
-				<paragraph>Select a raw metric. Regarding the selected metric, you will get one of the following panel in the "Criteria" frame:
-					<line_break/>
-					<line_break/>
-					<image>
-						<url>/images/eiffelstudio/metrics_png/dclasses.png</url>
-						<border>0</border>
-					</image>
-					<line_break/>
-					<line_break/>
-					<image>
-						<url>/images/eiffelstudio/metrics_png/ddependents.png</url>
-						<border>0</border>
-					</image>
-					<line_break/>
-					<line_break/>
-					<image>
-						<url>/images/eiffelstudio/metrics_png/dfeatures.png</url>
-						<border>0</border>
-					</image>
-					<line_break/>
-				</paragraph>
+				Choose your criteria by selecting the item with ... in the <bold>Criterion definition</bold> list. Once selected you can press Ctrl+Space to see the list of available criterion. 
+				Once the criterion is set, you can add some properties (e.g. a property could be <class_name>STRING</class_name> if the criterion you have is to look for descendants of the <class_name>STRING</class_name> class).
 			</item>
-			<item>Choose your criteria by selecting one button from each line.</item>
-			<item>When you are evaluating this metric on a scope, all criteria could be met, or just some or none of them. If you want the currently defined metric to count scopes that have all the criteria select "All of the following are met", and if you want it to count scopes that have a t least one of the defined criteria, select "At least one of the following is met.</item>
-			<item>If you want to save the metric definition without exiting the interface, click on "Save", otherwise, click on "OK" to save and exit.</item>
-			<item>If you want to define another derived metric, click on
-				<image>
-					<border>0</border>
-					<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
-				</image> to reset
-			</item>
+			<item>Once you have completed the metric definition you need to save your metric by clicking on the Save button.</item>
+			<item>If you want to define another derived metric, repeat all the previous steps.</item>
 		</list>
-		<note>
-			<bold>Note</bold>: Unit is adjusted in the "Unit" field regarding the selected raw metric
-		</note>
+		
+		<paragraph>For more information about criterion, read the <link><url>../../../../reference/60_metric_tool/30_user_interface_basics/20_criterion.xml</url><label>Managing criterion</label></link> section.</paragraph>
+		
+		<paragraph>A summary of the metric you just defined appears in a textual representation in the <bold>Expression</bold> text field.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/00_introduction.xml</url>
-				<label>Managing new metrics</label>
+				<url>../20_managing_new_metrics/00_introduction.xml</url>
+				<label>Managing metrics</label>
+			</link>
+			<line_break></line_break>
+			<link>
+				<url>../../../../reference/60_metric_tool/30_user_interface_basics/20_criterion.xml</url>
+				<label>Managing criterion</label>
 			</link>
 		</seealso>
-	</paragraph></document>
+	</paragraph>
+</document>

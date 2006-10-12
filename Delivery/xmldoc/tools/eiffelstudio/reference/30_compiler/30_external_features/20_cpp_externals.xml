@@ -20,14 +20,10 @@
 			<item>You can apply to these objects all the corresponding operations from the C++ class: executing functions ("methods"), accessing data members, executing destructors.</item>
 			<item>On Windows, you can use the Legacy++ tool to produce an Eiffel "wrapper class" encapsulating all the features of a C++ class, so that the result will look to the rest of the Eiffel software as if it had been written in Eiffel.</item>
 		</list>
-		<paragraph>The discussion concentrates on using C++ software from Eiffel. In the other direction, you can use the Cecil library (C-Eiffel Call-In Library) described in chapter 24 of 
+		<paragraph>The discussion concentrates on using C++ software from Eiffel. In the other direction, you can use  
 			<link>
-				<url>http://vig.pearsoned.com/store/product/1,3498,store-3841_isbn-0132479257,00.xml</url>
-				<label>Eiffel: The Language</label>
-			</link> with important complements in the 
-			<link>
-				<url>/technologies/cecil/index.xml</url>
-				<label>Cecil manual</label>
+				<url>../../../../../technologies/cecil/00_introduction.xml</url>
+				<label>the Cecil library (C-Eiffel Call-In Library)</label>
 			</link>.
 		</paragraph>
 		<heading>
@@ -135,7 +131,7 @@ External_name ==  <keyword>alias</keyword> Manifest_string
 			<item>If the declaration starts with <code><keyword>delete</keyword></code>, it indicates a call to a destructor from the C++ class. In this case the Eiffel class may inherit 
 				<link>
 					<label>MEMORY</label>
-					<url>/libraries/base/reference/kernel/classic/memory_chart.xml</url>
+					<url>/libraries/base/reference/memory_chart.xml</url>
 				</link> and redefine the dispose procedure to execute the destructor operations whenever the Eiffel objects are garbage-collected.
 			</item>
 			<item>If the declaration starts with <code><keyword>data_member</keyword></code>, it indicates access to a data member (attribute in Eiffel terminology) from the C++ class.

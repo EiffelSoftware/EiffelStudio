@@ -5,7 +5,7 @@
 			<bold>debug</bold> menu and in the 
 			<bold>project</bold> toolbar ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_bkpt_info_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/16x16/tool_breakpoints_icon.png</url>
 			</image> ), displays the list of all set breakpoints in the system (enabled or disabled).
 		</paragraph>
 

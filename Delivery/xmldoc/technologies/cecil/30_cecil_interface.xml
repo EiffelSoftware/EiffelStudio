@@ -186,7 +186,7 @@ EIF_INTEGER foo (EIF_POINTER ptr, EIF_OBJECT obj);
 {
 	/* Print the Eiffel object `obj', with the feature `print'
 	* from ANY. (do not forget to put `visible' the class
-	* ANY in the Ace.ace file.
+	* ANY in the project configuration file.
 	*/
 
 	EIF_PROCEDURE ep;

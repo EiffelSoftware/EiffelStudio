@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The routines view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_routines_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/class_features_routine_icon.png</url>
 			</image>displays all the routine signatures of the current class, including inherited routines.
 			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 

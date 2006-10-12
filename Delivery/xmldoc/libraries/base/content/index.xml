@@ -34,12 +34,6 @@
 					<label>Support</label>
 				</link> cluster that provide access to the environment, basic math operations and a few other helper classes.
 			</item>
-			<item>A 
-				<link>
-					<url>40_desc/index.xml</url>
-					<label>Dynamic External Shared Call</label>
-				</link> mechanism to call functions in DLL at runtime (Windows specific).
-			</item>
 		</list>
 	</paragraph>
 </document>

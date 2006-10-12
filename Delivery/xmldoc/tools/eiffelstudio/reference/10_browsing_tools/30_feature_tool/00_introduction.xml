@@ -40,7 +40,7 @@
 
 		The feature tool (
 		<image>
-			<url>/images/eiffelstudio/icons/icon_features_color.gif</url>
+			<url>/images/eiffelstudio/icons/16x16/tool_feature_icon.png</url>
 		</image>) gives a summary of all written-in features of the currently edited class. They are listed in a 
 		<link>
 			<url>10_feature_tree.xml</url>

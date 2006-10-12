@@ -24,7 +24,7 @@
 		<list ordered="false">
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_editor_feature_icon.png</url>
 				</image>
 				<link>
 					<url>./05_basic_text_format.xml</url>
@@ -33,16 +33,16 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_flat_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_clickable_feature_icon.png</url>
 				</image>
 				<link>
 					<url>./10_flat_format.xml</url>
-					<label>Flat view</label>
+					<label>Clickable view</label>
 				</link>
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_feature_callers_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_callers_icon.png</url>
 				</image>
 				<link>
 					<url>./15_callers_format.xml</url>
@@ -51,7 +51,38 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_feature_implementers_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_assigners_icon.png</url>
+				</image>
+				Assigners
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/16x16/feature_creators_icon.png</url>
+				</image>
+				Creators
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/16x16/feature_callees_icon.png</url>
+				</image>
+				Callees
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/16x16/feature_assignees_icon.png</url>
+				</image>
+				Assignees
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/16x16/feature_creaters_icon.png</url>
+				</image>
+				Creations
+			</item>
+
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/16x16/feature_implementers_icon.png</url>
 				</image>
 				<link>
 					<url>./20_implementers_format.xml</url>
@@ -60,7 +91,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_feature_ancestors_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_ancestors_icon.png</url>
 				</image>
 				<link>
 					<url>./25_ancestor_format.xml</url>
@@ -69,7 +100,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_feature_descendants_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_descendents_icon.png</url>
 				</image>
 				<link>
 					<url>./30_descendant_format.xml</url>
@@ -78,7 +109,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_feature_homonyms_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/feature_homonyms_icon.png</url>
 				</image>
 				<link>
 					<url>./35_homonyms_format.xml</url>

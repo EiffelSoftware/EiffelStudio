@@ -26,11 +26,5 @@
 					<label>User interface basics</label>
 				</link>
 			</item>
-			<item>
-				<link>
-					<url>metric_toolbar.xml</url>
-					<label>Metric toolbar</label>
-				</link>
-			</item>
 		</list>
 	</paragraph></document>

@@ -59,19 +59,8 @@
 					<keyword>Enable all</keyword>
 				</code> icon, used here as a hole. This sets and enables a breakpoint on the routine. Click the button labeled 
 				<code>
-					<keyword>Display info</keyword>
+					<keyword>Show/Hide information about breakpoints</keyword>
 				</code> above to get the list of breakpoints, as shown in the next figure.
-			</paragraph>
-			<paragraph>If the Context Tool is not present, 
-				<code>
-					<keyword>Display info</keyword>
-				</code> will bring it up. You can get the same effect as that of 
-				<code>
-					<keyword>Display info</keyword>
-				</code> by selecting the 
-				<code>
-					<keyword>Output</keyword>
-				</code> Tab in the Context Tool.
 			</paragraph>
 			<div>
 				<image_link>
@@ -153,10 +142,10 @@
 			</paragraph>
 			<div>
 				<image_link>
-					<url>index-86.png</url>
+					<url>index-82.png</url>
 					<target>screenshots</target>
 					<image>
-						<url>index-86.png</url>
+						<url>index-82.png</url>
 						<width>100</width>
 					</image>
 				</image_link>
@@ -333,17 +322,7 @@
 				</code>. Note that all objects are identified by their addresses in hexadecimal; such an address is by itself meaningless, but enables you to see quickly whether two object references are attached to the same object. The addresses you see as you run the Guided Tour will -- except for some unlikely coincidence -- be different from the ones appearing here.
 			</paragraph>
 			<paragraph>Note that since the garbage collector compacts memory and hence may move objects around, the address of a given object is not guaranteed to remain the same throughout a session.</paragraph>
-			<paragraph>To see the details of the object, pick-and-drop its identifier in place (that is to say, drop it in the Object Tool itself). A new object entry appears, showing the object:</paragraph>
-			<div>
-				<image_link>
-					<url>index-89.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-89.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
+			<paragraph>To see the details of the object, pick-and-drop its identifier in place (that is to say, drop it in the Object Tool itself). A new object entry appears, showing the object.</paragraph>
 		</div>
 		<div>
 			<heading>
@@ -359,16 +338,6 @@
 					<string>HEIR</string>
 				</code>: retarget the Context Tool to that class.
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-90.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-90.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>In the same way that you can drop a 
 				<span>feature</span> pebble into a tool that expects a class, you can also drop an 
 				<span>object</span> pebble, which will be understood as denoting the object's generating class.
@@ -400,18 +369,8 @@
 				<span>.</span>
 				<code>
 					<string>display</string>
-				</code>:
+				</code>.
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-91.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-91.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>Choosing 
 				<code>
 					<keyword>Step-by-step</keyword>
@@ -462,18 +421,8 @@
 				</code> routine in class 
 				<code>
 					<string>HEIR</string>
-				</code>:
+				</code>.
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-92.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-92.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>You can also expand the 
 				<code>
 					<keyword>Call stack</keyword>

@@ -25,7 +25,7 @@
 		<paragraph>
 			You can disable the evaluation of the selected expression by clicking on 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_on_off_very_small_color.png</url>
+				<url>/images/eiffelstudio/icons/10x10/general_toogle_icon.png</url>
 			</image> , then the context value will display 'disabled'.
 		</paragraph>
 		<paragraph>

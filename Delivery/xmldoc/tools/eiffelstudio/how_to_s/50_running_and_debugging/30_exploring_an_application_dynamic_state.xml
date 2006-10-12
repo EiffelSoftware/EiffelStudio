@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>To view the dynamic state of a debugged application, just stop it at the point where you want to see its context. The debugger tools will automatically be popped up then, yielding the call stack of the application, as well as the state of the objects located in the object tree, which include at least the object corresponding to the level of the call stack where the call stack cursor 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_green_arrow.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/callstack_active_arrow_icon.png</url>
 			</image> is.
 		</paragraph>
 		<paragraph>To see at which point the features in the call stack have stopped, just click the feature on which you want this information in the call stack. Doing this will change the cursor position in the call stack and display the flat view of the feature in the context tool.</paragraph>

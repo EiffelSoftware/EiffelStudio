@@ -25,7 +25,7 @@
 			<item>To remove an class, cluster, or link from the current view, use pick-and-drop to drop it in the 
 				<bold>Remove figure</bold> hole.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_recycle_bin_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_reset_icon.png</url>
 				</image>.  To remove a link handle you can also the same technique
 			</item>
 		</list>

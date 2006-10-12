@@ -36,7 +36,7 @@
 					<label>Drop</label>
 				</link> it either in the editor or on the error help button
 				<image>
-					<url>/images/eiffelstudio/icons/icon_help_tool_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/command_error_info_icon.png</url>
 				</image>.
 			</item>
 			<item>A dialog is then popped up that describes extended information concerning this error type:</item>

@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The ancestor view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_feature_ancestors_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/feature_ancestors_icon.png</url>
 			</image> displays all the features which the current feature is redefining.
 		</paragraph>
 		<seealso>

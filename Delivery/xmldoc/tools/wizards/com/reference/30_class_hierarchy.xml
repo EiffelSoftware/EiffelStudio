@@ -12,14 +12,14 @@
 		</image>
 		<paragraph>In a project accessing an existing component, the Eiffel classes corresponding to component coclasses inherit from the class 
 			<link>
-				<url>../../../../libraries/com/reference/Interfaces/ecom_queriable_chart.xml</url>
+				<url>../../../../libraries/com/reference/ecom_queriable_chart.xml</url>
 				<label>
 					<class_name>ECOM_QUERIABLE</class_name>
 				</label>
 			</link>, which is part of the EiffelCOM library. This class includes the feature 
 			<feature_name>make_from_other</feature_name> which allows initializing the component from another instance of 
 			<link>
-				<url>../../../../libraries/com/reference/Interfaces/ecom_interface_chart.xml</url>
+				<url>../../../../libraries/com/reference/ecom_interface_chart.xml</url>
 				<label>
 					<class_name>ECOM_INTERFACE</class_name>
 				</label>
@@ -30,13 +30,13 @@
 		</image>
 		<paragraph>In a project implementing a new component, the Eiffel classes corresponding to component coclasses inherit from the class 
 			<link>
-				<url>../../../../libraries/com/reference/Interfaces/ecom_stub_chart.xml</url>
+				<url>../../../../libraries/com/reference/ecom_stub_chart.xml</url>
 				<label>
 					<class_name>ECOM_STUB</class_name>
 				</label>
 			</link>, which is part of the EiffelCOM library. This class includes the feature 
 			<link>
-				<url>../../../../libraries/com/reference/Interfaces/ecom_stub_chart.xml</url><anchor_name>f_create_item</anchor_name>
+				<url>../../../../libraries/com/reference/ecom_stub_chart.xml</url><anchor_name>f_create_item</anchor_name>
 				<label><feature_name>create_item</feature_name></label>
 			</link> which allows initializing the component.
 		</paragraph>
@@ -44,7 +44,7 @@
 			The  <bold>Interface_proxy</bold> folder includes Eiffel classes wrapping interfaces that may be returned by functions on other interfaces. 
 			These classes inherit from both the deferred interface class located in <bold>Common\Interfaces</bold> and 
 			<link>
-				<url>../../../../libraries/com/reference/Interfaces/ecom_queriable_chart.xml</url>
+				<url>../../../../libraries/com/reference/ecom_queriable_chart.xml</url>
 				<label>
 					<class_name>ECOM_QUERIABLE</class_name>
 				</label>
@@ -57,7 +57,7 @@
 			The  <bold>Interface_stub</bold> folder includes Eiffel classes implementing interfaces that may be given to the component as an argument. 
 			These classes inherit from both the deferred interface class and 
 			<link>
-				<url>../../../../libraries/com/reference/Interfaces/ecom_stub_chart.xml</url>
+				<url>../../../../libraries/com/reference/ecom_stub_chart.xml</url>
 				<label>
 					<class_name>ECOM_STUB</class_name>
 				</label>

@@ -6,14 +6,7 @@
 		<list ordered="false">
 			<item>subclusters</item>
 			<item>superclusters</item>
-		</list>The image below shows the cluster 
-		<cluster_name>base.event</cluster_name> with the relation depth for superclusters 1 and subclusters zero. 
-		<div>
-			<image>
-				<url>/images/eiffelstudio/diagram/bon-subcluster.png</url>
-			</image>
-		</div>
-		<line_break/>
+		</list>
 		<paragraph>The relations for classes are:</paragraph>
 		<list ordered="false">
 			<item>ancestors</item>

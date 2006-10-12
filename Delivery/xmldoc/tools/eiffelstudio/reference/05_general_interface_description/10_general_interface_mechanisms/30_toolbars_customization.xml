@@ -47,27 +47,6 @@
 			<bold>OK</bold>. You can also go back to the initial toolbar layout by clicking on 
 			<bold>C		ancel</bold>.
 		</paragraph>
-		<paragraph><alignment>center</alignment>
-			<table>
-				<row><cell>Icon without text</cell><cell>Icon with text</cell></row>
-				<row><cell><image><url>/images/eiffelstudio/icons/icon_cluster_tool_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_cluster_tool_text_color.gif</url></image></cell></row>
-				<row><cell><image><url>/images/eiffelstudio/icons/icon_features_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_features_text_color.gif</url></image></cell></row>
-				<row><cell><image><url>/images/eiffelstudio/icons/icon_search_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_search_text_color.gif</url></image></cell></row>
-				<row><cell><image><url>/images/eiffelstudio/icons/icon_context_tool_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_context_tool_text_color.gif</url></image></cell></row>
-				<row><cell><image><url>/images/eiffelstudio/icons/icon_favorites_folder_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_favorites_text_color.gif</url></image></cell></row>
-				<row><cell><image><url>/images/eiffelstudio/icons/icon_windows_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_windows_text_color.gif</url></image></cell></row>
-			</table>
-			Standard toolbar icons.
-		</paragraph>
-		<line_break/>
-		<paragraph><alignment>center</alignment>
-			<table>
-				<row><cell>Icon without text</cell><cell>Icon with text</cell></row>
-				<row><cell><image><url>/images/eiffelstudio/icons/icon_compile_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_compile_text_color.gif</url></image></cell></row>
-				<row><cell><image><url>/images/eiffelstudio/icons/icon_debug_run_color.gif</url></image></cell><cell><image><url>/images/eiffelstudio/icons/icon_debug_run_text_color.gif</url></image></cell></row>
-			</table>
-			Project toolbar icons.
-		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

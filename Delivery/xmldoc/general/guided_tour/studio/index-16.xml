@@ -86,17 +86,7 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>You can try undoing this change, then redoing it:</paragraph>
-			<div>
-				<image_link>
-					<url>index-116.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-116.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
+			<paragraph>You can try undoing this change, then redoing it.</paragraph>
 			<paragraph>You can also click 
 				<code>
 					<keyword>History</keyword>
@@ -117,18 +107,8 @@
 			<paragraph>The useful button here is 
 				<code>
 					<keyword>New class</keyword>
-				</code>:
+				</code>.
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-117.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-117.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>This button is a pebble, meant to be dropped into the diagram. Drop it somewhere above the bubble for 
 				<code>
 					<string>TESTROOT</string>
@@ -260,16 +240,6 @@
 				<string>PARENT</string>
 			</code>.
 		</paragraph>
-		<div>
-			<image_link>
-				<url>index-123.png</url>
-				<target>screenshots</target>
-				<image>
-					<url>index-123.png</url>
-					<width>100</width>
-				</image>
-			</image_link>
-		</div>
 		<paragraph>In a moment we'll use this Editing Tool to see how, conversely, EiffelStudio will automatically reflect in the diagram a change made to the text. For the moment go back to the Development Window.</paragraph>
 		<paragraph>In the Cluster Tree in the top-left pane, you will notice that the name of 
 			<code>
@@ -347,12 +317,12 @@
 				</code>. In the 
 				<code>
 					<keyword>invariant</keyword>
-				</code> clause, enter
+				</code> clause, choose
 			</paragraph>
 			<code_block>
-	<feature_name>my_heir</feature_name> <symbol>/</symbol><symbol>=</symbol> Void
+	<feature_name>my_heir_not_void: my_heir </feature_name> <symbol>/</symbol><symbol>=</symbol> Void
 </code_block>
-			<paragraph>to specify the invariant property that this attribute should never be void. Finally, to see how EiffelStudio can generate the full accompaniment to an attribute, check the box 
+			<paragraph> from the list to specify the invariant property that this attribute should never be void. Finally, to see how EiffelStudio can generate the full accompaniment to an attribute, check the box 
 				<code>
 					<keyword>Generate set procedure</keyword>
 				</code>. Click 
@@ -402,18 +372,8 @@
 				</code> existed before, in text form; so the diagram mechanisms have had to preserve the existing feature and feature clauses, and add the elements corresponding to what you have specified through the diagram mechanisms. Here is the beginning of class 
 				<code>
 					<string>TESTROOT</string>
-				</code> in its updated form:
+				</code> in its updated form.
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-127.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-127.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>Note how EiffelStudio has generated both the attribute and the associated "set" procedure, 
 				<code>
 					<string>set_my_heir</string>
@@ -502,19 +462,7 @@
 				</code>
 				<code>
 					<keyword>Project settings</keyword>
-				</code>, or you can click the little Cluster Creation button at the top of the Cluster Tree:
-			</paragraph>
-			<div>
-				<image_link>
-					<url>index-129.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-129.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
-			<paragraph>Click this button. The resulting dialog asks you for the cluster name, and the existing cluster (non-precompiled) of which you want to make it a subcluster, here leaving only one choice:</paragraph>
+				</code>, or you can click the little Cluster Creation button at the top of the Cluster Tree. Click this button. The resulting dialog asks you for the cluster name, and the existing cluster (non-precompiled) of which you want to make it a subcluster, here leaving only one choice:</paragraph>
 			<div>
 				<image_link>
 					<url>index-130.png</url>
@@ -557,13 +505,13 @@
 				<size>2</size>
 				<content>Moving a class to a different cluster</content>
 			</heading>
-			<paragraph>Among the many operations you can do graphically is to move a class from one cluster to another. Drag-and-drop (again, using conventional drag and drop) the 
+			<paragraph>Among the many operations you can do graphically is to move a class from one cluster to another. Pick-and-drop the 
 				<code>
 					<string>HEIR2</string>
 				</code> class bubble to the rounded rectangle for 
 				<code>
 					<string>MY_CLUSTER</string>
-				</code>. Make sure the bubble fits entirely (that's why we wanted the cluster rectangle to be big enough).
+				</code>.
 			</paragraph>
 			<paragraph>This graphical manipulation has caused a structural change: class 
 				<code>
@@ -609,90 +557,9 @@
 		<div>
 			<heading>
 				<size>2</size>
-				<content>Changing a class name</content>
-			</heading>
-			<paragraph>Here is another operation that would be even more tedious if you had to perform it manually: changing a class name. You must make sure that 
-				<span>every</span> reference to the class in the system is updated; but that's difficult to do with a text editor since -- assuming we are changing the name of 
-				<code>
-					<string>HEIR</string>
-				</code> to 
-				<code>
-					<string>HEIR1</string>
-				</code> -- you must check references one by one to avoid, for example, changing an occurrence of the word in a string.
-			</paragraph>
-			<paragraph>Instead, find the icon whose tooltip reads "Change class name and generics":</paragraph>
-			<div>
-				<image_link>
-					<url>index-133.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-133.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
-			<paragraph>This is not a button but a hole (as you'll be reminded if you try just clicking it). Pick-and-drop 
-				<code>
-					<string>HEIR</string>
-				</code> to it:
-			</paragraph>
-			<div>
-				<image_link>
-					<url>index-134.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-134.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
-			<paragraph>As you can see, this dialog also serves to change the name of formal generic parameters when the selected class is generic. Type 
-				<code>
-					<string>HEIR1</string>
-				</code> (or 
-				<code>
-					<string>heir1</string>
-				</code>, EiffelStudio always converts class names to upper case) under 
-				<code>
-					<keyword>New name</keyword>
-				</code> and click 
-				<code>
-					<keyword>OK</keyword>
-				</code>.
-			</paragraph>
-			<paragraph>As EiffelStudio traverses the system to update all references to 
-				<code>
-					<string>HEIR</string>
-				</code>, a progress bar appears so that you know what's going on. Everything is updated, including the current cluster diagram, which displays the new name in the class bubble:
-			</paragraph>
-			<div>
-				<image_link>
-					<url>index-135.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-135.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
-		</div>
-		<div>
-			<heading>
-				<size>2</size>
 				<content>Adjusting the display</content>
 			</heading>
-			<paragraph>A number of buttons enable you to customize the display:</paragraph>
-			<div>
-				<image_link>
-					<url>index-136.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-136.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
-			<paragraph>So far all class bubbles had the same default color (yellow). Try pick-and-dropping a bubble into the 
+			<paragraph>A number of buttons enable you to customize the display. So far all class bubbles had the same default color (yellow). Try pick-and-dropping a bubble into the 
 				<code>
 					<keyword>Color hole</keyword>
 				</code> to get a color palette that enables you to select a different color. This is useful if you want to highlight classes possessing certain properties, for example classes that are part of a certain Design Pattern.
@@ -722,18 +589,7 @@
 					<keyword>DEFAULT</keyword>
 				</code>. You can define any number of views in your project, and apply them to various class and cluster diagrams.
 			</paragraph>
-			<paragraph>For example, using the buttons to show and hide links of various kinds</paragraph>
-			<div>
-				<image_link>
-					<url>index-137.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-137.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
-			<paragraph>you can produce diagrams that only show the inheritance links, and others that only show the client links. If you want to keep both kinds of diagram, simply define views by typing view names -- such as 
+			<paragraph>For example, using the buttons to show and hide links of various kinds you can produce diagrams that only show the inheritance links, and others that only show the client links. If you want to keep both kinds of diagram, simply define views by typing view names -- such as 
 				<code>
 					<string>Inheritance</string>
 				</code>, 

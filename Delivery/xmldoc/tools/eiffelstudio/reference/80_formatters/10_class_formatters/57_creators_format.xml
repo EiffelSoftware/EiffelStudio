@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The creators view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_creators_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/class_features_creator_icon.png</url>
 			</image>displays all the creation procedure signatures of the current class.
 			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 

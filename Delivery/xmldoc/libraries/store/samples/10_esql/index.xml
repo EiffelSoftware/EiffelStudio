@@ -11,12 +11,12 @@
 				<item>Launch EiffelStudio. </item>
 				<item>Click <bold>Add project</bold></item>
 				<item>Browse to 
-					<italic>$ISE_EIFFEL\examples\store\esql\\</italic>.
+					<italic>$ISE_EIFFEL\examples\store\esql\</italic>.
 				</item>
 				<item>Choose <italic>esql.ecf</italic></item>
 				<item>Choose the location where the project will be compiled, by default the same directory containing the configuration file. </item>
 				<item>Choose the targe according to the installed DBMS.</item>
-				<item>Click 
+				<item>Click
 					<bold>OK</bold>.
 				</item>
 			</list>
@@ -36,11 +36,11 @@ Password: mypass
 					</code_block>
 					<note>
 						<bold>Note:</bold>
-						<italic> Name</italic> and 
-						<italic>Password</italic> are no required with ODBC. If you don't need 
-						<italic>Name</italic> and 
+						<italic> Name</italic> and
+						<italic>Password</italic> are no required with ODBC. If you don't need
+						<italic>Name</italic> and
 						<italic>Password</italic>,
-						<italic/>you can simply hit 
+						<italic/>you can simply hit
 						<bold>Return</bold> when prompted
 						<italic>.</italic>
 					</note>
@@ -54,10 +54,10 @@ Name: smith@HANDSON
 Password: mypass
 					</code_block>
 					<note>
-						<bold>Note:</bold>   you have to specify the Oracle User Name and Net Service Name with the syntax 
-						<italic>&lt;user&gt;@&lt;service&gt; </italic>where          
-						<italic>&lt;user&gt;</italic> stands for the User Name and 
-						<italic>&lt;service&gt;</italic> stands for the Net Service Name. 
+						<bold>Note:</bold>   you have to specify the Oracle User Name and Net Service Name with the syntax
+						<italic>&lt;user&gt;@&lt;service&gt; </italic>where
+						<italic>&lt;user&gt;</italic> stands for the User Name and
+						<italic>&lt;service&gt;</italic> stands for the Net Service Name.
 					</note></item>
 				</list>
 				<paragraph>Then you can enter standard SQL queries to interact with your database, for instance: </paragraph>
@@ -67,8 +67,8 @@ John    Smith
 SQL>
 				</code_block>
 				<note>
-					<bold>Note:</bold>   enter 
-					<italic>exit</italic> to quit the application. 
+					<bold>Note:</bold>   enter
+					<italic>exit</italic> to quit the application.
 				</note>
 				<heading>
 					<size>2</size>Under the Hood
@@ -77,19 +77,19 @@ SQL>
 				<list ordered="false">
 					<item>
 						<link>
-							<url>../../reference/interface/db_control_chart.xml</url>
+							<url>../../reference/db_control_chart.xml</url>
 							<label>DB_CONTROL</label>
 						</link>            to connect and disconnect to your database.
 					</item>
 					<item>
 						<link>
-							<url>../../reference/interface/db_selection_chart.xml</url>
+							<url>../../reference/db_selection_chart.xml</url>
 							<label>DB_SELECTION</label>
 						</link>            to perform 'select' queries.
 					</item>
 					<item>
 						<link>
-							<url>../../reference/interface/db_change_chart.xml</url>
+							<url>../../reference/db_change_chart.xml</url>
 							<label>DB_CHANGE</label>
 						</link>            to perform SQL queries that output no result.
 					</item>

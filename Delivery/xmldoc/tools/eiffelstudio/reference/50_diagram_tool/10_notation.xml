@@ -87,8 +87,8 @@
 			<bold>See also</bold>
 			<line_break/>
 			<link>
-				<url>../../how_to_s/60_designing_a_project/20_altering_the_system/30_class_header.xml</url>
-				<label>Changing class names and formal generics</label>
+				<url>../../how_to_s/60_designing_a_project/20_altering_the_system/32_refactoring_class_rename.xml</url>
+				<label>Changing class names</label>
 			</link>
 		</seealso>
 		<heading>

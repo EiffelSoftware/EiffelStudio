@@ -1,4 +1,5 @@
 <document title="WEL Introduction">
+	<meta_data />
 	<paragraph>
 		<paragraph>    WEL is an encapsulation of the Win32 Application Programming  Interface (API), and provides users with a powerful means of creating  Win32 Applications. </paragraph>
 		<list ordered="false">

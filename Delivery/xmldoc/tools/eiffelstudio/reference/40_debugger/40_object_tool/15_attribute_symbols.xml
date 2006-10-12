@@ -14,23 +14,17 @@
 				<label>object tool</label>
 			</link>, objects are displayed. Two categories are made for each objects: its attributes (grouped under the `attributes' folder
 			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_attribute_symbol.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/feature_attribute_icon.png</url>
 			</image> ) and its once routines (grouped under the `once routines' folder
 			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_once_symbol.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/feature_once_icon.png</url>
 			</image> ).
 		</paragraph>
 		<paragraph>All follow the following symbol scheme to describe the kind of each item:</paragraph>
 		<list ordered="false">
 			<item>
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_immediate_value.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/debugger_object_immediate_icon.png</url>
 				</image> An attribute of a basic type, such as 
 				<class_name>
 						<label>INTEGER</label>
@@ -43,23 +37,17 @@
 			</item>
 			<item>
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_object_symbol.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/debugger_object_eiffel_icon.png</url>
 				</image> An attribute that is a reference to an object
 			</item>
 			<item>
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_void_pointer.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/debugger_object_void_icon.png</url>
 				</image> A Void reference
 			</item>
 			<item>
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_expanded_object.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/debugger_object_expanded_icon.png</url>
 				</image> An object that is expanded
 			</item>
 		</list>
@@ -67,23 +55,17 @@
 		<list ordered="false">			
 			<item>
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_external_symbol.png</url>
+					<url>/images/eiffelstudio/icons/16x16/debugger_object_dotnet_icon.png</url>
 				</image> An object that is external (i.e not known as an Eiffel type)
 			</item>			
 			<item>
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_static_external_symbol.png</url>
+					<url>/images/eiffelstudio/icons/16x16/debugger_object_dotnet_static_icon.png</url>
 				</image> A static value object that is external (i.e not known as an Eiffel type)
 			</item>			
 			<item>
 				<image>
-					<height>16</height>
-					<width>16</width>
-					<url>/images/eiffelstudio/icons/icon_static_object_symbol.png</url>
+					<url>/images/eiffelstudio/icons/16x16/debugger_object_static_icon.png</url>
 				</image> A static value object that is known as an Eiffel type
 			</item>			
 		</list>

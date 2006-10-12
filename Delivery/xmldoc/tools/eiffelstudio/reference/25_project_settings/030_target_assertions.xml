@@ -4,7 +4,7 @@
 		<paragraph>This is where you can configure the assertion level for your project.</paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/assertion_options.png</url>
 				<alt_text>Condition dialog</alt_text>
 			</image>
 		</paragraph>

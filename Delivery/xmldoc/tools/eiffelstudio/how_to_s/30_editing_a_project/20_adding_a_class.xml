@@ -20,7 +20,7 @@
 		<list ordered="false">
 			<item>Click
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_class_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_class_icon.png</url>
 				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
@@ -47,7 +47,7 @@
 					<label>diagram tool</label>
 				</link>: Pick the icon
 				<image>
-					<url>/images/eiffelstudio/icons/icon_new_class_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/new_class_icon.png</url>
 				</image> and drop it on the diagram in the right cluster. This will make the dialog window appear with the chosen cluster selected.
 			</item>
 		</list>

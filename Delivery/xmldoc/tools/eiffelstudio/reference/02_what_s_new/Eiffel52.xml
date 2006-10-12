@@ -266,7 +266,7 @@
 			<item>Put Windows and Unix version to the same version number.</item>
 			<item>Fixed EiffelWeb documentation and example.</item>
 			<item>Fixed minor issues found with EiffelVision2 on Unix and Windows which were affecting EiffelBuild.</item>
-			<item>Fixed incorrect Ace file specification for EiffelVision2 examples and wizards on Unix platforms where application could be linked dynamically with `libpng' but should not.</item>
+			<item>Fixed incorrect configuration file specification for EiffelVision2 examples and wizards on Unix platforms where application could be linked dynamically with `libpng' but should not.</item>
 			<item>Fixed EiffelStore handle for Oracle so that it works fine when compiled with the Borland C compiler.</item>
 			<item>Fixed incorrect version number in VERSION file on Unix platforms.</item>
 		</list>
@@ -343,15 +343,6 @@
 			<item>First initial release of EiffelStudio 5.2</item>
 		</list>
 		<paragraph>
-			<link>
-				<url>Eiffel51.xml</url>
-				<label>Click here to check out what was new in Eiffel 5.1</label>
-			</link>
-		</paragraph>
-		<paragraph>
-			<link>
-				<url>Eiffel50.xml</url>
-				<label>Click here to check out what was new in Eiffel 5.0</label>
-			</link>
+			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>
 		</paragraph>
 	</paragraph></document>

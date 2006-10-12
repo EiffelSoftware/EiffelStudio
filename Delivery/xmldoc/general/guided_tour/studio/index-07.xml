@@ -550,13 +550,13 @@
 		<paragraph>With all the techniques seen so far, you were able to retarget the current Development Window to a new class. As noted, you may also wish to have two or more Development Windows targeted to different classes; this is useful to keep track of several things at one. A simple way to start a new tool on a class is to find the class somewhere in the interface and 
 			<bold>control-right-click</bold> it.
 		</paragraph>
-		<paragraph>Here, for example, the diagram in the Context Tool shows, at the top, a yellow bubble for the class 
+		<paragraph>Here, for example, the editor lists 
 			<code>
 				<string>CHAIN</string>
-			</code>, a parent of 
+			</code>, as a parent of 
 			<code>
 				<string>LIST.</string>
-			</code> (You can see it for example on the next-to-last figure.) Go to that bubble and control-right-click it, that is to say, click with the rightmost button of the mouse while holding the CONTROL key on the keyboard. This starts a new Development Window, targeted to the chosen class, 
+			</code> Go to that word and control-right-click it, that is to say, click with the rightmost button of the mouse while holding the CONTROL key on the keyboard. This starts a new Development Window, targeted to the chosen class, 
 			<code>
 				<string>CHAIN</string>
 			</code> :

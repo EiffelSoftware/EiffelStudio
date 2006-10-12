@@ -21,7 +21,7 @@
 		<code_block>link [your link flags] -OUT:[name of your cecil executable] [your C object files and archives] lib&lt;system name&gt;.lib [other Windows libraries]</code_block>
 		<paragraph/>
 		<paragraph>on Windows with Borland:</paragraph>
-		<code_block>ilink32 -ap -c -Tpe main.obj c0w32.obj, [name of your cecil executable],,EIFGEN\W_code\lib&lt;system name&gt;.lib CW32 IMPORT32 OLE2w32,,</code_block>
+		<code_block>ilink32 -ap -c -Tpe main.obj c0w32.obj, [name of your cecil executable],,EIFGENs\target_name\W_code\lib&lt;system name&gt;.lib CW32 IMPORT32 OLE2w32,,</code_block>
 		<paragraph/>
 		<paragraph>
 			<bold>Notes for compiling CECIL C files:</bold>
@@ -38,9 +38,8 @@
 			<bold>Sample</bold>: if you want to use the multithreaded facilities of Eiffel, you should define the EIFFEL MT flags by adding "-DEIF_THREADS" to the command line and follow the instructions of your C compiler and platform to find out which additional flags you may need 
 			<bold>. For example:</bold> on Solaris you need to add "-DSOLARIS_THREADS -D_REENTRANT".
 		</sample>
-		<paragraph>You can specify a Makefile in your Ace file, so that your C files will be compiled automatically after the Eiffel compilation and before the final linking. Just add at the end of your Ace file in the external clause:</paragraph>
-		<code_block>external:"$PATH_TO_MAKEFILE/your_makefile";</code_block>
-		<paragraph>This makefile will be run from the $/EIFGEN/W_code or $/EIFGEN/F_code directory. You should not give the CECIL executable the same name as your system, because it will be replaced by the Eiffel executable when you run another compilation. </paragraph>
+		<paragraph>You can specify a Makefile in your configuration file, so that your C files will be compiled automatically after the Eiffel compilation and before the final linking. See <link><url>../../tools/eiffelstudio/reference/25_project_settings/080_advanced_externals.xml</url><label>the manipulation of external</label></link> in the project settings to add <code>$PATH_TO_MAKEFILE/your_makefile</code>.</paragraph>
+		<paragraph>This makefile will be run from the $/EIFGENs/target_name/W_code or $/EIFGENs/target_name/F_code directory. You should not give the CECIL executable the same name as your system, because it will be replaced by the Eiffel executable when you run another compilation. </paragraph>
 		<heading>
 			<size>2</size>Initializing the Eiffel run-time
 		</heading>Even though the main thread of control resides in the "C side" of the program, the Eiffel run-time must be initialized correctly before it can use CECIL facilities to communicate with the Eiffel world.
@@ -69,6 +68,6 @@ EIF_DISPOSE_ALL
 			<bold/> You can only link one CECIL library into your C applications at a time.
 		</note>
 		<warning>
-			<bold>Caution</bold>: Even though external object files and archives are correctly specified in the "object" clause of the Ace file, you will need to explicitly link them to your C application.
+			<bold>Caution</bold>: Even though external object files and archives are correctly specified in the "object" clause of the configuration file, you will need to explicitly link them to your C application.
 		</warning>
 	</paragraph></document>

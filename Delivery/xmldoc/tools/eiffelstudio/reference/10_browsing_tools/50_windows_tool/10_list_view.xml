@@ -12,12 +12,7 @@
 				<url>/images/eiffelstudio/browsing_tools/windows_tool.png</url>
 			</image>
 		</paragraph>
-		<paragraph>It displays all opened development windows. Left-clicking a development window in the list raises it so that it becomes the top-level window. Right-clicking one pops up a context menu:</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/browsing_tools/windows_context_menu.png</url>
-			</image>
-		</paragraph>
+		<paragraph>It displays all opened development windows. Left-clicking a development window in the list raises it so that it becomes the top-level window. Right-clicking one pops up a context menu.</paragraph>
 		<paragraph>The four first commands, 
 			<bold>Close</bold>, 
 			<bold>Minimize</bold>, 

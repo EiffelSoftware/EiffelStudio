@@ -5,7 +5,7 @@
 		<paragraph>Here is what you will see when you switch to the target section in the project settings of the calculator example:</paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/target_options.png</url>
 				<alt_text>General target properties</alt_text>
 			</image>
 		</paragraph>
@@ -17,7 +17,7 @@
 		<paragraph>If you want to change the root of your system, you will see a dialog like this:</paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/root_dialog.png</url>
 				<alt_text>Root dialog</alt_text>
 			</image>
 		</paragraph>
@@ -27,7 +27,7 @@
 		<paragraph>The version dialog looks similar to this one:</paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/version_dialog.png</url>
 				<alt_text>Version dialog</alt_text>
 			</image>
 		</paragraph>
@@ -36,7 +36,7 @@
 		<paragraph>The Exclude Rules setting allows to define rules to exclude certain files from every cluster. This can be used to exclude CVS or SVN directories globally instead of excluding them on each cluster. The dialog looks like this:</paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/exclude_dialog.png</url>
 				<alt_text>Exclude Rules dialog</alt_text>
 			</image>
 		</paragraph>
@@ -53,7 +53,7 @@
 		<paragraph>It is also possible to add conditions to a file rule (set of include and exclude file patterns). Adding conditions allows a file rule to be active only under certain conditions. The condition dialog looks like this:</paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/condition_dialog.png</url>
 				<alt_text>Condition dialog</alt_text>
 			</image>
 		</paragraph>

@@ -32,7 +32,7 @@
 			<item>Pick the feature from any place in EiffelStudio and drop it into the list. If several creation procedures exists in the container class, a dialog is popped up to give the choice between all possible creation procedures.</item>
 			<item>Or, use the Add command
 				<image>
-					<url>/images/eiffelstudio/icons/icon_add_exported_feature_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_add_icon.png</url>
 				</image> in the 
 				<bold>Edit</bold>/ 
 				<bold>Add</bold> menu. This pops up a dialog where it is possible to enter manually all parameters for the exported feature.
@@ -46,27 +46,27 @@
 		<paragraph>Other commands of the 
 			<bold>Edit</bold> menu allow you to remove
 			<image>
-				<url>/images/eiffelstudio/icons/icon_remove_exported_feature_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/general_delete_icon.png</url>
 			</image> exported features or to modify their export parameters
 			<image>
-				<url>/images/eiffelstudio/icons/icon_edit_exported_feature_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/general_edit_icon.png</url>
 			</image>.
 		</paragraph>
 		<paragraph>It is also possible to check the validity of the definition file. This command
 			<image>
-				<url>/images/eiffelstudio/icons/icon_check_exports_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/view_unmodified_icon.png</url>
 			</image>performs both a global check, to ensure that for example two features do not have the same name or same index in the library, and also local checks, that check for each feature that the parameters are valid.
 		</paragraph>
 		<paragraph>Other commands, located in the 
 			<bold>File</bold> menu, give standard file operations, such as opening
 			<image>
-				<url>/images/eiffelstudio/icons/icon_open_file_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/general_open_icon.png</url>
 			</image> a definition file, creating a new definition file
 			<image>
-				<url>/images/eiffelstudio/icons/icon_new_dynamic_lib_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/new_document_icon.png</url>
 			</image>,or saving the current definition file
 			<image>
-				<url>/images/eiffelstudio/icons/icon_save_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/general_save_icon.png</url>
 			</image>.
 		</paragraph>
 		<tip>

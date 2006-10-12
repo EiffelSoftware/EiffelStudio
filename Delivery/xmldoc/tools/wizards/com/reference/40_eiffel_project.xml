@@ -29,89 +29,89 @@
 			<item>
 				The arguments and objects returned by the public routines of the facade class must be of one of the following types: 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/character_chart.xml</url>
+					<url>../../../../libraries/base/reference/character_8_chart.xml</url>
 					<label>
-						<class_name>CHARACTER</class_name>
+						<class_name>CHARACTER_8</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/integer_chart.xml</url>
+					<url>../../../../libraries/base/reference/integer_32_chart.xml</url>
 					<label>
-						<class_name>INTEGER</class_name>
+						<class_name>INTEGER_32</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/real_chart.xml</url>
+					<url>../../../../libraries/base/reference/real_32_chart.xml</url>
 					<label>
-						<class_name>REAL</class_name>
+						<class_name>REAL_32</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/double_chart.xml</url>
+					<url>../../../../libraries/base/reference/real_64_chart.xml</url>
 					<label>
-						<class_name>DOUBLE</class_name>
+						<class_name>REAL_64</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/boolean_chart.xml</url>
+					<url>../../../../libraries/base/reference/boolean_chart.xml</url>
 					<label>
 						<class_name>BOOLEAN</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/integer_ref_chart.xml</url>
+					<url>../../../../libraries/base/reference/integer_32_ref_chart.xml</url>
 					<label>
-						<class_name>INTEGER_REF</class_name>
+						<class_name>INTEGER_32_REF</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/boolean_ref_chart.xml</url>
+					<url>../../../../libraries/base/reference/boolean_ref_chart.xml</url>
 					<label>
 						<class_name>BOOLEAN_REF</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/real_ref_chart.xml</url>
+					<url>../../../../libraries/base/reference/real_32_ref_chart.xml</url>
 					<label>
-						<class_name>REAL_REF</class_name>
+						<class_name>REAL_32_REF</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/character_ref_chart.xml</url>
+					<url>../../../../libraries/base/reference/character_8_ref_chart.xml</url>
 					<label>
-						<class_name>CHARACTER_REF</class_name>
+						<class_name>CHARACTER_8_REF</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/double_ref_chart.xml</url>
+					<url>../../../../libraries/base/reference/real_64_ref_chart.xml</url>
 					<label>
-						<class_name>DOUBLE_REF</class_name>
+						<class_name>REAL_64_REF</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/string_chart.xml</url>
+					<url>../../../../libraries/base/reference/string_8_chart.xml</url>
 					<label>
-						<class_name>STRING</class_name>
+						<class_name>STRING_8</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/com/reference/Structures/ecom_currency_chart.xml</url>
+					<url>../../../../libraries/com/reference/ecom_currency_chart.xml</url>
 					<label>
 						<class_name>ECOM_CURRENCY</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/com/reference/Structures/ecom_decimal_chart.xml</url>
+					<url>../../../../libraries/com/reference/ecom_decimal_chart.xml</url>
 					<label>
 						<class_name>ECOM_DECIMAL</class_name>
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/com/reference/Interfaces/ecom_interface_chart.xml</url>
+					<url>../../../../libraries/com/reference/ecom_interface_chart.xml</url>
 					<label><class_name>ECOM_INTERFACE</class_name></label>
 				</link>, or 
 				<link>
-					<url>../../../../libraries/com/reference/Structures/ecom_array_chart.xml</url>
+					<url>../../../../libraries/com/reference/ecom_array_chart.xml</url>
 					<label><class_name>ECOM_ARRAY</class_name></label>
 				</link>. Features with arguments or return objects that are of a type not in this list are excluded from the generated IDL file and are not accessible to clients.
 			</item>

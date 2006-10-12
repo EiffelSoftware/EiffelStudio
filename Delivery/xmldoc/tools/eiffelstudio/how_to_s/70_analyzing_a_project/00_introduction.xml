@@ -2,34 +2,27 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>The metric tab in the context tool allows project analyzing. Built on a suitable metric theory, this tool provides a set of elementary metrics that can be evaluated to test projects design and implementation.</paragraph>
-		<paragraph>The metric tool provides the following interface to evaluate measures, save them or delete some of them when no longer needed.</paragraph>
-		<image>
-			<url>/images/eiffelstudio/metrics_png/metric_tool.png</url>
-		</image><line_break></line_break>See section:
+		<paragraph>The metric tool provides an  interface to evaluate measures, save them or delete some of them when no longer needed.</paragraph>
+		<paragraph>With this tool users can:
 		<list ordered="false">
 			<item>
 				<link>
 					<url>10_computing_a_measure/00_introduction.xml</url>
-					<label>Computing a measure</label>
+					<label>Compute a measure</label>
 				</link>
 			</item>
-		</list>
-		<paragraph>This tool also allows users to define their own metrics. Indeed, users may have specific requirements and the set of metrics provided by default could be insufficient. See section:</paragraph>
-		<list ordered="false">
 			<item>
 				<link>
 					<url>20_handling_new_metrics/00_introduction.xml</url>
-					<label>Handling new metrics</label>
-				</link>
+					<label>Hande new metrics</label>
+				</link>: users may have specific requirements and the set of metrics provided by default could be insufficient.
 			</item>
-		</list>
-		<paragraph>Eventually, it is also possible to evaluate metrics for a different project than the currently loaded, and to compare systems one to another. See section:</paragraph>
-		<list ordered="false">
 			<item>
 				<link>
 					<url>30_handling_archives/00_introduction.xml</url>
-					<label>Handling archives</label>
-				</link>
+					<label>Handle archives</label>
+				</link>: evaluate metrics for a different project than the currently loaded, and to compare systems one to another.
 			</item>
 		</list>
+		</paragraph>
 	</paragraph></document>

@@ -5,6 +5,7 @@
 		<paragraph>Here is what you will see when opening the project settings window for the first time in a session when using the ecf file of the calculator example located at $ISE_EIFFEL|examples|base|calculator:</paragraph>
 		<paragraph>
 			<image>
+				<url>../../../../images/eiffelstudio/project_settings/system_options.png</url>
 				<alt_text>General system properties</alt_text>
 			</image>
 		</paragraph>
@@ -17,6 +18,9 @@
 		<paragraph>
 			A system also has one or multiple targets which are the main blocks that specify an application or library. A target can extend another target. For example in the calculator application we have three targets: common, classic and dotnet. The common target specifies the part of 
 				the application that is common to classic and .NET compilation. The dotnet and classic targets extend the common target and add their specific settings.
+		</paragraph>
+		<paragraph>
+			To add a new target select the system node and click on <bold>Add Targe</bold>t. If a target should extend another target, select the parent target and click <bold>Add Target</bold>.
 		</paragraph>
 	</paragraph>
 </document>

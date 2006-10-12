@@ -32,7 +32,7 @@
 					<keyword>fil</keyword>
 				</code> in the directory
 			</paragraph>
-			<code_block><keyword>$ISE_EIFFEL/examples/studio/filters</keyword></code_block>
+			<code_block><keyword>$ISE_EIFFEL/studio/filters</keyword></code_block>
 			<paragraph>To make a new filter available to yourself and other users of this installation, just add the corresponding file 
 				<code>
 					<string>name</string>

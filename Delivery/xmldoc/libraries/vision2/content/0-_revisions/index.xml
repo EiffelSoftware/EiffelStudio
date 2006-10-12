@@ -39,7 +39,11 @@
 				<bold>EV_TEXT</bold> - Added 'scroll_to_end' to scroll down so that the last line is visible
 			</item>
 			<item>
-				<bold>EV_WIDGET</bold> - Added 'refresh_now' that allows for immediate redraw of a widget without having to wait for the event loop to repaint it.  A useful example of this is when calling 'set_text' on EV_LABEL during heavy computation 
+				<bold>EV_WIDGET</bold>
+				<list ordered="false">
+					<item>Added 'refresh_now' that allows for immediate redraw of a widget without having to wait for the event loop to repaint it.  A useful example of this is when calling 'set_text' on EV_LABEL during heavy computation.</item>
+					<item>Added ability to ignore the default key action on widgets.</item>
+				</list>
 			</item>
 			<item>
 				<bold>EV_GRID</bold>
@@ -103,6 +107,9 @@
 						</list>
 					</item>
 					<item>
+						<bold>EV_FONT_DIALOG</bold> - Fixed issue where displayed font did not take into account font specified through call to `set_font'.
+					</item>
+					<item>
 						<bold>EV_RICH_TEXT</bold> - Fixed calling of `change_actions' which were never called in the  previous version.
 					</item>
 					<item>
@@ -121,6 +128,9 @@
 							<item>Fixed raise to work when process is not in the foreground, the window will now flash in the window selector</item>
 						</list>
 					</item>
+					<item><bold>EV_MENU</bold> - A menu with an ampersand (i.e. menu.set_text ("Test &amp;&amp; Verify")) could be truncated when displayed (i.e. the `y' could be missing).</item>
+					<item><bold>EV_PIXMAP</bold> - Fixed a memory corruption while loading PNG images.</item>
+					<item>Fixed resizing issue which would happen if too many widgets are nested in each other, those nested widgets would not resize properly.</item>
 				</list>
 			</item>
 			<item>

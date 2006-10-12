@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The clickable view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_clickable_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/view_clickable_icon.png</url>
 			</image>allows to 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>

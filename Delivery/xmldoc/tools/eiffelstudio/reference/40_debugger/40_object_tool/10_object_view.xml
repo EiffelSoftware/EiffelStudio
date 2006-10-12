@@ -32,7 +32,8 @@
 			<link>
 				<url>20_slice_size_command.xml</url>
 				<label>set slice size command</label>
-			</link> with <link><url>/libraries/base/reference/kernel/classic/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects or <class_name>NATIVE_ARRAY</class_name> objects.
+			</link> with <link><url>/libraries/base/reference/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects or 
+			<link><url>/libraries/base/reference/native_array_chart.xml</url><label><class_name>NATIVE_ARRAY</class_name></label></link> objects.
 		</paragraph>
 		<tip><bold>Tip</bold>: You can use the <link><url>../50_expression_evaluation/index.xml</url><label>expression evaluator tools</label></link> (alias watch tools) to have the same features with even more functionalities</tip>
 	</paragraph></document>

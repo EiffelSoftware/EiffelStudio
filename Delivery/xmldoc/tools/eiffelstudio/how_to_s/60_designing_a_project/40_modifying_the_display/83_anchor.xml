@@ -11,7 +11,7 @@
 		<list ordered="false">
 			<item>You may anchor a class to the diagram by right clicking the figure and dropping it onto the anchor button 
 				<image>
-					<url>../../../../../images/eiffelstudio/icons/icon_remove_anchor_color.png</url>
+					<url>../../../../../images/eiffelstudio/icons/16x16/diagram_anchor_icon.png</url>
 				</image>
 			.</item>
 			Likewise you may remove an anchor by doing the same to a currenlty anchored class.  Anchoring will force the class to remain anchored to the diagram, and it will not move around when in physics mode.

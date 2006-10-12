@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The flat view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_flat_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/view_flat_icon.png</url>
 			</image>displays all the features for the current class, i.e. including both written-in and inherited features; it is available either through the 
 			<link>
 				<url>/tools/eiffelstudio/reference/20_editor/index.xml</url>

@@ -14,11 +14,5 @@
 					<label>Supported C compilers</label>
 				</link>
 			</item>  
-			<item>
-				<link>
-					<url>20_lace_syntax.xml</url>
-					<label>Lace syntax</label>
-				</link>
-			</item>  
 		</list>
 	</paragraph></document>

@@ -18,7 +18,7 @@
     (C) Class : class formats and information.
     (I) Compile : compile or run the system.
     (F) Feature : feature formats and information.
-    (S) System : Ace and cluster details.
+    (S) System : Config and cluster details.
     (P) Profile : information about a profiled run.
     (D) Documentation: create documents from the system.
 

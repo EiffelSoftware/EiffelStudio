@@ -29,17 +29,14 @@
 			<output output="studio">
 				<list ordered="false">
 					<item>Launch EiffelStudio. </item>
-					<item>Select 
-						<bold>Use existing Ace (control file)</bold> and click 
-						<bold>OK</bold>. 
-					</item>
+					<item>Click <bold>Add project</bold></item>
 					<item>Browse to 
-						<italic>$ISE_EIFFEL\examples\wel\header_ctrl\</italic>. 
+						<italic>$ISE_EIFFEL\examples\wel\header_ctrl\</italic>.
 					</item>
-					<item>Choose 
-						<italic>Ace.ace</italic>
-					</item>
-					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+					<item>Choose <italic>header_ctrl.ecf</italic></item>
+					<item>Choose the location where the project will be compiled, by default the same directory containing the configuration file. 
+						If you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the default 
+						directory (the one containing the ecf file) to the new one.</item>
 					<item>Click 
 						<bold>OK</bold>.
 					</item>
@@ -48,11 +45,11 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the program, a window will be displayed as shown above. By manipulating the header control, you will see notification of the events that occur displayed in the <link><url>../../reference/controls/wel_list_view_chart.xml</url><label>WEL_LIST_VIEW</label></link> situated below. </paragraph>
+		<paragraph>After launching the program, a window will be displayed as shown above. By manipulating the header control, you will see notification of the events that occur displayed in the <link><url>../../reference/wel_list_view_chart.xml</url><label>WEL_LIST_VIEW</label></link> situated below. </paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph><code><class_name>HEADER_CONTROL</class_name></code> inherits <link><url>../../reference/controls/wel_header_control_chart.xml</url><label>WEL_HEADER_CONTROL</label></link> and redefines many of the `on_'  notification features to display the output. </paragraph>
+		<paragraph><code><class_name>HEADER_CONTROL</class_name></code> inherits <link><url>../../reference/wel_header_control_chart.xml</url><label>WEL_HEADER_CONTROL</label></link> and redefines many of the `on_'  notification features to display the output. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
 				<item><code><class_name>APPLICATION_IDS</class_name></code></item>

@@ -24,13 +24,13 @@
 		<paragraph>where 
 			<span>Version</span> is the version number, e.g. 5.7. Alternatively, you can double-click the icon that the installation procedure will have added to your desktop (if you have selected that option during installation).
 		</paragraph>
-		<paragraph>If this is the first time you are using EiffelStudio, you may get a dialog asking for an unlock code or inviting you to register the product. Please 
+		<paragraph>If this is the first time you are using EiffelStudio, you may get a dialog asking for an unlock code or inviting you to register the product. See 
 			<span>
 				<link>
-					<url>mailto:sales@eiffel.com</url>
-					<label>contact Eiffel Software </label>
+					<url>../../../installation/studio57/index.xml</url>
+					<label>your platform installation instructions</label>
 				</link>
-			</span> for registration and purchase information.
+			</span> for registration information.
 		</paragraph>
 		<heading>
 			<size>2</size>

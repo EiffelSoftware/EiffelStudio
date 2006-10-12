@@ -10,10 +10,10 @@
 	<paragraph>
 	To remove a feature, you may of course delete the corresponding lines in the class text. You can also use the Diagram tool if it is an attribute or a function. To do so, make sure that supplier links are shown in the diagram (if
 		<image>
-			<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
+			<url>/images/eiffelstudio/icons/16x16/diagram_supplier_link_icon.png</url>
 		</image> is not pressed, click it). Pick the link that correspond to the feature you want to remove and drop the pebble on
 		<image>
-			<url>/images/eiffelstudio/icons/icon_delete_color.gif</url>
+			<url>/images/eiffelstudio/icons/16x16/general_delete_icon.png</url>
 		</image>.
 		<seealso>
 			<bold>See Also</bold>

@@ -10,7 +10,7 @@
 		<paragraph>It is accessible through the 
 			<bold>project</bold> toolbar ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_no_stop_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/16x16/debug_run_without_breakpoint_icon.png</url>
 			</image> ) or through the 
 			<bold>debug</bold> menu.
 		</paragraph>

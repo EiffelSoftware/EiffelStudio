@@ -38,13 +38,6 @@
 			<line_break/> A 
 			<bold>derived metric</bold> is an elementary metric defined from a raw metric by counting only the patterns satisfying a certain combination of its selection criteria.
 		</note>
-		<paragraph>The metric menu of the metric tool classifies raw and derived metric:</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/raw_derived.png</url>
-				<border>0</border>
-			</image>
-		</paragraph>
 		<paragraph>A set of raw metrics and selection criteria is provided by default by the metric tool, see 
 			<link>
 				<url>60_predefined_raw_metrics_selection_criteria.xml</url>
@@ -60,20 +53,8 @@
 				An "and": count all the features that are both attributes and exported.
 			</item>
 		</list>
-		<paragraph>Our metric framework does not provide more general Boolean combinations, although they would be easy to add if necessary. Here is the interface provided to 
-			<link>
-				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/10_defining_derived_metrics.xml</url>
-				<label>define derived</label>
-			</link> metrics:
-		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/derived.png</url>
-				<border>0</border>
-			</image>
-		</paragraph>
 		<paragraph>A selection criterion may have more than two possible values. Most, as in these examples, have just two: a feature is either an attribute or a routine; it is either exported or secret.</paragraph>
-		<paragraph>The definition states that every derived metric is derived from a certain raw metric. This provides only two levels of elementary metrics, raw and derived; you may not, from an existing derived metric, derive new ones, since you may only associate selection criteria with raw metrics.</paragraph>
+		<paragraph>The definition states that every derived metric is derived from a certain raw metric or from another derived metric.</paragraph>
 		<paragraph>As a general guideline, we will try to keep the selection criteria for a given raw metric independent. For example, to distinguish the classes that inherit a given class we will use the following selection criteria:</paragraph>
 		<list ordered="false">
 			<item>
@@ -87,9 +68,9 @@
 			</item>
 		</list>
 		<paragraph>Other interesting notions are "proper descendant", covering direct and indirect heirs, and "descendant", covering proper descendants and descendants. We do not introduce these as separate criteria, since this would result in a non-independent set of criteria: every proper descendant is a descendant, every heir (direct or indirect) is a proper descendant.</paragraph>
-		<paragraph>Instead we limit ourselves to the three criteria listed above. If you need a finer decomposition, it is easy, with the techniques discussed below, to define Proper_descendants and Descendants as composite metrics expressed in terms of the elementary metricsHeirs, Indirect_heirs and Self.</paragraph>This criterion independence principle is not absolute, however, and in some cases we may find it clearer to define a new criterion even though its value is entirely determined by certain values of another. For example one criterion on features determines whether it is an attribute or a routine, another whether it is deferred or effective. An attribute is always effective, so the two criteria are not independent. Even though we could remove the dependency by using a single criterion with three values (attribute, effective routine, deferred routine), it is more convenient to keep two criteria. Of course the underlying counting mechanisms must make sure never to count an element twice even in an "or" query, as when a user asks for the number of features that are attributes or effective.
-		<paragraph>A metric is either elementary or composite. An elementary metric is either a raw metric, such as "number of features", or a derived metric obtained from slicing a raw metric by selection criteria. Composite metrics are obtained from existing metrics (elementary, or previously defined composite metrics) by applying some mathematical formula. The three kinds of composite metrics shown on the figure will be explained shortly.</paragraph>
-		<paragraph> </paragraph>
+		<paragraph>Instead we limit ourselves to the three criteria listed above. If you need a finer decomposition, it is easy, with the techniques discussed below, to define Proper_descendants and Descendants as composite metrics expressed in terms of the elementary metrics Heirs, Indirect_heirs and Self.</paragraph>
+		<paragraph>This criterion independence principle is not absolute, however, and in some cases we may find it clearer to define a new criterion even though its value is entirely determined by certain values of another. For example one criterion on features determines whether it is an attribute or a routine, another whether it is deferred or effective. An attribute is always effective, so the two criteria are not independent. Even though we could remove the dependency by using a single criterion with three values (attribute, effective routine, deferred routine), it is more convenient to keep two criteria. Of course the underlying counting mechanisms must make sure never to count an element twice even in an "or" query, as when a user asks for the number of features that are attributes or effective.</paragraph>
+		<paragraph>A metric is either elementary or composite. An elementary metric is either a raw metric, such as "number of features", or a derived metric obtained from slicing a raw metric by selection criteria. Composite metrics are obtained from existing metrics (elementary, or previously defined composite metrics) by applying some mathematical formula.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

@@ -18,16 +18,15 @@
 		<list ordered="false">
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
-					<label>System Settings</label>
+					<url>/tools/eiffelstudio/reference/25_project_settings/020_target_general.xml</url>
+					<label>Project Settings</label>
 				</link> dialog.
 			</item>
 			<item>In the 
-				<bold>Debug/Profile</bold> tab, check the 
-				<bold>Profiling</bold> check box.
+				<bold>Target</bold> section, enable
+				<bold>Profile</bold>.
 			</item>
 			<item>Click 
-				<bold>Apply</bold> or 
 				<bold>OK</bold>.
 			</item>
 			<item>You must 
@@ -41,13 +40,13 @@
 		<list ordered="false">
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/30_clusters.xml</url>
-					<label>System Settings</label>
+					<url>../../reference/25_project_settings/040_target_groups.xml</url>
+					<label>Project Settings</label>
 				</link> dialog.
 			</item>
 			<item>In the 
-				<bold>Clusters</bold> tab, check the 
-				<bold>Profile</bold> check box in the clusters where you want the profiler to be enabled.
+				<bold>Clusters</bold> property, check the 
+				<bold>Profile</bold> boolean value in the clusters where you want the profiler to be enabled.
 			</item>
 			<item>Click 
 				<bold>Apply</bold> or 
@@ -64,20 +63,20 @@
 		<list ordered="false">
 			<item>Create an object of type 
 				<link>
-					<url>/libraries/base/reference/support/classic/profiling_setting_chart.xml</url>
+					<url>/libraries/base/reference/profiling_setting_chart.xml</url>
 					<label>PROFILING_SETTING</label>
 				</link>.
 			</item>
 			<item>Call 
 				<link>
-					<url>/libraries/base/reference/support/classic/profiling_setting_flatshort.xml</url>
+					<url>../../../../libraries/base/reference/profiling_setting_flatshort.xml</url>
 					<anchor_name>f_start_profiling</anchor_name>
 					<label>start_profiling</label>
 				</link> on this object to start the profiler.
 			</item>
 			<item>Call 
 				<link>
-					<url>/libraries/base/reference/support/classic/profiling_setting_flatshort.xml</url>
+					<url>../../../../libraries/base/reference/profiling_setting_flatshort.xml</url>
 					<anchor_name>f_stop_profiling</anchor_name>
 					<label>stop_profiling</label>
 				</link> on this object to stop the profiler.
@@ -117,8 +116,8 @@
 			<bold>Note</bold>: Even if the profiler should only work in certain sections of code, the 
 			<bold>Profiling</bold> check box of the 
 			<link>
-				<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
-				<label>System Settings</label>
+				<url>../../reference/25_project_settings/020_target_general.xml</url>
+				<label>Projects Settings</label>
 			</link> dialog must be checked or the 
 			<bold>profile</bold> option must be set on certain clusters.
 		</note>

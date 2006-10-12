@@ -36,29 +36,26 @@
 				<list ordered="false">
 					<item>The first icon indicates whether some class files have been edited since the last compilation. This makes it easy to know whether you have changes to take into account (
 						<image>
-							<url>/images/eiffelstudio/icons/icon_editing.gif</url>
-						</image> or
-						<image>
-							<url>/images/eiffelstudio/icons/icon_exe_up_to_date.gif</url>
-						</image> ) and whether you should recompile.
+							<url>/images/eiffelstudio/icons/16x16/general_edit_icon.png</url>
+						</image>) and whether you should recompile.
 					</item>
 					<item>The second icon gives the compilation state of the project. It may indicate either that the last compilation was successful
 						<image>
-							<url>/images/eiffelstudio/icons/icon_compiled.gif</url>
+							<url>/images/eiffelstudio/icons/16x16/compile_success_icon.png</url>
 						</image>, or that it failed
 						<image>
-							<url>/images/eiffelstudio/icons/icon_compilation_error.gif</url>
+							<url>/images/eiffelstudio/icons/16x16/compile_error_icon.png</url>
 						</image> or that the project is being compiled
 						<image>
-							<url>/images/eiffelstudio/icons/icon_compiling_2.gif</url>
+							<url>/images/eiffelstudio/icons/16x16/compile_animation_6_icon.png</url>
 						</image>.
 					</item>
 					<item>The last icon gives the state of the debugger. It may indicate that the application is running
 						<image>
-							<url>/images/eiffelstudio/icons/icon_running_2.gif</url>
+							<url>/images/eiffelstudio/icons/16x16/run_animation_4_icon.png</url>
 						</image>, paused
 						<image>
-							<url>/images/eiffelstudio/icons/icon_stopped.gif</url>
+							<url>/images/eiffelstudio/icons/16x16/debug_pause_icon.png</url>
 						</image> or dead (no icon).
 					</item>
 				</list>
@@ -81,30 +78,24 @@
 		<list ordered="false">
 			<item>The minimize button
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_minimize_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/toolbar_minimize_icon.png</url>
 				</image>
 			</item>
 			<item>The maximize button
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_maximize_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/toolbar_maximize_icon.png</url>
 				</image>
 			</item>
 			<item>The restore button
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_restore_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/toolbar_restore_icon.png</url>
 				</image>
 			</item>
 			<item>The close button
 				<image>
 					<height>8</height>
 					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_close_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/toolbar_close_icon.png</url>
 				</image>
 			</item>
 		</list>

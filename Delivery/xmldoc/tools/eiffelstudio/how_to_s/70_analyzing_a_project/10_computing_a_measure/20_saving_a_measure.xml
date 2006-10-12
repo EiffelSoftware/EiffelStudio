@@ -8,78 +8,19 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>To save the result of evaluation of a metric over a scope:</paragraph>
+		<paragraph>To save the result of evaluation of a metric:</paragraph>
 		<list ordered="true">
-			<item>
-				<link>
-					<url>10_calculating_a_measure.xml</url>
-					<label>Evaluate a metric</label>
-				</link> over a scope.
-			</item>
-			<item>You can enter a name in the 
-				<link>
-					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url><anchor_name>name</anchor_name>
-					<label>name field</label>
-				</link>, otherwise, the metric tool generates automatically a name for the saved measure.
-			</item>
-			<item>Click the 
-				<link>
-					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url><anchor_name>add</anchor_name>
-					<label>add<image><url>/images/eiffelstudio/icons/icon_save_measure_color.gif</url></image></label>
-				</link> button. (link to buttons).
-			</item>
+			<item>Select the <bold>Metric Archive</bold> tab of the Metric tool.</item>
+			<item>Select the input domain as described in <link><url>10_calculating_a_measure.xml</url><label>Evaluating a measure</label></link> and the metrics you want to compute and save over the selected scope</item>
+			<item>Select a file to use to store the results. If you specify a non-existing file, it will be created, if you specify an existing file it will be overriden. The selection of the file can be done by clicking on the button with the three dots in the <bold>Archive Management</bold> frame.</item>
+			<item>Click the <bold>Start metric archive evaluation</bold>.</item>
 		</list>
-		<paragraph>The result is added to the multi column list, with a
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_green_tick.gif</url>
-				<border>0</border>
-			</image> icon, meaning that the measure is related to the last compilation of the project.
-		</paragraph>
-		<paragraph>If you are saving measures for the first time, a file will be automatically generated to store measures. It is located in the "Metrics" subfolder of current project. Otherwise, this file is updated.</paragraph>
-		<paragraph>A dialog reminds you of the path of the file in which measures are stored.</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/save.png</url>
-				<border>0</border>
-			</image>
-		</paragraph>
-		<note>
-			<bold>Note</bold>: After recompiling the project, all
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_green_tick.gif</url>
-				<border>0</border>
-			</image> icons are changed to
-			<image>
-				<height>16</height>
-				<width>16</width>
-				<url>/images/eiffelstudio/icons/icon_red_cross.gif</url>
-				<border>0</border>
-			</image> to inform that measures could have changed since project has been recompiled. You can 
-			<link>
-				<url>50_updating_recorded_measures.xml</url>
-				<label>update</label>
-			</link> your measures.
-		</note>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
 				<url>10_calculating_a_measure.xml</url>
-				<label>Calculating measures</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>50_updating_recorded_measures.xml</url>
-				<label>Updating measures</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>30_deleting_measures.xml</url>
-				<label>Deleting measures</label>
+				<label>Evaluating a measure</label>
 			</link>
 			<line_break/>
 			<link>

@@ -12,7 +12,7 @@
 		<paragraph>To add a new group, choose the corresponding add group button or context menu entry and enter a name and location or choose from a list (for assemblies and libraries).</paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/group_options.png</url>
 				<alt_text>Group dialog</alt_text>
 			</image>
 		</paragraph>
@@ -116,7 +116,7 @@
 		<paragraph>If a feature should be reachable from CECIL and may not be used it must be made visible because otherwise it will be removed by the dead code optimizer. To do this you have to make the class visible. In addition it is also possible to rename a class or a feature. In most cases we make a class completely visible and do not need renaming.</paragraph>
 		<paragraph>
 			<image>
-				<url/>
+				<url>../../../../images/eiffelstudio/project_settings/visible_dialog.png</url>
 				<alt_text>Visible dialog</alt_text>
 			</image>
 		</paragraph>

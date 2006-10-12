@@ -50,7 +50,7 @@
 					</image>
 				</image_link>
 			</div>
-			<paragraph>In the Context Tool at the bottom right, the second entry reads</paragraph>
+			<paragraph>In the Context Tool near the bottom right, there is an entry that reads</paragraph>
 			<code_block>
 	<class_name>ARRAYED_CIRCULAR</class_name> <feature_name>forth</feature_name>
 </code_block>
@@ -316,19 +316,7 @@
 				</code> buttons.) Click 
 				<code>
 					<keyword>OK</keyword>
-				</code>. The toolbar of your development tool has a new button:
-			</paragraph>
-			<div>
-				<image_link>
-					<url>index-64.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-64.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
-			<paragraph>You can now use this button to switch, for the enclosing Development Window, between the isolated and linked behaviors of the Context Tool.</paragraph>
+				</code>. The toolbar of your development tool has a new button which you can now use to switch, for the enclosing Development Window, between the isolated and linked behaviors of the Context Tool.</paragraph>
 		</div>
 		<heading>
 			<size>2</size>

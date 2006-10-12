@@ -8,48 +8,26 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The metric interface allows users to analyze their projects. It provides a set of metrics that could be evaluated over various scopes 
-			<span>to obtain quantitative information about systems.</span>
-		</paragraph>
+		<paragraph>The metric interface allows users to analyze their projects. It provides a set of metrics that could be evaluated over various scopes to obtain quantitative information about systems.</paragraph>
 		<paragraph>Thanks to the metric interface, users can evaluate metrics over different scopes, get some detailed information when possible, save the pertinent measures, delete the useless ones, and update the values of previously recorded metrics.</paragraph>
-		<paragraph>To achieve any kind of operation on measures, you need at least one of the following fields or buttons:</paragraph>
-		<paragraph>
-			<image>
-				<height>58</height>
-				<width>536</width>
-				<url>/images/eiffelstudio/metrics_png/fields.png</url>
-				<border>0</border>
-			</image>
-		</paragraph>
+		<paragraph>Below is the list of operation you can perform:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
 					<url>10_calculating_a_measure.xml</url>
-					<label>Calculating a measure<image><url>/images/eiffelstudio/icons/icon_new_measure_color.gif</url></image></label>
+					<label>Evaluating a measure</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>20_saving_a_measure.xml</url>
-					<label>Saving a measure<image><url>/images/eiffelstudio/icons/icon_save_measure_color.gif</url></image></label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>30_deleting_measures.xml</url>
-					<label>Deleting measures<image><url>/images/eiffelstudio/icons/icon_delete_measure_color.gif</url></image></label>
+					<label>Saving a measure</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>40_viewing_measure_details.xml</url>
-					<label>Detailing a measure<image><url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url></image></label>
-				</link>
-			</item>
-			<item>
-				<link>
-					<url>50_updating_recorded_measures.xml</url>
-					<label>Updating measures<image><url>/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url></image></label>
+					<label>Detailing a measure</label>
 				</link>
 			</item>
 		</list>

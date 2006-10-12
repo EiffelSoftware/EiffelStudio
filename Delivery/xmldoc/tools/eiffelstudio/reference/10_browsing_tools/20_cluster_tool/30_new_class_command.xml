@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The new class command (
 			<image>
-				<url>/images/eiffelstudio/icons/icon_new_class_small_color.gif</url>
+				<url>/images/eiffelstudio/icons/10x10/new_class_icon.png</url>
 			</image>) located in the cluster tool toolbar creates a class in the same fashion as the main new class command. The only difference is that when using the cluster tool command, the new class is by default located in the cluster selected in the 
 			<link>
 				<url>10_cluster_tree.xml</url>

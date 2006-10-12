@@ -75,7 +75,7 @@
         <item>Added more project related properties to finer grain control compilation.</item>
         <item>Removed Support CLR Version property as it is redundant because EiffelEnvision allows compilation to target a version of the CLR.</item>
         <item>The active configuration can now be renamed through the configuration manager.</item>
-        <item>Removed project configuration dependency on Eiffel compiler configuration (*.ace) files. All configuration details are stored in an EiffelEnvision project file (*.eifp).</item>
+        <item>Removed project configuration dependency on Eiffel compiler configuration files. All configuration details are stored in an EiffelEnvision project file (*.eifp).</item>
         <item>Use of environment variables permitted in properties with paths.</item>
         <item>Active project and solution configurations may not be renamed or remove without switching the active configuration.</item>
       </list>
@@ -110,7 +110,7 @@
         <item>Formatted .NET types and method names in trees to match those produced by Visual Studio .NET.</item>
         <item>Added linking for .NET namespaces, .NET types, .NET features, and clusters.</item>
         <item>Searching no longer keeps the Eiffel compiler loaded.</item>
-        <item>Resolved locking of active configuration's EIFGEN folder when searching.</item>
+        <item>Resolved locking of active configuration's project location folder when searching.</item>
         <item>Added ability to search using Match Case, Match Whole Word and Match Prefix and not just Match Substring.</item>
         <item>Consumed Eiffel assembly type have project defined prefixes added to them.</item>
         <item>Consumed Eiffel assembly type constructors are now in the list of available features.</item>
@@ -131,7 +131,7 @@
         <item>Added additional optimization to compile in the most common Microsoft assemblies into the Eiffel precompiled libraries to prevent compilation of common classes (this is an install-time option).</item>
         <item>Precompiled libraries can optionally be optimized to excluded assertions.</item>
         <item>Projects are only compiled and are compiled on as-needed basis.</item>
-        <item>Eiffel compiler ace files are 100% generated and only generated when the project properties change.</item>
+        <item>Eiffel compiler configuration files are 100% generated and only generated when the project properties change.</item>
         <item>Compilation does not require user to save the project.</item>
       </list>
     </paragraph>

@@ -20,16 +20,15 @@
 		<list ordered="false">
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
+					<url>/tools/eiffelstudio/reference/25_project_settings/020_target_general.xml</url>
 					<label>Project Settings</label>
 				</link> dialog.
 			</item>
 			<item>In the 
-				<bold>debug/profile</bold> tab, check the 
-				<bold>Profiling</bold> check box.
+				<bold>Target</bold> section, enable 
+				<bold>Profile</bold>.
 			</item>
 			<item>Click 
-				<bold>Apply</bold> or 
 				<bold>OK</bold>.
 			</item>
 			<item>You must 

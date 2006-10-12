@@ -117,7 +117,7 @@
 				</code>.). Save the file by clicking the Save button or using CTRL- 
 				<code>
 					<keyword>S</keyword>
-				</code>. EiffelStudio parses the class as it is saving it, and finds the error: The position of the error is highlighted in the class text.
+				</code> and then compile the system.
 			</paragraph>
 			<div>
 				<image_link>
@@ -178,7 +178,7 @@
 				</code>, you will find the following comment line:
 			</paragraph>
 			<code_block>
-<keyword>-- inv: INVALID</keyword></code_block>
+<keyword>-- inv: INVALID;</keyword></code_block>
 			<paragraph>If uncommented, this is a declaration of a feature of type 
 				<code>
 					<keyword>INVALID</keyword>

@@ -11,7 +11,7 @@
 		<list ordered="false">
 			<item>You can adjust the behavour of the physics mode by altering various parameters in the physics settings dialog.  To disaply the physics setting dialog press this button 
 				<image>
-					<url>../../../../../images/eiffelstudio/icons/icon_physics_settings_color.png</url>
+					<url>../../../../../images/eiffelstudio/icons/16x16/diagram_physics_settings_icon.png</url>
 				</image>
 			.</item>
 		</list>

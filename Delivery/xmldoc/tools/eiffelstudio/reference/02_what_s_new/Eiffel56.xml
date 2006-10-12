@@ -163,5 +163,8 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 		<list ordered="false">
 			<item>Made WEL 64 bits compliant. This required a breaking change in signatures. Some routines were actually using an <class_name>INTEGER</class_name> to represent a <class_name>POINTER</class_name>. On 64 bits platform this is not working as <class_name>INTEGER</class_name> is 32 bits and <class_name>POINTER</class_name> is 64 bits. As a consequence if you are using low level facilities of WEL your code might not compile anymore. Simply replace <class_name>INTEGER</class_name> by <class_name>POINTER</class_name> to make it compile.</item>
 		</list>
+		<paragraph>
+			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>
+		</paragraph>
 	</paragraph>
 </document>

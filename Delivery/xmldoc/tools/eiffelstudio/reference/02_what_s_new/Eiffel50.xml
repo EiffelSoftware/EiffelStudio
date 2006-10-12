@@ -21,7 +21,7 @@
 			</item>
 			<item>When edition of a class text which has been successfully compiled, the class will be fully `pick-and-droppable'.</item>
 			<item>Faster rendering for Clickable, Flat, Contract (previously known as Short) and Flat Contract views.</item>
-			<item>System tool has been replaced by a `project settings' window. The underlying mechanism of the Ace file is kept, but all changes are done through a nice GUI making it simpler for beginners to create their first Ace file.</item>
+			<item>System tool has been replaced by a `project settings' window. The underlying mechanism of the configuration file is kept, but all changes are done through a nice GUI making it simpler for beginners to create their first configuration file.</item>
 			<item>Toolbars are now customizable</item>
 			<item>EiffelCase has been merged within EiffelStudio to provide a true reverse engineering using the BON notation.</item>
 		</list>
@@ -80,5 +80,8 @@
 		</heading>
 		<paragraph>
 			Modified classes relative to the use of registry keys to be written only using Eiffel and externals to Win32 API (no more C intermediates). In the process <code><feature_name>close_key</feature_name></code> and <code><feature_name>delete_key</feature_name></code> are now commands and not queries. To find out if it their call was successful, you can query <code><feature_name>last_call_successful</feature_name></code>.
+		</paragraph>
+		<paragraph>
+			<link><url>index.xml</url><label>Click here to check out what was new in other versions</label></link>
 		</paragraph>
 	</paragraph></document>

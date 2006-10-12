@@ -26,19 +26,6 @@
 		</note>
 		<paragraph>By convention, this definition treats as process metric a composite metric involving both product and process components.</paragraph>
 		<paragraph>The classification introduced for metrics extends to measures, so that we may talk about an elementary product measure, a composite process measure and so on.</paragraph>
-		<paragraph>The metric menu of the metric tool separates elementary and composite metrics: </paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelstudio/metrics_png/metric_category.png</url>
-				<border>0</border>
-			</image>
-		</paragraph>
-		<paragraph>All metrics (elementary and composite) are not always sensitive. Their sensitiveness also depends on  
-			<link>
-				<url>70_scopes_scope_types.xml</url>
-				<label>scopes</label>
-			</link>
-		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
@@ -49,7 +36,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>70_scopes_scope_types.xml</url>
+				<url>70_scopes.xml</url>
 				<label>Scopes</label>
 			</link>
 		</seealso>

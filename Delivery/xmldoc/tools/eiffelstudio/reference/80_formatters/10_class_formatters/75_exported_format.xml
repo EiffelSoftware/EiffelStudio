@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>The exported view 
 			<image>
-				<url>/images/eiffelstudio/icons/icon_format_exporteds_color.gif</url>
+				<url>/images/eiffelstudio/icons/16x16/class_features_exported_icon.png</url>
 			</image>displays all the features of the current class that all other classes may call.
 			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 

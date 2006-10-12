@@ -20,19 +20,19 @@
 			<item>To toggle visibility of all client links, click 
 				<bold>Show/hide client-supplier links</bold>.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_supplier_link_icon.png</url>
 				</image>
 			</item>
 			<item>To toggle visibility of all inheritance links, click 
 				<bold>Show/hide inheritance links</bold>.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_inherit_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_inheritance_link_icon.png</url>
 				</image>
 			</item>
 			<item>To toggle visibility of all client link labels, click 
 				<bold>Show/hide labels</bold>.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_display_labels_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_show_labels_icon.png</url>
 				</image>
 			</item>
 		</list>

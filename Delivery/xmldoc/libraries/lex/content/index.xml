@@ -1,7 +1,7 @@
 <document title="Lexical analysis: the Lex library">
 	<meta_data>
 		<help>
-			<toc>			
+			<toc>
 				<envision_title>Lexical Analysis: The Lex library</envision_title>
 			</toc>
 		</help>
@@ -10,15 +10,15 @@
 		<heading>
 			<size>2</size>OVERVIEW
 		</heading>
-		<paragraph>When analyzing a text by computer, it is usually necessary to split it into individual components or 
+		<paragraph>When analyzing a text by computer, it is usually necessary to split it into individual components or
 			<bold>tokens</bold>. In human languages, the tokens are the words; in programming languages, tokens are the basic constituents of software texts, such as identifiers, constants and special symbols.
 		</paragraph>
 		<paragraph>The process of recognizing the successive tokens of a text is called lexical analysis. This chapter describes the Lex library, a set of classes which make it possible to build and apply lexical analyzers to many different languages.</paragraph>
-		<paragraph>Besides recognizing the tokens, it is usually necessary to recognize the deeper syntactic structure of the text. This process is called 
-			<bold>parsing</bold> or 
+		<paragraph>Besides recognizing the tokens, it is usually necessary to recognize the deeper syntactic structure of the text. This process is called
+			<bold>parsing</bold> or
 			<bold>syntax analysis</bold> and is studied in the next chapter.
 		</paragraph>
-		<paragraph>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <link><url>/libraries/parse/reference/l_interface_chart.xml</url><label>L_INTERFACE</label></link> has also been included although we will only study it in the 
+		<paragraph>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <link><url>/libraries/parse/reference/l_interface_chart.xml</url><label>L_INTERFACE</label></link> has also been included although we will only study it in the
 			<link>
 				<url>../../parse/content/index.xml</url>
 				<label>next chapter</label>
@@ -35,12 +35,12 @@
 		<heading>
 			<size>3</size>Basic terminology
 		</heading>
-		<paragraph>The set of tokens accepted by a lexical analyzer is called a 
-			<bold>lexical grammar</bold>. For example, the basic constructs of Eiffel (identifiers, keywords, constants, special symbols) constitute a lexical grammar. For reasons that will be clear below, a lexical grammar is also known as a 
+		<paragraph>The set of tokens accepted by a lexical analyzer is called a
+			<bold>lexical grammar</bold>. For example, the basic constructs of Eiffel (identifiers, keywords, constants, special symbols) constitute a lexical grammar. For reasons that will be clear below, a lexical grammar is also known as a
 			<bold>regular grammar</bold>.
 		</paragraph>
-		<paragraph>A lexical grammar defines a number of 
-			<bold>token types</bold>, such as Identifier and Integer for Eiffel. A token that conforms to the structure defined for a certain token type is called a 
+		<paragraph>A lexical grammar defines a number of
+			<bold>token types</bold>, such as Identifier and Integer for Eiffel. A token that conforms to the structure defined for a certain token type is called a
 			<bold>specimen</bold> of that token type. For example, the token my_identifier, which satisfies the rules for Eiffel tokens, is a specimen of the token type Identifier; 201 is a specimen of the token type Integer.
 		</paragraph>
 		<paragraph>To define a lexical grammar is to specify a number of token types by describing precisely, for each token type, the form of the corresponding specimens. For example a lexical grammar for Eiffel will specify that Identifier is the token type whose specimens are sequences of one or more characters, of which the first must be a letter (lower-case or upper-case) and any subsequent one is a letter, a digit (0 to 9) or an underscore. Actual grammar descriptions use a less verbose and more formal approach, studied below: regular expressions.</paragraph>
@@ -95,12 +95,12 @@
 			<item>Use the analyzer to analyze the tokens of one or more input texts by calling the various features of class <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> on this object.</item>
 		</list>
 		<paragraph>Steps 2 and 3 are obviously unnecessary if this process is applied as a single sequence. But in almost all practical cases you will want to use the same grammar to analyze many different input texts. Then steps 1 and 2 will be performed once and for all as soon as the lexical grammar is known, yielding an instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> that step 2 stores into a file; then in every case that requires analyzing a text you will simply retrieve the analyzer and apply it, performing steps 3 and 4 only.</paragraph>
-		<paragraph>The simplest way to store and retrieve the instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> and all related objects is to use the facilities of class <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>: procedure store and one of the retrieval procedures. To facilitate this process, <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> inherits from <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>.</paragraph>
+		<paragraph>The simplest way to store and retrieve the instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> and all related objects is to use the facilities of class <link><url>/libraries/base/reference/storable_chart.xml</url><label>STORABLE</label></link>: procedure store and one of the retrieval procedures. To facilitate this process, <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> inherits from <link><url>/libraries/base/reference/storable_chart.xml</url><label>STORABLE</label></link>.</paragraph>
 		<paragraph>The next sections explain how to perform these various steps. In the most common case, the best technique is to inherit from class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, which provides a framework for retrieving an analyzer file if it exists, creating it from a grammar description otherwise, and proceed with the lexical analysis of one or more input texts.</paragraph>
 		<heading>
 			<size>2</size>LEXICAL GRAMMAR FILES AND CLASS SCANNING
 		</heading>
-		<paragraph>Class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> may be used as an ancestor by classes that need to perform lexical analysis. When using <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> you will need a 
+		<paragraph>Class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> may be used as an ancestor by classes that need to perform lexical analysis. When using <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> you will need a
 			<bold>lexical grammar file</bold> that contains the description of the lexical grammar. Since it is easy to edit and adapt a file without modifying the software proper, this technique provides flexibility and supports the incremental development and testing of lexical analyzers.
 		</paragraph>
 		<heading>
@@ -111,31 +111,31 @@
 
 <code_block>	<feature_name>build</feature_name> <symbol>(</symbol><feature_name>store_file_name</feature_name>, <feature_name>grammar_file_name</feature_name><symbol>:</symbol> <class_name>STRING</class_name><symbol>)</symbol></code_block>
 
-		<paragraph>If no file of name 
+		<paragraph>If no file of name
 			<code>
 				<local_variable>store_file_name</local_variable>
-			</code> exists, then build reads the lexical grammar from the file of name 
+			</code> exists, then build reads the lexical grammar from the file of name
 			<code>
 				<local_variable>grammar_file_name</local_variable>
-			</code>, builds the corresponding lexical analyzer, and stores it into 
+			</code>, builds the corresponding lexical analyzer, and stores it into
 			<code>
 				<local_variable>store_file_name</local_variable>
 			</code>.
 		</paragraph>
-		<paragraph>If there already exists a file of name 
+		<paragraph>If there already exists a file of name
 			<code>
 				<local_variable>grammar_file_name</local_variable>
-			</code>, build uses it to recreate an analyzer without using the 
+			</code>, build uses it to recreate an analyzer without using the
 			<code>
 				<local_variable>grammar_file_name</local_variable>
 			</code>.
 			<heading>
 				<size>3</size>Lexical grammar files
 			</heading>
-			<paragraph>A lexical grammar file (to be used as second argument to build, corresponding to 
+			<paragraph>A lexical grammar file (to be used as second argument to build, corresponding to
 				<code>
 					<local_variable>grammar_file_name</local_variable>
-				</code>) should conform to a simple structure, of which the file 
+				</code>) should conform to a simple structure, of which the file
 				<italic>eiffel_regular</italic> in the examples directory provides a good illustration.
 			</paragraph>
 			<paragraph>Here is the general form:</paragraph>
@@ -154,14 +154,14 @@ Keyword_2
 Keyword_n
 
 </code_block>
-			<paragraph>In other words: one or more lines, each containing the name of a token type and a 
-				<bold>regular expression</bold>; a line beginning with two dashes -- (the word 
+			<paragraph>In other words: one or more lines, each containing the name of a token type and a
+				<bold>regular expression</bold>; a line beginning with two dashes -- (the word
 				<bold>Keywords</bold> may follow them to signal that this is the beginning of keywords); and one or more lines containing one keyword each.
 			</paragraph>
-			<paragraph>Each 
-				<italic>Token_type_i</italic> is the name of a token type, such as 
-				<italic>Identifier</italic> or 
-				<italic>Decimal_constant</italic>. Each 
+			<paragraph>Each
+				<italic>Token_type_i</italic> is the name of a token type, such as
+				<italic>Identifier</italic> or
+				<italic>Decimal_constant</italic>. Each
 				<italic>Regular_expression_i</italic> is a regular expression, built according to a precisely specified format. That format is defined later in this chapter, but even without having seen that definition it is not hard to understand the following small and typical example of lexical grammar file without keywords:
 			</paragraph>
 <code_block>
@@ -170,7 +170,7 @@ Natural +('0'..'9')
 Integer ['+'|'-'] '1'..'9' *('0'..'9')
 </code_block>
 			<paragraph>The first expression describes a token type whose specimens are tokens made of a single-letter decimal digit (any character between 0 and 9). In the second, the + sign denotes repetition (one or more); the specimens of the corresponding token type are all non-empty sequences of decimal digits - in other words, natural numbers, with leading zeroes permitted. In the third, the | symbol denotes alternation, and the asterisk denotes repetition (zero or more); the corresponding tokens are possibly signed integer constants, with no leading zeroes.</paragraph>
-			<paragraph>As explained below, keywords are regular expressions which are treated separately for convenience and efficiency. If you are using lexical grammar files of the above form, all keywords must be specimens of the last regular expression given ( 
+			<paragraph>As explained below, keywords are regular expressions which are treated separately for convenience and efficiency. If you are using lexical grammar files of the above form, all keywords must be specimens of the last regular expression given (
 				<italic>Regular_expression_m</italic> above). More details below.
 			</paragraph>
 			<heading>
@@ -197,9 +197,9 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			</heading>
 			<paragraph>To create a new analyzer, use</paragraph>
 			<code_block>	<keyword>create</keyword> <feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>make_new</feature_name></code_block>
-			<paragraph>You may also retrieve an analyzer from a previous session. <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> is a descendant from <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>, so you can use feature retrieved for that purpose. In a descendant of <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>, simply write</paragraph>
+			<paragraph>You may also retrieve an analyzer from a previous session. <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> is a descendant from <link><url>/libraries/base/reference/storable_chart.xml</url><label>STORABLE</label></link>, so you can use feature retrieved for that purpose. In a descendant of <link><url>/libraries/base/reference/storable_chart.xml</url><label>STORABLE</label></link>, simply write</paragraph>
 			<code_block>	<feature_name>analyzer</feature_name> <symbol>?=</symbol> <feature_name>retrieved</feature_name></code_block>
-			<paragraph>If you do not want to make the class a descendant of <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>, use the creation procedure make of <link><url>../reference/lexical_chart.xml</url><label>LEXICAL</label></link>, not to be confused with make_new above:</paragraph>
+			<paragraph>If you do not want to make the class a descendant of <link><url>/libraries/base/reference/storable_chart.xml</url><label>STORABLE</label></link>, use the creation procedure make of <link><url>../reference/lexical_chart.xml</url><label>LEXICAL</label></link>, not to be confused with make_new above:</paragraph>
 <code_block>
 	<keyword>create</keyword> <feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>make</feature_name>
 	<feature_name>analyzer</feature_name> <symbol>?=</symbol> <feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>retrieved</feature_name>
@@ -248,11 +248,11 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			<heading>
 				<size>2</size>REGULAR EXPRESSIONS
 			</heading>
-			<paragraph>The Lex library supports a powerful set of construction mechanisms for describing the various types of tokens present in common languages such as programming languages, specification languages or just text formats. These mechanisms are called 
-				<bold>regular expressions</bold>; any regular expression describes a set of possible tokens, called the 
+			<paragraph>The Lex library supports a powerful set of construction mechanisms for describing the various types of tokens present in common languages such as programming languages, specification languages or just text formats. These mechanisms are called
+				<bold>regular expressions</bold>; any regular expression describes a set of possible tokens, called the
 				<bold>specimens</bold> of the regular expression.
 			</paragraph>
-			<paragraph>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> and (as seen below) by procedure <feature_name>read_grammar</feature_name> of class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>. The 
+			<paragraph>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> and (as seen below) by procedure <feature_name>read_grammar</feature_name> of class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>. The
 				<italic>eiffel_regular</italic> grammar file in the examples directory provides an extensive example.
 			</paragraph>
 			<paragraph>Each regular expression denotes a set of tokens. For example, the first regular expression seen above,
@@ -263,10 +263,10 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			<heading>
 				<size>3</size>Basic expressions
 			</heading>
-			<paragraph>A character expression, written 
-				<italic>'character'</italic> where 
-				<italic>character</italic> is a single character, describes a set of tokens with just one element: the one-character token character. For example, 
-				<italic>'0'</italic> describes the set containing the single-digit single token 
+			<paragraph>A character expression, written
+				<italic>'character'</italic> where
+				<italic>character</italic> is a single character, describes a set of tokens with just one element: the one-character token character. For example,
+				<italic>'0'</italic> describes the set containing the single-digit single token
 				<italic>0</italic>.
 			</paragraph>
 			<paragraph>Cases in which character is not a printable character use the following conventions:
@@ -317,29 +317,29 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 				<heading>
 					<size>3</size>Intervals
 				</heading>
-				<paragraph>An interval, written 
-					<italic>lower..upper</italic> where 
-					<italic>lower</italic> and 
-					<italic>upper</italic> are character expressions, describes a set of one-character tokens: all the characters whose ASCII code is between the codes for the characters in 
-					<italic>lower</italic> and 
-					<italic>upper</italic>. For example, 
+				<paragraph>An interval, written
+					<italic>lower..upper</italic> where
+					<italic>lower</italic> and
+					<italic>upper</italic> are character expressions, describes a set of one-character tokens: all the characters whose ASCII code is between the codes for the characters in
+					<italic>lower</italic> and
+					<italic>upper</italic>. For example,
 					<italic>'0'..'9'</italic> contains all tokens made of a single decimal digit.
 				</paragraph>
 				<heading>
 					<size>3</size>Basic operator expressions
 				</heading>
-				<paragraph>A parenthesized expression, written ( 
-					<italic>exp</italic>) where 
-					<italic>exp</italic> is a regular expression, describes the same set of tokens as 
-					<italic>exp</italic>. This serves to remove ambiguities in complex regular expressions. For example, the parenthesized expression ( 
+				<paragraph>A parenthesized expression, written (
+					<italic>exp</italic>) where
+					<italic>exp</italic> is a regular expression, describes the same set of tokens as
+					<italic>exp</italic>. This serves to remove ambiguities in complex regular expressions. For example, the parenthesized expression (
 					<italic>'0'..'9'</italic>) also describes all single-decimal-digit tokens.
 				</paragraph>
-				<paragraph>A difference, written 
-					<italic>interval - char</italic>, where 
-					<italic>interval</italic> is an interval expression and 
-					<italic>char</italic> is a character expression, describes the set of tokens which are in 
-					<italic>exp</italic> but not in 
-					<italic>char</italic>. For example, the difference 
+				<paragraph>A difference, written
+					<italic>interval - char</italic>, where
+					<italic>interval</italic> is an interval expression and
+					<italic>char</italic> is a character expression, describes the set of tokens which are in
+					<italic>exp</italic> but not in
+					<italic>char</italic>. For example, the difference
 					<italic>'0'..'9' - '4'</italic> describes all single-decimal-digit tokens except those made of the digit 4.
 				</paragraph>
 				<warning>
@@ -348,20 +348,20 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 				<heading>
 					<size>3</size>Iterations
 				</heading>
-				<paragraph>An unbounded iteration, written 
-					<italic>*exp</italic> or 
-					<italic>+exp</italic> where 
-					<italic>exp</italic> is a regular expression, describes the set of tokens made of sequences of zero or more specimens of 
-					<italic>exp</italic> (in the first form, using the asterisk), or of one or more specimens of 
-					<italic>exp</italic> (in the second form, using the plus sign). For example, the iteration 
+				<paragraph>An unbounded iteration, written
+					<italic>*exp</italic> or
+					<italic>+exp</italic> where
+					<italic>exp</italic> is a regular expression, describes the set of tokens made of sequences of zero or more specimens of
+					<italic>exp</italic> (in the first form, using the asterisk), or of one or more specimens of
+					<italic>exp</italic> (in the second form, using the plus sign). For example, the iteration
 					<italic>+('0'..'9')</italic> describes the set of tokens made of one or more consecutive decimal digits.
 				</paragraph>
-				<paragraph>A fixed iteration, written 
-					<italic>n exp</italic> where 
-					<italic>n</italic> is a natural integer constant and 
-					<italic>exp</italic> is a regular expression, describes the set of tokens made of sequences of exactly 
-					<italic>n</italic> specimens of 
-					<italic>exp</italic>. For example, 
+				<paragraph>A fixed iteration, written
+					<italic>n exp</italic> where
+					<italic>n</italic> is a natural integer constant and
+					<italic>exp</italic> is a regular expression, describes the set of tokens made of sequences of exactly
+					<italic>n</italic> specimens of
+					<italic>exp</italic>. For example,
 					<italic>3 ('A'..'Z')</italic> describes the set of all three-letter upper-case tokens.
 					<heading>
 						<size>3</size>Other operator expressions
@@ -371,16 +371,16 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 						<sub_script>2</sub_script> ... exp
 						<sub_script>n</sub_script>, describes the set of tokens made of a specimen of exp
 						<sub_script>1</sub_script> followed by a specimen of exp
-						<sub_script>2</sub_script> etc. For example, the concatenation 
+						<sub_script>2</sub_script> etc. For example, the concatenation
 						<italic>'1'..'9' * ('0'..'9')</italic> describes the set of tokens made of one or more decimal digits, not beginning with a zero - in other words, integer constants in the usual notation.
 					</paragraph>
-					<paragraph>An optional component, written 
-						<italic>[exp]</italic> where 
-						<italic>exp</italic> is a regular expression, describes the set of tokens that includes the empty token and all specimens of 
+					<paragraph>An optional component, written
+						<italic>[exp]</italic> where
+						<italic>exp</italic> is a regular expression, describes the set of tokens that includes the empty token and all specimens of
 						<italic>exp</italic>. Optional components usually appear in concatenations.
 					</paragraph>
-					<paragraph>Concatenations may be inconvenient when the concatenated elements are simply characters, as in 
-						<italic>'A' ' ' 'T' 'e' 'x' 't'</italic>. In this case you may use a 
+					<paragraph>Concatenations may be inconvenient when the concatenated elements are simply characters, as in
+						<italic>'A' ' ' 'T' 'e' 'x' 't'</italic>. In this case you may use a
 						<bold>string</bold> in double quotes, as in
 						<line_break></line_break>
 						<code_block>	<string>"A Text"</string></code_block>
@@ -388,7 +388,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 					<paragraph>More generally, a string is written"a
 						<sub_script>1</sub_script> a
 						<sub_script>2</sub_script> ... a
-						<sub_script>n</sub_script>"for 
+						<sub_script>n</sub_script>"for
 						<italic>n &gt;= 0</italic>, where thea
 						<sub_script>i</sub_script> are characters, and is an abbreviation for the concatenation 'a
 						<sub_script>1</sub_script>' 'a
@@ -401,19 +401,19 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 					<sub_script>2</sub_script> | ... | exp
 					<sub_script>n</sub_script>, describes the set of tokens which are specimens ofexp
 					<sub_script>1</sub_script>, or ofexp
-					<sub_script>2</sub_script> etc. For example, the union 
+					<sub_script>2</sub_script> etc. For example, the union
 					<italic>('a'..'z') | ('A'..'Z')</italic> describes the set of single-letter tokens (lower-case or upper-case).
 				</paragraph>
 				<heading>
 					<size>3</size>Predefined expressions
 				</heading>
-				<paragraph>A joker, written 
+				<paragraph>A joker, written
 					<bold>$?</bold>, describes the set of all tokens made of exactly one character. A joker is considered to be an interval expression, so that it may be the first operand of a difference operation.
 				</paragraph>
-				<paragraph>A printable, written 
+				<paragraph>A printable, written
 					<bold>$P</bold>, describes the set of all tokens made of exactly one printable character.
 				</paragraph>
-				<paragraph>A blank, written 
+				<paragraph>A blank, written
 					<bold>$B</bold>, describes the set of all tokens made of one or more specimens of the characters blank, new-line, carriage-return and tabulation.
 				</paragraph>
 				<paragraph>The following non-elementary forms are abbreviations for commonly needed regular expressions:</paragraph>
@@ -469,12 +469,12 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 						<cell>Possibly signed integer constants</cell>
 					</row>
 				</table>
-				<paragraph>A delimited string, written 
-					<italic>-&gt;string</italic>, where 
+				<paragraph>A delimited string, written
+					<italic>-&gt;string</italic>, where
 					<italic>string</italic> is of the form,"a
 					<sub_script>1</sub_script> a
 					<sub_script>2</sub_script> ... a
-					<sub_script>n</sub_script>", represents the set of tokens made of any number of printable characters and terminated by 
+					<sub_script>n</sub_script>", represents the set of tokens made of any number of printable characters and terminated by
 					<italic>string</italic>.
 				</paragraph> One more form of regular expression, case-sensitive expressions, using the ~ symbol, will be introduced below.
 			</paragraph>
@@ -528,21 +528,21 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			<heading>
 				<size>3</size>Dealing with keywords
 			</heading>
-			<paragraph>Many languages to be analyzed have keywords - or, more generally, "reserved words". Eiffel, for example, has reserved words such as 
+			<paragraph>Many languages to be analyzed have keywords - or, more generally, "reserved words". Eiffel, for example, has reserved words such as
 				<code>
 					<keyword>class</keyword>
-				</code> and 
+				</code> and
 				<code>
 					<keyword>Result</keyword>
 				</code>.
 				<note>
-					<bold>Note</bold>: in Eiffel terminology reserved words include keywords; a keyword is a marker playing a purely syntactical role, such as 
+					<bold>Note</bold>: in Eiffel terminology reserved words include keywords; a keyword is a marker playing a purely syntactical role, such as
 					<code>
 						<keyword>class</keyword>
-					</code>. Predefined entities and expressions such as 
+					</code>. Predefined entities and expressions such as
 					<code>
 						<keyword>Result</keyword>
-					</code> and 
+					</code> and
 					<code>
 						<keyword>Current</keyword>
 					</code>, which have an associated value, are considered reserved words but not keywords. The present discussion uses the term "keyword" although it can be applied to all reserved words.
@@ -577,8 +577,8 @@ BOOLEAN
 ... Other reserved words ...
 </code_block>
 				<warning>
-					<bold>Caution</bold>: every keyword in the keyword section must be a specimen of one of the token types defined for the grammar, and that token type must be the last one defined in the lexical grammar file, just before the 
-					<bold>Keywords</bold> line. So in Eiffel where the keywords have the same lexical structure as identifiers, the last line before the keywords must be the definition of the token type 
+					<bold>Caution</bold>: every keyword in the keyword section must be a specimen of one of the token types defined for the grammar, and that token type must be the last one defined in the lexical grammar file, just before the
+					<bold>Keywords</bold> line. So in Eiffel where the keywords have the same lexical structure as identifiers, the last line before the keywords must be the definition of the token type
 					<italic>Identifier</italic>, as shown above.
 				</warning>
 				<note>
@@ -587,17 +587,17 @@ BOOLEAN
 				<heading>
 					<size>3</size>Case sensitivity
 				</heading>
-				<paragraph>By default, letter case is not significant for regular expressions and keywords. So if 
-					<italic>yes</italic> matches a token type defined by a regular expression, or is a keyword, the input values 
-					<italic>Yes</italic>, 
-					<italic>yEs</italic> and 
-					<italic>yES</italic> will all yield the same token or keyword. This also means that 
-					<italic>'a'..'z'</italic> and 
+				<paragraph>By default, letter case is not significant for regular expressions and keywords. So if
+					<italic>yes</italic> matches a token type defined by a regular expression, or is a keyword, the input values
+					<italic>Yes</italic>,
+					<italic>yEs</italic> and
+					<italic>yES</italic> will all yield the same token or keyword. This also means that
+					<italic>'a'..'z'</italic> and
 					<italic>'a'..'z' | 'A'..'Z'</italic> describe the same set of tokens.
 				</paragraph>
-				<paragraph>The regular expression syntax introduced above offers a special notation to specify that a particular expression is case-sensitive: 
-					<italic>~exp</italic>, where 
-					<italic>exp</italic> is a regular expression. For example, 
+				<paragraph>The regular expression syntax introduced above offers a special notation to specify that a particular expression is case-sensitive:
+					<italic>~exp</italic>, where
+					<italic>exp</italic> is a regular expression. For example,
 					<italic>~('A'..'Z')</italic> only covers single-upper-case-letter tokens. But for all other kinds of expression letter case is not taken into account.
 				</paragraph>
 				<paragraph>You may change this default behavior through a set of procedures introduced in class <link><url>../reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link> and hence available in its descendants <link><url>../reference/metalex_chart.xml</url><label>METALEX </label></link>and <link><url>../reference/scanning_chart.xml</url><label>SCANNING</label></link>.</paragraph>
@@ -625,7 +625,7 @@ BOOLEAN
 	<feature_name>Upper_identifier</feature_name>, <feature_name>Lower_identifier</feature_name>, <feature_name>Decimal_constant</feature_name>, <feature_name>Octal_constant</feature_name>, <feature_name>Word</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> <keyword>unique</keyword>
 	...
 	<feature_name>distinguish_case</feature_name>
-	<feature_name>keywords_distinguish_case</feature_name>	
+	<feature_name>keywords_distinguish_case</feature_name>
 	<feature_name>put_expression</feature_name><symbol>(</symbol>"<symbol>+</symbol><symbol>(</symbol><symbol>'</symbol>0<symbol>'</symbol><feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name><symbol>'</symbol>7<symbol>'</symbol>"<symbol>)</symbol>, <feature_name>Octal_constant</feature_name>, <string>"Octal"</string><symbol>)</symbol>
 	<feature_name>put_expression </feature_name><symbol>(</symbol>"<symbol>'</symbol>a<symbol>'</symbol><feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name><symbol>'</symbol>z<symbol>'</symbol> *<symbol>(</symbol><symbol>'</symbol>a<symbol>'</symbol><feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name><symbol>'</symbol>z<symbol>'</symbol>|<symbol>'</symbol>0<symbol>'</symbol><feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name><symbol>'</symbol>9<symbol>'</symbol>|<symbol>'</symbol>_<symbol>'</symbol><symbol>)</symbol>", <feature_name>Lower_identifier</feature_name>, <string>"Lower"</string><symbol>)</symbol>
 	<feature_name>put_expression </feature_name><symbol>(</symbol>"<symbol>'</symbol><class_name>A</class_name><symbol>'</symbol><feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name><symbol>'</symbol><class_name>Z</class_name><symbol>'</symbol> *<symbol>(</symbol><symbol>'</symbol><class_name>A</class_name><symbol>'</symbol><feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name><symbol>'</symbol><class_name>Z</class_name><symbol>'</symbol>|<symbol>'</symbol>0<symbol>'</symbol><feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name><symbol>'</symbol>9<symbol>'</symbol>|<symbol>'</symbol>_<symbol>'</symbol> <symbol>)</symbol>", <feature_name>Upper_identifier</feature_name>, <string>"Upper"</string><symbol>)</symbol>
@@ -646,7 +646,7 @@ BOOLEAN
 				</list>
 				<paragraph>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, you may use the procedure</paragraph>
 				<code_block>	<feature_name>read_grammar</feature_name> <symbol>(</symbol><local_variable>grammar_file_name</local_variable><symbol>: </symbol><class_name>STRING</class_name><symbol>)</symbol></code_block>
-				<paragraph>In this case all the expressions and keywords are taken from the file of name 
+				<paragraph>In this case all the expressions and keywords are taken from the file of name
 					<code>
 						<local_variable>grammar_file_name</local_variable>
 					</code> rather than passed explicitly as arguments to the procedures of the class. You do not need to call make_analyzer, since read_grammar includes such a call.
@@ -657,11 +657,11 @@ BOOLEAN
 					</heading>
 					<paragraph>As shown by the example, each token type, defined by a regular expression, must be assigned an integer code. Here the developer has chosen to use Unique constant values so as not to worry about selecting values for these codes manually, but you may select any values that are convenient or mnemonic. The values have no effect other than enabling you to keep track of the various lexical categories. Rather than using literal values directly, it is preferable to rely on symbolic constants, Unique or not, which will be more mnemonic.</paragraph>
 					<paragraph>Procedure put_expression records a regular expression. The first argument is the expression itself, given as a string built according to the rules seen earlier in this chapter. The second argument is the integer code for the expression. The third argument is a string which gives a name identifying the expression. This is useful mostly for debugging purposes; there is also a procedure put_nameless_expression which does not have this argument and is otherwise identical to put_expression.</paragraph>
-					<paragraph>Procedure dollar_w corresponds to the 
+					<paragraph>Procedure dollar_w corresponds to the
 						<bold>$W</bold> syntax for regular expressions. Here an equivalent call would have been
 					</paragraph>
 <code_block>	<feature_name>put_nameless_expression</feature_name> <symbol>(</symbol> <string>"$W"</string> <symbol>,</symbol><feature_name>Word</feature_name> <symbol>)</symbol> </code_block>
-					<paragraph>Procedure 
+					<paragraph>Procedure
 						<feature_name>declare_keyword</feature_name> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> - not all keywords need be specimens of the same regular expression.
 					</paragraph>
 					<paragraph>The calls seen so far record a number of regular expressions and keywords, but do not give us a lexical analyzer yet. To obtain a usable lexical analyzer, you must call</paragraph>
@@ -679,7 +679,7 @@ BOOLEAN
 							<heading>
 								<size>3</size>Building a lexical analyzer
 							</heading>
-							<paragraph><link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link> enables you to build a lexical analyzer by describing successive token types and keywords. This is normally done in a descendant of <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>. For each token type, you call a procedure that builds an object, or 
+							<paragraph><link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link> enables you to build a lexical analyzer by describing successive token types and keywords. This is normally done in a descendant of <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>. For each token type, you call a procedure that builds an object, or
 								<bold>tool</bold>, representing the associated regular expression.
 							</paragraph>
 							<paragraph>For the complete list of available procedures, refer to the flat-short form of the class; there is one procedure for every category of regular expression studied earlier in this chapter. Two typical examples of calls are:</paragraph>
@@ -690,8 +690,8 @@ BOOLEAN
 	<feature_name>union </feature_name><symbol>(</symbol><feature_name>Letter</feature_name>, <feature_name>Underlined</feature_name><symbol>)</symbol>
 	      <comment>-- Create a union tool </comment>
 </code_block>
-							<paragraph>Every such procedure call also assigns an integer index to the tool it creates; this number is available through the attribute <feature_name>last_created_tool</feature_name>. You will need to record it into an integer entity, for example 
-								<feature_name>Identifier</feature_name> or 
+							<paragraph>Every such procedure call also assigns an integer index to the tool it creates; this number is available through the attribute <feature_name>last_created_tool</feature_name>. You will need to record it into an integer entity, for example
+								<feature_name>Identifier</feature_name> or
 								<feature_name>Letter</feature_name>.
 								<heading>
 									<size>3</size>An example
@@ -708,7 +708,7 @@ BOOLEAN
 			<feature_name>interval</feature_name> <symbol>(</symbol><symbol>'</symbol>_<symbol>'</symbol>, <symbol>'</symbol>_<symbol>'</symbol><symbol>)</symbol>; <feature_name>Underlined </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name>
 			<feature_name>union</feature_name> <symbol>(</symbol><feature_name>Digit</feature_name>, <feature_name>Underlined</feature_name><symbol>)</symbol>;
 			<feature_name>Suffix </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name><feature_name>iteration</feature_name> <symbol>(</symbol><feature_name>Suffix</feature_name><symbol>)</symbol>;
-			<feature_name>Suffix_list</feature_name> <symbol>:</symbol><symbol>=</symbol><feature_name> last_created_tool</feature_name><feature_name>append</feature_name> <symbol>(</symbol><feature_name>Letter,</feature_name> <feature_name>Suffix_list</feature_name><symbol>)</symbol>; 
+			<feature_name>Suffix_list</feature_name> <symbol>:</symbol><symbol>=</symbol><feature_name> last_created_tool</feature_name><feature_name>append</feature_name> <symbol>(</symbol><feature_name>Letter,</feature_name> <feature_name>Suffix_list</feature_name><symbol>)</symbol>;
 			<feature_name>Identifier </feature_name><symbol>:</symbol><symbol>=</symbol><feature_name> last_created_tool</feature_name>
 		<keyword>end</keyword>
 </code_block>
@@ -716,9 +716,9 @@ BOOLEAN
 									<heading>
 										<size>3</size>Selecting visible tools
 									</heading>
-									<paragraph>In the preceding example, only some of the tools, such as 
-										<feature_name>Identifier</feature_name>, are of interest to the clients. Others, such as 
-										<feature_name>Suffix</feature_name> and 
+									<paragraph>In the preceding example, only some of the tools, such as
+										<feature_name>Identifier</feature_name>, are of interest to the clients. Others, such as
+										<feature_name>Suffix</feature_name> and
 										<feature_name>Suffix_list</feature_name>, only play an auxiliary role.
 									</paragraph>
 									<paragraph>When you create a tool, it is by default invisible to clients. To make it visible, use procedure <feature_name>select_tool</feature_name>. Clients will need a number identifying it; to set this number, use procedure<feature_name> associate</feature_name>. For example the above extract may be followed by:</paragraph>

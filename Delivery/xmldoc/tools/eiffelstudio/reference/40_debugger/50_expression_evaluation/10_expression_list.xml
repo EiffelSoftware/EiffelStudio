@@ -35,12 +35,10 @@
 		</tip>
 		<paragraph>On top of the list, four buttons can be found.</paragraph>
 		<list ordered="false">
-			<item>the first button is used to create/close watch tools via a menu popup</item>
+			<item>the first button <image><url>/images/eiffelstudio/icons/10x10/toolbar_dropdown_icon.png</url></image> is used to create/close watch tools via a menu popup</item>
 			<item>
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_new_expression_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/new_expression_icon.png</url>
 				</image> pops up the 
 				<link>
 					<url>20_new_expression_dialog.xml</url>
@@ -49,41 +47,31 @@
 			</item>
 			<item>
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_edit_expression_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/general_edit_icon.png</url>
 				</image> edits a currently selected expression (it is not possible to change the context of an expression, only the expression itself).
 				<line_break/> The associated key shortcut is F2.
 			</item>
 			<item>
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_on_off_very_small_color.png</url>
+					<url>/images/eiffelstudio/icons/10x10/general_toogle_icon.png</url>
 				</image> disable/enable the evaluation of the selected expressions from the list.
 				<line_break/>
 			</item>			
 			<item>
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/debugger_set_sizes_icon.png</url>
 				</image> set the slice limits of dropped <class_name>SPECIAL</class_name> or <class_name>NATIVE_ARRAY</class_name> objects.
 				<line_break/>
 			</item>			
 			<item>
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_numeric_format_very_small_color.png</url>
+					<url>/images/eiffelstudio/icons/10x10/debugger_show_hex_value_icon.png</url>
 				</image> Toggle format display of numeric between decimal and hexadecimal format.
 				<line_break/>
 			</item>			
 			<item>
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_expand_string_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/debugger_expand_info_icon.png</url>
 				</image> This command can give an 
 						<link>
 							<url>../40_object_tool/25_expanded_display_tool.xml</url>
@@ -96,9 +84,7 @@
 
 			<item>
 				<image>
-					<height>8</height>
-					<width>8</width>
-					<url>/images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/general_delete_icon.png</url>
 				</image> removes the selected expressions from the list.
 				<line_break/> The associated key shortcut is Del.
 			</item>

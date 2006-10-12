@@ -27,25 +27,25 @@
 				</list>
 			</output>
 			<output output="studio">
-			<list ordered="false">
-				<item>Launch EiffelStudio. </item>
-				<item>Click <bold>Add project</bold></item>
-				<item>Browse to 
-					<italic>$ISE_EIFFEL\examples\wel\brushes\</italic>.
-				</item>
-				<item>Choose <italic>brushes.ecf</italic></item>
-				<item>Choose the location where the project will be compiled, by default the same directory containing the configuration file. </item>
-				<item>Click 
-					<bold>OK</bold>.
-				</item>
-			</list>
+				<list ordered="false">
+					<item>Launch EiffelStudio. </item>
+					<item>Click <bold>Add project</bold></item>
+					<item>Browse to 
+						<italic>$ISE_EIFFEL\examples\wel\brushes\</italic>.
+					</item>
+					<item>Choose <italic>brushes.ecf</italic></item>
+					<item>Choose the location where the project will be compiled, by default the same directory containing the configuration file. </item>
+					<item>Click 
+						<bold>OK</bold>.
+					</item>
+				</list>
 			</output>
 		<heading>
 			<size>2</size>Running
 		</heading> After launching the program you will see a window displayed containing three push buttons marked "Brushes", "Rectangles" and "3D". Clicking "Brushes" will open a new window demonstrating different brushes available. Clicking "Rectangles" will open a new window within which many different shaped and colored rectangles will be drawn. Clicking"3D" will open a new window demonstrating the use of multiple bitmaps for animation. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading> Each of the three windows that are opened from the programs <code><class_name>MAIN_WINDOW</class_name></code> inherit <link><url>../../reference/windows/wel_frame_window_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> and contains code for generating their output. <code><feature_name>BRUSHES_DEMO</feature_name></code> redefines <code><feature_name>idle_action</feature_name></code> to force a re-draw on the applicable windows. 
+		</heading> Each of the three windows that are opened from the programs <code><class_name>MAIN_WINDOW</class_name></code> inherit <link><url>../../reference/wel_frame_window_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> and contains code for generating their output. <code><feature_name>BRUSHES_DEMO</feature_name></code> redefines <code><feature_name>idle_action</feature_name></code> to force a re-draw on the applicable windows. 
 		<note>
 			<bold>Note</bold>. If <code><feature_name>enable_idle_action</feature_name></code> is not called, then <code>
 	<feature_name>idle_action</feature_name></code> is never executed.

@@ -16,9 +16,9 @@
 			<bold>Note</bold>: If you choose 
 			<bold>Generate a profile from Run-time information record</bold> the generated 
 			<italic>Execution Profile</italic> will be written into 
-			<italic>&lt;project_directory&gt;/EIFGEN/W_CODE/profinfo.pfi</italic> if you have selected 
+			<italic>&lt;project_directory&gt;/EIFGENa/target_name/W_CODE/profinfo.pfi</italic> if you have selected 
 			<bold>Workbench mode</bold> in the first step, or 
-			<italic>&lt;project_directory&gt;/EIFGEN/F_CODE/profinfo.pfi</italic> if you have selected 
+			<italic>&lt;project_directory&gt;/EIFGENs/target_name/F_CODE/profinfo.pfi</italic> if you have selected 
 			<bold>Finalized mode</bold>. If a file with the same name already exists its content will be destroyed and replaced.
 		</note>
 		<line_break/>

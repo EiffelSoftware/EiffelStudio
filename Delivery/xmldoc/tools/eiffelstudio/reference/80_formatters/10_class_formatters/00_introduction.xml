@@ -28,7 +28,7 @@
 		<list ordered="false">
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_editor_icon.png</url>
 				</image>
 				<link>
 					<url>./05_basic_text_format.xml</url>
@@ -37,7 +37,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_clickable_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_clickable_icon.png</url>
 				</image>
 				<link>
 					<url>./10_clickable_format.xml</url>
@@ -46,7 +46,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_flat_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_flat_icon.png</url>
 				</image>
 				<link>
 					<url>./15_flat_format.xml</url>
@@ -55,7 +55,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_contract_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_contracts_icon.png</url>
 				</image>
 				<link>
 					<url>./20_contract_format.xml</url>
@@ -64,7 +64,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_interface_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/view_flat_contracts_icon.png</url>
 				</image>
 				<link>
 					<url>./25_interface_format.xml</url>
@@ -73,7 +73,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_ancestors_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_ancestors_icon.png</url>
 				</image>
 				<link>
 					<url>./30_ancestors_format.xml</url>
@@ -82,7 +82,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_descendants_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_descendents_icon.png</url>
 				</image>
 				<link>
 					<url>./35_descendants_format.xml</url>
@@ -91,7 +91,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_clients_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_clients_icon.png</url>
 				</image>
 				<link>
 					<url>./40_clients_format.xml</url>
@@ -100,7 +100,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_suppliers_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_supliers_icon.png</url>
 				</image>
 				<link>
 					<url>./45_suppliers_format.xml</url>
@@ -109,7 +109,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_attributes_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_features_attribute_icon.png</url>
 				</image>
 				<link>
 					<url>./50_attributes_format.xml</url>
@@ -118,7 +118,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_routines_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_features_routine_icon.png</url>
 				</image>
 				<link>
 					<url>./55_routines_format.xml</url>
@@ -127,7 +127,16 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_creators_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_features_invariant_icon.png</url>
+				</image>
+				<link>
+					<url>./56_invariants_format.xml</url>
+					<label>Invariants</label>
+				</link>
+			</item>			
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/16x16/class_features_creator_icon.png</url>
 				</image>
 				<link>
 					<url>./57_creators_format.xml</url>
@@ -136,7 +145,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_deferreds_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_features_deferred_icon.png</url>
 				</image>
 				<link>
 					<url>./60_deferred_format.xml</url>
@@ -145,7 +154,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_onces_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_features_once_icon.png</url>
 				</image>
 				<link>
 					<url>./65_onces_format.xml</url>
@@ -154,7 +163,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_externals_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_features_external_icon.png</url>
 				</image>
 				<link>
 					<url>./70_externals_format.xml</url>
@@ -163,7 +172,7 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_format_exporteds_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/class_features_exported_icon.png</url>
 				</image>
 				<link>
 					<url>./75_exported_format.xml</url>

@@ -13,7 +13,7 @@
 			<item>To apply straight angles to a link, drop it in the 
 				<bold>Put handles on a link</bold> hole.
 				<image>
-					<url>/images/eiffelstudio/icons/icon_straight_arrows_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/diagram_force_right_angles_icon.png</url>
 				</image>
 			</item>
 			<item>The 
@@ -56,9 +56,6 @@
 						</image>
 					</item>
 				</list>
-			</item>
-			<item>Click 
-				<bold>Apply</bold> to see a preview the new layout of the link.
 			</item>
 			<item>Click 
 				<bold>OK</bold> when you are satisfied with the result, pressing 

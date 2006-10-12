@@ -54,13 +54,13 @@
 			<label>second address bar</label>
 		</link>, in the context tool title bar. You may then center the context tool on a component by using the three methods described for the editor. You can also center the context tool on the same component as the editor ( the context tool remaining independent): Just click
 		<image>
-			<url>/images/eiffelstudio/icons/icon_send_stone_down_color.gif</url>
+			<url>/images/eiffelstudio/icons/16x16/context_sync_icon.png</url>
 		</image>or select 
 		<bold>Send to the context</bold> tool in the 
 		<bold>View</bold> menu.
 		<line_break/>To make the context tool independent if it is not, click
 		<image>
-			<url>/images/eiffelstudio/icons/icon_unify_stone_color.gif</url>
+			<url>/images/eiffelstudio/icons/16x16/context_link_icon.png</url>
 		</image> or select 
 		<bold>Isolate context tool</bold> in the 
 		<bold>View</bold> menu. To do  the opposite, click the same icon or select 

@@ -16,6 +16,12 @@
 			</item>
 			<item>
 				<link>
+					<url>codedom/index.xml</url>
+					<label>Eiffel for ASP.NET</label>
+				</link>
+			</item>
+			<item>
+				<link>
 					<url>cecil/index.xml</url>
 					<label>CECIL</label>
 				</link>
@@ -30,6 +36,12 @@
 				<link>
 					<url>threads/index.xml</url>
 					<label>Threads</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>unicode/index.xml</url>
+					<label>Unicode on Windows 95/98/Me</label>
 				</link>
 			</item>
 		</list>

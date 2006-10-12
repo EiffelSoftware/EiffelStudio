@@ -33,7 +33,7 @@
 					<label>view icon </label>
 				</link>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_view_small_color.gif</url>
+					<url>/images/eiffelstudio/icons/10x10/general_search_icon.png</url>
 				</image> of the 
 				<link>
 					<url>../../../reference/10_browsing_tools/20_cluster_tool/00_introduction.xml</url>

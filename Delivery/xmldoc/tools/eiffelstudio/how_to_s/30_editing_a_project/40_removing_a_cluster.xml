@@ -16,7 +16,7 @@
 					<label>Center the editor on the component</label>
 				</link>, and click
 				<image>
-					<url>/images/eiffelstudio/icons/icon_delete_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_delete_icon.png</url>
 				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>
@@ -31,7 +31,7 @@
 					<label>Drop a pebble</label>
 				</link> of this component on
 				<image>
-					<url>/images/eiffelstudio/icons/icon_delete_color.gif</url>
+					<url>/images/eiffelstudio/icons/16x16/general_delete_icon.png</url>
 				</image> in the 
 				<link>
 					<url>../../reference/05_general_interface_description/30_main_toolbars.xml</url>

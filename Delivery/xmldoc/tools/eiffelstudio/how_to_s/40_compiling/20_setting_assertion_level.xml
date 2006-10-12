@@ -36,15 +36,14 @@
 		<list ordered="false">
 			<item>Open the 
 				<link>
-					<url>/tools/eiffelstudio/reference/25_project_settings/10_general.xml</url>
+					<url>/tools/eiffelstudio/reference/25_project_settings/030_target_assertions.xml</url>
 					<label>Project Settings</label>
 				</link> dialog.
 			</item>
 			<item>In the 
-				<bold>General</bold> tab, select the assertions you want to check (among require, ensure, check, loop and class invariant).
+				<bold>Target, Assertions</bold>section, select the assertions you want to check (among require, ensure, check, loop and class invariant).
 			</item>
 			<item>Click 
-				<bold>Apply</bold> or 
 				<bold>OK</bold>.
 			</item>
 			<item>You must 

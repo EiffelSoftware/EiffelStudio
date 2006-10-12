@@ -8,7 +8,6 @@
 			</link>
 		</paragraph>
 		<paragraph>So far we have relied on existing class texts. Fascinating as it may be to explore excellent software such as EiffelBase, you probably want to write your own too (with the help of the reusable components in the Eiffel libraries). EiffelStudio provides a built-in editor -- as well as the ability to use some other editor if you prefer -- and sophisticated compilation mechanisms.</paragraph>
-		<div>
 			<heading>
 				<size>2</size>
 				<content>Recompiling</content>
@@ -16,20 +15,10 @@
 			<paragraph>When we started, we compiled the example system. Let's recompile it, just to see. We'll see compilation entries in the 
 				<code>
 					<keyword>Project</keyword>
-				</code> menu, but the easiest for the moment is to use the compilation button in the Project toolbar, the lower toolbar in the Development Window:
-			</paragraph>
-			<div>
-				<image_link>
-					<url>index-65.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-65.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
-		</div>
-		<paragraph>Click this button. You haven't changed anything in the project since it was compiled (you were not supposed to!), so EiffelStudio will very quickly detect this and finish compilation. On our test platform this takes less than a second. Now of course we should see what happens if you do change something.</paragraph>
+				</code> menu, but the easiest for the moment is to use the compilation button in the Project toolbar, the lower toolbar in the Development Window. Click this button. 
+				You haven't changed anything in the project since it was compiled (you were not supposed to!), so EiffelStudio will very quickly detect this and finish compilation. 
+				On our test platform this takes less than a second. Now of course we should see what happens if you do change something.
+		</paragraph>
 		<div>
 			<heading>
 				<size>2</size>
@@ -63,7 +52,7 @@
 				</code>, before the first two instructions of the routine:
 			</paragraph>
 			<code_block>
-	<feature_name>io</feature_name>.<feature_name>put_string</feature_name> <symbol>(</symbol>"This is some added text"<symbol>)</symbol> 
+	<feature_name>io</feature_name>.<feature_name>put_string</feature_name> <symbol>(</symbol>"This is some more added text"<symbol>)</symbol> 
 	<feature_name>io</feature_name>.<feature_name>new_line</feature_name>
 </code_block>
 			<paragraph>They are very similar to the current first two lines of the routine, so you can just use copy-paste: select the first two lines with the mouse, copy them using CTRL- 
@@ -89,7 +78,7 @@
 					<keyword>Edit</keyword>
 				</code> menu). Add or remove tabs to align with the rest of the routine, and change the string to 
 				<code>
-					<string>THIS IS SOME ADDED TEXT</string>
+					<string>THIS IS SOME MORE ADDED TEXT</string>
 				</code> so that the result will look like what's shown on the next figure. This is all there is to change; the second line remains untouched. Please check the result and be careful not to introduce any mistakes; in the next section we'll study how EiffelStudio will report syntax and other errors, but right now we want to see what happens when everything is right!
 			</paragraph>
 			<div>
@@ -129,18 +118,8 @@
 				<size>2</size>
 				<content>Views in the Editing Tool</content>
 			</heading>
-			<paragraph>In studying the Context Tool we discovered a number of views of a class text. For convenience, you can also display a number of these views in the Editing Tool, although only the basic Text view is editable. A row of buttons next to the Class and Feature fields lets you choose between them:
+			<paragraph>In studying the Context Tool we discovered a number of views of a class text. For convenience, you can also display a number of these views in the Editing Tool, although only the basic Text view is editable. A row of buttons next to the Class and Feature fields lets you choose between them.
 			</paragraph>
-			<div>
-				<image_link>
-					<url>index-68.png</url>
-					<target>screenshots</target>
-					<image>
-						<url>index-68.png</url>
-						<width>100</width>
-					</image>
-				</image_link>
-			</div>
 			<paragraph>You can try some of these view now, although there is nothing exciting to show about class 
 				<code>
 					<string>PARENT</string>
@@ -319,7 +298,7 @@
 					<content>Search and replace</content>
 				</heading>
 				<paragraph>The editor lets you search for text and replace occurrences, individually or globally. We assume you have seen a text search facility before, so we'll just emphasize some of the less obvious features.</paragraph>
-				<paragraph>To start a search, make sure the Search Tool is active by clicking the Search button in the top toolbar (this one we'll let you find), using the 
+				<paragraph>To start a search, make sure the Search Tool is active by clicking the Search button in the top toolbar (this one we'll let you find) or using the 
 					<code>
 						<keyword>Edit</keyword>
 					</code>
@@ -328,14 +307,12 @@
 					</code>
 					<code>
 						<keyword>Find</keyword>
-					</code> menu entry, or type CTRL- 
-					<code>
-						<keyword>F</keyword>
-					</code> in a Text or Context Tool.
+					</code> menu entry.
 				</paragraph>
 				<note>
 					<italic>Note that although we are studying Search as part of the Editor, this function also applies to any textual form displayed in the Context Tool; make sure to start a Search from the tool that you want to search.</italic>
 				</note>
+				<note>If you press CTRL - <keyword>F</keyword> in a tool you will get a quick search bar that quickly allows to search for something in the current text.</note>
 				<paragraph>The Search Tool presents a number of self-explanatory options:</paragraph>
 				<div>
 					<image_link>
@@ -347,35 +324,11 @@
 						</image>
 					</image_link>
 				</div>
-				<paragraph>If you select 
-					<code>
-						<keyword>Use wildcards</keyword>
-					</code>, two characters will be treated specially in the 
-					<code>
-						<keyword>Search for</keyword>
-					</code> field: a question mark 
-					<code>
-						<keyword>?</keyword>
-					</code> will match any character, and an asterisk 
-					<code>
-						<symbol>*</symbol>
-					</code> will match any sequence of characters.
-				</paragraph>
-				<paragraph>If you check the 
+				<paragraph>You can enter a term to replace your search term in the
 					<code>
 						<keyword>Replace with</keyword>
-					</code> box, a replacement field will appear:
+					</code> box.
 				</paragraph>
-				<div>
-					<image_link>
-						<url>index-70.png</url>
-						<target>screenshots</target>
-						<image>
-							<url>index-70.png</url>
-							<width>100</width>
-						</image>
-					</image_link>
-				</div>
 				<paragraph>Having filled the two fields, you can elect to replace the last found occurrence, or all occurrences at once.</paragraph>
 				<paragraph>The 
 					<code>
@@ -588,18 +541,8 @@
 					</code>
 					<code>
 						<keyword>External editor</keyword>
-					</code> or the corresponding button in the top toolbar:
+					</code> or the corresponding button in the top toolbar.
 				</paragraph>
-				<div>
-					<image_link>
-						<url>index-74.png</url>
-						<target>screenshots</target>
-						<image>
-							<url>index-74.png</url>
-							<width>100</width>
-						</image>
-					</image_link>
-				</div>
 				<paragraph>This will call the editor of your choice. The default is Notepad on Windows and Vi on Unix and Linux. You can easily change this to any editor by entering the desired editor command in 
 					<code>
 						<keyword>Tools</keyword>

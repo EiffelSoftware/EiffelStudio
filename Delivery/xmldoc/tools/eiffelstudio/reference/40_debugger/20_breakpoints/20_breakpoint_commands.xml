@@ -11,13 +11,13 @@
 		</paragraph>
 		<paragraph>Enable breakpoints ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_enable_bkpt_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/16x16/breakpoints_enable_icon.png</url>
 			</image> ), disable breakpoints ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_disable_bkpt_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/16x16/breakpoints_disable_icon.png</url>
 			</image> ) and remove breakpoints ( 
 			<image>
-				<url>../../../../../images/eiffelstudio/icons/icon_del_bkpt_color.gif</url>
+				<url>../../../../../images/eiffelstudio/icons/16x16/breakpoints_delete_icon.png</url>
 			</image> ) have all global and local actions. Left-clicking on them has a global action: all set breakpoints of the system will be respectively enabled, disabled, or discarded. However, it is also possible to 
 			<link>
 				<url>../../../../../tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>

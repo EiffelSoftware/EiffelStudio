@@ -11,7 +11,7 @@
 		<list ordered="false">
 			<item>To change the display quality of the diagram press the Toggle Quality button
 				<image>
-					<url>../../../../../images/eiffelstudio/icons/icon_toggle_quality_color.png</url>
+					<url>../../../../../images/eiffelstudio/icons/16x16/diagram_toggle_quality_icon.png</url>
 				</image>
 			.</item>
 		</list>

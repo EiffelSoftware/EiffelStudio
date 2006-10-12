@@ -35,23 +35,19 @@
 		<paragraph>When modifying the registry keys, simply create a `compiler.reg' file with the following content: </paragraph>
 		<code_block>REGEDIT4
 
-[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel55]
+[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel57]
 
-[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel55\ec]
+[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel57]
 "ISE_C_COMPILER"="C_COMPILER"
 
-[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel55\finish_freezing]
-"ISE_C_COMPILER"="C_COMPILER"
-
-[HKEY_LOCAL_MACHINE\Software\ISE\Eiffel55\wizard]
-"ISE_C_COMPILER"="C_COMPILER"</code_block>
+</code_block>
 		<paragraph>Where you can replace "C_COMPILER" by either:</paragraph>
 		<list ordered="false">
 			<item>msc for Microsoft Visual C++</item>
 			<item>bcb for Borland C++</item>
 		</list>
 		<paragraph>Then import the file and everything will be ready to use your new C compiler.</paragraph>
-		<note><bold>Note:</bold> Replace Eiffel55 by the appropriate value matching the version number of EiffelStudio. For example EiffelStudio 6.5 will have a value of Eiffel65</note>
+		<note><bold>Note:</bold> Replace Eiffel57 by the appropriate value matching the version number of EiffelStudio. For example EiffelStudio 6.5 will have a value of Eiffel65</note>
 		<paragraph> </paragraph>
 		<paragraph>When modifying the environment variables, simply defines ISE_C_COMPILER to be either:</paragraph>
 		<list ordered="false">

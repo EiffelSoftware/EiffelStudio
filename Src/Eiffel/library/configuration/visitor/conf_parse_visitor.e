@@ -98,6 +98,7 @@ feature -- Visit nodes
 			l_path: STRING
 			l_comparer: FILE_COMPARER
 			l_cond: CONF_CONDITION
+			l_ferr: CONF_ERROR_FILE
 		do
 			l_path := a_library.location.evaluated_path
 			create l_load.make (factory)
@@ -109,6 +110,10 @@ feature -- Visit nodes
 					a_library.set_conditions (Void)
 					a_library.add_condition (l_cond)
 				else
+					l_ferr?= l_load.last_error
+					if l_ferr /= Void then
+						l_ferr.set_config (a_library.target.system.file_name)
+					end
 					add_and_raise_error (l_load.last_error)
 				end
 			else

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		require
 			a_file_not_void: a_file /= Void
 		do
-			text := "Could not open file: "+a_file
+			file := a_file
 		end
 
 	make_with_config (a_file, a_config: STRING) is
@@ -31,15 +31,39 @@ feature {NONE} -- Initialization
 			a_file_not_void: a_file /= Void
 			a_config_not_void: a_config /= Void
 		do
-			text := "Could not open file: "+a_file+"%NConfiguration: "+a_config
+			file := a_file
+			config := a_config
 		end
-
 
 feature -- Access
 
-	text: STRING;
-		-- The error message.
+	file: STRING
+			-- File that could not be opened.
 
+	config: STRING
+			-- Config where the file was referenced.
+
+	text: STRING is
+			-- The error message.
+		do
+			check
+				file_not_void: file /= Void
+			end
+			Result := "Could not open file: "+file
+			if config /= Void then
+				Result.append ("%NConfiguration: "+config)
+			end
+		end
+
+feature -- Update
+
+	set_config (a_config: like config) is
+			-- Set `config' to `a_config'.
+		require
+			a_config_not_void: a_config /= Void
+		do
+			config := a_config
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

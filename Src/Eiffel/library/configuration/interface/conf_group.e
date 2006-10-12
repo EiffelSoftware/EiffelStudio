@@ -426,23 +426,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			same_as_classes: classes.count = classes_by_filename.count
 		end
 
-	clean_classes is
-			-- Clean the classes.
-		do
-			classes := Void
-		ensure
-			not_classes_set: not classes_set
-		end
-
-
-	set_overriders (an_overriders: like overriders) is
-			-- Set `overriders' to `an_overriders'.
-		do
-			overriders := an_overriders
-		ensure
-			overriders_set: overriders = an_overriders
-		end
-
 	add_overriders (an_overrider: CONF_OVERRIDE; a_added_classes, a_modified_classes, a_removed_classes: DS_HASH_SET [CONF_CLASS]) is
 			-- Add `an_overrider' to `overriders', track classes with a changed override in `a_modified_classes'
 			-- and classes that where compiled but do now override something in `a_removed_classes'.

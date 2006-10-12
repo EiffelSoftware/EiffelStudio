@@ -607,16 +607,8 @@ feature {NONE} -- Automatic Backup
 
 feature {NONE} -- Implementation
 
-	not_actions_successful: BOOLEAN
+	not_actions_successful: BOOLEAN;
 			-- Was there a problem during running the pre and post compile actions?
-
-feature {NONE} -- Externals
-
-	eif_date (s: POINTER): INTEGER is
-			-- Date of file of name `str'.
-		external
-			"C"
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

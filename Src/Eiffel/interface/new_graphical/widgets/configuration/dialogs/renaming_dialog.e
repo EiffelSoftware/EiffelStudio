@@ -90,6 +90,10 @@ feature {NONE} -- Agents
 			initialized: is_initialized
 		do
 			refresh
+			grid.set_focus
+			if grid.row_count > 0 then
+				grid.select_row (1)
+			end
 		end
 
 	on_add is
@@ -103,6 +107,7 @@ feature {NONE} -- Agents
 			if not (value.has (conf_interface_names.dialog_renaming_create_old) or value.has_item (conf_interface_names.dialog_renaming_create_new)) then
 				value.force (conf_interface_names.dialog_renaming_create_new, conf_interface_names.dialog_renaming_create_old)
 				refresh
+				grid.set_focus
 			end
 		end
 

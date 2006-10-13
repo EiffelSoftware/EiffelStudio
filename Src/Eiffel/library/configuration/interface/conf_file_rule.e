@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 				until
 					a_list.after
 				loop
-					l_regexp_str.append ("("+exclude.item_for_iteration+")|")
+					l_regexp_str.append ("("+a_list.item_for_iteration+")|")
 					a_list.forth
 				end
 				l_regexp_str.remove_tail (1)

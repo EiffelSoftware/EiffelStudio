@@ -345,6 +345,9 @@ rt_public void rout_obj_call_procedure_dynamic (
 		RT_GC_WEAN(open_map);
 	}
 	RT_GC_WEAN(first_arg);
+		/* We are calling a feature through an agent, in this case, we consider all calls
+		 * as qualified so that the invariant is checked. */
+	nstcall = 1;
 	dynamic_eval (feature_id, stype_id, is_precompiled, is_basic_type, is_inline_agent);
 }
 

@@ -515,10 +515,8 @@ feature -- Execution
 							cmdexe := Execution_environment.get ("COMSPEC")
 							if cmdexe /= Void then
 									-- This allows the use of `dir' etc.
-								create {ARRAYED_LIST [STRING]}args.make (1)
-								args.extend ("/c%""+cl+"%"")
-								external_launcher.prepare_command_line (cmdexe, args, wd)
-								use_argument := True
+								external_launcher.prepare_command_line (cmdexe + " /c %""+cl+"%"", Void, wd)
+								use_argument := False
 							else
 								external_launcher.prepare_command_line (cl, Void, wd)
 								use_argument := False

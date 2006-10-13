@@ -30,8 +30,6 @@ feature -- Element change
 
 	set_context_group (a_group: like context_group) is
 			-- Set `context_group' with `a_group'.
-		local
-			l_as: CONF_ASSEMBLY
 		do
 			internal_context_group := a_group
 		ensure

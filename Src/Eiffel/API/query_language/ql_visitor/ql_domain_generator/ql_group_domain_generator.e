@@ -60,22 +60,45 @@ feature -- Process
 			l_cluster: CONF_CLUSTER
 			l_library: CONF_LIBRARY
 			l_assembly: CONF_ASSEMBLY
+			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 			l_group_set: DS_HASH_SET [CONF_GROUP]
+			l_list: ARRAYED_LIST [CONF_GROUP]
 		do
 			l_conf_group := a_item.group
 			if l_conf_group.is_cluster then
 				l_cluster ?= l_conf_group
 				l_group_set := l_cluster.dependencies
 				if l_group_set /= Void then
-					process_groups_from_list (l_group_set, a_item)
+					create l_list.make (l_group_set.count)
+					from
+						l_group_set.start
+					until
+						l_group_set.after
+					loop
+						l_list.put (l_group_set.item_for_iteration)
+						l_group_set.forth
+					end
+					process_groups_from_list (l_list, a_item)
 				end
 			elseif l_conf_group.is_library then
 				l_library ?= l_conf_group
 				process_groups_from_target (l_library.library_target, a_item, agent evaluate_item)
-			elseif l_conf_group.is_assembly or l_conf_group.is_physical_assembly then
-				l_group_set := l_cluster.dependencies
-				if l_group_set /= Void then
-					process_groups_from_list (l_group_set, a_item)
+			elseif l_conf_group.is_assembly then
+				l_assembly ?= l_conf_group
+				check
+					assembly: l_assembly /= Void
+				end
+				l_phys_as := l_assembly.physical_assembly
+				if l_phys_as /= Void and then l_phys_as.dependencies /= Void then
+					process_groups_from_list (l_phys_as.dependencies.linear_representation, a_item)
+				end
+			elseif l_conf_group.is_physical_assembly then
+				l_phys_as ?= l_conf_group
+				check
+					physical_assembly: l_phys_as /= Void
+				end
+				if l_phys_as.dependencies /= Void then
+					process_groups_from_list (l_phys_as.dependencies.linear_representation, a_item)
 				end
 			end
 		end
@@ -144,7 +167,7 @@ feature{NONE} -- Implementation
 			Result := group_criterion_factory.simple_criterion_with_index (group_criterion_factory.c_is_compiled)
 		end
 
-	process_groups_from_list (a_list: DS_LINEAR [CONF_GROUP]; a_parent: QL_ITEM) is
+	process_groups_from_list (a_list: LIST [CONF_GROUP]; a_parent: QL_ITEM) is
 			-- Iterate through groups in `a_list' is evaluate them using `actual_criterion'.
 			-- If satisfied, create new items that represent satisfied groups and insert them
 			-- in `domain', `a_parent' will be parent in newly created items.
@@ -152,22 +175,16 @@ feature{NONE} -- Implementation
 			a_list_attached: a_list /= Void
 			a_parent_attached: a_parent /= Void
 			a_parent_valid: a_parent.is_valid_domain_item
-		local
-			l_cursor: DS_LINEAR_CURSOR [CONF_GROUP]
-			l_group: QL_GROUP
 		do
 			if not a_list.is_empty then
-				from
-					l_cursor := a_list.new_cursor
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					create l_group.make_with_parent (l_cursor.item, a_parent)
-					l_group.set_name (l_cursor.item.name)
-					evaluate_item (l_group)
-					l_cursor.forth
-				end
+				a_list.do_all (agent (a_item: CONF_GROUP; a_a_parent: QL_ITEM)
+					local
+						l_group: QL_GROUP
+					do
+						create l_group.make_with_parent (a_item, a_a_parent)
+						l_group.set_name (a_item.name)
+						evaluate_item (l_group)
+					end (?, a_parent))
 			end
 		end
 

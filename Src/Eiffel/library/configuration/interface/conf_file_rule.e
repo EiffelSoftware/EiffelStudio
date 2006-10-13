@@ -213,10 +213,10 @@ feature {NONE} -- Implementation
 					exclude.after
 				loop
 					create l_regexp.make
-					l_regexp.compile (exclude.item)
 					if {PLATFORM}.is_windows then
 						l_regexp.set_caseless (True)
 					end
+					l_regexp.compile (exclude.item)
 					if not l_regexp.is_compiled then
 						create l_er
 						l_er.set_regexp (exclude.item)
@@ -235,6 +235,9 @@ feature {NONE} -- Implementation
 					include.after
 				loop
 					create l_regexp.make
+					if {PLATFORM}.is_windows then
+						l_regexp.set_caseless (True)
+					end
 					l_regexp.compile (include.item)
 					if not l_regexp.is_compiled then
 						create l_er

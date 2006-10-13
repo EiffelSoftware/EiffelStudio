@@ -29,7 +29,7 @@ feature -- Display
 			-- Displayed format of the data.
 		local
 			l_fr: CONF_FILE_RULE
-			l_pattern: LINKED_SET [STRING]
+			l_pattern: DS_HASH_SET [STRING]
 		do
 			create Result.make_empty
 			if value /= Void and then not value.is_empty then
@@ -51,7 +51,7 @@ feature -- Display
 						until
 							l_pattern.after
 						loop
-							Result.append (l_pattern.item + ";")
+							Result.append (l_pattern.item_for_iteration + ";")
 							l_pattern.forth
 						end
 					end
@@ -64,7 +64,7 @@ feature -- Display
 						until
 							l_pattern.after
 						loop
-							Result.append (l_pattern.item + ";")
+							Result.append (l_pattern.item_for_iteration + ";")
 							l_pattern.forth
 						end
 					end

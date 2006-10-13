@@ -618,7 +618,7 @@ feature {NONE} -- Implementation
 	append_file_rule (a_file_rules: ARRAYED_LIST [CONF_FILE_RULE]) is
 			-- Append `a_file_rule'
 		local
-			l_pattern: LINKED_SET [STRING]
+			l_pattern: DS_HASH_SET [STRING]
 			l_rule: CONF_FILE_RULE
 		do
 			from
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 						until
 							l_pattern.after
 						loop
-							append_tag ("exclude", l_pattern.item, Void, Void)
+							append_tag ("exclude", l_pattern.item_for_iteration, Void, Void)
 							l_pattern.forth
 						end
 					end
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 						until
 							l_pattern.after
 						loop
-							append_tag ("include", l_pattern.item, Void, Void)
+							append_tag ("include", l_pattern.item_for_iteration, Void, Void)
 							l_pattern.forth
 						end
 					end

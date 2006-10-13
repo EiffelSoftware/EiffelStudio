@@ -400,9 +400,10 @@ feature {NONE} -- Implementation of data retrieval
 						l_excludes.after
 					loop
 						l_str := "/"+l_excludes.item.file__name+"$"
-						l_fr.add_exclude (l_str)
-						if l_fr.is_error then
-							set_error (l_fr.last_error)
+						if valid_regexp (l_str) then
+							l_fr.add_exclude (l_str)
+						else
+							set_error (create {CONF_ERROR_REGEXP}.make (l_str))
 						end
 						l_excludes.forth
 					end

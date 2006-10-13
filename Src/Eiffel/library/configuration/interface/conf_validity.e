@@ -36,6 +36,18 @@ feature -- Basic validity queries
 			end
 		end
 
+	valid_regexp (a_regexp: STRING): BOOLEAN is
+			-- is `a_regexp' a valid regular expression?
+		local
+			l_regexp: RX_PCRE_REGULAR_EXPRESSION
+		do
+			if a_regexp /= Void then
+				create l_regexp.make
+				l_regexp.compile (a_regexp)
+				Result := l_regexp.is_compiled
+			end
+		end
+
 	valid_setting (a_setting: STRING): BOOLEAN is
 			-- Is `a_setting' a valid setting?
 		do

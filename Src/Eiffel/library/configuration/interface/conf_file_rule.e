@@ -22,8 +22,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Create
 		do
-			create include_regexp.make
-			create exclude_regexp.make
 		end
 
 feature -- Status
@@ -34,18 +32,12 @@ feature -- Status
 			Result := (exclude = Void or else exclude.is_empty) and (include = Void or else include.is_empty)
 		end
 
-	is_error: BOOLEAN
-			-- Is there an error?
-
-	last_error: CONF_ERROR_PARSE
-			-- The last error.
-
 feature -- Access, stored in configuration file
 
-	exclude: LINKED_SET [STRING]
+	exclude: DS_HASH_SET [STRING]
 			-- Exclude patterns
 
-	include: LINKED_SET [STRING]
+	include: DS_HASH_SET [STRING]
 			-- Include patterns
 
 	description: STRING
@@ -53,51 +45,52 @@ feature -- Access, stored in configuration file
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_exclude (an_exclude: like exclude) is
-			-- Set `exclude' to `an_exclude'.
-		require
-			an_exclude_not_void: an_exclude /= Void
-		do
-			exclude := an_exclude
-			compile
-		ensure
-			exclude_set: exclude = an_exclude
-		end
-
-	set_include (an_include: like include) is
-			-- Set `include' to `an_include'.
-		require
-			an_include_not_void: an_include /= Void
-		do
-			include := an_include
-			compile
-		ensure
-			include_set: include = an_include
-		end
-
 	add_exclude (a_pattern: STRING) is
 			-- Add an exclude pattern.
 		require
-			a_pattern_ok: a_pattern /= Void and then not a_pattern.is_empty
+			a_pattern_ok: valid_regexp (a_pattern)
 		do
 			if exclude = Void then
-				create exclude.make
-				exclude.compare_objects
+				create exclude.make (1)
+				exclude.set_equality_tester (create {KL_EQUALITY_TESTER [STRING]})
 			end
-			exclude.extend (a_pattern)
+			exclude.force_last (a_pattern)
 			compile
 		end
 
 	add_include (a_pattern: STRING) is
 			-- Add an include pattern.
 		require
-			a_pattern_ok: a_pattern /= Void and then not a_pattern.is_empty
+			a_pattern_ok: valid_regexp (a_pattern)
 		do
 			if include = Void then
-				create include.make
-				include.compare_objects
+				create include.make (1)
 			end
-			include.extend (a_pattern)
+			include.force_last (a_pattern)
+			compile
+		end
+
+	del_exclude (a_pattern: STRING) is
+			-- Delete an exclude pattern.
+		require
+			a_pattern_ok: exclude /= Void and then exclude.has (a_pattern)
+		do
+			exclude.remove (a_pattern)
+			if exclude.is_empty then
+				exclude := Void
+			end
+			compile
+		end
+
+	del_include (a_pattern: STRING) is
+			-- Delete an include pattern.
+		require
+			a_pattern_ok: include /= Void and then include.has (a_pattern)
+		do
+			include.remove (a_pattern)
+			if include.is_empty then
+				include := Void
+			end
 			compile
 		end
 
@@ -133,8 +126,9 @@ feature {CONF_ACCESS} -- Merging
 					include.merge (other.include)
 				end
 
-				exclude_regexp.merge (other.exclude_regexp)
-				include_regexp.merge (other.include_regexp)
+				compile
+--				exclude_regexp.merge (other.exclude_regexp)
+--				include_regexp.merge (other.include_regexp)
 			end
 		end
 
@@ -142,15 +136,8 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is it the same file_rule as `other'?
-		local
-			a, b: LINKED_SET [STRING]
 		do
-			a := include
-			b := other.include
-			Result := equal (a, b)
-			a := exclude
-			b := other.exclude
-			Result := equal (a, b)
+			Result := equal (include, other.include) and equal (exclude, other.exclude)
 		end
 
 feature -- Basic operation
@@ -158,153 +145,92 @@ feature -- Basic operation
 	is_included (a_location: STRING): BOOLEAN is
 			-- Test if `a_location' is included according to the exclude/include rules.
 			-- That means it is either not excluded or it is included.
-		local
-			l_done: BOOLEAN
-			l_regexp: RX_PCRE_REGULAR_EXPRESSION
 		do
 			Result := True
-			from
-				exclude_regexp.start
-			until
-				exclude_regexp.after or l_done
-			loop
-				l_regexp := exclude_regexp.item
-				l_regexp.match (a_location)
-				if l_regexp.has_matched then
-						-- it's excluded, check if there is an include that matches
+
+			if exclude_regexp /= Void then
+				exclude_regexp.match (a_location)
+				if exclude_regexp.has_matched then
 					Result := False
-					l_done := True
-					from
-						include_regexp.start
-					until
-						include_regexp.after or Result
-					loop
-						l_regexp := include_regexp.item
-						l_regexp.match (a_location)
-						Result := l_regexp.has_matched
-						include_regexp.forth
+					if include_regexp /= Void then
+							-- it's excluded, check if there is an include that matches
+						include_regexp.match (a_location)
+						Result := include_regexp.has_matched
 					end
 				end
-				exclude_regexp.forth
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	set_error (an_error: CONF_ERROR_PARSE) is
-			-- Set `an_error'.
-		do
-			is_error := True
-			last_error := an_error
-		end
-
 	compile is
 			-- (Re)compile the regexp patterns.
-		local
-			l_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_er: CONF_ERROR_REGEXP
 		do
-			exclude_regexp.wipe_out
-			include_regexp.wipe_out
-			if exclude /= Void then
+			exclude_regexp := compile_list (exclude)
+			include_regexp := compile_list (include)
+		end
+
+	compile_list (a_list: DS_HASH_SET [STRING]): RX_PCRE_REGULAR_EXPRESSION is
+			-- Compile `a_list' into a regular expression.
+		local
+			l_regexp_str: STRING
+		do
+			if a_list /= Void and then not a_list.is_empty then
+				create l_regexp_str.make (50)
 				from
-					exclude.start
+					a_list.start
 				until
-					exclude.after
+					a_list.after
 				loop
-					create l_regexp.make
-					if {PLATFORM}.is_windows then
-						l_regexp.set_caseless (True)
-					end
-					l_regexp.compile (exclude.item)
-					if not l_regexp.is_compiled then
-						create l_er
-						l_er.set_regexp (exclude.item)
-						set_error (l_er)
-					else
-						l_regexp.optimize
-						exclude_regexp.extend (l_regexp)
-					end
-					exclude.forth
+					l_regexp_str.append ("("+exclude.item_for_iteration+")|")
+					a_list.forth
 				end
-			end
-			if include /= Void then
-				from
-					include.start
-				until
-					include.after
-				loop
-					create l_regexp.make
-					if {PLATFORM}.is_windows then
-						l_regexp.set_caseless (True)
-					end
-					l_regexp.compile (include.item)
-					if not l_regexp.is_compiled then
-						create l_er
-						l_er.set_regexp (include.item)
-						set_error (l_er)
-					else
-						l_regexp.optimize
-						include_regexp.extend (l_regexp)
-					end
-					include.forth
+				l_regexp_str.remove_tail (1)
+
+				create Result.make
+				if {PLATFORM}.is_windows then
+					Result.set_caseless (True)
 				end
+				Result.compile (l_regexp_str)
+				check
+					correct_regexp: Result.is_compiled
+				end
+				Result.optimize
 			end
 		end
 
 feature {CONF_FILE_RULE} -- Implementation, merging
 
-	exclude_regexp: LINKED_SET [RX_PCRE_REGULAR_EXPRESSION]
-			-- The compiled regexp objects of the strings.
-	include_regexp: LINKED_SET [RX_PCRE_REGULAR_EXPRESSION]
-			-- The compiled regexp objects of the strings.
+	exclude_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- The compiled regexp object for all the strings.
+	include_regexp: RX_PCRE_REGULAR_EXPRESSION
+			-- The compiled regexp object for all the strings.
 
 feature -- Contracts
 
 	valid_excludes: BOOLEAN is
 			-- Are excludes valid?
 		do
-			if not exclude_regexp.is_empty then
-					-- because of how we do the merging its possible that we have two regexps for the same expression
-				Result := exclude /= Void and then exclude.count <= exclude_regexp.count
+			if exclude = Void or else exclude.is_empty then
+				Result := exclude_regexp = Void
 			else
-				Result := exclude = Void or else exclude.is_empty
-			end
-			from
-				exclude_regexp.start
-			until
-				not Result or exclude_regexp.after
-			loop
-				Result := exclude_regexp.item.is_compiled
-				exclude_regexp.forth
+				Result := exclude_regexp.is_compiled
 			end
 		end
 
 	valid_includes: BOOLEAN is
 			-- Are includes valid?
 		do
-			if not include_regexp.is_empty then
-					-- because of how we do the merging its possible that we have two regexps for the same expression
-				Result := include /= Void and then include.count <= include_regexp.count
+			if include = Void or else include.is_empty then
+				Result := include_regexp = Void
 			else
-				Result := include = Void or else include.is_empty
-			end
-			from
-				include_regexp.start
-			until
-				not Result or include_regexp.after
-			loop
-				Result := include_regexp.item.is_compiled
-				include_regexp.forth
+				Result := include_regexp.is_compiled
 			end
 		end
 
 invariant
-	exclude_regexp_not_void: exclude_regexp /= Void
-	include_regexp_not_void: include_regexp /= Void
-	error_message: is_error implies last_error /= Void
-	exclude_patterns_valid: not is_error implies valid_excludes
-	include_patterns_valid: not is_error implies valid_includes
+	exclude_patterns_valid: valid_excludes
+	include_patterns_valid: valid_includes
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

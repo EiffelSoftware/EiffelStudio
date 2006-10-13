@@ -57,6 +57,8 @@ feature {NONE} -- Initialization
 			vb: EV_VERTICAL_BOX
 			hb_main, hb: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
+			l_list: ARRAYED_LIST [STRING]
+			l_hs: DS_HASH_SET [STRING]
 		do
 			default_create
 			data := a_file_rule
@@ -75,7 +77,17 @@ feature {NONE} -- Initialization
 			vb.set_padding (default_padding_size)
 
 			if data.exclude /= Void then
-				create exclude_pattern.make_with_strings (data.exclude)
+				l_hs := data.exclude
+				create l_list.make (l_hs.count)
+				from
+					l_hs.start
+				until
+					l_hs.after
+				loop
+					l_list.put_right (l_hs.item_for_iteration)
+					l_hs.forth
+				end
+				create exclude_pattern.make_with_strings (l_list)
 			else
 				create exclude_pattern
 			end
@@ -107,7 +119,17 @@ feature {NONE} -- Initialization
 			vb.set_border_width (default_border_size)
 
 			if data.include /= Void then
-				create include_pattern.make_with_strings (data.include)
+				l_hs := data.include
+				create l_list.make (l_hs.count)
+				from
+					l_hs.start
+				until
+					l_hs.after
+				loop
+					l_list.put_right (l_hs.item_for_iteration)
+					l_hs.forth
+				end
+				create include_pattern.make_with_strings (l_list)
 			else
 				create include_pattern
 			end
@@ -240,9 +262,7 @@ feature {NONE} -- Actions
 			-- Remove current selected exclude pattern.
 		do
 			if exclude_pattern.selected_item /= Void then
-				data.exclude.start
-				data.exclude.search (exclude_pattern.selected_item.text.to_string_8)
-				data.exclude.remove
+				data.del_exclude (exclude_pattern.selected_item.text.to_string_8)
 				exclude_pattern.start
 				exclude_pattern.search (exclude_pattern.selected_item)
 				exclude_pattern.remove
@@ -253,9 +273,7 @@ feature {NONE} -- Actions
 			-- Remove current selected include pattern.
 		do
 			if include_pattern.selected_item /= Void then
-				data.include.start
-				data.include.search (include_pattern.selected_item.text.to_string_8)
-				data.include.remove
+				data.del_include (include_pattern.selected_item.text.to_string_8)
 				include_pattern.start
 				include_pattern.search (include_pattern.selected_item)
 				include_pattern.remove

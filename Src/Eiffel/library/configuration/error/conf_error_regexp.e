@@ -10,9 +10,22 @@ class
 
 inherit
 	CONF_ERROR_PARSE
+		rename
+			make as make_parse
 		redefine
 			text
 		end
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_regexp: STRING) is
+			-- Create.
+		do
+			regexp := a_regexp
+		end
+
 
 feature -- Access
 
@@ -24,14 +37,6 @@ feature -- Access
 			else
 				Result := "Parse error: Invalid regexp: "+regexp
 			end
-		end
-
-feature -- Update
-
-	set_regexp (a_regexp: STRING) is
-			-- Set regexp
-		do
-			regexp := a_regexp
 		end
 
 feature {NONE} -- Implementation

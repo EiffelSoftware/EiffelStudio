@@ -1514,9 +1514,10 @@ feature {NONE} -- Implementation content processing
 		require
 			file_rule: current_file_rule /= Void
 		do
-			current_file_rule.add_exclude (current_content)
-			if current_file_rule.is_error then
-				set_error (current_file_rule.last_error)
+			if valid_regexp (current_content) then
+				current_file_rule.add_exclude (current_content)
+			else
+				set_error (create {CONF_ERROR_REGEXP}.make (current_content))
 			end
 		end
 
@@ -1525,9 +1526,10 @@ feature {NONE} -- Implementation content processing
 		require
 			file_rule: current_file_rule /= Void
 		do
-			current_file_rule.add_include (current_content)
-			if current_file_rule.is_error then
-				set_error (current_file_rule.last_error)
+			if valid_regexp (current_content) then
+				current_file_rule.add_include (current_content)
+			else
+				set_error (create {CONF_ERROR_REGEXP}.make (current_content))
 			end
 		end
 

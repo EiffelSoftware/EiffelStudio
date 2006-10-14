@@ -657,17 +657,22 @@ feature {NONE} -- Generation
 						(return_type_string, function_name, True, buffer,
 						arg_names (args_count), a_types)
 				end
-				buffer.put_string ("{%N%T")
+				if is_for_agent and (not final_mode or else system.keep_assertions) then
+						-- We need to check the invariant in an agent call, thus `nstcall' needs to be set.
+					buffer.put_string ("{%N%Tnstcall = 1;%N%T")
+				else
+					buffer.put_string ("{%N%T")
+				end
 
 				if is_function then
 					buffer.put_string ("return ")
 				end
 
-				if final_mode and then
-				   not a_feature.is_inline_agent and then
-				   final_mode and then
-				   is_target_closed and then
-				   is_for_agent
+				if
+					final_mode and then
+					not a_feature.is_inline_agent and then
+					is_target_closed and then
+					is_for_agent
 				then
 					buffer.put_string ("f_ptr (")
 					generate_arg_list_for_rout (buffer, arg_tags (l_type, args), omap, a_oargs_encapsulated)

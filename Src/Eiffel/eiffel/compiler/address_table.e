@@ -659,7 +659,7 @@ feature {NONE} -- Generation
 				end
 				if is_for_agent and (not final_mode or else system.keep_assertions) then
 						-- We need to check the invariant in an agent call, thus `nstcall' needs to be set.
-					buffer.put_string ("{%N%Tnstcall = 1;%N%T")
+					buffer.put_string ("{%N%TGTCX%N%Tnstcall = 1;%N%T")
 				else
 					buffer.put_string ("{%N%T")
 				end

@@ -38,15 +38,15 @@ feature -- Basic Operations
 			l_framework_version := {RUNTIME_ENVIRONMENT}.get_system_version
 			if Default_metadata_cache_path /= Void and l_framework_path /= Void and l_framework_version /= Void then
 				create l_cache_manager.make_with_path (Default_metadata_cache_path)
-				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Services.dll")
-				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Windows.Forms.dll")
-				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Design.dll")
+				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Services.dll", True, Void)
+				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Windows.Forms.dll", True, Void)
+				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Design.dll", True, Void)
 				if not l_framework_version.equals (("v1.0.3705").to_cil) then
-					l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Mobile.dll")
+					l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Mobile.dll", True, Void)
 				end
 			end
 		end
-	
+
 	uninstall (saved_state: IDICTIONARY) is
 			-- Redefine `install' feature.
 		local
@@ -60,13 +60,13 @@ feature -- Basic Operations
 				end
 			end
 		end
-	
+
 	commit (saved_state: IDICTIONARY) is
 			-- Redefine `commit' feature.
 		do
 			Precursor {CONFIG_INSTALL_INSTALLER}(saved_state)
 		end
-	
+
 	rollback (saved_state: IDICTIONARY) is
 			-- Redefine `rollback' feature.
 		do

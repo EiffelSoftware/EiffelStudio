@@ -145,51 +145,6 @@ feature -- Status report
 			result_not_void: Result /= Void
 		end
 
-feature -- Status setting
-
-	set_dialog_filters (a_dialog: EV_FILE_DIALOG; filters: ARRAY [STRING]) is
-			-- Add filters to `a_dialog' corresponding to all items in `filters'.
-		require
-			dialog_not_void: a_dialog /= Void
-			filters_not_void: filters /= Void
-			filters_not_empty: not filters.is_empty
-		local
-			i: INTEGER
-			filter: STRING
-		do
-				-- Remove any existing filters from `a_dialog'.
-			if not a_dialog.filters.is_empty then
-				a_dialog.filters.wipe_out
-			end
-
-			from
-				i := filters.lower
-			until
-				i > filters.upper
-			loop
-				filter := filters.item (i)
-				a_dialog.filters.extend ([filter, file_description_from_filter (filter)])
-				i := i + 1
-			end
-		ensure
-			filters_set: a_dialog.filters.count = filters.count
-		end
-
-	set_dialog_filters_and_add_all (a_dialog: EV_FILE_DIALOG; filters: ARRAY [STRING]) is
-			-- Add filters to `a_dialog' corresponding to all items in `filters' and also add a final `all_files' option.
-		require
-			dialog_not_void: a_dialog /= Void
-			filters_not_void: filters /= Void
-			filters_not_empty: not filters.is_empty
-		do
-			set_dialog_filters (a_dialog, filters)
-
-				-- Add all files filter.
-			a_dialog.filters.extend ([all_files_filter, file_description_from_filter (all_files_filter)])
-		ensure
-			filters_set: a_dialog.filters.count = filters.count + 1
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

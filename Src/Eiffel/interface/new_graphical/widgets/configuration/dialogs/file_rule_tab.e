@@ -28,14 +28,7 @@ inherit
 			is_equal
 		end
 
-	EV_LAYOUT_CONSTANTS
-		undefine
-			default_create,
-			copy,
-			is_equal
-		end
-
-	CONF_INTERFACE_CONSTANTS
+	CONF_GUI_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy,
@@ -73,8 +66,8 @@ feature {NONE} -- Initialization
 			hb_main.disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
-			vb.set_border_width (default_border_size)
-			vb.set_padding (default_padding_size)
+			vb.set_border_width (layout_constants.default_border_size)
+			vb.set_padding (layout_constants.default_padding_size)
 
 			if data.exclude /= Void then
 				l_hs := data.exclude
@@ -115,8 +108,8 @@ feature {NONE} -- Initialization
 			hb_main.disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
-			vb.set_padding (default_padding_size)
-			vb.set_border_width (default_border_size)
+			vb.set_padding (layout_constants.default_padding_size)
+			vb.set_border_width (layout_constants.default_border_size)
 
 			if data.include /= Void then
 				l_hs := data.include
@@ -151,8 +144,8 @@ feature {NONE} -- Initialization
 
 			append_small_margin (hb_main)
 
-			set_padding (default_padding_size)
-			set_border_width (default_border_size)
+			set_padding (layout_constants.default_padding_size)
+			set_border_width (layout_constants.default_border_size)
 
 			append_small_margin (Current)
 			create l_label.make_with_text (conf_interface_names.dialog_file_rule_description)
@@ -198,7 +191,7 @@ feature {NONE} -- Initialization
 			end
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_file_rule_edit_condition, agent edit_condition)
-			set_default_width_for_button (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 

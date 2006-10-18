@@ -16,6 +16,14 @@ inherit
 			{NONE} all
 		end
 
+	FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Access
 
 --	Layout_constants: EV_LAYOUT_CONSTANTS is

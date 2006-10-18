@@ -15,19 +15,7 @@ inherit
 			on_ok
 		end
 
-	CONF_INTERFACE_CONSTANTS
-		undefine
-			default_create,
-			copy
-		end
-
-	EV_LAYOUT_CONSTANTS
-		undefine
-			default_create,
-			copy
-		end
-
-	EB_CONSTANTS
+	CONF_GUI_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -58,7 +46,7 @@ feature {NONE} -- Initialization
 			grid.enable_single_row_selection
 
 			create hb
-			hb.set_padding (default_padding_size)
+			hb.set_padding (layout_constants.default_padding_size)
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
@@ -66,12 +54,12 @@ feature {NONE} -- Initialization
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			set_default_width_for_button (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
 			create l_btn.make_with_text_and_action (conf_interface_names.general_remove, agent on_remove)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			set_default_width_for_button (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
 
 			set_size (300, 400)
 			show_actions.extend (agent on_show)

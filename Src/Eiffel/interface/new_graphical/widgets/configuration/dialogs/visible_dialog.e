@@ -14,19 +14,7 @@ inherit
 			initialize
 		end
 
-	CONF_INTERFACE_CONSTANTS
-		undefine
-			default_create,
-			copy
-		end
-
-	EV_LAYOUT_CONSTANTS
-		undefine
-			default_create,
-			copy
-		end
-
-	EB_CONSTANTS
+	CONF_GUI_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -48,7 +36,7 @@ feature {NONE} -- Initialization
 			l_btn: EV_BUTTON
 		do
 			Precursor {PROPERTY_DIALOG}
-			element_container.set_padding (default_padding_size)
+			element_container.set_padding (layout_constants.default_padding_size)
 
 			create tree
 			element_container.extend (tree)
@@ -85,7 +73,7 @@ feature {NONE} -- Initialization
 			renamed_name.set_minimum_width (250)
 
 			create hb
-			hb.set_padding (default_padding_size)
+			hb.set_padding (layout_constants.default_padding_size)
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 

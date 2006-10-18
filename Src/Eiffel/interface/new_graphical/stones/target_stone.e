@@ -12,11 +12,6 @@ inherit
 			is_valid
 		end
 
-	EB_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

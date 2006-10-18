@@ -11,11 +11,6 @@ class
 inherit
 	OPTION_PROPERTIES
 
-	EB_FILE_DIALOG_CONSTANTS
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	conf_factory: CONF_FACTORY
@@ -157,7 +152,7 @@ feature {NONE} -- Implementation
 			properties.add_property (l_bool_prop)
 
 			add_dotnet_option_properties (current_target.changeable_internal_options, current_target.options, l_extends, current_target.setting_msil_generation)
-			
+
 		ensure
 			properties_not_void: properties /= Void
 		end

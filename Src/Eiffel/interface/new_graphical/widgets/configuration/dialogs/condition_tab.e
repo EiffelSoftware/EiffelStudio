@@ -37,14 +37,7 @@ inherit
 			is_equal
 		end
 
-	CONF_INTERFACE_CONSTANTS
-		undefine
-			default_create,
-			copy,
-			is_equal
-		end
-
-	EV_LAYOUT_CONSTANTS
+	CONF_GUI_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy,
@@ -79,13 +72,13 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
-			set_border_width (default_border_size)
+			set_border_width (layout_constants.default_border_size)
 
 				-- top part (platforms, builds, multithreaded, .NET)
 			create hb_top
 			extend (hb_top)
 			disable_item_expand (hb_top)
-			hb_top.set_padding (default_padding_size)
+			hb_top.set_padding (layout_constants.default_padding_size)
 
 				-- platforms
 			create l_frame.make_with_text (conf_interface_names.dial_cond_platforms)
@@ -93,7 +86,7 @@ feature {NONE} -- Initialization
 			hb_top.disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
-			vb.set_border_width (default_border_size)
+			vb.set_border_width (layout_constants.default_border_size)
 			create platforms
 			from
 				platform_names.start
@@ -124,7 +117,7 @@ feature {NONE} -- Initialization
 
 			create hb
 			l_frame.extend (hb)
-			hb.set_border_width (default_border_size)
+			hb.set_border_width (layout_constants.default_border_size)
 
 				-- build
 			create vb
@@ -230,8 +223,8 @@ feature {NONE} -- Initialization
 			disable_item_expand (l_frame)
 			create vb
 			l_frame.extend (vb)
-			vb.set_border_width (default_border_size)
-			vb.set_padding (default_padding_size)
+			vb.set_border_width (layout_constants.default_border_size)
+			vb.set_padding (layout_constants.default_padding_size)
 			create hb_version
 			vb.extend (hb_version)
 			vb.disable_item_expand (hb_version)
@@ -275,8 +268,8 @@ feature {NONE} -- Initialization
 			extend (l_frame)
 			create vb
 			l_frame.extend (vb)
-			vb.set_border_width (default_border_size)
-			vb.set_padding (default_padding_size)
+			vb.set_border_width (layout_constants.default_border_size)
+			vb.set_padding (layout_constants.default_padding_size)
 			create vb_grid
 			vb.extend (vb_grid)
 			vb_grid.set_border_width (1)

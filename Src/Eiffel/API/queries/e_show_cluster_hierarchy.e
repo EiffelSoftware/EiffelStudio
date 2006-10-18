@@ -139,7 +139,10 @@ feature {NONE} -- Implementation
 			elseif l_group.is_assembly or l_group.is_physical_assembly then
 				l_assembly ?= l_group
 				if l_assembly /= Void then
-					l_phys_as := l_assembly.physical_assembly
+					l_phys_as ?= l_assembly.physical_assembly
+					check
+						physical_assembly: l_phys_as /= Void
+					end
 				else
 					l_phys_as ?= l_group
 				end

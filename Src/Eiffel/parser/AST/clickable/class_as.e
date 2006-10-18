@@ -564,7 +564,7 @@ feature -- Comparison
 				is_separate = other.is_separate
 		end
 
-feature {CLASS_C} -- Update
+feature {CLASS_C_EXPORT} -- Update
 
 	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
 			-- Assign values to Unique features defined in the current class

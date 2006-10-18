@@ -62,6 +62,7 @@
 				<exclude>/support/helpers$</exclude>
 				<exclude>/support/interop$</exclude>
 				<exclude>/support/notifier$</exclude>
+				<exclude>/main$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/.svn$</exclude>

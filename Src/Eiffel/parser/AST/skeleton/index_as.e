@@ -84,7 +84,7 @@ feature -- Comparison
 						equivalent (index_list, other.index_list)
 		end
 
-feature {DOCUMENTATION_ROUTINES} -- Access
+feature {DOCUMENTATION_EXPORT} -- Access
 
 	content_as_string: STRING is
 			-- Merge content into a single string.

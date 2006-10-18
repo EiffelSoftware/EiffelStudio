@@ -11,6 +11,8 @@ class
 inherit
 	AST_VISITOR
 
+	AST_FEATURE_CHECKER_EXPORT
+
 	REFACTORING_HELPER
 		export
 			{NONE} all

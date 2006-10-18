@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="configuration" uuid="06DF248D-6B7F-4EC5-BB4E-25ACCA9C7FF7" library_target="default">
+	<target name="default">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<external_include location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib -D_WIN32_DCOM">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_debugger.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<cluster name="dotnet_loader" location=".\" recursive="true"/>
+	</target>
+</system>

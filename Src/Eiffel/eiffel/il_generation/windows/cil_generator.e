@@ -270,7 +270,7 @@ feature -- Generation
 			l_precomp: REMOTE_PROJECT_DIRECTORY
 			l_viop: VIOP
 			l_use_optimized_precomp: BOOLEAN
-			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]
+			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
 			l_as: CONF_PHYSICAL_ASSEMBLY
 			l_state: CONF_STATE
 		do
@@ -283,7 +283,10 @@ feature -- Generation
 				until
 					l_assemblies.after
 				loop
-					l_as := l_assemblies.item_for_iteration
+					l_as ?= l_assemblies.item_for_iteration
+					check
+						physical_assembly: l_as /= Void
+					end
 					if l_as.is_enabled (l_state) and then not l_as.is_in_gac then
 						copy_to_local (l_as.location.build_path ("", l_as.location.original_file))
 						l_has_local := True

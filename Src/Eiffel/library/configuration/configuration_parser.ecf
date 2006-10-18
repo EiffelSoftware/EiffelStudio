@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="configuration" uuid="A548E53F-02A4-4B6A-9570-26A727A3A069" library_target="default">
+	<target name="default">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
+		<library name="eiffel_identifier" location="$EIFFEL_SRC\Eiffel\library\eiffel_identifier\eiffel_identifier.ecf"/>
+		<cluster name="parser" location="parser\" recursive="true">
+			<condition>
+				<dotnet value="false"/>
+			</condition>
+			<file_rule>
+				<exclude>/dotnet$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="parser_dotnet" location="parser\" recursive="true">
+			<condition>
+				<dotnet value="true"/>
+			</condition>
+			<file_rule>
+				<exclude>/classic$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

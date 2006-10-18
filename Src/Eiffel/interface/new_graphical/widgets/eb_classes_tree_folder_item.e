@@ -596,7 +596,11 @@ feature {NONE} -- Implementation
 			if data.is_assembly then
 				l_as := data.actual_assembly
 				if l_as.classes_set then
-					Result.append (physical_assembly_tooltip_text (l_as.physical_assembly))
+					l_phys_as ?= l_as.physical_assembly
+					check
+						physical_assembly: l_phys_as /= Void
+					end
+					Result.append (physical_assembly_tooltip_text (l_phys_as))
 				end
 				Result.append (data.actual_group.location.evaluated_path)
 			elseif data.is_physial_assembly then

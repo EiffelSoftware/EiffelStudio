@@ -17,6 +17,7 @@ feature -- Configuration
 		do
 			Result := "Project Settings ("+a_system_name+")"
 		end
+	browse: STRING is "Browse..."
 
 feature -- Section names
 

@@ -71,13 +71,13 @@ feature {NONE} -- Initialization
 
 			hb2.extend (create {EV_CELL})
 			create l_btn.make_with_text_and_action (conf_interface_names.general_add, agent add_class)
-			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			l_btn.set_pixmap (conf_pixmaps.general_add_icon)
 			layout_constants.set_default_width_for_button (l_btn)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.general_remove, agent remove_class)
-			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			l_btn.set_pixmap (conf_pixmaps.general_remove_icon)
 			layout_constants.set_default_width_for_button (l_btn)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)

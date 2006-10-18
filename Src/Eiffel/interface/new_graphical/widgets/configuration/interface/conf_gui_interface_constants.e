@@ -11,11 +11,6 @@ class
 inherit
 	CONF_INTERFACE_CONSTANTS
 
-	EB_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
@@ -24,13 +19,42 @@ inherit
 			copy
 		end
 
+feature -- Update
+
+	set_pixmaps (a_pixmaps: CONF_PIXMAPS)
+		require
+			a_pixmaps_not_void: a_pixmaps /= Void
+		do
+			Pixmap_cell.put (a_pixmaps)
+		end
+
 feature {NONE} -- Access
 
---	Layout_constants: EV_LAYOUT_CONSTANTS is
---			-- Constants for vision2 layout
---		once
---			create Result
---		end
+	Layout_constants: EV_LAYOUT_CONSTANTS is
+			-- Constants for vision2 layout
+		once
+			create Result
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	Conf_pixmaps: CONF_PIXMAPS is
+			-- Pixmaps.
+		require
+			Pixmap_cell_filled: Pixmap_cell /= Void
+		once
+			Result := pixmap_cell.item
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+feature {NONE} -- Onces
+
+	Pixmap_cell: CELL [CONF_PIXMAPS] is
+			-- Cell to hold the pixmap.
+		once
+			create Result
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

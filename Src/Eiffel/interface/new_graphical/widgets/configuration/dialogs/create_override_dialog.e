@@ -21,12 +21,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_factory: CONF_FACTORY) is
+	make (a_target: CONF_TARGET; a_factory: like factory) is
 		-- Create.
 	do
 		Precursor {CREATE_CLUSTER_DIALOG} (a_target, a_factory)
 		set_title (conf_interface_names.dialog_create_override_title)
-		set_icon_pixmap (pixmaps.icon_pixmaps.new_override_cluster_icon)
+		set_icon_pixmap (conf_pixmaps.new_override_cluster_icon)
 	end
 
 feature -- Access

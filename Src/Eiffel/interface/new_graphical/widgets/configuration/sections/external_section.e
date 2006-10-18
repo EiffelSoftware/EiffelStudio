@@ -111,11 +111,11 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_external)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			l_item.set_pixmap (conf_pixmaps.general_delete_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
+			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is

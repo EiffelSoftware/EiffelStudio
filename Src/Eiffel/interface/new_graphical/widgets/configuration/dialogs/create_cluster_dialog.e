@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			l_lbl: EV_LABEL
 		do
 			Precursor
-			set_icon_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
+			set_icon_pixmap (conf_pixmaps.new_cluster_icon)
 
 			create vb
 			extend (vb)
@@ -90,8 +90,8 @@ feature {NONE} -- Initialization
 			create location
 			hb2.extend (location)
 
-			create l_btn.make_with_text_and_action (interface_names.b_browse, agent browse)
-			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
+			create l_btn.make_with_text_and_action (conf_interface_names.browse, agent browse)
+			l_btn.set_pixmap (conf_pixmaps.general_open_icon)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 

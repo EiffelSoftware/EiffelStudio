@@ -108,15 +108,15 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text_and_action (conf_interface_names.group_add_subcluster, agent add_subcluster)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
+			l_item.set_pixmap (conf_pixmaps.new_cluster_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_group)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			l_item.set_pixmap (conf_pixmaps.general_delete_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
+			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
 	update_toolbar_sensitivity is

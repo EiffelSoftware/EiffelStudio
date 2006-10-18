@@ -67,7 +67,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon of the section.
 		once
-			Result := pixmaps.icon_pixmaps.project_settings_task_icon
+			Result := conf_pixmaps.project_settings_task_icon
 		end
 
 feature -- Element update
@@ -122,11 +122,11 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_task)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			l_item.set_pixmap (conf_pixmaps.general_delete_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
+			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is

@@ -12,6 +12,8 @@ inherit
 	EB_TOOL
 		rename
 			make as tool_make
+		undefine
+			layout_constants
 		redefine
 			menu_name,
 			pixmap

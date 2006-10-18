@@ -19,7 +19,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_factory: CONF_FACTORY) is
+	make (a_target: CONF_TARGET; a_factory: like factory) is
 			-- Create.
 		require
 			a_target_not_void: a_target /= Void
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 	target: CONF_TARGET
 			-- Target where we add the group.
 
-	factory: CONF_FACTORY
+	factory: CONF_PARSE_FACTORY
 			-- Factory to create a group.
 
 	group_exists (a_group: STRING; a_target: CONF_TARGET): BOOLEAN is

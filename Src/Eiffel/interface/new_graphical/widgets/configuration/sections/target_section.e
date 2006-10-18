@@ -52,7 +52,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon of the section.
 		once
-			Result := pixmaps.icon_pixmaps.top_level_folder_targets_icon
+			Result := conf_pixmaps.top_level_folder_targets_icon
 		end
 
 feature -- Element update
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text_and_action (conf_interface_names.add_target, agent add_target)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_target_icon)
+			l_item.set_pixmap (conf_pixmaps.new_target_icon)
 
 			l_groups := groups_section
 			Result.append (l_groups.context_menu)
@@ -244,11 +244,11 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_target)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			l_item.set_pixmap (conf_pixmaps.general_delete_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
+			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is

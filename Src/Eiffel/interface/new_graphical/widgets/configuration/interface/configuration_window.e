@@ -10,6 +10,8 @@ class
 
 inherit
 	EV_DIALOG
+		export
+			{ANY} is_initialized
 		redefine
 			initialize, is_in_default_state,
 			destroy
@@ -60,21 +62,10 @@ inherit
 			refresh
 		end
 
-	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
-		undefine
-			default_create, copy
-		end
-
 	EV_SHARED_APPLICATION
 		undefine
 			default_create,
 			copy
-		end
-
-	EB_SHARED_PREFERENCES
-		undefine
-			copy,
-			default_create
 		end
 
 	SHARED_CONFIG_WINDOWS
@@ -91,30 +82,25 @@ inherit
 			default_create
 		end
 
-	SHARED_WORKBENCH
-		export
-			{NONE} all
-		undefine
-			copy,
-			default_create
-		end
-
 create
 	make
 
 feature {NONE}-- Initialization
 
-	make (a_system: like conf_system; a_factory: like conf_factory; a_debugs: like debug_clauses) is
+	make (a_system: like conf_system; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command) is
 			-- Create.
 		require
 			a_system_not_void: a_system /= Void
 			a_factory_not_void: a_factory /= Void
 			a_debugs_not_void: a_debugs /= Void
 			application_target_set: a_system.application_target /= Void
+			a_editor_not_void: a_editor /= Void
 		do
+			set_pixmaps (a_pixmaps)
 			conf_system := a_system
 			conf_factory := a_factory
 			debug_clauses := a_debugs
+			external_editor_command := a_editor
 			default_create
 			config_windows.force (Current, conf_system.file_name)
 			window := Current
@@ -138,9 +124,7 @@ feature {NONE}-- Initialization
 				-- window
 			Precursor
 			set_title (conf_interface_names.configuration_title (conf_system.name))
-			set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
-			set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)
-			set_icon_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
+			set_icon_pixmap (conf_pixmaps.tool_config_icon)
 			enable_user_resize
 
 			create vb
@@ -167,7 +151,6 @@ feature {NONE}-- Initialization
 				-- configuration space
 			create configuration_space
 			split_area.set_second (configuration_space)
-			split_area.set_split_position (preferences.dialog_data.project_settings_split_position)
 			configuration_space.set_padding (layout_constants.default_padding_size)
 
 				-- ok and cancel buttons
@@ -216,6 +199,31 @@ feature -- Status
 	is_refreshing: BOOLEAN
 			-- Are we currently refreshing?
 
+feature -- Access
+
+	external_editor_command: STRING
+			-- External editor with 4target as filename replacement and $line as line replacement (optional).
+
+	split_position: INTEGER is
+			-- Split position.
+		require
+			initialized: is_initialized
+		do
+			Result := split_area.split_position
+		end
+
+feature -- Update
+
+	set_split_position (a_position: like split_position) is
+			-- Set split position.
+		require
+			initialized: is_initialized
+		do
+			split_area.set_split_position (a_position)
+		ensure
+			split_position_updated: split_position = a_position
+		end
+
 feature -- Command
 
 	destroy is
@@ -249,7 +257,6 @@ feature {NONE} -- Agents
 	on_cancel is
 			-- Quit without saving.
 		do
-			store_layout
 			is_canceled := True
 			hide
 		end
@@ -257,10 +264,8 @@ feature {NONE} -- Agents
 	on_ok is
 			-- Quit with saving
 		do
-			store_layout
 			conf_system.store
 			conf_system.set_file_date
-			workbench.set_changed
 			hide
 		end
 
@@ -393,12 +398,12 @@ feature {NONE} -- Element initialization
 				configuration_space.disable_item_expand (hb)
 				hb.extend (create {EV_CELL})
 				create add_button.make_with_text (conf_interface_names.general_add)
-				add_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+				add_button.set_pixmap (conf_pixmaps.general_add_icon)
 				layout_constants.set_default_width_for_button (add_button)
 				hb.extend (add_button)
 				hb.disable_item_expand (add_button)
 				create remove_button.make_with_text (conf_interface_names.general_remove)
-				remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+				remove_button.set_pixmap (conf_pixmaps.general_remove_icon)
 				layout_constants.set_default_width_for_button (remove_button)
 				hb.extend (remove_button)
 				hb.disable_item_expand (remove_button)
@@ -915,16 +920,6 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 
 feature {NONE} -- Implementation
 
-	store_layout is
-			-- Store layout parameters in preferences.
-		do
-			preferences.dialog_data.project_settings_width_preference.set_value (width)
-			preferences.dialog_data.project_settings_height_preference.set_value (height)
-			preferences.dialog_data.project_settings_position_x_preference.set_value (x_position)
-			preferences.dialog_data.project_settings_position_y_preference.set_value (y_position)
-			preferences.dialog_data.project_settings_split_position_preference.set_value (split_area.split_position)
-		end
-
 	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
 			-- Expanded status of sections of groups.
 		once
@@ -980,15 +975,15 @@ feature {NONE} -- Implementation
 	open_text_editor is
 			-- Open editor to edit the configuration file by hand.
 		local
-			l_cmd_exec: COMMAND_EXECUTOR
 			l_cmd_string: STRING
+			l_env: EXECUTION_ENVIRONMENT
 		do
-			l_cmd_string := preferences.misc_data.external_editor_command.twin
+			l_cmd_string := external_editor_command.twin
 			if not l_cmd_string.is_empty then
 				l_cmd_string.replace_substring_all ("$target", conf_system.file_name)
 				l_cmd_string.replace_substring_all ("$line", "0")
-				create l_cmd_exec
-				l_cmd_exec.execute (l_cmd_string)
+				create l_env
+				l_env.launch (l_cmd_string)
 			end
 		end
 
@@ -1403,12 +1398,14 @@ invariant
 	configuration_space: is_initialized implies configuration_space /= Void
 	section_tree: is_initialized implies section_tree /= Void
 	toolbar: is_initialized implies toolbar /= Void
+	split_area: is_initialized implies split_area /= Void
 	grid_implies_add_button: grid /= Void implies add_button /= Void and then not add_button.is_destroyed
 	grid_implies_remove_button: grid /= Void implies remove_button /= Void and then not remove_button.is_destroyed
 	debug_clauses: debug_clauses /= Void
 	group_section_expanded_status: group_section_expanded_status /= Void
 	conf_system: conf_system /= Void
 	ok_button: is_initialized implies ok_button /= Void
+	external_editor_command_ok: is_initialized implies external_editor_command /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

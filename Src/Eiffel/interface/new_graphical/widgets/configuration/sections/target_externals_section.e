@@ -72,7 +72,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon of the section.
 		once
-			Result := pixmaps.icon_pixmaps.project_settings_externals_icon
+			Result := conf_pixmaps.project_settings_externals_icon
 		end
 
 feature -- Element update
@@ -241,23 +241,23 @@ feature -- Element update
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_include, agent add_include)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_include_icon)
+			l_item.set_pixmap (conf_pixmaps.new_include_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_object, agent add_object)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
+			l_item.set_pixmap (conf_pixmaps.new_object_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_library, agent add_library)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
+			l_item.set_pixmap (conf_pixmaps.new_object_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_make, agent add_make)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_makefile_icon)
+			l_item.set_pixmap (conf_pixmaps.new_makefile_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_resource, agent add_resource)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_resource_icon)
+			l_item.set_pixmap (conf_pixmaps.new_resource_icon)
 		end
 
 feature -- Simple operations

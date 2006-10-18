@@ -12,75 +12,24 @@ class
 inherit
 	EB_CONSTANTS
 
-
 feature {NONE} -- Implementation
 
-	pixmap_from_group (a_group: CONF_GROUP): EV_PIXMAP is
-			-- Return pixmap based on `a_group'.
+	pixmap_from_group (a_group: CONF_GROUP): EV_PIXMAP
 		require
 			a_group_not_void: a_group /= Void
 		do
-			Result := pixmap_from_group_path (a_group, "")
+			Result := pixmaps.pixmap_from_group (a_group)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	pixmap_from_group_path (a_group: CONF_GROUP; a_path: STRING): EV_PIXMAP is
-			-- Return pixmap based on `a_group' and `a_path'.
+	pixmap_from_group_path (a_group: CONF_GROUP; a_path: STRING): EV_PIXMAP
 		require
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 			path_implies_not_library: not a_path.is_empty implies not a_group.is_library
 		do
-			if not a_path.is_empty then
-				if a_group.is_override then
-					if a_group.is_readonly then
-						Result := pixmaps.icon_pixmaps.folder_override_blank_readonly_icon
-					else
-						Result := pixmaps.icon_pixmaps.folder_override_blank_icon
-					end
-				elseif a_group.is_cluster then
-					if a_group.is_readonly then
-						Result := pixmaps.icon_pixmaps.folder_blank_readonly_icon
-					else
-						Result := pixmaps.icon_pixmaps.folder_blank_icon
-					end
-				elseif a_group.is_assembly or a_group.is_physical_assembly then
-					Result := pixmaps.icon_pixmaps.folder_namespace_icon
-				else
-					check should_not_reach: false end
-				end
-			else
-				if a_group.is_override then
-					if a_group.is_readonly then
-						Result := pixmaps.icon_pixmaps.folder_override_cluster_readonly_icon
-					else
-						Result := pixmaps.icon_pixmaps.folder_override_cluster_icon
-					end
-				elseif a_group.is_cluster then
-					if a_group.is_readonly then
-						Result := pixmaps.icon_pixmaps.folder_cluster_readonly_icon
-					else
-						Result := pixmaps.icon_pixmaps.folder_cluster_icon
-					end
-				elseif a_group.is_precompile then
-					if a_group.is_readonly then
-						Result := pixmaps.icon_pixmaps.folder_precompiled_library_readonly_icon
-					else
-						Result := pixmaps.icon_pixmaps.folder_precompiled_library_icon
-					end
-				elseif a_group.is_library then
-					if a_group.is_readonly then
-						Result := pixmaps.icon_pixmaps.folder_library_readonly_icon
-					else
-						Result := pixmaps.icon_pixmaps.folder_library_icon
-					end
-				elseif a_group.is_assembly or a_group.is_physical_assembly then
-					Result := pixmaps.icon_pixmaps.folder_assembly_icon
-				else
-					check should_not_reach: false end
-				end
-			end
+			Result := pixmaps.pixmap_from_group_path (a_group, a_path)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -362,7 +311,6 @@ feature {NONE} -- Implementation
 	overriden_flag: NATURAL_8 is 0x40
 	readonly_flag: NATURAL_8 is 0x80;
 		-- Class icon state flags		
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

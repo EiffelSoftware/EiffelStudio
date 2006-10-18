@@ -923,8 +923,20 @@ feature {NONE} -- Actions
 				l_system := l_load.last_system
 				l_system.targets.start
 				l_system.set_application_target (l_system.targets.item_for_iteration)
-				create l_window.make (l_system, l_fact, create {DS_ARRAYED_LIST [STRING]}.make_default)
+				create l_window.make (l_system, l_fact, create {DS_ARRAYED_LIST [STRING]}.make_default, pixmaps, preferences.misc_data.external_editor_command)
+
+				l_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
+				l_window.set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)
+				l_window.set_split_position (preferences.dialog_data.project_settings_split_position)
+
 				l_window.show_modal_to_window (parent_window)
+
+				preferences.dialog_data.project_settings_width_preference.set_value (l_window.width)
+				preferences.dialog_data.project_settings_height_preference.set_value (l_window.height)
+				preferences.dialog_data.project_settings_position_x_preference.set_value (l_window.x_position)
+				preferences.dialog_data.project_settings_position_y_preference.set_value (l_window.y_position)
+				preferences.dialog_data.project_settings_split_position_preference.set_value (l_window.split_position)
+
 				l_row := last_selected_row
 				last_selected_row := Void
 				on_project_selected (l_row)

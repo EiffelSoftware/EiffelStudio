@@ -226,31 +226,28 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+			internal_is_compliant := l_compliant
 
-			if l_compliant then
-				l_compliant := True
-				l_attributes := {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, a_provider)
-				if l_attributes /= Void and then l_attributes.count > 0 then
-					from
-						l_enum := l_attributes.get_enumerator
-					until
-						not l_enum.move_next or else
-						l_eiffel_attr /= Void
-					loop
-						l_eiffel_attr ?= l_enum.current_
-						if l_eiffel_attr /= Void then
-							l_compliant := l_eiffel_attr.consumable
-								-- Explict attribute, skip Eiffel checking
-							skip_eiffel_checks := True
-							internal_is_eiffel_compliant := l_compliant
-							if not l_compliant then
-								non_eiffel_compliant_reason := non_compliant_reasons.reason_entity_marked_non_eiffel_compliant
-							end
+			l_attributes := {RT_CUSTOM_ATTRIBUTE_DATA}.get_eiffel_custom_attributes ({EIFFEL_CONSUMABLE_ATTRIBUTE}, a_provider)
+			if l_attributes /= Void and then l_attributes.count > 0 then
+				from
+					l_enum := l_attributes.get_enumerator
+				until
+					not l_enum.move_next or else
+					l_eiffel_attr /= Void
+				loop
+					l_eiffel_attr ?= l_enum.current_
+					if l_eiffel_attr /= Void then
+						l_compliant := l_eiffel_attr.consumable
+							-- Explict attribute, skip Eiffel checking
+						skip_eiffel_checks := True
+						internal_is_eiffel_compliant := l_compliant
+						if not l_compliant then
+							non_eiffel_compliant_reason := non_compliant_reasons.reason_entity_marked_non_eiffel_compliant
 						end
 					end
 				end
 			end
-			internal_is_compliant := l_compliant
 		end
 
 indexing

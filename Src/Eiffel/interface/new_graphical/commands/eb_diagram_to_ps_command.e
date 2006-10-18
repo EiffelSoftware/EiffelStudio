@@ -15,7 +15,7 @@ inherit
 			initialize
 		end
 
-	FILE_DIALOG_CONSTANTS
+	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		end

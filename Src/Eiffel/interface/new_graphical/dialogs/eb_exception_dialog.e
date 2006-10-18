@@ -19,7 +19,7 @@ inherit
 			default_create, copy
 		end
 
-	FILE_DIALOG_CONSTANTS
+	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		undefine

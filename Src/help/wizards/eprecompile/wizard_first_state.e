@@ -242,7 +242,7 @@ feature {NONE} -- Tools
 			info_lib: TUPLE [STRING, BOOLEAN]
 			path_name: FILE_NAME
 			l_conf: CONF_LOAD
-			l_factory: CONF_FACTORY
+			l_factory: CONF_PARSE_FACTORY
 			l_file: RAW_FILE
 			l_target_name: STRING
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]

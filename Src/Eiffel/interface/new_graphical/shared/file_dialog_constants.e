@@ -11,7 +11,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_FILE_DIALOG_CONSTANTS
+	FILE_DIALOG_CONSTANTS
 
 feature -- Access
 

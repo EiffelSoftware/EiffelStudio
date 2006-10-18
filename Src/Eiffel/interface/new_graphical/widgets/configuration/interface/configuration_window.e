@@ -60,22 +60,9 @@ inherit
 			refresh
 		end
 
-	EB_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		undefine
 			default_create, copy
-		end
-
-	EV_LAYOUT_CONSTANTS
-		undefine
-			default_create,
-			copy
 		end
 
 	EV_SHARED_APPLICATION
@@ -96,7 +83,7 @@ inherit
 			default_create
 		end
 
-	CONF_INTERFACE_CONSTANTS
+	CONF_GUI_INTERFACE_CONSTANTS
 		export
 			{CONFIGURATION_SECTION} conf_interface_names
 		undefine
@@ -146,7 +133,7 @@ feature {NONE}-- Initialization
 			l_accel: EV_ACCELERATOR
 		do
 				-- set default layout values
-			set_padding_size (default_padding_size)
+			set_padding_size (layout_constants.default_padding_size)
 
 				-- window
 			Precursor
@@ -158,8 +145,8 @@ feature {NONE}-- Initialization
 
 			create vb
 			extend (vb)
-			vb.set_padding (default_padding_size)
-			vb.set_border_width (default_border_size)
+			vb.set_padding (layout_constants.default_padding_size)
+			vb.set_border_width (layout_constants.default_border_size)
 
 				-- toolbar
 			create toolbar
@@ -181,7 +168,7 @@ feature {NONE}-- Initialization
 			create configuration_space
 			split_area.set_second (configuration_space)
 			split_area.set_split_position (preferences.dialog_data.project_settings_split_position)
-			configuration_space.set_padding (default_padding_size)
+			configuration_space.set_padding (layout_constants.default_padding_size)
 
 				-- ok and cancel buttons
 			create hb
@@ -189,16 +176,16 @@ feature {NONE}-- Initialization
 			vb.disable_item_expand (hb)
 
 			hb.extend (create {EV_CELL})
-			hb.set_padding (default_padding_size)
+			hb.set_padding (layout_constants.default_padding_size)
 
 			create ok_button.make_with_text_and_action (ev_ok, agent on_ok)
-			set_default_width_for_button (ok_button)
+			layout_constants.set_default_width_for_button (ok_button)
 			hb.extend (ok_button)
 			hb.disable_item_expand (ok_button)
 			set_default_push_button (ok_button)
 
 			create l_btn.make_with_text_and_action (ev_cancel, agent on_cancel)
-			set_default_width_for_button (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
@@ -401,18 +388,18 @@ feature {NONE} -- Element initialization
 
 					-- add add and remove buttons
 				create hb
-				hb.set_padding (default_padding_size)
+				hb.set_padding (layout_constants.default_padding_size)
 				configuration_space.extend (hb)
 				configuration_space.disable_item_expand (hb)
 				hb.extend (create {EV_CELL})
 				create add_button.make_with_text (conf_interface_names.general_add)
 				add_button.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
-				set_default_width_for_button (add_button)
+				layout_constants.set_default_width_for_button (add_button)
 				hb.extend (add_button)
 				hb.disable_item_expand (add_button)
 				create remove_button.make_with_text (conf_interface_names.general_remove)
 				remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
-				set_default_width_for_button (remove_button)
+				layout_constants.set_default_width_for_button (remove_button)
 				hb.extend (remove_button)
 				hb.disable_item_expand (remove_button)
 

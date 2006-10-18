@@ -21,35 +21,13 @@ inherit
 			default_create
 		end
 
-	EV_LAYOUT_CONSTANTS
-		undefine
-			copy,
-			default_create
-		end
-
 	PROPERTY_GRID_LAYOUT
 		undefine
 			copy,
 			default_create
 		end
 
-	CONF_INTERFACE_CONSTANTS
-		undefine
-			default_create,
-			copy
-		end
-
-	EB_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create,
-			copy
-		end
-
-	EB_FILE_DIALOG_CONSTANTS
-		export
-			{NONE} all
+	CONF_GUI_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -84,14 +62,14 @@ feature {NONE} -- Initialization
 
 			create vb
 			extend (vb)
-			vb.set_padding (default_padding_size)
-			vb.set_border_width (default_border_size)
+			vb.set_padding (layout_constants.default_padding_size)
+			vb.set_border_width (layout_constants.default_border_size)
 
 				-- assemblies found in default locations
 			create vb2
 			vb.extend (vb2)
-			vb2.set_padding (small_padding_size)
-			vb2.set_border_width (small_border_size)
+			vb2.set_padding (layout_constants.small_padding_size)
+			vb2.set_border_width (layout_constants.small_border_size)
 
 			create l_lbl.make_with_text (conf_interface_names.dialog_create_assembly_found)
 			vb2.extend (l_lbl)
@@ -157,8 +135,8 @@ feature {NONE} -- Initialization
 			create vb2
 			vb.extend (vb2)
 			vb.disable_item_expand (vb2)
-			vb2.set_padding (small_padding_size)
-			vb2.set_border_width (small_border_size)
+			vb2.set_padding (layout_constants.small_padding_size)
+			vb2.set_border_width (layout_constants.small_border_size)
 
 			create l_lbl.make_with_text (conf_interface_names.dialog_create_assembly_name)
 			vb2.extend (l_lbl)
@@ -173,8 +151,8 @@ feature {NONE} -- Initialization
 			create vb2
 			vb.extend (vb2)
 			vb.disable_item_expand (vb2)
-			vb2.set_padding (small_padding_size)
-			vb2.set_border_width (small_border_size)
+			vb2.set_padding (layout_constants.small_padding_size)
+			vb2.set_border_width (layout_constants.small_border_size)
 
 			create l_lbl.make_with_text (conf_interface_names.dialog_create_assembly_location)
 			vb2.extend (l_lbl)
@@ -184,7 +162,7 @@ feature {NONE} -- Initialization
 			create hb2
 			vb2.extend (hb2)
 			vb2.disable_item_expand (hb2)
-			hb2.set_padding (small_padding_size)
+			hb2.set_padding (layout_constants.small_padding_size)
 
 			create location
 			hb2.extend (location)
@@ -199,21 +177,21 @@ feature {NONE} -- Initialization
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
-			hb.set_padding (default_padding_size)
+			hb.set_padding (layout_constants.default_padding_size)
 
 			create l_btn.make_with_text (ev_ok)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_push_button (l_btn)
 			l_btn.select_actions.extend (agent on_ok)
-			set_default_width_for_button (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
 
 			create l_btn.make_with_text (ev_cancel)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
 			l_btn.select_actions.extend (agent on_cancel)
-			set_default_width_for_button (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
 
 			set_minimum_width (440)
 

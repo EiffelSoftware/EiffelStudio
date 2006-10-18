@@ -28,12 +28,6 @@ inherit
 			copy
 		end
 
-	EB_CONSTANTS
-		undefine
-			default_create,
-			copy
-		end
-
 feature {NONE} -- Initialization
 
 	initialize is

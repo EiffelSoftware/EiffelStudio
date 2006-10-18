@@ -13,11 +13,6 @@ inherit
 
 	DEFAULT_VALIDATOR
 
-	EB_FILE_DIALOG_CONSTANTS
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Implementation
 
 	add_group_properties (a_group: CONF_GROUP; a_target: CONF_TARGET) is

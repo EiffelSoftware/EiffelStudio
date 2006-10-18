@@ -15,14 +15,7 @@ inherit
 			is_in_default_state
 		end
 
-	EB_CONSTANTS
-		undefine
-			default_create,
-			is_equal,
-			copy
-		end
-
-	CONF_INTERFACE_CONSTANTS
+	CONF_GUI_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			is_equal,

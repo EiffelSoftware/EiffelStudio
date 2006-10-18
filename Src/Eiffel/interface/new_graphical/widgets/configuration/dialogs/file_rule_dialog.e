@@ -14,19 +14,7 @@ inherit
 			initialize
 		end
 
-	CONF_INTERFACE_CONSTANTS
-		undefine
-			default_create,
-			copy
-		end
-
-	EV_LAYOUT_CONSTANTS
-		undefine
-			default_create,
-			copy
-		end
-
-	EB_CONSTANTS
+	CONF_GUI_INTERFACE_CONSTANTS
 		undefine
 			default_create,
 			copy
@@ -50,21 +38,21 @@ feature {NONE} -- Initialization
 			create hb
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
-			hb.set_padding (default_padding_size)
+			hb.set_padding (layout_constants.default_padding_size)
 
 			hb.extend (create {EV_CELL})
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_file_rule_add_rule, agent on_add)
 			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
-			set_default_width_for_button (l_btn)
+			layout_constants.set_default_width_for_button (l_btn)
 			create remove_button.make_with_text_and_action (conf_interface_names.dialog_file_rule_remove_rule, agent on_remove)
 			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
-			set_default_width_for_button (remove_button)
-			set_default_width_for_button (cancel_button)
-			set_default_width_for_button (ok_button)
+			layout_constants.set_default_width_for_button (remove_button)
+			layout_constants.set_default_width_for_button (cancel_button)
+			layout_constants.set_default_width_for_button (ok_button)
 
 			show_actions.extend (agent on_show)
 		end

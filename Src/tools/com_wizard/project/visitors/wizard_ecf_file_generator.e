@@ -251,7 +251,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Onces
 
-	conf_factory: CONF_FACTORY is
+	conf_factory: CONF_PARSE_FACTORY is
 			-- Configuration factory.
 		once
 			create Result

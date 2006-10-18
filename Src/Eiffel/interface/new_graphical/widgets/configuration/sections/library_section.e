@@ -69,7 +69,12 @@ feature -- Basic operations
 				else
 					l_load.last_system.targets.start
 					l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
-					create l_lib_conf.make (l_load.last_system, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0))
+					create l_lib_conf.make (l_load.last_system, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
+
+					l_lib_conf.set_size (configuration_window.width, configuration_window.height)
+					l_lib_conf.set_position (configuration_window.x_position, configuration_window.y_position)
+					l_lib_conf.set_split_position (configuration_window.split_position)
+
 --					l_lib_conf.show_modal_to_window (configuration_window)
 					l_lib_conf.show
 				end
@@ -100,18 +105,18 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_group)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			l_item.set_pixmap (conf_pixmaps.general_delete_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.menu_edit_config, agent edit_configuration)
 			Result.extend (l_item)
 			if group.is_readonly then
 				l_item.disable_sensitive
 			end
-			l_item.set_pixmap (pixmaps.icon_pixmaps.project_settings_edit_library_icon)
+			l_item.set_pixmap (conf_pixmaps.project_settings_edit_library_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.menu_properties, agent enable_select)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.tool_properties_icon)
+			l_item.set_pixmap (conf_pixmaps.tool_properties_icon)
 		end
 
 	update_toolbar_sensitivity is

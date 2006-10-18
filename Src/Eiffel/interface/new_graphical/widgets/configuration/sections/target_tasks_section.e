@@ -32,7 +32,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon of the section.
 		once
-			Result := pixmaps.icon_pixmaps.project_settings_tasks_icon
+			Result := conf_pixmaps.project_settings_tasks_icon
 		end
 
 	pre_tasks: TARGET_PRE_TASKS_SECTION is
@@ -60,11 +60,11 @@ feature -- Access
 
 			create l_item.make_with_text_and_action (conf_interface_names.task_add_pre, agent add_pre_compilation)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_pre_compilation_task_icon)
+			l_item.set_pixmap (conf_pixmaps.new_pre_compilation_task_icon)
 
 			create l_item.make_with_text_and_action (conf_interface_names.task_add_post, agent add_post_compilation)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_post_compilation_task_icon)
+			l_item.set_pixmap (conf_pixmaps.new_post_compilation_task_icon)
 		end
 
 feature -- Simple operations

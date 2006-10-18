@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			create accelerators
 
 			create add_target_button
-			add_target_button.set_pixmap (pixmaps.icon_pixmaps.new_target_icon)
+			add_target_button.set_pixmap (conf_pixmaps.new_target_icon)
 			extend (add_target_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_t), True, False, False)
 			l_ac.actions.extend (agent press_button (add_target_button))
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create add_cluster_button
-			add_cluster_button.set_pixmap (pixmaps.icon_pixmaps.new_cluster_icon)
+			add_cluster_button.set_pixmap (conf_pixmaps.new_cluster_icon)
 			extend (add_cluster_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_u), True, False, False)
 			l_ac.actions.extend (agent press_button (add_cluster_button))
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			add_cluster_button.set_tooltip (name_with_key (conf_interface_names.group_add_cluster, l_ac))
 
 			create add_override_button
-			add_override_button.set_pixmap (pixmaps.icon_pixmaps.new_override_cluster_icon)
+			add_override_button.set_pixmap (conf_pixmaps.new_override_cluster_icon)
 			extend (add_override_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_o), True, False, False)
 			l_ac.actions.extend (agent press_button (add_override_button))
@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			add_override_button.set_tooltip (name_with_key (conf_interface_names.group_add_override, l_ac))
 
 			create add_assembly_button
-			add_assembly_button.set_pixmap (pixmaps.icon_pixmaps.new_reference_icon)
+			add_assembly_button.set_pixmap (conf_pixmaps.new_reference_icon)
 			extend (add_assembly_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_a), True, False, False)
 			l_ac.actions.extend (agent press_button (add_assembly_button))
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			add_assembly_button.set_tooltip (name_with_key (conf_interface_names.group_add_assembly, l_ac))
 
 			create add_library_button
-			add_library_button.set_pixmap (pixmaps.icon_pixmaps.new_library_icon)
+			add_library_button.set_pixmap (conf_pixmaps.new_library_icon)
 			extend (add_library_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_l), True, False, False)
 			l_ac.actions.extend (agent press_button (add_library_button))
@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			add_library_button.set_tooltip (name_with_key (conf_interface_names.group_add_library, l_ac))
 
 			create add_precompile_button
-			add_precompile_button.set_pixmap (pixmaps.icon_pixmaps.new_precompiled_library_icon)
+			add_precompile_button.set_pixmap (conf_pixmaps.new_precompiled_library_icon)
 			extend (add_precompile_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_p), True, False, False)
 			l_ac.actions.extend (agent press_button (add_precompile_button))
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create add_include_button
-			add_include_button.set_pixmap (pixmaps.icon_pixmaps.new_include_icon)
+			add_include_button.set_pixmap (conf_pixmaps.new_include_icon)
 			extend (add_include_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_i), True, False, False)
 			l_ac.actions.extend (agent press_button (add_include_button))
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			add_include_button.set_tooltip (name_with_key (conf_interface_names.external_add_include, l_ac))
 
 			create add_object_button
-			add_object_button.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
+			add_object_button.set_pixmap (conf_pixmaps.new_object_icon)
 			extend (add_object_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_b), True, False, False)
 			l_ac.actions.extend (agent press_button (add_object_button))
@@ -102,7 +102,7 @@ feature {NONE} -- Initialization
 			add_object_button.set_tooltip (name_with_key (conf_interface_names.external_add_object, l_ac))
 
 			create add_external_library_button
-			add_external_library_button.set_pixmap (pixmaps.icon_pixmaps.new_object_icon)
+			add_external_library_button.set_pixmap (conf_pixmaps.new_object_icon)
 			extend (add_external_library_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_e), True, False, False)
 			l_ac.actions.extend (agent press_button (add_external_library_button))
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 			add_external_library_button.set_tooltip (name_with_key (conf_interface_names.external_add_library, l_ac))
 
 			create add_make_button
-			add_make_button.set_pixmap (pixmaps.icon_pixmaps.new_makefile_icon)
+			add_make_button.set_pixmap (conf_pixmaps.new_makefile_icon)
 			extend (add_make_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_k), True, False, False)
 			l_ac.actions.extend (agent press_button (add_make_button))
@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 			add_make_button.set_tooltip (name_with_key (conf_interface_names.external_add_make, l_ac))
 
 			create add_resource_button
-			add_resource_button.set_pixmap (pixmaps.icon_pixmaps.new_resource_icon)
+			add_resource_button.set_pixmap (conf_pixmaps.new_resource_icon)
 			extend (add_resource_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_r), True, False, False)
 			l_ac.actions.extend (agent press_button (add_resource_button))
@@ -128,7 +128,7 @@ feature {NONE} -- Initialization
 			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create add_pre_task_button
-			add_pre_task_button.set_pixmap (pixmaps.icon_pixmaps.new_pre_compilation_task_icon)
+			add_pre_task_button.set_pixmap (conf_pixmaps.new_pre_compilation_task_icon)
 			extend (add_pre_task_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_s), True, False, False)
 			l_ac.actions.extend (agent press_button (add_pre_task_button))
@@ -136,7 +136,7 @@ feature {NONE} -- Initialization
 			add_pre_task_button.set_tooltip (name_with_key (conf_interface_names.task_add_pre, l_ac))
 
 			create add_post_task_button
-			add_post_task_button.set_pixmap (pixmaps.icon_pixmaps.new_post_compilation_task_icon)
+			add_post_task_button.set_pixmap (conf_pixmaps.new_post_compilation_task_icon)
 			extend (add_post_task_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_h), True, False, False)
 			l_ac.actions.extend (agent press_button (add_post_task_button))
@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create remove_button
-			remove_button.set_pixmap (pixmaps.icon_pixmaps.general_delete_icon)
+			remove_button.set_pixmap (conf_pixmaps.general_delete_icon)
 			extend (remove_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
 			l_ac.actions.extend (agent press_button (remove_button))
@@ -156,7 +156,7 @@ feature {NONE} -- Initialization
 			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create edit_library
-			edit_library.set_pixmap (pixmaps.icon_pixmaps.project_settings_edit_library_icon)
+			edit_library.set_pixmap (conf_pixmaps.project_settings_edit_library_icon)
 			extend (edit_library)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_y), True, False, False)
 			l_ac.actions.extend (agent press_button (edit_library))
@@ -166,7 +166,7 @@ feature {NONE} -- Initialization
 			extend (create {EV_TOOL_BAR_SEPARATOR})
 
 			create edit_manually_button
-			edit_manually_button.set_pixmap (pixmaps.icon_pixmaps.general_edit_icon)
+			edit_manually_button.set_pixmap (conf_pixmaps.general_edit_icon)
 			extend (edit_manually_button)
 			create l_ac.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_m), True, False, False)
 			l_ac.actions.extend (agent press_button (edit_manually_button))

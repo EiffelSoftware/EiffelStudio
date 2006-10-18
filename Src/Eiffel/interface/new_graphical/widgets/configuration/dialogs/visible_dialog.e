@@ -80,19 +80,19 @@ feature {NONE} -- Initialization
 			hb.extend (create {EV_CELL})
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_add_class, agent add_class)
-			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			l_btn.set_pixmap (conf_pixmaps.general_add_icon)
 			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_add_feature, agent add_feature)
-			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_add_icon)
+			l_btn.set_pixmap (conf_pixmaps.general_add_icon)
 			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_visible_remove, agent remove)
-			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			l_btn.set_pixmap (conf_pixmaps.general_remove_icon)
 			l_btn.set_minimum_width (100)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)

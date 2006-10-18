@@ -25,7 +25,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon of the section.
 		once
-			Result := pixmaps.icon_pixmaps.project_settings_resource_file_icon
+			Result := conf_pixmaps.project_settings_resource_file_icon
 		end
 
 feature -- Element update
@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 
 			create l_item.make_with_text_and_action (conf_interface_names.external_add_resource, agent add_external)
 			Result.extend (l_item)
-			l_item.set_pixmap (pixmaps.icon_pixmaps.new_resource_icon)
+			l_item.set_pixmap (conf_pixmaps.new_resource_icon)
 		end
 
 indexing

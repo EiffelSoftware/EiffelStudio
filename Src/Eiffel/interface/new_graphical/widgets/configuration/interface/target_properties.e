@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	conf_factory: CONF_FACTORY
+	conf_factory: CONF_PARSE_FACTORY
 			-- Factory to create new configuration nodes.
 
 feature {NONE} -- Implementation

@@ -23,7 +23,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon of the section.
 		once
-			Result := pixmaps.icon_pixmaps.project_settings_include_file_icon
+			Result := conf_pixmaps.project_settings_include_file_icon
 		end
 
 	conf_external: CONF_EXTERNAL_INCLUDE

@@ -34,7 +34,7 @@ feature -- Access
 	icon: EV_PIXMAP is
 			-- Icon of the section.
 		once
-			Result := pixmaps.icon_pixmaps.top_level_folder_precompiles_icon
+			Result := conf_pixmaps.top_level_folder_precompiles_icon
 		end
 
 feature {NONE} -- Implementation

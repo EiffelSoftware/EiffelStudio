@@ -111,11 +111,15 @@ feature -- Basic operations
 							else
 								l_load.last_system.targets.start
 								l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
-								create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
+								create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs, pixmaps, preferences.misc_data.external_editor_command)
 							end
 
---							configuration_window.show_modal_to_window (window_manager.last_focused_development_window.window)
-							configuration_window.show
+							configuration_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
+							configuration_window.set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)
+							configuration_window.set_split_position (preferences.dialog_data.project_settings_split_position)
+
+							configuration_window.show_modal_to_window (window_manager.last_focused_development_window.window)
+--							configuration_window.show
 						end
 					end
 				end
@@ -165,7 +169,12 @@ feature {NONE} -- Actions
 							create l_sorted_debugs.make_default
 							l_load.last_system.targets.start
 							l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
-							create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs)
+							create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs, pixmaps, preferences.misc_data.external_editor_command)
+
+							configuration_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
+							configuration_window.set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)
+							configuration_window.set_split_position (preferences.dialog_data.project_settings_split_position)
+
 --							configuration_window.show_modal_to_window (window_manager.last_focused_development_window.window)
 							configuration_window.show
 						end

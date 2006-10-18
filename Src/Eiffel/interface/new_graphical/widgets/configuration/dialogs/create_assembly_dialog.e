@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			Precursor
 
 			set_title (conf_interface_names.dialog_create_assembly_title)
-			set_icon_pixmap (pixmaps.icon_pixmaps.new_reference_icon)
+			set_icon_pixmap (conf_pixmaps.new_reference_icon)
 
 			create vb
 			extend (vb)
@@ -123,7 +123,7 @@ feature {NONE} -- Initialization
 					l_name.append (l_key)
 					create l_item.make_with_text (l_name)
 					l_item.select_actions.extend (agent fill_assembly (l_name, l_property.location))
-					l_item.set_pixmap (pixmaps.icon_pixmaps.folder_assembly_icon)
+					l_item.set_pixmap (conf_pixmaps.folder_assembly_icon)
 					assemblies.extend (l_item)
 					l_properties.forth
 				end
@@ -167,8 +167,8 @@ feature {NONE} -- Initialization
 			create location
 			hb2.extend (location)
 
-			create l_btn.make_with_text_and_action (interface_names.b_browse, agent browse)
-			l_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
+			create l_btn.make_with_text_and_action (conf_interface_names.browse, agent browse)
+			l_btn.set_pixmap (conf_pixmaps.general_open_icon)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
 

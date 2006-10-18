@@ -9,6 +9,8 @@ class
 	EB_SHARED_PIXMAPS
 
 inherit
+	CONF_PIXMAPS
+
 	EV_STOCK_PIXMAPS
 
 	EB_SHARED_PIXMAP_FACTORY
@@ -699,6 +701,283 @@ feature {NONE} -- Constants
 			icon_normal_callee_icon_value,
 			icon_creator_callee_icon_value,
 			icon_assigner_callee_icon_value: INTEGER is unique;
+
+feature {NONE} -- Configuration pixmaps
+
+	folder_override_blank_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_override_blank_readonly_icon
+		end
+
+	folder_override_blank_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_override_blank_icon
+		end
+
+	folder_blank_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_blank_readonly_icon
+		end
+
+	folder_blank_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_blank_icon
+		end
+
+	folder_namespace_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_namespace_icon
+		end
+
+	folder_override_cluster_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_override_cluster_readonly_icon
+		end
+
+	folder_override_cluster_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_override_cluster_icon
+		end
+
+	folder_cluster_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_cluster_readonly_icon
+		end
+
+	folder_precompiled_library_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_precompiled_library_icon
+		end
+
+	folder_precompiled_library_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_precompiled_library_readonly_icon
+		end
+
+	folder_cluster_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_cluster_icon
+		end
+
+	folder_library_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_library_readonly_icon
+		end
+
+	folder_library_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_library_icon
+		end
+
+	folder_assembly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_assembly_icon
+		end
+
+	new_reference_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_reference_icon
+		end
+
+	new_target_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_target_icon
+		end
+
+	new_cluster_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_cluster_icon
+		end
+
+	new_override_cluster_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_override_cluster_icon
+		end
+
+	new_library_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_library_icon
+		end
+
+	general_open_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.general_open_icon
+		end
+
+	general_add_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.general_add_icon
+		end
+
+	general_remove_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.general_remove_icon
+		end
+
+	general_edit_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.general_edit_icon
+		end
+
+	general_delete_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.general_delete_icon
+		end
+
+	new_precompiled_library_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_precompiled_library_icon
+		end
+
+	new_include_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_include_icon
+		end
+
+	new_object_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_object_icon
+		end
+
+	new_makefile_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_makefile_icon
+		end
+
+	new_resource_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_resource_icon
+		end
+
+	new_pre_compilation_task_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_pre_compilation_task_icon
+		end
+
+	new_post_compilation_task_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.new_post_compilation_task_icon
+		end
+
+	project_settings_edit_library_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_edit_library_icon
+		end
+
+	project_settings_system_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_system_icon
+		end
+
+	project_settings_tasks_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_tasks_icon
+		end
+
+	project_settings_task_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_task_icon
+		end
+
+	project_settings_variables_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_variables_icon
+		end
+
+	project_settings_groups_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_groups_icon
+		end
+
+	project_settings_assertions_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_assertions_icon
+		end
+
+	project_settings_warnings_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_warnings_icon
+		end
+
+	project_settings_externals_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_externals_icon
+		end
+
+	project_settings_debug_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_debug_icon
+		end
+
+	project_settings_type_mappings_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_type_mappings_icon
+		end
+
+	project_settings_advanced_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_advanced_icon
+		end
+
+	project_settings_include_file_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_include_file_icon
+		end
+
+	project_settings_resource_file_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_resource_file_icon
+		end
+
+	project_settings_make_file_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_make_file_icon
+		end
+
+	project_settings_object_file_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.project_settings_object_file_icon
+		end
+
+	tool_properties_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.tool_properties_icon
+		end
+
+	tool_config_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.tool_config_icon
+		end
+
+	top_level_folder_targets_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.top_level_folder_targets_icon
+		end
+
+	top_level_folder_references_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.top_level_folder_references_icon
+		end
+
+	top_level_folder_clusters_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.top_level_folder_clusters_icon
+		end
+
+	top_level_folder_overrides_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.top_level_folder_overrides_icon
+		end
+
+	top_level_folder_library_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.top_level_folder_library_icon
+		end
+
+	top_level_folder_precompiles_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.top_level_folder_precompiles_icon
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -134,6 +134,7 @@
 			<file_rule>
 				<exclude>/Core$</exclude>
 				<exclude>/kernel$</exclude>
+				<exclude>/parser_override$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/com_il_generation$</exclude>
@@ -174,7 +175,7 @@
 			</cluster>
 			<cluster name="interface_switch" location="$|interface\batch_only\"/>
 		</cluster>
-		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\parser_override\"/>
+		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
 		<override name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 	<target name="ecdpc" extends="batch">
@@ -280,6 +281,7 @@
 			<file_rule>
 				<exclude>/kernel$</exclude>
 				<exclude>/Core$</exclude>
+				<exclude>/parser_override$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/windows$</exclude>
@@ -361,7 +363,7 @@
 				<exclude>/ewb_case_storage\.e$</exclude>
 			</file_rule>
 		</cluster>
-		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\parser_override\"/>
+		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
 		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 	<target name="bench_unix" extends="bench">

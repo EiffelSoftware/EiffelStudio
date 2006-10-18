@@ -3382,7 +3382,11 @@ feature {NONE} -- Implementation
 					l_format_context.set_without_tabs
 					l_format_context.process_symbol_text (ti_colon)
 					l_format_context.put_space
-					l_format_context.put_quoted_string_item (l_assembly.physical_assembly.assembly_name)
+					l_phys_as ?= l_assembly.physical_assembly
+					check
+						physical_assembly: l_phys_as /= Void
+					end
+					l_format_context.put_quoted_string_item (l_phys_as.assembly_name)
 					l_format_context.put_new_line
 				end
 

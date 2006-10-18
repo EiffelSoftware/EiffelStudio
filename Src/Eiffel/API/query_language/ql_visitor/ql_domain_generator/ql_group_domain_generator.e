@@ -88,7 +88,7 @@ feature -- Process
 				check
 					assembly: l_assembly /= Void
 				end
-				l_phys_as := l_assembly.physical_assembly
+				l_phys_as ?= l_assembly.physical_assembly
 				if l_phys_as /= Void and then l_phys_as.dependencies /= Void then
 					process_groups_from_list (l_phys_as.dependencies.linear_representation, a_item)
 				end

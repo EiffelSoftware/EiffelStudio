@@ -9,6 +9,8 @@ class
 	EXTERNAL_CLASS_C
 
 inherit
+	CONSUMER_EXPORT
+
 	CLASS_C
 		rename
 			group as assembly
@@ -1495,7 +1497,7 @@ feature {NONE} -- Implementation
 		local
 			l_emitter: IL_EMITTER
 			l_man: CONF_CONSUMER_MANAGER
-			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING_8]
+			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING_8]
 			l_assembly: CONF_PHYSICAL_ASSEMBLY
 			l_path: STRING
 			l_asm: STRING
@@ -1524,7 +1526,10 @@ feature {NONE} -- Implementation
 					-- Note: All system assemblies are required because they are needed by the consumer
 					-- to resolve dependencies.
 				from l_assemblies.start until l_assemblies.after loop
-					l_assembly := l_assemblies.item_for_iteration
+					l_assembly ?= l_assemblies.item_for_iteration
+					check
+						physical_assembly: l_assembly /= Void
+					end
 					if not l_assembly.is_dependency then
 						l_path.append_character (';')
 						l_path.append (l_assembly.consumed_assembly.location)

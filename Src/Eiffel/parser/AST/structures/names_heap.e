@@ -17,7 +17,7 @@ class
 inherit
 	PREDEFINED_NAMES
 
-create {SYSTEM_I, SHARED_NAMES_HEAP}
+create {SYSTEM_EXPORT, SHARED_NAMES_HEAP}
 	make
 
 feature {NONE} -- Initialization

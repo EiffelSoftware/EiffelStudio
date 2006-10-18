@@ -77,8 +77,13 @@
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
+		<library name="configuration_compiler" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration_compiler.ecf" readonly="false"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration_parser.ecf" readonly="false"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
 		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="false"/>
+		<library name="dotnet_loader" location="$EIFFEL_SRC\Eiffel\library\dotnet_loader\dotnet_loader.ecf" readonly="false"/>
+		<library name="eiffel_identifier" location="$EIFFEL_SRC\Eiffel\library\eiffel_identifier\eiffel_identifier.ecf" readonly="false"/>
+		<library name="emitter_loader" location="$EIFFEL_SRC\Eiffel\library\emitter_loader\emitter_loader.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false"/>
 		<library name="framework" location="$EIFFEL_SRC\framework\framework.ecf" readonly="false">
 			<class_option class="ELLIPSIS_PROPERTY">
@@ -94,6 +99,7 @@
 			</option>
 		</library>
 		<library name="gobo_extension" location="$ISE_LIBRARY\library\gobo_extension\gobo_extension.ecf" readonly="false"/>
+		<library name="parser" location="$EIFFEL_SRC\Eiffel\parser\parser.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="false"/>
@@ -114,66 +120,45 @@
 			</condition>
 		</library>
 		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel\beurk\"/>
-		<cluster name="cli_writer_unix" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
+		<cluster name="cli_writer" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
 			<file_rule>
 				<exclude>/md_strong_name.e$</exclude>
 				<exclude>/md_public_key.e$</exclude>
 				<exclude>/system_assembly_list_builder.e$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="cli_writer_windows" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</cluster>
-		<cluster name="compiler_api_unix" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
+		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<file_rule>
-				<exclude>/structured_text$</exclude>
+				<exclude>/Core$</exclude>
+				<exclude>/kernel$</exclude>
 			</file_rule>
-		</cluster>
-		<cluster name="compiler_api_windows" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-			<file_rule>
-				<exclude>/structured_text$</exclude>
-				<exclude>/eb_preference_manager.e$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="compiler_unix" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
 			<file_rule>
 				<exclude>/com_il_generation$</exclude>
-				<exclude>/Clib$</exclude>
-				<exclude>/Core$</exclude>
-				<exclude>/junk$</exclude>
-				<exclude>/kernel$</exclude>
 				<exclude>/windows$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
 			</file_rule>
-		</cluster>
-		<cluster name="compiler_windows" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
 			<file_rule>
 				<exclude>/unix$</exclude>
 				<exclude>/Clib$</exclude>
-				<exclude>/Core$</exclude>
-				<exclude>/junk$</exclude>
-				<exclude>/kernel$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true">
+		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<file_rule>
-				<exclude>/dotnet$</exclude>
+				<exclude>/structured_text$</exclude>
+			</file_rule>
+			<file_rule>
+				<exclude>/eb_preference_manager.e$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
 			</file_rule>
 		</cluster>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\documentation\" recursive="true"/>
@@ -182,17 +167,6 @@
 			<cluster name="interface_shared" location="$|shared\"/>
 			<cluster name="tty" location="$|tty\" recursive="true"/>
 		</cluster>
-		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true">
-			<file_rule>
-				<exclude>/EIFGEN$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="parser" location="$EIFFEL_SRC\Eiffel\parser\" recursive="true">
-			<file_rule>
-				<exclude>/compiler_override$</exclude>
-				<exclude>/error$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
 			<cluster name="communications" location="$|no_communication\">
 				<cluster name="debuging_class" location="$|debug\"/>
@@ -200,6 +174,7 @@
 			</cluster>
 			<cluster name="interface_switch" location="$|interface\batch_only\"/>
 		</cluster>
+		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\parser_override\"/>
 		<override name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 	<target name="ecdpc" extends="batch">
@@ -284,96 +259,64 @@
 				<exclude>/unix$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="cli_writer_unix" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
+		<cluster name="cli_writer" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
 			<file_rule>
 				<exclude>/md_strong_name\.e$</exclude>
 				<exclude>/md_public_key\.e$</exclude>
 				<exclude>/system_assembly_list_builder\.e$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
 			</file_rule>
-		</cluster>
-		<cluster name="cli_writer_windows" location="$EIFFEL_SRC\Eiffel\library\cli_writer\" recursive="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
 			<file_rule>
-				<exclude>/clib$</exclude>
+				<exclude>/Clib$</exclude>
 				<exclude>/spec$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true"/>
-		<cluster name="compiler_unix" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
+		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
+			<file_rule>
+				<exclude>/kernel$</exclude>
+				<exclude>/Core$</exclude>
+			</file_rule>
 			<file_rule>
 				<exclude>/windows$</exclude>
 				<exclude>/com_il_generation$</exclude>
-				<exclude>/Core$</exclude>
-				<exclude>/kernel$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
 			</file_rule>
-		</cluster>
-		<cluster name="compiler_windows" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
 			<file_rule>
 				<exclude>/unix$</exclude>
 				<exclude>/Clib$</exclude>
-				<exclude>/Core$</exclude>
-				<exclude>/junk$</exclude>
-				<exclude>/kernel$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="configuration" location="$EIFFEL_SRC\Eiffel\library\configuration\" recursive="true">
-			<file_rule>
-				<exclude>/dotnet$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true"/>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
 		<cluster name="eac_documentation" location="$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations\"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
-		<cluster name="interface_unix" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
+		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
 			<file_rule>
-				<exclude>/graphical$</exclude>
-				<exclude>/win32$</exclude>
-				<exclude>/mswin$</exclude>
 				<exclude>/tty$</exclude>
-				<exclude>/Not_in_System$</exclude>
 				<exclude>/preferences$</exclude>
-				<exclude>/dotnet$</exclude>
 				<exclude>/ewb_case_storage\.e$</exclude>
 			</file_rule>
-		</cluster>
-		<cluster name="interface_windows" location="$EIFFEL_SRC\Eiffel\interface\" recursive="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
 			<file_rule>
-				<exclude>/graphical$</exclude>
+				<exclude>/mswin$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
+			<file_rule>
 				<exclude>/gtk$</exclude>
-				<exclude>/tty$</exclude>
-				<exclude>/Not_in_System$</exclude>
-				<exclude>/xml_implementation$</exclude>
-				<exclude>/preferences$</exclude>
-				<exclude>/no_dotnet$</exclude>
-				<exclude>/ewb_case_storage.e$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="merger" location="$EIFFEL_SRC\tools\partial_classes_merger\src\" recursive="true">
-			<file_rule>
-				<exclude>/EIFGEN$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="parser" location="$EIFFEL_SRC\Eiffel\parser\" recursive="true">
-			<file_rule>
-				<exclude>/compiler_override$</exclude>
-				<exclude>/error$</exclude>
+				<condition>
+					<platform value="windows"/>
+				</condition>
 			</file_rule>
 		</cluster>
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
@@ -418,6 +361,7 @@
 				<exclude>/ewb_case_storage\.e$</exclude>
 			</file_rule>
 		</cluster>
+		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\parser_override\"/>
 		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 	<target name="bench_unix" extends="bench">

@@ -310,7 +310,7 @@ feature -- Access
 			a_dotnet_name_not_empty: not a_dotnet_name.is_empty
 			target_not_void: target /= Void
 		local
-			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]
+			l_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
 			l_assembly: CONF_PHYSICAL_ASSEMBLY
 		do
 			from
@@ -319,7 +319,10 @@ feature -- Access
 			until
 				l_assembly /= Void or l_assemblies.after
 			loop
-				l_assembly := l_assemblies.item_for_iteration
+				l_assembly ?= l_assemblies.item_for_iteration
+				check
+					physical_assembly: l_assembly /= Void
+				end
 				if not l_assembly.assembly_name.is_case_insensitive_equal (an_assembly) then
 					l_assembly := Void
 				end

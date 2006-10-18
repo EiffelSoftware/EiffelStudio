@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			create l_fn.make_from_string (a_directory)
 			l_fn.set_file_name (a_file)
 
-			create l_loader.make (create {CONF_FACTORY})
+			create l_loader.make (create {CONF_PARSE_FACTORY})
 			l_loader.retrieve_configuration (l_fn)
 			if l_loader.is_error then
 				display_error ("Could not retrieve configuration "+l_fn+"!")

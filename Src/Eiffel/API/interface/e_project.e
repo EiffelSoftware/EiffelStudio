@@ -30,11 +30,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_ENV
-		export
-			{NONE} all
-		end
-
 	COMPILER_EXPORTER
 
 feature -- Initialization
@@ -422,39 +417,6 @@ feature -- Status setting
 			mode.set_item (compiler_mode)
 		ensure
 			set: compiler_mode = batch_mode
-		end
-
-	set_filter_path (f_path: STRING) is
-			-- Set filter_path to `f_path'.
-		require
-			valid_arg: f_path /= Void
-		do
-			if not f_path.is_equal (eiffel_layout.filter_path) then
-				eiffel_layout.filter_path.make_from_string (
-					environ.interpreted_string (f_path).twin)
-			end
-		end
-
-	set_profile_path (p_path: STRING) is
-			-- Set profile_path to `p_path'.
-		require
-			valid_arg: p_path /= Void
-		do
-			if not p_path.is_equal (eiffel_layout.profile_path) then
-				eiffel_layout.profile_path.make_from_string (
-					environ.interpreted_string (p_path).twin)
-			end
-		end
-
-	set_tmp_directory (t_path: STRING) is
-			-- Set tmp_directory to `t_path'.
-		require
-			valid_args: t_path /= Void
-		do
-			if not t_path.is_equal (eiffel_layout.tmp_directory) then
-				eiffel_layout.tmp_directory.wipe_out
-				eiffel_layout.tmp_directory.make_from_string (environ.interpreted_string (t_path))
-			end
 		end
 
 feature -- Update

@@ -295,7 +295,7 @@ feature {COMPILER_EXPORTER} -- Element Change
 			routine_body := a_routine_body
 		end
 
-feature {AST_FEATURE_CHECKER_GENERATOR} -- Setting
+feature {AST_FEATURE_CHECKER_EXPORT} -- Setting
 
 	set_number_of_breakpoint_slots (nr: INTEGER) is
 			-- Set `number_of_breakpoint_slots' to `nr'
@@ -304,7 +304,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Setting
 		ensure
 			number_of_breakpoint_slots_set: number_of_breakpoint_slots = nr
 		end
-		
+
 feature -- default rescue
 
 	create_default_rescue (def_resc_name : STRING) is

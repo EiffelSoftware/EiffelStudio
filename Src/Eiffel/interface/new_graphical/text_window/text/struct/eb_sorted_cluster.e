@@ -54,7 +54,7 @@ feature -- Statusupdate
 			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 			l_class_i: CLASS_I
 			l_lib_target: CONF_TARGET
-			l_ass_dep: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, INTEGER]
+			l_ass_dep: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER]
 			l_libs: LIST [CONF_GROUP]
 			l_cls: HASH_TABLE [CONF_CLUSTER, STRING]
 			l_cls_lst: ARRAYED_LIST [CONF_CLUSTER]
@@ -223,7 +223,7 @@ feature -- Access
 		local
 			l_sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			l_library_target: CONF_TARGET
-			l_assembly_deps: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, INTEGER]
+			l_assembly_deps: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, INTEGER]
 		do
 			Result := (actual_group.classes /= Void and then not actual_group.classes.is_empty)
 			if not Result then

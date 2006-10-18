@@ -90,6 +90,8 @@ inherit
 			{NONE} all
 		end
 
+	CLASS_C_EXPORT
+
 	REFACTORING_HELPER
 		export
 			{NONE} all

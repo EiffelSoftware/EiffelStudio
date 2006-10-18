@@ -10,19 +10,17 @@
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="eiffel_identifier" location="$EIFFEL_SRC\Eiffel\library\eiffel_identifier\eiffel_identifier.ecf"/>
 		<cluster name="parser" location="parser\" recursive="true">
-			<condition>
-				<dotnet value="false"/>
-			</condition>
 			<file_rule>
 				<exclude>/dotnet$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
 			</file_rule>
-		</cluster>
-		<cluster name="parser_dotnet" location="parser\" recursive="true">
-			<condition>
-				<dotnet value="true"/>
-			</condition>
 			<file_rule>
 				<exclude>/classic$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
 			</file_rule>
 		</cluster>
 	</target>

@@ -94,7 +94,7 @@ feature -- Update
 			enable_last_column_use_all_width
 			clear_description
 
-			sections.wipe_out
+			sections.clear_all
 			create expanded_section_store.make (5)
 			if not is_destroyed then
 				hide_horizontal_scroll_bar

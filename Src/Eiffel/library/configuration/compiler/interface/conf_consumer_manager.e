@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			removed_classes := a_removed_classes
 			modified_classes := a_modified_classes
 			create consume_assembly_observer
+			create linear_assemblies.make (0)
 		ensure
 			factory_set: factory = a_factory
 			il_version_set: an_il_version /= Void implies il_version = an_il_version
@@ -130,6 +131,7 @@ feature -- Commands
 				end
 				new_assemblies := a_new_assemblies
 				create assemblies.make (old_assemblies.count)
+				linear_assemblies.wipe_out
 
 					-- go through all the assemblies and update the information if necessary
 				from
@@ -146,12 +148,12 @@ feature -- Commands
 
 					-- build/add dependencies
 				from
-					assemblies.start
+					linear_assemblies.start
 				until
-					assemblies.after
+					linear_assemblies.after
 				loop
-					build_dependencies (assemblies.item_for_iteration)
-					assemblies.forth
+					build_dependencies (linear_assemblies.item)
+					linear_assemblies.forth
 				end
 			end
 			if internal_il_emitter.item /= Void then
@@ -185,6 +187,9 @@ feature {NONE} -- Implementation
 	removed_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of removed classes.
 
+	linear_assemblies: ARRAYED_LIST [CONF_PHYSICAL_ASSEMBLY]
+			-- Linear list of assemblies we have to process.
+
 	factory: CONF_FACTORY
 		-- Factory to create new configuration nodes.
 
@@ -202,6 +207,7 @@ feature {NONE} -- Implementation
 		require
 			a_consumed_ok: a_consumed /= Void
 		local
+			l_as_i: CONF_PHYSICAL_ASSEMBLY_INTERFACE
 			l_guid: STRING
 		do
 				-- see if we already have information about this assembly
@@ -209,9 +215,12 @@ feature {NONE} -- Implementation
 			Result := assemblies.item (l_guid)
 			if Result = Void then
 					-- see if we have information from a previous compilation
-				Result ?= old_assemblies.item (l_guid)
-				check
-					conf_physical_assembly: Result /= Void
+				l_as_i := old_assemblies.item (l_guid)
+				if l_as_i /= Void then
+					Result ?= l_as_i
+					check
+						conf_physical_assembly: Result /= Void
+					end
 				end
 				if Result /= Void then
 					old_assemblies.remove (l_guid)
@@ -227,8 +236,9 @@ feature {NONE} -- Implementation
 					Result := factory.new_physical_assembly (a_consumed, full_cache_path, application_target)
 					rebuild_classes (Result)
 				end
+				assemblies.force (Result, l_guid)
+				linear_assemblies.force (Result)
 			end
-			assemblies.force (Result, l_guid)
 		ensure
 			Result_valid: Result /= Void and then Result.is_valid
 			Result_computed: Result.classes_set
@@ -808,53 +818,46 @@ feature {NONE} -- Contract
 			l_as: CONF_PHYSICAL_ASSEMBLY
 		do
 			Result := True
-			if assemblies /= Void then
-				from
-					assemblies.start
-				until
-					not Result or assemblies.after
-				loop
-					l_as := assemblies.item_for_iteration
-					Result := l_as.is_valid and l_as.classes_set
-					assemblies.forth
-				end
+			if not linear_assemblies.is_empty then
+				Result := assemblies /= Void and then assemblies.count = linear_assemblies.count and then
+					linear_assemblies.for_all (agent (a_assembly: CONF_PHYSICAL_ASSEMBLY): BOOLEAN
+						do
+							Result := a_assembly.is_valid and a_assembly.classes_set and assemblies.has (a_assembly.guid) and then assemblies.found_item = a_assembly
+						end)
+			else
+				Result := assemblies = Void or else assemblies.is_empty
 			end
 		end
 
 	old_assemblies_valid: BOOLEAN is
 			-- Are `old_assemblies' valid?
 		local
-			l_as: CONF_PHYSICAL_ASSEMBLY
+			l_as: CONF_PHYSICAL_ASSEMBLY_INTERFACE
 		do
 			Result := True
-			if assemblies /= Void then
-				from
-					assemblies.start
-				until
-					not Result or assemblies.after
-				loop
-					l_as := assemblies.item_for_iteration
-					Result := l_as.classes_set
-					assemblies.forth
-				end
+			if old_assemblies /= Void then
+				Result := old_assemblies.linear_representation.for_all (agent (a_assembly: CONF_PHYSICAL_ASSEMBLY_INTERFACE): BOOLEAN
+					do
+						Result := a_assembly.classes_set
+					end)
 			end
 		end
 
 	new_assemblies_valid: BOOLEAN is
 			-- Are `new_assemblies' valid?
 		local
-			l_as: CONF_ASSEMBLY
+			l_cursor: DS_HASH_SET_CURSOR [CONF_ASSEMBLY]
 		do
 			Result := True
 			if new_assemblies /= Void then
 				from
-					new_assemblies.start
+					l_cursor := new_assemblies.new_cursor
+					l_cursor.start
 				until
-					not Result or new_assemblies.after
+					not Result or l_cursor.after
 				loop
-					l_as := new_assemblies.item_for_iteration
-					Result := l_as.is_valid
-					new_assemblies.forth
+					Result := l_cursor.item.is_valid
+					l_cursor.forth
 				end
 			end
 		end
@@ -864,6 +867,7 @@ invariant
 	factory_set: factory /= Void
 	il_version_set: il_version /= Void and then not il_version.is_empty
 	metadata_cache_path_set: metadata_cache_path /= Void
+	linear_assemblies_not_void: linear_assemblies /= Void
 	assemblies_valid: assemblies_valid
 	old_assemblies_valid: old_assemblies_valid
 	new_assemblies_valid: new_assemblies_valid

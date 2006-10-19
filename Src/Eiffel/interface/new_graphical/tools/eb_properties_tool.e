@@ -47,6 +47,11 @@ inherit
 			{NONE} all
 		end
 
+	CONF_GUI_INTERFACE_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -57,6 +62,7 @@ feature {NONE} -- Initialization
 		require
 			a_manager_exists: a_manager /= Void
 		do
+			set_pixmaps (pixmaps)
 			tool_make (a_manager)
 			cluster_manager.extend (Current)
 			create {CONF_COMP_FACTORY} conf_factory

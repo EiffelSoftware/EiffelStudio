@@ -202,6 +202,10 @@ feature -- Basic operation
 			if a_refactoring.success then
 				destroy_redo
 			end
+			window_manager.for_all_development_windows (agent (a_window: EB_DEVELOPMENT_WINDOW)
+				do
+					a_window.editor_tool.reload
+				end)
 			window_manager.on_refactoring_end
 			enable_sensitive
 			logger.refactoring_end

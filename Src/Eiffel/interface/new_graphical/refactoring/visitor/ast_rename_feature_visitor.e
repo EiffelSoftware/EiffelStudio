@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 			feature_i := a_feature
 			rout_id_set := feature_i.rout_id_set
 			old_feature_name := a_feature.feature_name.as_lower
-			new_feature_name := a_new_feature_name.as_lower
+			new_feature_name := a_new_feature_name
 			change_comments := a_change_comments
 			change_strings := a_change_strings
 			recursive_descendants := a_recursive_descendants
@@ -107,21 +107,19 @@ feature {NONE} -- Visitor implementation
 		local
 			l_atom: ATOMIC_AS
 		do
-				-- we only have to do this stuff if we are a descendant
+			Precursor (l_as)
+				-- if we are a descendent we have to deal with ids as values.
 			if is_descendant then
 				l_atom := l_as.lower
-				safe_process (l_atom)
 				if l_atom.is_id and then l_atom.string_value.is_case_insensitive_equal (old_feature_name) then
 					l_atom.replace_text (new_feature_name, match_list)
 				end
 				l_atom := l_as.upper
-				safe_process (l_atom)
 				if l_atom /= Void and then l_atom.is_id and then l_atom.string_value.is_case_insensitive_equal (old_feature_name) then
 					l_atom.replace_text (new_feature_name, match_list)
 				end
 			end
 		end
-
 
 	process_parent_as (l_as: PARENT_AS) is
 			-- Process the inherit clause node
@@ -434,7 +432,6 @@ invariant
 	old_feature_name_ok: old_feature_name /= Void and not old_feature_name.is_empty
 	old_feature_name_lower: old_feature_name.as_lower.is_equal (old_feature_name)
 	new_feature_name_ok: new_feature_name /= Void and not new_feature_name.is_empty
-	new_feature_name_lower: new_feature_name.as_lower.is_equal (new_feature_name)
 	recursive_descendants_not_void: recursive_descendants /= Void
 	type_a_generator_not_void: type_a_generator /= Void
 

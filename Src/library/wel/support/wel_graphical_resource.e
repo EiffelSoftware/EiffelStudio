@@ -29,7 +29,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 feature {NONE} -- Initialization
 
 	make_by_file (file_name: STRING_GENERAL) is
@@ -42,11 +42,11 @@ feature {NONE} -- Initialization
 		do
 			create a_wel_string.make (file_name)
 			item := cwin_load_image (
-				a_default_pointer, 
+				a_default_pointer,
 				a_wel_string.item,
-				Image_type, 
-				0, 
-				0, 
+				Image_type,
+				0,
+				0,
 				Lr_loadfromfile
 				)
 			gdi_make
@@ -54,6 +54,8 @@ feature {NONE} -- Initialization
 
 	make_by_icon_info (icon_info: WEL_ICON_INFO) is
 			-- Create an icon from an `icon_info' structure
+		require
+			icon_info_not_void: icon_info /= Void
 		do
 			item := cwin_create_icon_indirect (icon_info.item)
 			gdi_make
@@ -176,7 +178,7 @@ feature {NONE} -- Externals
 		alias
 			"CreateIconIndirect"
 		end
-	
+
 feature {NONE} -- Constants
 
 	Image_type: INTEGER is

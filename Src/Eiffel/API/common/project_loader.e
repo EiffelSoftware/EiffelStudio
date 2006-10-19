@@ -664,7 +664,7 @@ feature {NONE} -- Settings
 		require
 			a_precompile_not_void: a_precompile /= Void
 		local
-			l_mdcp: STRING
+			l_path: STRING
 			l_target: CONF_TARGET
 			l_args: ARRAYED_LIST [STRING]
 		do
@@ -680,18 +680,26 @@ feature {NONE} -- Settings
 				if l_target.setting_msil_use_optimized_precompile then
 					l_args.extend ("-finalize")
 				end
-				l_mdcp := overridden_metadata_cache_path
-				if l_mdcp = Void then
-					l_mdcp := l_target.setting_metadata_cache_path
+				l_path := overridden_metadata_cache_path
+				if l_path = Void then
+					l_path := l_target.setting_metadata_cache_path
 				end
-				if l_mdcp /= Void and then not l_mdcp.is_empty then
+				if l_path /= Void and then not l_path.is_empty then
+						-- remove trailing \ as it makes problem with the escaping of arguments
+					if l_path.item (l_path.count) = '\' then
+						l_path.remove_tail (1)
+					end
 					l_args.extend ("-metadata_cache_path")
-					l_args.extend (l_mdcp)
+					l_args.extend (l_path)
 				end
 			end
 			if a_precompile.eifgens_location /= Void then
 				l_args.extend ("-project_path")
-				l_args.extend (a_precompile.eifgens_location.evaluated_path)
+				l_path := a_precompile.eifgens_location.evaluated_path
+				if l_path.item (l_path.count) = '\' then
+					l_path.remove_tail (1)
+				end
+				l_args.extend (l_path)
 			end
 			launch_precompile_process (l_args)
 		end

@@ -189,6 +189,8 @@ feature {NONE}-- Initialization
 					l_section.show_context_menu
 				end)
 			accelerators.extend (l_accel)
+
+			create hide_actions
 		end
 
 feature -- Status
@@ -224,6 +226,10 @@ feature -- Update
 			split_position_updated: split_position = a_position
 		end
 
+feature -- Events
+
+	hide_actions: EV_NOTIFY_ACTION_SEQUENCE
+
 feature -- Command
 
 	destroy is
@@ -258,6 +264,7 @@ feature {NONE} -- Agents
 			-- Quit without saving.
 		do
 			is_canceled := True
+			hide_actions.call ([])
 			hide
 		end
 
@@ -266,6 +273,7 @@ feature {NONE} -- Agents
 		do
 			conf_system.store
 			conf_system.set_file_date
+			hide_actions.call ([])
 			hide
 		end
 
@@ -1406,6 +1414,7 @@ invariant
 	conf_system: conf_system /= Void
 	ok_button: is_initialized implies ok_button /= Void
 	external_editor_command_ok: is_initialized implies external_editor_command /= Void
+	hide_actions_not_void: is_initialized implies hide_actions /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -99,6 +99,7 @@ feature -- Command
 			l_icon_info: WEL_ICON_INFO
 		do
 			l_icon_info := wel_cursor.get_icon_info
+			check l_icon_info /= Void end
 			wel_cursor.decrement_reference
 			if a_is_x then
 				l_icon_info.set_x_hotspot (a_position)

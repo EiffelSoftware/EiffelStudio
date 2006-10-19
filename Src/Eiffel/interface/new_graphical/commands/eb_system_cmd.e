@@ -119,7 +119,7 @@ feature -- Basic operations
 							configuration_window.set_split_position (preferences.dialog_data.project_settings_split_position)
 
 --							configuration_window.show_modal_to_window (window_manager.last_focused_development_window.window)
-							configuration_window.hide_actions.extend (agent store_layout (configuration_window))
+							configuration_window.hide_actions.extend (agent on_hide_window (configuration_window))
 							configuration_window.show
 						end
 					end
@@ -177,7 +177,7 @@ feature {NONE} -- Actions
 							configuration_window.set_split_position (preferences.dialog_data.project_settings_split_position)
 
 --							configuration_window.show_modal_to_window (window_manager.last_focused_development_window.window)
-							configuration_window.hide_actions.extend (agent store_layout (configuration_window))
+							configuration_window.hide_actions.extend (agent on_hide_window (configuration_window))
 							configuration_window.show
 						end
 					end
@@ -255,8 +255,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	store_layout (a_window: CONFIGURATION_WINDOW) is
-			-- Store layout values of `a_window' into the preferences.
+	on_hide_window (a_window: CONFIGURATION_WINDOW) is
+			-- A configuration window was hidden, store layout values of `a_window' into the preferences, set changed if user pressed ok.
 		require
 			a_window_not_void: a_window /= Void
 		do
@@ -265,8 +265,10 @@ feature {NONE} -- Implementation
 			preferences.dialog_data.project_settings_position_x_preference.set_value (a_window.x_position)
 			preferences.dialog_data.project_settings_position_y_preference.set_value (a_window.y_position)
 			preferences.dialog_data.project_settings_split_position_preference.set_value (a_window.split_position)
+			if not a_window.is_canceled then
+				workbench.set_changed
+			end
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

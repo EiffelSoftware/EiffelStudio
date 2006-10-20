@@ -65,7 +65,7 @@ feature -- Basic operation
 				l_class := topological_mapping.item (l_id)
         		topological.remove
         		topological_mapping.remove (l_id)
-				syntactical_clients.force (l_class.lace_class)
+				syntactical_clients.force (l_class.original_class)
 				recursive_descendants.put (l_class.class_id)
 
 				check_class (l_class)
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 				until
 					l_clients.after
 				loop
-					syntactical_clients.force (l_clients.item.lace_class)
+					syntactical_clients.force (l_clients.item.original_class)
 					l_clients.forth
 				end
 

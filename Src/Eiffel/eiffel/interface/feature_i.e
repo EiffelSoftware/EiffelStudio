@@ -727,6 +727,8 @@ feature -- Incrementality
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark
 				and then assigner_name_id = other.assigner_name_id
+				and then has_property = other.has_property
+				and then (has_property implies property_name.is_equal (other.property_name))
 debug ("ACTIVITY")
 	if not Result then
 			io.error.put_boolean (written_in = other.written_in) io.error.put_new_line;

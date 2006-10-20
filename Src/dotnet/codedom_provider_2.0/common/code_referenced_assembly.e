@@ -84,7 +84,10 @@ feature -- Access
 	cluster_name: STRING is
 			-- Cluster name for assembly
 		do
-			Result := assembly.to_string
+			Result := assembly.get_name.name
+			if not Result.is_empty and then not Result.item (1).is_alpha then
+				Result.prepend ("a_")
+			end
 		ensure
 			non_void_cluster_name: Result /= Void
 		end

@@ -77,7 +77,7 @@ feature -- Comparison
 			Result := other.item = item
 		end
 
-	three_way_comparison (other: DOUBLE_REF): INTEGER is
+	three_way_comparison (other: like Current): INTEGER is
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 		do
@@ -98,7 +98,7 @@ feature -- Element change
 
 feature -- Status report
 
-	divisible (other: DOUBLE_REF): BOOLEAN is
+	divisible (other: like Current): BOOLEAN is
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0.0

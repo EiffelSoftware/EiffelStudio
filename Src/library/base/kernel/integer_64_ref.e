@@ -106,7 +106,7 @@ feature -- Element change
 
 feature -- Status report
 
-	divisible (other: INTEGER_64_REF): BOOLEAN is
+	divisible (other: like Current): BOOLEAN is
 			-- May current object be divided by `other'?
 		do
 			Result := other.item /= 0

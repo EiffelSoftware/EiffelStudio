@@ -44,9 +44,16 @@ feature -- Access
 
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class
+		local
+			t: TYPE_I
 		do
-			Result := true_generics.item (1).il_type_name (a_prefix).twin
+			t := true_generics.item (1)
+			Result := t.il_type_name (a_prefix).twin
 			Result.append ("&")
+			if a_prefix /= Void and then t.is_external then
+				Result.precede ('.')
+				Result.prepend (a_prefix)
+			end
 		end
 
 	generic_il_type_name: STRING is

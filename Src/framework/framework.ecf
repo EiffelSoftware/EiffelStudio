@@ -42,5 +42,6 @@
 		</condition>
 	</cluster>
 	<cluster name="utilities" location=".\utilities\" recursive="true"/>
+	<cluster name="resources" location=".\resources\" recursive="false"/>
 </target>
 </system>

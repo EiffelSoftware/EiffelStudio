@@ -178,10 +178,12 @@ feature -- Output
 						loop
 							a_text_formatter.add_space
 							eiffel_name := creation_feature_list.item.internal_name
-							if l_type /= Void then
+							if l_type = Void then
+								a_text_formatter.add_feature_name (eiffel_name, a_context_class)
+							elseif l_type.has_associated_class then
 								a_text_formatter.add_feature_name (eiffel_name, l_type.associated_class)
 							else
-								a_text_formatter.add_feature_name (eiffel_name, a_context_class)
+								a_text_formatter.process_feature_name_text (eiffel_name, Void)
 							end
 							creation_feature_list.forth
 							if not creation_feature_list.after then

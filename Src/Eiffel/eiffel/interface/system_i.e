@@ -2639,24 +2639,27 @@ feature {NONE} -- IL generation
 								l_name := l_name.as_lower
 							end
 
-							if l_table.has (l_name) then
-									-- This name has already been inserted, we
-									-- record it in `l_conflicts' to report an error later.
-								if l_conflicts.has (l_name) then
-										-- An error has already been processed on this type,
-										-- get list of classes involved to add current `l_class'.
-									l_list := l_conflicts.item (l_name)
+							if not l_types.item.is_external and then not l_types.item.type.is_basic then
+								if l_table.has (l_name) then
+										-- This name has already been inserted, we
+										-- record it in `l_conflicts' to report an error later.
+										-- This need not to be done for external class types.
+									if l_conflicts.has (l_name) then
+											-- An error has already been processed on this type,
+											-- get list of classes involved to add current `l_class'.
+										l_list := l_conflicts.item (l_name)
+									else
+											-- No error on `l_name', we create a new list.
+										create l_list.make (2)
+										l_conflicts.put (l_list, l_name)
+									end
+										-- Add classes involved in error.
+									l_list.force (l_class)
+									l_list.force (l_table.item (l_name))
 								else
-										-- No error on `l_name', we create a new list.
-									create l_list.make (2)
-									l_conflicts.put (l_list, l_name)
+										-- Mark `l_class' as being processed.
+									l_table.put (l_class, l_name)
 								end
-									-- Add classes involved in error.
-								l_list.force (l_class)
-								l_list.force (l_table.item (l_name))
-							else
-									-- Mark `l_class' as being processed.
-								l_table.put (l_class, l_name)
 							end
 						end
 						l_types.forth

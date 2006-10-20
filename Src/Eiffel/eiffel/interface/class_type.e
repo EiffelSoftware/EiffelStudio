@@ -79,7 +79,10 @@ feature {NONE} -- Initialization
 		require
 			good_argument: t /= Void
 			not_anchored: not t.is_anchored
-			not_formal: t.base_class.lace_class /= system.native_array_class implies not t.has_formal
+			not_formal:
+				(t.base_class.lace_class /= system.native_array_class and then
+				t.base_class.lace_class /= system.typed_pointer_class) implies
+				not t.has_formal
 		do
 			type := t.generic_derivation
 			if not t.is_expanded then
@@ -101,6 +104,13 @@ feature {NONE} -- Initialization
 						-- and an implementation get a different `implementation_id'.
 					implementation_id := Static_type_id_counter.next_id
 				end
+					-- Set `external_id'.
+				if type.is_basic and then associated_class.is_external then
+						-- Basic types have a specific ID for external counterparts.
+					external_id := Static_type_id_counter.next_id
+				else
+					external_id := static_type_id
+				end
 			end
 			System.reset_melted_conformance_table
 		end
@@ -118,6 +128,12 @@ feature -- Access
 			-- Same as `static_type_id' but used in IL mode only to
 			-- give a different ID wether we are handling interface
 			-- or implementation of current CLASS_TYPE.
+
+	external_id: INTEGER
+			-- Same as `static_type_id' but used in IL mode only to
+			-- give a different ID wether we are handling external
+			-- variant of current CLASS_TYPE (if any), otherwise
+			-- it defaults to `static_type_id'.
 
 	type: CL_TYPE_I
 			-- Type of the class: it includes meta-instantiation of
@@ -178,7 +194,7 @@ feature -- Access
 			l_class: like associated_class
 		do
 			l_class := associated_class
-			Result := l_class.is_external and (l_class.is_basic implies type.is_basic)
+			Result := l_class.is_external and then not l_class.is_basic
 		end
 
 	is_generated_as_single_type: BOOLEAN is

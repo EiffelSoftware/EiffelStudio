@@ -61,6 +61,16 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
+	external_id: INTEGER is
+			-- External type id of `Current' (or `static_type_id' for pure Eiffel type).
+		require
+			il_generation: System.il_generation
+		do
+			Result := System.system_object_class.compiled_class.types.first.external_id
+		ensure
+			valid_result: Result > 0
+		end
+
 	instantiation_in (other: CLASS_TYPE): TYPE_I is
 			-- Instantiation of Current in context of `other' class type.
 		require
@@ -164,7 +174,7 @@ feature -- Access
 		require
 			in_il_generation: system.il_generation
 		do
-			Result := il_type_name (Void)
+			Result := name
 		ensure
 			il_type_name_not_void: Result /= Void
 			il_type_name_not_empty: not Result.is_empty

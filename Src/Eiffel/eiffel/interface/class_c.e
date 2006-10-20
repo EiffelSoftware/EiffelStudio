@@ -1896,7 +1896,7 @@ end
 			data := actual_type.type_i
 			register_type (data).do_nothing
 			instantiator.dispatch (data.type_a, Current)
-			if data.is_expanded and then not data.is_external then
+			if data.is_expanded and then not data.is_external or else data.is_basic then -- and then not data.is_char then
 					-- Process reference counterpart.
 				data := data.reference_type
 				register_type (data).do_nothing
@@ -1909,7 +1909,10 @@ end
 		require
 			good_argument: data /= Void
 			consistency: data.base_class = Current
-			good_context: data.base_class.lace_class /= system.native_array_class implies not data.has_formal
+			good_context:
+				(data.base_class.lace_class /= system.native_array_class and then
+				data.base_class.lace_class /= system.typed_pointer_class) implies
+				not data.has_formal
 		local
 			new_class_type: CLASS_TYPE
 		do
@@ -2044,7 +2047,9 @@ debug ("GENERICITY")
 	io.error.put_string (filter.base_class.name)
 	io.error.put_new_line
 end
-				filter.base_class.update_types (filter)
+				if filter.has_formal implies filter.base_class.lace_class = system.native_array_class then
+					filter.base_class.update_types (filter)
+				end
 				class_filters.go_to (class_filters_cursor)
 				class_filters.forth
 			end
@@ -2080,7 +2085,11 @@ feature {CLASS_C} -- Incrementality
 				class_filters_cursor := class_filters.cursor
 					-- Instantiation of the filter with `data'
 				filter := class_filters.item.anchor_instantiation_in (new_class_type)
-				if filter.base_class.original_class /= system.native_array_class implies not filter.has_formal then
+				if
+					(filter.base_class.original_class /= system.native_array_class and then
+					filter.base_class.original_class /= system.typed_pointer_class) implies
+					not filter.has_formal
+				then
 debug ("GENERICITY")
 	io.error.put_string ("Propagation of ")
 	filter.trace

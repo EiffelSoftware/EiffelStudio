@@ -14,6 +14,7 @@ inherit
 			c_type,
 			conforms_to_array,
 			created_in,
+			external_id,
 			full_type_byte_code_type_id,
 			generate_cid,
 			generate_cid_array,
@@ -100,8 +101,18 @@ feature -- Access
 			-- Precise generic derivation of current type.
 			-- That is to say given a type, it gives the associated TYPE_I
 			-- which can be used to search its associated CLASS_TYPE.
+		local
+			c: like cr_info
 		do
-			Result := Current
+			c := cr_info
+			if c = Void then
+				Result := Current
+			else
+					-- Remove creation information.
+				cr_info := Void
+				Result := twin
+				cr_info := c
+			end
 		end
 
 	type_a: CL_TYPE_A is
@@ -158,7 +169,6 @@ feature -- Access
 			-- Class name of current type.
 		local
 			l_class_c: like base_class
-			l_is_precompiled: BOOLEAN
 			l_cl_type: like associated_class_type
 			l_alias_name: STRING
 			l_dot_pos: INTEGER
@@ -167,17 +177,15 @@ feature -- Access
 			if is_external then
 				Result := l_class_c.external_class_name.twin
 			else
-				l_is_precompiled := l_class_c.is_precompiled
-				if l_is_precompiled then
+				if l_class_c.is_precompiled then
 						-- Reuse the name that was computed at precompilation time.
 					l_cl_type := associated_class_type
-					l_is_precompiled := l_cl_type.is_precompiled
-					if l_is_precompiled then
+					if l_cl_type.is_precompiled then
 						Result := l_cl_type.il_type_name (a_prefix)
 					end
 				end
-				if not l_is_precompiled then
-					if l_class_c.external_class_name.is_equal (l_class_c.name) then
+				if Result = Void then
+					if not has_no_mark or else is_basic or else l_class_c.external_class_name.is_equal (l_class_c.name) then
 						Result := internal_il_type_name (l_class_c.name.twin, a_prefix)
 					else
 							-- Special case when an external name has been specified.
@@ -278,6 +286,12 @@ feature -- Access
 			ok: True
 		do
 			Result := associated_class_type.static_type_id
+		end
+
+	external_id: INTEGER is
+			-- External type id of `Current' (or `static_type_id' for pure Eiffel type).
+		do
+			Result := associated_class_type.external_id
 		end
 
 	sk_value: INTEGER is
@@ -392,7 +406,7 @@ feature -- Status
 				-- All Eiffel basic types are externals, and only basic types used
 				-- as reference are not external.
 			l_base_class := base_class
-			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
+			Result := l_base_class.is_external and then not l_base_class.is_basic
 		end
 
 	is_frozen: BOOLEAN is

@@ -10,7 +10,7 @@ class
 
 feature -- Basic Operations
 
-	run_test (a_parser: TEST_EIFFEL_PARSER; a_source: STRING; a_source_id: STRING; a_error: NATURAL_8; a_frozen: BOOLEAN): PARSE_TEST_RESULT
+	run_test (a_parser: TEST_EIFFEL_PARSER; a_source: STRING; a_source_id: STRING; a_error: NATURAL_8): PARSE_TEST_RESULT
 			-- Run parser test on source test `a_source', using parser `a_parser', with initialized parser and return a test result.
 			-- `a_error' dictates how many parses to perform. `a_frozen' indicates to test frozen parser also.
 		require
@@ -28,28 +28,17 @@ feature -- Basic Operations
 		do
 			l_then := c_ticks
 			from i := 0 until i = a_error loop
-				a_parser.parse (a_source, False)
+				a_parser.parse (a_source)
 				i := i + 1
 			end
 			l_now := c_ticks
 			l_ticks := ((l_now - l_then) / a_error)
 			create Result.make (a_source_id, l_ticks.max (1), a_parser.successful, a_parser.identity)
-
-			if a_frozen then
-				l_then := c_ticks
-				from i := 0 until i = a_error loop
-					a_parser.parse (a_source, True)
-					i := i + 1
-				end
-				l_now := c_ticks
-				l_ticks := ((l_now - l_then) / a_error)
-				Result.set_frozen_completion_ticks (l_ticks.max (1))
-			end
 		ensure
 			result_attached: Result /= Void
 		end
 
-	run_test_with_file (a_parser: TEST_EIFFEL_PARSER; a_fn: STRING; a_error: NATURAL_8; a_frozen: BOOLEAN): PARSE_TEST_RESULT
+	run_test_with_file (a_parser: TEST_EIFFEL_PARSER; a_fn: STRING; a_error: NATURAL_8): PARSE_TEST_RESULT
 			-- Run parser test on file `a_fn', using parser `a_parser', with initialized parser and return a test result.
 			-- `a_error' dictates how many parses to perform. `a_frozen' indicates to test frozen parser also.
 		require
@@ -66,23 +55,12 @@ feature -- Basic Operations
 		do
 			l_then := c_ticks
 			from i := 0 until i = a_error loop
-				a_parser.parse_file (a_fn, False)
+				a_parser.parse_file (a_fn)
 				i := i + 1
 			end
 			l_now := c_ticks
 			l_ticks := ((l_now - l_then) / a_error)
 			create Result.make (a_fn, l_ticks.max (1), a_parser.successful, a_parser.identity)
-
-			if a_frozen then
-				l_then := c_ticks
-				from i := 0 until i = a_error loop
-					a_parser.parse_file (a_fn, True)
-					i := i + 1
-				end
-				l_now := c_ticks
-				l_ticks := ((l_now - l_then) / a_error)
-				Result.set_frozen_completion_ticks (l_ticks.max (1))
-			end
 		ensure
 			result_attached: Result /= Void
 		end

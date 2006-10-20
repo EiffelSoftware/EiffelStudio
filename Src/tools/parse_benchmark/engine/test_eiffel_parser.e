@@ -13,18 +13,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_id: like identity; a_factory: AST_FACTORY; a_frozen_factory: AST_FACTORY)
+	make (a_id: like identity; a_factory: AST_FACTORY)
 			-- Initializes a test parser with a id `a_id' and a factory `a_factory'.
 			-- `a_frozen_factory' is used in conjunction with frozen parser tests.
 		require
 			a_id_attached: a_id /= Void
 			not_a_id_is_empty: not a_id.is_empty
-			a_factory_attached: a_factory /= Void
-			a_frozen_factory_attached: a_frozen_factory /= Void
 		do
 			identity := a_id
 			create eiffel_parser.make_with_factory (a_factory)
-			create frozen_eiffel_parser.make_with_factory (a_frozen_factory)
 		ensure
 			identity_set: identity = a_id
 		end
@@ -36,9 +33,8 @@ feature -- Access
 
 feature -- Parsing
 
-	parse (a_source: STRING; a_frozen: BOOLEAN)
+	parse (a_source: STRING)
 			-- Parses source `a_source'.
-			-- Frozen parser will be used if `a_frozen'
 		require
 			a_fn_attached: a_source /= Void
 		local
@@ -46,11 +42,7 @@ feature -- Parsing
 			retried: BOOLEAN
 		do
 			if not retried then
-				if a_frozen then
-					l_parser := frozen_eiffel_parser
-				else
-					l_parser := eiffel_parser
-				end
+				l_parser := eiffel_parser
 				l_parser.reset
 				l_parser.parse_from_string (a_source)
 				successful := l_parser.error_count = 0
@@ -62,9 +54,8 @@ feature -- Parsing
 			retry
 		end
 
-	parse_file (a_fn: STRING; a_frozen: BOOLEAN)
+	parse_file (a_fn: STRING)
 			-- Parses file `a_fn'.
-			-- Frozen parser will be used if `a_frozen'
 		require
 			a_fn_attached: a_fn /= Void
 			not_a_fn_is_empty: not a_fn.is_empty
@@ -75,11 +66,7 @@ feature -- Parsing
 			retried: BOOLEAN
 		do
 			if not retried then
-				if a_frozen then
-					l_parser := frozen_eiffel_parser
-				else
-					l_parser := eiffel_parser
-				end
+				l_parser := eiffel_parser
 				l_parser.reset
 				create l_buffer_if.make (a_fn)
 				l_parser.parse (l_buffer_if)
@@ -102,12 +89,7 @@ feature {NONE} -- Implementation
 	eiffel_parser: EIFFEL_PARSER
 			-- Parser used to perform Eiffel parse
 
-	frozen_eiffel_parser: FROZEN_EIFFEL_PARSER
-			-- Frozen parser used to perform Eiffel parsr
-
 invariant
-	eiffel_parser_attached: eiffel_parser /= Void
-	frozen_eiffel_parser_attached: frozen_eiffel_parser /= Void
 	identity_attached: identity /= Void
 	not_identity_is_empty: not identity.is_empty
 

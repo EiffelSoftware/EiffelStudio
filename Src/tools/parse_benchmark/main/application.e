@@ -38,19 +38,19 @@ feature -- Initialization
 
 			create l_parsers.make (4)
 			if a_parser.process_null_factory then
-				create l_parser.make ("null", create {AST_NULL_FACTORY}, create {FROZEN_AST_NULL_FACTORY})
+				create l_parser.make ("null", create {AST_NULL_FACTORY})
 				l_parsers.extend (l_parser)
 			end
 			if a_parser.process_basic_factory then
-				create l_parser.make ("basic", create {AST_FACTORY}, create {FROZEN_AST_FACTORY})
+				create l_parser.make ("basic", create {AST_FACTORY})
 				l_parsers.extend (l_parser)
 			end
 			if a_parser.process_lite_factory then
-				create l_parser.make ("lite", create {AST_ROUNDTRIP_LIGHT_FACTORY}, create {FROZEN_AST_ROUNDTRIP_LIGHT_FACTORY})
+				create l_parser.make ("lite", create {AST_ROUNDTRIP_LIGHT_FACTORY})
 				l_parsers.extend (l_parser)
 			end
 			if a_parser.process_roundtrip_factory then
-				create l_parser.make ("roundtrip", create {AST_ROUNDTRIP_FACTORY}, create {FROZEN_AST_ROUNDTRIP_FACTORY})
+				create l_parser.make ("roundtrip", create {AST_ROUNDTRIP_FACTORY})
 				l_parsers.extend (l_parser)
 			end
 
@@ -73,10 +73,7 @@ feature -- Initialization
 					l_writer.put_string ("  <parser>: <speed in ticks> : <frozen speed in ticks> (<parse successful>)%N%N")
 
 					l_writer.put_string ("Tesing parameters: using ")
-					if not a_parser.test_frozen then
-						l_writer.put_string ("non-")
-					end
-					l_writer.put_string ("frozen parser, ")
+					l_writer.put_string ("parser, ")
 					l_writer.put_string ("parsing ")
 					if a_parser.test_disk_access then
 						l_writer.put_string ("disk access and")
@@ -84,7 +81,7 @@ feature -- Initialization
 					l_writer.put_string ("content.%N%N")
 
 					l_writer.put_string ("Beginning speed bench marks...%N%N")
-					test_parsers (l_parsers, l_files, l_error, a_parser.test_disk_access, a_parser.test_frozen, l_writer)
+					test_parsers (l_parsers, l_files, l_error, a_parser.test_disk_access, l_writer)
 				else
 					l_writer.put_string ("No files selected!")
 					l_writer.new_line
@@ -97,7 +94,7 @@ feature -- Initialization
 
 feature {NONE} -- Testing
 
-	test_parsers (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fns: LIST [STRING]; a_error: NATURAL_8; a_disk: BOOLEAN; a_frozen: BOOLEAN; a_writer: IO_MEDIUM)
+	test_parsers (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fns: LIST [STRING]; a_error: NATURAL_8; a_disk: BOOLEAN; a_writer: IO_MEDIUM)
 			-- Tests all parsers in `a_parsers' with file `a_fn'
 		require
 			a_parsers_attached: a_parsers /= Void
@@ -131,10 +128,10 @@ feature {NONE} -- Testing
 					-- Run pretest. This is for .NET systems to ensure that the information is cached.
 					-- This pretest has to be run for every test to ensure all code executed prior to the
 					-- actual test has been jitted.
-				l_results := test_parsers_with_file (a_parsers, a_fns.item, 1, a_disk, a_frozen)
+				l_results := test_parsers_with_file (a_parsers, a_fns.item, 1, a_disk)
 
-				l_results := test_parsers_with_file (a_parsers, a_fns.item, a_error, a_disk, a_frozen)
-				write_test_results (a_writer, l_results, a_frozen)
+				l_results := test_parsers_with_file (a_parsers, a_fns.item, a_error, a_disk)
+				write_test_results (a_writer, l_results)
 				if not a_fns.islast then
 					a_writer.new_line
 				end
@@ -145,9 +142,6 @@ feature {NONE} -- Testing
 						l_result := l_results.item
 						l_id := l_result.parser_id
 						l_times.force (l_times[l_id] + l_result.completion_ticks, l_id)
-						if a_frozen then
-							l_ftimes.force (l_ftimes[l_id] + l_result.frozen_completion_ticks, l_id)
-						end
 						if l_result.successful then
 							l_successes.force (l_successes[l_id] + 1, l_id)
 						else
@@ -171,27 +165,21 @@ feature {NONE} -- Testing
 					l_result := l_results.item
 					l_id := l_result.parser_id
 					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_1", l_times[l_id], l_result.successful, l_result.parser_id))
-					if a_frozen then
-						l_results.item.set_frozen_completion_ticks (l_ftimes[l_id])
-					end
 					l_results.forth
 				end
 				a_writer.new_line
 				a_writer.put_string ("Total time taken")
-				write_results (a_writer, l_results, a_frozen, False)
+				write_results (a_writer, l_results, False)
 
 					-- Mean result times
 				from l_results.start until l_results.after loop
 					l_result := l_results.item
 					l_results.put (create {PARSE_TEST_RESULT}.make ("summary_2", (l_result.completion_ticks / a_fns.count), l_result.successful, l_result.parser_id))
-					if a_frozen then
-						l_results.item.set_frozen_completion_ticks ((l_result.frozen_completion_ticks / a_fns.count.to_natural_64))
-					end
 					l_results.forth
 				end
 				a_writer.new_line
 				a_writer.put_string ("Mean time")
-				write_results (a_writer, l_results, a_frozen, False)
+				write_results (a_writer, l_results, False)
 
 					-- Successes/Failures
 				from l_results.start until l_results.after loop
@@ -203,11 +191,11 @@ feature {NONE} -- Testing
 				end
 				a_writer.new_line
 				a_writer.put_string ("Successes/Failures")
-				write_results (a_writer, l_results, True, False)
+				write_results (a_writer, l_results, True)
 			end
 		end
 
-	test_parsers_with_file (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fn: STRING; a_error: NATURAL_8; a_disk: BOOLEAN; a_frozen: BOOLEAN): ARRAYED_LIST [PARSE_TEST_RESULT]
+	test_parsers_with_file (a_parsers: LIST [TEST_EIFFEL_PARSER]; a_fn: STRING; a_error: NATURAL_8; a_disk: BOOLEAN): ARRAYED_LIST [PARSE_TEST_RESULT]
 			-- Tests all parsers in `a_parsers' with file `a_fn'. `a_error' dictates the number of parses to perform for error-accurace
 			-- and `a_frozen' indicates if the frozen parser should be tested.
 		require
@@ -226,9 +214,9 @@ feature {NONE} -- Testing
 			l_cursor := a_parsers.cursor
 			from a_parsers.start until a_parsers.after loop
 				if a_disk then
-					l_results.extend (l_tester.run_test_with_file (a_parsers.item, a_fn, a_error, a_frozen))
+					l_results.extend (l_tester.run_test_with_file (a_parsers.item, a_fn, a_error))
 				else
-					l_results.extend (l_tester.run_test (a_parsers.item, file_content (a_fn), a_fn, a_error, a_frozen))
+					l_results.extend (l_tester.run_test (a_parsers.item, file_content (a_fn), a_fn, a_error))
 				end
 				a_parsers.forth
 			end
@@ -242,7 +230,7 @@ feature {NONE} -- Testing
 
 feature {NONE} -- Reporting
 
-	write_test_results (a_writer: IO_MEDIUM; a_results: LIST [PARSE_TEST_RESULT]; a_frozen: BOOLEAN)
+	write_test_results (a_writer: IO_MEDIUM; a_results: LIST [PARSE_TEST_RESULT])
 			-- Writes test results in `a_results' to `a_writer'
 		require
 			a_writer_attached: a_writer /= Void
@@ -253,10 +241,10 @@ feature {NONE} -- Reporting
 			a_writer.put_string (once "Test: ")
 			a_writer.put_string (a_results.first.file_name)
 
-			write_results (a_writer, a_results, a_frozen, True)
+			write_results (a_writer, a_results, True)
 		end
 
-	write_results (a_writer: IO_MEDIUM; a_results: LIST [PARSE_TEST_RESULT]; a_frozen: BOOLEAN; a_show_success: BOOLEAN)
+	write_results (a_writer: IO_MEDIUM; a_results: LIST [PARSE_TEST_RESULT]; a_show_success: BOOLEAN)
 			-- Writes test results in `a_results' to `a_writer'
 		require
 			a_writer_attached: a_writer /= Void
@@ -282,10 +270,6 @@ feature {NONE} -- Reporting
 				end
 				a_writer.put_string (once ": ")
 				a_writer.put_real (l_result.completion_ticks)
-				if a_frozen then
-					a_writer.put_string (" : ")
-					a_writer.put_real (l_result.frozen_completion_ticks)
-				end
 				if a_show_success then
 					a_writer.put_string (once " (")
 					a_writer.put_boolean (l_result.successful)

@@ -42,7 +42,6 @@ feature {NONE} -- Access
 			Result.extend (create {ARGUMENT_INTEGER_SWITCH}.make_with_range (error_switch, "Number of times the same file should be parsed to remove fuzzyness%N(default is 5.)", True, False, "count", "Number of parses to perform to retrieve mean parsed time.", False, 1, {NATURAL_8}.max_value))
 				-- Parser does not work using file names.
 			--Result.extend (create {ARGUMENT_SWITCH}.make (disk_access_switch, "Includes parser file loading times.", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (frozen_switch, "Indicates to include frozen parser tests.", True, False))
 		end
 
 feature -- Status Report
@@ -75,12 +74,6 @@ feature -- Status Report
 			-- Indicates if all AST_FACTORYs should be tested.
 		once
 			Result := has_option (all_switch)
-		end
-
-	test_frozen: BOOLEAN
-			-- Indicates if frozen parser should be tested
-		once
-			Result := has_option (frozen_switch)
 		end
 
 	test_disk_access: BOOLEAN
@@ -154,7 +147,6 @@ feature {NONE} -- Switch names
 			-- Location switches
 
 	error_switch: STRING = "e"
-	frozen_switch: STRING = "f"
 	disk_access_switch: STRING = "da";
 			-- Test related switches
 

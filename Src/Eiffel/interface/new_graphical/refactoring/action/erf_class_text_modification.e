@@ -397,7 +397,7 @@ feature {NONE} -- Implementation
 		do
 				-- only when necessary
 			if ast = Void then
-				l_compiled := class_i.compiled_representation
+				l_compiled := class_i.compiled_class
 				if is_parsing and then l_compiled = Void then
 					recompute_ast
 				else

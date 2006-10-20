@@ -15,22 +15,22 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	CODE_SHARED_TYPE_REFERENCE_FACTORY
 		export
 			{NONE} all
 		end
-	
+
 	CODE_STOCK_TYPE_REFERENCES
 		export
 			{NONE} all
 		end
-	
+
 	CODE_CONFIGURATION
 		export
 			{NONE} all
 		end
-	
+
 	CODE_DIRECTIONS
 		export
 			{NONE} all
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 				else
 					l_methods := a_caller_type.get_methods_binding_flags ({BINDING_FLAGS}.instance | {BINDING_FLAGS}.static | {BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public)
 				end
-				
+
 				from
 					l_static_equal_dynamique := False
 				until
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 								l_wrong_method := not are_conform (l_parameters.item (j).parameter_type, a_arguments_types.item (j))
 								j := j + 1
 							end
-							
+
 							if not l_wrong_method then
 								-- add method to list of possible methods : methods.item (i)
 								if Result = Void then
@@ -317,18 +317,18 @@ feature {NONE} -- Implementation
 			if not Result then
 				create l_static_name.make_from_cil (a_static_type.full_name)
 				create l_dynamic_name.make_from_cil (a_dynamic_type.full_name)
-				Result := 
+				Result :=
 							(l_dynamic_name.is_equal ("System.Byte") and then (l_static_name.is_equal ("System.Int16") or
 																			l_static_name.is_equal ("System.Int32") or
 																			l_static_name.is_equal ("System.Int64") or
 																			l_static_name.is_equal ("System.Real") or
 																			l_static_name.is_equal ("System.Double")))
-							or										
+							or
 							(l_dynamic_name.is_equal ("System.Real") and then l_static_name.is_equal ("System.Double"))
 
 			end
 		end
-	
+
 	check_eac_for_type (a_type: SYSTEM_TYPE) is
 			-- Check that assembly containing `a_type' is in EAC.
 			-- Consume it if it's not.
@@ -336,16 +336,19 @@ feature {NONE} -- Implementation
 			non_void_type: a_type /= Void
 		local
 			l_path: STRING
+			l_ca: CONSUMED_ASSEMBLY
 			l_stale, l_in_cache: BOOLEAN
 		do
 			l_path := a_type.assembly.location
 			l_in_cache := cache_reflection.is_assembly_in_cache (l_path, True)
 			if l_in_cache then
-				l_stale := cache_reflection.is_assembly_stale (l_path)
+					-- Also check if assembly is only partially consumed.
+				l_ca := cache_reflection.consumed_assembly_from_path (l_path)
+				l_stale := l_ca.has_info_only or cache_reflection.is_assembly_stale (l_path)
 			end
 			if not l_in_cache or l_stale then
-				Event_manager.raise_event ({CODE_EVENTS_IDS}.Consuming_assembly, [l_path, l_in_cache, l_stale])				
-				cache_writer.add_assembly (l_path)
+				Event_manager.raise_event ({CODE_EVENTS_IDS}.Consuming_assembly, [l_path, l_in_cache, l_stale])
+				cache_writer.add_assembly (l_path, False)
 			end
 		ensure
 			is_in_eac: cache_reflection.is_type_in_cache (a_type)
@@ -388,7 +391,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (10)
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -940,6 +940,7 @@ feature -- Generation Structure
 			else
 				l_type_name := class_type.full_il_type_name
 			end
+			l_type_name := escape_type_name (l_type_name)
 			if class_type.is_precompiled then
 				l_type_name.append (", ")
 				l_type_name.append (class_type.assembly_info.full_name)
@@ -961,7 +962,7 @@ feature -- Generation Structure
 			l_type_name: STRING
 		do
 			create l_assert_ca.make
-			l_type_name := class_type.full_il_type_name
+			l_type_name := escape_type_name (class_type.full_il_type_name)
 			if class_type.is_precompiled then
 				l_type_name.append (", ")
 				l_type_name.append (class_type.assembly_info.full_name)
@@ -1288,12 +1289,17 @@ feature -- Class info
 							l_ext_class ?= l_cl_type.base_class
 						end
 					end
-					l_class_name := l_class_type.full_il_type_name
+					if l_class_type.type.is_basic and then l_class_type.type.meta_generic = Void then
+							-- Use built-in type.
+						l_class_name := l_class_type.associated_class.external_class_name.twin
+					else
+						l_class_name := escape_type_name (l_class_type.full_il_type_name)
+					end
 					if l_ext_class = Void then
-							-- Case of an Eiffel class (including basic type)
+							-- Case of an Eiffel class
 						if
 							l_class_type.is_precompiled and then
-							not l_class_type.is_external
+							not l_class_type.associated_class.is_external
 						then
 							check
 								has_assembly_info: l_class_type.assembly_info /= Void
@@ -1353,6 +1359,7 @@ feature -- Class info
 			start_new_body (l_meth_token)
 			put_system_string (l_class_name)
 			generate_return (True)
+			store_locals (l_meth_token)
 			method_writer.write_current_body
 
 			if
@@ -1442,10 +1449,11 @@ feature -- Class info
 					generate_return (True)
 				else
 					generate_current
-					generate_load_from_address (class_type.type)
+					generate_load_from_address_as_object (class_type.type)
 					generate_metamorphose (class_type.type)
 					generate_return (True)
 				end
+				store_locals (l_meth_token)
 				method_writer.write_current_body
 
 					-- Define `____copy'
@@ -1465,7 +1473,11 @@ feature -- Class info
 				if class_type.is_expanded then
 					l_feature := class_type.associated_class.feature_of_rout_id (copy_rout_id)
 					l_type := argument_actual_type (l_feature.arguments.first.type_i)
-					if l_type.is_expanded then
+					if l_type.is_basic then
+							-- Unbox a value object.
+						generate_load_address (l_type)
+						generate_load_from_address_as_basic (l_type)
+					elseif l_type.is_expanded then
 							-- Unbox a value object.
 						generate_unmetamorphose (l_type)
 					end
@@ -1475,6 +1487,7 @@ feature -- Class info
 					internal_generate_feature_access (any_type_id, copy_feat_id, 1, False, True)
 				end
 				generate_return (False)
+				store_locals (l_meth_token)
 				method_writer.write_current_body
 
 					-- Define `____is_equal'
@@ -1494,7 +1507,11 @@ feature -- Class info
 				if class_type.is_expanded then
 					l_feature := class_type.associated_class.feature_of_rout_id (is_equal_rout_id)
 					l_type := argument_actual_type (l_feature.arguments.first.type_i)
-					if l_type.is_expanded then
+					if l_type.is_basic then
+							-- Unbox a value object.
+						generate_load_address (l_type)
+						generate_load_from_address_as_basic (l_type)
+					elseif l_type.is_expanded then
 							-- Unbox a value object.
 						generate_unmetamorphose (l_type)
 					end
@@ -1504,6 +1521,7 @@ feature -- Class info
 					internal_generate_feature_access (any_type_id, is_equal_feat_id, 1, True, True)
 				end
 				generate_return (True)
+				store_locals (l_meth_token)
 				method_writer.write_current_body
 			end
 		end
@@ -1640,7 +1658,12 @@ feature {NONE} -- SYSTEM_OBJECT features
 				arg_type := argument_actual_type (feature_i.arguments.first.type_i)
 				if arg_type.is_expanded then
 						-- Load value of the value object to the stack.
-					generate_unmetamorphose (arg_type)
+					if arg_type.is_basic then
+						generate_load_address (type_i)
+						generate_load_from_address_as_basic (type_i)
+					else
+						generate_unmetamorphose (arg_type)
+					end
 				end
 				generate_feature_access (type_i, feature_i.feature_id, 1, True, True)
 
@@ -1892,7 +1915,7 @@ feature -- Features info
 				agent generate_local_feature_description,
 				agent generate_inherited_feature_description,
 				type_feature_processor,
-				False)
+				agent generate_feature (?, False, True, False))
 		end
 
 	generate_local_feature_description (local_feature: FEATURE_I; inherited_feature: FEATURE_I; class_type: CLASS_TYPE; is_replicated: BOOLEAN) is
@@ -3070,7 +3093,7 @@ feature -- IL Generation
 			local_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE, BOOLEAN]];
 			inherited_feature_processor: PROCEDURE [ANY, TUPLE [FEATURE_I, FEATURE_I, CLASS_TYPE]];
 			type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]]
-			generate_inline_agents: BOOLEAN)
+			inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
 		is
 			-- Generate IL code for feature in `class_c'.
 		require
@@ -3078,6 +3101,7 @@ feature -- IL Generation
 			class_type_not_void: class_type /= Void
 			local_feature_processor_not_void: local_feature_processor /= Void
 			inherited_feature_processor_not_void: inherited_feature_processor /= Void
+			inline_agent_processor_attached: inline_agent_processor /= Void
 			not_external_class_type: not class_type.is_external
 		deferred
 		end
@@ -3436,7 +3460,11 @@ feature -- IL Generation
 			if type_i.is_expanded then
 					-- Stack contains a pointer to value type object.
 					-- Load a value of the object.
-				generate_load_from_address (type_i)
+				if type_i.is_basic then
+					generate_load_from_address_as_basic (type_i)
+				else
+					generate_load_from_address (type_i)
+				end
 					-- Now it has to be converted to a ... (see below)
 				if result_type_in (feat, current_class_type).is_expanded then
 						-- ... unboxed value.
@@ -3484,6 +3512,10 @@ feature -- IL Generation
 		do
 			method_body := method_writer.new_method_body (method_token)
 			result_position := -1
+			check
+				local_count = 0
+				local_types.count = 0
+			end
 		ensure
 			method_body_set: method_body /= Void
 		end
@@ -3597,6 +3629,7 @@ feature -- IL Generation
 				implementation_generate_feature (inh_feat, False, False, False, True, False, parent_type)
 				l_return_type := result_type_in (inh_feat, parent_type)
 
+				byte_context.clear_feature_data
 				l_token := last_non_recorded_feature_token
 				start_new_body (l_token)
 				generate_current
@@ -3612,7 +3645,10 @@ feature -- IL Generation
 						generate_argument (i)
 						if l_cur_sig.item (i) /= l_inh_sig.item (i) then
 							l_type_i := argument_actual_type (l_args.item.type_i)
-							if l_type_i.is_expanded then
+							if l_type_i.is_basic then
+								generate_load_address (l_type_i)
+								generate_load_from_address_as_basic (l_type_i)
+							elseif l_type_i.is_expanded then
 								generate_unmetamorphose (l_type_i)
 							elseif is_verifiable then
 								method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
@@ -3642,7 +3678,9 @@ feature -- IL Generation
 				if cur_feat.has_return_value then
 					if l_cur_sig.item (0) /= l_inh_sig.item (0) then
 						l_type_i := result_type (cur_feat)
-						if l_type_i.is_expanded then
+						if l_type_i.is_basic then
+							generate_eiffel_metamorphose (l_type_i)
+						elseif l_type_i.is_expanded then
 							generate_metamorphose (l_type_i)
 						elseif is_verifiable then
 							method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
@@ -3651,6 +3689,7 @@ feature -- IL Generation
 					end
 				end
 				generate_return (cur_feat.has_return_value)
+				store_locals (l_token)
 				method_writer.write_current_body
 
 				md_emit.define_method_impl (current_class_token, l_token,
@@ -4068,6 +4107,7 @@ feature -- Local saving
 				{MD_TOKEN_TYPES}.Md_method_def
 		do
 			current_module.store_locals (local_types, a_meth_token)
+			local_count := 0
 		end
 
 	generate_local_debug_info (a_method_token: INTEGER) is
@@ -4227,13 +4267,20 @@ feature -- Variables access
 		local
 			type_i: TYPE_I
 		do
+			type_i := current_class_type.type
 			generate_current
-			if current_class_type.is_expanded then
+			if type_i.is_expanded then
 					-- Box expanded object.
-				type_i := current_class_type.type
-				generate_load_from_address (type_i)
+				generate_load_from_address_as_object (type_i)
 				generate_metamorphose (type_i)
 			end
+		end
+
+	generate_current_as_basic is
+			-- Load `Current' as a basic value.
+		do
+			generate_current
+			generate_load_from_address_as_basic (current_class_type.type)
 		end
 
 	generate_result is
@@ -4445,6 +4492,55 @@ feature -- Variables access
 				actual_class_type_token (type_i.implementation_id))
 		end
 
+	generate_external_metamorphose (type_i: TYPE_I) is
+			-- Generate `metamorphose', ie boxing an expanded type `type_i'
+			-- using an associated external type (if any).
+		do
+				-- See comment in `generate_metamorphose'.
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Box,
+				actual_class_type_token (type_i.external_id))
+		end
+
+	generate_eiffel_metamorphose (a_type: TYPE_I) is
+			-- Generate a metamorphose of `a_type' into a _REF type.
+		local
+			l_local_number: INTEGER
+			l_cl_type: BASIC_I
+			l_feat: FEATURE_I
+			l_is_basic: BOOLEAN
+		do
+				-- FIXME: We only half support metamorphose of basic types
+				-- through the `set_item' routine.
+
+			l_cl_type ?= a_type
+			l_is_basic := l_cl_type.is_basic and not l_cl_type.is_bit
+
+			if l_is_basic then
+					-- Assign value to a temporary local variable.
+				byte_context.add_local (a_type)
+				l_local_number := byte_context.local_list.count
+				put_dummy_local_info (a_type, l_local_number)
+				generate_local_assignment (l_local_number)
+			else
+				pop
+			end
+
+				-- Create reference class
+			generate_creation (l_cl_type)
+--			(create {CREATE_TYPE}.make (l_cl_type)).generate_il
+
+			if l_is_basic then
+					-- Call `set_item' from the _REF class
+				generate_metamorphose (l_cl_type)
+				duplicate_top
+				generate_load_address (l_cl_type)
+				generate_local (l_local_number)
+
+				l_feat := l_cl_type.base_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
+				generate_feature_access (l_cl_type,
+					l_feat.feature_id, l_feat.argument_count, l_feat.has_return_value, False)
+			end
+		end
 
 	generate_unmetamorphose (type_i: TYPE_I) is
 			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
@@ -4452,6 +4548,46 @@ feature -- Variables access
 		do
 			generate_load_address (type_i)
 			generate_load_from_address (type_i)
+		end
+
+	generate_external_unmetamorphose (type_i: CL_TYPE_I) is
+			-- Generate `unmetamorphose', ie unboxing an external reference to a basic type of `type_i'.
+			-- Load content of address resulting from unbox operation.
+		do
+			generate_load_address_as_external (type_i)
+			generate_load_from_address (type_i)
+		end
+
+	generate_creation (cl_type_i: CL_TYPE_I) is
+			-- Generate IL code for a hardcoded creation type `cl_type_i'.
+		local
+			gen_type_i: GEN_TYPE_I
+			local_index: INTEGER
+		do
+			if cl_type_i.is_expanded and then cl_type_i.is_external then
+					-- Load a default value of a local variable.
+				byte_context.add_local (cl_type_i)
+				local_index := byte_context.local_list.count
+				put_dummy_local_info (cl_type_i, local_index)
+				generate_local (local_index)
+			else
+					-- Create object using default constructor.
+				create_object (cl_type_i.implementation_id)
+			end
+			gen_type_i ?= cl_type_i
+			if gen_type_i /= Void then
+				if cl_type_i.is_expanded then
+						-- Box expanded object.
+					generate_metamorphose (cl_type_i)
+				end
+				duplicate_top
+				gen_type_i.generate_gen_type_il (Current, True)
+				assign_computed_type
+				if cl_type_i.is_expanded then
+						-- Load value of a value type object.
+					generate_unmetamorphose (cl_type_i)
+				end
+			end
 		end
 
 feature -- Addresses
@@ -4558,6 +4694,14 @@ feature -- Addresses
 				actual_class_type_token (type_i.implementation_id))
 		end
 
+	generate_load_address_as_external (type_i: CL_TYPE_I) is
+			-- Generate code that takes address of a boxed value object of type `type_i'.
+		do
+				-- See comment on `generate_metamorphose' on why we chose `implementation_id'.
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Unbox,
+				actual_class_type_token (type_i.external_id))
+		end
+
 	generate_load_from_address (a_type: TYPE_I) is
 			-- Load value of `a_type' type from address pushed on stack.
 		do
@@ -4596,6 +4740,43 @@ feature -- Addresses
 			end
 		end
 
+	generate_load_from_address_as_object (a_type: TYPE_I) is
+			-- Load value of non-built-in `a_type' type from address pushed on stack.
+		do
+				-- See comment on `generate_metamorphose' to see why we
+				-- use `implementation_id'.
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldobj,
+				actual_class_type_token (a_type.implementation_id))
+		end
+
+	generate_load_from_address_as_basic (a_type: TYPE_I) is
+			-- Load value of a basic type `a_type' from address of an Eiffel object pushed on stack.
+		local
+			l_cl_type: CL_TYPE_I
+			l_table: FEATURE_TABLE
+			l_feat: FEATURE_I
+		do
+			l_cl_type ?= a_type
+			l_table := l_cl_type.base_class.feature_table
+				-- Try to get an attribute by name.
+			l_feat := l_table.item_id ({PREDEFINED_NAMES}.item_name_id)
+			if l_feat = Void or else not l_feat.is_attribute then
+					-- Find attribute explicitly.
+				from
+					l_table.start
+				until
+					l_table.after or else l_table.item_for_iteration.is_attribute
+				loop
+					l_table.forth
+				end
+				l_feat := l_table.item_for_iteration
+			end
+			check
+				l_feat_attached: l_feat /= Void -- This is ensured by {CLASS_B}.check_validity
+			end
+			generate_attribute (True, l_cl_type, l_feat.feature_id)
+		end
+
 feature -- Assignments
 
 	generate_is_true_instance_of (type_i: TYPE_I) is
@@ -4629,6 +4810,12 @@ feature -- Assignments
 				l_token := mapped_class_type_token (type_i.static_type_id)
 			end
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Isinst, l_token)
+		end
+
+	generate_is_instance_of_external (type_i: CL_TYPE_I) is
+			-- Generate `Isinst' byte code instruction for external variant of the type `type_i'.
+		do
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Isinst, mapped_class_type_token (type_i.external_id))
 		end
 
 	generate_check_cast (source_type, target_type: TYPE_I) is
@@ -5621,9 +5808,15 @@ feature -- Assertions
 				method_body.put_opcode ({MD_OPCODES}.ldc_i4_0);
 				method_body.put_opcode ({MD_OPCODES}.ceq)
 			else
-				generate_current_as_reference
-				internal_generate_external_call (current_module.mscorlib_token, 0, System_object_class_name,
-					"GetType", Normal_type, <<>>, System_type_class_name, False)
+				if current_class_type.is_expanded then
+						-- Type is known at compile time.
+					put_type_instance (current_class_type.type)
+				else
+						-- Type is evaluated at run time.
+					generate_current
+					internal_generate_external_call (current_module.mscorlib_token, 0, System_object_class_name,
+						"GetType", Normal_type, <<>>, System_type_class_name, False)
+				end
 				put_integer_32_constant (level)
 				internal_generate_external_call (current_module.ise_runtime_token, 0,
 					runtime_class_name, "is_assertion_checked", Static_type,
@@ -5740,6 +5933,7 @@ feature -- Assertions
 						-- Generate code for inherited invariants only.
 					start_new_body (l_dotnet_invariant_token)
 					generate_invariant_body (Void)
+					store_locals (l_dotnet_invariant_token)
 					method_writer.write_current_body
 				else
 						-- Generate code for immediate and inherited invariants.
@@ -5772,6 +5966,7 @@ feature -- Assertions
 
 					start_new_body (l_invariant_token)
 					generate_invariant_body (Void)
+					store_locals (l_invariant_token)
 					method_writer.write_current_body
 				end
 
@@ -6342,7 +6537,7 @@ feature -- Basic feature
 			local_number: INTEGER
 		do
 				-- Generate `out' representation in IL format
-			generate_metamorphose (type)
+			generate_external_metamorphose (type)
 			generate_to_string
 
 				-- Store value
@@ -6568,16 +6763,19 @@ feature -- Generic conformance
 	generate_class_type_instance (cl_type: CL_TYPE_I) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
 		local
-			l_type_id: INTEGER
+			l_rt_type_id: INTEGER
+			l_cl_type_id: INTEGER
 		do
 			if cl_type.is_basic then
-				l_type_id := basic_type_id
+				l_rt_type_id := basic_type_id
+				l_cl_type_id := cl_type.external_id
 			else
-				l_type_id := class_type_id
+				l_rt_type_id := class_type_id
+				l_cl_type_id := cl_type.implementation_id
 			end
-			create_object (l_type_id)
+			create_object (l_rt_type_id)
 			duplicate_top
-			put_type_token (cl_type.implementation_id)
+			put_type_token (l_cl_type_id)
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				class_type_class_name,
 				"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
@@ -7134,6 +7332,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					if l_class_type /= Void then
 						Result.put (l_class_type, l_class_type.static_type_id)
 						Result.put (l_class_type, l_class_type.implementation_id)
+						Result.put (l_class_type, l_class_type.external_id)
 					end
 					i := i + 1
 				end
@@ -7411,6 +7610,33 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			inserted: signatures_table.item (a_type_id).item (a_feature_id).is_equal (a_signature)
 		end
 
+feature {NONE} -- Implementation: name mangling
+
+	escape_type_name (n: STRING): STRING is
+			-- Escape type name `n' so that it can be used as a custom attribute value for Type argument.
+		require
+			n_attached: n /= Void
+			n_not_empty: not n.is_empty
+		local
+			i: INTEGER
+		do
+			Result := n
+			i := Result.count
+			if Result.item (i) = '&' then
+				from
+				until
+					i = 0 or else not (once "&[]").has (Result.item (i))
+				loop
+						-- Escape the character.
+					Result.insert_character ('\', i)
+					i := i - 1
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+			result_not_empty: not Result.is_empty
+		end
+
 feature {NONE} -- Implementation
 
 	buffer: GENERATION_BUFFER is
@@ -7441,25 +7667,23 @@ feature {NONE} -- Implementation
 
 feature -- Inline agents
 
-	generate_il_inline_agents (eif_cl: EIFFEL_CLASS_C; class_type: CLASS_TYPE)
+	generate_il_inline_agents (eif_cl: EIFFEL_CLASS_C; inline_agent_processor: PROCEDURE [CIL_CODE_GENERATOR, TUPLE [FEATURE_I]])
 		is
 			-- Generate IL code for inline agents in `eif_cl'
 		require
 			eif_cl_not_void: eif_cl /= Void
-			class_type /= Void
+			inline_agent_processor_attached: inline_agent_processor /= Void
 		local
-			feat: FEATURE_I
 			inl_tbl: HASH_TABLE [FEATURE_I, INTEGER]
 		do
+				-- Generate
 			from
 				inl_tbl := eif_cl.inline_agent_table
 				inl_tbl.start
 			until
 				inl_tbl.after
 			loop
-				feat := inl_tbl.item_for_iteration
-				generate_feature (feat, False, True, False)
-				generate_feature_code (feat, True)
+				inline_agent_processor.call ([inl_tbl.item_for_iteration])
 				inl_tbl.forth
 			end
 		end

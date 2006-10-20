@@ -291,7 +291,7 @@ feature -- Generation
 			label_done: IL_LABEL
 		do
 			if source_type.is_expanded then
-				if not source_type.is_external then
+				if not source_type.is_basic and then not source_type.is_external then
 						-- Generate code to copy object at compile time
 					if target_type.is_expanded then
 							-- Box object before calling run-time feature
@@ -321,11 +321,19 @@ feature -- Generation
 					label_done := il_generator.create_label
 					il_generator.branch_to (label_done)
 					il_generator.mark_label (label)
-					il_generator.generate_unmetamorphose (target_type)
+					if target_type.is_basic then
+						il_generator.generate_load_address (target_type)
+						il_generator.generate_load_from_address_as_basic (target_type)
+					else
+						il_generator.generate_unmetamorphose (target_type)
+					end
 					il_generator.mark_label (label_done)
 				else
 					il_generator.mark_label (label)
 				end
+			elseif target_type.is_basic then
+				il_generator.generate_load_address (target_type)
+				il_generator.generate_load_from_address_as_basic (target_type)
 			elseif target_type.is_expanded then
 				il_generator.generate_unmetamorphose (target_type)
 			end
@@ -627,9 +635,11 @@ feature {NONE} -- Implementation
 						feature_id := skeleton.item.feature_id
 						il_generator.generate_current
 						il_generator.generate_argument (1)
-						il_generator.generate_metamorphose (cl_type_i)
-						il_generator.generate_load_address (cl_type_i)
-						il_generator.generate_attribute (True, cl_type_i, feature_id)
+						if not cl_type_i.is_basic then
+							il_generator.generate_metamorphose (cl_type_i)
+							il_generator.generate_load_address (cl_type_i)
+							il_generator.generate_attribute (True, cl_type_i, feature_id)
+						end
 						il_generator.generate_attribute_assignment (True, cl_type_i, feature_id)
 						skeleton.forth
 					end
@@ -682,7 +692,7 @@ feature {NONE} -- Visitors
 			if l_is_nested_call then
 				l_type_i := context.real_type (a_node.type)
 				if l_type_i.is_true_expanded and then not l_type_i.type_a.associated_class.is_enum then
-					generate_il_metamorphose (a_node,l_type_i, l_type_i, True)
+					generate_il_metamorphose (l_type_i, l_type_i, True)
 				end
 			end
 		end
@@ -864,7 +874,7 @@ feature {NONE} -- Visitors
 
 				if a_node.is_first and a_node.need_target then
 						-- Accessing attribute written in current analyzed class.
-					if l_need_address and not context.associated_class.is_single then
+					if l_need_address and not context.current_type.is_generated_as_single_type then
 							-- We need current target which will be used later on in
 							-- NESTED_B.generate_il to assign back the new value of the attribute.
 						il_generator.generate_current
@@ -872,7 +882,7 @@ feature {NONE} -- Visitors
 					il_generator.generate_current
 				elseif l_cl_type.is_basic then
 						-- A metamorphose is required to perform call.
-					generate_il_metamorphose (a_node, l_cl_type, l_target_type, need_real_metamorphose (a_node, l_cl_type))
+					generate_il_metamorphose (l_cl_type, l_target_type, need_real_metamorphose (a_node, l_cl_type))
 				end
 
 					-- Let's try to prepare call to `XXX.attribute.copy' in
@@ -1233,18 +1243,9 @@ feature {NONE} -- Visitors
 					l_nested.set_target (a_node)
 					l_nested.set_message (a_node.call)
 					a_node.call.set_parent (l_nested)
-					l_ext_call ?= a_node.call
-					if l_ext_call /= Void then
-						is_in_creation_call := True
-						l_ext_call.process (Current)
-						is_in_creation_call := False
-					else
-							-- External class with a standard Eiffel feature can
-							-- only be a NATIVE_ARRAY.
-						is_in_creation_call := True
-						a_node.call.process (Current)
-						is_in_creation_call := False
-					end
+					is_in_creation_call := True
+					a_node.call.process (Current)
+					is_in_creation_call := False
 					a_node.call.set_parent (Void)
 				else
 						-- We called `default_create' on an external class.
@@ -1302,14 +1303,17 @@ feature {NONE} -- Visitors
 			end
 
 			is_this_argument_current := True
-			il_generator.generate_current
-
-			if l_is_object_load_required then
-				is_object_load_required := False
-				l_type_i := context.real_type (a_node.type)
-				if l_type_i.is_expanded then
-					is_this_argument_current := False
-					il_generator.generate_load_from_address (l_type_i)
+			l_type_i := context.real_type (a_node.type)
+			if l_is_object_load_required and then l_type_i.is_basic then
+				il_generator.generate_current_as_basic
+			else
+				il_generator.generate_current
+				if l_is_object_load_required then
+					is_object_load_required := False
+					if l_type_i.is_expanded then
+						is_this_argument_current := False
+						il_generator.generate_load_from_address (l_type_i)
+					end
 				end
 			end
 		end
@@ -1356,6 +1360,7 @@ feature {NONE} -- Visitors
 			l_cl_type: CL_TYPE_I
 			l_il_ext: IL_EXTENSION_I
 			l_return_type: TYPE_I
+			l_count: INTEGER
 			l_real_metamorphose: BOOLEAN
 			l_real_target: ACCESS_B
 			l_is_in_creation: like is_in_creation_call
@@ -1390,18 +1395,11 @@ feature {NONE} -- Visitors
 					l_real_metamorphose := need_real_metamorphose (a_node, l_cl_type)
 				end
 
-				if a_node.is_first and then need_current (l_il_ext.type) then
-						-- First call in dot expression, we need to generate Current
-						-- only when we do not call a static feature.
-					if l_cl_type.is_reference then
-							-- Normal call, we simply push current object.
+				if a_node.is_first then
+					if need_current (l_il_ext.type) then
+							-- First call in dot expression, we need to generate Current
+							-- only when we do not call a static feature.
 						il_generator.generate_current
-					else
-						if l_real_metamorphose then
-								-- Feature is written in an inherited class of current
-								-- expanded class. We need to box.
-							il_generator.generate_metamorphose (l_cl_type)
-						end
 					end
 				elseif l_cl_type.is_expanded then
 					if l_il_ext.type = operator_type then
@@ -1427,13 +1425,14 @@ feature {NONE} -- Visitors
 							end
 						elseif a_node.written_in /= l_cl_type.class_id then
 								-- A call to parent routine.
-							generate_il_metamorphose (a_node, l_cl_type, Void, l_real_metamorphose)
+							generate_il_metamorphose (l_cl_type, Void, l_real_metamorphose)
 						end
 					end
 				end
 
 				if a_node.parameters /= Void then
 						-- Generate parameters if any.
+					l_count := a_node.parameters.count
 					a_node.parameters.process (Current)
 				end
 
@@ -1445,6 +1444,11 @@ feature {NONE} -- Visitors
 						l_il_ext.generate_call (False)
 					elseif l_is_in_external_creation_call then
 						l_il_ext.generate_external_creation_call (l_cl_type)
+					elseif l_cl_type.is_expanded and then not l_cl_type.is_external and then not l_is_in_creation then
+							-- The feature is generated in the current class.
+						il_generator.generate_feature_access
+							(l_cl_type, l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id,
+							l_count, not context.real_type (a_node.type).is_void, False)
 					else
 							-- Standard call to an external feature.
 						if not l_cl_type.is_enum or else l_il_ext.type /= field_type then
@@ -1464,7 +1468,7 @@ feature {NONE} -- Visitors
 			if l_is_nested_call then
 				l_return_type := context.real_type (a_node.type)
 				if l_return_type.is_true_expanded and then not l_return_type.type_a.associated_class.is_enum then
-					generate_il_metamorphose (a_node, l_return_type, l_return_type, True)
+					generate_il_metamorphose (l_return_type, l_return_type, True)
 				end
 			end
 		end
@@ -1483,6 +1487,7 @@ feature {NONE} -- Visitors
 			l_need_generation: BOOLEAN
 			l_target_type: CL_TYPE_I
 			l_count: INTEGER
+			l_arg_type: CL_TYPE_I
 			l_is_call_on_any: BOOLEAN
 			l_is_nested_call: like is_nested_call
 			l_is_in_creation: like is_in_creation_call
@@ -1503,6 +1508,11 @@ feature {NONE} -- Visitors
 				-- or on an enum type. This happens only when we are calling
 				-- magically added feature on basic types.
 			if il_special_routines.has (a_node, l_cl_type) then
+				if a_node.is_first then
+						-- Because the code is generated for a basic type,
+						-- the value has to be loaded.
+					il_generator.generate_current_as_basic
+				end
 				il_special_routines.generate_il (Current, a_node, l_cl_type, a_node.parameters)
 			else
 				l_is_call_on_any := a_node.is_any_feature and a_node.precursor_type = Void
@@ -1542,7 +1552,7 @@ feature {NONE} -- Visitors
 					il_generator.generate_current
 				elseif l_cl_type.is_basic then
 						-- A metamorphose is required to perform call.
-					generate_il_metamorphose (a_node, l_cl_type, l_target_type, l_real_metamorphose)
+					generate_il_metamorphose (l_cl_type, l_target_type, True)
 				end
 
 				if l_invariant_checked then
@@ -1551,11 +1561,19 @@ feature {NONE} -- Visitors
 
 					-- Box value type if the call is made to the predefined feature from ANY
 					-- This has to be done before calculating feature arguments
-				if l_is_call_on_any and then l_cl_type.is_true_expanded then
-					if not l_cl_type.is_enum then
-						il_generator.generate_load_from_address (l_cl_type)
+				if l_is_call_on_any then
+					if l_cl_type.is_true_expanded then
+						if not l_cl_type.is_enum then
+							il_generator.generate_load_from_address (l_cl_type)
+						end
+						il_generator.generate_metamorphose (l_cl_type)
+					elseif l_cl_type.is_basic and then a_node.is_first then
+						il_generator.generate_load_from_address_as_object (l_cl_type)
+						il_generator.generate_metamorphose (l_cl_type)
 					end
-					il_generator.generate_metamorphose (l_cl_type)
+				elseif not a_node.is_first and then l_cl_type.is_basic then
+						-- Address of a value is required.
+					il_generator.generate_load_address (l_cl_type)
 				end
 
 				if l_class_c.is_special then
@@ -1597,10 +1615,12 @@ feature {NONE} -- Visitors
 						until
 							a_node.parameters.after
 						loop
-							a_node.parameters.item.process (Current)
-							if context.real_type (a_node.parameters.item.attachment_type).is_expanded then
-								il_generator.generate_metamorphose (
-									context.real_type (a_node.parameters.item.attachment_type))
+							l_arg_type ?= context.real_type (a_node.parameters.item.attachment_type)
+							if l_arg_type /= Void and then l_arg_type.is_expanded then
+								generate_expression_il_for_type (a_node.parameters.item,
+									l_arg_type.reference_type)
+							else
+								a_node.parameters.item.process (Current)
 							end
 							a_node.parameters.forth
 						end
@@ -1663,7 +1683,7 @@ feature {NONE} -- Visitors
 				l_return_type := context.real_type (a_node.type)
 				if l_return_type.is_true_expanded and then not l_return_type.type_a.associated_class.is_enum then
 						-- Pointer to value type is required.
-					generate_il_metamorphose (a_node, l_return_type, l_return_type, True)
+					generate_il_metamorphose (l_return_type, l_return_type, True)
 				end
 			end
 		end
@@ -1693,7 +1713,7 @@ feature {NONE} -- Visitors
 				if a_node.is_boxing or else not l_expr_type.is_basic then
 					il_generator.generate_metamorphose (l_expr_type)
 				else
-					generate_il_eiffel_metamorphose (a_node, l_expr_type)
+					generate_il_eiffel_metamorphose (l_expr_type)
 				end
 			end
 		end
@@ -2083,7 +2103,7 @@ feature {NONE} -- Visitors
 				l_attr ?= a_node.target
 				if l_attr /= Void then
 					l_need_attribute_to_be_assigned_back := need_access_address (l_attr, True) and then
-						l_attr.is_first and then not context.associated_class.is_single
+						l_attr.is_first and then not context.current_type.is_generated_as_single_type
 					if l_need_attribute_to_be_assigned_back then
 						il_generator.duplicate_top
 					end
@@ -2203,6 +2223,7 @@ feature {NONE} -- Visitors
 			l_source_class_type: CL_TYPE_I
 			l_target_class_type: CL_TYPE_I
 			success_label, failure_label: IL_LABEL
+			basic_failure_label: IL_LABEL
 		do
 			generate_il_line_info (a_node, True)
 			process_pragma (a_node)
@@ -2253,24 +2274,49 @@ feature {NONE} -- Visitors
 				end
 			else
 				if l_source_type.is_expanded then
-					generate_il_metamorphose (a_node.source, l_source_type, l_target_type, False)
+					generate_il_metamorphose (l_source_type, l_target_type, True)
 				end
+
+				if l_target_type.is_expanded then
+						-- Conditional branch is used to avoid reattachment
+						-- if the types do not conform.
+					il_generator.duplicate_top
+				end
+
 					-- Generate Test on type
 				il_generator.generate_is_instance_of (l_target_type)
 
 				if l_target_type.is_expanded then
-					il_generator.duplicate_top
 
+					failure_label := il_generator.create_label
 					success_label := il_generator.create_label
 					il_generator.branch_on_true (success_label)
 
 						-- Assignment attempt failed.
+
+					l_target_class_type ?= l_target_type
+					if l_target_class_type /= Void and then l_target_class_type.is_basic and then l_target_class_type.meta_generic = Void then
+							-- Check native .NET type.
+							-- Generate Test on type
+						il_generator.generate_is_instance_of_external (l_target_class_type)
+						il_generator.duplicate_top
+						basic_failure_label := il_generator.create_label
+						il_generator.branch_on_false (basic_failure_label)
+							-- Generate reattachment.
+						il_generator.generate_external_unmetamorphose (l_target_class_type)
+							-- Generate assignment header depending of the type
+							-- of the target (local, attribute or result).
+						generate_il_assignment (a_node.target, l_source_type)
+							-- Terminate reattachment.
+						il_generator.branch_to (failure_label)
+						il_generator.mark_label (basic_failure_label)
+					end
+
 						-- Remove duplicate obtained from call to `isinst'.
 					il_generator.pop
 						-- Avoid reattachment altogether.
 					generate_il_cancel_assignment (a_node.target)
 
-					failure_label := il_generator.create_label
 					il_generator.branch_to (failure_label)
 
 					il_generator.mark_label (success_label)
@@ -2367,7 +2413,7 @@ feature {NONE} -- Visitors
 				l_actual_type ?= context.real_type (a_node.source.type)
 
 				if l_actual_type /= Void and then l_actual_type.is_expanded then
-					generate_il_metamorphose (a_node.source, l_actual_type, Void, True)
+					il_generator.generate_external_metamorphose (l_actual_type)
 				end
 
 				il_generator.put_integer_32_constant (a_node.position)
@@ -2387,7 +2433,12 @@ feature {NONE} -- Visitors
 				il_generator.generate_feature_access (l_decl_type, l_item_feat.origin_feature_id, l_item_feat.argument_count, l_item_feat.has_return_value, True)
 
 				if a_node.tuple_element_type.is_expanded then
-					il_generator.generate_unmetamorphose (a_node.tuple_element_type)
+					l_actual_type ?= a_node.tuple_element_type
+					if l_actual_type /= Void then
+						il_generator.generate_external_unmetamorphose (l_actual_type)
+					else
+						il_generator.generate_unmetamorphose (a_node.tuple_element_type)
+					end
 				end
 			end
 		end
@@ -2441,7 +2492,7 @@ feature {NONE} -- Visitors
  				l_expr.process (Current)
  				if l_actual_type /= Void and then l_actual_type.is_expanded then
  						-- We generate a metamorphosed version of type.
- 					generate_il_metamorphose (l_expr, l_actual_type, Void, True)
+ 					il_generator.generate_external_metamorphose (l_actual_type)
  				end
 
  				il_generator.put_integer_32_constant (i)
@@ -2580,75 +2631,39 @@ feature {NONE} -- Implementation
 			target_type_not_void: a_target_type /= Void
 		local
 			l_expression_type: TYPE_I
+			l_cl_type: CL_TYPE_I
 		do
 			is_object_load_required := True
 			a_node.process (Current)
 			is_object_load_required := False
 			l_expression_type := context.real_type (a_node.type)
 			if a_target_type.is_reference and then l_expression_type.is_expanded then
-				if l_expression_type.is_basic and then not a_target_type.is_external then
+				l_cl_type ?= l_expression_type
+				if not l_expression_type.is_basic then
+						-- Simply box the object.
+					il_generator.generate_metamorphose (l_expression_type)
+				elseif not a_target_type.is_external or else l_cl_type.meta_generic /= Void then
 						-- Basic type is attached to Eiffel reference type,
 						-- so basic type has to be represented by Eiffel type
 						-- rather than by built-in IL type.
-					generate_il_eiffel_metamorphose (a_node, l_expression_type)
+					generate_il_eiffel_metamorphose (l_expression_type)
 				else
-						-- Simply box the object.
-					il_generator.generate_metamorphose (l_expression_type)
+					il_generator.generate_external_metamorphose (l_expression_type)
 				end
 			end
 		end
 
-	generate_il_eiffel_metamorphose (a_node: EXPR_B; a_type: TYPE_I) is
+	generate_il_eiffel_metamorphose (a_type: TYPE_I) is
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
 			is_valid: is_valid
-			a_node_not_void: a_node /= Void
 			a_type_not_void: a_type /= Void
 			a_type_is_basic: a_type.is_basic
-		local
-			l_local_number: INTEGER
-			l_cl_type: BASIC_I
-			l_feat: FEATURE_I
-			l_ref_class: CLASS_C
-			l_decl_type: CL_TYPE_I
-			l_is_basic: BOOLEAN
 		do
-				-- FIXME: We only half support metamorphose of basic types
-				-- through the `set_item' routine.
-
-			l_cl_type ?= a_type
-			l_is_basic := l_cl_type.is_basic and not l_cl_type.is_bit
-
-			if l_is_basic then
-					-- Assign value to a temporary local variable.
-				context.add_local (a_type)
-				l_local_number := context.local_list.count
-				il_generator.put_dummy_local_info (a_type, l_local_number)
-				il_generator.generate_local_assignment (l_local_number)
-			else
-				il_generator.pop
-			end
-
-				-- Create reference class
-			(create {CREATE_TYPE}.make (l_cl_type.reference_type)).generate_il
-
-			if l_is_basic then
-				il_generator.duplicate_top
-
-					-- Call `set_item' from the _REF class
-				l_ref_class := l_cl_type.reference_type.base_class
-				l_feat := l_ref_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
-
-				l_decl_type := il_generator.implemented_type (l_feat.origin_class_id,
-					l_cl_type.reference_type)
-
-				il_generator.generate_local (l_local_number)
-				il_generator.generate_feature_access (l_decl_type,
-					l_feat.origin_feature_id, l_feat.argument_count, l_feat.has_return_value, False)
-			end
+			il_generator.generate_eiffel_metamorphose (a_type)
 		end
 
-	generate_il_metamorphose (a_node: EXPR_B; a_type, a_target_type: TYPE_I; a_real_metamorphose: BOOLEAN) is
+	generate_il_metamorphose (a_type, a_target_type: TYPE_I; a_real_metamorphose: BOOLEAN) is
 			-- Generate a metamorphose of target object.
 			-- If `a_real_metamorphose' is set to True, target is an
 			-- expanded type and feature is defined in a non-expanded class.
@@ -2656,34 +2671,29 @@ feature {NONE} -- Implementation
 			-- class we simply need to load address of target.
 		require
 			is_valid: is_valid
-			a_node_not_void: a_node /= Void
 		local
 			l_local_number: INTEGER
 		do
-			if a_target_type = Void then
-				if a_real_metamorphose then
-					il_generator.generate_metamorphose (a_type)
-				else
-					context.add_local (a_type)
-					l_local_number := context.local_list.count
-					il_generator.put_dummy_local_info (a_type, l_local_number)
-					il_generator.generate_local_assignment (l_local_number)
-					il_generator.generate_local_address (l_local_number)
+			if a_target_type /= Void and then a_type.is_basic and then not a_target_type.is_external then
+					-- Box object.
+				generate_il_eiffel_metamorphose (a_type)
+				if not a_real_metamorphose then
+						-- Get address of an object.
+					il_generator.generate_load_address (a_type)
 				end
+			elseif
+				a_target_type = Void and then not a_real_metamorphose or else
+				a_target_type /= Void and then a_type.is_expanded and a_type.same_as (a_target_type)
+			then
+					-- Take object address.
+				context.add_local (a_type)
+				l_local_number := context.local_list.count
+				il_generator.put_dummy_local_info (a_type, l_local_number)
+				il_generator.generate_local_assignment (l_local_number)
+				il_generator.generate_local_address (l_local_number)
 			else
-				if a_type.is_basic and then not a_target_type.is_external then
-					generate_il_eiffel_metamorphose (a_node, a_type)
-				else
-					if a_type.is_expanded and a_type.same_as (a_target_type) then
-						context.add_local (a_type)
-						l_local_number := context.local_list.count
-						il_generator.put_dummy_local_info (a_type, l_local_number)
-						il_generator.generate_local_assignment (l_local_number)
-						il_generator.generate_local_address (l_local_number)
-					else
-						il_generator.generate_metamorphose (a_type)
-					end
-				end
+					-- Box object.
+				il_generator.generate_metamorphose (a_type)
 			end
 		end
 
@@ -3322,7 +3332,8 @@ feature {NONE} -- Implementation: Feature calls
 			a_type_not_void: a_type /= Void
 			a_type_has_associated_class: a_type.base_class /= Void
 		do
-			Result := a_node.written_in /= a_type.base_class.class_id
+			Result := system.class_of_id (a_node.written_in).is_external and then
+				a_node.written_in /= a_type.base_class.class_id
 		end
 
 	generate_il_c_call (a_node: EXTERNAL_B; inv_checked: BOOLEAN) is
@@ -3383,7 +3394,7 @@ feature {NONE} -- Implementation: Feature calls
 				end
 			elseif l_cl_type.is_expanded then
 					-- A metamorphose is required to perform call.
-				generate_il_metamorphose (a_node, l_cl_type, Void, l_real_metamorphose)
+				generate_il_metamorphose (l_cl_type, Void, l_real_metamorphose)
 			end
 
 			if l_invariant_checked then
@@ -3409,6 +3420,10 @@ feature {NONE} -- Implementation: Feature calls
 				il_generator.generate_feature_access (
 					il_generator.implemented_type (a_node.written_in, l_cl_type),
 					a_node.feature_id, l_count, not l_return_type.is_void, False)
+			elseif l_cl_type.is_expanded then
+				il_generator.generate_feature_access (l_cl_type,
+					l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id,
+					l_count, not l_return_type.is_void, False)
 			else
 				il_generator.generate_feature_access (
 					il_generator.implemented_type (a_node.written_in, l_cl_type),
@@ -4043,7 +4058,10 @@ feature {NONE} -- Implementation: Feature calls
 			l_extension.generate_call (False)
 
 				-- Unbox result if required
-			if a_result_type.is_expanded then
+			if a_result_type.is_basic then
+				il_generator.generate_load_address (a_result_type)
+				il_generator.generate_load_from_address_as_basic (a_result_type)
+			elseif a_result_type.is_expanded then
 				il_generator.generate_unmetamorphose (a_result_type)
 			end
 

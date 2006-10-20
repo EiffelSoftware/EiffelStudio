@@ -987,7 +987,7 @@ feature -- Metadata description
 		require
 			is_generated: is_generated
 			class_type_not_void: class_type /= Void
-			not_external_class_type: class_type.is_external
+			external_class_type: class_type.is_external or else class_type.type.is_basic
 		local
 			class_c: CLASS_C
 			l_native_array: NATIVE_ARRAY_CLASS_TYPE
@@ -1007,18 +1007,18 @@ feature -- Metadata description
 				create l_sig.make
 				set_signature_type (l_sig, class_type.type)
 				l_type_token := md_emit.define_type_spec (l_sig)
-				name := class_type.full_il_type_name
-				class_mapping.put (l_type_token, class_type.static_type_id)
+				name := class_type.associated_class.external_class_name.twin
+				class_mapping.put (l_type_token, class_type.external_id)
 				il_code_generator.external_class_mapping.put (class_type.type, name)
 				internal_external_token_mapping.put (l_type_token, name)
 			else
-				name := class_type.full_il_type_name
+				name := class_type.associated_class.external_class_name.twin
 				l_external_class ?= class_c
 				if l_external_class /= Void and then l_external_class.is_nested then
 					l_nested_parent_class := l_external_class.enclosing_class
 					create l_uni_string.make (l_nested_parent_class.types.first.full_il_type_name)
 					l_nested_parent_class_token := md_emit.define_type_ref (l_uni_string,
-						assembly_token (l_nested_parent_class.types.first))
+						external_assembly_token (l_nested_parent_class.types.first))
 					l_uni_string.set_string (name.substring (
 						name.index_of ('+', 1) + 1, name.count))
 					l_type_token := md_emit.define_type_ref (l_uni_string,
@@ -1026,9 +1026,9 @@ feature -- Metadata description
 				else
 					create l_uni_string.make (name)
 					l_type_token := md_emit.define_type_ref (l_uni_string,
-						assembly_token (class_type))
+						external_assembly_token (class_type))
 				end
-				class_mapping.put (l_type_token, class_type.static_type_id)
+				class_mapping.put (l_type_token, class_type.external_id)
 
 				il_code_generator.external_class_mapping.put (class_type.type, name)
 				internal_external_token_mapping.put (l_type_token, name)
@@ -1188,7 +1188,6 @@ feature -- Metadata description
 			l_parent_class: CLASS_C
 			l_single_inheritance_parent_id: like single_inheritance_parent_id
 			l_has_an_eiffel_parent: BOOLEAN
-			reference_type_a: CL_TYPE_A
 			interface_class_type: CLASS_TYPE
 		do
 			parents := class_c.parents
@@ -1255,12 +1254,10 @@ feature -- Metadata description
 							-- the associated interface.
 						if class_type.is_expanded then
 								-- For expanded types we use interface of the reference counterpart.
-							reference_type_a := class_type.type.type_a
-							reference_type_a.set_reference_mark
 							check
-								has_reference_class_type: class_c.types.has_type (reference_type_a.type_i)
+								has_reference_class_type: class_c.types.has_type (class_type.type.reference_type)
 							end
-							interface_class_type := class_c.types.search_item (reference_type_a.type_i)
+							interface_class_type := class_c.types.search_item (class_type.type.reference_type)
 						else
 								-- For reference types the corresponding interface is used.
 							interface_class_type := class_type
@@ -1293,12 +1290,10 @@ feature -- Metadata description
 				else
 					if class_type.is_expanded then
 							-- For expanded types we use interface of the reference counterpart.
-						reference_type_a := class_type.type.type_a
-						reference_type_a.set_reference_mark
 						check
-							has_reference_class_type: class_c.types.has_type (reference_type_a.type_i)
+							has_reference_class_type: class_c.types.has_type (class_type.type.reference_type)
 						end
-						interface_class_type := class_c.types.search_item (reference_type_a.type_i)
+						interface_class_type := class_c.types.search_item (class_type.type.reference_type)
 						l_parents.force (actual_class_type_token (interface_class_type.static_type_id), i)
 						i := i + 1
 					elseif not for_interface then
@@ -1825,8 +1820,13 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					generate_external_class_mapping (l_class_type)
 				elseif a_type_id = l_class_type.static_type_id then
 					generate_interface_class_mapping (l_class_type)
-				else
+				elseif a_type_id = l_class_type.implementation_id then
 					generate_implementation_class_mapping (l_class_type)
+				else
+					check
+						a_type_id = l_class_type.external_id
+					end
+					generate_external_class_mapping (l_class_type)
 				end
 				Result := l_class_mapping.item (a_type_id)
 			end
@@ -1887,7 +1887,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						l_ass_info.set_revision_number (l_revision.to_natural_16)
 					end
 
-					if a_key /= Void then
+					if a_key /= Void and then not a_key.is_equal ("null") then
 						create l_key_token.make_from_string (a_key)
 					end
 
@@ -2375,8 +2375,23 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			Result := internal_assemblies.item (a_class_type.implementation_id)
 			if Result = 0 then
 					-- Assembly token has not yet been computed.
-				find_and_insert_assembly_token (a_class_type)
+				find_and_insert_assembly_token (a_class_type, False)
 				Result := internal_assemblies.item (a_class_type.implementation_id)
+			end
+		end
+
+	external_assembly_token (a_class_type: CLASS_TYPE): INTEGER is
+			-- Given `a_class_type' find its associated assembly token
+			-- using an external type counterpart (if any).
+		require
+			is_generated: is_generated
+			a_class_type_not_void: a_class_type /= Void
+		do
+			Result := internal_assemblies.item (a_class_type.external_id)
+			if Result = 0 then
+					-- Assembly token has not yet been computed.
+				find_and_insert_assembly_token (a_class_type, True)
+				Result := internal_assemblies.item (a_class_type.external_id)
 			end
 		end
 
@@ -2398,15 +2413,18 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 		end
 
-	find_and_insert_assembly_token (a_class_type: CLASS_TYPE) is
+	find_and_insert_assembly_token (a_class_type: CLASS_TYPE; is_used_as_external: BOOLEAN) is
 			-- Given `a_class_type' find out which assembly defines it and updates
 			-- `internal_assemblies' accordingly. Create assembly reference
 			-- as they are needed.
 		require
 			is_generated: is_generated
 			a_class_not_void: a_class_type /= Void
-			not_inserted: internal_assemblies.item (a_class_type.implementation_id) = 0
+			not_inserted: (is_used_as_external or else internal_assemblies.item (a_class_type.implementation_id) = 0) and
+				(is_used_as_external implies internal_assemblies.item (a_class_type.external_id) = 0)
 		local
+			l_token: INTEGER
+			l_id: INTEGER
 			l_indexes: INDEXING_CLAUSE_AS
 			l_info: ARRAY [STRING]
 			l_name, l_key_string, l_culture, l_version_string: STRING
@@ -2417,19 +2435,17 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		do
 			l_native_array ?= a_class_type
 			if l_native_array /= Void then
-				internal_assemblies.put (
-					assembly_token (l_native_array.deep_il_element_type.associated_class_type),
-					a_class_type.implementation_id)
-			elseif a_class_type.is_generated then
+				l_token := assembly_token (l_native_array.deep_il_element_type.associated_class_type)
+			elseif a_class_type.is_generated and then not is_used_as_external then
 					-- We need to find in which module it is being defined. If no `module_ref'
 					-- token is found for this module, we need to create one for Current module.
 					--FIXME: I'm not sure what to do when `a_class_type' is defined in current
 					-- module.
-				internal_assemblies.put (
-					module_reference_token (il_code_generator.il_module (a_class_type)), a_class_type.implementation_id)
+				l_token := module_reference_token (il_code_generator.il_module (a_class_type))
 			else
 				if
 					not a_class_type.is_external and then
+					not is_used_as_external and then
 					a_class_type.is_precompiled
 				then
 					l_precompiled_assembly := a_class_type.assembly_info
@@ -2463,12 +2479,17 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						end
 					end
 				end
-				internal_assemblies.put (
-					define_assembly_reference (l_name, l_version_string, l_culture, l_key_string),
-					a_class_type.implementation_id)
+				l_token := define_assembly_reference (l_name, l_version_string, l_culture, l_key_string)
 			end
+			if is_used_as_external then
+				l_id := a_class_type.external_id
+			else
+				l_id := a_class_type.implementation_id
+			end
+			internal_assemblies.put (l_token, l_id)
 		ensure
-			updated: internal_assemblies.item (a_class_type.implementation_id) /= 0
+			updated:  (is_used_as_external or else internal_assemblies.item (a_class_type.implementation_id) /= 0) and
+				(is_used_as_external implies internal_assemblies.item (a_class_type.external_id) /= 0)
 		end
 
 	defined_assemblies: HASH_TABLE [INTEGER, STRING]

@@ -414,13 +414,18 @@ feature -- Status Report
 	generic_derivation: like Current is
 			-- Precise generic derivation of current type.
 		local
+			c: like cr_info
 			i, count: INTEGER
 			l_meta, meta_gen: like meta_generic
 			l_true, true_gen: like true_generics
 			l_type: TYPE_I
 		do
 			from
+					-- Remove creation information.
+				c := cr_info
+				cr_info := Void
 				Result := duplicate
+				cr_info := c
 				l_meta := meta_generic
 				l_true := true_generics
 				meta_gen := Result.meta_generic

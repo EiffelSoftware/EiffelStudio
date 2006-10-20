@@ -123,37 +123,12 @@ feature -- IL code generation
 			-- Generate IL code for a hardcoded creation type.
 		local
 			cl_type_i: CL_TYPE_I
-			gen_type_i: GEN_TYPE_I
-			local_index: INTEGER
 		do
 			cl_type_i ?= context.creation_type (type)
 			check
 				cl_type_i_not_void: cl_type_i /= Void
 			end
-			if cl_type_i.is_expanded and then cl_type_i.is_external then
-					-- Load a default value of a local variable.
-				context.add_local (cl_type_i)
-				local_index := context.local_list.count
-				il_generator.put_dummy_local_info (cl_type_i, local_index)
-				il_generator.generate_local (local_index)
-			else
-					-- Create object using default constructor.
-				il_generator.create_object (cl_type_i.implementation_id)
-			end
-			gen_type_i ?= cl_type_i
-			if gen_type_i /= Void then
-				if cl_type_i.is_expanded then
-						-- Box expanded object.
-					il_generator.generate_metamorphose (cl_type_i)
-				end
-				il_generator.duplicate_top
-				gen_type_i.generate_gen_type_il (il_generator, True)
-				il_generator.assign_computed_type
-				if cl_type_i.is_expanded then
-						-- Load value of a value type object.
-					il_generator.generate_unmetamorphose (cl_type_i)
-				end
-			end
+			il_generator.generate_creation (cl_type_i)
 		end
 
 	generate_il_type is

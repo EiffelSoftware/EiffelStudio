@@ -38,11 +38,11 @@ feature -- Basic Operations
 			l_framework_version := {RUNTIME_ENVIRONMENT}.get_system_version
 			if Default_metadata_cache_path /= Void and l_framework_path /= Void and l_framework_version /= Void then
 				create l_cache_manager.make_with_path (Default_metadata_cache_path)
-				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Services.dll", True, Void)
-				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Windows.Forms.dll", True, Void)
-				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Design.dll", True, Void)
+				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Services.dll", False, Void)
+				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Windows.Forms.dll", False, Void)
+				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Design.dll", False, Void)
 				if not l_framework_version.equals (("v1.0.3705").to_cil) then
-					l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Mobile.dll", True, Void)
+					l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Mobile.dll", False, Void)
 				end
 			end
 		end

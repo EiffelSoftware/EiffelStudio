@@ -814,8 +814,6 @@ feature {NONE} -- Contract
 
 	assemblies_valid: BOOLEAN is
 			-- Are `assemblies' valid?
-		local
-			l_as: CONF_PHYSICAL_ASSEMBLY
 		do
 			Result := True
 			if not linear_assemblies.is_empty then
@@ -831,8 +829,6 @@ feature {NONE} -- Contract
 
 	old_assemblies_valid: BOOLEAN is
 			-- Are `old_assemblies' valid?
-		local
-			l_as: CONF_PHYSICAL_ASSEMBLY_INTERFACE
 		do
 			Result := True
 			if old_assemblies /= Void then

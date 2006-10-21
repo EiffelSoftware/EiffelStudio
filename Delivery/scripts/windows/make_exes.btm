@@ -8,7 +8,7 @@ mkdir %INSTALL_DIR\releases\lib
 mkdir %INSTALL_DIR\releases\lib\bcb
 mkdir %INSTALL_DIR\releases\lib\msc
 
-remtrace Compile the commercial run-times
+remtrace Compile the run-times
 iff not defined WIN64 then
 	remtrace Compile a run-time for Borland
 	cdd %EIFFEL_SRC
@@ -99,8 +99,8 @@ REM Compiling EiffelStudio stuff
 iff defined BUILD_ENTERPRISE_ONLY then
 	remtrace Recompile EiffelStudio
 	cdd %FINALIZATION_DIR
-	copy %EIFFEL_SRC\Eiffel\Ace\ec.ecf ec.ecf
 	copy %EIFFEL_SRC\Eiffel\Ace\*.* .
+	copy %EIFFEL_SRC\tools\estudio_enterprise\ec.ecf ec.ecf
 	iff not exist ec.ecf then
 		remtrace Cannot find the finalization Ace for EiffelStudio
 		CANCEL
@@ -142,6 +142,7 @@ else
 		move new_system_constants.e system_constants.e
 		cdd %FINALIZATION_DIR
 		clean_project
+		copy %EIFFEL_SRC\tools\estudio_enterprise\ec.ecf ec.ecf
 		finalize ec.ecf bench
 		cleanup_eiffel bench ec.exe
 		iff not exist ec.exe then
@@ -234,7 +235,6 @@ move gdiplus\gdiplus.dll %INSTALL_DIR\releases
 
 remtrace Recompile Custom actions for installation program
 cdd %EIFFEL_SRC
-co %DEFAULT_ISE_SVN/Src/library/keygen library/keygen
 cd tools
 co %DEFAULT_ISE_SVN/Src/tools/setup setup
 cd %EIFFEL_SRC\tools\setup\studio

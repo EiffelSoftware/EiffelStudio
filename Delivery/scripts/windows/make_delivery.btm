@@ -194,6 +194,13 @@ iff not defined NO_COMPILE then
 	cdd %EIFFEL_SRC\..
 	co %DEFAULT_ORIGO_SVN/Src %EIFFEL_SRC
 
+	remtrace ISE specific files
+	cdd %EIFFEL_SRC
+	co %DEFAULT_ISE_SVN/Src/library/keygen library/keygen
+	cd tools
+	co %DEFAULT_ISE_SVN/Src/tools/activation activation
+	co %DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
+
 	cdd %INIT_DIR
 	call update_libraries.btm
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\

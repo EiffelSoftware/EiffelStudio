@@ -206,7 +206,6 @@ if [ -z "$MULTIPLE_EDITIONS" ]; then
 else
 	remtrace GPL edition
 	cp ec_ent.tar.gz ec.tar.gz
-	move ec_ent.tar.gz ec.tar.gz
 	untgz_ccode ec
 	gzip ec
 	move ec.gz $EXPORT_DIR/ecs/ec_ent.gz

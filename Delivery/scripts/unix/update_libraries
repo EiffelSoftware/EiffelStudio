@@ -8,10 +8,6 @@ remtrace gobo
 cd $EIFFEL_SRC/library
 gunzip -c $EIFFEL_SRC/free_add_ons/gobo/gobo_34_unix.tgz | tar -xf -
 
-remtrace keygen
-cd $EIFFEL_SRC/library
-co $DEFAULT_ISE_SVN/Src/library/keygen keygen
-
 remtrace Compiling additional libraries
 cd vision2/Clib
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -library >> $INSTALL_LOG

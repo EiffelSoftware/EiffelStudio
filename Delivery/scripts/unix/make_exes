@@ -78,6 +78,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		sed -e "s/Version_type_name:\ STRING\ is\ \"GPL\ Edition\"/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
 		cd $FINALIZATION_DIR
+		copy $EIFFEL_SRC/tools/estudio_enterprise/ec.ecf ec.ecf
 		clean_project
 		finalize ec.ecf bench
 		tgz_ccode bench ec.tar.gz

@@ -28,7 +28,7 @@ if [ ! -d $EXPORT_DIR ]; then
 	CANCEL
 fi
 
-if [ -f ec_ent.gz ]; then
+if [ -f ec_ent.tar.gz ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""

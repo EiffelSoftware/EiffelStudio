@@ -138,6 +138,14 @@ if [ ! "$NO_COMPILE" ]; then
 	md $EIFFEL_SRC
 	co $DEFAULT_ORIGO_SVN/Src $EIFFEL_SRC
 
+	remtrace ISE specific files
+	cd $EIFFEL_SRC
+	co $DEFAULT_ISE_SVN/Src/library/keygen library/keygen
+	cd tools
+	co $DEFAULT_ISE_SVN/Src/tools/activation activation
+	co $DEFAULT_ISE_SVN/Src/tools/estudio_enterprise estudio_enterprise
+	cd $INIT_DIR
+
 	remtrace Update all libraries
 	. update_libraries $GTK_DIR
 

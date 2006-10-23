@@ -8,6 +8,7 @@
 		<setting name="multithreaded" value="true"/>
 		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" readonly="false"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>

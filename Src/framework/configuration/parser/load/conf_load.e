@@ -104,14 +104,13 @@ feature -- Basic operation
 			if l_callback.is_error then
 				is_error := True
 				last_error := l_callback.last_error
-			elseif l_callback.last_uuid = Void then
+			elseif not is_error and then l_callback.last_uuid = Void then
 				is_error := True
 				create l_er
 				l_er.set_position (a_file, 1, 1)
 				last_error := l_er
-			else
-				last_uuid := l_callback.last_uuid
 			end
+			last_uuid := l_callback.last_uuid
 		ensure
 			no_error_implies_last_uuid_not_void: not is_error implies last_uuid /= Void
 		end

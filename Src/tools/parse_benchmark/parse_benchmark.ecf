@@ -22,7 +22,7 @@
 			<option warning="false">
 			</option>
 		</library>
-		<library name="parser" location="$EIFFEL_SRC\Eiffel\parser\parser.ecf">
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf">
 			<option warning="false">
 			</option>
 		</library>

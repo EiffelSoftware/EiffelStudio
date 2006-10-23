@@ -22,7 +22,7 @@
 			<visible class="ECOM_CURRENCY"/>
 			<visible class="ECOM_DECIMAL"/>
 		</library>
-		<library name="configuration_parser" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration_parser.ecf"/>
+		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="date_time" location="$EIFFEL_SRC\library\time\time.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>

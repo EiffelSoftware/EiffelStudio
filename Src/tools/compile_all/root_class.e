@@ -9,6 +9,11 @@ class
 inherit
 	EIFFEL_LAYOUT
 
+	CONF_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -97,9 +102,55 @@ feature {NONE} -- Implementation
 		require
 			a_target_ok: a_target /= Void
 		do
-			compile ("melt", True, a_target)
-			compile ("freeze", False, a_target)
-			compile ("finalize", False, a_target)
+			if arguments.is_parse_only then
+				parse (a_target)
+			else
+				compile ("melt", True, a_target)
+				compile ("freeze", False, a_target)
+				compile ("finalize", False, a_target)
+			end
+		end
+
+	parse (a_target: CONF_TARGET) is
+			-- Only parse configuration system (incl. used libraries) of `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+		local
+			l_state: CONF_STATE
+			l_vis: CONF_PARSE_VISITOR
+			l_version: HASH_TABLE [CONF_VERSION, STRING]
+			l_system, l_target: STRING
+			l_file: PLAIN_TEXT_FILE
+		do
+				-- create state for conditioning
+			create l_version.make (1)
+			l_version.force (create {CONF_VERSION}.make_version (eiffel_layout.major_version, eiffel_layout.minor_version, 0, 0), v_compiler)
+			create l_state.make (pf_windows, build_workbench, a_target.setting_multithreaded, a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
+
+				-- setup ISE_PRECOMP
+			eiffel_layout.set_precompile (a_target.setting_msil_generation)
+
+			l_system := a_target.system.name
+			l_target := a_target.name
+			print ("Parsing "+l_target+" from "+l_system+"...")
+
+			create l_vis.make_build (l_state, a_target, create {CONF_FACTORY})
+			a_target.process (l_vis)
+
+			if l_vis.is_error then
+				if arguments.is_log_verbose then
+					create l_file.make_open_write (l_system+"-"+a_target.system.uuid.out+"-"+l_target+"-parse.log")
+					l_vis.last_errors.do_all (agent (a_error: CONF_ERROR; a_file: PLAIN_TEXT_FILE)
+						do
+							a_file.put_string (a_error.out)
+						end (?, l_file))
+					l_file.close
+				end
+				print ("Failed")
+			else
+				print ("Ok")
+			end
+			io.new_line
 		end
 
 	compile (a_action: STRING; a_clean: BOOLEAN; a_target: CONF_TARGET) is
@@ -144,7 +195,13 @@ feature {NONE} -- Implementation
 
 			create l_prc_factory
 			l_prc_launcher := l_prc_factory.process_launcher (eiffel_layout.ec_command_name, l_args, Void)
-			l_prc_launcher.redirect_output_to_file (l_file+".log")
+			if arguments.is_log_verbose then
+				l_prc_launcher.redirect_output_to_file (l_file+".log")
+			else
+				l_prc_launcher.redirect_output_to_agent (agent (a_string: STRING)
+					do
+					end)
+			end
 			l_prc_launcher.redirect_error_to_same_as_output
 			l_prc_launcher.set_separate_console (False)
 			l_prc_launcher.launch
@@ -158,7 +215,6 @@ feature {NONE} -- Implementation
 				io.new_line
 			end
 		end
-
 
 feature {NONE} -- Error handling
 

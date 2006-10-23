@@ -32,8 +32,10 @@ feature {NONE} -- Access
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Argument switches
 		once
-			create Result.make (1)
+			create Result.make (3)
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (location_switch, "Directory where to look for configuration files.", True, False, "location", "A directory to look for ecf files", False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (log_verbose_switch, "Verbose logging of actions?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (parse_only_switch, "Only parse configuration files and check dependencies?", True, False))
 		end
 
 feature -- Status Report
@@ -65,9 +67,23 @@ feature -- Access
 			result_exists: (create {RAW_FILE}.make (Result)).exists or (create {DIRECTORY}.make (Result)).exists
 		end
 
+	is_parse_only: BOOLEAN
+			-- Only parse and check dependencies?
+		once
+			Result := has_option (parse_only_switch)
+		end
+
+	is_log_verbose: BOOLEAN
+			-- Log verbose status information?
+		once
+			Result := has_option (log_verbose_switch)
+		end
+
 feature {NONE} -- Switch names
 
-	location_switch: STRING = "l";
+	location_switch: STRING = "l"
+	log_verbose_switch: STRING = "log_verbose"
+	parse_only_switch: STRING = "parse_only";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -575,23 +575,23 @@ feature {NONE} -- Implementation attribute processing
 				inspect
 					current_tag.item
 				when t_external_include then
-					l_inc := factory.new_external_include (l_location)
+					l_inc := factory.new_external_include (l_location, current_target)
 					current_target.add_external_include (l_inc)
 					current_external := l_inc
 				when t_external_object then
-					l_obj := factory.new_external_object (l_location)
+					l_obj := factory.new_external_object (l_location, current_target)
 					current_target.add_external_object (l_obj)
 					current_external := l_obj
 				when t_external_library then
-					l_lib := factory.new_external_library (l_location)
+					l_lib := factory.new_external_library (l_location, current_target)
 					current_target.add_external_library (l_lib)
 					current_external := l_lib
 				when t_external_resource then
-					l_res := factory.new_external_resource (l_location)
+					l_res := factory.new_external_resource (l_location, current_target)
 					current_target.add_external_resource (l_res)
 					current_external := l_res
 				when t_external_make then
-					l_make := factory.new_external_make (l_location)
+					l_make := factory.new_external_make (l_location, current_target)
 					current_target.add_external_make (l_make)
 					current_external := l_make
 				else

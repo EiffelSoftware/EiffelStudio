@@ -838,13 +838,13 @@ feature {NONE} -- Implementation of data retrieval
 						end
 						if not l_has_ignores or else not l_ignore.has_matched then
 							if l_type.is_include_path then
-								current_target.add_external_include (factory.new_external_include (l_loc))
+								current_target.add_external_include (factory.new_external_include (l_loc, current_target))
 							elseif l_type.is_object then
-								current_target.add_external_object (factory.new_external_object (l_loc))
+								current_target.add_external_object (factory.new_external_object (l_loc, current_target))
 							elseif l_type.is_dotnet_resource then
-								current_target.add_external_resource (factory.new_external_resource (l_loc))
+								current_target.add_external_resource (factory.new_external_resource (l_loc, current_target))
 							elseif l_type.is_make then
-								current_target.add_external_make (factory.new_external_make (l_loc))
+								current_target.add_external_make (factory.new_external_make (l_loc, current_target))
 							else
 								set_error (create {CONF_ERROR_PARSE}.make ("Unkown external: "+l_type.language_name))
 							end

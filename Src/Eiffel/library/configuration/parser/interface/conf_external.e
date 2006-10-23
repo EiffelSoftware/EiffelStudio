@@ -16,14 +16,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_location: like location) is
+	make (a_location: like internal_location; a_target: like target) is
 			-- Create with `a_location'.
 		require
 			a_location_not_void: a_location /= Void
+			target_not_void: a_target /= Void
 		do
-			location := a_location
+			internal_location := a_location
+			target := a_target
 		ensure
-			location_set: location = a_location
+			location_set: internal_location = a_location
+			target_set: target = a_target
 		end
 
 feature -- Status
@@ -55,22 +58,38 @@ feature -- Status
 
 feature -- Access, stored in configuration file
 
-	location: STRING
+	location: like internal_location is
 			-- The file location.
+		local
+			l_path: STRING
+		do
+			Result := internal_location.twin
+			l_path := target.library_root.twin
+				-- remove trailing directory separator
+			if not l_path.is_empty and then l_path.item (l_path.count) = operating_environment.directory_separator then
+				l_path.remove_tail (1)
+			end
+			Result.replace_substring_all ("$ECF_CONFIG_PATH", l_path)
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	description: STRING
 			-- A description about the external.
 
+	target: CONF_TARGET
+			-- Target where the external is written in.
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
-	set_location (a_location: like location) is
+	set_location (a_location: like internal_location) is
 			-- Set `location' to `a_location'.
 		require
 			a_location_not_void: a_location /= Void
 		do
-			location := a_location
+			internal_location := a_location
 		ensure
-			location_set: location = a_location
+			location_set: internal_location = a_location
 		end
 
 	set_description (a_description: like description) is
@@ -81,8 +100,14 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
+feature {NONE} -- Implementation
+
+	internal_location: STRING
+			-- The file location.
+
 invariant
-	location_not_void: location /= Void
+	internal_location_not_void: location /= Void
+	target_not_void: target /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

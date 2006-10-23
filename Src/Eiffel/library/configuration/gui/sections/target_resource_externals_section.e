@@ -37,7 +37,7 @@ feature -- Element update
 			l_ext_sec: EXTERNAL_RESOURCE_SECTION
 		do
 				-- add it in the configuration
-			l_external := configuration_window.conf_factory.new_external_resource ("new")
+			l_external := configuration_window.conf_factory.new_external_resource ("new", target)
 			target.add_external_resource (l_external)
 
 				-- create and select the section

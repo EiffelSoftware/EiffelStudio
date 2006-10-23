@@ -87,7 +87,7 @@ safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace CLI writer
-cd %EIFFEL_SRC\Eiffel\library\cli_writer\Clib
+cd %EIFFEL_SRC\framework\cli_writer\Clib
 call nmake
 
 remtrace Compiling .NET components

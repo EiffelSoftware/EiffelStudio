@@ -1286,7 +1286,7 @@ feature {NONE} -- Configuration setting
 			a_key_valid: current_target.variables.has (a_key)
 		do
 			if a_value /= Void and then not a_value.is_empty then
-				current_target.update_variable (a_key, a_value)
+				current_target.add_variable (a_key, a_value)
 			end
 			show_properties_target_variables (current_target)
 		end

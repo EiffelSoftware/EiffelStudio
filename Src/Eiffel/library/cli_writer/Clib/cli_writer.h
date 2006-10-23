@@ -10,7 +10,6 @@ extern "C" {
 
 extern void com_initialize ();
 extern EIF_POINTER new_fusion_support ();
-extern EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags);
 extern EIF_POINTER new_cache_manager ();
 extern EIF_POINTER c_get_bstr (EIF_POINTER);
 extern void c_free_bstr (EIF_POINTER);
@@ -28,12 +27,12 @@ typedef struct _CLI_IMAGE_COR20_HEADER {
 	DWORD	cb;
 	WORD	MajorRuntimeVersion;
 	WORD	MinorRuntimeVersion;
-	
+
 	// Symbol table and startup information
-	IMAGE_DATA_DIRECTORY	MetaData;	
-	DWORD	Flags;	
+	IMAGE_DATA_DIRECTORY	MetaData;
+	DWORD	Flags;
 	DWORD	EntryPointToken;
-	
+
 	// Binding information
 	IMAGE_DATA_DIRECTORY	Resources;
 	IMAGE_DATA_DIRECTORY	StrongNameSignature;

@@ -5,7 +5,7 @@
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="dotnet_loader" location="$EIFFEL_SRC\Eiffel\library\dotnet_loader\dotnet_loader.ecf"/>
+		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
 		<cluster name="emitter_loader" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/unix$</exclude>

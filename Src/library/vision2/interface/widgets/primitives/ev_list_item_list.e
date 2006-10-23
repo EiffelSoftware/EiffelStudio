@@ -121,6 +121,13 @@ feature -- Status setting
 			-- for each of `a_string_array'.
 		require
 			not_destroyed: not is_destroyed
+			a_string_array_not_void: a_string_array /= Void
+			a_string_array_with_no_empty_strings:
+				a_string_array.linear_representation /= Void implies
+				a_string_array.linear_representation.for_all (agent (v: STRING_GENERAL): BOOLEAN
+					do
+						Result := v /= Void
+					end)
 		local
 			sc: like a_string_array
 			i, upper: INTEGER

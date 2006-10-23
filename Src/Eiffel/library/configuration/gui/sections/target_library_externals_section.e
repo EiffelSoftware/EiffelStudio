@@ -36,7 +36,7 @@ feature -- Element update
 			l_ext_sec: EXTERNAL_LIBRARY_SECTION
 		do
 				-- add it in the configuration
-			l_external := configuration_window.conf_factory.new_external_library ("new")
+			l_external := configuration_window.conf_factory.new_external_library ("new", target)
 			target.add_external_library (l_external)
 
 				-- create and select the section

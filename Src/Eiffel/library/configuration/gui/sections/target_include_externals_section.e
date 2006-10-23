@@ -37,7 +37,7 @@ feature -- Element update
 			l_ext_sec: EXTERNAL_INCLUDE_SECTION
 		do
 				-- add it in the configuration
-			l_external := configuration_window.conf_factory.new_external_include ("new")
+			l_external := configuration_window.conf_factory.new_external_include ("new", target)
 			target.add_external_include (l_external)
 
 				-- create and select the section

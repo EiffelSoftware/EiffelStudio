@@ -108,49 +108,65 @@ feature
 			Result_not_void: Result /= Void
 		end
 
-
-	new_external_include (a_location: STRING): CONF_EXTERNAL_INCLUDE is
+	new_external_include (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_INCLUDE is
 			-- Create a `CONF_EXTERNAL_INCLUDE' object.
+		require
+			a_location_not_void: a_location /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location)
+			create Result.make (a_location, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_object (a_location: STRING): CONF_EXTERNAL_OBJECT is
+	new_external_object (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_OBJECT is
 			-- Create a `CONF_EXTERNAL_OBJECT' object.
+		require
+			a_location_not_void: a_location /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location)
+			create Result.make (a_location, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_library (a_location: STRING): CONF_EXTERNAL_LIBRARY is
+	new_external_library (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_LIBRARY is
 			-- Create a `CONF_EXTERNAL_LIBRARY' object.
+		require
+			a_location_not_void: a_location /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location)
+			create Result.make (a_location, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_resource (a_location: STRING): CONF_EXTERNAL_RESOURCE is
+	new_external_resource (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_RESOURCE is
 			-- Create a `CONF_EXTERNAL_RESOURCE' object.
+		require
+			a_location_not_void: a_location /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location)
+			create Result.make (a_location, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_external_make (a_location: STRING): CONF_EXTERNAL_MAKE is
+	new_external_make (a_location: STRING; a_target: CONF_TARGET): CONF_EXTERNAL_MAKE is
 			-- Create a `CONF_EXTERNAL_MAKE' object.
+		require
+			a_location_not_void: a_location /= Void
+			a_target_not_void: a_target /= Void
 		do
-			create Result.make (a_location)
+			create Result.make (a_location, a_target)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	new_action (a_command: STRING; a_must_succeed: BOOLEAN; a_working_directory: CONF_DIRECTORY_LOCATION): CONF_ACTION is
 			-- Create a `CONF_ACTION' object.
+		require
+			a_command_ok: a_command /= Void and then not a_command.is_empty
 		do
 			create Result.make (a_command, a_must_succeed, a_working_directory)
 		ensure

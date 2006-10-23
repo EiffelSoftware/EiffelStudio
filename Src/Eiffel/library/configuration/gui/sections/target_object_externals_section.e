@@ -37,7 +37,7 @@ feature -- Element update
 			l_ext_sec: EXTERNAL_OBJECT_SECTION
 		do
 				-- add it in the configuration
-			l_external := configuration_window.conf_factory.new_external_object ("new")
+			l_external := configuration_window.conf_factory.new_external_object ("new", target)
 			target.add_external_object (l_external)
 
 				-- create and select the section

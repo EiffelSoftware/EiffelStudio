@@ -99,6 +99,9 @@ feature -- Access, in compiled only, not stored to configuration file
 
 	library_root: STRING
 			-- Root location to use for relative paths, defaults to `location' if the setting is not set.
+
+		require
+			location_set: location /= Void
 		local
 			l_fac: CONF_PARSE_FACTORY
 			l_target: CONF_TARGET
@@ -114,6 +117,8 @@ feature -- Access, in compiled only, not stored to configuration file
 			else
 				Result := location
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	used_in_libraries: ARRAYED_LIST [CONF_LIBRARY]

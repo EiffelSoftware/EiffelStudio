@@ -6,14 +6,14 @@
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
-		<library name="configuration_parser" location="$EIFFEL_SRC\Eiffel\library\configuration\configuration_parser.ecf" readonly="false"/>
+		<library name="configuration_parser" location="configuration_parser.ecf" readonly="false"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
+		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\Eiffel\parser\parser.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<library name="emitter_loader" location="$EIFFEL_SRC\Eiffel\library\emitter_loader\emitter_loader.ecf"/>
 		<cluster name="configuration" location="compiler\" recursive="true"/>
 	</target>
 </system>

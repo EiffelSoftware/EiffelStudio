@@ -1334,9 +1334,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_value_not_void: a_value /= Void
-			name_not_used: not variables.has (a_name.as_lower)
 		do
-			internal_variables.put (a_value, a_name.as_lower)
+			internal_variables.force (a_value, a_name.as_lower)
 		ensure
 			variable_added: internal_variables.has (a_name.as_lower) and then internal_variables.item (a_name.as_lower) = a_value
 		end
@@ -1349,18 +1348,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			internal_variables.remove (a_name.as_lower)
 		ensure
 			variable_removed: not internal_variables.has (a_name.as_lower)
-		end
-
-	update_variable (a_name, a_value: STRING) is
-			-- Update a variable with `a_name' and `a_value'.
-		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_value_not_void: a_value /= Void
-			entry_exists: variables.has (a_name.as_lower)
-		do
-			internal_variables.force (a_value, a_name.as_lower)
-		ensure
-			variable_added: internal_variables.has (a_name.as_lower) and then internal_variables.item (a_name.as_lower) = a_value
 		end
 
 	add_mapping (a_old_name, a_new_name: STRING) is

@@ -10,7 +10,11 @@
 				<platform value="windows"/>
 			</condition>
 		</library>
-		<cluster name="interface" location="interface\" recursive="true"/>
+		<cluster name="environment" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/spec$</exclude>
+			</file_rule>
+		</cluster>
 		<cluster name="unix" location="spec\unix\">
 			<condition>
 				<platform excluded_value="windows"/>

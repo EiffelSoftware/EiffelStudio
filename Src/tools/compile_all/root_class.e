@@ -96,7 +96,6 @@ feature {NONE} -- Implementation
 			-- Compile `a_target'.
 		require
 			a_target_ok: a_target /= Void
-		local
 		do
 			compile ("melt", True, a_target)
 			compile ("freeze", False, a_target)

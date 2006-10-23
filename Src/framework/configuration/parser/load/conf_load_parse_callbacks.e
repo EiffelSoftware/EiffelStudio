@@ -356,8 +356,12 @@ feature {NONE} -- Implementation attribute processing
 			if current_library_target /= Void then
 				current_library_target.to_lower
 			end
-			if is_valid_system_name (l_name) and then l_uuid /= Void and then check_uuid (l_uuid) then
-				create l_uu.make_from_string (l_uuid)
+			if is_valid_system_name (l_name) and then l_uuid = Void or else check_uuid (l_uuid) then
+				if l_uuid /= Void then
+					create l_uu.make_from_string (l_uuid)
+				else
+					l_uu := factory.uuid_generator.generate_uuid
+				end
 				last_system := factory.new_system (l_name.as_lower, l_uu)
 				if l_readonly /= Void then
 					if l_readonly.is_boolean then

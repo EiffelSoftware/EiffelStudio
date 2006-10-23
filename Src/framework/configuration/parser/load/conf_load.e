@@ -97,12 +97,18 @@ feature -- Basic operation
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		local
 			l_callback: CONF_LOAD_UUID_CALLBACKS
+			l_er: CONF_ERROR_UUID
 		do
 			create l_callback.make
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
 				is_error := True
 				last_error := l_callback.last_error
+			elseif l_callback.last_uuid = Void then
+				is_error := True
+				create l_er
+				l_er.set_position (a_file, 1, 1)
+				last_error := l_er
 			else
 				last_uuid := l_callback.last_uuid
 			end

@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create.
 		do
-			message := "Invalid uuid."
+			message := "Invalid or missing uuid."
 		end
 
 indexing

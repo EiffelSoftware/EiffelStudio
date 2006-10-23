@@ -21,7 +21,8 @@ inherit
 			class_type,
 			is_readonly,
 			accessible_groups,
-			location
+			location,
+			is_enabled
 		end
 
 create {CONF_PARSE_FACTORY}
@@ -69,6 +70,12 @@ feature -- Status
 
 	is_non_local_assembly: BOOLEAN
 			-- Was this assembly only specified by gac information (i.e. no location was set)?
+
+	is_enabled (a_state: CONF_STATE): BOOLEAN is
+			-- Is `Current' enabled for `a_state'?
+		do
+			Result := a_state.is_dotnet and then Precursor (a_state)
+		end
 
 feature -- Access, stored in configuration file
 

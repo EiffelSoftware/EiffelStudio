@@ -10,9 +10,9 @@ class
 
 inherit
 	CLR_HOST_STARTUP_FLAGS
-	
+
 feature -- Access
-	
+
 	runtime_host (version: STRING): CLR_HOST is
 			-- CLR runtime version currently loaded in process.
 			-- Check documentation available at:
@@ -26,7 +26,7 @@ feature -- Access
 			if version = Void then
 					-- Default version.
 				create l_version.make ((create {IL_ENVIRONMENT}).default_version)
-			else			
+			else
 				create l_version.make (version)
 			end
 			l_host := new_cor_runtime_host (l_version.item, 0)
@@ -41,7 +41,25 @@ feature {NONE} -- Implementation
 			-- Create a new instance of ICorRuntimeHost. Used to fix version of the CLR
 			-- being used by compiler to generate IL code.
 		external
-			"C signature (LPWSTR, DWORD): EIF_POINTER use %"cli_writer.h%""
+			"C inline use <mscoree.h>"
+		alias
+			"[
+				HRESULT hr = NULL;
+				HMODULE mscoree = NULL;
+				FARPROC cor_bind_to_runtime_ex = NULL;
+				ICorRuntimeHost *pHost = NULL;
+
+				mscoree = LoadLibrary (L"mscoree.dll");
+				if (mscoree != NULL) {
+					cor_bind_to_runtime_ex = GetProcAddress (mscoree, "CorBindToRuntimeEx");
+					if (cor_bind_to_runtime_ex != NULL) {
+						hr = (FUNCTION_CAST_TYPE(HRESULT, STDAPICALLTYPE, (LPWSTR, LPWSTR, DWORD, REFCLSID, REFIID, LPVOID *)) cor_bind_to_runtime_ex)
+							($version, NULL, $flags, &CLSID_CorRuntimeHost, &IID_ICorRuntimeHost, (LPVOID*)&pHost);
+					}
+				}
+
+				return pHost;
+			]"
 		end
 
 indexing

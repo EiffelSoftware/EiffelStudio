@@ -81,33 +81,6 @@ rt_public EIF_POINTER new_cache_manager ()
 }
 
 /*
-feature -- CorBindToRuntimeEx interface
-*/
-
-
-rt_public EIF_POINTER new_cor_runtime_host (LPWSTR version, DWORD flags)
-	/* Create new instance of `ICorRuntimeHost'. */
-{
-	HRESULT hr = NULL;
-	HMODULE mscoree = NULL;
-	FARPROC cor_bind_to_runtime_ex = NULL;
-	ICorRuntimeHost *pHost = NULL;
-
-	mscoree = LoadLibrary (L"mscoree.dll");
-	if (mscoree != NULL) {
-		cor_bind_to_runtime_ex = GetProcAddress (mscoree, "CorBindToRuntimeEx");
-		if (cor_bind_to_runtime_ex != NULL) {
-			hr = (FUNCTION_CAST_TYPE(HRESULT, STDAPICALLTYPE, (LPWSTR, LPWSTR, DWORD, REFCLSID, REFIID, LPVOID *)) cor_bind_to_runtime_ex)
-				(version, NULL, flags, CLSID_CorRuntimeHost, IID_ICorRuntimeHost, (void **)&pHost);
-		}
-	}
-
-	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "Could not create ICorRuntimeHost or already initialized");
-
-	return pHost;
-}
-
-/*
 feature -- Unmanaged Metadata API
 */
 

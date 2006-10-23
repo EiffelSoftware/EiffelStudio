@@ -14,7 +14,7 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="$(EIFFEL_SRC)framework\cli_writer\spec\msc\lib\cli_debugger.lib">
+		<external_object location="$(EIFFEL_SRC)\framework\cli_writer\spec\msc\lib\cli_debugger.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

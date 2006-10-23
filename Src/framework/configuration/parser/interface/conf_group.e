@@ -128,6 +128,8 @@ feature -- Access, stored in configuration file
 
 	is_readonly: BOOLEAN is
 			-- Is this group read only?
+		require
+			application_target_set: target.application_target /= Void
 		do
 			Result := internal_read_only
 		end

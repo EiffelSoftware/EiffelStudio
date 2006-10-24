@@ -133,8 +133,8 @@ feature -- Access
 	has_old_verbatim_strings_warning: BOOLEAN
 			-- Are warnings produces for old semantics of verbatim strings?
 
-	Maximum_character_code: INTEGER is 255
-			-- Largest supported code for CHARACTER values
+	Maximum_string_character_code: INTEGER is 0xFF
+			-- Maximum value for character code inside a string
 
 	Maximum_bit_constant: INTEGER is 0x7FFF
 			-- Maximum value of Constant in Bit_type declaration
@@ -190,20 +190,6 @@ feature {NONE} -- Error handling
 			create an_error.make (line, column, filename, a_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
-		end
-
-	report_character_invalid_code_error (a_code: INTEGER) is
-			-- Invalid character code after %.
-		local
-			an_error: BAD_CHARACTER
-		do
-			create an_error.make (line, column, filename, "", False)
-			Error_handler.insert_error (an_error)
-			Error_handler.raise_error
-
-				-- Dummy code (for error recovery) follows:
-			token_buffer.append_character ('a')
-			last_token := TE_CHAR
 		end
 
 	report_character_missing_quote_error (char: STRING) is
@@ -311,6 +297,16 @@ feature {NONE} -- Error handling
 			Error_handler.raise_error
 		end
 
+	report_invalid_integer_error (a_text: STRING) is
+			-- Invalid integer
+		local
+			an_error: VIIN
+		do
+			create an_error.make (line, column, filename, "", False)
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+		end
+
 feature {NONE} -- Implementation
 
 	process_id_as is
@@ -349,30 +345,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_character_code (code: INTEGER) is
-			-- Check whether `code' is a valid character code
-			-- and set `last_token' accordingly.
-		require
-			code_positive: code >= 0
-		do
-			if code > Maximum_character_code then
-					-- Bad character code.
-				report_character_invalid_code_error (code)
-			else
-				token_buffer.clear_all
-				token_buffer.append_character (charconv (code))
-				last_token := TE_CHAR
-				ast_factory.set_buffer (token_buffer2, Current)
-			end
-		end
-
 	process_string_character_code (code: INTEGER) is
 			-- Check whether `code' is a valid character code
 			-- in a string and set `last_token' accordingly.
 		require
 			code_positive: code >= 0
 		do
-			if code > Maximum_character_code then
+			if code > Maximum_string_character_code then
 					-- Bad character code.
 				set_start_condition (0)
 				report_string_invalid_code_error (code)

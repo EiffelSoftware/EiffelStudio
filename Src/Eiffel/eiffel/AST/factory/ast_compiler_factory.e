@@ -21,6 +21,8 @@ inherit
 			new_formal_dec_as,
 			new_integer_as,
 			new_integer_hexa_as,
+			new_integer_octal_as,
+			new_integer_binary_as,
 			new_external_lang_as,
 			validate_integer_real_type
 		end
@@ -269,6 +271,22 @@ feature -- Access
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
+			end
+		end
+
+	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
+			-- New INTEGER_AS node
+		do
+			if v /= Void then
+				create Result.make_from_octal_string (t, s, v)
+			end
+		end
+
+	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_CONSTANT is
+			-- New INTEGER_AS node
+		do
+			if v /= Void then
+				create Result.make_from_binary_string (t, s, v)
 			end
 		end
 

@@ -13,7 +13,6 @@ inherit
 	EIFFEL_SCANNER
 		redefine
 			process_id_as,
-			process_character_code,
 			process_string_character_code,
 			scan
 		end
@@ -119,13 +118,6 @@ feature
 			l_as: ID_AS
 		do
 			l_as := ast_factory.new_filled_id_as (Current)
-		end
-
-	process_character_code (code: INTEGER) is
-			-- Check whether `code' is a valid character code
-			-- and set `last_token' accordingly.
-		do
-			last_token := TE_CHAR
 		end
 
 	process_string_character_code (code: INTEGER) is

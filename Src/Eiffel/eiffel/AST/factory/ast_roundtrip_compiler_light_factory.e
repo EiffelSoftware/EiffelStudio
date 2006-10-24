@@ -20,6 +20,8 @@ inherit
 		undefine
 			new_integer_as,
 			new_integer_hexa_as,
+			new_integer_octal_as,
+			new_integer_binary_as,
 			new_feature_as,
 			new_bits_as,
 			new_class_as,

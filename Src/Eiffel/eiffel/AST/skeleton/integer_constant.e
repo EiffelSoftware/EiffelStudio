@@ -42,7 +42,7 @@ inherit
 		end
 
 create
-	make_with_value, make_from_string, make_from_hexa_string, make_from_type
+	make_with_value, make_from_string, make_from_hexa_string, make_from_octal_string, make_from_binary_string, make_from_type
 
 feature {NONE} -- Initialization
 

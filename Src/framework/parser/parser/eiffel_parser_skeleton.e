@@ -739,6 +739,21 @@ feature {AST_FACTORY} -- Error handling
 			Error_handler.raise_error
 		end
 
+	report_character_code_too_large_error (a_code: STRING) is
+			-- Integer encoded by `a_code' is too large to fit into a CHARACTER_32
+		require
+			a_code_not_void: a_code /= Void
+		local
+			l_message: STRING
+			an_error: BAD_CHARACTER
+		do
+			l_message := "Character code " + a_code + " is too large for CHARACTER_32."
+			create an_error.make (line, column, filename, l_message, False)
+			Error_handler.insert_error (an_error)
+			Error_handler.raise_error
+		end
+
+
 	report_error (a_message: STRING) is
 			-- A syntax error has been detected.
 			-- Print error message.

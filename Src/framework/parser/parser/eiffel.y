@@ -2740,13 +2740,16 @@ Boolean_constant: TE_FALSE
 Character_constant: TE_CHAR
 			{
 				check is_character: not token_buffer.is_empty end
-				$$ := ast_factory.new_character_as (token_buffer.item (1), line, column, position, token_buffer2)
+				
+				$$ := ast_factory.new_character_value (Current, Void, token_buffer, token_buffer2)
+
 			}
 	|	Typed TE_CHAR
 			{
 				check is_character: not token_buffer.is_empty end
 				fixme (once "We should handle `Type' instead of ignoring it.")
-				$$ := ast_factory.new_typed_char_as ($1, token_buffer.item (1), line, column, position, 1, token_buffer2)
+
+				$$ := ast_factory.new_character_value (Current, $1, token_buffer, token_buffer2)
 			}
 	;
 

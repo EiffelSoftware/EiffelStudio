@@ -18322,7 +18322,9 @@ debug ("GEYACC")
 end
 
 				check is_character: not token_buffer.is_empty end
-				yyval3 := ast_factory.new_character_as (token_buffer.item (1), line, column, position, token_buffer2)
+				
+				yyval3 := ast_factory.new_character_value (Current, Void, token_buffer, token_buffer2)
+
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
@@ -18342,7 +18344,8 @@ end
 
 				check is_character: not token_buffer.is_empty end
 				fixme (once "We should handle `Type' instead of ignoring it.")
-				yyval3 := ast_factory.new_typed_char_as (yyvs79.item (yyvsp79), token_buffer.item (1), line, column, position, 1, token_buffer2)
+
+				yyval3 := ast_factory.new_character_value (Current, yyvs79.item (yyvsp79), token_buffer, token_buffer2)
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2

@@ -248,7 +248,7 @@ feature -- Value AST creation
 			end
 			if token_value.is_number_sequence then
 				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
-			elseif token_value.item (1) = '0' then
+			elseif token_value.count >= 3 and then token_value.item (1) = '0' then
 				if token_value.item (2).lower = 'x' then
 					Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
 				elseif token_value.item (2).lower = 'c' then

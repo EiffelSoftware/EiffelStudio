@@ -1671,7 +1671,11 @@ feature -- Implementation
 	process_char_as (l_as: CHAR_AS) is
 		do
 			if l_as.type = Void then
-				last_type := character_type
+				if l_as.value.is_character_8 then
+					last_type := character_type
+				else
+					last_type := Wide_char_type
+				end
 			else
 				check_type (l_as.type)
 			end

@@ -13,8 +13,10 @@ inherit
 
 feature -- Basic commands
 
-	update_visible is
+	update_visible (a_added_classes: DS_HASH_SET [CONF_CLASS]) is
 			-- Update visible options on classes.
+		require
+			a_added_classes_not_void: a_added_classes /= Void
 		local
 			l_vis: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
 			l_class: CONF_CLASS
@@ -44,6 +46,9 @@ feature -- Basic commands
 							l_error := True
 							set_error (l_class.last_error)
 						end
+					end
+					if not l_class.is_compiled and l_class.is_always_compile then
+						a_added_classes.force (l_class)
 					end
 
 					visible.forth

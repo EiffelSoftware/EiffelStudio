@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugThread**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetThread"
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugFrame**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetActiveFrame"
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCaller"
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCallee"
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetPrevious"
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugChain**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetNext"
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsManaged"
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(ICorDebugFrameEnum **): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateFrames"
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugChain signature(CorDebugChainReason*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetReason"

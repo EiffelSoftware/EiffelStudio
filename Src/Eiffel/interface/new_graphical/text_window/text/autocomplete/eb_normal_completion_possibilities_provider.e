@@ -34,7 +34,7 @@ inherit
 			set_up_local_analyzer
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 
 create
 	make
@@ -87,8 +87,8 @@ feature -- Basic operation
 			Precursor
 			create insertion_cell
 			if not static then
-				context_class_c := eb_debugger_manager.debugging_class_c
-				context_feature_as := eb_debugger_manager.debugging_feature_as
+				context_class_c := Eb_debugger_manager.debugging_class_c
+				context_feature_as := Eb_debugger_manager.debugging_feature_as
 			end
 			if context_feature_as /= Void then
 				current_feature_as := [context_feature_as, context_feature_as.feature_names.first]

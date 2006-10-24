@@ -18,7 +18,7 @@ inherit
 
 	SHARED_APPLICATION_EXECUTION
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	EB_TEXT_OUTPUT_FACTORY
 
@@ -231,13 +231,13 @@ feature {NONE} -- Implementation
 		local
 			app_exec: APPLICATION_EXECUTION
 		do
-			app_exec := Eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			if app_exec.is_breakpoint_enabled (st.routine, st.index) then
 				app_exec.remove_breakpoint (st.routine, st.index)
 			else
 				app_exec.set_breakpoint (st.routine, st.index)
 			end
-			Eb_debugger_manager.notify_breakpoints_changes
+			Debugger_manager.notify_breakpoints_changes
 		end
 
 	drop_class (st: CLASSI_STONE) is

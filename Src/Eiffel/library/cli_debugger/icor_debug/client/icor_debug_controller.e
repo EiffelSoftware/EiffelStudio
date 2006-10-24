@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugController signature(BOOL): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Continue"
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugController signature(): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Detach"
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugController signature(DWORD): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Stop"
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugController signature(BOOL*): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsRunning"
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugController signature(ICorDebugThread*, BOOL*): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"HasQueuedCallbacks"
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugController signature(UINT): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Terminate"
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugController signature(ICorDebugThreadEnum **): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateThreads"
@@ -227,13 +227,13 @@ feature {NONE} -- Implementation
 --		external
 --			"[
 --				C++ ICorDebugController signature(CorDebugThreadState, ICorDebugThread*): EIF_INTEGER
---				use "cli_headers.h"
+--				use "cli_debugger_headers.h"
 --			]"
 --		alias
 --			"SetAllThreadsDebugState"
 --		end
 
-feature {EIFNET_DEBUGGER} -- Query
+feature {ICOR_EXPORTER} -- Query
 
 	frozen cpp_query_interface_ICorDebugController (obj: POINTER; a_p: POINTER): INTEGER is
 		external

@@ -268,7 +268,27 @@ feature -- Call Stack element related
 			end
 		end
 
+feature -- Process related access
+
+	process_id: INTEGER
+
+feature -- Process related change
+
+	set_process_id (pid: INTEGER) is
+			-- Set process id
+		require
+			id_valid: pid > 0
+		do
+			debug ("DEBUGGER_TRACE")
+				print (generator + ".set_process_id (" + pid.out + " ~ 0x" + pid.to_hex_string + ") %N")
+			end
+			process_id := pid
+		end
+
 feature -- Thread related access
+
+	active_thread_id: INTEGER
+			-- Thread ID when the execution was paused.
 
 	current_thread_id: INTEGER
 			-- Thread ID of the Current call stack.
@@ -298,6 +318,7 @@ feature -- Thread related change
 				--| Update in case the current call stack's object changed
 			get_current_call_stack
 		end
+
 	has_thread_id (tid: INTEGER): BOOLEAN is
 		do
 			Result := all_thread_ids /= Void and then all_thread_ids.has (tid)
@@ -305,6 +326,17 @@ feature -- Thread related change
 	refresh_current_thread_id is
 			-- Get fresh value of Thread ID from debugger
 		deferred
+		end
+
+	set_active_thread_id (tid: INTEGER) is
+			-- Set active thread id
+		require
+			id_valid: has_thread_id (tid)
+		do
+			debug ("DEBUGGER_TRACE")
+				print (generator + ".set_active_thread_id (" + tid.out + " ~ 0x" + tid.to_hex_string + ") %N")
+			end
+			active_thread_id := tid
 		end
 
 	set_current_thread_id (tid: INTEGER) is

@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunction signature(ICorDebugModule**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetModule"
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunction signature(ICorDebugClass**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetClass"
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunction signature(mdMethodDef*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetToken"
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunction signature(ICorDebugCode**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetILCode"
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunction signature(ICorDebugCode**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetNativeCode"
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunction signature(ICorDebugFunctionBreakpoint**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CreateBreakpoint"
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunction signature(mdSignature*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetLocalVarSigToken"
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunction signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCurrentVersionNumber"

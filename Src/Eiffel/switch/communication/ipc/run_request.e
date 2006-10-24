@@ -58,8 +58,6 @@ feature -- Status setting
 
 	set_environment_variables (s: STRING) is
 			-- Assign `s' to `environment_variables'.
-		require
-			s_not_void: s /= Void
 		do
 			environment_variables := s
 		ensure
@@ -87,6 +85,7 @@ feature -- Update
 				l_app_started := start_application
 				if l_app_started then
 					Application.build_status
+					Application.status.set_process_id (last_process_id)
 					send_breakpoints
 					send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, Application.critical_stack_depth)
 					Application.status.set_is_stopped (False)
@@ -141,13 +140,19 @@ feature {NONE} -- Implementation
 
 				-- Perform a handshake with the application.
 			if Result then
+				last_process_id := to_integer_32 (c_tread)
 				send_rqst_0 (Rqst_hello)
 				Result := recv_ack
 				debug("DEBUGGER")
 					io.put_string("[ ok ]%N");
 				end
+			else
+				last_process_id := 0
 			end
 		end
+
+	last_process_id: INTEGER;
+			-- Process ID of last application launched
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -856,9 +856,9 @@ rt_private void start_app(EIF_PSTREAM sp)
 #ifdef EIF_WINDOWS
 		/* First argument is 0 because we are not launching the compiler, but
 		 * an application being debugged by the Eiffel debugger. */
-	cp = spawn_child("app", 0, cmd, current_directory, current_app_env, 1, &process_handle, &process_id);	/* Start up children */
+	cp = spawn_child("app", 0, cmd, current_directory, (char**)current_app_env, 1, &process_handle, &process_id);	/* Start up children */
 #else
-	cp = spawn_child("app", cmd, current_directory, current_app_env, 1, &pid);	/* Start up children */
+	cp = spawn_child("app", cmd, current_directory, (char**)current_app_env, 1, &pid);	/* Start up children */
 #endif
 
 	free(cmd);
@@ -889,6 +889,8 @@ rt_private void start_app(EIF_PSTREAM sp)
 			add_log(100, "sending ak_ok");
 #endif
 			send_ack(sp, AK_OK);		/* Application started ok */
+			/* Send the process id to ewb */
+			twrite(sp, &(daemon_data.d_app_id), sizeof(int));
 		}
 	} else {
 #ifdef USE_ADD_LOG
@@ -911,6 +913,8 @@ rt_private void start_app(EIF_PSTREAM sp)
 			add_log(100, "sending ak_ok");
 #endif
 			send_ack(sp, AK_OK);		/* Application started ok */
+			/* Send the process id to ewb */
+			twrite(sp, &(daemon_data.d_app), sizeof(int));
 		}
 	} else {
 #ifdef USE_ADD_LOG

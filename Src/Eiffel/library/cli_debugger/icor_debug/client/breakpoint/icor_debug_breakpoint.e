@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugBreakpoint signature(BOOL): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Activate"
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugBreakpoint signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsActive"

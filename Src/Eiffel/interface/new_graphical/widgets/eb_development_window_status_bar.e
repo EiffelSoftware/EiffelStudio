@@ -24,7 +24,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -65,8 +65,8 @@ feature {NONE} -- Initialization
 			end
 			if mg.is_project_loaded then
 				on_project_loaded
-				if eb_debugger_manager.application_is_executing then
-					if eb_debugger_manager.application_is_stopped then
+				if Debugger_manager.application_is_executing then
+					if Debugger_manager.application_is_stopped then
 						on_application_stopped
 					else
 						on_application_launched
@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
 
-			eb_debugger_manager.observers.extend (Current)
+			Eb_debugger_manager.observers.extend (Current)
 		end
 
 	build_interface is
@@ -261,7 +261,7 @@ feature {EB_RECYCLER} -- Status setting
 		local
 			mg: EB_PROJECT_MANAGER
 		do
-			eb_debugger_manager.observers.prune_all (Current)
+			Eb_debugger_manager.observers.prune_all (Current)
 
 			mg := Eiffel_project.manager
 			mg.create_agents.prune_all (create_agent)
@@ -385,8 +385,8 @@ feature {NONE} -- Implementation: event handling
 			else
 				on_project_updated
 			end
-			if eb_debugger_manager.application_is_executing then
-				if eb_debugger_manager.application_is_stopped then
+			if debugger_manager.application_is_executing then
+				if debugger_manager.application_is_stopped then
 					on_application_stopped
 				else
 					on_application_launched

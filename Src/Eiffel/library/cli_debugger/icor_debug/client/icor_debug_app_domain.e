@@ -12,9 +12,9 @@ class
 inherit
 	ICOR_DEBUG_CONTROLLER
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	get_process: ICOR_DEBUG_PROCESS is
@@ -67,7 +67,7 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	is_attached: BOOLEAN is
-			-- IsAttached returns whether or not the debugger is attached to the 
+			-- IsAttached returns whether or not the debugger is attached to the
 			-- app domain
 		local
 			l_result: INTEGER
@@ -85,7 +85,7 @@ feature {ICOR_EXPORTER} -- Access
 			mp_name: MANAGED_POINTER
 		do
 			create mp_name.make (256 * 2)
-			
+
 			last_call_success := cpp_get_name (item, 256, $p_cchname, mp_name.item)
 			if mp_name.item /= default_pointer then
 				Result := (create {UNI_STRING}.make_by_pointer (mp_name.item)).string
@@ -95,7 +95,7 @@ feature {ICOR_EXPORTER} -- Access
 		end
 
 	attach is
-			-- Attach() should be called to attach to the app domain to 
+			-- Attach() should be called to attach to the app domain to
 			-- receive all app domain related events
 		do
 			last_call_success := cpp_attach (item)
@@ -111,13 +111,13 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
-feature {EIFNET_DEBUGGER} -- Implementation
+feature {ICOR_EXPORTER} -- Implementation
 
 	frozen cpp_get_process (obj: POINTER; a_p: POINTER): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugProcess**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetProcess"
@@ -127,7 +127,7 @@ feature {EIFNET_DEBUGGER} -- Implementation
 		external
 			"[
 				C++ ICorDebugAppDomain signature(): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Attach"
@@ -137,7 +137,7 @@ feature {EIFNET_DEBUGGER} -- Implementation
 		external
 			"[
 				C++ ICorDebugAppDomain signature(BOOL*): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsAttached"
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugAssemblyEnum **): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateAssemblies"
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugBreakpointEnum **): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateBreakpoints"
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ICorDebugStepperEnum **): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateSteppers"
@@ -179,17 +179,17 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ULONG32, ULONG32 *, WCHAR*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetName"
-		end		
+		end
 
 	frozen cpp_get_id (obj: POINTER; a_p_id: POINTER): INTEGER is
 		external
 			"[
 				C++ ICorDebugAppDomain signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetID"

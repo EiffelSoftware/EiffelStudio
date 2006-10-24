@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepperEnum signature(ULONG,ICorDebugStepper**, ULONG*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Next"

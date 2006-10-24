@@ -135,8 +135,36 @@ rt_private void send_dmpitem_request(struct item *ip)
 	ewb_send_packet(ewb_sp, &rqst);
 }
 
+/* send an integer_8 value to the application */
+rt_public void send_integer_8_value(EIF_INTEGER_8 value)
+{	
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_INT8;
+	item.it_int8 = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
 /* send an integer value to the application */
-rt_public void send_integer_value(EIF_INTEGER value)
+rt_public void send_integer_16_value(EIF_INTEGER_16 value)
+{	
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_INT16;
+	item.it_int16 = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send an integer value to the application */
+rt_public void send_integer_32_value(EIF_INTEGER_32 value)
 {	
 	struct item item;
 	
@@ -163,8 +191,64 @@ rt_public void send_integer_64_value(EIF_INTEGER_64 value)
 	send_dmpitem_request(&item);
 }
 
-/* send a real value to the application */
-rt_public void send_real_value(EIF_REAL_32 value)
+/* send an natural_8 value to the application */
+rt_public void send_natural_8_value(EIF_NATURAL_8 value)
+{	
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_UINT8;
+	item.it_uint8 = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send an natural value to the application */
+rt_public void send_natural_16_value(EIF_NATURAL_16 value)
+{	
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_UINT16;
+	item.it_uint16 = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send an natural value to the application */
+rt_public void send_natural_32_value(EIF_NATURAL_32 value)
+{	
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_UINT32;
+	item.it_uint32 = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send an natural_64 value to the application */
+rt_public void send_natural_64_value(EIF_NATURAL_64 value)
+{	
+	struct item item;
+	
+	/* fill in the item to send */
+	item.type = SK_UINT64;
+	item.it_uint64 = value;
+	item.it_addr = NULL;
+	
+	/* send the request */
+	send_dmpitem_request(&item);
+}
+
+/* send a real 32 value to the application */
+rt_public void send_real_32_value(EIF_REAL_32 value)
 {
 	struct item item;
 	
@@ -177,8 +261,8 @@ rt_public void send_real_value(EIF_REAL_32 value)
 	send_dmpitem_request(&item);
 }
 
-/* send a double value to the application */
-rt_public void send_double_value(EIF_REAL_64 value)
+/* send a real 64 value to the application */
+rt_public void send_real_64_value(EIF_REAL_64 value)
 {
 	struct item item;
 	
@@ -192,7 +276,7 @@ rt_public void send_double_value(EIF_REAL_64 value)
 }
 
 /* send a char value to the application */
-rt_public void send_char_value(EIF_CHARACTER value)
+rt_public void send_char_8_value(EIF_CHARACTER value)
 {
 	struct item item;
 	
@@ -206,7 +290,7 @@ rt_public void send_char_value(EIF_CHARACTER value)
 }
 
 /* send a wchar value to the application */
-rt_public void send_wchar_value(EIF_WIDE_CHAR value)
+rt_public void send_char_32_value(EIF_WIDE_CHAR value)
 {
 	struct item item;
 	

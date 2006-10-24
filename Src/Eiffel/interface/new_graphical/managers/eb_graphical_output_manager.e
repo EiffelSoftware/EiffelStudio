@@ -43,7 +43,7 @@ inherit
 			clear_general
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -197,8 +197,8 @@ feature -- Basic Operations / Information message
 				-- Build the text
 			clear_general
 			start_processing (true)
-			if eb_debugger_manager.application_is_executing then
-				eb_debugger_manager.Application.status.display_status (Current)
+			if Debugger_manager.application_is_executing then
+				Debugger_manager.Application.status.display_status (Current)
 			else
 				add ("System not launched")
 				add_new_line
@@ -222,7 +222,7 @@ feature -- Basic Operations / Information message
 				-- Build text.
 			clear_general
 			start_processing (true)
-			app_exec := eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			if  not app_exec.has_breakpoints then
 				add ("No breakpoints.")
 				add_new_line
@@ -709,7 +709,7 @@ feature {NONE} -- Implementation
 				stwl.extend (f)
 				routine_list.forth
 			end
-			app_exec := eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			from
 				table.start
 			until

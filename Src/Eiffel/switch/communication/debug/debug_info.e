@@ -236,7 +236,7 @@ feature -- changing all breakpoints
 		end
 
 	enable_all_breakpoints is
-			-- disable all breakpoints which are currently set and enabled
+			-- enable all breakpoints which are currently set and disabled
 		local
 			bp: BREAKPOINT
 		do

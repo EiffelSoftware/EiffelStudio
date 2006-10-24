@@ -121,7 +121,7 @@ feature -- Basic operations
 				-- "Enable"
 			create item.make_with_text (Interface_names.m_Enable_this_bkpt)
 			item.select_actions.extend (agent Application.enable_breakpoint (routine, index))
-			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+			item.select_actions.extend (agent Debugger_manager.notify_breakpoints_changes)
 			if Application.is_breakpoint_enabled (routine, index) then
 				item.disable_sensitive
 			end
@@ -129,7 +129,7 @@ feature -- Basic operations
 				-- "Disable"
 			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
 			item.select_actions.extend (agent Application.disable_breakpoint (routine, index))
-			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+			item.select_actions.extend (agent Debugger_manager.notify_breakpoints_changes)
 			if Application.is_breakpoint_disabled (routine, index) then
 				item.disable_sensitive
 			end
@@ -137,7 +137,7 @@ feature -- Basic operations
 				-- "Remove"
 			create item.make_with_text (Interface_names.m_Remove_this_bkpt)
 			item.select_actions.extend (agent Application.remove_breakpoint (routine, index))
-			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+			item.select_actions.extend (agent Debugger_manager.notify_breakpoints_changes)
 			if not Application.is_breakpoint_set (routine, index) then
 				item.disable_sensitive
 			end

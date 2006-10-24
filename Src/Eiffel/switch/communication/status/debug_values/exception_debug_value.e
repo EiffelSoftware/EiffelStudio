@@ -110,7 +110,7 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
-			create Result.make_exception (Current)
+			Result := Debugger_manager.Dump_value_factory.new_exception_value (Current)
 		end
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output

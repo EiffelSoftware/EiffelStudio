@@ -6,27 +6,27 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred 
+deferred
 class
 	ICOR_OBJECT
 
 inherit
 	COM_OBJECT
-		export 
+		export
 			{ICOR_EXPORTER} item, last_call_success, default_pointer
 		redefine
 			make_by_pointer,
 			out,
 			dispose
 		end
-		
+
 	ICOR_EXPORTER
 		export
 			{NONE} all
 		redefine
 			out
 		end
-		
+
 	SHARED_ICOR_OBJECTS_MANAGER
 		redefine
 			out
@@ -50,7 +50,7 @@ feature {ICOR_EXPORTER} -- Initialisation
 		end
 
 feature {ICOR_OBJECTS_MANAGER} -- Special feature for ICOR_OBJECTS_MANAGER
-	
+
 	update_item (p: POINTER) is
 		require
 			p_valid: p /= Default_pointer
@@ -76,25 +76,25 @@ feature {NONE}
 			-- if on_dispose , be careful to have safe GC code
 			-- and display related output
 		local
-			l_nb_ref: INTEGER			
+			l_nb_ref: INTEGER
 		do
 			debug ("com_object")
 				if on_dispose then
 					dispose_debug_output (1, item, $Current, 0)
 				else
-					clean_on_dispose_debug_output (1, item, $Current, 0)				
-				end			
-			end				
+					clean_on_dispose_debug_output (1, item, $Current, 0)
+				end
+			end
 			if item /= Default_pointer then
 				l_nb_ref := {CLI_COM}.release (item)
 				item := default_pointer
-			end	
+			end
 			debug ("com_object")
 				if on_dispose then
 					dispose_debug_output (2, item, $Current, l_nb_ref)
 				else
-					clean_on_dispose_debug_output (2, item, $Current, l_nb_ref)				
-				end				
+					clean_on_dispose_debug_output (2, item, $Current, l_nb_ref)
+				end
 			end
 		rescue
 			debug ("com_object")
@@ -102,7 +102,7 @@ feature {NONE}
 			end
 			item := default_pointer
 			retry
-		end		
+		end
 
 	dispose is
 			-- Free `item'.
@@ -134,7 +134,7 @@ feature {NONE}
 				}
 			]"
 		end
-		
+
 feature -- Ref management
 
 	add_ref is
@@ -146,7 +146,7 @@ feature -- Ref management
 
 			debug ("COM_OBJECT")
 				io.error.put_string ("Entering ["+ generating_type +"].add_ref ... on " + item.out + "%N")
-			end				
+			end
 			l_nb_ref := {CLI_COM}.add_ref (item)
 			debug ("COM_OBJECT")
 				io.error.put_string ("Quitting ["+ generating_type +"].add_ref [" + l_nb_ref.out + "] on " + item.out + "%N")
@@ -161,27 +161,27 @@ feature -- Ref management
 			check item /= Default_pointer end
 			debug ("COM_OBJECT")
 				io.error.put_string ("Entering [" + generating_type + "].release ... on " + item.out + "%N")
-			end						
+			end
 			l_nb_ref := {CLI_COM}.release (item)
 			debug ("COM_OBJECT")
 				io.error.put_string ("Quitting [" + generating_type + "].release [" + l_nb_ref.out + "] on " + item.out + "%N")
 			end
 			if l_nb_ref = 0 then
 				item := default_pointer
-			end			
+			end
 		end
-		
+
 feature -- Equality
 
 	is_equal_as_icor_object (other: like Current): BOOLEAN is
 			-- Comparison of pointer
 		require
-			other_not_void: other /= Void			
+			other_not_void: other /= Void
 		do
 			Result := item.is_equal (other.item)
 		ensure
 			symmetric: Result implies other.is_equal_as_icor_object (Current)
-			consistent: is_equal_as_icor_object (other) implies Result		
+			consistent: is_equal_as_icor_object (other) implies Result
 		end
 
 feature {ICOR_EXPORTER} -- Access
@@ -195,10 +195,10 @@ feature {ICOR_EXPORTER} -- Access
 					io.put_string ("[!] LastCallSuccess ERROR [" +last_error_code_id+ "]%N")
 				end
 			end
-		end	
-		
+		end
+
 	out: STRING is
-			-- 
+			--
 		do
 			Result := generating_type + "[0x"+item.out+"]"
 		end
@@ -213,7 +213,7 @@ feature -- Access status
 	last_call_succeed: BOOLEAN is
 			-- Is last call a success ?
 		do
-			Result := last_call_success = 0 
+			Result := last_call_success = 0
 				or last_call_success = 1 -- S_OK or S_FALSE
 				--| HRESULT .. < 0 if error ...
 		end
@@ -223,7 +223,7 @@ feature -- Access status
 		do
 			Result := Api_error_code_formatter.error_code_to_id (last_call_success)
 		end
-		
+
 	last_error_code_id: STRING is
 			-- Convert `last_call_success' to hex and keep the last word
 		do
@@ -233,9 +233,9 @@ feature -- Access status
 
 feature {ICOR_EXPORTER} -- Implementation
 
-	Api_error_code_formatter: EIFNET_API_ERROR_CODE_FORMATTER is
+	Api_error_code_formatter: ICOR_DEBUG_API_ERROR_CODE_FORMATTER is
 		once
-			Create Result
+			create Result
 		end
 
 	frozen cwin_close_handle (a_hdl: POINTER): INTEGER is
@@ -243,7 +243,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C signature(HANDLE): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CloseHandle"
@@ -254,15 +254,15 @@ feature {NONE} -- Implementation
 	sizeof_WCHAR: INTEGER is
 			-- Number of bytes in a value of type `WCHAR'
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"sizeof(WCHAR)"
 		end
-		
+
 	sizeof_CORDB_ADDRESS: INTEGER is
 			-- Number of bytes in a value of type `CORDB_ADDRESS'
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"sizeof(CORDB_ADDRESS)"
 		end
@@ -300,4 +300,4 @@ indexing
 		]"
 
 end -- class ICOR_OBJECT
-	
+

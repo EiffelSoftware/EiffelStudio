@@ -309,7 +309,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(ICorDebugProcess**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetProcess"
@@ -319,7 +319,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(CORDB_ADDRESS*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetBaseAddress"
@@ -329,7 +329,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(ICorDebugAssembly**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetAssembly"
@@ -339,7 +339,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(ULONG32, ULONG32 *, WCHAR*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetName"
@@ -349,7 +349,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(BOOL,BOOL): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnableJITDebugging"
@@ -359,7 +359,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(BOOL): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnableClassLoadCallbacks"
@@ -369,7 +369,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(mdMethodDef, ICorDebugFunction**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetFunctionFromToken"
@@ -379,7 +379,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(mdTypeDef, ICorDebugClass**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetClassFromToken"
@@ -389,7 +389,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(ICorDebugModuleBreakpoint**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CreateBreakpoint"
@@ -401,7 +401,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(REFIID, IUnknown**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetMetaDataInterface"
@@ -411,7 +411,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(mdModule*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetToken"
@@ -421,7 +421,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsDynamic"
@@ -431,7 +431,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(mdFieldDef, ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetGlobalVariableValue"
@@ -441,7 +441,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetSize"
@@ -451,7 +451,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugModule signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsInMemory"
@@ -464,7 +464,7 @@ feature {NONE} -- IID ...
 			--	 * meta data for this module.
 		external
 			"[
-				C++ inline use "cli_headers.h"
+				C++ inline use "cli_debugger_headers.h"
 			]"
 		alias
 			"[

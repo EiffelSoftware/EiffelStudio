@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that manages DEBUGGED_OBJECT instances."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -20,6 +20,7 @@ feature {NONE}-- Creation
 	make is
 		do
 			is_dotnet := Application.is_dotnet
+			caching_enabled := False
 		end
 
 	is_dotnet: BOOLEAN
@@ -109,6 +110,11 @@ feature -- Last debugged object
 
 	last_debugged_object: DEBUGGED_OBJECT
 
+--	last_debugged_object_is_erroneous: BOOLEAN is
+--		do
+--			Result := last_debugged_object /= Void and then last_debugged_object.is_erroneous
+--		end
+
 	last_sp_lower, last_sp_upper: INTEGER
 
 feature -- debugged object creation
@@ -133,10 +139,10 @@ feature -- debugged object creation
 			end
 			last_debugged_object := Result
 			last_sp_lower := sp_lower
-			last_sp_upper := sp_upper		
+			last_sp_upper := sp_upper
 		end
 		
-	caching_enabled: BOOLEAN is False
+	caching_enabled: BOOLEAN
 
 	debugged_object (addr: STRING; sp_lower, sp_upper: INTEGER): DEBUGGED_OBJECT is
 		require

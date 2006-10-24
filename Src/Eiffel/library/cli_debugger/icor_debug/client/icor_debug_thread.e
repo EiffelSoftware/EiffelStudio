@@ -202,7 +202,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugProcess**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetProcess"
@@ -212,7 +212,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(DWORD*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetID"
@@ -222,7 +222,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugAppDomain**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetAppDomain"
@@ -232,7 +232,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(CorDebugThreadState): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetDebugState"
@@ -242,7 +242,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(CorDebugThreadState*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetDebugState"
@@ -252,7 +252,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(CorDebugUserState*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetUserState"
@@ -262,7 +262,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCurrentException"
@@ -272,7 +272,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"ClearCurrentException"
@@ -282,7 +282,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugStepper**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CreateStepper"
@@ -292,7 +292,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugChainEnum **): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateChains"
@@ -302,7 +302,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugChain**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetActiveChain"
@@ -312,7 +312,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugFrame**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetActiveFrame"
@@ -322,7 +322,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugEval**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CreateEval"
@@ -332,7 +332,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugThread signature(ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetObject"
@@ -343,7 +343,7 @@ feature -- External macro (enum)
 	frozen enum_cor_debug_thread_state__thread_run: INTEGER is
 			-- 
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"THREAD_RUN"
 		end		
@@ -351,56 +351,56 @@ feature -- External macro (enum)
 	frozen enum_cor_debug_thread_state__thread_suspend: INTEGER is
 			-- 
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"THREAD_SUSPEND"
 		end
 		
 	enum_cor_debug_user_state__user_stop_requested: INTEGER is --		= 0x01,
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_STOP_REQUESTED"
 		end
 
 	enum_cor_debug_user_state__user_suspend_requested: INTEGER is --	= 0x02,
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_SUSPEND_REQUESTED"
 		end
 
 	enum_cor_debug_user_state__user_background: INTEGER is --			= 0x04,
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_BACKGROUND"
 		end
 
 	enum_cor_debug_user_state__user_unstarted: INTEGER is --			= 0x08,
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_UNSTARTED"
 		end
 
 	enum_cor_debug_user_state__user_stopped: INTEGER is --			= 0x10,
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_STOPPED"
 		end
 
 	enum_cor_debug_user_state__user_wait_sleep_join: INTEGER is --	= 0x20,
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_WAIT_SLEEP_JOIN"
 		end
 
 	enum_cor_debug_user_state__user_suspended: INTEGER is --			= 0x40		
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"USER_SUSPENDED"
 		end

@@ -25,7 +25,7 @@ inherit
 			Pixmaps as Shared_pixmaps
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	EB_EDITOR_TOKEN_IDS
 
@@ -128,7 +128,7 @@ feature -- Miscellaneous
 							--  2 = stopped version.
 			app_exec: APPLICATION_EXECUTION
 		do
-			app_exec := Eb_debugger_manager.application
+			app_exec := debugger_manager.application
 			status := app_exec.status
 			pebble_routine := pebble.routine
 			pebble_index := pebble.index

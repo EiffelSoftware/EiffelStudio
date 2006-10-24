@@ -1613,23 +1613,28 @@ rt_private void dbg_exception_trace (EIF_PSTREAM sp, int eid)
 	int i, l, n;
 
 	CHECK("EXCEPTION TRACE ID must be positive", eid > 0);	
-	etrace = dbg_fetch_exception_trace (eid);
-	/* etrace had been removed from exception traces storage, 
-	 * so we'll have to free it at the end */
-	if (etrace != NULL) {
-		l = (int) strlen(etrace);
-		n = l / IDRF_SIZE;
-		sprintf(buf, "%u", n + 1);
-		app_twrite(buf, strlen(buf));
-		for (i = 0; i <= n; i++) {
-			strncpy (buf, etrace + i * IDRF_SIZE, IDRF_SIZE);
-			if (i == n) {
-				app_twrite(buf, l - i * IDRF_SIZE);
-			} else {
-				app_twrite(buf, IDRF_SIZE);
+	if (eid > 0) {
+		etrace = dbg_fetch_exception_trace (eid);
+		/* etrace had been removed from exception traces storage, 
+		 * so we'll have to free it at the end */
+		if (etrace != NULL) {
+			l = (int) strlen(etrace);
+			n = l / IDRF_SIZE;
+			sprintf(buf, "%u", n + 1);
+			app_twrite(buf, strlen(buf));
+			for (i = 0; i <= n; i++) {
+				strncpy (buf, etrace + i * IDRF_SIZE, IDRF_SIZE);
+				if (i == n) {
+					app_twrite(buf, l - i * IDRF_SIZE);
+				} else {
+					app_twrite(buf, IDRF_SIZE);
+				}
 			}
+			free(etrace);
+		} else {
+			sprintf(buf, "%u", 0);
+			app_twrite(buf, strlen(buf));
 		}
-		free(etrace);
 	} else {
 		sprintf(buf, "%u", 0);
 		app_twrite(buf, strlen(buf));

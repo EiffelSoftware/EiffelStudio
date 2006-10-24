@@ -16,7 +16,7 @@ inherit
 			is_tooltext_important
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	SHARED_EIFFEL_PROJECT
 

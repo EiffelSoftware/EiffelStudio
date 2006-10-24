@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugModuleBreakpoint signature(ICorDebugModule**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetModule"

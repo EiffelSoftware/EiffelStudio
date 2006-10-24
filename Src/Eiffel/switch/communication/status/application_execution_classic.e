@@ -99,7 +99,7 @@ feature -- Execution
 					fixme ("[
 						Try to use UNICODE for environment variables in debugger. 
 						But for now the classic debugger would not allow that.
-						]")				
+						]")
 					l_env_s8 := env.as_string_8
 				end
 				run_request.set_environment_variables (l_env_s8)
@@ -253,7 +253,8 @@ feature -- Query
 
 	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
 		do
-			create Result.make_object (a_addr, a_cl)
+			Result := Debugger_manager.Dump_value_factory.new_object_value (a_addr, a_cl)
+
 		end
 
 	debug_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is

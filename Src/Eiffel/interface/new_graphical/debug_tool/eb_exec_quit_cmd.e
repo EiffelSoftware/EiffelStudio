@@ -21,7 +21,7 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	EB_SHARED_PREFERENCES
 
@@ -44,7 +44,7 @@ feature -- Formatting
 	execute is
 			-- Pause the execution.
 		do
-			if eb_debugger_manager.application_is_executing then
+			if Debugger_manager.application_is_executing then
 				ask_and_kill
 			end
 		end
@@ -102,10 +102,10 @@ feature {NONE} -- Implementation
 	kill is
 			-- Effectively kill the application.
 		require
-			valid_application: eb_debugger_manager.application_is_executing
+			valid_application: Debugger_manager.application_is_executing
 		do
-			if eb_debugger_manager.application_is_executing then
-				eb_debugger_manager.Application.kill
+			if Debugger_manager.application_is_executing then
+				Debugger_manager.Application.kill
 			end
 		end
 

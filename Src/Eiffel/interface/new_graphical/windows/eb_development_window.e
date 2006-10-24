@@ -2916,10 +2916,10 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				is_destroying := True
 					-- If a launched application is still running, kill it.
 				if
-					Eb_debugger_manager.application_is_executing
+					Debugger_manager.application_is_executing
 					and then Eb_debugger_manager.debugging_window = Current
 				then
-					Eb_debugger_manager.Application.kill
+					Debugger_manager.Application.kill
 				else
 					development_window_data.save_left_panel_layout (left_panel.save_to_resource)
 					development_window_data.save_right_panel_layout (right_panel.save_to_resource)

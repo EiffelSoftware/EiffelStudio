@@ -33,7 +33,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -158,7 +158,7 @@ feature {NONE} -- Initialization
 
 			box.extend (box2)
 			box.disable_item_expand (box2)
-			if eb_debugger_manager.application_is_executing then
+			if Debugger_manager.application_is_executing then
 				display_stop_cause (False)
 			end
 			exception.remove_text
@@ -319,7 +319,7 @@ feature -- Status setting
 	set_callstack_thread (tid: INTEGER) is
 		do
 			if debugger_manager.application_current_thread_id /= tid then
-				debugger_manager.set_current_thread_id (tid)
+				debugger_manager.change_current_thread_id (tid)
 				update
 			end
 		end
@@ -364,8 +364,8 @@ feature -- Status setting
 		do
 			cancel_process_real_update_on_idle
 			request_clean_stack_grid
-			if eb_debugger_manager.application_is_executing then
-				l_is_stopped := eb_debugger_manager.application_is_stopped
+			if Debugger_manager.application_is_executing then
+				l_is_stopped := Debugger_manager.application_is_stopped
 				display_stop_cause (l_is_stopped)
 				refresh_threads_info
 				process_real_update_on_idle (l_is_stopped)
@@ -462,7 +462,7 @@ feature {NONE} -- Grid Implementation
 				if l_row /= Void then
 					level := level_from_row (l_row)
 					if level > 0 then
-						elem ?= eb_debugger_manager.application.status.current_call_stack.i_th (level)
+						elem ?= Debugger_manager.application.status.current_call_stack.i_th (level)
 						if
 							elem /= Void and then
 							elem.dynamic_class /= Void and then
@@ -522,8 +522,8 @@ feature {NONE} -- Implementation
 		do
 			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
 			request_clean_stack_grid
-			if eb_debugger_manager.application_is_executing then
-				l_status := eb_debugger_manager.application.status
+			if Debugger_manager.application_is_executing then
+				l_status := Debugger_manager.application.status
 				if dbg_was_stopped then
 					l_status.update_on_stopped_state
 				end
@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 		local
 			m: STRING_32
 		do
-			if not eb_debugger_manager.application_is_executing then
+			if not Debugger_manager.application_is_executing then
 				stop_cause.set_text (Interface_names.l_System_launched)
 				exception.remove_text
 				exception.remove_tooltip
@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 				exception.remove_tooltip
 			else -- Application is stopped.
 				create m.make (100)
-				inspect eb_debugger_manager.application.status.reason
+				inspect Debugger_manager.application.status.reason
 				when Pg_step then
 					stop_cause.set_text (Interface_names.l_Stepped)
 					m.append (Interface_names.l_Stepped)
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 			ctid: INTEGER
 			s: APPLICATION_STATUS
 		do
-			s := eb_debugger_manager.application.status
+			s := Debugger_manager.application.status
 			if s.all_thread_ids_count > 1 then
 				ctid := s.current_thread_id
 				thread_id.set_text ("0x" + ctid.to_hex_string)
@@ -685,7 +685,7 @@ feature {NONE} -- Implementation
 		local
 			s32: STRING_32
 		do
-			s32 := eb_debugger_manager.Application.status.exception_description
+			s32 := Debugger_manager.Application.status.exception_description
 			if s32 /= Void then
 				Result := s32
 			else
@@ -702,12 +702,12 @@ feature {NONE} -- Implementation
 	exception_message_text: STRING_32 is
 			-- Text corresponding to the current exception.
 		local
-			dotnet_status: APPLICATION_STATUS_DOTNET
+			l_status: APPLICATION_STATUS
 		do
-			dotnet_status ?= eb_debugger_manager.application.status
-			if dotnet_status /= Void then
-				if dotnet_status.exception_occurred then
-					Result := dotnet_status.exception_to_string
+			l_status := Debugger_manager.application.status
+			if l_status /= Void then
+				if l_status.exception_occurred then
+					Result := l_status.exception_message
 				else
 					Result := "No exception occurred"
 				end
@@ -802,7 +802,7 @@ feature {NONE} -- Implementation
 				a_row.set_data (-1) -- This is not a valid Eiffel call stack element.
 			end
 
-			app_exec := eb_debugger_manager.Application
+			app_exec := Debugger_manager.Application
 				--| Tooltip addition
 			l_nb_stack := app_exec.status.current_call_stack.count
 			l_tooltip.prepend_string ((elem.level_in_stack).out + "/" + l_nb_stack.out + ": ")
@@ -1004,7 +1004,7 @@ feature {NONE} -- Implementation
 					fn.create_read_write
 				end
 					--| We generate the call stack.
-				eb_debugger_manager.Application.status.current_call_stack.display_stack (fn)
+				Debugger_manager.Application.status.current_call_stack.display_stack (fn)
 					--| We put it in the file.
 				if not fn.is_closed then
 					fn.close
@@ -1030,7 +1030,7 @@ feature {NONE} -- Implementation
 			if not retried then
 					--| We generate the call stack.
 				create l_output.make
-				eb_debugger_manager.Application.status.current_call_stack.display_stack (l_output)
+				Debugger_manager.Application.status.current_call_stack.display_stack (l_output)
 				ev_application.clipboard.set_text (l_output.stored_output)
 				l_output.reset_output
 			end
@@ -1060,7 +1060,7 @@ feature {NONE} -- Implementation
 			l_item_text, s: STRING
 			l_status: APPLICATION_STATUS
 		do
-			l_status := eb_debugger_manager.Application.status
+			l_status := Debugger_manager.Application.status
 			if l_status /= Void and then l_status.is_stopped then
 				arr := l_status.all_thread_ids
 				if arr /= Void and then not arr.is_empty then

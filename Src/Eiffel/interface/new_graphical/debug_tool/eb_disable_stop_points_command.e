@@ -18,7 +18,7 @@ inherit
 
 	EB_VETO_FACTORY
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	SHARED_EIFFEL_PROJECT
 
@@ -95,7 +95,7 @@ feature -- Execution
 			wd: EV_INFORMATION_DIALOG
 			app_exec: APPLICATION_EXECUTION
 		do
-			app_exec := eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			if app_exec.has_breakpoints then
 				app_exec.disable_all_breakpoints
 
@@ -103,7 +103,7 @@ feature -- Execution
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-				Eb_debugger_manager.notify_breakpoints_changes
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -122,14 +122,14 @@ feature -- Update
 			if f.is_debuggable then
 				index := bs.index
 				body_index := bs.body_index
-				app_exec := eb_debugger_manager.application
+				app_exec := Debugger_manager.application
 				app_exec.disable_breakpoint (f, index)
 
 				if app_exec.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-				Eb_debugger_manager.notify_breakpoints_changes
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -141,7 +141,7 @@ feature -- Update
 			app_exec: APPLICATION_EXECUTION
 		do
 			f := fs.e_feature
-			app_exec := eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			if f /= Void and then f.is_debuggable and then app_exec.has_breakpoint_set(f) then
 				app_exec.disable_breakpoints_in_feature (f)
 
@@ -149,7 +149,7 @@ feature -- Update
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-				Eb_debugger_manager.notify_breakpoints_changes
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -174,14 +174,14 @@ feature -- Update
 		do
 			conv_fst ?= cs
 			if conv_fst = Void then
-				app_exec := eb_debugger_manager.application
+				app_exec := Debugger_manager.application
 				app_exec.disable_breakpoints_in_class (cs.e_class)
 
 				if app_exec.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-				Eb_debugger_manager.notify_breakpoints_changes
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 

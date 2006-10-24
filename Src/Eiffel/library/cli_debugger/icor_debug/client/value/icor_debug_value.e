@@ -312,7 +312,7 @@ feature {NONE} -- External Implementation
 		external
 			"[
 				C++ ICorDebugValue signature(CorElementType*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetType"
@@ -322,7 +322,7 @@ feature {NONE} -- External Implementation
 		external
 			"[
 				C++ ICorDebugValue signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetSize"
@@ -332,7 +332,7 @@ feature {NONE} -- External Implementation
 		external
 			"[
 				C++ ICorDebugValue signature(CORDB_ADDRESS*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetAddress"

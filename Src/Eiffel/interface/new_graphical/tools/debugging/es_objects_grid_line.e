@@ -72,7 +72,7 @@ inherit
 			default_create, copy, is_equal
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 		undefine
 			default_create, copy, is_equal
 		end
@@ -692,8 +692,8 @@ feature -- Updating
 						{DUMP_VALUE_CONSTANTS}.Type_integer_64,
 						{DUMP_VALUE_CONSTANTS}.Type_natural_32,
 						{DUMP_VALUE_CONSTANTS}.Type_natural_64,
-						{DUMP_VALUE_CONSTANTS}.Type_character,
-						{DUMP_VALUE_CONSTANTS}.Type_wide_character
+						{DUMP_VALUE_CONSTANTS}.Type_character_8,
+						{DUMP_VALUE_CONSTANTS}.Type_character_32
 					then
 						if hexa_mode_enabled then
 							l_text := l_dmp.hexa_output_for_debugger
@@ -922,7 +922,7 @@ feature {NONE} -- Filling
 				dcl := object_dynamic_class
 				if
 					dcl /= Void
-					and then eb_debugger_manager.display_agent_details
+					and then Eb_debugger_manager.display_agent_details
 					and then dcl.conform_to (Application.Eiffel_system.System.routine_class.compiled_class)
 				then
 					fill_extra_attributes_for_agent (a_row, list_cursor)

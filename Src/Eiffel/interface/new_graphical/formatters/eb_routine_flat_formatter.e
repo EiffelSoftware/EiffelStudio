@@ -23,7 +23,7 @@ inherit
 
 	SHARED_FORMAT_INFO
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 create
 	make
@@ -77,11 +77,11 @@ feature -- Formatting
 			if displayed and selected then
 				if associated_feature /= Void then
 					if
-						eb_debugger_manager.application_is_executing
-						and then eb_debugger_manager.application_is_stopped
-						and then eb_debugger_manager.application.status.current_call_stack /= Void
+						Debugger_manager.application_is_executing
+						and then Debugger_manager.application_is_stopped
+						and then Debugger_manager.application.status.current_call_stack /= Void
 					then
-						stel  ?= eb_debugger_manager.application.status.current_call_stack_element
+						stel  ?= Debugger_manager.application.status.current_call_stack_element
 						if
 							stel /= Void and then stel.routine /= Void
 							and then stel.routine.body_id_for_ast = associated_feature.body_index

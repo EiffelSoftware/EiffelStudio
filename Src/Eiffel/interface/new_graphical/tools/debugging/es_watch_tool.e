@@ -38,7 +38,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end

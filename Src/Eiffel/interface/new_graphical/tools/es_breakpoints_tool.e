@@ -19,7 +19,7 @@ inherit
 
 	EB_RECYCLABLE
 
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -38,6 +38,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	EB_SHARED_WINDOW_MANAGER
 
 create
 	make
@@ -101,16 +103,16 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (tb)
 			toggle_layout_cmd := scmd
 
-			if eb_debugger_manager.enable_bkpt /= Void then
-				enable_bkpt_button := eb_debugger_manager.enable_bkpt.new_mini_toolbar_item
+			if Eb_debugger_manager.enable_bkpt /= Void then
+				enable_bkpt_button := Eb_debugger_manager.enable_bkpt.new_mini_toolbar_item
 				mini_toolbar.extend (enable_bkpt_button)
 			end
-			if eb_debugger_manager.disable_bkpt /= Void then
-				disable_bkpt_button := eb_debugger_manager.disable_bkpt.new_mini_toolbar_item
+			if Eb_debugger_manager.disable_bkpt /= Void then
+				disable_bkpt_button := Eb_debugger_manager.disable_bkpt.new_mini_toolbar_item
 				mini_toolbar.extend (disable_bkpt_button)
 			end
-			if eb_debugger_manager.clear_bkpt /= Void then
-				clear_bkpt_button := eb_debugger_manager.clear_bkpt.new_mini_toolbar_item
+			if Eb_debugger_manager.clear_bkpt /= Void then
+				clear_bkpt_button := Eb_debugger_manager.clear_bkpt.new_mini_toolbar_item
 				mini_toolbar.extend (clear_bkpt_button)
 			end
 		ensure
@@ -200,11 +202,11 @@ feature -- Events
 
 	on_row_double_clicked is
 		local
-			row: EV_GRID_ROW
+--			row: EV_GRID_ROW
 		do
-			row := grid.single_selected_row
-			if row /= Void then
-			end
+--			row := grid.single_selected_row
+--			if row /= Void then
+--			end
 		end
 
 	refresh is
@@ -231,7 +233,7 @@ feature -- Events
 	update is
 			-- Refresh `Current's display.
 		do
-			if eb_debugger_manager.application_initialized then
+			if Debugger_manager.application_initialized then
 				grid.request_delayed_clean
 				refresh_breakpoints_info
 			end
@@ -337,7 +339,7 @@ feature {NONE} -- Implementation
 				condition_color := preferences.editor_data.string_text_color
 
 				col := preferences.editor_data.comments_text_color
-				app_exec := eb_debugger_manager.application
+				app_exec := Debugger_manager.application
 				grid.call_delayed_clean
 				if not app_exec.has_breakpoints then
 					grid.insert_new_row (1)
@@ -395,13 +397,12 @@ feature {NONE} -- Impl bp
 			lab: EV_GRID_LABEL_ITEM
 			subrow: EV_GRID_ROW
 
-			table: HASH_TABLE [PART_SORTED_TWO_WAY_LIST[E_FEATURE], INTEGER]
+			table: HASH_TABLE [PART_SORTED_TWO_WAY_LIST [E_FEATURE], INTEGER]
 			stwl: PART_SORTED_TWO_WAY_LIST [E_FEATURE]
 			f: E_FEATURE
 			c: CLASS_C
 			bp_list: LIST [INTEGER]
 			has_bp: BOOLEAN
---			cs: CLASSI_STONE
 			cs: CLASSC_STONE
 			app_exec: APPLICATION_EXECUTION
 		do
@@ -453,7 +454,7 @@ feature {NONE} -- Impl bp
 				end
 
 				if has_bp then
-					create lab.make_with_text (c.name_in_upper) --c.lace_class
+					create lab.make_with_text (c.name_in_upper)
 					lab.set_foreground_color (class_color)
 					create cs.make (c)
 					lab.set_data (cs)
@@ -471,6 +472,7 @@ feature {NONE} -- Impl bp
 					sr := 1
 					subrow.set_item (1, lab)
 					subrow.set_item (2, create {EV_GRID_ITEM})
+					subrow.item (2).pointer_button_press_actions.force_extend (agent on_class_item_right_clicked (c, subrow, ?,?,?))
 					subrow.set_item (3, create {EV_GRID_ITEM})
 
 					from
@@ -507,7 +509,7 @@ feature {NONE} -- Impl bp
 			bp: BREAKPOINT
 			app_exec: APPLICATION_EXECUTION
 		do
-			app_exec := eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			if display_enabled and display_disabled then
 				bp_list := app_exec.breakpoints_set_for (f)
 			elseif display_enabled then
@@ -598,6 +600,7 @@ feature {NONE} -- Impl bp
 				end
 				create lab.make_with_text (s)
 				subrow.set_item (2, lab)
+				lab.pointer_button_press_actions.force_extend (agent on_feature_item_right_clicked (f, subrow, ?,?,?))
 				subrow.set_item (3, create {EV_GRID_ITEM})
 				subrow.ensure_expandable
 			end
@@ -616,6 +619,75 @@ feature {NONE} -- Impl bp
 			if button = 3 then
 				create bp_stone.make (f, i)
 				bp_stone.display_bkpt_menu
+			end
+		end
+
+	on_class_item_right_clicked	(c: CLASS_C; r: EV_GRID_ROW; x, y, button: INTEGER) is
+		require
+			c /= Void
+			r /= Void
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+			app: APPLICATION_EXECUTION
+		do
+			grid.remove_selection
+			r.enable_select
+			if button = 3 then
+				app := Debugger_manager.application
+				create m
+				create mi.make_with_text ("Add first breakpoints in class" )
+				mi.select_actions.extend (agent app.enable_first_breakpoints_in_class (c))
+				mi.select_actions.extend (agent window_manager.synchronize_all_about_breakpoints)
+				m.extend (mi)
+				create mi.make_with_text (Interface_names.m_enable_stop_points)
+				mi.select_actions.extend (agent app.enable_breakpoints_in_class (c))
+				mi.select_actions.extend (agent window_manager.synchronize_all_about_breakpoints)
+				m.extend (mi)
+				create mi.make_with_text (Interface_names.m_disable_stop_points)
+				mi.select_actions.extend (agent app.disable_breakpoints_in_class (c))
+				mi.select_actions.extend (agent window_manager.synchronize_all_about_breakpoints)
+				m.extend (mi)
+				create mi.make_with_text (Interface_names.m_clear_breakpoints)
+				mi.select_actions.extend (agent app.remove_breakpoints_in_class (c))
+				mi.select_actions.extend (agent window_manager.synchronize_all_about_breakpoints)
+				m.extend (mi)
+				m.show
+			end
+		end
+
+	on_feature_item_right_clicked	(f: E_FEATURE; r: EV_GRID_ROW; x, y, button: INTEGER) is
+		require
+			f /= Void
+			r /= Void
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+			app: APPLICATION_EXECUTION
+		do
+			grid.remove_selection
+			r.enable_select
+			if button = 3 then
+				app := Debugger_manager.application
+				create m
+				create mi.make_with_text ("Add first breakpoint in feature" )
+				mi.select_actions.extend (agent app.enable_first_breakpoint_of_feature (f))
+				mi.select_actions.extend (agent window_manager.synchronize_all_about_breakpoints)
+				m.extend (mi)
+				create mi.make_with_text (Interface_names.m_enable_stop_points)
+				mi.select_actions.extend (agent app.enable_breakpoints_in_feature (f))
+				mi.select_actions.extend (agent window_manager.synchronize_all_about_breakpoints)
+				m.extend (mi)
+				create mi.make_with_text (Interface_names.m_disable_stop_points)
+				mi.select_actions.extend (agent app.disable_breakpoints_in_feature (f))
+				mi.select_actions.extend (agent window_manager.synchronize_all_about_breakpoints)
+				m.extend (mi)
+				create mi.make_with_text (Interface_names.m_clear_breakpoints)
+				mi.select_actions.extend (agent app.remove_breakpoints_in_feature (f))
+				mi.select_actions.extend (agent window_manager.synchronize_all_about_breakpoints)
+
+				m.extend (mi)
+				m.show
 			end
 		end
 

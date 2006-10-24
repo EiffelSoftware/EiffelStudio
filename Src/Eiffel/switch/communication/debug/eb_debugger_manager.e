@@ -14,7 +14,7 @@ inherit
 	DEBUGGER_MANAGER
 		redefine
 			make,
-			set_current_thread_id,
+			change_current_thread_id,
 			on_application_before_launching,
 			on_application_launched,
 			on_application_before_resuming,
@@ -22,7 +22,11 @@ inherit
 			on_application_before_stopped,
 			on_application_just_stopped,
 			on_application_quit,
-			implementation
+			implementation,
+			set_maximum_stack_depth,
+			notify_breakpoints_changes,
+			debugger_message,
+			windows_handle
 		end
 
 	EB_CONSTANTS
@@ -321,7 +325,6 @@ feature -- Helpers
 			end
 		end
 
-
 feature -- GUI Access
 
 	windows_handle: POINTER is
@@ -346,13 +349,6 @@ feature -- Status report
 
 	raised: BOOLEAN
 			-- Are the debugging tools currently raised?
-
-	can_debug: BOOLEAN
-			-- Is graphical debugging allowed?
-
-	maximum_stack_depth: INTEGER
-			-- Maximum number of call stack elements displayed.
-			-- -1 means display all elements.
 
 feature -- Access
 
@@ -420,23 +416,12 @@ feature -- Access
 
 	notify_breakpoints_changes is
 		do
+			Precursor
 			display_breakpoints (False)
 			window_manager.synchronize_all_about_breakpoints
 		end
 
 feature -- Status setting
-
-	enable_debug is
-			-- Allow graphic debugging.
-		do
-			can_debug := True
-		end
-
-	disable_debug is
-			-- Disallow graphic debugging.
-		do
-			can_debug := False
-		end
 
 	set_debugging_window (a_window: EB_DEVELOPMENT_WINDOW) is
 			-- Associate `Current' with `a_window'.
@@ -453,7 +438,7 @@ feature -- Status setting
 			cst: CALL_STACK_STONE
 			ecs: EIFFEL_CALL_STACK
 		do
-			maximum_stack_depth := nb
+			Precursor (nb)
 			if Application.is_running then
 				Application.status.set_max_depth (nb)
 				if Application.is_stopped then
@@ -810,7 +795,7 @@ feature -- Status setting
 			end
 		end
 
-	set_current_thread_id (tid: INTEGER) is
+	change_current_thread_id (tid: INTEGER) is
 			-- Set Current thread id to `tid'
 		do
 			Precursor (tid)

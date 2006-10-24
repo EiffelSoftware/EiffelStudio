@@ -27,7 +27,7 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		undefine

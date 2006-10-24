@@ -2171,7 +2171,7 @@ feature -- Specific function evaluation
 					end
 					l_icd_debug_value.clean_on_dispose
 				else
-					if (l_data_icd_class.last_error_code) = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
+					if (l_data_icd_class.last_error_code) = {ICOR_DEBUG_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
 						l_once_already_called := False
 					else
 						l_once_not_available := True
@@ -2200,7 +2200,7 @@ feature -- Specific function evaluation
 						else
 							l_icd_debug_value.clean_on_dispose
 						end
-					elseif l_data_icd_class.last_error_code = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
+					elseif l_data_icd_class.last_error_code = {ICOR_DEBUG_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
 						fixme ("[
 									JFIAT: in this case, the once data about exception is not initialized yet.
 									So there is no exception and no result yet.

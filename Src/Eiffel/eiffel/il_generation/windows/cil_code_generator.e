@@ -512,6 +512,10 @@ feature -- Cleanup
 			l_mem: MEMORY
 			l_module: IL_MODULE
 		do
+				--| End recording session, (then Save IL Information used for eStudio .NET debugger)
+			Il_debug_info_recorder.end_recording_session
+
+			--| Clean up data
 			if internal_il_modules /= Void then
 				from
 					i := internal_il_modules.lower
@@ -881,7 +885,7 @@ feature -- Generation Structure
 			main_module.save_to_disk (a_signing)
 
 			--| End recording session, (then Save IL Information used for eStudio .NET debugger)
-			Il_debug_info_recorder.end_recording_session
+			-- The real end of recording is done in `cleanup'
 		end
 
 	generate_resources (a_resources: LIST [CONF_EXTERNAL_RESOURCE]) is

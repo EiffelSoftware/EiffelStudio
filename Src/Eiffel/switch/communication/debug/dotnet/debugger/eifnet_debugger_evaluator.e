@@ -720,7 +720,7 @@ feature {NONE}
 					Result := Void
 				else
 					Result := l_icd_eval.get_result
-					last_eval_aborted := (l_icd_eval.last_call_success & 0xFFFF) = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_s_func_eval_aborted
+					last_eval_aborted := (l_icd_eval.last_call_success & 0xFFFF) = {ICOR_DEBUG_API_ERROR_CODE_FORMATTER}.cordbg_s_func_eval_aborted
 				end
 			end
 			evaluation_termination (True)

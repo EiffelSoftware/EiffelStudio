@@ -45,16 +45,6 @@ feature -- Access
 			end
 		end
 
-	kay_actions: HASH_TABLE [PROCEDURE [ANY, TUPLE], INTEGER] is
-			-- Table of all registered key actions with their keys
-			-- Key is action index, value is that action agent.
-		do
-			create Result.make (key_actions.count)
-			Result.fill (key_actions)
-		ensure
-			result_attached: Result /= Void
-		end
-
 	key_shortcut_with_action_index (a_index: INTEGER): ES_KEY_SHORTCUT is
 			-- Key shortcut associated with agent whose index is `a_index'
 			-- Void if not key shortcut is assoicated with `a_index'

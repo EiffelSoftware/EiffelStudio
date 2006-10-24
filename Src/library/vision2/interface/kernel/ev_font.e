@@ -378,7 +378,7 @@ feature {NONE} -- Contract support
 				preferred_families /= Void and then preferred_families.is_empty
 		end
 
-feature {EV_ANY, EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_ANY_HANDLER} -- Implementation
 
 	implementation: EV_FONT_I
 			-- Responsible for interaction with native graphics

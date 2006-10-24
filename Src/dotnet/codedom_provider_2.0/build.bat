@@ -10,6 +10,12 @@ IF "%ISE_PLATFORM%" == "" GOTO END
 SET PATH=%PATH%;%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin
 SET TARGET=%1
 IF '%1' == '' SET TARGET=debug
+IF '%TARGET%' NEQ 'debug' (
+	IF '%TARGET%' NEQ 'release' (
+		ECHO "Invalid target: choose release or debug"
+		GOTO END
+	)
+)
 
 ECHO -
 ECHO Cleaning up

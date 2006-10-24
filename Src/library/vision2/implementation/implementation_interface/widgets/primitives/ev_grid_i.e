@@ -4000,14 +4000,15 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			viewport.resize_actions.extend (agent viewport_resized)
 			create static_fixed
 
-			static_fixed.set_minimum_size (32000, 32000)
+			static_fixed.set_minimum_size (static_fixed_x_offset * 2, static_fixed_y_offset * 2)
 			create static_fixed_viewport
 			static_fixed_viewport.resize_actions.extend (agent resize_viewport_in_static_fixed)
 			vertical_box.extend (static_fixed_viewport)
 			static_fixed_viewport.extend (static_fixed)
-			static_fixed_viewport.set_offset (16000, 16000)
+			static_fixed_viewport.set_offset (static_fixed_x_offset, static_fixed_y_offset)
 			static_fixed.extend (viewport)
-			static_fixed.set_item_position (viewport, 16000, 16000)
+			static_fixed.set_item_position (viewport, static_fixed_x_offset, static_fixed_y_offset)
+
 			vertical_box.extend (horizontal_scroll_bar)
 			vertical_box.disable_item_expand (horizontal_scroll_bar)
 			horizontal_scroll_bar.hide
@@ -4112,7 +4113,19 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 
 	static_fixed: EV_FIXED
 		-- A static fixed, which is used to hold widgets that are contained in locked rows or columns.
-		-- The contents are not moved relative to the viewable area as the virtual position of `Current' changed
+		-- The contents are not moved relative to the viewable area as the virtual position of `Current' changed.
+
+	static_fixed_x_offset: INTEGER
+			-- Default X offset of viewport contained within static fixed.
+		do
+			Result := 16000
+		end
+
+	static_fixed_y_offset: INTEGER
+			-- Default Y offset of viewport container within static fixed.
+		do
+			Result := 16000
+		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM) is
 			-- Respond to `header_item' being resized.

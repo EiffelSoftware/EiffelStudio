@@ -813,12 +813,18 @@ feature{NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
+		local
+			l_export_status: EXPORT_I
+			l_system: like system
 		do
 			if a_item.is_real_feature then
-				check a_item.e_feature.export_status /= Void end
-				Result := a_item.e_feature.export_status.is_all
+				l_export_status := a_item.e_feature.export_status
+				l_system := system
+				check l_export_status /= Void end
+				Result := l_export_status.is_all or else l_export_status.is_exported_to (l_system.class_of_id (l_system.any_id))
 			end
 		end
+		
 
 	is_deferred_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is deferred

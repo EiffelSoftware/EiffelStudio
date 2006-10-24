@@ -9,7 +9,7 @@ class
 	EB_SHARED_GRAPHICAL_COMMANDS
 
 inherit
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 
 feature -- Commands
 

@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugArrayValue signature(CorElementType*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetElementType"
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetRank"
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCount"
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32,ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetDimensions"
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugArrayValue signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"HasBaseIndicies"
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32,ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetBaseIndicies"
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32, ULONG32*, ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetElement"
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugArrayValue signature(ULONG32, ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetElementAtPosition"

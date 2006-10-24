@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugILFrame signature(ULONG32*, CorDebugMappingResult*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetIP"
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugILFrame signature(ICorDebugValueEnum**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateLocalVariables"
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugILFrame signature(DWORD,ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetLocalVariable"
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugILFrame signature(ICorDebugValueEnum**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateArguments"
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugILFrame signature(DWORD,ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetArgument"
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugILFrame signature(ULONG32 *): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetStackDepth"

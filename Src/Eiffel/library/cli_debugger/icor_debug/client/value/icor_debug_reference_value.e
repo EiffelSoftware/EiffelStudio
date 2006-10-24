@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsNull"
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(CORDB_ADDRESS*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetValue"
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(CORDB_ADDRESS): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetValue"
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Dereference"
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugReferenceValue signature(ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"DereferenceStrong"

@@ -168,10 +168,10 @@ feature {NONE} -- Implementation
 			l_links: LIST [EG_LINK]
 		do
 			if not retried then
-				if eb_debugger_manager.application_is_executing then
-					eb_debugger_manager.application.kill
+				if Debugger_manager.application_is_executing then
+					Debugger_manager.application.kill
 				end
-				Eb_debugger_manager.disable_debug
+				Debugger_manager.disable_debug
 				create file.make (class_i.file_name)
 				if
 					file.exists and then
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 					manager.remove_class (class_i)
 					could_not_delete := False
 				end
-				Eb_debugger_manager.resynchronize_breakpoints
+				Debugger_manager.resynchronize_breakpoints
 				window_manager.synchronize_all
 			end
 			if could_not_delete then

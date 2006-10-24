@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugChain**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetChain"
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugCode**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCode"
@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFunction**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetFunction"
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFrame signature(mdMethodDef*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetFunctionToken"
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFrame**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCaller"
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugFrame**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCallee"
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFrame signature(ICorDebugStepper**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CreateStepper"

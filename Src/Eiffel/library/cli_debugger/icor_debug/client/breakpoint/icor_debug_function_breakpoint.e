@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunctionBreakpoint signature(ICorDebugFunction**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetFunction"
@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFunctionBreakpoint signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetOffset"

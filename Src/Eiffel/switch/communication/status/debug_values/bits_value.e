@@ -87,7 +87,7 @@ feature -- Access
 			create l_type.make (bit_label.count + 5)
 			l_type.append (bit_label)
 			l_type.append_integer (value.count - 1)
-			create Result.make_bits (value, l_type, dynamic_class)
+			Result := Debugger_manager.Dump_value_factory.new_bits_value (value, l_type, dynamic_class)
 		end
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output

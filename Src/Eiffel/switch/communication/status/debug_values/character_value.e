@@ -34,7 +34,7 @@ feature -- Access
 			val := value
 			cval ?= val
 			if cval /= Void then
-				create Result.make_character (cval.item, Dynamic_class)
+				Result := Debugger_manager.Dump_value_factory.new_character_value (cval.item, Dynamic_class)
 			end
 		end
 

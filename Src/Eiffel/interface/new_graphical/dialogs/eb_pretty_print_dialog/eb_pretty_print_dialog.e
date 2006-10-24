@@ -27,7 +27,7 @@ inherit
 			default_create
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 		undefine
 			default_create
 		end
@@ -201,7 +201,7 @@ feature -- Status setting
 			-- Give a new object to `Current' and refresh the display.
 		require
 			stone_valid: is_stone_valid (st)
-			is_running: eb_debugger_manager.application_is_executing
+			is_running: Debugger_manager.application_is_executing
 		local
 			l_item: EV_ANY
 			l_dv: ABSTRACT_DEBUG_VALUE
@@ -217,7 +217,7 @@ feature -- Status setting
 				end
 			end
 
-			eb_debugger_manager.Application.status.keep_object (st.object_address)
+			Debugger_manager.Application.status.keep_object (st.object_address)
 			retrieve_dump_value
 			refresh
 		end
@@ -228,7 +228,7 @@ feature -- Status setting
 			has_current_object: has_object
 		do
 			if current_dump_value = Void then
-				current_dump_value := eb_debugger_manager.Application.dump_value_at_address_with_class (current_object.object_address, current_object.dynamic_class)
+				current_dump_value := Debugger_manager.Application.dump_value_at_address_with_class (current_object.object_address, current_object.dynamic_class)
 			end
 		end
 
@@ -244,8 +244,8 @@ feature -- Status setting
 			editor.remove_text
 			editor.enable_edit
 			if
-				eb_debugger_manager.application_is_executing
-				and then eb_debugger_manager.application_is_stopped
+				Debugger_manager.application_is_executing
+				and then Debugger_manager.application_is_stopped
 			then
 				if has_object then
 					retrieve_dump_value

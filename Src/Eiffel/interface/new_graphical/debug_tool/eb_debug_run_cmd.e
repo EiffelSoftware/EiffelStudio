@@ -52,7 +52,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -112,7 +112,7 @@ feature -- Execution
 				--| At this point we define the 'type' on debug operation
 				--| either step next, step into, step out, continue ...
 				--| this will be used in APPLICATION_EXECUTION_IMP.continue_ignoring_kept_objects
-			app_exec := eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			app_exec.set_execution_mode (execution_mode)
 
 				--| Now let's check the application status
@@ -138,7 +138,7 @@ feature -- Execution
 						wd.button (interface_names.b_ok).select_actions.extend (agent launch_application)
 						wd.set_default_push_button (wd.button (interface_names.b_cancel))
 						wd.show_modal_to_window (Window_manager.last_focused_window.window)
-					elseif not Debugger_manager.can_debug then
+					elseif not Eb_debugger_manager.can_debug then
 							-- A class was removed since the last compilation.
 							-- It is VERY dangerous to launch the debugger in these conditions.
 							-- However, forbidding it completely may be too frustating.
@@ -199,7 +199,7 @@ feature -- Execution
 --				need_to_wait := True
 --				melt_command.execute (Void, Void)
 --				need_to_wait := False
-				eb_debugger_manager.application.set_execution_mode (User_stop_points)
+				Debugger_manager.application.set_execution_mode (User_stop_points)
 				launch_application
 --				melt_command.set_run_after_melt (false)
 			end
@@ -233,7 +233,7 @@ feature -- Execution
 					index := bs.index
 					body_index := bs.body_index
 						-- Remember the status of the breakpoint
-					app_exec := eb_debugger_manager.application
+					app_exec := Debugger_manager.application
 					bp_exists := app_exec.is_breakpoint_set (f, index)
 					old_bp_status := app_exec.breakpoint_status (f, index)
 					if old_bp_status /= 0 then
@@ -284,7 +284,7 @@ feature -- Execution
 			app_exec: APPLICATION_EXECUTION
 		do
 			launch_program := False
-			app_exec := eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
 				create wd.make_with_text (Warning_messages.w_No_system)
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
@@ -397,8 +397,8 @@ feature -- Execution
 			status: APPLICATION_STATUS
 			app_exec: APPLICATION_EXECUTION
 		do
-			check debugger_running_and_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped end
-			app_exec := eb_debugger_manager.application
+			check debugger_running_and_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped end
+			app_exec := Debugger_manager.application
 
 			status := app_exec.status
 			if status /= Void and then status.is_stopped then
@@ -406,14 +406,7 @@ feature -- Execution
 				debug("DEBUGGER")
 					io.error.put_string (generator + ": Continue execution%N")
 				end
-				if debugger_manager /= Void
-					and (
-						debugger_manager.application_is_executing
-						and then debugger_manager.application_is_stopped
-					)
-				then
-					app_exec.on_application_before_resuming
-				end
+				app_exec.on_application_before_resuming
 
 					--| Continue the execution |--
 				app_exec.continue
@@ -429,12 +422,7 @@ feature -- Execution
 --					Window_manager.feature_tool_mgr.synchronize_with_callstack
 --					debug_target.save_current_cursor_position
 --					debug_target.display_string ("System is running%N")
-				if debugger_manager /= Void
-					and (
-						debugger_manager.application_is_executing
-						and then not debugger_manager.application_is_stopped
-					)
-				then
+				if app_exec.is_running and then not app_exec.is_stopped then
 					app_exec.on_application_resumed
 				else
 					debug ("debugger_trace")
@@ -454,7 +442,7 @@ feature -- Execution
 			l_cmd_line_arg: STRING
 			app_exec: APPLICATION_EXECUTION
 		do
-			if not eb_debugger_manager.application_is_executing then
+			if not Debugger_manager.application_is_executing then
 					-- First time we launch the program, we clear the output tool.
 				output_manager.clear_general
 			end
@@ -487,7 +475,7 @@ feature -- Execution
 			else
 					-- Raise debugger before launching.
 				Eb_debugger_manager.raise
-				app_exec := eb_debugger_manager.application
+				app_exec := Debugger_manager.application
 				app_exec.run (l_cmd_line_arg, working_dir, environment_vars)
 				if app_exec.is_running then
 					output_manager.add_string ("System is running")

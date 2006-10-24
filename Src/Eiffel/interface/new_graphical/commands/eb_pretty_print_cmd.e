@@ -19,7 +19,7 @@ inherit
 
 	EB_CONSTANTS
 
-	EB_SHARED_DEBUG_TOOLS
+	EB_SHARED_DEBUGGER_MANAGER
 
 create
 	make
@@ -94,7 +94,7 @@ feature -- Status report
 			dv: DUMP_VALUE
 		do
 			if st /= Void then
-				create dv.make_object (st.object_address, st.dynamic_class)
+				dv := Debugger_manager.Dump_value_factory.new_object_value (st.object_address, st.dynamic_class)
 				Result := dv.has_formatted_output
 			end
 		end

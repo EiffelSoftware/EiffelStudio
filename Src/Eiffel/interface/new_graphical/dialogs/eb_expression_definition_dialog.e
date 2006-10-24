@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -83,8 +83,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 		require
-			application_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped
-			valid_address: oa /= Void and then eb_debugger_manager.application.is_valid_object_address (oa)
+			application_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped
+			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 		do
 			stick_with_current_object := True
 			make
@@ -99,8 +99,8 @@ feature {NONE} -- Initialization
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
 		require
-			application_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped
-			valid_address: oa /= Void and then eb_debugger_manager.application.is_valid_object_address (oa)
+			application_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped
+			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
 			stick_with_current_object := True
@@ -114,8 +114,8 @@ feature {NONE} -- Initialization
 
 	make_with_expression_on_object	(oa: STRING; a_exp: STRING) is
 		require
-			application_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped
-			valid_address: oa /= Void and then eb_debugger_manager.application.is_valid_object_address (oa)
+			application_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped
+			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 			valid_expression: a_exp /= Void and then not a_exp.is_empty
 		do
 			make_with_object (oa)
@@ -127,8 +127,8 @@ feature {NONE} -- Initialization
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
 		require
-			application_stopped: eb_debugger_manager.application_is_executing and then eb_debugger_manager.application_is_stopped
-			valid_address: oa /= Void and then eb_debugger_manager.application.is_valid_object_address (oa)
+			application_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped
+			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
 			stick_with_current_object := True
@@ -220,8 +220,8 @@ feature {NONE} -- Graphical initialization and changes
 			expression_field.change_actions.extend (agent on_expression_changed)
 			expression_field.focus_in_actions.extend (agent on_expression_focus)
 			if
-				not eb_debugger_manager.application_is_executing
-				or else not eb_debugger_manager.application_is_stopped
+				not Debugger_manager.application_is_executing
+				or else not Debugger_manager.application_is_stopped
 			then
 				on_object_radio.disable_sensitive
 				as_object_radio.disable_sensitive
@@ -569,7 +569,7 @@ feature {NONE} -- Event handling
 						t := t.substring (3, t.count)
 					end
 					t.prepend ("0x")
-					app_exec := eb_debugger_manager.application
+					app_exec := Debugger_manager.application
 					if
 						app_exec.is_running and then app_exec.is_stopped
 						and then app_exec.is_valid_object_address (t)

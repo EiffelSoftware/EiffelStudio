@@ -77,7 +77,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugProcess**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetProcess"
@@ -87,7 +87,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugAppDomain**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetAppDomain"
@@ -97,7 +97,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugAssembly signature(ICorDebugModuleEnum **): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateModules"
@@ -107,7 +107,7 @@ feature {ICOR_EXPORTER} -- Implementation
 		external
 			"[
 				C++ ICorDebugAssembly signature(ULONG32, ULONG32 *, WCHAR*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetName"

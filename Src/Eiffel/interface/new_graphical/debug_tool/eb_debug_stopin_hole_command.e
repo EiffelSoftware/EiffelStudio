@@ -17,7 +17,7 @@ inherit
 
 	EB_VETO_FACTORY
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	SHARED_EIFFEL_PROJECT
 
@@ -101,7 +101,7 @@ feature -- Update
 			if f.is_debuggable then
 				index := bs.index
 				body_index := bs.body_index
-				app_exec := eb_debugger_manager.application
+				app_exec := Debugger_manager.application
 				app_exec.enable_breakpoint (f, index)
 
 				if app_exec.error_in_bkpts then
@@ -109,7 +109,7 @@ feature -- Update
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 
-				Eb_debugger_manager.notify_breakpoints_changes
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -129,7 +129,7 @@ feature -- Update
 		do
 			f := fs.e_feature
 			if f.is_debuggable then
-				app_exec := Eb_debugger_manager.application
+				app_exec := Debugger_manager.application
 				if app_exec.has_disabled_breakpoints then
 					app_exec.enable_breakpoints_in_feature (f)
 				end
@@ -139,7 +139,7 @@ feature -- Update
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-				Eb_debugger_manager.notify_breakpoints_changes
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -153,7 +153,7 @@ feature -- Update
 			conv_fst ?= cs
 				-- If a feature stone was dropped, it is handled by the drop_feature feature.
 			if conv_fst = Void then
-				app_exec := eb_debugger_manager.application
+				app_exec := Debugger_manager.application
 				app_exec.enable_first_breakpoints_in_class (cs.e_class)
 
 				if app_exec.error_in_bkpts then
@@ -161,7 +161,7 @@ feature -- Update
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 
-				Eb_debugger_manager.notify_breakpoints_changes
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -170,8 +170,8 @@ feature -- Execution
 	execute is
 			-- Enable all breakpoints in the application.
 		do
-			Eb_debugger_manager.Application.enable_all_breakpoints
-			Eb_debugger_manager.notify_breakpoints_changes
+			Debugger_manager.Application.enable_all_breakpoints
+			Debugger_manager.notify_breakpoints_changes
 		end
 
 feature {NONE} -- Implementation
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 --		local
 --			body_index: INTEGER
 		do
-			Eb_debugger_manager.Application.enable_breakpoints_in_feature (f)
+			Debugger_manager.Application.enable_breakpoints_in_feature (f)
 --| FIXME ARNAUD
 --			body_index := f.body_index
 --			tool_supervisor.feature_tool_mgr.show_stoppoint (body_index, 1)

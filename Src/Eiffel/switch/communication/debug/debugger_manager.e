@@ -6,7 +6,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred
 class
 	DEBUGGER_MANAGER
 
@@ -17,10 +16,10 @@ inherit
 
 	SYSTEM_CONSTANTS
 
---create
---	make
+create {SHARED_DEBUGGER_MANAGER}
+	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 		require
@@ -37,13 +36,14 @@ feature -- Output helpers
 	debugger_message (msg: STRING) is
 		require
 			msg /= Void
-		deferred
+		do
 		end
 
-feature -- Status
+feature -- Dump value factory
 
-	can_debug: BOOLEAN is
-		deferred
+	Dump_value_factory: DUMP_VALUE_FACTORY is
+		once
+			create Result
 		end
 
 feature -- Debug info access
@@ -74,7 +74,6 @@ feature -- Debug info access
 			Application.save_debug_info_into (save_filename)
 		end
 
-
 feature -- Breakpoints access
 
 	resynchronize_breakpoints is
@@ -88,6 +87,15 @@ feature -- Breakpoints access
 		do
 			Result := Application.debug_info.has_breakpoints
 		end
+
+feature -- Properties
+
+	maximum_stack_depth: INTEGER
+			-- Maximum number of call stack elements displayed.
+			-- -1 means display all elements.
+
+	can_debug: BOOLEAN
+			-- Is debugging allowed?
 
 feature -- Access
 
@@ -108,14 +116,17 @@ feature -- Access
 			Result := Application.is_stopped
 		end
 
-	maximum_stack_depth: INTEGER is
-		deferred
-		end
-
 	windows_handle: POINTER is
 		require
 			is_windows_platform: (create {PLATFORM}).is_windows
-		deferred
+		do
+		end
+
+	Application_active_thread_id: INTEGER is
+		require
+			application_is_executing: application_is_executing
+		do
+			Result := Application.status.active_thread_id
 		end
 
 	application_current_thread_id: INTEGER is
@@ -134,13 +145,16 @@ feature -- Access
 
 feature -- Change
 
-	set_current_thread_id (tid: INTEGER) is
+	change_current_thread_id (tid: INTEGER) is
 			-- Set Current thread id to `tid'
+		local
+			s: APPLICATION_STATUS
 		do
 			if Application_current_thread_id /= tid then
-				Application.status.set_current_thread_id (tid)
-				Application.status.switch_to_current_thread_id
-				Application.status.reload_current_call_stack
+				s := Application.status
+				s.set_current_thread_id (tid)
+				s.switch_to_current_thread_id
+				s.reload_current_call_stack
 			end
 		end
 
@@ -148,23 +162,24 @@ feature -- Change
 			-- Set the maximum number of stack elements to be displayed to `nb'.
 		require
 			valid_nb: nb = -1 or nb > 0
-		deferred
+		do
+			maximum_stack_depth := nb
 		end
 
 	notify_breakpoints_changes is
-		deferred
+		do
 		end
 
 	enable_debug is
 			-- Allow debugging.
-		deferred
+		do
 		ensure
 			can_debug
 		end
 
 	disable_debug is
 			-- Disallow debugging.
-		deferred
+		do
 		ensure
 			not can_debug
 		end

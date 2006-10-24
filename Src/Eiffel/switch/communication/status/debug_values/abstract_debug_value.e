@@ -11,6 +11,7 @@ indexing
 deferred class ABSTRACT_DEBUG_VALUE
 
 inherit
+	COMPARABLE
 
 	SHARED_EIFFEL_PROJECT
 		export
@@ -24,7 +25,10 @@ inherit
 			is_equal
 		end
 
-	COMPARABLE
+	SHARED_DEBUGGER_MANAGER
+		undefine
+			is_equal
+		end
 
 	VALUE_TYPES
 		export

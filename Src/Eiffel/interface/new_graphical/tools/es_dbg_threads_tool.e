@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -179,7 +179,7 @@ feature -- Status setting
 		do
 				-- FIXME jfiat: check what happens if the application is not stopped ?
 			if Debugger_manager.application_current_thread_id /= tid then
-				Debugger_manager.set_current_thread_id (tid)
+				Debugger_manager.change_current_thread_id (tid)
 			end
 		end
 
@@ -303,9 +303,16 @@ feature {NONE} -- Implementation
 						row := grid.row (r)
 						tid := arr.item
 						create lab.make_with_text ("0x" + tid.to_hex_string)
+						if tid = l_status.active_thread_id then
+							lab.set_font (active_thread_font)
+							lab.set_tooltip ("Debuggee's active thread")
+						end
+
 						row.set_item (1, lab)
+
 						if tid = l_status.current_thread_id then
 							row.set_background_color (row_highlight_bg_color)
+							row.ensure_visible
 						end
 
 						s := l_status.thread_name (tid)
@@ -372,11 +379,19 @@ feature {NONE} -- Implementation, cosmetic
 			-- when recycling.
 
 	set_row_highlight_bg_color (v: COLOR_PREFERENCE) is
+			-- set Background color for highlighted row.
 		do
 			row_highlight_bg_color := v.value
 		end
 
 	row_highlight_bg_color: EV_COLOR;
+			-- Background color for highlighted row.
+
+	active_thread_font: EV_FONT is
+		once
+			create Result
+			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

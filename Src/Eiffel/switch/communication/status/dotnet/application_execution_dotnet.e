@@ -252,21 +252,22 @@ feature -- Execution
 				app := Eiffel_system.application_name (True)
 
 				process_before_running
-				Application.build_status
 
 				Eifnet_debugger.do_run (app, cwd, args, env)
 
-
 				if not Eifnet_debugger.last_dbg_call_succeed then
 						-- This means we had issue creating process
-					Application.destroy_status
+--					Application.destroy_status
 					Eifnet_debugger.terminate_debugger_session
 					Eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
+				else
+					Application.build_status
 				end
 
 				if Application.is_running then
 						-- Application was able to be started
 					Application.status.set_is_stopped (False)
+					Application.status.set_process_id (eifnet_debugger.last_process_id)
 				end
 			end
 		end

@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			"[
 				C++ ICorDebug signature 
 					(): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Initialize"
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 					(LPCWSTR, LPWSTR, LPSECURITY_ATTRIBUTES, LPSECURITY_ATTRIBUTES, 
 					BOOL, DWORD, PVOID, LPCWSTR, LPSTARTUPINFOW, LPPROCESS_INFORMATION, 
 					CorDebugCreateProcessFlags, ICorDebugProcess**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CreateProcess"
@@ -204,7 +204,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebug signature(): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Terminate"
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebug signature(ICorDebugManagedCallback*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetManagedHandler"
@@ -224,7 +224,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebug signature(ICorDebugUnmanagedCallback*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetUnmanagedHandler"
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebug signature(DWORD, ICorDebugProcess**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetProcess"
@@ -247,7 +247,7 @@ feature { EIFNET_DEBUGGER} -- Implementation exported to EIFNET_DEBUGGER
 		external
 			"[
 				C++ ICorDebug signature(DWORD, BOOL, ICorDebugProcess**): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"DebugActiveProcess"
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation routines
 	cwin_create_new_console: INTEGER is
 			-- SDK CREATE_NEW_CONSOLE constant
 		external
-			"C macro use %"cli_headers.h%" "
+			"C macro use %"cli_debugger_headers.h%" "
 		alias
 			"CREATE_NEW_CONSOLE"
 		end
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation routines
 			-- SDK CREATE_UNICODE_ENVIRONMENT constant
 			-- Environment variables passed to new process uses Unicode characters instead of ANSI characters.
 		external
-			"C macro use %"cli_headers.h%" "
+			"C macro use %"cli_debugger_headers.h%" "
 		alias
 			"CREATE_UNICODE_ENVIRONMENT"
 		end
@@ -299,7 +299,7 @@ feature {NONE} -- Implementation routines
 	cwin_debug_only_this_process: INTEGER is
 			-- SDK DEBUG_ONLY_THIS_PROCESS constant
 		external
-			"C macro use %"cli_headers.h%" "
+			"C macro use %"cli_debugger_headers.h%" "
 		alias
 			"DEBUG_ONLY_THIS_PROCESS"
 		end
@@ -307,7 +307,7 @@ feature {NONE} -- Implementation routines
 	cwin_debug_no_specials_options: INTEGER is
 			-- SDK DEBUG_NO_SPECIAL_OPTIONS constant
 		external
-			"C macro use %"cli_headers.h%" "
+			"C macro use %"cli_debugger_headers.h%" "
 		alias
 			"DEBUG_NO_SPECIAL_OPTIONS"
 		end

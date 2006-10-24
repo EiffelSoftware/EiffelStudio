@@ -107,7 +107,7 @@ feature -- Access
 			else
 				l_cl := static_class
 			end
-			create Result.make_object (address, l_cl)
+			Result := Debugger_manager.Dump_value_factory.new_object_value (address, l_cl)
 		end
 
 feature -- Expanded status

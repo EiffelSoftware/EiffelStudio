@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugValueEnum signature(ULONG,ICorDebugValue**, ULONG*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Next"

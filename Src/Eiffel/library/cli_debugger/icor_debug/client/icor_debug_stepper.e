@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsActive"
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepper signature(): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Deactivate"
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepper signature(CorDebugIntercept): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetInterceptMask"
@@ -189,7 +189,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepper signature(CorDebugUnmappedStop): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetUnmappedStopMask"
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Step"
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepper signature(): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"StepOut"
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL, COR_DEBUG_STEP_RANGE*, ULONG32): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"StepRange"
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStepper signature(BOOL): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetRangeIL"
@@ -239,49 +239,49 @@ feature -- enum CorDebugIntercept
 
 	frozen enum_cor_debug_intercept__INTERCEPT_NONE: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_NONE"
 		end
 
 	frozen enum_cor_debug_intercept__INTERCEPT_CLASS_INIT: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_CLASS_INIT"
 		end
 
 	frozen enum_cor_debug_intercept__INTERCEPT_EXCEPTION_FILTER: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_EXCEPTION_FILTER"
 		end
 
 	frozen enum_cor_debug_intercept__INTERCEPT_SECURITY: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_SECURITY"
 		end
 
 	frozen enum_cor_debug_intercept__INTERCEPT_CONTEXT_POLICY: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_CONTEXT_POLICY"
 		end
 
 	frozen enum_cor_debug_intercept__INTERCEPT_INTERCEPTION: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_INTERCEPTION"
 		end
 
 	frozen enum_cor_debug_intercept__INTERCEPT_ALL: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"INTERCEPT_ALL"
 		end
@@ -303,49 +303,49 @@ feature -- enum CorDebugUnmappedStop
 
 	frozen enum_cor_debug_unmapped_stop__stop_none: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_NONE"
 		end
 
 	frozen enum_cor_debug_unmapped_stop__stop_prolog: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_PROLOG"
 		end
 
 	frozen enum_cor_debug_unmapped_stop__stop_epilog: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_EPILOG"
 		end
 
 	frozen enum_cor_debug_unmapped_stop__stop_no_mapping_info: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_NO_MAPPING_INFO"
 		end
 
 	frozen enum_cor_debug_unmapped_stop__stop_other_unmapped: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_OTHER_UNMAPPED"
 		end
 
 	frozen enum_cor_debug_unmapped_stop__stop_unmanaged: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_UNMANAGED"
 		end
 
 	frozen enum_cor_debug_unmapped_stop__stop_all: INTEGER is
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"STOP_ALL"
 		end
@@ -355,25 +355,25 @@ feature {NONE} -- External Struct implementation
 --	start_offset (p: POINTER): INTEGER_64 is
 --			-- Access field StartOffset of struct pointed by `p'.
 --		external
---			"C struct COR_DEBUG_STEP_RANGE access startOffset use %"cli_headers.h%" "
+--			"C struct COR_DEBUG_STEP_RANGE access startOffset use %"cli_debugger_headers.h%" "
 --		end
 --
 --	end_offset (p: POINTER): INTEGER_64 is
 --			-- Access field EndOffset of struct pointed by `p'.
 --		external
---			"C struct COR_DEBUG_STEP_RANGE access endOffset use %"cli_headers.h%" "
+--			"C struct COR_DEBUG_STEP_RANGE access endOffset use %"cli_debugger_headers.h%" "
 --		end
 
 	set_struct_start_offset (p: POINTER; v: INTEGER_64) is
 			-- Set field `StartOffset' of struct pointed by `p'.
 		external
-			"C struct COR_DEBUG_STEP_RANGE access startOffset type ULONG32 use %"cli_headers.h%" "
+			"C struct COR_DEBUG_STEP_RANGE access startOffset type ULONG32 use %"cli_debugger_headers.h%" "
 		end
 
 	set_struct_end_offset (p: POINTER; v: INTEGER_64) is
 			-- Set field `EndOffset' of struct pointed by `p'.
 		external
-			"C struct COR_DEBUG_STEP_RANGE access endOffset type ULONG32 use %"cli_headers.h%" "
+			"C struct COR_DEBUG_STEP_RANGE access endOffset type ULONG32 use %"cli_debugger_headers.h%" "
 		alias
 			"endOffset"
 		end
@@ -381,7 +381,7 @@ feature {NONE} -- External Struct implementation
 	sizeof_COR_DEBUG_STEP_RANGE: INTEGER is
 			-- Number of bytes in a value of type `COR_DEBUG_STEP_RANGE'
 		external
-			"C++ macro use %"cli_headers.h%" "
+			"C++ macro use %"cli_debugger_headers.h%" "
 		alias
 			"sizeof(COR_DEBUG_STEP_RANGE)"
 		end

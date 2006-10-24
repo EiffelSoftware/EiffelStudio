@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugObjectValue signature(ICorDebugClass**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetClass"
@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugObjectValue signature(ICorDebugClass*,mdFieldDef, ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetFieldValue"
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugObjectValue signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsValueClass"
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugObjectValue signature(IUnknown**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetManagedCopy"
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugObjectValue signature(IUnknown*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetFromManagedCopy"

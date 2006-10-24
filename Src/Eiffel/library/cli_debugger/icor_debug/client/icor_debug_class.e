@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugClass signature(ICorDebugModule**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetModule"
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugClass signature(mdTypeDef*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetToken"
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugClass signature(mdFieldDef, ICorDebugFrame*, ICorDebugValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetStaticFieldValue"

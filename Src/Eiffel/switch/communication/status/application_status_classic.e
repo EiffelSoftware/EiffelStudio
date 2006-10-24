@@ -14,7 +14,8 @@ inherit
 		redefine
 			current_call_stack,
 			switch_to_current_thread_id,
-			exception_description
+			exception_description,
+			thread_name, thread_priority
 		end
 
 	IPC_SHARED
@@ -141,6 +142,17 @@ feature -- Values
 		do
 			-- FIXME jfiat: for now Classic system do not support thread selection
 			-- TODO
+		end
+
+feature -- Threads related access
+
+	thread_name (id: like current_thread_id): STRING is
+		do
+			
+		end
+
+	thread_priority (id: like current_thread_id): INTEGER is
+		do
 		end
 
 indexing

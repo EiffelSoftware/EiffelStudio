@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugGenericValue signature(void*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetValue"
@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugGenericValue signature(void*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"SetValue"

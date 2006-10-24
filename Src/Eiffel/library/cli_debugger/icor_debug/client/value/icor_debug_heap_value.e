@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugHeapValue signature(BOOL*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsValid"

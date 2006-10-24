@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugFunction*, ULONG32, ICorDebugValue**): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CallFunction"
@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEval signature(BOOL*): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"IsActive"
@@ -219,7 +219,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEval signature(): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Abort"
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugValue**): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetResult"
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEval signature(CorElementType, ICorDebugClass*, ICorDebugValue**): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"CreateValue"
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEval signature(LPCWSTR): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"NewString"
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugFunction*,ULONG32, ICorDebugValue**): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"NewObject"
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEval signature(ICorDebugClass*): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"NewObjectNoConstructor"

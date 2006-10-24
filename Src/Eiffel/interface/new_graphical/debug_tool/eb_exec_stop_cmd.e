@@ -19,7 +19,7 @@ inherit
 
 	EB_CONSTANTS
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	EB_SHARED_WINDOW_MANAGER
 
@@ -43,10 +43,10 @@ feature -- Formatting
 			-- Pause the execution.
 		do
 			if
-				eb_debugger_manager.application_is_executing and then
-				not eb_debugger_manager.application_is_stopped
+				Debugger_manager.application_is_executing and then
+				not Debugger_manager.application_is_stopped
 			then
-				eb_debugger_manager.application.interrupt
+				Debugger_manager.application.interrupt
 			end
 		end
 

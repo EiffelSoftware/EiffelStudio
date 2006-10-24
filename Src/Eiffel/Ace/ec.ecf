@@ -68,6 +68,11 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false"/>
+		<library name="cli_debugger" location="$EIFFEL_SRC\eiffel\library\cli_debugger\cli_debugger.ecf" readonly="false">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf" readonly="false"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" readonly="false"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
@@ -230,14 +235,6 @@
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="false"/>
 		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf" readonly="false"/>
 		<cluster name="beurk" location="$EIFFEL_SRC\Eiffel\beurk\" recursive="true"/>
-		<cluster name="cli_debugger" location="$EIFFEL_SRC\Eiffel\library\cli_debugger\" recursive="true">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-			<file_rule>
-				<exclude>/unix$</exclude>
-			</file_rule>
-		</cluster>
 		<cluster name="compiler" location="$EIFFEL_SRC\Eiffel\eiffel\" recursive="true">
 			<file_rule>
 				<exclude>/kernel$</exclude>
@@ -285,7 +282,14 @@
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
 		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
 			<cluster name="communications" location="$|communication\">
-				<cluster name="debuging_class" location="$|debug\"/>
+				<cluster name="debuging_class" location="$|debug\" recursive="true" >
+					<file_rule>
+						<exclude>/dotnet$</exclude>
+						<condition>
+							<platform excluded_value="windows"/>
+						</condition>
+					</file_rule>
+				</cluster>
 				<cluster name="debuging_formatters" location="$|formatters\"/>
 				<cluster name="io_watcher_gtk" location="$|spec\gtk\">
 					<condition>
@@ -298,20 +302,18 @@
 					</condition>
 				</cluster>
 				<cluster name="ipc" location="$|ipc\" recursive="true"/>
-				<cluster name="status_mswin" location="$|status\" recursive="true">
-					<condition>
-						<platform value="windows"/>
-					</condition>
+				<cluster name="status" location="$|status\" recursive="true">
 					<file_rule>
 						<exclude>/no_dotnet$</exclude>
+						<condition>
+							<platform value="windows"/>
+						</condition>
 					</file_rule>
-				</cluster>
-				<cluster name="status_unix" location="$|status\" recursive="true">
-					<condition>
-						<platform excluded_value="windows"/>
-					</condition>
 					<file_rule>
 						<exclude>/dotnet$</exclude>
+						<condition>
+							<platform excluded_value="windows"/>
+						</condition>
 					</file_rule>
 				</cluster>
 			</cluster>
@@ -326,6 +328,7 @@
 		</cluster>
 		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
 		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
+		<override name="users_cluster" location=".\..\..\users_cluster\" recursive="true"/>
 	</target>
 	<target name="bench_unix" extends="bench">
 		<description>Compiling UNIX bench compiler on other platforms than Windows</description>

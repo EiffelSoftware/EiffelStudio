@@ -18,7 +18,7 @@ inherit
 
 	EB_CONSTANTS
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	EB_SHARED_WINDOW_MANAGER
 
@@ -56,7 +56,7 @@ feature -- Dialog
 			dialog: ES_EXCEPTION_HANDLER_DIALOG
 			app_exec: APPLICATION_EXECUTION
 		do
-			app_exec := Eb_debugger_manager.application
+			app_exec := Debugger_manager.application
 			if app_exec.exceptions_handler.handling_mode_is_by_name then
 				check app_exec.is_dotnet end
 				create dialog
@@ -119,7 +119,7 @@ feature -- Handler dialog by code
 			app_excep_handler: DBG_EXCEPTION_HANDLER
 			fr: EV_FRAME
 		do
-			app_excep_handler := Eb_debugger_manager.application.exceptions_handler
+			app_excep_handler := Debugger_manager.application.exceptions_handler
 			if not app_excep_handler.handling_mode_is_by_code then
 				app_excep_handler.set_handling_by_code_mode
 			end
@@ -245,7 +245,7 @@ feature -- Handler dialog by code
 			ecode: INTEGER
 			app_excep_handler: DBG_EXCEPTION_HANDLER
 		do
-			app_excep_handler := eb_debugger_manager.application.exceptions_handler
+			app_excep_handler := Debugger_manager.application.exceptions_handler
 			if abut = 1 and then gi /= Void and then gi.is_parented then
 				glab ?= gi
 				if glab /= Void then

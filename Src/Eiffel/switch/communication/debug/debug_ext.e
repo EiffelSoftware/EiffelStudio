@@ -40,33 +40,63 @@ feature
 			send_rqst_3 (code, info1, info2, integer_to_pointer (info3))
 		end
 
-	send_integer_value (value: INTEGER) is
+	send_integer_8_value (value: INTEGER_8) is
+		external
+			"C"
+		end
+
+	send_integer_16_value (value: INTEGER_16) is
+		external
+			"C"
+		end
+
+	send_integer_32_value (value: INTEGER_32) is
 		external
 			"C"
 		end
 
 	send_integer_64_value (value: INTEGER_64) is
+		external
+			"C"
+		end
+
+	send_natural_8_value (value: NATURAL_8) is
+		external
+			"C"
+		end
+
+	send_natural_16_value (value: NATURAL_16) is
+		external
+			"C"
+		end
+
+	send_natural_32_value (value: NATURAL_32) is
+		external
+			"C"
+		end
+
+	send_natural_64_value (value: NATURAL_64) is
 			--
 		external
 			"C"
 		end
 
-	send_real_value (value: REAL) is
+	send_real_32_value (value: REAL_32) is
 		external
 			"C"
 		end
 
-	send_double_value (value: DOUBLE) is
+	send_real_64_value (value: REAL_64) is
 		external
 			"C"
 		end
 
-	send_char_value (value: CHARACTER) is
+	send_char_8_value (value: CHARACTER_8) is
 		external
 			"C"
 		end
 
-	send_wchar_value (value: WIDE_CHARACTER) is
+	send_char_32_value (value: CHARACTER_32) is
 		external
 			"C"
 		end
@@ -146,7 +176,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Boolean_bytes)
 		end
 
-	to_character (s: STRING): CHARACTER is
+	to_character_8 (s: STRING): CHARACTER_8 is
 			-- Convert binary character enclosed in `s' into an CHARACTER.
 		require
 			s_not_void: s /= Void
@@ -158,7 +188,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Character_bytes);
 		end
 
-	to_wide_char (s: STRING): WIDE_CHARACTER is
+	to_character_32 (s: STRING): CHARACTER_32 is
 			-- Convert binary wide_char enclosed in `s' into an WIDE_CHARACTER.
 		require
 			s_not_void: s /= Void
@@ -242,7 +272,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Integer_16_bytes)
 		end
 
-	to_integer (s: STRING): INTEGER is
+	to_integer_32 (s: STRING): INTEGER_32 is
 			-- Convert binary integer enclosed in `s' into an INTEGER.
 		require
 			s_not_void: s /= Void
@@ -278,7 +308,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Pointer_bytes)
 		end
 
-	to_real (s: STRING): REAL is
+	to_real_32 (s: STRING): REAL_32 is
 			-- Convert binary double enclosed in `s' into a DOUBLE.
 		require
 			s_not_void: s /= Void
@@ -290,7 +320,7 @@ feature {NONE} -- Implementation
 			($Result).memory_copy ($a, Real_bytes)
 		end
 
-	to_double (s: STRING): DOUBLE is
+	to_real_64 (s: STRING): REAL_64 is
 			-- Convert binary double enclosed in `s' into a DOUBLE.
 		require
 			s_not_void: s /= Void

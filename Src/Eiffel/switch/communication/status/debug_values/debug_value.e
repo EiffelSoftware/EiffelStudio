@@ -81,52 +81,54 @@ feature -- Access
 			ptrval: POINTER_REF
 			bval: BOOLEAN_REF
 			wcval: WIDE_CHARACTER_REF
+			d_fact: DUMP_VALUE_FACTORY
 		do
+			d_fact := Debugger_manager.Dump_value_factory
 			inspect sk_type
 			when sk_uint8   then
 				uint8val ?= value
-				create Result.make_natural_32 (uint8val.item.to_natural_32, Dynamic_class)
+				Result := d_fact.new_natural_32_value (uint8val.item.to_natural_32, Dynamic_class)
 			when sk_uint16  then
 				uint16val ?= value
-				create Result.make_natural_32 (uint16val.item.to_natural_32, Dynamic_class)
+				Result := d_fact.new_natural_32_value (uint16val.item.to_natural_32, Dynamic_class)
 			when sk_uint32  then
 				uint32val ?= value
-				create Result.make_natural_32 (uint32val.item, Dynamic_class)
+				Result := d_fact.new_natural_32_value (uint32val.item, Dynamic_class)
 			when sk_uint64  then
 				uint64val ?= value
-				create Result.make_natural_64 (uint64val.item, Dynamic_class)
+				Result := d_fact.new_natural_64_value (uint64val.item, Dynamic_class)
 
 			when sk_int8    then
 				int8val ?= value
-				create Result.make_integer_32 (int8val.item.to_integer, Dynamic_class)
+				Result := d_fact.new_integer_32_value (int8val.item.to_integer, Dynamic_class)
 			when sk_int16   then
 				int16val ?= value
-				create Result.make_integer_32 (int16val.item.to_integer, Dynamic_class)
+				Result := d_fact.new_integer_32_value (int16val.item.to_integer, Dynamic_class)
 			when sk_int32   then
 				int32val ?= value
-				create Result.make_integer_32 (int32val.item, Dynamic_class)
+				Result := d_fact.new_integer_32_value (int32val.item, Dynamic_class)
 			when sk_int64   then
 				int64val ?= value
-				create Result.make_integer_64 (int64val.item, Dynamic_class)
+				Result := d_fact.new_integer_64_value (int64val.item, Dynamic_class)
 
 			when sk_bool    then
 				bval ?= value
-				create Result.make_boolean (bval.item, Dynamic_class)
+				Result := d_fact.new_boolean_value (bval.item, Dynamic_class)
 			when sk_char    then
 				cval ?= value
-				create Result.make_character (cval.item, Dynamic_class)
+				Result := d_fact.new_character_value (cval.item, Dynamic_class)
 			when sk_wchar   then
 				wcval ?= value
-				create Result.make_wide_character (wcval.item, Dynamic_class)
+				Result := d_fact.new_wide_character_value (wcval.item, Dynamic_class)
 			when sk_real32  then
 				realval ?= value
-				create Result.make_real (realval.item, Dynamic_class)
+				Result := d_fact.new_real_value (realval.item, Dynamic_class)
 			when sk_real64  then
 				dblval ?= value
-				create Result.make_double (dblval.item, Dynamic_class)
+				Result := d_fact.new_double_value (dblval.item, Dynamic_class)
 			when sk_pointer then
 				ptrval ?= value
-				create Result.make_pointer (ptrval.item, Dynamic_class)
+				Result := d_fact.new_pointer_value (ptrval.item, Dynamic_class)
 			else
 				check known_type: False	end
 			end

@@ -83,7 +83,7 @@ feature -- Update
 			send_rqst_3 (request_code, In_h_addr, 0, hex_to_pointer (object_address))
 			is_special := to_boolean (c_tread)
 			is_tuple := to_boolean (c_tread)
-			object_type_id := to_integer (c_tread) + 1
+			object_type_id := to_integer_32 (c_tread) + 1
 			if object_type_id <= 0 then
 					--| Error occurred
 				debug ("DEBUG_RECV")
@@ -128,7 +128,7 @@ feature -- Update
 						-- the address and the count of the special to be consistent
 						-- with the way we retrieve a special object in recv_attributes.
 					address := to_pointer (c_tread)
-					capacity := to_integer (c_tread)
+					capacity := to_integer_32 (c_tread)
 					recv_attributes (attributes, Void, True)
 					debug ("DEBUG_RECV")
 						io.error.put_string ("And being back again in `send'.%N")
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			type_id: INTEGER;
 			p: POINTER
 		do
-			attr_nb := to_integer (c_tread)
+			attr_nb := to_integer_32 (c_tread)
 			if attr_list.capacity <= attr_nb then
 				attr_list.resize (attr_nb)
 			end
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 				i > attr_nb
 			loop
 				attr_name := c_tread
-				sk_type := to_integer (c_tread)
+				sk_type := to_integer_32 (c_tread)
 				debug("DEBUG_RECV")
 					io.error.put_string ("Grepping attribute `");
 					io.error.put_string (attr_name);
@@ -203,9 +203,9 @@ feature {NONE} -- Implementation
 				when Sk_bool then
 					create {DEBUG_VALUE [BOOLEAN]} attr.make_attribute (sk_type, attr_name, e_class, to_boolean (c_tread))
 				when Sk_char then
-					create {CHARACTER_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_character (c_tread))
+					create {CHARACTER_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_character_8 (c_tread))
 				when Sk_wchar then
-					create {WIDE_CHARACTER_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_wide_char (c_tread))
+					create {WIDE_CHARACTER_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_character_32 (c_tread))
 				when Sk_uint8 then
 					create {DEBUG_VALUE [NATURAL_8]} attr.make_attribute (sk_type, attr_name, e_class, to_natural_8 (c_tread))
 				when Sk_uint16 then
@@ -219,19 +219,19 @@ feature {NONE} -- Implementation
 				when Sk_int16 then
 					create {DEBUG_VALUE [INTEGER_16]} attr.make_attribute (sk_type, attr_name, e_class, to_integer_16 (c_tread))
 				when Sk_int32 then
-					create {DEBUG_VALUE [INTEGER]} attr.make_attribute (sk_type, attr_name, e_class, to_integer (c_tread))
+					create {DEBUG_VALUE [INTEGER]} attr.make_attribute (sk_type, attr_name, e_class, to_integer_32 (c_tread))
 				when Sk_int64 then
 					create {DEBUG_VALUE [INTEGER_64]} attr.make_attribute (sk_type, attr_name, e_class, to_integer_64 (c_tread))
 				when Sk_real32 then
-					create {DEBUG_VALUE [REAL]} attr.make_attribute (sk_type, attr_name, e_class, to_real (c_tread))
+					create {DEBUG_VALUE [REAL]} attr.make_attribute (sk_type, attr_name, e_class, to_real_32 (c_tread))
 				when Sk_real64 then
-					create {DEBUG_VALUE [DOUBLE]} attr.make_attribute (sk_type, attr_name, e_class, to_double (c_tread))
+					create {DEBUG_VALUE [DOUBLE]} attr.make_attribute (sk_type, attr_name, e_class, to_real_64 (c_tread))
 				when Sk_pointer then
 					create {DEBUG_VALUE [POINTER]} attr.make_attribute (sk_type, attr_name, e_class, to_pointer (c_tread))
 				when Sk_bit then
 					create {BITS_VALUE} attr.make_attribute (attr_name, e_class, c_tread)
 				when Sk_exp then
-					type_id := to_integer (c_tread) + 1;
+					type_id := to_integer_32 (c_tread) + 1;
 					if container_is_special then
 						--| If expanded contained in SPECIAL, it doesn't have a specific (hector) address
 						--| and is only addressed via the SPECIAL object and the index
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 					if to_boolean (c_tread) then
 							-- Is this a tuple object?
 						if to_boolean (c_tread) then
-							type_id := to_integer (c_tread) + 1
+							type_id := to_integer_32 (c_tread) + 1
 							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
 								type_id, to_pointer (c_tread).out)
 						else
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 								io.error.put_string ("Creating special object.%N")
 							end
 							p := to_pointer (c_tread)
-							create spec_attr.make_attribute (attr_name, e_class, p.out, to_integer (c_tread))
+							create spec_attr.make_attribute (attr_name, e_class, p.out, to_integer_32 (c_tread))
 							debug("DEBUG_RECV")
 								io.error.put_string ("Attribute name: ");
 								io.error.put_string (attr_name);
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 					else
 							-- Is this a void object?
 						if not to_boolean (c_tread) then
-							type_id := to_integer (c_tread) + 1
+							type_id := to_integer_32 (c_tread) + 1
 							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class,
 														type_id, to_pointer (c_tread).out)
 						else

@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugNativeFrame signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetIP"
@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugNativeFrame signature(ICorDebugRegisterSet**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetRegisterSet"

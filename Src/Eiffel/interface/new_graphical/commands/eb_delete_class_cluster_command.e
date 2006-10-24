@@ -24,7 +24,7 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 
 	SHARED_APPLICATION_EXECUTION
 
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 					not class_i.is_read_only
 				then
 					str := class_i.name_in_upper
-					if eb_debugger_manager.application_is_executing then
+					if Debugger_manager.application_is_executing then
 						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_class>>)
 						cd.show_modal_to_window (window.window)
 					else
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 							create wd.make_with_text (Warning_messages.w_cannot_delete_need_recompile)
 							wd.show_modal_to_window (window.window)
 						else
-							if eb_debugger_manager.application_is_executing then
+							if Debugger_manager.application_is_executing then
 								create cd.make_with_text_and_actions (Warning_messages.W_Confirm_delete_cluster_debug (str),
 															<<agent delete_cluster>>)
 								cd.show_modal_to_window (window.window)
@@ -259,10 +259,10 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				if eb_debugger_manager.application_is_executing then
-					eb_debugger_manager.Application.kill
+				if debugger_manager.application_is_executing then
+					debugger_manager.Application.kill
 				end
-				Eb_debugger_manager.disable_debug
+				debugger_manager.disable_debug
 				create file.make (class_i.file_name)
 				if
 					file.exists and then
@@ -272,7 +272,7 @@ feature {NONE} -- Implementation
 					manager.remove_class (class_i)
 					could_not_delete := False
 				end
-				Eb_debugger_manager.resynchronize_breakpoints
+				Debugger_manager.resynchronize_breakpoints
 				Window_manager.synchronize_all
 			end
 			if could_not_delete then
@@ -288,12 +288,12 @@ feature {NONE} -- Implementation
 	delete_cluster is
 			-- Remove `group' from the system.
 		do
-			if eb_debugger_manager.application_is_executing then
-				eb_debugger_manager.application.kill
+			if Debugger_manager.application_is_executing then
+				Debugger_manager.application.kill
 			end
-			Eb_debugger_manager.disable_debug
+			Debugger_manager.disable_debug
 			manager.remove_group (group, path)
-			Eb_debugger_manager.resynchronize_breakpoints
+			Debugger_manager.resynchronize_breakpoints
 			Window_manager.synchronize_all
 			could_not_delete := False
 		end

@@ -56,6 +56,7 @@ feature -- Execution
 			l_status: APPLICATION_STATUS_CLASSIC
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
+			bp: BREAKPOINT
 			expr: EB_EXPRESSION
 			need_to_stop: BOOLEAN
 			need_to_resend_bp: BOOLEAN
@@ -151,6 +152,7 @@ feature -- Execution
 					l_status.add_thread_id (thr_id)
 				end
 				l_status.set_current_thread_id (thr_id)
+				l_status.set_active_thread_id (thr_id)
 				l_status.set (feature_name, address, origine_type, dynamic_type, offset, stopping_reason)
 				l_status.set_exception (exception_code, exception_tag)
 
@@ -185,12 +187,19 @@ feature -- Execution
 							--| Check if this is a Conditional Breakpoint
 						cse := l_status.current_call_stack.i_th (1)
 						if application.is_breakpoint_set (cse.routine, cse.break_index) then
-							expr := Application.condition (cse.routine, cse.break_index)
+							bp := Application.breakpoint (cse.routine, cse.break_index)
+							expr := bp.condition
 							if expr /= Void then
 									--| if the breakpoint is conditional, tests the condition.
 								expr.evaluate
 								evaluator := expr.expression_evaluator
-								need_to_stop := evaluator.error_occurred or else evaluator.final_result_is_true_boolean_value
+								if evaluator.error_occurred then
+									need_to_stop := evaluator.error_occurred
+										--| Fixme: find a better way to tell the user the cond bp stopped on eval failure.
+									Application.debugger_manager.debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.expression + "%".")
+								else
+									need_to_stop := evaluator.final_result_is_true_boolean_value
+								end
 								need_to_resend_bp := need_to_stop
 							end
 						else

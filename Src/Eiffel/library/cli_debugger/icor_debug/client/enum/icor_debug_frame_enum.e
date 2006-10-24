@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugFrameEnum signature(ULONG,ICorDebugFrame**, ULONG*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Next"

@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEnum signature(ULONG): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Skip"
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEnum signature(): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Reset"
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEnum signature(ICorDebugEnum**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"Clone"
@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugEnum signature(ULONG*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetCount"

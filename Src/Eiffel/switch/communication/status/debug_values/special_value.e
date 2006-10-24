@@ -217,7 +217,7 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
-			create Result.make_object (address, dynamic_class)
+			Result := Debugger_manager.Dump_value_factory.new_object_value (address, dynamic_class)
 		end
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output

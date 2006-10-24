@@ -15,7 +15,7 @@ inherit
 			initialize, grid_menu, row_type
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 		undefine
 			default_create, copy
 		end

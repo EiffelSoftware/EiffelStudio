@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStringValue signature(ULONG32*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetLength"
@@ -76,7 +76,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugStringValue signature(ULONG32, ULONG32*, WCHAR*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetString"

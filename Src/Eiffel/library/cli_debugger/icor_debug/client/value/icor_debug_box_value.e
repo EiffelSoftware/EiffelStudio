@@ -35,7 +35,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugBoxValue signature(ICorDebugObjectValue**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetObject"

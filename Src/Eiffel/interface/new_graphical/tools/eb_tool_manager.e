@@ -26,7 +26,7 @@ inherit
 			default_create
 		end
 
-	EB_SHARED_DEBUG_TOOLS
+	SHARED_DEBUGGER_MANAGER
 		undefine
 			default_create
 		end

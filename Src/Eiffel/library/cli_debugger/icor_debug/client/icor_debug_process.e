@@ -75,7 +75,7 @@ feature {ICOR_EXPORTER} -- Get Handle
 		external
 			"[
 				C++ ICorDebugProcess signature(HPROCESS *): EIF_INTEGER
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetHandle"
@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetID"
@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD, ICorDebugThread**): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetThread"
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugProcess signature(ICorDebugAppDomainEnum **): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"EnumerateAppDomains"
@@ -117,7 +117,7 @@ feature {NONE} -- Implementation
 		external
 			"[
 				C++ ICorDebugProcess signature(DWORD*): EIF_INTEGER 
-				use "cli_headers.h"
+				use "cli_debugger_headers.h"
 			]"
 		alias
 			"GetHelperThreadID"

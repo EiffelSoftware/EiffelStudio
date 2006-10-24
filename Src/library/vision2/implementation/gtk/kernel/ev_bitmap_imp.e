@@ -49,7 +49,7 @@ feature -- Status Setting
 			l_width, l_height: INTEGER
 		do
 			if drawable /= default_pointer then
-				oldpix := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (drawable)
+				oldpix := drawable
 				l_width := width
 				l_height := height
 			end
@@ -59,6 +59,7 @@ feature -- Status Setting
 
 			if oldpix /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_draw_pixmap (drawable, gc, oldpix, 0, 0, 0, 0, l_width, l_height)
+				{EV_GTK_EXTERNALS}.gdk_bitmap_unref (oldpix)
 			end
 		end
 
@@ -130,7 +131,7 @@ feature {NONE} -- Implementation
 	destroy is
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.object_unref (drawable)
+				{EV_GTK_EXTERNALS}.gdk_bitmap_unref (drawable)
 				drawable := default_pointer
 			end
 			set_is_destroyed (True)
@@ -140,7 +141,7 @@ feature {NONE} -- Implementation
 			-- Cleanup
 		do
 			if drawable /= default_pointer then
-				{EV_GTK_EXTERNALS}.object_unref (drawable)
+				{EV_GTK_EXTERNALS}.gdk_bitmap_unref (drawable)
 			end
 		end
 

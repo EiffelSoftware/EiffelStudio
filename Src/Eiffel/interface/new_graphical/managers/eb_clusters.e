@@ -41,11 +41,6 @@ inherit
 			default_create
 		end
 
-	LACE_AST_FACTORY
-		undefine
-			default_create
-		end
-
 	CONF_ACCESS
 		undefine
 			default_create

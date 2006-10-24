@@ -16,7 +16,8 @@ inherit
 		redefine
 			interface,
 			set_item_width,
-			set_item_height
+			set_item_height,
+			set_offset
 		end
 
 	EV_CELL_IMP
@@ -108,21 +109,41 @@ feature -- Element change
 
 	set_x_offset (a_x: INTEGER) is
 			-- Set `x_offset' to `a_x'.
+		do
+			set_offset (a_x, internal_y_offset)
+		end
+
+	set_offset (a_x, a_y: INTEGER)
 		local
 			l_null: POINTER
+			l_x_offset_changed, l_y_offset_changed: BOOLEAN
 		do
-			if a_x /= internal_x_offset then
+			l_x_offset_changed := a_x /= internal_x_offset
+			l_y_offset_changed := a_y /= internal_y_offset
+			if l_x_offset_changed or else l_y_offset_changed then
 				block_resize_actions
-				internal_x_offset := a_x
-				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
+				if l_x_offset_changed then
+					internal_x_offset := a_x
+					internal_set_value_from_adjustment (horizontal_adjustment, a_x)
+				end
+				if l_y_offset_changed then
+					internal_y_offset := a_y
+					internal_set_value_from_adjustment (vertical_adjustment, a_y)
+				end
+
 					-- Code below is to ensure that if the widget is visible then
 					-- we only move the window, and not call the `expose_actions' on `item'
 					-- as it is the case when calling `gtk_adjustment_value_changed'.
-				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget) /= l_null then
+				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (viewport) /= l_null then
 					{EV_GTK_EXTERNALS}.gdk_window_move (
-						{EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget), -a_x, -internal_y_offset)
+						{EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (viewport), -a_x, -a_y)
 				else
-					{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (horizontal_adjustment)
+					if l_x_offset_changed then
+						{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (horizontal_adjustment)
+					end
+					if l_y_offset_changed then
+						{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (vertical_adjustment)
+					end
 				end
 				unblock_resize_actions
 			end
@@ -130,24 +151,8 @@ feature -- Element change
 
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
-		local
-			l_null: POINTER
 		do
-			if a_y /= internal_y_offset then
-				block_resize_actions
-				internal_y_offset := a_y
-				internal_set_value_from_adjustment (vertical_adjustment, a_y)
-					-- Code below is to ensure that if the widget is visible then
-					-- we only move the window, and not call the `expose_actions' on `item'
-					-- as it is the case when calling `gtk_adjustment_value_changed'.
-				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget) /= l_null then
-					{EV_GTK_EXTERNALS}.gdk_window_move (
-						{EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget), -internal_x_offset, -a_y)
-				else
-					{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (vertical_adjustment)
-				end
-				unblock_resize_actions
-			end
+			set_offset (internal_x_offset, a_y)
 		end
 
 	set_item_size (a_width, a_height: INTEGER) is
@@ -177,7 +182,7 @@ feature {NONE} -- Implementation
 	visual_widget: POINTER is
 			-- Pointer to the GtkViewport widget.
 		do
-			Result := c_object
+			Result := viewport
 		end
 
 	internal_set_item_size (a_width, a_height: INTEGER) is
@@ -206,8 +211,7 @@ feature {NONE} -- Implementation
 			-- Reset minimum size.
 		do
 			Precursor (a_widget_imp)
-			set_x_offset (0)
-			set_y_offset (0)
+			set_offset (0, 0)
 		end
 
 	internal_x_offset, internal_y_offset: INTEGER

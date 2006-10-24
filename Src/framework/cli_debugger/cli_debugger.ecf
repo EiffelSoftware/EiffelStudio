@@ -4,12 +4,12 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<external_include location="\$(EIFFEL_SRC)\eiffel\library\cli_debugger\Clib -D_WIN32_DCOM">
+		<external_include location="\$(EIFFEL_SRC)\framework\cli_debugger\Clib -D_WIN32_DCOM">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_object location="$(EIFFEL_SRC)\eiffel\library\cli_debugger\spec\msc\lib\cli_debugger.lib">
+		<external_object location="$(EIFFEL_SRC)\framework\cli_debugger\spec\msc\lib\cli_debugger.lib">
 			<condition>
 				<platform value="windows"/>
 			</condition>

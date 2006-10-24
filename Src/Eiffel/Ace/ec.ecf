@@ -68,7 +68,7 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false"/>
-		<library name="cli_debugger" location="$EIFFEL_SRC\eiffel\library\cli_debugger\cli_debugger.ecf" readonly="false">
+		<library name="cli_debugger" location="$EIFFEL_SRC\framework\cli_debugger\cli_debugger.ecf" readonly="false">
 			<condition>
 				<platform value="windows"/>
 			</condition>

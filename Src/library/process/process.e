@@ -813,4 +813,133 @@ feature{NONE} -- Implementation
 		deferred
 		end
 
+	is_separator (a_char: CHARACTER): BOOLEAN is
+			-- Is `a_char' a separator for argument in command line?
+		do
+			Result := a_char = ' '
+		end
+
+	separated_words (a_cmd: STRING): LIST [STRING] is
+			-- Break shell command held in 'a_cmd' into words and
+			-- return retrieved word list.
+		require
+			a_cmd_attached: a_cmd /= Void
+		local
+			l_in_simple: BOOLEAN
+			l_in_quote: BOOLEAN
+			l_was_closing_quote: BOOLEAN
+			l_was_backslash: BOOLEAN
+			l_current_word: STRING
+			l_pos: INTEGER
+			l_pos_all: INTEGER
+			l_length: INTEGER
+			l_char: CHARACTER
+			l_should_process: BOOLEAN
+		do
+			create {LINKED_LIST [STRING]} Result.make
+			if not a_cmd.is_empty then
+				create l_current_word.make (128)
+				from
+					l_length := a_cmd.count
+					l_pos := 1
+					l_pos_all := 1
+					l_char := a_cmd.item (l_pos_all)
+				until
+					l_pos_all > l_length or else l_char = '%U'
+				loop
+					l_should_process := True
+					if l_in_simple then
+						if l_was_backslash then
+							l_was_backslash := False
+							if l_char = '\' then
+								l_should_process := False
+							elseif l_char = '%'' then
+								check not l_current_word.is_empty end
+								l_current_word.put (l_char, l_current_word.count)
+								l_should_process := False
+							end
+						end
+						if l_should_process then
+							if l_char = '%'' then
+								l_in_simple := False
+								l_was_closing_quote := True
+								l_should_process := False
+							end
+						end
+					elseif l_in_quote then
+						if l_was_backslash then
+							l_was_backslash := False
+							check not l_current_word.is_empty end
+							l_current_word.put (l_char, l_current_word.count)
+							l_should_process := False
+						end
+						if l_should_process then
+							if l_char = '"' then
+								l_in_quote := False
+								l_was_closing_quote := True
+								l_should_process := False
+							end
+						end
+					end
+					if l_should_process then
+						inspect
+							l_char
+						when '\' then
+							l_was_backslash := True
+							l_current_word.append_character (l_char)
+							l_pos := l_pos + 1
+							l_char := a_cmd.item (l_pos)
+						when '%'' then
+							l_in_simple := True
+						when '"' then
+							if not l_in_simple then
+								l_in_quote := True
+							else
+								if platform.is_windows then
+									if not l_in_quote then
+										l_current_word.append_character (l_char)
+										l_pos := l_pos + 1
+									else
+										l_in_quote := False
+										l_should_process := False
+									end
+								else
+									l_current_word.append_character (l_char)
+									l_pos := l_pos + 1
+								end
+							end
+						else
+							if l_in_simple or l_in_quote then
+								l_current_word.append_character (l_char)
+								l_pos := l_pos + 1
+							elseif is_separator (l_char) then
+								if l_pos > 1 or else l_was_closing_quote then
+									Result.extend (l_current_word.twin)
+									l_current_word.wipe_out
+									l_pos := 1
+									l_was_closing_quote := False
+									l_was_backslash := False
+								end
+							else
+								l_current_word.append_character (l_char)
+								l_pos := l_pos + 1
+							end
+						end
+					end
+					if l_should_process then
+						l_was_closing_quote := False
+					end
+					l_pos_all := l_pos_all + 1
+					if l_pos_all <= l_length then
+						l_char := a_cmd.item (l_pos_all)
+					end
+				end
+				if l_pos > 1 then
+					Result.extend (l_current_word)
+				end
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 end

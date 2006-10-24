@@ -46,26 +46,19 @@ feature {NONE} -- Initialization
 
 	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
 		local
-			ls: LIST [STRING]
 			p_name :STRING
-			args: ARRAYED_LIST [STRING]
+			args: LIST [STRING]
 		do
-			ls := cmd_line.split (' ')
-			create p_name.make_from_string (ls.i_th (1))
-			ls.start
-			ls.remove
-			if ls.count > 0 then
-				create args.make (ls.count)
-				from
-					ls.start
-				until
-					ls.after
-				loop
-					args.extend (ls.item)
-					ls.forth
-				end
+			args := separated_words (cmd_line)
+			check not args.is_empty end
+			if args.count = 1 then
+				make (args.first, Void, a_working_directory)
+			else
+				args.start
+				p_name := args.item
+				args.remove
+				make (p_name, args, a_working_directory)
 			end
-			make (p_name, args, a_working_directory)
 		end
 
 feature  -- Control

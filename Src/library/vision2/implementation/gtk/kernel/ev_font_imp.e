@@ -208,13 +208,13 @@ feature -- Status report
 			Result := string_width (once "W")
 		end
 
-	string_size (a_string: STRING_GENERAL): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
+	string_size (a_string: STRING_GENERAL): like reusable_string_size_tuple is
 			-- `Result' is [width, height, left_offset, right_offset] in pixels of `a_string' in the
 			-- current font, taking into account line breaks ('%N').
 		local
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout, a_pango_iter,  ink_rect, log_rect: POINTER
-			log_x, log_y, log_width, log_height, ink_x, ink_y,  ink_width, ink_height, a_width, a_height, left_off, right_off: INTEGER
+			log_x, log_y, log_width, log_height, ink_x, ink_y,  ink_width, ink_height, a_width, a_height, left_off, right_off, top_off, bottom_off: INTEGER
 			a_baseline: INTEGER
 			l_app_imp: like app_implementation
 		do
@@ -252,18 +252,25 @@ feature -- Status report
 				right_off := left_off + ink_width - log_width
 			end
 
+			if ink_height > 0 then
+				top_off := ink_y
+				bottom_off := top_off + ink_height - log_height
+			end
+
 			Result := reusable_string_size_tuple
 			Result.put_integer (a_width.max (1), 1)
 			Result.put_integer (a_height.max (1), 2)
 			Result.put_integer (left_off, 3)
 			Result.put_integer (right_off, 4)
 			Result.put_integer (a_baseline, 5)
+			Result.put_integer (top_off, 6)
+			Result.put_integer (bottom_off, 7)
 
 			ink_rect.memory_free
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 		end
 
-	reusable_string_size_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
+	reusable_string_size_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- Reusable tuple for `string_size'.
 		once
 			create Result

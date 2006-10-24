@@ -175,6 +175,11 @@ feature -- Variables access
 		do
 		end
 
+	generate_current_as_basic is
+			-- Load `Current' as a basic value.
+		do
+		end
+
 	generate_result is
 			-- Generate access to `Result'.
 		do
@@ -235,9 +240,31 @@ feature -- Variables access
 		do
 		end
 
+	generate_external_metamorphose (type_i: TYPE_I) is
+			-- Generate `metamorphose', ie boxing an expanded type `type_i'
+			-- using an associated external type (if any).
+		do
+		end
+
+	generate_eiffel_metamorphose (a_type: TYPE_I) is
+			-- Generate a metamorphose of `a_type' into a _REF type.
+		do
+		end
+
 	generate_unmetamorphose (type_i: TYPE_I) is
 			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
+		do
+		end
+
+	generate_external_unmetamorphose (type_i: CL_TYPE_I) is
+			-- Generate `unmetamorphose', ie unboxing an external reference to a basic type of `type_i'.
+			-- Load content of address resulting from unbox operation.
+		do
+		end
+
+	generate_creation (cl_type_i: CL_TYPE_I) is
+			-- Generate IL code for a hardcoded creation type `cl_type_i'.
 		do
 		end
 
@@ -284,6 +311,16 @@ feature -- Addresses
 		do
 		end
 
+	generate_load_from_address_as_object (a_type: TYPE_I) is
+			-- Load value of non-built-in `a_type' type from address pushed on stack.
+		do
+		end
+
+	generate_load_from_address_as_basic (a_type: TYPE_I) is
+			-- Load value of a basic type `a_type' from address of an Eiffel object pushed on stack.
+		do
+		end
+
 feature -- Assignments
 
 	generate_is_true_instance_of (type_i: TYPE_I) is
@@ -293,6 +330,11 @@ feature -- Assignments
 
 	generate_is_instance_of (type_i: TYPE_I) is
 			-- Generate `Isinst' byte code instruction.
+		do
+		end
+
+	generate_is_instance_of_external (type_i: CL_TYPE_I) is
+			-- Generate `Isinst' byte code instruction for external variant of the type `type_i'.
 		do
 		end
 

@@ -243,7 +243,6 @@ feature -- Element change
 		do
 			l_width := width
 			l_height := height
-
 			if l_width /= a_width or else l_height /= a_height then
 				oldpix := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (drawable)
 				if mask /= loc_default_pointer then
@@ -402,9 +401,11 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 			-- Set the GtkPixmap using Gdk pixmap data and mask.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_set_from_pixmap (visual_widget, gdkpix, gdkmask)
-			{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
 			drawable := gdkpix
 			mask := gdkmask
+			if gdkpix /= NULL then
+				{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkpix)
+			end
 			if gdkmask /= NULL then
 				{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdkmask)
 			end
@@ -473,11 +474,12 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Destroy the pixmap and resources.
 		do
-			Precursor {EV_PRIMITIVE_IMP}
+			set_pixmap (NULL, NULL)
 			if gc /= NULL then
 				{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)
 				gc := NULL
 			end
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 	dispose is

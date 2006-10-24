@@ -193,7 +193,7 @@ feature -- Visit nodes
 
 feature {NONE} -- Implementation
 
-	factory: CONF_FACTORY
+	factory: CONF_PARSE_FACTORY
 			-- Factory to use for creation of new nodes.
 
 	application_target: CONF_TARGET

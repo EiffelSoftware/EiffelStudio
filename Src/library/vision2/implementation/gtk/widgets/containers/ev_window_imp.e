@@ -115,13 +115,16 @@ feature {NONE} -- Initialization
 			signal_connect (l_c_object, app_imp.configure_event_string, agent (l_gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent, False)
 
 			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
-			signal_connect (
-				accel_group,
-				app_imp.accel_activate_string,
-				agent (App_imp.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
-				Void,
-				False
-			)
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1
+					-- This is performed in EV_ACCELERATOR_IMP for gtk 1.2 implementation.
+				signal_connect (
+					accel_group,
+					app_imp.accel_activate_string,
+					agent (App_imp.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
+					Void,
+					False
+				)
+			end
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (l_c_object, accel_group)
 
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (l_c_object, 1, 1)

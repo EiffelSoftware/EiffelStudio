@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_fixed_set_has_window (c_object, True)
+			{EV_GTK_EXTERNALS}.gtk_fixed_set_has_window (container_widget, True)
 			Precursor
 		end
 
@@ -52,7 +52,7 @@ feature -- Status setting
 			w_imp: EV_WIDGET_IMP
 		do
 			w_imp ?= a_widget.implementation
-			{EV_GTK_EXTERNALS}.gtk_fixed_move (c_object, w_imp.c_object, an_x, a_y)
+			{EV_GTK_EXTERNALS}.gtk_fixed_move (container_widget, w_imp.c_object, an_x, a_y)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
@@ -84,7 +84,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			glist: POINTER
 		do
-			glist := {EV_GTK_EXTERNALS}.gtk_fixed_struct_children (c_object)
+			glist := {EV_GTK_EXTERNALS}.gtk_fixed_struct_children (container_widget)
 			Result := {EV_GTK_EXTERNALS}.g_list_nth_data (glist, i - 1)
 		end
 

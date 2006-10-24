@@ -354,7 +354,7 @@ feature -- Visit nodes
 			end
 
 				-- update visibility
-			a_library.update_visible
+			a_library.update_visible (added_classes)
 			if a_library.is_error then
 				add_error (a_library.last_error)
 				a_library.reset_error
@@ -417,7 +417,7 @@ feature -- Visit nodes
 			end
 
 				-- update visibility
-			a_cluster.update_visible
+			a_cluster.update_visible (added_classes)
 			if a_cluster.is_error then
 				add_error (a_cluster.last_error)
 				a_cluster.reset_error

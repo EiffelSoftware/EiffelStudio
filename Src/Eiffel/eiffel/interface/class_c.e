@@ -1112,12 +1112,6 @@ feature -- Parent checking
 						Error_handler.insert_error (l_ve04)
 					else
 						computed_parents.extend (l_parent_c)
-							-- Use reference class type as a parent.
-						l_parent_type := l_parent_c.parent_type
-						if l_parent_type.is_expanded then
-							l_parent_type := l_parent_type.reference_type
-						end
-						parents.extend (l_parent_type)
 
 						l_parent_class := clickable_info.associated_eiffel_class (lace_class,
 							l_parent_as.type).compiled_class
@@ -1129,6 +1123,31 @@ feature -- Parent checking
 						end
 						l_parent_class.add_descendant (Current)
 
+							-- Use reference class type as a parent.
+						l_parent_type := l_parent_c.parent_type
+						if l_parent_type.is_expanded then
+							l_parent_type := l_parent_type.reference_type
+						end
+
+						if l_parent_class.is_generic then
+								-- Look for a derivation of the same class.
+							from
+								parents_classes.start
+							until
+								parents_classes.after
+							loop
+								if parents_classes.item = l_parent_class then
+									if not parents.i_th (parents_classes.index).same_as (l_parent_type) then
+											-- Different generic derivations are used in Parent parts.
+										error_handler.insert_error (create {VHPR5_ECMA}.make
+											(Current, l_parent_type, parents.i_th (parents_classes.index), l_parent_as.start_location))
+									end
+								end
+								parents_classes.forth
+							end
+						end
+
+						parents.extend (l_parent_type)
 							-- Insertion in `parents_classes'.
 						parents_classes.extend (l_parent_class)
 					end

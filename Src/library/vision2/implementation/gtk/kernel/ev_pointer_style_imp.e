@@ -141,7 +141,7 @@ feature -- Implementation
 			when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
 				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_watch_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
-				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
+				Result := default_pointer--{EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_left_ptr_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
 				Result := {EV_GTK_EXTERNALS}.gdk_cursor_new ({EV_GTK_ENUMS}.gdk_crosshair_enum)
 			when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
@@ -169,7 +169,7 @@ feature -- Implementation
 				{EV_GTK_EXTERNALS}.object_ref (a_image)
 			end
 
-			if Result = default_pointer then
+			if Result = default_pointer and then predefined_cursor_code /= {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
 				check
 					a_image_not_null: a_image /= default_pointer
 				end

@@ -15,7 +15,7 @@ indexing
 					create figure_world_cell.make_with_world (create {EV_FIGURE_WORLD})
 					figure_world_cell.world.extend (create {EV_FIGURE_LINE}.make_with_positions (0, 0, 100, 100))
 					horizontal_box.extend (figure_world_cell)
-				
+
 					]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,17 +30,17 @@ inherit
 		redefine
 			initialize
 		end
-		
+
 	EV_SHARED_APPLICATION
 		undefine
 			copy,
 			is_equal,
 			default_create
 		end
-	
+
 create
 	make_with_world
-	
+
 feature {NONE} -- Initialization
 
 	make_with_world (a_world: like world) is
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 		ensure
 			world_set: world = a_world
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		local
@@ -61,12 +61,12 @@ feature {NONE} -- Initialization
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			Precursor {EV_CELL}
-			
+
 			create drawing_area
 			drawing_area.set_minimum_size (1, 1)
 			drawing_area.clear
 			drawing_area.flush
-			
+
 			create horizontal_box
 			create vertical_scrollbar.make_with_value_range (create {INTEGER_INTERVAL}.make (0, 1))
 			vertical_scrollbar.set_step (15)
@@ -80,72 +80,72 @@ feature {NONE} -- Initialization
 			drawing_area.resize_actions.extend (agent on_resizing)
 
 			create projector.make_with_buffer (world, drawing_area)
-			
+
 			create vertical_box
 			vertical_box.extend (horizontal_box)
 			vertical_box.extend (horizontal_scrollbar)
 			vertical_box.disable_item_expand (horizontal_scrollbar)
-			
+
 			drawing_area.pointer_button_press_actions.extend (agent on_pointer_button_press_on_drawing_area)
 			drawing_area.pointer_button_release_actions.extend (agent on_pointer_button_release_on_drawing_area)
 			drawing_area.pointer_motion_actions.extend (agent on_pointer_button_move_on_drawing_area)
 			drawing_area.mouse_wheel_actions.extend (agent on_mouse_wheel_on_drawing_area)
 			drawing_area.key_press_actions.extend (agent on_key_pressed_on_drawing_area)
 			drawing_area.key_release_actions.extend (agent on_key_released_on_drawing_area)
-			
+
 			create autoscroll.make_with_interval (normal_timeout_interval)
 			autoscroll.actions.extend (agent on_autoscroll_time_out)
-			
+
 			extend (vertical_box)
-			
+
 			autoscroll_border := 50
 			world_border := 20
 			is_autoscroll_enabled := True
 			is_resize_enabled := True
 			scroll_speed := 1.0
 		end
-		
+
 feature -- Status report
 
 	is_autoscroll_enabled: BOOLEAN
 			-- Is autoscroll enabled?
-			
+
 	is_resize_enabled: BOOLEAN
 			-- Is resizing enabled?
-			
+
 	is_scrollbar_enabled: BOOLEAN
 			-- Are scrollbars visible?
-		
+
 feature -- Access
 
 	world: EV_MODEL_WORLD
 			-- The world shown in `Current'.
-	
+
 	projector: EV_MODEL_BUFFER_PROJECTOR
 			-- Projector to render `world'.
-	
+
 	drawing_area: EV_DRAWING_AREA
 			-- Graphical surface displaying `world'.
-			
+
 	vertical_scrollbar: EV_VERTICAL_SCROLL_BAR
 			-- Vertical scroll bar.
-			
+
 	horizontal_scrollbar: EV_HORIZONTAL_SCROLL_BAR
 			-- Horizontal scroll bar.
-			
+
 	autoscroll_border: INTEGER
 			-- Distance to the frame border wher scrolling starts.
-			
+
 	world_border: INTEGER
 			-- Minimal distance between world borders and frame borders.
-			
+
 	scroll_speed: DOUBLE
 			-- Speed of auto scroll. Autoscroll happens every 50 milliseconds for
 			-- scroll_speed * (distance between `autoscroll_border' and cursor)
 			-- Pixels. Meaning the nearer the cursor is to the cell border the
 			-- faster the scroll plus the higher the scroll_speed value the faster
 			-- the scroll. Default is 1.0.
-			
+
 feature -- Status setting
 
 	disable_resize is
@@ -155,7 +155,7 @@ feature -- Status setting
 		ensure
 			set: is_resize_enabled = False
 		end
-		
+
 	enable_resize is
 			-- Set `is_resize_enabled' to True.
 		do
@@ -163,7 +163,7 @@ feature -- Status setting
 		ensure
 			set: is_resize_enabled = True
 		end
-		
+
 	disable_scrollbars is
 			-- Hide scrollbars.
 		do
@@ -174,7 +174,7 @@ feature -- Status setting
 			hide: not horizontal_scrollbar.is_show_requested and not vertical_scrollbar.is_show_requested
 			set: not is_scrollbar_enabled
 		end
-		
+
 	enable_scrollbars is
 			-- Show scrollbars.
 		do
@@ -208,7 +208,7 @@ feature -- Element change
 		ensure
 			set: world = a_world
 		end
-		
+
 	set_world_border (a_border: like world_border) is
 			-- Set `world_border' to `a_border'.
 		require
@@ -218,7 +218,7 @@ feature -- Element change
 		ensure
 			set: world_border = a_border
 		end
-		
+
 	set_autoscroll_border (a_border: like autoscroll_border) is
 			-- Set `autoscroll_border' to `a_border'.
 		require
@@ -238,7 +238,7 @@ feature -- Element change
 			new_value: INTEGER
 		do
 			bbox := world.bounding_box
-			
+
 			world.hide
 			border := world_border + autoscroll_border
 			position := (horizontal_scrollbar.value - horizontal_scrollbar.value_range.lower) / horizontal_scrollbar.value_range.count
@@ -282,7 +282,7 @@ feature -- Element change
 			world.show
 			projector.full_project
 		end
-		
+
 	cut is
 			-- Resize scrollbars such that there is no overhang (crop without scrolling).
 		local
@@ -290,16 +290,16 @@ feature -- Element change
 			border: INTEGER
 		do
 			bbox := world.bounding_box
-			
+
 			border := world_border + autoscroll_border
-			
+
 			if horizontal_scrollbar.value_range.upper > bbox.right + border - drawing_area.width then
 				horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value_range.lower, horizontal_scrollbar.value.max (bbox.right + border - drawing_area.width))
 			end
 			if horizontal_scrollbar.value_range.lower < bbox.left - border then
 				horizontal_scrollbar.value_range.resize_exactly (horizontal_scrollbar.value.min (bbox.left - border), horizontal_scrollbar.value_range.upper)
 			end
-			
+
 			if vertical_scrollbar.value_range.upper > bbox.bottom + border - drawing_area.height then
 				vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value_range.lower, vertical_scrollbar.value.max (bbox.bottom + border - drawing_area.height))
 			end
@@ -307,7 +307,7 @@ feature -- Element change
 				vertical_scrollbar.value_range.resize_exactly (vertical_scrollbar.value.min (bbox.top - border), vertical_scrollbar.value_range.upper)
 			end
 		end
-		
+
 	fit_to_screen is
 			-- Zoom world such that it fits to screen.
 		local
@@ -332,25 +332,25 @@ feature {NONE} -- Implementation
 
 	normal_timeout_interval: INTEGER is 500
 		-- Normal millesecond timeout interval for autoscrolling
-	
+
 	scroll_timeout_interval: INTEGER is 50
 		-- Active millesecond timeout interval for autoscrolling
 
 	autoscroll: EV_TIMEOUT
 			-- Timer limiting scrolling speed.
-	
+
 	is_scroll: BOOLEAN
 			-- Is scrolling enabled?
-			
+
 	is_hand: BOOLEAN
 			-- Is hand enabled?
-			
+
 	start_x, start_y: INTEGER
 			-- Position of cursor when hand was activated.
-	
+
 	start_horizontal_value, start_vertical_value: INTEGER
 			-- Position of scroll bars when hand was activated.
-			
+
 	on_autoscroll_time_out is
 			-- Enable scroll.
 		do
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 				projector.change_area_position (new_value, projector.area_y)
 			end
 		end
-		
+
 	on_resizing (a_x, a_y, a_width, a_height: INTEGER) is
 			-- `area' has been resized.
 			-- Update scrollbars.
@@ -392,13 +392,13 @@ feature {NONE} -- Implementation
 			horizontal_scrollbar.set_leap (drawing_area.width.max (1))
 			vertical_scrollbar.set_leap (drawing_area.height.max (1))
 		end
-		
+
 	on_pointer_button_press_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
 			-- Pointer button was pressed in `drawing_area'.
 		do
 			if button = 1 then
-				if projector.is_figure_selected then	
-					is_scroll := True	
+				if projector.is_figure_selected then
+					is_scroll := True
 				elseif not ev_application.ctrl_pressed then
 					drawing_area.set_pointer_style (default_pixmaps.wait_cursor)
 					drawing_area.enable_capture
@@ -412,7 +412,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_pointer_button_move_on_drawing_area (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
 			-- Pointer was moved over `drawing_area'.
 		local
@@ -425,7 +425,7 @@ feature {NONE} -- Implementation
 				vertical_scrollbar.set_value ((start_vertical_value - offset_y).max (vertical_scrollbar.value_range.lower).min (vertical_scrollbar.value_range.upper))
 			end
 		end
-		
+
 	on_pointer_button_release_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
 			-- Pointer button was released over `drawing_area'.
 		do
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			end
 			drawing_area.set_pointer_style (default_pixmaps.standard_cursor)
 		end
-		
+
 	resize_if_necessary is
 			-- Resize the scroll bars to fit in world.
 		local
@@ -461,25 +461,25 @@ feature {NONE} -- Implementation
 				end
 				if left /= 0 or else right /= 0 then
 					horizontal_scrollbar.value_range.resize_exactly (
-							left.min (horizontal_scrollbar.value_range.lower), 
+							left.min (horizontal_scrollbar.value_range.lower),
 							right.max (horizontal_scrollbar.value_range.upper))
 				end
 				if top /= 0 or else bottom /= 0 then
 					vertical_scrollbar.value_range.resize_exactly (
-							top.min (vertical_scrollbar.value_range.lower), 
+							top.min (vertical_scrollbar.value_range.lower),
 							bottom.max (vertical_scrollbar.value_range.upper))
 				end
 			end
 		end
 
 	scroll_if_necessary is
-			-- Scroll if necessary. 
+			-- Scroll if necessary.
 			-- Do nothing if not `is_autoscroll_enabled'.
 		local
  			cursor_x, cursor_y, new_value: INTEGER
  			scrolled: BOOLEAN
  			da_width, da_height: INTEGER
-		do	
+		do
 			if is_autoscroll_enabled then
 				cursor_x := pointer_position.x
 				world.hide
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation
 				world.show
 			end
 		end
-		
+
 	on_mouse_wheel_on_drawing_area (i: INTEGER) is
 			-- User moved mouse wheel.
 		local
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_key_pressed_on_drawing_area (a_key: EV_KEY) is
 			-- User pressed a key. Turn on grid if shift was pressed.
 		do
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 				world.enable_grid
 			end
 		end
-		
+
 	on_key_released_on_drawing_area (a_key: EV_KEY) is
 			-- User released key. Turn off grid.
 		do
@@ -565,7 +565,7 @@ feature {NONE} -- Implementation
 
 invariant
 	scroll_speed_positive: scroll_speed >= 0.0
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

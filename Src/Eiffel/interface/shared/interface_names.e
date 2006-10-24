@@ -506,7 +506,7 @@ feature -- Menu mnenomics
 
 feature -- Label texts
 
-	l_Ace_file_for_frame: STRING is		"Ace file"
+	l_Ace_file_for_frame: STRING is		"Configuration file"
 	l_action_colon: STRING is			"Action:"
 	l_Active_query: STRING is			"Active query"
 	l_Address: STRING is				"Address:"
@@ -718,7 +718,6 @@ feature -- Label texts
 	l_Type: STRING is					"Type"
 	l_Unknown_status: STRING is			"Unknown application status"
 	l_Unknown_class_name: STRING is		"Unknown class name"
-	l_Use_existing_ace: STRING is		"Open existing Ace (control file)"
 	l_Use_existing_profile: STRING is	"Use existing profile: "
 	l_Use_regular_expression: STRING is "Use regular expression"
 	l_Use_wildcards: STRING is			"Use wildcards"
@@ -773,8 +772,6 @@ feature -- Title part
 	t_Breakpoints_tool: STRING is				"Breakpoints"
 	t_Call_stack_tool: STRING is				"Call Stack"
 	t_Calling_convention: STRING is				"Calling Convention"
-	t_Choose_ace_file: STRING is 				"Choose an Ace File"
-	t_Choose_ace_and_directory: STRING is		"Choose Your Ace File and Directory"
 	t_Choose_class: STRING is					"Choose a Class"
 	t_Choose_directory: STRING is 				"Choose Your Directory"
 	t_Choose_folder_name: STRING is				"Choose a Folder Name"

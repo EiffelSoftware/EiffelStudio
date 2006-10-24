@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			l_target := a_target.name
 			print ("Parsing "+l_target+" from "+l_system+"...")
 
-			create l_vis.make_build (l_state, a_target, create {CONF_FACTORY})
+			create l_vis.make_build (l_state, a_target, create {CONF_PARSE_FACTORY})
 			a_target.process (l_vis)
 
 			if l_vis.is_error then

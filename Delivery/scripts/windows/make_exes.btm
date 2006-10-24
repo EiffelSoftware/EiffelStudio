@@ -90,6 +90,10 @@ remtrace CLI writer
 cd %EIFFEL_SRC\framework\cli_writer\Clib
 call nmake
 
+remtrace CLI debugger
+cd %EIFFEL_SRC\framework\cli_debugger\Clib
+call nmake
+
 remtrace Compiling .NET components
 cdd %INIT_DIR
 call make_dotnet.btm

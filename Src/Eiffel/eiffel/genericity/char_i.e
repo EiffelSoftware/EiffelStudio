@@ -176,7 +176,7 @@ feature -- Code generation
 			if is_wide then
 				create Result.make ({CHARACTER_32}.max_value.to_character_32)
 			else
-				create Result.make ({EIFFEL_SCANNER_SKELETON}.Maximum_character_code.to_character_8)
+				create Result.make ({CHARACTER_8}.Max_value.to_character_8)
 			end
 		end
 

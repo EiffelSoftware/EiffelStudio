@@ -50,7 +50,7 @@ inherit
 		end
 
 create
-	make_from_string, make_from_hexa_string
+	make_from_string, make_from_hexa_string, make_from_octal_string, make_from_binary_string
 
 feature {NONE} -- Initialization
 
@@ -84,6 +84,46 @@ feature {NONE} -- Initialization
 		do
 			constant_type := a_type
 			read_hexadecimal_value (sign, s)
+		ensure
+			constant_type_set: constant_type = a_type
+		end
+
+	make_from_octal_string (a_type: like constant_type; sign: CHARACTER; s: STRING) is
+			-- Create a new INTEGER AST node from `s' string representing
+			-- an integer in octal starting with the following sequence "0c"
+			-- and given `sign'.
+			-- Set `is_initialized' to true if the string denotes a value that is
+			-- within allowed integer bounds. Otherwise set `is_initialized' to false.
+		require
+--			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
+			valid_sign: ("%U+-").has (sign)
+			s_not_void: s /= Void
+			s_long_enough: s.count >= 3
+			s_has_octal_prefix: s.as_lower.substring_index ("0c", 1) = 1
+			s_has_octal_suffix: -- for all i in [3..s.count] ("01234567").has (s.item (i))
+		do
+			constant_type := a_type
+			read_octal_value (sign, s)
+		ensure
+			constant_type_set: constant_type = a_type
+		end
+
+	make_from_binary_string (a_type: like constant_type; sign: CHARACTER; s: STRING) is
+			-- Create a new INTEGER AST node from `s' string representing
+			-- an integer in binary starting with the following sequence "0b"
+			-- and given `sign'.
+			-- Set `is_initialized' to true if the string denotes a value that is
+			-- within allowed integer bounds. Otherwise set `is_initialized' to false.
+		require
+--			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
+			valid_sign: ("%U+-").has (sign)
+			s_not_void: s /= Void
+			s_long_enough: s.count >= 3
+			s_has_octal_prefix: s.as_lower.substring_index ("0b", 1) = 1
+			s_has_octal_suffix: -- for all i in [3..s.count] ("01").has (s.item (i))
+		do
+			constant_type := a_type
+			read_binary_value (sign, s)
 		ensure
 			constant_type_set: constant_type = a_type
 		end
@@ -351,6 +391,128 @@ feature {NONE} -- Translation
 					when 4 then types := types | integer_16_mask
 					when 8 then types := types | integer_32_mask
 					when 16 then types := types | integer_64_mask
+					else
+						-- Do not change `types'.
+					end
+				end
+			end
+			if is_initialized and then has_constant_type then
+					-- Adjust type to match `constant_type'.
+				adjust_type
+			end
+		end
+
+	read_octal_value (sign: CHARACTER; s: STRING) is
+			-- Convert hexadecimal representation `s' with sign `sign' into an integer or natural value.
+		require
+			valid_sign: ("%U+-").has (sign)
+			s_not_void: s /= Void
+			s_large_enough: s.count > 2
+		local
+			i, j: INTEGER
+			area: SPECIAL [CHARACTER]
+			val: CHARACTER
+			last_nat_64: NATURAL_64
+			leading_one: BOOLEAN
+		do
+			is_initialized := True
+			j := s.count - 1
+			area := s.area
+
+			from
+			until
+				(j - i) < 2 or else i = 21
+			loop
+				val := area.item (j - i)
+				last_nat_64 := last_nat_64 | ((val.code - 48).as_natural_64 |<< (i * 3))
+				i := i + 1
+			end
+
+				-- Allow a number of length 22 only if the leading digit is '1'
+			if i = 21 and (j - 21) >= 2 then
+				val := area.item (j - i)
+				if val = '1' then
+					leading_one := True
+					last_nat_64 := last_nat_64 | 0x8000_0000_0000_0000
+				end
+				i := i + 1
+			end
+
+				-- Count leading zeroes
+			from
+				i := 3
+			until
+				i > j or else s.item (i) /= '0'
+			loop
+				i := i + 1
+			end
+				-- Set `i' to number of meanigful digits
+			i := j - i + 2
+			if i > 22 and not leading_one then
+					-- Number is too large
+				is_initialized := False
+			else
+				has_minus := sign = '-'
+				value := last_nat_64
+				compute_type
+			end
+			if is_initialized and then has_constant_type then
+					-- Adjust type to match `constant_type'.
+				adjust_type
+			end
+		end
+
+	read_binary_value (sign: CHARACTER; s: STRING) is
+			-- Convert hexadecimal representation `s' with sign `sign' into an integer or natural value.
+		require
+			valid_sign: ("%U+-").has (sign)
+			s_not_void: s /= Void
+			s_large_enough: s.count > 2
+		local
+			i, j: INTEGER
+			area: SPECIAL [CHARACTER]
+			val: CHARACTER
+			last_nat_64: NATURAL_64
+		do
+			is_initialized := True
+			j := s.count - 1
+			area := s.area
+
+			from
+			until
+				(j - i) < 2 or else i = 64
+			loop
+				if area.item (j - i) = '1' then
+					last_nat_64 := last_nat_64 | ((1).as_natural_64 |<< i)
+				end
+				i := i + 1
+			end
+
+				-- Count leading zeroes
+			from
+				i := 3
+			until
+				i > j or else s.item (i) /= '0'
+			loop
+				i := i + 1
+			end
+				-- Set `i' to number of meanigful digits
+			i := j - i + 2
+			if i > 64 then
+					-- Number is too large
+				is_initialized := False
+			else
+				has_minus := sign = '-'
+				value := last_nat_64
+				compute_type
+				if sign = '%U' then
+						-- Allow for integers to be specified using a binary representation regardless
+						-- of their value provided that number of digits matches integer length.
+					inspect i
+					when 8 then types := types | integer_8_mask
+					when 16 then types := types | integer_16_mask
+					when 32 then types := types | integer_32_mask
+					when 64 then types := types | integer_64_mask
 					else
 						-- Do not change `types'.
 					end

@@ -1,72 +1,25 @@
 indexing
-	description: "Objects that represent a typed char ast node"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
 
-class
-	TYPED_CHAR_AS
+	description:
+		"Error for invalid integers."
+	legal: "See notice at end of class."
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision $"
+
+class VIIN
 
 inherit
-	CHAR_AS
-		rename
-			initialize as char_initialize
-		redefine
-			first_token, process, type
-		end
+
+	VALIDITY_ERROR
 
 create
-	initialize
+	make
 
-feature {NONE} -- Initialization
+feature -- Properties
 
-	initialize (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER) is
-			-- Create a new CHARACTER AST node.
-		require
-			l_non_negative: l >= 0
-			co_non_negative: co >= 0
-			p_non_negative: p >= 0
-			n_non_negative: n >= 0
-		do
-			value := c
-			set_position (l, co, p, n)
-			type := t_as
-		ensure
-			value_set: value = c
-			type_set: type = t_as
-		end
-
-feature -- Roundtrip
-
-	type: TYPE_AS
-		-- Type associated with this node.
-
-feature -- Roundtrip/Token
-
-	first_token (a_list: LEAF_AS_LIST): LEAF_AS is
-		do
-			if a_list = Void then
-				Result := Current
-			else
-				if type /= Void then
-					Result := type.first_token (a_list)
-				else
-					Result := Current
-				end
-			end
-		end
-
-feature -- Visitor
-
-	process (v: AST_VISITOR) is
-			-- Process this node.
-		do
-			v.process_typed_char_as (Current)
-		end
-
-
+	code: STRING is "VIIN";
+			-- Error code
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -100,4 +53,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class VXRT

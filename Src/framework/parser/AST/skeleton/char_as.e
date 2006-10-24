@@ -22,7 +22,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: CHARACTER; l, co, p, n: INTEGER) is
+	initialize (c: CHARACTER_32; l, co, p, n: INTEGER) is
 			-- Create a new CHARACTER AST node.
 		require
 			l_non_negative: l >= 0
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 			p_non_negative: p >= 0
 			n_non_negative: n >= 0
 		do
-			value := c.to_character_32
+			value := c
 			set_position (l, co, p, n)
 		ensure
 			value_set: value = c

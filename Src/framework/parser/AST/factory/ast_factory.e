@@ -174,7 +174,7 @@ feature -- Access
 			create Result.make (k_as, i_as)
 		end
 
-	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS is
+	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS is
 			-- New TYPED_CHAR AST node.
 		do
 			create Result.initialize (t_as, c, l, co, p, n)
@@ -187,7 +187,46 @@ feature -- Access
 			create Result.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 		end
 
-feature -- Number AST creation
+feature -- Value AST creation
+
+	new_character_value (a_psr: EIFFEL_PARSER_SKELETON; a_type: TYPE_AS; buffer: STRING; a_text: STRING): CHAR_AS is
+			-- New character value.
+		require
+			buffer_not_void: buffer /= Void
+			a_psr_not_void: a_psr /= Void
+		local
+			l_integer: INTEGER_AS
+			l_code: STRING
+		do
+			if buffer.count = 1 then
+				if a_type = Void then
+					Result := new_character_as (buffer.item (1), a_psr.line, a_psr.column, a_psr.position, a_text)
+				else
+					Result := new_typed_char_as (a_type, buffer.item (1), a_psr.line, a_psr.column, a_psr.position, 1, a_text)
+				end
+			else
+				l_code := buffer.substring (4, buffer.count - 1)
+				l_integer := new_integer_value (a_psr, '+', Void, l_code, Void)
+				if l_integer.natural_64_value <= {NATURAL_8}.Max_value then
+					if a_type = Void then
+						Result := new_character_as (l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text)
+					else
+						Result := new_typed_char_as (a_type, l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, 0, a_text)
+					end
+				elseif l_integer.natural_64_value <= {NATURAL_32}.Max_value then
+					if a_type = Void then
+						Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text)
+					else
+						Result := new_typed_char_as (a_type, l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, 0, a_text)
+					end
+				else
+					a_psr.report_character_code_too_large_error (l_code)
+
+						-- Dummy code (for error recovery) follows:
+					Result := new_character_as ('a', 0, 0, 0, "")
+				end
+			end
+		end
 
 	new_integer_value (a_psr: EIFFEL_PARSER_SKELETON; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS is
 			-- New integer value.
@@ -209,11 +248,14 @@ feature -- Number AST creation
 			end
 			if token_value.is_number_sequence then
 				Result := new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
-			elseif
-				token_value.item (1) = '0' and then
-				token_value.item (2).lower = 'x'
-			then
-				Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+			elseif token_value.item (1) = '0' then
+				if token_value.item (2).lower = 'x' then
+					Result := new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				elseif token_value.item (2).lower = 'c' then
+					Result := new_integer_octal_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				elseif token_value.item (2).lower = 'b' then
+					Result := new_integer_binary_as (a_type, sign_symbol, token_value, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count)
+				end
 			end
 			if Result = Void or else not Result.is_initialized then
 				if sign_symbol = '-' then
@@ -677,7 +719,7 @@ feature -- Access
 			end
 		end
 
-	new_character_as (c: CHARACTER; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
+	new_character_as (c: CHARACTER_32; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
 			-- New CHARACTER AST node
 		require
 			l_non_negative: l >= 0
@@ -1273,6 +1315,24 @@ feature -- Access
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
+				Result.set_position (l, c, p, n)
+			end
+		end
+
+	new_integer_octal_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
+			-- New INTEGER_AS node
+		do
+			if v /= Void then
+				create Result.make_from_octal_string (t, s, v)
+				Result.set_position (l, c, p, n)
+			end
+		end
+
+	new_integer_binary_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS; l, c, p, n: INTEGER): INTEGER_AS is
+			-- New INTEGER_AS node
+		do
+			if v /= Void then
+				create Result.make_from_binary_string (t, s, v)
 				Result.set_position (l, c, p, n)
 			end
 		end

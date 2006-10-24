@@ -26,6 +26,7 @@ D		[0-9]
 I		{D}(({D}|_)*{D})?
 H		([0-9]|[A-F]|[a-f])
 O		[0-7]
+B		[0-1]
 E		(((e|E)[+-]?{D}+)?)
 A		([a-z]|[A-Z])
 X		([a-z]|[A-Z]|[0-9]|_)
@@ -585,6 +586,23 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_INTEGER
 			}
 
+0[cC]{O}(({O}|_)*{O})?	{		-- Recognizes octal integer numbers.
+				token_buffer.clear_all
+				append_text_to_string (token_buffer)				
+				last_token := TE_INTEGER
+			}
+
+0[bB]{B}(({B}|_)*{B})?	{		-- Recognizes binary integer numbers.
+				token_buffer.clear_all
+				append_text_to_string (token_buffer)				
+				last_token := TE_INTEGER
+			}
+
+0[bBcC]{H}(({H}|_)*{H})?	{		-- Recognizes erronous binary and octal numbers.
+				report_invalid_integer_error (token_buffer)
+			}
+
+
 -- Reals
 
 ({D}*\.{D}+{E})|({D}+\.{D}*{E})|(({U}(_{T})*)?\.({T}_)*{U}{E})|({U}(_{T})*\.(({T}_)*{U})?{E}) {
@@ -738,9 +756,21 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_CHAR
 				ast_factory.set_buffer (token_buffer2, Current)
 			}
-\'%\/[0-9]+\/\'	{
-				process_character_code (text_substring (4, text_count - 2).to_integer)
+\'%\/[0-9]+\/\'	|
+\'%\/0[xX]{H}(({H}|_)*{H})?\/\' |
+\'%\/0[cC]{O}(({O}|_)*{O})?\/\' |
+\'%\/0[bB]{B}(({B}|_)*{B})?\/\' {
+				token_buffer.clear_all
+				append_text_substring_to_string (1, text_count - 1, token_buffer)
+				last_token := TE_CHAR
+				ast_factory.set_buffer (token_buffer2, Current)
 			}
+
+\'%\/0[bBcC]{H}(({H}|_)*{H})?\/\'	{
+				report_invalid_integer_error (token_buffer)
+			}
+
+
 \'.{0,2}			|
 \'%\/[0-9]+(\/)?	{
 					-- Unrecognized character.

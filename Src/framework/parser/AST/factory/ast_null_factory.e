@@ -187,7 +187,7 @@ feature -- Roundtrip
 
 feature -- Roundtrip: New node
 
-	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS is
+	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS is
 			-- New TYPED_CHAR AST node.
 		do
 		end
@@ -492,7 +492,7 @@ feature -- Access
 		do
 		end
 
-	new_character_as (c: CHARACTER; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
+	new_character_as (c: CHARACTER_32; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
 			-- New CHARACTER AST node
 		do
 		end

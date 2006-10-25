@@ -9,6 +9,21 @@ inherit
 
 feature
 
+	frozen g_module_supported: BOOLEAN
+		external
+			"C signature (): gboolean use <gmodule.h>"
+		end
+
+	frozen g_module_symbol (a_module, a_symbol_name: POINTER; a_symbol: TYPED_POINTER [POINTER]): BOOLEAN
+		external
+			"C signature (GModule*, gchar*, gpointer*): gboolean use <gmodule.h>"
+		end
+
+	frozen g_module_open (a_module_name: POINTER; a_flags: INTEGER): POINTER
+		external
+			"C signature (gchar*, GModuleFlags): GModule* use <gmodule.h>"
+		end
+
 	frozen g_source_remove (a_tag: NATURAL_32): BOOLEAN is
 		external
 			"C (guint): gboolean | <gtk/gtk.h>"
@@ -153,6 +168,17 @@ feature
 			"[
 				#if GTK_MAJOR_VERSION == 2
 					return GDK_COLORSPACE_RGB;
+				#endif
+			]"
+		end
+
+	frozen gdk_pixbuf_get_pixels (a_pixbuf: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				#if GTK_MAJOR_VERSION == 2
+					return gdk_pixbuf_get_pixels ((GdkPixbuf*) $a_pixbuf);
 				#endif
 			]"
 		end

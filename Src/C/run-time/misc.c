@@ -256,76 +256,10 @@ rt_public void eif_system_asynchronous (char *cmd)
 
 }
 
+/* Obsolete but kept for backward compatibility. To remove in 6.x where x > 1 */
 rt_public char * eif_getenv (char * k)
 {
-#ifdef EIF_WINDOWS
-	char *result = getenv (k);
-
-	if (result)
-		return result;
-	else {
-		char *key, *lower_k; /* %%ss removed *value */
-		size_t appl_len, key_len;
-		HKEY hkey;
-		DWORD bsize = 1024;
-		static unsigned char buf[1024];
-	
-		appl_len = strlen (egc_system_name);
-		key_len = strlen (k);
-		if ((key = (char *) eif_calloc (appl_len + 46 +key_len, 1)) == NULL)
-			return result;
-	
-		if ((lower_k = (char *) eif_calloc (key_len+1, 1)) == NULL) {
-			eif_free (key);
-			return result;
-		}
-	
-		strcpy (lower_k, k);
-		CHECK("Not too big", key_len <= 0xFFFFFFFF);
-		CharLowerBuff (lower_k, (DWORD) key_len);
-	
-		strcpy (key, "Software\\ISE\\Eiffel60\\");
-		strncat (key, egc_system_name, appl_len);
-	
-		if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
-			if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
-				eif_free (key);
-				eif_free (lower_k);
-				return result;
-			}
-			if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
-				eif_free (key);
-				eif_free (lower_k);
-				RegCloseKey (hkey);
-				return result;
-			}
-		} else {
-			if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
-					/* Could not read from HKCU entry, so let's close it before opening
-					 * the one possibly in HKLM */
-				RegCloseKey(hkey);
-				if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
-					eif_free (key);
-					eif_free (lower_k);
-					return result;
-				}
-				if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
-					eif_free (key);
-					eif_free (lower_k);
-					RegCloseKey (hkey);
-					return result;
-				}
-			}
-		}
-
-		eif_free (key);
-		eif_free (lower_k);
-		RegCloseKey (hkey);
-		return (char *) buf;
-	}
-#else
 	return (char *) getenv (k);
-#endif
 }
 
 /***************************************/

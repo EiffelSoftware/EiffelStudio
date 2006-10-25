@@ -104,7 +104,7 @@ feature -- Status setting
 			l_env.append_character ('=')
 			l_env.append (value)
 			create l_c_env.make (l_env)
-			
+
 			environ.force (l_c_env, key)
 			return_code := eif_putenv (l_c_env.item)
 		ensure
@@ -160,7 +160,9 @@ feature {NONE} -- External
 	eif_getenv (s: POINTER): POINTER is
 			-- Value of environment variable `s'
 		external
-			"C use %"eif_misc.h%""
+			"C use <stdlib.h>"
+		alias
+			"getenv"
 		end
 
 	eif_putenv (v: POINTER): INTEGER is

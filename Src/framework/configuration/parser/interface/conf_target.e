@@ -17,7 +17,7 @@ inherit
 
 	CONF_VALIDITY
 
-	REFACTORING_HELPER
+	DEBUG_OUTPUT
 
 create {CONF_PARSE_FACTORY}
 	make
@@ -1472,6 +1472,14 @@ feature -- Visit
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_target (Current)
+		end
+
+feature -- Output
+
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := system.name + "/" + name
 		end
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are stored to the configuration file

@@ -13,6 +13,8 @@ inherit
 
 	CONF_FILE_DATE
 
+	DEBUG_OUTPUT
+
 create {CONF_PARSE_FACTORY}
 	make_with_uuid
 
@@ -291,6 +293,14 @@ feature -- Visit
 			-- Process `a_visitor'.
 		do
 			a_visitor.process_system (Current)
+		end
+
+feature -- Output
+
+	debug_output: STRING is
+			-- String that should be displayed in debugger to represent `Current'.
+		do
+			Result := name
 		end
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation

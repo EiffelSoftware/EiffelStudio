@@ -83,9 +83,6 @@ feature -- Match list maintaining
 
 	extend_match_list (a_match: LEAF_AS) is
 			-- Extend `match_list' with `a_match'.
-		require else
-			match_list: match_list /= Void
-			a_match_not_void: a_match /= Void
 		do
 			match_list.extend (a_match)
 		end
@@ -93,8 +90,6 @@ feature -- Match list maintaining
 	extend_match_list_with_stub (a_stub: LEAF_STUB_AS) is
 			-- Extend `match_list' with stub `a_stub',
 			-- and set index in `a_match'.
-		require else
-			a_stub_not_void: a_stub /= Void
 		do
 			a_stub.set_index (match_list_count)
 			match_list.extend (a_stub)
@@ -102,10 +97,10 @@ feature -- Match list maintaining
 
 feature -- Leaf Nodes
 
-	new_character_as (c: CHARACTER_32; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
+	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): CHAR_AS is
 			-- New CHARACTER AST node
 		do
-			Result := Precursor (c, l, co, p, a_text)
+			Result := Precursor (c, l, co, p, n, a_text)
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, a_text.count))
 		end
 

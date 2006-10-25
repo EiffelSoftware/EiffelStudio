@@ -76,7 +76,7 @@ feature -- Scann
 					when TE_REAL then
 						l_as := ast_factory.new_real_as (Void, Void, text, Void, line, column, position, text_count)
 					when TE_CHAR then
-						l_as := ast_factory.new_character_as (' ', line, column, position, text)
+						l_as := ast_factory.new_character_as (' ', line, column, position, text_count, text)
 					when
 						TE_STR_LT, TE_STR_GT, TE_STR_LE, TE_STR_GE, TE_STR_PLUS, TE_STR_MINUS, TE_STR_STAR,
 						TE_STR_SLASH, TE_STR_POWER, TE_STR_DIV, TE_STR_MOD, TE_STR_BRACKET, TE_STR_AND,

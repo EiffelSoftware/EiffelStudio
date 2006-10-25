@@ -77,8 +77,11 @@ feature -- Status update
 			end
 
 				-- Make sure to define ISE_LIBRARY if not defined.
-			if get_environment (ise_library_env) = Void then
+			temp := get_environment (ise_library_env)
+			if temp = Void then
 				environment.put (eiffel_installation_dir_name, ise_library_env)
+			else
+				environment.put (temp, ise_library_env)
 			end
 		ensure
 			is_valid_environment: is_valid_environment

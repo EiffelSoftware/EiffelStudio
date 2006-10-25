@@ -10,11 +10,39 @@ class
 
 feature -- Externals
 
-	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
+	frozen gtk_widget_toplevel (a_widget: POINTER): BOOLEAN
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"GTK_WIDGET_TOPLEVEL"
+		end
+
+	frozen gtk_window_get_focus (a_window: POINTER): POINTER
+		external
+			"C [struct <gtk/gtk.h>] (GtkWindow): EIF_POINTER"
+		alias
+			"focus_widget"
+		end
+
+	frozen gtk_window_set_accept_focus (a_window: POINTER; a_focus: BOOLEAN)
+		external
+			"C inline"
+		alias
+			" "
+		end
+
+	frozen gtk_window_present (a_window: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			" "
+			"gtk_widget_show ((GtkWidget*) $a_window)"
+		end
+
+	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
+		external
+			"C inline"
+		alias
+			"return NULL;"
 		end
 
 	frozen events_pending: BOOLEAN is
@@ -35,7 +63,7 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			" "
+			"return NULL;"
 		end
 
 	frozen g_static_rec_mutex_init (a_static_mutex: POINTER) is
@@ -56,7 +84,7 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			" "
+			"return (EIF_BOOLEAN)1;"
 		end
 
 	frozen g_static_rec_mutex_unlock (a_static_mutex: POINTER) is
@@ -70,7 +98,7 @@ feature -- Externals
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			" "
+			"return NULL;"
 		end
 
 	frozen g_thread_init is
@@ -122,25 +150,11 @@ feature -- Externals
 			"((GtkObject*) $a_window)->flags & GTK_HAS_FOCUS"
 		end
 
-	frozen gdk_window_process_all_updates is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			" "
-		end
-
 	frozen gdk_window_process_updates (a_window: POINTER; process_children: BOOLEAN) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			" "
-		end
-
-	frozen gdk_decor_resizeh_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GDK_DECOR_RESIZEH"
 		end
 
 	frozen gtk_scrolled_window_set_shadow_type (a_window: POINTER; a_shadow_type: INTEGER) is

@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 
 	interface: EV_ACCELERATOR
 
-feature {EV_TITLED_WINDOW_IMP} -- Implementation
+feature {EV_WINDOW_IMP} -- Implementation
 
 	modifier_mask: INTEGER is
 			-- The mask consisting of alt, shift and control keys.
@@ -62,32 +62,37 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 			end
 		end
 
-	add_accel (a_accel_grp: POINTER) is
+	add_accel (a_window_imp: EV_WINDOW_IMP) is
 			-- Add the current key combination to the invisible button.
 		require
-			a_accel_grp_not_null: a_accel_grp /= NULL
+			a_window_imp_not_void: a_window_imp /= Void
 		local
 			a_cs: EV_GTK_C_STRING
+			l_accel_grp: POINTER
 		do
 			a_cs := "activate"
+			l_accel_grp := a_window_imp.accel_group
 			{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
 				c_object,
 				a_cs.item,
-				a_accel_grp,
+				l_accel_grp,
 				key_code_to_gtk (key.code),
 				modifier_mask,
 				0
 			)
 		end
 
-	remove_accel (a_accel_grp: POINTER) is
+	remove_accel (a_window_imp: EV_WINDOW_IMP) is
 			-- Remove the current key combination to the invisible button.
 		require
-			a_accel_grp_not_null: a_accel_grp /= NULL
+			a_window_imp_not_void: a_window_imp /= Void
+		local
+			l_accel_grp: POINTER
 		do
+			l_accel_grp := a_window_imp.accel_group
 			{EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
 				c_object,
-				a_accel_grp,
+				l_accel_grp,
 				key_code_to_gtk (key.code),
 				modifier_mask
 			)

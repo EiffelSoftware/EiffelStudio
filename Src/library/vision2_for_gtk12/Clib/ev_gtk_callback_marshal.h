@@ -24,6 +24,8 @@ void c_ev_gtk_callback_marshal_destroy ();
 guint c_ev_gtk_callback_marshal_signal_connect
 	(GtkObject*, const gchar*, EIF_OBJECT, gboolean);
 
+void c_ev_gtk_callback_marshal_set_is_enabled (int);
+
 guint c_ev_gtk_callback_marshal_signal_connect_true
 	(GtkObject*, const gchar*, EIF_OBJECT);
 

@@ -1,16 +1,6 @@
 indexing
 	description: "Eiffel Vision font. GTK implementation."
 	legal: "See notice at end of class."
-	note:
-		"Does not inherit from EV_ANY_IMP because c_object is not a %N%
-		%GTK object. (type is GdkFont)",
-		"All font interaction is done through the system name. This string %N%
-		%consists of 14 attributes, separated by dashes. %N%
-		%The string looks like: %N%
-		%-foundry-family-weight-slant-setwidth-addstyle-pixel-point-resx-resy-spacing-width-charset-encoding %N%
-		%Of these attributes, only family, weight, slant and pixel_size %N%
-		%are relevant to EiffelVision., %N%
- 		%See: http://developer.gnome.org/doc/API/gdk/gdk-fonts.html"
 	status: "See notice at end of class."
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"

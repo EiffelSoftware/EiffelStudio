@@ -23,7 +23,8 @@ inherit
 			insert_text,
 			visual_widget,
 			set_background_color,
-			create_change_actions
+			create_change_actions,
+			needs_event_box
 		end
 
 	EV_FONTABLE_IMP
@@ -37,14 +38,17 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			scrollable_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			set_c_object (scrollable_window)
 			entry_widget := gtk_text_new (NULL, NULL)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, entry_widget)
+			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_window, entry_widget)
 			gtk_text_set_editable (entry_widget, True)
 			enable_word_wrapping
 		end
@@ -240,8 +244,6 @@ feature -- Status setting
 			-- If the widget is frozen any updates made to the
 			-- window will not be shown until the widget is
 			-- `thawed out' using `thaw'.
-			-- Note: Only one window can be frozen at a time.
-			-- This is because of a limitation on Windows.
 		do
 			gtk_text_freeze (entry_widget)
 		end
@@ -262,16 +264,21 @@ feature -- Basic operation
 
 	scroll_to_line (i: INTEGER) is
 		do
-			freeze
+			--freeze
 			{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
-			thaw
+			--thaw
+		end
+
+	scroll_to_end is
+		do
+			scroll_to_line (line_count)
 		end
 
 	enable_word_wrapping is
 			-- Set 'has_word_wrapping' to True.
 		do
 			has_word_wrapping := True
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (scrollable_window,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_NEVER_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
 			gtk_text_set_line_wrap (entry_widget, 1)
@@ -282,7 +289,7 @@ feature -- Basic operation
 			-- Set 'has_word_wrapping' to False.
 		do
 			has_word_wrapping := False
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (scrollable_window,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
 			gtk_text_set_line_wrap (entry_widget, 0)
@@ -307,7 +314,7 @@ feature {NONE} -- Implementation
 	vertical_adjustment_struct: POINTER is
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
+			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (scrollable_window))
 		end
 
 	line_height: INTEGER is
@@ -319,6 +326,9 @@ feature {NONE} -- Implementation
 				Result := App_implementation.Default_font_ascent + App_implementation.Default_font_descent
 			end
 		end
+
+	scrollable_window: POINTER
+		-- Pointer to the scrollable window.
 
 	entry_widget: POINTER
 		-- Pointer to the gtk text editable.

@@ -250,12 +250,25 @@ feature -- Element change
 			rectangle_struct.memory_free
 		end
 
+	set_clip_region (a_region: EV_REGION) is
+			--
+		do
+			--| FIXME
+		end
+
 	remove_clip_area is
 			-- Do not apply any clipping.
 		do
 			gc_clip_area := Void
 			{EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, default_pointer)
 		end
+
+	remove_clipping is
+			--
+		do
+			remove_clip_area
+		end
+
 
 	set_tile (a_pixmap: EV_PIXMAP) is
 			-- Set tile used to fill figures.

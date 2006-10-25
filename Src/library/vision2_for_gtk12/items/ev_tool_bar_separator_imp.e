@@ -18,13 +18,16 @@ inherit
 	EV_ITEM_IMP
 		redefine
 			interface,
-			initialize
+			initialize,
+			needs_event_box
 		end
 
 create
 	make
 
 feature {NONE} -- Initialization
+
+	needs_event_box: BOOLEAN is True
 
 	is_dockable: BOOLEAN is False
 
@@ -34,7 +37,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_vseparator_new)
 		end
-	
+
 	initialize is
 			-- Initialize some stuff useless to separators.
 		do

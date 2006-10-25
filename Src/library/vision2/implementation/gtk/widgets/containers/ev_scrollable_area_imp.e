@@ -14,7 +14,8 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color,
 			set_item_width,
-			set_item_height
+			set_item_height,
+			set_offset
 		redefine
 			interface
 		end

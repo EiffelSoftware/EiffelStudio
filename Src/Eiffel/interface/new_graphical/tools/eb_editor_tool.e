@@ -80,7 +80,9 @@ feature -- Status setting
 	set_focus is
 			-- Set the focus
 		do
-			text_area.set_focus
+			if text_area /= Void then
+				text_area.set_focus
+			end
 		end
 
 feature -- Basic operation

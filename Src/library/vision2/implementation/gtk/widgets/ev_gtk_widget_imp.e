@@ -193,13 +193,22 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_window: POINTER
 			a_cursor_imp: EV_POINTER_STYLE_IMP
 		do
-			a_cursor_imp ?= a_cursor.implementation
-			a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
+			if a_cursor /= Void then
+				a_cursor_imp ?= a_cursor.implementation
+				a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
+			end
 			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 			if a_window /= default_pointer then
 				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
 			end
+			if previous_gdk_cursor /= default_pointer then
+				{EV_GTK_EXTERNALS}.gdk_cursor_destroy (previous_gdk_cursor)
+			end
+			previous_gdk_cursor := a_cursor_ptr
 		end
+
+	previous_gdk_cursor: POINTER
+			-- Pointer to the previously create GdkCursor.
 
 	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when the pointer is over this widget.

@@ -80,7 +80,6 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 
 RT_LNK EIF_INTEGER eif_system (char *s);
 RT_LNK void eif_system_asynchronous (char *s);
-RT_LNK char * eif_getenv(char * k);
 
 RT_LNK EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k);
 

@@ -290,7 +290,6 @@ feature {NONE} -- Implementation
 			-- Update `Current' if needed.
 		do
 			-- Not applicable
-			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
 		end
 
 feature {EV_DRAWABLE_IMP} -- Implementation

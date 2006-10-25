@@ -15,20 +15,20 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM]
 		redefine
 			interface,
 			initialize
 		end
-	
+
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
 			initialize,
 			destroy
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface,
@@ -56,15 +56,15 @@ feature -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			{EV_GTK_EXTERNALS}.gtk_clist_column_titles_show (visual_widget)
 			--| FIXME Work out correct minimum height.
-			set_minimum_height (22)
-			
+			set_minimum_height ((create {EV_LABEL}).minimum_height + 8)
+
 			real_signal_connect_after (
 				visual_widget,
 				"resize_column",
 				agent column_resize_callback,
 				agent (App_implementation.gtk_marshal).column_resize_callback_translate
 			)
-			
+
 --			real_signal_connect_after (
 --				visual_widget,
 --				"click_column",
@@ -93,7 +93,7 @@ feature
 		end
 
 --	column_click_callback (a_column: INTEGER) is
---			-- 
+--			--
 --		local
 --			a_widget: POINTER
 --		do
@@ -102,7 +102,7 @@ feature
 
 	frozen column_padding: INTEGER is 6
 		-- Extra pixels that make up a column that are not reflected in the struct.
-	
+
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
@@ -114,7 +114,7 @@ feature
 			item_imp.set_parent_imp (Current)
 			update_items
 		end
-		
+
 	update_items is
 			-- Update `Current' to match item values
 		local
@@ -133,7 +133,7 @@ feature
 				i := i + 1
 			end
 		end
-		
+
 	remove_i_th (a_position: INTEGER) is
 			-- Remove item a`a_position'
 		local

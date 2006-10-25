@@ -114,12 +114,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	call_selection_action_sequences is
-			--
-		do
-			-- Not needed for 1.2 implementation
-		end
-
 	visual_widget: POINTER is
 			-- Visible widget on screen.
 		do
@@ -195,7 +189,7 @@ feature {NONE} -- Initialization
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 
-			tree_item_imp := row_from_y_coord (a_y)
+			tree_item_imp := item_from_coords (a_x, a_y)
 
 			if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 				if
@@ -227,7 +221,7 @@ feature {NONE} -- Initialization
 				pointer_motion_actions_internal.call (t)
 			end
 
-			a_row_imp := row_from_y_coord (a_y)
+			a_row_imp := item_from_coords (a_x, a_y)
 			if a_row_imp /= Void then
 				if a_row_imp.pointer_motion_actions_internal /= Void then
 					a_row_imp.pointer_motion_actions_internal.call (t)
@@ -285,15 +279,19 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
-				if select_actions_internal /= Void then
-					select_actions_internal.call (Void)
+			if a_tree_node_imp /= Void then
+				if a_tree_node_imp /= selected_node then
+					selected_node := a_tree_node_imp
+					if select_actions_internal /= Void then
+						select_actions_internal.call (Void)
+					end
+					if a_tree_node_imp.select_actions_internal /= Void then
+						a_tree_node_imp.select_actions_internal.call (Void)
+					end
 				end
-				if a_tree_node_imp.select_actions_internal /= Void then
-					a_tree_node_imp.select_actions_internal.call (Void)
-				end
+			else
+				selected_node := Void
 			end
-			selected_node := a_tree_node_imp
 		end
 
 	deselect_callback (a_tree_item: POINTER) is
@@ -303,6 +301,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
 			if a_tree_node_imp /= Void and selected_node = a_tree_node_imp then
+				selected_node := Void
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call (Void)
 				end
@@ -422,7 +421,7 @@ feature -- Implementation
 		is
 			-- Initialize a pick and drop transport.
 		do
-			pnd_row_imp := row_from_y_coord (a_y)
+			pnd_row_imp := item_from_coords (a_x, a_y)
 
 			if pnd_row_imp /= Void and then not pnd_row_imp.able_to_transport (a_button) then
 				pnd_row_imp := Void
@@ -544,7 +543,7 @@ feature -- Implementation
 
 feature {EV_TREE_NODE_IMP}
 
-	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
+	item_from_coords (a_x, a_y: INTEGER): EV_TREE_NODE_IMP is
 		local
 			temp_row_ptr: POINTER
 		do

@@ -14,7 +14,6 @@ inherit
 		redefine
 			width,
 			height,
-			is_parentable,
 			screen_x,
 			screen_y
 		end
@@ -41,9 +40,6 @@ feature {NONE} -- Implementation
 			-- Return Void
 		end
 
-	is_parentable: BOOLEAN is False
-			-- May `Current' have a parent?
-
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
 		do
@@ -68,25 +64,31 @@ feature {NONE} -- Implementation
 			-- Set as transient for `a_window'.
 		local
 			win_imp: EV_WINDOW_IMP
+			l_window: POINTER
 		do
-			internal_blocking_window := a_window
-			if a_window /= Void then
-				win_imp ?= a_window.implementation
-				{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, win_imp.c_object)
-			else
-				if not is_destroyed then
-					{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, NULL)
+			if not is_destroyed then
+				if a_window /= Void then
+					win_imp ?= a_window.implementation
+					l_window := win_imp.c_object
+					internal_blocking_window := win_imp
+				else
+					internal_blocking_window := Void
 				end
+				{EV_GTK_EXTERNALS}.gtk_window_set_transient_for (c_object, l_window)
+			else
+				internal_blocking_window := Void
 			end
 		end
 
 	blocking_window: EV_WINDOW is
 			-- Window this dialog is a transient for.
 		do
-			Result := internal_blocking_window
+			if internal_blocking_window /= Void and then not internal_blocking_window.is_destroyed then
+				Result := internal_blocking_window.interface
+			end
 		end
 
-	internal_blocking_window: EV_WINDOW
+	internal_blocking_window: EV_WINDOW_IMP
 			-- Window that `Current' is relative to.
 			-- Implementation
 
@@ -219,6 +221,89 @@ feature {NONE} -- Implementation
 			Result := 0 -- No decorations
 		end
 
+	hide is
+			-- Hide `Current'.
+		do
+			if is_show_requested then
+				if
+					is_modal and then
+					internal_blocking_window /= Void and then
+					not internal_blocking_window.is_destroyed and then
+					internal_blocking_window.is_show_requested
+				then
+					internal_blocking_window.decrease_modal_window_count
+				end
+				is_modal := False
+				set_blocking_window (Void)
+				{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
+			end
+		end
+
+	is_modal: BOOLEAN
+		-- Is `Current' modal?
+
+	show_modal_to_window (a_window: EV_WINDOW) is
+			-- Show `Current' modal with respect to `a_window'.
+		local
+			l_window_imp: EV_WINDOW_IMP
+		do
+			l_window_imp ?= a_window.implementation
+			is_modal := True
+			l_window_imp.increase_modal_window_count
+			show_relative_to_window (a_window)
+			block
+			is_modal := False
+				-- No need to call `set_blocking_window' to Void since this is done when
+				-- current is hidden.
+
+			if not l_window_imp.is_destroyed then
+				if l_window_imp.is_show_requested then
+						-- Get window manager to always show parent window.
+						-- This is a hack in case parent window was minimized and restored
+						-- by the modal dialog, when closed the window managed would restore the
+						-- focus to the previously focused window which may or may not be `l_window_imp',
+						-- this leads to odd behavior when closing the modal dialog so we always present the window.
+					{EV_GTK_EXTERNALS}.gtk_window_present (l_window_imp.c_object)
+				end
+			end
+		end
+
+	show_relative_to_window (a_window: EV_WINDOW) is
+			-- Show `Current' with respect to `a_window'.
+		do
+			set_blocking_window (a_window)
+			show
+				-- This extra call is needed otherwise the Window will not be transient.
+			set_blocking_window (a_window)
+		end
+
+	block is
+			-- Wait until window is closed by the user.
+		local
+			l_app_imp: like app_implementation
+		do
+			from
+				l_app_imp := app_implementation
+			until
+				blocking_condition
+			loop
+				l_app_imp.event_loop_iteration (True)
+			end
+		end
+
+	blocking_condition: BOOLEAN is
+			-- Condition when blocking ceases if enabled.
+		do
+			Result := is_destroyed or else not is_show_requested or else app_implementation.is_destroyed
+		end
+
+feature {EV_INTERMEDIARY_ROUTINES}
+
+	call_close_request_actions is
+			-- Call the close request actions.
+		deferred
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	enable_modal is
@@ -231,14 +316,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Set `is_modal' to `False'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, False)
-		end
-
-	is_modal: BOOLEAN is
-			-- Must the window be closed before application continues?
-		do
-			if not is_destroyed then
-				Result := {EV_GTK_EXTERNALS}.gtk_window_struct_modal (c_object).to_boolean
-			end
 		end
 
 	forbid_resize is

@@ -116,7 +116,7 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- List and list it
 			l_list_item_imp: EV_LIST_ITEM_IMP
 		do
 			l_list_item_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			l_list_item_imp.check_callback
+			l_list_item_imp.check_callback ()
 		end
 
 	list_item_deselect_callback_intermediary (a_c_object: POINTER; n_args: INTEGER; args: POINTER) is

@@ -19,7 +19,8 @@ inherit
 			interface,
 			visual_widget,
 			on_key_event,
-			create_change_actions
+			create_change_actions,
+			needs_event_box
 		end
 
 	EV_FONTABLE_IMP
@@ -41,16 +42,24 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN
+		do
+			Result := True
+		end
+
 	make (an_interface: like interface) is
 			-- Create a gtk entry.
+		local
+			l_vbox: POINTER
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
+			l_vbox := {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			set_c_object (l_vbox)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_entry_new
 			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
 			--| Minimum sizes need to be similar on both platforms
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (l_vbox, entry_widget, False, False, 0)
 			set_text ("")
 		end
 
@@ -114,10 +123,10 @@ feature -- Status Report
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
-			if in_change_action and not last_key_backspace then
-				Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 2
-			else
-				Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
+			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
+			if in_change_action and then not last_key_backspace then
+					-- Hack needed for autocompletion in EiffelStudio
+				Result := Result + 1
 			end
 		end
 
@@ -126,20 +135,15 @@ feature -- Status Report
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
-			-- Used for key event actions sequences.
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
+			-- A key event has occurred
 		do
 			if a_key_press then
-					-- The event is a key press event.
 				if a_key /= Void then
-					if a_key.code = {EV_KEY_CONSTANTS}.Key_back_space then
-						last_key_backspace := True
-					else
-						last_key_backspace := False
-					end
+					last_key_backspace := a_key.code = {EV_KEY_CONSTANTS}.key_back_space
 				end
 			end
-			Precursor (a_key, a_key_string, a_key_press)
+			Precursor {EV_TEXT_COMPONENT_IMP} (a_key, a_key_string, a_key_press, call_application_events)
 		end
 
 	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -237,18 +241,28 @@ feature -- Basic operation
 			-- Select (highlight) the text between
 			-- 'start_pos' and 'end_pos'.
 		do
-			internal_set_caret_position (end_pos.max (start_pos) + 1)
-			select_region_internal (start_pos, end_pos)
-			internal_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			internal_timeout_imp.interface.actions.extend
-				(agent select_region_internal (start_pos, end_pos))
-			internal_timeout_imp.set_interval_kamikaze (0)
+			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
+
+				-- Hack to ensure text field is selected when called from change actions
+			if not last_key_backspace and then change_actions_internal /= Void and then change_actions_internal.state = change_actions_internal.blocked_state and then end_pos = text.count then
+				app_implementation.do_once_on_idle (agent select_from_start_pos (start_pos, end_pos))
+			end
 		end
 
-	select_region_internal (start_pos, end_pos: INTEGER) is
-			-- Select region
+	select_from_start_pos (start_pos, end_pos: INTEGER) is
+			-- Hack to select region from change actions
+		local
+			a_start, a_end, text_count: INTEGER
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
+			if not is_destroyed then
+				a_start := start_pos.min (end_pos)
+				a_end := end_pos.max (start_pos)
+				text_count := text.count
+				if a_end < text_count then
+					a_start := a_start + (text_count - a_end)
+				end
+				{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, a_start - 1, -1)
+			end
 		end
 
 	deselect_all is
@@ -310,9 +324,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			real_signal_connect (entry_widget, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
 
-	internal_timeout_imp: EV_TIMEOUT_IMP
-			-- Timeout to call 'select_region
-
 	stored_text: STRING
 			-- Value of 'text' prior to a change action, used to compare
 			-- between old and new text.
@@ -320,27 +331,22 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	in_change_action: BOOLEAN
 			-- Is Current being changed?
 
-	toggle_in_change_action (a_flag: BOOLEAN) is
-			-- Set 'in_change_action' to 'a_flag'
-		do
-			in_change_action := a_flag
-		end
-
 	on_change_actions is
 			-- A change action has occurred.
+		local
+			new_text: STRING_32
 		do
-			toggle_in_change_action (True)
-			if stored_text /= Void then
-				if not text.is_equal (stored_text) then
-						-- The text has actually changed
-					stored_text := text
+			new_text := text
+			if not in_change_action and then (stored_text /= Void and then not new_text.is_equal (stored_text)) or else stored_text = Void then
+					-- The text has actually changed
+				in_change_action := True
+				if change_actions_internal /= Void then
 					change_actions_internal.call (Void)
 				end
-			else
+				in_change_action := False
 				stored_text := text
-				change_actions_internal.call (Void)
 			end
-			toggle_in_change_action (False)
+
 		end
 
 feature {NONE} -- Implementation

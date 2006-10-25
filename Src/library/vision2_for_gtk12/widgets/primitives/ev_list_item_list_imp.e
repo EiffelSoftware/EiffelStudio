@@ -41,10 +41,14 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a list widget with `par' as parent.
 			-- By default, a list allow only one selection.
+		local
+			l_scrolled_win: POINTER
 		do
 			base_make (an_interface)
 
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			l_scrolled_win := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+
+			set_c_object (l_scrolled_win)
 
 					-- Creating the gtk_list, pointed by `list_widget':
 			list_widget := {EV_GTK_EXTERNALS}.gtk_list_new
@@ -53,14 +57,14 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM
 			)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				c_object,
+				l_scrolled_win,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
 
 			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (
-				c_object,
+				l_scrolled_win,
 				list_widget
 			)
 			real_signal_connect (
@@ -375,7 +379,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				go_i_th (count)
 				arrow_used := not item.is_equal (f_item)
 			end
-			on_key_event (ev_key, a_key_string, a_key_press)
+			on_key_event (ev_key, a_key_string, a_key_press, False)
 		end
 
 	on_item_clicked is

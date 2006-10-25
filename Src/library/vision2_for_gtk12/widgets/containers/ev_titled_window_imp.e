@@ -50,15 +50,6 @@ feature {NONE} -- Initialization
 		do
 			app_imp := app_implementation
 			Precursor {EV_WINDOW_IMP}
-			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
---			signal_connect (
---				accel_group,
---				app_imp.accel_activate_string,
---				agent (App_imp.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
---				Void,
---				False
---			)
-			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
 --			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, False)
 		end
 
@@ -116,26 +107,6 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 				i := i + 1
 			end
-		end
-
-feature {NONE} -- Accelerators
-
-	connect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Connect key combination `an_accel' to this window.
-		local
-			acc_imp: EV_ACCELERATOR_IMP
-		do
-			acc_imp ?= an_accel.implementation
-			acc_imp.add_accel (accel_group)
-		end
-
-	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Disconnect key combination `an_accel' from this window.
-		local
-			acc_imp: EV_ACCELERATOR_IMP
-		do
-			acc_imp ?= an_accel.implementation
-			acc_imp.remove_accel (accel_group)
 		end
 
 feature -- Access
@@ -258,14 +229,6 @@ feature {NONE} -- Implementation
 		do
 			Result := {EV_GTK_EXTERNALS}.gdk_decor_all_enum
 		end
-
-feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP} -- Implementation
-
-	accel_group: POINTER
-			-- Pointer to GtkAccelGroup struct.
-
-	accel_box: POINTER
-			-- Pointer to the on screen zero size accelerator widget
 
 feature {EV_ANY_I} -- Implementation
 

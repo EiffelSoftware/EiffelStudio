@@ -86,12 +86,6 @@ feature {NONE} -- Initialization
 			create Result
 		end
 
-	call_selection_action_sequences is
-			--
-		do
-			-- Not needed for 1.2 implementation
-		end
-
 	button_press_switch (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
@@ -893,7 +887,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			end
 		end
 
-	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+	item_from_coords (a_x, a_y: INTEGER): EV_PND_DEFERRED_ITEM is
 			-- Returns the row at relative coordinate `a_y'
 		local
 			a_row_index: INTEGER

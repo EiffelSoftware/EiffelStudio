@@ -92,7 +92,7 @@ feature -- Status report
 	is_expanded: BOOLEAN
 			-- is the item expanded?
 
-feature -- Status setting
+feature {EV_ANY_I} -- Status setting
 
 	enable_select is
 			-- Select `Current' in its parent.

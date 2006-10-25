@@ -14,7 +14,7 @@ inherit
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
 			-- Used for key event actions sequences, redefined by descendants
 		do
 
@@ -22,35 +22,34 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 feature {NONE} -- Implementation
 
-	is_parentable: BOOLEAN is
-			-- May Current be parented?
-		do
-			Result := True
-		end
-
 	Gdk_events_mask: INTEGER is
 			-- Mask of all the gdk events the gdkwindow shall receive.
 		once
-			Result := {EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_KEY_RELEASE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM |
-			{EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
+			Result :=
+				{EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_KEY_RELEASE_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_ENTER_NOTIFY_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_LEAVE_NOTIFY_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_FOCUS_CHANGE_MASK_ENUM
+				| {EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
+--				| {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM
 		end
 
 	initialize is
-			-- Initialize `c_object'
+			-- Initialize `c_object'.
+		local
+			l_c_object: POINTER
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
-			if is_parentable then
-				{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
+			l_c_object := c_object
+			{EV_GTK_EXTERNALS}.gtk_widget_add_events (l_c_object, gdk_events_mask)
+			if {EV_GTK_EXTERNALS}.gtk_is_window (l_c_object) then
+				{EV_GTK_EXTERNALS}.gtk_widget_realize (l_c_object)
 			else
-				{EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (l_c_object)
 			end
 			set_is_initialized (True)
 		end
@@ -135,48 +134,55 @@ feature {EV_ANY_I} -- Implementation
 			Result ?= gtk_widget_imp_at_pointer_position
 		end
 
-	set_pointer_style (a_cursor: like pointer_style) is
-			-- Assign `a_cursor' to `pointer_style'.
+	set_focus
+			-- Grab keyboard focus.
 		do
-			if a_cursor /= pointer_style then
-				pointer_style := a_cursor
-				internal_set_pointer_style (a_cursor)
+			if not has_focus then
+				internal_set_focus
 			end
 		end
 
-	set_focus is
+	internal_set_focus is
 			-- Grab keyboard focus.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_grab_focus (visual_widget)
 		end
 
-	internal_set_pointer_style (a_cursor: like pointer_style) is
+	set_pointer_style (a_pointer: EV_POINTER_STYLE) is
+			-- Assign `a_pointer' to `pointer_style'.
+		do
+			if a_pointer /= pointer_style then
+				pointer_style := a_pointer
+				internal_set_pointer_style (a_pointer)
+			end
+		end
+
+	internal_set_pointer_style (a_cursor: EV_POINTER_STYLE) is
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
 			a_cursor_ptr: POINTER
+			a_window: POINTER
+			a_cursor_imp: EV_POINTER_STYLE_IMP
 		do
-			a_cursor_ptr := app_implementation.gdk_cursor_from_pixmap (a_cursor)
-			set_composite_widget_pointer_style (a_cursor_ptr)
+			if a_cursor /= Void then
+				a_cursor_imp ?= a_cursor.implementation
+				a_cursor_ptr := a_cursor_imp.gdk_cursor_from_pointer_style
+				a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
+				if a_window /= default_pointer then
+					{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
+				end
+			end
+			if previous_gdk_cursor /= default_pointer then
+				{EV_GTK_EXTERNALS}.gdk_cursor_destroy (previous_gdk_cursor)
+			end
+			previous_gdk_cursor := a_cursor_ptr
 		end
 
-	set_composite_widget_pointer_style (a_cursor_ptr: POINTER) is
-			-- Used to set the gdkcursor for composite widgets.
-		local
-			a_window: POINTER
-		do
-			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
-			if a_window /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
-			end
-			a_window := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
-			if a_window /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_window_set_cursor (a_window, a_cursor_ptr)
-			end
-		end
+	previous_gdk_cursor: POINTER
+			-- Pointer to the previously create GdkCursor.
 
 	pointer_style: EV_POINTER_STYLE
 			-- Cursor displayed when the pointer is over this widget.
-			-- Position retrieval.
 
 	frozen has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
 			-- Has this widget the flag `a_flag' set in struct_flags?
@@ -188,8 +194,19 @@ feature {EV_ANY_I} -- Implementation
 
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
+		local
+			l_window, l_widget: POINTER
+			l_widget_imp: EV_WIDGET_IMP
 		do
-			Result := has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum)
+			l_window := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+				-- This will return `c_object' if not toplevel window is found in hierarchy.
+			if l_window /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_widget_toplevel (l_window) then--and then {EV_GTK_EXTERNALS}.gtk_window_has_toplevel_focus (l_window) then
+				l_widget := {EV_GTK_EXTERNALS}.gtk_window_get_focus (l_window)
+				if l_widget /= default_pointer then
+					l_widget_imp ?= app_implementation.eif_object_from_gtk_object (l_widget)
+					Result := l_widget_imp = Current
+				end
+			end
 		end
 
 	width: INTEGER is
@@ -300,6 +317,30 @@ feature -- Status report
 			-- Is `Current' visible on the screen?
 		do
 			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	top_level_window_imp: EV_WINDOW_IMP is
+			-- Window implementation that `Current' is contained within (if any)
+		local
+			wind_ptr: POINTER
+		do
+			wind_ptr := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
+			if wind_ptr /= NULL then
+				Result ?= eif_object_from_c (wind_ptr)
+			end
+		end
+
+	top_level_window: EV_WINDOW is
+			-- Window the current is contained within (if any)
+		local
+			a_window_imp: EV_WINDOW_IMP
+		do
+			a_window_imp := top_level_window_imp
+			if a_window_imp /= Void then
+				Result := a_window_imp.interface
+			end
 		end
 
 feature {NONE} -- Implementation

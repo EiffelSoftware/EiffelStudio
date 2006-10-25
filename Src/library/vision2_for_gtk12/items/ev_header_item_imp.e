@@ -47,6 +47,7 @@ feature -- Initialization
 			-- Initialize `Current'.
 		do
 			textable_imp_initialize
+			pixmapable_imp_initialize
 			align_text_left
 			set_width (80)
 			set_minimum_width (0)

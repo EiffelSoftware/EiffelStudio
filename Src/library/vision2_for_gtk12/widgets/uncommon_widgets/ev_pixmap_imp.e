@@ -79,6 +79,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
 			initialize_graphical_context
 			init_default_values
+			clear
 		end
 
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
@@ -101,6 +102,52 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
 				a_src := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
 				pix_imp.set_pixmap (a_src, a_mask)
+			end
+		end
+
+	init_from_pointer_style (a_pointer_style: EV_POINTER_STYLE) is
+			-- Initialize from `a_pointer_style'
+		local
+			a_pointer_style_imp: EV_POINTER_STYLE_IMP
+		do
+			a_pointer_style_imp ?= a_pointer_style.implementation
+
+			if a_pointer_style_imp.predefined_cursor_code /= -1 then
+				-- We are building from a stock cursor.
+				inspect
+					a_pointer_style_imp.predefined_cursor_code
+				when {EV_POINTER_STYLE_CONSTANTS}.busy_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.busy_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.wait_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.wait_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.crosshair_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.help_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.help_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.ibeam_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.no_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.no_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizeall_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenesw_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizens_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizens_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizenwse_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
+				when {EV_POINTER_STYLE_CONSTANTS}.standard_cursor then
+					set_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.standard_cursor_xpm)
+				else
+					set_size (a_pointer_style.width, a_pointer_style.height)
+					clear
+				end
+			else
+				copy_pixmap (a_pointer_style_imp.internal_pixmap)
 			end
 		end
 
@@ -162,6 +209,12 @@ feature -- Measurement
 
 feature -- Element change
 
+	set_pixmap_from_pixbuf (a_pixbuf: POINTER) is
+			-- Construct `Current' from GdkPixbuf `a_pixbuf'
+		do
+			--| Needed for compatibility with gtk 2.x
+		end
+
 	set_mask (a_mask: EV_BITMAP) is
 			-- Set the GdkBitmap used for masking `Current'.
 		local
@@ -177,7 +230,7 @@ feature -- Element change
 			gdkpix: POINTER
 		do
 			if a_width /= width or else a_height /= height then
-				gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (drawable, a_width, a_height, Default_color_depth)
+				gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (app_implementation.default_gdk_window, a_width, a_height, Default_color_depth)
 				set_pixmap (gdkpix, default_pointer)
 			end
 		end
@@ -332,7 +385,7 @@ feature -- Element change
 
 feature -- Access
 
-	bitmap_array: ARRAY [CHARACTER] is
+	bitmap_array: ARRAY [NATURAL_8] is
 			-- Monochromatic representation of `Current' used for cursors.
 			-- Representation in bits stored in characters.
 		local
@@ -342,9 +395,9 @@ feature -- Access
 			a_color_map: POINTER
 			a_width: INTEGER
 			array_offset, array_size: INTEGER
-			array_area: SPECIAL [CHARACTER]
+			array_area: SPECIAL [NATURAL_8]
 			color_struct_size: INTEGER
-			character_result, n_character: INTEGER
+			l_result, n_character: NATURAL_8
 		do
 			array_size := width * height
 			if (array_size \\ 8) > 0 then
@@ -376,22 +429,24 @@ feature -- Access
 					((array_offset) // a_width) -- Zero based Y coord
 				)
 				{EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
-				-- RGB values of a_color are 16 bit.
+
 				if n_character = 8 then
 					n_character := 0
-					character_result := 0
+					l_result := 0
 				end
 				if
-					{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) > 0
-					--or else local_feature {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) > 0
-					--or else local_feature {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) > 0
+						-- RGB values of a_color are 16 bit.
+						-- If all values are over half grey then mark the pixel as white.
+					{EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) > 32768 and then
+					{EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) > 32768 and then
+					{EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) > 32768
 				then
-					character_result := character_result + (2 ^ (n_character)).rounded
-					-- Bitmap data is stored in a way that pixel 1 is bit 1 (2 ^ 0).
-					-- This is the way it is read in by the gdk function. (FIFO)
+					l_result := l_result + ({NATURAL_8}1) |<< (n_character)
+						-- Bitmap data is stored in a way that pixel 1 is bit 1 (2 ^ 0).
+						-- This is the way it is read in by the gdk function. (FIFO)
 				end
 				if array_offset \\ 8 = 7 then
-					Result.put (character_result.to_character_8, (array_offset // 8) + 1)
+					Result.put (l_result, (array_offset // 8) + 1)
 				end
 				n_character := n_character + 1
 				array_offset := array_offset + 1
@@ -408,10 +463,9 @@ feature -- Access
 			a_color_map: POINTER
 			a_width: INTEGER
 			array_offset, array_size: INTEGER
-			array_area: SPECIAL [CHARACTER]
+			array_area: SPECIAL [NATURAL_8]
 			color_struct_size: INTEGER
-			temp_alpha: CHARACTER
-			temp_alpha_int: INTEGER
+			temp_alpha: NATURAL_8
 		do
 			create Result.make_with_alpha_zero (width, height)
 			Result.set_originating_pixmap (interface)
@@ -425,8 +479,7 @@ feature -- Access
 				array_size := a_width * height
 				array_area := Result.area
 				color_struct_size := {EV_GTK_EXTERNALS}.c_gdk_color_struct_size
-				temp_alpha_int := 255
-				temp_alpha := temp_alpha_int.to_character_8
+				temp_alpha := 255
 			until
 				array_offset = array_size
 			loop
@@ -437,9 +490,9 @@ feature -- Access
 				)
 				{EV_GTK_DEPENDENT_EXTERNALS}.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				-- RGB values of a_color are 16 bit.
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_character_8, array_offset)
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_character_8, array_offset + 1)
-				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_character_8, array_offset + 2)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_red (a_color) // 256).to_natural_8, array_offset)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_green (a_color) // 256).to_natural_8, array_offset + 1)
+				array_area.put (({EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_color) // 256).to_natural_8, array_offset + 2)
 				array_area.put (temp_alpha, array_offset + 3)
 				array_offset := array_offset + 4
 			end
@@ -493,7 +546,7 @@ feature {EV_ANY_I} -- Implementation
 	gtk_pixmap: POINTER
 			-- Pointer to the gtk pixmap widget.
 
-feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP, EV_PIXEL_BUFFER_IMP} -- Implementation
+feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_NOTEBOOK_IMP, EV_PIXMAP_IMP, EV_PIXEL_BUFFER_IMP, EV_POINTER_STYLE_IMP} -- Implementation
 
 	set_pixmap (gdkpix, gdkmask: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.

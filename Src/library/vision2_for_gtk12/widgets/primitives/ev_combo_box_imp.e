@@ -1,4 +1,4 @@
-	indexing
+indexing
 
 	description:
 		"EiffelVision combo box, gtk implementation."
@@ -26,17 +26,16 @@ inherit
 			initialize,
 			make,
 			interface,
-			on_focus_changed
+			on_focus_changed,
+			needs_event_box
 		end
 
 	EV_LIST_ITEM_LIST_IMP
 		undefine
 			set_default_colors,
 			visual_widget,
-			set_composite_widget_pointer_style,
 			destroy,
 			on_key_event,
-			default_key_processing_blocked,
 			on_focus_changed,
 			has_focus,
 			set_focus,
@@ -103,6 +102,8 @@ feature {NONE} -- Initialization
 			)
 			real_signal_connect (dropdown_window, "unmap-event", agent (App_implementation.gtk_marshal).on_combo_box_dropdown_unmapped (c_object), App_implementation.default_translate)
 		end
+
+	needs_event_box: BOOLEAN is True
 
 feature -- Status report
 

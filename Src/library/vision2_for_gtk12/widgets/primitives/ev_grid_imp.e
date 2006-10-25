@@ -38,7 +38,8 @@ inherit
 			disable_capture,
 			enable_capture,
 			has_capture,
-			set_default_colors
+			set_default_colors,
+			set_default_key_processing_handler
 		redefine
 			interface,
 			initialize,
@@ -158,7 +159,7 @@ feature {EV_ANY_I} -- Implementation
 	extra_text_spacing: INTEGER is
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
 		do
-			Result := 6
+			Result := 3
 		end
 
 	interface: EV_GRID;

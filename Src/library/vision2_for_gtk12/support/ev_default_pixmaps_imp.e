@@ -9,6 +9,9 @@ indexing
 class
 	EV_STOCK_PIXMAPS_IMP
 
+inherit
+	EV_ANY_HANDLER
+
 feature -- Access
 
 	Information_pixmap: EV_PIXMAP is
@@ -110,299 +113,247 @@ feature -- Access
 
 feature -- Default cursors
 
-	Busy_cursor: EV_CURSOR is
+	Busy_cursor: EV_POINTER_STYLE is
 			-- Standard arrow and small hourglass
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (busy_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
 		end
 
-	Standard_cursor: EV_CURSOR is
+	Standard_cursor: EV_POINTER_STYLE is
 			-- Standard arrow
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (standard_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor)
 		end
 
-	Crosshair_cursor: EV_CURSOR is
+	Crosshair_cursor: EV_POINTER_STYLE is
 			-- Crosshair
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (crosshair_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor)
 			Result.set_x_hotspot (15)
 			Result.set_y_hotspot (15)
 		end
 
-	Help_cursor: EV_CURSOR is
+	Help_cursor: EV_POINTER_STYLE is
 			-- Arrow and question mark
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (help_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.help_cursor)
 		end
 
-	Ibeam_cursor: EV_CURSOR is
+	Ibeam_cursor: EV_POINTER_STYLE is
 			-- I-beam
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (ibeam_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor)
 			Result.set_x_hotspot (7)
 			Result.set_y_hotspot (10)
 		end
 
-	No_cursor: EV_CURSOR is
+	No_cursor: EV_POINTER_STYLE is
 			-- Slashed_circle
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (no_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.no_cursor)
 			Result.set_x_hotspot (10)
 			Result.set_y_hotspot (10)
 		end
 
-	Sizeall_cursor: EV_CURSOR is
+	Sizeall_cursor: EV_POINTER_STYLE is
 			-- Four-pointed arrow pointing north, south, east and west
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizeall_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor)
 			Result.set_x_hotspot (8)
 			Result.set_y_hotspot (8)
 		end
 
-	Sizens_cursor: EV_CURSOR is
+	Sizens_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north and south
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizens_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizens_cursor)
 			Result.set_x_hotspot (5)
 			Result.set_y_hotspot (7)
 		end
 
-	Sizenwse_cursor: EV_CURSOR is
+	Sizenwse_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north-west and south-east
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizenwse_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor)
 			Result.set_x_hotspot (8)
 			Result.set_y_hotspot (7)
 		end
 
-	Sizenesw_cursor: EV_CURSOR is
+	Sizenesw_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing north-east and south-west
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizenesw_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor)
 			Result.set_x_hotspot (7)
 			Result.set_y_hotspot (7)
 		end
 
-	Sizewe_cursor: EV_CURSOR is
+	Sizewe_cursor: EV_POINTER_STYLE is
 			-- Double-pointed arrow pointing west and east
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (sizewe_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor)
 			Result.set_x_hotspot (7)
 			Result.set_y_hotspot (5)
 		end
 
-	Uparrow_cursor: EV_CURSOR is
+	Uparrow_cursor: EV_POINTER_STYLE is
 			-- Vertical arrow
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (uparrow_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor)
 			Result.set_x_hotspot (0)
 			Result.set_y_hotspot (5)
 		end
 
-	Wait_cursor: EV_CURSOR is
+	Wait_cursor: EV_POINTER_STYLE is
 			-- Hourglass
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (wait_cursor_xpm)
+			create Result.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor)
 			Result.set_x_hotspot (16)
 			Result.set_y_hotspot (16)
 		end
 
-feature {NONE} -- Externals
+feature {EV_ANY_HANDLER, EV_ANY_I} -- Externals
 
-	information_pixmap_xpm: POINTER is
+	frozen information_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"information_pixmap_xpm"
 		end
 
-	error_pixmap_xpm: POINTER is
+	frozen error_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"error_pixmap_xpm"
 		end
 
-	warning_pixmap_xpm: POINTER is
+	frozen warning_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"warning_pixmap_xpm"
 		end
 
-	question_pixmap_xpm: POINTER is
+	frozen question_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"question_pixmap_xpm"
 		end
 
-	collate_pixmap_xpm: POINTER is
+	frozen collate_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"collate_pixmap_xpm"
 		end
 
-	no_collate_pixmap_xpm: POINTER is
+	frozen no_collate_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_collate_pixmap_xpm"
 		end
 
-	landscape_pixmap_xpm: POINTER is
+	frozen landscape_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"landscape_pixmap_xpm"
 		end
 
-	portrait_pixmap_xpm: POINTER is
+	frozen portrait_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"portrait_pixmap_xpm"
 		end
-		
-	busy_cursor_xpm: POINTER is
+
+	frozen busy_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"busy_cursor_xpm"
 		end
-		
-	crosshair_cursor_xpm: POINTER is
+
+	frozen crosshair_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"crosshair_cursor_xpm"
 		end
-		
-	help_cursor_xpm: POINTER is
+
+	frozen help_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"help_cursor_xpm"
 		end
-		
-	ibeam_cursor_xpm: POINTER is
+
+	frozen ibeam_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"ibeam_cursor_xpm"
 		end
-		
-	no_cursor_xpm: POINTER is
+
+	frozen no_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_cursor_xpm"
 		end
-		
-	sizeall_cursor_xpm: POINTER is
+
+	frozen sizeall_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizeall_cursor_xpm"
 		end
-		
-	sizenesw_cursor_xpm: POINTER is
+
+	frozen sizenesw_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenesw_cursor_xpm"
 		end
-		
-	sizens_cursor_xpm: POINTER is
+
+	frozen sizens_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizens_cursor_xpm"
 		end
-		
-	sizenwse_cursor_xpm: POINTER is
+
+	frozen sizenwse_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenwse_cursor_xpm"
 		end
-		
-	sizewe_cursor_xpm: POINTER is
+
+	frozen sizewe_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizewe_cursor_xpm"
 		end
-	
-	standard_cursor_xpm: POINTER is
+
+	frozen standard_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"standard_cursor_xpm"
 		end
-		
-	uparrow_cursor_xpm: POINTER is
+
+	frozen uparrow_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"uparrow_cursor_xpm"
 		end
-		
-	wait_cursor_xpm: POINTER is
+
+	frozen wait_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias

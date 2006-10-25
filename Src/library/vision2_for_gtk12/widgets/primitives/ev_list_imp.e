@@ -23,7 +23,8 @@ inherit
 			initialize,
 			has_focus,
 			clear_selection,
-			on_item_clicked
+			on_item_clicked,
+			needs_event_box
 		end
 create
 	make
@@ -35,6 +36,8 @@ feature -- Status report
 			-- False otherwise.
 
 feature -- Initialize
+
+	needs_event_box: BOOLEAN is True
 
 	initialize is
 			-- Initialize the list.

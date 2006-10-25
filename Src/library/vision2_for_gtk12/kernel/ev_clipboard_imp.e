@@ -36,7 +36,7 @@ feature {NONE}-- Initialization
 	initialize is
 			-- initialize `Current'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_container_add (App_implementation.default_window_imp.hbox, clipboard_widget)
+			{EV_GTK_EXTERNALS}.gtk_container_add (App_implementation.default_window_imp.container_widget, clipboard_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (clipboard_widget)
 			set_is_initialized (True)
 		end

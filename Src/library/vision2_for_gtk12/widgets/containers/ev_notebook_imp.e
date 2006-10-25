@@ -303,20 +303,20 @@ feature {EV_NOTEBOOK, EV_NOTEBOOK_TAB_IMP} -- Implementation
 			a_event_box, a_hbox, a_list, a_pix: POINTER
 			a_pix_imp: EV_PIXMAP_IMP
 		do
-			item_imp ?= an_item.implementation
-			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
-			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
-			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
-			if  {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
-				-- We already have a pixmap present so we remove it
-				{EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
-			end
-			a_pix_imp ?= a_pixmap.twin.implementation
-			a_pix_imp.stretch (pixmaps_width, pixmaps_height)
-			a_pix := {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pix_imp.drawable, a_pix_imp.mask)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
+--			item_imp ?= an_item.implementation
+--			a_event_box := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
+--			a_hbox := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (a_event_box)
+--			a_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_hbox)
+--			if  {EV_GTK_EXTERNALS}.g_list_length (a_list) = 2 then
+--				-- We already have a pixmap present so we remove it
+--				{EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
+--			end
+--			a_pix_imp ?= a_pixmap.twin.implementation
+--			a_pix_imp.stretch (pixmaps_width, pixmaps_height)
+--			a_pix := {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pix_imp.drawable, a_pix_imp.mask)
+--			{EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
+--			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
+--			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation

@@ -11,6 +11,10 @@
 #define _EV_C_UTIL_H_INCLUDED_
 #include <gtk/gtk.h>
 
+extern void (*eif_on_event) (EIF_REFERENCE, EIF_INTEGER);
+extern void add_watch_callback (EIF_OBJECT io_watcher, gint handle, GIOCondition condition, gint* connection_id);
+extern gboolean c_io_watcher_marshal (GIOChannel* source, GIOCondition condition, gpointer io_watcher);
+
 EIF_REAL double_array_i_th (double* double_array, int index);
 GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index);
 

@@ -28,6 +28,13 @@ void c_ev_gtk_callback_marshal_init (
             ev_gtk_callback_marshal = callback_marshal;
 }
 
+int c_ev_gtk_callback_marshal_is_enabled;
+
+void c_ev_gtk_callback_marshal_set_is_enabled (int enabled_state)
+{
+	c_ev_gtk_callback_marshal_is_enabled = enabled_state;
+}
+
 void c_ev_gtk_callback_marshal_destroy (Void)
 		// Disconnect marshal from the eiffel system.
 {
@@ -42,7 +49,7 @@ void c_ev_gtk_callback_marshal (
         // Called by GTK when an `object' emits a signal,
         // Call an `agent' with `n_args' `args'.
 {
-	if (ev_gtk_callback_marshal != NULL) {
+	if (ev_gtk_callback_marshal != NULL && c_ev_gtk_callback_marshal_is_enabled) {
 		ev_gtk_callback_marshal (
 			eif_access (ev_gtk_callback_marshal_object),
 			eif_access (agent),

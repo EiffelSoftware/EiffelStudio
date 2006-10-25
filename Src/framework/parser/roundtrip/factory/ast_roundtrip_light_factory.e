@@ -73,36 +73,28 @@ feature -- List operation
 
 	reverse_extend_separator (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
 			-- Add `l_as' into `a_list'.separator_list.
-		require else
-			a_list_not_void: a_list /= Void
 		do
 			a_list.reverse_extend_separator (l_as)
 		end
 
 	reverse_extend_identifier (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: ID_AS) is
 			-- Add `l_as' into `a_list'.
-		require else
-			a_list_not_void: a_list /= Void
 		do
 			a_list.reverse_extend (l_as)
 		end
 
 feature -- Leaf nodes
 
-	new_character_as (c: CHARACTER_32; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
+	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): CHAR_AS is
 			-- New CHARACTER AST node
-		require else
-			a_text_not_void: a_text /= Void
 		do
-			create Result.initialize (c, l, co, p, a_text.count)
+			create Result.initialize (c, l, co, p, n)
 			match_list_count := match_list_count + 1
 			Result.set_index (match_list_count)
 		end
 
 	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS is
 			-- New TYPED_CHAR AST node.
-		require else
-			a_text_not_void: a_text /= Void
 		do
 			create Result.initialize (t_as, c, l, co, p, n)
 			match_list_count := match_list_count + 1

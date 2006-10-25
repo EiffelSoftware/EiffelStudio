@@ -492,7 +492,7 @@ feature -- Access
 		do
 		end
 
-	new_character_as (c: CHARACTER_32; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
+	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): CHAR_AS is
 			-- New CHARACTER AST node
 		do
 		end

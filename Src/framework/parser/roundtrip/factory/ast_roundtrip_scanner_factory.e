@@ -103,10 +103,10 @@ feature -- Match list maintainning
 
 feature -- Roundtrip
 
-	new_character_as (c: CHARACTER_32; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
+	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): CHAR_AS is
 			-- New CHARACTER AST node
 		do
-			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, a_text.count))
+			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (a_text.twin, l, co, p, n))
 		end
 
 	new_typed_char_as (t_as: TYPE_AS; c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): TYPED_CHAR_AS is

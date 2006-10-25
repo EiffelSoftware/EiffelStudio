@@ -193,6 +193,7 @@ feature -- Value AST creation
 			-- New character value.
 		require
 			buffer_not_void: buffer /= Void
+			a_text_not_void: a_text /= Void
 			a_psr_not_void: a_psr /= Void
 		local
 			l_integer: INTEGER_AS
@@ -200,7 +201,7 @@ feature -- Value AST creation
 		do
 			if buffer.count = 1 then
 				if a_type = Void then
-					Result := new_character_as (buffer.item (1), a_psr.line, a_psr.column, a_psr.position, a_text)
+					Result := new_character_as (buffer.item (1), a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
 				else
 					Result := new_typed_char_as (a_type, buffer.item (1), a_psr.line, a_psr.column, a_psr.position, 1, a_text)
 				end
@@ -209,21 +210,21 @@ feature -- Value AST creation
 				l_integer := new_integer_value (a_psr, '+', Void, l_code, Void)
 				if l_integer.natural_64_value <= {NATURAL_8}.Max_value then
 					if a_type = Void then
-						Result := new_character_as (l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text)
+						Result := new_character_as (l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
 					else
-						Result := new_typed_char_as (a_type, l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, 0, a_text)
+						Result := new_typed_char_as (a_type, l_integer.natural_8_value.to_character_8, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
 					end
 				elseif l_integer.natural_64_value <= {NATURAL_32}.Max_value then
 					if a_type = Void then
-						Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text)
+						Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
 					else
-						Result := new_typed_char_as (a_type, l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, 0, a_text)
+						Result := new_typed_char_as (a_type, l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, a_text.count, a_text)
 					end
 				else
 					a_psr.report_character_code_too_large_error (l_code)
 
 						-- Dummy code (for error recovery) follows:
-					Result := new_character_as ('a', 0, 0, 0, "")
+					Result := new_character_as ('a', 0, 0, 0, 0, "")
 				end
 			end
 		end
@@ -719,14 +720,15 @@ feature -- Access
 			end
 		end
 
-	new_character_as (c: CHARACTER_32; l, co, p: INTEGER; a_text: STRING): CHAR_AS is
+	new_character_as (c: CHARACTER_32; l, co, p, n: INTEGER; a_text: STRING): CHAR_AS is
 			-- New CHARACTER AST node
 		require
 			l_non_negative: l >= 0
 			co_non_negative: co >= 0
 			p_non_negative: p >= 0
+			n_non_negative: n >= 0
 		do
-			create Result.initialize (c, l, co, p, 1)
+			create Result.initialize (c, l, co, p, n)
 		end
 
 	new_check_as (c: EIFFEL_LIST [TAGGED_AS]; c_as, e: KEYWORD_AS): CHECK_AS is

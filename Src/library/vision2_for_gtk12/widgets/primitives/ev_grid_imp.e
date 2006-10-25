@@ -18,7 +18,9 @@ inherit
 			propagate_foreground_color
 		redefine
 			interface,
-			initialize
+			initialize,
+			static_fixed_x_offset,
+			static_fixed_y_offset
 		end
 
 	EV_CELL_IMP
@@ -63,6 +65,10 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 		end
+
+	static_fixed_x_offset: INTEGER is 0
+	static_fixed_y_offset: INTEGER is 0
+		-- Redefined due to bug in viewport when contained in a fixed.
 
 	initialize is
 			-- Initialize `Current'

@@ -204,26 +204,27 @@ feature {NONE} -- Implementation
 			a_tip_win: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			if tooltips_pointer = default_pointer then
-				-- The tooltips have not yet been initialized.
-				tooltips_pointer := {EV_GTK_EXTERNALS}.gtk_tooltips_new
-				{EV_GTK_EXTERNALS}.gtk_tooltips_force_window (tooltips_pointer)
-				a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
-				{EV_GTK_EXTERNALS}.gtk_window_set_position (a_tip_win, {EV_GTK_EXTERNALS}.gtk_win_pos_mouse_enum)
-				create tooltip_repeater
-				tooltip_repeater.actions.extend (agent update_tooltip_window)
-			end
 			internal_tooltip := a_text.twin
-			a_cs := App_implementation.c_string_from_eiffel_string (internal_tooltip)
-
-			a_tip_label := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_label (tooltips_pointer)
-			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
-			{EV_GTK_EXTERNALS}.gtk_label_set_text (a_tip_label, a_cs.item)
-			{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
-			if not a_text.is_empty and then is_displayed then
-				update_tooltip (True)
-			else
-				update_tooltip (False)
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
+				if tooltips_pointer = default_pointer then
+					-- The tooltips have not yet been initialized.
+					tooltips_pointer := {EV_GTK_EXTERNALS}.gtk_tooltips_new
+					{EV_GTK_EXTERNALS}.gtk_tooltips_force_window (tooltips_pointer)
+					a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+					{EV_GTK_EXTERNALS}.gtk_window_set_position (a_tip_win, {EV_GTK_EXTERNALS}.gtk_win_pos_mouse_enum)
+					create tooltip_repeater
+					tooltip_repeater.actions.extend (agent update_tooltip_window)
+				end
+				a_cs := App_implementation.c_string_from_eiffel_string (internal_tooltip)
+				a_tip_label := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_label (tooltips_pointer)
+				a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+				{EV_GTK_EXTERNALS}.gtk_label_set_text (a_tip_label, a_cs.item)
+				{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
+				if not a_text.is_empty and then is_displayed then
+					update_tooltip (True)
+				else
+					update_tooltip (False)
+				end
 			end
 		end
 
@@ -249,13 +250,17 @@ feature {NONE} -- Implementation
 			a_drawable: POINTER
 		do
 			a_drawable := drawable
-			if a_drawable /= NULL then
-				a_rectangle := app_implementation.reusable_rectangle_struct
-				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
-				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
-				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
-				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
-				{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
+			if a_drawable /= NULL and then is_displayed then
+				if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
+					a_rectangle := app_implementation.reusable_rectangle_struct
+					{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
+					{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
+					{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
+					{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
+					{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
+				else
+					{EV_GTK_EXTERNALS}.gtk_widget_queue_draw_area (visual_widget, a_x, a_y, a_width, a_height)
+				end
 			end
 		end
 
@@ -276,13 +281,16 @@ feature {NONE} -- Implementation
 	flush is
 			-- Redraw the screen immediately.
 		do
-			refresh_now
+			if is_displayed then
+				refresh_now
+			end
 		end
 
 	update_if_needed is
 			-- Update `Current' if needed.
 		do
 			-- Not applicable
+			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (c_object)
 		end
 
 feature {EV_DRAWABLE_IMP} -- Implementation

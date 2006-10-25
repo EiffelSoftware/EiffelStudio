@@ -183,19 +183,21 @@ feature -- Element change
 		end
 
 	enable_sensitive is
-			--
+			-- Allow the object to be sensitive to user input.
 		local
-			l_pointer_over_widget: BOOLEAN
-			a_pointer_position: EV_COORDINATE
+			l_gdkwin: POINTER
+			i, l_screen_x, l_screen_y, l_x, l_y: INTEGER
 		do
 			Precursor {EV_SENSITIVE_IMP}
-			--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
+				--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
 			if is_displayed then
-				l_pointer_over_widget := Current = app_implementation.gtk_widget_imp_at_pointer_position
-				if l_pointer_over_widget then
-					a_pointer_position := pnd_screen.pointer_position
-					pnd_screen.set_pointer_position (a_pointer_position.x + width + 10, a_pointer_position.y + height + 10)
-					pnd_screen.set_pointer_position (a_pointer_position.x, a_pointer_position.y)
+				l_gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($l_x, $l_y)
+				if l_gdkwin /= default_pointer then
+					if Current = app_implementation.gtk_widget_from_gdk_window (l_gdkwin) then
+						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget), $l_screen_x, $l_screen_y)
+						pnd_screen.set_pointer_position (l_screen_x + l_x + width + 10, l_screen_y + l_y + height + 10)
+						pnd_screen.set_pointer_position (l_screen_x + l_x, l_screen_y + l_y)
+					end
 				end
 			end
 		end

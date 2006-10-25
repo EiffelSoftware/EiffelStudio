@@ -114,7 +114,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 						if a_key_string /= Void and then a_key_string.valid_index (1) then
 							l_char := a_key_string.item (1)
 							if l_char.is_character_8 then
-								if l_char.to_character_8.is_printable then
+								if l_char.to_character_8.is_printable or else l_char.code >= 128 then
+										--| FIXME `is_printable' should return True for characters above 127
 									temp_key_string := a_key_string
 								end
 							else
@@ -418,11 +419,15 @@ feature {EV_ANY_I} -- Implementation
 	refresh_now is
 			-- Flush any pending redraws due for `Current'.
 		do
-			if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object) /= default_pointer then
-				{EV_GTK_EXTERNALS}.gdk_window_process_updates (
-					{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
-					False
-				)
+			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
+				if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object) /= default_pointer then
+					{EV_GTK_EXTERNALS}.gdk_window_process_updates (
+						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+						False
+					)
+				end
+			else
+				{EV_GTK_EXTERNALS}.gdk_flush
 			end
 		end
 
@@ -447,10 +452,13 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 	destroy is
 			-- Destroy `Current'
 		do
-			if parent_imp /= Void then
-				parent_imp.interface.prune_all (interface)
+			if not is_destroyed then
+				internal_set_pointer_style (Void)
+				if parent_imp /= Void then
+					parent_imp.interface.prune_all (interface)
+				end
+				Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
-			Precursor {EV_PICK_AND_DROPABLE_IMP}
 		end
 
 	parent_imp: EV_CONTAINER_IMP

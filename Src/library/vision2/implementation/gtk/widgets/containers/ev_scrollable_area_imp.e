@@ -4,23 +4,24 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_SCROLLABLE_AREA_IMP
-	
+
 inherit
 	EV_SCROLLABLE_AREA_I
 		undefine
 			propagate_foreground_color,
 			propagate_background_color,
 			set_item_width,
-			set_item_height,
-			set_offset
+			set_item_height
 		redefine
 			interface
 		end
-		
+
 	EV_VIEWPORT_IMP
+		undefine
+			set_offset
 		redefine
 			horizontal_adjustment,
 			vertical_adjustment,
@@ -31,9 +32,10 @@ inherit
 			y_offset,
 			set_x_offset,
 			set_y_offset,
-			child_has_resized
+			child_has_resized,
+			needs_event_box
 		end
-	
+
 create
 	make
 
@@ -59,6 +61,8 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			{EV_GTK_EXTERNALS}.gtk_container_add (fixed_widget, container_widget)
 		end
+
+	needs_event_box: BOOLEAN is True
 
 feature -- Access
 
@@ -141,7 +145,7 @@ feature -- Element change
 	show_horizontal_scroll_bar is
 			-- Display horizontal scroll bar.
 		do
-			set_scrolling_policy ({EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM, vertical_policy)			
+			set_scrolling_policy ({EV_GTK_EXTERNALS}.gTK_POLICY_ALWAYS_ENUM, vertical_policy)
 		end
 
 	hide_horizontal_scroll_bar is
@@ -194,9 +198,9 @@ feature {NONE} -- Implementation
 			if item /= Void then
 				item_imp ?= item.implementation
 				{EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, ((fixed_width - item_imp.width) // 2).max (0), ((fixed_height - item_imp.height) // 2).max (0))
-			end	
+			end
 		end
-		
+
 	child_has_resized (item_imp: EV_WIDGET_IMP) is
 			-- If child has resized and smaller than parent then set position in center of `Current'.
 		do
@@ -236,7 +240,7 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation		
 
 	interface: EV_SCROLLABLE_AREA;
-			-- Provides a common user interface to platform dependent 
+			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
 indexing

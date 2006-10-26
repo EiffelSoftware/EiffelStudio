@@ -39,7 +39,6 @@ feature{NONE} -- Initialization
 
 	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
 		local
-			l_temp_args: LIST [STRING]
 			l_arg: STRING
 		do
 			create arguments.make

@@ -404,7 +404,7 @@ feature -- Element change
 								if old_group /= new_cluster then
 										-- Remove `a_class' from the old_group
 									old_group.classes.remove (a_class.name)
-									l_lib_usage := old_group.target.used_in_libraries
+									l_lib_usage := old_group.target.system.used_in_libraries
 									if l_lib_usage /= Void then
 										from
 											l_lib_usage.start
@@ -717,7 +717,7 @@ feature {NONE} -- Implementation
 					l_next_group := Void
 				end
 				if l_next_group = Void then
-					l_next_group := l_group.target.lowest_used_in_library
+					l_next_group := l_group.target.system.lowest_used_in_library
 				end
 				l_group := l_next_group
 			end

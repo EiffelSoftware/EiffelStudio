@@ -12,6 +12,8 @@ feature -- Access
 
 	file_modified_date (a_path: STRING): INTEGER is
 			-- Get last modified timestamp of `a_path'.
+		require
+			a_path_set: a_path /= Void and then not a_path.is_empty
 		local
 			l_cstr: C_STRING
 		do

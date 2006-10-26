@@ -218,7 +218,7 @@ feature -- Generation
 				generate_entry_point
 
 					-- Generate resources if any
-				l_res := universe.target.all_external_resource
+				l_res := universe.conf_system.all_external_resource
 				if not l_res.is_empty then
 					cil_generator.generate_resources (l_res)
 				end
@@ -278,7 +278,7 @@ feature -- Generation
 					-- Copy referenced local assemblies
 				l_state := universe.conf_state
 				from
-					l_assemblies := universe.target.all_assemblies
+					l_assemblies := universe.conf_system.all_assemblies
 					l_assemblies.start
 				until
 					l_assemblies.after

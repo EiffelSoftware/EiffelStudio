@@ -67,8 +67,6 @@ feature -- Basic operations
 					create wd.make_with_text (l_load.last_error.out)
 					wd.show_modal_to_window (configuration_window)
 				else
-					l_load.last_system.targets.start
-					l_load.last_system.set_application_target (l_load.last_system.targets.item_for_iteration)
 					create l_lib_conf.make (l_load.last_system, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
 
 					l_lib_conf.set_size (configuration_window.width, configuration_window.height)

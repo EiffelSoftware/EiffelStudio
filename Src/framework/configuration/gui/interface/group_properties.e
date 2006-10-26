@@ -49,6 +49,7 @@ feature {NONE} -- Implementation
 			l_visible: CONF_VISIBLE
 			l_precompile: CONF_PRECOMPILE
 			l_virtual_group: CONF_VIRTUAL_GROUP
+			l_load: CONF_LOAD
 		do
 			properties.reset
 
@@ -75,6 +76,16 @@ feature {NONE} -- Implementation
 				l_text_prop.set_value (conf_interface_names.group_library)
 				l_library ?= a_group
 				l_visible := l_library
+					-- if `a_group' is a library without a library target we need to parse the file and set the library target
+					-- as options are inherited from there
+				if l_library.library_target = Void then
+					create l_load.make (create {CONF_PARSE_FACTORY})
+					l_load.retrieve_configuration (l_library.location.evaluated_path)
+					if not l_load.is_error and then l_load.last_system.library_target /= Void then
+						l_load.last_system.set_application_target (l_library.target)
+						l_library.set_library_target (l_load.last_system.library_target)
+					end
+				end
 			elseif a_group.is_assembly or a_group.is_physical_assembly then
 				l_text_prop.set_value (conf_interface_names.group_assembly)
 				l_assembly ?= a_group
@@ -110,6 +121,16 @@ feature {NONE} -- Implementation
 			l_bool_prop.change_value_actions.extend (agent a_group.set_readonly)
 			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_bool_prop)
+
+			if l_library /= Void then
+					-- use application options
+				create l_bool_prop.make_with_value (conf_interface_names.library_use_application_options_name, l_library.use_application_options)
+				l_bool_prop.set_description (conf_interface_names.library_use_application_options_description)
+				l_bool_prop.change_value_actions.extend (agent l_library.set_use_application_options)
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+				l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
+				properties.add_property (l_bool_prop)
+			end
 
 			if l_cluster /= Void then
 					-- recursive

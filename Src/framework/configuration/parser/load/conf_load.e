@@ -54,9 +54,6 @@ feature -- Basic operation
 			a_file_ok: a_file /= Void
 		local
 			l_callback: CONF_LOAD_PARSE_CALLBACKS
-			l_directory: STRING
-			i, cnt: INTEGER
-			l_targets: HASH_TABLE [CONF_TARGET, STRING]
 		do
 			create l_callback.make_with_factory (factory)
 			parse_file (a_file, l_callback)
@@ -68,24 +65,6 @@ feature -- Basic operation
 				last_system := l_callback.last_system
 				last_system.set_file_name (a_file)
 				last_system.set_file_date
-				cnt := a_file.count
-				i := a_file.last_index_of ('/',cnt)
-				if i = 0 then
-					i := a_file.last_index_of ('\', cnt)
-				end
-				check
-					filename_start_found: i >= 0
-				end
-				l_directory := a_file.substring (1, i)
-				from
-					l_targets := last_system.targets
-					l_targets.start
-				until
-					l_targets.after
-				loop
-					l_targets.item_for_iteration.set_location (l_directory)
-					l_targets.forth
-				end
 			end
 		ensure
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void

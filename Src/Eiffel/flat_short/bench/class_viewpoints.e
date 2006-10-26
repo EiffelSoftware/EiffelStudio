@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 			l_as: CONF_ASSEMBLY
 			l_view_points: ARRAYED_LIST [CONF_GROUP]
 		do
-			l_list := conf_group.target.used_in_libraries
+			l_list := conf_group.target.system.used_in_libraries
 			if l_list /= Void then
 				l_view_points := calculate_sorted_viewpoints (l_list)
 				if conf_group.is_cluster then

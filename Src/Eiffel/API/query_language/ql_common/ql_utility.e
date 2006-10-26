@@ -116,8 +116,8 @@ feature -- Access
 				l_is_application_target_reached
 			loop
 				l_path.put_front (create {QL_TARGET}.make (l_target))
-				if l_target.system = l_target.application_target.system then
-					l_target := l_target.application_target
+				if l_target.system = l_target.system.application_target.system then
+					l_target := l_target.system.application_target
 					l_is_application_target_reached := True
 				else
 					check
@@ -126,9 +126,9 @@ feature -- Access
 					l_target := l_target.system.library_target
 				end
 				if not l_is_application_target_reached then
-					check l_target.lowest_used_in_library /= Void end
-					l_path.put_front (create {QL_GROUP}.make (l_target.lowest_used_in_library))
-					l_target := l_target.lowest_used_in_library.target
+					check l_target.system.lowest_used_in_library /= Void end
+					l_path.put_front (create {QL_GROUP}.make (l_target.system.lowest_used_in_library))
+					l_target := l_target.system.lowest_used_in_library.target
 				end
 			end
 			set_parents (l_path)
@@ -183,8 +183,8 @@ feature{NONE} -- Implementation
 					find_path_from_conf_group (a_list, l_cluster.parent)
 				else
 					l_target := a_group.target
-					if l_target.system = l_target.application_target.system then
-						l_target := l_target.application_target
+					if l_target.system = l_target.system.application_target.system then
+						l_target := l_target.system.application_target
 						l_is_application_target_reached := True
 					else
 						check
@@ -194,7 +194,7 @@ feature{NONE} -- Implementation
 					end
 					a_list.put_front (create{QL_TARGET}.make (l_target))
 					if not l_is_application_target_reached then
-						l_lib := l_target.lowest_used_in_library
+						l_lib := l_target.system.lowest_used_in_library
 						if l_lib /= Void  then
 							find_path_from_conf_group (a_list, l_lib)
 						end
@@ -202,8 +202,8 @@ feature{NONE} -- Implementation
 				end
 			elseif a_group.is_library or a_group.is_assembly or a_group.is_physical_assembly then
 				l_target := a_group.target
-				if l_target.system = l_target.application_target.system then
-					l_target := l_target.application_target
+				if l_target.system = l_target.system.application_target.system then
+					l_target := l_target.system.application_target
 				else
 					check
 						library_target: l_target.system.library_target /= Void
@@ -211,7 +211,7 @@ feature{NONE} -- Implementation
 					l_target := l_target.system.library_target
 				end
 				a_list.put_front (create{QL_TARGET}.make (l_target))
-				l_lib := l_target.lowest_used_in_library
+				l_lib := l_target.system.lowest_used_in_library
 				if l_lib /= Void  then
 					find_path_from_conf_group (a_list, l_lib)
 				end

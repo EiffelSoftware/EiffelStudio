@@ -607,7 +607,7 @@ feature -- Generation, Header
 			make_file.put_string ("SHAREDLIBS = $sharedlibs%N")
 			make_file.put_string ("SHARED_SUFFIX = $shared_suffix%N")
 
-			if not universe.target.all_external_make.is_empty then
+			if not universe.conf_system.all_external_make.is_empty then
 				generate_makefile_names -- EXTERNAL_MAKEFILES = ...
 				make_file.put_string ("COMMAND_MAKEFILE = $command_makefile%N")
 			else
@@ -684,7 +684,7 @@ feature -- Generation, External archives and object files.
 		do
 			create l_added_objects.make (10)
 				-- add the object files
-			object_file_names := universe.target.all_external_object
+			object_file_names := universe.conf_system.all_external_object
 			if object_file_names /= Void then
 				make_file.put_string ("EXTERNALS = ")
 				l_has_objects := True
@@ -712,7 +712,7 @@ feature -- Generation, External archives and object files.
 
 				-- add the libraries
 			l_added_objects.wipe_out
-			object_file_names := universe.target.all_external_library
+			object_file_names := universe.conf_system.all_external_library
 			if object_file_names /= Void then
 				if not l_has_objects then
 					make_file.put_string ("EXTERNALS = ")
@@ -753,7 +753,7 @@ feature -- Generation, External archives and object files.
 			l_added_includes: SEARCH_TABLE [STRING]
 		do
 			create l_added_includes.make (10)
-			include_paths := universe.target.all_external_include
+			include_paths := universe.conf_system.all_external_include
 			if include_paths /= Void then
 				make_file.put_string ("INCLUDE_PATH = ")
 				from
@@ -794,7 +794,7 @@ feature -- Generation, External archives and object files.
 			l_path: STRING
 		do
 			create l_added_make.make (1)
-			makefile_names := universe.target.all_external_make
+			makefile_names := universe.conf_system.all_external_make
 			from
 				make_file.put_string ("EXTERNAL_MAKEFILES = ")
 				i := 1
@@ -877,7 +877,7 @@ feature -- Generation (Linking rules)
 			make_file.put_string ("/emain.o Makefile%N%T$(RM) ")
 			make_file.put_string (system_name)
 			make_file.put_new_line
-			if not universe.target.all_external_make.is_empty then
+			if not universe.conf_system.all_external_make.is_empty then
 				make_file.put_string ("%T$(COMMAND_MAKEFILE) $(EXTERNAL_MAKEFILES)%N")
 			end
 			if System.has_cpp_externals then

@@ -1521,7 +1521,7 @@ feature {NONE} -- Implementation
 
 			create l_path.make (256)
 
-			l_assemblies := universe.target.all_assemblies
+			l_assemblies := universe.conf_system.all_assemblies
 			if l_assemblies /= Void then
 					-- Note: All system assemblies are required because they are needed by the consumer
 					-- to resolve dependencies.

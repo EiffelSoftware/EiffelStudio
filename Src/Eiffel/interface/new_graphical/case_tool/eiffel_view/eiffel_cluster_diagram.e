@@ -934,7 +934,7 @@ feature {NONE} -- Implementation
 			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do
 			create Result.make (5)
-			l_libs := a_target.used_in_libraries
+			l_libs := a_target.system.used_in_libraries
 			if l_libs /= Void then
 				from
 					l_libs.start

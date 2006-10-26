@@ -59,6 +59,8 @@ feature -- System names and descriptions
 	system_description_description: STRING is "Description of the system."
 	system_library_target_name: STRING is "Library Target"
 	system_library_target_description: STRING is "Target used if system is used as a library."
+	system_readonly_name: STRING is "Library Readonly"
+	system_readonly_description: STRING is "Is this system read only per default if it is used as a library?"
 	system_file_name: STRING is "File Name"
 	system_file_description: STRING is "Location of the configuration file."
 	system_uuid_name: STRING is "UUID"
@@ -235,6 +237,8 @@ feature -- Target names and descriptions
 	group_add_precompile: STRING is "Add Precompile"
 
 	library_edit_configuration: STRING is "Edit Library Configuration"
+	library_use_application_options_name: STRING is "Use Application Options"
+	library_use_application_options_description: STRING is "Should this library use options from the application instead of from the library?"
 
 	cluster_recursive_name: STRING is "Recursive"
 	cluster_recursive_description: STRING is "Are sub folders recursively included?"

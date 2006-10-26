@@ -540,8 +540,8 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 						l_parent_found := True
 					end
 					if not l_parent_found then
-						if l_cluster.target.used_in_libraries /= Void then
-							l_libs := l_cluster.target.used_in_libraries.twin
+						if l_cluster.target.system.used_in_libraries /= Void then
+							l_libs := l_cluster.target.system.used_in_libraries.twin
 						end
 						if l_libs /= Void then
 							from

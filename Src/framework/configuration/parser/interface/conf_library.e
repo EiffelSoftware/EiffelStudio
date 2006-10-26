@@ -45,8 +45,6 @@ feature -- Status
 
 	is_readonly: BOOLEAN is
 			-- Is this library readonly?
-		local
-			l_lib: like Current
 		do
 			if is_readonly_set then
 				Result := internal_read_only
@@ -55,17 +53,12 @@ feature -- Status
 			else
 				Result := True
 			end
-			if not Result and then is_used_in_library then
-				l_lib := find_current_in_application_target
-				if l_lib /= Void then
-					Result := l_lib.is_readonly
-				elseif library_target /= Void then
-					Result := library_target.system.is_readonly
-				else
-					Result := True
-				end
-			end
 		end
+
+feature -- Access, stored in configuration file
+
+	use_application_options: BOOLEAN
+			-- Should the library use the options of the application? (Instead of the library)
 
 feature -- Access, in compiled only, not stored to configuration file
 
@@ -83,9 +76,6 @@ feature -- Access, in compiled only, not stored to configuration file
 		end
 
 feature -- Access queries
-
-	uuid: UUID
-			-- uuid of the used library.
 
 	sub_group_by_name (a_name: STRING): CONF_GROUP is
 			-- Return sub group with `a_name' if there is any.
@@ -118,73 +108,57 @@ feature -- Access queries
 
 	options: CONF_OPTION is
 			-- Options (Debuglevel, assertions, ...)
-		local
-			l_lib: like Current
 		do
-				-- if used as library, get options from application level
-				-- either if the library is defined there or otherwise directly from the application target
-			if is_used_in_library then
-				l_lib := find_current_in_application_target
-				if l_lib /= Void then
-					Result := l_lib.options
-				else
-					Result := target.application_target.options
-				end
+				-- get local options
+			if internal_options /= Void then
+				Result := internal_options.twin
 			else
-				if internal_options /= Void then
-					Result := internal_options.twin
-				else
-					create Result
-				end
+				create Result
+			end
+
+				-- use options of the application
+			if use_application_options then
 				Result.merge (target.options)
+				-- use options specified in the library
+			elseif library_target /= Void then
+				Result.merge (library_target.options)
 			end
 		end
 
 	class_options: HASH_TABLE [CONF_OPTION, STRING] is
 			-- Options for classes.
-		local
-			l_lib: like Current
 		do
-				-- if used as library, get options from application level
-				-- either if the library is defined there or otherwise directly from the application target
-			if is_used_in_library then
-				l_lib := find_current_in_application_target
-				if l_lib /= Void then
-					Result := l_lib.class_options
-				end
+				-- get local options
+			if internal_class_options /= Void then
+				Result := internal_class_options.twin
 			else
-				if internal_class_options /= Void then
-					Result := internal_class_options.twin
-				else
-					create Result.make (0)
-				end
+				create Result.make (0)
 			end
+		end
+
+feature {CONF_ACCESS} -- Update, stored in configuration file
+
+	set_use_application_options (a_flag: like use_application_options) is
+			-- Set `use_application_options' to `a_flag'.
+		do
+			use_application_options := a_flag
+		ensure
+			use_application_options_set: use_application_options = a_flag
 		end
 
 feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration file
 
-	set_uuid (an_uuid: UUID) is
-			-- Set the uuid of the library.
-		require
-			an_uuid_not_void: an_uuid /= Void
-		do
-			uuid := an_uuid
-		ensure
-			uuid_set: uuid = an_uuid
-		end
-
-
 	set_library_target (a_target: CONF_TARGET) is
 			-- Set `library_target' to `a_target'.
 		require
+			target_fully_parsed: a_target.system.is_fully_parsed
 			a_target_not_void: a_target /= Void
 		do
 			library_target := a_target
-			library_target.add_library_usage (Current)
+			library_target.system.add_library_usage (Current)
 		ensure
 			library_target_set: library_target = a_target
 		end
-
 
 feature -- Visit
 
@@ -204,43 +178,8 @@ feature -- Equality
 				equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming)
 		end
 
-feature {NONE} -- Implementation
-
-	find_current_in_application_target: like Current is
-			-- Find `Current' in `application_target' if it is defined there directly.
-		require
-			application_target_not_void: target.application_target /= Void
-		local
-			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
-			l_lib: like Current
-			l_app_target: CONF_TARGET
-		do
-			l_app_target := target.application_target
-			if
-				l_app_target.precompile /= Void and then
-				l_app_target.precompile.uuid /= Void and then
-				l_app_target.precompile.uuid.is_equal (uuid)
-			then
-				Result := l_app_target.precompile
-			else
-				from
-					l_libs := l_app_target.libraries
-					l_libs.start
-				until
-					Result /= Void or l_libs.after
-				loop
-					l_lib := l_libs.item_for_iteration
-					if l_lib.uuid /= Void and then l_lib.uuid.is_equal (uuid) then
-						Result := l_lib
-					end
-					l_libs.forth
-				end
-			end
-		end
-
 invariant
 	library_target_set: classes_set implies library_target /= Void
-	uuid_set: classes_set implies uuid /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

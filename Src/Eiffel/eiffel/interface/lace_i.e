@@ -261,8 +261,8 @@ feature -- Status setting
 				conf_system = Void or else
 				(universe.target = Void and universe.new_target = Void) or else
 				date_has_changed or else not successful or else
-				(universe.target /= Void and then universe.target.date_has_changed) or else
-				(universe.new_target /= Void and then universe.new_target.date_has_changed)
+				(universe.target /= Void and then universe.conf_system.deep_date_has_changed) or else
+				(universe.new_target /= Void and then universe.new_target.system.deep_date_has_changed)
 			then
 				has_changed := True
 				do_recompilation
@@ -504,7 +504,7 @@ feature {NONE} -- Implementation
 			if universe.conf_system /= Void then
 				universe.conf_system.set_file_date
 			end
-			has_group_changed := is_force_new_target or else universe.conf_system = Void or l_old_target = Void or else l_old_target.date_has_changed or not conf_system.is_group_equivalent (universe.conf_system)
+			has_group_changed := is_force_new_target or else universe.conf_system = Void or l_old_target = Void or else l_old_target.system.deep_date_has_changed or not conf_system.is_group_equivalent (universe.conf_system)
 			if has_group_changed then
 					-- check if a precompile was modified
 				if l_old_target /= Void then
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 				end
 
 					-- update dates of used config files
-				l_all_libs := l_old_target.all_libraries
+				l_all_libs := l_old_target.system.all_libraries
 				check
 					libraries_set: l_all_libs /= Void
 				end
@@ -577,9 +577,9 @@ feature {NONE} -- Implementation
 			successful := True
 		ensure
 			new_target_ok: universe.new_target /= Void and then
-					universe.new_target.all_libraries /= Void and universe.new_target.application_target /= Void
+					universe.new_target.system.all_libraries /= Void and universe.new_target.system.application_target /= Void
 			old_target_ok: universe.target = old universe.target and universe.target /= Void implies
-					universe.target.application_target /= Void and universe.target.all_libraries /= Void
+					universe.target.system.application_target /= Void and universe.target.system.all_libraries /= Void
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
@@ -632,8 +632,8 @@ feature {NONE} -- Implementation
 			end
 			is_force_new_target := False
 		ensure
-			application_target_set: not is_error implies a_target.application_target /= Void
-			all_libraries_set: not is_error implies a_target.all_libraries /= Void
+			application_target_set: not is_error implies a_target.system.application_target /= Void
+			all_libraries_set: not is_error implies a_target.system.all_libraries /= Void
 			not_force_new_target: not is_force_new_target
 		end
 
@@ -1236,8 +1236,8 @@ feature {NONE} -- Implementation
 			l_target := universe.target
 			l_old_target := a_target
 			l_old_target.precompile.set_library_target (l_target)
-			l_old_target.set_all_libraries (l_target.all_libraries)
-			l_old_target.set_all_assemblies (l_target.all_assemblies)
+			l_old_target.system.set_all_libraries (l_target.system.all_libraries)
+			l_old_target.system.set_all_assemblies (l_target.system.all_assemblies)
 			l_old_target.system.set_application_target (l_old_target)
 			universe.set_new_target (l_old_target)
 

@@ -22,7 +22,7 @@ inherit
 		redefine
 			is_feature_pointer, name,
 			description, sk_value,
-			element_type, reference_type, true_reference_type, tuple_code
+			element_type, reference_type, true_reference_type, tuple_code, hash_code
 		end
 
 	ONE_GEN_TYPE_I
@@ -34,7 +34,7 @@ inherit
 		redefine
 			is_feature_pointer, description, sk_value,
 			element_type, tuple_code, true_reference_type,
-			name
+			name, hash_code
 		end
 
 create
@@ -143,6 +143,12 @@ feature
 		end
 
 	union_tag: STRING is "parg"
+
+	hash_code: INTEGER is
+			-- Hash code for current type
+		once
+			Result := Pointer_code
+		end
 
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.

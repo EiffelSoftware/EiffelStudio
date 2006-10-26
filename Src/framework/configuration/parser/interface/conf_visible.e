@@ -46,11 +46,10 @@ feature -- Basic commands
 							l_error := True
 							set_error (l_class.last_error)
 						end
+						if not l_class.is_compiled and l_class.is_always_compile then
+							a_added_classes.force (l_class)
+						end
 					end
-					if not l_class.is_compiled and l_class.is_always_compile then
-						a_added_classes.force (l_class)
-					end
-
 					visible.forth
 				end
 			end

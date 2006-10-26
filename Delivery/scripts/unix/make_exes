@@ -23,8 +23,8 @@ safe_md $EXPORT_DIR/vision2_tour
 cd $EIFFEL_SRC/vision2_tour
 clean_project
 finalize vision2_tour.ecf vision2_tour
-tgz_ccode vision2_tour vision2_tour.tar.gz
-if [ ! -f vision2_tour.tar.gz ]; then
+tgz_ccode vision2_tour vision2_tour.tar.bz2
+if [ ! -f vision2_tour.tar.bz2 ]; then
 	echo Could not finalize a new Vision2 tour
 	CANCEL
 fi
@@ -32,7 +32,7 @@ clean_project
 move $EIFFEL_SRC/vision2_tour/flatshort $INSTALL_DIR/vision2_tour
 move $EIFFEL_SRC/vision2_tour/tests $INSTALL_DIR/vision2_tour
 move $EIFFEL_SRC/vision2_tour/bitmaps/png/*.png $INSTALL_DIR/vision2_tour/bitmaps/png
-move vision2_tour.tar.gz $EXPORT_DIR/vision2_tour
+move vision2_tour.tar.bz2 $EXPORT_DIR/vision2_tour
 
 
 remtrace Recompile EiffelBuild
@@ -42,14 +42,14 @@ cd $EIFFEL_SRC/build
 remtrace Enterprise Build
 clean_project
 finalize build.ecf build
-tgz_ccode build build.tar.gz
-if [ ! -f build.tar.gz ]; then
+tgz_ccode build build.tar.bz2
+if [ ! -f build.tar.bz2 ]; then
 	echo Could not finalize a new EiffelBuild
 	CANCEL
 fi
 clean_project
 safe_md $EXPORT_DIR/build
-move build.tar.gz $EXPORT_DIR/build
+move build.tar.bz2 $EXPORT_DIR/build
 
 if [ ! "$NO_NEW_EC" ]; then
 	remtrace Recompile EiffelStudio
@@ -63,13 +63,13 @@ if [ ! "$NO_NEW_EC" ]; then
 	copy $EIFFEL_SRC/Eiffel/Ace/ec.ecf ec.ecf
 	clean_project
 	finalize ec.ecf bench
-	tgz_ccode bench ec.tar.gz
-	if [ ! -f ec.tar.gz ]; then
+	tgz_ccode bench ec.tar.bz2
+	if [ ! -f ec.tar.bz2 ]; then
 		echo Could not finalize a new EiffelStudio
 		CANCEL
 	fi
 	clean_project
-	move ec.tar.gz $EXPORT_DIR/ec_gpl.tar.gz
+	move ec.tar.bz2 $EXPORT_DIR/ec_gpl.tar.bz2
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
 		remtrace Enterprise version edition
@@ -81,13 +81,13 @@ if [ ! "$NO_NEW_EC" ]; then
 		copy $EIFFEL_SRC/tools/estudio_enterprise/ec.ecf ec.ecf
 		clean_project
 		finalize ec.ecf bench
-		tgz_ccode bench ec.tar.gz
-		if [ ! -f ec.tar.gz ]; then
+		tgz_ccode bench ec.tar.bz2
+		if [ ! -f ec.tar.bz2 ]; then
 			echo Could not finalize a new EiffelStudio
 			CANCEL
 		fi
 		clean_project
-		move ec.tar.gz $EXPORT_DIR/ec_ent.tar.gz
+		move ec.tar.bz2 $EXPORT_DIR/ec_ent.tar.bz2
 	fi
 else
 	# FIXME doesn't work.
@@ -98,13 +98,13 @@ remtrace Recompile quick_finalize
 cd $EIFFEL_SRC/tools/quick_finalize
 clean_project
 finalize quick_finalize.ecf quick_finalize
-tgz_ccode quick_finalize quick_finalize.tar.gz
-if [ ! -f quick_finalize.tar.gz ]; then
+tgz_ccode quick_finalize quick_finalize.tar.bz2
+if [ ! -f quick_finalize.tar.bz2 ]; then
 	echo Could not finalize a new quick_finalize
 	CANCEL
 fi
 clean_project
-move quick_finalize.tar.gz $EXPORT_DIR
+move quick_finalize.tar.bz2 $EXPORT_DIR
 
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Compiling CD key validator
@@ -114,11 +114,11 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 		cd cd_key_validator/eiffel_studio_52
 		clean_project
 		finalize setup.ecf setup
-		tgz_ccode setup setup.tar.gz
-		if [ ! -f setup.tar.gz ]; then
+		tgz_ccode setup setup.tar.bz2
+		if [ ! -f setup.tar.bz2 ]; then
 			echo Could not finalize a new setup
 		else
-			move setup.tar.gz $EXPORT_DIR
+			move setup.tar.bz2 $EXPORT_DIR
 		fi
 		clean_project
 	fi
@@ -128,10 +128,10 @@ remtrace Recompile estudio
 cd $EIFFEL_SRC/tools/estudio/config
 clean_project
 finalize estudio.ecf estudio
-tgz_ccode estudio estudio.tar.gz
-if [ ! -f estudio.tar.gz ]; then
+tgz_ccode estudio estudio.tar.bz2
+if [ ! -f estudio.tar.bz2 ]; then
 	echo Could not finalize a new estudio
 	CANCEL
 fi
 clean_project
-move estudio.tar.gz $EXPORT_DIR
+move estudio.tar.bz2 $EXPORT_DIR

@@ -26,22 +26,22 @@ fi
 
 # Check everything's fine
 if [ ! -d $EXPORT_DIR ]; then
-	remtrace Couldnt find the directory with the tgzs.
+	remtrace Couldnt find the directory with the compressed files.
 	CANCEL
 fi
-if [ -f ec_ent.tar.gz ]; then
+if [ -f ec_ent.tar.bz2 ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
 fi
 remtrace Compile C code of the libraries
 remtrace \"A tout seigneur tout honneur\", let\'s start with the run-time
-if [ ! -f c.tar.gz ]; then
-	remtrace 'No.tar.gz for the C directory'
+if [ ! -f c.tar.bz2 ]; then
+	remtrace 'No.tar.bz2 for the C directory'
 	CANCEL
 fi
 fullrd C
-gunzip -c c.tar.gz | tar -xf -
+bunzip2 -c c.tar.bz2 | tar -xf -
 if [ ! -d C ]; then
 	remtrace No C directory
 	CANCEL
@@ -50,7 +50,7 @@ fi
 remtrace Compile a commercial run-time
 cd $EXPORT_DIR
 fullrd C
-gunzip -c c.tar.gz | tar -xf -
+bunzip2 -c c.tar.bz2 | tar -xf -
 cd C
 . quick_configure >> $COMPILE_LOG 2>&1
 safe_md $EXPORT_DIR/runtimes
@@ -68,8 +68,8 @@ fi
 
 cd $EXPORT_DIR
 remtrace Extract the delivery
-if [ ! -f delivery.tar.gz ]; then
-	remtrace 'No.tar.gz of the delivery'
+if [ ! -f delivery.tar.bz2 ]; then
+	remtrace 'No.tar.bz2 of the delivery'
 	CANCEL
 else
 	remtrace Delivery
@@ -82,7 +82,7 @@ else
 		CANCEL
 	fi
 	cd $INSTALL_DIR
-	gunzip -c $EXPORT_DIR/delivery.tar.gz | tar -xf -
+	bunzip2 -c $EXPORT_DIR/delivery.tar.bz2 | tar -xf -
 fi
 
 cd $EXPORT_DIR
@@ -139,22 +139,22 @@ move ecdbgd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
 remtrace Then the Eiffel libraries
 cd $EXPORT_DIR
-if [ ! -f libs.tar.gz ]; then
-	remtrace 'No.tar.gz for the library directory'
+if [ ! -f libs.tar.bz2 ]; then
+	remtrace 'No.tar.bz2 for the library directory'
 	CANCEL
 fi
-gunzip -c libs.tar.gz | tar -xf -
+bunzip2 -c libs.tar.bz2 | tar -xf -
 if [ ! -d library ]; then
 	remtrace No library directory
 	CANCEL
 fi
 
 remtrace Then the C libraries
-if [ ! -f c_libs.tar.gz ]; then
-	remtrace 'No.tar.gz for the C_library directory'
+if [ ! -f c_libs.tar.bz2 ]; then
+	remtrace 'No.tar.bz2 for the C_library directory'
 	CANCEL
 fi
-gunzip -c c_libs.tar.gz | tar -xf -
+bunzip2 -c c_libs.tar.bz2 | tar -xf -
 if [ ! -d C_library ]; then
 	remtrace No C_library directory
 	CANCEL
@@ -173,7 +173,7 @@ move $INSTALL_DIR/build/spec/unix $INSTALL_DIR/build/spec/$ISE_PLATFORM
 cd $EXPORT_DIR/build
 untgz_ccode build
 cp build $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/
-gzip build
+bzip2 build
 
 remtrace Vision2_tour
 cd $EXPORT_DIR/vision2_tour
@@ -186,7 +186,7 @@ move vision2_tour $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM/bin
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Recompile CD key validator
 	cd $EXPORT_DIR
-	if [ -f setup.tar.gz ]; then
+	if [ -f setup.tar.bz2 ]; then
 		untgz_ccode setup
 	fi
 fi
@@ -196,19 +196,19 @@ cd $EXPORT_DIR
 safe_md $EXPORT_DIR/ecs
 
 remtrace GPL edition
-cp ec_gpl.tar.gz ec.tar.gz
+cp ec_gpl.tar.bz2 ec.tar.bz2
 untgz_ccode ec
-gzip ec
-move ec.gz $EXPORT_DIR/ecs/ec_gpl.gz
+bzip2 ec
+move ec.bz2 $EXPORT_DIR/ecs/ec_gpl.bz2
 
 if [ -z "$MULTIPLE_EDITIONS" ]; then
-	gunzip -c $EXPORT_DIR/ecs/ec_gpl.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	bunzip2 -c $EXPORT_DIR/ecs/ec_gpl.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 else
 	remtrace GPL edition
-	cp ec_ent.tar.gz ec.tar.gz
+	cp ec_ent.tar.bz2 ec.tar.bz2
 	untgz_ccode ec
-	gzip ec
-	move ec.gz $EXPORT_DIR/ecs/ec_ent.gz
+	bzip2 ec
+	move ec.bz2 $EXPORT_DIR/ecs/ec_ent.bz2
 fi
 
 remtrace Recompile estudio

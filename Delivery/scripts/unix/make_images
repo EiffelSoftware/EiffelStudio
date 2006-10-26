@@ -24,11 +24,11 @@ fi
 
 # Check everything's fine
 if [ ! -d $EXPORT_DIR ]; then
-	remtrace Couldnt find the directory with the tgzs.
+	remtrace Couldnt find the directory with the compressed files.
 	CANCEL
 fi
 
-if [ -f ec_ent.tar.gz ]; then
+if [ -f ec_ent.tar.bz2 ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
@@ -40,15 +40,15 @@ if [ ! -d cdrom ]; then
 	mkdir cdrom
 fi
 
-if [ ! -f Eiffel57_deliv.tgz ]; then
-	remtrace Saving empty delivery in Eiffel57_deliv.tgz
-	tar -cf Eiffel57_deliv.tar Eiffel57 
-	gzip Eiffel57_deliv.tar
+if [ ! -f Eiffel60_deliv.tar.bz2 ]; then
+	remtrace Saving empty delivery in Eiffel60_deliv.tar.bz2
+	tar -cf Eiffel60_deliv.tar Eiffel60 
+	bzip2 Eiffel60_deliv.tar
 fi
 
-if [ ! -d Eiffel57 ]; then
+if [ ! -d Eiffel60 ]; then
 	remtrace Extracting current delivery
-	gunzip -c Eiffel57_deliv.tgz | tar -xf -
+	bunzip2 -c Eiffel60_deliv.tar.bz2 | tar -xf -
 fi
 
 
@@ -57,7 +57,7 @@ cp -r runtimes/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Preparing Enterprise version
-	gunzip -c $EXPORT_DIR/ecs/ec_ent.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+	bunzip2 -c $EXPORT_DIR/ecs/ec_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
@@ -69,25 +69,25 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	cp $INSTALL_DIR/studio/bitmaps/png/activation.png $INSTALL_DIR/setup/install_left.png
 
 	remtrace Building Enterprise CD image
-	mv Eiffel57 cdrom
-	make_cd_image Eiffel57_enterprise Eiffel57_enterprise.iso cdrom
-	gzip Eiffel57_enterprise.iso
-	mv Eiffel57_enterprise.iso.gz Eiffel57_enterprise_$SVN_VERSION-$ISE_PLATFORM.iso.gz
-	mv cdrom/Eiffel57 Eiffel57
-	tar -cf Eiffel57_enterprise_$SVN_VERSION-$ISE_PLATFORM.tar Eiffel57 
-	gzip Eiffel57_enterprise_$SVN_VERSION-$ISE_PLATFORM.tar
+	mv Eiffel60 cdrom
+	make_cd_image Eiffel60_enterprise Eiffel60_enterprise.iso cdrom
+	bzip2 Eiffel60_enterprise.iso
+	mv Eiffel60_enterprise.iso.bz2 Eiffel60_enterprise_$SVN_VERSION-$ISE_PLATFORM.iso.bz2
+	mv cdrom/Eiffel60 Eiffel60
+	tar -cf Eiffel60_enterprise_$SVN_VERSION-$ISE_PLATFORM.tar Eiffel60 
+	bzip2 Eiffel60_enterprise_$SVN_VERSION-$ISE_PLATFORM.tar
 fi
 
 remtrace Preparing GPL version
-gunzip -c $EXPORT_DIR/ecs/ec_gpl.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+bunzip2 -c $EXPORT_DIR/ecs/ec_gpl.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
 remtrace Building GPL CD image
-mv Eiffel57 cdrom
-make_cd_image Eiffel57_gpl Eiffel57_gpl.iso cdrom
-gzip Eiffel57_gpl.iso
-mv Eiffel57_gpl.iso.gz Eiffel57_gpl_$SVN_VERSION-$ISE_PLATFORM.iso.gz
-mv cdrom/Eiffel57 Eiffel57
-tar -cf Eiffel57_gpl_$SVN_VERSION-$ISE_PLATFORM.tar Eiffel57
-gzip Eiffel57_gpl_$SVN_VERSION-$ISE_PLATFORM.tar
+mv Eiffel60 cdrom
+make_cd_image Eiffel60_gpl Eiffel60_gpl.iso cdrom
+bzip2 Eiffel60_gpl.iso
+mv Eiffel60_gpl.iso.bz2 Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.iso.bz2
+mv cdrom/Eiffel60 Eiffel60
+tar -cf Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.tar Eiffel60
+bzip2 Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.tar

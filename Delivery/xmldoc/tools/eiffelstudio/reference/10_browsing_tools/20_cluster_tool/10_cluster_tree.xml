@@ -22,10 +22,11 @@
 		<list ordered="false">
 			<item>
 				<image><url>/images/eiffelstudio/icons/16x16/folder_cluster_icon.png</url></image>,
-				<image><url>/images/eiffelstudio/icons/16x16/folder_cluster_readonly_icon.png</url></image>, 
-				<image><url>/images/eiffelstudio/icons/16x16/folder_blank_icon.png </url>	</image>, 
-				<image><url>/images/eiffelstudio/icons/16x16/folder_override_cluster_icon.png</url></image>  
-				are clusters (normal, readonly, subfolder in a recursive cluster, override cluster)
+				<image><url>/images/eiffelstudio/icons/16x16/folder_cluster_readonly_icon.png</url></image>,
+				<image><url>/images/eiffelstudio/icons/16x16/folder_blank_icon.png</url>	</image>,
+				<image><url>/images/eiffelstudio/icons/16x16/folder_override_cluster_icon.png</url></image>,
+				<image><url>/images/eiffelstudio/icons/16x16/folder_hidden_cluster_icon.png</url></image>,
+				are clusters (normal, readonly, subfolder in a recursive cluster, override cluster, hidden/implementation cluster)
 			</item>
 			<item>
 				<image><url>/images/eiffelstudio/icons/16x16/folder_library_icon.png</url></image> are libraries
@@ -42,7 +43,7 @@
 				<image><url>/images/eiffelstudio/icons/16x16/expanded_normal_icon.png</url></image>,
 				<image><url>/images/eiffelstudio/icons/16x16/class_deferred_icon.png</url></image>,
 				<image><url>/images/eiffelstudio/icons/16x16/class_overriden_normal_icon.png</url></image>,
-				<image><url>/images/eiffelstudio/icons/16x16/class_override_normal_icon.png</url></image> 
+				<image><url>/images/eiffelstudio/icons/16x16/class_override_normal_icon.png</url></image>
 				 are compiled classes (normal, frozen, expanded, deferred, overriden, overriding)
 			</item>
 			<item>Greyed out classes are classes outside the system.</item>
@@ -51,7 +52,7 @@
 				<image><url>/images/eiffelstudio/icons/16x16/folder_target_icon.png</url></image> are targets
 			</item>
 		</list>
-		<paragraph>Left-clicking on any item will send it to the editor. It is also possible to 
+		<paragraph>Left-clicking on any item will send it to the editor. It is also possible to
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 				<label>pick</label>

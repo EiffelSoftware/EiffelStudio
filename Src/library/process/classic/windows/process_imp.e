@@ -38,20 +38,30 @@ create
 feature{NONE} -- Initialization
 
 	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
+		local
+			l_temp_args: LIST [STRING]
+			l_arg: STRING
 		do
 			create arguments.make
 			create command_line.make_from_string (a_exec_name)
 
-			if args /= Void then
+			if args /= Void and then not args.is_empty then
 				from
 					args.start
 				until
 					args.after
 				loop
-					command_line.append (" %"")
-					command_line.append (args.item)
-					command_line.append ("%"")
-					arguments.extend (args.item)
+					l_arg := args.item
+					if l_arg /= Void and then not l_arg.is_empty then
+						command_line.append_character (' ')
+						if separated_words (l_arg).count > 1 then
+							command_line.append_character ('"')
+							command_line.append (l_arg)
+							command_line.append_character ('"')
+						else
+							command_line.append (l_arg)
+						end
+					end
 					args.forth
 				end
 			end

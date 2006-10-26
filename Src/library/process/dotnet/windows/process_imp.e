@@ -22,26 +22,35 @@ create
 feature{NONE} -- Initialization
 
 	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
+		local
+			l_arg: STRING
 		do
 			create arguments.make
 			create command_line.make_from_string (a_exec_name)
-			executable := a_exec_name
-			argument_line := ""
-			if args /= Void then
+			create argument_line.make (128)
+			executable := a_exec_name.twin
+			if args /= Void and then not args.is_empty then
 				from
 					args.start
 				until
 					args.after
 				loop
-					argument_line.append (" ")
-					argument_line.append (args.item)
-					command_line.append (" ")
-					command_line.append (args.item)
-					arguments.extend(args.item)
+					l_arg := args.item
+					if l_arg /= Void and then not l_arg.is_empty then
+						argument_line.append_character (' ')
+						if separated_words (l_arg).count > 1 then
+							argument_line.append_character ('"')
+							argument_line.append (l_arg)
+							argument_line.append_character ('"')
+						else
+							argument_line.append (l_arg)
+						end
+					end
 					args.forth
 				end
+				command_line.append (argument_line)
+				argument_line.left_adjust
 			end
-			argument_line.left_adjust
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 			create exit_mutex.default_create
@@ -55,19 +64,21 @@ feature{NONE} -- Initialization
 		local
 			cmd_arg: LIST [STRING]
 		do
-			executable := ""
-			argument_line := ""
-
-			cmd_arg := parse_command_line (cmd_line)
-
-			executable := cmd_arg.i_th (1)
-			argument_line := cmd_arg.i_th (2)
-			command_line := cmd_line.twin
+			create command_line.make_from_string (cmd_line)
+			cmd_arg := separated_words (cmd_line)
+			check not cmd_arg.is_empty end
+			create executable.make_from_string (cmd_arg.i_th (1))
+			if cmd_arg.count = 1 then
+				create argument_line.make_empty
+			else
+				create argument_line.make_from_string (cmd_line.substring (executable.count + 1, cmd_line.count))
+				argument_line.left_adjust
+			end
 			initialize_working_directory (a_working_directory)
 			initialize_parameter
 			create exit_mutex.default_create
 		end
-
+		
 feature -- Control
 
 	launch is
@@ -389,67 +400,6 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transimission
 
 
 feature{NONE} -- Implementation
-
-	parse_command_line (a_cmd_line: STRING): LIST [STRING] is
-			-- Parse command line `a_cmd_line' and return a list
-			-- of 2 items, the first item is program name, the second
-			-- item is argument list (if any).
-		require
-			a_cmd_line_not_void: a_cmd_line /= Void
-			a_cmd_line_not_empty: not a_cmd_line.is_empty
-		local
-			i: INTEGER
-			done: BOOLEAN
-			cnt: INTEGER
-			in_quote: BOOLEAN
-			c: CHARACTER
-			cmd_line: STRING
-			cmd: ARRAYED_LIST [STRING]
-		do
-			from
-				i := 1
-				create cmd_line.make_from_string (a_cmd_line)
-				cmd_line.left_adjust
-				cnt := cmd_line.count
-				done := False
-				in_quote := False
-			until
-				i > cnt or done
-			loop
-				c := cmd_line.item (i)
-				inspect
-					c
-				when '%"' then
-					if in_quote then
-						in_quote := False
-					else
-						in_quote := True
-					end
-					i := i + 1
-				when ' ' then
-					if not in_quote then
-						done := True
-					else
-						i := i + 1
-					end
-				else
-					i := i + 1
-				end
-			end
-			create cmd.make (2)
-			if not done then
-				cmd.extend (cmd_line)
-				cmd.extend ("")
-			else
-				cmd.extend (cmd_line.substring (1, i-1))
-				if i < cnt then
-					cmd.extend (cmd_line.substring (i + 1, cnt))
-				else
-					cmd.extend ("")
-				end
-			end
-			Result := cmd
-		end
 
 	start_info: SYSTEM_DLL_PROCESS_START_INFO is
 			-- Process start information

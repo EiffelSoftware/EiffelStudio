@@ -11,18 +11,6 @@ deferred class
 
 feature -- Access
 
-	folder_override_blank_readonly_icon: EV_PIXMAP
-		deferred
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	folder_override_blank_icon: EV_PIXMAP
-		deferred
-		ensure
-			Result_not_void: Result /= Void
-		end
-
 	folder_blank_readonly_icon: EV_PIXMAP
 		deferred
 		ensure
@@ -41,6 +29,18 @@ feature -- Access
 			Result_not_void: Result /= Void
 		end
 
+	folder_override_blank_readonly_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	folder_override_blank_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	folder_override_cluster_readonly_icon: EV_PIXMAP
 		deferred
 		ensure
@@ -48,6 +48,30 @@ feature -- Access
 		end
 
 	folder_override_cluster_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	folder_hidden_blank_readonly_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	folder_hidden_blank_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	folder_hidden_cluster_readonly_icon: EV_PIXMAP
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	folder_hidden_cluster_icon: EV_PIXMAP
 		deferred
 		ensure
 			Result_not_void: Result /= Void
@@ -357,6 +381,8 @@ feature -- Access
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 			path_implies_not_library: not a_path.is_empty implies not a_group.is_library
+		local
+			l_cluster: CONF_CLUSTER
 		do
 			if not a_path.is_empty then
 				if a_group.is_override then
@@ -366,10 +392,22 @@ feature -- Access
 						Result := folder_override_blank_icon
 					end
 				elseif a_group.is_cluster then
-					if a_group.is_readonly then
-						Result := folder_blank_readonly_icon
+					l_cluster ?= a_group
+					check
+						cluster: l_cluster /= Void
+					end
+					if l_cluster.is_hidden then
+						if a_group.is_readonly then
+							Result := folder_hidden_blank_readonly_icon
+						else
+							Result := folder_hidden_blank_icon
+						end
 					else
-						Result := folder_blank_icon
+						if a_group.is_readonly then
+							Result := folder_blank_readonly_icon
+						else
+							Result := folder_blank_icon
+						end
 					end
 				elseif a_group.is_assembly or a_group.is_physical_assembly then
 					Result := folder_namespace_icon
@@ -384,10 +422,22 @@ feature -- Access
 						Result := folder_override_cluster_icon
 					end
 				elseif a_group.is_cluster then
-					if a_group.is_readonly then
-						Result := folder_cluster_readonly_icon
+					l_cluster ?= a_group
+					check
+						cluster: l_cluster /= Void
+					end
+					if l_cluster.is_hidden then
+						if a_group.is_readonly then
+							Result := folder_hidden_cluster_readonly_icon
+						else
+							Result := folder_hidden_cluster_icon
+						end
 					else
-						Result := folder_cluster_icon
+						if a_group.is_readonly then
+							Result := folder_cluster_readonly_icon
+						else
+							Result := folder_cluster_icon
+						end
 					end
 				elseif a_group.is_precompile then
 					if a_group.is_readonly then

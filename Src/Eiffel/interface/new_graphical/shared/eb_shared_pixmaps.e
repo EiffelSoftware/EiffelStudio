@@ -704,16 +704,6 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Configuration pixmaps
 
-	folder_override_blank_readonly_icon: EV_PIXMAP
-		once
-			Result := icon_pixmaps.folder_override_blank_readonly_icon
-		end
-
-	folder_override_blank_icon: EV_PIXMAP
-		once
-			Result := icon_pixmaps.folder_override_blank_icon
-		end
-
 	folder_blank_readonly_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.folder_blank_readonly_icon
@@ -737,6 +727,36 @@ feature {NONE} -- Configuration pixmaps
 	folder_override_cluster_icon: EV_PIXMAP
 		once
 			Result := icon_pixmaps.folder_override_cluster_icon
+		end
+
+	folder_override_blank_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_override_blank_readonly_icon
+		end
+
+	folder_override_blank_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_override_blank_icon
+		end
+
+	folder_hidden_cluster_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_hidden_cluster_readonly_icon
+		end
+
+	folder_hidden_cluster_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_hidden_cluster_icon
+		end
+
+	folder_hidden_blank_readonly_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_hidden_blank_readonly_icon
+		end
+
+	folder_hidden_blank_icon: EV_PIXMAP
+		once
+			Result := icon_pixmaps.folder_hidden_blank_icon
 		end
 
 	folder_cluster_readonly_icon: EV_PIXMAP

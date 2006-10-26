@@ -890,159 +890,207 @@ feature -- Access
 		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (13, 4))
 		end
-	frozen folder_override_cluster_icon: EV_PIXMAP is
-			-- Access to 'cluster' pixmap.
-		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 4))
-		end
 
-	frozen folder_override_cluster_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'cluster' pixmap pixel buffer.
-		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 4))
-		end
-
-	frozen folder_override_cluster_readonly_icon: EV_PIXMAP is
-			-- Access to 'cluster readonly' pixmap.
-		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 4))
-		end
-
-	frozen folder_override_cluster_readonly_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'cluster readonly' pixmap pixel buffer.
-		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 4))
-		end
-
-	frozen folder_override_blank_icon: EV_PIXMAP is
-			-- Access to 'blank' pixmap.
-		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (16, 4))
-		end
-
-	frozen folder_override_blank_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'blank' pixmap pixel buffer.
-		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 4))
-		end
-
-	frozen folder_override_blank_readonly_icon: EV_PIXMAP is
-			-- Access to 'blank readonly' pixmap.
-		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (17, 4))
-		end
-
-	frozen folder_override_blank_readonly_icon_buffer: EV_PIXEL_BUFFER is
-			-- Access to 'blank readonly' pixmap pixel buffer.
-		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 4))
-		end
 	frozen folder_library_icon: EV_PIXMAP is
 			-- Access to 'library' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (18, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (14, 4))
 		end
 
 	frozen folder_library_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'library' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (18, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (14, 4))
 		end
 
 	frozen folder_library_readonly_icon: EV_PIXMAP is
 			-- Access to 'library readonly' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (19, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (15, 4))
 		end
 
 	frozen folder_library_readonly_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'library readonly' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (19, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (15, 4))
 		end
 
 	frozen folder_precompiled_library_icon: EV_PIXMAP is
 			-- Access to 'precompiled library' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (20, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (16, 4))
 		end
 
 	frozen folder_precompiled_library_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'precompiled library' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (16, 4))
 		end
 
 	frozen folder_precompiled_library_readonly_icon: EV_PIXMAP is
 			-- Access to 'precompiled library readonly' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (21, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (17, 4))
 		end
 
 	frozen folder_precompiled_library_readonly_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'precompiled library readonly' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (21, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (17, 4))
 		end
 
 	frozen folder_assembly_icon: EV_PIXMAP is
 			-- Access to 'assembly' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (22, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (18, 4))
 		end
 
 	frozen folder_assembly_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'assembly' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (18, 4))
 		end
 
 	frozen folder_namespace_icon: EV_PIXMAP is
 			-- Access to 'namespace' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (23, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (19, 4))
 		end
 
 	frozen folder_namespace_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'namespace' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (23, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (19, 4))
 		end
 
 	frozen folder_preference_icon: EV_PIXMAP is
 			-- Access to 'preference' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (24, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (20, 4))
 		end
 
 	frozen folder_preference_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'preference' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (24, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (20, 4))
 		end
 
 	frozen folder_config_icon: EV_PIXMAP is
 			-- Access to 'config' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (25, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (21, 4))
 		end
 
 	frozen folder_config_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'config' pixmap pixel buffer.
 		once
-			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (25, 4))
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (21, 4))
 		end
 
 	frozen folder_target_icon: EV_PIXMAP is
 			-- Access to 'target' pixmap.
 		once
-			Result := raw_buffer.sub_pixmap (pixel_rectangle (26, 4))
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (22, 4))
 		end
 
 	frozen folder_target_icon_buffer: EV_PIXEL_BUFFER is
 			-- Access to 'target' pixmap pixel buffer.
 		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (22, 4))
+		end
+	frozen folder_hidden_cluster_icon: EV_PIXMAP is
+			-- Access to 'cluster' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (23, 4))
+		end
+
+	frozen folder_hidden_cluster_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'cluster' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (23, 4))
+		end
+
+	frozen folder_hidden_cluster_readonly_icon: EV_PIXMAP is
+			-- Access to 'cluster readonly' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (24, 4))
+		end
+
+	frozen folder_hidden_cluster_readonly_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'cluster readonly' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (24, 4))
+		end
+
+	frozen folder_hidden_blank_icon: EV_PIXMAP is
+			-- Access to 'blank' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (25, 4))
+		end
+
+	frozen folder_hidden_blank_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'blank' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (25, 4))
+		end
+
+	frozen folder_hidden_blank_readonly_icon: EV_PIXMAP is
+			-- Access to 'blank readonly' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (26, 4))
+		end
+
+	frozen folder_hidden_blank_readonly_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'blank readonly' pixmap pixel buffer.
+		once
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (26, 4))
+		end
+	frozen folder_override_cluster_icon: EV_PIXMAP is
+			-- Access to 'cluster' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (27, 4))
+		end
+
+	frozen folder_override_cluster_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'cluster' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (27, 4))
+		end
+
+	frozen folder_override_cluster_readonly_icon: EV_PIXMAP is
+			-- Access to 'cluster readonly' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (28, 4))
+		end
+
+	frozen folder_override_cluster_readonly_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'cluster readonly' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (28, 4))
+		end
+
+	frozen folder_override_blank_icon: EV_PIXMAP is
+			-- Access to 'blank' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (29, 4))
+		end
+
+	frozen folder_override_blank_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'blank' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (29, 4))
+		end
+
+	frozen folder_override_blank_readonly_icon: EV_PIXMAP is
+			-- Access to 'blank readonly' pixmap.
+		once
+			Result := raw_buffer.sub_pixmap (pixel_rectangle (30, 4))
+		end
+
+	frozen folder_override_blank_readonly_icon_buffer: EV_PIXEL_BUFFER is
+			-- Access to 'blank readonly' pixmap pixel buffer.
+		once
+			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (30, 4))
 		end
 	frozen tool_features_icon: EV_PIXMAP is
 			-- Access to 'features' pixmap.

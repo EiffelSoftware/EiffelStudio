@@ -145,7 +145,7 @@ feature -- Generic conformance for IL
 			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
-			il_generator.generate_current
+			il_generator.generate_current_as_reference
 			il_generator.load_type
 		end
 

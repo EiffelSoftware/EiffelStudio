@@ -62,7 +62,7 @@ feature -- Il code generation
 	generate_il_type is
 			-- Load type of Current object.
 		do
-			il_generator.generate_current
+			il_generator.generate_current_as_reference
 			il_generator.load_type
 		end
 

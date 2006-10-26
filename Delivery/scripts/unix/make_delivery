@@ -196,24 +196,24 @@ if [ ! "$NO_INSTALL" ]; then
 		remtrace C directory
 		cd $EIFFEL_SRC
 		tar -cf c.tar C
-		gzip c.tar
-		move c.tar.gz $EXPORT_DIR
+		bzip2 c.tar
+		move c.tar.bz2 $EXPORT_DIR
 
 		remtrace C_library
 		tar -cf c_libs.tar C_library
-		gzip c_libs.tar
-		move c_libs.tar.gz $EXPORT_DIR
+		bzip2 c_libs.tar
+		move c_libs.tar.bz2 $EXPORT_DIR
 
 		remtrace Eiffel libraries
 		tar -cf libs.tar library
-		gzip libs.tar
-		move libs.tar.gz $EXPORT_DIR
+		bzip2 libs.tar
+		move libs.tar.bz2 $EXPORT_DIR
 	fi
 	remtrace The delivery itself
 	cd $INSTALL_DIR
 	tar -cf delivery.tar *
-	gzip delivery.tar
-	move delivery.tar.gz $EXPORT_DIR
+	bzip2 delivery.tar
+	move delivery.tar.bz2 $EXPORT_DIR
 	
 	cd $INIT_DIR
 	copy compile* $EXPORT_DIR

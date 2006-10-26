@@ -6,12 +6,12 @@ INSTALL_LOG=`pwd`/install.log
 # File in which the status of the installation compilation is logged
 COMPILE_LOG=`pwd`/compile.log
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=`pwd`/Eiffel57
+INSTALL_DIR=`pwd`/Eiffel60
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=`pwd`/Eiffel57
+FINAL_INSTALL_DIR=`pwd`/Eiffel60
 # Where documentation will be generated
 DOCUMENT_DIR=`pwd`
-# Where all.tar.gz files should be stored
+# Where all.tar.bz2 files should be stored
 EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
 DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
@@ -49,7 +49,7 @@ mkdir $*
 tgz ()
 {
 tar -cf $1.tar $1
-gzip $1.tar
+bzip2 $1.tar
 }
 # Completely remove a directory
 fullrd ()
@@ -149,14 +149,14 @@ clean_project ()
 {
 if [ -d EIFGENs ]; then fullrd EIFGENs; fi
 }
-# Create a portable.tar.gz of the C code. Parameter: name of the .tgz file
+# Create a portable compressed archive of the C code. Parameter: name of the compressed archive file
 tgz_ccode ()
 {
 if [ -d EIFGENs/$1/F_code ]; then
 cd EIFGENs/$1
 tar -cf F_code.tar F_code >> $INSTALL_LOG
-gzip F_code.tar
-mv F_code.tar.gz ../../$2
+bzip2 F_code.tar
+mv F_code.tar.bz2 ../../$2
 cd ../..
 fi
 }
@@ -166,11 +166,11 @@ untgz_ccode ()
 if [ -d F_code ]; then
 	fullrd F_code
 fi
-if [ ! -f $1.tar.gz ]; then
-	remtrace "Couldnt find $1.tar.gz"
+if [ ! -f $1.tar.bz2 ]; then
+	remtrace "Couldnt find $1.tar.bz2"
 	CANCEL
 fi
-gunzip -c $1.tar.gz | tar -xf -
+bunzip2 -c $1.tar.bz2 | tar -xf -
 if [ ! -d F_code ]; then
 	remtrace "No F_code for $1"
 	CANCEL

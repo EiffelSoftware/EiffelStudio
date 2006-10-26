@@ -21,8 +21,8 @@ if [ $# -ge 3 ]; then
 		# Build the delivery
 	ssh -p $port -l $user $remote_host "cd local/TEST_DELIV/PorterPackage; bash ./make_images $platform"
 
-	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel57_enterprise*gz" .
-	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel57_gpl*gz" .
+	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel60_enterprise*bz2" .
+	scp -P $port "$user@$remote_host:local/TEST_DELIV/PorterPackage/Eiffel60_gpl*bz2" .
 
 	echo Compilation for $platform is now done
 else

@@ -86,6 +86,7 @@
 					<label> Visible Classes</label>
 				</link>)
 			</item>
+			<item>Use Application Options: Should this library use options from the application instead of from the library?</item>
 		</list>
 		<heading>
 			<size>2</size>Assembly Options

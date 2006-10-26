@@ -505,7 +505,7 @@ feature -- Setting
 			-- Set `cr_info' to `cinfo'.
 		require
 			create_info_not_void: cinfo /= Void
-			not_expanded: not is_expanded
+			not_expanded: not is_expanded or else cinfo.is_equal (create {CREATE_CURRENT})
 		do
 			cr_info := cinfo
 		ensure

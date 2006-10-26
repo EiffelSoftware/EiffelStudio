@@ -85,14 +85,12 @@ feature {NONE} -- Initialization
 				not t.has_formal
 		do
 			type := t.generic_derivation
-			if not t.is_expanded then
-					-- Set creation info as if the type is used as "like Current".
-				if type = t then
-						-- Duplicate type object to avoid modification of `t'.
-					type := t.duplicate
-				end
-				type.set_cr_info (create_current)
+				-- Set creation info as if the type is used as "like Current".
+			if type = t then
+					-- Duplicate type object to avoid modification of `t'.
+				type := t.duplicate
 			end
+			type.set_cr_info (create_current)
 			is_changed := True
 			type_id := System.type_id_counter.next
 			static_type_id := Static_type_id_counter.next_id

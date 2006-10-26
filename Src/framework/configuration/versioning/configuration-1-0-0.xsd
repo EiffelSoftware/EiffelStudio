@@ -343,6 +343,7 @@
 				<xs:sequence>
 					<xs:element name="visible" type="visible" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
+				<xs:attribute name="use_application_options" type="xs:boolean" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>

@@ -76,7 +76,7 @@ feature -- Access (Target)
 				else
 					create l_uuid
 					if l_uuid.is_valid_uuid (uuid) then
-						l_target := universe.target.all_libraries.item (create {UUID}.make_from_string (uuid))
+						l_target := universe.target.system.all_libraries.item (create {UUID}.make_from_string (uuid))
 					end
 				end
 			end
@@ -128,7 +128,7 @@ feature -- Access (Group)
 			l_pos := a_id.index_of ('@', 1)
 			if l_pos > 0 then
 				if a_id.substring (1, l_pos-1).is_equal ("assembly") then
-					Result := universe.target.all_assemblies.item (a_id.substring (l_pos+1, a_id.count))
+					Result := universe.target.system.all_assemblies.item (a_id.substring (l_pos+1, a_id.count))
 					if Result /= Void then
 						last_group_name := Result.name
 					end

@@ -181,12 +181,12 @@ feature -- Visit nodes
 						-- twin, so that we can remove the libraries we have handled without
 						-- modifying the old data which is still needed in case of an error
 					if a_target = application_target then
-						old_libraries := old_target.all_libraries.twin
+						old_libraries := old_target.system.all_libraries.twin
 					end
 				end
 
 				if a_target = application_target then
-					all_libraries := a_target.all_libraries
+					all_libraries := a_target.system.all_libraries
 				end
 
 					-- if it is the library or application target, add the target to the libraries
@@ -215,7 +215,7 @@ feature -- Visit nodes
 						-- only for .NET
 					if state.is_dotnet then
 						if old_target /= Void then
-							l_old_assemblies := old_target.all_assemblies.twin
+							l_old_assemblies := old_target.system.all_assemblies.twin
 						end
 						create l_consumer_manager.make (factory, assembly_cache_folder, il_version, application_target, added_classes, removed_classes, modified_classes)
 						l_consumer_manager.consume_assembly_observer.append (consume_assembly_observer)
@@ -223,7 +223,7 @@ feature -- Visit nodes
 						if l_consumer_manager.is_error then
 							add_and_raise_error (l_consumer_manager.last_error)
 						else
-							a_target.set_all_assemblies (l_consumer_manager.assemblies)
+							a_target.system.set_all_assemblies (l_consumer_manager.assemblies)
 
 								-- only assemblies that have not been reused remain in `old_assemblies'
 							if l_old_assemblies /= Void then
@@ -240,7 +240,7 @@ feature -- Visit nodes
 							end
 						end
 					else
-						a_target.set_all_assemblies (create {HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]}.make (0))
+						a_target.system.set_all_assemblies (create {HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]}.make (0))
 					end
 
 						-- overrides can only be in the application target, must be done at the very end
@@ -261,7 +261,7 @@ feature -- Visit nodes
 				end
 			end
 		ensure then
-			all_assemblies_set: (not is_error and then a_target.application_target = a_target) implies a_target.all_assemblies /= Void
+			all_assemblies_set: (not is_error and then a_target.system.application_target = a_target) implies a_target.system.all_assemblies /= Void
 		rescue
 				-- If we have added a new configuration error, we retry, otherwise we let the
 				-- caller handle the exception.
@@ -297,7 +297,7 @@ feature -- Visit nodes
 			l_pre: STRING
 		do
 			on_process_group (a_library)
-			l_uuid := a_library.uuid
+			l_uuid := a_library.library_target.system.uuid
 			l_target := a_library.library_target
 			check
 				library_target_set: l_target /= Void
@@ -688,7 +688,7 @@ feature {NONE} -- Implementation
 								-- although the classes are still there, we have to recheck all clients
 								-- of this class in `current_system' because they no longer
 								-- have access to those classes.
-							if l_library.uuid /= Void and then all_libraries.has (l_library.uuid) then
+							if l_library.library_target /= Void and then all_libraries.has (l_library.library_target.system.uuid) then
 								l_done := True
 								if l_library.classes_set then
 									l_library.classes.linear_representation.do_if (agent (a_class: CONF_CLASS)

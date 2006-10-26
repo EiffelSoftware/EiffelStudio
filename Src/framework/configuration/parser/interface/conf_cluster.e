@@ -138,25 +138,16 @@ feature -- Access queries
 			end
 			l_local.merge (target.options)
 
-				-- if used as library, get options from application level
-				-- either if the library is defined there or otherwise directly from the application target
+				-- if used as library, get options from application level if the library is defined there
 			if is_used_in_library then
-				l_lib := find_parent_library_in_application_target
+				l_lib := target.system.application_target_library
 				if l_lib /= Void then
 					Result := l_lib.options
-				else
-					Result := target.application_target.options
-						-- take namespace from local options if defined there
-					if l_local.namespace /= Void then
-						Result.set_namespace (l_local.namespace)
+						-- if there is a namespace specified use this one and don't merge it with the local
+					if Result.namespace /= Void then
+						l_local.set_namespace (Void)
 					end
 				end
-				l_local.set_namespace (Void)
-			end
-
-				-- if no assertions are defined, set them to false
-			if Result /= Void and then Result.assertions = Void then
-				Result.set_assertions (create {CONF_ASSERTIONS})
 			end
 
 			if Result /= Void then
@@ -171,24 +162,21 @@ feature -- Access queries
 		local
 			l_lib: CONF_LIBRARY
 		do
-				-- if used as library, get options from application level
-				-- either if the library is defined there or otherwise directly from the application target
-			if is_used_in_library then
-				l_lib := find_parent_library_in_application_target
-				if l_lib /= Void then
-					Result := l_lib.class_options.twin
-				else
-					create Result.make (0)
-				end
+				-- get local options
+			if parent /= Void then
+				Result := parent.class_options.twin
 			else
-					-- get local options
-				if parent /= Void then
-					Result := parent.class_options.twin
-				else
-					create Result.make (0)
-				end
-				if internal_class_options /= Void then
-					Result.merge (internal_class_options)
+				create Result.make (0)
+			end
+			if internal_class_options /= Void then
+				Result.merge (internal_class_options)
+			end
+
+				-- if used as library, get options from application level if the library is defined there
+			if is_used_in_library then
+				l_lib := target.system.application_target_library
+				if l_lib /= Void then
+					Result.merge (l_lib.class_options.twin)
 				end
 			end
 		end
@@ -377,13 +365,13 @@ feature -- Access queries
 		do
 			Result := internal_read_only
 			if not Result and then is_used_in_library then
-				-- if used as library and the library defined in the application target itself, take value from there
-				-- else it is read only.
-				l_lib := find_parent_library_in_application_target
+					-- if used as library and the library defined in the application target itself, take value from there
+					-- else take the system value.
+				l_lib := target.system.application_target_library
 				if l_lib /= Void then
 					Result := l_lib.is_readonly
 				else
-					Result := True
+					Result := target.system.is_readonly
 				end
 			end
 		end
@@ -542,35 +530,7 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 feature {NONE} -- Implementation
 
-	find_parent_library_in_application_target: CONF_LIBRARY is
-			-- Find system as a library in `application_target' if it is defined there directly.
-		require
-			application_target_not_void: target.application_target /= Void
-		local
-			l_libs: HASH_TABLE [CONF_LIBRARY, STRING]
-			l_lib: CONF_LIBRARY
-			l_uuid: UUID
-			l_app_target: CONF_TARGET
-		do
-			l_uuid := target.system.uuid
-			l_app_target := target.application_target
-			if l_app_target.precompile /= Void and then l_app_target.precompile.uuid.is_equal (l_uuid) then
-				Result := l_app_target.precompile
-			else
-				from
-					l_libs := l_app_target.libraries
-					l_libs.start
-				until
-					Result /= Void or l_libs.after
-				loop
-					l_lib := l_libs.item_for_iteration
-					if l_lib.uuid /= Void and then l_lib.uuid.is_equal (l_uuid) then
-						Result := l_lib
-					end
-					l_libs.forth
-				end
-			end
-		end
+
 
 feature {NONE} -- Cached informations
 

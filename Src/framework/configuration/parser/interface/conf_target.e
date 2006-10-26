@@ -55,23 +55,6 @@ feature {NONE} -- Initialization
 			system_set: system = a_system
 		end
 
-feature -- Status
-
-	date_has_changed: BOOLEAN is
-			-- Did the date on any configuration file used in this target change?
-		require
-			all_libraries_set: all_libraries /= Void
-		do
-			from
-				all_libraries.start
-			until
-				Result or all_libraries.after
-			loop
-				Result := all_libraries.item_for_iteration.system.date_has_changed
-				all_libraries.forth
-			end
-		end
-
 feature -- Access, stored in configuration file
 
 	name: STRING
@@ -94,14 +77,10 @@ feature -- Access, in compiled only, not stored to configuration file
 	environ_variables: HASH_TABLE [STRING, STRING]
 			-- Saved environment variables.
 
-	location: STRING
-			-- Absolute location of the configuration file.
-
 	library_root: STRING
-			-- Root location to use for relative paths, defaults to `location' if the setting is not set.
-
+			-- Root location to use for relative paths, defaults to the location of the configuration file.
 		require
-			location_set: location /= Void
+			location_set: system.is_location_set
 		local
 			l_fac: CONF_PARSE_FACTORY
 			l_target: CONF_TARGET
@@ -115,49 +94,16 @@ feature -- Access, in compiled only, not stored to configuration file
 				create l_dir.make (Result, l_target)
 				Result := l_dir.evaluated_path
 			else
-				Result := location
+				Result := system.directory
+			end
+			if Result.item (Result.count) /= operating_environment.directory_separator then
+				Result.append_character (operating_environment.directory_separator)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	used_in_libraries: ARRAYED_LIST [CONF_LIBRARY]
-			-- Libraries this target is used in.
-
-	lowest_used_in_library: CONF_LIBRARY is
-			-- Library which uses this target and has the lowest level.
-		local
-			l_level: NATURAL_32
-		do
-			if used_in_libraries /= Void then
-				l_level := {NATURAL_32}.max_value
-				from
-					used_in_libraries.start
-				until
-					used_in_libraries.after
-				loop
-					if l_level > used_in_libraries.item.target.system.level then
-						Result := used_in_libraries.item
-						l_level := used_in_libraries.item.target.system.level
-					end
-					used_in_libraries.forth
-				end
-			end
-		end
-
-	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
-			-- All libraries in current system.
-
-	all_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
-			-- All assemblies in current system.
-
 feature -- Access queries
-
-	application_target: CONF_TARGET is
-			-- Target of application this system is part of.
-		do
-			Result := system.application_target
-		end
 
 	child_targets: LIST [CONF_TARGET] is
 			-- Targets that extend this target.
@@ -316,96 +262,6 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
-	all_external_include: like internal_external_include is
-			-- All external include files including the ones from libraries.
-		require
-			all_libraries_set: all_libraries /= Void
-		do
-			create Result.make (10)
-			from
-				all_libraries.start
-			until
-				all_libraries.after
-			loop
-				Result.append (all_libraries.item_for_iteration.external_include)
-				all_libraries.forth
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	all_external_object: like internal_external_object is
-			-- All external object files including the ones from libraries.
-		require
-			all_libraries_set: all_libraries /= Void
-		do
-			create Result.make (10)
-			from
-				all_libraries.start
-			until
-				all_libraries.after
-			loop
-				Result.append (all_libraries.item_for_iteration.external_object)
-				all_libraries.forth
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	all_external_library: like internal_external_library is
-			-- All external library files including the ones from libraries.
-		require
-			all_libraries_set: all_libraries /= Void
-		do
-			create Result.make (10)
-			from
-				all_libraries.start
-			until
-				all_libraries.after
-			loop
-				Result.append (all_libraries.item_for_iteration.external_library)
-				all_libraries.forth
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	all_external_resource: like internal_external_resource is
-			-- All external ressource files including the ones from libraries.
-		require
-			all_libraries_set: all_libraries /= Void
-		do
-			create Result.make (10)
-			from
-				all_libraries.start
-			until
-				all_libraries.after
-			loop
-				Result.append (all_libraries.item_for_iteration.external_resource)
-				all_libraries.forth
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	all_external_make: like internal_external_make is
-			-- All external make files including the ones from libraries.
-		require
-			all_libraries_set: all_libraries /= Void
-		do
-			create Result.make (10)
-			from
-				all_libraries.start
-			until
-				all_libraries.after
-			loop
-				Result.append (all_libraries.item_for_iteration.external_make)
-				all_libraries.forth
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
 	external_include: like internal_external_include is
 			-- Global external include files.
 		do
@@ -456,42 +312,6 @@ feature -- Access queries
 			Result := internal_external_resource.twin
 			if extends /= Void then
 				Result.append (extends.external_resource)
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	all_pre_compile_action: like internal_pre_compile_action is
-			-- All Aactions to be executed before compilation.
-		require
-			all_libraries_set: all_libraries /= Void
-		do
-			create Result.make (10)
-			from
-				all_libraries.start
-			until
-				all_libraries.after
-			loop
-				Result.append (all_libraries.item_for_iteration.pre_compile_action)
-				all_libraries.forth
-			end
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	all_post_compile_action: like internal_post_compile_action is
-			-- All Aactions to be executed after compilation.
-		require
-			all_libraries_set: all_libraries /= Void
-		do
-			create Result.make (10)
-			from
-				all_libraries.start
-			until
-				all_libraries.after
-			loop
-				Result.append (all_libraries.item_for_iteration.post_compile_action)
-				all_libraries.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -1399,50 +1219,6 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			environ_variables_set: environ_variables = a_vars
 		end
 
-	set_location (a_location: like location) is
-			-- Set `location' to `a_location'.
-		require
-			a_location_not_void: a_location /= Void
-		do
-			location := a_location
-		ensure
-			location_set: location = a_location
-		end
-
-	add_library_usage (a_library: CONF_LIBRARY) is
-			-- `Current' is library of `a_library'.
-		require
-			a_library_not_void: a_library /= Void
-			a_library_target: a_library.library_target = Current
-		do
-			if used_in_libraries = Void then
-				create used_in_libraries.make (1)
-			end
-			used_in_libraries.force (a_library)
-		ensure
-			added_libs: used_in_libraries.has (a_library)
-		end
-
-	set_all_libraries (a_libraries: like all_libraries) is
-			-- Set `all_libraries' to `a_libraries'.
-		require
-			a_libraries_not_void: a_libraries /= Void
-		do
-			all_libraries := a_libraries
-		ensure
-			libraries_set: all_libraries = a_libraries
-		end
-
-	set_all_assemblies (an_assemblies: like all_assemblies) is
-			-- Set `all_assemlibes' to `an_assemblies'.
-		require
-			an_assemblies_not_void: an_assemblies /= Void
-		do
-			all_assemblies := an_assemblies
-		ensure
-			assemblies_set: all_assemblies = an_assemblies
-		end
-
 feature -- Equality
 
 	is_group_equivalent (other: like Current): BOOLEAN is
@@ -1572,31 +1348,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Contract helper
-
-	valid_level: BOOLEAN is
-			-- Is the current level valid?
-			-- It has to be either 0 or the target has to be used in a library whose system has a lower level.
-		local
-			l_level: NATURAL_32
-		do
-			l_level := system.level
-			if l_level = 0 then
-				Result := True
-			else
-				if used_in_libraries /= Void then
-					from
-						used_in_libraries.start
-					until
-						Result or used_in_libraries.after
-					loop
-						Result := used_in_libraries.item.target.system.level < l_level
-						used_in_libraries.forth
-					end
-				end
-			end
-		end
-
 invariant
 	name_ok: name /= Void and not name.is_empty
 	name_lower: name.is_equal (name.as_lower)
@@ -1615,7 +1366,7 @@ invariant
 	internal_variables_not_void: internal_variables /= Void
 	internal_settings_not_void: internal_settings /= Void
 	environ_variables_not_void: environ_variables /= Void
-	valid_level: valid_level
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

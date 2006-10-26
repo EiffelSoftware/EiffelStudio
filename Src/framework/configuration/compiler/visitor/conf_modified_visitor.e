@@ -53,9 +53,9 @@ feature -- Visit nodes
 	process_library (a_library: CONF_LIBRARY) is
 			-- Process `a_library'.
 		do
-			if not is_override_only and then not a_library.is_readonly and then not processed_libraries.has (a_library.uuid) then
+			if not is_override_only and then not a_library.is_readonly and then not processed_libraries.has (a_library.library_target.system.uuid) then
 				on_process_group (a_library)
-				processed_libraries.force (a_library.uuid)
+				processed_libraries.force (a_library.library_target.system.uuid)
 				a_library.library_target.process (Current)
 			end
 		end

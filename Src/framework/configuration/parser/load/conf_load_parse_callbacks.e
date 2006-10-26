@@ -671,12 +671,13 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_name, l_location, l_readonly, l_prefix: STRING
+			l_name, l_location, l_readonly, l_prefix, l_app_opts: STRING
 		do
 			l_name := current_attributes.item (at_name)
 			l_location := current_attributes.item (at_location)
 			l_readonly := current_attributes.item (at_readonly)
 			l_prefix := current_attributes.item (at_prefix)
+			l_app_opts := current_attributes.item (at_use_application_options)
 			if l_name /= Void then
 				l_name.to_lower
 			end
@@ -688,6 +689,13 @@ feature {NONE} -- Implementation attribute processing
 						current_library.set_readonly (l_readonly.to_boolean)
 					else
 						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("readonly"))
+					end
+				end
+				if l_app_opts /= Void then
+					if l_app_opts.is_boolean then
+						current_library.set_use_application_options (l_app_opts.to_boolean)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value ("use_application_options"))
 					end
 				end
 				if l_prefix /= Void then
@@ -1876,11 +1884,13 @@ feature {NONE} -- Implementation state transitions
 				-- * location
 				-- * readonly
 				-- * prefix
+				-- * use_application_options
 			create l_attr.make (4)
 			l_attr.force (at_name, "name")
 			l_attr.force (at_location, "location")
 			l_attr.force (at_readonly, "readonly")
 			l_attr.force (at_prefix, "prefix")
+			l_attr.force (at_use_application_options, "use_application_options")
 			Result.force (l_attr, t_library)
 
 				-- precompile
@@ -1908,7 +1918,7 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_attr, t_assembly)
 
 				-- cluster/override
-				-- -everything from library except prefix
+				-- -everything from library except prefix, use_application_options
 				-- * recursive
 				-- * hidden
 			create l_attr.make (6)
@@ -2121,7 +2131,8 @@ feature {NONE} -- Implementation constants
 	at_eifgens_location,
 	at_warning,
 	at_hidden,
-	at_msil_application_optimize: INTEGER is unique
+	at_msil_application_optimize,
+	at_use_application_options: INTEGER is unique
 
 feature -- Assertions
 

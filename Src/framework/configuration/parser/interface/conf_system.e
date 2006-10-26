@@ -12,6 +12,9 @@ inherit
 	CONF_VISITABLE
 
 	CONF_FILE_DATE
+		export
+			{NONE} all
+		end
 
 	DEBUG_OUTPUT
 
@@ -20,20 +23,21 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_with_uuid (a_name: STRING; an_uuid: UUID) is
-			-- Creation with `a_name' and `an_uuid'.
+	make_with_uuid (a_name: STRING; a_uuid: UUID) is
+			-- Creation with `a_name' and `a_uuid'.
 		require
 			a_name_ok: a_name /= Void and not a_name.is_empty
-			an_uuid_ok: an_uuid /= Void
+			a_uuid_ok: a_uuid /= Void
 		do
 			create targets.make (1)
 			create target_order.make (1)
 			name := a_name.as_lower
-			uuid := an_uuid
+			uuid := a_uuid
 			is_readonly := True
 		ensure
 			name_set: name /= Void and then name.is_equal (a_name.as_lower)
-			uuid_set: uuid = an_uuid
+			uuid_set: uuid = a_uuid
+			is_readonly: is_readonly
 		end
 
 feature -- Status
@@ -43,8 +47,44 @@ feature -- Status
 
 	date_has_changed: BOOLEAN is
 			-- Did the file modification date of the configuration file change?
+		require
+			is_location_set: is_location_set
 		do
 			Result := file_modified_date (file_name) /= file_date
+		end
+
+	is_fully_parsed: BOOLEAN
+			-- Has the complete system (incl. all libraries) been parsed?
+		do
+			Result := application_target /= Void
+		end
+
+	is_location_set: BOOLEAN
+			-- Has the location of the configuration file been set?
+		do
+			Result := file_name /= Void and then not file_name.is_empty
+		end
+
+	deep_date_has_changed: BOOLEAN is
+			-- Did the date on any configuration file used in this system change?
+		require
+			fully_parsed: is_fully_parsed
+			filenames_set: all_libraries.linear_representation.for_all (agent (a_target: CONF_TARGET): BOOLEAN
+				local
+					l_fn: STRING
+				do
+					l_fn := a_target.system.file_name
+					 Result := l_fn /= Void and then not l_fn.is_empty
+				end)
+		do
+			from
+				all_libraries.start
+			until
+				Result or all_libraries.after
+			loop
+				Result := all_libraries.item_for_iteration.system.date_has_changed
+				all_libraries.forth
+			end
 		end
 
 feature -- Access, stored in configuration file
@@ -84,6 +124,21 @@ feature -- Access, in compiled only
 	level: NATURAL_32
 			-- Level, used for path finding to root of configuration system.
 
+	all_libraries: HASH_TABLE [CONF_TARGET, UUID]
+			-- All libraries in current system.
+
+	all_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
+			-- All assemblies in current system.
+
+	used_in_libraries: ARRAYED_LIST [CONF_LIBRARY]
+			-- Libraries this system is used in.
+
+	lowest_used_in_library: CONF_LIBRARY
+			-- Library which uses this system and has the lowest level.
+
+	application_target_library: CONF_LIBRARY
+			-- Library which uses this system and is written in the application target.
+
 feature -- Update, in compiled only
 
 	set_file_name (a_file_name: like file_name) is
@@ -100,21 +155,25 @@ feature -- Update, in compiled only
 			if i <= 0 then
 				i := cnt
 			end
+
 			directory := file_name.substring (1, i-1)
 		ensure
+			is_location_set: is_location_set
 			name_set: file_name = a_file_name
-			directory_set: directory /= Void
 		end
 
 	set_file_date is
 			-- Set `file_date' to last modified date of `file_name'.
+		require
+			is_location_set: is_location_set
 		do
 			file_date := file_modified_date (file_name)
 		end
 
+feature {CONF_ACCESS} -- Access, in compiled only
+
 	set_application_target (a_target: CONF_TARGET) is
 			-- Set `application_target' to `a_target'.
-			-- (export status {CONF_ACCESS})
 		require
 			a_target_not_void: a_target /= Void
 		do
@@ -131,16 +190,58 @@ feature -- Update, in compiled only
 			level_set: level = a_level
 		end
 
+	set_all_libraries (a_libraries: like all_libraries) is
+			-- Set `all_libraries' to `a_libraries'.
+		require
+			a_libraries_not_void: a_libraries /= Void
+		do
+			all_libraries := a_libraries
+		ensure
+			libraries_set: all_libraries = a_libraries
+		end
+
+	set_all_assemblies (an_assemblies: like all_assemblies) is
+			-- Set `all_assemlibes' to `an_assemblies'.
+		require
+			an_assemblies_not_void: an_assemblies /= Void
+		do
+			all_assemblies := an_assemblies
+		ensure
+			assemblies_set: all_assemblies = an_assemblies
+		end
+
+	add_library_usage (a_library: CONF_LIBRARY) is
+			-- Current system is library of `a_library'.
+		require
+			fully_parsed: is_fully_parsed
+			a_library_not_void: a_library /= Void
+			a_library_target: a_library.library_target.system = Current
+		do
+			if used_in_libraries = Void then
+				create used_in_libraries.make (1)
+			end
+			used_in_libraries.force (a_library)
+			if lowest_used_in_library = Void or else lowest_used_in_library.target.system.level > a_library.target.system.level then
+				lowest_used_in_library := a_library
+			end
+			if application_target_library = Void and then a_library.target.system = application_target.system then
+				application_target_library := a_library
+			end
+		ensure
+			added_libs: used_in_libraries.has (a_library)
+		end
+
 feature -- Store to disk
 
 	store is
 			-- Store system back to its config file (only system itself is stored, libraries are not stored).
 		require
-			file_name_set: file_name /= Void and then not file_name.is_empty
+			is_location_set: is_location_set
 		local
 			l_print: CONF_PRINT_VISITOR
 			l_file: PLAIN_TEXT_FILE
 		do
+			store_successful := False
 			create l_print.make
 			process (l_print)
 			if not l_print.is_error then
@@ -172,6 +273,132 @@ feature -- Access queries
 					Result.force (l_target, l_target.name)
 				end
 				targets.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_include: ARRAYED_LIST [CONF_EXTERNAL_INCLUDE] is
+			-- All external include files including the ones from libraries.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_include)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_object: ARRAYED_LIST [CONF_EXTERNAL_OBJECT] is
+			-- All external object files including the ones from libraries.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_object)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_library: ARRAYED_LIST [CONF_EXTERNAL_LIBRARY] is
+			-- All external library files including the ones from libraries.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_library)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_resource: ARRAYED_LIST [CONF_EXTERNAL_RESOURCE] is
+			-- All external ressource files including the ones from libraries.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_resource)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_external_make: ARRAYED_LIST [CONF_EXTERNAL_MAKE] is
+			-- All external make files including the ones from libraries.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.external_make)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_pre_compile_action: ARRAYED_LIST [CONF_ACTION] is
+			-- All Aactions to be executed before compilation.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.pre_compile_action)
+				all_libraries.forth
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	all_post_compile_action: ARRAYED_LIST [CONF_ACTION] is
+			-- All Aactions to be executed after compilation.
+		require
+			fully_parsed: is_fully_parsed
+		do
+			create Result.make (10)
+			from
+				all_libraries.start
+			until
+				all_libraries.after
+			loop
+				Result.append (all_libraries.item_for_iteration.post_compile_action)
+				all_libraries.forth
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -308,21 +535,28 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation
 	target_order: ARRAYED_LIST [CONF_TARGET]
 			-- Order the targets appear in configuration file.
 
-feature {NONE} -- Implementation
+feature {NONE} -- Contract helper
 
 	same_targets: BOOLEAN is
 			-- Do targets and target_order have the same content?
 		do
-			Result := targets.count = target_order.count
-			if Result then
-				from
-					target_order.start
-				until
-					not Result or target_order.after
-				loop
-					Result := targets.has (target_order.item.name) and then targets.found_item = target_order.item
-					target_order.forth
-				end
+			Result := targets.count = target_order.count and then target_order.for_all (agent (a_target: CONF_TARGET): BOOLEAN
+				do
+					Result := targets.has (a_target.name) and then targets.found_item = a_target
+				end)
+		end
+
+	valid_level: BOOLEAN is
+			-- Is the current level valid?
+			-- It has to be either 0 or the target has to be used in a library whose system has a lower level.
+		do
+			if level = 0 then
+				Result := True
+			elseif used_in_libraries /= Void then
+				Result := used_in_libraries.there_exists (agent (a_lib: CONF_LIBRARY): BOOLEAN
+					do
+						Result := a_lib.target.system.level < level
+					end)
 			end
 		end
 
@@ -332,6 +566,11 @@ invariant
 	targets_not_void: targets /= Void
 	target_order_not_void: target_order /= Void
 	target_and_order_same_content: same_targets
+	fully_parsed: is_fully_parsed implies application_target /= Void
+	location_set: is_location_set implies file_name /= Void and then not file_name.is_empty and directory /= Void
+	lowest_in_used: lowest_used_in_library /= Void implies used_in_libraries /= Void and then used_in_libraries.has (lowest_used_in_library)
+	application_target_library_in_used: application_target_library /= Void implies used_in_libraries /= Void and then used_in_libraries.has (application_target_library)
+	valid_level: valid_level
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

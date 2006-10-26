@@ -155,7 +155,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 					loop
 						l_conf_group := l_groups.item_for_iteration
 						if l_conf_group.is_library then
-							l_used_in_libraries := a_class.group.target.used_in_libraries
+							l_used_in_libraries := a_class.group.target.system.used_in_libraries
 							if l_used_in_libraries /= Void then
 								l_library ?= l_conf_group
 								l_found := l_used_in_libraries.has (l_library)

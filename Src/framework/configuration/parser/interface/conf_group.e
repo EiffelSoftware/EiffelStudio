@@ -90,10 +90,10 @@ feature -- Status
 
 	is_used_in_library: BOOLEAN is
 			-- Is this this cluster used in a library? (as opposed to directly in the application system)
-		require
-			application_target_set: target.application_target /= Void
 		do
-			Result := target.application_target.system /= target.system
+			if target.system.is_fully_parsed then
+				Result := target.system.application_target.system /= target.system
+			end
 		end
 
 feature -- Status update
@@ -114,7 +114,6 @@ feature -- Status update
 			not_is_error: not is_error
 		end
 
-
 feature -- Access, stored in configuration file
 
 	name: STRING
@@ -128,8 +127,6 @@ feature -- Access, stored in configuration file
 
 	is_readonly: BOOLEAN is
 			-- Is this group read only?
-		require
-			application_target_set: target.application_target /= Void
 		do
 			Result := internal_read_only
 		end

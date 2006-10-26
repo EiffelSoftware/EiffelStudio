@@ -921,8 +921,6 @@ feature {NONE} -- Actions
 				l_wd.show_modal_to_window (parent_window)
 			else
 				l_system := l_load.last_system
-				l_system.targets.start
-				l_system.set_application_target (l_system.targets.item_for_iteration)
 				create l_window.make (l_system, l_fact, create {DS_ARRAYED_LIST [STRING]}.make_default, pixmaps, preferences.misc_data.external_editor_command)
 
 				l_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)

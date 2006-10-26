@@ -93,7 +93,6 @@ feature {NONE}-- Initialization
 			a_system_not_void: a_system /= Void
 			a_factory_not_void: a_factory /= Void
 			a_debugs_not_void: a_debugs /= Void
-			application_target_set: a_system.application_target /= Void
 			a_editor_not_void: a_editor /= Void
 		do
 			set_pixmaps (a_pixmaps)
@@ -1001,6 +1000,7 @@ feature {NONE} -- Implementation
 			properties_ok: properties /= Void and then not properties.is_destroyed
 		local
 			l_string_prop: STRING_PROPERTY [STRING]
+			l_bool_prop: BOOLEAN_PROPERTY
 			l_mls_prop: MULTILINE_STRING_PROPERTY
 			l_choice_prop: STRING_CHOICE_PROPERTY [STRING_32]
 			l_targ_ord: ARRAYED_LIST [CONF_TARGET]
@@ -1057,6 +1057,13 @@ feature {NONE} -- Implementation
 			l_choice_prop.change_value_actions.extend (agent simple_wrapper({STRING_32}?, agent conf_system.set_library_target_by_name))
 			l_choice_prop.change_value_actions.extend (agent change_no_argument_wrapper ({STRING_32}?, agent handle_value_changes (False)))
 			properties.add_property (l_choice_prop)
+
+				-- readonly
+			create l_bool_prop.make_with_value (conf_interface_names.system_readonly_name, conf_system.is_readonly)
+			l_bool_prop.set_description (conf_interface_names.system_readonly_description)
+			l_bool_prop.change_value_actions.extend (agent conf_system.set_readonly)
+			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			properties.add_property (l_bool_prop)
 
 				-- file name
 			create l_string_prop.make (conf_interface_names.system_file_name)

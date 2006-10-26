@@ -224,7 +224,7 @@ feature -- Status report
 							l_assemblies.forth
 						end
 					else
-						found_group := found_group.target.lowest_used_in_library
+						found_group := found_group.target.system.lowest_used_in_library
 					end
 				end
 			else

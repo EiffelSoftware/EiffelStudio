@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			-- The file location.
 
 invariant
-	internal_location_not_void: location /= Void
+	internal_location_not_void: internal_location /= Void
 	target_not_void: target /= Void
 
 indexing

@@ -226,8 +226,8 @@ feature {NONE} -- Implementation
 					end
 				elseif l_group.is_library then
 					l_lib ?= l_group
-					if l_lib.target.used_in_libraries /= Void then
-						l_libs := l_lib.target.used_in_libraries.twin
+					if l_lib.target.system.used_in_libraries /= Void then
+						l_libs := l_lib.target.system.used_in_libraries.twin
 					end
 					if l_libs /= Void then
 						from
@@ -274,8 +274,8 @@ feature {NONE} -- Implementation
 					end
 				elseif l_group.is_library then
 					l_lib ?= l_group
-					if l_lib.target.used_in_libraries /= Void then
-						l_libs := l_lib.target.used_in_libraries.twin
+					if l_lib.target.system.used_in_libraries /= Void then
+						l_libs := l_lib.target.system.used_in_libraries.twin
 					end
 					if l_libs /= Void then
 						from

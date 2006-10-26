@@ -314,7 +314,7 @@ feature -- Access
 			l_assembly: CONF_PHYSICAL_ASSEMBLY
 		do
 			from
-				l_assemblies := target.all_assemblies
+				l_assemblies := conf_system.all_assemblies
 				l_assemblies.start
 			until
 				l_assembly /= Void or l_assemblies.after
@@ -536,13 +536,9 @@ feature {COMPILER_EXPORTER} -- Precompilation
 			precomp_ids.put (System.compilation_id, nb)
 		end
 
-feature {NONE} -- Externals
-
-	eif_date (s: POINTER): INTEGER is
-			-- External time stamp primitive
-		external
-			"C"
-		end
+invariant
+	new_target_in_conf_system: new_target /= Void implies new_target.system = conf_system
+	target_in_conf_system: new_target = Void implies target.system = conf_system
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

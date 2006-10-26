@@ -229,6 +229,9 @@ feature -- Visit nodes
 			-- Visit `a_library'.
 		do
 			append_pre_group ("library", a_library)
+			if a_library.use_application_options then
+				append_text (" use_application_options=%"true%"")
+			end
 			append_val_group (a_library)
 			if a_library.visible /= Void then
 				append_visible (a_library.visible)

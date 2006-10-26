@@ -39,8 +39,11 @@ feature {NONE} -- Initialization
 		do
 			factory := a_factory
 			make (a_state)
-			create libraries.make (Libraries_per_target)
+			create libraries.make (20)
 			application_target := an_application_target
+
+				-- add the application target to the libraries list
+			libraries.force (application_target, application_target.system.uuid)
 		end
 
 feature -- Status
@@ -69,22 +72,18 @@ feature -- Visit nodes
 					-- set application target
 				a_target.system.set_application_target (application_target)
 					-- set all libraries
-				a_target.set_all_libraries (libraries)
+				a_target.system.set_all_libraries (libraries)
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then
 					l_pre.process (Current)
 				end
 
-					-- if it is the library or application target, add the target to the libraries
-				if a_target = a_target.system.library_target or a_target = application_target then
-					libraries.force (a_target, a_target.system.uuid)
-				end
-
 				a_target.libraries.linear_representation.do_if (agent {CONF_LIBRARY}.process (Current), agent {CONF_LIBRARY}.is_enabled (state))
 			end
 		ensure then
-			all_libraries_set: not is_error implies a_target.all_libraries /= Void
+			all_libraries_set: not is_error implies a_target.system.all_libraries /= Void
+			fully_parsed: not is_error implies a_target.system.is_fully_parsed
 		rescue
 			retry
 		end
@@ -110,7 +109,7 @@ feature -- Visit nodes
 					a_library.set_conditions (Void)
 					a_library.add_condition (l_cond)
 				else
-					l_ferr?= l_load.last_error
+					l_ferr ?= l_load.last_error
 					if l_ferr /= Void then
 						l_ferr.set_config (a_library.target.system.file_name)
 					end
@@ -124,9 +123,8 @@ feature -- Visit nodes
 					if level + 1 < l_target.system.level then
 						l_target.system.set_level (level + 1)
 					end
-					a_library.set_uuid (l_uuid)
-					create l_comparer
 
+					create l_comparer
 					if a_library.options.is_warning_enabled (w_same_uuid) and then not l_comparer.same_files (l_path, l_target.system.file_name) then
 						add_warning (create {CONF_ERROR_UUIDFILE}.make (l_path, l_target.system.file_name))
 					end
@@ -147,14 +145,10 @@ feature -- Visit nodes
 									-- set environment to our global environment
 								l_target.set_environ_variables (application_target.environ_variables)
 
-								check
-									uuid_correct: l_uuid.is_equal (l_target.system.uuid)
-								end
 								libraries.force (l_target, l_uuid)
 
 								level := level + 1
 								a_library.set_library_target (l_target)
-								a_library.set_uuid (l_uuid)
 								l_target.system.set_level (level)
 								l_target.process (Current)
 								level := level - 1
@@ -164,7 +158,6 @@ feature -- Visit nodes
 				end
 			end
 		ensure then
-			uuid_set: not is_error implies a_library.uuid /= Void
 			target_set: not is_error implies a_library.library_target /= Void
 		end
 
@@ -175,7 +168,7 @@ feature -- Visit nodes
 		do
 				-- if precompile has all_libraries set, use those
 			if a_precompile.library_target /= Void then
-				l_libs := a_precompile.library_target.all_libraries
+				l_libs := a_precompile.library_target.system.all_libraries
 			end
 			if l_libs /= Void then
 				from
@@ -204,14 +197,6 @@ feature {NONE} -- Implementation
 
 	level: NATURAL_32
 			-- Current system level (application itself is 0, libraries of application 1, ...)
-
-feature {NONE} -- Size constants
-
-	Groups_per_system: INTEGER is 100
-			-- How many groups do we have per average system.
-
-	Libraries_per_target: INTEGER is 5
-			-- How many libraries do we have per average target.
 
 invariant
 	libraries_not_void: libraries /= Void

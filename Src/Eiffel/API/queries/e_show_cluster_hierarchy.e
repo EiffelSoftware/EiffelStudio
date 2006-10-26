@@ -130,11 +130,11 @@ feature {NONE} -- Implementation
 			text_formatter.add_group (l_group, l_group.name)
 			if l_group.is_library then
 				l_library ?= l_group
-				l_processed := processed_libraries.has (l_library.uuid)
+				l_processed := processed_libraries.has (l_library.library_target.system.uuid)
 				if l_processed then
 					text_formatter.add (output_interface_names.ellipse)
 				else
-					processed_libraries.extend (l_library.uuid)
+					processed_libraries.extend (l_library.library_target.system.uuid)
 				end
 			elseif l_group.is_assembly or l_group.is_physical_assembly then
 				l_assembly ?= l_group

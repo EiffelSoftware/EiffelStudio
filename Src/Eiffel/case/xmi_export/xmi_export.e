@@ -285,7 +285,7 @@ feature {NONE} -- Implementation
 			end
 				-- we don't have the cluster but we should have the enclosing library
 			if Result = Void then
-				Result := xmi_diagram_by_group (a_group.target.lowest_used_in_library)
+				Result := xmi_diagram_by_group (a_group.target.system.lowest_used_in_library)
 			end
 		ensure
 			result_not_void: Result /= Void

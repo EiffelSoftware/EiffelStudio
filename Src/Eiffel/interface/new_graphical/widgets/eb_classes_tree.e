@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 					l_next_group := Void
 				end
 				if l_next_group = Void then
-					l_next_group := l_group.target.lowest_used_in_library
+					l_next_group := l_group.target.system.lowest_used_in_library
 				end
 				l_group := l_next_group
 			end

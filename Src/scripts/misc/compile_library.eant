@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+<project name="compile_library" default="help">
+
+	<description>
+		description: "Clib library compilation"
+		author: "Jocelyn Fiat and others"
+	</description>
+
+	<inherit>
+		<parent location="${EIFFEL_SRC}/scripts/misc/_common_.eant">
+			<redefine target="help"/>
+		</parent>
+	</inherit>
+	
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant  compile_library" />
+	</target>	
+
+	<!--
+	**************************************************************************************
+	***  C code preparation (compilation ...)                   **************************
+	**************************************************************************************
+	-->
+
+	<target name="compile_all" depend="init">
+		<geant target="compile_c_library" />
+		<geant target="compile_library" />
+		<geant target="compile_eiffel_framework" />
+
+		<available resource="${EIFFEL_SRC}${path_separator}library${path_separator}gobo" variable="gobo_available"/>
+		<geant target="extract_gobo" unless="${gobo_available}" />
+		<unset name="gobo_available" />
+	</target>
+
+		<!-- C_library -->
+	<target name="compile_c_library" depend="init">
+		<set name="old_ISE_EIFFEL" value="${ISE_EIFFEL}" />
+		<setenv name="ISE_EIFFEL" value="${EIFFEL_SRC}" />
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/C_library/zlib" if="${is_windows}" />
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/C_library/libpng" if="${is_windows}" />
+		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}/C/ipc/ewb" if="${is_windows}" />
+		<setenv name="ISE_EIFFEL" value="${old_ISE_EIFFEL}" />
+		<unset name="old_ISE_EIFFEL" />
+	</target>
+
+		<!-- library -->
+	<target name="compile_library" depend="init">
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/net/Clib" if="${is_windows}" />
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/wel/clib" if="${is_windows}" />
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/vision2/Clib" if="${is_windows}" />
+
+		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/net/Clib" unless="${is_windows}" />
+		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/vision2/Clib" unless="${is_windows}" />
+		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/vision2/implementation/gtk/Clib" unless="${is_windows}" />
+	</target>
+	<target name="extract_gobo" depend="init">
+		<echo message="Extracting Gobo"/>
+		<exec executable="tar xzvf ..\..\free_add_ons\gobo\gobo_34_win.tgz" dir="${EIFFEL_SRC}/library" accept_errors="true" if="${is_windows}"/>
+		<exec executable="tar xzvf ${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_unix.tgz" dir="${EIFFEL_SRC}/library" accept_errors="true" unless="${is_windows}"/>
+	</target>
+
+	<target name="compile_eiffel_framework" depend="init">
+		<!-- Eiffel -->
+		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}/framework/cli_writer/Clib" if="${is_windows}" />
+		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}/framework/cli_debugger/Clib" if="${is_windows}" />
+	</target>
+	
+</project>

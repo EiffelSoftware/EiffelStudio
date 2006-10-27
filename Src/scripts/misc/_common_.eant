@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="init_compile" default="help">
+<project name="_common_" default="help">
 
 	<description>
 		description: "Common script code"
@@ -20,17 +20,17 @@
 
 	<target name="check_environment_windows" once="true">
 		<echo message="var ISE_C_COMPILER is not defined" unless="${ISE_C_COMPILER}" />
-		<set name="environment_valid" value="false" if="${environment_valid}=true" />
+		<set name="environment_valid" value="false" unless="${ISE_C_COMPILER}" />
 
 	</target>
 	<target name="check_environment" once="true">
 		<echo message="var ISE_EIFFEL is not defined" unless="${ISE_EIFFEL}" />
-		<set name="environment_valid" value="false" if="${environment_valid}=true" />
+		<set name="environment_valid" value="false" unless="${ISE_EIFFEL}" />
 
 		<echo message="var ISE_PLATFORM is not defined" unless="${ISE_PLATFORM}" />
-		<set name="environment_valid" value="false" if="${environment_valid}=true" />
+		<set name="environment_valid" value="false" unless="${ISE_PLATFORM}" />
 
-		<geant target="check_environment_windows" if="${is_windows}" />
+		<geant target="check_environment_windows" if="${is_windows}" reuse_variables="true" />
 	</target>
 
 	<!-- 
@@ -41,8 +41,11 @@
 
 	<target name="init" >
 		<set name="environment_valid" value="true" />
-		<geant target="check_environment" />
+
+		<geant target="check_environment" reuse_variables="true" />
+		<echo message="aaaa = ${environment_valid}" />
 		<geant target="check_environment_windows" if="${is_windows}" reuse_variables="true" />
+
 		<exit code="1" if="${environment_valid}=false" />
 		<unset name="environment_valid" />
 	</target>

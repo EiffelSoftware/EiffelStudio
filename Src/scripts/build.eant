@@ -36,6 +36,12 @@
 		<echo message=" geant ${opt} clean_estudio"/>
 		<echo message=" geant ${opt} finalize_estudio"/>
 		<echo message="       ----------"/>
+		<echo message=" geant ${opt} clean_finish_freezing"/>
+		<echo message=" geant ${opt} finalize_finish_freezing"/>
+		<echo message="       ----------"/>
+		<echo message=" geant ${opt} clean_emake"/>
+		<echo message=" geant ${opt} finalize_emake"/>
+		<echo message="       ----------"/>
 		<echo message=" geant ${opt} clean_mdconsumer"/>
 		<echo message=" geant ${opt} compile_mdconsumer"/>
 		<echo message=" geant ${opt} finalize_mdconsumer"/>
@@ -47,6 +53,7 @@
 		<echo message=" geant ${opt} compile_ebuild"/>
 		<echo message=" geant ${opt} finalize_ebuild"/>
 		<echo message="       ----------"/>
+		<echo message=" geant ${opt} build_eiffelstudio"/>
 	</target>
 	<target name="clean">
 		<set name="opt" value=" -Dforce_clean=true " />
@@ -61,18 +68,19 @@
 	<target name="check_environment" once="true">
 		<precursor/>
 
+		<set name="ise_bin" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
 		<available resource="${ise_bin}${path_separator}ec${exe}" variable="ise_ec_available"/>
 		<echo message="Executable ec not found " unless="${ise_ec_available}" />
 		<exit code="1" unless="${ise_ec_available}" />
 
 		<exec executable="sed --version"  accept_errors="true" exit_code_variable="return_code" />
+		<echo message="-------" />
 		<echo message="sed is not found (${return_code})" unless="${return_code}=0" />
 		<exit code="${return_code}" unless="${return_code}=0" />
 		<set name="sed_available" value="true" />
 
-		<echo message="Environment is valid" />
+		<echo message="System Environment is valid" />
 	</target>
-
 
 	<!--
 	**************************************************************************************
@@ -80,9 +88,7 @@
 	**************************************************************************************
 	-->
 	<target name="init_system" depend="init" once="true">
-		<set name="ise_bin" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
-
-		<geant target="check_environment" />
+		<echo message="System init" />
 
 		<!-- scripts and compilation related -->
 		<set name="scripts_dir" value="${EIFFEL_SRC}${path_separator}scripts" />
@@ -167,6 +173,41 @@
 		<geant file="ise_eiffel.eant" target="compile" reuse_variables="true" dir="${misc_dir}" fork="false"/>
 	</target>
 	<target name="finalize_estudio" depend="init_estudio">
+		<echo message="Compilation : $system in $system_dir"/>
+		<set name="finalize" value="true" />
+		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	</target>
+
+
+	<!-- finish_freezing -->
+	<target name="init_finish_freezing" depend="init_system">
+		<set name="system" value="finish_freezing"/>
+		<set name="system_target" value="finish_freezing" />
+		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}finish_freezing${path_separator}config${path_separator}finish_freezing.ecf" />
+		<set name="system_dir" value="${compile_dir}" />
+	</target>
+	<target name="clean_finish_freezing" depend="init_finish_freezing">
+		<echo message="Cleaning : $system in $system_dir"/>
+		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	</target>
+	<target name="finalize_finish_freezing" depend="init_finish_freezing">
+		<echo message="Compilation : $system in $system_dir"/>
+		<set name="finalize" value="true" />
+		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	</target>
+
+	<!-- emake -->
+	<target name="init_emake" depend="init_system">
+		<set name="system" value="emake"/>
+		<set name="system_target" value="emake" />
+		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}eiffel_make${path_separator}config${path_separator}emake.ecf" />
+		<set name="system_dir" value="${compile_dir}" />
+	</target>
+	<target name="clean_emake" depend="init_emake">
+		<echo message="Cleaning : $system in $system_dir"/>
+		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	</target>
+	<target name="finalize_emake" depend="init_emake">
 		<echo message="Compilation : $system in $system_dir"/>
 		<set name="finalize" value="true" />
 		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
@@ -260,6 +301,64 @@
 	</target>
 	<target name="compile_library" depend="init_system">
 		<geant file="${misc_dir}/compile_library.eant" target="compile_all" reuse_variables="true"  fork="false"/>
+	</target>
+
+	<!--
+	Compile and save output 
+	-->
+
+	<target name="build_eiffelstudio" depend="init_system" >
+		<echo message="Build EiffelStudio ..." />
+		<set name="output_dir" value="${compile_dir}${path_separator}output" />
+		<mkdir directory="${output_dir}"/>
+		<mkdir directory="${output_dir}${path_separator}bin" />
+		<mkdir directory="${output_dir}${path_separator}lib"/>
+		<mkdir directory="${output_dir}${path_separator}lib${path_separator}${ISE_C_COMPILER}"/>
+		<mkdir directory="${output_dir}${path_separator}include"/>
+
+		<!-- runtime -->
+		<geant target="compile_runtime" />
+		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="${output_dir}/bin/x2c${exe}" />
+		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" to_file="${output_dir}/bin/ecdbgd${exe}" />
+		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" to_file="${output_dir}/include/eif_confmagic.h" />
+		<copy to_directory="${output_dir}/include" dir="${EIFFEL_SRC}/C/run-time" >
+			<fileset include="@(*.h)" />
+		</copy>
+		<copy to_directory="${output_dir}/lib/${ISE_C_COMPILER}" dir="${EIFFEL_SRC}/C/run-time/LIB" if="$is_windows" >
+			<fileset include="@(*.lib)" />
+		</copy>
+		<copy to_directory="${output_dir}/lib" dir="${EIFFEL_SRC}/C/run-time" unless="$is_windows">
+			<fileset include="@(*.a)" />
+		</copy>
+
+		<!-- library -->
+		<geant target="compile_library" />
+		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${output_dir}\bin\wel_hook.dll" if="$is_windows" />
+
+		<!-- ec -->
+		<geant target="finalize_ec" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}F_code${path_separator}ec${exe}" to_file="${output_dir}${path_separator}bin${path_separator}ec${exe}" />
+
+		<!-- estudio -->
+		<geant target="finalize_estudio" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}estudio${path_separator}F_code${path_separator}estudio${exe}" to_file="${output_dir}${path_separator}bin${path_separator}estudio${exe}" />
+
+		<!-- finish_freezing -->
+		<geant target="finalize_finish_freezing" />
+		<copy file="${compile_dir}${path_separator}eifgens${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${output_dir}${path_separator}bin${path_separator}finish_freezing${exe}" />
+
+		<!-- emake -->
+		<geant target="finalize_emake" />
+		<copy file="${compile_dir}${path_separator}eifgens${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${output_dir}${path_separator}bin${path_separator}finish_freezing${exe}" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}emake${path_separator}F_code${path_separator}emake${exe}" to_file="${output_dir}${path_separator}bin${path_separator}emake${exe}" />
+
+		<!-- emake -->
+		<geant target="finalize_mdconsumer" />
+		<copy to_directory="${output_dir}/bin" dir="${compile_dir}/EIFGENs/consumer/F_code" >
+			<fileset include="@(*.dll)" />
+		</copy>
+
+		<unset name="output_dir" />
 	</target>
 
 </project>

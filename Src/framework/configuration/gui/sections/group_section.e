@@ -68,7 +68,11 @@ feature -- Element update
 		local
 			l_cd: EV_CONFIRMATION_DIALOG
 		do
-			create l_cd.make_with_text_and_actions (conf_interface_names.target_remove_group (name), <<agent remove_group>>)
+			if group.is_library then
+				create l_cd.make_with_text_and_actions (conf_interface_names.target_remove_library (name), <<agent remove_group>>)
+			else
+				create l_cd.make_with_text_and_actions (conf_interface_names.target_remove_group (name), <<agent remove_group>>)
+			end
 			l_cd.show_modal_to_window (configuration_window)
 		end
 

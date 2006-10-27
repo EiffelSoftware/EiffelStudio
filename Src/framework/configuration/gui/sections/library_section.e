@@ -66,8 +66,11 @@ feature -- Basic operations
 				if l_load.is_error then
 					create wd.make_with_text (l_load.last_error.out)
 					wd.show_modal_to_window (configuration_window)
+				elseif l_load.last_system.library_target = Void then
+					create wd.make_with_text ((create {CONF_ERROR_NOLIB}.make (group.name)).out)
+					wd.show_modal_to_window (configuration_window)
 				else
-					create l_lib_conf.make (l_load.last_system, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
+					create l_lib_conf.make_for_target (l_load.last_system, l_load.last_system.library_target.name, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
 
 					l_lib_conf.set_size (configuration_window.width, configuration_window.height)
 					l_lib_conf.set_position (configuration_window.x_position, configuration_window.y_position)

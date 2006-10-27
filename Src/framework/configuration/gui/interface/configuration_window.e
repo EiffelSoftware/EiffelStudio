@@ -83,18 +83,21 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_for_target
 
 feature {NONE}-- Initialization
 
-	make (a_system: like conf_system; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command) is
-			-- Create.
+	make_for_target (a_system: like conf_system; a_target: STRING; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command) is
+			-- Create and select `a_target'.
 		require
+			a_target_ok: a_target /= Void and then not a_target.is_empty
 			a_system_not_void: a_system /= Void
 			a_factory_not_void: a_factory /= Void
 			a_debugs_not_void: a_debugs /= Void
 			a_editor_not_void: a_editor /= Void
 		do
+			selected_target := a_target
 			set_pixmaps (a_pixmaps)
 			conf_system := a_system
 			conf_factory := a_factory
@@ -103,6 +106,23 @@ feature {NONE}-- Initialization
 			default_create
 			config_windows.force (Current, conf_system.file_name)
 			window := Current
+		ensure
+			system_set: conf_system = a_system
+			factory_set: conf_factory = a_factory
+			debug_clauses_set: debug_clauses = a_debugs
+			selected_target_set: selected_target = a_target
+		end
+
+	make (a_system: like conf_system; a_factory: like conf_factory; a_debugs: like debug_clauses; a_pixmaps: CONF_PIXMAPS; a_editor: like external_editor_command) is
+			-- Create.
+		require
+			a_system_not_void: a_system /= Void
+			a_system_has_targets: not a_system.targets.is_empty
+			a_factory_not_void: a_factory /= Void
+			a_debugs_not_void: a_debugs /= Void
+			a_editor_not_void: a_editor /= Void
+		do
+			make_for_target (a_system, a_system.target_order.first.name, a_factory, a_debugs, a_pixmaps, a_editor)
 		ensure
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory
@@ -201,6 +221,9 @@ feature -- Status
 			-- Are we currently refreshing?
 
 feature -- Access
+
+	selected_target: STRING
+			-- Target to select on startup.
 
 	external_editor_command: STRING
 			-- External editor with 4target as filename replacement and $line as line replacement (optional).
@@ -467,23 +490,16 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 			a_target_not_void: a_target /= Void
 			a_root_ok: a_root /= Void and then not a_root.is_destroyed and a_root.extendible
 		local
-			l_root: EV_TREE_NODE
 			l_target: TARGET_SECTION
 			l_target_tasks: TARGET_TASKS_SECTION
 			l_target_externals: TARGET_EXTERNALS_SECTION
 			l_target_advanced: TARGET_ADVANCED_SECTION
 			l_target_groups: TARGET_GROUPS_SECTION
-			l_children: LIST [CONF_TARGET]
+			l_node: EV_TREE_NODE
 		do
 				-- target
 			create l_target.make (a_target, Current)
 			a_root.extend (l_target)
-
-				-- expand parent if it is a child target
-			l_root ?= a_root
-			if l_root /= Void then
-				l_root.expand
-			end
 
 				-- assertions section
 			l_target.extend (create {TARGET_ASSERTIONS_SECTION}.make (a_target, Current))
@@ -528,14 +544,20 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 				-- advanced mapping section
 			l_target_advanced.extend (create {TARGET_MAPPING_SECTION}.make (a_target, Current))
 
-				-- expand if we don't have any children
-			l_children := a_target.child_targets
-			if l_children.is_empty then
-				l_target.expand
-			else
-					-- add child targets
-				l_children.do_all (agent add_target_sections (?, l_target))
+				-- expand if this is the selected target
+			if a_target.name.is_equal (selected_target) then
+				from
+					l_node := l_target
+				until
+					l_node = Void
+				loop
+					l_node.expand
+					l_node ?= l_node.parent
+				end
 			end
+
+				-- add child targets
+			a_target.child_targets.do_all (agent add_target_sections (?, l_target))
 		end
 
 
@@ -1422,6 +1444,7 @@ invariant
 	ok_button: is_initialized implies ok_button /= Void
 	external_editor_command_ok: is_initialized implies external_editor_command /= Void
 	hide_actions_not_void: is_initialized implies hide_actions /= Void
+	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -109,7 +109,7 @@ feature -- Basic operations
 							if configuration_window /= Void and then not configuration_window.is_canceled and configuration_window.conf_system.file_date = l_load.last_system.file_date then
 								configuration_window.set_debugs (l_sorted_debugs)
 							else
-								create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs, pixmaps, preferences.misc_data.external_editor_command)
+								create configuration_window.make_for_target (l_load.last_system, lace.target_name , l_fact, l_sorted_debugs, pixmaps, preferences.misc_data.external_editor_command)
 							end
 
 							configuration_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
@@ -166,7 +166,7 @@ feature {NONE} -- Actions
 								last_focused_development_window.window)
 						else
 							create l_sorted_debugs.make_default
-							create configuration_window.make (l_load.last_system, l_fact, l_sorted_debugs, pixmaps, preferences.misc_data.external_editor_command)
+							create configuration_window.make_for_target (l_load.last_system, lace.target_name, l_fact, l_sorted_debugs, pixmaps, preferences.misc_data.external_editor_command)
 
 							configuration_window.set_size (preferences.dialog_data.project_settings_width, preferences.dialog_data.project_settings_height)
 							configuration_window.set_position (preferences.dialog_data.project_settings_position_x, preferences.dialog_data.project_settings_position_y)

@@ -41,7 +41,7 @@ feature -- Access
 	root_class_name: STRING is
 			-- Root class name
 		do
-			Result := System.root_class_name
+			Result := System.root_type_name
 		end;
 
 	name: STRING is

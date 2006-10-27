@@ -39,7 +39,7 @@ feature {NONE} -- Query
 			l_creation_name := System.root_creation_name
 			Result := l_creation_name /= Void --| In case we are precompiling |--
 					and then a_feat.feature_name.is_equal (l_creation_name)
-					and then a_feat.written_class.is_equal (System.root_class.compiled_class)
+					and then a_feat.written_class.is_equal (System.root_type.associated_class)
 		end
 
 feature {NONE} -- IL info file names

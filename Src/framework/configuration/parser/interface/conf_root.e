@@ -20,17 +20,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_cluster, a_class, a_feature: STRING; a_all_root: BOOLEAN) is
+	make (a_cluster, a_class_type, a_feature: STRING; a_all_root: BOOLEAN) is
 			-- Create with `a_cluster', `a_class' and `a_feature'.
 			-- `a_all_root' indicates that all classes are considered to be root.
 		require
 			a_cluster_ok: a_cluster /= Void implies not a_cluster.is_empty
-			a_class_ok: not a_all_root implies a_class /= Void and then not a_class.is_empty
+			a_class_ok: not a_all_root implies a_class_type /= Void and then not a_class_type.is_empty
 			a_feature_ok: a_feature /= Void implies not a_feature.is_empty
 		do
 			is_all_root := a_all_root
 			if a_all_root then
-				class_name := "ANY"
+				class_type_name := "ANY"
 			else
 				if a_cluster /= Void then
 					cluster_name := a_cluster.as_lower
@@ -38,15 +38,15 @@ feature {NONE} -- Initialization
 				if a_feature /= Void then
 					feature_name := a_feature.as_lower
 				end
-				class_name := a_class.as_upper
+				class_type_name := a_class_type.as_upper
 			end
 		ensure
 			cluster_set: not a_all_root implies (a_cluster = Void and cluster_name = Void) or
 				(a_cluster /= Void and then cluster_name /= Void and then
 					cluster_name.is_equal (a_cluster.as_lower))
-			class_name_not_void: class_name /= Void
-			class_set: not a_all_root implies class_name.is_equal (a_class.as_upper)
-			class_set: a_all_root implies class_name.is_equal ("ANY")
+			class_type_name_not_void: class_type_name /= Void
+			class_set: not a_all_root implies class_type_name.is_equal (a_class_type.as_upper)
+			class_set: a_all_root implies class_type_name.is_equal ("ANY")
 			feature_set: not a_all_root implies (a_feature = Void and feature_name = Void) or
 				(a_feature /= Void and then feature_name /= Void and then
 					feature_name.is_equal (a_feature.as_lower))
@@ -59,7 +59,7 @@ feature -- Comparison
 			-- Is it the same file_rule as `other'?
 		do
 			Result := equal (cluster_name, other.cluster_name) and
-				equal (class_name, other.class_name) and
+				equal (class_type_name, other.class_type_name) and
 				equal (feature_name, other.feature_name)
 		end
 
@@ -75,7 +75,7 @@ feature -- Output
 				if cluster_name /= Void then
 					Result.append (cluster_name+".")
 				end
-				Result.append (class_name)
+				Result.append (class_type_name)
 				if feature_name /= Void then
 					Result.append ("."+feature_name)
 				end
@@ -87,8 +87,8 @@ feature -- Access, stored in configuration file
 	cluster_name: STRING
 			-- The name of the root cluster.
 
-	class_name: STRING
-			-- The name of the root class.
+	class_type_name: STRING
+			-- The name of the root type.
 
 	feature_name: STRING
 			-- The name of the root feature.
@@ -109,15 +109,15 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			name_set: cluster_name = a_name
 		end
 
-	set_class_name (a_name: like class_name) is
-			-- Set `class_name' to `a_name'.
+	set_class_type_name (a_name: like class_type_name) is
+			-- Set `class_type_name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			a_name_upper: a_name.is_equal (a_name.as_upper)
 		do
-			class_name := a_name
+			class_type_name := a_name
 		ensure
-			name_set: class_name = a_name
+			name_set: class_type_name = a_name
 		end
 
 	set_feature_name (a_name: like feature_name) is
@@ -134,8 +134,8 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 invariant
 	cluster_name_ok: cluster_name /= Void implies not cluster_name.is_empty
 	cluster_name_lower: cluster_name /= Void implies cluster_name.is_equal (cluster_name.as_lower)
-	class_name_ok: class_name /= Void and then not class_name.is_empty
-	class_name_upper: class_name.is_equal (class_name.as_upper)
+	class_type_name_ok: class_type_name /= Void and then not class_type_name.is_empty
+	class_type_name_upper: class_type_name.is_equal (class_type_name.as_upper)
 	feature_name_ok: feature_name /= Void implies not feature_name.is_empty
 	feature_name_lower: feature_name /= Void implies feature_name.is_equal (feature_name.as_lower)
 

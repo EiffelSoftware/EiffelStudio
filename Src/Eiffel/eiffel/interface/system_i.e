@@ -62,6 +62,16 @@ inherit
 
 	CONF_ACCESS
 
+	SHARED_EIFFEL_PARSER
+		export
+			{NONE} all
+		end
+
+	SHARED_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -476,10 +486,10 @@ feature -- Properties
 				-- The root class could be part of the precompiled library, so
 				-- we need to make sure that its `is_in_system' flag is set.
 			if
-				root_cluster.classes_set and then root_class.is_compiled and then
-				root_class.compiled_class.is_precompiled
+				root_cluster.classes_set and then root_type.associated_class.original_class.is_compiled and then
+				root_type.associated_class.is_precompiled
 			then
-				root_class.compiled_class.record_precompiled_class_in_system
+				root_type.associated_class.record_precompiled_class_in_system
 			end
 		end
 
@@ -1106,7 +1116,9 @@ end
 	update_root_class is
 			-- Update/recheck the root class.
 		require
+			universe_not_void: universe /= Void
 			target_not_void: universe.target /= Void
+			roout_not_void: universe.target.root /= Void
 		local
 			l_target: CONF_TARGET
 			l_classes_i: LIST [CLASS_I]
@@ -1116,15 +1128,28 @@ end
 			vd20: VD20
 			vd29: VD29
 			l_class: CLASS_I
+			l_root_type_name: STRING
+			l_root_type_base_class_name: STRING
 		do
 			l_target := universe.target
 				-- update root class/feature
 			l_root := l_target.root
-			if l_root /= Void then
-				system.set_root_class_name (l_root.class_name.as_upper)
+			l_root_type_name := l_root.class_type_name.as_upper
+
+			type_parser.parse_from_string ("type " + l_root_type_name)
+			root_class_type_as ?= type_parser.type_node
+
+			if root_class_type_as = Void then
+				-- Error: syntactically not a valid type
+				-- should already be captured by the config system
+				check false end
+			else
+
+				system.set_root_type_name (l_root_type_name)
 
 				if l_root.cluster_name = Void then
-					l_classes_i := universe.classes_with_name (l_root.class_name.as_upper)
+
+					l_classes_i := universe.classes_with_name (root_class_type_as.class_name.as_upper.string)
 						-- remove overriding classes
 					from
 						l_classes_i.start
@@ -1139,14 +1164,14 @@ end
 					end
 					if l_classes_i.count = 0 then
 						create vd20
-						vd20.set_class_name (l_root.class_name.as_upper)
+						vd20.set_class_name (l_root.class_type_name.as_upper)
 						Error_handler.insert_error (vd20)
 						Error_handler.raise_error
 					elseif l_classes_i.count > 1 then
 						create vd29
 						vd29.set_cluster (l_classes_i.first.group)
 						vd29.set_second_cluster_name (l_classes_i.last.group.name)
-						vd29.set_root_class_name (l_root.class_name.as_upper)
+						vd29.set_root_class_name (l_root.class_type_name.as_upper)
 						Error_handler.insert_error (vd29)
 						Error_handler.raise_error
 					else
@@ -1161,10 +1186,10 @@ end
 						Error_handler.raise_error
 					else
 							-- do a class_named because this checks for VSCN errors
-						l_class := universe.class_named (root_class_name, l_group)
-						if l_class = Void or else l_group.classes.item (root_class_name) /= l_class.config_class then
+						l_class := universe.class_named (root_class_type_as.class_name.as_upper.string, l_group)
+						if l_class = Void or else l_group.classes.item (root_class_type_as.class_name.as_upper.string) /= l_class.config_class then
 							create vd20
-							vd20.set_class_name (l_root.class_name.as_upper)
+							vd20.set_class_name (l_root.class_type_name.as_upper)
 							Error_handler.insert_error (vd20)
 							Error_handler.raise_error
 						end
@@ -1173,11 +1198,55 @@ end
 
 				system.set_root_cluster (l_group)
 				system.set_creation_name (l_root.feature_name)
+
+				root_class ?= root_cluster.classes.item (root_class_type_as.class_name.as_upper.string)
+				if root_class = Void then
+					create vd20
+					vd20.set_class_name (l_root.class_type_name.as_upper)
+					Error_handler.insert_error (vd20)
+					Error_handler.raise_error
+				end
 			end
 		ensure
 			root_class_set: root_class /= Void
 			root_cluster_set: root_cluster /= Void
 		end
+
+	compute_root_type is
+			-- Computes the root type
+		require
+			root_class_not_void: root_class /= Void
+		local
+			l_vsrt1: VSRT1
+			l_vsrt2: VSRT2
+		do
+			root_type ?= type_a_generator.evaluate_type_if_possible (root_class_type_as, root_class.compiled_class)
+
+
+			if 	root_type = Void or else
+				root_type.is_loose
+			then
+				-- Throw an error: type is not valid.
+				create l_vsrt2
+				l_vsrt2.set_class (root_class.compiled_class)
+				l_vsrt2.set_root_type_name (root_type_name)
+				l_vsrt2.set_group_name (root_class.group.name)
+				Error_handler.insert_error (l_vsrt2)
+				Error_handler.raise_error
+			end
+			if not root_type.has_generics and root_type.associated_class.is_generic then
+				create l_vsrt1
+				l_vsrt1.set_class (root_type.associated_class)
+				l_vsrt1.set_root_type (system.root_type)
+					-- Need duplication otherwise we would change the original FEATURE_I
+					-- object while displaying the error.
+				Error_handler.insert_error (l_vsrt1)
+				Error_handler.raise_error
+			end
+		ensure
+			root_type_set: root_type /= Void
+		end
+
 
 
 	init_recompilation is
@@ -1616,7 +1685,7 @@ end
 						-- The root class is not generic
 					root_class_c := root_class.compiled_class
 					current_class := root_class_c
-					root_class_c.check_non_genericity_of_root_class
+					root_class_c.check_that_root_class_is_not_deferred
 					current_class := Void
 						-- Remove useless classes i.e classes without
 						-- syntactical clients
@@ -1662,6 +1731,9 @@ end
 					reset_melted_conformance_table
 				end
 
+					-- Compute the root type
+				compute_root_type
+
 					-- Inheritance analysis: `Degree_4' is sorted by class
 					-- topological ids so the parent come first the heirs after.
 				process_degree_4
@@ -1679,8 +1751,8 @@ end
 					not Compilation_modes.is_precompiling and
 					not Lace.compile_all_classes
 				then
-						-- `root_class_c' cannot be used here as `root_class.compiled_class' might be changed
-					root_class.compiled_class.check_root_class_creators
+						-- `root_class_c' cannot be used here as `root_type.associated_class' might be changed
+					root_type.associated_class.check_root_class_creators
 				end
 
 					-- Byte code production and type checking
@@ -1770,7 +1842,7 @@ end
 					-- We may need to update `System.creation_name'
 					-- when it is not set explicitly and defaults to
 					-- a redeclaration of "ANY.default_create"
-				root_class.compiled_class.check_root_class_creators
+				root_type.associated_class.check_root_class_creators
 			end
 
 			if System.il_generation then
@@ -2106,12 +2178,7 @@ end
 
 				-- Processing of root class if any to make it easy to find
 				-- it in generated C code
-			if
-				root_class /= Void and then root_class.is_compiled and then
-				not root_class.compiled_class.has_types
-			then
-				root_class.compiled_class.init_types
-			end
+			instantiator.dispatch (root_type, root_type.associated_class)
 
 				-- Initialize types of non-generic classes which haven't been initialized yet.
 			Degree_2.initialize_non_generic_types
@@ -2266,7 +2333,7 @@ end
 				file_pointer := melted_file.file_pointer
 
 					-- Update the root class info
-				a_class := root_class.compiled_class
+				a_class := root_type.associated_class
 				dtype := a_class.types.first.type_id - 1
 				if root_creation_name /= Void then
 					root_feat := a_class.feature_table.item (root_creation_name)
@@ -2687,7 +2754,7 @@ feature -- Freeezing
 	freeze_system is
 			-- Worrkbench C code generation
 		require
-			root_class.is_compiled
+			root_type.associated_class.original_class.is_compiled
 		do
 			Eiffel_project.terminate_c_compilation
 			freezing_occurred := True
@@ -2814,7 +2881,7 @@ feature -- Final mode generation
 	finalize_system (keep_assert: BOOLEAN) is
 			-- Finalized generation.
 		require
-			root_class_compiled: root_class.is_compiled
+			root_class_compiled: root_type.associated_class.original_class.is_compiled
 		local
 			old_remover_off: BOOLEAN
 			old_exception_stack_managed: BOOLEAN
@@ -3150,8 +3217,8 @@ feature {NONE} -- Implementation
 					-- and remove classes recursively if needed.
 				from
 					related_classes.start
-					if root_class /= Void then
-						compiled_root_class := root_class.compiled_class
+					if root_type /= Void then
+						compiled_root_class := root_type.associated_class
 					end
 				until
 					related_classes.after
@@ -3358,7 +3425,7 @@ feature -- Dead code removal
 
 				-- First, inspection of the Eiffel code
 			if root_creation_name /= Void then
-				l_class := root_class.compiled_class
+				l_class := root_type.associated_class
 				root_feat := l_class.feature_table.item (root_creation_name)
 				remover.record (root_feat, l_class)
 			end
@@ -4611,7 +4678,7 @@ feature -- Pattern table generation
 
 			final_mode := byte_context.final_mode
 
-			root_cl := root_class.compiled_class
+			root_cl := root_type.associated_class
 			cl_type := root_cl.types.first
 			dtype := cl_type.type_id - 1
 
@@ -4980,19 +5047,14 @@ feature -- Conveniences
 			is_precompile_finalized_set: is_precompile_finalized = b
 		end
 
-	root_class: CLASS_I is
-			-- Root class of the system
-		require
-			root_cluster /= Void
-			root_class_name /= Void
-		do
-			if root_cluster.classes_set then
-				Result ?= root_cluster.classes.item (root_class_name)
-			end
-		ensure
-			Computed_Result_not_void: root_cluster.classes_set implies Result /= Void
-			Not_computed_void: not root_cluster.classes_set implies Result = Void
-		end
+	root_class: CLASS_I
+			-- Base class of `root_type'.
+
+	root_type: CL_TYPE_A
+			-- Computed type of specified root type.
+
+	root_class_type_as: CLASS_TYPE_AS
+			-- Root class type as specified in config system (possibly invalid).
 
 feature -- Precompilation
 

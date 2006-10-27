@@ -275,7 +275,7 @@ feature -- Queries : eStudio data from debugger data
 			l_class: CLASS_C
 		do
 			--| Update the root class info
-			l_class := System.root_class.compiled_class
+			l_class := System.root_type.associated_class
 			Result := l_class.feature_table.item (System.root_creation_name)
 		end
 

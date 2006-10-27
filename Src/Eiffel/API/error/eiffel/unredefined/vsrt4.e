@@ -1,27 +1,51 @@
 indexing
 
-	description: 
-		"Error for generic root class."
+	description:
+		"Base class of any type ond which the root type dependes must be in the scope of the root cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VSRC1 
+class VSRT4
 
 inherit
 
 	EIFFEL_ERROR
 		redefine
-			subcode
+			subcode, build_explain
 		end;
 
 feature -- Properties
 
-	code: STRING is "VSRC";
+	code: STRING is "VSRT";
 			-- Error code
 
-	subcode: INTEGER is 1;
+	subcode: INTEGER is 4;
+			-- Sub code of error
+
+		root_type: CL_TYPE_A;
+			-- Root type involved in the error
+
+feature	-- Output
+
+	build_explain (a_text_formatter: TEXT_FORMATTER) is
+		do
+			a_text_formatter.add ("Root type: ")
+			root_type.append_to  (a_text_formatter)
+			a_text_formatter.add_new_line
+		end
+
+feature {COMPILER_EXPORTER}
+
+	set_root_type (a_root_type: like root_type) is
+			-- Assign `a_root_type' to `root_type'.
+		require
+			a_valid_root_type: a_root_type /= Void
+		do
+			root_type := a_root_type;
+		end;
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -55,4 +79,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class VSRC1
+end -- class VSRT1

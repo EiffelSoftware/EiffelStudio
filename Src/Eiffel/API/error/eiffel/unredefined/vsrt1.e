@@ -1,59 +1,51 @@
 indexing
 
-	description: 
-		"Error for a root class having bad creation procedure arguments."
+	description:
+		"Error if root type is not a stand-alone type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class VSRC3
+class VSRT1
 
 inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode, is_defined
+			subcode, build_explain
 		end;
 
 feature -- Properties
 
-	code: STRING is "VSRC";
+	code: STRING is "VSRT";
+			-- Error code
 
-	subcode: INTEGER is 3;
+	subcode: INTEGER is 1;
+			-- Sub code of error
 
-	creation_feature: E_FEATURE;
-			-- Creation procedure name involved in the error
+		root_type: CL_TYPE_A;
+			-- Root type involved in the error
 
-feature -- Access
-
-	is_defined: BOOLEAN is
-			-- Is the error fully defined?
-		do
-			Result := is_class_defined and then
-				creation_feature /= Void
-		ensure then
-			valid_creation_feature: Result implies creation_feature /= Void
-		end
-
-feature -- Output
+feature	-- Output
 
 	build_explain (a_text_formatter: TEXT_FORMATTER) is
 		do
-			a_text_formatter.add ("Creation feature: ");
-			creation_feature.append_signature (a_text_formatter);
-			a_text_formatter.add_new_line;
-		end;
+			a_text_formatter.add ("Root type: ")
+			root_type.append_to  (a_text_formatter)
+			a_text_formatter.add_new_line
+		end
 
 feature {COMPILER_EXPORTER}
 
-	set_creation_feature (f: FEATURE_I) is
-			-- Assign `s' to `creation_name'.
+	set_root_type (a_root_type: like root_type) is
+			-- Assign `a_root_type' to `root_type'.
 		require
-			valid_f: f /= Void
+			a_valid_root_type: a_root_type /= Void
 		do
-			creation_feature := f.api_feature (f.written_in);
+			root_type := a_root_type;
 		end;
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -87,4 +79,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class VSRC3
+end -- class VSRT1

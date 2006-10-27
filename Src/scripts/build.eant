@@ -183,7 +183,7 @@
 	<target name="init_finish_freezing" depend="init_system">
 		<set name="system" value="finish_freezing"/>
 		<set name="system_target" value="finish_freezing" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}finish_freezing${path_separator}config${path_separator}finish_freezing.ecf" />
+		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}finish_freezing${path_separator}finish_freezing.ecf" />
 		<set name="system_dir" value="${compile_dir}" />
 	</target>
 	<target name="clean_finish_freezing" depend="init_finish_freezing">
@@ -200,7 +200,7 @@
 	<target name="init_emake" depend="init_system">
 		<set name="system" value="emake"/>
 		<set name="system_target" value="emake" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}eiffel_make${path_separator}config${path_separator}emake.ecf" />
+		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}eiffel_make${path_separator}emake.ecf" />
 		<set name="system_dir" value="${compile_dir}" />
 	</target>
 	<target name="clean_emake" depend="init_emake">

@@ -977,7 +977,7 @@ feature -- Generation Structure
 				current_module.ise_interface_type_attr_ctor_token, l_assert_ca)
 		end
 
-	end_module_generation (has_root_class: BOOLEAN; a_signing: MD_STRONG_NAME) is
+	end_module_generation (has_root_type: BOOLEAN; a_signing: MD_STRONG_NAME) is
 			-- Finish creation of current module.
 		require
 			a_signing_not_void: a_signing /= Void
@@ -993,8 +993,8 @@ feature -- Generation Structure
 				(current_module /= Void and then current_module.is_generated)
 			then
 					-- Mark now entry point for debug information
-				if has_root_class and is_debug_info_enabled and system.root_creation_name /= Void then
-					a_class := system.root_class.compiled_class
+				if has_root_type and is_debug_info_enabled and system.root_creation_name /= Void then
+					a_class := system.root_type.associated_class
 					root_feat := a_class.feature_table.item (system.root_creation_name)
 					l_decl_type := implemented_type (root_feat.origin_class_id,
 						a_class.types.first.type)
@@ -1207,10 +1207,10 @@ feature -- Class info
 			l_attributes: BYTE_LIST [BYTE_NODE]
 			l_cur_mod: like current_module
 		do
-			if System.root_class /= Void and then System.root_class.is_compiled then
+			if System.root_type /= Void and then System.root_type.associated_class.original_class.is_compiled then
 				l_cur_mod := current_module
 				current_module := main_module
-				l_class := System.root_class.compiled_class
+				l_class := System.root_type.associated_class
 				current_class_type := l_class.types.first
 				create l_ca_factory
 

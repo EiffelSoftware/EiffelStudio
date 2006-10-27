@@ -21,8 +21,8 @@ feature -- Access
 	root_cluster: CONF_GROUP
 			-- Root cluster of the system
 
-	root_class_name: STRING;
-			-- Root class name
+	root_type_name: STRING;
+			-- Root type name
 
 	root_creation_name: STRING;
 			-- Creation procedure name
@@ -84,15 +84,15 @@ feature -- Update
 			root_cluster := c
 		end
 
-	set_root_class_name (s: STRING) is
+	set_root_type_name (s: STRING) is
 			-- Assign `s' to `root_class_name'.
 		require
 			s_not_void: s /= Void
 			s_in_upper: s.is_equal (s.as_upper)
 		do
-			root_class_name := s
+			root_type_name := s
 		ensure
-			root_class_name_set: root_class_name = s
+			root_type_name_set: root_type_name = s
 		end
 
 	set_creation_name (s: STRING) is

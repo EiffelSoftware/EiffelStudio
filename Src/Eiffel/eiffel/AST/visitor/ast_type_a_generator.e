@@ -44,6 +44,22 @@ inherit
 
 feature -- Status report
 
+	evaluate_type_if_possible_in_group (a_type: TYPE_AS; a_context_group: CONF_GROUP): TYPE_A is
+			-- Given a TYPE_AS node, try to find its equivalent CL_TYPE_A node.
+		require
+			a_type_not_void: a_type /= Void
+			a_context_group_not_void: a_context_group /= Void
+		do
+			is_failure_enabled := True
+			current_class := Void
+			current_group := a_context_group
+			a_type.process (Current)
+			Result := last_type
+			current_class := Void
+			current_group := Void
+			last_type := Void
+		end
+
 	evaluate_type_if_possible (a_type: TYPE_AS; a_context_class: CLASS_C): TYPE_A is
 			-- Given a TYPE_AS node, try to find its equivalent CL_TYPE_A node.
 		require
@@ -52,9 +68,11 @@ feature -- Status report
 		do
 			is_failure_enabled := True
 			current_class := a_context_class
+			current_group := a_context_class.group
 			a_type.process (Current)
 			Result := last_type
 			current_class := Void
+			current_group := Void
 			last_type := Void
 		end
 
@@ -67,9 +85,11 @@ feature -- Status report
 		do
 			is_failure_enabled := False
 			current_class := a_context_class
+			current_group := a_context_class.group
 			a_type.process (Current)
 			Result := last_type
 			current_class := Void
+			current_group := Void
 			last_type := Void
 		ensure
 			evaluate_type_not_void: Result /= Void
@@ -84,9 +104,11 @@ feature -- Status report
 		do
 			is_failure_enabled := False
 			current_class := a_context_class
+			current_group := a_context_class.group
 			a_class_type.process (Current)
 			Result ?= last_type
 			current_class := Void
+			current_group := Void
 			last_type := Void
 		ensure
 			evaluate_type_not_void: Result /= Void
@@ -99,6 +121,9 @@ feature {NONE} -- Implementation: Access
 
 	current_class: CLASS_C
 			-- Current class where current type is resolved
+
+	current_group: CONF_GROUP
+			-- Current group where current type is resolved
 
 	is_failure_enabled: BOOLEAN
 			-- Is failure authorized?
@@ -114,9 +139,14 @@ feature {NONE} -- Visitor implementation
 		local
 			l_cur: LIKE_CURRENT
 		do
-			create l_cur
-			l_cur.set_actual_type (current_class.actual_type)
-			last_type := l_cur
+			if current_class = Void then
+				check failure_enabled: is_failure_enabled end
+				last_type := Void
+			else
+				create l_cur
+				l_cur.set_actual_type (current_class.actual_type)
+				last_type := l_cur
+			end
 		end
 
 	process_formal_as (l_as: FORMAL_AS) is
@@ -134,7 +164,7 @@ feature {NONE} -- Visitor implementation
 			l_type: TYPE_A
 		do
 				-- Lookup class in universe, it should be present.
-			l_class_i := universe.class_named (l_as.class_name, current_class.group)
+			l_class_i := universe.class_named (l_as.class_name, current_group)
 			if l_class_i /= Void and then l_class_i.is_compiled then
 				l_class_c := l_class_i.compiled_class
 				if l_as.generics /= Void then
@@ -241,6 +271,9 @@ feature {NONE} -- Visitor implementation
 		do
 			create {UNEVALUATED_BITS_SYMBOL_A} last_type.make (l_as.bits_symbol)
 		end
+
+invariant
+	valid_group: current_class /= Void implies current_group = current_class.group
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

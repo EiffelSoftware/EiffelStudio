@@ -404,8 +404,8 @@ feature {NONE} -- Type description
 			l_feat: FEATURE_I
 			l_root_class: CLASS_C
 		do
-			if System.root_class /= Void and then System.root_creation_name /= Void then
-				l_root_class := System.root_class.compiled_class
+			if System.root_type /= Void and then System.root_creation_name /= Void then
+				l_root_class := System.root_type.associated_class
 				l_feat := l_root_class.feature_table.item (System.root_creation_name)
 				root_class_routine := l_feat.written_class
 			end
@@ -821,7 +821,7 @@ feature {NONE} -- Type description
 				System.root_creation_name /= Void
 			then
 					-- Update the root class info
-				a_class := system.root_class.compiled_class
+				a_class := system.root_type.associated_class
 				root_class_type := a_class.actual_type.type_i.associated_class_type
 				root_feat := a_class.feature_table.item (System.root_creation_name)
 				l_decl_type := cil_generator.implemented_type (root_feat.written_in,

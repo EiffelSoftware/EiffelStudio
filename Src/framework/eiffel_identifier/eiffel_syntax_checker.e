@@ -10,9 +10,22 @@ class
 	EIFFEL_SYNTAX_CHECKER
 
 inherit
+
 	SYNTAX_STRINGS
 
 feature -- Status report
+
+	is_valid_class_type_name (ct: STRING): BOOLEAN is
+			-- Is `cn' a valid class type?
+			-- according to ECMA-367 Section 8.11.1
+		require
+			ct_not_void: ct /= Void
+		local
+			type_checker: CLASS_TYPE_NAME_SYNTAX_CHECKER
+		do
+			create type_checker
+			Result := type_checker.is_valid_class_type_name (ct)
+		end
 
 	is_valid_class_name (cn: STRING): BOOLEAN is
 			-- Is `cn' a valid class name?

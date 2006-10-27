@@ -105,7 +105,7 @@ feature -- Visit nodes
 					l_a_name.force ("cluster")
 					l_a_val.force (l_root.cluster_name)
 					l_a_name.force ("class")
-					l_a_val.force (l_root.class_name)
+					l_a_val.force (l_root.class_type_name)
 					l_a_name.force ("feature")
 					l_a_val.force (l_root.feature_name)
 				end

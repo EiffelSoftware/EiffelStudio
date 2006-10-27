@@ -731,7 +731,8 @@ feature -- Plug and Makefile file
 			buffer.put_string (";%N%N")
 
 			if not final_mode then
-				root_cl := System.root_class.compiled_class
+				check system.root_type /= Void end
+				root_cl := System.root_type.associated_class
 				if not Compilation_modes.is_precompiling and then System.root_creation_name /= Void then
 					root_feat := root_cl.feature_table.item (System.root_creation_name)
 					has_argument := root_feat.has_arguments

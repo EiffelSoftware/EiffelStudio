@@ -1338,25 +1338,17 @@ feature -- Parent checking
 
 feature -- Supplier checking
 
-	check_non_genericity_of_root_class is
+	check_that_root_class_is_not_deferred is
 		-- Check non-genericity of root class
 		require
 			is_root_class: Current = System.root_class.compiled_class
 		local
-			vsrc1: VSRC1
-			vsrc2: VSRC2
+			l_vsrt3: VSRT3
 		do
-			if generics /= Void then
-				create vsrc1
-				vsrc1.set_class (Current)
-				Error_handler.insert_error (vsrc1)
-				Error_handler.checksum
-			end
-
 			if is_deferred then
-				create vsrc2
-				vsrc2.set_class (Current)
-				Error_handler.insert_error (vsrc2)
+				create l_vsrt3
+				l_vsrt3.set_class (Current)
+				Error_handler.insert_error (l_vsrt3)
 				Error_handler.checksum
 			end
 		end
@@ -1364,73 +1356,80 @@ feature -- Supplier checking
 	check_root_class_creators is
 			-- Check creation procedures of root class
 		require
-			is_root: Current = System.root_class.compiled_class
+			is_root: Current = System.root_type.associated_class
 		local
-			creation_proc: FEATURE_I
-			system_creation: STRING
-			error: BOOLEAN
-			vsrc3: VSRC3
-			arg_type: TYPE_A
-			vd27: VD27
-			feat_tbl: like feature_table
+			l_creation_proc: FEATURE_I
+			l_system_creation: STRING
+			l_error: BOOLEAN
+			l_vsrp2: VSRP2
+			l_arg_type: TYPE_A
+			l_vd27: VD27
+			l_feat_tbl: like feature_table
 		do
-			if creators /= Void then
-				feat_tbl := feature_table
+			if creators /= Void and system.root_creation_name /= Void then
+				l_feat_tbl := feature_table
 				from
 					creators.start
 				until
 					creators.after
 				loop
-						-- `creators.key_for_iteration' contains the creation_name
-					creation_proc := feat_tbl.item (creators.key_for_iteration)
+					if System.root_creation_name.is_equal (creators.key_for_iteration) then
+							-- `creators.key_for_iteration' contains the creation_name
+						l_creation_proc := l_feat_tbl.item (creators.key_for_iteration)
 
-					inspect
-						creation_proc.argument_count
-					when 0 then
-						error := False
-					when 1 then
-						arg_type ?= creation_proc.arguments.first
-						arg_type := arg_type.instantiation_in (actual_type, class_id).actual_type
-						error := not arg_type.is_deep_equal (Array_of_string)
-					else
-						error := True
-					end
+						inspect
+							l_creation_proc.argument_count
+						when 0 then
+							l_error := False
+						when 1 then
+							l_arg_type ?= l_creation_proc.arguments.first
+							l_arg_type := l_arg_type.instantiation_in (system.root_type, class_id).actual_type
+							l_error := not l_arg_type.is_deep_equal (Array_of_string)
+						else
+							l_error := True
+						end
 
-					if error then
-						create vsrc3
-						vsrc3.set_class (Current)
-						vsrc3.set_creation_feature (creation_proc)
-						Error_handler.insert_error (vsrc3)
+						if l_error then
+							create l_vsrp2
+							l_vsrp2.set_class (Current)
+							l_vsrp2.set_root_type (system.root_type)
+								-- Need duplication otherwise we would change the original FEATURE_I
+								-- object while displaying the error.
+							l_creation_proc := l_creation_proc.duplicate
+							l_creation_proc.instantiation_in (system.root_type)
+							l_vsrp2.set_creation_feature (l_creation_proc)
+							Error_handler.insert_error (l_vsrp2)
+						end
 					end
 					creators.forth
 				end
 			end
 
-			system_creation := System.root_creation_name
+			l_system_creation := System.root_creation_name
 
-			if	system_creation /= Void	and then creators = Void then
+			if	l_system_creation /= Void	and then creators = Void then
 					-- Check default create
-				creation_proc := default_create_feature
-				if not creation_proc.feature_name.is_equal (system_creation) then
-					create vd27
-					vd27.set_creation_routine (system_creation)
-					vd27.set_root_class (Current)
-					Error_handler.insert_error (vd27)
+				l_creation_proc := default_create_feature
+				if not l_creation_proc.feature_name.is_equal (l_system_creation) then
+					create l_vd27
+					l_vd27.set_creation_routine (l_system_creation)
+					l_vd27.set_root_class (Current)
+					Error_handler.insert_error (l_vd27)
 				end
-			elseif system_creation /= Void and then not creators.has (system_creation) then
-				create vd27
-				vd27.set_creation_routine (system_creation)
-				vd27.set_root_class (Current)
-				Error_handler.insert_error (vd27)
-			elseif system_creation = Void then
+			elseif l_system_creation /= Void and then not creators.has (l_system_creation) then
+				create l_vd27
+				l_vd27.set_creation_routine (l_system_creation)
+				l_vd27.set_root_class (Current)
+				Error_handler.insert_error (l_vd27)
+			elseif l_system_creation = Void then
 				if allows_default_creation then
 						-- Set creation_name in System
 					System.set_creation_name (default_create_feature.feature_name)
 				else
-					create vd27
-					vd27.set_creation_routine ("")
-					vd27.set_root_class (Current)
-					Error_handler.insert_error (vd27)
+					create l_vd27
+					l_vd27.set_creation_routine ("")
+					l_vd27.set_root_class (Current)
+					Error_handler.insert_error (l_vd27)
 				end
 			end
 
@@ -3018,7 +3017,7 @@ feature -- Output
 			-- Append short signature of current class in `a_text_formatter'.
 			-- Short signature is to use "..." to replace constrained generic type, so
 			-- class {HASH_TABLE [G, H -> HASHABLE]} becomes {HASH_TABLE [G, H -> ...]}.
-			-- Short signature is used to save some display space.		
+			-- Short signature is used to save some display space.
 			-- If `a_with_deferred_symbol' then add a `*' to the class name.
 		require
 			non_void_st: a_text_formatter /= Void
@@ -3772,7 +3771,7 @@ feature {NONE} -- Implementation
 	append_signature_internal (a_text_formatter: TEXT_FORMATTER; a_with_deferred_symbol: BOOLEAN; a_short: BOOLEAN) is
 			-- Append the signature of current class in `a_text_formatter'. If `a_with_deferred_symbol'
 			-- then add a `*' to the class name.
-			-- If `a_short', use "..." to replace constrained generic type.			
+			-- If `a_short', use "..." to replace constrained generic type.
 		require
 			non_void_st: a_text_formatter /= Void
 		local
@@ -3831,19 +3830,19 @@ indexing
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-			
+
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-			
+
 			Eiffel Software's Eiffel Development Environment is
 			distributed in the hope that it will be useful,	but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

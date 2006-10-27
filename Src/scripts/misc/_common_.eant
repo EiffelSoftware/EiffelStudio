@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<project name="init_compile" default="help">
+
+	<description>
+		description: "Common script code"
+		author: "Jocelyn Fiat and others"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" Do not call this script directly" />
+	</target>	
+
+	<!-- 
+	**************************************************************************************
+	*** Check environment  ***************************************************************
+	**************************************************************************************
+	-->
+
+	<target name="check_environment_windows" once="true">
+		<echo message="var ISE_C_COMPILER is not defined" unless="${ISE_C_COMPILER}" />
+		<set name="environment_valid" value="false" if="${environment_valid}=true" />
+
+	</target>
+	<target name="check_environment" once="true">
+		<echo message="var ISE_EIFFEL is not defined" unless="${ISE_EIFFEL}" />
+		<set name="environment_valid" value="false" if="${environment_valid}=true" />
+
+		<echo message="var ISE_PLATFORM is not defined" unless="${ISE_PLATFORM}" />
+		<set name="environment_valid" value="false" if="${environment_valid}=true" />
+
+		<geant target="check_environment_windows" if="${is_windows}" />
+	</target>
+
+	<!-- 
+	**************************************************************************************
+	*** INIT/Settings      ***************************************************************
+	**************************************************************************************
+	-->
+
+	<target name="init" >
+		<set name="environment_valid" value="true" />
+		<geant target="check_environment" />
+		<geant target="check_environment_windows" if="${is_windows}" reuse_variables="true" />
+		<exit code="1" if="${environment_valid}=false" />
+		<unset name="environment_valid" />
+	</target>
+
+</project>

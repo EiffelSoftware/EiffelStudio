@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+
+<project name="eiffel">
+	<description>
+		description: "Eiffel compilation"
+		author: "Jocelyn Fiat"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant finalize"/>
+		<echo message="   geant clean"/>
+	</target>
+
+	<target name="init_system">
+		<!--
+			Values to be defined:
+				. ${system} : name of the system to be compiled
+				. ${system_dir} : directory for the compilation
+				. ${system_ecf} : config file for the compilation
+				. ${system_target} : target for the compilation
+		-->
+		<echo message="var [system] is missing !" unless="$system" />
+		<echo message="var [system_dir] is missing !" unless="$system_dir" />
+		<echo message="var [system_ecf] is missing !" unless="$system_ecf" /> 
+		<echo message="var [system_target] is missing !" unless="$system_target" /> 
+	</target>
+	
+	<target name="init" >
+		<set name="force_clean" value="false" />
+		<set name="finalize" value="true" />
+		<set name="c_compile" value="true" />
+		<geant target="init_system" />
+		<mkdir directory="${system_dir}"/>
+	</target>
+
+	<target name="finalize" depend="init">
+		<echo message="Finalize ${system} in [${system_dir}]" />
+		<set name="finalize" value="true" />
+		<set name="c_compile" value="true" />
+		<geant target="compile" />
+	</target>
+
+	<target name="compile" depend="init">
+		<echo message="Compile ${system} in [${system_dir}]" />
+		<mkdir directory="${system_dir}"/>
+		<geant target="clean" if="${force_clean}=true"/>
+		<available resource="${system_dir}/EIFGENs/${system_target}/project.epr" variable="is_compiled"/>
+		<geant target="tpl_compile" />
+	</target>
+	<target name="clean" depend="init">
+		<echo message="Clean ${system} in [${system_dir}]" />
+		<ise clean="${system}" dir="${system_dir}" />
+	</target>
+
+	<!-- Implementation -->
+	<target name="tpl_compile">
+		<set name="ecsystem" value="${system}" />
+		<set name="ecconfig" value="${system_ecf}" />
+		<set name="ectarget" value="${system_target}" />
+		<set name="ecprojectpath" value="${system_dir}" />
+		<set name="ecfinalize" value="${finalize}" />
+		<set name="ecccompile" value="${c_compile}" />
+		<set name="ecdir" value="${system_dir}" />
+		<set name="ecclean" value="${force_clean}" />
+
+		<geant target="ec_using_ecf"  reuse_variables="true" />
+
+		<unset name="ecsystem" />
+		<unset name="ecconfig" />
+		<unset name="ectarget" />
+		<unset name="ecprojectpath" />
+		<unset name="ecfinalize" />
+		<unset name="ecccompile" />
+		<unset name="ecdir" />
+		<unset name="ecclean" />
+	</target>
+
+	<target name="ec_using_ecf">
+		<set name="eccmd" value="ec${exe} " />
+		<set name="eccmd" value="${eccmd} -config ${ecconfig}" />
+		<set name="eccmd" value="${eccmd} -target ${ectarget}" />
+		<set name="eccmd" value="${eccmd} -finalize" if="${ecfinalize}=true"/>
+		<set name="eccmd" value="${eccmd} -freeze" if="${ecfinalize}=false"/>
+		<set name="eccmd" value="${eccmd} -c_compile" if="${ecccompile}=true" />
+		<set name="eccmd" value="${eccmd} -project_path ${ecprojectpath}" />
+		<set name="eccmd" value="${eccmd} -clean" if="${ecclean}=true" />
+		<!-- 
+		<set name="eccmd" value="${eccmd} -use_settings " />
+		-->
+		<echo message="CMD=${eccmd}" />
+		<echo message="DIR=${ecdir}" />
+		<exec executable="${eccmd}" dir="${ecdir}" />
+		<unset name="eccmd" />
+	</target>
+
+</project>

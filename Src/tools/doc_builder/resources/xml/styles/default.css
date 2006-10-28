@@ -19,7 +19,7 @@ table.footer
 	border-top-style: solid;
 	border-color: #9999aa;
 	width: 100%;
-	margin 0px 0px 0px 0px;
+	margin: 0px 0px 0px 0px;
 }
 
 table.header
@@ -60,14 +60,14 @@ td.header_filler
 {	
 	text-align: right;
 	background-color: #6699cc;
-	color: white:	
+	color: white;
 }
 
 td.bordered_cell
 {	
 	text-align: right;
 	background-color: #6699cc;
-	color: white:	
+	color: white;
 }
 
 td.footer
@@ -92,7 +92,7 @@ td.navigation
 td.product_type
 {
 	text-align: right;
-	font: italic;
+	font-style: italic;
 	background:white;
 }
 
@@ -155,7 +155,7 @@ h6
 
 pre, code, .code 
 {
-	font: courier new, courier, mono;
+	font-family: courier new, courier, mono;
 	margin: 20px 25px 20px 35px;	
 	padding-left: .5em;
 	padding-right: .5em;
@@ -167,7 +167,7 @@ pre, code, .code
 
 code
 {
-	font: courier new, courier, mono;
+	font-family: courier new, courier, mono;
 	margin: 20px 25px 20px 35px;	
 	padding-left: .5em;
 	padding-right: .5em;
@@ -179,7 +179,7 @@ code
 
 .code 
 {
-	font: courier new, courier, mono;
+	font-family: courier new, courier, mono;
 	margin: 20px 25px 20px 35px;	
 	padding-left: .5em;
 	padding-right: .5em;
@@ -332,8 +332,6 @@ a.feature:hover
 	text-decoration: none;
 }
 
-<!-- code blocks -->
-
 a.block_class_name, .block_class_name 
 {
     	color: #0000aa;
@@ -478,7 +476,7 @@ a.block_feature:hover
 {
 	background-color: white;
 	border-top: none;
-	border-left: non;
+	border-left: none;
 	border-bottom: solid black 2px;
 	border-right: solid black 2px;
 	padding: 4px 8px;

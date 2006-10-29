@@ -354,7 +354,7 @@
 
 		<!-- emake -->
 		<geant target="finalize_mdconsumer" />
-		<copy to_directory="${output_dir}/bin" dir="${compile_dir}/EIFGENs/consumer/F_code" >
+		<copy to_directory="${output_dir}/bin" dir="${compile_dir}/EIFGENs/consumer_20/F_code" >
 			<fileset include="@(*.dll)" />
 		</copy>
 

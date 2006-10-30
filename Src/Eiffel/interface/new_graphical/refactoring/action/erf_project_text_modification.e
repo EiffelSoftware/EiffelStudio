@@ -37,7 +37,7 @@ feature -- Highlevel element change
 		do
 			l_root := universe.target.root
 			if l_root /= Void then
-				l_root.set_class_name (a_class)
+				l_root.set_class_type_name (a_class)
 			end
 			rebuild_text
 		end

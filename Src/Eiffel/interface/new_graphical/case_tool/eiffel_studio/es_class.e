@@ -412,7 +412,7 @@ feature -- Element change
 					-- should never happen (see above)
 					set_name (class_i.name_in_upper)
 				end
-				set_is_root_class (class_i.name.is_equal (class_i.System.root_class_name))
+				set_is_root_class (class_i.name.is_equal (class_i.System.root_type_name))
 				c := class_c
 				if c /= Void then
 					if c.has_ast then

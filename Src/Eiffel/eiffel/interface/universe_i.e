@@ -498,6 +498,26 @@ feature {COMPILER_EXPORTER} -- Implementation
 				l_class_name := a_set.key_for_iteration
 				l_classes := universe.classes_with_name (l_class_name)
 				l_count := l_classes.count
+				if l_count > 1 then
+						-- Small workaround when a requested basic class also exists in the Universe
+						-- in a .NET assembly. In that case we decide to ignore the .NET classes if
+						-- there is at least one Eiffel class.
+						-- FIXME: we should use the UUID for EiffelBase and only look there for those
+						-- classes. This would speed up the lookup dramatically.
+					if not l_classes.for_all (agent {CLASS_I}.is_external_class) then
+						from
+							l_classes.start
+						until
+							l_classes.after
+						loop
+							if l_classes.item.is_external_class then
+								l_classes.remove
+							else
+								l_classes.forth
+							end
+						end
+					end
+				end
 				if l_count = 0 then
 					create vd23
 					vd23.set_class_name (l_class_name)

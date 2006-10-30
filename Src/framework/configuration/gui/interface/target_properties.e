@@ -5,16 +5,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	TARGET_PROPERTIES
 
 inherit
 	OPTION_PROPERTIES
-
-feature -- Access
-
-	conf_factory: CONF_PARSE_FACTORY
-			-- Factory to create new configuration nodes.
 
 feature {NONE} -- Implementation
 
@@ -638,7 +633,6 @@ feature {NONE} -- Wrappers
 		end
 
 invariant
-	config_factory: conf_factory /= Void
 	window: window /= Void
 
 indexing

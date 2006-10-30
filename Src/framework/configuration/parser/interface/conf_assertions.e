@@ -8,53 +8,75 @@ indexing
 class
 	CONF_ASSERTIONS
 
+create {CONF_PARSE_FACTORY}
+	default_create
+
 feature -- Access, stored in configuration file
 
 	is_precondition: BOOLEAN is
 			-- Check preconditions
 		do
-			Result := internal_assertions_values & precondition_flag = precondition_flag
+			Result := level & ck_require = ck_require
+		end
+
+	is_supplier_precondition: BOOLEAN is
+			-- Check supplier preconditions
+		do
+			Result := level & ck_require = ck_require
 		end
 
 	is_postcondition: BOOLEAN is
 			-- Check postconditions
 		do
-			Result := internal_assertions_values & postcondition_flag = postcondition_flag
+			Result := level & ck_ensure = ck_ensure
 		end
 
 	is_check: BOOLEAN is
 			-- Check assertions
 		do
-			Result := internal_assertions_values & check_flag = check_flag
+			Result := level & ck_check = ck_check
 		end
 
 	is_invariant: BOOLEAN is
 			-- Check invariants
 		do
-			Result := internal_assertions_values & invariant_flag = invariant_flag
+			Result := level & ck_invariant = ck_invariant
 		end
 
 	is_loop: BOOLEAN is
 			-- Check loop assertions
 		do
-			Result := internal_assertions_values & loop_flag = loop_flag
+			Result := level & ck_loop = ck_loop
 		end
 
 	has_assertions: BOOLEAN is
 			-- Are any assertions enabled?
 		do
-			Result := internal_assertions_values /= 0
+			Result := level /= 0
 		end
-
 
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	enable_precondition is
 			-- Enable precondition.
 		do
-			internal_assertions_values := internal_assertions_values | precondition_flag
+			level := level | ck_require
 		ensure
 			is_precondition: is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
+			is_postcondition_unchanged: is_postcondition = old is_postcondition
+			is_check_unchanged: is_check = old is_check
+			is_invariant_unchanged: is_invariant = old is_invariant
+			is_loop_unchanged: is_loop = old is_loop
+		end
+
+	enable_supplier_precondition is
+			-- Enable supplier precondition.
+		do
+			level := level | ck_sup_require
+		ensure
+			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition: is_supplier_precondition
 			is_postcondition_unchanged: is_postcondition = old is_postcondition
 			is_check_unchanged: is_check = old is_check
 			is_invariant_unchanged: is_invariant = old is_invariant
@@ -64,9 +86,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	enable_postcondition is
 			-- Enable postcondition.
 		do
-			internal_assertions_values := internal_assertions_values | postcondition_flag
+			level := level | ck_ensure
 		ensure
 			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
 			is_postcondition: is_postcondition
 			is_check_unchanged: is_check = old is_check
 			is_invariant_unchanged: is_invariant = old is_invariant
@@ -76,9 +99,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	enable_check is
 			-- Enable check.
 		do
-			internal_assertions_values := internal_assertions_values | check_flag
+			level := level | ck_check
 		ensure
 			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
 			is_postcondition_unchanged: is_postcondition = old is_postcondition
 			is_check: is_check
 			is_invariant_unchanged: is_invariant = old is_invariant
@@ -88,9 +112,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	enable_invariant is
 			-- Enable invariant.
 		do
-			internal_assertions_values := internal_assertions_values | invariant_flag
+			level := level | ck_invariant
 		ensure
 			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
 			is_postcondition_unchanged: is_postcondition = old is_postcondition
 			is_check_unchanged: is_check = old is_check
 			is_invariant: is_invariant
@@ -100,9 +125,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	enable_loop is
 			-- Enable loop.
 		do
-			internal_assertions_values := internal_assertions_values | loop_flag
+			level := level | ck_loop
 		ensure
 			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
 			is_postcondition_unchanged: is_postcondition = old is_postcondition
 			is_check_unchanged: is_check = old is_check
 			is_invariant_unchanged: is_invariant = old is_invariant
@@ -112,9 +138,23 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 	disable_precondition is
 			-- Enable precondition.
 		do
-			internal_assertions_values := internal_assertions_values & precondition_flag.bit_not
+			level := level & ck_require.bit_not
 		ensure
 			not_is_precondition: not is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
+			is_postcondition_unchanged: is_postcondition = old is_postcondition
+			is_check_unchanged: is_check = old is_check
+			is_invariant_unchanged: is_invariant = old is_invariant
+			is_loop_unchanged: is_loop = old is_loop
+		end
+
+	disable_supplier_precondition is
+			-- Disable supplier precondition.
+		do
+			level := level & ck_sup_require.bit_not
+		ensure
+			is_precondition_unchanged: is_precondition = old is_precondition
+			not_is_supplier_precondition: not is_supplier_precondition
 			is_postcondition_unchanged: is_postcondition = old is_postcondition
 			is_check_unchanged: is_check = old is_check
 			is_invariant_unchanged: is_invariant = old is_invariant
@@ -122,11 +162,12 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		end
 
 	disable_postcondition is
-			-- Enable postcondition.
+			-- Disable postcondition.
 		do
-			internal_assertions_values := internal_assertions_values & postcondition_flag.bit_not
+			level := level & ck_ensure.bit_not
 		ensure
 			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
 			not_is_postcondition: not is_postcondition
 			is_check_unchanged: is_check = old is_check
 			is_invariant_unchanged: is_invariant = old is_invariant
@@ -134,11 +175,12 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		end
 
 	disable_check is
-			-- Enable check.
+			-- Disable check.
 		do
-			internal_assertions_values := internal_assertions_values & check_flag.bit_not
+			level := level & ck_check.bit_not
 		ensure
 			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
 			is_postcondition_unchanged: is_postcondition = old is_postcondition
 			not_is_check: not is_check
 			is_invariant_unchanged: is_invariant = old is_invariant
@@ -146,11 +188,12 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		end
 
 	disable_invariant is
-			-- Enable invariant.
+			-- Disable invariant.
 		do
-			internal_assertions_values := internal_assertions_values & invariant_flag.bit_not
+			level := level & ck_invariant.bit_not
 		ensure
 			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
 			is_postcondition_unchanged: is_postcondition = old is_postcondition
 			is_check_unchanged: is_check = old is_check
 			not_is_invariant: not is_invariant
@@ -158,30 +201,32 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		end
 
 	disable_loop is
-			-- Enable loop.
+			-- Disable loop.
 		do
-			internal_assertions_values := internal_assertions_values & loop_flag.bit_not
+			level := level & ck_loop.bit_not
 		ensure
 			is_precondition_unchanged: is_precondition = old is_precondition
+			is_supplier_precondition_unchanged: is_supplier_precondition = old is_supplier_precondition
 			is_postcondition_unchanged: is_postcondition = old is_postcondition
 			is_check_unchanged: is_check = old is_check
 			is_invariant_unchanged: is_invariant = old is_invariant
 			not_is_loop: not is_loop
 		end
 
-feature {NONE} -- Constants
+feature -- Constants
 
-	precondition_flag: INTEGER is 0x01
-	postcondition_flag: INTEGER is 0x02
-	check_flag: INTEGER is 0x04
-	loop_flag: INTEGER is 0x08
-	invariant_flag: INTEGER is 0x10
+	ck_require: INTEGER is 0x01
+	ck_ensure: INTEGER is 0x02
+	ck_check: INTEGER is 0x04
+	ck_loop: INTEGER is 0x08
+	ck_invariant: INTEGER is 0x10
+	ck_sup_require: INTEGER is 0x20
 			-- Value used during C generation to define assertion level.
 			-- See values in `eif_option.h'.
 
-feature {CONF_ASSERTIONS} -- Implementation, attributes stored in configuration file
+feature -- Implementation, attributes stored in configuration file
 
-	internal_assertions_values: INTEGER;
+	level: INTEGER;
 			-- The assertion values, encoded into an integer.
 
 indexing

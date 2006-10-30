@@ -412,7 +412,7 @@ feature {NONE} -- Formatting
 			a_ctxt.process_comment_text (" -- ", Void)
 			a_ctxt.process_comment_text ("class", Void)
 			a_ctxt.put_space
-			a_ctxt.put_comment_text (a_ctxt.class_i.name_in_upper)
+			a_ctxt.put_comment_text (a_ctxt.class_i.name)
 			a_ctxt.process_filter_item (f_class_end, false)
 			a_ctxt.put_new_line
 		end

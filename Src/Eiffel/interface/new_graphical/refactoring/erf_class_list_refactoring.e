@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 				loop
 					status_bar.display_progress_value (i)
 					l_class := affected_classes.item_for_iteration
-					status_bar.display_message ("Updating " + l_class.name_in_upper)
+					status_bar.display_message ("Updating " + l_class.name)
 					apply_to_class (l_class)
 					i := i + 1
 					affected_classes.forth

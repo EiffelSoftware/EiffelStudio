@@ -1689,19 +1689,17 @@ feature -- Convenience features
 			inserted: descendants.has (c)
 		end
 
-	--MREMOVE
-	visible_name: STRING is
-			-- Visible name
-		do
---			Result := lace_class.visible_name
-		end
-
-	--MANU_MOVE_DOWN
 	external_name: STRING is
 			-- External name
+		local
+			l_vis: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
 		do
---			Result := lace_class.external_name
-			Result := name
+			l_vis := lace_class.visible
+			if l_vis /= Void then
+				Result := l_vis.class_renamed
+			else
+				Result := name
+			end
 		ensure
 			external_name_not_void: Result /= Void
 			external_name_in_upper: Result.as_upper.is_equal (Result)
@@ -1714,7 +1712,7 @@ feature -- Convenience features
 					-- In final mode we do not generate assertions
 					-- if the dead code remover is on.
 				if not System.keep_assertions then
-					create Result.make_no
+					create Result
 				else
 					Result := lace_class.assertion_level
 				end

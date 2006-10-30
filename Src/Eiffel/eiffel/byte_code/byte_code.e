@@ -740,7 +740,7 @@ end
 				(not l_il_generation and then l_old_expressions /= Void) or else
 				(l_il_generation and then l_old_expressions /= Void and then
 				(context.workbench_mode or
-				context.class_type.associated_class.assertion_level.check_postcond))
+				context.class_type.associated_class.assertion_level.is_postcondition))
 			then
 				from
 					nb := l_old_expressions.count

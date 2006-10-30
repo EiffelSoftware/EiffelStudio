@@ -34,12 +34,13 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: STRING; a_group: like group; a_path: STRING) is
+	make (a_file_name: STRING; a_group: like group; a_path: STRING; a_factory: like factory) is
 			-- Create
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
+			a_factory_not_void: a_factory /= Void
 		local
 			l_cluster: CONF_CLUSTER
 		do
@@ -57,8 +58,10 @@ feature {NONE} -- Initialization
 				l_cluster ?= a_group
 			end
 			is_renamed := False
+			factory := a_factory
 		ensure
 			is_valid: is_valid
+			factory_set: factory = a_factory
 		end
 
 feature -- Status
@@ -79,7 +82,7 @@ feature -- Access, in compiled only, not stored to configuration file
 		do
 			Result := actual_class.group.get_class_options (name)
 			if Result.assertions = Void then
-				Result.set_assertions (create {CONF_ASSERTIONS})
+				Result.set_assertions (factory.new_assertions)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -466,6 +469,9 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
+	factory: CONF_PARSE_FACTORY
+			-- Factory to create new config objects.
+
 	is_rebuilding: BOOLEAN
 			-- Are we currently rebuilding an old class?
 
@@ -495,6 +501,7 @@ invariant
 	path_not_void: path /= Void
 	is_error_set: is_error implies last_error /= Void
 	compiled_or_overrides: is_compiled implies not does_override
+	factory_not_void: factory /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

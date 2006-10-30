@@ -24,7 +24,7 @@ feature
 	new_class (a_file_name: STRING; a_group: CLUSTER_I; a_path: STRING): EIFFEL_CLASS_I is
 			-- Create a `CONF_CLASS' object.
 		do
-			create Result.make (a_file_name, a_group, a_path)
+			create Result.make (a_file_name, a_group, a_path, Current)
 		end
 
 	new_class_assembly (a_name, a_dotnet_name: STRING; an_assembly: ASSEMBLY_I; a_position: INTEGER): EXTERNAL_CLASS_I is

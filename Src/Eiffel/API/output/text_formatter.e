@@ -440,7 +440,7 @@ feature -- Text operator
 				end
 			end
 			if l_name = Void then
-				l_name := class_i.name_in_upper
+				l_name := class_i.name
 			end
 			process_class_name_text (l_name, class_i, false)
 		end

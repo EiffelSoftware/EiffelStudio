@@ -5,7 +5,7 @@ indexing
 				A ES_CLIENT_SUPPLIER_LINK can have more then one feature.
 				`features' are all features in `client' that have `supplier' as
 				supplier.
-				
+
 					]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,22 +22,22 @@ inherit
 			client,
 			supplier
 		end
-		
+
 	SHARED_WORKBENCH
 		undefine
 			default_create
 		end
-		
+
 	ES_ITEM
 		undefine
 			default_create
 		end
-		
+
 	FEATURE_NAME_EXTRACTOR
 		undefine
 			default_create
 		end
-	
+
 	SHARED_STATELESS_VISITOR
 		export
 			{NONE} all
@@ -49,10 +49,10 @@ inherit
 		undefine
 			default_create
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_client, a_supplier: ES_CLASS) is
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			synchronize
 			is_needed_on_diagram := True
 		end
-		
+
 feature -- Access
 
 	features: LIST [FEATURE_AS]
@@ -74,10 +74,10 @@ feature -- Access
 
 	client: ES_CLASS
 			-- Client of the link.
-	
+
 	supplier: ES_CLASS
 			-- Supplier of the link.
-		
+
 feature -- Element change
 
 	synchronize is
@@ -95,7 +95,7 @@ feature -- Element change
 				else
 					a_name := full_name (features.first)
 					a_name.replace_substring_all ("[", "[ ")
-					a_name.replace_substring_all (" " + supplier.class_i.name_in_upper, " ...")
+					a_name.replace_substring_all (" " + supplier.class_i.name, " ...")
 					if a_name.substring (a_name.count - 4, a_name.count).is_equal (": ...") then
 						a_name.replace_substring_all (": ...", "")
 					end
@@ -103,7 +103,7 @@ feature -- Element change
 						a_name.append (", ...")
 					end
 					a_name.replace_substring_all ("[ ", "[")
-					set_name (a_name)				
+					set_name (a_name)
 					is_aggregated := is_expanded (features.first)
 				end
 			end
@@ -111,7 +111,7 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-		
+
 	is_expanded (a_feature: FEATURE_AS): BOOLEAN is
 			-- Is `a_feature' declared `expanded'?
 		local
@@ -128,10 +128,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 invariant
 	features_not_void: features /= Void
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

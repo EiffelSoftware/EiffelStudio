@@ -973,7 +973,7 @@ feature {NONE} -- Implementation
 						check
 							l_item_not_void: l_item /= Void
 						end
-						if context_editor.ignore_excluded_figures or else not context_editor.is_excluded_in_preferences (l_item.name_in_upper) then
+						if context_editor.ignore_excluded_figures or else not context_editor.is_excluded_in_preferences (l_item.name) then
 							create new_class.make (l_item)
 							a_cluster.extend (new_class)
 							model.add_node_relations (new_class)
@@ -1000,7 +1000,7 @@ feature {NONE} -- Implementation
 						new_class := a_cluster.node_of (l_item)
 						if new_class = Void then
 							l_item ?= l_classes.item_for_iteration
-							if context_editor.ignore_excluded_figures or else not context_editor.is_excluded_in_preferences (l_item.name_in_upper) then
+							if context_editor.ignore_excluded_figures or else not context_editor.is_excluded_in_preferences (l_item.name) then
 								create new_class.make (l_item)
 								model.add_node (new_class)
 								model.add_node_relations (new_class)
@@ -1008,7 +1008,7 @@ feature {NONE} -- Implementation
 							end
 						else
 							l_item := new_class.class_i
-							if context_editor.ignore_excluded_figures or else not context_editor.is_excluded_in_preferences (l_item.name_in_upper) then
+							if context_editor.ignore_excluded_figures or else not context_editor.is_excluded_in_preferences (l_item.name) then
 								if not new_class.is_needed_on_diagram then
 									new_class.enable_needed_on_diagram
 									enable_all_links (new_class)

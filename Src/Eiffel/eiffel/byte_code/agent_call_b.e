@@ -55,7 +55,7 @@ feature -- Access
 		do
 			l_assert := current_class_type.associated_class.lace_class.assertion_level
 
-			if context.workbench_mode or else (system.keep_assertions and then (l_assert.check_precond or l_assert.check_invariant)) then
+			if context.workbench_mode or else (system.keep_assertions and then (l_assert.is_precondition or l_assert.is_invariant)) then
 				Result := Precursor
 			else
 				create l_agent_call

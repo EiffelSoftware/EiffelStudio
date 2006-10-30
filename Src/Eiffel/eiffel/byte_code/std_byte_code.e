@@ -81,15 +81,15 @@ feature -- Analyzis
 				-- Let's check if some invariants are going to be generated.
 				-- It is important to know for `compute_need_gc_hooks' which will
 				-- not try to optimize GC hooks if we are checking invariants.
-			has_invariant := context.workbench_mode or else context.assertion_level.check_invariant
+			has_invariant := context.workbench_mode or else context.assertion_level.is_invariant
 
 				-- Compute presence or not of pre/postconditions
 			if Context.origin_has_precondition then
 				have_precond := (precondition /= Void or else inh_assert.has_precondition) and then
-						(workbench_mode or else context.assertion_level.check_precond)
+						(workbench_mode or else context.assertion_level.is_precondition)
 			end
 			have_postcond := (postcondition /= Void or else inh_assert.has_postcondition) and then
-					(workbench_mode or else context.assertion_level.check_postcond)
+					(workbench_mode or else context.assertion_level.is_postcondition)
 
 				-- Check if we need GC hooks for current body.
 			Context.compute_need_gc_hooks (have_precond or have_postcond or has_invariant)
@@ -1012,7 +1012,7 @@ end
 				buf.put_new_line
 			end
 				-- Generate the int local variable saving the global `nstcall'.
-			if wkb_mode or else context.assertion_level.check_invariant then
+			if wkb_mode or else context.assertion_level.is_invariant then
 				buf.put_string ("RTSN;")
 				buf.put_new_line
 			end
@@ -1112,7 +1112,7 @@ end
 			if Context.origin_has_precondition then
 				have_assert := (precondition /= Void or else
 								inh_assert.has_precondition) and then
-					(workbench_mode or else context.assertion_level.check_precond)
+					(workbench_mode or else context.assertion_level.is_precondition)
 			end
 			generate_invariant_before
 			if have_assert then
@@ -1158,7 +1158,7 @@ end
 			workbench_mode := context.workbench_mode
 			inh_assert := Context.inherited_assertion
 			have_assert := (postcondition /= Void or else inh_assert.has_postcondition) and then
-					(workbench_mode or else context.assertion_level.check_postcond)
+					(workbench_mode or else context.assertion_level.is_postcondition)
 			if have_assert then
 				buf := buffer
 				context.set_assertion_type (In_postcondition)
@@ -1229,7 +1229,7 @@ end
 				context.current_register.print_register
 				buf.put_string (", RTAL);")
 				buf.put_new_line
-			elseif context.assertion_level.check_invariant then
+			elseif context.assertion_level.is_invariant then
 				buf.put_string (tag)
 				buf.put_character ('(')
 				context.current_register.print_register

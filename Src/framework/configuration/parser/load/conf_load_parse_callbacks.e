@@ -997,7 +997,7 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_option_not_void: current_option /= Void
 		local
-			l_pre, l_post, l_chk, l_inv, l_loop: STRING
+			l_pre, l_post, l_chk, l_inv, l_loop, l_sup_pre: STRING
 			l_assert: CONF_ASSERTIONS
 		do
 			l_pre := current_attributes.item (at_precondition)
@@ -1005,6 +1005,7 @@ feature {NONE} -- Implementation attribute processing
 			l_chk := current_attributes.item (at_check)
 			l_inv := current_attributes.item (at_invariant)
 			l_loop := current_attributes.item (at_loop)
+			l_sup_pre := current_attributes.item (at_supplier_precondition)
 			l_assert := factory.new_assertions
 			if l_pre /= Void then
 				if l_pre.is_boolean then
@@ -1049,6 +1050,15 @@ feature {NONE} -- Implementation attribute processing
 					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("loop"))
+				end
+			end
+			if l_sup_pre /= Void then
+				if l_sup_pre.is_boolean then
+					if l_sup_pre.to_boolean then
+						l_assert.enable_supplier_precondition
+					end
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value ("supplier_precondition"))
 				end
 			end
 			current_option.set_assertions (l_assert)
@@ -1945,12 +1955,14 @@ feature {NONE} -- Implementation state transitions
 				-- * check
 				-- * invariant
 				-- * loop
-			create l_attr.make (5)
+				-- * supplier preconditions
+			create l_attr.make (6)
 			l_attr.force (at_precondition, "precondition")
 			l_attr.force (at_postcondition, "postcondition")
 			l_attr.force (at_check, "check")
 			l_attr.force (at_invariant, "invariant")
 			l_attr.force (at_loop, "loop")
+			l_attr.force (at_supplier_precondition, "supplier_precondition")
 			Result.force (l_attr, t_assertions)
 
 				-- build, platform
@@ -2119,6 +2131,7 @@ feature {NONE} -- Implementation constants
 	at_check,
 	at_invariant,
 	at_loop,
+	at_supplier_precondition,
 	at_platform,
 	at_min,
 	at_max,

@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			es_class: ES_CLASS
 		do
 			last_added_class := Void
-			if context_editor = Void or else not context_editor.is_excluded_in_preferences (a_class.name_in_upper) then
+			if context_editor = Void or else not context_editor.is_excluded_in_preferences (a_class.name) then
 				es_class := cluster.node_of (a_class)
 				if es_class = Void then
 					create es_class.make (a_class)

@@ -408,9 +408,9 @@ feature -- Element change
 					graph.remove_node (Current)
 				end
 			else
-				if not class_i.name_in_upper.is_equal (name) then
+				if not class_i.name.is_equal (name) then
 					-- should never happen (see above)
-					set_name (class_i.name_in_upper)
+					set_name (class_i.name)
 				end
 				set_is_root_class (class_i.name.is_equal (class_i.System.root_type_name))
 				c := class_c

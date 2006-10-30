@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GROUP_PROPERTIES
 
 inherit
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 
 				-- class options
 			if not a_group.is_assembly then
-				create l_class_opt_dial
+				create l_class_opt_dial.make (conf_factory)
 				l_class_opt_dial.set_group_options (a_group.options)
 				l_class_opt_dial.set_debugs (debug_clauses)
 				create l_class_opt_prop.make_with_dialog (conf_interface_names.group_class_option_name, l_class_opt_dial)

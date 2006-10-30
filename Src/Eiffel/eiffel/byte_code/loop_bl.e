@@ -5,7 +5,7 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class LOOP_BL 
+class LOOP_BL
 
 inherit
 	LOOP_B
@@ -37,7 +37,7 @@ feature -- Access
 			context.init_propagation
 			workbench_mode := context.workbench_mode
 			check_loop := workbench_mode or else
-				context.assertion_level.check_loop
+				context.assertion_level.is_loop
 
 			if check_loop then
 				if variant_part /= Void then
@@ -79,7 +79,7 @@ feature -- Access
 			generate_invariant, generate_variant, workbench_mode: BOOLEAN
 		do
 			workbench_mode := context.workbench_mode
-			if workbench_mode or else context.assertion_level.check_loop then
+			if workbench_mode or else context.assertion_level.is_loop then
 				generate_variant := variant_part /= Void
 				generate_invariant := invariant_part /= Void
 			end
@@ -90,7 +90,7 @@ feature -- Access
 			if from_part /= Void then
 				from_part.generate
 			end
-			
+
 			if workbench_mode or else system.exception_stack_managed then
 					-- Record the place where we will generate
 					-- the hook for the invariant
@@ -136,7 +136,7 @@ feature -- Access
 		do
 			buf := buffer
 			workbench_mode := context.workbench_mode
-			if workbench_mode or else context.assertion_level.check_loop then
+			if workbench_mode or else context.assertion_level.is_loop then
 				generate_invariant := invariant_part /= Void
 				generate_variant := variant_part /= Void
 			end

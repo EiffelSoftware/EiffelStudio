@@ -125,7 +125,7 @@ feature -- C code generation
 			type_c := gen_param.c_type
 
 				-- Check validity of call
-			if not final_mode or else associated_class.assertion_level.check_precond then
+			if not final_mode or else associated_class.assertion_level.is_precondition then
 				buffer.put_string ("if (")
 				nb_register.print_register
 				buffer.put_string ("< 0) {")
@@ -531,7 +531,7 @@ feature {NONE} -- C code generation
 			buffer_not_void: buffer /= Void
 			arg_name_not_void: arg_name /= Void
 		do
-			if final_mode and then associated_class.assertion_level.check_precond then
+			if final_mode and then associated_class.assertion_level.is_precondition then
 				buffer.put_string ("%Tif (~in_assertion) {%N");
 				buffer.put_string ("%
 					%%TRTCT(%"index_large_enough%", EX_PRE);%N%

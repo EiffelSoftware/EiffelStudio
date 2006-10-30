@@ -546,7 +546,7 @@ feature -- Modification (Add/Remove feature)
 				execute_wizard_from_diagram (qcw)
 			else
 				create warning_dialog.make_with_text (
-					Warning_messages.w_Class_syntax_error_before_generation (class_i.name_in_upper))
+					Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
 				warning_dialog.show_modal_to_window (context_editor.development_window.window)
 				warning_dialog := Void
 				extend_from_diagram_successful := False
@@ -586,7 +586,7 @@ feature -- Modification (Add/Remove feature)
 				execute_wizard_from_diagram (qcw)
 			else
 				create warning_dialog.make_with_text (
-					Warning_messages.w_Class_syntax_error_before_generation (class_i.name_in_upper))
+					Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
 				warning_dialog.show_modal_to_window (context_editor.development_window.window)
 				warning_dialog := Void
 				extend_from_diagram_successful := False
@@ -639,7 +639,7 @@ feature -- Modification (Add/Remove feature)
 					end
 				else
 					create warning_dialog.make_with_text (
-						Warning_messages.w_Class_syntax_error_before_generation (class_i.name_in_upper))
+						Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
 					warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 					warning_dialog := Void
 					invalidate_text
@@ -1315,7 +1315,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				create warning_dialog.make_with_text (
-					Warning_messages.w_Class_syntax_error_before_generation (class_i.name_in_upper))
+					Warning_messages.w_Class_syntax_error_before_generation (class_i.name))
 				warning_dialog.show_modal_to_window (context_editor.development_window.window)
 				warning_dialog := Void
 				extend_from_diagram_successful := False

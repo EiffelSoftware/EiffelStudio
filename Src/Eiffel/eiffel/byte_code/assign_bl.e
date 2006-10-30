@@ -223,7 +223,7 @@ feature
 								-- Case: p := p.right in a list and p becomes
 								-- void...
 							if not ((context.workbench_mode or else
-								context.assertion_level.check_invariant) and
+								context.assertion_level.is_invariant) and
 								source.used (target))
 							then
 								source.propagate (target)

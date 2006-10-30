@@ -95,6 +95,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	conf_factory: CONF_PARSE_FACTORY
+			-- Factory to create new nodes.
+
 	widget: EV_VERTICAL_BOX
 			-- Widget representing Current
 

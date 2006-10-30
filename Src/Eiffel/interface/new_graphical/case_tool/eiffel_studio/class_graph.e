@@ -707,7 +707,7 @@ feature {NONE} -- Disable relations
 			es_classes: ARRAYED_LIST [ES_CLASS]
 		do
 			last_added_class := Void
-			if not context_editor.is_excluded_in_preferences (a_class.name_in_upper) then
+			if not context_editor.is_excluded_in_preferences (a_class.name) then
 				if not include_only_classes_of_cluster or else a_class.group = center_class.class_i.group then
 					es_classes := class_from_interface (a_class)
 					if not es_classes.is_empty then

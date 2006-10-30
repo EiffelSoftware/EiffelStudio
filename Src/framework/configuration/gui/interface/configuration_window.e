@@ -222,6 +222,9 @@ feature -- Status
 
 feature -- Access
 
+	conf_factory: CONF_PARSE_FACTORY
+			-- Factory to create new nodes.
+
 	selected_target: STRING
 			-- Target to select on startup.
 

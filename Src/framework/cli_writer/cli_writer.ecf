@@ -4,7 +4,10 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<external_include location="\$(EIFFEL_SRC)\framework\cli_writer\Clib -D_WIN32_DCOM">
+		<option>
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<external_include location="$(EIFFEL_SRC)\framework\cli_writer\Clib -D_WIN32_DCOM">
 			<condition>
 				<platform value="windows"/>
 			</condition>

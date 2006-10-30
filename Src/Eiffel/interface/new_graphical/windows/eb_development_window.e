@@ -3640,7 +3640,7 @@ feature {NONE} -- Implementation
 						l_out_classes.after
 					loop
 						l_cl_i := l_out_classes.item_for_iteration
-						check not_in_system: not l_cl_i.compiled end
+						check not_in_system: not l_cl_i.is_compiled end
 						l_format_context.put_manifest_string (" - ")
 						l_format_context.put_classi (l_cl_i)
 						l_format_context.put_new_line

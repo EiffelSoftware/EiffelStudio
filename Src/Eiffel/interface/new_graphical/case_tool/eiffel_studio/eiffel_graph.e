@@ -308,7 +308,7 @@ feature -- Element change
 		require
 			a_node_not_void: a_node /= Void
 		do
-			if a_node.class_i.compiled then
+			if a_node.class_i.is_compiled then
 				add_ancestor_relations (a_node)
 				add_descendant_relations (a_node)
 				add_client_relations (a_node)
@@ -576,7 +576,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			-- Add links to ancestors classes of `a_class' in the graph.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_compiled: a_class.class_i.compiled
+			a_class_compiled: a_class.class_i.is_compiled
 		local
 			l: FIXED_LIST [CL_TYPE_A]
 			cl: CLASS_I
@@ -617,7 +617,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			-- Add links to descendants of `a_class' in the graph.
 		require
 			a_class_not_void: a_class /= Void
-			a_class_compiled: a_class.class_i.compiled
+			a_class_compiled: a_class.class_i.is_compiled
 		local
 			l: LINEAR [CLASS_C]
 			cl: CLASS_I
@@ -658,7 +658,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			-- Add links to classes in the graph that are clients of `a_class'
 		require
 			a_class_not_void: a_class /= Void
-			a_class_compiled: a_class.class_i.compiled
+			a_class_compiled: a_class.class_i.is_compiled
 		local
 			cf: ES_CLASS
 			l_nodes: like nodes

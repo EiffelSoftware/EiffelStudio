@@ -147,7 +147,7 @@ feature {NONE} -- Implementation convenience
 	descendant_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
 			-- Get all descendant classes of `a_class'.
 		require
-			compiled_class: a_class.compiled
+			compiled_class: a_class.is_compiled
 		local
 			descendants: ARRAYED_LIST [CLASS_C]
 			descendant_class: CLASS_C
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation convenience
 	client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
 			-- Get all client classes of `a_class'.
 		require
-			compiled_class: a_class.compiled
+			compiled_class: a_class.is_compiled
 		local
 			clients: ARRAYED_LIST [CLASS_C]
 		do
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation convenience
 	recursive_client_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
 			-- Get all client classes of `a_class' or a descendant of `a_class'.
 		require
-			compiled_class: a_class.compiled
+			compiled_class: a_class.is_compiled
 		local
 			descendants: DS_HASH_SET [CLASS_I]
 		do
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation convenience
 	usage_classes (a_class: CLASS_I): DS_HASH_SET [CLASS_I] is
 			-- Get all classes that somehow use `a_class' directly or indirectly.
 		require
-			compiled_class: a_class.compiled
+			compiled_class: a_class.is_compiled
 		do
 			create Result.make (100)
 			Result.force (a_class)

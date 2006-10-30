@@ -526,7 +526,7 @@ feature -- Element change
 						feature_clause_list_changed_actions.call (Void)
 					end
 				end
-				b := class_i.compiled
+				b := class_i.is_compiled
 				if b /= is_compiled then
 					is_compiled := b
 					is_properties_changed := True
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			if not suppliers.is_empty then
 				suppliers.wipe_out
 			end
-			if class_i.compiled and class_i.compiled_class.has_feature_table then
+			if class_i.is_compiled and class_i.compiled_class.has_feature_table then
 				f := class_i.compiled_class.written_in_features
 				from
 					f.start

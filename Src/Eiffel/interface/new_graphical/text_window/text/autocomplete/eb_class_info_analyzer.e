@@ -337,7 +337,7 @@ feature {NONE}-- Clickable/Editable implementation
 					if a_position <= click_pos.stop then
 						if click_pos.is_feature then
 							class_i := Universe.safe_class_named (click_pos.class_name, group)
-							if class_i /= Void and then class_i.compiled and then class_i.compiled_class.has_feature_table then
+							if class_i /= Void and then class_i.is_compiled and then class_i.compiled_class.has_feature_table then
 								feat := class_i.compiled_class.feature_with_name (click_pos.feature_name)
 								if feat /= Void then
 									create {FEATURE_STONE} Result.make (feat)
@@ -346,7 +346,7 @@ feature {NONE}-- Clickable/Editable implementation
 						elseif click_pos.is_class then
 							class_i := Universe.safe_class_named (click_pos.class_name, group)
 							if class_i /= Void then
-								if class_i.compiled then
+								if class_i.is_compiled then
 									create {CLASSC_STONE} Result.make (class_i.compiled_class)
 								else
 									create {CLASSI_STONE} Result.make (class_i)
@@ -1093,7 +1093,7 @@ feature {NONE}-- Implementation
 			if Result = Void then
 				image := current_token.image.as_upper
 				class_i := Universe.safe_class_named (image, group)
-				if class_i /= Void and then class_i.compiled then
+				if class_i /= Void and then class_i.is_compiled then
 					found_class := class_i.compiled_class
 					Result := found_class.actual_type
 				end
@@ -1570,7 +1570,7 @@ feature {NONE} -- Implementation
 			l_overrides: ARRAYED_LIST [CONF_CLASS]
 		do
 			if current_class_i /= Void then
-				if current_class_i.compiled then
+				if current_class_i.is_compiled then
 						-- If current_class_i is an overriden class,
 						-- we do not try analysing its compiling infomation.
 					if current_class_i.config_class.is_overriden then

@@ -122,7 +122,7 @@ feature -- Access
 			-- be a classc_stone if the class is compiled now)
 		do
 			if class_i /= Void and then class_i.is_valid then
-				if class_i.compiled then
+				if class_i.is_compiled then
 					create {CLASSC_STONE} Result.make (class_i.compiled_class)
 				else
 					create {CLASSI_STONE} Result.make (class_i)

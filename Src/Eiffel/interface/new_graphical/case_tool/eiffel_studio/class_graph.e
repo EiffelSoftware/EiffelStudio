@@ -230,7 +230,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			l: FIXED_LIST [CL_TYPE_A]
 			ci: CLASS_I
 		do
-			if depth > 0 and then a_class.compiled then
+			if depth > 0 and then a_class.is_compiled then
 				l := a_class.compiled_class.parents
 				if l /= Void then
 					from
@@ -255,7 +255,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			ci: CLASS_I
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
-			if depth > 0 and then a_class.compiled then
+			if depth > 0 and then a_class.is_compiled then
 				l := a_class.compiled_class.parents
 				if l /= Void then
 					from
@@ -288,7 +288,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			l: LINEAR [CLASS_C]
 			ci: CLASS_I
 		do
-			if depth > 0 and then a_class.compiled then
+			if depth > 0 and then a_class.is_compiled then
 				l := a_class.compiled_class.descendants
 				from
 					l.start
@@ -314,7 +314,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			i, nb: INTEGER
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
-			if depth > 0 and then a_class.compiled then
+			if depth > 0 and then a_class.is_compiled then
 				l := a_class.compiled_class.descendants
 				from
 					i := 1
@@ -434,7 +434,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			ci: CLASS_I
 			i, nb: INTEGER
 		do
-			if depth > 0 and then a_class.compiled then
+			if depth > 0 and then a_class.is_compiled then
 				l := a_class.compiled_class.syntactical_suppliers
 				from
 					i := 1
@@ -461,7 +461,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 			l_classes : ARRAYED_LIST [ES_CLASS]
 		do
-			if depth > 0 and then a_class.class_i.compiled then
+			if depth > 0 and then a_class.class_i.is_compiled then
 				l := a_class.class_i.compiled_class.syntactical_suppliers
 				from
 					i := 1

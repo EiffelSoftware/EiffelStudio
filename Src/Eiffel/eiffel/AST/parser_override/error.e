@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 			initialize_output
 			a_text_formatter.add ("Line: ")
 			a_text_formatter.add (line.out)
-			if a_context_class.lace_class.date_has_changed then
+			if a_context_class.lace_class.config_class.has_modification_date_changed then
 				a_text_formatter.add (" (source code has changed)")
 				a_text_formatter.add_new_line
 			elseif not has_source_text then

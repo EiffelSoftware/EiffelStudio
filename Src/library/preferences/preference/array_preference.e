@@ -24,9 +24,9 @@ feature -- Access
 		do
 			create Result.make_empty
 			from
-				index := 1
+				index := value.lower
 			until
-				index > value.count
+				index > value.upper
 			loop
 				l_value := value.item (index)
 				if is_choice and then index = selected_index then
@@ -39,15 +39,13 @@ feature -- Access
 				end
 				index := index + 1
 			end
-		end	
+		end
 
 	string_type: STRING is
 			-- String description of this preference type.
 		once
-			Result := "LIST"			
-		end	
-		
-		
+			Result := "LIST"
+		end
 
 	selected_value: STRING is
 			-- Value of the selected index.
@@ -66,7 +64,7 @@ feature -- Status Setting
 			is_choice := a_flag
 			if selected_index = 0 then
 				selected_index := 1
-			end		
+			end
 		end
 
 	set_selected_index (a_index: INTEGER) is
@@ -83,16 +81,16 @@ feature -- Status Setting
 	set_value_from_string (a_value: STRING) is
 			-- Parse the string value `a_value' and set `value'.
 		local
-			cnt: INTEGER			
+			cnt: INTEGER
 			l_value: STRING
 			values: LIST [STRING]
 		do
 			create internal_value.make (1, 0)
 			values := a_value.split (';')
 			if values.count > 1 or not values.first.is_empty then
-				from 
+				from
 					values.start
-					cnt := 1					
+					cnt := 1
 				until
 					values.after
 				loop
@@ -102,13 +100,13 @@ feature -- Status Setting
 						is_choice := True
 						set_selected_index (cnt)
 					end
-					value.force (l_value, cnt)			
+					value.force (l_value, cnt)
 					values.forth
 					cnt := cnt + 1
-				end				
+				end
 			end
 			set_value (internal_value)
-		end	
+		end
 
 feature -- Query
 
@@ -119,7 +117,7 @@ feature -- Query
 			-- Is `a_string' valid for this preference type to convert into a value?		
 		do
 			Result := a_string /= Void
-		end		
+		end
 
 feature {PREFERENCES} -- Access
 
@@ -134,7 +132,7 @@ feature {PREFERENCES} -- Access
 		end
 
 feature {NONE} -- Implementation
-	
+
 	auto_default_value: ARRAY [STRING] is
 			-- Value to use when Current is using auto by default (until real auto is set)
 		once

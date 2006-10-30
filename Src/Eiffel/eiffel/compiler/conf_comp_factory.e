@@ -16,7 +16,8 @@ inherit
 			new_class_partial,
 			new_cluster,
 			new_override,
-			new_physical_assembly
+			new_physical_assembly,
+			new_assertions
 		end
 
 feature
@@ -55,6 +56,12 @@ feature
 			-- Create a `CONF_PHYSICAL_ASSEMBLY' object.
 		do
 			create Result.make_from_consumed (a_consumed, a_cache_path, a_target)
+		end
+
+	new_assertions: ASSERTION_I is
+			-- Create a `CONF_ASSERTIONS' object.
+		do
+			create Result
 		end
 
 indexing

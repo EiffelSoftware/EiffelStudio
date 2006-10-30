@@ -22,7 +22,7 @@ feature -- Access, stored in configuration file
 	is_supplier_precondition: BOOLEAN is
 			-- Check supplier preconditions
 		do
-			Result := level & ck_require = ck_require
+			Result := level & ck_sup_require = ck_sup_require
 		end
 
 	is_postcondition: BOOLEAN is

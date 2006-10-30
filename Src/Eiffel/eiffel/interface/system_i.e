@@ -1129,7 +1129,6 @@ end
 			vd29: VD29
 			l_class: CLASS_I
 			l_root_type_name: STRING
-			l_root_type_base_class_name: STRING
 		do
 			l_target := universe.target
 				-- update root class/feature

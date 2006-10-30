@@ -592,18 +592,12 @@ feature -- Status setting
 			a_format_imp: EV_CHARACTER_FORMAT_IMP
 			l_count: INTEGER
 			l_char_code: NATURAL_32
-			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			l_count := a_text.count
 			if l_count >= 1 then
 				if not buffer_locked_in_append_mode then
 					text_tag_table := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_tag_table (text_buffer)
 					append_buffer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (text_tag_table)
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, temp_start_iter.item, 0)
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, temp_end_iter.item, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (text_buffer))
-					create a_text_iter.make
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (append_buffer, a_text_iter.item, 0)
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert_range (append_buffer, a_text_iter.item, temp_start_iter.item, temp_end_iter.item)
 					buffer_locked_in_append_mode := True
 				end
 				l_char_code := a_text.code (1)

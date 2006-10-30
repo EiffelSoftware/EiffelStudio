@@ -212,7 +212,7 @@ feature -- Status setting
 				if not found and ofst /= Void then
 						-- The dropped class does not have any feature named like the current feature.
 					output_line.set_text (Warning_messages.w_No_such_feature_in_this_class (
-						ofst.feature_name, st.class_i.name_in_upper))
+						ofst.feature_name, st.class_i.name))
 				end
 				if not found then
 					launch_stone (st)

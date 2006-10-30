@@ -40,7 +40,7 @@ feature -- Basic operation
         		l_class := classes.item_for_iteration
         		if l_class.is_read_only then
         			success := False
-        			error_message := "The class "+l_class.name_in_upper+" is not writable."
+        			error_message := "The class "+l_class.name+" is not writable."
         		end
         		classes.forth
         	end

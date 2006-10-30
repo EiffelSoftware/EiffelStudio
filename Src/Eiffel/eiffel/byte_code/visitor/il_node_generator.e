@@ -138,7 +138,7 @@ feature -- Generation
 
 				-- Make IL code for preconditions
 			if a_body.precondition /= Void or inh_assert.has_precondition then
-				if (context.workbench_mode or class_c.assertion_level.check_precond) then
+				if (context.workbench_mode or class_c.assertion_level.is_precondition) then
 					generate_il_precondition (a_body)
 				elseif System.is_precompile_finalized then
 					l_nb_precond := 0
@@ -165,7 +165,7 @@ feature -- Generation
 			end
 
 			if
-				(context.workbench_mode or class_c.assertion_level.check_postcond) and then
+				(context.workbench_mode or class_c.assertion_level.is_postcondition) and then
 				(a_body.old_expressions /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_generator.create_label
@@ -207,7 +207,7 @@ feature -- Generation
 
 				-- Make IL code for postcondition
 			if
-				(context.workbench_mode or class_c.assertion_level.check_postcond) and then
+				(context.workbench_mode or class_c.assertion_level.is_postcondition) and then
 				(a_body.postcondition /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_generator.create_label
@@ -1197,7 +1197,7 @@ feature {NONE} -- Visitors
 			if
 				a_node.check_list /= Void and then
 				(context.workbench_mode or else
-					context.class_type.associated_class.assertion_level.check_check)
+					context.class_type.associated_class.assertion_level.is_check)
 			then
 				l_label := il_generator.create_label
 				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_check)
@@ -1536,7 +1536,7 @@ feature {NONE} -- Visitors
 				end
 
 				l_invariant_checked := (context.workbench_mode or
-					l_class_c.assertion_level.check_invariant) and then not a_node.is_first
+					l_class_c.assertion_level.is_invariant) and then not a_node.is_first
 					and then (l_native_array_class_type = Void)
 
 				if l_cl_type.is_expanded then
@@ -1957,7 +1957,7 @@ feature {NONE} -- Visitors
 			l_check_assertion: BOOLEAN
 		do
 			l_check_assertion := context.workbench_mode or
-				Context.class_type.associated_class.assertion_level.check_loop
+				Context.class_type.associated_class.assertion_level.is_loop
 
 			if a_node.from_part /= Void then
 					-- Generate IL code for the from part
@@ -3361,7 +3361,7 @@ feature {NONE} -- Implementation: Feature calls
 				-- magically added feature on basic types.
 			l_basic_type ?= l_cl_type
 			l_invariant_checked := (context.workbench_mode or
-				l_cl_type.base_class.assertion_level.check_invariant) and then
+				l_cl_type.base_class.assertion_level.is_invariant) and then
 				not a_node.is_first
 
 			if l_cl_type.is_expanded then

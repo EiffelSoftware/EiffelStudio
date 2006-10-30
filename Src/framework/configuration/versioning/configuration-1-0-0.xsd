@@ -179,6 +179,7 @@
 		<xs:attribute name="check" type="xs:boolean" use="optional"/>
 		<xs:attribute name="invariant" type="xs:boolean" use="optional"/>
 		<xs:attribute name="loop" type="xs:boolean" use="optional"/>
+		<xs:attribute name="supplier_precondition" type="xs:boolean" use="optional"/>
 	</xs:complexType>
 
 	<xs:complexType name="warning">

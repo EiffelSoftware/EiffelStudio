@@ -3585,35 +3585,31 @@ feature {NONE} -- Implementation
 						l_format_context.put_classi (l_cl_c.original_class)
 						l_format_context.set_without_tabs
 						l_format_context.process_symbol_text (ti_colon)
-						if l_assert_level.check_all then
-							l_format_context.put_space
-							l_format_context.set_without_tabs
-							l_format_context.process_keyword_text (ti_All_keyword, Void)
-						elseif l_assert_level.level = 0  then
+						if l_assert_level.level = 0  then
 							l_format_context.put_space
 							l_format_context.process_comment_text (once "None", Void)
 						else
-							if l_assert_level.check_precond then
+							if l_assert_level.is_precondition then
 								l_format_context.put_space
 								l_format_context.set_without_tabs
 								l_format_context.process_keyword_text (ti_Require_keyword, Void)
 							end
-							if l_assert_level.check_postcond then
+							if l_assert_level.is_postcondition then
 								l_format_context.put_space
 								l_format_context.set_without_tabs
 								l_format_context.process_keyword_text (ti_Ensure_keyword, Void)
 							end
-							if l_assert_level.check_check then
+							if l_assert_level.is_check then
 								l_format_context.put_space
 								l_format_context.set_without_tabs
 								l_format_context.process_keyword_text (ti_Check_keyword, Void)
 							end
-							if l_assert_level.check_loop then
+							if l_assert_level.is_loop then
 								l_format_context.put_space
 								l_format_context.set_without_tabs
 								l_format_context.process_keyword_text (ti_Loop_keyword, Void)
 							end
-							if l_assert_level.check_invariant then
+							if l_assert_level.is_invariant then
 								l_format_context.put_space
 								l_format_context.set_without_tabs
 								l_format_context.process_keyword_text (ti_Invariant_keyword, Void)

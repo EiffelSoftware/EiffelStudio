@@ -100,7 +100,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			description_set: description = a_description
 		end
 
-feature {NONE} -- Implementation
+feature {CONF_ACCESS} -- Implementation
 
 	internal_location: STRING
 			-- The file location.

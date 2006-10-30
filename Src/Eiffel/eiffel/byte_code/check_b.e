@@ -70,7 +70,7 @@ feature -- Code generation
 				workbench_mode := context.workbench_mode
 				if 	workbench_mode
 					or else
-					context.assertion_level.check_check
+					context.assertion_level.is_check
 				then
 					if workbench_mode then
 						context.add_dt_current
@@ -99,7 +99,7 @@ feature -- Code generation
 					buf.exdent
 					buf.put_character ('}')
 					buf.put_new_line
-				elseif context.assertion_level.check_check then
+				elseif context.assertion_level.is_check then
 					buf.put_string ("if (~in_assertion) {")
 					buf.put_new_line
 					buf.indent

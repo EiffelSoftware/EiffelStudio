@@ -413,7 +413,7 @@ feature -- Observer management
 				f ?= cell.item1
 				if f /= Void then
 					create nitem.make_with_text (
-						f.feature_name + l_From + f.class_i.name_in_upper)
+						f.feature_name + l_From + f.class_i.name)
 					nitem.set_data (cell.item2)
 					if f.e_feature /= Void then
 						nitem.set_pixmap (pixmap_from_e_feature (f.e_feature))
@@ -673,7 +673,7 @@ feature {NONE} -- Execution
 		do
 			if pos /= 0 then
 				class_i := class_list.i_th (pos)
-				class_address.set_text (class_i.name_in_upper)
+				class_address.set_text (class_i.name)
 			end
 			class_list := Void
 			if choosing_class then
@@ -775,7 +775,7 @@ feature {NONE} -- Execution
 				else
 					if not feature_address.text.is_empty then
 						display_error_message (
-							Warning_messages.w_not_a_compiled_class_line (class_i.name_in_upper))
+							Warning_messages.w_not_a_compiled_class_line (class_i.name))
 					end
 					parent.advanced_set_stone (create {CLASSI_STONE}.make (class_i))
 				end
@@ -2047,7 +2047,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					feature_label.set_minimum_width (maximum_label_width (text))
 					feature_label.set_text (text)
 					feature_label.set_pebble (create {FEATURE_STONE}.make (conv_f.e_feature))
-					text := conv_f.e_feature.associated_class.name_in_upper
+					text := conv_f.e_feature.associated_class.name
 					class_label.set_minimum_width (maximum_label_width (text))
 					class_label.set_text (text)
 					class_label.set_pebble (create {CLASSC_STONE}.make (conv_f.e_feature.associated_class))
@@ -2062,7 +2062,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 						cluster_label.set_pebble (create {CLUSTER_STONE}.make (conv_class.group))
 						cluster_label.set_minimum_width (maximum_label_width (text))
 						cluster_label.set_text (text)
-						text := conv_class.class_i.name_in_upper
+						text := conv_class.class_i.name
 						l_class_c := conv_class.class_i.compiled_representation
 						if l_class_c /= Void then
 							class_label.set_pebble (create {CLASSC_STONE}.make (l_class_c))
@@ -2109,7 +2109,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 				if not mode then
 					conv_class ?= c_stone
 					if conv_class /= Void then
-						class_address.set_text (conv_class.class_i.name_in_upper)
+						class_address.set_text (conv_class.class_i.name)
 						conv_f ?= c_stone
 						if conv_f /= Void then
 							feature_address.set_text (conv_f.origin_name)
@@ -2124,13 +2124,13 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 					conv_f ?= c_stone
 					if conv_f /= Void then
 						feature_address.set_text (conv_f.feature_name)
-						class_address.set_text (conv_f.e_feature.associated_class.name_in_upper)
+						class_address.set_text (conv_f.e_feature.associated_class.name)
 						cluster_address.set_text (conv_f.e_feature.associated_class.group.name)
 					else
 						conv_class ?= c_stone
 						if conv_class /= Void then
 							cluster_address.set_text (conv_class.group.name)
-							class_address.set_text (conv_class.class_i.name_in_upper)
+							class_address.set_text (conv_class.class_i.name)
 							feature_address.remove_text
 						else
 							cluster_address.remove_text

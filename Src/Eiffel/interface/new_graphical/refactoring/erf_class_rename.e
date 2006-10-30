@@ -107,10 +107,10 @@ feature {NONE} -- Implementation
 		local
 			dialog: ERF_CLASS_RENAME_DIALOG
         do
-        	preferences.set_old_class_name (class_i.name_in_upper)
+        	preferences.set_old_class_name (class_i.name)
 
 			create dialog
-			dialog.set_name (class_i.name_in_upper)
+			dialog.set_name (class_i.name)
 			dialog.disable_user_resize
 			if class_i.compiled then
 				dialog.enable_compiled

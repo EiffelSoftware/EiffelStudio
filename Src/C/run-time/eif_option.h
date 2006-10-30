@@ -67,6 +67,7 @@ struct eif_opt {
 #define CK_CHECK	  	0x00000004
 #define CK_LOOP			0x00000008
 #define CK_INVARIANT	0x00000010
+#define CK_SUP_REQUIRE	0x00000020
 
 /* Option level values for debugging, tracing and profiling */
 #define OPT_NO				0		 /* No option */

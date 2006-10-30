@@ -100,7 +100,7 @@ feature -- Status setting
 						class_i: class_i /= Void
 					end
 					if class_i.is_valid then
-						create over_item.make (class_i, class_i.name_in_upper)
+						create over_item.make (class_i, class_i.name)
 
 						if associated_window /= Void then
 							over_item.set_associated_window (associated_window)
@@ -128,7 +128,7 @@ feature -- Status setting
 					class_i: class_i /= Void
 				end
 				if class_i.is_valid then
-					create over_item.make (class_i, class_i.name_in_upper)
+					create over_item.make (class_i, class_i.name)
 
 					if associated_window /= Void then
 						over_item.set_associated_window (associated_window)
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			-- Print class name in textable, the associated text component.
 		do
 			if associated_textable /= Void then
-				associated_textable.set_text (data.name_in_upper)
+				associated_textable.set_text (data.name)
 			end
 		end
 

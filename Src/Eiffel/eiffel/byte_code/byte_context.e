@@ -802,7 +802,7 @@ feature -- Access
 				and then
 					(	workbench_mode
 						or else
-						assertion_level.check_precond)
+						assertion_level.is_precondition)
 		end
 
 	has_rescue: BOOLEAN is
@@ -821,7 +821,7 @@ feature -- Access
 		do
 			Result :=	workbench_mode
 						or else
-						(	assertion_level.check_postcond
+						(	assertion_level.is_postcondition
 							and
 							(	byte_code.postcondition /= Void
 								or else
@@ -836,7 +836,7 @@ feature -- Access
 			Result := 	workbench_mode
 						or else
 						(
-							assertion_level.check_precond
+							assertion_level.is_precondition
 							and
 							byte_code.precondition /= Void
 						)
@@ -845,7 +845,7 @@ feature -- Access
 	has_invariant: BOOLEAN is
 			-- Do we have to generate invariant checks ?
 		do
-			Result := workbench_mode or assertion_level.check_invariant
+			Result := workbench_mode or assertion_level.is_invariant
 		end
 
 	assertion_level: ASSERTION_I is
@@ -1014,8 +1014,8 @@ feature -- Access
 				-- Decide whether once routines can be optimized so that their results
 				-- can be retrieved directly from memory without making actual calls.
 			if
-				workbench_mode or else assertion_level.check_precond or else
-				assertion_level.check_invariant or else assertion_level.check_postcond
+				workbench_mode or else assertion_level.is_precondition or else
+				assertion_level.is_invariant or else assertion_level.is_postcondition
 			then
 				fixme ("[
 					Even with precondition and postcondition checks turned on there is a possibility that
@@ -1106,7 +1106,7 @@ feature -- Access
 		do
 			Result := not (	workbench_mode
 							or else
-							assertion_level.check_precond)
+							assertion_level.is_precondition)
 		end
 
 	add_dt_current is

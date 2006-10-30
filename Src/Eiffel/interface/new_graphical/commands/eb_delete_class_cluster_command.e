@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 				if
 					not class_i.is_read_only
 				then
-					str := class_i.name_in_upper
+					str := class_i.name
 					if Debugger_manager.application_is_executing then
 						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_class>>)
 						cd.show_modal_to_window (window.window)
@@ -193,7 +193,7 @@ feature {NONE} -- Implementation
 					end
 					class_i := Void
 				else
-					create wd.make_with_text (Warning_messages.w_cannot_delete_read_only_class (class_i.name_in_upper))
+					create wd.make_with_text (Warning_messages.w_cannot_delete_read_only_class (class_i.name))
 					wd.show_modal_to_window (window.window)
 					class_i := Void
 				end

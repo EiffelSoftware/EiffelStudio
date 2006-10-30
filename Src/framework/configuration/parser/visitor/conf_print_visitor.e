@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 				loop
 					l_ext := an_externals.item
 					append_text_indent ("<external_"+a_name)
-					append_text (" location=%""+escape_xml (l_ext.location)+"%">%N")
+					append_text (" location=%""+escape_xml (l_ext.internal_location)+"%">%N")
 					indent := indent + 1
 					last_count := text.count
 
@@ -733,6 +733,7 @@ feature {NONE} -- Implementation
 					l_a_name.extend ("check")
 					l_a_name.extend ("invariant")
 					l_a_name.extend ("loop")
+					l_a_name.extend ("supplier_precondition")
 
 					create l_a_val.make (5)
 					l_a_val.extend (l_assertions.is_precondition.out.as_lower)
@@ -740,6 +741,7 @@ feature {NONE} -- Implementation
 					l_a_val.extend (l_assertions.is_check.out.as_lower)
 					l_a_val.extend (l_assertions.is_invariant.out.as_lower)
 					l_a_val.extend (l_assertions.is_loop.out.as_lower)
+					l_a_val.extend (l_assertions.is_supplier_precondition.out.as_lower)
 					append_tag ("assertions", Void, l_a_name, l_a_val)
 				end
 

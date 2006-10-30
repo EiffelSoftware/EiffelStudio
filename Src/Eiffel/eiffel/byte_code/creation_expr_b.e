@@ -287,7 +287,7 @@ feature -- Generation
 				end
 				if
 					context.workbench_mode
-					or else context.assertion_level.check_invariant
+					or else context.assertion_level.is_invariant
 				then
 					buf.put_string ("RTCI(")
 					register.print_register

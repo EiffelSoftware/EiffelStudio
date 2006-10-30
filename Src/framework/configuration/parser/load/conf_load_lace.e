@@ -588,7 +588,7 @@ feature {NONE} -- Implementation of data retrieval
 						end
 						l_assertions := current_options.assertions
 						if l_assertions = Void then
-							create l_assertions
+							l_assertions := factory.new_assertions
 							current_options.set_assertions (l_assertions)
 						end
 						if l_value = Void then

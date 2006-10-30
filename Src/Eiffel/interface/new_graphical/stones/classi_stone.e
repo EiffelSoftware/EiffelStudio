@@ -77,7 +77,7 @@ feature -- Properties
 
 	stone_signature: STRING is
 		do
-			Result := class_i.name_in_upper
+			Result := class_i.name
 		end
 
 	history_name: STRING is

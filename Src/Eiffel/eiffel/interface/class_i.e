@@ -93,28 +93,10 @@ feature -- Access
 
 	assertion_level: ASSERTION_I is
 			-- Assertion checking level
-		local
-			l_a: CONF_ASSERTIONS
 		do
-			create Result.make_no
-			l_a := options.assertions
-			if l_a /= Void then
-				if l_a.is_check then
-					Result.enable_check
-				end
-				if l_a.is_invariant then
-					Result.enable_invariant
-				end
-				if l_a.is_loop then
-					Result.enable_loop
-				end
-				if l_a.is_postcondition then
-					Result.enable_ensure
-				end
-				if l_a.is_precondition then
-					Result.enable_require
-				end
-			end
+			Result ?= options.assertions
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	trace_level: OPTION_I is
@@ -364,18 +346,6 @@ feature -- Status report
 			l_name: STRING
 		do
 			l_name := actual_namespace
-		end
-
-	name_in_upper: STRING is
-			-- Class name in upper case.
-		do
-			Result := name
-			if Result = Void then
-				Result := "Name not yet set"
-			end
-		ensure then
-			result_not_void: Result /= Void
-			result_not_empty: not Result.is_empty
 		end
 
 	file_name: FILE_NAME is

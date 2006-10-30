@@ -92,7 +92,7 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 			node.put_last (Xml_routines.xml_node (node, "SUPPLIER_DEPTH", model.supplier_depth.out))
 			node.put_last (Xml_routines.xml_node (node, "ALL_CLASSES_IN_CLUSTER", model.include_all_classes_of_cluster.out))
 			node.put_last (Xml_routines.xml_node (node, "ONLY_CLASSES_IN_CLUSTER", model.include_only_classes_of_cluster.out))
-			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_NAME", model.center_class.class_i.name_in_upper))
+			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_NAME", model.center_class.class_i.name))
 			node.put_last (xml_routines.xml_node (node, "CENTER_CLASS_GROUP_ID", model.center_class.group_id))
 
 			Result := Precursor {EIFFEL_WORLD} (node)

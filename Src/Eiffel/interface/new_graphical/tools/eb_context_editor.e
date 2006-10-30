@@ -815,7 +815,7 @@ feature -- Element change
 
 			if not cancelled then
 				development_window.status_bar.reset
-				development_window.status_bar.display_message ("Constructing Diagram for " + a_class.name_in_upper + " Class")
+				development_window.status_bar.display_message ("Constructing Diagram for " + a_class.name + " Class")
 
 				graph.wipe_out
 

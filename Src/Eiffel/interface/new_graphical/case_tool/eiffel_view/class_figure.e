@@ -414,7 +414,7 @@ feature {NONE} -- Implementation (adding relations)
 		do
 			if world.model.has_node (other.model) then
 				other_model := other.model
-				other_model.code_generator.add_ancestor (model.class_i.name_in_upper)
+				other_model.code_generator.add_ancestor (model.class_i.name)
 				if not other_model.code_generator.class_modified_outside_diagram then
 					es_link ?= model.graph.inheritance_link_connecting (other_model, model)
 					if es_link = Void then
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation (adding relations)
 	add_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK) is
 			-- Add `Current' to `an_other's inheritance clause, show `a_link' if succesfull.
 		do
-			an_other.code_generator.add_ancestor (model.class_i.name_in_upper)
+			an_other.code_generator.add_ancestor (model.class_i.name)
 			if not an_other.code_generator.class_modified_outside_diagram then
 				a_link.enable_needed_on_diagram
 			end
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation (adding relations)
 	remove_ancestor (an_other: like model; a_link: ES_INHERITANCE_LINK) is
 			-- Remove `Current' from `an_other's inheritance clause, hide `a_link' if succesfull.
 		do
-			an_other.code_generator.remove_ancestor (model.class_i.name_in_upper)
+			an_other.code_generator.remove_ancestor (model.class_i.name)
 			if not an_other.code_generator.class_modified_outside_diagram then
 				a_link.disable_needed_on_diagram
 			end

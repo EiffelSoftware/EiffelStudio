@@ -20,7 +20,7 @@ feature
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 		do
-			create Result.make (a_file_name, a_group, a_path)
+			create Result.make (a_file_name, a_group, a_path, Current)
 		ensure
 			Result_not_void: Result /= Void
 		end

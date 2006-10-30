@@ -6672,7 +6672,7 @@ feature {NONE} -- Precursor handling
 				r_class_i := Universe.class_named (l_as.parent_base_class.class_name, context.current_class.group)
 
 				if r_class_i /= Void then
-					spec_p_name := r_class_i.name_in_upper
+					spec_p_name := r_class_i.name
 				else
 					-- A class of name `l_as.parent_base_class' does not exist
 					-- in the universe. Use an empty name to trigger
@@ -6692,7 +6692,7 @@ feature {NONE} -- Precursor handling
 				parents.after
 			loop
 				a_parent := parents.item.associated_class
-				p_name := a_parent.name_in_upper
+				p_name := a_parent.name
 
 					-- Don't check the same parent twice.
 					-- If construct is qualified, check

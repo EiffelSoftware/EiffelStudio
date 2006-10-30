@@ -181,7 +181,7 @@ feature -- Access
 				until
 					l_nodes.after
 				loop
-					if not l_group.class_by_name (l_nodes.item.class_i.name_in_upper, True).is_empty then
+					if not l_group.class_by_name (l_nodes.item.class_i.name, True).is_empty then
 						Result.extend (l_nodes.item)
 					end
 					l_nodes.forth

@@ -28,7 +28,21 @@ inherit
 			copy
 		end
 
+create
+	make
+
 feature {NONE} -- Initialization
+
+	make (a_factory: like conf_factory) is
+			-- Create.
+		require
+			a_factory_not_void: a_factory /= Void
+		do
+			conf_factory := a_factory
+			default_create
+		ensure
+			factory_set: conf_factory = a_factory
+		end
 
 	initialize is
 			-- Initialization
@@ -211,6 +225,9 @@ feature {NONE} -- Agents
 		end
 
 feature {NONE} -- Implementation
+
+	conf_factory: CONF_PARSE_FACTORY
+			-- Create.
 
 	group_options: CONF_OPTION
 			-- Options of the group this classes belong to.

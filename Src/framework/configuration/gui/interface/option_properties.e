@@ -22,6 +22,13 @@ inherit
 
 feature -- Access
 
+	conf_factory: CONF_PARSE_FACTORY is
+			-- Factory to create new nodes.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	window: EV_WINDOW
 			-- Window to show errors modal.
 
@@ -118,7 +125,7 @@ feature {NONE} -- Implementation
 			l_inh_assertions := an_inherited_options.assertions
 			l_assertions := an_options.assertions
 			if l_inh_assertions = Void then
-				create l_inh_assertions
+				l_inh_assertions := conf_factory.new_assertions
 			end
 			properties.add_section (conf_interface_names.section_assertions)
 
@@ -360,7 +367,7 @@ feature {NONE} -- Implementation
 			if l_assertion = Void then
 				l_assertion := a_inherited_option.assertions
 				if l_assertion = Void then
-					create l_assertion
+					l_assertion := conf_factory.new_assertions
 				else
 					l_assertion := l_assertion.twin
 				end

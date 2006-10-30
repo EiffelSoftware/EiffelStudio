@@ -1,23 +1,29 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="thread" uuid="8d4ab86a-5613-42c9-a181-925deb27843a" library_target="thread"> 
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="thread" uuid="8D4AB86A-5613-42C9-A181-925DEB27843A" library_target="thread">
 	<target name="thread">
 		<description>EiffelThread: Multithreading facilities for Eiffel.
 Copyright (c) 1984-2006, Eiffel Software and others.
-Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt). </description>
+Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<root all_classes="true"/>
 		<option>
 			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
-		<cluster name="thread" location="$ISE_LIBRARY\library\thread" recursive="true">
+		<cluster name="thread" location="$ISE_LIBRARY\library\thread\" recursive="true">
 			<file_rule>
-				<condition><dotnet value="false"/></condition>
-				<exclude>/\.svn$</exclude>
 				<exclude>/dotnet$</exclude>
+				<condition>
+					<dotnet value="false"/>
+				</condition>
 			</file_rule>
 			<file_rule>
-				<condition><dotnet value="true"/></condition>
-				<exclude>/\.svn$</exclude>
 				<exclude>/classic$</exclude>
+				<condition>
+					<dotnet value="true"/>
+				</condition>
 			</file_rule>
 		</cluster>
 	</target>

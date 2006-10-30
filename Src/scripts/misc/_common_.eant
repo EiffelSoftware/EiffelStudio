@@ -41,11 +41,8 @@
 
 	<target name="init" >
 		<set name="environment_valid" value="true" />
-
 		<geant target="check_environment" reuse_variables="true" />
-		<echo message="aaaa = ${environment_valid}" />
 		<geant target="check_environment_windows" if="${is_windows}" reuse_variables="true" />
-
 		<exit code="1" if="${environment_valid}=false" />
 		<unset name="environment_valid" />
 	</target>

@@ -116,7 +116,7 @@ feature {NONE} -- Agents
 					if value.cluster_name /= Void then
 						cluster_name.set_text (value.cluster_name)
 					end
-					class_name.set_text (value.class_name)
+					class_name.set_text (value.class_type_name)
 					if value.feature_name /= Void then
 						feature_name.set_text (value.feature_name)
 					end

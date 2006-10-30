@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			create dialog
 			dialog.set_name (class_i.name)
 			dialog.disable_user_resize
-			if class_i.compiled then
+			if class_i.is_compiled then
 				dialog.enable_compiled
 			else
 				dialog.disable_compiled

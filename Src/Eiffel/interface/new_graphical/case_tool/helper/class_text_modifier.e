@@ -922,7 +922,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 					--| FIXME set `current_class' in `system'.
-				if class_i.compiled then
+				if class_i.is_compiled then
 					l_class_c := class_i.compiled_class
 					class_i.system.set_current_class (l_class_c)
 				end

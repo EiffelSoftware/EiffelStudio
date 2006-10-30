@@ -80,7 +80,7 @@ feature -- Basic operations
 					loop
 						l_class ?= l_sel_figures.item.model
 						if l_class /= Void then
-							if l_class.class_i.compiled then
+							if l_class.class_i.is_compiled then
 								l_class_list.extend (l_class)
 								l_class_added := True
 							end

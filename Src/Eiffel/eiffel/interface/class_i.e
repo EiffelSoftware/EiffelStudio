@@ -197,7 +197,7 @@ feature -- Access
 			end
 		end
 
-	is_compiled, compiled: BOOLEAN is
+	is_compiled: BOOLEAN is
 			-- Is the class already compiled ?
 		do
 			Result := compiled_class /= Void
@@ -218,14 +218,6 @@ feature -- Access
 	is_external_class: BOOLEAN is
 			-- Is class defined outside current system.
 		do
-		end
-
-	date_has_changed: BOOLEAN is
-		local
-			l_date: INTEGER
-		do
-			l_date := file_modified_date (file_name)
-			Result := (l_date = -1) or (l_date /= date)
 		end
 
 	file_date: INTEGER is

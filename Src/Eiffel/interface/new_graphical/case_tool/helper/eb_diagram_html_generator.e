@@ -307,7 +307,7 @@ feature {NONE} -- Implementation
 				class_figures.after
 			loop
 				cf ?= class_figures.item
-				if cf.model.class_i.compiled and documentation.doc_universe.is_class_generated (cf.model.class_i) then
+				if cf.model.class_i.is_compiled and documentation.doc_universe.is_class_generated (cf.model.class_i) then
 					item_file := base_path.twin
 					path := documentation.relative_path (cf.model.class_i.group)
 					if path /= Void then

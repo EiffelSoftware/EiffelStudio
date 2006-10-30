@@ -549,7 +549,7 @@ feature {NONE} -- Implementation (adding relations)
 		do
 			if world.context_editor.is_link_inheritance then
 				new_child := a_stone.class_i
-				if new_child.compiled and model.class_i.compiled then
+				if new_child.is_compiled and model.class_i.is_compiled then
 					Result := not model.class_i.compiled_class.conform_to (new_child.compiled_class)
 				else
 					Result := not model.class_i.name.is_equal ("ANY")

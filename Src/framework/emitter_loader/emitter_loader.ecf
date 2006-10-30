@@ -4,6 +4,9 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
+		<option>
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="dotnet_loader" location="$EIFFEL_SRC\framework\dotnet_loader\dotnet_loader.ecf"/>
 		<cluster name="emitter_loader" location=".\" recursive="true">

@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 			an_inherited_options_not_void: an_inherited_options /= Void
 			properties_not_void: properties /= Void
 		local
-			l_require, l_ensure, l_check, l_invariant, l_loop: BOOLEAN_PROPERTY
+			l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require: BOOLEAN_PROPERTY
 			l_assertions, l_inh_assertions: CONF_ASSERTIONS
 		do
 			l_inh_assertions := an_inherited_options.assertions
@@ -164,34 +164,46 @@ feature {NONE} -- Implementation
 			l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			properties.add_property (l_loop)
 
+			create l_sup_require.make_with_value (conf_interface_names.option_sup_require_name, l_inh_assertions.is_supplier_precondition)
+			l_sup_require.set_description (conf_interface_names.option_sup_require_description)
+			l_sup_require.set_refresh_action (agent l_inh_assertions.is_supplier_precondition)
+			l_sup_require.change_value_actions.extend (agent update_assertion (an_options, an_inherited_options, conf_interface_names.option_sup_require_name, ?))
+			l_sup_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+			properties.add_property (l_sup_require)
+
 				-- assertion inheritance handling
 			if a_inherits then
 				l_require.use_inherited_actions.extend (agent an_options.set_assertions (Void))
 				l_require.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_require.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
-				l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
+				l_require.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, False))
+				l_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, True)))
 
 				l_ensure.use_inherited_actions.extend (agent an_options.set_assertions (Void))
 				l_ensure.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_ensure.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
-				l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
+				l_ensure.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, False))
+				l_ensure.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, True)))
 
 				l_check.use_inherited_actions.extend (agent an_options.set_assertions (Void))
 				l_check.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_check.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
-				l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
+				l_check.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, False))
+				l_check.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, True)))
 
 				l_invariant.use_inherited_actions.extend (agent an_options.set_assertions (Void))
 				l_invariant.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
-				l_invariant.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
+				l_invariant.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, True)))
+				l_invariant.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, False))
 
 				l_loop.use_inherited_actions.extend (agent an_options.set_assertions (Void))
 				l_loop.use_inherited_actions.extend (agent handle_value_changes (False))
-				l_loop.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, False))
-				l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, True)))
+				l_loop.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, False))
+				l_loop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, True)))
 
-				update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_assertions /= Void)
+				l_sup_require.use_inherited_actions.extend (agent an_options.set_assertions (Void))
+				l_sup_require.use_inherited_actions.extend (agent handle_value_changes (False))
+				l_sup_require.use_inherited_actions.extend (agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, False))
+				l_sup_require.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, True)))
+
+				update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, l_assertions /= Void)
 			end
 
 			properties.current_section.expand
@@ -359,7 +371,8 @@ feature {NONE} -- Implementation
 			an_option_not_void: an_option /= Void
 			a_inherited_option_not_void: a_inherited_option /= Void
 			a_name_valid: a_name.is_equal (conf_interface_names.option_require_name) or a_name.is_equal (conf_interface_names.option_ensure_name) or
-				a_name.is_equal (conf_interface_names.option_check_name) or a_name.is_equal (conf_interface_names.option_invariant_name) or a_name.is_equal (conf_interface_names.option_loop_name)
+				a_name.is_equal (conf_interface_names.option_check_name) or a_name.is_equal (conf_interface_names.option_invariant_name) or
+				a_name.is_equal (conf_interface_names.option_loop_name) or a_name.is_equal (conf_interface_names.option_sup_require_name)
 		local
 			l_assertion: CONF_ASSERTIONS
 		do
@@ -403,17 +416,28 @@ feature {NONE} -- Implementation
 				else
 					l_assertion.disable_loop
 				end
+			elseif a_name.is_equal (conf_interface_names.option_sup_require_name) then
+				if a_value then
+					l_assertion.enable_supplier_precondition
+				else
+					l_assertion.disable_supplier_precondition
+				end
+			else
+				check
+					should_not_reach: False
+				end
 			end
 		end
 
-	update_inheritance_assertion (a_require, a_ensure, a_check, a_invariant, a_loop: PROPERTY; a_overriden: BOOLEAN) is
-			-- Update inheritance of `a_require', `a_ensure', `a_check', `a_invariant' and `a_loop' to `a_overriden'.
+	update_inheritance_assertion (a_require, a_ensure, a_check, a_invariant, a_loop, a_sup_require: PROPERTY; a_overriden: BOOLEAN) is
+			-- Update inheritance of `a_require', `a_ensure', `a_check', `a_invariant', `a_sup_require' and `a_loop' to `a_overriden'.
 		require
 			a_require_not_void: a_require /= Void
 			a_ensure_not_void: a_ensure /= Void
 			a_check_not_void: a_check /= Void
 			a_invariant_not_void: a_invariant /= Void
 			a_loop_not_void: a_loop /= Void
+			a_sup_require_not_void: a_sup_require /= Void
 		do
 			if a_overriden then
 				a_require.enable_overriden
@@ -421,6 +445,7 @@ feature {NONE} -- Implementation
 				a_check.enable_overriden
 				a_invariant.enable_overriden
 				a_loop.enable_overriden
+				a_sup_require.enable_overriden
 			else
 				a_require.enable_inherited
 				a_require.refresh
@@ -432,6 +457,8 @@ feature {NONE} -- Implementation
 				a_invariant.refresh
 				a_loop.enable_inherited
 				a_loop.refresh
+				a_sup_require.enable_inherited
+				a_sup_require.refresh
 			end
 		end
 

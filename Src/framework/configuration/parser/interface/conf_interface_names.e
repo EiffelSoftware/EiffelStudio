@@ -279,6 +279,8 @@ feature -- Option names and descriptions
 	option_invariant_description: STRING is "Evaluate invariant assertions?"
 	option_loop_name: STRING is "Loop"
 	option_loop_description: STRING is "Evaluate loop assertions?"
+	option_sup_require_name: STRING is "Supplier Precondition"
+	option_sup_require_description: STRING is "Evaluate precondition assertions of suppliers?"
 
 	option_profile_name: STRING is "Profile"
 	option_profile_description: STRING is "Generate profiling information?"

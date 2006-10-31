@@ -228,20 +228,23 @@ feature {NONE} -- Display profiles impl
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			hb.set_padding_width (layout_constants.small_padding_size)
-			create add_button.make_with_text_and_action ("Add Profile", agent add_new_profile)
+			create add_button.make_with_text_and_action ("Add", agent add_new_profile)
 			add_button.disable_sensitive
---			add_button.set_minimum_width (layout_constants.default_button_width)
+
+			create remove_button.make_with_text_and_action ("Remove", agent remove_selected_profile)
+			remove_button.disable_sensitive
+
+			create dup_button.make_with_text_and_action ("Duplicate", agent duplicate_selected_profile)
+			dup_button.disable_sensitive
 
 			create enable_profiles_button.make_with_text ("Enable Profiles")
 			enable_profiles_button.select_actions.extend (agent on_enable_profiles_clicked)
 --			enable_profiles_button.set_minimum_width (layout_constants.default_button_width)
 
-			create remove_button.make_with_text_and_action ("Remove Profile", agent remove_selected_profile)
-			remove_button.disable_sensitive
---			remove_button.set_minimum_width (layout_constants.default_button_width)
-
 			hb.extend (add_button)
 			hb.disable_item_expand (add_button)
+			hb.extend (dup_button)
+			hb.disable_item_expand (dup_button)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
 			hb.extend (create {EV_CELL})
@@ -288,7 +291,7 @@ feature {NONE} -- GUI Properties
 	display_profiles_box: EV_VERTICAL_BOX
 			-- Widget containing profile settings.
 
-	add_button, remove_button: EV_BUTTON
+	add_button, dup_button, remove_button: EV_BUTTON
 
 	enable_profiles_button: EV_CHECK_BUTTON
 
@@ -351,6 +354,7 @@ feature {NONE} -- Grid events
 					end
 				end
 				remove_button.enable_sensitive
+				dup_button.enable_sensitive
 			end
 		end
 
@@ -361,6 +365,7 @@ feature {NONE} -- Grid events
 			r: EV_GRID_ROW
 		do
 			remove_button.disable_sensitive
+			dup_button.disable_sensitive
 			if a_row /= Void then
 				r := a_row.parent_row_root
 				if r = a_row then
@@ -495,6 +500,23 @@ feature -- Data change
 
 feature {NONE} -- Button Actions
 
+	on_enable_profiles_clicked is
+			-- `enable_profiles_button' has been clicked
+		do
+			if not enable_profiles_button.is_selected then
+				profiles_grid.remove_selection
+				set_sensitive_state_on_grid (profiles_grid, False)
+				add_button.disable_sensitive
+				remove_button.disable_sensitive
+				dup_button.disable_sensitive
+			else
+				set_sensitive_state_on_grid (profiles_grid, True)
+				add_button.enable_sensitive
+				remove_button.enable_sensitive
+				dup_button.enable_sensitive
+			end
+		end
+
 	add_new_profile is
 			-- Add a new profile
 		local
@@ -507,18 +529,27 @@ feature {NONE} -- Button Actions
 			end
 		end
 
-	on_enable_profiles_clicked is
-			-- `enable_profiles_button' has been clicked
+	duplicate_selected_profile is
+			-- Duplicate selected profile
+		local
+			r: EV_GRID_ROW
+			p: like profile_from_row
 		do
-			if not enable_profiles_button.is_selected then
-				profiles_grid.remove_selection
-				set_sensitive_state_on_grid (profiles_grid, False)
-				add_button.disable_sensitive
-				remove_button.disable_sensitive
-			else
-				set_sensitive_state_on_grid (profiles_grid, True)
-				add_button.enable_sensitive
-				remove_button.enable_sensitive
+			r := profiles_grid.single_selected_row
+			if r /= Void then
+				p := profile_from_row (r)
+				if p /= Void then
+					p := p.deep_twin
+					if p.title = Void then
+						p.title := description_from_profile (p)
+					end
+					p.title.prepend_string ("Copy of ")
+
+					r := added_profile_text_row (p, True, True)
+					if r.is_expandable and then not r.is_expanded then
+						r.expand
+					end
+				end
 			end
 		end
 
@@ -568,9 +599,11 @@ feature {NONE} -- Queries
 				if a_profile.env.count > 1 then
 					Result.append (" variables)")
 				else
-					Result.append (" variables)")
+					Result.append (" variable)")
 				end
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Profile actions

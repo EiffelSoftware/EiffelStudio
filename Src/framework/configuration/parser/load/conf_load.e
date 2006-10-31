@@ -32,11 +32,35 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error during the retrieval?
 
+	is_warning: BOOLEAN
+			-- Were there warnings during the retrieval?
+
 	is_invalid_xml: BOOLEAN
 			-- Is the file not even valid xml?
 
 	last_error: CONF_ERROR
 			-- The last error message.
+
+	last_warnings: ARRAYED_LIST [CONF_ERROR]
+			-- The last warning messages.
+
+	last_warning_messages: STRING is
+			-- Warning messages as a single string.
+		do
+			if last_warnings /= Void then
+				create Result.make (20)
+				last_warnings.do_all (agent (a_warning: CONF_ERROR; a_msg: STRING)
+					require
+						a_msg_not_void: a_msg /= Void
+					do
+						a_msg.append (a_warning.out)
+						a_msg.append_character ('%N')
+					end (?, Result))
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 
 feature -- Access
 
@@ -143,6 +167,9 @@ feature {NONE} -- Implementation
 				l_pos := l_parser.position
 				a_callback.last_error.set_position (l_pos.source_name, l_pos.row, l_pos.column)
 			end
+				-- add warnings
+			is_warning := a_callback.is_warning
+			last_warnings := a_callback.last_warning
 		rescue
 			l_retried := True
 			retry

@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			create consume_assembly_observer
 			create process_group_observer
 			create process_directory
-			create last_warnings.make
+			create last_warnings.make (1)
 			application_target := an_application_target
 		end
 

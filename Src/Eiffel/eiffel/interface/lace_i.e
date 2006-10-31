@@ -386,6 +386,20 @@ feature {NONE} -- Implementation
 				error_handler.raise_error
 			end
 
+				-- add warnings
+			if l_load.is_warning then
+				l_load.last_warnings.do_all (agent (a_warning: CONF_ERROR)
+					require
+						a_warning_not_void: a_warning /= Void
+					local
+						vd80: VD80
+					do
+						create vd80
+						vd80.set_warning (a_warning)
+						error_handler.insert_warning (vd80)
+					end)
+			end
+
 			conf_system := l_load.last_system
 		ensure
 			conf_system_set: conf_system /= Void
@@ -1214,6 +1228,21 @@ feature {NONE} -- Implementation
 				Error_handler.insert_error (vd77)
 				Error_handler.raise_error
 			end
+
+				-- add warnings
+			if l_load.is_warning then
+				l_load.last_warnings.do_all (agent (a_warning: CONF_ERROR)
+					require
+						a_warning_not_void: a_warning /= Void
+					local
+						vd80: VD80
+					do
+						create vd80
+						vd80.set_warning (a_warning)
+						error_handler.insert_warning (vd80)
+					end)
+			end
+
 			l_system := l_load.last_system
 
 				-- check if we have a library target

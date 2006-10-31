@@ -23,14 +23,23 @@ inherit
 
 feature -- Status
 
+	is_unknown_version: BOOLEAN
+			-- Is the file of an unknown version?
+
 	is_error: BOOLEAN
-			-- Was there an error during the parsing.
+			-- Was there an error during the parsing?
+
+	is_warning: BOOLEAN
+			-- Was there a warning during the parsing?
 
 	is_invalid_xml: BOOLEAN
 			-- Is the file not even valid xml?
 
 	last_error: CONF_ERROR_PARSE
 			-- The last error message from the parser.
+
+	last_warning: ARRAYED_LIST [CONF_ERROR_PARSE]
+			-- The last warning messages from the parser.
 
 feature -- Callbacks
 
@@ -69,11 +78,21 @@ feature {NONE} -- Implementation
 	check_version (a_value: STRING) is
 			-- Check that `a_value' is the correct version.
 		do
-			if a_value = Void or else not a_value.is_equal (namespace) then
+			if a_value = Void then
+					-- no version
 				set_error (create {CONF_ERROR_VERSION})
+			elseif a_value.is_equal (namespace_1_0_0) then
+					-- 5.7 release
+					-- this is fully compatible with the current version
+					-- so we don't have to do anything special
+			elseif a_value.is_equal (latest_namespace) then
+					-- current version
+			else
+					-- unknown version
+					-- we try to be forward compatible to a certain degree
+				is_unknown_version := True
 			end
 		end
-
 
 	set_error (an_error: CONF_ERROR_PARSE) is
 			-- Set `an_error'.
@@ -83,6 +102,18 @@ feature {NONE} -- Implementation
 			is_error := True
 			last_error := an_error
 			raise ("Parse error")
+		end
+
+	set_warning (an_error: CONF_ERROR_PARSE) is
+			-- Set `an_error' as a warning.
+		require
+			an_error_ok: an_error /= Void
+		do
+			is_warning := True
+			if last_warning = Void then
+				create last_warning.make (1)
+			end
+			last_warning.force (an_error)
 		end
 
 	set_parse_error_message (a_message: STRING) is
@@ -95,6 +126,20 @@ feature {NONE} -- Implementation
 			is_error := True
 			last_error := l_error
 			raise ("Parse error")
+		end
+
+	set_parse_warning_message (a_message: STRING) is
+			-- We have a parse warning with a message.
+		local
+			l_error: CONF_ERROR_PARSE
+		do
+			create l_error
+			l_error.set_message (a_message)
+			is_warning := True
+			if last_warning = Void then
+				create last_warning.make (1)
+			end
+			last_warning.force (l_error)
 		end
 
 indexing

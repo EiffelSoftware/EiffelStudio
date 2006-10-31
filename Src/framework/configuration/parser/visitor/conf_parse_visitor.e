@@ -116,6 +116,15 @@ feature -- Visit nodes
 					add_and_raise_error (l_load.last_error)
 				end
 			else
+					-- add warnings
+				if l_load.is_warning then
+					if last_warnings = Void then
+						last_warnings := l_load.last_warnings
+					else
+						last_warnings.append (l_load.last_warnings)
+					end
+				end
+
 				l_uuid := l_load.last_uuid
 				l_target := libraries.item (l_uuid)
 				if l_target /= Void then

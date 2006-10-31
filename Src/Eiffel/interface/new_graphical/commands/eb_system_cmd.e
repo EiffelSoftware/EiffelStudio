@@ -61,6 +61,7 @@ feature -- Basic operations
 			-- Open the Project configuration window.
 		local
 			rescued: BOOLEAN
+			ed: EV_ERROR_DIALOG
 			wd: EV_WARNING_DIALOG
 			l_debugs: SEARCH_TABLE [STRING]
 			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
@@ -82,10 +83,17 @@ feature -- Basic operations
 						create l_load.make (l_fact)
 						l_load.retrieve_configuration (l_config)
 						if l_load.is_error then
-							create wd.make_with_text (l_load.last_error.out)
-							wd.show_modal_to_window (window_manager.
+							create ed.make_with_text (l_load.last_error.out)
+							ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
+							ed.show_modal_to_window (window_manager.
 								last_focused_development_window.window)
 						else
+								-- display warnings
+							if l_load.is_warning then
+								create wd.make_with_text (l_load.last_warning_messages)
+								wd.show_modal_to_window (window_manager.
+									last_focused_development_window.window)
+							end
 								-- sort debugs
 							if workbench.system_defined then
 								l_debugs := system.debug_clauses
@@ -139,6 +147,7 @@ feature {NONE} -- Actions
 			a_stone_not_void: a_stone /= Void
 		local
 			l_lib: CONF_LIBRARY
+			ed: EV_ERROR_DIALOG
 			wd: EV_WARNING_DIALOG
 			l_sorted_debugs: DS_ARRAYED_LIST [STRING]
 			l_fact: CONF_COMP_FACTORY
@@ -161,10 +170,18 @@ feature {NONE} -- Actions
 						create l_load.make (l_fact)
 						l_load.retrieve_configuration (l_config)
 						if l_load.is_error then
-							create wd.make_with_text (l_load.last_error.out)
-							wd.show_modal_to_window (window_manager.
+							create ed.make_with_text (l_load.last_error.out)
+							ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
+							ed.show_modal_to_window (window_manager.
 								last_focused_development_window.window)
 						else
+								-- display warnings
+							if l_load.is_warning then
+								create wd.make_with_text (l_load.last_warning_messages)
+								wd.show_modal_to_window (window_manager.
+									last_focused_development_window.window)
+							end
+
 							create l_sorted_debugs.make_default
 							create configuration_window.make_for_target (l_load.last_system, lace.target_name, l_fact, l_sorted_debugs, pixmaps, preferences.misc_data.external_editor_command)
 

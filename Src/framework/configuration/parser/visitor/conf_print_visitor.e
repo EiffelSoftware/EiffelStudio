@@ -27,20 +27,57 @@ inherit
 	CONF_ACCESS
 
 create
-	make
+	make,
+	make_1_0_0
 
 feature {NONE} -- Initialization
 
 	make is
 			-- Create.
 		do
+			namespace := latest_namespace
+			schema := latest_schema
 		end
 
+	make_1_0_0 is
+			-- Create for EiffelStudio 5.7
+		do
+			namespace := namespace_1_0_0
+			schema := schema_1_0_0
+		end
 
 feature -- Access
 
 	text: STRING
 			-- The text output.
+
+	namespace: STRING
+			-- Namespace to use.
+
+	schema: STRING
+			-- Schema to use.
+
+feature -- Update
+
+	set_namespace (a_namespace: like namespace) is
+			-- Set `namespace' to `a_namespace'.
+		require
+			a_namespace_ok: a_namespace /= Void and then not a_namespace.is_empty
+		do
+			namespace := a_namespace
+		ensure
+			namespace_set: namespace = a_namespace
+		end
+
+	set_schema (a_schema: like schema) is
+			-- Set `schema' to `a_schema'.
+		require
+			a_schema_ok: a_schema /= Void and then not a_schema.is_empty
+		do
+			schema := a_schema
+		ensure
+			schema_set: schema = a_schema
+		end
 
 feature -- Visit nodes
 
@@ -229,7 +266,7 @@ feature -- Visit nodes
 			-- Visit `a_library'.
 		do
 			append_pre_group ("library", a_library)
-			if a_library.use_application_options then
+			if namespace /= namespace_1_0_0 and then a_library.use_application_options then
 				append_text (" use_application_options=%"true%"")
 			end
 			append_val_group (a_library)
@@ -743,7 +780,7 @@ feature {NONE} -- Implementation
 					if l_assertions.is_loop then
 						l_a_name.extend ("loop")
 					end
-					if l_assertions.is_supplier_precondition then
+					if namespace /= namespace_1_0_0 and then l_assertions.is_supplier_precondition then
 						l_a_name.extend ("supplier_precondition")
 					end
 
@@ -763,7 +800,7 @@ feature {NONE} -- Implementation
 					if l_assertions.is_loop then
 						l_a_val.extend (l_assertions.is_loop.out.as_lower)
 					end
-					if l_assertions.is_supplier_precondition then
+					if namespace /= namespace_1_0_0 and then l_assertions.is_supplier_precondition then
 						l_a_val.extend (l_assertions.is_supplier_precondition.out.as_lower)
 					end
 					append_tag ("assertions", Void, l_a_name, l_a_val)
@@ -942,7 +979,7 @@ feature {NONE} -- Implementation
 			if a_cluster.is_recursive then
 				append_text (" recursive=%"true%"")
 			end
-			if a_cluster.is_hidden then
+			if namespace /= namespace_1_0_0 and then a_cluster.is_hidden then
 				append_text (" hidden=%"true%"")
 			end
 		end

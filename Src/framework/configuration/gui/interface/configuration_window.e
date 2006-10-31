@@ -94,9 +94,11 @@ feature {NONE}-- Initialization
 			a_target_ok: a_target /= Void and then not a_target.is_empty
 			a_system_not_void: a_system /= Void
 			a_factory_not_void: a_factory /= Void
-			a_debugs_not_void: a_debugs /= Void
 			a_editor_not_void: a_editor /= Void
 		do
+			if a_debugs = Void then
+				create debug_clauses.make (0)
+			end
 			selected_target := a_target
 			set_pixmaps (a_pixmaps)
 			conf_system := a_system
@@ -106,10 +108,11 @@ feature {NONE}-- Initialization
 			default_create
 			config_windows.force (Current, conf_system.file_name)
 			window := Current
+			set_split_position (300)
 		ensure
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory
-			debug_clauses_set: debug_clauses = a_debugs
+			debug_clauses_set: a_debugs /= Void implies debug_clauses = a_debugs
 			selected_target_set: selected_target = a_target
 		end
 
@@ -119,14 +122,13 @@ feature {NONE}-- Initialization
 			a_system_not_void: a_system /= Void
 			a_system_has_targets: not a_system.targets.is_empty
 			a_factory_not_void: a_factory /= Void
-			a_debugs_not_void: a_debugs /= Void
 			a_editor_not_void: a_editor /= Void
 		do
 			make_for_target (a_system, a_system.target_order.first.name, a_factory, a_debugs, a_pixmaps, a_editor)
 		ensure
 			system_set: conf_system = a_system
 			factory_set: conf_factory = a_factory
-			debug_clauses_set: debug_clauses = a_debugs
+			debug_clauses_set: a_debugs /= Void implies debug_clauses = a_debugs
 		end
 
 	initialize is

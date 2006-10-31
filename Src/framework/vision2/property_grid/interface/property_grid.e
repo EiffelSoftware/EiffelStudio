@@ -122,7 +122,8 @@ feature -- Update
 			l_row: EV_GRID_ROW
 			l_item: EV_GRID_SPAN_LABEL_ITEM
 		do
-			if not sections.has (a_name) then
+			sections.search (a_name)
+			if not sections.found then
 				insert_new_row (row_count + 1)
 				l_row := row (row_count)
 				create l_item.make_master (1)
@@ -201,6 +202,8 @@ feature -- Update
 			-- Store for the expanded sections, will get updated if sections are expanded or collapsed.
 		require
 			a_store_not_void: a_store /= Void
+		local
+			l_section: EV_GRID_ROW
 		do
 			expanded_section_store := a_store
 			from
@@ -208,11 +211,12 @@ feature -- Update
 			until
 				a_store.after
 			loop
-				if sections.has (a_store.key_for_iteration) and then sections.found_item.is_expandable then
+				l_section := sections.item (a_store.key_for_iteration)
+				if l_section /= Void and then l_section.is_expandable then
 					if a_store.item_for_iteration then
-						sections.found_item.expand
+						l_section.expand
 					else
-						sections.found_item.collapse
+						l_section.collapse
 					end
 				end
 				a_store.forth

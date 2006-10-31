@@ -1,5 +1,9 @@
 indexing
-	description: "The configuration system."
+	description: "[
+		The configuration system. Every configuration file corresponds to one CONF_SYSTEM object.
+		It can be loaded from a configuration file by using CONF_LOAD and stored to a configuration file
+		by using the store feature.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

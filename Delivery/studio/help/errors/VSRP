@@ -1,0 +1,14 @@
+VSRP, ECMA Standard 367, section 8.3.10, page 32
+
+   Root Procedure rule
+
+	It is valid to specify a name pn as root procedure
+   name for a system `S' if and only if it satisfies the
+   following conditions:
+
+      1 `pn' is the name of a creation procedure `p' of `S’s root type.
+
+      2 `p' has no formal argument.
+
+      3 `p' is precondition-free.
+.

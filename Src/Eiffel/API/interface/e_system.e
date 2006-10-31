@@ -211,7 +211,7 @@ feature -- Access
 			Result := workbench.system /= Void and then workbench.System.is_precompiled
 		end;
 
-feature {COMPILER_EXPORTER, CALL_STACK_ELEMENT, ABSTRACT_REFERENCE_VALUE, EXPANDED_VALUE, ATTR_REQUEST, APPLICATION_STATUS}
+feature {COMPILER_EXPORTER}
 
 	valid_dynamic_id (i: INTEGER): BOOLEAN is
 			-- Is the class_type dynamic id `i' valid?

@@ -938,7 +938,7 @@ feature -- Update
 				eiffel_system.workbench.is_already_compiled and then
 				eiffel_system.workbench.last_reached_degree <= 5 and then
 				eiffel_system.root_cluster /= Void and then
-				eiffel_system.root_class_name /= Void
+				eiffel_system.root_class /= Void
 			then
 				if eiffel_system.root_class.is_compiled then
 					stone := create {CLASSC_STONE}.make (eiffel_system.system.root_class.compiled_class)

@@ -31,6 +31,9 @@ feature {NONE} -- Implementation
 			-- Set up the blank ace builder to work with a system named
 			-- `a_system_name' and a project located in `a_project_directory'.
 			-- `a_root_class_name', `a_root_cluster_name' and `a_root_feature_name' are the root attribute names.
+		local
+			l_rexp: RX_PCRE_REGULAR_EXPRESSION
+			l_root_class_file_name: STRING
 		do
 			system_name := a_system_name
 			root_class_name := a_root_class_name
@@ -44,8 +47,19 @@ feature {NONE} -- Implementation
 			ace_filename.add_extension (config_extension)
 
 				-- Create the pathname of the root class.
+			create l_rexp.make
+			l_rexp.compile ("^([a-zA-Z][a-zA-Z0-9_]*).*$")
+			l_rexp.match (a_root_class_name.as_lower)
+
+			check
+				l_rexp.has_matched
+					-- should always match because we already checked for a valid class type
+			end
+			l_root_class_file_name := create {STRING}.make_empty
+
+			l_rexp.append_captured_substring_to_string (l_root_class_file_name, 1)
 			create root_class_filename.make_from_string (project_directory)
-			root_class_filename.set_file_name (a_root_class_name.as_lower)
+			root_class_filename.set_file_name (l_root_class_file_name)
 			root_class_filename.add_extension (eiffel_extension)
 		end
 

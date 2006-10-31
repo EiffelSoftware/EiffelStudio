@@ -1,0 +1,16 @@
+VSRT, ECMA Standard 367, section: 8.3.9, page 32
+
+   Root Type Rule
+
+   It is valid to designate a type `TN' as root type of a
+   system of universe `U' if and only if it satisfies the
+   following conditions:
+
+      1 `TN' is the name of a stand-alone type `T'.
+
+      2 `T' only involves classes in `U'.
+
+      3 `T’s base class is not deferred.
+
+      4 The base class of any type on which `T' depends is in `U'.
+.

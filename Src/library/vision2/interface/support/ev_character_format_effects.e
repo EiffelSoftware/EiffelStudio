@@ -10,23 +10,23 @@ indexing
 class
 	EV_CHARACTER_FORMAT_EFFECTS
 
-inherit
-	ANY
-		redefine
-			is_equal
-		end
-
 feature -- Status report
 
 	is_striked_out: BOOLEAN
 			-- Is the character striken out?
-		
+
 	is_underlined: BOOLEAN
 			-- Is the character underlined?
-			
+
 	vertical_offset: INTEGER
 			-- Vertical offset of character from base line in pixels.
 			-- A positive value indicates a superscript, negative indicating a subscript.
+
+	is_in_default_state: BOOLEAN is
+			-- Is current in default state?
+		do
+			Result := not is_striked_out and not is_underlined and vertical_offset = 0
+		end
 
 feature -- Status setting
 
@@ -37,7 +37,7 @@ feature -- Status setting
 		ensure
 			is_striked_out: is_striked_out
 		end
-		
+
 	disable_striked_out is
 			-- Ensure characters are not displayed as striken out, and set `is_striked_out' to False.
 		do
@@ -45,7 +45,7 @@ feature -- Status setting
 		ensure
 			not_striked_out: not is_striked_out
 		end
-		
+
 	enable_underlined is
 			-- Ensure characters are displayed as underlined, and set `is_underlined' to True.
 		do
@@ -61,21 +61,13 @@ feature -- Status setting
 		ensure
 			not_underlined: not is_underlined
 		end
-		
+
 	set_vertical_offset (an_offset: INTEGER) is
 			-- Assign `an_offset' to `vertical_offset'.
 		do
 			vertical_offset := an_offset
 		ensure
 			vertical_offset_set: vertical_offset = an_offset
-		end
-		
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-		do
-			Result := (is_striked_out = other.is_striked_out) and then
-				(is_underlined = other.is_underlined)
 		end
 
 indexing

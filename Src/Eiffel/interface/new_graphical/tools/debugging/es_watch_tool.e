@@ -83,8 +83,7 @@ feature {NONE} -- Initialization
 			create esgrid.make_with_name ("Watches", "watches")
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (5)
-			esgrid.set_columns_layout_from_string_preference (
-					preferences.debug_tool_data.grid_column_layout_preference_for (esgrid.id),
+			esgrid.set_columns_layout (5, 1,
 					<<
 						[1, True, False, 150, "Expression"],
 						[2, True, False, 150, "Value"],

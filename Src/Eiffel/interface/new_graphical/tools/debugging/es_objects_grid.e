@@ -159,19 +159,15 @@ feature -- Change with preferences
 
 	set_columns_layout_from_string_preference (spref: STRING_PREFERENCE; dft_value: ARRAY [like column_layout]) is
 		local
-			retried: BOOLEAN
 			s: STRING
 		do
 			s := spref.value
-			if retried or (s = Void or else s.is_empty) then
-				set_columns_layout ( 5, 1, dft_value)
+			if s = Void or else s.is_empty then
+				set_columns_layout (5, 1, dft_value)
 				save_columns_layout_to_string_preference (spref)
 			else
 				set_columns_layout_from_string (spref.value)
 			end
-		rescue
-			retried := True
-			retry
 		end
 
 	save_columns_layout_to_string_preference (spref: STRING_PREFERENCE) is
@@ -194,31 +190,37 @@ feature -- Change with preferences
 			l_autoresize: BOOLEAN
 			l_width: INTEGER
 			l_title: STRING
+			retried: BOOLEAN
 		do
-			sp := s.split (';')
-			from
-				i := 0
-				n := sp.count // 5
-				create dts.make (0, n - 1)
-				sp.start
-			until
-				sp.after
-			loop
-				l_id         := sp.item.to_integer
-				sp.forth
-				l_displayed  := sp.item.to_boolean
-				sp.forth
-				l_autoresize := sp.item.to_boolean
-				sp.forth
-				l_width      := sp.item.to_integer
-				sp.forth
-				l_title      := sp.item
-				sp.forth
+			if not retried or s = Void or else not s.is_empty then
+				sp := s.split (';')
+				from
+					i := 0
+					n := sp.count // 5
+					create dts.make (0, n - 1)
+					sp.start
+				until
+					sp.after
+				loop
+					l_id         := sp.item.to_integer
+					sp.forth
+					l_displayed  := sp.item.to_boolean
+					sp.forth
+					l_autoresize := sp.item.to_boolean
+					sp.forth
+					l_width      := sp.item.to_integer
+					sp.forth
+					l_title      := sp.item
+					sp.forth
 
-				dts[i] :=  [l_id, l_displayed, l_autoresize, l_width, l_title]
-				i := i + 1
+					dts[i] :=  [l_id, l_displayed, l_autoresize, l_width, l_title]
+					i := i + 1
+				end
+				set_columns_layout (5, 1, dts)
 			end
-			set_columns_layout (5, 1, dts)
+		rescue
+			retried := True
+			retry
 		end
 
 	columns_layout_to_string: STRING is

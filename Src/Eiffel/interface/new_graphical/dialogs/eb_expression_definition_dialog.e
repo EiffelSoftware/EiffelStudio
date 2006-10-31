@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGER_MANAGER
+	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -499,7 +499,7 @@ feature {NONE} -- Event handling
 					l_list := eiffel_universe.compiled_classes_with_name (l_class_name)
 					if l_list /= Void and then not l_list.is_empty then
 						l_class_c := l_list.first.compiled_class
-						create expression_field_provider.make (l_class_c, Void, True)
+						create expression_field_provider.make (l_class_c, Void)
 						expression_field.set_completion_possibilities_provider (expression_field_provider)
 						expression_field_provider.set_code_completable (expression_field)
 					else
@@ -655,12 +655,21 @@ feature {NONE} -- Code completion.
 			expression_field_attached: expression_field /= Void
 			class_field_attached: class_field /= Void
 		do
-			create expression_field_provider.make (Void, Void, false)
+			create expression_field_provider.make (Void, Void)
+			expression_field_provider.set_dynamic_context_functions (
+											agent eb_debugger_manager.current_debugging_class_c,
+											agent eb_debugger_manager.current_debugging_feature_as)
+
+
 			expression_field_provider.set_code_completable (expression_field)
 			expression_field.set_completion_possibilities_provider (expression_field_provider)
 
 			if class_provider = Void then
-				create class_provider.make (Void, Void, false)
+				create class_provider.make (Void, Void)
+				class_provider.set_dynamic_context_functions (
+											agent eb_debugger_manager.current_debugging_class_c,
+											agent eb_debugger_manager.current_debugging_feature_as)
+
 				class_provider.set_use_all_classes_in_universe (True)
 				class_field.set_completing_feature (false)
 				class_field.set_completion_possibilities_provider (class_provider)

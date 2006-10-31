@@ -218,7 +218,7 @@ fixme ("find a smarter way to get a valid value")
 		require
 			last_dump_value /= Void
 		do
-			Result := last_dump_value.generating_type_representation
+			Result := last_dump_value.generating_type_representation (generating_type_evaluation_enabled)
 		end
 
 	associated_dump_value: DUMP_VALUE is
@@ -263,11 +263,16 @@ feature -- Graphical changes
 				if expression /= Void and then expression.context_class /= Void then
 					l_class_c := expression.context_class
 				else
-					l_class_c := eb_debugger_manager.debugging_class_c
-					l_feature_as := eb_debugger_manager.debugging_feature_as
+					l_class_c := eb_debugger_manager.current_debugging_class_c
+					l_feature_as := eb_debugger_manager.current_debugging_feature_as
 				end
 				if l_class_c /= Void then
-					create l_provider.make (l_class_c, l_feature_as, expression /= Void and then expression.context_class /= Void)
+					create l_provider.make (l_class_c, l_feature_as)
+					if expression = Void or else expression.context_class = Void then
+						l_provider.set_dynamic_context_functions (
+										agent eb_debugger_manager.current_debugging_class_c,
+										agent eb_debugger_manager.current_debugging_feature_as)
+					end
 					gedit.set_completion_possibilities_provider (l_provider)
 				end
 			end

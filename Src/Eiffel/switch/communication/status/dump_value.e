@@ -80,17 +80,12 @@ feature {DUMP_VALUE_FACTORY} -- Initialization
 
 feature {DUMP_VALUE_FACTORY} -- Preferences related
 
-	generating_type_evaluation_enabled_pref: BOOLEAN_PREFERENCE
+	debug_output_evaluation_enabled: BOOLEAN
+			-- Is debug output enabled ?
 
-	debug_output_evaluation_enabled_pref: BOOLEAN_PREFERENCE
-
-	set_debugger_preferences (
-				a_generating_type_evaluation_pref: BOOLEAN_PREFERENCE;
-				a_debug_output_evaluation_pref: BOOLEAN_PREFERENCE
-			) is
+	set_debug_output_evaluation_enabled (b: like debug_output_evaluation_enabled) is
 		do
-			generating_type_evaluation_enabled_pref := a_generating_type_evaluation_pref
-			debug_output_evaluation_enabled_pref := a_debug_output_evaluation_pref
+			debug_output_evaluation_enabled := b
 		end
 
 feature {DUMP_VALUE_FACTORY} -- Restricted Initialization
@@ -385,7 +380,7 @@ feature -- Status report
 						and then dynamic_class.simple_conform_to (system_string_c.compiled_class)
 					then
 						Result := True
-					elseif debug_output_evaluation_enabled_pref.value then
+					elseif debug_output_evaluation_enabled then
 						dc := debuggable_class
 						Result := dc /= Void and then
 								  dynamic_class.simple_conform_to (dc)
@@ -636,7 +631,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					Result.keep_head (l_count.min (Result.count))
 				end
 				last_string_representation_length := l_count
-			else
+			elseif debug_output_evaluation_enabled then
 				Result := classic_debug_output_evaluated_string (min, max)
 			end
 		end
@@ -753,28 +748,26 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
 			if application.is_running and application.is_stopped then
-				if generating_type_evaluation_enabled_pref.value then
-					l_feat := generating_type_feature_i (dynamic_class)
-					if application.is_dotnet then
-						if dynamic_class_type /= Void then
-							l_icdov := new_value_object_dotnet
-							if l_icdov /= Void then
-								Result := Eifnet_debugger.generating_type_value_from_object_value (
-											value_frame_dotnet,
-											value_dotnet,
-											l_icdov,
-											dynamic_class_type,
-											l_feat
-										)
-								l_icdov.clean_on_dispose
-							end
+				l_feat := generating_type_feature_i (dynamic_class)
+				if application.is_dotnet then
+					if dynamic_class_type /= Void then
+						l_icdov := new_value_object_dotnet
+						if l_icdov /= Void then
+							Result := Eifnet_debugger.generating_type_value_from_object_value (
+										value_frame_dotnet,
+										value_dotnet,
+										l_icdov,
+										dynamic_class_type,
+										l_feat
+									)
+							l_icdov.clean_on_dispose
 						end
-					else
-						l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
+					end
+				else
+					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
 
-						if l_final_result_value /= Void and then not l_final_result_value.is_void then
-							Result := l_final_result_value.classic_string_representation (0, -1)
-						end
+					if l_final_result_value /= Void and then not l_final_result_value.is_void then
+						Result := l_final_result_value.classic_string_representation (0, -1)
 					end
 				end
 				if Result /= Void then
@@ -899,7 +892,7 @@ feature -- Action
 
 feature -- Access
 
-	generating_type_representation: STRING is
+	generating_type_representation (generating_type_evaluation_enabled: BOOLEAN): STRING is
 			-- {TYPE}.generating_type string representation
 		local
 			l_generating_type_string: STRING
@@ -922,7 +915,9 @@ feature -- Access
 				elseif dynamic_class.is_true_external then
 					l_generating_type_string := dynamic_class.external_class_name
 				elseif dynamic_class.is_generic or dynamic_class.is_tuple then
-					l_generating_type_string := generating_type_evaluated_string
+					if generating_type_evaluation_enabled then
+						l_generating_type_string := generating_type_evaluated_string
+					end
 				elseif type = type_bits then
 					l_generating_type_string := type_of_bits
 				end

@@ -7,30 +7,23 @@ indexing
 class
 	DUMP_VALUE_FACTORY
 
-inherit
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
+feature {DEBUGGER_MANAGER} -- Change
+
+	set_debug_output_evaluation_enabled (b: like debug_output_evaluation_enabled) is
+		do
+			debug_output_evaluation_enabled := b
 		end
+
+feature {NONE} -- Properties		
+
+	debug_output_evaluation_enabled: BOOLEAN
 
 feature -- Prepare value
 
 	init_value (dv: DUMP_VALUE) is
 		do
-			if debug_output_evaluation_enabled_pref = Void then
-				debug_output_evaluation_enabled_pref := preferences.debug_tool_data.debug_output_evaluation_enabled_preference
-			end
-			if generating_type_evaluation_enabled_pref = Void then
-				generating_type_evaluation_enabled_pref := preferences.debug_tool_data.generating_type_evaluation_enabled_preference
-			end
-			dv.set_debugger_preferences (
-						generating_type_evaluation_enabled_pref,
-						debug_output_evaluation_enabled_pref
-					)
+			dv.set_debug_output_evaluation_enabled (debug_output_evaluation_enabled)
 		end
-
-	generating_type_evaluation_enabled_pref,
-	debug_output_evaluation_enabled_pref: BOOLEAN_PREFERENCE
 
 feature -- Access
 

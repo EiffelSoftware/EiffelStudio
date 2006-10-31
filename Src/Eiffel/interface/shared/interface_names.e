@@ -541,6 +541,8 @@ feature -- Label texts
 	l_Compile_project: STRING is		"Compile project"
 	l_Condition: STRING is				"Condition"
 	l_Confirm_kill: STRING is			"Stop the application?"
+	l_Confirm_kill_and_restart: STRING is			"Stop and restart the application?"
+
 	l_Context: STRING is				"Context"
 	l_Creation: STRING is				"Creation procedure:"
 	l_creators: STRING is				"creators"

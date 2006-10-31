@@ -14,7 +14,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_PREFERENCES
+	SHARED_DEBUGGER_MANAGER
 
 	IPC_REQUEST
 
@@ -38,12 +38,7 @@ create
 feature {NONE} -- Initialization
 
 	make is
-		local
-			p: BOOLEAN_PREFERENCE
 		do
-			p := Preferences.debugger_data.close_classic_dbg_daemon_on_end_of_debugging_preference
-			set_close_ecdbgd_on_end_of_debugging_by_pref (p)
-			p.change_actions.extend (agent set_close_ecdbgd_on_end_of_debugging_by_pref)
 		end
 
 feature -- Launching
@@ -77,7 +72,7 @@ feature -- Launching
 					create cs_pname.make ("ecdbgd")
 
 					debug ("ipc")
-						io.put_string ("Launching ecDBDd : " + cmd + " (timeout=" + ise_timeout.out + ") %N")
+						io.put_string ("Launching ecdbgd : " + cmd + " (timeout=" + ise_timeout.out + ") %N")
 					end
 
 					r := c_launch_ecdbgd (cs_pname.item, cs_cmd.item, ise_timeout)
@@ -115,7 +110,7 @@ feature -- Launching
 		local
 			s: STRING_8
 		do
-			ise_timeout := Preferences.debugger_data.classic_debugger_timeout
+			ise_timeout := Debugger_manager.classic_debugger_timeout
 			if ise_timeout <= 0 then
 				s := Execution_environment.get (Ise_timeout_varname)
 				if s /= Void and then s.is_integer then
@@ -125,7 +120,7 @@ feature -- Launching
 				end
 			end
 
-			s := Preferences.debugger_data.classic_debugger_location
+			s := Debugger_manager.classic_debugger_location
 			if s = Void or else s.is_empty then
 				s := Execution_environment.get (Ise_ecdbgd_varname)
 			end
@@ -188,21 +183,19 @@ feature -- Status
 			Result := ise_ecdbgd_path /= Void and then valid_executable (ise_ecdbgd_path)
 		end
 
+	close_ecdbgd_on_end_of_debugging: BOOLEAN is
+			-- Do we close the Eiffel debugger's daemon
+			-- when the debugging session is terminated ?
+		do
+			Result := Debugger_manager.classic_close_dbg_daemon_on_end_of_debugging
+		end
+
 feature -- Property
 
 	ec_dbg_launched: BOOLEAN
 			-- Is Eiffel debugger's daemon launched ?
 
-	close_ecdbgd_on_end_of_debugging: BOOLEAN
-			-- Do we close the Eiffel debugger's daemon
-			-- when the debugging session is terminated ?
-
 feature {NONE} -- ecdbgd status
-
-	set_close_ecdbgd_on_end_of_debugging_by_pref (p: BOOLEAN_PREFERENCE) is
-		do
-			close_ecdbgd_on_end_of_debugging := p.value
-		end
 
 	ecdbgd_alive_checking_timer: EV_TIMEOUT
 

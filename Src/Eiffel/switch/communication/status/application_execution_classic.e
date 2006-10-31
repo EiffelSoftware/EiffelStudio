@@ -27,11 +27,6 @@ inherit
 			{NONE} all
 		end
 
-	IPC_SHARED_ENGINE
-		export
-			{NONE} all
-		end
-
 	COMPILER_EXPORTER
 
 create {APPLICATION_EXECUTION}
@@ -43,6 +38,7 @@ feature {APPLICATION_EXECUTION} -- Initialization
 			--
 		do
 			Precursor
+			create ipc_engine.make
 		end
 
 	recycle is
@@ -197,6 +193,12 @@ feature -- Execution
 			release_all_objects
 		end
 
+	request_ipc_end_of_debugging is
+			-- Request ipc engine end of debugging
+		do
+			Ipc_engine.end_of_debugging
+		end
+
 feature -- Change
 
 	apply_critical_stack_depth (d: INTEGER) is
@@ -265,6 +267,11 @@ feature -- Query
 			check False end
 		end
 
+feature {NONE} -- IPC implementation
+
+	ipc_engine: IPC_ENGINE
+			-- IPC engine, used to control the ecdbgd debugger daemon.
+
 feature {RUN_REQUEST} -- Implementation
 
 	invoke_launched_command (successful: BOOLEAN) is
@@ -321,6 +328,10 @@ feature {APPLICATION_STATUS}
 		once
 			create Result.make (Rqst_cont)
 		end
+
+invariant
+
+	ipc_engine_not_void: ipc_engine /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

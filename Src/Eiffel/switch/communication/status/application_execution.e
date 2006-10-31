@@ -21,16 +21,6 @@ inherit
 			{ANY} Eiffel_project, Eiffel_system
 		end
 
-	EB_ERROR_MANAGER
-		export
-			{NONE} all
-		end
-
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
 	SHARED_DEBUGGED_OBJECT_MANAGER
 		export
 			{NONE} all
@@ -46,17 +36,9 @@ feature {NONE} -- Initialization
 	make is
 		do
 			create debug_info.make
-			displayed_string_size := preferences.misc_data.default_displayed_string_size
-			if preferences.debug_tool_data /= Void then
-				set_max_evaluation_duration (preferences.debug_tool_data.max_evaluation_duration)
-				preferences.debug_tool_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
-			end
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
 		ensure
-			displayed_string_size: displayed_string_size = preferences.misc_data.default_displayed_string_size
-			max_evaluation_duration_set: preferences.debug_tool_data /= Void implies
-				max_evaluation_duration = preferences.debug_tool_data.max_evaluation_duration
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
 		end
 
@@ -129,7 +111,7 @@ feature -- load and save
 			end
 			debug_info.save (save_filename)
 		rescue
-			set_error_message ("Unable to save project properties%N%
+			Debugger_manager.set_error_message ("Unable to save project properties%N%
 					%Cause: Unable to open " + save_filename + " for writing")
 		end
 
@@ -139,9 +121,6 @@ feature -- Execution event callbacks
 		require
 			Debugger_manager_not_void: debugger_manager /= Void
 		do
-			set_critical_stack_depth (preferences.debugger_data.critical_stack_depth)
-			set_displayed_string_size (preferences.misc_data.default_displayed_string_size)
-			set_interrupt_number (preferences.debug_tool_data.interrupt_every_n_instructions)
 			Debugger_manager.on_application_before_launching
 		end
 

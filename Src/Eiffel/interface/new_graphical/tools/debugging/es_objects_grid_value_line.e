@@ -227,7 +227,7 @@ feature -- Graphical changes
 					else
 						last_dump_value := dv.dump_value
 						set_value (last_dump_value.output_for_debugger)
-						set_type (last_dump_value.generating_type_representation)
+						set_type (last_dump_value.generating_type_representation (generating_type_evaluation_enabled))
 
 						set_pixmap (Icons @ (dv.kind))
 						if dv.expandable then

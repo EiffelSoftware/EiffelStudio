@@ -73,16 +73,27 @@ feature -- Element update
 			-- Add a new target.
 		local
 			l_target: CONF_TARGET
+			l_name: STRING
+			i: INTEGER
 		do
-			if not system.targets.has ("new") then
-					-- add it to the configuration
-				l_target := configuration_window.conf_factory.new_target ("new", system)
-				system.add_target (l_target)
-
-					-- add and display the section
-				configuration_window.add_target_sections (l_target, parent)
-				parent.last.enable_select
+				-- find an unused target name (new_XXX)
+			from
+				l_name := "new_1"
+				i := 1
+			until
+				not system.targets.has (l_name)
+			loop
+				l_name := "new_"+i.out
+				i := i + 1
 			end
+
+				-- add it to the configuration
+			l_target := configuration_window.conf_factory.new_target (l_name, system)
+			system.add_target (l_target)
+
+				-- add and display the section
+			configuration_window.add_target_sections (l_target, parent)
+			parent.last.enable_select
 		end
 
 feature {NONE} -- Implementation

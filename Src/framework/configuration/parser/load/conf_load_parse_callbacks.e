@@ -79,7 +79,13 @@ feature -- Callbacks
 				end
 
 				if l_tag = 0 then
-					set_parse_error_message (conf_interface_names.e_parse_invalid_tag (a_local_part))
+					if is_unknown_version then
+							-- unknown version, just add a warning
+						set_parse_warning_message (conf_interface_names.e_parse_invalid_tag (a_local_part))
+					else
+							-- known version, this is an error
+						set_parse_error_message (conf_interface_names.e_parse_invalid_tag (a_local_part))
+					end
 				else
 					current_tag.extend (l_tag)
 				end
@@ -117,7 +123,13 @@ feature -- Callbacks
 							set_parse_error_message (conf_interface_names.e_parse_invalid_value (a_local_part))
 						end
 					else
-						set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
+						if is_unknown_version then
+								-- unknown version, just add a warning
+							set_parse_warning_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
+						else
+								-- known version, this is an error
+							set_parse_error_message (conf_interface_names.e_parse_invalid_attribute (a_local_part))
+						end
 					end
 				end
 			end

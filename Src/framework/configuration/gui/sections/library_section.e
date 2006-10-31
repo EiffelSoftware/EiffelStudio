@@ -51,6 +51,7 @@ feature -- Basic operations
 		local
 			l_config: STRING
 			l_load: CONF_LOAD
+			ed: EV_ERROR_DIALOG
 			wd: EV_WARNING_DIALOG
 			l_lib_conf: CONFIGURATION_WINDOW
 		do
@@ -64,12 +65,18 @@ feature -- Basic operations
 				create l_load.make (configuration_window.conf_factory)
 				l_load.retrieve_configuration (l_config)
 				if l_load.is_error then
-					create wd.make_with_text (l_load.last_error.out)
-					wd.show_modal_to_window (configuration_window)
+					create ed.make_with_text (l_load.last_error.out)
+					ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
+					ed.show_modal_to_window (configuration_window)
 				elseif l_load.last_system.library_target = Void then
-					create wd.make_with_text ((create {CONF_ERROR_NOLIB}.make (group.name)).out)
-					wd.show_modal_to_window (configuration_window)
+					create ed.make_with_text ((create {CONF_ERROR_NOLIB}.make (group.name)).out)
+					ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
+					ed.show_modal_to_window (configuration_window)
 				else
+						-- add warnings
+					create wd.make_with_text (l_load.last_warning_messages)
+					wd.show_modal_to_window (configuration_window)
+
 					create l_lib_conf.make_for_target (l_load.last_system, l_load.last_system.library_target.name, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
 
 					l_lib_conf.set_size (configuration_window.width, configuration_window.height)

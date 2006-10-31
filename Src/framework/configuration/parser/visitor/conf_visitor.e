@@ -22,10 +22,16 @@ feature -- Status
 			Result := last_errors /= Void and then not last_errors.is_empty
 		end
 
-	last_errors: LINKED_LIST [CONF_ERROR]
+	is_warning: BOOLEAN is
+			-- Was there a warning?
+		do
+			Result := last_warnings /= Void and then not last_warnings.is_empty
+		end
+
+	last_errors: ARRAYED_LIST [CONF_ERROR]
 			-- The last errors.
 
-	last_warnings: LINKED_LIST [CONF_ERROR]
+	last_warnings: ARRAYED_LIST [CONF_ERROR]
 			-- The last warnings.
 
 feature -- Visit nodes
@@ -101,7 +107,7 @@ feature {NONE} -- Implementation
 			an_error_not_void: an_error /= Void
 		do
 			if not is_error then
-				create last_errors.make
+				create last_errors.make (1)
 			end
 			last_errors.extend (an_error)
 		end
@@ -112,7 +118,7 @@ feature {NONE} -- Implementation
 			an_error_not_void: an_error /= Void
 		do
 			if not is_error then
-				create last_errors.make
+				create last_errors.make (1)
 			end
 			last_errors.extend (an_error)
 			raise_error
@@ -124,7 +130,7 @@ feature {NONE} -- Implementation
 			a_warning_not_void: a_warning /= Void
 		do
 			if last_warnings = Void  then
-				create last_warnings.make
+				create last_warnings.make (1)
 			end
 			last_warnings.extend (a_warning)
 		end

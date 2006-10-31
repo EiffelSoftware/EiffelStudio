@@ -11,13 +11,36 @@ class
 feature {NONE} -- Constants
 
 	Header: STRING is "<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>"
-		-- xml header
-	Namespace: STRING is "http://www.eiffel.com/developers/xml/configuration-1-0-0"
-		-- configuration namespace
-	Schema: STRING is
-		-- schema location
+			-- xml header
+
+	namespace_1_0_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-0-0"
+			-- Namespace of the 5.7 release
+
+	schema_1_0_0: STRING is
+			-- Schema of the 5.7 release
 		once
-			Result := Namespace +" http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+			Result := namespace_1_0_0 +" http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+		end
+
+	namespace_1_1_0: STRING is "http://www.eiffel.com/developers/xml/configuration-1-1-0"
+			-- Namespace of the 6.0 release
+
+	schema_1_1_0: STRING is
+			-- Schema of the 6.0 release
+		once
+			Result := namespace_1_1_0 +" http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd"
+		end
+
+	Latest_namespace: STRING is
+			-- Latest configuration namespace
+		once
+			Result := namespace_1_1_0
+		end
+
+	Latest_schema: STRING is
+			-- Latest schema location
+		once
+			Result := schema_1_1_0
 		end
 
 indexing

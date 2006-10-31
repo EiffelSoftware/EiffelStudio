@@ -2,7 +2,7 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
 	targetNamespace="http://www.eiffel.com/developers/xml/configuration-1-0-0"
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" elementFormDefault="qualified">
-	
+
 	<xs:element name="system">
 		<xs:complexType>
 			<xs:sequence>
@@ -10,29 +10,29 @@
 				<xs:element name="target" type="target" maxOccurs="unbounded"/>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string" use="required"/>
-			<xs:attribute name="uuid" type="uuid" use="required"/>
+			<xs:attribute name="uuid" type="uuid" use="optional"/>
 			<xs:attribute name="readonly" type="xs:boolean" use="optional"/>
 			<xs:attribute name="library_target" type="xs:string" use="optional"/>
 		</xs:complexType>
 	</xs:element>
-	
+
 	<xs:simpleType name="uuid">
 		<xs:restriction base="xs:string">
 			<xs:pattern
 				value="[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:simpleType name="location">
 		<xs:restriction base="xs:string">
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:simpleType name="regexp">
 		<xs:restriction base="xs:string">
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:complexType name="target">
 		<xs:sequence>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -73,7 +73,7 @@
 		<xs:attribute name="extends" type="xs:string" use="optional"/>
 		<xs:attribute name="abstract" type="xs:boolean" use="optional"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="root">
 		<xs:attribute name="cluster" type="xs:string" use="optional"/>
 		<xs:attribute name="class" type="xs:string" use="required"/>
@@ -91,7 +91,7 @@
 		<xs:attribute name="copyright" type="xs:string" use="optional"/>
 		<xs:attribute name="trademark" type="xs:string" use="optional"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="file_rule">
 		<xs:sequence>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -102,7 +102,7 @@
 			<xs:element name="condition" type="condition" minOccurs="0" maxOccurs="unbounded"/>
 		</xs:sequence>
 	</xs:complexType>
-	
+
 	<xs:complexType name="option">
 		<xs:sequence>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -166,26 +166,27 @@
 			  <xs:enumeration value = "use_cluster_name_as_namespace"/>
 			  <xs:enumeration value = "use_all_cluster_name_as_namespace"/>
 	    </xs:restriction>
-	</xs:simpleType>		
+	</xs:simpleType>
 
 	<xs:complexType name="debug">
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="enabled" type="xs:boolean" use="required"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="assertions">
 		<xs:attribute name="precondition" type="xs:boolean" use="optional"/>
 		<xs:attribute name="postcondition" type="xs:boolean" use="optional"/>
 		<xs:attribute name="check" type="xs:boolean" use="optional"/>
 		<xs:attribute name="invariant" type="xs:boolean" use="optional"/>
 		<xs:attribute name="loop" type="xs:boolean" use="optional"/>
+		<xs:attribute name="supplier_precondition" type="xs:boolean" use="optional"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="warning">
 		<xs:attribute name="name" type="available_warnings" use="required"/>
 		<xs:attribute name="enabled" type="xs:boolean" use="required"/>
 	</xs:complexType>
-	
+
 	<xs:simpleType name="available_warnings">
 		<xs:restriction base = "xs:string">
 			  <xs:enumeration value = "unused_local"/>
@@ -202,7 +203,7 @@
 			  <xs:enumeration value = "option_unknown_class"/>
 	    </xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:complexType name="variable">
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="value" type="xs:string" use="required"/>
@@ -217,7 +218,7 @@
 		<xs:attribute name="working_directory" type="xs:string" use="optional"/>
 		<xs:attribute name="succeed" type="xs:boolean" use="optional"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="condition">
 		<xs:sequence>
 			<xs:element name="platform" type="platform" minOccurs="0" maxOccurs="1"/>
@@ -237,8 +238,8 @@
 
 	<xs:simpleType name="platform_list">
 		<xs:list itemType="available_platforms"/>
-	</xs:simpleType> 
-		
+	</xs:simpleType>
+
 	<xs:simpleType name="available_platforms">
 		<xs:restriction base = "xs:string">
 			  <xs:enumeration value = "windows"/>
@@ -246,7 +247,7 @@
 			  <xs:enumeration value = "macintosh"/>
 			  <xs:enumeration value = "vxworks"/>
 	    </xs:restriction>
-	</xs:simpleType>	
+	</xs:simpleType>
 
 	<xs:complexType name="build">
 		<xs:attribute name="value" type="build_list"/>
@@ -255,15 +256,15 @@
 
 	<xs:simpleType name="build_list">
 		<xs:list itemType="available_builds"/>
-	</xs:simpleType> 
-	
+	</xs:simpleType>
+
 	<xs:simpleType name="available_builds">
 		<xs:restriction base = "xs:string">
 			  <xs:enumeration value = "workbench"/>
 			  <xs:enumeration value = "finalize"/>
 	    </xs:restriction>
-	</xs:simpleType>	
-		
+	</xs:simpleType>
+
 	<xs:complexType name="multithreaded">
 		<xs:attribute name="value" type="xs:boolean" use="required"/>
 	</xs:complexType>
@@ -275,7 +276,7 @@
 	<xs:complexType name="dynamic_runtime">
 		<xs:attribute name="value" type="xs:boolean" use="required"/>
 	</xs:complexType>
-		
+
 	<xs:complexType name="version_condition">
 		<xs:attribute type="version_type" name="type"/>
 		<xs:attribute type="version_number" name="min" use="optional"/>
@@ -287,21 +288,21 @@
 			  <xs:enumeration value = "compiler"/>
 			  <xs:enumeration value = "msil_clr"/>
 	    </xs:restriction>
-	</xs:simpleType>	
-		
+	</xs:simpleType>
+
 	<xs:simpleType name="version_number">
 		<xs:restriction base="xs:string">
 			<xs:pattern
 				value="\d*(\.\d*){0,2}"/>
 		</xs:restriction>
 	</xs:simpleType>
-	
+
 	<xs:complexType name="custom">
 		<xs:attribute name="name" type="xs:string"/>
 		<xs:attribute name="value" type="xs:string" use="optional"/>
 		<xs:attribute name="excluded_value" type="xs:string" use="optional"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="external">
 		<xs:sequence>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -322,7 +323,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-			
+
 	<xs:complexType name="group">
 		<xs:sequence>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -336,17 +337,18 @@
 		<xs:attribute name="readonly" type="xs:boolean" use="optional"/>
 		<xs:attribute name="prefix" type="xs:string" use="optional"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="library">
 		<xs:complexContent>
 			<xs:extension base="group">
 				<xs:sequence>
 					<xs:element name="visible" type="visible" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
+				<xs:attribute name="use_application_options" type="xs:boolean" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="precompile">
 		<xs:complexContent>
 			<xs:extension base="library">
@@ -354,7 +356,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="assembly">
 		<xs:complexContent>
 			<xs:extension base="group">
@@ -381,12 +383,12 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="mapping">
 		<xs:attribute name="old_name" type="xs:string" use="required"/>
 		<xs:attribute name="new_name" type="xs:string" use="required"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="uses">
 		<xs:attribute name="group" type="xs:string" use="required"/>
 	</xs:complexType>
@@ -397,7 +399,7 @@
 		<xs:attribute name="class_rename" type="xs:string" use="optional"/>
 		<xs:attribute name="feature_rename" type="xs:string" use="optional"/>
 	</xs:complexType>
-	
+
 	<xs:complexType name="override">
 		<xs:complexContent>
 			<xs:extension base="cluster">
@@ -407,7 +409,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	
+
 	<xs:complexType name="overrides">
 		<xs:attribute name="group" type="xs:string" use="required"/>
 	</xs:complexType>

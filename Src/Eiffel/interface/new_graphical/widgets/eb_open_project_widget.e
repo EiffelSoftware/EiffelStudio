@@ -911,15 +911,24 @@ feature {NONE} -- Actions
 			l_system: CONF_SYSTEM
 			l_window: CONFIGURATION_WINDOW
 			l_wd: EV_WARNING_DIALOG
+			l_ed: EV_ERROR_DIALOG
 			l_row: like last_selected_row
+			l_warnings: STRING
 		do
 			create l_fact
 			create l_load.make (l_fact)
 			l_load.retrieve_configuration (selected_path)
 			if l_load.is_error then
-				create l_wd.make_with_text (l_load.last_error.out)
-				l_wd.show_modal_to_window (parent_window)
+				create l_ed.make_with_text (l_load.last_error.out)
+				l_ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
+				l_ed.show_modal_to_window (parent_window)
 			else
+					-- display warnings
+				if l_load.is_warning then
+					create l_wd.make_with_text (l_load.last_warning_messages)
+					l_wd.show_modal_to_window (parent_window)
+				end
+
 				l_system := l_load.last_system
 				create l_window.make (l_system, l_fact, Void, pixmaps, preferences.misc_data.external_editor_command)
 

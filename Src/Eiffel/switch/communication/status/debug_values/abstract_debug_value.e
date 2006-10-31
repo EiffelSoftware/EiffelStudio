@@ -47,6 +47,11 @@ inherit
 			is_equal
 		end
 
+	COMPILER_EXPORTER
+		undefine
+			is_equal
+		end
+
 feature -- Properties
 
 	is_attribute: BOOLEAN;

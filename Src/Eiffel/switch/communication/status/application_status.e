@@ -28,10 +28,13 @@ inherit
 			{ANY} Pg_break, Pg_interrupt,
 				Pg_raise, Pg_viol
 		end
+		
 	SHARED_APPLICATION_EXECUTION
 		export
 			{NONE} all
 		end
+
+	COMPILER_EXPORTER
 
 feature {NONE} -- Initialization
 

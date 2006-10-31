@@ -44,6 +44,8 @@ inherit
 			{NONE} all
 		end
 
+	COMPILER_EXPORTER
+
 create
 
 	make

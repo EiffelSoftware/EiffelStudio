@@ -50,7 +50,6 @@ feature
 		do
 			if not System.has_multithreaded then
 				cecil_basket := cecil_rt_basket
-				cecil_basket.extend ("network.o"); cecil_basket.finish
 				cecil_basket.extend ("wmalloc.o"); cecil_basket.finish
 				cecil_basket.extend ("wgarcol.o"); cecil_basket.finish
 				cecil_basket.extend ("wlocal.o"); cecil_basket.finish
@@ -100,9 +99,10 @@ feature
 				cecil_basket.extend ("wrout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("weif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("idrs.o"); cecil_basket.finish
+				cecil_basket.extend ("network.o"); cecil_basket.finish
+				cecil_basket.extend ("ipc.o"); cecil_basket.finish
 			else
 				cecil_basket := cecil_rt_basket
-				cecil_basket.extend ("MTnetwork.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwmalloc.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwgarcol.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwlocal.o"); cecil_basket.finish
@@ -152,6 +152,8 @@ feature
 				cecil_basket.extend ("MTwrout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("MTidrs.o"); cecil_basket.finish
+				cecil_basket.extend ("MTnetwork.o"); cecil_basket.finish
+				cecil_basket.extend ("mtipc.o"); cecil_basket.finish
 			end
 		end;
 

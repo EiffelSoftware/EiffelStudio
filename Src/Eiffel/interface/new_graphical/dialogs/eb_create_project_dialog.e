@@ -194,7 +194,7 @@ feature -- Execution
 				end
 				cla := root_class_field.text
 				cla.to_upper
-				if not sc.is_valid_class_name (cla) then
+				if not sc.is_valid_class_type_name (cla) then
 					add_error_message (Warning_messages.w_invalid_class_name (cla))
 					raise_exception (Invalid_project_name_exception)
 				end

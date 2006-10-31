@@ -31,19 +31,22 @@ feature {NONE} -- Initialization
 			code_set: code = type_id
 		end
 
-	initialize (on: like option_name) is
+	initialize (on: ID_SD) is
 			-- Create a new FREE_OPTION AST node.
 		require
 			on_not_void: on /= Void
+		local
+			l_str: STRING
 		do
-			if option_codes.has (on) then
-				code := option_codes.item (on)
+			create l_str.make_from_string (on)
+			if option_codes.has (l_str) then
+				code := option_codes.item (l_str)
 			else
 					-- Will raise an error during parsing
 				code := -1
 			end
 		ensure
-			option_name_set: option_codes.has (on) implies option_name.is_equal (on)
+			option_name_set: option_codes.has (on.string) implies option_name.is_equal (on.string)
 		end
 
 feature -- Properties
@@ -54,10 +57,10 @@ feature -- Properties
 			Result := code /= -1
 		end
 
-	option_name: ID_SD is
+	option_name: STRING is
 			-- Free option name
 		do
-			create Result.initialize (option_names.item (code))
+			Result := option_names.item (code).twin
 		end
 
 	code: INTEGER

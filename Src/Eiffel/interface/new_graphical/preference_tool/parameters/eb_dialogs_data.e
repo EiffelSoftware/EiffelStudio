@@ -153,6 +153,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := confirm_kill_preference.value
 		end
 
+	confirm_kill_and_restart: BOOLEAN is
+			--
+		do
+			Result := confirm_kill_and_restart_preference.value
+		end
+
 	already_editing_class: BOOLEAN is
 			--
 		do
@@ -278,6 +284,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	generate_homonyms_preference: BOOLEAN_PREFERENCE
 	stop_execution_when_compiling_preference: BOOLEAN_PREFERENCE
 	confirm_kill_preference: BOOLEAN_PREFERENCE
+	confirm_kill_and_restart_preference: BOOLEAN_PREFERENCE
 	already_editing_class_preference: BOOLEAN_PREFERENCE
 	executing_command_preference: BOOLEAN_PREFERENCE
 
@@ -332,6 +339,7 @@ feature -- Preference strings
 	generate_homonyms_string: STRING is "interface.dialogs.generate_homonyms"
 	stop_execution_when_compiling_string: STRING is "interface.dialogs.stop_execution_when_compiling"
 	confirm_kill_string: STRING is "interface.dialogs.confirm_kill"
+	confirm_kill_and_restart_string: STRING is "interface.dialogs.confirm_kill_and_restart"
 	already_editing_class_string: STRING is "interface.dialogs.already_editing_class"
 	executing_command_string: STRING is "interface.dialogs.executing_command"
 	file_open_and_save_dialogs_remember_last_directory_string: STRING is "interface.dialogs.file_open_and_save_dialogs_remember_last_directory"
@@ -390,6 +398,7 @@ feature {NONE} -- Implementation
 			generate_homonyms_preference := l_manager.new_boolean_preference_value (l_manager, generate_homonyms_string, True)
 			stop_execution_when_compiling_preference := l_manager.new_boolean_preference_value (l_manager, stop_execution_when_compiling_string, True)
 			confirm_kill_preference := l_manager.new_boolean_preference_value (l_manager, confirm_kill_string, True)
+			confirm_kill_and_restart_preference := l_manager.new_boolean_preference_value (l_manager, confirm_kill_and_restart_string, True)
 			already_editing_class_preference := l_manager.new_boolean_preference_value (l_manager, already_editing_class_string, True)
 			executing_command_preference := l_manager.new_boolean_preference_value (l_manager, executing_command_string, True)
 			confirm_replace_all_preference := l_manager.new_boolean_preference_value (l_manager, confirm_replace_all_string, True)

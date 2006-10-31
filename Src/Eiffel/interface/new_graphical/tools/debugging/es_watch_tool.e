@@ -1010,12 +1010,13 @@ feature {NONE} -- Implementation: internal data
 	move_up_cmd, move_down_cmd: EB_STANDARD_CMD
 			-- Move selected item up or down.
 
+	update_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent that is put in the idle_actions to update the call stack after a while.
+
+feature {EB_DEBUGGER_MANAGER} -- Grid
 
 	watches_grid: ES_OBJECTS_GRID
 			-- Graphical representation of the list of expressions to evaluate.
-
-	update_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent that is put in the idle_actions to update the call stack after a while.
 
 	watched_items: ARRAYED_LIST [like watched_item_from]
 			-- List of items that are displayed
@@ -1127,7 +1128,10 @@ feature {NONE} -- Auto-completion
 		local
 			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 		do
-			create l_provider.make (Void, Void, false)
+			create l_provider.make (Void, Void)
+			l_provider.set_dynamic_context_functions (
+										agent eb_debugger_manager.current_debugging_class_c,
+										agent eb_debugger_manager.current_debugging_feature_as)
 			a_item.set_completion_possibilities_provider (l_provider)
 		end
 

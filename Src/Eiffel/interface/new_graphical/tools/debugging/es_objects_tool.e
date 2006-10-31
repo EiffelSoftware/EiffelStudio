@@ -464,7 +464,6 @@ feature -- preference
 				g.save_columns_layout_to_string_preference (
 					preferences.debug_tool_data.grid_column_layout_preference_for (g.id)
 					)
-
 				objects_grids.forth
 			end
 		end

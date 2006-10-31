@@ -115,6 +115,9 @@ feature {NONE} -- Implementation
 			if not eb_debugger_manager.application_is_executing then
 					-- The application was not launched for some reason
 					-- (a compilation was running, the user didn't want to launch it after all,...)
+				if eb_debugger_manager.raised then
+					eb_debugger_manager.unraise
+				end
 				eb_debugger_manager.set_debugging_window (Void)
 			end
 			debug

@@ -33,10 +33,6 @@ inherit
 			{NONE} all
 		end
 
---creation {APPLICATION_STATUS_EXPORTER}
---
---	do_nothing
-
 feature {NONE} -- Initialization
 
 	make is

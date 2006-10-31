@@ -43,6 +43,20 @@ feature {NONE} -- Initialization
 			enable_multiple_row_selection
 			enable_border
 			enable_default_tree_navigation_behavior (True, False, True, True)
+
+			load_preferences
+		end
+
+	load_preferences is
+		local
+			bp: BOOLEAN_PREFERENCE
+		do
+			bp := preferences.debug_tool_data.generating_type_evaluation_enabled_preference
+			generating_type_evaluation_enabled := bp.value
+			bp.typed_change_actions.extend (agent (b: BOOLEAN)
+					do
+						generating_type_evaluation_enabled := b
+					end)
 		end
 
 	initialize is
@@ -86,6 +100,9 @@ feature {NONE} -- GRID Customization
 		-- May be redefined by EV_GRID descendents.		
 
 feature -- Properties
+
+	generating_type_evaluation_enabled: BOOLEAN
+			-- Is generating type representation evaluating {ANY}.generating_type ?
 
 	name: STRING
 			-- associated name to identify the related grid.
@@ -142,46 +159,15 @@ feature -- Change with preferences
 
 	set_columns_layout_from_string_preference (spref: STRING_PREFERENCE; dft_value: ARRAY [like column_layout]) is
 		local
-			dts: ARRAY [like column_layout]
-			s: STRING
-			sp: LIST [STRING]
-			i,n: INTEGER
-			l_id: INTEGER
-			l_displayed: BOOLEAN
-			l_autoresize: BOOLEAN
-			l_width: INTEGER
-			l_title: STRING
 			retried: BOOLEAN
+			s: STRING
 		do
 			s := spref.value
 			if retried or (s = Void or else s.is_empty) then
 				set_columns_layout ( 5, 1, dft_value)
 				save_columns_layout_to_string_preference (spref)
 			else
-				sp := s.split (';')
-				from
-					i := 0
-					n := sp.count // 5
-					create dts.make (0, n - 1)
-					sp.start
-				until
-					sp.after
-				loop
-					l_id         := sp.item.to_integer
-					sp.forth
-					l_displayed  := sp.item.to_boolean
-					sp.forth
-					l_autoresize := sp.item.to_boolean
-					sp.forth
-					l_width      := sp.item.to_integer
-					sp.forth
-					l_title      := sp.item
-					sp.forth
-
-					dts[i] :=  [l_id, l_displayed, l_autoresize, l_width, l_title]
-					i := i + 1
-				end
-				set_columns_layout (5, 1, dts)
+				set_columns_layout_from_string (spref.value)
 			end
 		rescue
 			retried := True
@@ -190,33 +176,78 @@ feature -- Change with preferences
 
 	save_columns_layout_to_string_preference (spref: STRING_PREFERENCE) is
 		local
+			s: STRING
+		do
+			s := columns_layout_to_string
+			if s /= Void then
+				spref.set_value (s)
+			end
+		end
+
+	set_columns_layout_from_string (s: STRING) is
+		local
+			dts: ARRAY [like column_layout]
+			sp: LIST [STRING]
+			i,n: INTEGER
+			l_id: INTEGER
+			l_displayed: BOOLEAN
+			l_autoresize: BOOLEAN
+			l_width: INTEGER
+			l_title: STRING
+		do
+			sp := s.split (';')
+			from
+				i := 0
+				n := sp.count // 5
+				create dts.make (0, n - 1)
+				sp.start
+			until
+				sp.after
+			loop
+				l_id         := sp.item.to_integer
+				sp.forth
+				l_displayed  := sp.item.to_boolean
+				sp.forth
+				l_autoresize := sp.item.to_boolean
+				sp.forth
+				l_width      := sp.item.to_integer
+				sp.forth
+				l_title      := sp.item
+				sp.forth
+
+				dts[i] :=  [l_id, l_displayed, l_autoresize, l_width, l_title]
+				i := i + 1
+			end
+			set_columns_layout (5, 1, dts)
+		end
+
+	columns_layout_to_string: STRING is
+		local
 			t: like column_layout
 			i: INTEGER
-			s: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
 				from
-					s := ""
+					Result := ""
 					i := 1
 				until
 					i > column_count
 				loop
 					t := column_layout (i)
-					s.append_string (t.col_index.out)
-					s.append_character (';')
-					s.append_string (t.is_displayed.out)
-					s.append_character (';')
-					s.append_string (t.has_auto_resizing.out)
-					s.append_character (';')
-					s.append_string (t.width.out)
-					s.append_character (';')
-					s.append_string (t.title)
-					s.append_character (';')
+					Result.append_string (t.col_index.out)
+					Result.append_character (';')
+					Result.append_string (t.is_displayed.out)
+					Result.append_character (';')
+					Result.append_string (t.has_auto_resizing.out)
+					Result.append_character (';')
+					Result.append_string (t.width.out)
+					Result.append_character (';')
+					Result.append_string (t.title)
+					Result.append_character (';')
 					i := i + 1
 				end
-				s.remove_tail (1)
-				spref.set_value (s)
+				Result.remove_tail (1)
 			end
 		rescue
 			retried := True

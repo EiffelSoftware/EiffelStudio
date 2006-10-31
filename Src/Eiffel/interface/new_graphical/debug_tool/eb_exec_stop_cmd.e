@@ -19,8 +19,6 @@ inherit
 
 	EB_CONSTANTS
 
-	SHARED_DEBUGGER_MANAGER
-
 	EB_SHARED_WINDOW_MANAGER
 
 create
@@ -28,9 +26,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_manager: like debugger_manager)
 			-- Initialize `Current'.
 		do
+			debugger_manager := a_manager
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f5),
 				True, False, True)
@@ -43,14 +42,17 @@ feature -- Formatting
 			-- Pause the execution.
 		do
 			if
-				Debugger_manager.application_is_executing and then
-				not Debugger_manager.application_is_stopped
+				debugger_manager.application_is_executing and then
+				not debugger_manager.application_is_stopped
 			then
-				Debugger_manager.application.interrupt
+				debugger_manager.application.interrupt
 			end
 		end
 
 feature {NONE} -- Attributes
+
+	debugger_manager: DEBUGGER_MANAGER
+			-- Manager in charge of all debugging operations.	
 
 	description: STRING is
 			-- What appears in the customize dialog box.

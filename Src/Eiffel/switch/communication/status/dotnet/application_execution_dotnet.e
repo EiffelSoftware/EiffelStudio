@@ -50,11 +50,6 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
 create {APPLICATION_EXECUTION}
 	make
 
@@ -62,19 +57,23 @@ feature {APPLICATION_EXECUTION} -- Initialization
 
 	make is
 			-- Create Current
+		local
+			p: BOOLEAN_PREFERENCE
 		do
 			Precursor
 			Eifnet_debugger.init
-			if preferences.debugger_data /= Void then
-				if preferences.debugger_data.keep_stepping_info_dotnet_feature then
+
+			p := Debugger_manager.dotnet_keep_stepping_info_non_eiffel_feature_pref
+			if p /= Void then
+				if p.value then
 					eifnet_debugger.enable_keep_stepping_into_dotnet_feature
 				else
 					eifnet_debugger.disable_keep_stepping_into_dotnet_feature
 				end
-				preferences.debugger_data.keep_stepping_info_dotnet_feature_preference.change_actions.extend (
-					agent (p: BOOLEAN_PREFERENCE; ed: EIFNET_DEBUGGER)
+				p.typed_change_actions.extend (
+					agent (b: BOOLEAN; ed: EIFNET_DEBUGGER)
 						do
-							if p.value then
+							if b then
 								ed.enable_keep_stepping_into_dotnet_feature
 							else
 								ed.disable_keep_stepping_into_dotnet_feature

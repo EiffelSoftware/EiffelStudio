@@ -41,13 +41,11 @@ create
 
 feature -- Initialization
 
-	make (a_class_c: CLASS_C; a_feature_as: FEATURE_AS; a_static: BOOLEAN) is
+	make (a_class_c: CLASS_C; a_feature_as: FEATURE_AS) is
 			-- Initialization
 			-- Set `class_c' with `a_class_c'.
-			-- If `a_static', we do not provide possibilities from context information.
 		do
 			context_class_c := a_class_c
-			static := a_static
 			context_feature_as := a_feature_as
 			if a_feature_as /= Void then
 				current_feature_as := [a_feature_as, a_feature_as.feature_names.first]
@@ -56,8 +54,6 @@ feature -- Initialization
 			end
 			completion_possibilities := Void
 			class_completion_possibilities := Void
-		ensure
-			static_set: static = a_static
 		end
 
 feature -- Access
@@ -79,6 +75,9 @@ feature -- Access
 	use_all_classes_in_universe: BOOLEAN
 			-- Provide all classes in universe?
 
+	dynamic_context_class_c_function: FUNCTION [ANY, TUPLE, CLASS_C]
+	dynamic_context_feature_as_function: FUNCTION [ANY, TUPLE, FEATURE_AS]
+
 feature -- Basic operation
 
 	prepare_completion is
@@ -86,9 +85,11 @@ feature -- Basic operation
 		do
 			Precursor
 			create insertion_cell
-			if not static then
-				context_class_c := Eb_debugger_manager.debugging_class_c
-				context_feature_as := Eb_debugger_manager.debugging_feature_as
+			if dynamic_context_class_c_function /= Void then
+				context_class_c := dynamic_context_class_c_function.item (Void)
+			end
+			if dynamic_context_feature_as_function /= Void then
+				context_feature_as := dynamic_context_feature_as_function.item (Void)
 			end
 			if context_feature_as /= Void then
 				current_feature_as := [context_feature_as, context_feature_as.feature_names.first]
@@ -119,6 +120,12 @@ feature -- Basic operation
 		end
 
 feature -- Element change
+
+	set_dynamic_context_functions (a_class_call: like dynamic_context_class_c_function; a_feat_call: like dynamic_context_feature_as_function) is
+		do
+			dynamic_context_class_c_function := a_class_call
+			dynamic_context_feature_as_function := a_feat_call
+		end
 
 	set_group_callback (a_call: FUNCTION [ANY, TUPLE, CONF_GROUP]) is
 			-- Group call back
@@ -368,9 +375,6 @@ feature {NONE} -- Build completion possibilities
 				l_analyzer.build_entities_list (context_feature_as)
 			end
 		end
-
-	static: BOOLEAN
-			-- If true, we do not provide possibilities from context information.
 
 	watching_line: EDITOR_LINE
 			-- Line

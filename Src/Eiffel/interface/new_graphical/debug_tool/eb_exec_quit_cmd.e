@@ -21,8 +21,6 @@ inherit
 
 	EB_SHARED_WINDOW_MANAGER
 
-	SHARED_DEBUGGER_MANAGER
-
 	EB_SHARED_PREFERENCES
 
 create
@@ -30,9 +28,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_manager: like debugger_manager)
 			-- Initialize `Current'.
 		do
+			debugger_manager := a_manager
 			create accelerator.make_with_key_combination (
 				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f5),
 				False, False, True)
@@ -44,12 +43,15 @@ feature -- Formatting
 	execute is
 			-- Pause the execution.
 		do
-			if Debugger_manager.application_is_executing then
+			if debugger_manager.application_is_executing then
 				ask_and_kill
 			end
 		end
 
 feature {NONE} -- Attributes
+
+	debugger_manager: DEBUGGER_MANAGER
+			-- Manager in charge of all debugging operations.
 
 	description: STRING is
 			-- What appears in the customize dialog box.
@@ -102,10 +104,10 @@ feature {NONE} -- Implementation
 	kill is
 			-- Effectively kill the application.
 		require
-			valid_application: Debugger_manager.application_is_executing
+			valid_application: debugger_manager.application_is_executing
 		do
-			if Debugger_manager.application_is_executing then
-				Debugger_manager.Application.kill
+			if debugger_manager.application_is_executing then
+				debugger_manager.Application.kill
 			end
 		end
 

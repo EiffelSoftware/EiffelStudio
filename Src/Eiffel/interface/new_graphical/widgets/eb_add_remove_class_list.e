@@ -100,7 +100,7 @@ feature {NONE} -- GUI
 			label: EV_LABEL
 			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 		do
-			create l_provider.make (Void, Void, true)
+			create l_provider.make (Void, Void)
 			l_provider.set_group_callback (group_internal)
 			create text_field.make
 			text_field.set_completing_feature (false)

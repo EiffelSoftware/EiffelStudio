@@ -9,8 +9,6 @@ inherit
 	SHARED_DEBUG;
 	OBJECT_ADDR
 
-	IPC_SHARED_ENGINE
-
 create
 
 	make
@@ -26,11 +24,15 @@ feature
 
 	execute is
 			-- register termination of the controlled application
+		local
+			app_classic: APPLICATION_EXECUTION_CLASSIC
 		do
 			if Application.is_running then
 				Application.process_termination;
 			end
-			Ipc_engine.end_of_debugging
+			app_classic ?= application.implementation
+			check app_classic /= Void end
+			app_classic.request_ipc_end_of_debugging
 		end
 
 indexing

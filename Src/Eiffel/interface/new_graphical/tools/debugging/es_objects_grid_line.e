@@ -246,6 +246,15 @@ feature -- Properties
 		deferred
 		end
 
+feature -- Bridge to parent ES_OBJECTS_GRID
+
+	generating_type_evaluation_enabled: BOOLEAN is
+		require
+			parent_grid /= Void
+		do
+			Result := parent_grid.generating_type_evaluation_enabled
+		end
+
 feature -- Query
 
 	text_data_for_clipboard: STRING_32 is
@@ -258,7 +267,7 @@ feature -- Query
 			end
 			dv := associated_dump_value
 			if dv /= Void then
-				Result.append_string (": " + dv.generating_type_representation)
+				Result.append_string (": " + dv.generating_type_representation (generating_type_evaluation_enabled))
 				Result.append_string (" = ")
 				Result.append_string (dv.full_output)
 			end

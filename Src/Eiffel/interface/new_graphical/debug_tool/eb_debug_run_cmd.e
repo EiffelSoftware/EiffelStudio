@@ -120,6 +120,7 @@ feature -- Execution
 				Eiffel_project.initialized and then
 				not Eiffel_project.Workbench.is_compiling
 			then
+					--| Application is not yet launched |--
 				if not app_exec.is_running then
 						-- ask to compile if we changed some classes inside eiffel studio
 					l_wb := eiffel_project.workbench
@@ -151,6 +152,7 @@ feature -- Execution
 						launch_application
 					end
 				elseif app_exec.is_stopped then
+						--| Application is already launched and is stopped |--
 					resume_application
 				end
 			end
@@ -185,23 +187,6 @@ feature -- Execution
 			else
 				create wd.make_with_text ("Could not initialize debugging tools")
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-			end
-		end
-
-	melt_and_execute is
-			-- Melt system, then launch it.
-		local
-			melt_command: EB_MELT_PROJECT_COMMAND
-		do
-			if Eiffel_project.initialized then
---				melt_command ?= project_window.quick_melt_cmd
-				melt_command.set_run_after_melt (True)
---				need_to_wait := True
---				melt_command.execute (Void, Void)
---				need_to_wait := False
-				Debugger_manager.application.set_execution_mode (User_stop_points)
-				launch_application
---				melt_command.set_run_after_melt (false)
 			end
 		end
 
@@ -248,20 +233,22 @@ feature -- Execution
 						-- the display of the temporary breakpoint (if not already present
 						-- at `index' in `f'.)
 					if bp_exists then
-						Eb_debugger_manager.add_on_stopped_kamikaze_action (
-							agent app_exec.set_breakpoint_status (f, index, old_bp_status)
+						Debugger_manager.add_on_stopped_action (
+							agent app_exec.set_breakpoint_status (f, index, old_bp_status),	True
 						)
 						if old_bp_status /= 0 and cond /= Void then
 								-- Restore condition after we stopped, otherwise if the evaluation
 								-- does not evaluate to True then it will not stopped.
-							Eb_debugger_manager.add_on_stopped_kamikaze_action (
-								agent app_exec.set_condition (f, index, cond))
+							Debugger_manager.add_on_stopped_action (
+									agent app_exec.set_condition (f, index, cond), True
+								)
 						end
 					else
-						Eb_debugger_manager.add_on_stopped_kamikaze_action (
-							agent app_exec.remove_breakpoint (f, index)
+						Debugger_manager.add_on_stopped_action (
+							agent app_exec.remove_breakpoint (f, index), True
 						)
 					end
+					Debugger_manager.add_on_stopped_action (agent Debugger_manager.notify_breakpoints_changes, True)
 				end
 			else
 				create wd.make_with_text (Warning_messages.w_Cannot_debug)
@@ -297,15 +284,16 @@ feature -- Execution
 				create wd.make_with_text ("No debugging for DLL system")
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			elseif (not app_exec.is_running) then
+					--| Application is not running |--
 				if
 					Eiffel_project.initialized and then
 					not Eiffel_project.Workbench.is_compiling
 				then
 						-- Application is not running. Start it.
-	debug("DEBUGGER")
-		io.error.put_string (generator)
-		io.error.put_string ("(DEBUG_RUN): Start execution%N")
-	end
+					debug("DEBUGGER")
+						io.error.put_string (generator)
+						io.error.put_string ("(DEBUG_RUN): Start execution%N")
+					end
 					create makefile_sh_name.make_from_string (project_location.workbench_path)
 					makefile_sh_name.set_file_name (Makefile_SH)
 
@@ -411,17 +399,6 @@ feature -- Execution
 					--| Continue the execution |--
 				app_exec.continue
 
---					window_manager.object_tool_mgr.hang_on
---					if status.e_feature /= Void then
---						window_manager.feature_tool_mgr.show_stoppoint
---							(status.e_feature, status.break_index)
---						target.show_stoppoint
---							(status.e_feature, status.break_index)
---					end
---					target.refresh_current_stoppoint
---					Window_manager.feature_tool_mgr.synchronize_with_callstack
---					debug_target.save_current_cursor_position
---					debug_target.display_string ("System is running%N")
 				if app_exec.is_running and then not app_exec.is_stopped then
 					app_exec.on_application_resumed
 				else
@@ -429,7 +406,6 @@ feature -- Execution
 						print ("Application is stopped, but it should not")
 					end
 				end
---| END FIXME
 			end
 		end
 
@@ -466,15 +442,37 @@ feature -- Execution
 			else
 				output_manager.add_quoted_text (l_cmd_line_arg)
 			end
+--| For now useless since the output panel display those info just a few nanoseconds ...
+--			if environment_vars /= Void and then not environment_vars.is_empty then
+--				output_manager.add_comment_text ("  - environment : ")
+--				from
+--					environment_vars.start
+--				until
+--					environment_vars.after
+--				loop
+--					output_manager.add_new_line
+--					output_manager.add_indent
+--					output_manager.add_string (environment_vars.key_for_iteration)
+--					output_manager.add_string ("=")
+--					output_manager.add_quoted_text (environment_vars.item_for_iteration)
+--					environment_vars.forth
+--				end
+--			end
 			output_manager.add_new_line
 
-			if not (create {DIRECTORY} .make (working_dir)).exists then
+			if not directory_exists (working_dir) then
 				create wd.make_with_text (Warning_messages.w_Invalid_working_directory (working_dir))
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				output_manager.add_string (Warning_messages.w_Invalid_working_directory (working_dir))
+				if Eb_debugger_manager.raised then
+					Eb_debugger_manager.unraise
+				end
 			else
 					-- Raise debugger before launching.
-				Eb_debugger_manager.raise
+				if not Eb_debugger_manager.raised then
+					Eb_debugger_manager.raise
+				end
+
 				app_exec := Debugger_manager.application
 				app_exec.run (l_cmd_line_arg, working_dir, environment_vars)
 				if app_exec.is_running then
@@ -492,12 +490,23 @@ feature -- Execution
 
 					app_exec.on_application_quit
 
-					Eb_debugger_manager.unraise
+					if Eb_debugger_manager.raised then
+						Eb_debugger_manager.unraise
+					end
 				end
 			end
 		end
 
 feature {NONE} -- Implementation / Attributes
+
+	directory_exists (a_dirname: STRING): BOOLEAN is
+			-- Is directory named `a_dirname' exists ?
+		local
+			d: DIRECTORY
+		do
+			create d.make (a_dirname)
+			Result := d.exists
+		end
 
 	tooltext: STRING is
 			-- Toolbar button text for the command

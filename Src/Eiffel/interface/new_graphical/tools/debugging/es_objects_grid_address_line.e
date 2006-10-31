@@ -120,7 +120,7 @@ feature -- Query
 			if last_dump_value = Void then
 				get_last_dump_value
 			end
-			Result := last_dump_value.generating_type_representation
+			Result := last_dump_value.generating_type_representation (generating_type_evaluation_enabled)
 		end
 
 	get_last_dump_value is

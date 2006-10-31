@@ -211,7 +211,7 @@ feature -- Basic operations
 			create lab
 
 				-- Code completion
-			create l_provider.make (f.associated_class, f.ast, true)
+			create l_provider.make (f.associated_class, f.ast)
 			tf.set_completion_possibilities_provider (l_provider)
 			l_provider.set_code_completable (tf)
 

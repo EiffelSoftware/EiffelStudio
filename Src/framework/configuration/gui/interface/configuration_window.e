@@ -98,12 +98,13 @@ feature {NONE}-- Initialization
 		do
 			if a_debugs = Void then
 				create debug_clauses.make (0)
+			else
+				debug_clauses := a_debugs
 			end
 			selected_target := a_target
 			set_pixmaps (a_pixmaps)
 			conf_system := a_system
 			conf_factory := a_factory
-			debug_clauses := a_debugs
 			external_editor_command := a_editor
 			default_create
 			config_windows.force (Current, conf_system.file_name)

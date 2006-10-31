@@ -34,7 +34,7 @@ feature
 			an_assembly_not_void: an_assembly /= Void
 			a_position_ok: a_position >= 0
 		do
-			create Result.make_assembly_class (a_name, a_dotnet_name, an_assembly, a_position)
+			create Result.make_assembly_class (a_name, a_dotnet_name, an_assembly, a_position, Current)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -46,7 +46,7 @@ feature
 			a_group_not_void: a_group /= Void
 			a_base_location_not_void: a_base_location /= Void
 		do
-			create Result.make_from_partial (a_partial_classes, a_group, a_base_location)
+			create Result.make_from_partial (a_partial_classes, a_group, a_base_location, Current)
 		ensure
 			Result_not_void: Result /= Void
 		end

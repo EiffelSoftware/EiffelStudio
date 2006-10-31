@@ -7,7 +7,7 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_CHARACTER_FORMAT
 
@@ -17,6 +17,7 @@ inherit
 			implementation,
 			is_in_default_state,
 			is_equal,
+			copy,
 			out
 		end
 
@@ -25,7 +26,7 @@ create
 	make_with_font,
 	make_with_font_and_color,
 	make_with_values
-	
+
 feature {NONE} -- Initialization
 
 	make_with_font (a_font: EV_FONT) is
@@ -39,7 +40,7 @@ feature {NONE} -- Initialization
 		ensure
 			font_set: font.is_equal (a_font)
 		end
-		
+
 	make_with_font_and_color (a_font: EV_FONT; a_color, a_background_color: EV_COLOR) is
 			-- Create `Current' with font `a_font', color `a_color' and
 			-- background_color `a_background_color'.
@@ -57,7 +58,7 @@ feature {NONE} -- Initialization
 			font_set: font.is_equal (a_font)
 			color_set: color.is_equal (a_color)
 		end
-		
+
 	make_with_values (a_font: EV_FONT; a_color, a_background_color: EV_COLOR; an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Create `Current' with font `a_font', color `a_color', background color `a_background_color' and effects `an_effect'.
 		require
@@ -99,7 +100,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	effects: EV_CHARACTER_FORMAT_EFFECTS is
 			-- Character format effects applicable to `font'.
 		require
@@ -109,7 +110,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	background_color: EV_COLOR is
 			-- Background color of the current format.
 		require
@@ -145,7 +146,7 @@ feature -- Element change
 		ensure
 			color_set: color.is_equal (a_color)
 		end
-		
+
 	set_background_color (a_color: EV_COLOR) is
 			-- Make `a_color' the new background_color.
 		require
@@ -157,7 +158,7 @@ feature -- Element change
 		ensure
 			color_set: background_color.is_equal (a_color)
 		end
-		
+
 	set_effects (an_effect: EV_CHARACTER_FORMAT_EFFECTS) is
 			-- Make `an_effect' the new `effects'.
 		require
@@ -176,10 +177,9 @@ feature -- Element change
 			Result := other.color.is_equal (color) and
 				other.background_color.is_equal (background_color) and
 				other.font.is_equal (font) and
-				other.effects.is_underlined.is_equal (effects.is_underlined) and 
-				other.effects.is_striked_out.is_equal (effects.is_striked_out)
+				other.effects.is_equal (effects)
 		end
-	
+
 	out: STRING is
 			-- New string containing terse printable representation
 			-- of current object
@@ -193,9 +193,24 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := color.is_equal ((create {EV_STOCK_COLORS}).black) and
-			background_color.is_equal ((create {EV_STOCK_COLORS}).white) and 
-			not effects.is_striked_out and
-			not effects.is_underlined
+			background_color.is_equal ((create {EV_STOCK_COLORS}).white) and
+			effects.is_in_default_state
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+		do
+			if implementation = Void then
+				default_create
+			end
+				-- No need to copy the objects since we get a copy from `other'.
+			implementation.set_color (other.color)
+			implementation.set_background_color (other.background_color)
+			implementation.set_font (other.font)
+			implementation.set_effects (other.effects)
 		end
 
 feature {EV_RICH_TEXT_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
@@ -207,12 +222,12 @@ feature {EV_RICH_TEXT_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 				internal_out := out
 				changed := False
 			end
-			Result := internal_out			
+			Result := internal_out
 		end
-		
+
 	internal_out: STRING
 		-- Internal representation of last call to `out'. Buffered for speed, used in `hash_value'.
-	
+
 	changed: BOOLEAN
 		-- Does `internal_out' require recomputation?
 
@@ -220,7 +235,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHARACTER_FORMAT_I
 			-- Implementation of the current object
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -228,7 +243,7 @@ feature {NONE} -- Implementation
 		do
 			create {EV_CHARACTER_FORMAT_IMP} implementation.make (Current)
 		end
-		
+
 invariant
 	font_not_void: font /= Void
 	color_not_void: color /= Void

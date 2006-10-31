@@ -38,8 +38,7 @@ feature -- Initialization
 				if delayed_run_action = Void then
 					create delayed_run_action.make (agent internal_execute (a_execution_mode), 5)
 				end
---				ag := agent delayed_run_action.request_call
-				ag := agent internal_execute (a_execution_mode)
+				ag := agent delayed_run_action.request_call
 				eb_debugger_manager.application_quit_actions.extend (ag)
 				eb_debugger_manager.application_quit_actions.prune_when_called (ag)
 

@@ -22,7 +22,7 @@ create {CONF_FACTORY}
 
 feature {NONE} -- Implementation
 
-	make_assembly_class (a_name, a_dotnet_name: STRING; an_assembly: like group; a_position: INTEGER) is
+	make_assembly_class (a_name, a_dotnet_name: STRING; an_assembly: like group; a_position: INTEGER; a_factory: like factory) is
 			-- Create.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
@@ -30,6 +30,7 @@ feature {NONE} -- Implementation
 			a_dotnet_name_ok: a_dotnet_name /= Void and then not a_dotnet_name.is_empty
 			an_assembly_not_void: an_assembly /= Void
 			a_position_ok: a_position >= 0
+			a_factory_not_void: a_factory /= Void
 		do
 			group := an_assembly
 			name := a_name
@@ -39,6 +40,7 @@ feature {NONE} -- Implementation
 			create path.make_empty
 			is_valid := True
 			path := extract_path_from_dotnet (a_dotnet_name)
+			factory := a_factory
 		ensure
 			is_valid: is_valid
 		end

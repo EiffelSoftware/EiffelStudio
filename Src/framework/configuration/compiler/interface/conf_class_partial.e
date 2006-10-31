@@ -23,12 +23,13 @@ create {CONF_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_from_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location) is
+	make_from_partial (a_partial_classes: ARRAYED_LIST [STRING]; a_group: like group; a_base_location: like base_location; a_factory: like factory) is
 			-- Create.
 		require
 			a_partial_classes_not_void: a_partial_classes /= Void
 			a_group_not_void: a_group /= Void
 			a_base_location_not_void: a_base_location /= Void
+			a_factory_not_void: a_factory /= Void
 		local
 			l_cluster: CONF_CLUSTER
 		do
@@ -55,6 +56,7 @@ feature {NONE} -- Initialization
 				visible := l_cluster.visible.item (name)
 			end
 			is_valid := True
+			factory := a_factory
 		ensure
 			is_valid: is_valid
 		end

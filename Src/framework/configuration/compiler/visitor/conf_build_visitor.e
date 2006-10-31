@@ -158,7 +158,7 @@ feature -- Visit nodes
 	process_target (a_target: CONF_TARGET) is
 			-- Visit `a_target'.
 		local
-			l_libraries, l_clusters, l_overrides: HASH_TABLE [CONF_GROUP, STRING]
+			l_libraries, l_clusters, l_overrides, l_assemblies: HASH_TABLE [CONF_GROUP, STRING]
 			l_pre: CONF_PRECOMPILE
 			l_old_group: CONF_GROUP
 			l_consumer_manager: CONF_CONSUMER_MANAGER
@@ -177,6 +177,7 @@ feature -- Visit nodes
 					l_libraries := old_target.libraries
 					l_clusters := old_target.clusters
 					l_overrides := old_target.overrides
+					l_assemblies := old_target.assemblies
 						-- if it's the application target, set the old_libraries
 						-- twin, so that we can remove the libraries we have handled without
 						-- modifying the old data which is still needed in case of an error
@@ -202,10 +203,15 @@ feature -- Visit nodes
 
 				l_pre := a_target.precompile
 				if l_pre /= Void then
+					if old_target /= Void then
+						old_group := old_target.precompile
+					end
 					process_library (l_pre)
+					old_group := Void
 				end
 
-				a_target.assemblies.linear_representation.do_if (agent {CONF_ASSEMBLY}.process (Current), agent {CONF_ASSEMBLY}.is_enabled (state))
+					-- process assemblies
+				process_with_old (a_target.assemblies, l_assemblies)
 
 					-- do libraries after clusters so that the clusters have already been processed
 				process_with_old (a_target.libraries, l_libraries)
@@ -275,7 +281,15 @@ feature -- Visit nodes
 			-- Visit `an_assembly'.
 		local
 			l_file: RAW_FILE
+			l_old_assembly: CONF_ASSEMBLY
+			l_classes: HASH_TABLE [CONF_CLASS, STRING]
+			l_cl: CONF_CLASS
 		do
+			l_old_assembly ?= old_group
+			check
+				old_group_implies_assembly: old_group /= Void implies l_old_assembly /= Void
+			end
+
 				-- if it is a local assembly, check that the file exists
 			if state.is_dotnet and then an_assembly.is_non_local_assembly then
 				create l_file.make (an_assembly.location.evaluated_path)
@@ -284,6 +298,22 @@ feature -- Visit nodes
 				end
 			end
 			new_assemblies.force (an_assembly)
+
+				-- if the renaming/prefix changed, mark classes as partly removed
+			if l_old_assembly /= Void and then not (equal (l_old_assembly.name_prefix, an_assembly.name_prefix) and equal (l_old_assembly.renaming, an_assembly.renaming)) then
+				from
+					l_classes := l_old_assembly.classes
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_cl := l_classes.item_for_iteration
+					if l_cl.is_compiled then
+						partly_removed_classes.force ([l_cl, current_system])
+					end
+					l_classes.forth
+				end
+			end
 		end
 
 	process_library (a_library: CONF_LIBRARY) is
@@ -295,8 +325,14 @@ feature -- Visit nodes
 			l_ren: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_prefixed_classes: like current_classes
 			l_pre: STRING
+			l_old_library: CONF_LIBRARY
+			l_cl: CONF_CLASS
 		do
 			on_process_group (a_library)
+			l_old_library ?= old_group
+			check
+				old_group_implies_old_library: old_group /= Void implies l_old_library /= Void
+			end
 			l_uuid := a_library.library_target.system.uuid
 			l_target := a_library.library_target
 			check
@@ -325,6 +361,22 @@ feature -- Visit nodes
 					Result := a_cluster.classes_set and then not a_cluster.is_hidden
 				end
 			)
+
+				-- if the renaming/prefix changed we have to add the classes to the partly_removed_classes list
+			if l_old_library /= Void and then not (equal (l_old_library.name_prefix, a_library.name_prefix) and equal (l_old_library.renaming, a_library.renaming)) then
+				from
+					current_classes.start
+				until
+					current_classes.after
+				loop
+					l_cl := current_classes.item_for_iteration
+					if l_cl.is_compiled then
+						partly_removed_classes.force ([l_cl, current_system])
+					end
+					current_classes.forth
+				end
+			end
+
 				-- do renaming prefixing if necessary
 			l_ren := a_library.renaming
 			if l_ren /= Void then

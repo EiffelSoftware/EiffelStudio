@@ -263,6 +263,8 @@ feature -- Equality
 					equal (assembly_culture, other.assembly_culture) and
 					equal (assembly_public_key_token, other.assembly_public_key_token) and
 					equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming)
+			elseif Result then
+				Result := equal (name_prefix, other.name_prefix) and then equal (renaming, other.renaming)
 			end
 		end
 

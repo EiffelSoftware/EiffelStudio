@@ -220,6 +220,7 @@ feature {NONE} -- Actions
 		local
 			l_loc: CONF_FILE_LOCATION
 			wd: EV_WARNING_DIALOG
+			l_sys: CONF_SYSTEM
 		do
 				-- library choosen?
 			if not location.text.is_empty and not name.text.is_empty then
@@ -234,7 +235,9 @@ feature {NONE} -- Actions
 					last_group := factory.new_library (name.text, l_loc, target)
 						-- add an empty classes list that it get's displayed in the classes tree
 					last_group.set_classes (create {HASH_TABLE [CONF_CLASS, STRING]}.make (0))
-					last_group.set_library_target (factory.new_target ("dummy", factory.new_system_generate_uuid ("dummy")))
+					l_sys := factory.new_system_generate_uuid ("dummy")
+					l_sys.set_application_target (target)
+					last_group.set_library_target (factory.new_target ("dummy", l_sys))
 					target.add_library (last_group)
 					is_ok := True
 					destroy

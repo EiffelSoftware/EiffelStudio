@@ -85,13 +85,13 @@ feature {NONE} -- Implementation of is_valid_class_type
 
 -- Tokens: 'Id'  '['  ']'  ','  'empty' and error
 
-	tkn_start: INTEGER is unique
-	tkn_id: INTEGER is unique
-	tkn_left_bracket: INTEGER is unique
-	tkn_right_bracket: INTEGER is unique
-	tkn_comma: INTEGER is unique
-	tkn_empty: INTEGER is unique
-	tkn_error: INTEGER is unique
+	tkn_start: INTEGER is 1
+	tkn_id: INTEGER is 2
+	tkn_left_bracket: INTEGER is 3
+	tkn_right_bracket: INTEGER is 4
+	tkn_comma: INTEGER is 5
+	tkn_empty: INTEGER is 6
+	tkn_error: INTEGER is 7
 
 	-- THIS IS NOT MT SAVE
 	current_position_in_input: INTEGER

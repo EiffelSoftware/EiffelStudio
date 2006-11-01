@@ -262,10 +262,10 @@ feature -- Status setting
 		do
 			nw := new_width;
 			nh := new_height;
-			if (text = Void or else text.empty) and not is_value_shown then
+			if (text = Void or else text.is_empty) and not is_value_shown then
 				p_set_size (nw, nh);
 			elseif is_horizontal then
-				if is_value_shown and (text = Void or else text.empty) then
+				if is_value_shown and (text = Void or else text.is_empty) then
 					p_set_size (nw, nh + label.height);
 				elseif not is_value_shown then
 					p_set_size (nw, nh + label.height);
@@ -274,7 +274,7 @@ feature -- Status setting
 				end;
 			else
 				create vas.make(0);
-				if is_value_shown and (text = Void or else text.empty) then
+				if is_value_shown and (text = Void or else text.is_empty) then
 					vas.append_integer (maximum);
 					tw := font_width_of_string (vas);
 					p_set_size (nw + tw, nh);
@@ -296,13 +296,13 @@ feature -- Status setting
 			vas: STRING;
 		do
 			nw := new_width;
-			if (text = Void or else text.empty) and not is_value_shown then
+			if (text = Void or else text.is_empty) and not is_value_shown then
 				p_set_width (nw);
 			elseif is_horizontal then
 				p_set_width (nw);
 			else
 				create vas.make(0);
-				if is_value_shown and (text = Void or else text.empty) then
+				if is_value_shown and (text = Void or else text.is_empty) then
 					vas.append_integer (maximum);
 					tw := font_width_of_string (vas);
 					p_set_width (nw + tw);
@@ -323,10 +323,10 @@ feature -- Status setting
 			nh: INTEGER;
 		do
 			nh := new_height;
-			if text = Void or else text.empty then
+			if text = Void or else text.is_empty then
 				p_set_height (nh);
 			elseif is_horizontal then
-				if is_value_shown and (text = Void or else text.empty) then
+				if is_value_shown and (text = Void or else text.is_empty) then
 					p_set_height (nh + label.height);
 				elseif not is_value_shown then
 					p_set_height (nh + label.height);

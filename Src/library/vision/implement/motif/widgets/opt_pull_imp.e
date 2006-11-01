@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 				-- the option_button will be inserted before Current
 				-- in the widget_manager
 			widget_index := widget_manager.last_inserted_position + 1;
-			pulldown_identifier := clone (a_pulldown.identifier);
+			pulldown_identifier := a_pulldown.identifier.twin;
 			pulldown_identifier.append ("_pull");
 			if man then
 				create option_button.make (a_pulldown.identifier, oui_parent);

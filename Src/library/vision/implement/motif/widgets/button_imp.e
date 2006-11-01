@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 	without_ampersands (a_text: STRING): STRING is
 			-- Returns a string which is a_text without ampersands
 		do
-			Result := clone(a_text)
+			Result := a_text.twin
 			Result.prune_all('&')
 		end
 	
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 					else
 						keysym := button_text.item (pos + 1);
 						set_mnemonic (keysym);
-						button_text := clone (button_text);
+						button_text := button_text.twin
 						button_text.remove (pos) -- Remove the `&'
 						set_label_as_string (button_text)
 					end

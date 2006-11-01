@@ -44,7 +44,7 @@ feature -- Status setting
 			m_p: MEL_COMPOSITE
 		do
 			if title_label = Void then
-				label_identifier := clone (abstract_menu.identifier);
+				label_identifier := abstract_menu.identifier.twin;
 				label_identifier.append (" Title");
 				m_p ?= abstract_menu.implementation;
 				create title_label.make (label_identifier, m_p, True);

@@ -226,7 +226,7 @@ feature -- Status setting
 			-- Set `name' to `a_name'.
 		do
 			dispose;
-			name := clone (a_name);
+			name := a_name.twin;
 			is_specified := true;
 			is_parsed := false;
 			update_widgets
@@ -278,7 +278,7 @@ feature {FONT_LIST_IMP} -- Status setting
 	only_set_name (a_name: STRING) is
 			-- Set `name' to `a_name'.
 		do
-			name := clone (a_name);
+			name := a_name.twin;
 			is_specified := true;
 		end;
 

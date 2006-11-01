@@ -45,7 +45,7 @@ feature -- Access
 			p: POINTER
 		do
 			p := c_event_target (handle);
-			if p /= Void then
+			if p /= default_pointer then
 				create Result.make_from_existing (p)
 			end
 		end;
@@ -56,7 +56,7 @@ feature -- Access
 			p: POINTER
 		do
 			p := c_event_property (handle);
-			if p /= Void then
+			if p /= default_pointer then
 				create Result.make_from_existing (p)
 			end
 		end;

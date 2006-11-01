@@ -146,7 +146,6 @@ feature -- Status setting
 			-- Set `foreground' and `foreground_color' to `a_color'.
 		local
 			list: like descendants;
-			color_id: POINTER
 		do
 			list :=descendants;
 			set_xt_pixel (screen_object, XmNforeground, a_color);

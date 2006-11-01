@@ -129,7 +129,7 @@ Widget widget,							/* useless							*/
 font_box_data * client,					/* font-box datas					*/
 XtPointer motif)						/* Useless							*/
 {
-	xfree (client);
+	eif_rt_xfree (client);
 } /* font_box_destroy_action */
 
 /****************************************************************************/
@@ -254,7 +254,7 @@ char ***menu_list)						/* Pointer to the pointer to the	*/
 
 /* If found, modify the pointer to the item */
 	if (i < *number) {
-		xfree (*item);
+		eif_rt_xfree (*item);
 		*item = (*menu_list) [i];
 		return;
 	}

@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionTop"

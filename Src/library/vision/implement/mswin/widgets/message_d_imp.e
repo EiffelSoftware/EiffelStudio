@@ -391,7 +391,7 @@ feature {NONE} -- implementation
 			default_position := true
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionMessageDialog"

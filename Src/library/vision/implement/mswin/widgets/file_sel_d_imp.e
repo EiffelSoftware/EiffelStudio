@@ -82,11 +82,12 @@ feature -- Access
 			-- Base directory used in determining files and directories
 			-- to be displayed
 
-	file_list: LINKED_LIST [STRING] is
+	file_list: LINKED_LIST [STRING_GENERAL] is
 			-- List of files below `filter' that match `pattern'
 		do
 			if wel_file_dialog /= Void and then wel_file_dialog.selected then
-				Result := wel_file_dialog.multiple_file_names
+				create Result.make
+				Result.append (wel_file_dialog.multiple_file_names)
 			end
 		end
 
@@ -451,7 +452,7 @@ feature {NONE} -- Implementation
 				s.substring_index ("*", 1) /= 0
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionFileSelectionDialog"

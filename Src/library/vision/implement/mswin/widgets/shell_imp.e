@@ -1,12 +1,12 @@
-indexing 
-	status: "See notice at end of class."; 
-	date: "$Date$"; 
-	revision: "$Revision$" 
- 
+indexing
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class
 	SHELL_IMP
-  
-inherit 
+
+inherit
 	WEL_SIZE_CONSTANTS
 		export
 			{NONE} all
@@ -16,7 +16,7 @@ inherit
 		redefine
 			on_size,
 			on_set_cursor,
-			height, 
+			height,
 			set_height,
 			set_size,
 			set_width,
@@ -89,7 +89,7 @@ inherit
 
 feature -- Initialization
 
-	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING; a_x, a_y, a_width, a_height: INTEGER) is
+	make_with_coordinates (a_parent: WEL_WINDOW; a_name: STRING_GENERAL; a_x, a_y, a_width, a_height: INTEGER) is
 		require
 			a_name_not_void: a_name /= Void
 		do
@@ -103,7 +103,7 @@ feature -- Initialization
 			exists: exists
 		end
 
-	make_top_with_coordinates (a_name: STRING; a_x, a_y, a_width,
+	make_top_with_coordinates (a_name: STRING_GENERAL; a_x, a_y, a_width,
 			a_height: INTEGER) is
 		require
 			a_name_not_void: a_name /= Void
@@ -157,10 +157,10 @@ feature -- Access
 			end
 		end
 
-	shell_height: INTEGER 
+	shell_height: INTEGER
 			-- Extra height of shell around widgets
 
-	shell_width: INTEGER 
+	shell_width: INTEGER
 			-- Extra width of shell around widgets
 
 	title: STRING is
@@ -183,7 +183,7 @@ feature -- Access
 				Result := private_attributes.width
 			end
 		end
- 
+
 feature -- Status setting
 
 	set_height (new_height: INTEGER) is
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 			dw: DIALOG_IMP
 			psw: POPUP_SHELL_IMP
 		do
-			from 
+			from
 				c := children_list
 				c.start
 			until
@@ -345,7 +345,7 @@ feature {NONE} -- Implementation
 		do
 			children_resizing := True
 			private_attributes.set_height (a_height)
-			private_attributes.set_width (a_width)				
+			private_attributes.set_width (a_width)
 			local_children := children_list
 			from
 				local_children.start
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 				local_children.count + 1 - local_children.index
 			until
 				local_children.off
-			loop	
+			loop
 				d ?= local_children.item
 				if d = Void then
 					p ?= local_children.item
@@ -363,7 +363,7 @@ feature {NONE} -- Implementation
 						b ?= local_children.item
 						if b /= Void then
 							b.set_size (a_width, a_height)
-						else					
+						else
 							m ?= local_children.item
 							if m /= Void then
 								m.set_size (a_width, a_height)
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 			Result := Ws_overlappedwindow + Ws_visible
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionShell"
@@ -404,8 +404,8 @@ feature {NONE} -- Implementation
 		do
 			if fixed_size_flag then
 				if is_restored then
-					w := private_attributes.width + shell_width 
-					h := private_attributes.height + shell_height 
+					w := private_attributes.width + shell_width
+					h := private_attributes.height + shell_height
 				else
 					w := wel_width
 					h := wel_height

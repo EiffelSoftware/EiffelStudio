@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_predefined_id (Idi_asterisk)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionInfoDialog"

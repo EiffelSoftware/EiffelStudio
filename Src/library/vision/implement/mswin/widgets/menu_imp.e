@@ -3,7 +3,7 @@ indexing
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision$" 
+	revision: "$Revision$"
 
 class
 	MENU_IMP
@@ -122,7 +122,7 @@ feature -- Status setting
 			id: INTEGER
 		do
 			id := id_of_child (widget)
-			if id /= 0 then 
+			if id /= 0 then
 				check_item (id)
 			end
 		end
@@ -132,7 +132,7 @@ feature -- Status setting
 			id: INTEGER
 		do
 			id := id_of_child (widget)
-			if id /= 0 then 
+			if id /= 0 then
 				uncheck_item (id)
 			end
 		end
@@ -142,7 +142,7 @@ feature -- Status setting
 			id: INTEGER
 		do
 			id := id_of_child (widget)
-			if id /= 0 then 
+			if id /= 0 then
 				enable_item (id)
 			end
 		end
@@ -152,7 +152,7 @@ feature -- Status setting
 			id: INTEGER
 		do
 			id := id_of_child (widget)
-			if id /= 0 then 
+			if id /= 0 then
 				disable_item (id)
 			end
 		end
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 				c.back
 			end
 		end
-			
+
 	associated_shell: WM_SHELL_IMP is
 		local
 			p : COMPOSITE_IMP
@@ -530,66 +530,66 @@ feature -- Inapplicable
 		do
 		end
 
-	wel_hide, 
-	wel_set_focus, 
-	wel_destroy, 
-	enable, 
-	disable, 
-	invalidate, 
-	wel_release_capture, 
-	wel_set_capture, 
+	wel_hide,
+	wel_set_focus,
+	wel_destroy,
+	enable,
+	disable,
+	invalidate,
+	wel_release_capture,
+	wel_set_capture,
 	wel_show  is
 		do
 		end
 
-	wel_set_text (s: STRING) is 
-		do 
+	wel_set_text (s: STRING) is
+		do
 		end
 
 	wel_set_menu (a_menu: WEL_MENU) is
 		do
 		end
 
-	wel_parent: WEL_COMPOSITE_WINDOW is 
-		do 
+	wel_parent: WEL_COMPOSITE_WINDOW is
+		do
 		end
 
-	client_rect: WEL_RECT is 
-		do 
+	client_rect: WEL_RECT is
+		do
 		end
 
-	wel_shown, 
-	enabled: BOOLEAN is 
-		do 
+	wel_shown,
+	enabled: BOOLEAN is
+		do
 		end
 
 	wel_children: LINKED_LIST [WEL_WINDOW]
 
-	wel_set_width, 
-	wel_set_height, 
-	wel_set_x, 
-	wel_set_y (i:INTEGER) is 
-		do 
+	wel_set_width,
+	wel_set_height,
+	wel_set_x,
+	wel_set_y (i:INTEGER) is
+		do
 		end
 
-	absolute_x, 
-	absolute_y, 
-	wel_width, 
-	wel_height, 
-	wel_x, 
-	wel_y: INTEGER is 
-		do 
+	absolute_x,
+	absolute_y,
+	wel_width,
+	wel_height,
+	wel_x,
+	wel_y: INTEGER is
+		do
 		end
 
-	wel_text: STRING is 
-		do 
+	wel_text: STRING_32 is
+		do
 		end
 
 	set_z_order (flags: POINTER) is
 		do
 		end
 
-	resize, 
+	resize,
 	wel_move (new_width, new_height: INTEGER) is
 		do
 		end

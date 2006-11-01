@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 	only_one: BOOLEAN
 			-- Can there be only one checked radio button?
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionRadioBox"

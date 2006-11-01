@@ -149,7 +149,7 @@ feature {NONE} -- Inapplicable
 	wel_children: LINKED_LIST [WEL_WINDOW]
 	wel_set_width, wel_set_height, wel_set_x, wel_set_y (i:INTEGER) is do end
 	absolute_x, absolute_y, wel_width, wel_height, wel_x, wel_y: INTEGER
-	wel_text: STRING
+	wel_text: STRING_32
 	resize, wel_move (new_width, new_height: INTEGER) is
 		do
 		end

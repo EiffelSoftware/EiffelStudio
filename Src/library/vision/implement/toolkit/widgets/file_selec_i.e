@@ -8,12 +8,12 @@ indexing
 
 deferred class
 
-	FILE_SELEC_I 
+	FILE_SELEC_I
 
 inherit
 
 	TERMINAL_I
-	
+
 feature -- Access
 
 	dir_list: LINKED_LIST [STRING] is
@@ -37,7 +37,7 @@ feature -- Access
 		deferred
 		end;
 
-	file_list: LINKED_LIST [STRING] is
+	file_list: LINKED_LIST [STRING_GENERAL] is
 			-- Items of current file list
 		deferred
 		end;
@@ -106,7 +106,7 @@ feature -- Status setting
 	hide_file_selection_label is
 		deferred
 		end;
-	
+
 	show_file_selection_label is
 		deferred
 		end;
@@ -219,12 +219,12 @@ feature -- Element change
 	set_file_list_width (new_width: INTEGER) is
 		deferred
 		end;
-  
+
 	set_directory_selection is
 			-- Sets selection to directories only.
 		deferred
 		end;
- 
+
 	set_file_selection is
 			-- Sets selection to files (default value).
 		deferred

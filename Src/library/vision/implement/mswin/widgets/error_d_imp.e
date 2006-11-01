@@ -28,9 +28,9 @@ feature {NONE} -- Implementation
 			-- The windows standard error icon
 		once
 			create Result.make_by_predefined_id (Idi_hand)
-		end 
+		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionErrorDialog"

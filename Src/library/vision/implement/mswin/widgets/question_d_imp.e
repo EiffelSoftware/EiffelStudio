@@ -30,12 +30,12 @@ feature {NONE} -- Implementation
 			create Result.make_by_predefined_id (Idi_question)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionQuestionDialog"
 		end
- 
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

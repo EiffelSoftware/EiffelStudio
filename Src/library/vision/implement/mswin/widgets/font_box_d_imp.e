@@ -253,7 +253,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionFontBoxDialog"

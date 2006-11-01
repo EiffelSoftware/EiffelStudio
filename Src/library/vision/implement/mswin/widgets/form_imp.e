@@ -84,7 +84,7 @@ feature -- Status setting
 					update_all
 				end
 			end
-		end 
+		end
 
 	set_width (new_width : INTEGER) is
 			-- Set width to `new_width'.
@@ -95,7 +95,7 @@ feature -- Status setting
 					update_all
 				end
 			end
-		end 
+		end
 
 	set_height (new_height : INTEGER) is
 			-- Set height to `new_height'.
@@ -106,7 +106,7 @@ feature -- Status setting
 					update_all
 				end
 			end
-		end 
+		end
 
 	realize is
 			-- Realize current form and children.
@@ -121,7 +121,7 @@ feature -- Status setting
 				h := form_child_list.height (Current)
 				if h > height then
 					set_form_height (h)
-				end			
+				end
 				w := form_child_list.width (Current)
 				if w > width then
 					set_form_width (w)
@@ -138,7 +138,7 @@ feature -- Status setting
 				-- set initial focus
 			if initial_focus /= Void then
 				initial_focus.wel_set_focus
-			end			
+			end
 		end
 
 	realize_current is
@@ -173,7 +173,7 @@ feature	-- Implementation
 		do
 			a_childw ?= a_child
 			form_child_list.attach_bottom (a_childw, Current, bottom_offset, false)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -188,7 +188,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_bottom (a_childw, Current, a_position, true)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -204,7 +204,7 @@ feature	-- Implementation
 			form_child_list.attach_bottom (a_childw, a_widgetw, bottom_offset, false);
 			a_childw  ?= a_widget
 			form_child_list.add (a_childw)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -217,7 +217,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_left (a_childw, Current, left_offset, false)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -248,7 +248,7 @@ feature	-- Implementation
 			form_child_list.attach_left (a_childw, a_widgetw, left_offset, false)
 			a_childw  ?= a_widget
 			form_child_list.add (a_childw)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -261,7 +261,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_right (a_childw, Current, right_offset, false)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -276,7 +276,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_right (a_childw, Current, a_position, true)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -292,7 +292,7 @@ feature	-- Implementation
 			form_child_list.attach_right (a_childw, a_widgetw, right_offset, false)
 			a_childw  ?= a_widget
 			form_child_list.add (a_childw)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -305,7 +305,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_top (a_childw, Current, top_offset, false)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -320,7 +320,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_top (a_childw, Current, a_position, true)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -336,7 +336,7 @@ feature	-- Implementation
 			form_child_list.attach_top (a_childw, a_widgetw, top_offset, false)
 			a_childw  ?= a_widget
 			form_child_list.add (a_childw)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -348,7 +348,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_right (a_childw, Void, 0, false)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -360,7 +360,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_left (a_childw, Void, 0, false)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -372,7 +372,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_bottom (a_childw, Void, 0, false)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -384,7 +384,7 @@ feature	-- Implementation
 		do
 			a_childw  ?= a_child
 			form_child_list.attach_top (a_childw, Void, 0, false)
-			if realized then 
+			if realized then
 				update_all
 			end
 		end
@@ -463,7 +463,7 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 		once
 			Result := "EvisionForm"
 		end

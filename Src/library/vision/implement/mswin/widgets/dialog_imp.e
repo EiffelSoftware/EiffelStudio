@@ -1,12 +1,12 @@
-indexing 
-    status: "See notice at end of class."; 
-    date: "$Date$"; 
-    revision: "$Revision$" 
- 
+indexing
+    status: "See notice at end of class.";
+    date: "$Date$";
+    revision: "$Revision$"
+
 class
 	DIALOG_IMP
-  
-inherit 
+
+inherit
 	WM_SHELL_IMP
 		redefine
 			x,
@@ -51,7 +51,7 @@ feature -- Status setting
 	show is
 			-- Show composite.
 		do
-			if exists then 
+			if exists then
 				wel_show
 				show_children
 			end
@@ -99,7 +99,7 @@ feature -- Status setting
 				end
 			end
 		end
-		
+
 	realize is
 		do
 			Precursor
@@ -108,7 +108,7 @@ feature -- Status setting
 				initial_focus.wel_set_focus
 			end
 		end
-		
+
 	unrealize is
 		do
 			if insensitive_list /= Void then
@@ -156,7 +156,7 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "Evisiondialog"

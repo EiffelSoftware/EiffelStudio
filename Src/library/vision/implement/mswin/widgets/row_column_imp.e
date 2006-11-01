@@ -97,7 +97,7 @@ feature -- Status report
 	mapping: BOOLEAN
 			-- Are we currently mapping the widgets?
 
-	margin_height: INTEGER 
+	margin_height: INTEGER
 			-- Amount of blank space between the top edge
 			-- of row column and the first item in each column, and the
 			-- bottom edge of row column and the last item in each column
@@ -242,7 +242,7 @@ feature -- Status setting
 		do
 			spacing := new_spacing
 		end
- 
+
 	set_row_layout (flag: BOOLEAN) is
 			-- Set row column to layout items preferably in row if `flag',
 			-- in column otherwise.
@@ -315,7 +315,7 @@ feature -- Element change
 				until
 					c.after
 				loop
-					ci := c.item 
+					ci := c.item
 					sizeable_window ?= ci
 					if ci /= Void and then ci.managed then
 						if ci.height > largest_h then
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			if managed_count > 0 then
 				if is_row_layout then
 					if preferred_count > managed_count then
-						max_height := managed_count * eh + 
+						max_height := managed_count * eh +
 							2 * margin_height +
 							((managed_count - 1) * spacing)
 					else
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 			if managed_count > 0 then
 				if is_row_layout then
 					if preferred_count > managed_count then
-						max_height := managed_count * max_height + 
+						max_height := managed_count * max_height +
 							2 * margin_height +
 							((managed_count - 1) * spacing)
 					else
@@ -538,7 +538,7 @@ feature {NONE} -- Implementation
 				until
 					j > preferred_count or placed > c.count
 				loop
-					ci := c.i_th (c.count - placed + 1) 
+					ci := c.i_th (c.count - placed + 1)
 					if ci /= Void and then ci.managed then
 						ci.set_x_y (new_x, new_y)
 						if new_x >= margin_width then
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 					-- j is the row indicator
 				placed := 1
 			variant
-				c.count + 1 - placed	
+				c.count + 1 - placed
 			until
 				placed > c.count
 			loop
@@ -675,7 +675,7 @@ feature {NONE} -- Implementation
 		end
 
 	preferred_count: INTEGER
-			-- Preferred number of items 
+			-- Preferred number of items
 			-- for a row/column (depends on layout)
 
 	same_size: BOOLEAN
@@ -692,7 +692,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionRowColumn"

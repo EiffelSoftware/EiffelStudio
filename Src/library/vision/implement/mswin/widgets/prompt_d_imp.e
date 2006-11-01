@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 			set_label_font (label_font)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionPromptDialog"

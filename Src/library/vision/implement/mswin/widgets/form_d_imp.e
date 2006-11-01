@@ -82,11 +82,11 @@ inherit
 
 	WEL_SIZE_CONSTANTS
 
-create 
+create
 	make
 
 feature -- Initialization
- 
+
 	make (a_form_d: FORM_D; oui_parent: COMPOSITE) is
 			-- Create the form dialog.
 		do
@@ -101,7 +101,7 @@ feature -- Initialization
 			default_position := true
 			private_attributes.set_width (100)
 			private_attributes.set_height (100)
-			max_width := full_screen_client_area_width 
+			max_width := full_screen_client_area_width
 			max_height := full_screen_client_area_height
 		end
 
@@ -133,7 +133,7 @@ feature -- Status setting
 				end
 			end
 			if default_position then
-				xpos := parent.real_x + ((parent.width - width) // 2) 
+				xpos := parent.real_x + ((parent.width - width) // 2)
 				ypos := parent.real_y + ((parent.height - height) // 2)
 				xpos := xpos.max (0)
 				ypos := ypos.max (0)
@@ -143,7 +143,7 @@ feature -- Status setting
 				-- set initial focus
 			if initial_focus /= void then
 				initial_focus.wel_set_focus
-			end			
+			end
 		end
 
 	set_form_height (new_height: INTEGER) is
@@ -151,7 +151,7 @@ feature -- Status setting
 		do
 			if height /= new_height then
 				private_attributes.set_height (new_height)
-				if exists then 
+				if exists then
 					wel_set_height (new_height + shell_height)
 				end
 			end
@@ -162,7 +162,7 @@ feature -- Status setting
 		do
 			if width /= new_width then
 				private_attributes.set_width (new_width)
-				if exists then 
+				if exists then
 					wel_set_width (new_width + shell_width)
 				end
 			end
@@ -173,13 +173,13 @@ feature -- Status setting
 		do
 			if private_attributes.height /= new_height then
 				private_attributes.set_height (new_height)
-				if exists then 
+				if exists then
 					wel_set_height (new_height + shell_height)
 				end
 				if not updating then
 					update_all
 				end
-			end	
+			end
 		end
 
 	set_size (new_width, new_height: INTEGER) is
@@ -189,7 +189,7 @@ feature -- Status setting
 			or else private_attributes.height /= new_height then
 				private_attributes.set_height (new_height)
 				private_attributes.set_width (new_width)
-				if exists then 
+				if exists then
 					resize (new_width + shell_width, new_height + shell_height)
 				end
 				update_all
@@ -201,13 +201,13 @@ feature -- Status setting
 		do
 			if private_attributes.width /= new_width then
 				private_attributes.set_width (new_width)
-				if exists then 
+				if exists then
 					wel_set_width (new_width + shell_width)
 				end
 				if not updating then
 					update_all
 				end
-			end	
+			end
 		end
 
 	show is
@@ -225,7 +225,7 @@ feature -- Status setting
 			Precursor {FORM_IMP}
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Set the class name for WEL.
 		once
 			Result := "EVisionFormDialog"

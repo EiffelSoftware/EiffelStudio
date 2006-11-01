@@ -17,7 +17,7 @@ inherit
 			set_managed,
 			realize,
 			realized,
-			set_width, 
+			set_width,
 			set_height,
 			set_size,
 			set_x,
@@ -117,7 +117,7 @@ feature -- Status report
 
 	double: BOOLEAN
 			-- Has current separator a double line?
-		
+
 feature -- Status setting
 
 	set_3d_separator is
@@ -139,7 +139,7 @@ feature -- Status setting
 				set_double_line
 			else
 				set_single_line
-			end				
+			end
 			if exists then
 				invalidate
 			end
@@ -344,7 +344,7 @@ feature -- Status setting
 			end
 		ensure then
 			is_horizontal_equals_flag: is_horizontal = flag
-		end		
+		end
 
 	set_no_line is
 			-- Set separator to have no line.
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 			create pen.make (Ps_solid, 1, black_color)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		do
 			Result := "EVisionSeparator"

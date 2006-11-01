@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 		require
 			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			set_default_values
 		ensure
 			components_set: components = a_components

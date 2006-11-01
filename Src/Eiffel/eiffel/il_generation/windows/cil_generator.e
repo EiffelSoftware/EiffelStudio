@@ -395,7 +395,7 @@ feature {NONE} -- Type description
 	compute_root_class is
 			-- Initialize `root_class_routine' with CLASS_C instance that defines
 			-- creation routine of current system.
-			--| In most cases `System.root_class.compiled_class' is equal to
+			--| In most cases `System.root_type.associated_class' is equal to
 			--| `root_class_routine', but when creation routine is inherited, this
 			--| is not true.
 			--| `root_class_routine' is used to find out which module needs to be

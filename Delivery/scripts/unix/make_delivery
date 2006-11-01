@@ -183,11 +183,8 @@ remtrace Free add ons
 exprt $DEFAULT_ORIGO_SVN/free_add_ons free_add_ons 
 cd $INSTALL_DIR/library
 gunzip -c $INSTALL_DIR/free_add_ons/gobo/gobo_34_unix.tgz | tar -xf -
-cd $INSTALL_DIR/free_add_ons
-fullrd eclop
-fullrd gobo
-fullrd micoe
-fullrd wex
+cd $INSTALL_DIR
+fullrd free_add_ons
 cd $INIT_DIR
 
 if [ ! "$NO_INSTALL" ]; then

@@ -22,7 +22,7 @@ EIF_REFERENCE xm_string_to_eiffel (XmString motif_string)
 	XmStringContext context;
 	Boolean separator;
 
-	result = (char *) cmalloc (sizeof (char));
+	result = (char *) malloc (sizeof (char));
 	*result = (char) 0;
 	if (XmStringInitContext (&context, motif_string))
 		{
@@ -30,7 +30,7 @@ EIF_REFERENCE xm_string_to_eiffel (XmString motif_string)
 			{
 			separator_place = 1;
 			if (separator) separator_place++;
-			result = (char *) crealloc (result, strlen (result) + strlen (text) + separator_place);
+			result = realloc (result, (strlen (result) + strlen (text) + separator_place));
 			strcat (result, text);
 			if (separator) strcat (result, "\n");
 			XtFree (text);
@@ -38,7 +38,7 @@ EIF_REFERENCE xm_string_to_eiffel (XmString motif_string)
 			}
 		XmStringFreeContext (context);
 		eiffel_string = RTMS (result);
-		xfree (result);
+		free (result);
 		}
 	return (EIF_REFERENCE) eiffel_string;
 }

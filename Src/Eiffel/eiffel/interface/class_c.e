@@ -1366,14 +1366,15 @@ feature -- Supplier checking
 			l_vd27: VD27
 			l_feat_tbl: like feature_table
 		do
-			if creators /= Void and system.root_creation_name /= Void then
+			l_system_creation := System.root_creation_name
+			if creators /= Void and l_system_creation/= Void then
 				l_feat_tbl := feature_table
 				from
 					creators.start
 				until
 					creators.after
 				loop
-					if System.root_creation_name.is_equal (creators.key_for_iteration) then
+					if l_system_creation.is_equal (creators.key_for_iteration) then
 							-- `creators.key_for_iteration' contains the creation_name
 						l_creation_proc := l_feat_tbl.item (creators.key_for_iteration)
 
@@ -1405,9 +1406,7 @@ feature -- Supplier checking
 				end
 			end
 
-			l_system_creation := System.root_creation_name
-
-			if	l_system_creation /= Void	and then creators = Void then
+			if l_system_creation /= Void and then creators = Void then
 					-- Check default create
 				l_creation_proc := default_create_feature
 				if not l_creation_proc.feature_name.is_equal (l_system_creation) then

@@ -250,17 +250,6 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 
 feature {NONE} -- Implementation
 
-	component_filename: FILE_NAME is
-			-- Location of component file.
-		do
-			create Result.make_from_string (eiffel_layout.eiffel_installation_dir_name)
-			Result.extend ("build")
-			Result.extend ("components")
-			Result.extend ("components.xml")
-		ensure
-			Result_exists: Result /= Void and not Result.is_empty
-		end
-
 	display_save_progress (total, written: INTEGER) is
 			-- Display current save progress as percentage of `total' based on `written',
 			-- unless Build is running in Wizard mode.

@@ -81,7 +81,6 @@ feature -- Status setting
             -- Set the background color from implementation `color_imp'.
 		local
 			w: MEL_WIDGET
-			g: MEL_GADGET
 		do
 			mel_set_background_color (color_imp);
 			w := vertical_scroll_bar;

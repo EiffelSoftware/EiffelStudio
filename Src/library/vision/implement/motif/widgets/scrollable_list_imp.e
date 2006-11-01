@@ -535,7 +535,7 @@ feature -- Status setting
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
 		local
-			was_shown, was_unmanaged: BOOLEAN
+			was_unmanaged: BOOLEAN
 		do
 			if not managed then
 				manage;

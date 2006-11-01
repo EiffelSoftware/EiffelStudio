@@ -174,7 +174,7 @@ feature -- Status setting
 		do
 			nw := new_width;
 			nh := new_height;
-			if not title.empty then
+			if not title.is_empty then
 				button_gadget.set_size (nw - title_width, new_height)
 			else
 				button_gadget.set_size (nw, new_height)

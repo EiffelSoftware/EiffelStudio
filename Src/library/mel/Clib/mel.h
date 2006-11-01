@@ -26,15 +26,17 @@
 #include <sys/param.h>
 #endif /* not EIF_VMS */
 
-#ifdef I_XM_PROTOCOLS
+//#ifdef I_XM_PROTOCOLS
 #include <Xm/Protocols.h>
-#else
-#include <X11/Protocols.h>
-#endif
+//#else
+//#include <X11/Protocols.h>
+//#endif
 
 #ifdef I_SYS_TIMES
 #include <sys/times.h>
 #endif
+
+#define xfree eif_rt_xfree
 
 extern XEvent global_xevent; 	
 						/* Global variable for Event processing */

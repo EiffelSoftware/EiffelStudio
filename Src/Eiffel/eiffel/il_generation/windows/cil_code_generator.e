@@ -997,7 +997,7 @@ feature -- Generation Structure
 					a_class := system.root_type.associated_class
 					root_feat := a_class.feature_table.item (system.root_creation_name)
 					l_decl_type := implemented_type (root_feat.origin_class_id,
-						a_class.types.first.type)
+						system.root_type.type_i)
 
 					entry_point_token := current_module.implementation_feature_token (
 						l_decl_type.associated_class_type.implementation_id,
@@ -1211,7 +1211,7 @@ feature -- Class info
 				l_cur_mod := current_module
 				current_module := main_module
 				l_class := System.root_type.associated_class
-				current_class_type := l_class.types.first
+				current_class_type := System.root_type.type_i.associated_class_type
 				create l_ca_factory
 
 					-- First we generate attributes common to both generated class and interface.

@@ -22,7 +22,6 @@ cp -r Delivery/vision2_tour/templates ./
 
 # Copy constants and eiffel environment to interface.
 cp ./Src/build/Constants/gb_constants.e ./interface/
-cp ./Src/build/utilities/eiffel_env.e ./interface/
 cp ./Src/build/utilities/gb_general_utilities.e ./interface/
 cp ./Src/build/utilities/gb_widget_utilities.e ./interface/
 cp ./Src/build/utilities/ordered_string_handler.e ./interface/

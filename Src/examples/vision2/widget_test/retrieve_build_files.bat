@@ -28,7 +28,6 @@ XCOPY /Y /E /I Delivery\vision2_tour\templates .\templates
 
 REM Copy constants and eiffel environment to interface.
 XCOPY /Y Src\build\constants\gb_constants.e .\interface
-XCOPY /Y Src\build\utilities\eiffel_env.e .\interface
 XCOPY /Y Src\build\utilities\gb_general_utilities.e .\interface
 XCOPY /Y Src\build\utilities\gb_widget_utilities.e .\interface
 XCOPY /Y Src\build\utilities\ordered_string_handler.e .\interface

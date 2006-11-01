@@ -1,14 +1,14 @@
 indexing
 
-	description: 
+	description:
 		"EiffelVision implementation of a Screen cursor."
 	legal: "See notice at end of class.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
-	SCREEN_CURSOR_IMP 
+class
+	SCREEN_CURSOR_IMP
 
 inherit
 
@@ -33,7 +33,7 @@ inherit
 		redefine
 			display, dispose
 		end
-		
+
 create
 	make,
 	make_for_screen
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 		do
 			type := X_cursor;
 			display := last_open_display
-		end; 
+		end;
 
 	make_for_screen (a_cursor: SCREEN_CURSOR; a_screen: SCREEN) is
 			-- Create a font.
@@ -87,7 +87,7 @@ feature -- Status setting
 			dispose;
 			type := new_type;
 			update_widgets
-		end; 
+		end;
 
 	set_pixmap (pixmap: PIXMAP; mask: PIXMAP) is
 			-- Set `pixmap' as the new shape of the cursor.
@@ -115,14 +115,14 @@ feature -- Element change
 	allocate_cursor is
 			-- Allocate the screen cursor.
 		require
-			set_up: (type = User_defined_pixmap and then 
+			set_up: (type = User_defined_pixmap and then
 				not is_allocated) implies (source_pixmap /= Void and then
 					cursor_mask /= Void)
 		do
 			if not is_allocated then
-				if type = User_defined_pixmap then 
+				if type = User_defined_pixmap then
 					make_from_pixmap (
-						source_pixmap.bitmap, cursor_mask.bitmap, 
+						source_pixmap.bitmap, cursor_mask.bitmap,
 						source_pixmap.hot_x, source_pixmap.hot_y)
 						-- Let the GC call dispose on the pixmaps in
 						-- order to free them if no other object is using them.
@@ -142,19 +142,21 @@ feature -- Element change
 				destroy
 			end;
 			is_allocated := False;
-		end; 
+		end;
+
+feature {NONE} -- Implementation
 
 	update_widget_resource (widget_m: WIDGET_IMP) is
 			-- Update resource for `widget_m'.
 		local
 			c: SCREEN_CURSOR
 		do
-			c := widget_m.cursor;	
+			c := widget_m.cursor;
 			if (c /= Void) and then (c.implementation = Current) then
 				number_of_users := number_of_users + 1;
 				widget_m.update_cursor
 			end
-		end; 
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

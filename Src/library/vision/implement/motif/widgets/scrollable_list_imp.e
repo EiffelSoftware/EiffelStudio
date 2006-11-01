@@ -32,13 +32,13 @@ inherit
 			height, real_x, real_y, realized, width,
 			x, y, hide, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize,
-			copy, setup, lower
+			copy, lower
 		redefine
 			set_size, set_height, set_width, parent
 		select
 			list_make_from_existing
 		end
-			
+
 	PRIMITIVE_IMP
 		rename
 			is_shown as shown,
@@ -49,7 +49,7 @@ inherit
 			realize, set_x, set_x_y, set_y, show, unrealize,
 			make_from_existing, create_callback_struct,
 			set_no_event_propagation, clean_up, object_clean_up,
-			copy, setup, lower
+			copy, lower
 		redefine
 			set_size, set_height, set_width,
 			set_background_color_from_imp, set_managed, parent,
@@ -60,14 +60,14 @@ inherit
 
 	PRIMITIVE_COMPOSITE_IMP
 		undefine
-			set_no_event_propagation, copy, setup
+			set_no_event_propagation, copy
 		redefine
 			set_size, set_height, set_width
 		end;
 
 	FONTABLE_IMP
 		undefine
-			copy, setup
+			copy
 		end
 
 create
@@ -107,7 +107,7 @@ feature -- Initialization
 			a_list: SCROLLABLE_LIST
 		do
 			a_list ?= widget_oui;
-			a_list.set_font_imp (Current);		
+			a_list.set_font_imp (Current);
 		end;
 
 feature -- Access
@@ -124,7 +124,7 @@ feature -- Access
 feature {NONE} -- Private routines
 
 	private_add (s: STRING; pos: INTEGER) is
-		-- Add s in the visual scrollable list 
+		-- Add s in the visual scrollable list
 		local
 			loc_string: MEL_STRING
 		do
@@ -371,7 +371,7 @@ feature  -- Status report
 			-- Position of selected item if single or extended selection mode is
 			-- selected
 			-- Null if nothing is selected
-		local	
+		local
 			pos: like selected_positions
 		do
 			pos := selected_positions;
@@ -397,13 +397,13 @@ feature  -- Default action callbacks
 				list.add_command (a_command, argument)
 			end;
 
-		remove_default_action is 
+		remove_default_action is
 				-- Remove all actions executed when items are
 				-- selected with double click or by pressing
 				-- `RETURN' in current scroll list.
 			local
 			do
-				remove_default_action_callback 
+				remove_default_action_callback
 			end;
 
 feature  -- Status setting
@@ -622,7 +622,7 @@ feature -- Update
 		end;
 
 feature {NONE} -- Implementation
-	
+
 	make_merge_list (other: SEQUENCE [SCROLLABLE_LIST_ELEMENT]): MEL_STRING_TABLE is
 			-- Make a merge list to `merge_left' and `merge_right'.
 		require

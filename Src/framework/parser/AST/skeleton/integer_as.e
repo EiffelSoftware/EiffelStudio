@@ -326,7 +326,7 @@ feature {INTEGER_AS} -- Storage
 	has_minus: BOOLEAN
 			-- Has constant a minus sign?
 
-feature {INTEGER_AS, INSPECT_CONTROL} -- Types
+feature {INTEGER_AS} -- Types
 
 	default_type: INTEGER
 			-- Default type of integer constant

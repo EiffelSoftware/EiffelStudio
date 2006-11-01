@@ -31,8 +31,17 @@ feature -- Access: file name
 
 	Bitmaps_path: DIRECTORY_NAME is
 		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_build_name, "bitmaps">>)
+			create Result.make_from_string (share_build_path)
+			Result.extend ("bitmaps")
+		end
+
+	share_build_path: DIRECTORY_NAME is
+			-- Path to shared build files.
+		once
+			Result := shared_path.twin
+			Result.extend (short_build_name)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 indexing

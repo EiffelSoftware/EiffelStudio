@@ -181,6 +181,8 @@ feature -- Change with preferences
 		end
 
 	set_columns_layout_from_string (s: STRING) is
+		require
+			s_valid: s /= Void and then not s.is_empty
 		local
 			dts: ARRAY [like column_layout]
 			sp: LIST [STRING]
@@ -192,8 +194,8 @@ feature -- Change with preferences
 			l_title: STRING
 			retried: BOOLEAN
 		do
-			if not retried or s = Void or else not s.is_empty then
-				sp := s.split (';')
+			if not retried then
+				sp := s.split (':')
 				from
 					i := 0
 					n := sp.count // 5
@@ -227,26 +229,28 @@ feature -- Change with preferences
 		local
 			t: like column_layout
 			i: INTEGER
+			sep: CHARACTER
 			retried: BOOLEAN
 		do
 			if not retried then
 				from
 					Result := ""
+					sep := ':'
 					i := 1
 				until
 					i > column_count
 				loop
 					t := column_layout (i)
 					Result.append_string (t.col_index.out)
-					Result.append_character (';')
+					Result.append_character (sep)
 					Result.append_string (t.is_displayed.out)
-					Result.append_character (';')
+					Result.append_character (sep)
 					Result.append_string (t.has_auto_resizing.out)
-					Result.append_character (';')
+					Result.append_character (sep)
 					Result.append_string (t.width.out)
-					Result.append_character (';')
+					Result.append_character (sep)
 					Result.append_string (t.title)
-					Result.append_character (';')
+					Result.append_character (sep)
 					i := i + 1
 				end
 				Result.remove_tail (1)

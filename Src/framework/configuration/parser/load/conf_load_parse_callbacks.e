@@ -447,7 +447,7 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_not_void: current_target /= Void
 		local
-			l_all, l_cluster, l_class, l_base_class, l_feature: STRING
+			l_all, l_cluster, l_class, l_feature: STRING
 			l_all_b: BOOLEAN
 		do
 			l_all := current_attributes.item (at_all_classes)

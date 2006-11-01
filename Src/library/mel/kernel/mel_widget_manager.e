@@ -14,7 +14,7 @@ inherit
 
 	ANY
 		undefine
-			is_equal, copy, setup, consistent
+			is_equal, copy
 		end;
 
 	HASH_TABLE [MEL_OBJECT, POINTER]

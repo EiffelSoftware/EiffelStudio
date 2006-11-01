@@ -913,7 +913,6 @@ feature {NONE} -- Actions
 			l_wd: EV_WARNING_DIALOG
 			l_ed: EV_ERROR_DIALOG
 			l_row: like last_selected_row
-			l_warnings: STRING
 		do
 			create l_fact
 			create l_load.make (l_fact)

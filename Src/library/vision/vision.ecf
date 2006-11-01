@@ -25,17 +25,12 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
                 <cluster name="vision" location="$ISE_LIBRARY/library/vision/">
                         <cluster name="vision_context_data" location="$|oui\context_data\"/>
                         <cluster name="vision_figures" location="$|figures\"/>
-                        <cluster name="vision_imp_motif" location="$|implement\motif\">
-                                <cluster name="vision_imp_kernel" location="$|kernel\"/>
-                                <cluster name="vision_imp_support" location="$|support\"/>
-                                <cluster name="vision_imp_widgets" location="$|widgets\"/>
+                        <cluster name="vision_imp_motif" location="$|implement\motif\" recursive="true">
 				<condition>
 					<platform excluded_value="windows"/>
 				</condition>
                         </cluster>
-                        <cluster name="vision_imp_x" location="$|implement\x\">
-                                <cluster name="vision_imp_x_kernel" location="$|kernel\"/>
-                                <cluster name="vision_imp_x_support" location="$|support\"/>
+                        <cluster name="vision_imp_x" location="$|implement\x\" recursive="true">
 				<condition>
 					<platform excluded_value="windows"/>
 				</condition>
@@ -46,11 +41,7 @@ Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</descri
 				</condition>
 			</cluster>
                         <cluster name="vision_kernel" location="$|oui\kernel\"/>
-                        <cluster name="vision_toolkit" location="$|implement\toolkit\">
-                                <cluster name="vision_toolkit_kernel" location="$|kernel\"/>
-                                <cluster name="vision_toolkit_support" location="$|support\"/>
-                                <cluster name="vision_toolkit_widgets" location="$|widgets\"/>
-                        </cluster>
+                        <cluster name="vision_toolkit" location="$|implement\toolkit\" recursive="true"/>
                         <cluster name="vision_tools" location="$|tools\"/>
                         <cluster name="vision_widgets" location="$|oui\widgets\"/>
                 </cluster>

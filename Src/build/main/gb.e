@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			-- system never gets compiled with more than one command option available.
 		local
 			environment_dialog: INVALID_ENVIRONMENT_DIALOG
-			l_env: GB_EIFFEL_ENV
+			l_env: GB_EIFFEL_LAYOUT
 		do
 				-- Initialize the environment
 			create l_env

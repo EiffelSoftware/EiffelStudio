@@ -239,18 +239,6 @@ iff not defined NO_COMPILE then
 	fullrf gobo\gobo_34_win.tgz
 	fullrf gobo\gobo_33_ise.tgz
 
-	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
-	clean_project
-	finalize zad_miner.ecf
-	cleanup_eiffel zad_miner zad_miner.exe
-	iff not exist zad_miner.exe then
-		echo Couldnt finalize zad_miner.exe.
-		CANCEL
-	endiff
-	fullrf new_ace.ecf
-	cd ..
-	safe_md binaries
-	move ace\zad_miner.exe binaries
 	cdd %INIT_DIR
 
 	remtrace Generate Resource Bench
@@ -264,8 +252,6 @@ else
 	quick_move /s rb
 	quick_move /s wizards
 	cdd %INSTALL_DIR
-	safe_md free_add_ons\zad_miner\binaries
-	quick_move free_add_ons\zad_miner\binaries\zad_miner.exe
 	give_time_to copy executables from the old delivery
 endiff
 

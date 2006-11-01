@@ -126,7 +126,7 @@ feature -- Element change
 			Result := implementation.file_count
 		end;
 
-	file_list: LINKED_LIST [STRING] is
+	file_list: LINKED_LIST [STRING_GENERAL] is
 			-- Items of current file list
 		require
 			exists: not destroyed

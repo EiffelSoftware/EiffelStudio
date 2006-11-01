@@ -303,6 +303,21 @@ feature -- Access: file name
 			result_ok: Result /= Void and then not Result.is_empty
 		end
 
+	Shared_path: DIRECTORY_NAME is
+			-- Location of shared files (platform independent).
+		require
+			is_valid_environment: is_valid_environment
+		once
+			if is_unix_layout then
+				Result := unix_layout_base_path.twin
+				Result.extend_from_array (<<"share", "eiffelstudio">>)
+			else
+				create Result.make_from_string (eiffel_installation_dir_name)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	Studio_path: DIRECTORY_NAME is
 			-- Location of studio
 		require
@@ -700,9 +715,6 @@ feature -- Status
 			Result := Platform.is_windows and then Eiffel_c_compiler.is_equal ("bcb")
 		end
 
-	is_unix_layout: BOOLEAN
-			-- Is eiffelstudio installed in the unix layout?
-
 feature -- Environment access
 
 	get_environment (a_var: STRING): STRING is
@@ -837,6 +849,21 @@ feature {NONE} -- Environment access
 		rescue
 			retried := True
 			retry
+		end
+
+feature {NONE} -- Configuration of layout
+
+	is_unix_layout: BOOLEAN is False 
+			-- Is eiffelstudio installed in the unix layout?
+
+	unix_layout_base_path: DIRECTORY_NAME
+			-- Base for the unix layout. e.g. "/usr" or "/usr/local"
+		once
+			create Result.make
+			Result.set_directory ("home")
+			Result.extend_from_array (<<"patrickr", "local", "Eiffel60Unix", "root", "usr">>)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 indexing

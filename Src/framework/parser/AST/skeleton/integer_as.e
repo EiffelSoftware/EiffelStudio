@@ -471,7 +471,6 @@ feature {NONE} -- Translation
 		local
 			i, j: INTEGER
 			area: SPECIAL [CHARACTER]
-			val: CHARACTER
 			last_nat_64: NATURAL_64
 		do
 			is_initialized := True

@@ -121,7 +121,7 @@ feature -- Access
 
 feature -- Status report
 
-	font: FONT 
+	font: FONT
 			-- Font currently selected by the user
 
 feature -- Status setting
@@ -232,12 +232,12 @@ feature -- Element change
 			-- Hide the apply button
 		do
 			apply_button_hidden := true
-			if apply /= Void and then apply.exists then 
+			if apply /= Void and then apply.exists then
 				apply.hide
 			end
 		end
 
-	hide_cancel_button is	
+	hide_cancel_button is
 			-- Show the cancel button
 		do
 			cancel_button_hidden := true
@@ -255,7 +255,7 @@ feature -- Element change
 			end
 		end
 
-	show_apply_button is 
+	show_apply_button is
 			-- Show the apply button
 		do
 			apply_button_hidden := false
@@ -268,7 +268,7 @@ feature -- Element change
 			-- Show the cancel button
 		do
 			cancel_button_hidden := false
-			if cancel /= Void and then cancel.exists then	
+			if cancel /= Void and then cancel.exists then
 				cancel.show
 			end
 		end
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 				current_style := font_styles.i_th_text (0)
 				select_new_style (new_font, current_style)
 			end
-			if current_size /= Void then	
+			if current_size /= Void then
 				select_new_size (new_font, current_style, current_size)
 			else
 				select_new_size (new_font, current_style, font_sizes.i_th_text (0))
@@ -567,7 +567,7 @@ feature {NONE} -- Implementation
 			wf: WEL_FONT
 			fw: FONT_IMP
 		do
-			if font_names.selected then 
+			if font_names.selected then
 				efw := find_font_name (font_names.selected_string)
 			else
 				efw := find_font_name (font_names.i_th_text (0))
@@ -592,7 +592,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionFontBox"

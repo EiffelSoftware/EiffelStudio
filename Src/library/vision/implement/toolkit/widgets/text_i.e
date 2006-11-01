@@ -6,7 +6,7 @@ indexing
 
 deferred class
 
-	TEXT_I 
+	TEXT_I
 
 inherit
 
@@ -84,7 +84,7 @@ feature -- Access
 			is_multi_line_mode: is_multi_line_mode
 		deferred
 		end;
- 
+
 	coordinate (char_pos: INTEGER): COORD_XY is
 			-- Coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
@@ -259,7 +259,7 @@ feature -- Status setting
 			-- Set editing for single line text.
 		deferred
 		end;
- 
+
 	set_multi_line_mode is
 			-- Set editing for multiline text.
 		deferred
@@ -272,7 +272,7 @@ feature -- Status setting
 
 feature -- Basic functions
 
-	find (text_to_find: STRING; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
+	find (text_to_find: STRING_GENERAL; match_case: BOOLEAN; start_from: INTEGER): INTEGER is
 			-- Search for the string `text_to_find' in the TEXT
 		require
 			text_to_find_not_void: text_to_find /= Void
@@ -366,7 +366,7 @@ feature -- Removal
 			not_a_command_void: a_command /= Void
 		deferred
 		end;
- 
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

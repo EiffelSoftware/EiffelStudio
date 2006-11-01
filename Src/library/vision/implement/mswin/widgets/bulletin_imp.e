@@ -11,7 +11,7 @@ class
 inherit
 	MANAGER_IMP
 		redefine
-			child_has_resized, 
+			child_has_resized,
 			realize_current,
 			show
 		end;
@@ -83,10 +83,10 @@ inherit
 			{NONE} all
 		end
 
-create 
+create
 	make
 
-feature {NONE} -- Initialization 
+feature {NONE} -- Initialization
 
 	make (a_bulletin: BULLETIN; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a bulletin.
@@ -119,7 +119,7 @@ feature -- Status setting
 	show is
 			-- Show composite.
 		do
-			if 
+			if
 				exists and then
 				((parent /= Void and then parent.wel_shown)
 				or (parent = Void))
@@ -132,13 +132,13 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 		once
 			Result := "EvisionBulletin"
 		end
 
 	child_has_resized is
-			-- Action to perform when a child 
+			-- Action to perform when a child
 			-- has changed size
 		do
 			if not fixed_size_flag then

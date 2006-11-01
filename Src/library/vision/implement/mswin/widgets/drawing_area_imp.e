@@ -66,7 +66,7 @@ inherit
 	DRAWING_AREA_I
 
 	DRAWABLE_DEVICE_WINDOWS
-	
+
 	CURSOR_WIDGET_MANAGER
 
 	WEL_MK_CONSTANTS
@@ -197,7 +197,7 @@ feature -- Removal
 			right_button_release_actions.remove (Current, a_command, arg)
 			middle_button_press_actions.remove (Current, a_command, arg)
 			middle_button_release_actions.remove (Current, a_command, arg)
-	
+
 			key_press_actions.remove (Current, a_command, arg)
 			key_release_actions.remove (Current, a_command, arg)
 		end
@@ -238,7 +238,7 @@ feature -- Basic operations
 				painting := False
 			else
 				create msg_box.make
-				msg_box.basic_message_box (Void, "No default printer set. Printing unavailable.", 
+				msg_box.basic_message_box (Void, "No default printer set. Printing unavailable.",
 					"Printer Not Set", Mb_iconstop + Mb_ok)
 			end
 		end
@@ -325,7 +325,7 @@ feature -- WEL
 	background_pen: WEL_PEN
 			-- Pen used to paint the background
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Windows class name
 		do
 			Result := "EVisionDrawingArea"
@@ -339,8 +339,8 @@ feature -- WEL
 			expose_data: EXPOSE_DATA
 		do
 			if drawing_dc /= Void then
-				clear_rect (invalid_rect.left, 
-					invalid_rect.top, invalid_rect.right, 
+				clear_rect (invalid_rect.left,
+					invalid_rect.top, invalid_rect.right,
 					invalid_rect.bottom)
 			end
 			create coord_xy

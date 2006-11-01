@@ -52,15 +52,15 @@ feature -- Access
 		do
 			create system_font.make
 			Result := (text.count + 1) * system_font.log_font.width
-		end	
-	
+		end
+
 	height: INTEGER is
 		local
 			system_font: WEL_SYSTEM_FONT
 		do
 			create system_font.make
 			Result := system_font.log_font.height
-		end	
+		end
 
 feature -- Status setting
 
@@ -92,10 +92,10 @@ feature -- Element change
 
 	realize is
 		do
-			realized := True			
+			realized := True
 		end
 
-	unrealize is 
+	unrealize is
 		do
 			realized := false
 		end
@@ -115,8 +115,8 @@ feature -- Element change
 		do
 		end
 
-	realized: BOOLEAN 
-	
+	realized: BOOLEAN
+
 feature {NONE} -- Inapplicable
 
 	default_style: INTEGER is
@@ -130,13 +130,13 @@ feature {NONE} -- Inapplicable
 	process_notification (notification_code: INTEGER) is
 		do
 		end
-		
+
 	attach_menu (a_menu: MENU_PULL) is
 		do
 			associated_menu := a_menu
 		end
 
-	wel_hide, wel_set_focus, enable, disable, invalidate, 
+	wel_hide, wel_set_focus, enable, disable, invalidate,
 	wel_release_capture, wel_set_capture, wel_show  is
 		do
 		end
@@ -157,7 +157,7 @@ feature {NONE} -- Inapplicable
 
 	absolute_x, absolute_y, wel_width, wel_height, wel_x, wel_y: INTEGER
 
-	wel_text: STRING
+	wel_text: STRING_32
 
 	resize, wel_move (new_width, new_height: INTEGER) is
 		do

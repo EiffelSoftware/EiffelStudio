@@ -62,7 +62,7 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access 
+feature -- Access
 
 	parent: COMPOSITE_IMP;
 			-- Parent widget
@@ -231,7 +231,7 @@ feature  -- Status report
 	valid_background_pixmap (a_pixmap : PIXMAP): BOOLEAN is
 			-- Is `a_pixmap' valid for current widget?
 		do
-			Result := False		
+			Result := False
 		end
 
 	valid_background_color (a_color: COLOR): BOOLEAN is
@@ -415,7 +415,7 @@ feature -- Status setting
 			if parent /= Void and parent.realized and then parent.exists then
 				if managed then
 					if realized then
-						if parent.wel_shown and not wel_shown then 
+						if parent.wel_shown and not wel_shown then
 							wel_show
 						end
 						cw ?= Current;
@@ -543,7 +543,7 @@ feature -- Status setting
 		do
 			if exists
 			and then ((parent /= Void and then parent.wel_shown)
-			or (parent = Void)) then 
+			or (parent = Void)) then
 				wel_show
 			end
 			shown := (parent /= Void and parent.shown) or (parent = Void)
@@ -576,11 +576,11 @@ feature -- Element change
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		do
 			inspect number
-			when 1 then 
+			when 1 then
 				left_button_motion_actions.add (Current, a_command, argument)
-			when 2 then 
+			when 2 then
 				middle_button_motion_actions.add (Current, a_command, argument)
-			when 3 then 
+			when 3 then
 				right_button_motion_actions.add (Current, a_command, argument)
 			end
 		end;
@@ -590,9 +590,9 @@ feature -- Element change
 			-- `number'-th mouse button is pressed.
 		do
 			inspect number
-			when 1 then 
+			when 1 then
 				left_button_press_actions.add (Current, a_command, argument)
-			when 2 then 
+			when 2 then
 				middle_button_press_actions.add (Current, a_command, argument)
 			when 3 then
 				right_button_press_actions.add (Current, a_command, argument)
@@ -604,11 +604,11 @@ feature -- Element change
 			-- `number'-th mouse button is released.
 		do
 			inspect number
-			when 1 then 
+			when 1 then
 				left_button_release_actions.add (Current, a_command, argument)
-			when 2 then 
+			when 2 then
 				middle_button_release_actions.add (Current, a_command, argument)
-			when 3 then 
+			when 3 then
 				right_button_release_actions.add (Current, a_command, argument)
 			end
 		end;
@@ -624,7 +624,7 @@ feature -- Element change
 			-- window resizes or moves.
 		do
 			resize_actions.add (Current, a_command, argument)
-		end			
+		end
 
 	add_enter_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of actions to execute when the
@@ -784,11 +784,11 @@ feature -- Removal
 			-- mouse is moved while the `number'-th mouse button is pressed.
 		do
 			inspect number
-			when 1 then 
+			when 1 then
 				left_button_motion_actions.remove (Current, a_command, argument)
-			when 2 then 
+			when 2 then
 				middle_button_motion_actions.remove (Current, a_command, argument)
-			when 3 then 
+			when 3 then
 				right_button_motion_actions.remove (Current, a_command, argument)
 			end
 		end;
@@ -805,11 +805,11 @@ feature -- Removal
 			-- `number'-th mouse button is pressed.
 		do
 			inspect number
-			when 1 then 
+			when 1 then
 				left_button_press_actions.remove (Current, a_command, argument)
-			when 2 then 
+			when 2 then
 				middle_button_press_actions.remove (Current, a_command, argument)
-			when 3 then 
+			when 3 then
 				right_button_press_actions.remove (Current, a_command, argument)
 			end
 		end;
@@ -819,11 +819,11 @@ feature -- Removal
 			-- `number'-th mouse button is released.
 		do
 			inspect number
-			when 1 then 
+			when 1 then
 				left_button_release_actions.remove (Current, a_command, argument)
-			when 2 then 
+			when 2 then
 				middle_button_release_actions.remove (Current, a_command, argument)
-			when 3 then 
+			when 3 then
 				right_button_release_actions.remove (Current, a_command, argument)
 			end
 		end;
@@ -1024,12 +1024,12 @@ feature -- Implementation
 		deferred
 		end
 
-	wel_text: STRING is
+	wel_text: STRING_32 is
 			-- Window text
 		deferred
 		end
 
-	wel_set_text (a_text: STRING) is
+	wel_set_text (a_text: STRING_GENERAL) is
 			-- Set the window text
 		deferred
 		end
@@ -1445,7 +1445,7 @@ feature {NONE} -- Implementation
 
 	on_set_cursor (hit_code: INTEGER) is
 			-- Wm_setcursor
-		local 
+		local
 			scw: SCREEN_CURSOR_IMP
 		do
 			scw := grabbed_cursor
@@ -1579,7 +1579,7 @@ feature {NONE} -- Implementation
 			else
 				windows_color ?= private_background_color.implementation
 				Result := windows_color.brush
-			end	
+			end
 		end
 
 invariant

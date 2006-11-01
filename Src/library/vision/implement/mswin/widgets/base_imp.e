@@ -4,7 +4,7 @@ indexing
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
- 
+
 class
 	BASE_IMP
 
@@ -28,7 +28,7 @@ feature -- Initialization
 			private_title := a_base.identifier
 			if private_title.is_integer then
 				create class_icon.make_by_id (private_title.to_integer)
-				if not class_icon.exists then	
+				if not class_icon.exists then
 					class_icon := null_class_icon
 				end
 			else
@@ -43,13 +43,13 @@ feature -- Initialization
 			private_attributes.set_width (minimal_width)
 			private_attributes.set_height (minimal_height)
 			max_width := maximal_width
-			max_height := maximal_height 
+			max_height := maximal_height
 			oui_top := a_base
 		end
 
 feature {NONE} -- Implementation
 
-	class_name: STRING is
+	class_name: STRING_32 is
 		once
 			Result := "EvisionBase"
 		end

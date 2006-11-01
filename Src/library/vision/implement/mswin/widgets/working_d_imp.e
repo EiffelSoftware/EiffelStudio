@@ -4,10 +4,10 @@ indexing
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
- 
+
 class
 	WORKING_D_IMP
- 
+
 inherit
 	MESSAGE_D_IMP
 		redefine
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 			create Result.make_by_predefined_id (Idi_asterisk)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionWorkingDialog"

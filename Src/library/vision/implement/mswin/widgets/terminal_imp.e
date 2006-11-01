@@ -1,10 +1,10 @@
-indexing 
-	status: "See notice at end of class."; 
-	date: "$Date$"; 
-	revision: "$Revision$" 
- 
+indexing
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 class
-	TERMINAL_IMP 
+	TERMINAL_IMP
 
 inherit
 	BULLETIN_IMP
@@ -22,13 +22,13 @@ feature {TERMINAL} -- Initialisation
 
 feature -- Access
 
-	label_font: FONT 
+	label_font: FONT
 			-- Font name for labels
 
-	button_font: FONT 
+	button_font: FONT
 			-- Font name for buttons
 
-	text_font: FONT 
+	text_font: FONT
 			-- Font name for texts
 
 feature -- Report
@@ -45,7 +45,7 @@ feature -- Report
 		require
 			font_not_void: a_font /= Void
    		do
-			label_font := a_font					 	
+			label_font := a_font
 		end
 
 	set_button_font (a_font: FONT) is
@@ -61,10 +61,10 @@ feature -- Report
 		require
 			font_not_void: a_font /= Void
  		do
-			text_font := a_font		 
+			text_font := a_font
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionTerminal"

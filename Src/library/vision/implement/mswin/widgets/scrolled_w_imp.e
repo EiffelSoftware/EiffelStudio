@@ -132,7 +132,7 @@ feature -- Initialization
 				-- set initial focus
 			if initial_focus /= void then
 				initial_focus.wel_set_focus
-			end			
+			end
 		end
 
 feature -- Access
@@ -334,7 +334,7 @@ feature {NONE} -- Implementation
 					else
 						working_area.set_x_y (working_area.x,
 							working_area.y.max (height -
-							working_area.height).min (0))						
+							working_area.height).min (0))
 					end
 					wel_set_vertical_position ( - working_area.y)
 				end
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			Result := Ws_ex_clientedge
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EvisionScrolledWindow"

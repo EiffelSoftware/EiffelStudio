@@ -28,7 +28,7 @@ inherit
 			class_name,
 			on_size,
 			set_height,
-			set_size, 
+			set_size,
 			unrealize,
 			set_width,
 			default_position
@@ -72,7 +72,7 @@ inherit
 			on_size,
 			default_position,
 			set_height,
-			set_size, 
+			set_size,
 			set_width
 		end
 
@@ -94,7 +94,7 @@ feature {NONE} -- Initialization
 			managed := True
 			shell_height := title_bar_height + window_border_height + 2 * window_frame_height
 			shell_width := 2 * window_frame_width
-			max_width := full_screen_client_area_width 
+			max_width := full_screen_client_area_width
 			max_height := full_screen_client_area_height
 		end
 
@@ -123,7 +123,7 @@ feature -- Status setting
 			wel_destroy
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 			-- Class name
 		once
 			Result := "EVisionBulletinDialog"
@@ -150,7 +150,7 @@ feature -- Status setting
 			or else private_attributes.height /= new_height then
 				private_attributes.set_height (new_height)
 				private_attributes.set_width (new_width)
-				if exists then 
+				if exists then
 					resize (new_width + shell_width, new_height + shell_height)
 				end
 				if parent /= Void then

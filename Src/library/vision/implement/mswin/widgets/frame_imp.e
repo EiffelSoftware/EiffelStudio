@@ -50,7 +50,7 @@ inherit
 			set_text as wel_set_text,
 			move as wel_move,
 			set_focus as wel_set_focus,
-			set_capture as wel_set_capture, 
+			set_capture as wel_set_capture,
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
@@ -101,7 +101,7 @@ feature -- Initialization
 				if form_height /= 0 or form_width /= 0 then
 						-- if size is set children size accordingly
 					set_child_size
-				else 
+				else
 						-- else set size according to children size
 					set_enclosing_size
 				end
@@ -110,7 +110,7 @@ feature -- Initialization
 				-- set initial focus
 			if initial_focus /= Void then
 				initial_focus.wel_set_focus
-			end			
+			end
 		end
 
 	realize_current is
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 			resize_actions.execute (Current, resize_data)
 		end
 
-	class_name: STRING is
+	class_name: STRING_32 is
 		once
 			Result := "EvisionFrame"
 		end

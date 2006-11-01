@@ -342,8 +342,8 @@ void set_fallback_res (EIF_POINTER w, EIF_OBJ res, EIF_INTEGER count)
 
 	if (fallback_list != (String *) 0) {
 		String * temp = fallback_list;
-		while (temp) xfree (*(temp++));
-		xfree (fallback_list);
+		while (temp) eif_rt_xfree (*(temp++));
+		eif_rt_xfree (fallback_list);
 		fallback_list = (String *) 0;
 	}
 	if (res != (EIF_OBJ) 0) {
@@ -448,6 +448,6 @@ void c_put_xpoint (EIF_POINTER array, EIF_INTEGER position, EIF_INTEGER x, EIF_I
 
 void c_free_xpoints (EIF_POINTER array)
 {
-	xfree ((XPoint *) array);
+	eif_rt_xfree ((XPoint *) array);
 }
 

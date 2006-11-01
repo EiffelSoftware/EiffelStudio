@@ -550,7 +550,6 @@ feature -- Status setting
 			i: INTEGER
 			rl, rr: ARRAY_PREFERENCE
 			l_watch_tool: ES_WATCH_TOOL
-			nwt: INTEGER
 			s: STRING
 			wlays: ARRAY [STRING]
 		do
@@ -616,35 +615,39 @@ feature -- Status setting
 
 				--| Watches tool
 			wlays := preferences.debug_tool_data.watch_tools_layout_preference.value
-			nwt := (wlays.count).max (1)
---			nwt := Preferences.debug_tool_data.number_of_watch_tools.min (1)
-			if watch_tool_list.count < nwt  then
-				from
-				until
-					watch_tool_list.count >= nwt
-				loop
-					create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
-				end
+			check wlays /= Void end
+			if watch_tool_list.is_empty then
+					--| At least one watch tool.
+				create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
 			end
 			from
 				watch_tool_list.start
 				i := wlays.lower
 			until
-				watch_tool_list.after
+				i > wlays.upper and watch_tool_list.after
 			loop
+				s := Void
+				if wlays.valid_index (i) then
+					s := wlays [i]
+					if s /= Void and then s.is_empty then
+						s := Void
+					end
+				end
+				if s /= Void and then watch_tool_list.after then
+					create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
+					watch_tool_list.finish
+				end
 				l_watch_tool := watch_tool_list.item
+				watch_tool_list.forth
+
 				if l_watch_tool /= Void then
-					if wlays /= Void and then i <= wlays.upper then
-						s := wlays [i]
-						if s /= Void and then not s.is_empty then
-							l_watch_tool.watches_grid.set_columns_layout_from_string (s)
-						end
+					if s /= Void then
+						l_watch_tool.watches_grid.set_columns_layout_from_string (s)
 					end
 					l_watch_tool.set_manager (debugging_window)
 					l_watch_tool.change_attach_notebook (debugging_tools)
 				end
 				i := i + 1
-				watch_tool_list.forth
 			end
 
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
@@ -745,8 +748,8 @@ feature -- Status setting
 
 			objects_tool.save_grids_preferences
 			from
-				i := 0
-				create wlays.make (i, i + watch_tool_list.count - 1)
+				i := 1
+				create wlays.make (1, watch_tool_list.count)
 				watch_tool_list.start
 			until
 				watch_tool_list.after

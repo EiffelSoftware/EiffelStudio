@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class GB_EIFFEL_ENV
+class GB_EIFFEL_LAYOUT
 
 inherit
 	EIFFEL_ENV
@@ -22,12 +22,6 @@ feature -- Status
 	application_name: STRING is "build"
 			-- Name of current application
 
-	execution_environment: EXECUTION_ENVIRONMENT is
-			-- Result is instance of EXECUTION_ENVIRONMENT
-		once
-			create Result
-		end
-
 feature -- Access: environment variable
 
 	short_build_name: STRING is "build"
@@ -39,18 +33,6 @@ feature -- Access: file name
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array (<<short_build_name, "bitmaps">>)
-		end
-
-	last_opened_projects_resource_name: STRING is "studio_recent_files"
-
-feature {NONE} -- Implementation
-
-	platform_constants: PLATFORM is
-			-- To get on what kind of computer we are running.
-		once
-			create Result
-		ensure
-			platform_constants_not_void: Result /= Void
 		end
 
 indexing

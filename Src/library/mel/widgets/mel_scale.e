@@ -63,7 +63,7 @@ feature -- Access
 			-- Label text widget of scale
 		local
 			c_list: FIXED_LIST [POINTER];
-			i, c: INTEGER
+			c: INTEGER
 		do
 			if private_text_widget = Void then
 				c := children_count;

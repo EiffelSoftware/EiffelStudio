@@ -150,7 +150,7 @@ feature -- Miscellaneous
 	flush is
 			-- Flush all the events of the display.
 		require
-			display_not_void: handle /= Void
+			display_not_void: handle /= default_pointer 
 		do
 			x_flush (handle)
 		end;

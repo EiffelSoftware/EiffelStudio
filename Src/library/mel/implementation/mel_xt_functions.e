@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 			-- as name. Call a C function that does not free the pointer
 			-- returned by XtVaGetValues.
 		require
-			not_a_resource_name_void: a_resource_name /= Void
+			not_a_resource_name_void: a_resource_name /= default_pointer
 			not_a_resource_name_null: a_resource_name /= default_pointer
 		external
 			"C (EIF_POINTER, char *): EIF_REFERENCE"
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			-- Value of X string resource with a_resource_name
 			-- as name.
 		require
-			not_a_resource_name_void: a_resource_name /= Void
+			not_a_resource_name_void: a_resource_name /= default_pointer
 			not_a_resource_name_null: a_resource_name /= default_pointer
 		external
 			"C (EIF_POINTER, char *): EIF_REFERENCE"

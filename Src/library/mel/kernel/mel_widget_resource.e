@@ -62,7 +62,7 @@ feature  -- Status setting
 		require
 			name_not_null: a_name /= Void
 		do
-			resource_name := clone (a_name)
+			resource_name := a_name.twin
 		ensure
 			set: resource_name.is_equal (a_name)
 		end;
@@ -72,7 +72,7 @@ feature  -- Status setting
 		require
 			value_not_null: a_value /= Void
 		do
-			resource_value := clone (a_value)
+			resource_value := a_value.twin
 		ensure
 			set: resource_value.is_equal (a_value)
 		end;
@@ -82,7 +82,7 @@ feature  -- Status setting
 		require
 			name_not_null: a_name /= Void
 		do
-			widget_name := clone (a_name)
+			widget_name := a_name.twin
 		ensure
 			set: widget_name.is_equal (a_name)
 		end;

@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			accepts_multiple_loose_arguments := a_allow_multi_loose
 			display_usage_on_error := a_usage_on_error
 			max_display_width := {NATURAL_16}.max_value
+			add_application_switches := True
 		ensure
 			case_sensitive_set: case_sensitive = a_cs
 			accepts_loose_argument_set: (accepts_loose_arguments and not a_allow_multi_loose) implies accepts_loose_argument
@@ -99,6 +100,9 @@ feature -- Access
 			-- Maximum width of display used to display usage information
 			-- Note: Not yet implemented for use!
 
+	add_application_switches: BOOLEAN assign set_add_application_switches
+			-- Indicates if built-in application switches should be added to the argument options
+
 feature -- Element change
 
 	set_loose_argument_validator (a_validator: like loose_argument_validator) is
@@ -119,6 +123,15 @@ feature -- Element change
 		ensure
 			max_display_width_set: max_display_width = a_width
 		end
+
+	set_add_application_switches (a_add: like add_application_switches) is
+			-- Set `add_application_switches' with `a_add'
+		do
+			add_application_switches := a_add
+		ensure
+			add_application_switches_set: add_application_switches = a_add
+		end
+
 
 feature -- Query
 
@@ -648,7 +661,7 @@ feature {NONE} -- Post Processing
 			successful: successful
 			parsed: parsed
 		do
-			suppress_logo := has_option (nologo_switch)
+			suppress_logo := not add_application_switches or else has_option (nologo_switch)
 			display_help := has_option (help_switch)
 		end
 
@@ -1486,9 +1499,11 @@ feature {NONE} -- Switches
 				Result.append (l_switches)
 			end
 
-			create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
-			l_switch.set_is_special
-			Result.extend (l_switch)
+			if add_application_switches then
+				create l_switch.make (nologo_switch, "Supresses copyright information.", True, False)
+				l_switch.set_is_special
+				Result.extend (l_switch)
+			end
 			create l_switch.make (help_switch, "Display usage information.", True, False)
 			l_switch.set_is_special
 			Result.extend (l_switch)

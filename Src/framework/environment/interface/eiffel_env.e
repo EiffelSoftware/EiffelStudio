@@ -141,13 +141,13 @@ feature -- Preferences
 			if platform.is_windows then
 				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" +
 					major_version.out + minor_version.out + "\"+application_name+"\Preferences"
+				if is_workbench then
+					Result.append ("_wkbench")
+				end
 			else
 				create fname.make_from_string (eiffel_home)
-				fname.set_file_name ("."+application_name+"rc" + major_version.out + minor_version.out)
+				fname.set_file_name (application_name + "rc" + major_version.out + minor_version.out)
 				Result := fname
-			end
-			if is_workbench then
-				Result.append ("_wkbench")
 			end
 		end
 
@@ -231,13 +231,19 @@ feature -- Access: Environment variables
 
 	Eiffel_home: DIRECTORY_NAME is
 			-- Name of directory containing Eiffel specific data.
+		local
+			l_dir_name: STRING
 		once
 			create Result.make_from_string (Home)
 			if platform.is_windows then
-				Result.extend ("EiffelSoftware")
+				l_dir_name := "EiffelSoftware"
 			else
-				Result.extend (".es")
+				l_dir_name := ".es"
 			end
+			if is_workbench then
+				l_dir_name.append ("_wkbench")
+			end
+			Result.extend (l_dir_name)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -261,8 +267,14 @@ feature -- Access: file name
 
 	Eiffel_installation_dir_name: DIRECTORY_NAME is
 			-- Installation of ISE Eiffel name.
+		local
+			l_name: STRING
 		once
-			create Result.make_from_string (get_environment (ise_eiffel_env))
+			l_name := get_environment (ise_eiffel_env)
+			if is_workbench and then (create {DIRECTORY}.make (l_name + "_wkbench")).exists then
+				l_name.append ("_wkbench")
+			end
+			create Result.make_from_string (l_name)
 		ensure
 			result_not_void_or_empty: is_valid_environment implies Result /= Void and not Result.is_empty
 		end
@@ -469,16 +481,9 @@ feature -- Access: file name
 	Bin_path: DIRECTORY_NAME is
 		require
 			is_valid_environment: is_valid_environment
-		local
-			l_p: STRING
 		do
-			l_p := get_environment (ec_folder_env)
-			if l_p /= Void then
-				create Result.make_from_string (l_p)
-			else
-				Result := Studio_path.twin
-				Result.extend_from_array (<<"spec", Eiffel_platform, "bin">>)
-			end
+			Result := Studio_path.twin
+			Result.extend_from_array (<<"spec", Eiffel_platform, "bin">>)
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
 		end
@@ -807,9 +812,6 @@ feature -- Environment constants
 	ec_name_env: STRING is "EC_NAME"
 		-- ec executable name.
 
-	ec_folder_env: STRING is "EC_FOLDER"
-		-- Location of the binaries.
-
 feature -- Constants
 
 	Executable_suffix: STRING is
@@ -853,7 +855,7 @@ feature {NONE} -- Environment access
 
 feature {NONE} -- Configuration of layout
 
-	is_unix_layout: BOOLEAN is False 
+	is_unix_layout: BOOLEAN is False
 			-- Is eiffelstudio installed in the unix layout?
 
 	unix_layout_base_path: DIRECTORY_NAME

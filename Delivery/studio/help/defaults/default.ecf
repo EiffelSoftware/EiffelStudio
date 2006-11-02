@@ -8,10 +8,13 @@
 		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
 		<cluster name="$root_cluster_name" location=".\" recursive="true">
 			<file_rule>
-				<exclude>EIFGENs</exclude>
-				<exclude>.svn</exclude>
-				<exclude>CVS</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
 			</file_rule>
 		</cluster>
+	</target>
+	<target name="$system_name_dotnet" extends="$system_name">
+		<setting name="msil_generation" value="true"/>
 	</target>
 </system>

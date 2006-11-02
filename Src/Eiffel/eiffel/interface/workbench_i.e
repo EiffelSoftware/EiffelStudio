@@ -561,21 +561,23 @@ feature -- Automatic backup
 		local
 			file: PLAIN_TEXT_FILE
 		do
-			create file.make_open_write (backup_info_file_name)
-			file.put_string ("Compiler version: ")
-			file.put_string (Version_number)
-			file.put_new_line
-			file.put_string ("batch mode: ")
-			file.put_boolean (Eiffel_project.batch_mode)
-			file.put_new_line
-			file.put_string ("new session: ")
-			file.put_boolean (new_session)
-			file.put_new_line
-			file.put_string ("successful: ")
-			file.put_boolean (successful)
-			file.put_new_line
-
-			file.close
+			create file.make (backup_info_file_name)
+			if file.is_creatable or else file.exists and file.is_writable then
+				file.open_write
+				file.put_string ("Compiler version: ")
+				file.put_string (Version_number)
+				file.put_new_line
+				file.put_string ("batch mode: ")
+				file.put_boolean (Eiffel_project.batch_mode)
+				file.put_new_line
+				file.put_string ("new session: ")
+				file.put_boolean (new_session)
+				file.put_new_line
+				file.put_string ("successful: ")
+				file.put_boolean (successful)
+				file.put_new_line
+				file.close
+			end
 
 			new_session := False
 		end

@@ -651,7 +651,7 @@ void exitprf(void)
 
 #ifdef WORKBENCH
 		char *meltpath = (char *) 0;			/* directory of .UPDT */
-		meltpath = (char*) eif_getenv ("MELT_PATH");
+		meltpath = (char*) getenv ("MELT_PATH");
 		if (meltpath != NULL) {
 			chdir (meltpath);
 		} else {

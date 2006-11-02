@@ -137,7 +137,7 @@ rt_public void update(char ignore_updt, char *argv0)
 #define MELTED_FILE_NEXISTS 0
 	melted_exists = MELTED_FILE_NEXISTS;
 
-	meltpath = eif_getenv ("MELT_PATH");
+	meltpath = getenv ("MELT_PATH");
 
 		/* We add 10 to the length of `filename' which corresponds to the size of
 		 * ".melted" (7) plus an extra 3 characters needed for the different platform

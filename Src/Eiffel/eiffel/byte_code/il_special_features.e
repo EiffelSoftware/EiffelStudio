@@ -62,6 +62,11 @@ feature -- Access
 				then
 					Result := basic_type_table.has (feat.feature_name_id)
 					function_type := basic_type_table.found_item
+					if function_type = out_type then
+							-- {REAL_32}.out and {REAL_64}.out are processed
+							-- as non-built-in to avoid issues with locale settings.
+						Result := not target_type.is_real_32 and then not target_type.is_real_64
+					end
 
 				else
 					if target_type.is_enum then

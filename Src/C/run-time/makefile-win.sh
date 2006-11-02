@@ -131,11 +131,6 @@ WOBJECTS = $(WORKBENCH_OBJECTS) \
 	$(INDIR)\wmain.$obj \
 	$(NETWORK)
 
-EOBJECTS = $(WORKBENCH_OBJECTS) \
-	$(INDIR)\bmain.$obj \
-	$(TOP)\ipc\shared\$(LIBNAME) \
-	$(TOP)\ipc\ewb\wewb_proto.$obj
-
 MT_FINAL_OBJECTS = \
 	$(INDIR)\MTlmalloc.$obj \
 	$(INDIR)\MTmalloc.$obj \
@@ -245,16 +240,11 @@ MT_WOBJECTS = $(MT_WORKBENCH_OBJECTS) \
 	$(INDIR)\MTwmain.$obj \
 	$(MT_NETWORK)
 
-MT_EOBJECTS = $(MT_WORKBENCH_OBJECTS) \
-	$(INDIR)\MTbmain.$obj \
-	$(TOP)\ipc\shared\$(LIBMTNAME) \
-	$(TOP)\ipc\ewb\mtwewb_proto.$obj
-
 all:: eif_size.h
 all:: $output_libraries
 
-standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib
-mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib $(OUTDIR)\mtebench.lib
+standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib
+mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib
 
 $(OUTDIR)\finalized.$lib: $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.$lib
@@ -339,13 +329,6 @@ $(OUTDIR)\finalized.dll : $(OUTDIR) $(OBJECTS)
 	$(MAKE)
 	cd ..\..\run-time
 
-$(OUTDIR)\ebench.$lib: $(EOBJECTS)
-	$(RM) $(OUTDIR)\ebench.$lib
-	$link_line
-
-$(OUTDIR)\mtebench.$lib: $(MT_EOBJECTS)
-	$(RM) $(OUTDIR)\mtebench.$lib
-	$link_line
 
 all:: x2c.exe
 
@@ -645,12 +628,6 @@ $(INDIR)\wurgent.$obj: $(RTSRC)\urgent.c
 final: finalized.$lib
 work: wkbench.$lib
 
-$(INDIR)\bmain.$obj: $(RTSRC)\main.c
-	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\main.c
-
-$(INDIR)\bexcept.$obj: $(RTSRC)\except.c
-	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\except.c
-
 ###################
 # MT_OBJECTS
 ###################
@@ -930,12 +907,6 @@ $(INDIR)\MTwumain.$obj: $(RTSRC)\umain.c
 
 $(INDIR)\MTwurgent.$obj: $(RTSRC)\urgent.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\urgent.c
-
-$(INDIR)\MTbmain.$obj: $(RTSRC)\main.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\main.c
-
-$(INDIR)\MTbexcept.$obj: $(RTSRC)\except.c
-	$(CC) $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\except.c
 
 TESTS = mram gram lram eram sram
 

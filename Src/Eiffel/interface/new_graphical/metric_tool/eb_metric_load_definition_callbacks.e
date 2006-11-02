@@ -35,7 +35,7 @@ feature{NONE} -- Initialization
 			create current_attributes.make (5)
 			create current_content.make (256)
 			create current_domain.make
-			create {LINKED_LIST [EB_METRIC]} metrics.make
+			create metrics.make (64)
 			create {LINKED_STACK [EB_METRIC_NARY_CRITERION]} current_criterion_stack.make
 		ensure
 			factory_set: factory = a_factory
@@ -48,7 +48,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	metrics: LIST [EB_METRIC]
+	metrics: HASH_TABLE [EB_METRIC, STRING]
 			-- List of loaded metrics
 
 feature -- Setting
@@ -166,8 +166,22 @@ feature{NONE} -- Process
 
 	process_metric is
 			-- Process "metric" definition list node.
+		local
+			l_metrics: like metrics
+			l_cur_metric: like current_metric
+			l_error_str: STRING
 		do
-			metrics.extend (current_metric)
+			l_metrics := metrics
+			l_cur_metric := current_metric
+			if l_metrics.has (l_cur_metric.name) then
+				create l_error_str.make (100)
+				l_error_str.append ("Duplicated metric name ")
+				l_error_str.append (quoted_name (l_cur_metric.name, ""))
+				l_error_str.append (".")
+				set_parse_error_message (l_error_str)
+			else
+				l_metrics.put (l_cur_metric, l_cur_metric.name)
+			end
 		end
 
 	process_basic_metric is

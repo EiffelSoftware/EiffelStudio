@@ -906,13 +906,10 @@ feature {NONE} -- Implementation
 				i > c
 			loop
 				l_row := l_grid.row (i)
-				if l_row.data /= Void then
+				l_metric ?= l_row.data
+				if l_metric /= Void then
 					l_check_item ?= l_row.item (1)
-					l_metric ?= l_row.data
-					check
-						l_check_item /= Void
-						l_metric /= Void
-					end
+					check l_check_item /= Void end
 					if l_metric.is_predefined = a_predefined then
 						if a_select then
 							if metric_manager.is_metric_valid (l_metric.name) or else should_invalid_metric_be_selected then
@@ -921,7 +918,6 @@ feature {NONE} -- Implementation
 						else
 							l_check_item.set_selected (a_select)
 						end
-
 					end
 				end
 				i := i + 1

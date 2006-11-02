@@ -139,6 +139,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_split_area_1.disable_item_expand (archive_definition_frame)
 			l_ev_horizontal_split_area_1.enable_item_expand (l_ev_horizontal_box_5)
 			archive_definition_frame.set_text ("Archive Management")
+			archive_definition_frame.set_minimum_width (450)
 			l_ev_vertical_box_1.set_padding (6)
 			l_ev_vertical_box_1.set_border_width (5)
 			l_ev_vertical_box_1.disable_item_expand (definition_toolbar_area)

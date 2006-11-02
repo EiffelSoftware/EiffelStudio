@@ -9,10 +9,13 @@
 		<library name="vision2" location="$ISE_LIBRARY/library/vision2/vision2.ecf"/>
 		<cluster name="root_cluster" location=".\" recursive="true">
 			<file_rule>
-				<exclude>EIFGENs</exclude>
-				<exclude>.svn</exclude>
-				<exclude>CVS</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
 			</file_rule>
 		</cluster>
+	</target>
+	<target name="${FL_PROJECT_NAME}_dotnet" extends="${FL_PROJECT_NAME}">
+		<setting name="msil_generation" value="true"/>
 	</target>
 </system>

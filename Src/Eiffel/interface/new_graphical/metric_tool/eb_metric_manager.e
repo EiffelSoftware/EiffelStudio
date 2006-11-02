@@ -753,7 +753,7 @@ feature{NONE} -- Implementation
 			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
 			parse_file (a_file_name, l_callback)
 			if not has_error then
-				Result := l_callback.metrics
+				Result := l_callback.metrics.linear_representation
 			end
 		end
 

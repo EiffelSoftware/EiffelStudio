@@ -72,10 +72,6 @@ rt_private fnptr send_proc;
 
 extern EIF_INTEGER eif_system(char *);
 
-#ifdef EIF_WINDOWS
-extern char *eif_getenv (char *);
-#endif
-
 void eif_beep (void)
 {
 #ifdef EIF_WINDOWS

@@ -303,7 +303,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of double value
 		do
-			create Result.make_from_cil ({SYSTEM_CONVERT}.to_string_double (item))
+			create Result.make_from_cil ({SYSTEM_CONVERT}.to_string_double_iformat_provider (item, {CULTURE_INFO}.invariant_culture))
 		end
 
 feature {NONE} -- Implementation

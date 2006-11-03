@@ -22,11 +22,6 @@ inherit
 			default_create, copy, is_equal
 		end
 
-	INSTALLATION_LOCATOR
-		undefine
-			default_create, copy, is_equal
-		end
-
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -125,11 +120,6 @@ feature {NONE} -- Implementation
 				if not warning_dialog.selected_button.is_equal ("OK") then
 					supress_generation := True
 				end
-			end
-			if installation_location = Void then
-				supress_generation := True
-				create error_dialog.make_with_text ("Unable to generate test as required files cannot be located.%NIf this tour was installed as part of the EiffelStudio installation, please ensure that ISE_EIFFEL is correctly set.")
-				error_dialog.show_modal_to_window (Current)
 			end
 			if not supress_generation then
 				test_controller.generate_current_test (directory)

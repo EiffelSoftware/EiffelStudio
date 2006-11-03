@@ -8,25 +8,20 @@ indexing
 
 class
 	TEST_CONTROLLER
-	
+
 inherit
 	EV_HORIZONTAL_BOX
 		redefine
 			initialize, is_in_default_state
 		end
-	
+
 	WIDGET_TEST_SHARED
 		export
 			{NONE} all
 		undefine
 			copy, default_create, is_equal
 		end
-		
-	INSTALLATION_LOCATOR
-		undefine
-			copy, default_create, is_equal
-		end
-		
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -43,8 +38,8 @@ feature {NONE} -- Initialization
 			register_type_change_agent (agent update_for_type_change)
 
 			hide_interface
-		end		
-		
+		end
+
 feature -- Status setting
 
 	set_class_output (a_text_control: EV_TEXT) is
@@ -55,8 +50,8 @@ feature -- Status setting
 			class_text_output := a_text_control
 		ensure
 			control_set: class_text_output = a_text_control
-		end		
-		
+		end
+
 
 	update_for_type_change (a_widget: EV_WIDGET) is
 			-- Test widget has changed to `a_widget', so
@@ -74,13 +69,13 @@ feature -- Status setting
 				-- We must block `select_actions' as they may be fired during a wipeout.
 			test_notebook.selection_actions.block
 			test_notebook.wipe_out
-			test_notebook.selection_actions.resume	
+			test_notebook.selection_actions.resume
 			class_names.wipe_out
-				
+
 				-- Build tests corresponding to `test_widget_type'.
 			retrieve_texts (test_widget_type)
 		end
-		
+
 feature -- Access
 
 	selected_test_name: STRING is
@@ -88,18 +83,16 @@ feature -- Access
 		do
 			Result := (class_names @ test_notebook.selected_item_index).twin
 		end
-		
+
 
 feature {GENERATION_DIALOG} -- Basic operations
 
 	generate_current_test (directory: DIRECTORY) is
 			-- Generate a stand alone test that may be compiled, based on
 			-- the selected test in `test_notebook'.
-		require
-			installation_corret: installation_location /= Void
 		do
 			Test_generator.generate_project (directory, selected_test_name,
-				test_widget_type.substring (4, test_widget_type.count))	
+				test_widget_type.substring (4, test_widget_type.count))
 		end
 
 feature {NONE} -- Implementation
@@ -160,7 +153,7 @@ feature {NONE} -- Implementation
 					create test_scrollable_area
 					test_scrollable_area.set_minimum_size (330, 330)
 					test_scrollable_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (216, 213, 255))
-	
+
 						-- We need to provide a small border between the widget and the scrollable area,
 						-- so that when the widget is bigger than the scrollable area, there is still a small visible
 						-- border.
@@ -169,13 +162,13 @@ feature {NONE} -- Implementation
 					test_scrollable_area.extend (temp_h_box)
 					test_scrollable_area.propagate_background_color
 					temp_h_box.extend (common_test.widget)
-	
+
 					create temp_h_box
 					create temp_frame
 					temp_h_box.extend (temp_frame)
 					temp_frame.extend (test_scrollable_area)
 					test_notebook.extend (temp_h_box)
-					
+
 					test_notebook.set_item_text (temp_h_box, test_name_from_class (class_names.item))
 					class_names.forth
 				else
@@ -185,7 +178,7 @@ feature {NONE} -- Implementation
 		ensure
 			notebook_count_correct: test_notebook.count = class_names.count
 		end
-		
+
 	test_name_from_class (a_class_name: STRING): STRING is
 			-- `Result' is `a_class_name' with Vision2 type stripped from front,
 			-- "test" removed from the front, and all "_" replaced with " ". The first
@@ -206,7 +199,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 
 	update_displayed_test is
 			-- Assign class text for test correpsonding to
@@ -240,8 +233,8 @@ feature {NONE} -- Implementation
 			class_texts_increased: class_texts.count = old class_texts.count + 1
 			class_names_increased: class_names.count = old class_names.count + 1
 		end
-		
-		
+
+
 	retrieve_texts (a_type: STRING) is
 			-- Retrieve all test class files, and
 			-- store them in `class_texts'.
@@ -251,7 +244,7 @@ feature {NONE} -- Implementation
 				-- This speeds up the appearence of the type change to a user, as they are not
 				-- waiting for the file to load before being able to interact with the interface.
 		end
-		
+
 	real_load_texts (a_type: STRING) is
 			-- Actually perform the loading of the file.
 		local
@@ -263,74 +256,67 @@ feature {NONE} -- Implementation
 			error_label: EV_LABEL
 		do
 			application.idle_actions.prune (application.idle_actions.first)
-			if installation_location /= Void then
-				create directory_name.make_from_string (installation_location)
-				directory_name.extend ("tests")
-				directory_string := a_type.substring (4, a_type.count)
-				directory_string.to_lower
-				directory_name.extend (directory_string)
-				create directory.make_open_read (directory_name)
-				filenames := directory.linear_representation
-				from
-					filenames.start
-				until
-					filenames.off
-				loop
-					current_file_name := filenames.item
-						-- 5 is an arbitary value to ensure that we ignore "." and ".." files.
-						-- No valid test will have a name that is shorter than 5 characters.
-					if current_file_name.count > 5 then 
-						store_text (current_file_name, directory)
-					end
-					filenames.forth
+			create directory_name.make_from_string (eiffel_layout.shared_application_path)
+			directory_name.extend ("tests")
+			directory_string := a_type.substring (4, a_type.count)
+			directory_string.to_lower
+			directory_name.extend (directory_string)
+			create directory.make_open_read (directory_name)
+			filenames := directory.linear_representation
+			from
+				filenames.start
+			until
+				filenames.off
+			loop
+				current_file_name := filenames.item
+					-- 5 is an arbitary value to ensure that we ignore "." and ".." files.
+					-- No valid test will have a name that is shorter than 5 characters.
+				if current_file_name.count > 5 then
+					store_text (current_file_name, directory)
 				end
-					-- Construct each test, and add to `test_notebook'.
-				build_tests
-				
-					-- Insert first entry in `class_texts' to `text_control'
-				if not class_names.is_empty then
-					class_names.start
-					class_text_output.set_text (class_texts.item (class_names.item))
-					build_interface
-				else
-					hide_interface
-				end
-			else
+				filenames.forth
+			end
+				-- Construct each test, and add to `test_notebook'.
+			build_tests
+
+				-- Insert first entry in `class_texts' to `text_control'
+			if not class_names.is_empty then
+				class_names.start
+				class_text_output.set_text (class_texts.item (class_names.item))
 				build_interface
-				create error_label.make_with_text ("Unable to locate the tests for " + test_widget_type + ".%N%N" + location_error_message)
-				test_notebook.extend (error_label)
-				test_notebook.set_item_text (error_label, "Error retrieving tests")
+			else
+				hide_interface
 			end
 		end
-		
-		
+
+
 	class_texts: HASH_TABLE [STRING, STRING]
 		-- All texts of classes associated with each class filename.
-		
+
 	test_notebook: EV_NOTEBOOK
 		-- A notebook containing all the tests that are available.
-		
+
 	included_tests: WIDGET_TEST_INCLUDE
 		-- All available tests are included via this class.
-		
+
 	class_names: ARRAYED_LIST [STRING]
 		-- All class names of tests, ordered as found in directory.
-	
+
 	class_text_output: EV_TEXT
 		-- An EV_TEXT to display all test class texts.
-	
+
 	test_generator: WIDGET_TEST_PROJECT_GENERATOR is
 			-- Once access to a project generator.
 		once
 			create Result
 		end
-		
+
 	is_in_default_state: BOOLEAN is True
 		-- Is `Current' in its default state?
 
 invariant
 	test_notebook_not_void: test_notebook /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

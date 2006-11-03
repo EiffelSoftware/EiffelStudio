@@ -95,6 +95,8 @@ extern "C" {
 #    define __LZO_PALMOS
 #  elif defined(__TOS__) || defined(__atarist__)
 #    define __LZO_TOS
+#  elif defined (__VMS) || defined (__vms)
+#    define __LZO_VMS
 #  endif
 #endif
 
@@ -227,6 +229,15 @@ typedef int lzo_bool;
 #    error "__LZO_MMODEL"
 #  endif
 #endif
+
+/* Memory model for 64 bit pointers on VMS */
+#if defined(__LZO_VMS)
+#  if __INITIAL_POINTER_SIZE > 32
+     typedef unsigned long long   lzo_ptr_t;
+     typedef long long	    lzo_sptr_t;
+#    define __LZO_HAVE_PTR_T
+#  endif
+#endif /* __LZO_VMS */
 
 /* no typedef here because of const-pointer issues */
 #define lzo_byte                unsigned char __LZO_MMODEL

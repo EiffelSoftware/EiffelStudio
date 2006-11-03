@@ -41,17 +41,11 @@
 doc:<file name="eif_project.c" header="eif_project.h" version="$Id$" summary="Declarations for runtime variables called by run-time and initialized by compiler C generated code">
 */
 
-#ifdef __VMS
-#pragma module EIF_PROJECT  /* force uppercase module name */
+#ifdef __VMS 	/* EIF_VMS is not defined yet */
+#pragma module EIF_PROJECT	// force uppercase module name
 #endif
 
 #include "eif_project.h"
-
-#ifdef EIF_VMS
-/* The first one is to upcase the module name, but why the second? */
-/*#pragma message disable EXTRAMODULE */
-#pragma module EIF_PROJECT
-#endif
 
 #ifdef __cplusplus
 extern "C" {

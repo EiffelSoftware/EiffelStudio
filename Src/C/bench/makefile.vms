@@ -29,7 +29,8 @@ SED = /bin/sed
 # Automatically generated parameters -- do not edit
 
 SOURCES =  \$(LSRC) \$(PSTORE)
-OBJECTS =  $(LOBJ)
+#OBJECTS =  $(LOBJ)
+OBJECTS =  $(FOBJ) $(WOBJ) $(MT_FOBJ) $(MT_WOBJ) bytedump.o meltdump.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -72,29 +73,66 @@ LSRC = byte.c date.c encode.c offset.c minilzo.c
 PSTORE = pstore.c pretrieve.c
 
 # Derived object file names
-FOBJ = byte.obj date.obj encode.obj offset.obj minilzo.obj pstore.obj pretrieve.obj 
-WOBJ = byte.obj date.obj encode.obj offset.obj minilzo.obj pstore.obj_wk pretrieve.obj_wk
+FOBJ = \
+	byte.obj \
+	date.obj \
+	encode.obj \
+	offset.obj \
+	minilzo.obj \
+	pstore.obj \
+	pretrieve.obj 
+
+MT_FOBJ = \
+	MTbyte.obj \
+	MTdate.obj \
+	MTencode.obj \
+	MToffset.obj \
+	MTminilzo.obj \
+	MTpstore.obj \
+	MTpretrieve.obj 
+
+WOBJ = \
+	byte.obj \
+	date.obj \
+	encode.obj \
+	offset.obj \
+	minilzo.obj \
+	wpstore.obj \
+	wpretrieve.obj 
+
+MT_WOBJ = \
+	MTbyte.obj \
+	MTdate.obj \
+	MTencode.obj \
+	MToffset.obj \
+	MTminilzo.obj \
+	MTwpstore.obj \
+	MTwpretrieve.obj 
+
+
+
+#WOBJ = byte.obj date.obj encode.obj offset.obj minilzo.obj pstore.obj_wk pretrieve.obj_wk
 #MT_FOBJ = MTbyte.obj MTdate.obj MTencode.obj MToffset.obj MTminilzo.obj MTpstore.obj MTpretrieve.obj 
 #MT_WOBJ = MTbyte.obj MTdate.obj MTencode.obj MToffset.obj MTminilzo.obj MTwpstore.obj MTwpretrieve.obj 
+#LOBJ = $(FOBJ) $(WOBJ) $(MT_FOBJ) $(MT_WOBJ)
+#DEPENDENCIES = $(TOP)/eif_config.h $(TOP)/eif_portable.h $(TOP)/eif_confmagic.h $(MAKEFILE_DEPENDENCIES) 
+#$(LOBJ) : $(DEPENDENCIES)	# make objects depend on local Makefile
 
-LOBJ = $(FOBJ) $(WOBJ) $(MT_FOBJ) $(MT_WOBJ)
-
-DEPENDENCIES = $(TOP)/eif_config.h $(TOP)/eif_portable.h $(TOP)/eif_confmagic.h $(MAKEFILE_DEPENDENCIES) 
-$(LOBJ) : $(DEPENDENCIES)	# make objects depend on local Makefile
+$(OBJECTS) : $(EXTRA_DEPENDENCIES)
 
 
 THISLIB = compiler.olb
-MTLIB = compiler_MT.olb		# this is a hack, fix it later
-WKLIB = compiler_wk.olb
-LIBS = $(THISLIB) $(MTLIB) $(WKLIB)
+MTLIB = MTcompiler.olb
+WKLIB = WKcompiler.olb
+#LIBS = $(THISLIB) $(MTLIB) $(WKLIB)
 
-all :: $(LIBS)
+#all :: $(LIBS)
 complete : FORCE all
 FORCE:
 
 #LISTINGS = $(patsubst %.obj,%.lis,$(LOBJ))
-LISTINGS = $(patsubst %.obj,%.lis,$(FOBJ)) $(patsubst %.obj_wk,%.lis_wk,$(WOBJ)) $(patsubst %.obj,%.lis,$(MT_FOBJ)) $(patsubst %.obj,%.lis,$(MT_WOBJ)) 
-$(LISTINGS) : $(MAKEFILE_DEPENDENCIES) 
+LISTINGS = $(patsubst %.obj,%.lis,$(FOBJ)) # $(patsubst %.obj_wk,%.lis_wk,$(WOBJ)) $(patsubst %.obj,%.lis,$(MT_FOBJ)) $(patsubst %.obj,%.lis,$(MT_WOBJ)) 
+$(LISTINGS) : $(EXTRA_DEPENDENCIES) 
 listings : $(LISTINGS)
 #	@write sys$$output "listings = $(LISTINGS)"
 #	@write sys$$output "Dependents: $^"
@@ -104,22 +142,24 @@ local_realclean ::
 	-$(RM) *.obj*;*,*.olb;*
 	if f$$search("*.dia") .nes. "" then $(RM) *.dia;*
 
-$(LIBs) : $(MAKEFILE_DEPENDENCIES)
-all :: compiler.olb
 
-compiler.olb : $(FOBJ)
+all :: $(THISLIB)
+$(THISLIB) : $(FOBJ)
 	libr/create $@ $^
-	@-purge/nolog $@,*.obj*
+	@-purge/nolog *.obj*
 	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
-# this is a hack, fix it later
-$(MTLIB) : $(THISLIB)
-	backup/log $?;0 $@
-	-purge/nolog $@
 
+all :: $(MTLIB) # MTcompiler.olb
+$(MTLIB) : $(MT_FOBJ)
+	libr/create $@ $^
+	@-purge/nolog *.obj*
+	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
+
+#all :: $(WKLIB)
 $(WKLIB) : $(WOBJ)
 	libr/create $@ $^
-	@-purge/nolog $@,*.obj*
+	@-purge/nolog $^
 	@-if f$$search("*.dia") .nes. "" then purge/nolog *.dia
 
 .SUFFIXES : .obj_wk

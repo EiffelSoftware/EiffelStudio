@@ -5,17 +5,12 @@
 #
 #######################################################################
 # Rules for individual Makefile.VMS:
-# CURRENT = (unix) relative path
-# DIR = VMS absolute path
-# CINCLUDES
-# CDEFINES
+#  CURRENT = (unix) relative path
+#  DIR = VMS absolute path
+#  CINCLUDES
+#  CDEFINES
 #######################################################################
 #
-# Boy, I sure do wish this worked.
-#DECC_FLAGS_OPENVMSVAX = /vax
-#DECC_FLAGS_OPENVMSAXP = /axp
-#DECC_FLAGS = $(DECC_FLAGS_)$(PLATFORM)
-#MY_PLATFORM = vms-axp
 
 # used for replacing spaces with commas: $(subst $(SPACE),$(COMMA),$(OBJECTS))
 EMPTY :=
@@ -31,7 +26,7 @@ endif
 LOCAL_MAKEFILE = $(TOP)/$(CURRENT)/Makefile.VMS
 MAKEFILE_DEPENDENCIES = $(subst :,\:,$(MAKEFILE_LIST))
 #EXTRA_DEPENDENCIES = [C]eif_config.h [C]eif_portable.h [C.run-time]eif_size.h [C.run-time]eif_vmsdef.h $(MAKEFILE_DEPENDENCIES) 
-EXTRA_DEPENDENCIES = [C]eif_config.h [C]eif_portable.h $(MAKEFILE_DEPENDENCIES) 
+EXTRA_DEPENDENCIES = EIFFEL_SRC\:[C]eif_config.h EIFFEL_SRC\:[C]eif_portable.h $(MAKEFILE_DEPENDENCIES) 
 
 # Individual Makefiles should define (if necessary) CDEFINES, CINCLUDES as comma separated lists;
 # this file constructs DECC_INCLUDES and DECC_DEFINES
@@ -125,9 +120,9 @@ endif
 #   (DEC C default is /optimize /nodebug [actually, /debug=[traceback,nosymbols)]
 #   Other useful DEC C compilation flags:
 #	/check
-DEBUG_CFLAGS = /debug/noopt
+#DEBUG_CFLAGS = 
 # temp, while debugging - dss
-#DEBUG_CFLAGS = /debug/noopt/check=(uninit,point=all)
+DEBUG_CFLAGS = /debug/noopt/check=(uninit,point=all)
 
 # definitions and rules for compiling C sources into objects
 # individual makefiles define the CFLAGS macro with local requirements

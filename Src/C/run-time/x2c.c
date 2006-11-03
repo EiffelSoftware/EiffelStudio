@@ -248,6 +248,9 @@ int main(int argc, char **argv)
 		}
 		if (!in_word) {
 			if (c != '@') {
+#ifdef EIF_VMS
+				if (c != '\r')		/* VMS: skip <cr> */
+#endif
 				putc(c, output_file);
 				continue;
 			}

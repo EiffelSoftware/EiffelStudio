@@ -40,20 +40,18 @@
 
 #ifdef __VMS
 #pragma module VMS_NAMES	/* force uppercase module name */
-#endif
 
 
-/* Native code on VMS defaults to coercing all external names to UPPERCASE. */
-/* In order to support code that cannot be recompiled to make external	    */
-/* names case sensitive (eg. CC /NAME=AS_IS), this module contains jacket   */
-/* routines that call the corresponding lower/mixed-case routine.	    */
-/*									    */
-/* Additionally, several X-related entry points that are not defined on VMS */
-/* are stubbed out here.						    */
-/*									    */
-/*									    */
-
-
+/* Native code on VMS defaults to coercing all external names to UPPERCASE.	*/
+/* In order to support code that cannot be recompiled to make external names	*/
+/* case sensitive (ie. CC /NAME=AS_IS), this module contains jacket routines	*/
+/* that call the corresponding lower/mixed-case routines.			*/
+/*										*/
+/* Additionally, several X-related entry points that are not defined on VMS	*/
+/* are stubbed out here, as well as any runtime functions that cannot be	*/
+/* supported on VMS.								*/
+/*										*/
+/*										*/
 
 
 
@@ -65,7 +63,7 @@
 #include "eif_portable.h"
 #include "eif_cecil.h"
 #include "eif_malloc.h"
-#include "eif_setup.h"	/* egc_init_plug() */
+#include "eif_setup.h"	/* for egc_init_plug() */
 
 
 /* The following entry points are defined in lower case:		    */
@@ -102,39 +100,19 @@
 */ 
 
 
-/*#ifdef moose_cecil*/
-/* dont mask cecil calls; some modules must use /NAME=AS for proper extern configuration */
 
 /* cecil.c */
 rt_public EIF_OBJECT EIFCREATE (EIF_TYPE_ID cid)
     { return eifcreate (cid); }
 
-rt_public EIF_PROCEDURE EIFPROC (char *routine, EIF_TYPE_ID cid)
-    { return eifproc (routine, cid); }
-
-rt_public EIF_INTEGER_FUNCTION EIFLONG (char *routine, EIF_TYPE_ID cid)
-    { return eiflong (routine, cid); }
-
-rt_public EIF_CHARACTER_FUNCTION EIFCHAR (char *routine, EIF_TYPE_ID cid)
-    { return eifchar (routine, cid); }
-
-rt_public EIF_REAL_FUNCTION EIFREAL (char *routine, EIF_TYPE_ID cid)
-    { return eifreal (routine, cid); }
-
-rt_public EIF_DOUBLE_FUNCTION EIFDOUBLE (char *routine, EIF_TYPE_ID cid)
-    { return eifdouble (routine, cid); }
-
-rt_public EIF_BIT_FUNCTION EIFBIT (char *routine, EIF_TYPE_ID cid)
-    { return eifbit (routine, cid); }
-
-rt_public EIF_BOOLEAN_FUNCTION EIFBOOL (char *routine, EIF_TYPE_ID cid)
-    { return eifbool (routine, cid); }
-
-rt_public EIF_POINTER_FUNCTION EIFPTR (char *routine, EIF_TYPE_ID cid)
-    { return eifptr (routine, cid); }
-
 rt_public EIF_REFERENCE_FUNCTION EIFREF (char *routine, EIF_TYPE_ID cid)
     { return eifref (routine, cid); }
+
+rt_public EIFVISEX (void)
+    { eifvisex(); }
+
+rt_public EIFUVISEX (void)
+    { eifuvisex(); }
 
 
 /* hector.c */
@@ -179,6 +157,16 @@ void ESIGRESALL (void)
 void INITSIG (void)
     { initsig(); }
 
+/* New routines added for CECIL control of signal handling */
+rt_public ESIG_CECIL_REGISTER (struct ex_vect * exvect)
+    { esig_cecil_register (exvect); }
+
+rt_public ESIG_CECIL_ENTER (void)
+    { esig_cecil_enter(); }
+
+rt_public ESIG_CECIL_EXIT (void)
+    { esig_cecil_exit(); }
+
 
 /* local.c */
 void INITSTK (void)
@@ -201,7 +189,8 @@ xxx rt_public int32 EIF_TYPE_ID (char *type_string)
 #endif
 
 
-/* These symbols are defined in the generated code. */
+
+/*** These symbols are defined in Eiffel-generated code. ***/
 
 /* emain.c (in [.EIFGEN.%_Code.E1]) */
 rt_public void EGC_INIT_PLUG (void)
@@ -213,8 +202,6 @@ rt_public void EMAIN (int argc, char ** argv)
     { emain (argc, argv); }
 
 
-/*#endif *//* moose cecil */
-
 
 /*
 ** These symbols are referenced in Vision2 GTK implementation,
@@ -224,9 +211,28 @@ rt_public void EMAIN (int argc, char ** argv)
 #define XSTUB(fn) int fn() \
 { fprintf (stderr, "*** undefined X entry point " #fn " called *** \n"); return -1; }
 
-XSTUB (XKeysymToKeycode)
+//XSTUB (XKeysymToKeycode)
 XSTUB (XTestFakeButtonEvent)
 XSTUB (XTestFakeKeyEvent)
 XSTUB (XTestFakeMotionEvent)
 XSTUB (XTestQueryExtension)
 
+
+
+rt_public pid_t eifrt_vms_fork_jacket (void)
+{
+    fprintf (stderr, "*** undefined %s()) called ***\n", __func__);
+    return (pid_t)-1;
+}
+
+
+
+#ifdef EIF_THREADS
+
+/*** TEMP: stub out PTHREAD routines ***/
+#define PTHREAD_STUB(fn) int fn() \
+{ fprintf (stderr, "*** undefined PTHREAD entry point " #fn " called *** \n"); return -1; }
+
+#endif /* EIF_THREADS */
+
+#endif /* __VMS */

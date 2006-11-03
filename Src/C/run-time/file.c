@@ -77,10 +77,12 @@ doc:<file name="file.c" header="eif_file.h" version="$Id$" summary="Externals fo
 #include <assert.h>
 rt_private int err;  		/* for debugging - save errno value */
 rt_private char filnam[FILENAME_MAX +1];
+#ifndef HAS_UTIME
 struct utimbuf {
     time_t actime;      /* access time */
     time_t modtime;     /* modification time */
 };
+#endif
 #include <lib$routines.h>
 #include <descrip.h>
 #include <rmsdef.h>

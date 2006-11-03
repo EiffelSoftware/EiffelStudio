@@ -90,7 +90,7 @@ feature -- Properties
 	target: EB_HISTORY_OWNER
 			-- That that owns the history that will be modified.
 
-feature {EB_HISTORY_COMMAND_TOOL_BAR, EB_HISTORY_COMMAND_MENU_ITEM} -- Implementation
+feature {EB_HISTORY_COMMAND_MENU_ITEM} -- Implementation
 
 	history_manager: EB_HISTORY_MANAGER is
 			-- Manager for history. It encapsulates the history.

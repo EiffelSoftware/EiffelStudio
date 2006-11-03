@@ -166,12 +166,7 @@ feature {NONE} -- Implementation
 			create Result.make (50)
 			Result.append ("Installation information:%N")
 			Result.append ("Version = " + t_version_info + "%N")
-			Result.append ("$ISE_EIFFEL = " + eiffel_layout.eiffel_installation_dir_name + "%N")
-			Result.append ("$ISE_LIBRARY = " + eiffel_layout.eiffel_library + "%N")
-			Result.append ("$ISE_PLATFORM = " + eiffel_layout.eiffel_platform)
-			if platform_constants.is_windows then
-				Result.append ("%N$ISE_C_COMPILER = " + eiffel_layout.eiffel_c_compiler)
-			end
+			Result.append (eiffel_layout.environment_info)
 		end
 
 feature {NONE} -- Constant strings

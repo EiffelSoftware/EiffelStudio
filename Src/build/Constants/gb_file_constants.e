@@ -21,7 +21,7 @@ feature -- Generation constants
 	Component_filename: FILE_NAME
 			-- Location of component file.
 		once
-			create Result.make_from_string (share_build_path)
+			create Result.make_from_string (eiffel_layout.shared_application_path)
 			Result.extend ("components")
 			Result.set_file_name ("components")
 			Result.add_extension ("xml")
@@ -32,7 +32,7 @@ feature -- Generation constants
 	template_file_location: FILE_NAME is
 			-- Location of templates.
 		do
-			create Result.make_from_string (share_build_path)
+			create Result.make_from_string (eiffel_layout.shared_application_path)
 			Result.extend ("templates")
 		end
 
@@ -105,28 +105,11 @@ feature -- Preferences
 	default_xml_file: FILE_NAME is
 			-- General system level resource specification XML file.			
 		do
-			create Result.make_from_string (share_build_path)
+			create Result.make_from_string (eiffel_layout.shared_application_path)
 			Result.extend ("config")
 			Result.extend ("default.xml")
 		ensure
 			result_not_empty: Result /= Void
-		end
-
-feature {NONE} -- Implementation
-
-	share_build_path: DIRECTORY_NAME is
-			-- Path to shared build files.
-		local
-			l_layout: GB_EIFFEL_LAYOUT
-		once
-			l_layout ?= eiffel_layout
-			check
-				build_layout: l_layout /= Void
-			end
-			Result := l_layout.shared_path.twin
-			Result.extend (l_layout.short_build_name)
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 indexing

@@ -22,9 +22,14 @@ feature -- Status update
 			temp := get_environment (ise_eiffel_env)
 			create p
 			if (temp = Void) or else temp.is_empty then
-				io.error.put_string (p.Workbench_name)
-				io.error.put_string (": the environment variable $"+ise_eiffel_env+" is not set.%N")
-				(create {EXCEPTIONS}).die (-1)
+--				if platform.is_unix then
+--						-- on unix we asume that the unix layout is used
+--					is_unix_layout := True
+--				else
+					io.error.put_string (p.Workbench_name)
+					io.error.put_string (": the environment variable $"+ise_eiffel_env+" is not set.%N")
+					(create {EXCEPTIONS}).die (-1)
+--				end
 			else
 				create l_file.make (temp)
 				if not l_file.exists or not l_file.is_directory then
@@ -49,9 +54,14 @@ feature -- Status update
 
 			temp := get_environment (ise_platform_env)
 			if (temp = Void) or else temp.is_empty then
-				io.error.put_string (p.Workbench_name)
-				io.error.put_string (": the environment variable $"+ise_platform_env+" is not set%N")
-				(create {EXCEPTIONS}).die (-1)
+				if is_unix_layout then
+					is_valid_environment := True
+					environment.put ("unix", ise_platform_env)
+				else
+					io.error.put_string (p.Workbench_name)
+					io.error.put_string (": the environment variable $"+ise_platform_env+" is not set%N")
+					(create {EXCEPTIONS}).die (-1)
+				end
 			else
 					-- we have now a valid environment, although we may have some warnings
 				is_valid_environment := True
@@ -79,7 +89,7 @@ feature -- Status update
 				-- Make sure to define ISE_LIBRARY if not defined.
 			temp := get_environment (ise_library_env)
 			if temp = Void then
-				environment.put (eiffel_installation_dir_name, ise_library_env)
+				environment.put (lib_path, ise_library_env)
 			else
 				environment.put (temp, ise_library_env)
 			end
@@ -131,6 +141,38 @@ feature -- Access
 			result_ok: Result /= Void and then not Result.is_empty
 		end
 
+	product_name: STRING is "Eiffel"
+			-- Name of the product.
+
+	product_version_name: STRING is
+			-- Versioned name of the product.
+		once
+			if is_unix_layout then
+				Result := product_name + major_version.out + "." + minor_version.out
+				Result.to_lower
+			else
+				Result := product_name + major_version.out + minor_version.out
+			end
+		end
+
+	environment_info: STRING is
+			-- Information about the environment.
+		do
+			create Result.make (100)
+			if is_unix_layout then
+				Result.append ("Base Path = " + unix_layout_base_path)
+			else
+				Result.append ("$ISE_EIFFEL = " + eiffel_installation_dir_name + "%N")
+				Result.append ("$ISE_LIBRARY = " + eiffel_library + "%N")
+				Result.append ("$ISE_PLATFORM = " + eiffel_platform)
+				if platform.is_windows then
+					Result.append ("%N$ISE_C_COMPILER = " + eiffel_c_compiler)
+				end
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 feature -- Preferences
 
 	Eiffel_preferences: STRING is
@@ -139,8 +181,7 @@ feature -- Preferences
 			fname: FILE_NAME
 		once
 			if platform.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" +
-					major_version.out + minor_version.out + "\"+application_name+"\Preferences"
+				Result := "HKEY_CURRENT_USER\Software\ISE\" + product_version_name + "\"+application_name+"\Preferences"
 				if is_workbench then
 					Result.append ("_wkbench")
 				end
@@ -156,8 +197,8 @@ feature -- Preferences
 		require
 			is_valid_environment: is_valid_environment
 		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"eifinit", short_studio_name>>)
+			create Result.make_from_string (shared_application_path)
+			Result.extend ("eifinit")
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
 		ensure
@@ -167,8 +208,8 @@ feature -- Preferences
 	platform_preferences: FILE_NAME is
 			-- Platform specific preferences.
 		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"eifinit", short_studio_name, "spec", Platform_abstraction>>)
+			create Result.make_from_string (shared_application_path)
+			Result.extend_from_array (<<"eifinit", "spec", Platform_abstraction>>)
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
 		ensure
@@ -304,7 +345,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		do
-			Result := eiffel_installation_dir_name.twin
+			Result := lib_path.twin
 			Result.extend_from_array (<<"precomp", "spec">>)
 			if a_is_dotnet then
 				Result.extend ("dotnet")
@@ -315,6 +356,38 @@ feature -- Access: file name
 			result_ok: Result /= Void and then not Result.is_empty
 		end
 
+	Runtime_include_path: DIRECTORY_NAME is
+			-- Include path for the runtime.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			if is_unix_layout then
+				Result := unix_layout_base_path.twin
+				Result.extend_from_array (<<"include", product_version_name>>)
+			else
+				Result := studio_path.twin
+				Result.extend_from_array (<<"spec", eiffel_platform, "include">>)
+			end
+		ensure
+			Result_ok: Result /= Void and then not Result.is_empty
+		end
+
+	Runtime_lib_path: DIRECTORY_NAME is
+			-- Library path for the runtime.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			if is_unix_layout then
+				Result := unix_layout_base_path.twin
+				Result.extend ("lib")
+			else
+				Result := studio_path.twin
+				Result.extend_from_array (<<"spec", eiffel_platform, "lib">>)
+			end
+		ensure
+			Result_ok: Result /= Void and then not Result.is_empty
+		end
+
 	Shared_path: DIRECTORY_NAME is
 			-- Location of shared files (platform independent).
 		require
@@ -322,12 +395,57 @@ feature -- Access: file name
 		once
 			if is_unix_layout then
 				Result := unix_layout_base_path.twin
-				Result.extend_from_array (<<"share", "eiffelstudio">>)
+				Result.extend_from_array (<<"share", product_version_name>>)
 			else
 				create Result.make_from_string (eiffel_installation_dir_name)
 			end
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	Lib_path: DIRECTORY_NAME is
+			-- Location of libs files (platform dependent).
+		require
+			is_valid_environment: is_valid_environment
+		once
+			if is_unix_layout then
+				Result := unix_layout_base_path.twin
+				Result.extend_from_array (<<"lib", product_version_name>>)
+			else
+				create Result.make_from_string (eiffel_installation_dir_name)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	Shared_application_path: DIRECTORY_NAME is
+			-- Location of shared files specific for the current application (platform independent).
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result := shared_path.twin
+				-- Patrickr, 11/01/06 hack for backwarts compatibility, the application is ec but
+				-- the directory is studio
+			if not is_unix_layout and application_name.is_equal ("ec") then
+				Result.extend (short_studio_name)
+			else
+				Result.extend (application_name)
+			end
+		end
+
+	Lib_application_path: DIRECTORY_NAME is
+			-- Location of lib files specific for the current application (platform dependent).
+		require
+			is_valid_environment: is_valid_environment
+		once
+			Result := lib_path.twin
+				-- Patrickr, 11/01/06 hack for backwarts compatibility, the application is ec but
+				-- the directory is studio
+			if not is_unix_layout and application_name.is_equal ("ec") then
+				Result.extend (short_studio_name)
+			else
+				Result.extend (application_name)
+			end
 		end
 
 	Studio_path: DIRECTORY_NAME is
@@ -346,7 +464,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := Studio_path.twin
+			Result := shared_application_path.twin
 			Result.extend ("help")
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -367,7 +485,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := Studio_path.twin
+			Result := shared_application_path.twin
 			Result.extend ("config")
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -401,7 +519,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := Studio_path.twin
+			Result := shared_application_path.twin
 			Result.extend ("bitmaps")
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -422,7 +540,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := eiffel_installation_dir_name.twin
+			Result := lib_path.twin
 			Result.extend_from_array (<<"dotnet", "assemblies">>)
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -472,7 +590,12 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := Eiffel_installation_dir_name.twin
+			if is_unix_layout then
+				Result := unix_layout_base_path.twin
+				Result.extend_from_array (<<"share", "doc", product_version_name>>)
+			else
+				Result := eiffel_installation_dir_name.twin
+			end
 			Result.extend ("docs")
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -492,7 +615,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := studio_path.twin
+			Result := shared_application_path.twin
 			Result.extend ("filters")
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -503,7 +626,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := studio_path.twin
+			Result := shared_application_path.twin
 			Result.extend ("profiler")
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -514,7 +637,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (studio_path)
+			create Result.make_from_string (shared_application_path)
 			Result.extend ("metrics")
 			Result.set_file_name ("predefined_metrics.xml")
 		ensure
@@ -526,7 +649,7 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			Result := studio_path.twin
+			Result := lib_application_path.twin
 			Result.extend_from_array (<<"wizards", "new_projects">>)
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -548,8 +671,8 @@ feature -- Access: file name
 		require
 			is_valid_environment: is_valid_environment
 		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"eifinit", short_studio_name>>)
+			create Result.make_from_string (shared_application_path)
+			Result.extend ("eifinit")
 			Result.set_file_name ("general")
 			Result.add_extension ("cfg")
 		ensure
@@ -562,8 +685,8 @@ feature -- Access: file name
 			is_windows: Platform.is_windows
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"eifinit", short_studio_name, "spec", Platform_abstraction>>)
+			create Result.make_from_string (shared_application_path)
+			Result.extend_from_array (<<"eifinit", "spec", Platform_abstraction>>)
 			Result.set_file_name ("culture")
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -593,18 +716,16 @@ feature -- Access: command name
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
 		end
 
---	Ise_eac_browser_name: FILE_NAME is
---			-- Filename of EAC Browser application
---		once
---			create Result.make_from_string (bin_path)
---			Result.set_file_name ("eac_browser.exe")
---		end
-
 	Freeze_command_name: FILE_NAME is
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (bin_path)
+			if is_unix_layout then
+				create Result.make_from_string (unix_layout_base_path)
+				Result.extend ("bin")
+			else
+				create Result.make_from_string (bin_path)
+			end
 			Result.set_file_name (Finish_freezing_script)
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -614,7 +735,11 @@ feature -- Access: command name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (bin_path)
+			if is_unix_layout then
+				create Result.make_from_string (lib_application_path)
+			else
+				create Result.make_from_string (bin_path)
+			end
 			Result.set_file_name ("prelink")
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -625,7 +750,12 @@ feature -- Access: command name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (bin_path)
+			if is_unix_layout then
+				create Result.make_from_string (unix_layout_base_path)
+				Result.extend ("bin")
+			else
+				create Result.make_from_string (bin_path)
+			end
 			Result.set_file_name (ec_name)
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
@@ -636,7 +766,12 @@ feature -- Access: command name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (bin_path)
+			if is_unix_layout then
+				create Result.make_from_string (unix_layout_base_path)
+				Result.extend ("bin")
+			else
+				create Result.make_from_string (bin_path)
+			end
 			Result.set_file_name ("estudio")
 			if not platform.is_unix then
 				Result.add_extension (executable_suffix)
@@ -650,7 +785,11 @@ feature -- Access: command name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (bin_path)
+			if is_unix_layout then
+				create Result.make_from_string (lib_application_path)
+			else
+				create Result.make_from_string (bin_path)
+			end
 			Result.set_file_name ("ecdbgd")
 			if not platform.is_unix then
 				Result.add_extension (executable_suffix)
@@ -664,7 +803,11 @@ feature -- Access: command name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (bin_path)
+			if is_unix_layout then
+				create Result.make_from_string (lib_application_path)
+			else
+				create Result.make_from_string (bin_path)
+			end
 			Result.set_file_name ("emake")
 			if not platform.is_unix then
 				Result.add_extension (executable_suffix)
@@ -678,8 +821,30 @@ feature -- Access: command name
 		require
 			is_valid_environment: is_valid_environment
 		once
-			create Result.make_from_string (bin_path)
+			if is_unix_layout then
+				create Result.make_from_string (lib_application_path)
+			else
+				create Result.make_from_string (bin_path)
+			end
 			Result.set_file_name ("quick_finalize")
+			if not platform.is_unix then
+				Result.add_extension (executable_suffix)
+			end
+		ensure
+			result_not_void_or_empty: Result /= Void and not Result.is_empty
+		end
+
+	x2c_command_name: FILE_NAME is
+			-- Complete path to `x2c'.
+		require
+			is_valid_environment: is_valid_environment
+		once
+			if is_unix_layout then
+				create Result.make_from_string (lib_application_path)
+			else
+				create Result.make_from_string (bin_path)
+			end
+			Result.set_file_name ("x2c")
 			if not platform.is_unix then
 				Result.add_extension (executable_suffix)
 			end

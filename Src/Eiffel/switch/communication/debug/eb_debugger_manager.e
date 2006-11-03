@@ -586,7 +586,6 @@ feature -- Status setting
 
 				-- Change the state of the debugging window.
 			debugging_window.hide_tools
---			debugging_window.context_tool.feature_view.pop_feature_flat
 
 				--| Create tools. |--
 				--| ES debugging tools |--

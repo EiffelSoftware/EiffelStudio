@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+		name="command_line_builder" uuid="44612348-a48f-4d96-b4f1-95117fa1dfe5" library_target="command_line_builder" >
+
+	<target name="command_line_builder">
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>		
+		<cluster name="command_line_builder" location="." recursive="true"/>
+	</target>
+</system>

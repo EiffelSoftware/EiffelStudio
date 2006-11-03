@@ -308,12 +308,12 @@ feature -- Status setting
 		do
 			if a_user_file_enabled then
 				create l_user_factory
-				l_user_factory.load (conf_system.uuid)
+				l_user_factory.load (conf_system.file_name)
 				if l_user_factory.successful then
 					user_options := l_user_factory.last_options
 					if user_options = Void then
 							-- No user options yet.
-						create user_options.make (conf_system.uuid, target_name)
+						create user_options.make (conf_system.file_name, target_name)
 					end
 				else
 					create vd21
@@ -323,7 +323,7 @@ feature -- Status setting
 				end
 			else
 					-- Create fake options to avoid too many if statements below.
-				create user_options.make (conf_system.uuid, target_name)
+				create user_options.make (conf_system.file_name, target_name)
 			end
 
 				-- Update targets

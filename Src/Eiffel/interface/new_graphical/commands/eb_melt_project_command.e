@@ -30,11 +30,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_RESCUE_STATUS
-		export
-			{NONE} all
-		end
-
 	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all

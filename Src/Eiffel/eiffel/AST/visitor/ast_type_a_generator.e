@@ -32,11 +32,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_RESCUE_STATUS
-		export
-			{NONE} all
-		end
-
 	REFACTORING_HELPER
 		export
 			{NONE} all

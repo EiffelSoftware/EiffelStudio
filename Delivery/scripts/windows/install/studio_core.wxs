@@ -39,9 +39,14 @@
 				</Directory>
 			</Directory>
 			<Directory Id="Application" Name=".">
-				<Directory Id="eifinit" Name="eifinit">
-					<Directory Id="studio" Name="studio">
-						<Component Id="studio" Guid="F6D23A19-818B-4799-90A5-BFFFEAA01973" >
+				<Directory Id="studio1" Name="studio">
+					<Directory Id="metrics" Name="metrics">
+						<Component Id="metrics" Guid="BACFC21E-A641-45cd-97F1-F2511B121B33">
+							<File Id="predefined_metrics_xml" Name="PREDEF~1.XML" LongName="predefined_metrics.xml" />
+						</Component>
+					</Directory>
+					<Directory Id="eifinit" Name="eifinit">
+						<Component Id="eifinit" Guid="F6D23A19-818B-4799-90A5-BFFFEAA01973" >
 							<File Id="default_xml" Name="default.xml" />
 							<File Id="general.cfg" Name="general.cfg" />
 						</Component>
@@ -53,13 +58,6 @@
 								</Component>
 							</Directory>
 						</Directory>
-					</Directory>
-				</Directory>
-				<Directory Id="studio1" Name="studio">
-					<Directory Id="metrics" Name="metrics">
-						<Component Id="metrics" Guid="BACFC21E-A641-45cd-97F1-F2511B121B33">
-							<File Id="predefined_metrics_xml" Name="PREDEF~1.XML" LongName="predefined_metrics.xml" />
-						</Component>
 					</Directory>
 					<Directory Id="profiler" Name="profiler">
 						<Component Id="profiler" Guid="C96FB383-E44A-45E8-A224-C260837E978D">

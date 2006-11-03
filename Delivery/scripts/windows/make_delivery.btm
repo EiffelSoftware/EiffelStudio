@@ -83,8 +83,6 @@ remtrace build
 exprt %DEFAULT_ORIGO_SVN/Delivery/build build
 remtrace vision2 tour
 exprt %DEFAULT_ORIGO_SVN/Delivery/vision2_tour vision2_tour
-remtrace eifinit
-exprt %DEFAULT_ORIGO_SVN/Delivery/eifinit eifinit
 remtrace .NET libraries
 exprt %DEFAULT_ORIGO_SVN/Src/library.net library.net
 remtrace examples

@@ -83,8 +83,6 @@ remtrace build
 exprt $DEFAULT_ORIGO_SVN/Delivery/build build 
 remtrace vision2_tour
 exprt $DEFAULT_ORIGO_SVN/Delivery/vision2_tour vision2_tour 
-remtrace eifinit
-exprt $DEFAULT_ORIGO_SVN/Delivery/eifinit eifinit 
 remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec

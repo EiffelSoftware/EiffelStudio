@@ -11,38 +11,11 @@ class GB_EIFFEL_LAYOUT
 
 inherit
 	EIFFEL_ENV
-		rename
-			environment as eiffel_environment
-		redefine
-			bitmaps_path
-		end
 
-feature -- Status
+feature -- Access
 
-	application_name: STRING is "build"
+	application_name: STRING is "build";
 			-- Name of current application
-
-feature -- Access: environment variable
-
-	short_build_name: STRING is "build"
-			-- Short version of Build name.
-
-feature -- Access: file name
-
-	Bitmaps_path: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (share_build_path)
-			Result.extend ("bitmaps")
-		end
-
-	share_build_path: DIRECTORY_NAME is
-			-- Path to shared build files.
-		once
-			Result := shared_path.twin
-			Result.extend (short_build_name)
-		ensure
-			Result_not_void: Result /= Void
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

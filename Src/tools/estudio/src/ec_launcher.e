@@ -59,13 +59,11 @@ feature -- Launching
 			io.error.put_string ("     /w         : wait until launched process exits %N")
 			io.error.put_string ("     /nosplash  : no splash screen %N")
 			io.error.put_string ("     /ec_name   : overwrite EC_NAME value %N")
-			io.error.put_string ("     /ec_folder : overwrite EC_FOLDER value %N")
 			io.error.put_string ("  * ec's parameters %N")
 			io.error.put_string ("     any ec's command line parameters (-config, -target, -project_path ...)%N")
 			io.error.put_string ("     if there is only one parameter, this is the eiffel configuration file (file.ecf)%N")
 			io.error.put_string ("%NOptional environment variables:%N")
 			io.error.put_string ("  * EC_NAME     : name of the compiler (default: ec)%N")
-			io.error.put_string ("  * EC_FOLDER   : folder which contains the compiler%N")
 			io.error.put_string ("  * MELTED_PATH : for workbench version %N")
 
 			io.error.put_string ("%NPress ENTER to continue ...%N")
@@ -336,11 +334,6 @@ feature -- Environment
 						cmdline_remove_head (1)
 						if cmdline_arguments_count > 0 then
 							argument_variables.put (cmdline_argument (1), eiffel_layout.Ec_name_env)
-						end
-					elseif s.is_equal ("/ec_folder") then
-						cmdline_remove_head (1)
-						if cmdline_arguments_count > 0 then
-							argument_variables.put (cmdline_argument (1), eiffel_layout.ec_folder_env)
 						end
 					elseif s.is_equal ("/melted_path") then
 						cmdline_remove_head (1)

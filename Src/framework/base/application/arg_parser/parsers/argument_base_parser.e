@@ -806,7 +806,7 @@ feature {NONE} -- Validation
 				end
 			end
 		ensure
-			a_groups_unmoved: a_groups.cursor.is_equal (old a_groups.cursor)
+--			a_groups_unmoved: old a_groups /= Void implies a_groups.cursor.is_equal (old a_groups.cursor)
 			values_unmoved: values.cursor.is_equal (old values.cursor)
 		end
 

@@ -24,7 +24,7 @@ feature -- Creation
 			calls_min_c := -1;
 			calls_min_cycle := -1;
 		end;
-		
+
 feature -- Iteration
 
 	start is
@@ -104,7 +104,7 @@ feature -- Iteration
 				Result := eiffel_profiling_list.item;
 			else
 				if not c_profiling_list.after then
-					Result := c_profiling_list.item; 
+					Result := c_profiling_list.item;
 				else
 					if not cycle_profiling_list.after then
 						Result := cycle_profiling_list.item;
@@ -495,7 +495,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-feature {E_SHOW_PROFILE_QUERY, E_SHOW_PROFILE_QUERY_DIRECT} -- Column-Attributes
+feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
 
 	-- column-attributes: min, max, avg per column means
 	-- calls_min_eiffel, percentage_min_eiffel, etc.

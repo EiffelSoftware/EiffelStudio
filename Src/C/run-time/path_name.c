@@ -44,6 +44,7 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 #include "eif_portable.h"
 #include "eif_path_name.h"
 #include "eif_project.h"
+#include "eif_misc.h"	/* for eif_getenv_native() */
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
@@ -62,44 +63,12 @@ doc:<file name="path_name.c" header="eif_path_name.h" version="$Id$" summary="Ex
 #include "rt_lmalloc.h"
 
 #ifdef EIF_VMS
-#include "rt_assert.h"
-#include <lib$routines>
-#include <descrip>
 #include <dvidef>
 #include <ssdef>	/* SS$_ symbols */
 #include <fab>		/* RMS FAB definitions */
 #include <nam>		/* RMS NAM (name block) definitions */
 #include <starlet>	/* system, rms services - sys$parse et. al. */
-
-/*
-doc:	<attribute name="vms_valid_filename_chars" return_type="char []" export="private">
-doc:		<summary>VMS filenames or types (.extensions) may contain any of the following.</summary>
-doc:		<fixme>This is no longer true, ODS-5 allows more liberal naming. These definitions should be removed, and pathnames should be tested by calling sys$parse.</fixme>
-doc:		<access>Read</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None since statically initialized.</synchronization>
-doc:	</attribute>
-*/
-rt_private const char vms_valid_filename_chars[] 
-	= "$_-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890";
-
-/*
-doc:	<attribute name="vms_path_delimiters" return_type="char []" export="private">
-doc:		<summary>VMS characters used for delimiters in filenames. Period is excluded.</summary>
-doc:		<access>Read</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None since statically initialized.</synchronization>
-doc:	</attribute>
-*/
-rt_private const char vms_path_delimiters[] = ":[]<>";
-
-/* does path p end in a VMS path delimiter? */
-#define IS_VMS_PATH_TERMINATED(p) ( strchr (vms_path_delimiters, (p)[strlen(p) -1]) )
-
-/* Is path p VMS or a UNIX filespec? */
-/* NB. these are not complementary; a simple filename with no path delimiters is neither. */
-#define IS_VMS_FILESPEC(p)  ( strpbrk ( (char*)(p), vms_path_delimiters) )
-#define IS_UNIX_FILESPEC(p) ( strchr  ( (char*)(p), '/') )
+#include <lib$routines>
 #endif /* EIF_VMS */
 
 #if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMS
@@ -222,7 +191,7 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_CHARACTER *p)
 #elif defined EIF_VMS
 	/* string must end in ":" */
 	if (p && *p && p[strlen((char*)p)-1] == ':' ) {
-		DX_BLD (dev_dx, p, strlen((char*)p));
+		DX_BLD (dev_dx, (char*)p, strlen((char*)p));
 		int devsts;
 		VMS_STS sts = lib$getdvi (&DVI$_DEVSTS, 0, &dev_dx, &devsts, 0, 0);
 		if (VMS_SUCCESS(sts) || sts == SS$_NOSUCHDEV)
@@ -387,16 +356,17 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 	char *pu = decc$translate_vms ((char*)p);   /* note: returns in static buffer */
 	char *vu = decc$translate_vms ((char*)v);
 	/*** END DEBUG ***/
-	/* if unix path delimiters in either string use unix syntax, else use VMS syntax. */
-	/*if ( IS_UNIX_FILESPEC(p) || IS_UNIX_FILESPEC(v) ) { */
-	if ( !IS_VMS_FILESPEC(p) && !IS_VMS_FILESPEC(v) ) {
+	/* if no vms path delimiters in either string, use unix syntax, else use vms syntax (i.e. default to unix) */
+	if ( !eifrt_is_vms_filespec((char*)p) && !eifrt_is_vms_filespec((char*)v) ) {
 	    strcat (strcat ((char*)p, "/"), (char*)v);
-	} else if (!*p && !strcspn ((char*)v, vms_valid_filename_chars)) { 
+#ifdef EIF_VMS_V6_ONLY	/* this is nugatory with default to unix */
+	} else if (!*p && !strcspn ((char*)v, eifrt_vms_valid_filename_chars)) { 
 	    /* HACK: if p is empty and v is a simple filename (no .type), force unix syntax */
 	    /* This works around the problem of es4 using append_directory ("kernel", "any.e")   */
 	    /* when it should be using append_filename() by forcing the relative path to    */
 	    /* be unix syntax ("./kernel", "any.e") so that the distinction is nugatory.    */
 	    strcat (strcpy ((char*)p, "./"), (char*)v);
+#endif /* EIF_VMS_V6_ONLY */
 	} else {
 		/* ASSUMING P & V ARE VALID DIRECTORY & SUBDIR AND IN VMS FORMAT */
 		/* allowable forms for p are device:[dir]file	*/
@@ -461,7 +431,7 @@ rt_public void eif_set_directory(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_CHA
 	strcpy (p, v);
 #elif defined EIF_VMS
 	/* assume *p == '\0' ? */
-	if (!IS_VMS_FILESPEC(v) && *p != '\0' && *v != '/')
+	if (!eifrt_is_vms_filespec((char*)v) && *p != '\0' && *v != '/')
 	    strcat ((char*)p, "/");
 	strcat ((char*)p, (char*)v);
 #elif defined EIF_WINDOWS || defined EIF_OS2
@@ -489,15 +459,15 @@ rt_public void eif_append_file_name(EIF_REFERENCE string, EIF_CHARACTER *p, EIF_
 		if (p[strlen(p) - 1] != '\\')
 			strcat ((char *)p, "\\");
 
-#elif defined EIF_VMS_V6_ONLY
-		/* vms: append unix separator iff no delimiter present */
+#elif defined EIF_VMS_V6_ONLY	/* vms_v6: append unix separator iff no delimiter present */
 		if (strchr (vms_valid_filename_chars, p[strlen(p) -1]))
 			strcat ((char *)p, "/");
 
-#elif defined EIF_VMS
-		/* vms: append unix separator iff no vms-specific delimiter at end of path */
-		if (!strchr (vms_path_delimiters, p[strlen((char*)p) -1]))
+#elif defined EIF_VMS	/* vms: append unix separator iff no vms-specific delimiter at end of path */
+		char lastc = p [strlen((char*)p) -1];
+		if (lastc != '/' && !strchr (eifrt_vms_path_terminators, lastc))
 			strcat ((char *)p, "/");
+
 #else /* Not Windows or VMS: append unix delimiter */
 		if (p[strlen((char *) p) - 1] != '/')
 			strcat ((char *)p, "/");
@@ -582,8 +552,23 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 	} else {
 		return NULL;
 	}
-#elif defined (EIF_VMS)
+#elif defined EIF_VMS_EIF56
 	return RTMS(getenv("SYS$LOGIN"));
+#elif defined EIF_VMS
+	/* Yet another VMS hack: Eiffel 5.7 wants to create a subdirectory named .ec	*/
+	/* under the user's home directory ($HOME/.ec) On VMS, this requires the home	*/
+	/* directory be on an ODS-5 volume, and an escape character before the		*/
+	/* leading "." in the subdirectory name (i.e DEV:[DIR.^.ec] (where SYS$LOGIN	*/
+	/* is DEV:[DIR]) Workaround: return the home directory name in UNIX syntax	*/
+	/* and rely on the VMS jackets to replace the leading "." with an underscore	*/
+	/* if invalid.									*/
+	{
+	    char *p = getenv("SYS$LOGIN");
+	    char *q = getenv ("HOME");
+	    char *r = eif_getenv_native ("SYS$LOGIN");
+	    char *s = eif_getenv_native ("HOME");
+	    return RTMS(decc$translate_vms(eif_getenv_native ("SYS$LOGIN")));
+	}
 #else
 	return RTMS(getenv("HOME"));
 #endif
@@ -639,125 +624,6 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER *p)
 #endif
 	return (EIF_REFERENCE) 0;
 }
-
-
-#ifdef EIF_VMS
-
-/* does the path end in a VMS terminator (dev:[dir] or dev:)? Boolean result. */
-rt_public int eifrt_vms_has_path_terminator (const char* path)
-{
-	if (path && *path) {
-	if (strchr (vms_path_delimiters, path[strlen(path) -1]))
-		return 1;	/* TRUE (VMS delimiter found) */
-	}
-	return 0;	/* FALSE */
-}
-
-/* append a filename to a path (VMS or Unix file specification syntax) */
-/* assumes path can accomodate appended name */
-rt_public void eifrt_vms_append_file_name (char* path, const char* file)
-{
-	/* append unix separator iff no vms-specific delimiter at end of path */
-	if (eifrt_vms_has_path_terminator (path))
-	strcat (path, "/");
-	strcat (path, file);
-}
-
-/* This is ugly (thread unsafe, too) but there's no other way to return the translated filespec. */
-rt_private char stupid_vms_name[FILENAME_MAX +1] = { '\0' };
-rt_private int stupid_vms_trick (char *name, int type)
-{
-	REQUIRE ("`name' is not too big", strlen(name) < sizeof stupid_vms_name);
-	strcpy (stupid_vms_name, name);
-	return 0;
-}
-
-/* convert a file specification to VMS syntax */
-rt_public char* eifrt_vms_filespec (const char* filespec, char* buf)
-{
-	int is_unix = (strchr(filespec, '/') != NULL);	/* if filespec contains a '/' it might be a foreign filespec */
-	int res = decc$to_vms (filespec, stupid_vms_trick, 0, 1);
-	if (res) strcpy (buf, stupid_vms_name);
-	else strcpy (buf, filespec);
-	return buf;
-}
-
-/* Given a VMS path (directory), return the directory file name (eg. dev:[dir.sub] ==> dev:[dir]sub.dir */
-rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
-{
-	struct FAB fab = cc$rms_fab;
-	struct NAM nam = cc$rms_nam;
-	char esb[NAM$C_MAXRSS +1], rsb[NAM$C_MAXRSS +1];
-	const char* dnm = "[ERROR__DIRECTORY_NOT_SPECIFIED]";
-	VMS_STS sts;
-	char vms_dir [PATH_MAX +1];
-
-/*	if (strchr(dir, '/')) { */
-		/* if dir contains a '/' it might be a Unix filespec */
-		int res = decc$to_vms (dir, stupid_vms_trick, 0, 2);
-		if (res) dir = strcpy (vms_dir, stupid_vms_name);
-/*	} */
-	/* perform a parse on the name supplied */
-	fab.fab$l_dna = (char*)dnm; fab.fab$b_dns = strlen(dnm);
-	fab.fab$l_fna = (char*)dir; fab.fab$b_fns = strlen(dir);
-	fab.fab$l_nam = &nam;
-	nam.nam$l_esa = esb; nam.nam$b_ess = sizeof esb -1;
-	nam.nam$l_rsa = rsb; nam.nam$b_rss = sizeof rsb -1;
-	/* VMS debug note: use nam.nam$r_nop_overlay. { nam$b_nop | nam$r_nop_bits } to examine. */
-	nam.nam$b_nop |= NAM$M_SYNCHK;	/* request syntax check only, no lookup */
-	sts = sys$parse (&fab);
-	if (VMS_FAILURE(sts)) {
-		/* parse failed; ensure expanded and resultant string length is zero */
-		nam.nam$b_esl = nam.nam$b_rsl = 0;
-	}
-	/* if directory present and name, type, and version are missing (just delimiters) */
-	if (nam.nam$b_dir && nam.nam$b_name == 0 && nam.nam$b_type <= 1 && nam.nam$b_ver <= 1) {
-		char *dirend = nam.nam$l_dir + nam.nam$b_dir -1;	/* points to directory terminator */
-		char dirdelim = *dirend;				/* save directory terminator (']' or '>') */
-		char *subdir;
-		int len;
-
-		REQUIRE ("", nam.nam$l_dir + nam.nam$b_dir == nam.nam$l_name || !nam.nam$l_name);
-
-		/* find the last [sub]directory name (.sub]) and make it the file name .DIR (]sub.DIR) */
-		if (*(dirend -1) == '.') --dirend;	/* handle terminal . case ("[dir.]") */
-		*dirend = '\0';				/* terminate after directory */
-		subdir = strrchr (nam.nam$l_dir, '.');	/* find rightmost '.' in directory */
-		if (!subdir) {				/* if no '.' found */
-			/* only one (or none) directory name, insert top level directory [000000.<rest>] */
-			const char* topdir = "000000.";
-			const size_t topdir_len = strlen(topdir);
-			len = dirend - nam.nam$l_dir;	/* debug: number of chars to shift */
-			memmove (nam.nam$l_dir +1 + topdir_len, nam.nam$l_dir +1, dirend - nam.nam$l_dir);
-			strncpy (nam.nam$l_dir +1, topdir, topdir_len);
-			subdir = nam.nam$l_dir + topdir_len;
-			dirend += topdir_len;
-		}
-		/* check for "[dir.][sub]" */
-		*subdir++ = dirdelim;			/* insert directory delimiter (replace '.') */
-		{
-			int dbg1 = strcspn (subdir, vms_valid_filename_chars);
-			int dbg2 = strspn (subdir, vms_path_delimiters);
-		}
-		if ( (len=strcspn (subdir, vms_valid_filename_chars)) > 0) {
-			int rem = strlen(subdir);	/* debug */
-			memmove (subdir, subdir + len, strlen(subdir + len));
-			dirend -= len;
-		}
-		strcpy (dirend, ".DIR");
-
-		/* return result in caller buffer, allocate space if null. */
-		CHECK ("", nam.nam$l_node == esb);
-		if (!buf) 
-			buf = malloc (strlen(esb) +1);
-		if (buf)
-			strcpy (buf, esb);
-		return buf;
-	}
-	return NULL;
-} /* end eifrt_vms_directory_file_name() */
-
-#endif /* EIF_VMS */
 
 
 /*

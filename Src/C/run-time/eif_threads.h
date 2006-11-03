@@ -149,6 +149,15 @@
 #define HAS_SEMA
 #endif
 
+#ifdef EIF_VMS			/* VMS supports POSIX 1003.1c threads */
+#define EIF_POSIX_THREADS
+#define EIF_NO_SEM
+#define EIF_NO_POSIX_SEM
+#define HASNT_SCHED_H
+#define HASNT_SEMAPHORE_H
+#endif
+
+
 /*---------------------------*/
 /*---- Header inclusion -----*/
 /*---------------------------*/

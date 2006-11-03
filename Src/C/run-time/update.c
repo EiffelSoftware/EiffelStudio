@@ -60,7 +60,6 @@ doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update ru
 #include "rt_error.h"					/* for error_tag() */
 #include "rt_malloc.h"
 #include "rt_garcol.h"
-#include "eif_path_name.h"				/* for eifrt_vms_has_path_terminator */
 
 #ifdef DEBUG
 #include "rt_interp.h"					/* For idump() */
@@ -158,31 +157,26 @@ rt_public void update(char ignore_updt, char *argv0)
 		exit (1);
 	}
 
+	if (meltpath) {
 #ifdef EIF_VMS
-	if (meltpath) {
-		if (!strcasecmp (meltpath, "MELT_PATH")) {
 			strcpy (filename, "MELT_PATH:");
-		} else {
-			strcpy (filename, meltpath);
-		}
-	} else {
-		strcpy (filename, "[]");
-	}
 #else
-	if (meltpath) {
-		strcpy (filename, meltpath);
+			strcpy (filename, meltpath);
+#endif
 	} else {
+#ifdef EIF_VMS
+		strcpy (filename, "[]");
+#else
 		strcpy (filename, ".");
+#endif
 	}
-#endif /* EIF_VMS */
-
 
 #ifdef EIF_WINDOWS
 	strcat(filename, "\\");
-#else
-#ifdef EIF_VMS	/* append path separator only if necessary */
+#elif defined EIF_VMS	/* append path separator only if necessary */
 	if (!eifrt_vms_has_path_terminator (filename))
-#endif
+		strcat(filename, "/");
+#else
 	strcat(filename, "/");
 #endif
 

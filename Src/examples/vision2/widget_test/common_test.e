@@ -8,25 +8,26 @@ indexing
 
 deferred class
 	COMMON_TEST
-	
+
 inherit
-	INSTALLATION_LOCATOR
-		export
-			{TEST_CONTROLLER} default_create
-		end
-		
 	EV_UTILITIES
 		export
 			{NONE} all
 		end
-		
+
+	EIFFEL_LAYOUT
+		export
+			{TEST_CONTROLLER} default_create
+			{NONE} all
+		end
+
 feature -- Access
 
 	widget: EV_WIDGET
 		-- Widget into which example is built.
 		-- Simply insert into your Vision2 interface, for
 		-- testing purposes.
-		
+
 feature {NONE} -- Implementation
 
 	numbered_pixmap (a_number: INTEGER): EV_PIXMAP is
@@ -37,23 +38,18 @@ feature {NONE} -- Implementation
 			if all_loaded_pixmaps = Void then
 				create all_loaded_pixmaps.make (2)
 			end
-			if installation_location /= Void then
-				create filename.make_from_string (installation_location)
-				filename.extend ("bitmaps")
-				filename.extend ("png")
-				filename.extend ("image" + a_number.out + ".png")
-				if all_loaded_pixmaps @ filename /= Void then
-					Result := all_loaded_pixmaps @ filename
-				else
-					create Result
-					Result.set_with_named_file (filename)	
-					all_loaded_pixmaps.put (Result, filename)
-				end
+			create filename.make_from_string (eiffel_layout.bitmaps_path)
+			filename.extend ("png")
+			filename.extend ("image" + a_number.out + ".png")
+			if all_loaded_pixmaps @ filename /= Void then
+				Result := all_loaded_pixmaps @ filename
 			else
 				create Result
+				Result.set_with_named_file (filename)
+				all_loaded_pixmaps.put (Result, filename)
 			end
 		end
-		
+
 	all_loaded_pixmaps: HASH_TABLE [EV_PIXMAP, STRING]
 			-- All pixmaps already loaded, referenced by their names.
 			-- For quick access.

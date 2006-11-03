@@ -35,11 +35,6 @@ inherit
 			copy, default_create, is_equal
 		end
 
-	INSTALLATION_LOCATOR
-		undefine
-			copy, default_create, is_equal
-		end
-
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -106,10 +101,6 @@ feature {NONE} -- Initialization
 
 				-- Set up search tool
 			search_tool.associate_text_entry (search_field)
-				-- Disable search tool if installation incorrect.
-			if installation_location = Void then
-				search_parent_box.disable_sensitive
-			end
 
 				-- Connect missing pixmaps to show_actions.
 			application.post_launch_actions.extend (agent display_missing_pixmaps)
@@ -298,9 +289,7 @@ feature {NONE} -- Implementation
 				tests_button.select_actions.resume
 			else
 				main_notebook.select_item (main_notebook_tests)
-				if installation_location /= Void then
-					generate_button.enable_sensitive
-				end
+				generate_button.enable_sensitive
 				file_generate.enable_sensitive
 			end
 			if selected_button /= documentation_button then
@@ -331,12 +320,10 @@ feature {NONE} -- Implementation
 	initialize_pixmaps is
 			-- Assign pixmaps to buttons as necessary.
 		do
-			if installation_location /= Void then
-				properties_button.set_pixmap (pixmap_by_name ("properties"))
-				tests_button.set_pixmap (pixmap_by_name ("testing"))
-				documentation_button.set_pixmap (pixmap_by_name ("documentation"))
-				generate_button.set_pixmap (pixmap_by_name ("icon_code_generation_color"))
-			end
+			properties_button.set_pixmap (pixmap_by_name ("properties"))
+			tests_button.set_pixmap (pixmap_by_name ("testing"))
+			documentation_button.set_pixmap (pixmap_by_name ("documentation"))
+			generate_button.set_pixmap (pixmap_by_name ("icon_code_generation_color"))
 		end
 
 	display_missing_pixmaps is

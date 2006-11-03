@@ -19,14 +19,16 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EV_LAYOUT_CONSTANTS
 		undefine
 			default_create, copy
 		end
-		
-	INSTALLATION_LOCATOR
-		undefine	
+
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		undefine
 			default_create, copy
 		end
 
@@ -58,26 +60,23 @@ feature -- Initialization
 
 				-- Create controls.
 			create eiffel_image
-			if installation_location /= Void then
-				create file_name.make_from_string (installation_location)
-				file_name.extend ("bitmaps")
-				file_name.extend ("png")
-				file_name.extend ("bm_about.png")
-				create file.make (file_name)
-				if file.exists then
-					eiffel_image.set_with_named_file (file_name.out)
-					eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
-					eiffel_image.set_background_color (White)				
-				end
+			create file_name.make_from_string (eiffel_layout.bitmaps_path)
+			file_name.extend ("png")
+			file_name.extend ("bm_about.png")
+			create file.make (file_name)
+			if file.exists then
+				eiffel_image.set_with_named_file (file_name.out)
+				eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
+				eiffel_image.set_background_color (White)
 			end
 			create info_label.make_with_text (t_info)
 			info_label.align_text_left
 			info_label.set_background_color (White)
-			
+
 			create version_label.make_with_text (t_version_info)
 			version_label.align_text_left
 			version_label.set_background_color (White)
-			
+
 			create copyright_label.make_with_text (t_Copyright_info)
 			copyright_label.align_text_left
 			copyright_label.set_background_color (White)
@@ -138,11 +137,11 @@ feature -- Constant strings
 		once
 			Result := "EiffelVision2 Demo"
 		end
-		
+
 
 	t_Copyright_info: STRING is
 		once
-			Result := 
+			Result :=
 				"Copyright (C) 1985-2004 Eiffel Software Inc.%N%
 				%All rights reserved"
 		end

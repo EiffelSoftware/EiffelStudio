@@ -8,17 +8,15 @@ indexing
 
 class
 	DOCUMENTATION_DISPLAY
-	
+
 inherit
 	INTERNAL
-	
+
 	WIDGET_TEST_SHARED
-	
-	INSTALLATION_LOCATOR
 
 create
 	make_with_text
-	
+
 feature {NONE} -- Initialization
 
 	make_with_text (a_text: EV_RICH_TEXT) is
@@ -40,7 +38,7 @@ feature -- Status setting
 				-- This speeds up the appearence of the type change to a user, as they are not
 				-- waiting for the file to load before being able to interact with the interface.
 		end
-		
+
 	real_update_for_type_change (widget: EV_WIDGET) is
 			-- Actually perform the update of the text.
 		local
@@ -53,22 +51,20 @@ feature -- Status setting
 			file_name := class_name (widget)
 			file_name.to_lower
 			file_name.append ("_flatshort.rtf")
-			if installation_location /= Void then
-				create directory_name.make_from_string (installation_location)
-				directory_name.extend ("flatshort")
-				create full_filename.make_from_string (directory_name.out)
-				full_filename.extend (file_name)
-				create file.make (full_filename)
-			end
-			if installation_location /= Void and then file.exists then
+			create directory_name.make_from_string (eiffel_layout.shared_application_path)
+			directory_name.extend ("flatshort")
+			create full_filename.make_from_string (directory_name.out)
+			full_filename.extend (file_name)
+			create file.make (full_filename)
+			if file.exists then
 				text.set_with_named_file (full_filename)
 			else
 				text.set_text ("Unable to locate the documentation for " + test_widget_type + ".%N%N" + location_error_message)
 			end
 
 			update_text_size
-		end		
-		
+		end
+
 	update_text_size is
 			-- adjust font size of `flat_short_display' by `value'.
 		local

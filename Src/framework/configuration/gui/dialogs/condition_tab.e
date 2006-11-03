@@ -584,8 +584,6 @@ feature {NONE} -- Actions
 			end
 		end
 
-
-
 feature {NONE} -- Layout constants
 
 	version_field_width: INTEGER is 100
@@ -679,7 +677,7 @@ feature {NONE} -- Implementation
 					if l_cust.item_for_iteration.invert then
 						l_choice.set_value ("/=")
 					else
-						l_choice.set_value ("/=")
+						l_choice.set_value ("=")
 					end
 					l_choice.change_value_actions.extend (agent update_invert (?, l_key))
 					custom.set_item (2, i, l_choice)

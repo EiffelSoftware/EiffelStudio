@@ -42,11 +42,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_RESCUE_STATUS
-		export
-			{NONE} all
-		end
-
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all

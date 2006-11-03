@@ -16,13 +16,6 @@ inherit
 			is_equal
 		end
 
-	SHARED_RESCUE_STATUS
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end
-
 	COMPILER_EXPORTER
 		export
 			{NONE} all

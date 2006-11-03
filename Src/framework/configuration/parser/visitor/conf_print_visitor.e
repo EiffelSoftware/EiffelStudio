@@ -765,44 +765,32 @@ feature {NONE} -- Implementation
 				l_assertions := an_options.assertions
 				if l_assertions /= Void then
 					create l_a_name.make (5)
-					if l_assertions.is_precondition then
-						l_a_name.extend ("precondition")
-					end
-					if l_assertions.is_postcondition then
-						l_a_name.extend ("postcondition")
-					end
-					if l_assertions.is_postcondition then
-						l_a_name.extend ("check")
-					end
-					if l_assertions.is_invariant then
-						l_a_name.extend ("invariant")
-					end
-					if l_assertions.is_loop then
-						l_a_name.extend ("loop")
-					end
-					if namespace /= namespace_1_0_0 and then l_assertions.is_supplier_precondition then
-						l_a_name.extend ("supplier_precondition")
-					end
-
 					create l_a_val.make (5)
 					if l_assertions.is_precondition then
+						l_a_name.extend ("precondition")
 						l_a_val.extend (l_assertions.is_precondition.out.as_lower)
 					end
 					if l_assertions.is_postcondition then
+						l_a_name.extend ("postcondition")
 						l_a_val.extend (l_assertions.is_postcondition.out.as_lower)
 					end
 					if l_assertions.is_check then
+						l_a_name.extend ("check")
 						l_a_val.extend (l_assertions.is_check.out.as_lower)
 					end
 					if l_assertions.is_invariant then
+						l_a_name.extend ("invariant")
 						l_a_val.extend (l_assertions.is_invariant.out.as_lower)
 					end
 					if l_assertions.is_loop then
+						l_a_name.extend ("loop")
 						l_a_val.extend (l_assertions.is_loop.out.as_lower)
 					end
 					if namespace /= namespace_1_0_0 and then l_assertions.is_supplier_precondition then
+						l_a_name.extend ("supplier_precondition")
 						l_a_val.extend (l_assertions.is_supplier_precondition.out.as_lower)
 					end
+
 					append_tag ("assertions", Void, l_a_name, l_a_val)
 				end
 

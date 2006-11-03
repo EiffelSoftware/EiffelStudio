@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 				if not l_conf.is_error then
 					last_state.has_system_error := False
 					last_state.system := l_conf.last_system
-					read_user_options (l_conf.last_system.uuid)
+					read_user_options (l_conf.last_system.file_name)
 					if not has_error then
 						l_options := last_state.options
 					end
@@ -833,15 +833,15 @@ feature {NONE} -- Implementation
 			location_combo.change_actions.resume
 		end
 
-	read_user_options (a_uuid: UUID) is
-			-- Read user data for project of UUID `a_uuid'.
+	read_user_options (a_file_path: STRING) is
+			-- Read user data for project of path `a_file_path'.
 		require
-			a_uuid_not_void: a_uuid /= Void
+			a_file_path_not_void: a_file_path /= Void
 		local
 			l_factory: USER_OPTIONS_FACTORY
 		do
 			create l_factory
-			l_factory.load (a_uuid)
+			l_factory.load (a_file_path)
 			if l_factory.successful then
 				last_state.options := l_factory.last_options
 			else

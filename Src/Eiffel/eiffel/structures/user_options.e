@@ -13,25 +13,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_uuid: like uuid; a_target_name: like target_name) is
-			-- Create a user specific data file for project with UUID `a_uuid'.
+	make (a_project_file_path: like project_file_path; a_target_name: like target_name) is
+			-- Create a user specific data file for project with location `a_project_file_path'.
 		require
-			a_uuid_not_void: a_uuid /= Void
+			a_uuid_not_void: a_project_file_path /= Void
 			a_target_name_not_void: a_target_name /= Void
 			a_target_name_not_empty: not a_target_name.is_empty
 		do
-			uuid := a_uuid
+			project_file_path := a_project_file_path
 			target_name := a_target_name
 			create targets.make (1)
 		ensure
-			uuid_set: uuid = a_uuid
+			project_file_path_set: project_file_path = a_project_file_path
 			target_name_set: target_name = a_target_name
 		end
 
 feature -- Access
 
-	uuid: UUID
-			-- UUID of configuration file associated with user configurations.
+	project_file_path: STRING
+			-- Path of configuration file associated with user configurations.
 
 	target: TARGET_USER_OPTIONS is
 			-- Options for currently selected target `target_name'.
@@ -76,7 +76,7 @@ feature -- Update
 		end
 
 invariant
-	uuid_not_void: uuid /= Void
+	project_file_path_not_void: project_file_path /= Void
 	targets_not_void: targets /= Void
 	target_name_not_void: target_name /= Void
 	target_name_not_empty: not target_name.is_empty

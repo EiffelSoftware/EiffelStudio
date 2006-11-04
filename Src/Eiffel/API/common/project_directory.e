@@ -311,6 +311,19 @@ feature -- Files
 			precompilation_file_name_not_void: Result /= Void
 		end
 
+	lock_file_name: FILE_NAME is
+			-- Path to `ec.lock'.
+		do
+			Result := internal_lock_file_name
+			if Result = Void then
+				create Result.make_from_string (target_path)
+				Result.set_file_name (ec_lock_file_name)
+				internal_lock_file_name := Result
+			end
+		ensure
+			locl_file_name_not_void: Result /= Void
+		end
+
 feature -- Status report
 
 	is_compiled: BOOLEAN is
@@ -380,6 +393,15 @@ feature -- Access
 					and then project_file.is_writable
 		end
 
+	is_lock_file_present: BOOLEAN is
+			-- Is `lock_file_name' present?
+		local
+			l_file: PLAIN_TEXT_FILE
+		do
+			create l_file.make (lock_file_name)
+			Result := l_file.exists
+		end
+
 	exists: BOOLEAN is
 			-- Does the project exist?
 			--| Ie, Comp, F_code, W_code and project file exist?
@@ -392,6 +414,52 @@ feature -- Access
 			Result := path_exists and then w_code_dir.exists
 				and then f_code_dir.exists and then comp_dir.exists
 				and then project_file.exists
+		end
+
+feature -- Locking
+
+	create_lock_file is
+			-- Create `lock_file_name'.
+		require
+			not_is_lock_file_present: not is_lock_file_present
+		local
+			l_file: PLAIN_TEXT_FILE
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_file.make_open_write (lock_file_name)
+				l_file.put_string (eiffel_layout.ise_eiffel_env)
+				l_file.put_character ('=')
+				l_file.put_string (eiffel_layout.eiffel_installation_dir_name)
+				l_file.put_new_line
+				l_file.put_string ("version=")
+				l_file.put_string (compiler_version_number.version)
+				l_file.put_new_line
+				l_file.put_string ("date=")
+				l_file.put_string ((create {DATE_TIME}.make_now).out)
+				l_file.put_new_line
+					-- The following cannot be filled yet, but some people might put some information in here.
+				l_file.put_string ("host=%Npid=%Nuser=%N")
+				l_file.close
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	delete_lock_file is
+			-- Delete `lock_file_name'.
+		local
+			l_file: PLAIN_TEXT_FILE
+			retried: BOOLEAN
+		do
+			if not retried and then is_lock_file_present then
+				create l_file.make (lock_file_name)
+				l_file.delete
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Settings
@@ -438,6 +506,7 @@ feature {NONE} -- Implementation
 			internal_workbench_assemblies_path := Void
 			internal_workbench_path := Void
 			internal_precompilation_file_name := Void
+			internal_lock_file_name := Void
 			internal_project_file_name := Void
 		end
 
@@ -458,6 +527,7 @@ feature {NONE} -- Implementation: Access
 			-- Placeholders for storing path.
 
 	internal_precompilation_file_name: like precompilation_file_name
+	internal_lock_file_name: like lock_file_name
 	internal_project_file_name: like project_file_name
 			-- Placeholders for storing filename.
 

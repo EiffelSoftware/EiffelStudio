@@ -751,7 +751,7 @@ feature -- Output
 
 			error_status_mode.set_item (Ok_status)
 			l_epr_file := project_directory.project_file
-			l_epr_file.store (Current, version_number, comp_system.compilation_id)
+			l_epr_file.store (Current, comp_system.compilation_id)
 
 			if l_epr_file.has_error then
 				set_error_status (Save_error_status)
@@ -773,7 +773,7 @@ feature -- Output
 			error_status_mode.set_item (Ok_status)
 			create precomp_info.make (Precompilation_directories, licensed)
 			create l_epr_file.make (project_directory.precompilation_file_name)
-			l_epr_file.store (precomp_info, version_number, comp_system.compilation_id)
+			l_epr_file.store (precomp_info, comp_system.compilation_id)
 
 			if l_epr_file.has_error then
 				set_error_status (Precomp_save_error_status)

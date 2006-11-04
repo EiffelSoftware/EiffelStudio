@@ -53,6 +53,7 @@ feature -- Status report
 			last_type := Void
 			associated_type_ast := Void
 		end
+	
 	check_and_solved (a_unevaluated_type: TYPE_A; a_type_as: TYPE_AS): TYPE_A is
 			-- Check that validity of `a_unevaluated_type' in current context
 			-- as initialized by `init' or `init_with_feature_table'.

@@ -120,6 +120,8 @@ feature {NONE}
 
 	Project_file_name: STRING is "project.epr"
 
+	ec_lock_file_name: STRING is "ec.lock"
+
 	Removed_log_file_name: STRING is "REMOVED";
 
 	Translation_log_file_name: STRING is "TRANSLAT";

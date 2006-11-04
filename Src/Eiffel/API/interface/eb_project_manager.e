@@ -122,6 +122,7 @@ feature -- Basic operations
 		local
 			l_create_agents: like create_agents
 		do
+			eiffel_project.project_directory.create_lock_file
 			is_created := True
 			from
 					-- We need to twin the list as items may be removed as a result or iteration.
@@ -142,6 +143,7 @@ feature -- Basic operations
 		local
 			l_close_agents: like close_agents
 		do
+			eiffel_project.project_directory.delete_lock_file
 			is_project_loaded := False
 			is_created := False
 				-- Save breakpoint status and command line.

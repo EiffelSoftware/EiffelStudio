@@ -674,7 +674,7 @@ feature{NONE} -- Implementation
 		require
 			a_str_attached: a_str /= Void
 		do
-			a_str.append (once "Linear metric is in the form:%N%N")
+			a_str.append (once "Linear metric is of the form:%N%N")
 			a_str.append (once "%Ta * metric1 + b * metric2 + c * metric3 + ...%N%N")
 			a_str.append (once "a, b, c are coefficients and %N")
 			a_str.append (once "metric1, metric2, metric3 are variable metrics.%N%N")
@@ -685,7 +685,7 @@ feature{NONE} -- Implementation
 		require
 			a_str_attached: a_str /= Void
 		do
-			a_str.append (once "Ratio metric is in the form:%N%N")
+			a_str.append (once "Ratio metric is of the form:%N%N")
 			a_str.append (once "%TNumerator metric / Denominator metric%N%N")
 			a_str.append (once "Numerator metric and denominator metric can be of any valid unit.%N%N")
 		end

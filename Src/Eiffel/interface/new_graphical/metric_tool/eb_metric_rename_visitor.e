@@ -38,6 +38,9 @@ feature -- Process
 		require
 			a_metric_attached: a_metric /= Void
 		do
+			if a_metric.name.is_case_insensitive_equal (old_metric_name) then
+				a_metric.set_name (new_metric_name.twin)
+			end
 			a_metric.process (Current)
 		end
 
@@ -82,7 +85,7 @@ feature{NONE} -- Process
 	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
 			-- Process `a_ratio_metric'.
 		do
-			if a_ratio_metric.denominator_metric_name.is_case_insensitive_equal (old_metric_name) then
+			if a_ratio_metric.numerator_metric_name .is_case_insensitive_equal (old_metric_name) then
 				a_ratio_metric.set_numerator_metric_name (new_metric_name)
 			end
 			if a_ratio_metric.denominator_metric_name.is_case_insensitive_equal (old_metric_name) then

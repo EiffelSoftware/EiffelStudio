@@ -62,12 +62,6 @@ feature {EIFNET_EXPORTER}
 			create Result.make
 		end
 
-	Edv_external_formatter: EIFNET_DEBUG_EXTERNAL_FORMATTER	 is
-		once
-			create Result
-			Result.set_debugger_info (Eifnet_debugger_info)
-		end
-
 feature -- Queries
 
 	icor_debug_module (a_mod_name: STRING): ICOR_DEBUG_MODULE is

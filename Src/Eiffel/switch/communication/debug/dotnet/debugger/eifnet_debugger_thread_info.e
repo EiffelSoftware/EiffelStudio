@@ -89,6 +89,7 @@ feature -- Access
 			r: INTEGER
 			p: POINTER
 			s32: STRING_32
+			extform: EIFNET_DEBUG_EXTERNAL_FORMATTER
 		do
 			if not thread_details_fetched then
 				thread_details_fetched := True
@@ -102,17 +103,18 @@ feature -- Access
 					create l_info.make (l_icd)
 					l_icdov := l_info.new_interface_debug_object_value
 					if l_icdov /= Void then
+						extform := Eifnet_debugger.edv_external_formatter
 						l_name_icd := l_icdov.get_field_value (
 											l_info.value_icd_class,
-											eifnet_debugger.edv_external_formatter.token_Thread_m_Name
+											extform.token_Thread_m_Name
 										)
 						l_priority_icd := l_icdov.get_field_value (
 											l_info.value_icd_class,
-											eifnet_debugger.edv_external_formatter.token_Thread_m_Priority
+											extform.token_Thread_m_Priority
 										)
 						l_icdov.clean_on_dispose
 						if l_name_icd /= Void then
-							s32 := Eifnet_debugger.Edv_external_formatter.system_string_value_to_string (l_name_icd)
+							s32 := extform.system_string_value_to_string (l_name_icd)
 							if s32 /= Void then
 								thread_name := s32.as_string_8
 							end

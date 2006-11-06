@@ -104,6 +104,9 @@ feature -- Initialization
 			debug ("debugger")
 				print ("call " + generator + ".init%N")
 			end
+
+			create edv_external_formatter
+			edv_external_formatter.set_debugger_info (Eifnet_debugger_info)
 		end
 
 	create_icor_debug is
@@ -2293,7 +2296,9 @@ feature -- Bridge to debug_value_keeper
 			Result := Debug_value_keeper.know_about (a_address)
 		end
 
-feature -- Bridge to eifnet_dbg_evaluator
+feature -- Bridge
+
+	edv_external_formatter: EIFNET_DEBUG_EXTERNAL_FORMATTER
 
 	eifnet_dbg_evaluator: EIFNET_DEBUGGER_EVALUATOR
 			-- Dotnet function evaluator

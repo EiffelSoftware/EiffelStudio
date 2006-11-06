@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 	<target name="common">
 		<file_rule>
 			<exclude>/\.svn$</exclude>
@@ -157,8 +157,9 @@
 		</cluster>
 		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
 			<cluster name="communications" location="$|no_communication\">
-				<cluster name="debuging_class" location="$|debug\"/>
+				<cluster name="debugging_class" location="$|debug\"/>
 				<cluster name="status" location="$|status\"/>
+				<cluster name="shell" location="$|shell\"/>
 			</cluster>
 			<cluster name="interface_switch" location="$|interface\batch_only\"/>
 		</cluster>
@@ -256,7 +257,7 @@
 				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true"/>
+		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true" />
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
 		<cluster name="eac_documentation" location="$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations\"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
@@ -282,7 +283,7 @@
 		<cluster name="process_gui" location="$ISE_LIBRARY\library\process\gui\" recursive="true"/>
 		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">
 			<cluster name="communications" location="$|communication\">
-				<cluster name="debuging_class" location="$|debug\" recursive="true" >
+				<cluster name="debugging_class" location="$|debug\" recursive="true">
 					<file_rule>
 						<exclude>/dotnet$</exclude>
 						<condition>
@@ -290,7 +291,6 @@
 						</condition>
 					</file_rule>
 				</cluster>
-				<cluster name="debuging_formatters" location="$|formatters\"/>
 				<cluster name="io_watcher_gtk" location="$|spec\gtk\">
 					<condition>
 						<platform excluded_value="windows"/>
@@ -316,6 +316,7 @@
 						</condition>
 					</file_rule>
 				</cluster>
+				<cluster name="shell" location="$|shell\"/>
 			</cluster>
 			<cluster name="interface_switch" location="$|interface\new_graphical\"/>
 		</cluster>
@@ -326,9 +327,9 @@
 				<exclude>/ewb_case_storage\.e$</exclude>
 			</file_rule>
 		</cluster>
+		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>
 		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
 		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
-		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override" recursive="true"/>
 	</target>
 	<target name="bench_unix" extends="bench">
 		<description>Compiling UNIX bench compiler on other platforms than Windows</description>

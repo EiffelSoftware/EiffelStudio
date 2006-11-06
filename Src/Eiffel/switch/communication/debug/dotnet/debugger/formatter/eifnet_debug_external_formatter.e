@@ -297,4 +297,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_DEBUG_EXTERNAL_FORMATTER
+end

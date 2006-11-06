@@ -15,11 +15,6 @@ feature {SHARED_EIFNET_DEBUG_VALUE_FORMATTER} -- Initialization
 		once
 			create Result
 		end
-		
---	Edv_external_formatter: EIFNET_DEBUG_EXTERNAL_FORMATTER is
---		once
---			create Result
---		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

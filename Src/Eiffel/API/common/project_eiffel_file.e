@@ -92,7 +92,7 @@ feature -- Store/Retrieval
 					-- The following information is not used on retrieval, but may help
 					-- users finding out which version of the Eiffel compiler and from where
 					-- this Eiffel compiler was coming from.
-				l_writer.write_string_8 (eiffel_layout.eiffel_installation_dir_name)
+				l_writer.write_string_8 (eiffel_layout.ec_command_name)
 				l_writer.write_string_8 (compiler_version_number.version.out)
 
 				if is_c_storable then

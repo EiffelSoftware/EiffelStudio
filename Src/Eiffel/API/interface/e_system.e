@@ -56,12 +56,6 @@ feature -- Access
 			Result := System.root_cluster
 		end
 
-	statistics: SYSTEM_STATISTICS is
-			-- Statistics of the Eiffel System
-		do
-			create Result.make
-		end;
-
 	document_path: DIRECTORY_NAME is
 			-- Path specified for the documents directory for classes.
 			-- Void result implies no document generation

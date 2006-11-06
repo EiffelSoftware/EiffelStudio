@@ -14,6 +14,8 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	SHARED_SYSTEM_STATISTICS
+
 create
 
 	make, do_nothing
@@ -27,7 +29,7 @@ feature -- Execution
 			l_number: INTEGER
 		do
 			if Eiffel_project.initialized then
-				stats := Eiffel_system.statistics
+				stats := Statistics
 
 				text_formatter.add (output_interface_names.for_system)
 				text_formatter.add_space

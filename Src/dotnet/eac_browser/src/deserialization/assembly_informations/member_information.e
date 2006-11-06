@@ -4,29 +4,17 @@ indexing
 class
 	MEMBER_INFORMATION
 
---inherit
---	IMEMBER_INFO_IMPL_STUB
-----		rename
-----			parameters as enum_parameters
---		redefine
---			name,
---			summary,
---			parameters,
---			returns
---		end
-
 create
 	make
-	
+
 feature -- Initialization
-	
+
 	make is
 			-- Initialization.
 		do
 			create name.make_empty
 			create summary.make_empty
 			create parameters.make (10)
---			create enum_parameters.make (parameters)
 			create returns.make_empty
 		ensure
 			non_void_name: name /= Void
@@ -38,13 +26,12 @@ feature -- Initialization
 feature -- Access
 
 	name: STRING
-	
+
 	summary: STRING
-	
+
 	parameters: ARRAYED_LIST [PARAMETER_INFORMATION]
-	
+
 	returns: STRING
-	
 
 feature -- Status Setting
 
@@ -53,7 +40,7 @@ feature -- Status Setting
 		require
 			non_void_a_name: a_name /= Void
 		do
-			name := a_name	
+			name := a_name
 		ensure
 			name_set: name = a_name
 		end
@@ -63,7 +50,7 @@ feature -- Status Setting
 		require
 			non_void_a_summary: a_summary /= Void
 		do
-			summary := a_summary	
+			summary := a_summary
 		ensure
 			summary_set: summary = a_summary
 		end
@@ -73,14 +60,14 @@ feature -- Status Setting
 		require
 			non_void_a_returns: a_returns /= Void
 		do
-			returns := a_returns	
+			returns := a_returns
 		ensure
 			returns_set: returns = a_returns
 		end
 
 
 feature -- Basic Operations
-	
+
 	add_parameter (a_parameter: PARAMETER_INFORMATION) is
 			-- Add `a_parameter' to `parameters'.
 		require
@@ -104,7 +91,7 @@ feature -- Basic Operations
 			empty_parameters: parameters.count = 0
 			empty_returns: returns.is_empty
 		end
-		
+
 invariant
 	non_void_name: name /= Void
 	non_void_summary: summary /= Void

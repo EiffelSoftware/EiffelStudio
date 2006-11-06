@@ -67,12 +67,12 @@
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
-		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false"/>
 		<library name="cli_debugger" location="$EIFFEL_SRC\framework\cli_debugger\cli_debugger.ecf" readonly="false">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</library>
+		<library name="cli_writer" location="$EIFFEL_SRC\framework\cli_writer\cli_writer.ecf" readonly="false"/>
 		<library name="configuration_compiler" location="$EIFFEL_SRC\framework\configuration\configuration_compiler.ecf" readonly="false"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf" readonly="false"/>
 		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
@@ -141,6 +141,9 @@
 		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
 			<file_rule>
 				<exclude>/structured_text$</exclude>
+				<exclude>/queries$</exclude>
+				<exclude>/query_language$</exclude>
+				<exclude>/profiler$</exclude>
 			</file_rule>
 			<file_rule>
 				<exclude>/eb_preference_manager.e$</exclude>
@@ -159,9 +162,18 @@
 			<cluster name="communications" location="$|no_communication\">
 				<cluster name="debugging_class" location="$|debug\"/>
 				<cluster name="status" location="$|status\"/>
-				<cluster name="shell" location="$|shell\"/>
 			</cluster>
+			<cluster name="interface_shell" location="$|no_communication\shell\" />
+			<cluster name="interface_common" location="$|interface\" />
 			<cluster name="interface_switch" location="$|interface\batch_only\"/>
+		</cluster>
+		<cluster name="compiler_api_utilities" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
+			<file_rule>
+				<exclude>/.*</exclude>
+				<include>queries</include>
+				<include>query_language</include>
+				<include>profile</include>
+			</file_rule>
 		</cluster>
 		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
 		<override name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
@@ -257,7 +269,13 @@
 				</condition>
 			</file_rule>
 		</cluster>
-		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true" />
+		<cluster name="compiler_api" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
+			<file_rule>
+				<exclude>/queries$</exclude>
+				<exclude>/query_language$</exclude>
+				<exclude>/profiler$</exclude>
+			</file_rule>
+		</cluster>
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\" recursive="true"/>
 		<cluster name="eac_documentation" location="$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations\"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
@@ -301,6 +319,7 @@
 						<platform value="windows"/>
 					</condition>
 				</cluster>
+				<cluster name="constants" location="$|constants\" />
 				<cluster name="ipc" location="$|ipc\" recursive="true"/>
 				<cluster name="status" location="$|status\" recursive="true">
 					<file_rule>
@@ -316,8 +335,9 @@
 						</condition>
 					</file_rule>
 				</cluster>
-				<cluster name="shell" location="$|shell\"/>
 			</cluster>
+			<cluster name="interface_shell" location="$|communication\shell\" />
+			<cluster name="interface_common" location="$|interface\" />
 			<cluster name="interface_switch" location="$|interface\new_graphical\"/>
 		</cluster>
 		<cluster name="tty" location="$EIFFEL_SRC\Eiffel\interface\tty\" recursive="true">
@@ -325,6 +345,14 @@
 				<exclude>/eb_diagram_html_generator\.e$</exclude>
 				<exclude>/eb_gui_preferences\.e$</exclude>
 				<exclude>/ewb_case_storage\.e$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="compiler_api_utilities" location="$EIFFEL_SRC\Eiffel\API\" recursive="true">
+			<file_rule>
+				<exclude>/.*</exclude>
+				<include>queries</include>
+				<include>query_language</include>
+				<include>profile</include>
 			</file_rule>
 		</cluster>
 		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>

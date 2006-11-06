@@ -14,6 +14,13 @@ inherit
 			out
 		end
 
+	KL_SHARED_EXECUTION_ENVIRONMENT
+		export
+			{NONE} all
+		undefine
+			out
+		end
+
 create
 	make
 
@@ -61,6 +68,7 @@ feature -- Queries
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
 			l_ver_cond: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
 			l_ver_state: CONF_VERSION
+			l_var_key, l_var_val: STRING
 		do
 			Result := True
 				-- multithreaded
@@ -113,7 +121,12 @@ feature -- Queries
 					not Result or custom.after
 				loop
 					l_cust_cond := custom.item_for_iteration
-					Result := equal (l_vars.item (custom.key_for_iteration), l_cust_cond.value) xor l_cust_cond.invert
+					l_var_key := custom.key_for_iteration
+					l_var_val := l_vars.item (l_var_key)
+					if l_var_val = Void then
+						l_var_val := execution_environment.variable_value (l_var_key)
+					end
+					Result := equal (l_var_val, l_cust_cond.value) xor l_cust_cond.invert
 					custom.forth
 				end
 			end

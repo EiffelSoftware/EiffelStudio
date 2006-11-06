@@ -1,20 +1,12 @@
 indexing
-	description: "Objects that ..."
+	description: "Exporter class for IL_DEBUG_INFO_RECORDER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SHARED_IL_DEBUG_INFO_RECORDER
-
-feature {NONE} -- Token Recorder
-
-	il_debug_info_recorder: IL_DEBUG_INFO_RECORDER is
-		once
-			create Result.make
-		end
+	IL_DEBUG_INFO_RECORDER_EXPORTER
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -48,4 +40,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class SHARED_IL_DEBUG_INFO_RECORDER
+end

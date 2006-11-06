@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			reset_debugging_live_data
 		end
 
-feature {EIFNET_DEBUGGER} -- reset live data
+feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- reset live data
 
 	reset_debugging_live_data is
 			-- Reset data used during debugging session
@@ -463,10 +463,7 @@ feature -- Queries : dotnet data from estudio data
 			end
 		end
 
-feature {EIFFEL_CALL_STACK_DOTNET,
-		APPLICATION_STATUS_DOTNET,
-		APPLICATION_EXECUTION_DOTNET,
-		EIFNET_DEBUGGER} -- Queries : IL Offset data
+feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 
 	is_il_offset_related_to_eiffel_line (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): BOOLEAN is
 			-- is a_il_offset related to an Eiffel line index ?
@@ -558,7 +555,7 @@ feature {EIFFEL_CALL_STACK_DOTNET,
 			end
 		end
 
-feature {APPLICATION_EXECUTION_DOTNET} -- Queries : IL Offset data
+feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 
 	feature_breakable_il_line_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
 				a_breakable_line_number: INTEGER): IL_OFFSET_SET is
@@ -1131,7 +1128,7 @@ feature {NONE} -- Debugger Info List
 	dbg_info_class_types: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
 			-- [CLASS_TYPE.static_type_id] => [IL_DEBUG_INFO_FROM_CLASS_TYPE]
 
-feature {CIL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
+feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 
 	load_data_for_debugging	is
 			-- Load workbench data (mainly for debugging)

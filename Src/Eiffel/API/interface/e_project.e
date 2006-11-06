@@ -21,8 +21,6 @@ inherit
 
 	SHARED_ERROR_HANDLER
 
-	SHARED_DEBUGGER_MANAGER
-
 	SHARED_EIFFEL_PARSER
 
 	SYSTEM_CONSTANTS
@@ -438,11 +436,6 @@ feature -- Update
 				if successful then
 					if not freezing_occurred then
 						link_driver
-					end
-
-					if Debugger_manager.has_breakpoints then
-						Degree_output.put_resynchronizing_breakpoints_message
-						Debugger_manager.resynchronize_breakpoints
 					end
 					if
 						not manager.is_project_loaded and then

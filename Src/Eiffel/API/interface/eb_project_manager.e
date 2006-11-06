@@ -192,6 +192,11 @@ feature -- Basic operations
 			end
 
 			if is_successful then
+				if Debugger_manager.has_breakpoints then
+					Degree_output.put_resynchronizing_breakpoints_message
+					Debugger_manager.resynchronize_breakpoints
+				end
+
 					-- Save breakpoint status and command line.
 				Debugger_manager.save_debug_info
 			end

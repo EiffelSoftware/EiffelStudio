@@ -73,9 +73,11 @@ feature -- Basic operations
 					ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
 					ed.show_modal_to_window (configuration_window)
 				else
-						-- add warnings
-					create wd.make_with_text (l_load.last_warning_messages)
-					wd.show_modal_to_window (configuration_window)
+					if l_load.is_warning then
+							-- add warnings
+						create wd.make_with_text (l_load.last_warning_messages)
+						wd.show_modal_to_window (configuration_window)
+					end
 
 					create l_lib_conf.make_for_target (l_load.last_system, l_load.last_system.library_target.name, configuration_window.conf_factory, create {DS_ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
 

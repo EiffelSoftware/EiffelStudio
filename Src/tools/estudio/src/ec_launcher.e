@@ -64,8 +64,6 @@ feature -- Launching
 			io.error.put_string ("     if there is only one parameter, this is the eiffel configuration file (file.ecf)%N")
 			io.error.put_string ("%NOptional environment variables:%N")
 			io.error.put_string ("  * EC_NAME     : name of the compiler (default: ec)%N")
-			io.error.put_string ("  * MELTED_PATH : for workbench version %N")
-
 			io.error.put_string ("%NPress ENTER to continue ...%N")
 			io.read_line
 			if is_exiting then
@@ -87,10 +85,7 @@ feature -- Launching
 					create s.make_empty
 
 					s.append_string ("*** estudio is using the following data : %N")
-					s.append_string (" ISE_EIFFEL: " + eiffel_layout.eiffel_installation_dir_name + "%N")
-					s.append_string (" ISE_PLATFORM: " + eiffel_layout.eiffel_platform + "%N")
-					s.append_string (" Path to ec: " + ec_path + "%N")
-					s.append_string (" Working directory: " + working_directory + "%N")
+					s.append_string (eiffel_layout.environment_info)
 					s.append_string (" Arguments: ")
 					from
 						ec_arguments.start
@@ -108,7 +103,7 @@ feature -- Launching
 						io.output.put_new_line
 					end
 				end
-				start_process (ec_path, ec_arguments, working_directory)
+				start_process (eiffel_layout.ec_command_name, ec_arguments, Void)
 			else
 				do_exit_launcher
 			end
@@ -131,7 +126,7 @@ feature -- Launching
 				--| estudio must stay alive ...
 			keep_estudio_terminal := not is_windows or is_waiting
 
-			process := process_factory.process_launcher (ec_path, args, dir)
+			process := process_factory.process_launcher (cmd, args, dir)
 			process.set_hidden (False)
 
 			if is_windows then
@@ -335,11 +330,6 @@ feature -- Environment
 						if cmdline_arguments_count > 0 then
 							argument_variables.put (cmdline_argument (1), eiffel_layout.Ec_name_env)
 						end
-					elseif s.is_equal ("/melted_path") then
-						cmdline_remove_head (1)
-						if cmdline_arguments_count > 0 then
-							argument_variables.put (cmdline_argument (1), Melted_path_varname)
-						end
 					else
 						io.error.put_string (" * Ignoring flag [" + s + "]%N")
 					end
@@ -372,7 +362,6 @@ feature -- Environment
 
 						--| Try to be smart and guess if the path is relative or not
 					cwd := Execution_environment.current_working_directory
-					Execution_environment.change_working_directory (working_directory)
 					create fn.make
 					if fn.is_file_name_valid (s) then
 						create file.make (s)
@@ -389,7 +378,6 @@ feature -- Environment
 						fn := Void
 						file := Void
 					end
-					Execution_environment.change_working_directory (cwd)
 
 						--| `s' is the path to the config file
 					if s.has (' ') and then not s.has ('"') then
@@ -448,21 +436,8 @@ feature -- Environment
 			-- Get environment variables
 		require
 			cmdline_arguments_not_void: cmdline_arguments /= Void
-		local
-			s: STRING
 		do
 			eiffel_layout.check_environment_variable
-			create ec_path.make_from_string (eiffel_layout.bin_path)
-
-				--| Melted path if workbench ec
-			s := get_environment_value (Melted_path_varname, ec_path)
-			create working_directory.make_from_string (s)
-
-			ec_path.set_file_name (eiffel_layout.ec_name)
-
-			if not working_directory.is_valid then
-				working_directory := Void
-			end
 		end
 
 	check_environment is
@@ -475,19 +450,6 @@ feature -- Environment
 			is_environment_valid := True
 			create m.make_empty
 
-			if
-				ec_path /= Void
-				and then (
-					not ec_path.is_valid or not file_exists (ec_path)
-					)
-			then
-				is_environment_valid := False
-				m.append_string ("%N")
-				m.append_string ("The path to ec [")
-				m.append_string (ec_path)
-				m.append ("] is not valid")
-			end
-
 			if not is_environment_valid then
 				m.prepend_string ("Error, the environment is not valid :")
 				implementation.error (m)
@@ -497,14 +459,6 @@ feature -- Environment
 
 	is_environment_valid: BOOLEAN
 			-- Is current environment valid ?
-
-	ec_path: FILE_NAME
-	melted_path: DIRECTORY_NAME
-	working_directory: DIRECTORY_NAME
-
-feature {NONE} -- Constants
-
-	Melted_path_varname: STRING is "MELTED_PATH"
 
 feature {NONE} -- Events
 
@@ -540,14 +494,6 @@ feature {NONE} -- File system helpers
 		do
 			create f.make (fn)
 			Result := f.exists
-		end
-
-	directory_exists (dn: STRING): BOOLEAN is
-		local
-			d: DIRECTORY
-		do
-			create d.make (dn)
-			Result := d.exists
 		end
 
 indexing

@@ -23,7 +23,7 @@ feature -- Copying
 			path: STRING
 			l_filename: FILE_NAME
 			retried: BOOLEAN
-		do	
+		do
 			if not retried then
 				from
 					cnt := 0
@@ -33,7 +33,7 @@ feature -- Copying
 					l_cnt := a_dir.count
 				until
 					cnt = l_cnt
-				loop	
+				loop
 					a_dir.readentry
 					if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
 						create l_filename.make_from_string (path)
@@ -56,12 +56,12 @@ feature -- Copying
 									create target_file.make_create_read_write (l_filename.string)
 									target_file.close
 									if not l_file.is_empty then
-										copy_file (l_file, target_file)	
+										copy_file (l_file, target_file)
 									end
 								end
-								
+
 							end
-						else		
+						else
 								-- This is a directory
 							create l_filename.make_from_string (target.name)
 							create sub_dir.make (l_filename.string)
@@ -71,31 +71,31 @@ feature -- Copying
 							else
 								l_filename.extend (a_dir.lastentry)
 								create sub_dir.make (l_filename.string)
-								if not sub_dir.exists then							
-									sub_dir.create_dir	
+								if not sub_dir.exists then
+									sub_dir.create_dir
 								end
 								copy_directory (src_sub_dir, sub_dir)
 							end
 						end
 					end
-					cnt := cnt + 1			
+					cnt := cnt + 1
 				end
 				a_dir.close
-			end		
+			end
 		ensure
-			directories_closed: a_dir.is_closed and target.is_closed			
+			directories_closed: a_dir.is_closed and target.is_closed
 		rescue
 			retried := True
 			print ("Exception in UTILITY_FUNCTIONS 'copy_directory'%N")
 			io.read_character
-		end		
+		end
 
 	copy_file (file, target: FILE) is
 			-- Copy contents of `file' to `target'
 		require
 			files_not_void: file /= Void and target /= Void
 			source_files_exists: file.exists
-			source_file_not_already_open: not file.is_open_read 
+			source_file_not_already_open: not file.is_open_read
 			target_file_not_already_open: not target.is_open_write
 		local
 			l_ptf, l_ptf2: PLAIN_TEXT_FILE
@@ -116,7 +116,7 @@ feature -- Copying
 		ensure
 			files_closed: file.is_closed and target.is_closed
 		end
-		
+
 	copy_text_file (text_file, target: PLAIN_TEXT_FILE) is
 			-- Copy contents of `text_file' to `target'
 		require
@@ -162,13 +162,13 @@ feature -- Directory
 					l_filename.extend (a_dir.lastentry)
 					create sub_dir.make (l_filename.string)
 					if sub_dir.exists then
-						Result := Result + directory_recursive_count (sub_dir, l_filename.string)			
+						Result := Result + directory_recursive_count (sub_dir, l_filename.string)
 					else
 						Result := Result + 1
 					end
 				end
-				cnt := cnt + 1	
-			end			
+				cnt := cnt + 1
+			end
 		end
 
 	directory_array (a_dir: STRING): ARRAY [STRING] is
@@ -194,10 +194,10 @@ feature -- Directory
 				from
 					cnt := 1
 					l_arr_index := 1
-					if (create {PLATFORM}).is_windows then
-						create Result.make (1, l_max_index)	
-					else					
-						create Result.make (1, l_max_index - 1)	
+					if {PLATFORM}.is_windows then
+						create Result.make (1, l_max_index)
+					else
+						create Result.make (1, l_max_index - 1)
 					end
 					create l_dir_string.make_empty
 				until
@@ -231,7 +231,7 @@ feature -- File
 				create Result.make_empty
 			end
 		end
-		
+
 	file_no_extension (a_file: STRING): STRING is
 			-- Return file name for `a_file' WITHOUT the extension
 		require
@@ -245,7 +245,7 @@ feature -- File
 		ensure
 			has_result: Result /= Void
 		end
-	
+
 	short_name (a_name: STRING): STRING is
 			-- Short file/directory name (minus directory hierarchy) of `a_name'
 		require
@@ -256,14 +256,14 @@ feature -- File
 			l_name := a_name.twin
 			l_name.replace_substring_all ("\", "/")
 			if l_name.last_index_of ('/', a_name.count) > 0 then
-				Result := l_name.substring (l_name.last_index_of ('/', l_name.count) + 1, l_name.count)			
+				Result := l_name.substring (l_name.last_index_of ('/', l_name.count) + 1, l_name.count)
 			else
 				Result := l_name
 			end
 		ensure
 			has_result: Result /= Void
 		end
-	
+
 	directory_no_file_name (a_path: STRING): STRING is
 			-- The full directory path `a_path' WITHOUT the file name
 		require
@@ -276,11 +276,11 @@ feature -- File
 			if l_path.last_index_of ('/', l_path.count) > 0 then
 				Result := l_path.substring (1, l_path.last_index_of ('/', l_path.count) - 1)
 			else
-				Result := l_path	
+				Result := l_path
 			end
 		ensure
 			has_result: Result /= Void
-		end			
+		end
 
 	unique_name: STRING is
 			-- Unique name
@@ -291,7 +291,7 @@ feature -- File
 			Result.replace_substring_all (" ", "_")
 			Result.replace_substring_all ("\", "_")
 			Result.replace_substring_all ("/", "_")
-		end	
+		end
 
 feature -- String
 
@@ -313,7 +313,7 @@ feature -- String
 				Result := (l_char.is_alpha or l_char.is_digit)
 				cnt := cnt + 1
 			end
-		end		
+		end
 
 	tidied_string (a_string: STRING): STRING is
 			-- Tidy `a_string'
@@ -323,7 +323,7 @@ feature -- String
 			Result.prune_all_leading ('%T')
 			Result.prune_all_trailing ('%N')
 			Result.prune_all_trailing ('%T')
-		end		
+		end
 
 feature -- Document
 
@@ -335,24 +335,24 @@ feature -- Document
 			l_root_dir: STRING
 			l_index: INTEGER
 			l_consts: APPLICATION_CONSTANTS
-		do			
+		do
 			l_consts := (create {SHARED_CONSTANTS}).Application_constants
 			create l_root_dir.make_from_string (l_consts.Temporary_html_directory.string)
 			Result := temporary_location (a_name, l_root_dir)
-			
+
 			if with_name then
 				if not l_consts.allowed_file_types.has (file_type (Result)) then
 					l_index := Result.last_index_of ('.', Result.count)
-					if l_index > 0 then					
+					if l_index > 0 then
 						Result := Result.substring (1, l_index - 1)
 					end
 					Result.append (".html")
 				end
 			else
 				Result := directory_no_file_name (Result)
-			end			
-		end	
-		
+			end
+		end
+
 	temporary_xml_location (a_name: STRING; with_name: BOOLEAN): STRING is
 			-- Temporary directory for location of `document' in XML		
 		require
@@ -360,22 +360,22 @@ feature -- Document
 		local
 			l_root_dir: STRING
 			l_index: INTEGER
-		do			
+		do
 			create l_root_dir.make_from_string ((create {SHARED_CONSTANTS}).Application_constants.Temporary_xml_directory.string)
 			Result := temporary_location (a_name, l_root_dir)
-			
+
 			if with_name then
 				if not file_type (Result).is_equal ("xml") then
 					l_index := Result.last_index_of ('.', Result.count)
-					if l_index > 0 then					
+					if l_index > 0 then
 						Result := Result.substring (1, l_index - 1)
-					end						
+					end
 					Result.append (".xml")
 				end
 			else
 				Result := directory_no_file_name (Result)
 			end
-		end	
+		end
 
 	temporary_help_location (a_name: STRING; with_name: BOOLEAN): STRING is
 			-- Temporary directory for location of `document' in Help project
@@ -384,26 +384,26 @@ feature -- Document
 		local
 			l_root_dir: STRING
 			l_index: INTEGER
-		do			
+		do
 			create l_root_dir.make_from_string ((create {SHARED_CONSTANTS}).Application_constants.Temporary_help_directory.string)
 			Result := temporary_location (a_name, l_root_dir)
-			
+
 			if with_name then
-				if 
-					not (file_type (Result).is_equal ("html") or 
-					file_type (Result).is_equal ("css") or 
+				if
+					not (file_type (Result).is_equal ("html") or
+					file_type (Result).is_equal ("css") or
 					file_type (Result).is_equal ("gif"))
 				then
 					l_index := Result.last_index_of ('.', Result.count)
-					if l_index > 0 then					
+					if l_index > 0 then
 						Result := Result.substring (1, l_index - 1)
 					end
 					Result.append (".html")
 				end
 			else
 				Result := directory_no_file_name (Result)
-			end			
-		end	
+			end
+		end
 
 	toc_friendly_url (a_url: STRING): STRING is
 			-- TOC friendly url of `a_url'
@@ -419,11 +419,11 @@ feature -- Document
 			Result.replace_substring_all (l_proj_name, "")
 			Result.replace_substring_all ((create {APPLICATION_CONSTANTS}).Temporary_help_directory, "")
 			Result.prune_all_leading ('/')
-			Result.prune_all_leading ('\')			
-			create l_name.make_from_string (Result)				
+			Result.prune_all_leading ('\')
+			create l_name.make_from_string (Result)
 			Result := l_name.string
 			Result.replace_substring_all ("\", "/")
-		end		
+		end
 
 	is_code_document (a_doc: DOCUMENT): BOOLEAN is
 			-- Is `a_doc' a code document
@@ -451,7 +451,7 @@ feature -- Document
 			l_link: DOCUMENT_LINK
 			l_consts: SHARED_OBJECTS
 		do
-			create l_consts					
+			create l_consts
 			if l_consts.Shared_document_manager.has_stylesheet then
 				a_filename := a_file.twin
 				l_name := l_consts.Shared_document_manager.stylesheet.name.twin
@@ -462,8 +462,8 @@ feature -- Document
 				else
 					Result := l_link.absolute_url
 				end
-			end				
-		end	
+			end
+		end
 
 	copy_stylesheet (a_loc: STRING) is
 			-- Copy stylesheet to `a_loc'
@@ -475,14 +475,14 @@ feature -- Document
 			l_filename: FILE_NAME
 		do
 			create l_objs
-			if l_objs.Shared_document_manager.has_stylesheet then				
+			if l_objs.Shared_document_manager.has_stylesheet then
 				create l_filename.make_from_string (a_loc)
 				l_filename.extend (short_name (l_objs.Shared_document_manager.stylesheet.name))
 				create l_target.make_create_read_write (l_filename.string)
 				l_target.close
 				create l_src.make (l_objs.Shared_document_manager.stylesheet.name)
 				copy_file (l_src, l_target)
-			end			
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			l_dir_arr: ARRAY [STRING]
 			l_cnt: INTEGER
 			l_sub_dir: DIRECTORY
-		do				
+		do
 			Result := a_name.twin
 			Result.replace_substring_all ("\", "/")
 			l_proj_root := (create {SHARED_OBJECTS}).Shared_project.root_directory
@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 						Result := short_name (Result)
 					end
 				end
-				
+
 			end
 			create l_file_name.make_from_string (a_root)
 			if Result.item (1) = '/' then
@@ -520,9 +520,9 @@ feature {NONE} -- Implementation
 			end
 			l_file_name.extend (Result)
 			Result := l_file_name.string.twin
-			
+
 					-- With Result path create sub-directories if necessary
-			l_dir_arr := directory_array (Result)			
+			l_dir_arr := directory_array (Result)
 			if l_dir_arr /= Void then
 				from
 					l_cnt := 2
@@ -537,8 +537,8 @@ feature {NONE} -- Implementation
 					end
 					l_cnt := l_cnt + 1
 				end
-			end	
-		end		
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

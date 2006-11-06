@@ -102,6 +102,7 @@ feature -- Basic operations
 			file: KL_BINARY_INPUT_FILE
 			an_element, component_element: XM_ELEMENT
 			parser: XM_EIFFEL_PARSER
+			l_found: BOOLEAN
 		do
 			check
 				component_doc_void: component_document = Void
@@ -112,14 +113,17 @@ feature -- Basic operations
 				create parser.make
 				parser.set_callbacks (pipe_callback.start)
 				file.open_read
-				parser.parse_from_stream (file)
-				file.close
-				component_document := pipe_callback.document
-				an_element ?= component_document.first
-				component_element ?= an_element.first
-
-				components.tools.component_selector.add_components (all_child_element_names (an_element))
-			else
+				if file.is_open_read then
+					l_found := True
+					parser.parse_from_stream (file)
+					file.close
+					component_document := pipe_callback.document
+					an_element ?= component_document.first
+					component_element ?= an_element.first
+					components.tools.component_selector.add_components (all_child_element_names (an_element))
+				end
+			end
+			if not l_found then
 					-- Create `component_document'.
 				create component_document.make_with_root_named ("Components", create {XM_NAMESPACE}.make_default)
 				component_element := component_document.root_element
@@ -183,14 +187,20 @@ feature -- Basic operations
 		local
 			file: KL_TEXT_OUTPUT_FILE
 			formater: XM_FORMATTER
+			warning_dialog: EV_WARNING_DIALOG
 		do
 			create file.make (component_filename)
 			file.open_write
-			file.put_string (xml_format)
-			create formater.make
-			formater.set_output (file)
-			formater.process_document (component_document)
-			file.close
+			if file.is_open_write then
+				file.put_string (xml_format)
+				create formater.make
+				formater.set_output (file)
+				formater.process_document (component_document)
+				file.close
+			else
+				create warning_dialog.make_with_text (unable_to_save_part1 + component_filename + unable_to_save_part2_components)
+				warning_dialog.show_modal_to_window (components.tools.main_window)
+			end
 		end
 
 	remove_component (component_name: STRING) is

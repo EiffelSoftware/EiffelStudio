@@ -73,7 +73,7 @@ feature -- Comparison
 			Result := name < other.name
 		end
 
-feature {ES} -- Setting
+feature -- Setting
 
 	set_output_window (display: OUTPUT_WINDOW) is
 			-- Set the output window to `display'
@@ -83,7 +83,7 @@ feature {ES} -- Setting
 			command_line_io.output_window = display
 		end
 
-feature {ES} -- Execution
+feature -- Execution
 
 	execute is
 			-- Action performed when invoked from the

@@ -669,12 +669,13 @@ feature {NONE} -- Implementation attribute processing
 		do
 			l_name := current_attributes.item (at_name)
 			l_value := current_attributes.item (at_value)
-			if l_name /= Void and l_value /= Void then
+			if l_value = Void then
+				l_value := ""
+			end
+			if l_name /= Void then
 				current_target.add_variable (l_name, l_value)
-			elseif l_name = Void then
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_variable_no_name)
 			else
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_variable (l_name))
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_variable_no_name)
 			end
 		end
 

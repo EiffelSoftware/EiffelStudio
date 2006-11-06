@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="eac_browser" uuid="6D32A198-6ED4-4B14-B236-3F635244C54E">
+	<target name="eac_browser">
+		<root class="VISION2_APPLICATION" feature="make_and_launch"/>
+		<option trace="false" profile="false" debug="false" warning="true">
+			<warning name="export_class_missing" enabled="false"/>
+			<warning name="old_verbatim_strings" enabled="false"/>
+			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
+		</option>
+		<setting name="array_optimization" value="false"/>
+		<setting name="check_vape" value="true"/>
+		<setting name="cls_compliant" value="true"/>
+		<setting name="console_application" value="false"/>
+		<setting name="dead_code_removal" value="true"/>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<setting name="exception_trace" value="true"/>
+		<setting name="il_verifiable" value="true"/>
+		<setting name="inlining" value="false"/>
+		<setting name="line_generation" value="false"/>
+		<setting name="msil_assembly_compatibility" value="None"/>
+		<setting name="msil_generation_type" value="exe"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
+		<library name="consumer" location="$EIFFEL_SRC\dotnet\consumer\consumer.ecf" readonly="false"/>
+		<library name="dotnet_helper" location="$EIFFEL_SRC\dotnet\helpers\support\dotnet_helper.ecf" readonly="false"/>
+		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
+		<cluster name="root_cluster" location="$EIFFEL_SRC\dotnet\eac_browser\root\" recursive="true"/>
+		<cluster name="src" location="$EIFFEL_SRC\dotnet\eac_browser\src\" recursive="true">
+			<file_rule>
+				<exclude>/assembly_informations_com$</exclude>
+			</file_rule>
+		</cluster>
+		<cluster name="tri_structures" location="$EIFFEL_SRC\Eiffel\eiffel\structures\" recursive="true"/>
+	</target>
+</system>

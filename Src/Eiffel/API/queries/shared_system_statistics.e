@@ -12,11 +12,11 @@ class
 
 feature {NONE} -- Shared system's statistics
 
-	statistics: SYSTEM_STATISTICS is
+	Statistics: SYSTEM_STATISTICS is
 			-- Statistics of the Eiffel System
-		do
+		once
 			create Result.make
-		end;	
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

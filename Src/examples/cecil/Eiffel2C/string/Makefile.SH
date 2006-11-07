@@ -14,15 +14,14 @@ $spitshell >Makefile <<!GROK!THIS!
 ########################################################################
 # Makefile generated from Makefile.SH on $DATE
 MAKE = make
-INCLUDE_PATH = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
+INCLUDE_PATH = $rt_include
 DELDIR = $rm -rf
 LN = $ln
 RM = $rm -f
 CP = $cp
 SHELL = /bin/sh
-FINISH_FREEZING = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/finish_freezing
 CFLAGS = $ccflags $large
-EC = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/ec
+EC = ec$rt_version
 ECF = cecil.ecf
 TARGET = classic
 EIFLIB = EIFGENs/\$(TARGET)/W_code/libcecil.a 

@@ -9,9 +9,9 @@ safe_md $INSTALL_DIR/studio/spec/unix
 safe_md $INSTALL_DIR/studio/spec/unix/bin
 safe_md $INSTALL_DIR/studio/spec/unix/include
 safe_md $INSTALL_DIR/studio/spec/unix/lib
-safe_md $INSTALL_DIR/build/spec
-safe_md $INSTALL_DIR/build/spec/unix
-safe_md $INSTALL_DIR/build/spec/unix/bin
+safe_md $INSTALL_DIR/esbuilder/spec
+safe_md $INSTALL_DIR/esbuilder/spec/unix
+safe_md $INSTALL_DIR/esbuilder/spec/unix/bin
 
 remtrace Recompile Vision2 Tour
 cd $EIFFEL_SRC
@@ -41,15 +41,15 @@ cd $EIFFEL_SRC/build/Constants
 cd $EIFFEL_SRC/build
 remtrace Enterprise Build
 clean_project
-finalize build.ecf build
-tgz_ccode build build.tar.bz2
-if [ ! -f build.tar.bz2 ]; then
+finalize esbuilder.ecf esbuilder
+tgz_ccode esbuilder esbuilder.tar.bz2
+if [ ! -f esbuilder.tar.bz2 ]; then
 	echo Could not finalize a new EiffelBuild
 	CANCEL
 fi
 clean_project
-safe_md $EXPORT_DIR/build
-move build.tar.bz2 $EXPORT_DIR/build
+safe_md $EXPORT_DIR/esbuilder
+move esbuilder.tar.bz2 $EXPORT_DIR/esbuilder
 
 if [ ! "$NO_NEW_EC" ]; then
 	remtrace Recompile EiffelStudio

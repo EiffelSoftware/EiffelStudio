@@ -37,7 +37,7 @@
 							<Merge Id="ec" Language="1033" src="MSMs\ec_gpl.msm" DiskId="1" />
 						<?endif?>
 						<Merge Id="eiffel_com" Language="1033" src="MSMs\eiffel_com.msm" DiskId="1" />
-						<Merge Id="build" Language="1033" src="MSMs\build.msm" DiskId="1" />
+						<Merge Id="esbuilder" Language="1033" src="MSMs\esbuilder.msm" DiskId="1" />
 						<Merge Id="base_libraries" Language="1033" src="MSMs\base_libraries.msm" DiskId="1" />
 						<Merge Id="borland" Language="1033" src="MSMs\borland.msm" DiskId="1" />
 						<Merge Id="c_library" Language="1033" src="MSMs\c_library.msm" DiskId="1" />
@@ -69,7 +69,7 @@
 				<ComponentRef Id="PROJECTDIR" />
 			</Feature>
 			<Feature Id="EiffelBuild" Title="EiffelBuild" TypicalDefault="install" Level="3" Display="hidden">
-				<MergeRef Id="build" />
+				<MergeRef Id="esbuilder" />
 			</Feature>
 
 			<Feature Id="Libraries" Title="Eiffel Libraries" TypicalDefault="install" Level="3" Display="hidden">

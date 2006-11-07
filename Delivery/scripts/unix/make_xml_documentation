@@ -2,7 +2,7 @@
 
 remtrace Checkout up to date version of XML documentation files
 cd $DOCUMENT_DIR
-exprt $DEFAULT_ORIGO_SVN/Delivery/xmldoc xmldoc
+exprt $DEFAULT_ORIGO_SVN/Documentation/xmldoc xmldoc
 
 remtrace Checkout and compile the Documentation tool
 cd $EIFFEL_SRC

@@ -2,7 +2,7 @@
 1            ICON    DISCARDABLE     "build.ico"
 
 // It should be 
-// CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "build.exe.manifest"
+// CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "esbuilder.exe.manifest"
 // but on older version of VC or older version of the Platform SDK they
 // are not defined.
-1 24 "build.exe.manifest"
+1 24 "esbuilder.exe.manifest"

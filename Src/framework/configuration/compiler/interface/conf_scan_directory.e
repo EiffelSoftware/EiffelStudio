@@ -42,12 +42,12 @@ feature -- Processing
 			create l_dir.make (l_path)
 
 			if not l_dir.is_readable then
-				add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.target.system.file_name))
+				add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
 			else
 					-- look for classes in directory itself.
 				l_files := l_dir.filenames
 				if l_files = Void then
-					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.target.system.file_name))
+					add_and_raise_error (create {CONF_ERROR_DIR}.make (l_path, a_cluster.location.original_path + a_path, a_cluster.target.system.file_name))
 				else
 					from
 						i := l_files.lower

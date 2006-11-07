@@ -16,13 +16,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dir: STRING; a_config: STRING) is
+	make (a_dir, a_orig_dir: STRING; a_config: STRING) is
 			-- Create.
 		require
 			a_dir_not_void: a_dir /= Void
+			a_orig_dir_not_void: a_orig_dir /= Void
 			a_config_not_void: a_config /= Void
 		do
-			text := "Directory open error: "+a_dir+"%NConfiguration: "+a_config
+			text := "Directory open error: "+a_dir+"%N"+a_orig_dir+"%NConfiguration: "+a_config
 		end
 
 

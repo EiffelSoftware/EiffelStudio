@@ -112,6 +112,7 @@ feature -- Visit nodes
 					l_ferr ?= l_load.last_error
 					if l_ferr /= Void then
 						l_ferr.set_config (a_library.target.system.file_name)
+						l_ferr.set_original_file (a_library.location.original_path)
 					end
 					add_and_raise_error (l_load.last_error)
 				end

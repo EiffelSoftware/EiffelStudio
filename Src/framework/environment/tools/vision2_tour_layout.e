@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 
-	application_name: STRING is "vision2_tour";
+	application_name: STRING is "vision2_demo";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

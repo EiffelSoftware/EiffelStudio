@@ -32,7 +32,7 @@ call build.btm gdiplus
 call build.btm gobo
 call build.btm graphical_libraries
 call build.btm studio_core
-call build.btm vision2_tour
+call build.btm vision2_demo
 call build.btm build
 
 remtrace EiffelStudio Enterprise

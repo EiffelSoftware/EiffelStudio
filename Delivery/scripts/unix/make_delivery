@@ -83,8 +83,8 @@ fullrf studio/wizards/new_projects/wel.dsc
 
 remtrace build
 exprt $DEFAULT_ORIGO_SVN/Delivery/build build 
-remtrace vision2_tour
-exprt $DEFAULT_ORIGO_SVN/Delivery/vision2_tour vision2_tour 
+remtrace vision2_demo
+exprt $DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo 
 remtrace precomp
 safe_md $INSTALL_DIR/precomp
 safe_md $INSTALL_DIR/precomp/spec

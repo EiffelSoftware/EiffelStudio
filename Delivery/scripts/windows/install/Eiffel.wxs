@@ -46,7 +46,7 @@
 						<Merge Id="gdiplus" Language="1033" src="MSMs\gdiplus.msm" DiskId="1" />
 						<Merge Id="graphical_libraries" Language="1033" src="MSMs\graphical_libraries.msm" DiskId="1" />
 						<Merge Id="studio_core" Language="1033" src="MSMs\studio_core.msm" DiskId="1" />
-						<Merge Id="vision2_tour" Language="1033" src="MSMs\vision2_tour.msm" DiskId="1" />
+						<Merge Id="vision2_demo" Language="1033" src="MSMs\vision2_demo.msm" DiskId="1" />
 					</Directory>
 
 				</Directory>
@@ -99,8 +99,8 @@
 				<MergeRef Id="gobo" />
 			</Feature>
 
-			<Feature Id="vision2_tour" Title="EiffelVision2 Tour" TypicalDefault="install" Level="3" Display="hidden">
-				<MergeRef Id="vision2_tour" />
+			<Feature Id="vision2_demo" Title="EiffelVision2 Tour" TypicalDefault="install" Level="3" Display="hidden">
+				<MergeRef Id="vision2_demo" />
 			</Feature>
 
 			<Feature Id="Borland" Title="Borland" TypicalDefault="install" Display="hidden" Level="3" >

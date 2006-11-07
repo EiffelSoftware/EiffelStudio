@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="vision2_tour" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="6.0">
+	<Module Id="vision2_demo" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="6.0">
 		<Package Id="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Keywords="MergeModule, MSI, Database" Description="Vision2Tour" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="ProgramMenuFolder" Name=".">
@@ -18,8 +18,8 @@
 				</Directory>
 			</Directory>
 			<Directory Id="Application" Name=".">
-				<Directory Id="vision2_tour" Name="VISION~1" LongName="vision2_tour">
-					<Component Id="vision2_tour" Guid="0E8DAE43-1031-414A-A9CE-7EC5C95BFDE4">
+				<Directory Id="vision2_demo" Name="VISION~1" LongName="vision2_demo">
+					<Component Id="vision2_demo" Guid="0E8DAE43-1031-414A-A9CE-7EC5C95BFDE4">
 						<File Id="readme.html" Name="README~1.HTM" LongName="readme.html" KeyPath="yes" />
 					</Component>
 					<Directory Id="flatshort" Name="FLATSH~1" LongName="flatshort">
@@ -496,8 +496,8 @@
 									<File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
 								</Component>
 								<Component Id="VISION1.EXE" Guid="ED8D2B15-007F-4611-9E13-4C5201289287">
-									<File Id="vision2_tour.exe" Name="VISION~1.EXE" LongName="vision2_tour.exe" KeyPath="yes">
-										<Shortcut Id="vision2_tour.exe" Directory="Documentation" Name="EIFFEL~1" LongName="EiffelVision2 Demo" Description="EiffelVision2 overview presentation" Hotkey="0" Show="normal" />
+									<File Id="vision2_demo.exe" Name="VISION~1.EXE" LongName="vision2_demo.exe" KeyPath="yes">
+										<Shortcut Id="vision2_demo.exe" Directory="Documentation" Name="EIFFEL~1" LongName="EiffelVision2 Demo" Description="EiffelVision2 overview presentation" Hotkey="0" Show="normal" />
 									</File>
 								</Component>
 							</Directory>

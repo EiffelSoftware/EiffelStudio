@@ -252,6 +252,7 @@ feature {NONE} -- Implementation
 			has_heavy_capture := other_imp.has_heavy_capture
 			help_enabled := other_imp.help_enabled
 			id := other_imp.id
+			internal_current_push_button := other_imp.internal_current_push_button
 			internal_default_push_button := other_imp.internal_default_push_button
 			internal_default_cancel_button := other_imp.internal_default_cancel_button
 			internal_height := other_imp.internal_height

@@ -9,7 +9,7 @@ if [ ! "$ISE_EIFFEL" ]; then
 fi
 if [ ! "$ISE_PLATFORM" ]; then
 	echo The environment variable ISE_PLATFORM should be set to one of these values, depending on your platform:
-	echo linux-glibc2.1, linux-glibc, sgi, sgi-64, solaris, solaris-2.5+, alpha or unixware.
+	echo linux-x86, linux-x86-64 irix-mips, irix-mips-64, solaris-sparc, solaris-sparc-64, solaris-x86, ...
 	ERROR_ENV=TRUE
 fi
 if [ "ERROR_ENV" = "TRUE" ]; then

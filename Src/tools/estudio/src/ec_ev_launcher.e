@@ -38,7 +38,7 @@ feature {NONE} -- Creation
 
 	make is
 		local
-			l_layout: ESTUDIO_EIFFEL_LAYOUT
+			l_layout: EC_EIFFEL_LAYOUT
 		do
 			create l_layout
 				-- the user can define some variables on the command line so we do the check after we have handled this

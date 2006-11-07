@@ -241,8 +241,8 @@ create_test: "echo %"finished%" >> finished"
 
 -- Layout variables
 
-rt_include: "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include"
-rt_lib: "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib"
-rt_templates: "$ISE_EIFFEL/studio/config/$ISE_PLATFORM/templates"
-x2c: "$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/x2c"
+rt_include: "$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\include"
+rt_lib: "$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib"
+rt_templates: "$ISE_EIFFEL\studio\config\$ISE_PLATFORM\templates"
+x2c: "$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\x2c.exe"
 

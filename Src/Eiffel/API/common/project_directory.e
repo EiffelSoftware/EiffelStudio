@@ -420,8 +420,6 @@ feature -- Locking
 
 	create_lock_file is
 			-- Create `lock_file_name'.
-		require
-			not_is_lock_file_present: not is_lock_file_present
 		local
 			l_file: PLAIN_TEXT_FILE
 			retried: BOOLEAN

@@ -1,9 +1,27 @@
 #!/bin/sh
 arg=none
 
+# default values for unix layout, so that no environment variables need to be set
+if [ -z "$ISE_PREFIX" ]; then
+	ISE_PREFIX=/usr/local
+	export ISE_PREFIX
+fi
+if [ -z "$ISE_VERSION" ]; then
+	ISE_VERSION=6.0
+	export ISE_VERSION
+fi
+if [ -z "$ISE_PLATFORM" ]; then
+	ISE_PLATFORM=unix
+	export ISE_PLATFORM
+fi
+
 #Check if ISE_LIBRARY is defined, if not we use ISE_EIFFEL.
 if [ -z "$ISE_LIBRARY" ]; then
-	ISE_LIBRARY=$ISE_EIFFEL
+	if [ -n "$ISE_EIFFEL" ]; then
+		ISE_LIBRARY=$ISE_EIFFEL
+	else
+		ISE_LIBRARY=$ISE_PREFIX/lib/eiffel$ISE_VERSION
+	fi
 	export ISE_LIBRARY
 fi
 
@@ -47,13 +65,21 @@ fi
 
 if [ "$arg" != "-library" ]; then
 	echo "Preparing C compilation ..."
-	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/quick_finalize . o
+	if [ -n "$ISE_EIFFEL" ]; then
+		$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/quick_finalize . o
+	else
+		$ISE_PREFIX/lib/eiffel$ISE_VERSION/ec/quick_finalize . o
+	fi
 else
 	echo "Generating C libraries ..."
 fi
 
 if [ ! -f config.sh ]; then
-	cp $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include/config.sh .
+	if [ -n "$ISE_EIFFEL" ]; then
+		cp $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include/config.sh .
+	else
+		cp $ISE_PREFIX/include/eiffel$ISE_VERSION/config.sh .
+	fi
 fi
 sh Makefile.SH
 

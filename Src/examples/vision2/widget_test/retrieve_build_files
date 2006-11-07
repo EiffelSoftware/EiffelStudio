@@ -11,13 +11,13 @@ fi
 svn co $svntag/Src/build Src/build
 
 # Check out bitmaps from Build delivery
-svn co $svntag/Delivery/build/bitmaps Delivery/build/bitmaps
+svn co $svntag/Delivery/esbuilder/bitmaps Delivery/esbuilder/bitmaps
 
 # Check out files from vision2_tour
-svn co $svntag/Delivery/vision2_tour Delivery/vision2_tour
+svn co $svntag/Delivery/vision2_demo Delivery/vision2_demo
 
 # Copy template files
-cp -r Delivery/vision2_tour/templates ./
+cp -r Delivery/vision2_demo/templates ./
 
 
 # Copy constants and eiffel environment to interface.
@@ -31,16 +31,16 @@ cp ./Src/build/utilities/gb_color_stone.e ./interface/
 
 
 # Copy icons for different widget types across.
-cp -r Delivery/build/bitmaps ./
+cp -r Delivery/esbuilder/bitmaps ./
 
 # Copy icons for standard buttons.
-cp Delivery/vision2_tour/bitmaps/png/documentation.png ./bitmaps/png/
-cp Delivery/vision2_tour/bitmaps/png/testing.png ./bitmaps/png/
-cp Delivery/vision2_tour/bitmaps/png/properties.png ./bitmaps/png/
-cp Delivery/vision2_tour/bitmaps/png/size_down.png ./bitmaps/png/
-cp Delivery/vision2_tour/bitmaps/png/size_up.png ./bitmaps/png/
-cp Delivery/vision2_tour/bitmaps/png/image1.png ./bitmaps/png/
-cp Delivery/vision2_tour/bitmaps/png/image2.png ./bitmaps/png/
+cp Delivery/vision2_demo/bitmaps/png/documentation.png ./bitmaps/png/
+cp Delivery/vision2_demo/bitmaps/png/testing.png ./bitmaps/png/
+cp Delivery/vision2_demo/bitmaps/png/properties.png ./bitmaps/png/
+cp Delivery/vision2_demo/bitmaps/png/size_down.png ./bitmaps/png/
+cp Delivery/vision2_demo/bitmaps/png/size_up.png ./bitmaps/png/
+cp Delivery/vision2_demo/bitmaps/png/image1.png ./bitmaps/png/
+cp Delivery/vision2_demo/bitmaps/png/image2.png ./bitmaps/png/
 
 
 # Copy any required dialogs

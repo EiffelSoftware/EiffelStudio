@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		do
 			l_text := text
 			check
-				l_text.count > 2
+				l_text.count >= 2
 			end
 			l_feat_name := l_text
 			l_feat_name := l_text.substring (2, l_text.count - 1)
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 		do
 			l_text := text
 			check
-				l_text.count > 2
+				l_text.count >= 2
 			end
 			if l_text.item (l_text.count) = '}' then
 				l_class_name := l_text.substring (2, l_text.count - 1)
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 		do
 			l_text := text
 			check
-				l_text.count > 2
+				l_text.count >= 2
 			end
 			l_cluster_name := l_text.substring (2, l_text.count - 1)
 			l_strings := l_cluster_name.split ('.')

@@ -27,7 +27,7 @@ feature -- Initialization
 			-- Creation
 		local
 			l_parser: ARGUMENT_PARSER
-			l_layout: FINISH_FREEZING_EIFFEL_LAYOUT
+			l_layout: EC_EIFFEL_LAYOUT
 		do
 			create l_layout
 			l_layout.check_environment_variable

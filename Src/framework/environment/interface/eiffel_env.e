@@ -36,7 +36,7 @@ feature -- Status update
 					io.error.put_string ("WARNING: the environment variable $"+ise_eiffel_env+" points to a non-existing directory.%N")
 				else
 						-- put it into the environment for backward compatibility
-					environment.put (temp, ise_eiffel_env)
+					environment.put (eiffel_installation_dir_name, ise_eiffel_env)
 				end
 			end
 

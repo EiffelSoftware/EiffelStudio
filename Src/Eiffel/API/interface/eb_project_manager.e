@@ -122,6 +122,9 @@ feature -- Basic operations
 		local
 			l_create_agents: like create_agents
 		do
+			if eiffel_project.project_directory.is_lock_file_present then
+				-- Handle error
+			end
 			eiffel_project.project_directory.create_lock_file
 			is_created := True
 			from

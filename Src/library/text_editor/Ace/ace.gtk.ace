@@ -7,15 +7,15 @@ root
 
 default
 	assertion (all);
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision");
---	precompiled ("$EIFFEL_SRC/precomp/spec/$PLATFORM/base");
+--	precompiled ("$ISE_PRECOMP/vision");
+--	precompiled ("$ISE_PRECOMP/base");
 
 -- If you are not using the precompiled version of EiffelVision, 
 -- uncomment the `external' clause below. 
 
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL_SRC/library/text_editor";
+	ROOT_CLUSTER: 		"$ISE_LIBRARY/library/text_editor";
 
 
 --		-- EiffelBase
@@ -26,7 +26,7 @@ cluster
 --		end
 -- EiffelBase:
 
-        base:                           "$EIFFEL4/library/base";
+        base:                           "$ISE_LIBRARY/library/base";
 	structures(base):               "$/structures";
 
 	kernel(base):           	"$/kernel";
@@ -62,7 +62,7 @@ cluster
 -- EiffelVision
 
 	-- Interface
-        vision:                 			"$EIFFEL_SRC/library/vision2";
+        vision:                 			"$ISE_LIBRARY/library/vision2";
 	vision_kernel (vision):        			"$/interface/kernel";
 	vision_support (vision):       			"$/interface/support";
 	vision_properties (vision):			"$/interface/properties";
@@ -105,7 +105,7 @@ cluster
     	vision_gtk_uncommon_widgets (vision_gtk_widgets): 	"$/uncommon_widgets";
 
 --	all vision_ii_components (vision):	"$/components";
-	vision_ii_components:	"$EIFFEL_SRC/library/vision2/components";
+	vision_ii_components:	"$ISE_LIBRARY/library/vision2/components";
 	vision_ii_components_histories (vision_ii_components):	"$/histories";
 	vision_ii_components_text_editor (vision_ii_components):	"$/text_editor";
 
@@ -113,11 +113,11 @@ cluster
 external
 
 	include_path:
- 		"$EIFFEL_SRC/library/vision2/implementation/gtk/Clib", "`gtk-config --cflags`",
+ 		"$ISE_LIBRARY/library/vision2/implementation/gtk/Clib", "`gtk-config --cflags`",
 		"$GOBO/library/kernel/include";
         object:
- 		"$(EIFFEL_SRC)/library/vision2/implementation/gtk/spec/$(PLATFORM)/gtk_eiffel.o",
- 		"$(EIFFEL_SRC)/library/vision2/implementation/gtk/spec/$(PLATFORM)/gtk_ev_text.o",
+ 		"$(ISE_LIBRARY)/library/vision2/implementation/gtk/spec/$(ISE_PLATFORM)/gtk_eiffel.o",
+ 		"$(ISE_LIBRARY)/library/vision2/implementation/gtk/spec/$(ISE_PLATFORM)/gtk_ev_text.o",
 		"`gtk-config --libs`"
 
 end

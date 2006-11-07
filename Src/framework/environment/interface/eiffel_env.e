@@ -128,6 +128,9 @@ feature -- Status report
 			"EIF_IS_WORKBENCH"
 		end
 
+	is_unix_layout: BOOLEAN
+			-- Is eiffelstudio installed in the unix layout?
+
 feature -- Version
 
 	Major_version: NATURAL_16 is 6
@@ -306,6 +309,22 @@ feature -- Access: Environment variables
 		end
 
 feature -- Access: file name
+
+	Eiffel_installation_dir_name: DIRECTORY_NAME is
+			-- Installation of ISE Eiffel name.
+		require
+			not_unix_layout: not is_unix_layout
+		local
+			l_name: STRING
+		once
+			l_name := get_environment (ise_eiffel_env)
+			if is_workbench and then (create {DIRECTORY}.make (l_name + "_wkbench")).exists then
+				l_name.append ("_wkbench")
+			end
+			create Result.make_from_string (l_name)
+		ensure
+			result_not_void_or_empty: is_valid_environment implies Result /= Void and not Result.is_empty
+		end
 
 	Eiffel_library: DIRECTORY_NAME is
 			-- ISE_LIBRARY name.
@@ -663,6 +682,20 @@ feature -- Access: file name
 		once
 			create Result.make
 			Result.set_directory ("tmp")
+		ensure
+			Result_ok: Result /= Void and then not Result.is_empty
+		end
+
+	borland_directory: DIRECTORY_NAME is
+			-- Location of the borland directory
+		require
+			has_borland: has_borland
+			not_unix_layout: not is_unix_layout
+		once
+			create Result.make_from_string (eiffel_installation_dir_name)
+			Result.extend ("BCC55")
+		ensure
+			Result_ok: Result /= Void and then not Result.is_empty
 		end
 
 feature -- Access: command name
@@ -969,22 +1002,6 @@ feature -- Constants
 
 feature {NONE} -- Implementation
 
-	Eiffel_installation_dir_name: DIRECTORY_NAME is
-			-- Installation of ISE Eiffel name.
-		require
-			not_unix_layout: not is_unix_layout
-		local
-			l_name: STRING
-		once
-			l_name := get_environment (ise_eiffel_env)
-			if is_workbench and then (create {DIRECTORY}.make (l_name + "_wkbench")).exists then
-				l_name.append ("_wkbench")
-			end
-			create Result.make_from_string (l_name)
-		ensure
-			result_not_void_or_empty: is_valid_environment implies Result /= Void and not Result.is_empty
-		end
-
 	Studio_path: DIRECTORY_NAME is
 			-- Location of studio
 		require
@@ -1033,9 +1050,6 @@ feature {NONE} -- Environment access
 		end
 
 feature {NONE} -- Configuration of layout
-
-	is_unix_layout: BOOLEAN
-			-- Is eiffelstudio installed in the unix layout?
 
 	unix_layout_base_path: DIRECTORY_NAME
 			-- Base for the unix layout. e.g. "/usr" or "/usr/local"

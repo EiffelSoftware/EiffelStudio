@@ -18,8 +18,8 @@ SHELL = /bin/sh
 AR = ar rc
 CC = $cc
 CTAGS = ctags
-CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include -I\$(EIFFEL_SRC)/C/run-time/include
-MTCFLAGS = $optimize $mtccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include -I\$(EIFFEL_SRC)/C/run-time/include
+CFLAGS = $optimize $ccflags $large -I$rt_include -I\$(EIFFEL_SRC)/C/run-time/include
+MTCFLAGS = $optimize $mtccflags $large -I$rt_include -I\$(EIFFEL_SRC)/C/run-time/include
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
 LN = $ln
@@ -29,6 +29,7 @@ RANLIB = $ranlib
 MKDIR = $mkdir -p
 MV = $mv
 RM = $rm -f
+PLATFORM = $ISE_PLATFORM
 ########################################################################
 # Automatically generated parameters -- do not edit
 
@@ -43,8 +44,8 @@ NET_LIBS = libnet.a libmtnet.a libnet.so libmtnet.so
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 all: $(NET_LIBS)
-	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
-	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
+	$(MKDIR) ../spec/$(PLATFORM)/lib
+	$(MV) $? ../spec/$(PLATFORM)/lib
 	$(MAKE) clobber
 
 SMODE = local.c network.c network_r.c storable.c

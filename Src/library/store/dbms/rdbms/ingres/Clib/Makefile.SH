@@ -14,7 +14,7 @@ $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
 AR = ar rc
-CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
+CFLAGS = $optimize $ccflags $large -I$rt_include
 LDFLAGS = $ldflags
 LIBS = $libs
 MAKE = $make
@@ -22,6 +22,7 @@ MKDEP = $mkdep \$(DPFLAGS) --
 MV = $mv
 RANLIB = $ranlib
 RM = $rm -f
+PLATFORM = $ISE_PLATFORM
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
@@ -31,11 +32,11 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 OBJECTS = ingres.o
 
 libingres_store.a: $(OBJECTS)
-	mkdir -p ../../../../spec/$(ISE_PLATFORM)/lib
+	mkdir -p ../../../../spec/$(PLATFORM)/lib
 	$(RM) $@
 	$(AR) $@ $(OBJECTS)
-	$(MV) $@ ../../../../spec/$(ISE_PLATFORM)/lib
-	$(RANLIB) ../../../../spec/$(ISE_PLATFORM)/lib/$@
+	$(MV) $@ ../../../../spec/$(PLATFORM)/lib
+	$(RANLIB) ../../../../spec/$(PLATFORM)/lib/$@
 	$(MAKE) clean
 
 ingres.c:   ingres.sc   ingres.h

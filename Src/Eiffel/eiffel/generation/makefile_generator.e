@@ -244,9 +244,9 @@ feature -- Generate Dynamic Library
 			-- Generate "E1/egc_dynlib.o"
 			make_file.put_string ("%N")
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string ("/egc_dynlib.o: Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
+			make_file.put_string ("/egc_dynlib.o: Makefile $(EIFTEMPLATES)/templates/")
 			make_file.put_string (egc_dynlib_file)
-			make_file.put_string ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
+			make_file.put_string ("%N%T$(CP) $(EIFTEMPLATES)/")
 			make_file.put_string (egc_dynlib_file)
 			make_file.put_string (" ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
@@ -540,7 +540,8 @@ feature -- Generation, Header
 			end
 
 			generate_specific_defines
-			make_file.put_string ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
+			make_file.put_string ("-I$rt_include ")
+			make_file.put_string ("-I. %H$(INCLUDE_PATH)%N")
 
 			if System.in_final_mode then
 				make_file.put_string ("CPPFLAGS = $optimize ")
@@ -563,7 +564,9 @@ feature -- Generation, Header
 			end
 
 			generate_specific_defines
-			make_file.put_string ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
+
+			make_file.put_string ("-I$rt_include ")
+			make_file.put_string ("-I. %H$(INCLUDE_PATH)%N")
 
 			make_file.put_string ("LDFLAGS = $ldflags%N")
 
@@ -585,6 +588,9 @@ feature -- Generation, Header
 			make_file.put_string ("%NEIFLIB = ")
 			make_file.put_string (run_time)
 
+			make_file.put_string ("%NEIFTEMPLATES = ")
+			make_file.put_string ("$rt_templates")
+
 			if System.has_multithreaded then
 				make_file.put_string ("%NLIBS = $mtlibs")
 			else
@@ -602,7 +608,7 @@ feature -- Generation, Header
 				%FILE_EXIST = $file_exist%N%
 				%RMDIR = $rmdir%N")
 
-			make_file.put_string ("X2C = \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/bin/x2c%N")
+			make_file.put_string ("X2C = $x2c%N")
 			make_file.put_string ("SHAREDLINK = $sharedlink%N")
 			make_file.put_string ("SHAREDLIBS = $sharedlibs%N")
 			make_file.put_string ("SHARED_SUFFIX = $shared_suffix%N")
@@ -1045,9 +1051,9 @@ feature -- Generation (Linking rules)
 			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/emain.o: Makefile ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string ("/Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
+			make_file.put_string ("/Makefile $(EIFTEMPLATES)/")
 			make_file.put_string (emain_file)
-			make_file.put_string ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
+			make_file.put_string ("%N%T$(CP) $(EIFTEMPLATES)/")
 			make_file.put_string (emain_file)
 			make_file.put_character (' ')
 			make_file.put_string (packet_name (system_object_prefix, 1))
@@ -1240,7 +1246,7 @@ feature {NONE} -- Constants
 			-- Location of run-time library files.
 		once
 			if System.uses_ise_gc_runtime then
-				Result := "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/"
+				Result := "$rt_lib/"
 			else
 				Result := "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib-"
 				Result.append (System.external_runtime)

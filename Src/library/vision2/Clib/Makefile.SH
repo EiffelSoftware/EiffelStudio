@@ -18,7 +18,7 @@ SHELL = /bin/sh
 AR = ar rc
 CC = $cc
 CTAGS = ctags
-INCLUDE = -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include -I../spec/include -I../../../C_library/libpng -I../../../C_library/zlib
+INCLUDE = -I$rt_include -I../spec/include -I../../../C_library/libpng -I../../../C_library/zlib
 CFLAGS = $optimize $ccflags $large -g \$(INCLUDE)
 MTCFLAGS = $optimize $mtccflags $large -g \$(INCLUDE)
 SHAREDLINK = $sharedlink
@@ -30,6 +30,7 @@ RANLIB = $ranlib
 RM = $rm -f
 MV = $mv
 MKDIR = $mkdir -p
+PLATFORM = $ISE_PLATFORM
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -44,8 +45,8 @@ OBJECTS = load_pixmap.o
 ALL_OBJECTS = $(OBJECTS) $(MT_OBJECTS)
 
 all: $(ALL_OBJECTS)
-	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
-	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
+	$(MKDIR) ../spec/$(PLATFORM)/lib
+	$(MV) $? ../spec/$(PLATFORM)/lib
 	$(MAKE) clobber
 
 MTload_pixmap.o: load_pixmap.c

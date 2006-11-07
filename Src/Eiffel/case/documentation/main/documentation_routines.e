@@ -156,6 +156,7 @@ feature -- Access
 			subs: DS_ARRAYED_LIST [CONF_CLUSTER]
 			l_name: STRING
 			l_cluster: CONF_CLUSTER
+			l_library: CONF_LIBRARY
 			l_group_type: STRING
 		do
 			l_group_type := type_of_group (group)
@@ -186,21 +187,30 @@ feature -- Access
 			a_text_formatter.process_symbol_text (ti_colon)
 			a_text_formatter.process_basic_text (ti_space)
 			a_text_formatter.process_string_text (ti_double_quote, Void)
-			if group.description /= Void then
+			if group.is_library then
+				l_library ?= group
+				check l_library /= Void end
+				if l_library.library_target.description /= Void then
+					a_text_formatter.add_indexing_string (l_library.library_target.description)
+				elseif group.description /= Void then
+					a_text_formatter.add_indexing_string (group.description)
+				end
+			elseif group.description /= Void then
 				a_text_formatter.add_indexing_string (group.description)
 			end
 			a_text_formatter.process_string_text (ti_double_quote, Void)
 			a_text_formatter.process_new_line
-			a_text_formatter.add_indent
-			a_text_formatter.process_basic_text ("copyright")
-			a_text_formatter.process_symbol_text (ti_colon)
-			a_text_formatter.process_basic_text (ti_space)
-			a_text_formatter.process_string_text (ti_double_quote, Void)
 			if group.target.version /= Void and then group.target.version.copyright /= Void then
+				a_text_formatter.add_indent
+				a_text_formatter.process_basic_text ("copyright")
+				a_text_formatter.process_symbol_text (ti_colon)
+				a_text_formatter.process_basic_text (ti_space)
+				a_text_formatter.process_string_text (ti_double_quote, Void)
 				a_text_formatter.add_indexing_string (group.target.version.copyright)
+				a_text_formatter.process_string_text (ti_double_quote, Void)
+				a_text_formatter.process_new_line
 			end
-			a_text_formatter.process_string_text (ti_double_quote, Void)
-			a_text_formatter.process_new_line
+
 			a_text_formatter.process_new_line
 
 			if group.is_cluster then
@@ -253,7 +263,7 @@ feature -- Access
 			a_text_formatter.process_filter_item (f_menu_bar, false)
 			class_c.append_header (a_text_formatter)
 			a_text_formatter.add_new_line
-			append_general_info (a_text_formatter, class_c.lace_class)
+			append_general_info (a_text_formatter, class_c.original_class)
 			append_class_ancestors (a_text_formatter, class_c)
 			create queries.make
 			create commands.make
@@ -702,13 +712,23 @@ feature {NONE} -- Indexing clauses
 		local
 			content, t: STRING
 			exc: like excluded_indexing_items
+			l_library: CONF_LIBRARY
+			l_description: STRING
 		do
 			create Result.make (20)
 			exc := excluded_indexing_items
 
-			if a_group.description /= Void then
+			if a_group.is_library then
+				l_library ?= a_group
+				check l_library /= Void end
+				l_description := l_library.library_target.description
+			end
+			if l_description = Void then
+				l_description := a_group.description
+			end
+			if l_description /= Void then
 				t := "description"
-				content := a_group.description
+				content := l_description
 				content.replace_substring_all ("%%N", " ")
 				content.prune_all ('%%')
 				content.prune_all ('"')

@@ -104,7 +104,7 @@ feature -- Miscellaneous
 			if parents /= Void and then not parents.is_empty then
 				create class_list.make
 				from parents.start until parents.after loop
-					class_list.extend (parents.item.associated_class.lace_class)
+					class_list.extend (parents.item.associated_class.original_class)
 					parents.forth
 				end
 				text.process_keyword_text ("Ancestors", Void)
@@ -152,7 +152,7 @@ feature -- Miscellaneous
 			if suppliers /= Void and then not suppliers.is_empty then
 				create class_list.make
 				from suppliers.start until suppliers.after loop
-					class_list.extend (suppliers.item.supplier.lace_class)
+					class_list.extend (suppliers.item.supplier.original_class)
 					suppliers.forth
 				end
 				text.process_keyword_text ("Suppliers", Void)
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			from l.start until l.after loop
-				Result.extend (l.item.lace_class)
+				Result.extend (l.item.original_class)
 				l.forth
 			end
 		end

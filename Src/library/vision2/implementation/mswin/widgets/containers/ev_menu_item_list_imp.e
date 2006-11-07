@@ -510,7 +510,7 @@ feature {EV_ANY_I, EV_POPUP_MENU_HANDLER} -- Implementation
 			-- Will not alter state of radio_menu_items.
 		do
 				-- Remove item at `pos' - 1 from `Current'
-			delete_position (pos - 1)
+			remove_position (pos - 1)
 
 				-- Insert item at `pos' - 1.
 			quick_insert_item (an_item, pos)

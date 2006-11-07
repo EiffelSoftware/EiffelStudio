@@ -165,6 +165,11 @@ eunicefix=':'
 spitshell='cat'
 
 #Compiler/Preprocessor
+rt_version=''
+rt_include=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include
+rt_lib=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib
+rt_templates=$ISE_EIFFEL/studio/config/$ISE_PLATFORM/templates
+x2c=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/x2c
 add_log='undef'
 cpp_stuff='42'
 defvoidused='15'

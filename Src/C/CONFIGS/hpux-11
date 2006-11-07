@@ -161,6 +161,22 @@ binexp='/usr/local/bin'
 installbin='/usr/local/bin'
 bitpbyte='8'
 byteorder='4321'
+if [ -n "$ISE_VERSION" ]; then
+	rt_version=$ISE_VERSION
+else
+	rt_version=''
+fi
+if [ -n "$ISE_EIFFEL" ]; then
+	rt_include=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/include
+	rt_lib=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/lib
+	rt_templates=$ISE_EIFFEL/studio/config/$ISE_PLATFORM/templates
+	x2c=$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/x2c
+else
+	rt_include=$ISE_PREFIX/include/eiffel$rt_version
+	rt_lib=$ISE_PREFIX/lib/eiffel$rt_version
+	rt_templates=$ISE_PREFIX/share/eiffel$rt_version/ec/config/$ISE_PLATFORM/templates
+	x2c=$ISE_PREFIX/lib/eiffel$rt_version/ec/x2c
+fi
 if [ -n "$CC" ]; then
 	cc=$CC
 else

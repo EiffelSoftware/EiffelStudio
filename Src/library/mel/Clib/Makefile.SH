@@ -13,8 +13,8 @@ echo "Extracting "."/Makefile (with variable substitutions)"
 $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC= $cc
-CFLAGS = $optimize $ccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
-MTCFLAGS = $optimize $mtccflags $large -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
+CFLAGS = $optimize $ccflags $large -I$rt_include
+MTCFLAGS = $optimize $mtccflags $large -I$rt_include
 LDFLAGS = $ldflags
 DEFINES= 
 LIBS = $libs
@@ -28,14 +28,14 @@ RM = $rm -f
 SHAREDLINK= $sharedlink
 LDSHAREDFLAGS= $ldsharedflags
 MEL_LIBS = libMel.a libmtMel.a libMel.so libmtMel.so
-
+PLATFORM = $ISE_PLATFORM
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 all: $(MEL_LIBS)
-	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
-	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
+	$(MKDIR) ../spec/$(PLATFORM)/lib
+	$(MV) $? ../spec/$(PLATFORM)/lib
 	$(MAKE) clobber
 
 #libMel.a

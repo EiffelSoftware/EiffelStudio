@@ -15,24 +15,24 @@ safe_md $INSTALL_DIR/build/spec/unix/bin
 
 remtrace Recompile Vision2 Tour
 cd $EIFFEL_SRC
-exprt $DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_tour
-cd $EIFFEL_SRC/vision2_tour
-safe_md $EXPORT_DIR/vision2_tour
+exprt $DEFAULT_ORIGO_SVN/Src/examples/vision2/widget_test vision2_demo
+cd $EIFFEL_SRC/vision2_demo
+safe_md $EXPORT_DIR/vision2_demo
 . retrieve_build_files $DEFAULT_ORIGO_SVN >> $INSTALL_LOG 2>&1
 . retrieve_flat_short >> $INSTALL_LOG 2>&1
-cd $EIFFEL_SRC/vision2_tour
+cd $EIFFEL_SRC/vision2_demo
 clean_project
-finalize vision2_tour.ecf vision2_tour
-tgz_ccode vision2_tour vision2_tour.tar.bz2
-if [ ! -f vision2_tour.tar.bz2 ]; then
+finalize vision2_demo.ecf vision2_demo
+tgz_ccode vision2_demo vision2_demo.tar.bz2
+if [ ! -f vision2_demo.tar.bz2 ]; then
 	echo Could not finalize a new Vision2 tour
 	CANCEL
 fi
 clean_project
-move $EIFFEL_SRC/vision2_tour/flatshort $INSTALL_DIR/vision2_tour
-move $EIFFEL_SRC/vision2_tour/tests $INSTALL_DIR/vision2_tour
-move $EIFFEL_SRC/vision2_tour/bitmaps/png/*.png $INSTALL_DIR/vision2_tour/bitmaps/png
-move vision2_tour.tar.bz2 $EXPORT_DIR/vision2_tour
+move $EIFFEL_SRC/vision2_demo/flatshort $INSTALL_DIR/vision2_demo
+move $EIFFEL_SRC/vision2_demo/tests $INSTALL_DIR/vision2_demo
+move $EIFFEL_SRC/vision2_demo/bitmaps/png/*.png $INSTALL_DIR/vision2_demo/bitmaps/png
+move vision2_demo.tar.bz2 $EXPORT_DIR/vision2_demo
 
 
 remtrace Recompile EiffelBuild

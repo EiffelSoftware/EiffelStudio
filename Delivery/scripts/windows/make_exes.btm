@@ -257,7 +257,7 @@ call make_build.btm
 
 remtrace Recompiling Vision2 tour
 cdd %INIT_DIR
-call make_vision2_tour.btm
+call make_vision2_demo.btm
 
 remtrace Recompile Legacy++
 cdd %EIFFEL_SRC\tools\legacy\PCCTS

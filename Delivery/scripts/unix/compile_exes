@@ -175,13 +175,13 @@ untgz_ccode build
 cp build $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/
 bzip2 build
 
-remtrace Vision2_tour
-cd $EXPORT_DIR/vision2_tour
-safe_md $INSTALL_DIR/vision2_tour/spec
-safe_md $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM
-safe_md $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM/bin
-untgz_ccode vision2_tour
-move vision2_tour $INSTALL_DIR/vision2_tour/spec/$ISE_PLATFORM/bin
+remtrace Vision2_demo
+cd $EXPORT_DIR/vision2_demo
+safe_md $INSTALL_DIR/vision2_demo/spec
+safe_md $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM
+safe_md $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM/bin
+untgz_ccode vision2_demo
+move vision2_demo $INSTALL_DIR/vision2_demo/spec/$ISE_PLATFORM/bin
 
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Recompile CD key validator

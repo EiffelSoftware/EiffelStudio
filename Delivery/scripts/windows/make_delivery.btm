@@ -82,7 +82,7 @@ cdd %INSTALL_DIR
 remtrace build
 exprt %DEFAULT_ORIGO_SVN/Delivery/build build
 remtrace vision2 tour
-exprt %DEFAULT_ORIGO_SVN/Delivery/vision2_tour vision2_tour
+exprt %DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo
 remtrace .NET libraries
 exprt %DEFAULT_ORIGO_SVN/Src/library.net library.net
 remtrace examples
@@ -158,9 +158,9 @@ safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 safe_md %INSTALL_DIR\build\spec
 safe_md %INSTALL_DIR\build\spec\%ISE_PLATFORM
 safe_md %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin
-safe_md %INSTALL_DIR\vision2_tour\spec
-safe_md %INSTALL_DIR\vision2_tour\spec\%ISE_PLATFORM
-safe_md %INSTALL_DIR\vision2_tour\spec\%ISE_PLATFORM\bin
+safe_md %INSTALL_DIR\vision2_demo\spec
+safe_md %INSTALL_DIR\vision2_demo\spec\%ISE_PLATFORM
+safe_md %INSTALL_DIR\vision2_demo\spec\%ISE_PLATFORM\bin
 safe_md %INSTALL_DIR\wizards
 safe_md %INSTALL_DIR\wizards\com
 safe_md %INSTALL_DIR\wizards\com\config
@@ -203,7 +203,7 @@ iff not defined NO_COMPILE then
 	call update_libraries.btm
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin\
-	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\vision2_tour\spec\%ISE_PLATFORM\bin\
+	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\vision2_demo\spec\%ISE_PLATFORM\bin\
 	cdd %INIT_DIR
 	give_time_to update libraries
 

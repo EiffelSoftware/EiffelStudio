@@ -94,7 +94,8 @@ feature -- Status setting
 			user_environment_variables.force (value, key)
 			return_code := 0
 		ensure
-			variable_set: (return_code = 0) implies (value.is_equal (get (key)))
+			variable_set: (return_code = 0) implies
+				(equal (value, get (key)) or else (value.is_empty and then (get (key) = Void)))
 		end
 
 	system (s: STRING) is

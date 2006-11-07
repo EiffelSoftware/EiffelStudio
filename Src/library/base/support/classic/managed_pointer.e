@@ -440,7 +440,7 @@ feature -- Element change: Platform specific
 		end
 
 	put_character (c: CHARACTER; pos: INTEGER) is
-			-- Insert `' at position `pos'.
+			-- Insert `c' at position `pos'.
 		require
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + Character_bytes) <= count

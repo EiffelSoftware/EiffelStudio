@@ -14,7 +14,7 @@ inherit
 
 feature -- Access
 
-	application_name: STRING is "build";
+	application_name: STRING is "esbuilder";
 			-- Name of current application
 
 indexing

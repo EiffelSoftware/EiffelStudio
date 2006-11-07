@@ -25,19 +25,21 @@ feature {NONE} -- Initialization
 			file := a_file
 		end
 
-	make_with_config (a_file, a_config: STRING) is
+	make_with_config (a_file, a_orig_file, a_config: STRING) is
 			-- Create.
 		require
 			a_file_not_void: a_file /= Void
+			a_orig_file_not_void: a_orig_file /= Void
 			a_config_not_void: a_config /= Void
 		do
 			file := a_file
+			orig_file := a_orig_file
 			config := a_config
 		end
 
 feature -- Access
 
-	file: STRING
+	orig_file, file: STRING
 			-- File that could not be opened.
 
 	config: STRING
@@ -50,6 +52,9 @@ feature -- Access
 				file_not_void: file /= Void
 			end
 			Result := "Could not open file: "+file
+			if orig_file /= Void then
+				Result.append ("%N"+orig_file)
+			end
 			if config /= Void then
 				Result.append ("%NConfiguration: "+config)
 			end
@@ -64,6 +69,17 @@ feature -- Update
 		do
 			config := a_config
 		end
+
+	set_original_file (a_file: like orig_file) is
+			-- Set `orig_file' to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+		do
+			orig_file := a_file
+		ensure
+			orig_file_set: orig_file = a_file
+		end
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

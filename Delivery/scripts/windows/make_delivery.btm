@@ -79,8 +79,8 @@ fullrd studio\spec\unix
 cdd %INSTALL_DIR\studio\config
 if not "windows"=="%ISE_PLATFORM" move windows %ISE_PLATFORM
 cdd %INSTALL_DIR
-remtrace build
-exprt %DEFAULT_ORIGO_SVN/Delivery/build build
+remtrace esbuilder
+exprt %DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder
 remtrace vision2 tour
 exprt %DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo
 remtrace .NET libraries
@@ -155,9 +155,9 @@ remtrace Create directories
 safe_md %INSTALL_DIR\studio\spec
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
-safe_md %INSTALL_DIR\build\spec
-safe_md %INSTALL_DIR\build\spec\%ISE_PLATFORM
-safe_md %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin
+safe_md %INSTALL_DIR\esbuilder\spec
+safe_md %INSTALL_DIR\esbuilder\spec\%ISE_PLATFORM
+safe_md %INSTALL_DIR\esbuilder\spec\%ISE_PLATFORM\bin
 safe_md %INSTALL_DIR\vision2_demo\spec
 safe_md %INSTALL_DIR\vision2_demo\spec\%ISE_PLATFORM
 safe_md %INSTALL_DIR\vision2_demo\spec\%ISE_PLATFORM\bin
@@ -202,7 +202,7 @@ iff not defined NO_COMPILE then
 	cdd %INIT_DIR
 	call update_libraries.btm
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
-	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin\
+	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\esbuilder\spec\%ISE_PLATFORM\bin\
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\vision2_demo\spec\%ISE_PLATFORM\bin\
 	cdd %INIT_DIR
 	give_time_to update libraries

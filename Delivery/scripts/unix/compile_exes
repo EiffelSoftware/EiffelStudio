@@ -168,12 +168,12 @@ cd $INSTALL_DIR
 
 
 
-remtrace Build
-move $INSTALL_DIR/build/spec/unix $INSTALL_DIR/build/spec/$ISE_PLATFORM
-cd $EXPORT_DIR/build
-untgz_ccode build
-cp build $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/
-bzip2 build
+remtrace Esbuilder
+move $INSTALL_DIR/esbuilder/spec/unix $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM
+cd $EXPORT_DIR/esbuilder
+untgz_ccode esbuilder
+cp esbuilder $INSTALL_DIR/esbuilder/spec/$ISE_PLATFORM/bin/
+bzip2 esbuilder
 
 remtrace Vision2_demo
 cd $EXPORT_DIR/vision2_demo

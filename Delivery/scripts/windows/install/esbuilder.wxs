@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="build" Guid="925B6F83-D534-4335-A8D1-D030B4DA753E" Language="0" Version="6.0">
+	<Module Id="esbuilder" Guid="925B6F83-D534-4335-A8D1-D030B4DA753E" Language="0" Version="6.0">
 		<Package Id="925B6F83-D534-4335-A8D1-D030B4DA753E" Keywords="MergeModule, MSI, Database" Description="EiffelBuild" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" />
 		<IgnoreModularization Name="PROJECTDIR" Type="Property" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
@@ -13,7 +13,7 @@
 				</Directory>
 			</Directory>
 			<Directory Id="Application" Name=".">
-				<Directory Id="build" Name="build">
+				<Directory Id="esbuilder" Name="esbuilder">
 					<Directory Id="pixmaps" Name="pixmaps">
 						<Component Id="pixmaps" Guid="5BC02BCD-CDF4-40A3-990B-83FF41BB4B55">
 							<File Id="eiffel_wizard_icon.png" Name="EIFFEL~2.PNG" LongName="eiffel_wizard_icon.png" KeyPath="yes" />
@@ -157,14 +157,14 @@
 					<Directory Id="spec" Name="spec">
 						<Directory Id="windows_dir" Name="$(env.ISE_PLATFORM)">
 							<Directory Id="bin" Name="bin">
-								<Component Id="build.exe" Guid="B3A0FDED-6F1D-4C86-A3E5-F9F145373FED">
-									<File Id="build.exe" Name="build.exe" >
-										<Shortcut Id="build.exe" Directory="EiffelStudio" Name="build.exe" LongName="EiffelBuild" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
+								<Component Id="esbuilder.exe" Guid="B3A0FDED-6F1D-4C86-A3E5-F9F145373FED">
+									<File Id="esbuilder.exe" Name="esbuilder.exe" >
+										<Shortcut Id="esbuilder.exe" Directory="EiffelStudio" Name="esbuilder.exe" LongName="EiffelBuild" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
 									</File>
-									<ProgId Id="build.project" Description="EiffelBuild project" Icon="[#build.exe]" IconIndex="0" >
+									<ProgId Id="build.project" Description="EiffelBuild project" Icon="[#esbuilder.exe]" IconIndex="0" >
 										<Extension Id="bpr">
 											<MIME ContentType="text/xml" />
-											<Verb Id="bpr" Argument="&quot;%1&quot;" Command="Open" Target="&quot;[#build.exe]&quot;" />
+											<Verb Id="bpr" Argument="&quot;%1&quot;" Command="Open" Target="&quot;[#esbuilder.exe]&quot;" />
 										</Extension>
 									</ProgId>
 								</Component>

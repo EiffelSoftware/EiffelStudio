@@ -81,8 +81,8 @@ fullrf studio/wizards/new_projects/dotnet.dsc
 fullrf studio/wizards/new_projects/wel
 fullrf studio/wizards/new_projects/wel.dsc
 
-remtrace build
-exprt $DEFAULT_ORIGO_SVN/Delivery/build build 
+remtrace esbuilder
+exprt $DEFAULT_ORIGO_SVN/Delivery/esbuilder esbuilder 
 remtrace vision2_demo
 exprt $DEFAULT_ORIGO_SVN/Delivery/vision2_demo vision2_demo 
 remtrace precomp

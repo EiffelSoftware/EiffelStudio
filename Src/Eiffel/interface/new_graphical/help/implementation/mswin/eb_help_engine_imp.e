@@ -72,7 +72,8 @@ feature {NONE} -- Implementation
 	Url_prefix: STRING is
 			-- URL prefix for $EiffelGraphicalCompiler$ help files
 		once
-			Result := eiffel_layout.Eiffel_installation_dir_name + "\docs\eiffel.chm::"
+			Result := eiffel_layout.docs_path.string
+			Result.append ("\eiffel.chm::")
 		end
 
 indexing

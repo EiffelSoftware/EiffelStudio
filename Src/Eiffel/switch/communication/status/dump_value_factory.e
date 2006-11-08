@@ -43,8 +43,8 @@ feature -- Access
 			init_value (Result)
 		end
 
-	new_wide_character_value (value: WIDE_CHARACTER; dtype: CLASS_C): DUMP_VALUE_BASIC is
-			-- make a wide_character item initialized to `value'
+	new_character_32_value (value: CHARACTER_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
+			-- make a character_32 item initialized to `value'
 		do
 			create Result.make_empty
 			Result.set_character_32_value (value, dtype)
@@ -107,8 +107,8 @@ feature -- Access
 			init_value (Result)
 		end
 
-	new_double_value (value: DOUBLE; dtype: CLASS_C): DUMP_VALUE_BASIC is
-			-- make a double item initialized to `value'
+	new_real_64_value (value: REAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
+			-- make a real_64 item initialized to `value'
 		do
 			create Result.make_empty
 			Result.set_real_64_value (value, dtype)

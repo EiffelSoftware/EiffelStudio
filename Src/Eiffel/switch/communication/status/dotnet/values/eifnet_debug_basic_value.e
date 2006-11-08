@@ -10,7 +10,7 @@ class
 	EIFNET_DEBUG_BASIC_VALUE [G]
 
 inherit
-	DEBUG_VALUE [G]
+	DEBUG_BASIC_VALUE [G]
 		rename
 			make as dv_make
 		redefine
@@ -41,7 +41,7 @@ feature -- Access : Redefinition of dump_value
 			-- Dump_value corresponding to `Current'.
 			-- (from ABSTRACT_DEBUG_VALUE)
 		do
-			Result := Precursor {DEBUG_VALUE}
+			Result := Precursor {DEBUG_BASIC_VALUE}
 			if Result /= Void then
 				Result.set_icd_value_dotnet (icd_referenced_value)
 			end

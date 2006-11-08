@@ -538,9 +538,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_attributes_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			l_attributes_item: ABSTRACT_DEBUG_VALUE
 			cv_spec: SPECIAL_VALUE
-			int_value: DEBUG_VALUE [INTEGER]
+			int_value: DEBUG_BASIC_VALUE [INTEGER]
 			area_attribute: SPECIAL_VALUE
-			count_attribute: DEBUG_VALUE [INTEGER]
+			count_attribute: DEBUG_BASIC_VALUE [INTEGER]
 			l_count: INTEGER
 			sc, sc8, sc32: CLASS_C
 			done: BOOLEAN

@@ -41,9 +41,9 @@
 #include "eif_portable.h"
 #ifdef EIF_WINDOWS
 #include <stdlib.h>
-#endif	/* EIF_WINDOWS */
-#ifdef EIF_WINDOWS
 #include <windows.h> /* DLL declarations */
+#else
+#include <sys/types.h>
 #endif
 
 #ifdef __cplusplus

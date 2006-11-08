@@ -107,6 +107,11 @@ feature {NONE} -- Implementation
 				l_lib := conf_factory.new_library ("wel", l_file_loc, l_target)
 				l_target.add_library (l_lib)
 			end
+			if not l_libs.has ("time") then
+				l_file_loc := conf_factory.new_location_from_full_path ("$ISE_LIBRARY\library\time\time.ecf", l_target)
+				l_lib := conf_factory.new_library ("time", l_file_loc, l_target)
+				l_target.add_library (l_lib)
+			end
 			if not l_libs.has ("com") then
 				l_file_loc := conf_factory.new_location_from_full_path ("$ISE_LIBRARY\library\com\com.ecf", l_target)
 				l_lib := conf_factory.new_library ("com", l_file_loc, l_target)

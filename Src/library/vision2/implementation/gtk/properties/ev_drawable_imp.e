@@ -567,20 +567,50 @@ feature -- Drawing operations
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
 		local
 			pixmap_imp: EV_PIXMAP_IMP
+			l_src_rect, l_dest_rect, l_src_intersection_rect, l_dest_intersection_rect: EV_RECTANGLE
+			l_x, l_y, l_src_x, l_src_y, l_src_width, l_src_height: INTEGER
 		do
 			if drawable /= default_pointer then
-				pixmap_imp ?= a_pixmap.implementation
-				if pixmap_imp.mask /= default_pointer then
-					{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
-					{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, x - x_src, y - y_src)
-				end
-				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (drawable, gc,
-					pixmap_imp.drawable,
-					x_src, y_src, x, y, src_width, src_height)
-				update_if_needed
-				if pixmap_imp.mask /= default_pointer then
-					{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, default_pointer)
-					{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
+
+					-- Optimize source rectangle.
+				create l_dest_rect.make (0, 0, a_pixmap.width, a_pixmap.height)
+				create l_src_rect.make (x_src, y_src, src_width, src_height)
+				l_src_intersection_rect := l_src_rect.intersection (l_dest_rect)
+
+				if l_src_intersection_rect.width > 0 and then l_src_intersection_rect.height > 0 then
+					l_dest_rect.move_and_resize (0, 0, width, height)
+					l_src_rect.move_and_resize (
+						x_src,
+						y_src,
+						src_width,
+						src_height
+					)
+					l_dest_intersection_rect := l_src_rect.intersection (l_dest_rect)
+					if l_dest_intersection_rect.width > 0 and then l_dest_intersection_rect.height > 0 then
+						l_dest_rect := l_src_intersection_rect.intersection (l_dest_intersection_rect)
+						if l_dest_rect.width > 0 and then l_dest_rect.height > 0 then
+							l_x := x - x_src.min (0)
+							l_y := y - y_src.min (0)
+							l_src_x := l_src_intersection_rect.x
+							l_src_y := l_src_intersection_rect.y
+							l_src_width := l_dest_intersection_rect.width
+							l_src_height := l_dest_intersection_rect.height
+
+							pixmap_imp ?= a_pixmap.implementation
+							if pixmap_imp.mask /= default_pointer then
+								{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
+								{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, l_x, l_y)
+							end
+							{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (drawable, gc,
+								pixmap_imp.drawable,
+								l_src_x, l_src_y, l_x, l_y, l_src_width, l_src_height)
+							update_if_needed
+							if pixmap_imp.mask /= default_pointer then
+								{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, default_pointer)
+								{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
+							end
+						end
+					end
 				end
 			end
 		end

@@ -244,7 +244,7 @@ feature -- Generate Dynamic Library
 			-- Generate "E1/egc_dynlib.o"
 			make_file.put_string ("%N")
 			make_file.put_string (packet_name (system_object_prefix, 1))
-			make_file.put_string ("/egc_dynlib.o: Makefile $(EIFTEMPLATES)/templates/")
+			make_file.put_string ("/egc_dynlib.o: Makefile $(EIFTEMPLATES)/")
 			make_file.put_string (egc_dynlib_file)
 			make_file.put_string ("%N%T$(CP) $(EIFTEMPLATES)/")
 			make_file.put_string (egc_dynlib_file)

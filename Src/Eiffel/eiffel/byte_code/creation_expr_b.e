@@ -255,7 +255,7 @@ feature -- Generation
 				l_special_type ?= context.creation_type (type)
 				check
 					is_special_type: l_special_type /= Void and then
-						l_special_type.base_class.lace_class = system.special_class
+						l_special_type.base_class.original_class = system.special_class
 				end
 				l_class_type ?= l_special_type.associated_class_type
 				check

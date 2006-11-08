@@ -5,7 +5,7 @@ indexing
 -- same final name. Those features are divided into the sublists:
 -- the deferred features and the non-deferred features.
 
-class INHERIT_FEAT 
+class INHERIT_FEAT
 
 inherit
 	PREDEFINED_NAMES
@@ -28,8 +28,8 @@ inherit
 
 create
 	make
-	
-feature 
+
+feature
 
 	deferred_features: LINKED_LIST [INHERIT_INFO]
 			-- List of deferred inherited features informations
@@ -243,7 +243,7 @@ feature
 						alias_name_id := feature_i.alias_name_id
 						if
 							alias_name_id /= 0 and then is_semi_strict_id (alias_name_id) and then
-							system.current_class.lace_class /= system.boolean_class
+							system.current_class.original_class /= system.boolean_class
 						then
 								-- Semistrict operator alias in a class other than BOOLEAN
 							error_handler.insert_error (create {VFAV4_VHPR}.make (system.current_class, feature_i, next.parent.parent))
@@ -523,7 +523,7 @@ feature
 					export_status := info.a_feature.export_status
 				end
 				Result := Result.concatenation (export_status)
-				deferred_features.forth	
+				deferred_features.forth
 			end
 		end
 

@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 					if class_i /= Void then
 						last_was_error := flatshort_dotnet_text (consumed_type, class_i, editor.text_displayed)
 					elseif associated_class /= Void then
-						last_was_error := flatshort_dotnet_text (consumed_type, associated_class.lace_class, editor.text_displayed)
+						last_was_error := flatshort_dotnet_text (consumed_type, associated_class.original_class, editor.text_displayed)
 					end
 					editor.handle_after_processing
 				end

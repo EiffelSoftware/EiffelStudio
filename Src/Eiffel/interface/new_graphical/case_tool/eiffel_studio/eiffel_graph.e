@@ -587,7 +587,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			l := a_class.class_i.compiled_class.parents
 			if l /= Void then
 				from l.start until l.after loop
-					cl := l.item.associated_class.lace_class
+					cl := l.item.associated_class.original_class
 					if cl /= Void then
 						es_classes := possible_linkable_node (a_class)
 						from
@@ -628,7 +628,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 			l := a_class.class_i.compiled_class.descendants
 			if l /= Void then
 				from l.start until l.after loop
-					cl := l.item.lace_class
+					cl := l.item.original_class
 					if cl /= Void then
 						es_classes := possible_linkable_node (a_class)
 						from

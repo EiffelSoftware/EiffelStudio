@@ -72,7 +72,7 @@ feature -- Access
 				create internal_tokens.make (0)
 				if feature_item.is_il_external then
 						-- For .NET external features
-					l_classi := feature_item.associated_class.lace_class
+					l_classi := feature_item.associated_class.original_class
 					if consumed_types.has (l_classi.name) then
 						l_consumed_type := consumed_types.item (l_classi.name)
 					else

@@ -140,7 +140,7 @@ feature {NONE} -- Execution
 			-- (Do nothing by default).
 		require
 			valid_e_class: e_class /= Void;
-			want_compiled_class: want_compiled_class (e_class.lace_class)
+			want_compiled_class: want_compiled_class (e_class.original_class)
 		do
 		end;
 

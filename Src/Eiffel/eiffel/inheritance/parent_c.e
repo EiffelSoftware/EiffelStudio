@@ -223,7 +223,7 @@ feature
 										-- Ensure the alias name is in binary form.
 									names_heap.put (infix_feature_name_with_symbol (alias_name))
 									local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
-									if is_semi_strict_id (names_heap.found_item) and then system.current_class.lace_class /= system.boolean_class then
+									if is_semi_strict_id (names_heap.found_item) and then system.current_class.original_class /= system.boolean_class then
 											-- Semi-strick operators cannot appear in classes other than BOOLEAN
 										create {VFAV4_VHRC} vfav
 									end

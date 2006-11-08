@@ -112,7 +112,7 @@ feature -- Status setting
 	set_class (a_class: CLASS_C) is
 			-- Associate `Current' with `a_class'.
 		do
-			set_classi (a_class.lace_class)
+			set_classi (a_class.original_class)
 		end
 
 	set_stone (new_stone: CLASSI_STONE) is

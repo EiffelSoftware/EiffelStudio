@@ -430,7 +430,7 @@ feature -- Access: file name
 			is_valid_environment: is_valid_environment
 		once
 			Result := shared_path.twin
-				-- Patrickr, 11/01/06 hack for backwarts compatibility, the application is ec but
+				-- Patrickr, 11/01/06 hack for backwards compatibility, the application is ec but
 				-- the directory is studio
 			if not is_unix_layout and application_name.is_equal ("ec") then
 				Result.extend (short_studio_name)
@@ -445,7 +445,7 @@ feature -- Access: file name
 			is_valid_environment: is_valid_environment
 		once
 			Result := lib_path.twin
-				-- Patrickr, 11/01/06 hack for backwarts compatibility, the application is ec but
+				-- Patrickr, 11/01/06 hack for backwards compatibility, the application is ec but
 				-- the directory is studio
 			if not is_unix_layout and application_name.is_equal ("ec") then
 				Result.extend (short_studio_name)

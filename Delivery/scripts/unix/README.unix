@@ -1,0 +1,36 @@
+Instructions to build a delivery with a Unix layout
+---------------------------------------------------
+
+Motivation
+----------
+-consistent file layout
+-no environment setup needed
+-multiple versions can be installed and used at the same time
+
+Before building
+---------------
+The class EIFFEL_ENV in $EIFFEL_SRC/framework/environment/interface/eiffel_env.e
+allows to adjust the installation path (default /usr/local) and some other settings 
+(e.g. name of the lib dir).
+
+Building
+--------
+A normal build should be created, e.g. with make_all
+
+After building
+--------------
+To get a delivery in the unix layout, use the make_unix_layout script
+
+make_unix_layout platform version source destination
+
+e.g. under Delivery/scripts/unix where a linux-x86-64 delivery has been generated
+
+./make_unix_layout linux-x86-64 6.0 PorterPackage/Eiffel60 unix_layout
+
+will generate a delivery in the unix_layout directory.
+
+After this, the top of the finish_freezing script may need to be adjusted, it can be found under
+unix_layout/bin/finish_freezing6.0 at the top there are the values for the installation base path
+(/usr/local) and the version (6.0)
+
+At the end, the precompiles should be built using the freshly built delivery.

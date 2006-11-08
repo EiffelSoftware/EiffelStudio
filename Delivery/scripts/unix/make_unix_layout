@@ -1,0 +1,97 @@
+#!/bin/sh
+
+if [ $# -eq 0 ]; then 
+	echo Usage: make_unix_layout platform version source destination
+	exit 1
+fi
+
+export ISE_PLATFORM=$1
+
+# Set up the environment
+. set_aliases
+
+VERSION=$2
+SRC_DIR=$3
+DST_DIR=$4
+
+# some helper variables
+PRODUCT=eiffel$VERSION
+UNIX_PLATFORM=unix
+INCLUDE_DIR=$DST_DIR/include/$PRODUCT
+LIB_DIR=$DST_DIR/lib/$PRODUCT
+SHARE_DIR=$DST_DIR/share/$PRODUCT
+DOC_DIR=$DST_DIR/share/doc/$PRODUCT
+SRC_BIN_DIR=$SRC_DIR/studio/spec/$ISE_PLATFORM/bin
+
+# Create basic directory layout
+fullrd $DST_DIR
+safe_md $DST_DIR
+safe_md $DST_DIR/bin
+
+safe_md $DST_DIR/lib
+safe_md $LIB_DIR
+safe_md $LIB_DIR/ec
+
+safe_md $DST_DIR/include
+safe_md $INCLUDE_DIR
+
+safe_md $DST_DIR/share
+safe_md $DST_DIR/share/doc
+safe_md $DOC_DIR 
+safe_md $SHARE_DIR
+
+# Copy runtime
+copy $SRC_DIR/studio/spec/$ISE_PLATFORM/include/* $INCLUDE_DIR
+copy $SRC_DIR/studio/spec/$ISE_PLATFORM/lib/* $LIB_DIR
+
+# Copy library
+copy $SRC_DIR/library $LIB_DIR
+copy $SRC_DIR/precomp $LIB_DIR
+move $LIB_DIR/precomp/spec/$ISE_PLATFORM $LIB_DIR/precomp/spec/$UNIX_PLATFORM
+
+# Copy documentation
+copy $SRC_DIR/VERSION $DOC_DIR
+copy $SRC_DIR/INSTALL.readme $DOC_DIR
+copy $SRC_DIR/examples $DOC_DIR
+copy $SRC_DIR/docs $DOC_DIR
+
+# Copy esbuilder
+copy $SRC_DIR/esbuilder/spec/$ISE_PLATFORM/bin/esbuilder $DST_DIR/bin/esbuilder$VERSION
+copy $SRC_DIR/esbuilder $SHARE_DIR
+fullrd $SHARE_DIR/esbuilder/spec
+
+# Copy vision2_demo
+copy $SRC_DIR/vision2_demo/spec/$ISE_PLATFORM/bin/vision2_demo $DST_DIR/bin/vision2_demo$VERSION
+copy $SRC_DIR/vision2_demo $SHARE_DIR
+copy $SRC_DIR/vision2_demo/readme.html $DOC_DIR/readme-vision2_demo.html
+fullrd $SHARE_DIR/vision2_demo/spec
+fullrf $SHARE_DIR/vision2_demo/readme.htlm
+
+# Copy internal binaries
+copy $SRC_BIN_DIR/ecdbgd $LIB_DIR/ec
+copy $SRC_BIN_DIR/prelink $LIB_DIR/ec
+copy $SRC_BIN_DIR/quick_finalize $LIB_DIR/ec
+copy $SRC_BIN_DIR/x2c $LIB_DIR/ec
+
+# Copy main binaries
+copy $SRC_BIN_DIR/ec $DST_DIR/bin/ec$VERSION
+copy $SRC_BIN_DIR/estudio $DST_DIR/bin/estudio$VERSION
+copy $SRC_BIN_DIR/finish_freezing $DST_DIR/bin/finish_freezing$VERSION
+
+# Copy wizards
+copy $SRC_DIR/studio/wizards $LIB_DIR/ec
+move $LIB_DIR/ec/wizards/new_projects/vision2/spec/$ISE_PLATFORM $LIB_DIR/ec/wizards/new_projects/vision2/spec/unix
+move $LIB_DIR/ec/wizards/others/precompile/spec/$ISE_PLATFORM $LIB_DIR/ec/wizards/others/precompile/spec/unix
+
+# Copy studio
+copy $SRC_DIR/studio $SHARE_DIR/ec
+fullrd $SHARE_DIR/ec/spec
+
+# Create symlinks
+cd $DST_DIR/bin
+ln -s ec$VERSION ec
+ln -s estudio$VERSION estudio
+ln -s finish_freezing$VERSION finish_freezing
+ln -s esbuilder$VERSION esbuilder
+ln -s vision2_demo$VERSION vision2_demo
+

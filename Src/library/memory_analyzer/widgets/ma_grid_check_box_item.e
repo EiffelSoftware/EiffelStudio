@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 	figure_start_x: INTEGER is
 			-- The start x position of the figure.
 		do
-			Result := (width - check_figure_size - margin_width).max (tree_line_margin_width)
+			Result := ((width - check_figure_size) // 2 - margin_width).max (tree_line_margin_width)
 		end
 
 	figure_start_y: INTEGER is

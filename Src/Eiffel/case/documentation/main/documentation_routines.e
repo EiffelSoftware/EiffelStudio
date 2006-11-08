@@ -190,7 +190,7 @@ feature -- Access
 			if group.is_library then
 				l_library ?= group
 				check l_library /= Void end
-				if l_library.library_target.description /= Void then
+				if l_library.classes_set and then l_library.library_target.description /= Void then
 					a_text_formatter.add_indexing_string (l_library.library_target.description)
 				elseif group.description /= Void then
 					a_text_formatter.add_indexing_string (group.description)
@@ -721,7 +721,9 @@ feature {NONE} -- Indexing clauses
 			if a_group.is_library then
 				l_library ?= a_group
 				check l_library /= Void end
-				l_description := l_library.library_target.description
+				if l_library.classes_set then
+					l_description := l_library.library_target.description
+				end
 			end
 			if l_description = Void then
 				l_description := a_group.description

@@ -7043,9 +7043,33 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 
 	equals_rout_id: INTEGER is
 			-- Routine ID of `equals' of SYSTEM_OBJECT.
+		local
+			c: CLASS_C
+			l: LIST [FEATURE_I]
+			f: FEATURE_I
 		once
-			Result := System.system_object_class.compiled_class.feature_table.
-				item_id ({PREDEFINED_NAMES}.equals_name_id).rout_id_set.first
+			c := System.system_object_class.compiled_class
+			l := c.feature_table.overloaded_items (names_heap.item ({PREDEFINED_NAMES}.equals_name_id))
+			check
+				l_attached: l /= Void
+			end
+			from
+				l.start
+			until
+				l.after
+			loop
+				f := l.item
+				if
+					not f.has_static_access and then
+					f.argument_count = 1 and then
+					f.arguments.first.same_as (c.actual_type)
+				then
+						-- "public virtual bool Equals (System.Object)" is found
+					l.finish
+				end
+				l.forth
+			end
+			Result := f.rout_id_set.first
 		ensure
 			equals_rout_id_positive: Result > 0
 		end

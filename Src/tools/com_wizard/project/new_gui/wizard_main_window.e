@@ -486,7 +486,6 @@ feature {NONE} -- Implementation
 			l_success := not a_folder.is_empty
 			if l_success then
 				create Result.make_success (feature {WIZARD_VALIDITY_STATUS_IDS}.Destination_folder)
-				output_box.disable_eiffelstudio_button
 				environment.set_destination_folder (a_folder)
 			else
 				create Result.make_error (feature {WIZARD_VALIDITY_STATUS_IDS}.Destination_folder)

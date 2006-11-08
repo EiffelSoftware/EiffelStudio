@@ -77,13 +77,6 @@ feature -- Element Settings
 			destination_folder_set: destination_folder = a_destination_folder
 		end
 
-	disable_eiffelstudio_button is
-			-- Disable EiffelStudio open button
-			-- Need to do this if destination folder changed but new project hasn't been compiled
-		do
-			open_eiffelstudio_button.disable_sensitive
-		end
-
 	enable_generate_button is
 			-- Enable sensitivity on `generate' button.
 		do
@@ -157,15 +150,7 @@ feature -- Basic Operations
 						stop_button.disable_sensitive
 						exit_button.enable_sensitive
 						save_button.enable_sensitive
-						if not environment.abort then
-							fixme ("progress_bar.value is off by one or two (lower than progress_bar.value_range.upper)")
-							check
-							--	step_called_correctly: not environment.abort implies (progress_bar.value = progress_bar.value_range.upper)
-							end
-							if environment.compile_eiffel then
-								open_eiffelstudio_button.enable_sensitive
-							end
-						end
+						open_eiffelstudio_button.enable_sensitive
 						destination_path_label.set_text (environment.destination_folder)
 						final_message_box.show
 						output_text.show_scroll_bars

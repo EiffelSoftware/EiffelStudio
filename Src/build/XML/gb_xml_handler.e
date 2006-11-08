@@ -107,7 +107,12 @@ feature -- Basic operations
 			check
 				component_doc_void: component_document = Void
 			end
+				-- Check to see if a user create component file is available, if not
+				-- load up the default one from the delivery.
 			create file.make (component_filename)
+			if not file.exists then
+				create file.make (default_component_filename)
+			end
 			if file.exists then
 					-- Load the existing file into `component document'
 				create parser.make
@@ -167,6 +172,11 @@ feature -- Basic operations
 				component_doc_not_void: component_document /= Void
 			end
 			create file.make (component_filename)
+			if not file.exists then
+					-- If we have not yet saved a component file then we create one.
+				file.create_read_write
+				file.close
+			end
 			from
 			until
 				file.is_writable or cancelled

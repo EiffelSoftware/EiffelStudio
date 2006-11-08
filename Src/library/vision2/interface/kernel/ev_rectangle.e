@@ -9,7 +9,7 @@ class
 	EV_RECTANGLE
 
 inherit
-	ANY
+	DEBUG_OUTPUT
 		redefine
 			out
 		end
@@ -46,19 +46,19 @@ feature -- Access
 
 	height: INTEGER
 			-- Height of `Current'.
-			
+
 	left: INTEGER is
 			-- Horizontal position of left side
 		do
 			Result := x
 		end
-		
+
 	top: INTEGER is
 			-- Vertical position of top.
 		do
 			Result := y
 		end
-		
+
 	right: INTEGER is
 			--  Horizontal position of right side.
 		do
@@ -120,7 +120,7 @@ feature -- Status report
 				c.x >= left and then
 				c.x <= right and then
 				c.y >= top and then
-				c.y <= bottom 
+				c.y <= bottom
 		end
 
 	has_x_y (a_x, a_y: INTEGER): BOOLEAN is
@@ -156,6 +156,42 @@ feature -- Status report
 					Result := top <= other.bottom
 				end
 			end
+		end
+
+	intersection (other: like Current): like Current
+			-- Intersection of `other' with `Current'.
+			-- If there is not intersection `Result' has default values.
+		require
+			other_not_void: other /= Void
+		local
+			l_top, l_bottom, l_left, l_right: INTEGER
+		do
+			create Result
+			if intersects (other) then
+				l_top := top.max (other.top)
+				l_bottom := bottom.min (other.bottom)
+				l_left := left.max (other.left)
+				l_right := right.min (other.right)
+				if l_top < 0 then
+					Result.set_top (l_top)
+					Result.set_bottom (l_bottom)
+				else
+					Result.set_bottom (l_bottom)
+					Result.set_top (l_top)
+				end
+
+				if l_left < 0 then
+					Result.set_left (l_left)
+					Result.set_right (l_right)
+				else
+					Result.set_right (l_right)
+					Result.set_left (l_left)
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_intersects_if_not_default: Result.width /= 0 or else Result.height /= 0 implies Result.intersects (other)
+			result_default_if_no_intersection: Result.width = 0 or else Result.height = 0 implies not Result.intersects (other)
 		end
 
 feature -- Element change
@@ -335,7 +371,7 @@ feature -- Element change
 
 feature -- Output
 
-	out: STRING is
+	debug_output, out: STRING is
 			-- Return readable string.
 		do
 			Result := "(X: " + x.out + ", Y: " + y.out +

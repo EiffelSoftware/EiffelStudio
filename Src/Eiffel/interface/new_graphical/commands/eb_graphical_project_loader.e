@@ -133,6 +133,7 @@ feature -- Settings
 			l_prc_launcher.set_separate_console (False)
 			l_prc_launcher.set_hidden (True)
 			create l_dialog
+			l_dialog.set_process (l_prc_launcher)
 			l_dialog.set_title ("Precompilation Progress")
 			l_prc_launcher.redirect_output_to_agent (agent l_dialog.append_in_gui_thread)
 			l_prc_launcher.redirect_error_to_same_as_output

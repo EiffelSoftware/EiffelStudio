@@ -147,7 +147,7 @@ feature -- Basic operations
 		do
 			create xml_store.make_with_components (components)
 			first_element ?= component_document.first
-			component_element := new_child_element (first_element, component_name, "Component")
+			component_element := new_child_element (first_element, component_name, "")
 			first_element.force_last (component_element)
 			new_element := create_widget_instance (component_element, an_object.type)
 			component_element.force_last (new_element)

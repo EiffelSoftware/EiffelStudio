@@ -10,7 +10,7 @@ frozen class
 
 inherit
 	SYSTEM_OBJECT
-	
+
 	REFLECTION
 
 	NAME_FORMATTER
@@ -86,7 +86,9 @@ feature -- Basic Operations
 			first_method, method: METHOD_SOLVER
 			name: STRING
 			i, param_count: INTEGER
-			is_unique, same_param_count: BOOLEAN
+			is_unique: BOOLEAN
+--			same_param_count: BOOLEAN
+			number_of_methods_with_parameters: INTEGER
 			eiffel_args: HASH_TABLE [STRING, STRING]
 		do
 			from
@@ -98,13 +100,15 @@ feature -- Basic Operations
 				method_list.start
 				first_method := method_list.item
 				param_count := first_method.arguments.count
+				number_of_methods_with_parameters := 0
 				from
 					method_list.forth
-					if method_list.after then
-						same_param_count := False
-					else
-						same_param_count := method_list.item.arguments.count = param_count and then
-							not first_method.is_conversion_operator
+					if
+						not method_list.after and then
+						not first_method.is_conversion_operator
+					then
+						number_of_methods_with_parameters := 1
+--						same_param_count := method_list.item.arguments.count = param_count
 					end
 				until
 					method_list.after
@@ -113,8 +117,9 @@ feature -- Basic Operations
 					if method.is_conversion_operator then
 						name := formatted_feature_name (method.starting_resolution_name)
 					else
-						same_param_count :=
-							same_param_count and method.arguments.count = param_count
+						number_of_methods_with_parameters := number_of_methods_with_parameters + 1
+--						same_param_count :=
+--							same_param_count and method.arguments.count = param_count
 						from
 							name := formatted_feature_name (method.starting_resolution_name)
 							is_unique := is_unique_signature (method, method_list, 0)
@@ -132,9 +137,10 @@ feature -- Basic Operations
 					method.set_eiffel_name (unique_feature_name (name))
 					method_list.forth
 				end
-				if same_param_count then
+				if number_of_methods_with_parameters > 1 then
+--				if same_param_count then
 					from
-						name := formatted_feature_name (method.starting_resolution_name)
+						name := formatted_feature_name (first_method.starting_resolution_name)
 						i := 1
 					until
 						i > param_count

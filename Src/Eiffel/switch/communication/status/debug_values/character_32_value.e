@@ -7,10 +7,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class WIDE_CHARACTER_VALUE
+class CHARACTER_32_VALUE
 
 inherit
-	DEBUG_VALUE [WIDE_CHARACTER]
+	DEBUG_BASIC_VALUE [CHARACTER_32]
 		redefine
 			append_type_and_value, append_value, type_and_value, dump_value
 		end
@@ -29,12 +29,12 @@ feature -- Access
 			-- Dump_value corresponding to `Current'.
 		local
 			val: ANY
-			cval: WIDE_CHARACTER_REF
+			cval: CHARACTER_32_REF
 		do
 			val := value
 			cval ?= val
 			if cval /= Void then
-				Result := Debugger_manager.Dump_value_factory.new_wide_character_value (cval.item, Dynamic_class)
+				Result := Debugger_manager.Dump_value_factory.new_character_32_value (cval.item, Dynamic_class)
 			end
 		end
 

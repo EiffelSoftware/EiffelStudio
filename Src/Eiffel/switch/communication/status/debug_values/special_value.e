@@ -87,7 +87,7 @@ feature -- Access
 			-- Else return Void.
 		local
 			char_value: CHARACTER_VALUE
-			wchar_value: WIDE_CHARACTER_VALUE
+			wchar_value: CHARACTER_32_VALUE
 			l_items: like children
 		do
 			l_items := children
@@ -120,10 +120,10 @@ feature -- Access
 			-- Else return Void.
 			-- Do not convert special characters to an Eiffel representation.
 		local
-			int8_value: DEBUG_VALUE [INTEGER_8]
-			int32_value: DEBUG_VALUE [INTEGER_32]
+			int8_value: DEBUG_BASIC_VALUE [INTEGER_8]
+			int32_value: DEBUG_BASIC_VALUE [INTEGER_32]
 			char_value: CHARACTER_VALUE
-			wchar_value: WIDE_CHARACTER_VALUE
+			wchar_value: CHARACTER_32_VALUE
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 			l_items: like children
 		do

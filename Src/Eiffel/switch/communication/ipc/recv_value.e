@@ -51,55 +51,55 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_nat8 (v: NATURAL_8) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [NATURAL_8]} item.make (sk_uint8, v)
+			create {DEBUG_BASIC_VALUE [NATURAL_8]} item.make (sk_uint8, v)
 		end
 
 	set_nat16 (v: NATURAL_16) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [NATURAL_16]} item.make (sk_uint16, v)
+			create {DEBUG_BASIC_VALUE [NATURAL_16]} item.make (sk_uint16, v)
 		end
 
 	set_nat32 (v: NATURAL_32) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [NATURAL_32]} item.make (sk_uint32, v)
+			create {DEBUG_BASIC_VALUE [NATURAL_32]} item.make (sk_uint32, v)
 		end
 
 	set_nat64 (v: NATURAL_64) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [NATURAL_64]} item.make (sk_uint64, v)
+			create {DEBUG_BASIC_VALUE [NATURAL_64]} item.make (sk_uint64, v)
 		end
 
 	set_int8 (v: INTEGER_8) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [INTEGER_8]} item.make (sk_int8, v)
+			create {DEBUG_BASIC_VALUE [INTEGER_8]} item.make (sk_int8, v)
 		end
 
 	set_int16 (v: INTEGER_16) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [INTEGER_16]} item.make (sk_int16, v)
+			create {DEBUG_BASIC_VALUE [INTEGER_16]} item.make (sk_int16, v)
 		end
 
 	set_int32 (v: INTEGER) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [INTEGER]} item.make (sk_int32, v)
+			create {DEBUG_BASIC_VALUE [INTEGER]} item.make (sk_int32, v)
 		end
 
 	set_int64 (v: INTEGER_64) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [INTEGER_64]} item.make (sk_int64, v)
+			create {DEBUG_BASIC_VALUE [INTEGER_64]} item.make (sk_int64, v)
 		end
 
 	set_bool (v: BOOLEAN) is
 			-- Receive a boolean value.
 		do
-			create {DEBUG_VALUE [BOOLEAN]} item.make (sk_bool, v)
+			create {DEBUG_BASIC_VALUE [BOOLEAN]} item.make (sk_bool, v)
 		end
 
 	set_char (v: CHARACTER) is
@@ -111,19 +111,19 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_wchar (v: WIDE_CHARACTER) is
 			-- Receive a character value.
 		do
-			create {WIDE_CHARACTER_VALUE} item.make (sk_wchar, v)
+			create {CHARACTER_32_VALUE} item.make (sk_wchar, v)
 		end
 
 	set_real (v: REAL) is
 			-- Receive a real value.
 		do
-			create {DEBUG_VALUE [REAL]} item.make (sk_real32 , v)
+			create {DEBUG_BASIC_VALUE [REAL]} item.make (sk_real32 , v)
 		end
 
 	set_double (v: DOUBLE) is
 			-- Receive a double value.
 		do
-			create {DEBUG_VALUE [DOUBLE]} item.make (sk_real64, v)
+			create {DEBUG_BASIC_VALUE [DOUBLE]} item.make (sk_real64, v)
 		end
 
 	set_ref (ref: POINTER; type: INTEGER) is
@@ -156,7 +156,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_point (v: POINTER) is
 			-- Receive a pointer value.
 		do
-			create {DEBUG_VALUE [POINTER]} item.make (sk_pointer ,v)
+			create {DEBUG_BASIC_VALUE [POINTER]} item.make (sk_pointer ,v)
 		end
 
 	set_bits (ref: POINTER; size: INTEGER)  is

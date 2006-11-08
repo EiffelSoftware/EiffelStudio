@@ -1029,7 +1029,7 @@ feature {NONE} -- Agent filling
 			list_cursor /= Void
 		local
 			lrow: EV_GRID_ROW
-			vitem: DEBUG_VALUE [INTEGER]
+			vitem: DEBUG_BASIC_VALUE [INTEGER]
 			grid: EV_GRID
 			ag_ct_id: INTEGER
 			ag_fe_id: INTEGER

@@ -365,7 +365,7 @@ feature {NONE} -- EXPR_B evaluation
 					if l_cl = Void then
 						l_cl := System.Character_32_class.compiled_class
 					end
-					tmp_result_value := d_fact.new_wide_character_value (l_char.character_value, l_cl)
+					tmp_result_value := d_fact.new_character_32_value (l_char.character_value, l_cl)
 				else
 					if l_cl = Void then
 						l_cl := System.Character_8_class.compiled_class
@@ -383,7 +383,7 @@ feature {NONE} -- EXPR_B evaluation
 				if l_cl = Void then
 					l_cl := System.real_64_class.compiled_class
 				end
-				tmp_result_value := d_fact.new_double_value (l_real.real_32_value, l_cl)
+				tmp_result_value := d_fact.new_real_64_value (l_real.real_32_value, l_cl)
 			elseif a_value_i.is_bit then
 				l_bit ?= a_value_i
 				if l_cl = Void then

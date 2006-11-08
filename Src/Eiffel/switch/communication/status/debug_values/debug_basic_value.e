@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	DEBUG_VALUE [G]
+	DEBUG_BASIC_VALUE [G]
 
 inherit
 	ABSTRACT_DEBUG_VALUE
@@ -119,13 +119,13 @@ feature -- Access
 				Result := d_fact.new_character_value (cval.item, Dynamic_class)
 			when sk_wchar   then
 				wcval ?= value
-				Result := d_fact.new_wide_character_value (wcval.item, Dynamic_class)
+				Result := d_fact.new_character_32_value (wcval.item, Dynamic_class)
 			when sk_real32  then
 				realval ?= value
 				Result := d_fact.new_real_value (realval.item, Dynamic_class)
 			when sk_real64  then
 				dblval ?= value
-				Result := d_fact.new_double_value (dblval.item, Dynamic_class)
+				Result := d_fact.new_real_64_value (dblval.item, Dynamic_class)
 			when sk_pointer then
 				ptrval ?= value
 				Result := d_fact.new_pointer_value (ptrval.item, Dynamic_class)

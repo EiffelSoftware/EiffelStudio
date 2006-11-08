@@ -10,7 +10,7 @@ indexing
 class CHARACTER_VALUE
 
 inherit
-	DEBUG_VALUE [CHARACTER]
+	DEBUG_BASIC_VALUE [CHARACTER]
 		redefine
 			append_type_and_value, append_value, type_and_value, dump_value
 		end

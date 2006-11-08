@@ -2592,7 +2592,7 @@ feature -- Resource Update
 					-- we made sure that the editor is updated accordingly.
 				l_class_i_stone ?= stone
 				if l_class_i_stone /= Void then
-					if editor.is_read_only then
+					if editor.is_read_only and selected_formatter.is_editable then
 							-- Only possible action is to go from a read-only class to a
 							-- non-readonly class.
 						editor.set_read_only (l_class_i_stone.class_i.is_read_only)
@@ -4129,6 +4129,8 @@ feature {NONE} -- Implementation
 				l_formatter.forth
 			end
 			l_formatter.go_i_th (l_index)
+		ensure
+			selected_formatter_not_void: Result /= Void
 		end
 
 feature -- Recycle

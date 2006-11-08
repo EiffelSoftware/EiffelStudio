@@ -15,7 +15,7 @@ inherit
 			set_stone,
 			generate_text,
 			class_cmd,
-			editable,
+			is_editable,
 			set_class,
 			format,
 			make,
@@ -32,12 +32,12 @@ feature -- Initialization
 		do
 			Precursor {EB_CLASS_TEXT_FORMATTER} (a_manager)
 			create_class_cmd
-			editable := True
+			is_editable := True
 		end
 
 feature -- Properties
 
-	editable: BOOLEAN
+	is_editable: BOOLEAN
 			-- Can the generated text be edited?
 
 	symbol: ARRAY [EV_PIXMAP] is
@@ -88,8 +88,8 @@ feature -- Formatting
 					editor.clear_window
 					editor.display_message (Warning_messages.w_file_not_exist (classi.file_name))
 				end
-				editable :=	not classi.is_read_only and not editor.load_file_error
-				editor.set_read_only (not editable)
+				is_editable :=	not classi.is_read_only and not editor.load_file_error
+				editor.set_read_only (not is_editable)
 				if has_breakpoints then
 					editor.enable_has_breakable_slots
 				else

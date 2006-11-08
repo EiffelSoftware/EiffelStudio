@@ -87,7 +87,6 @@ feature -- Basic Operations
 			name: STRING
 			i, param_count: INTEGER
 			is_unique: BOOLEAN
---			same_param_count: BOOLEAN
 			number_of_methods_with_parameters: INTEGER
 			eiffel_args: HASH_TABLE [STRING, STRING]
 		do
@@ -108,7 +107,6 @@ feature -- Basic Operations
 						not first_method.is_conversion_operator
 					then
 						number_of_methods_with_parameters := 1
---						same_param_count := method_list.item.arguments.count = param_count
 					end
 				until
 					method_list.after
@@ -118,8 +116,6 @@ feature -- Basic Operations
 						name := formatted_feature_name (method.starting_resolution_name)
 					else
 						number_of_methods_with_parameters := number_of_methods_with_parameters + 1
---						same_param_count :=
---							same_param_count and method.arguments.count = param_count
 						from
 							name := formatted_feature_name (method.starting_resolution_name)
 							is_unique := is_unique_signature (method, method_list, 0)
@@ -138,7 +134,6 @@ feature -- Basic Operations
 					method_list.forth
 				end
 				if number_of_methods_with_parameters > 1 then
---				if same_param_count then
 					from
 						name := formatted_feature_name (first_method.starting_resolution_name)
 						i := 1

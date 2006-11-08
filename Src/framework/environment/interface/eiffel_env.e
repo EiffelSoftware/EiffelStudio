@@ -541,16 +541,6 @@ feature -- Access: file name
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
 		end
 
-	Default_class_file: FILE_NAME is
-		require
-			is_valid_environment: is_valid_environment
-		once
-			create Result.make_from_string (Templates_path)
-			Result.set_file_name (Default_class_filename)
-		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
-		end
-
 	Default_config_name: FILE_NAME is
 		require
 			is_valid_environment: is_valid_environment
@@ -947,8 +937,6 @@ feature -- Version limitation
 			-- Does this version allow the signing of .NET assemblies
 
 feature -- File constants
-
-	Default_class_filename: STRING is "default.cls"
 
 	Default_config_file: STRING is "default.ecf"
 

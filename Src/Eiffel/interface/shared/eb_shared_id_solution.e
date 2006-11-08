@@ -359,7 +359,7 @@ feature -- ID modification
 					l_strings.after
 				loop
 					Result.extend (name_sep)
-					if l_strings.index = target_id_sections + group_id_sections then
+					if l_strings.index = group_id_sections then
 						Result.append (encode (a_group_name))
 					else
 						Result.append (l_strings.item)

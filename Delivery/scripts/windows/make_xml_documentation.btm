@@ -23,7 +23,7 @@ remtrace --------------------------------------------------------
 cdd %DOCUMENT_DIR
 if isdir xmldoc fullrd xmldoc
 if exist xmldoc fullrd xmldoc
-co %DEFAULT_ORIGO_SVN/Delivery/xmldoc xmldoc
+co %DEFAULT_ORIGO_SVN/Documentation/xmldoc xmldoc
 
 
 remtrace ---------------------------------------------

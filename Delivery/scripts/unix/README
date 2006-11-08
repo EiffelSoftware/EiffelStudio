@@ -7,6 +7,12 @@ script that calls `set_aliases'. Otherwise, it won't work because
 `set_aliases' won't be found or some scripts used by `set_aliases'
 won't be found too.
 
+Create a file `.doc_builder' in your home directory so that documentation
+is generated in /tmp/doc_builder. The content of the file should be:
+<EIFFEL_DOCUMENT>
+    <PREFERENCE NAME="general.output_directory" VALUE="/tmp/doc_builder" />
+</EIFFEL_DOCUMENT>
+
 1 - Preparing a delivery:
 
 Make sure that ISE_EIFFEL and ISE_PLATFORM are correctly defined, ie

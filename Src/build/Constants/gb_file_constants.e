@@ -18,12 +18,22 @@ inherit
 
 feature -- Generation constants
 
-	Component_filename: FILE_NAME
+	Default_component_filename: FILE_NAME
 			-- Location of component file.
 		once
 			create Result.make_from_string (eiffel_layout.shared_application_path)
 			Result.extend ("components")
 			Result.set_file_name ("components")
+			Result.add_extension ("xml")
+		ensure
+			Result_ok: Result /= Void and then not Result.is_empty
+		end
+
+	Component_filename: FILE_NAME
+			-- Location of component file.
+		once
+			create Result.make_from_string (eiffel_layout.Eiffel_home)
+			Result.set_file_name ("esbuilder_components")
 			Result.add_extension ("xml")
 		ensure
 			Result_ok: Result /= Void and then not Result.is_empty

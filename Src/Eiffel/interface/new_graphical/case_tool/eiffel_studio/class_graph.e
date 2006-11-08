@@ -238,7 +238,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 					until
 						l.after
 					loop
-						ci := l.item.associated_class.lace_class
+						ci := l.item.associated_class.original_class
 						Result := Result + number_of_ancestors (ci, depth - 1) + 1
 						l.forth
 					end
@@ -266,7 +266,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 					until
 						l.after
 					loop
-						ci := l.item.associated_class.lace_class
+						ci := l.item.associated_class.original_class
 						add_class (ci)
 						explore_ancestors (ci, depth - 1, progress_bar)
 						if progress_bar then
@@ -295,7 +295,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 				until
 					l.after
 				loop
-					ci := l.item.lace_class
+					ci := l.item.original_class
 					if not l.item.group.is_physical_assembly then
 						Result := Result + number_of_descendants (ci, depth - 1) + 1
 					end
@@ -325,7 +325,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 				until
 					i > nb
 				loop
-					ci := l.i_th (i).lace_class
+					ci := l.i_th (i).original_class
 					if not ci.group.is_physical_assembly then
 						add_class (ci)
 						explore_descendants (ci, depth - 1, progress_bar)
@@ -357,7 +357,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 				until
 					i > nb
 				loop
-					ci := l.i_th (i).lace_class
+					ci := l.i_th (i).original_class
 					Result := Result + number_of_clients (ci, depth - 1) + 1
 					i := i + 1
 				end
@@ -387,7 +387,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 				until
 					i > nb
 				loop
-					ci := l.i_th (i).lace_class
+					ci := l.i_th (i).original_class
 					if ci = a_class.class_i then
 						added_class := a_class
 					else
@@ -442,7 +442,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 				until
 					i > nb
 				loop
-					ci := l.i_th (i).lace_class
+					ci := l.i_th (i).original_class
 					Result := Result + number_of_suppliers (ci, depth - 1) + 1
 					i := i + 1
 				end
@@ -472,7 +472,7 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 				until
 					i > nb
 				loop
-					ci := l.i_th (i).lace_class
+					ci := l.i_th (i).original_class
 					if ci = a_class.class_i then
 						added_class := a_class
 					else

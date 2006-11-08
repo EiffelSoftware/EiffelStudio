@@ -219,7 +219,7 @@ feature -- Access
 								feature_name.set_is_binary
 								if
 									is_semi_strict_id (feature_name.internal_alias_name_id) and then
-									system.current_class.lace_class /= system.boolean_class
+									system.current_class.original_class /= system.boolean_class
 								then
 										-- Semistrict operator alias name is declared in a class that is not BOOLEAN
 									create {VFAV4_SYNTAX} vfav.make (feature_name)

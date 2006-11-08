@@ -1925,8 +1925,8 @@ end
 			good_argument: data /= Void
 			consistency: data.base_class = Current
 			good_context:
-				(data.base_class.lace_class /= system.native_array_class and then
-				data.base_class.lace_class /= system.typed_pointer_class) implies
+				(data.base_class.original_class /= system.native_array_class and then
+				data.base_class.original_class /= system.typed_pointer_class) implies
 				not data.has_formal
 		local
 			new_class_type: CLASS_TYPE
@@ -2062,7 +2062,7 @@ debug ("GENERICITY")
 	io.error.put_string (filter.base_class.name)
 	io.error.put_new_line
 end
-				if filter.has_formal implies filter.base_class.lace_class = system.native_array_class then
+				if filter.has_formal implies filter.base_class.original_class = system.native_array_class then
 					filter.base_class.update_types (filter)
 				end
 				class_filters.go_to (class_filters_cursor)

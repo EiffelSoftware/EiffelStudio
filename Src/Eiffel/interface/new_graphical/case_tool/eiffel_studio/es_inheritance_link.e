@@ -17,12 +17,12 @@ inherit
 			ancestor,
 			descendant
 		end
-	
+
 	ES_ITEM
 		undefine
 			default_create
 		end
-		
+
 create
 	make_with_classes
 
@@ -30,25 +30,25 @@ feature {NONE} -- Initialization
 
 	default_create is
 			-- Create a ES_INHERITANCE_LINK
-		do	
+		do
 			Precursor {EM_INHERITANCE_LINK}
 			is_needed_on_diagram := True
 		end
-		
+
 	make_with_classes (a_descendant, an_ancestor: ES_CLASS) is
 			-- Create an ES_INHERITANCE_LINK connecting `a_descendant' with `an_ancestor'.
 		do
 			make_directed_with_source_and_target (a_descendant, an_ancestor)
 		end
-		
+
 feature -- Access
 
 	ancestor: ES_CLASS
 			-- Ancestor of `descendant'.
-	
+
 	descendant: ES_CLASS
 			-- Descendant of `ancestor'
-	
+
 feature -- Element change
 
 	synchronize is
@@ -62,12 +62,12 @@ feature -- Element change
 			if ancestor.class_i.is_compiled then
 				l := ancestor.class_i.compiled_class.descendants
 				if l /= Void then
-					from 
-						l.start 
-					until 
-						is_still_valid or else l.after 
+					from
+						l.start
+					until
+						is_still_valid or else l.after
 					loop
-						cl := l.item.lace_class
+						cl := l.item.original_class
 						if cl = descendant.class_i then
 							is_still_valid := True
 						end
@@ -81,7 +81,7 @@ feature -- Element change
 				end
 			end
 		end
-		
+
 invariant
 	descendant_not_void: descendant /= Void
 	ancestor_not_void: ancestor /= Void

@@ -80,8 +80,8 @@ feature {NONE} -- Initialization
 			good_argument: t /= Void
 			not_anchored: not t.is_anchored
 			not_formal:
-				(t.base_class.lace_class /= system.native_array_class and then
-				t.base_class.lace_class /= system.typed_pointer_class) implies
+				(t.base_class.original_class /= system.native_array_class and then
+				t.base_class.original_class /= system.typed_pointer_class) implies
 				not t.has_formal
 		do
 			type := t.generic_derivation

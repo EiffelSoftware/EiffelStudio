@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			l_rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
 		do
-			class_i ?= a_feature.written_class.lace_class
+			class_i ?= a_feature.written_class.original_class
 			if class_i /= Void then
 				current_class ?= class_i.compiled_class
 			end
@@ -252,7 +252,7 @@ feature -- Element change
 			put_signature
 			put_comments
 		end
-		
+
 	put_comments is
 			-- Feature comments from XML.
 		local

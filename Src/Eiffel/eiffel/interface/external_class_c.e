@@ -1457,7 +1457,7 @@ feature {NONE} -- Implementation
 				end
 				create l_char_value.make_character_8 (a_value.item (1))
 				l_value := l_char_value
-			elseif a_external_type.associated_class.lace_class = System.system_string_class then
+			elseif a_external_type.associated_class.original_class = System.system_string_class then
 				create l_string_value.make (a_value, True)
 				l_value := l_string_value
 			end

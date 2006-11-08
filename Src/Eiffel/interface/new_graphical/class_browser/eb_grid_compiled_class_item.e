@@ -40,7 +40,7 @@ feature -- Access
 	associated_class_i: CLASS_I is
 			-- CLASS_I associated with current item
 		do
-			Result := associated_class.lace_class
+			Result := associated_class.original_class
 		end
 
 	associated_class: CLASS_C

@@ -326,6 +326,17 @@ feature -- Access: file name
 			result_not_void_or_empty: is_valid_environment implies Result /= Void and not Result.is_empty
 		end
 
+	Bin_path: DIRECTORY_NAME is
+		require
+			not_unix_layout: not is_unix_layout
+			is_valid_environment: is_valid_environment
+		do
+			Result := Studio_path.twin
+			Result.extend_from_array (<<"spec", Eiffel_platform, "bin">>)
+		ensure
+			result_not_void_or_empty: Result /= Void and not Result.is_empty
+		end
+
 	Eiffel_library: DIRECTORY_NAME is
 			-- ISE_LIBRARY name.
 		require
@@ -998,17 +1009,6 @@ feature {NONE} -- Implementation
 		once
 			Result := eiffel_installation_dir_name.twin
 			Result.extend (short_studio_name)
-		ensure
-			result_not_void_or_empty: Result /= Void and not Result.is_empty
-		end
-
-	Bin_path: DIRECTORY_NAME is
-		require
-			not_unix_layout: not is_unix_layout
-			is_valid_environment: is_valid_environment
-		do
-			Result := Studio_path.twin
-			Result.extend_from_array (<<"spec", Eiffel_platform, "bin">>)
 		ensure
 			result_not_void_or_empty: Result /= Void and not Result.is_empty
 		end

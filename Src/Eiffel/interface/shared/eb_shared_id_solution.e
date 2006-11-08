@@ -266,6 +266,109 @@ feature -- Access (Feature)
 			result_not_void: Result /= Void
 		end
 
+feature -- ID modification
+
+	substitute_target_uuid (a_id: STRING; a_target_uuid: STRING): STRING is
+			-- Substitute uuid of `a_id' to `a_target_uuid'.
+		require
+			a_id_not_void: a_id /= Void
+			a_target_uuid_not_void: a_target_uuid /= Void
+		local
+			l_strings: like last_split_strings
+		do
+			if last_id = Void or else not last_id.is_equal (a_id) then
+				last_id := a_id
+				last_split_strings := a_id.split (name_sep)
+			end
+			check
+				last_split_strings_not_void: last_split_strings /= Void
+			end
+			l_strings := last_split_strings
+			if l_strings.count >= target_id_sections then
+				create Result.make (40)
+				Result.append (encode (a_target_uuid))
+				from
+					l_strings.go_i_th (target_id_sections)
+				until
+					l_strings.after
+				loop
+					Result.extend (name_sep)
+					Result.append (l_strings.item)
+					l_strings.forth
+				end
+			end
+		end
+
+	substitute_target_name (a_id: STRING; a_target_name: STRING): STRING is
+			-- Substitute target name of `a_id' to `a_target_name'.
+		require
+			a_id_not_void: a_id /= Void
+			a_target_name_not_void: a_target_name /= Void
+		local
+			l_strings: like last_split_strings
+		do
+			if last_id = Void or else not last_id.is_equal (a_id) then
+				last_id := a_id
+				last_split_strings := a_id.split (name_sep)
+			end
+			check
+				last_split_strings_not_void: last_split_strings /= Void
+			end
+			l_strings := last_split_strings
+			if last_split_strings.count >= target_id_sections then
+				create Result.make (40)
+				Result.append (l_strings.first)
+				from
+					l_strings.go_i_th (target_id_sections)
+				until
+					l_strings.after
+				loop
+					Result.extend (name_sep)
+					if l_strings.index = target_id_sections then
+						Result.append (encode (a_target_name))
+					else
+						Result.append (l_strings.item)
+					end
+					l_strings.forth
+				end
+			end
+		end
+
+	substitute_group (a_id: STRING; a_group_name: STRING): STRING is
+			-- Substitute group name of `a_id' to `a_group_name'.
+		require
+			a_id_not_void: a_id /= Void
+			a_group_name_not_void: a_group_name /= Void
+		local
+			l_strings: like last_split_strings
+		do
+			if last_id = Void or else not last_id.is_equal (a_id) then
+				last_id := a_id
+				last_split_strings := a_id.split (name_sep)
+			end
+			check
+				last_split_strings_not_void: last_split_strings /= Void
+			end
+			l_strings := last_split_strings
+			if last_split_strings.count >= group_id_sections then
+				create Result.make (40)
+				Result.append (l_strings.first)
+				from
+					l_strings.go_i_th (target_id_sections)
+				until
+					l_strings.after
+				loop
+					Result.extend (name_sep)
+					if l_strings.index = target_id_sections + group_id_sections then
+						Result.append (encode (a_group_name))
+					else
+						Result.append (l_strings.item)
+					end
+					l_strings.forth
+				end
+			end
+		end
+
 feature -- UUID generation
 
 	generate_uuid: STRING is
@@ -299,6 +402,14 @@ feature {NONE} -- Access
 		once
 			Result := class_id_sections + 1
 		end
+
+feature {NONE} -- Implementation
+
+	last_id: STRING
+			-- Last id modified
+
+	last_split_strings: LIST [STRING]
+			-- Last split strings from `last_id'
 
 feature {NONE} -- Implementation. Encoding/Decoding
 

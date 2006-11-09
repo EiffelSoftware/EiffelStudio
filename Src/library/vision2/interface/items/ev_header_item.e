@@ -36,6 +36,17 @@ feature -- Access
 			bridge_ok: Result = implementation.user_can_resize
 		end
 
+	maximum_width: INTEGER is
+			-- Upper bound on `width' in pixels.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.maximum_width
+		ensure
+			bridge_ok: Result = implementation.maximum_width
+			positive_or_zero: Result >= 0
+		end
+
 feature -- Status setting
 
 	set_width (a_width: INTEGER) is

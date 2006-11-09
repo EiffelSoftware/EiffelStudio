@@ -249,6 +249,33 @@ feature -- Status setting
 			user_can_resize := False
 		end
 
+feature -- Measurement
+
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		do
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
+		do
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		do
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		do
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum vertical size in pixels.
+		do
+		end
+
 feature {NONE} -- implementation
 
 	refresh is

@@ -26,6 +26,13 @@ feature -- Access
 		deferred
 		end
 
+	maximum_width: INTEGER is
+			-- Upper bound on `width' in pixels.
+		deferred
+		ensure
+			positive_or_zero: Result >= 0
+		end
+
 feature -- Status setting
 
 	set_width (a_width: INTEGER) is

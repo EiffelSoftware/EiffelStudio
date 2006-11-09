@@ -21,6 +21,8 @@ feature -- Initialization
 
 	make (a_project: E_PROJECT) is
 			-- Associate `Current' with `a_project'.
+		require
+			a_project_not_void: a_project /= Void
 		do
 			project := a_project
 			create load_agents.make (10)
@@ -29,6 +31,8 @@ feature -- Initialization
 			create edition_agents.make (10)
 			create compile_start_agents.make (10)
 			create compile_stop_agents.make (10)
+		ensure
+			project_set: project = a_project
 		end
 
 feature -- Access
@@ -122,10 +126,10 @@ feature -- Basic operations
 		local
 			l_create_agents: like create_agents
 		do
-			if eiffel_project.project_directory.is_lock_file_present then
+			if project.project_directory.is_lock_file_present then
 				-- Handle error
 			end
-			eiffel_project.project_directory.create_lock_file
+			project.project_directory.create_lock_file
 			is_created := True
 			from
 					-- We need to twin the list as items may be removed as a result or iteration.
@@ -146,7 +150,7 @@ feature -- Basic operations
 		local
 			l_close_agents: like close_agents
 		do
-			eiffel_project.project_directory.delete_lock_file
+			project.project_directory.delete_lock_file
 			is_project_loaded := False
 			is_created := False
 				-- Save breakpoint status and command line.
@@ -204,6 +208,9 @@ feature -- Basic operations
 				Debugger_manager.save_debug_info
 			end
 		end
+
+invariant
+	project_not_void: project /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

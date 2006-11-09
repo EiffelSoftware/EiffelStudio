@@ -26,6 +26,41 @@ feature -- Access
 			Result := a_grid.item_at_virtual_position (a_grid.virtual_x_position + a_x, a_grid.virtual_y_position + a_y - l_header_height)
 		end
 
+feature -- Resizeing
+
+	auto_resize_columns (a_grid: EV_GRID; a_size_table: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER] ,INTEGER]) is
+			-- Auto resize columns in `a_grid'.
+			-- Keys of `a_size_table' are column indexes indicating those columns to be resized.
+			-- Value of a key indicates the min and max width of that column.
+			-- To perform resizing, the requrested width of a column is first retrieved and considered.
+			-- But the actual resized width will be within [min_width, max_width].
+		require
+			a_grid_attached: a_grid /= Void
+			a_size_table_attached: a_size_table /= Void
+		local
+			l_size_range: TUPLE [min_width, max_width: INTEGER]
+			l_column: EV_GRID_COLUMN
+			l_row_count: INTEGER
+		do
+			l_row_count := a_Grid.row_count
+			if l_row_count > 0 then
+				from
+					a_size_table.start
+				until
+					a_size_table.after
+				loop
+					l_column := a_grid.column (a_size_table.key_for_iteration)
+					l_size_range := a_size_table.item_for_iteration
+					check
+						l_column /= Void
+						l_size_range /= Void
+					end
+					l_column.set_width (l_column.required_width_of_item_span (1, l_row_count).max (l_size_range.min_width).min (l_size_range.max_width))
+					a_size_table.forth
+				end
+			end
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

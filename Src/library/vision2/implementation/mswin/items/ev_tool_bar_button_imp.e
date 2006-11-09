@@ -450,6 +450,56 @@ feature -- Element change
 			end
 		end
 
+feature -- Measurement
+
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		do
+			Result := parent_imp.child_x (interface)
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
+		do
+			Result := parent_imp.child_y (interface)
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		do
+			Result := parent_imp.child_x_absolute (interface)
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		do
+			Result := parent_imp.child_y_absolute (interface)
+		end
+
+	width: INTEGER is
+			-- Horizontal size in pixels.
+		do
+			Result := parent_imp.child_width (interface)
+		end
+
+	height: INTEGER is
+			-- Vertical size in pixels.
+		do
+			Result := parent_imp.child_height (interface)
+		end
+
+	minimum_width: INTEGER is
+			-- Minimum horizontal size in pixels.
+		do
+			Result := width
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum vertical size in pixels.
+		do
+			Result := height
+		end
+
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
 	restore_private_pixmaps is

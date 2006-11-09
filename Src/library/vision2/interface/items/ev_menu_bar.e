@@ -19,11 +19,19 @@ inherit
 			create_implementation
 		end
 
+	EV_POSITIONED
+		undefine
+			is_equal,
+			is_in_default_state
+		redefine
+			implementation
+		end
+
 create
 	default_create
 
 feature -- Status report
-		
+
 	parent: EV_WINDOW is
 			-- Parent of `Current'.
 		do
@@ -34,7 +42,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_BAR_I
 			-- Responsible for interaction with native graphics toolkit.
-		
+
 feature {NONE} -- Implementation
 
 	create_implementation is

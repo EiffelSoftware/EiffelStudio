@@ -286,6 +286,48 @@ feature {EV_ANY_I} -- Element change
 			end
 		end
 
+feature -- Measurement
+
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		do
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
+		do
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		do
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		do
+		end
+
+	width: INTEGER is
+			-- Horizontal size in pixels.
+		do
+		end
+
+	height: INTEGER is
+			-- Vertical size in pixels.
+		do
+		end
+
+	minimum_width: INTEGER is
+			-- Minimum horizontal size in pixels.
+		do
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum vertical size in pixels.
+		do
+		end
+
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	--| This is redundent in this class.
@@ -309,16 +351,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP is
 			-- `Result' is tree node at pixel position `x_pos', `y_pos'.
-		do
-		end
-
-	screen_x: INTEGER is
-			-- Horizontal offset of `Current' relative to screen.
-		do
-		end
-
-	screen_y: INTEGER is
-			-- Vertical offset of `Current' relative to screen.
 		do
 		end
 

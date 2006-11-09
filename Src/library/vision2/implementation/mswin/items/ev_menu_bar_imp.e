@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_MENU_BAR_IMP
 
 inherit
@@ -31,14 +31,72 @@ feature {NONE} -- Initialization
 			Precursor {EV_MENU_ITEM_LIST_IMP} (an_interface)
 			wel_make
 		end
-		
+
+feature -- Measurement
+
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		do
+			Result := screen_x - parent.screen_x
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
+		do
+			Result := screen_y - parent.screen_y
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		do
+			if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+				Result := info.rc_bar.left
+			end
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		do
+			if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+				Result := info.rc_bar.top
+			end
+		end
+
+	width: INTEGER is
+			-- Horizontal size in pixels.
+		do
+			if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+				Result := info.rc_bar.width
+			end
+		end
+
+	height: INTEGER is
+			-- Vertical size in pixels.
+		do
+			if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.Objid_menu, 0, info.item) /= 0 then
+				Result := info.rc_bar.height
+			end
+		end
+
+	minimum_width: INTEGER is
+			-- Minimum horizontal size in pixels.
+		do
+			Result := width
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum vertical size in pixels.
+		do
+			Result := height
+		end
+
 feature {EV_ANY_I} -- Status report
 
 	parent: EV_WINDOW is
 			-- Parent of `Current'.
 		do
 			if parent_imp /= Void then
-				Result := parent_imp.interface					
+				Result := parent_imp.interface
 			end
 		end
 
@@ -56,12 +114,12 @@ feature {NONE} -- Implementation
 			end
 			set_is_destroyed (True)
 		end
-		
+
 	update_parent_size is
 			-- Update size of `Parent_imp'.
 		do
 			if parent_imp /= Void then
-				parent_imp.compute_minimum_size	
+				parent_imp.compute_minimum_size
 			end
 		end
 
@@ -106,16 +164,6 @@ feature {NONE} -- Pick and drop support
 		do
 		end
 
-	screen_x: INTEGER is
-			-- Horizontal offset of `Current' relative to screen.
-		do
-		end
-
-	screen_y: INTEGER is
-			-- Vertical offset of `Current' relative to screen.
-		do
-		end
-
 	set_pointer_style (value: EV_POINTER_STYLE) is
 			-- Make `value' the new cursor of the widget
 		do
@@ -135,7 +183,7 @@ feature {NONE} -- Pick and drop support
 
 	cursor_on_widget: CELL [EV_WIDGET_IMP] is
 			-- This cell contains the widget_imp that currently
-			-- has the pointer of the mouse. As it is a once 
+			-- has the pointer of the mouse. As it is a once
 			-- feature, it is a shared data.
 			-- it is used for the `mouse_enter' and `mouse_leave'
 			-- events.
@@ -180,7 +228,7 @@ feature {NONE} -- Pick and drop support
 				pick_and_drop_not_implemented_for_menus: False
 			end
 		end
-		
+
 	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
@@ -189,7 +237,7 @@ feature {NONE} -- Pick and drop support
 			-- as for widgets that contain items, there are correct implementations. It is
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
-		
+
 	check_dragable_release (x_pos, y_pos: INTEGER) is
 			-- End transport if in drag and drop.
 		do
@@ -198,8 +246,8 @@ feature {NONE} -- Pick and drop support
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
 
-feature {EV_ANY_I} -- Status Report 
-		
+feature {EV_ANY_I} -- Status Report
+
 	top_level_window_imp: EV_WINDOW_IMP is
 			-- Top level window implementation containing `Current'.
 		do
@@ -215,12 +263,12 @@ feature {EV_ANY_I} -- Status Report
 				parent_imp := Void
 			end
 		end
-		
+
 	wel_count_empty: BOOLEAN is
 			-- Is `Current' empty?
 			--| In some places, we wish to externally query if `Current'
 			--| is empty. However, if this is done during a remove_item,
-			--| the interface will still return the count as 1. See 
+			--| the interface will still return the count as 1. See
 			--|`Extra_minimum_height' from EV_TITLED_WINDOW_IMP.
 		do
 			Result := wel_count = 0
@@ -232,6 +280,15 @@ feature {EV_ANY_I} -- Status Report
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_BAR;
+
+feature {NONE} -- Implementation
+
+	info: WEL_MENU_BAR_INFO is
+			-- Menu bar info struct used for API calls.
+			-- This instance is shared.
+		once
+			create Result.make
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

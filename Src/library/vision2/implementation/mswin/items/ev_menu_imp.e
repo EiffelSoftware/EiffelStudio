@@ -26,7 +26,8 @@ inherit
 			enable_sensitive,
 			wel_set_text,
 			dispose,
-			destroy
+			destroy,
+			load_bounds_rect
 		end
 
 	EV_MENU_ITEM_LIST_IMP
@@ -318,16 +319,6 @@ feature {NONE} -- Implementation
 			--| FIXME to be implemented for pick-and-dropable.
 		end
 
-	screen_x: INTEGER is
-			-- Horizontal offset of `Current' relative to screen.
-		do
-		end
-
-	screen_y: INTEGER is
-			-- Vertical offset of `Current' relative to screen.
-		do
-		end
-
 	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
@@ -375,6 +366,25 @@ feature {NONE} -- Implementation
 			interface.wipe_out
 			Precursor {EV_MENU_ITEM_IMP}
 			destroy_item
+		end
+
+	load_bounds_rect is
+			-- Load rect struct which holds boundary information
+		local
+			menu_bar: EV_MENU_BAR_IMP
+		do
+			menu_bar ?= parent_imp
+
+			if menu_bar /= Void then
+				if {WEL_API}.get_menu_item_rect (menu_bar.parent_imp.wel_item, menu_bar.wel_item, menu_bar.index_of (interface, 1)-1, bounds_rect.item) = 0 then
+					bounds_rect.set_rect (0, 0, 0, 0)
+					debug ("vision2_windows")
+						io.put_string ("ERROR: EV_MENU_IMP.load_bounds_rect%N")
+					end
+				end
+			else
+				Precursor
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

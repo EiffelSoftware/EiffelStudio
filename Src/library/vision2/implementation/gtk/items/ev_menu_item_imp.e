@@ -93,18 +93,6 @@ feature -- Element change
 			Precursor {EV_TEXTABLE_IMP} (a_text)
 		end
 
-feature -- Measurement
-
-	x_position: INTEGER is
-			-- Horizontal offset relative to parent `x_position' in pixels.
-		do
-		end
-
-	y_position: INTEGER is
-			-- Vertical offset relative to parent `y_position' in pixels.
-		do
-		end
-
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	accelerators_enabled: BOOLEAN is True

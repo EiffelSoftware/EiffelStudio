@@ -4,7 +4,7 @@ REM Check out Build source.
 svn co %1/Src/build Src\build
 
 REM Check out bitmaps from Build delivery
-svn co %1/Delivery/build/bitmaps Delivery\esbuilder\bitmaps
+svn co %1/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
 
 REM Check out files from vision2_tour
 svn co %1/Delivery/vision2_tour Delivery/vision2_demo
@@ -17,7 +17,7 @@ REM Check out Build source.
 svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Src/build Src\build
 
 REM Check out bitmaps from Build delivery
-svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/build/bitmaps Delivery\esbuilder\bitmaps
+svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
 
 REM Check out files from vision2_tour
 svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/vision2_tour Delivery\vision2_demo

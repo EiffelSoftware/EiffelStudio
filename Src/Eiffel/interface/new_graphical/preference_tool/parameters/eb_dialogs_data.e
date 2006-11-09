@@ -292,6 +292,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	last_opened_dynamic_lib_directory_preference: STRING_PREFERENCE
 --	last_opened_file_directory_preference: STRING_PREFERENCE
 	last_opened_metric_browse_archive_directory_preference: STRING_PREFERENCE
+	last_imported_metric_definition_directory_preference: STRING_PREFERENCE
 
 	last_saved_dynamic_lib_directory_preference: STRING_PREFERENCE
 	last_saved_call_stack_directory_preference: STRING_PREFERENCE
@@ -348,6 +349,7 @@ feature -- Preference strings
 	last_opened_dynamic_lib_directory_string: STRING is "interface.dialogs.last_opened_dynamic_lib_directory"
 --	last_opened_file_directory_preference_string: STRING is "interface.dialogs.last_opened_file_directory"
 	last_opened_metric_browse_archive_directory_preference_string: STRING is "interface.dialogs.last_opened_metric_browse_archive_directory"
+	last_imported_metric_definition_directory_preference_string: STRING is "interface.dialogs.last_imported_metric_definition_directory"
 
 	last_saved_dynamic_lib_directory_preference_string: STRING is "interface.dialogs.last_saved_dynamic_lib_directory"
 	last_saved_call_stack_directory_preference_string: STRING is "interface.dialogs.last_saved_call_stack_directory"
@@ -407,6 +409,7 @@ feature {NONE} -- Implementation
 			last_opened_dynamic_lib_directory_preference := l_manager.new_string_preference_value (l_manager, last_opened_dynamic_lib_directory_string, "")
 --			last_opened_file_directory_preference := l_manager.new_string_preference_value (l_manager, last_opened_file_directory_preference_string, "")
 			last_opened_metric_browse_archive_directory_preference := l_manager.new_string_preference_value (l_manager, last_opened_metric_browse_archive_directory_preference_string, "")
+			last_imported_metric_definition_directory_preference := l_manager.new_string_preference_value (l_manager, last_imported_metric_definition_directory_preference_string, "")
 			last_saved_dynamic_lib_directory_preference := l_manager.new_string_preference_value (l_manager, last_saved_dynamic_lib_directory_preference_string, "")
 			last_saved_call_stack_directory_preference := l_manager.new_string_preference_value (l_manager, last_saved_call_stack_directory_preference_string, "")
 			last_saved_debugger_exception_directory_preference := l_manager.new_string_preference_value (l_manager, last_saved_debugger_exception_directory_preference_string, "")

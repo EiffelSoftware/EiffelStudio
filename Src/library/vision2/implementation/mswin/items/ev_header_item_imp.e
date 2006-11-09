@@ -7,7 +7,7 @@ indexing
 
 class
 	EV_HEADER_ITEM_IMP
-	
+
 inherit
 	EV_HEADER_ITEM_I
 		undefine
@@ -16,14 +16,14 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_IMP
 		redefine
 			interface,
 			set_pixmap,
 			remove_pixmap
 		end
-		
+
 	EV_TEXT_ALIGNABLE_IMP
 		redefine
 			interface,
@@ -31,7 +31,7 @@ inherit
 			align_text_center,
 			align_text_right
 		end
-		
+
 	WEL_HD_ITEM
 		rename
 			make as wel_make,
@@ -44,7 +44,7 @@ inherit
 		redefine
 			wel_set_text, set_width
 		end
-		
+
 	WEL_HDF_CONSTANTS
 		export
 			{NONE} all
@@ -52,7 +52,7 @@ inherit
 
 create
 	make
-		
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			align_text_left
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -72,18 +72,18 @@ feature {NONE} -- Initialization
 			user_can_resize := True
 			maximum_width := 32000
 		end
-		
+
 feature -- Status report
 
 	parent_imp: EV_HEADER_IMP
 		-- Parent of `Current'
-		
+
 	user_can_resize: BOOLEAN
 			-- Can a user resize `Current'?
-			
+
 	minimum_width: INTEGER
 			-- Minimum width permitted for `Current'.
-			
+
 	maximum_width: INTEGER
 			-- Maximum width permitted for `Current'.
 
@@ -98,14 +98,14 @@ feature -- Status setting
 				parent_imp := Void
 			end
 		end
-		
+
 	wel_set_text (a_string: STRING_GENERAL) is
 			-- Set the text of the item to `a_string'
 		do
 			Precursor {WEL_HD_ITEM} (a_string)
 			refresh
 		end
-		
+
 	set_width (value: INTEGER) is
 			-- Sets width of item with `value'
 			-- Also updates `mask'
@@ -113,7 +113,7 @@ feature -- Status setting
 			Precursor {WEL_HD_ITEM} (value)
 			refresh
 		end
-		
+
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Assign `a_minimum_width' in pixels to `minimum_width'.
 			-- If `width' is less than `a_minimum_width', resize.
@@ -123,7 +123,7 @@ feature -- Status setting
 				set_width (minimum_width)
 			end
 		end
-		
+
 	set_maximum_width (a_maximum_width: INTEGER) is
 			-- Assign `a_maximum_width' in pixels to `maximum_width'.
 			-- If `width' is greater than `a_maximum_width', resize.
@@ -133,7 +133,7 @@ feature -- Status setting
 				set_width (maximum_width)
 			end
 		end
-		
+
 	resize_to_content is
 			-- Resize `Current' to fully display both `pixmap' and `text'.
 			-- As size of `text' is dependent on `font' of `parent', `Current'
@@ -141,7 +141,7 @@ feature -- Status setting
 		do
 			parent_imp.resize_item_to_content (Current)
 		end
-		
+
 	set_pixmap (p: EV_PIXMAP) is
 			-- Assign `p' to the displayed pixmap.
 		do
@@ -176,7 +176,7 @@ feature -- Status setting
 			end
 			parent_imp.refresh_item (Current)
 		end
-		
+
 	remove_pixmap is
 			-- Remove the pixmap from `Current'.
 		do
@@ -185,7 +185,7 @@ feature -- Status setting
 				set_pixmap_in_parent
 			end
 		end
-		
+
 	align_text_center is
 			-- Display `text' centered.
 		local
@@ -219,7 +219,7 @@ feature -- Status setting
 			set_format (l_format | hdf_right)
 			refresh
 		end
-        
+
 	align_text_left is
 			-- Display `text' left aligned.
 		local
@@ -236,7 +236,7 @@ feature -- Status setting
 			set_format (l_format | hdf_left)
 			refresh
 		end
-		
+
 	enable_user_resize is
 			-- Permit `Current' from being resized by users.
 		do
@@ -248,7 +248,7 @@ feature -- Status setting
 		do
 			user_can_resize := False
 		end
-		
+
 feature {NONE} -- implementation
 
 	refresh is

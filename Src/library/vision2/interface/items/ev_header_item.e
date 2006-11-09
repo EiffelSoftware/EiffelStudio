@@ -26,39 +26,6 @@ create
 
 feature -- Access
 
-	width: INTEGER is
-			-- `Result' is width of `Current' used
-			-- while parented.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.width
-		ensure
-			Result_non_negative: Result >= 0
-		end
-
-	minimum_width: INTEGER is
-			-- Lower bound on `width' in pixels.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.minimum_width
-		ensure
-			bridge_ok: Result = implementation.minimum_width
-			positive_or_zero: Result >= 0
-		end
-
-	maximum_width: INTEGER is
-			-- Upper bound on `width' in pixels.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.maximum_width
-		ensure
-			bridge_ok: Result = implementation.maximum_width
-			positive_or_zero: Result >= 0
-		end
-
 	user_can_resize: BOOLEAN is
 			-- Can a user resize `Current'?
 		require

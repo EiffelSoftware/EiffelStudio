@@ -438,6 +438,16 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP, EV_PIXEL_BUFFER_IMP} -- Implem
 			end
 		end
 
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+
+	call_expose_actions (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Call the expose actions for the drawing area.
+		do
+			if expose_actions_internal /= Void then
+				expose_actions_internal.call ([a_x, a_y, a_width, a_height])
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is

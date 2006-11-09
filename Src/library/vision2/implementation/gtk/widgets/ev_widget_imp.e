@@ -24,7 +24,9 @@ inherit
 			destroy,
 			minimum_width,
 			minimum_height,
-			on_key_event
+			on_key_event,
+			x_position,
+			y_position
 		end
 
 	EV_SENSITIVE_IMP
@@ -351,15 +353,7 @@ feature -- Measurement
 			if a_fixed_imp /= Void then
 				Result := a_fixed_imp.x_position_of_child (Current)
 			else
-				Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_x ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
-				a_aux_info := aux_info_struct
-				if a_aux_info /= l_null then
-					tmp_struct_x := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
-					if tmp_struct_x >= 0 then
-						Result := tmp_struct_x
-					end
-				end
-				Result := Result.max (0)
+				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
 		end
 
@@ -375,15 +369,7 @@ feature -- Measurement
 			if a_fixed_imp /= Void then
 				Result := a_fixed_imp.y_position_of_child (Current)
 			else
-				Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_y ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
-				a_aux_info := aux_info_struct
-				if a_aux_info /= l_null then
-					tmp_struct_y := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
-					if tmp_struct_y >= 0 then
-						Result := tmp_struct_y
-					end
-				end
-				Result := Result.max (0)
+				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
 		end
 

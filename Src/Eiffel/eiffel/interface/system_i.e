@@ -2935,7 +2935,7 @@ feature -- Final mode generation
 					process_optimized_single_types (False, l_type_id_mapping)
 				end
 
-				keep_assertions := keep_assert 
+				keep_assertions := keep_assert
 				set_is_precompile_finalized (is_precompiled)
 
 				if il_generation then
@@ -4692,8 +4692,6 @@ feature -- Pattern table generation
 
 			rout_id: INTEGER
 			rout_table: ROUT_TABLE
-			create_type: CREATE_TYPE
-			l_creation_type: CL_TYPE_I
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer

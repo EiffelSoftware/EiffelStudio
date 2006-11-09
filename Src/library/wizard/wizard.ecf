@@ -2,9 +2,6 @@
 	<target name="wizard">
 		<description>WEL library</description>
 		<root all_classes="true"/>
-		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>

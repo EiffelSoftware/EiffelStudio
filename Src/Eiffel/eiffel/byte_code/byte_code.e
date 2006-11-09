@@ -463,15 +463,9 @@ feature -- Settings
 				or else inh_assert.has_old_expression)
 			then
 				buf := buffer
-				if Context.workbench_mode then
-					buf.put_string ("if (RTAL & CK_ENSURE) {")
-					buf.put_new_line
-					buf.indent
-				else
-					buf.put_string ("if (~in_assertion) {");
-					buf.put_new_line
-					buf.indent
-				end
+				buf.put_string ("if (RTAL & CK_ENSURE) {")
+				buf.put_new_line
+				buf.indent
 				buf.put_string ("in_assertion = ~0;")
 				buf.put_new_line
 				if old_expressions /= Void then
@@ -722,6 +716,7 @@ end
 			l_old_expressions: like old_expressions
 			l_type: TYPE_I
 			l_il_generation: BOOLEAN
+			assert_chheck: BOOLEAN
 		do
 			from
 				position := 1
@@ -736,11 +731,12 @@ end
 			end
 			l_old_expressions := old_expressions
 			l_il_generation := System.il_generation
+			assert_chheck := context.workbench_mode or
+				context.system.keep_assertions
 			if
 				(not l_il_generation and then l_old_expressions /= Void) or else
 				(l_il_generation and then l_old_expressions /= Void and then
-				(context.workbench_mode or
-				context.class_type.associated_class.assertion_level.is_postcondition))
+				assert_chheck)
 			then
 				from
 					nb := l_old_expressions.count

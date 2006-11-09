@@ -189,7 +189,7 @@ feature -- Access
 			if f = Void then
 					-- Process feature as an internal routine.
 				if context.final_mode then
-					create feature_bl
+					create feature_bl.make
 				else
 					create {FEATURE_BW} feature_bl.make
 				end

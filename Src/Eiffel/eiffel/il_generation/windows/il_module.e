@@ -245,6 +245,9 @@ feature -- Access: tokens
 			-- Token for `ISE.Runtime.in_assertion' and `ISE.Runtime.set_in_assertion'
 			-- static members that holds status of assertion checking.
 
+	ise_caller_supplier_precondition_token: INTEGER
+			-- Token for `ISE.Runtime.caller_supplier_precondition'
+
 	ise_assertion_tag_token: INTEGER
 			-- Token for `ISE.Runtime.assertion_tag' static field that holds
 			-- message for exception being thrown.
@@ -901,7 +904,7 @@ feature -- Code generation
 			il_code_generator.start_new_body (entry_point_token)
 
 				-- Initialize assertions for runtime in workbench mode.
-			if not System.in_final_mode then
+			if not System.in_final_mode or else System.keep_assertions then
 				il_code_generator.put_type_token (l_type_id)
 				il_code_generator.internal_generate_external_call (ise_runtime_token, 0,
 					Runtime_class_name, "assertion_initialize",
@@ -2952,10 +2955,9 @@ feature {NONE} -- Once per modules being generated.
 				-- Define `ise_check_invariant_token'.
 			l_meth_sig.reset
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_meth_sig.set_parameter_count (2)
+			l_meth_sig.set_parameter_count (1)
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 			ise_check_invariant_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("check_invariant"), ise_runtime_type_token, l_meth_sig)
 

@@ -46,6 +46,9 @@ feature
 			file_name: STRING;
 			i, nb: INTEGER;
 		do
+			if system.keep_assertions then
+				add_in_primary_system_basket (Eoption);
+			end
 			add_in_primary_system_basket (Eref);
 			add_in_primary_system_basket (Epoly);
 			add_in_primary_system_basket (Esize);

@@ -2829,7 +2829,7 @@ end
 			generate_init_file
 
 			deg_output.display_degree_output (degree_message, 4, 10)
-			generate_option_file
+			generate_option_file (True)
 			address_table.generate (False)
 
 			deg_output.display_degree_output (degree_message, 3, 10)
@@ -2888,7 +2888,6 @@ feature -- Final mode generation
 			deg_output: DEGREE_OUTPUT
 			retried: BOOLEAN
 			d1, d2: DATE_TIME
-			l_assertions: CONF_ASSERTIONS
 			l_type_id_mapping: ARRAY [INTEGER]
 		do
 			eiffel_project.terminate_c_compilation
@@ -2917,8 +2916,7 @@ feature -- Final mode generation
 					process_optimized_single_types (False, l_type_id_mapping)
 				end
 
-				l_assertions := universe.target.options.assertions
-				keep_assertions := keep_assert and then l_assertions /= Void and then l_assertions.has_assertions
+				keep_assertions := keep_assert 
 				set_is_precompile_finalized (is_precompiled)
 
 				if il_generation then
@@ -3635,6 +3633,11 @@ feature -- Generation
 				-- Generate init file
 			deg_output.display_degree_output (degree_message, 1, 10)
 			generate_init_file
+
+				-- Generate option file
+			if keep_assertions then
+				generate_option_file (False)
+			end
 
 				-- Generate makefile
 			deg_output.display_degree_output (degree_message, 0, 10)
@@ -4900,9 +4903,9 @@ feature -- Workbench routine info table file generation
 			end
 		end
 
-feature --Workbench option file generation
+feature --option file generation
 
-	generate_option_file is
+	generate_option_file (is_workbench_mode: BOOLEAN) is
 			-- Generate compialtion option file
 		local
 			class_array: ARRAY [CLASS_C]
@@ -4962,7 +4965,11 @@ feature --Workbench option file generation
 			buffer.put_string ("};%N")
 			buffer.end_c_specific_code
 
-			create option_file.make_c_code_file (workbench_file_name (Eoption, dot_c, 1));
+			if is_workbench_mode then
+				create option_file.make_c_code_file (workbench_file_name (Eoption, dot_c, 1));
+			else
+				create option_file.make_c_code_file (final_file_name (Eoption, dot_c, 1));
+			end
 			buffer.put_in_file (option_file)
 			option_file.close
 		end

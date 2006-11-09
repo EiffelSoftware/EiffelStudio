@@ -497,6 +497,7 @@ rt_private void interpret(int flag, int where)
 	unsigned char * volatile string;		/* Strings for assertions tag */
 	int volatile type;						/* Often used to hold type values */
 	int volatile saved_assertion;
+	int16 volatile saved_caller_assertion_level = caller_assertion_level;	/* Saves the assertion level of the caller*/
 	unsigned char * volatile rescue;		/* Location of rescue clause */
 	jmp_buf exenv;							/* In case we have to setjmp() */
 	RTEX;									/* Routine's execution vector and debugger
@@ -566,13 +567,14 @@ rt_private void interpret(int flag, int where)
 		argnum = get_int16(&IC);			/* Get the argument number */
 		locnum = get_int16(&IC);		/* Get the local number */
 		init_registers(MTC);		/* Initialize the registers */
+		caller_assertion_level = WASC(icur_dtype) & CK_SUP_REQUIRE;	/* Set the caller assertion level */
 
 		/* Expanded clone of arguments (if any) */
 		while (*IC++ != BC_NO_CLONE_ARG) {
 			EIF_REFERENCE ref;
 
 			code = get_int16(&IC);		/* Get the argument number to clone */
-			last = arg(code);
+			last =  arg(code);
 			ref = last->it_ref;
 			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
@@ -739,7 +741,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		offset = get_int32(&IC);
 		pre_success = '\01';
-		if (!(~in_assertion & WASC(icur_dtype) & CK_REQUIRE)) {
+		if (!(~in_assertion & WASC(icur_dtype) & CK_REQUIRE | saved_caller_assertion_level)) {
 				/* No precondition check? */
 			IC += offset; /* Skip preconditions */
 			goto enter_body; /* Start execution of a routine body. */
@@ -3212,6 +3214,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_NULL\n");
 #endif
+		caller_assertion_level = saved_caller_assertion_level;
 		if (is_nested)		/* Nested feature call (dot notation) */
 			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant */
 		pop_registers();	/* Pop registers */
@@ -3246,6 +3249,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_INV_NULL\n");
 #endif
+		caller_assertion_level = saved_caller_assertion_level;
 		pop_registers();	/* Pop registers */
 		return;
 

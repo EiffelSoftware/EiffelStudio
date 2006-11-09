@@ -7,17 +7,28 @@ class FEATURE_BL
 
 inherit
 	FEATURE_B
+		rename
+			make as make_node
 		redefine
 			free_register,
 			is_feature_call, basic_register, generate_parameters_list,
 			generate_access_on_type, is_polymorphic, has_call,
 			set_register, register, set_parent, parent, generate_access,
 			generate_on, analyze_on, analyze, generate_special_feature,
-			allocates_memory, generate_end
+			allocates_memory, generate_end, set_need_invariant, need_invariant
 		end
 
 	SHARED_DECLARATIONS
 
+create
+	make
+
+feature {NONE} --Initialisation
+
+	make is
+		do
+			need_invariant := True;
+		end;
 feature
 
 	parent: NESTED_BL
@@ -52,6 +63,15 @@ feature
 				basic_register.free_register
 			end
 		end
+
+	need_invariant: BOOLEAN;
+			-- Does the call need an invariant check ?
+
+	set_need_invariant (b: BOOLEAN) is
+			-- Assign `b' to `need_invariant'.
+		do
+			need_invariant := b
+		end;
 
 	analyze is
 			-- Build a proper context for code generation.
@@ -227,7 +247,12 @@ end
 			entry: ROUT_ENTRY
 			f: FEATURE_I
 			index: INTEGER
+			keep, is_nested: BOOLEAN
+			l_par: NESTED_BL
 		do
+			keep := system.keep_assertions
+			is_nested := not is_first
+			l_par := parent
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
 			buf := buffer
 			is_deferred := False
@@ -244,6 +269,13 @@ end
 					-- to be enclosed in parenthesis.
 				table_name := Encoder.table_name (routine_id)
 				buf.put_character ('(')
+				if keep then
+					if is_nested and then need_invariant then
+						buf.put_string ("nstcall = 1, ")
+					else
+						buf.put_string ("nstcall = 0, ")
+					end
+				end
 				type_c.generate_function_cast (buf, argument_types)
 
 					-- Generate following dispatch:
@@ -303,6 +335,13 @@ end
 					local_argument_types := <<"EIF_REFERENCE">>
 				end
 				buf.put_character ('(')
+				if keep then
+					if is_nested and then need_invariant then
+						buf.put_string ("nstcall = 1, ")
+					else
+						buf.put_string ("nstcall = 0, ")
+					end
+				end
 				type_c.generate_function_cast (buf, local_argument_types)
 				buf.put_string (internal_name)
 				buf.put_character (')')

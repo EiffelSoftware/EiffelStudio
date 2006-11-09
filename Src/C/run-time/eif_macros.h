@@ -52,14 +52,11 @@
 #include "eif_size.h"
 #include "eif_gen_conf.h"
 #include "eif_rout_obj.h"
-#if !defined CUSTOM || defined NEED_OPTION_H
 #include "eif_option.h"
-#endif
 #include "eif_bits.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"
-#include "eif_option.h"
 #endif
 
 #ifdef __cplusplus
@@ -1147,14 +1144,11 @@ RT_LNK int fcount;
 #define RTEO(x)			((x) - RTOF(x))
 
 
-
-/* Macros for invariant check.
- *  RTSN saves global variable 'nstcall' within C stack
+/* Old Macros for invariant check.
  *  RTIV(x,y) checks invariant before call on object 'x' if good flags 'y'
  *  RTVI(x,y) checks invariant after call on object 'x' if good flags 'y'
  *  RTCI(x) checks invariant after creation call on object 'x'
  */
-#define RTSN int EIF_VOLATILE is_nested = nstcall
 #ifdef WORKBENCH
 #define RTIV(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,0)
 #define RTVI(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,1)
@@ -1165,6 +1159,16 @@ RT_LNK int fcount;
 #define RTCI(x)			if (~in_assertion) chkinv(MTC x,1)
 #endif
 
+/* New Macros for invariant check.
+ *  RTSN saves global variable 'nstcall' within C stack
+ *  RTIV(x,y) checks invariant before call on object 'x' if good flags 'y'
+ *  RTVI(x,y) checks invariant after call on object 'x' if good flags 'y'
+ *  RTCI(x) checks invariant after creation call on object 'x'
+ */
+#define RTSN int EIF_VOLATILE is_nested = nstcall
+#define RTIV2(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,0)
+#define RTVI2(x,y)		if (is_nested && ((y) & CK_INVARIANT)) chkinv(MTC x,1)
+#define RTCI2(x)			chkcinv(MTC x)
 
 
 /* Generic conformance
@@ -1188,22 +1192,40 @@ RT_LNK int fcount;
 
 
 
-/*
+#ifndef EIF_THREADS
+	RT_LNK int16 caller_assertion_level;	/*Saves information about the assertionlevel of the caller*/
+#endif
+
+
+/* Macros to cache assertion level in generated C routine.
+ * RTDA declares integer used to save the assertion level
+ * RTAL is the access to the saved assertion level variable.
+ * RTAC Checks the assertion level of the caller.
+ * RTSC saves assertion level of the current feature.
+ * RTRS restores the caller_assertion_level.
+ * WASC(x) Assertion level.
+ * RTSA(x) saves assertion level for dynamic type 'x'
+ */
+
+#define RTDA		struct eif_opt * EIF_VOLATILE opt; \
+		int16 saved_caller_assertion_level = caller_assertion_level
+#define RTAL		(~in_assertion & opt->assert_level)
+#define RTAC		(~in_assertion & saved_caller_assertion_level)
+#define RTSC		caller_assertion_level = RTAL & CK_SUP_REQUIRE
+#define RTRS		caller_assertion_level = saved_caller_assertion_level
+#define WASC(x)		eoption[x].assert_level	
+#ifdef WORKBENCH
+#define RTSA(x)		opt = eoption + x; check_options(opt, x)
+#else
+#define RTSA(x)		opt = eoption + x
+#endif
+
+
+ /*
  * Macros for workbench
  */
 
 #ifdef WORKBENCH
-
-/* Macros to cache assertion level in generated C routine.
- *  RTDA declares integer used to save the assertion level
- *  RTSA(x) saves assertion level for dynamic type 'x'
- *  RTAL is the access to the saved assertion level variable
- */
-#define RTDA		struct eif_opt * EIF_VOLATILE opt
-#define RTSA(x)		opt = eoption + x; check_options(opt, x)
-#define RTAL		(~in_assertion & opt->assert_level)
-
-
 
 /* Macros used for feature call and various accesses to objects.
  *  RTWF(x,y,z) is a feature call
@@ -1237,7 +1259,6 @@ RT_LNK int fcount;
 #define RTWO(x)
 
 #define WDBG(x,y)			is_debug(x,y)				/* Debug option */
-#define WASC(x)				eoption[x].assert_level		/* Assertion level */
 
 #define WASL(x,y,z)			waslist(x,y,z)		/* Assertion list evaluation */
 #define WASF(x)				wasfree(x)			/* Free assertion list */

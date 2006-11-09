@@ -2,9 +2,6 @@
 	<target name="event">
 		<description>Event library</description>
 		<root all_classes="true"/>
-		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf" readonly="true"/>
 		<cluster name="event" location=".">

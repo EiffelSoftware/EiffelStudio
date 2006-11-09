@@ -103,7 +103,7 @@ feature -- Assertions
 
 	[System.Diagnostics.DebuggerHiddenAttribute]
   	[System.Diagnostics.DebuggerStepThroughAttribute]
-	public static void check_invariant (object o, bool is_final)
+	public static void check_invariant (object o)
 		// Given object `o' if it has some invariant to be checked, make
 		// sure that they are checked and recursively goes to inherited
 		// invariants and check them too.
@@ -112,7 +112,7 @@ feature -- Assertions
 
 		if (
 			(!in_assertion ()) &&
-			((is_final) || (o != null && is_assertion_checked (o.GetType (), ASSERTION_LEVEL_ENUM.invariant)))
+			(o != null && is_assertion_checked (o.GetType (), ASSERTION_LEVEL_ENUM.invariant, false))
 		) {
 			target = o as EIFFEL_TYPE_INFO;
 			if (target != null) {
@@ -193,7 +193,7 @@ feature -- Assertions
 		}
 	}
 
-	public static bool is_assertion_checked (Type t, ASSERTION_LEVEL_ENUM val)
+	public static bool is_assertion_checked (Type t, ASSERTION_LEVEL_ENUM val, bool saved_caller_supplier_precondition)
 		// Are assertions checked for type `t' for assertion type `val'.
 		// Note that `val' is not a combination.
 	{
@@ -213,24 +213,62 @@ feature -- Assertions
 
 		Result = !in_assertion();
 		if (Result) {
-				// Let's extract the specified assertion level for type `t'.
-				// If `is_global_assertion_level_set' is set, then we can return
-				// the global one.
-			if (is_global_assertion_level_set) {
-				return (global_assertion_level & val) == val;
-			} else if ((assertion_levels != null)) {
-				obj = assertion_levels [t];
-				if (obj != null) {
-					type_assertion_level = (ASSERTION_LEVEL_ENUM) obj;
+			if (val == ASSERTION_LEVEL_ENUM.require && saved_caller_supplier_precondition) {
+				Result = true;
+			} else {
+					// Let's extract the specified assertion level for type `t'.
+					// If `is_global_assertion_level_set' is set, then we can return
+					// the global one.
+				if (is_global_assertion_level_set) {
+					return (global_assertion_level & val) == val;
+				} else if ((assertion_levels != null)) {
+					obj = assertion_levels [t];
+					if (obj != null) {
+						type_assertion_level = (ASSERTION_LEVEL_ENUM) obj;
+					} else {
+						type_assertion_level = ASSERTION_LEVEL_ENUM.no;
+					}
 				} else {
 					type_assertion_level = ASSERTION_LEVEL_ENUM.no;
 				}
+				Result = ((type_assertion_level & val) == val);
+			}
+		}
+		return Result;
+	}
+
+	public static bool save_supplier_precondition (Type t)
+		// Are supplier preconditions checked for type `t'.
+	{
+		ASSERTION_LEVEL_ENUM type_assertion_level;
+		object obj;
+		bool Result = caller_supplier_precondition;
+
+			// Let's extract the specified assertion level for type `t'.
+			// If `is_global_assertion_level_set' is set, then we can return
+			// the global one.
+		if (is_global_assertion_level_set) {
+			caller_supplier_precondition = 
+				(global_assertion_level & ASSERTION_LEVEL_ENUM.supplier_precond ) == ASSERTION_LEVEL_ENUM.supplier_precond;
+			return Result;
+		} else if ((assertion_levels != null)) {
+			obj = assertion_levels [t];
+			if (obj != null) {
+				type_assertion_level = (ASSERTION_LEVEL_ENUM) obj;
 			} else {
 				type_assertion_level = ASSERTION_LEVEL_ENUM.no;
 			}
-			Result = ((type_assertion_level & val) == val);
+		} else {
+			type_assertion_level = ASSERTION_LEVEL_ENUM.no;
 		}
+		caller_supplier_precondition = 
+			((type_assertion_level & ASSERTION_LEVEL_ENUM.supplier_precond ) == ASSERTION_LEVEL_ENUM.supplier_precond);
 		return Result;
+	}
+
+	public static void restore_supplier_precondition (bool val)
+	{
+		caller_supplier_precondition = val;
 	}
 
 /*
@@ -278,6 +316,11 @@ feature {NONE} -- Implementations: Assertions
 		// Flag used during assertion checking to make sure
 		// that assertions are not checked within an assertion
 		// checking.
+	
+	[ThreadStatic]
+	private static bool caller_supplier_precondition = false;
+		// Flag used to detect whether the caller has supplier
+		// preconditions enabled.
 
 	private static ASSERTION_LEVEL_ENUM global_assertion_level = ASSERTION_LEVEL_ENUM.no;
 		// Default global level of assertion checking. If `is_global_assertion_level_set'

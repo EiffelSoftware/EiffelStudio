@@ -15,6 +15,7 @@ extern "C" {
 extern void emain(int, char **);
 extern int main(void);
 extern void egc_init_plug (void); 
+extern void egc_rcdt_init (void); 
 
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
@@ -58,6 +59,7 @@ int main (void)
 	
 		eif_rtinit(argc, argv, envp);
 		if (egc_prof_enabled) initprf();
+		egc_rcdt_init();
 		emain(argc, argv);
 		free_argv (&argv);
 		reclaim();

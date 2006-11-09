@@ -106,6 +106,42 @@ feature {EV_ANY_I, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position'.
+			-- Unit of measurement: screen pixels.
+		local
+			a_aux_info, l_null: POINTER
+			tmp_struct_x: INTEGER
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_x ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+			a_aux_info := aux_info_struct
+			if a_aux_info /= l_null then
+				tmp_struct_x := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+				if tmp_struct_x >= 0 then
+					Result := tmp_struct_x
+				end
+			end
+			Result := Result.max (0)
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position'.
+			-- Unit of measurement: screen pixels.
+		local
+			a_aux_info, l_null: POINTER
+			tmp_struct_y: INTEGER
+		do
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_y ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+			a_aux_info := aux_info_struct
+			if a_aux_info /= l_null then
+				tmp_struct_y := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+				if tmp_struct_y >= 0 then
+					Result := tmp_struct_y
+				end
+			end
+			Result := Result.max (0)
+		end
+
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
 			-- Widget implementation at current mouse pointer position (if any)
 		do

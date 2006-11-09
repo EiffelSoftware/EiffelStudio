@@ -26,6 +26,22 @@ feature -- Menus
 			"TrackPopupMenu((HMENU) $hmenu, (UINT) $flags, (int) $x, (int) $y, (int) $reserved, (HWND) $hwnd, (RECT *) $rect)"
 		end
 
+	frozen get_menu_bar_info (hwnd: POINTER; id_object, id_item: INTEGER; menu_bar_info: POINTER): INTEGER is
+			-- SDK GetMenuBarInfo
+		external
+			"C inline use <windows.h>"
+		alias
+			"GetMenuBarInfo((HWND) $hwnd, (LONG) $id_object, (LONG) $id_item, (PMENUBARINFO) $menu_bar_info)"
+		end
+
+	frozen get_menu_item_rect (hwnd, hmenu: POINTER; uitem: INTEGER; rect: POINTER): INTEGER is
+			-- SDK GetMenuItemRect
+		external
+			"C inline use <windows.h>"
+		alias
+			"GetMenuItemRect((HWND) $hwnd, (HMENU) $hmenu, (UINT) $uitem, (RECT *) $rect)"
+		end
+
 feature -- Messages
 
 	frozen post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is

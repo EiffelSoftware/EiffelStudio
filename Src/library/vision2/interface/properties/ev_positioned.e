@@ -6,8 +6,8 @@ indexing
 	keywords: "position, width, height"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_POSITIONED
 
 inherit
@@ -15,9 +15,9 @@ inherit
 		redefine
 			implementation
 		end
-	
-feature -- Measurement 
-	
+
+feature -- Measurement
+
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		require
@@ -36,6 +36,26 @@ feature -- Measurement
 			Result := implementation.y_position
 		ensure
 			bridge_ok: Result = implementation.y_position
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.screen_x
+		ensure
+			bridge_ok: Result = implementation.screen_x
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.screen_y
+		ensure
+			bridge_ok: Result = implementation.screen_y
 		end
 
 	width: INTEGER is
@@ -58,7 +78,7 @@ feature -- Measurement
 			Result := implementation.height
 		ensure
 			bridge_ok: Result = implementation.height
-		end 
+		end
 
 	minimum_width: INTEGER is
 			-- Lower bound on `width' in pixels.
@@ -69,7 +89,7 @@ feature -- Measurement
 		ensure
 			bridge_ok: Result = implementation.minimum_width
 			positive_or_zero: Result >= 0
-		end 
+		end
 
 	minimum_height: INTEGER is
 			-- Lower bound on `height' in pixels.
@@ -80,10 +100,10 @@ feature -- Measurement
 		ensure
 			bridge_ok: Result = implementation.minimum_height
 			positive_or_zero: Result >= 0
-		end 
+		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_POSITIONED_I
 			-- Responsible for interaction with native graphics toolkit.
 

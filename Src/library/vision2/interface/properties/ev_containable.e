@@ -6,19 +6,19 @@ indexing
 	keywords: "parentable, containable, child"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_CONTAINABLE
 
 inherit
 	EV_ANY
-	
+
+	EV_IDENTIFIABLE
+
 feature -- Status report
 
-	parent: EV_ANY is
+	parent: EV_CONTAINABLE is
 			-- The parent that `Current' is contained within, if any.
-		require
-			not_destroyed: not is_destroyed
 		deferred
 		end
 

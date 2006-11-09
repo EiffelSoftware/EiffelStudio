@@ -48,6 +48,18 @@ feature {NONE} -- Initialization
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_separator_tool_item_new)
 		end
 
+feature -- Measurement
+
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		do
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
+		do
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_SEPARATOR;

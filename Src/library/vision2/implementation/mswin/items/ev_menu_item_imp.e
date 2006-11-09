@@ -159,6 +159,78 @@ feature -- Element change
 			end
 		end
 
+feature -- Measurement
+
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		local
+			a_menu_bar: EV_MENU_BAR_IMP
+			a_menu: EV_MENU_IMP
+		do
+			a_menu_bar ?= parent_imp
+			if a_menu_bar = Void then
+				a_menu ?= parent_imp
+				Result := screen_x - a_menu.screen_x
+			else
+				Result := screen_x - a_menu_bar.screen_x
+			end
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
+		local
+			a_menu_bar: EV_MENU_BAR_IMP
+			a_menu: EV_MENU_IMP
+		do
+			a_menu_bar ?= parent_imp
+			if a_menu_bar = Void then
+				a_menu ?= parent_imp
+				Result := screen_y - a_menu.screen_y
+			else
+				Result := screen_y - a_menu_bar.screen_y
+			end
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		do
+			load_bounds_rect
+			Result := bounds_rect.left
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		do
+			load_bounds_rect
+			Result := bounds_rect.top
+		end
+
+	width: INTEGER is
+			-- Horizontal size in pixels.
+		do
+			load_bounds_rect
+			Result := bounds_rect.right - bounds_rect.left
+		end
+
+	height: INTEGER is
+			-- Vertical size in pixels.
+		do
+			load_bounds_rect
+			Result := bounds_rect.bottom - bounds_rect.top
+		end
+
+	minimum_width: INTEGER is
+			-- Minimum horizontal size in pixels.
+		do
+			Result := width
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum vertical size in pixels.
+		do
+			Result := height
+		end
+
 feature {NONE} -- Implementation
 
 	wel_text: STRING_32 is
@@ -827,6 +899,26 @@ feature {NONE} -- Implementation
 			else
 				Result := a_pixmap_imp_state.build_icon
 				Result.enable_reference_tracking
+			end
+		end
+
+	bounds_rect: WEL_RECT is
+			-- Rect struct which holds boundary information
+			-- This struct is shared.
+		once
+			create Result.make (0, 0, 0, 0)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	load_bounds_rect is
+			-- Load bounds rect.
+		do
+			if {WEL_API}.get_menu_item_rect (Default_pointer, parent_imp.wel_item, parent_imp.index_of (interface, 1)-1, bounds_rect.item) = 0 then
+				bounds_rect.set_rect (0, 0, 0, 0)
+				debug ("vision2_windows")
+					io.put_string ("ERROR: load_bounds_rect")
+				end
 			end
 		end
 

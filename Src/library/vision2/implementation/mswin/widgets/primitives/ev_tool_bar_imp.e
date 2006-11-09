@@ -1180,7 +1180,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			disable_default_processing
 		end
 
-feature {NONE} -- Implementation
+feature {EV_TOOL_BAR_ITEM_IMP} -- Implementation
 
 	child_x (button: EV_TOOL_BAR_BUTTON): INTEGER is
 			-- `Result' is relative xcoor of `button' to `parent_imp'.
@@ -1193,20 +1193,59 @@ feature {NONE} -- Implementation
 			Result := button_rectangle.left
 		end
 
+	child_y (button: EV_TOOL_BAR_BUTTON): INTEGER is
+			-- `Result' is relative ycoor of `button' to `parent_imp'.
+		local
+			button_rectangle: WEL_RECT
+			but: EV_TOOL_BAR_BUTTON_IMP
+		do
+			but ?= button.implementation
+			button_rectangle := button_rect (internal_get_index (but))
+			Result := button_rectangle.top
+		end
+
+	child_x_absolute (button: EV_TOOL_BAR_BUTTON): INTEGER is
+			-- `Result' is absolute xcoor of `button'.	
+		local
+			button_rectangle: WEL_RECT
+			but: EV_TOOL_BAR_BUTTON_IMP
+		do
+			but ?= button.implementation
+			button_rectangle := button_rect (internal_get_index (but))
+			Result := screen_x + button_rectangle.left
+		end
+
 	child_y_absolute (button: EV_TOOL_BAR_BUTTON): INTEGER is
 			-- `Result' is absolute ycoor of `button'.	
 		local
 			button_rectangle: WEL_RECT
-			window_rectangle: WEL_RECT
 			but: EV_TOOL_BAR_BUTTON_IMP
-			b: EV_INTERNAL_TOOL_BAR_IMP
 		do
 			but ?= button.implementation
 			button_rectangle := button_rect (internal_get_index (but))
-			window_rectangle := window_rect
-			b := bar
-			Result := b.window_rect.top +
-			((b.window_rect.height - button_rectangle.height)//2) - 1
+			Result := screen_y + button_rectangle.top
+		end
+
+	child_width (button: EV_TOOL_BAR_BUTTON): INTEGER is
+			-- `Result' is width of `button'.
+		local
+			button_rectangle: WEL_RECT
+			but: EV_TOOL_BAR_BUTTON_IMP
+		do
+			but ?= button.implementation
+			button_rectangle := button_rect (internal_get_index (but))
+			Result := button_rectangle.width
+		end
+
+	child_height (button: EV_TOOL_BAR_BUTTON): INTEGER is
+			-- `Result' is height of `button'.
+		local
+			button_rectangle: WEL_RECT
+			but: EV_TOOL_BAR_BUTTON_IMP
+		do
+			but ?= button.implementation
+			button_rectangle := button_rect (internal_get_index (but))
+			Result := button_rectangle.height
 		end
 
 feature {EV_ANY_I}

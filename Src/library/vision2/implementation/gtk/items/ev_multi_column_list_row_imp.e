@@ -183,6 +183,48 @@ feature -- Element Change
 	tooltip: STRING_32
 			-- Tooltip displayed on `Current'.
 
+feature -- Measurement
+
+	x_position: INTEGER is
+			-- Horizontal offset relative to parent `x_position' in pixels.
+		do
+		end
+
+	y_position: INTEGER is
+			-- Vertical offset relative to parent `y_position' in pixels.
+		do
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset relative to screen.
+		do
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset relative to screen.
+		do
+		end
+
+	width: INTEGER is
+			-- Horizontal size in pixels.
+		do
+		end
+
+	height: INTEGER is
+			-- Vertical size in pixels.
+		do
+		end
+
+	minimum_width: INTEGER is
+			-- Minimum horizontal size in pixels.
+		do
+		end
+
+	minimum_height: INTEGER is
+			-- Minimum vertical size in pixels.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	on_item_added_at (an_item: STRING_GENERAL; item_index: INTEGER) is

@@ -4,27 +4,31 @@ indexing
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_MENU_BAR_I
-	
+
 inherit
 	EV_MENU_ITEM_LIST_I
 		redefine
 			interface
 		end
-		
+
+	EV_POSITIONED_I
+		redefine
+			interface
+		end
+
 feature -- Status report
 
 	parent: EV_WINDOW is
 			-- Parent of `Current'.
 		deferred
 		end
-		
 
 feature {EV_ANY} -- Implementation
 
-	interface: EV_MENU_BAR;	
+	interface: EV_MENU_BAR;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

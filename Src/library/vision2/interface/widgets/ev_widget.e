@@ -385,28 +385,6 @@ feature {EV_BUILDER} -- Element change
 			minimum_height_set_by_user_reset: not minimum_height_set_by_user
 		end
 
-feature -- Measurement
-
-	screen_x: INTEGER is
-			-- Horizontal offset relative to left of screen in pixels.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.screen_x
-		ensure
-			bridge_ok: Result = implementation.screen_x
-		end
-
-	screen_y: INTEGER is
-			-- Vertical offset relative to top of screen in pixels.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.screen_y
-		ensure
-			bridge_ok: Result = implementation.screen_y
-		end
-
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is

@@ -1,5 +1,5 @@
-indexing	
-	description: 
+indexing
+	description:
 		"Eiffel Vision item. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -7,7 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class 
+deferred class
 	EV_ITEM_I
 
 inherit
@@ -21,6 +21,11 @@ inherit
 			interface
 		end
 
+	EV_POSITIONED_I
+		redefine
+			interface
+		end
+
 	EV_ITEM_ACTION_SEQUENCES_I
 
 feature -- Access
@@ -30,7 +35,7 @@ feature -- Access
 		do
 			if parent_imp /= Void then
 				Result ?= parent_imp.interface
-				check 
+				check
 					parent_not_void: Result /= Void
 				end
 			end

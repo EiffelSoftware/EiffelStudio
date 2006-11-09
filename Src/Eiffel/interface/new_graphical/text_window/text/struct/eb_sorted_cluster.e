@@ -112,7 +112,20 @@ feature -- Statusupdate
 				clusters := build_groups (l_cls_lst)
 
 					-- overrides
-				overrides := build_groups (l_lib_target.overrides.linear_representation)
+				from
+					l_cls := l_lib_target.overrides
+					create l_cls_lst.make (l_cls.count)
+					l_cls.start
+				until
+					l_cls.after
+				loop
+					l_cluster := l_cls.item_for_iteration
+					if l_cluster.parent = Void then
+						l_cls_lst.force (l_cluster)
+					end
+					l_cls.forth
+				end
+				overrides := build_groups (l_cls_lst)
 
 					-- libraries
 				l_libs := l_lib_target.libraries.linear_representation

@@ -979,10 +979,7 @@ feature {NONE} -- Implementation
 		local
 			l_deps: DS_HASH_SET [CONF_GROUP]
 			l_visible: EQUALITY_HASH_TABLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]], STRING]
-			l_clusters: HASH_TABLE [CONF_CLUSTER, STRING]
-			l_cluster: CONF_CLUSTER
-			l_name: STRING
-			l_sort_lst: DS_ARRAYED_LIST [STRING]
+			l_clusters: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			append_file_rule (a_cluster.internal_file_rule)
 			append_mapping (a_cluster.internal_mapping)
@@ -1001,23 +998,14 @@ feature {NONE} -- Implementation
 			if l_visible /= Void then
 				append_visible (l_visible)
 			end
-				-- look for subclusters
-			from
-				l_name := a_cluster.name
-				l_clusters := current_target.internal_clusters.twin
-				create l_sort_lst.make_from_array (l_clusters.current_keys)
-				l_sort_lst.sort (create {DS_QUICK_SORTER [STRING]}.make (create {KL_COMPARABLE_COMPARATOR [STRING]}.make))
-
-				l_sort_lst.start
-			until
-				l_sort_lst.after
-			loop
-				l_cluster := l_clusters.item (l_sort_lst.item_for_iteration)
-				if l_cluster.parent /= Void and then l_cluster.parent.name.is_equal (l_name) then
-					current_is_subcluster := True
-					l_cluster.process (Current)
-				end
-				l_sort_lst.forth
+				-- process subclusters
+			l_clusters := a_cluster.children
+			if l_clusters /= Void then
+				l_clusters.do_all (agent (ai_cluster: CONF_CLUSTER)
+					do
+						current_is_subcluster := True
+						ai_cluster.process (Current)
+					end)
 			end
 		end
 

@@ -335,7 +335,7 @@ feature -- Callbacks
 					current_cluster := current_cluster.parent
 				when t_override then
 					current_group := current_cluster.parent
-					current_cluster := current_override.parent
+					current_cluster := current_cluster.parent
 					current_override := Void
 				when t_class_option then
 					current_option := Void
@@ -945,6 +945,7 @@ feature {NONE} -- Implementation attribute processing
 				end
 				if l_parent /= Void then
 					current_cluster.set_parent (l_parent)
+					l_parent.add_child (current_cluster)
 				end
 				group_list.force (current_group, l_name)
 				current_target.add_override (current_override)
@@ -1755,6 +1756,8 @@ feature {NONE} -- Implementation state transitions
 				-- -everything from cluster
 				-- => overrides
 			l_trans := l_trans.twin
+			l_trans.remove ("cluster")
+			l_trans.force (t_override, "override")
 			l_trans.force (t_overrides, "overrides")
 			Result.force (l_trans, t_override)
 

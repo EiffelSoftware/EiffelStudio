@@ -88,7 +88,20 @@ feature -- Initialization
 					l_cls.forth
 				end
 				clusters := create_groups (l_cls_lst)
-				overrides := create_groups (l_target.overrides)
+				from
+					l_cls := l_target.overrides
+					create l_cls_lst.make (l_cls.count)
+					l_cls.start
+				until
+					l_cls.after
+				loop
+					l_cluster := l_cls.item_for_iteration
+					if l_cluster.parent = Void and l_cluster.classes_set then
+						l_cls_lst.force (l_cluster, l_cluster.name)
+					end
+					l_cls.forth
+				end
+				overrides := create_groups (l_cls_lst)
 				l_libs := l_target.libraries
 				if l_target.precompile /= Void and l_target.precompile.classes_set then
 					l_libs.force (l_target.precompile, l_target.precompile.name)
@@ -531,6 +544,7 @@ feature -- Element change
 			l_clu: CLUSTER_I
 			l_sys: CONF_SYSTEM
 			l_fact: CONF_COMP_FACTORY
+			l_over, l_over_parent: OVERRIDE_I
 		do
 			create l_fact
 			error_in_config := False
@@ -539,16 +553,32 @@ feature -- Element change
 			else
 				l_target := a_parent.target
 			end
-			last_added_cluster := l_fact.new_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+			if a_parent /= Void and then a_parent.is_override then
+				l_over := l_fact.new_override (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+				last_added_cluster := l_over
+			else
+				last_added_cluster := l_fact.new_cluster (a_name, l_fact.new_location_from_path (a_path, l_target), l_target)
+			end
 				-- create empty class list, so that the folder can be displayed
 			last_added_cluster.set_classes (create {HASH_TABLE [EIFFEL_CLASS_I, STRING]}.make (0))
 			last_added_cluster.set_classes_by_filename (create {HASH_TABLE [EIFFEL_CLASS_I, STRING]}.make (0))
 
 			if a_parent /= Void and then a_parent.is_cluster then
-				l_clu ?= a_parent
-				last_added_cluster.set_parent (l_clu)
+				if a_parent.is_override then
+					l_over_parent ?= a_parent
+					l_over.set_parent (l_over_parent)
+					l_over_parent.add_child (l_over)
+				else
+					l_clu ?= a_parent
+					last_added_cluster.set_parent (l_clu)
+					l_clu.add_child (last_added_cluster)
+				end
 			end
-			l_target.add_cluster (last_added_cluster)
+			if l_over /= Void then
+				l_target.add_override (l_over)
+			else
+				l_target.add_cluster (last_added_cluster)
+			end
 			l_sys := l_target.system
 			l_sys.store
 			error_in_config := not l_sys.store_successful

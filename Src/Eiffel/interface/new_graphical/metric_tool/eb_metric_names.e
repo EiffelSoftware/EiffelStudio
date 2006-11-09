@@ -26,8 +26,9 @@ feature -- Titles
 	t_expression: STRING is "Expression:"
 	t_criterion: STRING is "Criterion"
 	t_properties: STRING is "Properties"
-	t_status: STRING is "Status:"
+	t_status: STRING is "Status"
 	t_ok: STRING is "OK"
+	t_cancel: STRING is "Cancel"
 	t_type: STRING is "type"
 	t_value_of_reference: STRING is "Reference value"
 	t_value_of_current: STRING is "Current value"
@@ -92,6 +93,28 @@ feature -- Titles
 	t_close: STRING is "Close"
 	t_metric_definition_error_wizard: STRING is "Metric definition error wizard"
 	t_metric_archive_calculation_finished: STRING is "Metric archive calculation finished."
+	t_import_metric_title: STRING is "Import Metrics"
+	t_import_selected_metrics: STRING is "Import Selected Metrics"
+	t_backup_user_defined_metrics: STRING is "Backup User-defined Metrics"
+	t_metric_definition_file: STRING is "Metric Definition File:"
+	t_load: STRING is "Load"
+	t_import: STRING is "Import"
+	t_metric_original_name: STRING is "Original metric name"
+	t_metric_name: STRING is "Metric name"
+	t_metric_description: STRING is "Description"
+	t_metric_unit: STRING is "Unit"
+	t_select_all_metrics: STRING is "Select All Metrics"
+	t_deselect_all_metrics: STRING is "Deselect All Metrics"
+	t_select_integral_metrics: STRING is "Select Integral Metrics"
+	t_deselect_integral_metrics: STRING is "Deselect Integral Metrics"
+
+	t_backup_metrics: STRING is "Backup user-defined metrics"
+	t_select_file_for_backup: STRING is "Select a file for user-defined metrics backup:"
+	t_backup: STRING is "Backup"
+	t_importing_metrics: STRING is "Importing metrics..."
+	t_metrics_imported: STRING is "Metric(s) imported."
+	t_metric_backuped: STRING is "User-defined metrics backup finished."
+	t_metrics_list: STRING is "Metric List:"
 
 feature -- Labels
 
@@ -155,7 +178,25 @@ feature -- Tooltip
 	f_move_unit_up: STRING is "Move metric unit up.%N"
 	f_move_unit_down: STRING is "Move metric unit down.%N"
 	f_rearrange_unit: STRING is "Or you can pick a metric unit and drop it on another metric to rearrange their order."
-	f_show_to_do_message: STRING is "Display a message about how to deal with the metric definition error";
+	f_show_to_do_message: STRING is "Display a message about how to deal with the metric definition error"
+	f_import_metrics: STRING is "Import metrics from file";
+
+feature -- Error/warning message
+
+	err_metric_name_exists_in_import_metric_list: STRING is "There is already metric named %"$new_name%" in import metric list.%NThe name %"$new_name%" will be changed back to %"$old_name%".";
+			-- Error message used when in metric import dialog, when a changed metric name causes name crash in listed metrics to be imported
+
+	wrn_metric_name_exists_in_your_metrics: STRING is "Metric named %"$name%" already exists in your metrics."
+			-- Warning message used when in metric import dialog, when a changed metric name causes name crash in a users metrics
+
+	wrn_referenced_metrics_not_selected: STRING is "Referenced metric(s): $metrics not selected"
+			-- Warning message used when in metric import dialog, when a metric is selected while some of its recursively referenced metrics are not selected
+
+	wrn_referenced_metrics_missing: STRING is "Referenced metric(s): $metrics not found"
+			-- Warning message used when in metric import dialog, when a metric is selected while some of its recursively referenced metrics are not found	
+
+	wrn_metric_name_crash: STRING is "There is already a metric named %"$name%".%NChange its name in %"Metric name%" column to make it importable";
+			-- Warning message used when in metric import dialog, when a metric has name crash with an existing metric.
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

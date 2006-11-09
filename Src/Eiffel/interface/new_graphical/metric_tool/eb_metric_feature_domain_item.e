@@ -89,7 +89,7 @@ feature -- Access
 			-- Query language item representation of current domain item
 		do
 			Result := ql_feature
-		end		
+		end
 
 feature -- Process
 

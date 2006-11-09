@@ -59,7 +59,6 @@ feature -- Setting
 			archive_is_empty: archive.is_empty
 		end
 
-
 feature{NONE} -- Callbacks
 
 	on_start_tag_finish is
@@ -206,10 +205,13 @@ feature{NONE} -- Process
 			l_id: STRING
 			l_type: STRING
 			l_error_str: STRING
+			l_library_target_uuid: STRING
+			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
 			check current_archive_node /= Void end
 			l_id := current_attributes.item (at_id)
 			l_type := current_attributes.item (at_type)
+			l_library_target_uuid := current_attributes.item (at_library_target_uuid)
 			if l_id = Void then
 				create l_error_str.make (100)
 				l_error_str.append ("Domain item id is missing in")
@@ -235,7 +237,24 @@ feature{NONE} -- Process
 						l_error_str.append (" is invalid.")
 						set_parse_error_message (l_error_str)
 					else
-						current_domain.extend (domain_item_type_table.item (l_type).item ([l_id]))
+						if l_library_target_uuid /= Void then
+							if not shared_uuid.is_valid_uuid (l_library_target_uuid) then
+								create l_error_str.make (100)
+								l_error_str.append ("Library target UUID ")
+								l_error_str.append (quoted_name (l_library_target_uuid, Void))
+								l_error_str.append (" in ")
+								l_error_str.append (quoted_name (current_archive_node.metric_name, "metric archive node"))
+								l_error_str.append (" is invalid.")
+								set_parse_error_message (l_error_str)
+							end
+						end
+						if not has_error then
+							l_domain_item := domain_item_type_table.item (l_type).item ([l_id])
+							if l_library_target_uuid /= Void then
+								l_domain_item.set_library_target_uuid (l_library_target_uuid)
+							end
+							current_domain.extend (l_domain_item)
+						end
 					end
 				end
 			end
@@ -305,9 +324,11 @@ feature{NONE} -- Implementation
 				-- domain_item
 				-- * id
 				-- * type
+				-- * library_target_uuid
 			create l_attr.make (2)
 			l_attr.force (at_id, n_id)
 			l_attr.force (at_type, n_type)
+			l_attr.force (at_library_target_uuid, n_library_target_uuid)
 			Result.force (l_attr, t_domain_item)
 		end
 

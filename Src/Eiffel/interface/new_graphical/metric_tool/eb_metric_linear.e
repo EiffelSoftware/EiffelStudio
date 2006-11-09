@@ -94,6 +94,20 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	direct_referenced_metrics: LIST [STRING] is
+			-- Name of metrics which are directly referenced by Current
+		do
+			create {LINKED_LIST [STRING]} Result.make
+			from
+				variable_metric.start
+			until
+				variable_metric.after
+			loop
+				Result.extend (variable_metric.item)
+				variable_metric.forth
+			end
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

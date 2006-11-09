@@ -25,6 +25,11 @@ inherit
 			is_equal
 		end
 
+	EB_METRIC_SHARED
+		undefine
+			is_equal
+		end
+
 feature{NONE} -- Initialization
 
 	make (a_id: STRING) is
@@ -121,6 +126,32 @@ feature -- Access
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	library_target_uuid: STRING
+			-- UUID of the library target if Current item is a group and represents a library
+
+feature -- Setting
+
+	set_library_target_uuid (a_uuid: STRING) is
+			-- Set `library_target_uuid' with `a_uuid'.
+		require
+			a_uuid_attached: a_uuid /= Void
+			a_uuid_valid: shared_uuid.is_valid_uuid (a_uuid)
+		do
+			create library_target_uuid.make_from_string (a_uuid)
+		ensure
+			library_target_uuid_set: library_target_uuid /= Void and then library_target_uuid.is_equal (a_uuid)
+		end
+
+	set_id (a_id: like id) is
+			-- Set `id' with `a_id'.
+		require
+			a_id_attached: a_id /= Void
+		do
+			create id.make_from_string (a_id)
+		ensure
+			id_set: id /= Void and then id.is_equal (a_id)
 		end
 
 invariant

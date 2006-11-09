@@ -148,6 +148,10 @@ feature {NONE} -- Initialization
 			send_current_to_new_btn.select_actions.extend (agent on_copy_current_metric_to_a_new_metric)
 			send_current_to_new_btn.set_tooltip (metric_names.f_create_new_metric_using_current_data)
 
+			import_btn.set_pixmap (pixmaps.icon_pixmaps.metric_export_to_file_icon)
+			import_btn.set_tooltip (metric_names.f_import_metrics)
+			import_btn.select_actions.extend (agent on_import_metrics)
+
 				-- Delete following in docking EiffelStudio.
 			no_metric_area.drop_actions.extend (agent drop_cluster)
 			no_metric_area.drop_actions.extend (agent drop_class)
@@ -189,6 +193,12 @@ feature -- Status report
 					(current_metric_editor.is_linear_metric_editor and then a_type = linear_metric_type) or
 					(current_metric_editor.is_ratio_metric_editor and then a_type = ratio_metric_type)
 			end
+		end
+
+	is_editing_new_metric: BOOLEAN is
+			-- Is a new metric being edited in current panel?
+		do
+			Result := current_metric_editor /= Void and then current_metric_editor.mode = {EB_METRIC_EDITOR}.new_mode
 		end
 
 feature -- Basic operations
@@ -285,11 +295,18 @@ feature -- Actions
 
 	on_select is
 			-- Action to be performed when current is selected
+		local
+			l_metric: EB_METRIC
+			l_editing_new: BOOLEAN
 		do
 			if not is_selected then
 				set_is_selected (True)
 			end
 			if not is_up_to_date then
+				l_editing_new := is_editing_new_metric
+				if l_editing_new then
+					l_metric := current_metric_editor.metric
+				end
 				metric_selector.load_metrics (True)
 				metric_selector.try_to_selected_last_metric
 				if metric_selector.selected_metric = Void then
@@ -298,6 +315,10 @@ feature -- Actions
 					save_metric_btn.disable_sensitive
 					remove_metric_btn.disable_sensitive
 					current_metric_editor := Void
+				end
+				if l_metric /= Void then
+					metric_selector.remove_selection
+					load_metric_definition (l_metric, metric_type (l_metric) , l_metric.unit, True)
 				end
 				if last_update_request = compilation_start_update_request then
 						-- This is an update when Eiffel compilation starts.
@@ -389,6 +410,18 @@ feature -- Actions
 					create l_cmd_exec
 					l_cmd_exec.execute (l_cmd_string)
 				end
+			end
+		end
+
+	on_import_metrics is
+			-- Action to be performed to import metric definitions from file.
+		local
+			l_import_dlg: EB_METRIC_IMPORT_DIALOG
+		do
+			create l_import_dlg.make (metric_tool)
+			l_import_dlg.show_modal_to_window (metric_tool_window)
+			if l_import_dlg.should_metric_be_refreshed then
+				on_reload_metrics
 			end
 		end
 

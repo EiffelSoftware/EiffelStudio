@@ -292,37 +292,37 @@ feature{NONE} -- Process
 	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
 			-- Process `a_item'.
 		do
-			append_domain_item (n_target, a_item.text_of_id)
+			append_domain_item (n_target, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
 	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
 			-- Process `a_item'.
 		do
-			append_domain_item (n_group, a_item.text_of_id)
+			append_domain_item (n_group, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
 	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
 			-- Process `a_item'.
 		do
-			append_domain_item (n_folder, a_item.text_of_id)
+			append_domain_item (n_folder, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
 	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
 			-- Process `a_item'.
 		do
-			append_domain_item (n_class, a_item.text_of_id)
+			append_domain_item (n_class, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
 	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
 			-- Process `a_item'.
 		do
-			append_domain_item (n_feature, a_item.text_of_id)
+			append_domain_item (n_feature, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
 	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
 			-- Process `a_item'.
 		do
-			append_domain_item (n_delayed, a_item.text_of_id)
+			append_domain_item (n_delayed, a_item.text_of_id, a_item.library_target_uuid)
 		end
 
 	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
@@ -384,7 +384,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	append_domain_item (a_type: STRING; a_id: STRING) is
+	append_domain_item (a_type: STRING; a_id: STRING; a_library_target_uuid: STRING) is
 			-- Append domain item with `a_attr_tbl' in `text'.
 		require
 			a_type_attached: a_type /= Void
@@ -393,9 +393,12 @@ feature{NONE} -- Implementation
 		local
 			l_attr_tbl: HASH_TABLE [STRING, STRING]
 		do
-			create l_attr_tbl.make (2)
+			create l_attr_tbl.make (3)
 			l_attr_tbl.put (a_type, n_type)
 			l_attr_tbl.put (a_id, n_id)
+			if a_library_target_uuid /= Void then
+				l_attr_tbl.put (a_library_target_uuid, n_library_target_uuid)
+			end
 			append_indent
 			append_start_tag (n_domain_item, l_attr_tbl)
 			append_end_tag (n_domain_item)

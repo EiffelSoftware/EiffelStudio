@@ -41,16 +41,24 @@ feature -- Access
 			-- Uses '.' as a separator.
 		do
 			if parent = Void then
-				Result := name.twin
+				Result := internal_name.twin
 			else
-				Result := parent.full_path
+				Result := parent.full_identifier_path
 				Result.append_character ('.')
-				Result.append_string (name)
+				Result.append_string (internal_name)
 			end
 		ensure
 			result_not_void: Result /= Void
-			result_correct: parent = Void implies Result.is_equal (name)
-			result_correct: parent /= Void implies Result.is_equal (parent.name + "." + name)
+			result_correct: parent = Void implies Result.is_equal (identifier_name)
+			result_correct: parent /= Void implies Result.is_equal (parent.full_identifier_path + "." + identifier_name)
+		end
+
+feature -- Status report
+
+	has_parent: BOOLEAN is
+			-- Does identifiable has a parent?
+		do
+			Result := parent /= Void
 		end
 
 feature -- Element change
@@ -65,7 +73,7 @@ feature -- Element change
 		do
 			internal_name := a_name.twin
 		ensure
-			name_set: name.is_equal (a_name)
+			name_set: identifier_name.is_equal (a_name)
 		end
 
 feature {NONE} -- Implementation
@@ -74,8 +82,8 @@ feature {NONE} -- Implementation
 			-- Internal name set by `set_name'
 
 invariant
-	name_not_void: name /= Void
-	name_not_empty: not name.is_empty
+	identifier_name_not_void: identifier_name /= Void
+	identifier_name_not_empty: not identifier_name.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

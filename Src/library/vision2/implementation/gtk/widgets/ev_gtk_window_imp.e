@@ -16,7 +16,9 @@ inherit
 			height,
 			show,
 			screen_x,
-			screen_y
+			screen_y,
+			x_position,
+			y_position
 		end
 
 feature {NONE} -- Agent functions.

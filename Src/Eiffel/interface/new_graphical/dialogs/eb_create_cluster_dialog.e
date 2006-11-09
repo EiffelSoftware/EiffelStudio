@@ -264,6 +264,7 @@ feature {NONE} -- Implementation
 			clu: EB_SORTED_CLUSTER
 			wd: EV_WARNING_DIALOG
 		do
+			is_top_level := False
 			if cluster_list.selected_item /= Void then
 				l_hdr ?= cluster_list.selected_item
 				if l_hdr /= Void then
@@ -336,7 +337,7 @@ feature {NONE} -- Implementation
 					check group_not_void: group /= Void end
 					if group.is_cluster then
 						l_clu ?= group
-						in_recursive := l_clu /= Void and then l_clu.is_recursive
+						in_recursive := l_clu /= Void and then l_clu.is_recursive and then (original_path = Void or else original_path.is_empty)
 					end
 				end
 				if aok and not in_recursive then

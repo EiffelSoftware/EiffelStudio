@@ -163,7 +163,7 @@ feature -- Generic conformance
 			Result := type.is_explicit
 		end
 
-	generate_gen_type_conversion (node : BYTE_NODE) is
+	generate_gen_type_conversion is
 
 		local
 			gen_type : GEN_TYPE_I

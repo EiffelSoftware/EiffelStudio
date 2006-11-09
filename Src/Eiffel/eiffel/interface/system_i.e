@@ -1246,7 +1246,15 @@ end
 			root_type_set: root_type /= Void
 		end
 
-
+	root_class_type: CLASS_TYPE is
+			-- CLASS_TYPE of root type		
+		do
+			check
+					-- Should be ensured by semantic analysis.
+				class_type_exists: root_type.type_i.has_associated_class_type
+			end
+			Result := root_type.type_i.associated_class_type
+		end
 
 	init_recompilation is
 			-- Initialization before a recompilation.
@@ -2300,6 +2308,7 @@ end
 			melted_file: RAW_FILE
 			file_name: FILE_NAME
 			l_name: STRING
+			l_ba: BYTE_ARRAY
 		do
 debug ("ACTIVITY")
 	io.error.put_string ("Updating name.eif%N")
@@ -2331,30 +2340,6 @@ end
 			if not empty then
 				file_pointer := melted_file.file_pointer
 
-					-- Update the root class info
-				a_class := root_type.associated_class
-				dtype := a_class.types.first.type_id - 1
-				if root_creation_name /= Void then
-					root_feat := a_class.feature_table.item (root_creation_name)
-					if root_feat /= Void then
-						if root_feat.has_arguments then
-							has_argument := 1
-						end
-						rout_id := root_feat.rout_id_set.first
-						rout_info := rout_info_table.item (rout_id)
-						rcorigin := rout_info.origin
-						rcoffset := rout_info.offset
-					else
-						rcorigin := - 1
-					end
-				else
-					rcorigin := -1
-				end
-				write_int (file_pointer, rcorigin)
-				write_int (file_pointer, dtype)
-				write_int (file_pointer, rcoffset)
-				write_int (file_pointer, has_argument)
-
 					-- Write first the number of dynamic types now available
 				write_int (file_pointer, type_id_counter.value)
 					-- Write the number of classes now available
@@ -2378,6 +2363,40 @@ end
 				make_update_descriptors (melted_file)
 					-- End mark
 				write_int (file_pointer, -1)
+
+
+					-- Update the root class info
+			    a_class := root_type.associated_class
+				dtype := root_class_type.type_id - 1
+				if root_creation_name /= Void then
+					root_feat := a_class.feature_table.item (root_creation_name)
+					if root_feat /= Void then
+						if root_feat.has_arguments then
+							has_argument := 1
+						end
+						rout_id := root_feat.rout_id_set.first
+						rout_info := rout_info_table.item (rout_id)
+						rcorigin := rout_info.origin
+						rcoffset := rout_info.offset
+					else
+						rcorigin := - 1
+					end
+				else
+					rcorigin := -1
+				end
+				write_int (file_pointer, rcorigin)
+
+					-- Generate type ID for ANY
+				write_int (file_pointer, any_class.compiled_class.types.first.type.type_id - 1)
+					-- Generate data to create the root full dynamic type ID.
+				create l_ba.make
+				byte_context.init (root_class_type)
+				root_type.type_i.make_full_type_byte_code (l_ba)
+					-- Write number of bytes in byte array.
+				l_ba.character_array.store (melted_file)
+
+				write_int (file_pointer, rcoffset)
+				write_int (file_pointer, has_argument)
 			end
 
 			melted_file.close
@@ -4673,6 +4692,8 @@ feature -- Pattern table generation
 
 			rout_id: INTEGER
 			rout_table: ROUT_TABLE
+			create_type: CREATE_TYPE
+			l_creation_type: CL_TYPE_I
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
@@ -4681,7 +4702,7 @@ feature -- Pattern table generation
 			final_mode := byte_context.final_mode
 
 			root_cl := root_type.associated_class
-			cl_type := root_cl.types.first
+			cl_type := root_class_type
 			dtype := cl_type.type_id - 1
 
 			if not Compilation_modes.is_precompiling and then root_creation_name /= Void then
@@ -4719,12 +4740,8 @@ feature -- Pattern table generation
 --											%%Textern char *root_obj;%N%
 --											%#endif%N")
 
-			buffer.put_string ("%Troot_obj = RTLN(")
-			if final_mode then
-				buffer.put_integer (dtype)
-			else
-				buffer.put_string ("egc_rcdt")
-			end
+			buffer.put_string ("%Troot_obj = RTLNSMART(")
+			buffer.put_string ("egc_rcdt")
 			buffer.put_string (");%N")
 
 			if final_mode then
@@ -4740,9 +4757,9 @@ feature -- Pattern table generation
 			else
 				buffer.put_string ("%Tif (egc_rcorigin != -1) {%N%
 					%%T%Tif (egc_rcarg) {%N%
-					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj, argarr(argc, argv));%N%
+					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj, argarr(argc, argv));%N%
 					%%T%T} else {%N%
-					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, egc_rcdt))(root_obj);%N%T%T}%N%T}%N")
+					%%T%T%T(FUNCTION_CAST(void, (EIF_REFERENCE)) RTWPF(egc_rcorigin, egc_rcoffset, Dtype(root_obj)))(root_obj);%N%T%T}%N%T}%N")
 			end
 
 			buffer.put_string ("%N}%N")

@@ -262,19 +262,19 @@ feature -- Generation
 					l_class_type_not_void: l_class_type /= Void
 				end
 				l_call.parameters.first.generate
-				info.generate_start (Current)
-				info.generate_gen_type_conversion (Current)
+				info.generate_start (buf)
+				info.generate_gen_type_conversion
 				l_class_type.generate_creation (buf, info, register, l_call.parameters.first)
-				info.generate_end (Current)
+				info.generate_end (buf)
 			else
-				info.generate_start (Current)
-				info.generate_gen_type_conversion (Current)
+				info.generate_start (buf)
+				info.generate_gen_type_conversion
 				register.print_register
 				buf.put_string (" = ")
 				info.generate
 				buf.put_character (';')
 				buf.put_new_line
-				info.generate_end (Current)
+				info.generate_end (buf)
 
 				if call /= Void then
 					call.set_parent (nested_b)

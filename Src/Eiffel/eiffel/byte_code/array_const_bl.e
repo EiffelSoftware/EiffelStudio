@@ -126,15 +126,15 @@ feature {NONE} -- C code generation
 		local
 			buf: GENERATION_BUFFER
 		do
-			info.generate_start (Current)
-			info.generate_gen_type_conversion (Current)
-			print_register;
 			buf := buffer
+			info.generate_start (buf)
+			info.generate_gen_type_conversion
+			print_register;
 			buf.put_string (" = ");
 			info.generate
 			buf.put_character (';');
 			buf.put_new_line;
-			generate_block_close;
+			info.generate_end (buf)
 		end;
 
 	fill_array (target_type: TYPE_I) is

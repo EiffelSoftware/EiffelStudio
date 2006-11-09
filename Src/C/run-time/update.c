@@ -51,6 +51,7 @@ doc:<file name="update.c" header="rt_update.h" version="$Id$" summary="Update ru
 #include "eif_except.h"
 #include "rt_update.h"
 #include "rt_interp.h"
+#include "rt_bc_reader.h"
 #include "eif_cecil.h"
 #include "eif_misc.h"
 #include "eif_file.h"
@@ -297,9 +298,6 @@ rt_public void update(char ignore_updt, char *argv0)
 		return;
 	}
 
-		/* Update the root class and the creation feature ids */
-	root_class_updt ();
-
 	count = wint32();			/* Read the count of class types */
 	ccount = wint32();			/* Read the count of classes */
 	eif_nb_org_routines = wint32();		/* Read the number of original routine bodies */
@@ -429,16 +427,29 @@ rt_public void update(char ignore_updt, char *argv0)
 	init_desc();
 	desc_updt();
 
+		/* Update the root class and the creation feature ids */
+	root_class_updt ();
+
 /* TEMPORARY */
 	fclose(melted_file);
 }
 
 rt_private void root_class_updt (void)
 {
+	EIF_GET_CONTEXT
+	EIF_REFERENCE l_obj;
+	unsigned char *old_IC = IC;
 	/* Update the root class info */
 
 	egc_rcorigin = wint32();
-	egc_rcdt = wint32();
+
+		/* Create an instance of ANY, to give us a context. */
+	l_obj = RTLNSMART((int16)wint32());
+		/* compute the full dynamic type for `root_obj'. */
+	IC = (unsigned char *) wtype_array(NULL);
+	egc_rcdt = get_compound_id (l_obj, get_int16(&IC));
+	IC = old_IC;
+
 	egc_rcoffset = wint32();
 	egc_rcarg = wint32();
 

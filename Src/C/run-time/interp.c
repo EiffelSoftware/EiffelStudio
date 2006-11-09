@@ -227,7 +227,7 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, struct item
 rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
-rt_private short get_compound_id(EIF_REFERENCE obj, short dtype);			/* Get a compound type id */
+rt_shared short get_compound_id(EIF_REFERENCE obj, short dtype);			/* Get a compound type id */
 rt_private int get_creation_type(void);		/* Get a creation type id */
 
 /* Interpreter interface */
@@ -4758,7 +4758,7 @@ rt_private void address(int32 aid)
 	last->it_ptr = (EIF_POINTER) RTWPP(aid);
 }
 
-rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
+rt_shared short get_compound_id(EIF_REFERENCE Current, short dtype)
 {
 	/* Get array of short ints and convert it to a compound id. */
 	RT_GET_CONTEXT
@@ -4783,7 +4783,7 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 						*(gp - 1) = RTID(RTCA(arg(pos)->it_ref, -10));
 						break;
 			case LIKE_CURRENT_TYPE: /* like Current */
-						*(gp - 1) = RTID((icur_dftype));
+						*(gp - 1) = RTID(Dftype(Current));
 						break;
 			case LIKE_PFEATURE_TYPE: /* like feature - see BC_PCLIKE */
 						{
@@ -4793,7 +4793,7 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 							stype = get_int16(&IC);			/* Get static type of caller */
 							origin = get_int32(&IC);			/* Get the origin class id */
 							ooffset = get_int32(&IC);			/* Get the offset in origin */
-							*(gp - 1) = RTID(RTWPCT(stype, origin, ooffset, icurrent->it_ref));
+							*(gp - 1) = RTID(RTWPCT(stype, origin, ooffset, Current));
 						}
 						break;
 			case LIKE_FEATURE_TYPE: /* like feature - see BC_CLIKE */
@@ -4803,7 +4803,7 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 
 							code = get_int16(&IC);		/* Get the static type first */
 							offset = get_int32(&IC);	/* Get the feature id of the anchor */
-							*(gp - 1) = RTID(RTWCT(code, offset, icurrent->it_ref));
+							*(gp - 1) = RTID(RTWCT(code, offset, Current));
 						}
 						break;
 			default:

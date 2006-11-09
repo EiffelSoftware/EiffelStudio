@@ -67,7 +67,7 @@
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
-		<library name="call_site" location="C:\development60_eth\framework\patterns\call_site\call_site.ecf"/>
+		<library name="call_site" location="$EIFFEL_SRC\framework\patterns\call_site\call_site.ecf"/>
 		<library name="cli_debugger" location="$EIFFEL_SRC\framework\cli_debugger\cli_debugger.ecf" readonly="false">
 			<condition>
 				<platform value="windows"/>
@@ -99,7 +99,7 @@
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf" readonly="false"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf"/>
-		<library name="service_coupling" location="C:\development60_eth\framework\patterns\service_coupling\service_coupling.ecf"/>
+		<library name="service_coupling" location="$EIFFEL_SRC\framework\patterns\service_coupling\service_coupling.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf" readonly="false"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf" readonly="false"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf" readonly="false"/>

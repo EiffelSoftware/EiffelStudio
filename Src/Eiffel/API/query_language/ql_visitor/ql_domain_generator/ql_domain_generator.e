@@ -533,7 +533,6 @@ feature{NONE} -- Implementation
 			-- call `a_invariant_action' for every invariant feature.
 		require
 			a_class_attached: a_class /= Void
-			a_class_is_compiled: a_class.is_compiled
 			a_real_feature_action_attached: a_real_feature_action /= Void
 			a_invariant_action_attached: a_invariant_action /= Void
 		local
@@ -544,39 +543,41 @@ feature{NONE} -- Implementation
 			l_parents: LINKED_LIST [CLASS_C]
 			l_inv_ast: INVARIANT_AS
 		do
-			l_class_c := a_class.class_c
-				-- Find real features.
-				-- All immediate and inherited real features are inserted.
-			l_feature_table := l_class_c.api_feature_table
-			from
-				l_feature_table.start
-			until
-				l_feature_table.after
-			loop
-				create l_real_feature.make_with_parent (l_feature_table.item_for_iteration, a_class)
-				a_real_feature_action.call ([l_real_feature])
-				l_feature_table.forth
-			end
-				-- Find invariant.
-				-- First find immediate invariant
-			if l_class_c.has_invariant then
-				create l_invariant.make_with_parent (l_class_c, l_class_c, a_class)
-				a_invariant_action.call ([l_invariant])
-			end
-				-- Then the inherited invariants.
-			from
-				create l_parents.make
-				record_ancestors_of_class (l_class_c, l_parents)
-				l_parents.start
-			until
-				l_parents.after
-			loop
-				l_inv_ast := l_parents.item.invariant_ast
-				if l_inv_ast /= Void then
-					create l_invariant.make_with_parent (l_class_c, l_parents.item, a_class)
+			if a_class.is_compiled then
+				l_class_c := a_class.class_c
+					-- Find real features.
+					-- All immediate and inherited real features are inserted.
+				l_feature_table := l_class_c.api_feature_table
+				from
+					l_feature_table.start
+				until
+					l_feature_table.after
+				loop
+					create l_real_feature.make_with_parent (l_feature_table.item_for_iteration, a_class)
+					a_real_feature_action.call ([l_real_feature])
+					l_feature_table.forth
+				end
+					-- Find invariant.
+					-- First find immediate invariant
+				if l_class_c.has_invariant then
+					create l_invariant.make_with_parent (l_class_c, l_class_c, a_class)
 					a_invariant_action.call ([l_invariant])
 				end
-				l_parents.forth
+					-- Then the inherited invariants.
+				from
+					create l_parents.make
+					record_ancestors_of_class (l_class_c, l_parents)
+					l_parents.start
+				until
+					l_parents.after
+				loop
+					l_inv_ast := l_parents.item.invariant_ast
+					if l_inv_ast /= Void then
+						create l_invariant.make_with_parent (l_class_c, l_parents.item, a_class)
+						a_invariant_action.call ([l_invariant])
+					end
+					l_parents.forth
+				end
 			end
 		end
 

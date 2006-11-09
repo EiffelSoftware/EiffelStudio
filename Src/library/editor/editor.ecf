@@ -7,9 +7,6 @@
 			<exclude>/eiffel$</exclude>
 			<exclude>/text_formatter\.e$</exclude>
 		</file_rule>
-		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true"/>
 		<library name="lex" location="$ISE_LIBRARY\library\lex\lex.ecf" readonly="true"/>

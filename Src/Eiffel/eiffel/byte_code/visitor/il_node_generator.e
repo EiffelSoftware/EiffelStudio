@@ -79,10 +79,12 @@ feature -- Generation
 			class_c: CLASS_C
 			end_of_assertion: IL_LABEL
 			end_of_routine: IL_LABEL
-			l_saved_in_assertion: INTEGER
+			l_saved_in_assertion, l_saved_supplier_precondition: INTEGER
 			l_nb_precond: INTEGER
+			keep: BOOLEAN
 		do
 			il_generator := a_code_generator
+			keep := context.workbench_mode or else system.keep_assertions
 
 				-- Put a breakable point on feature name.
 			il_generator.put_line_info (a_body.start_line_number)
@@ -123,6 +125,16 @@ feature -- Generation
 				generate_il_local_info (local_list)
 			end
 
+			if keep then
+					-- Generate local variable to save assertions level.
+				context.add_local (Boolean_c_type)
+				l_saved_supplier_precondition := context.local_list.count
+				context.set_saved_supplier_precondition (l_saved_supplier_precondition)
+				il_generator.put_dummy_local_info (Boolean_c_type, l_saved_supplier_precondition)
+				il_generator.generate_save_supplier_precondition
+				il_generator.generate_local_assignment (l_saved_supplier_precondition)
+			end
+
 			if a_body.rescue_clause /= Void then
 					-- Generate local variable to save assertions level.
 				context.add_local (Boolean_c_type)
@@ -138,7 +150,7 @@ feature -- Generation
 
 				-- Make IL code for preconditions
 			if a_body.precondition /= Void or inh_assert.has_precondition then
-				if (context.workbench_mode or class_c.assertion_level.is_precondition) then
+				if keep then
 					generate_il_precondition (a_body)
 				elseif System.is_precompile_finalized then
 					l_nb_precond := 0
@@ -165,8 +177,7 @@ feature -- Generation
 			end
 
 			if
-				(context.workbench_mode or class_c.assertion_level.is_postcondition) and then
-				(a_body.old_expressions /= Void or inh_assert.has_postcondition)
+				keep and then (a_body.old_expressions /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_generator.create_label
 				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_ensure)
@@ -207,7 +218,7 @@ feature -- Generation
 
 				-- Make IL code for postcondition
 			if
-				(context.workbench_mode or class_c.assertion_level.is_postcondition) and then
+				keep and then
 				(a_body.postcondition /= Void or inh_assert.has_postcondition)
 			then
 				end_of_assertion := il_generator.create_label
@@ -226,6 +237,11 @@ feature -- Generation
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
 				il_generator.mark_label (end_of_assertion)
+			end
+
+			if keep then
+				il_generator.generate_local (l_saved_supplier_precondition)
+				il_generator.generate_restore_supplier_precondition
 			end
 
 			if a_body.rescue_clause /= Void then

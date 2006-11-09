@@ -10,7 +10,7 @@ class
 inherit
 	AGENT_CALL_B
 		rename
-			parent as parent_b
+			parent as parent_b, make as make_agent_call
 		undefine
 			allocates_memory,
 			free_register,
@@ -27,20 +27,19 @@ inherit
 			has_call,
 			set_register,
 			register,
-			set_parent
+			set_parent,
+			need_invariant,
+			set_need_invariant
 		redefine
 			generate_on,
 			enlarged
 		end
 
 	FEATURE_BL
-		rename
-			make as make_feature
 		undefine
 			process,
 			set_parameters,
 			is_polymorphic,
-			make_feature,
 			set_type,
 			inlined_byte_code
 		redefine
@@ -50,7 +49,8 @@ inherit
 			generate_on,
 			enlarged
 		select
-			parent
+			parent,
+			make_node
 		end
 
 feature -- Code generation

@@ -6,13 +6,16 @@ class OPT_FEAT_BL
 inherit
 
 	OPT_FEAT_B
+		rename
+			make as make_opt_feat
 		undefine
 			is_polymorphic, free_register, has_call,
 			allocates_memory,
 			generate_on, basic_register, generate_access,
 			register, analyze_on, set_register,
 			is_feature_call, generate_special_feature, set_parent,
-			generate_parameters_list, generate_access_on_type
+			generate_parameters_list, generate_access_on_type,
+			need_invariant, set_need_invariant
 		redefine
 			parent, is_feature_special, generate_end,
 			generate_metamorphose_end, analyze
@@ -24,6 +27,8 @@ inherit
 		redefine
 			fill_from, parent, check_dt_current, is_feature_special,
 			generate_end, generate_metamorphose_end, analyze
+		select
+			make_node
 		end
 
 feature

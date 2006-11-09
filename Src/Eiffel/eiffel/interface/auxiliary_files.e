@@ -666,10 +666,13 @@ feature -- Plug and Makefile file
 			buffer.put_string ("%Tegc_partab = egc_partab_init;%N")
 			buffer.put_string ("%Tegc_partab_size = egc_partab_size_init;%N")
 
+			if not final_mode or else system.keep_assertions then
+				buffer.put_string ("%Tegc_foption = egc_foption_init;%N")
+			end
+
 			if not final_mode then
 				buffer.put_string ("%Tegc_frozen = egc_frozen_init;%N")
 				buffer.put_string ("%Tegc_fpatidtab = egc_fpatidtab_init;%N");
-				buffer.put_string ("%Tegc_foption = egc_foption_init;%N")
 				buffer.put_string ("%Tegc_address_table = egc_address_table_init;%N")
 				buffer.put_string ("%Tegc_fpattern = egc_fpattern_init;%N")
 

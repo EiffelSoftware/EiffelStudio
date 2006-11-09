@@ -53,12 +53,12 @@ extern struct conform *egc_fco_table_init [];
 extern void egc_system_mod_init_init (void);
 extern struct eif_par_types *egc_partab_init [];
 extern int egc_partab_size_init;
+extern struct eif_opt egc_foption_init [];
 
 #ifdef WORKBENCH
 
 extern fnptr egc_frozen_init [];
 extern int egc_fpatidtab_init [];
-extern struct eif_opt egc_foption_init [];
 extern fnptr *egc_address_table_init;
 extern struct p_interface egc_fpattern_init [];
 

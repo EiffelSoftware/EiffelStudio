@@ -597,7 +597,7 @@ feature -- Generation
 
 				generate_c_code := has_creation_routine or else
 						(current_class.has_invariant and then
-						 current_class.assertion_level.is_invariant)
+						 system.keep_assertions)
 
 				from
 					feature_table.start
@@ -694,7 +694,7 @@ feature -- Generation
 				if
 					current_class.has_invariant and then
 					((not final_mode) or else
-					current_class.assertion_level.is_invariant)
+					system.keep_assertions)
 				then
 					inv_byte_code := Inv_byte_server.disk_item (current_class.class_id)
 					byte_context.set_byte_code (create {STD_BYTE_CODE})
@@ -1349,7 +1349,7 @@ feature -- Skeleton generation
 			if
 				byte_context.final_mode and
 				associated_class.has_invariant and
-				associated_class.assertion_level.is_invariant
+				system.keep_assertions
 			then
 					-- Generate extern declaration for invariant
 					-- routine of the current class type
@@ -1404,8 +1404,7 @@ feature -- Skeleton generation
 
 			if byte_context.final_mode then
 				if
-					a_class.has_invariant and then
-					a_class.assertion_level.is_invariant
+					a_class.has_invariant and then system.keep_assertions
 				then
 					buffer.put_string (Encoder.feature_name (static_type_id, Invariant_body_index))
 				else

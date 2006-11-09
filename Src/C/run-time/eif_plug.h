@@ -116,10 +116,7 @@ extern long *esize;		/* Size of object given DType */
 RT_LNK EIF_INTEGER sp_count(EIF_REFERENCE spobject);		/* Count of a special object */
 RT_LNK EIF_INTEGER sp_elem_size(EIF_REFERENCE spobject);	/* Size of element a special object */
 RT_LNK void chkinv(EIF_REFERENCE obj, int where);	/* Invariant control call */
-
-#ifdef WORKBENCH
 RT_LNK void chkcinv(EIF_REFERENCE obj);			/* Creation invariant call */	
-#endif
 
 #ifndef WORKBENCH
 RT_LNK void rt_norout(EIF_REFERENCE);		/* No function pointer */

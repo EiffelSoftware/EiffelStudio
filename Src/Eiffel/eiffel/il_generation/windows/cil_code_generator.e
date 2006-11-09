@@ -878,6 +878,22 @@ feature -- Generation Structure
 					end
 					i := i + 1
 				end
+			elseif system.keep_assertions then
+				from
+					l_types := System.class_types
+					i := l_types.lower
+					nb := l_types.upper
+				until
+					i > nb
+				loop
+					l_type := l_types.item (i)
+					if l_type /= Void then
+						if not l_type.is_external then
+							define_assertion_level (l_type)
+						end
+					end
+					i := i + 1
+				end
 			end
 
 			define_assembly_attributes
@@ -5804,28 +5820,48 @@ feature -- Assertions
 			method_body.put_static_call (current_module.ise_in_assertion_token, 0, True)
 		end
 
+	generate_save_supplier_precondition is
+			-- Generate code to save the current supplier precondition in a local.
+		do
+			if current_class_type.is_expanded then
+					-- Type is known at compile time.
+				put_type_instance (current_class_type.type)
+			else
+					-- Type is evaluated at run time.
+				generate_current
+				internal_generate_external_call (current_module.mscorlib_token, 0, System_object_class_name,
+					"GetType", Normal_type, <<>>, System_type_class_name, False)
+			end
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				runtime_class_name, "save_supplier_precondition", Static_type,
+				<<System_type_class_name>>, "System.Boolean", False)
+		end
+
+	generate_restore_supplier_precondition is
+			-- Restores the supplier precondition flag using the local.
+		do
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				runtime_class_name, "restore_supplier_precondition", Static_type,
+				<<"System.Boolean">>, Void, False)
+		end
+
 	generate_is_assertion_checked (level: INTEGER) is
 			-- Check wether or not we need to check assertion for current type.
 		do
-			if System.in_final_mode then
-				method_body.put_static_call (current_module.ise_in_assertion_token, 0, True)
-				method_body.put_opcode ({MD_OPCODES}.ldc_i4_0);
-				method_body.put_opcode ({MD_OPCODES}.ceq)
+			if current_class_type.is_expanded then
+					-- Type is known at compile time.
+				put_type_instance (current_class_type.type)
 			else
-				if current_class_type.is_expanded then
-						-- Type is known at compile time.
-					put_type_instance (current_class_type.type)
-				else
-						-- Type is evaluated at run time.
-					generate_current
-					internal_generate_external_call (current_module.mscorlib_token, 0, System_object_class_name,
-						"GetType", Normal_type, <<>>, System_type_class_name, False)
-				end
-				put_integer_32_constant (level)
-				internal_generate_external_call (current_module.ise_runtime_token, 0,
-					runtime_class_name, "is_assertion_checked", Static_type,
-					<<System_type_class_name, Assertion_level_enum_class_name>>, "System.Boolean", False)
+					-- Type is evaluated at run time.
+				generate_current
+				internal_generate_external_call (current_module.mscorlib_token, 0, System_object_class_name,
+					"GetType", Normal_type, <<>>, System_type_class_name, False)
 			end
+			put_integer_32_constant (level)
+			generate_local (byte_context.saved_supplier_precondition)
+			internal_generate_external_call (current_module.ise_runtime_token, 0,
+				runtime_class_name, "is_assertion_checked", Static_type,
+				<<System_type_class_name, Assertion_level_enum_class_name, "System.Boolean">>, "System.Boolean", False)
 		end
 
 	generate_set_assertion_status is
@@ -6046,8 +6082,7 @@ feature -- Assertions
 			-- Generate an invariant check after routine call, it assumes that
 			-- target has already been pushed onto evaluation stack.
 		do
-			put_boolean_constant (System.in_final_mode)
-			method_body.put_static_call (current_module.ise_check_invariant_token, 2, False)
+			method_body.put_static_call (current_module.ise_check_invariant_token, 1, False)
 		end
 
 feature -- Constants generation

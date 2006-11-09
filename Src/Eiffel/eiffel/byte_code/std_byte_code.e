@@ -56,7 +56,7 @@ feature -- Analyzis
 	analyze is
 			-- Builds a proper context (for C code).
 		local
-			workbench_mode: BOOLEAN
+			workbench_mode, keep_assertions: BOOLEAN
 			type_i: TYPE_I
 			feat: FEATURE_I
 			have_precond, have_postcond, has_invariant: BOOLEAN
@@ -64,6 +64,7 @@ feature -- Analyzis
 			old_exp: UN_OLD_BL
 		do
 			workbench_mode := context.workbench_mode
+			keep_assertions := workbench_mode or else context.system.keep_assertions
 			feat := Context.current_feature
 			inh_assert := Context.inherited_assertion
 			inh_assert.init
@@ -81,15 +82,13 @@ feature -- Analyzis
 				-- Let's check if some invariants are going to be generated.
 				-- It is important to know for `compute_need_gc_hooks' which will
 				-- not try to optimize GC hooks if we are checking invariants.
-			has_invariant := context.workbench_mode or else context.assertion_level.is_invariant
+			has_invariant := keep_assertions
 
 				-- Compute presence or not of pre/postconditions
 			if Context.origin_has_precondition then
-				have_precond := (precondition /= Void or else inh_assert.has_precondition) and then
-						(workbench_mode or else context.assertion_level.is_precondition)
+				have_precond := (precondition /= Void or else inh_assert.has_precondition) and then keep_assertions
 			end
-			have_postcond := (postcondition /= Void or else inh_assert.has_postcondition) and then
-					(workbench_mode or else context.assertion_level.is_postcondition)
+			have_postcond := (postcondition /= Void or else inh_assert.has_postcondition) and then keep_assertions
 
 				-- Check if we need GC hooks for current body.
 			Context.compute_need_gc_hooks (have_precond or have_postcond or has_invariant)
@@ -231,9 +230,11 @@ feature -- Analyzis
 			l_is_once: BOOLEAN
 			args: like argument_names
 			i: INTEGER
+			keep: BOOLEAN
 		do
 			buf := buffer
 			l_is_once := is_once
+			keep := context.workbench_mode or else context.system.keep_assertions
 
 				-- Generate the header "int foo(Current, args)"
 			type_c := real_type (result_type).c_type
@@ -325,8 +326,8 @@ feature -- Analyzis
 				-- Allocate memory for once manifest strings if required
 			context.generate_once_manifest_string_allocation (once_manifest_string_count)
 
-				-- Generate the saving of the workbench mode assertion level
-			if context.workbench_mode then
+				-- Generate the saving of the assertion level
+			if keep then
 				generate_save_assertion_level
 			end
 
@@ -370,6 +371,12 @@ feature -- Analyzis
 
 				-- Now the postcondition
 			generate_postcondition
+
+				-- Restore the caller_assertion_level
+			if keep then
+				buf.put_string ("RTRS;")
+				buf.put_new_line
+			end
 
 			if not type_c.is_void then
 					-- Function returns something. This can be done
@@ -1011,20 +1018,18 @@ end
 				end
 				buf.put_new_line
 			end
-				-- Generate the int local variable saving the global `nstcall'.
-			if wkb_mode or else context.assertion_level.is_invariant then
+			if wkb_mode or else context.system.keep_assertions then
+					-- Generate the int local variable saving the global `nstcall'.
 				buf.put_string ("RTSN;")
 				buf.put_new_line
-			end
-			if wkb_mode then
-					-- Generate local variable for saving the workbench
-					-- mode assertion level of the current object.
+					-- Generate local variable for assertion level of the current object.
 				buf.put_string ("RTDA;")
+			end
+
+			buf.put_new_line
+			if wkb_mode and then has_rescue then
+				buf.put_string ("RTDT;")
 				buf.put_new_line
-				if has_rescue then
-					buf.put_string ("RTDT;")
-					buf.put_new_line
-				end
 			end
 				-- The local variable array is then declared, based on the
 				-- number of reference variable which need to be placed under
@@ -1112,20 +1117,14 @@ end
 			if Context.origin_has_precondition then
 				have_assert := (precondition /= Void or else
 								inh_assert.has_precondition) and then
-					(workbench_mode or else context.assertion_level.is_precondition)
+						(workbench_mode or else context.system.keep_assertions)
 			end
 			generate_invariant_before
 			if have_assert then
 				buf := buffer
-				if workbench_mode then
-					buf.put_string ("if (RTAL & CK_REQUIRE) {")
-					buf.put_new_line
-					buf.indent
-				else
-					buf.put_string ("if (~in_assertion) {")
-					buf.put_new_line
-					buf.indent
-				end
+				buf.put_string ("if (RTAL & CK_REQUIRE | RTAC) {")
+				buf.put_new_line
+				buf.indent
 
 				if inh_assert.has_precondition then
 					inh_assert.generate_precondition
@@ -1158,34 +1157,23 @@ end
 			workbench_mode := context.workbench_mode
 			inh_assert := Context.inherited_assertion
 			have_assert := (postcondition /= Void or else inh_assert.has_postcondition) and then
-					(workbench_mode or else context.assertion_level.is_postcondition)
+					(workbench_mode or else context.system.keep_assertions)
 			if have_assert then
 				buf := buffer
 				context.set_assertion_type (In_postcondition)
-				if workbench_mode then
-					buf.put_string ("if (RTAL & CK_ENSURE) {")
-					buf.put_new_line
-					buf.indent
-				else
-					buf.put_string ("if (~in_assertion) {")
-					buf.put_new_line
-					buf.indent
-				end
+				buf.put_string ("if (RTAL & CK_ENSURE) {")
+				buf.put_new_line
+				buf.indent
+
 				if inh_assert.has_postcondition then
 					inh_assert.generate_postcondition
 				end
 				if postcondition /= Void then
 					postcondition.generate
 				end
-				if workbench_mode then
-					buf.exdent
-					buf.put_character ('}')
-					buf.put_new_line
-				else
-					buf.exdent
-					buf.put_character ('}')
-					buf.put_new_line
-				end
+				buf.exdent
+				buf.put_character ('}')
+				buf.put_new_line
 			end
 			generate_invariant_after
 		end
@@ -1193,8 +1181,6 @@ end
 	generate_save_assertion_level is
 			-- Generate the instruction for saving the workbench mode
 			-- assertion level of the current object.
-		require
-			workbench_mode: context.workbench_mode
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -1203,18 +1189,20 @@ end
 			context.generate_current_dtype
 			buf.put_string (gc_rparan_semi_c)
 			buf.put_new_line
+			buf.put_string ("RTSC;")
+			buf.put_new_line
 		end
 
 	generate_invariant_before is
 			-- Generate invariant check at the entry of the routine.
 		do
-			generate_invariant ("RTIV")
+			generate_invariant ("RTIV2")
 		end
 
 	generate_invariant_after is
 			-- Generate invariant check at the end of the routine.
 		do
-			generate_invariant ("RTVI")
+			generate_invariant ("RTVI2")
 		end
 
 	generate_invariant (tag: STRING) is
@@ -1223,17 +1211,11 @@ end
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			if context.workbench_mode then
+			if context.workbench_mode or else context.system.keep_assertions then
 				buf.put_string (tag)
 				buf.put_character ('(')
 				context.current_register.print_register
 				buf.put_string (", RTAL);")
-				buf.put_new_line
-			elseif context.assertion_level.is_invariant then
-				buf.put_string (tag)
-				buf.put_character ('(')
-				context.current_register.print_register
-				buf.put_string (gc_rparan_semi_c)
 				buf.put_new_line
 			end
 		end

@@ -240,13 +240,13 @@ rt_public struct eif_par_types **egc_partab;
 rt_public int egc_partab_size;
 rt_public void (*egc_system_mod_init) (void);	
 rt_public int egc_type_of_gc;
+rt_public struct eif_opt *egc_foption;	
 
 
 #ifdef WORKBENCH
 
 rt_public fnptr *egc_frozen;			
 rt_public int *egc_fpatidtab;		
-rt_public struct eif_opt *egc_foption;	
 rt_public fnptr *egc_address_table;	
 rt_public struct p_interface *egc_fpattern;
 rt_public void (*egc_einit)(void);	

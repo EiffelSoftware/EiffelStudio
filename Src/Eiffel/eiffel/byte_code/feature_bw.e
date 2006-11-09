@@ -8,11 +8,8 @@ class FEATURE_BW
 inherit
 
 	FEATURE_BL
-		rename
-			make as node_make
 		redefine
-			check_dt_current, generate_access_on_type, is_polymorphic,
-			need_invariant, set_need_invariant
+			check_dt_current, generate_access_on_type, is_polymorphic
 		end
 
 create
@@ -24,20 +21,6 @@ feature
 			-- Is the feature call polymorphic ?
 		do
 			Result := True;
-		end;
-
-	need_invariant: BOOLEAN;
-			-- Does the call need an invariant check ?
-
-	set_need_invariant (b: BOOLEAN) is
-			-- Assign `b' to `need_invariant'.
-		do
-			need_invariant := b
-		end;
-
-	make is
-		do
-			need_invariant := True;
 		end;
 
 	check_dt_current (reg: REGISTRABLE) is

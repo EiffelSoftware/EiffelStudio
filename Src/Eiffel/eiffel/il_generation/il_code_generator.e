@@ -689,6 +689,16 @@ feature -- Assertions
 		deferred
 		end
 
+	generate_save_supplier_precondition is
+			-- Generate code to save the current supplier precondition in a local.
+		deferred
+		end
+
+	generate_restore_supplier_precondition is
+			-- Restores the supplier precondition flag using the local.
+		deferred
+		end
+
 	generate_is_assertion_checked (level: INTEGER) is
 			-- Check wether or not we need to check assertion for current type.
 		require

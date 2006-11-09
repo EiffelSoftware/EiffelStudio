@@ -5,9 +5,6 @@
 		<file_rule>
 			<exclude>/\.svn</exclude>
 		</file_rule>
-		<option>
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
-		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="flyweight" location="flyweight\" recursive="true"/>
 		<cluster name="observer" location="observer\" recursive="true"/>

@@ -141,6 +141,18 @@ doc:	</attribute>
 */
 rt_public char **eif_environ;	/* Environment variable pointer */
 
+/*
+doc:	<attribute name="eoption" return_type="struct eif_opt *" export="public">
+doc:		<summary>Option table. Store assertion and profiling option per dynamic type.</summary>
+doc:		<access>Read/Write</access>
+doc:		<indexing>Dtype</indexing>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since initialized in `main.c' and updated in `update.c'.</synchronization>
+doc:	</attribute>
+*/
+rt_public struct eif_opt *eoption;
+
+
 #ifdef WORKBENCH
 /*
 doc:	<attribute name="ccount" return_type="int" export="public">
@@ -203,17 +215,6 @@ doc:		<synchronization>None since initialized in compiler generated `einit.c'.</
 doc:	</attribute>
 */
 rt_public uint32 eif_nb_features;
-
-/*
-doc:	<attribute name="eoption" return_type="struct eif_opt *" export="public">
-doc:		<summary>Option table. Store assertion and profiling option per dynamic type.</summary>
-doc:		<access>Read/Write</access>
-doc:		<indexing>Dtype</indexing>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None since initialized in `main.c' and updated in `update.c'.</synchronization>
-doc:	</attribute>
-*/
-rt_public struct eif_opt *eoption;
 
 /*
 doc:	<attribute name="mpatidtab" return_type="int *" export="shared">
@@ -709,11 +710,12 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 		TIMEOUT = 30;
 	}
 
+	eoption = egc_foption;
+
 #ifdef WORKBENCH
 	xinitint();							/* Interpreter initialization */
 	esystem = egc_fsystem;
 	ecall = egc_fcall;
-	eoption = egc_foption;
 	eif_par_table = egc_partab;
 	eif_par_table_size = egc_partab_size;
 	eorg_table = egc_forg_table;

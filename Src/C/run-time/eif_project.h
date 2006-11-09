@@ -134,10 +134,10 @@ extern "C" {
 	RT_LNK int egc_partab_size;				/* Size of parent table */
 	RT_LNK int egc_type_of_gc;
 
+	RT_LNK struct eif_opt *egc_foption;	/* Frozen option table */
 #ifdef WORKBENCH
 	RT_LNK fnptr *egc_frozen;			/* C routine array (frozen routines) */
 	RT_LNK int *egc_fpatidtab;			/* Table of pattern id's indexed by body id's */
-	RT_LNK struct eif_opt *egc_foption;	/* Frozen option table */
 	RT_LNK fnptr *egc_address_table;		/* Table of $ operator encapsulation functions */
 	RT_LNK struct p_interface *egc_fpattern;
 

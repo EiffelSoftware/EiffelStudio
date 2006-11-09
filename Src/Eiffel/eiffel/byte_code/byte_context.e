@@ -144,6 +144,9 @@ feature -- Access
 	assertion_type: INTEGER
 			-- Type of assertion being generated
 
+	saved_supplier_precondition: INTEGER
+			-- Number of the saved_supplier_precondition local.
+
 	origin_has_precondition: BOOLEAN
 			-- Is Current feature have origin feature with precondition?
 			-- (This is used for cases where the origin of the
@@ -239,6 +242,12 @@ feature -- Setting
 			-- Assign `a' to `assertion_type'
 		do
 			assertion_type := a
+		end
+
+	set_saved_supplier_precondition (s: INTEGER) is
+			-- Assign `s' to `saved_supplier_precondition'
+		do
+			saved_supplier_precondition := s
 		end
 
 feature -- Code generation
@@ -802,7 +811,7 @@ feature -- Access
 				and then
 					(	workbench_mode
 						or else
-						assertion_level.is_precondition)
+						system.keep_assertions)
 		end
 
 	has_rescue: BOOLEAN is
@@ -819,33 +828,19 @@ feature -- Access
 	has_postcondition: BOOLEAN is
 			-- Do we have to generate any postcondition ?
 		do
-			Result :=	workbench_mode
-						or else
-						(	assertion_level.is_postcondition
-							and
-							(	byte_code.postcondition /= Void
-								or else
-								inherited_assertion.has_postcondition
-							)
-						)
+			Result := workbench_mode or else System.keep_assertions
 		end
 
 	has_precondition: BOOLEAN is
 			-- Do we have to generate any precondition ?
 		do
-			Result := 	workbench_mode
-						or else
-						(
-							assertion_level.is_precondition
-							and
-							byte_code.precondition /= Void
-						)
+			Result := workbench_mode or else System.keep_assertions
 		end
 
 	has_invariant: BOOLEAN is
 			-- Do we have to generate invariant checks ?
 		do
-			Result := workbench_mode or assertion_level.is_invariant
+			Result := workbench_mode or else System.keep_assertions
 		end
 
 	assertion_level: ASSERTION_I is

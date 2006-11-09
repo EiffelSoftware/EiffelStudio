@@ -24,6 +24,7 @@ extern "C" {
 extern void emain(int, char **);
 extern int main(int, char **, char **);
 extern void egc_init_plug(void);
+extern void egc_rcdt_init (void); 
 
 int main (int argc, char ** argvxx, char ** envpxx)
 {
@@ -84,6 +85,7 @@ int main (int argc, char ** argvxx, char ** envpxx)
 
 	eif_rtinit(argc, argv, envp);
 	if (egc_prof_enabled) initprf();
+	egc_rcdt_init (); 
 	emain(argc, argv);
 	reclaim();
 	exit(0);

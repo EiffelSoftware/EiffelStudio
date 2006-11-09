@@ -12,6 +12,8 @@ extern "C" {
 extern void emain(int, char **);
 extern int main(int, char **, char **);
 extern void egc_init_plug(void);
+extern void egc_rcdt_init (void); 
+
 
 /* ctors and dtors arrays -- to be used by runtime system */
 /*   to call static constructors and destructors          */
@@ -56,6 +58,7 @@ void eiffel_main ()
 
 	eif_rtinit(0, NULL, NULL);
 	if (egc_prof_enabled) initprf();
+	egc_rcdt_init();
 	emain(0, NULL);
 	reclaim();
 	return;

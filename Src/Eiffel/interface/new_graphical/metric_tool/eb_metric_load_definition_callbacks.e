@@ -19,6 +19,8 @@ inherit
 
 	EB_METRIC_UTILITY
 
+	EB_METRIC_SHARED
+
 create
 	make_with_factory
 
@@ -263,8 +265,8 @@ feature{NONE} -- Process
 			l_error_str: STRING
 		do
 			check current_linear_metric /= Void end
-			l_coefficient := internal_name (current_attributes.item (at_coefficient))
-			l_metric := internal_name (current_attributes.item (at_name))
+			l_coefficient := current_attributes.item (at_coefficient)
+			l_metric := current_attributes.item (at_name)
 			l_uuid_str := current_attributes.item (at_uuid)
 			if l_metric = Void then
 				create l_error_str.make (100)
@@ -543,9 +545,12 @@ feature{NONE} -- Process
 			l_id: STRING
 			l_type: STRING
 			l_error_str: STRING
+			l_library_target_uuid: STRING
+			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
 			l_id := current_attributes.item (at_id)
 			l_type := current_attributes.item (at_type)
+			l_library_target_uuid := current_attributes.item (at_library_target_uuid)
 			if l_id = Void then
 				check
 					current_metric /= Void
@@ -580,7 +585,25 @@ feature{NONE} -- Process
 						l_error_str.append (".")
 						set_parse_error_message (l_error_str)
 					else
-						current_domain.extend (domain_item_type_table.item (l_type).item ([l_id]))
+						if l_library_target_uuid /= Void then
+							if not shared_uuid.is_valid_uuid (l_library_target_uuid) then
+								create l_error_str.make (100)
+								l_error_str.append (quoted_name (l_library_target_uuid, "Library target UUID"))
+								l_error_str.append (" is invalid in ")
+								l_error_str.append (quoted_name (last_criterion.name, "criterion"))
+								l_error_str.append (" in ")
+								l_error_str.append (quoted_name (current_metric.name, "basic metric"))
+								l_error_str.append (".")
+								set_parse_error_message (l_error_str)
+							end
+						end
+						if not has_error then
+							l_domain_item := domain_item_type_table.item (l_type).item ([l_id])
+							if l_library_target_uuid /= Void then
+								l_domain_item.set_library_target_uuid (l_library_target_uuid)
+							end
+							current_domain.extend (l_domain_item)
+						end
 					end
 				end
 			end
@@ -913,9 +936,11 @@ feature{NONE} -- Implementation
 				-- domain_item
 				-- * id
 				-- * type
-			create l_attr.make (2)
+				-- * library_target_uuid
+			create l_attr.make (3)
 			l_attr.force (at_id, n_id)
 			l_attr.force (at_type, n_type)
+			l_attr.force (at_library_target_uuid, n_library_target_uuid)
 			Result.force (l_attr, t_domain_item)
 
 				-- variable_metric

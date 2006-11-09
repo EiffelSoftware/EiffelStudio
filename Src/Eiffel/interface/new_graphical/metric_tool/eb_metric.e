@@ -92,6 +92,13 @@ feature -- Access
 	uuid: UUID
 			-- UUID of current metric
 
+	direct_referenced_metrics: LIST [STRING] is
+			-- Name of metrics which are directly referenced by Current
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Setting
 
 	enable_filter_result is

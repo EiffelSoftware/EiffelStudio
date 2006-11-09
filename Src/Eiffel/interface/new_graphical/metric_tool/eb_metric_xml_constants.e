@@ -52,7 +52,8 @@ feature{NONE} -- Attribute constants
 	at_value,
 	at_uuid,
 	at_numerator_uuid,
-	at_denominator_uuid: INTEGER is unique
+	at_denominator_uuid,
+	at_library_target_uuid: INTEGER is unique
 
 feature{NONE} -- Text
 
@@ -103,7 +104,8 @@ feature{NONE} -- Text
 	n_metric_archive: STRING is "metric_archive"
 	n_uuid: STRING is "uuid"
 	n_numerator_uuid: STRING is "numerator_uuid"
-	n_denominator_uuid: STRING is "denominator_uuid";
+	n_denominator_uuid: STRING is "denominator_uuid"
+	n_library_target_uuid: STRING is "library_target_uuid";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

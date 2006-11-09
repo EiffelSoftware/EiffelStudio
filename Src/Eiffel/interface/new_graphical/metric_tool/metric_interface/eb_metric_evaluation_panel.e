@@ -68,6 +68,13 @@ inherit
 			default_create
 		end
 
+	SHARED_WORKBENCH
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	make
 

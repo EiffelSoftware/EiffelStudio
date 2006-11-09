@@ -50,6 +50,14 @@ feature -- Status report
 			Result := criteria = Void
 		end
 
+feature -- Access
+
+	direct_referenced_metrics: LIST [STRING] is
+			-- Name of metrics which are directly referenced by Current
+		do
+			create {LINKED_LIST [STRING]} Result.make
+		end
+
 feature -- Metric calculation
 
 	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN is

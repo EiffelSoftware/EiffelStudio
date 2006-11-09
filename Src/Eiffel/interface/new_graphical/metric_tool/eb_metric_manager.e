@@ -153,6 +153,23 @@ feature -- Status report
 			Result := last_userdefined_metric_load_error = Void
 		end
 
+	is_metric_name_equal (a_metric_name, b_metric_name: STRING): BOOLEAN is
+			-- Are `a_metric_name' and `b_metric_name' equal?
+		require
+			a_metric_name_attached: a_metric_name /= Void
+			b_metric_name_attached: b_metric_name /= Void
+		local
+			l_a_name, l_b_name: STRING
+		do
+			l_a_name := a_metric_name.twin
+			l_a_name.left_adjust
+			l_a_name.right_adjust
+			l_b_name := b_metric_name.twin
+			l_b_name.left_adjust
+			l_b_name.right_adjust
+			Result := l_a_name.is_case_insensitive_equal (l_b_name)
+		end
+
 feature -- Access
 
 	userdefined_metrics_file: STRING is
@@ -369,6 +386,24 @@ feature -- Access
 	last_userdefined_metric_load_error: EB_METRIC_ERROR
 			-- Error information when load userdefined metric definition the last time
 			-- Void if no error occurred.			
+
+	metrics_from_file (a_file_name: STRING): LIST [EB_METRIC] is
+			-- Metrics defined in file named `a_file_name'
+			-- If error occurs when opening the file or loading metric definitions,
+			-- result will be Void and the actual error will be in `last_error'.
+		require
+			a_file_name_attached: a_file_name /= Void
+			not_a_file_name_is_empty: not a_file_name.is_empty
+		local
+			l_callback: EB_METRIC_LOAD_DEFINITION_CALLBACKS
+		do
+			clear_last_error
+			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
+			parse_file (a_file_name, l_callback)
+			if not has_error then
+				Result := l_callback.metrics.linear_representation
+			end
+		end
 
 feature -- Access/Sorting order
 
@@ -737,24 +772,6 @@ feature{NONE} -- Implementation
 			metric_exists: has_metric (a_name)
 		do
 			Result := metrics_vadility.has (a_name)
-		end
-
-	metrics_from_file (a_file_name: STRING): LIST [EB_METRIC] is
-			-- Metrics defined in file named `a_file_name'
-			-- If error occurs when opening the file or loading metric definitions,
-			-- result will be Void and the actual error will be in `last_error'.
-		require
-			a_file_name_attached: a_file_name /= Void
-			not_a_file_name_is_empty: not a_file_name.is_empty
-		local
-			l_callback: EB_METRIC_LOAD_DEFINITION_CALLBACKS
-		do
-			clear_last_error
-			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
-			parse_file (a_file_name, l_callback)
-			if not has_error then
-				Result := l_callback.metrics.linear_representation
-			end
 		end
 
 feature{NONE} -- Implementation

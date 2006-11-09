@@ -97,7 +97,7 @@ feature -- Generic conformance
 			Result := False
 		end
 
-	generate_gen_type_conversion (node : BYTE_NODE) is
+	generate_gen_type_conversion is
 		do
 		end
 

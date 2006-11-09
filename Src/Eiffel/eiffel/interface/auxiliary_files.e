@@ -416,6 +416,10 @@ feature -- Plug and Makefile file
 			root_feat: FEATURE_I
 			rcorigin: INTEGER
 			rcoffset: INTEGER
+
+			l_create_type: CREATE_TYPE
+			l_creation_type: CL_TYPE_I
+			l_gen_type: GEN_TYPE_I
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
@@ -748,8 +752,7 @@ feature -- Plug and Makefile file
 
 				buffer.put_string ("%Tegc_rcorigin = ")
 				buffer.put_integer (rcorigin)
-				buffer.put_string (";%N%Tegc_rcdt = ")
-				buffer.put_type_id (root_cl.types.first.type_id)
+				buffer.put_string (";%N%Tegc_rcdt = 0")
 				buffer.put_string (";%N%Tegc_rcoffset = ")
 				buffer.put_integer (rcoffset)
 				buffer.put_string (";%N%Tegc_rcarg = ")
@@ -770,6 +773,48 @@ feature -- Plug and Makefile file
 				buffer.put_new_line
 			end
 
+			buffer.put_string ("}%N%N")
+
+				-- Declaration and definition of the egc_rcdt_init function.
+			buffer.put_string ("void egc_rcdt_init (void)%N{")
+			buffer.indent
+			buffer.put_new_line
+			buffer.put_string ("if (egc_rcdt == 0) {")
+			buffer.put_new_line
+			l_creation_type := system.root_type.type_i
+			l_gen_type ?= l_creation_type
+			if l_gen_type /= Void then
+				context.set_buffer (buffer)
+				buffer.indent
+				buffer.put_new_line
+					-- Because generic object creation requires a context object,
+					-- we simply create a temporary one of type ANY, used to
+					-- create an instance of our generic type.
+				buffer.put_string ("EIF_REFERENCE l_root_obj, Current = RTLN(")
+				buffer.put_integer (system.any_class.compiled_class.types.first.type_id)
+				buffer.put_string (");")
+				buffer.put_new_line
+					-- Go ahead an create our generic type.
+				create l_create_type.make (l_creation_type)
+				l_create_type.generate_start (buffer)
+				l_create_type.generate_gen_type_conversion
+				buffer.put_string ("l_root_obj = ")
+				l_create_type.generate
+				buffer.put_string (";")
+				buffer.put_new_line
+				l_create_type.generate_end (buffer)
+					-- Set `egc_rcdt' to the right dynamic type
+				buffer.put_string ("egc_rcdt = Dftype(l_root_obj);")
+				buffer.exdent
+			else
+				buffer.put_string ("%T%Tegc_rcdt = ")
+				buffer.put_integer (l_creation_type.type_id - 1)
+				buffer.put_character (';')
+			end
+			buffer.put_new_line
+			buffer.put_character ('}')
+			buffer.exdent
+			buffer.put_new_line
 			buffer.put_string ("}%N%N")
 
 			buffer.end_c_specific_code

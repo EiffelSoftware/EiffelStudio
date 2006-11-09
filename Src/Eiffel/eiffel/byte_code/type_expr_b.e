@@ -136,14 +136,14 @@ feature -- C code generation
 			fixme ("Instance should be unique.")
 			buf := buffer
 			create l_type_creator.make (context.real_type (type_data))
-			l_type_creator.generate_start (Current)
-			l_type_creator.generate_gen_type_conversion (Current)
+			l_type_creator.generate_start (buf)
+			l_type_creator.generate_gen_type_conversion
 			register.print_register
 			buf.put_string (" = ")
 			l_type_creator.generate
 			buf.put_character (';')
 			buf.put_new_line
-			l_type_creator.generate_end (Current)
+			l_type_creator.generate_end (buf)
 		end
 
 	print_register is

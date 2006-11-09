@@ -143,10 +143,6 @@ static  void    prepare_types ()
 	char    *dname;
 
 	(void) rchar ();	/* Is there something to read */
-	(void) rlong ();	/* root_class_updt */
-	(void) rlong ();	/* root_class_updt */
-	(void) rlong ();	/* root_class_updt */
-	(void) rlong ();	/* root_class_updt */
 	(void) rlong ();	/* class types count */
 	(void) rlong ();	/* class count */
 	(void) rlong ();	/* number of original routine bodies */
@@ -316,13 +312,6 @@ static  void    analyze_file ()
 	
 	print_line ();
 
-	fprintf (mfp,"Root class origin       : %d\n", rlong ());
-	fprintf (mfp,"Root class dynamic type : %d\n", rlong ());
-	fprintf (mfp,"Root class offset       : %d\n", rlong ());
-	fprintf (mfp,"Root class arguments    : %d\n", rlong ());
-
-	print_line ();
-
 	fprintf (mfp,"Nr. of class types             : %d\n", rlong ());
 	fprintf (mfp,"Nr. of classes                 : %d\n", rlong ());
 	fprintf (mfp,"Nr. of original routine bodies : %d\n", rlong ());
@@ -340,6 +329,24 @@ static  void    analyze_file ()
 	analyze_options ();
 	analyze_routinfo ();
 	analyze_desc ();
+
+	fprintf (mfp,"Root class origin       : %d\n", rlong ());
+		/* Root type computation */
+	(void) rlong ();	/* Read dynamic type of ANY. */
+	fprintf (mfp,"Root type description: ");
+	{
+		short t;
+		fprintf (mfp, "{");
+		while ((t = rshort())!=-1) {
+			fprintf (mfp, "%d, ", (int) t);
+		}
+		fprintf (mfp, "-1}");
+		fprintf (mfp, "\n");
+	}
+	fprintf (mfp,"Root class offset       : %d\n", rlong ());
+	fprintf (mfp,"Root class arguments    : %d\n", rlong ());
+
+	print_line ();
 }
 /*------------------------------------------------------------------*/
 

@@ -343,6 +343,23 @@ feature -- Basic element change
 			string_converter.escape_char (current_buffer, c)
 		end
 
+	generate_block_open is
+			-- Open a new C block.
+		do
+			put_character ('{')
+			put_new_line
+			indent
+		end
+
+	generate_block_close is
+			-- Close C block.
+		do
+			put_new_line
+			exdent
+			put_character ('}')
+			put_new_line
+		end
+
 feature -- prototype code generation
 
 	generate_extern_declaration (type: STRING; f_name: STRING;

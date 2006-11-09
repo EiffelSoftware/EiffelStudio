@@ -139,8 +139,8 @@ feature
 			source.generate
 			generate_special (how)
 
-			info.generate_start (Current)
-			info.generate_gen_type_conversion (Current)
+			info.generate_start (buf)
+			info.generate_gen_type_conversion
 
 			source_type := context.real_type (source.type)
 			target_type := context.real_type (target.type)
@@ -266,7 +266,7 @@ feature
 				buf.put_new_line
 			end
 
-			info.generate_end (Current)
+			info.generate_end (buf)
 		end;
 
 indexing

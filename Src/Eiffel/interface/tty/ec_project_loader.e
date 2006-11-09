@@ -406,7 +406,8 @@ feature {NONE} -- User interaction
 					io.put_string (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val))
 					io.put_string (" [y|n] ")
 					io.read_line
-					if io.last_string.item (1).as_lower = 'y' then
+					if io.last_string.is_empty then
+					elseif io.last_string.item (1).as_lower = 'y' then
 						is_update_environment := True
 						l_answered := True
 					elseif io.last_string.item (1).as_lower = 'n' then

@@ -283,6 +283,7 @@ extern void opstack_reset(struct opstack *stk);
 extern void dynamic_eval(int fid, int stype, int is_precompiled, int is_basic_type, int is_inline_agent);	/* Dynamic evaluation of a feature */
 extern struct item * dynamic_eval_dbg(int fid, int stype, int is_precompiled, int is_basic_type, struct item* previous_otop, int* exception_occured); /* Dynamic evaluation of a feature. Exceptions are caught*/
 
+extern short get_compound_id (EIF_REFERENCE, short);
 
 #ifdef __cplusplus
 }

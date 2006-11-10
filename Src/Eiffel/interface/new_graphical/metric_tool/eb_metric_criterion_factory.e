@@ -300,6 +300,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (class_scope, query_language_names.ql_cri_and), query_language_names.ql_cri_and)
 			l_hash_table.put (agent new_nary_criterion (class_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
+			l_hash_table.put (agent new_path_criterion (class_scope, query_language_names.ql_cri_contain_ast), query_language_names.ql_cri_contain_ast)
 		end
 
 	initialize_generic_criteria is
@@ -324,6 +325,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (generic_scope, query_language_names.ql_cri_and), query_language_names.ql_cri_and)
 			l_hash_table.put (agent new_nary_criterion (generic_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
+			l_hash_table.put (agent new_path_criterion (generic_scope, query_language_names.ql_cri_contain_ast), query_language_names.ql_cri_contain_ast)
 		end
 
 	initialize_feature_criteria is
@@ -390,6 +392,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (feature_scope, query_language_names.ql_cri_and), query_language_names.ql_cri_and)
 			l_hash_table.put (agent new_nary_criterion (feature_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
+			l_hash_table.put (agent new_path_criterion (feature_scope, query_language_names.ql_cri_contain_ast), query_language_names.ql_cri_contain_ast)
 		end
 
 	initialize_argument_criteria is
@@ -412,6 +415,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (argument_scope, query_language_names.ql_cri_and), query_language_names.ql_cri_and)
 			l_hash_table.put (agent new_nary_criterion (argument_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
+			l_hash_table.put (agent new_path_criterion (argument_scope, query_language_names.ql_cri_contain_ast), query_language_names.ql_cri_contain_ast)
 		end
 
 	initialize_local_criteria is
@@ -435,6 +439,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_nary_criterion (local_scope, query_language_names.ql_cri_and), query_language_names.ql_cri_and)
 			l_hash_table.put (agent new_nary_criterion (local_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
+			l_hash_table.put (agent new_path_criterion (local_scope, query_language_names.ql_cri_contain_ast), query_language_names.ql_cri_contain_ast)
 		end
 
 	initialize_assertion_criteria is
@@ -464,8 +469,8 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_name_criterion (assertion_scope, query_language_names.ql_cri_text_contain), query_language_names.ql_cri_text_contain)
 
 			l_hash_table.put (agent new_nary_criterion (assertion_scope, query_language_names.ql_cri_and), query_language_names.ql_cri_and)
-			l_hash_table.put (agent new_nary_criterion (assertion_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
+			l_hash_table.put (agent new_path_criterion (assertion_scope, query_language_names.ql_cri_contain_ast), query_language_names.ql_cri_contain_ast)
 		end
 
 	initialize_line_criteria is

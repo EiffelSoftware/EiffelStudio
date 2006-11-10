@@ -427,6 +427,13 @@
 		<geant target="compile_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
 
 		<echo message="Compiling ES is completed ..." to_file="$build_es_logfile" append="true" />
+
+		<!-- quick_finalize -->
+		<echo message="Finalize quick_finalize ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_quick_finalize" />
+		<echo message="Error occurred during 'finalize_quick_finalize' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}quick_finalize${path_separator}f_code${path_separator}quick_finalize${exe}" to_file="${OUTPUT_DIR}${path_separator}quick_finalize${exe}" if="${return_code}=0" />
+
 	</target>
 
 	<target name="compile_es_windows" depend="init_deliv" if="${is_windows}" >
@@ -442,12 +449,6 @@
 		<echo message="Error occurred during 'finalize_h2e' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}h2e${path_separator}f_code${path_separator}h2e${exe}" to_file="${OUTPUT_DIR}${path_separator}h2e${exe}" if="${return_code}=0" />
 
-		<!-- quick_finalize -->
-		<echo message="Finalize quick_finalize ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_quick_finalize" />
-		<echo message="Error occurred during 'finalize_quick_finalize' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}quick_finalize${path_separator}f_code${path_separator}quick_finalize${exe}" to_file="${OUTPUT_DIR}${path_separator}quick_finalize${exe}" if="${return_code}=0" />
-
 		<!-- emake -->
 		<echo message="Finalize emake ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_emake"  />
@@ -458,7 +459,7 @@
 		<echo message="Finalize mdconsumer ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_mdconsumer" fork="false" />
 		<echo message="Error occurred during 'finalize_mdconsumer' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy to_directory="${OUTPUT_DIR}" dir="${compile_dir}/EIFGENs/consumer_20/F_code" if="${return_code}=0" >
+		<copy to_directory="${OUTPUT_DIR}" dir="${compile_dir}\EIFGENs\consumer_20\F_code" if="${return_code}=0" >
 			<fileset include="@(*.dll)" />
 		</copy>
 	</target>

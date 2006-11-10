@@ -83,6 +83,18 @@ feature -- Basic operation
 			implementation.fake_pointer_button_release (a_button)
 		end
 
+	fake_pointer_wheel_up is
+			-- Simulate the user rotating the mouse wheel up.
+		do
+			implementation.fake_pointer_wheel_up
+		end
+
+	fake_pointer_wheel_down is
+			-- Simulate the user rotating the mouse wheel down.
+		do
+			implementation.fake_pointer_wheel_down
+		end
+
 	fake_key_press (a_key: EV_KEY) is
 			-- Simulate the user pressing a `key'.
 		require

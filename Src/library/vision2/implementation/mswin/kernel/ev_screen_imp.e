@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelVision screen, implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -81,7 +81,7 @@ feature -- Status report
 			create wel_point.make (x, y)
 				-- Retrieve WEL_WINDOW at `wel_point'.
 			l_window := wel_point.window_at
-			
+
 				-- If there is a window at `wel_point'.
 			widget_imp ?= l_window
 			if widget_imp /= Void then
@@ -118,7 +118,7 @@ feature -- Basic operation
 			create a_default_colors
 			set_background_color (a_default_colors.default_background_color)
 			set_foreground_color (a_default_colors.default_foreground_color)
-		end	
+		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
 			-- Simulate the user pressing a `a_button'
@@ -146,6 +146,18 @@ feature -- Basic operation
 			when 3 then
 				send_mouse_middle_button_up
 			end
+		end
+
+	fake_pointer_wheel_up is
+			-- Simulate the user rotating the mouse wheel up.
+		do
+			send_mouse_wheel_up
+		end
+
+	fake_pointer_wheel_down is
+			-- Simulate the user rotating the mouse wheel down.
+		do
+			send_mouse_wheel_down
 		end
 
 	fake_key_press (a_key: EV_KEY) is
@@ -179,7 +191,7 @@ feature -- Measurement
 		do
 			Result := dc.height
 		end
-		
+
 	virtual_width: INTEGER is
 			-- Virtual width of `Current'
 		local
@@ -188,7 +200,7 @@ feature -- Measurement
 			create l_metrics
 			Result := l_metrics.virtual_screen_width
 		end
-		
+
 	virtual_height: INTEGER is
 			-- Virtual height of `Current'
 		local
@@ -206,7 +218,7 @@ feature -- Measurement
 			create l_metrics
 			Result := l_metrics.virtual_screen_x
 		end
-		
+
 	virtual_y: INTEGER is
 			-- Y position of virtual screen in main display coordinates
 		local
@@ -215,13 +227,13 @@ feature -- Measurement
 			create l_metrics
 			Result := l_metrics.virtual_screen_y
 		end
-		
+
 	vertical_resolution: INTEGER is
 			-- Number of pixels per inch along screen height.
 		do
 			Result := get_device_caps (dc.item, logical_pixels_y)
 		end
-		
+
 	horizontal_resolution: INTEGER is
 			-- Number of pixels per inch along screen width.
 		do
@@ -246,7 +258,7 @@ feature -- Status setting
 		end
 
 feature -- Implementation
-	
+
 	interface: EV_SCREEN
 
 
@@ -257,13 +269,13 @@ feature {NONE} -- Constants
 		once
 			create Result
 		end
-	
+
 	Key_conversion: EV_WEL_KEY_CONVERSION is
 			-- Key conversion routines.
 		once
 			create Result
 		end
-		
+
 invariant
 	dc_not_void: dc /= Void
 

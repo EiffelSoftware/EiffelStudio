@@ -16,7 +16,6 @@ iff not defined WIN64 then
 	call configure clean >>& %INSTALL_LOG
 	call configure win32 b >>& %INSTALL_LOG
 	cd %EIFFEL_SRC
-	fullrf C\run-time\LIB\ebench.lib
 	copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\lib\bcb
 endiff
 
@@ -33,7 +32,6 @@ else
 	endiff
 endiff
 cd %EIFFEL_SRC
-fullrf C\run-time\LIB\ebench.lib
 fullrf C\run-time\LIB\*.exp
 copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\lib\msc
 cd %EIFFEL_SRC
@@ -51,7 +49,6 @@ else
 	endiff
 endiff
 cd %EIFFEL_SRC
-fullrf C\run-time\LIB\ebench.lib
 copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise_version\lib\msc
 iff not defined WIN64 then
 	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\enterprise_version\lib\msc

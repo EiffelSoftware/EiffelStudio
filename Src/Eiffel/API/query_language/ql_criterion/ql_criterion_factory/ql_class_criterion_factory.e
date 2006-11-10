@@ -74,6 +74,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_top_indexing_has_tag_criterion, c_top_indexing_has_tag)
 			agent_table.put (agent new_bottom_indexing_has_tag_criterion, c_bottom_indexing_has_tag)
 			agent_table.put (agent new_indexing_has_tag_criterion, c_indexing_has_tag)
+			agent_table.put (agent new_contain_ast_criterion, c_contain_ast)
 
 			create name_table.make (45)
 			name_table.put (c_false, query_language_names.ql_cri_false)
@@ -124,6 +125,8 @@ feature{NONE} -- Initialization
 			name_table.put (c_top_indexing_has_tag, query_language_names.ql_cri_top_indexing_has_tag)
 			name_table.put (c_bottom_indexing_has_tag, query_language_names.ql_cri_bottom_indexing_has_tag)
 			name_table.put (c_indexing_has_tag, query_language_names.ql_cri_indexing_has_tag)
+
+			name_table.put (c_contain_ast, query_language_names.ql_cri_contain_ast)
 		end
 
 
@@ -538,6 +541,19 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_contain_ast_criterion (a_ast_type_list: STRING; a_and_relation: BOOLEAN; a_check_detail: BOOLEAN): QL_SIMPLE_CLASS_CRITERION is
+			-- New {QL_SIMPLE_CLASS_CRITERION} criterion.
+		require
+			a_ast_type_list_attached: a_ast_type_list /= Void
+		local
+			l_visitor: QL_AST_VISITOR
+		do
+			create l_visitor.make (ast_index_list_from_string (a_ast_type_list), a_and_relation)
+			create Result.make (agent l_visitor.is_code_structure_item_satisfied ({QL_CLASS}?), True)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Criterion index
 
 	c_false,
@@ -584,7 +600,8 @@ feature -- Criterion index
 	c_is_read_only,
 	c_is_overriden,
 	c_is_overrider,
-	c_is_visible: INTEGER is unique;
+	c_is_visible,
+	c_contain_ast: INTEGER is unique;
 
 feature{NONE} -- Implementation/Evaluate agent
 

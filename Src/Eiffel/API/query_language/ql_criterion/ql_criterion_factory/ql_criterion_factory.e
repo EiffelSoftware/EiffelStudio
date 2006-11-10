@@ -144,6 +144,41 @@ feature{NONE} -- Implementation
 			-- Name-index table
 			-- Key is agent index, value is name of the criterion that the agent creates
 
+	ast_index_list_from_string (a_text: STRING): LIST [INTEGER] is
+			-- A list of AST node indexes parsed from `a_text'
+			-- `a_text' is of the form: "ast_type1, ast_type2, ..., ast_typen".
+			-- For example, "if, inspect, loop, integer".
+		require
+			a_text_attached: a_text /= Void
+		local
+			l_str_list: LIST [STRING]
+			l_str: STRING
+			l_indexes: ARRAY [INTEGER]
+			l_ast_index_table: HASH_TABLE [ARRAY [INTEGER], STRING]
+		do
+			create {LINKED_LIST [INTEGER]} Result.make
+			l_str_list := a_text.split (',')
+			l_ast_index_table := query_language_names.ast_index_table
+			from
+				l_str_list.start
+			until
+				l_str_list.after
+			loop
+				l_str := l_str_list.item
+				l_str.left_adjust
+				l_str.right_adjust
+				if not l_str.is_empty then
+					l_indexes := l_ast_index_table.item (l_str)
+					if l_indexes /= Void then
+						l_indexes.do_all (agent Result.extend)
+					end
+				end
+				l_str_list.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 invariant
 	agent_index_table_attached: agent_table /= Void
 	index_name_table_attached: name_table /= Void

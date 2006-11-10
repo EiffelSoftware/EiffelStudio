@@ -382,31 +382,32 @@
 		<geant target="finalize_estudio" />
 		<echo message="Error occurred during 'finalize_estudio' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}estudio${path_separator}F_code${path_separator}estudio${exe}" to_file="${OUTPUT_DIR}${path_separator}estudio${exe}" if="${return_code}=0"/>
+		<!-- specific to windows -->
+		<geant target="compile_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
 
+		<echo message="Compiling ES is completed ..." to_file="$build_es_logfile" append="true" />
+	</target>
+
+	<target name="compile_es_windows" depend="init_deliv" if="${is_windows}" >
 		<!-- finish_freezing -->
-		<set name="return_code" value="0" />
-		<echo message="Finalize finish_freezing ..." to_file="$build_es_logfile" append="true" if="${is_windows}" />
-		<geant target="finalize_finish_freezing" if="${is_windows}" />
+		<echo message="Finalize finish_freezing ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_finish_freezing" />
 		<echo message="Error occurred during 'finalize_finish_freezing' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<set name="return_code" value="-1" unless="${is_windows}" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${OUTPUT_DIR}${path_separator}finish_freezing${exe}" if="${return_code}=0" />
 
 		<!-- emake -->
 		<echo message="Finalize emake ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_emake" />
+		<geant target="finalize_emake"  />
 		<echo message="Error occurred during 'finalize_emake' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}emake${path_separator}F_code${path_separator}emake${exe}" to_file="${OUTPUT_DIR}${path_separator}emake${exe}" if="${return_code}=0"/>
 
 		<!-- dotnet consumer -->
-		<set name="return_code" value="0" />
-		<echo message="Finalize mdconsumer ..." to_file="$build_es_logfile" append="true" if="${is_windows}"/>
-		<geant target="finalize_mdconsumer" if="${is_windows}" fork="false" />
+		<echo message="Finalize mdconsumer ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_mdconsumer" fork="false" />
 		<echo message="Error occurred during 'finalize_mdconsumer' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy to_directory="${OUTPUT_DIR}" dir="${compile_dir}/EIFGENs/consumer_20/F_code" if="${return_code}=0" >
 			<fileset include="@(*.dll)" />
 		</copy>
-
-		<echo message="Compiling ES is completed ..." to_file="$build_es_logfile" append="true" />
 	</target>
 
 	<target name="install_es" depend="init_deliv" >

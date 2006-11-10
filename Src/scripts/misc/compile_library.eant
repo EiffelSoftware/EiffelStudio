@@ -76,7 +76,7 @@
 	</target>
 	<target name="extract_gobo" depend="init">
 		<echo message="Extracting Gobo"/>
-		<exec executable="tar xzvf ${EIFFEL_SRC}\..\free_add_ons\gobo\gobo_34_win.tgz" dir="${ISE_LIBRARY}/library" if="${is_windows}"
+		<exec executable="tar xzvf ${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_win.tgz" dir="${ISE_LIBRARY}\library" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
 		<exec executable="tar xzvf ${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_unix.tgz" dir="${ISE_LIBRARY}/library" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />

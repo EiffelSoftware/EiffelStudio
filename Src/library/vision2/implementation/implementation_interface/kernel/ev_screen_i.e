@@ -91,6 +91,16 @@ feature -- Basic operation
 		deferred
 		end
 
+	fake_pointer_wheel_up is
+			-- Simulate the user rotating the mouse wheel up.
+		deferred
+		end
+
+	fake_pointer_wheel_down is
+			-- Simulate the user rotating the mouse wheel down.
+		deferred
+		end
+
 	fake_key_press (a_key: EV_KEY) is
 			-- Simulate the user pressing a `key'.
 		deferred

@@ -79,6 +79,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_creators_of_criterion, c_createe_is)
 			agent_table.put (agent new_creator_is_criterion, c_creator_is)
 			agent_table.put (agent new_return_type_is_criterion, c_return_type_is)
+			agent_table.put (agent new_contain_ast_criterion, c_contain_ast)
 
 			create name_table.make (50)
 			name_table.put (c_false, query_language_names.ql_cri_false)
@@ -129,6 +130,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_createe_is, query_language_names.ql_cri_createe_is)
 			name_table.put (c_creator_is, query_language_names.ql_cri_creator_is)
 			name_table.put (c_return_type_is, query_language_names.ql_cri_return_type_is)
+			name_table.put (c_contain_ast, query_language_names.ql_cri_contain_ast)
 		end
 
 feature{NONE} -- Implementation
@@ -549,6 +551,18 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_contain_ast_criterion (a_ast_type_list: STRING; a_and_relation: BOOLEAN; a_check_detail: BOOLEAN): QL_SIMPLE_FEATURE_CRITERION is
+			-- New {QL_SIMPLE_FEATURE_CRITERION} criterion.
+		require
+			a_ast_type_list_attached: a_ast_type_list /= Void
+		local
+			l_visitor: QL_AST_VISITOR
+		do
+			create l_visitor.make (ast_index_list_from_string (a_ast_type_list), a_and_relation)
+			create Result.make (agent l_visitor.is_code_structure_item_satisfied ({QL_FEATURE}?), True)
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Criterion index
 
@@ -599,7 +613,8 @@ feature -- Criterion index
 	c_assigner_is,
 	c_createe_is,
 	c_creator_is,
-	c_return_type_is: INTEGER is unique
+	c_return_type_is,
+	c_contain_ast: INTEGER is unique
 
 feature{NONE} -- Implementation
 
@@ -824,7 +839,7 @@ feature{NONE} -- Implementation
 				Result := l_export_status.is_all or else l_export_status.is_exported_to (l_system.class_of_id (l_system.any_id))
 			end
 		end
-		
+
 
 	is_deferred_agent (a_item: QL_FEATURE): BOOLEAN is
 			-- Agent to test if `a_item' is deferred

@@ -323,6 +323,7 @@
 								<File Id="ECMA_VDJR" Name="ECMA-V~1" LongName="ECMA-VDJR" />
 								<File Id="ECMA_VDRD" Name="ECMA-V~2" LongName="ECMA-VDRD" />
 								<File Id="ECMA_VMFN" Name="ECMA-V~3" LongName="ECMA-VMFN" />
+								<File Id="ECMA_VHPR" Name="ECMA-V~4" LongName="ECMA-VHPR" />
 								<File Id="NO_LICENSE" Name="NO_LIC~1" LongName="NO_LICENSE" />
 								<File Id="RE_INT" Name="RE_INT" />
 								<File Id="VAOL" Name="VAOL" />
@@ -384,6 +385,8 @@
 								<File Id="VRRR" Name="VRRR" />
 								<File Id="VSCN" Name="VSCN" />
 								<File Id="VSRC" Name="VSRC" />
+								<File Id="VSRP" Name="VSRP" />
+								<File Id="VSRT" Name="VSRT" />
 								<File Id="VSTA" Name="VSTA" />
 								<File Id="VTAT" Name="VTAT" />
 								<File Id="VTBT" Name="VTBT" />
@@ -418,7 +421,8 @@
 									<File Id="ECMA_VDJR3" Name="ECMA-V~2" LongName="ECMA-VDJR3" />
 									<File Id="ECMA_VDRD7" Name="ECMA-V~3" LongName="ECMA-VDRD7" />
 									<File Id="ECMA_VDRD8" Name="ECMA-V~4" LongName="ECMA-VDRD8" />
-									<File Id="ECMA_VMFN2" Name="EC62ED~1" LongName="ECMA-VMFN2" />
+									<File Id="ECMA_VMFN2" Name="ECMA-V~5" LongName="ECMA-VMFN2" />
+									<File Id="ECMA_VHPR5" Name="ECMA-V~6" LongName="ECMA-VHPR5" />
 									<File Id="EXT_CPP" Name="EXT_CPP" />
 									<File Id="EXT_DLL_ALIAS" Name="EXT_DL~1" LongName="EXT_DLL_ALIAS" />
 									<File Id="EXT_DLL_SIGN" Name="EXT_DL~2" LongName="EXT_DLL_SIGN" />
@@ -622,9 +626,10 @@
 									<File Id="VRLE2" Name="VRLE2" />
 									<File Id="VRRR2" Name="VRRR2" />
 									<File Id="VSCN77" Name="VSCN" />
-									<File Id="VSRC1" Name="VSRC1" />
-									<File Id="VSRC2" Name="VSRC2" />
-									<File Id="VSRC3" Name="VSRC3" />
+									<File Id="VSRP2" Name="VSRP2" />
+									<File Id="VSRT1" Name="VSRT1" />
+									<File Id="VSRT2" Name="VSRT2" />
+									<File Id="VSRT3" Name="VSRT3" />
 									<File Id="VSTA1" Name="VSTA1" />
 									<File Id="VSTA2" Name="VSTA2" />
 									<File Id="VTAT1" Name="VTAT1" />
@@ -675,7 +680,6 @@
 						<Directory Id="defaults" Name="defaults">
 							<Component Id="defaults" Guid="345FD620-3BB3-4A7D-8C76-C860972E4D22">
 								<File Id="full.cls" Name="full.cls" KeyPath="yes" />
-								<File Id="default.cls" Name="default.cls" />
 								<File Id="default.ecf" Name="default.ecf" />
 								<File Id="empty.cls" Name="empty.cls" />
 							</Component>

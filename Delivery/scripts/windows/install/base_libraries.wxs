@@ -567,9 +567,12 @@
 							</Component>
 						</Directory>
 						<Directory Id="serialization" Name="SERIAL~1" LongName="serialization">
-							<Component Id="serialization" Guid="6616CDA1-CFD1-4f57-BE26-8BE0ABB443D1">
-								<File Id="sed_storable_facilities_e" Name="SED_ST~1.E" LongName="sed_storable_facilities.e" />
-							</Component>
+							<Directory Id="utilities" Name="UTILIT~1" LongName="utilities">
+								<Component Id="serialization" Guid="6616CDA1-CFD1-4f57-BE26-8BE0ABB443D1">
+									<File Id="sed_storable_facilities_e" Name="SED_ST~1.E" LongName="sed_storable_facilities.e" />
+									<File Id="sed_multi_object_serialization_e" Name="SED_MU~1.E" LongName="sed_multi_object_serialization.e" />
+								</Component>
+							</Directory>
 							<Directory Id="model" Name="model">
 								<Component Id="model" Guid="5FC416B5-F817-4d0f-BB9E-01CF4D5A3D8B">
 									<File Id="sed_meta_model_e" Name="SED_ME~1.E" LongName="sed_meta_model.e" />
@@ -1767,9 +1770,7 @@
 							</Directory>
 							<Directory Id="implementation" Name="IMPLEM~1" LongName="implementation">
 								<Component Id="implementation" Guid="54E3F432-EAA8-48C7-BA73-ED8E3B34B50E">
-									<File Id="vision_socket_poller.e" Name="VISION~1.E" LongName="vision_socket_poller.e" KeyPath="yes" />
 									<File Id="wel_socket_poller.e" Name="WEL_SO~1.E" LongName="wel_socket_poller.e" />
-									<File Id="mel_socket_poller.e" Name="MEL_SO~1.E" LongName="mel_socket_poller.e" />
 								</Component>
 							</Directory>
 						</Directory>

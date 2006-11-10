@@ -13,7 +13,7 @@
 				</Directory>
 			</Directory>
 			<Directory Id="Application" Name=".">
-				<Directory Id="esbuilder" Name="esbuilder">
+				<Directory Id="esbuilder" Name="ESBUIL~1" LongName="esbuilder">
 					<Directory Id="pixmaps" Name="pixmaps">
 						<Component Id="pixmaps" Guid="5BC02BCD-CDF4-40A3-990B-83FF41BB4B55">
 							<File Id="eiffel_wizard_icon.png" Name="EIFFEL~2.PNG" LongName="eiffel_wizard_icon.png" KeyPath="yes" />
@@ -158,8 +158,8 @@
 						<Directory Id="windows_dir" Name="$(env.ISE_PLATFORM)">
 							<Directory Id="bin" Name="bin">
 								<Component Id="esbuilder.exe" Guid="B3A0FDED-6F1D-4C86-A3E5-F9F145373FED">
-									<File Id="esbuilder.exe" Name="esbuilder.exe" >
-										<Shortcut Id="esbuilder.exe" Directory="EiffelStudio" Name="esbuilder.exe" LongName="EiffelBuild" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
+									<File Id="esbuilder.exe" Name="ESBUIL~1.EXE" LongName="esbuilder.exe" >
+										<Shortcut Id="esbuilder.exe" Directory="EiffelStudio" Name="ESBUIL~1.EXE" LongName="EiffelBuild" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
 									</File>
 									<ProgId Id="build.project" Description="EiffelBuild project" Icon="[#esbuilder.exe]" IconIndex="0" >
 										<Extension Id="bpr">

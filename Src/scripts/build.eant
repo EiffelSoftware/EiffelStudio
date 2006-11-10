@@ -382,6 +382,9 @@
 		<available resource="${INSTALL_DIR}" variable="installdir_available"/>
 		-->
 		<mkdir directory="${INSTALL_DIR}"  if="${installdir_available}=false" />
+
+		<set name="return_code" value="0" />
+
 		<echo message="Make delivery in ${INSTALL_DIR} ..." to_file="$build_es_logfile" append="true" if="${installdir_available}=false" />
 		<geant target="make_delivery" reuse_variables="true" fork="false" dir="${INSTALL_DIR}" if="${installdir_available}=false" />
 		<echo message="Error occurred during 'make_delivery' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
@@ -547,6 +550,7 @@
 		<geant target="make_delivery_windows" reuse_variables="true" fork="false" if="${is_windows}" dir="${NEW_ISE_EIFFEL}" />
 		<geant target="make_delivery_unix" reuse_variables="true" fork="false" unless="${is_windows}" dir="${NEW_ISE_EIFFEL}" />
 	</target>
+
 	<target name="update_delivery" depend="init_deliv" >
 		<echo message="Task: update_delivery"/>
 		<set name="NEW_ISE_EIFFEL" value="${cwd}" />

@@ -91,7 +91,7 @@
 		-->
 		<echo message="CMD=${eccmd}" />
 		<echo message="DIR=${ecdir}" />
-		<exec executable="${eccmd}" dir="${ecdir}" />
+		<exec executable="${eccmd}" dir="${ecdir}"  accept_errors="true" exit_code_variable="return_code" />
 		<unset name="eccmd" />
 	</target>
 

@@ -61,10 +61,11 @@
 		<exec executable="tar xzvf ${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_unix.tgz" dir="${EIFFEL_SRC}/library" accept_errors="true" unless="${is_windows}"/>
 	</target>
 
-	<target name="compile_eiffel_framework" depend="init">
+	<target name="compile_eiffel_framework" depend="init" >
 		<!-- Eiffel -->
-		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}/framework/cli_writer/Clib" if="${is_windows}" />
-		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}/framework/cli_debugger/Clib" if="${is_windows}" />
+		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time" if="${is_windows}" />
+		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\framework\cli_writer\Clib" if="${is_windows}" />
+		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\framework\cli_debugger\Clib" if="${is_windows}" />
 	</target>
 	
 </project>

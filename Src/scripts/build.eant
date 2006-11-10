@@ -39,6 +39,12 @@
 		<echo message=" geant ${opt} clean_finish_freezing"/>
 		<echo message=" geant ${opt} finalize_finish_freezing"/>
 		<echo message="       ----------"/>
+		<echo message=" geant ${opt} clean_quick_finalize"/>
+		<echo message=" geant ${opt} finalize_quick_finalize"/>
+		<echo message="       ----------"/>
+		<echo message=" geant ${opt} clean_h2e"/>
+		<echo message=" geant ${opt} finalize_h2e"/>
+		<echo message="       ----------"/>
 		<echo message=" geant ${opt} clean_emake"/>
 		<echo message=" geant ${opt} finalize_emake"/>
 		<echo message="       ----------"/>
@@ -191,6 +197,40 @@
 		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
 	</target>
 	<target name="finalize_finish_freezing" depend="init_finish_freezing">
+		<echo message="Compilation : $system in $system_dir"/>
+		<set name="finalize" value="true" />
+		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	</target>
+
+	<!-- h2e -->
+	<target name="init_h2e" depend="init_system">
+		<set name="system" value="h2e"/>
+		<set name="system_target" value="h2e" />
+		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}library${path_separator}wel${path_separator}extra${path_separator}h2e.ecf" />
+		<set name="system_dir" value="${compile_dir}" />
+	</target>
+	<target name="clean_h2e" depend="init_h2e">
+		<echo message="Cleaning : $system in $system_dir"/>
+		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	</target>
+	<target name="finalize_h2e" depend="init_h2e">
+		<echo message="Compilation : $system in $system_dir"/>
+		<set name="finalize" value="true" />
+		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	</target>
+
+	<!-- quick_finalize -->
+	<target name="init_quick_finalize" depend="init_system">
+		<set name="system" value="quick_finalize"/>
+		<set name="system_target" value="quick_finalize" />
+		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}quick_finalize${path_separator}quick_finalize.ecf" />
+		<set name="system_dir" value="${compile_dir}" />
+	</target>
+	<target name="clean_quick_finalize" depend="init_quick_finalize">
+		<echo message="Cleaning : $system in $system_dir"/>
+		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	</target>
+	<target name="finalize_quick_finalize" depend="init_quick_finalize">
 		<echo message="Compilation : $system in $system_dir"/>
 		<set name="finalize" value="true" />
 		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
@@ -396,6 +436,18 @@
 		<echo message="Error occurred during 'finalize_finish_freezing' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${OUTPUT_DIR}${path_separator}finish_freezing${exe}" if="${return_code}=0" />
 
+		<!-- h2e -->
+		<echo message="Finalize h2e ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_h2e" />
+		<echo message="Error occurred during 'finalize_h2e' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}h2e${path_separator}f_code${path_separator}h2e${exe}" to_file="${OUTPUT_DIR}${path_separator}h2e${exe}" if="${return_code}=0" />
+
+		<!-- quick_finalize -->
+		<echo message="Finalize quick_finalize ..." to_file="$build_es_logfile" append="true" />
+		<geant target="finalize_quick_finalize" />
+		<echo message="Error occurred during 'finalize_quick_finalize' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}quick_finalize${path_separator}f_code${path_separator}quick_finalize${exe}" to_file="${OUTPUT_DIR}${path_separator}quick_finalize${exe}" if="${return_code}=0" />
+
 		<!-- emake -->
 		<echo message="Finalize emake ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_emake"  />
@@ -451,6 +503,14 @@
 
 		<available dir="${OUTPUT_DIR}" resource="finish_freezing${exe}" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="finish_freezing${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
+
+		<available dir="${OUTPUT_DIR}" resource="quick_finalize${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="quick_finalize${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
+
+		<available dir="${OUTPUT_DIR}" resource="h2e${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="h2e${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
 
 		<available dir="${OUTPUT_DIR}" resource="emake${exe}" variable="tmp_available"/>
@@ -562,6 +622,8 @@
 		<!-- executable -->
 		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ec${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
 		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/finish_freezing${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
+		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/quick_finalize${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
+		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/h2e${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
 		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
 
 	</target>

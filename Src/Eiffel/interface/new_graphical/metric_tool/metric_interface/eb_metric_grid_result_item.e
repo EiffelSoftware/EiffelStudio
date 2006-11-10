@@ -29,6 +29,20 @@ inherit
 			is_equal
 		end
 
+	QL_UTILITY
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
+	EB_SHARED_EDITOR_TOKEN_UTILITY
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -36,27 +50,23 @@ feature -- Initialization
 
 	make (a_item: QL_ITEM; a_column_index: INTEGER; a_row_index: INTEGER; a_path: BOOLEAN) is
 			-- Initialize current with `a_item' `column_index' with `a_column_index' and `row_index' with `a_row_index'
-			-- `a_path' is True indicates that current is patht item.
+			-- `a_path' is True indicates that current is path item.
 		require
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 		local
 			l_writer: like token_writer
 			l_full_signature: BOOLEAN
-			l_list: LINKED_LIST [QL_ITEM]
-			l_parent: QL_ITEM
-			l_ql_item: QL_ITEM
 		do
 			default_create
-			l_writer := token_writer
-			l_writer.new_line
-			l_writer.set_context_group (Void)
 			column_index := a_column_index
 			row_index := a_row_index
 			set_overriden_fonts (label_font_table)
-
 			if not a_path then
 					-- Initialize current as a query language tem.
+				l_writer := token_writer
+				l_writer.new_line
+				l_writer.set_context_group (Void)
 				l_full_signature := not a_item.is_feature
 				add_editor_token_representation (a_item, l_full_signature, True, l_writer)
 				set_pixmap (pixmap_for_query_lanaguage_item (a_item))
@@ -65,34 +75,7 @@ feature -- Initialization
 				image_internal := a_item.name
 			else
 					-- Initialize current as a path item.
-				l_writer.new_line
-				create l_list.make
-				from
-					l_parent := a_item.parent
-				until
-					l_parent = Void
-				loop
-					l_list.put_front (l_parent)
-					l_parent := l_parent.parent
-				end
-				if l_list.is_empty then
-					l_list.extend (l_ql_item)
-				end
-				from
-					l_list.start
-					if l_list.count > 1 then
-						l_list.forth
-					end
-				until
-					l_list.after
-				loop
-					add_editor_token_representation (l_list.item, False, False, l_writer)
-					l_list.forth
-					if not l_list.after then
-						l_writer.add_string (".")
-					end
-				end
-				set_text_with_tokens (l_writer.last_line.content)
+				set_text_with_tokens (editor_tokens_of_query_item_path (a_item, Void, True, False, False))
 				image_internal := text
 			end
 		ensure

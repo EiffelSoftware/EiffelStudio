@@ -260,22 +260,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
---	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
---			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
---			-- Void if no item is found.
---		local
---			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
---			l_index: INTEGER
---		do
---			l_editor_token_item ?= grid_item_at_position (a_x, a_y)
---			if l_editor_token_item /= Void then
---				l_index := l_editor_token_item.token_index_at_current_position
---				if l_index > 0 then
---					Result := l_editor_token_item.token_at_position (l_index)
---				end
---			end
---		end
-
 	grid: ES_GRID
 			-- Grid used to display information
 

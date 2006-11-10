@@ -70,7 +70,13 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			-- String representation of feature view sorting order
 		do
 			Result := feature_view_sorting_order_preference.value
-		end		
+		end
+
+	is_item_path_shown: BOOLEAN is
+			-- Is item path shown?
+		do
+			Result := show_item_path_preference.value
+		end
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -81,6 +87,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	class_flat_view_sorting_order_preference: STRING_PREFERENCE
 	class_tree_view_sorting_order_preference: STRING_PREFERENCE
 	feature_view_sorting_order_preference: STRING_PREFERENCE
+	show_item_path_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -91,6 +98,7 @@ feature {NONE} -- Preference Strings
 	class_flat_view_sorting_order_string: STRING is "tools.class_browser.class_flat_view_sorting_order"
 	class_tree_view_sorting_order_string: STRING is "tools.class_browser.class_flat_tree_sorting_order"
 	feature_view_sorting_order_string: STRING is "tools.class_browser.feature_view_sorting_order"
+	show_item_path_string: STRING is "tools.class_browser.show_item_path"
 
 feature {NONE} -- Implementation
 
@@ -110,6 +118,7 @@ feature {NONE} -- Implementation
 			class_tree_view_sorting_order_preference.set_hidden (True)
 			feature_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, feature_view_sorting_order_string, "2:1")
 			feature_view_sorting_order_preference.set_hidden (True)
+			show_item_path_preference := l_manager.new_boolean_preference_value (l_manager, show_item_path_string, False)
 		end
 
 	preferences: PREFERENCES

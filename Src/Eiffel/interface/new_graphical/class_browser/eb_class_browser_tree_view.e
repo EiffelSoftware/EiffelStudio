@@ -14,7 +14,8 @@ inherit
 	EB_CLASS_BROWSER_GRID_VIEW [EB_CLASS_BROWSER_TREE_ROW]
 		redefine
 			data,
-			default_ensure_visible_action
+			default_ensure_visible_action,
+			recycle_agents
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -30,7 +31,21 @@ feature -- Access
 
 	control_bar: EV_WIDGET is
 			-- Widget of a control bar through which, certain control can be performed upon current view
+		local
+			l_tool_bar: EV_TOOL_BAR
 		do
+			if control_tool_bar = Void then
+				create control_tool_bar
+				create l_tool_bar
+				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+				l_tool_bar.extend (display_path_button)
+				control_tool_bar.set_padding (2)
+				control_tool_bar.extend (l_tool_bar)
+				control_tool_bar.disable_item_expand (l_tool_bar)
+			end
+			Result := control_tool_bar
+		ensure then
+			result_attached: Result /= Void
 		end
 
 feature -- Actions
@@ -284,6 +299,29 @@ feature -- Actions
 			preferences.class_browser_data.class_tree_view_sorting_order_preference.set_value (string_representation_of_sorted_columns)
 		end
 
+	on_show_path_changed is
+			-- Action to be performed when selection status of `display_path_button' changes
+		do
+			is_up_to_date := False
+			update_view
+			preferences.class_browser_data.show_item_path_preference.set_value (display_path_button.is_selected)
+		end
+
+	on_show_path_changed_from_outside is
+			-- Action to be performed when selection status of `display_path_button' changes from outside
+		local
+			l_displayed: BOOLEAN
+		do
+			l_displayed := preferences.class_browser_data.is_item_path_shown
+			if l_displayed /= display_path_button.is_selected then
+				if l_displayed then
+					display_path_button.enable_select
+				else
+					display_path_button.disable_select
+				end
+			end
+		end
+
 feature -- Notification
 
 	update_view is
@@ -293,6 +331,11 @@ feature -- Notification
 		do
 			if not is_up_to_date then
 				if data /= Void then
+					if start_class = Void and then display_path_button.is_selected then
+						set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_CLASS_BROWSER_TREE_ROW]}.make (agent path_name_tester, ascending_order))
+					else
+						remove_sort_info (2)
+					end
 					text.hide
 					component_widget.show
 					fill_rows
@@ -403,6 +446,19 @@ feature -- Sorting
 			-- Current sort order on class column
 		do
 			Result := column_sort_info.item (1).current_order
+		end
+
+	path_name_tester (a_row, b_row: EB_CLASS_BROWSER_TREE_ROW; a_order: INTEGER): BOOLEAN is
+			-- Tester to decide order between `a_row' and `b_row' according to order `a_order'
+		require
+			a_row_attached: a_row /= Void
+			b_row_attached: b_row /= Void
+		do
+			if a_order = ascending_order then
+				Result := a_row.path_grid_item.image < b_row.path_grid_item.image
+			else
+				Result := a_row.path_grid_item.image > b_row.path_grid_item.image
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -564,6 +620,8 @@ feature{NONE} -- Implementation
 			l_row: EB_CLASS_BROWSER_TREE_ROW
 			l_rows: like rows
 			l_bg_color: EV_COLOR
+			l_size_table: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
+			l_is_path_displayed: BOOLEAN
 		do
 			l_bg_color := even_line_color
 			if grid.row_count > 0 then
@@ -571,6 +629,7 @@ feature{NONE} -- Implementation
 			end
 			grid.hide_tree_node_connectors
 			grid.set_row_height (default_row_height)
+			l_is_path_displayed := display_path_button.is_selected
 			from
 				l_rows := rows
 				l_rows.start
@@ -578,8 +637,14 @@ feature{NONE} -- Implementation
 				l_rows.after
 			loop
 				l_row := rows.item_for_iteration
-				l_row.bind_row (Void, grid, l_bg_color, 0)
+				l_row.bind_row (Void, grid, l_bg_color, 0, l_is_path_displayed)
 				l_rows.forth
+			end
+			if not has_grid_been_binded then
+				has_grid_been_binded := True
+				create l_size_table.make (1)
+				l_size_table.force ([500, 800], 1)
+				auto_resize_columns (grid, l_size_table)
 			end
 		end
 
@@ -800,15 +865,55 @@ feature{NONE} -- Implementation
 	class_table_internal: like class_table
 			-- Implementation of `class_table'		
 
+	has_grid_been_binded: BOOLEAN
+			-- Has `grid' been binded before?
+
+	control_tool_bar: EV_HORIZONTAL_BOX
+			-- Implementation of `control_bar'
+
+	display_path_button: EV_TOOL_BAR_TOGGLE_BUTTON
+			-- Toggle button to turn on/off item path display
+		do
+			if display_path_button_internal = Void then
+				create display_path_button_internal
+				display_path_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
+				display_path_button_internal.set_tooltip (interface_names.h_show_item_path)
+				if preferences.class_browser_data.is_item_path_shown then
+					display_path_button_internal.enable_select
+				else
+					display_path_button_internal.disable_select
+				end
+			end
+			Result := display_path_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	display_path_button_internal: like display_path_button
+			-- Implementation of `display_path_button'
+
+	on_show_path_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent for `on_show_path_changed_from_outside'
+
+	recycle_agents is
+			-- Recycle agents
+		do
+			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
+			if on_show_path_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.show_item_path_preference.change_actions.prune_all (on_show_path_changed_from_outside_agent)
+			end
+		end
+
 feature{NONE} -- Initialization
 
 	build_grid is
 			-- Build `grid'.
 		do
 			create grid
-			grid.set_column_count_to (1)
+			grid.set_column_count_to (2)
 			grid.enable_selection_on_single_button_click
 			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
+			grid.header.i_th (2).set_text (interface_names.l_class_browser_path)
 			grid.enable_single_row_selection
 			grid.enable_tree
 			grid.set_row_height (default_row_height)
@@ -826,6 +931,10 @@ feature{NONE} -- Initialization
 			create {ARRAYED_LIST [EV_GRID_ROW]}processed_rows.make (20)
 			enable_editor_token_pnd
 			set_select_all_action (agent do  end)
+
+			display_path_button.select_actions.extend (agent on_show_path_changed)
+			on_show_path_changed_from_outside_agent := agent on_show_path_changed_from_outside
+			preferences.class_browser_data.show_item_path_preference.change_actions.extend (on_show_path_changed_from_outside_agent)
 		end
 
 	build_sortable_and_searchable is

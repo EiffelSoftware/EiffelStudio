@@ -228,6 +228,7 @@ feature{NONE} -- Process
 			append_end_tag (n_path)
 			append_new_line
 			exdent
+			append_indent
 			append_end_tag (n_path_criterion)
 			append_new_line
 		end

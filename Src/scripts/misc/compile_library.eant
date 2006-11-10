@@ -29,22 +29,23 @@
 		<geant target="compile_library" />
 		<geant target="compile_eiffel_framework" />
 
-		<available resource="${EIFFEL_SRC}${path_separator}library${path_separator}gobo${path_separator}library" variable="gobo_available"/>
-		<geant target="extract_gobo" unless="${gobo_available}" />
+		<available resource="${ISE_LIBRARY}${path_separator}library${path_separator}gobo${path_separator}library" variable="gobo_available"/>
+		<echo message="GOBO is already installed ${ISE_LIBRARY}${path_separator}library${path_separator}gobo${path_separator}library" if="${gobo_available}=true" />
+		<geant target="extract_gobo" if="${gobo_available}=false" />
 		<unset name="gobo_available" />
 	</target>
 
 		<!-- C_library -->
 	<target name="compile_c_library" depend="init" if="${is_windows}" >
 		<set name="old_ISE_EIFFEL" value="${ISE_EIFFEL}" />
-		<setenv name="ISE_EIFFEL" value="${EIFFEL_SRC}" />
+		<setenv name="ISE_EIFFEL" value="${ISE_LIBRARY}" />
 
 		<echo message="Compiler zlib" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/C_library/zlib" if="${is_windows}" 
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/C_library/zlib" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compiler libpng" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/C_library/libpng" if="${is_windows}"
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/C_library/libpng" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<setenv name="ISE_EIFFEL" value="${old_ISE_EIFFEL}" />
@@ -54,30 +55,30 @@
 		<!-- library -->
 	<target name="compile_library" depend="init">
 		<echo message="Compile net clib" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/net/Clib" if="${is_windows}" 
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/library/net/Clib" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/net/Clib" unless="${is_windows}" 
+		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/net/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile vision2 clib" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/vision2/Clib" if="${is_windows}"
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/library/vision2/Clib" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/vision2/Clib" unless="${is_windows}" 
+		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/vision2/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile wel clib" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/wel/clib" if="${is_windows}"
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${ISE_LIBRARY}/library/wel/clib" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
 
 		<echo message="Compile vision2/gtk clib" />
-		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/vision2/implementation/gtk/Clib" unless="${is_windows}" 
+		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/vision2/implementation/gtk/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 	</target>
 	<target name="extract_gobo" depend="init">
 		<echo message="Extracting Gobo"/>
-		<exec executable="tar xzvf ..\..\free_add_ons\gobo\gobo_34_win.tgz" dir="${EIFFEL_SRC}/library" if="${is_windows}"
+		<exec executable="tar xzvf ${EIFFEL_SRC}\..\free_add_ons\gobo\gobo_34_win.tgz" dir="${ISE_LIBRARY}/library" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="tar xzvf ${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_unix.tgz" dir="${EIFFEL_SRC}/library" unless="${is_windows}" 
+		<exec executable="tar xzvf ${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_unix.tgz" dir="${ISE_LIBRARY}/library" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 	</target>
 

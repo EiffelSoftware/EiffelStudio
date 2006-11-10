@@ -412,6 +412,7 @@
 		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" variable="tmp_available"/>
 		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${OUTPUT_DIR}${path_separator}wel_hook.dll" if="${tmp_available}=true" />
 
+		<!-- IL runtime -->
 		<available resource="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" variable="tmp_available"/>
 		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${OUTPUT_DIR}${path_separator}EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
 		
@@ -549,6 +550,15 @@
 		<geant target="make_delivery_common" reuse_variables="true" fork="false" dir="${NEW_ISE_EIFFEL}" />
 		<geant target="make_delivery_windows" reuse_variables="true" fork="false" if="${is_windows}" dir="${NEW_ISE_EIFFEL}" />
 		<geant target="make_delivery_unix" reuse_variables="true" fork="false" unless="${is_windows}" dir="${NEW_ISE_EIFFEL}" />
+
+		<!-- compile NEW_ISE_EIFFEL library -->
+		<set name="old_ISE_LIBRARY" value="${ISE_LIBRARY}" />
+		<setenv name="ISE_LIBRARY" value="${NEW_ISE_EIFFEL}" />
+		<geant target="compile_library" />
+		<exit code="123" />
+		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" />
+		<setenv name="ISE_LIBRARY" value="${old_ISE_LIBRARY}" />
+		<unset name="old_ISE_LIBRARY" />
 	</target>
 
 	<target name="update_delivery" depend="init_deliv" >
@@ -562,6 +572,7 @@
 		<set name="SVNURL" value="https://eiffelsoftware.origo.ethz.ch/svn/es/trunk" />
 		<exec executable="svn checkout $SVNURL/Delivery . " />
 		<exec executable="svn checkout $SVNURL/Src/library library" />
+		<exec executable="svn checkout $SVNURL/Src/C_library C_library" />
 		<mkdir directory="studio/spec/$ISE_PLATFORM"/>
 		<mkdir directory="studio/spec/$ISE_PLATFORM/bin"/>
 		<echo message="make dir : studio/spec/$ISE_PLATFORM/include" />

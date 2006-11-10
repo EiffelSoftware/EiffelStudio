@@ -388,6 +388,7 @@
 		<echo message="Finalize finish_freezing ..." to_file="$build_es_logfile" append="true" if="${is_windows}" />
 		<geant target="finalize_finish_freezing" if="${is_windows}" />
 		<echo message="Error occurred during 'finalize_finish_freezing' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<set name="return_code" value="-1" unless="${is_windows}" />
 		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${OUTPUT_DIR}${path_separator}finish_freezing${exe}" if="${return_code}=0" />
 
 		<!-- emake -->

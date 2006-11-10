@@ -68,12 +68,17 @@ feature -- Setting
 		local
 			l_sort_agent: PROCEDURE [ANY, TUPLE]
 		do
-			if a_column_index <= column_sort_info.upper then
-				column_sort_info.put (Void, a_column_index)
-			end
-			l_sort_agent := sort_agent_table.item (a_column_index)
-			if l_sort_agent /= Void then
-				safe_remove_agent (l_sort_agent, grid.column (a_column_index).header_item.pointer_button_press_actions)
+			if column_sort_info.item (a_column_index) /= Void then
+				if column_sort_info.item (a_column_index).is_auto_indicator_enabled then
+					grid.column (column_sort_info.item (a_column_index).column_index).header_item.remove_pixmap
+				end
+				if a_column_index <= column_sort_info.upper then
+					column_sort_info.put (Void, a_column_index)
+				end
+				l_sort_agent := sort_agent_table.item (a_column_index)
+				if l_sort_agent /= Void then
+					safe_remove_agent (l_sort_agent, grid.column (a_column_index).header_item.pointer_button_press_actions)
+				end
 			end
 		ensure
 			sort_info_removed:
@@ -261,8 +266,10 @@ feature -- Sort
 						is_column_sortable (a_column_index)
 					then
 						l_sort_info := column_sort_info.item (last_sorted_column_internal)
-						if l_sort_info.is_auto_indicator_enabled then
-							grid.column (last_sorted_column_internal).header_item.remove_pixmap
+						if l_sort_info /= Void then
+							if l_sort_info.is_auto_indicator_enabled then
+								grid.column (last_sorted_column_internal).header_item.remove_pixmap
+							end
 						end
 					end
 					last_sorted_column_internal := a_column_index
@@ -320,11 +327,11 @@ feature -- Access
 
 	sorted_columns: LINKED_LIST [INTEGER]
 			-- Columns to be sorted
-			-- This is used to support multi-column sort. When you sorted the first column, and thne
+			-- This is used to support multi-column sort. When you sorted the first column, and then
 			-- sort the second column with control key pressed, the result would be first sort the first column,
 			-- and then sort the second column.
-			-- In this list, a list of column index are maintained, the first item is the oldest sorted column, the last item is
-			-- the most recent sorted column.
+			-- In this list, a list of column index are maintained, the first item is the earliest sorted column, the last item is
+			-- the most recently sorted column.
 
 	last_sorted_column: INTEGER is
 			-- Index of last sorted column
@@ -552,8 +559,10 @@ feature{NONE} -- Implementation
 				l_columns.after
 			loop
 				l_sort_info_item := l_sort_info.item (l_columns.item)
-				l_action_list.extend (l_sort_info_item.comparator)
-				l_order_list.extend (l_sort_info_item.current_order)
+				if l_sort_info_item /= Void then
+					l_action_list.extend (l_sort_info_item.comparator)
+					l_order_list.extend (l_sort_info_item.current_order)
+				end
 				l_columns.forth
 			end
 			create Result.make (l_action_list, l_order_list)
@@ -596,8 +605,9 @@ feature{NONE} -- Implementation
 			until
 				l_columns.after
 			loop
-				check column_sort_info.item (l_columns.item) /= Void end
-				Result.extend ([l_columns.item, column_sort_info.item (l_columns.item).current_order])
+				if column_sort_info.item (l_columns.item) /= Void then
+					Result.extend ([l_columns.item, column_sort_info.item (l_columns.item).current_order])
+				end
 				l_columns.forth
 			end
 		ensure

@@ -34,11 +34,12 @@ feature{NONE} -- Initialization
 
 feature -- Grid binding
 
-	bind_row (a_row: EV_GRID_ROW; a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER) is
+	bind_row (a_row: EV_GRID_ROW; a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER; a_path: BOOLEAN) is
 			-- Bind current as a subrow of `a_row' in `a_grid'. if `a_row' is Void, insert a new
 			-- row in `a_grid' directly.
 			-- Set backgroud color of inserted row with `a_background_color',
 			-- set row height with `a_height'.
+			-- If `a_path' is True, display path of associated item.
 		require
 			a_grid_not_void: a_grid /= Void
 			a_grid_valid: a_grid.is_tree_enabled
@@ -56,6 +57,9 @@ feature -- Grid binding
 				l_row := a_grid.row (a_grid.row_count)
 			end
 			l_row.set_item (1, class_grid_item)
+			if a_path then
+				l_row.set_item (2, path_grid_item)
+			end
 			set_grid_row (l_row)
 			l_children := children
 			if not l_children.is_empty then
@@ -64,7 +68,7 @@ feature -- Grid binding
 				until
 					l_children.after
 				loop
-					l_children.item_for_iteration.bind_row (l_row, a_grid, a_background_color, a_height)
+					l_children.item_for_iteration.bind_row (l_row, a_grid, a_background_color, a_height, a_path)
 					l_children.forth
 				end
 			end
@@ -145,6 +149,21 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	path_grid_item: EB_GRID_QUERY_LANGUAGE_ITEM is
+			-- Path item
+		local
+			l_style: EB_GRID_QUERY_LANGUAGE_ITEM_STYLE
+		do
+			if path_grid_item_internal = Void then
+				create l_style.make (True, False)
+				create path_grid_item_internal.make (class_item, l_style)
+				path_grid_item_internal.enable_pixmap
+			end
+			Result := path_grid_item_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 	parent: like Current
 			-- Parent of Current row
 
@@ -158,6 +177,9 @@ feature{NONE} -- Implementation
 
 	class_item_internal: like class_grid_item
 			-- Internal `class_grid_item'
+
+	path_grid_item_internal: like path_grid_item
+			-- Implementation of `path_grid_item'			
 
 feature -- Setting
 

@@ -556,7 +556,7 @@
 		<mkdir directory="studio/spec/$ISE_PLATFORM/include"/>
 		<mkdir directory="studio/spec/$ISE_PLATFORM/lib"/>
 		<copy to_directory="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include" dir="${EIFFEL_SRC}/C/run-time" >
-			<fileset include="@(eif_*.h)" />
+			<fileset include="@(*.h)" />
 		</copy>
 		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include/eif_confmagic.h" />
 		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />

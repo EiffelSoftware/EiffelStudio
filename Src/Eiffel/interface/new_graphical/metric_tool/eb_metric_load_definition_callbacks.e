@@ -526,7 +526,7 @@ feature{NONE} -- Process
 	process_path is
 			-- Process "path" definition list node.		
 		do
-			if current_tag.item /= t_path_criterion then
+			if current_tag.item /= t_path then
 				set_parse_error_message ("Invalid tag.")
 			else
 				current_path_criterion.set_path (current_content)

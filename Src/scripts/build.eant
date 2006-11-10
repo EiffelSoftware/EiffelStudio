@@ -484,6 +484,7 @@
 		</copy>
 
 		<geant target="install_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
+		<geant target="install_es_unix" fork="false" reuse_variables="true" unless="${is_windows}" />
 
 		<unset name="tmp_install_dir" />
 		<!-- end of install -->
@@ -491,6 +492,10 @@
 		<echo message="Installing ES is completed ..." to_file="$build_es_logfile" append="true" />
 	</target>
 
+
+	<target name="install_es_unix" depend="init_deliv" unless="${is_windows}" >
+		<exec executable="chmod a+x ${tmp_install_dir}/bin/* " accept_errors="true" exit_code_variable="return_code" />
+	</target>
 
 	<target name="install_es_windows" depend="init_deliv" if="${is_windows}" >
 		<available dir="${OUTPUT_DIR}" resource="wel_hook.dll" variable="tmp_available"/>
@@ -561,6 +566,13 @@
 		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include/eif_confmagic.h" />
 		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />
 		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" />
+
+		<copy to_directory="${INSTALL_DIR}\precomp\spec\${ISE_PLATFORM}" dir="precomp\spec\platform" >
+			<fileset 
+				include="@(**/*)" 
+				exclude="@(**/.svn/**/*)"
+			/>
+		</copy>
 	</target>
 
 	<target name="make_delivery_windows" depend="init_deliv" >

@@ -37,7 +37,11 @@ indexing
 #ifdef I_SYS_TIMES
 #include <sys/times.h>
 #endif
+#ifdef EIF_VMS
+#include "netvmsdef.h"
+#else
 #include <sys/types.h>		/* select */
+#endif
 #include <unistd.h>
 #define SOCKET_ERROR -1
 #define GET_SOCKET_ERROR errno
@@ -56,6 +60,37 @@ rt_private int socket_fides;
 #endif
 
 extern void idr_flush (void);
+
+
+
+#ifdef EIF_VMS
+/* 
+** Some VMS TCP/IP stacks appear to have a problem (bug?) with large (i.e.
+** size < 65535) transfers.  The bug is confirmed in VMS Multinet and may
+** exist in other VMS TCP/IP stacks as well.  Changing EIF_BUFFER_SIZE for
+** VMS doesnt help, because it must match the value used for packetizing
+** messages in run-time/store.c.
+**
+** The workaround is to constrain socket recv and send (read and write) calls
+** to some workable maximum. The first try used socket buffersize, i.e.
+** SO_SNDBUF/SO_RCVBUF. A more efficient workaround is to constrain 
+** the send/recv calls to the largest counts that are known to work.  I have
+** discovered through experimentation that send calls of up to 65535 bytes
+** work while 65536 fails.  recv calls of up to 65534 bytes work and 65536
+** fails (I haven't completely tested recv calls of 65535 bytes).  However, I
+** also noticed that the VMS Porting Library (aka VMS_JACKETS) limits i/o
+** transfers to a maximum size of 32768 (defined as GENERIC_K_MAXBUF); I
+** shall do likewise here.
+*/
+
+#ifndef GENERIC_K_MAXBUF
+#define GENERIC_K_MAXBUF 32768
+#endif
+#define get_socket_maxrecv(fd) GENERIC_K_MAXBUF
+#define get_socket_maxsend(fd) GENERIC_K_MAXBUF
+#endif /* EIF_VMS */
+
+
 
 /* Returns nonzero if the socket is ready for, zero otherwise */
 /* read = 0, check the socket to be ready for writing */
@@ -103,10 +138,17 @@ int net_char_read(char *pointer, int size)
 {
 	GTCX
 	int i;
+#ifdef EIF_VMS
+        int rcvbuf = get_socket_maxrecv (socket_fides);
+        int chunksize = size;
+        if (size > rcvbuf) chunksize = rcvbuf;
+#endif
 
 retry:
 #ifdef EIF_WINDOWS
 	i = recv(socket_fides, pointer, size, 0);
+#elif defined EIF_VMS
+        i = recv(socket_fides, pointer, chunksize, 0);
 #else
 	i = read(socket_fides, pointer, size);
 #endif
@@ -166,9 +208,17 @@ rt_private char* net_buffer (int min_size)
 rt_private int write2(int fd, char* pointer, int size)
 {
 	int i;
+#ifdef EIF_VMS
+        int sndbuf = get_socket_maxsend (socket_fides);
+        int chunksize = size;
+        if (chunksize > sndbuf) chunksize = sndbuf;
+#endif
+
 retry:
 #ifdef EIF_WINDOWS
 	i = send(fd, pointer, size, 0);
+#elif defined EIF_VMS
+        i = send(fd, pointer, chunksize, 0);
 #else
 	i = write(fd, pointer, size);
 #endif

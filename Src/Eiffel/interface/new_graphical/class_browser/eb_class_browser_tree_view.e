@@ -877,7 +877,7 @@ feature{NONE} -- Implementation
 			if display_path_button_internal = Void then
 				create display_path_button_internal
 				display_path_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
-				display_path_button_internal.set_tooltip (interface_names.h_show_item_path)
+				display_path_button_internal.set_tooltip (interface_names.h_show_item_location)
 				if preferences.class_browser_data.is_item_path_shown then
 					display_path_button_internal.enable_select
 				else

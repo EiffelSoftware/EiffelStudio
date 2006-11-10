@@ -738,7 +738,7 @@ feature -- Label texts
 	l_show_tooltip: STRING is "Tooltip"
 	h_show_feature_from_any: STRING is  "Show unchanged features from class ANY?"
 	h_show_tooltip: STRING is "Show tooltips?"
-	h_show_item_path: STRING is "Show class path?"
+	h_show_item_location: STRING is "Show class location?"
 	l_class_browser_classes: STRING is "Class"
 	l_class_browser_Path: STRING is "Path"
 	l_class_browser_features: STRING is "Feature"

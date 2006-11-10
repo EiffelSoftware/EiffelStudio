@@ -255,6 +255,43 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
+	pixmap_for_query_lanaguage_item (a_item: QL_ITEM): EV_PIXMAP is
+			-- Pixmap for `a_item'
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_group: QL_GROUP
+			l_class: QL_CLASS
+			l_feature: QL_REAL_FEATURE
+		do
+			if a_item.is_target then
+				Result := pixmaps.icon_pixmaps.metric_unit_target_icon
+			elseif a_item.is_group then
+				l_group ?= a_item
+				Result := pixmap_from_group (l_group.group)
+			elseif a_item.is_class then
+				l_class ?= a_item
+				Result := pixmap_from_class_i (l_class.class_i)
+			elseif a_item.is_generic then
+				Result := pixmaps.icon_pixmaps.metric_unit_generic_icon
+			elseif a_item.is_real_feature then
+				l_feature ?= a_item
+				Result := pixmap_from_e_feature (l_feature.e_feature)
+			elseif a_item.is_invariant_feature then
+				Result := pixmaps.icon_pixmaps.class_features_invariant_icon
+			elseif a_item.is_argument or a_item.is_local then
+				Result := pixmaps.icon_pixmaps.metric_unit_local_or_argument_icon
+			elseif a_item.is_assertion then
+				Result := pixmaps.icon_pixmaps.metric_unit_assertion_icon
+			elseif a_item.is_line then
+				Result := pixmaps.icon_pixmaps.metric_unit_line_icon
+			else
+				Result := pixmaps.icon_pixmaps.general_blank_icon
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	class_icon_map: HASH_TABLE [EV_PIXMAP, NATURAL_8] is

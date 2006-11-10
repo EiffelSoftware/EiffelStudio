@@ -40,7 +40,7 @@ feature -- Titles
 	t_evaluation_tab: STRING is "Metric Evaluation"
 	t_archive_tab: STRING is "Metric Archive"
 	t_detail_result_tab: STRING is "Detailed Result"
-	t_path: STRING is "Path"
+	t_path: STRING is "Location"
 	t_group: STRING is "Group"
 	t_metrics: STRING is "Metrics"
 	t_coefficient: STRING is "Coefficient"

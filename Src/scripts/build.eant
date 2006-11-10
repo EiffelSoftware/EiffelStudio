@@ -555,7 +555,6 @@
 		<set name="old_ISE_LIBRARY" value="${ISE_LIBRARY}" />
 		<setenv name="ISE_LIBRARY" value="${NEW_ISE_EIFFEL}" />
 		<geant target="compile_library" />
-		<exit code="123" />
 		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" />
 		<setenv name="ISE_LIBRARY" value="${old_ISE_LIBRARY}" />
 		<unset name="old_ISE_LIBRARY" />

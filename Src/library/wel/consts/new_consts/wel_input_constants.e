@@ -39,7 +39,7 @@ feature -- Mouse and Key constants (MK_xxxx)
 	Mk_shift: INTEGER is 4
 			-- Declared in Windows as MK_SHIFT
 
-feature -- Virtual Key constants (VK_xxxx) 
+feature -- Virtual Key constants (VK_xxxx)
 
 	Vk_lbutton: INTEGER is 1
 			-- Declared in Windows as VK_LBUTTON
@@ -351,6 +351,12 @@ feature -- Mouse event input constants
 
 	Mouseeventf_wheel: INTEGER is 2048;
 			-- Declared in Windows as MOUSEEVENTF_WHEEL
+
+feature -- Mouse wheel constants
+
+	Wheel_delta: INTEGER is 120;
+			-- One wheel click is defined as WHEEL_DELTA, which is 120
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -20,35 +20,35 @@ inherit
 feature -- Keyboard events
 
 	send_keyboard_key_down (virtual_key_code: INTEGER) is
-			-- The keybd_event function synthesizes a keystroke. The system 
-			-- can use such a synthesized keystroke to generate a  
+			-- The keybd_event function synthesizes a keystroke. The system
+			-- can use such a synthesized keystroke to generate a
 			-- WM_KEYDOWN message.
 			--
-			-- An application can simulate a press of the PRINTSCRN key in 
-			-- order to obtain a screen snapshot and save it to the 
-			-- clipboard. 
+			-- An application can simulate a press of the PRINTSCRN key in
+			-- order to obtain a screen snapshot and save it to the
+			-- clipboard.
 			-- To do this, call `send_keyboard_key_down(Vk_snapshot)'.
 			--
-			-- Windows NT: The `send_keyboard_key_down' can toggle the 
-			-- NUM LOCK, CAPS LOCK, and SCROLL LOCK keys. 
+			-- Windows NT: The `send_keyboard_key_down' can toggle the
+			-- NUM LOCK, CAPS LOCK, and SCROLL LOCK keys.
 			--
 			-- Windows 95: The `send_keyboard_key_down' function can toggle
-			-- only the CAPS LOCK and SCROLL LOCK keys. It cannot toggle 
+			-- only the CAPS LOCK and SCROLL LOCK keys. It cannot toggle
 			-- the NUM LOCK key.
 		do
 			cwin_keybd_event (virtual_key_code, 0, 0, Default_pointer)
 		end
 
 	send_keyboard_key_up (virtual_key_code: INTEGER) is
-			-- The keybd_event function synthesizes a keystroke. The system 
-			-- can use such a synthesized keystroke to generate a  
+			-- The keybd_event function synthesizes a keystroke. The system
+			-- can use such a synthesized keystroke to generate a
 			-- WM_KEYUP message.
 			--
-			-- Windows NT: The `send_keyboard_key_down' can toggle the 
-			-- NUM LOCK, CAPS LOCK, and SCROLL LOCK keys. 
+			-- Windows NT: The `send_keyboard_key_down' can toggle the
+			-- NUM LOCK, CAPS LOCK, and SCROLL LOCK keys.
 			--
 			-- Windows 95: The `send_keyboard_key_down' function can toggle
-			-- only the CAPS LOCK and SCROLL LOCK keys. It cannot toggle 
+			-- only the CAPS LOCK and SCROLL LOCK keys. It cannot toggle
 			-- the NUM LOCK key.
 		do
 			cwin_keybd_event (virtual_key_code, 0, Keyeventf_keyup, Default_pointer)
@@ -60,14 +60,14 @@ feature -- Mouse events
 			-- Synthesize a fake mouse move to absolute
 			-- screen position `a_x', `a_y'.
 			--
-			-- `a_x' and `a_y' contain normalized absolute coordinates 
-			-- between 0 and 65,535. The event procedure maps these 
-			-- coordinates onto the display surface. Coordinate (0,0) 
-			-- maps onto the upper-left corner of the display surface, 
-			-- (65535,65535) maps onto the lower-right corner. 
+			-- `a_x' and `a_y' contain normalized absolute coordinates
+			-- between 0 and 65,535. The event procedure maps these
+			-- coordinates onto the display surface. Coordinate (0,0)
+			-- maps onto the upper-left corner of the display surface,
+			-- (65535,65535) maps onto the lower-right corner.
 			--
 			-- To determine the size of the screen use
-			-- {WEL_SYSTEM_METRICS}.screen_width and 
+			-- {WEL_SYSTEM_METRICS}.screen_width and
 			-- {WEL_SYSTEM_METRICS}.screen_height.
 		do
 			cwin_mouse_event (
@@ -83,8 +83,8 @@ feature -- Mouse events
 			-- Synthesize a fake mouse move.
 			-- `a_x' and `a_y' are the number of mickeys moved.
 			--
-			-- A mickey is the amount that a mouse has to move 
-			-- for it to report that it has moved. 
+			-- A mickey is the amount that a mouse has to move
+			-- for it to report that it has moved.
 		do
 			cwin_mouse_event (
 				Mouseeventf_move,
@@ -137,6 +137,18 @@ feature -- Mouse events
 			cwin_mouse_event (Mouseeventf_middleup, 0, 0, 0, Default_pointer);
 		end
 
+	send_mouse_wheel_up is
+			-- Synthesize a fake mouse wheel rotation forward.
+		do
+			cwin_mouse_event (Mouseeventf_wheel, 0, 0, Wheel_delta, Default_pointer)
+		end
+
+	send_mouse_wheel_down is
+			-- Synthesize a fake mouse wheel rotation backward.
+		do
+			cwin_mouse_event (Mouseeventf_wheel, 0, 0, -Wheel_delta, Default_pointer)
+		end
+
 feature {NONE} -- External
 
 	cwin_mouse_event (
@@ -146,7 +158,7 @@ feature {NONE} -- External
   		dwData	: INTEGER -- wheel movement
   		dwExtraInfo: POINTER -- application-defined information
 	) is
-			-- The mouse_event function synthesizes mouse motion and button 
+			-- The mouse_event function synthesizes mouse motion and button
 			-- clicks.
 		external
 			"C [macro %"wel.h%"] (DWORD, DWORD, DWORD, DWORD, ULONG_PTR)"
@@ -160,10 +172,10 @@ feature {NONE} -- External
 		dwFlags	: INTEGER -- function options
   		dwExtraInfo: POINTER -- application-defined information
 	) is
-			-- The keybd_event function synthesizes a keystroke. The system 
-			-- can use such a synthesized keystroke to generate a WM_KEYUP or 
-			-- WM_KEYDOWN message. The keyboard driver's interrupt handler 
-			-- calls the keybd_event function. 
+			-- The keybd_event function synthesizes a keystroke. The system
+			-- can use such a synthesized keystroke to generate a WM_KEYUP or
+			-- WM_KEYDOWN message. The keyboard driver's interrupt handler
+			-- calls the keybd_event function.
 		external
 			"C [macro %"wel.h%"] (BYTE, BYTE, DWORD, ULONG_PTR)"
 		alias

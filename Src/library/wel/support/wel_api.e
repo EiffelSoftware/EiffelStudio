@@ -8,6 +8,24 @@ indexing
 class
 	WEL_API
 
+feature -- Windows
+
+	frozen window_from_point (point: POINTER): POINTER is
+			-- SDK WindowFromPoint
+		external
+			"C inline use <windows.h>"
+		alias
+			"WindowFromPoint (* ((POINT*) $point))"
+		end
+
+	frozen child_window_from_point (hwnd_parent: POINTER; point: POINTER): POINTER is
+			-- SDK ChildWindowFromPoint
+		external
+			"C inline use <windows.h>"
+		alias
+			"ChildWindowFromPoint ((HWND) $hwnd_parent, * ((POINT*) $point))"
+		end
+
 feature -- Menus
 
 	frozen set_menu (hwnd, hmenu: POINTER): INTEGER is
@@ -24,6 +42,14 @@ feature -- Menus
 			"C inline use <windows.h>"
 		alias
 			"TrackPopupMenu((HMENU) $hmenu, (UINT) $flags, (int) $x, (int) $y, (int) $reserved, (HWND) $hwnd, (RECT *) $rect)"
+		end
+
+	frozen get_menu (hwnd: POINTER): POINTER is
+			-- SDK GetMenu
+		external
+			"C inline use <windows.h>"
+		alias
+			"GetMenu ((HWND) $hwnd)"
 		end
 
 	frozen get_menu_bar_info (hwnd: POINTER; id_object, id_item: INTEGER; menu_bar_info: POINTER): INTEGER is

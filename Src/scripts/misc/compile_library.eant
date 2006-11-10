@@ -35,32 +35,42 @@
 	</target>
 
 		<!-- C_library -->
-	<target name="compile_c_library" depend="init">
+	<target name="compile_c_library" depend="init" if="${is_windows}" >
 		<set name="old_ISE_EIFFEL" value="${ISE_EIFFEL}" />
 		<setenv name="ISE_EIFFEL" value="${EIFFEL_SRC}" />
+
+		<echo message="Compiler zlib" />
 		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/C_library/zlib" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
+
+		<echo message="Compiler libpng" />
 		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/C_library/libpng" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}/C/ipc/ewb" if="${is_windows}" 
-			accept_errors="true" exit_code_variable="return_code" />
+
 		<setenv name="ISE_EIFFEL" value="${old_ISE_EIFFEL}" />
 		<unset name="old_ISE_EIFFEL" />
 	</target>
 
 		<!-- library -->
 	<target name="compile_library" depend="init">
+		<echo message="Compile net clib" />
 		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/net/Clib" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/wel/clib" if="${is_windows}"
-			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/vision2/Clib" if="${is_windows}"
+		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/net/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 
-		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/net/Clib" unless="${is_windows}" 
+
+		<echo message="Compile vision2 clib" />
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/vision2/Clib" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />
 		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/vision2/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
+
+		<echo message="Compile wel clib" />
+		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/wel/clib" if="${is_windows}"
+			accept_errors="true" exit_code_variable="return_code" />
+
+		<echo message="Compile vision2/gtk clib" />
 		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/vision2/implementation/gtk/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 	</target>
@@ -72,12 +82,17 @@
 			accept_errors="true" exit_code_variable="return_code" />
 	</target>
 
-	<target name="compile_eiffel_framework" depend="init" >
-		<!-- Eiffel -->
+	<target name="compile_eiffel_framework" depend="init" if="${is_windows}" >
+		<echo message="Compile Eiffel framework externals lib" />
+		<echo message="Compile dotnet IL runtime" />
 		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
+
+		<echo message="Compile cli_writer" />
 		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\framework\cli_writer\Clib" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
+
+		<echo message="Compile cli_debugger" />
 		<exec executable="nmake /f Makefile" dir="${EIFFEL_SRC}\framework\cli_debugger\Clib" if="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 	</target>

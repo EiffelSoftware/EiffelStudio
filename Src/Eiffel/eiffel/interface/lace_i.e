@@ -991,7 +991,8 @@ feature {NONE} -- Implementation
 			l_s := l_settings.item (s_metadata_cache_path)
 			if l_s = Void then
 				l_s := overridden_metadata_cache_path
-			else
+			end
+			if l_s /= Void then
 				l_s := l_factory.new_location_from_path (l_s, a_target).evaluated_directory
 			end
 				-- value can't change from a precompile or in a compiled system

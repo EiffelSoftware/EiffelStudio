@@ -193,6 +193,14 @@ feature -- Setting
 			related_window_set: tooltip_window.related_window = a_window
 		end
 
+	set_tooltip_window_related_window_agent (a_agent: FUNCTION [ANY, TUPLE, EV_WINDOW]) is
+			-- Set `tooltip_window'.`related_window_agent' with `a_agent'.
+		do
+			tooltip_window.set_related_window_agent (a_agent)
+		ensure
+			related_window_set: tooltip_window.related_window_agent = a_agent
+		end
+
 feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Setting
 
 	set_is_pointer_on_tooltip (b: BOOLEAN) is
@@ -284,6 +292,14 @@ feature -- Access
 			Result := tooltip_window.related_window
 		ensure
 			result_set: Result = tooltip_window.related_window
+		end
+
+	tooltip_window_related_window_agent: FUNCTION [ANY, TUPLE, EV_WINDOW] is
+			-- Tooltip window related window agent
+		do
+			Result := tooltip_window.related_window_agent
+		ensure
+			result_set: Result = tooltip_window.related_window_agent
 		end
 
 feature -- Measure

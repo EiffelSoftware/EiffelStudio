@@ -89,9 +89,16 @@ feature{NONE} -- Implementation
 				-- could be moved later to a different display.
 			a_tooltip.set_tooltip_maximum_width (screen.width - 30)
 			a_tooltip.set_tooltip_maximum_height (screen.height - 30)
-			if a_tooltip.tooltip_window_related_window /= window_manager.last_focused_development_window.window then
-				a_tooltip.set_tooltip_window_related_window (window_manager.last_focused_development_window.window)
-			end
+--			if a_tooltip.tooltip_window_related_window /= window_manager.last_focused_development_window.window then
+--				a_tooltip.set_tooltip_window_related_window (window_manager.last_focused_development_window.window)
+--			end
+			a_tooltip.set_tooltip_window_related_window_agent (agent last_focused_window)
+		end
+
+	last_focused_window: EV_WINDOW is
+			-- Last focused window
+		do
+			Result := window_manager.last_focused_development_window.window
 		end
 
 indexing

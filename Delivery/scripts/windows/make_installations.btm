@@ -27,13 +27,12 @@ call build.btm borland
 call build.btm c_library
 call build.btm dotnet
 call build.btm eiffel_com
-call build.btm free_add_ons
 call build.btm gdiplus
 call build.btm gobo
 call build.btm graphical_libraries
 call build.btm studio_core
 call build.btm vision2_demo
-call build.btm build
+call build.btm esbuilder
 
 remtrace EiffelStudio Enterprise
 %INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise_version -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs

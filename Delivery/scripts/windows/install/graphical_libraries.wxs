@@ -646,6 +646,23 @@
 								<File Id="welcome.rtf" Name="welcome.rtf" />
 							</Component>
 						</Directory>
+						<Directory Id="zad_miner" Name="ZAD_MI~1" LongName="zad_miner">
+							<Directory Id="ace" Name="ace">
+								<Component Id="zad_miner.rc" Guid="1F8CF2E1-92AD-4CB5-A1E3-F1C4EF9C0CFD">
+									<File Id="zad_miner.rc" Name="ZAD_MI~1.RC" LongName="zad_miner.rc" KeyPath="yes" />
+									<File Id="zad_miner.ecf" Name="ZAD_MI~1.ECF" LongName="zad_miner.ecf" />
+								</Component>
+							</Directory>
+							<Directory Id="src166" Name="src">
+								<Component Id="miner_window.e" Guid="1290A890-8E97-4B9C-9D1E-D3BE9D7458BE">
+									<File Id="miner_window.e" Name="MINER_~4.E" LongName="miner_window.e" KeyPath="yes" />
+									<File Id="miner_button.e" Name="MINER_~1.E" LongName="miner_button.e" />
+									<File Id="zad_miner.e" Name="ZAD_MI~1.E" LongName="zad_miner.e" />
+									<File Id="miner_timer.e" Name="MINER_~3.E" LongName="miner_timer.e" />
+									<File Id="miner_constants.e" Name="MINER_~2.E" LongName="miner_constants.e" />
+								</Component>
+							</Directory>
+						</Directory>
 					</Directory>
 				</Directory>
 				<Directory Id="library" Name="library">

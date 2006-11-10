@@ -316,6 +316,7 @@
 	<target name="init_deliv" depend="init_system" >
 		<set name="INSTALL_DIR" value="${cwd}${path_separator}EiffelXX" unless="${INSTALL_DIR}" />
 		<set name="OUTPUT_DIR" value="${cwd}${path_separator}bin" unless="${OUTPUT_DIR}"/>
+		<set name="build_es_logfile" value="${cwd}${path_separator}build_es.log" unless="$build_es_logfile" />
 	</target>
 
 	<target name="build_es" depend="init_deliv" >
@@ -494,21 +495,21 @@
 		<echo message="make dir : studio/spec/$ISE_PLATFORM/include" />
 		<mkdir directory="studio/spec/$ISE_PLATFORM/include"/>
 		<mkdir directory="studio/spec/$ISE_PLATFORM/lib"/>
-		<copy to_directory="studio/spec/${ISE_PLATFORM}/include" dir="${EIFFEL_SRC}/C/run-time" >
+		<copy to_directory="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include" dir="${EIFFEL_SRC}/C/run-time" >
 			<fileset include="@(eif_*.h)" />
 		</copy>
-		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" to_file="studio/spec/${ISE_PLATFORM}/include/eif_confmagic.h" />
-		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />
-		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" to_file="studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" />
+		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include/eif_confmagic.h" />
+		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />
+		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" />
 	</target>
 
 	<target name="make_delivery_windows" depend="init_deliv" >
 		<!-- Windows -->
 		<mkdir directory="studio\spec\$ISE_PLATFORM\lib\$ISE_C_COMPILER"/>
-		<copy to_directory="studio\spec\${ISE_PLATFORM}\lib\$ISE_C_COMPILER" dir="${EIFFEL_SRC}\C\run-time\LIB" >
+		<copy to_directory="${INSTALL_DIR}\studio\spec\${ISE_PLATFORM}\lib\$ISE_C_COMPILER" dir="${EIFFEL_SRC}\C\run-time\LIB" >
 			<fileset include="@(*.lib|*.dll)" />
 		</copy>
-		<copy to_directory="studio\config\${ISE_PLATFORM}" dir="studio\config\windows" unless="${ISE_PLATFORM}=windows" >
+		<copy to_directory="${INSTALL_DIR}\studio\config\${ISE_PLATFORM}" dir="studio\config\windows" unless="${ISE_PLATFORM}=windows" >
 			<fileset 
 				include="@(**/*)" 
 				exclude="@(**/.svn/**/*)"
@@ -518,10 +519,10 @@
 
 	<target name="make_delivery_unix" depend="init_deliv" >
 		<copy file="${EIFFEL_SRC}/C/config.sh" to_directory="studio/spec/${ISE_PLATFORM}/include" />
-		<copy to_directory="studio/spec/${ISE_PLATFORM}/lib" dir="${EIFFEL_SRC}/C/run-time" >
+		<copy to_directory="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/lib" dir="${EIFFEL_SRC}/C/run-time" >
 			<fileset include="@(lib*.*)" />
 		</copy>
-		<copy to_directory="studio/config/${ISE_PLATFORM}" dir="studio/config/unix">
+		<copy to_directory="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}" dir="studio/config/unix">
 			<fileset 
 				include="@(**/*)" 
 				exclude="@(**/.svn/**/*)"

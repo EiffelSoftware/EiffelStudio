@@ -59,7 +59,6 @@
 		<exec executable="finish_freezing -library" dir="${EIFFEL_SRC}/library/net/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 
-
 		<echo message="Compile vision2 clib" />
 		<exec executable="make_${ISE_C_COMPILER}.bat" dir="${EIFFEL_SRC}/library/vision2/Clib" if="${is_windows}"
 			accept_errors="true" exit_code_variable="return_code" />

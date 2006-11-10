@@ -416,13 +416,6 @@
 		<!-- install binaries -->
 		<set name="tmp_install_dir" value="${INSTALL_DIR}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
 
-		<available dir="${OUTPUT_DIR}" resource="wel_hook.dll" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="wel_hook.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true" />
-		<available dir="${OUTPUT_DIR}" resource="EiffelSoftware.Runtime.dll" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="EiffelSoftware.Runtime.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true" />
-
 		<available dir="${OUTPUT_DIR}" resource="ec${exe}" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="ec${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
@@ -431,6 +424,30 @@
 		<copy dir="${OUTPUT_DIR}" file="estudio${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
 
+
+
+		<copy dir="${OUTPUT_DIR}" to_directory="${tmp_install_dir}${path_separator}bin" >
+			<fileset include="@(*.dll)" />
+		</copy>
+
+		<geant target="install_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
+
+		<unset name="tmp_install_dir" />
+		<!-- end of install -->
+
+		<echo message="Installing ES is completed ..." to_file="$build_es_logfile" append="true" />
+	</target>
+
+
+	<target name="install_es_windows" depend="init_deliv" if="${is_windows}" >
+		<available dir="${OUTPUT_DIR}" resource="wel_hook.dll" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="wel_hook.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true" />
+
+		<available dir="${OUTPUT_DIR}" resource="EiffelSoftware.Runtime.dll" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="EiffelSoftware.Runtime.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true" />
+
 		<available dir="${OUTPUT_DIR}" resource="finish_freezing${exe}" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="finish_freezing${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
@@ -438,16 +455,8 @@
 		<available dir="${OUTPUT_DIR}" resource="emake${exe}" variable="tmp_available"/>
 		<copy dir="${OUTPUT_DIR}" file="emake${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
 			if="${tmp_available}=true"/>
-
-		<copy dir="${OUTPUT_DIR}" to_directory="${tmp_install_dir}${path_separator}bin" >
-			<fileset include="@(*.dll)" />
-		</copy>
-		<unset name="tmp_install_dir" />
-		<!-- end of install -->
-		<unset name="OUTPUT_DIR" />
-
-		<echo message="Installing ES is completed ..." to_file="$build_es_logfile" append="true" />
 	</target>
+
 	<target name="clean_es" depend="init_deliv" >
 		<exec executable="rmdir /q/s ${EIFGENs}" if="${is_windows}" />
 		<exec executable="\rm -rf ${EIFGENs}" unless="${is_windows}" />

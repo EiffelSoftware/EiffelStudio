@@ -470,10 +470,8 @@
 				exclude="@(**/.svn/**/*)"
 			/>
 		</copy>
-		<delete file="studio/spec/$ISE_PLATFORM/bin/finish_freezing" />
-		<exec executable="ln -s ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
-		<delete file="studio/spec/$ISE_PLATFORM/bin/prelink" />
-		<exec executable="ln -s ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
+		<exec executable="ln -s -f ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
+		<exec executable="ln -s -f ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
 	</target>
 
 	<!-- 

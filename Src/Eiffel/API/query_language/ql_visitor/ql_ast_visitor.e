@@ -65,10 +65,6 @@ feature -- Access
 
 	ast_index_list: LIST [INTEGER] is
 			-- List of indexes of specified AST nodes			
-		local
-			l_ast_array: like ast_array
-			i: INTEGER
-			l_count: INTEGER
 		do
 			Result := ast_array.list_of_bit_index (True)
 		ensure
@@ -82,8 +78,6 @@ feature -- Setting
 			-- `a_ast_index_list' is a list of ast node index to be matched.
 		require
 			a_ast_index_list_valid: a_ast_index_list /= Void and then not a_ast_index_list.is_empty
-		local
-			l_ast_array: like ast_array
 		do
 			create ast_array.make (max_ast_type)
 			a_ast_index_list.do_all (agent ast_array.set_bit (?))

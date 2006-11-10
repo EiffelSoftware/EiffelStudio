@@ -437,7 +437,6 @@
 		<echo message="make dir : studio/spec/$ISE_PLATFORM/include" />
 		<mkdir directory="studio/spec/$ISE_PLATFORM/include"/>
 		<mkdir directory="studio/spec/$ISE_PLATFORM/lib"/>
-		<echo message="before copy ${EIFFEL_SRC}/C/run-time to studio/spec/${ISE_PLATFORM}/include"  />
 		<copy to_directory="studio/spec/${ISE_PLATFORM}/include" dir="${EIFFEL_SRC}/C/run-time" >
 			<fileset include="@(*.h)" />
 		</copy>
@@ -471,7 +470,9 @@
 				exclude="@(**/.svn/**/*)"
 			/>
 		</copy>
+		<delete file="studio/spec/$ISE_PLATFORM/bin/finish_freezing" />
 		<exec executable="ln -s ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
+		<delete file="studio/spec/$ISE_PLATFORM/bin/prelink" />
 		<exec executable="ln -s ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
 	</target>
 

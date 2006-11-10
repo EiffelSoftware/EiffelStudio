@@ -98,7 +98,7 @@ feature
 				register.free_register;
 			end;
 			simple_op_assignment := No_simple_op;
-			if target_type.is_true_expanded then
+			if target_type.is_expanded then
 				last_in_result := False
 			end
 		end;

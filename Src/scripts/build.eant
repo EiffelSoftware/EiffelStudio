@@ -314,19 +314,21 @@
 	-->
 
 	<target name="init_deliv" depend="init_system" >
-		<set name="INSTALL_DIR" value="${cwd}${path_separator}EiffelXX" />
-
+		<set name="INSTALL_DIR" value="${cwd}${path_separator}EiffelXX" unless="${INSTALL_DIR}" />
+		<set name="OUTPUT_DIR" value="${cwd}${path_separator}bin" unless="${OUTPUT_DIR}"/>
 	</target>
 
 	<target name="build_es" depend="init_deliv" >
 		<set name="build_es_logfile" value="${cwd}${path_separator}build_es.log" />
 		<echo message="Build EiffelStudio ..." to_file="$build_es_logfile" append="true" />
 
-		<!-- run-time -->
-		<echo message="Compile runtime ..." to_file="$build_es_logfile" append="true" />
-		<geant target="compile_runtime" />
-		<echo message="Error occurred during 'compile_runtime_dll' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
+		<geant target="compile_es" 			fork="false" reuse_variables="true" />
+		<geant target="create_es_delivery" 	fork="false" reuse_variables="true" />
+		<geant target="install_es" 			fork="false" reuse_variables="true" />
+	</target>
 
+	<target name="create_es_delivery" depend="init_deliv" >
+		<echo message="Building delivery for ES into ${INSTALL_DIR}" to_file="$build_es_logfile" append="true" />
 		<!-- Delivery -->
 		<available resource="${INSTALL_DIR}" variable="installdir_available"/>
 		<!--
@@ -348,57 +350,101 @@
 		<geant target="update_delivery" reuse_variables="true" fork="false" dir="${INSTALL_DIR}" if="${installdir_available}=true" />
 		<echo message="Error occurred during 'make_delivery' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<exit code="${return_code}" unless="${return_code}=0" />
+	</target>
 
-		<set name="output_dir" value="${INSTALL_DIR}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+	<target name="compile_es" depend="init_deliv" >
+		<echo message="Compiling ES into ${OUTPUT_DIR}" to_file="$build_es_logfile" append="true" />
+
+		<mkdir directory="${OUTPUT_DIR}" />
+		<!-- run-time -->
+		<echo message="Compile runtime ..." to_file="$build_es_logfile" append="true" />
+		<geant target="compile_runtime" />
+		<echo message="Error occurred during 'compile_runtime_dll' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 
 		<!-- library -->
 		<echo message="Compile library ..." to_file="$build_es_logfile" append="true" />
 		<geant target="compile_library" />
 		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" variable="tmp_available"/>
-		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${output_dir}\bin\wel_hook.dll" if="${tmp_available}=true" />
-		<available resource="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" variable="tmp_available"/>
-		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${output_dir}\bin\EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
-		
+		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${OUTPUT_DIR}${path_separator}wel_hook.dll" if="${tmp_available}=true" />
 
+		<available resource="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" variable="tmp_available"/>
+		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${OUTPUT_DIR}${path_separator}EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
+		
 		<!-- ec -->
 		<echo message="Finalize ec ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_ec" />
 		<echo message="Error occurred during 'finalize_ec' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}F_code${path_separator}ec${exe}" to_file="${output_dir}${path_separator}bin${path_separator}ec${exe}" if="${return_code}=0" />
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}F_code${path_separator}ec${exe}" to_file="${OUTPUT_DIR}${path_separator}ec${exe}" if="${return_code}=0" />
 
 		<!-- estudio -->
 		<echo message="Finalize estudio ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_estudio" />
 		<echo message="Error occurred during 'finalize_estudio' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}estudio${path_separator}F_code${path_separator}estudio${exe}" to_file="${output_dir}${path_separator}bin${path_separator}estudio${exe}" if="${return_code}=0"/>
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}estudio${path_separator}F_code${path_separator}estudio${exe}" to_file="${OUTPUT_DIR}${path_separator}estudio${exe}" if="${return_code}=0"/>
 
 		<!-- finish_freezing -->
 		<set name="return_code" value="0" />
 		<echo message="Finalize finish_freezing ..." to_file="$build_es_logfile" append="true" if="${is_windows}" />
 		<geant target="finalize_finish_freezing" if="${is_windows}" />
 		<echo message="Error occurred during 'finalize_finish_freezing' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}eifgens${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${output_dir}${path_separator}bin${path_separator}finish_freezing${exe}" if="${return_code}=0" />
+		<copy file="${compile_dir}${path_separator}eifgens${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${OUTPUT_DIR}${path_separator}finish_freezing${exe}" if="${return_code}=0" />
 
 		<!-- emake -->
 		<echo message="Finalize emake ..." to_file="$build_es_logfile" append="true" />
 		<geant target="finalize_emake" />
 		<echo message="Error occurred during 'finalize_emake' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}eifgens${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${output_dir}${path_separator}bin${path_separator}finish_freezing${exe}" if="${return_code}=0"/>
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}emake${path_separator}F_code${path_separator}emake${exe}" to_file="${output_dir}${path_separator}bin${path_separator}emake${exe}" if="${return_code}=0"/>
+		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}emake${path_separator}F_code${path_separator}emake${exe}" to_file="${OUTPUT_DIR}${path_separator}emake${exe}" if="${return_code}=0"/>
 
 		<!-- dotnet consumer -->
 		<set name="return_code" value="0" />
 		<echo message="Finalize mdconsumer ..." to_file="$build_es_logfile" append="true" if="${is_windows}"/>
 		<geant target="finalize_mdconsumer" if="${is_windows}" fork="false" />
 		<echo message="Error occurred during 'finalize_mdconsumer' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy to_directory="${output_dir}/bin" dir="${compile_dir}/EIFGENs/consumer_20/F_code" if="${return_code}=0" >
+		<copy to_directory="${OUTPUT_DIR}" dir="${compile_dir}/EIFGENs/consumer_20/F_code" if="${return_code}=0" >
 			<fileset include="@(*.dll)" />
 		</copy>
 
-		<echo message="Building ES is completed ..." to_file="$build_es_logfile" append="true" />
+		<echo message="Compiling ES is completed ..." to_file="$build_es_logfile" append="true" />
+	</target>
 
-		<unset name="output_dir" />
+	<target name="install_es" depend="init_deliv" >
+		<echo message="Installing ES into ${INSTALL_DIR}" to_file="$build_es_logfile" append="true" />
+
+		<!-- install binaries -->
+		<set name="tmp_install_dir" value="${INSTALL_DIR}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
+
+		<available dir="${OUTPUT_DIR}" resource="wel_hook.dll" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="wel_hook.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true" />
+		<available dir="${OUTPUT_DIR}" resource="EiffelSoftware.Runtime.dll" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="EiffelSoftware.Runtime.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true" />
+
+		<available dir="${OUTPUT_DIR}" resource="ec${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="ec${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
+
+		<available dir="${OUTPUT_DIR}" resource="estudio${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="estudio${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
+
+		<available dir="${OUTPUT_DIR}" resource="finish_freezing${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="finish_freezing${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
+
+		<available dir="${OUTPUT_DIR}" resource="emake${exe}" variable="tmp_available"/>
+		<copy dir="${OUTPUT_DIR}" file="emake${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
+			if="${tmp_available}=true"/>
+
+		<copy dir="${OUTPUT_DIR}" to_directory="${tmp_install_dir}${path_separator}bin" >
+			<fileset include="@(*.dll)" />
+		</copy>
+		<unset name="tmp_install_dir" />
+		<!-- end of install -->
+		<unset name="OUTPUT_DIR" />
+
+		<echo message="Installing ES is completed ..." to_file="$build_es_logfile" append="true" />
 	</target>
 	<target name="clean_es" depend="init_deliv" >
 		<exec executable="rmdir /q/s ${EIFGENs}" if="${is_windows}" />
@@ -416,7 +462,7 @@
 	</target>
 	<target name="make_delivery" depend="init_deliv" >
 		<echo message="Task: make_delivery"/>
-		<set name="NEW_ISE_EIFFEL" value="${cwd}" if="${NEW_ISE_EIFFEL}=" />
+		<set name="NEW_ISE_EIFFEL" value="${cwd}" unless="${NEW_ISE_EIFFEL}" />
 		<geant target="make_delivery_common" reuse_variables="true" fork="false" dir="${NEW_ISE_EIFFEL}" />
 		<geant target="make_delivery_windows" reuse_variables="true" fork="false" if="${is_windows}" dir="${NEW_ISE_EIFFEL}" />
 		<geant target="make_delivery_unix" reuse_variables="true" fork="false" unless="${is_windows}" dir="${NEW_ISE_EIFFEL}" />

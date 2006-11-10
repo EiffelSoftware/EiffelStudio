@@ -81,7 +81,7 @@ feature -- Element change
 	put_routine_id (a_routine_id: INTEGER) is
 			-- Insert an anchor based on `a_routine_id'.
 		do
-			routine_ids.put (a_routine_id)
+			routine_ids.extend (a_routine_id)
 		ensure
 			has_routine_id: has_routine_id (a_routine_id)
 		end
@@ -89,17 +89,31 @@ feature -- Element change
 	put_argument (a_position: INTEGER) is
 			-- Insert an anchor based on `a_position'.
 		do
-			arguments.put (a_position)
+			arguments.extend (a_position)
 		ensure
 			has_argument: has_argument (a_position)
 		end
 
+feature -- Removal
+
+	remove_routine_id is
+			-- Remove last recorded routine id.
+		do
+			routine_ids.remove
+		end
+
+	remove_argument is
+			-- Remove last recorded argument.
+		do
+			arguments.remove
+		end
+
 feature {NONE} -- implementation
 
-	arguments: SEARCH_TABLE [INTEGER]
+	arguments: ARRAYED_STACK [INTEGER]
 			-- Used arguments
 
-	routine_ids: SEARCH_TABLE [INTEGER]
+	routine_ids: ARRAYED_STACK [INTEGER]
 			-- Used features
 
 invariant

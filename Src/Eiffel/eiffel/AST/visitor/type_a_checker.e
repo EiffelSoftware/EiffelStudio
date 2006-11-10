@@ -53,7 +53,7 @@ feature -- Status report
 			last_type := Void
 			associated_type_ast := Void
 		end
-	
+
 	check_and_solved (a_unevaluated_type: TYPE_A; a_type_as: TYPE_AS): TYPE_A is
 			-- Check that validity of `a_unevaluated_type' in current context
 			-- as initialized by `init' or `init_with_feature_table'.
@@ -736,7 +736,6 @@ feature {NONE} -- Implementation
 			a_feature_not_void: a_feature /= Void
 			a_type_not_void: a_type /= Void
 		local
-			l_anchor_type: TYPE_A
 			l_vtat1a: VTAT1A
 			l_controler_state: BOOLEAN
 		do
@@ -759,8 +758,8 @@ feature {NONE} -- Implementation
 					like_control.turn_on
 				end
 				like_control.put_argument (a_type.position)
-				l_anchor_type := a_feature.arguments.i_th (a_type.position)
-				l_anchor_type.process (Current)
+				a_feature.arguments.i_th (a_type.position).process (Current)
+				like_control.remove_argument
 				if last_type /= Void then
 					a_type.set_actual_type (last_type)
 					last_type := a_type
@@ -807,9 +806,11 @@ feature {NONE} -- Implementation
 				end
 					-- Update anchored type controler
 				like_control.put_routine_id (l_rout_id)
-
 					-- Process type referenced by anchor.
 				a_feature.type.process (Current)
+					-- Update anchored type controler
+				like_control.remove_routine_id
+
 				l_anchor_type := last_type
 
 				if l_anchor_type = Void then

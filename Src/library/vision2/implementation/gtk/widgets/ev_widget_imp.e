@@ -345,8 +345,6 @@ feature -- Measurement
 			-- Horizontal offset relative to parent `x_position'.
 			-- Unit of measurement: screen pixels.
 		local
-			a_aux_info, l_null: POINTER
-			tmp_struct_x: INTEGER
 			a_fixed_imp: EV_FIXED_IMP
 		do
 			a_fixed_imp ?= parent_imp
@@ -361,8 +359,6 @@ feature -- Measurement
 			-- Vertical offset relative to parent `y_position'.
 			-- Unit of measurement: screen pixels.
 		local
-			a_aux_info, l_null: POINTER
-			tmp_struct_y: INTEGER
 			a_fixed_imp: EV_FIXED_IMP
 		do
 			a_fixed_imp ?= parent_imp

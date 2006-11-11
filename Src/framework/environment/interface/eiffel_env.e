@@ -1042,15 +1042,14 @@ feature {NONE} -- Configuration of layout
 	unix_layout_base_path: DIRECTORY_NAME
 			-- Base for the unix layout. e.g. "/usr" or "/usr/local"
 		once
-			create Result.make
-			Result.set_directory ("usr")
-			Result.extend ("local")
+			create Result.make_from_string ("/usr/local") -- Comment to finde line for replacement UNIX_BASE_PATH
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	unix_layout_lib_dir: STRING is "lib"
+	unix_layout_lib_dir: STRING is "lib" -- Comment to finde line for replacement UNIX_LIB_NAME
 			-- Directory name for lib. e.g. "lib" or "lib64"
+			--|
 
 	unix_layout_platform: STRING is "unix";
 			-- Platform to use for the unix layout.

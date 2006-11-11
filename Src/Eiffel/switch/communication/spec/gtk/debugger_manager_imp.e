@@ -23,27 +23,29 @@ feature {DEBUGGER_MANAGER} -- Access
 			i: INTEGER
 			k, v: STRING_32
 		do
-			create Result.make (5)
-			psize := (create {PLATFORM}).pointer_bytes
 			p := c_environ
-			from
-				ip := c_environ_next (p)
-			until
-				ip = Default_pointer
-			loop
-				create cs.make_by_pointer (ip)
-				s := cs.string
-				if s /= Void and then s.count > 1 then
-					i := s.index_of ('=', 1)
-					if i > 1 then
-						k := s.substring (1, i - 1).as_string_32
-						if i < s.count then
-							v := s.substring (i + 1, s.count).as_string_32
-							Result.force (v, k)
+			if p /= Default_pointer then 
+				psize := (create {PLATFORM}).pointer_bytes
+				create Result.make (5)
+				from
+					ip := c_environ_next (p)
+				until
+					ip = Default_pointer
+				loop
+					create cs.make_by_pointer (ip)
+					s := cs.string
+					if s /= Void and then s.count > 1 then
+						i := s.index_of ('=', 1)
+						if i > 1 then
+							k := s.substring (1, i - 1).as_string_32
+							if i < s.count then
+								v := s.substring (i + 1, s.count).as_string_32
+								Result.force (v, k)
+							end
 						end
 					end
+					ip := c_environ_next (p)
 				end
-				ip := c_environ_next (p)
 			end
 		end
 

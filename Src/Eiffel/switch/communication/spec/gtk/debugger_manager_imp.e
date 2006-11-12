@@ -56,8 +56,12 @@ feature -- external
 			"C inline use <unistd.h>"
 		alias
 			"[
-				extern char** environ;
-				return (EIF_POINTER) &environ;
+				#if defined(environ) 
+					extern char** environ;
+					return (EIF_POINTER) &environ;
+				#else
+					return (EIF_POINTER) NULL;
+				#endif
 			]"
 		end
 

@@ -55,6 +55,20 @@ fi
 # Copy runtime files
 cp -r runtimes/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 
+remtrace Preparing GPL version
+bunzip2 -c $EXPORT_DIR/ecs/ec_gpl.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
+chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
+
+remtrace Building GPL CD image
+mv Eiffel60 cdrom
+make_cd_image Eiffel60_gpl Eiffel60_gpl.iso cdrom
+bzip2 Eiffel60_gpl.iso
+mv Eiffel60_gpl.iso.bz2 Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.iso.bz2
+mv cdrom/Eiffel60 Eiffel60
+tar -cf Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.tar Eiffel60
+bzip2 Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.tar
+
 if [ "$MULTIPLE_EDITIONS" ]; then
 	remtrace Preparing Enterprise version
 	bunzip2 -c $EXPORT_DIR/ecs/ec_ent.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
@@ -78,16 +92,4 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	bzip2 Eiffel60_enterprise_$SVN_VERSION-$ISE_PLATFORM.tar
 fi
 
-remtrace Preparing GPL version
-bunzip2 -c $EXPORT_DIR/ecs/ec_gpl.bz2 > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
-chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
-remtrace Building GPL CD image
-mv Eiffel60 cdrom
-make_cd_image Eiffel60_gpl Eiffel60_gpl.iso cdrom
-bzip2 Eiffel60_gpl.iso
-mv Eiffel60_gpl.iso.bz2 Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.iso.bz2
-mv cdrom/Eiffel60 Eiffel60
-tar -cf Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.tar Eiffel60
-bzip2 Eiffel60_gpl_$SVN_VERSION-$ISE_PLATFORM.tar

@@ -455,37 +455,49 @@ feature -- Measurement
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
-			Result := parent_imp.child_x (interface)
+			if parent_imp /= Void then
+				Result := parent_imp.child_x (interface)
+			end
 		end
 
 	y_position: INTEGER is
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
-			Result := parent_imp.child_y (interface)
+			if parent_imp /= Void then
+				Result := parent_imp.child_y (interface)
+			end
 		end
 
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		do
-			Result := parent_imp.child_x_absolute (interface)
+			if parent_imp /= Void then
+				Result := parent_imp.child_x_absolute (interface)
+			end
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
 		do
-			Result := parent_imp.child_y_absolute (interface)
+			if parent_imp /= Void then
+				Result := parent_imp.child_y_absolute (interface)
+			end
 		end
 
 	width: INTEGER is
 			-- Horizontal size in pixels.
 		do
-			Result := parent_imp.child_width (interface)
+			if parent_imp /= Void then
+				Result := parent_imp.child_width (interface)
+			end
 		end
 
 	height: INTEGER is
 			-- Vertical size in pixels.
 		do
-			Result := parent_imp.child_height (interface)
+			if parent_imp /= Void then
+				Result := parent_imp.child_height (interface)
+			end
 		end
 
 	minimum_width: INTEGER is

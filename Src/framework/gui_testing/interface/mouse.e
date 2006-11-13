@@ -21,6 +21,11 @@ inherit
 			{NONE} all
 		end
 
+	THREAD_CONTROL
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -30,6 +35,10 @@ feature {NONE} -- Initialization
 			-- Initialize object.
 		do
 			create {MOUSE_IMP}implementation
+			clicking_delay := 500_000_000
+			pressing_delay :=   5_000_000
+			releasing_delay :=  5_000_000
+			movement_delay :=   5_000_000
 		end
 
 feature -- Clicking button
@@ -53,6 +62,7 @@ feature -- Clicking button
 				release_button (a_mouse_button)
 				clicked_count := clicked_count + 1
 			end
+			sleep (clicking_delay)
 		end
 
 	click_on (a_widget: EV_IDENTIFIABLE; a_mouse_button: INTEGER; a_click_count: INTEGER) is
@@ -75,7 +85,7 @@ feature -- Clicking left button
 		end
 
 	left_double_click is
-			-- Click with left mouse button.
+			-- Double click with left mouse button.
 		do
 			click (left, 2)
 		end
@@ -97,7 +107,7 @@ feature -- Clicking right button
 		end
 
 	right_double_click is
-			-- Click with right mouse button.
+			-- Double click with right mouse button.
 		do
 			click (right, 2)
 		end
@@ -119,7 +129,7 @@ feature -- Clicking middle button
 		end
 
 	middle_double_click is
-			-- Click with middle mouse button.
+			-- Double click with middle mouse button.
 		do
 			click (middle, 2)
 		end
@@ -140,6 +150,7 @@ feature -- Pressing button
 			a_mouse_button_valid: is_valid_button (a_mouse_button)
 		do
 			implementation.press_button (a_mouse_button)
+			sleep (pressing_delay)
 		end
 
 	press_left is
@@ -168,6 +179,7 @@ feature -- Releasing button
 			a_mouse_button_valid: is_valid_button (a_mouse_button)
 		do
 			implementation.release_button (a_mouse_button)
+			sleep (releasing_delay)
 		end
 
 	release_left is
@@ -193,15 +205,12 @@ feature -- Moving
 	move_to_absolute_position (an_x, a_y: INTEGER) is
 			-- Move mouse to absolute screen position `an_x' `a_y'.
 		local
-			l_thread_control: THREAD_CONTROL
 			l_start: EV_COORDINATE
-			l_current_x, l_current_y: REAL_64
 			l_dx, l_dy: REAL_64
 			x_steps, y_steps, steps: INTEGER
 			i: INTEGER
 		do
 			if is_movement_infered then
-				create l_thread_control
 				l_start := screen.pointer_position
 				x_steps := ((an_x - l_start.x_precise) / x_movement).rounded.abs
 				y_steps := ((a_y - l_start.y_precise) / y_movement).rounded.abs
@@ -211,16 +220,27 @@ feature -- Moving
 				from
 					i := 0
 				until
-					i = steps
+					i > steps
 				loop
 					implementation.move_to_absolute_position ((l_start.x + i * l_dx).rounded, (l_start.y + i * l_dy).rounded)
 					i := i + 1
-					l_thread_control.sleep (movement_delay)
+					sleep (movement_delay)
 				end
 				implementation.move_to_absolute_position (an_x, a_y)
+				sleep (movement_delay)
 			else
 				implementation.move_to_absolute_position (an_x, a_y)
+				sleep (movement_delay)
 			end
+		end
+
+	move_relative (a_dx, a_dy: INTEGER) is
+			-- Move mouse `a_dx' pixels in x direction and `a_dy' pixels in y direction.
+		local
+			l_current: EV_COORDINATE
+		do
+			l_current := screen.pointer_position
+			move_to_absolute_position (l_current.x + a_dx, l_current.y + a_dy)
 		end
 
 	move_to_widget (a_widget: EV_IDENTIFIABLE) is
@@ -242,12 +262,16 @@ feature -- Scrolling
 			-- Scroll mouse wheel up.
 		do
 			implementation.scroll_up
+			sleep (pressing_delay)
+			sleep (releasing_delay)
 		end
 
 	scroll_down is
 			-- Scroll mouse wheel down.
 		do
 			implementation.scroll_down
+			sleep (pressing_delay)
+			sleep (releasing_delay)
 		end
 
 feature -- Clicking menu items
@@ -257,6 +281,36 @@ feature -- Clicking menu items
 		do
 			-- TODO
 		end
+
+feature -- Advanced window commands
+
+	window_resize_lower_right (a_width, a_height: INTEGER) is
+			-- Resize `window' by `a_width' `a_height' using mouse on lower right corner.
+		local
+			lower_right_x, lower_right_y: INTEGER
+		do
+			lower_right_x := gui.window.screen_x + gui.window.width - 2
+			lower_right_y := gui.window.screen_y + gui.window.height - 2
+
+			move_to_absolute_position (lower_right_x, lower_right_y)
+			press_left
+			move_relative (a_width, a_height)
+			release_left
+		end
+
+feature -- Access
+
+	clicking_delay: INTEGER
+			-- Delay in milliseconds after a button click
+
+	pressing_delay: INTEGER
+			-- Delay in milliseconds after a button press
+
+	releasing_delay: INTEGER
+			-- Delay in nanoseconds after a button release
+
+	movement_delay: INTEGER
+			-- Delay in nanoseconds after mouse movement step
 
 feature -- Status report
 
@@ -277,15 +331,54 @@ feature -- Status setting
 			is_movement_infered := False
 		end
 
+feature -- Element change
+
+	set_clicking_delay (a_value: INTEGER) is
+			-- Set `clicking_delay' to `a_value'.
+		require
+			a_value_not_negative: a_value > 0
+		do
+			clicking_delay := a_value
+		ensure
+			clicking_delay_set: clicking_delay = a_value
+		end
+
+	set_pressing_delay (a_value: INTEGER) is
+			-- Set `pressing_delay' to `a_value'.
+		require
+			a_value_not_negative: a_value > 0
+		do
+			pressing_delay := a_value
+		ensure
+			pressing_delay_set: pressing_delay = a_value
+		end
+
+	set_releasing_delay (a_value: INTEGER) is
+			-- Set `releasing_delay' to `a_value'.
+		require
+			a_value_not_negative: a_value > 0
+		do
+			releasing_delay := a_value
+		ensure
+			releasing_delay_set: releasing_delay = a_value
+		end
+
+	set_movement_delay (a_value: INTEGER) is
+			-- Set `movement_delay' to `a_value'.
+		require
+			a_value_not_negative: a_value > 0
+		do
+			movement_delay := a_value
+		ensure
+			movement_delay_set: movement_delay = a_value
+		end
+
 feature {NONE} -- Implementation
 
-	movement_delay: INTEGER is 5000000
-			-- Delay in nanoseconds between mouse movement steps
-
-	x_movement: INTEGER is 5
+	x_movement: INTEGER is 10
 			-- Mouse movement step in pixels in x direction
 
-	y_movement: INTEGER is 5
+	y_movement: INTEGER is 10
 			-- Mouse movement step in pixels in y direction
 
 	implementation: MOUSE_I

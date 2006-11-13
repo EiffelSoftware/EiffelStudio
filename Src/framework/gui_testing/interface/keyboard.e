@@ -12,6 +12,11 @@ class
 inherit
 	KEYS
 
+	THREAD_CONTROL
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -21,6 +26,9 @@ feature {NONE} -- Initialization
 			-- Initialize object.
 		do
 			create {KEYBOARD_IMP}implementation
+			typing_delay :=   50_000_000
+			pressing_delay :=  5_000_000
+			releasing_delay := 5_000_000
 		end
 
 feature -- Typing
@@ -35,10 +43,16 @@ feature -- Typing
 
 	type_character (a_character: CHARACTER) is
 			-- Type `a_character' into keyboard.
-		local
-			key: EV_KEY
 		do
-			type_ev_key (create {EV_KEY}.make_with_code (key_code_from_key_string (a_character.out)))
+			if a_character = ' ' then
+				type_key (key_space)
+			elseif a_character.is_upper then
+				press_key (key_shift)
+				type_key (key_code_from_key_string (a_character.out))
+				release_key (key_shift)
+			else
+				type_key (key_code_from_key_string (a_character.out))
+			end
 		end
 
 	type_key (a_key_code: INTEGER) is
@@ -49,27 +63,127 @@ feature -- Typing
 			type_ev_key (create {EV_KEY}.make_with_code (a_key_code))
 		end
 
+	type_modified_key (a_modifier_mask, a_key_code: INTEGER) is
+			-- Type key denoted by `a_key_code' while using modifiers.
+		require
+			a_key_code_valid: valid_key_code (a_key_code)
+		do
+			press_modifiers (a_modifier_mask)
+			type_key (a_key_code)
+			release_modifiers (a_modifier_mask)
+		end
+
 	type_ev_key (a_key: EV_KEY) is
 			-- Type `a_key' into keyboard.
 		require
 			a_key_not_void: a_key /= Void
 		do
-			press_key (a_key)
-			release_key (a_key)
+			press_ev_key (a_key)
+			release_ev_key (a_key)
+			sleep (typing_delay)
 		end
 
 feature -- Pressing
 
-	press_key (a_key: EV_KEY) is
+	press_key (a_key_code: INTEGER) is
+			-- Press `a_key'.
+		require
+			a_key_code_valid: valid_key_code (a_key_code)
+		do
+			press_ev_key (create {EV_KEY}.make_with_code (a_key_code))
+		end
+
+	release_key (a_key_code: INTEGER) is
+			-- Release `a_key'.
+		require
+			a_key_code_valid: valid_key_code (a_key_code)
+		do
+			release_ev_key (create {EV_KEY}.make_with_code (a_key_code))
+		end
+
+	press_ev_key (a_key: EV_KEY) is
 			-- Press `a_key'.
 		do
 			implementation.press_key (a_key)
+			sleep (pressing_delay)
 		end
 
-	release_key (a_key: EV_KEY) is
+	release_ev_key (a_key: EV_KEY) is
 			-- Release `a_key'.
 		do
 			implementation.release_key (a_key)
+			sleep (releasing_delay)
+		end
+
+	press_modifiers (a_modifier_mask: INTEGER) is
+			-- Press modifiers.
+		do
+			if a_modifier_mask.bit_and (shift) /= 0 then
+ 				press_key (key_shift)
+			end
+			if a_modifier_mask.bit_and (control) /= 0 then
+ 				press_key (key_ctrl)
+			end
+			if a_modifier_mask.bit_and (alt) /= 0 then
+ 				press_key (key_alt)
+			end
+		end
+
+	release_modifiers (a_modifier_mask: INTEGER) is
+			-- Press modifiers.
+		do
+			if a_modifier_mask.bit_and (shift) /= 0 then
+ 				release_key (key_shift)
+			end
+			if a_modifier_mask.bit_and (control) /= 0 then
+ 				release_key (key_ctrl)
+			end
+			if a_modifier_mask.bit_and (alt) /= 0 then
+ 				release_key (key_alt)
+			end
+		end
+
+feature -- Access
+
+	typing_delay: INTEGER
+			-- Delay in nanoseconds after a key is typed
+
+	pressing_delay: INTEGER
+			-- Delay in milliseconds after a key is pressed
+
+	releasing_delay: INTEGER
+			-- Delay in nanoseconds after a key is released
+
+feature -- Element change
+
+	set_typing_delay (a_value: INTEGER) is
+			-- Set `typing_delay' to `a_value'.
+		require
+			a_value_not_negative: a_value > 0
+		do
+			typing_delay := a_value
+		ensure
+			typing_delay_set: typing_delay = a_value
+		end
+
+	set_pressing_delay (a_value: INTEGER) is
+			-- Set `pressing_delay' to `a_value'.
+		require
+			a_value_not_negative: a_value > 0
+		do
+			pressing_delay := a_value
+		ensure
+			pressing_delay_set: pressing_delay = a_value
+		end
+
+	set_releasing_delay (a_value: INTEGER) is
+			-- Set `releasing_delay' to `a_value'.
+		require
+			a_value_not_negative: a_value > 0
+		do
+			releasing_delay := a_value
+		ensure
+			releasing_delay_set: releasing_delay = a_value
 		end
 
 feature {NONE} -- Implementation

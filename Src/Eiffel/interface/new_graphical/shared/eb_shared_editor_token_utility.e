@@ -84,7 +84,6 @@ feature -- Editor token
 			a_item_attached: a_item /= Void
 		local
 			l_writer: like token_writer
-			l_full_signature: BOOLEAN
 			l_list: LINKED_LIST [QL_ITEM]
 			l_parent: QL_ITEM
 			l_count: INTEGER

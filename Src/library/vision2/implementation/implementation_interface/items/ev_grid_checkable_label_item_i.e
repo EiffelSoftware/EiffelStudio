@@ -1,20 +1,20 @@
 indexing
-	description: "Cell consisting of only of a text label. Implementation Interface."
+	description: "Cell consisting of only of a checkbox, a optional pixmap and text label. Implementation Interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EV_GRID_LABEL_ITEM_I
+	EV_GRID_CHECKABLE_LABEL_ITEM_I
 
 inherit
-	EV_GRID_ITEM_I
+	EV_GRID_LABEL_ITEM_I
 		redefine
-			interface,
-			perform_redraw,
 			initialize,
-			required_width
+			interface,
+			required_width,
+			perform_redraw
 		end
 
 create
@@ -25,8 +25,9 @@ feature {EV_ANY} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			must_recompute_text_dimensions := True
-			Precursor {EV_GRID_ITEM_I}
+			Precursor {EV_GRID_LABEL_ITEM_I}
+			create checked_changed_actions.make
+			pointer_button_press_actions.extend (agent checkbox_handled)
 		end
 
 feature {EV_GRID_LABEL_ITEM} -- Status Report
@@ -34,104 +35,29 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 	required_width: INTEGER is
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
-		local
-			l_interface: like interface
 		do
-			l_interface := interface
-			Result := l_interface.left_border + text_width + l_interface.right_border
-			if l_interface.pixmap /= Void then
-				Result := Result + l_interface.pixmap.width + l_interface.spacing
+			Result := Precursor + check_figure_size + interface.spacing
+		end
+
+feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Access
+
+	checked_changed_actions: ACTION_SEQUENCE [TUPLE [like interface]]
+			-- Actions when user checked the item.
+
+	is_checked: BOOLEAN
+			-- Is current cell checked ?
+
+	set_is_checked (b: BOOLEAN) is
+			-- Set Current cell checked if `b' is True
+		do
+			is_checked := b
+			if is_parented and not is_destroyed then
+				redraw
 			end
-		end
-
-	text_width: INTEGER is
-			-- `Result' is width required to fully display `text' in `pixels'.
-			-- This function is optimized internally by `Current' and is therefore
-			-- faster than querying `font.string_size' directly.
-		do
-			recompute_text_dimensions
-			Result := internal_text_width
-		ensure
-			result_non_negative: Result >= 0
-		end
-
-	text_height: INTEGER is
-			-- `Result' is height required to fully display `text' in `pixels'.
-			-- This function is optimized internally by `Current' and is therefore
-			-- faster than querying `font.string_size' directly.
-		do
-			recompute_text_dimensions
-			Result := internal_text_height
-		ensure
-			result_non_negative: Result >= 0
-		end
-
-feature {EV_GRID_LABEL_ITEM} -- Implementation
-
-	string_size_changed is
-			-- Respond to the changing of an `interface' property which
-			-- affects the size of `text'
-		do
-			must_recompute_text_dimensions := True
-		ensure
-			must_recompute_text_dimensions: must_recompute_text_dimensions
+			checked_changed_actions.call ([interface])
 		end
 
 feature {EV_GRID_DRAWER_I} -- Implementation
-
-	internal_default_font: EV_FONT is
-			-- Default font used for `Current'.
-		once
-			create Result
-		end
-
-	internal_text_width: INTEGER
-		-- Last computed width of `text' within `interface'.
-
-	internal_text_height: INTEGER
-		-- Last computed height of `text' within `interface'.
-
-	must_recompute_text_dimensions: BOOLEAN
-		-- Must the dimensions of `interface.text' be re-computed
-		-- before drawing.
-
-	recompute_text_dimensions is
-			-- Recompute `internal_text_width' and `internal_text_height'.
-		local
-			l_text_dimensions: TUPLE [INTEGER, INTEGER]
-		do
-			if must_recompute_text_dimensions then
-				if parent_i /= Void then
-					l_text_dimensions := text_dimensions
-					if interface.font /= Void then
-						parent_i.string_size (interface.text, interface.font, l_text_dimensions)
-					else
-						parent_i.string_size (interface.text, internal_default_font, l_text_dimensions)
-					end
-				else
-						-- Item is not parented so we use the slower font implementation directly.
-					if interface.font /= Void then
-						l_text_dimensions := interface.font.string_size (interface.text)
-					else
-						l_text_dimensions := internal_default_font.string_size (interface.text)
-					end
-				end
-				internal_text_width := l_text_dimensions.integer_item (1)
-				internal_text_height := l_text_dimensions.integer_item (2)
-			end
-			must_recompute_text_dimensions := False
-		ensure
-			dimensions_recomputed: must_recompute_text_dimensions = False
-		end
-
-	text_dimensions: TUPLE [INTEGER, INTEGER] is
-			-- A once tuple for use within `recompute_text_dimensions' to
-			-- prevent the need for always creating new tuples.
-		once
-			create Result
-		ensure
-			result_not_void: Result /= Void
-		end
 
 	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP) is
 			-- Redraw `Current'.
@@ -147,6 +73,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			client_x, client_y, client_width, client_height: INTEGER
 			text_x, text_y: INTEGER
 			pixmap_x, pixmap_y: INTEGER
+			checkbox_x, checkbox_y: INTEGER
 			selection_x, selection_y, selection_width, selection_height: INTEGER
 			focused: BOOLEAN
 			l_clip_width, l_clip_height: INTEGER
@@ -178,7 +105,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				spacing_used := l_interface.spacing
 			end
 
-			space_remaining_for_text := client_width - pixmap_width - spacing_used
+			space_remaining_for_text := client_width - check_figure_size - l_interface.spacing - pixmap_width - spacing_used
 			space_remaining_for_text_vertical := client_height
 
 				-- Note in the following text positioning calculations, we subtract 1 from
@@ -213,11 +140,14 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 					-- when the height of the row is not enough to display the text fully.
 				vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
 			end
-			pixmap_x := left_border
+			checkbox_x := left_border
+			checkbox_y := top_border + (client_height - check_figure_size) // 2
+
+			pixmap_x := checkbox_x + check_figure_size + l_interface.spacing
 			pixmap_y := top_border + (client_height - pixmap_height) // 2
+
 			text_x := pixmap_x + pixmap_width + spacing_used + text_offset_into_available_space
 			text_y := top_border + vertical_text_offset_into_available_space
-
 
 			if l_interface.layout_procedure /= Void then
 				grid_label_item_layout.set_pixmap_x (pixmap_x)
@@ -283,10 +213,14 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 					-- Only draw if the clipping area is not empty
 				internal_rectangle.move_and_resize (left_border, top_border, column_i.width - right_border, height - bottom_border)
 				drawable.set_clip_area (internal_rectangle)
+
+				draw_check_box (drawable, checkbox_x + an_indent, checkbox_y)
+
 				if l_pixmap /= Void then
 						-- Now blit the pixmap
 					drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
 				end
+
 
 				if l_interface.font /= Void then
 					drawable.set_font (l_interface.font)
@@ -304,15 +238,85 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 		end
 
-	grid_label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT is
-			-- Once access to a layout structure used by `layout_procedure'.
+
+feature {NONE} -- Implementation
+
+	checkbox_handled (a_x, a_y, a_but: INTEGER; r1,r2,r3: REAL_64; a_screen_x, a_screen_y: INTEGER_32) is
+			-- Checkbox clicked
+		do
+			if a_but = 1 then
+				if a_x <= check_figure_size then
+					set_is_checked (not is_checked)
+				end
+			end
+		end
+
+	draw_check_box (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER) is
+			-- Draw check box on `a_drawable'
+		local
+			l_data: like section_data
+			l_coord: EV_COORDINATE
+			l_start_x, l_start_y: INTEGER
+			lw: INTEGER
+		do
+			lw := a_drawable.line_width
+			a_drawable.set_line_width (check_box_line_width)
+			a_drawable.draw_rectangle (a_start_x, a_start_y, check_figure_size,  check_figure_size)
+			if interface.is_checked then
+				a_drawable.set_line_width (check_figure_line_width)
+				l_start_x := a_start_x
+				l_start_y := a_start_y
+				from
+					l_data := section_data
+					l_data.start
+				until
+					l_data.after
+				loop
+					l_coord := l_data.item
+					a_drawable.draw_segment (
+											l_start_x + l_coord.x, l_start_y + l_coord.y,
+											l_start_x + l_coord.x, l_start_y + l_coord.y + 2
+											)
+					l_data.forth
+				end
+			end
+			a_drawable.set_line_width (lw)
+		end
+
+	section_data: ARRAYED_LIST [EV_COORDINATE] is
+			-- Coordinate used to draw a check
 		once
-			create Result
+			create Result.make (7)
+			Result.extend (create{EV_COORDINATE}.make (2, 4))
+			Result.extend (create{EV_COORDINATE}.make (3, 5))
+			Result.extend (create{EV_COORDINATE}.make (4, 6))
+			Result.extend (create{EV_COORDINATE}.make (5, 5))
+			Result.extend (create{EV_COORDINATE}.make (6, 4))
+			Result.extend (create{EV_COORDINATE}.make (7, 3))
+			Result.extend (create{EV_COORDINATE}.make (8, 2))
+		ensure
+			result_attached: Result /= Void
+		end
+
+	check_figure_size: INTEGER is 12
+			-- The width/height of the check box.
+
+	check_figure_line_width: INTEGER is 1
+			-- The line width on the sign figure.
+
+	check_box_line_width: INTEGER is
+			-- Line width for drawing check box.
+		do
+			if {PLATFORM}.is_windows then
+				Result := 2
+			else
+				Result := 1
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_GRID_LABEL_ITEM;
+	interface: EV_GRID_CHECKABLE_LABEL_ITEM;
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
 
@@ -328,4 +332,3 @@ indexing
 		]"
 
 end
-

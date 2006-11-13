@@ -214,7 +214,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				internal_rectangle.move_and_resize (left_border, top_border, column_i.width - right_border, height - bottom_border)
 				drawable.set_clip_area (internal_rectangle)
 
-				draw_check_box (drawable, checkbox_x + an_indent, checkbox_y)
+				draw_check_box (drawable, 1 + checkbox_x + an_indent, checkbox_y)
 
 				if l_pixmap /= Void then
 						-- Now blit the pixmap

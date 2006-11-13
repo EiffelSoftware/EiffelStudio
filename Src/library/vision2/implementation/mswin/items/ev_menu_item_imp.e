@@ -914,10 +914,11 @@ feature {NONE} -- Implementation
 	load_bounds_rect is
 			-- Load bounds rect.
 		do
-			if {WEL_API}.get_menu_item_rect (Default_pointer, parent_imp.wel_item, parent_imp.index_of (interface, 1)-1, bounds_rect.item) = 0 then
+			if parent_imp = Void then
 				bounds_rect.set_rect (0, 0, 0, 0)
-				debug ("vision2_windows")
-					io.put_string ("ERROR: load_bounds_rect")
+			else
+				if {WEL_API}.get_menu_item_rect (Default_pointer, parent_imp.wel_item, parent_imp.index_of (interface, 1)-1, bounds_rect.item) = 0 then
+					bounds_rect.set_rect (0, 0, 0, 0)
 				end
 			end
 		end

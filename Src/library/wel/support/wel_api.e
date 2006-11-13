@@ -95,6 +95,30 @@ feature -- Messages
 			"RegisterWindowMessage ((LPCTSTR) $a_message_name)"
 		end
 
+	frozen send_message_result (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: POINTER): BOOLEAN is
+			-- SDK SendMessage (with the result)
+		external
+			"C inline use <windows.h>"
+		alias
+			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+		end
+
+	frozen send_message_integer_result (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: POINTER): INTEGER is
+			-- SDK SendMessage (with an integer result)
+		external
+			"C inline use <windows.h>"
+		alias
+			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+		end
+
+	frozen send_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: POINTER) is
+			-- SDK SendMessage
+		external
+			"C inline use <windows.h>"
+		alias
+			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+		end
+
 feature -- Windows
 
 	frozen set_foreground_window (hwnd: POINTER): BOOLEAN is
@@ -127,6 +151,17 @@ feature -- Character codes
 			"C inline use <windows.h>"
 		alias
 			"return (EIF_INTEGER_32) VkKeyScan ((TCHAR) $a_char);"
+		end
+
+feature -- Error
+
+	frozen get_last_error: INTEGER is
+			-- SDK GetLastError
+
+		external
+			"C inline use <windows.h>"
+		alias
+			"(EIF_INTEGER_32)GetLastError()"
 		end
 
 indexing

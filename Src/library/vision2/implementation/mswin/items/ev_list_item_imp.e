@@ -178,41 +178,53 @@ feature -- Measurement
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
+			Result := screen_x - parent_imp.screen_x
 		end
 
 	y_position: INTEGER is
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
+			Result := screen_y - parent_imp.screen_y
 		end
 
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		do
+			load_bounds_rect
+			Result := bounds_rect.left
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
 		do
+			load_bounds_rect
+			Result := bounds_rect.top
 		end
 
 	width: INTEGER is
 			-- Horizontal size in pixels.
 		do
+			load_bounds_rect
+			Result := bounds_rect.width
 		end
 
 	height: INTEGER is
 			-- Vertical size in pixels.
 		do
+			load_bounds_rect
+			Result := bounds_rect.height
 		end
 
 	minimum_width: INTEGER is
 			-- Minimum horizontal size in pixels.
 		do
+			Result := width
 		end
 
 	minimum_height: INTEGER is
 			-- Minimum vertical size in pixels.
 		do
+			Result := height
 		end
 
 feature {EV_ANY_I} -- Access
@@ -387,6 +399,44 @@ feature {NONE} -- Implementation
 			Precursor {EV_ITEM_IMP}
 		end
 
+	bounds_rect: WEL_RECT is
+			-- Rect struct to hold size information
+			-- This is shared and should only be used right after a call to `load_bounds_rect'
+		once
+			create Result.make (0, 0, 0, 0)
+		end
+
+	load_bounds_rect is
+			-- Load bounds rect.
+		local
+			a_list: EV_LIST_IMP
+			a_box: EV_COMBO_BOX_IMP
+			a_rect: WEL_RECT
+			an_index, a_height: INTEGER
+		do
+			create a_rect.make (0, 0, 0, 0)
+			a_list ?= parent_imp
+			if a_list = Void then
+				a_box ?= parent_imp
+				if a_box = Void then
+					bounds_rect.set_rect (0, 0, 0, 0)
+				else
+					an_index := a_box.index_of (interface, 1)
+					a_height := {WEL_API}.send_message_integer_result (a_box.wel_item, {WEL_CB_CONSTANTS}.cb_getitemheight, 0, a_rect.item)
+					if {WEL_API}.send_message_result (a_box.wel_item, {WEL_CB_CONSTANTS}.cb_getdroppedcontrolrect, 0, a_rect.item) then
+						bounds_rect.set_rect (a_rect.left, a_rect.top + (an_index * a_height), a_rect.right, a_rect.top + ((an_index + 1) * a_height))
+					else
+						bounds_rect.set_rect (0, 0, 0, 0)
+					end
+				end
+			else
+				if {WEL_API}.send_message_result (a_list.wel_item, lvm_getitemrect, parent_imp.index_of (interface, 1), a_rect.item) then
+					bounds_rect.set_rect (parent.screen_x+a_rect.left, parent.screen_y+a_rect.top, parent.screen_x+a_rect.right, parent.screen_y+a_rect.bottom)
+				else
+					bounds_rect.set_rect (0, 0, 0, 0)
+				end
+			end
+		end
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
 

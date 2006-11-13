@@ -12,6 +12,23 @@ class
 inherit
 	EV_KEY_CONSTANTS
 
+feature -- Access
+
+	control: INTEGER is 0x01
+			-- Constant for control modifier
+
+	shift: INTEGER is 0x02
+			-- Constant for shift modifier
+
+	alt: INTEGER is 0x04
+			-- Constant for alt modifier
+
+	control_shift: INTEGER is 0x03
+			-- Constant for control & shift modifiers
+
+	control_alt: INTEGER is 0x05
+			-- Constant for control & alt modifiers
+
 feature -- Status report
 
 	is_valid_key (a_key: EV_KEY): BOOLEAN is

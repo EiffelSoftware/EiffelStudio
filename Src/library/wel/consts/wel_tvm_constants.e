@@ -79,6 +79,9 @@ feature -- Access
 	Tvm_sortchildrencb: INTEGER is 4373
 			-- Declared in Windows as TVM_SORTCHILDRENCB
 
+	Tvm_getitemheight: INTEGER is 4380
+			-- Declared in Windows as TVM_GETITEMHEIGHT
+
 	Tvm_setbkcolor: INTEGER is 4381
 			-- Declared in Windows as TVM_SETBKCOLOR
 

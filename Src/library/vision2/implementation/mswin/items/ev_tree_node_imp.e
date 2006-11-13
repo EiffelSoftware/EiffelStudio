@@ -291,41 +291,53 @@ feature -- Measurement
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
+			Result := screen_x - parent_tree.screen_x
 		end
 
 	y_position: INTEGER is
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
+			Result := screen_y - parent_tree.screen_y
 		end
 
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		do
+			load_bounds_rect
+			Result := bounds_rect.left
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
 		do
+			load_bounds_rect
+			Result := bounds_rect.top
 		end
 
 	width: INTEGER is
 			-- Horizontal size in pixels.
 		do
+			load_bounds_rect
+			Result := bounds_rect.width
 		end
 
 	height: INTEGER is
 			-- Vertical size in pixels.
 		do
+			load_bounds_rect
+			Result := bounds_rect.height
 		end
 
 	minimum_width: INTEGER is
 			-- Minimum horizontal size in pixels.
 		do
+			Result := width
 		end
 
 	minimum_height: INTEGER is
 			-- Minimum vertical size in pixels.
 		do
+			Result := height
 		end
 
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
@@ -673,6 +685,31 @@ feature {NONE} -- Implementation
 				end
 			elseif internal_children /= Void then
 				internal_children.prune_all (internal_children.last)
+			end
+		end
+
+	bounds_rect: WEL_RECT is
+			-- Rect struct to hold size information
+			-- This is shared and should only be used right after a call to `load_bounds_rect'
+		once
+			create Result.make (0, 0, 0, 0)
+		end
+
+	load_bounds_rect is
+			-- Load bounds rect.
+		local
+			a_rect: WEL_RECT
+		do
+			if top_parent_imp = Void then
+				bounds_rect.set_rect (0, 0, 0, 0)
+			else
+				create a_rect.make (0, 0, 0, 0)
+				a_rect.set_left (h_item.to_integer_32)
+				if {WEL_API}.send_message_result (top_parent_imp.wel_item, {WEL_TVM_CONSTANTS}.tvm_getitemrect, 1, a_rect.item) then
+					bounds_rect.set_rect (parent_tree.screen_x + a_rect.left, parent_tree.screen_y + a_rect.top, parent_tree.screen_x + a_rect.right, parent_tree.screen_y + a_rect.bottom)
+				else
+					bounds_rect.set_rect (0, 0, 0, 0)
+				end
 			end
 		end
 

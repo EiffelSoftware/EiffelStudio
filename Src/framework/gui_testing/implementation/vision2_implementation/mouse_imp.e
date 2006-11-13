@@ -38,16 +38,12 @@ feature -- Scrolling
 
 	scroll_up is
 			-- Scroll mouse wheel up.
-		local
-			exceptions: EXCEPTIONS
 		do
 			screen.fake_pointer_wheel_up
 		end
 
 	scroll_down is
 			-- Scroll mouse wheel down.
-		local
-			exceptions: EXCEPTIONS
 		do
 			screen.fake_pointer_wheel_down
 		end

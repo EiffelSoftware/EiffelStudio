@@ -29,7 +29,7 @@ feature -- Access
 			Result := "BOOLEAN"
 		end
 
-	change_item_widget: EV_GRID_CHOICE_ITEM
+	change_item_widget: EV_GRID_CHECKABLE_LABEL_ITEM
 
 feature -- Status Setting
 
@@ -43,13 +43,16 @@ feature -- Status Setting
 	show is
 			-- Show the widget in its editable state
 		do
-			activate_combo
+			-- It is already editable as a checkbox
 		end
 
 	refresh is
 		do
 			Precursor {PREFERENCE_WIDGET}
 			change_item_widget.set_text (preference.string_value)
+			change_item_widget.checked_changed_actions.block
+			change_item_widget.set_is_checked (preference.value)
+			change_item_widget.checked_changed_actions.resume
 		end
 
 feature {NONE} -- Implementation
@@ -63,16 +66,16 @@ feature {NONE} -- Implementation
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
-			change_item_widget.deactivate_actions.extend (agent update_changes)
-			change_item_widget.set_item_strings (<<"True", "False">>)
-			change_item_widget.set_text (preference.value.out)
-			change_item_widget.pointer_button_press_actions.force_extend (agent activate_combo)
+			change_item_widget.set_text (preference.string_value)
+			change_item_widget.set_is_checked (preference.value)
+			change_item_widget.checked_changed_actions.extend (agent checkbox_value_changed)
 		end
 
-	activate_combo is
-			-- Activate the combo
+	checkbox_value_changed (v: EV_GRID_CHECKABLE_LABEL_ITEM) is
 		do
-			change_item_widget.activate
+			preference.set_value (v.is_checked)
+			change_item_widget.set_text (preference.string_value)
+			update_changes
 		end
 
 	preference: BOOLEAN_PREFERENCE

@@ -58,8 +58,7 @@ feature {NONE} -- Initialization
 				value := (- v.as_integer_64).as_natural_64
 				has_minus := True
 			end
-			default_type := integer_32_mask
-			types := integer_32_mask
+			compute_type
 		ensure
 			is_initialized: is_initialized
 			has_integer: has_integer (32)

@@ -973,7 +973,8 @@ end;
 				unique_feature ?= Result;
 				create integer_value.make_with_value (
 					Tmp_ast_server.unique_values_item (a_class.class_id).item (Result.feature_name))
-				unique_feature.set_value (integer_value);
+				integer_value.set_real_type (unique_feature.type)
+				unique_feature.set_value (integer_value)
 			elseif Result.is_c_external then
 					-- Track new externals introduced in the class. Freeze is taken care by
 					-- EXTERNALS.is_equivalent queried by SYSTEM_I.

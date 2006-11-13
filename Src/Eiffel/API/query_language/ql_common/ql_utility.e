@@ -69,16 +69,8 @@ feature -- Access
 			-- Given a CONF_CLASS object, return a QL_CLASS object representing it.
 		require
 			a_conf_class_attached: a_conf_class /= Void
-		local
-			l_group: CONF_GROUP
-			l_path: LINKED_LIST [QL_ITEM]
 		do
-			l_group := a_conf_class.group
-			create l_path.make
-			find_path_from_conf_group (l_path, l_group)
-			check l_path.count >= 2 end
-			set_parents (l_path)
-			create Result.make_with_parent (a_conf_class, l_path.last)
+			create Result.make_with_parent (a_conf_class, conf_group_as_parent (a_conf_class.group))
 		ensure
 			result_attached: Result /= Void
 			result_valid: Result.is_valid_domain_item
@@ -88,13 +80,8 @@ feature -- Access
 			-- Given a CONF_GROUP object, return a QL_GROUP object representing it.
 		require
 			a_group_attached: a_group /= Void
-		local
-			l_list: LINKED_LIST [QL_ITEM]
 		do
-			create l_list.make
-			find_path_from_conf_group (l_list, a_group)
-			set_parents (l_list)
-			Result ?= l_list.last
+			Result ?= conf_group_as_parent (a_group)
 		ensure
 			result_attached: Result /= Void
 			result_valid: Result.is_valid_domain_item
@@ -238,6 +225,21 @@ feature{NONE} -- Implementation
 					a_list.forth
 				end
 			end
+		end
+
+	conf_group_as_parent (a_group: CONF_GROUP): QL_ITEM is
+			-- Return query language representation of `a_group'.
+			-- Result's parent is already setup.
+		require
+			a_group_attached: a_group /= Void
+		local
+			l_list: LINKED_LIST [QL_ITEM]
+		do
+			create l_list.make
+			find_path_from_conf_group (l_list, a_group)
+			set_parents (l_list)
+			Result := l_list.last
+			l_list.wipe_out
 		end
 
 feature{NONE} -- Implementation

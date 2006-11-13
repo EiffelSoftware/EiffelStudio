@@ -4,7 +4,7 @@ arg=none
 # default values for unix layout, so that no environment variables need to be set
 if [ -z "$ISE_EIFFEL" ]; then
 	if [ -z "$ISE_PREFIX" ]; then
-		ISE_PREFIX=/usr/local
+		ISE_PREFIX=/usr/local #UNIX_BASE_PATH comment for replacement
 		export ISE_PREFIX
 	fi
 	if [ -z "$ISE_VERSION" ]; then
@@ -14,6 +14,10 @@ if [ -z "$ISE_EIFFEL" ]; then
 	if [ -z "$ISE_PLATFORM" ]; then
 		ISE_PLATFORM=unix
 		export ISE_PLATFORM
+	fi
+	if [ -z "$ISE_LIB_NAME" ]; then
+		ISE_LIB_NAME=lib #UNIX_LIB_NAME comment for replacement
+		export ISE_LIB_NAME
 	fi
 fi
 

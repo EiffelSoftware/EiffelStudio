@@ -145,11 +145,11 @@ feature {NONE} -- Implementation
 				l_y := (change_item_widget.row.height // 2 - 6)
 			end
 			area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-			area.draw_rectangle (1, l_y, 12, 12)
+			area.draw_rectangle (2, l_y, 12, 12)
 
 				-- Draw the little color box internal color
 			area.set_foreground_color (preference.value)
-			area.fill_rectangle (2, l_y + 1, 10, 10)
+			area.fill_rectangle (3, l_y + 1, 10, 10)
 		end
 
 	color_tool: EV_COLOR_DIALOG;

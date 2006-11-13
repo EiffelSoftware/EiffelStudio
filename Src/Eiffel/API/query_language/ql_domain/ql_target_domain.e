@@ -166,10 +166,7 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 							l_found := l_conf_group = a_class.group
 						end
 						if l_found then
-							Result := class_from_group (a_class, create{QL_GROUP}.make_with_parent (l_conf_group, l_target), l_class_table)
---						else
---							Result := query_class_item_from_conf_class (a_class)
---							Result.set_visible (False)
+							Result := class_from_group (a_class, query_group_item_from_conf_group (l_conf_group), l_class_table)
 						end
 						l_groups.forth
 					end

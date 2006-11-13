@@ -357,7 +357,7 @@ feature -- Measurement
 		do
 			Result := implementation.text_width
 		ensure
-			result_non_negative: result >= 0
+			result_non_negative: Result >= 0
 		end
 
 	text_height: INTEGER is
@@ -369,7 +369,7 @@ feature -- Measurement
 		do
 			Result := implementation.text_height
 		ensure
-			result_non_negative: result >= 0
+			result_non_negative: Result >= 0
 		end
 
 feature -- Status report

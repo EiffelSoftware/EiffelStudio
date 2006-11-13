@@ -125,7 +125,7 @@ feature -- Tooltip
 
 	f_show_detailed_result: STRING is "Run selected metric and show detailed result"
 	f_quick_metric_definition: STRING is "Define quick metric"
-	f_run: STRING is "Run selected metric"
+	f_run: STRING is "Run selected metric (faster, but detailed result won't be available)"
 	f_go_to_definition: STRING is "Go to definition"
 	f_stop: STRING is "Stop metric evaluation"
 	f_move_row_up: STRING is "Move selected row up"

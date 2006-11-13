@@ -1047,9 +1047,13 @@ feature {NONE} -- Configuration of layout
 			Result_not_void: Result /= Void
 		end
 
-	unix_layout_lib_dir: STRING is "lib" -- Comment to finde line for replacement UNIX_LIB_NAME
+	unix_layout_lib_dir: STRING is
 			-- Directory name for lib. e.g. "lib" or "lib64"
-			--|
+		once
+			create Result.make_from_string ("lib") -- Comment to finde line for replacement UNIX_LIB_NAME
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	unix_layout_platform: STRING is "unix";
 			-- Platform to use for the unix layout.

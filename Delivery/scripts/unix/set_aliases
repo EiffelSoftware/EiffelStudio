@@ -1,6 +1,10 @@
 #!/bin/sh
 
 # Define some parameters
+# Base path for unix layout
+UNIX_BASE_PATH=/usr
+# Name for the lib directory
+UNIX_LIB_NAME=lib64
 # File in which the status of the installation generation is logged
 INSTALL_LOG=`pwd`/install.log
 # File in which the status of the installation compilation is logged

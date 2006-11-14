@@ -138,6 +138,40 @@ if [ ! "$NO_COMPILE" ]; then
 	md $EIFFEL_SRC
 	co $DEFAULT_ORIGO_SVN/Src $EIFFEL_SRC
 
+	if [ -n "$UNIX_BASE_PATH" ]; then
+		remtrace Adjusting unix base path
+		# updating EIFFEL_ENV
+		rm -f tmp
+		sed -e "/UNIX_BASE_PATH/s|/usr/local|$UNIX_BASE_PATH|g" $EIFFEL_SRC/framework/environment/interface/eiffel_env.e  > tmp
+		rm -f $EIFFEL_SRC/framework/environment/interface/eiffel_env.e
+		mv -f tmp $EIFFEL_SRC/framework/environment/interface/eiffel_env.e
+
+		# update finish_freezing
+		rm -f tmp
+		sed -e "/UNIX_BASE_PATH/s|/usr/local|$UNIX_BASE_PATH|g" $INSTALL_DIR/studio/spec/unix/finish_freezing > tmp
+		rm -f $INSTALL_DIR/studio/spec/unix/finish_freezing
+		mv -f tmp $INSTALL_DIR/studio/spec/unix/finish_freezing
+
+		chmod +x $INSTALL_DIR/studio/spec/unix/finish_freezing
+	fi
+
+	if [ -n "$UNIX_LIB_NAME" ]; then
+		remtrace Adjusting unix lib name
+		# updating EIFFEL_ENV
+		rm -f tmp
+		sed -e "/UNIX_LIB_NAME/s/lib/$UNIX_LIB_NAME/g" $EIFFEL_SRC/framework/environment/interface/eiffel_env.e  > tmp
+		rm -f $EIFFEL_SRC/framework/environment/interface/eiffel_env.e
+		mv -f tmp $EIFFEL_SRC/framework/environment/interface/eiffel_env.e
+
+		# update finish_freezing
+		rm -f tmp
+		sed -e "/UNIX_LIB_NAME/s/lib/$UNIX_LIB_NAME/g" $INSTALL_DIR/studio/spec/unix/finish_freezing > tmp
+		rm -f $INSTALL_DIR/studio/spec/unix/finish_freezing
+		mv -f tmp $INSTALL_DIR/studio/spec/unix/finish_freezing
+
+		chmod +x $INSTALL_DIR/studio/spec/unix/finish_freezing 
+	fi
+
 	remtrace ISE specific files
 	cd $EIFFEL_SRC
 	co $DEFAULT_ISE_SVN/Src/library/keygen library/keygen

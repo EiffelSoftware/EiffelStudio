@@ -11,7 +11,7 @@ deferred class
 inherit
 	EB_TARGET_COMMAND
 		redefine
-			target
+			target, internal_recycle
 		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -25,8 +25,6 @@ inherit
 		redefine
 			on_position_changed, on_update, on_item_added, on_item_removed
 		end
-
-	EB_RECYCLABLE
 
 feature -- Execution
 
@@ -75,14 +73,17 @@ feature -- Basic operations
 				Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			end
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- Recycle current command.
 		do
 			if observer_started then
 				history_manager.remove_observer (Current)
 			end
+				-- Precursor calls needs to be after since the above `history_manager'
+				-- relies on `target' being cleared by Precursor.
+			Precursor {EB_TARGET_COMMAND}
 		end
 
 feature -- Properties

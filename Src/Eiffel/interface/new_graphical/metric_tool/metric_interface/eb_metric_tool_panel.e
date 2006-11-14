@@ -169,9 +169,9 @@ feature -- Actions
 			end
 		end
 
-feature -- Basic operations
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- To be called when the button has became useless.
 		do
 			metric_evaluation_panel.recycle
@@ -186,6 +186,8 @@ feature -- Basic operations
 			development_window := Void
 		end
 
+feature -- Basic operations
+
 	set_stone (a_stone: STONE) is
 			-- Notify that `a_stone' has been dropp on metric panel.
 		local
@@ -198,7 +200,7 @@ feature -- Basic operations
 		end
 
 invariant
-	development_window_attached: development_window /= Void
+	development_window_attached: not is_recycled implies development_window /= Void
 	panel_list_attached: panel_table /= Void
 
 indexing

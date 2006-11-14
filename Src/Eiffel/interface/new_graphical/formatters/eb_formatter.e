@@ -337,9 +337,9 @@ feature {NONE} -- Location
 			end
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			manager := Void

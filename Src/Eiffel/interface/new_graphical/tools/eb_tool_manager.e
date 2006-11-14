@@ -12,13 +12,13 @@ deferred class
 inherit
 	EB_WINDOW
 		rename
-			destroy_recyclable_items as recycle
+			destroy_recyclable_items as internal_recycle
 		redefine
 			make,
 			build_menus,
 			build_menu_bar,
 			destroy_imp,
-			recycle
+			internal_recycle
 		end
 
 	EB_EXPLORER_BAR_MANAGER
@@ -35,7 +35,7 @@ inherit
 		undefine
 			default_create
 		redefine
-			recycle
+			internal_recycle
 		end
 
 	EB_SHARED_PREFERENCES
@@ -711,7 +711,7 @@ feature {NONE} -- Initialization flags
 	tools_initialized: BOOLEAN
 			-- Are the tools initialized?
 
-	recycle is
+	internal_recycle is
 			-- Destroy `Current'.
 		do
 			window.accelerators.wipe_out

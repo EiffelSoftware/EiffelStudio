@@ -13,7 +13,7 @@ inherit
 	EB_FEATURE_INFO_FORMATTER
 		redefine
 			empty_widget,
-			recycle
+			internal_recycle
 		end
 
 	QL_UTILITY
@@ -31,7 +31,7 @@ feature -- Setting
 				browser.set_focus
 			end
 		end
-		
+
 feature -- Formatting
 
 	format is
@@ -147,9 +147,9 @@ feature -- Status setting
 			feature_set: a_feature = associated_feature
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			Precursor {EB_FEATURE_INFO_FORMATTER}

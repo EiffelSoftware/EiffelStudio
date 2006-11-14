@@ -12,6 +12,8 @@ deferred class
 inherit
 	EB_COMMAND
 
+	EB_RECYCLABLE
+
 feature {NONE} -- Initialization
 
 	make (a_target: like target) is
@@ -35,8 +37,20 @@ feature -- Properties
 	target: ANY
 			-- Target for the command.
 
+feature {NONE} -- Recyclable
+
+	internal_recycle is
+			-- Recycle
+		do
+			target := Void
+			if accelerator /= Void then
+				accelerator.actions.wipe_out
+				accelerator := Void
+			end
+		end
+
 invariant
-	target_not_void: target /= Void
+	target_not_void: not is_recycled implies target /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

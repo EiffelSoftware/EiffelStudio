@@ -13,7 +13,7 @@ inherit
 	EB_OUTPUT_TOOL
 		redefine
 			make,  drop_breakable, drop_class, drop_feature, drop_cluster,
-			clear, recycle, scroll_to_end,set_focus,
+			clear, internal_recycle, scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin, is_general
 		end
 
@@ -321,50 +321,6 @@ feature -- Basic operation
 			name_not_null: name /= Void
 		do
 			cmd_lst.set_text (name)
-		end
-
-	recycle is
-			-- To be called before destroying this objects
-		do
-			recycle_widgets
-			external_output_manager.prune (Current)
-			toolbar.recycle
-			toolbar := Void
-			widget.destroy
-			widget := Void
-			text_area := Void
-			owner := Void
-			stone_manager := Void
-		end
-
-	recycle_widgets is
-			--
-		do
-			cmd_lst.destroy
-			terminate_btn.destroy
-			run_btn.destroy
-			state_label.destroy
-			main_frame.destroy
-			edit_cmd_detail_btn.destroy
-			hidden_btn.destroy
-			input_field.destroy
-			send_input_btn.destroy
-			save_output_btn.destroy
-			clear_output_btn.destroy
-			del_cmd_btn.destroy
-
-			terminate_btn := Void
-			run_btn := Void
-			state_label := Void
-			main_frame := Void
-			cmd_lst := Void
-			edit_cmd_detail_btn := Void
-			hidden_btn := Void
-			input_field := Void
-			send_input_btn := Void
-			save_output_btn := Void
-			clear_output_btn := Void
-			del_cmd_btn := Void
 		end
 
 	scroll_to_end is
@@ -749,7 +705,53 @@ feature{NONE}
 			wd.show_modal_to_window (a_window)
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Recycle
+
+	internal_recycle is
+			-- To be called before destroying this objects
+		do
+			recycle_widgets
+			external_output_manager.prune (Current)
+			toolbar.recycle
+			toolbar := Void
+			widget.destroy
+			widget := Void
+			text_area := Void
+			owner := Void
+			stone_manager := Void
+		end
+
+	recycle_widgets is
+			--
+		do
+			cmd_lst.destroy
+			terminate_btn.destroy
+			run_btn.destroy
+			state_label.destroy
+			main_frame.destroy
+			edit_cmd_detail_btn.destroy
+			hidden_btn.destroy
+			input_field.destroy
+			send_input_btn.destroy
+			save_output_btn.destroy
+			clear_output_btn.destroy
+			del_cmd_btn.destroy
+
+			terminate_btn := Void
+			run_btn := Void
+			state_label := Void
+			main_frame := Void
+			cmd_lst := Void
+			edit_cmd_detail_btn := Void
+			hidden_btn := Void
+			input_field := Void
+			send_input_btn := Void
+			save_output_btn := Void
+			clear_output_btn := Void
+			del_cmd_btn := Void
+		end
+
+feature {NONE} -- Implementation
 
 	toolbar: EB_TOOLBAR
 

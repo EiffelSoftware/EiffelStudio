@@ -87,7 +87,9 @@ feature -- Element change
 			end
 		end
 
-	recycle is
+feature {NONE} -- Cleaning
+
+	internal_recycle is
 			-- To be called when the object is no more used.
 		do
 			favorites.remove_observer (Current)

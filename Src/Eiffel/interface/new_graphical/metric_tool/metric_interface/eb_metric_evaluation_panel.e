@@ -859,9 +859,9 @@ feature{NONE} -- Notification
 			end
 		end
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- To be called when the button has became useless.
 		do
 			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.prune_all (on_show_percentage_btn_change_from_outside_agent)

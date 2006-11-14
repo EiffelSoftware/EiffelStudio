@@ -17,7 +17,7 @@ inherit
 			user_initialization,
 			gain_focus,
 			lose_focus,
-			recycle
+			internal_recycle
 		end
 
 create
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			dev_window.window.focus_in_actions.prune_all (check_search_bar_visible_procedure)

@@ -15,7 +15,7 @@ inherit
 			make,
 			manager,
 			reverse,
-			recycle
+			internal_recycle
 		end
 
 	EB_SHARED_MANAGERS
@@ -1584,9 +1584,9 @@ feature -- Custom search scope
 			Result.set_pos_container (manager.managed_main_formatters.first)
 		end
 
-feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			bottom_reached_actions.wipe_out
@@ -1595,6 +1595,8 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			remove_observer (Current)
 			Precursor {EB_MULTI_SEARCH_TOOL_IMP}
 		end
+
+feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 
 	search_history_size: INTEGER is 10
 

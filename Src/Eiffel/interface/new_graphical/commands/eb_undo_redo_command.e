@@ -11,7 +11,7 @@ deferred class
 inherit
 	EB_DEVELOPMENT_WINDOW_COMMAND
 		redefine
-			recycle
+			internal_recycle
 		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -54,9 +54,9 @@ feature -- Basic operations
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 		end
 
-feature -- recycle
+feature {NONE} -- recycle
 
-	recycle is
+	internal_recycle is
 			-- Recycle Current
 		do
 			if observer_started and target /= Void then

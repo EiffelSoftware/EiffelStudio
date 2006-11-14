@@ -51,9 +51,9 @@ feature {NONE} -- Initialization
 			create output_display_factory
 		end
 
-feature -- Clean up
+feature {NONE} -- Clean up
 
-	recycle is
+	internal_recycle is
 			-- To be called before destroying this objects
 		do
 			graphical_output_manager.prune (Current)

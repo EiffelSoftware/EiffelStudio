@@ -22,7 +22,7 @@ inherit
 			make as make_search_bar
 		redefine
 			user_initialization,
-			recycle
+			internal_recycle
 		end
 
 	EVS_UTILITY
@@ -56,8 +56,8 @@ feature{NONE} -- Initialization
 		require
 			a_dev_window_attached: a_dev_window /= Void
 		do
-			make_search_bar (a_dev_window.search_tool)
 			create delayed_timer.make (agent search_internal, wait_to_search_time)
+			make_search_bar (a_dev_window.search_tool)
 		ensure
 			delayed_timer_attached: delayed_timer /= Void
 		end
@@ -210,9 +210,9 @@ feature -- Accelerator
 			-- Key accelerator to store current search keyword in search bar
 			-- and do a search next
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			Precursor {QUICK_SEARCH_BAR}

@@ -387,18 +387,6 @@ feature -- Status setting
 			explorer_changed: explorer_bar_item.parent = an_explorer_bar
 		end
 
-feature -- Memory management
-
-	recycle is
-			-- Recycle `Current', but leave `Current' in an unstable state,
-			-- so that we know whether we're still referenced or not.
-		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
-			end
-			reset_tool
-		end
-
 	reset_tool is
 		do
 			reset_update_on_idle
@@ -410,6 +398,18 @@ feature -- Memory management
 			exception.remove_tooltip
 
 			clean_stack_grid
+		end
+
+feature {NONE} -- Memory management
+
+	internal_recycle is
+			-- Recycle `Current', but leave `Current' in an unstable state,
+			-- so that we know whether we're still referenced or not.
+		do
+			if explorer_bar_item /= Void then
+				unattach_from_explorer_bar
+			end
+			reset_tool
 		end
 
 feature {NONE} -- Grid Implementation

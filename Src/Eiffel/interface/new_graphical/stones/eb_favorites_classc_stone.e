@@ -13,11 +13,11 @@ inherit
 	CLASSC_STONE
 		rename
 			make as old_make
-		select
-			classi_make
 		end
 
 	EB_FAVORITES_CLASS_STONE
+		rename
+			make as classi_make
 		undefine
 			header,
 			is_valid,

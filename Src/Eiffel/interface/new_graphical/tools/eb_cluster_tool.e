@@ -176,9 +176,9 @@ feature -- Status setting
 			show_current_class_cluster_cmd.disable_sensitive
 		end
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do

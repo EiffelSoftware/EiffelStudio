@@ -144,9 +144,9 @@ feature {EB_MULTI_SEARCH_TOOL, EB_SEARCH_REPORT_GRID} -- Widgets
 	report : EV_FRAME
 			-- Report container
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recyclable
 		do
 			search_tool := Void

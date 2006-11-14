@@ -532,9 +532,9 @@ feature {NONE} -- Option behaviour
 			unlock_update
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			preferences.editor_data.filter_completion_list_preference.change_actions.prune_all (filter_completion_list_agent)

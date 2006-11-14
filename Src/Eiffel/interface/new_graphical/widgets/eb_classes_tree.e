@@ -43,8 +43,6 @@ inherit
 		end
 
 	EB_RECYCLABLE
-		export
-			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
@@ -328,9 +326,9 @@ feature -- Observer pattern
 			wipe_out
 		end
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		local

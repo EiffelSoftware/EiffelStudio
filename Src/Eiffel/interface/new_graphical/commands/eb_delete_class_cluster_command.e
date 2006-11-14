@@ -155,9 +155,9 @@ feature -- Basic operations
 			end
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			window := Void

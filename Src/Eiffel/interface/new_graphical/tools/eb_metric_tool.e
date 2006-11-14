@@ -288,9 +288,9 @@ feature -- Access
 	feedback_dialog: EV_INFORMATION_DIALOG
 			-- Dialog to display feedback
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Remove all references to `Current', and leave `Current' in an
 			-- unstable state, so that we know `Current' is not referenced any longer.
 		do

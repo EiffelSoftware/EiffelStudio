@@ -12,7 +12,8 @@ class
 inherit
 	EDITABLE_TEXT_PANEL
 		rename
-			cursors as editor_cursors
+			cursors as editor_cursors,
+			recycle as internal_recycle
 		undefine
 			font,
 			line_height
@@ -23,7 +24,7 @@ inherit
 			load_text,
 			initialize_editor_context,
 			reference_window,
-			recycle
+			internal_recycle
 		end
 
 	EB_SHARED_MANAGERS
@@ -41,8 +42,6 @@ inherit
 		end
 
 	EB_RECYCLABLE
-		export
-			{EB_RECYCLER} all
 		undefine
 			default_create
 		end
@@ -204,7 +203,7 @@ feature -- Stonable
 
 feature {NONE} -- Memory Management
 
-	recycle is
+	internal_recycle is
 			-- Destroy `Current'.
 		do
 			Precursor {EDITABLE_TEXT_PANEL}

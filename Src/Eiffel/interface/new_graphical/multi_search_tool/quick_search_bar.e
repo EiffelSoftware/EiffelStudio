@@ -66,9 +66,9 @@ feature {NONE} -- Initialization
 		require
 			a_option_manager_not_void: a_option_manager /= Void
 		do
-			default_create
 			option_manager := a_option_manager
 			option_manager.add_observer (Current)
+			default_create
 		end
 
 	user_initialization is
@@ -154,9 +154,9 @@ feature -- Status change
 			end
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			option_manager.remove_observer (Current)
@@ -408,7 +408,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	option_manager_not_void: option_manager /= Void
+	option_manager_not_void: not is_recycled implies option_manager /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

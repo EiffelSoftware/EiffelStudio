@@ -269,9 +269,9 @@ feature -- Actions
 			end
 		end
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- To be called when the button has became useless.
 		do
 			metric_result.recycle

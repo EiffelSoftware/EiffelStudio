@@ -10,6 +10,17 @@ deferred class
 
 inherit
 	ERF_REFACTORING
+		redefine
+			make
+		end
+
+feature {NONE} -- Initialization
+
+	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES) is
+		do
+			Precursor (an_undo_stack, a_preference)
+			create affected_classes.make (0)
+		end
 
 feature {NONE} -- Implementation
 

@@ -719,17 +719,7 @@ feature -- Status report
 	can_refresh: BOOLEAN
 			-- Should we display the trees when a stone is set?
 
-feature -- Memory management
-
-	recycle is
-			-- Recycle `Current', but leave `Current' in an unstable state,
-			-- so that we know whether we're still referenced or not.
-		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
-			end
-			reset_tool
-		end
+feature -- Status Setting
 
 	reset_tool is
 		local
@@ -758,6 +748,18 @@ feature -- Memory management
 				objects_grids.forth
 			end
 			clean_header_box
+		end
+
+feature {NONE} -- Memory management
+
+	internal_recycle is
+			-- Recycle `Current', but leave `Current' in an unstable state,
+			-- so that we know whether we're still referenced or not.
+		do
+			if explorer_bar_item /= Void then
+				unattach_from_explorer_bar
+			end
+			reset_tool
 		end
 
 feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change

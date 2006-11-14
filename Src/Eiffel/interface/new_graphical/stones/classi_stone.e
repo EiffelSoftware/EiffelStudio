@@ -130,12 +130,12 @@ feature -- Access
 			end
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	actual_class_i: CLASS_I;
 
 invariant
-	actual_class_i_not_void: actual_class_i /= Void
+	actual_class_i_not_void: class_i /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

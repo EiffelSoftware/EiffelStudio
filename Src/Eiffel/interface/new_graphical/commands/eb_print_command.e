@@ -145,9 +145,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			dev_window := Void

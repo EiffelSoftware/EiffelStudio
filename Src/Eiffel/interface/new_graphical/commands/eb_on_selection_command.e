@@ -14,16 +14,16 @@ inherit
 	EB_STANDARD_CMD
 		rename
 			make as make_standard,
-			recycle as recycle_std
+			internal_recycle as recycle_std
 		redefine
 			executable
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
 		redefine
-			executable, make, recycle
+			executable, make, internal_recycle
 		select
-			recycle
+			internal_recycle
 		end
 
 	TEXT_OBSERVER
@@ -111,7 +111,9 @@ feature -- Observer pattern
 			update_status
 		end
 
-	recycle is
+feature {NONE} -- Recyclable
+
+	internal_recycle is
 			-- Recycle
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}

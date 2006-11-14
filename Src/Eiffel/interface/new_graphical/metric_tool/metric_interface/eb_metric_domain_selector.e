@@ -90,9 +90,6 @@ feature {NONE} -- Initialization
 		do
 			create l_colors
 			create domain_change_actions
-			create history_manager.make (Current)
-			create address_manager.make (Current, True)
-			address_manager.enable_accept_general_group
 
 				-- Setup scope type
 			add_delayed_scope_btn.set_tooltip (metric_names.f_delayed_scope)
@@ -101,10 +98,6 @@ feature {NONE} -- Initialization
 			add_application_scope_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
 			add_application_scope_btn.select_actions.extend (agent on_application_scope_added)
 			add_application_scope_btn.set_tooltip (metric_names.f_application_scope)
-
-			open_address_manager_btn.set_pixmap (pixmaps.icon_pixmaps.tool_search_icon)
-			open_address_manager_btn.select_actions.extend (agent on_show_address_manager)
-			open_address_manager_btn.set_tooltip (metric_names.f_search_for_class)
 
 				-- Build tool bar buttons for scope grid.
 			add_item_btn.remove_text
@@ -156,6 +149,14 @@ feature {NONE} -- Initialization
 			grid.key_press_actions.extend (agent on_key_pressed)
 			grid.enable_selection_on_single_button_click
 			remove_all_btn.drop_actions.extend (agent on_item_drop_on_remove_button)
+
+				-- Setup address manager.
+			create history_manager.make (Current)
+			create address_manager.make (Current, True)
+			address_manager.enable_accept_general_group
+			open_address_manager_btn.set_pixmap (pixmaps.icon_pixmaps.tool_search_icon)
+			open_address_manager_btn.select_actions.extend (agent on_show_address_manager)
+			open_address_manager_btn.set_tooltip (metric_names.f_search_for_class)
 		end
 
 feature -- Access

@@ -844,7 +844,6 @@ feature{NONE} -- Implementation
 			-- Time interval (in milliseconds) to wait before we update view
 
 invariant
-	development_window_attached: development_window /= Void
 	filter_engine_attached: filter_engine /= Void
 
 indexing

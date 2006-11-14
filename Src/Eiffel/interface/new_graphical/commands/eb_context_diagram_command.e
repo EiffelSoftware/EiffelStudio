@@ -11,14 +11,11 @@ deferred class
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 
-	EB_RECYCLABLE
-
 	EB_TARGET_COMMAND
 		rename
 			target as tool
 		redefine
-			tool,
-			make
+			tool, make, internal_recycle
 		end
 
 feature {NONE} -- Initialization
@@ -63,17 +60,13 @@ feature -- Access
 			Result_exists: Result /= Void
 		end
 
-feature -- Removal
+feature {NONE} -- Removal
 
-	recycle is
+	internal_recycle is
 			-- Recycle code.
 		do
-			if accelerator /= Void then
-				accelerator.actions.wipe_out
-				accelerator := Void
-			end
+			Precursor {EB_TARGET_COMMAND}
 			history := Void
-			tool := Void
 
 				-- No need to wipe out the content, because it should
 				-- have been done by the users of menu and toolbar items.

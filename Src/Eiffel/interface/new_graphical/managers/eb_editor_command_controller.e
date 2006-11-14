@@ -24,6 +24,8 @@ inherit
 		end
 
 	TEXT_OBSERVER_MANAGER
+		rename
+			recycle as internal_recycle
 		export
 			{NONE} all
 		undefine
@@ -33,7 +35,7 @@ inherit
 			on_selection_begun, on_selection_finished,
 			on_text_back_to_its_last_saved_state,
 			on_text_edited, on_text_fully_loaded, on_text_loaded, on_text_reset,
-			recycle, make
+			make, internal_recycle
 		end
 
 	EB_RECYCLABLE
@@ -174,23 +176,6 @@ feature -- Status setting
 			cmd_now_known: selection_commands.has (cmd)
 		end
 
-	recycle is
-			-- Destroy references to `Current'.
-		do
-			Precursor {TEXT_OBSERVER_MANAGER}
-			editor_commands.wipe_out
-			from
-				selection_commands.start
-			until
-				selection_commands.after
-			loop
-				selection_commands.item.recycle
-				selection_commands.forth
-			end
-			selection_commands.wipe_out
-			current_editor := Void
-		end
-
 feature {NONE} -- Event handling
 
 	on_text_reset is
@@ -284,6 +269,23 @@ feature {NONE} -- Event handling
 		end
 
 feature {NONE} -- Implementation
+
+	internal_recycle is
+			-- Destroy references to `Current'.
+		do
+			Precursor {TEXT_OBSERVER_MANAGER}
+			editor_commands.wipe_out
+			from
+				selection_commands.start
+			until
+				selection_commands.after
+			loop
+				selection_commands.item.recycle
+				selection_commands.forth
+			end
+			selection_commands.wipe_out
+			current_editor := Void
+		end
 
 	add_observers is
 			--

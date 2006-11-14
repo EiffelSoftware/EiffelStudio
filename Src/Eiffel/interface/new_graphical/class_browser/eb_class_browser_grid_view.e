@@ -448,9 +448,9 @@ feature{NONE} -- Actions
 			end
 		end
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- Recyclable
 		do
 			development_window := Void
@@ -482,7 +482,7 @@ feature -- Recycle
 			result_attached: Result /= Void
 		end
 
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 
 	default_row_height: INTEGER is
 			-- Default height to set grid rows.
@@ -603,7 +603,7 @@ feature{NONE} -- Implementation
 			-- Trace message	
 
 invariant
-	development_window_attached: development_window /= Void
+	development_window_attached: not is_recycled implies development_window /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

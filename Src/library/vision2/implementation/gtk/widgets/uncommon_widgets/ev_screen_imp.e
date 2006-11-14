@@ -189,17 +189,15 @@ feature -- Basic operation
 	fake_pointer_wheel_up is
 			-- Simulate the user rotating the mouse wheel up.
 		do
-			check
-				false -- TODO: implement
-			end
+				--| Mouse pointer button number 4 relates to mouse wheel up
+			fake_pointer_button_press (4)
 		end
 
 	fake_pointer_wheel_down is
 			-- Simulate the user rotating the mouse wheel down.
 		do
-			check
-				false -- TODO: implement
-			end
+				--| Mouse pointer button number 5 relates to mouse wheel up
+			fake_pointer_button_press (5)
 		end
 
 	fake_key_press (a_key: EV_KEY) is

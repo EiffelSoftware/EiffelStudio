@@ -14,7 +14,7 @@ feature -- Access
 	gui: GUI is
 			-- GUI interface
 		once
-			create Result
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end

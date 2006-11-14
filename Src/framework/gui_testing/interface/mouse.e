@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			-- Initialize object.
 		do
 			create {MOUSE_IMP}implementation
-			clicking_delay := 500_000_000
+			clicking_delay := 300_000_000
 			pressing_delay :=   5_000_000
 			releasing_delay :=  5_000_000
 			movement_delay :=   5_000_000
@@ -207,20 +207,20 @@ feature -- Moving
 		local
 			l_start: EV_COORDINATE
 			l_dx, l_dy: REAL_64
-			x_steps, y_steps, steps: INTEGER
+			l_x_steps, l_y_steps, l_steps: INTEGER
 			i: INTEGER
 		do
 			if is_movement_infered then
-				l_start := screen.pointer_position
-				x_steps := ((an_x - l_start.x_precise) / x_movement).rounded.abs
-				y_steps := ((a_y - l_start.y_precise) / y_movement).rounded.abs
-				steps := x_steps.max (y_steps) - 1
-				l_dx := (an_x - l_start.x_precise) / steps
-				l_dy := (a_y - l_start.y_precise) / steps
+				l_start := gui.screen.pointer_position
+				l_x_steps := ((an_x - l_start.x_precise) / x_movement).rounded.abs
+				l_y_steps := ((a_y - l_start.y_precise) / y_movement).rounded.abs
+				l_steps := l_x_steps.max (l_y_steps) - 1
+				l_dx := (an_x - l_start.x_precise) / l_steps
+				l_dy := (a_y - l_start.y_precise) / l_steps
 				from
 					i := 0
 				until
-					i > steps
+					i > l_steps
 				loop
 					implementation.move_to_absolute_position ((l_start.x + i * l_dx).rounded, (l_start.y + i * l_dy).rounded)
 					i := i + 1
@@ -239,7 +239,7 @@ feature -- Moving
 		local
 			l_current: EV_COORDINATE
 		do
-			l_current := screen.pointer_position
+			l_current := gui.screen.pointer_position
 			move_to_absolute_position (l_current.x + a_dx, l_current.y + a_dy)
 		end
 
@@ -289,8 +289,10 @@ feature -- Advanced window commands
 		local
 			lower_right_x, lower_right_y: INTEGER
 		do
-			lower_right_x := gui.window.screen_x + gui.window.width - 2
-			lower_right_y := gui.window.screen_y + gui.window.height - 2
+			-- TODO: the -2 is just a guess (which works on windows).
+			-- TODO: check if other value is more suitable
+			lower_right_x := gui.active_window.screen_x + gui.active_window.width - 2
+			lower_right_y := gui.active_window.screen_y + gui.active_window.height - 2
 
 			move_to_absolute_position (lower_right_x, lower_right_y)
 			press_left
@@ -375,20 +377,14 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	implementation: MOUSE_I
+			-- Implementation of mouse interface
+
 	x_movement: INTEGER is 10
 			-- Mouse movement step in pixels in x direction
 
 	y_movement: INTEGER is 10
 			-- Mouse movement step in pixels in y direction
-
-	implementation: MOUSE_I
-			-- Implementation of mouse interface
-
-	screen: EV_SCREEN is
-			-- Screen access
-		once
-			create Result
-		end
 
 invariant
 

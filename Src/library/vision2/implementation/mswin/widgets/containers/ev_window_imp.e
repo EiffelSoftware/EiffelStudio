@@ -1092,7 +1092,7 @@ feature {EV_ANY_I} -- Implementation
 
 						-- We don't send message to ourself
 						if l_tool_window /= Void and then l_imp.wel_item /= wel_item and wel_item /= lparam then
-							cwin_send_message (l_imp.wel_item, wm_ncactivate, to_wparam (l_keep_alive), to_lparam (-1))
+							{WEL_API}.send_message (l_imp.wel_item, wm_ncactivate, to_wparam (l_keep_alive), to_lparam (-1))
 						end
 						l_windows.forth
 					end

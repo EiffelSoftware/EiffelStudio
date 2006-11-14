@@ -242,15 +242,15 @@ feature -- Status setting
 			--       `a_big_icon' to Void to remove the big icon.
 		do
 			if a_small_icon /= Void then
-				cwin_send_message (item, Wm_seticon, to_wparam (Icon_small), a_small_icon.item)
+				{WEL_API}.send_message (item, Wm_seticon, {WEL_DATA_TYPE}.to_wparam (Icon_small), a_small_icon.item)
 			else
-				cwin_send_message (item, Wm_seticon, to_wparam (Icon_small), to_lparam (0))
+				{WEL_API}.send_message (item, Wm_seticon, {WEL_DATA_TYPE}.to_wparam (Icon_small), {WEL_DATA_TYPE}.to_lparam (0))
 			end
 
 			if a_big_icon /= Void then
-				cwin_send_message (item, Wm_seticon, to_wparam (Icon_big), a_big_icon.item)
+				{WEL_API}.send_message (item, Wm_seticon, {WEL_DATA_TYPE}.to_wparam (Icon_big), a_big_icon.item)
 			else
-				cwin_send_message (item, Wm_seticon, to_wparam (Icon_big), to_lparam (0))
+				{WEL_API}.send_message (item, Wm_seticon, {WEL_DATA_TYPE}.to_wparam (Icon_big), {WEL_DATA_TYPE}.to_lparam (0))
 			end
 		end
 
@@ -964,7 +964,7 @@ feature {NONE} -- Implementation
 			loop
 				control ?= child_wnd.item
 				if control /= Void then
-					cwin_send_message (child_wnd.item.item, Wm_syscolorchange, to_wparam (0), to_lparam (0))
+					{WEL_API}.send_message (child_wnd.item.item, Wm_syscolorchange, {WEL_DATA_TYPE}.to_wparam (0), {WEL_DATA_TYPE}.to_lparam (0))
 				end
 				child_wnd.forth
 			end

@@ -267,7 +267,7 @@ feature -- Status setting
 			if internal_bitmap /= Void then
 				invalidate
 			else
-				cwin_send_message (wel_item, bm_setstyle,
+				{WEL_API}.send_message (wel_item, bm_setstyle,
 					to_wparam (style | bs_defpushbutton),
 					cwin_make_long (1, 0))
 			end
@@ -280,7 +280,7 @@ feature -- Status setting
 			if flag_set (style, bs_ownerdraw) then
 				invalidate
 			else
-				cwin_send_message (wel_item, bm_setstyle,
+				{WEL_API}.send_message (wel_item, bm_setstyle,
 					to_wparam (style & bs_defpushbutton.bit_not),
 					cwin_make_long (1, 0))
 			end

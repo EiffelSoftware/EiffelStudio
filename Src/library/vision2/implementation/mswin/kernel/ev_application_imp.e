@@ -259,6 +259,8 @@ feature {NONE} -- Implementation
 	Application_windows_id: ARRAYED_LIST [POINTER] is
 			-- All user created windows in the application.
 			--| For internal use only.
+		indexing
+			once_status: global
 		once
 			create Result.make (5)
 		ensure
@@ -772,22 +774,6 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>] (int): EIF_INTEGER"
 		alias
 			"GetKeyState"
-		end
-
-	cwin_send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
-			-- SDK SendMessage (without the result)
-		external
-			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
-		alias
-			"SendMessage"
-		end
-
-	cwin_post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
-			-- SDK PostMessage (without the result)
-		external
-			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
-		alias
-			"PostMessage"
 		end
 
 	frozen cwel_integer_to_pointer (i: INTEGER): POINTER is

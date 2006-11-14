@@ -36,7 +36,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Bm_setcheck, to_wparam (1), to_lparam (0))
+			{WEL_API}.send_message (item, Bm_setcheck, to_wparam (1), to_lparam (0))
 		ensure
 			checked: checked
 		end
@@ -46,7 +46,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Bm_setcheck, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Bm_setcheck, to_wparam (0), to_lparam (0))
 		ensure
 			unchecked: not checked
 		end
@@ -58,7 +58,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Bm_getcheck,
+			Result := {WEL_API}.send_message_result_integer (item, Bm_getcheck,
 				to_wparam (0), to_lparam (0)) = 1
 		end
 

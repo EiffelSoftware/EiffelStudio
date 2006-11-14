@@ -34,7 +34,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_HDM_CONSTANTS
 		export
 			{NONE} all
@@ -80,11 +80,11 @@ feature {NONE} -- Initialization
 				-- will be made visible in case default_style
 				-- includes Ws_visible.
 			internal_window_make (a_parent, Void,
-										 clear_flag (default_style, Ws_visible), 
+										 clear_flag (default_style, Ws_visible),
 										 0, 0, 0, 0,
 										 an_id, default_pointer)
 			id := an_id
-			
+
 			create a_rect.make (a_x, a_y, a_x + a_width, a_y + a_height)
 
 				-- Let the operating system determine the exact window position and size
@@ -102,8 +102,8 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Hdm_get_item_count,
-				to_wparam (0), to_lparam (0)) 
+			Result := {WEL_API}.send_message_result_integer (item, Hdm_get_item_count,
+				to_wparam (0), to_lparam (0))
 			check
 				successfull: Result /= -1
 			end
@@ -124,16 +124,16 @@ feature -- Status report
 		do
 			create Result.make
 			Result.set_point (a_point)
-			cwin_send_message (item, Hdm_hit_test, to_wparam (0), Result.item)
+			{WEL_API}.send_message (item, Hdm_hit_test, to_wparam (0), Result.item)
 		end
-		
+
 	get_image_list: WEL_IMAGE_LIST is
 			-- Get the image list associated with `Current'
 			-- or `Void' if none.
-		local 
+		local
        		handle: POINTER
        	do
-       		handle := cwin_send_message_result (item, hdm_get_image_list, to_wparam (0), to_lparam (0))
+       		handle := {WEL_API}.send_message_result (item, hdm_get_image_list, to_wparam (0), to_lparam (0))
        		if handle /= default_pointer then
        			create Result.make_by_pointer(handle)
        		end
@@ -165,7 +165,7 @@ feature -- Element change
 
 			insert_header_item (hd_item, insert_after_item_no)
 		ensure
-			item_count_increased: item_count = old item_count + 1			
+			item_count_increased: item_count = old item_count + 1
 		end
 
 	insert_header_item (hd_item: WEL_HD_ITEM; insert_after_item_no: INTEGER) is
@@ -180,14 +180,14 @@ feature -- Element change
 		local
 			i_result: INTEGER
 		do
-			i_result := cwin_send_message_result_integer (item, Hdm_insert_item, to_wparam (insert_after_item_no), hd_item.item)
+			i_result := {WEL_API}.send_message_result_integer (item, Hdm_insert_item, to_wparam (insert_after_item_no), hd_item.item)
 			check
 				successfull: i_result /= -1
 			end
 		ensure
-			item_count_increased: item_count = old item_count + 1			
+			item_count_increased: item_count = old item_count + 1
 		end
-		
+
 	delete_header_item (index: INTEGER) is
 			-- delete item from header control at index `index'
 		require
@@ -196,16 +196,16 @@ feature -- Element change
 		local
 			i_result: INTEGER
 		do
-			i_result := cwin_send_message_result_integer (item, Hdm_delete_item, to_wparam (index), to_lparam (0)) 
+			i_result := {WEL_API}.send_message_result_integer (item, Hdm_delete_item, to_wparam (index), to_lparam (0))
 			check
 				successfull: i_result /= -1
 			end
 		ensure
-			item_count_decreased: item_count = old item_count - 1			
+			item_count_decreased: item_count = old item_count - 1
 		end
-		
+
 	set_header_item (index: INTEGER; hd_item: WEL_HD_ITEM) is
-			-- This windows message sets the attributes of the specified item in a header control. 
+			-- This windows message sets the attributes of the specified item in a header control.
 		require
 			exists: exists
 			hd_item_exists: hd_item /= Void and then hd_item.exists
@@ -213,7 +213,7 @@ feature -- Element change
 		local
 			i_result: INTEGER
 		do
-			i_result := cwin_send_message_result_integer (item, Hdm_set_item, to_wparam (index), hd_item.item)
+			i_result := {WEL_API}.send_message_result_integer (item, Hdm_set_item, to_wparam (index), hd_item.item)
 			check
 				successfull: i_result /= 0
 			end
@@ -221,7 +221,7 @@ feature -- Element change
 
 	retrieve_and_set_windows_pos (parent_client_rect: WEL_RECT) is
 			-- Asks the OS for the window position and size,
-			-- given the parents client area is `parent_client_rect' 
+			-- given the parents client area is `parent_client_rect'
 		require
 			exists: exists
 			rect_exists: parent_client_rect /= Void and then parent_client_rect.exists
@@ -254,25 +254,25 @@ feature -- Element change
 										last_retrieved_window_pos.width, last_retrieved_window_pos.height,
 										a_window_style)
 		end
-		
+
 	set_image_list (image_list: WEL_IMAGE_LIST) is
 			-- Associate `image_list' with `Current'.
 			-- If `image_list' is `Void', removes the currently associated
 			-- image list (if any).
 		do
 			if image_list = Void then
-				cwin_send_message (item, hdm_set_image_list, to_wparam (0), to_lparam (0))
+				{WEL_API}.send_message (item, hdm_set_image_list, to_wparam (0), to_lparam (0))
 			else
-				cwin_send_message (item, hdm_set_image_list, to_wparam (0), image_list.item)
+				{WEL_API}.send_message (item, hdm_set_image_list, to_wparam (0), image_list.item)
 			end
 		end
 
 feature -- Notifications
 
 	on_hdn_begin_track (info: WEL_HD_NOTIFY) is
-			-- The user has begun dragging a divider in the control 
-			-- (that is, the user has pressed the left mouse button while 
-			-- the mouse cursor is on a divider in the header control). 
+			-- The user has begun dragging a divider in the control
+			-- (that is, the user has pressed the left mouse button while
+			-- the mouse cursor is on a divider in the header control).
 		require
 			exists: exists
 			info_exists: info /= Void and then info.exists
@@ -280,7 +280,7 @@ feature -- Notifications
 		end
 
 	on_hdn_track (info: WEL_HD_NOTIFY) is
-			-- The user is dragging a divider in the header control. 
+			-- The user is dragging a divider in the header control.
 		require
 			exists: exists
 			info_exists: info /= Void and then info.exists
@@ -288,7 +288,7 @@ feature -- Notifications
 		end
 
 	on_hdn_end_track (info: WEL_HD_NOTIFY) is
-			-- The user has finished dragging a divider. 
+			-- The user has finished dragging a divider.
 		require
 			exists: exists
 			info_exists: info /= Void and then info.exists
@@ -320,7 +320,7 @@ feature -- Notifications
 		end
 
 	on_hdn_item_click (info: WEL_HD_NOTIFY) is
-			-- The user clicked the control. 
+			-- The user clicked the control.
 		require
 			exists: exists
 			info_exists: info /= Void and then info.exists
@@ -328,7 +328,7 @@ feature -- Notifications
 		end
 
 	on_hdn_item_dbl_click (info: WEL_HD_NOTIFY) is
-			-- The user double-clicked the control. 
+			-- The user double-clicked the control.
 		require
 			exists: exists
 			info_exists: info /= Void and then info.exists
@@ -344,8 +344,8 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			hd_notify: WEL_HD_NOTIFY
 			code: INTEGER
 		do
-			code := notification_info.code 
-  
+			code := notification_info.code
+
 			if code = Hdn_begin_track then
 				create hd_notify.make_by_nmhdr (notification_info)
 				on_hdn_begin_track (hd_notify)
@@ -379,9 +379,9 @@ feature {NONE} -- Implementation
 	last_retrieved_window_pos: WEL_WINDOW_POS
 
 	send_layout_message (a_rect: WEL_RECT) is
-			-- This Windows message retrieves the size and position of a header control 
-			-- within a given rectangle. This message is used to determine the appropriate 
-			-- dimensions for a new header control that is to occupy the given rectangle. 
+			-- This Windows message retrieves the size and position of a header control
+			-- within a given rectangle. This message is used to determine the appropriate
+			-- dimensions for a new header control that is to occupy the given rectangle.
 			-- The resulting window position will be stored in `last_retrieved_window_pos'
 		require
 			exists: exists
@@ -392,7 +392,7 @@ feature {NONE} -- Implementation
 		do
 			create hd_layout.make
 			hd_layout.set_rectangle (a_rect)
-			i_result := cwin_send_message_result_integer (item, Hdm_layout, to_wparam (0), hd_layout.item)
+			i_result := {WEL_API}.send_message_result_integer (item, Hdm_layout, to_wparam (0), hd_layout.item)
 			check
 				successfull: i_result /= 0
 			end
@@ -410,10 +410,10 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once
-			Result := Ws_child + Ws_border + 
+			Result := Ws_child + Ws_border +
 						 Hds_Buttons + Hds_horz + Ws_visible
 		end
-		
+
 feature {NONE} -- Externals
 
 	cwin_wc_header: POINTER is

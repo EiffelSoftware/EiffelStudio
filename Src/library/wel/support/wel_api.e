@@ -26,6 +26,18 @@ feature -- Windows
 			"ChildWindowFromPoint ((HWND) $hwnd_parent, * ((POINT*) $point))"
 		end
 
+	frozen set_foreground_window (hwnd: POINTER): BOOLEAN is
+			-- The SetForegroundWindow function puts the thread that created the specified
+			-- window into the foreground and activates the window. Keyboard input is
+			-- directed to the window, and various visual cues are changed for the user.
+			-- The system assigns a slightly higher priority to the thread that created
+			-- the foreground window than it does to other threads.
+		external
+			"C inline use <windows.h>"
+		alias
+			"SetForegroundWindow ((HWND)$hwnd)"
+		end
+
 feature -- Menus
 
 	frozen set_menu (hwnd, hmenu: POINTER): INTEGER is
@@ -70,7 +82,15 @@ feature -- Menus
 
 feature -- Messages
 
-	frozen post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
+	frozen post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+			-- SDK PostMessage (with the result)
+		external
+			"C inline use <windows.h>"
+		alias
+			"PostMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
+		end
+
+	frozen post_message_result_boolean (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
 			-- SDK PostMessage (with the result)
 		external
 			"C inline use <windows.h>"
@@ -95,7 +115,7 @@ feature -- Messages
 			"RegisterWindowMessage ((LPCTSTR) $a_message_name)"
 		end
 
-	frozen send_message_result (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: POINTER): BOOLEAN is
+	frozen send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- SDK SendMessage (with the result)
 		external
 			"C inline use <windows.h>"
@@ -103,7 +123,7 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen send_message_integer_result (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: POINTER): INTEGER is
+	frozen send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER is
 			-- SDK SendMessage (with an integer result)
 		external
 			"C inline use <windows.h>"
@@ -111,26 +131,20 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-	frozen send_message (hwnd: POINTER; msg: INTEGER; wparam: INTEGER; lparam: POINTER) is
-			-- SDK SendMessage
+	frozen send_message_result_boolean (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
+			-- SDK SendMessage (with a boolean result)
 		external
 			"C inline use <windows.h>"
 		alias
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
-feature -- Windows
-
-	frozen set_foreground_window (hwnd: POINTER): BOOLEAN is
-			-- The SetForegroundWindow function puts the thread that created the specified
-			-- window into the foreground and activates the window. Keyboard input is
-			-- directed to the window, and various visual cues are changed for the user.
-			-- The system assigns a slightly higher priority to the thread that created
-			-- the foreground window than it does to other threads.
+	frozen send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
+			-- SDK SendMessage
 		external
 			"C inline use <windows.h>"
 		alias
-			"SetForegroundWindow ((HWND)$hwnd)"
+			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
 feature -- Shell

@@ -61,7 +61,7 @@ feature -- Access
 				Result := (create {WEL_SHARED_FONTS}).system_font
 			else
 				create Result.make_by_pointer (
-					cwin_send_message_result (item, Wm_getfont,
+					{WEL_API}.send_message_result (item, Wm_getfont,
 					default_pointer, default_pointer))
 			end
 		ensure
@@ -77,7 +77,7 @@ feature -- Element change
 			a_font_not_void: a_font /= Void
 			a_font_exists: a_font.exists
 		do
-			cwin_send_message (item, Wm_setfont,
+			{WEL_API}.send_message (item, Wm_setfont,
 				a_font.item,
 				cwin_make_long (1, 0))
 		ensure
@@ -91,7 +91,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Wm_getfont,
+			Result := {WEL_API}.send_message_result (item, Wm_getfont,
 				default_pointer, default_pointer) = default_pointer
 		end
 
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 		once
 			Result := "WELControlWindowClass"
 		end
-		
+
 	class_requires_icon: BOOLEAN is
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise

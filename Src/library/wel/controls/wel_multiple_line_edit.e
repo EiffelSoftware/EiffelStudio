@@ -28,7 +28,7 @@ feature -- Basic operations
 			-- scroll horizontally, `vertical' is the number
 			-- of lines to scroll vertically.
 		do
-			cwin_send_message (item, Em_linescroll, to_wparam (horizontal), to_lparam (vertical))
+			{WEL_API}.send_message (item, Em_linescroll, to_wparam (horizontal), to_lparam (vertical))
 		end
 
 feature -- Status setting
@@ -39,9 +39,9 @@ feature -- Status setting
 			-- If `scroll_caret_at_selection' is True, the
 			-- caret will be scrolled to `start_position'.
 		do
-			cwin_send_message (item, Em_setsel, to_wparam (start_position), to_lparam (end_position))
+			{WEL_API}.send_message (item, Em_setsel, to_wparam (start_position), to_lparam (end_position))
 			if scroll_caret_at_selection then
-				cwin_send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
+				{WEL_API}.send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
 			end
 		end
 
@@ -50,9 +50,9 @@ feature -- Status setting
 			-- If `scroll_caret_at_selection' is True, the
 			-- caret will be scrolled to `position'.
 		do
-			cwin_send_message (item, Em_setsel, to_wparam (position), to_lparam (position))
+			{WEL_API}.send_message (item, Em_setsel, to_wparam (position), to_lparam (position))
 			if scroll_caret_at_selection then
-				cwin_send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
+				{WEL_API}.send_message (item, Em_scrollcaret, to_wparam (0), to_lparam (0))
 			end
 		end
 
@@ -62,7 +62,7 @@ feature -- Status setting
 			exists: exists
 			rect_not_void: rect /= Void
 		do
-			cwin_send_message (item, Em_setrect, to_wparam (0), rect.item)
+			{WEL_API}.send_message (item, Em_setrect, to_wparam (0), rect.item)
 		end
 
 	set_tab_stops (tab: INTEGER) is
@@ -72,7 +72,7 @@ feature -- Status setting
 			positive_tab: tab > 0
 		do
 			fixme (once "Should not use $tab here, since it is supposed to be an array of unsigned int.")
-			cwin_send_message (item, Em_settabstops, to_wparam (1), $tab)
+			{WEL_API}.send_message (item, Em_settabstops, to_wparam (1), $tab)
 		end
 
 	set_tab_stops_array (tab: ARRAY [INTEGER]) is
@@ -86,7 +86,7 @@ feature -- Status setting
 		do
 			fixme (once "Should use a WEL_UINT_ARRAY here, since it is supposed to be an array of unsigned int.")
 			create a.make (tab)
-			cwin_send_message (item, Em_settabstops, to_wparam (tab.count), a.item)
+			{WEL_API}.send_message (item, Em_settabstops, to_wparam (tab.count), a.item)
 		end
 
 	set_default_tab_stops is
@@ -94,7 +94,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Em_settabstops, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Em_settabstops, to_wparam (0), to_lparam (0))
 		end
 
 	enable_scroll_caret_at_selection is
@@ -128,7 +128,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Em_getlinecount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
@@ -139,7 +139,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Em_lineindex, to_wparam (-1), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Em_lineindex, to_wparam (-1), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -149,7 +149,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Em_getfirstvisibleline, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Em_getfirstvisibleline, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 			result_small_enough: Result < line_count
@@ -160,7 +160,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Em_linefromchar, to_wparam (-1), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
@@ -174,7 +174,7 @@ feature -- Status report
 			i_large_enough: i >= 0
 			i_small_enough: i < line_count
 		do
-			Result := cwin_send_message_result_integer (item, Em_linelength,
+			Result := {WEL_API}.send_message_result_integer (item, Em_linelength,
  				to_wparam (line_index (i)), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
@@ -195,7 +195,7 @@ feature -- Status report
 			if nb > 0 then
 				create a_wel_string.make_empty (nb)
 				a_wel_string.set_size_in_string (nb)
-				nb := cwin_send_message_result_integer (item, Em_getline, to_wparam (i), a_wel_string.item)
+				nb := {WEL_API}.send_message_result_integer (item, Em_getline, to_wparam (i), a_wel_string.item)
 				Result := a_wel_string.substring (1, nb)
 			else
 				create Result.make (0)
@@ -214,7 +214,7 @@ feature -- Status report
 			i_large_enough: i >= 0
 			i_small_enough: i < line_count
 		do
-			Result := cwin_send_message_result_integer (item, Em_lineindex,
+			Result := {WEL_API}.send_message_result_integer (item, Em_lineindex,
 				to_wparam (i), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
@@ -227,7 +227,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Em_linefromchar, to_wparam (i), to_lparam (0))
 		ensure
 			positive_result: Result >= 0

@@ -144,7 +144,7 @@ feature -- Initialization
 			show_vertical_scroll_bar
 				-- Remove the standard upper limit on characters in
 				-- `Current'. Default is 32,767.
-			cwin_send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 		end
 
 	initialize is
@@ -284,7 +284,7 @@ feature -- Status Report
 	line_number_from_position (i: INTEGER): INTEGER is
 			-- Line containing caret position `i'.
 		do
-			Result := cwin_send_message_result_integer (wel_item, em_linefromchar,
+			Result := {WEL_API}.send_message_result_integer (wel_item, em_linefromchar,
 				to_wparam (i + 1), to_lparam (0)) + 1
 		end
 
@@ -314,7 +314,7 @@ feature -- Status Report
 				-- starting and ending character positions of the
 				-- current selection in the edit control
 		do
-			wel_sel := cwin_send_message_result (wel_item, Em_getsel, to_wparam (0), to_lparam (0))
+			wel_sel := {WEL_API}.send_message_result (wel_item, Em_getsel, to_wparam (0), to_lparam (0))
 			start_pos := cwin_hi_word (wel_sel)
 			end_pos := cwin_lo_word (wel_sel)
 			Result := wel_text.substring (start_pos.min (end_pos), end_pos.max (start_pos))
@@ -333,7 +333,7 @@ feature -- Status Settings
 			internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
 			set_default_font
 			set_text (old_text)
-			cwin_send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 			show_vertical_scroll_bar
 			if parent_imp /= Void then
 				parent_imp.notify_change (nc_minsize, Current)
@@ -350,7 +350,7 @@ feature -- Status Settings
 			internal_window_make (wel_parent, "", default_style + Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
 			set_default_font
 			set_text (old_text)
-			cwin_send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 			show_vertical_scroll_bar
 			if parent_imp /= Void then
 				parent_imp.notify_change (nc_minsize, Current)

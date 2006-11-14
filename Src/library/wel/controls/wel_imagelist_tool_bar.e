@@ -77,7 +77,7 @@ feature -- Status report
 			coordinates: WEL_POINT
 		do
 			create coordinates.make(a_x, a_y)
-			Result := cwin_send_message_result_integer (item, Tb_hittest, to_wparam (0), coordinates.item)
+			Result := {WEL_API}.send_message_result_integer (item, Tb_hittest, to_wparam (0), coordinates.item)
 		end
 
 	get_max_width: INTEGER is
@@ -122,7 +122,7 @@ feature -- Status report
 			error_code: INTEGER
 		do
 			create Result
-			error_code := cwin_send_message_result_integer (item, Tb_getmaxsize, to_wparam (0), Result.item)
+			error_code := {WEL_API}.send_message_result_integer (item, Tb_getmaxsize, to_wparam (0), Result.item)
 			check
 				no_error: error_code /= 0
 			end
@@ -133,13 +133,13 @@ feature -- Resizing
 	get_button_width: INTEGER  is
 			-- Get the width of the buttons.
 		do
-			Result := cwin_lo_word(cwin_send_message_result (item, Tb_getbuttonsize, to_wparam (0), to_lparam (0)))
+			Result := cwin_lo_word({WEL_API}.send_message_result (item, Tb_getbuttonsize, to_wparam (0), to_lparam (0)))
 		end
 
 	get_button_height: INTEGER  is
 			-- Get the height of the buttons.
 		do
-			Result := cwin_hi_word(cwin_send_message_result (item, Tb_getbuttonsize, to_wparam (0), to_lparam (0)))
+			Result := cwin_hi_word({WEL_API}.send_message_result (item, Tb_getbuttonsize, to_wparam (0), to_lparam (0)))
 		end
 
 feature -- Element change
@@ -150,16 +150,16 @@ feature -- Element change
 			-- To remove the imagelist, set `an_image_list' to Void.
 		do
 			if an_image_list = Void then
-				cwin_send_message (item, Tb_setimagelist, to_wparam (0), to_lparam (0))
+				{WEL_API}.send_message (item, Tb_setimagelist, to_wparam (0), to_lparam (0))
 			else
-				cwin_send_message (item, Tb_setimagelist, to_wparam (0), an_image_list.item)
+				{WEL_API}.send_message (item, Tb_setimagelist, to_wparam (0), an_image_list.item)
 			end
 		end
 
 	get_image_list: WEL_IMAGE_LIST is
 		do
 			create Result.make_by_pointer(
-				cwin_send_message_result (item, Tb_getimagelist, to_wparam (0), to_lparam (0)))
+				{WEL_API}.send_message_result (item, Tb_getimagelist, to_wparam (0), to_lparam (0)))
 		end
 
 	set_hot_image_list (an_image_list: WEL_IMAGE_LIST) is
@@ -168,9 +168,9 @@ feature -- Element change
 			-- To remove the imagelist, set `an_image_list' to Void.
 		do
 			if an_image_list = Void then
-				cwin_send_message (item, Tb_sethotimagelist, to_wparam (0), to_lparam (0))
+				{WEL_API}.send_message (item, Tb_sethotimagelist, to_wparam (0), to_lparam (0))
 			else
-				cwin_send_message (item, Tb_sethotimagelist, to_wparam (0), an_image_list.item)
+				{WEL_API}.send_message (item, Tb_sethotimagelist, to_wparam (0), an_image_list.item)
 			end
 		end
 

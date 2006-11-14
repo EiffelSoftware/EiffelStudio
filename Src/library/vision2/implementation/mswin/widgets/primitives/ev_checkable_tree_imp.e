@@ -11,7 +11,7 @@ indexing
 
 class
 	EV_CHECKABLE_TREE_IMP
-	
+
 inherit
 	EV_CHECKABLE_TREE_I
 		undefine
@@ -19,7 +19,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_TREE_IMP
 		redefine
 			interface,
@@ -27,12 +27,12 @@ inherit
 			process_message,
 			on_left_button_down
 		end
-	
+
 	EV_CHECKABLE_TREE_ACTION_SEQUENCES_IMP
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 				-- MSDN guildines regarding TVS_CHECKBOXES style.
 			set_style (default_style + tvs_checkboxes)
 		end
-		
+
 feature -- Status report
 
 	is_item_checked (tree_item: EV_TREE_NODE): BOOLEAN is
@@ -80,7 +80,7 @@ feature -- Status setting
 			item_imp.set_statemask (tvis_stateimagemask)
 			item_imp.set_state (cwin_index_to_state_image_mask (2))
 			original_mask := item_imp.state
-			set_tree_item (item_imp)		
+			set_tree_item (item_imp)
 			item_imp.set_mask (original_mask)
 			item_imp.set_statemask (original_state_mask)
 				-- Call the check actions if connected.
@@ -124,23 +124,23 @@ feature {EV_ANY_I} -- Implementation
 			tree_node: EV_TREE_NODE_IMP
 		do
 			message_pos := cwel_get_message_pos
-			
+
 				-- We use the original position for the press for determining the
 				-- point to respond to,
 			create pt.make (click_original_x_pos, click_original_y_pos)
 			create info.make_with_point (pt)
 				-- Send a Tvm_hittest message to determine the pointed node.
-			cwin_send_message (wel_item, Tvm_hittest, to_wparam (0), info.item)
+			{WEL_API}.send_message (wel_item, Tvm_hittest, to_wparam (0), info.item)
 				-- Check if the click was performed on the check box state icon.
 			if info.flags.is_equal (tvht_onitemstateicon) then
 					-- Retreive the tree item that was clicked.
 				tree_node ?= (all_ev_children @ info.hitem)
 					-- Post a custom message, `Um_checkable_tree_state_change' in order to respond to the
-					-- state change at the correct point in the processing. See Microsoft KB entry 261289. 
-				cwin_post_message (wel_item, Um_checkable_tree_state_change, info.hitem, to_lparam(0))
+					-- state change at the correct point in the processing. See Microsoft KB entry 261289.
+				{WEL_API}.post_message (wel_item, Um_checkable_tree_state_change, info.hitem, to_lparam(0))
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_left_button_down (keys: INTEGER; x_pos: INTEGER; y_pos: INTEGER) is
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			click_original_x_pos := x_pos
 			click_original_y_pos := y_pos
 		end
-	
+
 	click_original_x_pos, click_original_y_pos: INTEGER
 		-- Position of mouse pointer in relation to `Current' when
 		-- left button is pressed. Pressing the left button signifies the
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 		-- as this is the item whose state changes, even if the pointer is moved a few pixels
 		-- over the next item before releasing the mouse button. Without doing this, it is
 		-- not possible to correctly respond to the check box states.
-		
+
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_GETDLGCODE'.
 		local
@@ -191,8 +191,8 @@ feature {NONE} -- Implementation
 			else
 				Result := Precursor (hwnd, msg, wparam, lparam)
 			end
-		end		
-		
+		end
+
 	um_checkable_tree_state_change: INTEGER is
 			-- User defined message constant we send to windows for processing
 			-- when a state icon is clicked in `Current'.

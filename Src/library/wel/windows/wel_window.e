@@ -864,7 +864,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, wm_setredraw, to_wparam (1), default_pointer)
+			{WEL_API}.send_message (item, wm_setredraw, {WEL_DATA_TYPE}.to_wparam (1), default_pointer)
 		end
 
 	disable_redraw is
@@ -872,7 +872,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, wm_setredraw, default_pointer, default_pointer)
+			{WEL_API}.send_message (item, wm_setredraw, default_pointer, default_pointer)
 		end
 
 
@@ -1994,7 +1994,7 @@ feature {NONE} -- Removal
 						-- To ensure that the window will be destroyed, we send a
 						-- WM_CLOSE message which by default calls `DestroyWindow'
 						-- but this time it will be done in the proper thread.
-					cwin_post_message (hwnd, wm_close, l_null, l_null)
+					{WEL_API}.post_message (hwnd, wm_close, l_null, l_null)
 				end
 
 				if is_from_gc then
@@ -2047,7 +2047,7 @@ feature {NONE} -- Windows bug workaround
 					-- the WM message ourself to `item'.
 					-- Thanks to `l_diff' we are able to catch cases where a WM_SIZE message
 					-- was not sent because it did not need to.
-				cwin_post_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
+				{WEL_API}.post_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
 			end
 		end
 
@@ -2314,47 +2314,6 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND, HRGN)"
 		alias
 			"ValidateRgn"
-		end
-
-	cwin_send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
-			-- SDK SendMessage (with the result)
-		external
-			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_POINTER"
-		alias
-			"SendMessage"
-		end
-
-	cwin_send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER is
-			-- SDK SendMessage (with the result)
-		external
-			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
-		alias
-			"SendMessage"
-		end
-
-	cwin_send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
-			-- SDK SendMessage (without the result)
-		external
-			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
-		alias
-			"SendMessage"
-		end
-
-	cwin_post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
-			-- SDK PostMessage (with the result)
-		external
-			"C [macro %"wel.h%"] (HWND, UINT, %
-				%WPARAM, LPARAM): EIF_BOOLEAN"
-		alias
-			"PostMessage"
-		end
-
-	cwin_post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
-			-- SDK PostMessage (without the result)
-		external
-			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
-		alias
-			"PostMessage"
 		end
 
 	cwin_bring_window_to_top (hwnd: POINTER): BOOLEAN is

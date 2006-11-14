@@ -246,7 +246,7 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 			font_imp: EV_FONT_IMP
 			margin: INTEGER
 		do
-			margin := cwin_send_message_result_integer (wel_item, hdm_get_bitmap_margin, cwel_integer_to_pointer (0), cwel_integer_to_pointer (0))
+			margin := {WEL_API}.send_message_result_integer (wel_item, hdm_get_bitmap_margin, cwel_integer_to_pointer (0), cwel_integer_to_pointer (0))
 			l_text := header_item.text
 			if not l_text.is_empty then
 				if private_font /= Void then

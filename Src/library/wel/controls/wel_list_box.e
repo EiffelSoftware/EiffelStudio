@@ -81,7 +81,7 @@ feature -- Access
 			create Result.make (i_th_text_length (i))
 			Result.fill_blank
 			create a_wel_string.make (Result)
-			cwin_send_message (item, Lb_gettext, to_wparam (i), a_wel_string.item)
+			{WEL_API}.send_message (item, Lb_gettext, to_wparam (i), a_wel_string.item)
 			Result := a_wel_string.string
 		ensure
 			result_exists: Result /= Void
@@ -95,7 +95,7 @@ feature -- Access
 			i_large_enough: i >= 0
 			i_small_enough: i < count
 		do
-			Result := cwin_send_message_result_integer (item, Lb_gettextlen,
+			Result := {WEL_API}.send_message_result_integer (item, Lb_gettextlen,
 				to_wparam (i), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
@@ -134,7 +134,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			cwin_send_message (item, Lb_addstring, to_wparam (0), a_wel_string.item)
+			{WEL_API}.send_message (item, Lb_addstring, to_wparam (0), a_wel_string.item)
 		ensure
 			count_increased: count = old count + 1
 		end
@@ -150,7 +150,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			cwin_send_message (item, Lb_insertstring, to_wparam (index), a_wel_string.item)
+			{WEL_API}.send_message (item, Lb_insertstring, to_wparam (index), a_wel_string.item)
 		ensure
 			count_increased: count = old count + 1
 		end
@@ -162,7 +162,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Lb_deletestring, to_wparam (index), to_lparam (0))
+			{WEL_API}.send_message (item, Lb_deletestring, to_wparam (index), to_lparam (0))
 		ensure
 			count_decreased: count = old count - 1
 		end
@@ -178,7 +178,7 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (files)
-			cwin_send_message (item, Lb_dir, to_wparam (attribut), a_wel_string.item)
+			{WEL_API}.send_message (item, Lb_dir, to_wparam (attribut), a_wel_string.item)
 		end
 
 	reset_content is
@@ -186,7 +186,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Lb_resetcontent, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Lb_resetcontent, to_wparam (0), to_lparam (0))
 		ensure
 			empty: count = 0
 		end
@@ -201,7 +201,7 @@ feature -- Status setting
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Lb_settopindex, to_wparam (index), to_lparam (0))
+			{WEL_API}.send_message (item, Lb_settopindex, to_wparam (index), to_lparam (0))
 		ensure
 			index_visible: top_index <= index  
 		end
@@ -224,7 +224,7 @@ feature -- Status setting
 			exists: exists
 			positive_width: width >= 0
 		do
-			cwin_send_message (item, Lb_sethorizontalextent, to_wparam (a_width), to_lparam (0))
+			{WEL_API}.send_message (item, Lb_sethorizontalextent, to_wparam (a_width), to_lparam (0))
 		ensure
 			horizontal_extent_set: horizontal_extent = a_width
 		end
@@ -243,7 +243,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Lb_gettopindex,
+			Result := {WEL_API}.send_message_result_integer (item, Lb_gettopindex,
 				to_wparam (0), to_lparam (0))
 		ensure
 			result_large_enough: Result >= 0
@@ -257,7 +257,7 @@ feature -- Status report
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			Result := cwin_send_message_result_integer (item, Lb_getsel,
+			Result := {WEL_API}.send_message_result_integer (item, Lb_getsel,
 				to_wparam (index), to_lparam (0)) > 0
 		end
 
@@ -285,7 +285,7 @@ feature -- Status report
 			exists: exists
 			has_horizontal_scroll_bar: has_horizontal_scroll_bar
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Lb_gethorizontalextent, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
@@ -309,7 +309,7 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Lb_findstring, to_wparam (index), a_wel_string.item)
 		end
 
@@ -328,7 +328,7 @@ feature -- Basic operations
 			a_wel_string: WEL_STRING
 		do
 			create a_wel_string.make (a_string)
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Lb_findstringexact, to_wparam (index), a_wel_string.item)
 		end
 
@@ -339,7 +339,7 @@ feature -- Measurement
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Lb_getcount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0

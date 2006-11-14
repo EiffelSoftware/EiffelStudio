@@ -101,7 +101,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,Tcm_getitemcount, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item,Tcm_getitemcount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -111,7 +111,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Tcm_getrowcount, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tcm_getrowcount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -128,7 +128,7 @@ feature -- Access
 			exists: exists
 		do
 			Result := client_rect
-			cwin_send_message (item, Tcm_adjustrect, to_wparam (0), Result.item)
+			{WEL_API}.send_message (item, Tcm_adjustrect, to_wparam (0), Result.item)
 		end
 
 	label_index_rect: WEL_RECT is
@@ -136,7 +136,7 @@ feature -- Access
 			-- (excluding the tab sheet)
 		do
 			create Result.make (0, 0, 0, 0)
-			cwin_send_message (item, Tcm_getitemrect, to_wparam (current_selection), Result.item)
+			{WEL_API}.send_message (item, Tcm_getitemrect, to_wparam (current_selection), Result.item)
 		end
 
 feature -- Status report
@@ -146,7 +146,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Tcm_getcursel, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tcm_getcursel, to_wparam (0), to_lparam (0))
 		ensure
 			consistent_result: Result /= -1 implies Result >= 0 and Result < count
 		end
@@ -172,7 +172,7 @@ feature -- Status report
 			buffer.fill_blank
 			Result.set_text (buffer)
 			Result.set_cchtextmax (buffer_size)
-			cwin_send_message (item, Tcm_getitem, to_wparam (index), Result.item)
+			{WEL_API}.send_message (item, Tcm_getitem, to_wparam (index), Result.item)
 		end
 
 	background_region (invalid_rect: WEL_RECT): WEL_REGION is
@@ -214,7 +214,7 @@ feature -- Status report
 			until
 				i = a_count
 			loop
-				cwin_send_message (l_item, Tcm_getitemrect, to_wparam (i), r_addr)
+				{WEL_API}.send_message (l_item, Tcm_getitemrect, to_wparam (i), r_addr)
 				if i /= sel then
 					if is_bottom then
 						r.set_top (r.top + 2)
@@ -262,7 +262,7 @@ feature -- Status setting
 			index_small_enough: index < count
 		do
 			on_tcn_selchanging
-			cwin_send_message (item, Tcm_setcursel, to_wparam (index), to_lparam (0))
+			{WEL_API}.send_message (item, Tcm_setcursel, to_wparam (index), to_lparam (0))
 			on_tcn_selchange
 		ensure
 			current_selection_set: current_selection = index
@@ -274,7 +274,7 @@ feature -- Status setting
 			-- To use for a notebook with the tabs on the left or
 			-- the right.
 		do
-			cwin_send_message (item, wm_setfont, fnt.item, cwin_make_long (1, 0))
+			{WEL_API}.send_message (item, wm_setfont, fnt.item, cwin_make_long (1, 0))
 		end
 
 feature -- Element change
@@ -288,7 +288,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index <= count
 		do
-			cwin_send_message (item, Tcm_setitem, to_wparam (index), an_item.item)
+			{WEL_API}.send_message (item, Tcm_setitem, to_wparam (index), an_item.item)
 		end
 
 	insert_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM) is
@@ -301,7 +301,7 @@ feature -- Element change
 		local
 			window: WEL_WINDOW
 		do
-			cwin_send_message (item, Tcm_insertitem, to_wparam (index), an_item.item)
+			{WEL_API}.send_message (item, Tcm_insertitem, to_wparam (index), an_item.item)
 			window := an_item.window
 			if window /= Void and then window.exists then
 				if index = 0 then
@@ -321,7 +321,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Tcm_deleteitem, to_wparam (index), to_lparam (0))
+			{WEL_API}.send_message (item, Tcm_deleteitem, to_wparam (index), to_lparam (0))
 		ensure
 			count_decreased: count = old count - 1
 		end
@@ -331,7 +331,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tcm_deleteallitems, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Tcm_deleteallitems, to_wparam (0), to_lparam (0))
 		ensure
 			empty: count = 0
 		end
@@ -340,7 +340,7 @@ feature -- Element change
 			-- Set size of labeled index area of each tab
 			-- Width is only reset if tabs are fixed-width; height is always reset
 		do
-			cwin_send_message (item, Tcm_setitemsize, to_wparam (0), cwin_make_long (new_width, new_height))
+			{WEL_API}.send_message (item, Tcm_setitemsize, to_wparam (0), cwin_make_long (new_width, new_height))
 		end
 
 feature -- Notifications

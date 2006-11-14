@@ -46,7 +46,7 @@ feature -- Status report
 			buffer.fill_blank
 			Result.set_text (buffer)
 			Result.set_cchtextmax (buffer_size)
-			cwin_send_message (item, Cbem_getitem, to_wparam (0), Result.item)
+			{WEL_API}.send_message (item, Cbem_getitem, to_wparam (0), Result.item)
 		end
 
 	list_shown: BOOLEAN is
@@ -54,7 +54,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Cb_getdroppedstate, to_wparam (0), to_lparam (0)) = 1
 		end
 
@@ -64,7 +64,7 @@ feature -- Status report
        	local
        		handle: POINTER
        	do
-       		handle := cwin_send_message_result (item, Cbem_getimagelist, to_wparam (0), to_lparam (0))
+       		handle := {WEL_API}.send_message_result (item, Cbem_getimagelist, to_wparam (0), to_lparam (0))
        		if handle /= default_pointer then
        			create Result.make_by_pointer(handle)
        		end
@@ -81,7 +81,7 @@ feature -- Status setting
 			index_small_enough: index < count
 		do
 			an_item.set_index (index)
-			cwin_send_message (item, Cbem_setitem, to_wparam (0), an_item.item)
+			{WEL_API}.send_message (item, Cbem_setitem, to_wparam (0), an_item.item)
 		ensure
 			an_item_updated: an_item.index = index
 		end
@@ -91,7 +91,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Cb_showdropdown, to_wparam (1), to_lparam (0))
+			{WEL_API}.send_message (item, Cb_showdropdown, to_wparam (1), to_lparam (0))
 		ensure
 			list_shown: list_shown
 		end
@@ -101,7 +101,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Cb_showdropdown, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Cb_showdropdown, to_wparam (0), to_lparam (0))
 		ensure
 			list_not_shown: not list_shown
 		end
@@ -113,9 +113,9 @@ feature -- Status setting
        	do
        		-- Then, associate the image list to the combination box.
        		if an_imagelist /= Void then
-       			cwin_send_message (item, Cbem_setimagelist, to_wparam (0), an_imagelist.item)
+       			{WEL_API}.send_message (item, Cbem_setimagelist, to_wparam (0), an_imagelist.item)
        		else
-       			cwin_send_message (item, Cbem_setimagelist, to_wparam (0), to_lparam (0))
+       			{WEL_API}.send_message (item, Cbem_setimagelist, to_wparam (0), to_lparam (0))
        			-- 0 correspond to NULL.
        		end
        	end
@@ -147,7 +147,7 @@ feature -- Element change
 			index_large_enough: an_item.index >= 0
 			index_small_enough: an_item.index <= count
 		do
-			cwin_send_message (item, Cbem_insertitem, to_wparam (0), an_item.item)
+			{WEL_API}.send_message (item, Cbem_insertitem, to_wparam (0), an_item.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -159,7 +159,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			cwin_send_message (item, Cbem_deleteitem, to_wparam (index), to_lparam (0))
+			{WEL_API}.send_message (item, Cbem_deleteitem, to_wparam (index), to_lparam (0))
 		ensure
 			new_count: count = old count - 1
 		end
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Cbem_getcombocontrol, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result (item, Cbem_getcombocontrol, to_wparam (0), to_lparam (0))
 		end
 
 	class_name: STRING_32 is

@@ -209,7 +209,7 @@ feature -- Implementation
 			-- Is `Current' able to initiate transport with `a_button'.
 		do
 			Result := (mode_is_drag_and_drop and then a_button = 1 and then not is_dockable) or
-				((mode_is_pick_and_drop or mode_is_target_menu) and then a_button = 3)
+				(mode_is_pick_and_drop and then a_button = 3)
 		end
 
 	on_mouse_button_event (

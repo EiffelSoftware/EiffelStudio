@@ -13,7 +13,7 @@ deferred class
 feature {NONE} -- Initialization
 
 	make is
-			-- Create			
+			-- Create
 		do
 			create change_actions
 		end
@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 		require
 			preference_not_void: a_preference /= Void
 		do
-			set_preference (a_preference)
 			make
+			set_preference (a_preference)
 		ensure
 			has_preference: preference /= Void
 		end
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	has_widget: change_item_widget /= Void
+	has_widget: preference /= Void implies change_item_widget /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

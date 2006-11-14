@@ -38,10 +38,11 @@ feature {NONE} -- Initialization
 	make (a_preferences: like preferences; a_parent_window: like parent_window) is
 			-- New view.
 		do
+			Precursor {PREFERENCE_VIEW} (a_preferences, Current)
+
 			default_create
 			flat_sorting_info := Name_sorting_mode
 
-			Precursor {PREFERENCE_VIEW} (a_preferences, Current)
 			set_size (640, 460)
 			set_title (preferences_title)
 			create grid

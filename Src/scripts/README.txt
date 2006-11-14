@@ -12,6 +12,8 @@ and other product from EiffelSoftware open source project.
 for instance
 svn checkout https://eiffelsoftware.origo.ethz.ch/svn/es/branches/Eiffel_57 57dev
 
+Note: the whole trunk or branches is checkouted into a single folder
+
 2) go to your compilation directory
 for instance
 cd $HOME/compile

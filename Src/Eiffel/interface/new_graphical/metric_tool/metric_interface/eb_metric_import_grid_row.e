@@ -27,8 +27,9 @@ feature{NONE} -- Implementation
 			a_metric_attached: a_metric /= Void
 		do
 			metric := a_metric
-			create import_checkbox.make_with_boolean (False)
-			import_checkbox.selected_changed_actions.extend (agent on_selection_change)
+			create import_checkbox
+			import_checkbox.set_is_checked (False)
+			import_checkbox.checked_changed_actions.extend (agent on_selection_change)
 			original_name := metric.name.twin
 			create name_editable_area.make_with_text (metric.name)
 			name_editable_area.set_pixmap (metric_icon)
@@ -84,7 +85,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	import_checkbox: MA_GRID_CHECK_BOX_ITEM
+	import_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM
 			-- Checkbox to indicate `metric' is selected to be imported
 
 	name_editable_area: EV_GRID_EDITABLE_ITEM
@@ -129,7 +130,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is `metric' in Current row selected to be imported?
 		do
-			Result := import_checkbox.selected
+			Result := import_checkbox.is_checked
 		end
 
 	has_warning: BOOLEAN
@@ -275,7 +276,7 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Actions
 
-	on_selection_change (a_checkbox: MA_GRID_CHECK_BOX_ITEM) is
+	on_selection_change (a_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM) is
 			-- Action to be performed when selection status in `import_checkbox' changes
 		require
 			a_checkbox_attached: a_checkbox /= Void

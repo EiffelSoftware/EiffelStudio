@@ -278,14 +278,14 @@ feature{NONE} -- Actions
 			group_selected_actions.resume
 		end
 
-	on_selection_change (a_item: MA_GRID_CHECK_BOX_ITEM) is
+	on_selection_change (a_item: EV_GRID_CHECKABLE_LABEL_ITEM) is
 			-- Action to be performed when selection in `a_item' changes
 		local
 			l_metric: EB_METRIC
 		do
 			l_metric ?= a_item.data
 			check l_metric /= Void end
-			selection_status.force (a_item.selected, l_metric.name.as_lower)
+			selection_status.force (a_item.is_checked, l_metric.name.as_lower)
 		end
 
 	on_row_selected (a_row: EV_GRID_ROW) is
@@ -354,7 +354,7 @@ feature{NONE} -- Actions
 			l_code: INTEGER
 			l_metric: EB_METRIC
 			l_selected_rows: LIST [EV_GRID_ROW]
-			l_checkbox_item: MA_GRID_CHECK_BOX_ITEM
+			l_checkbox_item: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
 			l_code := a_key.code
 			inspect
@@ -365,7 +365,7 @@ feature{NONE} -- Actions
 					if l_selected_rows /= Void then
 						l_checkbox_item ?= l_selected_rows.first.item (1)
 						if l_checkbox_item /= Void then
-							l_checkbox_item.set_selected (not l_checkbox_item.selected)
+							l_checkbox_item.set_is_checked (not l_checkbox_item.is_checked)
 						end
 					end
 				end
@@ -734,7 +734,7 @@ feature -- Metric management
 			l_tooltip: STRING
 			l_vadility: EB_METRIC_ERROR
 			l_red: EV_COLOR
-			l_check_item: MA_GRID_CHECK_BOX_ITEM
+			l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
 			metric_name_list.extend (a_metric.name)
 			create l_grid_item.make_with_text (a_metric.name)
@@ -755,26 +755,22 @@ feature -- Metric management
 			if metric_grid.is_tree_enabled then
 				a_row.insert_subrow (a_row.subrow_count + 1)
 				l_grid_row := a_row.subrow (a_row.subrow_count)
-				metric_name_row_table.force (l_grid_row.index, a_metric.name)
-				l_grid_row.set_data (a_metric)
-				l_grid_row.set_item (metric_column_index, l_grid_item)
-				if is_selectable then
-					create l_check_item.make_with_boolean (selection_status.item (a_metric.name.as_lower))
-					l_check_item.initialize_for_tree
-					l_check_item.selected_changed_actions.extend (agent on_selection_change)
-					l_check_item.set_data (a_metric)
-					l_grid_row.set_item (1, l_check_item)
-				end
 			else
-				a_row.set_item (metric_column_index, l_grid_item)
-				a_row.set_data (a_metric)
-				metric_name_row_table.force (a_row.index, a_metric.name)
-				if is_selectable then
-					create l_check_item.make_with_boolean (selection_status.item (a_metric.name.as_lower))
-					l_check_item.selected_changed_actions.extend (agent on_selection_change)
-					l_check_item.set_data (a_metric)
-					a_row.set_item (1, l_check_item)
+				l_grid_row := a_row
+			end
+			l_grid_row.set_item (metric_column_index, l_grid_item)
+			metric_name_row_table.force (l_grid_row.index, a_metric.name)
+			l_grid_row.set_data (a_metric)
+			if is_selectable then
+				create l_check_item
+				if selection_status.item (a_metric.name.as_lower) then
+					l_check_item.set_is_checked (True)
+				else
+					l_check_item.set_is_checked (False)
 				end
+				l_check_item.checked_changed_actions.extend (agent on_selection_change)
+				l_check_item.set_data (a_metric)
+				l_grid_row.set_item (1, l_check_item)
 			end
 		end
 
@@ -895,7 +891,7 @@ feature {NONE} -- Implementation
 			l_row: EV_GRID_ROW
 			l_grid: like metric_grid
 			l_metric: EB_METRIC
-			l_check_item: MA_GRID_CHECK_BOX_ITEM
+			l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
 			from
 				i := 1
@@ -912,10 +908,10 @@ feature {NONE} -- Implementation
 					if l_metric.is_predefined = a_predefined then
 						if a_select then
 							if metric_manager.is_metric_valid (l_metric.name) or else should_invalid_metric_be_selected then
-								l_check_item.set_selected (a_select)
+								l_check_item.set_is_checked (a_select)
 							end
 						else
-							l_check_item.set_selected (a_select)
+							l_check_item.set_is_checked (a_select)
 						end
 					end
 				end

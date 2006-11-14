@@ -269,8 +269,8 @@ feature {NONE} -- Actions
 						loop
 							l_row := l_referenced_metrics.item_for_iteration
 							if l_row /= Void then
-								if not l_row.import_checkbox.selected then
-									l_row.import_checkbox.set_selected (True)
+								if not l_row.import_checkbox.is_checked then
+									l_row.import_checkbox.set_is_checked (True)
 								end
 							end
 							l_referenced_metrics.forth
@@ -314,9 +314,9 @@ feature {NONE} -- Actions
 				l_rows.after
 			loop
 				if a_select and then not l_rows.item.is_selected then
-					l_rows.item.import_checkbox.set_selected (True)
+					l_rows.item.import_checkbox.set_is_checked (True)
 				elseif not a_select and then l_rows.item.is_selected then
-					l_rows.item.import_checkbox.set_selected (False)
+					l_rows.item.import_checkbox.set_is_checked (False)
 				end
 				l_rows.forth
 			end
@@ -343,9 +343,9 @@ feature {NONE} -- Actions
 						l_row.item (3).activate
 					elseif a_key.code = {EV_KEY_CONSTANTS}.key_space then
 						if l_metric.is_selected then
-							l_metric.import_checkbox.set_selected (False)
+							l_metric.import_checkbox.set_is_checked (False)
 						else
-							l_metric.import_checkbox.set_selected (True)
+							l_metric.import_checkbox.set_is_checked (True)
 						end
 					end
 				end

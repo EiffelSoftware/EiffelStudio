@@ -134,8 +134,8 @@ feature -- Properties
 		do
 			create l_vis.make
 			create Result.make (1000)
-			if universe.target /= Void then
-				universe.target.process (l_vis)
+			if target /= Void then
+				target.process (l_vis)
 			end
 			from
 				l_classes := l_vis.classes
@@ -496,7 +496,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 				a_set.after
 			loop
 				l_class_name := a_set.key_for_iteration
-				l_classes := universe.classes_with_name (l_class_name)
+				l_classes := classes_with_name (l_class_name)
 				l_count := l_classes.count
 				if l_count > 1 then
 						-- Small workaround when a requested basic class also exists in the Universe
@@ -557,8 +557,8 @@ feature {COMPILER_EXPORTER} -- Precompilation
 		end
 
 invariant
-	new_target_in_conf_system: new_target /= Void implies new_target.system = conf_system
-	target_in_conf_system: new_target = Void implies target.system = conf_system
+	new_target_in_conf_system: (conf_system /= Void and new_target /= Void) implies new_target.system = conf_system
+	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

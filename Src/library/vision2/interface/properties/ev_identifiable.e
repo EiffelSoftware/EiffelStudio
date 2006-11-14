@@ -30,7 +30,7 @@ feature -- Access
 			-- If no specific name is set, the generating type is used.
 		do
 			if internal_name = Void then
-				Result := generating_type
+				Result := "{"+generating_type+"}"
 			else
 				Result := internal_name.twin
 			end
@@ -41,11 +41,11 @@ feature -- Access
 			-- Uses '.' as a separator.
 		do
 			if parent = Void then
-				Result := internal_name.twin
+				Result := identifier_name.twin
 			else
 				Result := parent.full_identifier_path
 				Result.append_character ('.')
-				Result.append_string (internal_name)
+				Result.append_string (identifier_name)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -64,7 +64,7 @@ feature -- Status report
 feature -- Element change
 
 	set_identifier_name (a_name: like identifier_name) is
-			-- Set `name' to `a_name'.
+			-- Set `identifier_name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
@@ -73,7 +73,7 @@ feature -- Element change
 		do
 			internal_name := a_name.twin
 		ensure
-			name_set: identifier_name.is_equal (a_name)
+			identifier_name_set: identifier_name.is_equal (a_name)
 		end
 
 feature {NONE} -- Implementation

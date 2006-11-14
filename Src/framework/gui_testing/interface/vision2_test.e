@@ -31,8 +31,11 @@ feature -- Element change
 			-- Set application under test to `an_app'.
 		require
 			an_app_not_void: an_app /= Void
+		local
+			gui_imp: GUI_IMP
 		do
-			gui.set_application_under_test (an_app)
+			gui_imp ?= gui.implementation
+			gui_imp.set_application_under_test (an_app)
 		ensure
 			ev_application_set: gui.application_under_test = an_app
 		end
@@ -52,7 +55,7 @@ feature -- Basic operations
 			from until
 				application_under_test /= Void
 			loop
-				sleep (1000000)
+				sleep (10_000_000)
 			end
 			set_application_under_test (application_under_test)
 		end
@@ -65,7 +68,7 @@ feature -- Basic operations
 			from until
 				gui.application_under_test.is_destroyed
 			loop
-				sleep (1000000)
+				sleep (10_000_000)
 			end
 		ensure
 			application_under_test_destroyed: gui.application_under_test.is_destroyed
@@ -76,7 +79,9 @@ feature -- Basic operations
 		local
 			failed: BOOLEAN
 		do
-			if not failed then
+			if failed then
+				-- TODO: show error
+			else
 				a_test.call ([])
 			end
 		rescue

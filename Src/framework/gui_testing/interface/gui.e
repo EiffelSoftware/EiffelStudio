@@ -9,18 +9,41 @@ indexing
 class
 	GUI
 
+create
+	make
+
+feature {NONE} -- Implementation
+
+	make is
+			-- Initialize object.
+		do
+			create {GUI_IMP}implementation
+		end
+
 feature -- Access
 
-	application_under_test: EV_APPLICATION
+	application_under_test: EV_APPLICATION is
 			-- Application under test
-
-	window: EV_WINDOW
-			-- Window to use for input and search for widgets
-
-	dialog: EV_DIALOG
-			-- `window' as dialog object
 		do
-			Result ?= window
+			Result := implementation.application_under_test
+		end
+
+	screen: EV_SCREEN is
+			-- Screen
+		do
+			Result := implementation.screen
+		end
+
+	active_window: EV_WINDOW is
+			-- Window to use for input and search for widgets
+		do
+			Result := implementation.active_window
+		end
+
+	active_dialog: EV_DIALOG
+			-- `active_window' as dialog object
+		do
+			Result ?= active_window
 			if Result = Void then
 				-- TODO: raise exception, provide help
 			end
@@ -28,107 +51,99 @@ feature -- Access
 
 feature -- Element change
 
-	set_application_under_test (an_app: EV_APPLICATION) is
-			-- Set `ev_application' to `an_app'.
-		require
-			an_app_not_void: an_app /= Void
-		do
-			application_under_test := an_app
-		ensure
-			application_under_test_set: application_under_test = an_app
-		end
-
-	set_window (a_window: EV_WINDOW) is
-			-- Set `window' to `a_window'.
-		do
-			window := a_window
-		end
-
 	set_active_window (a_window: EV_WINDOW) is
 			-- Set `window' to `a_window' and request focus for it.
 		require
 			a_window_not_void: a_window /= Void
+			a_window_valid: application_under_test.windows.has (a_window)
 		do
-			set_window (a_window)
-			window.show
-			window.set_focus
+			implementation.set_active_window (a_window)
+		ensure
+			active_window_set: active_window = a_window
 		end
 
-	set_window_by_title (a_title: STRING) is
-			-- Set `window' to window with title `a_title'.
+	set_active_window_by_title (a_title: STRING) is
+			-- Set `active_window' to window with title `a_title'.
 		local
-			windows: LINEAR [EV_WINDOW]
+			l_window: EV_WINDOW
+			l_windows: LINEAR [EV_WINDOW]
 		do
-			windows := application_under_test.windows
+			l_windows := application_under_test.windows
 			from
-				windows.start
-				window := Void
+				l_windows.start
+				l_window := Void
 			until
-				windows.after or window /= Void
+				l_windows.after or l_window /= Void
 			loop
 				-- TODO: regexp matching
-				if windows.item.title.is_equal (a_title) then
-					window := windows.item
+				if l_windows.item.title.is_equal (a_title) then
+					l_window := l_windows.item
 				else
-					windows.forth
+					l_windows.forth
 				end
 			end
-			if window = Void then
+			if l_window = Void then
 				-- TODO: raise exception, provide help
+			else
+				set_active_window (l_window)
 			end
 		ensure
-			window_correct: has_window_with_title (a_title) implies window /= Void
+			active_window_correct: has_window_with_title (a_title) implies active_window /= Void
 		end
 
 	set_window_by_name (a_name: STRING) is
 			-- Set `window' to window which has `a_name' as `identifier_name'.
 		local
-			windows: LINEAR [EV_WINDOW]
+			l_window: EV_WINDOW
+			l_windows: LINEAR [EV_WINDOW]
 		do
-			windows := application_under_test.windows
+			l_windows := application_under_test.windows
 			from
-				windows.start
-				window := Void
+				l_windows.start
 			until
-				windows.after or window /= Void
+				l_windows.after or l_window /= Void
 			loop
 				-- TODO: regexp matching
-				if windows.item.identifier_name.is_equal (a_name) then
-					window := windows.item
+				if l_windows.item.identifier_name.is_equal (a_name) then
+					l_window := l_windows.item
 				else
-					windows.forth
+					l_windows.forth
 				end
 			end
-			if window = Void then
+			if l_window = Void then
 				-- TODO: raise exception, provide help
+			else
+				set_active_window (l_window)
 			end
 		ensure
-			window_correct: has_window_with_name (a_name) implies window /= Void
+			active_window_correct: has_window_with_name (a_name) implies active_window /= Void
 		end
 
-	set_window_to_current_focus is
-			-- Set `window' to window which has currently the focus.
+	set_active_window_to_current_focus is
+			-- Set `active_window' to window which has currently the focus.
 		local
-			windows: LINEAR [EV_WINDOW]
+			l_window: EV_WINDOW
+			l_windows: LINEAR [EV_WINDOW]
 		do
-			windows := application_under_test.windows
+			l_windows := application_under_test.windows
 			from
-				windows.start
-				window := Void
+				l_windows.start
 			until
-				windows.after or window /= Void
+				l_windows.after or l_window /= Void
 			loop
-				if windows.item.has_focus then
-					window := windows.item
+				if l_windows.item.has_focus then
+					l_window := l_windows.item
 				else
-					windows.forth
+					l_windows.forth
 				end
 			end
-			if window = Void then
+			if l_window = Void then
 				-- TODO: raise exception, provide help
+			else
+				set_active_window (l_window)
 			end
 		ensure
-			window_correct: -- has_window_with_focus implies window /= Void
+			active_window_correct: has_window_with_focus implies active_window /= Void
 		end
 
 feature -- Status report
@@ -156,6 +171,12 @@ feature -- Status report
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
+		do
+			-- TODO
+		end
+
+	has_window_with_focus: BOOLEAN is
+			-- Does a window with focus exist in GUI?
 		do
 			-- TODO
 		end
@@ -249,15 +270,22 @@ feature -- Menu access
 			result_correct: -- has_popup_menu_with_name (a_name) implies Result /= Void
 		end
 
-feature {NONE} -- Implementation
+feature {VISION2_TEST} -- Implementation
+
+	implementation: GUI_I
+			-- Implementation of GUI interface
 
 	check_window is
 			-- Check active window.
 		do
-			if window = Void then
-				application_under_test.windows.do_all (agent (a_window: EV_WINDOW) do if a_window.has_focus then window := a_window	end end)
-			end
+--			if window = Void then
+--				application_under_test.windows.do_all (agent (a_window: EV_WINDOW) do if a_window.has_focus then window := a_window	end end)
+--			end
 		end
+
+invariant
+
+	implementation_not_void: implementation /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

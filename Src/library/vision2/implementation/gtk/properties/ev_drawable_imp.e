@@ -551,7 +551,7 @@ feature -- Drawing operations
 					y,
 					a_width,
 					a_height,
-					(a_start_angle * a_radians + 0.5).truncated_to_integer ,
+					(a_start_angle * a_radians + 0.5).truncated_to_integer,
 					(an_aperture * a_radians + 0.5).truncated_to_integer
 				)
 				update_if_needed
@@ -567,51 +567,86 @@ feature -- Drawing operations
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
 		local
 			pixmap_imp: EV_PIXMAP_IMP
-			l_src_rect, l_dest_rect, l_src_intersection_rect, l_dest_intersection_rect: EV_RECTANGLE
-			l_x, l_y, l_src_x, l_src_y, l_src_width, l_src_height: INTEGER
+--			l_src_rect, l_dest_rect, l_src_intersection_rect, l_dest_intersection_rect: EV_RECTANGLE
+--			l_adjusted_x, l_adjusted_y: INTEGER
+--			l_adjusted_x_src, l_adjusted_y_src, l_adjusted_src_width, l_adjusted_src_height: INTEGER
 		do
 			if drawable /= default_pointer then
 
-					-- Optimize source rectangle.
-				create l_dest_rect.make (0, 0, a_pixmap.width, a_pixmap.height)
-				create l_src_rect.make (x_src, y_src, src_width, src_height)
-				l_src_intersection_rect := l_src_rect.intersection (l_dest_rect)
+--					-- Find adjusted values for source rectangle.
+--				create l_dest_rect.make (0, 0, a_pixmap.width, a_pixmap.height)
+--				create l_src_rect.make (x_src, y_src, src_width, src_height)
+--				l_src_intersection_rect := l_src_rect.intersection (l_dest_rect)
+--				l_adjusted_x_src := l_src_intersection_rect.x
+--				l_adjusted_y_src := l_src_intersection_rect.y
+--				l_adjusted_src_width := l_src_intersection_rect.width
+--				l_adjusted_src_height := l_src_intersection_rect.height
+--				l_adjusted_x := x - x_src.min (0)
+--				l_adjusted_y := y - y_src.min (0)
 
-				if l_src_intersection_rect.width > 0 and then l_src_intersection_rect.height > 0 then
-					l_dest_rect.move_and_resize (0, 0, width, height)
-					l_src_rect.move_and_resize (
-						x_src,
-						y_src,
-						src_width,
-						src_height
-					)
-					l_dest_intersection_rect := l_src_rect.intersection (l_dest_rect)
-					if l_dest_intersection_rect.width > 0 and then l_dest_intersection_rect.height > 0 then
-						l_dest_rect := l_src_intersection_rect.intersection (l_dest_intersection_rect)
-						if l_dest_rect.width > 0 and then l_dest_rect.height > 0 then
-							l_x := x - x_src.min (0)
-							l_y := y - y_src.min (0)
-							l_src_x := l_src_intersection_rect.x
-							l_src_y := l_src_intersection_rect.y
-							l_src_width := l_dest_intersection_rect.width
-							l_src_height := l_dest_intersection_rect.height
+--				if l_adjusted_src_width > 0 and then l_adjusted_src_height > 0 then
+--						-- Optimize destination rectangle.
+--					l_dest_rect.move_and_resize (0, 0, width, height)
+--					l_src_rect.move_and_resize (
+--						l_adjusted_x,
+--						l_adjusted_y,
+--						l_adjusted_src_width,
+--						l_adjusted_src_height
+--					)
+--					l_dest_intersection_rect := l_src_rect.intersection (l_dest_rect)
 
-							pixmap_imp ?= a_pixmap.implementation
-							if pixmap_imp.mask /= default_pointer then
-								{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
-								{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, l_x, l_y)
-							end
-							{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (drawable, gc,
-								pixmap_imp.drawable,
-								l_src_x, l_src_y, l_x, l_y, l_src_width, l_src_height)
-							update_if_needed
-							if pixmap_imp.mask /= default_pointer then
-								{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, default_pointer)
-								{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
-							end
+--					l_adjusted_x := l_dest_intersection_rect.x
+--					l_adjusted_y := l_dest_intersection_rect.y
+--						-- If destination origin is negative then adjust the source origin to take this in to account.
+--					if l_adjusted_x < 0 then
+--						l_adjusted_x_src := l_adjusted_x_src - l_adjusted_x
+--					end
+--					if l_adjusted_y_src < 0 then
+--						l_adjusted_y_src := l_adjusted_y_src - l_adjusted_y
+--					end
+--					l_adjusted_src_width := l_dest_intersection_rect.width
+--					l_adjusted_src_height := l_dest_intersection_rect.height
+
+--					if l_dest_intersection_rect.width > 0 and then l_dest_intersection_rect.height > 0 then
+						pixmap_imp ?= a_pixmap.implementation
+--						if pixmap_imp.mask /= default_pointer then
+--							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
+--							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, l_adjusted_x - l_adjusted_x_src, l_adjusted_y - l_adjusted_y_src)
+--						end
+--						{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (
+--							drawable,
+--							gc,
+--							pixmap_imp.drawable,
+--							l_adjusted_x_src,
+--							l_adjusted_y_src,
+--							l_adjusted_x,
+--							l_adjusted_y,
+--							l_adjusted_src_width,
+--							l_adjusted_src_height
+--						)
+
+						if pixmap_imp.mask /= default_pointer then
+							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, pixmap_imp.mask)
+							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, x - x_src, y - y_src)
 						end
-					end
-				end
+						{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (
+							drawable,
+							gc,
+							pixmap_imp.drawable,
+							x_src,
+							y_src,
+							x,
+							y,
+							src_width,
+							src_height
+						)
+						update_if_needed
+						if pixmap_imp.mask /= default_pointer then
+							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_mask (gc, default_pointer)
+							{EV_GTK_EXTERNALS}.gdk_gc_set_clip_origin (gc, 0, 0)
+						end
+--					end
+--				end
 			end
 		end
 

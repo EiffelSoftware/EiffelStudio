@@ -28,9 +28,9 @@ feature -- Initialization
 			if has_selection then
 				disable_selection
 			end
-			Precursor
 			cursor := Void
 			selection_cursor := Void
+			Precursor
 		end
 
 feature -- Access

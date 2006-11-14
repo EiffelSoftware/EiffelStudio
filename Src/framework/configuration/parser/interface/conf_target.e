@@ -1242,6 +1242,48 @@ feature -- Equality
 			end
 		end
 
+	is_deep_group_equivalent (other: like Current; a_processed_libraries: SEARCH_TABLE [UUID]): BOOLEAN is
+			-- Is `other' and `Current' the same with respect to the group layout, even down into used libraries?
+			-- do not process already processed libraries and add newly processed libraries to `a_processed_libraries'.
+		require
+			a_processed_libraries: a_processed_libraries /= Void
+		local
+			l_libs, l_other_libs: HASH_TABLE [CONF_LIBRARY, STRING]
+			l_lib, l_other_lib: CONF_LIBRARY
+		do
+			Result := is_group_equivalent (other)
+				-- check if all the used library are deep group equivalent
+			if Result then
+				from
+					l_other_libs := other.libraries
+					l_libs := libraries
+						-- if we have a precompile, add this to the list of libraries
+					if precompile /= Void then
+						l_libs := l_libs.twin
+						l_libs.force (precompile, precompile.name)
+						l_other_libs := l_other_libs.twin
+						l_other_libs.force (other.precompile, other.precompile.name)
+					end
+					l_libs.start
+				until
+					not Result or else l_libs.after
+				loop
+					l_lib := l_libs.item_for_iteration
+					l_other_lib := l_other_libs.item (l_lib.name)
+					check
+						other_library_found: l_other_lib /= Void
+					end
+					if l_lib.library_target = Void then
+						Result := l_other_lib.library_target = Void
+					elseif not a_processed_libraries.has (l_lib.library_target.system.uuid) then
+						a_processed_libraries.force (l_lib.library_target.system.uuid)
+						Result := l_other_lib.library_target /= Void and then l_lib.library_target.is_deep_group_equivalent (l_other_lib.library_target, a_processed_libraries)
+					end
+					l_libs.forth
+				end
+			end
+		end
+
 feature -- Visit
 
 	process (a_visitor: CONF_VISITOR) is

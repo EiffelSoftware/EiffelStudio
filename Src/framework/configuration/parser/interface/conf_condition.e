@@ -11,14 +11,16 @@ class
 inherit
 	CONF_VALIDITY
 		redefine
-			out
+			out,
+			is_equal
 		end
 
 	KL_SHARED_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
 		undefine
-			out
+			out,
+			is_equal
 		end
 
 create
@@ -291,6 +293,16 @@ feature -- Update
 			version.force (l_vers, a_type)
 		ensure
 			version_added: version.has (a_type)
+		end
+
+feature -- Equality
+
+	is_equal (other: like Current): BOOLEAN
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+				-- we consider them equal if the textual representation is equal
+			Result := out.is_equal (other.out)
 		end
 
 feature -- Output

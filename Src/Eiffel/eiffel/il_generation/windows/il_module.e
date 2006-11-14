@@ -870,38 +870,43 @@ feature -- Code generation
 			a_class_type_not_void: a_class_type /= Void
 			positive_feature_id: a_feature_id > 0
 		local
-			entry_type_token: INTEGER
+			l_entry_type_token: INTEGER
+			l_root_creator_token: INTEGER
 			l_sig: like method_sig
 			l_type_id: INTEGER
 			l_nb_args: INTEGER
+			l_creation_type: CREATE_TYPE
 		do
 			l_type_id := a_class_type.implementation_id
 
-			entry_type_token := md_emit.define_type (
+			l_entry_type_token := md_emit.define_type (
 				create {UNI_STRING}.make ("MAIN"), {MD_TYPE_ATTRIBUTES}.Ansi_class |
 					{MD_TYPE_ATTRIBUTES}.Auto_layout | {MD_TYPE_ATTRIBUTES}.public,
 				object_type_token, Void)
 
+				-- First we create a static function which takes one argument: In our case an instance of class ANY.
+				-- This function then creates the root object and calls the creation feature.
 			l_sig := method_sig
 			l_sig.reset
 			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_sig.set_parameter_count (0)
+			l_sig.set_parameter_count (1)
 			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_eiffel_type_info_type_token)
 
-			entry_point_token := md_emit.define_method (create {UNI_STRING}.make ("Main"),
-				entry_type_token, {MD_METHOD_ATTRIBUTES}.Public |
+			l_root_creator_token := md_emit.define_method (create {UNI_STRING}.make ("create_and_call_root_object"),
+				l_entry_type_token, {MD_METHOD_ATTRIBUTES}.Public |
 				{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
 				{MD_METHOD_ATTRIBUTES}.Static, l_sig,
 				{MD_METHOD_ATTRIBUTES}.Managed)
 
 			if is_debug_info_enabled then
-				il_code_generator.define_custom_attribute (entry_point_token,
+				il_code_generator.define_custom_attribute (l_root_creator_token,
 					debugger_step_through_ctor_token, empty_ca)
-				il_code_generator.define_custom_attribute (entry_point_token,
+				il_code_generator.define_custom_attribute (l_root_creator_token,
 					debugger_hidden_ctor_token, empty_ca)
 			end
 
-			il_code_generator.start_new_body (entry_point_token)
+			il_code_generator.start_new_body (l_root_creator_token)
 
 				-- Initialize assertions for runtime in workbench mode.
 			if not System.in_final_mode or else System.keep_assertions then
@@ -913,7 +918,8 @@ feature -- Code generation
 			end
 
 				-- Create root object and call creation procedure.
-			il_code_generator.method_body.put_newobj (constructor_token (creation_type.implementation_id), 0)
+			create l_creation_type.make (system.root_type.type_i)
+			l_creation_type.generate_il
 			if creation_type.is_expanded then
 					-- Box expanded object.
 				il_code_generator.generate_metamorphose (creation_type.type)
@@ -940,8 +946,46 @@ feature -- Code generation
 				il_code_generator.method_body.put_call ({MD_OPCODES}.Call,
 					implementation_feature_token (l_type_id, a_feature_id), l_nb_args, False)
 			end
-			il_code_generator.generate_return (False)
+			il_code_generator.generate_return (false)
+			method_writer.write_current_body
 
+				-- Now create the actual static main routine.
+			l_sig.reset
+			l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (0)
+			l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+
+			entry_point_token := md_emit.define_method (create {UNI_STRING}.make ("Main"),
+				l_entry_type_token, {MD_METHOD_ATTRIBUTES}.Public |
+				{MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+				{MD_METHOD_ATTRIBUTES}.Static, l_sig,
+				{MD_METHOD_ATTRIBUTES}.Managed)
+
+			if is_debug_info_enabled then
+				il_code_generator.define_custom_attribute (entry_point_token,
+					debugger_step_through_ctor_token, empty_ca)
+				il_code_generator.define_custom_attribute (entry_point_token,
+					debugger_hidden_ctor_token, empty_ca)
+			end
+
+			il_code_generator.start_new_body (entry_point_token)
+
+				-- Initialize assertions for runtime in workbench mode.
+			if not System.in_final_mode or else System.keep_assertions then
+				il_code_generator.put_type_token (l_type_id)
+				il_code_generator.internal_generate_external_call (ise_runtime_token, 0,
+					Runtime_class_name, "assertion_initialize",
+					{SHARED_IL_CONSTANTS}.static_type, <<type_handle_class_name>>,
+					Void, False)
+			end
+
+				-- Dummy ANY object for context in case `system.root_type' is generic.
+			(create {CREATE_TYPE}.make (system.any_class.compiled_class.types.first.type)).generate_il
+
+				-- Call the routine which creates and calls creation feature on root object.
+			il_code_generator.method_body.put_static_call (	l_root_creator_token, 1, False)
+
+			il_code_generator.generate_return (False)
 			method_writer.write_current_body
 		end
 

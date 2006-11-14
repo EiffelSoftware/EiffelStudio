@@ -159,7 +159,7 @@ feature -- Visit nodes
 			-- Visit `a_target'.
 		local
 			l_libraries, l_clusters, l_overrides, l_assemblies: HASH_TABLE [CONF_GROUP, STRING]
-			l_pre: CONF_PRECOMPILE
+			l_pre, l_old_pre: CONF_PRECOMPILE
 			l_old_group: CONF_GROUP
 			l_consumer_manager: CONF_CONSUMER_MANAGER
 			l_old_assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY_INTERFACE, STRING]
@@ -202,9 +202,18 @@ feature -- Visit nodes
 				process_with_old (a_target.clusters, l_clusters)
 
 				l_pre := a_target.precompile
-				if l_pre /= Void then
+				if l_pre /= Void and then l_pre.is_enabled (state) then
 					if old_target /= Void then
-						old_group := old_target.precompile
+						l_old_pre := old_target.precompile
+						old_group := l_old_pre
+					end
+						-- did any configuration in the precompile change? => error
+					if
+						l_old_pre = Void or else not l_old_pre.is_enabled (state) or else
+						l_pre.library_target = Void or else l_old_pre.library_target = Void or else
+						not l_pre.library_target.is_deep_group_equivalent (l_old_pre.library_target, create {SEARCH_TABLE [UUID]}.make (20))
+					then
+						add_and_raise_error (create {CONF_ERROR_PRE_CHANGED}.make)
 					end
 					process_library (l_pre)
 					old_group := Void

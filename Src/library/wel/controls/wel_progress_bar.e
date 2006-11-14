@@ -48,21 +48,21 @@ feature -- Access
 	position: INTEGER is
 			-- Current position
 		do
-			Result := cwin_send_message_result_integer (item, Pbm_getpos,
+			Result := {WEL_API}.send_message_result_integer (item, Pbm_getpos,
 				to_wparam (0), to_lparam (0))
 		end
 
 	minimum: INTEGER is
 			-- Minimum position
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Pbm_getrange, to_wparam (1), to_lparam (0))
 		end
 
 	maximum: INTEGER is
 			-- Maximum position
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Pbm_getrange, to_wparam (0), to_lparam (0))
 		end
 
@@ -71,25 +71,25 @@ feature -- Element change
 	step_it is
 			-- Advance the current position by the step increment.
 		do
-			cwin_send_message (item, Pbm_stepit, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Pbm_stepit, to_wparam (0), to_lparam (0))
 		end
 
 	set_position (new_position: INTEGER) is
 			-- Set the current position with `new_position'.
 		do
-			cwin_send_message (item, Pbm_setpos, to_wparam (new_position), to_lparam (0))
+			{WEL_API}.send_message (item, Pbm_setpos, to_wparam (new_position), to_lparam (0))
 		end
 
 	set_range (min, max: INTEGER) is
 			-- Set the range with `minimum' and `maximum'.
 		do
-			cwin_send_message (item, Pbm_setrange32, to_wparam (min), to_lparam (max))
+			{WEL_API}.send_message (item, Pbm_setrange32, to_wparam (min), to_lparam (max))
 		end
 
 	set_step (step: INTEGER) is
 			-- Set the step increment with `step'.
 		do
-			cwin_send_message (item, Pbm_setstep, to_wparam (step), to_lparam (0))
+			{WEL_API}.send_message (item, Pbm_setstep, to_wparam (step), to_lparam (0))
 		end
 
 	set_delta_pos (increment: INTEGER) is
@@ -98,7 +98,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Pbm_deltapos, to_wparam (increment), to_lparam (0))
+			{WEL_API}.send_message (item, Pbm_deltapos, to_wparam (increment), to_lparam (0))
 		end
 
 feature {NONE} -- Implementation

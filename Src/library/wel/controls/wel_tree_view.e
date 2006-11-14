@@ -106,7 +106,7 @@ feature -- Access
 		local
 			handle: POINTER
 		do
-			handle := cwin_send_message_result (item, Tvm_getnextitem,
+			handle := {WEL_API}.send_message_result (item, Tvm_getnextitem,
 				to_wparam (Tvgn_parent), an_item.h_item)
 			if handle /= default_pointer then
 				create Result.make
@@ -124,7 +124,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Tvm_getcount,
+			Result := {WEL_API}.send_message_result_integer (item, Tvm_getcount,
 				to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
@@ -136,7 +136,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Tvm_getvisiblecount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
@@ -148,7 +148,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Tvm_getindent, to_wparam (0), to_lparam (0))
 		end
 
@@ -164,7 +164,7 @@ feature -- Status report
 			wel_tree_view_item.set_h_item (an_item.h_item)
 			wel_tree_view_item.set_mask (Tvif_state)
 			wel_tree_view_item.set_statemask (Tvis_selected)
-			cwin_send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
+			{WEL_API}.send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
 			Result := flag_set (wel_tree_view_item.state, Tvis_selected)
 		end
 
@@ -180,7 +180,7 @@ feature -- Status report
 			wel_tree_view_item.set_h_item (an_item.h_item)
 			wel_tree_view_item.set_mask (Tvif_state)
 			wel_tree_view_item.set_statemask (Tvis_expanded)
-			cwin_send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
+			{WEL_API}.send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
 			Result := flag_set (wel_tree_view_item.state, Tvis_expanded)
 		end
 
@@ -197,7 +197,7 @@ feature -- Status report
 			wel_tree_view_item.set_h_item (an_item.h_item)
 			wel_tree_view_item.set_mask (Tvif_state)
 			wel_tree_view_item.set_statemask (Tvis_cut)
-			cwin_send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
+			{WEL_API}.send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
 			Result := flag_set (wel_tree_view_item.state, Tvis_cut)
 		end
 
@@ -213,7 +213,7 @@ feature -- Status report
 			wel_tree_view_item.set_h_item (an_item.h_item)
 			wel_tree_view_item.set_mask (Tvif_state)
 			wel_tree_view_item.set_statemask (Tvis_bold)
-			cwin_send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
+			{WEL_API}.send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
 			Result := flag_set (wel_tree_view_item.state, Tvis_bold)
 		end
 
@@ -229,7 +229,7 @@ feature -- Status report
 			wel_tree_view_item.set_h_item (an_item.h_item)
 			wel_tree_view_item.set_mask (Tvif_state)
 			wel_tree_view_item.set_statemask (Tvis_drophilited)
-			cwin_send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
+			{WEL_API}.send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
 			Result := flag_set (wel_tree_view_item.state, Tvis_drophilited)
 		end
 
@@ -244,7 +244,7 @@ feature -- Status report
 			create wel_tree_view_item.make
 			wel_tree_view_item.set_h_item (an_item.h_item)
 			wel_tree_view_item.set_mask (Tvif_children)
-			cwin_send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
+			{WEL_API}.send_message (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item)
 			Result := wel_tree_view_item.children = 1
 		end
 
@@ -260,7 +260,7 @@ feature -- Status report
 			create wel_tree_view_item.make
 			wel_tree_view_item.set_h_item (an_item.h_item)
 			wel_tree_view_item.set_mask (tvif_handle)
-			Result := cwin_send_message_result (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item) /= default_pointer
+			Result := {WEL_API}.send_message_result (item, Tvm_getitem, to_wparam (0), wel_tree_view_item.item) /= default_pointer
 		ensure
 			mask_unchanged: an_item.mask = old an_item.mask
 		end
@@ -270,7 +270,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Tvm_getnextitem,
+			Result := {WEL_API}.send_message_result (item, Tvm_getnextitem,
 				to_wparam (Tvgn_caret), to_lparam (0)) /= default_pointer
 		end
 
@@ -282,7 +282,7 @@ feature -- Status report
 		local
 			handle: POINTER
 		do
-			handle := cwin_send_message_result (item, Tvm_getnextitem,
+			handle := {WEL_API}.send_message_result (item, Tvm_getnextitem,
 				to_wparam (Tvgn_caret), to_lparam (0))
 			create Result.make
 			Result.set_h_item (handle)
@@ -297,7 +297,7 @@ feature -- Status report
 		local
 			handle: POINTER
 		do
-			handle := cwin_send_message_result (item, Tvm_getimagelist,
+			handle := {WEL_API}.send_message_result (item, Tvm_getimagelist,
 				to_wparam (Tvsil_normal), to_lparam (0))
 			if handle /= default_pointer then
 				create Result.make_by_pointer(handle)
@@ -314,7 +314,7 @@ feature -- Status report
 		do
 			create rect.make (0, 0, 0, 0)
 			set_item_pointer_in_rect (rect.item, an_item.h_item)
-			if cwin_send_message_result_integer (item, Tvm_getitemrect, to_wparam (0), rect.item) = 1 then
+			if {WEL_API}.send_message_result_integer (item, Tvm_getitemrect, to_wparam (0), rect.item) = 1 then
 				Result := rect
 			end
 		end
@@ -329,7 +329,7 @@ feature -- Status report
 		do
 			create rect.make (0, 0, 0, 0)
 			set_item_pointer_in_rect (rect.item, an_item.h_item)
-			if cwin_send_message_result_integer (item, Tvm_getitemrect, to_wparam (1), rect.item) = 1 then
+			if {WEL_API}.send_message_result_integer (item, Tvm_getitemrect, to_wparam (1), rect.item) = 1 then
 				Result := rect
 			end
 		end
@@ -350,7 +350,7 @@ feature -- Status report
 		local
 			color_int: INTEGER
 		do
-			color_int := cwin_send_message_result_integer (item, Tvm_getbkcolor, to_wparam (0), to_lparam (0))
+			color_int := {WEL_API}.send_message_result_integer (item, Tvm_getbkcolor, to_wparam (0), to_lparam (0))
 			create Result.make_by_color (color_int)
 		end
 
@@ -359,7 +359,7 @@ feature -- Status report
 		local
 			color_int: INTEGER
 		do
-			color_int := cwin_send_message_result_integer (item, Tvm_gettextcolor, to_wparam (0), to_lparam (0))
+			color_int := {WEL_API}.send_message_result_integer (item, Tvm_gettextcolor, to_wparam (0), to_lparam (0))
 			create Result.make_by_color (color_int)
 		end
 
@@ -371,7 +371,7 @@ feature -- Status setting
 			exists: exists
 			valid_item: has_item (an_item)
 		do
-			cwin_send_message (item, Tvm_selectitem, to_wparam (Tvgn_caret), an_item.h_item)
+			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_caret), an_item.h_item)
 		ensure
 			item_selected: is_selected (an_item)
 		end
@@ -382,7 +382,7 @@ feature -- Status setting
 			exists: exists
 			valid_item: has_item (an_item)
 		do
-			cwin_send_message (item, Tvm_selectitem, to_wparam (Tvgn_caret), to_lparam (0))
+			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_caret), to_lparam (0))
 		ensure
 			item_deselected: not is_selected (an_item)
 		end
@@ -394,7 +394,7 @@ feature -- Status setting
 			is_parent: is_parent (an_item)
 			valid_item: has_item (an_item)
 		do
-			cwin_send_message (item, Tvm_expand, to_wparam (Tve_expand), an_item.h_item)
+			{WEL_API}.send_message (item, Tvm_expand, to_wparam (Tve_expand), an_item.h_item)
 		ensure
 			item_expanded: is_expanded (an_item)
 		end
@@ -406,7 +406,7 @@ feature -- Status setting
 			is_parent (an_item)
 			valid_item: has_item (an_item)
 		do
-			cwin_send_message (item, Tvm_expand, to_wparam (Tve_collapse), an_item.h_item)
+			{WEL_API}.send_message (item, Tvm_expand, to_wparam (Tve_collapse), an_item.h_item)
 		ensure
 			item_collapse: not is_expanded (an_item)
 		end
@@ -418,7 +418,7 @@ feature -- Status setting
 			exists: exists
 			valid_item: has_item (an_item)
 		do
-			cwin_send_message (item, Tvm_selectitem, to_wparam (Tvgn_firstvisible), an_item.h_item)
+			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_firstvisible), an_item.h_item)
 		end
 
 	select_drop_target (an_item: WEL_TREE_VIEW_ITEM) is
@@ -428,7 +428,7 @@ feature -- Status setting
 			exists: exists
 			valid_item: has_item (an_item)
 		do
-			cwin_send_message (item, Tvm_selectitem, to_wparam (Tvgn_drophilite), an_item.h_item)
+			{WEL_API}.send_message (item, Tvm_selectitem, to_wparam (Tvgn_drophilite), an_item.h_item)
 		end
 
 	set_indent (an_indent: INTEGER) is
@@ -436,7 +436,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tvm_setindent, to_wparam (an_indent), to_lparam (0))
+			{WEL_API}.send_message (item, Tvm_setindent, to_wparam (an_indent), to_lparam (0))
 		end
 
 	set_image_list(an_imagelist: WEL_IMAGE_LIST) is
@@ -446,9 +446,9 @@ feature -- Status setting
 		do
 				-- Then, associate the image list to the tree view.
 			if an_imagelist /= Void then
-				cwin_send_message (item, Tvm_setimagelist, to_wparam (Tvsil_normal), an_imagelist.item)
+				{WEL_API}.send_message (item, Tvm_setimagelist, to_wparam (Tvsil_normal), an_imagelist.item)
 			else
-				cwin_send_message (item, Tvm_setimagelist, to_wparam (Tvsil_normal), to_lparam (0))
+				{WEL_API}.send_message (item, Tvm_setimagelist, to_wparam (Tvsil_normal), to_lparam (0))
 			end
 		end
 
@@ -460,13 +460,13 @@ feature -- Status setting
 	set_background_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to background color.
 		do
-			cwin_send_message (item, Tvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
+			{WEL_API}.send_message (item, Tvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
 	set_text_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to color of item text.
 		do
-			cwin_send_message (item, Tvm_settextcolor, to_wparam (0), to_lparam (a_color.item))
+			{WEL_API}.send_message (item, Tvm_settextcolor, to_wparam (0), to_lparam (a_color.item))
 		end
 
 feature -- Element change
@@ -478,7 +478,7 @@ feature -- Element change
 			an_item_not_void: an_item /= Void
 			an_item_exists: an_item.exists
 		do
-			last_item := cwin_send_message_result (item, Tvm_insertitem, to_wparam (0), an_item.item)
+			last_item := {WEL_API}.send_message_result (item, Tvm_insertitem, to_wparam (0), an_item.item)
 			an_item.tree_view_item.set_h_item (last_item)
 			an_item.user_tree_view_item.set_h_item (last_item)
 		ensure
@@ -495,7 +495,7 @@ feature -- Element change
 		local
 			msg_result: POINTER
 		do
-			msg_result := cwin_send_message_result (item, Tvm_deleteitem,
+			msg_result := {WEL_API}.send_message_result (item, Tvm_deleteitem,
 				to_wparam (0), an_item.h_item)
 			check
 				item_deleted: msg_result /= default_pointer
@@ -510,7 +510,7 @@ feature -- Element change
 		local
 			msg_result: POINTER
 		do
-			msg_result := cwin_send_message_result (item, Tvm_deleteitem, to_wparam (0), Tvi_root)
+			msg_result := {WEL_API}.send_message_result (item, Tvm_deleteitem, to_wparam (0), Tvi_root)
 			check
 				items_deleted: msg_result /= default_pointer
 			end
@@ -524,7 +524,7 @@ feature -- Element change
 			valid_item: has_item (an_item)
 			has_items: count > 0
 		do
-			cwin_send_message (item, Tvm_setitem, to_wparam (0), an_item.item)
+			{WEL_API}.send_message (item, Tvm_setitem, to_wparam (0), an_item.item)
 		end
 
 feature -- Notifications
@@ -690,7 +690,7 @@ feature {WEL_NM_TREE_VIEW} -- Implementation
 			buffer.fill_blank
 			an_item.set_text (buffer)
 			an_item.set_cchtextmax (Buffer_size)
-			if cwin_send_message_result (item, Tvm_getitem, to_wparam (0), an_item.item) /= default_pointer then
+			if {WEL_API}.send_message_result (item, Tvm_getitem, to_wparam (0), an_item.item) /= default_pointer then
 				Result := an_item
 			end
 		ensure

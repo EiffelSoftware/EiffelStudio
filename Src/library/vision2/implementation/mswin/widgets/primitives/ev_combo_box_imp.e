@@ -265,7 +265,7 @@ feature -- Status report
 				-- starting and ending character positions of the
 				-- current selection in the edit control
 		do
-			wel_sel := cwin_send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0))
+			wel_sel := {WEL_API}.send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0))
 			start_pos := cwin_hi_word (wel_sel)
 			end_pos := cwin_lo_word (wel_sel)
 
@@ -279,9 +279,9 @@ feature -- Status report
 		local
 			sel_end: INTEGER
 		do
-			--Result := cwin_hi_word (cwin_send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0)))
+			--Result := cwin_hi_word ({WEL_API}.send_message_result (edit_item, Em_getsel, to_wparam (0), to_lparam (0)))
 			fixme (once "Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.")
-			cwin_send_message (edit_item, Em_getsel, to_wparam (0), $sel_end)
+			{WEL_API}.send_message (edit_item, Em_getsel, to_wparam (0), $sel_end)
 			Result := sel_end
 		end
 
@@ -353,7 +353,7 @@ feature -- Status setting
 	internal_set_caret_position (pos: INTEGER) is
 			-- Set the caret position to `pos'.
 		do
-			cwin_send_message (edit_item, Em_setsel, to_wparam (pos), to_lparam (pos))
+			{WEL_API}.send_message (edit_item, Em_setsel, to_wparam (pos), to_lparam (pos))
 		end
 
 feature -- Basic operation
@@ -361,32 +361,32 @@ feature -- Basic operation
 	deselect_all is
 			-- Unselect the currently selected text.
 		do
-			cwin_send_message (edit_item, Em_setsel, to_wparam (-1), to_lparam (0))
+			{WEL_API}.send_message (edit_item, Em_setsel, to_wparam (-1), to_lparam (0))
 		end
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			cwin_send_message (edit_item, Wm_clear, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (edit_item, Wm_clear, to_wparam (0), to_lparam (0))
 		end
 
 	cut_selection is
 			-- Cut the current selection to the clipboard.
 		do
-			cwin_send_message (edit_item, Wm_cut, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (edit_item, Wm_cut, to_wparam (0), to_lparam (0))
 		end
 
 	copy_selection is
 			-- Copy the current selection to the clipboard.
 		do
-			cwin_send_message (edit_item, Wm_copy, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (edit_item, Wm_copy, to_wparam (0), to_lparam (0))
 		end
 
 	clip_paste is
 			-- Paste the contents of the clipboard to the current
 			-- caret position.
 		do
-			cwin_send_message (edit_item, Wm_paste, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (edit_item, Wm_paste, to_wparam (0), to_lparam (0))
 		end
 
 	replace_selection (txt: STRING_GENERAL) is
@@ -400,7 +400,7 @@ feature -- Basic operation
 			wel_str: WEL_STRING
 		do
 			create wel_str.make (txt)
-			cwin_send_message (edit_item, Em_replacesel, to_wparam (0), wel_str.item)
+			{WEL_API}.send_message (edit_item, Em_replacesel, to_wparam (0), wel_str.item)
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Pixmap handling
@@ -967,14 +967,14 @@ feature {NONE} -- WEL Implementation
 	wel_selection_start: INTEGER is
 			-- Zero based index of the first character selected.
 		do
-			Result := cwin_lo_word (cwin_send_message_result (edit_item,
+			Result := cwin_lo_word ({WEL_API}.send_message_result (edit_item,
 				Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 
 	wel_selection_end: INTEGER is
 			-- Zero based index of the last character selected.
 		do
-			Result := cwin_hi_word (cwin_send_message_result (edit_item,
+			Result := cwin_hi_word ({WEL_API}.send_message_result (edit_item,
 				Em_getsel, to_wparam (0), to_lparam (0)))
 		end
 

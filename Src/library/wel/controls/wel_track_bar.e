@@ -75,7 +75,7 @@ feature -- Access
 			-- Number of scroll units per line
 			-- Used when the user use the arrow keys.
 		do
-			Result := cwin_send_message_result_integer (item, Tbm_getlinesize, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tbm_getlinesize, to_wparam (0), to_lparam (0))
 		end
 
 	page: INTEGER is
@@ -83,25 +83,25 @@ feature -- Access
 			-- Used when the user use the page-up,
 			-- page down key or click on the range.
 		do
-			Result := cwin_send_message_result_integer (item, Tbm_getpagesize, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tbm_getpagesize, to_wparam (0), to_lparam (0))
 		end
 
 	position: INTEGER is
 			-- Current position
 		do
-			Result := cwin_send_message_result_integer (item, Tbm_getpos, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tbm_getpos, to_wparam (0), to_lparam (0))
 		end
 
 	minimum: INTEGER is
 			-- Minimum position
 		do
-			Result := cwin_send_message_result_integer (item, Tbm_getrangemin, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tbm_getrangemin, to_wparam (0), to_lparam (0))
 		end
 
 	maximum: INTEGER is
 			-- Maximum position
 		do
-			Result := cwin_send_message_result_integer (item, Tbm_getrangemax, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tbm_getrangemax, to_wparam (0), to_lparam (0))
 		end
 
 	tick_mark_position (index: INTEGER): INTEGER is
@@ -110,7 +110,7 @@ feature -- Access
 			exists: exists
 			valid_index: valid_index (index)
 		do
-			Result := cwin_send_message_result_integer (item, Tbm_gettic, to_wparam (index), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tbm_gettic, to_wparam (index), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -123,7 +123,7 @@ feature -- Status report
 			exists: exists
 		do
 			Result := index >= 0 and then
-				cwin_send_message_result_integer (item, Tbm_gettic,
+				{WEL_API}.send_message_result_integer (item, Tbm_gettic,
 				to_wparam (index), to_lparam (0)) /= -1
 		end
 
@@ -132,19 +132,19 @@ feature -- Element change
 	set_line (line_magnitude: INTEGER) is
 			-- Set `line' with `line_magnitude'.
 		do
-			cwin_send_message (item, Tbm_setlinesize, to_wparam (0), to_lparam (line_magnitude))
+			{WEL_API}.send_message (item, Tbm_setlinesize, to_wparam (0), to_lparam (line_magnitude))
 		end
 
 	set_page (page_magnitude: INTEGER) is
 			-- Set `page' with `page_magnitude'.
 		do
-			cwin_send_message (item, Tbm_setpagesize, to_wparam (0), to_lparam (page_magnitude))
+			{WEL_API}.send_message (item, Tbm_setpagesize, to_wparam (0), to_lparam (page_magnitude))
 		end
 
 	set_position (new_position: INTEGER) is
 			-- Set `position' with `new_position'
 		do
-			cwin_send_message (item, Tbm_setpos, to_wparam (1), to_lparam (new_position))
+			{WEL_API}.send_message (item, Tbm_setpos, to_wparam (1), to_lparam (new_position))
 		end
 
 	set_range (a_minimum, a_maximum: INTEGER) is
@@ -153,8 +153,8 @@ feature -- Element change
 		do
 				-- We do not use `Tbm_setrange' message as this limits
 				-- our values to 2^16, instead of the full 32 bit INTEGER.
-			cwin_send_message (item, Tbm_setrangemin, to_wparam (1), to_lparam (a_minimum))
-			cwin_send_message (item, Tbm_setrangemax, to_wparam (1), to_lparam (a_maximum))
+			{WEL_API}.send_message (item, Tbm_setrangemin, to_wparam (1), to_lparam (a_minimum))
+			{WEL_API}.send_message (item, Tbm_setrangemax, to_wparam (1), to_lparam (a_maximum))
 		end
 
 	set_tick_mark (pos: INTEGER) is
@@ -164,7 +164,7 @@ feature -- Element change
 			pos_large_enough: pos > minimum
 			pos_small_enough: pos < maximum
 		do
-			cwin_send_message (item, Tbm_settic, to_wparam (0), to_lparam (pos))
+			{WEL_API}.send_message (item, Tbm_settic, to_wparam (0), to_lparam (pos))
 		end
 
 	clear_tick_marks is
@@ -172,7 +172,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tbm_cleartics, to_wparam (1), to_lparam (0))
+			{WEL_API}.send_message (item, Tbm_cleartics, to_wparam (1), to_lparam (0))
 		end
 
 feature {NONE} -- Implementation

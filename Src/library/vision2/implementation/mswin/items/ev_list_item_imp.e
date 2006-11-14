@@ -422,15 +422,15 @@ feature {NONE} -- Implementation
 					bounds_rect.set_rect (0, 0, 0, 0)
 				else
 					an_index := a_box.index_of (interface, 1)
-					a_height := {WEL_API}.send_message_integer_result (a_box.wel_item, {WEL_CB_CONSTANTS}.cb_getitemheight, 0, a_rect.item)
-					if {WEL_API}.send_message_result (a_box.wel_item, {WEL_CB_CONSTANTS}.cb_getdroppedcontrolrect, 0, a_rect.item) then
+					a_height := {WEL_API}.send_message_result_integer (a_box.wel_item, {WEL_CB_CONSTANTS}.cb_getitemheight, {WEL_DATA_TYPE}.to_wparam(0), a_rect.item)
+					if {WEL_API}.send_message_result_boolean (a_box.wel_item, {WEL_CB_CONSTANTS}.cb_getdroppedcontrolrect, {WEL_DATA_TYPE}.to_wparam(0), a_rect.item) then
 						bounds_rect.set_rect (a_rect.left, a_rect.top + (an_index * a_height), a_rect.right, a_rect.top + ((an_index + 1) * a_height))
 					else
 						bounds_rect.set_rect (0, 0, 0, 0)
 					end
 				end
 			else
-				if {WEL_API}.send_message_result (a_list.wel_item, lvm_getitemrect, parent_imp.index_of (interface, 1), a_rect.item) then
+				if {WEL_API}.send_message_result_boolean (a_list.wel_item, lvm_getitemrect, {WEL_DATA_TYPE}.to_wparam(parent_imp.index_of (interface, 1)), a_rect.item) then
 					bounds_rect.set_rect (parent.screen_x+a_rect.left, parent.screen_y+a_rect.top, parent.screen_x+a_rect.right, parent.screen_y+a_rect.bottom)
 				else
 					bounds_rect.set_rect (0, 0, 0, 0)

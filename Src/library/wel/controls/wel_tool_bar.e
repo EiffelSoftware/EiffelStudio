@@ -75,7 +75,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_size, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Wm_size, to_wparam (0), to_lparam (0))
 		end
 
 	auto_size is
@@ -87,7 +87,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_autosize, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_autosize, to_wparam (0), to_lparam (0))
 		end
 
 feature -- Status setting
@@ -97,7 +97,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_checkbutton, to_wparam (command_id),
+			{WEL_API}.send_message (item, Tb_checkbutton, to_wparam (command_id),
 				cwin_make_long (1, 0))
 		ensure
 			button_is_checked: button_checked (command_id)
@@ -108,7 +108,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_checkbutton, to_wparam (command_id), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_checkbutton, to_wparam (command_id), to_lparam (0))
 		ensure
 			button_unchecked: not button_checked (command_id)
 		end
@@ -118,7 +118,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_enablebutton, to_wparam (command_id),
+			{WEL_API}.send_message (item, Tb_enablebutton, to_wparam (command_id),
 				cwin_make_long (1, 0))
 		ensure
 			button_enabled: button_enabled (command_id)
@@ -129,7 +129,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_enablebutton, to_wparam (command_id), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_enablebutton, to_wparam (command_id), to_lparam (0))
 		ensure
 			button_disabled: not button_enabled (command_id)
 		end
@@ -139,7 +139,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_hidebutton, to_wparam (command_id), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_hidebutton, to_wparam (command_id), to_lparam (0))
 		ensure
 			button_shown: not button_hidden (command_id)
 		end
@@ -149,7 +149,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_hidebutton, to_wparam (command_id),
+			{WEL_API}.send_message (item, Tb_hidebutton, to_wparam (command_id),
 				cwin_make_long (1, 0))
 		ensure
 			button_hidden: button_hidden (command_id)
@@ -161,7 +161,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_indeterminate, to_wparam (command_id),
+			{WEL_API}.send_message (item, Tb_indeterminate, to_wparam (command_id),
 				cwin_make_long (1, 0))
 		ensure
 			button_indeterminate: button_indeterminate (command_id)
@@ -173,7 +173,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_indeterminate, to_wparam (command_id), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_indeterminate, to_wparam (command_id), to_lparam (0))
 		ensure
 			button_not_indeterminate:
 				not button_indeterminate (command_id)
@@ -184,7 +184,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_pressbutton, to_wparam (command_id),
+			{WEL_API}.send_message (item, Tb_pressbutton, to_wparam (command_id),
 				cwin_make_long (1, 0))
 		ensure
 			button_pressed: button_pressed (command_id)
@@ -195,7 +195,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_pressbutton, to_wparam (command_id), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_pressbutton, to_wparam (command_id), to_lparam (0))
 		ensure
 			button_not_pressed: not button_pressed (command_id)
 		end
@@ -213,7 +213,7 @@ feature -- Status setting
 			positive_height: a_height >= 0
 			no_bitmap_present: not has_bitmap
 		do
-			cwin_send_message (item, Tb_setbitmapsize, to_wparam (0), cwin_make_long (a_width, a_height))
+			{WEL_API}.send_message (item, Tb_setbitmapsize, to_wparam (0), cwin_make_long (a_width, a_height))
 		end
 
 	set_button_size (a_width, a_height: INTEGER) is
@@ -229,7 +229,7 @@ feature -- Status setting
 			positive_height: a_height >= 0
 			no_existing_buttons: button_count = 0
 		do
-			cwin_send_message (item, Tb_setbuttonsize, to_wparam (0),
+			{WEL_API}.send_message (item, Tb_setbuttonsize, to_wparam (0),
 				cwin_make_long (a_width, a_height))
 		end
 
@@ -241,7 +241,7 @@ feature -- Status setting
 			index_large_enough: index >= 0
 			index_small_enough: index < button_count
 		do
-			cwin_send_message (item, Tb_setcmdid, to_wparam (index), to_lparam (an_id))
+			{WEL_API}.send_message (item, Tb_setcmdid, to_wparam (index), to_lparam (an_id))
 		end
 
 	set_tooltip (a_tooltip: WEL_TOOLTIP) is
@@ -251,7 +251,7 @@ feature -- Status setting
 			a_tooltip_not_void: a_tooltip /= Void
 			a_tooltip_exists: a_tooltip.exists
 		do
-			cwin_send_message (item, Tb_settooltips, a_tooltip.item, to_lparam (0))
+			{WEL_API}.send_message (item, Tb_settooltips, a_tooltip.item, to_lparam (0))
 		ensure
 			tooltip_exists: tooltip_exists
 			tooltip_set: tooltip = a_tooltip
@@ -268,7 +268,7 @@ feature -- Status setting
 			l_result_rect: WEL_RECT
 		do
 			create l_result_rect.make (0, 0, 0, 0)
-			cwin_send_message (item, {WEL_TB_CONSTANTS}.tb_setrows, makew_param (a_row_count, 1), l_result_rect.item)
+			{WEL_API}.send_message (item, {WEL_TB_CONSTANTS}.tb_setrows, makew_param (a_row_count, 1), l_result_rect.item)
 		end
 
 	enable_hot_item (command_id: INTEGER) is
@@ -276,7 +276,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_sethotitem, to_wparam (command_id), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_sethotitem, to_wparam (command_id), to_lparam (0))
 		end
 
 	disable_hot_item is
@@ -284,7 +284,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_sethotitem, to_wparam (-1), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_sethotitem, to_wparam (-1), to_lparam (0))
 		end
 
 feature -- Status report
@@ -297,7 +297,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
+			Result := {WEL_API}.send_message_result (item,
 				Tb_gettooltips, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
@@ -306,7 +306,7 @@ feature -- Status report
 		require
 			tooltip_exists: tooltip_exists
 		do
-			Result ?= window_of_item (cwin_send_message_result (item, Tb_gettooltips,
+			Result ?= window_of_item ({WEL_API}.send_message_result (item, Tb_gettooltips,
 				to_wparam (0), to_lparam (0)))
 		end
 
@@ -315,7 +315,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
+			Result := {WEL_API}.send_message_result (item,
 				Tb_isbuttonhidden, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		end
 
@@ -325,7 +325,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
+			Result := {WEL_API}.send_message_result (item,
 				Tb_isbuttonindeterminate, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		ensure
 		end
@@ -335,7 +335,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
+			Result := {WEL_API}.send_message_result (item,
 				Tb_isbuttonpressed, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		end
 
@@ -344,7 +344,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
+			Result := {WEL_API}.send_message_result (item,
 				Tb_isbuttonchecked, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		end
 
@@ -353,7 +353,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
+			Result := {WEL_API}.send_message_result (item,
 				Tb_isbuttonenabled, to_wparam (command_id), to_lparam (0)) /= default_pointer
 		end
 
@@ -365,7 +365,7 @@ feature -- Status report
 			index_small_enough: index < button_count
 		do
 			create Result.make (0, 0, 0, 0)
-			cwin_send_message (item, Tb_getitemrect, to_wparam (index), Result.item)
+			{WEL_API}.send_message (item, Tb_getitemrect, to_wparam (index), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -378,7 +378,7 @@ feature -- Status report
 			index_small_enough: index < button_count
 		do
 			create Result.make
-			cwin_send_message (item, Tb_getbutton, to_wparam (index), Result.item)
+			{WEL_API}.send_message (item, Tb_getbutton, to_wparam (index), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -388,7 +388,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, Tb_buttoncount, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Tb_buttoncount, to_wparam (0), to_lparam (0))
 		ensure
 			positive_result: Result >= 0
 		end
@@ -410,7 +410,7 @@ feature -- Element change
 			index_large_enough: index >= 0
 			index_small_enough: index <= button_count
 		do
-			cwin_send_message (item, Tb_insertbutton, to_wparam (index), button.item)
+			{WEL_API}.send_message (item, Tb_insertbutton, to_wparam (index), button.item)
 		ensure
 			buttons_increased: button_count = old button_count + 1
 		end
@@ -444,7 +444,7 @@ feature -- Element change
 			bitmap_not_void: tb_bitmap /= Void
 			positive_bitmap_count: bitmap_count > 0
 		do
-			last_bitmap_index := cwin_send_message_result_integer (item, Tb_addbitmap,
+			last_bitmap_index := {WEL_API}.send_message_result_integer (item, Tb_addbitmap,
 				to_wparam (bitmap_count), tb_bitmap.item)
 			has_bitmap := True
 		end
@@ -472,7 +472,7 @@ feature -- Element change
 			end
 			s.append_character ('%/0/')
 			create wel_s.make (s)
-			last_string_index := cwin_send_message_result_integer (item, Tb_addstring,
+			last_string_index := {WEL_API}.send_message_result_integer (item, Tb_addstring,
 				to_wparam (0), wel_s.item)
 		end
 
@@ -485,7 +485,7 @@ feature -- Removal
 			index_large_enough: index >= 0
 			index_small_enough: index < button_count
 		do
-			cwin_send_message (item, Tb_deletebutton, to_wparam (index), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_deletebutton, to_wparam (index), to_lparam (0))
 		ensure
 			buttons_decreased: button_count = old button_count - 1
 		end
@@ -637,7 +637,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Tb_buttonstructsize, to_wparam (c_size_of_tbbutton), to_lparam (0))
+			{WEL_API}.send_message (item, Tb_buttonstructsize, to_wparam (c_size_of_tbbutton), to_lparam (0))
 		end
 
 feature {NONE} -- Externals

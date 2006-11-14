@@ -65,7 +65,7 @@ feature {NONE} -- WEL Implementation
 					-- Set resource string id.
 				create tt1.make_by_nmhdr (info)
 					-- We retrieve a pointer to the tooltip for `toolbar'
-				int := cwin_send_message_result (
+				int := {WEL_API}.send_message_result (
 					toolbar.wel_item, tb_gettooltips, to_wparam (0), to_lparam (0))
 					-- We create `tooltip' from retrieved pointer.	
 				create tooltip.make_by_pointer (int)

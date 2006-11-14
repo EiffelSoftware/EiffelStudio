@@ -53,7 +53,7 @@ feature -- Access
 	position: INTEGER is
 			-- Current position
 		do
-			Result := cwin_send_message_result_integer (item, Udm_getpos32, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result_integer (item, Udm_getpos32, to_wparam (0), to_lparam (0))
 		end
 
 	minimum: INTEGER is
@@ -62,7 +62,7 @@ feature -- Access
 			lower: INTEGER
 		do
 			fixme (once "lower should be an INTEGER_32")
-			cwin_send_message (item, Udm_getrange32, $lower, to_lparam (0))
+			{WEL_API}.send_message (item, Udm_getrange32, $lower, to_lparam (0))
 			Result := lower
 		end
 
@@ -72,7 +72,7 @@ feature -- Access
 			upper: INTEGER
 		do
 			fixme (once "upper should be an INTEGER_32")
-			cwin_send_message (item, Udm_getrange32, to_wparam (0), $upper)
+			{WEL_API}.send_message (item, Udm_getrange32, to_wparam (0), $upper)
 			Result := upper
 		end
 
@@ -82,7 +82,7 @@ feature -- Access
 			exists: exists
 		do
 			Result := window_of_item (
-				cwin_send_message_result (item, Udm_getbuddy, to_wparam (0), to_lparam (0)))
+				{WEL_API}.send_message_result (item, Udm_getbuddy, to_wparam (0), to_lparam (0)))
 		end
 
 feature -- Element change
@@ -90,7 +90,7 @@ feature -- Element change
 	set_position (a_position: INTEGER) is
 			-- Set `position' with `new_position'.
 		do
-			cwin_send_message (item, udm_setpos32, to_wparam (0),
+			{WEL_API}.send_message (item, udm_setpos32, to_wparam (0),
 				to_lparam (a_position))
 		end
 
@@ -98,7 +98,7 @@ feature -- Element change
 			-- Set `minimum' and `maximum' with `a_minimum' and
 			-- `a_maximum'.
 		do
-			cwin_send_message (item, Udm_setrange32, to_wparam (a_minimum),
+			{WEL_API}.send_message (item, Udm_setrange32, to_wparam (a_minimum),
 				to_lparam (a_maximum))
 		end
 
@@ -109,7 +109,7 @@ feature -- Element change
 			a_window_not_void: a_window /= Void
 			a_window_exists: a_window.exists
 		do
-			cwin_send_message (item, Udm_setbuddy,
+			{WEL_API}.send_message (item, Udm_setbuddy,
 				a_window.item, to_lparam (0))
 		ensure
 			window_set: buddy_window = a_window
@@ -122,7 +122,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Udm_setbase, to_wparam (10), to_lparam (0))
+			{WEL_API}.send_message (item, Udm_setbase, to_wparam (10), to_lparam (0))
 		ensure
 			decimal_base: decimal_base
 		end
@@ -132,7 +132,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Udm_setbase, to_wparam (16), to_lparam (0))
+			{WEL_API}.send_message (item, Udm_setbase, to_wparam (16), to_lparam (0))
 		ensure
 			hexadecimal_base: hexadecimal_base
 		end
@@ -144,7 +144,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Udm_getbase, to_wparam (0), to_lparam (0)) = 10
 		end
 
@@ -153,7 +153,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Udm_getbase, to_wparam (0), to_lparam (0)) = 16
 		end
 

@@ -33,7 +33,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Cb_showdropdown, to_wparam (1), to_lparam (0))
+			{WEL_API}.send_message (item, Cb_showdropdown, to_wparam (1), to_lparam (0))
 		ensure
 			list_shown: list_shown
 		end
@@ -43,7 +43,7 @@ feature -- Status setting
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Cb_showdropdown, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Cb_showdropdown, to_wparam (0), to_lparam (0))
 		ensure
 			list_not_shown: not list_shown
 		end
@@ -55,7 +55,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
+			Result := {WEL_API}.send_message_result (item,
 				Cb_getdroppedstate, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 

@@ -127,7 +127,7 @@ feature -- Status report
 			coordinates: WEL_POINT
 		do
 			create coordinates.make(a_x, a_y)
-			Result := cwin_send_message_result_integer (item, Tb_hittest, to_wparam (0), coordinates.item)
+			Result := {WEL_API}.send_message_result_integer (item, Tb_hittest, to_wparam (0), coordinates.item)
 		end
 	
 	get_max_width: INTEGER is
@@ -154,7 +154,7 @@ feature -- Status report
 			error_code: POINTER
 		do
 			create Result
-			error_code := cwin_send_message_result (item, Tb_getmaxsize, to_wparam (0), Result.item)
+			error_code := {WEL_API}.send_message_result (item, Tb_getmaxsize, to_wparam (0), Result.item)
 			check
 				no_error: error_code /= default_pointer
 			end
@@ -216,7 +216,7 @@ feature -- Element change
 					-- We retrieve the bitmap from the icon.
 				a_bitmap := a_icon.get_icon_info.color_bitmap
 				create a_toolbar_bitmap.make_from_bitmap (a_bitmap)
-				last_bitmap_index := cwin_send_message_result_integer (item, Tb_addbitmap,
+				last_bitmap_index := {WEL_API}.send_message_result_integer (item, Tb_addbitmap,
 					to_wparam (1), a_toolbar_bitmap.item)
 			end
 		end
@@ -288,7 +288,7 @@ feature -- Element change
 			else
 					-- We build a "toolbar bitmap".
 				create a_toolbar_bitmap.make_from_bitmap(a_bitmap)
-				last_bitmap_index := cwin_send_message_result_integer (item, Tb_addbitmap,
+				last_bitmap_index := {WEL_API}.send_message_result_integer (item, Tb_addbitmap,
 					to_wparam (1), a_toolbar_bitmap.item)
 			end
 		end
@@ -364,7 +364,7 @@ feature -- Element change
 			else
 					-- We build a "toolbar bitmap".
 				create a_toolbar_bitmap.make_from_bitmap(a_bitmap)
-				last_bitmap_index := cwin_send_message_result_integer (item, Tb_addbitmap,
+				last_bitmap_index := {WEL_API}.send_message_result_integer (item, Tb_addbitmap,
 					to_wparam (1), a_toolbar_bitmap.item)
 			end
 		end
@@ -437,7 +437,7 @@ feature -- Resizing
 				setup_disabled_image_list(True)
 			else
 					-- Plain Win95 version
-				cwin_send_message (item, Tb_setbitmapsize, to_wparam (0), cwin_make_long (a_width, a_height))
+				{WEL_API}.send_message (item, Tb_setbitmapsize, to_wparam (0), cwin_make_long (a_width, a_height))
 			end
 		end
 
@@ -446,7 +446,7 @@ feature -- Resizing
 		require
 			function_supported: comctl32_version >= version_470
 		do
-			Result := cwin_lo_word(cwin_send_message_result (item, Tb_getbuttonsize,
+			Result := cwin_lo_word({WEL_API}.send_message_result (item, Tb_getbuttonsize,
 				to_wparam (0), to_lparam (0)))
 		end
 
@@ -455,7 +455,7 @@ feature -- Resizing
 		require
 			function_supported: comctl32_version >= version_470
 		do
-			Result := cwin_hi_word(cwin_send_message_result (item, Tb_getbuttonsize,
+			Result := cwin_hi_word({WEL_API}.send_message_result (item, Tb_getbuttonsize,
 				to_wparam (0), to_lparam (0)))
 		end
 
@@ -494,7 +494,7 @@ feature -- Obsolete
 				last_bitmap_index := default_image_list.last_position
 			else
 					-- Plain Win95 version
-				last_bitmap_index := cwin_send_message_result_integer (item, Tb_addbitmap,
+				last_bitmap_index := {WEL_API}.send_message_result_integer (item, Tb_addbitmap,
 					to_wparam (bitmap_count), tb_bitmap.item)
 			end
 		end
@@ -507,7 +507,7 @@ feature {NONE} -- Implementation
 		do
 			if (overwrite and default_image_list /= Void) or ((not overwrite) and default_image_list = Void) then
 				create default_image_list.make(bitmaps_width, bitmaps_height, Ilc_colorddb, True)
-				cwin_send_message (item, Tb_setimagelist, to_wparam (0), default_image_list.item)
+				{WEL_API}.send_message (item, Tb_setimagelist, to_wparam (0), default_image_list.item)
 			end
 		end
 
@@ -517,7 +517,7 @@ feature {NONE} -- Implementation
 		do
 			if (overwrite and disabled_image_list /= Void) or ((not overwrite) and disabled_image_list = Void) then
 				create disabled_image_list.make(bitmaps_width, bitmaps_height, Ilc_colorddb, True)
-				cwin_send_message (item, Tb_setdisabledimagelist, to_wparam (0), disabled_image_list.item)
+				{WEL_API}.send_message (item, Tb_setdisabledimagelist, to_wparam (0), disabled_image_list.item)
 			end
 		end
 
@@ -527,7 +527,7 @@ feature {NONE} -- Implementation
 		do
 			if (overwrite and hot_image_list /= Void) or ((not overwrite) and hot_image_list = Void) then
 				create hot_image_list.make(bitmaps_width, bitmaps_height, Ilc_colorddb, True)
-				cwin_send_message (item, Tb_sethotimagelist, to_wparam (0), hot_image_list.item)
+				{WEL_API}.send_message (item, Tb_sethotimagelist, to_wparam (0), hot_image_list.item)
 			end
 		end
 

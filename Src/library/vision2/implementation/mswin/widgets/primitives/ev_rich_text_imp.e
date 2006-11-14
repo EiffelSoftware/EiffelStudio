@@ -225,7 +225,7 @@ feature {NONE} -- Initialization
 			set_text_limit (2560000)
 			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
 			enable_all_notifications
-			cwin_send_message (wel_item, Em_settypographyoptions,
+			{WEL_API}.send_message (wel_item, Em_settypographyoptions,
 				to_wparam (to_advancedtypography), to_lparam (to_advancedtypography))
 
 				-- Connect events to `tab_positions' to update `Current' as values
@@ -306,7 +306,7 @@ feature -- Status report
 		do
 			create Result
 			char_imp ?= Result.implementation
-			cwin_send_message (wel_item, em_getcharformat, to_wparam (1), char_imp.item)
+			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), char_imp.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -320,7 +320,7 @@ feature -- Status report
 		do
 			create char_format
 			Result ?= char_format.implementation
-			cwin_send_message (wel_item, em_getcharformat, to_wparam (1), Result.item)
+			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), Result.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -368,7 +368,7 @@ feature -- Status report
 		do
 			create Result
 			imp ?= Result.implementation
-			cwin_send_message (wel_item, em_getparaformat, to_wparam (0), imp.item)
+			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), imp.item)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -393,7 +393,7 @@ feature -- Status report
 				set_selection (start_index, end_index - 1)
 			end
 			create wel_character_format.make
-			cwin_send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
+			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
 			mask := wel_character_format.mask
 			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset | cfm_backcolor)
 			if not range_already_selected then
@@ -412,7 +412,7 @@ feature -- Status report
 		do
 			set_selection (start_index - 1, end_index - 1)
 			create wel_character_format.make
-			cwin_send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
+			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
 			mask := wel_character_format.mask
 			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset | cfm_backcolor)
 		end
@@ -507,7 +507,7 @@ feature -- Status report
 				set_selection (start_position - 1, end_position - 1)
 			end
 			create wel_paragraph_format.make
-			cwin_send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
+			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
 			mask := wel_paragraph_format.mask
 			Result := flag_set (mask, Pfm_alignment | pfm_startindent| pfm_rightindent | pfm_spacebefore | pfm_spaceafter)
 			if not range_already_selected then
@@ -524,7 +524,7 @@ feature -- Status report
 		do
 			set_selection (start_position - 1, end_position - 1)
 			create wel_paragraph_format.make
-			cwin_send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
+			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
 			mask := wel_paragraph_format.mask
 			Result := flag_set (mask, Pfm_alignment | pfm_startindent| pfm_rightindent | pfm_spacebefore | pfm_spaceafter)
 		end
@@ -549,7 +549,7 @@ feature -- Status report
 				set_selection (start_index - 1, end_index - 1)
 			end
 			create wel_character_format.make
-			cwin_send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
+			{WEL_API}.send_message (wel_item, em_getcharformat, to_wparam (1), wel_character_format.item)
 			mask := wel_character_format.mask
 			if flag_set (mask, cfm_face) then
 				flags := flags | {EV_CHARACTER_FORMAT_CONSTANTS}.font_family
@@ -610,7 +610,7 @@ feature -- Status report
 				set_selection (start_position - 1, end_position - 1)
 			end
 			create wel_paragraph_format.make
-			cwin_send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
+			{WEL_API}.send_message (wel_item, em_getparaformat, to_wparam (0), wel_paragraph_format.item)
 
 			mask := wel_paragraph_format.mask
 			if flag_set (mask, pfm_alignment) then
@@ -1153,7 +1153,7 @@ feature -- Status setting
 			end
 
 			set_options (Ecoop_set, Eco_autovscroll + Eco_autohscroll)
-			cwin_send_message (wel_item, Em_settypographyoptions,
+			{WEL_API}.send_message (wel_item, Em_settypographyoptions,
 				to_wparam (to_advancedtypography), to_lparam (to_advancedtypography))
 			set_text_limit (2560000)
 			set_default_font
@@ -1569,7 +1569,7 @@ feature {NONE} -- Implementation
 	enable_redraw is
 			-- Ensure `Current' is redrawn as required.
 		do
-			cwin_send_message (wel_item, wm_setredraw, to_wparam (1), to_lparam (0))
+			{WEL_API}.send_message (wel_item, wm_setredraw, to_wparam (1), to_lparam (0))
 			invalidate_without_background
 		end
 

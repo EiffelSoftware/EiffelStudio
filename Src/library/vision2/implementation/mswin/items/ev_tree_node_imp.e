@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 			else
 				create a_rect.make (0, 0, 0, 0)
 				a_rect.set_left (h_item.to_integer_32)
-				if {WEL_API}.send_message_result (top_parent_imp.wel_item, {WEL_TVM_CONSTANTS}.tvm_getitemrect, 1, a_rect.item) then
+				if {WEL_API}.send_message_result_boolean (top_parent_imp.wel_item, {WEL_TVM_CONSTANTS}.tvm_getitemrect, {WEL_DATA_TYPE}.to_wparam(1), a_rect.item) then
 					bounds_rect.set_rect (parent_tree.screen_x + a_rect.left, parent_tree.screen_y + a_rect.top, parent_tree.screen_x + a_rect.right, parent_tree.screen_y + a_rect.bottom)
 				else
 					bounds_rect.set_rect (0, 0, 0, 0)

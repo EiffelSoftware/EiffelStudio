@@ -62,7 +62,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
+			Result := {WEL_API}.send_message_result (item,
 				Wm_mdigetactive, to_wparam (0), to_lparam (0)) /= default_pointer
 		end
 
@@ -72,7 +72,7 @@ feature -- Status report
 			exists: exists
 			has_active_window: has_active_window
 		do
-			Result ?= window_of_item (cwin_send_message_result (item, Wm_mdigetactive,
+			Result ?= window_of_item ({WEL_API}.send_message_result (item, Wm_mdigetactive,
 				to_wparam (0), to_lparam (0)))
 		ensure
 			result_not_void: Result /= Void
@@ -100,7 +100,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_mdiiconarrange, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Wm_mdiiconarrange, to_wparam (0), to_lparam (0))
 		end
 
 	cascade_children is
@@ -108,7 +108,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_mdicascade, to_wparam (0), to_lparam (0))
+			{WEL_API}.send_message (item, Wm_mdicascade, to_wparam (0), to_lparam (0))
 		end
 
 	tile_children_horizontal is
@@ -116,7 +116,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_mditile, to_wparam (Mditile_horizontal), to_lparam (0))
+			{WEL_API}.send_message (item, Wm_mditile, to_wparam (Mditile_horizontal), to_lparam (0))
 		end
 
 	tile_children_vertical is
@@ -124,7 +124,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_send_message (item, Wm_mditile, to_wparam (Mditile_vertical), to_lparam (0))
+			{WEL_API}.send_message (item, Wm_mditile, to_wparam (Mditile_vertical), to_lparam (0))
 		end
 
 	destroy_window (child: WEL_MDI_CHILD_WINDOW) is
@@ -134,7 +134,7 @@ feature -- Basic operations
 			child_not_void: child /= Void
 			child_exists: child.exists
 		do
-			cwin_send_message (item, Wm_mdidestroy, child.item, to_lparam (0))
+			{WEL_API}.send_message (item, Wm_mdidestroy, child.item, to_lparam (0))
 		end
 
 feature {NONE} -- Implementation

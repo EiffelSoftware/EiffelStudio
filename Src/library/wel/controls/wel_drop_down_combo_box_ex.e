@@ -71,7 +71,7 @@ feature -- Status settings
 			exists: exists
 			positive_limit: limit >= 0
 		do
-			cwin_send_message (edit_item, Em_limittext, to_wparam (limit), to_lparam (0))
+			{WEL_API}.send_message (edit_item, Em_limittext, to_wparam (limit), to_lparam (0))
 		end
 
 feature {NONE} -- Implementation
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item, Cbem_geteditcontrol, to_wparam (0), to_lparam (0))
+			Result := {WEL_API}.send_message_result (item, Cbem_geteditcontrol, to_wparam (0), to_lparam (0))
 		end
 
 	default_style: INTEGER is

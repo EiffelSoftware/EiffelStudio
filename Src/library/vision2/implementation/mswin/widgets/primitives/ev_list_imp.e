@@ -496,7 +496,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (Lvis_selected + Lvis_focused)
 			litem.set_statemask (Lvis_selected + Lvis_focused)	
-			cwin_send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
+			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
 	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
@@ -509,7 +509,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (0)
 			litem.set_statemask (Lvis_selected + Lvis_focused)	
-			cwin_send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
+			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
 	set_default_minimum_size is
@@ -601,7 +601,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
-			cwin_send_message (wel_item, Lvm_hittest, to_wparam (0), info.item)
+			{WEL_API}.send_message (wel_item, Lvm_hittest, to_wparam (0), info.item)
 			if flag_set (info.flags, Lvht_onitemlabel)
 			or flag_set (info.flags, Lvht_onitemicon)
 			then

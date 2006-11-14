@@ -61,6 +61,12 @@ feature -- Status report
 			Result := parent /= Void
 		end
 
+	has_identifier_name_set: BOOLEAN is
+			-- Is a specific identifier name set?
+		do
+			Result := internal_name /= Void
+		end
+
 feature -- Element change
 
 	set_identifier_name (a_name: like identifier_name) is

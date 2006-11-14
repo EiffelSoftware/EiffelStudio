@@ -24,7 +24,7 @@ feature -- Status setting
 			exists: exists
 			positive_limit: limit >= 0
 		do
-			cwin_send_message (item, Cb_limittext, to_wparam (limit), to_lparam (0))
+			{WEL_API}.send_message (item, Cb_limittext, to_wparam (limit), to_lparam (0))
 		end
 
 feature {NONE} -- Implementation

@@ -134,7 +134,7 @@ feature -- Element change
 				internal_bitmap.increment_reference
 			end
 			show_bitmap
-			cwin_send_message (item, Bm_setimage, to_wparam (Image_bitmap), a_bitmap.item)
+			{WEL_API}.send_message (item, Bm_setimage, to_wparam (Image_bitmap), a_bitmap.item)
 		end
 
 	set_icon (an_icon: WEL_ICON) is
@@ -152,7 +152,7 @@ feature -- Element change
 				internal_icon.increment_reference
 			end
 			show_icon
-			cwin_send_message (item, Bm_setimage, to_wparam (Image_icon), an_icon.item)
+			{WEL_API}.send_message (item, Bm_setimage, to_wparam (Image_icon), an_icon.item)
 		end
 
 	unset_bitmap, unset_icon is

@@ -540,7 +540,7 @@ feature -- Access
 		do
 			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
-			cwin_send_message (wel_item, Lvm_hittest, to_wparam (0), info.item)
+			{WEL_API}.send_message (wel_item, Lvm_hittest, to_wparam (0), info.item)
 			if flag_set (info.flags, Lvht_onitemlabel)
 			or flag_set (info.flags, Lvht_onitemicon)
 			then
@@ -616,7 +616,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			loop
 				create litem.make_with_attributes (
 					Lvif_text, an_index - 1, list.index - 1, 0, list.item)
-				cwin_send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
+				{WEL_API}.send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
 				list.forth
 			end
 				-- Now update image.
@@ -665,7 +665,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 					image_list.add_pixmap (row.internal_pixmap)
 					litem.set_image (image_list.last_position)
 				end
-			cwin_send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
+			{WEL_API}.send_message (wel_item, Lvm_setitem, to_wparam (0), litem.item)
 		end
 
 	on_item_added_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING_GENERAL; item_index: INTEGER) is
@@ -731,7 +731,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (Lvis_selected + Lvis_focused)
 			litem.set_statemask (Lvis_selected + Lvis_focused)
-			cwin_send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
+			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
 	internal_deselect (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
@@ -744,7 +744,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (0)
 			litem.set_statemask (Lvis_selected + Lvis_focused)
-			cwin_send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
+			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
 	set_default_minimum_size is

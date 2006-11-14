@@ -143,7 +143,7 @@ feature -- Access
 			handle: POINTER
 		do
 			if selected then
-				handle := cwin_send_message_result (wel_item, Tvm_getnextitem,
+				handle := {WEL_API}.send_message_result (wel_item, Tvm_getnextitem,
 					to_wparam (Tvgn_caret), to_lparam (0))
 				Result ?= (all_ev_children @ handle).interface
 			else
@@ -160,7 +160,7 @@ feature -- Access
 			handle: POINTER
 		do
 			if selected then
-				handle := cwin_send_message_result (wel_item, Tvm_getnextitem,
+				handle := {WEL_API}.send_message_result (wel_item, Tvm_getnextitem,
 					to_wparam (Tvgn_caret), to_lparam (0))
 				Result ?= all_ev_children @ handle
 			else
@@ -269,17 +269,17 @@ feature -- Basic operations
 			create Result.make (1)
 			from
 				if item_imp = Void then
-					hwnd := cwin_send_message_result (
+					hwnd := {WEL_API}.send_message_result (
 						wel_item, Tvm_getnextitem, to_wparam (Tvgn_root), to_lparam (0))
 				else
-					hwnd := cwin_send_message_result (
+					hwnd := {WEL_API}.send_message_result (
 						wel_item, Tvm_getnextitem, to_wparam (Tvgn_child), item_imp.h_item)
 				end
 			until
 				hwnd = a_default_pointer
 			loop
 				Result.extend (all_ev_children @ hwnd)
-				hwnd := cwin_send_message_result (wel_item,
+				hwnd := {WEL_API}.send_message_result (wel_item,
 					Tvm_getnextitem, to_wparam (Tvgn_next), hwnd)
 			end
 		end
@@ -294,7 +294,7 @@ feature -- Basic operations
 			check
 				tree_node_imp /= Void
 			end
-			cwin_send_message (wel_item, Tvm_ensurevisible, to_wparam (0), tree_node_imp.h_item)
+			{WEL_API}.send_message (wel_item, Tvm_ensurevisible, to_wparam (0), tree_node_imp.h_item)
 		end
 
 feature {EV_TREE_NODE_I} -- Implementation
@@ -324,7 +324,7 @@ feature {EV_TREE_NODE_I} -- Implementation
 			-- The item must have all the necessary flags and
 			-- informations to notify.
 		do
-			cwin_send_message (wel_item, Tvm_setitem, to_wparam (0), item_imp.wel_item)
+			{WEL_API}.send_message (wel_item, Tvm_setitem, to_wparam (0), item_imp.wel_item)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -367,7 +367,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
-			cwin_send_message (wel_item, Tvm_hittest, to_wparam (0), info.item)
+			{WEL_API}.send_message (wel_item, Tvm_hittest, to_wparam (0), info.item)
 			if flag_set (info.flags, Tvht_onitemlabel)
 			or flag_set (info.flags, Tvht_onitemicon)
 			then
@@ -601,7 +601,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			expand_called_manually := True
 			tree_item ?= an_item
 			if not is_expanded (tree_item) then
-				cwin_send_message (wel_item, Tvm_expand, to_wparam (Tve_expand), an_item.h_item)
+				{WEL_API}.send_message (wel_item, Tvm_expand, to_wparam (Tve_expand), an_item.h_item)
 				tree_item.interface.expand_actions.call (Void)
 			end
 			expand_called_manually := False
@@ -617,7 +617,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			expand_called_manually := True
 			tree_item ?= an_item
 			if is_expanded (tree_item) then
-				cwin_send_message (wel_item, Tvm_expand, to_wparam (Tve_collapse), an_item.h_item)
+				{WEL_API}.send_message (wel_item, Tvm_expand, to_wparam (Tve_collapse), an_item.h_item)
 				tree_item.interface.collapse_actions.call (Void)
 			end
 			expand_called_manually := False

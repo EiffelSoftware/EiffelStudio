@@ -201,7 +201,7 @@ feature {EV_ANY_I} -- Status report
 			point.set_x (point.x - screen_x)
 			point.set_y (point.y - screen_y)
 			create hit_test_info.make_with_point (point)
-			Result := cwin_send_message_result_integer (wel_item, tcm_hittest, to_wparam (0), hit_test_info.item) + 1
+			Result := {WEL_API}.send_message_result_integer (wel_item, tcm_hittest, to_wparam (0), hit_test_info.item) + 1
 		end
 
 	item_tab (an_item: EV_WIDGET): EV_NOTEBOOK_TAB is
@@ -289,7 +289,7 @@ feature {EV_ANY_I} -- Element change
 	set_font (f: EV_FONT) is
 			-- Set `font' to `f'.
 			-- When the tabs are vertical, we set back the default font
-			-- by using `cwin_send_message' (feature not implemented in WEL)
+			-- by using `{WEL_API}.send_message' (feature not implemented in WEL)
 			-- because vertical fonts doesn't work with everything.
 		do
 			private_font := f
@@ -872,7 +872,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 						-- If no image list is associated with `Current', retrieve
 						-- and associate one.
 					image_list := get_imagelist_with_size (pixmaps_width, pixmaps_height)
-					cwin_send_message (wel_item, tcm_setimagelist, to_wparam (0), image_list.item)
+					{WEL_API}.send_message (wel_item, tcm_setimagelist, to_wparam (0), image_list.item)
 				end
 				image_list.add_pixmap (a_pixmap)
 					-- Set the `iimage' to the index of the image to be used
@@ -905,7 +905,7 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 					-- Note that `get_item' is not used as this does not set the `mask' enabling
 					-- `iimage' to be returned. I did not want to change the behaviour in WEL_TAB_CONTROL_ITEM
 					-- to avoid breaking something. Julian
-				cwin_send_message (wel_item, Tcm_getitem, to_wparam (index_of (v, 1) - 1), a_wel_item.item)
+				{WEL_API}.send_message (wel_item, Tcm_getitem, to_wparam (index_of (v, 1) - 1), a_wel_item.item)
 				image_index := a_wel_item.iimage
 					-- `image_index' may be -1 in the case where a tab does not have an associated image.
 					-- If so, there is nothing to do as the returned pixmap must be `Void'.
@@ -1083,7 +1083,7 @@ feature {NONE} -- Font implementation
 					set_default_font
 				end
 			else
-				cwin_send_message (wel_item, Wm_setfont, to_wparam (0), cwin_make_long (1, 0))
+				{WEL_API}.send_message (wel_item, Wm_setfont, to_wparam (0), cwin_make_long (1, 0))
 			end
 			notify_change (nc_minsize, Current)
 		end

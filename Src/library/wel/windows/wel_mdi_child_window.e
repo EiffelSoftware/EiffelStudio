@@ -109,7 +109,7 @@ feature {NONE} -- Implementation
 			parent := a_parent
 			create mdi_cs.make (class_name, a_name)
 			mdi_cs.set_style (default_style)
-			item := cwin_send_message_result (a_parent.client_window.item,
+			item := {WEL_API}.send_message_result (a_parent.client_window.item,
 				Wm_mdicreate, to_wparam (0), mdi_cs.item)
 			if item /= default_pointer then
 				register_current_window

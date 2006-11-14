@@ -25,7 +25,7 @@ feature -- Status setting
 	select_item (index: INTEGER) is
 			-- Select item at the zero-based `index'.
 		do
-			cwin_send_message (item, Lb_setsel, to_wparam (1), to_lparam (index))
+			{WEL_API}.send_message (item, Lb_setsel, to_wparam (1), to_lparam (index))
 		end
 
 	unselect_item (index: INTEGER) is
@@ -35,7 +35,7 @@ feature -- Status setting
 			index_small_enough: index < count
 			index_large_enough: index >= 0
 		do
-			cwin_send_message (item, Lb_setsel, to_wparam (0), to_lparam (index))
+			{WEL_API}.send_message (item, Lb_setsel, to_wparam (0), to_lparam (index))
 		ensure
 			is_not_selected: not is_selected (index)
 		end
@@ -52,7 +52,7 @@ feature -- Status setting
 			end_index_large_enough: end_index >= 0
 			valid_range: end_index >= start_index
 		do
-			cwin_send_message (item, Lb_selitemrange, to_wparam (1),
+			{WEL_API}.send_message (item, Lb_selitemrange, to_wparam (1),
 				cwin_make_long (start_index, end_index))
 		ensure
 			selected: selected
@@ -72,7 +72,7 @@ feature -- Status setting
 			end_index_large_enough: end_index >= 0
 			valid_range: end_index >= start_index
 		do
-			cwin_send_message (item, Lb_selitemrange, to_wparam (0),
+			{WEL_API}.send_message (item, Lb_selitemrange, to_wparam (0),
 				cwin_make_long (start_index, end_index))
 		ensure
 			no_item_selected: not selected
@@ -112,10 +112,10 @@ feature -- Status setting
 			index_large_enough: index >= 0
 		do
 			if scrolling then
-				cwin_send_message (item, Lb_setcaretindex,
+				{WEL_API}.send_message (item, Lb_setcaretindex,
 					to_wparam (index), cwin_make_long (1, 0))
 			else
-				cwin_send_message (item, Lb_setcaretindex,
+				{WEL_API}.send_message (item, Lb_setcaretindex,
 					to_wparam (index), cwin_make_long (0, 0))
 			end
 		ensure
@@ -136,7 +136,7 @@ feature -- Status report
 			exits: exists
 		do
 			
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Lb_getselcount, to_wparam (0), to_lparam (0))
 		ensure
 			result_large_enough: Result >= 0
@@ -159,7 +159,7 @@ feature -- Status report
 				create l_result.make (Result)
 	
 					-- Retrieve the selected items.
-				items_in_buffer := cwin_send_message_result_integer (
+				items_in_buffer := {WEL_API}.send_message_result_integer (
 					item, Lb_getselitems, 
 					to_wparam (local_count_selected_items), l_result.item)
 	
@@ -203,7 +203,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item,
+			Result := {WEL_API}.send_message_result_integer (item,
 				Lb_getcaretindex, to_wparam (0), to_lparam (0))
 		end
 

@@ -36,14 +36,6 @@ feature -- Access
 			Result := cf_Chart |..| cf_Flatshort
 		end
 
-feature -- Contract support
-
-	valid_class_format (i: INTEGER): BOOLEAN is
-			-- Is `i' one of the cf_* values?
-		do
-			Result := all_class_formats.has (i)
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

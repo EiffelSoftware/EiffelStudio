@@ -91,13 +91,9 @@ feature -- Helper
 					else
 						l_name := l_cluster.parent.name
 					end
-					Result := path_representation (sep, l_name + sep, l_cluster.parent, dotdot_path)
+					Result := path_representation (sep, l_name, l_cluster.parent, dotdot_path) + sep + a_name
 				else
-					if not dotdot_path then
-						Result := a_name
-					else
-						Result := a_name
-					end
+					Result := a_name
 				end
 			elseif a_group.is_library or a_group.is_assembly or a_group.is_physical_assembly then
 				Result := a_name
@@ -187,18 +183,11 @@ feature {NONE} -- Implementation
 
 	group_sorter: DS_QUICK_SORTER [CONF_GROUP] is
 			-- Sorter of group in alphabetical order.
-		do
-			Result := internal_group_sorter
-			if Result = Void then
-				create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
-				internal_group_sorter := Result
-			end
+		once
+			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
 		ensure
 			group_sorter_not_void: Result /= Void
 		end
-
-	internal_group_sorter: like group_sorter;
-			-- Storage for `group_sorter'.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

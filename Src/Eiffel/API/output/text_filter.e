@@ -1209,15 +1209,15 @@ feature {NONE} -- Implementation
 		end
 
 	relative_to_base (rel_filename: STRING): STRING is
-		local
-			fn: EB_FILE_NAME
 		do
-			create fn.make_from_string (base_path)
-			if file_separator /= '%U' then
-				fn.set_separator (file_separator)
+			create Result.make_from_string (base_path)
+			if not base_path.is_empty then
+				Result.append_character (operating_environment.directory_separator)
 			end
-			fn.extend (rel_filename)
-			Result := fn
+			Result.append (rel_filename)
+			if file_separator /= '%U' then
+				Result.replace_substring_all (operating_environment.directory_separator.out, file_separator.out)
+			end
 		end
 
 invariant

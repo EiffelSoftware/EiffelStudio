@@ -34,9 +34,6 @@ feature -- Access
 			Result := Interface_names.m_Generate_documentation
 		end
 
-	pixmap: EV_PIXMAP
-			-- Pixmap
-
 feature -- Execution
 
 	execute is
@@ -131,4 +128,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class DOCUMENT_CMD
+end

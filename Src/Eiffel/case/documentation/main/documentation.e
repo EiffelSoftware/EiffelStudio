@@ -9,7 +9,6 @@ class
 	DOCUMENTATION
 
 inherit
-
 	SHARED_EIFFEL_PROJECT
 
 	SHARED_ERROR_HANDLER
@@ -303,7 +302,7 @@ feature -- Actions
 		require
 			root_directory /= Void
 		local
-			d: DIRECTORY
+			d: KL_DIRECTORY
 			fi: FILE_NAME
 			l_string: STRING
 		do
@@ -312,7 +311,7 @@ feature -- Actions
 			fi.extend (l_string)
 			create d.make (fi)
 			if not d.exists then
-				d.create_dir
+				d.recursive_create_directory
 			end
 		end
 
@@ -631,15 +630,15 @@ feature -- Access
 
 	relative_to_base (rel_filename: STRING): STRING is
 			-- Path of `rel_filename' relative to documentation root dir.
-		local
-			fn: EB_FILE_NAME
 		do
-			create fn.make_from_string (base_path)
-			if filter.file_separator /= '%U' then
-				fn.set_separator (filter.file_separator)
+			create Result.make_from_string (base_path)
+			if not base_path.is_empty then
+				Result.append_character (operating_environment.directory_separator)
 			end
-			fn.extend (rel_filename)
-			Result := fn
+			Result.append (rel_filename)
+			if filter.file_separator /= '%U' then
+				Result.replace_substring_all (operating_environment.directory_separator.out, filter.file_separator.out)
+			end
 		end
 
 feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access

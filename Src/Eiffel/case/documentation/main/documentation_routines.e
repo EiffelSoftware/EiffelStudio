@@ -117,6 +117,8 @@ feature -- Access
 			a_text_formatter_not_void: a_text_formatter /= Void
 		local
 			l_groups: HASH_TABLE [CONF_GROUP, STRING]
+			l_grp: CONF_GROUP
+			l_cluster: CONF_CLUSTER
 		do
 			a_text_formatter.process_filter_item (f_class_declaration, true)
 
@@ -132,7 +134,16 @@ feature -- Access
 			until
 				l_groups.after
 			loop
-				append_cluster_hierarchy_leaf (a_text_formatter, du, l_groups.item_for_iteration, 1)
+				l_grp := l_groups.item_for_iteration
+				if l_grp.is_cluster then
+					l_cluster ?= l_grp
+					check cluster: l_cluster /= Void end
+					if l_cluster.parent = Void then
+						append_cluster_hierarchy_leaf (a_text_formatter, du, l_grp, 1)
+					end
+				else
+					append_cluster_hierarchy_leaf (a_text_formatter, du, l_grp, 1)
+				end
 				l_groups.forth
 			end
 

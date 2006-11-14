@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 			any_group_format_generated := True
 			any_class_format_generated := True
 			any_feature_format_generated := True
-			create class_sorter.make (create {KL_COMPARABLE_COMPARATOR [CONF_CLASS]}.make)
-			create group_sorter.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
 		end
 
 	make_all is
@@ -282,20 +280,6 @@ feature {NONE} -- Implementation
 					end
 					cl.forth
 				end
-				if group.is_cluster then
-					l_cluster ?= group
-					l_subclusters := l_cluster.children
-					if l_subclusters /= Void then
-						from
-							l_subclusters.start
-						until
-							l_subclusters.after
-						loop
-							Result.append_last (unsorted_classes_in_group (l_subclusters.item))
-							l_subclusters.forth
-						end
-					end
-				end
 			end
 		ensure
 			unsorted_classes_in_group_not_void: Result /= Void
@@ -303,11 +287,21 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation: Access
 
-	class_sorter: DS_QUICK_SORTER [CONF_CLASS]
+	class_sorter: DS_QUICK_SORTER [CONF_CLASS] is
 			-- Sorter object for classes.
+		once
+			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_CLASS]}.make)
+		ensure
+			Result_not_void: Result /= Void
+		end
 
-	group_sorter: DS_QUICK_SORTER [CONF_GROUP]
+	group_sorter: DS_QUICK_SORTER [CONF_GROUP] is
 			-- Sorter object for groups.
+		once
+			create Result.make (create {KL_COMPARABLE_COMPARATOR [CONF_GROUP]}.make)
+		ensure
+			Result_not_void: Result /= Void
+		end
 
 	classes_internal: DS_ARRAYED_LIST [CONF_CLASS]
 			-- Classes internal
@@ -317,8 +311,6 @@ feature {NONE} -- Implementation: Access
 
 invariant
 	groups_not_void: groups /= Void
-	class_sorter_not_void: class_sorter /= Void
-	group_sorter_not_void: group_sorter /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

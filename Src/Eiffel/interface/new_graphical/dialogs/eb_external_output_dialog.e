@@ -95,7 +95,6 @@ feature -- Update
 			-- Append `a_text' to the displayed text.
 		local
 			l_txt: like a_text
-			l_line: INTEGER
 		do
 			if is_displayed then
 				l_txt := a_text.twin

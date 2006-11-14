@@ -384,6 +384,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			targets: like pnd_targets
 			identified: IDENTIFIED
 			sensitive: EV_SENSITIVE
+			l_item_name: STRING_GENERAL
 		do
 			targets := pnd_targets
 			create Result
@@ -401,9 +402,16 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					then
 						sensitive ?= trg
 						if not (sensitive /= Void and not sensitive.is_sensitive) then
-							if trg.target_name /= Void then
+							if trg.target_name_function /= Void then
+								l_item_name := trg.target_name_function.item ([a_pebble])
+							elseif trg.target_name /= Void then
+								l_item_name := trg.target_name
+							else
+								l_item_name := Void
+							end
+							if l_item_name /= Void then
 								create i.make_with_text (
-									trg.target_name
+									l_item_name
 								)
 								Result.extend (i)
 								i.select_actions.extend (agent

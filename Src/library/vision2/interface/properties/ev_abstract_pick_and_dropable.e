@@ -27,6 +27,9 @@ feature -- Access
 	target_name: STRING_GENERAL
 			-- Optional textual name describing `Current' pick and drop hole.
 
+	target_name_function: FUNCTION [ANY, TUPLE [ANY], STRING_GENERAL]
+			-- Function for computing `target_name' based on source pebble.
+
 	pebble_function: FUNCTION [ANY, TUPLE, ANY] is
 			-- Returns data to be transported by pick and drop mechanism.
 		deferred
@@ -97,6 +100,15 @@ feature -- Status setting
 		ensure
 			target_name_assigned:
 				a_name /= target_name and a_name.is_equal (target_name)
+		end
+
+	set_target_name_function (a_function: FUNCTION [ANY, TUPLE [ANY], STRING_GENERAL]) is
+			-- Set `a_function' to compute `target_name' based on transport source.
+		require
+			a_function_not_void: a_function /= Void
+			a_function_takes_pebble: a_function.valid_operands (["pebble"])
+		do
+			target_name_function := a_function.twin
 		end
 
 	set_accept_cursor (a_cursor: like accept_cursor) is

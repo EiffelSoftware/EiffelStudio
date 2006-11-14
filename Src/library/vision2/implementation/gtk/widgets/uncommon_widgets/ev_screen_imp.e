@@ -274,7 +274,6 @@ feature -- Measurement
 feature {NONE} -- Externals (XTEST extension)
 
 	frozen x_keysym_to_keycode (a_display: POINTER; a_keycode: INTEGER): INTEGER is
-			-- (from EV_C_GTK)
 		external
 			"C: EIF_INTEGER| <X11/Xlib.h>"
 		alias
@@ -282,7 +281,6 @@ feature {NONE} -- Externals (XTEST extension)
 		end
 
 	frozen x_test_fake_button_event (a_display: POINTER; a_button: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN is
-			-- (from EV_C_GTK)
 		external
 			"C: EIF_BOOL| <X11/extensions/XTest.h>"
 		alias
@@ -290,7 +288,6 @@ feature {NONE} -- Externals (XTEST extension)
 		end
 
 	frozen x_test_fake_key_event (a_display: POINTER; a_keycode: INTEGER; a_is_press: BOOLEAN; a_delay: INTEGER): BOOLEAN is
-			-- (from EV_C_GTK)
 		external
 			"C: EIF_BOOL| <X11/extensions/XTest.h>"
 		alias
@@ -298,7 +295,6 @@ feature {NONE} -- Externals (XTEST extension)
 		end
 
 	frozen x_test_fake_motion_event (a_display: POINTER; a_scr_num, a_x, a_y, a_delay: INTEGER): BOOLEAN is
-			-- (from EV_C_GTK)
 		external
 			"C: EIF_BOOL| <X11/extensions/XTest.h>"
 		alias
@@ -306,7 +302,6 @@ feature {NONE} -- Externals (XTEST extension)
 		end
 
 	frozen x_test_query_extension (a_display, a_event_base, a_error_base, a_major_version, a_minor_version: POINTER): BOOLEAN is
-			-- (from EV_C_GTK)
 		external
 			"C: EIF_BOOL| <X11/extensions/XTest.h>"
 		alias

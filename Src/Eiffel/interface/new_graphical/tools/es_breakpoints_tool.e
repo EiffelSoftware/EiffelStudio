@@ -250,7 +250,7 @@ feature -- Events
 			change_attach_explorer (an_explorer_bar)
 		end
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
 	enable_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
 
@@ -258,7 +258,7 @@ feature -- Memory management
 
 	clear_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
 
-	recycle is
+	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do

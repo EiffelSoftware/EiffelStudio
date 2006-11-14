@@ -18,7 +18,7 @@ inherit
 		redefine
 			new_toolbar_item,
 			description,
-			recycle
+			internal_recycle
 		select
 			name
 		end
@@ -44,7 +44,7 @@ inherit
 			delete_class,
 			delete_cluster,
 			execute,
-			recycle
+			internal_recycle
 		end
 
 create
@@ -100,9 +100,9 @@ feature -- Access
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-feature -- Removal
+feature {NONE} -- Removal
 
-	recycle is
+	internal_recycle is
 			-- Recycle code.
 		do
 			Precursor {EB_CONTEXT_DIAGRAM_COMMAND}

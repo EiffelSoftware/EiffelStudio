@@ -24,7 +24,7 @@ inherit
 			build_tools_menu,
 			build_favorites_menu,
 			refresh,
-			recycle,
+			internal_recycle,
 			destroy_imp,
 			destroy,
 			position,
@@ -4133,9 +4133,9 @@ feature {NONE} -- Implementation
 			selected_formatter_not_void: Result /= Void
 		end
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- Call the precursors.
 		do
 			recycle_command
@@ -4290,7 +4290,6 @@ feature -- Recycle
 			view_menu := Void
 			refactoring_menu := Void
 		end
-
 
 feature {NONE} -- Implementation: Editor commands
 

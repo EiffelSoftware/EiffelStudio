@@ -380,18 +380,6 @@ feature -- Status setting
 			change_attach_explorer (an_explorer_bar)
 		end
 
-feature -- Memory management
-
-	recycle is
-			-- Recycle `Current', but leave `Current' in an unstable state,
-			-- so that we know whether we're still referenced or not.
-		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
-			end
-			reset_tool
-		end
-
 	reset_tool is
 		do
 			reset_update_on_idle
@@ -400,6 +388,18 @@ feature -- Memory management
 			recycle_expressions
 			watches_grid.reset_layout_manager
 			clean_watched_grid
+		end
+
+feature {NONE} -- Memory management
+
+	internal_recycle is
+			-- Recycle `Current', but leave `Current' in an unstable state,
+			-- so that we know whether we're still referenced or not.
+		do
+			if explorer_bar_item /= Void then
+				unattach_from_explorer_bar
+			end
+			reset_tool
 		end
 
 	recycle_expressions is
@@ -1325,8 +1325,7 @@ feature {NONE} -- Implementation
 			--	expressions.count = watches_grid.row_count
 
 invariant
-
-	not_void_delete_expression_cmd: delete_expression_cmd /= Void
+	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

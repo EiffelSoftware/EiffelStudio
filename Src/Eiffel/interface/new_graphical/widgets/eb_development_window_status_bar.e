@@ -254,9 +254,9 @@ feature -- Status setting
 			coordinate_label.enable_sensitive
 		end
 
-feature {EB_RECYCLER} -- Status setting
+feature {NONE} -- Status setting
 
-	recycle is
+	internal_recycle is
 			-- Remove references to `Current', which becomes no longer usable.
 		local
 			mg: EB_PROJECT_MANAGER

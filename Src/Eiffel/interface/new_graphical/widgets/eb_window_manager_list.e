@@ -150,9 +150,9 @@ feature -- Observer pattern
 			end
 		end
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- To be called when the object is no more used.
 		do
 			window_manager.remove_observer (Current)

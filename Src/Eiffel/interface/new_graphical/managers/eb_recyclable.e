@@ -8,9 +8,28 @@ indexing
 deferred class
 	EB_RECYCLABLE
 
-feature {EB_RECYCLER} -- Basic operations
+feature -- Basic operations
 
-	recycle is
+	frozen recycle is
+			-- To be called when the button has became useless.
+		do
+			if not is_recycled then
+					-- Prevents multiple calls.
+				is_recycled := True
+				internal_recycle
+			end
+		ensure
+			recycled: is_recycled
+		end
+
+feature -- Access
+
+	is_recycled: BOOLEAN;
+			-- Has current been recycled?
+
+feature {NONE} -- Implementation
+
+	internal_recycle is
 			-- To be called when the button has became useless.
 		deferred
 		end

@@ -26,7 +26,7 @@ inherit
 			handle_extended_ctrled_key,
 			text_displayed,
 			copy_selection,
-			recycle,
+			internal_recycle,
 			margin,
 			has_margin,
 			cursor_type,
@@ -662,9 +662,9 @@ feature {NONE} -- Implementation
 			resume_cursor_blinking
 		end
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Destroy `Current'
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}

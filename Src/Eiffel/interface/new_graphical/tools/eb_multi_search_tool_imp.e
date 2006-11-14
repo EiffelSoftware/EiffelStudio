@@ -579,7 +579,7 @@ feature {NONE} -- Destroy behavior.
 			preferences.preferences.save_preference (l_pre.init_scope_preference)
 		end
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			save_preferences

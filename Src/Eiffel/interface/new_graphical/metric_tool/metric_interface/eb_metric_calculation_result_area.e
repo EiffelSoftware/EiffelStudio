@@ -103,12 +103,12 @@ feature {NONE} -- Initialization
 			set_metric_tool (a_tool)
 			metric_panel := a_panel
 			on_show_percentage_change_from_outside_agent := agent on_show_percentage_change_from_outside
-			default_create
 			create content.make (2)
 			content.extend (create {HASH_TABLE [EV_GRID_ITEM, INTEGER]}.make (100))
 			content.extend (create {HASH_TABLE [EV_GRID_ITEM, INTEGER]}.make (100))
 			create invisible_items.make
 			is_first_display := True
+			default_create
 		ensure
 			metric_tool_attached: metric_tool = a_tool
 			metric_panel_attached: metric_panel /= Void
@@ -806,9 +806,9 @@ feature{NONE} -- Implementation
 	on_show_percentage_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_show_precentage_change_from_outside'
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- To be called when the button has became useless.
 		do
 			if quick_search_bar /= Void then

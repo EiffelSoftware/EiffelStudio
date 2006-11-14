@@ -634,9 +634,9 @@ feature{NONE} -- Implementation
 	ratio_metric_definition_area: EB_RATIO_METRIC_DEFINITION_AREA
 			-- Internal ratio metric definition area			
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- To be called when the button has became useless.
 		do
 			preferences.metric_tool_data.unit_order_preference.change_actions.prune_all (on_unit_order_change_agent)

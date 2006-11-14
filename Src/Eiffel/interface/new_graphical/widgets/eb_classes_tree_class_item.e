@@ -14,7 +14,7 @@ inherit
 		redefine
 			data,
 			set_data,
-			recycle
+			internal_recycle
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
@@ -177,9 +177,9 @@ feature -- Status setting
 			pointer_double_press_actions.extend (p)
 		end
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			Precursor {EB_CLASSES_TREE_ITEM}

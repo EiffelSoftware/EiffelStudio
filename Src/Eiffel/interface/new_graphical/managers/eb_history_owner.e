@@ -16,9 +16,9 @@ inherit
 
 	EB_RECYCLER
 		rename
-			destroy as recycle
+			destroy as internal_recycle
 		redefine
-			recycle
+			internal_recycle
 		end
 
 feature -- Access
@@ -31,9 +31,9 @@ feature -- Access
 	history_manager: EB_HISTORY_MANAGER
 			-- Manager for history. It encapsulates the history.
 
-feature -- Removal
+feature {NONE} -- Removal
 
-	recycle is
+	internal_recycle is
 			-- Free references to `Current'.
 		do
 			Precursor {EB_RECYCLER}

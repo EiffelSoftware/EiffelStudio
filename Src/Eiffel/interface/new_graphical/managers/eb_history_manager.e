@@ -13,9 +13,9 @@ inherit
 
 	EB_RECYCLER
 		rename
-			destroy as recycle
+			destroy as internal_recycle
 		redefine
-			recycle
+			internal_recycle
 		end
 
 	EB_SHARED_PREFERENCES
@@ -379,9 +379,9 @@ feature {EB_HISTORY_MANAGER_OBSERVER} -- Observer pattern / Registration
 			end
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			target := Void

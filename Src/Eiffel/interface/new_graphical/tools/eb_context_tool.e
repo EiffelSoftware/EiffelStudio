@@ -22,7 +22,7 @@ inherit
 		rename
 			set_stone as launch_stone
 		redefine
-			recycle,
+			internal_recycle,
 			advanced_set_stone
 		end
 
@@ -394,9 +394,9 @@ feature -- Status report
 	is_diagram_selected: BOOLEAN
 			-- Is the current tab `editor'?
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do

@@ -554,6 +554,8 @@ feature -- Access
 
 	projector: EIFFEL_PROJECTOR is
 			-- Current projector
+		require
+			not_recycled: not is_recycled
 		do
 			Result := world_cell.projector
 		ensure
@@ -1206,9 +1208,9 @@ feature {EB_TOGGLE_UML_COMMAND} -- UML/BON toggle.
 			Result := world.is_uml
 		end
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Frees `Current's memory, and leave `Current' in an unstable state
 			-- so that we know whether we're still referenced or not.
 		do
@@ -1380,6 +1382,8 @@ feature {EB_CLASS_HEADER_COMMAND} -- Class head command
 
 	area_as_widget: EV_WIDGET is
 			-- `area' cast to EV_WIDGET.
+		require
+			not_recycled: not is_recycled
 		do
 			Result ?= area
 		ensure
@@ -1865,6 +1869,8 @@ feature {NONE} -- Implementation
 
 	area: EV_DRAWING_AREA is
 			-- Graphical surface displaying diagram.
+		require
+			not_recycled: not is_recycled
 		do
 			Result := world_cell.drawing_area
 		ensure
@@ -2170,10 +2176,7 @@ feature {NONE} -- Implementation keyboard shortcuts
 		end
 
 invariant
-	world_cell_not_void: world_cell /= Void
-	area_not_void: area /= Void
-	area_as_widget_not_void: area_as_widget /= Void
-	projector_not_void: projector /= Void
+	world_cell_not_void: not is_recycled implies world_cell /= Void
 	shortcut_table_not_void: shortcut_table /= Void
 
 indexing

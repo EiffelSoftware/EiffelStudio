@@ -15,19 +15,10 @@ inherit
 			target
 		end
 
-	EB_RECYCLABLE
-
 feature -- Properties
 
 	target: EB_FILEABLE;
 			-- Target for the command.
-feature -- Recycle
-
-	recycle is
-			-- Recycle
-		do
-			target := Void
-		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

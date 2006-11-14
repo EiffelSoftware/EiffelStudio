@@ -27,7 +27,7 @@ inherit
 			initialize_customizable_commands,
 			basic_cursor_move,
 			text_displayed,
-			recycle	,
+			internal_recycle	,
 			file_loading_setup,
 			on_text_back_to_its_last_saved_state,
 			on_key_down,
@@ -798,9 +798,9 @@ feature -- Text Loading
 			load_without_save := False
 		end
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do

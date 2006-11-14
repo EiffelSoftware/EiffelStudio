@@ -28,13 +28,13 @@ inherit
 
 	EB_RECYCLER
 		rename
-			destroy as recycle
+			destroy as internal_recycle
 		undefine
 			is_equal, copy, default_create
 		redefine
-			recycle
+			internal_recycle
 		select
-			recycle
+			internal_recycle
 		end
 
 	EB_RECYCLER
@@ -265,9 +265,9 @@ feature -- Conversion
 			Result ?= loc_parent
 		end
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do

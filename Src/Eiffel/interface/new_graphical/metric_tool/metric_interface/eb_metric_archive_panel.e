@@ -934,9 +934,9 @@ feature -- Overwritting
 			end
 		end
 
-feature -- Recycle
+feature {NONE} -- Recycle
 
-	recycle is
+	internal_recycle is
 			-- To be called when the button has became useless.
 		do
 			preferences.metric_tool_data.unit_order_preference.change_actions.prune_all (on_unit_order_change_agent)

@@ -157,9 +157,9 @@ feature -- Basic operations
 			Result.enable_sensitive
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			window := Void

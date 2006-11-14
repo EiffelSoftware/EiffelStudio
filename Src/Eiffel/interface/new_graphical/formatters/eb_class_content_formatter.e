@@ -15,7 +15,7 @@ inherit
 			line_numbers_allowed,
 			widget,
 			empty_widget,
-			recycle
+			internal_recycle
 		end
 
 	REFACTORING_HELPER
@@ -156,9 +156,9 @@ feature -- Status report
 		do
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recyclable
 		do
 			Precursor {EB_CLASS_INFO_FORMATTER}

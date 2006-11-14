@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
+			make_with_grid (Current)
 			Precursor {ES_GRID}
 
 			col_pixmap_index := 1
@@ -80,7 +81,6 @@ feature {NONE} -- Initialization
 			row_collapse_actions.extend (agent on_row_collapse)
 
 --			set_item_pebble_function (agent on_pebble_function)
-			make_with_grid (Current)
 			enable_editor_token_pnd
 
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)

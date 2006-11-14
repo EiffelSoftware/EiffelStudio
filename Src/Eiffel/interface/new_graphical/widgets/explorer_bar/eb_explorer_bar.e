@@ -558,9 +558,9 @@ feature -- Access
 			item_list.go_to (cur)
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			wipe_out

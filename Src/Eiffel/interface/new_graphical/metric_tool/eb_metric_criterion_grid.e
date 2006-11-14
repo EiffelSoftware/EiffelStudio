@@ -55,11 +55,11 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize `scope' with `a_scope'
 		do
+			create change_actions
 			default_create
 			enable_tree
 			enable_row_separators
 			enable_column_separators
-			create change_actions
 
 			set_column_count_to (2)
 			column (2).set_width (100)
@@ -74,7 +74,6 @@ feature{NONE} -- Initialization
 			key_press_string_actions.extend (agent on_key_string_pressed)
 		ensure then
 			tree_enabled: is_tree_enabled
-			change_actions_attached: change_actions /= Void
 		end
 
 feature -- Basic operation

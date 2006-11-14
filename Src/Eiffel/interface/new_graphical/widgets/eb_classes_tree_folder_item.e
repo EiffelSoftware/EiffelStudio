@@ -14,7 +14,7 @@ inherit
 		redefine
 			data,
 			set_data,
-			recycle
+			internal_recycle
 		end
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
@@ -479,9 +479,9 @@ feature -- Interactivity
 			end
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		do
 			Precursor {EB_CLASSES_TREE_ITEM}

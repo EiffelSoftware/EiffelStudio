@@ -13,7 +13,7 @@ inherit
 	EB_OUTPUT_TOOL
 		redefine
 			make,
-			clear, recycle, scroll_to_end,set_focus,
+			clear, internal_recycle, scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin,
 			is_general
 		end
@@ -136,14 +136,6 @@ feature -- Basic operation
 			output_text.set_text ("")
 			on_text_change
 			message_label.set_text ("")
-		end
-
-	recycle is
-			-- To be called before destroying this objects
-		do
-			c_compilation_output_manager.prune (Current)
-			owner := Void
-			stone_manager := Void
 		end
 
 	scroll_to_end is
@@ -532,6 +524,16 @@ feature{NONE} -- Implementation
 
 	message_label: EV_LABEL;
 			-- Status message label
+
+feature {NONE} -- Recycle
+
+	internal_recycle is
+			-- To be called before destroying this objects
+		do
+			c_compilation_output_manager.prune (Current)
+			owner := Void
+			stone_manager := Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -119,9 +119,9 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.tool_properties_icon
 		end
 
-feature -- Memory management
+feature {NONE} -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do

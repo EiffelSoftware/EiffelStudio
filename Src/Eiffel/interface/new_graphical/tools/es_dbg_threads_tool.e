@@ -213,9 +213,17 @@ feature -- Status setting
 			explorer_changed: explorer_bar_item.parent = an_explorer_bar
 		end
 
-feature -- Memory management
+	reset_tool is
+		do
+			reset_update_on_idle
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
+			notes_on_threads.wipe_out
+			clean_threads_info
+		end
 
-	recycle is
+feature {NONE} -- Memory management
+
+	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
@@ -225,13 +233,6 @@ feature -- Memory management
 			reset_tool
 		end
 
-	reset_tool is
-		do
-			reset_update_on_idle
-			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
-			notes_on_threads.wipe_out
-			clean_threads_info
-		end
 
 feature {NONE} -- Implementation
 

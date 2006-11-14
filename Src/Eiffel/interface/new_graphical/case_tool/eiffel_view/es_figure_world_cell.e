@@ -20,7 +20,7 @@ inherit
 			world,
 			set_world
 		end
-		
+
 	EB_RECYCLABLE
 		undefine
 			copy,
@@ -32,7 +32,7 @@ inherit
 			copy,
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as retrieve_preferences
@@ -40,7 +40,7 @@ inherit
 			default_create,
 			copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create,
@@ -50,7 +50,7 @@ inherit
 create
 	make_with_world,
 	make_with_world_and_tool
-	
+
 feature {NONE} -- Initialization
 
 	make_with_world_and_tool (a_world: like world; a_tool: like tool) is
@@ -78,7 +78,7 @@ feature -- Access
 
 	projector: EIFFEL_PROJECTOR
 			-- The projector used to project the `world'.
-			
+
 	tool: EB_CONTEXT_EDITOR
 			-- Tool the `world' is displayed in.
 
@@ -98,15 +98,15 @@ feature -- Element change
 			projector.set_world (a_world)
 		end
 
-feature -- Recycling
+feature {NONE} -- Recycling
 
-	recycle is
+	internal_recycle is
 			-- Recycle `Current' and leave `Current' in an unstable state.
 		do
 			preferences.diagram_tool_data.remove_observer (Current)
 			world.recycle
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_pointer_button_press_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 		do
 			if button = 1 then
 				if projector.is_figure_selected then
-					is_scroll := True	
+					is_scroll := True
 				elseif not ev_application.ctrl_pressed then
 					drawing_area.set_pointer_style (cursors.closed_hand_cursor)
 					is_hand := True
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_pointer_button_release_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
 			-- Pointer button was released over `drawing_area'.
 		do
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 				drawing_area.disable_capture
 			end
 		end
-		
+
 	on_mouse_wheel_on_drawing_area (i: INTEGER) is
 			-- User moved mouse wheel.
 		local
@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	retrieve_preferences is
 			-- Retrieve `scroll_speed' from preferences.
 		local

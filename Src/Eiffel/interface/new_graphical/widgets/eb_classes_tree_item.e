@@ -38,9 +38,9 @@ feature -- Access
 			Result ?= Precursor
 		end
 
-feature -- Recyclable
+feature {NONE} -- Recyclable
 
-	recycle is
+	internal_recycle is
 			-- Recycle
 		local
 			l_item: EB_CLASSES_TREE_ITEM

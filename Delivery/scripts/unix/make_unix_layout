@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# -eq 0 ]; then 
-	echo Usage: make_unix_layout platform version source destination
+	echo Usage: make_unix_layout platform source destination
 	exit 1
 fi
 
@@ -10,15 +10,15 @@ export ISE_PLATFORM=$1
 # Set up the environment
 . set_aliases
 
-VERSION=$2
-SRC_DIR=$3
-DST_DIR=$4
+VERSION=6.0
+SRC_DIR=$2
+DST_DIR=$3
 
 # some helper variables
 PRODUCT=eiffel$VERSION
 UNIX_PLATFORM=unix
 INCLUDE_DIR=$DST_DIR/include/$PRODUCT
-LIB_DIR=$DST_DIR/lib/$PRODUCT
+LIB_DIR=$DST_DIR/$UNIX_LIB_NAME/$PRODUCT
 SHARE_DIR=$DST_DIR/share/$PRODUCT
 DOC_DIR=$DST_DIR/share/doc/$PRODUCT
 SRC_BIN_DIR=$SRC_DIR/studio/spec/$ISE_PLATFORM/bin
@@ -28,7 +28,7 @@ fullrd $DST_DIR
 safe_md $DST_DIR
 safe_md $DST_DIR/bin
 
-safe_md $DST_DIR/lib
+safe_md $DST_DIR/$UNIX_LIB_NAME
 safe_md $LIB_DIR
 safe_md $LIB_DIR/ec
 

@@ -66,6 +66,7 @@ feature {NONE} -- Implementation
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
+			change_item_widget.set_spacing (4)
 			change_item_widget.set_text (preference.string_value)
 			change_item_widget.set_is_checked (preference.value)
 			change_item_widget.checked_changed_actions.extend (agent checkbox_value_changed)

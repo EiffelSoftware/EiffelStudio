@@ -105,9 +105,15 @@ feature {NONE} -- Implementation
 			if arguments.is_parse_only then
 				parse (a_target)
 			else
-				compile ("melt", True, a_target)
-				compile ("freeze", False, a_target)
-				compile ("finalize", False, a_target)
+				if arguments.is_melt then
+					compile ("melt", arguments.is_clean, a_target)
+				end
+				if arguments.is_freeze then
+					compile ("freeze", False, a_target)
+				end
+				if arguments.is_finalize then
+					compile ("finalize", False, a_target)
+				end
 			end
 		end
 
@@ -165,6 +171,8 @@ feature {NONE} -- Implementation
 			l_prc_launcher: PROCESS
 			l_system, l_target: STRING
 			l_file: STRING
+			l_dir_name: DIRECTORY_NAME
+			l_dir: KL_DIRECTORY
 		do
 			l_system := a_target.system.name
 			l_target := a_target.name
@@ -180,6 +188,15 @@ feature {NONE} -- Implementation
 
 			if a_clean then
 				l_args.extend ("-clean")
+			end
+
+			if arguments.eifgen /= Void then
+				l_args.extend ("-project_path")
+				create l_dir_name.make_from_string (arguments.eifgen)
+				l_dir_name.extend (l_system)
+				create l_dir.make (l_dir_name)
+				l_dir.recursive_create_directory
+				l_args.extend (l_dir_name)
 			end
 
 			if a_action.is_equal ("melt") then

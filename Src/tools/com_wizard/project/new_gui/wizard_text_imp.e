@@ -20,9 +20,9 @@ inherit
 			on_erase_background
 		end
 
-create	
+create
 	make
-		
+
 feature {EV_ANY} -- Initialization
 
 	initialize is
@@ -31,7 +31,7 @@ feature {EV_ANY} -- Initialization
 			Precursor {EV_WEL_CONTAINER_IMP}
 			create wel_text_edit.make (Default_parent, "", 0, 0, 0, 0, -1)
 			replace (wel_text_edit)
-			cwin_send_message (wel_text_edit.item, feature {WEL_EM_CONSTANTS}.Em_limittext, to_wparam (0), to_lparam (0))
+			wel_text_edit.set_text_limit (0)
 			wel_text_edit.set_font (Default_font)
 			wel_text_edit.set_read_only
 			font_height := font.height
@@ -49,7 +49,7 @@ feature -- Access
 
 	font_height: INTEGER
 			-- Height of font in pixels
-		
+
 	font: WEL_FONT is
 			-- Font
 		do
@@ -61,7 +61,7 @@ feature -- Access
 		do
 			Result := wel_text_edit.first_visible_line
 		end
-		
+
 	line_count: INTEGER is
 			-- Line count in text
 		do
@@ -71,13 +71,13 @@ feature -- Access
 		end
 
 feature -- Element Settings
-	
+
 	set_font (a_font: WEL_FONT) is
 			-- Set `font' with `a_font'.
 		do
 			wel_text_edit.set_font (a_font)
 		end
-		
+
 feature -- Basic Operations
 
 	set_text (a_text: STRING) is
@@ -87,7 +87,7 @@ feature -- Basic Operations
 		do
 			wel_text_edit.set_text (a_text)
 		end
-		
+
 	save (a_file_name: STRING) is
 			-- Save content to `a_file_name'.
 		require
@@ -106,7 +106,7 @@ feature -- Basic Operations
 			l_retried := True
 			retry
 		end
-		
+
 	scroll_to_line (a_line: INTEGER) is
 			-- Scroll to line `a_line'.
 		require
@@ -120,13 +120,13 @@ feature -- Basic Operations
 		do
 			wel_text_edit.hide_scroll_bars
 		end
-		
+
 	show_scroll_bars is
 			-- Hide vertical scroll bar
 		do
 			wel_text_edit.show_scroll_bars
 		end
-		
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: WIZARD_TEXT
@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_indirect (create {WEL_LOG_FONT}.make (10, "Lucida Console"))
 		end
-		
+
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Disable erase background message
 		do

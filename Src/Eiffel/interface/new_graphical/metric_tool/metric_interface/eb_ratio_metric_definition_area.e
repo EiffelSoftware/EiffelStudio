@@ -42,10 +42,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like metric_tool; a_panel: like metric_panel) is
-			-- Initialize `metric_tool' with `a_tool'.
+	make (a_tool: like metric_tool; a_panel: like metric_panel; a_mode: INTEGER; a_unit: QL_METRIC_UNIT) is
+			-- Initialize `metric_tool' with `a_tool', mode with `a_mode' and `unit' with `a_unit'.
 		require
 			a_tool_attached: a_tool /= Void
+			a_mode_valid: is_mode_valid (a_mode)
+			a_unit_attached: a_unit /= Void
 		do
 			set_metric_tool (a_tool)
 			set_metric_panel (a_panel)
@@ -54,6 +56,8 @@ feature {NONE} -- Initialization
 			default_create
 			create numerator_delayed_timer.make (agent on_numerator_text_change_confirmed, 500)
 			create denominator_delayed_timer.make (agent on_denominator_text_change_confirmed, 500)
+			set_unit (a_unit)
+			set_mode (a_mode)
 			setup_editor
 		ensure
 			metric_tool_set: metric_tool = a_tool
@@ -97,19 +101,6 @@ feature {NONE} -- Initialization
 			denominator_btn.select_actions.extend (agent on_open_metric_menu (denominator_btn, denominator_text))
 			denominator_btn.key_press_actions.extend (agent on_key_pressed_in_open_metric_btn (denominator_btn, denominator_text, ?))
 
---			numerator_target_pixmap.set_size (16, 16)
---			numerator_target_pixmap.copy (pixmaps.icon_pixmaps.metric_unit_target_icon)
---			numerator_target_pixmap.set_accept_cursor (cursors.cur_metric)
---			numerator_target_pixmap.set_deny_cursor (cursors.cur_x_metric)
---			numerator_target_pixmap.drop_actions.extend (agent on_drop (?, numerator_text))
---			numerator_target_pixmap.set_tooltip (interface_names.l_metric_drop_metric_here)
---
---			denominator_target_pixmap.set_size (16, 16)
---			denominator_target_pixmap.copy (pixmaps.icon_pixmaps.metric_unit_target_icon)
---			denominator_target_pixmap.set_accept_cursor (cursors.cur_metric)
---			denominator_target_pixmap.set_deny_cursor (cursors.cur_x_metric)
---			denominator_target_pixmap.drop_actions.extend (agent on_drop (?, denominator_text))
---			denominator_target_pixmap.set_tooltip (interface_names.l_metric_drop_metric_here)
 			numerator_target_pixmap.hide
 			denominator_target_pixmap.hide
 

@@ -466,7 +466,7 @@ feature -- Basic operations
 			original_metric := a_metric
 				-- Refresh metric definition area.
 			if not is_current_metric_editor_reusable (a_type) then
-				current_metric_editor := new_metric_editor (a_type)
+				current_metric_editor := new_metric_editor (a_type, l_mode, a_unit)
 				current_metric_editor.change_actions.extend (agent on_metric_changed)
 				metric_definition_area.wipe_out
 				metric_definition_area.extend (current_metric_editor.widget)
@@ -596,24 +596,27 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	new_metric_editor (a_type: INTEGER): like current_metric_editor is
-			-- New metric editor for metric of type `a_type'
+	new_metric_editor (a_type: INTEGER; a_mode: INTEGER; a_unit: QL_METRIC_UNIT): like current_metric_editor is
+			-- New metric editor for metric of type `a_type' and set the metric editor with mode `a_mode' and unit `a_unit'
+			-- if it has not been initialized.
 		require
 			a_type_valid: is_valid_metric_type (a_type)
+			a_mode_valid: is_mode_valid (a_mode)
+			a_unit_attached: a_unit /= Void
 		do
 			if a_type = basic_metric_type then
 				if basic_metric_definition_area = Void then
-					create basic_metric_definition_area.make (metric_tool, Current)
+					create basic_metric_definition_area.make (metric_tool, Current, a_mode, a_unit)
 				end
 				Result := basic_metric_definition_area
 			elseif a_type = linear_metric_type then
 				if linear_metric_defintion_area = Void then
-					create linear_metric_defintion_area.make (metric_tool, Current)
+					create linear_metric_defintion_area.make (metric_tool, Current, a_mode, a_unit)
 				end
 				result := linear_metric_defintion_area
 			elseif a_type = ratio_metric_type then
 				if ratio_metric_definition_area = Void then
-					create ratio_metric_definition_area.make (metric_tool, Current)
+					create ratio_metric_definition_area.make (metric_tool, Current, a_mode, a_unit)
 				end
 				Result := ratio_metric_definition_area
 			end

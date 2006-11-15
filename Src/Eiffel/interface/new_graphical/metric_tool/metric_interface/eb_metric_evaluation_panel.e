@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 			l_text: EV_TEXT
 		do
 				-- Setup basic metric definition area.
-			create metric_definer.make (metric_tool, Current)
+			create metric_definer.make (metric_tool, Current, new_mode, class_unit)
 			metric_definer.change_actions_internal.extend (agent on_definition_change)
 			metric_definer.hide_name_area
 			criterion_area.extend (metric_definer.widget)

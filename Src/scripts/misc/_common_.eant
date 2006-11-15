@@ -45,6 +45,10 @@
 		<geant target="check_environment_windows" if="${is_windows}" reuse_variables="true" />
 		<exit code="1" if="${environment_valid}=false" />
 		<unset name="environment_valid" />
+
+		<!-- scripts and compilation related -->
+		<set name="scripts_dir" value="${EIFFEL_SRC}${path_separator}scripts" />
+		<set name="misc_dir" value="${scripts_dir}${path_separator}misc" />
 	</target>
 
 </project>

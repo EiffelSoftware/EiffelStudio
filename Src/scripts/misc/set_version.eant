@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+
+<project name="set_version" default="help">
+	<description>
+		description: "set version in CONSTANTS class for EiffelStudio"
+		author: "Jocelyn Fiat and others"
+		note: "This script could be split into severals scripts, one for each product"
+	</description>
+	<inherit>
+		<parent location="${EIFFEL_SRC}/scripts/misc/_common_.eant">
+			<redefine target="help"/>
+		</parent>
+	</inherit>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant  set_version" />
+	</target>	
+
+	<!-- end of set_version -->
+	<target name="set_version" depend="set_version_windows,set_version_unix">
+		<echo message="Set version of ec" />
+		<geant target="set_version_windows" if="$is_windows" />
+		<geant target="set_version_unix" unless="$is_windows" />
+	</target>
+
+	<target name="set_version_windows" depend="init" if="${is_windows}" >
+		<set name="set_version_fn" value="${cwd}\tmp_b_set_version.bat" />
+		<set name="tmp_target_dirname" value="${EIFFEL_SRC}\Eiffel\API\constants" />
+		<echo message="rem Set Version" 	to_file="${set_version_fn}" append="false" />
+		<echo message="@echo off" 			to_file="${set_version_fn}"  append="true"/>
+		<echo message="setlocal" 			to_file="${set_version_fn}"  append="true"/>
+		<echo message="svn info ${EIFFEL_SRC} > %1.tmp-rev" 
+											to_file="${set_version_fn}"  append="true"/>
+<!--
+		<echo message="svn info ${tmp_target_dirname} > %1.tmp-rev" 
+											to_file="${set_version_fn}"  append="true"/>
+-->
+		<echo message="For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('findstr /L /B /C:&quot;Last Changed Rev&quot; %1.tmp-rev') do (set LASTREV=%%d)" 
+											to_file="${set_version_fn}"  append="true"/>
+		<echo message="del %1.tmp-rev"		to_file="${set_version_fn}"  append="true"/>
+		<echo message="svn revert %1"		to_file="${set_version_fn}"  append="true"/>
+
+		<echo message="For /f &quot;tokens=2-4 delims=/ &quot; %%a in ('date /t') do (set TODAYDATE=%%c-%%a-%%b)" 
+											to_file="${set_version_fn}"  append="true"/>
+
+		<echo message="sed -e &quot;s/create\ Result.make_version\ (\([0-9\ ]*\),\([0-9\ ]*\),\ *[0-9][0-9]*\ *,\([0-9\ ]*\))/create\ Result.make_version\ (\\1,\\2,\ %LASTREV%,\\3)/g&quot; %1 > %1.tmp" 
+											to_file="${set_version_fn}"  append="true"/>
+		<echo message="move %1.tmp %1" 		to_file="${set_version_fn}"  append="true"/>
+
+		<echo message="sed -e &quot;s/Version_info:\ STRING\ is\ \&quot;[0-9a-zA-Z_\,\ \/\:()\.\=\-]*\&quot;/Version_info:\ STRING\ is\ \&quot;Revision:\ %LASTREV% , Compilation:\ %TODAYDATE%\ %TIME%\&quot;/g&quot; %1 > %1.tmp" 
+											to_file="${set_version_fn}"  append="true"/>
+		<echo message="move %1.tmp %1" 		to_file="${set_version_fn}"  append="true"/>
+		<echo message="endlocal" 			to_file="${set_version_fn}"  append="true"/>
+		<echo message="@echo on" 			to_file="${set_version_fn}"  append="true"/>
+
+		<exec executable="${set_version_fn} system_constants.e" dir="${tmp_target_dirname}"
+			accept_errors="true" />
+		<unset name="tmp_target_dirname" />
+		<delete file="${set_version_fn}" />
+	</target>
+
+	<target name="set_version_unix" depend="init" unless="${is_windows}" >
+		<set name="set_version_fn" value="${cwd}/tmp_b_set_version.sh" />
+		<echo message="#!/bin/sh" 	to_file="${set_version_fn}" append="false" />
+		<exec executable="/bin/sh ${set_version_fn} system_constants.e" dir="${EIFFEL_SRC}/Eiffel/API/constants" 
+			accept_errors="true" />
+		<delete file="${set_version_fn}" />
+	</target>
+
+	<!-- end of set_version -->
+
+</project>

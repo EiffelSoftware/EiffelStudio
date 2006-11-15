@@ -74,12 +74,16 @@
 		<exec executable="finish_freezing -library" dir="${ISE_LIBRARY}/library/vision2/implementation/gtk/Clib" unless="${is_windows}" 
 			accept_errors="true" exit_code_variable="return_code" />
 	</target>
+
 	<target name="extract_gobo" depend="init">
 		<echo message="Extracting Gobo"/>
-		<exec executable="tar xzvf ${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_win.tgz" dir="${ISE_LIBRARY}\library" if="${is_windows}"
-			accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="tar xzvf ${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_unix.tgz" dir="${ISE_LIBRARY}/library" unless="${is_windows}" 
-			accept_errors="true" exit_code_variable="return_code" />
+		<copy file="${EIFFEL_SRC}\..\free_add_ons\gobo\gobo_34_win.tgz" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" if="${is_windows}" />
+		<copy file="${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_unix.tgz" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" unless="${is_windows}" />
+
+		<available resource="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" variable="tmp_available"/>
+		<exec executable="tar xzvf gobo.tgz" dir="${ISE_LIBRARY}${path_separator}library"
+			accept_errors="true" exit_code_variable="return_code" if="$tmp_available" />
+		<delete file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" if="$tmp_available" />
 	</target>
 
 	<target name="compile_eiffel_framework" depend="init" if="${is_windows}" >

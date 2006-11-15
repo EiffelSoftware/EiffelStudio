@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="eiffel">
+<project name="ise_eiffel">
 	<description>
 		description: "Eiffel compilation"
 		author: "Jocelyn Fiat"
@@ -28,26 +28,27 @@
 	</target>
 	
 	<target name="init" >
-		<set name="force_clean" value="false" />
-		<set name="finalize" value="true" />
-		<set name="c_compile" value="true" />
+		<set name="force_clean" value="false" unless="$force_clean=true" />
+		<set name="use_settings" value="false" unless="$use_settings=true" />
+		<set name="c_compile" value="true" unless="$c_compile=false" />
 		<geant target="init_system" />
 		<mkdir directory="${system_dir}"/>
 	</target>
 
 	<target name="finalize" depend="init">
 		<echo message="Finalize ${system} in [${system_dir}]" />
-		<set name="finalize" value="true" />
 		<set name="c_compile" value="true" />
-		<geant target="compile" />
+		<geant target="tpl_compile" >
+			<argument name="finalize" value="true" />
+		</geant>
 	</target>
-
 	<target name="compile" depend="init">
-		<echo message="Compile ${system} in [${system_dir}]" />
-		<mkdir directory="${system_dir}"/>
-		<geant target="clean" if="${force_clean}=true"/>
+		<!--
 		<available resource="${system_dir}/EIFGENs/${system_target}/project.epr" variable="is_compiled"/>
-		<geant target="tpl_compile" />
+		-->
+		<geant target="tpl_compile" >
+			<argument name="finalize" value="false" />
+		</geant>
 	</target>
 	<target name="clean" depend="init">
 		<echo message="Clean ${system} in [${system_dir}]" />
@@ -56,36 +57,67 @@
 
 	<!-- Implementation -->
 	<target name="tpl_compile">
-		<set name="ecsystem" value="${system}" />
-		<set name="ecconfig" value="${system_ecf}" />
-		<set name="ectarget" value="${system_target}" />
-		<set name="ecprojectpath" value="${system_dir}" />
-		<set name="ecfinalize" value="${finalize}" />
-		<set name="ecccompile" value="${c_compile}" />
-		<set name="ecdir" value="${system_dir}" />
-		<set name="ecclean" value="${force_clean}" />
+		<argument name="finalize" />
+		<echo message="finalize=$finalize" />
 
-		<geant target="ec_using_ecf"  reuse_variables="true" />
-
-		<unset name="ecsystem" />
-		<unset name="ecconfig" />
-		<unset name="ectarget" />
-		<unset name="ecprojectpath" />
-		<unset name="ecfinalize" />
-		<unset name="ecccompile" />
-		<unset name="ecdir" />
-		<unset name="ecclean" />
+		<echo message="Compile ${system} in [${system_dir}]" />
+		<mkdir directory="${system_dir}"/>
+		<geant target="clean" if="${force_clean}=true"/>
+		<geant target="ec_using_ecf"  reuse_variables="true" >
+			<argument name="ecconfig" value="${system_ecf}" />
+			<argument name="ectarget" value="${system_target}" />
+			<argument name="ecprojectpath" value="${system_dir}" />
+			<argument name="ecfinalize" value="${finalize}" />
+			<argument name="ecccompile" value="${c_compile}" />
+			<argument name="ecdir" value="${system_dir}" />
+			<argument name="ecclean" value="${force_clean}" />
+			<argument name="ecusesettings" value="${use_settings}" />
+		</geant>
 	</target>
 
 	<target name="ec_using_ecf">
+		<argument name="ecconfig" />
+		<argument name="ectarget" />
+		<argument name="ecfinalize" />
+		<argument name="ecccompile" />
+		<argument name="ecprojectpath" />
+		<argument name="ecclean" />
+		<argument name="ecusesettings" />
+		<argument name="ecdir" />
+		<!--
+		<echo message="ecconfig=${ecconfig}" />
+		<echo message="ectarget=${ectarget}" />
+		<echo message="ecfinalize=${ecfinalize}" />
+		<echo message="ecccompile=${ecccompile}" />
+		<echo message="ecprojectpath=${ecprojectpath}" />
+		<echo message="ecclean=${ecclean}" />
+		<echo message="ecusesettings=${ecusesettings}" />
+		-->
+
+
+		<echo message="ecdir=${ecdir}" />
 		<set name="eccmd" value="ec${exe} " />
-		<set name="eccmd" value="${eccmd} -config ${ecconfig}" />
-		<set name="eccmd" value="${eccmd} -target ${ectarget}" />
-		<set name="eccmd" value="${eccmd} -finalize" if="${ecfinalize}=true"/>
-		<set name="eccmd" value="${eccmd} -freeze" if="${ecfinalize}=false"/>
-		<set name="eccmd" value="${eccmd} -c_compile" if="${ecccompile}=true" />
-		<set name="eccmd" value="${eccmd} -project_path ${ecprojectpath}" />
-		<set name="eccmd" value="${eccmd} -clean" if="${ecclean}=true" />
+		<set name="eccmd" value="${eccmd} -config $ecconfig" />
+		<set name="eccmd" value="${eccmd} -target $ectarget" />
+		<set name="eccmd" value="${eccmd} -project_path $ecprojectpath" />
+
+		<!-- fixed geant bugs with arguments in if="" -->
+		<set name="ecfinalize" value="$ecfinalize" />
+		<set name="ecccompile" value="$ecccompile" />
+		<set name="ecclean" value="$ecclean" />
+		<set name="ecusesettings" value="$ecusesettings" />
+
+		<set name="eccmd" value="${eccmd} -finalize" 		if="$ecfinalize=true"/>
+		<set name="eccmd" value="${eccmd} -freeze" 			unless="$ecfinalize=true"/>
+		<set name="eccmd" value="${eccmd} -c_compile" 		if="$ecccompile=true" />
+		<set name="eccmd" value="${eccmd} -clean" 			if="$ecclean=true" />
+		<set name="eccmd" value="${eccmd} -use_settings" 	if="$ecusesettings=true" />
+
+		<unset name="ecfinalize" />
+		<unset name="ecccompile" />
+		<unset name="ecclean" />
+		<unset name="ecusesettings" />
+
 		<!-- 
 		<set name="eccmd" value="${eccmd} -use_settings " />
 		-->

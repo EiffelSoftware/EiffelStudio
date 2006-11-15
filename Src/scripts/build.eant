@@ -9,7 +9,6 @@
 	<inherit>
 		<parent location="${EIFFEL_SRC}/scripts/misc/_common_.eant">
 			<redefine target="help"/>
-			<redefine target="check_environment"/>
 		</parent>
 	</inherit>
 	
@@ -58,60 +57,10 @@
 		<echo message=" geant ${opt} clean_ebuild"/>
 		<echo message=" geant ${opt} compile_ebuild"/>
 		<echo message=" geant ${opt} finalize_ebuild"/>
-		<echo message="       ----------"/>
-		<echo message=" geant ${opt} build_es"/>
 	</target>
 	<target name="clean">
 		<set name="opt" value=" -Dforce_clean=true " />
 		<geant target="help" reuse_variables="true" />
-	</target>
-
-	<!-- 
-	**************************************************************************************
-	*** Check environment  ***************************************************************
-	**************************************************************************************
-	-->
-	<target name="check_environment" once="true">
-		<precursor/>
-
-		<set name="ise_bin" value="${ISE_EIFFEL}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}${path_separator}bin" />
-		<available resource="${ise_bin}${path_separator}ec${exe}" variable="ise_ec_available"/>
-		<echo message="Executable ec not found " unless="${ise_ec_available}" />
-		<exit code="1" unless="${ise_ec_available}" />
-
-		<exec executable="sed --version"  accept_errors="true" exit_code_variable="return_code" />
-		<echo message="-------" />
-		<echo message="sed is not found (${return_code})" unless="${return_code}=0" />
-		<exit code="${return_code}" unless="${return_code}=0" />
-		<set name="sed_available" value="true" />
-
-		<echo message="System Environment is valid" />
-	</target>
-
-	<!--
-	**************************************************************************************
-	***  INIT/SETTINGS : ec, batch, unix ...   *******************************************
-	**************************************************************************************
-	-->
-	<target name="init_system" depend="init" once="true">
-		<echo message="System init" />
-
-		<!-- scripts and compilation related -->
-		<set name="scripts_dir" value="${EIFFEL_SRC}${path_separator}scripts" />
-		<set name="misc_dir" value="${scripts_dir}${path_separator}misc" />
-
-		<!-- compilation related -->
-		<set name="compile_dir" value="${cwd}"/>
-
-		<!-- source related -->
-		<set name="delivery_dir" value="${EIFFEL_SRC}${path_separator}..${path_separator}Delivery" />
-
-		<!-- environment related -->
-		<setenv name="ISE_LIBRARY" value="${EIFFEL_SRC}" />
-		<setenv name="EIFFEL_DELIVERY" value="${delivery_dir}" />
-
-		<!-- Default var value -->
-		<set name="force_clean" value="false" />
 	</target>
 
 	<!--
@@ -120,624 +69,197 @@
 	**************************************************************************************
 	-->
 
+	<!-- templates -->
+	<target name="tmp_clean_executable" depend="init">
+		<argument name="executable_target" />
+		<geant file="compile_executables.eant" target="clean_${executable_target}" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	</target>
+	<target name="tmp_compile_executable" depend="init" >
+		<argument name="executable_target" />
+		<set name="use_settings" value="true" />
+		<geant file="compile_executables.eant" target="compile_${executable_target}" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+		<unset name="use_settings" />
+	</target>
+	<target name="tmp_finalize_executable" depend="init">
+		<argument name="executable_target" />
+		<geant file="compile_executables.eant" target="finalize_${executable_target}" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	</target>
+
 	<!-- bench ec -->
-	<target name="init_ec" depend="init_system">
-		<set name="system" value="ec"/>
-		<set name="system_target" value="bench" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace${path_separator}ec.ecf" />
-		<set name="system_dir" value="${compile_dir}" />
+	<target name="clean_ec" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="ec" />
+		</geant>
 	</target>
-	<target name="clean_ec" depend="init_ec">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	<target name="compile_ec" depend="init">
+		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="ec" />
+		</geant>
 	</target>
-	<target name="compile_ec" depend="init_ec">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="false" />
-		<geant file="ise_eiffel.eant" target="compile" reuse_variables="true" dir="${misc_dir}" fork="false"/>
-	</target>
-	<target name="finalize_ec" depend="init_ec">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	<target name="finalize_ec" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="ec" />
+		</geant>
 	</target>
 
 	<!-- batch ec -->
-	<target name="init_ec_batch" depend="init_ec">
-		<set name="system_target" value="batch" />
+	<target name="clean_ec_batch" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="ec_batch" />
+		</geant>
 	</target>
-	<target name="clean_ec_batch" depend="init_ec_batch">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	<target name="compile_ec_batch" depend="init">
+		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="ec_batch" />
+		</geant>
 	</target>
-	<target name="compile_ec_batch" depend="init_ec_batch">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="false" />
-		<geant file="ise_eiffel.eant" target="compile" reuse_variables="true" dir="${misc_dir}" fork="false"/>
-	</target>
-	<target name="finalize_ec_batch" depend="init_ec_batch">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	<target name="finalize_ec_batch" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="ec_batch" />
+		</geant>
 	</target>
 
 	<!-- final estudio -->
-
-	<target name="init_estudio" depend="init_system">
-		<set name="system" value="estudio"/>
-		<set name="system_target" value="estudio" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}estudio${path_separator}config${path_separator}estudio.ecf" />
-		<set name="system_dir" value="${compile_dir}" />
+	<target name="clean_estudio" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="estudio" />
+		</geant>
 	</target>
-	<target name="clean_estudio" depend="init_estudio">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	<target name="finalize_estudio" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="estudio" />
+		</geant>
 	</target>
-	<target name="compile_estudio" depend="init_estudio">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="false" />
-		<geant file="ise_eiffel.eant" target="compile" reuse_variables="true" dir="${misc_dir}" fork="false"/>
-	</target>
-	<target name="finalize_estudio" depend="init_estudio">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
-	</target>
-
 
 	<!-- finish_freezing -->
-	<target name="init_finish_freezing" depend="init_system">
-		<set name="system" value="finish_freezing"/>
-		<set name="system_target" value="finish_freezing" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}finish_freezing${path_separator}finish_freezing.ecf" />
-		<set name="system_dir" value="${compile_dir}" />
+	<target name="clean_finish_freezing" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="finish_freezing" />
+		</geant>
 	</target>
-	<target name="clean_finish_freezing" depend="init_finish_freezing">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
-	</target>
-	<target name="finalize_finish_freezing" depend="init_finish_freezing">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	<target name="finalize_finish_freezing" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="finish_freezing" />
+		</geant>
 	</target>
 
 	<!-- h2e -->
-	<target name="init_h2e" depend="init_system">
-		<set name="system" value="h2e"/>
-		<set name="system_target" value="h2e" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}library${path_separator}wel${path_separator}extra${path_separator}h2e.ecf" />
-		<set name="system_dir" value="${compile_dir}" />
+	<target name="clean_h2e" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="h2e" />
+		</geant>
 	</target>
-	<target name="clean_h2e" depend="init_h2e">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
-	</target>
-	<target name="finalize_h2e" depend="init_h2e">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	<target name="finalize_h2e" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="h2e" />
+		</geant>
 	</target>
 
 	<!-- quick_finalize -->
-	<target name="init_quick_finalize" depend="init_system">
-		<set name="system" value="quick_finalize"/>
-		<set name="system_target" value="quick_finalize" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}quick_finalize${path_separator}quick_finalize.ecf" />
-		<set name="system_dir" value="${compile_dir}" />
+	<target name="clean_quick_finalize" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="quick_finalize" />
+		</geant>
 	</target>
-	<target name="clean_quick_finalize" depend="init_quick_finalize">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
-	</target>
-	<target name="finalize_quick_finalize" depend="init_quick_finalize">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	<target name="finalize_quick_finalize" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="quick_finalize" />
+		</geant>
 	</target>
 
 	<!-- emake -->
-	<target name="init_emake" depend="init_system">
-		<set name="system" value="emake"/>
-		<set name="system_target" value="emake" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}eiffel_make${path_separator}emake.ecf" />
-		<set name="system_dir" value="${compile_dir}" />
+	<target name="clean_emake" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="emake" />
+		</geant>
 	</target>
-	<target name="clean_emake" depend="init_emake">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
-	</target>
-	<target name="finalize_emake" depend="init_emake">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	<target name="finalize_emake" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="emake" />
+		</geant>
 	</target>
 
 	<!-- unix ec -->
-	<target name="init_ec_unix_on_windows" depend="init_ec">
-		<set name="system_target" value="unix_bench" if="${is_windows}" />
+	<target name="compile_ec_unix_on_windows" depend="init">
 		<setenv name="ISE_PLATFORM" value="linux-x86" />
-	</target>
-	<target name="compile_ec_unix_on_windows" depend="init_ec_unix_on_windows">
-		<echo message="Compilation : $system in $system_dir"/>
 		<set name="c_compile" value="false" />
 		<set name="finalize" value="false" />
-		<geant file="ise_eiffel.eant" target="compile" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="ec" />
+		</geant>
 	</target>
+
 
 	<!-- Consumer -->
-
-	<target name="init_mdconsumer" depend="init_system">
-		<set name="system" value="EiffelSoftware.MetadataConsumer"/>
-		<!-- 
-		<set name="system_target" value="consumer_10" />
-		-->
-		<set name="system_target" value="consumer_20" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}dotnet${path_separator}consumer${path_separator}consumer.ecf" />
-		<set name="system_dir" value="${compile_dir}" />
+	<target name="clean_mdconsumer" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="mdconsumer" />
+		</geant>
 	</target>
-	<target name="clean_mdconsumer" depend="init_mdconsumer">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	<target name="compile_mdconsumer" depend="init">
+		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="mdconsumer" />
+		</geant>
 	</target>
-	<target name="compile_mdconsumer" depend="init_mdconsumer">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="false" />
-		<geant file="ise_eiffel.eant" target="compile" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
-	</target>
-	<target name="finalize_mdconsumer" depend="init_mdconsumer">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="c_compile" value="true" />
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
-	</target>
+	<target name="finalize_mdconsumer" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="mdconsumer" />
+		</geant>
+	</target>	
 
 	<!-- emdc -->
-	<target name="init_emdc" depend="init_mdconsumer">
-		<set name="system" value="emdc" />
-		<set name="system_target" value="emdc" />
+	<target name="clean_emdc" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="emdc" />
+		</geant>
 	</target>
-	<target name="clean_emdc" depend="init_emdc">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
-	</target>
-	<target name="finalize_emdc" depend="init_emdc">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="c_compile" value="true" />
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	<target name="finalize_emdc" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="emdc" />
+		</geant>
 	</target>
 
 	<!-- eBuild -->
-	<target name="init_ebuild" depend="init_system">
-		<set name="system" value="build"/>
-		<set name="system_target" value="build" />
-		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}build${path_separator}build.ecf" />
-		<set name="system_dir" value="${compile_dir}" />
+	<target name="clean_esbuilder" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="esbuilder" />
+		</geant>
 	</target>
-	<target name="clean_ebuild" depend="init_ebuild">
-		<echo message="Cleaning : $system in $system_dir"/>
-		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	<target name="compile_esbuilder" depend="init">
+		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="esbuilder" />
+		</geant>
 	</target>
-	<target name="compile_ebuild" depend="init_ebuild">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="false" />
-		<geant file="ise_eiffel.eant" target="compile" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	<target name="finalize_esbuilder" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+			<argument name="executable_target" value="esbuilder" />
+		</geant>
 	</target>
-	<target name="finalize_ebuild" depend="init_ebuild">
-		<echo message="Compilation : $system in $system_dir"/>
-		<set name="finalize" value="true" />
-		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
-	</target>
-
+	
 	<!--
 	**************************************************************************************
 	***  Third party and C code preparation (compilation ...)   **************************
 	**************************************************************************************
 	-->
 
-	<target name="compile_runtime" depend="init_system">
+	<target name="compile_runtime" depend="init">
 		<geant file="${misc_dir}/compile_runtime.eant" target="compile_runtime" reuse_variables="true"  fork="false"/>
 	</target>
-	<target name="clean_runtime" depend="init_system">
+	<target name="clean_runtime" depend="init">
 		<geant file="${misc_dir}/compile_runtime.eant" target="clean_runtime" reuse_variables="true"  fork="false"/>
 	</target>
-	<target name="compile_runtime_dll" depend="init_system">
+	<target name="compile_runtime_dll" depend="init">
 		<geant file="${misc_dir}/compile_runtime.eant" target="compile_runtime_dll" reuse_variables="true"  fork="false"/>
 	</target>
-	<target name="compile_library" depend="init_system">
+	<target name="compile_library" depend="init">
 		<geant file="${misc_dir}/compile_library.eant" target="compile_all" reuse_variables="true"  fork="false"/>
 	</target>
 
 	<!--
-	Compile and save output 
+	Helper scripts
 	-->
-
-	<!-- end of set_version -->
-	<target name="set_version" depend="init_deliv">
-		<echo message="Set version of ec" />
-		<geant target="set_version_windows" if="$is_windows" />
-		<geant target="set_version_unix" unless="$is_windows" />
-	</target>
-
-	<target name="set_version_windows" depend="init_deliv">
-		<set name="set_version_fn" value="${cwd}\tmp_b_set_version.bat" />
-		<set name="tmp_target_dirname" value="${EIFFEL_SRC}\Eiffel\API\constants" />
-		<echo message="rem Set Version" 	to_file="${set_version_fn}" append="false" />
-		<echo message="@echo off" 			to_file="${set_version_fn}"  append="true"/>
-		<echo message="setlocal" 			to_file="${set_version_fn}"  append="true"/>
-		<echo message="svn info ${EIFFEL_SRC} > %1.tmp-rev" 
-											to_file="${set_version_fn}"  append="true"/>
-<!--
-		<echo message="svn info ${tmp_target_dirname} > %1.tmp-rev" 
-											to_file="${set_version_fn}"  append="true"/>
--->
-		<echo message="For /f &quot;tokens=1-4 delims=/ &quot; %%a in ('findstr /L /B /C:&quot;Last Changed Rev&quot; %1.tmp-rev') do (set LASTREV=%%d)" 
-											to_file="${set_version_fn}"  append="true"/>
-		<echo message="del %1.tmp-rev"		to_file="${set_version_fn}"  append="true"/>
-		<echo message="svn revert %1"		to_file="${set_version_fn}"  append="true"/>
-
-		<echo message="For /f &quot;tokens=2-4 delims=/ &quot; %%a in ('date /t') do (set TODAYDATE=%%c-%%a-%%b)" 
-											to_file="${set_version_fn}"  append="true"/>
-
-		<echo message="sed -e &quot;s/create\ Result.make_version\ (\([0-9\ ]*\),\([0-9\ ]*\),\ *[0-9][0-9]*\ *,\([0-9\ ]*\))/create\ Result.make_version\ (\\1,\\2,\ %LASTREV%,\\3)/g&quot; %1 > %1.tmp" 
-											to_file="${set_version_fn}"  append="true"/>
-		<echo message="move %1.tmp %1" 		to_file="${set_version_fn}"  append="true"/>
-
-		<echo message="sed -e &quot;s/Version_info:\ STRING\ is\ \&quot;[0-9a-zA-Z_\,\ \/\:()\.\=\-]*\&quot;/Version_info:\ STRING\ is\ \&quot;Revision:\ %LASTREV% , Compilation:\ %TODAYDATE%\ %TIME%\&quot;/g&quot; %1 > %1.tmp" 
-											to_file="${set_version_fn}"  append="true"/>
-		<echo message="move %1.tmp %1" 		to_file="${set_version_fn}"  append="true"/>
-		<echo message="endlocal" 			to_file="${set_version_fn}"  append="true"/>
-		<echo message="@echo on" 			to_file="${set_version_fn}"  append="true"/>
-
-		<exec executable="${set_version_fn} system_constants.e" dir="${tmp_target_dirname}"
-			accept_errors="true" />
-		<unset name="tmp_target_dirname" />
-		<delete file="${set_version_fn}" />
-	</target>
-
-	<target name="set_version_unix" depend="init">
-		<set name="set_version_fn" value="${cwd}/tmp_b_set_version.sh" />
-		<echo message="#!/bin/sh" 	to_file="${set_version_fn}" append="false" />
-		<exec executable="/bin/sh ${set_version_fn} system_constants.e" dir="${EIFFEL_SRC}/Eiffel/API/constants" 
-			accept_errors="true" />
-		<delete file="${set_version_fn}" />
-	</target>
-
-	<!-- end of set_version -->
-
-	<target name="init_deliv" depend="init_system" >
-		<set name="INSTALL_DIR" value="${cwd}${path_separator}EiffelXX" unless="${INSTALL_DIR}" />
-		<set name="OUTPUT_DIR" value="${cwd}${path_separator}bin" unless="${OUTPUT_DIR}"/>
-		<set name="build_es_logfile" value="${cwd}${path_separator}build_es.log" unless="$build_es_logfile" />
-	</target>
-
-	<target name="build_es" depend="init_deliv" >
-		<set name="build_es_logfile" value="${cwd}${path_separator}build_es.log" />
-		<echo message="Build EiffelStudio ..." to_file="$build_es_logfile" append="true" />
-
-		<geant target="set_version"			fork="false" reuse_variables="true" />
-		<geant target="compile_es" 			fork="false" reuse_variables="true" />
-		<geant target="create_es_delivery" 	fork="false" reuse_variables="true" />
-		<geant target="install_es" 			fork="false" reuse_variables="true" />
-	</target>
-
-	<target name="create_es_delivery" depend="init_deliv" >
-		<echo message="Building delivery for ES into ${INSTALL_DIR}" to_file="$build_es_logfile" append="true" />
-		<!-- Delivery -->
-		<available resource="${INSTALL_DIR}" variable="installdir_available"/>
-		<!--
-		<echo message="Clean delivery ..." to_file="$build_es_logfile" append="true" if="${installdir_available}=true"  />
-		<geant target="clean_delivery" reuse_variables="true" fork="false" if="${installdir_available}=true" />
-		<echo message="Error occurred during 'clean_delivery' (${return_code})" unless="${return_code}=0" />
-		<echo message="Error occurred during 'clean_delivery' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<exit code="${return_code}" unless="${return_code}=0" />
-
-		<available resource="${INSTALL_DIR}" variable="installdir_available"/>
-		-->
-		<mkdir directory="${INSTALL_DIR}"  if="${installdir_available}=false" />
-
-		<set name="return_code" value="0" />
-
-		<echo message="Make delivery in ${INSTALL_DIR} ..." to_file="$build_es_logfile" append="true" if="${installdir_available}=false" />
-		<geant target="make_delivery" reuse_variables="true" fork="false" dir="${INSTALL_DIR}" if="${installdir_available}=false" />
-		<echo message="Error occurred during 'make_delivery' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<exit code="${return_code}" unless="${return_code}=0" />
-
-		<echo message="Update delivery in ${INSTALL_DIR} ..." to_file="$build_es_logfile" append="true" if="${installdir_available}=true" />
-		<geant target="update_delivery" reuse_variables="true" fork="false" dir="${INSTALL_DIR}" if="${installdir_available}=true" />
-		<echo message="Error occurred during 'make_delivery' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<exit code="${return_code}" unless="${return_code}=0" />
-	</target>
-
-	<target name="compile_es" depend="init_deliv" >
-		<echo message="Compiling ES into ${OUTPUT_DIR}" to_file="$build_es_logfile" append="true" />
-
-		<mkdir directory="${OUTPUT_DIR}" />
-		<!-- run-time -->
-		<echo message="Compile runtime ..." to_file="$build_es_logfile" append="true" />
-		<geant target="compile_runtime" />
-		<echo message="Error occurred during 'compile_runtime_dll' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-
-		<!-- library -->
-		<echo message="Compile library ..." to_file="$build_es_logfile" append="true" />
-		<geant target="compile_library" />
-		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" variable="tmp_available"/>
-		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${OUTPUT_DIR}${path_separator}wel_hook.dll" if="${tmp_available}=true" />
-
-		<!-- IL runtime -->
-		<available resource="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" variable="tmp_available"/>
-		<copy file="${EIFFEL_SRC}\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll" to_file="${OUTPUT_DIR}${path_separator}EiffelSoftware.Runtime.dll" if="${tmp_available}=true" />
-		
-		<!-- ec -->
-		<echo message="Finalize ec ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_ec" />
-		<echo message="Error occurred during 'finalize_ec' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}bench${path_separator}F_code${path_separator}ec${exe}" to_file="${OUTPUT_DIR}${path_separator}ec${exe}" if="${return_code}=0" />
-
-		<!-- estudio -->
-		<echo message="Finalize estudio ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_estudio" />
-		<echo message="Error occurred during 'finalize_estudio' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}estudio${path_separator}F_code${path_separator}estudio${exe}" to_file="${OUTPUT_DIR}${path_separator}estudio${exe}" if="${return_code}=0"/>
-		<!-- specific to windows -->
-		<geant target="compile_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
-
-		<echo message="Compiling ES is completed ..." to_file="$build_es_logfile" append="true" />
-
-		<!-- quick_finalize -->
-		<echo message="Finalize quick_finalize ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_quick_finalize" />
-		<echo message="Error occurred during 'finalize_quick_finalize' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}quick_finalize${path_separator}f_code${path_separator}quick_finalize${exe}" to_file="${OUTPUT_DIR}${path_separator}quick_finalize${exe}" if="${return_code}=0" />
-
-	</target>
-
-	<target name="compile_es_windows" depend="init_deliv" if="${is_windows}" >
-		<!-- finish_freezing -->
-		<echo message="Finalize finish_freezing ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_finish_freezing" />
-		<echo message="Error occurred during 'finalize_finish_freezing' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}finish_freezing${path_separator}f_code${path_separator}finish_freezing${exe}" to_file="${OUTPUT_DIR}${path_separator}finish_freezing${exe}" if="${return_code}=0" />
-
-		<!-- h2e -->
-		<echo message="Finalize h2e ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_h2e" />
-		<echo message="Error occurred during 'finalize_h2e' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}h2e${path_separator}f_code${path_separator}h2e${exe}" to_file="${OUTPUT_DIR}${path_separator}h2e${exe}" if="${return_code}=0" />
-
-		<!-- emake -->
-		<echo message="Finalize emake ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_emake"  />
-		<echo message="Error occurred during 'finalize_emake' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy file="${compile_dir}${path_separator}EIFGENs${path_separator}emake${path_separator}F_code${path_separator}emake${exe}" to_file="${OUTPUT_DIR}${path_separator}emake${exe}" if="${return_code}=0"/>
-
-		<!-- dotnet consumer -->
-		<echo message="Finalize mdconsumer ..." to_file="$build_es_logfile" append="true" />
-		<geant target="finalize_mdconsumer" fork="false" />
-		<echo message="Error occurred during 'finalize_mdconsumer' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
-		<copy to_directory="${OUTPUT_DIR}" dir="${compile_dir}\EIFGENs\consumer_20\F_code" if="${return_code}=0" >
-			<fileset include="@(*.dll)" />
-		</copy>
-	</target>
-
-	<target name="install_es" depend="init_deliv" >
-		<echo message="Installing ES into ${INSTALL_DIR}" to_file="$build_es_logfile" append="true" />
-
-		<!-- install binaries -->
-		<set name="tmp_install_dir" value="${INSTALL_DIR}${path_separator}studio${path_separator}spec${path_separator}${ISE_PLATFORM}" />
-
-		<available dir="${OUTPUT_DIR}" resource="ec${exe}" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="ec${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true"/>
-
-		<available dir="${OUTPUT_DIR}" resource="estudio${exe}" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="estudio${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true"/>
-
-
-
-		<copy dir="${OUTPUT_DIR}" to_directory="${tmp_install_dir}${path_separator}bin" >
-			<fileset include="@(*.dll)" />
-		</copy>
-
-		<geant target="install_es_windows" fork="false" reuse_variables="true" if="${is_windows}" />
-		<geant target="install_es_unix" fork="false" reuse_variables="true" unless="${is_windows}" />
-
-		<unset name="tmp_install_dir" />
-		<!-- end of install -->
-
-		<echo message="Installing ES is completed ..." to_file="$build_es_logfile" append="true" />
-	</target>
-
-
-	<target name="install_es_unix" depend="init_deliv" unless="${is_windows}" >
-		<exec executable="chmod a+x ${tmp_install_dir}/bin/* " accept_errors="true" exit_code_variable="return_code" />
-	</target>
-
-	<target name="install_es_windows" depend="init_deliv" if="${is_windows}" >
-		<available dir="${OUTPUT_DIR}" resource="wel_hook.dll" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="wel_hook.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true" />
-
-		<available dir="${OUTPUT_DIR}" resource="EiffelSoftware.Runtime.dll" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="EiffelSoftware.Runtime.dll" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true" />
-		<copy dir="${OUTPUT_DIR}" file="EiffelSoftware.Runtime.dll" to_directory="${tmp_install_dir}${path_separator}lib" 
-			if="${tmp_available}=true" />
-
-		<available dir="${OUTPUT_DIR}" resource="finish_freezing${exe}" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="finish_freezing${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true"/>
-
-		<available dir="${OUTPUT_DIR}" resource="quick_finalize${exe}" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="quick_finalize${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true"/>
-
-		<available dir="${OUTPUT_DIR}" resource="h2e${exe}" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="h2e${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true"/>
-
-		<available dir="${OUTPUT_DIR}" resource="emake${exe}" variable="tmp_available"/>
-		<copy dir="${OUTPUT_DIR}" file="emake${exe}" to_directory="${tmp_install_dir}${path_separator}bin" 
-			if="${tmp_available}=true"/>
-	</target>
-
-	<target name="clean_es" depend="init_deliv" >
-		<exec executable="rmdir /q/s ${EIFGENs}" if="${is_windows}" />
-		<exec executable="\rm -rf ${EIFGENs}" unless="${is_windows}" />
-		<available resource="${INSTALL_DIR}" variable="installdir_available"/>
-		<geant target="clean_delivery" reuse_variables="true" fork="false" if="${installdir_available}=true" />
-	</target>
-
-	<target name="clean_delivery" depend="init_deliv" >
-		<!--
-		<delete directory="${INSTALL_DIR}" if="${installdir_available}=true" />
-		-->
-		<exec executable="rmdir /q/s ${INSTALL_DIR}" if="${is_windows}" accept_errors="true" exit_code_variable="return_code" />
-		<exec executable="\rm -rf ${INSTALL_DIR}" unless="${is_windows}" accept_errors="true" exit_code_variable="return_code" />
-	</target>
-	<target name="make_delivery" depend="init_deliv" >
-		<echo message="Task: make_delivery"/>
-		<set name="NEW_ISE_EIFFEL" value="${cwd}" unless="${NEW_ISE_EIFFEL}" />
-		<geant target="make_delivery_common" reuse_variables="true" fork="false" dir="${NEW_ISE_EIFFEL}" />
-		<geant target="make_delivery_windows" reuse_variables="true" fork="false" if="${is_windows}" dir="${NEW_ISE_EIFFEL}" />
-		<geant target="make_delivery_unix" reuse_variables="true" fork="false" unless="${is_windows}" dir="${NEW_ISE_EIFFEL}" />
-
-		<!-- compile NEW_ISE_EIFFEL library -->
-		<set name="old_ISE_LIBRARY" value="${ISE_LIBRARY}" />
-		<setenv name="ISE_LIBRARY" value="${NEW_ISE_EIFFEL}" />
-		<geant target="compile_library" />
-		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" />
-		<setenv name="ISE_LIBRARY" value="${old_ISE_LIBRARY}" />
-		<unset name="old_ISE_LIBRARY" />
-		<set name="return_code" value="0" />
-	</target>
-
-	<target name="update_delivery" depend="init_deliv" >
-		<echo message="Task: update_delivery"/>
-		<set name="NEW_ISE_EIFFEL" value="${cwd}" />
-		<geant target="make_delivery" reuse_variables="true" fork="false" />
-	</target>
-
-	<target name="make_delivery_common" depend="init_deliv" >
-		<!-- platform independant -->
-		<set name="SVNURL" value="https://eiffelsoftware.origo.ethz.ch/svn/es/trunk" />
-		<exec executable="svn checkout $SVNURL/Delivery . " />
-		<exec executable="svn checkout $SVNURL/Src/library library" />
-		<exec executable="svn checkout $SVNURL/Src/C_library C_library" />
-		<mkdir directory="studio/spec/$ISE_PLATFORM"/>
-		<mkdir directory="studio/spec/$ISE_PLATFORM/bin"/>
-		<echo message="make dir : studio/spec/$ISE_PLATFORM/include" />
-		<mkdir directory="studio/spec/$ISE_PLATFORM/include"/>
-		<mkdir directory="studio/spec/$ISE_PLATFORM/lib"/>
-		<copy to_directory="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include" dir="${EIFFEL_SRC}/C/run-time" >
-			<fileset include="@(*.h)" />
-		</copy>
-		<copy file="${EIFFEL_SRC}/C/eif_confmagic.h" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/include/eif_confmagic.h" />
-		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />
-		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" />
-
-		<copy to_directory="${INSTALL_DIR}\precomp\spec\${ISE_PLATFORM}" dir="precomp\spec\platform" >
-			<fileset 
-				include="@(**/*)" 
-				exclude="@(**/.svn/**/*)"
-			/>
-		</copy>
-	</target>
-
-	<target name="make_delivery_windows" depend="init_deliv" >
-		<!-- Windows -->
-		<mkdir directory="studio\spec\$ISE_PLATFORM\lib\$ISE_C_COMPILER"/>
-		<copy to_directory="${INSTALL_DIR}\studio\spec\${ISE_PLATFORM}\lib\$ISE_C_COMPILER" dir="${EIFFEL_SRC}\C\run-time\LIB" >
-			<fileset include="@(*.lib|*.dll)" />
-		</copy>
-		<copy to_directory="${INSTALL_DIR}\studio\config\${ISE_PLATFORM}" dir="studio\config\windows" unless="${ISE_PLATFORM}=windows" >
-			<fileset 
-				include="@(**/*)" 
-				exclude="@(**/.svn/**/*)"
-			/>
-		</copy>
-	</target>
-
-	<target name="make_delivery_unix" depend="init_deliv" >
-		<copy file="${EIFFEL_SRC}/C/config.sh" to_directory="studio/spec/${ISE_PLATFORM}/include" />
-		<copy to_directory="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/lib" dir="${EIFFEL_SRC}/C/run-time" >
-			<fileset include="@(lib*.*)" />
-		</copy>
-		<copy to_directory="${INSTALL_DIR}/studio/config/${ISE_PLATFORM}" dir="studio/config/unix">
-			<fileset 
-				include="@(**/*)" 
-				exclude="@(**/.svn/**/*)"
-			/>
-		</copy>
-		<exec executable="ln -s -f ../../unix/finish_freezing finish_freezing" dir="studio/spec/$ISE_PLATFORM/bin" />
-		<exec executable="ln -s -f ../../unix/prelink prelink" dir="studio/spec/$ISE_PLATFORM/bin" />
-	</target>
-
-	<!-- 
-		============================================
-		== build windows Setup : work in progress ==
-		============================================
-	-->
-	<target name="prepare_setup" depend="init_deliv" >
-		<!-- prepare executable for release / setup -->
-		<mkdir directory="$INSTALL_DIR\releases" />
-		<mkdir directory="$INSTALL_DIR\releases\gpl_version" />
-		<mkdir directory="$INSTALL_DIR\releases\lib" />
-		<mkdir directory="$INSTALL_DIR\releases\lib\$ISE_C_COMPILER" />
-
-
-		<geant target="clean_runtime" />
-		<geant target="compile_runtime_dll" />
-		<copy to_directory="${INSTALL_DIR}/releases/lib/${ISE_C_COMPILER}" dir="${EIFFEL_SRC}/C/run-time/LIB" >
-			<fileset include="@(*.dll|*.lib)" />
-		</copy>
-
-		<geant target="clean_runtime" />
-		<geant target="compile_runtime" />
-		<copy to_directory="${INSTALL_DIR}/releases/lib/${ISE_C_COMPILER}" dir="${EIFFEL_SRC}/C/run-time/LIB" >
-			<fileset include="@(*.lib)" />
-		</copy>
-		<copy file="${EIFFEL_SRC}/C/desc/ise_desc.dll" to_file="${INSTALL_DIR}/releases/lib/${ISE_C_COMPILER}/ise_desc.dll" />
-		<copy file="${EIFFEL_SRC}/C/desc/ise_desc.lib" to_file="${INSTALL_DIR}/releases/lib/${ISE_C_COMPILER}/ise_desc.lib" />
-
-		<!-- executable -->
-		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ec${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
-		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/finish_freezing${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
-		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/quick_finalize${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
-		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/h2e${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
-		<copy file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" to_directory="${INSTALL_DIR}/releases/gpl_version" />
-
-	</target>
-
-	<target name="make_setup" depend="init_deliv" >
-		<!-- setup itself -->
-		<echo message="Setup only for windows for now !" unless="${is_windows}" />
-		<exit code="-1" unless="${is_windows}" />
-
-		<set name="scripts_windows_dir" value="${INSTALL_DIR}\scripts\windows" />
-		<set name="wixdir" value="${scripts_windows_dir}\wix" />
-		<set name="CANDLE_FLAGS" value="-sw1044" />
-		<set name="IS_WIN64" value="yes" if="${ISE_PLATFORM}=win64" />
-		<set name="IS_WIN64" value="no" unless="${ISE_PLATFORM}=win64" />
-		<setenv name="path" value="${PATH};${wixdir}" />
-		<exec executable="${wixdir}\candle $CANDLE_FLAGS -dIsWin64=${IS_WIN64} -dISE_RELEASE=gpl_version -dISE_MODULE_NAME=ec_gpl -dISE_PRODUCT_NAME=&quot;EiffelStudio GPL Edition&quot; ec.wxs" 
-				dir="${scripts_windows_dir}\install" />
-			<exec executable="${wixdir}\light /b ${INSTALL_DIR} ec.wixobj -out MSMs\ec_gpl.msm" 
-				dir="${scripts_windows_dir}\install" />
-		<delete file="ec.wixobj" />
-
-		<mkdir directory="$INSTALL_DIR\setups" />
-		<mkdir directory="$INSTALL_DIR\setups\gpl" />
-
-		<exec executable="${wixdir}\candle $CANDLE_FLAGS -dIsWin64=${IS_WIN64} -dEDITION=&quot;gpl&quot; -dEDITIONNAME=&quot;GPL Edition&quot; Eiffel.wxs" 
-				dir="${scripts_windows_dir}\install" />
-
-		<exec executable="${wixdir}\light /b ${INSTALL_DIR} Eiffel.wixobj -out ${INSTALL_DIR}\setups\gpl\Eiffel60_gpl_SVN_VERSION-${ISE_PLATFORM}.msi"
-				dir="${scripts_windows_dir}\install" />
-		<delete file="Eiffel.wixobj" />
+	<target name="set_version" depend="init">
+		<geant file="${misc_dir}/set_version.eant" target="set_version" reuse_variables="true"  fork="false"/>
 	</target>
 
 </project>

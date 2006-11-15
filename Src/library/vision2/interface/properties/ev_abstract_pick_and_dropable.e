@@ -104,11 +104,13 @@ feature -- Status setting
 
 	set_target_name_function (a_function: FUNCTION [ANY, TUPLE [ANY], STRING_GENERAL]) is
 			-- Set `a_function' to compute `target_name' based on transport source.
+			-- Overrides any `target_name' set with `set_target_name'.
 		require
 			a_function_not_void: a_function /= Void
-			a_function_takes_pebble: a_function.valid_operands (["pebble"])
 		do
 			target_name_function := a_function.twin
+		ensure
+			target_name_function_assigned: target_name_function /= Void and then target_name_function.is_equal (a_function)
 		end
 
 	set_accept_cursor (a_cursor: like accept_cursor) is

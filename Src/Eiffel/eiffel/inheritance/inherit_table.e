@@ -973,7 +973,12 @@ end;
 				unique_feature ?= Result;
 				create integer_value.make_with_value (
 					Tmp_ast_server.unique_values_item (a_class.class_id).item (Result.feature_name))
-				integer_value.set_real_type (unique_feature.type)
+				if integer_value.valid_type (unique_feature.type) then
+					integer_value.set_real_type (unique_feature.type)
+				else
+						-- The value cannot be represented using specified integer type.
+					error_handler.insert_error (create {VQUI2}.make (a_class, Result.feature_name, Result.type))
+				end
 				unique_feature.set_value (integer_value)
 			elseif Result.is_c_external then
 					-- Track new externals introduced in the class. Freeze is taken care by

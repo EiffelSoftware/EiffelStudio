@@ -581,12 +581,13 @@ feature {NONE} -- Implementation
 				system.set_msil_version (l_new_target.version.version)
 			end
 
+				-- set the new target
+			universe.set_new_target (l_new_target)
+
 			if has_group_changed then
 				parse_target (l_new_target)
 				universe.set_conf_system (conf_system)
 			end
-				-- set the new target
-			universe.set_new_target (l_new_target)
 
 			successful := True
 		ensure

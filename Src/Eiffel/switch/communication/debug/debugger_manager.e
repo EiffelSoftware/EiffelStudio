@@ -16,6 +16,8 @@ inherit
 
 	SYSTEM_CONSTANTS
 
+	EXECUTION_ENVIRONMENT
+
 create {SHARED_DEBUGGER_MANAGER}
 	make
 
@@ -174,8 +176,19 @@ feature -- Access
 		end
 
 	environment_variables_table: HASH_TABLE [STRING_32, STRING_32] is
+		local
+			l_envs: HASH_TABLE [STRING_GENERAL, STRING_GENERAL]
 		do
-			Result := implementation.environment_variables_table
+			l_envs := environment_variables
+			from
+				create Result.make (l_envs.count)
+				l_envs.start
+			until
+				l_envs.after
+			loop
+				Result.force (l_envs.item_for_iteration, l_envs.key_for_iteration)
+				l_envs.forth
+			end
 		ensure
 			Result /= Void
 		end

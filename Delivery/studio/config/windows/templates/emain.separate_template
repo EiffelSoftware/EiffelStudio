@@ -17,7 +17,10 @@ extern void emain(int, char **);
 extern int main(int, char **, char **);
 extern void egc_init_plug (void);
 extern void egc_rcdt_init (void); 
- 
+
+#ifndef GetEnvironmentStringsA 
+ extern LPVOID GetEnvironmentStringsA(void);
+#endif
 
 APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {

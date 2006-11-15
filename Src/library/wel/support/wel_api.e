@@ -147,6 +147,36 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
+feature -- Scrolling
+
+	frozen set_control_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER is
+			-- Sets the parameters of a control scroll bar, including the minimum and maximum
+			-- scrolling positions, the page size, and the position of the scroll box (thumb).
+			-- The function also redraws the scroll bar, if requested.
+			--
+			--| Note: if the call does not seem to work as pointed out by the following discussion thread:
+			--| http://groups.google.com/group/microsoft.public.win32.programmer.ui/browse_frm/thread/91fe1923a5aef60
+			--| try to send the SBM_SETSCROLLINFO as shown in the commented alias clause.
+		external
+			"C inline use  <windows.h>"
+		alias
+			"return SetScrollInfo((HWND) $hwnd, SB_CTL, (LPCSCROLLINFO) $info, (BOOL) $redraw);"
+--			"return (EIF_INTEGER) SendMessage ((HWND) $hwnd, SBM_SETSCROLLINFO, (WPARAM) $redraw, (LPARAM) $info);"
+		end
+
+	frozen get_control_scroll_info (hwnd: POINTER; info: POINTER): INTEGER is
+			-- Retrieves the parameters of a control scroll bar, including the minimum and maximum
+			-- scrolling positions, the page size, and the position of the scroll box (thumb).
+			--
+			--| Note: like `set_control_scroll_info' if it does not work you may try to
+			--| send the SBM_GETSCROLLINFO message as shown in the commented alias clause.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return GetScrollInfo((HWND) $hwnd, SB_CTL, (LPSCROLLINFO) $info);"
+--			"return (EIF_INTEGER) SendMessage ((HWND) $hwnd, SBM_GETSCROLLINFO, (WPARAM) 0, (LPARAM) $info);"
+		end
+
 feature -- Shell
 
 	frozen shell_notify_icon (a_message: INTEGER; a_notify_icon_data_ptr: POINTER): INTEGER is

@@ -231,17 +231,19 @@ feature -- Implementation
 			app_imp := app_implementation
 			l_top_level_window_imp := top_level_window_imp
 			if l_top_level_window_imp /= Void then
-				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then not app_imp.is_in_transport then
-					if is_dockable and then a_button = 1 then
+				if not app_imp.is_in_transport then
+					if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then is_dockable and then a_button = 1 then
 						l_dockable_source ?= Current
 						l_dockable_source.start_dragable_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 						l_call_events := False
-					elseif able_to_transport (a_button) or else ready_for_pnd_menu (a_button) then
+					elseif
+						(a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button)) or else
+						(a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then ready_for_pnd_menu (a_button)) then
 							-- Retrieve/calculate pebble
 						call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
 						if pebble /= Void then
 							if
-								able_to_transport (a_button)
+								a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button)
 							then
 								pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
 								if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
@@ -262,7 +264,7 @@ feature -- Implementation
 								internal_set_pointer_style (l_cursor)
 								enable_capture
 								l_call_events := False
-							elseif ready_for_pnd_menu (a_button) then
+							elseif a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then ready_for_pnd_menu (a_button) then
 								app_imp.target_menu (pebble).show
 								l_call_events := False
 							end

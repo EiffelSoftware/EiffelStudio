@@ -16,6 +16,19 @@ feature -- Access
 			-- length restriction on Windows. This is name used when
 			-- running in `conservative_mode'
 
+	cache_bit_platform: STRING is
+			-- Bit platform cache used under
+		once
+			if {PLATFORM_CONSTANTS}.is_windows_64_bits then
+				Result.append (x64_directory_name)
+			else
+				Result.append (x86_directory_name)
+			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
 	cache_name: STRING is "MetadataConsumer"
 			-- Cache name.
 
@@ -35,10 +48,16 @@ feature -- Access
 	types_info_file: STRING is "types.info"
 			-- Name of file which has information about the types in an assembly.
 
-	null_key_string: STRING is "null";
+	null_key_string: STRING is "null"
 			-- Null key string.
 
-indexing
+feature {NONE} -- Constants
+
+	x64_directory_name: STRING = "x64"
+	x86_directory_name: STRING = "x86"
+			-- Bit platform directory names.
+
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

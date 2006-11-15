@@ -1,0 +1,4 @@
+Error: Unique constant cannot be represented using specified integer type.
+What to do: use other integer type with larger range of values
+   (e.g., INTEGER_16 instead of INTEGER_8), reduce the number of
+   unique constants or make the feature non-Unique. 

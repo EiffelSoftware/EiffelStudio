@@ -119,7 +119,7 @@ feature {EV_ANY_I} -- Implementation
 			scroll_info_struct.set_minimum (value_range.lower)
 			scroll_info_struct.set_maximum (value_range.upper + a_leap - 1)
 			scroll_info_struct.set_page (a_leap)
-			l_previous := cwin_set_scroll_info (wel_item, scroll_info_struct.item, True)
+			l_previous := {WEL_API}.set_control_scroll_info (wel_item, scroll_info_struct.item, True)
 		end
 
 	wel_set_range (a_minimum, a_maximum: INTEGER) is
@@ -149,7 +149,7 @@ feature {EV_ANY_I} -- Implementation
 			scroll_info_struct.set_position (l_value)
 			scroll_info_struct.set_minimum (a_minimum)
 			scroll_info_struct.set_maximum (a_maximum)
-			l_previous := cwin_set_scroll_info (wel_item, scroll_info_struct.item, True)
+			l_previous := {WEL_API}.set_control_scroll_info (wel_item, scroll_info_struct.item, True)
 		end
 
 	set_range is

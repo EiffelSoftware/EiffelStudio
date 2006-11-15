@@ -63,10 +63,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool: like metric_tool; a_panel: like metric_panel) is
+	make (a_tool: like metric_tool; a_panel: like metric_panel; a_mode: INTEGER; a_unit: QL_METRIC_UNIT) is
 			-- Initialize `metric' with `a_metric' mode with `a_mode' and `unit' with `a_unit'.
 		require
 			a_tool_attached: a_tool /= Void
+			a_mode_valid: is_mode_valid (a_mode)
+			a_unit_attached: a_unit /= Void
 		do
 			create expression_generator.make
 			create change_actions_internal
@@ -75,6 +77,8 @@ feature {NONE} -- Initialization
 			set_metric_panel (a_panel)
 			default_create
 			setup_editor
+			set_mode (a_mode)
+			set_unit (a_unit)
 		ensure
 			change_actions_attached: change_actions_internal /= Void
 			metric_tool_set: metric_tool = a_tool

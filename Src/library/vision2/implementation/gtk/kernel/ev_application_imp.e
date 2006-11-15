@@ -419,36 +419,40 @@ feature -- Basic operation
 
 							if l_pnd_imp /= Void then
 								l_top_level_window_imp := l_pnd_imp.top_level_window_imp
-								if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then
+								if l_top_level_window_imp /= Void then
+									if not l_top_level_window_imp.has_modal_window then
+										{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+										if pointer_motion_actions_internal /= Void then
+											l_widget_imp ?= l_pnd_imp
+											if l_widget_imp /= Void then
+													pointer_motion_actions_internal.call (
+													[
+														l_widget_imp.interface,
+														l_screen_x,
+														l_screen_y
+													]
+												)
+											end
+										end
+										if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM then
+											if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget) /= {EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event) then
+													-- If the event we received is not from the associating widget window then we remap its correct x and y values.
+												i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget), $l_widget_x, $l_widget_y)
+												l_widget_x := l_screen_x - l_widget_x
+												l_widget_y := l_screen_y - l_widget_y
+											end
+											l_motion_tuple.put_integer (l_widget_x, 1)
+											l_motion_tuple.put_integer (l_widget_y, 2)
+											l_motion_tuple.put_double (0.5, 3)
+											l_motion_tuple.put_double (0.5, 4)
+											l_motion_tuple.put_double (0.5, 5)
+											l_motion_tuple.put_integer (l_screen_x, 6)
+											l_motion_tuple.put_integer (l_screen_y, 7)
+											l_pnd_imp.on_pointer_motion (l_motion_tuple)
+										end
+									end
+								else
 									{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
-								end
-								if pointer_motion_actions_internal /= Void then
-									l_widget_imp ?= l_pnd_imp
-									if l_widget_imp /= Void then
-											pointer_motion_actions_internal.call (
-											[
-												l_widget_imp.interface,
-												l_screen_x,
-												l_screen_y
-											]
-										)
-									end
-								end
-								if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM then
-									if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget) /= {EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event) then
-											-- If the event we received is not from the associating widget window then we remap its correct x and y values.
-										i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_pnd_imp.visual_widget), $l_widget_x, $l_widget_y)
-										l_widget_x := l_screen_x - l_widget_x
-										l_widget_y := l_screen_y - l_widget_y
-									end
-									l_motion_tuple.put_integer (l_widget_x, 1)
-									l_motion_tuple.put_integer (l_widget_y, 2)
-									l_motion_tuple.put_double (0.5, 3)
-									l_motion_tuple.put_double (0.5, 4)
-									l_motion_tuple.put_double (0.5, 5)
-									l_motion_tuple.put_integer (l_screen_x, 6)
-									l_motion_tuple.put_integer (l_screen_y, 7)
-									l_pnd_imp.on_pointer_motion (l_motion_tuple)
 								end
 							else
 								{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)

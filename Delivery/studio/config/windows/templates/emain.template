@@ -38,7 +38,8 @@ int main (void)
 
 		/* Initialization of the command line which is going to be passed to eiffel */
 	get_argcargv (&argc, &argv);
-	envp = (char **) GetEnvironmentStrings();
+		/* We get ANSI version of environment variables */
+	envp = (char **) GetEnvironmentStringsA();
 
 	eif_alloc_init();
 #ifdef EIF_THREADS
@@ -64,7 +65,7 @@ int main (void)
 		free_argv (&argv);
 		reclaim();
 	}
-	FreeEnvironmentStrings ((LPTSTR) envp);
+	FreeEnvironmentStringsA ((LPSTR) envp);
 
 	exit(0);
 	return 0;

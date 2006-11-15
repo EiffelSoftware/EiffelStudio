@@ -32,10 +32,14 @@ feature {NONE} -- Access
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Argument switches
 		once
-			create Result.make (3)
+			create Result.make (7)
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (location_switch, "Directory where to look for configuration files.", True, False, "location", "A directory to look for ecf files", False))
+			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (eifgen_switch, "Directory where projects will be compiled.", True, False, "eifgen", "A directory where the projects will be compiled", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (log_verbose_switch, "Verbose logging of actions?", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (parse_only_switch, "Only parse configuration files and check dependencies?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (no_clean_switch, "Clean before compilation?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (no_melt_switch, "Do not melt the project?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (no_freeze_switch, "Do not freeze the project?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (no_finalize_switch, "Do not finalize the project?", True, False))
 		end
 
 feature -- Status Report
@@ -67,10 +71,18 @@ feature -- Access
 			result_exists: (create {RAW_FILE}.make (Result)).exists or (create {DIRECTORY}.make (Result)).exists
 		end
 
+	eifgen: STRING
+			-- Location where the projects are compiled.
+		once
+			if has_option (eifgen_switch) then
+				Result := option_of_name (eifgen_switch).value
+			end
+		end
+
 	is_parse_only: BOOLEAN
 			-- Only parse and check dependencies?
 		once
-			Result := has_option (parse_only_switch)
+			Result := has_option (no_melt_switch) and has_option (no_freeze_switch) and has_option (no_finalize_switch)
 		end
 
 	is_log_verbose: BOOLEAN
@@ -79,11 +91,39 @@ feature -- Access
 			Result := has_option (log_verbose_switch)
 		end
 
+	is_clean: BOOLEAN
+			-- Clean before compilation?
+		once
+			Result := not has_option (no_clean_switch)
+		end
+
+	is_melt: BOOLEAN
+			-- Melt the project?
+		once
+			Result := not has_option (no_melt_switch)
+		end
+
+	is_freeze: BOOLEAN
+			-- Freeze the project?
+		once
+			Result := not has_option (no_freeze_switch)
+		end
+
+	is_finalize: BOOLEAN
+			-- Finalize the project?
+		once
+			Result := not has_option (no_finalize_switch)
+		end
+
 feature {NONE} -- Switch names
 
 	location_switch: STRING = "l"
+	eifgen_switch: STRING = "eifgen"
 	log_verbose_switch: STRING = "log_verbose"
-	parse_only_switch: STRING = "parse_only";
+	no_clean_switch: STRING = "no_clean"
+	no_melt_switch: STRING = "no_melt"
+	no_freeze_switch: STRING = "no_freeze"
+	no_finalize_switch: STRING = "no_finalize";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

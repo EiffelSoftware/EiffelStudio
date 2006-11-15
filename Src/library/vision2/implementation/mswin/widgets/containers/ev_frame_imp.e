@@ -86,6 +86,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_SHARED_METRICS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -341,16 +346,22 @@ feature {NONE} -- WEL Implementation
 			theme_drawer: EV_THEME_DRAWER_IMP
 			text_rect: WEL_RECT
 			drawstate: INTEGER
-			memory_dc: WEL_MEMORY_DC
+			memory_dc: WEL_DC
 			wel_bitmap: WEL_BITMAP
 			color_imp: EV_COLOR_IMP
+			l_is_remote: BOOLEAN
 		do
+			l_is_remote := metrics.is_remote_session
 			theme_drawer := application_imp.theme_drawer
 
-			create memory_dc.make_by_dc (paint_dc)
-			create wel_bitmap.make_compatible (paint_dc, width, height)
-			memory_dc.select_bitmap (wel_bitmap)
-			wel_bitmap.dispose
+			if l_is_remote then
+				memory_dc := paint_dc
+			else
+				create {WEL_MEMORY_DC} memory_dc.make_by_dc (paint_dc)
+				create wel_bitmap.make_compatible (paint_dc, width, height)
+				memory_dc.select_bitmap (wel_bitmap)
+				wel_bitmap.dispose
+			end
 
 				-- Cache value of `ev_width' and `ev_height' for
 				-- faster access
@@ -442,7 +453,11 @@ feature {NONE} -- WEL Implementation
 				end
 				theme_drawer.draw_text (open_theme, memory_dc, bp_groupbox, gbs_disabled, text, dt_center, is_sensitive, text_rect, color_imp)
 			end
-			paint_dc.bit_blt (invalid_rect.left, invalid_rect.top, invalid_rect.width, invalid_rect.height, memory_dc, invalid_rect.left, invalid_rect.top, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
+			if not l_is_remote then
+				paint_dc.bit_blt (invalid_rect.left, invalid_rect.top,
+					invalid_rect.width, invalid_rect.height,
+					memory_dc, invalid_rect.left, invalid_rect.top, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
+			end
 			memory_dc.unselect_all
 			memory_dc.delete
 			disable_default_processing

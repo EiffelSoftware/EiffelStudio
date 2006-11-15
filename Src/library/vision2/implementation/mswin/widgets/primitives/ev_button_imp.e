@@ -144,6 +144,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_SHARED_METRICS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -458,13 +463,13 @@ feature {EV_ANY_I} -- Drawing implementation
 				-- if there is no pixmap.
 			wel_bitmap: WEL_BITMAP
 				-- Bitmap used to draw `internal_pixmap_state' on `Current' if it is not Void.
-			rect: WEL_RECT
+			l_rect: WEL_RECT
 				-- Rect of `Current' retrieved from `draw_item'.
 			focus_rect: WEL_RECT
-				-- Rect used to draw focus rect. Is `rect' inflated negatively, using `focus_rect_border'.
+				-- Rect used to draw focus rect. Is `l_rect' inflated negatively, using `focus_rect_border'.
 			state: INTEGER
 				-- State of `Current' as retrieved from `draw_item'.
-			memory_dc: WEL_MEMORY_DC
+			memory_dc: WEL_DC
 				-- Dc used to perform all drawing on. This cuts out the flicker that would be present if
 				-- we did not buffer the drawing.
 			font_imp: EV_FONT_IMP
@@ -504,20 +509,26 @@ feature {EV_ANY_I} -- Drawing implementation
 			theme_drawer: EV_THEME_DRAWER_IMP
 				-- Theme drawer currently in use.
 			l_internal_brush: WEL_BRUSH
+			l_is_remote: BOOLEAN
 		do
 			theme_drawer := application_imp.theme_drawer
+			l_is_remote := metrics.is_remote_session
 
 				-- Local access to information in `draw_item'.
 			dc := draw_item.dc
-			rect := draw_item.rect_item
+			l_rect := draw_item.rect_item
 			state := draw_item.item_state
 
-				-- Create `memory_dc' for double buffering, and select
-				-- a bitmap compatible with `dc' ready for drawing.
-			create memory_dc.make_by_dc (dc)
-			create wel_bitmap.make_compatible (dc, rect.width, rect.height)
-			memory_dc.select_bitmap (wel_bitmap)
-			wel_bitmap.dispose
+			if l_is_remote then
+				memory_dc := dc
+			else
+					-- Create `memory_dc' for double buffering, and select
+					-- a bitmap compatible with `dc' ready for drawing.
+				create {WEL_MEMORY_DC} memory_dc.make_by_dc (dc)
+				create wel_bitmap.make_compatible (dc, l_rect.width, l_rect.height)
+				memory_dc.select_bitmap (wel_bitmap)
+				wel_bitmap.dispose
+			end
 
 				-- Now set both the font and background colors of `memory_dc'.
 			color_imp ?= background_color.implementation
@@ -550,7 +561,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			end
 
 							-- Need to first clear the area to the background color of `parent_imp'
-			theme_drawer.draw_theme_parent_background (wel_item, memory_dc, rect, Void)
+			theme_drawer.draw_theme_parent_background (wel_item, memory_dc, l_rect, Void)
 
 				-- We set the text color of `memory_dc' to white, so that if we are
 				-- a toggle button, and must draw the checked background, it uses white combined with
@@ -559,13 +570,13 @@ feature {EV_ANY_I} -- Drawing implementation
 			memory_dc.set_text_color (white)
 
 			l_internal_brush := internal_background_brush
-			theme_drawer.draw_theme_background (open_theme, memory_dc, bp_pushbutton, drawstate, rect, Void, l_internal_brush)
+			theme_drawer.draw_theme_background (open_theme, memory_dc, bp_pushbutton, drawstate, l_rect, Void, l_internal_brush)
 			l_internal_brush.delete
 
 			memory_dc.set_text_color (color_ref)
 
-			create focus_rect.make (rect.left, rect.top, rect.right, rect.bottom)
-			create text_rect.make (rect.left, rect.top, rect.right, rect.bottom)
+			create focus_rect.make (l_rect.left, l_rect.top, l_rect.right, l_rect.bottom)
+			create text_rect.make (l_rect.left, l_rect.top, l_rect.right, l_rect.bottom)
 			focus_rect.inflate (-focus_rect_border, -focus_rect_border)
 
 			if has_pushed_appearence (state) then
@@ -668,10 +679,11 @@ feature {EV_ANY_I} -- Drawing implementation
 				draw_focus_rect (memory_dc, focus_rect)
 			end
 
-				-- Copy the image from `memory_dc' to `dc' which is the dc originally provided
-				-- in `draw_item_state'.
-			dc.bit_blt (rect.left, rect.top, rect.width, rect.height, memory_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
-
+			if not l_is_remote then
+					-- Copy the image from `memory_dc' to `dc' which is the dc originally provided
+					-- in `draw_item_state'.
+				dc.bit_blt (l_rect.left, l_rect.top, l_rect.width, l_rect.height, memory_dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.Srccopy)
+			end
 				-- Clean up GDI objects created.
 			memory_dc.unselect_all
 			memory_dc.delete

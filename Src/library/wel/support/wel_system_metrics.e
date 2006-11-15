@@ -275,12 +275,12 @@ feature -- Status report
 			Result := cwin_get_system_metrics (Sm_dbcsenabled) /= 0
 		end
 
-	imm_enabled: BOOLEAN is 
-			-- Is the IMM enabled (works only for Windows 2000 and 
-			-- and Asian locale machines (Chinese, Japanese, Korean)) 
-		do 
-			Result := cwin_get_system_metrics (Sm_immenabled) /= 0 
-		end 
+	imm_enabled: BOOLEAN is
+			-- Is the IMM enabled (works only for Windows 2000 and
+			-- and Asian locale machines (Chinese, Japanese, Korean))
+		do
+			Result := cwin_get_system_metrics (Sm_immenabled) /= 0
+		end
 
 	debug_installed: BOOLEAN is
 			-- Is the debugging version of USER.EXE installed?
@@ -314,6 +314,12 @@ feature -- Status report
 			Result := cwin_get_system_metrics (Sm_swapbutton) /= 0
 		end
 
+	is_remote_session: BOOLEAN is
+			-- Is current applications displayed using remote desktop?
+		do
+			Result := cwin_get_system_metrics (sm_remotesession) /= 0
+		end
+
 feature {NONE} -- Externals
 
 	cwin_get_system_metrics (value: INTEGER): INTEGER is
@@ -335,8 +341,5 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_SYSTEM_METRICS
+end
 

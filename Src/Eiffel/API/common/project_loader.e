@@ -585,6 +585,12 @@ feature {NONE} -- Settings
 					l_key := l_envs.key_for_iteration
 					l_old_val := l_envs.item_for_iteration
 					l_new_val := eiffel_layout.get_environment (l_key)
+					if eiffel_layout.platform.is_windows then
+						l_old_val.to_lower
+						if l_new_val /= Void then
+							l_new_val.to_lower
+						end
+					end
 					if
 						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_framework_env) and then
 						not l_key.is_case_insensitive_equal (eiffel_layout.ise_precomp_env) and then

@@ -57,6 +57,8 @@
 		<echo message=" geant ${opt} clean_ebuild"/>
 		<echo message=" geant ${opt} compile_ebuild"/>
 		<echo message=" geant ${opt} finalize_ebuild"/>
+		<echo message="       ----------"/>
+		<echo message=" geant ${opt} build_es"/>
 	</target>
 	<target name="clean">
 		<set name="opt" value=" -Dforce_clean=true " />
@@ -260,6 +262,10 @@
 	-->
 	<target name="set_version" depend="init">
 		<geant file="${misc_dir}/set_version.eant" target="set_version" reuse_variables="true"  fork="false"/>
+	</target>
+
+	<target name="build_es" depend="init">
+		<geant file="${scripts_dir}/deliv.eant" target="build_es" reuse_variables="true"  fork="false"/>
 	</target>
 
 </project>

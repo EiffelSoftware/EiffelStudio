@@ -11,6 +11,9 @@ indexing
 
 class EXECUTION_ENVIRONMENT
 
+inherit
+	PLATFORM
+
 feature -- Access
 
 	command_line: ARGUMENTS is
@@ -69,6 +72,35 @@ feature -- Access
 			Result := "/"
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	environment_variables: HASH_TABLE [STRING, STRING] is
+			-- Table of environment variables associated with current process,
+			-- indexed by variable name
+		local
+			l_dic: IDICTIONARY
+			l_enumerator: IENUMERATOR
+			l_entry: DICTIONARY_ENTRY
+			l_key: SYSTEM_STRING
+			l_value: SYSTEM_STRING
+		do
+			l_dic := {ENVIRONMENT}.get_environment_variables
+			l_enumerator := l_dic.get_enumerator_2
+			create Result.make (l_dic.count)
+			from
+			until
+				not l_enumerator.move_next
+			loop
+				l_entry ?= l_enumerator.current_
+				check l_entry /= Void end
+				l_key ?= l_entry.key
+				l_value ?= l_entry.value
+				check
+					l_key /= Void
+					l_value /= Void
+				end
+				Result.force (l_value, l_key)
+			end
 		end
 
 feature -- Status
@@ -193,7 +225,7 @@ feature {NONE} -- Implementation
 					l_comspec := "cmd.exe"
 				end
 				if s.is_empty then
-					create l_si.make_from_file_name (l_comspec.to_cil)				
+					create l_si.make_from_file_name (l_comspec.to_cil)
 				else
 					create l_si.make_from_file_name_and_arguments (l_comspec.to_cil, ("/c " + s).to_cil)
 				end
@@ -237,7 +269,7 @@ feature {NONE} -- Implementation
 					l_ext.start
 				until
 					Result /= Void or l_ext.off
-				loop 
+				loop
 					from
 						l_paths.start
 					until
@@ -270,7 +302,7 @@ feature {NONE} -- Implementation
 		ensure
 			executable_extensions_not_void: Result /= Void
 		end
-		
+
 	search_directories: ARRAYED_LIST [STRING] is
 			-- While it would be more efficient to make this a
 			-- "once" feature, it's also possible that the caller
@@ -308,7 +340,7 @@ feature {NONE} -- Implementation
 				l_vars.forth
 			end
 		end
-						
+
 	user_environment_variables: HASH_TABLE [STRING, STRING] is
 			-- User-defined environment variables.
 		once

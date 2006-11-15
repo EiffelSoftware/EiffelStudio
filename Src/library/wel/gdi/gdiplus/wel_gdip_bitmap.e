@@ -120,7 +120,7 @@ feature -- Command
 			l_header_info.set_height (height)
 			l_header_info.set_planes (1)
 			l_header_info.set_bit_count (32)
-			l_header_info.set_compression ({WEL_BI_COMPRESSION_CONSTANTS}.Bi_rgb.to_integer_32)
+			l_header_info.set_compression ({WEL_BI_COMPRESSION_CONSTANTS}.Bi_rgb)
 			l_header_info.set_size_image (0)
 			l_header_info.set_x_pels_per_meter (0)
 			l_header_info.set_y_pels_per_meter (0)
@@ -132,7 +132,9 @@ feature -- Command
 
 			l_result_pointer := Result.ppv_bits
 
-			l_bitmap_data := lock_bits (create {WEL_GDIP_RECT}.make_with_size (0, 0, width, height), {WEL_GDIP_IMAGE_LOCK_MODE}.read_only, {WEL_GDIP_PIXEL_FORMAT}.format32bpppargb)
+			l_bitmap_data := lock_bits (
+				create {WEL_GDIP_RECT}.make_with_size (0, 0, width, height),
+				{WEL_GDIP_IMAGE_LOCK_MODE}.read_only, {WEL_GDIP_PIXEL_FORMAT}.format32bpppargb)
 			-- We are 32bits, so size is width * height * 4
 			l_result_pointer.memory_copy (l_bitmap_data.scan_0, width * height * 4)
 			unlock_bits (l_bitmap_data)

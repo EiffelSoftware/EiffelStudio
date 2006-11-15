@@ -236,18 +236,13 @@ feature {EMITTER} -- Access
 			Result.append_character (l_dir_sep)
 			Result.append (clr_version)
 			Result.append_character (l_dir_sep)
-			if {PLATFORM_CONSTANTS}.is_windows_64_bits then
-				Result.append (x64_directory_name)
-			else
-				Result.append (x86_directory_name)
-			end
+			Result.append (cache_bit_platform)
 			Result.append_character (l_dir_sep)
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
-
 
 	internal_eiffel_cache_path: CELL [STRING] is
 			-- internal eiffel cache path
@@ -265,12 +260,6 @@ feature {EMITTER} -- Element Change
 		do
 			internal_eiffel_cache_path.put (a_path)
 		end
-
-feature {NONE} -- Constants
-
-	x64_directory_name: STRING = "x64"
-	x86_directory_name: STRING = "x86";
-			-- Bit platform directory names.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

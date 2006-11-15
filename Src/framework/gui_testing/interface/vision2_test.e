@@ -18,46 +18,29 @@ inherit
 
 	SHARED_KEYBOARD
 
-feature -- Access
-
-	application_under_test: EV_APPLICATION is
-			-- Application under test
-		deferred
-		end
-
-feature -- Element change
-
-	set_application_under_test (an_app: EV_APPLICATION) is
-			-- Set application under test to `an_app'.
-		require
-			an_app_not_void: an_app /= Void
-		local
-			gui_imp: GUI_IMP
-		do
-			gui_imp ?= gui.implementation
-			gui_imp.set_application_under_test (an_app)
-		ensure
-			ev_application_set: gui.application_under_test = an_app
-		end
-
 feature -- Basic operations
 
 	launch_application is
 			-- Launch application under test
+			-- This must be implemented by the test case. Create the
+			-- original root class with the root feature.
 		deferred
 		end
 
 	launch_application_threaded is
 			-- Launch application under test in a separate thread
+		local
+			l_thread: WORKER_THREAD
 		do
-			create {WORKER_THREAD}thread.make_with_procedure (agent launch_application)
-			thread.launch
+			create l_thread.make_with_procedure (agent launch_application)
+			l_thread.launch
 			from until
-				application_under_test /= Void
+				gui.application_under_test /= Void
 			loop
 				sleep (10_000_000)
 			end
-			set_application_under_test (application_under_test)
+		ensure
+			application_under_test_not_void: gui.application_under_test /= Void
 		end
 
 	wait_until_destroyed is
@@ -75,7 +58,7 @@ feature -- Basic operations
 		end
 
 	run_safe_test (a_test: PROCEDURE [ANY, TUPLE])
-			--
+			-- Run a test procedure in a rescue clause.
 		local
 			failed: BOOLEAN
 		do
@@ -88,13 +71,6 @@ feature -- Basic operations
 			failed := True
 			retry
 		end
-
-feature {NONE} -- Implementation
-
-	thread: THREAD
-		-- Thread used to launch Vision2 application
-
-invariant
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

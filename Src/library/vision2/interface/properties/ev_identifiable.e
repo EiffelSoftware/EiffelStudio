@@ -27,13 +27,28 @@ feature -- Access
 
 	identifier_name: STRING is
 			-- Name of object
-			-- If no specific name is set, the generating type is used.
+			-- If no specific name is set, `default_identifier_name' is used.
 		do
 			if internal_name = Void then
-				Result := "{"+generating_type+"}"
+				Result := default_identifier_name
 			else
 				Result := internal_name.twin
 			end
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
+			no_period_in_result: not Result.has ('.')
+			default_name_available: not has_identifier_name_set implies Result.is_equal (default_identifier_name)
+		end
+
+	default_identifier_name: STRING is
+			-- Default name if no other name is set.
+		do
+			Result := "{"+generating_type+"}"
+		ensure
+			result_not_void: Result /= Void
+			result_not_empty: not Result.is_empty
+			no_period_in_result: not Result.has ('.')
 		end
 
 	full_identifier_path: STRING
@@ -85,11 +100,9 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	internal_name: STRING
-			-- Internal name set by `set_name'
+			-- Internal name set by `set_identifier_name'
 
 invariant
-	identifier_name_not_void: identifier_name /= Void
-	identifier_name_not_empty: not identifier_name.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -437,11 +437,14 @@ feature {NONE} -- Implementation: State
 		local
 			l_formal_type: FORMAL_A
 		do
-			if a_type.is_formal then
-				l_formal_type ?= a_type
-				Result := context.current_class.constraint (l_formal_type.position)
-			else
+			from
+					-- Unfold the chain of formal generics
 				Result := a_type
+			until
+				not Result.is_formal
+			loop
+				l_formal_type ?= Result
+				Result := context.current_class.constraint (l_formal_type.position)
 			end
 		end
 

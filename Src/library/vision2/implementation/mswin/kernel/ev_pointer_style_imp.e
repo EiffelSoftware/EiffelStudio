@@ -41,7 +41,9 @@ feature {NONE} -- Initlization
 			build_bitmap (a_pixel_buffer)
 			build_native_cursor (a_pixel_buffer.width, a_pixel_buffer.height, a_x_hotspot, a_y_hotspot)
 			wel_bitmap.delete
+			wel_bitmap := Void
 			wel_mask_bitmap.delete
+			wel_mask_bitmap := Void
 		end
 
 	init_from_cursor (a_cursor: EV_CURSOR) is

@@ -39,12 +39,6 @@ create {CONF_COMP_FACTORY}
 
 feature -- Attributes
 
-	path: STRING is
-			-- Path to the cluster (without environment variables and trailing \ or /)
-		do
-			Result := location.evaluated_directory
-		end
-
 	classes: HASH_TABLE [EIFFEL_CLASS_I, STRING]
 			-- Classes available in the cluster: key is the declared
 			-- name and entry is the class
@@ -64,26 +58,10 @@ feature -- Access
 			Result := cluster_name.as_upper
 		end
 
-feature -- Formatting
-
-	format (a_text_formatter: TEXT_FORMATTER) is
-			-- Output name of Current in `a_text_formatter'.
-			-- (from ASSEMBLY_INFO)
-		require -- from ASSEMBLY_INFO
-			st_not_void: a_text_formatter /= Void
-		do
-			a_text_formatter.add_string (path)
-		end
-
 feature -- Type anchors
 
-	class_anchor: CLASS_I is
+	class_anchor: CLASS_I;
 			-- Type of classes one can insert in Current
-		do
-		end
-
-invariant
-	path_not_void: path /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

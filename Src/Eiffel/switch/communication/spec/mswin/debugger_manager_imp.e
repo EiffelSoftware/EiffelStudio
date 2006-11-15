@@ -13,67 +13,6 @@ create {DEBUGGER_MANAGER}
 
 feature {DEBUGGER_MANAGER} -- Access
 
-	environment_variables_table: HASH_TABLE [STRING_32, STRING_32] is
-		local
-			p: POINTER
-			ws: WEL_STRING
-			k,v: STRING_32
-			s: STRING_32
-			i: INTEGER
-			lst: LIST [STRING_32]
-		do
-
-			p := cwin_get_environment_strings
-			if p /= Default_pointer then
-				create ws.share_from_pointer (p)
-				lst := ws.null_separated_strings
-				from
-					create Result.make (lst.count)
-					lst.start
-				until
-					lst.after
-				loop
-					s := lst.item
-					if s /= Void and then not s.is_empty then
-						i := s.index_of ('=', 1)
-						if i > 1 then
-							k := s.substring (1, i - 1)
-							if i < s.count then
-								v := s.substring (i + 1, s.count)
-								Result.force (v, k)
-							end
-						end
-					end
-					lst.forth
-				end
-				cwin_free_environment_strings (p)
-			end
-		end
-
-feature {NONE} -- Externals
-
-	cwin_get_environment_strings: POINTER is
-			-- GetEnvironmentStrings
-		external
-			"[
-				C signature(): EIF_POINTER
-				use "windows.h"
-			]"
-		alias
-			"GetEnvironmentStrings"
-		end
-
-	cwin_free_environment_strings (p: POINTER) is
-			-- GetEnvironmentStrings
-		external
-			"[
-				C signature(LPTCH)
-				use "windows.h"
-			]"
-		alias
-			"FreeEnvironmentStrings"
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

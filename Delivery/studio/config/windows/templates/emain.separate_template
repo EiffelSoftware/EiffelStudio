@@ -34,9 +34,10 @@ APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nC
 
 		/* Initialization of the command line which is going to be passed to eiffel */
 	get_argcargv (&argc, &argv);
-	eif_environ = (char **) GetEnvironmentStrings();
+		/* We get ANSI version of environment variables */
+	eif_environ = (char **) GetEnvironmentStringsA();
 	main(argc, argv, eif_environ);
-	FreeEnvironmentStrings ((LPTSTR) eif_environ);
+	FreeEnvironmentStringsA ((LPSTR) eif_environ);
 	return 0;
 }
 

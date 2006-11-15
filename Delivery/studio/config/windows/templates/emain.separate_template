@@ -19,7 +19,7 @@ extern void egc_init_plug (void);
 extern void egc_rcdt_init (void); 
 
 #ifndef GetEnvironmentStringsA 
- extern LPVOID GetEnvironmentStringsA(void);
+ extern LPVOID WINAPI GetEnvironmentStringsA(void);
 #endif
 
 APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)

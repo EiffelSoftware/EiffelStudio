@@ -869,8 +869,11 @@ feature -- Access
 			debug ("to_implement")
 				to_implement ("Move this feature to TYPE_I with a redefinition in FORMAL_I.")
 			end
-			Result := type
-			if Result.is_formal then
+			from
+				Result := type
+			until
+				not Result.is_formal
+			loop
 				context_type_i := context_type.type
 				formal ?= Result
 				check

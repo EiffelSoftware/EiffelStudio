@@ -101,6 +101,7 @@ feature {NONE}-- Initialization
 			else
 				debug_clauses := a_debugs
 			end
+			window := Current
 			selected_target := a_target
 			set_pixmaps (a_pixmaps)
 			conf_system := a_system
@@ -108,7 +109,6 @@ feature {NONE}-- Initialization
 			external_editor_command := a_editor
 			default_create
 			config_windows.force (Current, conf_system.file_name)
-			window := Current
 			set_split_position (300)
 		ensure
 			system_set: conf_system = a_system

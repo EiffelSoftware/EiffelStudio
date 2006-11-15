@@ -144,7 +144,7 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.is_item_expanded (an_item)
 		end
-		
+
 	splitter_width: INTEGER is
 			-- Width of splitter in pixels.
 		require
@@ -169,7 +169,7 @@ feature -- Element change
 				old first /= Void implies second = an_item
 			has_an_item: has (an_item)
 		end
-		
+
 	put (an_item: EV_WIDGET) is
 			-- Replace `item' with `an_item'.
 		do
@@ -193,7 +193,7 @@ feature -- Element change
 			an_item_assigned: first = an_item
 			an_item_not_expanded: not is_item_expanded (an_item)
 		end
-		
+
 	set_second (an_item: EV_WIDGET) is
 			-- Assign `an_item' to `second'.
 		require
@@ -207,7 +207,7 @@ feature -- Element change
 		ensure
 			an_item_assigned: second = an_item
 			an_item_expanded: is_item_expanded (an_item)
-		end	
+		end
 
 feature -- Status setting
 
@@ -321,20 +321,19 @@ feature -- Conversion
 			end
 			Result := implementation.linear_representation
 		end
-	
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_SPLIT_AREA_I
 		-- Responsible for interaction with native graphics toolkit
 
 invariant
-
-	maximum_greater_or_equal_minimum: 
+	maximum_greater_or_equal_minimum:
 		is_usable implies minimum_split_position <= maximum_split_position
-		
+
 	splitter_in_valid_position_minimum:
 		full implies split_position >= minimum_split_position
-		
+
 	splitter_in_valid_position_maximum:
 		full implies split_position <= maximum_split_position
 
@@ -349,8 +348,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class EV_SPLIT_AREA
-

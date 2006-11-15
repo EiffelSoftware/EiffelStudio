@@ -243,16 +243,29 @@ feature -- Moving
 			move_to_absolute_position (l_current.x + a_dx, l_current.y + a_dy)
 		end
 
-	move_to_widget (a_widget: EV_IDENTIFIABLE) is
-			-- Move mouse to center of `a_widget'.
+	move_to_widget (an_identifiable: EV_IDENTIFIABLE) is
+			-- Move mouse to center of `an_identifiable'.
 		local
 			a_positioned: EV_POSITIONED
 		do
-			a_positioned ?= a_widget
-			if a_positioned /= Void then
-				move_to_absolute_position (a_positioned.screen_x + (a_positioned.width // 2), a_positioned.screen_y + (a_positioned.height // 2))
-			else
+			a_positioned ?= an_identifiable
+			if a_positioned = Void then
 				check false end
+			else
+				move_to_absolute_position (a_positioned.screen_x + (a_positioned.width // 2), a_positioned.screen_y + (a_positioned.height // 2))
+			end
+		end
+
+	move_relative_to_widget (an_identifiable: EV_IDENTIFIABLE; a_dx, a_dy: INTEGER) is
+			-- Move mouse `a_dx' `a_dy' pixels relative to top-left corner of `an_identifiable'.
+		local
+			a_positioned: EV_POSITIONED
+		do
+			a_positioned ?= an_identifiable
+			if a_positioned = Void then
+				check false end
+			else
+				move_to_absolute_position (a_positioned.screen_x + a_dx, a_positioned.screen_y + a_dy)
 			end
 		end
 
@@ -276,10 +289,13 @@ feature -- Scrolling
 
 feature -- Clicking menu items
 
-	click_menu (a_path: STRING) is
+	left_click_menu (a_path: STRING) is
 			-- Click menu item denoted by `a_path'.
+		local
+			l_items: LIST [EV_IDENTIFIABLE]
 		do
-			-- TODO
+			l_items := gui.menu_items_by_path (a_path)
+			l_items.do_all (agent left_click_on (?))
 		end
 
 feature -- Advanced window commands

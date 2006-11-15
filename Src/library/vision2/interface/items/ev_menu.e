@@ -25,7 +25,8 @@ inherit
 
 	EV_MENU_ITEM_LIST
 		undefine
-			initialize
+			initialize,
+			default_identifier_name
 		redefine
 			implementation,
 			create_implementation,

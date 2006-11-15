@@ -91,25 +91,12 @@ feature -- Element change
 			active_window_correct: has_window_with_title (a_title) implies active_window /= Void
 		end
 
-	set_window_by_name (a_name: STRING) is
-			-- Set `window' to window which has `a_name' as `identifier_name'.
+	set_active_window_by_name (a_name: STRING) is
+			-- Set `active_window' to window which has `a_name' as `identifier_name'.
 		local
 			l_window: EV_WINDOW
-			l_windows: LINEAR [EV_WINDOW]
 		do
-			l_windows := application_under_test.windows
-			from
-				l_windows.start
-			until
-				l_windows.after or l_window /= Void
-			loop
-				-- TODO: regexp matching
-				if l_windows.item.identifier_name.is_equal (a_name) then
-					l_window := l_windows.item
-				else
-					l_windows.forth
-				end
-			end
+			l_window := implementation.window_by_identifier (a_name)
 			if l_window = Void then
 				-- TODO: raise exception, provide help
 			else
@@ -184,13 +171,13 @@ feature -- Status report
 feature -- Widget access
 
 	widget_by_name (a_name: STRING): EV_WIDGET
-			-- Get widget with `a_name'.
+			-- Get widget with `a_name' in `active_window'.
+			-- Widget will be looked for recursively.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-			check_window
-
+			Result ?= implementation.identifiable_recursive (active_window, a_name)
 			if Result = Void then
 				-- TODO: raise exception, provide help
 			end
@@ -198,40 +185,40 @@ feature -- Widget access
 			result_correct: has_widget_with_name (a_name) implies Result /= Void
 		end
 
-feature -- Menu access
+feature -- Item access
 
-	menu_by_title (a_title: STRING): EV_MENU_ITEM is
-			-- Menu on main menu bar of `window' with title `a_title'
-		require
-			a_title_not_void: a_title /= Void
-			a_title_not_empty: not a_title.is_empty
-		do
-			check_window
-		ensure
-			result_correct: -- has_menu_with_title (a_title) implies Result /= Void
-		end
-
-	menu_by_name (a_name: STRING): EV_MENU_ITEM is
-			-- Menu on main menu bar of `window' with `identifier_name' `a_name'
+	item_by_name (a_name: STRING): EV_ITEM
+			-- Get item with `a_name' in `active_window'.
+			-- Items will be looked for recursively.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-
+			Result ?= implementation.identifiable_recursive (active_window, a_name)
+			if Result = Void then
+				-- TODO: raise exception, provide help
+			end
 		ensure
-			result_correct: -- has_menu_with_name (a_name) implies Result /= Void
+			result_correct: -- has_item_with_name (a_name) implies Result /= Void
 		end
 
-	sub_menu_by_title (a_parent: EV_MENU_ITEM; a_title: STRING): EV_MENU_ITEM is
-			-- Menu item of `a_parent' with title `a_title'
-		require
-			a_parent_not_void: a_parent /= Void
-			a_title_not_void: a_title /= Void
-			a_title_not_empty: not a_title.is_empty
-		do
 
+feature -- Menu access
+
+	menu_by_name (a_name: STRING): EV_MENU_ITEM is
+			-- Menu on main menu bar of `active_window' with `identifier_name' `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			if active_window.menu_bar /= Void then
+				Result ?= implementation.identifiable (active_window.menu_bar, a_name)
+			end
+			if Result = Void then
+				-- TODO: raise exception, provide help
+			end
 		ensure
-			result_correct: -- has_sub_menu_with_title (a_parent, a_title) implies Result /= Void
+			result_correct: -- has_menu_with_name (a_name) implies Result /= Void
 		end
 
 	sub_menu_by_name (a_parent: EV_MENU_ITEM; a_name: STRING): EV_MENU_ITEM is
@@ -241,47 +228,67 @@ feature -- Menu access
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-
+			Result ?= implementation.identifiable (a_parent, a_name)
+			if Result = Void then
+				-- TODO: raise exception, provide help
+			end
 		ensure
 			result_correct: -- has_sub_menu_with_name (a_parent, a_name) implies Result /= Void
 		end
 
-	popup_menu_by_title (a_title: STRING): EV_MENU_ITEM is
-			-- Menu item of active popup menu of `ev_application' with title `a_title'
+	menu_by_path (a_path: STRING): EV_MENU_ITEM is
+			-- Menu item on menu bar of `active_window' denoted by `a_path'.
 		require
-			a_title_not_void: a_title /= Void
-			a_title_not_empty: not a_title.is_empty
-			active_popup_menu: application_under_test.popup_menu /= Void
+			a_path_not_void: a_path /= Void
+			a_path_not_empty: not a_path.is_empty
+		local
+			l_segments: LIST [STRING]
 		do
-
-		ensure
-			result_correct: -- has_popup_menu_with_title (a_title) implies Result /= Void
+			l_segments := a_path.split ('.')
+			from
+				l_segments.start
+			until
+				l_segments.after
+			loop
+				if Result = Void then
+					Result := menu_by_name (l_segments.item)
+				else
+					Result := sub_menu_by_name (Result, l_segments.item)
+				end
+				l_segments.forth
+			end
 		end
 
-	popup_menu_by_name (a_name: STRING): EV_MENU_ITEM is
-			-- Menu item of active popup menu of `ev_application' with `identifier_name' `a_name'
+	menu_items_by_path (a_path: STRING): LIST [EV_MENU_ITEM] is
+			-- Menu items of `active_window' on `a_path'.
 		require
-			a_name_not_void: a_name /= Void
-			a_name_not_empty: not a_name.is_empty
-			active_popup_menu: application_under_test.popup_menu /= Void
+			a_path_not_void: a_path /= Void
+			a_path_not_empty: not a_path.is_empty
+		local
+			l_segments: LIST [STRING]
 		do
-
+			l_segments := a_path.split ('.')
+			from
+				create {LINKED_LIST [EV_MENU_ITEM]}Result.make
+				l_segments.start
+			until
+				l_segments.after
+			loop
+				if Result.is_empty then
+					Result.extend (menu_by_name (l_segments.item))
+				else
+					Result.extend (sub_menu_by_name (Result.last, l_segments.item))
+				end
+				l_segments.forth
+			end
 		ensure
-			result_correct: -- has_popup_menu_with_name (a_name) implies Result /= Void
+			result_not_void: Result /= Void
 		end
 
 feature {VISION2_TEST} -- Implementation
 
 	implementation: GUI_I
 			-- Implementation of GUI interface
-
-	check_window is
-			-- Check active window.
-		do
---			if window = Void then
---				application_under_test.windows.do_all (agent (a_window: EV_WINDOW) do if a_window.has_focus then window := a_window	end end)
---			end
-		end
 
 invariant
 

@@ -18,7 +18,8 @@ inherit
 			set_background_color,
 			set_foreground_color,
 			foreground_color,
-			background_color
+			background_color,
+			default_identifier_name
 		end
 
 	EV_DIALOG_CONSTANTS
@@ -165,6 +166,17 @@ feature -- Access
 
 	background_color: EV_COLOR
 			-- Background color of `Current'.
+
+	default_identifier_name: STRING is
+			-- Default identifier name if no specific name is set.
+		do
+			if title.is_empty then
+				Result := Precursor {EV_DIALOG}
+			else
+				Result := title.as_lower
+				Result.prune_all ('.')
+			end
+		end
 
 feature -- Status setting
 

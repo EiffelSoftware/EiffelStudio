@@ -164,6 +164,7 @@ feature -- Commands
 		ensure
 			assemblies_set: not is_error implies assemblies /= Void
 		rescue
+			l_retried := True
 			check
 				is_error: is_error
 			end

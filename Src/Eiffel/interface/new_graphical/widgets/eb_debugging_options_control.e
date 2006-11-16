@@ -70,19 +70,6 @@ feature {NONE} -- Initialization
 			parent_window := a_parent
 			set_padding (Layout_constants.Default_padding_size)
 			build_interface
-			parent_window.show_actions.extend (
-				agent
-					local
-						l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
-					do
-						if profiles_grid /= Void then
-							l_selected_rows := profiles_grid.selected_rows
-							if not l_selected_rows.is_empty then
-								l_selected_rows.first.ensure_visible
-							end
-						end
-					end
-				)
 			update
 		end
 
@@ -437,6 +424,24 @@ feature -- Status Setting
 			else
 				enable_profiles_button.set_focus
 			end
+		end
+
+	connect_to_show_actions is
+			-- Connect show actions to `parent_window'
+		do
+			parent_window.show_actions.extend (
+				agent
+					local
+						l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
+					do
+						if profiles_grid /= Void then
+							l_selected_rows := profiles_grid.selected_rows
+							if not l_selected_rows.is_empty then
+								l_selected_rows.first.ensure_visible
+							end
+						end
+					end
+				)
 		end
 
 feature -- Data change

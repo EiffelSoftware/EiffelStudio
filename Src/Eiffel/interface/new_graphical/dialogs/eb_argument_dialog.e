@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 				-- Build Dialog GUI
 			create debugging_options_control.make (Current)
 			build_interface
+			debugging_options_control.connect_to_show_actions
 			key_press_actions.extend (agent escape_check (?))
 			focus_in_actions.extend (agent on_window_focused)
 			close_request_actions.extend (agent on_cancel)

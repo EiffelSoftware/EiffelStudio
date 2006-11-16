@@ -89,7 +89,7 @@ feature -- Access
 			first_breakpoint_slot_index_set: first_breakpoint_slot_index = index
 		end
 
-feature {INTERNAL_AS, INTERNAL_MERGER} -- Replication
+feature {INTERNAL_AS} -- Replication
 
 	set_compound (c: like compound) is
 		do

@@ -99,7 +99,7 @@ feature -- Comparison
 				equivalent (type, other.type)
 		end
 
-feature {TYPE_DEC_AS, LOCALS_MERGER} -- Replication
+feature {TYPE_DEC_AS} -- Replication
 
 	set_type (t: like type) is
 		require

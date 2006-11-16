@@ -61,16 +61,16 @@ feature -- Access
 	flags: NATURAL_64
 			-- Assembly flags
 
-	major_version: NATURAL_8
+	major_version: NATURAL_16
 			-- The major version number of the referenced assembly
 
-	minor_version: NATURAL_8
+	minor_version: NATURAL_16
 			-- The minor version number of the referenced assembly
 
-	build_number: NATURAL_8
+	build_number: NATURAL_16
 			-- The build number of the referenced assembly.
 
-	revision_number: NATURAL_8
+	revision_number: NATURAL_16
 			-- The revision number of the referenced assembly
 
 	locales: LIST [STRING]

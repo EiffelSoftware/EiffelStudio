@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 		do
 			Result := internal_loaded_assemblies
 			if Result = Void then
-				create Result.make (30, {STRING_COMPARER}.invariant_culture_ignore_case)
+				create Result.make (30, create {CONSUMER_STRING_COMPARER}.make (True))
 				internal_loaded_assemblies := Result
 			end
 		ensure

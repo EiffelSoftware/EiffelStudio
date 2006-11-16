@@ -20,9 +20,9 @@ feature -- Access
 			-- Bit platform cache used under
 		once
 			if {PLATFORM_CONSTANTS}.is_windows_64_bits then
-				Result.append (x64_directory_name)
+				Result := x64_directory_name
 			else
-				Result.append (x86_directory_name)
+				Result := x86_directory_name
 			end
 		ensure
 			result_attached: Result /= Void

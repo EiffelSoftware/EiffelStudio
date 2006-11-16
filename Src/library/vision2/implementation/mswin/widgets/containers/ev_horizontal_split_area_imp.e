@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 			-- Assign coordinate relative to click position on splitter to
 			-- `click_relative_position'.
 		do
-			click_relative_position := x_pos - split_position
+			click_relative_position := x_pos - internal_split_position
 		end
 
 	compute_minimum_size is
@@ -166,21 +166,21 @@ feature {NONE} -- Implementation
 
 			if first_visible and second_visible then
 				if originator then
-					first_imp.set_move_and_size (0, 0, split_position, height)
+					first_imp.set_move_and_size (0, 0, internal_split_position, height)
 					second_imp.set_move_and_size
-						(split_position + splitter_width, 0, width -
-						split_position - splitter_width, height)
+						(internal_split_position + splitter_width, 0, width -
+						internal_split_position - splitter_width, height)
 				else
-					first_imp.ev_apply_new_size (0, 0, split_position, height,
+					first_imp.ev_apply_new_size (0, 0, internal_split_position, height,
 						True)
 					second_imp.ev_apply_new_size
-						(split_position + splitter_width, 0, width -
-						split_position - splitter_width, height, True)
+						(internal_split_position + splitter_width, 0, width -
+						internal_split_position - splitter_width, height, True)
 				end
 			end
 
 				-- Invalidate separator.
-			create rect.make (split_position, 0, split_position +
+			create rect.make (internal_split_position, 0, internal_split_position +
 				splitter_width, height)
 			invalidate_rect (rect, True)
 		end
@@ -221,9 +221,8 @@ feature {NONE} -- Implementation
 				movement := (size_change * splitter_movement_factor).rounded
 
 					-- Move the split position.
-				set_split_position (split_position + movement)
+				set_split_position (internal_split_position + movement)
 			end
-
 			update_split_position
 			layout_widgets (originator)
 		end
@@ -231,7 +230,7 @@ feature {NONE} -- Implementation
 	invert_split (a_dc: WEL_DC) is
 			-- Invert the split on `a_dc'.
 		do
-			invert_rectangle (a_dc, split_position, -1, split_position +
+			invert_rectangle (a_dc, internal_split_position, -1, internal_split_position +
 				splitter_width, height)
 		end
 
@@ -254,7 +253,7 @@ feature {NONE} -- Implementation
 				else
 					new_pos := x_pos - click_relative_position
 				end
-				if split_position /= new_pos then
+				if internal_split_position /= new_pos then
 					create t
  --|--------------------------------------------------------------
  --| Removed the "real time resizing". As soon as windows
@@ -270,7 +269,7 @@ feature {NONE} -- Implementation
 							-- Move shade of splitter and do not update content.
 						create window_dc.make (Current)
 						invert_split (window_dc)
-						split_position := new_pos
+						internal_split_position := new_pos
 						invert_split (window_dc)
 						window_dc.delete
  --|					end
@@ -325,7 +324,7 @@ feature {NONE} -- Implementation
 		require
 			x_pos_valid: x_pos >= 0 and x_pos <= width
 		do
-			Result := x_pos - (split_position + 1) <= splitter_width
+			Result := x_pos - (internal_split_position + 1) <= splitter_width
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is

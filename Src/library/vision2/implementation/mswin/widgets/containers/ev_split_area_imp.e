@@ -105,7 +105,17 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	split_position: INTEGER
+	split_position: INTEGER is
+			--
+		do
+			if first /= Void and second /= Void then
+				Result := internal_split_position.max (minimum_split_position).min (maximum_split_position)
+			else
+				Result := internal_split_position
+			end
+		end
+
+	internal_split_position: INTEGER
 		-- Position of the splitter in pixels.
 		-- For a vertical split area, the position is the top of the splitter.
 		-- For a horizontal split area, the position is the left
@@ -164,7 +174,7 @@ feature {NONE} -- Implementation
 			-- Assign `a_position' to split position and layout the
 			-- widgets accordingly.
 		do
-			split_position := a_position
+			internal_split_position := a_position
 			layout_widgets (True)
 		end
 
@@ -217,8 +227,8 @@ feature {NONE} -- Implementation
 	update_split_position is
 			-- Set splitter to a valid position and redraw if necessary.
 		do
-			split_position := split_position.max (minimum_split_position)
-			split_position := split_position.min (maximum_split_position)
+			internal_split_position := internal_split_position.max (minimum_split_position)
+			internal_split_position := internal_split_position.min (maximum_split_position)
 		end
 
 feature {NONE} -- Implementation

@@ -89,7 +89,7 @@ feature -- Output
 			Result.extend ('"')
 		end
 
-feature {INFIX_PREFIX_AS, DOCUMENTATION_ROUTINES} -- Status setting
+feature {INFIX_PREFIX_AS} -- Status setting
 
 	set_value (s: STRING) is
 		do

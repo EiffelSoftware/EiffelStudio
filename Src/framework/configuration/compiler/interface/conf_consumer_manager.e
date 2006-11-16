@@ -111,8 +111,10 @@ feature -- Commands
 			-- Build information about `a_new_assemblies' from the metadata cache and `an_old_assemblies' and store them in `assemblies'.
 		require
 			a_new_assemblies_not_void: a_new_assemblies /= Void
+		local
+			l_retried: BOOLEAN
 		do
-			if not is_error then
+			if not l_retried then
 					-- load information from metadata cache, consume if the metadata cache does not yet exist
 				retrieve_cache
 				if cache_content = Void then
@@ -738,7 +740,7 @@ feature {NONE} -- helpers
 			create l_eac_file.make_from_string (full_cache_path)
 			l_eac_file.set_file_name (cache_info_file)
 			create l_file.make (l_eac_file)
-			if l_file.exists then
+			if l_file.exists and then l_file.is_readable then
 				create l_reader
 				l_reader.deserialize (l_eac_file, 0)
 				if l_reader.successful then

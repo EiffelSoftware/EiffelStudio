@@ -299,7 +299,6 @@ feature {NONE} -- Implementation
 					arg_types := rout.arguments
 					if arg_types = Void then
 						unprocessed_l.go_i_th (unprocessed_l.index + l_count)
-						create args_list.make (0)
 					else
 						create args_list.make_filled (l_count)
 						from
@@ -394,8 +393,9 @@ feature {NONE} -- Implementation
 					counter := counter + 1
 				end
 			end
+			private_arguments := args_list
 
-			if locals_list /= Void then
+			if locals_list /= Void and then not locals_list.is_empty then
 				from
 					locals_list.start
 					counter := 1
@@ -406,10 +406,11 @@ feature {NONE} -- Implementation
 					locals_list.forth
 					counter := counter + 1
 				end
+				private_locals := locals_list
+			else
+				private_locals := Void
 			end
 
-			private_arguments := args_list
-			private_locals := locals_list
 			unprocessed_values := Void
 			initialized := True
 			debug ("DEBUGGER_TRACE_CALLSTACK"); io.put_string ("%TFinished initializating stack: "+routine_name+"%N"); end

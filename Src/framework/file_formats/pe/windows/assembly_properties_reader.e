@@ -159,7 +159,7 @@ feature {NONE} -- Externals
 				{
 					fWasInit = (S_OK == hr); // COM was initialized here, make sure to uinit.
 					hr = CoCreateInstance (CLSID_CorMetaDataDispenserRuntime, NULL, CLSCTX_INPROC_SERVER, IID_IMetaDataDispenser, (LPVOID*)&pUnk);
-					if (SUCCEEDED (hr) & NULL != pUnk)
+					if (SUCCEEDED (hr) && (pUnk != NULL))
 					{
 						pUnk->AddRef();
 						*$a_dispenser = (EIF_POINTER)pUnk;

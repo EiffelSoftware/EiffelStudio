@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 						return NULL;
 					#else
 						char **vars = (char **)buf;						
-						for(; *vars && cnt<$i; vars++,i++) {}
+						for(; *vars && i<$i; vars++,i++) {}
 						return ((char **)buf)[i];
 					#endif
 				} else {

@@ -79,7 +79,7 @@
 		</cluster>
 	</target>
 	<target name="emdc" extends="consumer_library">
-		<root class="APPLICATION" feature="make"/>
+		<root cluster="main" class="APPLICATION" feature="make"/>
 		<setting name="executable_name" value="emdc"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<library name="arg_parser" location="$EIFFEL_SRC\framework\base\application\arg_parser\arg_parser.ecf" readonly="false"/>

@@ -11,7 +11,7 @@ class
 
 inherit
 	ICOR_EXPORTER
-	
+
 create {SHARED_ICOR_OBJECTS_MANAGER}
 	make
 
@@ -23,17 +23,17 @@ feature {NONE} -- Initialization
 			create classes.make (100)
 			create functions.make (500)
 		end
-		
+
 feature -- Cleaning
 
 	clean is
-			-- 
+			--
 		do
 			clean_modules
 			clean_classes
 			clean_functions
 		end
-	
+
 	clean_modules is
 		local
 			l_module: ICOR_DEBUG_MODULE
@@ -47,9 +47,9 @@ feature -- Cleaning
 				l_module.clean_on_dispose
 				modules.forth
 			end
-			modules.wipe_out
+			modules.clear_all
 		end
-		
+
 	clean_classes is
 		local
 			l_class: ICOR_DEBUG_CLASS
@@ -63,8 +63,8 @@ feature -- Cleaning
 				l_class.clean_on_dispose
 				classes.forth
 			end
-			classes.wipe_out
-		end		
+			classes.clear_all
+		end
 
 	clean_functions is
 		local
@@ -79,11 +79,11 @@ feature -- Cleaning
 				l_function.clean_on_dispose
 				functions.forth
 			end
-			functions.wipe_out
-		end		
+			functions.clear_all
+		end
 
 feature {ICOR_EXPORTER} -- Access
-	
+
 	icd_module (p: POINTER): ICOR_DEBUG_MODULE is
 		require
 			pointer_valid: p /= default_pointer
@@ -103,7 +103,7 @@ feature {ICOR_EXPORTER} -- Access
 			result_pointer_set: Result.item = p
 			result_indexed: modules.has (Result.item)
 		end
-		
+
 	icd_class (p: POINTER): ICOR_DEBUG_CLASS is
 		require
 			pointer_valid: p /= default_pointer
@@ -117,13 +117,13 @@ feature {ICOR_EXPORTER} -- Access
 			end
 			if Result.item = Default_pointer then
 				Result.update_item (p)
-			end			
+			end
 		ensure
 			result_not_void: Result /= Void
 			result_pointer_set: Result.item = p
 			result_indexed: classes.has (Result.item)
 		end
-		
+
 	icd_function (p: POINTER): ICOR_DEBUG_FUNCTION is
 		require
 			pointer_valid: p /= default_pointer
@@ -137,12 +137,12 @@ feature {ICOR_EXPORTER} -- Access
 			end
 			if Result.item = Default_pointer then
 				Result.update_item (p)
-			end			
+			end
 		ensure
 			result_not_void: Result /= Void
 			result_pointer_set: Result.item = p
 			result_indexed: functions.has (Result.item)
-		end		
+		end
 
 feature {NONE} -- Implementation
 

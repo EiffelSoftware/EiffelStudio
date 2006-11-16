@@ -179,7 +179,7 @@ feature -- Access
 		local
 			l_envs: HASH_TABLE [STRING_GENERAL, STRING_GENERAL]
 		do
-			l_envs := environment_variables
+			l_envs := starting_environment_variables
 			from
 				create Result.make (l_envs.count)
 				l_envs.start

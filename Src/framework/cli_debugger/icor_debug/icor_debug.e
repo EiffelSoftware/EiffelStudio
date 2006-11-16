@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 			"GetProcess"
 		end
 
-feature { EIFNET_DEBUGGER} -- Implementation exported to EIFNET_DEBUGGER
+feature {NONE} -- Implementation
 
 	cpp_debug_active_process (obj: POINTER; p_id: INTEGER; win32_attach: INTEGER; icordebugprocess: POINTER): INTEGER is
 			-- Call `ICorDebug->DebugActiveProcess'.

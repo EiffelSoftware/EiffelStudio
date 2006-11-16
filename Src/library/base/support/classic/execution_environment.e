@@ -189,22 +189,18 @@ feature {NONE} -- Implementation
 			"C inline use <string.h>"
 		alias
 			"[
-				int i = 0;
-				void *buf = (void *)eif_environ;				
-				if(buf) {
-					#ifdef EIF_WINDOWS						
-						LPSTR ptr;
-						LPSTR vars = (LPTSTR)buf;												
+				if (eif_environ) {
+					#ifdef EIF_WINDOWS
+						LPSTR vars = (LPSTR) eif_environ;
+						int cnt = 0;
 						for (; *vars; vars++) {
-						   if ($i==i) return vars;
+						   if ($i==cnt) return vars;
 						   while (*vars) { vars++; }
-						   i++;
+						   cnt++;
 						}
 						return NULL;
 					#else
-						char **vars = (char **)buf;						
-						for(; *vars && i<$i; vars++,i++) {}
-						return ((char **)buf)[i];
+						return ((char **)eif_environ)[$i];
 					#endif
 				} else {
 					return NULL;

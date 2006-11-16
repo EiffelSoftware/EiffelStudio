@@ -1378,7 +1378,9 @@ feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_DRAWER_I} -- Implementation
 			-- functionality implemented by `Current'.
 
 invariant
-	no_subrows_implies_not_expanded: parent /= Void and then subrow_count = 0 implies not is_expanded
+--	We currently cannot hold this invariant during expand/collapse, thus
+--	it is commented until we find a better way to express it:
+--	no_subrows_implies_not_expanded: parent /= Void and then subrow_count = 0 implies not is_expanded
 	subrows_not_void: is_initialized implies subrows /= Void
 	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = -1) or else (parent /= Void and then hash_code > 0))
 

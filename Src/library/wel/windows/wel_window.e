@@ -1844,6 +1844,9 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 				on_wm_destroy
 			when Wm_ncdestroy then
 				on_wm_nc_destroy
+					-- After this call, windows has really destroyed the current object, so we simply
+					-- need to reset `item'.
+				item := default_pointer
 			when Wm_erasebkgnd then
 				on_wm_erase_background (wparam)
 			when Wm_activate then
@@ -1972,7 +1975,7 @@ feature {NONE} -- Removal
 		do
 				-- Take care of `item'.
 			hwnd := item
-			if is_window (hwnd) then
+			if hwnd /= l_null and then is_window (hwnd) then
 					-- When called from `dispose' we do not want to come back in Eiffel code
 					-- in the call to `cwin_destroy_window'. This is why we reset the dispatched
 					-- pointer.

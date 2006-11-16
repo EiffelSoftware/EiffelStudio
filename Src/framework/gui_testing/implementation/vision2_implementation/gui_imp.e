@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Implementation for a GUI lookip interface which has direct access on EV_APPLICATION"
+		"Implementation for a GUI lookup interface which has direct access on EV_APPLICATION"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

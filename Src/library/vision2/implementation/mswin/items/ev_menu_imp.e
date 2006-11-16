@@ -375,15 +375,12 @@ feature {NONE} -- Implementation
 		do
 			menu_bar ?= parent_imp
 
-			if menu_bar /= Void then
+			if menu_bar /= Void and then menu_bar.parent_imp /= Void then
 				if {WEL_API}.get_menu_item_rect (menu_bar.parent_imp.wel_item, menu_bar.wel_item, menu_bar.index_of (interface, 1)-1, bounds_rect.item) = 0 then
 					bounds_rect.set_rect (0, 0, 0, 0)
-					debug ("vision2_windows")
-						io.put_string ("ERROR: EV_MENU_IMP.load_bounds_rect%N")
-					end
 				end
 			else
-				Precursor
+				Precursor {EV_MENU_ITEM_IMP}
 			end
 		end
 

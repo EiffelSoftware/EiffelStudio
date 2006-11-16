@@ -115,7 +115,6 @@ feature {NONE} -- Modification implementation
 			l_name: SYSTEM_STRING
 			l_elm: XML_ELEMENT
 			l_atr: XML_ATTRIBUTE
-			l_loc: SYSTEM_STRING
 			l_nodes: XML_NODE_LIST
 			l_prefix: SYSTEM_STRING
 			l_count: INTEGER
@@ -170,7 +169,6 @@ feature -- Query
 			a_assembly_attached: a_assembly /= Void
 		local
 			l_loc: STRING
-			l_key: STRING
 			l_fw_path: STRING
 			l_len: INTEGER
 		do

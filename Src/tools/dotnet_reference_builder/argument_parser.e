@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize argument parser
 		do
-			make_parser (False, False)
+			make_parser (False, False, False)
 			set_loose_argument_validator (create {ARGUMENT_FILE_VALIDATOR})
 		end
 

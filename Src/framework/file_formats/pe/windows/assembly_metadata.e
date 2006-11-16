@@ -43,25 +43,25 @@ feature -- Clean up
 
 feature -- Access
 
-	major_version: NATURAL_8 is
+	major_version: NATURAL_16 is
 			-- The major version number of the referenced assembly
 		do
 			Result := get_major_version (item)
 		end
 
-	minor_version: NATURAL_8 is
+	minor_version: NATURAL_16 is
 			-- The minor version number of the referenced assembly
 		do
 			Result := get_minor_version (item)
 		end
 
-	build_number: NATURAL_8 is
+	build_number: NATURAL_16 is
 			-- The build number of the referenced assembly
 		do
 			Result := get_build_number (item)
 		end
 
-	revision_number: NATURAL_8 is
+	revision_number: NATURAL_16 is
 			-- The revision number of the referenced assembly
 		do
 			Result := get_revision_number (item)
@@ -187,6 +187,8 @@ feature {NONE} -- Extenral access
 				ULONG cbLocale = ((ASSEMBLYMETADATA*)$a_item)->cbLocale;
 				if (cbLocale > 0) {
 					return ((ASSEMBLYMETADATA*)$a_item)->szLocale;
+				} else {
+					return NULL;
 				}
 			]"
 		end

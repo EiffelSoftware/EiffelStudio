@@ -11,9 +11,6 @@ indexing
 
 class EXECUTION_ENVIRONMENT
 
-inherit
-	PLATFORM
-
 feature -- Access
 
 	command_line: ARGUMENTS is
@@ -77,73 +74,30 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	environment_variables: HASH_TABLE [STRING, STRING] is
-			-- Table of environment variables associated with current process,
+	starting_environment_variables: HASH_TABLE [STRING, STRING] is
+			-- Table of environment variables when current process starts,
 			-- indexed by variable name
 		local
-			l_ptr, l_ptr2: POINTER
-			l_succ: BOOLEAN
-			l_count: INTEGER
+			l_ptr: POINTER
 			i: INTEGER
-			l_ptr_size: INTEGER
-			l_managed_ptr: MANAGED_POINTER
 			l_curr_var: TUPLE [value: STRING; key: STRING]
-			l_is_window: BOOLEAN
-			l_new_vars: like environ
-			l_key_table: like variable_key_table
 		do
-			l_new_vars := environ
-				-- Get environment variables which are set when current process starts.			
-			get_environment_variables ($l_ptr, $l_count, $l_succ)
-			if l_succ then
-				l_is_window := is_windows
-				create Result.make (l_count + l_new_vars.count)
-				l_ptr_size := pointer_bytes
-				create l_managed_ptr.make_from_pointer (l_ptr, l_count * l_ptr_size)
-				from
-					i := 0
-				until
-					i = l_count
-				loop
-					l_ptr2 := l_managed_ptr.read_pointer (i * l_ptr_size)
-					l_curr_var := separated_variables (create {STRING}.make_from_c (l_ptr2))
-					if l_curr_var /= Void then
-						Result.force (l_curr_var.value, l_curr_var.key)
-					end
-					if l_is_window then
-						l_ptr2.memory_free
-					end
-					i := i + 1
+			create Result.make (40)
+			from
+				i := 0
+				l_ptr := i_th_environ (i)
+			until
+				l_ptr = default_pointer
+			loop
+				l_curr_var := separated_variables (create {STRING}.make_from_c (l_ptr))
+				if l_curr_var /= Void then
+					Result.force (l_curr_var.value, l_curr_var.key)
 				end
-				if l_is_window then
-					l_ptr.memory_free
-				end
-			else
-				create Result.make (l_new_vars.count)
+				i := i + 1
+				l_ptr := i_th_environ (i)
 			end
-
-				-- Get environment variables set by current process.
-			if not l_new_vars.is_empty then
-				if is_windows then
-					l_key_table := variable_key_table (Result)
-				end
-				from
-					l_new_vars.start
-				until
-					l_new_vars.after
-				loop
-					l_curr_var := separated_variables (l_new_vars.item_for_iteration.string)
-					if l_curr_var /= Void then
-						if is_windows then
-							check l_key_table /= Void end
-							case_insensitive_put (Result, l_key_table, l_curr_var.value, l_curr_var.key)
-						else
-							Result.force (l_curr_var.value, l_curr_var.key)
-						end
-					end
-				l_new_vars.forth
-				end
-			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 feature -- Status
@@ -170,20 +124,13 @@ feature -- Status setting
 		local
 			l_env: STRING
 			l_c_env: C_STRING
-			l_key_table: like variable_key_table
 		do
 			create l_env.make (value.count + key.count + 1)
 			l_env.append (key)
 			l_env.append_character ('=')
 			l_env.append (value)
 			create l_c_env.make (l_env)
-
-			if is_windows then
-				l_key_table := variable_key_table (environ)
-				case_insensitive_put (environ, l_key_table, l_c_env, key)
-			else
-				environ.force (l_c_env, key)
-			end
+			environ.force (l_c_env, key)
 			return_code := eif_putenv (l_c_env.item)
 		ensure
 			variable_set: (return_code = 0) implies
@@ -234,69 +181,33 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 		end
 
-	get_environment_variables (a_pointers: TYPED_POINTER [POINTER]; a_count: TYPED_POINTER [INTEGER]; a_succ: TYPED_POINTER [BOOLEAN]) is
-			-- Get environment variables associated with current process and store them in `a_pointers'.
-			-- `a_count' indicates the number of environment variables (i.e., number of pointers in `a_pointer').
-			-- `a_size' is the size of a pointer.
-			-- If succeeded, set `a_succ' to True, otherwise False.
+	i_th_environ (i: INTEGER): POINTER is
+			-- Environment variable at `i'-th position of `eif_environ'.
+		require
+			i_valid: i >=0
 		external
-			"C inline use <string.h>, %"eif_main.h%""
+			"C inline use <string.h>"
 		alias
 			"[
-				{
-					char **buf;					
-					int cnt;
-					#ifdef EIF_WINDOWS
-						LPVOID lpvEnv;
-						LPSTR lpszVariable; 						
-						int len;
-						char *curr_str;
-						lpvEnv = eif_environ;
-						if(lpvEnv) {						
-							lpszVariable = (LPTSTR)lpvEnv;	
-							cnt = 0;					
-							for (; *lpszVariable; lpszVariable++) { 						   
-							   while (*lpszVariable) {
-							      lpszVariable++;
-							    }						    
-							    cnt++;						    				  
-							}
-							*$a_count = cnt;
-							buf = (LPSTR*)malloc (cnt * sizeof(LPSTR*));
-							cnt = 0;						
-							lpszVariable = (LPTSTR)lpvEnv;
-							for (; *lpszVariable; lpszVariable++) { 
-							   len = 0;				
-							   curr_str = lpszVariable;						   
-							   while (*lpszVariable) {						   	  
-							      lpszVariable++;
-							      len++;
-							    }
-							    if(curr_str) {
-								    buf[cnt] = (char *)malloc (len + 1);
-								    memcpy (buf[cnt], curr_str, len + 1);
-								}
-							    cnt++;						    				  
-							}		
-							*$a_pointers = buf;				
-							*$a_succ = 1;
-						} else {
-							*$a_succ = 0;
+				int i = 0;
+				void *buf = (void *)eif_environ;				
+				if(buf) {
+					#ifdef EIF_WINDOWS						
+						LPSTR ptr;
+						LPSTR vars = (LPTSTR)buf;												
+						for (; *vars; vars++) {
+						   if ($i==i) return vars;
+						   while (*vars) { vars++; }
+						   i++;
 						}
+						return NULL;
 					#else
-	    				cnt = 0;
-	    				*$a_pointers = (void*)eif_environ;
-	    				if(*$a_pointers) {
-		    				buf = (char **)*$a_pointers;
-		    				while (*buf++) {
-								cnt++;
-		    				}
-		    				*$a_count=cnt;
-		        			*$a_succ=1;
-		        		} else {
-		        			*$a_succ=0;
-		        		}
+						char **vars = (char **)buf;						
+						for(; *vars && cnt<$i; vars++,i++) {}
+						return ((char **)buf)[i];
 					#endif
+				} else {
+					return NULL;
 				}
 			]"
 		end
@@ -325,45 +236,6 @@ feature {NONE} -- Implementation
 			end
 			if i > 1 and then i < j then
 				Result := [a_var.substring (i + 1, j), a_var.substring (1, i - 1)]
-			end
-		end
-
-	variable_key_table (a_table: HASH_TABLE [ANY, STRING]): HASH_TABLE [STRING, STRING] is
-			-- Table contains keys in `a_table'.
-			-- For an item in returned table, `value' is an original key in `a_table',
-			-- `key' is the original key in lower case format.
-		require
-			a_table_attached: a_table /= Void
-		do
-			create Result.make (a_table.count)
-			from
-				a_table.start
-			until
-				a_table.after
-			loop
-				Result.force (a_table.key_for_iteration, a_table.key_for_iteration.as_lower)
-				a_table.forth
-			end
-		ensure
-			result_attached: Result /= Void
-		end
-
-	case_insensitive_put (a_table: HASH_TABLE [ANY, STRING]; a_key_table: HASH_TABLE [STRING, STRING]; a_value: ANY; a_key: STRING) is
-			-- Insert `a_value' with `a_key' into `a_table', and `a_key' is case insensitive.
-			-- `a_key_table' is used to support case-insensitive insertion. See `variable_key_table' for more information.
-		require
-			a_table_attached: a_table /= Void
-			a_key_table_attached: a_key_table /= Void
-			a_key_attached: a_key /= Void
-		local
-			l_key_as_lower: STRING
-		do
-			l_key_as_lower := a_key.as_lower
-			if a_key_table.has (l_key_as_lower) then
-				a_table.remove (a_key_table.item (l_key_as_lower))
-				a_table.force (a_value, a_key)
-			else
-				a_table.force (a_value, a_key)
 			end
 		end
 

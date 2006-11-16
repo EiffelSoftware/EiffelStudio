@@ -2,7 +2,7 @@ indexing
 	description: "[
 		Constants for use by and with pointer handling actions.
 		
-		It's used for identify pointer buttons.
+		It's used to identify pointer buttons.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -19,15 +19,15 @@ feature -- Constants
 			-- Left pointer button.
 
 	middle: INTEGER is 2
-			-- Middl pointer button.
+			-- Middle pointer button.
 
 	right: INTEGER is 3
 			-- Right pointer button.
 
 feature -- Contract support
 
-	valid (a_button: INTEGER): BOOLEAN is
-			-- If `a_button' vaild?
+	valid_button (a_button: INTEGER): BOOLEAN is
+			-- If `a_button' valid?
 		do
 			Result := a_button = left or
 					a_button = middle or

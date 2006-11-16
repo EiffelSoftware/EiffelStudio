@@ -270,10 +270,13 @@ feature {NONE} -- Implementation
 
 	loaded_assemblies: HASHTABLE is
 			-- Table of loaded assemblies
+		local
+			l_comparer: CONSUMER_STRING_COMPARER
 		do
 			Result := internal_loaded_assemblies
 			if Result = Void then
-				create Result.make (30, create {CONSUMER_STRING_COMPARER}.make (True))
+				create l_comparer.make (True)
+				create Result.make (30, l_comparer, l_comparer)
 				internal_loaded_assemblies := Result
 			end
 		ensure

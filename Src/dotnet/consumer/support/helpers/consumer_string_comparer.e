@@ -9,9 +9,9 @@ class
 	CONSUMER_STRING_COMPARER
 
 inherit
---	SYSTEM_OBJECT
+	ICOMPARER
 
-	IEQUALITY_COMPARER
+	IHASH_CODE_PROVIDER
 
 create
 	make
@@ -28,17 +28,20 @@ feature {NONE} -- Initialization
 
 feature -- Query
 
-	equals_object_object (a_x: SYSTEM_OBJECT; a_y: SYSTEM_OBJECT): BOOLEAN is
-			-- Determines whether the specified objects are equal.
+	compare (a_x: SYSTEM_OBJECT; a_y: SYSTEM_OBJECT): INTEGER is
+			-- Compares the specified objects.
 		local
 			l_x, l_y: SYSTEM_STRING
 		do
-			Result := (a_x = a_y)
-			if not Result then
+			if a_x /= a_y then
 				l_x ?= a_x
 				l_y ?= a_y
 				if l_x /= Void and l_y /= Void then
-					Result := {SYSTEM_STRING}.compare (l_x, l_y, is_case_insensitive) = 0
+					Result := {SYSTEM_STRING}.compare (l_x, l_y, is_case_insensitive)
+				elseif l_x = Void then
+					Result := -1
+				else
+					Result := 1
 				end
 			end
 		end

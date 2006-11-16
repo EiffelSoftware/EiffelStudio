@@ -291,13 +291,17 @@ feature -- Measurement
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
-			Result := screen_x - parent_tree.screen_x
+			if parent_tree /= Void then
+				Result := screen_x - parent_tree.screen_x
+			end
 		end
 
 	y_position: INTEGER is
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
-			Result := screen_y - parent_tree.screen_y
+			if parent_tree /= Void then
+				Result := screen_y - parent_tree.screen_y
+			end
 		end
 
 	screen_x: INTEGER is

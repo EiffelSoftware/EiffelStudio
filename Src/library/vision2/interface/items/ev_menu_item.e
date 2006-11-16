@@ -80,14 +80,18 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			Result := text.twin
-			Result.prune_all ('&')
-			Result.prune_all ('.')
-			i := Result.index_of ('%T', 1)
-			if i > 0 then
-				Result.keep_head (i)
+			if text.is_empty then
+				Result := Precursor {EV_ITEM}
+			else
+				Result := text.twin
+				Result.prune_all ('&')
+				Result.prune_all ('.')
+				i := Result.index_of ('%T', 1)
+				if i > 0 then
+					Result.keep_head (i)
+				end
+				Result.to_lower
 			end
-			Result.to_lower
 		end
 
 feature -- Obsolete

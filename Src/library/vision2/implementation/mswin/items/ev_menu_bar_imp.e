@@ -37,44 +37,56 @@ feature -- Measurement
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		do
-			Result := screen_x - parent.screen_x
+			if parent /= Void then
+				Result := screen_x - parent.screen_x
+			end
 		end
 
 	y_position: INTEGER is
 			-- Vertical offset relative to parent `y_position' in pixels.
 		do
-			Result := screen_y - parent.screen_y
+			if parent /= Void then
+				Result := screen_y - parent.screen_y
+			end
 		end
 
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		do
-			if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
-				Result := info.rc_bar.left
+			if parent_imp /= Void then
+				if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+					Result := info.rc_bar.left
+				end
 			end
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
 		do
-			if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
-				Result := info.rc_bar.top
+			if parent_imp /= Void then
+				if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+					Result := info.rc_bar.top
+				end
 			end
 		end
 
 	width: INTEGER is
 			-- Horizontal size in pixels.
 		do
-			if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
-				Result := info.rc_bar.width
+			if parent_imp /= Void then
+				if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.objid_menu, 0, info.item) /= 0 then
+					Result := info.rc_bar.width
+				end
 			end
 		end
 
 	height: INTEGER is
 			-- Vertical size in pixels.
 		do
-			if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.Objid_menu, 0, info.item) /= 0 then
-				Result := info.rc_bar.height
+			if parent_imp /= Void then
+				if {WEL_API}.get_menu_bar_info (parent_imp.wel_item, {WEL_OBJID_CONSTANTS}.Objid_menu, 0, info.item) /= 0 then
+					Result := info.rc_bar.height
+				end
 			end
 		end
 

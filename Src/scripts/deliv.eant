@@ -251,7 +251,7 @@
 		<copy file="${EIFFEL_SRC}/C/run-time/x2c${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/x2c${exe}" />
 		<copy file="${EIFFEL_SRC}/C/ipc/daemon/ecdbgd${exe}" to_file="${INSTALL_DIR}/studio/spec/${ISE_PLATFORM}/bin/ecdbgd${exe}" />
 
-		<copy to_directory="${INSTALL_DIR}\precomp\spec\${ISE_PLATFORM}" dir="precomp\spec\platform" >
+		<copy to_directory="${INSTALL_DIR}${path_separator}precomp${path_separator}spec${path_separator}${ISE_PLATFORM}" dir="precomp${path_separator}spec${path_separator}platform" >
 			<fileset 
 				include="@(**/*)" 
 				exclude="@(**/.svn/**/*)"

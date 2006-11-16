@@ -804,7 +804,7 @@ feature -- Removal
 					(has_default = old has_default)
 		end
 
-	clear_all is
+	clear_all, wipe_out is
 			-- Reset all items to default values; reset status.
 		local
 			default_value: G

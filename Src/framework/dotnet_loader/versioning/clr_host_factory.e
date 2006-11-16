@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			"C inline use <mscoree.h>"
 		alias
 			"[
-				HRESULT hr = NULL;
+				HRESULT hr;
 				HMODULE mscoree = NULL;
 				FARPROC cor_bind_to_runtime_ex = NULL;
 				ICorRuntimeHost *pHost = NULL;

@@ -11,9 +11,6 @@ indexing
 
 class EXECUTION_ENVIRONMENT
 
-inherit
-	PLATFORM
-
 feature -- Access
 
 	command_line: ARGUMENTS is

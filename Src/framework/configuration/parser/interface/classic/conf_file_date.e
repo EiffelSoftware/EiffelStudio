@@ -49,7 +49,7 @@ feature {NONE} -- Externals
 				static ULARGE_INTEGER epoch_date;
 				static int done = 0;
 	
-				WIN32_FIND_DATA l_find_data;
+				WIN32_FIND_DATAA l_find_data;
 				HANDLE l_file_handle;
 				ULARGE_INTEGER l_date;
 	

@@ -32,11 +32,13 @@ feature {NONE} -- Access
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Argument switches
 		once
-			create Result.make (7)
+			create Result.make (9)
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (location_switch, "Directory where to look for configuration files.", True, False, "location", "A directory to look for ecf files", False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (eifgen_switch, "Directory where projects will be compiled.", True, False, "eifgen", "A directory where the projects will be compiled", False))
+			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (ignore_switch, "Ignore file with files/targets to ignore.", True, False, "ignore.ini", "INI file with the ignores.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (log_verbose_switch, "Verbose logging of actions?", True, False))
-			Result.extend (create {ARGUMENT_SWITCH}.make (no_clean_switch, "Clean before compilation?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (no_clean_switch, "Do not clean before compilation?", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (no_c_compile_switch, "Do not compile generated C code?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (no_melt_switch, "Do not melt the project?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (no_freeze_switch, "Do not freeze the project?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (no_finalize_switch, "Do not finalize the project?", True, False))
@@ -79,6 +81,16 @@ feature -- Access
 			end
 		end
 
+	ignore: STRING
+			-- File with the ignores.
+		once
+			if has_option (ignore_switch) then
+				Result := option_of_name (ignore_switch).value
+			end
+		ensure
+			Result_ok: Result /= Void implies not Result.is_empty and then (create {RAW_FILE}.make (Result)).exists or (create {DIRECTORY}.make (Result)).exists
+		end
+
 	is_parse_only: BOOLEAN
 			-- Only parse and check dependencies?
 		once
@@ -95,6 +107,12 @@ feature -- Access
 			-- Clean before compilation?
 		once
 			Result := not has_option (no_clean_switch)
+		end
+
+	is_c_compile: BOOLEAN
+			-- Compile generated C code?
+		once
+			Result := not has_option (no_c_compile_switch)
 		end
 
 	is_melt: BOOLEAN
@@ -119,8 +137,10 @@ feature {NONE} -- Switch names
 
 	location_switch: STRING = "l"
 	eifgen_switch: STRING = "eifgen"
+	ignore_switch: STRING = "ignore"
 	log_verbose_switch: STRING = "log_verbose"
 	no_clean_switch: STRING = "no_clean"
+	no_c_compile_switch: STRING = "no_c_compile"
 	no_melt_switch: STRING = "no_melt"
 	no_freeze_switch: STRING = "no_freeze"
 	no_finalize_switch: STRING = "no_finalize";

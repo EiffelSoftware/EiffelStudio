@@ -70,7 +70,7 @@ feature{NONE} -- Initialization
 			set_right_border (1)
 			set_top_border (1)
 			set_bottom_border (1)
-			set_spacing (0)
+			set_spacing (2)
 			expose_actions.extend (agent perform_redraw)
 			setting_change_actions.extend (agent safe_redraw)
 			Precursor

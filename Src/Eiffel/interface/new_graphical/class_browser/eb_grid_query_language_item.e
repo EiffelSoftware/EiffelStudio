@@ -68,16 +68,6 @@ feature -- Setting
 			Precursor (a_style)
 		end
 
-feature{NONE} -- Implementation
-
-	internal_replace (original, new: STRING) is
-			-- Replace every occurrence of `original' with `new' in `image'.
-		do
-		end
-
-	image_internal: like image
-			-- Implementation of `image'
-
 invariant
 	item_attached: item /= Void
 

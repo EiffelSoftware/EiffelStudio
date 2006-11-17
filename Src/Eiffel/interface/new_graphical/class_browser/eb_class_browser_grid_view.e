@@ -345,6 +345,11 @@ feature -- Status report
 			Result := data = Void
 		end
 
+	should_tooltip_be_displayed: BOOLEAN
+			-- Should tooltip be displayed?
+		deferred
+		end
+
 feature{NONE} -- Implementation
 
 	text: EV_TEXT is

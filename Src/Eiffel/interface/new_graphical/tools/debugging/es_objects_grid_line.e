@@ -77,6 +77,11 @@ inherit
 			default_create, copy, is_equal
 		end
 
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		undefine
+			default_create, copy, is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	make_with_grid (g: like parent_grid) is
@@ -1018,9 +1023,18 @@ feature {NONE} -- Filling
 
 feature {NONE} -- Agent filling
 
-	Grid_feature_style: EB_NAME_SIGNATURE_FEATURE_STYLE is
+	Grid_feature_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+			-- Feature style to generate editor token informaton of feature
 		once
 			create Result
+			Result.enable_argument
+			Result.disable_comment
+			Result.disable_class
+			Result.disable_return_type
+			Result.disable_value_for_constant
+			Result.disable_use_overload_name
+		ensure
+			result_attached: Result /= Void
 		end
 
 	fill_extra_attributes_for_agent (a_row: EV_GRID_ROW; list_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]) is
@@ -1039,7 +1053,7 @@ feature {NONE} -- Agent filling
 			ag_fi: FEATURE_I
 			r: INTEGER
 			glab: EV_GRID_LABEL_ITEM
-			gf: EB_GRID_FEATURE_ITEM
+			gf: EB_GRID_COMPILER_ITEM
 		do
 			grid := a_row.parent
 			from
@@ -1082,7 +1096,10 @@ feature {NONE} -- Agent filling
 				glab.set_pixmap (pixmaps.mini_pixmaps.general_search_icon)
 				lrow.set_item (Col_name_index, glab)
 
-				create gf.make (create {QL_REAL_FEATURE}.make (ag_fe), Grid_feature_style)
+				Grid_feature_style.set_e_feature (ag_fe)
+				create gf
+				gf.set_pixmap (pixmap_from_e_feature (ag_fe))
+				gf.set_text_with_tokens (Grid_feature_style.text)
 				lrow.set_item (Col_value_index, gf)
 			end
 		end

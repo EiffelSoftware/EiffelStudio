@@ -316,7 +316,7 @@ feature -- Status report
 			-- Should tooltip display be vetoed?
 		do
 			Result := show_tooltip_checkbox.is_selected
-		ensure
+		ensure then
 			good_result: Result = show_tooltip_checkbox.is_selected
 		end
 

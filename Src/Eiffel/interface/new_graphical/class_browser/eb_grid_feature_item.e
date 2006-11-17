@@ -77,11 +77,6 @@ feature{NONE} -- Pixmap
 			end
 		end
 
-	internal_replace (original, new: STRING) is
-			-- Replace every occurrence of `original' with `new' in `image'.
-		do
-		end
-
 feature -- Style type
 
 	style: EB_GRID_FEATURE_ITEM_STYLE

@@ -322,6 +322,13 @@ feature -- Actions
 			end
 		end
 
+feature -- Status report
+
+	should_tooltip_be_displayed: BOOLEAN is
+			-- Should tooltip display be vetoed?
+		do
+		end
+
 feature -- Notification
 
 	update_view is
@@ -519,7 +526,7 @@ feature{NONE} -- Implementation
 				until
 					l_data.after
 				loop
-					create l_row.make (l_data.item, False)
+					create l_row.make (Current, l_data.item, False)
 					l_rows.force_last (l_row)
 					l_data.forth
 				end
@@ -539,7 +546,7 @@ feature{NONE} -- Implementation
 				end
 				processed_classes.wipe_out
 				check l_start_class /= Void end
-				create l_row.make (l_start_class, False)
+				create l_row.make (Current, l_start_class, False)
 				l_rows.force_last (l_row)
 				fill_row_tree (l_row, l_data)
 			end
@@ -579,13 +586,13 @@ feature{NONE} -- Implementation
 					if l_processed_classes.has (l_class) then
 						l_list2 ?= l_class.data
 						if l_list2 /= Void and then not l_list2.is_empty then
-							create l_row.make (l_class, True)
+							create l_row.make (Current, l_class, True)
 						else
-							create l_row.make (l_class, False)
+							create l_row.make (Current, l_class, False)
 						end
 						a_row.add_child (l_row)
 					else
-						create l_row.make (l_class, False)
+						create l_row.make (Current, l_class, False)
 						a_row.add_child (l_row)
 						if l_class.class_c.class_id /= any_class_id then
 							if l_processed_classes.count = l_processed_classes.capacity then

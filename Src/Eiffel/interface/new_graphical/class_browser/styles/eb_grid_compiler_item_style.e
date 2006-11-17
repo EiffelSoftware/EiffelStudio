@@ -92,14 +92,14 @@ feature{NONE} -- Implementation
 --			if a_tooltip.tooltip_window_related_window /= window_manager.last_focused_development_window.window then
 --				a_tooltip.set_tooltip_window_related_window (window_manager.last_focused_development_window.window)
 --			end
-			a_tooltip.set_tooltip_window_related_window_agent (agent last_focused_window)
+--			a_tooltip.set_tooltip_window_related_window_agent (agent last_focused_window)
 		end
 
-	last_focused_window: EV_WINDOW is
-			-- Last focused window
-		do
-			Result := window_manager.last_focused_development_window.window
-		end
+--	last_focused_window: EV_WINDOW is
+--			-- Last focused window
+--		do
+--			Result := window_manager.last_focused_development_window.window
+--		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

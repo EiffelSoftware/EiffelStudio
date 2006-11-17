@@ -70,7 +70,6 @@ feature -- Initialization
 				l_full_signature := not a_item.is_feature
 				add_editor_token_representation (a_item, l_full_signature, True, l_writer)
 				set_pixmap (pixmap_for_query_lanaguage_item (a_item))
-				set_spacing (3)
 				set_text_with_tokens (l_writer.last_line.content)
 				image_internal := a_item.name
 			else

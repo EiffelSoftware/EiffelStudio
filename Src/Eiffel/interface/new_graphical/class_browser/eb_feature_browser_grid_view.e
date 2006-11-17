@@ -41,7 +41,7 @@ feature -- Status report
 			-- Should tooltip display be vetoed?
 		do
 			Result := show_tooltip_checkbox.is_selected
-		ensure
+		ensure then
 			good_result: Result = show_tooltip_checkbox.is_selected
 		end
 
@@ -541,9 +541,7 @@ feature -- Notification
 					end
 				end
 				l_last_bid := l_branch_id
-				create l_row.make (l_data.item, l_branch_id, Current)
-				l_row.set_is_written_class_used (is_written_class_used)
-				l_row.set_is_signature_displayed (is_signature_displayed)
+				create l_row.make (l_data.item, l_branch_id, Current, is_written_class_used, is_signature_displayed)
 				l_rows.force_last (l_row)
 				l_data.forth
 			end
@@ -594,9 +592,9 @@ feature{NONE} -- Sorting
 				Result := row_a.branch_id < row_b.branch_id
 			else
 				if a_order = ascending_order then
-					Result := row_a.feature_item.name < row_b.feature_item.name
+					Result := row_a.feature_image < row_b.feature_image
 				else
-					Result := row_a.feature_item.name > row_b.feature_item.name
+					Result := row_a.feature_image > row_b.feature_image
 				end
 			end
 		end

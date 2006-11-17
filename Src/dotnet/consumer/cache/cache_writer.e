@@ -10,7 +10,7 @@ frozen class
 
 inherit
 	SYSTEM_OBJECT
-	
+
 	CALLBACK_INTERFACE
 
 	CACHE_ERRORS
@@ -49,6 +49,9 @@ inherit
 		end
 
 	IDISPOSABLE
+		rename
+			equals as equals_object
+		end
 
 create
 	make

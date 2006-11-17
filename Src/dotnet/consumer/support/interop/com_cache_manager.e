@@ -18,6 +18,9 @@ inherit
 	I_COM_CACHE_MANAGER
 
 	ISPONSOR
+		rename
+			equals as equals_object
+		end
 
 create {COM_CACHE_MANAGER}
 	default_create

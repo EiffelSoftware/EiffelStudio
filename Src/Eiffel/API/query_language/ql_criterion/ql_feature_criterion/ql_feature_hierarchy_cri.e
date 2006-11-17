@@ -210,9 +210,8 @@ feature{NONE} -- Evaluate
 
 invariant
 	feature_item_attached: criterion_domain /= Void
-	user_data_list_attached: user_data_list /= Void
-	feature_list_attached: feature_list /= Void
-	feature_list_and_user_data_list_valid: feature_list.count = user_data_list.count
+	list_count_valid:
+		(feature_list /= Void and then user_data_list /= Void) implies (feature_list.count = user_data_list.count)
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

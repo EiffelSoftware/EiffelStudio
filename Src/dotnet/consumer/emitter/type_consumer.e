@@ -957,7 +957,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			loop
 				l_method ?= l_members.item (i)
 				if l_method /= Void then
-					l_obj_method := l_object_methods.item (l_method.name)
+					l_obj_method := l_object_methods.item (object_key_name (l_method))
 					if l_obj_method /= Void then
 							-- Let's check return type and arguments type.
 						l_obj_params := l_obj_method.get_parameters
@@ -1077,11 +1077,11 @@ feature {NONE} -- Added features of System.Object to Interfaces
 		local
 			l_type: SYSTEM_TYPE
 			l_methods: NATIVE_ARRAY [METHOD_INFO]
+			l_meth: METHOD_INFO
 			i, nb: INTEGER
 		once
 			l_type := {SYSTEM_TYPE}.get_type_string ("System.Object")
-			l_methods := l_type.get_methods_binding_flags ({BINDING_FLAGS}.instance |
-				{BINDING_FLAGS}.public)
+			l_methods := l_type.get_methods_binding_flags ({BINDING_FLAGS}.instance | {BINDING_FLAGS}.static | {BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public)
 			create Result.make (l_methods.count)
 			from
 				i := l_methods.lower
@@ -1089,11 +1089,44 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			until
 				i > nb
 			loop
-				Result.put (l_methods.item (i), l_methods.item (i).name)
+				l_meth := l_methods.item (i)
+				if (l_meth.is_public or l_meth.is_family or l_meth.is_family_or_assembly) then
+					Result.put (l_meth, object_key_name (l_meth))
+				end
 				i := i + 1
 			end
 		ensure
 			object_methods: Result /= Void
+		end
+
+	object_key_name (a_method: METHOD_INFO): STRING is
+			-- Retrieves a key for use with `object_methods' given method `a_method'
+		require
+			a_method_attached: a_method /= Void
+		local
+			l_params: NATIVE_ARRAY [PARAMETER_INFO]
+			l_param: PARAMETER_INFO
+			l_res: STRING_BUILDER
+			l_count, i: INTEGER
+		do
+			create l_res.make (30)
+			l_res := l_res.append (a_method.name)
+			l_res := l_res.append ('(')
+			l_params := a_method.get_parameters
+			l_count := l_params.length
+			from until i = l_count loop
+				l_param := l_params.item (i)
+				i := i + 1
+				l_res := l_res.append (l_param.parameter_type.name)
+				if i < l_count then
+					l_res := l_res.append (',')
+				end
+			end
+			l_res := l_res.append (')')
+			Result := l_res.to_string
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 feature {NONE} -- Added features for ENUM types.

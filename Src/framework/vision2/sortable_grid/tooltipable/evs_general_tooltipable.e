@@ -302,6 +302,17 @@ feature -- Access
 			result_set: Result = tooltip_window.related_window_agent
 		end
 
+	before_display_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions to be performed just before current tooltip is displayed
+		do
+			if before_display_actions_internal = Void then
+				create before_display_actions_internal
+			end
+			Result := before_display_actions_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Measure
 
 	max_tooltip_width: INTEGER
@@ -414,37 +425,34 @@ feature{NONE} -- Tooltip show/hide
 			l_show: BOOLEAN
 		do
 			l_window := tooltip_window
-			if not is_tooltip_display_vetoed then
-				if not is_my_tooltip then
-					if l_window.has_owner then
-							-- We only display tooltip of current if other's tooltip is not pined.
-						if not l_window.owner.is_tooltip_pined then
-							l_window.detach_owner
-							l_show := True
-						end
-					else
+			if not is_my_tooltip then
+				if l_window.has_owner then
+						-- We only display tooltip of current if other's tooltip is not pined.
+					if not l_window.owner.is_tooltip_pined then
+						l_window.detach_owner
 						l_show := True
 					end
-					if l_show then
-						if is_tooltip_displayed then
-							l_window.hide_tooltip
-						end
-						l_window.attach_owner (Current)
-					end
-				elseif not is_my_tooltip_displayed then
+				else
 					l_show := True
 				end
 				if l_show then
-						-- Use `veto_tooltip_display_funcitons' to do final tooltip display decision.
+					if is_tooltip_displayed then
+						l_window.hide_tooltip
+					end
+					l_window.attach_owner (Current)
+				end
+			elseif not is_my_tooltip_displayed then
+				l_show := True
+			end
+			if l_show then
+				if not before_display_actions.is_empty then
+					before_display_actions.call ([])
+				end
+				if not is_tooltip_display_vetoed then
 					l_window.show_tooltip (screen.pointer_position.x, screen.pointer_position.y)
 					setup_timer (tooltip_status_check_time, agent hide_tooltip)
 				end
 			end
-		ensure
-			my_tooltip_displayed:
-				-- If not other's pined tooltip is displayed and not vertoed by `veto_tooltip_display_function'
-				-- tooltip should be displayed.
-				-- (not (is_others_tooltip_displayed and then tooltip_window.owner.is_tooltip_pined)) implies is_my_tooltip_displayed
 		end
 
 	hide_tooltip is
@@ -624,6 +632,9 @@ feature{NONE} -- Implementation
 
 	pointer_leave_agent_internal: like pointer_leave_agent
 			-- Implementation of once per object  `pointer_leave_agent'
+
+	before_display_actions_internal: like before_display_actions
+			-- Implementation of `before_display_actions'
 
 	actual_tooltip_background_color: EV_COLOR is
 			-- Actual border line color used to draw border line

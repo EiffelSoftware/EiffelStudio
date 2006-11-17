@@ -41,18 +41,11 @@ feature{NONE} -- Pixmap
 	item_pixmap: EV_PIXMAP is
 			-- Pixmap associated to current compiler item
 		do
-			if not is_invisible_pixmap_enabled then
-				Result := pixmap_from_class_i (associated_class_i)
-			else
-				Result := pixmaps.icon_pixmaps.general_blank_icon
-			end
-		end
-
-feature{NONE} -- Implementation
-
-	internal_replace (original, new: STRING) is
-			-- Replace every occurrence of `original' with `new' in `image'.
-		do
+--			if not is_invisible_pixmap_enabled then
+--				Result := pixmap_from_class_i (associated_class_i)
+--			else
+--				Result := pixmaps.icon_pixmaps.general_blank_icon
+--			end
 		end
 
 indexing

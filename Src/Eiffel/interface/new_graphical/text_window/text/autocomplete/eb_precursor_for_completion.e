@@ -71,7 +71,7 @@ feature -- Status report
 
 feature -- Query
 
-	grid_item: EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item: EB_GRID_COMPILER_ITEM is
 			-- Grid item
 		local
 			l_items: ARRAYED_LIST [EDITOR_TOKEN]
@@ -100,7 +100,6 @@ feature -- Query
 			end
 			create Result
 			Result.set_text_with_tokens (l_items)
-			Result.set_spacing (layout_constants.Tiny_padding_size)
 			Result.set_pixmap (icon)
 			Result.set_overriden_fonts (label_font_table)
 		end

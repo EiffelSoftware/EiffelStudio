@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EB_GRID_COMPILER_ITEM
 
 inherit
@@ -40,42 +40,18 @@ inherit
 			default_create
 		end
 
-feature{NONE} -- Initialization
-
-	activate_key_not_pressed: BOOLEAN is
-			-- If control key is not presses, returns True.
-		do
-			Result := not ev_application.shift_pressed
-		end
-
-	activate_key_not_pressed_agent: FUNCTION [ANY, TUPLE, BOOLEAN] is
-			-- Agent to wrap `alt_not_pressed'.
-		once
-			Result := agent activate_key_not_pressed
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature -- Setting
 
 	enable_pixmap is
 			-- Enable pixmap display.
 		do
-			is_pixmap_enabled := True
-			set_pixmap (item_pixmap)
 		ensure
-			pixmap_enalbed: is_pixmap_enabled
-			pixmap_set: pixmap /= Void and then pixmap.is_equal (item_pixmap)
 		end
 
 	disable_pixmap is
 			-- Disable pixmap display.
 		do
-			is_pixmap_enabled := False
-			remove_pixmap
 		ensure
-			pixmap_disabled: not is_pixmap_enabled
-			pixmap_removed: pixmap = Void
 		end
 
 	set_general_tooltip (a_tooltip: like general_tooltip) is
@@ -103,17 +79,6 @@ feature -- Setting
 			general_tooltip_removed: general_tooltip = Void
 		end
 
-	set_style (a_style: like style) is
-			-- Set `style' with `a_style'.
-		require
-			a_style_attached: a_style /= Void
-		do
-			style := a_style
-			style.apply (Current)
-		ensure
-			style_set: style = a_style
-		end
-
 	set_tooltip_display_function (a_function: like tooltip_display_function) is
 			-- Set `tooltip_display_function' with `a_function'.
 		do
@@ -124,41 +89,23 @@ feature -- Setting
 
 feature -- Setting
 
-	enable_invisible_pixmap is
-			-- Ensure `is_invisible_pixmap_enabled' is True.
+	set_image (a_image: like image) is
+			-- Set `image' with `a_image'.
+		require
+			a_image_attached: a_image /= Void
 		do
-			is_invisible_pixmap_enabled := True
-			if is_pixmap_enabled then
-				set_pixmap (pixmaps.icon_pixmaps.general_blank_icon)
-			end
+			create image_internal.make_from_string (a_image)
 		ensure
-			is_invisible_pixmap_enabled_set: is_invisible_pixmap_enabled
-		end
-
-	disable_invisible_pixmap is
-			-- Ensure `is_invisible_pixmap_enabled' is False.
-		do
-			is_invisible_pixmap_enabled := False
-			if is_pixmap_enabled then
-				set_pixmap (item_pixmap)
-			end
-		ensure
-			is_invisible_pixmap_enabled_set: not is_invisible_pixmap_enabled
+			image_set: image /= Void and then image.is_equal (a_image)
 		end
 
 feature -- Status report
-
-	is_invisible_pixmap_enabled: BOOLEAN
-			-- Is invisible pixmap enabled?
-
-	is_pixmap_enabled: BOOLEAN
-			-- Is pixmap display enabled?		
 
 	should_tooltip_be_displayed: BOOLEAN is
 			-- Should tooltip be displayed?
 		do
 			if tooltip_display_function /= Void then
-				Result := not tooltip_display_function.item ([])
+				Result := tooltip_display_function.item ([])
 			end
 		end
 
@@ -169,37 +116,35 @@ feature -- Access
 			-- Use this tooltip if normal tooltip provided cannot satisfy,
 			-- for example, you want to be able to pick and drop from/to tooltip.
 
-	style: EB_GRID_COMPILER_ITEM_STYLE
-			-- Style of current item
+feature -- Searchable
 
-feature{NONE} -- Searchable
+	image: STRING is
+			-- Image of current used in search
+		do
+			Result := image_internal
+			if Result = Void then
+				Result := ""
+			end
+		end
+
+feature{NONE} -- Implementation
+
+	tooltip_display_function: FUNCTION [ANY, TUPLE, BOOLEAN]
+			-- Funtion which decides whether or not tooltip should be displayed
+
+	image_internal: like image
+			-- Implementation of `image'
+
+	internal_replace (original, new: STRING) is
+			-- Replace every occurrence of `original' with `new' in `image'.
+		do
+		end
 
 	grid_item: EV_GRID_ITEM is
 			-- EV_GRID item associated with current
 		do
 			Result := Current
 		end
-
-	image: STRING is
-			-- Image of current used in search
-		do
-			Result := style.image (Current)
-		end
-
-feature{NONE} -- Implementation
-
-	item_pixmap: EV_PIXMAP is
-			-- Pixmap associated to current compiler item
-		deferred
-		ensure
-			result_attached: Result /= Void
-		end
-
-	tooltip_display_function: FUNCTION [ANY, TUPLE, BOOLEAN]
-			-- Funtion which decides whether or not tooltip should be displayed
-
-invariant
-	style_attached: style /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

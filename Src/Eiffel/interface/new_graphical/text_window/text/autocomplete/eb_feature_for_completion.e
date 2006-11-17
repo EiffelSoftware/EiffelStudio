@@ -29,6 +29,11 @@ inherit
 			out, copy, is_equal
 		end
 
+	EB_SHARED_EDITOR_TOKEN_UTILITY
+		undefine
+			out, copy, is_equal
+		end
+
 create
 	make
 
@@ -128,29 +133,38 @@ feature -- Access
 			end
 		end
 
-	grid_item: EB_GRID_FEATURE_ITEM is
+	grid_item: EB_GRID_COMPILER_ITEM is
 			-- Grid item
 		local
-			l_f: QL_REAL_FEATURE
-			l_class: QL_CLASS
-			l_style: EB_GRID_FEATURE_ITEM_STYLE
+			l_style: like feature_style
 		do
-			l_class := query_class_item_from_class_c (associated_feature.associated_class)
-			create l_f.make_with_parent (associated_feature, l_class)
+			l_style := feature_style
+
 			if not show_signature and then not show_type then
-				create {EB_GRID_JUST_NAME_FEATURE_STYLE}l_style
+				l_style.disable_argument
+				l_style.disable_return_type
 			elseif show_signature and then not show_type then
-				create {EB_NAME_SIGNATURE_FEATURE_STYLE}l_style
+				l_style.enable_argument
+				l_style.disable_return_type
 			elseif show_type and then not show_signature then
-				create {EB_NAME_TYPE_FEATURE_STYLE}l_style
+				l_style.enable_return_type
+				l_style.disable_argument
 			elseif show_type and then show_signature then
-				create {EB_GRID_FULL_FEATURE_STYLE}l_style
+				l_style.enable_argument
+				l_style.enable_return_type
 			end
-			l_style.use_overload_name (not show_disambiguated_name)
-			create Result.make_overload (l_f, l_style, name)
-			Result.set_tooltip_display_function (agent display_colorized_tooltip)
-			Result.enable_pixmap
+			if show_disambiguated_name then
+				l_style.disable_use_overload_name
+			else
+				l_style.enable_use_overload_name
+			end
+			l_style.set_e_feature (associated_feature)
+			l_style.set_overload_name (name)
+			create Result
+
 			Result.set_overriden_fonts (label_font_table)
+			Result.set_pixmap (icon)
+			Result.set_text_with_tokens (l_style.text)
 		end
 
 feature -- Query
@@ -208,6 +222,17 @@ feature {NONE} -- Implementation
 	insert_name_internal: STRING
 
 	full_insert_name_internal: STRING
+
+	feature_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+			-- Feature style to generate text for `associated_feature'.
+		once
+			create Result
+			Result.disable_class
+			Result.disable_comment
+			Result.disable_value_for_constant
+		ensure
+			result_attached: Result /= Void
+		end
 
 invariant
 	associated_feature_not_void: associated_feature /= Void

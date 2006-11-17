@@ -10,25 +10,64 @@ class
 	EB_FEATURE_BROWSER_GRID_ROW
 
 inherit
-	EB_GRID_ROW
+	EB_CLASS_BROWSER_GRID_ROW
+		redefine
+			browser
+		end
 
 create
 	make
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like feature_item; a_branch_id: INTEGER; a_browser: like browser) is
+	make (a_feature: like feature_item; a_branch_id: INTEGER; a_browser: like browser; a_written_class_used: BOOLEAN; a_signature_displayed: BOOLEAN) is
 			-- Initialize `feature_item' with `a_feature' and
 			-- `branch_id' with `a_branch_id'.
+			-- `a_written_class_used' indicates if written class of `a_feature' is displayed.
+			-- `a_signature_displayed' indicates if full signature of `a_feature' is displayed instead of just feature name.
 		require
 			a_feature_attached: a_feature /= Void
 			a_feature_valid: a_feature.is_valid_domain_item
 			a_browser_attached: a_browser /= Void
+		local
+			l_style: EB_EDITOR_TOKEN_STYLE
 		do
 			feature_item := a_feature
 			branch_id := a_branch_id
 			browser := a_browser
+			is_written_class_used := a_written_class_used
+			is_signature_displayed := a_signature_displayed
+
+			short_generic_class_style.set_class_c (feature_item.class_c)
+			short_class_tokens := short_generic_class_style.text
+			short_class_image := string_representation_of_editor_tokens (short_class_tokens)
+
+			if is_written_class_used then
+				short_generic_class_style.set_class_c (feature_item.written_class)
+				short_written_class_tokens := short_generic_class_style.text
+				short_written_class_image := string_representation_of_editor_tokens (short_written_class_tokens)
+			end
+
+			if is_signature_displayed then
+				feature_signature_style.set_e_feature (feature_item.e_feature)
+				l_style := feature_signature_style
+			else
+				feature_signature_style.set_e_feature (feature_item.e_feature)
+				l_style := feature_signature_style
+			end
+			if browser.is_version_from_displayed then
+				if
+					feature_item.is_real_feature and then
+					feature_item.e_feature.same_as (browser.feature_item)
+				then
+					agent_style.set_text_function (agent interface_names.l_version_from_message)
+					l_style := l_style + agent_style
+				end
+			end
+			feature_signature_tokens := l_style.text
+			feature_image := string_representation_of_editor_tokens (feature_signature_tokens)
 		ensure
+			feature_signature_tokens_attached: feature_signature_tokens /= Void
 			feature_item_set: feature_item = a_feature
 			branch_id_set: branch_id = a_branch_id
 			browser_set: browser = a_browser
@@ -43,15 +82,16 @@ feature -- Status report
 			-- Is full feature signature displayed?
 			-- If False, just display feature name.
 
-feature -- Setting
-
-	set_is_written_class_used (b: BOOLEAN) is
-			-- Set `is_written_class_used' with `b'.
+	should_feature_tooltip_be_vetoed: BOOLEAN is
+			-- Should tooltip displayed be vetoed?
 		do
-			is_written_class_used := b
-		ensure
-			is_written_class_used_set: is_written_class_used = b
+			Result := not browser.should_tooltip_be_displayed
+			if not Result then
+				Result := not feature_grid_item.general_tooltip.has_tooltip_text
+			end
 		end
+
+feature -- Setting
 
 	set_parent (a_parent: like parent) is
 			-- Set `parent' with `a_parent'.
@@ -61,15 +101,7 @@ feature -- Setting
 			parent_set: parent = a_parent
 		end
 
-	set_is_signature_displayed (b: BOOLEAN) is
-			-- Set `is_signature_displayed' with `b'.
-		do
-			is_signature_displayed := b
-		ensure
-			is_signature_displayed_set: is_signature_displayed = b
-		end
-
-feature -- Access
+feature -- Access		
 
 	feature_item: QL_FEATURE
 			-- Feature assoicated with current row
@@ -83,69 +115,52 @@ feature -- Access
 	browser: EB_FEATURE_BROWSER_GRID_VIEW
 			-- Browser in which current row is contained			
 
-feature -- Access
-
-	class_grid_item: EB_GRID_COMPILED_CLASS_ITEM is
+	class_grid_item: EB_GRID_COMPILER_ITEM is
 			-- Class item
-		local
-			l_style: EB_GRID_CLASS_ITEM_STYLE
 		do
 			if class_item_internal = Void then
-				create {EB_GRID_JUST_NAME_CLASS_STYLE}l_style
-				l_style.disable_starred_class_name
-				create class_item_internal.make (feature_item.class_c, l_style)
-				class_item_internal.enable_pixmap
-				class_item_internal.set_tooltip_display_function (agent browser.should_tooltip_be_displayed)
+				create class_item_internal
+				setup_class_item_with_short_signature (
+					class_item_internal, feature_item.class_c, short_class_tokens, short_class_image,
+					agent: BOOLEAN do Result := not browser.should_tooltip_be_displayed end, agent complete_class_name_tokens)
 			end
 			Result := class_item_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	written_class_grid_item: EB_GRID_COMPILED_CLASS_ITEM is
+	written_class_grid_item: EB_GRID_COMPILER_ITEM is
 			-- Written class item
-		local
-			l_style: EB_GRID_CLASS_ITEM_STYLE
+		require
+			writen_class_used: is_written_class_used
 		do
 			if is_written_class_used and then feature_item.class_c.class_id /= feature_item.written_class.class_id then
 				if written_class_item_internal = Void then
-					create {EB_GRID_JUST_NAME_CLASS_STYLE}l_style
-					l_style.disable_starred_class_name
-					create written_class_item_internal.make (feature_item.written_class, l_style)
-					written_class_item_internal.enable_pixmap
-					written_class_item_internal.set_tooltip_display_function (agent should_feature_tooltip_be_displayed)
+					create written_class_item_internal
+					setup_class_item_with_short_signature (
+						written_class_item_internal, feature_item.written_class, short_written_class_tokens, short_written_class_image,
+						agent: BOOLEAN do Result := not browser.should_tooltip_be_displayed end, agent complete_written_class_name_tokens)
 				end
 				Result := written_class_item_internal
 			end
 		end
 
-	feature_grid_item: EB_GRID_FEATURE_ITEM is
+	feature_grid_item: EB_GRID_COMPILER_ITEM is
 			-- Feature item
-		local
-			l_style: EB_GRID_FEATURE_ITEM_STYLE
 		do
-			if feature_item_internal = Void then
-				if is_signature_displayed then
-					create {EB_GRID_FULL_FEATURE_STYLE}l_style
-				else
-					create {EB_GRID_JUST_NAME_FEATURE_STYLE}l_style
-				end
-				if browser.is_version_from_displayed then
-					if
-						feature_item.is_real_feature and then
-						feature_item.e_feature.same_as (browser.feature_item)
-					then
-						l_style := create {EB_GRID_VERSION_FROM_FEATURE_STYLE}.make (l_style)
-					end
-				end
-				create feature_item_internal.make (feature_item, l_style)
-				feature_item_internal.enable_pixmap
-				feature_item_internal.set_tooltip_display_function (agent should_feature_tooltip_be_displayed)
+			if feature_item_internal = Void  then
+				create feature_item_internal
+				setup_feature_signature_item (
+					feature_item_internal, feature_item.e_feature, feature_signature_tokens, feature_image,
+					agent should_feature_tooltip_be_vetoed, agent feature_comment)
 			end
 			Result := feature_item_internal
 		ensure
 			result_attached: Result /= Void
 		end
+
+	feature_image: STRING
+			-- String representation of `feature_signature' used in grid search.
 
 feature -- Grid binding
 
@@ -189,18 +204,65 @@ feature{NONE} -- Implementation
 	feature_item_internal: like feature_grid_item
 			-- Internal `feature_grid_item'
 
-	should_feature_tooltip_be_displayed: BOOLEAN is
-			-- Should tooltip be displayed?
+	short_class_tokens: LIST [EDITOR_TOKEN]
+			-- Editor tokens containing short generic form of `feature_item'.`class_c'
+
+	short_class_image: STRING
+			-- Image of `feature_item'.`class_c' used in grid search
+
+	short_written_class_tokens: LIST [EDITOR_TOKEN]
+			-- Editor tokens containing short generic form of `feature_item'.`written_class'
+
+	short_written_class_image: STRING
+			-- Image of `feature_item'.`written_class' used in grid search
+
+	complete_written_class_name_tokens: LIST [EDITOR_TOKEN] is
+			-- Editor tokens to display complete written class form of `feature_item'.`written_class_c'.
 		do
-			Result := browser.should_tooltip_be_displayed
-			if Result then
-				Result := feature_grid_item.general_tooltip.has_tooltip_text
+			if complete_written_class_name_tokens_internal = Void then
+				complete_generic_class_style.set_class_c (feature_item.written_class)
+				complete_written_class_name_tokens_internal := complete_generic_class_style.text
 			end
+			Result := complete_written_class_name_tokens_internal
 		end
 
+	complete_written_class_name_tokens_internal: like complete_written_class_name_tokens
+			-- Implementation of `complete_written_class_name_tokens'
+
+	feature_signature_tokens: LIST [EDITOR_TOKEN]
+			-- Editor tokens to display feature signature.
+
+	feature_comment: LIST [EDITOR_TOKEN] is
+			-- Feature comment
+		do
+			if feature_comment_internal = Void then
+				feature_comment_style.set_ql_feature (feature_item)
+				feature_comment_internal := feature_comment_style.text
+			end
+			Result := feature_comment_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	feature_comment_internal: like feature_comment
+			-- Implementation of `feature_comment'
+
+	complete_class_name_tokens: LIST [EDITOR_TOKEN] is
+			-- Editor tokens to display complete class form of `feature_item'.`class_c'.
+		do
+			if complete_class_name_tokens_internal = Void then
+				complete_generic_class_style.set_class_c (feature_item.class_c)
+				complete_class_name_tokens_internal := complete_generic_class_style.text
+			end
+			Result := complete_class_name_tokens_internal
+		end
+
+	complete_class_name_tokens_internal: like complete_class_name_tokens
+			-- Implementation of `complete_class_name_tokens'
+
 invariant
-	feature_item_attached: feature_item /= Void
-	browser_attached: browser /= Void
+	short_class_tokens_attached: short_class_tokens /= Void
+	short_class_image_attached: short_class_image /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

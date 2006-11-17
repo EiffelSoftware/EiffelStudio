@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			default_create
 			name := a_name
 			set_spacing (layout_constants.Tiny_padding_size)
-			set_style (a_style)
+--			set_style (a_style)
 		end
 
 	make_with_type (a_name: STRING; a_type: TYPE_A; a_feature: FEATURE_I; a_style: EB_GRID_LOCAL_ITEM_STYLE) is
@@ -64,13 +64,6 @@ feature -- Access
 			-- Pixmap associated to current compiler item
 		do
 			Result := pixmaps.icon_pixmaps.feature_local_variable_icon
-		end
-
-feature {NONE} -- Implementation
-
-	internal_replace (original, new: STRING) is
-			-- Replace every occurrence of `original' with `new' in image.
-		do
 		end
 
 invariant

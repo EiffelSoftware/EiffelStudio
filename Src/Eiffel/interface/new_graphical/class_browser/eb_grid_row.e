@@ -34,8 +34,6 @@ feature -- Grid row
 			data_set: grid_row.data = Current
 		end
 
-invariant
-	grid_row_attached: grid_row /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

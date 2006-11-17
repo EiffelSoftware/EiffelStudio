@@ -10,7 +10,7 @@ class
 	EB_CLASS_BROWSER_FLAT_ROW
 
 inherit
-	EB_GRID_ROW
+	EB_CLASS_BROWSER_GRID_ROW
 
 create
 	make
@@ -26,9 +26,17 @@ feature{NONE} -- Initialization
 		do
 			feature_item := a_feature
 			browser := a_browser
-		ensure
-			feature_item_set: feature_item = a_feature
-			browser_set: browser = a_browser
+
+			create class_item_internal
+			class_item_internal.set_tooltip_display_function (agent browser.should_tooltip_be_displayed)
+			create feature_item_internal
+
+			short_generic_class_style.set_class_c (written_class)
+			short_generic_class_tokens := short_generic_class_style.text
+			class_image := string_representation_of_editor_tokens (short_generic_class_tokens)
+
+			feature_signature_style.set_ql_feature (feature_item)
+			feature_signature_tokens := feature_signature_style.text
 		end
 
 feature -- Grid binding
@@ -37,12 +45,9 @@ feature -- Grid binding
 			-- Refresh current row.
 		require
 			grid_row_attached: grid_row /= Void
-		local
-			l_class_item: like class_grid_item
-			l_feature_item: like feature_grid_item
 		do
-			l_class_item := class_grid_item
-			l_feature_item := feature_grid_item
+			is_up_to_date := False
+			update_row
 		end
 
 	bind_row (a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER) is
@@ -100,6 +105,18 @@ feature -- Status report
 	is_expanded: BOOLEAN
 			-- Is current row expanded?
 
+	is_up_to_date: BOOLEAN
+			-- Is status of current row up-to_date?
+
+	should_feature_tooltip_be_vetoed: BOOLEAN is
+			-- Should feature tooltip display be vetoed?
+		do
+			Result := not browser.should_tooltip_be_displayed
+			if not Result then
+				Result := not feature_grid_item.general_tooltip.has_tooltip_text or else not is_expanded
+			end
+		end
+
 feature -- Access
 
 	feature_item: QL_FEATURE
@@ -107,6 +124,8 @@ feature -- Access
 
 	e_feature: E_FEATURE is
 			-- E_FEATURE object of `feature_item'
+		require
+			real_feature: feature_item.is_real_feature
 		do
 			Result := feature_item.e_feature
 		ensure
@@ -138,7 +157,9 @@ feature -- Access
 	summary: STRING is
 			-- Summary of current row
 		do
-			Result := (children_count + 1).out + " features"
+			create Result.make (24)
+			Result.append ((children_count + 1).out)
+			Result.append (" features")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -149,6 +170,7 @@ feature -- Setting
 			-- Set `parent' with `a_parent'.
 		do
 			parent := a_parent
+			is_up_to_date := False
 		ensure
 			parent_set: parent = a_parent
 		end
@@ -157,6 +179,7 @@ feature -- Setting
 			-- Set `is_expanded' with `b'.
 		do
 			is_expanded := b
+			is_up_to_date := False
 		ensure
 			is_expanded_set: is_expanded = b
 		end
@@ -165,87 +188,26 @@ feature -- Setting
 			-- Set `children_count' with `a_count'.
 		do
 			children_count := a_count
+			is_up_to_date := False
 		ensure
 			children_count_set: children_count = a_count
 		end
 
-feature -- Grid operations
+feature{NONE} -- Grid items
 
-	class_grid_item: EB_GRID_COMPILED_CLASS_ITEM is
+	class_grid_item: EB_GRID_COMPILER_ITEM is
 			-- Class item
-		local
-			l_style: EB_GRID_CLASS_ITEM_STYLE
 		do
-			if class_item_internal = Void then
-				if is_parent then
-					create {EB_GRID_SHORTENED_CLASS_STYLE}l_style
-					l_style.disable_starred_class_name
-					create class_item_internal.make (written_class, l_style)
-					class_item_internal.disable_invisible_pixmap
-				else
-					create {EB_GRID_QUOTE_CLASS_STYLE}l_style
-					l_style.disable_starred_class_name
-					create class_item_internal.make (written_class, l_style)
-					class_item_internal.enable_invisible_pixmap
-				end
-				class_item_internal.enable_pixmap
-				class_item_internal.set_data (Current)
-				class_item_internal.set_tooltip_display_function (agent browser.should_tooltip_be_displayed)
-			else
-				if is_parent then
-					if not class_item_internal.style.is_shortened_signature_style then
-						create {EB_GRID_SHORTENED_CLASS_STYLE}l_style
-						l_style.disable_starred_class_name
-						class_item_internal.set_style (l_style)
-						class_item_internal.disable_invisible_pixmap
-					end
-				else
-					if not class_item_internal.style.is_quote_style then
-						create {EB_GRID_QUOTE_CLASS_STYLE}l_style
-						l_style.disable_starred_class_name
-						class_item_internal.set_style (l_style)
-						class_item_internal.enable_invisible_pixmap
-					end
-				end
-			end
+			update_row
 			Result := class_item_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	feature_grid_item: EB_GRID_FEATURE_ITEM is
+	feature_grid_item: EB_GRID_COMPILER_ITEM is
 			-- Feature item
-		local
-			l_style: EB_GRID_FEATURE_ITEM_STYLE
 		do
-			if feature_item_internal = Void then
-				if is_parent and not is_expanded then
-					create {EB_GRID_MESSAGE_FEATURE_STYLE}l_style.make (summary)
-					create feature_item_internal.make (feature_item, l_style)
-					feature_item_internal.enable_invisible_pixmap
-				else
-					create {EB_GRID_FULL_FEATURE_STYLE}l_style
-					create feature_item_internal.make (feature_item, l_style)
-					feature_item_internal.disable_invisible_pixmap
-				end
-				feature_item_internal.enable_pixmap
-				feature_item_internal.set_data (Current)
-				feature_item_internal.set_tooltip_display_function (agent should_feature_tooltip_be_displayed)
-			else
-				if is_parent and not is_expanded then
-					if not feature_item_internal.style.is_message_style then
-						create {EB_GRID_MESSAGE_FEATURE_STYLE}l_style.make (summary)
-						feature_item_internal.set_style (l_style)
-						feature_item_internal.enable_invisible_pixmap
-					end
-				else
-					if not feature_item_internal.style.is_full_signature_style then
-						create {EB_GRID_FULL_FEATURE_STYLE}l_style
-						feature_item_internal.set_style (l_style)
-						feature_item_internal.disable_invisible_pixmap
-					end
-				end
-			end
+			update_row
 			Result := feature_item_internal
 		ensure
 			result_attached: Result /= Void
@@ -259,23 +221,116 @@ feature{NONE} -- Implementation
 	class_item_internal: like class_grid_item
 			-- Internal `class_grid_item'
 
-	browser: EB_CLASS_BROWSER_FLAT_VIEW
-			-- Browser in which current is displayed
-
-	should_feature_tooltip_be_displayed: BOOLEAN is
-			-- Should tooltip be displayed?
+	class_tooltip_tokens: LIST [EDITOR_TOKEN] is
+			-- Editor tokens for class tooltip
 		do
-			Result := browser.should_tooltip_be_displayed
-			if Result then
-				Result := feature_grid_item.general_tooltip.has_tooltip_text and then is_expanded
+			if class_tooltip_tokens_internal = Void then
+				complete_generic_class_style.set_class_c (written_class)
+				class_tooltip_tokens_internal := complete_generic_class_style.text
 			end
+			Result := class_tooltip_tokens_internal
+		end
+
+	class_tooltip_tokens_internal: like class_tooltip_tokens
+			-- Implementation of `class_tooltip_tokens'
+
+	class_image: STRING
+			-- Image of class used in search
+
+	feature_image: STRING is
+			-- Image of feature used in search
+		do
+			if feature_image_internal = Void then
+				feature_image_internal := string_representation_of_editor_tokens (feature_signature_tokens)
+			end
+			Result := feature_image_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	feature_comment: LIST [EDITOR_TOKEN] is
+			-- Feature comment
+		do
+			if feature_comment_internal = Void then
+				feature_comment_style.set_ql_feature (feature_item)
+				feature_comment_internal := feature_comment_style.text
+			end
+			Result := feature_comment_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	feature_comment_internal: like feature_comment
+			-- Implementation of `feature_comment'
+
+	feature_image_internal: like feature_image
+			-- Implementation of `feature_image'
+
+	short_generic_class_tokens: LIST [EDITOR_TOKEN]
+			-- Editor tokens for class signature displayed in grid item
+
+	feature_signature_tokens: LIST [EDITOR_TOKEN]
+			-- Editor tokens for feature signature displayed in grid item
+
+feature{NONE} -- Item setup
+
+	setup_class_item_with_blank (a_item: EB_GRID_COMPILER_ITEM) is
+			-- Setup `a_item' using `class_c' into blank form.
+		require
+			a_item_attached: a_item /= Void
+		do
+			a_item.set_text ("")
+			a_item.set_image ("")
+			a_item.remove_pixmap
+		end
+
+	setup_feature_with_summary (a_item: like feature_grid_item) is
+			-- Setup `a_item' using `feature_item' to summary form.
+		require
+			a_item_attached: a_item /= Void
+		do
+			a_item.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
+			agent_style.set_text_function (agent summary)
+			a_item.set_text_with_tokens (agent_style.text)
+			a_item.set_image (feature_image)
+			a_item.remove_general_tooltip
+		end
+
+	update_row is
+			-- Update status of current row.
+		do
+			if not is_up_to_date then
+					-- Update class item.
+				if is_parent then
+					setup_class_item_with_short_signature (
+						class_item_internal, written_class, short_generic_class_tokens, class_image,
+						agent: BOOLEAN do Result := not browser.should_tooltip_be_displayed end,
+						agent class_tooltip_tokens)
+				else
+					setup_class_item_with_blank (class_item_internal)
+				end
+					-- Update feature item.
+				if is_parent and not is_expanded then
+					setup_feature_with_summary (feature_item_internal)
+				else
+					setup_feature_signature_item (
+						feature_item_internal, feature_item.e_feature, feature_signature_tokens, feature_image,
+						agent should_feature_tooltip_be_vetoed, agent feature_comment)
+				end
+				is_up_to_date := True
+			end
+		ensure
+			status_up_to_date: is_up_to_date
 		end
 
 invariant
 	feature_item_attached: feature_item /= Void
 	feature_item_is_real_feature: feature_item.is_real_feature
+	e_feature_attached: e_feature /= Void
 	children_count_correct: children_count > 0 implies is_parent
-	browser_attached: browser /= Void
+	class_image_attached: class_image /= Void
+	short_generic_class_tokens_attached: short_generic_class_tokens /= Void
+	feature_signature_tokens_attached: feature_signature_tokens /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

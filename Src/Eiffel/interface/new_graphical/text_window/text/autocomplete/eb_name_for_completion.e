@@ -110,26 +110,26 @@ feature -- Query
 			Result := pixmaps.icon_pixmaps.feature_local_variable_icon
 		end
 
-	grid_item : EB_GRID_EDITOR_TOKEN_ITEM is
+	grid_item : EB_GRID_COMPILER_ITEM is
 			-- Corresponding grid item
 		local
-			l_local_item: EB_GRID_LOCAL_ITEM
+			l_style: like local_style
 		do
-			if not token_exist then
-				create l_local_item.make (Current, create {EB_GRID_LOCAL_ITEM_NAME_STYLE})
-				l_local_item.set_tooltip_display_function (agent display_colorized_tooltip)
-				l_local_item.enable_pixmap
-				Result := l_local_item
-			else
-				create Result
-				Result.set_spacing (layout_constants.Tiny_padding_size)
-				Result.set_text_with_tokens (tokens)
-				Result.set_pixmap (icon)
-			end
+			l_style := local_style
+			create Result
+			Result.set_overriden_fonts (label_font_table)
 			if has_child then
 				Result.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
+			else
+				Result.set_pixmap (icon)
 			end
-			Result.set_overriden_fonts (label_font_table)
+			if not token_exist then
+				l_style.disable_type
+				l_style.set_local (Current, Void, Void)
+				Result.set_text_with_tokens (l_style.text)
+			else
+				Result.set_text_with_tokens (tokens)
+			end
 		end
 
 	child_grid_items: ARRAYED_LIST [EB_GRID_EDITOR_TOKEN_ITEM] is
@@ -252,8 +252,16 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 
-	internal_completion_type: STRING;
+	internal_completion_type: STRING
 			-- cache `completion_type'
+
+	local_style: EB_LOCAL_EDITOR_TOKEN_STYLE is
+			-- Local style to generate text of local
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

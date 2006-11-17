@@ -339,7 +339,6 @@ feature -- Grid binding
 		do
 			create l_editor_token_item
 			l_editor_token_item.set_pixmap (pixmap)
-			l_editor_token_item.set_spacing (3)
 			l_editor_token_item.set_text_with_tokens (token_name)
 			l_editor_token_item.set_data (Current)
 			l_editor_token_item.set_overriden_fonts (label_font_table)

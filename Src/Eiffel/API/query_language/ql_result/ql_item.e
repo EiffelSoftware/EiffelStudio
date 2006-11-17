@@ -384,7 +384,7 @@ feature{NONE} -- Implementation
 
 invariant
 	name_valid: name /= Void and then not name.is_empty
-	full_name_valid: path /= Void and then not path.is_empty
+	full_name_valid: path /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

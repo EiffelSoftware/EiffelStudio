@@ -586,7 +586,6 @@ feature {NONE} -- Implementation
 
 			if has_group_changed then
 				parse_target (l_new_target)
-				universe.set_conf_system (conf_system)
 			end
 
 			successful := True

@@ -344,8 +344,10 @@ feature -- Update
 			a_target_not_void: a_target /= Void
 		do
 			new_target := a_target
+			conf_system := a_target.system
 		ensure
 			new_target_set: new_target = a_target
+			conf_system_set: conf_system = a_target.system
 		end
 
 	new_target_to_target is
@@ -358,16 +360,6 @@ feature -- Update
 		ensure
 			target_set: target /= Void and target = old new_target
 			new_target_void: new_target = Void
-		end
-
-	set_conf_system (a_system: like conf_system) is
-			-- Set `conf_system' to `a_system'.
-		require
-			a_system_not_void: a_system /= Void
-		do
-			conf_system := a_system
-		ensure
-			conf_system_set: conf_system = a_system
 		end
 
 	reset_internals is

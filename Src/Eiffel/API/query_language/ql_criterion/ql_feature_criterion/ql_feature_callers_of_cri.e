@@ -345,11 +345,10 @@ feature{NONE} -- Evaluate
 
 invariant
 	caller_type_attached: caller_type /= Void
-	invariant_list_attached: invariant_list /= Void
-	callee_list_for_invariant_attached: callee_list_for_invariant /= Void
-	callee_list_for_invariant_invariant_list_valid: callee_list_for_invariant.count = invariant_list.count
-	callee_list_for_feature_attached: callee_list_for_feature /= Void
-	callee_list_for_feature_invariant_list_valid: callee_list_for_feature.count = feature_list.count
+	feature_callee_valid:
+		(callee_list_for_feature /= Void and then feature_list /= Void) implies (callee_list_for_feature.count = feature_list.count)
+	invariant_callee_valid:
+		(callee_list_for_invariant /= Void and then invariant_list /= Void) implies (callee_list_for_invariant.count = invariant_list.count)
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

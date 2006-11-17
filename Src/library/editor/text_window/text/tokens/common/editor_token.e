@@ -337,6 +337,16 @@ feature -- Implementation of clickable and editable text
 			pos_in_text_set: pos_in_text = pit
 		end
 
+	is_clickable: BOOLEAN
+
+	set_is_clickable (a_clickable: BOOLEAN) is
+			-- Set `is_clickable' with `a_clickable'.
+		do
+			is_clickable := a_clickable
+		ensure
+			is_clickable_set: is_clickable = a_clickable
+		end
+
 	platform_is_windows: BOOLEAN is
 			-- Is the current platform Windows?
 		once

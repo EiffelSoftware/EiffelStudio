@@ -107,6 +107,9 @@ feature -- Analysis preparation
 							split_string := False
 						elseif token.image @ token.image.count /= '%"' then
 							split_string := True
+						else
+								-- It might be an operator name
+							token.set_is_clickable (True)
 						end
 					else
 						if not split_string then
@@ -118,6 +121,7 @@ feature -- Analysis preparation
 								next := token.next
 								create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.image,
 									features_position.item.start_pos, features_position.item.end_pos)
+								tfs.set_is_clickable (True)
 								tfs.set_feature_index_in_table (features_position.index)
 								if prev /= Void then
 									prev.set_next_token (tfs)
@@ -131,6 +135,10 @@ feature -- Analysis preparation
 								end
 								features_position.forth
 								token := tfs
+							else
+								if not has_colon_followed (token, line) then
+									token.set_is_clickable (True)
+								end
 							end
 						end
 					end
@@ -415,6 +423,9 @@ feature -- Click list update
 									token := Void
 								end
 							end
+						else
+								-- It might be an operator name
+							token.set_is_clickable (True)
 						end
 					else
 							-- "Normal" text token
@@ -423,6 +434,7 @@ feature -- Click list update
 							next := token.next
 							create {EDITOR_TOKEN_FEATURE_START} tfs.make_with_pos (token.image,
 								features_position.item.start_pos, features_position.item.end_pos)
+							token.set_is_clickable (True)
 							tfs.set_feature_index_in_table (features_position.index)
 							if prev /= Void then
 								prev.set_next_token (tfs)
@@ -436,6 +448,10 @@ feature -- Click list update
 							end
 							features_position.forth
 							token := tfs
+						else
+							if not has_colon_followed (token, line) then
+								token.set_is_clickable (True)
+							end
 						end
 					end
 				end
@@ -544,8 +560,8 @@ feature {NONE} -- Implementation
 			token: EDITOR_TOKEN
 		do
 			token := a_token
-			if token.pos_in_text > 0 then
-					-- pos_in_text has already been setup.
+			if token.is_clickable and then token.pos_in_text > 0 then
+					-- is_clickable has already been setup.
 				Result := True
 			elseif token.is_text then
 				if is_keyword (token) then
@@ -553,15 +569,37 @@ feature {NONE} -- Implementation
 					if token_image_is_same_as_word (token, "precursor") then
 						Result := True
 					end
-				elseif is_comment (token) then
-					-- no interesting token : skip
-				elseif is_string (token) then
-					-- no interesting token : skip
-					-- We do not care the operator case here.
-				else
-						-- "Normal" text token
-					Result := True
 				end
+			end
+		end
+
+	has_colon_followed (a_token: EDITOR_TOKEN; a_line: EDITOR_LINE): BOOLEAN is
+			-- Does `a_token' have a colon followed?
+		require
+			a_token_not_void: a_token /= Void
+			a_line_not_void: a_line /= Void
+		local
+			l_token: EDITOR_TOKEN
+			l_line: EDITOR_LINE
+		do
+			from
+				l_line := a_line
+				l_token := a_token.next
+				if l_token = Void and then l_line.next /= Void then
+					l_line := l_line.next
+					l_token := l_line.first_token
+				end
+			until
+				l_token = Void or else l_token.is_text
+			loop
+				l_token := l_token.next
+				if l_token = Void and then l_line.next /= Void then
+					l_line := l_line.next
+					l_token := l_line.first_token
+				end
+			end
+			if l_token /= Void then
+				Result := l_token.image.is_equal (":")
 			end
 		end
 

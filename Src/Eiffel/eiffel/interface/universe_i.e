@@ -350,6 +350,20 @@ feature -- Update
 			conf_system_set: conf_system = a_target.system
 		end
 
+	set_old_target (a_target: like target) is
+			-- Set `target' to `a_target' and reset `new_target'.
+		require
+			a_target_not_void: a_target /= Void
+		do
+			target := a_target
+			new_target := Void
+			conf_system := Void
+		ensure
+			target_set: target = a_target
+			new_target_void: new_target = Void
+			conf_system_void: conf_system = Void
+		end
+
 	new_target_to_target is
 			-- Move `new_target' to `target'.
 		require

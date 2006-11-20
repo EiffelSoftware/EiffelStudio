@@ -64,9 +64,6 @@ feature {NONE} -- Initialization
 			Result := True
 		end
 
-	scrollable_area: POINTER
-		-- Pointer to the GtkScrolledWindow widget used for scrolling the tree view
-
 	make (an_interface: like interface) is
 			-- Create an empty Tree.
 		do
@@ -714,6 +711,9 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	scrollable_area: POINTER
+		-- Pointer to the GtkScrolledWindow widget used for scrolling the tree view
 
 	interface: EV_TREE;
 

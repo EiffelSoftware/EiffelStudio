@@ -1,206 +1,160 @@
 indexing
 	description: "[
-		A printer interface for outputing information to a UI.
+		Basic implementation of a status printer for outputing information to a {IO_MEDIUM} descendent.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class
-	STATUS_PRINTER
+class
+	BASIC_TEXT_PRINTER
+
+inherit
+	TEXT_PRINTER
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_medium: like medium) is
+			-- Initialize printer using medium `a_medium'
+		require
+			a_medium_attached: a_medium /= Void
+			a_medium_is_writable: a_medium.is_writable
+		do
+			medium := a_medium
+		ensure
+			medium_set: medium = a_medium
+		end
 
 feature -- Output
 
 	new_line is
 			-- Write a new line character to medium
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.new_line
 		end
 
 	put_string_8 (a_value: STRING_8) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-			a_value_attached: a_value /= Void
-		deferred
+		do
+			medium.put_string (a_value)
 		end
 
 	put_string_32 (a_value: STRING_32) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-			a_value_attached: a_value /= Void
-		deferred
+		do
+			check not_impl: False end
 		end
 
 	put_character_8 (a_value: CHARACTER_8) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-			a_value_printable: a_value.is_printable
-		deferred
+		do
+			medium.put_character (a_value)
 		end
 
 	put_character_32 (a_value: CHARACTER_32) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			check not_impl: False end
 		end
 
 	put_integer_8 (a_value: INTEGER_8) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_integer_8 (a_value)
 		end
 
 	put_integer_16 (a_value: INTEGER_16) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_integer_16 (a_value)
 		end
 
 	put_integer_32 (a_value: INTEGER) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_integer_32 (a_value)
 		end
 
 	put_integer_64 (a_value: INTEGER_64) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_integer_64 (a_value)
 		end
 
 	put_natural_8 (a_value: NATURAL_8) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_natural_8 (a_value)
 		end
 
 	put_natural_16 (a_value: NATURAL_16) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_natural_16 (a_value)
 		end
 
 	put_natural_32 (a_value: NATURAL_32) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_natural_32 (a_value)
 		end
 
 	put_natural_64 (a_value: NATURAL_64) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_natural_64 (a_value)
 		end
 
 	put_boolean (a_value: BOOLEAN) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_boolean (a_value)
 		end
 
 	put_real_32 (a_value: REAL_32) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
+		do
+			medium.put_real (a_value)
 		end
 
 	put_real_64 (a_value: REAL_64) is
 			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		deferred
-		end
-
-feature -- Output defaults
-
-	put_string (a_value: STRING_GENERAL) is
-			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-			a_value_attached: a_value /= Void
-		local
-			l_s8: STRING_8
-			l_s32: STRING_32
 		do
-			l_s8 ?= a_value
-			if l_s8 /= Void then
-				put_string_8 (l_s8)
-			else
-				l_s32 ?= a_value
-				check l_s32_attached: l_s32 /= Void end
-				put_string_32 (l_s32)
-			end
-		end
-
-	put_character (a_value: CHARACTER) is
-			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		do
-			put_character_8 (a_value)
-		end
-
-	put_integer (a_value: INTEGER) is
-			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		do
-			put_integer_32 (a_value)
-		end
-
-	put_natural (a_value: NATURAL) is
-			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		do
-			put_natural_32 (a_value)
-		end
-
-	put_real (a_value: REAL_32) is
-			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		do
-			put_real_32 (a_value)
-		end
-
-	put_double (a_value: DOUBLE) is
-			-- Write `a_value' to printer.
-		require
-			is_writable: is_writable
-		do
-			put_real_64 (a_value)
+			medium.put_double (a_value)
 		end
 
 feature -- Basic operations
 
 	flush is
 			-- Flushes any buffered content.
-		deferred
+		local
+			l_file: FILE
+		do
+			l_file ?= medium
+			if l_file /= Void then
+				l_file.flush
+			end
 		end
 
 feature -- Status report
 
 	is_writable: BOOLEAN is
 			-- Determines if printer can be written to
-		deferred
+		do
+			Result := medium.is_writable
 		end
+
+feature {NONE} -- Implementation
+
+	medium: IO_MEDIUM
+			-- Medium used to print output
+
+invariant
+	medium_attached: medium /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -234,4 +188,4 @@ feature -- Status report
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class {STATUS_PRINTER}
+end -- class {BASIC_TEXT_PRINTER}

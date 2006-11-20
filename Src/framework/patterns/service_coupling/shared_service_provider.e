@@ -8,8 +8,8 @@ indexing
 		
 		On first initialization a service heap {SERVICE_HEAP} will be created to store and maintain a list of services.
 		After initialization three services will be registered. 
-			* {SERVICE_CONTAINER} provides access to the global service container by passing any chained container.
-			* {SERVICE_PROVIDER} provides access to the global service provider by passing any chained provider.
+			* {SERVICE_CONTAINER} provides access to the global service container by-passing any chained container.
+			* {SERVICE_PROVIDER} provides access to the global service provider by-passing any chained provider.
 			* {SERVICE_HEAP} providess access to the global service heap.
 	]"
 	legal: "See notice at end of class."

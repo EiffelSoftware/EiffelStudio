@@ -495,7 +495,11 @@ feature {NONE} -- retrieving information from cache
 				end
 			end
 			if Result = Void or else not Result.is_consumed then
-				add_error (create {CONF_ERROR_ASOP}.make (an_assembly.assembly_name))
+				if an_assembly.is_non_local_assembly then
+					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.name))
+				else
+					add_error (create {CONF_ERROR_ASOP}.make (an_assembly.location.evaluated_path))
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void

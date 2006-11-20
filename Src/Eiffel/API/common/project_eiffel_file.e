@@ -66,6 +66,12 @@ feature -- Store/Retrieval
 			-- (Note: error cannot be invalid_precompilation)
 		do
 			Result ?= retrieved_object
+			if Result = Void and then not has_error then
+					-- An error was not detected, that is to say we were able
+					-- to retrieve something which is not of type PRECOMP_INFO.
+					-- Let's generate an error.
+				error_value := corrupt_value
+			end
 		ensure
 			valid_result: not has_error implies Result /= Void
 		end;

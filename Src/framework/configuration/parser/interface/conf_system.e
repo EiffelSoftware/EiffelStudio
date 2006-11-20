@@ -506,14 +506,12 @@ feature -- Equality
 				from
 					targets.start
 					l_o_targets := other.targets
-					l_o_targets.start
 				until
-					not Result or targets.after or l_o_targets.after
+					not Result or targets.after
 				loop
 					l_o_target := l_o_targets.item (targets.key_for_iteration)
 					Result := l_o_target /= Void and then targets.item_for_iteration.is_group_equivalent (l_o_target)
 					targets.forth
-					l_o_targets.forth
 				end
 			end
 		end

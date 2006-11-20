@@ -42,18 +42,6 @@ inherit
 
 feature -- Setting
 
-	enable_pixmap is
-			-- Enable pixmap display.
-		do
-		ensure
-		end
-
-	disable_pixmap is
-			-- Disable pixmap display.
-		do
-		ensure
-		end
-
 	set_general_tooltip (a_tooltip: like general_tooltip) is
 			-- Set `general_tooltip' with `a_tooltip' and enable it at the same time.
 		require
@@ -79,14 +67,6 @@ feature -- Setting
 			general_tooltip_removed: general_tooltip = Void
 		end
 
-	set_tooltip_display_function (a_function: like tooltip_display_function) is
-			-- Set `tooltip_display_function' with `a_function'.
-		do
-			tooltip_display_function := a_function
-		ensure
-			tooltip_display_function_set: tooltip_display_function = a_function
-		end
-
 feature -- Setting
 
 	set_image (a_image: like image) is
@@ -97,16 +77,6 @@ feature -- Setting
 			create image_internal.make_from_string (a_image)
 		ensure
 			image_set: image /= Void and then image.is_equal (a_image)
-		end
-
-feature -- Status report
-
-	should_tooltip_be_displayed: BOOLEAN is
-			-- Should tooltip be displayed?
-		do
-			if tooltip_display_function /= Void then
-				Result := tooltip_display_function.item ([])
-			end
 		end
 
 feature -- Access
@@ -128,9 +98,6 @@ feature -- Searchable
 		end
 
 feature{NONE} -- Implementation
-
-	tooltip_display_function: FUNCTION [ANY, TUPLE, BOOLEAN]
-			-- Funtion which decides whether or not tooltip should be displayed
 
 	image_internal: like image
 			-- Implementation of `image'

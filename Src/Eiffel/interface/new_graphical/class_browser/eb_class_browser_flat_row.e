@@ -28,7 +28,6 @@ feature{NONE} -- Initialization
 			browser := a_browser
 
 			create class_item_internal
-			class_item_internal.set_tooltip_display_function (agent browser.should_tooltip_be_displayed)
 			create feature_item_internal
 
 			short_generic_class_style.set_class_c (written_class)

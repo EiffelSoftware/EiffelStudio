@@ -594,13 +594,18 @@ end
 			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_BIT, Current)
 				last_token := TE_BIT
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							once "The `bit' keyword will be removed in the future according to ECMA Eiffel and should not be used."))
+				end
 			
 when 50 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 274 "eiffel.l"
+--|#line 279 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 274")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 279")
 end
 			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CHECK, Current)
@@ -609,9 +614,9 @@ end
 when 51 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 278 "eiffel.l"
+--|#line 283 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 278")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 283")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CLASS, Current)
@@ -620,9 +625,9 @@ end
 when 52 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 282 "eiffel.l"
+--|#line 287 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 282")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 287")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CONVERT, Current)
@@ -631,9 +636,9 @@ end
 when 53 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 286 "eiffel.l"
+--|#line 291 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 286")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 291")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CREATE, Current)
@@ -642,9 +647,9 @@ end
 when 54 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 290 "eiffel.l"
+--|#line 295 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 290")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 295")
 end
 				
 				last_keyword_as_value := ast_factory.new_creation_keyword_as (Current)
@@ -653,9 +658,9 @@ end
 when 55 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 294 "eiffel.l"
+--|#line 299 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 294")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 299")
 end
 				
 				last_current_as_value := ast_factory.new_current_as (Current)
@@ -664,9 +669,9 @@ end
 when 56 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 298 "eiffel.l"
+--|#line 303 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 298")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 303")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_DEBUG, Current)
@@ -675,9 +680,9 @@ end
 when 57 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 302 "eiffel.l"
+--|#line 307 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 302")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 307")
 end
 				
 				last_deferred_as_value := ast_factory.new_deferred_as (Current)
@@ -686,9 +691,9 @@ end
 when 58 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 306 "eiffel.l"
+--|#line 311 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 306")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 311")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_DO, Current)
@@ -697,9 +702,9 @@ end
 when 59 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 310 "eiffel.l"
+--|#line 315 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 310")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 315")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ELSE, Current)
@@ -708,9 +713,9 @@ end
 when 60 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 314 "eiffel.l"
+--|#line 319 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 314")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 319")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ELSEIF, Current)
@@ -719,9 +724,9 @@ end
 when 61 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 318 "eiffel.l"
+--|#line 323 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 318")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 323")
 end
 				
 				last_keyword_as_value := ast_factory.new_end_keyword_as (Current)
@@ -730,9 +735,9 @@ end
 when 62 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 322 "eiffel.l"
+--|#line 327 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 322")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 327")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ENSURE, Current)
@@ -741,9 +746,9 @@ end
 when 63 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 326 "eiffel.l"
+--|#line 331 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 326")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 331")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXPANDED, Current)
@@ -752,9 +757,9 @@ end
 when 64 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 330 "eiffel.l"
+--|#line 335 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 330")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 335")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXPORT, Current)
@@ -763,9 +768,9 @@ end
 when 65 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 334 "eiffel.l"
+--|#line 339 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 334")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 339")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_EXTERNAL, Current)
@@ -774,9 +779,9 @@ end
 when 66 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 338 "eiffel.l"
+--|#line 343 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 338")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 343")
 end
 				
 				last_bool_as_value := ast_factory.new_boolean_as (False, Current)
@@ -785,9 +790,9 @@ end
 when 67 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 342 "eiffel.l"
+--|#line 347 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 342")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 347")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_FEATURE, Current)
@@ -796,9 +801,9 @@ end
 when 68 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 346 "eiffel.l"
+--|#line 351 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 346")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 351")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_FROM, Current)
@@ -807,9 +812,9 @@ end
 when 69 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 350 "eiffel.l"
+--|#line 355 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 350")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 355")
 end
 				
 				last_keyword_as_value := ast_factory.new_frozen_keyword_as (Current)
@@ -818,9 +823,9 @@ end
 when 70 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 354 "eiffel.l"
+--|#line 359 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 354")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 359")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_IF, Current)
@@ -829,9 +834,9 @@ end
 when 71 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 358 "eiffel.l"
+--|#line 363 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 358")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 363")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_IMPLIES, Current)
@@ -840,9 +845,9 @@ end
 when 72 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 362 "eiffel.l"
+--|#line 367 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 362")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 367")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_INDEXING, Current)
@@ -851,9 +856,9 @@ end
 when 73 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 366 "eiffel.l"
+--|#line 371 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 366")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 371")
 end
 				
 				last_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
@@ -862,9 +867,9 @@ end
 when 74 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 370 "eiffel.l"
+--|#line 375 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 370")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 375")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_INHERIT, Current)
@@ -873,9 +878,9 @@ end
 when 75 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 374 "eiffel.l"
+--|#line 379 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 374")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 379")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_INSPECT, Current)
@@ -884,9 +889,9 @@ end
 when 76 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 378 "eiffel.l"
+--|#line 383 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 378")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 383")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_INVARIANT, Current)
@@ -895,9 +900,9 @@ end
 when 77 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 382 "eiffel.l"
+--|#line 387 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 382")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 387")
 end
 			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_IS, Current)
@@ -906,9 +911,9 @@ end
 when 78 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 386 "eiffel.l"
+--|#line 391 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 386")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 391")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_LIKE, Current)
@@ -917,9 +922,9 @@ end
 when 79 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 390 "eiffel.l"
+--|#line 395 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 390")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 395")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_LOCAL, Current)
@@ -928,9 +933,9 @@ end
 when 80 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 394 "eiffel.l"
+--|#line 399 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 394")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 399")
 end
 
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_LOOP, Current)
@@ -939,9 +944,9 @@ end
 when 81 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 398 "eiffel.l"
+--|#line 403 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 398")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 403")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_NOT, Current)
@@ -950,9 +955,9 @@ end
 when 82 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 402 "eiffel.l"
+--|#line 407 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 402")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 407")
 end
 
 				last_token := TE_ID
@@ -966,9 +971,9 @@ end
 when 83 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 411 "eiffel.l"
+--|#line 416 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 411")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 416")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_OBSOLETE, Current)
@@ -977,9 +982,9 @@ end
 when 84 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 415 "eiffel.l"
+--|#line 420 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 415")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 420")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_OLD, Current)
@@ -989,9 +994,9 @@ when 85 then
 	yy_end := yy_end - 1
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 431 "eiffel.l"
+--|#line 436 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 431")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 436")
 end
 				
 				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text,  line, column, position, 4)
@@ -1001,9 +1006,9 @@ when 86 then
 	yy_end := yy_end - 1
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 435 "eiffel.l"
+--|#line 440 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 435")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 440")
 end
 				
 				last_keyword_as_value := ast_factory.new_once_string_keyword_as (text_substring (1, 4),  line, column, position, 4)
@@ -1014,9 +1019,9 @@ end
 when 87 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 442 "eiffel.l"
+--|#line 447 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 442")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 447")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_ONCE, Current)
@@ -1025,9 +1030,9 @@ end
 when 88 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 446 "eiffel.l"
+--|#line 451 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 446")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 451")
 end
 
 				last_token := TE_ID
@@ -1041,9 +1046,9 @@ end
 when 89 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 455 "eiffel.l"
+--|#line 460 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 455")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 460")
 end
 			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_OR, Current)
@@ -1052,9 +1057,9 @@ end
 when 90 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 459 "eiffel.l"
+--|#line 464 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 459")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 464")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_PARTIAL_CLASS, Current)
@@ -1063,9 +1068,9 @@ end
 when 91 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 463 "eiffel.l"
+--|#line 468 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 463")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 468")
 end
 				
 				last_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
@@ -1074,9 +1079,9 @@ end
 when 92 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 467 "eiffel.l"
+--|#line 472 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 467")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 472")
 end
 				
 				last_keyword_as_value := ast_factory.new_prefix_keyword_as (Current)
@@ -1085,9 +1090,9 @@ end
 when 93 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 471 "eiffel.l"
+--|#line 476 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 471")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 476")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_REDEFINE, Current)
@@ -1096,9 +1101,9 @@ end
 when 94 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 475 "eiffel.l"
+--|#line 480 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 475")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 480")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_REFERENCE, Current)
@@ -1107,9 +1112,9 @@ end
 when 95 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 479 "eiffel.l"
+--|#line 484 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 479")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 484")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_RENAME, Current)
@@ -1118,9 +1123,9 @@ end
 when 96 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 483 "eiffel.l"
+--|#line 488 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 483")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 488")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_REQUIRE, Current)
@@ -1129,9 +1134,9 @@ end
 when 97 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 487 "eiffel.l"
+--|#line 492 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 487")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 492")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_RESCUE, Current)
@@ -1140,9 +1145,9 @@ end
 when 98 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 491 "eiffel.l"
+--|#line 496 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 491")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 496")
 end
 					
 				last_result_as_value := ast_factory.new_result_as (Current)
@@ -1151,9 +1156,9 @@ end
 when 99 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 495 "eiffel.l"
+--|#line 500 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 495")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 500")
 end
 				
 				last_retry_as_value := ast_factory.new_retry_as (Current)
@@ -1162,9 +1167,9 @@ end
 when 100 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 499 "eiffel.l"
+--|#line 504 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 499")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 504")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_SELECT, Current)
@@ -1173,9 +1178,9 @@ end
 when 101 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 503 "eiffel.l"
+--|#line 508 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 503")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 508")
 end
 			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_SEPARATE, Current)
@@ -1184,9 +1189,9 @@ end
 when 102 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 507 "eiffel.l"
+--|#line 512 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 507")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 512")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_STRIP, Current)
@@ -1195,9 +1200,9 @@ end
 when 103 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 511 "eiffel.l"
+--|#line 516 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 511")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 516")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_THEN, Current)
@@ -1206,9 +1211,9 @@ end
 when 104 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 515 "eiffel.l"
+--|#line 520 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 515")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 520")
 end
 				
 				last_bool_as_value := ast_factory.new_boolean_as (True, Current)
@@ -1217,9 +1222,9 @@ end
 when 105 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 519 "eiffel.l"
+--|#line 524 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 519")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 524")
 end
 
 				last_token := TE_TUPLE
@@ -1228,9 +1233,9 @@ end
 when 106 then
 	yy_column := yy_column + 8
 	yy_position := yy_position + 8
---|#line 523 "eiffel.l"
+--|#line 528 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 523")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 528")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_UNDEFINE, Current)
@@ -1239,9 +1244,9 @@ end
 when 107 then
 	yy_column := yy_column + 6
 	yy_position := yy_position + 6
---|#line 527 "eiffel.l"
+--|#line 532 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 527")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 532")
 end
 				
 				last_unique_as_value := ast_factory.new_unique_as (Current)
@@ -1250,9 +1255,9 @@ end
 when 108 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 531 "eiffel.l"
+--|#line 536 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 531")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 536")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_UNTIL, Current)
@@ -1261,9 +1266,9 @@ end
 when 109 then
 	yy_column := yy_column + 7
 	yy_position := yy_position + 7
---|#line 535 "eiffel.l"
+--|#line 540 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 535")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 540")
 end
 			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_VARIANT, Current)
@@ -1272,9 +1277,9 @@ end
 when 110 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 539 "eiffel.l"
+--|#line 544 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 539")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 544")
 end
 				
 				last_void_as_value := ast_factory.new_void_as (Current)
@@ -1283,9 +1288,9 @@ end
 when 111 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 543 "eiffel.l"
+--|#line 548 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 543")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 548")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_WHEN, Current)
@@ -1294,9 +1299,9 @@ end
 when 112 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 547 "eiffel.l"
+--|#line 552 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 547")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 552")
 end
 				
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_XOR, Current)
@@ -1305,9 +1310,9 @@ end
 when 113 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 555 "eiffel.l"
+--|#line 560 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 555")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 560")
 end
 
 				last_token := TE_ID
@@ -1316,20 +1321,26 @@ end
 when 114 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 562 "eiffel.l"
+--|#line 567 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 562")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 567")
 end
 
 				last_token := TE_A_BIT			
 				last_id_as_value := ast_factory.new_filled_bit_id_as (Current)
+
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							once "Use of bit syntax will be removed in the future according to ECMA Eiffel and should not be used."))
+				end
 			
 when 115 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 570 "eiffel.l"
+--|#line 581 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 570")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 581")
 end
 		-- This a trick to avoid having:
 					--     when 1..2 then
@@ -1346,9 +1357,9 @@ when 116 then
 	yy_end := yy_end - 2
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 571 "eiffel.l"
+--|#line 582 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 571")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 582")
 end
 		-- This a trick to avoid having:
 					--     when 1..2 then
@@ -1364,9 +1375,9 @@ end
 when 117 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 583 "eiffel.l"
+--|#line 594 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 583")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 594")
 end
 		-- Recognizes hexadecimal integer numbers.
 				token_buffer.clear_all
@@ -1376,9 +1387,9 @@ end
 when 118 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 589 "eiffel.l"
+--|#line 600 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 589")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 600")
 end
 		-- Recognizes octal integer numbers.
 				token_buffer.clear_all
@@ -1388,9 +1399,9 @@ end
 when 119 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 595 "eiffel.l"
+--|#line 606 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 595")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 606")
 end
 		-- Recognizes binary integer numbers.
 				token_buffer.clear_all
@@ -1400,19 +1411,19 @@ end
 when 120 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 601 "eiffel.l"
+--|#line 612 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 601")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 612")
 end
-		-- Recognizes erronous binary numbers.
+		-- Recognizes erronous binary and octal numbers.
 				report_invalid_integer_error (token_buffer)
 			
 when 121 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 608 "eiffel.l"
+--|#line 619 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 608")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 619")
 end
 
 				token_buffer.clear_all
@@ -1425,9 +1436,9 @@ end
 when 122 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 620 "eiffel.l"
+--|#line 631 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 620")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 631")
 end
 
 				token_buffer.clear_all
@@ -1438,9 +1449,9 @@ end
 when 123 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 626 "eiffel.l"
+--|#line 637 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 626")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 637")
 end
 
 					-- This is not correct Eiffel!
@@ -1452,9 +1463,9 @@ end
 when 124 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 633 "eiffel.l"
+--|#line 644 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 633")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 644")
 end
 
 				token_buffer.clear_all
@@ -1465,9 +1476,9 @@ end
 when 125 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 639 "eiffel.l"
+--|#line 650 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 639")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 650")
 end
 
 				token_buffer.clear_all
@@ -1478,9 +1489,9 @@ end
 when 126 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 645 "eiffel.l"
+--|#line 656 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 645")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 656")
 end
 
 				token_buffer.clear_all
@@ -1491,9 +1502,9 @@ end
 when 127 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 651 "eiffel.l"
+--|#line 662 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 651")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 662")
 end
 
 				token_buffer.clear_all
@@ -1504,9 +1515,9 @@ end
 when 128 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 657 "eiffel.l"
+--|#line 668 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 657")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 668")
 end
 
 				token_buffer.clear_all
@@ -1517,9 +1528,9 @@ end
 when 129 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 663 "eiffel.l"
+--|#line 674 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 663")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 674")
 end
 
 				token_buffer.clear_all
@@ -1530,9 +1541,9 @@ end
 when 130 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 669 "eiffel.l"
+--|#line 680 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 669")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 680")
 end
 
 				token_buffer.clear_all
@@ -1543,9 +1554,9 @@ end
 when 131 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 675 "eiffel.l"
+--|#line 686 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 675")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 686")
 end
 
 				token_buffer.clear_all
@@ -1556,9 +1567,9 @@ end
 when 132 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 681 "eiffel.l"
+--|#line 692 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 681")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 692")
 end
 
 				token_buffer.clear_all
@@ -1569,9 +1580,9 @@ end
 when 133 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 687 "eiffel.l"
+--|#line 698 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 687")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 698")
 end
 
 				token_buffer.clear_all
@@ -1582,9 +1593,9 @@ end
 when 134 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 693 "eiffel.l"
+--|#line 704 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 693")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 704")
 end
 
 				token_buffer.clear_all
@@ -1595,9 +1606,9 @@ end
 when 135 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 699 "eiffel.l"
+--|#line 710 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 699")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 710")
 end
 
 				token_buffer.clear_all
@@ -1608,9 +1619,9 @@ end
 when 136 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 705 "eiffel.l"
+--|#line 716 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 705")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 716")
 end
 
 				token_buffer.clear_all
@@ -1621,9 +1632,9 @@ end
 when 137 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 711 "eiffel.l"
+--|#line 722 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 711")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 722")
 end
 
 				token_buffer.clear_all
@@ -1634,9 +1645,9 @@ end
 when 138 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 717 "eiffel.l"
+--|#line 728 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 717")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 728")
 end
 
 				token_buffer.clear_all
@@ -1647,9 +1658,9 @@ end
 when 139 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 723 "eiffel.l"
+--|#line 734 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 723")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 734")
 end
 
 				token_buffer.clear_all
@@ -1660,9 +1671,9 @@ end
 when 140 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 729 "eiffel.l"
+--|#line 740 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 729")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 740")
 end
 
 				token_buffer.clear_all
@@ -1673,9 +1684,9 @@ end
 when 141 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 735 "eiffel.l"
+--|#line 746 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 735")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 746")
 end
 
 				token_buffer.clear_all
@@ -1686,9 +1697,9 @@ end
 when 142 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 741 "eiffel.l"
+--|#line 752 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 741")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 752")
 end
 
 				token_buffer.clear_all
@@ -1699,9 +1710,9 @@ end
 when 143 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 747 "eiffel.l"
+--|#line 758 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 747")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 758")
 end
 
 				token_buffer.clear_all
@@ -1712,9 +1723,9 @@ end
 when 144 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 753 "eiffel.l"
+--|#line 764 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 753")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 764")
 end
 
 				token_buffer.clear_all
@@ -1725,9 +1736,9 @@ end
 when 145 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 759 "eiffel.l"
+--|#line 770 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 759")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 770")
 end
 
 				token_buffer.clear_all
@@ -1738,9 +1749,9 @@ end
 when 146 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 760 "eiffel.l"
+--|#line 771 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 760")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 771")
 end
 
 				token_buffer.clear_all
@@ -1751,9 +1762,9 @@ end
 when 147 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 761 "eiffel.l"
+--|#line 772 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 761")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 772")
 end
 
 				token_buffer.clear_all
@@ -1764,9 +1775,9 @@ end
 when 148 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 762 "eiffel.l"
+--|#line 773 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 762")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 773")
 end
 
 				token_buffer.clear_all
@@ -1777,9 +1788,9 @@ end
 when 149 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 769 "eiffel.l"
+--|#line 780 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 769")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 780")
 end
 
 				report_invalid_integer_error (token_buffer)
@@ -1787,9 +1798,9 @@ end
 when 150 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 774 "eiffel.l"
+--|#line 785 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 774")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 785")
 end
 
 					-- Unrecognized character.
@@ -1799,9 +1810,9 @@ end
 when 151 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 775 "eiffel.l"
+--|#line 786 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 775")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 786")
 end
 
 					-- Unrecognized character.
@@ -1811,9 +1822,9 @@ end
 when 152 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 784 "eiffel.l"
+--|#line 795 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 784")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 795")
 end
 				
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1822,9 +1833,9 @@ end
 when 153 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 788 "eiffel.l"
+--|#line 799 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 788")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 799")
 end
 				
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1833,9 +1844,9 @@ end
 when 154 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 792 "eiffel.l"
+--|#line 803 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 792")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 803")
 end
 				
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1844,9 +1855,9 @@ end
 when 155 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 796 "eiffel.l"
+--|#line 807 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 796")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 807")
 end
 			
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1855,9 +1866,9 @@ end
 when 156 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 800 "eiffel.l"
+--|#line 811 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 800")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 811")
 end
 
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1866,9 +1877,9 @@ end
 when 157 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 804 "eiffel.l"
+--|#line 815 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 804")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 815")
 end
 
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1877,9 +1888,9 @@ end
 when 158 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 808 "eiffel.l"
+--|#line 819 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 808")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 819")
 end
 
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1888,9 +1899,9 @@ end
 when 159 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 812 "eiffel.l"
+--|#line 823 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 812")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 823")
 end
 
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1899,9 +1910,9 @@ end
 when 160 then
 	yy_column := yy_column + 3
 	yy_position := yy_position + 3
---|#line 816 "eiffel.l"
+--|#line 827 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 816")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 827")
 end
 
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1910,9 +1921,9 @@ end
 when 161 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 820 "eiffel.l"
+--|#line 831 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 820")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 831")
 end
 
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1921,9 +1932,9 @@ end
 when 162 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 824 "eiffel.l"
+--|#line 835 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 824")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 835")
 end
 
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1932,9 +1943,9 @@ end
 when 163 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 828 "eiffel.l"
+--|#line 839 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 828")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 839")
 end
 
 				ast_factory.set_buffer (token_buffer2, Current)
@@ -1943,9 +1954,9 @@ end
 when 164 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 832 "eiffel.l"
+--|#line 843 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 832")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 843")
 end
 
 				token_buffer.clear_all
@@ -1956,9 +1967,9 @@ end
 when 165 then
 	yy_column := yy_column + 10
 	yy_position := yy_position + 10
---|#line 838 "eiffel.l"
+--|#line 849 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 838")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 849")
 end
 
 				token_buffer.clear_all
@@ -1969,9 +1980,9 @@ end
 when 166 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 844 "eiffel.l"
+--|#line 855 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 844")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 855")
 end
 
 				token_buffer.clear_all
@@ -1982,9 +1993,9 @@ end
 when 167 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 850 "eiffel.l"
+--|#line 861 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 850")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 861")
 end
 
 				token_buffer.clear_all
@@ -1995,9 +2006,9 @@ end
 when 168 then
 	yy_column := yy_column + 4
 	yy_position := yy_position + 4
---|#line 856 "eiffel.l"
+--|#line 867 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 856")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 867")
 end
 
 				token_buffer.clear_all
@@ -2008,9 +2019,9 @@ end
 when 169 then
 	yy_column := yy_column + 9
 	yy_position := yy_position + 9
---|#line 862 "eiffel.l"
+--|#line 873 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 862")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 873")
 end
 
 				token_buffer.clear_all
@@ -2021,9 +2032,9 @@ end
 when 170 then
 	yy_column := yy_column + 5
 	yy_position := yy_position + 5
---|#line 868 "eiffel.l"
+--|#line 879 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 868")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 879")
 end
 
 				token_buffer.clear_all
@@ -2034,9 +2045,9 @@ end
 when 171 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 874 "eiffel.l"
+--|#line 885 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 874")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 885")
 end
 
 				token_buffer.clear_all
@@ -2050,9 +2061,9 @@ end
 when 172 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 883 "eiffel.l"
+--|#line 894 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 883")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 894")
 end
 
 					-- Empty string.
@@ -2063,9 +2074,9 @@ end
 when 173 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 889 "eiffel.l"
+--|#line 900 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 889")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 900")
 end
 
 					-- Regular string.
@@ -2081,9 +2092,9 @@ end
 when 174 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 900 "eiffel.l"
+--|#line 911 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 900")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 911")
 end
 
 					-- Verbatim string.
@@ -2104,9 +2115,9 @@ when 175 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 918 "eiffel.l"
+--|#line 929 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 918")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 929")
 end
 
 				ast_factory.append_text_to_buffer (token_buffer2, Current)
@@ -2115,9 +2126,9 @@ end
 when 176 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 922 "eiffel.l"
+--|#line 933 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 922")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 933")
 end
 
 					-- No final bracket-double-quote.
@@ -2133,9 +2144,9 @@ end
 when 177 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 942 "eiffel.l"
+--|#line 953 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 942")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 953")
 end
 
 				ast_factory.append_text_to_buffer (token_buffer2, Current)
@@ -2183,9 +2194,9 @@ end
 when 178 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 985 "eiffel.l"
+--|#line 996 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 985")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 996")
 end
 
 				ast_factory.append_text_to_buffer (token_buffer2, Current)
@@ -2196,9 +2207,9 @@ when 179 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 990 "eiffel.l"
+--|#line 1001 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 990")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1001")
 end
 
 				ast_factory.append_text_to_buffer (token_buffer2, Current)
@@ -2211,9 +2222,9 @@ end
 when 180 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 998 "eiffel.l"
+--|#line 1009 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 998")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1009")
 end
 
 					-- No final bracket-double-quote.
@@ -2226,9 +2237,9 @@ when 181 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 1014 "eiffel.l"
+--|#line 1025 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1014")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1025")
 end
 
 				ast_factory.append_text_to_buffer (token_buffer2, Current)
@@ -2242,9 +2253,9 @@ end
 when 182 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 1023 "eiffel.l"
+--|#line 1034 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1023")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1034")
 end
 
 					-- No final bracket-double-quote.
@@ -2256,9 +2267,9 @@ end
 when 183 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 1036 "eiffel.l"
+--|#line 1047 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1036")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1047")
 end
 
 					-- String with special characters.
@@ -2274,9 +2285,9 @@ end
 when 184 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 1048 "eiffel.l"
+--|#line 1059 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1048")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1059")
 end
 
 				ast_factory.append_text_to_buffer (token_buffer2, Current)
@@ -2285,9 +2296,9 @@ end
 when 185 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1052 "eiffel.l"
+--|#line 1063 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1052")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1063")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%A")
@@ -2296,9 +2307,9 @@ end
 when 186 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1056 "eiffel.l"
+--|#line 1067 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1056")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1067")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%B")
@@ -2307,9 +2318,9 @@ end
 when 187 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1060 "eiffel.l"
+--|#line 1071 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1060")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1071")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%C")
@@ -2318,9 +2329,9 @@ end
 when 188 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1064 "eiffel.l"
+--|#line 1075 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1064")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1075")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%D")
@@ -2329,9 +2340,9 @@ end
 when 189 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1068 "eiffel.l"
+--|#line 1079 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1068")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1079")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%F")
@@ -2340,9 +2351,9 @@ end
 when 190 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1072 "eiffel.l"
+--|#line 1083 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1072")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1083")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%H")
@@ -2351,9 +2362,9 @@ end
 when 191 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1076 "eiffel.l"
+--|#line 1087 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1076")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1087")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%L")
@@ -2362,9 +2373,9 @@ end
 when 192 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1080 "eiffel.l"
+--|#line 1091 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1080")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1091")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%N")
@@ -2373,9 +2384,9 @@ end
 when 193 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1084 "eiffel.l"
+--|#line 1095 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1084")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1095")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%Q")
@@ -2384,9 +2395,9 @@ end
 when 194 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1088 "eiffel.l"
+--|#line 1099 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1088")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1099")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%R")
@@ -2395,9 +2406,9 @@ end
 when 195 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1092 "eiffel.l"
+--|#line 1103 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1092")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1103")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%S")
@@ -2406,9 +2417,9 @@ end
 when 196 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1096 "eiffel.l"
+--|#line 1107 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1096")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1107")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%T")
@@ -2417,9 +2428,9 @@ end
 when 197 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1100 "eiffel.l"
+--|#line 1111 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1100")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1111")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%U")
@@ -2428,9 +2439,9 @@ end
 when 198 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1104 "eiffel.l"
+--|#line 1115 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1104")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1115")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%V")
@@ -2439,9 +2450,9 @@ end
 when 199 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1108 "eiffel.l"
+--|#line 1119 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1108")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1119")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%%%")
@@ -2450,9 +2461,9 @@ end
 when 200 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1112 "eiffel.l"
+--|#line 1123 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1112")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1123")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%%'")
@@ -2461,9 +2472,9 @@ end
 when 201 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1116 "eiffel.l"
+--|#line 1127 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1116")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1127")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%%"")
@@ -2472,9 +2483,9 @@ end
 when 202 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1120 "eiffel.l"
+--|#line 1131 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1120")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1131")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%(")
@@ -2483,9 +2494,9 @@ end
 when 203 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1124 "eiffel.l"
+--|#line 1135 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1124")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1135")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%)")
@@ -2494,9 +2505,9 @@ end
 when 204 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1128 "eiffel.l"
+--|#line 1139 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1128")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1139")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%<")
@@ -2505,9 +2516,9 @@ end
 when 205 then
 	yy_column := yy_column + 2
 	yy_position := yy_position + 2
---|#line 1132 "eiffel.l"
+--|#line 1143 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1132")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1143")
 end
 
 				ast_factory.append_string_to_buffer (token_buffer2, once "%%>")
@@ -2516,9 +2527,9 @@ end
 when 206 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 1136 "eiffel.l"
+--|#line 1147 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1136")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1147")
 end
 
 				ast_factory.append_text_to_buffer (token_buffer2, Current)
@@ -2527,9 +2538,9 @@ end
 when 207 then
 yy_set_line_column
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 1140 "eiffel.l"
+--|#line 1151 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1140")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1151")
 end
 
 					-- This regular expression should actually be: %\n[ \t\r]*%
@@ -2539,9 +2550,9 @@ end
 when 208 then
 	yy_column := yy_column + yy_end - yy_start - yy_more_len
 	yy_position := yy_position + yy_end - yy_start - yy_more_len
---|#line 1145 "eiffel.l"
+--|#line 1156 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1145")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1156")
 end
 
 				ast_factory.append_text_to_buffer (token_buffer2, Current)
@@ -2562,9 +2573,9 @@ end
 when 209 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 1161 "eiffel.l"
+--|#line 1172 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1161")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1172")
 end
 
 					-- Bad special character.
@@ -2576,9 +2587,9 @@ when 210 then
 	yy_line := yy_line + 1
 	yy_column := 1
 	yy_position := yy_position + 1
---|#line 1167 "eiffel.l"
+--|#line 1178 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1167")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1178")
 end
 
 					-- No final double-quote.
@@ -2588,9 +2599,9 @@ end
 when 211 then
 	yy_column := yy_column + 1
 	yy_position := yy_position + 1
---|#line 1185 "eiffel.l"
+--|#line 1196 "eiffel.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1185")
+	std.error.put_line ("Executing scanner user-code from file 'eiffel.l' at line 1196")
 end
 
 				report_unknown_token_error (text_item (1))

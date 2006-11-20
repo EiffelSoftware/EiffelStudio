@@ -23,6 +23,8 @@ create
 %option outfile="editor_eiffel_scanner.e"
 
 D		([0-9])
+B		([0-1])
+O		([0-7])
 H		([0-9A-Fa-f])
 
 %%
@@ -403,7 +405,9 @@ H		([0-9A-Fa-f])
 ----------/** Eiffel integers **/-----------------------------------------------
 
 {D}(({D}|_)*{D})?			|
-0[xX]{H}(({H}|_)*{H})?	{
+0[xX]{H}(({H}|_)*{H})?			|
+0[cC]{O}(({O}|_)*{O})?			|
+0[bB]{B}(({B}|_)*{B})?	{
 						-- Eiffel Integer
 						if not in_comments then
 							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)

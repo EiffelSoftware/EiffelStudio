@@ -270,6 +270,11 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [bB][iI][tT]	{			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_BIT, Current)
 				last_token := TE_BIT
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							once "The `bit' keyword will be removed in the future according to ECMA Eiffel and should not be used."))
+				end
 			}
 [cC][hH][eE][cC][kK]	{			
 				last_keyword_as_value := ast_factory.new_keyword_as (TE_CHECK, Current)
@@ -562,6 +567,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [0-1]+[bB]	{
 				last_token := TE_A_BIT			
 				last_id_as_value := ast_factory.new_filled_bit_id_as (Current)
+
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+							once "Use of bit syntax will be removed in the future according to ECMA Eiffel and should not be used."))
+				end
 			}
 
 

@@ -187,42 +187,78 @@ feature -- Measurement
 
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position' in pixels.
+		local
+			l_h_adjust: POINTER
 		do
+			-- Return parents horizontal scrollbar offset.
+			if parent_imp /= Void then
+				l_h_adjust := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_hadjustment (parent_imp.scrollable_area)
+				if l_h_adjust /= default_pointer then
+					Result := - {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_h_adjust).rounded
+				end
+			end
 		end
 
 	y_position: INTEGER is
 			-- Vertical offset relative to parent `y_position' in pixels.
+		local
+			l_v_adjust: POINTER
 		do
+			if parent_imp /= Void then
+				Result := (index - 1) * parent_imp.interface.row_height
+				l_v_adjust := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (parent_imp.scrollable_area)
+				if l_v_adjust /= default_pointer then
+					Result := Result - {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_v_adjust).rounded
+				end
+			end
 		end
 
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		do
+			if parent_imp /= Void then
+				Result := parent_imp.screen_x + x_position
+			end
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
 		do
+			if parent_imp /= Void then
+				Result := parent_imp.screen_y + y_position
+			end
 		end
 
 	width: INTEGER is
 			-- Horizontal size in pixels.
 		do
+			if parent_imp /= Void then
+				Result := parent_imp.width
+			end
 		end
 
 	height: INTEGER is
 			-- Vertical size in pixels.
 		do
+			if parent_imp /= Void then
+				Result := parent_imp.interface.row_height
+			end
 		end
 
 	minimum_width: INTEGER is
 			-- Minimum horizontal size in pixels.
 		do
+			if parent_imp /= Void then
+				Result := parent_imp.minimum_width
+			end
 		end
 
 	minimum_height: INTEGER is
 			-- Minimum vertical size in pixels.
 		do
+			if parent_imp /= Void then
+				Result := parent_imp.interface.row_height
+			end
 		end
 
 feature {NONE} -- Implementation

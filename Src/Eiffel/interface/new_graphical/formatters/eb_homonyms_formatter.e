@@ -72,6 +72,8 @@ feature -- Formatting
 					last_was_error := False
 					rebuild_browser
 					generate_result
+				else
+					browser.update (Void, Void)
 				end
 				if not widget.is_displayed then
 					widget.show

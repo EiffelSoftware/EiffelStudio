@@ -204,8 +204,10 @@ feature {NONE} -- Implementation
 	execute_and_close is
 		do
 			debugging_options_control.store_dbg_options
-			run.call (Void)
+				-- Hide first since it may take a long time before the program is
+				-- actually launched.
 			hide
+			run.call (Void)
 		end
 
 feature {NONE} -- Observing event handling.

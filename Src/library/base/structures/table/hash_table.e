@@ -225,8 +225,28 @@ feature -- Access
 			Result := found
 			control := old_control; position := old_position
 		ensure then
-			default_case:
-				(key = computed_default_key) implies (Result = has_default)
+			default_case: (key = computed_default_key) implies (Result = has_default)
+		end
+
+	has_key (key: H): BOOLEAN is
+			-- Is there an item in the table with key `key'? Set `found_item' to the found item.
+		local
+			old_position: INTEGER
+			l_default: G
+		do
+			old_position := position
+			internal_search (key)
+			Result := found
+			if Result then
+				found_item := content.item (position)
+			else
+				found_item := l_default
+			end
+			position := old_position
+		ensure then
+			default_case: (key = computed_default_key) implies (Result = has_default)
+			found: Result = found
+			item_if_found: found implies (found_item = item (key))
 		end
 
 	has_item (v: G): BOOLEAN is
@@ -444,11 +464,35 @@ feature -- Status report
 	valid_key (k: H): BOOLEAN is
 			-- Is `k' a valid key?
 			-- (Answer: always yes for hash tables in this version)
+		local
+			l_internal: INTERNAL
+			l_default: H
+			l_index, i, nb: INTEGER
 		do
 			Result := True
+			debug ("prevent_hash_table_catcall")
+				if k /= l_default then
+					create l_internal
+					from
+						i := 1
+						nb := l_internal.field_count (Current)
+					until
+						i >= nb
+					loop
+						if l_internal.field_name (i, Current).is_equal ("debugging_h") then
+							l_index := i
+							i := nb + 1
+						end
+						i := i + 1
+					end
+					Result := l_internal.field_static_type_of_type (l_index, l_internal.dynamic_type (Current)) = l_internal.dynamic_type (k)
+				end
+			end
 		ensure then
 			Result
 		end
+
+	debugging_h: H
 
 feature -- Cursor movement
 
@@ -493,17 +537,20 @@ feature -- Cursor movement
 			-- If found, set `found' to true, and set
 			-- `found_item' to item associated with `key'.
 		local
+			old_position: INTEGER
 			default_value: G
 		do
+			old_position := position
 			internal_search (key)
 			if found then
 				found_item := content.item (position)
 			else
 				found_item := default_value
 			end
+			position := old_position
 		ensure
 			found_or_not_found: found or not_found
-			item_if_found: found implies (found_item = content.item (position))
+			item_if_found: found implies (found_item = item (key))
 		end
 
 	search_item: G is
@@ -586,8 +633,9 @@ feature -- Element change
 			True
 		local
 			default_key: H
+			default_value: G
 		do
-			search (key)
+			internal_search (key)
 			if not_found then
 				if soon_full then
 					add_space
@@ -604,6 +652,9 @@ feature -- Element change
 					set_default
 				end
 				count := count + 1
+				found_item := default_value
+			else
+				found_item := content.item (position)
 			end
 			content.put (new, position)
 		ensure then
@@ -675,8 +726,9 @@ feature -- Element change
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
 		do
-			search (key)
+			internal_search (key)
 			if found then
+				found_item := content.item (position)
 				content.put (new, position)
 				set_replaced
 			end
@@ -708,7 +760,7 @@ feature -- Element change
 			if inserted then
 				count := count - 1
 				insert_position := position
-				search (old_key)
+				internal_search (old_key)
 				if found then
 					content.put (found_item, insert_position)
 					if old_key = default_key then
@@ -1139,6 +1191,11 @@ feature {NONE} -- Implementation
 							stop := True
 							control := Found_constant
 						else
+							debug ("detect_hash_table_catcall")
+								check
+									catcall_detected: l_key.same_type (key)
+								end
+							end
 								-- Go to next increment.
 							l_pos := (l_pos + increment) \\ l_capacity
 						end

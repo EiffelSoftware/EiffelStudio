@@ -36,6 +36,8 @@ inherit
 	AST_COMPILER_FACTORY
 		undefine
 			create_match_list,
+			backup_match_list_count,
+			resume_match_list_count,
 			new_keyword_as,
 			new_symbol_as,
 			new_current_as,
@@ -88,7 +90,7 @@ feature -- Roundtrip
 				create Result.make_from_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
@@ -101,7 +103,7 @@ feature -- Roundtrip
 				create Result.make_from_hexa_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
@@ -114,7 +116,7 @@ feature -- Roundtrip
 				create Result.make_from_octal_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end
@@ -127,7 +129,7 @@ feature -- Roundtrip
 				create Result.make_from_binary_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 				extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n))
 			end

@@ -138,7 +138,7 @@ feature {NONE} -- Switches
 			-- Retrieve a list of switch used for a specific application
 		do
 			create Result.make (5)
-			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (include_switch, "Include a file or directory for generation of a visitor class.%NSpecify no includes takes the current directory.", True, True, "expression", "A RegEx representing files or folders to include.", False))
+			Result.extend (create {ARGUMENT_FILE_OR_DIRECTORY_SWITCH}.make (include_switch, "Include a file or directory for generation of a visitor class.%NSpecify no includes takes the current directory.", True, True, "expression", "A RegEx representing files or folders to include.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (recurse_switch, "Forces all included directories to be recursively scanned for classes", True, False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (exclude_switch, "Exclude regular expression for files or directories to exclude.", True, True, "expression", "A RegEx representing files or folders to exclude.", False))
 			Result.extend (create {ARGUMENT_EIFFEL_CLASS_SWITCH}.make (class_name_switch, "Eiffel class name to give the generated class.", True, False, "name", "An Eiffel class name", False))

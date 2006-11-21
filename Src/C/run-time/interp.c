@@ -741,7 +741,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		offset = get_int32(&IC);
 		pre_success = '\01';
-		if (!(~in_assertion & WASC(icur_dtype) & CK_REQUIRE | saved_caller_assertion_level)) {
+		if (!(~in_assertion & ((WASC(icur_dtype) & CK_REQUIRE) | saved_caller_assertion_level))) {
 				/* No precondition check? */
 			IC += offset; /* Skip preconditions */
 			goto enter_body; /* Start execution of a routine body. */

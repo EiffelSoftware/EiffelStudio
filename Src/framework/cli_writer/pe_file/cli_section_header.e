@@ -9,10 +9,9 @@ class
 	CLI_SECTION_HEADER
 
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			structure_size as count,
-			make as old_make
+			make as managed_pointer_make
 		end
 
 create
@@ -29,7 +28,7 @@ feature {NONE} -- Initialization
 			l_c_string: C_STRING
 			l_name_ptr: POINTER
 		do
-			old_make
+			managed_pointer_make (structure_size)
 			c_set_pointer_to_line_numbers (item, 0)
 			c_set_number_of_line_numbers (item, 0)
 
@@ -39,12 +38,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Measurement
-
-	count: INTEGER is
-			-- Size of current structure.
-		do
-			Result := structure_size
-		end
 
 	structure_size: INTEGER is
 			-- Size of IMAGE_SECTION_HEADER.

@@ -245,69 +245,69 @@ feature -- Saving
 			create l_pe_file.make_open_write (file_name)
 
 				-- First the headers
-			l_pe_file.put_data (dos_header.item, dos_header.count)
-			l_pe_file.put_data (pe_header.item, pe_header.count)
-			l_pe_file.put_data (optional_header.item, optional_header.count)
-			l_pe_file.put_data (text_section_header.item, text_section_header.count)
-			l_pe_file.put_data (reloc_section_header.item, reloc_section_header.count)
+			l_pe_file.put_managed_pointer (dos_header, 0, dos_header.count)
+			l_pe_file.put_managed_pointer (pe_header, 0, pe_header.count)
+			l_pe_file.put_managed_pointer (optional_header, 0, optional_header.count)
+			l_pe_file.put_managed_pointer (text_section_header, 0, text_section_header.count)
+			l_pe_file.put_managed_pointer (reloc_section_header, 0, reloc_section_header.count)
 
 				-- Add padding to .text section
 			create l_padding.make (padding (headers_size, file_alignment))
-			l_pe_file.put_data (l_padding.item, l_padding.count)
+			l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 
 				-- Store .text section
-			l_pe_file.put_data (iat.item, iat.count)
-			l_pe_file.put_data (cli_header.item, cli_header.count)
+			l_pe_file.put_managed_pointer (iat, 0, iat.count)
+			l_pe_file.put_managed_pointer (cli_header, 0, cli_header.count)
 			if method_writer /= Void then
 					-- No need for padding as it is correctly aligned of 4 bytes
 				check
 					correctly_aligned: (iat.count + cli_header.count) \\ 4 = 0
 				end
-				l_pe_file.put_data (method_writer.item, code_size)
+				l_pe_file.put_managed_pointer (method_writer.item, 0, code_size)
 			end
 
 			if has_debug_info then
-				l_pe_file.put_data (debug_directory.item, debug_directory.count)
-				l_pe_file.put_data (debug_info.item, debug_info.count)
+				l_pe_file.put_managed_pointer (debug_directory, 0, debug_directory.count)
+				l_pe_file.put_managed_pointer (debug_info, 0, debug_info.count)
 				l_size := padding (debug_directory.count + debug_info.count, 16)
 				if l_size > 0 then
 					create l_padding.make (l_size)
-					l_pe_file.put_data (l_padding.item, l_padding.count)
+					l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 				end
 			end
 
 			if has_strong_name then
 				l_strong_name_location := l_pe_file.count
 				create l_padding.make (strong_name_size)
-				l_pe_file.put_data (l_padding.item, l_padding.count)
+				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 			end
 
 			if has_resources then
 					-- Store `resources.item' since otherwise no one will be referencing
 					-- it and thus ready for GC.
 				l_padding := resources.item
-				l_pe_file.put_data (l_padding.item, resources_size)
+				l_pe_file.put_managed_pointer (l_padding, 0, resources_size)
  			end
 
-			l_pe_file.put_data (emitter.assembly_memory.item, meta_data_size)
+			l_pe_file.put_managed_pointer (emitter.assembly_memory, 0, meta_data_size)
 
 			if import_table_padding > 0 then
 				create l_padding.make (import_table_padding)
-				l_pe_file.put_data (l_padding.item, l_padding.count)
+				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 			end
-			l_pe_file.put_data (import_table.item, import_table.count)
-			l_pe_file.put_data (entry_data.item, entry_data.count)
+			l_pe_file.put_managed_pointer (import_table, 0, import_table.count)
+			l_pe_file.put_managed_pointer (entry_data, 0, entry_data.count)
 
 				-- Add padding to .text section
 			create l_padding.make (padding (text_size, file_alignment))
-			l_pe_file.put_data (l_padding.item, l_padding.count)
+			l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 
 				-- Store .reloc section
-			l_pe_file.put_data (reloc_section.item, reloc_section.count)
+			l_pe_file.put_managed_pointer (reloc_section, 0, reloc_section.count)
 
 				-- Add padding to end of file
 			create l_padding.make (padding (reloc_size, file_alignment))
-			l_pe_file.put_data (l_padding.item, l_padding.count)
+			l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 
 			l_pe_file.close
 			is_valid := False
@@ -315,7 +315,7 @@ feature -- Saving
 			if has_strong_name then
 				create l_pe_file.make_open_read (file_name)
 				create l_padding.make (l_pe_file.count)
-				l_pe_file.read_data (l_padding.item, l_padding.count)
+				l_pe_file.read_to_managed_pointer (l_padding, 0, l_padding.count)
 				l_pe_file.close
 
 				create l_uni_string.make (file_name)
@@ -324,7 +324,7 @@ feature -- Saving
 					l_signature.count)
 
 				create l_pe_file.make_open_write (file_name)
-				l_pe_file.put_data (l_padding.item, l_padding.count)
+				l_pe_file.put_managed_pointer (l_padding, 0, l_padding.count)
 				l_pe_file.close
 			end
 

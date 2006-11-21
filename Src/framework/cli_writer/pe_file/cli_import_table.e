@@ -9,10 +9,9 @@ class
 	CLI_IMPORT_TABLE
 
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			structure_size as count,
-			make as old_make
+			make as managed_pointer_make
 		end
 
 create
@@ -26,7 +25,7 @@ feature {NONE} -- Initialization
 			str: POINTER
 			ascii_str: C_STRING
 		do
-			old_make
+			managed_pointer_make (structure_size)
 			c_set_time_date_stamp (item, 0)
 			c_set_forwarder_chain (item, 0)
 
@@ -59,12 +58,6 @@ feature -- Settings
 		end
 
 feature -- Measurement
-
-	count: INTEGER is
-			-- Size of Current.
-		do
-			Result := structure_size
-		end
 
 	structure_size: INTEGER is
 			-- Size of CLI_IMPORT_TABLE.

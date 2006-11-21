@@ -9,10 +9,9 @@ class
 	CLI_HEADER
 
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			make as make_structure,
-			structure_size as count
+			make as managed_pointer_make
 		end
 
 create
@@ -25,7 +24,7 @@ feature {NONE} -- Initialization
 		local
 			l_flags: INTEGER
 		do
-			make_structure
+			managed_pointer_make (structure_size)
 			c_set_cb (item, structure_size)
 			c_set_major_runtime_version (item, 2)
 			c_set_minor_runtime_version (item, 5)
@@ -35,17 +34,9 @@ feature {NONE} -- Initialization
 				l_flags := l_flags | il_32bits
 			end
 			c_set_flags (item, l_flags)
-		ensure
-			not_shared: not shared
 		end
 
 feature -- Measurement
-
-	count: INTEGER is
-			-- Size of current.
-		do
-			Result := structure_size
-		end
 
 	structure_size: INTEGER is
 			-- Size of `CLI_IMAGE_COR20_HEADER'.

@@ -7,13 +7,11 @@ indexing
 
 class
 	CLI_IMAGE_RELOCATION
-	
+
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			structure_size as count
-		redefine
-			make
+			make as managed_pointer_make
 		end
 
 	CLI_UTILITIES
@@ -22,23 +20,23 @@ inherit
 		undefine
 			copy, is_equal
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
 			-- Allocate `item'.
 		do
-			Precursor {WEL_STRUCTURE}
+			managed_pointer_make (structure_size)
 			c_set_block_size (item, 0x0C)
 		end
 
 feature -- Settings
 
 	set_data (data_location: INTEGER) is
-			-- Set current structure knowing that relocation 
+			-- Set current structure knowing that relocation
 			-- location is at position `data_location' in memory.
 		require
 			valid_data_location: data_location >= Section_alignment
@@ -50,7 +48,7 @@ feature -- Settings
 			if block_rva /= data_location then
 					-- Block was not aligned on a `Block_size' boundary, so we remove `Block_size'
 					-- from `block_rva' to find in which `Block_size' RVA is `data_location'.
-				block_rva := block_rva - Block_size	
+				block_rva := block_rva - Block_size
 			end
 			i := data_location - block_rva
 			c_set_block_rva (item, block_rva)
@@ -59,12 +57,6 @@ feature -- Settings
 		end
 
 feature -- Measurement
-
-	count: INTEGER is
-			-- Size of current structure.
-		do
-			Result := structure_size
-		end
 
 	structure_size: INTEGER is
 			-- Size of CLI_IMAGE_RELOCATION structure.

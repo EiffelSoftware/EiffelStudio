@@ -9,22 +9,20 @@ class
 	CLI_DEBUG_DIRECTORY
 
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			structure_size as count
-		redefine
-			make
+			make as managed_pointer_make
 		end
-		
+
 create
 	make
-		
+
 feature {NONE} -- Initialization
 
 	make is
 			-- Allocate `item'
 		do
-			Precursor {WEL_STRUCTURE}
+			managed_pointer_make (structure_size)
 			c_set_characteristics (item, 0)
 			c_set_date_stamp (item, {CLI_TIME}.time (default_pointer))
 			c_set_major_version (item, 0)
@@ -35,13 +33,13 @@ feature {NONE} -- Initialization
 feature -- Settings
 
 	set_size (a_size: INTEGER) is
-			-- 
+			--
 		require
 			valid_size: a_size >= 0
 		do
 			c_set_size (item, a_size)
 		end
-		
+
 	set_address_of_data (a_rva: INTEGER) is
 			-- Set RVA of debug info into PE file.
 		require
@@ -57,14 +55,8 @@ feature -- Settings
 		do
 			c_set_pointer_to_raw_data (item, a_pos)
 		end
-		
-feature -- Measurement
 
-	count: INTEGER is
-			-- Size of current structure.
-		do
-			Result := structure_size
-		end
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size of IMAGE_DATA_DIRECTORY.
@@ -81,7 +73,7 @@ feature {NONE} -- Implementation
 		external
 			"C struct IMAGE_DEBUG_DIRECTORY access Characteristics type DWORD use <windows.h>"
 		end
-		
+
 	c_set_date_stamp (an_item: POINTER; t: INTEGER) is
 			-- Set `TimeDataStamp' to `t'.
 		external

@@ -28,7 +28,7 @@ feature -- Initialization
 			base_class := a_class.name
 		ensure
 			type_set: type = a_type
-			base_class_set: base_class = a_class
+			base_class_set: equal (base_class, a_class.name)
 		end
 
 feature -- Properties

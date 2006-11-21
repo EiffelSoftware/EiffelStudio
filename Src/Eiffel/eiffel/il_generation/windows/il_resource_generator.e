@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 			create l_platform
 			create l_data.make (l_raw_file.count + l_platform.integer_32_bytes)
 			l_data.put_integer_32_le (l_raw_file.count, 0)
-			l_raw_file.read_data (l_data.item + l_platform.integer_32_bytes, l_raw_file.count)
+			l_raw_file.read_to_managed_pointer (l_data, l_platform.integer_32_bytes, l_raw_file.count)
 			l_raw_file.close
 			l_resources.extend (l_data)
 

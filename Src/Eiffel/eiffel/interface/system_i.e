@@ -1204,6 +1204,10 @@ end
 					vd20.set_class_name (l_root.class_type_name.as_upper)
 					Error_handler.insert_error (vd20)
 					Error_handler.raise_error
+				else
+					if not root_class.is_compiled then
+						Workbench.change_class (root_class)
+					end
 				end
 			end
 		ensure
@@ -1218,8 +1222,16 @@ end
 		local
 			l_vsrt1: VSRT1
 			l_vsrt2: VSRT2
+			l_vd20: VD20
 		do
-			root_type ?= type_a_generator.evaluate_type_if_possible (root_class_type_as, root_class.compiled_class)
+			if root_class.is_compiled then
+				root_type ?= type_a_generator.evaluate_type_if_possible (root_class_type_as, root_class.compiled_class)
+			else
+						create l_vd20
+						l_vd20.set_class_name (root_class.name.as_upper)
+						Error_handler.insert_error (l_vd20)
+						Error_handler.raise_error
+			end
 
 
 			if 	root_type = Void or else
@@ -1332,7 +1344,7 @@ end
 				then
 					mark_only_used_precompiled_classes
 				end
-				if root_class.compiled_class = Void then
+				if not root_class.is_compiled then
 						-- If root_class is not compiled (i.e. root class has
 						-- changed since last compilaton), insert it in the
 						-- changed_classes.
@@ -1689,7 +1701,7 @@ end
 					not Compilation_modes.is_precompiling and
 					not Lace.compile_all_classes
 				then
-						-- The root class is not generic
+						-- The root class is not deferred
 					root_class_c := root_class.compiled_class
 					current_class := root_class_c
 					root_class_c.check_that_root_class_is_not_deferred
@@ -1740,6 +1752,7 @@ end
 
 					-- Compute the root type
 				compute_root_type
+
 
 					-- Inheritance analysis: `Degree_4' is sorted by class
 					-- topological ids so the parent come first the heirs after.
@@ -3233,8 +3246,8 @@ feature {NONE} -- Implementation
 					-- and remove classes recursively if needed.
 				from
 					related_classes.start
-					if root_type /= Void then
-						compiled_root_class := root_type.associated_class
+					if root_class /= Void then
+						compiled_root_class := root_class.compiled_class
 					end
 				until
 					related_classes.after

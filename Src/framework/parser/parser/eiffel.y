@@ -14,8 +14,6 @@ inherit
 
 	EIFFEL_PARSER_SKELETON
 
-	SHARED_NAMES_HEAP
-	
 create
 	make,
 	make_with_factory
@@ -1171,8 +1169,7 @@ Identifier_list: Identifier_as_lower
 			{
 				$$ := ast_factory.new_identifier_list (counter_value + 1)
 				if $$ /= Void and $1 /= Void then
-					Names_heap.put ($1)
-					$$.reverse_extend (Names_heap.found_item)
+					$$.reverse_extend ($1.name_id)
 					ast_factory.reverse_extend_identifier ($$.id_list, $1)
 				end
 			}
@@ -1180,8 +1177,7 @@ Identifier_list: Identifier_as_lower
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
-					Names_heap.put ($1)
-					$$.reverse_extend (Names_heap.found_item)
+					$$.reverse_extend ($1.name_id)
 					ast_factory.reverse_extend_identifier ($$.id_list, $1)
 					ast_factory.reverse_extend_separator ($$.id_list, $2)
 				end
@@ -1603,8 +1599,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					if not case_sensitive then
 						$1.to_lower		
 					end
-					Names_heap.put ($1)
-					last_identifier_list.reverse_extend (Names_heap.found_item)
+					last_identifier_list.reverse_extend ($1.name_id)
 					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
 				end
 				$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
@@ -1621,8 +1616,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 						if not case_sensitive then
 							$1.to_lower		
 						end
-						Names_heap.put ($1)
-						last_identifier_list.reverse_extend (Names_heap.found_item)
+						last_identifier_list.reverse_extend ($1.name_id)
 						ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
 						ast_factory.reverse_extend_separator (last_identifier_list.id_list, $2)
 					end
@@ -1639,8 +1633,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 					if not case_sensitive then
 						$1.to_lower		
 					end
-					Names_heap.put ($1)
-					last_identifier_list.reverse_extend (Names_heap.found_item)
+					last_identifier_list.reverse_extend ($1.name_id)
 					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
 					
 					$$.reverse_extend (ast_factory.new_type_dec_as (last_identifier_list, $3, $2))
@@ -1695,7 +1688,7 @@ Formal_generic_list: Formal_generic
 
 Formal_parameter: TE_REFERENCE Class_identifier
 			{
-				if equal (None_classname, $2) then
+				if equal (None_classname, $2.name) then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -1709,7 +1702,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 			}
 	| TE_EXPANDED Class_identifier
 			{
-				if equal (None_classname, $2) then
+				if equal (None_classname, $2.name) then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -1724,7 +1717,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 
 	|	Class_identifier
 			{
-				if equal (None_classname, $1) then
+				if equal (None_classname, $1.name) then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$1' is not a class name

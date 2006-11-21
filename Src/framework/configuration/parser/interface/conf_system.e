@@ -460,7 +460,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 		do
-			if targets.has (a_name) then
+			if targets.has_key (a_name) then
 				target_order.start
 				target_order.search (targets.found_item)
 				target_order.remove
@@ -544,7 +544,7 @@ feature {NONE} -- Contract helper
 		do
 			Result := targets.count = target_order.count and then target_order.for_all (agent (a_target: CONF_TARGET): BOOLEAN
 				do
-					Result := targets.has (a_target.name) and then targets.found_item = a_target
+					Result := targets.has_key (a_target.name) and then targets.found_item = a_target
 				end)
 		end
 

@@ -9,26 +9,39 @@ class ID_AS
 
 inherit
 	LEAF_AS
-		undefine
-			copy, out, is_equal
+		redefine
+			is_equal
 		end
 
 	ATOMIC_AS
-		undefine
-			copy, out, is_equal, text
 		redefine
 			is_id,
-			is_equivalent
+			is_equivalent,
+			is_equal
 		end
 
-	STRING
-		rename
-			set as string_set,
-			is_integer as string_is_integer
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
+
+	HASHABLE
+		redefine
+			is_equal
+		end
+
+	DEBUG_OUTPUT
+		export
+			{NONE} all
+		redefine
+			is_equal
 		end
 
 create
-	make, initialize
+	initialize,
+	initialize_from_id
 
 feature {NONE} -- Initialization
 
@@ -41,10 +54,51 @@ feature {NONE} -- Initialization
 		local
 			l_int: INTEGER
 		do
-			make (s.count)
-			append (s)
-				-- Force computation of `hash_code' so that it gets stored in AST.
-			l_int := hash_code
+			names_heap.put (s)
+			name_id := names_heap.found_item
+		end
+
+	initialize_from_id (a_id: like name_id)
+			-- Create a new ID AST node representing a name already in the names heap.
+		require
+			id_in_names_heap: a_id > 0 and then names_heap.valid_index (a_id)
+		do
+			name_id := a_id
+		end
+
+feature -- Update
+
+	set_name (a_name: like name) is
+			-- Set `name' to `a_name'.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+		do
+			initialize (a_name)
+		ensure
+			name_set: name.is_equal (a_name)
+		end
+
+	to_upper
+		do
+			initialize (name.as_upper)
+		end
+
+	to_lower
+		do
+			initialize (name.as_lower)
+		end
+
+feature -- Access
+
+	name_id, hash_code: INTEGER
+			-- ID representing the string in the names heap.
+
+	name, string_value: STRING is
+			-- Name of this id.
+		do
+			Result := names_heap.item (name_id)
+		ensure then
+			Result_ok: Result /= Void and then not Result.is_empty
 		end
 
 feature -- Visitor
@@ -58,9 +112,15 @@ feature -- Visitor
 feature -- Properties
 
 	is_id: BOOLEAN is True
-			-- Is the current atomic node an id ?
+			-- Is the current atomic node an id?
 
 feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' equal to the current object?
+		do
+			Result := name_id = other.name_id
+		end
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
@@ -68,11 +128,11 @@ feature -- Comparison
 			Result := is_equal (other)
 		end
 
-feature {AST_EIFFEL} -- Output
+feature {NONE} -- Implementation
 
-	string_value: STRING is
+	debug_output: STRING
 		do
-			Result := twin
+			Result := name
 		end
 
 indexing

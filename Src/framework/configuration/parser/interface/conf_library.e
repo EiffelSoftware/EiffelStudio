@@ -94,7 +94,7 @@ feature -- Access queries
 			l_mapping: like mapping
 		do
 			l_mapping := mapping
-			if l_mapping /= Void and then l_mapping.has (a_class) then
+			if l_mapping /= Void and then l_mapping.has_key (a_class) then
 				l_class := l_mapping.found_item
 			else
 				l_class := a_class

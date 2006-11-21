@@ -53,12 +53,12 @@ feature -- Properties
 	prefix_feature_name: STRING is
 			-- Internal name
 		do
-			Result := prefix_feature_name_with_symbol (op_name)
+			Result := prefix_feature_name_with_symbol (op_name.name)
 		end
 
 	operator_name: STRING is
 		do
-			Result := op_name
+			Result := op_name.name
 		end
 
 feature -- Comparison

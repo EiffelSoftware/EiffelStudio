@@ -196,7 +196,7 @@ feature -- Access
 						Result := s.value
 					else
 						id ?= list.first
-						if id /= Void and then id.string_value.as_lower.is_equal ("auto") then
+						if id /= Void and then id.name.as_lower.is_equal ("auto") then
 								-- Implicit property name
 							Result := ""
 						end
@@ -229,7 +229,7 @@ feature -- Access
 						else
 							l_id ?= l_list.item
 							if l_id /= Void then
-								Result.extend (l_id.string_value)
+								Result.extend (l_id.name)
 							end
 						end
 						l_list.forth
@@ -262,7 +262,7 @@ feature -- Access
 						Result := s /= Void and then s.value.is_equal (Global_value)
 						if not Result then
 							l_id ?= list.item
-							Result := l_id /= Void and then l_id.string_value.is_equal (Global_value)
+							Result := l_id /= Void and then l_id.name.is_equal (Global_value)
 						end
 						list.forth
 					end
@@ -309,14 +309,14 @@ feature -- Element change
 			l_index: like item
 		do
 			if v.tag /= Void then
-				lookup_table.search (v.tag)
+				lookup_table.search (v.tag.name)
 				if lookup_table.found then
 						-- Merge data from two similar `Index_clause' into one.
 					l_index := lookup_table.found_item
 					l_index.index_list.append (v.index_list)
 				else
 					create l_index.initialize (v.tag, v.index_list.twin, Void)
-					lookup_table.put (l_index, l_index.tag)
+					lookup_table.put (l_index, l_index.tag.name)
 				end
 --				if obsolete_tags.has (v.tag) then
 --					Error_handler.insert_warning (

@@ -458,7 +458,7 @@ feature -- Access
 				until
 					parents.after or else Result /= Void
 				loop
-					pn := parents.item.type.class_name
+					pn := parents.item.type.class_name.name
 					if pn.is_equal (n) then
 						Result := parents.item
 					end

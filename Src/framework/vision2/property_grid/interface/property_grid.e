@@ -181,7 +181,7 @@ feature -- Update
 			l_name_item.deselect_actions.extend (agent clear_description)
 			a_property.set_name_item (l_name_item)
 
-			if expanded_section_store.has (current_section_name) then
+			if expanded_section_store.has_key (current_section_name) then
 				if expanded_section_store.found_item and not current_section.is_expanded then
 					current_section.expand
 				elseif not expanded_section_store.found_item and current_section.is_expanded then

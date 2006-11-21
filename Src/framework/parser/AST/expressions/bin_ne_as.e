@@ -29,7 +29,10 @@ feature -- Visitor
 
 feature -- Properties
 
-	op_name: STRING is "/=";
+	op_name: ID_AS is
+		once
+			create Result.initialize ("/=")
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

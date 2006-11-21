@@ -134,7 +134,7 @@ feature -- Access
 			p_non_negative: p >= 0
 			s_non_negative: s >= 0
 		do
-			create Result.make (s)
+			create Result.make
 			Result.set_position (l, c, p, s)
 		end
 
@@ -1222,11 +1222,14 @@ feature -- Access
 		require
 			a_scn_not_void: a_scn /= Void
 		local
-			l_count: INTEGER
+			l_cnt: INTEGER
+			l_str: STRING
 		do
-			l_count := a_scn.text_count
-			create Result.make (l_count)
-			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_count)
+			l_cnt := a_scn.text_count
+			create l_str.make (l_cnt)
+			a_scn.append_text_to_string (l_str)
+			create Result.initialize (l_str)
+			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 		end
 
 	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS is
@@ -1243,11 +1246,13 @@ feature -- Access
 			a_scn_not_void: a_scn /= Void
 		local
 			l_cnt: INTEGER
+			l_str: STRING
 		do
 			l_cnt := a_scn.text_count - 1
-			create Result.make (l_cnt)
+			create l_str.make (l_cnt)
+			a_scn.append_text_substring_to_string (1, l_cnt, l_str)
+			create Result.initialize (l_str)
 			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
-			a_scn.append_text_substring_to_string (1, l_cnt, Result)
 		end
 
 	new_identifier_list (n: INTEGER): IDENTIFIER_LIST is

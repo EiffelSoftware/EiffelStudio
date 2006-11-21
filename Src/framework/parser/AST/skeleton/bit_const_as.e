@@ -66,8 +66,8 @@ feature -- Output
 
 	string_value: STRING is
 		do
-			create Result.make (value.count)
-			Result.append (value)
+			create Result.make (value.name.count)
+			Result.append (value.name)
 		end
 
 invariant

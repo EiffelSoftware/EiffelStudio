@@ -50,7 +50,7 @@ feature -- Properties
 			-- Internal name of the infixed feature associated to the
 			-- binary expression
 		do
-			Result := infix_feature_name_with_symbol (op_name)
+			Result := infix_feature_name_with_symbol (op_name.name)
 		end
 
 feature -- Comparison
@@ -75,7 +75,7 @@ feature {BINARY_AS}
 
 	set_infix_function_name (name: ID_AS) is
 		do
-			create op_name.initialize (extract_symbol_from_infix (name))
+			create op_name.initialize (extract_symbol_from_infix (name.name))
 		end
 
 indexing

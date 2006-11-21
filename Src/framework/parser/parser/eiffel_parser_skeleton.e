@@ -563,9 +563,6 @@ feature {NONE} -- ID factory
 			-- New ID AST node for "NONE"
 		do
 			Result := ast_factory.new_filled_none_id_as (line, column, position, None_classname.count)
-			if Result /= Void then
-				Result.append (None_classname)
-			end
 		end
 
 feature {NONE} -- Type factory
@@ -585,7 +582,7 @@ feature {NONE} -- Type factory
 			if an_id /= Void then
 				class_name := an_id
 
-				if none_classname.is_case_insensitive_equal (class_name) then
+				if none_classname.is_case_insensitive_equal (class_name.name) then
 					if generics /= Void then
 						report_basic_generic_type_error
 					end

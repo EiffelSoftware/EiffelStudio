@@ -160,8 +160,8 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 			i, nb: INTEGER
 			l_generics: like generics
 		do
-			create Result.make (class_name.count)
-			Result.append (class_name)
+			create Result.make (class_name.name.count)
+			Result.append (class_name.name)
 			from
 				l_generics := generics
 				l_generics.start;

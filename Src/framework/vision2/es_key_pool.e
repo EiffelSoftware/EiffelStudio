@@ -124,8 +124,9 @@ feature -- Setting
 					if l_binder.item_for_iteration = a_index then
 						l_binder.remove (l_binder.key_for_iteration)
 						done := True
+					else
+						l_binder.forth
 					end
-					l_binder.forth
 				end
 			end
 			key_actions.remove (a_index)

@@ -81,7 +81,7 @@ feature -- Properties
 		deferred
 		end
 
-	op_name: STRING is
+	op_name: ID_AS is
 			-- Symbol representing the operator (without the infix).
 		deferred
 		end

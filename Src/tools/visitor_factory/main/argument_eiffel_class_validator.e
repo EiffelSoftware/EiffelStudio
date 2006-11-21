@@ -1,0 +1,66 @@
+indexing
+	description: "[
+		A command line switch file validator that checks if a specifed value is a valid Eiffel class identifier.
+	]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision $"
+
+class
+	ARGUMENT_EIFFEL_CLASS_VALIDATOR
+
+inherit
+	ARGUMENT_VALUE_VALIDATOR
+		redefine
+			validate_value
+		end
+
+feature -- Validation
+
+	validate_value (a_value: STRING) is
+			-- Validates option value against any defined rules.
+			-- `is_option_valid' will be set upon completion.
+		local
+			l_synax_checker: EIFFEL_SYNTAX_CHECKER
+		do
+			create l_synax_checker
+			is_option_valid := l_synax_checker.is_valid_class_name (a_value)
+			if not is_option_valid then
+				reason := "The specified class name is not a valid Eiffel class name identifier."
+			end
+		end
+
+;indexing
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options:	"http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful,	but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the	GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+		]"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
+end -- class {ARGUMENT_EIFFEL_CLASS_VALIDATOR}

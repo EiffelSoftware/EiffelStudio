@@ -10,6 +10,7 @@ class
 	EIFNET_DEBUG_UNKNOWN_TYPE_VALUE
 
 inherit
+
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		redefine
 			kind, address
@@ -76,23 +77,7 @@ feature -- Access
 			Result := Debugger_manager.Dump_value_factory.new_manifest_string_value ("ERROR: Unknown type", dynamic_class)
 		end
 
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_type_and_value (a_text_formatter: TEXT_FORMATTER) is
-			-- Append type and value of Current to `a_text_formatter'.
-		do
-			a_text_formatter.add_string ("ERROR: Unknown type")
-			a_text_formatter.add_string (Equal_sign_str);
-			a_text_formatter.add_string (address)
-		end
-
 feature {NONE} -- Output
-
-	append_value (a_text_formatter: TEXT_FORMATTER) is
-			-- Append only the value of Current to `a_text_formatter'.
-		do
-			a_text_formatter.add_string (address)
-		end
 
 	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
@@ -141,6 +126,13 @@ feature -- Output
 			-- Used to display the corresponding icon.
 		do
 			Result := Immediate_value
+		end
+
+feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
+
+	debug_value_type_id: INTEGER is
+		do
+			Result := eifnet_debug_unknown_type_value_id
 		end
 
 indexing

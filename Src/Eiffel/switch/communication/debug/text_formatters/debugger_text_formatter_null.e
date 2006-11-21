@@ -1,68 +1,61 @@
 indexing
-	description: "Eiffel call stack for the stopped application."
+	description: "Routines for use by classes that need to display debugger related objects in TEXT_FORMATTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-deferred class EIFFEL_CALL_STACK
+class
+	DEBUGGER_TEXT_FORMATTER_NULL
 
-feature -- Fake inherit from TWO_WAY_LIST
+inherit
+	DEBUGGER_TEXT_FORMATTER_VISITOR
 
-	stack_depth: INTEGER is
-		deferred
+feature -- Generic
+
+	append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER) is
+		do
 		end
 
-	count: INTEGER is
-		deferred
+	append_type_and_value (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER) is
+		do
 		end
 
-	is_empty: BOOLEAN is
-			-- Call Stack empty ?
-		deferred
+feature -- Application status
+
+	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
+			-- Display the status of the running application.
+		do
 		end
 
-	start is
-		deferred
+	append_exception (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
+			-- Display exception in `st'.		
+		do
 		end
 
-	forth is
-		deferred
+feature -- Call stack
+
+	append_stack (ecs: EIFFEL_CALL_STACK; st: TEXT_FORMATTER) is
+			-- Display callstack in `st'.
+		do
 		end
 
-	after: BOOLEAN is
-		deferred
+	append_arguments (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+			-- Display the arguments passed to the routine
+			-- associated with Current call.
+		do
 		end
 
-	item: CALL_STACK_ELEMENT is
-		deferred
+	append_locals (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+			-- Display the local entities and result (if it exists) of
+			-- the routine associated with Current call.
+		do
 		end
 
-	extend (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-		deferred
+	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
+			-- Display information about associated routine.
+		do
 		end
-
-	i_th alias "[]" (i: INTEGER): like item is
-		deferred
-		end
-
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' within allowable bounds?
-		deferred
-		end
-
-feature -- Properties
-
-	error_occurred: BOOLEAN is
-			-- Did an error occurred when retrieving the eiffel stack?
-		deferred
-		end
-
-invariant
-
-	empty_if_error: error_occurred implies is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -96,4 +89,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_CALL_STACK
+end

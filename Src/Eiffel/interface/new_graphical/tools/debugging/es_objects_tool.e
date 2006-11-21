@@ -31,11 +31,6 @@ inherit
 			{NONE} all
 		end
 
-	IPC_SHARED
-		export
-			{NONE} all
-		end
-
 	SHARED_DEBUG
 		export
 			{NONE} all

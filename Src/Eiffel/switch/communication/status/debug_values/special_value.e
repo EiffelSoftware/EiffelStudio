@@ -14,21 +14,21 @@ inherit
 	ABSTRACT_SPECIAL_VALUE
 		redefine
 			set_hector_addr
-		end;
+		end
 
 	OBJECT_ADDR
 		export
 			{NONE} all
 		undefine
 			is_equal
-		end;
+		end
 
 	CHARACTER_ROUTINES
 		export
 			{NONE} all
 		undefine
 			is_equal
-		end;
+		end
 
 create {DEBUG_VALUE_EXPORTER}
 
@@ -219,91 +219,6 @@ feature -- Access
 		do
 			Result := Debugger_manager.Dump_value_factory.new_object_value (address, dynamic_class)
 		end
-
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_type_and_value (st: TEXT_FORMATTER) is
-		local
-			ec: CLASS_C
-		do
-			if address = Void then
-				st.add_string (NONE_representation)
-			else
-				ec := dynamic_class;
-				if ec /= Void then
-					ec.append_name (st);
-					st.add_string (Left_address_delim);
-					if Application.is_running and Application.is_stopped then
-						st.add_address (address, name, ec)
-					else
-						st.add_string (address)
-					end;
-					st.add_string (Right_address_delim)
-				else
-					Any_class.append_name (st)
-					st.add_string (Is_unknown)
-				end
-			end
-		end;
-
-feature {NONE} -- Output
-
-	append_value (st: TEXT_FORMATTER) is
-			-- Append `Current' to `st' with `indent' tabs the left margin.
-		local
-			is_special_of_char: BOOLEAN
-			char_value: CHARACTER_VALUE
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
-			l_children: like children
-		do
-			st.add_string ("-- begin special object --");
-			st.add_new_line;
-			if sp_lower > 0 then
-				append_tabs (st, 1);
-				st.add_string ("... Items skipped ...");
-				st.add_new_line
-			end
-			l_children := children
-			l_cursor := l_children.new_cursor
-			if l_children.count /= 0 then
-				l_cursor.start
-				char_value ?= l_cursor.item
-				is_special_of_char := char_value /= Void
-			end
-			if not is_special_of_char then
-				from
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					l_cursor.item.append_to (st, 1);
-					l_cursor.forth
-				end;
-			else
-				st.add_string ("%"")
-				from
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					char_value ?= l_cursor.item
-					check
-						valid_character_element: char_value /= Void
-					end
-					st.add_char (char_value.value)
-					l_cursor.forth
-				end;
-				st.add_string ("%"%N")
-			end
-			if 0 <= sp_upper and sp_upper < capacity - 1 then
-				append_tabs (st, 1);
-				st.add_string ("... More items ...");
-				st.add_new_line
-			end;
-			st.add_string ("-- end special object --");
-			st.add_new_line
-		end;
-
 
 feature -- Items
 

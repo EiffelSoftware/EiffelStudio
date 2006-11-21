@@ -10,6 +10,9 @@ class
 
 inherit
 	ABSTRACT_DEBUG_VALUE
+		redefine
+			debug_value_type_id
+		end
 
 	COMPILER_EXPORTER
 		undefine
@@ -134,21 +137,7 @@ feature -- Access
 			end
 		end
 
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_type_and_value (st: TEXT_FORMATTER) is
-		do
-			dynamic_class.append_name (st)
-			st.add_string (Equal_sign_str);
-			st.add_string (value.out)
-		end;
-
 feature {NONE} -- Output
-
-	append_value (st: TEXT_FORMATTER) is
-		do
-			st.add_string (value.out)
-		end;
 
 	output_value: STRING_32 is
 			-- Return a string representing `Current'.
@@ -216,6 +205,13 @@ feature {NONE} -- Setting
 			end
 		ensure
 			dynamic_class_not_void: dynamic_class /= Void
+		end
+
+feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
+
+	debug_value_type_id: INTEGER is
+		do
+			Result := debug_basic_value_id
 		end
 
 invariant

@@ -12,6 +12,9 @@ deferred class
 inherit
 
 	ABSTRACT_DEBUG_VALUE
+		undefine
+			debug_value_type_id
+		end
 
 	SHARED_EIFNET_DEBUGGER
 		undefine

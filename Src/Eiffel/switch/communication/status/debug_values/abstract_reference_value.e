@@ -16,7 +16,8 @@ inherit
 
 	ABSTRACT_DEBUG_VALUE
 		redefine
-			address
+			address,
+			debug_value_type_id
 		end
 
 	SHARED_APPLICATION_EXECUTION
@@ -42,68 +43,7 @@ feature -- Expanded status
 	is_expanded: BOOLEAN
 			-- Is Current value an expanded object ?
 
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_type_and_value (st: TEXT_FORMATTER) is
-		local
-			ec: CLASS_C;
-			status: APPLICATION_STATUS
-		do
-			if is_null then
-				st.add_string ("NONE = Void")
-			else
-				ec := dynamic_class;
-				if ec /= Void then
-					ec.append_name (st);
-					st.add_string (" [");
-					status := Application.status;
-					if status /= Void and status.is_stopped then
-						st.add_address (address, name, ec)
-					else
-						st.add_string (address)
-					end;
-					st.add_string ("]");
-					if string_value /= Void then
-						st.add_string (" = ");
-						st.add_string (string_value.as_string_8)
-					end
-				else
-					Any_class.append_name (st);
-					st.add_string (" = Unknown")
-				end
-			end
-		end;
-
 feature {NONE} -- Output
-
-	append_value (st: TEXT_FORMATTER) is
-		local
-			ec: CLASS_C;
-			status: APPLICATION_STATUS
-		do
-			if address = Void then
-				st.add_string ("Void")
-			else
-				ec := dynamic_class;
-				if ec /= Void then
-					st.add_string ("[");
-					status := Application.status;
-					if status /= Void and status.is_stopped then
-						st.add_address (address, name, ec)
-					else
-						st.add_string (address)
-					end;
-					st.add_string ("]");
-					if string_value /= Void then
-						st.add_new_line
-						st.add_string (string_value.as_string_8)
-					end
-				else
-					Any_class.append_name (st);
-					st.add_string ("Unknown")
-				end
-			end
-		end;
 
 	output_value: STRING_32 is
 			-- Return a string representing `Current'.
@@ -139,6 +79,13 @@ feature -- Output
 			else
 				Result := Void_value
 			end
+		end
+
+feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
+
+	debug_value_type_id: INTEGER is
+		do
+			Result := abstract_reference_value_id
 		end
 
 indexing

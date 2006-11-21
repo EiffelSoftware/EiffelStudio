@@ -43,7 +43,7 @@ inherit
 			clear_general
 		end
 
-	SHARED_DEBUGGER_MANAGER
+	EB_SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -198,7 +198,7 @@ feature -- Basic Operations / Information message
 			clear_general
 			start_processing (true)
 			if Debugger_manager.application_is_executing then
-				Debugger_manager.Application.status.display_status (Current)
+				Eb_debugger_manager.text_formatter_visitor.append_status (Debugger_manager.Application.status, Current)
 			else
 				add ("System not launched")
 				add_new_line

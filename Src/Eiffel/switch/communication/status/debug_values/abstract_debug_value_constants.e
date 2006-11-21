@@ -1,68 +1,35 @@
 indexing
-	description: "Eiffel call stack for the stopped application."
+	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
-deferred class EIFFEL_CALL_STACK
+class
+	ABSTRACT_DEBUG_VALUE_CONSTANTS
 
-feature -- Fake inherit from TWO_WAY_LIST
+inherit
+	DEBUG_VALUE_EXPORTER
 
-	stack_depth: INTEGER is
-		deferred
-		end
+feature {DEBUG_VALUE_EXPORTER} -- Constants
 
-	count: INTEGER is
-		deferred
-		end
+	abstract_debug_value_id: INTEGER is 0
+	abstract_special_value_id: INTEGER is 1
+	abstract_reference_value_id: INTEGER is 5
+	expanded_value_id: INTEGER is 6
+	bits_value_id: INTEGER is 7
+	debug_basic_value_id: INTEGER is 10
+	character_value_id: INTEGER is 11
+	character_32_value_id: INTEGER is 12
+	eifnet_debug_unknown_type_value_id: INTEGER is 20
+	eifnet_debug_native_array_value_id: INTEGER is 21
+	exception_debug_value_id: INTEGER is 30
+	dummy_message_debug_value_id: INTEGER is 31
 
-	is_empty: BOOLEAN is
-			-- Call Stack empty ?
-		deferred
-		end
+feature {NONE} -- Readme
 
-	start is
-		deferred
-		end
-
-	forth is
-		deferred
-		end
-
-	after: BOOLEAN is
-		deferred
-		end
-
-	item: CALL_STACK_ELEMENT is
-		deferred
-		end
-
-	extend (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-		deferred
-		end
-
-	i_th alias "[]" (i: INTEGER): like item is
-		deferred
-		end
-
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' within allowable bounds?
-		deferred
-		end
-
-feature -- Properties
-
-	error_occurred: BOOLEAN is
-			-- Did an error occurred when retrieving the eiffel stack?
-		deferred
-		end
-
-invariant
-
-	empty_if_error: error_occurred implies is_empty
+	--| For now, only value used in DEBUGGER_TEXT_FORMATTER_OUTPUT are set
+	--| don't forget to update any related classes.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -95,5 +62,4 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-end -- class EIFFEL_CALL_STACK
+end

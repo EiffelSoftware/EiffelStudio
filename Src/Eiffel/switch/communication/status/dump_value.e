@@ -52,11 +52,6 @@ inherit
 			{NONE} all
 		end
 
-	IPC_SHARED
-		export
-			{NONE} all
-		end
-
 	SHARED_DEBUGGED_OBJECT_MANAGER
 		export
 			{NONE} all

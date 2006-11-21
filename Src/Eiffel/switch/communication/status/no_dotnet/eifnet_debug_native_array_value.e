@@ -14,7 +14,7 @@ inherit
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
-			address, append_to, sorted_children
+			address, sorted_children
 		end
 
 feature -- Access
@@ -28,19 +28,6 @@ feature -- Access
 			-- Dump_value corresponding to `Current'.
 		do
 		end
-
-feature -- Output
-
-	append_type_and_value (a_text_formatter: TEXT_FORMATTER) is
-		do
-		end;
-
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_value (a_text_formatter: TEXT_FORMATTER) is
-			-- Append only the value of Current to `st'.
-		do
-		end;
 
 feature -- Output	
 

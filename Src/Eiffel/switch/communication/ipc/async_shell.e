@@ -2,13 +2,9 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class ASYNC_SHELL 
+class ASYNC_SHELL
 
-inherit
-
-	IPC_SHARED
-
-feature 
+feature
 
 	send is
 			-- Send request to execute shell command

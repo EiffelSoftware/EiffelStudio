@@ -12,7 +12,6 @@ class
 inherit
 	APPLICATION_STATUS
 		redefine
-			display_status,
 			current_call_stack_element,
 			current_call_stack,
 			update_on_stopped_state,
@@ -168,24 +167,6 @@ feature -- Changes
 			Eifnet_debugger.info.set_is_evaluating (b) -- For optimization purpose
 		end
 
-feature -- Output
-
-	display_status (st: TEXT_FORMATTER) is
-			-- Display status of debugged system
-		do
-			check
-				il_generation: Eiffel_system.System.il_generation
-			end
-
-			if not is_stopped then
-				st.add_string ("System is running")
-				st.add_new_line
-			end
-			st.add_new_line
-			-- NOTA jfiat [2004/07/02] : maybe we could display more information
-			-- for instance if we run with or without break points
-		end
-
 feature -- Thread info
 
 	set_current_thread_id (tid: INTEGER) is
@@ -292,32 +273,32 @@ feature -- Reason for stopping
 
 	set_reason_as_break is
 		do
-			set_reason ({IPC_SHARED}.Pg_break)
+			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_break)
 		end
 
 	set_reason_as_interrupt is
 		do
-			set_reason ({IPC_SHARED}.Pg_interrupt)
+			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_interrupt)
 		end
 
 	set_reason_as_raise is
 		do
-			set_reason ({IPC_SHARED}.Pg_raise)
+			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_raise)
 		end
 
 	set_reason_as_viol is
 		do
-			set_reason ({IPC_SHARED}.Pg_viol)
+			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_viol)
 		end
 
 	set_reason_as_new_breakpoint is
 		do
-			set_reason ({IPC_SHARED}.Pg_new_breakpoint)
+			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_new_breakpoint)
 		end
 
 	set_reason_as_step is
 		do
-			set_reason ({IPC_SHARED}.Pg_step)
+			set_reason ({APPLICATION_STATUS_CONSTANTS}.Pg_step)
 		end
 
 indexing

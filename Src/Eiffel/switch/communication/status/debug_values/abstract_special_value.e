@@ -13,7 +13,8 @@ inherit
 
 	ABSTRACT_DEBUG_VALUE
 		redefine
-			append_to, address, sorted_children
+			address, sorted_children,
+			debug_value_type_id
 		end
 
 	SHARED_DEBUG
@@ -94,81 +95,7 @@ feature -- Output
 			end
 		end
 
-feature -- Output
-
-	append_to (st: TEXT_FORMATTER; indent: INTEGER) is
-			-- Append `Current' to `st' with `indent' tabs the left margin.
-		local
-			status: APPLICATION_STATUS
-			is_special_of_char: BOOLEAN
-			char_value: CHARACTER_VALUE
-			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
-		do
-			append_tabs (st, indent);
-			st.add_feature_name (name, e_class);
-			st.add_string (": ");
-			dynamic_class.append_name (st);
-			st.add_string (Left_address_delim);
-			status := Application.status;
-			if status /= Void and status.is_stopped then
-				st.add_address (address, name, dynamic_class)
-			else
-				st.add_string (address)
-			end
-			st.add_string (Right_address_delim);
-			st.add_new_line;
-			append_tabs (st, indent + 1);
-			st.add_string ("-- begin special object --");
-			st.add_new_line;
-			if sp_lower > 0 then
-				append_tabs (st, indent + 2);
-				st.add_string ("... Items skipped ...");
-				st.add_new_line
-			end
-
-			l_cursor := items.new_cursor
-			if items.count /= 0 then
-				l_cursor.start
-				char_value ?= l_cursor.item
-				is_special_of_char := char_value /= Void
-			end
-			if not is_special_of_char then
-				from
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					l_cursor.item.append_to (st, indent + 2);
-					l_cursor.forth
-				end;
-			else
-				st.add_string ("%"")
-				from
-					l_cursor.start
-				until
-					l_cursor.after
-				loop
-					char_value ?= l_cursor.item
-					check
-						valid_character_element: char_value /= Void
-					end
-					st.add_char (char_value.value)
-					l_cursor.forth
-				end;
-				st.add_string ("%"")
-				st.add_new_line
-			end
-			if 0 <= sp_upper and sp_upper < capacity - 1 then
-				append_tabs (st, indent + 2);
-				st.add_string ("... More items ...");
-				st.add_new_line
-			end;
-			append_tabs (st, indent + 1);
-			st.add_string ("-- end special object --");
-			st.add_new_line
-		end;
-
-feature {NONE} -- Output
+feature {DEBUG_VALUE_EXPORTER} -- Output
 
 	output_value: STRING_32 is
 			-- Return a string representing `Current'.
@@ -221,6 +148,13 @@ feature -- Access
 
 	string_value: STRING_GENERAL is
 		deferred
+		end
+
+feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
+
+	debug_value_type_id: INTEGER is
+		do
+			Result := abstract_special_value_id
 		end
 
 indexing

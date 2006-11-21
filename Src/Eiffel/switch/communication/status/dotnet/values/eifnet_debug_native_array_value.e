@@ -19,7 +19,8 @@ inherit
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
-			address, append_to, sorted_children
+			address,
+			sorted_children
 		redefine
 			extra_output_details
 		end
@@ -124,19 +125,6 @@ feature -- Output
 			Result := " count=" + array_value.get_count.out + " rank=" + array_value.get_rank.out
 			release_array_value
 		end
-
-	append_type_and_value (a_text_formatter: TEXT_FORMATTER) is
-		do
-			a_text_formatter.add_string (type_and_value)
-		end;
-
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_value (a_text_formatter: TEXT_FORMATTER) is
-			-- Append only the value of Current to `a_text_formatter'.
-		do
-			a_text_formatter.add_string (output_value)
-		end;
 
 feature -- Output	
 

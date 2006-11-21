@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 
 			l_system := a_target.system.name
 			l_target := a_target.name
-			print ("Parsing "+l_target+" from "+l_system+"...")
+			print ("Parsing "+l_target+" from "+l_system+"("+a_target.system.file_name+")...")
 
 			create l_vis.make_build (l_state, a_target, create {CONF_PARSE_FACTORY})
 			a_target.process (l_vis)

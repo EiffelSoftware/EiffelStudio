@@ -20,6 +20,8 @@ inherit
 	AST_FACTORY
 		redefine
 			create_match_list,
+			backup_match_list_count,
+			resume_match_list_count,
 			new_keyword_as,
 			new_symbol_as,
 			new_current_as,
@@ -69,6 +71,37 @@ feature -- Match list maintain
 			match_list_count_set: match_list_count = 0
 		end
 
+	increase_match_list_count is
+			-- Increase count of `match_list' by one.
+		do
+			match_list_count := match_list_count + 1
+		end
+
+	set_match_list_count (a_new_count: INTEGER) is
+			-- Set `match_list_count' to `a_new_count'.
+		require
+			a_new_count_valid: a_new_count >= 0
+		do
+		ensure
+			match_list_count_set: match_list_count = a_new_count
+		end
+
+	backup_match_list_count is
+			-- Backup value of `match_list_count' into `match_list_count_backup'.
+		do
+			 match_list_count_backup := match_list_count
+		ensure then
+			match_list_count_backup_set: match_list_count_backup = match_list_count
+		end
+
+	resume_match_list_count is
+			-- Resume the value of `match_list_count_backup' and set `match_list_count' with it.
+		do
+			match_list_count := match_list_count_backup
+		ensure then
+			match_list_count_resumed: match_list_count = match_list_count_backup
+		end
+
 feature -- List operation
 
 	reverse_extend_separator (a_list: EIFFEL_LIST [AST_EIFFEL]; l_as: AST_EIFFEL) is
@@ -89,7 +122,7 @@ feature -- Leaf nodes
 			-- New CHARACTER AST node
 		do
 			create Result.initialize (c, l, co, p, n)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
@@ -97,7 +130,7 @@ feature -- Leaf nodes
 			-- New TYPED_CHAR AST node.
 		do
 			create Result.initialize (t_as, c, l, co, p, n)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
@@ -106,7 +139,7 @@ feature -- Leaf nodes
 		do
 			if s /= Void then
 				create Result.initialize (s, l, c, p, n)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
@@ -116,7 +149,7 @@ feature -- Leaf nodes
 		do
 			if s /= Void and marker /= Void then
 				create Result.initialize (s, marker, is_indentable, l, c, p, n)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
@@ -128,7 +161,7 @@ feature -- Leaf nodes
 				create Result.make_from_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
@@ -140,7 +173,7 @@ feature -- Leaf nodes
 				create Result.make_from_hexa_string (t, s, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
@@ -152,7 +185,7 @@ feature -- Leaf nodes
 				create Result.make (t, v)
 				Result.set_position (l, c, p, n)
 				Result.set_sign_symbol (s_as)
-				match_list_count := match_list_count + 1
+				increase_match_list_count
 				Result.set_index (match_list_count)
 			end
 		end
@@ -160,7 +193,7 @@ feature -- Leaf nodes
 	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS is
 		do
 			Result := Precursor (a_scn)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
@@ -182,56 +215,56 @@ feature -- Leaf nodes
 			-- New empty ID AST node.
 		do
 			Result := Precursor (a_scn)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_void_as (a_scn: EIFFEL_SCANNER): VOID_AS is
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_unique_as (a_scn: EIFFEL_SCANNER): UNIQUE_AS is
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_retry_as (a_scn: EIFFEL_SCANNER): RETRY_AS is
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_result_as (a_scn: EIFFEL_SCANNER): RESULT_AS is
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_boolean_as (b: BOOLEAN; a_scn: EIFFEL_SCANNER): BOOL_AS is
 		do
 			create Result.initialize (b, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_current_as (a_scn: EIFFEL_SCANNER): CURRENT_AS is
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
 	new_deferred_as (a_scn: EIFFEL_SCANNER): DEFERRED_AS is
 		do
 			create Result.make_with_location (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
@@ -239,7 +272,7 @@ feature -- Leaf nodes
 			-- New KEYWORD AST node
 		do
 			create Result.make (a_code, a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
@@ -283,7 +316,7 @@ feature -- Leaf nodes
 			-- New KEYWORD AST node
 		do
 			create Result.make ({EIFFEL_TOKENS}.te_once_string, a_text, l, c, p, n)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
@@ -291,7 +324,7 @@ feature -- Leaf nodes
 			-- New KEYWORD AST node		
 		do
 			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			Result.set_index (match_list_count)
 		end
 
@@ -305,13 +338,13 @@ feature -- Leaf nodes
 	create_break_as (a_scn: EIFFEL_SCANNER) is
 			-- NEw BREAK_AS node
 		do
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 		end
 
 	create_break_as_with_data (a_text: STRING; l, c, p, n: INTEGER) is
 			-- New COMMENT_AS node
 		do
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 		end
 
 feature -- Access

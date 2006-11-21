@@ -87,18 +87,22 @@ feature -- Match list maintainning
 			match_list: match_list /= Void
 			a_match_not_void: a_match /= Void
 		do
-			match_list_count := match_list_count + 1
-			a_match.set_index (match_list_count)
-			match_list.extend (a_match)
+			if is_match_list_extension_enabled then
+				increase_match_list_count
+				a_match.set_index (match_list_count)
+				match_list.extend (a_match)
+			end
 		end
 
 	extend_match_list_with_stub (a_stub: LEAF_STUB_AS) is
 			-- Extend `internal_match_list' with stub `a_stub',
 			-- and set index in `a_match'.
 		do
-			match_list_count := match_list_count + 1
-			a_stub.set_index (match_list_count)
-			match_list.extend (a_stub)
+			if is_match_list_extension_enabled then
+				increase_match_list_count
+				a_stub.set_index (match_list_count)
+				match_list.extend (a_stub)
+			end
 		end
 
 feature -- Roundtrip

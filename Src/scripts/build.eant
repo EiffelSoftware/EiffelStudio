@@ -30,7 +30,7 @@
 		<echo message=" geant ${opt} compile_ec_batch"/>
 		<echo message=" geant ${opt} finalize_ec_batch"/>
 		<echo message="       ----------"/>
-		<echo message=" geant ${opt} test_compile_ec_unix_on_windows"/>
+		<echo message=" geant ${opt} compile_ec_unix_on_windows"/>
 		<echo message="       ----------"/>
 		<echo message=" geant ${opt} clean_estudio"/>
 		<echo message=" geant ${opt} finalize_estudio"/>
@@ -74,109 +74,109 @@
 	<!-- templates -->
 	<target name="tmp_clean_executable" depend="init">
 		<argument name="executable_target" />
-		<geant file="compile_executables.eant" target="clean_${executable_target}" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+		<geant file="${misc_dir}${path_separator}compile_executables.eant" target="clean_${executable_target}" reuse_variables="true" dir="${cwd}" fork="false"/>
 	</target>
 	<target name="tmp_compile_executable" depend="init" >
 		<argument name="executable_target" />
 		<set name="use_settings" value="true" />
-		<geant file="compile_executables.eant" target="compile_${executable_target}" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+		<geant file="${misc_dir}${path_separator}compile_executables.eant" target="compile_${executable_target}" reuse_variables="true" dir="${cwd}" fork="false"/>
 		<unset name="use_settings" />
 	</target>
 	<target name="tmp_finalize_executable" depend="init">
 		<argument name="executable_target" />
-		<geant file="compile_executables.eant" target="finalize_${executable_target}" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+		<geant file="${misc_dir}${path_separator}compile_executables.eant" target="finalize_${executable_target}" reuse_variables="true" dir="${cwd}" fork="false"/>
 	</target>
 
 	<!-- bench ec -->
 	<target name="clean_ec" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="ec" />
 		</geant>
 	</target>
 	<target name="compile_ec" depend="init">
-		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="ec" />
 		</geant>
 	</target>
 	<target name="finalize_ec" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="ec" />
 		</geant>
 	</target>
 
 	<!-- batch ec -->
 	<target name="clean_ec_batch" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="ec_batch" />
 		</geant>
 	</target>
 	<target name="compile_ec_batch" depend="init">
-		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="ec_batch" />
 		</geant>
 	</target>
 	<target name="finalize_ec_batch" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="ec_batch" />
 		</geant>
 	</target>
 
 	<!-- final estudio -->
 	<target name="clean_estudio" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="estudio" />
 		</geant>
 	</target>
 	<target name="finalize_estudio" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="estudio" />
 		</geant>
 	</target>
 
 	<!-- finish_freezing -->
 	<target name="clean_finish_freezing" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="finish_freezing" />
 		</geant>
 	</target>
 	<target name="finalize_finish_freezing" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="finish_freezing" />
 		</geant>
 	</target>
 
 	<!-- h2e -->
 	<target name="clean_h2e" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="h2e" />
 		</geant>
 	</target>
 	<target name="finalize_h2e" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="h2e" />
 		</geant>
 	</target>
 
 	<!-- quick_finalize -->
 	<target name="clean_quick_finalize" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="quick_finalize" />
 		</geant>
 	</target>
 	<target name="finalize_quick_finalize" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="quick_finalize" />
 		</geant>
 	</target>
 
 	<!-- emake -->
 	<target name="clean_emake" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="emake" />
 		</geant>
 	</target>
 	<target name="finalize_emake" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="emake" />
 		</geant>
 	</target>
@@ -186,7 +186,7 @@
 		<setenv name="ISE_PLATFORM" value="linux-x86" />
 		<set name="c_compile" value="false" />
 		<set name="finalize" value="false" />
-		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="ec" />
 		</geant>
 	</target>
@@ -194,46 +194,46 @@
 
 	<!-- Consumer -->
 	<target name="clean_mdconsumer" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="mdconsumer" />
 		</geant>
 	</target>
 	<target name="compile_mdconsumer" depend="init">
-		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="mdconsumer" />
 		</geant>
 	</target>
 	<target name="finalize_mdconsumer" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="mdconsumer" />
 		</geant>
 	</target>	
 
 	<!-- emdc -->
 	<target name="clean_emdc" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="emdc" />
 		</geant>
 	</target>
 	<target name="finalize_emdc" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="emdc" />
 		</geant>
 	</target>
 
 	<!-- eBuild -->
 	<target name="clean_esbuilder" depend="init">
-		<geant target="tmp_clean_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="esbuilder" />
 		</geant>
 	</target>
 	<target name="compile_esbuilder" depend="init">
-		<geant target="tmp_compile_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="esbuilder" />
 		</geant>
 	</target>
 	<target name="finalize_esbuilder" depend="init">
-		<geant target="tmp_finalize_executable" reuse_variables="true" dir="${misc_dir}" fork="false" >
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="esbuilder" />
 		</geant>
 	</target>

@@ -84,15 +84,19 @@ feature -- Match list maintaining
 	extend_match_list (a_match: LEAF_AS) is
 			-- Extend `match_list' with `a_match'.
 		do
-			match_list.extend (a_match)
+			if is_match_list_extension_enabled then
+				match_list.extend (a_match)
+			end
 		end
 
 	extend_match_list_with_stub (a_stub: LEAF_STUB_AS) is
 			-- Extend `match_list' with stub `a_stub',
 			-- and set index in `a_match'.
 		do
-			a_stub.set_index (match_list_count)
-			match_list.extend (a_stub)
+			if is_match_list_extension_enabled then
+				a_stub.set_index (match_list_count)
+				match_list.extend (a_stub)
+			end
 		end
 
 feature -- Leaf Nodes
@@ -237,7 +241,7 @@ feature -- Leaf Nodes
 		local
 			b_as: BREAK_AS
 		do
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			create b_as.make (a_scn.text, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
 			b_as.set_index (match_list_count)
 			extend_match_list (b_as)
@@ -248,7 +252,7 @@ feature -- Leaf Nodes
 		local
 			b_as: BREAK_AS
 		do
-			match_list_count := match_list_count + 1
+			increase_match_list_count
 			create b_as.make (a_text.string, l, c, p, n)
 			b_as.set_index (match_list_count)
 			extend_match_list (b_as)

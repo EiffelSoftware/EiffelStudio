@@ -9,13 +9,21 @@ class
 	CLI_IMPORT_ADDRESS_TABLE
 
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			structure_size as count
+			make as managed_pointer_make
 		end
-		
+
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- New instance of CLI_IMPORT_ADDRESS_TABLE.
+		do
+			managed_pointer_make (structure_size)
+		end
 
 feature -- Settings
 
@@ -24,15 +32,9 @@ feature -- Settings
 		do
 			c_set_import_by_name_rva (item, rva)
 		end
-		
+
 feature -- Measurement
 
-	count: INTEGER is
-			-- Size of Current structure.
-		do
-			Result := structure_size
-		end
-	
 	structure_size: INTEGER is
 			-- Size of CLI_IMPORT_ADDRESS_TABLE.
 		external
@@ -40,7 +42,7 @@ feature -- Measurement
 		alias
 			"sizeof(CLI_IMPORT_ADDRESS_TABLE)"
 		end
-	
+
 feature {NONE} -- Implementation
 
 	c_set_import_by_name_rva (an_item: POINTER; i: INTEGER) is
@@ -48,7 +50,7 @@ feature {NONE} -- Implementation
 		external
 			"C struct CLI_IMPORT_ADDRESS_TABLE access ImportByNameRVA type DWORD use %"cli_writer.h%""
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

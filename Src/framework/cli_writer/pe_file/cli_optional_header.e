@@ -9,11 +9,9 @@ class
 	CLI_OPTIONAL_HEADER
 
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			structure_size as count
-		redefine
-			make
+			make as managed_pointer_make
 		end
 
 	CLI_UTILITIES
@@ -32,7 +30,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Allocate `item' and initialize default values for CLI.
 		do
-			Precursor {WEL_STRUCTURE}
+			managed_pointer_make (structure_size)
 			c_set_magic (item, 0x10B)
 			c_set_major_linker_version (item, 6)
 			c_set_minor_linker_version (item, 0)
@@ -65,14 +63,6 @@ feature -- Access
 		do
 			p := c_directories (item)
 			create Result.make_by_pointer (p + i * {CLI_DIRECTORY}.structure_size)
-		end
-
-feature -- Measurement
-
-	count: INTEGER is
-			-- Size of Current C structure.
-		do
-			Result := structure_size
 		end
 
 feature -- Settings

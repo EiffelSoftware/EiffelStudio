@@ -9,13 +9,21 @@ class
 	MD_ASSEMBLY_INFO
 
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			structure_size as size
+			make as managed_pointer_make
 		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create MD_ASSEMBLY_INFO.
+		do
+			managed_pointer_make (structure_size)
+		end
 
 feature -- Settings
 
@@ -44,12 +52,6 @@ feature -- Settings
 		end
 
 feature -- Measurement
-
-	size: INTEGER is
-			-- Size of current.
-		do
-			Result := structure_size
-		end
 
 	structure_size: INTEGER is
 			-- Size of ASSEMBLYMETADATA structure.

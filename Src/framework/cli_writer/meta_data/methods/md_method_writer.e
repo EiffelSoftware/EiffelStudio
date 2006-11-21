@@ -13,9 +13,9 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	ANY
-	
+
 create
 	make
 
@@ -25,29 +25,24 @@ feature {NONE} -- Initialization
 			-- Create Factory to store method bodys into `item'.
 		do
 			create method_locations.make (10)
-			create internal_item.make (Chunk_size)
+			create item.make (Chunk_size)
 			current_position := 0
 			capacity := Chunk_size
 			is_previous_body_written := True
 			is_closed := False
 		end
-		
+
 feature -- Access
 
-	item: POINTER is
-			-- Memory area containing IL code
-		do
-			Result := internal_item.item
-		ensure
-			result_not_null: Result /= default_pointer
-		end
+	item: MANAGED_POINTER
+			-- Memory where IL data instruction stream is stored.
 
 	count: INTEGER is
 			-- Size of code
 		do
 			Result := current_position
 		end
-		
+
 feature -- Method body definition
 
 	new_method_body (token: INTEGER): MD_METHOD_BODY is
@@ -74,7 +69,7 @@ feature -- Status Report
 
 	is_previous_body_written: BOOLEAN
 			-- Has last body generated through Current been emitted?
-	
+
 	is_closed: BOOLEAN
 			-- Can Current object be used for further method body definition?
 			-- If `True' no, otherwise yes.
@@ -122,7 +117,7 @@ feature -- Settings
 			source_pos := method_locations.item (source_meth)
 			method_locations.put (source_pos, new_meth)
 		end
-		
+
 	write_current_body is
 			-- Store `current body' in `Current'.
 		require
@@ -132,18 +127,18 @@ feature -- Settings
 			l_pos: INTEGER
 			l_meth_size: INTEGER
 			l_meth: like internal_method_body
-			l_m: like internal_item
+			l_m: like item
 			l_ex: MD_EXCEPTION_CLAUSE
 			is_fat_seh: BOOLEAN
 		do
 			l_meth := internal_method_body
 			l_pos := current_position
 			l_meth_size := l_meth.count
-			l_m := internal_item
+			l_m := item
 			method_locations.put (l_pos, l_meth.method_token)
 
 			update_size (l_pos + l_meth_size + {MD_FAT_METHOD_HEADER}.Count)
-			
+
 			if
 				not l_meth.has_locals and then not l_meth.has_exceptions_handling
 				and then l_meth.max_stack <= 8 and then l_meth_size < 64
@@ -156,15 +151,15 @@ feature -- Settings
 					-- Valid candidate for fat header.
 				Fat_method_header.remake (l_meth.max_stack.to_integer_16,
 					l_meth_size, l_meth.local_token)
-					
+
 				if l_meth.has_exceptions_handling then
 					Fat_method_header.set_flags ({MD_METHOD_CONSTANTS}.More_sections)
 				end
-				
+
 				Fat_method_header.write_to_stream (l_m, l_pos)
 				l_pos := l_pos + Fat_method_header.count
 			end
-			
+
 			l_meth.write_to_stream (l_m, l_pos)
 			l_pos := l_pos + l_meth_size
 
@@ -213,7 +208,7 @@ feature {NONE} -- Implementation
 
 	current_position: INTEGER
 			-- Current position for next write.
-			
+
 	capacity: INTEGER
 			-- Number of `bytes' that `internal_item' can hold.
 
@@ -227,9 +222,6 @@ feature {NONE} -- Implementation
 	internal_method_body: MD_METHOD_BODY
 			-- Body used over and over to avoid memory consumption.
 
-	internal_item: MANAGED_POINTER
-			-- Memory where IL data instruction stream is stored.
-
 	update_size (a_new_offset: INTEGER) is
 			-- Resized `internal_item' if it cannot hold up to `a_new_offset' new items.
 		require
@@ -238,7 +230,7 @@ feature {NONE} -- Implementation
 			if a_new_offset > capacity then
 					-- Resize `internal_item'.
 				capacity := a_new_offset.max (capacity + Chunk_size)
-				internal_item.resize (capacity)
+				item.resize (capacity)
 			end
 		ensure
 			resized_if_necessary: a_new_offset <= capacity
@@ -254,7 +246,7 @@ feature {NONE} -- constants
 		once
 			create Result.make (0)
 		end
-		
+
 	fat_method_header: MD_FAT_METHOD_HEADER is
 			-- To avoid over creating method headers.
 		once
@@ -266,11 +258,11 @@ feature {NONE} -- constants
 		once
 			create Result.make
 		end
-		
+
 invariant
 	good_capacity: capacity > 0 and current_position <= capacity
 	method_locations_not_void: method_locations /= Void
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

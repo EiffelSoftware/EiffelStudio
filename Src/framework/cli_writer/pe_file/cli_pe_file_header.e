@@ -13,29 +13,27 @@ class
 	CLI_PE_FILE_HEADER
 
 inherit
-	WEL_STRUCTURE
+	MANAGED_POINTER
 		rename
-			structure_size as count
-		redefine
-			make
+			make as managed_pointer_make
 		end
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
 			-- Allocate `item' and initialize default values for CLI.
 		do
-			Precursor {WEL_STRUCTURE}
+			managed_pointer_make (structure_size)
 			c_set_machine (item, 0x14C)
 			c_set_time_date_stamp (item, {CLI_TIME}.time (default_pointer))
 			c_set_pointer_to_symbol_table (item, 0)
 			c_set_size_of_optional_header (item, 0x00E0)
 			c_set_number_of_symbols (item, 0)
 		end
-		
+
 feature -- Settings
 
 	set_number_of_sections (i: INTEGER) is
@@ -49,13 +47,13 @@ feature -- Settings
 		do
 			c_set_time_date_stamp (item, t)
 		end
-		
+
 	set_size_of_optional_header_size (s: INTEGER_16) is
 			-- Set `size_of_optional_header_size' to `s'.
 		do
 			c_set_size_of_optional_header (item, s)
 		end
-		
+
 	set_characteristics (c: INTEGER_16) is
 			-- Set `characteristics' to `c'.
 			-- Loof in `CLI_PE_FILE_CONSTANTS' for possible constants.
@@ -63,14 +61,6 @@ feature -- Settings
 			c_set_characteristics (item, c)
 		end
 
-feature -- Measurement
-
-	count: INTEGER is
-			-- Size of Current C structure.
-		do
-			Result := structure_size
-		end
-		
 feature {NONE} -- Implementation
 
 	structure_size: INTEGER is
@@ -92,7 +82,7 @@ feature {NONE} -- Implementation
 		external
 			"C struct IMAGE_FILE_HEADER access NumberOfSections type WORD use <windows.h>"
 		end
-		
+
 	c_set_time_date_stamp (an_item: POINTER; i: INTEGER) is
 			-- Set `TimeDateStamp' to `i'.
 		external
@@ -110,19 +100,19 @@ feature {NONE} -- Implementation
 		external
 			"C struct IMAGE_FILE_HEADER access NumberOfSymbols type DWORD use <windows.h>"
 		end
-	
+
 	c_set_size_of_optional_header (an_item: POINTER; i: INTEGER_16) is
 			-- Set `SizeOfOptionalHeader' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access SizeOfOptionalHeader type WORD use <windows.h>"
 		end
-	
+
 	c_set_characteristics (an_item: POINTER; i: INTEGER_16) is
 			-- Set `Characteristics' to `i'.
 		external
 			"C struct IMAGE_FILE_HEADER access Characteristics type WORD use <windows.h>"
 		end
-		
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

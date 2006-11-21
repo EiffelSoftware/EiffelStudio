@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 			until
 				Result /= Void or else a_list.after
 			loop
-				if a_name.is_equal (a_list.item.feature_name) then
+				if a_name.is_equal (a_list.item.feature_name.name) then
 					Result := a_list.item
 				end
 				a_list.forth

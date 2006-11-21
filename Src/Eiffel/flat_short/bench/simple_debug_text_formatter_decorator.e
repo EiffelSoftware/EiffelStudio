@@ -59,10 +59,10 @@ feature -- Access
 
 feature -- Element change
 
-	formal_name (pos: INTEGER): ID_AS is
+	formal_name (pos: INTEGER): STRING is
 			-- Formal name of class_c generics at position `pos.
 		do
-			Result := e_class.generics.i_th (pos).name.as_upper
+			Result := e_class.generics.i_th (pos).name.name.as_upper
 		end
 
 feature {NONE} -- Implementation

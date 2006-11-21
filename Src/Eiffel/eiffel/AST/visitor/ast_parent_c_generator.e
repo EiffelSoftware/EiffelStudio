@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 						create l_vhrc2
 						l_vhrc2.set_class (current_class)
 						l_vhrc2.set_parent (last_parent_c.parent)
-						l_vhrc2.set_feature_name (l_old_name.internal_name)
+						l_vhrc2.set_feature_name (l_old_name.internal_name.name)
 						l_vhrc2.set_location (l_old_name.start_location)
 						Error_handler.insert_error (l_vhrc2)
 					else
@@ -212,8 +212,8 @@ feature {NONE} -- Implementation
 						create {VMSS3} l_vdrs3
 					end
 					l_vdrs3.set_class (current_class)
-					l_vdrs3.set_parent_name (l_as.type.class_name)
-					l_vdrs3.set_feature_name (clause.item.internal_name)
+					l_vdrs3.set_parent_name (l_as.type.class_name.name)
+					l_vdrs3.set_feature_name (clause.item.internal_name.name)
 					l_vdrs3.set_location (clause.item.start_location)
 					Error_handler.insert_error (l_vdrs3)
 				else

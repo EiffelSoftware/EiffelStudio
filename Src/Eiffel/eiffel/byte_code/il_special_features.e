@@ -60,7 +60,7 @@ feature -- Access
 					boolean_type, character_type, integer_type, real_32_type,
 					real_64_type, pointer_type
 				then
-					Result := basic_type_table.has (feat.feature_name_id)
+					Result := basic_type_table.has_key (feat.feature_name_id)
 					function_type := basic_type_table.found_item
 					if function_type = out_type then
 							-- {REAL_32}.out and {REAL_64}.out are processed

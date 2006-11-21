@@ -53,10 +53,10 @@ feature{NONE} -- Initialization
 			a_parent_valid: a_parent.is_class and then a_parent.is_compiled a_parent.is_valid_domain_item
 		do
 			internal_ast := a_ast
-			set_name (a_ast.name)
+			set_name (a_ast.name.name)
 			set_parent (a_parent)
 		ensure
-			name_set: name.is_case_insensitive_equal (a_ast.name)
+			name_set: name.is_case_insensitive_equal (a_ast.name.name)
 			parent_set: parent = a_parent
 		end
 
@@ -132,7 +132,7 @@ feature -- Access
 				until
 					l_list.after or l_ast /= Void
 				loop
-					l_item_name := l_list.item.name
+					l_item_name := l_list.item.name.name
 					if l_item_name.is_case_insensitive_equal (l_name) then
 						l_ast := l_list.item
 					end

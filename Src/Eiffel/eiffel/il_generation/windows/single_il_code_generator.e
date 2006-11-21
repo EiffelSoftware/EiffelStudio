@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 					-- Generate local definition of `inh_feat' which
 					-- calls static definition.
 				rout_id := inh_feat.rout_id_set.first
-				if rout_ids_tbl.has (rout_id) then
+				if rout_ids_tbl.has_key (rout_id) then
 					feat := rout_ids_tbl.found_item
 					generate_method_impl (feat, class_type, inh_feat)
 				else
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 					-- Generate local definition of `inh_feat' which
 					-- calls static definition.
 				rout_id := inh_feat.rout_id_set.first
-				if rout_ids_tbl.has (rout_id) then
+				if rout_ids_tbl.has_key (rout_id) then
 						-- This is where we should do a MethodImpl on the inherited
 						-- implementation and not on the interface.
 					feat := rout_ids_tbl.found_item

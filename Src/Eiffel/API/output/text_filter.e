@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 	init_file_separator is
 			-- Get preferred file separator from `format_table'.
 		do
-			if format_table.has (f_File_separator) then
+			if format_table.has_key (f_File_separator) then
 				file_separator := format_table.found_item.item1 @ 1
 				if file_separator /= '/' and file_separator /= '\' then
 					file_separator := operating_environment.directory_separator
@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 	init_file_suffix is
 			-- Get file suffix from `format_table'.
 		do
-			if format_table.has (f_Suffix) then
+			if format_table.has_key (f_Suffix) then
 				file_suffix := format_table.found_item.item1
 			end
 			if file_suffix = Void then
@@ -305,9 +305,9 @@ feature -- Text processing
 		do
 			if not skipping then
 				text_image := text.as_lower
-				if format_table.has (text_image) then
+				if format_table.has_key (text_image) then
 					format := format_table.found_item
-				elseif format_table.has (f_Symbol) then
+				elseif format_table.has_key (f_Symbol) then
 					format := format_table.found_item
 				end
 				if format /= Void then
@@ -331,11 +331,11 @@ feature -- Text processing
 		do
 			if not skipping then
 				text_image := text.as_lower
-				if format_table.has (text_image) then
+				if format_table.has_key (text_image) then
 					format := format_table.found_item
-				elseif a_feature /= Void and then format_table.has (f_Keyword_features) then
+				elseif a_feature /= Void and then format_table.has_key (f_Keyword_features) then
 					format := format_table.found_item
-				elseif format_table.has (f_Keyword) then
+				elseif format_table.has_key (f_Keyword) then
 					format := format_table.found_item
 				end
 
@@ -377,18 +377,18 @@ feature -- Text processing
 				operator_generated := doc_universe.is_feature_generated (a_feature)
 				l_group := doc_universe.found_group
 				text_image := text.as_lower
-				if format_table.has (text_image) then
+				if format_table.has_key (text_image) then
 					format := format_table.found_item
 				elseif is_keyword (text) then
-					if operator_generated and then format_table.has (f_Keyword_features) then
+					if operator_generated and then format_table.has_key (f_Keyword_features) then
 						format := format_table.found_item
-					elseif format_table.has (f_Keyword) then
+					elseif format_table.has_key (f_Keyword) then
 						format := format_table.found_item
 					end
 				elseif is_symbol (text) then
-					if operator_generated and then format_table.has (f_Symbol_features) then
+					if operator_generated and then format_table.has_key (f_Symbol_features) then
 						format := format_table.found_item
-					elseif format_table.has (f_Symbol) then
+					elseif format_table.has_key (f_Symbol) then
 						format := format_table.found_item
 					end
 				end
@@ -417,7 +417,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING]
 		do
 			if not skipping then
-				if format_table.has (f_Basic) then
+				if format_table.has_key (f_Basic) then
 					format := format_table.found_item
 				end
 				if format /= Void then
@@ -441,10 +441,10 @@ feature -- Text processing
 			if not skipping then
 				s := escaped_text (text)
 				process_multiple_spaces (s)
-				if url /= Void and then format_table.has (f_Comment_url) then
+				if url /= Void and then format_table.has_key (f_Comment_url) then
 					format := format_table.found_item
 					set_keyword (kw_File, url)
-				elseif format_table.has (f_Comment) then
+				elseif format_table.has_key (f_Comment) then
 					format := format_table.found_item
 				end
 				if format /= Void then
@@ -468,7 +468,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING];
 		do
 			if not skipping then
-				if format_table.has (f_Quoted) then
+				if format_table.has_key (f_Quoted) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -496,13 +496,13 @@ feature -- Text processing
 			if not skipping then
 				cluster_generated := doc_universe.is_group_generated (a_cluster)
 				if cluster_generated then
-					if format_table.has (f_Cluster_name) then
+					if format_table.has_key (f_Cluster_name) then
 						format := format_table.found_item
 						path_pre := path_representation (file_separator.out, a_cluster.name, a_cluster, False)
 						set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + "index") + "." + file_suffix)
 					end
 				else
-					if format_table.has (f_Non_generated_Cluster) then
+					if format_table.has_key (f_Non_generated_Cluster) then
 						format := format_table.found_item
 					end
 				end
@@ -537,7 +537,7 @@ feature -- Text processing
 			if not skipping then
 				class_generated := doc_universe.is_class_generated (a_class)
 				if class_generated then
-					if format_table.has (f_Class_name) then
+					if format_table.has_key (f_Class_name) then
 						l_group := doc_universe.found_group
 						format := format_table.found_item
 						path_pre := path_representation (file_separator.out, l_group.name, l_group, False)
@@ -548,7 +548,7 @@ feature -- Text processing
 						)
 					end
 				else
-					if format_table.has (f_Non_generated_class) then
+					if format_table.has_key (f_Non_generated_class) then
 						format := format_table.found_item
 					end
 				end
@@ -579,7 +579,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING]
 		do
 			if not skipping then
-				if format_table.has (f_New_line) then
+				if format_table.has_key (f_New_line) then
 					format := format_table.found_item
 					image_append (format.item1);
 					if format.item2 /= Void then
@@ -599,7 +599,7 @@ feature -- Text processing
 			str: STRING
 		do
 			if not skipping then
-				if format_table.has (f_Tab) then
+				if format_table.has_key (f_Tab) then
 					format := format_table.found_item
 					from
 						i := 1
@@ -630,7 +630,7 @@ feature -- Text processing
 			if skipping then
 				if last_skipped_key /= Void and then last_skipped_key.is_equal (construct) then
 					stop_skipping
-					if format_table.has (construct) then
+					if format_table.has_key (construct) then
 						format := format_table.found_item
 						if is_before then
 							image_append (format.item1)
@@ -647,7 +647,7 @@ feature -- Text processing
 					end
 				end
 			else
-				if format_table.has (construct) then
+				if format_table.has_key (construct) then
 					format := format_table.found_item
 					if is_before then
 						image_append (format.item1)
@@ -675,7 +675,7 @@ feature -- Text processing
 			if skipping then
 				if last_skipped_key /= Void and then last_skipped_key.is_equal (construct) then
 					stop_skipping
-					if format_table.has (construct) then
+					if format_table.has_key (construct) then
 						set_keyword (kw_Feature, escaped_text (a_feature_name))
 						format := format_table.found_item
 						if is_before then
@@ -694,7 +694,7 @@ feature -- Text processing
 					end
 				end
 			else
-				if format_table.has (construct) then
+				if format_table.has_key (construct) then
 					set_keyword (kw_Feature, escaped_text (a_feature_name))
 					format := format_table.found_item
 					if is_before then
@@ -726,7 +726,7 @@ feature -- Text processing
 					stop_skipping
 				end
 			else
-				if format_table.has (construct) then
+				if format_table.has_key (construct) then
 					set_keyword (kw_Tooltip, escaped_text (a_tooltip))
 					format := format_table.found_item
 					if is_before then
@@ -847,12 +847,12 @@ feature -- Text processing
 			if not skipping then
 				feature_generated := doc_universe.is_feature_generated (a_feature)
 				if feature_generated then
-					if format_table.has (f_Features) then
+					if format_table.has_key (f_Features) then
 						format := format_table.found_item
 						set_keywords_for_feature (a_feature, doc_universe.found_group)
 					end
 				else
-					if format_table.has (f_Non_generated_feature) then
+					if format_table.has_key (f_Non_generated_feature) then
 						format := format_table.found_item
 					end
 				end
@@ -907,7 +907,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING];
 		do
 			if not skipping then
-				if format_table.has (f_Character) then
+				if format_table.has_key (f_Character) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -926,7 +926,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING];
 		do
 			if not skipping then
-				if format_table.has (f_Generic) then
+				if format_table.has_key (f_Generic) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -945,7 +945,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING];
 		do
 			if not skipping then
-				if format_table.has (f_Indexing_tag) then
+				if format_table.has_key (f_Indexing_tag) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -964,7 +964,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING];
 		do
 			if not skipping then
-				if format_table.has (f_Local_symbol) then
+				if format_table.has_key (f_Local_symbol) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -983,7 +983,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING];
 		do
 			if not skipping then
-				if format_table.has (f_Number) then
+				if format_table.has_key (f_Number) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -1002,7 +1002,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING]
 		do
 			if not skipping then
-				if format_table.has (f_Assertion_tag) then
+				if format_table.has_key (f_Assertion_tag) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -1024,7 +1024,7 @@ feature -- Text processing
 			replacing: BOOLEAN
 		do
 			if not skipping then
-				if format_table.has (f_Multiple_spaces) then
+				if format_table.has_key (f_Multiple_spaces) then
 					format := format_table.found_item
 					rep := format.item1
 					if format.item2 /= Void then
@@ -1067,10 +1067,10 @@ feature -- Text processing
 			if not skipping then
 				s := escaped_text (text)
 				process_multiple_spaces (s)
-				if link /= Void and then format_table.has (f_String_url) then
+				if link /= Void and then format_table.has_key (f_String_url) then
 					format := format_table.found_item
 					set_keyword (kw_File, link)
-				elseif format_table.has (f_String) then
+				elseif format_table.has_key (f_String) then
 					format := format_table.found_item
 				end
 				if format /= Void then
@@ -1095,7 +1095,7 @@ feature -- Text processing
 			format: CELL2 [STRING, STRING];
 		do
 			if not skipping then
-				if format_table.has (f_Reserved_word) then
+				if format_table.has_key (f_Reserved_word) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -1122,7 +1122,7 @@ feature -- Text processing
 					set_keyword (kw_File, link + "." + file_suffix)
 				end
 
-				if format_table.has (format_item) then
+				if format_table.has_key (format_item) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -1148,7 +1148,7 @@ feature -- Text processing
 					set_keyword (kw_File, link + "." + file_suffix)
 				end
 
-				if format_table.has (format_item) then
+				if format_table.has_key (format_item) then
 					format := format_table.found_item
 					image_append (format.item1)
 					if format.item2 /= Void then
@@ -1187,7 +1187,7 @@ feature {NONE} -- Implementation
 				elseif l_state = 1 and l_c.code /= dollar_code then
 					kw.append_character (l_c)
 				elseif l_state = 1 and l_c.code = dollar_code then
-					if keyword_table.has (kw) then
+					if keyword_table.has_key (kw) then
 						image.append (keyword_table.found_item)
 					else
 						image.append (kw)

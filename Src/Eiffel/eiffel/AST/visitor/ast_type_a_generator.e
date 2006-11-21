@@ -102,7 +102,7 @@ feature {NONE} -- Visitor implementation
 
 	process_like_id_as (l_as: LIKE_ID_AS) is
 		do
-			create {UNEVALUATED_LIKE_TYPE} last_type.make (l_as.anchor)
+			create {UNEVALUATED_LIKE_TYPE} last_type.make (l_as.anchor.name)
 		end
 
 	process_like_cur_as (l_as: LIKE_CUR_AS) is
@@ -129,7 +129,7 @@ feature {NONE} -- Visitor implementation
 			l_type: TYPE_A
 		do
 				-- Lookup class in universe, it should be present.
-			l_class_i := universe.class_named (l_as.class_name, current_class.group)
+			l_class_i := universe.class_named (l_as.class_name.name, current_class.group)
 			if l_class_i /= Void and then l_class_i.is_compiled then
 				l_class_c := l_class_i.compiled_class
 				if l_as.generics /= Void then
@@ -234,7 +234,7 @@ feature {NONE} -- Visitor implementation
 
 	process_bits_symbol_as (l_as: BITS_SYMBOL_AS) is
 		do
-			create {UNEVALUATED_BITS_SYMBOL_A} last_type.make (l_as.bits_symbol)
+			create {UNEVALUATED_BITS_SYMBOL_A} last_type.make (l_as.bits_symbol.name)
 		end
 
 indexing

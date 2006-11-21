@@ -163,7 +163,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 		do
 				-- At this stage `l_as' has already been type checked thus `solved_type' will be non-void.
 			class_c := type_a_generator.evaluate_type (l_as.class_type, context.current_class).associated_class
-			feature_i := class_c.feature_table.item (l_as.feature_name)
+			feature_i := class_c.feature_table.item (l_as.feature_name.name)
 			constant_i ?= feature_i
 
 			if feature_i = Void then
@@ -222,7 +222,7 @@ feature {ID_AS} -- Visitor
 			feature_i: FEATURE_I
 			constant_i: CONSTANT_I
 		do
-			feature_i := context.current_class.feature_table.item (l_as)
+			feature_i := context.current_class.feature_table.item (l_as.name)
 			constant_i ?= feature_i
 			if constant_i /= Void and then constant_i.value.valid_type (type) then
 					-- Record dependencies
@@ -233,8 +233,8 @@ feature {ID_AS} -- Visitor
 				last_inspect_value := constant_i.value.inspect_value (type)
 			elseif
 				feature_i /= Void or else
-				context.current_feature.argument_position (l_as) /= 0 or else
-				context.locals.has (l_as)
+				context.current_feature.argument_position (l_as.name) /= 0 or else
+				context.locals.has (l_as.name)
 			then
 				report_vomb2 (l_as)
 			else
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 		do
 			create veen
 			context.init_error (veen)
-			veen.set_identifier (identifier)
+			veen.set_identifier (identifier.name)
 			veen.set_location (identifier)
 			error_handler.insert_error (veen)
 		end

@@ -290,10 +290,10 @@ feature -- Access
 			end
 		end
 
-	formal_name (pos: INTEGER): ID_AS is
+	formal_name (pos: INTEGER): STRING is
 			-- Formal name of class_c generics at position `pos.
 		do
-			Result := current_class.generics.i_th (pos).name.as_upper
+			Result := current_class.generics.i_th (pos).name.name.as_upper
 		end
 
 	e_feature: E_FEATURE

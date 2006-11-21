@@ -147,7 +147,7 @@ feature -- Access
 						l_indexing.after or done
 					loop
 						l_index_item := l_indexing.item
-						l_string := l_index_item.tag
+						l_string := l_index_item.tag.name
 						if l_string.is_case_insensitive_equal (description_string) then
 							if not l_index_item.index_list.is_empty then
 								l_string := l_index_item.index_list.first.string_value

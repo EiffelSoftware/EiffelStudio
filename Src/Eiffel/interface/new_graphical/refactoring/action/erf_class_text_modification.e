@@ -248,7 +248,7 @@ feature -- Highlevel element change
 						l_parents.after
 					loop
 						l_inherit := l_parents.item
-						if a_class_name.is_case_insensitive_equal (l_inherit.type.class_name) then
+						if a_class_name.is_case_insensitive_equal (l_inherit.type.class_name.name) then
 							l_name := a_feature_name
 
 								-- if we rename it, we have to use the new name
@@ -351,7 +351,7 @@ feature -- Highlevel element change
 
 							-- if we redefine it and we aren't the implementer
 							-- => add undefine
-						if l_found and not a_implements.is_case_insensitive_equal (l_inherit.type.class_name) then
+						if l_found and not a_implements.is_case_insensitive_equal (l_inherit.type.class_name.name) then
 							create l_parent_modifier.make (l_inherit, match_list)
 							l_parent_modifier.extend ({ERT_PARENT_AS_MODIFIER}.undefine_clause, a_feature_name)
 							l_parent_modifier.apply

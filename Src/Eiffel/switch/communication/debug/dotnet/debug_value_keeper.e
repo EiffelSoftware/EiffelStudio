@@ -109,8 +109,9 @@ feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 					l_add := debug_value_kept.key_for_iteration
 					if l_addresses = Void or else not l_addresses.has (l_add) then
 						debug_value_kept.remove (l_add)
+					else
+						debug_value_kept.forth
 					end
-					debug_value_kept.forth
 				end
 			end
 		end

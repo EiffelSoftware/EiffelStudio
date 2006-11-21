@@ -14,7 +14,7 @@ inherit
 
 feature -- Properties
 
-	file_name: STRING 
+	file_name: STRING
 			-- Name of shared definition file.
 
 feature -- Access
@@ -127,7 +127,7 @@ feature -- DYNAMIC_LIB Exports processing.
 					--| (thinking aloud) When will we get rid of the old interface so that code
 					--| can be cleaned up?!
 					--| END FIXME
-					
+
 					-- Addition of an export feature from the environment.
 				create list_dl.make(d_class, d_routine,d_index, d_alias, d_call_type)
 				list_dl.choose_creation
@@ -141,7 +141,7 @@ feature -- DYNAMIC_LIB Exports processing.
 				elseif d_routine.is_deferred then
 					-- Error: a deferred feature cannot be exported.
 				else
-					if dynamic_lib_exports.has (d_class.class_id) then
+					if dynamic_lib_exports.has_key (d_class.class_id) then
 						dl_exp_list := dynamic_lib_exports.found_item
 					else
 						create dl_exp_list.make
@@ -208,29 +208,29 @@ feature -- DYNAMIC_LIB Exports processing.
 			if t_class /= Void and then t_routine /= Void then
 
 				class_list := Eiffel_universe.compiled_classes_with_name (t_class)
-			
+
 				if class_list.is_empty then
 						-- Error cannot process the line
 					class_list := Void
 				elseif class_list.count = 1 then
-					class_i := class_list.first --FIXME: if there are many cluster with the 
+					class_i := class_list.first --FIXME: if there are many cluster with the
 					class_list := Void
 				else
 						-- Error cannot process the line
 				end
 
-				if class_i /= Void then 
+				if class_i /= Void then
 					dl_class := class_i.compiled_class
 					if not dl_class.is_precompiled then
 						api_feature_table:= dl_class.api_feature_table
-						if api_feature_table.has (t_routine) then
+						if api_feature_table.has_key (t_routine) then
 							dl_routine:= api_feature_table.found_item
 						end
-	
-						if api_feature_table.has (t_creation) then
+
+						if api_feature_table.has_key (t_creation) then
 							dl_creation:= api_feature_table.found_item
 						end
-	
+
 						if t_index/= Void then
 							dl_index:=t_index.to_integer
 						else
@@ -293,7 +293,7 @@ feature -- DYNAMIC_LIB Exports processing.
 						end
 					end
 
-					if done > 0 then 
+					if done > 0 then
 						mark := pos+1
 
 						--Class
@@ -319,7 +319,7 @@ feature -- DYNAMIC_LIB Exports processing.
 								t_creation := Void
 							end
 								--routine
-							from 
+							from
 								if done = 2 then -- we already found ':'
 									done := 1
 									pos := pos-1
@@ -486,13 +486,13 @@ feature -- DYNAMIC_LIB Exports processing.
 					not dynamic_lib_exports.item_for_iteration.is_empty
 				then
 					out_text.append( "%N-- CLASS [" )
-	
+
 					dynamic_lib_exports.item_for_iteration.start
 					class_name := dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper
 					out_text.append(class_name)
-	
+
 					out_text.append( "]%N" )
-					from 
+					from
 					until
 						dynamic_lib_exports.item_for_iteration.after
 					loop
@@ -548,7 +548,7 @@ feature {NONE} -- Implementation
 		local
 			temp: STRING
 		do
-			temp := current_line.substring (pos, pos + 4)	
+			temp := current_line.substring (pos, pos + 4)
 			if temp.count = 5 then
 				temp.to_lower
 				Result := temp.is_equal ("alias")
@@ -563,7 +563,7 @@ feature {NONE} -- Implementation
 		local
 			temp: STRING
 		do
-			temp := current_line.substring (pos, pos + 8)	
+			temp := current_line.substring (pos, pos + 8)
 			if temp.count = 9 then
 				temp.to_lower
 				Result := temp.is_equal ("call_type")

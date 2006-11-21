@@ -104,7 +104,7 @@ feature -- Access
 						until
 							feature_list.after
 						loop
-							feature_name := feature_list.item.internal_name;
+							feature_name := feature_list.item.internal_name.name;
 							a_feature := feat_table.item (feature_name);
 							if a_feature = Void then
 								create vgcp2;

@@ -290,9 +290,12 @@ feature {NONE} -- Implementation
 						if not arr.has (tid) then
 							if notes_on_threads.valid_key (tid) then
 								notes_on_threads.remove (tid)
+							else
+								notes_on_threads.forth
 							end
+						else
+							notes_on_threads.forth
 						end
-						notes_on_threads.forth
 					end
 					from
 						grid.insert_new_rows (arr.count, 1)

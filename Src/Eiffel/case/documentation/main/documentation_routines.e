@@ -419,7 +419,7 @@ feature -- Routines
 					until
 						invariants.after
 					loop
-						s := invariants.item.tag
+						s := invariants.item.tag.name
 						if s /= Void and then not s.is_empty then
 							s := s.twin
 							s.replace_substring_all ("_", " ")
@@ -827,7 +827,7 @@ feature {NONE} -- Indexing clauses
 					indexes.after
 				loop
 					ii := indexes.item
-					t := ii.tag
+					t := ii.tag.name
 					if t = Void then
 						t := "description"
 							-- It is legal Eiffel syntax to omit first tag
@@ -845,12 +845,12 @@ feature {NONE} -- Indexing clauses
 			ic: HASH_TABLE [STRING, STRING]
 		do
 			ic := indexes_to_table (c.compiled_class.ast.top_indexes)
-			if ic.has (s) then
+			if ic.has_key (s) then
 				Result := ic.found_item
 			end
 			if Result = Void then
 				ic := indexes_to_table (c.compiled_class.ast.bottom_indexes)
-				if ic.has (s) then
+				if ic.has_key (s) then
 					Result := ic.found_item
 				end
 			end

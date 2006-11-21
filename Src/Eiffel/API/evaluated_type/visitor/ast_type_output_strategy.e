@@ -129,7 +129,7 @@ feature {TYPE_A} -- Visitors
 	process_formal_a (a_type: FORMAL_A) is
 			-- Process `a_type'.
 		do
-			text_formatter.process_generic_text (current_class.generics.i_th (a_type.position).name.as_upper)
+			text_formatter.process_generic_text (current_class.generics.i_th (a_type.position).name.name.as_upper)
 		end
 
 	process_gen_type_a (a_type: GEN_TYPE_A) is

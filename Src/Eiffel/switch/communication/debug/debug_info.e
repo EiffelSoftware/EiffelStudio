@@ -686,7 +686,7 @@ feature -- changing a specified breakpoint
 
 			if not bp.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has(bp) then
+				if breakpoints.has_key (bp) then
 						-- yes, the breakpoint is already known, so switch it
 					breakpoints.found_item.switch
 				else
@@ -712,7 +712,7 @@ feature -- changing a specified breakpoint
 
 			if not bp.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has (bp) then
+				if breakpoints.has_key (bp) then
 						-- yes, the breakpoint is already known, so switch it
 					breakpoints.found_item.discard
 				end
@@ -735,7 +735,7 @@ feature -- changing a specified breakpoint
 
 			if not bp.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has (bp) then
+				if breakpoints.has_key (bp) then
 						-- yes, the breakpoint is already known, so switch it
 					breakpoints.found_item.disable
 				else
@@ -765,7 +765,7 @@ feature -- changing a specified breakpoint
 
 			if bp /= Void and then not bp.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has (bp) then
+				if breakpoints.has_key (bp) then
 						-- yes, the breakpoint is already known, so switch it
 					breakpoints.found_item.enable
 				else
@@ -793,7 +793,7 @@ feature -- changing a specified breakpoint
 
 			if not bp.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has (bp) then
+				if breakpoints.has_key (bp) then
 						-- yes, the breakpoint is already known, so set its condition.
 					breakpoints.found_item.set_condition (expr)
 				else
@@ -819,7 +819,7 @@ feature -- changing a specified breakpoint
 
 			if not bp.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has (bp) then
+				if breakpoints.has_key (bp) then
 						-- yes, the breakpoint is already known, so remove its condition.
 					breakpoints.found_item.remove_condition
 				end
@@ -843,7 +843,7 @@ feature -- getting the status of a specified breakpoint
 
 			if not bp.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has (bp) then
+				if breakpoints.has_key (bp) then
 						-- yes, the breakpoint is already known, so remove its condition.
 					Result := breakpoints.found_item
 				end
@@ -875,7 +875,7 @@ feature -- getting the status of a specified breakpoint
 					-- create a 'fake' breakpoint, in order to get the real one in hash table
 				create bp.make(f,i)
 				if not bp.is_corrupted then
-					if breakpoints.has(bp) then
+					if breakpoints.has_key (bp) then
 						Result := breakpoints.found_item.is_set
 					end
 				else
@@ -893,7 +893,7 @@ feature -- getting the status of a specified breakpoint
 			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique or else f.real_body_id = 0) then
 				create bp.make(f,i)
 				if not bp.is_corrupted then
-					if breakpoints.has(bp) then
+					if breakpoints.has_key (bp) then
 						Result := breakpoints.found_item.is_enabled
 					end
 				else
@@ -911,7 +911,7 @@ feature -- getting the status of a specified breakpoint
 			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
 				create bp.make(f,i)
 				if not bp.is_corrupted then
-					if breakpoints.has(bp) then
+					if breakpoints.has_key(bp) then
 						Result := breakpoints.found_item.is_disabled
 					end
 				else
@@ -944,7 +944,7 @@ feature -- getting the status of a specified breakpoint
 					create bp.make(f,i)
 				end
 				if bp /= Void and then not bp.is_corrupted then
-					if breakpoints.has(bp) then
+					if breakpoints.has_key(bp) then
 						bp := breakpoints.found_item
 						if bp.is_enabled then
 							if bp.condition = Void then

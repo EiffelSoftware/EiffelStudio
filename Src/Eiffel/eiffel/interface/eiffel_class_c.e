@@ -92,8 +92,9 @@ feature -- Access
 					end
 					inline_agent_table.remove (inline_agent_table.key_for_iteration)
 					system.execution_table.add_dead_function (l_feat.body_index)
+				else
+					inline_agent_table.forth
 				end
-				inline_agent_table.forth
 			end
 		end
 
@@ -1640,10 +1641,10 @@ feature {NONE} -- Class initialization
 
 					-- First, check if the formal generic name is not the
 					-- anme of a class in the surrounding universe.
-				if Universe.class_named (generic_name, cluster) /= Void then
+				if Universe.class_named (generic_name.name, cluster) /= Void then
 					create vcfg1
 					vcfg1.set_class (Current)
-					vcfg1.set_formal_name (generic_name)
+					vcfg1.set_formal_name (generic_name.name)
 					vcfg1.set_location (generic_name)
 					Error_handler.insert_error (Vcfg1)
 					error := True
@@ -1661,7 +1662,7 @@ feature {NONE} -- Class initialization
 						if next_dec.name.is_equal (generic_name) then
 							create vcfg2
 							vcfg2.set_class (Current)
-							vcfg2.set_formal_name (generic_name)
+							vcfg2.set_formal_name (generic_name.name)
 							vcfg2.set_location (generic_name)
 							Error_handler.insert_error (vcfg2)
 							error := True
@@ -1685,14 +1686,14 @@ feature {NONE} -- Class initialization
 					until
 						f_list.after
 					loop
-						if duplicate_name.has (f_list.item.internal_name) then
+						if duplicate_name.has (f_list.item.internal_name.name) then
 							create vgcp3
 							vgcp3.set_class (Current)
-							vgcp3.set_feature_name (f_list.item.internal_name)
+							vgcp3.set_feature_name (f_list.item.internal_name.name)
 							vgcp3.set_location (f_list.item.start_location)
 							Error_handler.insert_error (vgcp3)
 						else
-							duplicate_name.put (f_list.item.internal_name)
+							duplicate_name.put (f_list.item.internal_name.name)
 						end
 						f_list.forth
 					end
@@ -1720,10 +1721,10 @@ feature {NONE} -- Class initialization
 				generic_dec := l_area.item (i)
 				generic_name := generic_dec.name
 
-				if Universe.class_named (generic_name, cluster) /= Void then
+				if Universe.class_named (generic_name.name, cluster) /= Void then
 					create vcfg1
 					vcfg1.set_class (Current)
-					vcfg1.set_formal_name (generic_name)
+					vcfg1.set_formal_name (generic_name.name)
 					vcfg1.set_location (generic_name)
 					Error_handler.insert_error (Vcfg1)
 				end
@@ -1829,7 +1830,7 @@ feature -- Supplier checking
 				supplier_list.after
 			loop
 					-- Check supplier class_name `supplier_list.item_for_iteration' of the class
-				check_one_supplier (supplier_list.item_for_iteration, a_light_suppliers)
+				check_one_supplier (supplier_list.item_for_iteration.name, a_light_suppliers)
 				supplier_list.forth
 			end
 		end
@@ -1849,7 +1850,7 @@ feature -- Supplier checking
 			until
 				i = nb
 			loop
-				check_one_supplier (l_area.item (i).type.class_name, False)
+				check_one_supplier (l_area.item (i).type.class_name.name, False)
 				i := i + 1
 			end
 		end

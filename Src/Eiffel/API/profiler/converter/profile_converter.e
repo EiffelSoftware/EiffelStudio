@@ -279,7 +279,7 @@ end
 					function_name := token_string
 					function_name.right_adjust
 
-					if functions.has (function_name) then
+					if functions.has_key (function_name) then
 						e_function := functions.found_item
 						is_eiffel := True
 						is_c := False

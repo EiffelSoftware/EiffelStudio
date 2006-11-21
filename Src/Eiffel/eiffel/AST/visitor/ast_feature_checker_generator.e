@@ -896,7 +896,7 @@ feature -- Implementation
 
 				-- Check validity of type declaration for static access
 			if l_type.is_none then
-				create l_vsta1.make (l_type.dump, l_as.feature_name)
+				create l_vsta1.make (l_type.dump, l_as.feature_name.name)
 				l_vsta1.set_class (context.current_class)
 				l_vsta1.set_location (l_as.class_type.start_location)
 				error_handler.insert_error (l_vsta1)
@@ -999,7 +999,7 @@ feature -- Implementation
 					-- Cannot go on here
 				error_handler.raise_error
 			elseif l_last_constrained.is_none then
-				create l_vuex.make_for_none (l_feature_name)
+				create l_vuex.make_for_none (l_feature_name.name)
 				context.init_error (l_vuex)
 				l_vuex.set_location (l_feature_name)
 				error_handler.insert_error (l_vuex)
@@ -1021,7 +1021,7 @@ feature -- Implementation
 					-- Look for a feature in the class associated to the
 					-- last actual type onto the context type stack. If it
 					-- is a generic take the associated constraint.
-				if l_last_class.feature_table.has_overloaded (l_feature_name) then
+				if l_last_class.feature_table.has_overloaded (l_feature_name.name) then
 						-- Evaluate parameters. This is needed for overloading resolution.
 						-- Note: if one parameter is a manifest array, then its type is resolved
 						-- without context.
@@ -1043,7 +1043,7 @@ feature -- Implementation
 						create l_feature_name.initialize (l_feature.feature_name)
 					end
 				else
-					l_feature := l_last_class.feature_table.item (l_feature_name)
+					l_feature := l_last_class.feature_table.item (l_feature_name.name)
 				end
 			end
 				-- No feature was found, so if the target of the call is a named tuple
@@ -1051,11 +1051,11 @@ feature -- Implementation
 			if l_feature = Void and l_last_type.is_named_tuple then
 				l_named_tuple ?= l_last_type
 				check l_named_tuple_not_void: l_named_tuple /= Void end
-				l_label_pos := l_named_tuple.label_position (l_feature_name)
+				l_label_pos := l_named_tuple.label_position (l_feature_name.name)
 				if l_label_pos > 0 then
 					last_type := l_named_tuple.generics.item (l_label_pos)
 					l_is_last_access_tuple_access := True
-					last_feature_name := l_feature_name
+					last_feature_name := l_feature_name.name
 					if l_needs_byte_node then
 						create {TUPLE_ACCESS_B} last_byte_node.make (l_named_tuple.type_i, l_label_pos)
 						last_byte_node.set_line_number (l_feature_name.line)
@@ -1376,7 +1376,7 @@ feature -- Implementation
 							-- Not a valid feature name.
 						create l_veen
 						context.init_error (l_veen)
-						l_veen.set_identifier (l_feature_name)
+						l_veen.set_identifier (l_feature_name.name)
 						l_veen.set_parameter_count (l_actual_count)
 						l_veen.set_location (l_feature_name)
 						error_handler.insert_error (l_veen)
@@ -1460,9 +1460,9 @@ feature -- Implementation
 
 	process_bit_const_as (l_as: BIT_CONST_AS) is
 		do
-			create {BITS_A} last_type.make (l_as.value.count)
+			create {BITS_A} last_type.make (l_as.value.name.count)
 			if is_byte_node_enabled then
-				create {BIT_CONST_B} last_byte_node.make (l_as.value)
+				create {BIT_CONST_B} last_byte_node.make (l_as.value.name)
 			end
 		end
 
@@ -1848,7 +1848,7 @@ feature -- Implementation
 						l_arg_pos := l_as.argument_position
 					end
 				else
-					l_arg_pos := l_feature.argument_position (l_as.feature_name)
+					l_arg_pos := l_feature.argument_position (l_as.feature_name.name)
 				end
 			end
 			if l_arg_pos /= 0 then
@@ -1876,7 +1876,7 @@ feature -- Implementation
 			else
 					-- Look for a local if not in a pre- or postcondition
 				if not is_inherited or else l_as.is_local then
-					l_local_info := context.locals.item (l_as.feature_name)
+					l_local_info := context.locals.item (l_as.feature_name.name)
 				end
 				if l_local_info /= Void then
 						-- Local found
@@ -1899,7 +1899,7 @@ feature -- Implementation
 							--|(Fred)
 						create l_veen2b
 						context.init_error (l_veen2b)
-						l_veen2b.set_identifier (l_as.feature_name)
+						l_veen2b.set_identifier (l_as.feature_name.name)
 						l_veen2b.set_location (l_as.feature_name)
 						error_handler.insert_error (l_veen2b)
 					end
@@ -1932,9 +1932,9 @@ feature -- Implementation
 			if l_has_vuar_error then
 				create l_vuar1
 				if l_arg_pos /= 0 then
-					l_vuar1.set_arg_name (l_as.feature_name)
+					l_vuar1.set_arg_name (l_as.feature_name.name)
 				else
-					l_vuar1.set_local_name (l_as.feature_name)
+					l_vuar1.set_local_name (l_as.feature_name.name)
 				end
 				context.init_error (l_vuar1)
 				l_vuar1.set_location (l_as.feature_name)
@@ -1967,7 +1967,7 @@ feature -- Implementation
 			if is_inherited then
 				l_arg_pos := l_as.argument_position
 			else
-				l_arg_pos := l_feature.argument_position (l_as.feature_name)
+				l_arg_pos := l_feature.argument_position (l_as.feature_name.name)
 			end
 			if l_arg_pos /= 0 then
 					-- Found argument
@@ -1977,7 +1977,7 @@ feature -- Implementation
 				if l_as.parameters /= Void then
 					create l_vuar1
 					context.init_error (l_vuar1)
-					l_vuar1.set_arg_name (l_as.feature_name)
+					l_vuar1.set_arg_name (l_as.feature_name.name)
 					l_vuar1.set_location (l_as.feature_name)
 					error_handler.insert_error (l_vuar1)
 				end
@@ -2001,13 +2001,13 @@ feature -- Implementation
 			else
 					-- Look for a local if in a pre- or postcondition
 				if not is_inherited then
-					l_local_info := context.locals.item (l_as.feature_name)
+					l_local_info := context.locals.item (l_as.feature_name.name)
 				end
 				if l_local_info /= Void then
 						-- Local found
 					create l_veen2b
 					context.init_error (l_veen2b)
-					l_veen2b.set_identifier (l_as.feature_name)
+					l_veen2b.set_identifier (l_as.feature_name.name)
 					l_veen2b.set_location (l_as.feature_name)
 					error_handler.insert_error (l_veen2b)
 				else
@@ -2385,7 +2385,11 @@ feature -- Implementation
 					l_expr_not_void: l_expr /= Void
 				end
 				create l_assert
-				l_assert.set_tag (l_as.tag)
+				if l_as.tag /= Void then
+					l_assert.set_tag (l_as.tag.name)
+				else
+					l_assert.set_tag (Void)
+				end
 				l_assert.set_expr (l_expr)
 				l_assert.set_line_number (l_as.expr.start_location.line)
 				last_byte_node := l_assert
@@ -2416,7 +2420,11 @@ feature -- Implementation
 					l_expr_not_void: l_expr /= Void
 				end
 				create l_assert
-				l_assert.set_tag (l_as.tag)
+				if l_as.tag /= Void then
+					l_assert.set_tag (l_as.tag.name)
+				else
+					l_assert.set_tag (Void)
+				end
 				l_assert.set_expr (l_expr)
 				l_assert.set_line_number (l_as.expr.start_location.line)
 				last_byte_node := l_assert
@@ -2600,7 +2608,7 @@ feature -- Implementation
 						l_arg_pos := l_as.argument_position
 					end
 				else
-					l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name)
+					l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name.name)
 				end
 			end
 			if l_arg_pos /= 0 then
@@ -2620,7 +2628,7 @@ feature -- Implementation
 			else
 					-- Look for a local if not in a pre- or postcondition
 					if not is_inherited or else l_as.is_local then
-					l_local_info := context.locals.item (l_as.feature_name.internal_name)
+					l_local_info := context.locals.item (l_as.feature_name.internal_name.name)
 				end
 				if l_local_info /= Void then
 						-- Local found
@@ -2642,7 +2650,7 @@ feature -- Implementation
 							--|(Fred)
 						create l_veen2b
 						context.init_error (l_veen2b)
-						l_veen2b.set_identifier (l_as.feature_name.internal_name)
+						l_veen2b.set_identifier (l_as.feature_name.internal_name.name)
 						l_veen2b.set_location (l_as.feature_name.start_location)
 						error_handler.insert_error (l_veen2b)
 					end
@@ -2654,19 +2662,19 @@ feature -- Implementation
 					if is_inherited then
 						l_feature := context.current_class.feature_of_rout_id (l_as.routine_ids.first)
 					else
-						l_feature := context.current_class.feature_table.item (l_as.feature_name.internal_name)
+						l_feature := context.current_class.feature_table.item (l_as.feature_name.internal_name.name)
 					end
 					if l_feature = Void then
 						create l_veen
 						context.init_error (l_veen)
-						l_veen.set_identifier (l_as.feature_name.internal_name)
+						l_veen.set_identifier (l_as.feature_name.internal_name.name)
 						l_veen.set_location (l_as.feature_name.start_location)
 						error_handler.insert_error (l_veen)
 					else
 						if l_feature.is_constant then
 							create l_vzaa1
 							context.init_error (l_vzaa1)
-							l_vzaa1.set_address_name (l_as.feature_name.internal_name)
+							l_vzaa1.set_address_name (l_as.feature_name.internal_name.name)
 							l_vzaa1.set_location (l_as.feature_name.start_location)
 							error_handler.insert_error (l_vzaa1)
 						elseif l_feature.is_external then
@@ -2785,7 +2793,7 @@ feature -- Implementation
 			l_class := l_target_type.associated_class
 			l_table := l_class.feature_table
 			if a_feature = Void then
-				l_feature := l_table.item (l_feature_name)
+				l_feature := l_table.item (l_feature_name.name)
 			else
 				l_feature := a_feature
 			end
@@ -2793,7 +2801,7 @@ feature -- Implementation
 			if l_feature = Void then
 				l_named_tuple ?= l_target_type
 				if l_named_tuple /= Void then
-					l_label_pos := l_named_tuple.label_position (l_feature_name)
+					l_label_pos := l_named_tuple.label_position (l_feature_name.name)
 					if l_label_pos > 0 then
 						l_is_named_tuple := True
 					end
@@ -2803,7 +2811,7 @@ feature -- Implementation
 			if l_feature = Void and then not l_is_named_tuple then
 				create l_unsupported
 				context.init_error (l_unsupported)
-				l_unsupported.set_message ("Agent creation on `" + l_feature_name + "' is%
+				l_unsupported.set_message ("Agent creation on `" + l_feature_name.name + "' is%
 					% not supported because it is either an attribute, a constant or%
 					% an external feature")
 				l_unsupported.set_location (l_feature_name)
@@ -5691,7 +5699,7 @@ feature {NONE} -- Implementation: overloading
 		require
 			a_type_not_void: a_type /= Void
 			last_class_not_void: last_class /= Void
-			last_class_has_overloaded: last_class.feature_table.has_overloaded (a_feature_name)
+			last_class_has_overloaded: last_class.feature_table.has_overloaded (a_feature_name.name)
 		local
 			last_id: INTEGER
 			l_features: LIST [FEATURE_I]
@@ -5702,7 +5710,7 @@ feature {NONE} -- Implementation: overloading
 			last_id := last_class.class_id
 
 				-- At this stage we know this is an overloaded routine.
-			l_features := last_class.feature_table.overloaded_items (a_feature_name)
+			l_features := last_class.feature_table.overloaded_items (a_feature_name.name)
 
 				-- Remove all features that are not valid for Current call.
 				-- C# ECMA 14.4.2.1
@@ -5737,7 +5745,7 @@ feature {NONE} -- Implementation: overloading
 						end
 					end
 					create viof.make (context.current_class, current_feature,
-						l_features, a_feature_name, last_id, l_list)
+						l_features, a_feature_name.name, last_id, l_list)
 					viof.set_location (a_feature_name)
 					error_handler.insert_error (viof)
 						-- Cannot go on here
@@ -6557,7 +6565,7 @@ feature {NONE} -- Agents
 			else
 				l_number := context.inline_agent_counter.next
 				l_old_inline_agents := context.old_inline_agents
-				if l_old_inline_agents /= Void and then l_old_inline_agents.has (l_number) then
+				if l_old_inline_agents /= Void and then l_old_inline_agents.has_key (l_number) then
 					l_old_feat := l_old_inline_agents.found_item
 				end
 			end
@@ -6672,7 +6680,7 @@ feature {NONE} -- Precursor handling
 
 			if l_as.parent_base_class /= Void then
 				-- Take class renaming into account
-				r_class_i := Universe.class_named (l_as.parent_base_class.class_name, context.current_class.group)
+				r_class_i := Universe.class_named (l_as.parent_base_class.class_name.name, context.current_class.group)
 
 				if r_class_i /= Void then
 					spec_p_name := r_class_i.name
@@ -6701,7 +6709,7 @@ feature {NONE} -- Precursor handling
 					-- If construct is qualified, check
 					-- specified parent only.
 				if
-					not (p_list.has (p_name) and then
+					not (p_list.has_key (p_name) and then
 					p_list.found_item.is_equivalent (parents.item)) and then
 					(spec_p_name = Void or else spec_p_name.is_equal (p_name))
 				then

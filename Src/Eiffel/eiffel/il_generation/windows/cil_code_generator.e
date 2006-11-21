@@ -1569,7 +1569,7 @@ feature -- Class info
 			l_class_id := class_type.associated_class.class_id
 
 				-- Process `equals'
-			if l_select_tbl.has (equals_rout_id) then
+			if l_select_tbl.has_key (equals_rout_id) then
 				l_feat := l_select_tbl.found_item
 				if l_feat.written_in /= l_class_id then
 					define_equals_routine (class_type)
@@ -1579,7 +1579,7 @@ feature -- Class info
 			end
 
 				-- Process `finalize'
-			if l_select_tbl.has (finalize_rout_id) then
+			if l_select_tbl.has_key (finalize_rout_id) then
 				l_feat := l_select_tbl.found_item
 				if l_feat.written_in /= l_class_id then
 					define_finalize_routine (class_type)
@@ -1589,7 +1589,7 @@ feature -- Class info
 			end
 
 				-- Process `get_hash_code'
-			if l_select_tbl.has (get_hash_code_rout_id) then
+			if l_select_tbl.has_key (get_hash_code_rout_id) then
 				l_feat := l_select_tbl.found_item
 				if l_feat.written_in /= l_class_id then
 					define_get_hash_code_routine (class_type)
@@ -1599,7 +1599,7 @@ feature -- Class info
 			end
 
 				-- Process `to_string'
-			if l_select_tbl.has (to_string_rout_id) then
+			if l_select_tbl.has_key (to_string_rout_id) then
 				l_feat := l_select_tbl.found_item
 				if l_feat.written_in /= l_class_id then
 					define_to_string_routine (class_type)

@@ -248,7 +248,7 @@ feature {NONE} -- Click ast exploration
 									class_name := current_class_i.name
 								end
 								create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
-								clickable_position.set_feature (class_name, clickable.feature_name)
+								clickable_position.set_feature (class_name, clickable.feature_name.name)
 								prov_list.extend (clickable_position)
 							end
 							pos := pos + 1
@@ -455,7 +455,7 @@ feature {NONE}-- Clickable/Editable implementation
 								skip_parenthesis ('{', '}')
 								if processed_type /= Void and then processed_type.associated_class /= Void then
 									if processed_type.associated_class.has_feature_table then
-										Result := processed_type.associated_class.feature_with_name (current_feature_as.name.internal_name)
+										Result := processed_type.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
 									end
 								end
 							end
@@ -469,7 +469,7 @@ feature {NONE}-- Clickable/Editable implementation
 								loop
 									type := l_current_class_c.parents.item
 									if type.associated_class /= Void and then type.associated_class.has_feature_table then
-										Result := type.associated_class.feature_with_name (current_feature_as.name.internal_name)
+										Result := type.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
 									end
 									l_current_class_c.parents.forth
 								end
@@ -1252,7 +1252,7 @@ feature {NONE}-- Implementation
 					current_feature_as /= Void and then l_current_class_c.has_feature_table
 				then
 					current_feature := l_current_class_c.feature_with_name (
-						current_feature_as.name.internal_name)
+						current_feature_as.name.internal_name.name)
 					if current_feature /= Void then
 						Result := current_feature.type
 						if Result /= Void and then Result.is_formal then
@@ -1298,7 +1298,7 @@ feature {NONE}-- Implementation
 				until
 					l_gens.after or else end_loop
 				loop
-					if a_str.is_equal (l_gens.item.name) then
+					if a_str.is_equal (l_gens.item.name.name) then
 						end_loop := True
 						l_des_as := l_gens.item
 						create {FORMAL_A}Result.make (l_des_as.is_reference, l_des_as.is_expanded, l_des_as.position)
@@ -1616,7 +1616,7 @@ feature {NONE} -- Implementation
 				l_current_class_c := current_class_c
 				if l_current_class_c.has_feature_table then
 					if current_feature_as /= Void then
-						Result := l_current_class_c.feature_named (current_feature_as.name.internal_name)
+						Result := l_current_class_c.feature_named (current_feature_as.name.internal_name.name)
 					end
 				end
 					-- We hack here to avoid current feature void.

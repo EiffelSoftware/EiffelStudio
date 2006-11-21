@@ -468,7 +468,7 @@ feature -- Element change
 							until
 								b or i.after
 							loop
-								s := i.item.tag
+								s := i.item.tag.name
 								b := s /= Void and then s.is_equal (l_persistent_str)
 								i.forth
 							end
@@ -480,7 +480,7 @@ feature -- Element change
 							until
 								b or i.after
 							loop
-								s := i.item.tag
+								s := i.item.tag.name
 								b := s /= Void and then s.is_equal (l_persistent_str)
 								i.forth
 							end
@@ -615,7 +615,7 @@ feature {NONE} -- Implementation
 		do
 			ct ?= a_type
 			if ct /= Void then
-				l_class_i := class_i_by_name (ct.class_name)
+				l_class_i := class_i_by_name (ct.class_name.name)
 				check
 					l_class_i_not_void: l_class_i /= Void
 				end
@@ -657,7 +657,7 @@ feature {NONE} -- Implementation
 		do
 			ct ?= a_type
 			if ct /= Void then
-				Result := class_i_by_name (ct.class_name) = a_class
+				Result := class_i_by_name (ct.class_name.name) = a_class
 				if not Result then
 					g := ct.generics
 					if g /= Void then

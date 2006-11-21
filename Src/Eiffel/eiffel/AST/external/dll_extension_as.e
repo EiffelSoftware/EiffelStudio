@@ -30,7 +30,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 		do
 			type := a_dll_type
 			index := a_dll_index
-			name := a_dll_name.string
+			name := a_dll_name.name.twin
 			if sig /= Void then
 				argument_types := sig.arguments_id_array
 				if sig.return_type /= Void then
@@ -131,7 +131,7 @@ end
 				end
 			end
 		end
- 
+
 feature -- {EXTERNAL_LANG_AS} Implementation
 
 	set_type (t: INTEGER) is

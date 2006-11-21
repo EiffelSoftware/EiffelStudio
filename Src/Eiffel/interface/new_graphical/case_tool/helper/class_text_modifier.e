@@ -384,7 +384,7 @@ feature -- Modification (Add/Remove feature)
 					data.after
 				loop
 					l_item := data.item
-					actual_feature_as := class_as.feature_with_name (l_item.feature_name)
+					actual_feature_as := class_as.feature_with_name (l_item.feature_name.name)
 					if actual_feature_as /= Void then
 						if actual_feature_as.feature_names.count = 1 then
 							feat_code := code (actual_feature_as.start_position, actual_feature_as.end_position)
@@ -423,7 +423,7 @@ feature -- Modification (Add/Remove feature)
 								remove_code (name_start_position, name_end_position - 1)
 								reparse
 							else
-								tmp := feat_code.substring_index (l_item.feature_name, 1)
+								tmp := feat_code.substring_index (l_item.feature_name.name, 1)
 								name_start_position := actual_feature_as.start_position + tmp
 								name_end_position := actual_feature_as.start_position +
 									feat_code.index_of (',', tmp) + 1

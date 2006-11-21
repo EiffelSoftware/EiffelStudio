@@ -59,7 +59,7 @@ feature -- Access
 			until
 				l_features.after
 			loop
-				Result.extend (l_features.item.feature_name)
+				Result.extend (l_features.item.feature_name.name)
 				l_features.forth
 			end
 		ensure
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 		do
 			l_class := model.client.class_c
 			if l_class /= Void then
-				Result := l_class.feature_with_name (a_feature.feature_name)
+				Result := l_class.feature_with_name (a_feature.feature_name.name)
 			end
 		end
 

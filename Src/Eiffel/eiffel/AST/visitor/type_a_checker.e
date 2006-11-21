@@ -260,11 +260,11 @@ feature -- Special checking
 				a_error_handler.insert_error (l_vcfg3)
 			elseif l_class_type /= Void then
 				l_cluster := a_context_class.group
-				l_class_i := universe.class_named (l_class_type.class_name, l_cluster)
+				l_class_i := universe.class_named (l_class_type.class_name.name, l_cluster)
 				if l_class_i = Void then
 					create l_vtct
 					l_vtct.set_class (a_context_class)
-					l_vtct.set_class_name (l_class_type.class_name)
+					l_vtct.set_class_name (l_class_type.class_name.name)
 					l_vtct.set_location (l_class_type.start_location)
 					a_error_handler.insert_error (l_vtct)
 					a_error_handler.raise_error

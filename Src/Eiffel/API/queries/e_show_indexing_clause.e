@@ -112,7 +112,7 @@ feature -- Execution
 						indexes.after
 					loop
 						index := indexes.item
-						index_tag := index.tag
+						index_tag := index.tag.name
 						if
 							index_tag /= Void and then
 							(not index_tag.is_equal ("status") and
@@ -148,7 +148,7 @@ feature -- Execution
 						indexes.after
 					loop
 						index := indexes.item
-						index_tag := index.tag
+						index_tag := index.tag.name
 						if
 							index_tag /= Void and then
 							(not index_tag.is_equal ("status") and

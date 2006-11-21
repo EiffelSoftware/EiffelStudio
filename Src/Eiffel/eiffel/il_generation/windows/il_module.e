@@ -1910,7 +1910,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_major, l_minor, l_build, l_revision: INTEGER
 			l_key_token: MD_PUBLIC_KEY_TOKEN
 		do
-			if defined_assemblies.has (a_name) then
+			if defined_assemblies.has_key (a_name) then
 				Result := defined_assemblies.found_item
 			else
 				if a_name.is_equal ("mscorlib") then

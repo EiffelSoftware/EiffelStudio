@@ -58,7 +58,7 @@ feature{NONE} -- Access
 		do
 			if not last_is_used then
 				check last_local_name /= Void end
-				last_is_used := last_local_name.is_case_insensitive_equal (l_as.feature_name.internal_name)
+				last_is_used := last_local_name.is_case_insensitive_equal (l_as.feature_name.internal_name.name)
 			end
 		end
 

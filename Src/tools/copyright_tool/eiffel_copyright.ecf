@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="eiffel_copyright" uuid="A9C11092-E1F5-4C51-A58B-15A0AC1254B9">
+	<target name="eiffel_copyright">
+		<description>Let you set a copyright notice to your Eiffel classes.</description>
+		<root class="ROOT_CLASS" feature="make_and_launch"/>
+		<file_rule>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="inlining" value="true"/>
+		<setting name="inlining_size" value="0"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<cluster name="root_cluster" location="$EIFFEL_SRC\tools\copyright_tool\"/>
+	</target>
+</system>

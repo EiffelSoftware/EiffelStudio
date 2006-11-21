@@ -156,8 +156,9 @@ feature -- Status report
 			end
 
 	row_height: INTEGER is
-			-- Default height of rows
+			-- Height of rows in `Current'
 		do
+			--| FIXME Implement correctly.
 			Result := 10
 		end
 

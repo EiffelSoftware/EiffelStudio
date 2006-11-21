@@ -86,12 +86,10 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_get_entry (container_widget)
 
-
 				-- Alter focus chain so that button cannot be selected via the keyboard.
 			a_focus_list := {EV_GTK_EXTERNALS}.g_list_append (default_pointer, entry_widget)
 			{EV_GTK_EXTERNALS}.gtk_container_set_focus_chain (container_widget, a_focus_list)
 			{EV_GTK_EXTERNALS}.g_list_free (a_focus_list)
-
 
 				-- This is a hack, remove when the toggle button can be retrieved via the API.
 			real_signal_connect (container_widget, once "realize", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1), Void)

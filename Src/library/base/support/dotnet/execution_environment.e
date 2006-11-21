@@ -89,7 +89,6 @@ feature -- Access
 				not l_enumerator.move_next
 			loop
 				l_entry ?= l_enumerator.current_
-				check l_entry /= Void end
 				l_key ?= l_entry.key
 				l_value ?= l_entry.value
 				check

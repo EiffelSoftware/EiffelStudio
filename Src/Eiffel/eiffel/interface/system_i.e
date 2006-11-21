@@ -1062,7 +1062,7 @@ end
 				l_class := l_classes.item_for_iteration
 				l_name := l_class.name
 				if not l_class.config_class.does_override then
-					if not l_table.has (l_name) then
+					if not l_table.has_key (l_name) then
 						l_table.force (l_class, l_name)
 					else
 						is_force_rebuild := True
@@ -1148,7 +1148,7 @@ end
 
 				if l_root.cluster_name = Void then
 
-					l_classes_i := universe.classes_with_name (root_class_type_as.class_name.as_upper.string)
+					l_classes_i := universe.classes_with_name (root_class_type_as.class_name.name.as_upper)
 						-- remove overriding classes
 					from
 						l_classes_i.start
@@ -1185,8 +1185,8 @@ end
 						Error_handler.raise_error
 					else
 							-- do a class_named because this checks for VSCN errors
-						l_class := universe.class_named (root_class_type_as.class_name.as_upper.string, l_group)
-						if l_class = Void or else l_group.classes.item (root_class_type_as.class_name.as_upper.string) /= l_class.config_class then
+						l_class := universe.class_named (root_class_type_as.class_name.name.as_upper, l_group)
+						if l_class = Void or else l_group.classes.item (root_class_type_as.class_name.name.as_upper) /= l_class.config_class then
 							create vd20
 							vd20.set_class_name (l_root.class_type_name.as_upper)
 							Error_handler.insert_error (vd20)
@@ -1198,7 +1198,7 @@ end
 				system.set_root_cluster (l_group)
 				system.set_creation_name (l_root.feature_name)
 
-				root_class ?= root_cluster.classes.item (root_class_type_as.class_name.as_upper.string)
+				root_class ?= root_cluster.classes.item (root_class_type_as.class_name.name.as_upper)
 				if root_class = Void then
 					create vd20
 					vd20.set_class_name (l_root.class_type_name.as_upper)

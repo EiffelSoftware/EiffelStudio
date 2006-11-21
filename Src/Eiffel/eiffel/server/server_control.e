@@ -81,7 +81,7 @@ feature -- Ids creation
 			create new_file.make (id)
 			files.put (new_file, id)
 			last_computed_id := id
-			
+
 debug ("SERVER")
 	io.error.put_string ("Creating new file: ")
 	io.error.put_string (new_file.file_name (id))
@@ -115,7 +115,7 @@ feature -- File operations
 			-- Remove all empty files from disk
 		local
 			file: SERVER_FILE
-			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
+			local_files: like files
 		do
 				-- Delete files from disk which are already not used
 			from
@@ -127,8 +127,9 @@ feature -- File operations
 				file := local_files.item_for_iteration
 				if file.exists and then not file.precompiled and file.occurrence = 0 then
 					remove_file (file)
+				else
+					local_files.forth
 				end
-				local_files.forth
 			end
 		end
 
@@ -150,14 +151,14 @@ feature -- File operations
 			force (f)
 			if last_removed_item /= Void then
 				last_removed_item.close
-				check 
+				check
 					not_in_cache: not has_id (last_removed_item.file_id)
 				end
 			end
 		ensure
 			is_open: f.is_open
 		end
-		
+
 	close_file (f: SERVER_FILE) is
 			-- Close file `f'
 		require
@@ -251,7 +252,7 @@ feature -- Status report
 				Result := local_files.item_for_iteration.exists
 				local_files.forth
 			end
-		end	
+		end
 
 feature -- Initialization
 
@@ -282,7 +283,7 @@ feature -- Merging
 			file_counter.append (other.file_counter)
 			files.merge (other.files)
 		end
-			
+
 feature -- SERVER_FILE sizes
 
 	block_size: INTEGER

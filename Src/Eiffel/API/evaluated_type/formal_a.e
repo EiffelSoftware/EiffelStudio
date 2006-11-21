@@ -120,7 +120,7 @@ feature -- Output
 			if f /= Void then
 				l_class := f.associated_class.ast
 				if l_class.generics /= Void and then l_class.generics.valid_index (position) then
-					s := l_class.generics.i_th (position).name.as_upper
+					s := l_class.generics.i_th (position).name.name.as_upper
 					st.process_generic_text (s)
 				else
 						-- We are in case where actual generic position does not match

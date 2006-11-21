@@ -153,7 +153,7 @@ feature -- Debug
 	trace is
 		do
 			from features.start until features.after loop
-				io.error.put_string ("%T" + features.item.ast.feature_name + "%N")
+				io.error.put_string ("%T" + features.item.ast.feature_name.name + "%N")
 				features.forth
 			end
 		end

@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 					until
 						f_names.after
 					loop
-						f_item_name := f_names.item.internal_name
+						f_item_name := f_names.item.internal_name.name
 						if l_first_item_name = Void then
 							l_first_item_name := f_item_name
 						end

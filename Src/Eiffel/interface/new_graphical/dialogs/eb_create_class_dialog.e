@@ -582,7 +582,7 @@ feature {NONE} -- Implementation
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			l_classes := cluster.classes
-			if l_classes.has (class_name) and then l_classes.found_item.is_valid then
+			if l_classes.has_key (class_name) and then l_classes.found_item.is_valid then
 				aok := False
 				create wd.make_with_text (Warning_messages.w_class_already_exists (class_name))
 				wd.show_modal_to_window (Current)

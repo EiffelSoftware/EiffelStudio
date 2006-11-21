@@ -587,19 +587,19 @@ end;
 			-- Check all the renamings made in the table of
 			-- inherited features
 		local
-			inh_feat: INHERIT_FEAT
+			l: like linear_representation
 		do
 			from
-				start;
+				l := linear_representation
+				l.start
 			until
-				after
+				l.after
 			loop
-				inh_feat := item_for_iteration
 					-- Check the renamings on one name
-				inh_feat.check_renamings;
-				forth
-			end;
-		end;
+				l.item.check_renamings
+				l.forth
+			end
+		end
 
 	analyze is
 			-- Analyze inherited features: the renamings must have
@@ -953,7 +953,7 @@ end;
 			feature_name_id := feat.internal_name_id;
 debug ("ACTIVITY")
 	io.error.put_string ("FEATURE_UNIT on ");
-	io.error.put_string (feat.internal_name);
+	io.error.put_string (feat.internal_name.name);
 	io.error.put_new_line;
 end;
 
@@ -972,7 +972,7 @@ end;
 					-- Unique value processing
 				unique_feature ?= Result;
 				create integer_value.make_with_value (
-					Tmp_ast_server.unique_values_item (a_class.class_id).item (Result.feature_name))
+					Tmp_ast_server.unique_values_item (a_class.class_id).item (Result.feature_name.string_representation))
 				if integer_value.valid_type (unique_feature.type) then
 					integer_value.set_real_type (unique_feature.type)
 				else

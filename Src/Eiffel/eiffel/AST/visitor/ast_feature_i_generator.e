@@ -105,8 +105,7 @@ feature {NONE} -- Implementation
 			l_assigner_name_id: INTEGER
 		do
 			if l_as.assigner /= Void then
-				names_heap.put (l_as.assigner)
-				l_assigner_name_id := names_heap.found_item
+				l_assigner_name_id := l_as.assigner.name_id
 			end
 			if l_as.content = Void then
 					-- It is an attribute

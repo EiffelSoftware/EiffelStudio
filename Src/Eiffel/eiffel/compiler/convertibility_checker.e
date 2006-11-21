@@ -471,7 +471,7 @@ feature {NONE} -- Implementation: checking
 							-- Check it is listed as part of creation procedures of current class.
 						if
 							a_class.creators = Void or else
-							not a_class.creators.has (a_convert_feat.feature_name.internal_name)
+							not a_class.creators.has (a_convert_feat.feature_name.internal_name.name)
 						then
 								-- Not a creation procedure.
 							create l_vncp.make ("Not a creation procedure.")
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation: checking
 				end
 			else
 				create l_vncp.make ("Routine not found: " +
-					a_convert_feat.feature_name.internal_name)
+					a_convert_feat.feature_name.internal_name.name)
 				l_vncp.set_class (a_class)
 				l_vncp.set_location (a_convert_feat.feature_name.start_location)
 				Error_handler.insert_error (l_vncp)

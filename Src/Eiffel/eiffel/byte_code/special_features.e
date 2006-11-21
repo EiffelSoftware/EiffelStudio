@@ -29,7 +29,7 @@ feature -- Access
 			char: CHAR_I
 		do
 			if compilation_type then
-				Result := c_type_table.has (feature_name_id)
+				Result := c_type_table.has_key (feature_name_id)
 				if Result then
 					function_type := c_type_table.found_item
 					if function_type = out_type and then target_type.is_char then
@@ -38,7 +38,7 @@ feature -- Access
 					end
 				end
 			else
-				Result := byte_type_table.has (feature_name_id)
+				Result := byte_type_table.has_key (feature_name_id)
 				if Result then
 					function_type := byte_type_table.found_item
 				end

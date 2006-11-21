@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 		do
 			a_name := a_feature_as.feature_names.i_th (a_name_pos)
 			a_body := a_feature_as.body
-			l_assinger := a_body.assigner /= Void and then not a_body.assigner.is_empty
+			l_assinger := a_body.assigner /= Void and then not a_body.assigner.name.is_empty
 			a_routine ?= a_body.content
 			l_is_obsolete := (a_routine /= Void and then a_routine.obsolete_message /= Void)
 			l_is_frozen := a_name.is_frozen

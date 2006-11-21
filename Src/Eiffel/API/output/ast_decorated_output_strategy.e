@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 
 	process_id_as (l_as: ID_AS) is
 		do
-			text_formatter_decorator.process_basic_text (l_as)
+			text_formatter_decorator.process_basic_text (l_as.name)
 		end
 
 	process_integer_as (l_as: INTEGER_CONSTANT) is
@@ -406,9 +406,9 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				text_formatter_decorator.process_symbol_text (ti_dot)
 				if not has_error_internal then
-					text_formatter_decorator.process_feature_text (l_as.feature_name, l_feat, False)
+					text_formatter_decorator.process_feature_text (l_as.feature_name.name, l_feat, False)
 				else
-					text_formatter_decorator.process_basic_text (l_as.feature_name)
+					text_formatter_decorator.process_basic_text (l_as.feature_name.name)
 				end
 			end
 			if l_as.parameter_count > 0 then
@@ -580,10 +580,10 @@ feature {NONE} -- Implementation
 	process_bit_const_as (l_as: BIT_CONST_AS) is
 		do
 			if not expr_type_visiting then
-				text_formatter_decorator.process_string_text (l_as.value, Void)
+				text_formatter_decorator.process_string_text (l_as.value.name, Void)
 				text_formatter_decorator.process_string_text ("B", Void)
 			end
-			create {BITS_A} last_type.make (l_as.value.count)
+			create {BITS_A} last_type.make (l_as.value.name.count)
 		end
 
 	process_array_as (l_as: ARRAY_AS) is
@@ -690,9 +690,9 @@ feature {NONE} -- Implementation
 					l_feat := current_assigner_feature
 				end
 				if not has_error_internal then
-					text_formatter_decorator.process_feature_text (l_as.assigner, l_feat, False)
+					text_formatter_decorator.process_feature_text (l_as.assigner.name, l_feat, False)
 				else
-					text_formatter_decorator.process_basic_text (l_as.assigner)
+					text_formatter_decorator.process_basic_text (l_as.assigner.name)
 				end
 			end
 			safe_process (l_as.content)
@@ -847,7 +847,7 @@ feature {NONE} -- Implementation
 				last_type := current_feature.arguments.i_th (l_as.argument_position)
 			elseif l_as.is_local then
 				if last_type = Void then
-					if locals_for_current_feature.has (l_as.access_name) then
+					if locals_for_current_feature.has_key (l_as.access_name) then
 						last_type := locals_for_current_feature.found_item
 					end
 				end
@@ -941,7 +941,7 @@ feature {NONE} -- Implementation
 			l_current_feature := feature_in_class (current_class, current_feature.rout_id_set)
 			if not has_error_internal then
 				if l_as.parent_base_class /= Void then
-					l_parent_class_i := universe.safe_class_named (l_as.parent_base_class.class_name, current_class.group)
+					l_parent_class_i := universe.safe_class_named (l_as.parent_base_class.class_name.name, current_class.group)
 					if l_parent_class_i /= Void then
 						l_parent_class := l_parent_class_i.compiled_class
 					else
@@ -969,7 +969,7 @@ feature {NONE} -- Implementation
 					if not has_error_internal then
 						text_formatter_decorator.add_class (l_parent_class.lace_class)
 					else
-						text_formatter_decorator.process_basic_text (l_as.parent_base_class.class_name)
+						text_formatter_decorator.process_basic_text (l_as.parent_base_class.class_name.name)
 					end
 					text_formatter_decorator.process_symbol_text (ti_r_curly)
 				end
@@ -1420,7 +1420,7 @@ feature {NONE} -- Implementation
 				if l_as.is_argument then
 					create {TYPED_POINTER_A} last_type.make_typed (current_feature.arguments.i_th (l_as.argument_position))
 				elseif l_as.is_local then
-					if locals_for_current_feature.has (l_as.feature_name.internal_name) then
+					if locals_for_current_feature.has_key (l_as.feature_name.internal_name.name) then
 						create {TYPED_POINTER_A} last_type.make_typed (locals_for_current_feature.found_item)
 					end
 				else
@@ -1436,9 +1436,9 @@ feature {NONE} -- Implementation
 					text_formatter_decorator.set_without_tabs
 					text_formatter_decorator.process_symbol_text (ti_dollar)
 					if l_feat /= Void then
-						text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name, l_feat, False)
+						text_formatter_decorator.process_feature_text (l_as.feature_name.internal_name.name, l_feat, False)
 					else
-						text_formatter_decorator.process_local_text (l_as.feature_name.internal_name)
+						text_formatter_decorator.process_local_text (l_as.feature_name.internal_name.name)
 					end
 					text_formatter_decorator.commit
 				end
@@ -1465,7 +1465,7 @@ feature {NONE} -- Implementation
 				if not has_error_internal then
 					text_formatter_decorator.process_feature_text (l_feat.name, l_feat, False)
 				else
-					text_formatter_decorator.process_basic_text (l_as.feature_name)
+					text_formatter_decorator.process_basic_text (l_as.feature_name.name)
 				end
 
 				if l_as.operands /= Void then
@@ -1689,7 +1689,7 @@ feature {NONE} -- Implementation
 					end
 				else
 					text_formatter_decorator.put_space
-					text_formatter_decorator.process_basic_text (l_as.op_name)
+					text_formatter_decorator.process_basic_text (l_as.op_name.name)
 					text_formatter_decorator.put_space
 					l_as.right.process (Current)
 				end
@@ -1807,7 +1807,7 @@ feature {NONE} -- Implementation
 			l_as.left.process (Current)
 			if not expr_type_visiting then
 				text_formatter_decorator.put_space
-				text_formatter_decorator.process_symbol_text (l_as.op_name)
+				text_formatter_decorator.process_symbol_text (l_as.op_name.name)
 				text_formatter_decorator.put_space
 			end
 			l_as.right.process (Current)
@@ -1819,7 +1819,7 @@ feature {NONE} -- Implementation
 			l_as.left.process (Current)
 			if not expr_type_visiting then
 				text_formatter_decorator.put_space
-				text_formatter_decorator.process_symbol_text (l_as.op_name)
+				text_formatter_decorator.process_symbol_text (l_as.op_name.name)
 				text_formatter_decorator.put_space
 			end
 			l_as.right.process (Current)
@@ -1910,13 +1910,13 @@ feature {NONE} -- Implementation
 			text_formatter_decorator.begin
 			text_formatter_decorator.set_separator (ti_comma)
 			text_formatter_decorator.set_space_between_tokens
-			text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name, True)
+			text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name, True)
 			text_formatter_decorator.set_separator (ti_comma)
 			text_formatter_decorator.set_space_between_tokens
 			l_as.feature_names.process (Current)
 			l_as.body.process (Current)
 			text_formatter_decorator.set_without_tabs
-			text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name, False)
+			text_formatter_decorator.process_feature_dec_item (l_as.feature_names.first.internal_name.name, False)
 			if not text_formatter_decorator.is_feature_short then
 				text_formatter_decorator.put_new_line
 			end
@@ -2033,9 +2033,9 @@ feature {NONE} -- Implementation
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
-						l_feat := last_parent.feature_with_name (l_as.feature_name)
+						l_feat := last_parent.feature_with_name (l_as.feature_name.name)
 					else
-						l_feat := current_class.feature_with_name (l_as.feature_name)
+						l_feat := current_class.feature_with_name (l_as.feature_name.name)
 					end
 				else
 						-- Processing name of a feature.
@@ -2103,7 +2103,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-				text_formatter_decorator.process_basic_text (l_as.feature_name)
+				text_formatter_decorator.process_basic_text (l_as.feature_name.name)
 			end
 		end
 
@@ -2118,9 +2118,9 @@ feature {NONE} -- Implementation
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
-						l_feat := last_parent.feature_with_name (l_as.feature_name)
+						l_feat := last_parent.feature_with_name (l_as.feature_name.name)
 					else
-						l_feat := current_class.feature_with_name (l_as.feature_name)
+						l_feat := current_class.feature_with_name (l_as.feature_name.name)
 					end
 				else
 						-- Processing name of a feature.
@@ -2132,9 +2132,9 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.put_space
 			end
 			if not has_error_internal then
-				text_formatter_decorator.process_operator_text (l_as.feature_name, l_feat)
+				text_formatter_decorator.process_operator_text (l_as.feature_name.name, l_feat)
 			else
-				text_formatter_decorator.process_basic_text (l_as.feature_name)
+				text_formatter_decorator.process_basic_text (l_as.feature_name.name)
 			end
 			text_formatter_decorator.put_space
 			text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
@@ -2693,7 +2693,7 @@ feature {NONE} -- Implementation
 				else
 					text_formatter_decorator.process_keyword_text (ti_like_keyword, Void)
 					text_formatter_decorator.add_space
-					text_formatter_decorator.process_local_text (l_as.anchor)
+					text_formatter_decorator.process_local_text (l_as.anchor.name)
 				end
 			end
 		end
@@ -2742,7 +2742,7 @@ feature {NONE} -- Implementation
 				text_formatter_decorator.put_space
 			end
 
-			text_formatter_decorator.process_generic_text (l_as.name)
+			text_formatter_decorator.process_generic_text (l_as.name.name)
 			if l_as.has_constraint then
 				text_formatter_decorator.put_space
 				text_formatter_decorator.set_without_tabs
@@ -2863,7 +2863,7 @@ feature {NONE} -- Implementation
 				not_expr_type_visiting: not expr_type_visiting
 			end
 			if l_as.tag /= Void then
-				text_formatter_decorator.process_indexing_tag_text (l_as.tag.twin)
+				text_formatter_decorator.process_indexing_tag_text (l_as.tag.name.twin)
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_colon)
 				text_formatter_decorator.put_space
@@ -2959,7 +2959,7 @@ feature {NONE} -- Implementation
 			until
 				l_as.clients.after
 			loop
-				temp := l_as.clients.item
+				temp := l_as.clients.item.name
 				client_classi := universe.safe_class_named (temp, cluster)
 				if client_classi /= Void then
 					text_formatter_decorator.put_classi (client_classi)
@@ -3444,7 +3444,7 @@ feature {NONE} -- Implementation: helpers
 				put_breakable
 			end
 			if l_as.tag /= Void then
-				text_formatter_decorator.process_assertion_tag_text (l_as.tag.twin)
+				text_formatter_decorator.process_assertion_tag_text (l_as.tag.name.twin)
 				text_formatter_decorator.set_without_tabs
 				text_formatter_decorator.process_symbol_text (ti_colon)
 				text_formatter_decorator.put_space
@@ -3621,7 +3621,7 @@ feature {NONE} -- Implementation: helpers
 				i > l_count
 			loop
 				item := a_list.i_th (i)
-				feat_adapter := creators.item (item.internal_name)
+				feat_adapter := creators.item (item.internal_name.name)
 				if feat_adapter /= Void then
 					feat_adapter.format (text_formatter_decorator)
 					text_formatter_decorator.put_new_line

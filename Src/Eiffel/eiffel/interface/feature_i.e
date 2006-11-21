@@ -1542,7 +1542,7 @@ feature -- Signature checking
 					vreg.set_entity_name (Names_heap.item (arg_id))
 					Error_handler.insert_error (vreg)
 				end
-				if feat_table.has_id (arg_id) then
+				if feat_table.has_key_id (arg_id) then
 						-- An argument name is a feature name of the feature
 						-- table.
 					create vrfa

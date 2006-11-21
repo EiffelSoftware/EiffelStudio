@@ -35,7 +35,7 @@ feature {NONE} -- Implementation: type validation
 					-- Check about dependencies
 				l_class_type ?= a_type
 				if l_class_type /= Void then
-					l_classes := universe.classes_with_name (l_class_type.class_name)
+					l_classes := universe.classes_with_name (l_class_type.class_name.name)
 					if l_classes.count = 1 then
 						l_cl := l_classes.first
 						if l_cl.is_compiled then
@@ -44,7 +44,7 @@ feature {NONE} -- Implementation: type validation
 					elseif l_classes.count > 1 then
 						create l_vd29
 						l_vd29.set_location (a_type.start_location)
-						l_vd29.set_root_class_name (l_class_type.class_name)
+						l_vd29.set_root_class_name (l_class_type.class_name.name)
 
 						l_classes.start
 						l_vd29.set_cluster (l_classes.item.group)

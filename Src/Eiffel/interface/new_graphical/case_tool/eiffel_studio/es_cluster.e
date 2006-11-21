@@ -176,7 +176,7 @@ feature -- Element change
 								l_cluster.prune_all (Current)
 							else
 								l_lib ?= l_cluster.group
-								if not l_lib.library_target.libraries.has (group.name) or else
+								if not l_lib.library_target.libraries.has_key (group.name) or else
 									l_lib.library_target.libraries.found_item /= group
 								then
 									remove_cluster

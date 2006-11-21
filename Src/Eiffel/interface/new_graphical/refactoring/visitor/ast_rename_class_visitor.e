@@ -44,7 +44,7 @@ feature
 	process_class_type_as (l_as: CLASS_TYPE_AS) is
 			-- Process `l_as'.
 		do
-			if old_class_name.is_case_insensitive_equal (l_as.class_name) then
+			if old_class_name.is_case_insensitive_equal (l_as.class_name.name) then
 				l_as.class_name.replace_text (new_class_name, match_list)
 				has_modified := True
 			end
@@ -54,7 +54,7 @@ feature
 	process_class_as (l_as: CLASS_AS) is
 			-- Process `l_as'.
 		do
-			if old_class_name.is_case_insensitive_equal (l_as.class_name) then
+			if old_class_name.is_case_insensitive_equal (l_as.class_name.name) then
 				l_as.class_name.replace_text (new_class_name, match_list)
 				has_modified := True
 			end
@@ -74,7 +74,7 @@ feature
 				l_list.after
 			loop
 				l_item := l_list.item
-				if old_class_name.is_case_insensitive_equal (l_item) then
+				if old_class_name.is_case_insensitive_equal (l_item.name) then
 					l_item.replace_text (new_class_name, match_list)
 					has_modified := True
 				end

@@ -36,7 +36,7 @@ feature
 			feat_is_visible: is_visible (feat, class_id)
 		do
 			Result := feat.feature_name;
-			if renamings /= Void and then renamings.has (Result) then
+			if renamings /= Void and then renamings.has_key (Result) then
 				Result := renamings.found_item
 			end;
 		end;

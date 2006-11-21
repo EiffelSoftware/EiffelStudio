@@ -67,7 +67,7 @@ feature -- Access
 			end
 		ensure then
 			good_result: (ast.tag = Void implies Result.is_equal ("")) and
-						 (ast.tag /= Void implies Result.is_equal (ast.tag))
+						 (ast.tag /= Void implies Result.is_equal (ast.tag.name))
 		end
 
 	path_name: STRING is

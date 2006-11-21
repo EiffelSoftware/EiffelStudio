@@ -178,7 +178,6 @@
 			<cluster name="interface_switch" location="$|interface\batch_only\"/>
 		</cluster>
 		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
-		<override name="table_eiffel_3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 	<target name="ecdpc" extends="batch">
 		<setting name="executable_name" value="ecdpc"/>
@@ -359,7 +358,6 @@
 		</cluster>
 		<override name="eiffel_override" location="$EIFFEL_SRC\Eiffel\override\" recursive="true"/>
 		<override name="parser_override" location="$EIFFEL_SRC\Eiffel\eiffel\AST\parser_override\"/>
-		<override name="table_eiffel3" location="$ISE_LIBRARY\library\obsolete\base\table_eiffel3\"/>
 	</target>
 	<target name="bench_unix" extends="bench">
 		<description>Compiling UNIX bench compiler on other platforms than Windows</description>

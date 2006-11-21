@@ -25,13 +25,14 @@ inherit
 		rename
 			item as item_id,
 			has as has_id,
+			has_key as has_key_id,
 			search as search_id
 		export
 			{NONE} all
 			{FEATURE_TABLE} keys, content, deleted_marks
 			{ANY}
 				after, conflict, count, cursor, forth, found,
-				found_item, go_to, has_id, item_for_iteration,
+				found_item, go_to, has_id, has_key_id, item_for_iteration,
 				item_id, key_for_iteration, linear_representation,
 				put, remove, replace, search_id, start, valid_key, off,
 				valid_cursor
@@ -180,7 +181,7 @@ feature -- Access: compatibility
 			l_id: INTEGER
 		do
 			l_id := Names_heap.id_of (s)
-			Result := l_id > 0 and then has_id (l_id)
+			Result := l_id > 0 and then has_key_id (l_id)
 		end
 
 	search (key: STRING) is

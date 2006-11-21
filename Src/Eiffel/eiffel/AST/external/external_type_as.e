@@ -27,7 +27,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			l, i: INTEGER
 			value: STRING
 		do
-			l := id.count
+			l := id.name.count
 			if is_struct then
 				l := l + struct_text_length
 			end
@@ -38,7 +38,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			if is_struct then
 				value.append (struct_text)
 			end
-			value.append (id)
+			value.append (id.name)
 			if nb_pointer > 0 then
 				from
 					i := 1

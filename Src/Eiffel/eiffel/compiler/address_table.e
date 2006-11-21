@@ -12,7 +12,7 @@ inherit
 	HASH_TABLE [HASH_TABLE [ADDRESS_TABLE_ENTRY, INTEGER], INTEGER]
 		rename
 			make as make_hash_table,
-			has as has_table_of_class,
+			has_key as has_table_of_class,
 			item as table_of_class,
 			cursor as ht_cursor
 		export
@@ -65,7 +65,7 @@ feature -- Access
 			feature_id_valid: feature_id > 0
 		do
 			if has_table_of_class (class_id) then
-				if found_item.has (feature_id) then
+				if found_item.has_key (feature_id) then
 					Result := found_item.found_item.has_dollar_op
 				end
 			end
@@ -97,7 +97,7 @@ feature -- Access
 		do
 			Result := has_table_of_class (a_class_id)
 			if Result then
-				Result := found_item.has (a_feature_id)
+				Result := found_item.has_key (a_feature_id)
 				if Result then
 					Result := found_item.found_item.has (make_reordering (a_is_target_closed, o_map))
 				end
@@ -125,7 +125,7 @@ feature -- Access
 		require
 			a_class_type_not_void: a_class_type /= Void
 			dollar_feature_valid: has_table_of_class (a_class_id) and then
-								  found_item.has (a_feature_id) and then
+								  found_item.has_key (a_feature_id) and then
 								  found_item.found_item.has_dollar_op and then
 								  found_item.found_item.dollar_ids.has (a_class_type.static_type_id)
 		local
@@ -171,7 +171,7 @@ feature -- Access
 							l_feature := l_class.eiffel_class_c.inline_agent_of_id (l_feature_id)
 						end
 						if l_feature = Void then
-							item_for_iteration.remove (l_feature_id)
+							l_table_of_class.remove (l_feature_id)
 						else
 							if l_table_entry.has_dollar_op then
 								from
@@ -196,8 +196,8 @@ feature -- Access
 								l_table_entry.item_for_iteration.set_frozen_age (new_frozen_age)
 								l_table_entry.forth
 							end
+							l_table_of_class.forth
 						end
-						l_table_of_class.forth
 					end
 				end
 				forth
@@ -312,72 +312,74 @@ feature -- Generation
 				class_id := key_for_iteration
 				a_class := System.class_of_id (class_id)
 				System.set_current_class (a_class)
-				if
-					a_class /= Void and then
-					(final_mode implies (not a_class.is_precompiled or else a_class.is_in_system))
-				then
-					l_table_of_class := item_for_iteration
-					from
-						l_table_of_class.start
-					until
-						l_table_of_class.after
-					loop
-						feature_id := l_table_of_class.key_for_iteration
-						table_entry := l_table_of_class.item_for_iteration
+				if a_class /= Void then
+					if (final_mode implies (not a_class.is_precompiled or else a_class.is_in_system)) then
+						l_table_of_class := item_for_iteration
+						from
+							l_table_of_class.start
+						until
+							l_table_of_class.after
+						loop
+							feature_id := l_table_of_class.key_for_iteration
+							table_entry := l_table_of_class.item_for_iteration
 
-						a_feature := a_class.feature_table.feature_of_feature_id (feature_id)
-						if a_feature = Void and then a_class.is_eiffel_class_c then
-								-- maybe its an inline agent
-							a_feature := a_class.eiffel_class_c.inline_agent_of_id (feature_id)
-						end
-						if a_feature = Void then
-								-- Remove invalid entry or feature which has been converted
-								-- from a routine to an attribute.
-							l_table_of_class.remove (feature_id)
-						else
-								-- Feature exists
-							if a_feature.used then
-									-- Feature is not dead code removed
+							a_feature := a_class.feature_table.feature_of_feature_id (feature_id)
+							if a_feature = Void and then a_class.is_eiffel_class_c then
+									-- maybe its an inline agent
+								a_feature := a_class.eiffel_class_c.inline_agent_of_id (feature_id)
+							end
+							if a_feature = Void then
+									-- Remove invalid entry or feature which has been converted
+									-- from a routine to an attribute.
+								l_table_of_class.remove (feature_id)
+							else
+									-- Feature exists
+								if a_feature.used then
+										-- Feature is not dead code removed
 
-debug ("DOLLAR")
-	io.put_string ("ADDRESS_TABLE.generate_feature ")
-	io.put_string (a_class.name)
-	io.put_character (' ')
-	io.put_string (a_feature.feature_name)
-	io.put_new_line
-end
-								if table_entry.has_dollar_op then
-									generate_feature (a_class, a_feature, final_mode, buffer, False, False, Void, False)
-								end
-
-								from
-									table_entry.start
-								until
-									table_entry.after
-								loop
-									l_reordering := table_entry.item_for_iteration
-									l_reordering.set_frozen_age (new_frozen_age)
-									generate_feature (a_class, a_feature, final_mode, buffer, True,
-													  l_reordering.is_target_closed, l_reordering.open_map, True)
-									if final_mode then
-										generate_feature (a_class, a_feature, final_mode, buffer, True,
-														  l_reordering.is_target_closed, l_reordering.open_map, False)
+		debug ("DOLLAR")
+		io.put_string ("ADDRESS_TABLE.generate_feature ")
+		io.put_string (a_class.name)
+		io.put_character (' ')
+		io.put_string (a_feature.feature_name)
+		io.put_new_line
+		end
+									if table_entry.has_dollar_op then
+										generate_feature (a_class, a_feature, final_mode, buffer, False, False, Void, False)
 									end
-									table_entry.forth
+
+									from
+										table_entry.start
+									until
+										table_entry.after
+									loop
+										l_reordering := table_entry.item_for_iteration
+										l_reordering.set_frozen_age (new_frozen_age)
+										generate_feature (a_class, a_feature, final_mode, buffer, True,
+														  l_reordering.is_target_closed, l_reordering.open_map, True)
+										if final_mode then
+											generate_feature (a_class, a_feature, final_mode, buffer, True,
+															  l_reordering.is_target_closed, l_reordering.open_map, False)
+										end
+										table_entry.forth
+									end
 								end
+								l_table_of_class.forth
 							end
 						end
-						l_table_of_class.forth
-					end
-					if l_table_of_class.is_empty then
-						-- None of the features are valid
-						remove (class_id)
+						if l_table_of_class.is_empty then
+							-- None of the features are valid
+							remove (class_id)
+						else
+							forth
+						end
+					else
+						forth
 					end
 				else
 						-- Remove the invalid entry
 					remove (class_id)
 				end
-				forth
 			end
 
 			create cecil_file.make_c_code_file (x_gen_file_name (final_mode, Ececil));

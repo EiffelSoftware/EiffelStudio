@@ -35,7 +35,7 @@ feature  -- Initialization
 			use_list_not_empty: not use_list.is_empty
 			a_name_not_void: a_name /= Void
 			a_field_name_not_void: a_field_name /= Void
-			a_field_name_not_empty: a_field_name.count > 0
+			a_field_name_not_empty: a_field_name.name.count > 0
 		local
 			id: INTEGER
 		do
@@ -50,8 +50,7 @@ feature  -- Initialization
 				create argument_types.make (1, 1)
 				argument_types.put (id, 1)
 			end
-			Names_heap.put (a_field_name)
-			field_name_id := Names_heap.found_item
+			field_name_id := a_field_name.name_id
 			header_files := use_list.array_representation
 		ensure
 			is_cpp_set: is_cpp = is_cpp_struct
@@ -99,7 +98,7 @@ feature -- Type check
 			else
 				has_new_syntax := True
 			end
-				
+
 			if field_name_id = 0 then
 				has_error := True
 				create struct_error

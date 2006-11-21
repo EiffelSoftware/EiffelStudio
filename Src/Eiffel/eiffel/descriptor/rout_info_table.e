@@ -14,12 +14,12 @@ inherit
 			make as ht_make,
 			put as table_put
 		end
-		
+
 	SHARED_WORKBENCH
 		undefine
 			copy, is_equal
 		end
-		
+
 	SHARED_ARRAY_BYTE
 		undefine
 			copy, is_equal
@@ -46,8 +46,8 @@ feature {NONE} -- Initialization
 feature -- Insertion
 
 	put (rout_id: INTEGER; org: CLASS_C) is
-			-- Record the routine id `rout_id', the origin 
-			-- of the corresponding routine and the offset of 
+			-- Record the routine id `rout_id', the origin
+			-- of the corresponding routine and the offset of
 			-- the routine in the origin class.
 		require
 			rout_id_not_void: rout_id /= 0
@@ -55,8 +55,8 @@ feature -- Insertion
 		local
 			info: ROUT_INFO
 		do
-			if has (rout_id) then
-					-- The routine id has been recorded 
+			if has_key (rout_id) then
+					-- The routine id has been recorded
 					-- earlier.
 				info := found_item
 				if not (info.origin = org.class_id) then
@@ -84,7 +84,7 @@ feature -- Offset processing
 			counter: COUNTER
 		do
 			class_id := c.class_id
-			if not offset_counters.has (class_id) then
+			if not offset_counters.has_key (class_id) then
 				create counter
 					-- Routine offsets start from 0.
 				counter.set_value (-1)
@@ -126,7 +126,7 @@ feature -- Query features
 			-- Number of routines introduced
 			-- in class of id `class_id'
 		do
-			if offset_counters.has (class_id) then
+			if offset_counters.has_key (class_id) then
 				-- Offsets start from 0.
 				Result := offset_counters.found_item.value + 1
 			end
@@ -175,7 +175,7 @@ feature -- Generation
 						 %#include %"eif_macros.h%"%N%N")
 
 			buffer.start_c_specific_code
-			
+
 			buffer.put_string ("struct rout_info egc_forg_table_init[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
@@ -184,7 +184,7 @@ feature -- Generation
 			buffer.put_string ("%T{(int16) 0, (int16) 0},%N")
 
 			from
-				i := 2	
+				i := 2
 			until
 				i > nb_elements
 			loop
@@ -238,7 +238,7 @@ feature -- Melting
 			Byte_array.append_short_integer (0)
 
 			from
-				i := 2	
+				i := 2
 			until
 				i > nb_elements
 			loop

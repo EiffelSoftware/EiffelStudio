@@ -562,7 +562,7 @@ feature {EIFFEL_WORLD, EB_CONTEXT_DIAGRAM_COMMAND} -- Insert
 					if a_parent.group.is_library then
 						l_lib ?= a_parent.group
 						l_libs_tar := l_lib.library_target.libraries
-						if l_libs_tar.has (l_group.name) then
+						if l_libs_tar.has_key (l_group.name) then
 							if l_libs_tar.found_item = l_group then
 								a_parent.extend (a_cluster)
 							end

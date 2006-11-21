@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 					from info.start until info.after loop
 						dir_name := info.key_for_iteration
 						id := info.item_for_iteration
-						if precomp_ids.has (dir_name) then
+						if precomp_ids.has_key (dir_name) then
 								-- Check compatibility between
 								-- precompiled libraries.
 							if id /= precomp_ids.found_item then
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 						info.forth
 					end;
 					id := info.compilation_id
-					if precomp_ids.has (a_project_location.target_path) then
+					if precomp_ids.has_key (a_project_location.target_path.string) then
 							-- Check compatibility between
 							-- precompiled libraries.
 						if id /= precomp_ids.found_item then
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 							Error_handler.raise_error
 						end
 					else
-						precomp_ids.put (id, a_project_location.target_path)
+						precomp_ids.put (id, a_project_location.target_path.string)
 					end;
 					Result := project_dir
 				end

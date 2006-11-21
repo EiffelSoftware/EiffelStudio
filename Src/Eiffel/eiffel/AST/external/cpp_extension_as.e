@@ -28,7 +28,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			class_not_void: base_class /= Void
 			use_list_not_void: use_list /= Void
 		do
-			class_name := base_class
+			class_name := base_class.name
 			type := a_type
 
 			if a_sig /= Void then
@@ -41,7 +41,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 				header_files := use_list.array_representation
 			end
 		ensure
-			class_name_set: class_name = base_class
+			class_name_set: class_name.is_equal (base_class.name)
 			type_set: type = a_type
 		end
 
@@ -334,7 +334,7 @@ end
 				header_files.force (header_files.item (header_files.lower), header_files.upper + 1)
 			end
 			Names_heap.put (class_header_file)
-			header_files.put (Names_heap.found_item, header_files.lower)		
+			header_files.put (Names_heap.found_item, header_files.lower)
 		end
 
 	next_white_space (s: STRING; start: INTEGER): INTEGER is

@@ -108,7 +108,7 @@ feature -- Status
 				until
 					creation_feature_list.after
 				loop
-					feature_name := creation_feature_list.item.internal_name
+					feature_name := creation_feature_list.item.internal_name.name
 					feat_table.search (feature_name)
 					Result.extend (feat_table.found_item)
 					Result.forth
@@ -153,7 +153,7 @@ feature -- Output
 				a_text_formatter.process_keyword_text (ti_expanded_keyword, Void)
 				a_text_formatter.add_space
 			end
-			c_name := name.as_upper
+			c_name := name.name.as_upper
 			a_text_formatter.process_generic_text (c_name)
 			if has_constraint then
 				a_text_formatter.add_space
@@ -177,7 +177,7 @@ feature -- Output
 							creation_feature_list.after
 						loop
 							a_text_formatter.add_space
-							eiffel_name := creation_feature_list.item.internal_name
+							eiffel_name := creation_feature_list.item.internal_name.name
 							if l_type = Void then
 								a_text_formatter.add_feature_name (eiffel_name, a_context_class)
 							elseif l_type.has_associated_class then
@@ -226,11 +226,11 @@ feature -- Validity checking
 				create vtcg6
 				vtcg6.set_class (a_context_class)
 				vtcg6.set_constraint_type (type_a_generator.evaluate_type (constraint, a_context_class))
-				vtcg6.set_feature_name (creation_feature_list.first.internal_name)
+				vtcg6.set_feature_name (creation_feature_list.first.internal_name.name)
 				vtcg6.set_location (creation_feature_list.first.start_location)
 				Error_handler.insert_error (vtcg6)
 			else
-				class_i := universe.class_named (class_type.class_name, cluster)
+				class_i := universe.class_named (class_type.class_name.name, cluster)
 					-- We handle only the case where `class_i' is a valid reference
 					-- because the case has been handled in `check_constraint_type'
 					-- from CLASS_TYPE_AS which is called just before this feature.
@@ -247,7 +247,7 @@ feature -- Validity checking
 					until
 						creation_feature_list.after
 					loop
-						feature_name := creation_feature_list.item.internal_name
+						feature_name := creation_feature_list.item.internal_name.name
 						feat_table.search (feature_name)
 						if
 							not feat_table.found or else

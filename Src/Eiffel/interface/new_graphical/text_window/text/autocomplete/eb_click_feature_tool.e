@@ -140,7 +140,7 @@ feature -- Analysis preparation
 				elseif feature_name.is_prefix then
 					feature_name_image := "prefix"
 				else
-					feature_name_image := feature_name.internal_name
+					feature_name_image := feature_name.internal_name.name
 				end
 			else
 				feature_name_image := current_feature_name

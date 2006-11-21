@@ -312,7 +312,7 @@ feature -- Class names completion
 				until
 					current_class_as.generics.after
 				loop
-					create name_name.make (current_class_as.generics.item.name)
+					create name_name.make (current_class_as.generics.item.name.name)
 					class_list.put_front (name_name)
 					current_class_as.generics.forth
 				end
@@ -598,7 +598,7 @@ feature {NONE} -- Implementation
 					until
 						l_features.after
 					loop
-						if inserted_feature_table.has (l_features.item) then
+						if inserted_feature_table.has_key (l_features.item) then
 							l_e_feature := inserted_feature_table.found_item
 							if not l_new_group then
 								l_new_group := True
@@ -886,7 +886,7 @@ feature {NONE} -- Implementation
 			l_parents := a_class.parents
 			if l_parents /= Void and then not l_parents.is_empty then
 				l_cursor := l_parents.cursor
-				l_name := a_feature.feature_name
+				l_name := a_feature.feature_name.name
 				from
 					l_parents.start
 				until
@@ -912,13 +912,13 @@ feature {NONE} -- Implementation
 										create l_class_from.make (20)
 										l_class_from.extend (create {EDITOR_TOKEN_SPACE}.make (1))
 										l_class_from.extend (create {EDITOR_TOKEN_OPERATOR}.make (ti_l_curly))
-										l_class_name := l_parent.type.class_name
+										l_class_name := l_parent.type.class_name.name
 										l_class_token := class_token_of_name (l_class_name)
 										l_class_from.extend (l_class_token)
 										l_class_from.extend (create {EDITOR_TOKEN_OPERATOR}.make (ti_r_curly))
 										if current_class_c /= Void then
 											if current_class_c.has_feature_table then
-												l_feature_i := current_class_c.feature_named (a_feature.feature_name)
+												l_feature_i := current_class_c.feature_named (a_feature.feature_name.name)
 											end
 											if l_feature_i = Void then
 												l_feature_i := current_class_c.feature_named ("is_equal")
@@ -1045,7 +1045,7 @@ feature {NONE} -- Implementation
 				until
 					l_list.after
 				loop
-					if l_table.has (l_list.item.visual_name) then
+					if l_table.has_key (l_list.item.visual_name) then
 						l_feat := l_table.found_item
 						if l_feat.is_exported_to (current_class_c) then
 							add_feature_to_completion_possibilities (l_feat)
@@ -1144,7 +1144,7 @@ feature {NONE} -- Implementation
 								skip_parenthesis ('{', '}')
 								if Result /= Void and then Result.associated_class /= Void then
 									if Result.associated_class.has_feature_table then
-										feat := Result.associated_class.feature_with_name (current_feature_as.name.internal_name)
+										feat := Result.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
 									end
 								end
 							end
@@ -1158,7 +1158,7 @@ feature {NONE} -- Implementation
 								loop
 									type := l_current_class_c.parents.item
 									if type.associated_class /= Void and then type.associated_class.has_feature_table then
-										feat := type.associated_class.feature_with_name (current_feature_as.name.internal_name)
+										feat := type.associated_class.feature_with_name (current_feature_as.name.internal_name.name)
 									end
 									l_current_class_c.parents.forth
 								end

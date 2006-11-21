@@ -39,7 +39,7 @@ feature -- Element change
 		require else
 			bp_exists: bp /= Void
 		do
-			if not has (bp) then
+			if not has_key (bp) then
 				put (bp, bp)
 			else
 				found_item.enable

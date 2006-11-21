@@ -98,7 +98,7 @@ feature {NONE} -- Initialize
 			loop
 				l_feature := l_features.item
 
-				e_feature := a_fs.class_c.feature_with_name (l_feature.feature_name)
+				e_feature := a_fs.class_c.feature_with_name (l_feature.feature_name.name)
 
 				signature := full_signature_compiled (e_feature)
 

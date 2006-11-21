@@ -3733,7 +3733,7 @@ feature {NONE} -- Implementation
 							l_names.start
 						until
 							l_names.after or else
-							l_feature.name.is_case_insensitive_equal (l_names.item.internal_name)
+							l_feature.name.is_case_insensitive_equal (l_names.item.internal_name.name)
 						loop
 							l_names.forth
 						end
@@ -4339,13 +4339,13 @@ feature {NONE} -- Implementation: Editor commands
 			l_classc: CLASS_C
 		do
 			if a_feature_name /= Void then
-				address_manager.set_feature_text_simply (a_feature_name.internal_name)
+				address_manager.set_feature_text_simply (a_feature_name.internal_name.name)
 				if class_name /= Void and group /= Void then
 					l_class_i := eiffel_universe.safe_class_named (class_name, group)
 					if l_class_i /= Void and then l_class_i.is_compiled then
 						l_classc := l_class_i.compiled_class
 						if l_classc.has_feature_table then
-							l_efeature := l_classc.feature_with_name (a_feature_name.internal_name)
+							l_efeature := l_classc.feature_with_name (a_feature_name.internal_name.name)
 							if l_efeature /= Void and then l_efeature.written_in /= l_classc.class_id then
 								l_efeature := Void
 							end
@@ -4355,7 +4355,7 @@ feature {NONE} -- Implementation: Editor commands
 				if l_efeature /= Void then
 					seek_item_in_feature_tool (l_efeature)
 				else
-					features_tool.seek_ast_item_in_feature_tool (a_feature_name.internal_name)
+					features_tool.seek_ast_item_in_feature_tool (a_feature_name.internal_name.name)
 				end
 			else
 				address_manager.set_feature_text_simply (once "")

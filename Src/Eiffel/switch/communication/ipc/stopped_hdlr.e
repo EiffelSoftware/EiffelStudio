@@ -15,6 +15,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	APPLICATION_STATUS_CONSTANTS
+
 create
 
 	make

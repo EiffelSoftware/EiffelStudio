@@ -96,6 +96,8 @@ feature {NONE} -- Initialization
 				init_commands
 				create watch_tool_list.make
 			end
+
+			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
 			create observers.make (10)
 		end
 
@@ -160,6 +162,10 @@ feature -- tools
 
 	debugging_tools: ES_DOCKABLE_NOTEBOOK
 			-- A tool that contains various debugging tools.
+
+feature -- Output visitor
+
+	text_formatter_visitor: DEBUGGER_TEXT_FORMATTER_VISITOR
 
 feature -- tools management
 

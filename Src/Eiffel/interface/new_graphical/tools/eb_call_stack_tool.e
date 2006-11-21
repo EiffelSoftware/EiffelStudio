@@ -18,7 +18,7 @@ inherit
 
 	EB_RECYCLABLE
 
-	IPC_SHARED
+	APPLICATION_STATUS_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -1004,7 +1004,8 @@ feature {NONE} -- Implementation
 					fn.create_read_write
 				end
 					--| We generate the call stack.
-				Debugger_manager.Application.status.current_call_stack.display_stack (fn)
+				Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.Application.status.current_call_stack, fn)
+
 					--| We put it in the file.
 				if not fn.is_closed then
 					fn.close
@@ -1029,8 +1030,8 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 					--| We generate the call stack.
-				create l_output.make
-				Debugger_manager.Application.status.current_call_stack.display_stack (l_output)
+				create l_output.make;
+				Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.Application.status.current_call_stack, l_output)
 				ev_application.clipboard.set_text (l_output.stored_output)
 				l_output.reset_output
 			end

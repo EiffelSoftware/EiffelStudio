@@ -42,39 +42,6 @@ feature -- Properties
 
 feature -- Output
 
-	display_arguments (st: TEXT_FORMATTER) is
-			-- Display the arguments passed to the routine
-			-- associated with Current call.
-		do
-		end
-
-	display_locals (st: TEXT_FORMATTER) is
-			-- Display the local entities and result (if it exists) of
-			-- the routine associated with Current call.
-		do
-		end
-
-	display_feature (st: TEXT_FORMATTER) is
-			-- Display information about associated routine.
-		do
-				-- Print object address (14 characters)
-			st.add_string ("[")
-			st.add_string (display_object_address)
-			st.add_string ("] ")
-			st.add_column_number (14)
-				-- Print class name
-			st.add_string (class_name)
-			st.add_string (" ")
-			st.add_column_number (26)
-
-			st.add_string (routine_name)
-
-			-- print line number
-			st.add_string(" ( @ ")
-			st.add_int(break_index)
-			st.add_string(" )")
-		end
-
 	display_object_address: like object_address is
 		do
 			Result := object_address

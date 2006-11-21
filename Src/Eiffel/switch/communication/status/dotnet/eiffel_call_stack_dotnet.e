@@ -79,57 +79,6 @@ feature -- Properties
 	error_occurred: BOOLEAN;
 			-- Did an error occurred when retrieving the eiffel stack?
 
-feature -- Output
-
-	display_stack (st: TEXT_FORMATTER) is
-			-- Display callstack in `st'.
-		local
-			stack_num, i: INTEGER
-		do
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Displaying stack %N"); end
-			st.add_new_line;
-			st.add_string ("Call stack:");
-			st.add_new_line;
-			st.add_new_line;
-			st.process_call_stack_item (0, false) -- For padding
-			st.add_string ("Object");
-			st.add_column_number (14);
-			st.add_string ("Class");
-			st.add_column_number (26);
-			st.add_string ("Routine");
-			st.add_new_line;
-			st.process_call_stack_item (0, false) -- For padding
-			st.add_string ("------");
-			st.add_column_number (14);
-			st.add_string ("-----");
-			st.add_column_number (26);
-			st.add_string ("-------");
-			st.add_new_line;
-
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: getting stack number %N"); end
-			stack_num := Application.current_execution_stack_number;
-
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: processing %N"); end
-			from
-				start;
-				i := 1
-			until
-				after
-			loop
-				if i = stack_num then
-					st.process_call_stack_item (i, true)
-				else
-					st.process_call_stack_item (i, false)
-				end;
-				item.display_feature (st);
-				st.add_new_line;
-				forth;
-				i := i + 1;
-			end;
-			st.add_new_line
-			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: end displaying call stack %N"); end
-		end;
-
 feature {NONE} -- Initialization
 
 	make (n: INTEGER; tid: INTEGER) is

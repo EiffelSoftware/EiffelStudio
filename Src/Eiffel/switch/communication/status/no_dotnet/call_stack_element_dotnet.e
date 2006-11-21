@@ -43,25 +43,6 @@ feature -- Dotnet Properties
 		do
 		end
 		
-feature
-	
-	display_feature (a_text_formatter: TEXT_FORMATTER) is
-			-- Display information about associated routine.
-		do
-		end
-		
-	display_locals (a_text_formatter: TEXT_FORMATTER) is
-			-- Display the local entities and result (if it exists) of
-			-- the routine associated with Current call.
-		do
-		end		
-		
-	display_arguments (a_text_formatter: TEXT_FORMATTER) is
-			-- Display the arguments passed to the routine
-			-- associated with Current call.
-		do
-		end		
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -12,7 +12,8 @@ class CHARACTER_32_VALUE
 inherit
 	DEBUG_BASIC_VALUE [CHARACTER_32]
 		redefine
-			append_type_and_value, append_value, type_and_value, dump_value
+			type_and_value, dump_value,
+			debug_value_type_id
 		end
 
 	CHARACTER_ROUTINES
@@ -38,23 +39,7 @@ feature -- Access
 			end
 		end
 
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_type_and_value (st: TEXT_FORMATTER) is
-		do
-			dynamic_class.append_name (st)
-			st.add_string (" = ")
-			st.add_char ('%'')
-			st.add_string (wchar_text (value))
-			st.add_char ('%'')
-		end;
-
 feature {NONE} -- Output
-
-	append_value (st: TEXT_FORMATTER) is
-		do
-			st.add_string (wchar_text (value))
-		end
 
 	type_and_value: STRING_32 is
 			-- Return a string representing `Current'.
@@ -73,6 +58,13 @@ feature {NONE} -- Constants
 	Equal_slash: STRING is " = /"
 	Slash_colon: STRING is "/ : %'"
 	Quote: STRING is "%'";
+
+feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
+
+	debug_value_type_id: INTEGER is
+		do
+			Result := character_32_value_id
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

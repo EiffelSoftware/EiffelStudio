@@ -11,6 +11,9 @@ class
 
 inherit
 	ABSTRACT_DEBUG_VALUE
+		redefine
+			debug_value_type_id
+		end
 
 create {RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make_with_name
@@ -113,21 +116,7 @@ feature -- Access
 			Result := Debugger_manager.Dump_value_factory.new_exception_value (Current)
 		end
 
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_type_and_value (st: TEXT_FORMATTER) is
-			-- Append type and value of Current to `st'.
-		do
-			st.add_string (display_tag)
-		end
-
 feature {NONE} -- Output
-
-	append_value (st: TEXT_FORMATTER) is
-			-- Append only the value of Current to `st'.
-		do
-			st.add_string (display_tag)
-		end
 
 	output_value: STRING_32 is
 			-- A STRING representation of the value of `Current'.
@@ -160,6 +149,13 @@ feature -- Output
 			-- Used to display the corresponding icon.
 		do
 			Result := Exception_message_value
+		end
+
+feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
+
+	debug_value_type_id: INTEGER is
+		do
+			Result := exception_debug_value_id
 		end
 
 indexing

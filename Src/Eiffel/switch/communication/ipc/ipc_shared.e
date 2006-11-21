@@ -172,29 +172,29 @@ feature {NONE} -- Inspection constants
 	Out_once_per_process: INTEGER is 1
 			-- Precised that once is per process
 
-feature {APPLICATION_STATUS} -- Implementation
+--feature {APPLICATION_STATUS} -- Implementation
 
-	Pg_raise: INTEGER is 1
-			-- Explicitely raised exception
+--	Pg_raise: INTEGER is 1
+--			-- Explicitely raised exception
 
-	Pg_viol: INTEGER is 2
-			-- Implicitely raised exception
+--	Pg_viol: INTEGER is 2
+--			-- Implicitely raised exception
 
-	Pg_break: INTEGER is 3
-			-- Breakpoint reached
+--	Pg_break: INTEGER is 3
+--			-- Breakpoint reached
 
-	Pg_interrupt: INTEGER is 4
-			-- System execution interrupted
+--	Pg_interrupt: INTEGER is 4
+--			-- System execution interrupted
 
-	Pg_new_breakpoint: INTEGER is 5
-			-- New breakpoints added while running. The application should stop
-			-- to record the new breakpoints.
+--	Pg_new_breakpoint: INTEGER is 5
+--			-- New breakpoints added while running. The application should stop
+--			-- to record the new breakpoints.
 
-	Pg_step: INTEGER is 6
-			-- The application completed a step operation.
+--	Pg_step: INTEGER is 6
+--			-- The application completed a step operation.
 
-	Pg_overflow: INTEGER is 7
-			-- The application might run into a stack overflow.
+--	Pg_overflow: INTEGER is 7
+--			-- The application might run into a stack overflow.
 
 		-- stack request code: same as in ipc/shared/stack.h
 --	Exceptions_stack: INTEGER is 0
@@ -204,7 +204,6 @@ feature {APPLICATION_STATUS} -- Implementation
 --	Args_stack: INTEGER is 4
 --	Vars_stack: INTEGER is 5
 --	Once_stack: INTEGER is 6
-
 
 -- Need to be updated.
 	Rqst_cont: INTEGER is 2

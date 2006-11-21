@@ -216,12 +216,15 @@ feature {NONE} -- Display profiles impl
 			vb.disable_item_expand (hb)
 			hb.set_padding_width (layout_constants.small_padding_size)
 			create add_button.make_with_text_and_action ("Add", agent add_new_profile)
+			add_button.set_minimum_width (layout_constants.default_button_width)
 			add_button.disable_sensitive
 
 			create remove_button.make_with_text_and_action ("Remove", agent remove_selected_profile)
+			remove_button.set_minimum_width (layout_constants.default_button_width)
 			remove_button.disable_sensitive
 
 			create dup_button.make_with_text_and_action ("Duplicate", agent duplicate_selected_profile)
+			dup_button.set_minimum_width (layout_constants.default_button_width)
 			dup_button.disable_sensitive
 
 			create enable_profiles_button.make_with_text ("Enable Profiles")
@@ -426,22 +429,16 @@ feature -- Status Setting
 			end
 		end
 
-	connect_to_show_actions is
-			-- Connect show actions to `parent_window'
+	on_show is
+		local
+			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
-			parent_window.show_actions.extend (
-				agent
-					local
-						l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
-					do
-						if profiles_grid /= Void then
-							l_selected_rows := profiles_grid.selected_rows
-							if not l_selected_rows.is_empty then
-								l_selected_rows.first.ensure_visible
-							end
-						end
-					end
-				)
+			if profiles_grid /= Void then
+				l_selected_rows := profiles_grid.selected_rows
+				if not l_selected_rows.is_empty then
+					l_selected_rows.first.ensure_visible
+				end
+			end
 		end
 
 feature -- Data change

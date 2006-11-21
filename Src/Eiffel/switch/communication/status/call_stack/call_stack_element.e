@@ -67,23 +67,6 @@ feature -- Properties
 
 feature -- Output
 
-	display_arguments (st: TEXT_FORMATTER) is
-			-- Display the arguments passed to the routine
-			-- associated with Current call.
-		deferred
-		end
-
-	display_locals (st: TEXT_FORMATTER) is
-			-- Display the local entities and result (if it exists) of
-			-- the routine associated with Current call.
-		deferred
-		end
-
-	display_feature (st: TEXT_FORMATTER) is
-			-- Display information about associated routine.
-		deferred
-		end
-
 	display_object_address: like object_address is
 		deferred
 		end

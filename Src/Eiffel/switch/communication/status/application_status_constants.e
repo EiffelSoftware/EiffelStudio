@@ -1,68 +1,42 @@
 indexing
-	description: "Eiffel call stack for the stopped application."
+
+	description:
+		"Constants used in Application Status information "
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision $"
 
-deferred class EIFFEL_CALL_STACK
+class
+	APPLICATION_STATUS_CONSTANTS
 
-feature -- Fake inherit from TWO_WAY_LIST
+inherit
+	APPLICATION_STATUS_EXPORTER
 
-	stack_depth: INTEGER is
-		deferred
-		end
+feature {APPLICATION_STATUS_EXPORTER} -- Constants
 
-	count: INTEGER is
-		deferred
-		end
+	Pg_raise: INTEGER is 1
+			-- Explicitely raised exception
 
-	is_empty: BOOLEAN is
-			-- Call Stack empty ?
-		deferred
-		end
+	Pg_viol: INTEGER is 2
+			-- Implicitely raised exception
 
-	start is
-		deferred
-		end
+	Pg_break: INTEGER is 3
+			-- Breakpoint reached
 
-	forth is
-		deferred
-		end
+	Pg_interrupt: INTEGER is 4
+			-- System execution interrupted
 
-	after: BOOLEAN is
-		deferred
-		end
+	Pg_new_breakpoint: INTEGER is 5
+			-- New breakpoints added while running. The application should stop
+			-- to record the new breakpoints.
+			-- (mainly for classic debugger)
 
-	item: CALL_STACK_ELEMENT is
-		deferred
-		end
+	Pg_step: INTEGER is 6
+			-- The application completed a step operation.
 
-	extend (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-		deferred
-		end
-
-	i_th alias "[]" (i: INTEGER): like item is
-		deferred
-		end
-
-	valid_index (i: INTEGER): BOOLEAN is
-			-- Is `i' within allowable bounds?
-		deferred
-		end
-
-feature -- Properties
-
-	error_occurred: BOOLEAN is
-			-- Did an error occurred when retrieving the eiffel stack?
-		deferred
-		end
-
-invariant
-
-	empty_if_error: error_occurred implies is_empty
+	Pg_overflow: INTEGER is 7;
+			-- The application might run into a stack overflow.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -96,4 +70,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_CALL_STACK
+end

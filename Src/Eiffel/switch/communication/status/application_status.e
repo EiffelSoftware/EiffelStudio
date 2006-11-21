@@ -12,6 +12,8 @@ deferred class APPLICATION_STATUS
 
 inherit
 
+	APPLICATION_STATUS_CONSTANTS
+
 	SHARED_DEBUG
 		export
 			{NONE} all
@@ -22,13 +24,6 @@ inherit
 			{NONE} all
 		end
 
-	IPC_SHARED
-		export
-			{NONE} all
-			{ANY} Pg_break, Pg_interrupt,
-				Pg_raise, Pg_viol
-		end
-		
 	SHARED_APPLICATION_EXECUTION
 		export
 			{NONE} all
@@ -545,117 +540,6 @@ feature -- Setting
 			valid_n: n = -1 or n > 0
 		do
 			stack_max_depth := n
-		end
-
-feature -- Output
-
-	display_status (st: TEXT_FORMATTER) is
-			-- Display the status of the running application.
-		local
-			c, oc: CLASS_C
-			cs: CALL_STACK_ELEMENT
-			stack_num: INTEGER
-			ccs: EIFFEL_CALL_STACK
-		do
-			if not is_stopped then
-				st.add_string ("System is running")
-				st.add_new_line
-			else -- Application is stopped.
-				-- Print object address.
-				st.add_string ("Stopped in object [")
-				c := dynamic_class
-				st.add_address (object_address, e_feature.name, c)
-				st.add_string ("]")
-				st.add_new_line
-					-- Print class name.
-				st.add_indent
-				st.add_string ("Class: ")
-				c.append_name (st)
-				st.add_new_line
-					-- Print routine name.
-				st.add_indent
-				st.add_string ("Feature: ")
-				if e_feature /= Void then
-					oc := origin_class
-					e_feature.append_name (st)
-					if oc /= c then
-						st.add_string (" (From ")
-						oc.append_name (st)
-						st.add_string (")")
-					end
-				else
-					st.add_string ("Void")
-				end
-				st.add_new_line
-					-- Print the reason for stopping.
-				st.add_indent
-				st.add_string ("Reason: ")
-				inspect reason
-				when Pg_break then
-					st.add_string ("Stop point reached")
-					st.add_new_line
-				when Pg_interrupt then
-					st.add_string ("Execution interrupted")
-					st.add_new_line
-				when Pg_raise then
-					st.add_string ("Explicit exception pending")
-					st.add_new_line
-					display_exception (st)
-				when Pg_viol then
-					st.add_string ("Implicit exception pending")
-					st.add_new_line
-					display_exception (st)
-				when Pg_new_breakpoint then
-					st.add_string ("New breakpoint(s) to commit")
-					st.add_new_line
-					display_exception (st)
-				when Pg_step then
-					st.add_string ("Step completed")
-					st.add_new_line
-				else
-					st.add_string ("Unknown")
-					st.add_new_line
-				end
-				ccs := current_call_stack
-				if not ccs.is_empty then
-					stack_num := Application.current_execution_stack_number
-					cs := ccs.i_th (stack_num)
-					cs.display_arguments (st)
-					cs.display_locals (st)
-					ccs.display_stack (st)
-				end
-			end
-		end
-
-	display_exception (st: TEXT_FORMATTER) is
-			-- Display exception in `st'.
-		require
-			non_void_st: st /= Void
-			valid_code: exception_code > 0
-		local
-			e: EXCEPTIONS
-			m: STRING
-		do
-			st.add_indent
-			st.add_indent
-			st.add_string ("Code: ")
-			st.add_int (exception_code)
-			st.add_string (" (")
-			create e
-			m := e.meaning (exception_code)
-			if m = Void then
-				m := "Undefined"
-			end
-			st.add_string (m)
-			st.add_string (")")
-			st.add_new_line
-			st.add_indent
-			st.add_indent
-			st.add_string ("Tag: ")
-			if exception_tag /= Void then
-				st.add_string (exception_tag.as_string_8)
-			end
-			st.add_new_line
 		end
 
 indexing

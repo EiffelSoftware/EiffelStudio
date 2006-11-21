@@ -16,7 +16,8 @@ inherit
 			min as comp_min,
 			max as comp_max
 		redefine
-			get_value
+			get_value,
+			debug_value_type_id
 		end
 
 	DEBUG_EXT
@@ -90,17 +91,6 @@ feature -- Access
 			Result := Debugger_manager.Dump_value_factory.new_bits_value (value, l_type, dynamic_class)
 		end
 
-feature {ABSTRACT_DEBUG_VALUE} -- Output
-
-	append_type_and_value (st: TEXT_FORMATTER) is
-		do
-			st.add_classi (dynamic_class.lace_class, "BIT");
-			st.add (ti_Space);
-			st.add_int (value.count - 1);
-			st.add (Equal_sign);
-			st.add (value)
-		end;
-
 feature {NONE} -- Output
 
 	output_value: STRING_32 is
@@ -120,12 +110,6 @@ feature {NONE} -- Output
 			Result.append ((cnt - 1).out)
 			Result.append (Equal_sign)
 			Result.append (value)
-		end
-
-	append_value (st: TEXT_FORMATTER) is
-			-- Append the value of `Current' to `st'. (Useful for pretty print).
-		do
-			st.add_string (value)
 		end
 
 feature -- Output
@@ -168,6 +152,13 @@ feature {NONE} -- Implementation
 				-- This is actual `value' .
 			end
 		end;
+
+feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
+
+	debug_value_type_id: INTEGER is
+		do
+			Result := bits_value_id
+		end
 
 invariant
 

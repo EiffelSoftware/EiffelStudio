@@ -367,7 +367,23 @@ feature -- Access
 			Result.append (Current)
 		ensure
 			string_not_void: Result /= Void
-			string_type: Result.same_type ("")
+			string_type: Result.same_type (create {STRING_32}.make_empty)
+			first_item: count > 0 implies Result.item (1) = item (1)
+			recurse: count > 1 implies Result.substring (2, count).is_equal (
+				substring (2, count).string)
+		end
+
+	string_representation: STRING_32 is
+			-- Similar to `string' but only create a new object if `Current' is not of dynamic type {STRING_8}
+		do
+			if same_type (create {STRING_32}.make_empty) then
+				Result := Current
+			else
+				Result := string
+			end
+		ensure
+			Result_not_void: Result /= Void
+			correct_type: Result.same_type (create {STRING_32}.make_empty)
 			first_item: count > 0 implies Result.item (1) = item (1)
 			recurse: count > 1 implies Result.substring (2, count).is_equal (
 				substring (2, count).string)

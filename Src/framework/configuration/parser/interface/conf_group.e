@@ -188,7 +188,7 @@ feature -- Access queries
 			l_map: like mapping
 		do
 			l_map := mapping
-			if l_map.has (a_class) then
+			if l_map.has_key (a_class) then
 				l_name := l_map.found_item
 			else
 				l_name := a_class
@@ -245,7 +245,7 @@ feature -- Access queries
 				end
 				classes.go_to (l_cursor)
 			end
-			if reverse_classes_cache.has (a_class) then
+			if reverse_classes_cache.has_key (a_class) then
 				Result.force (reverse_classes_cache.found_item)
 			end
 		ensure

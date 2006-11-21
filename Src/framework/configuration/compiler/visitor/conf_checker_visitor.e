@@ -56,7 +56,7 @@ feature -- Visit nodes
 							l_name := l_ren.key_for_iteration
 								-- do not use mapping because renaming already deals with changing names in the system,
 								-- also applying mapping would make things too confusing
-							if not l_classes.has (l_ren.item_for_iteration) or else not l_classes.found_item.name.is_equal (l_name) then
+							if not l_classes.has_key (l_ren.item_for_iteration) or else not l_classes.found_item.name.is_equal (l_name) then
 								add_error (create {CONF_ERROR_RENAM}.make (l_name, a_group.target.system.file_name))
 							end
 							l_ren.forth
@@ -74,7 +74,7 @@ feature -- Visit nodes
 						l_c_opt.after
 					loop
 						l_name := l_c_opt.key_for_iteration
-						if l_map.has (l_name) then
+						if l_map.has_key (l_name) then
 							l_name := l_map.found_item
 						end
 						if not l_c_opt.item_for_iteration.is_empty and then not l_classes.has (l_name) then

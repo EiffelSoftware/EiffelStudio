@@ -213,13 +213,13 @@ feature -- Access queries
 			l_cursor: DS_HASH_SET_CURSOR [CONF_GROUP]
 		do
 				-- apply mapping
-			if mapping.has (a_class) then
+			if mapping.has_key (a_class) then
 				l_name := mapping.found_item
 			else
 				l_name := a_class
 			end
 
-			if a_dependencies and then class_by_name_cache.has (l_name) then
+			if a_dependencies and then class_by_name_cache.has_key (l_name) then
 				Result := class_by_name_cache.found_item
 			else
 					-- search in cluster itself
@@ -256,7 +256,7 @@ feature -- Access queries
 			l_groups: like accessible_groups
 			l_grp: CONF_GROUP
 		do
-			if a_dependencies and then name_by_class_cache.has (a_class) then
+			if a_dependencies and then name_by_class_cache.has_key (a_class) then
 				Result := name_by_class_cache.found_item
 			else
 					-- search in cluster itself

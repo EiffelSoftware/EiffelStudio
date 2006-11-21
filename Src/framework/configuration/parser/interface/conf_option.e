@@ -135,7 +135,7 @@ feature -- Access queries
 		require
 			a_warning_valid: valid_warning (a_warning)
 		do
-			Result := is_warning and then (warnings = Void or else (not warnings.has (a_warning) or else warnings.found_item))
+			Result := is_warning and then (warnings = Void or else (not warnings.has_key (a_warning) or else warnings.found_item))
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file.

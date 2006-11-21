@@ -21,11 +21,14 @@ feature -- Properties
 	infix_function_name: STRING is
 			-- Qualified name with the infix keyword.
 		once
-			Result := infix_feature_name_with_symbol (op_name)
+			Result := infix_feature_name_with_symbol (op_name.name)
 		end
 
-	op_name: STRING is "xor"
+	op_name: ID_AS is
 			-- Name without the infix keyword.
+		once
+			create Result.initialize ("xor")
+		end
 
 feature -- Visitor
 

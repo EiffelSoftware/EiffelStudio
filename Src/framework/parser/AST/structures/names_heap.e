@@ -17,6 +17,8 @@ class
 inherit
 	PREDEFINED_NAMES
 
+	REFACTORING_HELPER
+
 create {SYSTEM_EXPORT, SHARED_NAMES_HEAP}
 	make
 
@@ -42,6 +44,7 @@ feature -- Access
 		ensure
 			Result_not_void: i > 0 implies Result /= Void
 			Result_void: i = 0 implies Result = Void
+			Result_valid_type: Result /= Void implies Result.same_type (string_type)
 		end
 
 	found_item: INTEGER
@@ -54,6 +57,7 @@ feature -- Access
 			-- Id of `s' if inserted, otherwise 0.
 		require
 			s_not_void: s /= Void
+			s_valid_type: s.same_type (string_type)
 		do
 			lookup_table.search (s)
 			if lookup_table.found then
@@ -70,10 +74,15 @@ feature -- Access
 			-- Does current have `s'.
 		require
 			s_not_void: s /= Void
+			s_valid_type: s.same_type (string_type)
 		do
 			search (s)
 			Result := found
 		end
+
+	string_type: STRING is ""
+			-- Manifest string used in precondition to
+			-- ensure that Current only contains STRING instances.
 
 feature -- Status report
 
@@ -87,6 +96,7 @@ feature -- Status report
 			-- Search for `s' in Current.
 		require
 			s_not_void: s /= Void
+			s_valid_type: s.same_type (string_type)
 		do
 			lookup_table.search (s)
 			found := lookup_table.found
@@ -104,6 +114,9 @@ feature -- Element change
 			-- to location in Current.
 		require
 			s_not_void: s /= Void
+			s_valid_type: s.same_type (string_type)
+		local
+			l_s: STRING
 		do
 			lookup_table.search (s)
 			if lookup_table.found then
@@ -113,8 +126,11 @@ feature -- Element change
 				if area.count <= top_index then
 					area := area.resized_area (top_index + (top_index // 2).max (Chunk))
 				end
-				area.put (s, top_index)
-				lookup_table.put (top_index, s)
+					-- Twin string as the heap cannot work if `s' is externally
+					-- modified.
+				l_s := s.twin
+				area.put (l_s, top_index)
+				lookup_table.put (top_index, l_s)
 				top_index := top_index + 1
 			end
 		ensure

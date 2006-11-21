@@ -320,9 +320,6 @@ feature {NONE} -- Implementation
 				report_too_long_string (text)
 			else
 				last_id_as_value := ast_factory.new_filled_id_as (Current)
-				if last_id_as_value /= Void then
-					append_text_to_string (last_id_as_value)
-				end
 			end
 		end
 
@@ -340,7 +337,7 @@ feature {NONE} -- Implementation
 			else
 				last_id_as_value := ast_factory.new_filled_id_as_with_existing_stub (Current, a_index)
 				if last_id_as_value /= Void then
-					append_text_to_string (last_id_as_value)
+					append_text_to_string (last_id_as_value.name)
 				end
 			end
 		end

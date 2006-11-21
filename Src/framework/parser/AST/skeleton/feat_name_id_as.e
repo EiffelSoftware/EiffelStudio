@@ -43,7 +43,7 @@ feature -- Access
 	feature_name: ID_AS
 			-- Feature name
 
-	internal_alias_name: STRING is
+	internal_alias_name: ID_AS is
 			-- Operator associated with the feature (if any)
 			-- augmented with information about its arity
 		do
@@ -80,7 +80,7 @@ feature -- Comparison
 			if infix_feature /= Void then
 				Result := True
 			else
-				Result := feature_name < normal_feature.feature_name
+				Result := feature_name.name < normal_feature.feature_name.name
 			end
 		end
 

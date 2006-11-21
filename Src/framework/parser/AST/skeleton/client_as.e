@@ -122,7 +122,7 @@ feature -- Output
 			until
 				clients.after
 			loop
-				Result.append (clients.item)
+				Result.append (clients.item.name)
 				clients.forth
 				if not clients.after then
 					Result.append (", ")

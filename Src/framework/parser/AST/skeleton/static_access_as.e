@@ -95,7 +95,7 @@ feature {AST_EIFFEL} -- Output
 	string_value: STRING is
 			-- Printed value of Current
 		do
-			Result := "{" + class_type.dump + "}." + feature_name.string_value
+			Result := "{" + class_type.dump + "}." + feature_name.name
 		end
 
 invariant

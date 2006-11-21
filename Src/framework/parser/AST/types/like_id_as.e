@@ -84,9 +84,9 @@ feature -- Output
 	dump: STRING is
 			-- Dump string
 		do
-			create Result.make (5 + anchor.count)
+			create Result.make (5 + anchor.name.count)
 			Result.append ("like ")
-			Result.append (anchor)
+			Result.append (anchor.name)
 		end
 
 feature {LIKE_ID_AS} -- Replication

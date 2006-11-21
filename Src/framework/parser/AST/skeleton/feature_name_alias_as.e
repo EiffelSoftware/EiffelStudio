@@ -85,14 +85,14 @@ feature -- Access
 	alias_name: STRING_AS
 			-- Operator associated with the feature
 
-	internal_alias_name: STRING is
+	internal_alias_name: ID_AS is
 			-- Operator associated with the feature (if any)
 			-- augmented with information about its arity in case of operator alias
 		do
 			if is_bracket then
-				Result := alias_name.value
+				create Result.initialize (alias_name.value)
 			else
-				Result := get_internal_alias_name
+				create Result.initialize (get_internal_alias_name)
 			end
 		end
 

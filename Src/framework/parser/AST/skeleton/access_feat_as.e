@@ -79,7 +79,7 @@ feature -- Attributes
 
 	access_name: STRING is
 		do
-			Result := feature_name
+			Result := feature_name.name
 		end
 
 

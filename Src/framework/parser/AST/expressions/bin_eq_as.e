@@ -29,13 +29,13 @@ feature -- Type check, byte code and dead code removal
 	infix_function_name: STRING is
 			-- Qualified name with the infix keyword.
 		once
-			Result := infix_feature_name_with_symbol (op_name)
+			Result := infix_feature_name_with_symbol (op_name.name)
 		end
 
-	op_name: STRING is
+	op_name: ID_AS is
 			-- Name without the infix keyword.
 		once
-			Result := "="
+			create Result.initialize ("=")
 		end
 
 indexing

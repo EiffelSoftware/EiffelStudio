@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 						assembly_class: l_class /= Void
 					end
 					l_name := l_class.name.twin
-					if l_renamings /= Void and then l_renamings.has (l_name) then
+					if l_renamings /= Void and then l_renamings.has_key (l_name) then
 						l_name := l_renamings.found_item
 					end
 					if l_prefix /= Void then
@@ -827,7 +827,7 @@ feature {NONE} -- Contract
 				Result := assemblies /= Void and then assemblies.count = linear_assemblies.count and then
 					linear_assemblies.for_all (agent (a_assembly: CONF_PHYSICAL_ASSEMBLY): BOOLEAN
 						do
-							Result := a_assembly.is_valid and a_assembly.classes_set and assemblies.has (a_assembly.guid) and then assemblies.found_item = a_assembly
+							Result := a_assembly.is_valid and a_assembly.classes_set and assemblies.has_key (a_assembly.guid) and then assemblies.found_item = a_assembly
 						end)
 			else
 				Result := assemblies = Void or else assemblies.is_empty

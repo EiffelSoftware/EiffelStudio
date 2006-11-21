@@ -352,7 +352,7 @@ feature -- Visit nodes
 					-- get and initialize visitor
 				l_vis := twin
 				l_vis.reset
-				if old_libraries /= Void and then old_libraries.has (l_uuid) then
+				if old_libraries /= Void and then old_libraries.has_key (l_uuid) then
 					l_vis.set_old_target (old_libraries.found_item)
 					old_libraries.remove (l_uuid)
 				end
@@ -624,7 +624,7 @@ feature {NONE} -- Implementation
 				l_file_name := a_path+"/"+a_file
 					-- try to get it directly from old_group by filename
 				if
-					old_group /= Void and then old_group.classes_by_filename.has (l_file_name)
+					old_group /= Void and then old_group.classes_by_filename.has_key (l_file_name)
 				then
 					l_class := old_group.classes_by_filename.found_item
 						-- update class
@@ -639,7 +639,7 @@ feature {NONE} -- Implementation
 						end
 							-- add it to `reused_classes'
 						reused_classes.force (l_class)
-						if current_classes.has (l_name) then
+						if current_classes.has_key (l_name) then
 							add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 						else
 							current_classes.force (l_class, l_name)
@@ -686,7 +686,7 @@ feature {NONE} -- Implementation
 									add_and_raise_error (l_class.last_error)
 								end
 								added_classes.force (l_class)
-								if current_classes.has (l_name) then
+								if current_classes.has_key (l_name) then
 									add_and_raise_error (create {CONF_ERROR_CLASSDBL}.make (l_name, current_classes.found_item.full_file_name, l_class.full_file_name, a_cluster.target.system.file_name))
 								else
 									current_classes.force (l_class, l_name)

@@ -33,7 +33,7 @@ feature -- Basic commands
 					l_error or else visible.after
 				loop
 					l_name := visible.key_for_iteration
-					if l_map.has (l_name) then
+					if l_map.has_key (l_name) then
 						l_name := l_map.found_item
 					end
 					l_vis := visible.item_for_iteration

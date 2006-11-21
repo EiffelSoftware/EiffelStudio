@@ -264,7 +264,7 @@ feature -- Access
 			until
 				feature_names.after or else Result /= Void
 			loop
-				if n.is_equal (feature_names.item.internal_name) then
+				if n.is_equal (feature_names.item.internal_name.name) then
 					Result := Current
 				end
 				feature_names.forth
@@ -339,7 +339,7 @@ feature -- Update
 				until
 					feature_names.after
 				loop
-					values.put (counter.next, feature_names.item.internal_name)
+					values.put (counter.next, feature_names.item.internal_name.name)
 					feature_names.forth
 				end
 			end

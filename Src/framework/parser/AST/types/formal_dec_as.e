@@ -163,7 +163,7 @@ feature -- Comparison
 			until
 				Result or else creation_list.after
 			loop
-				Result := creation_list.item.internal_name.string_value.is_equal (feature_name)
+				Result := creation_list.item.internal_name.name.is_equal (feature_name)
 				creation_list.forth
 			end
 		end
@@ -179,7 +179,7 @@ feature -- Output
 			elseif is_expanded then
 				Result.append ("expanded ")
 			end
-			Result.append (name.as_upper)
+			Result.append (name.name.as_upper)
 			if has_constraint then
 				Result.append (" -> ")
 				Result.append (constraint.dump.as_upper)

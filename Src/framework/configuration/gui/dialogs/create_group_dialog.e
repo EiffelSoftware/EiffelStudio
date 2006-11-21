@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			l_groups: HASH_TABLE [CONF_GROUP, STRING_8]
 		do
 			l_groups := a_target.groups
-			Result := l_groups.has (a_group.as_lower) and then l_groups.found_item.name.is_equal (a_group.as_lower)
+			Result := l_groups.has_key (a_group.as_lower) and then l_groups.found_item.name.is_equal (a_group.as_lower)
 			if not Result then
 				Result := a_target.child_targets.there_exists (agent group_exists(a_group.as_lower, ?))
 			end

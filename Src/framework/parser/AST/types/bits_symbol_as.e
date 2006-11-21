@@ -84,9 +84,9 @@ feature -- Output
 	dump: STRING is
 			-- Debug purpose
 		do
-			create Result.make (5 + bits_symbol.count)
+			create Result.make (5 + bits_symbol.name.count)
 			Result.append ("BIT ")
-			Result.append (bits_symbol)
+			Result.append (bits_symbol.name)
    		end
 
 invariant

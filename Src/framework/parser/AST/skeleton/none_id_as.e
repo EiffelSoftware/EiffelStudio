@@ -17,7 +17,15 @@ inherit
 		end
 
 create
-	make, initialize
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create.
+		do
+			initialize ("NONE")
+		end
 
 feature -- Visitor
 

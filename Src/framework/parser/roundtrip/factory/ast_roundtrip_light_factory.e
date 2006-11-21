@@ -158,37 +158,30 @@ feature -- Leaf nodes
 		end
 
 	new_filled_id_as (a_scn: EIFFEL_SCANNER_SKELETON): ID_AS is
-		local
-			l_count: INTEGER
-			l, c, p: INTEGER
 		do
-			l := a_scn.line
-			c := a_scn.column
-			p := a_scn.position
-			l_count := a_scn.text_count
-			create Result.make (l_count)
-			Result.set_position (l, c, p, l_count)
+			Result := Precursor (a_scn)
 			match_list_count := match_list_count + 1
 			Result.set_index (match_list_count)
 		end
 
 	new_filled_id_as_with_existing_stub (a_scn: EIFFEL_SCANNER_SKELETON; a_index: INTEGER): ID_AS is
 			-- New empty ID AST node.
+		local
+			l_cnt: INTEGER
+			l_str: STRING
 		do
-			create Result.make (a_scn.text_count)
-			Result.set_position (a_scn.line, a_scn.column, a_scn.position, a_scn.text_count)
+			l_cnt := a_scn.text_count
+			create l_str.make (l_cnt)
+			a_scn.append_text_to_string (l_str)
+			create Result.initialize (l_str)
+			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
 			Result.set_index (a_index)
 		end
 
 	new_filled_bit_id_as (a_scn: EIFFEL_SCANNER): ID_AS is
 			-- New empty ID AST node.
-		local
-			l_cnt: INTEGER
 		do
-			l_cnt := a_scn.text_count - 1
-			create Result.make (l_cnt)
-			Result.set_position (a_scn.line, a_scn.column, a_scn.position, l_cnt)
-			a_scn.append_text_substring_to_string (1, l_cnt, Result)
+			Result := Precursor (a_scn)
 			match_list_count := match_list_count + 1
 			Result.set_index (match_list_count)
 		end

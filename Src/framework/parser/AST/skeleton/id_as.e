@@ -51,8 +51,6 @@ feature {NONE} -- Initialization
 		require
 			s_not_void: s /= Void
 			s_not_empty: not s.is_empty
-		local
-			l_int: INTEGER
 		do
 			names_heap.put (s)
 			name_id := names_heap.found_item

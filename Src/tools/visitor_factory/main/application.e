@@ -51,14 +51,19 @@ feature -- Initialization
 			create {BASIC_TEXT_PRINTER}l_printer.make (io.default_output)
 			l_printer.put_string (status_messages.scanning_files_message)
 			create l_options.make (a_parser)
-			l_printer.put_string (status_messages.done_message)
-			l_printer.new_line
 
-				-- Generate classes
-			l_printer.put_string (status_messages.generating_visitor_class_message)
-			create l_generator
-			l_generator.generate_files (l_options)
-			l_printer.put_string (status_messages.done_message)
+			if not l_options.files.is_empty then
+				l_printer.put_string (status_messages.done_message)
+				l_printer.new_line
+
+					-- Generate classes
+				l_printer.put_string (status_messages.generating_visitor_class_message)
+				create l_generator
+				l_generator.generate_files (l_options)
+				l_printer.put_string (status_messages.done_message)
+			else
+				l_printer.put_string (status_messages.nothing_to_generate_message)
+			end
 			l_printer.new_line
 		end
 

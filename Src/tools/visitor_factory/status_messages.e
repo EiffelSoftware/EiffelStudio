@@ -12,8 +12,9 @@ class
 
 feature -- Access
 
-	scanning_files_message: STRING_8 = "Scanning for Eiffel files..."
-	generating_visitor_class_message: STRING_8 = "Generating class(es)..."
+	scanning_files_message: STRING = "Scanning for Eiffel files... "
+	generating_visitor_class_message: STRING = "Generating class(es)... "
+	nothing_to_generate_message: STRING = "***Nothing to generate!***"
 	done_message: STRING_8 = "Done."
 
 ;indexing

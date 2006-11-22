@@ -192,6 +192,10 @@ feature {NONE} -- Implementation
 					if Result /= Void and then Result.is_empty then
 						Result := Void
 					end
+					if l_table.is_full then
+						l_table.resize (l_table.capacity * 2)
+						check not_is_full: not l_table.is_full end
+					end
 					l_table.put (Result, a_file_name)
 				end
 				if Result /= Void then

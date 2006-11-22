@@ -758,6 +758,11 @@ feature -- Label texts
 	l_filter: STRING is "Filter: "
 	l_viewpoints: STRING is "Viewpoints: "
 	l_Tab_metrics: STRING is "Metric"
+	l_Tab_dependency_info: STRING is "Dependency"
+	l_client_class: STRING is "Client class"
+	l_supplier_class: STRING is "Supplier class"
+	l_client_group: STRING is "Client group"
+	l_supplier_group: STRING is "Supplier group"
 
 feature -- Stone names
 

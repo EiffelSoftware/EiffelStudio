@@ -763,6 +763,12 @@ feature -- Label texts
 	l_supplier_class: STRING is "Supplier class"
 	l_client_group: STRING is "Client group"
 	l_supplier_group: STRING is "Supplier group"
+	h_show_dependency_on_self: STRING is "Show dependency on self?"
+	l_of: STRING is " of "
+	l_info_cannot_be_retrieved: STRING is "Information cannot be retrieved."
+	l_folder: STRING is "folder"
+	l_assembly: STRING is "assembly"
+	l_cluster_label: STRING is "cluster"
 
 feature -- Stone names
 

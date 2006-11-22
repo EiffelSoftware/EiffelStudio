@@ -77,6 +77,15 @@ feature -- Access
 			Result := ql_group
 		end
 
+	group: QL_GROUP is
+			-- Group to which current domain item belongs
+			-- Return group itself.
+		do
+			Result ?= query_language_item
+		ensure then
+			result_attached: Result /= Void
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

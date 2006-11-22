@@ -79,6 +79,13 @@ feature -- Access
 			end
 		end
 
+	group: QL_GROUP is
+			-- Group to which current domain item belongs
+		do
+		ensure then
+			result_not_attached: Result = Void
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

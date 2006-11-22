@@ -149,6 +149,16 @@ feature -- Access
 	library_target_uuid: STRING
 			-- UUID of the library target if Current item is a group and represents a library
 
+	group: QL_GROUP is
+			-- Group to which current domain item belongs
+			-- For group item, return it self,
+			-- for folder item, return the group in which the folder is located,
+			-- for class item, return the group in which the class is located,
+			-- for feature item, return the group in which the feature's associated class is located,
+			-- for other kinds of item, return Void.
+		deferred
+		end
+
 feature -- Setting
 
 	set_library_target_uuid (a_uuid: STRING) is

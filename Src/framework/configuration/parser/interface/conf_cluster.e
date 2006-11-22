@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 			Precursor (a_name, a_location, a_target)
 			create internal_file_rule.make (0)
 			internal_file_rule.compare_objects
-			create class_by_name_cache.make (20)
-			create name_by_class_cache.make (20)
+			create class_by_name_cache.make (50)
+			create name_by_class_cache.make (50)
 		end
 
 feature -- Status

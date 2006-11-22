@@ -30,6 +30,11 @@ inherit
 			is_equal
 		end
 
+	QL_SHARED_SCOPES
+		undefine
+			is_equal
+		end
+
 feature{NONE} -- Initialization
 
 	make (a_id: STRING) is
@@ -92,12 +97,25 @@ feature -- Access
 
 	domain (a_scope: QL_SCOPE): QL_DOMAIN is
 			-- New query lanaguage domain representing current item
+			-- `a_scope' is only used to generate delayed domain.
 		require
 			a_scope_attached: a_scope /= Void
 			valid: is_valid
 		deferred
 		ensure
 			result_attached: Result /= Void
+		end
+
+	domain_without_scope: QL_DOMAIN is
+			-- New query lanaguage domain representing current item
+		do
+			if not is_delayed_item then
+				Result := domain (class_scope)
+			end
+		ensure
+			good_result:
+				(is_delayed_item implies Result = Void) and then
+				((not is_delayed_item) implies Result /= Void)
 		end
 
 	query_language_item: QL_ITEM is

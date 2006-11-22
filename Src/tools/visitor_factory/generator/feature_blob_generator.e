@@ -39,10 +39,14 @@ feature -- Basic operations
 			-- Generates query features
 		do
 			create Result.make (128)
-			if not a_stub and then a_opts.use_user_data then
-				Result.append_character ('%T')
-				Result.append (user_data_validation_function_name (a_opts))
-				Result.append (once " (a_data: G): BOOLEAN is%N%T%T%T-- Determines if data `a_data' is valid for Current.%N%T%Tdo%N%T%T%TResult := True%N%T%Tend%N%N")
+			if not a_stub then
+				Result.append (once "%Tis_applicable_visitation_entity (a_entity: ANY): BOOLEAN is%N%T%T%T-- Determines if object instance `a_entity' is applicable for a visitation.%N%T%Tdo%N%T%T%TResult := True%N%T%Tend%N%N")
+
+				if a_opts.use_user_data then
+					Result.append_character ('%T')
+					Result.append (user_data_validation_function_name (a_opts))
+					Result.append (once " (a_data: G): BOOLEAN is%N%T%T%T-- Determines if data `a_data' is valid for Current.%N%T%Tdo%N%T%T%TResult := True%N%T%Tend%N%N")
+				end
 			end
 		ensure
 			result_attached: Result /= Void
@@ -109,21 +113,16 @@ feature {NONE} -- Implementation
 				if l_use_user_data then
 					Result.append (once "; a_data: G")
 				end
-				Result.append (once ")%N%T%T%T-- Process object `a_")
-				Result.append (l_name)
-				Result.append_character ('%'')
+				Result.append (once ")%N%T%T%T-- Process object `a_value'")
 				if l_use_user_data then
 					Result.append (once" using user data `a_data'.")
 				else
 					Result.append_character ('.')
 				end
 				if not a_stub then
-					Result.append ("%N%T%Trequire%N%T%T%Ta_")
-					Result.append (l_name)
-					Result.append (once "_attached: ")
-					Result.append (l_name)
+					Result.append (once "%N%T%Trequire%N%T%T%Ta_value_attached: a_value /= Void")
+					Result.append (once "%N%T%T%Tis_applicable_visitation_entity (a_value)")
 
-					Result.append (once " /= Void")
 					if l_use_user_data then
 						l_valid_name := user_data_validation_function_name (a_opts)
 						Result.append (once "%N%T%T%T")

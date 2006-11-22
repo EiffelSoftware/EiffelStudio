@@ -40,7 +40,8 @@ feature -- Basic operations
 		do
 			create Result.make (128)
 			if not a_stub then
-				Result.append (once "%Tis_applicable_visitation_entity (a_entity: ANY): BOOLEAN is%N%T%T%T-- Determines if object instance `a_entity' is applicable for a visitation.%N%T%Tdo%N%T%T%TResult := True%N%T%Tend%N%N")
+				Result.append (once "%Tis_valid: BOOLEAN is%N%T%T%T-- Determines if `Current' is in a validate state to permit processing%N%T%Tdo%N%T%T%TResult := True%N%T%Tend%N%N")
+				Result.append (once "%Tis_applicable_visitation_entity (a_value: ANY): BOOLEAN is%N%T%T%T-- Determines if object instance `a_value' is applicable for a visitation%N%T%Trequire%N%T%T%Ta_value_attached: a_value /= Void%N%T%Tdo%N%T%T%TResult := True%N%T%Tend%N%N")
 
 				if a_opts.use_user_data then
 					Result.append_character ('%T')
@@ -120,8 +121,9 @@ feature {NONE} -- Implementation
 					Result.append_character ('.')
 				end
 				if not a_stub then
-					Result.append (once "%N%T%Trequire%N%T%T%Ta_value_attached: a_value /= Void")
-					Result.append (once "%N%T%T%Tis_applicable_visitation_entity (a_value)")
+					Result.append (once "%N%T%Trequire%N%T%T%Tis_valid: is_valid")
+					Result.append (once "%N%T%T%Ta_value_attached: a_value /= Void")
+					Result.append (once "%N%T%T%Tis_applicable_visitation_entity: is_applicable_visitation_entity (a_value)")
 
 					if l_use_user_data then
 						l_valid_name := user_data_validation_function_name (a_opts)

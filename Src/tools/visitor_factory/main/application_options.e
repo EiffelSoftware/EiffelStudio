@@ -28,8 +28,6 @@ feature {NONE} -- Initialization
 			a_params_is_readable: a_params.is_readable
 		local
 			l_name: STRING
-			l_iname: STRING
-			l_sname: STRING
 			l_stub: BOOLEAN
 			l_interface: BOOLEAN
 			l_both: BOOLEAN
@@ -141,39 +139,30 @@ feature {NONE} -- Implementation
 				not_l_list_is_empty: not l_list.is_empty
 			end
 
+			l_excludes := a_params.exclude_expressions
+			if not l_excludes.is_empty then
+				l_exclude_rx := create_pattern_for_file_list (l_excludes)
+			end
+
 				-- Retrieve all files
 			create l_files.make (10)
 			files := l_files
-			l_list.do_all (agent (a_item: STRING; a_files: ARRAYED_LIST [STRING]; a_recurse: BOOLEAN)
+			l_list.do_all (agent (a_item: STRING; a_files: ARRAYED_LIST [STRING]; a_recurse: BOOLEAN; a_expression: RX_PCRE_MATCHER)
 				require
 					a_item_attached: a_item /= Void
 					not_a_item_is_empty: not a_item.is_empty
 					a_files_attached: a_files /= Void
 				do
-					append_file_list (a_item, a_files, a_recurse)
-				end (?, l_files, a_params.recurse_directories))
-
-				-- Remove excluded items
-			l_excludes := a_params.exclude_expressions
-			if not l_excludes.is_empty then
-				l_exclude_rx := create_pattern_for_file_list (l_excludes)
-				from l_files.start until l_files.after loop
-					l_exclude_rx.reset
-					l_exclude_rx.match (l_files.item)
-					if l_exclude_rx.has_matched then
-						l_files.remove
-					else
-						l_files.forth
-					end
-				end
-			end
+					append_file_list (a_item, a_files, a_recurse, a_expression)
+				end (?, l_files, a_params.recurse_directories, l_exclude_rx))
 		ensure
 			files_attached: files /= Void
 		end
 
-	append_file_list (a_path: STRING; a_list: ARRAYED_LIST [STRING]; a_recurse: BOOLEAN) is
+	append_file_list (a_path: STRING; a_list: ARRAYED_LIST [STRING]; a_recurse: BOOLEAN; a_expression: RX_PCRE_MATCHER) is
 			-- Appends Eiffel source files located at or in `a_path' to `a_list'. If `a_path' happens to
 			-- be a directory and `a_recurse' is True then any subdirectories will also be scanned.
+			-- `a_expression' represents an excluded expression
 		require
 			a_path_attached: a_path /= Void
 			not_a_path_is_empty: not a_path.is_empty
@@ -186,13 +175,12 @@ feature {NONE} -- Implementation
 			if l_file.exists then
 				if l_file.is_directory or l_file.is_device then
 					create l_directory.make (a_path)
-					l_directory.filenames.do_all (agent (a_item: STRING; a_inner_list: ARRAYED_LIST [STRING]; a_dir: STRING)
+					l_directory.filenames.do_all (agent (a_item: STRING; a_inner_list: ARRAYED_LIST [STRING]; a_dir: STRING; a_in_expr: RX_PCRE_MATCHER)
 						require
 							a_item_attached: a_item /= Void
 							not_a_item_is_empty: not a_item.is_empty
 							a_inner_list_attached: a_inner_list /= Void
 							a_dir_attached: a_dir /= Void
-							not_a_dir_is_empty: not a_dir.is_empty
 						local
 							l_file_name: FILE_NAME
 						do
@@ -203,19 +191,32 @@ feature {NONE} -- Implementation
 									create l_file_name.make
 								end
 								l_file_name.set_file_name (a_item)
-								a_inner_list.extend (l_file_name)
+								if not a_in_expr.matches (l_file_name) then
+									a_inner_list.extend (l_file_name)
+								end
 							end
-						end (?, a_list, a_path))
+						end (?, a_list, a_path, a_expression))
 
 					if a_recurse then
-						l_directory.directory_names.do_all (agent (a_item: STRING; a_files: ARRAYED_LIST [STRING])
+						l_directory.directory_names.do_all (agent (a_item: STRING; a_files: ARRAYED_LIST [STRING]; a_dir: STRING; a_in_expr: RX_PCRE_MATCHER)
 							require
 								a_item_attached: a_item /= Void
 								not_a_item_is_empty: not a_item.is_empty
 								a_files_attached: a_files /= Void
+								a_dir_attached: a_dir /= Void
+							local
+								l_path_name: FILE_NAME
 							do
-								append_file_list (a_item, a_files, True)
-							end (?, a_list))
+								if not a_dir.is_empty then
+									create l_path_name.make_from_string (a_dir)
+								else
+									create l_path_name.make
+								end
+								l_path_name.set_file_name (a_item)
+								if not a_in_expr.matches (l_path_name) then
+									append_file_list (l_path_name, a_files, True, a_in_expr)
+								end
+							end (?, a_list, a_path, a_expression))
 					end
 				else
 					if has_eiffel_extension (a_path) then
@@ -237,14 +238,15 @@ feature {NONE} -- Implementation
 			l_cursor := a_list.cursor
 			create l_pattern.make (1024)
 			from a_list.start until a_list.after loop
-				l_pattern.append_character ('(')
 				if not a_list.isfirst then
 					l_pattern.append_character ('|')
 				end
+				l_pattern.append_character ('(')
 				l_pattern.append (a_list.item)
 				l_pattern.append_character (')')
 				a_list.forth
 			end
+			a_list.go_to (l_cursor)
 			create Result.make
 			Result.compile (l_pattern)
 		ensure

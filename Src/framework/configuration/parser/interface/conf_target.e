@@ -1182,7 +1182,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_new_name_ok: a_new_name /= Void and then not a_new_name.is_empty
 		do
 			if internal_mapping = Void then
-				create internal_mapping.make (1)
+				create internal_mapping.make (15)
 			end
 			internal_mapping.force (a_new_name.as_upper, a_old_name.as_upper)
 		end

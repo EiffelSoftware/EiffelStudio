@@ -952,7 +952,7 @@ feature {NONE} -- contracts
 
 feature {NONE} -- Size constants
 
-	Classes_per_cluster: INTEGER is 100
+	Classes_per_cluster: INTEGER is 200
 			-- How many classes do we have per average cluster.
 
 	Classes_per_system: INTEGER is 3000

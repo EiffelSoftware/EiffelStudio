@@ -86,6 +86,15 @@ feature -- Access
 			Result := query_group_item_from_conf_group (folder.cluster)
 		end
 
+	group: QL_GROUP is
+			-- Group to which current domain item belongs
+			-- Return the group where current folder is located.
+		do
+			Result ?= query_language_item
+		ensure then
+			result_attached: Result /= Void
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

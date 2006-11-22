@@ -66,6 +66,14 @@ feature -- Access
 		do
 		end
 
+	group: QL_GROUP is
+			-- Group to which current domain item belongs
+			-- Return Void for delayed item.
+		do
+		ensure then
+			result_not_attached: Result = Void
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

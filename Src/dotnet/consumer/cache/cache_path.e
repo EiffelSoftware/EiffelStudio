@@ -234,9 +234,9 @@ feature {EMITTER} -- Access
 			create Result.make (l_name.count + clr_version.count + 3)
 			Result.append (l_name)
 			Result.append_character (l_dir_sep)
-			Result.append (clr_version)
-			Result.append_character (l_dir_sep)
 			Result.append (cache_bit_platform)
+			Result.append_character (l_dir_sep)
+			Result.append (clr_version)
 			Result.append_character (l_dir_sep)
 		ensure
 			result_not_void: Result /= Void

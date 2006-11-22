@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 									create l_file_name.make
 								end
 								l_file_name.set_file_name (a_item)
-								if not a_in_expr.matches (l_file_name) then
+								if a_in_expr = Void or else not a_in_expr.matches (l_file_name) then
 									a_inner_list.extend (l_file_name)
 								end
 							end
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 									create l_path_name.make
 								end
 								l_path_name.set_file_name (a_item)
-								if not a_in_expr.matches (l_path_name) then
+								if a_in_expr = Void or else not a_in_expr.matches (l_path_name) then
 									append_file_list (l_path_name, a_files, True, a_in_expr)
 								end
 							end (?, a_list, a_path, a_expression))

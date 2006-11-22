@@ -84,13 +84,13 @@ feature -- Access
 	generate_stub: BOOLEAN is
 			-- Indiciates if a stub class file should be generated
 		once
-			Result := not has_option (interface_switch)
+			Result := has_option (stub_switch)
 		end
 
 	generate_interface: BOOLEAN is
 			-- Indiciates if a interface class file should be generated
 		once
-			Result := not has_option (stub_switch)
+			Result := has_option (interface_switch) or else not has_option (stub_switch)
 		end
 
 feature -- Status report

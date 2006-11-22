@@ -51,12 +51,6 @@ feature -- Access
 			Result := options_values_of_name (exclude_switch)
 		end
 
-	template_file_name: STRING is
-			-- Template file name
-		once
-			Result := option_of_name (template_file_name).value
-		end
-
 	class_name: STRING is
 			-- Output class name
 		once
@@ -94,12 +88,6 @@ feature -- Access
 		end
 
 feature -- Status report
-
-	has_template_file_name: BOOLEAN is
-			-- Inidicates if a template file name was passed via command line
-		once
-			Result := has_option (template_switch)
-		end
 
 	has_class_name: BOOLEAN is
 			-- Inidicates if a class name was passed via command line
@@ -151,7 +139,6 @@ feature {NONE} -- Switch names
 
 	include_switch: STRING = "i"
 	exclude_switch: STRING = "ex"
-	template_switch: STRING = "t"
 	class_name_switch: STRING = "n"
 	user_data_switch: STRING = "ud"
 	recurse_switch: STRING = "r"

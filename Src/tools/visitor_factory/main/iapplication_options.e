@@ -26,14 +26,6 @@ feature -- Access
 		deferred
 		end
 
-	template_file_name: STRING is
-			-- Template file name
-		require
-			is_readable: is_readable
-			has_template_file_name: has_template_file_name
-		deferred
-		end
-
 	class_name: STRING is
 			-- Output class name
 		require
@@ -79,13 +71,6 @@ feature -- Access
 		end
 
 feature -- Status report
-
-	has_template_file_name: BOOLEAN is
-			-- Inidicates if a template file name was passed via command line
-		require
-			is_readable: is_readable
-		deferred
-		end
 
 	has_class_name: BOOLEAN is
 			-- Inidicates if a class name was passed via command line

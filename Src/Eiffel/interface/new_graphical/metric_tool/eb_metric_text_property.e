@@ -13,11 +13,22 @@ inherit
 	DIALOG_PROPERTY [TUPLE [STRING_GENERAL, BOOLEAN, BOOLEAN]]
 		redefine
 			update_text_on_deactivation,
-			deactivate
+			deactivate,
+			make_with_dialog,
+			dialog
 		end
 
 create
 	make_with_dialog
+
+feature{NONE} -- Initialization
+
+	make_with_dialog (a_name: like name; a_dialog: like dialog) is
+			-- Create with `a_name' and `a_dialog'.
+		do
+			Precursor (a_name, a_dialog)
+			a_dialog.ok_actions.extend (agent on_dialog_close)
+		end
 
 feature{NONE} -- Implementation
 
@@ -59,6 +70,16 @@ feature{NONE} -- Implementation
 			set_value ([l_text, l_case.item, l_regx.item])
 		end
 
+	on_dialog_close is
+			-- Action to be performed when `dialog' closes.
+		do
+			set_value (dialog.value)
+		end
+
+feature {NONE} -- Implementation
+
+	dialog: EB_METRIC_TEXT_PROPERTY_DIALOG;
+			-- Dialog to show to change the value.
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

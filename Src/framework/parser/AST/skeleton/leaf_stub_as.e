@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "A Stub representing original text for terminal tokens in a match list"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

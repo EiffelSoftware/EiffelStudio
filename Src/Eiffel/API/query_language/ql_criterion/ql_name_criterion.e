@@ -23,12 +23,7 @@ feature{NONE} -- Initialization
 			a_name_valid: a_name /= Void
 		do
 			create search_engine.make
-			create name.make_from_string (a_name)
-			if not name.is_empty then
-				initialize_search_engine
-			end
-		ensure
-			name_set: name /= Void and then name.is_equal (a_name)
+			set_name (a_name)
 		end
 
 	make_with_setting (a_name: STRING; a_case_sensitive: BOOLEAN; a_identical_comparison: BOOLEAN) is
@@ -53,6 +48,9 @@ feature -- Access
 	name: STRING
 			-- Name used to compare with an item's name
 
+	lower_name: STRING
+			-- `name' in lower case
+
 	is_case_sensitive: BOOLEAN
 			-- Is comparison between name case sensitive?
 			-- Default: False
@@ -69,11 +67,13 @@ feature -- Setting
 			a_name_valid: a_name /= Void
 		do
 			create name.make_from_string (a_name)
+			create lower_name.make_from_string (a_name.as_lower)
 			if not name.is_empty then
 				initialize_search_engine
 			end
 		ensure
 			name_set: name /= Void and then name.is_equal (a_name)
+			lower_name_set: lower_name /= Void and then lower_name.is_equal (a_name.as_lower)
 		end
 
 	enable_case_sensitive is
@@ -123,9 +123,9 @@ feature -- Evaluate
 			else
 				if is_identical_comparison then
 					if is_case_sensitive then
-						Result := name.is_equal (a_name)
+						Result := name.has_substring (a_name)
 					else
-						Result := name.is_case_insensitive_equal (a_name)
+						Result := lower_name.has_substring (name.as_lower)
 					end
 				else
 					search_engine.match (a_name)
@@ -157,6 +157,7 @@ feature{NONE} -- Implementation
 
 invariant
 	name_valid: name /= Void
+	lower_name_valid: lower_name /= Void
 	search_engine_attached: search_engine /= Void
 
 indexing

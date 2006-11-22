@@ -307,7 +307,7 @@ feature {AST_FEATURE_CHECKER_EXPORT} -- Setting
 
 feature -- default rescue
 
-	create_default_rescue (def_resc_name : STRING) is
+	create_default_rescue (def_resc_name_id: INTEGER) is
 		local
 			def_resc_id   : ID_AS
 			def_resc_call : ACCESS_ID_AS
@@ -315,7 +315,7 @@ feature -- default rescue
 		do
 			if rescue_clause = Void and then
 			   not (routine_body.is_deferred or routine_body.is_external) then
-				create def_resc_id.initialize (def_resc_name)
+				create def_resc_id.initialize_from_id (def_resc_name_id)
 				def_resc_id.set_position (end_keyword.line, end_keyword.column,
 					end_keyword.position, end_keyword.location_count)
 				create def_resc_call.initialize (def_resc_id, Void)

@@ -1,7 +1,7 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class VISIBLE_SELEC_I 
+class VISIBLE_SELEC_I
 
 inherit
 
@@ -16,8 +16,8 @@ inherit
 	SHARED_CECIL
 
 	COMPILER_EXPORTER
-	
-feature 
+
+feature
 
 	visible_features: SEARCH_TABLE [STRING];
 			-- Visible features
@@ -29,7 +29,7 @@ feature
 		end;
 
 	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
-			-- Is feature name `feat_name' visible in context 
+			-- Is feature name `feat_name' visible in context
 			-- of class `class_id'?
 		do
 			Result := visible_features.has (feat.feature_name);
@@ -37,7 +37,7 @@ feature
 
 	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE) is
 			-- Mark visible features from `feat_table'.
-		local	
+		local
 			a_feature: FEATURE_I;
 		do
 			from
@@ -142,7 +142,7 @@ feature
 				visible_features.forth;
 			end;
 		end;
-				
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

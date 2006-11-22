@@ -70,7 +70,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equal (internal_name_id, other.internal_name_id) and
+			Result := equal (internal_name, other.internal_name) and
 				is_infix = other.is_infix and
 				is_frozen = other.is_frozen
 		end

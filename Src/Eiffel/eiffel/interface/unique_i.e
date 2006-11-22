@@ -5,19 +5,19 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class UNIQUE_I 
+class UNIQUE_I
 
 inherit
 	CONSTANT_I
 		redefine
-			is_unique, is_once, check_types, equiv, value, 
+			is_unique, is_once, check_types, equiv, value,
 			replicated, unselected, new_api_feature
 		end
 
 create
 	make
-	
-feature 
+
+feature
 
 	value: INTEGER_CONSTANT
 			-- Value of the constant in the class
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 	new_api_feature: E_UNIQUE is
 			-- API feature creation
 		do
-			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
+			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
 			Result.set_value (value.string_value)
 		end

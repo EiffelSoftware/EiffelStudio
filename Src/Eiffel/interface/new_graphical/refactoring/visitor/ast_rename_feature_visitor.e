@@ -153,7 +153,7 @@ feature {NONE} -- Visitor implementation
 						loop
 							l_rename := l_renamings.item
 								-- if the feature we change was renamed
-							if l_rename.old_name.internal_name_id = feature_i.feature_name_id then
+							if l_rename.old_name.internal_name.name_id = feature_i.feature_name_id then
 								is_renaming := True
 									-- did we rename into the new name?
 								if l_rename.new_name.visual_name.is_case_insensitive_equal (new_feature_name) then
@@ -205,7 +205,7 @@ feature {NONE} -- Visitor implementation
 							loop
 								l_rename := l_renamings.item
 									-- if there is already a renaming, update it
-								l_name_id := l_rename.old_name.internal_name_id
+								l_name_id := l_rename.old_name.internal_name.name_id
 								if l_parent_features.has (l_name_id) then
 									l_rename.new_name.replace_text (new_feature_name, match_list)
 									l_parent_features.remove (l_name_id)

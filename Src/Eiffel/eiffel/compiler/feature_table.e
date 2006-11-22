@@ -144,21 +144,17 @@ feature -- Access: compatibility
 			id: INTEGER
 		do
 			id := Names_heap.id_of (s)
-			if id > 0 then
-				Result := item_id (id)
-			end
+			Result := item_id (id)
 		end
 
-	overloaded_items (s: STRING): LIST [FEATURE_I] is
+	overloaded_items (a_name: INTEGER): LIST [FEATURE_I] is
 			-- List of features matching overloaded name `s'.
 		require
-			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
-			has_overloaded_s: has_overloaded (s)
+			has_overloaded_s: has_overloaded (a_name)
 		local
 			l_names: ARRAYED_LIST [INTEGER]
 		do
-			l_names := overloaded_names.item (Names_heap.id_of (s))
+			l_names := overloaded_names.item (a_name)
 			create {ARRAYED_LIST [FEATURE_I]} Result.make (l_names.count)
 			from
 				l_names.start
@@ -184,26 +180,6 @@ feature -- Access: compatibility
 			Result := l_id > 0 and then has_key_id (l_id)
 		end
 
-	search (key: STRING) is
-			-- Search for item of key `key'
-			-- If found, set `found' to True, and set
-			-- `found_item' to item associated with `key'.
-			-- (from HASH_TABLE)
-		require
-			key_not_void: key /= Void
-			key_not_empty: not key.is_empty
-		local
-			l_id: INTEGER
-		do
-			l_id := Names_heap.id_of (key)
-			if l_id > 0 then
-				search_id (l_id)
-			else
-				control := Not_found_constant
-				found_item := Void
-			end
-		end
-
 	alias_item (alias_name: STRING): FEATURE_I is
 			-- Feature with given `alias_name' if any
 		require
@@ -215,15 +191,12 @@ feature -- Access: compatibility
 
 feature -- Status report
 
-	has_overloaded (a_feature_name: STRING): BOOLEAN is
+	has_overloaded (a_feature_name: INTEGER): BOOLEAN is
 			-- Does Current have `a_feature_name' has being an overloaded routine?
-		local
-			l_id: INTEGER
 		do
 			if associated_class.is_true_external and overloaded_names /= Void then
-				l_id := Names_heap.id_of (a_feature_name)
-				if l_id > 0 then
-					Result := overloaded_names.has (l_id)
+				if a_feature_name > 0 then
+					Result := overloaded_names.has (a_feature_name)
 				end
 			end
 		end

@@ -91,7 +91,7 @@ feature -- Status
 			has_computed_feature_table: has_computed_feature_table (a_context_class)
 		local
 			class_type: CL_TYPE_A
-			feature_name: STRING
+			feature_name: ID_AS
 			feat_table: FEATURE_TABLE
 		do
 			class_type ?= constraint_type (a_context_class)
@@ -108,8 +108,8 @@ feature -- Status
 				until
 					creation_feature_list.after
 				loop
-					feature_name := creation_feature_list.item.internal_name.name
-					feat_table.search (feature_name)
+					feature_name := creation_feature_list.item.internal_name
+					feat_table.search_id (feature_name.name_id)
 					Result.extend (feat_table.found_item)
 					Result.forth
 
@@ -208,7 +208,7 @@ feature -- Validity checking
 			associated_class: CLASS_C
 			class_i: CLASS_I
 			cluster: CONF_GROUP
-			feature_name: STRING
+			feature_name: ID_AS
 			feat_table: FEATURE_TABLE
 			class_type: CLASS_TYPE_AS
 			vtcg6: VTCG6
@@ -247,8 +247,8 @@ feature -- Validity checking
 					until
 						creation_feature_list.after
 					loop
-						feature_name := creation_feature_list.item.internal_name.name
-						feat_table.search (feature_name)
+						feature_name := creation_feature_list.item.internal_name
+						feat_table.search_id (feature_name.name_id)
 						if
 							not feat_table.found or else
 							not is_valid_creation_routine (feat_table.found_item)
@@ -258,7 +258,7 @@ feature -- Validity checking
 							create vtcg6
 							vtcg6.set_class (a_context_class)
 							vtcg6.set_constraint_class (associated_class)
-							vtcg6.set_feature_name (feature_name)
+							vtcg6.set_feature_name (feature_name.name)
 							vtcg6.set_location (creation_feature_list.item.start_location)
 							Error_handler.insert_error (vtcg6)
 						end

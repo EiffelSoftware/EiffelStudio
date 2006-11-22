@@ -248,8 +248,7 @@ feature {NONE} -- Implementation
 			adapter: like Current
 		do
 			select_table := format_reg.target_feature_table.origin_table;
-			s_feat := format_reg.current_feature_table.item
-						(old_name.internal_name.name);
+			s_feat := format_reg.current_feature_table.item_id (old_name.internal_name.name_id)
 			if s_feat /= Void then
 				rout_id := s_feat.rout_id_set.first;
 				t_feat := select_table.item (rout_id);
@@ -294,7 +293,7 @@ feature {NONE} -- Implementation
 		local
 			feat: FEATURE_I
 		do
-			feat := format_reg.target_feature_table.item (name.internal_name.name);
+			feat := format_reg.target_feature_table.item_id (name.internal_name.name_id);
 			if feat = Void then
 					-- Newly added feature which hasn't been compiled
 				register_uncompiled_feature (format_reg)

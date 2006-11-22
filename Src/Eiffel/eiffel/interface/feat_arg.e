@@ -94,24 +94,6 @@ feature -- Access
 			Result_not_empty: not Result.is_empty
 		end
 
-	argument_position (arg_id: STRING; a_start_position: INTEGER): INTEGER is
-		require
-			arg_id_not_void: arg_id /= Void
-			arg_id_not_empty: not arg_id.is_empty
-			valid_start_position: a_start_position >= 1
-		local
-			arg_name_id: INTEGER
-		do
-			if a_start_position <= count then
-				arg_name_id := Names_heap.id_of (arg_id)
-				if arg_name_id > 0 then
-					Result := 1 + argument_names.index_of (arg_name_id, a_start_position - 1)
-				end
-			end
-		ensure
-			not_found_or_found: Result = 0 or else (Result >= 1 and then Result <= count)
-		end
-
 	argument_position_id (arg_id: INTEGER; a_start_position: INTEGER): INTEGER is
 		require
 			arg_id_not_void: arg_id >= 0

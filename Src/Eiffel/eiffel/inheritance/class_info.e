@@ -58,7 +58,7 @@ feature -- Access
 		require
 			good_argument: feat_table /= Void;
 		local
-			feature_name: STRING;
+			feature_name: ID_AS;
 			a_class: CLASS_C;
 			a_feature, l_def_create: FEATURE_I;
 			feature_list: EIFFEL_LIST [FEATURE_NAME];
@@ -104,29 +104,29 @@ feature -- Access
 						until
 							feature_list.after
 						loop
-							feature_name := feature_list.item.internal_name.name;
-							a_feature := feat_table.item (feature_name);
+							feature_name := feature_list.item.internal_name
+							a_feature := feat_table.item_id (feature_name.name_id);
 							if a_feature = Void then
 								create vgcp2;
 								vgcp2.set_class (a_class);
-								vgcp2.set_feature_name (feature_name);
+								vgcp2.set_feature_name (feature_name.name);
 								vgcp2.set_location (feature_list.item.start_location)
 								Error_handler.insert_error (vgcp2);
 							else
-								if Result.has (feature_name) then
+								if Result.has (feature_name.name) then
 									create vgcp3;
 									vgcp3.set_class (a_class);
-									vgcp3.set_feature_name (feature_name);
+									vgcp3.set_feature_name (feature_name.name);
 									vgcp3.set_location (feature_list.item.start_location)
 									Error_handler.insert_error (vgcp3);
 								else
 									has_default_create := has_default_create or a_feature = l_def_create
-									Result.put (l_export_status, feature_name);
+									Result.put (l_export_status, feature_name.name);
 								end;
 								if not a_feature.type.is_void then
 									create vgcp21;
 									vgcp21.set_class (a_class);
-									vgcp21.set_feature_name (feature_name);
+									vgcp21.set_feature_name (feature_name.name);
 									vgcp21.set_location (feature_list.item.start_location)
 									Error_handler.insert_error (vgcp21);
 								end;

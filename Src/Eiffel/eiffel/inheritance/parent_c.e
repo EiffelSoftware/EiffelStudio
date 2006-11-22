@@ -177,14 +177,14 @@ feature
 					new_name_id := feature_renaming.feature_name_id
 					new_name := names_heap.item (new_name_id)
 					alias_name_id := feature_renaming.alias_name_id
-					if not parent_table.has (old_name) then
+					if not parent_table.has_id (old_name_id) then
 						create vhrc1
 						vhrc1.set_class (System.current_class)
 						vhrc1.set_parent (parent)
 						vhrc1.set_feature_name (old_name)
 						Error_handler.insert_error (vhrc1)
 					elseif is_mangled_infix (new_name) then
-						f := parent_table.item (old_name)
+						f := parent_table.item_id (old_name_id)
 						if f.argument_count /= 1 or else f.type.is_void then
 							create vhrc5
 							vhrc5.set_class (System.current_class)
@@ -193,7 +193,7 @@ feature
 							Error_handler.insert_error (vhrc5)
 						end;
 					elseif is_mangled_prefix (new_name) then
-						f := parent_table.item (old_name)
+						f := parent_table.item_id (old_name_id)
 						if f.argument_count /= 0 or else f.type.is_void then
 							create vhrc4
 							vhrc4.set_class (System.current_class)
@@ -203,7 +203,7 @@ feature
 						end
 					elseif alias_name_id > 0 then
 						vfav := Void
-						f := parent_table.item (old_name)
+						f := parent_table.item_id (old_name_id)
 						if alias_name_id = bracket_symbol_id then
 							if f.argument_count = 0 or else f.type.is_void then
 									-- Bracket features should have at least one argument and a return type.

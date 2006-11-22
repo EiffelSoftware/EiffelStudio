@@ -70,16 +70,6 @@ feature -- Access
 			valid_result: Result >= 0
 		end
 
-	has (s: STRING): BOOLEAN is
-			-- Does current have `s'.
-		require
-			s_not_void: s /= Void
-			s_valid_type: s.same_type (string_type)
-		do
-			search (s)
-			Result := found
-		end
-
 	string_type: STRING is ""
 			-- Manifest string used in precondition to
 			-- ensure that Current only contains STRING instances.
@@ -90,19 +80,6 @@ feature -- Status report
 			-- Is `i' within bounds?
 		do
 			Result := i >= 0 and then i < top_index
-		end
-
-	search (s: STRING) is
-			-- Search for `s' in Current.
-		require
-			s_not_void: s /= Void
-			s_valid_type: s.same_type (string_type)
-		do
-			lookup_table.search (s)
-			found := lookup_table.found
-			if found then
-				found_item := lookup_table.found_item
-			end
 		end
 
 feature -- Element change
@@ -343,6 +320,10 @@ feature {NONE} -- Implementation: access
 			put ("valid_operands") check found_item = valid_operands_name_id end
 			put ("set_rout_disp_final") check found_item = set_rout_disp_final_name_id end
 			put ("to_pointer") check found_item = to_pointer_name_id end
+			put ("NONE") check found_item = none_class_name_id end
+			put ("Precursor") check found_item = precursor_id end
+			put ("pointer_item") check found_item = pointer_item_id end
+			put ("fast_item") check found_item = fast_item_id end
 		end
 
 invariant

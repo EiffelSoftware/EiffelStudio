@@ -700,7 +700,7 @@ feature {TYPE_A} -- Visitors
 				create l_like_feature.make (l_anchor_feature, current_class.class_id)
 				update_like_feature (l_anchor_feature, l_like_feature)
 			else
-				l_argument_position := current_feature.argument_position (a_type.anchor)
+				l_argument_position := current_feature.argument_position (a_type.anchor_name_id)
 				if l_argument_position /= 0 then
 					create l_like_argument
 					l_like_argument.set_position (l_argument_position)

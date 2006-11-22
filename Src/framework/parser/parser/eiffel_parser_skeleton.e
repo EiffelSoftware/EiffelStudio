@@ -29,6 +29,9 @@ inherit
 	SHARED_PARSER_FILE_BUFFER
 		export {NONE} all end
 
+	PREDEFINED_NAMES
+		export {NONE} all end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -562,7 +565,7 @@ feature {NONE} -- ID factory
 	new_none_id: NONE_ID_AS is
 			-- New ID AST node for "NONE"
 		do
-			Result := ast_factory.new_filled_none_id_as (line, column, position, None_classname.count)
+			Result := ast_factory.new_filled_none_id_as (line, column, position, 4)
 		end
 
 feature {NONE} -- Type factory
@@ -582,7 +585,7 @@ feature {NONE} -- Type factory
 			if an_id /= Void then
 				class_name := an_id
 
-				if none_classname.is_case_insensitive_equal (class_name.name) then
+				if none_class_name_id = class_name.name_id then
 					if generics /= Void then
 						report_basic_generic_type_error
 					end
@@ -773,18 +776,6 @@ feature{NONE} -- Roundtrip
 	temp_address_result_as: ADDRESS_RESULT_AS
 
 feature {NONE} -- Constants
-
-	Integer_8_classname: STRING is "INTEGER_8"
-	Integer_16_classname: STRING is "INTEGER_16"
-	Integer_classname: STRING is "INTEGER"
-	Integer_64_classname: STRING is "INTEGER_64"
-	Boolean_classname: STRING is "BOOLEAN"
-	Character_classname: STRING is "CHARACTER"
-	Wide_char_classname: STRING is "WIDE_CHARACTER"
-	Double_classname: STRING is "DOUBLE"
-	None_classname: STRING is "NONE"
-	Pointer_classname: STRING is "POINTER"
-	Real_classname: STRING is "REAL"
 
 	Initial_counters_capacity: INTEGER is 20
 			-- Initial capacity for `counters'

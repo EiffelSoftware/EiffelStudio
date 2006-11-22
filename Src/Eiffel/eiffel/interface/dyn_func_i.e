@@ -65,7 +65,7 @@ feature -- Api creation
 	new_api_feature: E_FUNCTION is
 			-- API feature creation
 		do
-			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
+			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
 			update_api (Result)
 		end

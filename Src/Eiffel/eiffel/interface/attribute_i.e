@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 	new_api_feature: E_ATTRIBUTE is
 			-- API feature creation
 		do
-			create Result.make (feature_name, alias_name, has_convert_mark, feature_id)
+			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
 		end
 

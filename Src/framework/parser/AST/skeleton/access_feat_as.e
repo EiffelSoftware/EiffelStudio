@@ -82,7 +82,6 @@ feature -- Attributes
 			Result := feature_name.name
 		end
 
-
 	is_qualified: BOOLEAN is
 			-- Is current entity a call on an other object?
 		do

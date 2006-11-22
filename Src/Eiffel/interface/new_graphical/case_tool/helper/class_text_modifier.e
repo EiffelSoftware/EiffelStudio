@@ -77,6 +77,13 @@ inherit
 			default_create
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	make_with_tool,
 	make
@@ -384,7 +391,7 @@ feature -- Modification (Add/Remove feature)
 					data.after
 				loop
 					l_item := data.item
-					actual_feature_as := class_as.feature_with_name (l_item.feature_name.name)
+					actual_feature_as := class_as.feature_with_name (l_item.feature_name.name_id)
 					if actual_feature_as /= Void then
 						if actual_feature_as.feature_names.count = 1 then
 							feat_code := code (actual_feature_as.start_position, actual_feature_as.end_position)
@@ -973,7 +980,7 @@ feature {NONE} -- Implementation
 			last_feature_as := Void
 			reparse
 			if class_as /= Void then
-				last_feature_as := class_as.feature_with_name (a_name)
+				last_feature_as := class_as.feature_with_name (names_heap.id_of (a_name))
 			end
 		end
 

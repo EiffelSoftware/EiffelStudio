@@ -40,29 +40,40 @@ inherit
 			is_equal
 		end
 
+	SHARED_NAMES_HEAP
+		undefine
+			is_equal
+		end
+
 feature -- Initialization
 
-	make (n: like name; a: like alias_name; c: like has_convert_mark; i: INTEGER) is
+	make (n: like name_id; a: like alias_name; c: like has_convert_mark; i: INTEGER) is
 			-- Initialize feature with name `n' with
 			-- identification `i'.
 		require
-			valid_n: n /= Void
+			valid_n: n >= 0
 			positive_i: i >= 0
 		do
-			name := n
+			name_id := n
 			alias_name := a
 			has_convert_mark := c
 			feature_id := i
 		ensure
-			name_set: name = n
+			name_id_set: name_id = n
 			alias_name_set: alias_name = a
 			feature_id_set: feature_id = i
 		end
 
 feature -- Properties
 
-	name: STRING;
+	name_id: INTEGER
+			-- Name id in the names heap.
+
+	name: STRING is
 			-- Final name of the feature
+		do
+			Result := names_heap.item (name_id)
+		end
 
 	alias_name: STRING
 			-- Alias name of the feature (if any)
@@ -440,7 +451,7 @@ feature -- Access
 			end
 			if Result = Void and Tmp_ast_server.has (written_in) then
 				class_ast := Tmp_ast_server.item (written_in)
-				Result := class_ast.feature_with_name (name)
+				Result := class_ast.feature_with_name (name_id)
 			end
 
 			if Result = Void then
@@ -459,7 +470,7 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code
 		do
-			Result := name.hash_code
+			Result := name_id
 		end;
 
 	callees (a_flag: INTEGER_8): LINKED_LIST [TUPLE [class_c: CLASS_C; feature_name: STRING]] is

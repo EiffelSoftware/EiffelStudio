@@ -78,6 +78,24 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := show_item_path_preference.value
 		end
 
+	is_self_dependency_shown: BOOLEAN is
+			-- Is dependency on self shown?
+		do
+			Result := show_self_dependency_preference.value
+		end
+
+	should_referenced_class_be_expanded: BOOLEAN is
+			-- Should referenced classes in dependency view be expanded by default?
+		do
+			Result := expand_referenced_class_preference.value
+		end
+
+	should_referencer_class_be_expanded: BOOLEAN is
+			-- Should referencer classes in dependency view be expanded by default?
+		do
+			Result := expand_referencer_class_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	odd_row_background_color_preference: COLOR_PREFERENCE
@@ -88,6 +106,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	class_tree_view_sorting_order_preference: STRING_PREFERENCE
 	feature_view_sorting_order_preference: STRING_PREFERENCE
 	show_item_path_preference: BOOLEAN_PREFERENCE
+	show_self_dependency_preference: BOOLEAN_PREFERENCE
+	expand_referenced_class_preference: BOOLEAN_PREFERENCE
+	expand_referencer_class_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -99,6 +120,9 @@ feature {NONE} -- Preference Strings
 	class_tree_view_sorting_order_string: STRING is "tools.class_browser.class_flat_tree_sorting_order"
 	feature_view_sorting_order_string: STRING is "tools.class_browser.feature_view_sorting_order"
 	show_item_path_string: STRING is "tools.class_browser.show_item_path"
+	show_self_dependency_string: STRING is "tools.class_browser.show_self_dependency"
+	expand_referenced_class_string: STRING is "tools.class_browser.expand_referenced_class"
+	expand_referencer_class_string: STRING is "tools.class_browser.expand_referencer_class"
 
 feature {NONE} -- Implementation
 
@@ -119,6 +143,9 @@ feature {NONE} -- Implementation
 			feature_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, feature_view_sorting_order_string, "2:1")
 			feature_view_sorting_order_preference.set_hidden (True)
 			show_item_path_preference := l_manager.new_boolean_preference_value (l_manager, show_item_path_string, False)
+			show_self_dependency_preference := l_manager.new_boolean_preference_value (l_manager, show_self_dependency_string, False)
+			expand_referenced_class_preference := l_manager.new_boolean_preference_value (l_manager, expand_referenced_class_string, True)
+			expand_referencer_class_preference := l_manager.new_boolean_preference_value (l_manager, expand_referencer_class_string, False)
 		end
 
 	preferences: PREFERENCES

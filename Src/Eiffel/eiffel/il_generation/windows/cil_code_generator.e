@@ -7084,7 +7084,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			f: FEATURE_I
 		once
 			c := System.system_object_class.compiled_class
-			l := c.feature_table.overloaded_items (names_heap.item ({PREDEFINED_NAMES}.equals_name_id))
+			l := c.feature_table.overloaded_items ({PREDEFINED_NAMES}.equals_name_id)
 			check
 				l_attached: l /= Void
 			end

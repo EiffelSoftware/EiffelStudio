@@ -950,7 +950,7 @@ end;
 			vffd4: VFFD4;
 			external_i: EXTERNAL_I;
 		do
-			feature_name_id := feat.internal_name_id;
+			feature_name_id := feat.internal_name.name_id
 debug ("ACTIVITY")
 	io.error.put_string ("FEATURE_UNIT on ");
 	io.error.put_string (feat.internal_name.name);

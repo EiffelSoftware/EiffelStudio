@@ -57,7 +57,7 @@ feature -- Access
 	current_feature: FEATURE_I
 			-- Current analyzed feature.
 
-	locals: HASH_TABLE [LOCAL_INFO, STRING]
+	locals: HASH_TABLE [LOCAL_INFO, INTEGER]
 			-- Current local variables of the analyzed feature
 
 	supplier_ids: FEATURE_DEPENDANCE

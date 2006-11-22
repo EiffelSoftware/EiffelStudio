@@ -83,6 +83,11 @@ inherit
 			{NONE} all
 		end
 
+	PREDEFINED_NAMES
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	init (a_context: AST_CONTEXT) is
@@ -683,7 +688,7 @@ feature -- Roundtrip
 
 					if is_byte_node_enabled then
 
-						create l_feature_name.initialize (l_feature.feature_name)
+						create l_feature_name.initialize_from_id (l_feature.feature_name_id)
 						l_ak := l_as.agent_keyword
 						l_feature_name.set_position (l_ak.line, l_ak.column, l_ak.position, 0)
 						l_as.set_feature_name (l_feature_name)
@@ -1021,7 +1026,7 @@ feature -- Implementation
 					-- Look for a feature in the class associated to the
 					-- last actual type onto the context type stack. If it
 					-- is a generic take the associated constraint.
-				if l_last_class.feature_table.has_overloaded (l_feature_name.name) then
+				if l_last_class.feature_table.has_overloaded (l_feature_name.name_id) then
 						-- Evaluate parameters. This is needed for overloading resolution.
 						-- Note: if one parameter is a manifest array, then its type is resolved
 						-- without context.
@@ -1040,10 +1045,10 @@ feature -- Implementation
 							-- Update `l_feature_name' with appropriate resolved name.
 							-- Otherwise some routine using `l_feature_name' will fail although
 							-- it succeeds here (e.g. CREATION_EXPR_AS and CREATION_AS)
-						create l_feature_name.initialize (l_feature.feature_name)
+						create l_feature_name.initialize_from_id (l_feature.feature_name_id)
 					end
 				else
-					l_feature := l_last_class.feature_table.item (l_feature_name.name)
+					l_feature := l_last_class.feature_table.item_id (l_feature_name.name_id)
 				end
 			end
 				-- No feature was found, so if the target of the call is a named tuple
@@ -1848,7 +1853,7 @@ feature -- Implementation
 						l_arg_pos := l_as.argument_position
 					end
 				else
-					l_arg_pos := l_feature.argument_position (l_as.feature_name.name)
+					l_arg_pos := l_feature.argument_position (l_as.feature_name.name_id)
 				end
 			end
 			if l_arg_pos /= 0 then
@@ -1876,7 +1881,7 @@ feature -- Implementation
 			else
 					-- Look for a local if not in a pre- or postcondition
 				if not is_inherited or else l_as.is_local then
-					l_local_info := context.locals.item (l_as.feature_name.name)
+					l_local_info := context.locals.item (l_as.feature_name.name_id)
 				end
 				if l_local_info /= Void then
 						-- Local found
@@ -1967,7 +1972,7 @@ feature -- Implementation
 			if is_inherited then
 				l_arg_pos := l_as.argument_position
 			else
-				l_arg_pos := l_feature.argument_position (l_as.feature_name.name)
+				l_arg_pos := l_feature.argument_position (l_as.feature_name.name_id)
 			end
 			if l_arg_pos /= 0 then
 					-- Found argument
@@ -2001,7 +2006,7 @@ feature -- Implementation
 			else
 					-- Look for a local if in a pre- or postcondition
 				if not is_inherited then
-					l_local_info := context.locals.item (l_as.feature_name.name)
+					l_local_info := context.locals.item (l_as.feature_name.name_id)
 				end
 				if l_local_info /= Void then
 						-- Local found
@@ -2128,7 +2133,7 @@ feature -- Implementation
 				-- the current class type (e.g. like Current).
 			l_feature_i.instantiate (context.current_class_type)
 
-			create l_precursor_id.initialize ("Precursor")
+			create l_precursor_id.initialize_from_id (precursor_id)
 			l_precursor_id.set_position (l_as.precursor_keyword.line, l_as.precursor_keyword.column,
 				l_as.precursor_keyword.position, l_as.precursor_keyword.location_count)
 			process_call (context.current_class_type, l_parent_type, l_precursor_id, l_feature_i,
@@ -2608,7 +2613,7 @@ feature -- Implementation
 						l_arg_pos := l_as.argument_position
 					end
 				else
-					l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name.name)
+					l_arg_pos := l_feature.argument_position (l_as.feature_name.internal_name.name_id)
 				end
 			end
 			if l_arg_pos /= 0 then
@@ -2628,7 +2633,7 @@ feature -- Implementation
 			else
 					-- Look for a local if not in a pre- or postcondition
 					if not is_inherited or else l_as.is_local then
-					l_local_info := context.locals.item (l_as.feature_name.internal_name.name)
+					l_local_info := context.locals.item (l_as.feature_name.internal_name.name_id)
 				end
 				if l_local_info /= Void then
 						-- Local found
@@ -2662,7 +2667,7 @@ feature -- Implementation
 					if is_inherited then
 						l_feature := context.current_class.feature_of_rout_id (l_as.routine_ids.first)
 					else
-						l_feature := context.current_class.feature_table.item (l_as.feature_name.internal_name.name)
+						l_feature := context.current_class.feature_table.item_id (l_as.feature_name.internal_name.name_id)
 					end
 					if l_feature = Void then
 						create l_veen
@@ -2793,7 +2798,7 @@ feature -- Implementation
 			l_class := l_target_type.associated_class
 			l_table := l_class.feature_table
 			if a_feature = Void then
-				l_feature := l_table.item (l_feature_name.name)
+				l_feature := l_table.item_id (l_feature_name.name_id)
 			else
 				l_feature := a_feature
 			end
@@ -3504,7 +3509,7 @@ feature -- Implementation
 			end
 
 				-- Process arguments
-			create id_feature_name.initialize (bracket_feature.feature_name)
+			create id_feature_name.initialize_from_id (bracket_feature.feature_name_id)
 			location := l_as.left_bracket_location
 			id_feature_name.set_position (location.line, location.column, location.position, location.location_count)
 				-- Restore assigner call flag
@@ -4061,7 +4066,7 @@ feature -- Implementation
 
 					-- Use default_create
 				create {ACCESS_INV_AS} l_call.make (
-					create {ID_AS}.initialize (l_dcr_feat.feature_name), Void, Void)
+					create {ID_AS}.initialize_from_id (l_dcr_feat.feature_name_id), Void, Void)
 					-- For better error reporting as we insert a dummy call for type checking.
 				l_call.feature_name.set_position (a_location.line, a_location.column,
 					a_location.position, a_location.location_count)
@@ -5699,7 +5704,7 @@ feature {NONE} -- Implementation: overloading
 		require
 			a_type_not_void: a_type /= Void
 			last_class_not_void: last_class /= Void
-			last_class_has_overloaded: last_class.feature_table.has_overloaded (a_feature_name.name)
+			last_class_has_overloaded: last_class.feature_table.has_overloaded (a_feature_name.name_id)
 		local
 			last_id: INTEGER
 			l_features: LIST [FEATURE_I]
@@ -5710,7 +5715,7 @@ feature {NONE} -- Implementation: overloading
 			last_id := last_class.class_id
 
 				-- At this stage we know this is an overloaded routine.
-			l_features := last_class.feature_table.overloaded_items (a_feature_name.name)
+			l_features := last_class.feature_table.overloaded_items (a_feature_name.name_id)
 
 				-- Remove all features that are not valid for Current call.
 				-- C# ECMA 14.4.2.1
@@ -6885,7 +6890,7 @@ feature {NONE} -- Implementation: checking locals
 			l_track_local: BOOLEAN
 			i: INTEGER
 			l_local_info: LOCAL_INFO
-			l_context_locals: HASH_TABLE [LOCAL_INFO, STRING]
+			l_context_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
 			l_vrle1: VRLE1
 			l_vrle2: VRLE2
 			l_vreg: VREG
@@ -6947,7 +6952,7 @@ feature {NONE} -- Implementation: checking locals
 
 						l_local_info.set_type (l_solved_type)
 						l_local_info.set_position (i)
-						if l_context_locals.has (l_local_name) then
+						if l_context_locals.has (l_local_name_id) then
 								-- Error: two locals withe the same name
 							create l_vreg
 							l_vreg.set_entity_name (l_local_name)
@@ -6955,7 +6960,7 @@ feature {NONE} -- Implementation: checking locals
 							l_vreg.set_location (l_as.locals.item.start_location)
 							error_handler.insert_error (l_vreg)
 						else
-							l_context_locals.put (l_local_info, l_local_name)
+							l_context_locals.put (l_local_info, l_local_name_id)
 						end
 							-- We do NOT want to update the type in the instantiator
 							-- if there is an error!!!! (Xavier)
@@ -6978,7 +6983,7 @@ feature {NONE} -- Implementation: checking locals
 			end
 		end
 
-	check_unused_locals (a_locals: HASH_TABLE [LOCAL_INFO, STRING]) is
+	check_unused_locals (a_locals: HASH_TABLE [LOCAL_INFO, INTEGER]) is
 			-- Check that all locals are used in Current. If not raise
 			-- a warning.
 		require
@@ -6997,7 +7002,7 @@ feature {NONE} -- Implementation: checking locals
 					if l_warning = Void then
 						create l_warning.make (context.current_class, current_feature.enclosing_feature)
 					end
-					l_warning.add_unused_local (a_locals.key_for_iteration, l_local.type)
+					l_warning.add_unused_local (names_heap.item (a_locals.key_for_iteration), l_local.type)
 				end
 				a_locals.forth
 			end

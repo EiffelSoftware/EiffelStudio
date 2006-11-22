@@ -29,11 +29,11 @@ feature {NONE} -- Initialization
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
+			n_upper: n.name.is_equal (n.name.as_upper)
 			p_not_void: p /= Void
 			p_has_arguments: p.arguments /= Void
 		do
 			class_name := n
-			class_name.to_upper
 			parameters := p
 		ensure
 			class_name_set: class_name.is_equal (n)

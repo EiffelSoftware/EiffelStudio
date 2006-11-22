@@ -79,7 +79,7 @@ feature -- Initialization/Checking
 					a_convertors.after or has_error
 				loop
 					l_feat := a_convertors.item
-					l_name_id := l_feat.feature_name.internal_name_id
+					l_name_id := l_feat.feature_name.internal_name.name_id
 					if l_processed.has (l_name_id) then
 							-- Routine specified twice in Convert_clause.
 						create l_vncp.make ("Routine specified twice in Convert_clause.")
@@ -463,7 +463,7 @@ feature {NONE} -- Implementation: checking
 			l_feat: FEATURE_I
 			l_vncp: VNCP
 		do
-			a_feat_tbl.search_id (a_convert_feat.feature_name.internal_name_id)
+			a_feat_tbl.search_id (a_convert_feat.feature_name.internal_name.name_id)
 			if a_feat_tbl.found then
 				l_feat := a_feat_tbl.found_item
 				if l_feat.is_routine and (not l_feat.is_once or not l_feat.is_external) then
@@ -534,16 +534,16 @@ feature {NONE} -- Implementation: checking
 			matching_class_and_feat_tbl: a_class = a_feat_tbl.associated_class
 			a_convert_feat_not_void: a_convert_feat /= Void
 			a_type_not_void: a_type /= Void
-			has_routine: a_feat_tbl.has_id (a_convert_feat.feature_name.internal_name_id)
+			has_routine: a_feat_tbl.has_id (a_convert_feat.feature_name.internal_name.name_id)
 			routine_valid:
-				valid_signature (a_feat_tbl.item_id (a_convert_feat.feature_name.internal_name_id))
+				valid_signature (a_feat_tbl.item_id (a_convert_feat.feature_name.internal_name.name_id))
 		local
 			l_feat: FEATURE_I
 			l_vncp: VNCP
 		do
 				-- Check conformance of `a_type' to signature of routine specified in
 				-- `a_convert_feat'.
-			l_feat := a_feat_tbl.item_id (a_convert_feat.feature_name.internal_name_id)
+			l_feat := a_feat_tbl.item_id (a_convert_feat.feature_name.internal_name.name_id)
 				-- FIXME: Manu 04/28/2003: we do not do yet apply convertibility to check
 				-- for conversion type validity, only conformance
 			if l_feat.is_function then

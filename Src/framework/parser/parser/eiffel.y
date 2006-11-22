@@ -1573,9 +1573,7 @@ Actual_parameter_list:	Type TE_RSQURE
 			{
 				$$ := $4
 				if $$ /= Void and $1 /= Void then
-					if not case_sensitive then
-						$1.to_upper		
-					end
+					$1.to_upper		
 					$$.reverse_extend (new_class_type ($1, Void))
 					ast_factory.reverse_extend_separator ($$, $2)
 				end
@@ -1596,9 +1594,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
 				
 				if $$ /= Void and last_identifier_list /= Void and $1 /= Void then
-					if not case_sensitive then
-						$1.to_lower		
-					end
+					$1.to_lower		
 					last_identifier_list.reverse_extend ($1.name_id)
 					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
 				end
@@ -1613,9 +1609,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				if $$ /= Void then
 					last_identifier_list := $$.reversed_first.id_list
 					if last_identifier_list /= Void then
-						if not case_sensitive then
-							$1.to_lower		
-						end
+						$1.to_lower		
 						last_identifier_list.reverse_extend ($1.name_id)
 						ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
 						ast_factory.reverse_extend_separator (last_identifier_list.id_list, $2)
@@ -1630,9 +1624,7 @@ Named_parameter_list: TE_ID TE_COLON Type TE_RSQURE
 				last_identifier_list := ast_factory.new_identifier_list (counter_value + 1)
 				
 				if $$ /= Void and $1 /= Void and $3 /= Void and last_identifier_list /= Void then
-					if not case_sensitive then
-						$1.to_lower		
-					end
+					$1.to_lower		
 					last_identifier_list.reverse_extend ($1.name_id)
 					ast_factory.reverse_extend_identifier (last_identifier_list.id_list, $1)
 					
@@ -1688,7 +1680,7 @@ Formal_generic_list: Formal_generic
 
 Formal_parameter: TE_REFERENCE Class_identifier
 			{
-				if equal (None_classname, $2.name) then
+				if $2 /= Void and then none_class_name_id = $2.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -1702,7 +1694,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 			}
 	| TE_EXPANDED Class_identifier
 			{
-				if equal (None_classname, $2.name) then
+				if $2 /= Void and then none_class_name_id = $2.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$2' is not a class name
@@ -1717,7 +1709,7 @@ Formal_parameter: TE_REFERENCE Class_identifier
 
 	|	Class_identifier
 			{
-				if equal (None_classname, $1.name) then
+				if $1 /= Void and then none_class_name_id = $1.name_id then
 						-- Trigger an error when constraint is NONE.
 						-- Needs to be done manually since current test for
 						-- checking that `$1' is not a class name
@@ -2459,7 +2451,7 @@ Typed_expression:	Typed
 
 Free_operator: TE_FREE
 			{
-				if not case_sensitive and $1 /= Void then
+				if $1 /= Void then
 					$1.to_lower
 				end
 				$$ := $1
@@ -2616,7 +2608,7 @@ Expression_list: Expression
 
 Class_or_tuple_identifier: TE_TUPLE
 			{
-				if not case_sensitive and $1 /= Void then
+				if $1 /= Void then
 					$1.to_upper
 				end
 				$$ := $1
@@ -2629,7 +2621,7 @@ Class_or_tuple_identifier: TE_TUPLE
 
 Class_identifier: TE_ID
 			{
-				if not case_sensitive and $1 /= Void then
+				if $1 /= Void then
 					$1.to_upper		
 				end
 				$$ := $1
@@ -2644,7 +2636,7 @@ Class_identifier: TE_ID
 							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
 
-				if not case_sensitive and last_id_as_value /= Void then
+				if last_id_as_value /= Void then
 					last_id_as_value.to_upper
 				end
 				$$ := last_id_as_value
@@ -2653,14 +2645,14 @@ Class_identifier: TE_ID
 
 Identifier_as_lower: TE_ID
 			{
-				if not case_sensitive and $1 /= Void then
+				if $1 /= Void then
 					$1.to_lower
 				end
 				$$ := $1
 			}
 	|	TE_TUPLE
 			{
-				if not case_sensitive and $1 /= Void then
+				if $1 /= Void then
 					$1.to_lower
 				end
 				$$ := $1
@@ -2674,7 +2666,7 @@ Identifier_as_lower: TE_ID
 						create {SYNTAX_WARNING}.make (line, column, filename,
 							once "Use of `assign', possibly a new keyword in future definition of `Eiffel'."))
 				end
-				if not case_sensitive and last_id_as_value /= Void then
+				if last_id_as_value /= Void then
 					last_id_as_value.to_lower
 				end
 				$$ := last_id_as_value

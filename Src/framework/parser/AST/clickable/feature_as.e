@@ -253,7 +253,7 @@ feature -- Access
 			Result := feature_names.first.internal_name
 		end
 
-	feature_with_name (n: STRING): FEATURE_AS is
+	feature_with_name (n: INTEGER): FEATURE_AS is
 			-- Feature ast with internal name `n'
 		local
 			cur: CURSOR
@@ -264,7 +264,7 @@ feature -- Access
 			until
 				feature_names.after or else Result /= Void
 			loop
-				if n.is_equal (feature_names.item.internal_name.name) then
+				if n.is_equal (feature_names.item.internal_name.name_id) then
 					Result := Current
 				end
 				feature_names.forth
@@ -355,13 +355,13 @@ feature -- empty body
 
 feature -- default rescue
 
-	create_default_rescue (def_resc_name : STRING) is
+	create_default_rescue (def_resc_name_id: INTEGER) is
 				-- Create default rescue if necessary
 		require
-			valid_feature_name : def_resc_name /= Void
+			valid_feature_name_id: def_resc_name_id > 0
 		do
 			if body /= Void then
-				body.create_default_rescue (def_resc_name)
+				body.create_default_rescue (def_resc_name_id)
 			end
 		end
 

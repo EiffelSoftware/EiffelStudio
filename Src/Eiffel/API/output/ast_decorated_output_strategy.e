@@ -1950,9 +1950,9 @@ feature {NONE} -- Implementation
 				if current_feature = Void then
 						-- Processing other part of a class, not in a feature.
 					if last_parent /= Void then
-						l_feat := last_parent.feature_table.item_id (l_as.internal_name_id).e_feature
+						l_feat := last_parent.feature_table.item_id (l_as.internal_name.name_id).e_feature
 					else
-						l_feat := current_class.feature_table.item_id (l_as.internal_name_id).e_feature
+						l_feat := current_class.feature_table.item_id (l_as.internal_name.name_id).e_feature
 					end
 				else
 						-- Processing name of a feature.
@@ -2592,7 +2592,7 @@ feature {NONE} -- Implementation
 				if l_feat /= Void then
 					create l_creators.make (1)
 					create l_features.make (1)
-					l_features.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize (l_feat.feature_name)))
+					l_features.extend (create {FEAT_NAME_ID_AS}.initialize (create {ID_AS}.initialize_from_id (l_feat.feature_name_id)))
 					create l_create.initialize (Void, l_features, Void)
 					l_creators.extend (l_create)
 				end

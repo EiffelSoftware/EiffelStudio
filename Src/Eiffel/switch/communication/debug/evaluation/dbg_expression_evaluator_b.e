@@ -1296,7 +1296,7 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 
-			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
+			l_ct_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
 			f_as: BODY_AS
 			l_byte_code: BYTE_CODE
 			bak_byte_code: BYTE_CODE

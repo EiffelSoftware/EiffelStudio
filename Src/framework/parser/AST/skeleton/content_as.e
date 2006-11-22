@@ -107,10 +107,10 @@ feature -- test for empty body
 
 feature -- default rescue
 
-	create_default_rescue (def_resc_name : STRING) is
+	create_default_rescue (def_resc_name_id: INTEGER) is
 			-- Create default rescue clause if necessary
 		require
-			valid_feature_name : def_resc_name /= Void
+			valid_feature_name_id: def_resc_name_id > 0
 		do
 			-- redefined in ROUTINE_AS
 		end

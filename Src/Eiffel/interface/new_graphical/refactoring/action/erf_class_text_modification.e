@@ -40,6 +40,11 @@ inherit
 
 	COMPILER_EXPORTER
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -134,7 +139,7 @@ feature -- Highlevel element change
 				create last_export.make_empty
 				create last_code.make_empty
 				create last_comment.make_empty
-				l_feature := ast.feature_with_name (a_name)
+				l_feature := ast.feature_with_name (names_heap.id_of (a_name))
 				if l_feature /= Void then
 					last_code := l_feature.text (match_list)
 					from
@@ -172,7 +177,7 @@ feature -- Highlevel element change
 		do
 			compute_ast
 			if not is_parse_error then
-				l_feature := ast.feature_with_name (a_name)
+				l_feature := ast.feature_with_name (names_heap.id_of (a_name))
 				if l_feature /= Void then
 					l_names := l_feature.feature_names
 					if l_names.count = 1 then

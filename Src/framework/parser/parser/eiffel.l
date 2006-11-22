@@ -619,9 +619,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 ({D}*\.{D}+{E})|({D}+\.{D}*{E})|(({U}(_{T})*)?\.({T}_)*{U}{E})|({U}(_{T})*\.(({T}_)*{U})?{E}) {
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				if not Case_sensitive then
-					token_buffer.to_lower
-				end				
+				token_buffer.to_lower
 				last_token := TE_REAL
 			}
 

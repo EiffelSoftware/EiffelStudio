@@ -56,16 +56,6 @@ inherit
 
 feature -- Stoning
 
-	internal_name_id: INTEGER is
-			-- `internal_name' ID in NAMES_HEAP.
-		local
-			l_names_heap: like Names_heap
-		do
-			l_names_heap := Names_heap
-			l_names_heap.put (internal_name.name)
-			Result := l_names_heap.found_item
-		end
-
 	internal_name: ID_AS is
 			-- Internal name used by the compiler.
 		deferred
@@ -119,13 +109,9 @@ feature -- Status report
 
 	internal_alias_name_id: INTEGER is
 			-- `internal_alias_name' ID in NAMES_HEAP
-		local
-			l_names_heap: like Names_heap
 		do
 			if alias_name /= Void then
-				l_names_heap := Names_heap
-				l_names_heap.put (internal_alias_name.name)
-				Result := l_names_heap.found_item
+				Result := internal_alias_name.name_id
 			end
 		ensure
 			has_alias: alias_name /= Void implies Result > 0

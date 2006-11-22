@@ -867,7 +867,7 @@ feature -- creation of default rescue clause
 			then
 				my_body := body
 				if (my_body /= Void) then
-					my_body.create_default_rescue (names_heap.item (def_resc_name_id))
+					my_body.create_default_rescue (def_resc_name_id)
 				end
 			end
 		end
@@ -1294,7 +1294,7 @@ feature -- Check
 					-- best we can do is to search through the
 					-- class ast and find the feature as
 					class_ast := Tmp_ast_server.item (written_in)
-					Result ?= class_ast.feature_with_name (feature_name)
+					Result ?= class_ast.feature_with_name (feature_name_id)
 				end
 			end
 		end
@@ -1996,14 +1996,14 @@ end
 			end
 		end
 
-	argument_position (arg_id: STRING): INTEGER is
+	argument_position (arg_id: INTEGER): INTEGER is
 			-- Position of argument `arg_id' in list of arguments
 			-- of current feature. 0 if none or not found.
 		require
-			arg_id /= Void
+			arg_id_not_void: arg_id >= 0
 		do
 			if arguments /= Void then
-				Result := arguments.argument_position (arg_id, 1)
+				Result := arguments.argument_position_id (arg_id, 1)
 			end
 		end
 

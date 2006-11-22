@@ -123,7 +123,7 @@ feature -- Comparison
 
 feature -- Access
 
-	feature_with_name (n: STRING): FEATURE_AS is
+	feature_with_name (n: INTEGER): FEATURE_AS is
 			-- Feature ast with internal name `n'
 		local
 			saved: INTEGER

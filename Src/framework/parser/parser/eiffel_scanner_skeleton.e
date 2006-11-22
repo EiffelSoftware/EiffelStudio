@@ -476,11 +476,6 @@ feature {NONE} -- Implementation
 			less_memory: Result.capacity <= a_string.capacity
 		end
 
-feature -- Case Mode
-
-	Case_sensitive: BOOLEAN is False
-			-- Is code case sensitive?
-
 feature {NONE} -- Constants
 
 	Initial_buffer_size: INTEGER is 5120

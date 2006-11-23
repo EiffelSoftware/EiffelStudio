@@ -329,7 +329,6 @@ feature -- Call stack
 	append_feature (cse: CALL_STACK_ELEMENT; st: TEXT_FORMATTER) is
 			-- Display information about associated routine.
 		local
-			extcse: EXTERNAL_CALL_STACK_ELEMENT
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			c, oc	: CLASS_C
 			last_pos: INTEGER

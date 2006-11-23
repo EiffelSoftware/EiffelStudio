@@ -501,6 +501,9 @@ feature {NONE} -- Initialization
 			managed_feature_formatters.extend (Void)
 			managed_feature_formatters.extend (create {EB_HOMONYMS_FORMATTER}.make (Current))
 
+			create managed_dependency_formatters.make (2)
+			managed_dependency_formatters.extend (create {EB_CLIENT_DEPENDENCY_FORMATTER}.make (Current))
+			managed_dependency_formatters.extend (create {EB_SUPPLIER_DEPENDENCY_FORMATTER}.make (Current))
 
 			create managed_main_formatters.make (6)
 
@@ -594,6 +597,17 @@ feature {NONE} -- Initialization
 				managed_main_formatters.forth
 			end
 
+			from
+				managed_dependency_formatters.start
+			until
+				managed_dependency_formatters.after
+			loop
+				if managed_dependency_formatters.item /= Void then
+					managed_dependency_formatters.item.set_manager (context_tool)
+				end
+				managed_dependency_formatters.forth
+			end
+
 			(managed_main_formatters @ 1).enable_select;
 
 				-- We now select the correct class formatter.
@@ -618,6 +632,12 @@ feature {NONE} -- Initialization
 				f_ind := 2
 			end
 			managed_class_formatters.i_th (f_ind).enable_select
+
+			f_ind := preferences.context_tool_data.default_dependency_formatter_index
+			if f_ind < 1 or f_ind > managed_dependency_formatters.count then
+				f_ind := 1
+			end
+			managed_dependency_formatters.i_th (f_ind).enable_select
 		end
 
 	build_tools is
@@ -2796,6 +2816,9 @@ feature -- Tools & Controls
 
 	goto_dialog: EB_GOTO_DIALOG
 			-- The goto dialog for line number access
+
+	managed_dependency_formatters: ARRAYED_LIST [EB_DEPENDENCY_FORMATTER]
+			-- All formatters to display dependency relationship of a target/group/folder/class
 
 feature -- Multiple editor management
 

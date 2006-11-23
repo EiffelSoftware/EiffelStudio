@@ -67,6 +67,7 @@ feature {NONE} -- Initialization
 			create error_output_view.make (development_window, Current)
 			create warning_output_view.make (development_window, Current)
 			create output_view.make (development_window, Current)
+			create dependency_view.make_with_tool (development_window, Current)
 
 			if eiffel_layout.has_metrics then
 				create metrics.make (development_window, Current)
@@ -91,6 +92,7 @@ feature {NONE} -- Initialization
 			end
 			notebook.extend (class_view.widget)
 			notebook.extend (feature_view.widget)
+			notebook.extend (dependency_view.widget)
 			if eiffel_layout.has_metrics then
 				notebook.extend (metrics.widget)
 				if eiffel_layout.has_case then
@@ -115,6 +117,7 @@ feature {NONE} -- Initialization
 			notebook.item_tab (c_compilation_output_view.widget).set_pixmap (icon_pixmaps.tool_c_output_icon)
 			notebook.item_tab (error_output_view.widget).set_pixmap (icon_pixmaps.tool_error_icon)
 			notebook.item_tab (warning_output_view.widget).set_pixmap (icon_pixmaps.tool_warning_icon)
+			notebook.item_tab (dependency_view.widget).set_pixmap (icon_pixmaps.diagram_supplier_link_icon)
 
 			notebook.set_item_text (output_view.widget, interface_names.l_Tab_output)
 			notebook.set_item_text (external_output_view.widget, interface_names.l_Tab_external_output)
@@ -127,6 +130,7 @@ feature {NONE} -- Initialization
 			end
 			notebook.set_item_text (class_view.widget, interface_names.l_Tab_class_info)
 			notebook.set_item_text (feature_view.widget, interface_names.l_Tab_feature_info)
+			notebook.set_item_text (dependency_view.widget, interface_names.l_Tab_dependency_info)
 			if eiffel_layout.has_metrics then
 				notebook.set_item_text (metrics.widget, interface_names.l_Tab_metrics)
 			end
@@ -135,6 +139,7 @@ feature {NONE} -- Initialization
 
 			class_view.set_parent_notebook (notebook)
 			feature_view.set_parent_notebook (notebook)
+			dependency_view.set_parent_notebook (notebook)
 			output_view.set_parent_notebook (notebook)
 			external_output_view.set_parent_notebook (notebook)
 			c_compilation_output_view.set_parent_notebook (notebook)
@@ -173,6 +178,7 @@ feature {NONE} -- Initialization
 			end
 			class_view.set_parent (explorer_bar_item)
 			feature_view.set_parent (explorer_bar_item)
+			dependency_view.set_parent (explorer_bar_item)
 			output_view.set_parent (explorer_bar_item)
 			external_output_view.set_parent (explorer_bar_item)
 			c_compilation_output_view.set_parent (explorer_bar_item)
@@ -196,6 +202,9 @@ feature -- Access
 
 	feature_view: EB_FEATURES_VIEW
 			-- Feature information display.
+
+	dependency_view: EB_DEPENDENCY_VIEW
+			-- Dependency view
 
 	output_view: EB_OUTPUT_TOOL
 			-- Displays the compiler messages.
@@ -276,6 +285,7 @@ feature -- Status setting
 					end
 					class_view.invalidate
 					feature_view.invalidate
+					dependency_view.invalidate
 					set_stone (stone)
 					if eiffel_layout.has_case then
 						editor.synchronize
@@ -298,6 +308,7 @@ feature -- Status setting
 			end
 			class_view.refresh
 			feature_view.refresh
+			dependency_view.refresh
 		end
 
 	quick_refresh_editors is
@@ -308,6 +319,7 @@ feature -- Status setting
 			c_compilation_output_view.quick_refresh_editor
 			class_view.quick_refresh_editor
 			feature_view.quick_refresh_editor
+			dependency_view.quick_refresh_editor
 			address_manager.refresh
 			error_output_view.quick_refresh_editor
 			warning_output_view.quick_refresh_editor
@@ -321,6 +333,7 @@ feature -- Status setting
 			c_compilation_output_view.quick_refresh_margin
 			class_view.quick_refresh_margin
 			feature_view.quick_refresh_margin
+			dependency_view.quick_refresh_margin
 			address_manager.refresh
 			error_output_view.quick_refresh_margin
 			warning_output_view.quick_refresh_margin
@@ -376,6 +389,8 @@ feature -- Status setting
 				class_view.set_focus
 			elseif sit = feature_view.widget and then feature_view.widget.is_displayed then
 				feature_view.set_focus
+			elseif sit = dependency_view.widget and then dependency_view.widget.is_displayed then
+				dependency_view.set_focus
 			elseif sit = external_output_view.widget and then external_output_view.widget.is_displayed then
 				external_output_view.set_focus
 			elseif sit = c_compilation_output_view.widget and then c_compilation_output_view.widget.is_displayed then
@@ -422,6 +437,8 @@ feature {NONE} -- Memory management
 			class_view := Void
 			feature_view.recycle
 			feature_view := Void
+			dependency_view.recycle
+			dependency_view := Void
 			error_output_view.recycle
 			error_output_view := Void
 			warning_output_view.recycle
@@ -481,6 +498,7 @@ feature -- Stone management
 			Eb_debugger_manager.set_stone (a_stone)
 			feature_view.set_stone (a_stone)
 			class_view.set_stone (a_stone)
+			dependency_view.set_stone (a_stone)
 			if eiffel_layout.has_case then
 				editor.set_stone (a_stone)
 			end
@@ -597,6 +615,7 @@ feature {NONE} -- Implementation
 				editor.on_select
 				class_view.on_deselect
 				feature_view.on_deselect
+				dependency_view.on_deselect
 				if eiffel_layout.has_metrics then
 					metrics.on_deselect
 				end
@@ -607,6 +626,7 @@ feature {NONE} -- Implementation
 				is_diagram_selected := False
 				class_view.on_select
 				feature_view.on_deselect
+				dependency_view.on_deselect
 				if eiffel_layout.has_metrics then
 					metrics.on_deselect
 				end
@@ -617,6 +637,7 @@ feature {NONE} -- Implementation
 				is_diagram_selected := False
 				feature_view.on_select
 				class_view.on_deselect
+				dependency_view.on_deselect
 				if eiffel_layout.has_metrics then
 					metrics.on_deselect
 				end
@@ -627,6 +648,7 @@ feature {NONE} -- Implementation
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
+				dependency_view.on_deselect
 				metrics.on_select
 			elseif notebook.selected_item = output_view.widget then
 				output_view.on_select
@@ -635,6 +657,7 @@ feature {NONE} -- Implementation
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
+				dependency_view.on_deselect
 				if eiffel_layout.has_metrics then
 					metrics.on_deselect
 				end
@@ -645,6 +668,7 @@ feature {NONE} -- Implementation
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
+				dependency_view.on_deselect
 				if eiffel_layout.has_metrics then
 					metrics.on_deselect
 				end
@@ -655,6 +679,7 @@ feature {NONE} -- Implementation
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
+				dependency_view.on_deselect
 				if eiffel_layout.has_metrics then
 					metrics.on_deselect
 				end
@@ -665,11 +690,24 @@ feature {NONE} -- Implementation
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
+				dependency_view.on_deselect
 				if eiffel_layout.has_metrics then
 					metrics.on_deselect
 				end
 			elseif notebook.selected_item = warning_output_view.widget then
 				warning_output_view.on_select
+				external_output_view.on_deselect
+				output_view.on_deselect
+				is_diagram_selected := False
+				class_view.on_deselect
+				feature_view.on_deselect
+				dependency_view.on_deselect
+				if eiffel_layout.has_metrics then
+					metrics.on_deselect
+				end
+			elseif notebook.selected_item = dependency_view.widget then
+				dependency_view.on_select
+				warning_output_view.on_deselect
 				external_output_view.on_deselect
 				output_view.on_deselect
 				is_diagram_selected := False

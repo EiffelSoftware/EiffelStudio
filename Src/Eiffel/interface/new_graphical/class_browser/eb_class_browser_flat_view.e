@@ -15,7 +15,8 @@ inherit
 			grid_selected_items,
 			data,
 			recycle_agents,
-			default_ensure_visible_action
+			default_ensure_visible_action,
+			starting_element
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -323,7 +324,7 @@ feature -- Status report
 	is_displaying_class_any: BOOLEAN is
 			-- Is class any been displayed currently?
 		do
-			Result := start_class /= Void and then start_class.is_compiled and then start_class.class_c.class_id = system.any_id
+			Result := starting_element /= Void and then starting_element.is_compiled and then starting_element.class_c.class_id = system.any_id
 		end
 
 feature -- Access
@@ -428,6 +429,11 @@ feature -- Access
 	rows: DS_ARRAYED_LIST [EB_CLASS_BROWSER_FLAT_ROW]
 			-- Rows for features that are to be displayed
 
+	starting_element: QL_CLASS
+			-- Starting element as root of the tree displayed in current browser.
+			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
+			-- If `starting_element' is Void, don't build tree.			
+
 feature{NONE} -- Update
 
 	update_view is
@@ -460,6 +466,10 @@ feature{NONE} -- Update
 					disable_force_multi_column_sorting
 					bind_grid
 					enable_auto_sort_order_change
+					if not has_grid_been_binded then
+						set_has_grid_been_binded (True)
+						auto_resize
+					end
 				else
 					component_widget.hide
 					text.show
@@ -470,7 +480,6 @@ feature{NONE} -- Update
 					end
 					text.set_text (l_msg)
 				end
-				auto_resize
 				is_up_to_date := True
 			end
 		end

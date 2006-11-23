@@ -34,7 +34,7 @@ feature{NONE} -- Initialization
 		do
 			feature_item := a_feature
 			branch_id := a_branch_id
-			browser := a_browser
+			set_browser (a_browser)
 			is_written_class_used := a_written_class_used
 			is_signature_displayed := a_signature_displayed
 

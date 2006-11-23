@@ -53,7 +53,7 @@ feature{NONE} -- Implementation
 			if not l_retried then
 				browser.set_trace (Void)
 				l_domain ?= system_target_domain.new_domain (domain_generator)
-				browser.set_start_class (start_class)
+				browser.set_starting_element (start_class)
 				if is_tree_node_highlight_enabled then
 					browser.enable_tree_node_highlight
 				else

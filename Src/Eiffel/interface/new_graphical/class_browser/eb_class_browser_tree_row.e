@@ -25,7 +25,7 @@ feature{NONE} -- Initialization
 		do
 			class_item := a_class
 			is_collapsed := collapsed
-			browser := a_browser
+			set_browser (a_browser)
 		ensure
 			class_item_set: class_item = a_class
 			is_collapsed_set: is_collapsed = collapsed
@@ -73,26 +73,6 @@ feature -- Grid binding
 			end
 			if l_row.is_expandable then
 				l_row.expand
-			end
-		end
-
-	expand_row is
-			-- Expand Current and its parent recursively.
-		local
-			l_row: like Current
-			l_grid_row: EV_GRID_ROW
-		do
-			from
-				l_row := Current
-			until
-				l_row = Void
-			loop
-				l_grid_row := l_row.grid_row
-				check l_grid_row /= Void end
-				if l_grid_row.is_expandable then
-					l_grid_row.expand
-				end
-				l_row := l_row.parent
 			end
 		end
 
@@ -145,6 +125,7 @@ feature -- Access
 					l_class_item_internal.set_text_with_tokens (l_complete_generic_class_style.text)
 				end
 				class_item_internal := l_class_item_internal
+				class_item_internal.set_image (class_item_internal.text)
 			end
 			Result := class_item_internal
 		ensure

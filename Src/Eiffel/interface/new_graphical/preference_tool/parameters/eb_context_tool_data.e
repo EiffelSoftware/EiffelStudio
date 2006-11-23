@@ -38,6 +38,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := default_feature_formatter_index_preference.value
 		end
 
+	default_dependency_formatter_index: INTEGER is
+			-- Default dependency formatter that should be popped up automatically.
+		do
+			Result := default_dependency_formatter_index_preference.value
+		end
+
 	editor_history_size: INTEGER is
 			-- Number of memorized formatted text in formatters.
 		do
@@ -49,12 +55,14 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	editor_history_size_preference: INTEGER_PREFERENCE
 	default_class_formatter_index_preference: INTEGER_PREFERENCE
 	default_feature_formatter_index_preference: INTEGER_PREFERENCE
+	default_dependency_formatter_index_preference: INTEGER_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
 	editor_history_size_string: STRING is "tools.context_tool.formatters_history_size"
 	default_class_formatter_index_string: STRING is "tools.context_tool.default_class_formatter_index"
 	default_feature_formatter_index_string: STRING is "tools.context_tool.default_feature_formatter_index"
+	default_dependency_formatter_index_string: STRING is "tools.context_tool.default_dependency_formatter_index"
 
 feature {NONE} -- Implementation
 
@@ -67,6 +75,7 @@ feature {NONE} -- Implementation
 			editor_history_size_preference := l_manager.new_integer_preference_value (l_manager, editor_history_size_string, 60)
 			default_class_formatter_index_preference := l_manager.new_integer_preference_value (l_manager, default_class_formatter_index_string, 5)
 			default_feature_formatter_index_preference := l_manager.new_integer_preference_value (l_manager, default_feature_formatter_index_string, 2)
+			default_dependency_formatter_index_preference := l_manager.new_integer_preference_value (l_manager, default_dependency_formatter_index_string, 2)
 		end
 
 	preferences: PREFERENCES

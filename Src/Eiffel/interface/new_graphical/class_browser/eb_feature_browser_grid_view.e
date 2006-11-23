@@ -100,25 +100,10 @@ feature -- Setting
 			-- Rebuild interface
 		local
 			l_written_class_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_FEATURE_BROWSER_GRID_ROW]
---			i: INTEGER
---			l_column: EV_GRID_COLUMN
 		do
 			if is_written_class_used then
 				grid.set_column_count_to (3)
---				from
---					 i := 1
---				until
---					i > 3
---				loop
---					l_column := grid.column (i)
---					if not l_column.is_displayed then
---						l_column.show
---					end
---					i := i + 1
---				end
---				l_column.header_item
 				grid.column (3).header_item.set_text (interface_names.l_version_from)
---				grid.header.i_th (3).set_text (interface_names.l_version_from)
 				create l_written_class_sort_info.make (agent written_class_tester, ascending_order)
 				l_written_class_sort_info.enable_auto_indicator
 				set_sort_info (3, l_written_class_sort_info)
@@ -180,54 +165,6 @@ feature -- Actions
 			l_processed := on_predefined_key_pressed (a_key)
 		end
 
-	go_to_parent (a_item: EV_GRID_ITEM) is
-			-- Go to parent of `a_item', if any.
-		require
-			a_item_attached: a_item /= Void
-			a_item_is_parented: a_item.parent /= Void
-		local
-			l_row: EV_GRID_ROW
-			l_grid_item: EV_GRID_ITEM
-		do
-			if a_item.column.index = 1 then
-				l_row := a_item.row
-				if l_row.is_expandable and then l_row.is_expanded then
-					l_row.collapse
-				else
-					if l_row.parent_row /= Void then
-						l_row.disable_select
-						l_grid_item := l_row.parent_row.item (1)
-						l_grid_item.row.ensure_visible
-						l_grid_item.enable_select
-					end
-				end
-			end
-		end
-
-	go_to_first_child (a_item: EV_GRID_ITEM) is
-			-- Go to first child of `a_item'.
-		require
-			a_item_attached: a_item /= Void
-			a_item_is_parented: a_item.parent /= Void
-		local
-			l_row: EV_GRID_ROW
-			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
-		do
-			l_row := a_item.row
-			if l_row.is_expandable then
-				if not l_row.is_expanded then
-					l_row.expand
-				else
-					if l_row.subrow_count > 0 then
-						l_row.disable_select
-						l_grid_item ?= l_row.subrow (1).item (1)
-						check l_grid_item /= Void end
-						ensure_visible (l_grid_item, True)
-					end
-				end
-			end
-		end
-
 	on_expand_all_level is
 			-- Action to be performed to recursively expand all selected rows.
 		do
@@ -252,7 +189,7 @@ feature -- Actions
 				l_item := l_selected_items.first
 				if l_item.column.index = 1 then
 					if not l_item.row.is_expandable or else l_item.row.is_expanded then
-						go_to_first_child (l_item)
+						go_to_first_child (l_item.row)
 						l_done := True
 					end
 				end
@@ -274,7 +211,9 @@ feature -- Actions
 				l_item := l_selected_items.first
 				if l_item.column.index = 1 then
 					if not l_item.row.is_expandable or else not l_item.row.is_expanded then
-						go_to_parent (l_item)
+						if l_item.column.index = 1 then
+							go_to_parent (l_item.row)
+						end
 						l_done := True
 					end
 				end
@@ -560,15 +499,18 @@ feature -- Visiability
 		do
 			l_grid_row := a_item.grid_item.row
 			l_row ?= l_grid_row.data
-			check l_row /= Void end
-			if l_row.parent /= Void then
-				if l_row.parent.is_expandable then
-					l_row.parent.expand
-				end
-				l_grid_row.ensure_visible
-			end
 			grid.remove_selection
-			a_item.grid_item.enable_select
+			if l_row /= Void then
+				if l_row.parent /= Void then
+					if l_row.parent.is_expandable then
+						l_row.parent.expand
+					end
+					l_grid_row.ensure_visible
+				end
+				a_item.grid_item.enable_select
+			else
+				l_grid_row.enable_select
+			end
 		end
 
 feature{NONE} -- Sorting
@@ -699,10 +641,21 @@ feature{NONE} -- Implementation
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	branch_item (a_branch_id: INTEGER): EB_GRID_EDITOR_TOKEN_ITEM is
+	branch_item (a_branch_id: INTEGER): EB_GRID_COMPILER_ITEM is
 			-- A grid item to display branch id
 		do
-			create Result.make_with_text (interface_names.l_branch+a_branch_id.out)
+			create Result
+			branch_item_style.set_source_text (interface_names.l_branch + a_branch_id.out)
+			Result.set_text_with_tokens (branch_item_style.text)
+			Result.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	branch_item_style: EB_TEXT_EDITOR_TOKEN_STYLE is
+			-- Style to generate editor tokens for branch items
+		once
+			create Result
 		ensure
 			result_attached: Result /= Void
 		end

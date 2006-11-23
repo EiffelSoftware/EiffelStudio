@@ -18,8 +18,39 @@ inherit
 
 feature -- Access
 
-	browser: EB_CLASS_BROWSER_GRID_VIEW [EB_CLASS_BROWSER_GRID_ROW]
+	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
 			-- Broswer in which current row is displayed
+
+feature -- Setting
+
+	set_browser (a_browser: like browser) is
+			-- Set `browser' with `a_browser'.
+		require
+			a_browser_attached: a_browser /= Void
+		do
+			browser := a_browser
+		ensure
+			browser_set: browser = a_browser
+		end
+
+feature -- Row expanding
+
+	expand_parent_row_recursively (a_grid_row: EV_GRID_ROW) is
+			-- Expand parent rows of `a_grid_row' recursively.
+		require
+			a_grid_row_attached: a_grid_row /= Void
+			a_grid_row_in_grid: a_grid_row.parent /= Void
+		local
+			l_grid_row: EV_GRID_ROW
+		do
+			l_grid_row := a_grid_row.parent_row
+			if l_grid_row /= Void then
+				if l_grid_row.is_expandable and then not l_grid_row.is_expanded  then
+					l_grid_row.expand
+				end
+				expand_parent_row_recursively (l_grid_row)
+			end
+		end
 
 feature -- General tooltip
 

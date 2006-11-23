@@ -25,7 +25,7 @@ feature{NONE} -- Initialization
 			a_browser_attached: a_browser /= Void
 		do
 			feature_item := a_feature
-			browser := a_browser
+			set_browser (a_browser)
 
 			create class_item_internal
 			create feature_item_internal

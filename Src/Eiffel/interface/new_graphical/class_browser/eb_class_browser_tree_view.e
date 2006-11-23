@@ -10,12 +10,12 @@ class
 	EB_CLASS_BROWSER_TREE_VIEW
 
 inherit
-
 	EB_CLASS_BROWSER_GRID_VIEW [EB_CLASS_BROWSER_TREE_ROW]
 		redefine
 			data,
 			default_ensure_visible_action,
-			recycle_agents
+			recycle_agents,
+			starting_element
 		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
@@ -48,133 +48,26 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	starting_element: QL_CLASS
+			-- Starting element as root of the tree displayed in current browser.
+			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
+			-- If `starting_element' is Void, don't build tree.
+
 feature -- Actions
 
 	on_grid_focus_in is
 			-- Action to be performed when `grid' gets focus
-		local
-			l_selected_rows: LIST [EV_GRID_ROW]
-			l_row: EV_GRID_ROW
 		do
 			if is_tree_node_highlight_enabled then
-				l_selected_rows := grid.selected_rows
-				if not l_selected_rows.is_empty then
-					processed_rows.wipe_out
-					from
-						l_selected_rows.start
-					until
-						l_selected_rows.after
-					loop
-						l_row := l_selected_rows.item
-						if not processed_rows.has (l_row) then
-							on_row_selected (l_row)
-							processed_rows.extend (l_row)
-						end
-						l_selected_rows.forth
-					end
-				end
+				highlight_tree_on_grid_focus_change
 			end
 		end
 
 	on_grid_focus_out is
 			-- Action to be performed when `grid' loses focus
-		local
-			l_selected_rows: LIST [EV_GRID_ROW]
-			l_row: EV_GRID_ROW
-		do
-			l_selected_rows := grid.selected_rows
-			if not l_selected_rows.is_empty then
-				processed_rows.wipe_out
-				from
-					l_selected_rows.start
-				until
-					l_selected_rows.after
-				loop
-					l_row := l_selected_rows.item
-					if not processed_rows.has (l_row) then
-						on_row_deselected (l_row)
-						processed_rows.extend (l_row)
-					end
-					l_selected_rows.forth
-				end
-			end
-		end
-
-	on_row_selected (a_row: EV_GRID_ROW) is
-			-- Action to be performed when `a_row' is selected
-		require
-			a_row_attached: a_row /= Void
-		local
-			l_row_index: INTEGER
-			l_row_count: INTEGER
 		do
 			if is_tree_node_highlight_enabled then
-				if a_row.is_selected then
-					if grid.has_focus then
-						a_row.set_background_color (preferences.editor_data.selection_background_color)
-					else
-						a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
-					end
-				else
-					a_row.set_background_color (odd_line_color)
-				end
-				l_row_count := a_row.subrow_count
-				if l_row_count > 0 then
-					from
-						l_row_index := 1
-					until
-						l_row_index > l_row_count
-					loop
-						on_row_selected (a_row.subrow (l_row_index))
-						l_row_index := l_row_index + 1
-					end
-				end
-			end
-		end
-
-	on_row_deselected (a_row: EV_GRID_ROW) is
-			-- Action to be performed when `a_row' is deselected
-		require
-			a_row_attached: a_row /= Void
-		local
-			l_row_index: INTEGER
-			l_row_count: INTEGER
-			l_is_parent_selected: BOOLEAN
-			l_parent_row: EV_GRID_ROW
-		do
-			if is_tree_node_highlight_enabled then
-				from
-					l_parent_row := a_row.parent_row
-				until
-					l_parent_row = Void or l_is_parent_selected
-				loop
-					l_is_parent_selected := l_parent_row.is_selected
-					l_parent_row := l_parent_row.parent_row
-				end
-				if a_row.is_selected then
-					if grid.has_focus then
-						a_row.set_background_color (preferences.editor_data.selection_background_color)
-					else
-						a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
-					end
-				else
-					if l_is_parent_selected then
-						a_row.set_background_color (odd_line_color)
-					else
-						a_row.set_background_color (even_line_color)
-					end
-				end
-				l_row_count := a_row.subrow_count
-				if l_row_count > 0 then
-					from
-						l_row_index := 1
-					until
-						l_row_index > l_row_count
-					loop
-						on_row_deselected (a_row.subrow (l_row_index))
-						l_row_index := l_row_index + 1
-					end
-				end
+				highlight_tree_on_grid_focus_change
 			end
 		end
 
@@ -184,14 +77,13 @@ feature -- Actions
 			l_grid_item: EV_GRID_ITEM
 			l_row: EB_CLASS_BROWSER_TREE_ROW
 		do
-			if a_button = 1 then
+			if a_button = {EV_POINTER_CONSTANTS}.left then
 				l_grid_item := grid_item_at_position (grid, a_x, a_y)
 				if l_grid_item /= Void then
 					l_row ?= l_grid_item.row.data
 					if l_row /= Void and then l_row.is_collapsed then
 						l_row := first_occurrence (l_row)
 						ensure_visible (l_row.class_grid_item, True)
-						on_row_selected (l_row.grid_row)
 					end
 				end
 			end
@@ -303,7 +195,9 @@ feature -- Actions
 			-- Action to be performed when selection status of `display_path_button' changes
 		do
 			is_up_to_date := False
-			update_view
+			if data /= Void then
+				bind_grid
+			end
 			preferences.class_browser_data.show_item_path_preference.set_value (display_path_button.is_selected)
 		end
 
@@ -338,7 +232,7 @@ feature -- Notification
 		do
 			if not is_up_to_date then
 				if data /= Void then
-					if start_class = Void and then display_path_button.is_selected then
+					if starting_element = Void and then display_path_button.is_selected then
 						set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_CLASS_BROWSER_TREE_ROW]}.make (agent path_name_tester, ascending_order))
 					else
 						remove_sort_info (2)
@@ -501,7 +395,7 @@ feature{NONE} -- Implementation
 			check l_grid_row /= Void end
 			l_row ?= l_grid_row.data
 			check l_row /= Void end
-			l_row.expand_row
+			l_row.expand_parent_row_recursively (l_row.grid_row)
 			grid.remove_selection
 			l_grid_row.ensure_visible
 			if a_selected then
@@ -520,7 +414,7 @@ feature{NONE} -- Implementation
 			l_rows := rows
 			l_rows.wipe_out
 			l_data := data
-			if start_class = Void then
+			if starting_element = Void then
 				from
 					l_data.start
 				until
@@ -539,7 +433,7 @@ feature{NONE} -- Implementation
 					l_data.after
 				loop
 					class_table.force (l_data.item, l_data.item.class_c.class_id)
-					if l_start_class = Void and then l_data.item.is_equal (start_class) then
+					if l_start_class = Void and then l_data.item.is_equal (starting_element) then
 						l_start_class := l_data.item
 					end
 					l_data.forth
@@ -648,7 +542,7 @@ feature{NONE} -- Implementation
 				l_rows.forth
 			end
 			if not has_grid_been_binded then
-				has_grid_been_binded := True
+				set_has_grid_been_binded (True)
 				create l_size_table.make (1)
 				l_size_table.force ([500, 800], 1)
 				auto_resize_columns (grid, l_size_table)
@@ -702,150 +596,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	go_to_parent (a_row: EV_GRID_ROW) is
-			-- Select parent row of `a_row'.
-		require
-			a_row_attached: a_row /= Void
-			a_row_is_parented: a_row.parent /= Void
-		local
-			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
-		do
-			if a_row.is_expandable and then a_row.is_expanded then
-				a_row.collapse
-			else
-				if a_row.parent_row /= Void then
-					l_grid_item ?= a_row.item (1)
-					a_row.disable_select
-					l_grid_item ?= a_row.parent_row.item (1)
-					check l_grid_item /= Void end
-					ensure_visible (l_grid_item, True)
-				end
-			end
-		end
-
-	go_to_first_child (a_row: EV_GRID_ROW) is
-			-- Select first child (if any) of `a_row'.
-		require
-			a_row_attached: a_row /= Void
-			a_row_is_parented: a_row.parent /= Void
-		local
-			l_grid_item: EVS_GRID_SEARCHABLE_ITEM
-		do
-			if a_row.is_expandable then
-				if not a_row.is_expanded then
-					expand_row (a_row)
-				else
-					if a_row.subrow_count > 0 then
-						a_row.disable_select
-						l_grid_item ?= a_row.subrow (1).item (1)
-						check l_grid_item /= Void end
-						ensure_visible (l_grid_item, True)
-					end
-				end
-			end
-		end
-
-	processed_rows: LIST [EV_GRID_ROW]
-			-- Rows that have been processed during some expansion or collapsion
-
-	collapse_row_recursively (a_row: EV_GRID_ROW) is
-			-- Collapse `a_row' recursively.
-		require
-			a_row_attached: a_row /= Void
-			a_row_is_parented: a_row.parent /= Void
-		local
-			l_subrow_cnt: INTEGER
-			l_subrow_index: INTEGER
-		do
-			if a_row.is_expandable then
-				a_row.collapse
-			end
-			l_subrow_cnt := a_row.subrow_count
-			if l_subrow_cnt > 0 then
-				from
-					l_subrow_index := 1
-				until
-					l_subrow_index > l_subrow_cnt
-				loop
-					collapse_row_recursively (a_row.subrow (l_subrow_index))
-					l_subrow_index := l_subrow_index + 1
-				end
-			end
-		end
-
-	expand_row_recursively (a_row: EV_GRID_ROW) is
-			-- Expand `a_row' recursively.
-		require
-			a_row_attached: a_row /= Void
-			a_row_is_parented: a_row.parent /= Void
-		local
-			l_subrow_cnt: INTEGER
-			l_subrow_index: INTEGER
-		do
-			if a_row.is_expandable then
-				a_row.expand
-			end
-			l_subrow_cnt := a_row.subrow_count
-			if l_subrow_cnt > 0 then
-				from
-					l_subrow_index := 1
-				until
-					l_subrow_index > l_subrow_cnt
-				loop
-					expand_row_recursively (a_row.subrow (l_subrow_index))
-					l_subrow_index := l_subrow_index + 1
-				end
-			end
-		end
-
-	expand_row (a_row: EV_GRID_ROW) is
-			-- Expand `a_row'.
-		require
-			a_row_attached: a_row /= Void
-		do
-			if a_row.is_expandable then
-				a_row.expand
-			end
-		end
-
-	collapse_row (a_row: EV_GRID_ROW) is
-			-- Collapse subrows of `a_row'.
-			-- But don't collapse `a_row', and make sure direct subrows of `a_row' is visible.
-		require
-			a_row_attached: a_row /= Void
-		local
-			l_subrow_cnt: INTEGER
-			l_subrow_index: INTEGER
-		do
-			l_subrow_cnt := a_row.subrow_count
-			if l_subrow_cnt > 0 then
-				from
-					l_subrow_index := 1
-				until
-					l_subrow_index > l_subrow_cnt
-				loop
-					if a_row.subrow (l_subrow_index).is_expandable then
-						a_row.subrow (l_subrow_index).collapse
-						processed_rows.extend (a_row.subrow (l_subrow_index))
-					end
-					l_subrow_index := l_subrow_index + 1
-				end
-			end
-			if a_row.is_expandable and then not processed_rows.has (a_row) then
-				a_row.expand
-			end
-		end
-
-	collapse_row_normal (a_row: EV_GRID_ROW) is
-			-- Collapse `a_row' normally.
-		require
-			a_row_attached: a_row /= Void
-		do
-			if a_row /= Void and then a_row.is_expandable and then a_row.is_expanded then
-				a_row.collapse
-			end
-		end
-
 	selected_rows: LIST [EV_GRID_ROW] is
 			-- Selected rows in `grid'.
 			-- If empty, put the first row in `grid' in result.
@@ -871,9 +621,6 @@ feature{NONE} -- Implementation
 
 	class_table_internal: like class_table
 			-- Implementation of `class_table'		
-
-	has_grid_been_binded: BOOLEAN
-			-- Has `grid' been binded before?
 
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
@@ -920,7 +667,7 @@ feature{NONE} -- Initialization
 			grid.set_column_count_to (2)
 			grid.enable_selection_on_single_button_click
 			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
-			grid.header.i_th (2).set_text (interface_names.l_class_browser_path)
+			grid.header.i_th (2).set_text (interface_names.l_location)
 			grid.enable_single_row_selection
 			grid.enable_tree
 			grid.set_row_height (default_row_height)
@@ -931,11 +678,10 @@ feature{NONE} -- Initialization
 			grid.pointer_double_press_actions.extend (agent on_pointer_double_click)
 			grid.focus_in_actions.extend (agent on_grid_focus_in)
 			grid.focus_out_actions.extend (agent on_grid_focus_out)
-			grid.row_select_actions.extend (agent on_row_selected)
-			grid.row_deselect_actions.extend (agent on_row_deselected)
+			grid.row_select_actions.extend (agent highlight_row)
+			grid.row_deselect_actions.extend (agent dehighlight_row)
 			grid.key_press_actions.extend (agent on_key_pressed)
 			grid.enable_multiple_row_selection
-			create {ARRAYED_LIST [EV_GRID_ROW]}processed_rows.make (20)
 			enable_editor_token_pnd
 			set_select_all_action (agent do  end)
 

@@ -333,7 +333,9 @@ feature {NONE} -- Location
 			-- Setup viewpoint for formatting.
 		do
 			if viewpoints /= Void then
-				editor.text_displayed.set_context_group (viewpoints.current_viewpoint)
+				if editor /= Void then
+					editor.text_displayed.set_context_group (viewpoints.current_viewpoint)
+				end
 			end
 		end
 

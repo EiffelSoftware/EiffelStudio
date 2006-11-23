@@ -254,6 +254,8 @@ feature{NONE} -- Actions
 				if is_accelerator_matched (a_key, l_acc) then
 					if not is_displayed and then l_component.is_search_enabled then
 						show_tool
+					else
+						keyword_field.set_focus
 					end
 				end
 					-- Key accelerator to search previous

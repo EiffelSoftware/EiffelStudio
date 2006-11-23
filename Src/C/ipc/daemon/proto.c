@@ -326,11 +326,11 @@ rt_private LPVOID get_interrupt_flag(EIF_PSTREAM sp, Request *rqst)
  * Sending/receiving packets.
  */
 
+rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst
 #ifdef EIF_WINDOWS
-rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst, BOOL reset)
-#else
-rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst)
+		, BOOL reset
 #endif
+		)
 				/* The connected socket */
 				/* The request received */
  {
@@ -343,11 +343,11 @@ rt_public int dbg_recv_packet(EIF_PSTREAM sp, Request *rqst)
 	 */
 
 	/* If we cannot receive data, then the connection is surely broken */
+ 	if (-1 == net_recv(sp, idrs_buf(&dbg_idrf.i_decode), IDRF_SIZE
 #ifdef EIF_WINDOWS
- 	if (-1 == net_recv(sp, idrs_buf(&dbg_idrf.i_decode), IDRF_SIZE, reset)) {
-#else
-	if (-1 == net_recv(sp, idrs_buf(&dbg_idrf.i_decode), IDRF_SIZE)) {
+		, reset
 #endif
+		)) {
 #ifdef USE_ADD_LOG
 		add_log(9, "SYSERR recv: %m (%e)");
 		add_log(12, "connection broken on fd #%d", sp);

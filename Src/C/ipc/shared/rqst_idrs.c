@@ -112,7 +112,6 @@ rt_private struct idr_discrim u_Request[] = {
 	{ MODIFY_ATTR, idr_Opaque },
 	{ DYNAMIC_EVAL, idr_Opaque },
 	{ APPLICATION_CWD, idr_void },
-	{ APPLICATION_ENV, idr_void },
 	{ OVERFLOW_DETECT, idr_Opaque },
 	{ CHANGE_THREAD, idr_Opaque },
 	{ EWB_SET_ASSERTION_CHECK, idr_Opaque },
@@ -120,6 +119,7 @@ rt_private struct idr_discrim u_Request[] = {
 	{ SET_IPC_PARAM, idr_Opaque },
 	{ CLEAR_BREAKPOINTS, idr_void },
 	{ DBG_EXCEPTION_TRACE, idr_Opaque },
+	{ APPLICATION_ENV, idr_void },
 };
 
 /*

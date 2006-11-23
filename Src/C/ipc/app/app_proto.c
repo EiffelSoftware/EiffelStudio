@@ -374,7 +374,7 @@ rt_public void app_send_packet(EIF_PSTREAM sp, Request *rqst)
 #endif
 }
 
-rt_public int app_recv_packet(EIF_PSTREAM s, Request *dans
+rt_public int app_recv_packet(EIF_PSTREAM s, Request *rqst
 #ifdef EIF_WINDOWS
 		, BOOL reset
 #endif
@@ -390,21 +390,21 @@ rt_public int app_recv_packet(EIF_PSTREAM s, Request *dans
 	 */
 
 	/* Wait for request */
+ 	if (-1 == net_recv(sp, idrs_buf(&app_idrf.i_decode), IDRF_SIZE
 #ifdef EIF_WINDOWS
-	if (-1 == net_recv(s, idrs_buf(&app_idrf.i_decode), IDRF_SIZE, reset))
-#else
-	if (-1 == net_recv(s, idrs_buf(&app_idrf.i_decode), IDRF_SIZE))
+		, reset
 #endif
+		)) {
 		esdie(1);		/* Connection lost, probably */
 
 	idrf_reset_pos(&app_idrf);	/* Reposition IDR streams */
 
 	/* Deserialize request */
-	if (!idr_Request(&app_idrf.i_decode, dans))
+	if (!idr_Request(&app_idrf.i_decode, rqst))
 		esdie(1);
 
 #ifdef DEBUG
-	trace_request("got", dans);
+	trace_request("got", rqst);
 #endif
 
 	return 0;		/* All is ok, for lint */

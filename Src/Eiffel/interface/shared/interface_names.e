@@ -766,15 +766,21 @@ feature -- Label texts
 	h_show_dependency_on_self: STRING is "Show dependency on self?"
 	l_of: STRING is " of "
 	l_info_cannot_be_retrieved: STRING is "Information cannot be retrieved."
-	l_folder: STRING is "folder"
-	l_assembly: STRING is "assembly"
-	l_cluster_label: STRING is "cluster"
+	l_feature_in_client_class: STRING is "Feature in client class"
+	l_feature_in_supplier_class: STRING is "Feature in supplier class"
+	l_select_element_to_show_info: STRING is "Select a target/group/folder/class to show information about it."
+	l_location: STRING is "Location"
 
 feature -- Stone names
 
 	s_Class_stone: STRING is			"Class "
 	s_Cluster_stone: STRING is			"Cluster "
 	s_Feature_stone: STRING is			"Feature "
+	s_Assembly_stone: STRING is			"Assembly "
+	s_folder_stone: STRING is			"Folder "
+	s_library_stone: STRING is			"Library "
+	s_target_stone: STRING is 			"Target "
+
 
 feature -- Title part
 

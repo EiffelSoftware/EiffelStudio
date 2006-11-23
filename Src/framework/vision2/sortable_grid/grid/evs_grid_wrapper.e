@@ -242,7 +242,7 @@ feature -- Sort
 			l_indicator: EV_PIXMAP
 		do
 				-- We only sort on column where sorting information is set.									
-			if button = 1 and then is_column_sortable (a_column_index) then
+			if button = {EV_POINTER_CONSTANTS}.left and then is_column_sortable (a_column_index) then
 				update_sorted_columns (is_ctrl_key_pressed, a_column_index)
 				l_sort_info := column_sort_info.item (a_column_index)
 				if is_auto_sort_order_change_enabled then
@@ -541,31 +541,68 @@ feature{NONE} -- Implementation
 			-- 	The first two arguments are rows to be compared with each other
 			-- 	The third integer argument is current sorting order
 			-- 	Return value of this comparator should be True if the first row is less thant the second one.			
+--		local
+--			l_columns: like sorted_columns
+--			l_sort_info: like column_sort_info
+--			l_action_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
+--			l_order_list: ARRAYED_LIST [INTEGER]
+--			l_index_list: ARRAYED_LIST [INTEGER]
+--			l_sort_info_item: EVS_GRID_SORTING_INFO [G]
+		do
+			Result := comparator (sorted_columns)
+--			l_columns := sorted_columns
+--			l_sort_info := column_sort_info
+--			create l_action_list.make (l_columns.count)
+--			create l_order_list.make (l_columns.count)
+--			create l_index_list.make (l_columns.count)
+--			from
+--				l_columns.start
+--			until
+--				l_columns.after
+--			loop
+--				l_sort_info_item := l_sort_info.item (l_columns.item)
+--				if l_sort_info_item /= Void then
+--					l_action_list.extend (l_sort_info_item.comparator)
+--					l_order_list.extend (l_sort_info_item.current_order)
+--					l_index_list.extend (l_columns.item)
+--				end
+--				l_columns.forth
+--			end
+--			create Result.make (l_action_list, l_order_list, l_index_list)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	comparator (a_column_index: LIST [INTEGER]): AGENT_LIST_COMPARATOR [G] is
+			-- Comparator to sort columns whose indexes are specified by `a_comlumn_index'
+		require
+			a_column_index_attached: a_column_index /= Void
+			not_a_column_index_is_empty: not a_column_index.is_empty
 		local
-			l_columns: like sorted_columns
 			l_sort_info: like column_sort_info
 			l_action_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
 			l_order_list: ARRAYED_LIST [INTEGER]
+			l_index_list: ARRAYED_LIST [INTEGER]
 			l_sort_info_item: EVS_GRID_SORTING_INFO [G]
 		do
-			l_columns := sorted_columns
 			l_sort_info := column_sort_info
-			create l_action_list.make (l_columns.count)
-			create l_order_list.make (l_columns.count)
-
+			create l_action_list.make (a_column_index.count)
+			create l_order_list.make (a_column_index.count)
+			create l_index_list.make (a_column_index.count)
 			from
-				l_columns.start
+				a_column_index.start
 			until
-				l_columns.after
+				a_column_index.after
 			loop
-				l_sort_info_item := l_sort_info.item (l_columns.item)
+				l_sort_info_item := l_sort_info.item (a_column_index.item)
 				if l_sort_info_item /= Void then
 					l_action_list.extend (l_sort_info_item.comparator)
 					l_order_list.extend (l_sort_info_item.current_order)
+					l_index_list.extend (a_column_index.item)
 				end
-				l_columns.forth
+				a_column_index.forth
 			end
-			create Result.make (l_action_list, l_order_list)
+			create Result.make (l_action_list, l_order_list, l_index_list)
 		ensure
 			result_attached: Result /= Void
 		end

@@ -390,12 +390,13 @@ rt_public int app_recv_packet(EIF_PSTREAM s, Request *rqst
 	 */
 
 	/* Wait for request */
- 	if (-1 == net_recv(sp, idrs_buf(&app_idrf.i_decode), IDRF_SIZE
+ 	if (-1 == net_recv(s, idrs_buf(&app_idrf.i_decode), IDRF_SIZE
 #ifdef EIF_WINDOWS
 		, reset
 #endif
 		)) {
 		esdie(1);		/* Connection lost, probably */
+	}
 
 	idrf_reset_pos(&app_idrf);	/* Reposition IDR streams */
 

@@ -684,9 +684,9 @@ feature{NONE} -- Implementation
 			until
 				l_feature_domain.after
 			loop
-				if l_feature_domain.item.is_visible then
-					io.put_string (l_feature_domain.item.name + "%N")
-				end
+--				if l_feature_domain.item.is_visible then
+--					io.put_string (l_feature_domain.item.name + "%N")
+--				end
 				create l_new_row_node
 				create l_dependency_row.make (l_feature_domain.item, l_new_row_node, Current)
 				l_new_row_node.set_data (l_dependency_row)

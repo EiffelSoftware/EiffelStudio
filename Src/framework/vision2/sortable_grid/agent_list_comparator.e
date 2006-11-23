@@ -17,22 +17,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_action_list: like action_list; a_sorting_order_list: like sorting_order_list) is
+	make (a_action_list: like action_list; a_sorting_order_list: like sorting_order_list; a_column_index_list: like column_index_list) is
 			-- Use `a_action_list' to compare two elements of type G.
 			-- The agent at lower index has higher priority.
 			-- `a_sorting_order_list' stores sorting orders for every agent in `a_action_list'.
+			-- `a_column_index_list' stores indexes of columns to be sorted.
 		require
 			a_action_list_not_void: a_action_list /= Void
 			not_a_action_list_is_empty: not a_action_list.is_empty
 			a_sorting_order_list_attached: a_sorting_order_list /= Void
 			not_a_sorting_order_list_is_empty: not a_sorting_order_list.is_empty
 			columns_match: a_sorting_order_list.count = a_action_list.count
+			a_column_index_list_attached: a_column_index_list /= Void
+			not_a_column_index_list_is_empty: not a_column_index_list.is_empty
+			a_column_index_list_valid: a_sorting_order_list.count = a_column_index_list.count
 		do
 			action_list := a_action_list
 			sorting_order_list := a_sorting_order_list
+			column_index_list := a_column_index_list
 		ensure
 			action_list_set: action_list = a_action_list
 			sorting_order_list_set: sorting_order_list = a_sorting_order_list
+			column_index_list_set: column_index_list = a_column_index_list
 		end
 
 feature -- Access
@@ -42,6 +48,59 @@ feature -- Access
 
 	sorting_order_list: LIST [INTEGER]
 			-- List of sorting order
+
+	column_index_list: LIST [INTEGER]
+
+	new_agent_list_comparator (a_index_array: ARRAY [INTEGER]): like Current is
+			-- New agent list comparator which contains columns whose indexes are specified in `a_index_array'
+		require
+			a_index_array_attached: a_index_array /= Void
+			not_a_index_array_is_empty: not a_index_array.is_empty
+		local
+			l_action_list: like action_list
+			l_order_list: like sorting_order_list
+			l_index_list: like column_index_list
+			i: INTEGER
+			l_count: INTEGER
+			l_item: INTEGER
+			l_action_tbl: HASH_TABLE [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN], INTEGER]
+			l_order_tbl: HASH_TABLE [INTEGER, INTEGER]
+		do
+			l_index_list := column_index_list
+			l_count := l_index_list.count
+			create l_action_tbl.make (l_count)
+			create l_order_tbl.make (l_count)
+			from
+				l_index_list.start
+				action_list.start
+				sorting_order_list.start
+			until
+				l_index_list.after
+			loop
+				l_action_tbl.force (action_list.item, l_index_list.item)
+				l_order_tbl.force (sorting_order_list.item, l_index_list.item)
+				l_index_list.forth
+				action_list.forth
+				sorting_order_list.forth
+			end
+
+			create {ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]} l_action_list.make (l_count)
+			create {ARRAYED_LIST [INTEGER]} l_order_list.make (l_count)
+			from
+				i := 1
+				l_count := a_index_array.count
+			until
+				i > l_count
+			loop
+				l_item := a_index_array.item (i)
+				if l_action_tbl.has (l_item) then
+					l_action_list.extend (l_action_tbl.item (l_item))
+					l_order_list.extend (l_order_tbl.item (l_item))
+				end
+				i := i + 1
+			end
+			create Result.make (l_action_list, l_order_list, create {ARRAYED_LIST [INTEGER]}.make_from_array (a_index_array))
+		end
 
 feature -- Status report
 
@@ -96,7 +155,9 @@ invariant
 	not_action_list_is_empty: not action_list.is_empty
 	sorting_order_list_attached: sorting_order_list /= Void
 	not_sorting_order_list_is_empty: not sorting_order_list.is_empty
-	columns_match: sorting_order_list.count = action_list.count
+	column_index_list_attached: column_index_list /= Void
+	not_column_index_list_is_empty: not column_index_list.is_empty
+	columns_match: sorting_order_list.count = action_list.count and then sorting_order_list.count = column_index_list
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

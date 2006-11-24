@@ -11,9 +11,11 @@ deferred class
 
 inherit
 	EB_FEATURE_INFO_FORMATTER
-		redefine
-			is_editor_formatter
+		undefine
+			internal_recycle
 		end
+
+	EB_EDITOR_FORMATTER
 
 	SHARED_EIFFEL_PROJECT
 
@@ -39,12 +41,6 @@ feature -- Access
 
 	feature_cmd: E_FEATURE_CMD
 			-- Feature command that is used to generate text output (especially in files).
-
-	is_editor_formatter: BOOLEAN is
-			-- Is current formatter use an editor to display information?
-		do
-			Result := True
-		end
 
 feature -- Status setting
 

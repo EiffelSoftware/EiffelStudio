@@ -43,6 +43,8 @@ feature {NONE} -- Initialization
 			formatters := a_tool.managed_feature_formatters
 			create managed_formatters.make (10)
 			create shared_editor.make (a_tool)
+			shared_editor.widget.set_border_width (1)
+			shared_editor.widget.set_background_color ((create {EV_STOCK_COLORS}).gray)
 			create l_drop_actions
 			l_drop_actions.extend (agent drop_stone)
 			shared_editor.disable_line_numbers
@@ -75,7 +77,6 @@ feature {NONE} -- Initialization
 				l_feature_content_formatter ?= formatters.item
 				if l_feature_content_formatter /= Void then
 					l_feature_content_formatter.set_browser (l_browser)
-					l_feature_content_formatter.set_editor (shared_editor)
 				end
 				managed_formatters.extend (l_formatter)
 				formatters.forth
@@ -183,8 +184,6 @@ feature -- Status setting
 	drop_stone (st: CLASSI_STONE) is
 			-- Test if there is a feature with the same name (or routine id?)
 			-- in the dropped class.
-		require
-			st_not_void: st /= Void
 		local
 			fst, ofst: FEATURE_STONE
 			new_f: E_FEATURE
@@ -337,16 +336,8 @@ feature -- Status setting
 								formatter_tool_bar_area.disable_item_expand (l_class_feature_formatter.browser.control_bar)
 							end
 						end
-						if l_formatters.item.is_editor_formatter then
-							editor_frame.wipe_out
-							outer_container.wipe_out
-							editor_frame.extend (formatter_container)
-							outer_container.extend (editor_frame)
-						else
-							editor_frame.wipe_out
-							outer_container.wipe_out
-							outer_container.extend (formatter_container)
-						end
+						outer_container.wipe_out
+						outer_container.extend (formatter_container)
 						done := True
 					end
 					l_formatters.forth
@@ -509,7 +500,7 @@ feature {NONE} -- Implementation
 			create tool_bar_area
 			create formatter_tool_bar_area
 			create outer_container
-			create editor_frame
+--			create editor_frame
 			output_line.align_text_left
 			build_tool_bar
 			widget.extend (tool_bar_area)
@@ -520,8 +511,8 @@ feature {NONE} -- Implementation
 			widget.extend (output_line)
 			widget.disable_item_expand (output_line)
 
-			editor_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			outer_container.extend (formatter_container)
+--			editor_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+--			outer_container.extend (formatter_container)
 			widget.extend (outer_container)
 			output_line.set_text (Interface_names.l_No_feature)
 		end
@@ -595,8 +586,8 @@ feature {NONE} -- Implementation
 	outer_container: EV_CELL
 			-- Container to hold `formatter_container' and `editor_frame' (if current formatter is an editor formatter)
 
-	editor_frame: EV_FRAME
-			-- Frame as borer of an editor if current formatter is and editor formatter
+--	editor_frame: EV_FRAME
+--			-- Frame as borer of an editor if current formatter is and editor formatter
 
 invariant
 	flat_formatter_not_void: flat_formatter /= Void

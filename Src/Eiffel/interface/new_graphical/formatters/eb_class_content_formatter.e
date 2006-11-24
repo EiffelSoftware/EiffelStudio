@@ -14,7 +14,6 @@ inherit
 		redefine
 			line_numbers_allowed,
 			widget,
-			empty_widget,
 			internal_recycle
 		end
 
@@ -51,23 +50,6 @@ feature -- Access
 			else
 				Result := browser.widget
 			end
-		end
-
-	empty_widget: EV_WIDGET is
-			-- Widget displayed when no information can be displayed.
-		local
-			def: EV_STOCK_COLORS
-			l_frame: EV_FRAME
-			l_cell: EV_CELL
-		do
-			create def
-			create l_frame
-			l_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			create l_cell
-			l_cell.extend (l_frame)
-			Result := l_cell
-			l_frame.set_background_color (def.White)
-			l_frame.drop_actions.extend (agent on_class_drop)
 		end
 
 feature -- Setting
@@ -135,6 +117,11 @@ feature -- Setting
 			class_set: (a_class /= Void and then a_class.has_feature_table) implies (a_class = associated_class)
 		end
 
+	setup_viewpoint is
+			-- Setup viewpoint for formatting.
+		do
+		end
+
 feature -- Status report
 
 	line_numbers_allowed: BOOLEAN is False
@@ -148,11 +135,6 @@ feature -- Status report
 
 	is_class_feature_formatter: BOOLEAN is
 			-- Is current a class feature formatter?
-		do
-		end
-
-	is_class_hierarchy_formatter: BOOLEAN is
-			-- Is current a class hierarchy formatter?
 		do
 		end
 

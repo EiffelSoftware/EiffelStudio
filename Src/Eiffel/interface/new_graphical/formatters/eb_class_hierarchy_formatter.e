@@ -11,9 +11,6 @@ deferred class
 
 inherit
 	EB_CLASS_CONTENT_FORMATTER
-		redefine
-			is_class_hierarchy_formatter
-		end
 
 	QL_SHARED_CLASS_RELATION
 
@@ -22,9 +19,6 @@ inherit
 	EXCEPTIONS
 
 feature -- Status report
-
-	is_class_hierarchy_formatter: BOOLEAN is True
-			-- Is current a class hierarchy formatter?
 
 	is_tree_node_highlight_enabled: BOOLEAN is
 			-- Is tree node highlight enabled?

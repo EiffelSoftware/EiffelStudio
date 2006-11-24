@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 
 	redraw_span (a_drawable: EV_DRAWABLE) is
 		local
-			l_text: STRING
+			l_text: like text
 			g: EV_GRID
 			c: INTEGER
 			prev_width: INTEGER

@@ -15,7 +15,7 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
-	DOCUMENT_HELPER
+	EIFFEL_PROJECT_FACILITIES
 
 feature -- Status setting
 

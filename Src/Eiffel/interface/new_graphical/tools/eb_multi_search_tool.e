@@ -39,7 +39,7 @@ inherit
 			default_create, copy, is_equal
 		end
 
-	DOCUMENT_HELPER
+	EIFFEL_PROJECT_FACILITIES
 		export
 			{NONE} all
 		end

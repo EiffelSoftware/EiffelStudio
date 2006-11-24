@@ -1,18 +1,52 @@
 indexing
-	description: "Retrieve system infomation for documentation generation use."
+	description: "Routines generally used on Eiffel_project clients."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	DOCUMENT_HELPER
+class
+	EIFFEL_PROJECT_FACILITIES
 
 inherit
 	SHARED_EIFFEL_PROJECT
 
-feature -- Helper
+feature -- Access
+
+	class_by_name (name: STRING): CLASS_I is
+			-- Return class with `name'. `Void' if not in system.
+		require
+			name_not_void: name /= Void
+			is_class_name: (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (name) and name.as_upper.is_equal (name)
+		local
+			cl: LIST [CLASS_I]
+		do
+			cl := Eiffel_universe.classes_with_name (name)
+			if cl /= Void and then not cl.is_empty then
+				Result := cl.first
+			end
+		end
+
+	cluster_by_name (name: STRING): CLUSTER_I is
+			-- Return cluster with `name'. `Void' if not in system.
+		require
+			name_not_void: name /= Void
+		do
+			Result := Eiffel_universe.cluster_of_name (name)
+		end
+
+	feature_by_name (name: STRING): E_FEATURE is
+			-- Return feature in current class with `name'. `Void' if not in system.
+		local
+			cc: CLASS_C
+		do
+			cc := Eiffel_system.System.current_class
+			if cc /= Void then
+				Result := cc.feature_with_name (name)
+			end
+		end
+
+feature -- Helper		
 
 	group_name_presentation (sep: STRING; a_name: STRING; a_group: CONF_GROUP): STRING is
 			-- Name presentation of `a_group' + `sep' + `a_name'. i.e. "a.a_name"
@@ -220,4 +254,5 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-end
+
+end -- class DOCUMENTATION_FACILITIES

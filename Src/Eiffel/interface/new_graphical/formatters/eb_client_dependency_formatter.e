@@ -39,7 +39,7 @@ feature -- Access
 			Result := Interface_names.l_clients
 		end
 
-	post_fix: STRING is "cli_dep"
+	post_fix: STRING is "cli"
 			-- String symbol of the command, used as an extension when saving.
 
 

@@ -12,7 +12,7 @@ deferred class
 inherit
 	EB_FORMATTER
 		redefine
-			new_button
+			internal_recycle
 		end
 
 	SHARED_FORMAT_INFO
@@ -24,13 +24,6 @@ inherit
 	EXCEPTIONS
 
 feature -- Access
-
-	new_button: EV_TOOL_BAR_RADIO_BUTTON is
-			-- Create a new toolbar button and associate it with `Current'.
-		do
-			Result := Precursor
-			Result.drop_actions.extend (agent on_stone_drop)
-		end
 
 	browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW
 			-- Browser in which dependencies are displayed
@@ -149,6 +142,40 @@ feature -- Properties
 			result_attached: Result /= Void
 		end
 
+	element_name: STRING is
+			-- name of associated element in current formatter.
+			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
+		local
+			l_target_stone: TARGET_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_class_stone: CLASSC_STONE
+			l_feature_stone: FEATURE_STONE
+			l_group: CONF_GROUP
+		do
+			if associated_stone /= Void and then is_stone_valid (associated_stone) then
+				l_feature_stone ?= associated_stone
+				l_class_stone ?= associated_stone
+				l_cluster_stone ?= associated_stone
+				l_target_stone ?= associated_stone
+				create Result.make (64)
+				if l_feature_stone /= Void then
+					Result.append (l_feature_stone.e_feature.name)
+				elseif l_class_stone /= Void then
+					Result.append (l_class_stone.class_name)
+				elseif l_cluster_stone /= Void then
+					if not l_cluster_stone.path.is_empty then
+							-- For a folder
+						Result.append (l_cluster_stone.folder_name)
+					else
+							-- For a group
+						Result.append (l_group.name)
+					end
+				elseif l_target_stone /= Void then
+					Result.append (l_target_stone.target.name)
+				end
+			end
+		end
+
 feature -- Status setting
 
 	set_dotnet_mode (a_flag: BOOLEAN) is
@@ -200,10 +227,8 @@ feature -- Status setting
 			browser_set: browser = a_browser
 		end
 
-feature -- Formatting
-
-	save_in_file is
-			-- Save output format to a file.
+	setup_viewpoint is
+			-- Setup viewpoint for formatting.
 		do
 		end
 
@@ -215,15 +240,6 @@ feature {NONE} -- Implementation
 			if browser /= Void then
 				browser.reset_display
 			end
-		end
-
-	file_name: FILE_NAME is
-			-- Name of the file in which displayed information may be stored.
-		require else
-			class_non_void: associated_stone /= Void
-		do
-			create Result.make_from_string ("Depend")
-			Result.add_extension (post_fix)
 		end
 
 	temp_header: STRING is
@@ -249,36 +265,6 @@ feature {NONE} -- Implementation
 			else
 				Result := Interface_names.l_select_element_to_show_info
 			end
-		end
-
-feature {NONE} -- Actions
-
-	on_stone_drop (a_stone: STONE) is
-			-- Notify `manager' of the dropping of `stone'.
-		do
-			if not selected then
-				execute
-			end
-			manager.set_stone (a_stone)
-		end
-
-feature{NONE} -- Implementation
-
-	empty_widget: EV_WIDGET is
-			-- Widget displayed when no information can be displayed.
-		local
-			def: EV_STOCK_COLORS
-			l_frame: EV_FRAME
-			l_cell: EV_CELL
-		do
-			create def
-			create l_frame
-			l_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			create l_cell
-			l_cell.extend (l_frame)
-			Result := l_cell
-			l_frame.set_background_color (def.White)
-			l_frame.drop_actions.extend (agent on_stone_drop)
 		end
 
 	class_domain_from_associated_stone: QL_CLASS_DOMAIN is
@@ -373,6 +359,14 @@ feature{NONE} -- Implementation
 				browser.set_trace (exception_trace)
 				browser.update (Void, Void)
 			end
+		end
+
+	internal_recycle is
+			-- Recycle
+		do
+			Precursor
+			browser.recycle
+			browser := Void
 		end
 
 indexing

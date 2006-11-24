@@ -496,8 +496,6 @@ feature {NONE} -- Implementation
 
 	drop_stone (st: STONE) is
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
-		require
-			valid_stone: st /= Void
 		local
 			fst: FEATURE_STONE
 		do

@@ -24,6 +24,21 @@ inherit
 
 	EB_RECYCLABLE
 
+feature -- Initialization
+
+	make (a_manager: like manager) is
+			-- Create a formatter associated with `a_manager'.
+		do
+			manager := a_manager
+			capital_command_name := command_name.twin
+			capital_command_name.left_adjust
+				-- Set the first character to upper case.
+			capital_command_name.put ((capital_command_name @ 1) - 32, 1)
+			create post_execution_action
+		ensure
+			valid_capital_command_name: valid_string (capital_command_name)
+		end
+
 feature -- Properties
 
 	manager: EB_STONABLE
@@ -40,30 +55,33 @@ feature -- Properties
 	stone: STONE
 			-- Stone representing Current
 
-	is_editor_formatter: BOOLEAN is
-			-- Is current formatter use an editor to display information?
-		do
-		end
-
 	viewpoints: CLASS_VIEWPOINTS
 			-- Class view points
 
 	post_execution_action: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called after execution
 
-feature -- Initialization
-
-	make (a_manager: like manager) is
-			-- Create a formatter associated with `a_manager'.
+	empty_widget: EV_WIDGET is
+			-- Widget displayed when no information can be displayed.
 		do
-			manager := a_manager
-			capital_command_name := command_name.twin
-			capital_command_name.left_adjust
-				-- Set the first character to upper case.
-			capital_command_name.put ((capital_command_name @ 1) - 32, 1)
-			create post_execution_action
-		ensure
-			valid_capital_command_name: valid_string (capital_command_name)
+			if internal_empty_widget = Void then
+				new_empty_widget
+			end
+			Result := internal_empty_widget
+		end
+
+	element_name: STRING is
+			-- name of associated element in current formatter.
+			-- For exmaple, if a class stone is associated to current, `element_name' would be the class name.
+			-- Void if element is not retrievable.
+		deferred
+		end
+
+feature -- Status report
+
+	is_dotnet_formatter: BOOLEAN is
+			-- Is Current able to format .NET class texts?
+		deferred
 		end
 
 feature -- Setting
@@ -94,16 +112,6 @@ feature -- Setting
 			manager := a_manager
 		end
 
-	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
-			-- Set `editor' to `an_editor'.
-			-- Used to share an editor between several formatters.
-		require
-			an_editor_non_void: an_editor /= Void
-		do
-			editor := an_editor
-			internal_widget := an_editor.widget
-		end
-
 	set_viewpoints (a_viewpoints: like viewpoints) is
 			-- Viewpoints of current formatting
 		do
@@ -114,6 +122,11 @@ feature -- Setting
 
 	set_focus is
 			-- Set focus to current formatter.
+		deferred
+		end
+
+	reset_display is
+			-- Clear all graphical output.
 		deferred
 		end
 
@@ -128,26 +141,6 @@ feature -- Formatting
 			-- Did an error occur during the last attempt to format?
 
 feature -- Interface
-
-	on_shown is
-			-- `Widget's parent is displayed.
-		do
-			internal_displayed := True
-			if
-				widget_owner /= Void and then
-				selected
-			then
-				widget_owner.set_widget (widget)
-				display_header
-			end
-			format
-		end
-
-	on_hidden is
-			-- `Widget's parent is hidden.
-		do
-			internal_displayed := False
-		end
 
 	symbol: ARRAY [EV_PIXMAP] is
 			-- Pixmaps for the default button (1 is color, 2 is grey, if any).
@@ -183,6 +176,7 @@ feature -- Interface
 			end
 			Result.set_tooltip (tt)
 			set_button (Result)
+			Result.drop_actions.extend (agent on_stone_drop)
 		end
 
 feature -- Pop up
@@ -211,6 +205,37 @@ feature -- Pop up
 			widget_owner := new_owner
 		end
 
+feature -- Actions
+
+	on_shown is
+			-- `Widget's parent is displayed.
+		do
+			internal_displayed := True
+			if
+				widget_owner /= Void and then
+				selected
+			then
+				widget_owner.set_widget (widget)
+				display_header
+			end
+			format
+		end
+
+	on_hidden is
+			-- `Widget's parent is hidden.
+		do
+			internal_displayed := False
+		end
+
+	on_stone_drop (a_stone: STONE) is
+			-- Notify `manager' of the dropping of `stone'.
+		do
+			if not selected then
+				execute
+			end
+			manager.set_stone (a_stone)
+		end
+
 feature -- Commands
 
 	execute is
@@ -225,7 +250,8 @@ feature -- Commands
 
 	save_in_file is
 			-- Save output format into a file.
-		deferred
+		do
+--|FIXME XR: To be implemented.		
 		end
 
 	display_header is
@@ -278,20 +304,6 @@ feature -- Loacation
 			end
 		end
 
-	go_to_position is
-			-- Save manager position and go to position in `editor' if possible.
-		do
-			save_manager_position
-			if
-				selected and then
-				stone /= Void and then
-				stone.pos_container = current and then
-				stone.position > 0
-			then
-				editor.display_line_at_top_when_ready (stone.position)
-			end
-		end
-
 feature -- Agents
 
 	popup_actions: ACTION_SEQUENCE [TUPLE] is
@@ -331,12 +343,7 @@ feature {NONE} -- Location
 
 	setup_viewpoint is
 			-- Setup viewpoint for formatting.
-		do
-			if viewpoints /= Void then
-				if editor /= Void then
-					editor.text_displayed.set_context_group (viewpoints.current_viewpoint)
-				end
-			end
+		deferred
 		end
 
 feature {NONE} -- Recyclable
@@ -345,7 +352,6 @@ feature {NONE} -- Recyclable
 			-- Recycle
 		do
 			manager := Void
-			editor := Void
 		end
 
 feature {NONE} -- Implementation
@@ -355,9 +361,6 @@ feature {NONE} -- Implementation
 
 	cur_wid: EV_WIDGET
 			-- Widget on which the hourglass cursor was set.
-
-	editor: EB_CLICKABLE_EDITOR
-			-- Output editor.
 
 	displayed: BOOLEAN is
 			-- Is `widget' displayed?
@@ -412,8 +415,14 @@ feature {NONE} -- Implementation
 		end
 
 	file_name: FILE_NAME is
-			-- Name of the file where formatted output may be saved.
-		deferred
+			-- Name of the file in which displayed information may be stored
+		require
+			element_name_attached: element_name /= Void
+		do
+			create Result.make_from_string (element_name)
+			Result.add_extension (post_fix)
+		ensure
+			result_attached: Result /= Void
 		end
 
 	post_fix: STRING is
@@ -435,8 +444,27 @@ feature {NONE} -- Implementation
 	line_numbers_allowed: BOOLEAN is deferred end
 		-- Does it make sense to show line numbers in Current?
 
-	popup_actions_internal: like popup_actions;
+	popup_actions_internal: like popup_actions
 			-- Implementation of `popup_actions'
+
+	internal_empty_widget: EV_WIDGET
+			-- Widget displayed when no information can be displayed.	
+
+	new_empty_widget is
+			-- Initialize a default empty_widget.
+		local
+			l_frame: EV_FRAME
+		do
+			create l_frame
+			l_frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			l_frame.set_background_color ((create {EV_STOCK_COLORS}).white)
+			internal_empty_widget := l_frame
+			if widget_owner /= Void then
+				internal_empty_widget.drop_actions.extend (agent widget_owner.drop_stone)
+			else
+				internal_empty_widget.drop_actions.extend (agent on_stone_drop)
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -39,7 +39,7 @@ feature -- Access
 			Result := Interface_names.l_suppliers
 		end
 
-	post_fix: STRING is "sup_dep"
+	post_fix: STRING is "sup"
 			-- String symbol of the command, used as an extension when saving.
 
 

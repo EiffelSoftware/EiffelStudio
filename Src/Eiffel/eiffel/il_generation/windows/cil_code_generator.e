@@ -841,7 +841,8 @@ feature -- Generation Structure
 						if not l_type.is_external then
 							define_assertion_level (l_type)
 						end
-						if l_type.is_generated then
+						l_class := l_type.associated_class
+						if l_type.is_generated and then not l_class.is_typed_pointer then
 							l_module := il_module (l_type)
 
 							file_token.search (l_module)
@@ -865,7 +866,6 @@ feature -- Generation Structure
 									{MD_TYPE_ATTRIBUTES}.Public)
 							end
 
-							l_class := l_type.associated_class
 							if
 								not l_class.is_deferred and
 								(l_class.creators = Void or else not l_class.creators.is_empty)
@@ -1140,7 +1140,6 @@ feature -- Class info
 			parent_type: CL_TYPE_I
 			parents: FIXED_LIST [CL_TYPE_A]
 			l_native_array: NATIVE_ARRAY_CLASS_TYPE
-			l_type: CL_TYPE_I
 		do
 			l_native_array ?= class_type
 			if l_native_array /= Void then
@@ -1151,8 +1150,7 @@ feature -- Class info
 			then
 					-- We do not process TYPED_POINTER as it is not a real class type in .NET so
 					-- TYPED_POINTER doesn't really have a `full_il_type_name'.
-				l_type := class_type.type
-				external_class_mapping.put (l_type, class_type.full_il_type_name)
+				external_class_mapping.put (class_type.type, class_type.full_il_type_name)
 			end
 
 			parents := class_c.parents
@@ -3087,7 +3085,10 @@ feature -- IL Generation
 						nb, False)
 				end
 				fixme ("Generate class invariant check (if enabled).")
-				if current_class_type.is_expanded then
+				if current_class_type.type.is_basic then
+						-- Load basic object value.
+					generate_load_from_address_as_basic (current_class_type.type)
+				elseif current_class_type.is_expanded then
 						-- Load expanded object value.
 					generate_load_from_address (current_class_type.type)
 				end

@@ -77,7 +77,7 @@ feature -- Text processing
 	process_string_text (t: STRING; url: STRING) is
 			-- Process default basic text `t'.
 		local
-			tok: EDITOR_TOKEN_TEXT
+			tok: EDITOR_TOKEN_STRING
 			l_pos, l_previous: INTEGER
 			stone: URL_STONE
 		do

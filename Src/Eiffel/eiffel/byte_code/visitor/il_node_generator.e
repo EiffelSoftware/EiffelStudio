@@ -320,6 +320,10 @@ feature -- Generation
 					end
 					generate_twin_routine ({PREDEFINED_NAMES}.twin_name_id, target_type)
 				end
+			elseif target_type.is_basic then
+				il_generator.generate_check_cast (source_type, target_type)
+				il_generator.generate_load_address (target_type)
+				il_generator.generate_load_from_address_as_basic (target_type)
 			elseif
 				source.is_dynamic_clone_required (source_type) and then
 				(source_type.is_external and then
@@ -342,19 +346,11 @@ feature -- Generation
 					label_done := il_generator.create_label
 					il_generator.branch_to (label_done)
 					il_generator.mark_label (label)
-					if target_type.is_basic then
-						il_generator.generate_load_address (target_type)
-						il_generator.generate_load_from_address_as_basic (target_type)
-					else
-						il_generator.generate_unmetamorphose (target_type)
-					end
+					il_generator.generate_unmetamorphose (target_type)
 					il_generator.mark_label (label_done)
 				else
 					il_generator.mark_label (label)
 				end
-			elseif target_type.is_basic then
-				il_generator.generate_load_address (target_type)
-				il_generator.generate_load_from_address_as_basic (target_type)
 			elseif target_type.is_expanded then
 				il_generator.generate_unmetamorphose (target_type)
 			end
@@ -882,6 +878,10 @@ feature {NONE} -- Visitors
 				l_cl_type ?= a_node.context_type
 				if l_cl_type.is_expanded and then not l_cl_type.is_external then
 						-- Access attribute directly.
+					if l_cl_type.base_class.is_typed_pointer then
+							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
+						l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+					end
 					l_target_type := l_cl_type
 					l_target_attribute_id := l_cl_type.base_class.feature_of_rout_id (a_node.routine_id).feature_id
 				else
@@ -1410,6 +1410,10 @@ feature {NONE} -- Visitors
 				end
 
 				if l_cl_type.is_expanded then
+					if l_cl_type.base_class.is_typed_pointer then
+							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
+						l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+					end
 						-- Current type is expanded. We need to find out if
 						-- we need to generate a box operation, meaning that
 						-- the feature is inherited from a non-expanded class.
@@ -1539,6 +1543,10 @@ feature {NONE} -- Visitors
 				l_is_call_on_any := a_node.is_any_feature and a_node.precursor_type = Void
 					-- Find location of feature.
 				if l_cl_type.is_expanded and then not l_cl_type.is_external and then not l_is_call_on_any then
+					if l_cl_type.base_class.is_typed_pointer then
+							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
+						l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+					end
 					l_target_type := l_cl_type
 				else
 					l_target_type := il_generator.implemented_type (a_node.written_in, l_cl_type)
@@ -2274,10 +2282,21 @@ feature {NONE} -- Visitors
 			a_node.source.process (Current)
 			is_object_load_required := False
 
-			if l_source_type.is_expanded and then l_target_type.is_expanded then
+			l_target_class_type ?= l_target_type
+			if
+				l_target_class_type /= Void and then
+				l_target_class_type.base_class.is_typed_pointer and then not
+				l_source_type.same_as (l_target_type)
+			then
+					-- Reverse reattachment to TYPED_POINTER is NOOP
+					-- if the source is not of the same type as the target.
+					-- Remove expression value because it is not used.
+				il_generator.pop
+					-- Avoid reattachment altogether.
+				generate_il_cancel_assignment (a_node.target)
+			elseif l_source_type.is_expanded and then l_target_type.is_expanded then
 					-- NOOP if classes are different or normal assignment otherwise.
 				l_source_class_type ?= l_source_type
-				l_target_class_type ?= l_target_type
 				if
 					l_target_class_type /= Void and then l_source_class_type /= Void and then
 					l_target_class_type.class_id = l_source_class_type.class_id
@@ -2295,6 +2314,11 @@ feature {NONE} -- Visitors
 				end
 			else
 				if l_source_type.is_expanded then
+					l_source_class_type ?= l_source_type
+					if l_source_class_type /= Void and then l_source_class_type.base_class.is_typed_pointer then
+							-- Use non-generic class POINTER because TYPED_POINTER is not generated.
+						l_source_type := system.pointer_class.compiled_class.actual_type.type_i
+					end
 					generate_il_metamorphose (l_source_type, l_target_type, True)
 				end
 
@@ -2663,13 +2687,20 @@ feature {NONE} -- Implementation
 				if not l_expression_type.is_basic then
 						-- Simply box the object.
 					il_generator.generate_metamorphose (l_expression_type)
-				elseif not a_target_type.is_external or else l_cl_type.meta_generic /= Void then
-						-- Basic type is attached to Eiffel reference type,
-						-- so basic type has to be represented by Eiffel type
-						-- rather than by built-in IL type.
-					generate_il_eiffel_metamorphose (l_expression_type)
 				else
-					il_generator.generate_external_metamorphose (l_expression_type)
+					if l_cl_type.base_class.is_typed_pointer then
+							-- Use POINTER instead of TYPED_POINTER.
+						l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+						l_expression_type := l_cl_type
+					end
+					if not a_target_type.is_external or else l_cl_type.meta_generic /= Void then
+							-- Basic type is attached to Eiffel reference type,
+							-- so basic type has to be represented by Eiffel type
+							-- rather than by built-in IL type.
+						generate_il_eiffel_metamorphose (l_expression_type)
+					else
+						il_generator.generate_external_metamorphose (l_expression_type)
+					end
 				end
 			end
 		end
@@ -3377,6 +3408,17 @@ feature {NONE} -- Implementation: Feature calls
 				valid_type: l_cl_type /= Void
 			end
 
+			if l_cl_type.is_expanded then
+				if l_cl_type.base_class.is_typed_pointer then
+						-- Use POINTER instead of TYPED_POINTER.
+					l_cl_type := system.pointer_class.compiled_class.actual_type.type_i
+				end
+					-- Current type is expanded. We need to find out if
+					-- we need to generate a box operation, meaning that
+					-- the feature is inherited from a non-expanded class.
+				l_real_metamorphose := need_real_metamorphose (a_node, l_cl_type)
+			end
+
 				-- Let's find out if we are performing a call on a basic type
 				-- or on an enum type. This happens only when we are calling
 				-- magically added feature on basic types.
@@ -3384,13 +3426,6 @@ feature {NONE} -- Implementation: Feature calls
 			l_invariant_checked := (context.workbench_mode or
 				l_cl_type.base_class.assertion_level.is_invariant) and then
 				not a_node.is_first
-
-			if l_cl_type.is_expanded then
-					-- Current type is expanded. We need to find out if
-					-- we need to generate a box operation, meaning that
-					-- the feature is inherited from a non-expanded class.
-				l_real_metamorphose := need_real_metamorphose (a_node, l_cl_type)
-			end
 
 			if a_node.is_first then
 					-- First call in dot expression, we need to generate Current

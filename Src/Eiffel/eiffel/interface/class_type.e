@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 					implementation_id := Static_type_id_counter.next_id
 				end
 					-- Set `external_id'.
-				if type.is_basic and then associated_class.is_external then
+				if type.is_basic and then associated_class.is_external and then not associated_class.is_typed_pointer then
 						-- Basic types have a specific ID for external counterparts.
 					external_id := Static_type_id_counter.next_id
 				else
@@ -192,7 +192,7 @@ feature -- Access
 			l_class: like associated_class
 		do
 			l_class := associated_class
-			Result := l_class.is_external and then not l_class.is_basic
+			Result := l_class.is_external and then (not l_class.is_basic or else l_class.is_typed_pointer)
 		end
 
 	is_generated_as_single_type: BOOLEAN is

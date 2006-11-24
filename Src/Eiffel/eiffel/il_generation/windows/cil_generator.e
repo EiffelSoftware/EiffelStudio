@@ -1118,7 +1118,7 @@ feature {NONE} -- Progression
 		do
 				-- We force generation of basic classes even if only the reference version
 				-- will be generated.
-			Result := (a_class /= Void and then (a_class.is_basic or not a_class.is_external))
+			Result := (a_class /= Void and then (a_class.is_basic and then not a_class.is_typed_pointer or not a_class.is_external))
 				and then (is_finalizing or else a_class.degree_minus_1_needed)
 		end
 

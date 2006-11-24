@@ -311,8 +311,14 @@ feature {COMPILER_EXPORTER} -- Conformance
 			if other_class_type /= Void then
 				if other_class_type.is_expanded then
 						-- It should be the exact same base class for expanded.
-					Result := is_expanded and then class_id = other_class_type.class_id
-						and then other_class_type.valid_generic (Current)
+					if is_expanded and then class_id = other_class_type.class_id then
+						if is_typed_pointer then
+								-- TYPED_POINTER should be exactly the same type.
+							Result := same_as (other)
+						else
+							Result := other_class_type.valid_generic (Current)
+						end
+					end
 				else
 					Result :=
 						associated_class.conform_to (other_class_type.associated_class)

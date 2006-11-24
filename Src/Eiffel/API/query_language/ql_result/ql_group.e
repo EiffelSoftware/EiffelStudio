@@ -168,6 +168,30 @@ feature -- Status report
 			good_result: Result = group_scope
 		end
 
+	is_library: BOOLEAN is
+			-- Is `group' a library?
+		do
+			Result := group.is_library
+		end
+
+	is_assembly: BOOLEAN is
+			-- Is `group' an assembly?
+		do
+			Result := group.is_assembly
+		end
+
+	is_cluster: BOOLEAN is
+			-- Is `group' a cluster?
+		do
+			Result := group.is_cluster
+		end
+
+	is_physical_assembly: BOOLEAN is
+			-- Is `group' a physical assembly?
+		do
+			Result := group.is_physical_assembly
+		end
+
 feature -- Visit
 
 	process (a_visitor: QL_VISITOR) is

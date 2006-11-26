@@ -319,9 +319,9 @@ feature {NONE} -- Implementation
 					-- Generate dependency table `l_dep'.
 					-- `l_dep' is a hash table whose key is ql group items and value is another hash table whose key is class in that ql group, and value is
 					-- a set of classes who depend on this class.
+				l_source_domain := class_domain_from_associated_stone
 				from
 					l_target_domain := system_target_domain
-					l_source_domain := class_domain_from_associated_stone
 					l_source_domain.start
 				until
 					l_source_domain.after
@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 					l_source_domain.forth
 				end
 				browser.set_starting_element (stone)
-				browser.update (Void, l_dep)
+				browser.update (Void, [l_dep, l_source_domain] )
 			else
 				browser.set_trace (exception_trace)
 				browser.update (Void, Void)

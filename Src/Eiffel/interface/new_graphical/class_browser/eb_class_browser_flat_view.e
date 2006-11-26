@@ -96,29 +96,6 @@ feature -- Actions
 			end
 		end
 
-	on_show_tooltip_changed is
-			-- Action to be performed when selection status of `show_tooltip_checkbox' changes
-		do
-			if preferences.class_browser_data.is_tooltip_shown /= show_tooltip_checkbox.is_selected then
-				preferences.class_browser_data.show_tooltip_preference.set_value (show_tooltip_checkbox.is_selected)
-			end
-		end
-
-	on_show_tooltip_changed_from_outside is
-			-- Action to be performed when selection status of `show_tooltip_checkbox' changes from outside
-		local
-			l_displayed: BOOLEAN
-		do
-			l_displayed := preferences.class_browser_data.is_tooltip_shown
-			if l_displayed /= show_tooltip_checkbox.is_selected then
-				if l_displayed then
-					show_tooltip_checkbox.enable_select
-				else
-					show_tooltip_checkbox.disable_select
-				end
-			end
-		end
-
 	on_show_feature_from_any_changed_from_outside is
 			-- Action to be performed when selection status of `show_feature_from_any' changes from outside
 		local
@@ -842,9 +819,6 @@ feature{NONE} -- Implementation
 			is_up_to_date := False
 			update_view
 		end
-
-	on_show_tooltip_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent kept for recycling
 
 	on_show_feature_from_any_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent kept for recycling

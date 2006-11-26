@@ -114,29 +114,6 @@ feature -- Setting
 
 feature -- Actions
 
-	on_show_tooltip_changed is
-			-- Action to be performed when selection status of `show_tooltip_checkbox' changes
-		do
-			if preferences.class_browser_data.is_tooltip_shown /= show_tooltip_checkbox.is_selected then
-				preferences.class_browser_data.show_tooltip_preference.set_value (show_tooltip_checkbox.is_selected)
-			end
-		end
-
-	on_show_tooltip_changed_from_outside is
-			-- Action to be performed when selection status of `show_tooltip_checkbox' changes from outside
-		local
-			l_displayed: BOOLEAN
-		do
-			l_displayed := preferences.class_browser_data.is_tooltip_shown
-			if l_displayed /= show_tooltip_checkbox.is_selected then
-				if l_displayed then
-					show_tooltip_checkbox.enable_select
-				else
-					show_tooltip_checkbox.disable_select
-				end
-			end
-		end
-
 	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
 			-- Action to be performed when `collapse_button' is pressed
 		do
@@ -618,8 +595,6 @@ feature -- Recyclable
 		end
 
 feature{NONE} -- Implementation
-
-	on_show_tooltip_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
 
 	data: QL_FEATURE_DOMAIN
 			-- Data to be displayed

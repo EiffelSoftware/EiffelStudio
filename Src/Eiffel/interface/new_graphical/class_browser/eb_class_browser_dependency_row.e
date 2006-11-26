@@ -14,6 +14,8 @@ inherit
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 
+	EB_SHARED_EDITOR_TOKEN_UTILITY
+
 create
 	make
 
@@ -23,12 +25,13 @@ feature{NONE} -- Initialization
 			-- Initialize `item' with `a_item', `row_node' with `a_row_node' and `browser' with `a_browser'.
 		require
 			a_item_attached: a_item /= Void
-			a_row_node_attached: a_row_node /= Void
+			a_row_node_valid: a_row_node /= Void
 			a_browser_attached: a_browser /= Void
 		do
 			set_item (a_item)
 			set_row_node (a_row_node)
 			set_browser (a_browser)
+			set_should_current_row_be_displayed (True)
 		end
 
 feature -- Access
@@ -39,21 +42,24 @@ feature -- Access
 	row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
 			-- Row node where current belongs
 
+
 	grid_item: EB_GRID_COMPILER_ITEM is
 			-- Grid item to be displayed
 		local
-			l_style: like item_style
+			l_path_style: like item_path_style
 		do
 			if grid_item_internal = Void then
-				l_style := item_style
-				create grid_item_internal
-				l_style.set_item (item)
+				l_path_style := item_path_style
 				if should_path_be_displayed then
-					l_style.enable_parent
+					l_path_style.enable_parent
+					l_path_style.enable_indirect_parent
 				else
-					l_style.disable_parent
+					l_path_style.disable_parent
+					l_path_style.disable_indirect_parent
 				end
-				grid_item_internal.set_text_with_tokens (item_style.text)
+				create grid_item_internal
+				l_path_style.set_item (item)
+				grid_item_internal.set_text_with_tokens (l_path_style.text)
 				grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (item))
 				grid_item_internal.set_image (grid_item_internal.text)
 			end
@@ -61,6 +67,62 @@ feature -- Access
 		ensure
 			result_attached: Result /= Void
 		end
+
+	feature_list_item: EB_GRID_COMPILER_ITEM is
+			-- Grid item to display `feature_list'
+		require
+			feature_list_attached: feature_list /= Void
+		local
+			l_list: like feature_list
+			l_space: LIST [EDITOR_TOKEN]
+			l_text: LINKED_LIST [EDITOR_TOKEN]
+			i: INTEGER
+			l_count: INTEGER
+			l_feature_name_style: like feature_name_style
+			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
+		do
+			if feature_list_item_internal = Void then
+				create feature_list_item_internal
+				l_list := feature_list
+				check not l_list.is_empty end
+				feature_list_item_internal.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
+				l_count := l_list.count
+				l_feature_name_style := feature_name_style
+				if l_count > 1 then
+					plain_text_style.set_source_text (", ")
+					l_space := plain_text_style.text
+					create l_text.make
+					from
+						i := 1
+						l_list.start
+					until
+						l_list.after
+					loop
+						l_feature_name_style.set_ql_feature (l_list.item)
+						l_text.append (l_feature_name_style.text)
+						if i < l_count then
+							l_text.append (l_space)
+						end
+						i := i + 1
+						l_list.forth
+					end
+					feature_list_item_internal.set_text_with_tokens (l_text)
+				else
+					l_feature_name_style.set_ql_feature (l_list.first)
+					feature_list_item_internal.set_text_with_tokens (l_feature_name_style.text)
+				end
+				feature_list_item_internal.set_image (feature_list_item_internal.text)
+				l_tooltip := new_general_tooltip (feature_list_item_internal, agent: BOOLEAN do Result := not browser.should_tooltip_be_displayed end)
+				setup_general_tooltip (agent tooltip_text_function, l_tooltip)
+				feature_list_item_internal.set_general_tooltip (l_tooltip)
+			end
+			Result := feature_list_item_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	feature_list: LIST [QL_FEATURE]
+			-- Feature list to be displayed in another column
 
 feature -- Status report
 
@@ -76,15 +138,20 @@ feature -- Status report
 	has_been_expanded: BOOLEAN
 			-- Has current row been expanded?
 
-	is_referencer_class_row: BOOLEAN
-			-- Is current row for referencer class?
+	is_lazy_expandable: BOOLEAN
+			-- Is current row able for lazy expandable?
+			-- Used to indicate that subrows of current row is to be inserted later when
+			-- current row is expanded for the first time because the retrieval of the subrows are
+			-- time consuming.
+
+	should_current_row_be_displayed: BOOLEAN
+			-- Should current row be displayed?
+			-- Default: True
 
 feature -- Setting
 
 	set_item (a_item: like item) is
 			-- Set `item' with `a_item'.
-		require
-			a_item_attached: a_item /= Void
 		do
 			item := a_item
 		ensure
@@ -111,15 +178,28 @@ feature -- Setting
 			is_expanded_set: is_expanded = a_expanded
 		end
 
-	set_is_referencer_class (a_referencer_class: BOOLEAN) is
-			-- Set `is_referencer_class_row' with `a_referencer_class'.
+	set_is_lazy_expandable (a_lazy_expandable: BOOLEAN) is
+			-- Set `is_lazy_expandable' with `a_lazy_expandable'.
 		do
-			is_referencer_class_row := a_referencer_class
-			if is_referencer_class_row then
-				grid_item.set_tooltip (warning_messages.w_slow_process_to_expand)
-			end
+			is_lazy_expandable := a_lazy_expandable
 		ensure
-			is_referencer_class_set_row: is_referencer_class_row = a_referencer_class
+			is_lazy_expandable_set: is_lazy_expandable = a_lazy_expandable
+		end
+
+	set_feature_list (a_feature_list: like feature_list) is
+			-- Set `feature_list' with `a_feature_list'.
+		do
+			feature_list := a_feature_list
+		ensure
+			feature_list_set: feature_list = a_feature_list
+		end
+
+	set_should_current_row_be_displayed (b: BOOLEAN) is
+			-- Set `should_current_row_be_dispalyed' with `b'.
+		do
+			should_current_row_be_displayed := b
+		ensure
+			should_current_row_be_displayed_set: should_current_row_be_displayed = b
 		end
 
 feature -- Grid binding
@@ -133,24 +213,68 @@ feature -- Grid binding
 			a_row.clear
 			a_row.set_data (Current)
 			a_row.set_item (a_column, grid_item)
+			if feature_list /= Void then
+				a_row.set_item (a_column + 1, feature_list_item)
+			end
 			set_grid_row (a_row)
 		end
 
 feature{NONE} -- Implementation
 
-	item_style: EB_PATH_EDITOR_TOKEN_STYLE is
-			-- Style to generate text for `grid_item'
+	class_style: EB_CLASS_EDITOR_TOKEN_STYLE is
+			-- Style to generate text for class
 		once
 			create Result
-			Result.enable_parent
-			Result.enable_self
-			Result.disable_target
+			Result.enable_just_name
+		ensure
+			result_attached: Result /= Void
+		end
+
+	feature_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+			-- Feature style
+		once
+			create Result
+			Result.disable_class
+			Result.disable_comment
+			Result.disable_return_type
+			Result.disable_value_for_constant
+			Result.disable_use_overload_name
+			Result.disable_argument
 		ensure
 			result_attached: Result /= Void
 		end
 
 	grid_item_internal: like grid_item
-			-- Implementation of `grid_item'.	
+			-- Implementation of `grid_item'.
+
+	feature_list_item_internal: like feature_list_item
+			-- Implementation of `feature_list_item'
+
+	item_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
+			-- Path style
+		once
+			create Result
+			Result.disable_target
+			Result.enable_indirect_parent
+			Result.enable_parent
+			Result.enable_self
+			Result.path_printer.set_class_style (class_style)
+			Result.path_printer.set_feature_style (feature_style)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	tooltip_text_function: LIST [EDITOR_TOKEN] is
+			-- Text to return text for tooltip
+		require
+			feature_list_valid: feature_list /= Void and then feature_list.is_empty
+		do
+			complete_generic_class_style.set_class_c (feature_list.first.class_c)
+			plain_text_style.set_source_text (interface_names.l_from)
+			Result := (plain_text_style + complete_generic_class_style).text
+		ensure
+			result_attached: Result /= Void
+		end
 
 invariant
 	item_attached: item /= Void

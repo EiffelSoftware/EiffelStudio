@@ -770,6 +770,9 @@ feature -- Label texts
 	l_feature_in_supplier_class: STRING is "Feature in supplier class"
 	l_select_element_to_show_info: STRING is "Select a target/group/folder/class to show information about it."
 	l_location: STRING is "Location"
+	l_callers_from_client_class: STRING is "Callers from client class"
+	l_callees_from_supplier_class: STRING is "Callees from supplier class"
+	l_from: STRING is "From "
 
 feature -- Stone names
 

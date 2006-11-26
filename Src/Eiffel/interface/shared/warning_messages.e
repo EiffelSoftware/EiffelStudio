@@ -1169,8 +1169,7 @@ feature -- Warning messages
 	w_cannot_save_when_c_compilation_running: STRING is "Please save output after c compilation has exited."
 	w_cannot_clear_when_external_running: STRING is "Please clear this window after external command has exited."
 	w_cannot_save_when_external_running: STRING is "Please save output after external command has exited."
-	w_external_command_running_in_development_window: STRING is "An external command is running, close this window will terminate it.%NContinue?"
-	w_slow_process_to_expand: STRING is "Slow process to expand current item";
+	w_external_command_running_in_development_window: STRING is "An external command is running, close this window will terminate it.%NContinue?";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

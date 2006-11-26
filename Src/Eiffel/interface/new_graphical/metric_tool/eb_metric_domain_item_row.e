@@ -175,6 +175,7 @@ feature -- Access
 			l_writer: like token_writer
 			l_item: QL_ITEM
 			l_group: QL_GROUP
+			l_feature: QL_FEATURE
 		do
 			l_writer := token_writer
 			l_writer.new_line
@@ -194,7 +195,14 @@ feature -- Access
 					else
 						l_item := l_domain_item.query_language_item
 						if l_item /= Void then
-							add_editor_token_representation (l_item, False, True, l_writer)
+							if l_item.is_feature then
+								l_feature ?= l_item
+								feature_with_class_style.set_ql_feature (l_feature)
+								Result := feature_with_class_style.text
+							else
+								ql_name_style.set_item (l_item)
+								Result := ql_name_style.text
+							end
 						else
 							l_writer.add_string (l_domain_item.string_representation)
 						end
@@ -203,7 +211,9 @@ feature -- Access
 			else
 				l_writer.add_error (create{SYNTAX_ERROR}.init, l_domain_item.string_representation)
 			end
-			Result := l_writer.last_line.content
+			if Result = Void then
+				Result := l_writer.last_line.content
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -370,6 +380,8 @@ feature{NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
+
+
 
 invariant
 	domain_item_attached: domain_item /= Void

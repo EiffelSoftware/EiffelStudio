@@ -55,8 +55,8 @@ feature -- Initialization
 			a_item_attached: a_item /= Void
 			a_item_valid: a_item.is_valid_domain_item
 		local
-			l_writer: like token_writer
-			l_full_signature: BOOLEAN
+			l_path_style: like item_path_style
+			l_feature: QL_FEATURE
 		do
 			default_create
 			column_index := a_column_index
@@ -64,17 +64,21 @@ feature -- Initialization
 			set_overriden_fonts (label_font_table)
 			if not a_path then
 					-- Initialize current as a query language tem.
-				l_writer := token_writer
-				l_writer.new_line
-				l_writer.set_context_group (Void)
-				l_full_signature := not a_item.is_feature
-				add_editor_token_representation (a_item, l_full_signature, True, l_writer)
+				if a_item.is_feature then
+					l_feature ?= a_item
+					feature_with_class_style.set_ql_feature (l_feature)
+					set_text_with_tokens (feature_with_class_style.text)
+				else
+					ql_name_style.set_item (a_item)
+					set_text_with_tokens (ql_name_style.text)
+				end
 				set_pixmap (pixmap_for_query_lanaguage_item (a_item))
-				set_text_with_tokens (l_writer.last_line.content)
 				image_internal := a_item.name
 			else
 					-- Initialize current as a path item.
-				set_text_with_tokens (editor_tokens_of_query_item_path (a_item, Void, True, False, False))
+				l_path_style := item_path_style
+				l_path_style.set_item (a_item)
+				set_text_with_tokens (l_path_style.text)
 				image_internal := text
 			end
 		ensure
@@ -112,6 +116,18 @@ feature{NONE} -- Implementation
 
 	image_internal: like image
 			-- Implementation of `image'
+
+	item_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
+			-- Path style used to diplay path for query item
+		once
+			create Result
+			Result.disable_target
+			Result.disable_self
+			Result.enable_parent
+			Result.enable_indirect_parent
+		ensure
+			result_attached: Result /= Void
+		end
 
 invariant
 	image_intarnal_attached: image_internal /= Void

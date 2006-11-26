@@ -380,6 +380,8 @@ feature -- Access
 
 	control_bar: EV_WIDGET is
 			-- Widget of a control bar through which, certain control can be performed upon current view
+			-- Every view can provide a customized control bar. Normally a tool bar is placed in this area
+			-- through which behavior (such as tooltip display) of current view can be changed.
 		deferred
 		end
 
@@ -630,6 +632,29 @@ feature{NONE} -- Actions
 			end
 		end
 
+	on_show_tooltip_changed is
+			-- Action to be performed when selection status of `show_tooltip_checkbox' changes
+		do
+			if preferences.class_browser_data.is_tooltip_shown /= show_tooltip_checkbox.is_selected then
+				preferences.class_browser_data.show_tooltip_preference.set_value (show_tooltip_checkbox.is_selected)
+			end
+		end
+
+	on_show_tooltip_changed_from_outside is
+			-- Action to be performed when selection status of `show_tooltip_checkbox' changes from outside
+		local
+			l_displayed: BOOLEAN
+		do
+			l_displayed := preferences.class_browser_data.is_tooltip_shown
+			if l_displayed /= show_tooltip_checkbox.is_selected then
+				if l_displayed then
+					show_tooltip_checkbox.enable_select
+				else
+					show_tooltip_checkbox.disable_select
+				end
+			end
+		end
+
 feature {NONE} -- Recycle
 
 	internal_recycle is
@@ -769,6 +794,9 @@ feature {NONE} -- Implementation
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
+
+	on_show_tooltip_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent kept for recycling
 
 feature{NONE} -- Implementation
 

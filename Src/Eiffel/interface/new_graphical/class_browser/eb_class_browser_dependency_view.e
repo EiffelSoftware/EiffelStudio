@@ -1,5 +1,8 @@
 indexing
-	description: "Group dependency view"
+	description: "[
+					Group dependency view
+					This class is reponsible for displaying client/supplier classes for a given target/group/folder/class.
+				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -34,6 +37,8 @@ inherit
 
 	QL_SHARED
 
+	QL_UTILITY
+
 create
 	make
 
@@ -49,6 +54,7 @@ feature -- Access
 				create l_tool_bar
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
 				l_tool_bar.extend (show_self_dependency)
+				l_tool_bar.extend (show_tooltip_checkbox)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)
@@ -74,34 +80,13 @@ feature -- Status report
 	should_tooltip_be_displayed: BOOLEAN is
 			-- Should tooltip display be vetoed?
 		do
+			Result := show_tooltip_checkbox.is_selected
 		end
 
 	has_grid_been_binded_for_current_data: BOOLEAN
 			-- Has `grid' been binded for current `data'?
-
-	should_level_be_shown (a_level_index: INTEGER; a_level: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]): BOOLEAN is
-			-- Should `a_level' be shown in level indexed by `a_level_index'?
-		require
-			a_level_attached: a_level /= Void
-		local
-			l_group: QL_GROUP
-			l_starting_element_group: QL_GROUP
-		do
-			inspect
-				a_level_index
-			when 1 then
-				l_starting_element_group := starting_element_group
-				if not show_self_dependency.is_selected and then l_starting_element_group /= Void then
-					l_group ?= a_level.data.item
-					check l_group /= Void end
-					Result :=  not l_group.is_equal (l_starting_element_group)
-				else
-					Result := True
-				end
-			else
-				Result := True
-			end
-		end
+			-- i.e., for the same `data', `grid' can be binded for many times (each time per sorting),
+			-- and this feature is used in maintaining expansion status of rows.
 
 	is_displaying_suppliers: BOOLEAN
 			-- Is view displaying suppliers for the moment?
@@ -114,7 +99,19 @@ feature -- Status report
 			good_result: Result = not is_displaying_suppliers
 		end
 
+	is_starting_element_folder: BOOLEAN
+			-- Is `starting_element' a folder?
+			-- If `starting_element' is a folder, we do special things in filtering out self dependency.
+
 feature -- Setting
+
+	set_is_displaying_suppliers (b: BOOLEAN) is
+			-- Set `is_displaying_suppliers' with `b'.
+		do
+			is_displaying_suppliers := b
+		ensure
+			is_displaying_suppliers_set: is_displaying_suppliers = b
+		end
 
 	prepare_for_supplier_view (a_name_of_starting_element: STRING) is
 			-- Prepare for display supplier dependency.
@@ -126,7 +123,8 @@ feature -- Setting
 			grid.header.i_th (2).set_text (interface_names.l_supplier_class)
 			grid.header.i_th (3).set_text (referenced_class_column_name (interface_names.l_client_class, a_name_of_starting_element))
 			grid.header.i_th (4).set_text (interface_names.l_feature_in_client_class)
-			is_displaying_suppliers := True
+			grid.header.i_th (5).set_text (interface_names.l_callees_from_supplier_class)
+			set_is_displaying_suppliers (True)
 		ensure
 			is_displaying_suppliers: is_displaying_suppliers
 		end
@@ -139,7 +137,8 @@ feature -- Setting
 			grid.header.i_th (2).set_text (interface_names.l_client_class)
 			grid.header.i_th (3).set_text (referenced_class_column_name (interface_names.l_supplier_class, a_name_of_starting_element))
 			grid.header.i_th (4).set_text (interface_names.l_feature_in_supplier_class)
-			is_displaying_suppliers := False
+			grid.header.i_th (5).set_text (interface_names.l_callers_from_client_class)
+			set_is_displaying_suppliers (False)
 		ensure
 			is_displaying_clients: is_displaying_clients
 		end
@@ -309,7 +308,7 @@ feature -- Actions
 		do
 			l_referencer_row ?= a_row.data
 			if l_referencer_row /= Void then
-				if a_expanded and then not l_referencer_row.has_been_expanded and then l_referencer_row.is_referencer_class_row then
+				if a_expanded and then not l_referencer_row.has_been_expanded and then l_referencer_row.is_lazy_expandable then
 					l_referencer_row.set_is_expanded (a_expanded)
 					l_referencer_class ?= l_referencer_row.item
 					check a_row.parent_row /= Void end
@@ -331,13 +330,17 @@ feature -- Notification
 		local
 			l_msg: STRING
 			l_resize_table: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER], INTEGER]
+			l_cluster_stone: CLUSTER_STONE
 		do
 			if not is_up_to_date then
 				set_has_grid_been_binded_for_current_data (False)
 				starting_element_group := domain_item_from_stone (starting_element).group
+				l_cluster_stone ?= starting_element
+				is_starting_element_folder := l_cluster_stone /= Void and then (l_cluster_stone.path /= Void and then not l_cluster_stone.path.is_empty)
 				if data /= Void then
 					text.hide
 					component_widget.show
+					retrieve_classes_in_starting_element
 					fill_rows
 					if last_sorted_column_internal = 0 then
 						last_sorted_column_internal := 1
@@ -354,6 +357,7 @@ feature -- Notification
 						l_resize_table.force ([150, 300], 1)
 						l_resize_table.force ([150, 300], 2)
 						l_resize_table.force ([150, 200], 3)
+						l_resize_table.force ([100, 200], 4)
 						auto_resize_columns (grid, l_resize_table)
 					end
 				else
@@ -412,7 +416,7 @@ feature -- Sorting
 			end
 		end
 
-	path_name_tester (a_row, b_row: EB_CLASS_BROWSER_DEPENDENCY_ROW; a_order: INTEGER): BOOLEAN is
+	name_tester (a_row, b_row: EB_CLASS_BROWSER_DEPENDENCY_ROW; a_order: INTEGER): BOOLEAN is
 			-- Tester to decide order between `a_row' and `b_row' according to order `a_order'
 		require
 			a_row_attached: a_row /= Void
@@ -422,6 +426,52 @@ feature -- Sorting
 				Result := a_row.grid_item.image < b_row.grid_item.image
 			else
 				Result := a_row.grid_item.image > b_row.grid_item.image
+			end
+		end
+
+	group_name_tester (a_row, b_row: EB_CLASS_BROWSER_DEPENDENCY_ROW; a_order: INTEGER): BOOLEAN is
+			-- Tester to decide order between `a_row' an `b_row' as groups according to order `a_order'.
+		require
+			a_row_attached: a_row /= Void
+			b_row_attached: b_row /= Void
+		local
+			l_a_group: QL_GROUP
+			l_b_group: QL_GROUP
+			l_a_index: INTEGER
+			l_b_index: INTEGER
+		do
+			if a_order = topology_order then
+				l_a_group ?= a_row.item
+				l_b_group ?= b_row.item
+				check
+					l_a_group /= Void
+					l_b_group /= Void
+				end
+				l_a_index := index_of_group (l_a_group)
+				l_b_index := index_of_group (l_b_group)
+				if l_a_index /= l_b_index then
+					Result := l_a_index < l_b_index
+				else
+					Result := name_tester (a_row, b_row, ascending_order)
+				end
+			else
+				Result := name_tester (a_row, b_row, a_order)
+			end
+		end
+
+	index_of_group (a_group: QL_GROUP): INTEGER is
+			-- Index for `a_group' used in sorting
+			-- This is used when sort client/supplier group column to make sure that cluster is displayed before
+			-- library which is before assembly.
+		require
+			a_group_attached: a_group /= Void
+		do
+			if a_group.is_cluster then
+				Result := 1
+			elseif a_group.is_library then
+				Result := 2
+			elseif a_group.is_assembly then
+				Result := 3
 			end
 		end
 
@@ -437,13 +487,32 @@ feature -- Sorting
 
 feature{NONE} -- Implementation
 
-	data: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]
+	data: TUPLE [dependency_data: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]; class_list_in_starting_element: QL_CLASS_DOMAIN]
 			-- Data to be displayed in current view
-			-- The outer hash table is indexed by group, and its value is the inner table,
+			-- for `dependency_data, the outer hash table is indexed by group, and its value is the inner table,
 			-- inner table is indexed by "referenced class" and its value is a set of classes who references the referenced class.
+			-- And `class_list_in_starting_element' is a list of classes which contained in `starting_element'.
+			-- For example, if `starting_element' is a group, then `class_list_in_starting_element' is all classes in that group.
 
 	rows: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW] is
 			-- Rows to be displayed
+			-- It is a tree hierarchy.
+			-- The first level (level index is 1) are dependency groups,
+			-- the second level (level index is 2) are referenced classes in each dependency group,
+			-- the third level (level index is 3) are referencer classes to each referenced class,
+			-- the forth level (level index is 4) are features in referencer classes,			
+			-- For example, if we are displaying suppliers of group "demo":
+			-- demo
+			--	|
+			--  +- base
+			--	   |
+			--	   +- STRING_8
+			--		  |
+			--		  +- MY_CLASS1
+			--		      +- foo		make_from_string, count, as_lower
+			-- This graph means group "demo" depends on "base" library, in detail, class MY_CLASS1 in "demo" uses STRING_8 in "base",
+			-- and in more detail, feature "foo" from MY_CLASS1 uses feature "make_from_string", "count" and "as_lower" from class STRING_8.
+			-- Here, "base" is dependency group, "STRING_8" is referenced class, "MY_CLASS1" is referencer class and "foo" is features in referencer class.
 		do
 			if rows_internal = Void then
 				create rows_internal
@@ -490,23 +559,25 @@ feature{NONE} -- Implementation
 			l_referenced_classes: HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS]
 			l_referencer_class_set: DS_HASH_SET [QL_CLASS]
 			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
+			l_dependency_data: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]
 		do
 			l_rows := rows
 			l_rows.children.wipe_out
 			l_data := data
 			from
-				l_data.start
+				l_dependency_data := data.dependency_data
+				l_dependency_data.start
 			until
-				l_data.after
+				l_dependency_data.after
 			loop
 					-- Setup group row.
 				create l_group_row
-				create l_dependency_row.make (l_data.key_for_iteration, l_group_row, Current)
+				create l_dependency_row.make (l_dependency_data.key_for_iteration, l_group_row, Current)
 				l_group_row.set_data (l_dependency_row)
 				l_rows.children.force_last (l_group_row)
 
 					-- Setup referenced class rows
-				l_referenced_classes := l_data.item_for_iteration
+				l_referenced_classes := l_dependency_data.item_for_iteration
 				from
 					l_referenced_classes.start
 				until
@@ -525,14 +596,14 @@ feature{NONE} -- Implementation
 					loop
 						create l_referencer_class_row
 						create l_dependency_row.make (l_referencer_class_set.item_for_iteration, l_referencer_class_row, Current)
-						l_dependency_row.set_is_referencer_class (True)
+						l_dependency_row.set_is_lazy_expandable (True)
 						l_referencer_class_row.set_data (l_dependency_row)
 						l_referenced_class_row.children.force_last (l_referencer_class_row)
 						l_referencer_class_set.forth
 					end
 					l_referenced_classes.forth
 				end
-				l_data.forth
+				l_dependency_data.forth
 			end
 		end
 
@@ -544,6 +615,7 @@ feature{NONE} -- Implementation
 			end
 			grid.set_row_height (default_row_height)
 			bind_first_row
+			mark_display
 			bind_row_level (grid.row (1), rows, 1, True)
 		end
 
@@ -595,6 +667,34 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	classes_in_starting_element: DS_HASH_SET [QL_CLASS]
+			-- Classes in `starting_element'.
+
+	retrieve_classes_in_starting_element is
+			-- Retrieve classes in `starting_element' and store them in `classes_in_starting_element'.
+		require
+			data_attached: data /= Void
+			class_from_starting_element_attached: data.class_list_in_starting_element /= Void
+		local
+			l_class_domain: QL_CLASS_DOMAIN
+		do
+			l_class_domain := data.class_list_in_starting_element
+			create classes_in_starting_element.make (l_class_domain.count)
+			classes_in_starting_element.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent class_equal))
+			l_class_domain.do_all (agent classes_in_starting_element.force_last)
+		ensure
+			classes_in_starting_element_attached: classes_in_starting_element /= Void
+		end
+
+	class_equal (a_class: QL_CLASS; b_class: QL_CLASS): BOOLEAN is
+			-- Is `a_class' same as `b_class'?
+		require
+			a_class_attached: a_class /= Void
+			b_class_attached: b_class /= Void
+		do
+			Result := a_class.is_equal (b_class)
+		end
+
 	bind_row_level (a_base_row: EV_GRID_ROW; a_level: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_level_index: INTEGER; a_recursive: BOOLEAN) is
 			-- Bind rows.
 		require
@@ -617,7 +717,7 @@ feature{NONE} -- Implementation
 				until
 					l_rows.after
 				loop
-					if should_level_be_shown (a_level_index, l_rows.item_for_iteration) then
+					if l_rows.item_for_iteration.data.should_current_row_be_displayed then
 							-- Bind row.
 						a_base_row.insert_subrow (a_base_row.subrow_count + 1)
 						l_grid_row := a_base_row.subrow (a_base_row.subrow_count)
@@ -650,6 +750,186 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	client_class_set (a_supplier_class: CLASS_C): DS_HASH_SET [CLASS_C] is
+			-- Set of client classes of `a_supplier_class'
+		require
+			a_supplier_class_attached: a_supplier_class /= Void
+		local
+			l_list: LIST [CLASS_C]
+		do
+			l_list := a_supplier_class.clients
+			if l_list /= Void then
+				create Result.make (l_list.count)
+				l_list.do_all (agent Result.force)
+			else
+				create Result.make (0)
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	categorized_feature_table (a_class: QL_CLASS): HASH_TABLE [HASH_TABLE [QL_FEATURE, STRING], QL_CLASS] is
+			-- For a class `a_class', return its categorized feature table.
+			-- Value of the returned table is a table of features indexed by feature name.
+			-- Key of that value is the written class where features in value is written.
+			-- This is used to facility invariant computation. Because inherited invariant from a class are treated as
+			-- a feature written in that class.
+		require
+			a_class_attached: a_class /= Void
+		local
+			l_feature_domain: QL_FEATURE_DOMAIN
+			l_feature: QL_FEATURE
+			l_invariant: QL_INVARIANT
+			l_class: QL_CLASS
+			l_feat_name_table: HASH_TABLE [QL_FEATURE, STRING]
+		do
+			create Result.make (10)
+			from
+				l_feature_domain ?= a_class.wrapped_domain.new_domain (create {QL_FEATURE_DOMAIN_GENERATOR}.make (Void, True))
+				l_feature_domain.start
+			until
+				l_feature_domain.after
+			loop
+				l_feature := l_feature_domain.item
+				if l_feature.is_invariant_feature then
+					l_invariant ?= l_feature
+					if l_invariant.written_class.class_id = l_invariant.class_c.class_id then
+							-- For immediate invariant
+						l_class ?= l_invariant.parent
+					else
+							-- For inherited invariant
+						l_class := query_class_item_from_class_c (l_invariant.written_class)
+					end
+				else
+					l_class ?= l_feature.parent
+				end
+
+				l_feat_name_table := Result.item (l_class)
+				if l_feat_name_table = Void then
+					create l_feat_name_table.make (30)
+					Result.put (l_feat_name_table, l_class)
+				end
+				l_feat_name_table.put (l_feature, l_feature.name)
+				l_feature_domain.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	reversed_called_features (a_called_features: like called_features): like called_features is
+			-- Reversed repesentation of `called_features'.
+			-- i.e., the keys are called feature and value is calling features of that key.
+		require
+			a_called_features_attached: a_called_features /= Void
+		local
+			l_list: LIST [QL_FEATURE]
+			l_list2: LIST [QL_FEATURE]
+		do
+			create Result.make (20)
+			from
+				a_called_features.start
+			until
+				a_called_features.after
+			loop
+				l_list := a_called_features.item_for_iteration
+				from
+					l_list.start
+				until
+					l_list.after
+				loop
+					if Result.has_key (l_list.item) then
+						l_list2 := Result.item (l_list.item)
+					else
+						create {LINKED_LIST [QL_FEATURE]}l_list2.make
+						Result.put (l_list2, l_list.item)
+					end
+					l_list2.extend (a_called_features.key_for_iteration)
+					l_list.forth
+				end
+				a_called_features.forth
+			end
+		end
+
+	called_features (a_supplier_class: QL_CLASS; a_client_class: QL_CLASS): HASH_TABLE [LIST [QL_FEATURE], QL_FEATURE] is
+			-- Called features from `a_client_class' to `a_supplier_class'.
+			-- Key of Result is a feature from `a_client_class', value of that key is a list of features from `a_supplier_class' which are called by the key feature.
+		require
+			a_supplier_class_valid: a_supplier_class /= Void and then a_supplier_class.is_compiled
+			a_client_class_valid: a_client_class /= Void and then a_client_class.is_compiled
+		local
+			l_supplier_features: QL_FEATURE_DOMAIN
+			l_client_features: QL_FEATURE_DOMAIN
+			l_client_feature: QL_FEATURE
+			l_supplier_feature: QL_FEATURE
+			l_feature_generator: QL_FEATURE_DOMAIN_GENERATOR
+			l_caller_list: SORTED_LIST [STRING]
+			l_invariant_name: STRING
+			l_invariant_feature_name: STRING
+			l_name_table: HASH_TABLE [HASH_TABLE [QL_FEATURE, STRING], QL_CLASS]
+			l_feat_name_table: HASH_TABLE [QL_FEATURE, STRING]
+			l_list: LIST [QL_FEATURE]
+			l_clients_of_supplier_class: DS_HASH_SET [CLASS_C]
+			l_class_c: CLASS_C
+		do
+			create Result.make (100)
+			create l_feature_generator.make (Void, True)
+			create l_name_table.make (10)
+			l_invariant_name := "_invariant"
+			l_invariant_feature_name := "invariant"
+			l_clients_of_supplier_class := client_class_set (a_supplier_class.class_c)
+			l_name_table := categorized_feature_table (a_client_class)
+			l_client_features ?= a_client_class.wrapped_domain.new_domain (l_feature_generator)
+
+			from
+				l_supplier_features ?= a_supplier_class.wrapped_domain.new_domain (l_feature_generator)
+				l_supplier_features.start
+			until
+				l_supplier_features.after
+			loop
+				l_supplier_feature := l_supplier_features.item
+				if l_supplier_feature.is_real_feature then
+					from
+						l_name_table.start
+					until
+						l_name_table.after
+					loop
+						l_class_c := l_name_table.key_for_iteration.class_c
+						if l_clients_of_supplier_class.has (l_class_c) then
+							l_caller_list := l_supplier_feature.e_feature.callers (l_class_c, 0)
+							if l_caller_list /= Void then
+								l_feat_name_table := l_name_table.item_for_iteration
+								from
+									l_caller_list.start
+								until
+									l_caller_list.after
+								loop
+									if l_caller_list.item.is_equal (l_invariant_name) then
+										l_client_feature := l_feat_name_table.item (l_invariant_feature_name)
+									else
+										l_client_feature := l_feat_name_table.item (l_caller_list.item)
+									end
+									if l_client_feature /= Void then
+										l_list := Result.item (l_client_feature)
+										if l_list = Void then
+											create {LINKED_LIST [QL_FEATURE]} l_list.make
+											Result.put (l_list, l_client_feature)
+										end
+										l_list.extend (l_supplier_feature)
+									end
+
+									l_caller_list.forth
+								end
+							end
+						end
+						l_name_table.forth
+					end
+				end
+				l_supplier_features.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 	bind_feature_rows (a_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_referenced_class: QL_CLASS; a_referencer_class: QL_CLASS) is
 			-- Bind feature rows in subrows of `a_row_node'.
 			-- `a_row_node' is a node in `rows'.
@@ -660,41 +940,45 @@ feature{NONE} -- Implementation
 			a_referencer_class_attached: a_referencer_class /= Void
 		local
 			l_feature_generator: QL_FEATURE_DOMAIN_GENERATOR
-			l_feature_domain: QL_FEATURE_DOMAIN
 			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 			l_new_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
-			l_feature_criterion: QL_FEATURE_CRITERION
 			l_order_list: LINKED_LIST [INTEGER]
+			l_feature_table: like called_features
+			l_features: DS_HASH_SET [QL_FEATURE]
+			l_grid_row: EV_GRID_ROW
 		do
 				-- Get features.
 			create l_feature_generator
 			l_feature_generator.enable_fill_domain
+			create l_features.make (100)
 			if is_displaying_clients then
-				create {QL_FEATURE_CALLER_IS_CRI}l_feature_criterion.make (a_referenced_class.wrapped_domain, normal_callee, True)
+				l_feature_table := reversed_called_features (called_features (a_referencer_class, a_referenced_class))
 			else
-				create {QL_FEATURE_CALLERS_OF_CRI}l_feature_criterion.make (a_referenced_class.wrapped_domain, normal_caller, True)
+				l_feature_table := called_features (a_referenced_class, a_referencer_class)
 			end
-			l_feature_criterion := l_feature_criterion and feature_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_visible, [])
-			l_feature_generator.set_criterion (l_feature_criterion)
-			l_feature_domain ?= a_referencer_class.wrapped_domain.new_domain (l_feature_generator)
-				-- Bind feature in `rows'.
-			l_feature_domain := l_feature_domain.distinct
+
 			from
-				l_feature_domain.start
+				l_feature_table.start
 			until
-				l_feature_domain.after
+				l_feature_table.after
 			loop
 				create l_new_row_node
-				create l_dependency_row.make (l_feature_domain.item, l_new_row_node, Current)
+				create l_dependency_row.make (l_feature_table.key_for_iteration, l_new_row_node, Current)
+				l_dependency_row.set_feature_list (l_feature_table.item_for_iteration)
 				l_new_row_node.set_data (l_dependency_row)
 				a_row_node.children.force_last (l_new_row_node)
-				l_feature_domain.forth
+				l_feature_table.forth
 			end
 			create l_order_list.make
 			l_order_list.extend (4)
 			sort_level (a_row_node, 4, 4, comparator (l_order_list))
-			first_non_void_grid_item (a_row_node.data.grid_row).set_tooltip (Void)
-			bind_row_level (a_row_node.data.grid_row, a_row_node, 4, False)
+			l_grid_row := a_row_node.data.grid_row
+			bind_row_level (l_grid_row, a_row_node, 4, False)
+			if l_grid_row.is_selected then
+				highlight_row (l_grid_row)
+			else
+				dehighlight_row (l_grid_row)
+			end
 		end
 
 	selected_rows: LIST [EV_GRID_ROW] is
@@ -713,6 +997,11 @@ feature{NONE} -- Implementation
 
 	show_self_dependency: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Toggle button to turn on/off item path display
+			-- For examples, if we are displaying suppliers for a given group "demo",
+			-- actually we are displaying supplier classes of every class in that group,
+			-- and always classes in group "demo" will use other classes in group "demo",
+			-- but sometimes we don't want to show those classes in group "demo" as supplier classes.
+			-- In this case, we can choose not to show self dependency.
 		do
 			if show_self_dependency_button_internal = Void then
 				create show_self_dependency_button_internal
@@ -741,6 +1030,9 @@ feature{NONE} -- Implementation
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
 			if on_show_self_dependency_changed_from_outside_agent /= Void then
 				preferences.class_browser_data.show_self_dependency_preference.change_actions.prune_all (on_show_self_dependency_changed_from_outside_agent)
+			end
+			if on_show_tooltip_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.show_tooltip_preference.change_actions.prune_all (on_show_tooltip_changed_from_outside_agent)
 			end
 		end
 
@@ -779,8 +1071,101 @@ feature{NONE} -- Implementation
 			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 		do
 			l_dependency_row ?= a_row.data
-			if l_dependency_row = Void or else not (l_dependency_row.is_referencer_class_row and then not l_dependency_row.has_been_expanded) then
+			if l_dependency_row = Void or else not (l_dependency_row.is_lazy_expandable and then not l_dependency_row.has_been_expanded) then
 				Precursor (a_row)
+			end
+		end
+
+	mark_display is
+			-- Mark rows to be displayed or not to be displayed according to status of `show_self_dependency'.
+		require
+			rows_attached: rows /= Void
+		local
+			l_rows: like rows
+			l_groups: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_show_self: BOOLEAN
+			l_starting_element_group: QL_GROUP
+			l_classes: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_classes_from_starting_element: like classes_in_starting_element
+			l_group: QL_GROUP
+			l_class: QL_CLASS
+			l_new_class_count: INTEGER
+			l_new_class: BOOLEAN
+			l_is_group_equal: BOOLEAN
+			l_used_in_library: CONF_GROUP
+		do
+			l_rows := rows
+			l_groups := l_rows.children
+			l_show_self := show_self_dependency.is_selected
+			l_starting_element_group := starting_element_group
+			if l_show_self or l_starting_element_group = Void then
+					-- If self dependency is shown, we just mark every thing to be displayed.
+				mark_display_in_rows (l_groups, 2, True)
+			else
+					-- If self dependency is not shown, we check every group.
+				from
+					l_groups.start
+				until
+					l_groups.after
+				loop
+					l_group ?= l_groups.item_for_iteration.data.item
+					check l_group /= Void end
+					l_is_group_equal := l_group.is_equal (l_starting_element_group)
+					if not l_is_group_equal then
+						if not l_starting_element_group.is_library then
+							l_used_in_library := l_starting_element_group.group.target.system.lowest_used_in_library
+							if l_used_in_library /= Void then
+								l_is_group_equal := l_group.group = l_used_in_library
+							end
+						end
+					end
+					if not l_is_group_equal then
+						l_groups.item_for_iteration.data.set_should_current_row_be_displayed (True)
+						mark_display_in_rows (l_groups.item_for_iteration.children, 1, True)
+					else
+						l_classes_from_starting_element := classes_in_starting_element
+						from
+							l_classes := l_groups.item_for_iteration.children
+							l_new_class_count := 0
+							l_classes.start
+						until
+							l_classes.after
+						loop
+							l_class ?= l_classes.item_for_iteration.data.item
+							l_new_class := not l_classes_from_starting_element.has (l_class)
+							l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
+							if l_new_class then
+								l_new_class_count := l_new_class_count + 1
+							end
+							l_classes.forth
+						end
+						l_groups.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class_count > 0)
+					end
+					l_groups.forth
+				end
+			end
+		end
+
+	mark_display_in_rows (a_row_list: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]; a_depth: INTEGER; a_display: BOOLEAN) is
+			-- Mark `a_row_list' with display status specified in `a_display'.
+			-- Mark subrows deep to `a_depth' of `a_row_list also'.
+			-- For example, if `a_depth' is 1, mark `a_row_list' only, and if 2, mark the first level subrows of `a_row_list', and so on.
+		require
+			a_row_list_attached: a_row_list /= Void
+			a_depth_valid: a_depth >= 1
+		do
+			if not a_row_list.is_empty then
+				from
+					a_row_list.start
+				until
+					a_row_list.after
+				loop
+					a_row_list.item_for_iteration.data.set_should_current_row_be_displayed (a_display)
+					if a_depth > 1 then
+						mark_display_in_rows (a_row_list.item_for_iteration.children, a_depth - 1, a_display)
+					end
+					a_row_list.forth
+				end
 			end
 		end
 
@@ -790,7 +1175,7 @@ feature{NONE} -- Initialization
 			-- Build `grid'.
 		do
 			create grid
-			grid.set_column_count_to (4)
+			grid.set_column_count_to (5)
 			grid.enable_selection_on_single_button_click
 			grid.enable_single_row_selection
 			grid.enable_tree
@@ -817,28 +1202,39 @@ feature{NONE} -- Initialization
 
 			create post_row_bind_action_table.make (1)
 			post_row_bind_action_table.force (agent ensure_row_expandable, 3)
+
+			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
+			on_show_tooltip_changed_from_outside_agent := agent on_show_tooltip_changed_from_outside
+			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
 		end
 
 	build_sortable_and_searchable is
 			-- Build facilities to support sort and search
 		local
 			l_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_CLASS_BROWSER_DEPENDENCY_ROW]
+			l_three_way_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_CLASS_BROWSER_DEPENDENCY_ROW]
 		do
 			old_make (grid)
 				-- Prepare sort facilities
 			last_sorted_column_internal := 0
 			set_sort_action (agent sort_agent)
-			create l_sort_info.make (agent path_name_tester, ascending_order)
-			l_sort_info.enable_auto_indicator
-			set_sort_info (1, l_sort_info)
-			create l_sort_info.make (agent path_name_tester, ascending_order)
+				-- Setup sorting info for the first column: the dependency group column.
+			create l_three_way_sort_info.make (agent group_name_tester, ascending_order)
+			l_three_way_sort_info.enable_auto_indicator
+			set_sort_info (1, l_three_way_sort_info)
+
+				-- Setup sorting info for the second column: the referenced class column.
+			create l_sort_info.make (agent name_tester, ascending_order)
 			l_sort_info.enable_auto_indicator
 			set_sort_info (2, l_sort_info)
-			create l_sort_info.make (agent path_name_tester, ascending_order)
+
+				-- Setup sorting info for the third column: the referencer class column.
+			create l_sort_info.make (agent name_tester, ascending_order)
 			l_sort_info.enable_auto_indicator
 			set_sort_info (3, l_sort_info)
 
-			create l_sort_info.make (agent path_name_tester, ascending_order)
+				-- Setup sorting info for the forth column: the feature column.
+			create l_sort_info.make (agent name_tester, ascending_order)
 			l_sort_info.enable_auto_indicator
 			set_sort_info (4, l_sort_info)
 

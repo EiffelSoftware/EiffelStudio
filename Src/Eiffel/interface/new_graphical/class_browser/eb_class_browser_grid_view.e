@@ -390,34 +390,6 @@ feature -- Access
 			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
 			-- If `starting_element' is Void, don't build tree.
 
-	collapse_button: EV_TOOL_BAR_BUTTON is
-			-- Button to collapse one level of tree
-		do
-			if collapse_button_internal = Void then
-				create collapse_button_internal
-				collapse_button_internal.set_pixmap (icon_collapse_all)
-				collapse_button_internal.set_tooltip (tooltip_with_accelerator (interface_names.l_collapse_layer, accelerator_from_preference ("collapse_tree_node")))
-				collapse_button_internal.select_actions.extend (collapse_button_pressed_action)
-			end
-			Result := collapse_button_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	expand_button: EV_TOOL_BAR_BUTTON is
-			-- Button to expand one level of tree
-		do
-			if expand_button_internal = Void then
-				create expand_button_internal
-				expand_button_internal.set_pixmap (icon_expand_all)
-				expand_button_internal.set_tooltip (tooltip_with_accelerator (interface_names.l_expand_layer,accelerator_from_preference ("expand_tree_node")))
-				expand_button_internal.select_actions.extend (expand_button_pressed_action)
-			end
-			Result := expand_button_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
 	show_tooltip_checkbox: EV_TOOL_BAR_TOGGLE_BUTTON is
 			-- Checkbox to indicate whether or not tooltip is displayed
 		do
@@ -675,20 +647,6 @@ feature {NONE} -- Recycle
 			desynchronize_scroll_behavior_with_editor
 		end
 
-	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
-			-- Action to be performed when `collapse_button' is pressed
-		deferred
-		ensure
-			result_attached: Result /= Void
-		end
-
-	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
-			-- Action to be performed when `expand_button' is pressed
-		deferred
-		ensure
-			result_attached: Result /= Void
-		end
-
 feature {NONE} -- Implementation
 
 	default_row_height: INTEGER is
@@ -799,12 +757,6 @@ feature {NONE} -- Implementation
 			-- Agent kept for recycling
 
 feature{NONE} -- Implementation
-
-	expand_button_internal: like expand_button
-			-- Implementation of `expand_button'
-
-	collapse_button_internal: like collapse_button
-			-- Implementation of `collapse_button'
 
 	show_tooltip_checkbox_internal: like show_tooltip_checkbox
 			-- Implementation of `show_tooltip_checkbox'

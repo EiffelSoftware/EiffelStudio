@@ -63,7 +63,7 @@ feature -- Formatting
 	format is
 			-- Refresh `widget'.
 		do
-			if selected and then displayed then
+			if associated_class /= Void and then selected and then displayed then
 				display_temp_header
 				reset_display
 				setup_viewpoint

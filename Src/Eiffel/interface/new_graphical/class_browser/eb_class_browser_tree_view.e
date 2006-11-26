@@ -105,18 +105,6 @@ feature -- Actions
 			on_expand_all_level
 		end
 
-	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
-			-- Action to be performed when `collapse_button' is pressed
-		do
-			Result := agent on_collapse_one_level
-		end
-
-	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
-			-- Action to be performed when `expand_button' is pressed
-		do
-			Result := agent on_expand_one_level
-		end
-
 	on_expand_all_level is
 			-- Action to be performed to recursively expand all selected rows.
 		do

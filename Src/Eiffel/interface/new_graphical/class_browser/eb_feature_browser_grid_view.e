@@ -114,18 +114,6 @@ feature -- Setting
 
 feature -- Actions
 
-	collapse_button_pressed_action: PROCEDURE [ANY, TUPLE] is
-			-- Action to be performed when `collapse_button' is pressed
-		do
-			Result := agent on_collapse_one_level
-		end
-
-	expand_button_pressed_action: PROCEDURE [ANY, TUPLE] is
-			-- Action to be performed when `expand_button' is pressed
-		do
-			Result := agent on_expand_one_level
-		end
-
 	on_enter_pressed is
 			-- Action to be performed when enter key is pressed
 		do

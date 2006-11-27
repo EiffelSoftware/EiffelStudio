@@ -147,14 +147,15 @@ feature -- Access: compatibility
 			Result := item_id (id)
 		end
 
-	overloaded_items (a_name: INTEGER): LIST [FEATURE_I] is
+	overloaded_items (an_id: INTEGER): LIST [FEATURE_I] is
 			-- List of features matching overloaded name `s'.
 		require
-			has_overloaded_s: has_overloaded (a_name)
+			an_id_valid: an_id >= 0
+			has_overloaded_an_id: has_overloaded (an_id)
 		local
 			l_names: ARRAYED_LIST [INTEGER]
 		do
-			l_names := overloaded_names.item (a_name)
+			l_names := overloaded_names.item (an_id)
 			create {ARRAYED_LIST [FEATURE_I]} Result.make (l_names.count)
 			from
 				l_names.start
@@ -191,12 +192,12 @@ feature -- Access: compatibility
 
 feature -- Status report
 
-	has_overloaded (a_feature_name: INTEGER): BOOLEAN is
+	has_overloaded (a_feature_name_id: INTEGER): BOOLEAN is
 			-- Does Current have `a_feature_name' has being an overloaded routine?
 		do
 			if associated_class.is_true_external and overloaded_names /= Void then
-				if a_feature_name > 0 then
-					Result := overloaded_names.has (a_feature_name)
+				if a_feature_name_id > 0 then
+					Result := overloaded_names.has (a_feature_name_id)
 				end
 			end
 		end

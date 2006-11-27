@@ -34,6 +34,7 @@ feature -- Resizeing
 			-- Value of a key indicates the min and max width of that column.
 			-- To perform resizing, the requrested width of a column is first retrieved and considered.
 			-- But the actual resized width will be within [min_width, max_width].
+			-- If width range tuple of a specified column is void, resize that column to its required width.
 		require
 			a_grid_attached: a_grid /= Void
 			a_size_table_attached: a_size_table /= Void
@@ -41,6 +42,7 @@ feature -- Resizeing
 			l_size_range: TUPLE [min_width, max_width: INTEGER]
 			l_column: EV_GRID_COLUMN
 			l_row_count: INTEGER
+			l_required_width: INTEGER
 		do
 			l_row_count := a_Grid.row_count
 			if l_row_count > 0 then
@@ -53,9 +55,13 @@ feature -- Resizeing
 					l_size_range := a_size_table.item_for_iteration
 					check
 						l_column /= Void
-						l_size_range /= Void
 					end
-					l_column.set_width (l_column.required_width_of_item_span (1, l_row_count).max (l_size_range.min_width).min (l_size_range.max_width))
+					l_required_width := l_column.required_width_of_item_span (1, l_row_count)
+					if l_size_range /= Void then
+						l_column.set_width (l_required_width.max (l_size_range.min_width).min (l_size_range.max_width))
+					else
+						l_column.set_width (l_required_width)
+					end
 					a_size_table.forth
 				end
 			end

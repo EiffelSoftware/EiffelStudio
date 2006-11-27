@@ -396,6 +396,20 @@ feature -- Access
 			-- Used in Ctrl+A.
 			-- If Void, `default_select_all_action' will be used.
 
+	largest_sorted_column_index: INTEGER is
+			-- Index of largest sorted column
+			-- 0 if no sort had occurred
+		do
+			Result := extreme_index_of_sorted_columns (True)
+		end
+
+	smallest_sorted_column_index: INTEGER is
+			-- Index of smallest sorted column
+			-- 0 if no sort had occurred
+		do
+			Result := extreme_index_of_sorted_columns (False)
+		end
+
 feature -- Virtual grid
 
 	is_grid_empty: BOOLEAN is
@@ -964,6 +978,32 @@ feature{NONE} -- Implementation
 				loop
 					l_grid.select_row (l_row_index)
 					l_row_index := l_row_index + 1
+				end
+			end
+		end
+
+	extreme_index_of_sorted_columns (a_largest: BOOLEAN): INTEGER is
+			-- Max (if `a_largest' is True) or min (if `a_largest' is False) index of sorted columns
+			-- 0 if no sort had occurred.
+		local
+			l_sorted_columns: like sorted_columns
+		do
+			l_sorted_columns := sorted_columns
+			if not l_sorted_columns.is_empty then
+				Result := l_sorted_columns.first
+				if l_sorted_columns.count > 1 then
+					from
+						l_sorted_columns.move (2)
+					until
+						l_sorted_columns.after
+					loop
+						if a_largest then
+							Result := Result.max (l_sorted_columns.item)
+						else
+							Result := Result.min (l_sorted_columns.item)
+						end
+						l_sorted_columns.forth
+					end
 				end
 			end
 		end

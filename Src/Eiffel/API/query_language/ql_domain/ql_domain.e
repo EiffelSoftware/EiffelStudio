@@ -351,6 +351,7 @@ feature -- Set operation
 			l_cursor: CURSOR
 		do
 			create l_other_set.make (other.count)
+			l_other_set.set_equality_tester (create {KL_EQUALITY_TESTER [like item_type]})
 			other.content.do_all (agent l_other_set.put)
 			l_cur_content := content
 			l_cursor := l_cur_content.cursor

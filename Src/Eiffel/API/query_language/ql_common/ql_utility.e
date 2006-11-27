@@ -145,6 +145,30 @@ feature -- Type
 			result_attached: Result /= Void
 		end
 
+feature -- Equality tester
+
+	is_class_equal (a_class, b_class: QL_CLASS): BOOLEAN is
+			-- Does `a_class' equal to `b_class'?
+		require
+			a_class_attached: a_class /= Void
+			b_class_attached: b_class /= Void
+		do
+			Result := a_class.is_equal (b_class)
+		ensure
+			good_result: Result = a_class.is_equal (b_class)
+		end
+
+	is_feature_equal (a_feature, b_feature: QL_FEATURE): BOOLEAN is
+			-- Does `a_feature' equal to `b_feature'?
+		require
+			a_feature_attached: a_feature /= Void
+			b_feature_attached: b_feature /= Void
+		do
+			Result := a_feature.is_equal (b_feature)
+		ensure
+			good_result: Result = a_feature.is_equal (b_feature)
+		end
+
 feature{NONE} -- Implementation
 
 	find_path_from_conf_group (a_list: LINKED_LIST [QL_ITEM]; a_group: CONF_GROUP) is

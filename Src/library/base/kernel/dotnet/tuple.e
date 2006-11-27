@@ -270,7 +270,9 @@ feature -- Status report
 					end
 				else
 						-- A basic type
-					Result := Result + l_item.get_hash_code * internal_primes.i_th (i)
+					if l_item /= Void then
+						Result := Result + l_item.get_hash_code * internal_primes.i_th (i)
+					end
 				end
 				i := i + 1
 			end

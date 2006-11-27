@@ -773,6 +773,7 @@ feature -- Label texts
 	l_callers_from_client_class: STRING is "Callers from client class"
 	l_callees_from_supplier_class: STRING is "Callees from supplier class"
 	l_from: STRING is "From "
+	h_categorize_folder: STRING is "Categorize classes in folder?"
 
 feature -- Stone names
 

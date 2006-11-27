@@ -98,6 +98,7 @@ feature -- Editor token style
 			Result.disable_return_type
 			Result.disable_use_overload_name
 			Result.disable_value_for_constant
+			Result.disable_written_class
 		ensure
 			result_attached: Result /= Void
 		end
@@ -112,6 +113,7 @@ feature -- Editor token style
 			Result.enable_return_type
 			Result.disable_class
 			Result.disable_comment
+			Result.disable_written_class
 		ensure
 			result_attached: Result /= Void
 		end
@@ -176,7 +178,7 @@ feature -- Editor token style
 		end
 
 	feature_with_class_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
-			-- Feature style used to display feature information in form of "{CLASS}.feature"
+			-- Feature style used to display feature information in form of "{CLASS}.feature" where {CLASS} is associated class of that feature.
 			-- Note: Do not change setting of this style.
 		once
 			create Result
@@ -186,6 +188,23 @@ feature -- Editor token style
 			Result.disable_return_type
 			Result.disable_use_overload_name
 			Result.disable_value_for_constant
+			Result.disable_written_class
+		ensure
+			result_attached: Result /= Void
+		end
+
+	feature_with_written_class_style: EB_FEATURE_EDITOR_TOKEN_STYLE is
+			-- Feature style used to display feature information in form of "{CLASS}.feature" where {CLASS} is written class of that feature.
+			-- Note: Do not change setting of this style.
+		once
+			create Result
+			Result.disable_class
+			Result.disable_argument
+			Result.disable_comment
+			Result.disable_return_type
+			Result.disable_use_overload_name
+			Result.disable_value_for_constant
+			Result.enable_written_class
 		ensure
 			result_attached: Result /= Void
 		end

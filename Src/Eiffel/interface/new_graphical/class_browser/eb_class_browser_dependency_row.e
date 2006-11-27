@@ -21,15 +21,17 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_item: like item; a_row_node: like row_node; a_browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW) is
-			-- Initialize `item' with `a_item', `row_node' with `a_row_node' and `browser' with `a_browser'.
+	make (a_item: like item; a_row_node: like row_node; a_row_type: INTEGER; a_browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW) is
+			-- Initialize `item' with `a_item', `row_node' with `a_row_node', `row_type' with `a_row_type'  and `browser' with `a_browser'.
 		require
 			a_item_attached: a_item /= Void
 			a_row_node_valid: a_row_node /= Void
+			a_row_type_valid: is_row_type_valid (a_row_type)
 			a_browser_attached: a_browser /= Void
 		do
 			set_item (a_item)
 			set_row_node (a_row_node)
+			set_row_type (a_row_type)
 			set_browser (a_browser)
 			set_should_current_row_be_displayed (True)
 		end
@@ -42,26 +44,51 @@ feature -- Access
 	row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
 			-- Row node where current belongs
 
-
 	grid_item: EB_GRID_COMPILER_ITEM is
 			-- Grid item to be displayed
 		local
-			l_path_style: like item_path_style
+			l_path_style: like path_style
+			l_class: QL_CLASS
+			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
 		do
 			if grid_item_internal = Void then
-				l_path_style := item_path_style
-				if should_path_be_displayed then
-					l_path_style.enable_parent
-					l_path_style.enable_indirect_parent
-				else
-					l_path_style.disable_parent
-					l_path_style.disable_indirect_parent
-				end
 				create grid_item_internal
-				l_path_style.set_item (item)
-				grid_item_internal.set_text_with_tokens (l_path_style.text)
-				grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (item))
-				grid_item_internal.set_image (grid_item_internal.text)
+				if row_type /= folder_row_type then
+						-- For rows other than folder row
+					l_path_style := item_path_style
+					if should_path_be_displayed then
+						l_path_style.enable_indirect_parent
+						l_path_style.enable_parent
+					else
+						l_path_style.disable_indirect_parent
+						l_path_style.disable_parent
+					end
+					if item.is_invariant_feature then
+						l_path_style.path_printer.set_feature_style (feature_with_written_class_style)
+					elseif item.is_real_feature then
+						l_path_style.path_printer.set_feature_style (feature_name_style)
+					end
+					l_path_style.set_item (item)
+					grid_item_internal.set_text_with_tokens (l_path_style.text)
+					grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (item))
+					grid_item_internal.set_image (grid_item_internal.text)
+							-- For referencer class row, we setup a tooltip to display path of that class.
+					if row_type = referencer_class_row_type then
+						l_class ?= item
+						check l_class /= Void end
+						l_tooltip := new_general_tooltip (grid_item_internal, agent: BOOLEAN do Result := not browser.should_tooltip_be_displayed end)
+						setup_general_tooltip (agent path_text (l_class, True), l_tooltip)
+						grid_item_internal.set_general_tooltip (l_tooltip)
+					end
+				else
+						-- For folder row
+					l_class ?= item
+					check l_class /= Void end
+					grid_item_internal.set_text_with_tokens (path_text (l_class, False))
+					grid_item_internal.set_image (grid_item_internal.text)
+					grid_item_internal.set_pixmap (pixmap_from_group_path (l_class.class_c.group, l_class.class_i.path))
+
+				end
 			end
 			Result := grid_item_internal
 		ensure
@@ -124,6 +151,10 @@ feature -- Access
 	feature_list: DS_LIST [QL_FEATURE]
 			-- Feature list to be displayed in another column
 
+	row_type: INTEGER
+			-- Type of current row
+			-- Row type indicates
+
 feature -- Status report
 
 	should_path_be_displayed: BOOLEAN is
@@ -132,21 +163,49 @@ feature -- Status report
 			Result := item.is_group
 		end
 
+	should_parent_be_displayed: BOOLEAN is
+			-- Should parent of `item' be displayed?
+		do
+			Result := item.is_group or item.is_invariant_feature
+		end
+
 	is_expanded: BOOLEAN
 			-- Is current row expanded?
 
 	has_been_expanded: BOOLEAN
 			-- Has current row been expanded?
 
-	is_lazy_expandable: BOOLEAN
+	is_lazy_expandable: BOOLEAN is
 			-- Is current row able for lazy expandable?
 			-- Used to indicate that subrows of current row is to be inserted later when
 			-- current row is expanded for the first time because the retrieval of the subrows are
 			-- time consuming.
+		do
+			Result := row_type = referencer_class_row_type
+		end
 
 	should_current_row_be_displayed: BOOLEAN
 			-- Should current row be displayed?
 			-- Default: True
+
+	is_row_type_valid (a_row_type: INTEGER): BOOLEAN is
+			-- Is `a_row_type' a valid row type?
+		do
+			Result := a_row_type = group_row_type or else
+					  a_row_type = folder_row_type or else
+					  a_row_type = referencer_class_row_type or else
+					  a_row_type = referenced_class_row_type or else
+					  a_row_type = feature_row_type
+		end
+
+feature -- Constants
+
+	group_row_type: INTEGER is 1
+	folder_row_type: INTEGER is 2
+	referenced_class_row_type: INTEGER is 3
+	referencer_class_row_type: INTEGER is 4
+	feature_row_type: INTEGER is 5
+			-- Different row types
 
 feature -- Setting
 
@@ -178,16 +237,18 @@ feature -- Setting
 			is_expanded_set: is_expanded = a_expanded
 		end
 
-	set_is_lazy_expandable (a_lazy_expandable: BOOLEAN) is
-			-- Set `is_lazy_expandable' with `a_lazy_expandable'.
-		do
-			is_lazy_expandable := a_lazy_expandable
-		ensure
-			is_lazy_expandable_set: is_lazy_expandable = a_lazy_expandable
-		end
+--	set_is_lazy_expandable (a_lazy_expandable: BOOLEAN) is
+--			-- Set `is_lazy_expandable' with `a_lazy_expandable'.
+--		do
+--			is_lazy_expandable := a_lazy_expandable
+--		ensure
+--			is_lazy_expandable_set: is_lazy_expandable = a_lazy_expandable
+--		end
 
 	set_feature_list (a_feature_list: like feature_list) is
 			-- Set `feature_list' with `a_feature_list'.
+		require
+			current_is_feature_row: row_type = feature_row_type
 		do
 			feature_list := a_feature_list
 		ensure
@@ -200,6 +261,16 @@ feature -- Setting
 			should_current_row_be_displayed := b
 		ensure
 			should_current_row_be_displayed_set: should_current_row_be_displayed = b
+		end
+
+	set_row_type (a_row_type: INTEGER) is
+			-- Set `row_type' with `a_row_type'.
+		require
+			a_row_type_valid: is_row_type_valid (a_row_type)
+		do
+			row_type := a_row_type
+		ensure
+			row_type_set: row_type = a_row_type
 		end
 
 feature -- Grid binding
@@ -267,7 +338,7 @@ feature{NONE} -- Implementation
 	tooltip_text_function: LIST [EDITOR_TOKEN] is
 			-- Text to return text for tooltip
 		require
-			feature_list_valid: feature_list /= Void and then feature_list.is_empty
+			feature_list_valid: feature_list /= Void and then not feature_list.is_empty
 		do
 			complete_generic_class_style.set_class_c (feature_list.first.class_c)
 			plain_text_style.set_source_text (interface_names.l_from)
@@ -276,9 +347,36 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+	path_text (a_class: QL_CLASS; a_location: BOOLEAN): LIST [EDITOR_TOKEN] is
+			-- Editor token representation of path of `a_class'
+			-- If `a_location" is True, add "Location" before path.
+		require
+			a_class_attached: a_class /= Void
+		local
+			l_path: STRING
+			l_plain_text_style: like plain_text_style
+		do
+			l_path := a_class.class_i.path.twin
+			if l_path.is_empty then
+				l_path := "."
+			else
+				l_path.keep_tail (l_path.count - 1)
+				l_path.replace_substring_all ("/", ".")
+			end
+			l_plain_text_style := plain_text_style
+			if a_location then
+				l_path.prepend (interface_names.l_location_colon)
+			end
+			l_plain_text_style.set_source_text (l_path)
+			Result := l_plain_text_style.text
+		ensure
+			result_attached: Result /= Void
+		end
+
 invariant
 	item_attached: item /= Void
 	row_node_attached: row_node /= Void
+	row_type_valid: is_row_type_valid (row_type)
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

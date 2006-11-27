@@ -24,6 +24,8 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+	QL_UTILITY
+
 create
 	make
 
@@ -494,6 +496,7 @@ feature{NONE} -- Implementation
 		do
 			if processed_classes_internal = Void then
 				create processed_classes_internal.make (100)
+				processed_classes_internal.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make(agent is_class_equal))
 			end
 			Result := processed_classes_internal
 		ensure

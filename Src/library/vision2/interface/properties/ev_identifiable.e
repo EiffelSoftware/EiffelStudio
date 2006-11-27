@@ -59,7 +59,7 @@ feature -- Access
 				Result := identifier_name.twin
 			else
 				Result := parent.full_identifier_path
-				Result.append_character ('.')
+				Result.append_character (parent.identifier_path_separator)
 				Result.append_string (identifier_name)
 			end
 		ensure
@@ -96,6 +96,15 @@ feature -- Element change
 		ensure
 			identifier_name_set: identifier_name.is_equal (a_name)
 		end
+
+feature {EV_IDENTIFIABLE} -- Implementation
+
+	identifier_path_separator: CHARACTER is
+			-- Character used to separate path to children
+		once
+			Result := '.'
+		end
+
 
 feature {NONE} -- Implementation
 

@@ -88,7 +88,7 @@ feature -- Access
 				Result.prune_all ('.')
 				i := Result.index_of ('%T', 1)
 				if i > 0 then
-					Result.keep_head (i)
+					Result.keep_head (i-1)
 				end
 				Result.to_lower
 			end

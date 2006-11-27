@@ -9,6 +9,13 @@ indexing
 class
 	GUI
 
+inherit
+
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -38,6 +45,10 @@ feature -- Access
 			-- Window to use for input and search for widgets
 		do
 			Result := implementation.active_window
+			if Result = Void then
+				set_active_window_to_current_focus
+				Result := implementation.active_window
+			end
 		end
 
 	active_dialog: EV_DIALOG
@@ -84,6 +95,7 @@ feature -- Element change
 			end
 			if l_window = Void then
 				-- TODO: raise exception, provide help
+				raise ("window_not_found")
 			else
 				set_active_window (l_window)
 			end
@@ -99,6 +111,7 @@ feature -- Element change
 			l_window := implementation.window_by_identifier (a_name)
 			if l_window = Void then
 				-- TODO: raise exception, provide help
+				raise ("window_not_found")
 			else
 				set_active_window (l_window)
 			end
@@ -112,7 +125,7 @@ feature -- Element change
 			l_window: EV_WINDOW
 			l_windows: LINEAR [EV_WINDOW]
 		do
-			l_windows := application_under_test.windows
+			l_windows := application_under_test.windows.twin
 			from
 				l_windows.start
 			until
@@ -126,6 +139,7 @@ feature -- Element change
 			end
 			if l_window = Void then
 				-- TODO: raise exception, provide help
+				raise ("window_not_found")
 			else
 				set_active_window (l_window)
 			end
@@ -134,6 +148,15 @@ feature -- Element change
 		end
 
 feature -- Status report
+
+	has_identifiable (a_pattern: STRING): BOOLEAN is
+			-- Does an identifiable corresponding to `a_pattern' exist in GUI?
+		require
+			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: -- is_valid_pattern (a_pattern)
+		do
+			Result := implementation.identifiable (a_pattern) /= Void
+		end
 
 	has_widget_with_name (a_name: STRING): BOOLEAN is
 			-- Does a widget with `identifier_name' `a_name' exist in GUI?
@@ -168,7 +191,49 @@ feature -- Status report
 			-- TODO
 		end
 
-feature -- Widget access
+feature -- Basic lookup
+
+	identifiable (a_pattern: STRING): EV_IDENTIFIABLE is
+			-- Identifiable according to `a_pattern'
+			-- Pattern syntax:
+			--   name				lookup a name
+			--   {TYPE}				lookup a type
+			--   {TYPE}name			lookup a type and name
+			--   parent.name			lookup a direct parent-child relationship
+			--   parent..name		lookup a direct or indirect parent-child relationship
+			--   window:name			lookup a name on a window
+			-- Example of a combination:
+			--   window:{TYPE}indirect-parent..direct-parent.{TYPE}name
+			--
+			-- not supported yet:
+			--	type syntax on window
+		require
+			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: valid_pattern (a_pattern)
+		do
+			Result := implementation.identifiable (a_pattern)
+			if Result = Void then
+				-- TODO: raise exception, provide help
+				raise ("identifiable_not_found")
+			end
+		ensure
+			result_correct: has_identifiable (a_pattern) implies Result /= Void
+		end
+
+	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE] is
+			-- All identifiables according to `a_pattern'
+			-- See `identifiable' for more information about pattern syntax.
+		require
+			a_pattern_not_void: a_pattern /= Void
+			a_pattern_valid: valid_pattern (a_pattern)
+		do
+			Result := implementation.identifiables (a_pattern)
+		ensure
+			result_not_void: Result /= Void
+			result_correct: has_identifiable (a_pattern) implies not Result.is_empty
+		end
+
+feature -- Advanced lookup
 
 	widget_by_name (a_name: STRING): EV_WIDGET
 			-- Get widget with `a_name' in `active_window'.
@@ -177,15 +242,30 @@ feature -- Widget access
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-			Result ?= implementation.identifiable_recursive (active_window, a_name)
+			Result ?= implementation.identifiable (a_name)
 			if Result = Void then
 				-- TODO: raise exception, provide help
+				raise ("widget_not_found")
 			end
 		ensure
-			result_correct: has_widget_with_name (a_name) implies Result /= Void
+			result_correct: -- has_widget_with_name (a_name) implies Result /= Void
 		end
 
-feature -- Item access
+	container_by_name (a_name: STRING): EV_CONTAINER
+			-- Get container with `a_name' in `active_window'.
+			-- Container will be looked for recursively.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			Result ?= implementation.identifiable (a_name)
+			if Result = Void then
+				-- TODO: raise exception, provide help
+				raise ("container_not_found")
+			end
+		ensure
+			result_correct: -- has_container_with_name (a_name) implies Result /= Void
+		end
 
 	item_by_name (a_name: STRING): EV_ITEM
 			-- Get item with `a_name' in `active_window'.
@@ -194,16 +274,32 @@ feature -- Item access
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-			Result ?= implementation.identifiable_recursive (active_window, a_name)
+			Result ?= implementation.identifiable (a_name)
 			if Result = Void then
 				-- TODO: raise exception, provide help
+				raise ("item_not_found")
 			end
 		ensure
 			result_correct: -- has_item_with_name (a_name) implies Result /= Void
 		end
 
+	item_list_by_name (a_name: STRING): EV_ITEM_LIST [EV_ITEM]
+			-- Get item list with `a_name' in `active_window'.
+			-- Items list will be looked for recursively.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			Result ?= implementation.identifiable (a_name)
+			if Result = Void then
+				-- TODO: raise exception, provide help
+				raise ("item_list_not_found")
+			end
+		ensure
+			result_correct: -- has_item_list_with_name (a_name) implies Result /= Void
+		end
 
-feature -- Menu access
+feature -- Menu lookup
 
 	menu_by_name (a_name: STRING): EV_MENU_ITEM is
 			-- Menu on main menu bar of `active_window' with `identifier_name' `a_name'
@@ -211,11 +307,10 @@ feature -- Menu access
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-			if active_window.menu_bar /= Void then
-				Result ?= implementation.identifiable (active_window.menu_bar, a_name)
-			end
+			Result ?= implementation.identifiable ("{EV_MENU_BAR}."+a_name)
 			if Result = Void then
 				-- TODO: raise exception, provide help
+				raise ("menu_not_found")
 			end
 		ensure
 			result_correct: -- has_menu_with_name (a_name) implies Result /= Void
@@ -228,9 +323,10 @@ feature -- Menu access
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-			Result ?= implementation.identifiable (a_parent, a_name)
+			Result ?= implementation.identifiable (a_parent.full_identifier_path+"."+a_name)
 			if Result = Void then
 				-- TODO: raise exception, provide help
+				raise ("sub_menu_not_found")
 			end
 		ensure
 			result_correct: -- has_sub_menu_with_name (a_parent, a_name) implies Result /= Void
@@ -283,6 +379,14 @@ feature -- Menu access
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature -- Support
+
+	valid_pattern (a_pattern: STRING): BOOLEAN is
+			-- Is `a_pattern' valid to use for searching?
+		do
+			Result := implementation.valid_pattern (a_pattern)
 		end
 
 feature {VISION2_TEST} -- Implementation

@@ -1,5 +1,5 @@
-indexing	
-	description: 
+indexing
+	description:
 		"[
 			Node for use with EV_TREE.
 		]"
@@ -18,13 +18,15 @@ inherit
 			is_equal, parent
 		redefine
 			implementation,
-			is_in_default_state
+			is_in_default_state,
+			default_identifier_name
 		end
-		
+
 	EV_TREE_NODE_LIST
 		redefine
 			implementation,
-			is_in_default_state
+			is_in_default_state,
+			default_identifier_name
 		end
 
 	EV_TEXTABLE
@@ -68,7 +70,7 @@ feature -- Access
 		do
 			Result := implementation.parent
 		end
-	
+
 	parent_tree: EV_TREE is
 			-- Contains `Current'.
 		require
@@ -77,7 +79,17 @@ feature -- Access
 			Result := implementation.parent_tree
 		ensure
 			bridge_ok: Result = implementation.parent_tree
-		end		
+		end
+
+	default_identifier_name: STRING is
+			-- Default `identifier_name' if no specific name is set.
+		do
+			if parent = Void then
+				Result := Precursor {EV_ITEM}
+			else
+				Result := "#" + parent.index_of (Current, 1).out
+			end
+		end
 
 feature -- Status report
 
@@ -87,7 +99,7 @@ feature -- Status report
 			not_destroyed: not is_destroyed
 		do
 			if parent_tree /= Void then
-				Result := implementation.is_expanded	
+				Result := implementation.is_expanded
 			end
 		end
 
@@ -114,7 +126,7 @@ feature -- Status setting
 		ensure
 			not_is_expanded: not is_expanded
 		end
-		
+
 feature -- Contract support
 
 	is_expandable: BOOLEAN is
@@ -123,7 +135,7 @@ feature -- Contract support
 			not_destroyed: not is_destroyed
 		deferred
 		end
-		
+
 	is_parent_recursive (a_list: EV_TREE_NODE): BOOLEAN is
 			-- Is `a_list' `parent' or recursively `parent' of `parent'?
 		local

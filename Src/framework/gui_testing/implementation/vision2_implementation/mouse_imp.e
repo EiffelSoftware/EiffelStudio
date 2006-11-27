@@ -16,7 +16,17 @@ feature -- Pressing
 
 	press_button (a_mouse_button: INTEGER) is
 			-- Press `a_mouse_button'.
+		local
+			l_widget: EV_WIDGET
+			dump: GUI_DUMP
 		do
+--			l_widget := screen.widget_at_mouse_pointer
+--			if l_widget /= Void then
+--				create dump
+--				dump.dump_class_info (l_widget)
+--				io.put_string ("%N%N")
+--			end
+
 			screen.fake_pointer_button_press (a_mouse_button)
 		end
 

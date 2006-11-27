@@ -222,13 +222,19 @@ feature -- Measurement
 	minimum_width: INTEGER is
 			-- Minimum horizontal size in pixels.
 		do
-			Result := width
+				-- If this is called an invariant violation is triggered in WEL_DC
+				-- It looks like the call to "load_bounds_rect" and then to "GetMenuItemRect" has some side-effects
+				-- juliant, 16. Nov. 2006
+			--Result := width
 		end
 
 	minimum_height: INTEGER is
 			-- Minimum vertical size in pixels.
 		do
-			Result := height
+				-- If this is called an invariant violation is triggered in WEL_DC
+				-- It looks like the call to "load_bounds_rect" and then to "GetMenuItemRect" has some side-effects
+				-- juliant, 16. Nov. 2006
+			--Result := height
 		end
 
 feature {NONE} -- Implementation

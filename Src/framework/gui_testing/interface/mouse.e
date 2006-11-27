@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			pressing_delay :=   5_000_000
 			releasing_delay :=  5_000_000
 			movement_delay :=   5_000_000
+			is_movement_infered := True
 		end
 
 feature -- Clicking button
@@ -220,7 +221,7 @@ feature -- Moving
 				from
 					i := 0
 				until
-					i > l_steps
+					i >= l_steps
 				loop
 					implementation.move_to_absolute_position ((l_start.x + i * l_dx).rounded, (l_start.y + i * l_dy).rounded)
 					i := i + 1
@@ -250,6 +251,7 @@ feature -- Moving
 		do
 			a_positioned ?= an_identifiable
 			if a_positioned = Void then
+				-- TODO: raise exception, provide help
 				check false end
 			else
 				move_to_absolute_position (a_positioned.screen_x + (a_positioned.width // 2), a_positioned.screen_y + (a_positioned.height // 2))
@@ -263,6 +265,7 @@ feature -- Moving
 		do
 			a_positioned ?= an_identifiable
 			if a_positioned = Void then
+				-- TODO: raise exception, provide help
 				check false end
 			else
 				move_to_absolute_position (a_positioned.screen_x + a_dx, a_positioned.screen_y + a_dy)
@@ -287,26 +290,38 @@ feature -- Scrolling
 			sleep (releasing_delay)
 		end
 
-feature -- Clicking menu items
-
-	left_click_menu (a_path: STRING) is
-			-- Click menu item denoted by `a_path'.
-		local
-			l_items: LIST [EV_IDENTIFIABLE]
-		do
-			l_items := gui.menu_items_by_path (a_path)
-			l_items.do_all (agent left_click_on (?))
-		end
-
 feature -- Advanced window commands
+
+	window_click_title_bar (a_window: EV_WINDOW) is
+			-- Click title bar of `a_window'.
+		local
+			l_titled_window: EV_TITLED_WINDOW
+			l_x, l_y: INTEGER
+		do
+			l_titled_window ?= a_window
+			if l_titled_window = Void then
+				-- TODO: raise exception, provide help
+			else
+				l_x := l_titled_window.screen_x + (l_titled_window.width // 2)
+					-- TODO: the 10 is just a guess (which works on windows).
+					-- TODO: check if other value is more suitable
+				l_y := l_titled_window.screen_y + 10
+				if gui.screen.widget_at_position (l_x, l_y) /= l_titled_window then
+						-- TODO: check if another approach would be more 'user-like'
+					l_titled_window.raise
+				end
+				move_to_absolute_position (l_x, l_y)
+				left_click
+			end
+		end
 
 	window_resize_lower_right (a_width, a_height: INTEGER) is
 			-- Resize `window' by `a_width' `a_height' using mouse on lower right corner.
 		local
 			lower_right_x, lower_right_y: INTEGER
 		do
-			-- TODO: the -2 is just a guess (which works on windows).
-			-- TODO: check if other value is more suitable
+				-- TODO: the -2 is just a guess (which works on windows).
+				-- TODO: check if other value is more suitable
 			lower_right_x := gui.active_window.screen_x + gui.active_window.width - 2
 			lower_right_y := gui.active_window.screen_y + gui.active_window.height - 2
 
@@ -314,6 +329,9 @@ feature -- Advanced window commands
 			press_left
 			move_relative (a_width, a_height)
 			release_left
+
+				-- TODO: make delay a variable which can be set
+			sleep (200_000_000)
 		end
 
 feature -- Access

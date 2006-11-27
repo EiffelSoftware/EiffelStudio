@@ -35,8 +35,6 @@ feature -- Make
 feature -- Generic
 
 	append_to (v: ABSTRACT_DEBUG_VALUE; st: TEXT_FORMATTER; indent: INTEGER) is
-		local
-			vexp: EXPANDED_VALUE
 		do
 			inspect v.debug_value_type_id
 			when {ABSTRACT_DEBUG_VALUE_CONSTANTS}.abstract_special_value_id then

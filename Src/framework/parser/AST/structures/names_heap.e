@@ -150,7 +150,7 @@ feature {NONE} -- Implementation: access
 	top_index: INTEGER
 			-- Number of elements in Current
 
-	Chunk: INTEGER is 500
+	Chunk: INTEGER is 5000
 			-- Default chunk size.
 
 	initialize_constants is

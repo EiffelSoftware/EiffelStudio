@@ -14,6 +14,8 @@ inherit
 		end
 
 	ATOMIC_AS
+		rename
+			string_value as name
 		redefine
 			is_id,
 			is_equivalent,
@@ -91,7 +93,7 @@ feature -- Access
 	name_id, hash_code: INTEGER
 			-- ID representing the string in the names heap.
 
-	name, string_value: STRING is
+	name: STRING is
 			-- Name of this id.
 		do
 			Result := names_heap.item (name_id)

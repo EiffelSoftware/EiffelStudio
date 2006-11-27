@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_ROW
+	EVS_GRID_ROW
 
 feature -- Status report
 

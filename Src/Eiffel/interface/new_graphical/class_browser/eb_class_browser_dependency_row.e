@@ -98,7 +98,7 @@ feature -- Access
 					until
 						l_list.after
 					loop
-						l_feature_name_style.set_ql_feature (l_list.item)
+						l_feature_name_style.set_ql_feature (l_list.item_for_iteration)
 						l_text.append (l_feature_name_style.text)
 						if i < l_count then
 							l_text.append (l_space)
@@ -121,7 +121,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	feature_list: LIST [QL_FEATURE]
+	feature_list: DS_LIST [QL_FEATURE]
 			-- Feature list to be displayed in another column
 
 feature -- Status report

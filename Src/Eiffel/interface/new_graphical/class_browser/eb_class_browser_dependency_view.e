@@ -629,11 +629,12 @@ feature{NONE} -- Implementation
 	level_starting_column_index: ARRAYED_LIST [INTEGER] is
 			-- Starting column index of levels
 		once
-			create Result.make (4)
+			create Result.make (5)
 			Result.extend (1)
 			Result.extend (2)
 			Result.extend (3)
 			Result.extend (4)
+			Result.extend (5)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -668,19 +669,10 @@ feature{NONE} -- Implementation
 		do
 			l_class_domain := data.class_list_in_starting_element
 			create classes_in_starting_element.make (l_class_domain.count)
-			classes_in_starting_element.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent class_equal))
+			classes_in_starting_element.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
 			l_class_domain.do_all (agent classes_in_starting_element.force_last)
 		ensure
 			classes_in_starting_element_attached: classes_in_starting_element /= Void
-		end
-
-	class_equal (a_class: QL_CLASS; b_class: QL_CLASS): BOOLEAN is
-			-- Is `a_class' same as `b_class'?
-		require
-			a_class_attached: a_class /= Void
-			b_class_attached: b_class /= Void
-		do
-			Result := a_class.is_equal (b_class)
 		end
 
 	bind_row_level (a_base_row: EV_GRID_ROW; a_level: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_level_index: INTEGER; a_recursive: BOOLEAN) is
@@ -810,8 +802,8 @@ feature{NONE} -- Implementation
 		require
 			a_called_features_attached: a_called_features /= Void
 		local
-			l_list: LIST [QL_FEATURE]
-			l_list2: LIST [QL_FEATURE]
+			l_list: DS_LIST [QL_FEATURE]
+			l_list2: DS_LIST [QL_FEATURE]
 		do
 			create Result.make (20)
 			from
@@ -825,20 +817,20 @@ feature{NONE} -- Implementation
 				until
 					l_list.after
 				loop
-					if Result.has_key (l_list.item) then
-						l_list2 := Result.item (l_list.item)
+					if Result.has_key (l_list.item_for_iteration) then
+						l_list2 := Result.item (l_list.item_for_iteration)
 					else
-						create {LINKED_LIST [QL_FEATURE]}l_list2.make
-						Result.put (l_list2, l_list.item)
+						create {DS_ARRAYED_LIST [QL_FEATURE]}l_list2.make (10)
+						Result.put (l_list2, l_list.item_for_iteration)
 					end
-					l_list2.extend (a_called_features.key_for_iteration)
+					l_list2.force_last (a_called_features.key_for_iteration)
 					l_list.forth
 				end
 				a_called_features.forth
 			end
 		end
 
-	called_features (a_supplier_class: QL_CLASS; a_client_class: QL_CLASS): HASH_TABLE [LIST [QL_FEATURE], QL_FEATURE] is
+	called_features (a_supplier_class: QL_CLASS; a_client_class: QL_CLASS): HASH_TABLE [DS_LIST [QL_FEATURE], QL_FEATURE] is
 			-- Called features from `a_client_class' to `a_supplier_class'.
 			-- Key of Result is a feature from `a_client_class', value of that key is a list of features from `a_supplier_class' which are called by the key feature.
 		require
@@ -855,7 +847,7 @@ feature{NONE} -- Implementation
 			l_invariant_feature_name: STRING
 			l_name_table: HASH_TABLE [HASH_TABLE [QL_FEATURE, STRING], QL_CLASS]
 			l_feat_name_table: HASH_TABLE [QL_FEATURE, STRING]
-			l_list: LIST [QL_FEATURE]
+			l_list: DS_LIST [QL_FEATURE]
 			l_clients_of_supplier_class: DS_HASH_SET [CLASS_C]
 			l_class_c: CLASS_C
 		do
@@ -899,10 +891,10 @@ feature{NONE} -- Implementation
 									if l_client_feature /= Void then
 										l_list := Result.item (l_client_feature)
 										if l_list = Void then
-											create {LINKED_LIST [QL_FEATURE]} l_list.make
+											create {DS_ARRAYED_LIST [QL_FEATURE]} l_list.make (10)
 											Result.put (l_list, l_client_feature)
 										end
-										l_list.extend (l_supplier_feature)
+										l_list.force_last (l_supplier_feature)
 									end
 
 									l_caller_list.forth
@@ -934,17 +926,20 @@ feature{NONE} -- Implementation
 			l_feature_table: like called_features
 			l_features: DS_HASH_SET [QL_FEATURE]
 			l_grid_row: EV_GRID_ROW
+			l_column_tbl: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
+			l_sorter: DS_QUICK_SORTER [QL_FEATURE]
 		do
 				-- Get features.
 			create l_feature_generator
 			l_feature_generator.enable_fill_domain
 			create l_features.make (100)
+			l_features.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_FEATURE]}.make (agent is_feature_equal))
 			if is_displaying_clients then
 				l_feature_table := reversed_called_features (called_features (a_referencer_class, a_referenced_class))
 			else
 				l_feature_table := called_features (a_referenced_class, a_referencer_class)
 			end
-
+			create l_sorter.make (create {AGENT_BASED_EQUALITY_TESTER [QL_FEATURE]}.make (agent (a_feature, b_feature: QL_FEATURE): BOOLEAN do Result := a_feature.name < b_feature.name end))
 			from
 				l_feature_table.start
 			until
@@ -952,6 +947,7 @@ feature{NONE} -- Implementation
 			loop
 				create l_new_row_node
 				create l_dependency_row.make (l_feature_table.key_for_iteration, l_new_row_node, Current)
+				l_sorter.sort (l_feature_table.item_for_iteration)
 				l_dependency_row.set_feature_list (l_feature_table.item_for_iteration)
 				l_new_row_node.set_data (l_dependency_row)
 				a_row_node.children.force_last (l_new_row_node)
@@ -967,6 +963,9 @@ feature{NONE} -- Implementation
 			else
 				dehighlight_row (l_grid_row)
 			end
+			create l_column_tbl.make (1)
+			l_column_tbl.put (Void, level_starting_column_index.i_th (5))
+			auto_resize_columns (grid, l_column_tbl)
 		end
 
 	selected_rows: LIST [EV_GRID_ROW] is

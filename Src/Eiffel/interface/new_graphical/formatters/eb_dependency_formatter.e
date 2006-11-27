@@ -23,6 +23,8 @@ inherit
 
 	EXCEPTIONS
 
+	QL_UTILITY
+
 feature -- Access
 
 	browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW
@@ -346,6 +348,7 @@ feature {NONE} -- Implementation
 						l_class_set := l_class_tbl.item (l_dep_domain.item)
 						if l_class_set = Void then
 							create l_class_set.make (64)
+							l_class_set.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
 							l_class_tbl.force (l_class_set, l_dep_domain.item)
 						end
 						l_class_set.force (l_source_domain.item)

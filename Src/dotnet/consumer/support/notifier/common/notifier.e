@@ -12,9 +12,6 @@ inherit
 	SYSTEM_OBJECT
 
 	IDISPOSABLE
-		rename
-			equals as equals_object
-		end
 
 create
 	make

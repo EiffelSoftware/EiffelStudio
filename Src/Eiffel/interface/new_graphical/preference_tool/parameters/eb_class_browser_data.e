@@ -102,6 +102,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := expand_referencer_class_preference.value
 		end
 
+	is_class_categorized_in_folder: BOOLEAN is
+			-- Should classes be categorized in physical folders where they locates?
+		do
+			Result := categorized_folder_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	odd_row_background_color_preference: COLOR_PREFERENCE
@@ -116,6 +122,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_self_dependency_preference: BOOLEAN_PREFERENCE
 	expand_referenced_class_preference: BOOLEAN_PREFERENCE
 	expand_referencer_class_preference: BOOLEAN_PREFERENCE
+	categorized_folder_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -131,6 +138,7 @@ feature {NONE} -- Preference Strings
 	show_self_dependency_string: STRING is "tools.class_browser.show_self_dependency"
 	expand_referenced_class_string: STRING is "tools.class_browser.expand_referenced_class"
 	expand_referencer_class_string: STRING is "tools.class_browser.expand_referencer_class"
+	categorized_folder_string: STRING is "tools.class_browser.classes_categorized_folder"
 
 feature {NONE} -- Implementation
 
@@ -157,6 +165,7 @@ feature {NONE} -- Implementation
 			show_self_dependency_preference := l_manager.new_boolean_preference_value (l_manager, show_self_dependency_string, False)
 			expand_referenced_class_preference := l_manager.new_boolean_preference_value (l_manager, expand_referenced_class_string, True)
 			expand_referencer_class_preference := l_manager.new_boolean_preference_value (l_manager, expand_referencer_class_string, False)
+			categorized_folder_preference := l_manager.new_boolean_preference_value (l_manager, categorized_folder_string, False)
 		end
 
 	preferences: PREFERENCES

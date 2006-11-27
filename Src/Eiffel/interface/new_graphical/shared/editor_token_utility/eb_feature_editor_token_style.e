@@ -89,7 +89,9 @@ feature -- Access
 				l_writer := token_writer
 				l_writer.new_line
 				if is_class_enabled then
-					append_class (l_writer)
+					append_class (l_writer, class_c)
+				elseif is_written_class_enabled then
+					append_class (l_writer, written_class)
 				end
 				append_feature_name (l_writer)
 				if not is_for_invariant then
@@ -135,6 +137,12 @@ feature -- Status report
 	is_class_enabled: BOOLEAN
 			-- Should associated class of `e_feature' be displayed?
 			-- If True, `text' will be in form of {CLASS}.feature_name.
+			-- Cannot be set to True if `is_written_class_enabled' is True.
+
+	is_written_class_enabled: BOOLEAN
+			-- Should written class of `e_feature' be displayed?
+			-- If True, `text' will be in form of {CLASS}.feature_name.
+			-- Cannot be set to True if `is_class_enabled' is True.
 
 	is_comment_enabled: BOOLEAN
 			-- Should current display feature comment?
@@ -262,6 +270,8 @@ feature -- Setting
 	enable_class is
 			-- Enable display of classs.
 			-- See `is_class_enabled' for more information.
+		require
+			written_class_disabled: not is_written_class_enabled
 		do
 			is_class_enabled := True
 		ensure
@@ -276,6 +286,28 @@ feature -- Setting
 		ensure
 			class_disalbed: not is_class_enabled
 		end
+
+	enable_written_class is
+			-- Enable display of written_classs.
+			-- See `is_written_class_enabled' for more information.
+		require
+			class_disabled: not is_class_enabled
+		do
+			is_written_class_enabled := True
+		ensure
+			written_class_enalbed: is_written_class_enabled
+		end
+
+	disable_written_class is
+			-- Disable display of written_classs.
+			-- See `is_written_class_enabled' for more information.
+		do
+			is_written_class_enabled := False
+		ensure
+			written_class_disalbed: not is_written_class_enabled
+		end
+
+
 
 	enable_comment is
 			-- Enable display of comments.
@@ -323,14 +355,14 @@ feature{NONE} -- Implementation
 			good_result: Result /= Void and then Result.is_equal ("invariant")
 		end
 
-	append_class (a_writer: like token_writer) is
-			-- Append name of `class_c' into last line of `a_writer'.
+	append_class (a_writer: like token_writer; a_class: CLASS_C) is
+			-- Append name of `a_class' into last line of `a_writer'.
 		require
 			a_writer_attached: a_writer /= Void
 			class_c_attached: class_c /= Void
 		do
 			a_writer.process_symbol_text (ti_l_curly)
-			class_c.append_name (a_writer)
+			a_class.append_name (a_writer)
 			a_writer.process_symbol_text (ti_r_curly)
 			a_writer.process_symbol_text (ti_dot)
 		end

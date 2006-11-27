@@ -53,7 +53,8 @@ feature -- Access
 				create control_tool_bar
 				create l_tool_bar
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
-				l_tool_bar.extend (show_self_dependency)
+				l_tool_bar.extend (show_self_dependency_button)
+				l_tool_bar.extend (categorize_folder_button)
 				l_tool_bar.extend (show_tooltip_checkbox)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
@@ -260,25 +261,56 @@ feature -- Actions
 		end
 
 	on_show_self_dependency_changed is
-			-- Action to be performed when selection status of `show_self_dependency' changes
+			-- Action to be performed when selection status of `show_self_dependency_button' changes
 		do
 			if data /= Void then
 				bind_grid
 			end
-			preferences.class_browser_data.show_self_dependency_preference.set_value (show_self_dependency.is_selected)
+			preferences.class_browser_data.show_self_dependency_preference.set_value (show_self_dependency_button.is_selected)
 		end
 
 	on_show_self_dependency_changed_from_outside is
-			-- Action to be performed when selection status of `show_self_dependency' changes from outside
+			-- Action to be performed when selection status of `show_self_dependency_button' changes from outside
 		local
 			l_displayed: BOOLEAN
 		do
 			l_displayed := preferences.class_browser_data.is_self_dependency_shown
-			if l_displayed /= show_self_dependency.is_selected then
+			if l_displayed /= show_self_dependency_button.is_selected then
 				if l_displayed then
-					show_self_dependency.enable_select
+					show_self_dependency_button.enable_select
 				else
-					show_self_dependency.disable_select
+					show_self_dependency_button.disable_select
+				end
+			end
+		end
+
+	on_categorized_folder_changed is
+			-- Action to be performed when selection status of `categorized_folder_button' changes
+		do
+			create_index_info
+			if data /= Void then
+				fill_rows
+				disable_auto_sort_order_change
+				enable_force_multi_column_sorting
+				sort (0, 0, 1, 0, 0, 0, 0, 0, 1)
+				disable_force_multi_column_sorting
+				enable_auto_sort_order_change
+				bind_grid
+			end
+			preferences.class_browser_data.categorized_folder_preference.set_value (categorize_folder_button.is_selected)
+		end
+
+	on_categorized_folder_changed_from_outside is
+			-- Action to be performed when selection status of `categorized_folder_button' changes from outside
+		local
+			l_selected: BOOLEAN
+		do
+			l_selected := preferences.class_browser_data.is_class_categorized_in_folder
+			if l_selected /= categorize_folder_button.is_selected then
+				if l_selected then
+					categorize_folder_button.enable_select
+				else
+					categorize_folder_button.disable_select
 				end
 			end
 		end
@@ -296,7 +328,7 @@ feature -- Actions
 		do
 			l_referencer_row ?= a_row.data
 			if l_referencer_row /= Void then
-				if a_expanded and then not l_referencer_row.has_been_expanded and then l_referencer_row.is_lazy_expandable then
+				if a_expanded and then l_referencer_row.is_lazy_expandable and then not l_referencer_row.has_been_expanded then
 					l_referencer_row.set_is_expanded (a_expanded)
 					l_referencer_class ?= l_referencer_row.item
 					check a_row.parent_row /= Void end
@@ -329,6 +361,7 @@ feature -- Notification
 					text.hide
 					component_widget.show
 					retrieve_classes_in_starting_element
+					data_hierarchy := Void
 					fill_rows
 					if last_sorted_column_internal = 0 then
 						last_sorted_column_internal := 1
@@ -369,8 +402,19 @@ feature -- Sorting
 		require
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty: not a_column_list.is_empty
+		local
+			l_array: ARRAY [INTEGER]
 		do
-			a_column_list.do_all (agent sort_level (rows, ?, 1, a_comparator))
+			from
+				a_column_list.start
+			until
+				a_column_list.after
+			loop
+				l_array := level_sort_table.item (a_column_list.item)
+				check l_array /= Void end
+				l_array.do_all (agent sort_level (rows, ?, 1, a_comparator))
+				a_column_list.forth
+			end
 			bind_grid
 		end
 
@@ -397,7 +441,11 @@ feature -- Sorting
 					l_children.forth
 				end
 			else
-				l_comparater := a_comparator.new_agent_list_comparator (<<a_level_index>>)
+--				if categorize_folder_button.is_selected and then a_level_index = 2 then
+					l_comparater := a_comparator.new_agent_list_comparator (<<level_starting_column_index.i_th (a_level_index)>>)
+--				else
+--					l_comparater := a_comparator.new_agent_list_comparator (<<a_level_index>>)
+--				end
 				create l_agent.make (agent tree_node_tester (?, ?, l_comparater))
 				create l_sorter.make (l_agent)
 				l_sorter.sort (a_level.children)
@@ -428,22 +476,31 @@ feature -- Sorting
 			l_a_index: INTEGER
 			l_b_index: INTEGER
 		do
-			if a_order = topology_order then
-				l_a_group ?= a_row.item
-				l_b_group ?= b_row.item
-				check
-					l_a_group /= Void
-					l_b_group /= Void
-				end
-				l_a_index := index_of_group (l_a_group)
-				l_b_index := index_of_group (l_b_group)
-				if l_a_index /= l_b_index then
-					Result := l_a_index < l_b_index
-				else
+			if a_row.row_type = {EB_CLASS_BROWSER_DEPENDENCY_ROW}.folder_row_type then
+				check b_row.row_type = {EB_CLASS_BROWSER_DEPENDENCY_ROW}.folder_row_type end
+				if a_order = topology_order then
 					Result := name_tester (a_row, b_row, ascending_order)
+				else
+					Result := name_tester (a_row, b_row, a_order)
 				end
 			else
-				Result := name_tester (a_row, b_row, a_order)
+				if a_order = topology_order then
+					l_a_group ?= a_row.item
+					l_b_group ?= b_row.item
+					check
+						l_a_group /= Void
+						l_b_group /= Void
+					end
+					l_a_index := index_of_group (l_a_group)
+					l_b_index := index_of_group (l_b_group)
+					if l_a_index /= l_b_index then
+						Result := l_a_index < l_b_index
+					else
+						Result := name_tester (a_row, b_row, ascending_order)
+					end
+				else
+					Result := name_tester (a_row, b_row, a_order)
+				end
 			end
 		end
 
@@ -473,127 +530,17 @@ feature -- Sorting
 			Result := a_comparator.less_than (a_node.data, b_node.data)
 		end
 
-feature{NONE} -- Implementation
+feature -- Constants
 
-	data: TUPLE [dependency_data: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]; class_list_in_starting_element: QL_CLASS_DOMAIN]
-			-- Data to be displayed in current view
-			-- for `dependency_data, the outer hash table is indexed by group, and its value is the inner table,
-			-- inner table is indexed by "referenced class" and its value is a set of classes who references the referenced class.
-			-- And `class_list_in_starting_element' is a list of classes which contained in `starting_element'.
-			-- For example, if `starting_element' is a group, then `class_list_in_starting_element' is all classes in that group.
+	group_column: INTEGER is 1
+	folder_column: INTEGER is 1
+	referenced_class_column: INTEGER is 2
+	referencer_class_column: INTEGER is 3
+	feature_column: INTEGER is 4
+	feature_list_column: INTEGER is 5
+			-- Column names
 
-	rows: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW] is
-			-- Rows to be displayed
-			-- It is a tree hierarchy.
-			-- The first level (level index is 1) are dependency groups,
-			-- the second level (level index is 2) are referenced classes in each dependency group,
-			-- the third level (level index is 3) are referencer classes to each referenced class,
-			-- the forth level (level index is 4) are features in referencer classes,			
-			-- For example, if we are displaying suppliers of group "demo":
-			-- demo
-			--	|
-			--  +- base
-			--	   |
-			--	   +- STRING_8
-			--		  |
-			--		  +- MY_CLASS1
-			--		      +- foo		make_from_string, count, as_lower
-			-- This graph means group "demo" depends on "base" library, in detail, class MY_CLASS1 in "demo" uses STRING_8 in "base",
-			-- and in more detail, feature "foo" from MY_CLASS1 uses feature "make_from_string", "count" and "as_lower" from class STRING_8.
-			-- Here, "base" is dependency group, "STRING_8" is referenced class, "MY_CLASS1" is referencer class and "foo" is features in referencer class.
-		do
-			if rows_internal = Void then
-				create rows_internal
-			end
-			Result := rows_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	rows_internal: like rows
-			-- Implementation of `rows'
-
-	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
-			-- Ensure that `a_item' is visible.
-			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
-		local
-			l_grid_item: EV_GRID_ITEM
-			l_grid_row: EV_GRID_ROW
-			l_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
-		do
-			l_grid_item := a_item.grid_item
-			check l_grid_item /= Void end
-			l_grid_row := l_grid_item.row
-			check l_grid_row /= Void end
-			l_row ?= l_grid_row.data
-			if l_row /= Void then
-				l_row.expand_parent_row_recursively (l_grid_row)
-			end
-			grid.remove_selection
-			l_grid_row.ensure_visible
-			if a_selected then
-				l_grid_row.enable_select
-			end
-		end
-
-	fill_rows  is
-			-- Fill rows with `data'.
-		local
-			l_data: like data
-			l_group_row: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
-			l_referenced_class_row: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
-			l_referencer_class_row: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
-			l_rows: like rows
-			l_referenced_classes: HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS]
-			l_referencer_class_set: DS_HASH_SET [QL_CLASS]
-			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
-			l_dependency_data: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]
-		do
-			l_rows := rows
-			l_rows.children.wipe_out
-			l_data := data
-			from
-				l_dependency_data := data.dependency_data
-				l_dependency_data.start
-			until
-				l_dependency_data.after
-			loop
-					-- Setup group row.
-				create l_group_row
-				create l_dependency_row.make (l_dependency_data.key_for_iteration, l_group_row, Current)
-				l_group_row.set_data (l_dependency_row)
-				l_rows.children.force_last (l_group_row)
-
-					-- Setup referenced class rows
-				l_referenced_classes := l_dependency_data.item_for_iteration
-				from
-					l_referenced_classes.start
-				until
-					l_referenced_classes.after
-				loop
-					create l_referenced_class_row
-					create l_dependency_row.make (l_referenced_classes.key_for_iteration, l_referenced_class_row, Current)
-					l_referenced_class_row.set_data (l_dependency_row)
-					l_group_row.children.force_last (l_referenced_class_row)
-						-- Setup referencer class rows
-					l_referencer_class_set := l_referenced_classes.item_for_iteration
-					from
-						l_referencer_class_set.start
-					until
-						l_referencer_class_set.after
-					loop
-						create l_referencer_class_row
-						create l_dependency_row.make (l_referencer_class_set.item_for_iteration, l_referencer_class_row, Current)
-						l_dependency_row.set_is_lazy_expandable (True)
-						l_referencer_class_row.set_data (l_dependency_row)
-						l_referenced_class_row.children.force_last (l_referencer_class_row)
-						l_referencer_class_set.forth
-					end
-					l_referenced_classes.forth
-				end
-				l_dependency_data.forth
-			end
-		end
+feature{NONE} -- Grid binding
 
 	bind_grid is
 			-- Bind `rows' in `grid'.
@@ -626,17 +573,80 @@ feature{NONE} -- Implementation
 			first_row_binded: grid.row_count = 1
 		end
 
-	level_starting_column_index: ARRAYED_LIST [INTEGER] is
-			-- Starting column index of levels
-		once
-			create Result.make (5)
-			Result.extend (1)
-			Result.extend (2)
-			Result.extend (3)
-			Result.extend (4)
-			Result.extend (5)
-		ensure
-			result_attached: Result /= Void
+	level_starting_column_index: ARRAYED_LIST [INTEGER]
+			-- Starting column index of levels indexed by level index.
+
+	level_row_type: ARRAYED_LIST [INTEGER]
+			-- List of row type indexed by level
+
+	column_level_table: HASH_TABLE [INTEGER, INTEGER]
+			-- Level-column mapping
+			-- Key of this table is columns in `grid', it can be `group_column', `folder_column', `referenced_class_column',
+			-- `referencer_class_column', `feature_column'.
+			-- Value of that key is the level-index for that column
+
+	level_sort_table: HASH_TABLE [ARRAY [INTEGER], INTEGER]
+			-- Table to store levels to be sorted when sorting a column
+			-- Key is column index, value is a list of levels to be sort to when the given column is sorted.
+
+	create_index_info is
+			-- Create `level_starting_column_index' and `level_row_type'
+		local
+			b: BOOLEAN
+		do
+			b := categorize_folder_button.is_selected
+			if b then
+					-- If classes are categorized in their physical folder, we have 5 levels: group - folder - referencer class - referenced class - feature
+				create level_starting_column_index.make (5)
+				level_starting_column_index.extend (1)
+				level_starting_column_index.extend (1)
+				level_starting_column_index.extend (2)
+				level_starting_column_index.extend (3)
+				level_starting_column_index.extend (4)
+				create level_row_type.make (5)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.group_row_type)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.folder_row_type)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.referenced_class_row_type)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.referencer_class_row_type)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.feature_row_type)
+				create column_level_table.make (5)
+				column_level_table.put (1, group_column)
+				column_level_table.put (2, folder_column)
+				column_level_table.put (3, referenced_class_column)
+				column_level_table.put (4, referencer_class_column)
+				column_level_table.put (5, feature_column)
+				create level_sort_table.make (4)
+				level_sort_table.put (<<1, 2>>, 1)
+				level_sort_table.put (<<3>>, 2)
+				level_sort_table.put (<<4>>, 3)
+				level_sort_table.put (<<5>>, 4)
+				create post_row_bind_action_table.make (1)
+				post_row_bind_action_table.force (agent ensure_row_expandable, 4)
+			else
+					-- If classes are not categorized in their physical folder, we have 4 levels: group - referencer class - referenced class - feature
+				create level_starting_column_index.make (4)
+				level_starting_column_index.extend (1)
+				level_starting_column_index.extend (2)
+				level_starting_column_index.extend (3)
+				level_starting_column_index.extend (4)
+				create level_row_type.make (4)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.group_row_type)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.referenced_class_row_type)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.referencer_class_row_type)
+				level_row_type.extend ({EB_CLASS_BROWSER_DEPENDENCY_ROW}.feature_row_type)
+				create column_level_table.make (4)
+				column_level_table.put (1, group_column)
+				column_level_table.put (2, referenced_class_column)
+				column_level_table.put (3, referencer_class_column)
+				column_level_table.put (4, feature_column)
+				create level_sort_table.make (4)
+				level_sort_table.put (<<1>>, 1)
+				level_sort_table.put (<<2>>, 2)
+				level_sort_table.put (<<3>>, 3)
+				level_sort_table.put (<<4>>, 4)
+				create post_row_bind_action_table.make (1)
+				post_row_bind_action_table.force (agent ensure_row_expandable, 3)
+			end
 		end
 
 	should_level_be_expanded (a_level_index: INTEGER): BOOLEAN is
@@ -647,32 +657,25 @@ feature{NONE} -- Implementation
 			when 1 then
 				Result := True
 			when 2 then
-				Result := preferences.class_browser_data.should_referenced_class_be_expanded
+				if categorize_folder_button.is_selected then
+					Result := True
+				else
+					Result := preferences.class_browser_data.should_referenced_class_be_expanded
+				end
 			when 3 then
-				Result := preferences.class_browser_data.should_referencer_class_be_expanded
+				if categorize_folder_button.is_selected then
+					Result := preferences.class_browser_data.should_referenced_class_be_expanded
+				else
+					Result := preferences.class_browser_data.should_referencer_class_be_expanded
+				end
 			when 4 then
-				Result := True
+				if categorize_folder_button.is_selected then
+					Result := preferences.class_browser_data.should_referencer_class_be_expanded
+				else
+					Result := False
+				end
 			else
 			end
-		end
-
-	classes_in_starting_element: DS_HASH_SET [QL_CLASS]
-			-- Classes in `starting_element'.
-
-	retrieve_classes_in_starting_element is
-			-- Retrieve classes in `starting_element' and store them in `classes_in_starting_element'.
-		require
-			data_attached: data /= Void
-			class_from_starting_element_attached: data.class_list_in_starting_element /= Void
-		local
-			l_class_domain: QL_CLASS_DOMAIN
-		do
-			l_class_domain := data.class_list_in_starting_element
-			create classes_in_starting_element.make (l_class_domain.count)
-			classes_in_starting_element.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
-			l_class_domain.do_all (agent classes_in_starting_element.force_last)
-		ensure
-			classes_in_starting_element_attached: classes_in_starting_element /= Void
 		end
 
 	bind_row_level (a_base_row: EV_GRID_ROW; a_level: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_level_index: INTEGER; a_recursive: BOOLEAN) is
@@ -728,6 +731,576 @@ feature{NONE} -- Implementation
 					l_rows.forth
 				end
 			end
+		end
+
+	bind_feature_rows (a_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_referenced_class: QL_CLASS; a_referencer_class: QL_CLASS) is
+			-- Bind feature rows in subrows of `a_row_node'.
+			-- `a_row_node' is a node in `rows'.
+		require
+			a_row_node_attached: a_row_node /= Void
+			a_row_node_has_not_been_binded: a_row_node.children.is_empty
+			a_referenced_class_attached: a_referenced_class /= Void
+			a_referencer_class_attached: a_referencer_class /= Void
+		local
+			l_feature_generator: QL_FEATURE_DOMAIN_GENERATOR
+			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
+			l_new_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
+			l_order_list: LINKED_LIST [INTEGER]
+			l_feature_table: like called_features
+			l_features: DS_HASH_SET [QL_FEATURE]
+			l_grid_row: EV_GRID_ROW
+			l_column_tbl: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
+			l_sorter: DS_QUICK_SORTER [QL_FEATURE]
+			l_level_index: INTEGER
+		do
+				-- Get features.
+			create l_feature_generator
+			l_feature_generator.enable_fill_domain
+			create l_features.make (100)
+			l_features.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_FEATURE]}.make (agent is_feature_equal))
+			if is_displaying_clients then
+				l_feature_table := reversed_called_features (called_features (a_referencer_class, a_referenced_class))
+			else
+				l_feature_table := called_features (a_referenced_class, a_referencer_class)
+			end
+			create l_sorter.make (create {AGENT_BASED_EQUALITY_TESTER [QL_FEATURE]}.make (agent (a_feature, b_feature: QL_FEATURE): BOOLEAN do Result := a_feature.name < b_feature.name end))
+			from
+				l_feature_table.start
+			until
+				l_feature_table.after
+			loop
+				create l_new_row_node
+				create l_dependency_row.make (l_feature_table.key_for_iteration, l_new_row_node, {EB_CLASS_BROWSER_DEPENDENCY_ROW}.feature_row_type , Current)
+				l_sorter.sort (l_feature_table.item_for_iteration)
+				l_dependency_row.set_feature_list (l_feature_table.item_for_iteration)
+				l_new_row_node.set_data (l_dependency_row)
+				a_row_node.children.force_last (l_new_row_node)
+				l_feature_table.forth
+			end
+			create l_order_list.make
+			l_order_list.extend (feature_column)
+			l_level_index := column_level_table.item (feature_column)
+			sort_level (a_row_node, l_level_index, l_level_index, comparator (l_order_list))
+			l_grid_row := a_row_node.data.grid_row
+			bind_row_level (l_grid_row, a_row_node, l_level_index, False)
+			if l_grid_row.is_selected then
+				highlight_row (l_grid_row)
+			else
+				dehighlight_row (l_grid_row)
+			end
+			create l_column_tbl.make (1)
+			l_column_tbl.put (Void, feature_list_column)
+			auto_resize_columns (grid, l_column_tbl)
+		end
+
+	mark_display is
+			-- Mark rows to be displayed or not to be displayed according to status of `show_self_dependency_button'.
+		require
+			rows_attached: rows /= Void
+		local
+			l_rows: like rows
+			l_groups: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_show_self: BOOLEAN
+			l_starting_element_group: QL_GROUP
+			l_classes: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_classes_from_starting_element: like classes_in_starting_element
+			l_group: QL_GROUP
+			l_class: QL_CLASS
+			l_new_class_count: INTEGER
+			l_new_class: BOOLEAN
+			l_is_group_equal: BOOLEAN
+			l_used_in_library: CONF_GROUP
+			l_folders: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_cursor: DS_LIST_CURSOR [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
+			l_folder_count: INTEGER
+		do
+			l_rows := rows
+			l_groups := l_rows.children
+			l_show_self := show_self_dependency_button.is_selected
+			l_starting_element_group := starting_element_group
+			if l_show_self or l_starting_element_group = Void then
+					-- If self dependency is shown, we just mark every thing to be displayed.
+				if categorize_folder_button.is_selected then
+					mark_display_in_rows (l_groups, 3, True)
+				else
+					mark_display_in_rows (l_groups, 2, True)
+				end
+			else
+					-- If self dependency is not shown, we check every group.
+				from
+					l_groups.start
+				until
+					l_groups.after
+				loop
+					l_group ?= l_groups.item_for_iteration.data.item
+					check l_group /= Void end
+					l_is_group_equal := l_group.is_equal (l_starting_element_group)
+					if not l_is_group_equal then
+						if not l_starting_element_group.is_library then
+							l_used_in_library := l_starting_element_group.group.target.system.lowest_used_in_library
+							if l_used_in_library /= Void then
+								l_is_group_equal := l_group.group = l_used_in_library
+							end
+						end
+					end
+					if not l_is_group_equal then
+						l_groups.item_for_iteration.data.set_should_current_row_be_displayed (True)
+						if categorize_folder_button.is_selected then
+							mark_display_in_rows (l_groups.item_for_iteration.children, 3, True)
+						else
+							mark_display_in_rows (l_groups.item_for_iteration.children, 2, True)
+						end
+					else
+						l_classes_from_starting_element := classes_in_starting_element
+						if categorize_folder_button.is_selected then
+							l_folders := l_groups.item_for_iteration.children
+							l_cursor := l_folders.new_cursor
+							l_folder_count := 0
+							from
+								l_cursor.start
+							until
+								l_cursor.after
+							loop
+								l_classes := l_cursor.item.children
+								l_new_class_count := 0
+								from
+									l_classes.start
+								until
+									l_classes.after
+								loop
+									l_class ?= l_classes.item_for_iteration.data.item
+									l_new_class := not l_classes_from_starting_element.has (l_class)
+									l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
+									if l_new_class then
+										l_new_class_count := l_new_class_count + 1
+									end
+									l_classes.forth
+								end
+								l_cursor.item.data.set_should_current_row_be_displayed (l_new_class_count > 0)
+								if l_new_class_count > 0 then
+									l_folder_count := l_folder_count + 1
+								end
+								l_cursor.forth
+							end
+							l_groups.item_for_iteration.data.set_should_current_row_be_displayed (l_folder_count > 0)
+						else
+							from
+								l_classes := l_groups.item_for_iteration.children
+								l_new_class_count := 0
+								l_classes.start
+							until
+								l_classes.after
+							loop
+								l_class ?= l_classes.item_for_iteration.data.item
+								l_new_class := not l_classes_from_starting_element.has (l_class)
+								l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
+								if l_new_class then
+									l_new_class_count := l_new_class_count + 1
+								end
+								l_classes.forth
+							end
+							l_groups.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class_count > 0)
+						end
+					end
+					l_groups.forth
+				end
+			end
+		end
+
+	mark_display_in_rows (a_row_list: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]; a_depth: INTEGER; a_display: BOOLEAN) is
+			-- Mark `a_row_list' with display status specified in `a_display'.
+			-- Mark subrows deep to `a_depth' of `a_row_list also'.
+			-- For example, if `a_depth' is 1, mark `a_row_list' only, and if 2, mark the first level subrows of `a_row_list', and so on.
+		require
+			a_row_list_attached: a_row_list /= Void
+			a_depth_valid: a_depth >= 1
+		do
+			if not a_row_list.is_empty then
+				from
+					a_row_list.start
+				until
+					a_row_list.after
+				loop
+					a_row_list.item_for_iteration.data.set_should_current_row_be_displayed (a_display)
+					if a_depth > 1 then
+						mark_display_in_rows (a_row_list.item_for_iteration.children, a_depth - 1, a_display)
+					end
+					a_row_list.forth
+				end
+			end
+		end
+
+feature{NONE} -- Implementation
+
+	data: TUPLE [dependency_data: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]; class_list_in_starting_element: QL_CLASS_DOMAIN]
+			-- Data to be displayed in current view
+			-- for `dependency_data, the outer hash table is indexed by group, and its value is the inner table,
+			-- inner table is indexed by "referenced class" and its value is a set of classes who references the referenced class.
+			-- And `class_list_in_starting_element' is a list of classes which contained in `starting_element'.
+			-- For example, if `starting_element' is a group, then `class_list_in_starting_element' is all classes in that group.
+
+	data_hierarchy: EB_TREE_NODE [QL_ITEM]
+			-- Tree hierarchy representation of `data'
+
+	rows: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW] is
+			-- Rows to be displayed
+			-- It is a tree hierarchy.
+			-- If `categorize_folder_button' is not selected:
+			-- The first level (level index is 1) are dependency groups,
+			-- the second level (level index is 2) are referenced classes in each dependency group,
+			-- the third level (level index is 3) are referencer classes to each referenced class,
+			-- the forth level (level index is 4) are features in referencer classes,			
+			-- For example, if we are displaying suppliers of group "demo":
+			-- demo
+			--	|
+			--  +- base
+			--	   |
+			--	   +- STRING_8
+			--		  |
+			--		  +- MY_CLASS1
+			--			  |
+			--		      +- foo		make_from_string, count, as_lower
+			-- This graph means group "demo" depends on "base" library, in detail, class MY_CLASS1 in "demo" uses STRING_8 in "base",
+			-- and in more detail, feature "foo" from MY_CLASS1 uses feature "make_from_string", "count" and "as_lower" from class STRING_8.
+			-- Here, "base" is dependency group, "STRING_8" is referenced class, "MY_CLASS1" is referencer class and "foo" is features in referencer class.
+			--
+			-- If `categorize_folder_button' is selected:
+			-- The first level (level index is 1) are dependency groups,
+			-- the second level (level index is 2) are folders,
+			-- the thrid level (level index is 3) referenced classes in each dependency group,
+			-- the forth level (level index is 4) are referencer classes to each referenced class,
+			-- the fifth level (level index is 5) are features in referencer classes,			
+			-- For example, if we are displaying suppliers of group "demo":
+			-- demo
+			--	|
+			--  +- base
+			--	   |
+			--     +- kernel
+			--         |
+			--	       +- STRING_8
+			--		       |
+			--		       +- MY_CLASS1
+			--				   |
+			--		           +- foo		make_from_string, count, as_lower			
+		do
+			if rows_internal = Void then
+				create rows_internal
+			end
+			Result := rows_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	rows_internal: like rows
+			-- Implementation of `rows'
+
+	selected_rows: LIST [EV_GRID_ROW] is
+			-- Selected rows in `grid'.
+			-- If empty, put the first row in `grid' in result.
+		do
+			Result := grid.selected_rows
+			if Result.is_empty and then grid.row_count > 0 then
+				create {ARRAYED_LIST [EV_GRID_ROW]}Result.make (1)
+				Result.extend (grid.row (1))
+			end
+		end
+
+	control_tool_bar: EV_HORIZONTAL_BOX
+			-- Implementation of `control_bar'
+
+	show_self_dependency_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+			-- Toggle button to turn on/off item path display
+			-- For examples, if we are displaying suppliers for a given group "demo",
+			-- actually we are displaying supplier classes of every class in that group,
+			-- and always classes in group "demo" will use other classes in group "demo",
+			-- but sometimes we don't want to show those classes in group "demo" as supplier classes.
+			-- In this case, we can choose not to show self dependency.
+		do
+			if show_self_dependency_button_internal = Void then
+				create show_self_dependency_button_internal
+				show_self_dependency_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
+				show_self_dependency_button_internal.set_tooltip (interface_names.h_show_dependency_on_self)
+				if preferences.class_browser_data.is_item_path_shown then
+					show_self_dependency_button_internal.enable_select
+				else
+					show_self_dependency_button_internal.disable_select
+				end
+			end
+			Result := show_self_dependency_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	on_show_self_dependency_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent for `on_show_self_dependency_changed_from_outside'					
+
+	show_self_dependency_button_internal: like show_self_dependency_button
+			-- Implementation of `show_self_dependency_button'
+
+	categorize_folder_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+			-- Toggle button to decide if classes in a given group should be displayed in physical folders where they locates.
+			-- For example, if this button is not selected, the following will be displayed:
+			-- + base
+			--    |
+			--	  +- ARRAY
+			--
+			-- And if this button is selected, the following will be displayed:
+			-- + base
+			--    |
+			--	  + base.kernel
+			--		 |
+			--		 +- ARRAY
+		do
+			if categorize_folder_button_internal = Void then
+				create categorize_folder_button_internal
+				categorize_folder_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
+				categorize_folder_button_internal.set_tooltip (interface_names.h_categorize_folder)
+				if preferences.class_browser_data.is_class_categorized_in_folder then
+					categorize_folder_button_internal.enable_select
+				else
+					categorize_folder_button_internal.disable_select
+				end
+			end
+			Result := categorize_folder_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	categorize_folder_button_internal: like categorize_folder_button
+			-- Implementation of `categorize_folder_button'
+
+	on_categorized_folder_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent for `on_categorized_folder_changed_from_outside'			
+
+	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
+			-- Ensure that `a_item' is visible.
+			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
+		local
+			l_grid_item: EV_GRID_ITEM
+			l_grid_row: EV_GRID_ROW
+			l_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
+		do
+			l_grid_item := a_item.grid_item
+			check l_grid_item /= Void end
+			l_grid_row := l_grid_item.row
+			check l_grid_row /= Void end
+			l_row ?= l_grid_row.data
+			if l_row /= Void then
+				l_row.expand_parent_row_recursively (l_grid_row)
+			end
+			grid.remove_selection
+			l_grid_row.ensure_visible
+			if a_selected then
+				l_grid_row.enable_select
+			end
+		end
+
+	fill_row_level (a_data: EB_TREE_NODE [QL_ITEM]; a_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_starting_level_index: INTEGER; a_fill_children: BOOLEAN) is
+			-- Fill items from children of `a_data' into subrows of `a_row_node' staring from level index `a_starting_level_index'.
+			-- If `a_fill_children' is True, fill children of `a_data' recursively.
+		require
+			a_data_attached: a_data /= Void
+			a_row_node_attached: a_row_node /= Void
+		local
+			l_cursor: DS_ARRAYED_LIST_CURSOR [EB_TREE_NODE [QL_ITEM]]
+			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
+			l_row_type: INTEGER
+			l_new_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
+		do
+			if not a_data.children.is_empty then
+				l_cursor := a_data.children.new_cursor
+				l_row_type := level_row_type.i_th (a_starting_level_index)
+				from
+					l_cursor.start
+				until
+					l_cursor.after
+				loop
+					create l_new_row_node
+					create l_dependency_row.make (l_cursor.item.data, l_new_row_node, l_row_type, Current)
+					l_new_row_node.set_data (l_dependency_row)
+					a_row_node.children.force_last (l_new_row_node)
+					if a_fill_children then
+						fill_row_level (l_cursor.item, l_new_row_node, a_starting_level_index + 1, a_fill_children)
+					end
+					l_cursor.forth
+				end
+			end
+		end
+
+	set_data_hierarchy (a_data: like data) is
+			-- Set `data_hierarchy' with `a_data'. Do not categorize folder.
+		local
+			l_data_hierarchy: like data_hierarchy
+			l_data: like data
+			l_referenced_classes: HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS]
+			l_referencer_class_set: DS_HASH_SET [QL_CLASS]
+			l_dependency_data: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]
+			l_group_level: EB_TREE_NODE [QL_ITEM]
+			l_referenced_class_level: EB_TREE_NODE [QL_ITEM]
+			l_referencer_class_level: EB_TREE_NODE [QL_ITEM]
+		do
+			create data_hierarchy
+			l_data_hierarchy := data_hierarchy
+			l_data := data
+			from
+				l_dependency_data := data.dependency_data
+				l_dependency_data.start
+			until
+				l_dependency_data.after
+			loop
+					-- Setup group row.						
+				create l_group_level
+				l_group_level.set_data (l_dependency_data.key_for_iteration)
+				l_data_hierarchy.children.force_last (l_group_level)
+
+					-- Setup referenced class rows
+				l_referenced_classes := l_dependency_data.item_for_iteration
+				from
+					l_referenced_classes.start
+				until
+					l_referenced_classes.after
+				loop
+					create l_referenced_class_level
+					l_referenced_class_level.set_data (l_referenced_classes.key_for_iteration)
+					l_group_level.children.force_last (l_referenced_class_level)
+						-- Setup referencer class rows
+					l_referencer_class_set := l_referenced_classes.item_for_iteration
+					from
+						l_referencer_class_set.start
+					until
+						l_referencer_class_set.after
+					loop
+						create l_referencer_class_level
+						l_referencer_class_level.set_data (l_referencer_class_set.item_for_iteration)
+						l_referenced_class_level.children.force_last (l_referencer_class_level)
+						l_referencer_class_set.forth
+					end
+					l_referenced_classes.forth
+				end
+				l_dependency_data.forth
+			end
+		ensure
+			data_hierarchy_attached: data_hierarchy /= Void
+		end
+
+	set_data_hierarchy_with_folder_categorized (a_data: like data) is
+			-- Set `data_hierarchy' with `a_data'. Categorize folder.
+		require
+			a_data_attached: a_data /= Void
+		local
+			l_data_hierarchy: like data_hierarchy
+			l_referencer_class_row: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
+			l_referenced_classes: HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS]
+			l_referencer_class_set: DS_HASH_SET [QL_CLASS]
+			l_dependency_data: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]
+
+			l_group_level: EB_TREE_NODE [QL_ITEM]
+			l_referenced_class_level: EB_TREE_NODE [QL_ITEM]
+			l_referencer_class_level: EB_TREE_NODE [QL_ITEM]
+			l_folder_level: EB_TREE_NODE [QL_ITEM]
+			l_class_table: HASH_TABLE [LINKED_LIST [QL_CLASS], STRING]
+			l_class_list: LINKED_LIST [QL_CLASS]
+			l_path: STRING
+		do
+			create data_hierarchy
+			l_data_hierarchy := data_hierarchy
+			from
+				l_dependency_data := data.dependency_data
+				l_dependency_data.start
+			until
+				l_dependency_data.after
+			loop
+					-- Setup group row.						
+				create l_group_level
+				l_group_level.set_data (l_dependency_data.key_for_iteration)
+				l_data_hierarchy.children.force_last (l_group_level)
+
+					-- Setup referenced class rows
+				l_referenced_classes := l_dependency_data.item_for_iteration
+					-- Categorize classes by folders
+				create l_class_table.make (64)
+				from
+					l_referenced_classes.start
+				until
+					l_referenced_classes.after
+				loop
+					l_path := l_referenced_classes.key_for_iteration.class_i.path
+					l_class_list := l_class_table.item (l_path)
+					if l_class_list = Void then
+						create l_class_list.make
+						l_class_table.put (l_class_list, l_path)
+					end
+					l_class_list.extend (l_referenced_classes.key_for_iteration)
+					l_referenced_classes.forth
+				end
+
+				from
+					l_class_table.start
+				until
+					l_class_table.after
+				loop
+					create l_folder_level
+					l_class_list := l_class_table.item_for_iteration
+					l_folder_level.set_data (l_class_list.first)
+					l_group_level.children.force_last (l_folder_level)
+					from
+						l_class_list.start
+					until
+						l_class_list.after
+					loop
+						create l_referenced_class_level
+						l_referenced_class_level.set_data (l_class_list.item)
+						l_folder_level.children.force_last (l_referenced_class_level)
+							-- Setup referencer class rows
+						l_referencer_class_set := l_referenced_classes.item (l_class_list.item)
+						from
+							l_referencer_class_set.start
+						until
+							l_referencer_class_set.after
+						loop
+							create l_referencer_class_row
+							create l_referencer_class_level
+							l_referencer_class_level.set_data (l_referencer_class_set.item_for_iteration)
+							l_referenced_class_level.children.force_last (l_referencer_class_level)
+							l_referencer_class_set.forth
+						end
+						l_class_list.forth
+					end
+					l_class_table.forth
+				end
+				l_dependency_data.forth
+			end
+		end
+
+	fill_rows  is
+			-- Fill rows with `data'.
+		do
+			rows.children.wipe_out
+			if categorize_folder_button.is_selected then
+				set_data_hierarchy_with_folder_categorized (data)
+			else
+				set_data_hierarchy (data)
+			end
+			fill_row_level (data_hierarchy, rows, 1, True)
+		end
+
+	classes_in_starting_element: DS_HASH_SET [QL_CLASS]
+			-- Classes in `starting_element'.
+
+	retrieve_classes_in_starting_element is
+			-- Retrieve classes in `starting_element' and store them in `classes_in_starting_element'.
+		require
+			data_attached: data /= Void
+			class_from_starting_element_attached: data.class_list_in_starting_element /= Void
+		local
+			l_class_domain: QL_CLASS_DOMAIN
+		do
+			l_class_domain := data.class_list_in_starting_element
+			create classes_in_starting_element.make (l_class_domain.count)
+			classes_in_starting_element.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
+			l_class_domain.do_all (agent classes_in_starting_element.force_last)
+		ensure
+			classes_in_starting_element_attached: classes_in_starting_element /= Void
 		end
 
 	client_class_set (a_supplier_class: CLASS_C): DS_HASH_SET [CLASS_C] is
@@ -910,107 +1483,6 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	bind_feature_rows (a_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]; a_referenced_class: QL_CLASS; a_referencer_class: QL_CLASS) is
-			-- Bind feature rows in subrows of `a_row_node'.
-			-- `a_row_node' is a node in `rows'.
-		require
-			a_row_node_attached: a_row_node /= Void
-			a_row_node_has_not_been_binded: a_row_node.children.is_empty
-			a_referenced_class_attached: a_referenced_class /= Void
-			a_referencer_class_attached: a_referencer_class /= Void
-		local
-			l_feature_generator: QL_FEATURE_DOMAIN_GENERATOR
-			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
-			l_new_row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
-			l_order_list: LINKED_LIST [INTEGER]
-			l_feature_table: like called_features
-			l_features: DS_HASH_SET [QL_FEATURE]
-			l_grid_row: EV_GRID_ROW
-			l_column_tbl: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
-			l_sorter: DS_QUICK_SORTER [QL_FEATURE]
-		do
-				-- Get features.
-			create l_feature_generator
-			l_feature_generator.enable_fill_domain
-			create l_features.make (100)
-			l_features.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_FEATURE]}.make (agent is_feature_equal))
-			if is_displaying_clients then
-				l_feature_table := reversed_called_features (called_features (a_referencer_class, a_referenced_class))
-			else
-				l_feature_table := called_features (a_referenced_class, a_referencer_class)
-			end
-			create l_sorter.make (create {AGENT_BASED_EQUALITY_TESTER [QL_FEATURE]}.make (agent (a_feature, b_feature: QL_FEATURE): BOOLEAN do Result := a_feature.name < b_feature.name end))
-			from
-				l_feature_table.start
-			until
-				l_feature_table.after
-			loop
-				create l_new_row_node
-				create l_dependency_row.make (l_feature_table.key_for_iteration, l_new_row_node, Current)
-				l_sorter.sort (l_feature_table.item_for_iteration)
-				l_dependency_row.set_feature_list (l_feature_table.item_for_iteration)
-				l_new_row_node.set_data (l_dependency_row)
-				a_row_node.children.force_last (l_new_row_node)
-				l_feature_table.forth
-			end
-			create l_order_list.make
-			l_order_list.extend (4)
-			sort_level (a_row_node, 4, 4, comparator (l_order_list))
-			l_grid_row := a_row_node.data.grid_row
-			bind_row_level (l_grid_row, a_row_node, 4, False)
-			if l_grid_row.is_selected then
-				highlight_row (l_grid_row)
-			else
-				dehighlight_row (l_grid_row)
-			end
-			create l_column_tbl.make (1)
-			l_column_tbl.put (Void, level_starting_column_index.i_th (5))
-			auto_resize_columns (grid, l_column_tbl)
-		end
-
-	selected_rows: LIST [EV_GRID_ROW] is
-			-- Selected rows in `grid'.
-			-- If empty, put the first row in `grid' in result.
-		do
-			Result := grid.selected_rows
-			if Result.is_empty and then grid.row_count > 0 then
-				create {ARRAYED_LIST [EV_GRID_ROW]}Result.make (1)
-				Result.extend (grid.row (1))
-			end
-		end
-
-	control_tool_bar: EV_HORIZONTAL_BOX
-			-- Implementation of `control_bar'
-
-	show_self_dependency: EV_TOOL_BAR_TOGGLE_BUTTON
-			-- Toggle button to turn on/off item path display
-			-- For examples, if we are displaying suppliers for a given group "demo",
-			-- actually we are displaying supplier classes of every class in that group,
-			-- and always classes in group "demo" will use other classes in group "demo",
-			-- but sometimes we don't want to show those classes in group "demo" as supplier classes.
-			-- In this case, we can choose not to show self dependency.
-		do
-			if show_self_dependency_button_internal = Void then
-				create show_self_dependency_button_internal
-				show_self_dependency_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
-				show_self_dependency_button_internal.set_tooltip (interface_names.h_show_dependency_on_self)
-				if preferences.class_browser_data.is_item_path_shown then
-					show_self_dependency_button_internal.enable_select
-				else
-					show_self_dependency_button_internal.disable_select
-				end
-			end
-			Result := show_self_dependency_button_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	show_self_dependency_button_internal: like show_self_dependency
-			-- Implementation of `show_self_dependency'
-
-	on_show_self_dependency_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent for `on_show_self_dependency_changed_from_outside'
-
 	recycle_agents is
 			-- Recycle agents
 		do
@@ -1020,6 +1492,9 @@ feature{NONE} -- Implementation
 			end
 			if on_show_tooltip_changed_from_outside_agent /= Void then
 				preferences.class_browser_data.show_tooltip_preference.change_actions.prune_all (on_show_tooltip_changed_from_outside_agent)
+			end
+			if on_categorized_folder_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.categorized_folder_preference.change_actions.prune_all (on_categorized_folder_changed_from_outside_agent)
 			end
 		end
 
@@ -1063,99 +1538,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	mark_display is
-			-- Mark rows to be displayed or not to be displayed according to status of `show_self_dependency'.
-		require
-			rows_attached: rows /= Void
-		local
-			l_rows: like rows
-			l_groups: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
-			l_show_self: BOOLEAN
-			l_starting_element_group: QL_GROUP
-			l_classes: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
-			l_classes_from_starting_element: like classes_in_starting_element
-			l_group: QL_GROUP
-			l_class: QL_CLASS
-			l_new_class_count: INTEGER
-			l_new_class: BOOLEAN
-			l_is_group_equal: BOOLEAN
-			l_used_in_library: CONF_GROUP
-		do
-			l_rows := rows
-			l_groups := l_rows.children
-			l_show_self := show_self_dependency.is_selected
-			l_starting_element_group := starting_element_group
-			if l_show_self or l_starting_element_group = Void then
-					-- If self dependency is shown, we just mark every thing to be displayed.
-				mark_display_in_rows (l_groups, 2, True)
-			else
-					-- If self dependency is not shown, we check every group.
-				from
-					l_groups.start
-				until
-					l_groups.after
-				loop
-					l_group ?= l_groups.item_for_iteration.data.item
-					check l_group /= Void end
-					l_is_group_equal := l_group.is_equal (l_starting_element_group)
-					if not l_is_group_equal then
-						if not l_starting_element_group.is_library then
-							l_used_in_library := l_starting_element_group.group.target.system.lowest_used_in_library
-							if l_used_in_library /= Void then
-								l_is_group_equal := l_group.group = l_used_in_library
-							end
-						end
-					end
-					if not l_is_group_equal then
-						l_groups.item_for_iteration.data.set_should_current_row_be_displayed (True)
-						mark_display_in_rows (l_groups.item_for_iteration.children, 1, True)
-					else
-						l_classes_from_starting_element := classes_in_starting_element
-						from
-							l_classes := l_groups.item_for_iteration.children
-							l_new_class_count := 0
-							l_classes.start
-						until
-							l_classes.after
-						loop
-							l_class ?= l_classes.item_for_iteration.data.item
-							l_new_class := not l_classes_from_starting_element.has (l_class)
-							l_classes.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class)
-							if l_new_class then
-								l_new_class_count := l_new_class_count + 1
-							end
-							l_classes.forth
-						end
-						l_groups.item_for_iteration.data.set_should_current_row_be_displayed (l_new_class_count > 0)
-					end
-					l_groups.forth
-				end
-			end
-		end
-
-	mark_display_in_rows (a_row_list: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]; a_depth: INTEGER; a_display: BOOLEAN) is
-			-- Mark `a_row_list' with display status specified in `a_display'.
-			-- Mark subrows deep to `a_depth' of `a_row_list also'.
-			-- For example, if `a_depth' is 1, mark `a_row_list' only, and if 2, mark the first level subrows of `a_row_list', and so on.
-		require
-			a_row_list_attached: a_row_list /= Void
-			a_depth_valid: a_depth >= 1
-		do
-			if not a_row_list.is_empty then
-				from
-					a_row_list.start
-				until
-					a_row_list.after
-				loop
-					a_row_list.item_for_iteration.data.set_should_current_row_be_displayed (a_display)
-					if a_depth > 1 then
-						mark_display_in_rows (a_row_list.item_for_iteration.children, a_depth - 1, a_display)
-					end
-					a_row_list.forth
-				end
-			end
-		end
-
 feature{NONE} -- Initialization
 
 	build_grid is
@@ -1183,16 +1565,20 @@ feature{NONE} -- Initialization
 			enable_editor_token_pnd
 			set_select_all_action (agent do  end)
 			enable_tree_node_highlight
-			show_self_dependency.select_actions.extend (agent on_show_self_dependency_changed)
+
+			show_self_dependency_button.select_actions.extend (agent on_show_self_dependency_changed)
 			on_show_self_dependency_changed_from_outside_agent := agent on_show_self_dependency_changed_from_outside
 			preferences.class_browser_data.show_self_dependency_preference.change_actions.extend (on_show_self_dependency_changed_from_outside_agent)
-
-			create post_row_bind_action_table.make (1)
-			post_row_bind_action_table.force (agent ensure_row_expandable, 3)
 
 			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
 			on_show_tooltip_changed_from_outside_agent := agent on_show_tooltip_changed_from_outside
 			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
+
+		 	categorize_folder_button.select_actions.extend (agent on_categorized_folder_changed)
+			on_categorized_folder_changed_from_outside_agent := agent on_categorized_folder_changed_from_outside
+			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
+
+			create_index_info
 		end
 
 	build_sortable_and_searchable is

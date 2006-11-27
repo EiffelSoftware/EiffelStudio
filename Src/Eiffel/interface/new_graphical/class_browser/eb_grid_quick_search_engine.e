@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_CLASS_BROWSER_QUICK_SEARCH_ENGINE
+	EB_GRID_QUICK_SEARCH_ENGINE
 
 inherit
 

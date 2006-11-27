@@ -539,11 +539,8 @@ feature {NONE} -- Implementation
 	customizable_commands: HASH_TABLE [PROCEDURE [like Current, TUPLE], STRING]
 			-- Hash of customizable commands (agent hashed by shortcut name)
 
-	check_search_bar_visible_procedure: PROCEDURE [ANY, TUPLE]
+	check_search_bar_visible_procedure: PROCEDURE [ANY, TUPLE];
 			-- Procedure instance added into focus_in_actions of current window
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

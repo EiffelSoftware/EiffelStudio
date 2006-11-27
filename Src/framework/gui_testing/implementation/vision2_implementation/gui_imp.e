@@ -37,51 +37,295 @@ feature -- Element change
 			active_window := a_window
 		end
 
-feature -- Identifiable lookup
+feature -- Window lookup
 
 	window_by_identifier (an_identifier: STRING): EV_WINDOW is
 			-- Window which has `an_identifier' as `identifier_name'.
 		local
 			l_windows: LINEAR [EV_WINDOW]
 		do
-			l_windows := application_under_test.windows
-			from
-				l_windows.start
-			until
-				l_windows.after or Result /= Void
-			loop
-				-- TODO: regexp match
-				if an_identifier.is_equal (l_windows.item.identifier_name) then
-					Result := l_windows.item
-				end
-				l_windows.forth
-			end
+			Result ?= window ([an_identifier, Void])
 		end
 
 	windows_by_identifier (an_identifier: STRING): LIST [EV_WINDOW] is
 			-- All windows which have `an_identifier' as `identifier_name'.
+		do
+			-- TODO: check if this cast is valid
+			Result ?= windows ([an_identifier, Void])
+		end
+
+feature -- Identifiable lookup
+
+	identifiable (a_pattern: STRING): EV_IDENTIFIABLE is
+			-- Identifiable corresponding to `a_pattern'.
+		local
+			l_tokens: LIST [STRING]
+			l_token: STRING
+			l_indirect: BOOLEAN
+
+			l_list: LIST [EV_IDENTIFIABLE]
+		do
+			l_list := identifiables (a_pattern)
+			if not l_list.is_empty then
+				Result := l_list.first
+			end
+
+-- This algorithm is flawed in the case that it is greedy. As soon as it finds a path it will follow it
+-- and stay on the path even if the end result will not be found this way. For example a search for:
+-- 'a.b' will follow the first identifiable with name 'a' even if it does not have a child with name 'b'
+-- and there exist a second identifiable with name 'a' which has a child with name 'b'.
+-- Thus the current solution by searching for all and returning the first result is not the optimal
+-- way but at least correct.
+--	juliant, 22. November 2006
+
+				-- check window syntax
+--			l_tokens := a_pattern.split (':')
+--			if l_tokens.count = 1 then
+--				Result := active_window
+--			elseif l_tokens.count = 2 then
+--				Result := window (parse_info_token (l_tokens.first))
+--			else
+--				check
+--					invalid_pattern: false
+--				end
+--			end
+--				-- parse pattern
+--			from
+--				l_tokens := l_tokens.last.split ('.')
+--				l_tokens.start
+--				l_indirect := true
+--			until
+--				l_tokens.after or Result = Void
+--			loop
+--				l_token := l_tokens.item
+--				if l_token.is_empty then
+--						-- we have a double dot, hence the next child is a direct or indirect parent
+--					check
+--						indirect_not_set: not l_indirect -- three dots if l_indirect is alredy set and thus an invalid pattern
+--					end
+--					l_indirect := true
+--				else
+--						-- look for child
+--					if l_indirect then
+--						Result := identifiable_child_recursive (Result, parse_info_token (l_token))
+--					else
+--						Result := identifiable_child (Result, parse_info_token (l_token))
+--					end
+--					l_indirect := false
+--				end
+--				l_tokens.forth
+--			end
+		end
+
+	identifiables (a_pattern: STRING): LIST [EV_IDENTIFIABLE] is
+			-- All identifiablkes corresponding to `a_pattern.
+		local
+			l_active_elements: LIST [EV_IDENTIFIABLE]
+			l_tokens: LIST [STRING]
+			l_token: STRING
+			l_token_info: TUPLE [name, type: STRING]
+			l_indirect: BOOLEAN
+		do
+				-- check window syntax
+			l_tokens := a_pattern.split (':')
+			if l_tokens.count = 1 then
+				create {LINKED_LIST [EV_IDENTIFIABLE]}l_active_elements.make
+				l_active_elements.extend (active_window)
+			elseif l_tokens.count = 2 then
+				l_active_elements := windows (parse_info_token (l_tokens.first))
+			else
+				check
+					invalid_pattern: false	-- raise exception
+				end
+			end
+				-- parse pattern
+			from
+				l_tokens := l_tokens.last.split ('.')
+				l_tokens.start
+				l_indirect := true
+			until
+				l_tokens.after or l_active_elements.count = 0
+			loop
+				l_token := l_tokens.item
+				if l_token.is_empty then
+						-- we have a double dot, hence the next child is a direct or indirect parent
+					check
+						indirect_not_set: not l_indirect -- three dots if l_indirect is alredy set and thus an invalid pattern
+					end
+					l_indirect := true
+				else
+						-- look for children of all active elements
+					create {LINKED_LIST [EV_IDENTIFIABLE]}Result.make
+					from
+						l_token_info := parse_info_token (l_token)
+						l_active_elements.start
+					until
+						l_active_elements.after
+					loop
+							-- Lookup next token with active elements
+						if l_indirect then
+							Result.append (identifiable_children_recursive (l_active_elements.item, l_token_info))
+						else
+							Result.append (identifiable_children (l_active_elements.item, l_token_info))
+						end
+						l_active_elements.forth
+					end
+					l_active_elements := Result
+				end
+				l_tokens.forth
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	environment: EV_ENVIRONMENT is
+			-- Vision2 environment
+		once
+			create Result
+		end
+
+	children (an_identifiable: EV_IDENTIFIABLE): LINEAR [EV_IDENTIFIABLE] is
+			-- Linear representation of all direct children of `an_identifiable'.
+		require
+			an_identifiable_not_void: an_identifiable /= Void
+		local
+			l_window: EV_WINDOW
+			l_container: EV_CONTAINER
+			l_item_list: EV_ITEM_LIST [EV_ITEM]
+			l_list: LINKED_LIST [EV_IDENTIFIABLE]
+			l_linear: LINEAR [EV_IDENTIFIABLE]
+		do
+			l_window ?= an_identifiable
+			if l_window = Void then
+				l_container ?= an_identifiable
+				if l_container = Void then
+					l_item_list ?= an_identifiable
+					if l_item_list = Void then
+						create {LINKED_LIST [EV_IDENTIFIABLE]}Result.make
+					else
+						Result := l_item_list.linear_representation
+					end
+				else
+					Result := l_container.linear_representation
+				end
+			else
+				create l_list.make
+				if l_window.menu_bar /= Void then
+					l_list.extend (l_window.menu_bar)
+				end
+				l_list.extend (l_window.upper_bar)
+				l_linear := l_window.linear_representation
+				l_linear.do_all (agent l_list.extend (?))
+				l_list.extend (l_window.lower_bar)
+				Result := l_list
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	parse_info_token (a_token: STRING): TUPLE [name, type: STRING] is
+			-- Parse `a_token'.
+		require
+			a_token_not_void: a_token /= Void
+			a_token_not_empty: not a_token.is_empty
+		local
+			l_brace_index: INTEGER
+		do
+			create Result
+			l_brace_index := a_token.index_of ('}', 1)
+			if l_brace_index > 0 then
+				Result.type := a_token.substring (2, l_brace_index - 1)
+				if l_brace_index /= a_token.count then
+					Result.name := a_token.substring (l_brace_index+1, a_token.count)
+				else
+					Result.name := Void
+				end
+			else
+				Result.name := a_token
+				Result.type := Void
+			end
+		ensure
+			result_not_void: Result /= Void
+			result_has_name_or_type: Result.name /= Void or Result.type /= Void
+		end
+
+	matches_info (an_identifiable: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): BOOLEAN is
+			-- Does `an_identifiable' match `an_info's name and type?
+		require
+			an_identifiable_not_void: an_identifiable /= Void
+			an_info_not_void: an_info /= Void
+			a_name_or_a_type_set: an_info.name /= Void or an_info.type /= Void
+			an_info_name_not_empty: an_info.name /= Void implies not an_info.name.is_empty
+			an_info_type_not_empty: an_info.type /= Void implies not an_info.type.is_empty
+		do
+			-- TODO: regexp match of name
+			if an_info.name /= Void and an_info.type /= Void then
+				Result := an_identifiable.identifier_name.is_equal (an_info.name) and an_identifiable.generating_type.is_equal (an_info.type)
+			elseif an_info.name /= Void then
+				Result := an_identifiable.identifier_name.is_equal (an_info.name)
+			else
+				check
+					has_type: an_info.type /= Void
+				end
+				Result := an_identifiable.generating_type.is_equal (an_info.type)
+			end
+		end
+
+	window (an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE is
+			-- Window which has `a_name' and `a_type'
+		require
+			an_info_not_void: an_info /= Void
+			a_name_or_a_type_set: an_info.name /= Void or an_info.type /= Void
+			an_info_name_not_empty: an_info.name /= Void implies not an_info.name.is_empty
+			an_info_type_not_empty: an_info.type /= Void implies not an_info.type.is_empty
+		local
+			l_windows: LIST [EV_IDENTIFIABLE]
+		do
+			l_windows := windows (an_info)
+			if not l_windows.is_empty then
+				Result := l_windows.first
+			end
+		end
+
+	windows (an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE] is
+			-- Windows which have `a_name' and `a_type'
+		require
+			an_info_not_void: an_info /= Void
+			a_name_or_a_type_set: an_info.name /= Void or an_info.type /= Void
+			an_info_name_not_empty: an_info.name /= Void implies not an_info.name.is_empty
+			an_info_type_not_empty: an_info.type /= Void implies not an_info.type.is_empty
 		local
 			l_windows: LINEAR [EV_WINDOW]
+			l_window: EV_WINDOW
 		do
 			l_windows := application_under_test.windows
 			from
-				create {LINKED_LIST [EV_WINDOW]}Result.make
+				create {LINKED_LIST [EV_IDENTIFIABLE]}Result.make
 				l_windows.start
 			until
 				l_windows.after
 			loop
-				-- TODO: regexp match
-				if an_identifier.is_equal (l_windows.item.identifier_name) then
-					Result.extend (l_windows.item)
+				l_window := l_windows.item
+				if matches_info (l_window, an_info) then
+					Result.extend (l_window)
 				end
 				l_windows.forth
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
-	identifiable (a_parent: EV_IDENTIFIABLE; an_identifier: STRING): EV_IDENTIFIABLE is
-			-- Identifiable corresponding to `an_identifier' in `a_parent'.
+	identifiable_child (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE is
+			-- Child identifiable of `a_parent' which match `an_info's name and type
+		require
+			a_parent_not_void: a_parent /= Void
+			an_info_not_void: an_info /= Void
+			a_name_or_a_type_set: an_info.name /= Void or an_info.type /= Void
+			an_info_name_not_empty: an_info.name /= Void implies not an_info.name.is_empty
+			an_info_type_not_empty: an_info.type /= Void implies not an_info.type.is_empty
 		local
 			l_children: LINEAR [EV_IDENTIFIABLE]
+			l_child: EV_IDENTIFIABLE
 		do
 			from
 				l_children := children (a_parent)
@@ -89,18 +333,25 @@ feature -- Identifiable lookup
 			until
 				l_children.after or Result /= Void
 			loop
-				-- TODO: regexp match
-				if an_identifier.is_equal (l_children.item.identifier_name) then
-					Result := l_children.item
+				l_child := l_children.item
+				if matches_info (l_child, an_info) then
+					Result := l_child
 				end
 				l_children.forth
 			end
 		end
 
-	identifiables (a_parent: EV_IDENTIFIABLE; an_identifier: STRING): LIST [EV_IDENTIFIABLE] is
-			-- All identifiables which correspond to `an_identifier' in `a_parent'.
+	identifiable_children (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE] is
+			-- All child identifiables of `a_parent' which match `an_info's name and type
+		require
+			a_parent_not_void: a_parent /= Void
+			an_info_not_void: an_info /= Void
+			a_name_or_a_type_set: an_info.name /= Void or an_info.type /= Void
+			an_info_name_not_empty: an_info.name /= Void implies not an_info.name.is_empty
+			an_info_type_not_empty: an_info.type /= Void implies not an_info.type.is_empty
 		local
 			l_children: LINEAR [EV_IDENTIFIABLE]
+			l_child: EV_IDENTIFIABLE
 		do
 			from
 				l_children := children (a_parent)
@@ -109,16 +360,24 @@ feature -- Identifiable lookup
 			until
 				l_children.after
 			loop
-				-- TODO: regexp match
-				if an_identifier.is_equal (l_children.item.identifier_name) then
-					Result.extend (l_children.item)
+				l_child := l_children.item
+				if matches_info (l_child, an_info) then
+					Result.extend (l_child)
 				end
 				l_children.forth
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
-	identifiable_recursive (a_parent: EV_IDENTIFIABLE; an_identifier: STRING): EV_IDENTIFIABLE is
-			-- Identifiable corresponding to `an_identifier' recursive searched starting at `a_parent'.
+	identifiable_child_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): EV_IDENTIFIABLE is
+			-- Identifiable matching `an_info's name and type recursive searched starting at `a_parent'.
+		require
+			a_parent_not_void: a_parent /= Void
+			an_info_not_void: an_info /= Void
+			a_name_or_a_type_set: an_info.name /= Void or an_info.type /= Void
+			an_info_name_not_empty: an_info.name /= Void implies not an_info.name.is_empty
+			an_info_type_not_empty: an_info.type /= Void implies not an_info.type.is_empty
 		local
 			l_queue: QUEUE [EV_IDENTIFIABLE]
 			l_item: EV_IDENTIFIABLE
@@ -131,9 +390,7 @@ feature -- Identifiable lookup
 			loop
 				l_item := l_queue.item
 				l_queue.remove
-
-				-- TODO: regexp match
-				if an_identifier.is_equal (l_item.identifier_name) then
+				if matches_info (l_item, an_info) then
 					Result := l_item
 				else
 					children (l_item).do_all (agent l_queue.extend (?))
@@ -141,8 +398,14 @@ feature -- Identifiable lookup
 			end
 		end
 
-	identifiables_recursive (a_parent: EV_IDENTIFIABLE; an_identifier: STRING): LIST [EV_IDENTIFIABLE] is
-			-- All identifiables corresponding to `an_identifier' recursive searched starting at `a_parent'.
+	identifiable_children_recursive (a_parent: EV_IDENTIFIABLE; an_info: TUPLE [name, type: STRING]): LIST [EV_IDENTIFIABLE] is
+			-- All identifiables matching `an_info's name and type recursive searched starting at `a_parent'.
+		require
+			a_parent_not_void: a_parent /= Void
+			an_info_not_void: an_info /= Void
+			a_name_or_a_type_set: an_info.name /= Void or an_info.type /= Void
+			an_info_name_not_empty: an_info.name /= Void implies not an_info.name.is_empty
+			an_info_type_not_empty: an_info.type /= Void implies not an_info.type.is_empty
 		local
 			l_queue: QUEUE [EV_IDENTIFIABLE]
 			l_item: EV_IDENTIFIABLE
@@ -157,55 +420,11 @@ feature -- Identifiable lookup
 				l_item := l_queue.item
 				l_queue.remove
 
-				-- TODO: regexp match
-				if an_identifier.is_equal (l_item.identifier_name) then
+				if matches_info (l_item, an_info) then
 					Result.extend (l_item)
 				else
 					children (l_item).do_all (agent l_queue.extend (?))
 				end
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	environment: EV_ENVIRONMENT is
-			-- Vision2 environment
-		once
-			create Result
-		end
-
-	children (an_identifiable: EV_IDENTIFIABLE): LINEAR [EV_IDENTIFIABLE] is
-			-- Linear representation of all children of `an_identifiable'.
-		require
-			an_identifiable_not_void: an_identifiable /= Void
-		local
-			l_window: EV_WINDOW
-			l_container: EV_CONTAINER
-			l_item_list: EV_ITEM_LIST [EV_ITEM]
-			l_list: LINKED_LIST [EV_IDENTIFIABLE]
-			l_linear: LINEAR [EV_IDENTIFIABLE]
-		do
-			l_container ?= an_identifiable
-			if l_container = Void then
-				l_item_list ?= an_identifiable
-				if l_item_list = Void then
-					l_window ?= an_identifiable
-					if l_window = Void then
-						create {LINKED_LIST [EV_IDENTIFIABLE]}Result.make
-					else
-						create l_list.make
-						l_list.extend (l_window.menu_bar)
-						l_list.extend (l_window.upper_bar)
-						l_linear := l_window.linear_representation
-						l_linear.do_all (agent l_list.extend (?))
-						l_list.extend (l_window.lower_bar)
-						Result := l_list
-					end
-				else
-					Result := l_item_list.linear_representation
-				end
-			else
-				Result := l_container.linear_representation
 			end
 		ensure
 			result_not_void: Result /= Void

@@ -314,9 +314,12 @@ feature -- Status Report
 				-- starting and ending character positions of the
 				-- current selection in the edit control
 		do
-			wel_sel := {WEL_API}.send_message_result (wel_item, Em_getsel, to_wparam (0), to_lparam (0))
-			start_pos := cwin_hi_word (wel_sel)
-			end_pos := cwin_lo_word (wel_sel)
+			{WEL_API}.send_message (wel_item, Em_getsel, $start_pos, $end_pos)
+				-- Eiffel Strings are indexed from 1 whereas C Strings are indexed from 0
+				-- End position is returned as "position of the first nonselected character" thus it works
+				-- with Eiffel strings out of the box.
+			start_pos := start_pos + 1
+
 			Result := wel_text.substring (start_pos.min (end_pos), end_pos.max (start_pos))
 			Result.prune_all ('%R')
 		end

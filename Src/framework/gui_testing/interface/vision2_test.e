@@ -18,6 +18,25 @@ inherit
 
 	SHARED_KEYBOARD
 
+	SHARED_SPECIAL_COMMANDS
+
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Start application and execute test
+		do
+			launch_application_threaded
+
+			run_safe_test (agent run_test)
+
+			wait_until_destroyed
+		end
+
 feature -- Basic operations
 
 	launch_application is
@@ -37,7 +56,7 @@ feature -- Basic operations
 			from until
 				gui.application_under_test /= Void
 			loop
-				sleep (10_000_000)
+				sleep (100_000_000)
 			end
 		ensure
 			application_under_test_not_void: gui.application_under_test /= Void
@@ -47,11 +66,15 @@ feature -- Basic operations
 			-- Wait until `application_under_test' is destroyed.
 		require
 			application_under_test_not_void: gui.application_under_test /= Void
+		local
+			l_app: EV_APPLICATION
 		do
-			from until
-				gui.application_under_test.is_destroyed
+			from
+				l_app := gui.application_under_test
+			until
+				l_app.is_destroyed
 			loop
-				sleep (10_000_000)
+				sleep (100_000_000)
 			end
 		ensure
 			application_under_test_destroyed: gui.application_under_test.is_destroyed
@@ -64,12 +87,22 @@ feature -- Basic operations
 		do
 			if failed then
 				-- TODO: show error
+				if exception = developer_exception then
+					io.put_string ("a "+developer_exception_name+" exception occured")
+				else
+					-- TODO: raise again
+				end
 			else
 				a_test.call ([])
 			end
 		rescue
 			failed := True
 			retry
+		end
+
+	run_test is
+			-- Run a test.
+		do
 		end
 
 indexing

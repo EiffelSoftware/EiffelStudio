@@ -29,7 +29,8 @@ inherit
 			implementation,
 			initialize,
 			is_in_default_state,
-			has
+			has,
+			identifier_path_separator
 		end
 
 	EV_POSITIONABLE
@@ -390,6 +391,12 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_WINDOW_IMP} implementation.make (Current)
+		end
+
+	identifier_path_separator: CHARACTER is
+			-- Character used to separate path to children.
+		once
+			Result := ':'
 		end
 
 invariant

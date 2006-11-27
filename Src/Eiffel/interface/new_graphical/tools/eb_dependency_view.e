@@ -299,7 +299,6 @@ feature -- Status setting
 							formatter_tool_bar_area.extend (l_formatter.browser.control_bar)
 							formatter_tool_bar_area.disable_item_expand (l_formatter.browser.control_bar)
 						end
-						outer_container.extend (formatter_container)
 						done := True
 					end
 					l_formatters.forth

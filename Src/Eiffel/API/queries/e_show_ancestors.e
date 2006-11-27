@@ -90,6 +90,7 @@ feature {NONE} -- Implementation
 		do
 			if processed_class_internal = Void then
 				create processed_class_internal.make (50)
+				processed_class_internal.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
 			end
 			Result := processed_class_internal
 		ensure

@@ -464,7 +464,7 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	search_engine: EB_CLASS_BROWSER_QUICK_SEARCH_ENGINE is
+	search_engine: EB_GRID_QUICK_SEARCH_ENGINE is
 			-- Search engine
 		do
 			if search_engine_internal = Void then

@@ -49,9 +49,6 @@ inherit
 		end
 
 	IDISPOSABLE
-		rename
-			equals as equals_object
-		end
 
 create
 	make

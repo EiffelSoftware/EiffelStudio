@@ -1053,7 +1053,7 @@ feature{NONE} -- Implementation
 		do
 			if categorize_folder_button_internal = Void then
 				create categorize_folder_button_internal
-				categorize_folder_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
+				categorize_folder_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_fill_cluster_icon)
 				categorize_folder_button_internal.set_tooltip (interface_names.h_categorize_folder)
 				if preferences.class_browser_data.is_class_categorized_in_folder then
 					categorize_folder_button_internal.enable_select

@@ -510,7 +510,6 @@ feature {NONE} -- Parsing
 			l_switches: like available_switches
 			l_use_separated: like use_separated_switch_values
 			l_last_switch: ARGUMENT_SWITCH
-			l_arg_option: ARGUMENT_OPTION
 			l_cursor: CURSOR
 			l_option: STRING
 			l_value: STRING
@@ -628,8 +627,10 @@ feature {NONE} -- Parsing
 								not_internal_option_values_is_empty: not internal_option_values.is_empty
 								same_name: internal_option_values.last.name.is_equal (l_last_switch.name)
 							end
-							l_arg_option := internal_option_values.last
-							l_arg_option.value := l_arg
+							internal_option_values.finish
+							if l_arg /= Void and then not l_arg.is_empty then
+								internal_option_values.replace (l_value_switch.create_value_option (l_arg))
+							end
 						end
 						l_last_switch := Void
 					end

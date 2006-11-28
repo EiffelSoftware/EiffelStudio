@@ -59,7 +59,7 @@ feature -- Query
 			if has_value then
 				c := a_flag
 				Result := flags.has (a_flag)
-				if not case_sensitive then
+				if not Result and then not case_sensitive then
 					c := a_flag
 					if c.is_alpha then
 						if c.is_lower then
@@ -72,8 +72,8 @@ feature -- Query
 				end
 			end
 		ensure
-			has_flag: (case_sensitive and Result = flags.has (a_flag)) or else
-				(not case_sensitive and Result = (Result = flags.has (a_flag.as_lower) or Result = flags.has (a_flag.as_upper)))
+			has_flag: (case_sensitive and (Result = flags.has (a_flag))) or else
+				(not case_sensitive and (Result = (flags.has (a_flag.as_lower) or flags.has (a_flag.as_upper))))
 		end
 
 invariant

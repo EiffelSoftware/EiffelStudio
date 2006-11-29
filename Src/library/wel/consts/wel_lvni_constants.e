@@ -1,11 +1,13 @@
 indexing
-	description	: "List view next item (LVNI) constants."
+	description	: "[
+		List view next item (LVNI) constants.
+	
+		Note: Used to find items in a list view with the given properties.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
-	note		: "Used to find items in a list view with the given%
-				  % properties."
 
 class
 	WEL_LVNI_CONSTANTS
@@ -13,7 +15,7 @@ class
 obsolete
 	"use WEL_LIST_VIEW_CONSTANTS instead"
 
-feature -- Geometric relation of the requested item to the 
+feature -- Geometric relation of the requested item to the
 		-- specified item.
 
 	Lvni_above: INTEGER is 256

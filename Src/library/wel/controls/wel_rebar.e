@@ -1,10 +1,13 @@
 indexing
-	description: "Control window that contains one or more bands%
-		%that can be moved by the user."
+	description: "[
+		Control window that contains one or more bands
+		that can be moved by the user.
+		
+		Note: To use this control you need to create a
+		WEL_INIT_COMMON_CONTROLS with the flags Icc_cool_Classes
+		and Icc_bar_classes in your application class.
+	]"
 	legal: "See notice at end of class."
-	note: "To use this control you need to create a%
-		% WEL_INIT_COMMON_CONTROLS with the flags Icc_cool_Classes%
-		% and Icc_bar_classes in your application class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

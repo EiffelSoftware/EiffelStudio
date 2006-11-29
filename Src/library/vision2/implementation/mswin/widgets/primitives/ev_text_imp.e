@@ -309,7 +309,6 @@ feature -- Status Report
 	selected_text: STRING_32
 			-- Text currently selected in `Current'.
 		local
-			wel_sel: POINTER
 			start_pos, end_pos: INTEGER
 				-- starting and ending character positions of the
 				-- current selection in the edit control

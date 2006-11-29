@@ -59,6 +59,7 @@ feature -- Access
 		require
 			home_directory_supported: Operating_environment.home_directory_supported
 		do
+			Result := {ENVIRONMENT}.get_folder_path ({SPECIAL_FOLDER_IN_ENVIRONMENT}.local_application_data)
 		end
 
 	root_directory_name: STRING is

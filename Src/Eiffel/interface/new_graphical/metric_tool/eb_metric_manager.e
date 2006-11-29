@@ -23,6 +23,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_METRIC_NAMES
+
 create
 	make
 
@@ -423,7 +425,9 @@ feature -- Metric management
 		local
 			l_file: RAW_FILE
 			l_error: like last_error
-			l_error_str: STRING
+			l_predefined_error_str: STRING_GENERAL
+			l_userdefined_error_str: STRING_GENERAL
+			l_final_error: STRING_GENERAL
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				clear_last_error
@@ -433,7 +437,7 @@ feature -- Metric management
 					-- Load predefined metrics.
 				create l_file.make (eiffel_layout.predefined_metrics_file)
 				if not l_file.exists then
-					create {EB_METRIC_ERROR_FILE} l_error.make ("Could not open file", eiffel_layout.predefined_metrics_file)
+					create l_error.make (metric_names.err_file_not_readable (eiffel_layout.predefined_metrics_file))
 				else
 					load_metric_definitions (eiffel_layout.predefined_metrics_file, True)
 					if last_error /= Void then
@@ -452,7 +456,7 @@ feature -- Metric management
 					if l_file.is_readable  then
 						load_metric_definitions (userdefined_metrics_file, False)
 					else
-						create {EB_METRIC_ERROR_FILE} l_error.make ("Could not open file", userdefined_metrics_file)
+						create l_error.make (metric_names.err_file_not_readable (userdefined_metrics_file))
 					end
 				else
 					last_userdefined_metric_load_error := Void
@@ -466,18 +470,17 @@ feature -- Metric management
 					last_userdefined_metric_load_error := Void
 				end
 				if not is_last_predefined_metric_load_successful or not is_last_userdefined_metric_load_successful then
-					create l_error_str.make (256)
 					if not is_last_predefined_metric_load_successful then
-						l_error_str.append ("When loading predefined metrics: ")
-						l_error_str.append (last_predefined_metric_load_error.out)
-						l_error_str.append ("%NPredefined metrics not loaded.%N")
+						l_final_error := metric_names.err_loading_predefined_metrics (last_predefined_metric_load_error.message_with_location)
 					end
 					if not is_last_userdefined_metric_load_successful then
-						l_error_str.append ("When loading user-defined metrics: ")
-						l_error_str.append (last_userdefined_metric_load_error.out)
-						l_error_str.append ("%NUser-defined metrics not loaded.%N")
+						if l_final_error = Void then
+							l_final_error := metric_names.err_loading_userdefined_metrics (last_userdefined_metric_load_error.message_with_location)
+						else
+							l_final_error.append (metric_names.err_loading_userdefined_metrics (last_userdefined_metric_load_error.message_with_location))
+						end
 					end
-					create {EB_METRIC_ERROR_PARSE} last_error.make_with_no_title (l_error_str)
+					create last_error.make (l_final_error)
 				end
 				is_metric_loaded := True
 				resume
@@ -545,7 +548,7 @@ feature -- Metric management
 				l_file.close
 			end
 		rescue
-			create{EB_METRIC_ERROR_FILE} last_error.make ("Could not write file", a_file_name)
+			create last_error.make (metric_names.err_file_not_writable (a_file_name))
 			l_retried := True
 			retry
 		end
@@ -565,7 +568,7 @@ feature -- Metric management
 			end
 		rescue
 			l_retried := True
-			create{EB_METRIC_ERROR_FILE} last_error.make ("Could not create directory", userdefined_metrics_path)
+			create last_error.make (metric_names.err_directory_creation_fail (userdefined_metrics_path))
 			retry
 		end
 
@@ -717,7 +720,7 @@ feature -- Metric archive
 			end
 		rescue
 			l_retried := True
-			create{EB_METRIC_ERROR_FILE} last_error.make ("Could not write file", a_file_name)
+			create last_error.make (metric_names.err_file_not_writable (a_file_name))
 		end
 
 feature{NONE} -- Implementation
@@ -747,7 +750,7 @@ feature{NONE} -- Implementation
 					last_error := a_callback.last_error
 				end
 			else
-				create {EB_METRIC_ERROR_FILE} last_error.make ("Could not open file", a_file)
+				create last_error.make (metric_names.err_file_not_readable (a_file))
 			end
 		end
 
@@ -826,7 +829,7 @@ feature{NONE} -- Implementation
 				l_metric := a_metric_list.item
 				check l_metric /= Void end
 				if has_metric (l_metric.name) then
-					create{EB_METRIC_ERROR_EXIST} last_error.make (l_metric.name)
+					create last_error.make (metric_names.err_duplicated_metric_name (l_metric.name))
 				end
 				a_metric_list.forth
 			end

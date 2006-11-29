@@ -368,7 +368,7 @@ feature{NONE} -- Implementation
 				(not l_metric.name.is_case_insensitive_equal (original_metric_name)))
 			then
 				if metric_manager.has_metric (l_metric.name) then
-					create {EB_METRIC_ERROR_EXIST} l_vadility.make (l_metric.name)
+					create l_vadility.make (metric_names.err_duplicated_metric_name (l_metric.name))
 				end
 			end
 			if l_vadility = Void then
@@ -380,7 +380,7 @@ feature{NONE} -- Implementation
 				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_tick_icon)
 				status_area.show_to_do_message_btn.disable_sensitive
 			else
-				status_area.status_text.set_text (l_vadility.out)
+				status_area.status_text.set_text (l_vadility.message_with_location)
 				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_error_icon)
 				status_area.show_to_do_message_btn.enable_sensitive
 			end

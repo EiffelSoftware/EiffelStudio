@@ -103,7 +103,7 @@ feature{NONE} -- Actions
 			metric_manager.store_metric_definitions (file_name_area.text)
 			if metric_manager.has_error then
 				create l_error_dlg
-				l_error_dlg.set_text (metric_manager.last_error.out)
+				l_error_dlg.set_text (metric_manager.last_error.message_with_location)
 				l_error_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
 				l_error_dlg.show_modal_to_window (Current)
 			else

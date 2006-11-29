@@ -16,6 +16,11 @@ inherit
 
 	QL_SHARED
 
+	EB_METRIC_SHARED
+		rename
+			metric_manager as metric_manager_internal
+		end
+
 create
 	make
 
@@ -104,8 +109,6 @@ feature -- Process
 		local
 			l_sub_metrics: LIST [STRING]
 			l_sub_metric: EB_METRIC
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			last_metric := a_linear_metric
 			if not has_error then
@@ -117,14 +120,11 @@ feature -- Process
 						-- Check sub metrics' vadility.
 					l_sub_metrics := a_linear_metric.variable_metric
 					if l_sub_metrics.is_empty then
-						create l_error_msg.make (100)
-						l_error_msg.append (once "Variable metric missing in linear metric %"")
-						l_error_msg.append (a_linear_metric.name)
-						l_error_msg.append (once "%".")
-						create l_to_do_msg.make (256)
-						append_linear_metric_info (l_to_do_msg)
-						l_to_do_msg.append (once "Make sure that at lease one variable metric is listed %Nin a linear metric definition.")
-						create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+						create_last_error_with_to_do (
+							metric_names.err_variable_metric_missing,
+							metric_names.linear_metric_location_section (a_linear_metric.name),
+							metric_names.variable_metric_missing_to_do
+						)
 					else
 							-- Check unit of every sub metric.
 						from
@@ -133,33 +133,19 @@ feature -- Process
 							l_sub_metrics.after or has_error
 						loop
 							if not metric_manager.has_metric (l_sub_metrics.item) then
-								create l_error_msg.make (100)
-								l_error_msg.append (once "No definition for variable metric %"")
-								l_error_msg.append (l_sub_metrics.item)
-								l_error_msg.append (once " in linear metric %"")
-								l_error_msg.append (a_linear_metric.name)
-								l_error_msg.append (once "%".")
-								create l_to_do_msg.make (256)
-								append_linear_metric_info (l_to_do_msg)
-								l_to_do_msg.append (once "Make sure every variable metric referenced by a linear metric is defined.")
-								create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+								create_last_error_with_to_do (
+									metric_names.err_variable_metric_not_defined,
+									metric_names.variable_metric_location (a_linear_metric.name, l_sub_metrics.item),
+									metric_names.variable_metric_not_defined_to_do
+								)
 							else
 								l_sub_metric := metric_manager.metric_with_name (l_sub_metrics.item)
 								if l_sub_metric.unit /= a_linear_metric.unit then
-									create l_error_msg.make (256)
-									l_error_msg.append (once "Unit of variable metric %"")
-									l_error_msg.append (l_sub_metric.name)
-									l_error_msg.append (once "%" is ")
-									l_error_msg.append (l_sub_metric.unit.name)
-									l_error_msg.append (once ", which is different from unit of linear metric %"")
-									l_error_msg.append (a_linear_metric.name)
-									l_error_msg.append (once "%", which is ")
-									l_error_msg.append (a_linear_metric.unit.name)
-									l_error_msg.append (".")
-									create l_to_do_msg.make (256)
-									append_linear_metric_info (l_to_do_msg)
-									l_to_do_msg.append (once "Make sure unit of every variable metric is same as that of the linear metric.")
-									create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+									create_last_error_with_to_do (
+										metric_names.err_variable_metric_unit_not_correct (l_sub_metric.unit.name, a_linear_metric.unit.name),
+										metric_names.variable_metric_location (a_linear_metric.name, l_sub_metrics.item),
+										metric_names.variable_metric_unit_not_correct_to_do
+									)
 								end
 							end
 							l_sub_metrics.forth
@@ -189,8 +175,6 @@ feature -- Process
 		local
 			l_num_metric: EB_METRIC
 			l_den_metric: EB_METRIC
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			last_metric := a_ratio_metric
 			if not has_error then
@@ -202,16 +186,11 @@ feature -- Process
 					-- Check the existance of numerator metric.
 				if not has_error then
 					if not metric_manager.has_metric (a_ratio_metric.numerator_metric_name) then
-						create l_error_msg.make (256)
-						l_error_msg.append (once "Numerator metric %"")
-						l_error_msg.append (a_ratio_metric.numerator_metric_name)
-						l_error_msg.append (once "%" is not defined in ratio metric %"")
-						l_error_msg.append (a_ratio_metric.name)
-						l_error_msg.append (once "%".")
-						create l_to_do_msg.make (256)
-						append_ratio_metric_info (l_to_do_msg)
-						l_to_do_msg.append (once "Make sure that numerator and denominator metric referenced by ratio metric are defined.")
-						create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+						create_last_error_with_to_do (
+							metric_names.err_numerator_metric_not_defined (a_ratio_metric.numerator_metric_name),
+							metric_names.ratio_metric_location_section (a_ratio_metric.name),
+							metric_names.numerator_denominator_metric_not_defined_to_do
+						)
 					else
 						l_num_metric := metric_manager.metric_with_name (a_ratio_metric.numerator_metric_name)
 					end
@@ -219,16 +198,11 @@ feature -- Process
 					-- Check the existance of denominator metric.
 				if not has_error then
 					if not metric_manager.has_metric (a_ratio_metric.denominator_metric_name) then
-						create l_error_msg.make (256)
-						l_error_msg.append (once "Denominator metric %"")
-						l_error_msg.append (a_ratio_metric.denominator_metric_name)
-						l_error_msg.append (once "%" is not defined in ratio metric %"")
-						l_error_msg.append (a_ratio_metric.name)
-						l_error_msg.append (once "%".")
-						create l_to_do_msg.make (256)
-						append_ratio_metric_info (l_to_do_msg)
-						l_to_do_msg.append (once "Make sure that numerator and denominator metric referenced by ratio metric are defined.")
-						create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+						create_last_error_with_to_do (
+							metric_names.err_denominator_metric_not_defined (a_ratio_metric.denominator_metric_name),
+							metric_names.ratio_metric_location_section (a_ratio_metric.name),
+							metric_names.numerator_denominator_metric_not_defined_to_do
+						)
 					else
 						l_den_metric := metric_manager.metric_with_name (a_ratio_metric.denominator_metric_name)
 					end
@@ -246,38 +220,23 @@ feature -- Process
 	process_criterion (a_criterion: EB_METRIC_CRITERION) is
 			-- Process `a_criterion'.
 			-- A criterion is valid if it is registered.
-		local
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			last_criterion := a_criterion
 			if not has_error then
 				check last_metric /= Void end
 				if a_criterion.scope /= last_metric.unit.scope then
-					create l_error_msg.make (256)
-					l_error_msg.append (once "Criterion unit is different from basic metric scope: ")
-					l_error_msg.append (once "In basic metric %"")
-					l_error_msg.append (last_metric.name)
-					l_error_msg.append (once "%" whose unit is ")
-					l_error_msg.append (last_metric.unit.scope.name)
-					l_error_msg.append (once ", criterion %"")
-					l_error_msg.append (a_criterion.name)
-					l_error_msg.append (once "%" is of unit ")
-					l_error_msg.append (a_criterion.scope.name)
-					l_error_msg.append (".")
-					create l_to_do_msg.make (256)
-					l_to_do_msg.append (once "Make sure every (recursive) criterion in basic metric%Nis of the same unit with that basic metric.")
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_basic_metric_unit_not_correct (a_criterion.scope.name,	last_metric.unit.name),
+						metric_names.criterion_location (last_metric.name, a_criterion.name),
+						metric_names.unit_in_basic_metric_not_same_to_do
+					)
 				end
 				if not has_error and then not criterion_factory_table.item (a_criterion.scope).has_criterion_with_name (a_criterion.name) then
-					create l_error_msg.make (100)
-					l_error_msg.append (once "Criterion %"")
-					l_error_msg.append (a_criterion.name)
-					l_error_msg.append (once "%" of unit ")
-					l_error_msg.append (a_criterion.scope.name)
-					l_error_msg.append (once " doesn't exist.")
-					create l_to_do_msg.make_from_string (once "Make sure that the criterion of given unit exists.")
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_criterion_not_exist (a_criterion.name, a_criterion.scope.name),
+						metric_names.metric_location_section (last_metric.name, metric_type_name (metric_type_id (last_metric))),
+						metric_names.criterion_not_exist_to_do
+					)
 				end
 			end
 		end
@@ -290,8 +249,6 @@ feature -- Process
 			--		* every domain item is valid
 		local
 			l_domain: EB_METRIC_DOMAIN
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			if not has_error then
 				process_criterion (a_criterion)
@@ -299,17 +256,11 @@ feature -- Process
 			if not has_error then
 				if a_criterion.domain.is_empty then
 					check last_metric /= Void end
-					create l_error_msg.make (256)
-					l_error_msg.append (once "No domain item defined in criterion %"")
-					l_error_msg.append (a_criterion.name)
-					l_error_msg.append (once "%" in metric %"")
-					l_error_msg.append (last_metric.name)
-					l_error_msg.append (once "%".")
-
-					create l_to_do_msg.make (256)
-					l_to_do_msg.append (once "Make sure that at least one domain item%N")
-					l_to_do_msg.append (once "is listed in the criterion in trouble.")
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_domain_item_not_exist,
+						metric_names.criterion_location (last_metric.name, a_criterion.name),
+						metric_names.domain_item_not_exists_to_do
+					)
 				end
 				if not has_error then
 					l_domain := a_criterion.domain
@@ -340,9 +291,6 @@ feature -- Process
 			-- A text criterion is valid if and only if
 			--		* it's a registered criterion
 			--		* its text is not emtpy
-		local
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			if not has_error then
 				process_criterion (a_criterion)
@@ -350,15 +298,11 @@ feature -- Process
 			if not has_error then
 				if a_criterion.text.is_empty then
 					check last_metric /= Void end
-					create l_error_msg.make (100)
-					l_error_msg.append (once "Text cannot be empty in criterion %"")
-					l_error_msg.append (a_criterion.name)
-					l_error_msg.append (once "%" in metric %"")
-					l_error_msg.append (last_metric.name)
-					l_error_msg.append (once "%".")
-					create l_to_do_msg.make (100)
-					l_to_do_msg.append ("Make sure to specify a non-empty string for the criterion in trouble.")
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_text_in_text_criterion_empty,
+						metric_names.criterion_location (last_metric.name, a_criterion.name),
+						metric_names.text_in_text_criterion_empty_to_do
+					)
 				end
 			end
 		end
@@ -424,8 +368,6 @@ feature -- Process
 			--		* the group it represents exists in current system
 		local
 			l_conf_group: CONF_GROUP
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			if not has_error then
 				l_conf_group := group_of_id (a_item.id)
@@ -434,23 +376,11 @@ feature -- Process
 						last_metric /= Void
 						last_criterion /= Void
 					end
-					create l_error_msg.make (100)
-					l_error_msg.append (once "Group ")
-					if last_group_name /= Void then
-						l_error_msg.append (once "%"")
-						l_error_msg.append (last_group_name)
-						l_error_msg.append (once "%" ")
-					end
-					l_error_msg.append (once "(ID:")
-					l_error_msg.append (a_item.id)
-					l_error_msg.append (once ") is invalid in criterion %"")
-					l_error_msg.append (last_criterion.name)
-					l_error_msg.append (once "%" in metric %"")
-					l_error_msg.append (last_metric.name)
-					l_error_msg.append (once "%".")
-					create l_to_do_msg.make (256)
-					append_invalid_domain_item_info (l_to_do_msg)
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_invalid_group_domain_item (last_group_name, a_item.id),
+						metric_names.criterion_location (last_metric.name, last_criterion.name),
+						metric_names.invalid_domain_item_info
+					)
 				end
 			end
 		end
@@ -461,8 +391,6 @@ feature -- Process
 			--		* the folder it represents exists in current system
 		local
 			l_folder: EB_FOLDER
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			if not has_error then
 				l_folder := folder_of_id (a_item.id)
@@ -471,23 +399,11 @@ feature -- Process
 						last_metric /= Void
 						last_criterion /= Void
 					end
-					create l_error_msg.make (100)
-					l_error_msg.append (once "Folder ")
-					if last_group_name /= Void then
-						l_error_msg.append (once "%"")
-						l_error_msg.append (last_folder_name)
-						l_error_msg.append (once "%" ")
-					end
-					l_error_msg.append (once "(ID:")
-					l_error_msg.append (a_item.id)
-					l_error_msg.append (once ") is invalid in criterion %"")
-					l_error_msg.append (last_criterion.name)
-					l_error_msg.append (once "%" in metric %"")
-					l_error_msg.append (last_metric.name)
-					l_error_msg.append (once "%".")
-					create l_to_do_msg.make (256)
-					append_invalid_domain_item_info (l_to_do_msg)
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_invalid_folder_domain_item (last_folder_name, a_item.id),
+						metric_names.criterion_location (last_metric.name, last_criterion.name),
+						metric_names.invalid_domain_item_info
+					)
 				end
 			end
 		end
@@ -498,8 +414,6 @@ feature -- Process
 			--		* the class it represents exists in current system		
 		local
 			l_conf_class: CONF_CLASS
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			if not has_error then
 				l_conf_class := class_of_id (a_item.id)
@@ -508,23 +422,12 @@ feature -- Process
 						last_metric /= Void
 						last_criterion /= Void
 					end
-					create l_error_msg.make (100)
-					l_error_msg.append ("Class ")
-					if last_group_name /= Void then
-						l_error_msg.append (once "%"")
-						l_error_msg.append (last_class_name)
-						l_error_msg.append (once "%" ")
-					end
-					l_error_msg.append (once "(ID:")
-					l_error_msg.append (a_item.id)
-					l_error_msg.append (once ") is invalid in criterion %"")
-					l_error_msg.append (last_criterion.name)
-					l_error_msg.append (once "%" in metric %"")
-					l_error_msg.append (last_metric.name)
-					l_error_msg.append (once "%".")
-					create l_to_do_msg.make (256)
-					append_invalid_domain_item_info (l_to_do_msg)
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_invalid_class_domain_item (last_class_name, a_item.id),
+						metric_names.criterion_location (last_metric.name, last_criterion.name),
+						metric_names.invalid_domain_item_info
+					)
+
 				end
 			end
 		end
@@ -535,8 +438,6 @@ feature -- Process
 			--		* the feature it represents exists in current system
 		local
 			l_feature: E_FEATURE
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			if not has_error then
 				l_feature := feature_of_id (a_item.id)
@@ -545,23 +446,11 @@ feature -- Process
 						last_metric /= Void
 						last_criterion /= Void
 					end
-					create l_error_msg.make (100)
-					l_error_msg.append ("Feature ")
-					if last_group_name /= Void then
-						l_error_msg.append (once "%"")
-						l_error_msg.append (last_feature_name)
-						l_error_msg.append (once "%" ")
-					end
-					l_error_msg.append (once "(ID:")
-					l_error_msg.append (a_item.id)
-					l_error_msg.append (once ") is invalid in criterion %"")
-					l_error_msg.append (last_criterion.name)
-					l_error_msg.append (once "%" in metric %"")
-					l_error_msg.append (last_metric.name)
-					l_error_msg.append (once "%".")
-					create l_to_do_msg.make (256)
-					append_invalid_domain_item_info (l_to_do_msg)
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_invalid_feature_domain_item (last_feature_name, a_item.id),
+						metric_names.criterion_location (last_metric.name, last_criterion.name),
+						metric_names.invalid_domain_item_info
+					)
 				end
 			end
 		end
@@ -605,23 +494,17 @@ feature{NONE} -- Implementation
 			-- Detect recursive difinitoin of `current_metric'.
 		require
 			a_metric_attached: a_metric /= Void
-		local
-			l_error_msg: STRING
-			l_to_do_msg: STRING
 		do
 			check
 				current_metric_attached: current_metric /= Void
 			end
 			if a_metric.name.is_equal (current_metric.name) then
 				if is_current_metric_processed then
-					create l_error_msg.make (100)
-					l_error_msg.append (once "Recursive definition in metric %"")
-					l_error_msg.append (current_metric.name)
-					l_error_msg.append ("%".")
-					create l_to_do_msg.make (256)
-					l_to_do_msg.append (once "In linear metric, make sure that every variable metric doesn't involve %Nrecursive metric.%N")
-					l_to_do_msg.append (once "In ratio metric, make sure that numerator metric or denominator metric %Ndoesn't involve recursive metric.")
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+					create_last_error_with_to_do (
+						metric_names.err_recursive_metric_definition (current_metric.name),
+						metric_names.metric_location_section (current_metric.name, metric_type_name (metric_type_id (current_metric))),
+						metric_names.recursive_definition_to_do
+					)
 				else
 					is_current_metric_processed := True
 				end
@@ -632,25 +515,26 @@ feature{NONE} -- Implementation
 			-- Is `current_metric' processed?
 			-- Used for recursive definition detection.
 
-	create_last_error (a_msg: STRING) is
+	create_last_error (a_msg: STRING_GENERAL) is
 			-- Create `last_error' with message `a_msg' and set `has_error' with True.
 		require
 			a_msg_attached: a_msg /= Void
 			not_a_msg_is_empty: not a_msg.is_empty
 		do
 			has_error := True
-			create {EB_METRIC_ERROR_VADILITY} last_error.make (a_msg)
+			create last_error.make (a_msg)
 		ensure
 			last_error_created: last_error /= Void
 		end
 
-	create_last_error_with_to_do (a_msg: STRING; a_to_do: STRING) is
-			-- Create `last_error' with message `a_msg' and set `to_do' with `a_to_do'.
+	create_last_error_with_to_do (a_msg: STRING_GENERAL; a_location: STRING_GENERAL; a_to_do: STRING_GENERAL) is
+			-- Create `last_error' with message `a_msg', `a_location', `a_to_do'.
 		require
 			a_msg_attached: a_msg /= Void
 			not_a_msg_is_empty: not a_msg.is_empty
 		do
 			create_last_error (a_msg)
+			last_error.set_location (a_location)
 			last_error.set_to_do (a_to_do)
 		end
 
@@ -660,75 +544,23 @@ feature{NONE} -- Implementation
 	last_criterion: EB_METRIC_CRITERION
 			-- Last analyzed criterion
 
-	append_metric_name_info (a_str: STRING) is
-			-- Append metric name information information to `a_str'.
-		require
-			a_str_attached: a_str /= Void
-		do
-			a_str.append (once "A valid metric name is a non-empty string %Nwhich doesn't start with%N")
-			a_str.append (once "space, enter or tab, and doesn't end with space, enter or tab.%N")
-		end
 
-	append_linear_metric_info (a_str: STRING) is
-			-- Append linear metric information information to `a_str'.
-		require
-			a_str_attached: a_str /= Void
-		do
-			a_str.append (once "Linear metric is of the form:%N%N")
-			a_str.append (once "%Ta * metric1 + b * metric2 + c * metric3 + ...%N%N")
-			a_str.append (once "a, b, c are coefficients and %N")
-			a_str.append (once "metric1, metric2, metric3 are variable metrics.%N%N")
-		end
-
-	append_ratio_metric_info (a_str: STRING) is
-			-- Append ratio metric information information to `a_str'.
-		require
-			a_str_attached: a_str /= Void
-		do
-			a_str.append (once "Ratio metric is of the form:%N%N")
-			a_str.append (once "%TNumerator metric / Denominator metric%N%N")
-			a_str.append (once "Numerator metric and denominator metric can be of any valid unit.%N%N")
-		end
-
-	append_invalid_domain_item_info (a_str: STRING) is
-			-- Append invalid domain help information to `a_str'.
-		require
-			a_str_attached: a_str /= Void
-		do
-			a_str.append (once "Make sure that every item specified in a domain is valid.%N")
-			a_str.append (once "Following are some reasons which can cause a domain item invalid:%N")
-			a_str.append (once "%TDomain item ID is damaged or incorrect.%N")
-			a_str.append (once "%TDomain item doesn't exist (Maybe due to removal/rename of a folder, group, class or feature).%N")
-		end
 
 	check_metric_name (a_name: STRING) is
 			-- Check if `a_name' is a valid metric name.
-		local
-			l_error_msg: STRING
-			l_to_do_msg: STRING
-			l_first_char, l_last_char: CHARACTER
 		do
 			if a_name = Void or else a_name.is_empty then
-				create l_error_msg.make_from_string (once "Metric name cannot be empty.")
-				create l_to_do_msg.make (256)
-				l_to_do_msg.append (once "Make sure metric name is not empty and contains valid charactors.")
-				create_last_error_with_to_do (l_error_msg, l_to_do_msg)
+				create_last_error_with_to_do (
+					metric_names.err_metric_name_empty,
+					Void,
+					metric_names.metric_name_empty_to_do
+				)
 			else
-				l_first_char := a_name.item (1)
-				if not l_first_char.is_graph then
-					create l_error_msg.make_from_string (once "Metric name cannot start with space, enter, tab.")
-					create l_to_do_msg.make (100)
-					append_metric_name_info (l_to_do_msg)
-					create_last_error_with_to_do (l_error_msg, l_to_do_msg)
-				end
-				if not has_error and then a_name.count > 1 then
-					l_last_char := a_name.item (a_name.count)
-					if not l_last_char.is_graph then
-						create l_error_msg.make_from_string (once "Metric name cannot end with space, enter, tab.")
-						create l_to_do_msg.make (100)
-						append_metric_name_info (l_to_do_msg)
-						create_last_error_with_to_do (l_error_msg, l_to_do_msg)
-					end
+				if not a_name.item (1).is_graph or else (a_name.count > 1 and then (not a_name.item (a_name.count).is_graph)) then
+					create_last_error_with_to_do (
+						metric_names.err_metric_name_invalid (a_name),
+						metric_names.metric_location_section (current_metric.name, metric_type_name (metric_type_id (current_metric))),
+						metric_names.metric_name_info)
 				end
 			end
 		end

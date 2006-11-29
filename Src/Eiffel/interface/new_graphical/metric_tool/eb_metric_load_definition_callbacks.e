@@ -127,7 +127,7 @@ feature{NONE} -- Callbacks
 				when t_basic_metric then
 					process_metric
 				when t_linear_metric then
-					process_metric
+					process_linear_metric_end
 				when t_ratio_metric then
 					process_metric
 				when t_scope_ratio_metric then
@@ -171,16 +171,11 @@ feature{NONE} -- Process
 		local
 			l_metrics: like metrics
 			l_cur_metric: like current_metric
-			l_error_str: STRING
 		do
 			l_metrics := metrics
 			l_cur_metric := current_metric
 			if l_metrics.has (l_cur_metric.name) then
-				create l_error_str.make (100)
-				l_error_str.append ("Duplicated metric name ")
-				l_error_str.append (quoted_name (l_cur_metric.name, ""))
-				l_error_str.append (".")
-				set_parse_error_message (l_error_str)
+				set_parse_error_message (metric_names.err_duplicated_metric_name (l_cur_metric.name), Void)
 			else
 				l_metrics.put (l_cur_metric, l_cur_metric.name)
 			end
@@ -191,10 +186,11 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; unit: STRING; uuid: UUID]
 		do
-			l_id := current_metric_identifier
+			l_id := current_metric_identifier (basic_metric_type)
 			if not has_error then
 				current_basic_metric := factory.new_basic_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid)
 				current_metric := current_basic_metric
+				create {LINKED_LIST [EB_METRIC_CRITERION]} current_criterion.make
 			end
 		end
 
@@ -203,7 +199,7 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; unit: STRING; uuid: UUID]
 		do
-			l_id := current_metric_identifier
+			l_id := current_metric_identifier (linear_metric_type)
 			if not has_error then
 				current_linear_metric := factory.new_linear_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid)
 				current_metric := current_linear_metric
@@ -220,38 +216,60 @@ feature{NONE} -- Process
 			l_den_uuid_str: STRING
 			l_num_uuid: UUID
 			l_den_uuid: UUID
-			l_error_str: STRING
 		do
-			l_id := current_metric_identifier
+			l_id := current_metric_identifier (ratio_metric_type)
 			if not has_error then
 				l_num := current_attributes.item (at_numerator)
 				l_den := current_attributes.item (at_denominator)
 				l_num_uuid_str := current_attributes.item (at_numerator_uuid)
 				l_den_uuid_str := current_attributes.item (at_denominator_uuid)
 				if l_num = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Numerator metric of ")
-					l_error_str.append (quoted_name (l_id.name, once "ratio metrc"))
-					l_error_str.append (" is missing.")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_numerator_metric_missing,
+						metric_names.ratio_metric_location_section (l_id.name)
+					)
 				end
 				if not has_error and then l_den = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Denominator metric of ")
-					l_error_str.append (quoted_name (l_id.name, once "ratio metrc"))
-					l_error_str.append (" is missing.")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_denominator_metric_missing,
+						metric_names.ratio_metric_location_section (l_id.name)
+					)
 				end
 				if not has_error then
-					l_num_uuid := check_uuid_vadility (l_num_uuid_str, " in numerator metric " + quoted_name (l_id.name, " in ratio metric") + ".")
+					check_uuid_vadility (
+						l_num_uuid_str,
+						metric_names.numerator_location (l_id.name, l_num)
+					)
+					if not has_error then
+						l_num_uuid := last_valid_uuid
+					end
 				end
 				if not has_error then
-					l_den_uuid := check_uuid_vadility (l_den_uuid_str, " in denominator metric " + quoted_name (l_id.name, " in ratio metric")  + ".")
+					check_uuid_vadility (
+						l_den_uuid_str,
+						metric_names.denominator_location (l_id.name, l_den)
+					)
+					if not has_error then
+						l_den_uuid := last_valid_uuid
+					end
 				end
 				if not has_error then
 					current_ratio_metric := factory.new_ratio_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid, l_num, l_num_uuid, l_den, l_den_uuid)
 					current_metric := current_ratio_metric
 				end
+			end
+		end
+
+	process_linear_metric_end is
+			-- Process when linear metric node ends
+		do
+			if current_linear_metric.variable_metric.is_empty then
+				set_parse_error_message (
+					metric_names.err_variable_metric_missing,
+					metric_names.linear_metric_location_section (current_linear_metric.name)
+				)
+			else
+				process_metric
 			end
 		end
 
@@ -261,36 +279,28 @@ feature{NONE} -- Process
 			l_coefficient: STRING
 			l_metric: STRING
 			l_uuid_str: STRING
-			l_uuid: UUID
-			l_error_str: STRING
 		do
 			check current_linear_metric /= Void end
 			l_coefficient := current_attributes.item (at_coefficient)
 			l_metric := current_attributes.item (at_name)
 			l_uuid_str := current_attributes.item (at_uuid)
 			if l_metric = Void then
-				create l_error_str.make (100)
-				l_error_str.append ("Variable metric name is missing in ")
-				l_error_str.append (quoted_name (current_linear_metric.name, once "linear metric"))
-				l_error_str.append (".")
-				set_parse_error_message (l_error_str)
+				set_parse_error_message (
+					metric_names.err_variable_metric_name_missing,
+					metric_names.linear_metric_location_section (current_linear_metric.name)
+				)
 			end
 			if not has_error then
 				if l_coefficient = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Coefficient of ")
-					l_error_str.append (quoted_name (l_metric, "variable metrc"))
-					l_error_str.append (quoted_name (current_linear_metric.name, "in linear metric"))
-					l_error_str.append (" is missing.")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_coefficient_missing,
+						metric_names.variable_metric_location (current_linear_metric.name, l_metric)
+					)
 				elseif not l_coefficient.is_real then
-					create l_error_str.make (100)
-					l_error_str.append ("Coefficient is invalid in ")
-					l_error_str.append (quoted_name (l_metric, "variable metric"))
-					l_error_str.append (" in ")
-					l_error_str.append (quoted_name (current_linear_metric.name, "linear metric"))
-					l_error_str.append (". A real number is expected.")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_coefficient_invalid (l_coefficient),
+						metric_names.variable_metric_location (current_linear_metric.name, l_metric)
+					)
 				end
 			end
 			if not has_error then
@@ -301,15 +311,12 @@ feature{NONE} -- Process
 				current_linear_metric.variable_metric.extend (l_metric)
 			end
 			if not has_error then
-				create l_error_str.make (100)
-				l_error_str.append (" in ")
-				l_error_str.append (quoted_name (l_metric, "variable metric"))
-				l_error_str.append (" in ")
-				l_error_str.append (quoted_name (current_linear_metric.name, "linear metric"))
-				l_error_str.append (".")
-				l_uuid := check_uuid_vadility (l_uuid_str, l_error_str)
+				check_uuid_vadility (
+					l_uuid_str,
+					metric_names.variable_metric_location (current_linear_metric.name, l_metric)
+				)
 				if not has_error then
-					current_linear_metric.variable_metric_uuid.extend (l_uuid)
+					current_linear_metric.variable_metric_uuid.extend (last_valid_uuid)
 				end
 			end
 		end
@@ -317,7 +324,12 @@ feature{NONE} -- Process
 	process_criterion is
 			-- Process "criterion" definition list node.		
 		do
-			create {LINKED_LIST [EB_METRIC_CRITERION]} current_criterion.make
+			if not current_criterion.is_empty then
+				set_parse_error_message (
+					metric_names.err_too_many_criterion_section,
+					metric_names.basic_metric_location_section (current_metric.name)
+				)
+			end
 		end
 
 	process_normal_criterion is
@@ -345,6 +357,7 @@ feature{NONE} -- Process
 				last_criterion := current_domain_criterion
 				setup_criterion (current_domain_criterion, l_id.negation)
 				register_criterion (current_domain_criterion)
+				create current_domain.make
 			end
 		end
 
@@ -356,7 +369,6 @@ feature{NONE} -- Process
 			l_regular_expression: STRING
 			l_case_sensitive_value: BOOLEAN
 			l_regular_expression_value: BOOLEAN
-			l_error_str: STRING
 		do
 			l_id := current_criterion_identifier
 			if not has_error then
@@ -364,51 +376,35 @@ feature{NONE} -- Process
 				l_case_sensitive := internal_name (current_attributes.item (at_case_sensitive))
 				l_regular_expression := internal_name (current_attributes.item (at_regular_expression))
 				if l_case_sensitive = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Attribute %"case_sensitive%" is missing in ")
-					l_error_str.append (quoted_name (l_id.name, "criterion"))
-					l_error_str.append (" in ")
-					l_error_str.append (quoted_name (current_basic_metric.name, "basic metric"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_case_sensitive_attr_missing,
+						metric_names.criterion_location (current_basic_metric.name, l_id.name)
+					)
 				end
 				if not has_error and then l_regular_expression = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Attribute %"regular_expression%" is missing in ")
-					l_error_str.append (quoted_name (l_id.name, "criterion"))
-					l_error_str.append (" in ")
-					l_error_str.append (quoted_name (current_basic_metric.name, "basic metric"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_regular_expression_attr_missing,
+						metric_names.criterion_location (current_basic_metric.name, l_id.name)
+					)
 				end
 				if not has_error then
 					if is_valid_boolean_attribute (l_case_sensitive) then
 						l_case_sensitive_value := l_case_sensitive.to_boolean
 					else
-						create l_error_str.make (100)
-						l_error_str.append ("Value of %"case_sensitive%" attribute ")
-						l_error_str.append (quoted_name (l_case_sensitive, Void))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (l_id.name, "criterion"))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (current_basic_metric.name, "basic metric"))
-						l_error_str.append (" is invalid. Boolean value is expected.")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_case_sensitive_attr_invalid (l_case_sensitive),
+							metric_names.criterion_location (current_basic_metric.name, l_id.name)
+						)
 					end
 				end
 				if not has_error then
 					if is_valid_boolean_attribute (l_regular_expression) then
 						l_regular_expression_value := l_regular_expression.to_boolean
 					else
-						create l_error_str.make (100)
-						l_error_str.append ("Value of %"regular_expression%" attribute ")
-						l_error_str.append (quoted_name (l_regular_expression, Void))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (l_id.name, "criterion"))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (current_basic_metric.name, "basic metric"))
-						l_error_str.append (" is invalid. Boolean value is expected.")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_regular_expression_attr_invalid (l_regular_expression),
+							metric_names.criterion_location (current_basic_metric.name, l_id.name)
+						)
 					end
 				end
 				if not has_error then
@@ -450,7 +446,6 @@ feature{NONE} -- Process
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
 			l_only_current_vertion: STRING
 			l_only_current_vertion_value: BOOLEAN
-			l_error_str: STRING
 		do
 			l_id := current_criterion_identifier
 			if not has_error then
@@ -459,15 +454,10 @@ feature{NONE} -- Process
 					if is_valid_boolean_attribute (l_only_current_vertion) then
 						l_only_current_vertion_value := l_only_current_vertion.to_boolean
 					else
-						create l_error_str.make (100)
-						l_error_str.append ("Value of %"only_current_version%" attribute ")
-						l_error_str.append (quoted_name (l_only_current_vertion, Void))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (l_id.name, "criterion"))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (current_basic_metric.name, "basic metric"))
-						l_error_str.append (" is invalid. Boolean value is expected.")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_only_current_version_attr_invalid (l_only_current_vertion),
+							metric_names.criterion_location (current_basic_metric.name, l_id.name)
+						)
 					end
 				end
 				current_caller_criterion := factory.new_caller_criterion (l_id.name, l_id.scope)
@@ -479,6 +469,7 @@ feature{NONE} -- Process
 					current_caller_criterion.disable_only_current_version
 				end
 				register_criterion (current_caller_criterion)
+				create current_domain.make
 			end
 		end
 
@@ -517,7 +508,7 @@ feature{NONE} -- Process
 			-- Process "text" definition list node.
 		do
 			if current_tag.item /= t_text then
-				set_parse_error_message ("Invalid tag.")
+				set_parse_error_message (metric_names.err_invalid_tag, Void)
 			else
 				current_text_criterion.set_text (current_content)
 			end
@@ -527,7 +518,7 @@ feature{NONE} -- Process
 			-- Process "path" definition list node.		
 		do
 			if current_tag.item /= t_path then
-				set_parse_error_message ("Invalid tag.")
+				set_parse_error_message (metric_names.err_invalid_tag, Void)
 			else
 				current_path_criterion.set_path (current_content)
 			end
@@ -536,7 +527,13 @@ feature{NONE} -- Process
 	process_domain is
 			-- Process "domain" definition list node.		
 		do
-			create current_domain.make
+
+			if not current_domain.is_empty then
+				set_parse_error_message (
+					metric_names.err_too_many_domain,
+					metric_names.linear_metric_location_section (current_linear_metric.name)
+				)
+			end
 		end
 
 	process_domain_item is
@@ -544,7 +541,6 @@ feature{NONE} -- Process
 		local
 			l_id: STRING
 			l_type: STRING
-			l_error_str: STRING
 			l_library_target_uuid: STRING
 			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
@@ -556,45 +552,31 @@ feature{NONE} -- Process
 					current_metric /= Void
 					last_criterion /= Void
 				end
-				create l_error_str.make (100)
-				l_error_str.append ("Domain item id is missing in ")
-				l_error_str.append (quoted_name (last_criterion.name, "criterion"))
-				l_error_str.append (" in ")
-				l_error_str.append (quoted_name (current_metric.name, "basic metric"))
-				l_error_str.append (".")
-				set_parse_error_message (l_error_str)
+				set_parse_error_message (
+					metric_names.err_domain_item_id_is_missing,
+					metric_names.criterion_location (current_metric.name, last_criterion.name)
+				)
 			end
 			if not has_error then
 				if l_type = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Domain item type is missing in ")
-					l_error_str.append (quoted_name (last_criterion.name, "criterion"))
-					l_error_str.append (" in ")
-					l_error_str.append (quoted_name (current_metric.name, "basic metric"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_domain_item_type_is_missing,
+						metric_names.criterion_location (current_metric.name, last_criterion.name)
+					)
 				else
 					l_type := internal_name (l_type)
 					if not is_domain_item_type_valid (l_type) then
-						create l_error_str.make (100)
-						l_error_str.append (quoted_name (l_type, "Domain item type"))
-						l_error_str.append (" is invalid in ")
-						l_error_str.append (quoted_name (last_criterion.name, "criterion"))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (current_metric.name, "basic metric"))
-						l_error_str.append (".")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_domain_item_type_invalid (l_type),
+							metric_names.criterion_location (current_metric.name, last_criterion.name)
+						)
 					else
 						if l_library_target_uuid /= Void then
 							if not shared_uuid.is_valid_uuid (l_library_target_uuid) then
-								create l_error_str.make (100)
-								l_error_str.append (quoted_name (l_library_target_uuid, "Library target UUID"))
-								l_error_str.append (" is invalid in ")
-								l_error_str.append (quoted_name (last_criterion.name, "criterion"))
-								l_error_str.append (" in ")
-								l_error_str.append (quoted_name (current_metric.name, "basic metric"))
-								l_error_str.append (".")
-								set_parse_error_message (l_error_str)
+								set_parse_error_message (
+									metric_names.err_library_target_uuid_invalid (l_library_target_uuid),
+									metric_names.criterion_location (current_metric.name, last_criterion.name)
+								)
 							end
 						end
 						if not has_error then
@@ -615,7 +597,7 @@ feature{NONE} -- Process
 			if current_metric /= Void then
 				current_metric.set_description (current_content.twin)
 			else
-				set_parse_error_message ("Invalid description tag.")
+				set_parse_error_message (metric_names.err_invalid_description_tag, Void)
 			end
 		end
 
@@ -953,49 +935,46 @@ feature{NONE} -- Implementation
 
 feature{NONE} -- Implementation
 
-	current_metric_identifier: TUPLE [name: STRING; unit: STRING; uuid: UUID] is
+	current_metric_identifier (a_metric_type_id: INTEGER) : TUPLE [name: STRING; unit: STRING; uuid: UUID] is
 			-- Metric identifier of `current_metric'
+		require
+			a_metric_type_id_valid: is_metric_type_valid (a_metric_type_id)
 		local
 			l_name: STRING
 			l_unit: STRING
 			l_uuid_str: STRING
-			l_uuid: UUID
-			l_error_str: STRING
 		do
 			l_name := current_attributes.item (at_name)
 			l_unit := internal_name (current_attributes.item (at_unit))
 			l_uuid_str := current_attributes.item (at_uuid)
 			if not has_error then
 				if l_name = Void then
-					set_parse_error_message ("Metric name is missing.")
+					set_parse_error_message (metric_names.err_metric_name_missing_in_metric_definition, Void)
+				else
+					check_metric_name (l_name)
 				end
 			end
 			if not has_error then
 				if l_unit = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Unit is missing in ")
-					l_error_str.append (quoted_name (l_name, "metric"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_unit_name_missing,
+						metric_names.metric_location_section (l_name, metric_type_name (a_metric_type_id))
+					)
 				elseif not is_unit_valid (l_unit) then
-					create l_error_str.make (100)
-					l_error_str.append ("Value of ")
-					l_error_str.append (quoted_name (l_unit, "unit"))
-					l_error_str.append (" is invalid in ")
-					l_error_str.append (quoted_name (l_name, "metric"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_unit_name_invalid (l_unit),
+						metric_names.metric_location_section (l_name, metric_type_name (a_metric_type_id))
+					)
 				end
 			end
 			if not has_error then
-				create l_error_str.make (100)
-				l_error_str.append (" in ")
-				l_error_str.append (quoted_name (l_name, "metric"))
-				l_error_str.append (".")
-				l_uuid := check_uuid_vadility (l_uuid_str, l_error_str)
-			end
-			if not has_error then
-				Result := [l_name, l_unit, l_uuid]
+				check_uuid_vadility (
+					l_uuid_str,
+					metric_names.metric_location_section (l_name, metric_type_name (a_metric_type_id))
+				)
+				if not has_error then
+					Result := [l_name, l_unit, last_valid_uuid]
+				end
 			end
 		end
 
@@ -1009,54 +988,48 @@ feature{NONE} -- Implementation
 			l_negation: STRING
 			l_ql_scope: QL_SCOPE
 			l_negation_used: BOOLEAN
-			l_error_str: STRING
 		do
 			check current_metric /= Void end
 			l_name := internal_name (current_attributes.item (at_name))
 			l_scope := internal_name (current_attributes.item (at_unit))
 			l_negation := internal_name (current_attributes.item (at_negation))
 			if l_name = Void then
-				create l_error_str.make (100)
-				l_error_str.append ("Criterion name is missing in ")
-				l_error_str.append (quoted_name (current_metric.name, "metric"))
-				l_error_str.append (".")
-				set_parse_error_message (l_error_str)
+				set_parse_error_message (
+					metric_names.err_criterion_name_missing,
+					metric_names.basic_metric_location_section (current_metric.name)
+				)
 			end
 			if not has_error then
 				if l_scope = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Unit is missing in ")
-					l_error_str.append (quoted_name (l_name, "criterion"))
-					l_error_str.append (" in ")
-					l_error_str.append (quoted_name (current_metric.name, "metric"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_unit_name_missing,
+						metric_names.criterion_location (current_metric.name, l_name)
+					)
 				else
 					l_ql_scope := scope_table.item (l_scope)
 					if l_ql_scope = Void then
-						create l_error_str.make (100)
-						l_error_str.append ("Value of ")
-						l_error_str.append (quoted_name (l_scope, "unit"))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (l_name, "criterion"))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (current_metric.name, "metric"))
-						l_error_str.append (" is invalid.")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_unit_name_invalid (l_scope),
+							metric_names.criterion_location (current_metric.name, l_name)
+						)
+					end
+				end
+				if not has_error then
+					if current_metric.unit.scope /= l_ql_scope then
+						set_parse_error_message (
+							metric_names.err_basic_metric_unit_not_correct (l_ql_scope.name, current_metric.unit.name),
+							metric_names.criterion_location (current_metric.name, l_name)
+						)
 					end
 				end
 			end
 			if not has_error then
 				if l_negation /= Void then
 					if not l_negation.is_boolean then
-						create l_error_str.make (100)
-						l_error_str.append ("Value of ")
-						l_error_str.append (quoted_name (l_negation, "negation attribute"))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (l_name, "criterion"))
-						l_error_str.append (quoted_name (current_metric.name, "metric"))
-						l_error_str.append (" is invalid. Boolean value is expected.")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_negation_attr_invalid (l_negation),
+							metric_names.criterion_location (current_metric.name, l_name)
+						)
 					else
 						l_negation_used := l_negation.to_boolean
 					end
@@ -1088,7 +1061,10 @@ feature{NONE} -- Implementation
 				l_parent.operands.extend (a_criterion)
 			else
 				if not current_criterion.is_empty then
-					set_parse_error_message ("More than one crierion is specified in %"criterion%" section.")
+					set_parse_error_message (
+						metric_names.err_too_many_criteria,
+						metric_names.basic_metric_location_section (current_metric.name)
+					)
 				else
 					current_criterion.extend (a_criterion)
 				end
@@ -1096,6 +1072,18 @@ feature{NONE} -- Implementation
 			l_nary_cri ?= a_criterion
 			if l_nary_cri /= Void then
 				current_criterion_stack.extend (l_nary_cri)
+			end
+		end
+
+	check_metric_name (a_name: STRING) is
+			-- Check if `a_name' is a valid metric name.
+		do
+			if a_name = Void or else a_name.is_empty then
+				set_parse_error_message (metric_names.err_metric_name_empty, Void)
+			else
+				if not a_name.item (1).is_graph or else (a_name.count > 1 and then (not a_name.item (a_name.count).is_graph)) then
+					set_parse_error_message (metric_names.err_metric_name_invalid (a_name), Void)
+				end
 			end
 		end
 

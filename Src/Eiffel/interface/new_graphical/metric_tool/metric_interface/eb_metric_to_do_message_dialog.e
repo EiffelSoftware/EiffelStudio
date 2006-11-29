@@ -61,28 +61,28 @@ feature {NONE} -- Initialization
 			close_btn.set_text (metric_names.t_close)
 			close_btn.select_actions.extend (agent hide)
 			create editor
-			editor.set_cursors (create {EB_EDITOR_CURSORS})
-			editor.set_reference_window (Current)
-			editor.widget.set_minimum_size (Layout_constants.dialog_unit_to_pixels (200), Layout_constants.dialog_unit_to_pixels (100))
-			editor_area.extend (editor.widget)
+--			editor.set_cursors (create {EB_EDITOR_CURSORS})
+--			editor.set_reference_window (Current)
+--			editor.widget.set_minimum_size (Layout_constants.dialog_unit_to_pixels (200), Layout_constants.dialog_unit_to_pixels (100))
+			editor_area.extend (editor)
 			set_size (Layout_constants.dialog_unit_to_pixels (700), Layout_constants.dialog_unit_to_pixels (300))
 			set_default_cancel_button (close_btn)
 		end
 
 feature -- Access
 
-	editor: SELECTABLE_TEXT_PANEL
+	editor: EV_TEXT
 			-- Editor to display to-do message
 
 feature -- Basic operations
 
-	load_text (a_text: STRING) is
+	load_text (a_text: STRING_GENERAL) is
 			-- Load `a_text' in `editor'.			
 		do
 			if a_text = Void then
-				editor.load_text ("")
+				editor.set_text ("")
 			else
-				editor.load_text (a_text)
+				editor.set_text (a_text)
 			end
 		end
 

@@ -1,8 +1,11 @@
 indexing
-	description: "Windows error messages in human-readable form."
+	description: "[
+		Windows error messages in human-readable form.
+		
+		Note: Automatically generated from WinError.h.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note: "Automatically generated from WinError.h"
 
 class
 	WEL_WINDOWS_ERROR_MESSAGES

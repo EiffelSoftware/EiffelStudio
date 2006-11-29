@@ -1,10 +1,14 @@
 indexing
-	description	: "Enhancement of the toolbar. This toolbar appears flat %
-				  %and use imagelist to store bitmaps - when available   "
+	description	: "[
+		Enhancement of the toolbar. This toolbar appears flat
+		and use imagelist to store bitmaps - when available.
+		
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) 
+		needs to be loaded to use this control.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	note		: "The common controls dll (WEL_COMMON_CONTROLS_DLL)     %
-				  %needs to be loaded to use this control.               "
+
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -17,7 +21,7 @@ inherit
 			make,
 			default_style,
 			set_bitmap_size,
-			add_bitmaps	
+			add_bitmaps
 		end
 
 	WEL_ILC_CONSTANTS
@@ -48,7 +52,7 @@ feature -- Access
 
 	bitmaps_width: INTEGER
 			-- 16 by default
-	
+
 	bitmaps_height: INTEGER
 			-- 15 by default
 
@@ -116,22 +120,22 @@ feature -- Status report
 		end
 
 	find_button (a_x, a_y: INTEGER): INTEGER is
-			-- Determines where a point lies in a toolbar control. 
+			-- Determines where a point lies in a toolbar control.
 			--
 			-- Returns an integer value. If the return value is zero or a positive value,
-			-- it is the zero-based index of the nonseparator item in which the point lies. 
+			-- it is the zero-based index of the nonseparator item in which the point lies.
 			-- If the return value is negative, the point does not lie within a button.
-			-- The absolute value of the return value is the index of a separator item 
-			-- or the nearest nonseparator item. 
+			-- The absolute value of the return value is the index of a separator item
+			-- or the nearest nonseparator item.
 		local
 			coordinates: WEL_POINT
 		do
 			create coordinates.make(a_x, a_y)
 			Result := {WEL_API}.send_message_result_integer (item, Tb_hittest, to_wparam (0), coordinates.item)
 		end
-	
+
 	get_max_width: INTEGER is
-			-- Retrieves the total width of all of the visible buttons and separators in the toolbar. 
+			-- Retrieves the total width of all of the visible buttons and separators in the toolbar.
 		require
 			function_supported: comctl32_version >= version_471
 		do
@@ -139,7 +143,7 @@ feature -- Status report
 		end
 
 	get_max_height: INTEGER is
-			-- Retrieves the common height of all of the visible buttons and separators in the toolbar. 
+			-- Retrieves the common height of all of the visible buttons and separators in the toolbar.
 		require
 			function_supported: comctl32_version >= version_471
 		do
@@ -236,7 +240,7 @@ feature -- Element change
 
 					-- Insert the bitmap into the image lists.
 				disabled_image_list.add_icon(an_icon)
-					
+
 					-- Update the position
 				last_disabled_bitmap_index := disabled_image_list.last_position
 			else
@@ -259,7 +263,7 @@ feature -- Element change
 
 					-- Insert the bitmap into the image lists.
 				hot_image_list.add_icon(an_icon)
-					
+
 					-- Update the position
 				last_hot_bitmap_index := hot_image_list.last_position
 			else
@@ -308,7 +312,7 @@ feature -- Element change
 
 					-- Insert the bitmap into the image lists.
 				disabled_image_list.add_bitmap(a_bitmap)
-					
+
 					-- Update the position
 				last_disabled_bitmap_index := disabled_image_list.last_position
 			else
@@ -331,7 +335,7 @@ feature -- Element change
 
 					-- Insert the bitmap into the image lists.
 				hot_image_list.add_bitmap(a_bitmap)
-					
+
 					-- Update the position
 				last_hot_bitmap_index := hot_image_list.last_position
 			else
@@ -535,7 +539,7 @@ feature {NONE} -- Implementation
 			-- Default style used to create the control
 		once
 			Result := Ws_visible + Ws_child + Tbstyle_tooltips
-	
+
 				-- Add the flat style if available.
 			if comctl32_version >= version_470 then
 				Result := Result + Tbstyle_flat

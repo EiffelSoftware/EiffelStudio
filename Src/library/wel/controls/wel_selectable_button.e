@@ -1,11 +1,15 @@
 indexing
-	description: "Control that looks and acts like a button. But %
-		% the button looks raised when it isn't pushed or checked,%
-		% and sunken when it is pushed or checked."
+	description: "[
+		Control that looks and acts like a button. But
+		the button looks raised when it isn't pushed or checked,
+		and sunken when it is pushed or checked.
+		
+		Note: "To create this kind of button  a ressource editor,
+		create a checkbox and then choose the pushlike option
+		for this checkbox.
+	]"
 	legal: "See notice at end of class."
-	note: "To create this kind of button  a ressource editor,   %
-		% create a checkbox and then choose the pushlike option %
-		% for this checkbox"
+
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,7 +32,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		once
-			Result := Ws_visible + Ws_child + 
+			Result := Ws_visible + Ws_child +
 				Ws_group + Ws_tabstop + Bs_autocheckbox + Bs_pushlike
  		end
 

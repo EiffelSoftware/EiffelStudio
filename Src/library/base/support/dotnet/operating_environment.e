@@ -25,7 +25,7 @@ feature
 	Current_directory_name_representation: STRING is "."
 			-- Representation of the current directory.
 
-	home_directory_supported: BOOLEAN is False
+	home_directory_supported: BOOLEAN is True
 			-- Is the notion of home directory supported on this platform?
 
 	root_directory_supported: BOOLEAN is True
@@ -33,7 +33,7 @@ feature
 
 	case_sensitive_path_names: BOOLEAN is False;
 			-- Are path names case sensitive?
-			
+
 	--| FIXME IEK There seems to be a parsing bug that doesn't allow the file to be saved without
 	--| the semi-colon on case_sensitive_path_names.
 

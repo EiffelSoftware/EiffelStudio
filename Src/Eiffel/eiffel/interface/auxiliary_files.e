@@ -791,7 +791,7 @@ feature -- Plug and Makefile file
 					-- we simply create a temporary one of type ANY, used to
 					-- create an instance of our generic type.
 				buffer.put_string ("EIF_REFERENCE l_root_obj, Current = RTLN(")
-				buffer.put_integer (system.any_class.compiled_class.types.first.type_id)
+				buffer.put_type_id (system.any_class.compiled_class.types.first.type_id)
 				buffer.put_string (");")
 				buffer.put_new_line
 					-- Go ahead an create our generic type.
@@ -808,7 +808,7 @@ feature -- Plug and Makefile file
 				buffer.exdent
 			else
 				buffer.put_string ("%T%Tegc_rcdt = ")
-				buffer.put_integer (l_creation_type.type_id - 1)
+				buffer.put_type_id (l_creation_type.type_id)
 				buffer.put_character (';')
 			end
 			buffer.put_new_line

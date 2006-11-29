@@ -47,7 +47,7 @@ feature -- Status Setting
 feature -- Access
 
 	selected: BOOLEAN assign set_selected is
-			-- If current check box selected?
+			-- Is current check box selected?
 		do
 			Result := internal_selected
 		end

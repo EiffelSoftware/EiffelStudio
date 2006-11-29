@@ -198,7 +198,7 @@ feature -- Basic operations
 				if feedback_dialog.is_show_requested then
 					feedback_dialog.hide
 				end
-				create l_dlg.make_with_text (metric_manager.last_error.out)
+				create l_dlg.make_with_text (metric_manager.last_error.message_with_location)
 				l_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
 				l_dlg.show_relative_to_window (development_window.window)
 				metric_manager.clear_last_error

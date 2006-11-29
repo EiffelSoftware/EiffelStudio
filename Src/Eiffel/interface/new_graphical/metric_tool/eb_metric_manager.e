@@ -425,8 +425,6 @@ feature -- Metric management
 		local
 			l_file: RAW_FILE
 			l_error: like last_error
-			l_predefined_error_str: STRING_GENERAL
-			l_userdefined_error_str: STRING_GENERAL
 			l_final_error: STRING_GENERAL
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then

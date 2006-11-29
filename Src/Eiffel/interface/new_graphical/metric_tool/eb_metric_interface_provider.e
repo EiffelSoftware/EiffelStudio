@@ -22,8 +22,6 @@ inherit
 
 	SHARED_TEXT_ITEMS
 
-	EB_METRIC_SERVICE
-
 	EB_SHARED_ID_SOLUTION
 
 feature -- Metric menu
@@ -94,13 +92,13 @@ feature -- Metric menu
 
 feature -- Names
 
-	metric_names: EB_METRIC_NAMES is
-			-- Names used in metric interface
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
+--	metric_names: EB_METRIC_NAMES is
+--			-- Names used in metric interface
+--		once
+--			create Result
+--		ensure
+--			result_attached: Result /= Void
+--		end
 
 	unit_list (a_all: BOOLEAN): LIST [TUPLE [unit: QL_METRIC_UNIT; pixmap: EV_PIXMAP]] is
 			-- List of units
@@ -282,7 +280,7 @@ feature -- Names
 			end
 		end
 
-	metric_tooltip (a_metric: EB_METRIC; a_go_to_definition: BOOLEAN): STRING is
+	metric_tooltip (a_metric: EB_METRIC; a_go_to_definition: BOOLEAN): STRING_32 is
 			-- Tooltip for `a_metric'.
 			-- If `a_go_to_definition' is True, Add "Go to definition" message.
 		require
@@ -300,7 +298,7 @@ feature -- Names
 					end
 				end
 			else
-				Result.append(l_vadility.out)
+				Result.append (l_vadility.message_with_location)
 			end
 			if a_go_to_definition then
 				if not Result.is_empty then
@@ -414,6 +412,28 @@ feature -- Domain item
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+feature -- Metric editor mode
+
+	readonly_mode: INTEGER is 1
+			-- Read only mode
+			-- This is used for browsing predefined metrics
+
+	new_mode: INTEGER is 2
+			-- New mode
+			-- This is used for define new metrics
+
+	edit_mode: INTEGER is 3
+			-- Edit mode
+			-- This is used for editing existing metrics
+
+	is_mode_valid (a_mode: INTEGER): BOOLEAN is
+			-- Is `a_mode' valid?
+		do
+			Result := a_mode = readonly_mode or a_mode = new_mode or a_mode = edit_mode
+		ensure
+			good_result: Result implies (a_mode = readonly_mode or a_mode = new_mode or a_mode = edit_mode)
 		end
 
 feature{NONE} -- Implementation

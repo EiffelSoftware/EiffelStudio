@@ -6,44 +6,90 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EB_METRIC_ERROR
 
 inherit
-	ANY
-		redefine
-			out
+	EB_METRIC_SHARED
+
+create
+	make
+
+feature{NONE} -- Initialization
+
+	make (a_message: like message) is
+			-- Initialize `message' with `a_message'.
+		require
+			a_message_attached: a_message /= Void
+		do
+			set_message (a_message)
 		end
 
 feature -- Access
 
-	text: STRING is
+	message: STRING_GENERAL
 			-- The error message.
-		deferred
-		end
 
-	out: STRING is
-			-- Output
-		do
-			Result := text
-		end
-
-	to_do: STRING
+	to_do: STRING_GENERAL
 			-- Information about how to do to deal with current error
+
+	location: STRING_GENERAL
+			-- Location where current error occurs
+
+	message_with_location: STRING_GENERAL is
+			-- `message' with `location' (if any)
+		local
+			l_str: STRING_32
+		do
+			create l_str.make (message.count + 64)
+			l_str.append (message)
+			if location /= Void then
+				l_str.append (metric_names.location_string (location))
+			end
+			Result := l_str
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Setting
 
-	set_to_do (a_to_do: STRING) is
+	set_message (a_message: like message) is
+			-- Set `message 'with `a_message'.
+		require
+			a_message_attached: a_message /= Void
+		do
+			create {STRING_32}message.make_from_string (a_message)
+		ensure
+			message_set: message /= Void and then message.is_equal (a_message)
+		end
+
+	set_location (a_location: like location) is
+			-- Set `location 'with `a_location'.
+		do
+			if a_location /= Void then
+				create {STRING_32}location.make_from_string (a_location)
+			else
+				location := Void
+			end
+		ensure
+			location_set: (a_location /= Void implies location.is_equal (a_location)) and then
+						  (a_location = Void) implies location = Void
+		end
+
+	set_to_do (a_to_do: like to_do) is
 			-- Set `to_do' with `a_to_do'.
 		do
 			if a_to_do /= Void then
-				create to_do.make_from_string (a_to_do)
+				create {STRING_32}to_do.make_from_string (a_to_do)
 			else
 				to_do := Void
 			end
 		ensure
 			to_do_set: (a_to_do = Void implies to_do = Void) and (a_to_do /= Void implies (to_do /= Void and then to_do.is_equal (a_to_do)))
 		end
+
+invariant
+	message_attached: message /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

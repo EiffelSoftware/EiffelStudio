@@ -66,7 +66,7 @@ feature -- Setting
 	set_to_do_message (a_error: EB_METRIC_ERROR) is
 			-- Set to-do message with `a_error'.`to_do'.
 		local
-			l_to_do: STRING
+			l_to_do: STRING_GENERAL
 
 		do
 			if a_error /= Void then
@@ -86,11 +86,6 @@ feature{NONE} -- Actions
 			-- Action to be performed to open a dialog to display help information about how to solve current metric definition error
 			-- If `a_force' is True, display `to_do_dialog', otherwise, don't display `to_do_dialog' if it is hidden.
 		do
---			if to_do_message = Void then
---				to_do_dialog.to_do_info_text.set_text ("")
---			else
---				to_do_dialog.to_do_info_text.set_text (to_do_message)
---			end
 			to_do_dialog.load_text (to_do_message)
 			if not to_do_dialog.is_displayed and then a_force then
 				to_do_dialog.show_relative_to_window (metric_tool_window)
@@ -108,7 +103,7 @@ feature{NONE} -- Impelementation
 			result_attached: Result /= Void
 		end
 
-	to_do_message: STRING;
+	to_do_message: STRING_GENERAL;
 			-- To do message
 
 indexing

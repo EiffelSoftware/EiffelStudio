@@ -154,82 +154,75 @@ feature -- Grid binding
 	bind_row (a_row: EV_GRID_ROW; a_existing_metric_exist: BOOLEAN; a_missing_metrics_name: LIST [STRING]; a_unselected_metrics_name: LIST [STRING]) is
 			-- Bind Current in `a_row'.
 			-- If `a_existing_metric_exist' is True, that is, name crash occurs, `a_row' will be in invalid state.
+			-- `a_missing_metrics_name' is a list of metric names which are referenced by `metric' but not found.
+			-- `a_unselected_metrics_name' is a list of metric names which are referencedd by `metric' and found but not selected.
 		require
 			a_row_attached: a_row /= Void
 			a_row_parented: a_row.parent /= Void
+			a_missing_metrics_name_attached: a_missing_metrics_name /= Void
+			a_unselected_metrics_name_attached: a_unselected_metrics_name /= Void
 		local
 			l_unit_lbl: EV_GRID_LABEL_ITEM
-			l_status_lbl: EV_GRID_LABEL_ITEM
-			l_original_name_lbl: EV_GRID_LABEL_ITEM
-			l_tooltip: STRING
-			l_linear: EB_METRIC_LINEAR
-			l_ratio: EB_METRIC_RATIO
-			l_linear_expr_generator: EB_METRIC_LINEAR_EXPRESSION_GENERATOR
-			l_ratio_expr_generator: EB_METRIC_RATIO_EXPRESSION_GENERATOR
-			l_status_tooltip: STRING
-			l_temp_str: STRING
 		do
 			a_row.clear
 			has_name_crash_internal := a_existing_metric_exist
 			has_warning := not a_missing_metrics_name.is_empty or not a_unselected_metrics_name.is_empty
+
 			set_grid_row (a_row)
 			a_row.set_item (1, import_checkbox)
-			create l_status_lbl
-			if has_name_crash then
-				l_status_lbl.set_pixmap (pixmaps.icon_pixmaps.general_error_icon)
-				l_status_lbl.set_tooltip (substituted_text (metric_names.wrn_metric_name_crash, <<"$name", metric.name>>))
-			elseif not a_missing_metrics_name.is_empty or not a_unselected_metrics_name.is_empty then
-				create l_status_tooltip.make (256)
-				l_status_lbl.set_pixmap (pixmaps.icon_pixmaps.general_warning_icon)
-				if not a_missing_metrics_name.is_empty then
-					l_temp_str := concatenated_names (a_missing_metrics_name)
-					l_status_tooltip.append (substituted_text (metric_names.wrn_referenced_metrics_missing, <<"$metrics", l_temp_str>>))
-				end
-				if not a_unselected_metrics_name.is_empty then
-					if not l_status_tooltip.is_empty then
-						l_status_tooltip.append (".%N")
-					end
-					l_temp_str := concatenated_names (a_unselected_metrics_name)
-					l_status_tooltip.append (substituted_text (metric_names.wrn_referenced_metrics_not_selected, <<"$metrics", l_temp_str>>))
-				end
-				l_status_lbl.set_tooltip (l_status_tooltip)
-			else
-				l_status_lbl.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
-			end
-			l_status_lbl.set_layout_procedure (agent status_layout)
-			a_row.set_item (2, l_status_lbl)
+			a_row.set_item (2, status_item (has_name_crash, a_missing_metrics_name, a_unselected_metrics_name))
 			a_row.set_item (3, name_editable_area)
-			create l_original_name_lbl.make_with_text (original_name)
-			create l_tooltip.make (256)
-			if not description.is_empty then
-				l_tooltip.append (description)
-			end
-			create l_linear_expr_generator.make
-			create l_ratio_expr_generator.make
-			if not metric.is_basic then
-				if not l_tooltip.is_empty then
-					l_tooltip.append ("%N")
-				end
-				l_tooltip.append ("Expression: ")
-				if metric.is_linear then
-					l_linear ?= metric
-					l_linear_expr_generator.set_metric (l_linear)
-					l_linear_expr_generator.generate_expression
-					l_tooltip.append (l_linear_expr_generator.string_representation.as_string_8)
-				elseif metric.is_ratio then
-					l_ratio ?= metric
-					l_ratio_expr_generator.set_metric (l_ratio)
-					l_ratio_expr_generator.generate_expression
-					l_tooltip.append (l_ratio_expr_generator.string_representation.as_string_8)
-				end
-			end
-			if not l_tooltip.is_empty then
-				name_editable_area.set_tooltip (l_tooltip)
-			end
-			a_row.set_item (4, l_original_name_lbl)
+			a_row.set_item (4, origianl_metric_name_item)
 			create l_unit_lbl.make_with_text (displayed_name (unit.name))
 			l_unit_lbl.set_pixmap (pixmap_from_unit (unit))
 			a_row.set_item (5, l_unit_lbl)
+		end
+
+feature{NONE} -- Implementation
+
+	has_name_crash_internal: BOOLEAN
+			-- Internal implementation of `has_name_crashs'
+
+	old_name: STRING
+			-- Name before `name_editable_area' is activated
+
+	status_item (a_name_crash: BOOLEAN; a_missing_metrics_name: LIST [STRING]; a_unselected_metrics_name: LIST [STRING]): EV_GRID_ITEM is
+			-- Status item to be binded in to current row.
+			-- `a_name_crash' indicates if name crash exists.
+			-- `a_missing_metrics_name' is a list of metric names which are referenced by `metric' but not found.
+			-- `a_unselected_metrics_name' is a list of metric names which are referencedd by `metric' and found but not selected.			
+		require
+			a_missing_metrics_name_attached: a_missing_metrics_name /= Void
+			a_unselected_metrics_name_attached: a_unselected_metrics_name /= Void
+		local
+			l_status_lbl: EV_GRID_LABEL_ITEM
+			l_str_list: LINKED_LIST [STRING_GENERAL]
+		do
+			create l_status_lbl
+			create l_str_list.make
+			if a_name_crash then
+					-- If name crash happends.
+				l_status_lbl.set_pixmap (pixmaps.icon_pixmaps.general_error_icon)
+				l_status_lbl.set_tooltip (metric_names.wrn_metric_name_crash (metric.name))
+			elseif not a_missing_metrics_name.is_empty or not a_unselected_metrics_name.is_empty then
+					-- If some referenced metrics for this to-be-imported metrics are not found or not selected.
+				l_status_lbl.set_pixmap (pixmaps.icon_pixmaps.general_warning_icon)
+				if not a_missing_metrics_name.is_empty then
+					l_str_list.extend (metric_names.wrn_referenced_metrics_missing ((metric_names.concatenated_string (a_missing_metrics_name, metric_names.comma_separator))))
+				end
+				if not a_unselected_metrics_name.is_empty then
+					l_str_list.extend (metric_names.wrn_referenced_metrics_not_selected (metric_names.concatenated_string (a_unselected_metrics_name, metric_names.comma_separator)))
+				end
+				l_status_lbl.set_tooltip (metric_names.concatenated_string (l_str_list, metric_names.new_line_separator))
+			else
+					-- If this metric is ready to be imported.
+				l_status_lbl.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
+			end
+			l_status_lbl.set_layout_procedure (agent status_layout)
+
+			Result := l_status_lbl
+		ensure
+			result_attached: Result /= Void
 		end
 
 	status_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT) is
@@ -245,31 +238,68 @@ feature -- Grid binding
 			a_layout.set_pixmap_y ((a_item.height - l_pixmap.height) // 2)
 		end
 
-feature{NONE} -- Implementation
-
-	has_name_crash_internal: BOOLEAN
-			-- Internal implementation of `has_name_crashs'
-
-	old_name: STRING
-			-- Name before `name_editable_area' is activated
-
-	concatenated_names (a_names: LIST [STRING]): STRING is
-			-- String concatenating all names in `a_names' with ", "
-		require
-			a_names_attached: a_names /= Void
+	origianl_metric_name_item: EV_GRID_ITEM is
+			-- Origianal metric name item
+		local
+			l_str_list: LINKED_LIST [STRING_GENERAL]
+			l_original_name_lbl: EV_GRID_LABEL_ITEM
 		do
-			create Result.make (256)
-			from
-				a_names.start
-				Result.append (a_names.item)
-				a_names.forth
-			until
-				a_names.after
-			loop
-				Result.append (", ")
-				Result.append (a_names.item)
-				a_names.forth
+			create l_original_name_lbl.make_with_text (original_name)
+			create l_str_list.make
+			if not description.is_empty then
+				l_str_list.extend (description)
 			end
+			if not metric.is_basic then
+				l_str_list.extend (expression_of_metric)
+			end
+			if not l_str_list.is_empty then
+				l_original_name_lbl.set_tooltip (metric_names.concatenated_string (l_str_list, metric_names.new_line_separator))
+			end
+			Result := l_original_name_lbl
+		ensure
+			result_attached: Result /= Void
+		end
+
+	expression_of_metric: STRING_GENERAL is
+			-- Expression of `metric'
+			-- For example, if `metric' is linear, expression would like "Expression: 2 * metric1 + 3 * metric2".
+		require
+			metric_valid: metric.is_linear or metric.is_ratio
+		local
+			l_str_list: LINKED_LIST [STRING_GENERAL]
+			l_linear: EB_METRIC_LINEAR
+			l_ratio: EB_METRIC_RATIO
+		do
+			create l_str_list.make
+			l_str_list.extend (metric_names.t_expression)
+			if metric.is_linear then
+				l_linear ?= metric
+				linear_expr_generator.set_metric (l_linear)
+				linear_expr_generator.generate_expression
+				l_str_list.extend (linear_expr_generator.string_representation)
+			elseif metric.is_ratio then
+				l_ratio ?= metric
+				ratio_expr_generator.set_metric (l_ratio)
+				ratio_expr_generator.generate_expression
+				l_str_list.extend (ratio_expr_generator.string_representation)
+			end
+			Result := metric_names.concatenated_string (l_str_list, metric_names.space_separator)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	linear_expr_generator: EB_METRIC_LINEAR_EXPRESSION_GENERATOR is
+			-- Expression generator for linear metric
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	ratio_expr_generator: EB_METRIC_RATIO_EXPRESSION_GENERATOR is
+			-- Expression generator for ratio metric
+		once
+			create Result.make
 		ensure
 			result_attached: Result /= Void
 		end

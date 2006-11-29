@@ -232,12 +232,12 @@ feature {NONE} -- Actions
 				if not has_metric (a_row.name) then
 					change_name (a_old_name, a_row.name)
 					if has_existing_metric (l_name) then
-						create l_warning_dlg.make_with_text (substituted_text (metric_names.wrn_metric_name_exists_in_your_metrics, <<"$name", l_name>>))
+						create l_warning_dlg.make_with_text (metric_names.wrn_metric_name_exists_in_your_metrics (l_name))
 						l_warning_dlg.show_modal_to_window (Current)
 					end
 					bind_grid (True)
 				else
-					create l_error_dlg.make_with_text (substituted_text (metric_names.err_metric_name_exists_in_import_metric_list, <<"$new_name", l_name, "$old_name", a_old_name>>))
+					create l_error_dlg.make_with_text (metric_names.err_metric_name_exists_in_import_metric_list (l_name, a_old_name))
 					l_error_dlg.set_buttons (<<metric_names.t_ok>>)
 					l_error_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
 					l_error_dlg.show_modal_to_window (Current)
@@ -546,7 +546,7 @@ feature{NONE} -- Implementation
 			metric_manager.clear_last_error
 			Result := metric_manager.metrics_from_file (a_file_name)
 			if metric_manager.has_error then
-				create l_error_dlg.make_with_text ("Metrics loading error:" + metric_manager.last_error.out)
+				create l_error_dlg.make_with_text (metric_names.err_metric_loading_error (metric_manager.last_error.message_with_location))
 				l_error_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
 				l_error_dlg.show_modal_to_window (Current)
 			end

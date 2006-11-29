@@ -112,75 +112,70 @@ feature{NONE} -- Process
 			l_name: STRING
 			l_type_str: STRING
 			l_uuid: UUID
-			l_error_str: STRING
 		do
 			l_name := current_attributes.item (at_name)
 			if not has_error then
 				if l_name = Void then
-					set_parse_error_message ("Metric name is missing.")
+					set_parse_error_message (metric_names.err_metric_name_missing_in_archive_node, Void)
 				end
 			end
 			if not has_error then
 				l_type_str := current_attributes.item (at_type)
 				if l_type_str = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Metric type is missing in ")
-					l_error_str.append (quoted_name (l_name, "metric archive node"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_metric_type_missing,
+						metric_names.archive_location (l_name)
+					)
 				else
 					l_type := metric_type_id_from_name (l_type_str)
 					if l_type = 0 then
-						create l_error_str.make (100)
-						l_error_str.append (quoted_name (l_type_str, "Metric type"))
-						l_error_str.append (" is invalid in ")
-						l_error_str.append (quoted_name (l_name, "metric archive node"))
-						l_error_str.append (".")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_metric_type_invalid (l_type_str),
+							metric_names.archive_location (l_name)
+						)
 					end
 				end
 			end
 			if not has_error then
 				l_time := current_attributes.item (at_time)
 				if l_time = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Time is missing in ")
-					l_error_str.append (quoted_name (l_name, "metric archive node"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_archive_time_missing,
+						metric_names.archive_location (l_name)
+					)
 				else
 					create l_date.make_now
 					if not l_date.date_time_valid (l_time, l_date.default_format_string) then
-						create l_error_str.make (100)
-						l_error_str.append ("Time ")
-						l_error_str.append (quoted_name (l_time, Void))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (l_name, "metric archive node"))
-						l_error_str.append (" is invalid.")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_archive_time_invalid (l_time),
+							metric_names.archive_location (l_name)
+						)
 					end
 				end
 			end
 			if not has_error then
 				l_value := current_attributes.item (at_value)
 				if l_value = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Value is missing in ")
-					l_error_str.append (quoted_name (l_name, "metric archive node"))
-					l_error_str.append (".")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_archive_value_missing,
+						metric_names.archive_location (l_name)
+					)
 				elseif not l_value.is_real then
-					create l_error_str.make (100)
-					l_error_str.append (quoted_name (l_value, "Metric value"))
-					l_error_str.append (" in ")
-					l_error_str.append (quoted_name (l_name, "metric archive node"))
-					l_error_str.append (" is invalid. A real number is expected.")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_archive_value_invalid (l_value),
+						metric_names.archive_location (l_name)
+					)
 				end
 			end
 			if not has_error then
 				l_uuid_str := current_attributes.item (at_uuid)
-				l_uuid := check_uuid_vadility (l_uuid_str, " in " + quoted_name (l_name, "metric archive node") + ".")
+				check_uuid_vadility (
+					l_uuid_str,
+					metric_names.archive_location (l_name)
+				)
+				if not has_error then
+					l_uuid := last_valid_uuid
+				end
 			end
 			if not has_error then
 				current_archive_node := factory.new_metric_arichive_node (
@@ -190,13 +185,19 @@ feature{NONE} -- Process
 					l_value.to_double,
 					create {EB_METRIC_DOMAIN}.make,
 					l_uuid_str)
+				create current_domain.make
 			end
 		end
 
 	process_domain is
 			-- Process "domain" definition list node.		
 		do
-			create current_domain.make
+			if not current_domain.is_empty then
+				set_parse_error_message (
+					metric_names.err_too_many_domain,
+					metric_names.archive_location (current_archive_node.metric_name)
+				)
+			end
 		end
 
 	process_domain_item is
@@ -204,7 +205,6 @@ feature{NONE} -- Process
 		local
 			l_id: STRING
 			l_type: STRING
-			l_error_str: STRING
 			l_library_target_uuid: STRING
 			l_domain_item: EB_METRIC_DOMAIN_ITEM
 		do
@@ -213,39 +213,31 @@ feature{NONE} -- Process
 			l_type := current_attributes.item (at_type)
 			l_library_target_uuid := current_attributes.item (at_library_target_uuid)
 			if l_id = Void then
-				create l_error_str.make (100)
-				l_error_str.append ("Domain item id is missing in")
-				l_error_str.append (quoted_name (current_archive_node.metric_name, "metric archive node"))
-				l_error_str.append (".")
-				set_parse_error_message (l_error_str)
+				set_parse_error_message (
+					metric_names.err_domain_item_id_is_missing,
+					metric_names.archive_location (current_archive_node.metric_name)
+				)
 			end
 			if not has_error then
 				if l_type = Void then
-					create l_error_str.make (100)
-					l_error_str.append ("Domain item type in ")
-					l_error_str.append (quoted_name (current_archive_node.metric_name, "metric archive node"))
-					l_error_str.append (" is missing.")
-					set_parse_error_message (l_error_str)
+					set_parse_error_message (
+						metric_names.err_domain_item_type_is_missing,
+						metric_names.archive_location (current_archive_node.metric_name)
+					)
 				else
 					l_type := internal_name (l_type)
 					if not is_domain_item_type_valid (l_type) then
-						create l_error_str.make (100)
-						l_error_str.append ("Domain item type ")
-						l_error_str.append (quoted_name (l_type, Void))
-						l_error_str.append (" in ")
-						l_error_str.append (quoted_name (current_archive_node.metric_name, "metric archive node"))
-						l_error_str.append (" is invalid.")
-						set_parse_error_message (l_error_str)
+						set_parse_error_message (
+							metric_names.err_domain_item_type_invalid (l_type),
+							metric_names.archive_location (current_archive_node.metric_name)
+						)
 					else
 						if l_library_target_uuid /= Void then
 							if not shared_uuid.is_valid_uuid (l_library_target_uuid) then
-								create l_error_str.make (100)
-								l_error_str.append ("Library target UUID ")
-								l_error_str.append (quoted_name (l_library_target_uuid, Void))
-								l_error_str.append (" in ")
-								l_error_str.append (quoted_name (current_archive_node.metric_name, "metric archive node"))
-								l_error_str.append (" is invalid.")
-								set_parse_error_message (l_error_str)
+								set_parse_error_message (
+									metric_names.err_library_target_uuid_invalid (l_library_target_uuid),
+									metric_names.archive_location (current_archive_node.metric_name)
+								)
 							end
 						end
 						if not has_error then

@@ -1,5 +1,5 @@
 indexing
-	description: "Shared metric utilities."
+	description: "Shared metric utilities. Can be used in both batch and gui mode"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -11,6 +11,8 @@ class
 
 inherit
 	EB_CONSTANTS
+
+	EB_SHARED_METRIC_NAMES
 
 feature -- Access
 
@@ -65,19 +67,23 @@ feature -- Access/Metric type
 			good_result: is_metric_type_valid (Result)
 		end
 
-feature -- Metric editor mode
-
-	readonly_mode: INTEGER is 1
-			-- Read only mode
-			-- This is used for browsing predefined metrics
-
-	new_mode: INTEGER is 2
-			-- New mode
-			-- This is used for define new metrics
-
-	edit_mode: INTEGER is 3
-			-- Edit mode
-			-- This is used for editing existing metrics
+	metric_type_name (a_metric_type_id: INTEGER): STRING_GENERAL is
+			-- Metric type name of `a_metrc_type_id'
+		require
+			a_metric_type_id_valid: is_metric_type_valid (a_metric_type_id)
+		do
+			inspect
+				a_metric_type_id
+			when basic_metric_type then
+				Result := metric_names.l_basic_metric
+			when linear_metric_type then
+				Result := metric_names.l_linear_metric
+			when ratio_metric_type then
+				Result := metric_names.l_ratio_metric
+			end
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Status report
 
@@ -86,14 +92,6 @@ feature -- Status report
 			-- For information of metric type, see `basic_metric_type', `linear_metric_type' and `ratio_metric_type'
 		do
 			Result := a_type = basic_metric_type or a_type = linear_metric_type or a_type = ratio_metric_type
-		end
-
-	is_mode_valid (a_mode: INTEGER): BOOLEAN is
-			-- Is `a_mode' valid?
-		do
-			Result := a_mode = readonly_mode or a_mode = new_mode or a_mode = edit_mode
-		ensure
-			good_result: Result implies (a_mode = readonly_mode or a_mode = new_mode or a_mode = edit_mode)
 		end
 
 	is_uuid_valid (a_uuid: STRING): BOOLEAN is

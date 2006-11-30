@@ -94,7 +94,7 @@ feature -- Access
 			metadata_cache_path_set: metadata_cache_path /= Void
 		do
 			Result := metadata_cache_path.twin
-			Result.extend_from_array (<<short_cache_name, il_version, cache_bit_platform>>)
+			Result.extend_from_array (<<short_cache_name, cache_bit_platform, il_version>>)
 		end
 
 	assemblies: HASH_TABLE [CONF_PHYSICAL_ASSEMBLY, STRING]

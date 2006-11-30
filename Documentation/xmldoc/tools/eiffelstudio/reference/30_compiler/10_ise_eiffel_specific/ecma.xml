@@ -153,6 +153,30 @@
 				<cell>Yes</cell>
 			</row>
 		</table>
+		<heading><size>2</size>Attachment</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Preserving expandedness status when attaching expanded object to reference entity</cell>
+				<cell><local_variable>x</local_variable> <symbol>:=</symbol> <local_variable>y</local_variable></cell>
+				<cell>No, object is copied to new object of the corresponding reference type</cell>
+				<cell>Yes</cell>
+				<cell>Yes, except for TYPED_POINTER under .NET that is converted to POINTER before reattachment</cell>
+			</row>
+			<row>
+				<cell>Reverse assignment</cell>
+				<cell><local_variable>x</local_variable> <symbol>?=</symbol> <local_variable>y</local_variable></cell>
+				<cell>Yes</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+			</row>
+		</table>
 		<heading><size>2</size>Feature calls</heading>
 		<table>
 			<row>

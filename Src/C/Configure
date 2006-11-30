@@ -6675,11 +6675,13 @@ else
 fi
 cpp_stuff='$cpp_stuff'
 defvoidused='$defvoidused'
-#Check value for next 4
+#Check value for next 6 
 eif_sgi='$eif_sgi'
 eif_solaris='$eif_solaris'
 eif_windows='$eif_windows'
 eif_64_bits=''
+eif_os=''
+eif_arch=''
 Mcc='$Mcc'
 d_tls='$d_tls'
 #Check value for next 2
@@ -6708,7 +6710,7 @@ if [ -n "\$MAKE" ]; then
 	make='\$MAKE'
 else
 	make='$make'
-end
+fi
 mkdep='$mkdep'
 mkdir='$mkdir'
 mtldflags="\$ldflags"

@@ -1,0 +1,97 @@
+
+test_name generating-type-of-type-parameter
+test_description Testing correct implementation of compiler regarding generic root types.
+
+copy_raw test.e $CLUSTER test.e
+
+
+
+-------------------------------------------- for frozen
+define GENERIC_PARAMETER "INTEGER"
+copy_sub Ace $TEST Ace
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE out_INTEGER
+execute_result ok
+compare out_INTEGER expected_output_INTEGER
+
+define GENERIC_PARAMETER "STRING"
+copy_sub Ace $TEST Ace
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE out_STRING
+execute_result ok
+compare out_STRING expected_output_STRING
+
+define GENERIC_PARAMETER "LIST[STRING]"
+copy_sub Ace $TEST Ace
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work NONE out_LIST_STRING
+execute_result ok
+compare out_LIST_STRING expected_output_LIST_STRING
+
+-------------------------------------------- for finalized
+define GENERIC_PARAMETER "INTEGER"
+copy_sub Ace $TEST Ace
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE out_INTEGER
+execute_result ok
+compare out_INTEGER expected_output_INTEGER
+
+define GENERIC_PARAMETER "STRING"
+copy_sub Ace $TEST Ace
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE out_STRING
+execute_result ok
+compare out_STRING expected_output_STRING
+
+define GENERIC_PARAMETER "LIST[STRING]"
+copy_sub Ace $TEST Ace
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_work NONE out_LIST_STRING
+execute_result ok
+compare out_LIST_STRING expected_output_LIST_STRING
+
+-------------------------------------------- for melted
+define GENERIC_PARAMETER "INTEGER"
+copy_sub Ace $TEST Ace
+compile_quick_melted
+compile_result	ok
+execute_work NONE out_INTEGER
+execute_result ok
+compare out_INTEGER expected_output_INTEGER
+
+define GENERIC_PARAMETER "STRING"
+copy_sub Ace $TEST Ace
+compile_quick_melted
+compile_result	ok
+execute_work NONE out_STRING
+execute_result ok
+compare out_STRING expected_output_STRING
+
+define GENERIC_PARAMETER "LIST[STRING]"
+copy_sub Ace $TEST Ace
+compile_quick_melted
+compile_result	ok
+execute_work NONE out_LIST_STRING
+execute_result ok
+compare out_LIST_STRING expected_output_LIST_STRING
+
+
+test_end

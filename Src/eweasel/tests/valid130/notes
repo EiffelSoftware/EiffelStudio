@@ -1,0 +1,8 @@
+A system with an Ace file that uses a precompiled library compiles
+fine if the path name of the precompiled library uses environment
+variables, but the compiler issues a bogus VD43 warning at the end of
+compilation.
+
+Discovered in release 5.2.1102.
+
+

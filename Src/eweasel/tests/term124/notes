@@ -1,0 +1,4 @@
+A class with the expression `agent f ({NONE})' causes compiler to die
+during degree 3.
+
+Discovered in release 5.4.0906.

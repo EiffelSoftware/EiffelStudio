@@ -1,0 +1,7 @@
+A class which inherits twice from one parent and simply renames the
+single inherited feature both times appears to be valid, but the
+compiler says it violates the Repeated Inheritance Consistency
+constraint (VMRC).
+
+Discovered in Prerelease 93.02.17.
+

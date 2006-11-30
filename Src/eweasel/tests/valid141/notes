@@ -1,0 +1,6 @@
+A class with a declaration `c: CHARACTER is "abc"' should be rejected
+as a VQMC but the compiler accepts it.  Also incorrectly accepts other
+basic types (INTEGER, REAL, DOUBLE, POINTER, BOOLEAN) when the
+constant is a manifest string.
+
+Report by Manu on August 5, 2003.

@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 external-tab-after-macro
+test_description A declaration of an external routine which declares the external to be a macro is not accepted if the word `macro' is followed immediately by a tab instead of a space.
+
+copy_sub 	 Ace $TEST Ace
+define 		 TERMINATOR "	"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+define 		 TERMINATOR "				"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+test_end

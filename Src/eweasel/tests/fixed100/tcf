@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 freezing-good-type-id
+test_description After initial compilation, the Ace is changed to indicate a different root class which is almost identical to the original root class, but has one inheritance clause
+
+define		 ROOT_CLASS TEST1
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 ROOT_CLASS TEST
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+test_end

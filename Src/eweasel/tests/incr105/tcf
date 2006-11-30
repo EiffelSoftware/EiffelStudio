@@ -1,0 +1,40 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 veen-cant-find-feature
+test_description After initial compilation, an attribute which is the target of a creation instruction is moved to a parent class and changed to an external function.  The compiler detects the VGCC(7) error.  Then the inheritance clause for the parent is deleted from the heir and compilation is resumed.
+
+copy_sub 	 Ace $TEST Ace
+define		 INHERITANCE "inherit TEST1"
+define		 ATTRIBUTE "x: STRING"
+define		 EXTERNAL ""
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 ATTRIBUTE ""
+define		 EXTERNAL "x: STRING is external "C" end"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VGCC(7)
+
+define		 INHERITANCE ""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VEEN
+
+define		 INHERITANCE "inherit TEST1"
+define		 EXTERNAL "x: STRING"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

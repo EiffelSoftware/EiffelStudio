@@ -1,0 +1,6 @@
+The free operator `prefix "##%%"' should be legal according to page
+419 of ETL, since non-first characters may be any printable
+characters.  But the compiler reports a syntax error for a declaration
+of this free operator.
+
+Discovered in prerelease 93.05.17.

@@ -1,0 +1,6 @@
+A routine with a precondition which has a function call that
+references a secret argument violates VAPE, but the compiler accepts it.
+
+Discovered in Release 3.2.3b.
+
+

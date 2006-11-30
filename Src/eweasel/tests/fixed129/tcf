@@ -1,0 +1,10 @@
+test_name 	 elseif-with-compound
+test_description A VWBE error occurs in an elseif clause which has a compound would cause the compiler to crash.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_error TEST VWBE
+
+test_end

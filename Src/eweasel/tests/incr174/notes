@@ -1,0 +1,5 @@
+A sequence of changes tricks the compiler into accepting a class with
+a VXRC error.  If the system is compiled from scratch the compiler
+detects the error.
+
+Discovered in Release 5.0.015.

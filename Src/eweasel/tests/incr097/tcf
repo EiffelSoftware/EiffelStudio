@@ -1,0 +1,38 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 anchored-constraint-touch-file
+test_description A class with a generic parameter `G -> ARRAY [like weasel]' is correctly reported as a VCFG(3) error and then the date of last modification of the file with the class is updated
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+define		 CONSTRAINT " -> ARRAY [like weasel]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VCFG(3)
+
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST1 VCFG(3)
+
+define		 CONSTRAINT " -> ARRAY [like Current]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST1 VCFG(3)
+
+define		 CONSTRAINT " -> ARRAY [like wimp]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST1 VCFG(3)
+
+define		 CONSTRAINT " -> ARRAY [STRING]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

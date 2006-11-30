@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 remove-constraint-veen-sneak
+test_description A generic class whose formal generic parameter G is constrained by STRING has a call to an agent whose open target is {G}.  After initial compilation, the generic constraint is removed.  When the system is recompiled, the compiler does not detect the newly introduced VEEN error.
+
+define CONSTRAINT "-> STRING"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test2.e $CLUSTER test2.e
+compile_frozen
+compile_result 	ok
+
+define CONSTRAINT ""
+copy_sub 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	validity_error TEST2 VEEN
+
+test_end

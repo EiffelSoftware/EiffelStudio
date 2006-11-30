@@ -1,0 +1,6 @@
+After initial compilation, a VUPR(3) error is introduced by changing
+an inherited deferred feature to effective, so that a routine calling
+precursor has two precursors.  On recompile, the compiler does not
+detect the VUPR(3) error.
+
+Discovered in release 5.4.0610.

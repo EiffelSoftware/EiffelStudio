@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vuex-weasel
+test_description Class A has a qualified call to one of its own features, where the feature is exported only to B and its descendants.  This is valid since class A is a descendant of B.  But when the inheritance clause is removed, so that A is no longer a descendant of B, and the system is recompiled, the VUEX violation is not detected.
+
+define PARENT 	"TEST2"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define PARENT 	""
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VUEX(2)
+
+test_end

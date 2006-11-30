@@ -1,0 +1,6 @@
+A system has an Ace which specifies the precompiled cluster EiffelBase
+and also has a cluster with Cluster_tag `kernel'.  After initial
+compilation, the tag `kernel' is changed to `other' and the system is
+recompiled.  The compiler then reports an erroneous VD28 error.
+
+Discovered in Release 3.3 beta.

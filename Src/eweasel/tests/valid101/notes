@@ -1,0 +1,7 @@
+An invalid expanded type used as actual generic parameter in an
+explicit type in a parent part in an inheritance clause should cause
+the compiler to report a VTEC error, but it does not.
+
+Discovered in Release 3.2.3b.
+
+

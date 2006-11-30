@@ -1,0 +1,5 @@
+A simple system is frozen.  Then the system name is changed in the Ace
+file and changes are melted.  System execution then dies with "Error
+could not open Eiffel update file ./eiffelbase.melted".
+
+Discovered in release 5.4.0610.

@@ -1,0 +1,5 @@
+The expression `old Current' is not equal to Current (using `=') in a
+routine postcondition, where the routine call is an unqualified call.
+
+Discovered in Prerelease 93.04.21.
+

@@ -1,0 +1,6 @@
+When a small valid class is compiled with `assertion (all)' and
+executed, assertion `empty_property' of the invariant of class
+UNIX_FILE is violated.
+
+Discovered in Release 3.2.
+

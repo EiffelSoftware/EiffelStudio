@@ -1,0 +1,11 @@
+test_name inline-agent-with-local-in-inherited-assertion
+test_description Compiler crashes when an inherited assertion contains an inline agent with locals.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	b.e $CLUSTER b.e
+
+compile_frozen
+compile_result 	ok
+
+test_end

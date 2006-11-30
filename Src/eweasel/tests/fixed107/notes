@@ -1,0 +1,6 @@
+Compiling a system where A inherits from B and B has an attribute of
+type `expanded A' results in an exception trace.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.07.15.
+

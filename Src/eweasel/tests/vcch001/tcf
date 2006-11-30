@@ -1,0 +1,63 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vcch-add-del
+test_description Add and delete VCCH violations
+copy_sub 	 Ace $TEST Ace
+
+define		 HEADER_MARK ""
+define		 ROUTINE_MARK deferred
+copy_raw 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VCCH(1)
+
+define		 ROUTINE_MARK do
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+define		 ROUTINE_MARK deferred
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VCCH(1)
+
+define		 ROUTINE_MARK do
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+define		 HEADER_MARK "deferred"
+define		 ROUTINE_MARK do
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 ROUTINE_MARK once
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 HEADER_MARK ""
+define		 ROUTINE_MARK deferred
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VCCH(1)
+
+define		 HEADER_MARK deferred
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+define		 HEADER_MARK ""
+define		 ROUTINE_MARK once
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+test_end

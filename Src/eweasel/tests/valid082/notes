@@ -1,0 +1,7 @@
+A class calls (on an entity of another type) a feature which is
+exported to it.  The compiler rejects the class as violating VUEX(2),
+but only if the feature is an operator feature.
+
+Discovered in Release 3.2.3b.
+
+

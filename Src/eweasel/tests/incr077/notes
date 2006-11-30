@@ -1,0 +1,5 @@
+After initial compilation, an attribute of an expanded class is
+changed from a constant STRING to BIT 1.  System execution then ends
+with a run-time panic.
+
+Discovered in Release 3.2.

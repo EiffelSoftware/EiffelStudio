@@ -1,0 +1,9 @@
+Compiling a system whose Ace specifies creation procedure `make' when
+the root class has no creation procedures causes the compiler to
+correctly report a validity violation (VD27).  But when the creation
+procedure specification is removed from the Ace, the compiler still
+reports violation of VD27.
+
+Discovered in Prerelease 93.04.21.
+Fixed in Prerelease 93.05.17.
+

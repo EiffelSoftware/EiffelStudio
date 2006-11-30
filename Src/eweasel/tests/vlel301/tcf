@@ -1,0 +1,45 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vlel3-mult-same
+test_description Violate validity constraint VLEL3 with a feature name which appears more than once in the same feature list
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+define		 EXPORT "{ANY} prefix "+", f, prefix "+""
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VLEL(3)
+
+define		 EXPORT "{ANY} prefix "@weasel", f, prefix "@weasel""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VLEL(3)
+
+define		 EXPORT "{ANY} infix "@wimp", f, infix "@wimp""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VLEL(3)
+
+define		 EXPORT "{ANY} infix "-", f, infix "-""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VLEL(3)
+
+define		 EXPORT "{ANY} f, weasel, weasel"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VLEL(3)
+
+define		 EXPORT "{ANY} prefix "@wuss", infix "@wuss""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

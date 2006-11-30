@@ -1,0 +1,6 @@
+A system has a class TEST1 with 150 attributes of an expanded type,
+where the base class of the expanded type has 110 STRING attributes.
+Repeated creation of instances of TEST1 causes a run-time panic when
+executed, even if garbage collection is turned off.
+
+Discovered in Release 3.2.4.

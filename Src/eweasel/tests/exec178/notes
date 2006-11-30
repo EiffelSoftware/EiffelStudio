@@ -1,0 +1,5 @@
+A routine which prints 
+`(agent {like Current}.generating_type).generating_type'
+prints the wrong value in a descendant of the class in which it is written.
+
+Discovered in release 5.5.0205.

@@ -1,0 +1,7 @@
+After initial compilation, the order of two attributes (which are each
+of an expanded type) is switched.  After recompilation, system
+execution should initialize the expanded attributes in a different
+order but it does not.  The initial compilation and recompilation can
+each be either a melt or a freeze - the problem occurs regardless.
+
+Discovered in Release 3.2.4.

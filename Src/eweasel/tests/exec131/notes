@@ -1,0 +1,5 @@
+A system which calls POINTER.memory_copy as passes $double_value
+(address of a double) compiles fine when melted, but dies with a
+segmentation fault when executed.  Frozen code works correctly.
+
+Reported by Manu on Release 5.2.0914.

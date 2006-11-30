@@ -1,0 +1,5 @@
+A class with a declaration `x: REAL is -13' causes the compiler to
+report an internal error and terminate.
+
+Discovered in Release 3.2.
+

@@ -1,0 +1,5 @@
+A Real constant `.e1' has both the integral and fractional parts
+absent, making it invalid, but the compiler accepts it.  The generated
+C code will not compile (melted code gives wrong results).
+
+Discovered in Release 3.3.3.

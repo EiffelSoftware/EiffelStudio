@@ -1,0 +1,6 @@
+A system creates an instance of a class with 500 generic parameters,
+where the class has one attribute for every generic parameter.  The
+system compiles fine when melted, frozen or finalized, but dies when
+executed.
+
+Discovered in Release 5.4.0515.

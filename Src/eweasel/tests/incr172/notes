@@ -1,0 +1,6 @@
+After initial compilation, a syntax error is added to the Ace file.
+The compiler detects the syntax error.  But when compilation is
+resumed, the compiler accepts the Ace file even though the syntax
+error is still there.
+
+Discovered in Release 5.0.015.

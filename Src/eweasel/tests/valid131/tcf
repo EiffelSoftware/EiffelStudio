@@ -1,0 +1,20 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 anchored-argument-bogus-vdjr
+test_description A class A has a deferred routine with an argument anchor to an attribute `a'.  A second class B inherits A and has an identical deferred routine with the same name, where the routine in B is also anchored to `a'.  Class C inherits both A and B.  The compiler incorrectly reports a VDJR error and a VD43 warning.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	c.e $CLUSTER c.e
+compile_melted
+compile_result 	ok
+
+test_end

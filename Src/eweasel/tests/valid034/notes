@@ -1,0 +1,6 @@
+A case of repeated inheritance with renaming of the single inherited
+feature seems to be valid (according to ETL), but the compiler reports
+violation of the Feature Name rule (VMFN).
+
+Still not fixed in Prerelease 93.02.17.
+

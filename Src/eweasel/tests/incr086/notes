@@ -1,0 +1,6 @@
+After initial compilation, an inherited feature which is redefined is
+marked as frozen in the ancestor class.  The compiler detects the
+violation VDRS violation, but when the `frozen' keyword is deleted and
+compilation is resumed, the compiler reports a bogus VD27 error.
+
+Discovered in Release 3.2.

@@ -1,0 +1,5 @@
+A reference to the delayed call expression "{NONE}~weasel"
+causes the compiler to die in degree 3.
+
+Discovered in Release 5.0.005.
+

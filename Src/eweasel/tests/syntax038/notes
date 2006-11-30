@@ -1,0 +1,5 @@
+A class with a call `f ("#",a,"%N")' should be valid but the compiler
+reports a syntax error.  Adding white space before the `a' eliminates
+the error.
+
+Discovered in Release 4.5.

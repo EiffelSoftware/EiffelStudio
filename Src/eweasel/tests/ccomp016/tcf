@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	assign-attempt-basic-local-addr
+test_description A routine with an assignment attempt whose source is a `$x', where `x' is a local which is of a basic type (INTEGER, REAL, etc.)  compiles fine when frozen, but generates C code which won't compile.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output1
+execute_result ok
+compare		exec_output1 output
+
+test_end

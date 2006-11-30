@@ -1,0 +1,9 @@
+After initial compilation, a generic parameter is added to root class,
+then a creation clause.  When VSRC error is reported, generics are
+removed and creation procedure formal argument is changed to
+nonexistent class G.  When VTCT is reported, class G is added,
+introducing a VCFG error.  To correct the VCFG error, the name of a
+formal generic parameter is changed.  When compilation is resumed,
+the compiler dies instead of reporting a VSRP(2) error.
+
+Discovered in Release 5.0.015.

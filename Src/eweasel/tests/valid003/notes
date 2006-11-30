@@ -1,0 +1,5 @@
+Class with New_exports which exports to class not in universe should
+cause violation of VLCP, but is still accepted without complaint.
+Prerelease 92.12.08.
+Still not fixed in Prerelease 93.02.17.
+

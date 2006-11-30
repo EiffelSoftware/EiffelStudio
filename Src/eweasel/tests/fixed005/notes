@@ -1,0 +1,5 @@
+
+Wrong positions are reported for a syntax error if manifest strings
+precede the position where the error is.
+
+Fixed in prerelease 93.02.17.

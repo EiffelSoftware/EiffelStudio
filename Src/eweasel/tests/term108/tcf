@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	generic-static-constant
+test_description A call to a static feature `feature {FOO}.value' causes the compiler to die with a segmentation fault if FOO is a generic class that contains a constant integer feature `value'.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST VTUG(2)
+
+test_end

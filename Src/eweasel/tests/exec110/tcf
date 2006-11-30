@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 strip-memory-leak
+test_description A class repeatedly generates a small manifest array, each of whose elements is `strip ()'.  The system compiles fine, but when executed for a large number of iterations it eventually runs out of memory, which appears to indicate a memory leak.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_warning TEST Unused_local_warning
+
+execute_work	 NONE exec_output1 200000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

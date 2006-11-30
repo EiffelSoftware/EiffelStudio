@@ -1,0 +1,5 @@
+A class with a routine that has a single instruction 
+`io.put_character ('%/255/')' compiles fine but dies with
+an exception trace indicating I/O error when executed.
+
+Discovered in Release 4.3.

@@ -1,0 +1,31 @@
+test_name auto-properties-recompilation
+test_description Recompilation of the features declared with a property mark should not lead to invalid code.
+
+define SYSTEM_OBJECT ""
+define SYSTEM_STRING "STRING"
+if DOTNET define SYSTEM_OBJECT "SYSTEM_OBJECT"
+if DOTNET define SYSTEM_STRING "SYSTEM_STRING"
+
+copy_sub Ace $TEST Ace
+copy_raw properties.e $CLUSTER properties.e
+copy_sub properties2.e $CLUSTER properties2.e
+copy_sub all_properties.e $CLUSTER all_properties.e
+copy_raw test.e $CLUSTER test.e
+
+define PROPERTY ""
+copy_sub properties1.e $CLUSTER properties1.e
+
+compile_melted
+compile_result ok
+execute_work NONE exec_output
+execute_result ok
+
+define PROPERTY "property: auto"
+copy_sub properties1.e $CLUSTER properties1.e
+
+compile_melted
+compile_result ok
+execute_work NONE exec_output
+execute_result ok
+
+test_end

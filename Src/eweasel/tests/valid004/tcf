@@ -1,0 +1,20 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name invalid-local-rescue
+test_description Violate Routine rule (validity constraint VRRR)
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+compile_melted
+compile_result validity_error TEST1 VXRC
+
+copy_raw test1_rev1.e $CLUSTER test1.e
+resume_compile
+compile_result validity_error TEST1 VRRR(2)
+test_end

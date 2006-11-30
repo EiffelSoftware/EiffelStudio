@@ -1,0 +1,6 @@
+A class creates an ARRAY [BIT 4096] and fills it with elements of type
+BIT 4096.  Executing the system results in a segmentation fault if the
+size of the array is big enough (approximately 3000), but only if the
+system is finalized and garbage collection is on.
+
+Discovered in release 5.4.0403.

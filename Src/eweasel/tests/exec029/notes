@@ -1,0 +1,6 @@
+A class which tries to get and print the address of an external
+feature (which is not a constant) compiles fine, but dies with an
+exception trace when executed.
+
+Discovered in Prerelease 93.07.15.
+

@@ -1,0 +1,5 @@
+An Old expression is allowed in a precondition, although it should not be.
+
+Discovered in Prerelease 93.04.21.
+Fixed in Prerelease 93.07.15.
+

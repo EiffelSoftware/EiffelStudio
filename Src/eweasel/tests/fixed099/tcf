@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 fix-vuar-error
+test_description A class with a VUAR violation is compiled and then the type of the actual argument is changed to fix the error
+
+copy_sub 	 Ace $TEST Ace
+define		 LOCAL_TYPE "FIXED_LIST [INTEGER]"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VUAR(2)
+
+define		 LOCAL_TYPE "LINKED_LIST [INTEGER]"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

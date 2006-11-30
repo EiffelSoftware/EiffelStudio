@@ -1,0 +1,5 @@
+An anchored declaration whose anchor is the final name of an operator
+feature is rejected by the compiler as a syntax error.
+
+Still not fixed in Prerelease 93.02.17.
+

@@ -1,0 +1,8 @@
+Compiling a system, adding `class' to the indexing clause, recompiling
+and then removing `class' from indexing clause when syntax error is
+reported causes exception trace.
+
+Fixed in Prerelease 93.02.17.  However, if the keyword class appears
+in the indexing part, compiler reports VD20 violation (gets confused
+about what the name of the class really is).
+

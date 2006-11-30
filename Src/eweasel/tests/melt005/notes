@@ -1,0 +1,7 @@
+A system does arithmetic with two REAL operands, at least one of which
+is a constant and assigns the result to a variable of type DOUBLE.
+Executing the system causes a run-time panic with "illegal cast
+operation", but only if the routine which does the arithmetic is melted.
+
+Discovered in Prerelease 93.07.15.
+

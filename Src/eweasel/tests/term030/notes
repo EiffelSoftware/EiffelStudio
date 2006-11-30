@@ -1,0 +1,7 @@
+A violation of the Expanded Client rule (VLEC) is not detected when
+more than 2 classes are involved in the cycle, at least if the
+expansion is done in the attribute declarations rather than in the
+class headers.  Compilation ends with "illegal instruction".
+
+Discovered in Release 3.1.1.
+

@@ -1,0 +1,17 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	finalize-inline-infix-external
+test_description Finalizing a system with a class which has a call to an infix operator which is an external routine causes the compiler to die during degree -3 on the class, but only if inlining (yes) is specified.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_final
+compile_result 	ok
+
+test_end

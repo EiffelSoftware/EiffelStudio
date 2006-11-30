@@ -1,0 +1,6 @@
+Melting a system which evalutes `item >= feature
+{CHARACTER}.Max_value' where `item' is of type INTEGER works fine, but
+when the system is executed it dies with a panic.  Frozen code works
+fine.
+
+Reported by Manu in release 5.2.1005.

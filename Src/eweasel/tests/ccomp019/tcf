@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	finalize-expanded-return-type
+test_description A function whose return type is and expanded type has a local of this return type and body `Result := x'.  When the system is finalized, the code generated for the routine won't compile.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_final
+compile_result 	 ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output1
+execute_result	ok
+compare		exec_output1 output
+
+test_end

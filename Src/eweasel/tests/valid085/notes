@@ -1,0 +1,9 @@
+A routine with a secret precondition does not violate VAPE because the
+routine itself is also exported to {NONE}.  But the class containing
+this routine is inherited by another class and the routine export
+status is changed to {ANY}, yielding a generally available routine
+with a secret precondition.  The compiler does not detect the VAPE error.
+
+Discovered in Release 3.2.3b.
+
+

@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 keep-on-stripping
+test_description A class has a routine which repeatedly applies the `strip' operator to the current object and puts the resulting array in a local variable. The class has 4 INTEGER attributes.  Executing the system results in a run-time panic.  Reducing the number of attributes to 3 or turning off garbage collection allows the system to execute correctly for a huge number of iterations.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1 10000 1000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

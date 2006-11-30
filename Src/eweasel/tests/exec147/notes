@@ -1,0 +1,4 @@
+Procedure `default_create' is not called on all elements of a
+SPECIAL being created, when the elements are of an expanded type.
+
+Reported by Manu on January 31, 2003.

@@ -1,0 +1,53 @@
+ --- MY_TREE1 (TWO_WAY_TREE-based) --- 
+True
+True
+True
+True
+True
+True
+True
+True
+
+ --- MY_TREE2 (BINARY_TREE-based) --- 
+True
+True
+True
+True
+True
+True
+True
+True
+True
+
+ --- MY_TREE3 (LINKED_TREE-based) --- 
+True
+True
+True
+True
+True
+True
+True
+True
+
+ --- MY_TREE4 (FIXED_TREE-based) --- 
+True
+True
+True
+True
+True
+True
+True
+True
+True
+
+ --- MY_TREE5 (ARRAYED_TREE-based) --- 
+True
+True
+True
+True
+True
+True
+True
+True
+
+Execution completed

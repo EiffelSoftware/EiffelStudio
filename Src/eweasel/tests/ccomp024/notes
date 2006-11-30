@@ -1,0 +1,7 @@
+A declaration of an external routine declares the external to be a
+macro and specifies two include files whose names are delimited only
+by white space (no %" or <> bracketing).  If the white space is a tab
+instead of a space, only one C include is generated with the two file
+names run together, causing the C code not to compile.
+
+Discovered in Release 3.3 beta.

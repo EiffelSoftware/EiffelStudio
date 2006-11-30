@@ -1,0 +1,7 @@
+After initial compilation, a system which does repeated creation of
+instances of an expanded type is modified: a second variable attribute
+of an expanded type is added to an expanded class and changes are
+melted.  System execution then ends with a run-time panic.
+
+Discovered in Release 3.2.2.
+

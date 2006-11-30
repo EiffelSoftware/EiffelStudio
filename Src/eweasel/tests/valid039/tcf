@@ -1,0 +1,16 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name valid-once-redefine
+test_description A Redefine subclause which lists a feature name which is a `once' routine in the parent class
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+compile_melted
+compile_result ok
+test_end

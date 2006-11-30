@@ -1,0 +1,8 @@
+A class has agents which are calls to a routine that takes a numeric
+type (DOUBLE, REAL, INTEGER_64, INTEGER, INTEGER_16, INTEGER_8) and
+prints its argument.  If the argument is left open and a lighter type
+is passed as the actual argument in a tuple at the time of the call
+(e.g., INTEGER_8 is passed to a routine expecting an INTEGER), the
+argument is passed incorrectly in some cases.
+
+Discovered in Release 5.2.0928.

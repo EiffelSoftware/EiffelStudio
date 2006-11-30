@@ -1,0 +1,29 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vsrp2-two-procedures
+test_description Class with two creation procedures, one of which violates VSRP2
+
+copy_sub 	 Ace $TEST Ace
+
+define		 ARGUMENTS "(arg: STRING)"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARGUMENTS "(arg1, arg2: ARRAY [STRING])"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VSRP(2)
+
+define		 ARGUMENTS ""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

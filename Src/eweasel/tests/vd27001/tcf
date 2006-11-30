@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 lace-vd27-basic
+test_description Violate validity constraint VD27 by listing invalid root creation procedure in the Ace
+
+define		 CREATION_PROC "feature="weasel""
+define		 CLASS "class TEST create make feature make is do end end"
+copy_sub 	 Ace $TEST Ace
+copy_sub 	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error NONE VD27
+
+define		 CREATION_PROC "feature="make""
+define		 CLASS "class TEST create feature make is do end end"
+copy_sub 	 Ace $TEST Ace
+copy_sub 	 test.e $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error NONE VD27
+
+define		 CREATION_PROC ""
+define		 CLASS "class TEST feature make is do end end"
+copy_sub 	 Ace $TEST Ace
+copy_sub 	 test.e $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

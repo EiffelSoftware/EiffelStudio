@@ -1,0 +1,4 @@
+A routine does a bitwise "and" of an INTEGER_16 local with 0xFF00.
+The result is wrong if code is frozen, but is correct when melted.
+
+Reported by Manu on September 9, 2003.

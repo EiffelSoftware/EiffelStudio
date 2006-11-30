@@ -1,0 +1,5 @@
+A class that does an inspect of `x', whose type is INTEGER_64 and
+which has value 1, does not match value 1 but only when code is
+melted.  Frozen and finalized code work correctly.
+
+Discovered in release 5.4.0403.

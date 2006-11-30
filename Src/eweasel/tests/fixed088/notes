@@ -1,0 +1,6 @@
+Deleting an inheritance clause in some circumstances and then retrying
+a failed compilation results in an exception trace.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.07.15.
+

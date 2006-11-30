@@ -1,0 +1,8 @@
+A system name which includes characters special to the shell is
+accepted and causes the generated system to be linked to the driver
+under an incorrect name or not at all when using a precompiled library
+and melting the system.  A system name which includes characters
+special to `make' is accepted and results in an error in `make' when
+the finish_freezing step is executed after freezing the system.
+
+Discovered in Release 3.3.7.

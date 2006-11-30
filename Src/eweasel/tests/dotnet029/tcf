@@ -1,0 +1,13 @@
+test_name 	 property-accessor-name-clash
+test_description Introduced feature name may clash with inherited property accessor.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+
+test_end

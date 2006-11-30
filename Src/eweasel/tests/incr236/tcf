@@ -1,0 +1,25 @@
+test_name generic-status-change
+test_description Change of generic status of a class causes compiler to crash where it should not.
+
+copy_sub Ace $TEST Ace
+define GENERIC "[ANY]"
+define FORMAL "[G]"
+define INHERIT "inherit ARRAY [G]"
+define ARGUMENT "ARRAY [G]"
+copy_sub test.e $CLUSTER test.e
+copy_sub test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+define GENERIC ""
+define FORMAL ""
+define INHERIT ""
+define ARGUMENT "ANY"
+copy_sub test.e $CLUSTER test.e
+copy_sub test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+test_end

@@ -1,0 +1,4 @@
+A constant declared as `value: INTEGER is -0xD' is accepted by the
+compiler, but is interpreted as 13 instead of -13.
+
+Discovered in Release 5.4.0515.

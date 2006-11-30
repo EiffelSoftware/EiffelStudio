@@ -1,0 +1,5 @@
+After initial compilation, a VUPR(3) error is introduced by removing
+an inheritance clause, yielding no effective precursors.  The compiler
+does not detect the VUPR(3) error.
+
+Discovered in Release 5.0.015.

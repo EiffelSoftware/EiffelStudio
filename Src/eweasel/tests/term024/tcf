@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	bit-creation-type
+test_description A creation instruction with an explicit creation type which is a BIT type with (what looks like) a constant attribute expressing the number of bits in the BIT type
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	validity_error TEST VEEN
+
+test_end
+

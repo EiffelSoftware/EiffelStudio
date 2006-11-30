@@ -1,0 +1,42 @@
+test_name 	 enum-inspect-validity
+test_description Ensure validality of use of .NET enum values in inspect statements and when cases.
+
+copy_sub 	 Ace  $TEST Ace
+
+define		 EVAL "REGISTRY_HIVE"
+define		 WHEN "{REGISTRY_VALUE_KIND}.binary"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VOMB(2)
+
+define		 EVAL "INTEGER"
+define		 WHEN "{REGISTRY_HIVE}.local_machine"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VOMB(2)
+
+define		 EVAL "NATURAL_32"
+define		 WHEN "{REGISTRY_HIVE}.local_machine"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VOMB(2)
+
+define		 EVAL "REGISTRY_HIVE"
+define		 WHEN "{INTEGER}.max_value"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VOMB(2)
+
+define		 EVAL "REGISTRY_HIVE"
+define		 WHEN "{NATURAL_32}.max_value"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VOMB(2)
+
+define		 EVAL "REGISTRY_HIVE"
+define		 WHEN "{REGISTRY_HIVE}.local_machine"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result ok
+
+test_end

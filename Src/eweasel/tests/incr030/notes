@@ -1,0 +1,5 @@
+Changing an argumentless function in a class which is repeatedly
+inherited to an attribute and recompiling causes an exception trace.
+
+Discovered in Prerelease 93.07.15.
+

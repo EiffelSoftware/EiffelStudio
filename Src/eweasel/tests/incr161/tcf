@@ -1,0 +1,38 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 missing-rescue-clause
+test_description A sequence of changes where a rescue clause is added to external routines, then removed and routines are made deferred causes the compiler to die with a segmentation fault in `has_rescue'.
+
+define BODY1 "external "C""
+define BODY2 "external "C""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define BODY1 "deferred"
+define BODY2 "deferred"
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define BODY1 "external "C" rescue retry"
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	validity_error TEST2 VDRD(5)
+
+define BODY1 "deferred"
+copy_sub 	test1.e $CLUSTER test1.e
+resume_compile
+compile_result 	ok
+
+test_end

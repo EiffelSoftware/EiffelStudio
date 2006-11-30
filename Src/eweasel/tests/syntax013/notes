@@ -1,0 +1,6 @@
+A class with an Indexing part which has a completely empty Index_list
+(no Index_clause's) should be legal according to page 49.  But the
+compiler calls it a syntax error.  [empty-index-list]
+
+Discovered in Prerelease 93.04.21.
+

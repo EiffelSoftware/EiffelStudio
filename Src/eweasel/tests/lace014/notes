@@ -1,0 +1,6 @@
+After initial compilation, the name of a cluster (the tag) is changed
+in the Ace file.  When the system is recompiled, the compiler dies with
+an exception trace.
+
+Discovered in Release 3.1.1.
+

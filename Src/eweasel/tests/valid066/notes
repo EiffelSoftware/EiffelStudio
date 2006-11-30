@@ -1,0 +1,6 @@
+An attribute of type `TEST1 [TEST1 [DOUBLE]]' where TEST1 is declared
+as an expanded class causes the compiler to report a VLEC error.  But
+TEST1 has no attributes at all so there cannot be an expanded client cycle.
+
+Discovered in Release 3.2.
+

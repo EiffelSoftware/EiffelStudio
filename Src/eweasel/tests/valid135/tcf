@@ -1,0 +1,19 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 bit-identifier-in-generic
+test_description A class whose generic parameter is constrained by `DD [BIT name]', where "name" is an unknown identifier, is accepted by the compiler but should not be.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	cc.e $CLUSTER cc.e
+copy_raw 	dd.e $CLUSTER dd.e
+compile_melted
+compile_result 	validity_error CC VCFG(3)
+
+test_end

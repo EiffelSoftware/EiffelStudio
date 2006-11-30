@@ -1,0 +1,6 @@
+After initial compilation, two routines which were declared separately
+are changed so that they share a single redeclaration, which calls
+precursor.  When the system is recompiled, the compiler does not
+detect the VUPR(1) error.
+
+Discovered in Release 5.0.015.

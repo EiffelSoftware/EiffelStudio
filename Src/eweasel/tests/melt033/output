@@ -1,0 +1,16 @@
+Starting try
+Starting weasel
+Raising exception
+In try rescue clause
+Assertion violation: False
+Original exception: 24
+Exception: 24
+Meaning of original exception: Developer exception.
+Meaning of exception: Developer exception.
+In make rescue clause
+Assertion violation: False
+Original exception: 24
+Exception: 8
+Meaning of original exception: Developer exception.
+Meaning of exception: Routine failure.
+Execution completed

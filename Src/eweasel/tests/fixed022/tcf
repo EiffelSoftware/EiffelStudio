@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 invalid-actual-generic2
+test_description An actual generic parameter which is invalid (because it is a generic derivation of a class which is *not* generic)
+
+copy_sub 	 Ace $TEST Ace
+
+define		 ACTUAL "STRING [STRING]"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VTUG(1)
+
+define		 ACTUAL "ARRAY [STRING]"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

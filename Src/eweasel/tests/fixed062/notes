@@ -1,0 +1,6 @@
+Compiling a system and then changing an inherited class so that it is
+deferred results in undetected violation of VCCH1.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.04.21.
+

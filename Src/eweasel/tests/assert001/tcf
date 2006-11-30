@@ -1,0 +1,49 @@
+test_name 	supplier-preconditions
+test_description tests the assertion monitoring for supplier preconditions
+
+define A_SUP ""true""
+define B_SUP ""false""
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	da.e $CLUSTER da.e
+copy_raw	db.e $CLUSTER db.e
+copy_raw	x.e $CLUSTER x.e
+
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output1
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output1
+
+compile_final_keep
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final	NONE exec_output3
+execute_result ok
+compare		exec_output3 output1
+
+compile_final
+compile_result ok
+
+c_compile_final
+c_compile_result ok
+
+
+test_end

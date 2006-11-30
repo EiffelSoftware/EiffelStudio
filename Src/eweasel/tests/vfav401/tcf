@@ -1,0 +1,75 @@
+test_name validity-vfav4-basic
+test_description Validity rules for semistrict operators.
+
+-- Tests with normal class BOOLEAN
+
+define EXCLUDE ""
+
+if DOTNET copy_sub Ace_dotnet $TEST Ace
+if not DOTNET copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw b.e    $CLUSTER b.e
+
+-- Operator "and then"
+
+define OPERATOR "and then"
+
+copy_sub co01.e $CLUSTER c.e
+compile_melted
+compile_result validity_error C VFAV(4)
+
+copy_sub co02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4)
+
+copy_sub co03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4)
+
+-- Operator "or else"
+
+define OPERATOR "or else"
+
+copy_sub co01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4)
+
+copy_sub co02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4)
+
+copy_sub co03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4)
+
+-- Operator "implies"
+
+define OPERATOR "and then"
+
+copy_sub co01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4)
+
+copy_sub co02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4)
+
+copy_sub co03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4)
+
+-- Tests with non-frozen class BOOLEAN
+
+define EXCLUDE "<exclude>boolean.e</exclude>"
+
+if DOTNET copy_sub Ace_dotnet $TEST Ace
+if not DOTNET copy_sub Ace $TEST Ace
+copy_raw boolean.e $CLUSTER boolean.e
+
+-- Inheritance from BOOLEAN: error is reported twice because of implementation
+
+copy_raw ci01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(4) VFAV(4) VFAV(4) VFAV(4) VFAV(4) VFAV(4)
+
+test_end

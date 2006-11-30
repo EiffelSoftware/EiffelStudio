@@ -1,0 +1,8 @@
+The precursor construct is used in a routine inherited twice from the
+same generic class with different actual generic parameters.  The
+compiler thinks the precursor routine returns one type, but it
+actually returns a child type so system execution fails.  If the order
+of the parent clauses is switched, the compiler reports a VJAR error
+instead of accepting the classes.
+
+Discovered in Release 5.0.015.

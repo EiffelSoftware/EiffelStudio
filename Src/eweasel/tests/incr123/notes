@@ -1,0 +1,8 @@
+After initial compilation, a new attribute is added to a parent of a
+class containing a `strip' expression.  After recompilation, system
+execution produces the wrong output (different than the output of a
+system compiled from scratch).  The initial compilation and
+recompilation can each be either a melt or a freeze - the problem
+occurs regardless.
+
+Discovered in Release 3.2.4.

@@ -1,0 +1,9 @@
+After initial compilation and freezing, the type of a formal argument
+to routine is changed from `TEST1' to `expanded TEST1' and changes are
+melted.  Since the actual argument is Void, a "void assigned to
+expanded" exception should occur when the system is executed.
+Instead, execution terminates with "illegal instruction" and no
+exception trace.
+
+Discovered in Release 3.2.
+

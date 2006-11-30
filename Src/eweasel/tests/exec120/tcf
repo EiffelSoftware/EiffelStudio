@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 multithreaded-string-blank
+test_description A class creates several threads.  Each thread repeatedly creates a string whose length is determined by a random number generator and fills the string with blanks.  System execution ends with an exception, but should not.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 worker.e  $CLUSTER worker.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1 10
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

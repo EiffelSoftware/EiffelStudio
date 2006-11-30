@@ -1,0 +1,6 @@
+A violation of export validity (constraint VUEX on page 368) which
+involves a qualified call that is an operator expression (instead of
+being in dot notation) is not detected.
+
+Discovered in Prerelease 93.04.21.
+

@@ -1,0 +1,6 @@
+To ensure that the test work, you need to compile cas.cs into the cas.dll. For compatibility reasons
+it has been compiled for .NET 1.0.
+
+In case you need to compile it again, simply do:
+
+	csc -target:library cas.cs

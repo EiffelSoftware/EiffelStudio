@@ -1,0 +1,5 @@
+An external routine which refers to a DLL16 or DLL32 and appears to be
+valid causes the compiler to terminate during degree 5 (presumably
+only on a non-Windows platform).
+
+Discovered in Release 3.3 beta.

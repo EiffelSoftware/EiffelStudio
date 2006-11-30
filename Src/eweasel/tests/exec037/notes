@@ -1,0 +1,7 @@
+A system with a class which does a creation instruction on a local of
+type INTEGER and then tries to add 1 to that local compiles fine, but
+when it is executed it dies with a panic and the message "operational
+stack botched".
+
+Discovered in Release 3.2.
+

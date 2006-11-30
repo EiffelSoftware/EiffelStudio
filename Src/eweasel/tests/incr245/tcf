@@ -1,0 +1,27 @@
+test_name remove-add-root-cluster-crash
+test_description Compiler crashes after adding a previously removed root cluster.
+
+copy_raw 	a.e $CLUSTER/a a.e
+copy_raw 	test.e $CLUSTER test.e
+
+copy_sub 	Ace1 $TEST Ace
+compile_frozen
+compile_result validity_error TEST VTCT
+
+copy_sub 	Ace2 $TEST Ace
+resume_compile
+compile_result validity_error NONE VD20
+
+copy_sub 	Ace3 $TEST Ace
+resume_compile
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output
+execute_result ok
+
+compare exec_output output
+
+test_end

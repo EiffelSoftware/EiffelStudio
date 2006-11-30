@@ -1,0 +1,5 @@
+A class inherits a deferred routine and provides a new version of the
+routine which is still deferred but has a different signature.  The
+compiler should report a VDRD(4) error, but does not.
+
+Reported by Manu on November 2, 2003.

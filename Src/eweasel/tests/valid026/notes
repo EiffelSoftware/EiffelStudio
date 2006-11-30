@@ -1,0 +1,7 @@
+Compiler accepts a generic derivation which is invalid because the
+class on which it is based is not a generic derivation.  This only
+seems to happen when this base class is a basic class (INTEGER, REAL,
+DOUBLE, CHARACTER, BOOLEAN, POINTER).
+
+Discovered in Prerelease 93.05.17.
+

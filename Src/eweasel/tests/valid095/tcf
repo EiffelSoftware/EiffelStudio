@@ -1,0 +1,19 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 precond-call-chain-vape
+test_description An exported routine has a precondition `a.b'.  Feature `b' is not available to all classes so the compiler should report a VAPE error but it does not.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+copy_raw 	 test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	 validity_error TEST1 VAPE
+
+test_end

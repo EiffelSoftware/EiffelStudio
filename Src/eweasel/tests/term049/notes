@@ -1,0 +1,6 @@
+A class has an attribute `x' of type `LINKED_LIST [like weasel]',
+where weasel is of type `LINKED_LIST [STRING]'.  A reference to the
+first item of the first list in `x', which is of the form `x.i_th
+(1).i_th (1)' causes termination of the compiler after pass 3 on the class.
+
+Discovered in Release 3.2.3b.

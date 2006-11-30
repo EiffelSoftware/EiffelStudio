@@ -1,0 +1,62 @@
+#!/bin/sh
+
+# Note: add -v or -x option to /bin/sh line above to debug any problems
+
+# Build a package for distributing EiffelWeasel.
+# Make unreadable files and directories readable so that tar can
+# access them without being root, then run tar and gzip to
+# produce eweasel.tar.gz file.
+
+# Check command line arguments
+
+if [ $# -eq 1 ]; then
+	outdir=$1
+else
+	echo "Usage: package_eweasel <output_directory>"
+	exit 1
+fi
+if [ ! -d "$outdir" ] ; then
+	echo "Output directory $outdir not found or not directory"
+	exit 1
+fi
+
+# Check that required environment variables are set and are valid
+
+if [ "$EWEASEL" = "" ] ; then
+	echo "Environment variable \$EWEASEL is not set"
+	echo "Please set it to eweasel root directory"
+	exit 1
+fi
+if [ ! -d "$EWEASEL" ] ; then
+	echo "Value of \$EWEASEL environment variable is not a directory"
+	echo "\$EWEASEL = $EWEASEL"
+	exit 1
+fi
+
+# Fix permissions of files that need to be made readable to produce tar file
+$EWEASEL/compilation/fix_permission
+
+# Build tar file
+
+cd $EWEASEL/..
+echo "Creating tar file"
+tar cvf $outdir/eweasel.tar eweasel
+
+# Compress it
+
+echo "Compressing tar file"
+gzip $outdir/eweasel.tar
+
+# Reset permissions of files that had to be made readable to produce tar file
+$EWEASEL/compilation/unfix_permission
+
+# Check results
+
+if [ ! -f "$outdir/eweasel.tar.gz" ] ; then
+	echo "Eweasel package build failed"
+	echo "File $outdir/eweasel.tar.gz not found"
+	exit
+fi
+
+echo "EiffelWeasel package built in $outdir/eweasel.tar.gz"
+exit

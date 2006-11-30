@@ -1,0 +1,8 @@
+Compiling a class TEST which declares an attribute of type TEST but is
+not an expanded class works fine.  Changing the class to an expanded
+class and rerunning es3 results in an undetected violation of the
+Expanded Client rule (VLEC).
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.07.15.
+

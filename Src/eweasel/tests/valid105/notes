@@ -1,0 +1,9 @@
+A class inherits twice from the same parent and renames the single
+inherited feature, thereby replicating it.  But when an heir of this
+class tries to give these two feature the same name by renaming one of
+them (sharing under repeated inheritance) the compiler reports a VMFN
+error.
+
+Discovered in Release 3.2.4.
+
+

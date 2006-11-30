@@ -1,0 +1,4 @@
+A class with a `strip' expression which references an attribute of
+type NONE causes silent termination of the compiler during pass 2.
+
+Discovered in Release 3.2.2.

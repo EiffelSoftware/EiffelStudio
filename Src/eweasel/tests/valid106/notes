@@ -1,0 +1,7 @@
+A class with the inheritance clause `inherit GENERAL' should have ANY
+added implicitly as an ancestor, thereby making the features of
+PLATFORM accessible, but it does not.
+
+Discovered in Release 3.2.4.
+
+

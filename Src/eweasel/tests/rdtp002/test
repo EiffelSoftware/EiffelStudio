@@ -1,0 +1,16 @@
+indexing
+	description	: "Test class"
+
+class
+	TEST
+
+feature
+	make is
+		local
+			c: CHARACTER
+		do
+			c := '%/0/'
+		end
+
+end 
+

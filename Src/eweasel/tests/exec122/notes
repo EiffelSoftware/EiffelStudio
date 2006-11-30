@@ -1,0 +1,7 @@
+A system involving several generic derivations prints out
+the generating type of an attribute as `ARRAY [B2 [STRING]]'
+instead of `ARRAY [B2 [C]]'.
+
+Reported by Manu in release 5.1.003.
+
+

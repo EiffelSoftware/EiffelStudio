@@ -1,0 +1,6 @@
+An external function `value: INTEGER' which is "C inline" has a
+postcondition `value = 29'.  If this feature is called via static
+access `feature {TEST1}.value', system execution dies with a
+segmentation fault in the postcondition.
+
+Discovered in release 5.4.0709.

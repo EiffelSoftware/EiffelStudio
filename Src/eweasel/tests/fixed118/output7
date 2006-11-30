@@ -1,0 +1,11 @@
+Calling violate_precondition
+Assertion violation detected
+Calling violate_postcondition
+Assertion violation detected
+Calling violate_invariant
+Assertion violation detected
+Calling violate_loop
+Assertion violation detected
+Calling violate_check
+Assertion violation detected
+Execution completed

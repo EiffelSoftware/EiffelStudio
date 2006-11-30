@@ -1,0 +1,7 @@
+A Multi_branch instruction with an interval does not execute correctly
+after melting.  Even if the value of the inspect expression falls
+within an interval, an "Unmatched inspect value" exception is
+triggered.
+
+Fixed in Prerelease 93.02.17.
+

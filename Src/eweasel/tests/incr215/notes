@@ -1,0 +1,7 @@
+After initial freezing of a generic class FOO whose formal generic
+parameter is constrained by DOUBLE, the constraint is changed to TEST2
+with a generic creation procedure `default_create' and all references
+to FOO [DOUBLE] are removed.  When the system is refrozen, the C code
+won't compile.
+
+Discovered in release 5.4.0610.

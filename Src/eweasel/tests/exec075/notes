@@ -1,0 +1,6 @@
+A system repeatedly allocates a string of size `k', where `k' starts
+at 1 and is incremented by one after each iteration.  When the system
+is executed, the amount of "used" Eiffel memory as indicated by the
+memory statistics facilities of class MEM_INFO soon becomes negative.
+
+Discovered in Release 3.2.4.

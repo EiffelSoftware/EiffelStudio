@@ -1,0 +1,22 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name result-in-none-func
+test_description A function whose return type is NONE and which references the predefined entity Result
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+compile_melted
+compile_result validity_warning TEST Unused_local_warning
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

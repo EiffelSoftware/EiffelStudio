@@ -1,0 +1,8 @@
+After initial compilation (without using a precompiled library), the
+text of the root class is modified to give the class a different name.
+When the system is recompiled, the compiler should report a VD30 error
+(cannot find root class), but it instead terminates silently after
+pass 6 on the root cluster.  The error does not occur if a precompiled
+base library is used.
+
+Discovered in Release 3.2.3b.

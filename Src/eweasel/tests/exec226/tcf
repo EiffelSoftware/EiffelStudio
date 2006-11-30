@@ -1,0 +1,18 @@
+test_name 	generic-named-tuple
+test_description Access on a named tuple, when the tuple has a generic type as generic parameter
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+
+compile_frozen
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

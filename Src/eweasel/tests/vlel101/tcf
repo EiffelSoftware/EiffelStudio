@@ -1,0 +1,50 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vlel1-mult-diff
+test_description Violate validity constraint VLEL with keyword all appearing multiple times in different feature lists
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+define		 EXPORT "{ANY} all; {NONE} all"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VLEL(1)
+
+define		 EXPORT "{ANY} prefix "+", all; {NONE} prefix "@weasel", all"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 11
+
+define		 EXPORT "{ANY} all, prefix "+"; {NONE} all, prefix "@weasel""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 11
+
+define		 EXPORT "{ANY} prefix "+", all; {NONE} all, prefix "@weasel""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 syntax_error TEST 11
+
+define		 EXPORT "{NONE} all; {NONE} all"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VLEL(1)
+
+define		 EXPORT "{ANY} all; {ANY} all"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VLEL(1)
+
+define		 EXPORT "{ANY} all; {TEST} f; {NONE} all"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VLEL(1)
+
+test_end

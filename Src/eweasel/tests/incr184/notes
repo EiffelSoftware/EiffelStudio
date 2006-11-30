@@ -1,0 +1,9 @@
+Initially, the system is frozen with an Ace file using no precompiled
+library that specifies either `multithreaded (yes)' or
+`shared_library_definition ("/foo/bar")'.  Then the Ace file is
+changed to indicate `multithreaded (no)' or to delete the line with
+the shared_library_definition specification and the system is
+refrozen.  The compiled C code is not removed first, so it the
+non-multithreaded code won't link.
+
+Discovered in Release 5.0.016.

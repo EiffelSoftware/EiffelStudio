@@ -1,0 +1,7 @@
+A class repeatedly generates a small manifest array, each of whose
+elements is `strip ()'.  The system compiles fine, but when executed
+for a large number of iterations it eventually runs out of memory,
+which appears to indicate a memory leak.
+
+Discovered in Release 5.0.015.
+

@@ -1,0 +1,11 @@
+
+test_name creation-procedure-restriction
+test_description Only the creation procedure of a root class which is defined as the root creation procedure has restrictions on arguments.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_frozen
+compile_result	ok
+
+test_end

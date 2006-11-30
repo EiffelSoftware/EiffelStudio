@@ -1,0 +1,31 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	remove-formal-generic
+test_description After initial compilation, a generic class TEST1 [G] is changed to a non-generic class and the class that inherits from TEST1 is changed correspondingly.  When the system is frozen, the compiler dies in degree -1.
+
+define		FORMAL_GENERIC "[G]"
+define		ACTUAL_GENERIC "[STRING]"
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define		FORMAL_GENERIC ""
+define		ACTUAL_GENERIC ""
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

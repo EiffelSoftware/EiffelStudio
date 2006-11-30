@@ -1,0 +1,7 @@
+After initial compilation, a class is changed to an expanded class.
+The compiler detects the newly introduced VDRD(2) violation.  Then an
+invalid creation instruction is added and the compiler reports the
+VGCC error.  But when the invalid creation instruction is removed, the
+compiler accepts the classes even though the VDRD(2) error is still present.
+
+Discovered in Release 3.2.2.

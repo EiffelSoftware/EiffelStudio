@@ -1,0 +1,7 @@
+A type `STRING [STRING]' should be a VTUG(1) error since STRING is not
+a generic class.  The compiler reports a VTUG(2) error for this type,
+but only when it is used in a constraint on a formal generic
+parameter.  Other uses are correctly reported as VTUG(1).
+
+Discovered in Release 3.2.1.
+

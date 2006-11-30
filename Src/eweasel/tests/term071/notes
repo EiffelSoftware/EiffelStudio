@@ -1,0 +1,5 @@
+Finalizing a system with a class which has a prefix operator
+implemented as a variable attribute causes the compiler to die during
+degree -5 on the class.
+
+Discovered in Release 3.3.3.

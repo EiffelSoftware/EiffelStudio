@@ -1,0 +1,6 @@
+A routine which prints `(create {like x}).generator' is written
+in class A and inherited by class B.  Class B redefines the type of
+`x' from ANY to MEM_CONST.  When the routine is called on an object of
+type B, it prints "ANY" instead of "MEM_CONST".
+
+Reported by Manu on Oct 2, 2003.

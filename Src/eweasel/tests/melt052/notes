@@ -1,0 +1,7 @@
+A class calls a feature that is a once function in another class,
+where the target of the call is a creation expression.  The once
+function value is stated not be Void in the invariant of the second
+class.  If the system is melted, execution ends with an invariant
+violation.  Frozen code works correctly.
+
+Discovered in release 5.2.0928.

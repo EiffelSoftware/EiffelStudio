@@ -1,0 +1,52 @@
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General Public
+--| License version 2.
+
+This directory is the distribution directory for the EiffelWeasel
+automatic tester.  It has the following subdirectories with the
+indicated contents:
+
+	bin		Executables for platform-independent shell scripts
+	compilation	Scripts and files need for compiling EiffelWeasel
+	control		Include files, test suite catalogs for operation
+	doc		Documentation
+	spec		One subdirectory per supported platform with
+			platform-dependent stuff (lib, bin, project dirs)
+	source		Source code to build EiffelWeasel
+	tests		Contains subdirectories which each have one test
+
+Before proceeding, please read:
+
+	This README file
+	BUGS file in this directory
+	CHANGES file in this directory
+	INSTALL file in this directory
+	doc/eweasel.doc
+
+Typical usage of eweasel (on Solaris)
+
+	setenv EWEASEL <EiffelWeasel_install_dir>
+	set path = ($EWEASEL/bin $path)
+	rehash
+	alias ew 'eweasel -d HOME <your_home_dir> -d INCLUDE $EWEASEL/control -d ISE_EIFFEL <Eiffel_install_dir> -d ISE_PLATFORM solaris-2.5+ -d VERSION 5.0 \!* $EWEASEL/control/init $EWEASEL/control/catalog <test suite output directory>'
+
+To show usage:
+
+	eweasel -h	
+
+
+Suggestions for improvement and bug reports should be sent to the
+technical support address listed below.
+
+The file BUGS in this directory contains a list of known bugs and
+deficiencies in the EiffelWeasel tester.
+
+The file CHANGES in this directory contains a list of changes to
+EiffelWeasel since the previous release.
+
+For technical support, contact:
+
+	David Hollenberg
+	Email:  dhollen@mosis.org
+	Phone:  (310) 448-8704

@@ -1,0 +1,5 @@
+A function takes a BIT argument and just returns its argument.  When
+the system is finalized, the code generated for the routine won't
+compile.
+
+Discovered in Release 3.3 beta.

@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 manifest-array-of-tiny-strings
+test_description A class has a routine which repeatedly creates a manifest array of 80 strings, each of whose elements is "w".  The system compiles fine when frozen, but execution soon ends with a run-time panic.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_frozen
+compile_result 	 validity_warning TEST Unused_local_warning Unused_local_warning
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output1 200 48 16 100000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

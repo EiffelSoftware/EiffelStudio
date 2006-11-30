@@ -1,0 +1,78 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 lace-assertion-option
+test_description Test assertion monitoring and debug instruction execution
+
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+
+define		 ASSERTION_LEVEL ""
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+execute_work		 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output1
+
+define		 ASSERTION_LEVEL "precondition="true""
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+execute_work		 NONE exec_output2
+execute_result	 ok
+compare		 exec_output2 output2
+
+define		 ASSERTION_LEVEL "precondition="true" postcondition="true""
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+execute_work		 NONE exec_output3
+execute_result	 ok
+compare		 exec_output3 output3
+
+define		 ASSERTION_LEVEL "precondition="true" postcondition="true" invariant="true""
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+execute_work		 NONE exec_output4
+execute_result	 ok
+compare		 exec_output4 output4
+
+define		 ASSERTION_LEVEL "precondition="true" postcondition="true" invariant="true" loop="true""
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+execute_work		 NONE exec_output5
+execute_result	 ok
+compare		 exec_output5 output5
+
+define		 ASSERTION_LEVEL "precondition="true" postcondition="true" invariant="true" loop="true" check="true""
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+execute_work		 NONE exec_output6
+execute_result	 ok
+compare		 exec_output6 output6
+
+define		 ASSERTION_LEVEL "precondition="true" postcondition="true" invariant="true" loop="true" check="true""
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+execute_work		 NONE exec_output7
+execute_result	 ok
+compare		 exec_output7 output7
+
+test_end

@@ -1,0 +1,5 @@
+Freezing a system with a feature which is an argumentless external
+function that includes a signature in the External_declaration
+produces C code which won't compile.
+
+Discovered in Release 3.3 beta.

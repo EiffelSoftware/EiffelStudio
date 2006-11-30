@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 join-effect-precond-skipped
+test_description A class inherits three deferred features and joins and effects them. The flatshort form of the heir class looks as expected, with all alternative preconditions present in the expected order.  But when the system is executed, only one of the preconditions of the deferred features is executed.
+
+copy_sub 	 Ace $TEST Ace
+define		 SHOW_VALUE "False"
+copy_sub 	 show.e   $CLUSTER show.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output1
+
+define		 SHOW_VALUE "True"
+copy_sub 	 show.e   $CLUSTER show.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output2
+execute_result	 ok
+compare		 exec_output2 output2
+
+test_end

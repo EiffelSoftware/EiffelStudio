@@ -1,0 +1,50 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 creation-instruction-sneak
+test_description A client A of a class B has a valid creation instruction to create an instance of B and B is then modified so that the creation instruction in A is no longer valid
+
+copy_sub 	 Ace $TEST Ace
+define		 CREATION_CALL "!!x"
+define		 CREATORS ""
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 CREATORS "creation make"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VGCC(5)
+
+define		 CREATION_CALL "!!x.make"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+define		 CREATORS "creation {NONE} make"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VGCC(6)
+
+define		 CREATORS "creation {NONE}"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST VGCC(6)
+
+define		 CREATORS "creation {TEST}"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST VGCC(6)
+
+define		 CREATORS "creation {TEST} make"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

@@ -1,0 +1,31 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 fix-veen-add-vrfa
+test_description After initial compilation, a VEEN error is added to a class.  When the compiler detects the error, it is corrected by inheriting from a different class.  This introduces a VRFA error which the compiler catches, but it also says "Exception occurred while displaying error message" while trying to display the name of the feature involved.
+
+copy_sub 	 Ace $TEST Ace
+define		 PARENT "TEST1"
+define		 INSTRUCTION ""
+copy_sub 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test1_access.e  $CLUSTER test1_access.e
+compile_melted
+compile_result 	 ok
+
+define		 INSTRUCTION "str.concat"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VEEN
+
+define		 PARENT "TEST1_ACCESS"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VRFA
+
+test_end

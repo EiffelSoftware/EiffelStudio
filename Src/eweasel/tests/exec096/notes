@@ -1,0 +1,6 @@
+A routine has a local of an expanded type and the creation procedure
+of the expanded type's base class raises an exception.  When the
+routine is called repeatedly, a run-time panic occurs if garbage
+collection is on.
+
+Discovered in Release 3.2.4.

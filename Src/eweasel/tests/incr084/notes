@@ -1,0 +1,6 @@
+After initial compilation where the system is frozen, the value of an
+inherited constant INTEGER attribute is changed and the system is
+refrozen.  System execution should print a longer bit string, but it
+does not.
+
+Discovered in Release 3.2.

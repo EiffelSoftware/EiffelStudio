@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	create-sub-cluster-bogus-vd30
+test_description A system with one cluster preceded by the keyword "all" in the Ace file is compiled, where the cluster does not exist.  The compiler correctly reports a VD01 error (nonexistent cluster path in Ace file). Then the cluster is created with one sub-cluster `sub' which contains the root class.  When compilation is resumed, the compiler reports a bogus VD30 error.
+
+define_directory NEW_CLUSTER $TEST new_clusters
+define_directory SUBDIR $NEW_CLUSTER sub
+copy_sub 	Ace $TEST Ace
+compile_melted
+compile_result 	validity_error NONE VD71
+
+copy_raw 	test1.e $NEW_CLUSTER test1.e
+copy_raw 	test.e $SUBDIR test.e
+resume_compile
+compile_result 	ok
+
+test_end

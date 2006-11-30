@@ -1,0 +1,6 @@
+A violation of the Entity rule (VEEN) involving the predefined entity
+`Result' is incorrectly reported by the compiler as a violation of the
+Local Entity rule (VRLE).
+
+Still not fixed in Prerelease 93.02.17.
+

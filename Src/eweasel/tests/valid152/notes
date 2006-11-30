@@ -1,0 +1,6 @@
+A constrained generic class `TEST1 [G -> TEST2]' tries to pass `agent
+{G}.is_stopable' to a procedure whose formal argument is of type
+FUNCTION [G, TUPLE [G], BOOLEAN].  The compiler should accept the
+class but reports a VUAR(2) error on the procedure call.
+
+Discovered in release 5.4.0906.

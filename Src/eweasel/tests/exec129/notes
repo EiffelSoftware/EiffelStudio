@@ -1,0 +1,5 @@
+A call `b.to_integer' where `b' is of type BOOLEAN compiles fine when
+melted, but executing the system results in an "Illegal cast
+operation" panic.  Frozen code works correctly.
+
+Reported by Manu on Release 5.1.12.

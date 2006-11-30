@@ -1,0 +1,6 @@
+A class inherits from a second class and renames two effective
+features to a new name, redefining that new feature name.  The
+redefinition calls precursor.  The compiler should report a VUPR(3)
+error, but it accepts the classes.
+
+Discovered in Release 5.0.015.

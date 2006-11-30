@@ -1,0 +1,16 @@
+test_name single-class-with-inherited-anchor
+test_description When a class which is generated as a single entity because it inherits from a .NET class, and that it also inherits from an Eiffel class which has some anchors. Then the compiler fail to generate correct code.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output
+execute_result ok
+
+compare exec_output output
+
+test_end

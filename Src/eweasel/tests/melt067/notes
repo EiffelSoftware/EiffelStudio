@@ -1,0 +1,7 @@
+A root class has an attribute of type `expanded TEST1 [STRING]' where
+the creation procedure of TEST1 declares a local of type `expanded
+TEST2 [like Current]' and prints its generating type.  Code compiles
+fine when melted, but dies with a panic when executed.  Frozen and
+finalized code work correctly.
+
+Discovered in release 5.4.0515.

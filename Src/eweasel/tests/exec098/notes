@@ -1,0 +1,5 @@
+A class with an attribute of type BIT 1000 has a routine which calls
+`out'.  The system compiles fine, but system execution terminates with
+an "out of memory" exception.
+
+Discovered in Release 3.2.4.

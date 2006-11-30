@@ -1,0 +1,8 @@
+A generic class has a routine with a local whose type is the formal
+generic parameter.  Another class inherits from the generic class and
+provides an expanded type as actual generic parameter, where the
+expanded type's base class has a creation procedure.  If the system is
+finalized with dead code removal on, the generated C code will compile
+but won't link.
+
+Discovered in Release 3.2.4.

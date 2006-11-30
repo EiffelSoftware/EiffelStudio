@@ -1,0 +1,8 @@
+The creation procedure is not called for an entity of an expanded
+type, but only if the creation procedure is the implicit
+`default_create' instead of an explicitly named creation procedure and
+only if entity is a local and class has no attribute of the same
+expanded type.
+
+Reported by Manu on October 3, 2002.
+

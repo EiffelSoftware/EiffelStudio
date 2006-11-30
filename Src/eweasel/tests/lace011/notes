@@ -1,0 +1,5 @@
+An Ace with a Cluster_properties containing an Include or Exclude with
+a completely empty File_list causes an exception trace.
+
+Still not fixed in Prerelease 93.02.17.
+

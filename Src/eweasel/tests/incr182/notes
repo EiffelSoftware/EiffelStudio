@@ -1,0 +1,8 @@
+After initial compilation where the system is melted, a parent class
+is added to the root class.  This parent has a deferred version of a
+feature effected by the root class and the deferred feature has a
+precondition and postcondition.  When changes are melted, executing
+the system does not execute the precondition or postcondition but it
+should.
+
+Discovered in Release 5.0.016.

@@ -1,0 +1,35 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 freeze-print-int64-array
+test_description A system is frozen without a precompiled library.  Then an instruction `print ((<<int64, int64>>).item (1));' is added to the body of the root creation procedure and changes are melted. System execution then dies with a precondition violation (index_small_enough), though it should not.
+
+define LOCAL ""
+define BODY ""
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+define LOCAL "int64: INTEGER_64"
+define BODY "print ((<<int64, int64>>).item (1)); io.new_line"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

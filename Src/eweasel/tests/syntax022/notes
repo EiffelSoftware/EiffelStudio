@@ -1,0 +1,5 @@
+Null characters (%U) are completely ignored in a standard operator
+name such as infix "and%U", but only when they are trailing nulls.
+
+Discovered in Prerelease 93.07.15.
+

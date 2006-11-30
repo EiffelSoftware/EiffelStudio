@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	 xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd"
+	 name="test" uuid="569d4016-8e4c-4d75-8de5-9e12ce74ce61">
+	<target name="test">
+		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+</description>
+		<root cluster="root_cluster" class="test" feature="make"/>
+		<option>
+			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		</option>
+		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

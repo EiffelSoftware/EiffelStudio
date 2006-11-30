@@ -1,0 +1,17 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 visible-cluster-case-sensitive
+test_description A Visible clause in the Ace which names a class (or a feature in its export subclause) is case-sensitive if the name is enclosed in double quotes, but should not be since it does not refer to an outside element.  The compiler incorrectly reports a VD25 violation.  In the case of a feature, the compiler thinks the feature is missing so it dies (a previously reported bug).
+
+copy_sub 	 Ace $TEST Ace
+copy_raw	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+test_end

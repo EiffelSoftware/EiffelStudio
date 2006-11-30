@@ -1,0 +1,5 @@
+An external routine which takes an expanded argument and also
+specifies a cast in the Special_external_decl compiles fine when
+frozen, but the generated C code won't compile.
+
+Discovered in Release 3.3.7.

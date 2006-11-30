@@ -1,0 +1,6 @@
+Finalizing a system with a class which has a call to an infix operator
+which is an external routine causes the compiler to die during degree
+-3 on the class, but only if inlining (yes) is specified.
+
+Discovered in Release 5.0.015.
+

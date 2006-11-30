@@ -1,0 +1,7 @@
+After initial compilation, the type of an attribute is changed from
+`TEST1' to `expanded TEST1'.  The system recompiles fine, but when it
+is executed it dies with a segmentation fault instead of printing
+"Weasel".
+
+Discovered in Release 3.1.1.
+

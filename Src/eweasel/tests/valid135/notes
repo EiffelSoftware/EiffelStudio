@@ -1,0 +1,6 @@
+A class whose generic parameter is constrained by `DD [BIT name]',
+where "name" is an unknown identifier, is accepted by the compiler but
+should not be.
+
+Reported by Manu on 13 May 2003.
+

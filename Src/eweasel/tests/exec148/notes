@@ -1,0 +1,4 @@
+Bug in generic conformance involving class with two constrained
+generic parameters.
+
+Reported by Manu on February 7, 2003.

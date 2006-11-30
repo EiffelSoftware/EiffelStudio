@@ -1,0 +1,6 @@
+A class tries to retrieve an object which was stored into a file using
+`independent_store'.  If the file contents is manually modified to
+delete a character (to simulate a corrupted file), the retrieve
+operation goes into an infinite loop.
+
+Discovered in release 5.3.0620.

@@ -1,0 +1,38 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 precond-valid-cursor-index
+test_description Compiling two classes fully, adding an inheritance clause to each (one with an error) and then removing one of the newly added inheritance clauses
+
+copy_sub 	 Ace $TEST Ace
+
+define		 TEST_INHERITANCE ""
+define		 TEST1_INHERITANCE ""
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_warning TEST Unused_local_warning
+
+define		 TEST_INHERITANCE "inherit ANY undefine is_equal end;"
+define		 TEST1_INHERITANCE "inherit TEST;"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VCCH(1)
+
+define		 TEST1_INHERITANCE ""
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 validity_error TEST VCCH(1)
+
+define		 TEST_INHERITANCE ""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_warning TEST Unused_local_warning
+
+test_end

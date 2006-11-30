@@ -1,0 +1,36 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 wrong-alt-precondition-order
+test_description A class inherits different versions of a routine with the same name and signature from different parents, but redefines the feature.  The flatshort form looks as expected, with all preconditions of redefined versions of the feature in the expected order.  But when the system is executed, the preconditions are checked in a different order than that indicated by the flatshort form.
+
+copy_sub 	 Ace $TEST Ace
+define		 SHOW_VALUE "False"
+copy_sub 	 show.e   $CLUSTER show.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+copy_raw 	 test3.e  $CLUSTER test3.e
+copy_raw 	 test4.e  $CLUSTER test4.e
+copy_raw 	 test5.e  $CLUSTER test5.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output1
+
+define		 SHOW_VALUE "True"
+copy_sub 	 show.e   $CLUSTER show.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output2
+execute_result	 ok
+compare		 exec_output2 output2
+
+test_end

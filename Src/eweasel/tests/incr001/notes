@@ -1,0 +1,9 @@
+A system with two classes compiles fine.  A violation of the Expanded
+Client rule (VLEC) is introduced and the compiler detects it.  But
+when the formal generic parameter of the class violating the rule is
+removed, compilation is resumed and then the formal generic parameter
+is added back, the VLEC violation is still there but the compiler does
+not detect it.
+
+Discovered in Prerelease 93.07.15.
+

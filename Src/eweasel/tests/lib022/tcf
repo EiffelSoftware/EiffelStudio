@@ -1,0 +1,17 @@
+-- This is a test control file
+
+test_name 	ptf-file-finish
+test_description Call `finish'
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+
+copy_raw	file.txt $EXEC_WORK file.txt
+execute_work 	NONE exec_output1
+execute_result 	ok
+if UNIX compare		exec_output1 output_unix
+if not UNIX  compare	exec_output1 output_windows
+
+test_end

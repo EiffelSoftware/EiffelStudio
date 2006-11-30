@@ -1,0 +1,5 @@
+An `old' expression in a manifest array in a postcondition causes a
+run-time panic (illegal metamorphose type), but only after melting.
+
+Discovered in Prerelease 93.04.21.
+

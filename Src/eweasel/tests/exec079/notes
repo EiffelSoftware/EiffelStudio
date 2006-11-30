@@ -1,0 +1,7 @@
+A routine which conditionally raises an exception has a rescue clause
+which always retries, but which first calls the routine itself
+recursively the first time the rescue clause is executed.  Executing
+the system with garbage collection off causes a run-time panic if the
+number of retries is moderately large (331 or greater).
+
+Discovered in Release 3.2.4.

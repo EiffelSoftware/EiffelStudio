@@ -677,8 +677,33 @@ $inttypes_include
 #define RTI64C(x)	$eif_integer_64_constant
 #define RTU64C(x)	$eif_natural_64_constant
 
+/* Define EIF_OS Constants */
+#define EIF_WINDOWS 	1
+#define EIF_LINUX 	2
+#define EIF_SOLARIS 	3
+#define EIF_MACOSX 	4
+#define EIF_ALPHA 	5
+#define EIF_FREEBSD 	6
+#define EIF_HPUX 	7
+#define EIF_IRIX 	8
+#define EIF_OPENBSD 	9
+#define EIF_UNICOS 	10
+#define EIF_VXWORKS	11
+
 /* Define EIF_OS value */
 #define EIF_OS $eif_os
+
+/* Define EIF_ARCH Constants */
+#define EIF_X86 	1
+#define EIF_X86_64 	2
+#define EIF_SPARC 	3
+#define EIF_SPARC_64 	4
+#define EIF_PPC		5
+#define EIF_PPC_64	6
+#define EIF_C90		7
+#define EIF_T3D		8
+#define EIF_HPPA	9
+#define EIF_MIPS	10
 
 /* Define EIF_ARCH value */
 #define EIF_ARCH $eif_arch

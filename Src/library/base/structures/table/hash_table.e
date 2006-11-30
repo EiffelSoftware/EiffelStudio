@@ -762,7 +762,7 @@ feature -- Element change
 				insert_position := position
 				internal_search (old_key)
 				if found then
-					content.put (found_item, insert_position)
+					content.put (content.item (position), insert_position)
 					if old_key = default_key then
 						set_no_default
 					else

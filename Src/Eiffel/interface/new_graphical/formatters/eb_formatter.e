@@ -44,7 +44,7 @@ feature -- Properties
 	manager: EB_STONABLE
 			-- What sends and receives stones.
 
-	output_line: EV_TEXTABLE
+	output_line: EV_LABEL
 			-- Where status information should be printed.
 
 	widget: EV_WIDGET is
@@ -259,6 +259,7 @@ feature -- Commands
 		do
 			if output_line /= Void then
 				output_line.set_text (header)
+				output_line.refresh_now
 			end
 			if cur_wid = Void then
 				--| Do nothing.
@@ -401,6 +402,7 @@ feature {NONE} -- Implementation
 
 			if output_line /= Void then
 				output_line.set_text (temp_header)
+				output_line.refresh_now
 			end
 		end
 

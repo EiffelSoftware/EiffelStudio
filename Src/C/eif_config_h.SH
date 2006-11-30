@@ -708,9 +708,7 @@ $inttypes_include
 #define EIF_MIPS	10
 
 /* Define EIF_ARCH value */
-
-
-//#define EIF_ARCH $eif_arch
+#define EIF_ARCH $eif_arch
 
 /* Is windows platform? */
 #$eif_windows EIF_WINDOWS	/* NC */

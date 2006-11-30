@@ -7,23 +7,23 @@ indexing
 
 class
 	EV_PARAGRAPH_FORMAT
-	
+
 inherit
 	EV_ANY
 		redefine
 			implementation,
 			initialize
 		end
-		
+
 feature {NONE} -- Initialization
 
 	initialize is
 			-- Perform initialization of `Current'.
 		do
 			enable_left_alignment
-			is_initialized := True
+			Precursor
 		end
-		
+
 feature -- Status report
 
 	alignment: INTEGER is
@@ -40,25 +40,25 @@ feature -- Status report
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_left
 		end
-		
+
 	is_center_aligned: BOOLEAN is
 			-- Is `Current' center aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_center
 		end
-	
+
 	is_right_aligned: BOOLEAN is
 			-- Is `Current' right aligned?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_right
 		end
-	
+
 	is_justified: BOOLEAN is
 			-- Is `Current' justified?
 		do
 			Result := alignment = {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
-		
+
 	left_margin: INTEGER is
 			-- Left margin between border and text in pixels.
 		require
@@ -66,7 +66,7 @@ feature -- Status report
 		do
 			Result := implementation.left_margin
 		end
-		
+
 	right_margin: INTEGER is
 			-- Right margin between line end and border in pixels.
 		require
@@ -74,7 +74,7 @@ feature -- Status report
 		do
 			Result := implementation.right_margin
 		end
-		
+
 	top_spacing: INTEGER is
 			-- Spacing between top of paragraph and previous line in pixels.
 		require
@@ -82,7 +82,7 @@ feature -- Status report
 		do
 			Result := implementation.top_spacing
 		end
-		
+
 	bottom_spacing: INTEGER is
 			-- Spacing between bottom of paragraph and next line in pixels.
 		require
@@ -90,7 +90,7 @@ feature -- Status report
 		do
 			Result := implementation.bottom_spacing
 		end
-		
+
 feature -- Status setting
 
 	enable_left_alignment is
@@ -102,7 +102,7 @@ feature -- Status setting
 		ensure
 			is_left_aligned: is_left_aligned
 		end
-		
+
 	enable_center_alignment is
 			-- Ensure `is_center_aligned' is `True'.
 		require
@@ -112,7 +112,7 @@ feature -- Status setting
 		ensure
 			is_center_aligned: is_center_aligned
 		end
-		
+
 	enable_right_alignment is
 			-- Ensure `is_right_aligned' is `True'.
 		require
@@ -122,7 +122,7 @@ feature -- Status setting
 		ensure
 			is_right_aligned: is_right_aligned
 		end
-		
+
 	enable_justification is
 			-- Ensure `is_justified' is `True'.
 		require
@@ -132,7 +132,7 @@ feature -- Status setting
 		ensure
 			is_justified: is_justified
 		end
-		
+
 	set_alignment (an_alignment: INTEGER) is
 			-- Assign `an_alignment' to `alignment.
 		require
@@ -165,7 +165,7 @@ feature -- Status setting
 		ensure
 			margin_set: right_margin = a_margin
 		end
-		
+
 	set_top_spacing (a_spacing: INTEGER) is
 			-- Set `top_spacing' to `a_spacing'.
 		require
@@ -176,7 +176,7 @@ feature -- Status setting
 		ensure
 			spacing_set: top_spacing = a_spacing
 		end
-		
+
 	set_bottom_spacing (a_spacing: INTEGER) is
 			-- Set `bottom_spacing' to `a_spacing'.
 		require
@@ -187,7 +187,7 @@ feature -- Status setting
 		ensure
 			spacing_set: bottom_spacing = a_spacing
 		end
-		
+
 feature -- Contract Support
 
 	valid_alignment (an_alignment: INTEGER): BOOLEAN is
@@ -205,7 +205,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_PARAGRAPH_FORMAT_I
 			-- Implementation of the current object
-		
+
 feature {NONE} -- Implementation
 
 	create_implementation is

@@ -85,12 +85,16 @@ feature -- Basic operation
 
 	fake_pointer_wheel_up is
 			-- Simulate the user rotating the mouse wheel up.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.fake_pointer_wheel_up
 		end
 
 	fake_pointer_wheel_down is
 			-- Simulate the user rotating the mouse wheel down.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.fake_pointer_wheel_down
 		end

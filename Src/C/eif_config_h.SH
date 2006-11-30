@@ -678,10 +678,11 @@ $inttypes_include
 #define RTU64C(x)	$eif_natural_64_constant
 
 /* Define EIF_OS Constants */
-#define EIF_WINDOWS 	1
+
+#define EIF_WINNT 	1
 #define EIF_LINUX 	2
-#define EIF_SOLARIS 	3
-#define EIF_MACOSX 	4
+#define EIF_SUNOS	3
+#define EIF_DARWIN 	4
 #define EIF_ALPHA 	5
 #define EIF_FREEBSD 	6
 #define EIF_HPUX 	7
@@ -694,6 +695,7 @@ $inttypes_include
 #define EIF_OS $eif_os
 
 /* Define EIF_ARCH Constants */
+
 #define EIF_X86 	1
 #define EIF_X86_64 	2
 #define EIF_SPARC 	3
@@ -706,7 +708,9 @@ $inttypes_include
 #define EIF_MIPS	10
 
 /* Define EIF_ARCH value */
-#define EIF_ARCH $eif_arch
+
+
+//#define EIF_ARCH $eif_arch
 
 /* Is windows platform? */
 #$eif_windows EIF_WINDOWS	/* NC */

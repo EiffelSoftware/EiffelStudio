@@ -677,6 +677,12 @@ $inttypes_include
 #define RTI64C(x)	$eif_integer_64_constant
 #define RTU64C(x)	$eif_natural_64_constant
 
+/* Define EIF_OS value */
+#define EIF_OS $eif_os
+
+/* Define EIF_ARCH value */
+#define EIF_ARCH $eif_arch
+
 /* Is windows platform? */
 #$eif_windows EIF_WINDOWS	/* NC */
 

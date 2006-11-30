@@ -1,0 +1,17 @@
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General Public
+--| License version 2.
+
+Installation instructions:
+
+1. Use tar to get the eweasel directory tree off the tape.
+
+2. Modify files in the `control' subdirectory so that they are
+   appropriate for your site.  I believe you will only have to modify
+   file `site_specific'.
+
+3. Note: version 0.2 of `eweasel' is not compatible with version 0.1.
+   Some of the test control files have changed a little bit.  You
+   should therefore completely replace the previous distribution
+   (version 0.1) with this distribution.

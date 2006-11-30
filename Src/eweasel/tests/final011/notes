@@ -1,0 +1,7 @@
+A particular function `f' with a rescue clause calls another function.
+When this called function raises an exception, the rescue clause of
+`f' is not executed and there is no retry.  The rescue clause of the
+caller of `f' is executed instead.  This incorrect behavior only
+occurs if the system is finalized.
+
+Discovered in Release 3.3.4.

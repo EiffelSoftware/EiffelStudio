@@ -1,0 +1,7 @@
+After initial compilation, an inherited feature which is a named as a
+creation procedure in the heir is changed to an attribute or a
+function.  The compiler should report a VGCP(2) error, but it is too
+lazy to do so.
+
+
+Discovered in Release 3.2.1.

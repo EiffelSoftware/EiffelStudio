@@ -1,0 +1,6 @@
+A violation of the Expanded Type rule is detected, but when I fix the
+problem by removing the declaration of the offending feature and hit
+return to retry, es3 dies much later.
+
+Fixed in Prerelease 93.02.17.
+

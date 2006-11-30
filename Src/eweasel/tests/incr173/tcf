@@ -1,0 +1,39 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 byte-node-disaster
+test_description A sequence of changes causes the compiler to die with a segmentation fault in `byte_node'.
+
+define ACTUAL "REAL, CHARACTER"
+define FEATURE1 ""
+define FEATURE2 "w: G"
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+copy_sub 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define ACTUAL "CHARACTER, REAL"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VOMB(1)
+
+define FEATURE2 ""
+copy_sub 	test2.e $CLUSTER test2.e
+resume_compile
+compile_result 	validity_error TEST VEEN
+
+define ACTUAL "REAL, CHARACTER"
+define FEATURE2 "w: G is do end"
+copy_sub 	test.e $CLUSTER test.e
+copy_sub 	test2.e $CLUSTER test2.e
+resume_compile
+compile_result 	ok
+
+test_end

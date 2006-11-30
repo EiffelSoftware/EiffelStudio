@@ -1,0 +1,5 @@
+A clearer example of a system which obtains a reference to a
+sub-object and uses it to change that sub-object.
+
+Discovered in Release 3.2.2.
+

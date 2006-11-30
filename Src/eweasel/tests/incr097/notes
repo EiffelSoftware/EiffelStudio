@@ -1,0 +1,7 @@
+A class with a generic parameter `G -> ARRAY [like weasel]' is
+correctly reported as a VCFG(3) error.  But when an empty line is
+inserted and then deleted in the file containing the class, thereby
+updating its date of last modification, and compilation is resumed the
+compiler terminates silently after pass 5 on the class.
+
+Discovered in Release 3.2.1.

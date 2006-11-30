@@ -1,0 +1,4 @@
+Routine `copy_to' in FILE does not work correctly if file which is
+target of call is not positioned at beginning of file.
+
+Discovered in release 5.4.0515.

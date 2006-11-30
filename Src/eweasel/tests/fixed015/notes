@@ -1,0 +1,6 @@
+An operator feature (infix or prefix) whose name is not all in
+lowercase cannot be called.  Also, multiple declarations of the same
+operator feature, differing only by case, are accepted.
+
+Fixed in Prerelease 93.02.17.
+

@@ -1,0 +1,5 @@
+A generic class which violates the Expanded Client rule (constraint
+VLEC) causes an infinite loop in the compiler.
+
+Discovered in Prerelease 93.05.17.
+

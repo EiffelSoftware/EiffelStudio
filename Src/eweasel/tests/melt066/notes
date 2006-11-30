@@ -1,0 +1,7 @@
+A class tries to print the generating type of the expression `create
+{TEST1 [BIT n]' where `n: INTEGER is 8'.  When the system is melted,
+system execution ends with an "out of memory" error.  Frozen code
+works correctly, except that it prints "TEST1 [BIT_REF]" instead of
+the expected "TEST1 [BIT 8]".
+
+Discovered in release 5.4.0515.

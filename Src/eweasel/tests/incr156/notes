@@ -1,0 +1,7 @@
+A pair of generic classes that mention each other in their formal
+generic constraints is invalid.  When some of the actual generic
+parameters are NONE, the compiler correctly detects the VTCG error.
+But when compilation is resumed without any change to the classes, the
+compiler dies with a bus error.
+
+Discovered in Release 5.0.015.

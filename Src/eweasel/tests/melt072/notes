@@ -1,0 +1,7 @@
+A class with the instruction `print ($a = $b)' where `a' and `b' are
+variable attributes of the class compiles fine when melted, but
+execution ends with a run-time panic and "operational stack botched".
+Frozen code works fine and correctly prints False.
+
+Discovered in release 5.5.1012.
+

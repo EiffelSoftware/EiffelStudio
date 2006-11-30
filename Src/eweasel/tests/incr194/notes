@@ -1,0 +1,6 @@
+An expanded class has a call to an agent, which consists of a call to
+an inherited function.  After initial compilation the return type of
+the inherited function is changed and changes are melted.  System
+execution then dies with a segmentation violation.
+
+Discovered in release 5.4.0403.

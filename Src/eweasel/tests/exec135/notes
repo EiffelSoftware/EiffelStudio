@@ -1,0 +1,6 @@
+A class does an `independent_store' of an object that has two expanded
+attributes, then retrieves the previously stored object.  The values
+in the expanded attributes are incorrect after retrieval.
+
+Reported by Manu on October. 1, 2002.
+

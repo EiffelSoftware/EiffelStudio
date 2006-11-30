@@ -1,0 +1,6 @@
+When a violation of VTEC(2) is introduced after initial compilation by
+adding a creation clause with two creation procedures to the class
+being used as an expanded type, the compiler does not detect it.
+
+Discovered in Release 3.1.1.
+

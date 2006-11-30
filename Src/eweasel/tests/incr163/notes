@@ -1,0 +1,7 @@
+After initial compilation, formal generics in an inheritance clause
+are switched, causing a class to no longer conform to the generic
+constraint.  The class is used as an actual generic in a generic
+constraint.  The compiler does not detect the newly introduced VTCG
+error.
+
+Discovered in Release 5.0.015.

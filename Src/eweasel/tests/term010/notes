@@ -1,0 +1,6 @@
+A generic class with a single formal generic parameter which is
+constrained by a class with an invalid actual generic parameter
+(`STRING [STRING]') causes an exception trace.
+
+Still not fixed in Prerelease 93.02.17.
+

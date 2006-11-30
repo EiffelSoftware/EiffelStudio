@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 unreachable-syntax-error
+test_description A system with two classes is compiled.  The compiler detects the syntax error on the second class.  Then the root class is changed so that the second class is no longer reachable from the root.  When compilation is resumed, the compiler still reports a syntax error on the unreachable class.
+
+copy_sub 	 Ace $TEST Ace
+define		 ATTRIBUTE "x: TEST1"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 syntax_error TEST1 10
+
+define		 ATTRIBUTE ""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

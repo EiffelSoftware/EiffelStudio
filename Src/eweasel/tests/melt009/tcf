@@ -1,0 +1,22 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	invariant-melt-panic
+test_description A inherited function of type `like Current' is called from the inheriting class.  The violation of the class invariant at execution time is reported.  However a run-time panic also occurs when the classes are melted, but not when they are frozen.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	failed
+
+test_end

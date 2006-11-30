@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 expanded-generic-conformance
+test_description The type `expanded TEST1 [DOUBLE]' should not conform to the type `expanded TEST1 [STRING]'.  But the compiler accepts an assignment involving these two types.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VJAR
+
+test_end

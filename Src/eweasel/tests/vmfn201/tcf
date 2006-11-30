@@ -1,0 +1,347 @@
+test_name validity-vmfn2-basic
+test_description Validity rule for alias of shared feature.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+-- D inherits A
+
+-- Feature with no arguments: no alias in A
+define A ""
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define P2 "A rename a as d alias "+" end"
+copy_sub d.e $CLUSTER d.e
+compile_melted
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "not" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with no arguments: operator alias in A
+define A "alias "not""
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define P2 "A rename a as d alias "+" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "not" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: binary operator alias without convert in A
+define A "alias "and" (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define P2 "A rename a as d alias "+" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "and" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P2 "A rename a as d alias "and" convert end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P2 "A rename a as d alias "[]" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: binary operator alias with convert in A
+define A "alias "and" convert (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define P2 "A rename a as d alias "+" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "and" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P2 "A rename a as d alias "and" convert end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P2 "A rename a as d alias "[]" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: bracket alias in A
+define A "alias "[]" (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define P2 "A rename a as d alias "[]" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "and" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P2 "A rename a as d alias "[]" end"
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- D inherits A and B
+define P2 "B"
+
+-- Feature with no arguments: no alias in A
+define A ""
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define B "rename a as d alias "+" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "not" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with no arguments: operator alias in A
+define A "alias "not""
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define B "rename a as d alias "+" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "not" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: binary operator alias without convert in A
+define A "alias "and" (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define B "rename a as d alias "+" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "and" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "and" convert end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "[]" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: binary operator alias with convert in A
+define A "alias "and" convert (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define B "rename a as d alias "+" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "and" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "and" convert end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "[]" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: bracket alias in A
+define A "alias "[]" (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define P1 "A rename a as d end"
+define B "rename a as d alias "[]" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define P1 "A rename a as d alias "and" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "[]" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub d.e $CLUSTER d.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- D inherits B and C
+define P1 "B"
+define P2 "C"
+copy_sub d.e $CLUSTER d.e
+
+-- Feature with no arguments: no alias in A
+define A ""
+copy_sub a.e $CLUSTER a.e
+
+define B "rename a as d end"
+define C "rename a as d alias "+" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "not" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with no arguments: operator alias in A
+define A "alias "not""
+copy_sub a.e $CLUSTER a.e
+
+define B "rename a as d end"
+define C "rename a as d alias "+" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "not" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: binary operator alias without convert in A
+define A "alias "and" (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define B "rename a as d end"
+define C "rename a as d alias "+" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "and" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define C "rename a as d alias "and" convert end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define C "rename a as d alias "[]" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: binary operator alias with convert in A
+define A "alias "and" convert (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define B "rename a as d end"
+define C "rename a as d alias "+" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "and" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define C "rename a as d alias "and" convert end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define C "rename a as d alias "[]" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+-- Feature with 1 argument: bracket alias in A
+define A "alias "[]" (x: BOOLEAN)"
+copy_sub a.e $CLUSTER a.e
+
+define B "rename a as d end"
+define C "rename a as d alias "[]" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define B "rename a as d alias "and" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+define C "rename a as d alias "[]" end"
+copy_sub b.e $CLUSTER b.e
+copy_sub c.e $CLUSTER c.e
+resume_compile
+compile_result validity_error D ECMA-VMFN(2)
+
+test_end

@@ -1,0 +1,6 @@
+According to page 418 of ETL, there is no limit to the length of
+identifiers and all characters are significant.  But the compiler
+seems to look at only the first 50 characters of identifiers.
+
+Still not fixed in Prerelease 93.02.17.
+

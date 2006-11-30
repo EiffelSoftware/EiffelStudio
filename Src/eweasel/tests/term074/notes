@@ -1,0 +1,6 @@
+The creation procedure of a class creates an instance of another class
+and calls a feature on it which contains a "strip" expression.  If the
+system is finalized and the Ace specifies `inlining (yes)' the
+compiler dies during degree -5 on the first class.
+
+Discovered in Release 3.3.7.

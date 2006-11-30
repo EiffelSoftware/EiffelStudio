@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	compare-frozen-real-arg
+test_description A procedure sets an attribute of type REAL to the value passed in as an argument.  Then the procedure checks whether the attribute is equal to the value just assigned to it.  If the system is frozen then the attribute is not equal to the value assigned to it.  Melted code works correctly.
+
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

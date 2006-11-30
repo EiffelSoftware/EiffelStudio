@@ -1,0 +1,8 @@
+A class has two functions which each have the same expanded type as
+return type.  One of the functions just lets Result get set by the
+default initializations applied to locals, while the other one does an
+explicit creation with Result as target.  The two functions return
+results which should be equal but are not, but only if the system is
+finalized.
+
+Discovered in Release 3.2.3b.

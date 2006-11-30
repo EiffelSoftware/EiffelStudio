@@ -1,0 +1,8 @@
+Finalizing a system whose root creation procedure is an inherited
+(rather than immediate) feature produces C code which won't link.  It
+does not matter whether the Ace includes any `visible' clauses for the
+involved classes.  Even turning off dead_code_removal does not help.
+
+Discovered in Release 3.2.1.
+
+

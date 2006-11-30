@@ -1,0 +1,6 @@
+A function with return type of NONE causes a run-time panic during
+compilation (during descriptor generation if freezing system or during
+pass 5 if not freezing system).
+
+Discovered in Prerelease 93.07.15.
+

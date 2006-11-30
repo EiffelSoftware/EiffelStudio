@@ -1,0 +1,7 @@
+An invalid type used as actual generic parameters in an explicit type in
+a creation instruction should cause the compiler to report a VTEC or
+VTCG error, but it does not.
+
+Discovered in Release 3.2.3b.
+
+

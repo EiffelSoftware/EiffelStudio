@@ -1,0 +1,4 @@
+A creation instruction with an explicit creation type `BIT Weasel'
+where Weasel is not defined causes compiler to die.
+
+Discovered in Release 4.3-17.

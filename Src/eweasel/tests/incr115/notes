@@ -1,0 +1,8 @@
+After initial compilation, the Ace is changed to indicate a new root
+class, which happens to be generic.  The compiler detects the VSRT(1)
+error.  But when the Ace is changed to indicate a new (and newly
+added) root cluster with a valid root class the compiler reports a
+bogus VSCN error.
+
+Discovered in Release 3.2.4.
+

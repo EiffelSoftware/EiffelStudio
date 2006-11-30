@@ -1,0 +1,60 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 reference-to-sub-object
+test_description A class declares an attribute of type `expanded A', where A contains an attribute of type `expanded B' (a sub-object).  Neither classes A nor B are themselves expanded.  Class B has a function which returns `Current' as its result.  It appears that a caller is able to get and save a reference to a sub-object.
+
+define		 ASSERTION_LEVEL "all"
+copy_sub 	 Ace $TEST Ace
+define		 LOCAL "m: expanded TEST2"
+define		 ATTRIBUTE ""
+copy_sub 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1 100000
+execute_result	 ok
+compare		 exec_output1 output
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output2 100000
+execute_result	 ok
+compare		 exec_output2 output
+
+cleanup_compile
+
+define		 ASSERTION_LEVEL "no"
+copy_sub 	 Ace $TEST Ace
+define		 LOCAL ""
+define		 ATTRIBUTE "m: expanded TEST2"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output3 100000
+execute_result	 ok
+compare		 exec_output3 output
+
+compile_frozen
+compile_result 	 ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work	 NONE exec_output4 100000
+execute_result	 ok
+compare		 exec_output4 output
+
+test_end

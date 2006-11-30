@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	freeze-with-unused-locals
+test_description A recursive routine recurses 15 levels deep and then calls a routine on a Void target.  The exception is supposed to be caught but system dies with a run-time panic if frozen.  If a similar class with all unused local variables removed is frozen, it executes correctly.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	validity_warning TEST Unused_local_warning Unused_local_warning Unused_local_warning
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

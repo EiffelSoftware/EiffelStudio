@@ -1,0 +1,30 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	slash-power-on-formal-bad-code
+test_description Call to `/' and `^' on formal constrained to NUMERIC or DOUBLE generates incorrect C code because formal is not evaluated in right context. Also when introducing an error the compiler would crash reporting the error.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+define VWOE_ERROR "make (value ^ 0.0)"
+copy_sub 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_frozen
+compile_result validity_error TEST1 VWOE
+
+define VWOE_ERROR ""
+copy_sub	test1.e $CLUSTER test1.e
+
+resume_compile
+
+compile_result	ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

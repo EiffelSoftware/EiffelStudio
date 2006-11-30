@@ -1,0 +1,8 @@
+A class which inherits from an unconstrained generic class and
+provides a BIT type as actual generic parameter, where the number of
+bits is specified by an integer constant attribute, causes a compiler
+exception trace.  If the class is instead a client of the generic
+class with the same actual generic parameter, no exception trace occurs.
+
+Discovered in Prerelease 93.07.15.
+

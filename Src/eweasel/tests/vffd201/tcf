@@ -1,0 +1,74 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vffd2-basic
+test_description Violate validity constraint VFFD2 with a class which has the same feature name used more than once in the same declaration
+
+copy_sub 	 Ace $TEST Ace
+
+define		 FEATURE_LIST "make, make"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VMFN VMFN
+
+define		 FEATURE_LIST "make, MAKE"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN VMFN
+
+define		 FEATURE_LIST "make, infix "@", make (n: INTEGER): INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN VMFN
+
+define		 FEATURE_LIST "make, prefix "not", make: INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN VMFN
+
+define		 FEATURE_LIST "prefix "not", make, prefix "not": INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN VMFN
+
+define		 FEATURE_LIST "infix "@##", make, infix "@##" (n: INTEGER): INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN VMFN
+
+define		 FEATURE_LIST "MAKE, MAKE1, make2, MAKE3, MAKE4, MAKE5, MAKE2"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN VMFN
+
+define		 FEATURE_LIST "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, a, xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN
+
+define		 FEATURE_LIST "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx, a, xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN
+
+define		 FEATURE_LIST "infix "+", make, prefix "+" (n: INTEGER): INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN
+
+define		 FEATURE_LIST "prefix "@##############################", prefix "@##############################": DOUBLE"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VMFN
+
+define		 FEATURE_LIST "prefix "@##############################", prefix "@###############################": DOUBLE"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

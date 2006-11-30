@@ -1,0 +1,5 @@
+An assignment of `expanded TEST2' to `expanded TEST1' where TEST2
+inherits from TEST1 should be a VJAR error, but the compiler accepts
+it.
+
+Discovered in release 5.4.0610.

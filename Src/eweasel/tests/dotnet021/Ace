@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="54ef525e-af2c-4b37-85a1-c32a8ed5fa1b">
+	<target name="test">
+		<description>-- Do not check postconditions as they may access default value.
+</description>
+		<root class="test" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="false" check="false" invariant="true" loop="false"/>
+		<warning name="syntax" enabled="false"/></option>
+		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
+		$EWEASEL_DOTNET_SETTING
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
+		<assembly name="val_test" location="$CLUSTER\ValTest.dll"/>
+		<cluster name="root_cluster" location="$CLUSTER\"/>
+	</target>
+</system>

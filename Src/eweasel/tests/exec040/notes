@@ -1,0 +1,8 @@
+A pattern of object allocation, resizing and reclamation which was
+derived from a simple merge-sort program compiles fine when it is
+frozen, but dies with a run-time panic when executed with certain
+large values (e.g. 99999).  Many other large values do not cause a
+run-time panic.
+
+Discovered in Release 3.2.1.
+

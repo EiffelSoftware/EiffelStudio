@@ -1,0 +1,5 @@
+An external routine which takes an expanded argument and is defined as
+a macro with a signature compiles fine when frozen, but when executed
+the system dies with a segmentation fault.
+
+Reported by Manu on Release 5.4.0515.

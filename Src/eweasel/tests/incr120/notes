@@ -1,0 +1,6 @@
+When a class having an invariant with a syntax error is compiled, the
+compiler correctly reports a syntax error.  But when the missing
+parenthesis is added and compilation is resumed, the compiler reports
+a bogus VEEN error instead of the expected VUAR(1) error.
+
+Discovered in Release 3.2.4.

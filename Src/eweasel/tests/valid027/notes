@@ -1,0 +1,7 @@
+An invalid generic derivation (STRING [STRING], which is invalid
+because STRING is not a generic class) is accepted by the compiler,
+but only when it is used as explicit creation type in a creation
+instruction.
+
+Discovered in Prerelease 93.05.17.
+

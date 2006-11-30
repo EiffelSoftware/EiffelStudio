@@ -1,0 +1,8 @@
+After initial compilation, a BOOL_STRING is changed to a BIT_REF.
+The compiler correctly detects and reports a VEEN error.  But when
+the offending line is deleted and compilation is resumed, the
+compiler dies during pass 3 on the class with the message "object
+allocation: No more memory".
+
+Discovered in Release 3.2.3b.
+

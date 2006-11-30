@@ -1,0 +1,8 @@
+After initial compilation, an attribute which is the target of a
+creation instruction is moved to a parent class and changed to an
+external function.  The compiler detects the VGCC(7) error.  But when
+the inheritance clause for the parent is deleted from the heir and
+compilation is resumed, the compiler reports a VEEN error but dies in
+the middle of reporting it.
+
+Discovered in Release 3.2.2.

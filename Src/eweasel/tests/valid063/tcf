@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 exclude-recompile-vd14
+test_description Recompiling after change causes VD14 error.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 cust_ic_design.e  $CLUSTER cust_ic_design.e
+copy_raw 	 sqlda.e  $CLUSTER sqlda.e
+compile_frozen
+compile_result	validity_error NONE VD71
+
+copy_raw 	 sqlda_rev1.e  $CLUSTER sqlda.e
+resume_compile
+compile_result	validity_error NONE VD71
+
+test_end

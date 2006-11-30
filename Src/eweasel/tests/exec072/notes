@@ -1,0 +1,6 @@
+A root class has two attributes of an expanded type.  The base class
+of this expanded type has a creation procedure which creates a single
+large string in an attribute.  System execution ends with a run time
+panic, but only if garbage collection is on.
+
+Discovered in Release 3.2.4.

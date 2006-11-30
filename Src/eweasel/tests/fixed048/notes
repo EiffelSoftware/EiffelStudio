@@ -1,0 +1,7 @@
+An Ace which is (presumably) invalid because the Class_name in the
+Root part of the Ace is empty (the Manifest_string "") causes an
+exception trace.
+
+Still not fixed in Prerelease 93.02.17.
+Fixed in Prerelease 93.04.21.
+

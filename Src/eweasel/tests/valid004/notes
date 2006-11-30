@@ -1,0 +1,6 @@
+The Routine rule on page 113 of ETL states that a routine whose
+Routine_body is External or Deferred may not have a Local_declarations
+part or a Rescue part.  This validity constraint is still not
+enforced.  Prerelease 92.12.08.
+
+Still not fixed in prerelease 93.02.17.

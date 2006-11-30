@@ -1,0 +1,7 @@
+A creation instruction whose target is a procedure or functionshould
+be a VGCC violation.  The compiler instead reports a VUAR(1) error,
+but only if the routine takes arguments.
+
+Discovered in Release 4.3-18.
+
+

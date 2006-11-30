@@ -1,0 +1,11 @@
+Attributes declared as unique and introduced in the same feature
+declaration are supposed to have consecutive values according to page
+266.  But deleting a unique attribute and rerunning es3 can sometimes
+result in unique attributes which should have consecutive values, but
+do not.
+
+Still not fixed in Prerelease 93.02.17.
+In fact, now both unique attributes have value 0, instead of remaining
+1 and 3.
+
+

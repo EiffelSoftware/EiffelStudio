@@ -1,0 +1,9 @@
+A system repeatedly creates one thread (which has an empty `execute'
+procedure) and then calls join_all to wait for it to terminate.  As
+the number of threads which have been created increases, the memory
+used by the executing system keeps growing, apparently without limit.
+After 4000 threads have been created, system memory usage is about 90 MB.
+
+Discovered in release 5.1.003.
+
+

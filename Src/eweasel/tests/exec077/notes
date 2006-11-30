@@ -1,0 +1,5 @@
+A class calls the `strip' operator and has an attribute of an expanded
+type.  Executing the system results in an "unknown attribute type"
+run-time panic.
+
+Discovered in Release 3.2.4.

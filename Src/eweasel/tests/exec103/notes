@@ -1,0 +1,7 @@
+A non-expanded class FOO has a routine `bar' which passes Current to a
+routine which uses it to set an attribute in the object referenced by
+the passed argument.  Another class declares an entity of type
+`expanded FOO' and calls `bar' on it.  The attribute in this entity is
+changed by the call, though it should not be.
+
+Discovered in Release 3.3.7.

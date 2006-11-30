@@ -1,0 +1,6 @@
+A routine passes `clone (b)' where `b' is of type BIT 8 to a routine
+whose formal argument is of type BIT 8.  If the system is melted,
+system execution ends with a "Create on deferred" exception.  Frozen
+code works fine.
+
+Discovered in Release 3.2.4.

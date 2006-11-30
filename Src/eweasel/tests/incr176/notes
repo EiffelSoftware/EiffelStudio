@@ -1,0 +1,8 @@
+After initial compilation, a cluster in the Ace file is changed from
+the form "all root_cluster" to a list of the two specific clusters in
+the root cluster directory.  Recompilation works fine.  However, when
+the Ace is then changed to indicate a new root class and and the class
+name inside one file is also changed, a second recompile ends with a
+segmentation fault in `backup_directory'
+
+Discovered in Release 5.0.015.

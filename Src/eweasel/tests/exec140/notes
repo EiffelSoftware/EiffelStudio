@@ -1,0 +1,7 @@
+A class creates a linked queue and puts two elements in it, then gets
+its linear representation.  When system is executed, it dies with a
+postcondition violation.
+
+Reported by Manu on October 10, 2002.
+
+

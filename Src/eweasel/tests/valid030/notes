@@ -1,0 +1,5 @@
+Class which redefines feature of type REAL to be of type `expanded REAL'
+is not accepted.
+
+Still not fixed in Prerelease 93.02.17.
+

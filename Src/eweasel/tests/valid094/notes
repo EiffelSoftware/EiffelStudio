@@ -1,0 +1,11 @@
+A class with an inheritance clause which renames some inherited
+features violates either VHRC(2) or VHRC(3) and also violates VHRC(1)
+is not reported as violating VHRC(1).  It seems to me that it should.
+If `old_name' is not the final name of a feature of the named parent,
+then `old_name' is not even valid.  This seems like a more fundamental
+error than renaming a valid feature name more than once or renaming a
+valid feature name to itself.
+
+Discovered in Release 3.2.3b.
+
+

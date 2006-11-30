@@ -1,0 +1,7 @@
+After initial compilation, the creation procedure named in a generic
+constraint is removed from the creation clause in its class, but the
+feature is left there.  When the system is recompiled, the VTCG
+validity error is not detected.
+
+Discovered in Release 5.0.005.
+

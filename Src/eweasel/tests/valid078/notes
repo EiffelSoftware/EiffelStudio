@@ -1,0 +1,8 @@
+A reverse assignment attempt `x ?= proc' is accepted, where `proc' is
+a procedure.  The compiler should report a validity violation, such as
+VKCN.  If system is frozen, compiler terminates silently while
+freezing the system.  ETL page 341.
+
+Discovered in Release 3.2.1.
+
+

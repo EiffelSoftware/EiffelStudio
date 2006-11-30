@@ -1,0 +1,31 @@
+test_name 	 expanded-reverse-attachment
+test_description Reverse attachment to expanded type is allowed now.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	x.e $CLUSTER x.e
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result	validity_warning A VJRV(2); TEST VJRV(1) VJRV(1) VJRV(1) VJRV(1)
+execute_work	NONE exec_output_m
+compare		exec_output_m output
+execute_result	ok
+
+compile_frozen
+compile_result	ok
+c_compile_work
+c_compile_result ok
+execute_work	NONE exec_output_w
+compare		exec_output_w output
+execute_result	ok
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result ok
+execute_final	NONE exec_output_f
+compare		exec_output_f output
+execute_result	ok
+
+test_end

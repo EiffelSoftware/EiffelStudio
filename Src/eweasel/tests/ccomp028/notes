@@ -1,0 +1,5 @@
+A routine fills an ARRAY [POINTER] with its own address.  If the
+system is finalized with `array_optimization (yes)', the generated C
+code won't compile.
+
+Discovered in Release 3.3.7.

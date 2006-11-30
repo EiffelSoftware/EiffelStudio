@@ -1,0 +1,8 @@
+A class creates an instance of a second class which has a `dispose'
+procedure that causes a floating exception.  When this instance is
+garbage collected, the `dispose' procedure is call and the exception
+is correctly raised.  However, garbage collection is turned off.  A
+subsequent creation of the and collection of another object causes
+program termination.
+
+Discovered in Release 3.3.7.

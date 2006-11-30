@@ -1,0 +1,10 @@
+After initial compilation where the system is melted, an entity name
+in a class invariant is changed to the name of a nonexistent entity.
+When the compiler reports the VEEN error, the entity name is changed
+back to its original value and compilation completes.  But execution
+of the resulting system, which was compiled with `assertion (all)',
+does not monitor class invariants.  It does monitor all other
+assertions.
+
+Discovered in Release 3.2.3b.
+

@@ -1,0 +1,15 @@
+test_name 	 tuple-real-double
+test_description A manifest tuple of real/double values where the type is marked would violate precondition or give incorrect value.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output_1
+execute_result	 ok
+
+compare		 exec_output_1 output
+
+test_end

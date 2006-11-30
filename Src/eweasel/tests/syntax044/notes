@@ -1,0 +1,4 @@
+A class with a convert clause that does not list any routine names
+should be accepted, but the compiler reports a syntax error.
+
+Discovered in release 5.5.0820.

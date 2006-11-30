@@ -1,0 +1,5 @@
+The creation procedure `make' of BOOL_STRING has a precondition
+`positive_size: n > 0'.  This should be `nonnegative_size: n >= 0'.
+
+Discovered in Release 3.2 beta.
+

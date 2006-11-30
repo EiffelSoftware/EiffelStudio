@@ -1,0 +1,19 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 bogus-vtcg
+test_description A system has a generic class with constraint `-> ARRAY [TEST2]'.  If another class inherits from the generic class, providing ARRAY [TEST2]' as actual generic parameter *and* if TEST2 is an expanded class, then the compiler incorrectly reports a VTCG error.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+copy_raw 	 test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	 ok
+
+test_end

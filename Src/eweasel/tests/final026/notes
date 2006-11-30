@@ -1,0 +1,5 @@
+An external "C inline" function which sums its DOUBLE arguments gives
+the wrong results if the function takes 10 or more arguments, but only
+when code is finalized.
+
+Discovered in release 5.4.0515.

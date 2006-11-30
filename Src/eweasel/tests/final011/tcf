@@ -1,0 +1,24 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	finalize-skip-rescue-clause
+test_description A particular function `f' with a rescue clause calls another function. When this called function raises an exception, the rescue clause of `f' is not executed and there is no retry.  The rescue clause of the caller of `f' is executed instead.  This incorrect behavior only occurs if the system is finalized.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+compile_final
+compile_result 	 ok
+
+c_compile_final
+c_compile_result ok
+
+execute_final 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

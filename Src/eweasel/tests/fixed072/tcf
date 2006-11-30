@@ -1,0 +1,29 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vuex-violation
+test_description Adding an export restriction which causes a validity violation after compilation and then recompiling
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+define		 EXPORT_RESTRICTION ""
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 EXPORT_RESTRICTION "{TEST1}"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VUEX(2)
+
+define		 EXPORT_RESTRICTION "{TEST}"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

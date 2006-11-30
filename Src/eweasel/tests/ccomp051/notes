@@ -1,0 +1,7 @@
+Finalizing a system that calls `print' on an attribute of an expanded
+type, where the expanded class has a conversion routine `to_any: ANY
+is do Result := "Weasel" end' generates C code that won't compile, but
+only if inlining is enabled.
+
+Discovered in release 5.5.1012.
+

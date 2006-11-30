@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 replicated-feat-multiple-select
+test_description A system has a class which inherits from another class three times, renaming one of its features in two of the Parent parts and selecting the renamed feature twice.  This violates the letter of VMRC(2).
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+copy_raw 	 test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VMRC(2)
+
+test_end

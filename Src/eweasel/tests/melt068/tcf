@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	melted-old-expanded-result
+test_description A function that returns an expanded type has a postcondition that states that `old Result' is not equal to the value of the function, where the body of the function sets an attribute of Result to a non-default value.  Melted code incorrectly violates the postcondition, while frozen code does not.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test2.e $CLUSTER test2.e
+copy_raw 	test2_ref.e $CLUSTER test2_ref.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

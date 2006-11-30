@@ -1,0 +1,35 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	chg-external-to-internal
+test_description After initial compilation where the system is frozen, an inherited external BOOLEAN function is changed to an internal BOOLEAN function and changes are melted.
+
+copy_sub 	Ace $TEST Ace
+define		ROUTINE "weaseling: BOOLEAN is external "C | %"eif_memory.h%"" alias "eif_gc_ison" end"
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define		ROUTINE "weaseling: BOOLEAN is do Result := True; end"
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

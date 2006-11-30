@@ -1,0 +1,19 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 default-create-vtcg
+test_description A class FOO has a generic parameter G of type XXX with a generic creation clause `create default_create end'.  Another class declares an attribute of type FOO [XXX], where `default_create' is not listed as a creation procedure of XXX.  The compiler should report a VTCG error but does not.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	validity_error TEST VTCG
+
+test_end

@@ -1,0 +1,15 @@
+class TEST
+
+create
+	make
+
+feature {NONE} -- Creation
+
+	make is
+			-- Execute test.
+		do
+			io.put_string ("")
+			io.put_new_line
+		end
+		
+end

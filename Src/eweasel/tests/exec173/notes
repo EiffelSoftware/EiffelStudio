@@ -1,0 +1,10 @@
+A "C inline" external function `value (n: G): G' in a generic class
+has body "$n", so that it just returns its argument.  If this function
+is called normally from another routine in the class, the result is
+correct.  But if the function is called via a static access and if
+there is more than one generic derivation of the enclosing generic
+class, a class invariant is violated due to the wrong routine being
+called.  If code is finalized, generated C code won't compile due to
+conflicting function prototypes.
+
+Discovered in release 5.4.0709.

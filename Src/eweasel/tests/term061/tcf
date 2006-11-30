@@ -1,0 +1,18 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 many-long-bit-constants
+test_description A class has a routine with 2000 copies of an instruction that prints a BIT constant which is 370 bits long.  When the class is compiled, the compiler dies with a run-time panic during degree 2.
+
+copy_sub 	 Ace $TEST Ace
+define		 INSTRUCTION "print (0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000B);"
+copy_sub	 test.e $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+	
+test_end

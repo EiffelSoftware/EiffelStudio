@@ -1,0 +1,26 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name single-inheritance-test
+test_description Inline agents in a single inheritance generated class
+
+copy_sub Ace $TEST Ace
+copy_raw a.e $CLUSTER a.e
+copy_raw b.e $CLUSTER b.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result	ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

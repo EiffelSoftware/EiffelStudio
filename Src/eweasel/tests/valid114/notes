@@ -1,0 +1,5 @@
+A class has Generic #2 constrained by Generic #1, but the compiler
+won't use this fact to allow an inheritance of another generic class
+that requires Generic #2 to conform to Generic #1.
+
+Discovered in Release 5.0.015

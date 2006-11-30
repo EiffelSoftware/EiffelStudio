@@ -1,0 +1,45 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 generic-deriv-slide
+test_description Removing one of the formal generic parameters from a generic class
+
+copy_sub 	 Ace $TEST Ace
+define		 LOCAL ""
+define		 GENERICS "G, H, I"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 LOCAL "x: TEST1 [INTEGER, STRING, REAL];"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	validity_warning TEST Unused_local_warning
+
+define		 GENERICS "G, H"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VTUG(2)
+
+define		 GENERICS "I, G, H"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	validity_warning TEST Unused_local_warning
+
+define		 GENERICS "H, G"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST VTUG(2)
+
+define		 LOCAL "x: TEST1 [INTEGER, STRING];"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	validity_warning TEST Unused_local_warning
+
+test_end

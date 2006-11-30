@@ -1,0 +1,7 @@
+A routine has a precondition.  The body of the routine raises an
+exception which is retried by the rescue clause.  When precondition
+are monitored and the system is melted, the routine precondition is
+incorrectly evaluated again when the retry instruction is executed.
+Frozen code works correctly.
+
+Discovered in Release 3.2.4.

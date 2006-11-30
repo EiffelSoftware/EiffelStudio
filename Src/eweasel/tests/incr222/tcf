@@ -1,0 +1,40 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 change-system-name
+test_description A simple system is frozen.  Then the system name is changed in the Ace file and changes are melted.  System execution then dies with "Error could not open Eiffel update file ./eiffelbase.melted".
+
+define SYSTEM_NAME "test"
+system 		$SYSTEM_NAME
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+define SYSTEM_NAME "testme"
+system 		$SYSTEM_NAME
+copy_sub 	Ace $TEST Ace
+compile_melted
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+
+test_end

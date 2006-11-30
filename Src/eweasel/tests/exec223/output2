@@ -1,0 +1,38 @@
+Simple tests:
+100
+Checkpoint 1
+HelloWorld
+Checkpoint 2
+p1 called
+Checkpoint 3
+p2 called with: Hello and World
+Checkpoint 4
+Function: 
+inner_outer
+Exceptions in inline functions:
+Got violation. Ok
+Exceptions in inline procedures:
+Got violation. Ok
+Agents on attributes and externals:
+Attributes, we expect 100 and get: 100
+Externals, we expect 100 and get: 100
+Locals in inline agents:
+l_1: 10
+l_2: 20
+l_3: hallo
+l_4: welt
+Sortable array:
+1
+3
+10
+20
+100
+
+1
+aba
+dudu
+wow
+
+hallo from agent created in agent_on_parameter
+END
+Execution completed

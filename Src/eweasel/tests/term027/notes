@@ -1,0 +1,5 @@
+A class with many formal generic parameters (512) which all have the
+same name causes the compiler to end with "illegal instruction".
+
+Discovered in Prerelease 93.07.15.
+

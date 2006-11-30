@@ -1,0 +1,7 @@
+Compiling a valid class with a multi-branch which has unique inspect
+constants and then changing the value of one of the choices (which is
+a constant attribute) from 0 to a positive value results in an
+undetected VOMB violation.
+
+Discovered in Release 3.1.1.
+

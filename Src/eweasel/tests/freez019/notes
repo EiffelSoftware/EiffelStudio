@@ -1,0 +1,4 @@
+A class which prints `<< i16 + i8, i >> @ 1' prints -32642 when code
+is melted, but 32894 when frozen.
+
+Discovered in release 5.4.0403.

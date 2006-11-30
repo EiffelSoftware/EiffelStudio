@@ -1,0 +1,23 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 expanded-client-violation
+test_description After violation of the Expanded Client rule (VLEC) is detected, the problem is corrected by removing the offending feature
+
+copy_sub 	 Ace $TEST Ace
+define		 FEATURE "m: expanded TEST"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VLEC
+
+define		 FEATURE ""
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

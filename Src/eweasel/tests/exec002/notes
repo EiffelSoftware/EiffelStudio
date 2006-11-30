@@ -1,0 +1,6 @@
+
+Trying to assign a BIT constant to a local and then write it out
+compiles fine, but corresponding C file won't compile.
+
+Not fixed in prerelease 93.02.17.
+In prerelease 93.04.21, it now compiles OK but does not write anything out.

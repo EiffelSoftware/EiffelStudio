@@ -1,0 +1,9 @@
+A once function is supposed to return the value computed thus far when
+called recursively, but doing a recursive call to a once function
+shows that a creation instruction whose target is Result incorrectly
+attaches the newly created object to Result before calling the named
+creation procedure.
+
+Reported by Manu on January 6, 2003.
+
+

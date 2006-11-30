@@ -1,0 +1,5 @@
+Real conforms to double: False
+Real square of 9.876543: 97.5461
+Double square of 9.876543: 97.546101630848995
+Double square minus real square close to zero: True
+Execution completed

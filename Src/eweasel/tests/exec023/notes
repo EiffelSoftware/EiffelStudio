@@ -1,0 +1,7 @@
+A prefix operator which is implemented as an variable integer
+attribute compiles fine (whether freezing or not).  But when the
+resulting system is executed and tries to print the value of the
+attribute, an exception trace results.
+
+Discovered in Prerelease 93.07.15.
+

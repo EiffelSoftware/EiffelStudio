@@ -1,0 +1,39 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 change-generic-derived-external
+test_description A sequence of changes involving complex changes to actual generic parameters of the genericly derived return type of an external function
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+define		 ACTUAL "HASH_TABLE [STRING, HASHABLE]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 ACTUAL "HASH_TABLE [STRING, expanded HASHABLE]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VTEC(1)
+
+define		 ACTUAL "ARRAY [DOUBLE]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+define		 ACTUAL "HASH_TABLE [STRING, expanded HASHABLE]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 validity_error TEST1 VTEC(1)
+
+define		 ACTUAL "ARRAY [ARRAYED_LIST [DOUBLE]]"
+copy_sub 	 test1.e  $CLUSTER test1.e
+resume_compile
+compile_result 	 ok
+
+test_end

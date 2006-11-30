@@ -1,0 +1,10 @@
+A class has a secret procedure with a precondition which references a
+secret attribute.  This procedure is available to {ANY} as a creation
+procedure.  The compiler should report a VAPE violation but it accepts
+the class.  Actually, I believe that VAPE may need to be extended to
+say that "every feature whose final name appears in any
+Assertion_clause is also available to every class to which `r' is
+available for *creation*".  Otherwise, the creation procedure can have
+a secret precondition.
+
+Discovered in release 3.2.3b.

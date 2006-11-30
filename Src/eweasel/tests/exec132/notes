@@ -1,0 +1,4 @@
+Routine `is_integer' from STRING accepts `(+|-)[a-zA-Z]*[0-9]*' which
+is incorrect (for example, returns True for `("-wer123").is_integer'.
+
+Reported by Manu on Release 5.2.0914.

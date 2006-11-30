@@ -1,0 +1,7 @@
+According to page 229 (and general conformance on page 219), NONE does
+not conform to an expanded type or to a Bit_type.  But the compiler
+accepts assignment of Void to entities declared of these types.
+
+Discovered in Prerelease 93.04.21.
+Fixed in Prerelease 93.07.15.
+

@@ -1,0 +1,7 @@
+After initial compilation, a VWOE violation is introduced.  When the
+system is recompiled, the compiler detects the violation but
+correcting it by returning the class to its original state and
+resuming leads to a compiler exception trace.
+
+Discovered in Prerelease 93.07.15.
+

@@ -1,0 +1,5 @@
+A static call to a frozen external with no immediate assertions that
+is a redefinition of a non-frozen external with a postcondition is
+accepted, but should be a VSTA(2) error.
+
+Discovered in release 5.4.0722.

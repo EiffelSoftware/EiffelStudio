@@ -1,0 +1,34 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	init-expanded-local-when-retry
+test_description A routine has a local of an expanded type.  The body of the routine raises an exception which is retried by the rescue clause.  If the system is frozen, the expanded local is incorrectly initialized again when the retry instruction is executed.  Melted code works correctly.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+cleanup_compile
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output2
+execute_result 	ok
+compare		exec_output2 output
+
+test_end

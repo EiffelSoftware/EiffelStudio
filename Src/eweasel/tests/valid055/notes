@@ -1,0 +1,5 @@
+The compiler correctly detects a VTUG violation, but reports it as
+`Error VTUG3 (VTUG3)' instead of `Error VTUG (VTUG3)'.
+
+Discovered in Prerelease 93.07.15.
+

@@ -1,0 +1,14 @@
+deferred class TEST_SETUP
+
+inherit
+	THREAD
+
+feature -- Execution
+
+	run is
+		do
+			launch
+			join_all
+		end
+
+end

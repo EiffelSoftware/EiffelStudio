@@ -1,0 +1,65 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 validity-vffd5-basic
+test_description Violate validity constraint VFFD5 with a class which has a prefix feature with invalid signature
+
+copy_sub 	 Ace $TEST Ace
+
+
+define		 FEATURE "prefix "@" is do end"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VFFD(5)
+
+define		 FEATURE "prefix "@" (n: INTEGER): INTEGER is once end"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VFFD(5)
+
+define		 FEATURE "prefix "@" (n: INTEGER) is do end"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VFFD(5)
+
+define		 FEATURE "a, prefix "@" is do end"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VFFD(5)
+
+define		 FEATURE "a, prefix "@" (n: INTEGER): INTEGER is once end"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VFFD(5)
+
+define		 FEATURE "a, prefix "@" (n: INTEGER) is do end"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 validity_error TEST VFFD(5)
+
+define		 FEATURE "prefix "@": INTEGER"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+define		 FEATURE "prefix "@": INTEGER is 13"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+define		 FEATURE "prefix "@": INTEGER is once end"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+define		 FEATURE "prefix "@": INTEGER is unique"
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+test_end

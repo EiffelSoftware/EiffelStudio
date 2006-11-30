@@ -1,0 +1,8 @@
+A procedure which prints out some real and double constants executes
+correctly after first compile and freezing.  When it is modified
+(presumably causing melting) and re-executed, incorrect values are
+printed for the numbers.
+
+Still not fixed in Prerelease 93.02.17.
+Prerelease 93.04.21: all of the values are OK except one.
+Fixed in Prerelease 93.07.15.

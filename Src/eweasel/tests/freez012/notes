@@ -1,0 +1,7 @@
+A procedure sets an attribute of type REAL to the value passed in as
+an argument.  Then the procedure checks whether the attribute is equal
+to the value just assigned to it.  If the system is frozen then the
+attribute is not equal to the value assigned to it.  Melted code works
+correctly.
+
+Discovered in Release 3.3.7.

@@ -1,0 +1,7 @@
+A system is frozen without a precompiled library.  Then an instruction
+`print ((<<int64, int64>>).item (1));' is added to the body of the
+root creation procedure and changes are melted. System execution then
+dies with a precondition violation (index_small_enough), though it
+should not.
+
+Reported by Manu in release 5.1.12.

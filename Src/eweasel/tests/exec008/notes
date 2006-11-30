@@ -1,0 +1,6 @@
+The standard binary operator infix "+" should have lower precedence
+(7) than a unary free operator (11), according to page 377, but it
+does not.
+
+Discovered in Prerelease 93.04.21.
+

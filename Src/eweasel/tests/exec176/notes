@@ -1,0 +1,8 @@
+A routine which does an assignment attempt of a TUPLE to a local that
+is a TUPLE type with an anchored type (e.g., `TUPLE [like i, INTEGER,
+INTEGER]') works correctly if the anchored type is `like Current'.  It
+does not work correctly if anchored to a routine argument.  In
+finalized mode, it also does not work correctly if anchored to an
+attribute.
+
+Discovered in release 5.4.0730.

@@ -1,0 +1,6 @@
+Compiler accepts but completely ignores many characters at certain
+positions inside an external routine declaration.  These characters
+include !#$%^-=+\|`~{}[];'./?%/0/%/1/ and probably others.
+
+Discovered in release 5.4.0515.
+

@@ -1,0 +1,8 @@
+After initial compilation, an attribute used as an anchor in a type
+serving as actual generic parameter is changed to a procedure.  When
+the system is recompiled, the compiler incorrectly reports a VTCG
+error (which is impossible since the involved generic class has no
+generic constraints) instead of a VTAT(1) error.
+
+Discovered in Release 3.2.3b.
+

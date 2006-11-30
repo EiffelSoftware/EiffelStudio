@@ -1,0 +1,6 @@
+An Ace file with a cluster which explicitly includes one of the files
+(test.e) contained in the corresponding directory causes the compiler
+to report a VSCN error, even though there is really only one file
+containing a class named TEST.  The error message is quite confusing.
+
+Discovered in release 5.4.0610.

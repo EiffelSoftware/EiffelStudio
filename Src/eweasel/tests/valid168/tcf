@@ -1,0 +1,20 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 like-anchor-instantiation-in-generic
+test_description If the return type of a function declared in a generic class has a result which is an anchor, and the anchor involves one of the formal generic parameter, then the compiler does not properly instiate the result type in the context of a non-generic class.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+copy_raw 	 test2.e  $CLUSTER test2.e
+
+compile_melted
+compile_result	ok
+
+test_end

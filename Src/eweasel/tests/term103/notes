@@ -1,0 +1,8 @@
+If the Ace specifies a precompiled library that is an incompatible
+version, the compiler correctly reports a VD52 error.  But it also
+prints "Exception occurred while displaying error message" when
+reporting the error message.
+
+Discovered in Release 5.1.11.
+
+

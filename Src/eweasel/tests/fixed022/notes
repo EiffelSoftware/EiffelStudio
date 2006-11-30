@@ -1,0 +1,6 @@
+An actual generic parameter which is invalid (because it is a generic
+derivation of a class which is *not* generic) causes the compiler to
+die with an exception trace.
+
+Fixed in Prerelease 93.02.17.
+

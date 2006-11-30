@@ -1,0 +1,126 @@
+test_name validity-vfav2-basic
+test_description Validity rules for bracket alias.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw b.e    $CLUSTER b.e
+
+-- Bracket alias: it should be a query
+
+copy_raw cq01.e $CLUSTER c.e
+compile_melted
+compile_result validity_error C VFAV(2)
+
+copy_raw cq02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_raw cq03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_raw cq04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_raw cq05.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_raw cq06.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_raw cq07.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+-- Bracket alias: it should have at least one argument
+
+copy_raw ca01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_raw ca02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+-- Bracket alias: there should not be the same alias with 1 argument
+
+define ARGS "x"
+define COUNT "1"
+copy_sub a.e $CLUSTER a.e
+copy_sub ab.e $CLUSTER ab.e
+
+copy_sub cs01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs05.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs06.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs07.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs08.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+-- Bracket alias: there should not be the same alias with 2 arguments
+
+define ARGS "x, y"
+define COUNT "2"
+copy_sub a.e $CLUSTER a.e
+copy_sub ab.e $CLUSTER ab.e
+
+copy_sub cs01.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs02.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs03.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs04.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs05.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs06.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs07.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+copy_sub cs08.e $CLUSTER c.e
+resume_compile
+compile_result validity_error C VFAV(2)
+
+test_end

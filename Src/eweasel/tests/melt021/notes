@@ -1,0 +1,7 @@
+After initial compilation where the system is frozen, an inherited
+internal INTEGER function with no arguments is changed to an INTEGER
+constant and changes are melted.  System execution then ends with a
+run-time panic which states "invalid assertion level".
+
+Discovered in Release 3.2.3b.
+

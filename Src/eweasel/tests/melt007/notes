@@ -1,0 +1,8 @@
+A routine with precondition `false' is redefined with alternative
+precondition `true' in a descendant.  When the system is compiled via
+melting both classes, system execution results in a precondition
+violation (which is wrong).  When the same system is frozen and
+executed, there are no precondition violations.
+
+Discovered in Prerelease 93.07.15.
+

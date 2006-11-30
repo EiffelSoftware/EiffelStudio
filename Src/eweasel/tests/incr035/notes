@@ -1,0 +1,6 @@
+After initial compilation, changing an actual generic parameter from
+one expanded type to a different expanded type and recompiling causes
+a compiler exception trace while melting changes.
+
+Discovered in Prerelease 93.07.15.
+

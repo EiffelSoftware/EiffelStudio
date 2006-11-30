@@ -1,0 +1,5 @@
+A system with a class name longer than 256 characters compiles fine
+when melted but dies with a run-time panic when executed.  Frozen and
+finalized code work fine.
+
+Discovered in release 5.4.0403.

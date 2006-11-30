@@ -1,0 +1,5 @@
+A system with a case of repeated inheritance which appears to be valid
+is reported to violate the Feature Name rule (VMFN) on page 188.
+
+Still not fixed in Prerelease 93.02.17.
+

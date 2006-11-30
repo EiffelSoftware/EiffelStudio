@@ -1,0 +1,24 @@
+test_name 	dynamic-generic-type
+test_description Calculated dynamic types for generic-like types (tuples, typed pointers, etc.) should match real types of objects.
+
+-- Conditionally exclude NATIVE_ARRAY test as it is available only under .NET
+
+if DOTNET define NA ""
+if not DOTNET define NA "--"
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	a.e $CLUSTER a.e
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE exec_output
+execute_result 	ok
+
+compare		exec_output output
+
+test_end

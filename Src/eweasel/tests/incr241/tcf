@@ -1,0 +1,27 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 like-anchor-recompile-in-generic-class
+test_description After initial compilation, we add a new generic derivation of CHILD which has a function whose return type is a generic type which has an anchor. Then the compiler would crash instead of compiling the code successfully.
+
+copy_sub 	Ace $TEST Ace
+define		ATTRIBUTE_1 "child1: CHILD [INTEGER]"
+define		ATTRIBUTE_2 ""
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	child.e $CLUSTER child.e
+
+compile_melted
+compile_result 	ok
+
+define		ATTRIBUTE_2 "child2: CHILD [STRING]"
+copy_sub	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+
+test_end

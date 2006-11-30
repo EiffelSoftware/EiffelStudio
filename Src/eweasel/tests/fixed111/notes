@@ -1,0 +1,6 @@
+A class with a constant attribute of type REAL or DOUBLE whose value
+is negative (e.g. -.54) causes a run-time PANIC in the compiler.
+
+Discovered in Prerelease 93.04.21.
+Fixed in Prerelease 93.07.15.
+

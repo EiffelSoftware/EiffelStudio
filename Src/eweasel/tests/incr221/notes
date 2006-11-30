@@ -1,0 +1,7 @@
+Class A has a qualified call to one of its own features, where the
+feature is exported only to B and its descendants.  This is valid
+since class A is a descendant of B.  But when the inheritance clause
+is removed, so that A is no longer a descendant of B, and the system
+is recompiled, the VUEX violation is not detected.
+
+Discovered in release 5.4.0610.

@@ -1,0 +1,8 @@
+After initial compilation where the system is frozen, an attribute is
+changed from a BIT_REF to a BOOL_STRING and the instruction which
+creates it is modified accordingly and changes are melted.  System
+execution then ends with a run-time panic which states "invalid
+assertion level".
+
+Discovered in Release 3.2.2.
+

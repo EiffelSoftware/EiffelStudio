@@ -1,0 +1,6 @@
+A generic class which violates the Expanded Client rule (constraint VLEC)
+causes a compiler exception trace.
+
+Discovered in Prerelease 93.05.17.
+Fixed in Prerelease 93.07.15.
+

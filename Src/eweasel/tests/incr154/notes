@@ -1,0 +1,6 @@
+After initial compilation with an invalid type `expanded STRING'
+as an actual generic parameter, the type is changed to STRING.
+Finalization completes normally, but the resulting C code will not
+compile.
+
+Discovered in Release 5.0.005.

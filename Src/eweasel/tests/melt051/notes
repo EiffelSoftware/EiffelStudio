@@ -1,0 +1,7 @@
+A class creates an instance of INTERNAL and uses it to print the field
+count of the current object.  The system compiles fine when frozen and
+correctly prints 0 when executed.  Then an attribute is added to the
+class and changes are melted.  System execution then incorrectly still
+prints 0, instead of 1.
+
+Reported by Manu on Release 5.1.

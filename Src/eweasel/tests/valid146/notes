@@ -1,0 +1,7 @@
+A precompiled library includes a cluster whose tag is `foo', which
+contains a class TEST.  An Ace file that uses this precompiled library
+also includes a cluster with tag `foo' that has its own class TEST,
+but this cluster has a different path.  The compiler should report a
+VDCN error but does not.
+
+Discovered in release 5.4.0610.

@@ -1,0 +1,6 @@
+The free operator infix "@@@" can be declared, but when I try to use
+it, the compiler complains that there is no feature `_infix_@' in
+class TEST.
+
+Still not fixed in Prerelease 93.02.17.
+

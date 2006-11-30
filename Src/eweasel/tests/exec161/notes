@@ -1,0 +1,5 @@
+A class enables GC time accounting, creates some objects and then gets
+GC statistics.  The incremental collector values `collected' and
+`collected_average' are negative.
+
+Discovered in Release 5.4.0515.

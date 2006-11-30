@@ -1,0 +1,12 @@
+test_name 	 character-32-truncated
+test_description If you have an attribute CHARACTER_32 it will get overriden because the compiler treats it as a 16-bit value where it should be 32-bit.
+
+copy_raw	test.e $CLUSTER test.e
+copy_sub	Ace $TEST Ace
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output1
+compare		exec_output1 output
+execute_result	ok
+
+test_end

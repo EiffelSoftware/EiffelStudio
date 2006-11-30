@@ -1,0 +1,8 @@
+After initial compilation, the entire text of a class A is deleted and
+the system is recompiled.  The compiler correctly reports the VD10
+violation.  But when compilation is resumed with no change to any
+files, the compiler reports a syntax error at position 0 on class A,
+though there is still no class A.
+
+Discovered in Prerelease 93.07.15.
+

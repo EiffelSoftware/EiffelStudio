@@ -1,0 +1,26 @@
+test_name 	 inherited-attribute-and-assigner
+test_description Test for code generation of inherited attributes and associated assigner routines.
+
+copy_raw	a.e $CLUSTER a.e
+copy_raw	b.e $CLUSTER b.e
+copy_raw	c.e $CLUSTER c.e
+copy_raw	d.e $CLUSTER d.e
+copy_raw	e.e $CLUSTER e.e
+copy_raw	f.e $CLUSTER f.e
+copy_raw	test.e $CLUSTER test.e
+
+if DOTNET	copy_bin	x.dll	$CLUSTER x.dll
+if not DOTNET   copy_raw	x.e	$CLUSTER x.e
+
+if DOTNET	define ASSEMBLY "<assembly name="x" location="$CLUSTER\x.dll"/>"
+if not DOTNET	define ASSEMBLY ""
+
+copy_sub	Ace $TEST Ace
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

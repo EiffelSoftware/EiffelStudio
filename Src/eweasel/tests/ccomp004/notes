@@ -1,0 +1,6 @@
+When both arguments of the boolean operator `implies' are either
+boolean constants (true or false) or local variables, the generated C
+code won't compile.
+
+Discovered in Prerelease 93.05.17.
+

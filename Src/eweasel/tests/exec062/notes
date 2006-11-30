@@ -1,0 +1,6 @@
+An object of type `TEST1 [STRING]' conforms to an object of type
+`TEST1 [SEQ_STRING]' according to `conforms_to'.  This is obviously
+not the case and system execution later pays the ultimate price.
+
+Discovered in Release 3.2.3b.
+

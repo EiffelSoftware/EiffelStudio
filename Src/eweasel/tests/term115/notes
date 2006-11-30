@@ -1,0 +1,7 @@
+A class with a generic parameter with a constraint `-> STRING create
+xxx end' is compiled.  The compiler correctly reports a VTCG error.
+When `xxx' is changed to `make' and compilation is resumed,
+compilation should finish but the compiler dies in degree 4 on the
+class.
+
+Discovered in release 5.4.0403.

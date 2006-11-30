@@ -1,0 +1,29 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 vjaw-sneak
+test_description After initial compilation, a feature which is the target of an assignment is changed from a variable attribute of type TEST1 to a constant attribute of type STRING.
+
+copy_sub 	 Ace $TEST Ace
+define		 FEATURE "try: TEST1"
+copy_sub 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER test1.e
+compile_melted
+compile_result 	 ok
+
+define		 FEATURE "try: STRING is "abc""
+copy_sub 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 validity_error TEST VJAW
+
+define		 FEATURE "try: STRING"
+copy_sub 	 test.e  $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

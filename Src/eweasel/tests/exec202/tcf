@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 developer-exception-with-null
+test_description A routine raises a developer exception and passes a string that includes a null character.  When the exception is rescued, calling `is_developer_exception_of_name' and passing in the same string passed to `raise' returns False.  It should return True.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

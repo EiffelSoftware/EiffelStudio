@@ -1,0 +1,7 @@
+An expression which consists of the application of three different
+unary operators (free operators in this case) compiles OK, but after
+melting the innermost one is called three times instead of each one
+being called once.
+
+Discovered in Prerelease 93.04.21.
+

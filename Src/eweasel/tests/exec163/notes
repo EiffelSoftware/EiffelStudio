@@ -1,0 +1,5 @@
+A class creates a number of objects, guided by a random number
+generator.  If the EIF_MEMORY_CHUNK environment variable is set to
+262143 before execution, system execution ends with a panic.
+
+Discovered in Release 5.4.0515.

@@ -1,0 +1,8 @@
+A generic class has a formal generic parameter constrained by a
+nonexistent and invalid creation procedure `infix "@"'.  The compiler
+correctly reports VTCG error.  Then a syntax error is added to the
+class.  The compiler detects the error, but says "Exception occurred
+while displaying error message" when it tries to print the name of the
+class.
+
+Discovered in release 5.4.0403.

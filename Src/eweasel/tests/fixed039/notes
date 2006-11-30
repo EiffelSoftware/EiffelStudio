@@ -1,0 +1,9 @@
+A particular root class has a validity violation discovered in pass 3.
+If when the compiler stops the name of the root class is changed so
+that it is different (but the class is left in the same file so that
+file name root and class name do not match), but the new class name
+does not match the name of any other classes in the universe, an
+exception trace results.
+
+Fixed in Prerelease 93.02.17.
+

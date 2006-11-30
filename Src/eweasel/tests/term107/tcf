@@ -1,0 +1,43 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	add-remove-vcch-freeze
+test_description A system has a class that inherits a deferred feature `value', which is of type string, and effects it with a string constant.  After initial compilation, the effecting feature name is changed, introducing a VCCH(1) error.  When compiler reports the error, feature is changed back to `value' and compilation finishes.  But when the system is then frozen, the compiler dies with a segmentation fault in `real_body_id'.
+
+copy_sub 	Ace $TEST Ace
+define VAR_NAME value
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+define VAR_NAME xxx
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VCCH(1)
+
+define VAR_NAME value
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	ok
+
+execute_work NONE exec_output1
+execute_result  ok
+compare		 exec_output1 output
+
+compile_frozen
+compile_result 	ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work NONE exec_output2
+execute_result  ok
+compare		 exec_output2 output
+
+test_end

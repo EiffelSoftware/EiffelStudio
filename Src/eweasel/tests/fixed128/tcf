@@ -1,0 +1,13 @@
+test_name 	 synonyms-with-indexing
+test_description Indexing clause should not cause compiler crash when used for synonyms.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output
+execute_result	ok
+compare		exec_output output
+
+test_end

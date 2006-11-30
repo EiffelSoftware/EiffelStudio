@@ -1,0 +1,6 @@
+A manifest string in the extended form which contains lines with only
+white space (blanks and tabs) but no leading and trailing percent sign
+is accepted, but should not be.
+
+Discovered in Release 3.1.1.
+

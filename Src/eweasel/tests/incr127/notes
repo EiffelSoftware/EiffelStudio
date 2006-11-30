@@ -1,0 +1,8 @@
+After initial compilation, an extra unused formal generic parameter is
+added to a generic class and an extra actual generic parameter is
+added to the only generic derivation of this class.  After
+recompilation, system execution output should be unchanged, but
+execution instead terminates with a segmentation fault.  The initial
+compilation and recompilation can be (melt, melt) or (freeze, freeze).
+
+Discovered in Release 3.2.4.

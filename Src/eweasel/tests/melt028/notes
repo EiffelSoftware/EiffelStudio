@@ -1,0 +1,6 @@
+A class calls a procedure and passes as actual argument a named
+constant which is of type BIT 2.  If the system is melted, a
+segmentation fault occurs during system execution.  Frozen code works
+fine.
+
+Discovered in Release 3.2.4.

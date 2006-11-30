@@ -1,0 +1,28 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 default-create-add-body
+test_description After initial compilation, a redefined `default_create' with an empty body is changed so that the body has an instruction.  After recompilation, the new version of `default_create' should be executed but is not.
+
+define BODY ""
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+define BODY "weasel := 47"
+copy_sub 	test1.e $CLUSTER test1.e
+compile_melted
+compile_result 	ok
+
+execute_work 	NONE 	exec_output1
+execute_result 	ok
+compare		exec_output1 output
+
+test_end

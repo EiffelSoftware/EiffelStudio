@@ -1,0 +1,6 @@
+A class creates an object of type `ARRAY [BIT 70000]' and prints its
+generating type.  The generating type prints as "ARRAY [BIT 4464]"
+instead of "ARRAY [BIT 70000]" or "ARRAY [BIT_REF]".  C compiler
+issues warnings about "overflow in implicit constant conversion".
+
+Discovered in Release 5.4.0403.

@@ -1,0 +1,5 @@
+Compiling a generic class FOO [G] with a function whose return type is
+ANY and which contains an instruction `create {G} Result' causes the
+compiler to die in degree 3.
+
+Reported on ISE users mailing list on August 18, 2004.

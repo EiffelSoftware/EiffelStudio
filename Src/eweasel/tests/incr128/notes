@@ -1,0 +1,6 @@
+After initial compilation where the system is melted, a generic class
+header is changed so that it is expanded and the system is frozen.
+The resulting C code compiles, but will not link due to multiply
+defined symbols.
+
+Discovered in Release 3.2.3b.

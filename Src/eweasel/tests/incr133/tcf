@@ -1,0 +1,25 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 bogus-vd28
+test_description A system has an Ace which specifies the precompiled cluster EiffelBase and also has a cluster with Cluster_tag `kernel'.  After initial compilation, the tag `kernel' is changed to `other' and the system is recompiled.  The compiler then reports an erroneous VD28 error.
+
+define		 CLUSTER_TAG "kernel"
+define_directory CLUSTER2 $CLUSTER subdir
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+copy_raw 	 test1.e  $CLUSTER2 test1.e
+compile_melted
+compile_result 	 ok
+
+define		 CLUSTER_TAG "other"
+copy_sub 	 Ace $TEST Ace
+compile_melted
+compile_result 	 ok
+
+test_end

@@ -1,0 +1,17 @@
+test_name feature-calls-on-dotnet-expanded-attribute
+test_description Doing a call on an attribute which is a .NET expanded type might cause incorrect code to be generated.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+copy_raw test1.e $CLUSTER test1.e
+copy_raw test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output
+execute_result ok
+
+compare exec_output output
+
+test_end

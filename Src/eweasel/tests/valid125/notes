@@ -1,0 +1,11 @@
+An assignment  `e1 := e2' where e1 and e2 are both of type E
+becomes invalid in a descendant when the type of e1 is redefined to
+be a descendant of E.  The compiler should report some kind of
+validity violation, but it does not.
+
+Reported by Bertrand on version 5.1.3.
+
+
+
+
+

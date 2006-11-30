@@ -1,0 +1,6 @@
+A violation of condition 2 the Expanded Type rule (VTEC) is not
+detected, but only if the expanded type is introduced by by a
+declaration of the form `expanded CT'.
+
+First discovered in Prerelease 93.02.17.
+

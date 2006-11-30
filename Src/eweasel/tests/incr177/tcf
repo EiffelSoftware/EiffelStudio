@@ -1,0 +1,28 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 finalize-then-melt
+test_description After initial compilation where the system is finalized, the Ace is changed to indicate a new root class and changes are melted. Execution of the melted system then executes the old root creation procedure instead of the new one.
+
+define ROOT "<root cluster="root_cluster" class="OLD_TEST" feature="make"/>"
+copy_sub 	Ace $TEST Ace
+copy_raw 	old_test.e $CLUSTER old_test.e
+copy_raw 	new_test.e $CLUSTER new_test.e
+compile_final
+compile_result 	ok
+
+define ROOT "<root class="NEW_TEST" feature="make"/>"
+copy_sub 	Ace $TEST Ace
+compile_melted
+compile_result 	ok
+
+execute_work NONE exec_output1
+execute_result ok
+compare exec_output1 output
+
+test_end

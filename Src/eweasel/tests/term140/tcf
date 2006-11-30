@@ -1,0 +1,16 @@
+test_name	generic-renamed-in-expanded
+test_description Code generation of a feature declared and used in an assertion in a generic class and renamed by an expanded class should not rely on a feature name thus causing a crash.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	b.e $CLUSTER b.e
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work	NONE	exec_output
+execute_result	ok
+compare exec_output output
+
+test_end

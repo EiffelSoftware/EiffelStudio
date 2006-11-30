@@ -1,0 +1,5 @@
+The routine `readline' in class UNIX_FILE does not work properly on
+long lines.  The first 256 characters are returned as one complete line.
+
+Discovered in Prerelease 93.07.15.
+

@@ -1,0 +1,11 @@
+A system has a generic class CLIENT with constraint `G -> SUPPLIER
+create make end', where the creation procedure of SUPPLIER is exported
+to {CLIENT}.  If another class has an attribute `x: CLIENT [SUPPLIER]'
+the compiler reports a VTCG error, though it should accept the
+classes.
+
+Reported by Manu on version 5.0.036.
+
+
+
+

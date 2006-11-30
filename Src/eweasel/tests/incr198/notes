@@ -1,0 +1,6 @@
+After initial compilation, a VGCC(6) error is introduced by removing
+an inheritance clause, making a feature that is selectively available
+for creation no longer available.  The compiler does not detect the
+error.
+
+Discovered in release 5.4.0403.

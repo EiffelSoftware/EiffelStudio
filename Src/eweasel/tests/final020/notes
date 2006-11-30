@@ -1,0 +1,5 @@
+Finalizing a system with `b or else True' and keeping assertions,
+where b is a boolean in a system with a postcondition `ensure b'
+produces code that violates the postcondition.
+
+Reported by Manu on March 7, 2003.

@@ -1,0 +1,6 @@
+A class creates a LINKED_LIST [FOO] where FOO is an expanded class and
+appends two elements to it and then prints the `value' attribute of
+the first item in the list.  The wrong result is printed if the system
+is finalized with inlining (47.250000007042502 instead of 47.25).
+
+Discovered in release 5.6.0410.

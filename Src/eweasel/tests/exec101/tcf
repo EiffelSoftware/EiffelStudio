@@ -1,0 +1,21 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 strip-bad-linked-list
+test_description A class with one attribute, which is of type LINKED_LIST [STRING], repeatedly calls `strip ()' and checks the result.  The system compiles fine, but executing it yields some `strip' result arrays whose first element does not conform to LINKED_LIST [STRING].  Trying to print the offending first element terminates system execution with an illegal instruction.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e  $CLUSTER test.e
+compile_melted
+compile_result 	 ok
+
+execute_work	 NONE exec_output1 100000
+execute_result	 ok
+compare		 exec_output1 output
+
+test_end

@@ -1,0 +1,7 @@
+An external routine has a Special_external_decl which casts the
+arguments.  If the type to which an argument is cast includes any
+parentheses, then the first closing parenthesis in the cast type
+incorrectly terminates the argument list in parentheses.  This causes
+the compiler to report a syntax error.
+
+Discovered in Release 3.3.7.

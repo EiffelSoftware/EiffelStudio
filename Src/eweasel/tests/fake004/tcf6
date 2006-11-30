@@ -1,0 +1,33 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 test
+test_description Looking for bugs
+
+define ROOT "TEST (root_cluster): "make""
+define CLASS "class TEST creation make feature make is do end x: TEST1 end"
+
+define CLASS1 "class TEST1 inherit TEST2 [DOUBLE, TEST2 [DOUBLE, REAL]] redefine make, f end TEST3 redefine make, f end creation make feature make is do end f is do end end"
+define CLASS2 "deferred class TEST2 [G -> DOUBLE, H -> G] inherit DOUBLE undefine out, is_equal end TEST3 redefine f, make end feature make is do end f is do end end"
+define CLASS3 "class TEST3 creation make feature make is do end f is do end end"
+	
+copy_sub 	 Ace $TEST Ace
+copy_sub	 test.e $CLUSTER test.e
+copy_sub	 test1.e $CLUSTER test1.e
+copy_sub	 test2.e $CLUSTER test2.e
+copy_sub	 test3.e $CLUSTER test3.e
+compile_melted
+compile_result 	ok
+
+define CLASS2 "deferred class TEST2 [G -> DOUBLE, H -> G] inherit TEST3 redefine f, make end feature make is do end f is do end end"
+	
+copy_sub	 test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	validity_error TEST1 VTCG
+
+

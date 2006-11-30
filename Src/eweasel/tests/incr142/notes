@@ -1,0 +1,5 @@
+After initial compilation where the system is melted, the root class
+is changed so that it is expanded and the system is frozen.  The
+resulting C code will not compile in eparents.c.
+
+Discovered in Release 4.3-17.

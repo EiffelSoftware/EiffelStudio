@@ -1,0 +1,74 @@
+system
+	"eweasel"
+
+root
+	VISION2_APPLICATION: make_and_launch
+
+default
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("gelex")
+	disabled_debug ("geyacc")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	disabled_debug ("xml_input_stream")
+	disabled_debug ("xml_parser")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (yes)
+	syntax_warning (yes)
+	address_expression (no)
+	array_optimization (yes)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (yes)
+	inlining_size ("0")
+	multithreaded (no)
+
+
+cluster
+	all eweasel:		"$EWEASEL/source"
+		exclude
+			"windows"; "CVS"; 
+		end
+
+	all base:		"$ISE_EIFFEL/library/base"
+		exclude
+			"CVS"; "table_eiffel3"; 
+		end
+
+	all vision2:		"$ISE_EIFFEL/library/vision2"
+		exclude
+			"mswin"; 
+		end
+
+	all gobo:		"$GOBO/library"
+		exclude
+			"hact"; "ve"; "se"; "expat"; "EiffelBase"; "other"; 
+		default
+			assertion (no)
+		end
+
+external
+
+	include_path:
+		"\$(EWEASEL)/include",
+		"\$(ISE_EIFFEL)/library/vision2/spec/include",
+		"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
+
+	object:
+		"$(EWEASEL)/spec/$(ISE_PLATFORM)/lib/eweasel.a",
+		"`$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
+
+end

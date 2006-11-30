@@ -1,0 +1,35 @@
+
+--| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| All rights reserved.
+--| Your use of this work is governed under the terms of the GNU General
+--| Public License version 2.
+
+-- This is a test control file
+
+test_name 	 expanded-expanded-conformance
+test_description An assignment of `expanded TEST2' to `expanded TEST1' where TEST2 inherits from TEST1 should be a VJAR error, but the compiler accepts it.
+
+define 		INSTRUCTION ""
+copy_sub 	Ace $TEST Ace
+copy_sub 	test.e $CLUSTER test.e
+copy_raw 	test1.e $CLUSTER test1.e
+copy_raw 	test2.e $CLUSTER test2.e
+compile_melted
+compile_result 	ok
+
+define 		INSTRUCTION "b := a"
+copy_sub 	test.e $CLUSTER test.e
+compile_melted
+compile_result 	validity_error TEST VJAR
+
+define 		INSTRUCTION "b := c"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VJAR
+
+define 		INSTRUCTION "b := d"
+copy_sub 	test.e $CLUSTER test.e
+resume_compile
+compile_result 	validity_error TEST VJAR
+
+test_end

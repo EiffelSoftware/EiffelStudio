@@ -184,6 +184,8 @@ eif_sgi='undef'
 eif_solaris='undef'
 eif_windows='undef'
 eif_64_bits='define'
+eif_os='linux'
+eif_arch='x86-64'
 Mcc='Mcc'
 d_tls='undef'
 #Check value for next 2

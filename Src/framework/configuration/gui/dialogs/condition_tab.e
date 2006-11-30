@@ -526,7 +526,7 @@ feature {NONE} -- Actions
 			-- Update variable name from `an_old_key' to `a_new_key'.
 		require
 			an_old_key_ok: an_old_key /= Void and then data.custom /= Void and then data.custom.has (an_old_key)
-			a_new_key_ok: a_new_key /= Void
+			a_new_key_ok: a_new_key /= Void and then (data.custom = Void  or else not data.custom.has (a_new_key))
 		do
 			if not a_new_key.is_empty then
 				data.custom.replace_key (a_new_key, an_old_key)

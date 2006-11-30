@@ -32,12 +32,12 @@ feature {NONE} -- Initialization
 			default_create
 			set_interval (an_interval)
 		end
-		
+
 	initialize is
 			-- Create action sequence.
 		do
 			create actions
-			is_initialized := True
+			Precursor
 		end
 
 feature -- Access
@@ -94,7 +94,7 @@ feature -- Status setting
 		ensure
 			count_is_zero: count = 0
 		end
-		
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is

@@ -123,9 +123,9 @@ feature -- Evaluate
 			else
 				if is_identical_comparison then
 					if is_case_sensitive then
-						Result := name.has_substring (a_name)
+						Result := a_name.has_substring (name)
 					else
-						Result := lower_name.has_substring (name.as_lower)
+						Result := name.as_lower.has_substring (lower_name)
 					end
 				else
 					search_engine.match (a_name)

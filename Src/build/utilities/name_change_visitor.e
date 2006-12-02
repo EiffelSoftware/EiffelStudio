@@ -11,26 +11,26 @@ indexing
 
 class
 	NAME_CHANGE_VISITOR
-	
+
 inherit
 	AST_NULL_VISITOR
 		redefine
 			process_class_as
 		end
-		
+
 	GB_CONSTANTS
-		
+
 feature -- Access
 
 	name_start_position: INTEGER
 		-- Index of first character of class name.
-	
+
 	name_end_position: INTEGER
 		-- Index of last character of class name.
-		
+
 	parent_start_position: INTEGER
 		-- Index of first character of parent inheritance.
-		
+
 	parent_end_position: INTEGER
 		-- Index of last character of parent inheritance.
 
@@ -46,7 +46,7 @@ feature {NONE} -- Basic operations
 			l_as.class_name.process (Current)
 			name_start_position := l_as.click_ast.start_position
 			name_end_position := l_as.click_ast.end_position
-			inherited_class_name := l_as.class_name + Class_implementation_extension
+			inherited_class_name := l_as.class_name.name + Class_implementation_extension
 			parents := l_as.parents
 				-- We must find the correct inherited class, so that if a user inherits
 				-- from other classes, we will not change them.
@@ -55,7 +55,7 @@ feature {NONE} -- Basic operations
 			until
 				parents.off or parent_as /= Void
 			loop
-				if inherited_class_name.is_equal (parents.item.type.class_name) then
+				if inherited_class_name.is_equal (parents.item.type.class_name.name) then
 					parent_as := parents.item
 				end
 				parents.forth

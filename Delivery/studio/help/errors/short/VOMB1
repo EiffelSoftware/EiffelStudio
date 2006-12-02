@@ -1,2 +1,2 @@
 Error: incorrect type for inspect expression.
-What to do: make sure that type is INTEGER or CHARACTER. 
+What to do: make sure that type is INTEGER, CHARACTER, NATURAL or a .NET enum. 

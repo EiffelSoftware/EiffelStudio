@@ -15,19 +15,18 @@ inherit
 			is_in_default_state
 		redefine
 			initialize,
-			destroy
-		select
+			destroy,
 			implementation
 		end
 
 	GB_LAYOUT_NODE
-		rename
-			implementation as old_imp
 		export
 			{NONE} all
 			{ANY} object
+		undefine
+			default_identifier_name, destroy
 		redefine
-			destroy
+			implementation
 		end
 
 	GB_CONSTANTS
@@ -147,6 +146,11 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_OBJECT, GB_COMMAND_ADD_WINDOW} -- I
 		ensure
 			not_parented: parent = Void
 		end
+
+feature {EV_ANY, EV_ANY_I}-- Implementation
+
+	implementation: EV_TREE_ITEM_I
+			-- Responsible for interaction with native graphics toolkit.
 
 feature {NONE} -- Implementation
 

@@ -56,12 +56,6 @@ Known bugs and deficiencies in the EiffelWeasel tester:
    the catalog for execution.  Filters should be extended to allow
    and, or, xor, nor, minus and not operators.
 
-5. EiffelWeasel has only been tested on a SPARC 10 running SunOS
-   4.1.3.  It may not work on other Unix platforms, though this should
-   be fairly easy to remedy.  In particular, no attempt has been made
-   to guarantee that system calls such as "dup2" are available under
-   all versions of Unix.
-   
-6. Tests in the test suite catalog which include the keywords "loop",
+5. Tests in the test suite catalog which include the keywords "loop",
    "very_long" or "not_done" should not be executed since they will
    either loop, take a *very* long time or not work properly.

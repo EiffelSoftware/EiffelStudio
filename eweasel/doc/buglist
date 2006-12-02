@@ -1187,7 +1187,7 @@ Known incrementality bugs:  wrong results when interrupt involved
 1. After initial compilation, a system is recompiled with no changes
    made.  When the message "Melting changes" is displayed, control-C
    is typed immediately, resulting in the message "Error: could not
-   write to ./EIFGEN/project.eif" and a resume prompt.  Then the
+   write to ./EIFGENs/test/project.eif" and a resume prompt.  Then the
    compilation is resumed and it appears to complete successfully.
    However, a subsequent attempt to run the compiler again results in
    the message "Project in: . is corrupted. Cannot continue".
@@ -1196,7 +1196,7 @@ Known incrementality bugs:  wrong results when interrupt involved
 2. After initial compilation, a system is recompiled with no changes
    made.  When the message "Melting changes" is displayed, control-C
    is typed immediately, resulting in the message "Error: could not
-   write to ./EIFGEN/project.eif" and a resume prompt.  Then `q' is
+   write to ./EIFGENs/test/project.eif" and a resume prompt.  Then `q' is
    typed to quit the compilation.  However, a subsequent attempt to
    run the compiler results in an infinite loop.
    [control-c-infinite-loop]
@@ -1332,7 +1332,7 @@ Known melting bugs:  wrong result when melted, but not when frozen
     [inspect-integer-64-one]
    
 12. A system whose Ace specifies `profile (yes)' is melted.
-    When the system is executed with the EIFGEN/W_code directory as
+    When the system is executed with the EIFGENs/test/W_code directory as
     the current directory with the MELT_PATH environment variable not
     set, system execution fails with "Unable to open to output file
     for profile".  [melted-profile-system]
@@ -1355,10 +1355,10 @@ Known melting bugs:  wrong result when melted, but not when frozen
     prints 0 instead of 3.  [melted-local-referers]
    
 16. A system whose Ace specifies `profile (yes)' is melted.
-    When the system is executed with the EIFGEN/W_code directory as
+    When the system is executed with the EIFGENs/test/W_code directory as
     the current directory with the MELT_PATH environment variable not
     set, system execution attempts to create the "profinfo" file
-    in the wrong place (not in the EIFGEN/W_code directory).  
+    in the wrong place (not in the EIFGENs/test/W_code directory).  
     [melted-profinfo-wrong-dir]
    
 17. A root class has an attribute of type `expanded TEST1 [STRING]'
@@ -4814,7 +4814,7 @@ Fixed bugs
      `/etc/spool/Comp_Color'.  Click on OK.  Ebench says "Project in
      /etc/spool/Comp_Color Cannot be retrieved.  Check permissions and
      please try again."  But there is no project in this directory
-     (i.e., no EIFGEN subdirectory in it).  Even worse, is that if I
+     (i.e., no EIFGENs/test subdirectory in it).  Even worse, is that if I
      try to select this directory as the project directory twice more
      via the above procedure, ebench accepts it on the third try.  A
      subsequent Melt kills ebench since the directory is not writable.
@@ -5086,7 +5086,7 @@ Fixed bugs
      prints the line "Usage: cp [-ip] f1 f2; or: cp [-ipr] f1 ... fn
      d2", which seems undesirable.  [es3-loop-blank-template-filename]
 
-543. Running `es3 -flat xxx' in a directory where there is no EIFGEN
+543. Running `es3 -flat xxx' in a directory where there is no EIFGENs/test
      subdirectory (or one with incomplete information because no
      compile has completed yet) causes the compiler to silently
      terminate with no output at all.  This might lead users to think
@@ -6513,7 +6513,7 @@ Fixed bugs
 		/home/eiffel/Eiffel5.0.016/bench/spec/solaris-2.5+/bin/ec
 	2. Using test.e and test.ace (shown below):
 		ec -ace test.ace -freeze
-	3. cd EIFGEN/W_code
+	3. cd EIFGENs/test/W_code
 	4. finish_freezing
 	5. cd /marten/yyyy
 	6. ec -project test.epr -finalize   [compiler dies]
@@ -7259,7 +7259,7 @@ Fixed bugs
 931. Compiling the C code generated for the following features generates
      warnings of the form:
 
-/marten/test/EIFGEN/W_code/C1/pl13.c:334: warning: assignment makes integer from pointer without a cast
+/marten/test/EIFGENs/test/W_code/C1/pl13.c:334: warning: assignment makes integer from pointer without a cast
 
    For example, the code generated for PLATFORM.minimum_integer includes this:
 

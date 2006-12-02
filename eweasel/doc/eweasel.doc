@@ -28,7 +28,7 @@ next parameter:
 In the absence of this option, eweasel deletes the entire
 directory tree generated for each, whether it passes or fails.
 
-The -clean option specifies that the EIFGEN directory that results from
+The -clean option specifies that the EIFGENs/test directory that results from
 running the test should be deleted, to save disk space.  Note that
 this option has no effect unless the -keep option is also specified.
 
@@ -331,7 +331,7 @@ define <name> <value>
 		
 		- The Ace file which is input to the Eiffel compiler
 		
-		- The EIFGEN directory created and used by the 
+		- The EIFGENs/test directory created and used by the 
 		  Eiffel compiler
 		
 		- A "clusters" directory with the clusters which contain 
@@ -499,7 +499,7 @@ compile_final_keep [<output-file-name>]
 cleanup_compile
 
 	Clean up a previous Eiffel compilation by deleting the entire
-	EIFGEN directory tree.  The next Eiffel compilation will
+	EIFGENs/test directory tree.  The next Eiffel compilation will
 	start with a clean slate.  If there is a suspended Eiffel
 	compilation awaiting resumption, the `abort_compile'
 	instruction must be used instead of this one.
@@ -510,7 +510,7 @@ abort_compile
 	compilation can be started from scratch.  There can be at most
 	one Eiffel compilation in progress at a time.  This
 	instruction does a `cleanup' after aborting the compilation,
-	which deletes the entire EIFGEN directory tree.
+	which deletes the entire EIFGENs/test directory tree.
 
 exit_compile
 
@@ -518,7 +518,7 @@ exit_compile
 	compilation can be started from scratch.  There can be at most
 	one Eiffel compilation in progress at a time.  This
 	instruction is identical to `abort_compile' except that
-	it does not delete the EIFGEN directory tree.
+	it does not delete the EIFGENs/test directory tree.
 
 resume_compile
 

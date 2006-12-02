@@ -9,7 +9,8 @@ REM finalize rb.ecf
 REM cleanup_eiffel rb rb.exe
 REM if not exist rb.exe (remtrace Couldnt generate rb.exe & cancel)
 REM move rb.exe %INSTALL_DIR\rb\bin
-quick_move rb\bin\rb.exe
+cdd %INSTALL_DIR\rb
+exprt %DEFAULT_ORIGO_SVN/Src/tools/resource_bench/bin bin
 
 remtrace Retrieve the example
 cdd %INSTALL_DIR\rb

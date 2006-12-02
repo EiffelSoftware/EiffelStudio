@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Initialize printer using medium `a_medium'
 		require
 			a_medium_attached: a_medium /= Void
-			a_medium_is_writable: a_medium.is_writable
+			a_medium_is_open_write: a_medium.is_open_write
 		do
 			medium := a_medium
 		ensure
@@ -145,7 +145,7 @@ feature -- Status report
 	is_writable: BOOLEAN is
 			-- Determines if printer can be written to
 		do
-			Result := medium.is_writable
+			Result := medium.is_open_write
 		end
 
 feature {NONE} -- Implementation

@@ -7,8 +7,8 @@ VOMB, chapter 14 (Control structures), page 239
      the  following  conditions  are  met  by its unfolded
      form.
 
-        1 The inspect expression is of type  `INTEGER'  or
-          `CHARACTER'.
+        1 The inspect expression is of type  `INTEGER',
+          `CHARACTER', 'NATURAL' or a .NET enum.
 
         2 The inspect constants (the values in the various
           Choices  parts)  are  constant attributes of the

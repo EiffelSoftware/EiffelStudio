@@ -607,6 +607,7 @@ feature -- Update
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
+			l_cmd.append (" -nologo")
 			invoke_finish_freezing (path, l_cmd, False, workbench_mode)
 		end
 

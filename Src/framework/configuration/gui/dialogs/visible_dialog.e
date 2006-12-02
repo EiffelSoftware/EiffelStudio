@@ -9,7 +9,7 @@ class
 	VISIBLE_DIALOG
 
 inherit
-	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]]
+	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]]
 		redefine
 			initialize
 		end
@@ -138,7 +138,7 @@ feature {NONE} -- Agents
 			-- Show information about `a_feature' in `a_class'.
 		require
 			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
-			a_feature_ok: a_feature /= Void and then value.item (a_class).features /= Void and then value.item (a_class).features.has (a_feature)
+			a_feature_ok: a_feature /= Void and then value.item (a_class).item.features /= Void and then value.item (a_class).item.features.has (a_feature)
 		do
 			current_class := a_class
 			current_feature := a_feature
@@ -154,10 +154,10 @@ feature {NONE} -- Agents
 		do
 			if value /= Void then
 				if current_feature /= Void then
-					l_features := value.item (current_class).features
+					l_features := value.item (current_class).item.features
 					l_features.remove (current_feature)
 					if l_features.is_empty then
-						value.item (current_class).features := Void
+						value.item (current_class).item.features := Void
 					end
 					refresh
 				elseif current_class /= Void then
@@ -185,7 +185,7 @@ feature {NONE} -- Agents
 					create value.make (1)
 				end
 
-				value.force ([l_vis_name, Void], l_name)
+				value.force (create {EQUALITY_TUPLE [TUPLE [STRING_8, EQUALITY_HASH_TABLE [STRING_8, STRING_8]]]}.make ([l_vis_name, Void]), l_name)
 				original_name.set_text ("")
 				renamed_name.set_text ("")
 				current_class := l_name
@@ -205,11 +205,11 @@ feature {NONE} -- Agents
 				if l_vis_name.is_empty then
 					l_vis_name := l_name
 				end
-				l_feats := value.item (current_class).features
+				l_feats := value.item (current_class).item.features
 				if is_valid_feature_name (l_name) and then is_valid_feature_name (l_vis_name) and then (l_feats = Void or else not l_feats.has (l_name)) then
 					if l_feats = Void then
 						create l_feats.make (1)
-						value.item (current_class).features := l_feats
+						value.item (current_class).item.features := l_feats
 					end
 
 					l_feats.force (l_vis_name, l_name)
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 		local
 			l_sort: DS_ARRAYED_LIST [STRING]
 			l_class_item, l_feat_item: EV_TREE_ITEM
-			l_rena: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
+			l_rena: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
 			l_feat: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_class, l_feat_name, l_vis_name: STRING
 			l_cur_class: BOOLEAN
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 					l_sort.after
 				loop
 					l_class := l_sort.item_for_iteration
-					l_vis_name := value.item (l_class).class_renamed
+					l_vis_name := value.item (l_class).item.class_renamed
 					if l_vis_name /= Void and then not l_vis_name.is_equal (l_class) then
 						create l_class_item.make_with_text (l_class+" ("+l_vis_name+")")
 					else
@@ -277,8 +277,8 @@ feature {NONE} -- Implementation
 							l_cur_class := True
 						end
 					end
-					if l_rena /= Void and then l_rena.features /= Void then
-						l_feat := l_rena.features
+					if l_rena /= Void and then l_rena.item.features /= Void then
+						l_feat := l_rena.item.features
 						from
 							l_feat.start
 						until

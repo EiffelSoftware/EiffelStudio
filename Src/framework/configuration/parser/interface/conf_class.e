@@ -89,7 +89,7 @@ feature -- Access, in compiled only, not stored to configuration file
 			Result_assertions: Result.assertions /= Void
 		end
 
-	visible: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
+	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
 			-- The visible features.
 
 	is_valid: BOOLEAN
@@ -248,7 +248,7 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 			-- Add visible rules to `visible'. Set `is_error' and `last_error' if there is a conflict.
 		require
 			a_vis_not_void: a_vis /= Void
-			a_renamed_not_void: a_vis.class_renamed /= Void
+			a_renamed_not_void: a_vis.item.class_renamed /= Void
 		local
 			l_vis_check, l_vis_other: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_other: STRING
@@ -259,14 +259,14 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 				visible := a_vis
 			else
 					-- check final external class name
-				if visible.class_renamed.is_equal (a_vis.class_renamed) then
-					if equal (a_vis.features, visible.features) then
+				if visible.item.class_renamed.is_equal (a_vis.item.class_renamed) then
+					if equal (a_vis.item.features, visible.item.features) then
 						-- done, same features are visible
 					else
-						if visible.features = Void then
-							l_vis_check := a_vis.features
-						elseif a_vis.features = Void then
-							l_vis_check := visible.features
+						if visible.item.features = Void then
+							l_vis_check := a_vis.item.features
+						elseif a_vis.item.features = Void then
+							l_vis_check := visible.item.features
 						end
 						if l_vis_check /= Void then
 								-- check for renamings
@@ -281,21 +281,21 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 							if l_error then
 									-- conflict, all features visible vs some features visible with renaming
 								is_error := True
-								last_error := create {CONF_ERROR_VISI_CONFL01}.make (visible.class_renamed)
+								last_error := create {CONF_ERROR_VISI_CONFL01}.make (visible.item.class_renamed)
 							else
 									-- done, everything is visible and we had no renamings
 									-- twin because we may change something
 								visible := visible.twin
-								visible.features := Void
+								visible.item.features := Void
 							end
 						else
 								-- check if there are no conflicting feature definitions
-							if visible.features.count >= a_vis.features.count then
-								l_vis_check := visible.features
-								l_vis_other := a_vis.features
+							if visible.item.features.count >= a_vis.item.features.count then
+								l_vis_check := visible.item.features
+								l_vis_other := a_vis.item.features
 							else
-								l_vis_check := a_vis.features
-								l_vis_other := visible.features
+								l_vis_check := a_vis.item.features
+								l_vis_other := visible.item.features
 							end
 							from
 								l_vis_check.start
@@ -309,19 +309,19 @@ feature {CONF_ACCESS} -- Update, in compiled only, not stored to configuration f
 							if l_error then
 									-- conflict, conflicting feature renamings
 								is_error := True
-								last_error := create {CONF_ERROR_VISI_CONFL02}.make (visible.class_renamed)
+								last_error := create {CONF_ERROR_VISI_CONFL02}.make (visible.item.class_renamed)
 							else
 									-- merge
 									-- twin because we may change something
-								visible.features := visible.features.twin
-								visible.features.merge (a_vis.features)
+								visible.item.features := visible.item.features.twin
+								visible.item.features.merge (a_vis.item.features)
 							end
 						end
 					end
 				else
 						-- conflict, different final external class name
 					is_error := True
-					last_error := create {CONF_ERROR_VISI_CONFL03}.make (visible.class_renamed, a_vis.class_renamed)
+					last_error := create {CONF_ERROR_VISI_CONFL03}.make (visible.item.class_renamed, a_vis.item.class_renamed)
 				end
 			end
 		end

@@ -1075,7 +1075,7 @@ end
 			end
 		end
 
-	recheck_partly_removed (a_classes: ARRAYED_LIST [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]] ) is
+	recheck_partly_removed (a_classes: ARRAYED_LIST [EQUALITY_TUPLE [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]] ) is
 			-- Recheck clients of classes that have been removed from one place but still exists in another.
 		require
 			a_classes_not_void: a_classes /= Void
@@ -1090,8 +1090,8 @@ end
 			until
 				a_classes.after
 			loop
-				l_system := a_classes.item.system
-				l_class_i ?= a_classes.item.conf_class
+				l_system := a_classes.item.item.system
+				l_class_i ?= a_classes.item.item.conf_class
 				check
 					correct_class: l_class_i /= Void and then l_class_i.is_compiled
 				end

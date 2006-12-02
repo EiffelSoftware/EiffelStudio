@@ -456,11 +456,11 @@ feature {NONE} -- Implementation
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
 			l_platforms, l_builds: ARRAYED_LIST [INTEGER]
-			l_custs: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
-			l_custom: TUPLE [value: STRING; invert: BOOLEAN]
-			l_versions: HASH_TABLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION], STRING]
+			l_custs: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]], STRING]
+			l_custom: EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]]
+			l_versions: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			l_name: STRING
-			l_ver: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
+			l_ver: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 		do
 			if a_conditions /= Void then
 					-- assembly and only the default rule? => don't print it
@@ -479,13 +479,13 @@ feature {NONE} -- Implementation
 
 						l_condition := a_conditions.item
 						if l_condition.platform /= Void then
-							if l_condition.platform.invert then
+							if l_condition.platform.item.invert then
 								append_text_indent ("<platform excluded_value=%"")
 							else
 								append_text_indent ("<platform value=%"")
 							end
 							from
-								l_platforms := l_condition.platform.value
+								l_platforms := l_condition.platform.item.value
 								l_platforms.start
 							until
 								l_platforms.after
@@ -498,13 +498,13 @@ feature {NONE} -- Implementation
 						end
 
 						if l_condition.build /= Void then
-							if l_condition.build.invert then
+							if l_condition.build.item.invert then
 								append_text_indent ("<build excluded_value=%"")
 							else
 								append_text_indent ("<build value=%"")
 							end
 							from
-								l_builds := l_condition.build.value
+								l_builds := l_condition.build.item.value
 								l_builds.start
 							until
 								l_builds.after
@@ -537,11 +537,11 @@ feature {NONE} -- Implementation
 						loop
 							l_ver := l_versions.item_for_iteration
 							append_text_indent ("<version type=%""+l_versions.key_for_iteration+"%"")
-							if l_ver.min /= Void then
-								append_text (" min=%""+l_ver.min.version+"%"")
+							if l_ver.item.min /= Void then
+								append_text (" min=%""+l_ver.item.min.version+"%"")
 							end
-							if l_ver.max /= Void then
-								append_text (" max=%""+l_ver.max.version+"%"")
+							if l_ver.item.max /= Void then
+								append_text (" max=%""+l_ver.item.max.version+"%"")
 							end
 							append_text ("/>%N")
 
@@ -555,12 +555,12 @@ feature {NONE} -- Implementation
 							l_custs.after
 						loop
 							l_custom := l_custs.item_for_iteration
-							if l_custom.invert then
+							if l_custom.item.invert then
 								l_name := "excluded_value"
 							else
 								l_name := "value"
 							end
-							append_text_indent ("<custom name=%""+l_custs.key_for_iteration+"%" "+l_name+"=%""+l_custom.value+"%"/>%N")
+							append_text_indent ("<custom name=%""+l_custs.key_for_iteration+"%" "+l_name+"=%""+l_custom.item.value+"%"/>%N")
 							l_custs.forth
 						end
 
@@ -819,7 +819,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	append_visible (a_visible: EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]) is
+	append_visible (a_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]) is
 			-- Append visible rules.
 		require
 			a_visible_not_void: a_visible /= Void
@@ -834,8 +834,8 @@ feature {NONE} -- Implementation
 				a_visible.after
 			loop
 				l_class := a_visible.key_for_iteration
-				l_class_rename := a_visible.item_for_iteration.class_renamed
-				l_vis_feat := a_visible.item_for_iteration.features
+				l_class_rename := a_visible.item_for_iteration.item.class_renamed
+				l_vis_feat := a_visible.item_for_iteration.item.features
 				if l_vis_feat /= Void then
 					from
 						l_vis_feat.start
@@ -978,7 +978,7 @@ feature {NONE} -- Implementation
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_deps: DS_HASH_SET [CONF_GROUP]
-			l_visible: EQUALITY_HASH_TABLE [TUPLE [STRING, EQUALITY_HASH_TABLE [STRING, STRING]], STRING]
+			l_visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [STRING_8, EQUALITY_HASH_TABLE [STRING_8, STRING_8]]], STRING_8]
 			l_clusters: ARRAYED_LIST [CONF_CLUSTER]
 		do
 			append_file_rule (a_cluster.internal_file_rule)

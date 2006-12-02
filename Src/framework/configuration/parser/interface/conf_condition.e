@@ -37,10 +37,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	platform: TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]
+	platform: EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
 			-- Platform where it is enabled or for which it is disabled (if `invert' is true)
 
-	build: TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]
+	build: EQUALITY_TUPLE [TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]]
 			-- Build where it is is enabled or for which it is disabled (if `invert' is true)
 
 	multithreaded: CELL [BOOLEAN]
@@ -52,10 +52,10 @@ feature -- Access
 	dynamic_runtime: CELL [BOOLEAN]
 			-- Enabled for dynamic runtime?
 
-	version: HASH_TABLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION], STRING]
+	version: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			-- Enabled for a certain version number? Indexed by the type of the version number.
 
-	custom: HASH_TABLE [TUPLE [value: STRING; invert: BOOLEAN], STRING]
+	custom: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]], STRING]
 			-- Custom variables that have to be fullfilled indexed by the variable name.
 
 feature -- Queries
@@ -65,10 +65,10 @@ feature -- Queries
 		require
 			a_state_not_void: a_state /= Void
 		local
-			l_cust_cond: TUPLE [value: STRING; invert: BOOLEAN]
+			l_cust_cond: EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]]
 			l_vars: EQUALITY_HASH_TABLE [STRING, STRING]
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
-			l_ver_cond: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
+			l_ver_cond: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 			l_ver_state: CONF_VERSION
 			l_var_key, l_var_val: STRING
 		do
@@ -90,12 +90,12 @@ feature -- Queries
 
 				-- platform
 			if Result and platform /= Void then
-				Result := platform.value.has (a_state.platform) xor platform.invert
+				Result := platform.item.value.has (a_state.platform) xor platform.item.invert
 			end
 
 				-- build
 			if Result and build /= Void then
-				Result := build.value.has (a_state.build) xor build.invert
+				Result := build.item.value.has (a_state.build) xor build.item.invert
 			end
 
 				-- Version
@@ -108,8 +108,8 @@ feature -- Queries
 				loop
 					l_ver_cond := version.item_for_iteration
 					l_ver_state := l_version.item (version.key_for_iteration)
-					Result := l_ver_state /= Void and then (l_ver_cond.min = Void or else l_ver_cond.min <= l_ver_state) and
-						(l_ver_cond.max = Void or else l_ver_cond.max >= l_ver_state)
+					Result := l_ver_state /= Void and then (l_ver_cond.item.min = Void or else l_ver_cond.item.min <= l_ver_state) and
+						(l_ver_cond.item.max = Void or else l_ver_cond.item.max >= l_ver_state)
 					version.forth
 				end
 			end
@@ -128,7 +128,7 @@ feature -- Queries
 					if l_var_val = Void then
 						l_var_val := execution_environment.variable_value (l_var_key)
 					end
-					Result := equal (l_var_val, l_cust_cond.value) xor l_cust_cond.invert
+					Result := equal (l_var_val, l_cust_cond.item.value) xor l_cust_cond.item.invert
 					custom.forth
 				end
 			end
@@ -140,27 +140,27 @@ feature -- Update
 			-- Add requirement on `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
-			no_invert: platform = Void or else not platform.invert
+			no_invert: platform = Void or else not platform.item.invert
 		do
 			if platform = Void then
 				create platform
-				platform.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				platform.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
 			end
-			platform.value.force (a_platform)
+			platform.item.value.force (a_platform)
 		end
 
 	exclude_platform (a_platform: INTEGER) is
 			-- Add an exclude requirement on `a_platform'.
 		require
 			valid_platform: valid_platform (a_platform)
-			all_invert: platform = Void or else platform.invert
+			all_invert: platform = Void or else platform.item.invert
 		do
 			if platform = Void then
 				create platform
-				platform.value := create {ARRAYED_LIST [INTEGER]}.make (1)
-				platform.invert := True
+				platform.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				platform.item.invert := True
 			end
-			platform.value.force (a_platform)
+			platform.item.value.force (a_platform)
 		end
 
 	wipe_out_platform is
@@ -175,27 +175,27 @@ feature -- Update
 			-- Add requirement on `a_build'.
 		require
 			valid_build: valid_build (a_build)
-			no_invert: build = Void or else not build.invert
+			no_invert: build = Void or else not build.item.invert
 		do
 			if build = Void then
 				create build
-				build.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				build.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
 			end
-			build.value.force (a_build)
+			build.item.value.force (a_build)
 		end
 
 	exclude_build (a_build: INTEGER) is
 			-- Add an exclude requirement on `a_build'.
 		require
 			valid_build: valid_build (a_build)
-			all_invert: build = void or else build.invert
+			all_invert: build = void or else build.item.invert
 		do
 			if build = Void then
 				create build
-				build.value := create {ARRAYED_LIST [INTEGER]}.make (1)
-				build.invert := True
+				build.item.value := create {ARRAYED_LIST [INTEGER]}.make (1)
+				build.item.invert := True
 			end
-			build.value.force (a_build)
+			build.item.value.force (a_build)
 		end
 
 	wipe_out_build is
@@ -285,11 +285,11 @@ feature -- Update
 			min_less_max: a_min /= Void and a_max /= Void implies a_min <= a_max
 			valid_type: valid_version_type (a_type)
 		local
-			l_vers: TUPLE [min: CONF_VERSION; max: CONF_VERSION]
+			l_vers: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 		do
 			create l_vers
-			l_vers.min := a_min
-			l_vers.max := a_max
+			l_vers.item.min := a_min
+			l_vers.item.max := a_max
 			version.force (l_vers, a_type)
 		ensure
 			version_added: version.has (a_type)
@@ -315,7 +315,7 @@ feature -- Output
 		do
 			create Result.make_empty
 			if platform /= Void then
-				if platform.invert then
+				if platform.item.invert then
 					Result.append ("not ")
 					l_conc := " and "
 				else
@@ -323,7 +323,7 @@ feature -- Output
 				end
 				Result.append ("(")
 				from
-					l_lst := platform.value
+					l_lst := platform.item.value
 					l_lst.start
 				until
 					l_lst.after
@@ -336,7 +336,7 @@ feature -- Output
 			end
 
 			if build /= Void then
-				if build.invert then
+				if build.item.invert then
 					Result.append ("not ")
 					l_conc := " and "
 				else
@@ -344,7 +344,7 @@ feature -- Output
 				end
 				Result.append ("(")
 				from
-					l_lst := build.value
+					l_lst := build.item.value
 					l_lst.start
 				until
 					l_lst.after
@@ -361,12 +361,12 @@ feature -- Output
 			until
 				version.after
 			loop
-				if version.item_for_iteration.min /= Void then
-					Result.append (version.item_for_iteration.min.version + " <= ")
+				if version.item_for_iteration.item.min /= Void then
+					Result.append (version.item_for_iteration.item.min.version + " <= ")
 				end
 				Result.append (version.key_for_iteration + " version")
-				if version.item_for_iteration.max /= Void then
-					Result.append (" <= " + version.item_for_iteration.max.version)
+				if version.item_for_iteration.item.max /= Void then
+					Result.append (" <= " + version.item_for_iteration.item.max.version)
 				end
 				Result.append (" and ")
 				version.forth
@@ -402,12 +402,12 @@ feature -- Output
 				custom.after
 			loop
 				Result.append (custom.key_for_iteration)
-				if custom.item_for_iteration.invert then
+				if custom.item_for_iteration.item.invert then
 					Result.append (" /= ")
 				else
 					Result.append (" = ")
 				end
-				Result.append (custom.item_for_iteration.value + " and ")
+				Result.append (custom.item_for_iteration.item.value + " and ")
 				custom.forth
 			end
 
@@ -420,8 +420,8 @@ feature -- Output
 		end
 
 invariant
-	platform_ok: platform /= Void implies platform.value /= Void
-	build_ok: build /= Void implies build.value /= Void
+	platform_ok: platform /= Void implies platform.item.value /= Void
+	build_ok: build /= Void implies build.item.value /= Void
 	version_not_void: version /= Void
 	custom_not_void: custom /= Void
 

@@ -83,7 +83,7 @@ feature -- Access
 	removed_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of removed classes.
 
-	partly_removed_classes: ARRAYED_LIST [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]
+	partly_removed_classes: ARRAYED_LIST [EQUALITY_TUPLE [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]]
 			-- The list of classes that have been removed from a certain system only.
 			-- (if a library that is still used somewhere else has been removed)
 

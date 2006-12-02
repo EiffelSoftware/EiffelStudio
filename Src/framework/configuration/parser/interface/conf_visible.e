@@ -18,7 +18,7 @@ feature -- Basic commands
 		require
 			a_added_classes_not_void: a_added_classes /= Void
 		local
-			l_vis: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
+			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
 			l_class: CONF_CLASS
 			l_error: BOOLEAN
 			l_map: HASH_TABLE [STRING, STRING]
@@ -36,7 +36,7 @@ feature -- Basic commands
 					if l_map.has_key (l_name) then
 						l_name := l_map.found_item
 					end
-					l_vis := visible.item_for_iteration
+					l_vis := visible.item_for_iteration.item
 					l_class := classes.item (l_name)
 					if l_class = Void then
 						last_warnings.force (create {CONF_ERROR_VISI}.make (l_name))
@@ -62,7 +62,7 @@ feature -- Status
 
 feature {CONF_ACCESS} -- Access, stored in configuration file
 
-	visible: EQUALITY_HASH_TABLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]], STRING]
+	visible: EQUALITY_HASH_TABLE [EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]], STRING]
 			-- Table of table of features of classes that are visible.
 			-- Mapped to their rename (if any).
 			-- CLASS_NAME => [CLASS_RENAMED, feature_name => feature_renamed]
@@ -88,7 +88,7 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			a_feature_rename_implies_feature: a_feature_rename /= Void implies a_feature /= Void
 		local
 			l_v_cl: EQUALITY_HASH_TABLE [STRING, STRING]
-			l_tpl: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
+			l_tpl: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
 			l_visible_name, l_feature_name: STRING
 			l_class, l_feature: STRING
 		do
@@ -114,12 +114,12 @@ feature {CONF_ACCESS} -- Update, stored to configuration file
 			if l_tpl = Void then
 				create l_tpl
 			end
-			l_tpl.class_renamed := l_visible_name
+			l_tpl.item.class_renamed := l_visible_name
 			if l_feature /= Void then
-				l_v_cl := l_tpl.features
+				l_v_cl := l_tpl.item.features
 				if l_v_cl = Void then
 					create l_v_cl.make (1)
-					l_tpl.features := l_v_cl
+					l_tpl.item.features := l_v_cl
 				end
 				l_v_cl.force (l_feature_name, l_feature)
 			end

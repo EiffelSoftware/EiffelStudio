@@ -1691,11 +1691,11 @@ feature -- Convenience features
 	external_name: STRING is
 			-- External name
 		local
-			l_vis: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]
+			l_vis: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]]
 		do
 			l_vis := lace_class.visible
 			if l_vis /= Void then
-				Result := l_vis.class_renamed
+				Result := l_vis.item.class_renamed
 			else
 				Result := name
 			end

@@ -70,7 +70,7 @@ feature -- Access
 		deferred
 		end
 
-	visible: TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]] is
+	visible: EQUALITY_TUPLE [TUPLE [class_renamed: STRING; features: EQUALITY_HASH_TABLE [STRING, STRING]]] is
 			-- The visible features.
 		deferred
 		end
@@ -166,7 +166,7 @@ feature -- Access
 			l_feat, l_ren_feat: STRING
 		do
 			if visible /= Void then
-				l_vis := visible.features
+				l_vis := visible.item.features
 				if l_vis = Void then
 					Result := create {VISIBLE_EXPORT_I}
 				else

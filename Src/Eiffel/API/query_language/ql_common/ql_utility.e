@@ -70,7 +70,7 @@ feature -- Access
 		require
 			a_conf_class_attached: a_conf_class /= Void
 		do
-			create Result.make_with_parent (a_conf_class, conf_group_as_parent (a_conf_class.group))
+			create Result.make_with_parent (a_conf_class, conf_group_as_parent (a_conf_class.group, False))
 		ensure
 			result_attached: Result /= Void
 			result_valid: Result.is_valid_domain_item
@@ -81,7 +81,7 @@ feature -- Access
 		require
 			a_group_attached: a_group /= Void
 		do
-			Result ?= conf_group_as_parent (a_group)
+			Result ?= conf_group_as_parent (a_group, False)
 		ensure
 			result_attached: Result /= Void
 			result_valid: Result.is_valid_domain_item
@@ -171,9 +171,10 @@ feature -- Equality tester
 
 feature{NONE} -- Implementation
 
-	find_path_from_conf_group (a_list: LINKED_LIST [QL_ITEM]; a_group: CONF_GROUP) is
+	find_path_from_conf_group (a_list: LINKED_LIST [QL_ITEM]; a_group: CONF_GROUP; a_stop_on_target: BOOLEAN) is
 			-- Find a path from `a_group' to current system target, and
 			-- save this path in `a_list'.
+			-- If `a_stop_on_target' is True, stop path building when we meet a target component.
 		require
 			a_list_attached: a_list /= Void
 			a_group_attached: a_group /= Void
@@ -181,7 +182,6 @@ feature{NONE} -- Implementation
 			l_cluster: CONF_CLUSTER
 			l_lib: CONF_LIBRARY
 			l_target: CONF_TARGET
-			l_is_application_target_reached: BOOLEAN
 		do
 			if a_list.is_empty then
 				a_list.extend (create{QL_GROUP}.make (a_group))
@@ -191,40 +191,40 @@ feature{NONE} -- Implementation
 			if a_group.is_cluster then
 				l_cluster ?= a_group
 				if l_cluster.parent /= Void then
-					find_path_from_conf_group (a_list, l_cluster.parent)
+					find_path_from_conf_group (a_list, l_cluster.parent, False)
 				else
 					l_target := a_group.target
 					if l_target.system = l_target.system.application_target.system then
-						l_target := l_target.system.application_target
-						l_is_application_target_reached := True
+							-- We have reached current application target.
+						a_list.put_front (create{QL_TARGET}.make (l_target.system.application_target))
 					else
-						check
-							library_target: l_target.system.library_target /= Void
-						end
+							-- We have reached a library target.
+						check library_target: l_target.system.library_target /= Void end
 						l_target := l_target.system.library_target
-					end
-					a_list.put_front (create{QL_TARGET}.make (l_target))
-					if not l_is_application_target_reached then
+						a_list.put_front (create{QL_TARGET}.make (l_target))
 						l_lib := l_target.system.lowest_used_in_library
-						if l_lib /= Void  then
-							find_path_from_conf_group (a_list, l_lib)
+						check l_lib /= Void end
+						if not a_stop_on_target then
+							find_path_from_conf_group (a_list, l_lib, False)
 						end
 					end
 				end
 			elseif a_group.is_library or a_group.is_assembly or a_group.is_physical_assembly then
 				l_target := a_group.target
 				if l_target.system = l_target.system.application_target.system then
+						-- We have reached current application target.
 					l_target := l_target.system.application_target
+					a_list.put_front (create{QL_TARGET}.make (l_target))
 				else
-					check
-						library_target: l_target.system.library_target /= Void
-					end
+						-- We have reached a library target.
+					check library_target: l_target.system.library_target /= Void end
 					l_target := l_target.system.library_target
-				end
-				a_list.put_front (create{QL_TARGET}.make (l_target))
-				l_lib := l_target.system.lowest_used_in_library
-				if l_lib /= Void  then
-					find_path_from_conf_group (a_list, l_lib)
+					a_list.put_front (create{QL_TARGET}.make (l_target))
+					l_lib := l_target.system.lowest_used_in_library
+					check l_lib /= Void end
+					if not a_stop_on_target then
+						find_path_from_conf_group (a_list, l_lib, False)
+					end
 				end
 			end
 		end
@@ -251,16 +251,17 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	conf_group_as_parent (a_group: CONF_GROUP): QL_ITEM is
+	conf_group_as_parent (a_group: CONF_GROUP; a_stop_on_target: BOOLEAN): QL_ITEM is
 			-- Return query language representation of `a_group'.
 			-- Result's parent is already setup.
+			-- If `a_stop_on_target' is True, stop path building when we meet a target component.			
 		require
 			a_group_attached: a_group /= Void
 		local
 			l_list: LINKED_LIST [QL_ITEM]
 		do
 			create l_list.make
-			find_path_from_conf_group (l_list, a_group)
+			find_path_from_conf_group (l_list, a_group, a_stop_on_target)
 			set_parents (l_list)
 			Result := l_list.last
 			l_list.wipe_out

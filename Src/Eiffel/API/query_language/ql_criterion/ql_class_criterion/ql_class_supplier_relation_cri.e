@@ -10,123 +10,28 @@ class
 	QL_CLASS_SUPPLIER_RELATION_CRI
 
 inherit
-	QL_CLASS_HIERARCHY_CRI
-		redefine
-			relation_type,
-			intrinsic_domain,
-			finder_agent_table
-		end
-
-	QL_SHARED_CLASS_RELATION
+	QL_CLASS_REFERENCE_RELATION_CRI
 
 create
 	make
 
-feature{QL_DOMAIN} -- Intrinsic domain
-
-	intrinsic_domain: QL_CLASS_DOMAIN is
-			-- Intrinsic_domain which can be inferred from current criterion			
-		local
-			l_list: like candidate_class_list
-		do
-			if not is_criterion_domain_evaluated then
-				initialize_domain
-			end
-			source_domain.clear_cache
-			create Result.make
-			l_list := candidate_class_list
-			from
-				l_list.start
-			until
-				l_list.after
-			loop
-				Result.extend (query_class_item (l_list.item_for_iteration.lace_class.config_class))
-				l_list.forth
-			end
-		end
-
-feature -- Access
-
-	relation_type: QL_CLASS_CLIENT_RELATION
-			-- Type of class relation
-
-feature -- Status report
-
-	is_relation_type_valid (a_type: like relation_type): BOOLEAN is
-			-- Is `a_type' a valid type according to current criterion?
-		do
-			Result :=
-				a_type = class_supplier_relation or
-				a_type = class_indirect_supplier_relation
-		ensure then
-			good_result:
-				Result implies (
-					a_type = class_supplier_relation or
-					a_type = class_indirect_supplier_relation)
-		end
-
 feature{NONE} -- Implementation
 
-	find_supplier_classes (a_class_c: CLASS_C) is
-			-- Find all supplier of `a_class_c' and put them in `candidate_class_list' and `candidate_class_table'.
-		local
-			l_list: LIST [CLASS_C]
-			l_candidate_class_list: like candidate_class_list
-			l_class_c: CLASS_C
-			l_source_id: INTEGER
+	referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C] is
+			-- A list of classes referenced by `a_class_c'.
+			-- In supplier criterion, it's suppliers of `a_class_c'.
+			-- In client criterion, it's clients of `a_class_c'.
 		do
-			l_list := a_class_c.suppliers.classes
-			if not l_list.is_empty then
-				l_candidate_class_list := candidate_class_list
-				l_source_id := a_class_c.class_id
-				from
-					l_list.start
-				until
-					l_list.after
-				loop
-					l_class_c := l_list.item
-					if l_class_c.class_id /= l_source_id then
-						l_candidate_class_list.put (l_class_c, l_class_c.class_id)
-					end
-					l_list.forth
-				end
-			end
+			Result := a_class_c.suppliers.classes
 		end
 
-	find_indirect_supplier_classes (a_class_c: CLASS_C) is
-			-- Find indirect supplier of `a_class_c' and put them in `candidate_class_list' and `candidate_class_table'.
-		local
-			l_clients: LIST [CLASS_C]
+	syntactical_referenced_classes (a_class_c: CLASS_C): LIST [CLASS_C] is
+			-- A list of syntactically referened by `a_class_c'.
+			-- In supplier criterion, it's syntactical suppliers of `a_class_c'.
+			-- In client criterion, it's ssyntactical clients of `a_class_c'.
 		do
-			l_clients := a_class_c.suppliers.classes
-			if not l_clients.is_empty then
-				from
-					l_clients.start
-				until
-					l_clients.after
-				loop
-					find_supplier_classes (l_clients.item)
-					l_clients.forth
-				end
-			end
+			Result := a_class_c.syntactical_suppliers
 		end
-
-feature{NONE} -- Implementation
-
-	finder_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_C]], QL_CLASS_CLIENT_RELATION] is
-			-- Table for finders of certain kind of class supplier (supplier, indirect supplier) relation.
-			-- Key is class ancestor relation, value is the finder agent associated to the relation.
-		do
-			if internal_finder_agent_table = Void then
-				create internal_finder_agent_table.make (2)
-				internal_finder_agent_table.put (agent find_supplier_classes, class_supplier_relation)
-				internal_finder_agent_table.put (agent find_indirect_supplier_classes, class_indirect_supplier_relation)
-			end
-			Result := internal_finder_agent_table
-		end
-
-	internal_finder_agent_table: like finder_agent_table;
-			-- Implementation of `finder_agent_table'
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

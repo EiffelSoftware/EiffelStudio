@@ -51,7 +51,7 @@ feature -- Output
 		do
 			create {QL_CLASS_SUPPLIER_RELATION_CRI}Result.make (
 				query_class_item_from_class_c (current_class).wrapped_domain,
-				class_supplier_relation)
+				False, False)
 		ensure then
 			result_attached: Result /= Void
 		end

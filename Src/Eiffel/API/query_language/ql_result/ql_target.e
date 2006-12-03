@@ -135,12 +135,12 @@ feature -- Status report
 			-- True as return value means every ancestors of current item is a valid domain item.
 		do
 			if parent = Void then
-				Result := target = target.system.application_target
+				Result := True
 			else
 				Result := parent.is_valid_domain_item
 			end
 		ensure then
-			good_result: (parent = Void implies (Result = (target = target.system.application_target))) and
+			good_result: (parent = Void implies Result) and
 						 (parent /= Void implies (Result = parent.is_valid_domain_item))
 		end
 

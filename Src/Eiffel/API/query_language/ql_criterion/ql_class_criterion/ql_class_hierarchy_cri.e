@@ -27,23 +27,6 @@ inherit
 
 	QL_UTILITY
 
-feature{NONE} -- Initialization
-
-	make (a_criterion_domain: like criterion_domain; a_type: like relation_type) is
-			-- Initialize `criteiron_domain' with `a_criterion_domain'.
-			-- If `only_indirect' is True, we only find out indirect ones.
-		require
-			a_criterion_domain_attached: a_criterion_domain /= Void
-			a_type_attached: a_type /= Void
-			a_type_valid: is_relation_type_valid (a_type)
-		do
-			relation_type := a_type
-			old_make (a_criterion_domain)
-		ensure
-			relation_type_set: relation_type = a_type
-			criterion_domain_set: criterion_domain = a_criterion_domain
-		end
-
 feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
@@ -65,20 +48,6 @@ feature -- Evaluate
 			Result := is_satisfied_by_internal (a_item)
 		end
 
-feature -- Access
-
-	relation_type: QL_CLASS_RELATION
-			-- Type of class relation
-
-feature -- Status report
-
-	is_relation_type_valid (a_type: like relation_type): BOOLEAN is
-			-- Is `a_type' a valid type according to current criterion?
-		require
-			a_type_attached: a_type /= Void
-		deferred
-		end
-
 feature{NONE} -- Implementation
 
 	find_result is
@@ -88,7 +57,7 @@ feature{NONE} -- Implementation
 			l_finder: PROCEDURE [ANY, TUPLE [CLASS_C]]
 		do
 			l_class_tbl := compiled_classes_from_domain (criterion_domain)
-			l_finder := finder_agent_table.item (relation_type)
+			l_finder := finder_agent
 			check l_finder /= Void end
 			from
 				l_class_tbl.start
@@ -109,9 +78,16 @@ feature{NONE} -- Implementation
 			else
 				candidate_class_list.wipe_out
 			end
+			if processed_classes = Void then
+				create processed_classes.make (100)
+			else
+				processed_classes.wipe_out
+			end
 		ensure then
 			candidate_class_list_attached: candidate_class_list /= Void
 			candidate_class_list_is_empty: candidate_class_list.is_empty
+			processed_classes_attached: processed_classes /= Void
+			processed_classes_is_empty: processed_classes.is_empty
 		end
 
 	compiled_classes_from_domain (a_domain: QL_DOMAIN): HASH_TABLE [QL_CLASS, INTEGER] is
@@ -182,16 +158,16 @@ feature{NONE} -- Implemenation/Data
 			-- Table of ancestor classes
 			-- Key is `class_id' of a descendant class, value is CLASS_C object of that class
 
-	finder_agent_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_C]], QL_CLASS_RELATION] is
-			-- Table for finders of certain kind of class supplier (supplier, indirect supplier) relation.
-			-- Key is class ancestor relation, value is the finder agent associated to the relation.
+	processed_classes: DS_HASH_SET [INTEGER];
+			-- Flag structure to indicate whether or not a class has been processed
+			-- Item of this set is `class_id' of a compiled class
+
+	finder_agent: PROCEDURE [ANY, TUPLE [CLASS_C]] is
+			-- Finder used to find result for current criterion
 		deferred
 		ensure
 			result_attached: Result /= Void
 		end
-
-invariant
-	relation_type_attached: relation_type /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

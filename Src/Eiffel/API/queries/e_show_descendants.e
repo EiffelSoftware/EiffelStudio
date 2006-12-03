@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 		do
 			create {QL_CLASS_DESCENDANT_RELATION_CRI}Result.make (
 				query_class_item_from_class_c (current_class).wrapped_domain,
-				class_descendant_relation)
+				{QL_CLASS_DESCENDANT_RELATION_CRI}.descendant_type)
 		ensure then
 			result_attached: Result /= Void
 		end

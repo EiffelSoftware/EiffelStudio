@@ -26,30 +26,33 @@ inherit
 			intrinsic_domain
 		end
 
+	QL_SHARED_FEATURE_INVOKE_RELATION_TYPES
+
 create
 	make
 
 feature{NONE} -- Initialization
 
-	make (a_feature: like criterion_domain; a_caller_type: like caller_type; only_current_version: BOOLEAN) is
-			-- Initialize `criterion_domain' with `a_feature' and `caller_type' with `a_caller_type'.
-			-- if `only_current_version' is True, only find callers of current version of features in `a_feature'.
+	make (a_feature: like criterion_domain; a_callee_type: INTEGER_8; only_current_version: BOOLEAN) is
+			-- Initialize `criterion_domain' with `a_feature' and `calle_type' with `a_callee_type'.
+			-- if `only_current_version' is True, only find callees of current version of features in `a_feature'.
 		require
 			a_feature_attached: a_feature /= Void
-			a_caller_type_attached: a_caller_type /= Void
+			a_callee_type_valid: is_callee_type_valid (a_callee_type)
 		do
 			only_find_current_version := only_current_version
-			caller_type := a_caller_type
+			callee_type := a_callee_type
 			old_make (a_feature)
 		end
 
 feature -- Status report
 
-	caller_type: QL_FEATURE_CALLEE_TYPE
+	callee_type: INTEGER_8
 			-- Feature caller type
 
 	only_find_current_version: BOOLEAN
 			-- Only caller of current versions (not descendant versions) of features in `criterion_domain'?
+
 
 feature{QL_DOMAIN} -- Intrinsic domain
 
@@ -111,7 +114,7 @@ feature{NONE} -- Implementation
 	find_result is
 			-- Find callers to `criterion_domain'.
 		do
-			find_all_callees (caller_type.type)
+			find_all_callees (callee_type)
 			is_intrinsic_domain_cached_in_domain_generator := False
 		end
 
@@ -316,7 +319,7 @@ feature{NONE} -- Evaluate
 		end
 
 invariant
-	caller_type_attached: caller_type /= Void
+	callee_type_valid: is_callee_type_valid (callee_type)
 	invariant_callee_valid:
 		(callee_list_for_invariant /= Void and then invariant_list /= Void) implies (callee_list_for_invariant.count = invariant_list.count)
 	feature_callee_valid:

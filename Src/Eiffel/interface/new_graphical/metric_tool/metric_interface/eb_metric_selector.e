@@ -690,7 +690,7 @@ feature -- Metric management
 					if l_metric_list /= Void and then not l_metric_list.is_empty then
 						metric_grid.insert_new_row (metric_grid.row_count + 1)
 						l_row := metric_grid.row (metric_grid.row_count)
-						create l_item.make_with_text (displayed_name (l_unit.name))
+						create l_item.make_with_text (unit_name_table.item (l_unit))
 						l_item.set_pixmap (l_unit_list.item.pixmap)
 						l_row.set_item (1, l_item)
 						l_row.set_data (l_unit)

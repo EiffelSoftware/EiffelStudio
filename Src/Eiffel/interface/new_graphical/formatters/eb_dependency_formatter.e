@@ -291,6 +291,7 @@ feature {NONE} -- Implementation
 			associated_stone_attached: associated_stone /= Void
 			associated_stone_valid: is_stone_valid (associated_stone)
 			a_domain_attached: a_domain /= Void
+			browser_attached: browser /= Void
 		deferred
 		ensure
 			result_attached: Result /= Void

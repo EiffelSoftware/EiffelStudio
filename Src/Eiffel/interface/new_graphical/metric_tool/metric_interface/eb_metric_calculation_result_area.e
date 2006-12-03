@@ -126,6 +126,7 @@ feature {NONE} -- Initialization
 			l_item_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
 			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
 			l_text: EV_TEXT_FIELD
+			l_font: EV_FONT
 		do
 				-- Setup `input_grid'.
 			create input_grid
@@ -212,6 +213,9 @@ feature {NONE} -- Initialization
 			show_percentage_btn.select_actions.extend (agent on_show_percentage_changes)
 			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.extend (on_show_percentage_change_from_outside_agent)
 			on_show_percentage_change_from_outside
+			create l_font
+			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+			value_text.set_font (l_font)
 		ensure then
 			input_grid_attached: input_grid /= Void
 			editor_token_grid_support_attached: editor_token_grid_support /= Void
@@ -228,6 +232,11 @@ feature -- Result loading
 		do
 			if domain /= Void then
 				domain.wipe_out
+			end
+			if a_metric.is_ratio then
+				ratio_btn_toolbar.show
+			else
+				ratio_btn_toolbar.hide
 			end
 			invisible_items.wipe_out
 			load_metric_information (a_metric, a_value)
@@ -251,7 +260,7 @@ feature -- Result loading
 			end
 			type_name_text.set_text (displayed_name (name_of_metric_type (metric_type_id (a_metric))))
 			type_pixmap.copy (pixmap_from_metric_type (metric_type_id (a_metric)))
-			unit_name_text.set_text (displayed_name (a_metric.unit.name))
+			unit_name_text.set_text (unit_name_table.item (a_metric.unit))
 			unit_pixmap.copy (pixmap_from_unit (a_metric.unit))
 			value_text.set_text (metric_value (a_value, a_metric.is_ratio and then show_percentage_btn.is_selected))
 			value_text.set_data (a_value)

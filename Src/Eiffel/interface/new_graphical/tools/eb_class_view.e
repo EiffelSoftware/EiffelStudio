@@ -31,7 +31,8 @@ feature {NONE} -- Initialization
 			formatters: like managed_formatters
 			conv_ct: EB_CLASS_TEXT_FORMATTER
 			l_flat_browser: EB_CLASS_BROWSER_FLAT_VIEW
-			l_tree_browser: EB_CLASS_BROWSER_TREE_VIEW
+			l_inheritance_browser: EB_CLASS_BROWSER_TREE_VIEW
+			l_reference_browser: EB_CLASS_BROWSER_TREE_VIEW
 			l_class_formatter: EB_CLASS_CONTENT_FORMATTER
 			l_drop_actions: EV_PND_ACTION_SEQUENCE
 		do
@@ -45,8 +46,11 @@ feature {NONE} -- Initialization
 			l_drop_actions.extend (agent drop_stone)
 			create l_flat_browser.make (a_tool, l_drop_actions)
 			l_flat_browser.set_sorting_status (l_flat_browser.sorted_columns_from_string (preferences.class_browser_data.class_flat_view_sorting_order))
-			create l_tree_browser.make (a_tool, l_drop_actions)
-			l_tree_browser.set_sorting_status (l_tree_browser.sorted_columns_from_string (preferences.class_browser_data.class_tree_view_sorting_order))
+			create l_inheritance_browser.make_with_flag (a_tool, l_drop_actions, True)
+			l_inheritance_browser.set_sorting_status (l_inheritance_browser.sorted_columns_from_string (preferences.class_browser_data.class_tree_view_sorting_order))
+			create l_reference_browser.make_with_flag (a_tool, l_drop_actions, False)
+			l_reference_browser.set_sorting_status (l_reference_browser.sorted_columns_from_string (preferences.class_browser_data.class_tree_view_sorting_order))
+			l_reference_browser.retrieve_data_actions.extend (agent refresh)
 			shared_editor.disable_line_numbers
 			shared_editor.drop_actions.extend (agent drop_stone)
 			from
@@ -64,7 +68,11 @@ feature {NONE} -- Initialization
 					if l_class_formatter.is_class_feature_formatter then
 						l_class_formatter.set_browser (l_flat_browser)
 					else
-						l_class_formatter.set_browser (l_tree_browser)
+						if l_class_formatter.is_reference_formatter then
+							l_class_formatter.set_browser (l_reference_browser)
+						elseif l_class_formatter.is_inheritance_formatter then
+							l_class_formatter.set_browser (l_inheritance_browser)
+						end
 					end
 				end
 				managed_formatters.extend (formatters.item)
@@ -266,7 +274,6 @@ feature -- Status setting
 			done: BOOLEAN
 		do
 			if not formatter_container.has (new_widget) then
-
 				l_formatters := managed_formatters
 				l_cursor := l_formatters.cursor
 				from

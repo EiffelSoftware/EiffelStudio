@@ -12,8 +12,6 @@ class
 inherit
 	EB_DEPENDENCY_FORMATTER
 
-	QL_SHARED_CLASS_RELATION
-
 create
 	make
 
@@ -65,7 +63,10 @@ feature{NONE} -- Implementation
 	dependency_criterion (a_domain: QL_DOMAIN): QL_CLASS_CRITERION is
 			-- Criterion to filter dependency classes		
 		do
-			create {QL_CLASS_SUPPLIER_RELATION_CRI} Result.make (a_domain, class_supplier_relation)
+			create {QL_CLASS_SUPPLIER_RELATION_CRI} Result.make (a_domain, browser.syntactical_button.is_selected, False)
+			if browser.inheritance_button.is_selected then
+				Result := Result or (create {QL_CLASS_ANCESTOR_RELATION_CRI}.make (a_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.proper_ancestor_type))
+			end
 		end
 
 indexing

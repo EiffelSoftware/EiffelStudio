@@ -148,7 +148,7 @@ feature -- Basic operations
 		require
 			a_unit_attached: a_unit /= Void
 		do
-			unit_text.set_text (displayed_name (a_unit.name))
+			unit_text.set_text (unit_name_table.item (a_unit))
 			unit_pixmap.copy (pixmap_from_unit (a_unit))
 		end
 

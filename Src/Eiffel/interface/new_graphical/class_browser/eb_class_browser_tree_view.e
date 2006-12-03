@@ -27,26 +27,59 @@ inherit
 	QL_UTILITY
 
 create
-	make
+	make_with_flag
+
+feature{NONE} -- Initialization
+
+	make_with_flag (a_dev_window: like development_window; a_drop_actions: like drop_actions; a_tree_view_enabled: BOOLEAN) is
+			-- Initialize.
+		do
+			make (a_dev_window, a_drop_actions)
+			is_tree_view_enabled := a_tree_view_enabled
+		ensure
+			is_tree_view_enabled_set: is_tree_view_enabled = a_tree_view_enabled
+		end
+
+feature -- Status report
+
+	is_tree_view_enabled: BOOLEAN
+		-- Is Tree view enabled for displaying ancestor/descendant hierarchy?
+
+	is_flat_view_enabled: BOOLEAN is
+			-- Is flat view enabled for displaying supplier/client referenced?
+		do
+			Result := not is_tree_view_enabled
+		end
 
 feature -- Access
 
 	control_bar: EV_WIDGET is
 			-- Widget of a control bar through which, certain control can be performed upon current view
-		local
-			l_tool_bar: EV_TOOL_BAR
 		do
-			if control_tool_bar = Void then
-				create control_tool_bar
-				create l_tool_bar
-				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
-				l_tool_bar.extend (display_path_button)
-				control_tool_bar.set_padding (2)
-				control_tool_bar.extend (l_tool_bar)
-				control_tool_bar.disable_item_expand (l_tool_bar)
+			if control_tool_internal = Void then
+				create control_tool_internal
+				control_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+				control_tool_bar.extend (display_path_button)
+				if is_flat_view_enabled then
+					control_tool_bar.extend (syntactical_button)
+				end
+				control_tool_internal.set_padding (2)
+				control_tool_internal.extend (control_tool_bar)
+				control_tool_internal.disable_item_expand (control_tool_bar)
 			end
-			Result := control_tool_bar
+			Result := control_tool_internal
 		ensure then
+			result_attached: Result /= Void
+		end
+
+	control_tool_bar: EV_TOOL_BAR is
+			-- Tool bar contained in `control_bar'
+		do
+			if control_tool_bar_internal = Void then
+				create control_tool_bar_internal
+			end
+			Result := control_tool_bar_internal
+		ensure
 			result_attached: Result /= Void
 		end
 
@@ -54,6 +87,19 @@ feature -- Access
 			-- Starting element as root of the tree displayed in current browser.
 			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
 			-- If `starting_element' is Void, don't build tree.
+
+	syntactical_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+			-- Toggle button to indicate if syntactical supplier/clients are displayed
+		do
+			if syntactical_button_internal = Void then
+				create syntactical_button_internal
+				syntactical_button_internal.set_pixmap (pixmaps.icon_pixmaps.class_overriden_normal_icon)
+				syntactical_button_internal.set_tooltip (interface_names.h_show_syntactical_classes)
+			end
+			Result := syntactical_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Actions
 
@@ -206,6 +252,31 @@ feature -- Actions
 			end
 		end
 
+	on_show_syntactical_class_changed is
+			-- Action to be performed when selection status of `syntactical_button' changes
+		do
+			is_up_to_date := False
+			if data /= Void and then is_flat_view_enabled then
+				retrieve_data_actions.call ([])
+			end
+			preferences.class_browser_data.syntactical_class_preference.set_value (syntactical_button.is_selected)
+		end
+
+	on_show_syntactical_class_changed_from_outside is
+			-- Action to be performed when selection status of `syntactical_button' changes from outside
+		local
+			l_displayed: BOOLEAN
+		do
+			l_displayed := preferences.class_browser_data.is_syntactical_class_shown
+			if l_displayed /= syntactical_button.is_selected then
+				if l_displayed then
+					syntactical_button.enable_select
+				else
+					syntactical_button.disable_select
+				end
+			end
+		end
+
 feature -- Status report
 
 	should_tooltip_be_displayed: BOOLEAN is
@@ -222,7 +293,7 @@ feature -- Notification
 		do
 			if not is_up_to_date then
 				if data /= Void then
-					if starting_element = Void and then display_path_button.is_selected then
+					if is_flat_view_enabled and then display_path_button.is_selected then
 						set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_CLASS_BROWSER_TREE_ROW]}.make (agent path_name_tester, ascending_order))
 					else
 						remove_sort_info (2)
@@ -404,7 +475,7 @@ feature{NONE} -- Implementation
 			l_rows := rows
 			l_rows.wipe_out
 			l_data := data
-			if starting_element = Void then
+			if is_flat_view_enabled then
 				from
 					l_data.start
 				until
@@ -613,7 +684,7 @@ feature{NONE} -- Implementation
 	class_table_internal: like class_table
 			-- Implementation of `class_table'		
 
-	control_tool_bar: EV_HORIZONTAL_BOX
+	control_tool_internal: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
 	display_path_button: EV_TOOL_BAR_TOGGLE_BUTTON
@@ -634,11 +705,17 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+	syntactical_button_internal: like syntactical_button
+			-- Implementation of `syntactical_button'
+
 	display_path_button_internal: like display_path_button
 			-- Implementation of `display_path_button'
 
 	on_show_path_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent for `on_show_path_changed_from_outside'
+
+	on_show_syntactical_class_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent for `on_show_syntactical_class_changed_from_outside'
 
 	recycle_agents is
 			-- Recycle agents
@@ -646,6 +723,9 @@ feature{NONE} -- Implementation
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
 			if on_show_path_changed_from_outside_agent /= Void then
 				preferences.class_browser_data.show_item_path_preference.change_actions.prune_all (on_show_path_changed_from_outside_agent)
+			end
+			if on_show_syntactical_class_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.syntactical_class_preference.change_actions.prune_all (on_show_syntactical_class_changed_from_outside_agent)
 			end
 		end
 
@@ -678,7 +758,10 @@ feature{NONE} -- Initialization
 
 			display_path_button.select_actions.extend (agent on_show_path_changed)
 			on_show_path_changed_from_outside_agent := agent on_show_path_changed_from_outside
+			on_show_syntactical_class_changed_from_outside_agent := agent on_show_syntactical_class_changed_from_outside
+			syntactical_button.select_actions.extend (agent on_show_syntactical_class_changed)
 			preferences.class_browser_data.show_item_path_preference.change_actions.extend (on_show_path_changed_from_outside_agent)
+			preferences.class_browser_data.syntactical_class_preference.change_actions.extend (on_show_syntactical_class_changed_from_outside_agent)
 		end
 
 	build_sortable_and_searchable is
@@ -702,8 +785,11 @@ feature{NONE} -- Initialization
 			grid.add_key_shortcut (collapse_one_level_partly_index, create{ES_KEY_SHORTCUT}.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_left), True, False, False))
 		end
 
-	collapse_one_level_partly_index: INTEGER is 65530;
+	collapse_one_level_partly_index: INTEGER is 65530
 			-- Key shortcut index for collapse one level partly
+
+	control_tool_bar_internal: like control_tool_bar;
+			-- Implementation of `control_tool_bar'
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

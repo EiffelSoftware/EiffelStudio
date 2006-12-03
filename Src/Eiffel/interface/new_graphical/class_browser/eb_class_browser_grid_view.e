@@ -477,6 +477,17 @@ feature -- Access
 			end
 		end
 
+	retrieve_data_actions: ACTION_SEQUENCE [TUPLE] is
+			-- Actions to be performed to get new data which will force current view to be refreshed.
+		do
+			if retrieve_data_actions_internal = Void then
+				create retrieve_data_actions_internal
+			end
+			Result := retrieve_data_actions_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
 	is_up_to_date: BOOLEAN
@@ -804,29 +815,30 @@ feature -- Tree hierarchy highlight
 		require
 			a_row_attached: a_row /= Void
 			grid_is_in_tree_mode: grid.is_tree_enabled
-			tree_node_highlight_enabled: is_tree_node_highlight_enabled
 		local
 			l_row_index: INTEGER
 			l_row_count: INTEGER
 		do
-			if a_row.is_selected then
-				if grid.has_focus then
-					a_row.set_background_color (preferences.editor_data.selection_background_color)
+			if is_tree_node_highlight_enabled then
+				if a_row.is_selected then
+					if grid.has_focus then
+						a_row.set_background_color (preferences.editor_data.selection_background_color)
+					else
+						a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
+					end
 				else
-					a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
+					a_row.set_background_color (odd_line_color)
 				end
-			else
-				a_row.set_background_color (odd_line_color)
-			end
-			l_row_count := a_row.subrow_count
-			if l_row_count > 0 then
-				from
-					l_row_index := 1
-				until
-					l_row_index > l_row_count
-				loop
-					highlight_row (a_row.subrow (l_row_index))
-					l_row_index := l_row_index + 1
+				l_row_count := a_row.subrow_count
+				if l_row_count > 0 then
+					from
+						l_row_index := 1
+					until
+						l_row_index > l_row_count
+					loop
+						highlight_row (a_row.subrow (l_row_index))
+						l_row_index := l_row_index + 1
+					end
 				end
 			end
 		end
@@ -836,43 +848,44 @@ feature -- Tree hierarchy highlight
 		require
 			a_row_attached: a_row /= Void
 			grid_is_in_tree_mode: grid.is_tree_enabled
-			tree_node_highlight_enabled: is_tree_node_highlight_enabled
 		local
 			l_row_index: INTEGER
 			l_row_count: INTEGER
 			l_is_parent_selected: BOOLEAN
 			l_parent_row: EV_GRID_ROW
 		do
-			from
-				l_parent_row := a_row.parent_row
-			until
-				l_parent_row = Void or l_is_parent_selected
-			loop
-				l_is_parent_selected := l_parent_row.is_selected
-				l_parent_row := l_parent_row.parent_row
-			end
-			if a_row.is_selected then
-				if grid.has_focus then
-					a_row.set_background_color (preferences.editor_data.selection_background_color)
-				else
-					a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
-				end
-			else
-				if l_is_parent_selected then
-					a_row.set_background_color (odd_line_color)
-				else
-					a_row.set_background_color (even_line_color)
-				end
-			end
-			l_row_count := a_row.subrow_count
-			if l_row_count > 0 then
+			if is_tree_node_highlight_enabled then
 				from
-					l_row_index := 1
+					l_parent_row := a_row.parent_row
 				until
-					l_row_index > l_row_count
+					l_parent_row = Void or l_is_parent_selected
 				loop
-					dehighlight_row (a_row.subrow (l_row_index))
-					l_row_index := l_row_index + 1
+					l_is_parent_selected := l_parent_row.is_selected
+					l_parent_row := l_parent_row.parent_row
+				end
+				if a_row.is_selected then
+					if grid.has_focus then
+						a_row.set_background_color (preferences.editor_data.selection_background_color)
+					else
+						a_row.set_background_color (preferences.editor_data.focus_out_selection_background_color)
+					end
+				else
+					if l_is_parent_selected then
+						a_row.set_background_color (odd_line_color)
+					else
+						a_row.set_background_color (even_line_color)
+					end
+				end
+				l_row_count := a_row.subrow_count
+				if l_row_count > 0 then
+					from
+						l_row_index := 1
+					until
+						l_row_index > l_row_count
+					loop
+						dehighlight_row (a_row.subrow (l_row_index))
+						l_row_index := l_row_index + 1
+					end
 				end
 			end
 		end
@@ -890,6 +903,9 @@ feature -- Tree hierarchy highlight
 
 	processed_rows_internal: like processed_rows
 			-- Implementation of `processed_Rows'
+
+	retrieve_data_actions_internal: like retrieve_data_actions
+			-- Implementation of `retrieve_data_actions'
 
 invariant
 	development_window_attached: not is_recycled implies development_window /= Void

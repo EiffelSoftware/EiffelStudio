@@ -557,12 +557,12 @@ feature{NONE} -- Implementation
 				l_unit_list := unit_list (False)
 
 				create l_new_menu
-				create l_submenu.make_with_text (displayed_name (metric_names.t_basic) + " metric")
+				create l_submenu.make_with_text (displayed_name (metric_names.l_basic_metric))
 				l_submenu.set_data (basic_metric_type)
 				l_submenu.set_pixmap (pixmaps.icon_pixmaps.metric_basic_icon)
 				l_new_menu.extend (l_submenu)
 
-				create l_submenu.make_with_text (displayed_name (metric_names.t_linear) + " metric")
+				create l_submenu.make_with_text (displayed_name (metric_names.l_linear_metric))
 				l_submenu.set_data (linear_metric_type)
 				l_submenu.set_pixmap (pixmaps.icon_pixmaps.metric_linear_icon)
 				l_new_menu.extend (l_submenu)
@@ -579,14 +579,14 @@ feature{NONE} -- Implementation
 						l_unit_list.after
 					loop
 						l_submenu ?= l_new_menu.item
-						create l_menu_item.make_with_text_and_action (displayed_name (l_unit_list.item.l_unit.name), agent on_create_new_metric (l_type.item, l_unit_list.item.l_unit))
+						create l_menu_item.make_with_text_and_action (unit_name_table.item (l_unit_list.item.l_unit), agent on_create_new_metric (l_type.item, l_unit_list.item.l_unit))
 						l_menu_item.set_pixmap (l_unit_list.item.l_pixmap)
 						l_submenu.extend (l_menu_item)
 						l_unit_list.forth
 					end
 					l_new_menu.forth
 				end
-				create l_menu_item.make_with_text_and_action (displayed_name (ratio_unit.name + " metric"), agent on_create_new_metric (ratio_metric_type, ratio_unit))
+				create l_menu_item.make_with_text_and_action (displayed_name (metric_names.l_ratio_metric), agent on_create_new_metric (ratio_metric_type, ratio_unit))
 				l_menu_item.set_pixmap (pixmaps.icon_pixmaps.metric_ratio_icon)
 				l_new_menu.extend (l_menu_item)
 				new_metric_menu_internal := l_new_menu

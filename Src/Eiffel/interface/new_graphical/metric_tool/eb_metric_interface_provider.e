@@ -45,7 +45,7 @@ feature -- Metric menu
 			loop
 				l_metric_list := l_metric_table.item (l_unit_list.item.unit)
 				if not l_metric_list.is_empty then
-					create l_submenu.make_with_text (displayed_name (l_unit_list.item.unit.name))
+					create l_submenu.make_with_text (unit_name_table.item (l_unit_list.item.unit))
 					l_submenu.set_pixmap (l_unit_list.item.pixmap)
 					Result.extend (l_submenu)
 					from
@@ -91,14 +91,6 @@ feature -- Metric menu
 		end
 
 feature -- Names
-
---	metric_names: EB_METRIC_NAMES is
---			-- Names used in metric interface
---		once
---			create Result
---		ensure
---			result_attached: Result /= Void
---		end
 
 	unit_list (a_all: BOOLEAN): LIST [TUPLE [unit: QL_METRIC_UNIT; pixmap: EV_PIXMAP]] is
 			-- List of units
@@ -310,6 +302,26 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
+	unit_name_table: HASH_TABLE [STRING_GENERAL, QL_METRIC_UNIT] is
+			-- Interface names for metric unit
+		once
+			create Result.make (12)
+			Result.put (metric_names.l_target_unit, target_unit)
+			Result.put (metric_names.l_group_unit, group_unit)
+			Result.put (metric_names.l_class_unit, class_unit)
+			Result.put (metric_names.l_feature_unit, feature_unit)
+			Result.put (metric_names.l_generic_unit, generic_unit)
+			Result.put (metric_names.l_assertion_unit, assertion_unit)
+			Result.put (metric_names.l_local_unit, local_unit)
+			Result.put (metric_names.l_line_unit, line_unit)
+			Result.put (metric_names.l_compilation_unit, compilation_unit)
+			Result.put (metric_names.l_ratio_unit, ratio_unit)
+			Result.put (metric_names.l_argument_unit, argument_unit)
+			Result.put ("", no_unit)
+	ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Dialog
 
 	show_warning_dialog (a_msg: STRING; a_window: EV_WINDOW) is
@@ -517,3 +529,4 @@ indexing
 
 
 end
+

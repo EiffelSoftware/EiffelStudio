@@ -133,9 +133,8 @@ feature -- Labels
 
 feature -- Tooltip
 
-	f_show_detailed_result: STRING is "Run selected metric and show detailed result"
 	f_quick_metric_definition: STRING is "Define quick metric"
-	f_run: STRING is "Run selected metric (faster, but detailed result won't be available)"
+	f_run: STRING is "Run selected metric"
 	f_go_to_definition: STRING is "Go to definition"
 	f_stop: STRING is "Stop metric evaluation"
 	f_move_row_up: STRING is "Move selected row up"
@@ -190,6 +189,18 @@ feature -- Tooltip
 	f_rearrange_unit: STRING is "Or you can pick a metric unit and drop it on another metric to rearrange their order."
 	f_show_to_do_message: STRING is "Display a message about how to deal with the metric definition error"
 	f_import_metrics: STRING is "Import metrics from file"
+
+	l_target_unit: STRING is "Target"
+	l_group_unit: STRING is "Group"
+	l_class_unit: STRING is "Class"
+	l_feature_unit: STRING is "Feature"
+	l_generic_unit: STRING is "Generic"
+	l_assertion_unit: STRING is "Assertion"
+	l_argument_unit: STRING is "Argument"
+	l_line_unit: STRING is "Line"
+	l_compilation_unit: STRING is "Compilation"
+	l_local_unit: STRING is "Local"
+	l_ratio_unit: STRING is "Ratio"
 
 feature -- Error/warning message
 

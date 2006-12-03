@@ -15,8 +15,6 @@ inherit
 			criterion_type
 		end
 
-	QL_SHARED_CLASS_RELATION
-
 create
 	make
 
@@ -426,7 +424,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_ancestor_relation)
+			create Result.make (a_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.ancestor_type)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -436,7 +434,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_proper_ancestor_relation)
+			create Result.make (a_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.proper_ancestor_type)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -446,7 +444,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_parent_relation)
+			create Result.make (a_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.parent_type)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -456,7 +454,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_indirect_parent_relation)
+			create Result.make (a_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.indirect_parent_type)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -466,7 +464,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_descendant_relation)
+			create Result.make (a_domain, {QL_CLASS_DESCENDANT_RELATION_CRI}.descendant_type)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -476,7 +474,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_proper_descendant_relation)
+			create Result.make (a_domain, {QL_CLASS_DESCENDANT_RELATION_CRI}.proper_descendant_type)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -486,7 +484,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_heir_relation)
+			create Result.make (a_domain, {QL_CLASS_DESCENDANT_RELATION_CRI}.heir_type)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -496,7 +494,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_indirect_heir_relation)
+			create Result.make (a_domain, {QL_CLASS_DESCENDANT_RELATION_CRI}.indirect_heir_type)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -506,7 +504,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_supplier_relation)
+			create Result.make (a_domain, False, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -516,7 +514,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_indirect_supplier_relation)
+			create Result.make (a_domain, False, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -526,7 +524,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_client_relation)
+			create Result.make (a_domain, False, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -536,7 +534,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, class_indirect_client_relation)
+			create Result.make (a_domain, False, True)
 		ensure
 			result_attached: Result /= Void
 		end

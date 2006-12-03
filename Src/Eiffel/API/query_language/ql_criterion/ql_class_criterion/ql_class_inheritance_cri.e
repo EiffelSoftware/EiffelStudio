@@ -1,30 +1,46 @@
 indexing
-	description: "[
-					Object that represents a inheritance relation between classes
-					We support the following inheritance relations:
-							ancestor
-							proper ancestor
-							descendant
-							proper descendant
-							heir
-							indirect heir
-							parent
-							indirect parent
-				]"
+	description: "Object that represents a class inheritance (ancestor/descendant) criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	QL_CLASS_INHERITANCE_RELATION
+deferred class
+	QL_CLASS_INHERITANCE_CRI
 
 inherit
-	QL_CLASS_RELATION
+	QL_CLASS_HIERARCHY_CRI
 
-create
-	make
+feature{NONE} -- Initialization
+
+	make (a_criterion_domain: like criterion_domain; a_relation_type: INTEGER) is
+			-- Initialize `criteiron_domain' with `a_criterion_domain'.			
+		require
+			a_criterion_domain_attached: a_criterion_domain /= Void
+			a_relation_valid: is_inheritance_relation_valid (a_relation_type)
+		do
+			inheritance_relation := a_relation_type
+			old_make (a_criterion_domain)
+		ensure
+			inheritance_relation_set: inheritance_relation = a_relation_type
+			criterion_domain_set: criterion_domain = a_criterion_domain
+		end
+
+feature -- Access
+
+	inheritance_relation: INTEGER;
+			-- Type of inheritance
+
+feature -- Status report
+
+	is_inheritance_relation_valid (a_relation: INTEGER): BOOLEAN is
+			-- Is `a_relation' a valid ancestor relation?			
+		deferred
+		end
+
+invariant
+	inheritance_relation_valid: is_inheritance_relation_valid (inheritance_relation)
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -57,8 +73,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
-
-
 
 end

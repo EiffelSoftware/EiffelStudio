@@ -135,18 +135,18 @@ feature {NONE} -- Implementation
 	criterion: QL_CRITERION is
 			-- Criterion used in current command
 		local
-			l_caller_type: QL_FEATURE_CALLER_TYPE
-			l_callee_type: QL_FEATURE_CALLEE_TYPE
+			l_caller_type: INTEGER_8
+			l_callee_type: INTEGER_8
 		do
 			if flag = {DEPEND_UNIT}.is_in_assignment_flag then
-				l_caller_type := assigner_caller
-				l_callee_type := assigner_callee
+				l_caller_type := assigner_caller_type
+				l_callee_type := assigner_callee_type
 			elseif flag = {DEPEND_UNIT}.is_in_creation_flag then
-				l_caller_type := creator_caller
-				l_callee_type := creator_callee
+				l_caller_type := creator_caller_type
+				l_callee_type := creator_callee_type
 			else
-				l_caller_type := normal_caller
-				l_callee_type := normal_callee
+				l_caller_type := normal_caller_type
+				l_callee_type := normal_callee_type
 			end
 			if is_callee_displayed then
 				create {QL_FEATURE_CALLER_IS_CRI}Result.make (

@@ -486,7 +486,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, normal_caller, a_only_current_version)
+			create Result.make (a_domain, normal_caller_type, a_only_current_version)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -496,7 +496,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, normal_callee, a_only_current_version)
+			create Result.make (a_domain, normal_callee_type, a_only_current_version)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -506,7 +506,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, assigner_caller, a_only_current_version)
+			create Result.make (a_domain, assigner_caller_type, a_only_current_version)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -516,7 +516,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, assigner_callee, a_only_current_version)
+			create Result.make (a_domain, assigner_callee_type, a_only_current_version)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -526,7 +526,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, creator_caller, a_only_current_version)
+			create Result.make (a_domain, creator_caller_type, a_only_current_version)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -536,7 +536,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, creator_callee, a_only_current_version)
+			create Result.make (a_domain, creator_callee_type, a_only_current_version)
 		ensure
 			result_attached: Result /= Void
 		end

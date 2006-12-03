@@ -55,6 +55,8 @@ feature -- Access
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
 				l_tool_bar.extend (show_self_dependency_button)
 				l_tool_bar.extend (categorize_folder_button)
+				l_tool_bar.extend (syntactical_button)
+				l_tool_bar.extend (inheritance_button)
 				l_tool_bar.extend (show_tooltip_checkbox)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
@@ -75,6 +77,32 @@ feature -- Access
 
 	post_row_bind_action_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [EV_GRID_ROW]], INTEGER]
 			-- Table of action to be performed after a row whose level index is specified by key of the table has been binded into `grid'.
+
+	syntactical_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+			-- Toggle button to indicate if syntactical supplier/clients are displayed
+		do
+			if syntactical_button_internal = Void then
+				create syntactical_button_internal
+				syntactical_button_internal.set_pixmap (pixmaps.icon_pixmaps.class_overriden_normal_icon)
+				syntactical_button_internal.set_tooltip (interface_names.h_show_syntactical_classes)
+			end
+			Result := syntactical_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	inheritance_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+			-- Toggle button to indicate if inheritance are displayed
+		do
+			if inheritance_button_internal = Void then
+				create inheritance_button_internal
+				inheritance_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_inheritance_link_icon)
+				inheritance_button_internal.select_actions.extend (agent on_show_inheritance_class_changed)
+			end
+			Result := inheritance_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Status report
 
@@ -126,6 +154,7 @@ feature -- Setting
 			grid.header.i_th (4).set_text (interface_names.l_feature_in_client_class)
 			grid.header.i_th (5).set_text (interface_names.l_callees_from_supplier_class)
 			set_is_displaying_suppliers (True)
+			inheritance_button.set_tooltip (interface_names.h_show_ancestor_classes)
 		ensure
 			is_displaying_suppliers: is_displaying_suppliers
 		end
@@ -140,6 +169,7 @@ feature -- Setting
 			grid.header.i_th (4).set_text (interface_names.l_feature_in_supplier_class)
 			grid.header.i_th (5).set_text (interface_names.l_callers_from_client_class)
 			set_is_displaying_suppliers (False)
+			inheritance_button.set_tooltip (interface_names.h_show_descendant_classes)
 		ensure
 			is_displaying_clients: is_displaying_clients
 		end
@@ -343,6 +373,56 @@ feature -- Actions
 			end
 		end
 
+	on_show_syntactical_class_changed is
+			-- Action to be performed when selection status of `syntactical_button' changes
+		do
+			is_up_to_date := False
+			if data /= Void then
+				retrieve_data_actions.call ([])
+			end
+			preferences.class_browser_data.syntactical_class_preference.set_value (syntactical_button.is_selected)
+		end
+
+	on_show_syntactical_class_changed_from_outside is
+			-- Action to be performed when selection status of `syntactical_button' changes from outside
+		local
+			l_displayed: BOOLEAN
+		do
+			l_displayed := preferences.class_browser_data.is_syntactical_class_shown
+			if l_displayed /= syntactical_button.is_selected then
+				if l_displayed then
+					syntactical_button.enable_select
+				else
+					syntactical_button.disable_select
+				end
+			end
+		end
+
+	on_show_inheritance_class_changed is
+			-- Action to be performed when selection status of `inheritance_button' changes
+		do
+			is_up_to_date := False
+			if data /= Void then
+				retrieve_data_actions.call ([])
+			end
+			preferences.class_browser_data.inheritance_class_preference.set_value (inheritance_button.is_selected)
+		end
+
+	on_show_inheritance_class_changed_from_outside is
+			-- Action to be performed when selection status of `inheritance_button' changes from outside
+		local
+			l_displayed: BOOLEAN
+		do
+			l_displayed := preferences.class_browser_data.is_inheritance_class_shown
+			if l_displayed /= inheritance_button.is_selected then
+				if l_displayed then
+					inheritance_button.enable_select
+				else
+					inheritance_button.disable_select
+				end
+			end
+		end
+
 feature -- Notification
 
 	update_view is
@@ -441,11 +521,7 @@ feature -- Sorting
 					l_children.forth
 				end
 			else
---				if categorize_folder_button.is_selected and then a_level_index = 2 then
-					l_comparater := a_comparator.new_agent_list_comparator (<<level_starting_column_index.i_th (a_level_index)>>)
---				else
---					l_comparater := a_comparator.new_agent_list_comparator (<<a_level_index>>)
---				end
+				l_comparater := a_comparator.new_agent_list_comparator (<<level_starting_column_index.i_th (a_level_index)>>)
 				create l_agent.make (agent tree_node_tester (?, ?, l_comparater))
 				create l_sorter.make (l_agent)
 				l_sorter.sort (a_level.children)
@@ -752,6 +828,7 @@ feature{NONE} -- Grid binding
 			l_column_tbl: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 			l_sorter: DS_QUICK_SORTER [QL_FEATURE]
 			l_level_index: INTEGER
+			l_row_type: INTEGER
 		do
 				-- Get features.
 			create l_feature_generator
@@ -764,30 +841,55 @@ feature{NONE} -- Grid binding
 				l_feature_table := called_features (a_referenced_class, a_referencer_class)
 			end
 			create l_sorter.make (create {AGENT_BASED_EQUALITY_TESTER [QL_FEATURE]}.make (agent (a_feature, b_feature: QL_FEATURE): BOOLEAN do Result := a_feature.name < b_feature.name end))
-			from
-				l_feature_table.start
-			until
-				l_feature_table.after
-			loop
+			l_level_index := column_level_table.item (feature_column)
+			if not l_feature_table.is_empty then
+					-- If classes are related by feature invocation, we insert rows for these invocations.
+				from
+					l_feature_table.start
+				until
+					l_feature_table.after
+				loop
+					create l_new_row_node
+					create l_dependency_row.make (l_feature_table.key_for_iteration, l_new_row_node, {EB_CLASS_BROWSER_DEPENDENCY_ROW}.feature_row_type , Current)
+					l_sorter.sort (l_feature_table.item_for_iteration)
+					l_dependency_row.set_feature_list (l_feature_table.item_for_iteration)
+					l_new_row_node.set_data (l_dependency_row)
+					a_row_node.children.force_last (l_new_row_node)
+					l_feature_table.forth
+				end
+					-- Sort features.
+				create l_order_list.make
+				l_order_list.extend (feature_column)
+				sort_level (a_row_node, l_level_index, l_level_index, comparator (l_order_list))
+			else
+					-- If classes are related either by inheritance relationship or only syntactical references
 				create l_new_row_node
-				create l_dependency_row.make (l_feature_table.key_for_iteration, l_new_row_node, {EB_CLASS_BROWSER_DEPENDENCY_ROW}.feature_row_type , Current)
-				l_sorter.sort (l_feature_table.item_for_iteration)
-				l_dependency_row.set_feature_list (l_feature_table.item_for_iteration)
+				if is_class_inheritance_related (a_referenced_class, a_referencer_class) then
+					if is_displaying_suppliers then
+						l_row_type := {EB_CLASS_BROWSER_DEPENDENCY_ROW}.ancestor_row_type
+					else
+						l_row_type := {EB_CLASS_BROWSER_DEPENDENCY_ROW}.descendant_row_type
+					end
+				else
+					l_row_type := {EB_CLASS_BROWSER_DEPENDENCY_ROW}.syntactical_row_type
+				end
+				create l_dependency_row.make (Void, l_new_row_node, l_row_type, Current)
 				l_new_row_node.set_data (l_dependency_row)
 				a_row_node.children.force_last (l_new_row_node)
-				l_feature_table.forth
 			end
-			create l_order_list.make
-			l_order_list.extend (feature_column)
-			l_level_index := column_level_table.item (feature_column)
-			sort_level (a_row_node, l_level_index, l_level_index, comparator (l_order_list))
+
+				-- Bind retrieved rows in grid.
 			l_grid_row := a_row_node.data.grid_row
 			bind_row_level (l_grid_row, a_row_node, l_level_index, False)
+
+				-- Highlight selected rows (if any)
 			if l_grid_row.is_selected then
 				highlight_row (l_grid_row)
 			else
 				dehighlight_row (l_grid_row)
 			end
+
+				-- Auto resize grid columns.
 			create l_column_tbl.make (1)
 			l_column_tbl.put (Void, feature_list_column)
 			auto_resize_columns (grid, l_column_tbl)
@@ -1201,6 +1303,8 @@ feature{NONE} -- Implementation
 			l_class_table: HASH_TABLE [LINKED_LIST [QL_CLASS], STRING]
 			l_class_list: LINKED_LIST [QL_CLASS]
 			l_path: STRING
+			l_path_item: QL_ITEM
+			l_class: CONF_CLASS
 		do
 			create data_hierarchy
 			l_data_hierarchy := data_hierarchy
@@ -1224,7 +1328,9 @@ feature{NONE} -- Implementation
 				until
 					l_referenced_classes.after
 				loop
-					l_path := l_referenced_classes.key_for_iteration.class_i.path
+					l_class := l_referenced_classes.key_for_iteration.class_i.config_class
+					l_path_item := conf_group_as_parent (l_class.group, True)
+					l_path := l_path_item.path + l_class.path
 					l_class_list := l_class_table.item (l_path)
 					if l_class_list = Void then
 						create l_class_list.make
@@ -1496,6 +1602,12 @@ feature{NONE} -- Implementation
 			if on_categorized_folder_changed_from_outside_agent /= Void then
 				preferences.class_browser_data.categorized_folder_preference.change_actions.prune_all (on_categorized_folder_changed_from_outside_agent)
 			end
+			if on_show_syntactical_class_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.syntactical_class_preference.change_actions.prune_all (on_show_syntactical_class_changed_from_outside_agent)
+			end
+			if on_show_inheritance_class_changed_from_outside_agent /= Void then
+				preferences.class_browser_data.inheritance_class_preference.change_actions.prune_all (on_show_inheritance_class_changed_from_outside_agent)
+			end
 		end
 
 	referenced_class_column_name (a_relation_name: STRING_GENERAL; a_name_of_starting_element: STRING_GENERAL): STRING_GENERAL is
@@ -1538,6 +1650,41 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	syntactical_button_internal: like syntactical_button
+			-- Implementation of `syntactical_button'
+
+	on_show_syntactical_class_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent for `on_show_syntactical_class_changed_from_outside'
+
+	inheritance_button_internal: like inheritance_button
+			-- Implementation of `inheritance_button'
+
+	on_show_inheritance_class_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent for `on_show_inheritance_class_changed_from_outside'
+
+	is_class_inheritance_related (a_class, b_class: QL_CLASS): BOOLEAN is
+			-- Are `a_class' and `b_class' related by inheritance relationship?
+			-- i.e.,  `is_displaying_suppliers' is True, is `a_class' an ancestor of `b_class'?
+			-- and if `is_displaying_clients' is True, is `a_class' a descendant of `b_class'?
+		require
+			a_class_attached: a_class /= Void
+			b_class_attached: b_class /= Void
+		local
+			l_criterion: QL_CLASS_CRITERION
+			l_generator: QL_CLASS_DOMAIN_GENERATOR
+			l_class_domain: QL_CLASS_DOMAIN
+		do
+			if is_displaying_suppliers then
+				create {QL_CLASS_ANCESTOR_RELATION_CRI} l_criterion.make (b_class.wrapped_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.ancestor_type)
+			else
+				create {QL_CLASS_DESCENDANT_RELATION_CRI} l_criterion.make (b_class.wrapped_domain, {QL_CLASS_DESCENDANT_RELATION_CRI}.descendant_type)
+			end
+			create l_generator.make (l_criterion, True)
+			l_class_domain ?= system_target_domain.new_domain (l_generator)
+			l_class_domain.compare_objects
+			Result := l_class_domain.has (a_class)
+		end
+
 feature{NONE} -- Initialization
 
 	build_grid is
@@ -1577,6 +1724,14 @@ feature{NONE} -- Initialization
 		 	categorize_folder_button.select_actions.extend (agent on_categorized_folder_changed)
 			on_categorized_folder_changed_from_outside_agent := agent on_categorized_folder_changed_from_outside
 			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
+
+			syntactical_button.select_actions.extend (agent on_show_syntactical_class_changed)
+			on_show_syntactical_class_changed_from_outside_agent := agent on_show_syntactical_class_changed_from_outside
+			preferences.class_browser_data.syntactical_class_preference.change_actions.extend (on_show_syntactical_class_changed_from_outside_agent)
+
+			inheritance_button.select_actions.extend (agent on_show_inheritance_class_changed)
+			on_show_inheritance_class_changed_from_outside_agent := agent on_show_inheritance_class_changed_from_outside
+			preferences.class_browser_data.inheritance_class_preference.change_actions.extend (on_show_inheritance_class_changed_from_outside_agent)
 
 			create_index_info
 		end

@@ -111,6 +111,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			l_text: EV_TEXT
+			l_font: EV_FONT
 		do
 				-- Setup basic metric definition area.
 			create metric_definer.make (metric_tool, Current, new_mode, class_unit)
@@ -143,12 +144,8 @@ feature {NONE} -- Initialization
 				-- Setup run tool bar
 			run_metric_btn.set_pixmap (pixmaps.icon_pixmaps.debug_run_icon)
 			run_metric_btn.set_tooltip (metric_names.f_run)
-			run_metric_btn.select_actions.extend (agent on_run_metric (False))
+			run_metric_btn.select_actions.extend (agent on_run_metric)
 			run_metric_btn.disable_sensitive
-
-			run_with_detail_metric_btn.set_pixmap (pixmaps.icon_pixmaps.metric_run_and_show_details_icon)
-			run_with_detail_metric_btn.select_actions.extend (agent on_run_metric (True))
-			run_with_detail_metric_btn.set_tooltip (metric_names.f_show_detailed_result)
 
 			stop_metric_btn.set_pixmap (pixmaps.icon_pixmaps.debug_stop_icon)
 			stop_metric_btn.disable_sensitive
@@ -198,6 +195,10 @@ feature {NONE} -- Initialization
 			metric_definition_empty_area.drop_actions.extend (agent drop_cluster)
 			metric_definition_empty_area.drop_actions.extend (agent drop_class)
 			metric_definition_empty_area.drop_actions.extend (agent drop_feature)
+
+			create l_font
+			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+			metric_value_text.set_font (l_font)
 
 			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.extend (on_show_percentage_btn_change_from_outside_agent)
 			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.extend (on_filter_result_change_from_outside_agent)
@@ -259,7 +260,6 @@ feature -- Basic operations
 			-- Synchronize when Eiffel compilation starts.
 		do
 			run_metric_btn.disable_sensitive
-			run_with_detail_metric_btn.disable_sensitive
 			stop_metric_btn.disable_sensitive
 			domain_selector.disable_sensitive
 			go_to_definition_btn.disable_sensitive
@@ -292,7 +292,6 @@ feature -- Basic operations
 			-- Synchronize when metric evaluation starts.
 		do
 			run_metric_btn.disable_sensitive
-			run_with_detail_metric_btn.disable_sensitive
 			stop_metric_btn.enable_sensitive
 			domain_selector.disable_sensitive
 			go_to_definition_btn.disable_sensitive
@@ -316,9 +315,6 @@ feature -- Basic operations
 			run_metric_btn.enable_sensitive
 			stop_metric_btn.disable_sensitive
 			quick_metric_btn.enable_sensitive
-			if current_metric.is_result_domain_available then
-				run_with_detail_metric_btn.enable_sensitive
-			end
 			unit_combo.enable_sensitive
 			metric_definer.enable_sensitive
 			metric_selector.enable_sensitive
@@ -346,13 +342,16 @@ feature -- Actions
 					end
 					show_percent_btn.set_data (True)
 				end
-				show_percent_btn.enable_sensitive
+				if percentage_tool_bar.is_empty then
+					percentage_tool_bar.extend (show_percent_btn)
+				end
 			else
 				show_percent_btn.disable_sensitive
+				percentage_tool_bar.wipe_out
 			end
 		end
 
-	on_run_metric (a_detailed: BOOLEAN) is
+	on_run_metric is
 			-- Action to be performed when run a metric			
 			-- If `a_detailed' is True, record detailed result when calculating `current_metric'.
 		require
@@ -380,7 +379,7 @@ feature -- Actions
 					l_metric.disable_filter_result
 				end
 					-- Setup metric evaluator.
-				if a_detailed then
+				if l_metric.is_basic then
 					l_metric.enable_fill_domain
 						-- Special setting for metric of line unit.
 					if l_metric.is_basic and then l_metric.unit = line_unit then
@@ -598,7 +597,7 @@ feature -- Actions
 	on_filter_result_change_from_outside is
 			-- Action to be performed when selection status of `filter_result_btn' changes from preferences setting window
 		local
-			l_btn: like show_percent_btn
+			l_btn: like filter_result_btn
 		do
 			l_btn := filter_result_btn
 			if preferences.metric_tool_data.is_invisible_result_filtered then
@@ -722,19 +721,12 @@ feature -- Metric management
 				l_is_valid := l_is_valid and domain_selector.domain.is_valid
 				if l_is_valid then
 					run_metric_btn.enable_sensitive
-					if l_metric.is_result_domain_available then
-						run_with_detail_metric_btn.enable_sensitive
-					else
-						run_with_detail_metric_btn.disable_sensitive
-					end
 				else
 					run_metric_btn.disable_sensitive
-					run_with_detail_metric_btn.disable_sensitive
 				end
 				go_to_definition_btn.enable_sensitive
 			else
 				run_metric_btn.disable_sensitive
-				run_with_detail_metric_btn.disable_sensitive
 				go_to_definition_btn.disable_sensitive
 			end
 		end
@@ -765,7 +757,7 @@ feature{NONE} -- Implementation
 			until
 				l_unit_list.after
 			loop
-				create l_list_item.make_with_text (displayed_name (l_unit_list.item.unit.name))
+				create l_list_item.make_with_text (unit_name_table.item (l_unit_list.item.unit))
 				l_list_item.set_data (l_unit_list.item.unit)
 				l_list_item.set_pixmap (l_unit_list.item.pixmap)
 				unit_combo.extend (l_list_item)

@@ -138,6 +138,16 @@ feature -- Status report
 		do
 		end
 
+	is_inheritance_formatter: BOOLEAN is
+			-- Is current a class inheritance (ancestor/descendant) formatter?
+		do
+		end
+
+	is_reference_formatter: BOOLEAN is
+			-- Is current a class reference (supplier/client) formatter?
+		do
+		end
+
 feature {NONE} -- Recyclable
 
 	internal_recycle is

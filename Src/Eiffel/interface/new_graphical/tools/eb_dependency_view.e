@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			l_drop_actions.extend (agent drop_stone)
 			create shared_browser.make (a_tool, l_drop_actions)
 			shared_browser.set_sorting_status (shared_browser.sorted_columns_from_string (preferences.class_browser_data.dependency_view_sorting_order))
-
+			shared_browser.retrieve_data_actions.extend (agent refresh)
 			from
 				formatters.start
 			until

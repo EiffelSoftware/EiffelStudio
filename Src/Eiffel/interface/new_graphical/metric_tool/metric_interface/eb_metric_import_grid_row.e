@@ -173,7 +173,7 @@ feature -- Grid binding
 			a_row.set_item (2, status_item (has_name_crash, a_missing_metrics_name, a_unselected_metrics_name))
 			a_row.set_item (3, name_editable_area)
 			a_row.set_item (4, origianl_metric_name_item)
-			create l_unit_lbl.make_with_text (displayed_name (unit.name))
+			create l_unit_lbl.make_with_text (unit_name_table.item (unit))
 			l_unit_lbl.set_pixmap (pixmap_from_unit (unit))
 			a_row.set_item (5, l_unit_lbl)
 		end

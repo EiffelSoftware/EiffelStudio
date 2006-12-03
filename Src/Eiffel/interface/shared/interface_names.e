@@ -774,6 +774,12 @@ feature -- Label texts
 	l_callees_from_supplier_class: STRING is "Callees from supplier class"
 	l_from: STRING is "From "
 	h_categorize_folder: STRING is "Categorize classes in folder?"
+	h_show_syntactical_classes: STRING is "Show only synctactically referenced classes also?"
+	h_show_ancestor_classes: STRING is "Show ancestor classes?"
+	h_show_descendant_classes: STRING is "Show descendant classes?"
+	l_only_syntactically_related: STRING is "Only syntactically related"
+	l_ancestor_related: STRING is "Ancestor related"
+	l_descendant_related: STRING is "Descendant related"
 
 feature -- Stone names
 

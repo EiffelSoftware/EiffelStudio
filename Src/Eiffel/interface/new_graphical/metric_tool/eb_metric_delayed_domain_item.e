@@ -10,15 +10,21 @@ class
 	EB_METRIC_DELAYED_DOMAIN_ITEM
 
 inherit
-	EB_METRIC_DOMAIN_ITEM
-		redefine
-			is_delayed_item,
-			is_valid,
-			is_equal,
+	EB_DELAYED_DOMAIN_ITEM
+		undefine
 			string_representation
 		end
 
-	EB_METRIC_INTERFACE_PROVIDER
+	EB_METRIC_DOMAIN_ITEM
+		undefine
+			is_valid,
+			is_equal,
+			is_delayed_item
+		redefine
+			string_representation
+		end
+
+	EB_METRIC_SHARED
 		undefine
 			is_equal
 		end
@@ -26,30 +32,7 @@ inherit
 create
 	make
 
-feature -- Status report
-
-	is_delayed_item: BOOLEAN is True
-			-- Is current a delayed item?
-
-	is_valid: BOOLEAN is True
-			-- Does current represent a valid domain item?
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-		do
-			if Current.same_type (other) then
-				Result := True
-			end
-		end
-
 feature -- Access
-
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
-			-- New query lanaguage domain representing current item
-		do
-			Result := a_scope.delayed_domain
-		end
 
 	string_representation: STRING is
 			-- Text of current item
@@ -59,19 +42,6 @@ feature -- Access
 			else
 				Result := metric_names.t_input_domain
 			end
-		end
-
-	query_language_item: QL_ITEM is
-			-- Query language item representation of current domain item
-		do
-		end
-
-	group: QL_GROUP is
-			-- Group to which current domain item belongs
-			-- Return Void for delayed item.
-		do
-		ensure then
-			result_not_attached: Result = Void
 		end
 
 feature -- Process

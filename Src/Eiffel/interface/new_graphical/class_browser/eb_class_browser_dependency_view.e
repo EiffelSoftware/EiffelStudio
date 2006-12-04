@@ -31,13 +31,15 @@ inherit
 
 	EV_SHARED_APPLICATION
 
-	EB_METRIC_INTERFACE_PROVIDER
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 
 	QL_SHARED_FEATURE_INVOKE_RELATION_TYPES
 
 	QL_SHARED
 
 	QL_UTILITY
+
+	EB_DOMAIN_ITEM_UTILITY
 
 create
 	make
@@ -636,12 +638,12 @@ feature{NONE} -- Grid binding
 			grid_is_empty: grid.row_count = 0
 		local
 			l_grid_item: EB_GRID_COMPILER_ITEM
-			l_first_row: EB_METRIC_DOMAIN_ITEM_ROW
+			l_domain_item: EB_DOMAIN_ITEM
 		do
-			create l_first_row.make (domain_item_from_stone (starting_element))
+			l_domain_item := domain_item_from_stone (starting_element)
 			create l_grid_item
-			l_grid_item.set_text_with_tokens (l_first_row.token_name)
-			l_grid_item.set_pixmap (l_first_row.pixmap)
+			l_grid_item.set_text_with_tokens (token_name_from_domain_item (l_domain_item))
+			l_grid_item.set_pixmap (pixmap_from_domain_item (l_domain_item))
 			l_grid_item.set_image (l_grid_item.text)
 			grid.insert_new_row (1)
 			grid.row (1).set_item (1, l_grid_item)

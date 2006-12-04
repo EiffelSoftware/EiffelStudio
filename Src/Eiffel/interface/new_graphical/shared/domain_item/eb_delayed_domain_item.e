@@ -1,35 +1,65 @@
 indexing
-	description: "Metric folder domain item"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
+	description: "Delayed domain item"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_METRIC_FOLDER_DOMAIN_ITEM
+	EB_DELAYED_DOMAIN_ITEM
 
 inherit
-	EB_FOLDER_DOMAIN_ITEM
-
-	EB_METRIC_DOMAIN_ITEM
-		undefine
-			string_representation,
+	EB_DOMAIN_ITEM
+		redefine
+			is_delayed_item,
 			is_valid,
-			is_folder_item
+			is_equal
+		end
+
+	EB_CONSTANTS
+		undefine
+			is_equal
 		end
 
 create
 	make
 
-feature -- Process
+feature -- Status report
 
-	process (a_visitor: EB_METRIC_VISITOR) is
-			-- Process current using `a_visitor'.
+	is_delayed_item: BOOLEAN is True
+			-- Is current a delayed item?
+
+	is_valid: BOOLEAN is True
+			-- Does current represent a valid domain item?
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
 		do
-			a_visitor.process_folder_domain_item (Current)
+			if Current.same_type (other) then
+				Result := True
+			end
 		end
 
+feature -- Access
+
+	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+			-- New query lanaguage domain representing current item
+		do
+			Result := a_scope.delayed_domain
+		end
+
+	query_language_item: QL_ITEM is
+			-- Query language item representation of current domain item
+		do
+		end
+
+	group: QL_GROUP is
+			-- Group to which current domain item belongs
+			-- Return Void for delayed item.
+		do
+		ensure then
+			result_not_attached: Result = Void
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1,23 +1,29 @@
 indexing
-	description	: "Controls execution of debugged application."
+	description	: "Controls execution of classic debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision $"
 
-class APPLICATION_EXECUTION_CLASSIC
+class
+	APPLICATION_EXECUTION_CLASSIC
 
 inherit
-
-	APPLICATION_EXECUTION_IMP
+	APPLICATION_EXECUTION
 		redefine
+			status,
+			is_valid_object_address,
+			update_critical_stack_depth,
+			can_not_launch_system_message,
 			recycle,
-			make,
-			apply_critical_stack_depth,
-			can_not_launch_system_message
+			make_with_debugger,
+			is_classic_system,
+			is_dotnet
 		end
 
 	OBJECT_ADDR
+		rename
+			is_dotnet as is_dotnet_platform
 		export
 			{NONE} all
 		end
@@ -29,44 +35,57 @@ inherit
 
 	COMPILER_EXPORTER
 
-create {APPLICATION_EXECUTION}
-	make
+	DEBUG_VALUE_EXPORTER
 
-feature {APPLICATION_EXECUTION} -- Initialization
+	EB_CONSTANTS
 
-	make is
-			--
+	VALUE_TYPES
+
+create {DEBUGGER_MANAGER}
+	make_with_debugger
+
+feature
+	is_classic_system: BOOLEAN is True
+	is_dotnet: BOOLEAN is False
+
+feature {NONE} -- Initialization
+
+	make_with_debugger (dbg: like debugger_manager) is
 		do
-			Precursor
-			create ipc_engine.make
+			Precursor {APPLICATION_EXECUTION} (dbg)
+			create ipc_engine.make (debugger_manager)
 		end
+
+feature -- recycling data
 
 	recycle is
 		do
-			Precursor
 			once_request.recycle
+			Precursor
+		end
+
+feature {DEAD_HDLR, RUN_REQUEST} -- Status
+
+	build_status is
+		do
+			create status.make (Current)
 		end
 
 feature -- Properties
 
-	status: APPLICATION_STATUS_CLASSIC is
-			-- Status of the running application
-		do
-			Result ?= Application.status
-		end
-
-feature {APPLICATION_EXECUTION} -- Properties
+	status: APPLICATION_STATUS_CLASSIC
+			-- Status of the running dotnet application
 
 	is_valid_object_address (addr: STRING): BOOLEAN is
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		do
-			Result := is_object_kept (addr)
+			Result := Precursor (addr) and then is_object_kept (addr)
 		end
 
 feature -- Execution
 
-	run (args, cwd: STRING; env: STRING_GENERAL) is
+	run_with_env_string (args, cwd: STRING; env: STRING_GENERAL) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -82,8 +101,8 @@ feature -- Execution
 			l_status: APPLICATION_STATUS
 			l_env_s8: STRING_8
 		do
-			Ipc_engine.launch_ec_dbg
-			if Ipc_engine.ec_dbg_launched then
+			ipc_engine.launch_ec_dbg
+			if ipc_engine.ec_dbg_launched then
 				app := Eiffel_system.application_name (True)
 				if args /= Void then
 					app.extend (' ')
@@ -113,7 +132,7 @@ feature -- Execution
 		do
 			cont_request.send_breakpoints
 			status.set_is_stopped (False)
-			cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
+			cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
 		end
 
 	interrupt is
@@ -179,14 +198,14 @@ feature -- Execution
 				end
 			end
 
-			Application.process_termination
+			process_termination
 
 			Ipc_engine.end_of_debugging
 		ensure then
-			app_is_not_running: not Application.is_running
+			app_is_not_running: not is_running
 		end
 
-	process_termination is
+	clean_on_process_termination is
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
@@ -201,7 +220,7 @@ feature -- Execution
 
 feature -- Change
 
-	apply_critical_stack_depth (d: INTEGER) is
+	update_critical_stack_depth (d: INTEGER) is
 			-- Call stack depth at which we warn the user against a possible stack overflow.
 			-- -1 never warns the user.
 		do
@@ -267,18 +286,13 @@ feature -- Query
 			check False end
 		end
 
-feature {NONE} -- IPC implementation
-
-	ipc_engine: IPC_ENGINE
-			-- IPC engine, used to control the ecdbgd debugger daemon.
-
-feature {RUN_REQUEST} -- Implementation
-
-	invoke_launched_command (successful: BOOLEAN) is
-			-- Process after the launch of the application according
-			-- to `successful' and the execute `application_launch_command'.
-		do
-		end
+--feature {RUN_REQUEST} -- Implementation
+--
+--	invoke_launched_command (successful: BOOLEAN) is
+--			-- Process after the launch of the application according
+--			-- to `successful' and the execute `application_launch_command'.
+--		do
+--		end
 
 feature {APPLICATION_EXECUTION} -- Launching status
 
@@ -329,6 +343,11 @@ feature {APPLICATION_STATUS}
 			create Result.make (Rqst_cont)
 		end
 
+feature {NONE} -- IPC implementation
+
+	ipc_engine: IPC_ENGINE
+			-- IPC engine, used to control the ecdbgd debugger daemon.
+
 invariant
 
 	ipc_engine_not_void: ipc_engine /= Void
@@ -365,5 +384,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class APPLICATION_EXECUTION_CLASSIC
-
+end

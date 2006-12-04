@@ -311,15 +311,19 @@ feature -- Status setting
 			-- Assign `a_stone' as new stone.
 		local
 			cst: CALL_STACK_STONE
+			app_impl: APPLICATION_EXECUTION_DOTNET
 		do
 			if can_refresh then
 				cst ?= a_stone
-				if cst /= Void and then application.is_stopped then
+				if cst /= Void and then debugger_manager.safe_application_is_stopped then
 					fixme ("Check if we should not call `update' to benefit real_update optimisation")
-					if
-						not Application.is_dotnet
-						or else not Application.imp_dotnet.callback_notification_processing
-					then
+					if debugger_manager.is_dotnet_project then
+						app_impl ?= debugger_manager.application
+						check app_impl /= Void end
+						if not app_impl.callback_notification_processing then
+							refresh_context_expressions
+						end
+					else
 						refresh_context_expressions
 					end
 				end
@@ -348,22 +352,24 @@ feature -- Status setting
 		local
 			l_expr: EB_EXPRESSION
 			witem: like watched_item_from
+			witems: like watched_items
 		do
 			clean_watched_grid
 			from
-				watched_items.start
+				witems := watched_items
+				witems.start
 			until
-				watched_items.after
+				witems.after
 			loop
-				witem := watched_items.item
+				witem := witems.item
 
 				l_expr := witem.expression
 				if not l_expr.is_still_valid then
-					watched_items.remove
+					witems.remove
 				else
 					l_expr.set_unevaluated
 					add_watched_item_to_grid (witem, watches_grid)
-					watched_items.forth
+					witems.forth
 				end
 			end
 
@@ -406,19 +412,21 @@ feature {NONE} -- Memory management
 			-- Recycle
 		local
 			witem: ES_OBJECTS_GRID_EXPRESSION_LINE
+			witems: like watched_items
 		do
 			from
-				watched_items.start
+				witems := watched_items
+				witems.start
 			until
-				watched_items.after
+				witems.after
 			loop
-				witem := watched_items.item
+				witem := witems.item
 				witem.recycle
 				check witem.expression /= Void	end
 				if not witem.expression.is_still_valid then
-					watched_items.remove
+					witems.remove
 				else
-					watched_items.forth
+					witems.forth
 				end
 			end
 		end
@@ -613,6 +621,7 @@ feature {NONE} -- Event handling
 			sel_index: INTEGER
 			new_index, to_index: INTEGER
 			line: ES_OBJECTS_GRID_EXPRESSION_LINE
+			witems: like watched_items
 		do
 			if not move_processing then
 				move_processing := True --| To avoid concurrent move
@@ -623,17 +632,18 @@ feature {NONE} -- Event handling
 						sel_index := sel.index
 						line ?= sel.data
 						if line /= Void then
-							watched_items.start
-							watched_items.search (line)
-							if not watched_items.exhausted then
-								check watched_items.item = line end
-								new_index := watched_items.index + offset
+							witems := watched_items
+							witems.start
+							witems.search (line)
+							if not witems.exhausted then
+								check witems.item = line end
+								new_index := witems.index + offset
 								if new_index < 1 then
 									new_index := 1
-								elseif new_index > watched_items.count then
-									new_index := watched_items.count
+								elseif new_index > witems.count then
+									new_index := witems.count
 								end
-								watched_items.swap (new_index)
+								witems.swap (new_index)
 							end
 						end
 						to_index := grid.grid_move_top_row_node_by (grid, sel_index, offset)
@@ -937,11 +947,11 @@ feature {NONE} -- Event handling
 		require
 			ost_ot_void: ost /= Void
 			oname /= Void
-			application_is_running: Application.is_running
+			application_is_running: debugger_manager.application_is_executing
 		local
 			expr: EB_EXPRESSION
 		do
-			Application.status.keep_object (ost.object_address)
+			debugger_manager.application_status.keep_object (ost.object_address)
 			create expr.make_as_object (ost.dynamic_class , ost.object_address)
 			expr.set_name (oname)
 			add_expression (expr)
@@ -954,7 +964,7 @@ feature {NONE} -- Event handling
 			if expr.evaluation_disabled then
 				-- Nothing special
 			else
-				if application.is_running and application.is_stopped then
+				if debugger_manager.safe_application_is_stopped then
 					expr.evaluate
 				else
 					expr.set_unevaluated
@@ -1028,10 +1038,6 @@ feature -- Grid management
 	clean_watched_grid is
 		do
 			if not watches_grid_empty then
---				if record_layout_on_next_clean then
---					watches_grid.record_layout
---					record_layout_on_next_clean := False
---				end
 				watches_grid.remove_and_clear_all_rows
 				watches_grid_empty := True
 			end
@@ -1050,7 +1056,7 @@ feature {NONE} -- grid Layout Implementation
 	keep_object_reference_fixed (addr: STRING) is
 		do
 			if debugger_manager.application_is_executing then
-				application.status.keep_object (addr)
+				debugger_manager.application_status.keep_object (addr)
 			end
 		end
 
@@ -1066,11 +1072,6 @@ feature {NONE} -- grid Layout Implementation
 			check
 				l_grid.layout_manager /= Void
 			end
-
---			l_grid.layout_manager.set_row_is_ready_for_identification_agent (agent l_grid.row_is_ready_for_grid_objects_identification)
---			l_grid.layout_manager.set_identification_agent (agent l_grid.grid_objects_id_name_from_row)
---			l_grid.layout_manager.set_value_agent (agent l_grid.grid_objects_id_value_from_row)
---			l_grid.layout_manager.set_on_difference_callback (agent l_grid.grid_objects_on_difference_cb)
 			is_grid_layout_initialized := True
 		end
 
@@ -1095,7 +1096,7 @@ feature -- Access
 			if l_expr.evaluation_disabled then
 				-- nothing special
 			else
-				if Application.is_running and Application.is_stopped then
+				if debugger_manager.safe_application_is_stopped then
 					l_expr.evaluate
 				else
 					l_expr.set_unevaluated
@@ -1112,7 +1113,7 @@ feature -- Update
 			l_status: APPLICATION_STATUS
 		do
 			cancel_process_real_update_on_idle
-			l_status := Application.status
+			l_status := debugger_manager.application_status
 			if l_status /= Void then
 				process_real_update_on_idle (l_status.is_stopped)
 			else
@@ -1143,9 +1144,10 @@ feature {NONE} -- Implementation
 			eval: BOOLEAN
 			l_expr: EB_EXPRESSION
 			l_item: like watched_item_from
+			witems: like watched_items
 		do
 			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
-			if application.is_running and application.is_stopped and dbg_was_stopped then
+			if debugger_manager.safe_application_is_stopped and dbg_was_stopped then
 				eval := True
 			end
 			watches_grid.remove_selection
@@ -1159,11 +1161,12 @@ feature {NONE} -- Implementation
 			end
 
 			from
-				watched_items.start
+				witems := watched_items
+				witems.start
 			until
-				watched_items.after
+				witems.after
 			loop
-				l_item := watched_items.item
+				l_item := witems.item
 				l_item.request_evaluation (False)
 				check l_item.row /= Void end
 				l_expr := l_item.expression
@@ -1183,7 +1186,7 @@ feature {NONE} -- Implementation
 					l_item.attach_to_row (watches_grid.extended_new_row)
 				end
 				l_item.request_refresh
-				watched_items.forth
+				witems.forth
 			end
 			ensure_last_row_is_new_expression_row
 			on_row_deselected (Void) -- Reset toolbar buttons
@@ -1259,17 +1262,19 @@ feature {NONE} -- Implementation
 		require
 			valid_expr: expr /= Void
 		local
+			witems: like watched_items
 		do
 			from
-				watched_items.start
+				witems := watched_items
+				witems.start
 			until
-				watched_items.after or Result /= Void
+				witems.after or Result /= Void
 			loop
-				Result := watched_items.item
+				Result := witems.item
 				if Result.expression /= expr then
 					Result := Void
 				end
-				watched_items.forth
+				witems.forth
 			end
 		end
 
@@ -1287,7 +1292,7 @@ feature {NONE} -- Implementation
 	refresh_context_expressions is
 			-- Refresh the value and display of context-related expressions.
 		require
-			application_stopped: application.is_running and application.is_stopped
+			application_stopped: debugger_manager.safe_application_is_stopped
 		local
 			r: INTEGER
 			row: EV_GRID_ROW

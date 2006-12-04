@@ -26,8 +26,6 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
-	SHARED_APPLICATION_EXECUTION
-
 	EB_RECYCLABLE
 
 create
@@ -260,7 +258,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				if debugger_manager.application_is_executing then
-					debugger_manager.Application.kill
+					debugger_manager.application.kill
 				end
 				debugger_manager.disable_debug
 				create file.make (class_i.file_name)

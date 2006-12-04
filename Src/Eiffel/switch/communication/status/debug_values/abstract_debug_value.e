@@ -170,7 +170,7 @@ feature -- Output
 			valid_kind: Result >= Immediate_value and then Result <= Error_message_value
 		end
 
-feature {DUMP_VALUE, CALL_STACK_ELEMENT, SHARED_DEBUG}
+feature {DUMP_VALUE, CALL_STACK_ELEMENT, SHARED_DEBUG, IPC_REQUEST}
 
 	set_hector_addr is
 			-- Convert the physical addresses received from the application
@@ -191,7 +191,7 @@ feature {ATTR_REQUEST, CALL_STACK_ELEMENT} -- Setting
 			item_number = n
 		end
 
-feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VALUE, APPLICATION_EXECUTION_IMP} -- Setting
+feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VALUE, APPLICATION_EXECUTION} -- Setting
 
 	set_name (n: like name) is
 			-- Set `name' to `n'.
@@ -202,24 +202,6 @@ feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VA
 		end
 
 feature {NONE} -- Implementation
-
---	append_tabs (st: TEXT_FORMATTER; indent: INTEGER) is
---			-- Append `indent' tabulation character to `st'.
---		require
---			st: st /= Void;
---			indent_positive: indent >= 0
---		local
---			i: INTEGER
---		do
---			from
---				i := 1
---			until
---				i > indent
---			loop
---				st.add_indent;
---				i := i + 1
---			end
---		end;
 
 	set_default_name is
 			-- Set the name to `default' in order to	

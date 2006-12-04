@@ -18,10 +18,6 @@ inherit
 		end
 
 	SHARED_DEBUG
-		export
-			{ANY} Application
-			{NONE} all
-		end
 
 	SHARED_DEBUGGER_MANAGER
 
@@ -355,7 +351,7 @@ feature -- Evaluation
 			-- Compute the value of the last message of `Current'.
 		require
 			dbg_expression_valid_syntax: as_object or else not dbg_expression.syntax_error
-			running_and_stopped: Application.is_running and Application.is_stopped
+			running_and_stopped: debugger_manager.safe_application_is_stopped
 		deferred
 		ensure
 			error_message_if_failed: (final_result_value = Void

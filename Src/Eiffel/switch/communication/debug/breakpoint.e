@@ -431,7 +431,7 @@ feature {DEBUG_INFO} -- Saving protocol.
 			end
 		end
 
-feature {EWB_REQUEST, APPLICATION_EXECUTION_IMP} -- application status access
+feature {EWB_REQUEST, APPLICATION_EXECUTION} -- application status access
 
 	is_set_for_application: BOOLEAN is
 			-- Is the breakpoint set for the application?

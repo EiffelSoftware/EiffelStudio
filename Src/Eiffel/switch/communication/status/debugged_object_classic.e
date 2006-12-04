@@ -58,7 +58,7 @@ feature {NONE} -- Creation
 			-- conform to `a_class'.
 		require
 			non_void_addr: addr /= Void;
-			valid_addr: Application.is_valid_object_address (addr);
+			valid_addr: is_valid_object_address (addr);
 			class_not_void: a_class /= Void
 			class_has_types: a_class.has_types
 		do
@@ -94,12 +94,12 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 			capacity := rqst.capacity;
 			max_capacity := rqst.max_capacity
 		end
-		
+
 feature -- Properties
 
 	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE];
 			-- Attributes of object being inspected (sorted by name)
-		
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

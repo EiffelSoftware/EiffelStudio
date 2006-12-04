@@ -7,6 +7,18 @@ indexing
 class
 	DUMP_VALUE_FACTORY
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (dbg: like debugger_manager) is
+		do
+			debugger_manager := dbg
+		end
+
+	debugger_manager: DEBUGGER_MANAGER
+
 feature {DEBUGGER_MANAGER} -- Change
 
 	set_debug_output_evaluation_enabled (b: like debug_output_evaluation_enabled) is
@@ -30,7 +42,7 @@ feature -- Access
 	new_boolean_value (value: BOOLEAN; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a boolean item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_boolean_value (value, dtype)
 			init_value (Result)
 		end
@@ -38,7 +50,7 @@ feature -- Access
 	new_character_value (value: CHARACTER; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a character item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_character_8_value (value, dtype)
 			init_value (Result)
 		end
@@ -46,7 +58,7 @@ feature -- Access
 	new_character_32_value (value: CHARACTER_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a character_32 item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_character_32_value (value, dtype)
 			init_value (Result)
 		end
@@ -54,7 +66,7 @@ feature -- Access
 	new_integer_32_value  (value: INTEGER; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a integer item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_integer_32_value (value, dtype)
 			init_value (Result)
 		end
@@ -62,7 +74,7 @@ feature -- Access
 	new_integer_64_value  (value: INTEGER_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a integer_64 item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_integer_64_value (value, dtype)
 			init_value (Result)
 		end
@@ -70,7 +82,7 @@ feature -- Access
 	new_natural_8_value  (value: NATURAL_8; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a integer item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_natural_8_value (value, dtype)
 			init_value (Result)
 		end
@@ -78,7 +90,7 @@ feature -- Access
 	new_natural_16_value  (value: NATURAL_16; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a integer item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_natural_16_value (value, dtype)
 			init_value (Result)
 		end
@@ -86,7 +98,7 @@ feature -- Access
 	new_natural_32_value  (value: NATURAL_32; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a integer item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_natural_32_value (value, dtype)
 			init_value (Result)
 		end
@@ -94,7 +106,7 @@ feature -- Access
 	new_natural_64_value  (value: NATURAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a integer_64 item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_natural_64_value (value, dtype)
 			init_value (Result)
 		end
@@ -102,7 +114,7 @@ feature -- Access
 	new_real_value (value: REAL; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a real item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_real_32_value (value, dtype)
 			init_value (Result)
 		end
@@ -110,7 +122,7 @@ feature -- Access
 	new_real_64_value (value: REAL_64; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a real_64 item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_real_64_value (value, dtype)
 			init_value (Result)
 		end
@@ -123,7 +135,7 @@ feature -- Access
 			a_type_not_void: a_type /= Void
 			dtype_not_void: dtype /= Void
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_bits_value (a_value, a_type, dtype)
 			init_value (Result)
 		end
@@ -131,14 +143,14 @@ feature -- Access
 	new_pointer_value (value: POINTER; dtype: CLASS_C): DUMP_VALUE_BASIC is
 			-- make a pointer item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_pointer_value (value, dtype)
 			init_value (Result)
 		end
 
 	new_void_value (dtype: CLASS_C): DUMP_VALUE is
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_void_value (dtype)
 			init_value (Result)
 		end
@@ -146,7 +158,7 @@ feature -- Access
 	new_object_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE is
 			-- make a object item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_object_value (value, dtype)
 			init_value (Result)
 		end
@@ -156,7 +168,7 @@ feature -- Access
 		require
 			dtype_not_void: dtype /= Void
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_expanded_object_value (addr, dtype)
 			init_value (Result)
 		end
@@ -164,14 +176,14 @@ feature -- Access
 	new_manifest_string_value  (value: STRING; dtype: CLASS_C): DUMP_VALUE is
 			-- make a string item initialized to `value'
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_manifest_string_value (value, dtype)
 			init_value (Result)
 		end
 
 	new_exception_value  (value: EXCEPTION_DEBUG_VALUE): DUMP_VALUE is
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_exception_value (value)
 			init_value (Result)
 		end
@@ -183,7 +195,7 @@ feature -- Dotnet creation
 		require
 			arg_not_void: a_eifnet_dsv /= Void
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_string_for_dotnet_value (a_eifnet_dsv)
 		end
 
@@ -192,7 +204,7 @@ feature -- Dotnet creation
 		require
 			arg_not_void: a_eifnet_drv /= Void
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_object_for_dotnet_value (a_eifnet_drv)
 		end
 
@@ -201,9 +213,13 @@ feature -- Dotnet creation
 		require
 			arg_not_void: a_eifnet_dnav /= Void
 		do
-			create Result.make_empty
+			create Result.make_empty (debugger_manager)
 			Result.set_native_array_object_for_dotnet_value (a_eifnet_dnav)
 		end
+
+invariant
+
+	debugger_manager_not_void: debugger_manager /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -14,7 +14,7 @@ inherit
 
 	ICOR_EXPORTER
 
-	SHARED_APPLICATION_EXECUTION
+	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
@@ -568,7 +568,7 @@ feature {NONE}
 				l_icd_eval := l_icd_thread.create_eval
 			end
 
-			l_status ?= Application.status
+			l_status ?= debugger_manager.application_status
 			Eifnet_debugger.reset_evaluation_exception
 			l_status.set_is_evaluating (True)
 				--| Let use the evaluating mecanism instead of the normal one
@@ -597,7 +597,7 @@ feature {NONE}
 				if eifnet_debugger.callback_notification_processing then
 					eifnet_debugger.restore_callback_notification_state
 				else
-					if not application.is_stopped then
+					if not debugger_manager.application_is_stopped then
 						eifnet_debugger.start_dbg_timer
 					end
 				end
@@ -629,7 +629,7 @@ feature {NONE}
 			-- Timeout of the function evaluation.
 			-- (in seconds)
 		do
-			Result := Application.max_evaluation_duration
+			Result := debugger_manager.max_evaluation_duration
 		end
 
 	complete_method_evaluation is

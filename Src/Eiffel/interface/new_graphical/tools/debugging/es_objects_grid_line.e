@@ -40,13 +40,6 @@ inherit
 			is_equal, copy, default_create
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		undefine
 			default_create, copy, is_equal
@@ -228,6 +221,15 @@ feature -- Status
 			Result := row /= Void
 		end
 
+feature {NONE} -- Helpers
+
+	is_valid_object_address (addr: STRING): BOOLEAN is
+		require
+			application_is_executing: debugger_manager.application_is_executing
+		do
+			Result := debugger_manager.application.is_valid_object_address (addr)
+		end
+
 feature -- Properties
 
 	row: EV_GRID_ROW
@@ -308,6 +310,8 @@ feature -- Query
 		end
 
 	associated_dump_value: DUMP_VALUE is
+		require
+			application_is_executing: debugger_manager.application_is_executing
 		deferred
 		end
 
@@ -478,7 +482,7 @@ feature -- Graphical changes
 	computed_grid_item (c: INTEGER): EV_GRID_ITEM is
 		do
 			if not compute_grid_display_done then
-				if application.is_running and then application.is_stopped then
+				if debugger_manager.safe_application_is_stopped then
 					compute_grid_row
 				else
 --					set_name (object_name)
@@ -492,7 +496,7 @@ feature -- Graphical changes
 				end
 			end
 		ensure
-			result_not_void_if_stopped: (application.is_running and then application.is_stopped) implies Result /= Void
+			result_not_void_if_stopped: (debugger_manager.safe_application_is_stopped ) implies Result /= Void
 		end
 
 	compute_grid_row is
@@ -942,7 +946,7 @@ feature {NONE} -- Filling
 				if
 					dcl /= Void
 					and then Eb_debugger_manager.display_agent_details
-					and then dcl.conform_to (Application.Eiffel_system.System.routine_class.compiled_class)
+					and then dcl.conform_to (debugger_manager.Eiffel_system.System.routine_class.compiled_class)
 				then
 					fill_extra_attributes_for_agent (a_row, list_cursor)
 				end
@@ -957,6 +961,7 @@ feature {NONE} -- Filling
 		require
 			a_row = onces_row
 			onces_not_filled_yet: not row_onces_filled
+			application_is_executing: debugger_manager.application_is_executing
 		local
 			flist: LIST [E_FEATURE]
 			l_once_values: ARRAY [ABSTRACT_DEBUG_VALUE]
@@ -974,7 +979,7 @@ feature {NONE} -- Filling
 					--| Nota: address and class are used only for classic implementation
 					--| maybe optimize this call by testing if we are on classic or dotnet
 					--| but the benefit would be small compared to the gain of lisibility
-				l_once_values := application.onces_values (flist, object_address, object_dynamic_class)
+				l_once_values := debugger_manager.application.onces_values (flist, object_address, object_dynamic_class)
 				fill_onces_with_values (a_row, l_once_values)
 			end
 
@@ -1073,7 +1078,7 @@ feature {NONE} -- Agent filling
 				then
 					if ag_ct_id = 0 and then vitem.name.is_equal ("class_id") then
 						ag_ct_id := vitem.value + 1
-						ag_ct := application.eiffel_system.system.class_type_of_static_type_id (ag_ct_id)
+						ag_ct := debugger_manager.eiffel_system.system.class_type_of_static_type_id (ag_ct_id)
 					elseif ag_fe_id = 0 and then vitem.name.is_equal ("feature_id") then
 						ag_fe_id := vitem.value
 						if ag_ct /= Void and then ag_fe_id /= 0 then

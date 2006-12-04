@@ -35,6 +35,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEBUGGER_MANAGER
+
 create
 	make
 
@@ -131,6 +133,7 @@ feature -- Basic operations
 			nat_dv: EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 			l_item: EV_ANY
 			l_addr: STRING
+			app_impl: APPLICATION_EXECUTION_DOTNET
 		do
 			if for_tool then
 				conv_obj ?= st
@@ -154,10 +157,12 @@ feature -- Basic operations
 				end
 			else
 				l_addr := pretty_dlg.current_object.object_address
-				if Application.is_dotnet then
+				if debugger_manager.is_dotnet_project then
 						--| not working in case of not registered object
-					if application.imp_dotnet.know_about_kept_object (l_addr) then
-						nat_dv ?= Application.imp_dotnet.kept_object_item (l_addr)
+					app_impl ?= debugger_manager.application
+					check app_impl /= Void end
+					if app_impl.know_about_kept_object (l_addr) then
+						nat_dv ?= app_impl.kept_object_item (l_addr)
 					end
 					Result := nat_dv /= Void
 				else
@@ -270,12 +275,12 @@ feature {NONE} -- Implementation
 				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 					--| Set Value
-				if application.displayed_string_size = -1 then
+				if debugger_manager.displayed_string_size = -1 then
 					tf_disp_str_size.set_text (preferences.misc_data.default_displayed_string_size.out)
 					tf_disp_str_size.disable_sensitive
 					cb_disp_str_limit.enable_select
 				else
-					tf_disp_str_size.set_text (application.displayed_string_size.out)
+					tf_disp_str_size.set_text (debugger_manager.displayed_string_size.out)
 					tf_disp_str_size.enable_sensitive
 					cb_disp_str_limit.disable_select
 				end
@@ -501,7 +506,7 @@ feature {NONE} -- Implementation
 			end
 			if ok then
 				if disp_size = -1 or disp_size > 0 then
-					application.set_displayed_string_size (disp_size) --str1.to_integer)
+					debugger_manager.set_displayed_string_size (disp_size) --str1.to_integer)
 				end
 				internal_set_limits (str2.to_integer, str3.to_integer)
 				dial.destroy

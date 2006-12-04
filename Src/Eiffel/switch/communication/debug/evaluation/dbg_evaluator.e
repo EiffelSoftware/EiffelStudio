@@ -16,10 +16,6 @@ inherit
 	SHARED_DEBUGGER_MANAGER
 
 	SHARED_DEBUG
-		export
-			{ANY} Application
-			{NONE} all
-		end
 
 	SHARED_WORKBENCH
 		export
@@ -54,7 +50,7 @@ feature {NONE} -- Initialization
 	build_evaluator is
 		do
 			fixme ("try to make this decision between dotnet or classic before")
-			if application.is_dotnet then
+			if Debugger_manager.is_dotnet_project then
 					--| Soon or later .. change this by creating descendant of Current
 				create {DBG_EVALUATOR_DOTNET} implementation.make (Current)
 			else

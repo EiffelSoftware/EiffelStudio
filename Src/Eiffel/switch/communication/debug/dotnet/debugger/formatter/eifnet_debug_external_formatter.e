@@ -22,12 +22,14 @@ inherit
 			{NONE} all
 		end
 
-feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Provide info from debugger
+create
+	make
 
-	set_debugger_info (di: like debugger_info) is
-			-- set `debugger_info' with `di'
+feature {NONE} -- Initialization
+
+	make (info: like debugger_info) is
 		do
-			debugger_info := di
+			debugger_info := info
 		end
 
 feature {NONE} -- Debugger information

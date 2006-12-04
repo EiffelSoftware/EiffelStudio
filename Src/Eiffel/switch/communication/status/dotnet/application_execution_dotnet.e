@@ -1,24 +1,34 @@
 indexing
-	description	: "Controls execution of debugged application under dotnet."
+description	: "Controls execution of dotnet debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
-	author		: "$Author$"
-	revision	: "$Revision$"
+	revision	: "$Revision $"
 
-class APPLICATION_EXECUTION_DOTNET
+class
+	APPLICATION_EXECUTION_DOTNET
 
 inherit
+	APPLICATION_EXECUTION
+		redefine
+			status,
+			is_valid_object_address,
+			can_not_launch_system_message,
+			recycle,
+			make_with_debugger,
+			is_classic_system,
+			is_dotnet
+		end
 
 	SHARED_EIFNET_DEBUGGER
 
 	EB_SHARED_MANAGERS
 
-	APPLICATION_EXECUTION_IMP
-		redefine
-			make, recycle, load_system_dependent_debug_info,
-			can_not_launch_system_message
-		end
+	DEBUG_VALUE_EXPORTER
+
+	EB_CONSTANTS
+
+	VALUE_TYPES
 
 	APPLICATION_STATUS_EXPORTER
 		export
@@ -50,17 +60,21 @@ inherit
 			{NONE} all
 		end
 
-create {APPLICATION_EXECUTION}
-	make
+create {DEBUGGER_MANAGER}
+	make_with_debugger
+
+feature
+	is_classic_system: BOOLEAN is False
+	is_dotnet: BOOLEAN is True
 
 feature {APPLICATION_EXECUTION} -- Initialization
 
-	make is
+	make_with_debugger (dbg: like debugger_manager) is
 			-- Create Current
 		local
 			p: BOOLEAN_PREFERENCE
 		do
-			Precursor
+			Precursor {APPLICATION_EXECUTION} (dbg)
 			Eifnet_debugger.init
 
 			p := Debugger_manager.dotnet_keep_stepping_info_non_eiffel_feature_pref
@@ -89,8 +103,8 @@ feature -- recycling data
 
 	recycle is
 		do
-			Precursor
 			Eifnet_debugger.recycle_debug_value_keeper
+			Precursor
 		end
 
 feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
@@ -160,21 +174,21 @@ feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL, EV_SHARED_APPLICATION}  
 
 feature {APPLICATION_EXECUTION} -- load and save
 
-	load_dotnet_debug_info is
-			-- Load debug information
-		local
-			w_dlg: EV_WARNING_DIALOG
-		do
-			Il_debug_info_recorder.load_data_for_debugging
-			if not Il_debug_info_recorder.load_successful then
-				if (create {EV_ENVIRONMENT}).application /= Void then
-					create w_dlg.make_with_text (Il_debug_info_recorder.loading_errors_message)
-					w_dlg.show
-				else
-					io.error.put_string (Il_debug_info_recorder.loading_errors_message)
-				end
-			end
-		end
+--	load_dotnet_debug_info is
+--			-- Load debug information
+--		local
+--			w_dlg: EV_WARNING_DIALOG
+--		do
+--			Il_debug_info_recorder.load_data_for_debugging
+--			if not Il_debug_info_recorder.load_successful then
+--				if (create {EV_ENVIRONMENT}).application /= Void then
+--					create w_dlg.make_with_text (Il_debug_info_recorder.loading_errors_message)
+--					w_dlg.show
+--				else
+--					io.error.put_string (Il_debug_info_recorder.loading_errors_message)
+--				end
+--			end
+--		end
 
 	reload_dotnet_debug_info_if_needed is
 			-- Reload debug information if last mode was finalized
@@ -185,7 +199,7 @@ feature {APPLICATION_EXECUTION} -- load and save
 				debug ("debugger_trace")
 					print ("Reload IL debug info for dotnet %N")
 				end
-				load_dotnet_debug_info
+				Il_debug_info_recorder.load_data_for_debugging
 			else
 				debug ("debugger_trace")
 					print ("Keep current IL debug info for dotnet %N")
@@ -193,13 +207,17 @@ feature {APPLICATION_EXECUTION} -- load and save
 			end
 		end
 
+feature {NONE} -- Status
+
+	build_status is
+		do
+			create status.make (Current)
+		end
+
 feature -- Properties
 
-	status: APPLICATION_STATUS_DOTNET is
+	status: APPLICATION_STATUS_DOTNET
 			-- Status of the running dotnet application
-		do
-			Result ?= Application.status
-		end
 
 	is_inside_callback_notification_processing: BOOLEAN is
 		do
@@ -212,7 +230,7 @@ feature {APPLICATION_EXECUTION} -- Properties
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		do
-			Result := Eifnet_debugger.know_about_kept_object (addr)
+			Result := Precursor (addr) and then Eifnet_debugger.know_about_kept_object (addr)
 		end
 
 feature -- Bridge to Debugger
@@ -234,7 +252,7 @@ feature -- Bridge to Debugger
 
 feature -- Execution
 
-	run (args, cwd: STRING; env: STRING_GENERAL) is
+	run_with_env_string (args, cwd: STRING; env: STRING_GENERAL) is
 			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
@@ -256,24 +274,24 @@ feature -- Execution
 
 				if not Eifnet_debugger.last_dbg_call_succeed then
 						-- This means we had issue creating process
---					Application.destroy_status
+--					destroy_status
 					Eifnet_debugger.terminate_debugger_session
 					Eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
 				else
-					Application.build_status
+					build_status
 				end
 
-				if Application.is_running then
+				if is_running then
 						-- Application was able to be started
-					Application.status.set_is_stopped (False)
-					Application.status.set_process_id (eifnet_debugger.last_process_id)
+					status.set_is_stopped (False)
+					status.set_process_id (eifnet_debugger.last_process_id)
 				end
 			end
 		end
 
 	continue_ignoring_kept_objects is
 		do
-			inspect application.execution_mode
+			inspect execution_mode
 			when {EXEC_MODES}.step_into then
 				step_into
 			when {EXEC_MODES}.step_by_step then
@@ -349,10 +367,10 @@ feature -- Execution
 				Eifnet_debugger.set_last_control_mode_is_kill
 				Eifnet_debugger.terminate_debugging
 			end
-			application.process_termination
+			process_termination
 		end
 
-	process_termination is
+	clean_on_process_termination is
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
@@ -363,14 +381,14 @@ feature -- Execution
 -- this is now called directly from EIFNET_DEBUGGER.on_exit_process
 		end
 
-	load_system_dependent_debug_info is
-		do
-			if
-				Eiffel_system.workbench.system_defined
-			then
-				load_dotnet_debug_info
-			end
-		end
+--	load_system_dependent_debug_info is
+--		do
+--			if
+--				Eiffel_system.workbench.system_defined
+--			then
+--				load_dotnet_debug_info
+--			end
+--		end
 
 feature {APPLICATION_EXECUTION} -- Launching status
 
@@ -474,6 +492,7 @@ feature -- Control execution
 	process_before_running is
 		local
 			l_entry_point_feature: E_FEATURE
+			bpm: BREAKPOINTS_MANAGER
 		do
 			check il_debug_info_recorder.last_loading_is_workbench end
 
@@ -483,19 +502,20 @@ feature -- Control execution
 				print ("%N%N")
 			end
 
-			Application.debug_info.update
-			inspect Application.execution_mode
+			bpm := Debugger_manager
+			bpm.update_debug_info
+			inspect execution_mode
 			when {EXEC_MODES}.no_stop_points then
 				send_no_breakpoints
 			when {EXEC_MODES}.step_by_step, {EXEC_MODES}.step_into then
-				if not Application.is_running then
+				if not is_running then
 					debug ("debugger_trace_stepping")
 						print ("Let's add a breakpoint at the entry point of the system%N")
 					end
 					l_entry_point_feature := Il_debug_info_recorder.entry_point_feature_i.e_feature
-					Application.enable_breakpoint (l_entry_point_feature, 1)
+					bpm.enable_breakpoint (l_entry_point_feature, 1)
 					send_breakpoints
-					Application.remove_breakpoint (l_entry_point_feature , 1)
+					bpm.remove_breakpoint (l_entry_point_feature , 1)
 				else
 					send_breakpoints
 				end
@@ -688,7 +708,7 @@ feature -- Breakpoints controller
 			debug ("debugger_trace_breakpoint")
 				print (generator + ".send_breakpoints %N")
 			end
-			l_bp_list := Application.debug_info.breakpoints
+			l_bp_list := Debugger_manager.breakpoints
 
 			from
 				l_bp_list.start
@@ -727,7 +747,7 @@ feature -- Breakpoints controller
 			l_bp_list: BREAK_LIST
 			l_bp_item: BREAKPOINT
 		do
-			l_bp_list := Application.debug_info.breakpoints
+			l_bp_list := Debugger_manager.breakpoints
 
 			from
 				l_bp_list.start
@@ -959,10 +979,10 @@ feature {NONE} -- Events on notification
 			dbg_info := Eifnet_debugger.info
 
 --| Useless, but we may need it one day
---			Application.on_application_before_stopped
+--			on_application_before_stopped
 
 				--| on top of the stack = current stack/feature
-			application.set_current_execution_stack_number (1)
+			set_current_execution_stack_number (1)
 			-- FIXME jfiat: we should point to the first Eiffel Call Stack ...
 
 				--| We need to stop
@@ -1005,14 +1025,14 @@ feature {NONE} -- Events on notification
 
 --| not true in case of empty stack .. when exception occurs during launching
 --			set_current_execution_stack (1)
-			Application.set_current_execution_stack_number (Application.number_of_stack_elements)
+			set_current_execution_stack_number (number_of_stack_elements)
 
 			if need_to_continue then
 				debug ("debugger_trace_callstack")
 					print ("Note: Continue on stopped status (need_to_continue = True)%N")
 					print ("Note: last managed callback = " + Eifnet_debugger.managed_callback_name (cb_id) + "%N")
 				end
-				Application.release_all_but_kept_object
+				release_all_but_kept_object
 				l_status.set_is_stopped (False)
 				Eifnet_debugger.do_continue
 			else
@@ -1103,7 +1123,7 @@ feature -- update processing
 					debug ("debugger_trace")
 						io.error.put_string (generator + ".real_update_notify_on_after_stopped : call real notification%N")
 					end
-					Application.on_application_just_stopped
+					on_application_just_stopped
 				else
 					debug ("debugger_trace")
 						io.error.put_string (generator + ".real_update_notify_on_after_stopped : postpone real notification%N")

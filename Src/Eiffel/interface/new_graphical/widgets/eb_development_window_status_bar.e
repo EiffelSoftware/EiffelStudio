@@ -24,19 +24,20 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_DEBUGGER_MANAGER
+	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		end
 
 	EB_SHARED_PREFERENCES
 
-	EB_DEBUGGER_OBSERVER
+	DEBUGGER_OBSERVER
 		export
 			{NONE} all
 		redefine
-			on_application_killed,
+			on_application_quit,
 			on_application_launched,
+			on_application_resumed,
 			on_application_stopped
 		end
 
@@ -72,7 +73,7 @@ feature {NONE} -- Initialization
 						on_application_launched
 					end
 				else
-					on_application_killed
+					on_application_quit
 				end
 			else
 				on_project_closed
@@ -91,7 +92,7 @@ feature {NONE} -- Initialization
 			mg.compile_start_agents.extend (compile_start_agent)
 			mg.compile_stop_agents.extend (compile_stop_agent)
 
-			Eb_debugger_manager.observers.extend (Current)
+			Debugger_manager.add_observer (Current)
 		end
 
 	build_interface is
@@ -261,7 +262,7 @@ feature {NONE} -- Status setting
 		local
 			mg: EB_PROJECT_MANAGER
 		do
-			Eb_debugger_manager.observers.prune_all (Current)
+			Debugger_manager.remove_observer (Current)
 
 			mg := Eiffel_project.manager
 			mg.create_agents.prune_all (create_agent)
@@ -332,6 +333,12 @@ feature {NONE} -- Implementation: event handling
 	on_application_launched is
 			-- The application has just been launched by the debugger.
 		do
+			on_application_resumed
+		end
+
+	on_application_resumed is
+			-- The application has been resumed by the debugger.
+		do
 			if debugger_cell.is_empty then
 				debugger_cell.extend (debugger_icon)
 			end
@@ -362,7 +369,7 @@ feature {NONE} -- Implementation: event handling
 			end
 		end
 
-	on_application_killed is
+	on_application_quit is
 			-- The application has just terminated (dead).
 		do
 			running_timer.set_interval (0)
@@ -373,7 +380,7 @@ feature {NONE} -- Implementation: event handling
 			-- The project has been created.
 		do
 			on_project_updated
-			on_application_killed
+			on_application_quit
 		end
 
 	on_project_loaded is
@@ -392,7 +399,7 @@ feature {NONE} -- Implementation: event handling
 					on_application_launched
 				end
 			else
-				on_application_killed
+				on_application_quit
 			end
 			if not eiffel_project.workbench.is_compiling then
 				on_project_compiled
@@ -410,7 +417,7 @@ feature {NONE} -- Implementation: event handling
 			edition_icon.clear
 			edition_icon.remove_tooltip
 				--| This is probably redundant...
-			on_application_killed
+			on_application_quit
 		end
 
 	on_project_compiles is

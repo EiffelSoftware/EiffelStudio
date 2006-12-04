@@ -17,10 +17,7 @@ inherit
 			is_storable
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
+	EB_SHARED_DEBUGGER_MANAGER
 
 	EB_CONSTANTS
 		export
@@ -111,7 +108,9 @@ feature -- Basic operations
 			menu: EV_MENU
 			item: EV_MENU_ITEM
 			conv_dev: EB_DEVELOPMENT_WINDOW
+			bpm: BREAKPOINTS_MANAGER
 		do
+			bpm := Debugger_manager
 			create menu
 			create item.make_with_text ("Breakpoint index: " + index.out)
 			item.disable_sensitive
@@ -120,39 +119,44 @@ feature -- Basic operations
 
 				-- "Enable"
 			create item.make_with_text (Interface_names.m_Enable_this_bkpt)
-			item.select_actions.extend (agent Application.enable_breakpoint (routine, index))
-			item.select_actions.extend (agent Debugger_manager.notify_breakpoints_changes)
-			if Application.is_breakpoint_enabled (routine, index) then
+			item.select_actions.extend (agent bpm.enable_breakpoint (routine, index))
+			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+
+			if bpm.is_breakpoint_enabled (routine, index) then
 				item.disable_sensitive
 			end
 			menu.extend (item)
 				-- "Disable"
 			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
-			item.select_actions.extend (agent Application.disable_breakpoint (routine, index))
-			item.select_actions.extend (agent Debugger_manager.notify_breakpoints_changes)
-			if Application.is_breakpoint_disabled (routine, index) then
+			item.select_actions.extend (agent bpm.disable_breakpoint (routine, index))
+			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+
+			if bpm.is_breakpoint_disabled (routine, index) then
 				item.disable_sensitive
 			end
 			menu.extend (item)
 				-- "Remove"
 			create item.make_with_text (Interface_names.m_Remove_this_bkpt)
-			item.select_actions.extend (agent Application.remove_breakpoint (routine, index))
-			item.select_actions.extend (agent Debugger_manager.notify_breakpoints_changes)
-			if not Application.is_breakpoint_set (routine, index) then
+			item.select_actions.extend (agent bpm.remove_breakpoint (routine, index))
+			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+
+			if not bpm.is_breakpoint_set (routine, index) then
 				item.disable_sensitive
 			end
 			menu.extend (item)
 			menu.extend (create {EV_MENU_SEPARATOR})
-			if not Application.is_breakpoint_set (routine, index) then
+			if not bpm.is_breakpoint_set (routine, index) then
 					-- "Set conditional breakpoint"
 				create item.make_with_text (Interface_names.m_Set_conditional_breakpoint)
 				item.select_actions.extend (agent set_conditional_breakpoint (routine, index))
+
 				menu.extend (item)
 			else
-				if Application.condition (routine, index) = Void then
+				if bpm.condition (routine, index) = Void then
 						-- "Edit condition" (no remove)
 					create item.make_with_text (Interface_names.m_Edit_condition)
 					item.select_actions.extend (agent set_conditional_breakpoint (routine, index))
+
 					menu.extend (item)
 				else
 						-- "Edit condition" (with remove)
@@ -269,7 +273,7 @@ feature -- Basic operations
 			create lab
 
 				-- Update widgets.
-			expr := Application.condition (f, pos)
+			expr := Debugger_manager.condition (f, pos)
 			if expr /= Void then
 				tf.set_text (expr.expression)
 			end
@@ -302,7 +306,7 @@ feature -- Basic operations
 
 	remove_condition_from_breakpoint (f: E_FEATURE; pos: INTEGER) is
 		do
-			Application.remove_condition (f, pos)
+			Debugger_manager.remove_condition (f, pos)
 			Debugger_manager.notify_breakpoints_changes
 		end
 
@@ -310,14 +314,16 @@ feature -- Basic operations
 			-- Attempt to create a conditional breakpoint.
 		local
 			expr: EB_EXPRESSION
+			bpm: BREAKPOINTS_MANAGER
 		do
 			create expr.make_for_context (a_input.text)
 			if not expr.syntax_error_occurred then
+				bpm := Debugger_manager
 				if expr.is_condition (f) then
-					if not Application.is_breakpoint_set (f, pos) then
-						Application.enable_breakpoint (f, pos)
+					if not bpm.is_breakpoint_set (f, pos) then
+						bpm.enable_breakpoint (f, pos)
 					end
-					Application.set_condition (f, pos, expr)
+					bpm.set_condition (f, pos, expr)
 					Debugger_manager.notify_breakpoints_changes
 					d.destroy
 				else
@@ -331,11 +337,14 @@ feature -- Basic operations
 	toggle_bkpt is
 			-- If the corresponding breakpoint was not set or disabled, enable it.
 			-- If the corresponding breakpoint was already enabled, remove it.
+		local
+			bpm: BREAKPOINTS_MANAGER
 		do
-			if Application.is_breakpoint_enabled (routine, index) then
-				Application.remove_breakpoint (routine, index)
+			bpm := Debugger_manager
+			if bpm.is_breakpoint_enabled (routine, index) then
+				bpm.remove_breakpoint (routine, index)
 			else
-				Application.enable_breakpoint (routine, index)
+				bpm.enable_breakpoint (routine, index)
 			end
 			Debugger_manager.notify_breakpoints_changes
 		end

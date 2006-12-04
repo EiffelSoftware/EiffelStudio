@@ -20,13 +20,6 @@ inherit
 			debug_value_type_id
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		undefine
-			is_equal
-		end;
-
 feature -- Properties
 
 	address: STRING;

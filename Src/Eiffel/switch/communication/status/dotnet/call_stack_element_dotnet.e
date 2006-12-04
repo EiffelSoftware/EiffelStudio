@@ -38,11 +38,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		export
 			{NONE} all

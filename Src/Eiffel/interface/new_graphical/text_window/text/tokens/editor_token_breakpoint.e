@@ -126,14 +126,12 @@ feature -- Miscellaneous
 			index: INTEGER 	-- index in the pixmap array.
 							--  1 = not stopped version
 							--  2 = stopped version.
-			app_exec: APPLICATION_EXECUTION
 		do
-			app_exec := debugger_manager.application
-			status := app_exec.status
 			pebble_routine := pebble.routine
 			pebble_index := pebble.index
 
-			if status /= Void and then status.is_stopped then
+			if debugger_manager.safe_application_is_stopped then
+				status := Debugger_manager.application_status
 				if status.is_top (pebble_routine.body_index, pebble_index) then
 					index := 2
 				elseif status.is_at (pebble_routine.body_index, pebble_index) then
@@ -145,7 +143,7 @@ feature -- Miscellaneous
 				index := 1
 			end
 
-			inspect app_exec.breakpoint_status (pebble_routine, pebble_index)
+			inspect Debugger_manager.breakpoint_status (pebble_routine, pebble_index)
 			when 0 then
 				pixmaps := icon_group_bp_slot
 			when 1 then

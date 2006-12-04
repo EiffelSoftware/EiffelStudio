@@ -93,13 +93,13 @@ feature -- Execution
 			-- Disable all stop points.
 		local
 			wd: EV_INFORMATION_DIALOG
-			app_exec: APPLICATION_EXECUTION
+			bpm: BREAKPOINTS_MANAGER
 		do
-			app_exec := Debugger_manager.application
-			if app_exec.has_breakpoints then
-				app_exec.disable_all_breakpoints
+			bpm := Debugger_manager
+			if bpm.has_breakpoints then
+				bpm.disable_all_breakpoints
 
-				if app_exec.error_in_bkpts then
+				if bpm.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
@@ -116,16 +116,16 @@ feature -- Update
 			f: E_FEATURE
 			body_index: INTEGER
 			wd: EV_INFORMATION_DIALOG
-			app_exec: APPLICATION_EXECUTION
+			bpm: BREAKPOINTS_MANAGER
 		do
 			f := bs.routine
 			if f.is_debuggable then
 				index := bs.index
 				body_index := bs.body_index
-				app_exec := Debugger_manager.application
-				app_exec.disable_breakpoint (f, index)
+				bpm := Debugger_manager
+				bpm.disable_breakpoint (f, index)
 
-				if app_exec.error_in_bkpts then
+				if bpm.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
@@ -138,14 +138,14 @@ feature -- Update
 		local
 			f: E_FEATURE
 			wd: EV_INFORMATION_DIALOG
-			app_exec: APPLICATION_EXECUTION
+			bpm: BREAKPOINTS_MANAGER
 		do
 			f := fs.e_feature
-			app_exec := Debugger_manager.application
-			if f /= Void and then f.is_debuggable and then app_exec.has_breakpoint_set(f) then
-				app_exec.disable_breakpoints_in_feature (f)
+			bpm := Debugger_manager
+			if f /= Void and then f.is_debuggable and then bpm.has_breakpoint_set(f) then
+				bpm.disable_breakpoints_in_feature (f)
 
-				if app_exec.error_in_bkpts then
+				if bpm.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
@@ -170,14 +170,14 @@ feature -- Update
 		local
 			wd: EV_INFORMATION_DIALOG
 			conv_fst: FEATURE_STONE
-			app_exec: APPLICATION_EXECUTION
+			bpm: BREAKPOINTS_MANAGER
 		do
 			conv_fst ?= cs
 			if conv_fst = Void then
-				app_exec := Debugger_manager.application
-				app_exec.disable_breakpoints_in_class (cs.e_class)
+				bpm := Debugger_manager
+				bpm.disable_breakpoints_in_class (cs.e_class)
 
-				if app_exec.error_in_bkpts then
+				if bpm.error_in_bkpts then
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end

@@ -8,10 +8,35 @@ indexing
 class
 	DEBUGGER_MANAGER_IMP
 
+inherit
+	DEBUGGER_MANAGER_I
+		redefine
+			load_system_dependent_debug_info
+		end
+
+	SHARED_EIFFEL_PROJECT
+		export {NONE} all end
+
+	SHARED_IL_DEBUG_INFO_RECORDER
+
 create {DEBUGGER_MANAGER}
-	default_create
+	make
 
 feature {DEBUGGER_MANAGER} -- Access
+
+	load_system_dependent_debug_info is
+		do
+			Precursor
+			if
+				Eiffel_project.system_defined
+				and then interface.is_dotnet_project
+			then
+				il_debug_info_recorder.load_data_for_debugging
+				if not il_debug_info_recorder.load_successful then
+					interface.debugger_warning_message (il_debug_info_recorder.loading_errors_message)
+				end
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

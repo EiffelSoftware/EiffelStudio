@@ -27,21 +27,22 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	EB_SHARED_DEBUGGER_MANAGER
+	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
 
-	EB_DEBUGGER_OBSERVER
+	DEBUGGER_OBSERVER
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		redefine
-			on_application_killed,
+			on_application_quit,
 			on_application_launched,
+			on_application_resumed,
 			on_application_stopped
 		end
 
@@ -59,7 +60,7 @@ feature {NONE} -- Initialization
 		do
 			make_with_title ("Debugging Options")
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
-			Eb_debugger_manager.observers.extend (Current)
+			Debugger_manager.add_observer (Current)
 			set_size (600, 400)
 			run := cmd
 
@@ -214,7 +215,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Observing event handling.
 
-	on_application_killed is
+	on_application_quit is
 			-- Action to take when the application is killed.
 		do
 			if not run_button.is_sensitive then
@@ -227,6 +228,12 @@ feature {NONE} -- Observing event handling.
 
 	on_application_launched is
 			-- Action to take when the application is launched.
+		do
+			on_application_resumed
+		end
+
+	on_application_resumed is
+			-- Action to take when the application is resumed.
 		do
 			if run_button.is_sensitive then
 				run_button.disable_sensitive

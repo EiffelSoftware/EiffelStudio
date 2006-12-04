@@ -1,42 +1,27 @@
 indexing
-	description	: "Shared instance of Application execution."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date		: "$Date$";
-	revision	: "$Revision $"
+	status: "See notice at end of class."
 
-class SHARED_APPLICATION_EXECUTION
+class SHARED_DEBUG
 
-feature -- Access
+inherit
 
-	Application_initialized: BOOLEAN is
-		do
-			Result := cell_Application_initialized.item
-		end
+	SHARED_DEBUGGED_OBJECT_MANAGER
 
-	Application: APPLICATION_EXECUTION is
+feature
+
+	min_slice_ref: INTEGER_REF is
+			-- Minimum bound asked for special objects.
 		once
-			create Result.make
+			create Result
+			Result.set_item (0)
 		end
 
-feature {DEBUGGER_MANAGER} -- Build
-
-	build_shared_application_execution (dbg_manager: DEBUGGER_MANAGER) is
-		require
-			not Application_initialized
-		do
-			check application.debugger_manager = Void end
-			Application.set_debugger_manager (dbg_manager)
-			cell_Application_initialized.put (True)
-		ensure
-			Application_initialized
-		end
-
-feature {NONE} -- Impl
-
-	cell_Application_initialized: CELL [BOOLEAN] is
+	max_slice_ref: INTEGER_REF is
+			-- Maximum bound asked for special objects.
 		once
-			create Result.put (False)
+			create Result
+			Result.set_item (50)
 		end
 
 indexing
@@ -71,4 +56,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class SHARED_APPLICATION_EXECUTION
+end

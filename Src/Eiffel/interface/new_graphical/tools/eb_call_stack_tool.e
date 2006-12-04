@@ -34,9 +34,6 @@ inherit
 		end
 
 	EB_SHARED_DEBUGGER_MANAGER
-		export
-			{NONE} all
-		end
 
 	EB_SHARED_PREFERENCES
 		export
@@ -317,6 +314,8 @@ feature -- Access
 feature -- Status setting
 
 	set_callstack_thread (tid: INTEGER) is
+		require
+			application_is_executing: debugger_manager.application_is_executing
 		do
 			if debugger_manager.application_current_thread_id /= tid then
 				debugger_manager.change_current_thread_id (tid)
@@ -462,7 +461,7 @@ feature {NONE} -- Grid Implementation
 				if l_row /= Void then
 					level := level_from_row (l_row)
 					if level > 0 then
-						elem ?= Debugger_manager.application.status.current_call_stack.i_th (level)
+						elem ?= Debugger_manager.application_status.current_call_stack.i_th (level)
 						if
 							elem /= Void and then
 							elem.dynamic_class /= Void and then
@@ -523,7 +522,7 @@ feature {NONE} -- Implementation
 			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
 			request_clean_stack_grid
 			if Debugger_manager.application_is_executing then
-				l_status := Debugger_manager.application.status
+				l_status := Debugger_manager.application_status
 				if dbg_was_stopped then
 					l_status.update_on_stopped_state
 				end
@@ -586,7 +585,7 @@ feature {NONE} -- Implementation
 				exception.remove_tooltip
 			else -- Application is stopped.
 				create m.make (100)
-				inspect Debugger_manager.application.status.reason
+				inspect Debugger_manager.application_status.reason
 				when Pg_step then
 					stop_cause.set_text (Interface_names.l_Stepped)
 					m.append (Interface_names.l_Stepped)
@@ -646,11 +645,13 @@ feature {NONE} -- Implementation
 
 	refresh_threads_info is
 			-- Refresh thread info according to debugger data
+		require
+			application_is_executing: debugger_manager.application_is_executing
 		local
 			ctid: INTEGER
 			s: APPLICATION_STATUS
 		do
-			s := Debugger_manager.application.status
+			s := Debugger_manager.application_status
 			if s.all_thread_ids_count > 1 then
 				ctid := s.current_thread_id
 				thread_id.set_text ("0x" + ctid.to_hex_string)
@@ -704,7 +705,7 @@ feature {NONE} -- Implementation
 		local
 			l_status: APPLICATION_STATUS
 		do
-			l_status := Debugger_manager.application.status
+			l_status := Debugger_manager.application_status
 			if l_status /= Void then
 				if l_status.exception_occurred then
 					Result := l_status.exception_message
@@ -802,7 +803,8 @@ feature {NONE} -- Implementation
 				a_row.set_data (-1) -- This is not a valid Eiffel call stack element.
 			end
 
-			app_exec := Debugger_manager.Application
+			check debugger_manager.application_is_executing end
+			app_exec := Debugger_manager.application
 				--| Tooltip addition
 			l_nb_stack := app_exec.status.current_call_stack.count
 			l_tooltip.prepend_string ((elem.level_in_stack).out + "/" + l_nb_stack.out + ": ")
@@ -1004,7 +1006,7 @@ feature {NONE} -- Implementation
 					fn.create_read_write
 				end
 					--| We generate the call stack.
-				Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.Application.status.current_call_stack, fn)
+				Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, fn)
 
 					--| We put it in the file.
 				if not fn.is_closed then
@@ -1031,7 +1033,7 @@ feature {NONE} -- Implementation
 			if not retried then
 					--| We generate the call stack.
 				create l_output.make;
-				Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.Application.status.current_call_stack, l_output)
+				Eb_debugger_manager.text_formatter_visitor.append_stack (Debugger_manager.application_status.current_call_stack, l_output)
 				ev_application.clipboard.set_text (l_output.stored_output)
 				l_output.reset_output
 			end
@@ -1061,7 +1063,7 @@ feature {NONE} -- Implementation
 			l_item_text, s: STRING
 			l_status: APPLICATION_STATUS
 		do
-			l_status := Debugger_manager.Application.status
+			l_status := Debugger_manager.application_status
 			if l_status /= Void and then l_status.is_stopped then
 				arr := l_status.all_thread_ids
 				if arr /= Void and then not arr.is_empty then

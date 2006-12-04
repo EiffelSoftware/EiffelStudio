@@ -88,12 +88,15 @@ feature {NONE} -- real_update
 		end
 
 	real_update_allowed (dbg_was_stopped: BOOLEAN): BOOLEAN is
+		local
+			app_impl: APPLICATION_EXECUTION_DOTNET
 		do
 			Result := not is_real_update_on_idle_processing
-				and (
-					not debugger_manager.application_is_dotnet
-					or else not debugger_manager.application.imp_dotnet.callback_notification_processing
-					)
+			if Result and Debugger_manager.is_dotnet_project then
+				app_impl ?= Debugger_manager.application
+				check app_impl /= Void end
+				Result := not app_impl.callback_notification_processing
+			end
 		end
 
 	real_update (arg_is_stopped: BOOLEAN) is

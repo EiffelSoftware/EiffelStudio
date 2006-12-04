@@ -643,10 +643,12 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Keep object
 		end
 
 	keep_object_in_debugger_for_gui_need (add: STRING) is
+		require
+			application_is_executing: debugger_manager.application_is_executing
 		do
 			if not kept_object_references.has (add) then
 				Kept_object_references.extend (add)
-				Debugger_manager.application.status.keep_object (add)
+				Debugger_manager.application_status.keep_object (add)
 			end
 		end
 

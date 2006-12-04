@@ -10,9 +10,9 @@ class
 
 inherit
 	DEBUGGER_MANAGER_IMP
-	
+
 create {EB_DEBUGGER_MANAGER}
-	default_create
+	make
 
 feature {EB_DEBUGGER_MANAGER} -- Access
 

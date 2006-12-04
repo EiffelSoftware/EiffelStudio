@@ -8,8 +8,11 @@ indexing
 class
 	DEBUGGER_MANAGER_IMP
 
+inherit
+	DEBUGGER_MANAGER_I
+
 create {DEBUGGER_MANAGER}
-	default_create
+	make
 
 feature {DEBUGGER_MANAGER} -- Access
 

@@ -49,9 +49,7 @@ inherit
 			default_create, is_equal, copy
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
+	SHARED_DEBUGGER_MANAGER
 		undefine
 			default_create, is_equal, copy
 		end
@@ -1195,7 +1193,7 @@ feature {NONE} -- Environment implementation
 		do
 			Result := internal_sorted_environment_variables
 			if Result = Void then
-				Result := application.sorted_keys_from_environment_variables (application.debugger_manager.environment_variables_table)
+				Result := debugger_manager.sorted_comparable_string32_keys_from (Debugger_manager.environment_variables_table)
 				internal_sorted_environment_variables := Result
 			end
 		end

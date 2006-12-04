@@ -216,8 +216,7 @@ feature -- Status setting
 					current_dump_value := l_dv.dump_value
 				end
 			end
-
-			Debugger_manager.Application.status.keep_object (st.object_address)
+			Debugger_manager.application_status.keep_object (st.object_address)
 			retrieve_dump_value
 			refresh
 		end
@@ -226,9 +225,10 @@ feature -- Status setting
 			-- Retrieve `current_dump_value' from `current_object'.
 		require
 			has_current_object: has_object
+			application_is_executing: debugger_manager.application_is_executing
 		do
 			if current_dump_value = Void then
-				current_dump_value := Debugger_manager.Application.dump_value_at_address_with_class (current_object.object_address, current_object.dynamic_class)
+				current_dump_value := Debugger_manager.application.dump_value_at_address_with_class (current_object.object_address, current_object.dynamic_class)
 			end
 		end
 

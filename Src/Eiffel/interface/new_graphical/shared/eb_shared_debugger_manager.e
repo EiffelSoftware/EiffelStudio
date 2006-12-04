@@ -16,10 +16,10 @@ feature -- Access
 
 	eb_debugger_manager: EB_DEBUGGER_MANAGER is
 			-- Manager in charge of debugging operations.
-		once
+		do
 			Result ?= debugger_manager
 		ensure
-			debugger_manager_not_void: Result /= Void
+			debugger_manager_not_void: debugger_manager /= Void implies Result /= Void
 		end
 
 indexing

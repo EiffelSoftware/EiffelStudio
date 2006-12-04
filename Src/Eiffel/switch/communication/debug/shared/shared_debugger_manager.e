@@ -1,32 +1,46 @@
 indexing
 	description: "Objects that ..."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	EB_DEBUGGER_OBSERVER
+class
+	SHARED_DEBUGGER_MANAGER
 
-feature {EB_DEBUGGER_MANAGER} -- Event handling
+feature -- Access
 
-	on_application_launched is
-			-- The debugged application has just been launched.
+	Debugger_manager: DEBUGGER_MANAGER is
+			-- Manager in charge of debugging operations.
 		do
-			
+			Result := Debugger_manager_cell.item
+			if Result = Void then
+				create {EB_DEBUGGER_MANAGER} Result.make
+				set_debugger_manager (Result)
+			end
+		ensure
+			debugger_manager_not_void: Result /= Void
 		end
 
-	on_application_stopped is
-			-- The debugged application has just stopped (paused).
+	set_debugger_manager (v: like debugger_manager) is
 		do
-			
+			Debugger_manager_cell.replace (v)
+		ensure
+			Debugger_manager_is_set: Debugger_manager = v
 		end
 
-	on_application_killed is
-			-- The debugged application has just died (exited).
-		do
-			
+feature {NONE} -- Helper
+
+--	application: APPLICATION_EXECUTION is
+--		do
+--			Result := Debugger_manager.application
+--		end
+
+feature {NONE} -- Cell
+
+	Debugger_manager_cell: CELL [DEBUGGER_MANAGER] is
+			-- Manager in charge of debugging operations.
+		once
+			create Result.put (Void)
 		end
 
 indexing
@@ -61,4 +75,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DEBUGGER_OBSERVER
+end

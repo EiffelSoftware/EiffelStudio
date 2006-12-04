@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 		require
-			application_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped
+			application_stopped: Debugger_manager.safe_application_is_stopped
 			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 		do
 			stick_with_current_object := True
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
 		require
-			application_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped
+			application_stopped: Debugger_manager.safe_application_is_stopped
 			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
@@ -114,7 +114,7 @@ feature {NONE} -- Initialization
 
 	make_with_expression_on_object	(oa: STRING; a_exp: STRING) is
 		require
-			application_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped
+			application_stopped: Debugger_manager.safe_application_is_stopped
 			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 			valid_expression: a_exp /= Void and then not a_exp.is_empty
 		do
@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 			-- `oa' is the address of the object.
 			-- `on' is a name for this object
 		require
-			application_stopped: Debugger_manager.application_is_executing and then Debugger_manager.application_is_stopped
+			application_stopped: Debugger_manager.safe_application_is_stopped
 			valid_address: oa /= Void and then Debugger_manager.application.is_valid_object_address (oa)
 			valid_object_name: on /= Void and then not on.is_empty
 		do
@@ -219,10 +219,7 @@ feature {NONE} -- Graphical initialization and changes
 			object_name_field.change_actions.extend (agent on_object_name_changed)
 			expression_field.change_actions.extend (agent on_expression_changed)
 			expression_field.focus_in_actions.extend (agent on_expression_focus)
-			if
-				not Debugger_manager.application_is_executing
-				or else not Debugger_manager.application_is_stopped
-			then
+			if not debugger_manager.safe_application_is_stopped then
 				on_object_radio.disable_sensitive
 				as_object_radio.disable_sensitive
 				address_field.disable_sensitive
@@ -523,7 +520,6 @@ feature {NONE} -- Event handling
 			wd: EV_WARNING_DIALOG
 			oe: STRING_32
 			do_not_close_dialog: BOOLEAN
-			app_exec: APPLICATION_EXECUTION
 		do
 			if modified_expression = Void then
 				if class_radio.is_selected then
@@ -569,10 +565,10 @@ feature {NONE} -- Event handling
 						t := t.substring (3, t.count)
 					end
 					t.prepend ("0x")
-					app_exec := Debugger_manager.application
+
 					if
-						app_exec.is_running and then app_exec.is_stopped
-						and then app_exec.is_valid_object_address (t)
+						Debugger_manager.safe_application_is_stopped
+						and then Debugger_manager.application.is_valid_object_address (t)
 					then
 						o := debugged_object_manager.debugged_object (t, 0, 0)
 						if as_object_radio.is_selected then
@@ -586,7 +582,8 @@ feature {NONE} -- Event handling
 							create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 							wd.show_modal_to_window (dialog)
 						else
-							app_exec.status.keep_object (t)
+							check debugger_manager.application_status /= Void end
+							Debugger_manager.application_status.keep_object (t)
 						end
 					else
 						set_focus (address_field)

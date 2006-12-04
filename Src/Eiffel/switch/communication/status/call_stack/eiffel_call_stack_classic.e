@@ -34,12 +34,8 @@ inherit
 			{NONE} all
 		undefine
 			is_equal, copy
-		end;
-	SHARED_APPLICATION_EXECUTION
-		undefine
-			is_equal, copy
 		end
-
+		
 create {APPLICATION_STATUS_CLASSIC}
 	make, dummy_make
 

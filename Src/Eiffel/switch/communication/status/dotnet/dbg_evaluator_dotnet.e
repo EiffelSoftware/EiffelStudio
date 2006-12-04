@@ -36,9 +36,12 @@ feature -- Concrete initialization
 
 	init is
 			-- Retrieve new value for evaluation mecanism.
+		local
+			app: APPLICATION_EXECUTION_DOTNET
 		do
 			Precursor
-			eifnet_debugger := Application.imp_dotnet.eifnet_debugger
+			app ?= debugger_manager.application
+			eifnet_debugger := app.eifnet_debugger
 			eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
 		end
 

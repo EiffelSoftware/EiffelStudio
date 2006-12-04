@@ -178,7 +178,7 @@ feature -- Access queries
 			-- Options for classes.
 		deferred
 		ensure
-			Result_not_void: Result /= Void
+			Result_not_void: Result /= Void implies not Result.is_empty
 		end
 
 	get_class_options (a_class: STRING): CONF_OPTION is
@@ -186,6 +186,7 @@ feature -- Access queries
 		local
 			l_name: STRING
 			l_map: like mapping
+			l_class_options: like class_options
 		do
 			l_map := mapping
 			if l_map.has_key (a_class) then
@@ -193,13 +194,19 @@ feature -- Access queries
 			else
 				l_name := a_class
 			end
-			Result := class_options.item (l_name)
-			if Result /= Void then
-				Result := Result.twin
-				Result.merge (options)
+			l_class_options := class_options
+			if l_class_options /= Void then
+				Result := class_options.item (l_name)
+				if Result /= Void then
+					Result := Result.twin
+					Result.merge (options)
+				else
+					Result := options.twin
+				end
 			else
 				Result := options.twin
 			end
+
 		ensure
 			Result_not_void: Result /= Void
 		end

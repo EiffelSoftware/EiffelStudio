@@ -1125,7 +1125,9 @@ end;
 			assert_prop_list := Void;
 
 			clear_all
-			extend_tbl_make (default_size)
+			if capacity > 200 then
+				extend_tbl_make (default_size)
+			end
 			create inherited_features.make (default_size)
 		end;
 

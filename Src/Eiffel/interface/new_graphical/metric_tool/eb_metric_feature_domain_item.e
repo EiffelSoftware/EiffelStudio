@@ -10,70 +10,19 @@ class
 	EB_METRIC_FEATURE_DOMAIN_ITEM
 
 inherit
-	EB_METRIC_DOMAIN_ITEM
-		redefine
-			is_feature_item,
-			is_valid,
-			string_representation
-		end
+	EB_FEATURE_DOMAIN_ITEM
 
-	QL_SHARED_SCOPES
+	EB_METRIC_DOMAIN_ITEM
 		undefine
-			is_equal
+			string_representation,
+			is_valid,
+			is_feature_item
 		end
 
 create
 	make
 
-feature -- Status report
-
-	is_feature_item: BOOLEAN is True
-			-- Is current a feature item?
-
-	is_valid: BOOLEAN is
-			-- Does current represent a valid domain item?
-		do
-			Result := feature_of_id (id) /= Void
-		end
-
 feature -- Access
-
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
-			-- New query lanaguage domain representing current item
-		do
-			Result := ql_feature.wrapped_domain
-		end
-
-	string_representation: STRING is
-			-- Text of current item
-		local
-			l_feature_name: STRING
-		do
-			if feature_of_id (id) /= Void then
-				Result := ql_feature.name
-			else
-				l_feature_name := last_feature_name
-				if l_feature_name /= Void and then not l_feature_name.is_empty then
-					Result := l_feature_name.twin
-				else
-					Result := Precursor
-				end
-			end
-		end
-
-	ql_feature: QL_FEATURE is
-			-- QL_FEATURE object representing current item
-		require
-			valid: is_valid
-		local
-			l_e_feature: E_FEATURE
-		do
-			l_e_feature := feature_of_id (id)
-			check l_e_feature /= Void end
-			Result := query_feature_item_from_e_feature (l_e_feature)
-		ensure
-			result_attached: Result /= Void
-		end
 
 	class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM is
 			-- Class domain item for associated class of current feature
@@ -82,25 +31,6 @@ feature -- Access
 		do
 			create Result.make (id_of_class (ql_feature.class_c.lace_class.config_class))
 		ensure
-			result_attached: Result /= Void
-		end
-
-	query_language_item: QL_ITEM is
-			-- Query language item representation of current domain item
-		do
-			Result := ql_feature
-		end
-
-	group: QL_GROUP is
-			-- Group to which current domain item belongs
-			-- Return the group where current feature's associated is located.
-		do
-			check
-				query_language_item.parent /= Void
-				query_language_item.parent.parent /= Void
-			end
-			Result ?= query_language_item.parent.parent
-		ensure then
 			result_attached: Result /= Void
 		end
 

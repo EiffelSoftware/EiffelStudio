@@ -318,14 +318,14 @@ feature -- Actions
 			if
 				l_stone /= Void and then
 				not l_domain.has_delayed_domain_item and then
-				not domain_has (l_domain, domain_item_from_stone (l_stone))
+				not domain_has (l_domain, metric_domain_item_from_stone (l_stone))
 			then
 				l_classi_stone ?= a_any
 				l_cluster_stone ?= a_any
 				l_feature_stone ?= a_any
 				l_target_stone ?= a_any
 				if l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void then
-					insert_domain_item (domain_item_from_stone (l_stone))
+					insert_domain_item (metric_domain_item_from_stone (l_stone))
 					on_domain_change
 				end
 			end

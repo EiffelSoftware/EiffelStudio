@@ -384,7 +384,7 @@ feature -- Actions
 					if l_target_stone /= Void or l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void then
 						l_domain_grid_item ?= a_item
 						if l_domain_grid_item /= Void then
-							l_domain_item := domain_item_from_stone (l_stone)
+							l_domain_item := metric_domain_item_from_stone (l_stone)
 							l_domain := l_domain_grid_item.domain
 							l_domain.compare_objects
 							if not l_domain.has (l_domain_item) then
@@ -613,7 +613,7 @@ feature{NONE} -- Implementation
 						if l_target_stone /= Void or l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void then
 							l_stone ?= a_pebble
 							l_domain := l_domain_item.domain
-							Result := not l_domain.has (domain_item_from_stone (l_stone)) and then not l_domain.has_delayed_domain_item
+							Result := not l_domain.has (metric_domain_item_from_stone (l_stone)) and then not l_domain.has_delayed_domain_item
 						end
 					end
 				end

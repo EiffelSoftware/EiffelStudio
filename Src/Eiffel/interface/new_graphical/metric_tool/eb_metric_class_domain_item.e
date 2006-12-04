@@ -10,77 +10,17 @@ class
 	EB_METRIC_CLASS_DOMAIN_ITEM
 
 inherit
+	EB_CLASS_DOMAIN_ITEM
+
 	EB_METRIC_DOMAIN_ITEM
-		redefine
-			is_class_item,
+		undefine
+			string_representation,
 			is_valid,
-			string_representation
+			is_class_item
 		end
 
 create
 	make
-
-feature -- Status report
-
-	is_class_item: BOOLEAN is True
-			-- Is current a class item?
-
-	is_valid: BOOLEAN is
-			-- Does current represent a valid domain item?
-		do
-			Result := class_of_id (id) /= Void
-		end
-
-feature -- Access
-
-	domain (a_scope: QL_SCOPE): QL_DOMAIN is
-			-- New query lanaguage domain representing current item
-		do
-			Result := ql_class.wrapped_domain
-		end
-
-	string_representation: STRING is
-			-- Text of current item
-		local
-			l_class_name: STRING
-		do
-			if class_of_id (id) /= Void then
-				Result := ql_class.name
-			else
-				l_class_name := last_class_name
-				if l_class_name /= Void and then not l_class_name.is_empty then
-					Result := l_class_name.twin
-				else
-					Result := Precursor
-				end
-			end
-		end
-
-	ql_class: QL_CLASS is
-			-- QL_CLASS object representing current item
-		require
-			valid: is_valid
-		local
-			l_conf_class: CONF_CLASS
-		do
-			l_conf_class := class_of_id (id)
-			Result := query_class_item_from_conf_class (l_conf_class)
-		end
-
-	query_language_item: QL_ITEM is
-			-- Query language item representation of current domain item
-		do
-			Result := ql_class
-		end
-
-	group: QL_GROUP is
-			-- Group to which current domain item belongs
-			-- Return the group where current class is located.
-		do
-			Result ?= query_language_item.parent
-		ensure then
-			result_attached: Result /= Void
-		end
 
 feature -- Process
 

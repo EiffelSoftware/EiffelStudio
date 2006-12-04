@@ -24,6 +24,8 @@ inherit
 
 	EB_SHARED_ID_SOLUTION
 
+	EB_DOMAIN_ITEM_UTILITY
+
 feature -- Metric menu
 
 	metric_menu: EV_MENU is
@@ -370,57 +372,25 @@ feature -- Feedback dialog
 
 feature -- Domain item
 
-	domain_item_from_stone (a_stone: STONE): EB_METRIC_DOMAIN_ITEM is
-			-- Domain item from `a_stone'
+	metric_domain_item_from_stone (a_stone: STONE): EB_METRIC_DOMAIN_ITEM is
+			-- Metric domain item from `a_stone'
 		require
 			a_stone_attached: a_stone /= Void
 		local
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_feature_stone: FEATURE_STONE
-			l_target_stone: TARGET_STONE
-			l_folder: EB_FOLDER
-			done: BOOLEAN
-			l_library: CONF_LIBRARY
-			l_target: CONF_TARGET
+			l_domain_item: EB_DOMAIN_ITEM
 		do
-			l_feature_stone ?= a_stone
-			if l_feature_stone/= Void then
-				create {EB_METRIC_FEATURE_DOMAIN_ITEM} Result.make (id_of_feature (l_feature_stone.e_feature))
-				done := True
-			end
-			if not done then
-				l_classi_stone ?= a_stone
-				if l_classi_stone /= Void then
-					create {EB_METRIC_CLASS_DOMAIN_ITEM} Result.make (id_of_class (l_classi_stone.class_i.config_class))
-					done := True
-				end
-			end
-			if not done then
-				l_cluster_stone ?= a_stone
-				if l_cluster_stone /= Void then
-					if not l_cluster_stone.path.is_empty then
-							-- For a folder
-						create l_folder.make_with_name (l_cluster_stone.cluster_i, l_cluster_stone.path, l_cluster_stone.folder_name)
-						create {EB_METRIC_FOLDER_DOMAIN_ITEM} Result.make (id_of_folder (l_folder))
-					else
-							-- For a group
-						create {EB_METRIC_GROUP_DOMAIN_ITEM} Result.make (id_of_group (l_cluster_stone.group))
-						if l_cluster_stone.group.is_library then
-							l_library ?= l_cluster_stone.group
-							l_target := target_of_id (Result.id)
-							if l_target.system.uuid.is_equal (universe.target.system.uuid) then
-								Result.set_library_target_uuid (l_library.library_target.system.uuid.out)
-							end
-						end
-					end
-				end
-			end
-			if not done then
-				l_target_stone ?= a_stone
-				if l_target_stone /= Void then
-					create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (id_of_target (l_target_stone.target))
-				end
+			l_domain_item := domain_item_from_stone (a_stone)
+			check l_domain_item /= Void end
+			if l_domain_item.is_feature_item then
+				create {EB_METRIC_FEATURE_DOMAIN_ITEM} Result.make (l_domain_item.id)
+			elseif l_domain_item.is_class_item then
+				create {EB_METRIC_CLASS_DOMAIN_ITEM} Result.make (l_domain_item.id)
+			elseif l_domain_item.is_folder_item then
+				create {EB_METRIC_FOLDER_DOMAIN_ITEM} Result.make (l_domain_item.id)
+			elseif l_domain_item.is_group_item then
+				create {EB_METRIC_GROUP_DOMAIN_ITEM} Result.make (l_domain_item.id)
+			elseif l_domain_item.is_target_item then
+				create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
 			end
 		ensure
 			result_attached: Result /= Void

@@ -107,15 +107,6 @@ feature -- Status report
 	is_up_to_date: BOOLEAN
 			-- Is status of current row up-to_date?
 
-	should_feature_tooltip_be_vetoed: BOOLEAN is
-			-- Should feature tooltip display be vetoed?
-		do
-			Result := not browser.should_tooltip_be_displayed
-			if not Result then
-				Result := not feature_grid_item.general_tooltip.has_tooltip_text or else not is_expanded
-			end
-		end
-
 feature -- Access
 
 	feature_item: QL_FEATURE
@@ -303,7 +294,7 @@ feature{NONE} -- Item setup
 				if is_parent then
 					setup_class_item_with_short_signature (
 						class_item_internal, written_class, short_generic_class_tokens, class_image,
-						agent: BOOLEAN do Result := not browser.should_tooltip_be_displayed end,
+						agent should_class_tooltip_be_displayed (written_class),
 						agent class_tooltip_tokens)
 				else
 					setup_class_item_with_blank (class_item_internal)
@@ -314,12 +305,21 @@ feature{NONE} -- Item setup
 				else
 					setup_feature_signature_item (
 						feature_item_internal, feature_item.e_feature, feature_signature_tokens, feature_image,
-						agent should_feature_tooltip_be_vetoed, agent feature_comment)
+						agent should_feature_tooltip_be_displayed, agent feature_comment)
 				end
 				is_up_to_date := True
 			end
 		ensure
 			status_up_to_date: is_up_to_date
+		end
+
+	should_feature_tooltip_be_displayed: BOOLEAN is
+			-- Should feature tooltip display be displayed?
+		do
+			Result := browser.should_tooltip_be_displayed
+			if Result then
+				Result := feature_grid_item.general_tooltip.has_tooltip_text or else not is_expanded
+			end
 		end
 
 invariant

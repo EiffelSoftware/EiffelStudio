@@ -103,7 +103,7 @@ feature -- Access
 					if row_type = referencer_class_row_type then
 						l_class ?= item
 						check l_class /= Void end
-						l_tooltip := new_general_tooltip (grid_item_internal, agent: BOOLEAN do Result := not browser.should_tooltip_be_displayed end)
+						l_tooltip := new_general_tooltip (grid_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
 						if l_class.conf_class.group.is_used_in_library then
 						else
 						end
@@ -175,7 +175,7 @@ feature -- Access
 					feature_list_item_internal.set_text_with_tokens (l_feature_name_style.text)
 				end
 				feature_list_item_internal.set_image (feature_list_item_internal.text)
-				l_tooltip := new_general_tooltip (feature_list_item_internal, agent: BOOLEAN do Result := not browser.should_tooltip_be_displayed end)
+				l_tooltip := new_general_tooltip (feature_list_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
 				setup_general_tooltip (agent tooltip_text_function, l_tooltip)
 				feature_list_item_internal.set_general_tooltip (l_tooltip)
 			end

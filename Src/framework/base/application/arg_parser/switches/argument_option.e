@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			a_switch_attached: a_switch /= Void
 		do
 			make (a_name, a_switch)
-			value := a_value
+			set_value (a_value)
 		ensure
 			name_set: name = a_name
 			value_set: value = a_value
@@ -71,6 +71,8 @@ feature -- Status Report
 			-- Indicicate if option has an associated value.
 		do
 			Result := value /= Void or else not value.is_empty
+		ensure
+			result_base_true: Result implies (value /= Void and then not value.is_empty)
 		end
 
 invariant

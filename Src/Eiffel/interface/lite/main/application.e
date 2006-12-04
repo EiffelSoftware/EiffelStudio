@@ -24,6 +24,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_ERROR_HANDLER
+		export
+			{NONE} all
+		end
+
 	EIFFEL_LAYOUT
 		export
 			{NONE} all
@@ -84,6 +89,8 @@ feature {NONE} -- Initialization
 			l_resources: TTY_RESOURCES
 			l_window: OUTPUT_WINDOW_STREAM
 			l_degree_out: ECL_DEGREE_OUTPUT
+			l_system: CONF_SYSTEM
+			l_target: CONF_TARGET
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -112,8 +119,26 @@ feature {NONE} -- Initialization
 				l_loader.open_project_file (a_parser.configuration_file, a_parser.target, a_parser.project_location, a_parser.clean_project)
 
 				if not l_loader.has_error then
-					l_command.set_is_finish_freezing_called (a_parser.compile_c_code)
-					l_command.execute
+						-- Set configuration settings
+					l_system := l_loader.eiffel_project.lace.conf_system
+					if l_system /= Void then
+						l_target := l_system.application_target
+						if l_target /= Void then
+							l_target.settings.merge (a_parser.configuration_settings)
+
+								-- Perform exection
+							l_command.set_is_finish_freezing_called (a_parser.compile_c_code)
+							l_command.execute
+						end
+					end
+				end
+			else
+				if l_displayer /= Void then
+					if not error_handler.warning_list.is_empty then
+						l_displayer.trace_warnings (error_handler)
+					end
+					l_displayer.trace_errors (error_handler)
+					l_displayer.force_display
 				end
 			end
 		rescue

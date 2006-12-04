@@ -1,21 +1,31 @@
 indexing
 	description: "Objects that ..."
-	author: ""
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	SHARED_DEBUGGER_MANAGER
+deferred class
+	DEBUGGER_MANAGER_I
 
-feature -- Access
+feature {NONE} -- Initialization
 
-	Debugger_manager: DEBUGGER_MANAGER is
-			-- Manager in charge of debugging operations.
-		once
-			create {EB_DEBUGGER_MANAGER} Result.make
-		ensure
-			debugger_manager_not_void: Result /= Void
+	make (dm: DEBUGGER_MANAGER) is
+			-- Initialize `Current'.
+		do
+			interface := dm
 		end
+
+feature {DEBUGGER_MANAGER} -- Access
+
+	load_system_dependent_debug_info is
+		do
+		end
+
+feature {NONE} -- Implementation
+
+	interface: DEBUGGER_MANAGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

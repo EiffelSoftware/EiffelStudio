@@ -50,18 +50,23 @@ feature -- Execution
 		local
 			app_exec: APPLICATION_EXECUTION
 		do
-			app_exec := Debugger_manager.Application
-			if not app_exec.is_running or else not app_exec.is_stopped then
-				disable_sensitive
-			else
-				enable_sensitive
-			end
-			if assertion_checking_changed then
-				assertion_checking_changed := False
-				app_exec.restore_assertion_check
-			else
-				assertion_checking_changed := True
-				app_exec.disable_assertion_check
+			if debugger_manager.application_initialized then
+				app_exec := Debugger_manager.Application
+				if
+					not app_exec.is_running
+					or else not app_exec.is_stopped
+				then
+					disable_sensitive
+				else
+					enable_sensitive
+				end
+				if assertion_checking_changed then
+					assertion_checking_changed := False
+					app_exec.restore_assertion_check
+				else
+					assertion_checking_changed := True
+					app_exec.disable_assertion_check
+				end
 			end
 			update_graphical
 		end

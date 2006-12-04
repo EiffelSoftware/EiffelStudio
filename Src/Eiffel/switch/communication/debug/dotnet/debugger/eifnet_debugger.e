@@ -60,6 +60,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEBUGGER_MANAGER
+
 	DEBUG_OUTPUT_SYSTEM_I
 		export
 			{NONE} all
@@ -105,8 +107,9 @@ feature -- Initialization
 				print ("call " + generator + ".init%N")
 			end
 
-			create edv_external_formatter
-			edv_external_formatter.set_debugger_info (Eifnet_debugger_info)
+			if edv_external_formatter = Void then
+				create edv_external_formatter.make (Eifnet_debugger_info)
+			end
 		end
 
 	create_icor_debug is
@@ -237,6 +240,15 @@ feature -- Initialization
 			-- Does Call back "ExitProcess" occurred ?
 			--| This could be during evaluation ...
 
+feature -- Helpers
+
+	application_status: APPLICATION_STATUS is
+		require
+			application_is_executing: debugger_manager.application_is_executing
+		do
+			Result := debugger_manager.application_status
+		end
+
 feature -- Termination monitoring ...
 
 	timer_monitor_process_termination_on_exit: EV_TIMEOUT
@@ -270,7 +282,7 @@ feature -- Termination monitoring ...
 			then
 				destroy_monitoring_of_process_termination_on_exit
 				--FIXME JFIAT:  try to reuse timer object !
-				Application.process_termination
+				debugger_manager.application.process_termination
 
 				--| else This means, Process_termination had already been called (from kill)
 			end
@@ -352,7 +364,7 @@ feature {NONE} -- Logging
 	debugger_message (m: STRING) is
 			-- Put message on context tool's output
 		do
-			Application.debugger_manager.debugger_message (m)
+			Debugger_manager.debugger_message (m)
 --			if context_output_tool /= Void then
 --				create st.make
 --				st.add_string (m)
@@ -392,6 +404,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			not estudio_callback_event_processing
 		local
 			may_stop_on_callback: BOOLEAN
+			app_impl: APPLICATION_EXECUTION_DOTNET
 			s: APPLICATION_STATUS
 			execution_stopped: BOOLEAN
 		do
@@ -429,7 +442,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				end
 
 				if execution_stopped then
-					s := Application.status
+					s := application_status
 					s.set_is_stopped (execution_stopped)
 					if managed_callback_is_exit_process (cb_id) then
 						debug ("debugger_trace_callback")
@@ -449,7 +462,9 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					end
 				end
 				if not next_estudio_notification_disabled then
-					Application.imp_dotnet.estudio_callback_notify
+					app_impl ?= debugger_manager.application
+					check app_impl /= Void end
+					app_impl.estudio_callback_notify
 				end
 			end
 
@@ -1021,7 +1036,7 @@ feature {NONE} -- Callback actions
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do
 			if
-				application.exceptions_handler.exception_handling_enabled
+				Debugger_manager.exceptions_handler.exception_handling_enabled
 			then
 				l_icd_exception := new_active_exception_value_from_thread
 --| Check if we should not use directly the `exception_class_name' feature
@@ -1035,7 +1050,7 @@ feature {NONE} -- Callback actions
 					l_icd_exception.clean_on_dispose
 				end
 				if cln /= Void then
-					Result := application.exceptions_handler.exception_catched_by_name (cln)
+					Result := Debugger_manager.exceptions_handler.exception_catched_by_name (cln)
 				else
 					Result := True
 				end
@@ -1223,7 +1238,7 @@ feature {NONE} -- Stepping Implementation
 			edti: EIFNET_DEBUGGER_THREAD_INFO
 			thid: INTEGER
 		do
-			thid := application.status.current_thread_id
+			thid := application_status.current_thread_id
 			if thid = 0 then
 				thid := eifnet_debugger_info.last_icd_thread_id
 			end
@@ -1308,13 +1323,13 @@ feature -- Stepping Access
 			thid: INTEGER
 			tids: ARRAY [INTEGER]
 			i: INTEGER
+			st: APPLICATION_STATUS
 		do
 			debug ("debugger_trace_operation")
 				print ("[enter] EIFNET_DEBUGGER.do_global_step_into%N")
 			end
-
-			thid := application.status.current_thread_id
-
+			st := application_status
+			thid := st.current_thread_id
 			tids := eifnet_debugger_info.loaded_managed_threads.current_keys
 
 			from
@@ -1322,11 +1337,11 @@ feature -- Stepping Access
 			until
 				i > tids.upper
 			loop
-				application.status.set_current_thread_id (tids @ i)
+				st.set_current_thread_id (tids @ i)
 				do_step (cst_control_step_into, False)
 				i := i + 1
 			end
-			application.status.set_current_thread_id (thid)
+			st.set_current_thread_id (thid)
 			do_continue
 		end
 
@@ -1406,7 +1421,7 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 		local
 			l_cse: CALL_STACK_ELEMENT_DOTNET
 		do
-			l_cse ?= application.status.current_call_stack_element
+			l_cse ?= application_status.current_call_stack_element
 			if l_cse /= Void then
 				Result := l_cse.icd_frame
 			else
@@ -1877,7 +1892,7 @@ feature -- Specific function evaluation
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
 		do
 			check
-				running_and_stopped: Application.is_running and Application.is_stopped
+				running_and_stopped: debugger_manager.safe_application_is_stopped
 			end
 			debug ("debugger_trace_eval")
 				print ("<start> " + generator + ".generating_type_value_from_object_value %N")
@@ -1948,7 +1963,7 @@ feature -- Specific function evaluation
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
 		do
 			check
-				running_and_stopped: Application.is_running and Application.is_stopped
+				running_and_stopped: debugger_manager.safe_application_is_stopped
 			end
 -- FIXME jfiat [2004/07/20] : Why do we set l_icd as a_icd ... this is not what we want, check it
 --			l_icd := a_icd

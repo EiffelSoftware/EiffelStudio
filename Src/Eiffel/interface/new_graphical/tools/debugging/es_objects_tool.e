@@ -22,8 +22,7 @@ inherit
 	EB_TOOL
 		redefine
 			menu_name,
-			pixmap,
-			make
+			pixmap
 		end
 
 	EB_RECYCLABLE
@@ -41,17 +40,7 @@ inherit
 			{NONE} all
 		end
 
-	EV_SHARED_APPLICATION
-		export
-			{NONE} all
-		end
-
 	EB_SHARED_PREFERENCES
-		export
-			{NONE} all
-		end
-
-	SHARED_APPLICATION_EXECUTION
 		export
 			{NONE} all
 		end
@@ -63,13 +52,16 @@ inherit
 		end
 
 create
-	make
+	make_with_debugger
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_TOOL_MANAGER) is
+	make_with_debugger (a_manager: EB_TOOL_MANAGER; a_debugger: like debugger_manager) is
 			-- Initialize `Current'.
+		require
+			a_debugger_not_void: a_debugger /= Void
 		do
+			set_debugger_manager (a_debugger)
 			min_slice_ref.set_item (preferences.debug_tool_data.min_slice)
 			max_slice_ref.set_item (preferences.debug_tool_data.max_slice)
 
@@ -85,7 +77,7 @@ feature {NONE} -- Initialization
 
 			create objects_grids_positions.make (Position_current, Position_objects)
 
-			Precursor {EB_TOOL} (a_manager)
+			make (a_manager)
 		end
 
 feature {NONE} -- Internal properties
@@ -516,6 +508,7 @@ feature {NONE} -- Notebook item's behavior
 		require
 			header_box /= Void
 		local
+			app: APPLICATION_EXECUTION
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			lab, flab, clab: EV_LABEL
 			l_fstone: FEATURE_STONE
@@ -530,10 +523,11 @@ feature {NONE} -- Notebook item's behavior
 			hbox.extend (sep)
 			hbox.disable_item_expand (sep)
 			if
-				Application.is_running
+				debugger_manager.application_is_executing
 			then
-				if Application.is_stopped and then dbg_stopped then
-					if not Application.current_call_stack_is_empty then
+				app := debugger_manager.application
+				if app.is_stopped and then dbg_stopped then
+					if not app.current_call_stack_is_empty then
 						ecse ?= current_stack_element
 						if ecse /= Void then
 							create lab.make_with_text ("{")
@@ -678,7 +672,7 @@ feature -- Change
 			l_status: APPLICATION_STATUS
 		do
 			cancel_process_real_update_on_idle
-			l_status := application.status
+			l_status := Debugger_manager.application_status
 			if l_status /= Void then
 				process_real_update_on_idle (l_status.is_stopped)
 			else
@@ -805,7 +799,7 @@ feature {NONE} -- grid Layout Implementation
 	keep_object_reference_fixed (addr: STRING) is
 		do
 			if debugger_manager.application_is_executing then
-				application.status.keep_object (addr)
+				debugger_manager.application_status.keep_object (addr)
 			end
 		end
 
@@ -916,7 +910,7 @@ feature {NONE} -- Implementation
 		local
 			l_status: APPLICATION_STATUS
 		do
-			l_status := application.status
+			l_status := debugger_manager.application_status
 			if l_status.current_call_stack /= Void then
 				Result := l_status.current_call_stack_element
 			end
@@ -929,6 +923,7 @@ feature {NONE} -- Implementation
 			-- Display current execution status.
 			-- dbg_was_stopped is ignore if Application/Debugger is not running
 		local
+			l_app: APPLICATION_EXECUTION
 			l_status: APPLICATION_STATUS
 			g: like objects_grid
 			cse: EIFFEL_CALL_STACK_ELEMENT
@@ -943,7 +938,10 @@ feature {NONE} -- Implementation
 				objects_grids.forth
 			end
 
-			l_status := application.status
+			if debugger_manager.application_is_executing then
+				l_app := debugger_manager.application
+				l_status := l_app.status
+			end
 			if l_status /= Void then
 				pretty_print_cmd.refresh
 				if l_status.is_stopped and dbg_was_stopped then
@@ -956,7 +954,7 @@ feature {NONE} -- Implementation
 							objects_grids.item_for_iteration.cancel_delayed_clean
 							objects_grids.forth
 						end
-						if not Application.current_call_stack_is_empty then
+						if not l_app.current_call_stack_is_empty then
 							cse ?= current_stack_element
 						end
 						from
@@ -1026,11 +1024,14 @@ feature {NONE} -- Current objects grid Implementation
 
 	build_current_object_row (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
 		require
+			application_is_executing: debugger_manager.application_is_executing
 			target_grid_not_void: a_target_grid /= Void
 			cse_not_void: cse /= Void
 		local
 			value: ABSTRACT_DEBUG_VALUE
 			item: ES_OBJECTS_GRID_LINE
+			dn_st: APPLICATION_STATUS_DOTNET
+			app: APPLICATION_EXECUTION
 		do
 			if current_object /= Void then
 				display_first 			 := current_object.display
@@ -1038,9 +1039,12 @@ feature {NONE} -- Current objects grid Implementation
 				display_first_onces		 := current_object.display_onces
 			end
 			current_object := Void
-			if Application.is_dotnet then
-				if not Application.current_call_stack_is_empty then
-					value := application.imp_dotnet.status.current_call_stack_element_dotnet.current_object
+			if debugger_manager.is_dotnet_project then
+				app := debugger_manager.application
+				if not app.current_call_stack_is_empty then
+					dn_st ?= app.status
+					check dn_st /= Void end
+					value := dn_st.current_call_stack_element_dotnet.current_object
 					if value /= Void then
 						create {ES_OBJECTS_GRID_VALUE_LINE} current_object.make_with_value (value, a_target_grid)
 					end
@@ -1059,7 +1063,7 @@ feature {NONE} -- Current objects grid Implementation
 					item.set_title (Interface_names.l_Current_object)
 				end
 				item.attach_to_row (a_target_grid.extended_new_row)
-				if application.is_running and then application.is_stopped then
+				if debugger_manager.safe_application_is_stopped then
 					current_object.compute_grid_display
 				end
 			end
@@ -1131,7 +1135,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 	add_debugged_object (a_stone: OBJECT_STONE) is
 			-- Add the object represented by `a_stone' to the managed objects.
 		require
-			application_is_running: Application.is_running
+			application_is_running: debugger_manager.application_is_executing
 		local
 			n_obj: ES_OBJECTS_GRID_LINE
 			conv_spec: SPECIAL_VALUE
@@ -1160,7 +1164,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			if not exists then
 				l_item := a_stone.ev_item
 				if l_item /= Void then
-					if application.is_dotnet then
+					if debugger_manager.is_dotnet_project then
 						abstract_value ?= grid_data_from_widget (l_item)
 							--| FIXME jfiat : check if it is safe to use a Value ?
 						if abstract_value /= Void then
@@ -1178,7 +1182,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				end
 
 				n_obj.set_title (a_stone.name + Left_address_delim + a_stone.object_address + Right_address_delim)
-				Application.status.keep_object (a_stone.object_address)
+				debugger_manager.application_status.keep_object (a_stone.object_address)
 				displayed_objects.extend (n_obj)
 				g.insert_new_row (g.row_count + 1)
 				n_obj.attach_to_row (g.row (g.row_count))
@@ -1365,7 +1369,7 @@ feature {NONE} -- Impl : Stack objects grid
 			dotnet_status: APPLICATION_STATUS_DOTNET
 			exc_dv: ABSTRACT_DEBUG_VALUE
 		do
-			appstat := application.status
+			appstat := debugger_manager.application_status
 			if appstat.exception_occurred then
 					--| Details
 				exception_row := a_target_grid.extended_new_row
@@ -1646,6 +1650,8 @@ feature {NONE} -- Constants
 	Right_address_delim: STRING is ">";
 
 invariant
+
+	debugger_manager_not_void: debugger_manager /= Void
 
 	objects_grids_positions_not_void: objects_grids_positions /= void
 	objects_grids_not_void: objects_grids /= Void

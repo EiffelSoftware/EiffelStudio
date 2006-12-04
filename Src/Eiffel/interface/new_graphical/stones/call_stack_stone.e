@@ -42,8 +42,6 @@ inherit
 			is_valid
 		end
 
-	SHARED_APPLICATION_EXECUTION
-
 create
 	make
 
@@ -59,14 +57,16 @@ feature {NONE} -- Initialization
 			f: E_FEATURE
 		do
 			level_number := level_num
-			curr_cs := Application.status.current_call_stack
-			if curr_cs /= Void then
-				elem ?= curr_cs.i_th (level_num)
-				if elem /= Void then
-					obj_make (elem.object_address, " ", elem.dynamic_class)
-					f := elem.routine
-					if f /= Void then
-						feature_make (f)
+			if debugger_manager.application_is_executing then
+				curr_cs := debugger_manager.application_status.current_call_stack
+				if curr_cs /= Void then
+					elem ?= curr_cs.i_th (level_num)
+					if elem /= Void then
+						obj_make (elem.object_address, " ", elem.dynamic_class)
+						f := elem.routine
+						if f /= Void then
+							feature_make (f)
+						end
 					end
 				end
 			end
@@ -117,9 +117,10 @@ feature -- Access
 			cs: CALL_STACK_ELEMENT
 		do
 			Result := fvalid and then Precursor {OBJECT_STONE}
-					and then Application.status.current_call_stack.count >= level_number
+					and then debugger_manager.application_is_executing
+					and then debugger_manager.application_status.current_call_stack.count >= level_number
 			if Result then
-				ecs := Application.status.current_call_stack
+				ecs := debugger_manager.application_status.current_call_stack
 				if ecs /= Void then
 					cs := ecs.i_th (level_number)
 				end

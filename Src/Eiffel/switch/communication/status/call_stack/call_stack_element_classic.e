@@ -53,7 +53,7 @@ inherit
 
 create {EIFFEL_CALL_STACK}
 	make
-create {STOPPED_HDLR,APPLICATION_EXECUTION_CLASSIC}
+create {STOPPED_HDLR, APPLICATION_EXECUTION_CLASSIC}
 	dummy_make
 
 feature {NONE} -- Initialization

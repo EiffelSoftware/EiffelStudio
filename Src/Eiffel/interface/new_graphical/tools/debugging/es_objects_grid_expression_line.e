@@ -30,7 +30,8 @@ inherit
 		end
 
 create
-	make_with_expression
+	make_with_expression,
+	make_with_readonly_expression
 
 feature {NONE} -- Initialization
 
@@ -55,6 +56,14 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
+		end
+
+	make_with_readonly_expression (exp: EB_EXPRESSION; g: like parent_grid) is
+		require
+			exp /= Void
+		do
+			is_readonly := True
+			make_with_expression (exp, g)
 		end
 
 feature -- Recycling
@@ -159,6 +168,8 @@ feature -- change properties
 
 feature -- Properties
 
+	is_readonly: BOOLEAN
+
 	expression: EB_EXPRESSION
 
 	expression_evaluator: DBG_EXPRESSION_EVALUATOR
@@ -225,7 +236,7 @@ fixme ("find a smarter way to get a valid value")
 		do
 			Result := internal_associated_dump_value
 			if Result = Void and then object_address /= Void then
-				Result := Application.dump_value_at_address_with_class (object_address, object_dynamic_class)
+				Result := debugger_manager.application.dump_value_at_address_with_class (object_address, object_dynamic_class)
 				internal_associated_dump_value := Result
 			end
 		end
@@ -252,10 +263,11 @@ feature -- Graphical changes
 			gedit ?= cell (Col_expression_index)
 			if gedit = Void then
 				gedit := new_cell_expression
-
-				gedit.pointer_double_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, False, ?,?,?,?,?,?,?,?))
-				gedit.pointer_button_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, True, ?,?,?,?,?,?,?,?))
-				gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))
+				if not is_readonly then
+					gedit.pointer_double_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, False, ?,?,?,?,?,?,?,?))
+					gedit.pointer_button_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, True, ?,?,?,?,?,?,?,?))
+					gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))
+				end
 
 				apply_cell_expression_text_properties_on (gedit)
 				set_cell (Col_expression_index, gedit)
@@ -304,7 +316,7 @@ feature -- Graphical changes
 						a_item.set_text (expression.expression)
 					elseif not new_text.is_equal (expression.expression) then
 						expression.set_expression (new_text)
-						if application.is_running and then application.is_stopped then
+						if debugger_manager.safe_application_is_stopped  then
 							request_evaluation (True)
 						elseif expression /= Void then
 							expression.set_unevaluated

@@ -32,11 +32,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	DEBUG_OUTPUT_SYSTEM_I
 		export
 			{NONE} all
@@ -67,11 +62,14 @@ create {DUMP_VALUE_FACTORY}
 
 feature {DUMP_VALUE_FACTORY} -- Initialization
 
-	make_empty is
+	make_empty (dbg: like debugger_manager) is
 		do
-			is_dotnet_system := Application.is_dotnet
+			debugger_manager := dbg
+			is_dotnet_system := debugger_manager.is_dotnet_project
 			is_dotnet_value := is_dotnet_system
 		end
+
+	debugger_manager: DEBUGGER_MANAGER
 
 feature {DUMP_VALUE_FACTORY} -- Preferences related
 
@@ -408,7 +406,7 @@ feature -- Status report
 			elseif type = Type_string_dotnet and value_string_dotnet = Void then
 				Result := "%"" + Character_routines.eiffel_string_32 (value_string) + "%""
 			else
-				l_max := Application.displayed_string_size
+				l_max := debugger_manager.displayed_string_size
 					--| if l_max = -1, then do no truncate upper string
 
 				l_str := truncated_string_representation (0, l_max)
@@ -719,7 +717,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_final_result_value: DUMP_VALUE
 			l_feat: FEATURE_I
 		do
-			if application.is_running and application.is_stopped then
+			if debugger_manager.safe_application_is_stopped then
 				if dynamic_class /= Void then
 					l_feat := debug_output_feature_i (dynamic_class)
 					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
@@ -742,9 +740,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_final_result_value: DUMP_VALUE
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
-			if application.is_running and application.is_stopped then
+			if debugger_manager.safe_application_is_stopped then
 				l_feat := generating_type_feature_i (dynamic_class)
-				if application.is_dotnet then
+				if is_dotnet then
 					if dynamic_class_type /= Void then
 						l_icdov := new_value_object_dotnet
 						if l_icdov /= Void then
@@ -782,9 +780,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_dyntype: CLASS_TYPE
 		do
 			check
-				running_and_stopped: Application.is_running and Application.is_stopped
+				running_and_stopped: debugger_manager.safe_application_is_stopped
 			end
-			if a_feat /= Void and Application.is_valid_object_address (value_address) then
+			if a_feat /= Void and debugger_manager.application.is_valid_object_address (value_address) then
 					-- Initialize the communication.
 				l_dbg_obj := Debugged_object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
 				l_dtype := l_dbg_obj.dtype

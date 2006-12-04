@@ -8,9 +8,6 @@ indexing
 class
 	EB_SHARED_GRAPHICAL_COMMANDS
 
-inherit
-	EB_SHARED_DEBUGGER_MANAGER
-
 feature -- Commands
 
 	Wizard_precompile_cmd: EB_WIZARD_PRECOMPILE_COMMAND is
@@ -51,7 +48,7 @@ feature -- Commands
 	Run_project_cmd: EB_EXEC_DEBUG_CMD is
 			-- Command to run a system.
 		once
-			create Result.make (eb_debugger_manager)
+			create Result.make ((create {EB_SHARED_DEBUGGER_MANAGER}).eb_debugger_manager)
 			Result.disable_sensitive
 		end
 

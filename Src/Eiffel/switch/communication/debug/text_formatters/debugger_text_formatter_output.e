@@ -17,9 +17,11 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
-	SHARED_APPLICATION_EXECUTION
+	SHARED_DEBUGGER_MANAGER
 
 	CHARACTER_ROUTINES
+
+	EB_CONSTANTS
 
 	INTERNAL
 
@@ -88,7 +90,7 @@ feature -- Application status
 			ccs: EIFFEL_CALL_STACK
 		do
 			if not appstatus.is_stopped then
-				st.add_string ("System is running")
+				st.add_string (interface_names.e_running)
 				st.add_new_line
 			else -- Application is stopped.
 				-- Print object address.
@@ -125,33 +127,33 @@ feature -- Application status
 				st.add_string ("Reason: ")
 				inspect appstatus.reason
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_break then
-					st.add_string ("Stop point reached")
+					st.add_string (Interface_names.l_Stop_point_reached)
 					st.add_new_line
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_interrupt then
-					st.add_string ("Execution interrupted")
+					st.add_string (Interface_names.l_Execution_interrupted)
 					st.add_new_line
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_raise then
-					st.add_string ("Explicit exception pending")
+					st.add_string (Interface_names.l_Explicit_exception_pending)
 					st.add_new_line
 					append_exception (appstatus, st)
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_viol then
-					st.add_string ("Implicit exception pending")
+					st.add_string (Interface_names.l_Implicit_exception_pending)
 					st.add_new_line
 					append_exception (appstatus, st)
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_new_breakpoint then
-					st.add_string ("New breakpoint(s) to commit")
+					st.add_string (Interface_names.l_New_breakpoint)
 					st.add_new_line
 					append_exception (appstatus ,st)
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_step then
-					st.add_string ("Step completed")
+					st.add_string (Interface_names.l_Stepped)
 					st.add_new_line
 				else
-					st.add_string ("Unknown")
+					st.add_string (Interface_names.l_Unknown_status)
 					st.add_new_line
 				end
 				ccs := appstatus.current_call_stack
 				if not ccs.is_empty then
-					stack_num := Application.current_execution_stack_number
+					stack_num := debugger_manager.application.current_execution_stack_number
 					cs := ccs.i_th (stack_num)
 					append_arguments (cs, st)
 					append_locals (cs, st)
@@ -220,7 +222,7 @@ feature -- Call stack
 			st.add_new_line;
 
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": getting stack number %N"); end
-			stack_num := Application.current_execution_stack_number;
+			stack_num := debugger_manager.application.current_execution_stack_number;
 
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%T" + generator + ": processing %N"); end
 			from
@@ -431,7 +433,7 @@ feature {NONE} -- append_to implementation
 			dc.append_name (st)
 			st.add_string (Left_address_delim)
 			add := v.address
-			if Application.is_running and then Application.is_stopped then
+			if debugger_manager.safe_application_is_stopped then
 				st.add_address (add, n, dc)
 			else
 				st.add_string (add)
@@ -542,7 +544,7 @@ feature {NONE} -- append_type_and_value implementation
 					ec.append_name (st);
 					st.add_string (Left_address_delim)
 					add := v.address
-					if Application.is_running and then Application.is_stopped then
+					if debugger_manager.safe_application_is_stopped then
 						st.add_address (add, v.name, ec)
 					else
 						st.add_string (add)
@@ -581,7 +583,7 @@ feature {NONE} -- append_type_and_value implementation
 				if ec /= Void then
 					ec.append_name (st);
 					st.add_string (Left_address_delim);
-					if Application.is_running and then Application.is_stopped then
+					if debugger_manager.safe_application_is_stopped then
 						st.add_address (v.address, v.name, ec)
 					else
 						st.add_string (v.address)

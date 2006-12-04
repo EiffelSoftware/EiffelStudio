@@ -18,11 +18,6 @@ inherit
 
 	EB_RECYCLABLE
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	SHARED_DEBUGGER_MANAGER
 		export
 			{NONE} all
@@ -195,8 +190,9 @@ feature -- Status setting
 		do
 			cancel_process_real_update_on_idle
 			request_clean_threads_info
-			l_status := application.status
-			if l_status /= Void then
+			if debugger_manager.application_is_executing then
+				l_status := debugger_manager.application_status
+				check l_status /= Void end
 				process_real_update_on_idle (l_status.is_stopped)
 			end
 		end
@@ -243,8 +239,8 @@ feature {NONE} -- Implementation
 			l_status: APPLICATION_STATUS
 		do
 			Precursor {DEBUGGING_UPDATE_ON_IDLE} (dbg_was_stopped)
-			if Application.is_running then
-				l_status := application.status
+			if debugger_manager.application_is_executing then
+				l_status := debugger_manager.application_status
 				if dbg_was_stopped then
 					l_status.update_on_stopped_state
 				end
@@ -264,6 +260,8 @@ feature {NONE} -- Implementation
 
 	refresh_threads_info is
 			-- Refresh thread info according to debugger data
+		require
+			application_is_executing: debugger_manager.application_is_executing
 		local
 			r: INTEGER
 			row: EV_GRID_ROW
@@ -277,7 +275,7 @@ feature {NONE} -- Implementation
 			prio: INTEGER
 		do
 			clean_threads_info
-			l_status := Application.status
+			l_status := debugger_manager.application_status
 			if l_status /= Void and then l_status.is_stopped then
 				arr := l_status.all_thread_ids
 				if arr /= Void and then not arr.is_empty then

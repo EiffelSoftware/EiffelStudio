@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 			valid_application: debugger_manager.application_is_executing
 		do
 			if debugger_manager.application_is_executing then
-				debugger_manager.Application.kill
+				debugger_manager.application.kill
 			end
 		end
 

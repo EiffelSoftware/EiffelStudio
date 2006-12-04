@@ -7,7 +7,7 @@ inherit
 
 	RQST_HANDLER_WITH_DATA
 
-	SHARED_DEBUG
+	SHARED_DEBUGGER_MANAGER
 
 	OBJECT_ADDR
 
@@ -30,6 +30,7 @@ feature
 			retried: BOOLEAN
 			event_type: INTEGER
 			event_data: INTEGER
+			s: APPLICATION_STATUS
 		do
 			if not retried then
 				debug ("debugger_ipc")
@@ -54,19 +55,20 @@ feature
 					--| Now process stopped state  |--
 					--|----------------------------|--				
 
+				s := Debugger_manager.application_status
 				inspect
 					event_type
 				when notif_thr_created then
 					debug ("debugger_ipc")
 						print (generator + " : Thread created: " + event_data.to_hex_string + "%N")
 					end
-					application.status.add_thread_id (event_data)
+					s.add_thread_id (event_data)
 
 				when notif_thr_exited then
 					debug ("debugger_ipc")
 						print (generator + " : Thread exited: " + event_data.to_hex_string + "%N")
 					end
-					application.status.remove_thread_id (event_data)
+					s.remove_thread_id (event_data)
 				else
 					debug ("debugger_ipc")
 						print ("EWB notified eventType="+ event_type.out + "eventData=" + event_data.out + "%N")

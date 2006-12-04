@@ -14,8 +14,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGER_MANAGER
-
 	IPC_REQUEST
 
 	THREAD_CONTROL
@@ -37,9 +35,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (dbg: like debugger_manager) is
+		require
+			dbg_not_void: dbg /= Void
 		do
+			debugger_manager := dbg
 		end
+
+	debugger_manager: DEBUGGER_MANAGER
 
 feature -- Launching
 

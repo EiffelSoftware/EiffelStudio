@@ -23,10 +23,7 @@ inherit
 			reset, init
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{EIFNET_DEBUGGER_INFO_ACCESSOR} Application
-		end
+	SHARED_DEBUGGER_MANAGER
 
 	SHARED_IL_DEBUG_INFO_RECORDER
 
@@ -820,7 +817,7 @@ feature -- JIT Thread
 		do
 			create edti.make (p)
 			loaded_managed_threads.put (edti, edti.thread_id)
-			Application.status.add_thread_id (edti.thread_id)
+			debugger_manager.application_status.add_thread_id (edti.thread_id)
 
 			if last_icd_thread_id = 0 then
 				set_last_icd_thread_id (edti.thread_id)
@@ -841,7 +838,7 @@ feature -- JIT Thread
 			n := {ICOR_DEBUG_THREAD}.cpp_get_id (p, $tid)
 			if loaded_managed_threads.has (tid) then
 				loaded_managed_threads.remove (tid)
-				Application.status.remove_thread_id (tid)
+				debugger_manager.application_status.remove_thread_id (tid)
 
 					-- FIXME jfiat: maybe find a better way for that .. a kind of history of selected thread ?
 				if last_icd_thread_id = tid and then not loaded_managed_threads.is_empty then

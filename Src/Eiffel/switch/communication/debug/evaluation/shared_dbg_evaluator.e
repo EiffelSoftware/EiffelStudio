@@ -8,16 +8,17 @@ indexing
 
 class
 	SHARED_DBG_EVALUATOR
-	
+
 feature {NONE} -- shared dbg_evaluator
 
 	Dbg_evaluator: DBG_EVALUATOR is
-			-- Object used for expression evaluation 
+			-- Object used for expression evaluation
 			-- to evaluate features and so on ..
 		once
+			--| FIXME: get rid of this once
 			create Result.make
 		end
-		
+
 	reset_dbg_evaluator is
 			-- Reset Dbg_evaluator if exists
 			-- needed to be done for each new debugging session
@@ -25,7 +26,7 @@ feature {NONE} -- shared dbg_evaluator
 			if dbg_evaluator /= Void then
 				dbg_evaluator.reset
 			end
-		end		
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

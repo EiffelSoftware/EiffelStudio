@@ -54,19 +54,16 @@ feature -- Dialog
 	build_handler_dialog is
 		local
 			dialog: ES_EXCEPTION_HANDLER_DIALOG
-			app_exec: APPLICATION_EXECUTION
 		do
-			app_exec := Debugger_manager.application
-			if app_exec.exceptions_handler.handling_mode_is_by_name then
-				check app_exec.is_dotnet end
+			if Debugger_manager.exceptions_handler.handling_mode_is_by_name then
+				check Debugger_manager.is_dotnet_project end
 				create dialog
-				dialog.set_handler (app_exec.exceptions_handler)
+				dialog.set_handler (Debugger_manager.exceptions_handler)
 				handler_dialog := dialog
 			else
-				check app_exec.is_classic end
+				check Debugger_manager.is_classic_project end
 				build_handler_by_code_dialog
 			end
-
 		end
 
 	handler_dialog: EV_DIALOG
@@ -119,7 +116,7 @@ feature -- Handler dialog by code
 			app_excep_handler: DBG_EXCEPTION_HANDLER
 			fr: EV_FRAME
 		do
-			app_excep_handler := Debugger_manager.application.exceptions_handler
+			app_excep_handler := Debugger_manager.exceptions_handler
 			if not app_excep_handler.handling_mode_is_by_code then
 				app_excep_handler.set_handling_by_code_mode
 			end
@@ -206,16 +203,16 @@ feature -- Handler dialog by code
 
 	handle_ignore_external_changed is
 		do
-			debugger_manager.application.exceptions_handler.ignore_external_exceptions (cb_ignore_external.is_selected)
+			Debugger_manager.exceptions_handler.ignore_external_exceptions (cb_ignore_external.is_selected)
 		end
 
 	handle_exception_changed is
 		do
 			if cb_handle_exception.is_selected then
-				debugger_manager.application.exceptions_handler.enable_exception_handling
+				Debugger_manager.exceptions_handler.enable_exception_handling
 				enable_grid
 			else
-				debugger_manager.application.exceptions_handler.disable_exception_handling
+				Debugger_manager.exceptions_handler.disable_exception_handling
 				disable_grid
 			end
 		end
@@ -245,7 +242,7 @@ feature -- Handler dialog by code
 			ecode: INTEGER
 			app_excep_handler: DBG_EXCEPTION_HANDLER
 		do
-			app_excep_handler := Debugger_manager.application.exceptions_handler
+			app_excep_handler := Debugger_manager.exceptions_handler
 			if abut = 1 and then gi /= Void and then gi.is_parented then
 				glab ?= gi
 				if glab /= Void then

@@ -49,6 +49,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_DEBUGGER_MANAGER
+
 feature {NONE} -- Initialization
 
 	make is

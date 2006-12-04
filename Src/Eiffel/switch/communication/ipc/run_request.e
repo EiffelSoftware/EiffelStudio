@@ -80,15 +80,17 @@ feature -- Update
 			-- Send `Current' request to ised, which may relay it to the application.
 		local
 			l_app_started: BOOLEAN
+			app: APPLICATION_EXECUTION
 		do
-			if server_mode and then not Application.is_running then
+			if server_mode and then not Debugger_manager.application_is_executing then
 				l_app_started := start_application
 				if l_app_started then
-					Application.build_status
-					Application.status.set_process_id (last_process_id)
+					app := Debugger_manager.application
+					app.build_status
+					app.status.set_process_id (last_process_id)
 					send_breakpoints
-					send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, Application.critical_stack_depth)
-					Application.status.set_is_stopped (False)
+					send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
+					app.status.set_is_stopped (False)
 				end
 			end
 		end

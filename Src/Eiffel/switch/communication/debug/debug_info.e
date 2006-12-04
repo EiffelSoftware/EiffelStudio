@@ -17,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-create {APPLICATION_EXECUTION}
+create {DEBUGGER_MANAGER}
 	make
 
 feature {NONE} -- Initialization
@@ -982,7 +982,7 @@ feature -- Debug
 			io.put_string ("===================================%N%N");
 		end
 
-feature {APPLICATION_EXECUTION, FAILURE_HDLR}
+feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 
 	resynchronize_breakpoints is
 			-- Resychronize the breakpoints after a compilation.
@@ -1061,7 +1061,7 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 			non_void_result: Result /= Void
 		end
 
-feature {EWB_REQUEST, SHARED_DEBUG}
+feature {BREAKPOINTS_MANAGER}
 
 	breakpoints: BREAK_LIST;
 			-- list of all breakpoints set, disabled and recently switched.

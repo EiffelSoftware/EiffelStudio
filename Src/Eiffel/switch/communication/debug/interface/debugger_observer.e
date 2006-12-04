@@ -1,34 +1,34 @@
 indexing
+	description: "Objects that ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-class SHARED_DEBUG
+deferred class
+	DEBUGGER_OBSERVER
 
-inherit
+feature {DEBUGGER_MANAGER} -- Event handling
 
-	SHARED_APPLICATION_EXECUTION
-
-	SHARED_DEBUGGED_OBJECT_MANAGER
-
-feature
-
-	debug_info: DEBUG_INFO is
-		once
-			Result := Application.debug_info
-		end;
-
-	min_slice_ref: INTEGER_REF is
-			-- Minimum bound asked for special objects.
-		once
-			create Result
-			Result.set_item (0)
+	on_application_launched is
+			-- The debugged application has just been launched.
+		do
 		end
 
-	max_slice_ref: INTEGER_REF is
-			-- Maximum bound asked for special objects.
-		once
-			create Result
-			Result.set_item (50)
+	on_application_resumed is
+			-- The debugged application has been resumed after a stop.
+		do
+		end
+
+	on_application_stopped is
+			-- The debugged application has just stopped (paused).
+		do
+		end
+
+	on_application_quit is
+			-- The debugged application has just died (exited).
+		do
 		end
 
 indexing
@@ -63,4 +63,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class EB_DEBUGGER_OBSERVER

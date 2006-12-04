@@ -62,6 +62,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_DEBUGGER_MANAGER
+
 create
 	make
 

@@ -2747,8 +2747,8 @@ feature -- Window management
 				-- If the debugger is displayed, the previous layout is already saved,
 				-- and this is the one that must be used, as only one debugger is ever displayed.
 			if
-				(Eb_debugger_manager.application_is_executing and Eb_debugger_manager.debugging_window /= Current)
-				or not Eb_debugger_manager.application_is_executing
+				(Debugger_manager.application_is_executing and Eb_debugger_manager.debugging_window /= Current)
+				or not Debugger_manager.application_is_executing
 			then
 				a_window_data.save_left_panel_layout (left_panel.save_to_resource)
 				a_window_data.save_right_panel_layout (right_panel.save_to_resource)
@@ -2942,7 +2942,7 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 					Debugger_manager.application_is_executing
 					and then Eb_debugger_manager.debugging_window = Current
 				then
-					Debugger_manager.Application.kill
+					Debugger_manager.application.kill
 				else
 					development_window_data.save_left_panel_layout (left_panel.save_to_resource)
 					development_window_data.save_right_panel_layout (right_panel.save_to_resource)
@@ -3025,7 +3025,7 @@ feature {NONE} -- Implementation
 			l_short_formatter: EB_SHORT_FORMATTER
 			l_flat_formatter: EB_FLAT_SHORT_FORMATTER
 			l_main_formatter: EB_CLASS_TEXT_FORMATTER
-			app_exec: APPLICATION_EXECUTION
+			bpm: BREAKPOINTS_MANAGER
 		do
 				-- the text does not change if the text was saved with syntax errors
 			cur_wid := window
@@ -3044,11 +3044,11 @@ feature {NONE} -- Implementation
 			ef_stone ?= a_stone
 			target_stone ?= a_stone
 			if conv_brkstone /= Void then
-				app_exec := Debugger_manager.application
-				if app_exec.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
-					app_exec.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+				bpm := Debugger_manager
+				if bpm.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
+					bpm.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				else
-					app_exec.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
+					bpm.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
 				Debugger_manager.notify_breakpoints_changes
 			elseif conv_errst /= Void then

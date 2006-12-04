@@ -7,7 +7,7 @@ inherit
 
 	RQST_HANDLER_WITH_DATA
 
-	SHARED_DEBUG
+	SHARED_DEBUGGER_MANAGER
 
 	OBJECT_ADDR
 
@@ -55,6 +55,7 @@ feature -- Execution
 			exception_tag: STRING
 			thr_id: INTEGER
 
+			l_app: APPLICATION_EXECUTION
 			l_status: APPLICATION_STATUS_CLASSIC
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
@@ -64,8 +65,13 @@ feature -- Execution
 			need_to_resend_bp: BOOLEAN
 			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
+			check
+				application_is_executing: debugger_manager.application_is_executing
+			end
+
 			if not retry_clause then
-				Application.on_application_before_stopped
+				l_app := Debugger_manager.application
+				l_app.on_application_before_stopped
 				debug ("DEBUGGER_TRACE","DEBUGGER_IPC")
 					io.error.put_string (generator + ": Application is stopped%N")
 				end
@@ -139,7 +145,7 @@ feature -- Execution
 					io.error.put_new_line
 				end
 
-				l_status ?= Application.status;
+				l_status ?= l_app.status;
 				check
 					application_launched: l_status /= Void
 				end
@@ -184,12 +190,13 @@ feature -- Execution
 							--| Initialize the stack with a dummy first call stack element
 							--| to be able to operation on the current feature
 						l_status.current_call_stack.extend (create {CALL_STACK_ELEMENT_CLASSIC}.dummy_make (feature_name, 1, True, offset, address, dynamic_type - 1, origine_type - 1))
-						Application.set_current_execution_stack_number (1)
+						l_app.set_current_execution_stack_number (1)
 
 							--| Check if this is a Conditional Breakpoint
 						cse := l_status.current_call_stack.i_th (1)
-						if application.is_breakpoint_set (cse.routine, cse.break_index) then
-							bp := Application.breakpoint (cse.routine, cse.break_index)
+
+						if Debugger_manager.debug_info.is_breakpoint_set (cse.routine, cse.break_index) then
+							bp := Debugger_manager.debug_info.breakpoint (cse.routine, cse.break_index)
 							expr := bp.condition
 							if expr /= Void then
 									--| if the breakpoint is conditional, tests the condition.
@@ -198,7 +205,7 @@ feature -- Execution
 								if evaluator.error_occurred then
 									need_to_stop := evaluator.error_occurred
 										--| Fixme: find a better way to tell the user the cond bp stopped on eval failure.
-									Application.debugger_manager.debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.expression + "%".")
+									Debugger_manager.debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.expression + "%".")
 								else
 									need_to_stop := evaluator.final_result_is_true_boolean_value
 								end
@@ -214,10 +221,10 @@ feature -- Execution
 							--| Now that we know the debuggee will be really stopped
 							--| Let get the effective call stack (not the dummy)
 						l_status.reload_current_call_stack
-						Application.set_current_execution_stack_number (Application.number_of_stack_elements)
+						l_app.set_current_execution_stack_number (l_app.number_of_stack_elements)
 
 							-- Inspect the application's current state.
-						Application.on_application_just_stopped
+						l_app.on_application_just_stopped
 
 						debug ("DEBUGGER_TRACE")
 							io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
@@ -225,7 +232,7 @@ feature -- Execution
 					else
 							--| We don't stop on this breakpoint,
 							--| Relaunch the application.
-						Application.release_all_but_kept_object
+						l_app.release_all_but_kept_object
 						if need_to_resend_bp then
 								--| if we stopped on cond bp
 								--| in case we don't really stop
@@ -234,7 +241,7 @@ feature -- Execution
 							Cont_request.send_breakpoints
 						end
 						l_status.set_is_stopped (False)
-						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
+						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, debugger_manager.interrupt_number, debugger_manager.critical_stack_depth)
 					end
 				else --| stopping_reason = Pg_new_breakpoint |--
 						--| If the reason is Pg_new_breakpoint, the application sends the
@@ -244,8 +251,8 @@ feature -- Execution
 					end
 				end
 			else -- retry_clause
-				if Application.is_running then
-					Application.process_termination;
+				if l_app.is_running then
+					l_app.process_termination;
 				end
 			end
 			debug ("DEBUGGER_TRACE")
@@ -264,7 +271,7 @@ feature {NONE} -- Implementation
 
 	execution_stopped_on_exception (excep_code: INTEGER): BOOLEAN is
 		do
-			Result := Application.exceptions_handler.exception_catched_by_code (excep_code)
+			Result := Debugger_manager.exceptions_handler.exception_catched_by_code (excep_code)
 			debug ("debugger_trace")
 				if Result then
 					print ("Catch exception: " + excep_code.out + "%N")

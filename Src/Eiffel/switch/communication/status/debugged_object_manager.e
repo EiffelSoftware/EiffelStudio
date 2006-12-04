@@ -10,7 +10,7 @@ class
 	DEBUGGED_OBJECT_MANAGER
 
 inherit
-	SHARED_APPLICATION_EXECUTION
+	SHARED_DEBUGGER_MANAGER
 
 create {SHARED_DEBUGGED_OBJECT_MANAGER}
 	make
@@ -19,11 +19,9 @@ feature {NONE}-- Creation
 
 	make is
 		do
-			is_dotnet := Application.is_dotnet
+			is_dotnet := Debugger_manager.is_dotnet_project
 			caching_enabled := False
 		end
-
-	is_dotnet: BOOLEAN
 
 feature -- Reset
 
@@ -110,18 +108,24 @@ feature -- Last debugged object
 
 	last_debugged_object: DEBUGGED_OBJECT
 
---	last_debugged_object_is_erroneous: BOOLEAN is
---		do
---			Result := last_debugged_object /= Void and then last_debugged_object.is_erroneous
---		end
-
 	last_sp_lower, last_sp_upper: INTEGER
+
+feature -- status
+
+	is_valid_object_address (addr: STRING): BOOLEAN is
+		require
+			application_is_executing: debugger_manager.application_is_executing
+		do
+			Result := Debugger_manager.application.is_valid_object_address (addr)
+		end
+
+	is_dotnet: BOOLEAN
 
 feature -- debugged object creation
 
 	classic_debugged_object_with_class (addr: STRING; a_compiled_class: CLASS_C): DEBUGGED_OBJECT_CLASSIC is
 		require
-			Application.is_classic
+			not is_dotnet
 		do
 			create Result.make_with_class (addr, a_compiled_class)
 		end
@@ -129,7 +133,7 @@ feature -- debugged object creation
 	fakedebugged_object (addr: STRING; sp_lower, sp_upper: INTEGER): DEBUGGED_OBJECT is
 		require
 			non_void_addr: addr /= Void
-			valid_addr: application.is_valid_object_address (addr)
+			valid_addr: is_valid_object_address (addr)
 			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else sp_upper = -1)
 		do
 			if is_dotnet then
@@ -141,21 +145,21 @@ feature -- debugged object creation
 			last_sp_lower := sp_lower
 			last_sp_upper := sp_upper
 		end
-		
+
 	caching_enabled: BOOLEAN
 
 	debugged_object (addr: STRING; sp_lower, sp_upper: INTEGER): DEBUGGED_OBJECT is
 		require
 			non_void_addr: addr /= Void
-			valid_addr: application.is_valid_object_address (addr)
+			valid_addr: is_valid_object_address (addr)
 			valid_bounds: sp_lower >= 0 and (sp_upper >= sp_lower or else sp_upper = -1)
 		do
 			debug ("debugger_caching")
 				print (generator + " : debugged_object for " + addr + " [" + sp_lower.out + ":" + sp_upper.out + "]%N")
 			end
 			if
-				caching_enabled and then 
-				last_debugged_object /= Void 
+				caching_enabled and then
+				last_debugged_object /= Void
 				and then last_debugged_object.object_address.is_equal (addr)
 			then
 				debug ("debugger_caching")
@@ -178,8 +182,8 @@ feature -- debugged object creation
 				elseif last_sp_lower /= sp_lower or last_sp_upper /= sp_upper then
 					debug ("debugger_caching")
 						print (generator + " : slices already included into reused debugged object %N")
-						print (generator + " : [" 
-								+ sp_lower.out + ":" + sp_upper.out 
+						print (generator + " : ["
+								+ sp_lower.out + ":" + sp_upper.out
 								+ "] included into ["
 								+ last_sp_lower.out + ":" + last_sp_upper.out
 								+"] %N")

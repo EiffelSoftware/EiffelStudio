@@ -23,10 +23,6 @@ inherit
 	SHARED_DEBUGGER_MANAGER
 
 	SHARED_DEBUG
-		export
-			{ANY} Application
-			{NONE} all
-		end
 
 	SHARED_WORKBENCH
 		export

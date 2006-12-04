@@ -24,23 +24,24 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
-		export
-			{NONE} all
-		end
-
 	COMPILER_EXPORTER
 
 feature {NONE} -- Initialization
 
-	make is
+	make (app: like application) is
 			-- Create Current
 		do
 			debug ("debugger_trace")
 				print (generator + ".make %N")
 			end
+			application := app
 			initialize
 		end
+
+feature -- Properties
+
+	application: APPLICATION_EXECUTION
+			-- Attached Application execution object.
 
 feature {NONE} -- Initialization
 
@@ -256,7 +257,7 @@ feature -- Call Stack element related
 		local
 			i: INTEGER
 		do
-			i := Application.current_execution_stack_number
+			i := application.current_execution_stack_number
 			if current_call_stack.valid_index (i) then
 				Result := current_call_stack.i_th (i)
 			end
@@ -352,15 +353,6 @@ feature -- Thread related change
 		do
 			--| Mainly use for Classical debugger purpose
 		end
-
---	set_thread_ids (a: ARRAY [INTEGER]) is
---			-- set thread's ids with `a'
---		require
---			a_not_empty: a /= Void and then not a.is_empty
---		do
---			create all_thread_ids.make_from_array (a)
---			refresh_threads_information
---		end
 
 	add_thread_id (tid: INTEGER) is
 		require

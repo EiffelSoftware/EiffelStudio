@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 		do
 			if eb_debugger_manager.application_is_executing then
 				kill_requested := True
-				eb_debugger_manager.Application.kill
+				eb_debugger_manager.application.kill
 			end
 		end
 

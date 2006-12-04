@@ -25,10 +25,6 @@ inherit
 		undefine
 			is_equal, copy
 		end;
-	SHARED_APPLICATION_EXECUTION
-		undefine
-			is_equal, copy
-		end
 
 	EIFNET_EXPORTER
 		undefine

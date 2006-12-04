@@ -65,6 +65,15 @@ create
 	make_with_expression,
 	make_as_object
 
+feature -- helpers
+
+	application_status: APPLICATION_STATUS is
+		require
+			application_is_executing: debugger_manager.application_is_executing
+		do
+			Result := debugger_manager.application_status
+		end
+
 feature -- Evaluation
 
 	evaluate is
@@ -875,7 +884,7 @@ feature {NONE} -- EXPR_B evaluation
 			dv: ABSTRACT_DEBUG_VALUE
 			cf: E_FEATURE
 		do
-			cse ?= Application.status.current_call_stack_element
+			cse ?= application_status.current_call_stack_element
 			if cse = Void then
 				notify_error_evaluation ("Unable to get Current call stack element")
 				check
@@ -900,7 +909,7 @@ feature {NONE} -- EXPR_B evaluation
 			dv: ABSTRACT_DEBUG_VALUE
 			cf: E_FEATURE
 		do
-			cse ?= Application.status.current_call_stack_element
+			cse ?= application_status.current_call_stack_element
 			if cse = Void then
 				notify_error_evaluation ("Unable to get Current call stack element")
 				check
@@ -928,7 +937,7 @@ feature {NONE} -- EXPR_B evaluation
 			dv: ABSTRACT_DEBUG_VALUE
 			cf: E_FEATURE
 		do
-			cse ?= Application.status.current_call_stack_element
+			cse ?= application_status.current_call_stack_element
 			if cse = Void then
 				notify_error_evaluation ("Unable to get Current call stack element")
 				check
@@ -965,7 +974,7 @@ feature {NONE} -- EXPR_B evaluation
 					tmp_result_static_type := tmp_result_value.dynamic_class
 				end
 			else
-				cse ?= Application.status.current_call_stack_element
+				cse ?= application_status.current_call_stack_element
 				check cse /= Void end
 				tmp_result_value := dbg_evaluator.current_object_from_callstack (cse)
 				if tmp_result_value = Void then
@@ -1073,7 +1082,7 @@ feature {NONE} -- Concrete evaluation
 		local
 			l_addr: STRING
 		do
-			if application.is_dotnet then
+			if debugger_manager.is_dotnet_project then
 					-- FIXME: What about static ? check ...
 				if a_target /= Void then
 					l_addr := tmp_target.value_address
@@ -1113,7 +1122,7 @@ feature -- Change Context
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			fi: FEATURE_I
 		do
-			cse := Application.status.current_call_stack_element
+			cse := application_status.current_call_stack_element
 			if cse = Void then
 				notify_error_expression (Cst_error_during_context_preparation)
 			else
@@ -1410,6 +1419,7 @@ feature {NONE} -- Implementation
 				reset_error
 				error_handler.wipe_out
 				Ast_context.set_is_ignoring_export (True)
+
 				dbg_expression_checker.init (ast_context)
 				debug ("debugger_trace_eval_data")
 					print (generator + ".expression_byte_node_from_ast (..) %N")
@@ -1422,6 +1432,7 @@ feature {NONE} -- Implementation
 					print ("%N")
 				end
 				dbg_expression_checker.expression_type_check_and_code (context_feature, exp)
+
 				Ast_context.set_is_ignoring_export (False)
 
 				if error_handler.has_error then

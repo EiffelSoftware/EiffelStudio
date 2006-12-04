@@ -92,7 +92,7 @@ feature -- Status report
 			-- Indiciates if compiler should precompile project
 		require
 			successful: successful
-		do
+		once
 			Result := has_option (precomp_switch)
 		end
 
@@ -100,7 +100,7 @@ feature -- Status report
 			-- Indiciates if compiler should generate optimized code
 		require
 			successful: successful
-		do
+		once
 			Result := has_option (finalize_switch)
 		end
 
@@ -108,7 +108,7 @@ feature -- Status report
 			-- Indiciates if compiler should re-examine directory structures for new/removed classes
 		require
 			successful: successful
-		do
+		once
 			Result := has_option (force_switch)
 		end
 
@@ -116,7 +116,7 @@ feature -- Status report
 			-- Indiciates if compiler should freeze melted code
 		require
 			successful: successful
-		do
+		once
 			Result := has_option (freeze_switch)
 		end
 
@@ -125,8 +125,36 @@ feature -- Status report
 			-- a successful Eifel compilation
 		require
 			successful: successful
-		do
+		once
 			Result := has_option (c_compile_switch)
+		end
+
+	configuration_settings: HASH_TABLE [STRING, STRING] is
+			-- Table of override configuration settings
+			-- Key: Setting nane
+			-- Value: Value
+		require
+			successful: successful
+		local
+			l_options: LIST [ARGUMENT_OPTION]
+			l_option: ARGUMENT_PROPERTY_OPTION
+			l_cursor: CURSOR
+		once
+			l_options := options_of_name (set_switch)
+			create Result.make (l_options.count)
+			if not l_options.is_empty then
+				l_cursor := l_options.cursor
+				from l_options.start until l_options.after loop
+					l_option ?= l_options.item
+					if l_option /= Void then
+						if l_option.has_property_name and l_option.has_value then
+							Result.force (l_option.property_value, l_option.property_name)
+						end
+					end
+					l_options.forth
+				end
+				l_options.go_to (l_cursor)
+			end
 		end
 
 	clean_project: BOOLEAN is
@@ -134,7 +162,7 @@ feature -- Status report
 			-- before compiling.
 		require
 			successful: successful
-		do
+		once
 			Result := has_option (clean_switch)
 		end
 
@@ -142,7 +170,7 @@ feature -- Status report
 			-- Indiciates if compiler should display verbose information on compiler output
 		require
 			successful: successful
-		do
+		once
 			Result := has_option (verbose_switch)
 		end
 
@@ -191,7 +219,8 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (precomp_switch, "Precompiles a project for use by another project.", False, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, "Forces re-examination of directory structures for new or removed classes.", False, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (freeze_switch, "Freezes any melted code.", False, False))
-			Result.extend (create {OPTIMIZED_ARGUMENT_SWITCH}.make (finalize_switch, "Optimizes and finalizes code generation.", True, False, "Flags", "Optimization flags", True, l_optimize_flags, False))
+			Result.extend (create {OPTIMIZED_ARGUMENT_SWITCH}.make (finalize_switch, "Optimizes and finalizes code generation.", True, False, "Flags", "Optimization flags.", True, l_optimize_flags, False))
+			Result.extend (create {SETTING_ARGUMENT_SWITCH}.make (set_switch, "Overrides or sets a configuration file setting.", True, True, "<setting>", "A configuration setting in the form of <setting>=<value>.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (c_compile_switch, "Automatically compiles an C code at the end of an Eiffel compilation.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Cleans project before compiling.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Displays verbose compiler output.", True, False))
@@ -206,6 +235,7 @@ feature {NONE} -- Usage
 				switch_of_name (target_switch),
 				switch_of_name (finalize_switch),
 				switch_of_name (c_compile_switch),
+				switch_of_name (set_switch),
 				switch_of_name (clean_switch),
 				switch_of_name (verbose_switch)>>, True))
 
@@ -214,6 +244,7 @@ feature {NONE} -- Usage
 				switch_of_name (target_switch),
 				switch_of_name (finalize_switch),
 				switch_of_name (c_compile_switch),
+				switch_of_name (set_switch),
 				switch_of_name (clean_switch),
 				switch_of_name (verbose_switch)>>, True))
 
@@ -222,6 +253,7 @@ feature {NONE} -- Usage
 				switch_of_name (target_switch),
 				switch_of_name (finalize_switch),
 				switch_of_name (c_compile_switch),
+				switch_of_name (set_switch),
 				switch_of_name (clean_switch),
 				switch_of_name (verbose_switch)>>, True))
 
@@ -229,6 +261,7 @@ feature {NONE} -- Usage
 				switch_of_name (precomp_switch),
 				switch_of_name (finalize_switch),
 				switch_of_name (c_compile_switch),
+				switch_of_name (set_switch),
 				switch_of_name (clean_switch),
 				switch_of_name (verbose_switch)>>, True))
 		end
@@ -244,9 +277,10 @@ feature {NONE} -- Option names
 	location_switch: STRING = "location"
 	clean_switch: STRING = "clean"
 	c_compile_switch: STRING = "c_compile"
-	verbose_switch: STRING = "verbose";
+	verbose_switch: STRING = "verbose"
+	set_switch: STRING = "set"
 
-indexing
+;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

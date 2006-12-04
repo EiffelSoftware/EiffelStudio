@@ -131,8 +131,6 @@ feature -- Access queries
 				-- get local options
 			if internal_class_options /= Void then
 				Result := internal_class_options.twin
-			else
-				create Result.make (0)
 			end
 		end
 

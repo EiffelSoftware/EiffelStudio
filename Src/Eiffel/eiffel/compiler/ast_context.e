@@ -72,13 +72,13 @@ feature -- Access
 	old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
 			-- It the processed feature was allready presend, this table gives a mapping from
 			-- original inline_agent_nr to its features.
-
-	set_old_inline_agents (a_table: like old_inline_agents)
-			-- set `old_inline_agents' to `a_table'
 		do
-			old_inline_agents := a_table
+			if old_inline_agents_int = Void then
+				create old_inline_agents_int.make (0)
+			end
+			Result := old_inline_agents_int
 		ensure
-			old_inline_agents_set: old_inline_agents = a_table
+			Result /= Void
 		end
 
 	used_argument_names: SEARCH_TABLE [INTEGER]
@@ -295,6 +295,9 @@ feature	-- Saving contexts
 		do
 			copy (context)
 		end
+
+feature {NONE} --Internals
+	old_inline_agents_int:  HASH_TABLE [FEATURE_I, INTEGER]
 
 invariant
 	locals_not_void: locals /= Void

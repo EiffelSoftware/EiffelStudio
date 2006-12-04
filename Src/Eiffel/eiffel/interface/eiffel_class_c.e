@@ -485,7 +485,6 @@ feature -- Third pass: byte code production and type check
 			check_local_names_needed: BOOLEAN
 			byte_code_generated: BOOLEAN
 			inline_agent_byte_code: LINKED_LIST [BYTE_CODE]
-			old_inline_agents: HASH_TABLE [FEATURE_I, INTEGER]
 			old_inline_agent_table: like inline_agent_table
 
 				-- Invariant
@@ -602,9 +601,9 @@ feature -- Third pass: byte code production and type check
 						then
 								-- Type check
 							Error_handler.mark
-							create old_inline_agents.make (1)
-							remove_inline_agents_of_feature (feature_i.body_index, old_inline_agents)
-							ast_context.set_old_inline_agents (old_inline_agents)
+							ast_context.old_inline_agents.wipe_out
+							remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
+
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
 							type_check_error := Error_handler.new_error
@@ -713,9 +712,8 @@ feature -- Third pass: byte code production and type check
 								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 						then
 							error_handler.mark
-							create old_inline_agents.make (1)
-							remove_inline_agents_of_feature (feature_i.body_index, old_inline_agents)
-							ast_context.set_old_inline_agents (old_inline_agents)
+							ast_context.old_inline_agents.wipe_out
+							remove_inline_agents_of_feature (feature_i.body_index, ast_context.old_inline_agents)
 							feature_checker.type_check_and_code (feature_i)
 							type_checked := True
 							type_check_error := error_handler.new_error
@@ -772,7 +770,7 @@ feature -- Third pass: byte code production and type check
 					new_suppliers := suppliers.same_suppliers
 				end
 				if invariant_feature /= Void then
-					ast_context.set_old_inline_agents (Void)
+					ast_context.old_inline_agents.wipe_out
 					remove_inline_agents_of_feature (invariant_feature.body_index, Void)
 				end
 				if f_suppliers /= Void then
@@ -812,9 +810,8 @@ feature -- Third pass: byte code production and type check
 					invar_clause := Inv_ast_server.item (class_id)
 					Error_handler.mark
 
-					create old_inline_agents.make (1)
-					remove_inline_agents_of_feature (invariant_feature.body_index, old_inline_agents)
-					ast_context.set_old_inline_agents (old_inline_agents)
+					ast_context.old_inline_agents.wipe_out
+					remove_inline_agents_of_feature (invariant_feature.body_index, ast_context.old_inline_agents)
 					feature_checker.invariant_type_check (invariant_feature, invar_clause, True)
 
 					if not Error_handler.new_error then
@@ -883,7 +880,7 @@ feature -- Third pass: byte code production and type check
 					body_index := removed_features.item_for_iteration
 
 					remove_inline_agents_of_feature (body_index, Void)
-					ast_context.set_old_inline_agents (Void)
+					ast_context.old_inline_agents.wipe_out
 
 					f_suppliers := dependances.item (body_index)
 					if f_suppliers /= Void then

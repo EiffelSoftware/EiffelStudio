@@ -268,7 +268,9 @@ feature -- Access
 	veto_tooltip_display_functions: LINKED_LIST [FUNCTION [ANY, TUPLE, BOOLEAN]] is
 			-- Functions used to determine whether or not to display tooltip when other condition
 			-- such as `is_tooltip_enabled', pointer on owner are all satisfied.
-			-- If any function in the list returns True, tooltip display is vetoed.
+			-- A True value returned by a function indicates that tooltip should be displayed,
+			-- a False value indicates that tooltip should not be displayed.
+			-- So if any function in the list returns False, tooltip display is vetoed.
 			-- This is useful for example when you want tooltip to display only when certain keys
 			-- are pressed.
 		do
@@ -681,7 +683,7 @@ feature{NONE} -- Implementation
 				until
 					l_func.after or Result
 				loop
-					Result := l_func.item.item ([])
+					Result := not l_func.item.item ([])
 					l_func.forth
 				end
 				if l_cursor /= Void then

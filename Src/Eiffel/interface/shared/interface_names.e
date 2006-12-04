@@ -780,6 +780,7 @@ feature -- Label texts
 	l_only_syntactically_related: STRING is "Only syntactically related"
 	l_ancestor_related: STRING is "Ancestor related"
 	l_descendant_related: STRING is "Descendant related"
+	l_invalid_item: STRING is "Invalid item"
 
 feature -- Stone names
 

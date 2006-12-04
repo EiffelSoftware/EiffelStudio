@@ -16,6 +16,10 @@ inherit
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 
+	QL_UTILITY
+
+	QL_SHARED
+
 feature -- Access
 
 	browser: EB_CLASS_BROWSER_GRID_VIEW [ANY]
@@ -136,6 +140,22 @@ feature{NONE} -- Implementation
 				a_item.set_general_tooltip (l_tooltip)
 			else
 				a_item.remove_general_tooltip
+			end
+		end
+
+	should_class_tooltip_be_displayed (a_class: CLASS_C): BOOLEAN is
+			-- Should tooltip for `a_class' be display?
+		require
+			a_class_attached: a_class /= Void
+		local
+			l_generic_generator: QL_GENERIC_DOMAIN_GENERATOR
+			l_generic_domain: QL_GENERIC_DOMAIN
+		do
+			Result := browser.should_tooltip_be_displayed
+			if Result then
+				create l_generic_generator.make (generic_criterion_factory.criterion_with_name (query_language_names.ql_cri_has_constraint, []), True)
+				l_generic_domain ?= query_class_item_from_class_c (a_class).wrapped_domain.new_domain (l_generic_generator)
+				Result := not l_generic_domain.is_empty
 			end
 		end
 

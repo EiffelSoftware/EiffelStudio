@@ -63,7 +63,6 @@ feature {NONE} -- Initlization
 			l_zero_size_container.disable_item_expand (internal_highlight_area_after)
 
 			create custom_area
-			custom_area.set_minimum_height (internal_shared.title_bar_height)
 			l_zero_size_container.extend (custom_area)
 			l_zero_size_container.disable_item_expand (custom_area)
 
@@ -72,13 +71,16 @@ feature {NONE} -- Initlization
 
 			create stick
 			stick.set_pixmap (internal_shared.icons.unstick)
+			stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick_unpin)
 
 			set_stick (False)
 
 			create normal_max
 			normal_max.set_pixmap (internal_shared.icons.maximize)
+			normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_maximize)
 			create close
 			close.set_pixmap (internal_shared.icons.close)
+			close.set_tooltip (internal_shared.tooltip_mini_toolbar_close)
 
 			stick.select_actions.extend (agent on_stick_select)
 			normal_max.select_actions.extend (agent on_normal_max)
@@ -138,8 +140,10 @@ feature -- Command
 		do
 			if a_stick then
 				stick.set_pixmap (internal_shared.icons.stick)
+				stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick)
 			else
 				stick.set_pixmap (internal_shared.icons.unstick)
+				stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick_unpin)
 			end
 			is_stick := a_stick
 		ensure
@@ -151,8 +155,10 @@ feature -- Command
 		do
 			if a_max then
 				normal_max.set_pixmap (internal_shared.icons.normal)
+				normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_restore)
 			else
 				normal_max.set_pixmap (internal_shared.icons.maximize)
+				normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_maximize)
 			end
 			is_max := a_max
 		ensure
@@ -363,7 +369,7 @@ feature {NONE} -- Agents
 					if internal_tool_bar.has (mini_tool_bar_indicator) then
 						internal_tool_bar.prune (mini_tool_bar_indicator)
 					end
-					if not custom_area.has (internal_custom_widget) then
+					if not custom_area.is_destroyed and then not custom_area.has (internal_custom_widget) then
 						custom_area.wipe_out
 						if internal_custom_widget.parent /= Void then
 							internal_custom_widget.parent.prune (internal_custom_widget)
@@ -372,11 +378,12 @@ feature {NONE} -- Agents
 					end
 				else
 						-- Remove `internal_custom_widget' , add `mini_tool_bar_indicator' to `internal_tool_bar'.
-					custom_area.wipe_out
+					wipe_out_custom_area
 
 					if mini_tool_bar_indicator = Void then
 						create mini_tool_bar_indicator
 						mini_tool_bar_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
+						mini_tool_bar_indicator.set_tooltip (internal_shared.tooltip_mini_toolbar_hidden_toolbar_indicator)
 						mini_tool_bar_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
 					end
 
@@ -402,8 +409,10 @@ feature {NONE} -- Agents
 		do
 			if  is_stick then
 				stick.set_pixmap (internal_shared.icons.unstick)
+				stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick_unpin)
 			else
 				stick.set_pixmap (internal_shared.icons.stick)
+				stick.set_tooltip (internal_shared.tooltip_mini_toolbar_stick)
 			end
 			stick_select_actions.call ([])
 		end
@@ -413,8 +422,10 @@ feature {NONE} -- Agents
 		do
 			if is_max then
 				normal_max.set_pixmap (internal_shared.icons.maximize)
+				normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_maximize)
 			else
 				normal_max.set_pixmap (internal_shared.icons.normal)
+				normal_max.set_tooltip (internal_shared.tooltip_mini_toolbar_restore)
 			end
 
 			normal_max_actions.call ([])

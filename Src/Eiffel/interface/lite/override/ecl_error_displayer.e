@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 				a_window.put_string (a_error.line.out)
 				a_window.put_string (")")
 			else
-				a_window.put_string ("ECLITE")
+				a_window.put_string ("ECL")
 			end
 
 				-- Code
@@ -128,6 +128,9 @@ feature {NONE} -- Implementation
 				end
 				l_file.close
 			end
+
+			a_window.put_new_line
+			a_error.build_explain (a_window)
 		end
 
 	short_help_file_name (a_error: ERROR): STRING is

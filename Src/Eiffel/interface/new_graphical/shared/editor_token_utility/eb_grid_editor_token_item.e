@@ -208,6 +208,7 @@ feature{NONE} -- Redraw
 			l_parent: EV_GRID
 			l_focused: BOOLEAN
 			l_editor_data: EB_EDITOR_DATA
+			l_width: INTEGER
 		do
 			l_parent := parent
 			l_focused := l_parent.has_focus
@@ -272,6 +273,11 @@ feature{NONE} -- Redraw
 				end
 				if l_text_x /= l_editor_token.x_offset or l_text_y /= l_editor_token.y_offset then
 					l_editor_token.set_x_y_offset (l_text_x, l_text_y)
+				end
+				l_width := width
+				if l_width /= last_column_width then
+					last_column_width := l_width
+					l_editor_token.set_maximum_width (l_width)
 				end
 				if is_selected then
 					l_editor_token.display_selected (0, 0, a_drawable, l_focused)
@@ -394,6 +400,9 @@ feature -- Pick and drop
 			good_result: a_index > 0 and then a_index <= editor_token_text.tokens.count implies
 				Result = editor_token_text.tokens.i_th (a_index).pebble
 		end
+
+	last_column_width: INTEGER;
+			-- Column width when this item is drawn
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

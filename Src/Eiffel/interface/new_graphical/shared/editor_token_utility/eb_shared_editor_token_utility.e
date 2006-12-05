@@ -56,7 +56,7 @@ feature -- Editor token
 				-- because the parent window could be on a different display, and moreover it
 				-- could be moved later to a different display.
 			a_tooltip.set_tooltip_maximum_width (ev_screen.width - 30)
-			a_tooltip.set_tooltip_maximum_height (ev_screen.height - 30)
+			a_tooltip.set_tooltip_maximum_height (70)
 			a_tooltip.set_tooltip_window_related_window_agent (agent last_focused_window)
 		end
 

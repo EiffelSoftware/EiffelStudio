@@ -14,18 +14,18 @@ inherit
 
 	EVS_SETTING_CHANGE_ACTIONS
 
-feature{NONE} -- Initialization
+create
+	default_create,
+	make_from_editor_line
 
-	make_empty is
-			--
-		do
-		end
+feature{NONE} -- Initialization
 
 	make_from_editor_line (a_line: EIFFEL_EDITOR_LINE) is
 			-- Initialize `tokens' with `a_line'.
 		require
 			a_line_attached: a_line /= Void
 		do
+			set_tokens (a_line.content)
 		end
 
 feature -- Token operation
@@ -48,7 +48,6 @@ feature -- Token operation
 			loop
 				l_token := a_tokens.item
 				if l_token /= Void then
-					l_token.update_width
 					l_tokens.extend (l_token)
 				end
 				a_tokens.forth
@@ -96,6 +95,7 @@ feature -- Setting
 			overriden_fonts := a_font
 			is_position_up_to_date := False
 			is_required_width_up_to_date := False
+			ellipsis_token_width_internal := 0
 			unlock_update
 			try_call_setting_change_actions
 		ensure
@@ -216,6 +216,14 @@ feature -- Setting
 			y_offset_set: y_offset = a_y_offset
 		end
 
+	invalidate is
+			-- Invalidate current so position recalculation is forced.
+		do
+			is_position_up_to_date := False
+		ensure
+			not_is_position_up_to_date: not is_position_up_to_date
+		end
+
 feature -- Status report
 
 	is_overriden_font_set: BOOLEAN is
@@ -312,7 +320,7 @@ feature -- Display
 			if not is_position_up_to_date then
 				update_position
 			end
-			l_tokens := tokens
+			l_tokens := adapted_tokens
 			if not l_tokens.is_empty then
 				l_pos := token_position
 				l_cursor := l_tokens.cursor
@@ -383,7 +391,7 @@ feature -- Display
 			if not is_position_up_to_date then
 				update_position
 			end
-			l_tokens := tokens
+			l_tokens := adapted_tokens
 			if not l_tokens.is_empty then
 				l_pos := token_position
 				l_cursor := l_tokens.cursor
@@ -427,7 +435,7 @@ feature -- Display
 			if not is_position_up_to_date then
 				update_position
 			end
-			l_tokens := tokens
+			l_tokens := adapted_tokens
 			if not l_tokens.is_empty then
 				l_pos := token_position
 				l_cursor := l_tokens.cursor
@@ -487,22 +495,22 @@ feature -- Access
 	overriden_line_height: INTEGER
 			-- Line height in pixel
 
-	tokens: ARRAYED_LIST [EDITOR_TOKEN] is
+	tokens: LINKED_LIST [EDITOR_TOKEN] is
 			-- `tokens' stored in list
 		do
 			if internal_tokens = Void then
-				create internal_tokens.make (0)
+				create internal_tokens.make
 			end
 			Result := internal_tokens
 		ensure
 			result_attached: Result /= Void
 		end
 
-	token_position: ARRAYED_LIST [EV_RECTANGLE] is
+	token_position: LINKED_LIST [EV_RECTANGLE] is
 			-- Position information of every token in `tokens'
 		do
 			if internal_token_position = Void then
-				create internal_token_position.make (0)
+				create internal_token_position.make
 			end
 			Result := internal_token_position
 		ensure
@@ -560,18 +568,11 @@ feature -- Measure
 			l_cursor: CURSOR
 			l_tokens: like tokens
 			l_token: EDITOR_TOKEN
-			l_overriden_font_used: BOOLEAN
-			l_overriden_fonts: like overriden_fonts
-			l_overriden_font: EV_FONT
 		do
 			if not is_required_width_up_to_date then
 				l_tokens := tokens
 				if not l_tokens.is_empty then
 					l_cursor := l_tokens.cursor
-					l_overriden_font_used := is_overriden_font_set
-					if l_overriden_font_used then
-						l_overriden_fonts := overriden_fonts
-					end
 					from
 						l_tokens.start
 					until
@@ -584,17 +585,7 @@ feature -- Measure
 							end
 							l_cur_line_width := 0
 						else
-							if l_overriden_font_used then
-								check
-									l_token.font_id >= 0
-									l_token.font_id < overriden_fonts.count
-									overriden_fonts.item (l_token.font_id) /= Void
-								end
-								l_overriden_font := l_overriden_fonts.item (l_token.font_id)
-								l_cur_line_width := l_cur_line_width + l_overriden_font.string_width (l_token.image)
-							else
-								l_cur_line_width := l_cur_line_width + l_token.width
-							end
+							l_cur_line_width := l_cur_line_width + token_width (l_token, l_token.image)
 						end
 						l_tokens.forth
 					end
@@ -619,23 +610,23 @@ feature -- Measure
 			x, y: INTEGER
 			l_overriden_font_used: BOOLEAN
 			l_wrapped: BOOLEAN
-			l_width, l_height: INTEGER
+			l_width: INTEGER
 			l_line_height: INTEGER
 			l_token_in_current_line: INTEGER
 			l_is_max_width_set: BOOLEAN
 			l_is_text_wrapped: BOOLEAN
-			l_overriden_font: EV_FONT
-			l_overriden_fonts: like overriden_fonts
+--			l_overriden_font: EV_FONT
+--			l_overriden_fonts: like overriden_fonts
 		do
 			l_tokens := tokens
 			if not l_tokens.is_empty then
 				l_cursor := l_tokens.cursor
-				l_overriden_font_used := is_overriden_font_set
+--				l_overriden_font_used := is_overriden_font_set
 				l_wrapped := is_text_wrap_enabled
 				l_line_height := actual_line_height
 				l_is_max_width_set := is_maximum_width_set
 				l_is_text_wrapped := is_text_wrap_enabled
-				l_overriden_fonts := overriden_fonts
+--				l_overriden_fonts := overriden_fonts
 				from
 					x := x_offset
 					y := y_offset
@@ -645,19 +636,20 @@ feature -- Measure
 					l_tokens.after
 				loop
 					l_token := l_tokens.item
-					if l_overriden_font_used then
-						check
-							l_token.font_id >= 0
-							l_token.font_id < overriden_fonts.count
-							overriden_fonts.item (l_token.font_id) /= Void
-						end
-						l_overriden_font := overriden_fonts.item (l_token.font_id)
-						l_width := l_overriden_font.string_width (l_token.image)
-						l_height := l_overriden_font.height
-					else
-						l_width := l_token.width
-						l_height := l_token.font.height
-					end
+--					if l_overriden_font_used then
+--						check
+--							l_token.font_id >= 0
+--							l_token.font_id < overriden_fonts.count
+--							overriden_fonts.item (l_token.font_id) /= Void
+--						end
+--						l_overriden_font := overriden_fonts.item (l_token.font_id)
+--						l_width := l_overriden_font.string_width (l_token.image)
+----						l_height := l_overriden_font.height
+--					else
+--						l_width := token_width (l_token, l_token.image)
+----						l_height := l_token.font.height
+--					end
+					l_width := token_width (l_token, l_token.image)
 					if
 						not l_token.is_new_line and then
 						(l_is_max_width_set and l_is_text_wrapped and x + l_width > maximum_width and l_token_in_current_line > 0)
@@ -719,58 +711,6 @@ feature{NONE} -- Display
 			a_drawable.draw_text_top_left (x, y, a_token.image)
 		end
 
-	display_part_selected_token (x ,y: INTEGER; a_token: EDITOR_TOKEN; a_select_start, a_select_end: INTEGER; a_focus: BOOLEAN; a_drawable: EV_DRAWABLE) is
-			-- Display `a_token' at position (x, y) in its partly selected state
-			-- Selection region is from `a_select_start' to `a_select_end'.
-			-- `a_focus' indicates whether `a_token' has focus or not.
-		require
-			a_token_attached: a_token /= Void
-			a_drawable_attached: a_drawable /= Void
-			selection_position_valid: a_select_start >= 1 and a_select_end <= a_token.image.count and a_select_start <= a_select_end
-		local
-			l_first_image: STRING
-			l_selected_image: STRING
-			l_last_image: STRING
-			l_image: STRING
-			l_x: INTEGER
-			l_font: EV_FONT
-			l_width: INTEGER
-		do
-			l_font := actual_token_font (a_token)
-			a_drawable.set_font (l_font)
-			l_image := a_token.image
-			if a_select_start > 1 then
-				l_first_image := l_image.substring (1, a_select_start - 1)
-			end
-			l_selected_image := l_image.substring (a_select_start, a_select_end)
-			if a_select_end < l_image.count then
-				l_last_image := l_image.substring (a_select_end + 1, l_image.count)
-			end
-			l_x := x
-			if l_first_image /= Void then
-				a_drawable.set_foreground_color (a_token.text_color)
-				a_drawable.draw_text_top_left (l_x, y, l_first_image)
-				l_x := l_x + l_font.string_width (l_first_image)
-			end
-			if l_image /= Void then
-				if a_focus then
-					a_drawable.set_background_color (a_token.selected_background_color)
-					a_drawable.set_foreground_color (a_token.selected_text_color)
-				else
-					a_drawable.set_background_color (a_token.focus_out_selected_background_color)
-					a_drawable.set_foreground_color (a_token.text_color)
-				end
-				l_width := l_font.string_width (l_image)
-				a_drawable.clear_rectangle (l_x, y, l_width, l_font.height)
-				a_drawable.draw_text_top_left (x, y, l_image)
-				l_x := l_x + l_width
-			end
-			if l_last_image /= Void then
-				a_drawable.set_foreground_color (a_token.text_color)
-				a_drawable.draw_text_top_left (l_x, y, l_last_image)
-			end
-		end
-
 feature{NONE} -- Implementation
 
 	actual_token_font (a_token: EDITOR_TOKEN): EV_FONT is
@@ -805,86 +745,284 @@ feature{NONE} -- Implementation
 	internal_required_width: INTEGER
 			-- Internal `required_width'
 
+	adapted_tokens: like tokens is
+			-- Adapted tokesn for ellipsis display
+		do
+			if adapted_tokens_internal = Void then
+				create adapted_tokens_internal.make
+			end
+			Result := adapted_tokens_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	adapted_tokens_internal: like adapted_tokens
+			-- Implementation of `adapted_tokens'
+
 	update_position is
 			-- Update width information and relative position in every token in `tokens'.
-		require
-			tokens_attached: tokens /= Void
 		local
 			l_tokens: like tokens
-			l_pos: like token_position
-			l_token: EDITOR_TOKEN
+			l_adapted_tokens: like adapted_tokens
+			l_position: like token_position
 			l_cursor: CURSOR
 			x, y: INTEGER
-			l_overriden_font_used: BOOLEAN
-			l_wrapped: BOOLEAN
-			l_width, l_height: INTEGER
-			l_line_height: INTEGER
-			l_token_in_current_line: INTEGER
 			l_is_max_width_set: BOOLEAN
-			l_is_text_wrapped: BOOLEAN
-			l_overriden_fonts: like overriden_fonts
-			l_overriden_font: EV_FONT
+			l_is_max_height_set: BOOLEAN
+			l_max_width: INTEGER
+			l_max_height: INTEGER
+			l_is_text_wrap_enabled: BOOLEAN
+			l_line_height: INTEGER
+			l_width_left: INTEGER
+			l_token: EDITOR_TOKEN
+			l_ellipsis_width: INTEGER
+			l_width: INTEGER
+			l_token_in_current_line: INTEGER
+			l_should_go_forward: BOOLEAN
+			l_done: BOOLEAN
+			l_split_token: EDITOR_TOKEN
+			l_split_token_pos: EV_RECTANGLE
+			l_splited: TUPLE [a_splited_token: EDITOR_TOKEN; a_splited_token_position: EV_RECTANGLE; a_ellipsis_position: EV_RECTANGLE]
+			l_finished: BOOLEAN
+			l_ell_pos: EV_RECTANGLE
+			l_x_offset: INTEGER
+			l_pro: PROFILING_SETTING
 		do
+			create l_pro.make
+			l_pro.start_profiling
 			l_tokens := tokens
 			if not l_tokens.is_empty then
-				l_pos := token_position
-				l_pos.wipe_out
-				l_cursor := l_tokens.cursor
-				l_overriden_font_used := is_overriden_font_set
-				if l_overriden_font_used then
-					l_overriden_fonts := overriden_fonts
-				end
-				l_wrapped := is_text_wrap_enabled
+					-- Clean tokens calculated before.
+				l_adapted_tokens := adapted_tokens
+				l_adapted_tokens.wipe_out
+
+					-- Clean positions calculated before.
+				l_position := token_position
+				l_position.wipe_out
+
+					-- Flags setup.
+				l_ellipsis_width := ellipsis_token_width
+				l_is_text_wrap_enabled := is_text_wrap_enabled
 				l_line_height := actual_line_height
 				l_is_max_width_set := is_maximum_width_set
-				l_is_text_wrapped := is_text_wrap_enabled
+				l_is_max_height_set := is_maximum_height_set
+				l_x_offset := x_offset
+				if l_is_max_height_set then
+					l_max_height := maximum_height
+				end
+				if l_is_max_width_set then
+					l_max_width := maximum_width
+				end
+				l_is_text_wrap_enabled := is_text_wrap_enabled
+
+					-- Update positions.
+				l_cursor := l_tokens.cursor
 				from
-					x := x_offset
+					x := l_x_offset
 					y := y_offset
+					l_width_left := l_max_width - l_x_offset
 					l_tokens.start
-					l_token_in_current_line := 0
+					l_should_go_forward := False
 				until
-					l_tokens.after
+					l_tokens.after or l_finished
 				loop
 					l_token := l_tokens.item
-					if l_overriden_font_used then
-						check
-							l_token.font_id >= 0
-							l_token.font_id < overriden_fonts.count
-							overriden_fonts.item (l_token.font_id) /= Void
+					l_width := token_width (l_token, l_token.image)
+
+					if is_maximum_width_set and then l_width > l_width_left then
+						check not l_token.is_new_line end
+						if
+							l_is_text_wrap_enabled and then
+							(l_token_in_current_line > 0 and then (l_is_max_height_set implies ((y + 2 * l_line_height) <= l_max_height)))
+						then
+								-- Place current token `l_token' in a new line.
+							 y := y + l_line_height
+							 x := l_x_offset
+							 l_token_in_current_line := 0
+							 l_width_left := l_max_width - l_x_offset
+
+							 	-- Because current token `l_token' has not been positioned, we dont' step forward.
+							 l_should_go_forward := False
+						else
+								-- Current token `l_token' must be placed in current line.
+							if x + l_ellipsis_width > l_max_width and then l_token_in_current_line > 0 then
+									-- If there is not enough space for display any part of current token plus ellipsis,
+									-- we search backward to find a token to adapt.
+								from
+									l_position.finish
+									l_adapted_tokens.finish
+									l_done := False
+								until
+									l_done or else l_position.before
+								loop
+									l_split_token_pos := l_position.item
+									if l_position.item.x + l_ellipsis_width <= l_max_width or else l_position.item.x = 0 then
+											-- We found the token which will be splited.
+										l_split_token := l_adapted_tokens.item
+										l_done := True
+									end
+									l_position.back
+									l_adapted_tokens.back
+									l_adapted_tokens.remove_right
+									l_position.remove_right
+								end
+							else
+									-- If left space is enough for display part of current token and ellipsis, or current token
+									-- is the only token in that line, we just chop current token apart and display ellipsis after the left part.
+								l_split_token := l_token
+								create l_split_token_pos.make (x, y, l_width, l_line_height)
+							end
+								-- Insert splited token and ellipsis.
+							l_splited := splited_token_with_ellipsis (l_split_token, l_split_token_pos, l_max_width)
+							l_ell_pos := l_splited.a_ellipsis_position
+							if l_splited.a_splited_token /= Void then
+								l_adapted_tokens.extend (l_splited.a_splited_token)
+								l_position.extend (l_splited.a_splited_token_position)
+							end
+							l_adapted_tokens.extend (ellipsis_token)
+							l_position.extend (l_ell_pos)
+							if l_is_text_wrap_enabled and then (l_is_max_height_set implies (y + 2 * l_line_height <= l_max_height)) then
+								x := l_x_offset
+								y := y + l_line_height
+								l_token_in_current_line := 0
+								l_width_left := l_max_width - l_x_offset
+							else
+								l_finished := True
+							end
+							l_should_go_forward := True
 						end
-						l_overriden_font := l_overriden_fonts.item (l_token.font_id)
-						l_width := l_overriden_font.string_width (l_token.image)
-						l_height := l_overriden_font.height
 					else
-						l_width := l_token.width
-						l_height := l_token.font.height
+						l_adapted_tokens.extend (l_token)
+						l_position.extend (create {EV_RECTANGLE}.make (x, y, l_width, l_line_height))
+						l_should_go_forward := True
+						if l_token.is_new_line then
+							if l_is_max_height_set implies (y + 2 * l_line_height <= l_max_height) then
+								x := l_x_offset
+								y := y + l_line_height
+								l_token_in_current_line := 0
+								l_width_left := l_max_width - l_x_offset
+							else
+								l_finished := True
+							end
+						else
+							x := x + l_width
+							l_width_left := l_width_left - l_width
+							l_token_in_current_line := l_token_in_current_line + 1
+						end
 					end
-					if
-						not l_token.is_new_line and then
-						(l_is_max_width_set and l_is_text_wrapped and x + l_width > maximum_width and l_token_in_current_line > 0)
-					then
-						x := x_offset
-						y := y + l_line_height
-						l_token_in_current_line := 0
+					if l_should_go_forward then
+						l_tokens.forth
 					end
-					l_pos.extend (create {EV_RECTANGLE}.make (x, y, l_width, l_line_height))
-					x := x + l_width
-					if l_token.is_new_line then
-						y := y + l_line_height
-						x := x_offset
-						l_token_in_current_line := 0
-					else
-						l_token_in_current_line := l_token_in_current_line + 1
-					end
-					l_tokens.forth
 				end
 				l_tokens.go_to (l_cursor)
 			end
 			is_position_up_to_date := True
+			l_pro.stop_profiling
 		ensure
-			position_up_to_date: is_position_up_to_date
-			token_position_set: token_position.count = tokens.count
+			position_is_up_to_date: is_position_up_to_date
+			data_valid: token_position.count = adapted_tokens.count
+		end
+
+	splited_token_with_ellipsis (a_token: EDITOR_TOKEN; a_position: EV_RECTANGLE; a_max_width: INTEGER): TUPLE [splited_token: EDITOR_TOKEN; splited_token_position: EV_RECTANGLE; ellipsis_token_positon: EV_RECTANGLE] is
+			-- Split `a_token' into former part and latter part, and remove the latter part
+			-- so there is enough space to display ellipsis "..." after the former part
+			-- according to position `a_position' for `a_token' and max width allowed `a_max_width'.
+			-- Return the former part in `splited_token', its position in `splited_token_position',
+			-- and position for ellipsis in `ellipsis_token_positon'.
+		require
+			a_token_attached: a_token /= Void
+			a_position_attached: a_position /= Void
+		local
+			l_editor_token: EDITOR_TOKEN_TEXT
+			l_splited_token_position: EV_RECTANGLE
+			l_ellipsis_position: EV_RECTANGLE
+			l_image: STRING
+			l_min_count: INTEGER
+			l_image_count: INTEGER
+			l_start_x: INTEGER
+			l_ellipsis_width: INTEGER
+			l_line_height: INTEGER
+			l_x_offset: INTEGER
+			l_token_width: INTEGER
+		do
+			l_editor_token ?= a_token.twin
+			l_start_x := a_position.x
+			l_line_height := actual_line_height
+			l_ellipsis_width := ellipsis_token_width
+			if l_editor_token /= Void and then not l_editor_token.image.is_empty then
+					-- For text editor token								
+				from
+					l_x_offset := x_offset
+					l_image := l_editor_token.image.twin
+					l_image_count := l_image.count
+					if a_position.x = l_x_offset then
+						l_min_count := 1
+					end
+					l_token_width := token_width (l_editor_token, l_image)
+				until
+					l_image_count = l_min_count or else l_start_x + l_token_width + l_ellipsis_width <= a_max_width
+				loop
+					l_image_count := l_image_count - 1
+					l_image.keep_head (l_image_count)
+					l_token_width := token_width (l_editor_token, l_image)
+				end
+				l_editor_token.set_image (l_image)
+				create l_splited_token_position.make (l_start_x, a_position.y, l_token_width, l_line_height)
+				create l_ellipsis_position.make (l_start_x + l_token_width, a_position.y, l_ellipsis_width, l_line_height)
+			else
+				l_editor_token := Void
+				create l_ellipsis_position.make (l_start_x, a_position.y, l_ellipsis_width, l_line_height)
+			end
+			Result := [l_editor_token, l_splited_token_position, l_ellipsis_position]
+		ensure
+			result_attached: Result /= Void
+			result_valid: (Result.splited_token /= Void implies Result.splited_token_position /= Void) and then
+						  (Result.splited_token = Void implies Result.splited_token_position = Void) and then
+						  (Result.ellipsis_token_positon /= Void)
+		end
+
+	ellipsis_token: EDITOR_TOKEN_SYMBOL is
+			-- Editor token for "..."
+		once
+			create Result.make ("...")
+		ensure
+			result_attached: Result /= Void
+		end
+
+	ellipsis_token_width: INTEGER is
+			-- Width in pixel of `ellipsis_token'.
+		do
+			if ellipsis_token_width_internal = 0 then
+				if is_overriden_font_set then
+					ellipsis_token_width_internal := overriden_fonts.item (ellipsis_token.font_id).string_width (ellipsis_token.image)
+				else
+					ellipsis_token_width_internal := token_width (ellipsis_token, ellipsis_token.image)
+				end
+			end
+			Result := ellipsis_token_width_internal
+		ensure
+			result_good: Result > 0
+		end
+
+	ellipsis_token_width_internal: INTEGER
+			-- Implementation of `ellipsis_token_width'
+
+	token_width (a_token: EDITOR_TOKEN; a_image: STRING): INTEGER
+			-- Width in pixel of `a_image' using font in `a_token' or `overriden_fonts' if `is_overriden_font_set'.
+		require
+			a_token_attached: a_token /= Void
+			a_image_attached: a_image /= Void
+		do
+			if is_overriden_font_set then
+				check
+					a_token.font_id >= 0
+					a_token.font_id < overriden_fonts.count
+					overriden_fonts.item (a_token.font_id) /= Void
+				end
+				Result := overriden_fonts.item (a_token.font_id).string_width (a_image)
+			else
+				Result := a_token.font.string_width (a_image)
+			end
 		end
 
 indexing

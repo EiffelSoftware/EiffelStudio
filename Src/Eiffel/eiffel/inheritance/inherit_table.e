@@ -997,6 +997,9 @@ end;
 
 						-- Found a feature of same name and written in the
 						-- same class.
+					check
+						has_body: body_server.server_has (body_index)
+					end
 					old_description := Body_server.server_item (body_index)
 					if old_description = Void then
 							-- This should not happen, but if it does.

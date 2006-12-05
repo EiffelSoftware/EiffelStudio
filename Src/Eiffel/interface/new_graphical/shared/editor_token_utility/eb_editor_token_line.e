@@ -615,18 +615,14 @@ feature -- Measure
 			l_token_in_current_line: INTEGER
 			l_is_max_width_set: BOOLEAN
 			l_is_text_wrapped: BOOLEAN
---			l_overriden_font: EV_FONT
---			l_overriden_fonts: like overriden_fonts
 		do
 			l_tokens := tokens
 			if not l_tokens.is_empty then
 				l_cursor := l_tokens.cursor
---				l_overriden_font_used := is_overriden_font_set
 				l_wrapped := is_text_wrap_enabled
 				l_line_height := actual_line_height
 				l_is_max_width_set := is_maximum_width_set
 				l_is_text_wrapped := is_text_wrap_enabled
---				l_overriden_fonts := overriden_fonts
 				from
 					x := x_offset
 					y := y_offset
@@ -636,19 +632,6 @@ feature -- Measure
 					l_tokens.after
 				loop
 					l_token := l_tokens.item
---					if l_overriden_font_used then
---						check
---							l_token.font_id >= 0
---							l_token.font_id < overriden_fonts.count
---							overriden_fonts.item (l_token.font_id) /= Void
---						end
---						l_overriden_font := overriden_fonts.item (l_token.font_id)
---						l_width := l_overriden_font.string_width (l_token.image)
-----						l_height := l_overriden_font.height
---					else
---						l_width := token_width (l_token, l_token.image)
-----						l_height := l_token.font.height
---					end
 					l_width := token_width (l_token, l_token.image)
 					if
 						not l_token.is_new_line and then

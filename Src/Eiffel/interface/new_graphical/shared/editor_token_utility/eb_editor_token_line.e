@@ -275,7 +275,7 @@ feature -- Status report
 			until
 				l_pos.after or done
 			loop
-				if l_pos.item.has_x_y (x, y) and not tokens.i_th (l_pos.index).image.is_equal (once "...") then
+				if l_pos.item.has_x_y (x, y) then
 					Result := l_pos.index
 					done := True
 				end
@@ -289,10 +289,11 @@ feature -- Status report
 
 	pebble (a_index: INTEGER): ANY is
 			-- Pebble of item at position `a_index'.
-		require
-			a_index_valid: a_index >= 1 and a_index <= tokens.count
 		do
-			Result := tokens.i_th (a_index).pebble
+			check
+				a_index_valid: a_index >= 1 and a_index <= adapted_tokens.count
+			end
+			Result := adapted_tokens.i_th (a_index).pebble
 		end
 
 feature -- Display
@@ -608,13 +609,14 @@ feature -- Measure
 			l_token: EDITOR_TOKEN
 			l_cursor: CURSOR
 			x, y: INTEGER
-			l_overriden_font_used: BOOLEAN
 			l_wrapped: BOOLEAN
 			l_width: INTEGER
 			l_line_height: INTEGER
 			l_token_in_current_line: INTEGER
 			l_is_max_width_set: BOOLEAN
 			l_is_text_wrapped: BOOLEAN
+			l_max_width: INTEGER
+			l_should_go_forward: BOOLEAN
 		do
 			l_tokens := tokens
 			if not l_tokens.is_empty then
@@ -623,6 +625,7 @@ feature -- Measure
 				l_line_height := actual_line_height
 				l_is_max_width_set := is_maximum_width_set
 				l_is_text_wrapped := is_text_wrap_enabled
+				l_max_width := maximum_width
 				from
 					x := x_offset
 					y := y_offset
@@ -633,23 +636,19 @@ feature -- Measure
 				loop
 					l_token := l_tokens.item
 					l_width := token_width (l_token, l_token.image)
-					if
-						not l_token.is_new_line and then
-						(l_is_max_width_set and l_is_text_wrapped and x + l_width > maximum_width and l_token_in_current_line > 0)
-					then
+					if l_token.is_new_line or else (l_is_max_width_set and then x + l_width > l_max_width and then l_wrapped) then
 						x := 0
 						y := y + l_line_height
-						l_token_in_current_line := 0
-					end
-					x := x + l_width
-					if l_token.is_new_line then
-						y := y + l_line_height
-						x := 0
+						l_should_go_forward := l_token.is_new_line or else l_token_in_current_line = 0
 						l_token_in_current_line := 0
 					else
+						x := x + l_width
 						l_token_in_current_line := l_token_in_current_line + 1
+						l_should_go_forward := True
 					end
-					l_tokens.forth
+					if l_should_go_forward then
+						l_tokens.forth
+					end
 				end
 				l_tokens.go_to (l_cursor)
 			end

@@ -34,6 +34,13 @@ inherit
 			{NONE} all
 		end
 
+-- Access convience
+
+	CONF_ACCESS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -85,12 +92,14 @@ feature {NONE} -- Initialization
 		local
 			l_command: like command_for_parser_state
 			l_displayer: ECL_ERROR_DISPLAYER
-			l_loader: EC_PROJECT_LOADER
+			l_loader: PROJECT_LOADER
 			l_resources: TTY_RESOURCES
 			l_window: OUTPUT_WINDOW_STREAM
 			l_degree_out: ECL_DEGREE_OUTPUT
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
+			l_conf_loader: CONF_LOAD
+			l_factory: CONF_COMP_FACTORY
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -111,26 +120,11 @@ feature {NONE} -- Initialization
 				eiffel_project.set_degree_output (l_degree_out)
 
 					-- Load project
-				create l_loader
-				l_loader.set_should_stop_on_prompt (True)
-				l_loader.set_has_library_conversion (False)
-					-- Should implement use_settings
-				l_loader.set_ignore_user_configuration_file (True)
-				l_loader.open_project_file (a_parser.configuration_file, a_parser.target, a_parser.project_location, a_parser.clean_project)
-
+				l_loader := load_project_file (a_parser)
 				if not l_loader.has_error then
-						-- Set configuration settings
-					l_system := l_loader.eiffel_project.lace.conf_system
-					if l_system /= Void then
-						l_target := l_system.application_target
-						if l_target /= Void then
-							l_target.settings.merge (a_parser.configuration_settings)
-
-								-- Perform exection
-							l_command.set_is_finish_freezing_called (a_parser.compile_c_code)
-							l_command.execute
-						end
-					end
+					-- Perform exection
+					l_command.set_is_finish_freezing_called (a_parser.compile_c_code)
+					l_command.execute
 				end
 			else
 				if l_displayer /= Void then
@@ -173,6 +167,176 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	load_project_file (a_parser: ARGUMENT_PARSER): PROJECT_LOADER is
+			-- Loads a configuration file from parser `a_parser'
+		require
+			a_parser_attached: a_parser /= Void
+			a_parser_successful: a_parser.successful
+		local
+			l_system: CONF_SYSTEM
+			l_target: CONF_TARGET
+			l_conf_loader: CONF_LOAD
+			l_visitor: CONF_PRINT_VISITOR
+			l_settings: HASH_TABLE [STRING, STRING]
+			l_loader: EC_PROJECT_LOADER
+			l_file: PLAIN_TEXT_FILE
+			l_src_file: PLAIN_TEXT_FILE
+			l_file_name: STRING
+			l_cursor: CURSOR
+		do
+			create l_loader
+			l_loader.set_should_stop_on_prompt (True)
+			l_loader.set_has_library_conversion (False)
+			l_loader.set_ignore_user_configuration_file (True)
+
+			l_settings := a_parser.configuration_settings
+			if not l_settings.is_empty then
+					-- Duplicate project file and set settings.
+				l_file := modified_configuration_file (a_parser)
+				if l_file /= Void then
+					if inject_src_configuration_file (a_parser.configuration_file, l_file) then
+						l_file.close
+						
+						l_file_name := l_file.name
+						l_loader.open_project_file (l_file_name, a_parser.target, a_parser.project_location, a_parser.clean_project)
+						if not l_loader.has_error then
+
+								-- Retrieve applicable target.
+							l_system := l_loader.eiffel_project.lace.conf_system
+							check l_system_attached: l_system /= Void end
+							if a_parser.target /= Void then
+								l_target := l_system.compilable_targets.item (a_parser.target)
+							elseif a_parser.precompile then
+								l_target := l_system.library_target
+							else
+								l_target := l_system.application_target
+							end
+
+							if l_target /= Void then
+									-- Add settings to configuration.
+								l_cursor := l_settings.cursor
+								from l_settings.start until l_settings.after loop
+									l_target.add_setting (l_settings.key_for_iteration, l_settings.item_for_iteration)
+									l_settings.forth
+								end
+								l_settings.go_to (l_cursor)
+							end
+
+								-- Write configuration text.
+							create l_visitor.make
+							l_system.set_file_name (l_file_name)
+							l_visitor.process_system (l_system)
+
+								-- Reset file so we can rewrite from the beginning
+							l_file.reset (l_file.name)
+							l_file.open_write
+							l_file.put_string (l_visitor.text)
+							l_file.flush
+							l_file.close
+						else
+							l_file.close
+
+								-- Source configuration file was probably not locatable, so let the configuration systen
+								-- handle the error.
+							l_loader.open_project_file (a_parser.configuration_file, a_parser.target, a_parser.project_location, a_parser.clean_project)
+						end
+					end
+				else
+						-- Source configuration file was probably not locatable, so let the configuration systen
+						-- handle the error.	
+					l_loader.open_project_file (a_parser.configuration_file, a_parser.target, a_parser.project_location, a_parser.clean_project)
+				end
+			else
+					-- No setting set, use regular configuration file.
+				l_loader.open_project_file (a_parser.configuration_file, a_parser.target, a_parser.project_location, a_parser.clean_project)
+			end
+
+			Result := l_loader
+		ensure
+			result_attached: Result /= Void
+		end
+
+	modified_configuration_file (a_parser: ARGUMENT_PARSER): PLAIN_TEXT_FILE is
+			-- Retrieve a modified configuration file stream opened for writing.
+		require
+			a_parser_attached: a_parser /= Void
+			a_parser_successful: a_parser.successful
+		local
+			l_cfg_file: STRING
+			l_file: STRING
+			l_file_name: FILE_NAME
+			l_project_location: STRING
+			l_slash_pos: INTEGER
+			l_count: INTEGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				l_project_location := a_parser.project_location
+				if l_project_location /= Void then
+						-- Store project configuration file in project location
+					l_cfg_file := a_parser.configuration_file.twin
+					l_cfg_file.prune_all_trailing (operating_environment.directory_separator)
+					l_count := l_cfg_file.count
+
+						-- Retrieve file name			
+					l_slash_pos := l_cfg_file.last_index_of (operating_environment.directory_separator, l_count)
+					if l_slash_pos < l_count then
+						l_cfg_file := l_cfg_file.substring (l_slash_pos + 1, l_count)
+					end
+
+					create l_file_name.make_from_string (l_project_location)
+					l_file_name.set_file_name (l_cfg_file)
+				else
+						-- Store project configuration file next to ecf
+					create l_file_name.make_from_string (a_parser.configuration_file)
+				end
+				l_file_name.add_extension ("ecl")
+
+				create Result.make_open_write (l_file_name.out)
+			else
+					-- Use temporary file location
+				create l_file_name.make_temporary_name
+				create Result.make_open_write (l_file_name.out)
+			end
+		ensure
+			result_opened_for_writing: Result /= Void implies Result.is_open_write
+		rescue
+			if not retried then
+				retried := True
+				retry
+			end
+		end
+
+	inject_src_configuration_file (a_src_file: STRING; a_dest_file: PLAIN_TEXT_FILE): BOOLEAN is
+			-- Injects a source file `a_src_file' into open file `a_dest_file'.
+		require
+			a_src_file_attached: a_src_file /= Void
+			not_a_src_file_is_empty: not a_src_file.is_empty
+			a_dest_file_attached: a_dest_file /= Void
+			a_dest_file_is_open_write: a_dest_file.is_open_write or a_dest_file.is_open_append
+		local
+			l_file: PLAIN_TEXT_FILE
+			retried: BOOLEAN
+		do
+			if not retried then
+				create l_file.make_open_read (a_src_file)
+				l_file.copy_to (a_dest_file)
+				a_dest_file.flush
+				l_file.close
+				Result := True
+			else
+				if l_file /= Void and then not l_file.is_closed then
+					l_file.close
+				end
+				Result := False
+			end
+		ensure
+			not_a_dest_file_is_close: not a_dest_file.is_closed
+		rescue
+			retried := True
+			retry
 		end
 
 indexing

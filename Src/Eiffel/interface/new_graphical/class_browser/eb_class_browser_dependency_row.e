@@ -49,7 +49,7 @@ feature -- Access
 	grid_item: EB_GRID_COMPILER_ITEM is
 			-- Grid item to be displayed
 		local
-			l_path_style: like path_style
+			l_path_style: like item_path_style
 			l_class: QL_CLASS
 			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
 		do
@@ -114,19 +114,6 @@ feature -- Access
 				end
 			end
 			Result := grid_item_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	class_path (a_class: QL_CLASS; a_location: BOOLEAN): LIST [EDITOR_TOKEN] is
-			-- Path for `a_class'
-		require
-			a_class_valid: a_class /= Void
-		do
-			if a_class.conf_class.group.is_used_in_library then
-			else
---				Result := path_text (a, a_location, True)
-			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -401,7 +388,7 @@ feature{NONE} -- Implementation
 				if not a_keep_leading_separator then
 					l_path.keep_tail (l_path.count - 1)
 				end
-				l_path.replace_substring_all ("/", ".")
+				l_path.replace_substring_all ("/", path_separator.out)
 			end
 			l_plain_text_style := plain_text_style
 			l_plain_text_style.set_source_text (l_path)

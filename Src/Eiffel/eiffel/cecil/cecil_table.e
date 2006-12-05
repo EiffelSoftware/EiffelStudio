@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class CECIL_TABLE [T] 
+deferred class CECIL_TABLE [T]
 
 inherit
 	ANY
@@ -38,8 +38,10 @@ feature -- Initialization
 			hash_size_positive: hash_size > 0
 		local
 			i: INTEGER
+			l_primes: PRIMES
 		do
-			i := primes.higher_prime (bottom_int_div (5 * hash_size, 4)) - 1
+			create l_primes
+			i := l_primes.higher_prime (bottom_int_div (5 * hash_size, 4)) - 1
 			create keys.make (0, i)
 			create values.make (0, i)
 		end
@@ -58,7 +60,7 @@ feature {NONE} -- Access
 
 	values: ARRAY [T]
 			-- Values of the hash table
-			
+
 	keys: ARRAY [STRING]
 			-- Keys of the hash table
 
@@ -103,16 +105,6 @@ feature -- Element change
 				position := (position + increment) \\ hash_size
 				try := try + 1
 			end
-		end
-
-feature {NONE} -- Convenience
-
-	primes: PRIMES is
-			-- Prime number testor
-		once
-			create Result
-		ensure
-			primes_not_void: Result /= Void
 		end
 
 indexing

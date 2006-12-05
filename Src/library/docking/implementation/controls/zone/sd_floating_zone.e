@@ -21,8 +21,8 @@ inherit
 			{SD_CONFIG_MEDIATOR} destroy
 		undefine
 			initialize,
+			Identifier_path_separator,
 			show
-
 		redefine
 			type,
 			state
@@ -34,6 +34,8 @@ inherit
 		end
 
 	EV_UNTITLED_DIALOG
+-- FIXIT:	EV_UNTITLED_DIALOG can't use accelerator.
+--			We should use EV_POPUP_WINDOW, but it can't have a border now, so user can't resize. Implement it later.
 		rename
 			extend as extend_dialog,
 			show as show_allow_to_back,
@@ -66,6 +68,7 @@ feature {NONE} -- Initlization
 			default_create
 			create internal_vertical_box
 			extend_dialog (internal_vertical_box)
+
 			enable_user_resize
 			create internal_title_bar.make
 			internal_title_bar.drag_actions.extend (agent on_title_bar_drag)
@@ -80,26 +83,12 @@ feature {NONE} -- Initlization
 			if internal_floating_state.docking_manager.query.golbal_accelerators /= Void then
 				accelerators.append (internal_floating_state.docking_manager.query.golbal_accelerators)
 				set_title ("")
-				create l_test_key.make_with_code ({EV_KEY_CONSTANTS}.key_a)
-				create l_acceler_test.make_with_key_combination (l_test_key, False, False, False)
-				l_acceler_test.actions.extend (agent on_test_del_it)
-				accelerators.extend (l_acceler_test)
 			end
 			focus_in_actions.extend (agent on_dialog_focus_in)
 			focus_out_actions.extend (agent on_dialog_focus_out)
 			focus_in_actions.extend (agent (internal_docking_manager.agents).on_top_level_window_focus_in)
 			focus_out_actions.extend (agent (internal_docking_manager.agents).on_top_level_window_focus_out)
 			resize_actions.extend (agent on_resize)
-		end
-
-	on_test_del_it is
-			-- FIXIT:
-			-- Why dialog don't response to accelerators? But EV_TITLED_WINDOW works?
-		local
-			l_test: EV_INFORMATION_DIALOG
-		do
-			create l_test.make_with_text ("Test in SD_FLOATING_ZONE")
-			l_test.show
 		end
 
 feature {SD_CONFIG_MEDIATOR} -- Save config
@@ -393,7 +382,7 @@ feature {NONE} -- Agents
 		do
 			if internal_docking_manager.property.last_focus_content /= Void then
 				l_last_zone := internal_docking_manager.property.last_focus_content.state.zone
-				if has_recursive (l_last_zone) then
+				if not is_destroyed and then has_recursive (l_last_zone) then
 					internal_title_bar.enable_non_focus_active_color
 					l_last_zone.set_non_focus_selection_color
 				end

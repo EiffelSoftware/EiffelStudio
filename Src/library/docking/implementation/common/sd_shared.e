@@ -61,22 +61,6 @@ feature -- Access
 			set: hot_zone_factory = a_factory
 		end
 
-	hot_zone_factory_cell: CELL [SD_HOT_ZONE_ABSTRACT_FACTORY] is
-			-- Hot zone factory cell.
-		once
-			create Result
-		ensure
-			not_void: Result /= Void
-		end
-
-	allow_window_to_back_cell: CELL [BOOLEAN] is
-			-- Cell hold `allow_window_to_back'.
-		once
-			create Result
-		ensure
-			not_void: Result /= Void
-		end
-
 	widget_factory: SD_WIDGET_FACTORY is
 			-- SD_WIDGET_FACTORY instance.
 		once
@@ -155,6 +139,38 @@ feature -- Access
 			-- Drawer for tool bars.
 		once
 			create {SD_TOOL_BAR_DRAWER} Result.make
+		end
+
+	default_screen_x: INTEGER is
+			-- Default floating screen x/y position for the zone's float feature first time be called.
+		do
+			Result := default_screen_x_cell.item
+		end
+
+	default_screen_y: INTEGER is
+			-- Default floating screen x/y position for the zone's float feature first time be called.
+		do
+			Result := default_screen_y_cell.item
+		end
+
+	set_defualt_screen_x (a_x: INTEGER) is
+			-- Set `default_screen_x'
+		require
+			valid: default_screen_x >= 0
+		do
+			default_screen_x_cell.put (a_x)
+		ensure
+			set: default_screen_x = a_x
+		end
+
+	set_default_screen_y (a_y: INTEGER) is
+			-- Set `default_screen_y'
+		require
+			vaild: default_screen_y >= 0
+		do
+			default_screen_y_cell.put (a_y)
+		ensure
+			set: default_screen_y = a_y
 		end
 
 feature  -- Colors
@@ -381,6 +397,27 @@ feature -- Constants
 	Zone_navigation_right_column_name: STRING is "Targets"
 			-- Right column name of SD_ZONE_NAVIGATION_DIALOG.
 
+	Tooltip_mini_toolbar_stick: STRING is "Auto Hide"
+			-- Tooltip for mini toolbar pin buttons.
+	Tooltip_mini_toolbar_stick_unpin: STRING is "Auto Hide"
+			-- Tooltip for mini toolbar unpin buttons.
+	Tooltip_mini_toolbar_maximize: STRING is "Maximize"
+			-- Tooltip for mini toolbar maximize buttons.
+	Tooltip_mini_toolbar_restore: STRING is "Restore"
+			-- Tooltip for mini toolbar restore buttons.
+	Tooltip_mini_toolbar_minimize: STRING is "Minimize"
+			-- Tooltip for mini toolbar minimize buttons.
+	Tooltip_mini_toolbar_close: STRING is "Close"
+			-- Tooltip for mini toolbar close buttons.
+	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING is "Show Mini Toolbar"
+			-- Tooltip for mini toolbar hidden tool bar indicators.
+	Tooltip_mini_toolbar_hidden_tab_indicator: STRING is "Show List"
+			-- Tooltip for mini toolbar hidden tab indicators.
+	Tooltip_toolbar_tail_indicator: STRING is "Toolbar Options"
+			-- Tooltip for tool bar tail indicators.
+	Tooltip_toolbar_floating_close: STRING is "Close"
+			-- Tooltip for tool bar close button.
+
 feature {NONE} -- Implementation
 
 	color: SD_COLORS is
@@ -402,6 +439,38 @@ feature {NONE} -- Implementation
 
 	Auto_hide_tab_slide_timer_interval_cell: CELL [INTEGER] is
 			-- Singleton cell for `Auto_hide_tab_slide_timer_interval'.
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	hot_zone_factory_cell: CELL [SD_HOT_ZONE_ABSTRACT_FACTORY] is
+			-- Hot zone factory cell.
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	allow_window_to_back_cell: CELL [BOOLEAN] is
+			-- Cell hold `allow_window_to_back'.
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	default_screen_x_cell: CELL [INTEGER] is
+			-- Singleton cell for `default_screen_x'
+		once
+			create Result
+		ensure
+			not_void: Result /= Void
+		end
+
+	default_screen_y_cell: CELL [INTEGER] is
+			-- Singleton cell for `default_screen_y'
 		once
 			create Result
 		ensure

@@ -786,10 +786,7 @@ feature{NONE} -- Implementation
 			l_finished: BOOLEAN
 			l_ell_pos: EV_RECTANGLE
 			l_x_offset: INTEGER
-			l_pro: PROFILING_SETTING
 		do
-			create l_pro.make
-			l_pro.start_profiling
 			l_tokens := tokens
 			if not l_tokens.is_empty then
 					-- Clean tokens calculated before.
@@ -917,7 +914,6 @@ feature{NONE} -- Implementation
 				l_tokens.go_to (l_cursor)
 			end
 			is_position_up_to_date := True
-			l_pro.stop_profiling
 		ensure
 			position_is_up_to_date: is_position_up_to_date
 			data_valid: token_position.count = adapted_tokens.count

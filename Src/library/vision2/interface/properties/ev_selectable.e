@@ -48,7 +48,7 @@ feature -- Status setting
 		do
 			implementation.enable_select
 		ensure
-			is_selected: is_selected
+			is_selected: action_sequence_call_counter = old action_sequence_call_counter implies is_selected
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation

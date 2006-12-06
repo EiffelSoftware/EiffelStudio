@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Apearance of a screen pointer cursor, typically moved by a mouse."
+		"Appearance of a screen pointer cursor, typically moved by a mouse."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "mouse, pointer, cursor, arrow"

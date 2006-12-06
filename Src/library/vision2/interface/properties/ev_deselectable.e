@@ -6,8 +6,8 @@ indexing
 	keywords: "deselect, deselectable, select, selected, selectable"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-deferred class 
+
+deferred class
 	EV_DESELECTABLE
 
 inherit
@@ -16,7 +16,7 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-	
+
 feature -- Status setting
 
 	disable_select is
@@ -26,9 +26,9 @@ feature -- Status setting
 		do
 			implementation.disable_select
 		ensure
-			unselected: not is_selected
+			unselected: action_sequence_call_counter = old action_sequence_call_counter implies not is_selected
 		end
-		
+
 	toggle is
 			-- Change `is_selected'.
 		require
@@ -41,7 +41,7 @@ feature -- Status setting
 				enable_select
 			end
 		ensure
-			is_selected_changed: is_selected /= old is_selected
+			is_selected_changed: action_sequence_call_counter = old action_sequence_call_counter implies is_selected /= old is_selected
 		end
 
 feature {NONE} -- Contract support
@@ -49,14 +49,14 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_SELECTABLE} and not is_selected 
+			Result := Precursor {EV_SELECTABLE} and not is_selected
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_DESELECTABLE_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 invariant
 
 	not_selectable_therefore_not_selected: not is_selectable implies not is_selected
@@ -64,7 +64,7 @@ invariant
 		-- any descendent in which the parent can be in a single selection mode, to combat the
 		-- problem of adding two selected items, we have this assertion, so these items
 		-- cannot be selected unless they are parented.
-		
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

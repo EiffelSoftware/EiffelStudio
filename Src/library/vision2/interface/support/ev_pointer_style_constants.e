@@ -50,12 +50,15 @@ feature -- Enumeration
 	Wait_cursor: INTEGER is 13
 			-- Hourglass
 
+	Header_sizewe_cursor: INTEGER is 14
+			-- Double-pointed arrow pointing west and east used for header column resizing.
+
 feature -- Query
 
 	is_valid (a_integer: INTEGER): BOOLEAN is
 			-- If `a_integer' is valid?
 		do
-			Result := (Busy_cursor |..| Wait_cursor).valid_index (a_integer)
+			Result := (Busy_cursor |..| Header_sizewe_cursor).valid_index (a_integer)
 		end
 
 indexing

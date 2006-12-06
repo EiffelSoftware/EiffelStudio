@@ -14,6 +14,8 @@ inherit
 
 	EVS_SETTING_CHANGE_ACTIONS
 
+	EB_CONSTANTS
+
 create
 	default_create,
 	make_from_editor_line
@@ -95,7 +97,6 @@ feature -- Setting
 			overriden_fonts := a_font
 			is_position_up_to_date := False
 			is_required_width_up_to_date := False
-			ellipsis_token_width_internal := 0
 			unlock_update
 			try_call_setting_change_actions
 		ensure
@@ -190,8 +191,11 @@ feature -- Setting
 	set_x_offset (a_offset: INTEGER) is
 			-- Set `x_offset' with `a_offset'.			
 		do
+			lock_update
 			x_offset := a_offset
 			is_position_up_to_date := False
+			unlock_update
+			try_call_setting_change_actions
 		ensure
 			x_offset_set: x_offset = a_offset
 		end
@@ -199,8 +203,11 @@ feature -- Setting
 	set_y_offset (a_offset: INTEGER) is
 			-- Set `y_offset' with `a_offset'.			
 		do
+			lock_update
 			y_offset := a_offset
 			is_position_up_to_date := False
+			unlock_update
+			try_call_setting_change_actions
 		ensure
 			y_offset_set: y_offset = a_offset
 		end
@@ -208,9 +215,12 @@ feature -- Setting
 	set_x_y_offset (a_x_offset, a_y_offset: INTEGER) is
 			-- Set `x_offset' with `a_x_offset' and `y_offset' with `a_y_offset'.
 		do
+			lock_update
 			x_offset := a_x_offset
 			y_offset := a_y_offset
 			is_position_up_to_date := False
+			unlock_update
+			try_call_setting_change_actions
 		ensure
 			x_offset_set: x_offset = a_x_offset
 			y_offset_set: y_offset = a_y_offset
@@ -257,44 +267,8 @@ feature -- Status report
 			good_result: (Result implies maximum_height > 0) and (not Result implies maximum_height = 0)
 		end
 
-	token_index_at_position (x, y: INTEGER): INTEGER is
-			-- Index of item in `tokens' whose region contains position (x, y)
-			-- 0 if no item in `tokens' satisfies this condition.
-		local
-			l_pos: like token_position
-			l_cursor: CURSOR
-			done: BOOLEAN
-		do
-			if not is_position_up_to_date then
-				update_position
-			end
-			l_pos := token_position
-			l_cursor := l_pos.cursor
-			from
-				l_pos.start
-			until
-				l_pos.after or done
-			loop
-				if l_pos.item.has_x_y (x, y) then
-					Result := l_pos.index
-					done := True
-				end
-				l_pos.forth
-			end
-			l_pos.go_to (l_cursor)
-		ensure
-			result_non_negative: Result >= 0
-			result_correct: Result > 0 implies (Result <= token_position.count and then token_position.i_th (Result).has_x_y (x, y))
-		end
-
-	pebble (a_index: INTEGER): ANY is
-			-- Pebble of item at position `a_index'.
-		do
-			check
-				a_index_valid: a_index >= 1 and a_index <= adapted_tokens.count
-			end
-			Result := adapted_tokens.i_th (a_index).pebble
-		end
+	is_text_truncated: BOOLEAN
+			-- Was text of current truncated because of lack of space the last time when it is displayed?
 
 feature -- Display
 
@@ -658,6 +632,45 @@ feature -- Measure
 			end
 		end
 
+	token_index_at_position (x, y: INTEGER): INTEGER is
+			-- Index of item in `tokens' whose region contains position (x, y)
+			-- 0 if no item in `tokens' satisfies this condition.
+		local
+			l_pos: like token_position
+			l_cursor: CURSOR
+			done: BOOLEAN
+		do
+			if not is_position_up_to_date then
+				update_position
+			end
+			l_pos := token_position
+			l_cursor := l_pos.cursor
+			from
+				l_pos.start
+			until
+				l_pos.after or done
+			loop
+				if l_pos.item.has_x_y (x, y) then
+					Result := l_pos.index
+					done := True
+				end
+				l_pos.forth
+			end
+			l_pos.go_to (l_cursor)
+		ensure
+			result_non_negative: Result >= 0
+			result_correct: Result > 0 implies (Result <= token_position.count and then token_position.i_th (Result).has_x_y (x, y))
+		end
+
+	pebble (a_index: INTEGER): ANY is
+			-- Pebble of item at position `a_index'.
+		do
+			check
+				a_index_valid: a_index >= 1 and a_index <= adapted_tokens.count
+			end
+			Result := adapted_tokens.i_th (a_index).pebble
+		end
+
 feature{NONE} -- Display
 
 	display_token (x, y: INTEGER; a_token: EDITOR_TOKEN; a_drawable: EV_DRAWABLE) is
@@ -768,8 +781,10 @@ feature{NONE} -- Implementation
 			l_finished: BOOLEAN
 			l_ell_pos: EV_RECTANGLE
 			l_x_offset: INTEGER
+			l_ellipsis_token: like ellipsis_token
 		do
 			l_tokens := tokens
+			is_text_truncated := False
 			if not l_tokens.is_empty then
 					-- Clean tokens calculated before.
 				l_adapted_tokens := adapted_tokens
@@ -780,7 +795,8 @@ feature{NONE} -- Implementation
 				l_position.wipe_out
 
 					-- Flags setup.
-				l_ellipsis_width := ellipsis_token_width
+				l_ellipsis_token := ellipsis_token
+				l_ellipsis_width := token_width (l_ellipsis_token, l_ellipsis_token.image)
 				l_is_text_wrap_enabled := is_text_wrap_enabled
 				l_line_height := actual_line_height
 				l_is_max_width_set := is_maximum_width_set
@@ -809,6 +825,7 @@ feature{NONE} -- Implementation
 					l_width := token_width (l_token, l_token.image)
 
 					if is_maximum_width_set and then l_width > l_width_left then
+						is_text_truncated := True
 						check not l_token.is_new_line end
 						if
 							l_is_text_wrap_enabled and then
@@ -922,11 +939,13 @@ feature{NONE} -- Implementation
 			l_line_height: INTEGER
 			l_x_offset: INTEGER
 			l_token_width: INTEGER
+			l_ellipsis_token: like ellipsis_token
 		do
 			l_editor_token ?= a_token.twin
 			l_start_x := a_position.x
 			l_line_height := actual_line_height
-			l_ellipsis_width := ellipsis_token_width
+			l_ellipsis_token := ellipsis_token
+			l_ellipsis_width := token_width (l_ellipsis_token, l_ellipsis_token.image)
 			if l_editor_token /= Void and then not l_editor_token.image.is_empty then
 					-- For text editor token								
 				from
@@ -961,29 +980,11 @@ feature{NONE} -- Implementation
 
 	ellipsis_token: EDITOR_TOKEN_SYMBOL is
 			-- Editor token for "..."
-		once
-			create Result.make ("...")
+		do
+			create Result.make (interface_names.l_ellipsis)
 		ensure
 			result_attached: Result /= Void
 		end
-
-	ellipsis_token_width: INTEGER is
-			-- Width in pixel of `ellipsis_token'.
-		do
-			if ellipsis_token_width_internal = 0 then
-				if is_overriden_font_set then
-					ellipsis_token_width_internal := overriden_fonts.item (ellipsis_token.font_id).string_width (ellipsis_token.image)
-				else
-					ellipsis_token_width_internal := token_width (ellipsis_token, ellipsis_token.image)
-				end
-			end
-			Result := ellipsis_token_width_internal
-		ensure
-			result_good: Result > 0
-		end
-
-	ellipsis_token_width_internal: INTEGER
-			-- Implementation of `ellipsis_token_width'
 
 	token_width (a_token: EDITOR_TOKEN; a_image: STRING): INTEGER
 			-- Width in pixel of `a_image' using font in `a_token' or `overriden_fonts' if `is_overriden_font_set'.

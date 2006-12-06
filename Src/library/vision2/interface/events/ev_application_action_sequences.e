@@ -38,6 +38,8 @@ feature -- Event handling
 			-- Use of `idle_actions' is not thread-safe.  For thread-safe idle
 			-- actions handling use 'add_idle_action', `remove_idle_action'
 			-- or `do_once_on_idle' in conjunction with EV_THREAD_APPLICATION.
+		require
+			single_threaded: not {PLATFORM}.is_thread_capable
 		do
 			Result := implementation.idle_actions
 		ensure
@@ -83,7 +85,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	uncaught_exception_actions: ACTION_SEQUENCE [TUPLE [EXCEPTION]] is
+	uncaught_exception_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EXCEPTION]] is
 			-- Actions to be performed when an
 			-- action sequence called via callback
 			-- from the underlying toolkit raises an
@@ -94,7 +96,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_motion_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER]] is
+	pointer_motion_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER]] is
 			-- Actions to be performed when screen pointer moves with open arguments
 			-- widget: EV_WIDGET; screen_x, screen_y: INTEGER
 		do
@@ -103,7 +105,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+	pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
 			-- Actions to be performed when screen pointer button is pressed with open arguments
 			-- widget: EV_WIDGET; button, screen_x, screen_y: INTEGER
 		do
@@ -112,7 +114,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+	pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
 			-- Actions to be performed when screen pointer is double clicked with open arguments
 			-- widget: EV_WIDGET; button, screen_x, screen_y: INTEGER
 		do
@@ -121,7 +123,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	pointer_button_release_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+	pointer_button_release_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
 			-- Actions to be performed when screen pointer button is released with open arguments
 			-- widget: EV_WIDGET; button, screen_x, screen_y: INTEGER
 		do
@@ -130,7 +132,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	mouse_wheel_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER]] is
+	mouse_wheel_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER]] is
 			-- Actions to be performed when mouse wheel is rotated with open arguments
 			-- widget: EV_WIDGET; delta: INTEGER
 		do
@@ -139,7 +141,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	key_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
+	key_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
 			-- Actions to be performed when a keyboard key is pressed with open arguments
 			-- widget: EV_WIDGET; key: EV_KEY
 		do
@@ -148,7 +150,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_GENERAL]] is
+	key_press_string_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_GENERAL]] is
 			-- Actions to be performed when a keyboard press generates a displayable character with
 			-- open arguments widget: EV_WIDGET; string: STRING_GENERAL
 		do
@@ -157,7 +159,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	key_release_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
+	key_release_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
 			-- Actions to be performed when a keyboard key is released with open arguments
 			-- widget: EV_WIDGET; key: EV_KEY
 		do
@@ -166,7 +168,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	focus_in_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+	focus_in_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
 			-- Actions to be performed when getting focus with open arguments
 			-- widget: EV_WIDGET
 		do
@@ -175,7 +177,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	focus_out_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+	focus_out_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
 			-- Actions to be performed when losing focus with open arguments
 			-- widget: EV_WIDGET
 		do

@@ -11,7 +11,7 @@ deferred class
 	EV_ACTION_SEQUENCE [EVENT_DATA -> TUPLE create default_create end]
 
 inherit
-	ACTION_SEQUENCE [EVENT_DATA]
+	EV_LITE_ACTION_SEQUENCE [EVENT_DATA]
 		undefine
 			new_filled_list
 		end

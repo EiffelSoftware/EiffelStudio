@@ -822,7 +822,7 @@ feature -- Access
 		do
 			Result := implementation.viewable_width
 		ensure
-			viewable_width_valid: viewable_width >= 0 and viewable_width <= width
+			viewable_width_valid: is_displayed implies viewable_width >= 0 and viewable_width <= width
 		end
 
 	viewable_height: INTEGER is
@@ -833,7 +833,7 @@ feature -- Access
 		do
 			Result := implementation.viewable_height
 		ensure
-			viewable_height_valid: viewable_height >= 0 and viewable_height <= height
+			viewable_height_valid: is_displayed implies viewable_height >= 0 and viewable_height <= height
 		end
 
 	viewable_x_offset: INTEGER is

@@ -228,8 +228,9 @@ feature{NONE} -- Implementation
 			-- Adjust tooltip layout according to changes such as border color/width, maximum height/width...
 			-- If `should_redraw' is True, redraw whole tooltip region after adjustment.
 		do
-			set_x_offset (border_line_width + left_border)
-			set_y_offset (border_line_width + top_border)
+			lock_update
+			set_x_y_offset (border_line_width + left_border, border_line_width + top_border)
+			unlock_update
 			if drawing_area /= Void then
 				drawing_area.set_minimum_size (actual_tooltip_width, actual_tooltip_height)
 				if should_redraw and then drawing_area.is_displayed then

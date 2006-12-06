@@ -1,5 +1,5 @@
 indexing
-	description: "Object that represents a searchable, tooltipable, pick-and-dropable item in EV_GRID"
+	description: "Object that represents a pixmap trailer displayed in a grid editor token item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,70 +7,68 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_GRID_COMPILER_ITEM
+	EB_GRID_EDITOR_TOKEN_PIXMAP_TRAILER
 
 inherit
-	EB_GRID_EDITOR_TOKEN_ITEM
+	EB_GRID_EDITOR_TOKEN_ITEM_TRAILER
 
-	EB_SHARED_MANAGERS
-		undefine
-			copy,
-			is_equal,
-			default_create
+create
+	make
+
+feature{NONE} -- Initialization
+
+	make (a_pixmap: like pixmap) is
+			-- Initialize `pixmap' with `a_pixmap'.
+		do
+			set_pixmap (a_pixmap)
+		ensure
+			pixmap_set: pixmap = a_pixmap
 		end
 
-	EVS_GRID_SEARCHABLE_ITEM
-		undefine
-			copy,
-			is_equal,
-			default_create
+feature -- Access
+
+	pixmap: EV_PIXMAP
+			-- Pixmap associated with Current
+
+	required_width: INTEGER is
+			-- Required width in pixel
+		do
+			Result := pixmap.width
+		ensure then
+			good_result: Result = pixmap.width
 		end
 
-	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
-		undefine
-			copy,
-			is_equal,
-			default_create
+	required_height: INTEGER is
+			-- Required height in pixel
+		do
+			Result := pixmap.height
+		ensure then
+			good_result: Result = pixmap.height
+		end
+
+feature -- Drawing
+
+	draw (a_drawable: EV_DRAWABLE; a_start_x, a_start_y: INTEGER) is
+			-- Draw current trailer in `a_drawable' starting from (`a_start_x', `a_start_y').
+			-- `a_start_x' and `a_start_y' are 0-based.
+		do
+			a_drawable.draw_pixmap (a_start_x, a_start_y, pixmap)
 		end
 
 feature -- Setting
 
-	set_image (a_image: like image) is
-			-- Set `image' with `a_image'.
+	set_pixmap (a_pixmap: like pixmap) is
+			-- Set `pixmap' with `a_pixmap'.
 		require
-			a_image_attached: a_image /= Void
+			a_pixmap_attached: a_pixmap /= Void
 		do
-			create image_internal.make_from_string (a_image)
+			pixmap := a_pixmap
 		ensure
-			image_set: image /= Void and then image.is_equal (a_image)
+			pixmap_set: pixmap = a_pixmap
 		end
 
-feature -- Searchable
-
-	image: STRING is
-			-- Image of current used in search
-		do
-			Result := image_internal
-			if Result = Void then
-				Result := ""
-			end
-		end
-
-feature{NONE} -- Implementation
-
-	image_internal: like image
-			-- Implementation of `image'
-
-	internal_replace (original, new: STRING) is
-			-- Replace every occurrence of `original' with `new' in `image'.
-		do
-		end
-
-	grid_item: EV_GRID_ITEM is
-			-- EV_GRID item associated with current
-		do
-			Result := Current
-		end
+invariant
+	pixmap_attached: pixmap /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -103,6 +101,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

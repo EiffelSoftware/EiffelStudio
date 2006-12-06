@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"Facilities for direct drawing to a printer."
 	legal: "See notice at end of class."
@@ -27,9 +27,10 @@ feature {NONE} -- Initialization
 		require
 			a_dc_not_void: a_dc /= Void
 		do
-			-- default_create not being called as initialization relies on `a_dc'.
-			default_create_called := True
+				-- default_create not being called as initialization relies on `a_dc'.
+			set_default_colors
 			create_implementation
+			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, True)
 			implementation.set_printer_dc (a_dc)
 			implementation.initialize
 			initialize
@@ -74,7 +75,7 @@ feature -- Status setting
 		do
 			implementation.end_document
 		end
-	
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_PRINTER_I;

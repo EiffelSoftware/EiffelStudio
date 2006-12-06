@@ -288,21 +288,24 @@ feature {NONE} -- Implementation
 			n_args_not_negative: n_args >= 0
 			args_not_null: n_args > 0 implies args /= default_pointer
 		local
-			retried: BOOLEAN
+			l_retry_count: INTEGER
 			l_integer_pointer_tuple: like integer_pointer_tuple
 			app_imp: EV_APPLICATION_IMP
 		do
-			if not retried then
+			if l_retry_count = 0 then
 				l_integer_pointer_tuple := integer_pointer_tuple
 				l_integer_pointer_tuple.put_integer (n_args, 1)
 				l_integer_pointer_tuple.put_pointer (args, 2)
 				action.call (l_integer_pointer_tuple)
-			else
+			elseif l_retry_count = 1 then
 				app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
 				app_imp.on_exception_action (app_imp.new_exception)
+			else
+				-- An exception has been raised during the exception action so we
+				-- exit gracefully.
 			end
 		rescue
-			retried := True
+			l_retry_count := l_retry_count + 1
 			retry
 		end
 

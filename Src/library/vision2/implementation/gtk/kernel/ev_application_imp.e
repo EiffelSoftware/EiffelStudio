@@ -20,6 +20,8 @@ inherit
 				pointer_button_release_actions_internal
 			{EV_ANY_I, EV_INTERMEDIARY_ROUTINES}
 				is_destroyed
+		redefine
+			launch
 		end
 
 	EV_GTK_DEPENDENT_APPLICATION_IMP
@@ -95,14 +97,7 @@ feature {NONE} -- Event loop
 			-- and start the event loop.
 		do
 			if gtk_is_launchable then
-				from
-					gtk_dependent_launch_initialize
-					call_post_launch_actions
-				until
-					is_destroyed
-				loop
-					event_loop_iteration (True)
-				end
+				Precursor
 					-- Unhook marshal object.
 				gtk_marshal.destroy
 			end
@@ -111,30 +106,16 @@ feature {NONE} -- Event loop
 
 feature {EV_ANY_IMP} -- Implementation
 
-	event_loop_iteration (a_relinquish_cpu: BOOLEAN) is
-			-- Run a single iteration of the event loop.
-			-- CPU will be relinquished if `a_relinquish_cpu'.
-		local
-			retried: BOOLEAN
+	process_underlying_toolkit_event_queue is
+			-- Process underlying toolkit event queue.
 		do
-			if not retried then
+			from
 				process_gdk_events
-				if {EV_GTK_EXTERNALS}.events_pending then
-						-- This handles remaining idle handling such as timeouts, internal gtk/gdk idles and expose events.
-						{EV_GTK_EXTERNALS}.dispatch_events
-				else
-					if a_relinquish_cpu then
-							-- Idle actions only need to be called just before CPU relinquishment.
-						call_idle_actions
-						relinquish_cpu_slice
-					end
-				end
-			else
-				on_exception_action (new_exception)
+			until
+				not {EV_GTK_EXTERNALS}.events_pending or else is_destroyed
+			loop
+				{EV_GTK_EXTERNALS}.dispatch_events
 			end
-		rescue
-			retried := True
-			retry
 		end
 
 	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
@@ -226,36 +207,10 @@ feature -- Access
 
 feature -- Basic operation
 
-	process_events_until_stopped is
-			-- Process all events until one event is received
-			-- by `widget'.
-		do
-			from
-				stop_processing_requested := False
-			until
-				stop_processing_requested or else is_destroyed
-			loop
-				event_loop_iteration (True)
-			end
-		end
-
-	process_events is
-			-- Process all pending events and redraws.
-		do
-			event_loop_iteration (False)
-		end
-
 	process_graphical_events is
 			-- Process all pending graphical events and redraws.
 		do
 			{EV_GTK_EXTERNALS}.gdk_window_process_all_updates
-		end
-
-	stop_processing is
-			-- Exit `process_events_until_stopped'.
-		do
-				-- Set flag for 'process_events_until_stopped' to exit.
-			stop_processing_requested := True
 		end
 
 	motion_tuple: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER; originating_x: INTEGER; originating_y: INTEGER] is

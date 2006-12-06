@@ -273,7 +273,7 @@ feature -- Basic operations
 			until
 				blocking_condition
 			loop
-				l_app_imp.event_loop_iteration (True)
+				l_app_imp.process_event_queue (True)
 			end
 		end
 

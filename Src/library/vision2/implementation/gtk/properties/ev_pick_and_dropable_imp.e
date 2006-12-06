@@ -209,7 +209,7 @@ feature -- Implementation
 			-- Is `Current' able to initiate transport with `a_button'.
 		do
 			Result := (mode_is_drag_and_drop and then a_button = 1 and then not is_dockable) or
-				(mode_is_pick_and_drop and then a_button = 3)
+				(mode_is_pick_and_drop and then a_button = 3 and then not mode_is_configurable_target_menu)
 		end
 
 	on_mouse_button_event (
@@ -221,11 +221,11 @@ feature -- Implementation
 			-- Handle mouse button events.
 		local
 			app_imp: EV_APPLICATION_IMP
-			l_cursor: EV_POINTER_STYLE
 			l_top_level_window_imp: EV_WINDOW_IMP
 			l_call_events: BOOLEAN
 			l_dockable_source: EV_DOCKABLE_SOURCE_IMP
 			l_current: ANY
+			l_configure_agent: PROCEDURE [ANY, TUPLE]
 		do
 			l_call_events := True
 			app_imp := app_implementation
@@ -238,14 +238,15 @@ feature -- Implementation
 						l_call_events := False
 					elseif
 						(a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button)) or else
-						(a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then ready_for_pnd_menu (a_button)) then
+						ready_for_pnd_menu (a_button, a_type) then
 							-- Retrieve/calculate pebble
 						call_pebble_function (a_x, a_y, a_screen_x, a_screen_y)
 						if pebble /= Void then
-							if
-								a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button)
-							then
-								pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y)
+							l_configure_agent := agent (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y: INTEGER)
+							local
+								l_cursor: EV_POINTER_STYLE
+							do
+								pre_pick_steps (a_start_x, a_start_y, a_start_screen_x, a_start_screen_y)
 								if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (pebble) then
 										-- Set correct accept cursor if `Current' accepts its own pebble.
 									if accept_cursor /= Void then
@@ -263,11 +264,14 @@ feature -- Implementation
 								end
 								internal_set_pointer_style (l_cursor)
 								enable_capture
-								l_call_events := False
-							elseif a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum and then ready_for_pnd_menu (a_button) then
-								app_imp.target_menu (pebble).show
-								l_call_events := False
+							end (a_x, a_y, a_screen_x, a_screen_y)
+
+							if ready_for_pnd_menu (a_button, a_type) then
+								app_imp.target_menu (pebble, l_configure_agent).show
+							elseif a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then able_to_transport (a_button) then
+								l_configure_agent.call (Void)
 							end
+							l_call_events := False
 						end
 					end
 				else
@@ -304,10 +308,10 @@ feature -- Implementation
 			end
 		end
 
-	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+	ready_for_pnd_menu (a_button, a_type: INTEGER): BOOLEAN is
 			-- Will `Current' display a menu with button `a_button'.
 		do
-			Result := mode_is_target_menu and a_button = 3
+			Result := ((mode_is_target_menu or else mode_is_configurable_target_menu) and a_button = 3) and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum
 		end
 
 	end_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -335,7 +339,7 @@ feature -- Implementation
 				-- Call appropriate action sequences
 			l_pebble_tuple := [pebble]
 			if
-				able_to_transport (a_button)
+				able_to_transport (a_button) or else (a_button = 3 and then mode_is_configurable_target_menu)
 			then
 				target := pointed_target
 				if target /= Void and then target.drop_actions.accepts_pebble (pebble) then

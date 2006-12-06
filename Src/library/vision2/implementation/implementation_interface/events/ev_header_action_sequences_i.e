@@ -44,7 +44,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
+	item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
 			-- Actions to be performed when a mouse pointer is double-pressed on a header item.
 			--
 			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
@@ -60,7 +60,7 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	item_pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
+	item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
 			-- Actions to be performed when a mouse pointer is pressed on a header item.
 			--
 			-- item: EV_HEADER_ITEM -- The header item the event occurred upon.
@@ -87,10 +87,10 @@ feature {EV_ANY_I} -- Implementation
 	item_resize_end_actions_internal: EV_HEADER_ITEM_ACTION_SEQUENCE
 		-- Implementation of once per object `item_resize_end_actions_internal'.
 
-	item_pointer_button_press_actions_internal: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
+	item_pointer_button_press_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
 		-- Implementation of once per object `item_pointer_button_press_actions'.
 
-	item_pointer_double_press_actions_internal: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
+	item_pointer_double_press_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]]
 		-- Implementation of once per object `item_double_button_press_actions'.
 
 	create_item_resize_actions: EV_HEADER_ITEM_ACTION_SEQUENCE is
@@ -108,13 +108,13 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-	create_item_pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
+	create_item_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
 			-- Create an item button press actions.
 		do
 			create Result
 		end
 
-	create_item_pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
+	create_item_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_HEADER_ITEM, INTEGER, INTEGER, INTEGER]] is
 			-- Create an item double press actions.
 		do
 			create Result

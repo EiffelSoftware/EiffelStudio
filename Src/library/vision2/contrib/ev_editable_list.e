@@ -278,7 +278,7 @@ feature {NONE} -- Status report
 
 feature -- Actions
 
-	end_edit_actions: ACTION_SEQUENCE [TUPLE]
+	end_edit_actions: EV_LITE_ACTION_SEQUENCE [TUPLE]
 			-- List of actions to perform when list row has just been edited.
 
 feature {NONE} -- Actions

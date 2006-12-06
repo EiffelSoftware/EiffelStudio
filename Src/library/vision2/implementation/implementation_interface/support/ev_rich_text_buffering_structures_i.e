@@ -397,33 +397,39 @@ feature {NONE} -- Implementation
 			l_index: INTEGER
 			text_completed: BOOLEAN
 			current_text: STRING_32
-			current_character: WIDE_CHARACTER
-			next_character: WIDE_CHARACTER
+			current_character: CHARACTER_32
+			next_character: CHARACTER_32
+			l_new_line, l_carriage_return, l_closed_parenthesis, l_open_parenthesis, l_backslash: CHARACTER_32
 		do
 			create current_text.make (128)
 			from
 				l_index := 1
+				l_new_line := '%N'
+				l_carriage_return := '%R'
+				l_closed_parenthesis := '}'
+				l_open_parenthesis := '{'
+				l_backslash := '\'
 			until
 				text_completed or l_index + index > rtf_text.count
 			loop
 				current_character := get_character (rtf_text, l_index + index)
-				if current_character /= '%N' and current_character /= '%R' then
+				if current_character /= l_new_line and current_character /= l_carriage_return then
 						-- New line characters have no effect on the RTF contents, so
 						-- simply ignore these characters.
-					if current_character = '}' then
+					if current_character = l_closed_parenthesis then
 						text_completed := True
-					elseif current_character = '{' then
+					elseif current_character = l_open_parenthesis then
 						text_completed := True
 							-- If the text is ending with `{', we reduce
 							-- the offset by one so that the `{' is included within
 							-- the main iteration
 						l_index := l_index - 1
-					elseif current_character = '\' then
+					elseif current_character = l_backslash then
 						next_character := rtf_text.item (l_index + index + 1)
 							-- The following three characters are reserved in RTF, and therefore
 							-- if they appear in the text they must be escaped with the '\'.
 							-- We perform this here.
-						if next_character = '}' or next_character = '{' or next_character = '\' then
+						if next_character = l_closed_parenthesis or else next_character = l_open_parenthesis or else next_character = l_backslash then
 							current_character := next_character
 							l_index := l_index + 1
 						else

@@ -163,6 +163,17 @@ feature -- Access
 			result_non_negative: Result >= 0
 		end
 
+	is_displayed: BOOLEAN
+			-- Is `Current' visible on the screen?
+			-- An item that is_displayed does not necessarily have to be visible on screen at that particular time.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_displayed
+		ensure
+			bridge_ok: Result = implementation.is_displayed
+		end
+
 feature -- Status setting
 
 	ensure_visible is
@@ -170,6 +181,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			parented: parent /= Void
+			is_displayed: is_displayed
 		do
 			implementation.ensure_visible
 		ensure

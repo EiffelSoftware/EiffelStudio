@@ -32,7 +32,7 @@ feature -- Access
 
 invariant
 	column_not_void: column /= Void
-	parented_whilst_in_grid: column.is_displayed implies column.parent.header = parent
+	parented_whilst_in_grid: column.is_show_requested implies column.parent.header = parent
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

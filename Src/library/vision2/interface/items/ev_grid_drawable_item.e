@@ -53,7 +53,7 @@ feature -- Status setting
 
 feature -- Element change
 
-	expose_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
+	expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
 			-- Actions to be performed when an area needs to be redrawn.
 			-- See description at top of class to determine how to draw into the drawable.
 		do

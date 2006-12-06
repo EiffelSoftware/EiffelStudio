@@ -43,14 +43,25 @@ feature -- Access
 		end
 
 	is_displayed: BOOLEAN is
-			-- May `Current' be displayed when its `parent' is?
-			-- Will return False if `hide' has been called on `Current'.
-			-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
+			-- Is `Current' visible on the screen?
+			-- `True' when show requested and parent displayed.
+			-- A column that `is_show_requested' does not necessarily have to be visible on screen at that particular time.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_displayed
+		ensure
+			bridge_ok: Result = implementation.is_displayed
+		end
+
+	is_show_requested: BOOLEAN is
+			-- Will `Current' be displayed when its parent is?
+			-- See also `is_displayed'.
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
 		do
-			Result := implementation.is_displayed
+			Result := implementation.is_show_requested
 		end
 
 	title: STRING_32 is
@@ -233,7 +244,7 @@ feature -- Status setting
 		do
 			implementation.hide
 		ensure
-			not_is_displayed: not is_displayed
+			not_is_show_requested: not is_show_requested
 		end
 
 	show is
@@ -245,7 +256,7 @@ feature -- Status setting
 		do
 			implementation.show
 		ensure
-			is_displayed: is_displayed
+			is_show_requested: is_show_requested
 		end
 
 	ensure_visible is
@@ -253,7 +264,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			parented: parent /= Void
-			shown: is_displayed
+			is_displayed: is_displayed
 		do
 			implementation.ensure_visible
 		ensure
@@ -280,7 +291,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			parented: parent /= Void
-			shown: is_displayed
+			is_show_requested: is_show_requested
 		do
 			set_width (required_width_of_item_span (1, parent.row_count))
 		ensure

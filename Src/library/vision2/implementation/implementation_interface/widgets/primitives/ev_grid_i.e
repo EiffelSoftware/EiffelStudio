@@ -120,7 +120,7 @@ feature -- Access
 				visible_counter = i
 			loop
 				a_col_i := columns @ (counter)
-				if a_col_i.is_displayed then
+				if a_col_i.is_show_requested then
 					visible_counter := visible_counter + 1
 				end
 				counter := counter + 1
@@ -1080,8 +1080,8 @@ feature -- Status setting
 			a_col_i: EV_GRID_COLUMN_I
 		do
 			a_col_i := columns @ (a_column)
-			if not a_col_i.is_displayed then
-				a_col_i.set_is_displayed (True)
+			if not a_col_i.is_show_requested then
+				a_col_i.set_is_show_requested (True)
 				displayed_column_count := displayed_column_count + 1
 
 					-- Now show the header.
@@ -1103,8 +1103,8 @@ feature -- Status setting
 			a_col_i: EV_GRID_COLUMN_I
 		do
 			a_col_i := columns @ (a_column)
-			if a_col_i.is_displayed then
-				a_col_i.set_is_displayed (False)
+			if a_col_i.is_show_requested then
+				a_col_i.set_is_show_requested (False)
 				displayed_column_count := displayed_column_count - 1
 
 					-- Now hide the header
@@ -1947,7 +1947,7 @@ feature -- Status report
 			a_col_i: EV_GRID_COLUMN_I
 		do
 			a_col_i := columns @ (a_column)
-			Result := a_col_i.is_displayed
+			Result := a_col_i.is_show_requested
 		end
 
 	is_row_selection_enabled: BOOLEAN is
@@ -2657,7 +2657,7 @@ feature -- Removal
 				i > l_column_count
 			loop
 				current_column := columns.i_th (i)
-				if current_column.is_displayed then
+				if current_column.is_show_requested then
 						-- Now remove associated header item.
 					header.go_i_th (1)
 					header.remove
@@ -2781,7 +2781,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			until
 				i = 0
 			loop
-				if not (l_columns @ i).is_displayed then
+				if not (l_columns @ i).is_show_requested then
 						-- If the column is not visible then neither is its associating header item.
 					Result := Result - 1
 				end
@@ -3786,7 +3786,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 				columns.off or l_viewable_width <= 0
 			loop
 				l_column := columns.item
-				if l_column.is_displayed then
+				if l_column.is_show_requested then
 					l_viewable_width := l_viewable_width - l_column.width
 				end
 				if l_viewable_width > 0 then
@@ -6020,7 +6020,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 
 	non_displayed_row_count: INTEGER
 		-- Number of rows hidden in `Current'. Note that this is simply those that are flagged
-		-- as not `is_displayed'. The actual visibility which is also based on expanded tree
+		-- as not `is_show_requested'. The actual visibility which is also based on expanded tree
 		-- information has no effect on this value. Use `computed_visible_row_count' to determine
 		-- the true number of rows that are actually displayed.
 

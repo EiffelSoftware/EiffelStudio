@@ -354,14 +354,19 @@ feature -- Generation
 										table_entry.after
 									loop
 										l_reordering := table_entry.item_for_iteration
-										l_reordering.set_frozen_age (new_frozen_age)
-										generate_feature (a_class, a_feature, final_mode, buffer, True,
-														  l_reordering.is_target_closed, l_reordering.open_map, True)
-										if final_mode then
+										if l_reordering.is_valid_for (a_feature) then
+											l_reordering.set_frozen_age (new_frozen_age)
 											generate_feature (a_class, a_feature, final_mode, buffer, True,
-															  l_reordering.is_target_closed, l_reordering.open_map, False)
+															  l_reordering.is_target_closed, l_reordering.open_map, True)
+											if final_mode then
+												generate_feature (a_class, a_feature, final_mode, buffer, True,
+																  l_reordering.is_target_closed, l_reordering.open_map, False)
+											end
+											table_entry.forth
+										else
+											table_entry.forth
+											table_entry.remove (l_reordering)
 										end
-										table_entry.forth
 									end
 								end
 								l_table_of_class.forth

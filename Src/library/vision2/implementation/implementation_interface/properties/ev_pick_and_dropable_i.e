@@ -143,11 +143,19 @@ feature -- Status setting
 		end
 
 	set_target_menu_mode is
-			-- Set transport mechanism to target_menu.
+			-- Set transport mechanism to a target_menu.
 		do
 			user_interface_mode := target_menu_mode
 		ensure
 			mode_is_target_menu: mode_is_target_menu
+		end
+
+	set_configurable_target_menu_mode is
+			-- Set transport mechanism to a configurable target_menu.
+		do
+			user_interface_mode := configurable_target_menu_mode
+		ensure
+			mode_is_target_menu: mode_is_configurable_target_menu
 		end
 
 	set_accept_cursor (a_cursor: like accept_cursor) is
@@ -184,7 +192,7 @@ feature -- Status report
 	mode_is_pick_and_drop: BOOLEAN is
 			-- Is the transport mechanism pick and drop?
 		do
-			Result := user_interface_mode = pick_and_drop_mode
+			Result := user_interface_mode = pick_and_drop_mode or else user_interface_mode = configurable_target_menu_mode
 		end
 
 	mode_is_drag_and_drop: BOOLEAN is
@@ -194,9 +202,15 @@ feature -- Status report
 		end
 
 	mode_is_target_menu: BOOLEAN is
-			-- Is the transport mechanism target menu?
+			-- Is the transport mechanism a target menu?
 		do
 			Result := user_interface_mode = target_menu_mode
+		end
+
+	mode_is_configurable_target_menu: BOOLEAN is
+			-- Is the transport mechanism a configurable target menu?
+		do
+			Result := user_interface_mode = configurable_target_menu_mode
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -213,6 +227,7 @@ feature {EV_ANY_I} -- Implementation
 	pick_and_drop_mode: INTEGER_8 is 0
 	drag_and_drop_mode: INTEGER_8 is 1
 	target_menu_mode: INTEGER_8 is 2
+	configurable_target_menu_mode: INTEGER_8 is 3
 
 	start_transport (
 		a_x, a_y, a_button: INTEGER;

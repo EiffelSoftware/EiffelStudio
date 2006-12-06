@@ -781,6 +781,11 @@ feature -- Label texts
 	l_ancestor_related: STRING is "Ancestor related"
 	l_descendant_related: STRING is "Descendant related"
 	l_invalid_item: STRING is "Invalid item"
+	l_ellipsis: STRING is "..."
+	l_ancestor_of: STRING is "Ancestor of "
+	l_descendant_of: STRING is "Descendant of "
+	l_syntactical_supplier_of: STRING is "Syntactical supplier of "
+	l_syntactical_client_of: STRING is "Syntactical client of "
 
 feature -- Stone names
 

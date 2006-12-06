@@ -136,14 +136,14 @@ feature {NONE} -- Implementation
 			-- Call `real_update' on idle action
 		do
 			real_update_on_idle_called_on_stopped := a_dbg_stopped
-			ev_application.idle_actions.extend (update_on_idle_agent)
+			ev_application.add_idle_action (update_on_idle_agent)
 		end
 
 	cancel_process_real_update_on_idle is
 			-- cancel any calls to `real_update' on idle action	
 		do
 			real_update_on_idle_called_on_stopped := False
-			ev_application.idle_actions.prune_all (update_on_idle_agent)
+			ev_application.remove_idle_action (update_on_idle_agent)
 		end
 
 	update_on_idle_agent: PROCEDURE [ANY, TUPLE]; --TUPLE [BOOLEAN]]

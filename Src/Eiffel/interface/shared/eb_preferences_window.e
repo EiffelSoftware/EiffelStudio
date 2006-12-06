@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 					-- If structured view is enabled then we autosize the columns
 				Precursor
 			end
-			grid.process_events_and_idle
+			grid.ev_application.process_events
 			nb := grid.row_count
 			if nb > 0 then
 				grid.row (1).enable_select

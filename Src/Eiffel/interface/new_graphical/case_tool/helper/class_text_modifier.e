@@ -1259,10 +1259,10 @@ feature {NONE} -- Implementation
 			if not editor.is_empty then
 					-- Wait for the editor to read class text.
 				from
-					process_events_and_idle
 				until
 					editor.text_is_fully_loaded
 				loop
+					ev_application.process_events
 				end
 			end
 

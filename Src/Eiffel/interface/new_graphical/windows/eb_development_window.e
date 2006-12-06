@@ -2224,7 +2224,7 @@ feature -- Stone process
 				end
 			end
 			if not editor_tool.text_area.has_focus then
-				ev_application.idle_actions.extend_kamikaze (agent editor_tool.set_focus)
+				ev_application.do_once_on_idle (agent editor_tool.set_focus)
 			end
 		end
 

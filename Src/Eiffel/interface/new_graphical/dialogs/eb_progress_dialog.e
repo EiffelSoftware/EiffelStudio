@@ -260,7 +260,7 @@ feature -- Actions
 			-- Process any pending events.
 			-- Not needed after `start' or `set_value'.
 		do
-			process_events_and_idle
+			ev_application.process_events
 			if cancel_compilation_requested then
 				cancel_compilation_requested := False
 				Error_handler.insert_interrupt_error (True)

@@ -60,12 +60,12 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			go_to (a_cursor)
 		end
 
-	internal_add_actions: ACTION_SEQUENCE [TUPLE [like item]]
+	internal_add_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [like item]]
 			-- Actions performed when an item has just been added.
 			-- Internal version not accessible by users, used by the
 			-- EiffelVision implementation.
 
-	internal_remove_actions: ACTION_SEQUENCE [TUPLE [like item]]
+	internal_remove_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [like item]]
 			-- Actions performed when an item has just been removed.
 			-- Internal version not accessible by users, used by the
 			-- EiffelVision implementation.

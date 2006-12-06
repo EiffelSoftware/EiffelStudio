@@ -232,7 +232,7 @@ feature -- Access
 			-- Is there an item in the table with key `key'? Set `found_item' to the found item.
 		local
 			old_position: INTEGER
-			l_default: G
+			l_default_value: G
 		do
 			old_position := position
 			internal_search (key)
@@ -240,7 +240,7 @@ feature -- Access
 			if Result then
 				found_item := content.item (position)
 			else
-				found_item := l_default
+				found_item := l_default_value
 			end
 			position := old_position
 		ensure then
@@ -470,12 +470,12 @@ feature -- Status report
 			-- (Answer: always yes for hash tables in this version)
 		local
 			l_internal: INTERNAL
-			l_default: H
+			l_default_key: H
 			l_index, i, nb: INTEGER
 		do
 			Result := True
 			debug ("prevent_hash_table_catcall")
-				if k /= l_default then
+				if k /= l_default_key then
 					create l_internal
 					from
 						i := 1

@@ -97,7 +97,7 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-	activate_actions: ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]] is
+	activate_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]] is
 			-- Actions to be performed to override the default `activate' setup of `Current', see {EV_GRID_EDITABLE_ITEM}.activate_action.
 			-- Useful for repositioning `popup_window', which will then be shown automatically by the grid.
 			-- Arguments of TUPLE (with name for clarity):

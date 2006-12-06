@@ -25,6 +25,11 @@ feature {NONE} -- Implementation
 
 feature -- Event handling
 
+	file_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]] is
+			-- Actions to be performed when an OS file drop is performed on `Current'.
+		do
+			Result := implementation.file_drop_actions
+		end
 
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer moves.
@@ -78,7 +83,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
 			-- Actions to be performed when mouse wheel is rotated.
 		do
@@ -112,7 +117,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is gained.

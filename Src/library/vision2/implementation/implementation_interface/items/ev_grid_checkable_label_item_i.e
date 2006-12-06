@@ -26,7 +26,7 @@ feature {EV_ANY} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_GRID_LABEL_ITEM_I}
-			create checked_changed_actions.make
+			create checked_changed_actions
 			pointer_button_press_actions.extend (agent checkbox_handled)
 		end
 
@@ -41,7 +41,7 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 
 feature {EV_GRID_CHECKABLE_LABEL_ITEM} -- Access
 
-	checked_changed_actions: ACTION_SEQUENCE [TUPLE [like interface]]
+	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [like interface]]
 			-- Actions when user checked the item.
 
 	is_checked: BOOLEAN

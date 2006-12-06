@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 
 feature {EV_GRID_DRAWABLE_ITEM} -- Implementation
 
-	expose_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
+	expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
 			-- Actions to be performed when an area needs to be redrawn.
 		do
 			if expose_actions_internal = Void then
@@ -87,13 +87,13 @@ feature {EV_GRID_DRAWABLE_ITEM} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	create_expose_actions: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
+	create_expose_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]] is
 			-- Create a expose action sequence.
 		do
 			create Result
 		end
 
-	expose_actions_internal: ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]]
+	expose_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_DRAWABLE]]
 			-- Implementation of once per object `expose_actions'.
 
 feature {EV_ANY_I} -- Implementation

@@ -108,7 +108,7 @@ feature -- Access
 			-- Class item
 		local
 			l_complete_generic_class_style: like complete_generic_class_no_star_style
-			l_agent_style: like agent_style
+			l_text_style: like plain_text_style
 			l_class_item_internal: like class_item_internal
 		do
 			if class_item_internal = Void then
@@ -117,9 +117,9 @@ feature -- Access
 				l_class_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (class_item))
 				l_complete_generic_class_style.set_ql_class (class_item)
 				if is_collapsed then
-					l_agent_style := agent_style
-					l_agent_style.set_text_function (agent: STRING do Result := "..." end)
-					l_class_item_internal.set_text_with_tokens ((l_complete_generic_class_style + l_agent_style).text)
+					l_text_style := plain_text_style
+					l_text_style.set_source_text (interface_names.l_ellipsis)
+					l_class_item_internal.set_text_with_tokens ((l_complete_generic_class_style + l_text_style).text)
 					l_class_item_internal.set_tooltip (interface_names.f_go_to_first_occurrence)
 				else
 					l_class_item_internal.set_text_with_tokens (l_complete_generic_class_style.text)
@@ -156,7 +156,7 @@ feature -- Access
 					l_plain_text_style.set_source_text (l_path)
 					l_style := l_style + l_plain_text_style
 				end
-				
+
 				path_grid_item_internal.set_text_with_tokens (l_style.text)
 				path_grid_item_internal.set_image (path_grid_item_internal.text)
 				if class_item.parent /= Void then

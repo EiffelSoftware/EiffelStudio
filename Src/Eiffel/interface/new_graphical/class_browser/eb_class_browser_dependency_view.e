@@ -830,7 +830,6 @@ feature{NONE} -- Grid binding
 			l_column_tbl: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
 			l_sorter: DS_QUICK_SORTER [QL_FEATURE]
 			l_level_index: INTEGER
-			l_row_type: INTEGER
 		do
 				-- Get features.
 			create l_feature_generator
@@ -865,19 +864,24 @@ feature{NONE} -- Grid binding
 				sort_level (a_row_node, l_level_index, l_level_index, comparator (l_order_list))
 			else
 					-- If classes are related either by inheritance relationship or only syntactical references
-				create l_new_row_node
+				a_row_node.data.grid_item.set_trailer_spacing (8)
+				a_row_node.data.grid_item.enable_adhesive_trailer
 				if is_class_inheritance_related (a_referenced_class, a_referencer_class) then
 					if is_displaying_suppliers then
-						l_row_type := {EB_CLASS_BROWSER_DEPENDENCY_ROW}.ancestor_row_type
+						add_trailer (a_referenced_class, pixmaps.icon_pixmaps.class_descendents_icon, interface_names.l_descendant_of, a_row_node.data.grid_item)
 					else
-						l_row_type := {EB_CLASS_BROWSER_DEPENDENCY_ROW}.descendant_row_type
+						add_trailer (a_referenced_class, pixmaps.icon_pixmaps.class_ancestors_icon, interface_names.l_ancestor_of, a_row_node.data.grid_item)
 					end
 				else
-					l_row_type := {EB_CLASS_BROWSER_DEPENDENCY_ROW}.syntactical_row_type
+					if is_displaying_suppliers then
+						add_trailer (a_referenced_class, pixmaps.icon_pixmaps.class_clients_icon, interface_names.l_syntactical_client_of, a_row_node.data.grid_item)
+					else
+						add_trailer (a_referenced_class, pixmaps.icon_pixmaps.class_supliers_icon, interface_names.l_syntactical_supplier_of, a_row_node.data.grid_item)
+					end
 				end
-				create l_dependency_row.make (Void, l_new_row_node, l_row_type, Current)
-				l_new_row_node.set_data (l_dependency_row)
-				a_row_node.children.force_last (l_new_row_node)
+				if a_row_node.data.grid_row.subrow_count > 0 then
+					grid.remove_row (a_row_node.data.grid_row.subrow (1).index)
+				end
 			end
 
 				-- Bind retrieved rows in grid.
@@ -895,6 +899,29 @@ feature{NONE} -- Grid binding
 			create l_column_tbl.make (1)
 			l_column_tbl.put (Void, feature_list_column)
 			auto_resize_columns (grid, l_column_tbl)
+		end
+
+	add_trailer (a_class: QL_CLASS; a_pixmap: EV_PIXMAP; a_text: STRING; a_grid_item: EB_GRID_EDITOR_TOKEN_ITEM)is
+			-- Add trailer into `a_grid_item' to display information of `a_class'.	
+			-- The trailer will display pixmap given by `a_pixmap' with tooltip saying `a_text' + name of `a_class'.
+		require
+			a_class_attached: a_class /= Void
+			a_pixmap_attached: a_pixmap /= Void
+			a_text_attached: a_text /= Void
+			a_grid_item_attached: a_grid_item /= Void
+		local
+			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
+			l_trailer: EB_GRID_EDITOR_TOKEN_PIXMAP_TRAILER
+		do
+			create l_trailer.make (a_pixmap)
+			create l_tooltip.make (l_trailer.pointer_enter_actions , l_trailer.pointer_leave_actions, agent a_grid_item.is_destroyed)
+			plain_text_style.set_source_text (a_text)
+			complete_generic_class_style.set_ql_class (a_class)
+			l_tooltip.set_tooltip_text ((plain_text_style + complete_generic_class_style).text)
+			l_tooltip.veto_tooltip_display_functions.extend (agent should_tooltip_be_displayed)
+			initialize_editor_token_tooltip (l_tooltip)
+			l_trailer.set_general_tooltip (l_tooltip)
+			a_grid_item.insert_trailer (l_trailer, 1)
 		end
 
 	mark_display is

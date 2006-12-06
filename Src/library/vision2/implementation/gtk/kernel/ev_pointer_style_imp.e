@@ -52,8 +52,72 @@ feature {NONE} -- Initlization
 
 	init_predefined (a_constant: INTEGER) is
 			-- Initialized a predefined cursor.
+		local
+			l_x_hotspot, l_y_hotspot: INTEGER
 		do
 			predefined_cursor_code := a_constant
+				-- Set hotspot values
+			inspect
+				a_constant
+			when {EV_POINTER_STYLE_CONSTANTS}.crosshair_cursor then
+				l_x_hotspot := 15
+				l_y_hotspot := 15
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.ibeam_cursor
+			then
+				l_x_hotspot := 7
+				l_y_hotspot := 10
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.no_cursor
+			then
+				l_x_hotspot := 10
+				l_y_hotspot := 10
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.sizeall_cursor
+			then
+				l_x_hotspot := 8
+				l_y_hotspot := 8
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.sizens_cursor
+			then
+				l_x_hotspot := 5
+				l_y_hotspot := 7
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.sizenwse_cursor
+			then
+				l_x_hotspot := 8
+				l_y_hotspot := 7
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.sizenesw_cursor
+			then
+				l_x_hotspot := 7
+				l_y_hotspot := 7
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.sizewe_cursor
+			then
+				l_x_hotspot := 7
+				l_y_hotspot := 5
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor
+			then
+				l_x_hotspot := 0
+				l_y_hotspot := 5
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.busy_cursor
+			then
+				l_x_hotspot := 16
+				l_y_hotspot := 16
+			when
+				{EV_POINTER_STYLE_CONSTANTS}.header_sizewe_cursor
+			then
+				l_x_hotspot := 7
+				l_y_hotspot := 5
+			else
+				l_x_hotspot := 0
+				l_y_hotspot := 0
+			end
+			set_x_hotspot (l_x_hotspot)
+			set_y_hotspot (l_y_hotspot)
 		end
 
 	init_from_cursor (a_cursor: EV_CURSOR) is
@@ -164,6 +228,8 @@ feature -- Implementation
 				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			when {EV_POINTER_STYLE_CONSTANTS}.uparrow_cursor then
 				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.uparrow_cursor_xpm)
+			when {EV_POINTER_STYLE_CONSTANTS}.header_sizewe_cursor then
+				a_image := image_from_xpm_data ({EV_STOCK_PIXMAPS_IMP}.sizewe_cursor_xpm)
 			else
 				a_image := gdk_pixbuf
 				{EV_GTK_EXTERNALS}.object_ref (a_image)

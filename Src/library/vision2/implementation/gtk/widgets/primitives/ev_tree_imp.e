@@ -334,20 +334,21 @@ feature -- Implementation
 			-- Is list or row able to transport PND data using `a_button'.
 		do
 			if pnd_row_imp /= Void then
-				Result := (pnd_row_imp.mode_is_drag_and_drop and a_button = 1) or
-				(pnd_row_imp.mode_is_pick_and_drop and a_button = 3)
+				Result := pnd_row_imp.able_to_transport (a_button)
 			else
 				Result := Precursor (a_button)
 			end
 		end
 
-	ready_for_pnd_menu (a_button: INTEGER): BOOLEAN is
+	ready_for_pnd_menu (a_button, a_type: INTEGER): BOOLEAN is
 			-- Is list or row able to display PND menu using `a_button'
 		do
-			if pnd_row_imp /= Void then
-				Result := pnd_row_imp.mode_is_target_menu and then a_button = 3
-			else
-				Result := mode_is_target_menu and then a_button = 3
+			if a_button = 3 and then a_type = {EV_GTK_EXTERNALS}.gdk_button_release_enum then
+				if pnd_row_imp /= Void then
+					Result := pnd_row_imp.mode_is_target_menu or else pnd_row_imp.mode_is_configurable_target_menu
+				else
+					Result := mode_is_target_menu or else mode_is_configurable_target_menu
+				end
 			end
 		end
 

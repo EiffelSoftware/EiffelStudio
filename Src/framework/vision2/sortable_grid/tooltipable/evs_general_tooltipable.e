@@ -201,6 +201,22 @@ feature -- Setting
 			related_window_set: tooltip_window.related_window_agent = a_agent
 		end
 
+	force_enter is
+			-- Force `pointer_enter_agent' to be called.
+		do
+			if is_tooltip_enabled then
+				pointer_enter_agent.call ([])
+			end
+		end
+
+	force_leave is
+			-- Force `pointer_leave_agent' to be called.
+		do
+			if is_tooltip_enabled then
+				pointer_leave_agent.call ([])
+			end
+		end
+
 feature{EVS_GENERAL_TOOLTIP_WINDOW} -- Setting
 
 	set_is_pointer_on_tooltip (b: BOOLEAN) is
@@ -425,24 +441,13 @@ feature{NONE} -- Tooltip show/hide
 		local
 			l_window: like tooltip_window
 			l_show: BOOLEAN
+			l_need_change_owner: BOOLEAN
 		do
 			l_window := tooltip_window
 			if not is_my_tooltip then
-				if l_window.has_owner then
-						-- We only display tooltip of current if other's tooltip is not pined.
-					if not l_window.owner.is_tooltip_pined then
-						l_window.detach_owner
-						l_show := True
-					end
-				else
-					l_show := True
-				end
-				if l_show then
-					if is_tooltip_displayed then
-						l_window.hide_tooltip
-					end
-					l_window.attach_owner (Current)
-				end
+				l_need_change_owner := True
+					-- We only display tooltip of current if other's tooltip is not pined.					
+				l_show := l_window.has_owner implies (not l_window.owner.is_tooltip_pined)
 			elseif not is_my_tooltip_displayed then
 				l_show := True
 			end
@@ -451,6 +456,15 @@ feature{NONE} -- Tooltip show/hide
 					before_display_actions.call ([])
 				end
 				if not is_tooltip_display_vetoed then
+					if is_tooltip_displayed then
+						l_window.hide_tooltip
+					end
+					if l_need_change_owner then
+						if l_window.has_owner then
+							l_window.detach_owner
+						end
+						l_window.attach_owner (Current)
+					end
 					l_window.show_tooltip (screen.pointer_position.x, screen.pointer_position.y)
 					setup_timer (tooltip_status_check_time, agent hide_tooltip)
 				end

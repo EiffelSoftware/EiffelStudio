@@ -90,23 +90,23 @@ feature {EV_ANY_I} -- implementation
 
 feature -- Event handling
 
-	new_item_actions: ACTION_SEQUENCE [TUPLE [EV_ITEM]]
+	new_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_ITEM]]
 			-- Actions to be performed after an item is added.
 
-	remove_item_actions: ACTION_SEQUENCE [TUPLE [EV_ITEM]]
+	remove_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_ITEM]]
 			-- Actions to be performed before an item is removed.
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM_LIST [G]
-	
+
 feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_ITEM_IMP is
 			-- `Result' is item at pixel position `x_pos', `y_pos'.
 		deferred
 		end
-		
+
 	screen_x: INTEGER is
 			-- Horizontal offset of `Current' relative to screen.
 		deferred

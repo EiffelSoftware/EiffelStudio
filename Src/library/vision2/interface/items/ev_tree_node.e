@@ -113,7 +113,7 @@ feature -- Status setting
 		do
 			implementation.set_expand (True)
 		ensure
-			is_expanded: is_expanded
+			is_expanded: action_sequence_call_counter = old action_sequence_call_counter implies is_expanded
 		end
 
 	collapse is
@@ -124,7 +124,7 @@ feature -- Status setting
 		do
 			implementation.set_expand (False)
 		ensure
-			not_is_expanded: not is_expanded
+			not_is_expanded: action_sequence_call_counter = old action_sequence_call_counter implies not is_expanded
 		end
 
 feature -- Contract support

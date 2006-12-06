@@ -41,7 +41,7 @@ feature -- Change
 
 feature -- Actions
 
-	checked_changed_actions: ACTION_SEQUENCE [TUPLE [like Current]] is
+	checked_changed_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [like Current]] is
 			-- Actions called when checkbox value changed.
 		do
 			Result := implementation.checked_changed_actions

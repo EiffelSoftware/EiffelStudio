@@ -87,14 +87,7 @@ feature {NONE} -- Initialization
 			create theme_window.make
 			create duplicated_message.make
 			set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
-		end
-
-	launch  is
-			-- Start the event loop.
-		do
 			set_application_main_window (silly_main_window)
-			call_post_launch_actions
-			message_loop
 		end
 
 feature -- Access
@@ -146,24 +139,6 @@ feature -- Basic operation
 			loop
 				process_message (msg)
 				msg.peek_paint_messages
-			end
-		end
-
-	process_events is
-			-- Process any pending events.
-			--| Pass control to the GUI toolkit so that it can
-			--| handle any events that may be in its queue.
-		local
-			msg: WEL_MSG
-		do
-			from
-				create msg.make
-				msg.peek_all
-			until
-				not msg.last_boolean_result
-			loop
-				process_message (msg)
-				msg.peek_all
 			end
 		end
 
@@ -516,10 +491,9 @@ feature -- Basic operation
 			-- Destroy `Current' (End the application).
 		do
 			cwin_post_quit_message (0)
-			quit_requested := True
 			set_is_destroyed (True)
 			window_with_focus := Void
-			interface.destroy_actions.call ([])
+			interface.destroy_actions.call (Void)
 		end
 
 feature -- Tooltips
@@ -565,27 +539,25 @@ feature {NONE} -- Implementation
 	message_loop is
 			-- Windows message loop.
 			--| Redefined to add accelerator functionality.
+		do
+			-- Not applicable with Vision2
+		end
+
+	process_underlying_toolkit_event_queue is
+			-- Process event queue from underlying toolkit.
 		local
 			msg: WEL_MSG
 		do
 			from
 				create msg.make
-			until
-				quit_requested
-			loop
 				msg.peek_all
-				if msg.last_boolean_result then
-					process_message (msg)
-				else
-					call_idle_actions
-					relinquish_cpu_slice
-				end
+			until
+				not msg.last_boolean_result or else is_destroyed
+			loop
+				process_message (msg)
+				msg.peek_all
 			end
 		end
-
-	quit_requested: BOOLEAN
-			-- Has a Wm_quit message been processed?
-			-- Or has destroy been called?
 
 	process_message (msg: WEL_MSG) is
 			-- Dispatch `msg'.
@@ -597,7 +569,7 @@ feature {NONE} -- Implementation
 		do
 			if msg.last_boolean_result then
 				if msg.quit then
-					quit_requested := True
+					set_is_destroyed (True)
 				else
 					focused_window := window_with_focus
 					if focused_window /= Void and then focused_window.exists then
@@ -673,34 +645,6 @@ feature {NONE} -- Implementation
 			create Result.make_with_array (l_array)
 		ensure
 			f10_accelerator_table_not_void: Result /= Void
-		end
-
-	process_events_until_stopped is
-			-- Process all events until 'stop_processing' is called.
-		local
-			msg: WEL_MSG
-		do
-			from
-				create msg.make
-				msg.peek_all
-				stop_processing_requested := False
-			until
-				stop_processing_requested
-			loop
-				msg.peek_all
-				if msg.last_boolean_result then
-					process_message (msg)
-				else
-					call_idle_actions
-					relinquish_cpu_slice
-				end
-			end
-		end
-
-	stop_processing is
-			--  Exit `process_events_until_stopped'.
-		do
-			stop_processing_requested := True
 		end
 
 	internal_capture_type: INTEGER_REF is

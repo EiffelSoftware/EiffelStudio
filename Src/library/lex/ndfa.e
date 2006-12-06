@@ -25,7 +25,7 @@ feature -- Access
 			source_in_automaton: source >= 1 and source <= nb_states;
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		deferred
-		end; 
+		end;
 
 	find_e_successors (source: INTEGER): LINKED_LIST [INTEGER] is
 			-- Epsilon successors of source.
@@ -33,7 +33,7 @@ feature -- Access
 		require
 			source_in_automaton: source >= 1 and source <= nb_states
 		deferred
-		end 
+		end
 
 feature -- Element change
 
@@ -44,7 +44,7 @@ feature -- Element change
 			target_in_automaton: target >= 1 and target <= nb_states;
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		deferred
-		end; 
+		end;
 
 	set_e_transition (source, target: INTEGER) is
 			-- Set epsilon transition from `source' to `target'.
@@ -52,7 +52,7 @@ feature -- Element change
 			source_in_automaton: source >= 1 and source <= nb_states;
 			target_in_automaton: target >= 1 and target <= nb_states
 		deferred
-		end; 
+		end;
 
 feature -- Removal
 
@@ -63,7 +63,7 @@ feature -- Removal
 			target_in_automaton: target >= 1 and target <= nb_states;
 			possible_input_doc: input_doc >= 0 and input_doc <= greatest_input
 		deferred
-		end; 
+		end;
 
 feature -- Transformation
 
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 				Result := Result or (closures.item (index));
 				index := initial_set.next (index)
 			end
-		end; 
+		end;
 
 	build_closures is
 			-- Build the array closures, which is used
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 				index := index + 1;
 				closures.put (closure (index), index)
 			end
-		end; 
+		end;
 
 	search_in_tree (set: FIXED_INTEGER_SET) is
 			-- Search set in set_tree. If set is not found,
@@ -244,7 +244,7 @@ feature {NONE} -- Implementation
 					io.new_line
 				end
 				current_tree.child_go_i_th (index)
-				if current_tree.child = Void then
+				if current_tree.child.arity = 0 then
 					create new_tree.make_filled (nb_states, 0)
 					current_tree.replace_child (new_tree)
 				end
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			i_in_closure: Result.has (i)
-		end; 
+		end;
 
 	move (initial_set: FIXED_INTEGER_SET; i: INTEGER): FIXED_INTEGER_SET is
 			-- Set of NDFA states to which there is a transition on
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 			-- Void if the set if empty
 			-- Secret
 		deferred
-		end; 
+		end;
 
 	initial_final_designation is
 			-- Set the final and initial attributes of dfa,

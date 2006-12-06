@@ -27,7 +27,7 @@ feature{NONE} -- Initialization
 			-- Initialize `item' with `a_item', `row_node' with `a_row_node', `row_type' with `a_row_type'  and `browser' with `a_browser'.
 		require
 			a_row_type_valid: is_row_type_valid (a_row_type)
-			a_item_valid: (a_row_type /= ancestor_row_type and a_row_type /= descendant_row_type and a_row_type /= syntactical_row_type) implies a_item /= Void
+			a_item_valid: a_item /= Void
 			a_row_node_valid: a_row_node /= Void
 			a_browser_attached: a_browser /= Void
 		do
@@ -57,26 +57,11 @@ feature -- Access
 				create grid_item_internal
 				inspect
 					row_type
-				when ancestor_row_type then
-					plain_text_style.set_source_text (interface_names.l_ancestor_related)
-					grid_item_internal.set_text_with_tokens (plain_text_style.text)
-					grid_item_internal.set_pixmap (pixmaps.icon_pixmaps.class_ancestors_icon)
-					grid_item_internal.set_image ("")
-				when descendant_row_type then
-					plain_text_style.set_source_text (interface_names.l_descendant_related)
-					grid_item_internal.set_text_with_tokens (plain_text_style.text)
-					grid_item_internal.set_pixmap (pixmaps.icon_pixmaps.class_descendents_icon)
-					grid_item_internal.set_image ("")
-				when syntactical_row_type then
-					plain_text_style.set_source_text (interface_names.l_only_syntactically_related)
-					grid_item_internal.set_text_with_tokens (plain_text_style.text)
-					grid_item_internal.set_pixmap (pixmaps.icon_pixmaps.class_overriden_normal_icon)
-					grid_item_internal.set_image ("")
 				when folder_row_type then
 							-- For folder row
 					l_class ?= item
 					check l_class /= Void end
-					grid_item_internal.set_text_with_tokens (path_grid_item_text (l_class, False))
+					grid_item_internal.set_text_with_tokens (path_grid_item_text (l_class, False, True, False))
 					grid_item_internal.set_image (grid_item_internal.text)
 					grid_item_internal.set_pixmap (pixmap_from_group_path (l_class.class_c.group, l_class.class_i.path))
 				else
@@ -104,10 +89,7 @@ feature -- Access
 						l_class ?= item
 						check l_class /= Void end
 						l_tooltip := new_general_tooltip (grid_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
-						if l_class.conf_class.group.is_used_in_library then
-						else
-						end
-						setup_general_tooltip (agent path_tooltip_text (l_class), l_tooltip)
+						l_tooltip.before_display_actions.extend (agent setup_general_tooltip (agent path_tooltip_text (l_class), l_tooltip))
 						grid_item_internal.set_general_tooltip (l_tooltip)
 					end
 
@@ -163,7 +145,7 @@ feature -- Access
 				end
 				feature_list_item_internal.set_image (feature_list_item_internal.text)
 				l_tooltip := new_general_tooltip (feature_list_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
-				setup_general_tooltip (agent tooltip_text_function, l_tooltip)
+				l_tooltip.before_display_actions.extend (agent setup_general_tooltip (agent tooltip_text_function, l_tooltip))
 				feature_list_item_internal.set_general_tooltip (l_tooltip)
 			end
 			Result := feature_list_item_internal
@@ -218,11 +200,7 @@ feature -- Status report
 					  a_row_type = folder_row_type or else
 					  a_row_type = referencer_class_row_type or else
 					  a_row_type = referenced_class_row_type or else
-					  a_row_type = feature_row_type or else
-					  a_row_type = ancestor_row_type or else
-					  a_row_type = descendant_row_type or else
-					  a_row_type = syntactical_row_type
-
+					  a_row_type = feature_row_type
 		end
 
 feature -- Constants
@@ -232,9 +210,6 @@ feature -- Constants
 	referenced_class_row_type: INTEGER is 3
 	referencer_class_row_type: INTEGER is 4
 	feature_row_type: INTEGER is 5
-	ancestor_row_type: INTEGER is 6
-	descendant_row_type: INTEGER is 7
-	syntactical_row_type: INTEGER is 8
 			-- Different row types
 
 feature -- Setting
@@ -397,19 +372,21 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	path_grid_item_text (a_class: QL_CLASS; a_allow_empty: BOOLEAN): LIST [EDITOR_TOKEN] is
+	path_grid_item_text (a_class: QL_CLASS; a_allow_empty: BOOLEAN; a_stop_on_target: BOOLEAN; a_force_complete: BOOLEAN): LIST [EDITOR_TOKEN] is
 			-- Editor token representations of path of `a_class' used in grid item.
 			-- If `a_class' is used in cluster, display "folder.folder.folder"
 			-- If `a_class' is used in library, display "cluster.cluster.folder.folder.folder"
 			-- If `a_allow_empty' is True, folder part of the part can be empty, otherwise at least "." is displayed as folder part.
+			-- If `a_stop_on_target' is True, stope path searching when we meet a target.
+			-- If `a_force_complete' is True, always find group/cluster part of path instead of only folder part.
 		require
 			a_class_attached: a_class /= Void
 		local
 			l_path_style: like class_path_style
 		do
-			if a_class.class_c.group.is_used_in_library then
+			if a_class.class_c.group.is_used_in_library or else a_force_complete then
 				l_path_style := class_path_style
-				l_path_style.set_item (conf_group_as_parent (a_class.class_i.config_class.group, True))
+				l_path_style.set_item (conf_group_as_parent (a_class.class_i.config_class.group, a_stop_on_target))
 				Result := l_path_style.text
 				Result.append (path_text (a_class, a_allow_empty, True))
 			else
@@ -429,7 +406,7 @@ feature{NONE} -- Implementation
 			l_plain_text_style := plain_text_style
 			l_plain_text_style.set_source_text (interface_names.l_location_colon)
 			Result := l_plain_text_style.text
-			Result.append (path_grid_item_text (a_class, True))
+			Result.append (path_grid_item_text (a_class, True, False, True))
 		end
 
 	class_path_style: EB_PATH_EDITOR_TOKEN_STYLE is
@@ -445,7 +422,7 @@ feature{NONE} -- Implementation
 		end
 
 invariant
-	item_attached: (row_type /= ancestor_row_type and row_type /= descendant_row_type and row_type /= syntactical_row_type) implies item /= Void
+	item_attached: item /= Void
 	row_node_attached: row_node /= Void
 	row_type_valid: is_row_type_valid (row_type)
 

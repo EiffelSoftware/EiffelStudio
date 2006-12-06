@@ -585,6 +585,8 @@ test	wiping-out-types				incr272	tcf	pass incrementality
 test	noclass-syntax					incr273 tcf pass incrementality
 test	gc-crash-in-melted-agent-creation incr274 tcf pass incrementality
 test	expanded-not-expanded			incr275 tcf pass incrementality
+test	finalize-changed-agent-to-changed-feature incr276 tcf pass incrementality
+
 
 -- Melting
 

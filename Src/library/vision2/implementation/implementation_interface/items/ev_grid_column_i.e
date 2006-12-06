@@ -95,11 +95,17 @@ feature -- Access
 			valid_result: Result >= 0 and Result <= count
 		end
 
-
-	is_displayed: BOOLEAN
+	is_show_requested: BOOLEAN
 		-- May `Current' be displayed when its `parent' is?
 		-- Will return False if `hide' has been called on `Current'.
-		-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
+
+	is_displayed: BOOLEAN
+			-- Is `Current' visible on the screen?
+			-- `True' when show requested and parent displayed.
+			-- A column that `is_displayed' does not necessarily have to be visible on screen at that particular time.
+		do
+			Result := is_show_requested and then parent_i /= Void and then parent_i.is_displayed
+		end
 
 	title: STRING_32 is
 			-- Title of Current column. Empty if none.
@@ -273,7 +279,7 @@ feature -- Status setting
 		do
 			parent.hide_column (index)
 		ensure
-			not_is_displayed: not is_displayed
+			not_is_displayed: not is_show_requested
 		end
 
 	show is
@@ -284,7 +290,7 @@ feature -- Status setting
 		do
 			parent.show_column (index)
 		ensure
-			is_displayed: is_displayed
+			is_displayed: is_show_requested
 		end
 
 	ensure_visible is
@@ -589,7 +595,7 @@ feature {EV_GRID_I} -- Implementation
 			end
 			clear
 			disable_select
-			set_is_displayed (False)
+			set_is_show_requested (False)
 			unparent
 		ensure
 			parent_i_unset: parent_i = Void
@@ -604,12 +610,12 @@ feature {EV_GRID_I} -- Implementation
 			set_is_destroyed (True)
 		end
 
-	set_is_displayed (a_displayed: BOOLEAN) is
-			-- Set `is_displayed' to `a_displayed'.
+	set_is_show_requested (a_displayed: BOOLEAN) is
+			-- Set `is_show_requested' to `a_displayed'.
 		do
-			is_displayed := a_displayed
+			is_show_requested := a_displayed
 		ensure
-			is_displayed_set: is_displayed = a_displayed
+			is_displayed_set: is_show_requested = a_displayed
 		end
 
 feature {NONE} -- Implementation

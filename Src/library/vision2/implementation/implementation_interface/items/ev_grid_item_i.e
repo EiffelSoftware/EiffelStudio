@@ -135,6 +135,14 @@ feature -- Access
 			Result := 0
 		end
 
+	is_displayed: BOOLEAN
+			-- Is `Current' visible on the screen?
+			-- `True' when parent displayed.
+			-- An item that is_displayed does not necessarily have to be visible on screen at that particular time.
+		do
+			Result := parent_i /= Void and then parent_i.is_displayed and then column_i.is_show_requested and then row_i.is_show_requested
+		end
+
 	width: INTEGER is
 			-- Width of `Current' in pixels.
 		require

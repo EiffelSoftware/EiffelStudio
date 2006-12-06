@@ -18,7 +18,8 @@ inherit
 		redefine
 			implementation,
 			application_exists,
-			initialize
+			initialize,
+			action_sequence_call_counter
 		end
 
 	EV_APPLICATION_ACTION_SEQUENCES
@@ -32,7 +33,7 @@ feature {NONE} -- Initialization is
 			-- Mark `Current' as initialized.
 		do
 			set_tooltip_delay (default_tooltip_delay)
-			is_initialized := True
+			Precursor
 		ensure then
 			tooltip_delay_initialized: tooltip_delay = default_tooltip_delay
 		end
@@ -188,6 +189,17 @@ feature -- Basic operation
 			implementation.process_events_until_stopped
 		end
 
+	process_graphical_events is
+			-- Process any pending paint events.
+			-- Pass control to the GUI toolkit so that it can
+			-- handle any paint events that may be in its queue.
+		require
+			not_destroyed: not is_destroyed
+			is_launched: is_launched
+		do
+			implementation.process_graphical_events
+		end
+
 	stop_processing is
 			--  Exit `process_events_until_stopped'.
 		require
@@ -304,7 +316,7 @@ feature -- Event handling
 		end
 
 	add_idle_action (a_idle_action: PROCEDURE [ANY, TUPLE]) is
-			-- Extend `idle_actions' with `a_idle_action'.
+			-- Add `a_idle_actions' to `idle_actions' if not already present.
 			-- Thread safe
 		require
 			a_idle_action_not_void: a_idle_action /= Void
@@ -321,8 +333,18 @@ feature -- Event handling
 			implementation.remove_idle_action (a_idle_action)
 		end
 
-	increase_action_sequence_call_counter is
+feature {EV_ANY, EV_LITE_ACTION_SEQUENCE} -- Implementation
+
+	action_sequence_call_counter: NATURAL_32
+			-- Counter used in post-conditions to determine if any actions sequences have been
+			-- called as a result of the routine the post-condition is applied to.
+
+feature {EV_LITE_ACTION_SEQUENCE} -- Implementation
+
+	increase_action_sequence_call_counter
+			-- Increase `action_sequence_call_counter' by one.
 		do
+			action_sequence_call_counter := action_sequence_call_counter + 1
 		end
 
 feature {NONE} -- Contract support

@@ -180,7 +180,7 @@ feature {NONE} -- Private characteristics & constants
 			if is_fixed_width then
 				Result := editor_preferences.tabulation_spaces * font_width
 			else
-				Result := editor_preferences.tabulation_spaces * font.string_width (once " ")
+				Result := editor_preferences.tabulation_spaces * font.string_width (once " ").max (1)
 			end
 		end
 

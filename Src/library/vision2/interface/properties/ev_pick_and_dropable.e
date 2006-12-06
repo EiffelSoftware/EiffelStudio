@@ -202,6 +202,18 @@ feature -- Status setting
 			target_menu_mode_set: mode_is_target_menu
 		end
 
+	set_configurable_target_menu_mode is
+			-- Set user interface mode to pop-up menu of targets.
+			-- Target menu is configurable as the first option can be used to
+			-- initiate a regular 'pick and drop' of the source pebble.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.set_configurable_target_menu_mode
+		ensure
+			target_menu_mode_set: mode_is_configurable_target_menu
+		end
+
 	set_pebble_position (a_x, a_y: INTEGER) is
 			-- Set the initial position for pick and drop
 			-- Coordinates are in pixels and are relative to position of `Current'.
@@ -289,6 +301,16 @@ feature -- Status report
 			Result := implementation.mode_is_target_menu
 		ensure then
 			bridge_ok: Result = implementation.mode_is_target_menu
+		end
+
+	mode_is_configurable_target_menu: BOOLEAN is
+			-- Is the user interface mode a configurable pop-up menu of targets?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.mode_is_configurable_target_menu
+		ensure then
+			bridge_ok: Result = implementation.mode_is_configurable_target_menu
 		end
 
 feature {NONE} -- Contract support

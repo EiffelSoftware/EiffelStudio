@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		do
 				-- Create this new implementation using the
 				-- same interface as other.
-			set_base_make_called (True)
+			set_state_flag (base_make_called_flag, True)
 
 			promote_from_simple (other)
 
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 				-- Is_initialized should be set to True
 				-- when the bridge pattern is linked.
-			set_is_initialized (False)
+			set_state_flag (is_initialized_flag, False)
 		end
 
 	promote_from_simple (other: EV_PIXMAP_IMP) is

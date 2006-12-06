@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			awaiting_movement := other_imp.awaiting_movement
 			background_color_imp := other_imp.background_color_imp
 			background_pixmap_imp := other_imp.background_pixmap_imp
-			set_base_make_called (other_imp.base_make_called)
+			set_state_flag (base_make_called_flag, other_imp.base_make_called)
 			child_cell := other_imp.child_cell
 			close_request_actions_internal := other_imp.close_request_actions_internal
 			commands := other_imp.commands

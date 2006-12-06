@@ -299,7 +299,7 @@ feature {NONE} -- Quick search bar.
 				search_bar.record_current_searched
 			elseif a_key.code = {EV_KEY_CONSTANTS}.key_enter and ctrled_key and not shifted_key and not alt_key then
 				search_bar.record_current_searched
-				ev_application.idle_actions.extend_kamikaze (agent editor_drawing_area.set_focus)
+				ev_application.do_once_on_idle (agent editor_drawing_area.set_focus)
 			elseif l_shortcut_forw.matches (a_key, alt_key, ctrled_key, shifted_key) then
 				quick_find_next
 			elseif l_shortcut_backw.matches (a_key, alt_key, ctrled_key, shifted_key) then
@@ -316,7 +316,7 @@ feature {NONE} -- Quick search bar.
 		do
 			if ctrled_key and not shifted_key and not alt_key then
 				search_bar.record_current_searched
-				ev_application.idle_actions.extend_kamikaze (agent editor_drawing_area.set_focus)
+				ev_application.do_once_on_idle (agent editor_drawing_area.set_focus)
 			elseif not ctrled_key and not shifted_key and not alt_key then
 				quick_find_next
 			elseif not ctrled_key and shifted_key and not alt_key then
@@ -329,7 +329,7 @@ feature {NONE} -- Quick search bar.
 		do
 			set_quick_search_mode (false)
 			hide_search_bar
-			ev_application.idle_actions.extend_kamikaze (agent set_focus_to_drawing_area)
+			ev_application.do_once_on_idle (agent set_focus_to_drawing_area)
 		end
 
 	quick_search_mode : BOOLEAN is

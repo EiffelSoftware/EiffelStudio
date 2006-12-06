@@ -252,7 +252,7 @@ feature -- Execution
 			until
 				not process_manager.is_c_compilation_running
 			loop
-				process_events_and_idle
+				ev_application.process_events
 			end
 		end
 

@@ -107,7 +107,7 @@ feature -- Actions
 	on_process_gui (a_item: QL_ITEM) is
 			-- Action to be performed to process gui events
 		do
-			process_events_and_idle
+			ev_application.process_events
 			if a_item /= Void then
 				display_status_message (metric_names.e_evaluating + a_item.path)
 			end

@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			-- Any widget loses focus.
 		do
 			if lose_focus /= Void then
-				ev_application.idle_actions.extend_kamikaze (agent lose_focus.call ([Void]))
+				ev_application.do_once_on_idle (agent lose_focus.call ([Void]))
 			end
 		end
 

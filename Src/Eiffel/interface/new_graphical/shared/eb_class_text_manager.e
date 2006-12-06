@@ -39,25 +39,27 @@ feature -- Access
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			unchanged_editor, changed_editor: EB_DEVELOPMENT_WINDOW
 			editor: EB_SMART_EDITOR
+			l_app: like ev_application
 		do
 			l := Window_manager.development_windows_with_class (a_class.name)
 			if not l.is_empty then
 				from
+					l_app := ev_application
 					l.start
 				until
 					l.after
 				loop
-						-- Wait for the editor to read class text.
-					editor := l.item.editor_tool.text_area
-					l.item.window.set_pointer_style (default_pixmaps.wait_cursor)
+
 					from
-						process_events_and_idle
+							-- Wait for the editor to read class text.
+						editor := l.item.editor_tool.text_area
+						l.item.window.set_pointer_style (default_pixmaps.wait_cursor)
 					until
 						editor.text_is_fully_loaded
 					loop
-							-- Because editor text is loaded on idle, unless idle_actions are called EiffelStudio
+							-- As editor text is loaded on idle, unless idle_actions are called EiffelStudio
 							-- stays in an infinite loop.
-						ev_application.idle_actions.call (Void)
+						l_app.process_events
 					end
 					l.item.window.set_pointer_style (default_pixmaps.standard_cursor)
 

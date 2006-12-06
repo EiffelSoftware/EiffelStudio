@@ -196,21 +196,22 @@ feature {NONE} -- Implementation
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			unchanged_editor, changed_editor: EB_DEVELOPMENT_WINDOW
 			l_editor: EB_SMART_EDITOR
+			l_app: like ev_application
 		do
 			l := window_manager.development_windows_with_class (a_class.name)
 			if not l.is_empty then
 				from
+					l_app := ev_application
 					l.start
 				until
 					l.after
 				loop
-					l_editor := l.item.editor_tool.text_area
 					from
-						process_events_and_idle
+						l_editor := l.item.editor_tool.text_area
 					until
 						editor.text_is_fully_loaded
 					loop
-						ev_application.idle_actions.call ([])
+						l_app.process_events
 					end
 					if l_editor.is_editable then
 						if l.item.changed then

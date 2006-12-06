@@ -161,6 +161,8 @@ feature {EV_ANY_I} -- Implementation
 	start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Initialize the pick/drag and drop mechanism.
+		local
+			l_configure_agent: PROCEDURE [ANY, TUPLE]
 		do
 			application_imp.clear_transport_just_ended
 			if mode_is_pick_and_drop and a_button /= 3 then
@@ -179,8 +181,12 @@ feature {EV_ANY_I} -- Implementation
 					-- If you drop on to a widget that is also a source and call `process_events' from the
 					-- `drop_actions', this causes the transport to start. The above check prevents this
 					-- from occurring.
-
-					if mode_is_pick_and_drop and a_button = 3 then
+					if (mode_is_target_menu or mode_is_configurable_target_menu) and a_button = 3 then
+						if mode_is_configurable_target_menu then
+							l_configure_agent := agent real_start_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+						end
+						application_imp.target_menu (pebble, l_configure_agent).show
+					elseif mode_is_pick_and_drop and a_button = 3 then
 						real_start_transport (a_x, a_y, a_button, a_x_tilt,
 							a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					elseif mode_is_drag_and_drop and a_button = 1 then
@@ -195,8 +201,6 @@ feature {EV_ANY_I} -- Implementation
 							awaiting_movement := True
 							application_imp.start_awaiting_movement
 						end
-					elseif mode_is_target_menu and a_button = 3 then
-						application_imp.target_menu (pebble).show
 					end
 				end
 			end
@@ -242,7 +246,8 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if
 				(mode_is_drag_and_drop and a_button = 1) or
-				(mode_is_pick_and_drop and a_button = 3)
+				(mode_is_pick_and_drop and a_button = 3) or
+				(mode_is_target_menu and a_button = 3)
 				-- Check that transport can be started.
 				--| Drag and drop is always started with the left button press.
 				--| Pick and drop is always started with the right button press.

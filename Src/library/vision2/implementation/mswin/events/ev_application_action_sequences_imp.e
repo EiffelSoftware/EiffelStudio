@@ -51,61 +51,61 @@ feature -- Event handling
 			create Result
 		end
 
-	create_pointer_motion_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER]] is
+	create_pointer_motion_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER]] is
 			-- Create a pointer_motion action sequence.
 		do
 			create Result
 		end
 
-	create_pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+	create_pointer_button_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
 			-- Create a pointer_button_press action sequence.
 		do
 			create Result
 		end
 
-	create_pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+	create_pointer_double_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
 			-- Create a pointer_double_press action sequence.
 		do
 			create Result
 		end
 
-	create_pointer_button_release_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+	create_pointer_button_release_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
 			-- Create a pointer_button_release action sequence.
 		do
 			create Result
 		end
 
-	create_mouse_wheel_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER]] is
+	create_mouse_wheel_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER]] is
 			-- Create a mouse_wheel action sequence.
 		do
 			create Result
 		end
 
-	create_key_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
+	create_key_press_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
 			-- Create a key_press action sequence.
 		do
 			create Result
 		end
 
-	create_key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_32]] is
+	create_key_press_string_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING_32]] is
 			-- Create a key_press_string action sequence.
 		do
 			create Result
 		end
 
-	create_key_release_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
+	create_key_release_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
 			-- Create a key_release action sequence.
 		do
 			create Result
 		end
 
-	create_focus_in_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+	create_focus_in_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
 			-- Create a focus_in action sequence.
 		do
 			create Result
 		end
 
-	create_focus_out_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+	create_focus_out_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
 			-- Create a focus_out action sequence.
 		do
 			create Result

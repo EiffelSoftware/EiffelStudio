@@ -154,7 +154,7 @@ feature -- Initialization
 		local
 			i: INTEGER
 			new_table: HASH_TABLE [G, H]
-			default_key: H
+			l_default_key: H
 			l_content: like content
 			l_keys: like keys
 		do
@@ -177,7 +177,7 @@ feature -- Initialization
 			end
 
 			if has_default then
-				new_table.put (l_content.item (capacity), default_key)
+				new_table.put (l_content.item (capacity), l_default_key)
 			end
 
 			set_content (new_table.content)
@@ -399,7 +399,7 @@ feature -- Status report
 	conflict: BOOLEAN is
 			-- Did last operation cause a conflict?
 		do
-			Result := (control = Conflict_constant)
+			Result := (control = conflict_constant)
 		end
 
 	inserted: BOOLEAN is
@@ -423,13 +423,13 @@ feature -- Status report
 	found: BOOLEAN is
 			-- Did last operation find the item sought?
 		do
-			Result := (control = Found_constant)
+			Result := (control = found_constant)
 		end
 
 	not_found: BOOLEAN is
 			-- Did last operation fail to find the item sought?
 		do
-			Result := (control = Not_found_constant)
+			Result := (control = not_found_constant)
 		end
 
 	after, off: BOOLEAN is
@@ -549,14 +549,14 @@ feature -- Cursor movement
 			-- `found_item' to item associated with `key'.
 		local
 			old_position: INTEGER
-			default_value: G
+			l_default_value: G
 		do
 			old_position := position
 			internal_search (key)
 			if found then
 				found_item := content.item (position)
 			else
-				found_item := default_value
+				found_item := l_default_value
 			end
 			position := old_position
 		ensure
@@ -643,8 +643,8 @@ feature -- Element change
 		require else
 			True
 		local
-			default_key: H
-			default_value: G
+			l_default_key: H
+			l_default_value: G
 		do
 			internal_search (key)
 			if not_found then
@@ -659,11 +659,11 @@ feature -- Element change
 					used_slot_count := used_slot_count + 1
 				end
 				keys.put (key, position)
-				if key = default_key then
+				if key = l_default_key then
 					has_default := True
 				end
 				count := count + 1
-				found_item := default_value
+				found_item := l_default_value
 			else
 				found_item := content.item (position)
 			end
@@ -764,22 +764,22 @@ feature -- Element change
 			-- see `instructions' in the Indexing clause.
 		local
 			insert_position: INTEGER
-			default_value: G
-			default_key: H
+			l_default_value: G
+			l_default_key: H
 		do
-			put (default_value, new_key)
+			put (l_default_value, new_key)
 			if inserted then
 				count := count - 1
 				insert_position := position
 				internal_search (old_key)
 				if found then
 					content.put (content.item (position), insert_position)
-					if old_key = default_key then
+					if old_key = l_default_key then
 						set_no_default
 					else
 						remove_at_position (position)
 					end
-					if new_key = default_key then
+					if new_key = l_default_key then
 						has_default := True
 					end
 					control := replaced_constant
@@ -841,19 +841,19 @@ feature -- Removal
 			-- If not, set `not_found'.
 			-- Reset `found_item' to its default value if `removed'.
 		local
-			default_key: H
-			default_value: G
+			l_default_key: H
+			l_default_value: G
 		do
 			internal_search (key)
 			if found then
-				if key = default_key then
+				if key = l_default_key then
 					set_no_default
 				else
 					remove_at_position (position)
 				end
 				count := count - 1
 				control := removed_constant
-				found_item := default_value
+				found_item := l_default_value
 			end
 		ensure
 			removed_or_not_found: removed or not_found
@@ -870,12 +870,12 @@ feature -- Removal
 	clear_all, wipe_out is
 			-- Reset all items to default values; reset status.
 		local
-			default_value: G
+			l_default_value: G
 		do
 			content.clear_all
 			keys.clear_all
 			deleted_marks.clear_all
-			found_item := default_value
+			found_item := l_default_value
 			count := 0
 			used_slot_count := 0
 			position := 0
@@ -1007,10 +1007,10 @@ feature {HASH_TABLE} -- Implementation: content attributes and preservation
 	set_no_default is
 			-- Record information that there is no value for default key.
 		local
-			default_value: G
+			l_default_value: G
 		do
 			has_default := False
-			content.put (default_value, capacity)
+			content.put (l_default_value, capacity)
 		end
 
 feature {HASH_TABLE} -- Implementation: search attributes
@@ -1054,9 +1054,9 @@ feature {NONE} -- Implementation
 		require
 			in_bounds: i >= 0 and i < capacity
 		local
-			default_key: H
+			l_default_key: H
 		do
-			Result := (keys.item (i) /= default_key)
+			Result := (keys.item (i) /= l_default_key)
 		end
 
 	truly_occupied (i: INTEGER): BOOLEAN is
@@ -1139,7 +1139,7 @@ feature {NONE} -- Implementation
 	computed_default_key: H is
 			-- Default key
 			-- (For performance reasons, used only in assertions;
-			-- elsewhere, see use of local entity `default_key'.)
+			-- elsewhere, see use of local entity `l_default_key'.)
 		do
 			-- No instructions necessary (returns default value of type H)
 		end
@@ -1147,7 +1147,7 @@ feature {NONE} -- Implementation
 	computed_default_value: G is
 			-- Default value of type G
 			-- (For performance reasons, used only in assertions;
-			-- elsewhere, see use of local entity `default_value'.)
+			-- elsewhere, see use of local entity `l_default_value'.)
 		do
 			-- No instructions necessary (returns default value of type G)
 		end
@@ -1159,7 +1159,7 @@ feature {NONE} -- Implementation
 			-- If not, set `position' to possible position for insertion,
 			-- and set status to `found' or `not_found'.
 		local
-			default_key: H
+			l_default_key: H
 			hash_value, increment, l_pos, l_capacity: INTEGER
 			first_deleted_position: INTEGER
 			stop: BOOLEAN
@@ -1168,12 +1168,12 @@ feature {NONE} -- Implementation
 			l_deleted_marks: like deleted_marks
 		do
 			first_deleted_position := impossible_position
-			if key = default_key then
+			if key = l_default_key then
 				position := capacity
 				if has_default then
-					control := Found_constant
+					control := found_constant
 				else
-					control := Not_found_constant
+					control := not_found_constant
 				end
 			else
 				from
@@ -1189,10 +1189,10 @@ feature {NONE} -- Implementation
 						-- Go to next increment.
 					l_pos := (l_pos + increment) \\ l_capacity
 					l_key := l_keys.item (l_pos)
-					if l_key = default_key then
+					if l_key = l_default_key then
 						if not l_deleted_marks.item (l_pos) then
 							stop := True
-							control := Not_found_constant
+							control := not_found_constant
 						elseif first_deleted_position = impossible_position then
 							first_deleted_position := l_pos
 						end
@@ -1204,7 +1204,7 @@ feature {NONE} -- Implementation
 						end
 						if l_key.is_equal (key) then
 							stop := True
-							control := Found_constant
+							control := found_constant
 						end
 					end
 				end
@@ -1229,12 +1229,12 @@ feature {NONE} -- Implementation
 		require
 			not_present: not has (key)
 		local
-			default_key: H
+			l_default_key: H
 			hash_value, increment, l_pos, l_capacity: INTEGER
 			l_deleted_marks: like deleted_marks
 			l_keys: like keys
 		do
-			if key = default_key then
+			if key = l_default_key then
 				check
 						-- Because of the precondition
 					not has_default
@@ -1249,7 +1249,7 @@ feature {NONE} -- Implementation
 					l_deleted_marks := deleted_marks
 					l_keys := keys
 				until
-					l_deleted_marks.item (l_pos) or l_keys.item (l_pos) = default_key
+					l_deleted_marks.item (l_pos) or l_keys.item (l_pos) = l_default_key
 				loop
 					l_pos := (l_pos + increment) \\ l_capacity
 				end
@@ -1269,11 +1269,11 @@ feature {NONE} -- Implementation
 			default_if_at_capacity:
 				(a_pos = capacity) implies (key = computed_default_key)
 		local
-			default_key: H
+			l_default_key: H
 		do
 			content.put (new, a_pos)
 			keys.put (key, a_pos)
-			if key = default_key then
+			if key = l_default_key then
 				has_default := True
 			end
 		ensure
@@ -1288,11 +1288,11 @@ feature {NONE} -- Implementation
 		require
 			in_bounds: a_pos >= 0 and a_pos <= capacity
 		local
-			default_value: G
-			default_key: H
+			l_default_value: G
+			l_default_key: H
 		do
-			content.put (default_value, a_pos)
-			keys.put (default_key, a_pos)
+			content.put (l_default_value, a_pos)
+			keys.put (l_default_key, a_pos)
 			deleted_marks.put (True, a_pos)
 			if iteration_position = a_pos then
 				forth
@@ -1332,24 +1332,24 @@ feature {NONE} -- Implementation
 			position := (position + increment) \\ capacity
 		end
 
-	Conflict_constant: INTEGER is 1
+	conflict_constant: INTEGER is 1
 			-- Could not insert an already existing key
 
 	set_conflict is
 			-- Set status to conflict.
 		do
-			control := Conflict_constant
+			control := conflict_constant
 		ensure
 			conflict: conflict
 		end
 
-	Found_constant: INTEGER is 2
+	found_constant: INTEGER is 2
 			-- Key found
 
 	set_found is
 			-- Set status to found.
 		do
-			control := Found_constant
+			control := found_constant
 		ensure
 			found: found
 		end
@@ -1365,13 +1365,13 @@ feature {NONE} -- Implementation
 			inserted: inserted
 		end
 
-	Not_found_constant: INTEGER is 8
+	not_found_constant: INTEGER is 8
 			-- Key not found
 
 	set_not_found is
 			-- Set status to not found.
 		do
-			control := Not_found_constant
+			control := not_found_constant
 		ensure
 			not_found: not_found
 		end

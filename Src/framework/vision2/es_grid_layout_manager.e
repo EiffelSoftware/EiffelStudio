@@ -259,7 +259,7 @@ feature -- Access
 							end
 						end
 						if positioning_enabled and then last_row_set_as_first_visible_row /= Void then
-							ev_application.idle_actions.extend_kamikaze (agent ensure_row_is_first_visible_row (last_row_set_as_first_visible_row))
+							ev_application.do_once_on_idle (agent ensure_row_is_first_visible_row (last_row_set_as_first_visible_row))
 							last_row_set_as_first_visible_row := Void
 						end
 					end
@@ -431,7 +431,7 @@ feature {NONE} -- Implementation
 			end
 --			a_row.parent.refresh_now
 --			print ("Row after refresh_now => " + a_row.count.out + "%N")
-			Ev_application.idle_actions.extend_kamikaze (agent delayed_restore_row_layout (a_row, lay, l_curr_pid))
+			Ev_application.do_once_on_idle (agent delayed_restore_row_layout (a_row, lay, l_curr_pid))
 			debug ("es_grid_layout")
 				print (":" + name + ": " + generator + ".restore_row_layout_on_idle : " + a_row.index.out + " -> " + string_id_for_lay (lay) + " : FINISHED %N")
 			end

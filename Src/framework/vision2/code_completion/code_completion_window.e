@@ -170,7 +170,7 @@ feature -- Status Setting
 			Precursor {EV_POPUP_WINDOW}
 			choice_list.set_focus
 			select_closest_match
-			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
+			ev_application.do_once_on_idle (agent resize_column_to_window_width)
 		end
 
 feature -- Query
@@ -360,7 +360,7 @@ feature {NONE} -- Events handling
 					i := i + 1
 				end
 			end
-			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
+			ev_application.do_once_on_idle (agent resize_column_to_window_width)
 		end
 
 	on_row_collapse (a_row: EV_GRID_ROW) is
@@ -368,7 +368,7 @@ feature {NONE} -- Events handling
 		require
 			a_row_not_void: a_row /= Void
 		do
-			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
+			ev_application.do_once_on_idle (agent resize_column_to_window_width)
 		end
 
 feature {NONE} -- Cursor movement
@@ -1055,7 +1055,7 @@ feature {NONE} -- Implementation
 	on_scroll (x, y: INTEGER) is
 			-- On vertical bar scroll
 		do
-			ev_application.idle_actions.extend_kamikaze (agent resize_column_to_window_width)
+			ev_application.do_once_on_idle (agent resize_column_to_window_width)
 		end
 
 	is_first_show: BOOLEAN

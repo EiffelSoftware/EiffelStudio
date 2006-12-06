@@ -19,12 +19,14 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	process_events_and_idle is
-			-- Call `process_events' and `idle_actions' on `ev_application'.
+		obsolete
+			"Call ev_application.process_events instead"
+			-- Call `process_events'.
 		do
 			ev_application.process_events
-			ev_application.idle_actions.call (Void)
+				-- Idle actions are called when all events are processed.
 		end
 
 indexing

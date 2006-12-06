@@ -388,7 +388,7 @@ feature{NONE} -- Implementation
 				l_path_style := class_path_style
 				l_path_style.set_item (conf_group_as_parent (a_class.class_i.config_class.group, a_stop_on_target))
 				Result := l_path_style.text
-				Result.append (path_text (a_class, a_allow_empty, True))
+				Result.append (path_text (a_class, (not Result.is_empty) or else a_allow_empty, True))
 			else
 				Result := path_text (a_class, a_allow_empty, False)
 			end

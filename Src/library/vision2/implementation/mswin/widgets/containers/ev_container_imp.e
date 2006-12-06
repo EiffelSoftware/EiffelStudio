@@ -798,7 +798,7 @@ feature -- Status setting
 
 feature -- Event handling
 
-	remove_item_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
+	remove_item_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
 			-- Actions to be performed before an item is removed.
 
 feature {NONE} -- Implementation

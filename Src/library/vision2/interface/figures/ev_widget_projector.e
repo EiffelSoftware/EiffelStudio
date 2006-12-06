@@ -420,7 +420,7 @@ feature {NONE} -- Event implementation
 			end
 		end
 
-	call_actions (f: EV_FIGURE; actions: ACTION_SEQUENCE [TUPLE]; arg: TUPLE) is
+	call_actions (f: EV_FIGURE; actions: EV_LITE_ACTION_SEQUENCE [TUPLE]; arg: TUPLE) is
 			-- Call `actions' on `f' with `arg'.
 		do
 			if actions /= Void and then f.is_sensitive then

@@ -360,7 +360,7 @@ feature {NONE} -- Text Loading
 				reading_text_finished := True
 				on_text_loaded
 			end
-			ev_application.idle_actions.extend (finish_reading_string_agent)
+			ev_application.add_idle_action (finish_reading_string_agent)
 		end
 
 	finish_reading_string is
@@ -437,13 +437,13 @@ feature {NONE} -- Text Loading
 			-- Stop text processing done during idle actions.
 		do
 			text_being_processed := False
-			ev_application.idle_actions.prune_all (finish_reading_string_agent)
+			ev_application.remove_idle_action (finish_reading_string_agent)
 		end
 
 	after_reading_idle_action is
 			-- action performed on idle when text reading is finished.
 		do
-			ev_application.idle_actions.prune_all (finish_reading_string_agent)
+			ev_application.remove_idle_action (finish_reading_string_agent)
 			text_being_processed := False
 			on_text_fully_loaded
 		end

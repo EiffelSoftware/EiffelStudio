@@ -775,9 +775,7 @@ feature {NONE} -- Scroll bars Management
 				else
 					horizontal_scrollbar.show
 					horizontal_scrollbar_needs_updating := True
-					if not ev_application.idle_actions.has (update_scroll_agent) then
-						ev_application.idle_actions.extend (update_scroll_agent)
-					end
+					ev_application.add_idle_action (update_scroll_agent)
 				end
 			elseif horizontal_scrollbar.is_show_requested then
 				horizontal_scrollbar.value_range.resize_exactly (0, 1)
@@ -785,9 +783,7 @@ feature {NONE} -- Scroll bars Management
 				horizontal_scrollbar.hide
 				horizontal_scrollbar_needs_updating := True
 				set_offset (0)
-				if not ev_application.idle_actions.has (update_scroll_agent) then
-					ev_application.idle_actions.extend (update_scroll_agent)
-				end
+				ev_application.add_idle_action (update_scroll_agent)
 			elseif horizontal_scrollbar_needs_updating and then not platform_is_windows then
 				horizontal_scrollbar_needs_updating := False
 			else
@@ -821,16 +817,12 @@ feature {NONE} -- Scroll bars Management
 					else
 						scroll_vbox.show
 						vertical_scrollbar_needs_updating := True
-						if not ev_application.idle_actions.has (update_scroll_agent) then
-							ev_application.idle_actions.extend (update_scroll_agent)
-						end
+						ev_application.add_idle_action (update_scroll_agent)
 					end
 				elseif scroll_vbox.is_show_requested then
 					scroll_vbox.hide
 					vertical_scrollbar_needs_updating := True
-					if not ev_application.idle_actions.has (update_scroll_agent) then
-						ev_application.idle_actions.extend (update_scroll_agent)
-					end
+					ev_application.add_idle_action (update_scroll_agent)
 				elseif vertical_scrollbar_needs_updating and then not platform_is_windows then
 					vertical_scrollbar_needs_updating := False
 				else
@@ -896,9 +888,7 @@ feature {NONE} -- Scroll bars Management
 					end
 				end
 			end
-			if ev_application.idle_actions.has (update_scroll_agent) then
-				ev_application.idle_actions.prune_all (update_scroll_agent)
-			end
+			ev_application.remove_idle_action (update_scroll_agent)
 		end
 
 	update_width is
@@ -1407,9 +1397,7 @@ feature -- Memory management
 				-- Cannot use current anymore.
 			is_initialized := False
 
-			if ev_application.idle_actions.has (update_scroll_agent) then
-				ev_application.idle_actions.prune_all (update_scroll_agent)
-			end
+			ev_application.remove_idle_action (update_scroll_agent)
 
 				-- Remove `refresh_line_number_agent' from `change_actions' for `show_line_numbers'.
 			editor_preferences.show_line_numbers_preference.change_actions.prune_all (refresh_line_number_agent)

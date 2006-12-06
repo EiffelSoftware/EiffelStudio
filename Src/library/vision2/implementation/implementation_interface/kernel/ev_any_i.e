@@ -34,7 +34,7 @@ feature {EV_ANY_I} -- Initialization
 			an_interface_not_void: an_interface /= Void
 			not_already_called: base_make_called = False
 		do
-			set_base_make_called (True)
+			set_state_flag (base_make_called_flag, True)
 			interface := an_interface
 		ensure
 			interface_assigned: interface = an_interface
@@ -62,7 +62,7 @@ feature {EV_ANY} -- Initialization
 			--| Called from EV_ANY.default_create
 		deferred
 		ensure
-			is_initialized: is_initialized
+			is_initialized: get_state_flag (is_initialized_flag)
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -106,52 +106,70 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- bit_test (1) returns `is_initialized'.
 		-- bit_test (2) returns `is_destroyed'.
 		-- bit_test (3) returns `is_in_destroy'.
+		-- bit_test (4) returns `interface.default_create_called'
+		-- bit_test (5) returns `interface.is_initialized'
+
+	base_make_called_flag: INTEGER_8 is 0
+	is_initialized_flag: INTEGER_8 is 1
+	is_destroyed_flag: INTEGER_8 is 2
+	is_in_destroy_flag: INTEGER_8 is 3
+	interface_default_create_called_flag: INTEGER_8 is 4
+	interface_is_initialized_flag: INTEGER_8 is 5
+		-- Flag positions used for setting state of `Current' and `interface'.
+
+	set_state_flag (a_flag: INTEGER_8; a_value: BOOLEAN)
+			-- Set state flag `a_flag' to `a_value'.
+		require
+			a_flag_valid: a_flag >= base_make_called_flag and then a_flag <= interface_is_initialized_flag
+		do
+			state_flags := state_flags.set_bit (a_value, a_flag)
+		end
+
+	get_state_flag (a_flag: INTEGER_8): BOOLEAN
+			-- Get state flag value for `a_flag' flag position.
+		require
+			a_flag_valid: a_flag >= base_make_called_flag and then a_flag <= interface_is_initialized_flag
+		do
+			Result := state_flags.bit_test (a_flag)
+		end
 
 	base_make_called: BOOLEAN is
 			-- Was `base_make' called?
 		do
-			Result := state_flags.bit_test (0)
+			Result := get_state_flag (base_make_called_flag)
 		end
 
 	is_initialized: BOOLEAN is
 			-- Has `Current' been initialized properly?
 		do
-			Result := state_flags.bit_test (1)
+			Result := get_state_flag (is_initialized_flag)
 		end
 
 	is_destroyed: BOOLEAN is
 			-- Is `Current' no longer usable?
 		do
-			Result := state_flags.bit_test (2)
+			Result := get_state_flag (is_destroyed_flag)
 		end
 
 	is_in_destroy: BOOLEAN is
 			-- Is `Current' in the process of being destroyed?
 			-- Needed for call protection when in the process of `destroy' to prevent multiple calls as a result of destruction.
 		do
-			Result := state_flags.bit_test (3)
-		end
-
-	set_base_make_called (flag: BOOLEAN) is
-			-- Set `base_make_called' to `flag'.
-		do
-			state_flags := state_flags.set_bit (flag, 0)
-		ensure
-			is_base_make_called_set: base_make_called = flag
+			Result := get_state_flag (is_in_destroy_flag)
 		end
 
 	set_is_initialized (flag: BOOLEAN) is
 			-- Set `is_initialized' to `flag'.
 		do
-			state_flags := state_flags.set_bit (flag, 1)
+			set_state_flag (is_initialized_flag, flag)
 		ensure
-			is_initialized_set: is_initialized = flag
+			is_initialized_set: get_state_flag (is_initialized_flag) = flag
 		end
 
 	set_is_destroyed (flag: BOOLEAN) is
 			-- Set `is_destroyed' to `flag'.
 		do
-			state_flags := state_flags.set_bit (flag, 2)
+			set_state_flag (is_destroyed_flag, flag)
 		ensure
 			is_destroyed_set: is_destroyed = flag
 		end
@@ -159,13 +177,13 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	set_is_in_destroy (flag: BOOLEAN) is
 			-- Set `is_in_destroy' to `flag'.
 		do
-			state_flags := state_flags.set_bit (flag, 3)
+			set_state_flag (is_in_destroy_flag, flag)
 		ensure
 			is_in_destroy_set: is_in_destroy = flag
 		end
 
 	set_interface (an_interface: like interface) is
-			-- Assign `an_interface' to `interface'. 
+			-- Assign `an_interface' to `interface'.
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
 			check
@@ -187,7 +205,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			end
 			set_is_initialized (True)
 		ensure
-			is_initialized: is_initialized
+			is_initialized: get_state_flag (is_initialized_flag)
 		end
 
 	disable_initialized is
@@ -200,7 +218,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			end
 			set_is_initialized (False)
 		ensure
-			not_is_initialized: not is_initialized
+			not_is_initialized: not get_state_flag (is_initialized_flag)
 		end
 
 feature {NONE} -- Contract support
@@ -208,7 +226,7 @@ feature {NONE} -- Contract support
 	is_usable: BOOLEAN is
 			-- Is `Current' usable?
 		do
-			Result := is_initialized and not is_destroyed
+			Result := get_state_flag (is_initialized_flag) and not is_destroyed
 		end
 
 invariant

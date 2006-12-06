@@ -284,7 +284,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
-			action: ACTION_SEQUENCE [TUPLE]
+			action: EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -325,7 +325,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
-			action: ACTION_SEQUENCE [TUPLE]
+			action: EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -362,7 +362,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
-			action: ACTION_SEQUENCE [TUPLE]
+			action: EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y
@@ -425,7 +425,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			same_fig: EV_MODEL
 			p: BOOLEAN
-			action: ACTION_SEQUENCE [TUPLE]
+			action: EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			if current_figure /= new_current_figure then
 				if
@@ -496,7 +496,7 @@ feature {NONE} -- Event implementation
 			event_fig: EV_MODEL
 			p: BOOLEAN
 			w_x, w_y: INTEGER
-			action: ACTION_SEQUENCE [TUPLE]
+			action: EV_LITE_ACTION_SEQUENCE [TUPLE]
 		do
 			w_x := x + area_x
 			w_y := y + area_y

@@ -176,9 +176,7 @@ feature -- Access queries
 
 	class_options: HASH_TABLE [CONF_OPTION, STRING]
 			-- Options of classes in the assembly.
-		once
-				-- classes in assemblies have no options
-			create Result.make (0)
+		do
 		end
 
 	sub_group_by_name (a_name: STRING): CONF_GROUP is

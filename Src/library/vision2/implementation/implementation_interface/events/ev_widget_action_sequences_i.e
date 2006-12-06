@@ -13,7 +13,7 @@ deferred class
 
 feature -- Event handling
 
-	file_drop_actions: ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]] is
+	file_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]] is
 			-- Actions to be performed when an OS file drop occurs on `Current'.
 		do
 			if file_drop_actions_internal = Void then
@@ -26,7 +26,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	file_drop_actions_internal: ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]]
+	file_drop_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [LIST [STRING_32]]]
 			-- Implementation of once per object `file_drop_actions'.
 
 feature -- Event handling

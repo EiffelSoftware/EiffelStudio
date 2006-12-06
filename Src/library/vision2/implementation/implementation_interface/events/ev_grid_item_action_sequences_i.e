@@ -175,7 +175,7 @@ feature {EV_ANY_I} -- Implementation
 
 feature -- Event handling
 
-	activate_actions: ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]] is
+	activate_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]] is
 			-- Actions to be performed to setup `Current' for activation.
 			-- Overrides default setup of activatable items.
 			-- Arguments of TUPLE (with names for clarity):
@@ -190,7 +190,7 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	activate_actions_internal: ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]]
+	activate_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_POPUP_WINDOW]]
 			-- Implementation of once per object `activate_actions'.
 
 feature -- Event handling

@@ -439,10 +439,13 @@ end
 						pass_control.remove_external (external_i)
 					end
 					if
-						new_feature_i = Void or else not (new_feature_i.written_in = feat_tbl_id)
+						new_feature_i = Void or else
+						(new_feature_i.written_in /= feat_tbl_id) or else
+						(new_feature_i.body_index /= old_feature_i.body_index)
 					then
-							-- A feature written in the associated class
-							-- disapear
+							-- A feature written in the associated class disapearred,
+							-- or was moved in the inheritance hierarchy,
+							-- or had a different body_index.
 debug ("ACTIVITY")
 	io.error.put_string ("Removed feature: ")
 	io.error.put_string (old_feature_i.feature_name)

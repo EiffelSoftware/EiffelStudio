@@ -1011,6 +1011,7 @@ test	equality-on-expanded		exec260 tcf pass execution
 test	inspect-int-nat-big-endian	exec261 tcf fail execution
 test	anchor-on-feature-with-formal	exec262 tcf fail execution
 test  generating-type-of-type-parameter exec263 tcf pass execution
+test  agent-on-attribute-with-open-target exec264 tcf pass execution
 
 -- Compiler termination (exception trace, panic, etc.)
 

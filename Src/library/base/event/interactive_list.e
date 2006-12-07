@@ -294,17 +294,19 @@ feature -- Removal
 	wipe_out is
 			-- Remove all items.
 		local
-			l: like Current
+			l: like area
+			i, l_count: INTEGER
 		do
-			l := standard_twin
+			l := area.twin
+			l_count := count
 			Precursor {ARRAYED_LIST}
 			from
-				l.start
+				i := 0
 			until
-				l.after
+				i = l_count
 			loop
-				on_item_removed_at (l.item, 1)
-				l.forth
+				on_item_removed_at (l @ i, 1)
+				i := i + 1
 			end
 		end
 

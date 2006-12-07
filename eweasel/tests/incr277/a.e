@@ -1,5 +1,7 @@
 class
 	A
+inherit
+	TEST
 
 feature
 	target is

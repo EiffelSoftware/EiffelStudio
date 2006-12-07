@@ -6419,14 +6419,12 @@ feature {NONE} -- Agents
 			l_target_closed := not (a_rc.target /= Void and then a_rc.target.is_open)
 			l_cur_class := context.current_class.eiffel_class_c
 			create l_func
-			if l_target_closed then
-				create l_args.make (1)
-				l_args.start
-				l_args.put (a_target_type)
-				l_args.put_name (
-					{PREDEFINED_NAMES}.fake_inline_agent_target_name_id, 1)
-				l_func.set_arguments (l_args)
-			end
+			create l_args.make (1)
+			l_args.start
+			l_args.put (a_target_type)
+			l_args.put_name (
+				{PREDEFINED_NAMES}.fake_inline_agent_target_name_id, 1)
+			l_func.set_arguments (l_args)
 			l_func.set_type (a_feature_type, 0)
 
 			l_func.set_is_fake_inline_agent (True)
@@ -6438,27 +6436,22 @@ feature {NONE} -- Agents
 			create l_assign
 			l_assign.set_target (create {RESULT_B})
 
-			if l_target_closed then
-				create l_argument
-				l_argument.set_position (1)
+			create l_argument
+			l_argument.set_position (1)
 
-				create l_nested
-				l_nested.set_target (l_argument)
-				l_nested.set_message (a_feature)
-				a_feature.set_parent (l_nested)
+			create l_nested
+			l_nested.set_target (l_argument)
+			l_nested.set_message (a_feature)
+			a_feature.set_parent (l_nested)
 
-				l_assign.set_source (l_nested)
-			else
-				l_assign.set_source (a_feature)
-			end
+			l_assign.set_source (l_nested)
 
 			l_byte_list.extend (l_assign)
 			create l_code
 			l_code.set_compound (l_byte_list)
 
-			if l_target_closed then
-				l_code.set_arguments (<<a_target_type.type_i>>)
-			end
+			l_code.set_arguments (<<a_target_type.type_i>>)
+
 			l_code.set_rout_id (l_func.rout_id_set.first)
 			l_code.set_body_index (l_func.body_index)
 			l_code.set_start_line_number (a_rc.start_location.line)
@@ -6487,8 +6480,9 @@ feature {NONE} -- Agents
 				create l_tuple_type.make (system.tuple_id, <<context.current_class_type, a_target_type>>)
 
 			else
-				create l_closed_args.make (0)
-				create l_tuple_type.make (system.tuple_id, create {ARRAY [TYPE_A]}.make (1, 0))
+				create l_closed_args.make (1)
+				l_closed_args.extend (create {CURRENT_B})
+				create l_tuple_type.make (system.tuple_id, <<context.current_class_type>> )
 			end
 
 			create l_tuple_node.make (l_closed_args, l_tuple_type.type_i)
@@ -6529,7 +6523,7 @@ feature {NONE} -- Agents
 	open_target_omap: ARRAYED_LIST [INTEGER_32] is
 		do
 			create Result.make (1)
-			Result.extend (1)
+			Result.extend (2)
 		end
 
 	open_target_omap_bc: ARRAY_CONST_B is
@@ -6537,7 +6531,7 @@ feature {NONE} -- Agents
 			l_byte_list: BYTE_LIST [BYTE_NODE]
 		do
 			create l_byte_list.make (1)
-			l_byte_list.extend (create {INTEGER_CONSTANT}.make_with_value (1))
+			l_byte_list.extend (create {INTEGER_CONSTANT}.make_with_value (2))
 			create Result.make (l_byte_list, integer_array_type.type_i, integer_array_type.create_info)
 		end
 

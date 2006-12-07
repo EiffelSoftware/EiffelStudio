@@ -9,7 +9,7 @@ indexing
 class
 	EB_SHARED_PREFERENCES
 
-feature {ES, ES_GRAPHIC} -- Initialization
+feature {ES} -- Initialization
 
 	initialize_preferences (a_preferences: PREFERENCES; gui_mode: BOOLEAN) is
 		require

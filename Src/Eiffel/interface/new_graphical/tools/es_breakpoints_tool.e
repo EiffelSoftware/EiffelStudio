@@ -470,7 +470,7 @@ feature {NONE} -- Impl bp
 					sr := 1
 					subrow.set_item (1, lab)
 					subrow.set_item (2, create {EV_GRID_ITEM})
-					subrow.item (2).pointer_button_press_actions.force_extend (agent on_class_item_right_clicked (c, subrow, ?,?,?))
+					subrow.item (2).pointer_button_release_actions.force_extend (agent on_class_item_right_clicked (c, subrow, ?,?,?))
 					subrow.set_item (3, create {EV_GRID_ITEM})
 
 					from
@@ -568,7 +568,7 @@ feature {NONE} -- Impl bp
 						else
 							create lab.make_with_text (" error")
 						end
-						lab.pointer_button_press_actions.force_extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?))
+						lab.pointer_button_release_actions.force_extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?))
 						subrow.subrow (ir).set_item (2, lab)
 
 						s.append_string (i.out)
@@ -598,7 +598,7 @@ feature {NONE} -- Impl bp
 				end
 				create lab.make_with_text (s)
 				subrow.set_item (2, lab)
-				lab.pointer_button_press_actions.force_extend (agent on_feature_item_right_clicked (f, subrow, ?,?,?))
+				lab.pointer_button_release_actions.force_extend (agent on_feature_item_right_clicked (f, subrow, ?,?,?))
 				subrow.set_item (3, create {EV_GRID_ITEM})
 				subrow.ensure_expandable
 			end

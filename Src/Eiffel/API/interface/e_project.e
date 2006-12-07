@@ -786,13 +786,6 @@ feature {LACE_I} -- Initialization
 			create system.make
 		end
 
-feature {APPLICATION_EXECUTION}
-
-	compilation_counter: INTEGER is
-		do
-			Result := Workbench.compilation_counter
-		end
-
 feature {NONE} -- Retrieval
 
 	retrieve is

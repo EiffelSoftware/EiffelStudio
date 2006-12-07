@@ -52,6 +52,7 @@ test	insert-default-key		table001 tcf pass table
 test	replace_key_cycle		table002 tcf pass table
 test	replace_key_conflict_not_found	table003 tcf pass table
 test	replace_key_replace_item	table004 tcf pass table
+test	iteration-with-default-key	table005 tcf pass table
 
 -- For testing only
 
@@ -586,6 +587,7 @@ test	noclass-syntax					incr273 tcf pass incrementality
 test	gc-crash-in-melted-agent-creation incr274 tcf pass incrementality
 test	expanded-not-expanded			incr275 tcf pass incrementality
 test	finalize-changed-agent-to-changed-feature incr276 tcf pass incrementality
+test	inline-agent-from-scratch-bug	incr277 tcf pass incrementality
 
 
 -- Melting

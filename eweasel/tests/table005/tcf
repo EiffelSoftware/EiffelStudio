@@ -1,0 +1,15 @@
+
+test_name iteration-with-default-key
+test_description When inserting the default key, we might ignore it when traversing the HASH_TABLE.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result ok
+
+execute_work NONE exec_output1
+execute_result ok
+compare	exec_output1 output
+
+test_end

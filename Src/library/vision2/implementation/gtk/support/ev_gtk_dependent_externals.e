@@ -3297,6 +3297,11 @@ feature -- Externals
 			"C signature (GtkTextView*, GtkTextIter*, gdouble, gboolean, gdouble, gdouble) use <gtk/gtk.h> "
 		end
 
+	frozen gtk_text_view_scroll_to_mark (a_text_view: POINTER; a_text_mark: POINTER; within_margin: DOUBLE; use_align: BOOLEAN; xalign: DOUBLE; yalign: DOUBLE) is
+		external
+			"C signature (GtkTextView*, GtkTextMark*, gdouble, gboolean, gdouble, gdouble) use <gtk/gtk.h> "
+		end
+
 	frozen gtk_text_view_get_iter_location (a_text_view, a_text_iter, a_rectangle: POINTER) is
 		external
 			"C signature (GtkTextView*, GtkTextIter*, GdkRectangle*) use <gtk/gtk.h>"

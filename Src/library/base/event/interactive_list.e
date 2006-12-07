@@ -297,7 +297,7 @@ feature -- Removal
 			l: like area
 			i, l_count: INTEGER
 		do
-			l := area.twin
+			l := area
 			l_count := count
 			Precursor {ARRAYED_LIST}
 			from

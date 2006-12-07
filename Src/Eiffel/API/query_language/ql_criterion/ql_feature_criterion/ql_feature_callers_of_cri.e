@@ -37,7 +37,7 @@ feature{NONE} -- Initialization
 			-- if `only_current_version' is True, only find callers of current version of features in `a_feature'.
 		require
 			a_feature_attached: a_feature /= Void
-			a_caller_type_attached: a_caller_type /= Void
+			a_caller_type_valid: is_caller_type_valid (a_caller_type)			
 		do
 			only_find_current_version := only_current_version
 			caller_type := a_caller_type

@@ -910,7 +910,7 @@ feature -- Environment update
 		do
 			environment.put (a_value, a_var)
 		ensure
-			value_updated: get_environment (a_var).is_equal (a_value)
+			value_updated: get_environment (a_var) /= Void implies get_environment (a_var).is_equal (a_value)
 		end
 
 

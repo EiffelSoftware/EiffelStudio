@@ -78,8 +78,7 @@ inherit
 			is_displayed
 		redefine
 			setup_dialog,
-			process_message,
-			wel_move_and_resize
+			process_message
 		end
 
 	WEL_ID_CONSTANTS
@@ -533,20 +532,6 @@ feature {NONE} -- Implementation
 			--| doesn't seem to make much difference to GDI count, is it necessary?
 			--| If it is determined that it is required, uncomment.
 			---background_brush.delete
-		end
-
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
-		do
-			move_absolute (a_x, a_y)
-			wel_resize (a_width, a_height)
-			if repaint then
-					-- We don't want the background to be erased (it's done by
-					-- the dialog box)
-				cwin_invalidate_rect (wel_item, default_pointer, False)
-				cwin_update_window (wel_item)
-			end
 		end
 
 	on_wm_ncdestroy is

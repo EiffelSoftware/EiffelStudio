@@ -683,7 +683,7 @@ feature -- Roundtrip
 
 					create l_feature_generator
 					l_feature := l_feature_generator.new_feature (l_feature_as, l_cur_class)
-					l_enclosing_feature := init_inline_agent_feature (l_feature)
+					l_enclosing_feature := init_inline_agent_feature (l_feature, Void)
 					l_cur_feature := context.current_feature
 
 					if is_byte_node_enabled then
@@ -6379,7 +6379,7 @@ feature {NONE} -- Agents
 								   		a_target_type: TYPE_A; a_agent_type: TYPE_A)
 		do
 			compute_fake_inline_agent (a_rc, a_feature.access (a_feature.type.type_i), a_feature.type, a_target,
-									   a_target_type, a_agent_type)
+									   a_target_type, a_agent_type, a_feature)
 		end
 
 	compute_named_tuple_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_named_tuple: NAMED_TUPLE_TYPE_A; a_label_pos: INTEGER;
@@ -6388,14 +6388,24 @@ feature {NONE} -- Agents
 			l_tuple_access: TUPLE_ACCESS_B
 		do
 			create l_tuple_access.make (a_named_tuple.type_i, a_label_pos)
-			compute_fake_inline_agent (a_rc, l_tuple_access, l_tuple_access.type.type_a, a_target, a_target_type, a_agent_type)
+			compute_fake_inline_agent (a_rc, l_tuple_access, l_tuple_access.type.type_a, a_target, a_target_type, a_agent_type, Void)
 		end
 
-	compute_fake_inline_agent (a_rc: ROUTINE_CREATION_AS; a_feature: CALL_B; a_feature_type: TYPE_A; a_target: BYTE_NODE; a_target_type: TYPE_A; a_agent_type: TYPE_A) is
+	compute_fake_inline_agent (
+			a_rc: ROUTINE_CREATION_AS
+			a_feature: CALL_B
+			a_feature_type: TYPE_A
+			a_target: BYTE_NODE
+			a_target_type: TYPE_A
+			a_agent_type: TYPE_A
+			a_for_feature: FEATURE_I)
+		is
 			-- Creates an inline agent bytenode that is semanticaly equivalent to the agent on the target byte node
 			-- It further creates the proper routine creation
 			-- agent T.a becomes:
 			-- agent(t: TYPE_T): TYPE_a do Result := t.a end (T)
+		require
+			a_for_feature /= Void implies a_for_feature.is_attribute
 		local
 			l_func: DYN_FUNC_I
 			l_args: FEAT_ARG
@@ -6428,7 +6438,7 @@ feature {NONE} -- Agents
 			l_func.set_type (a_feature_type, 0)
 
 			l_func.set_is_fake_inline_agent (True)
-			l_enclosing_feature := init_inline_agent_feature (l_func)
+			l_enclosing_feature := init_inline_agent_feature (l_func, a_for_feature)
 
 			create l_byte_list.make (1)
 			l_byte_list.start
@@ -6543,7 +6553,11 @@ feature {NONE} -- Agents
 			create Result.make (l_byte_list, integer_array_type.type_i, integer_array_type.create_info)
 		end
 
-	init_inline_agent_feature (a_feat: FEATURE_I): FEATURE_I is
+	init_inline_agent_feature (a_feat, a_real_feat: FEATURE_I): FEATURE_I is
+			-- a_feat may just be a fake wrapper to a_real_feat (for agents on attributes).
+		require
+			a_feat /= Void
+			a_feat.is_attribute implies a_real_feat /= Void
 		local
 			l_new_rout_id_set: ROUT_ID_SET
 			l_cur_class: EIFFEL_CLASS_C
@@ -6608,6 +6622,13 @@ feature {NONE} -- Agents
 				l_name := "fake inline-agent"
 				l_name.append_character ('#')
 				l_name.append_integer (a_feat.body_index)
+				if a_real_feat /= Void then
+					l_name.append_character ('#')
+					l_name.append_integer (a_real_feat.written_in)
+					l_name.append_character ('#')
+					l_name.append_integer (a_real_feat.feature_id)
+					l_name.append_character ('#')
+				end
 			else
 				l_name := "inline-agent"
 				l_name.append_character ('#')

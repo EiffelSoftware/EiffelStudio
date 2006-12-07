@@ -567,7 +567,7 @@ feature -- Removal
 		do
 			set_count (0)
 			index := 0
-			discard_items
+			clear_all
 		end
 
 feature -- Transformation

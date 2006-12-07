@@ -1098,6 +1098,7 @@ feature {NONE} -- Agent filling
 				list_cursor.forth
 			end
 			if ag_fe /= Void then
+				ag_fe := real_feature (ag_fe)
 				r := 1
 				a_row.insert_subrow (r)
 				lrow := a_row.subrow (r)
@@ -1160,6 +1161,37 @@ feature {NONE} -- Implementation
 		do
 			row.set_item (c, v)
 		end
+
+	real_feature (a_feat: E_FEATURE): E_FEATURE is
+		require
+			a_feat /= Void
+		local
+			l_tokens: LIST [STRING]
+			l_class_id, l_feature_id: INTEGER
+			l_class: CLASS_C
+		do
+			l_tokens := a_feat.name.split ('#')
+			if l_tokens.count /= 5 or else not equal ("fake inline-agent", l_tokens.i_th (1)) then
+				Result := a_feat
+			elseif not l_tokens.i_th (3).is_integer_32 or not l_tokens.i_th (4).is_integer_32 then
+				Result := a_feat
+			else
+				l_class_id := l_tokens.i_th (3).to_integer
+				l_feature_id := l_tokens.i_th (4).to_integer
+				l_class := debugger_manager.eiffel_system.class_of_id (l_class_id)
+				if l_class /= Void then
+					Result := l_class.feature_with_feature_id (l_feature_id)
+					if Result = Void then
+						Result := a_feat
+					end
+				else
+					Result := a_feat
+				end
+			end
+		ensure
+			Result /= Void
+		end
+
 
 invariant
 	parent_grid_not_void: parent_grid /= Void

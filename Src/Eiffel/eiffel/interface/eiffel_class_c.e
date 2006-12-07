@@ -1919,7 +1919,7 @@ feature -- Inline agents
 		require
 			valid_feature: a_feature /= Void
 		do
-			inline_agent_table.put (a_feature, a_feature.feature_name_id)
+			inline_agent_table.force (a_feature, a_feature.feature_name_id)
 		ensure
 			agent_added: inline_agent_table.has (a_feature.feature_name_id)
 		end

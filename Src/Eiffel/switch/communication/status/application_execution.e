@@ -466,7 +466,7 @@ feature -- Environment related
 			Result = Void implies (env = Void or else env.is_empty)
 		end
 
-feature {DEAD_HDLR, RUN_REQUEST, APPLICATION_EXECUTION_IMP} -- Setting
+feature {DEAD_HDLR, RUN_REQUEST} -- Setting
 
 	build_status is
 		require

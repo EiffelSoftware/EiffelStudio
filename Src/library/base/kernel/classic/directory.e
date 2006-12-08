@@ -196,7 +196,7 @@ feature -- Status report
 				-- are symbolic representations but not effective directories.
 			Result := (count = 2)
 		end
-	
+
 	empty: BOOLEAN is
 			-- Is directory empty?
 		obsolete
@@ -262,8 +262,7 @@ feature -- Removal
 		end
 
 	delete_content is
-			-- Delete all files located in current directory and its
-			-- subdirectories.
+			-- Delete all files located in directory and its subdirectories.
 		require
 			directory_exists: exists
 		local
@@ -307,7 +306,7 @@ feature -- Removal
 			-- Delete directory, its files and its subdirectories.
 		require
 			directory_exists: exists
-		do	
+		do
 			delete_content
 			if is_empty then
 				delete
@@ -320,12 +319,12 @@ feature -- Removal
 			file_number: INTEGER)
 		is
 			-- Delete all files located in current directory and its
-			-- subdirectories. 
+			-- subdirectories.
 			--
 			-- `action' is called each time `file_number' files has
 			-- been deleted and before the function exits.
 			-- `action' may be set to Void if you don't need it.
-			-- 
+			--
 			-- Same for `is_cancel_requested'.
 			-- Make it return `True' to cancel the operation.
 			-- `is_cancel_requested' may be set to Void if you don't need it.
@@ -421,7 +420,7 @@ feature -- Removal
 			directory_exists: exists
 		local
 			deleted_files: ARRAYED_LIST [STRING]
-		do	
+		do
 			delete_content_with_action (action, is_cancel_requested, file_number)
 			if (is_cancel_requested = Void) or else (not is_cancel_requested.item (Void)) then
 				delete

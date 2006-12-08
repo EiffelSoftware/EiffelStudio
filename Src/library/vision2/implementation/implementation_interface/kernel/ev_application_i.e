@@ -60,6 +60,7 @@ feature {EV_APPLICATION} -- Initialization
 					snapshot.call (Void)
 				end
 
+			idle_iteration_count := 1
 			set_is_initialized (True)
 		end
 
@@ -77,16 +78,36 @@ feature {EV_APPLICATION} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
+	idle_iteration_count: NATURAL_32
+		-- Number of iterations that the application has been idle.
+
+	idle_iteration_boundary: NATURAL_32 is 3000
+		-- Number of iterations before forcing Garbage Collector to kick in.
+		-- 30 Seconds = 30 * 1000 / sleep time
+
 	process_event_queue (a_relinquish_cpu: BOOLEAN)
 			-- Process all posted events on the event queue.
 			-- CPU will be relinquished if the idle actions are successfully executed.
 		local
 			l_retry_count: INTEGER
 			l_locked: BOOLEAN
+			l_memory: MEMORY
 		do
 			if l_retry_count = 0 then
 				process_underlying_toolkit_event_queue
 					-- There are no more events left so call idle actions if read lock can be attained.
+				if user_events_processed_from_underlying_toolkit then
+					idle_iteration_count := 1
+				elseif a_relinquish_cpu then
+						-- We only want to increase the count if the event loop is not forced.
+					idle_iteration_count := idle_iteration_count + 1
+					if idle_iteration_count \\ idle_iteration_boundary = 0 then
+						create l_memory
+						l_memory.full_collect
+						l_memory.full_coalesce
+						idle_iteration_count := 1
+					end
+				end
 				if try_lock then
 					l_locked := True
 					internal_idle_actions.call (Void)
@@ -117,14 +138,21 @@ feature {NONE} -- Implementation
 
 	process_underlying_toolkit_event_queue is
 			-- Process event queue from underlying toolkit.
+			-- `events_process_from_toolkit
 		deferred
 		end
+
+	user_events_processed_from_underlying_toolkit: BOOLEAN
+		-- Were user generated events processed in previous call to `process_underlying_toolkit_event_queue'.
 
 feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- Access
 
 	dockable_targets: ARRAYED_LIST [INTEGER]
 
 feature -- Access
+
+	cpu_relinquishment_time: INTEGER is 10
+		-- Number of milliseconds to relinquish CPU when idling.
 
 	pnd_targets: HASH_TABLE [INTEGER, INTEGER]
 			-- Global list of pick and drop target object ids.
@@ -242,7 +270,7 @@ feature -- Basic operation
 	relinquish_cpu_slice is
 			-- Give timeslice back to kernel so as to not take all CPU.
 		do
-			sleep (10)
+			sleep (cpu_relinquishment_time)
 		end
 
 	process_events is

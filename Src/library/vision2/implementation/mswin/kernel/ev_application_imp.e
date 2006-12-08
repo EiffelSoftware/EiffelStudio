@@ -85,6 +85,7 @@ feature {NONE} -- Initialization
 			dispatcher.set_exception_callback (agent on_exception_action)
 
 			create theme_window.make
+			create reusable_message.make
 			create duplicated_message.make
 			set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 			set_application_main_window (silly_main_window)
@@ -538,10 +539,12 @@ feature {NONE} -- Implementation
 
 	message_loop is
 			-- Windows message loop.
-			--| Redefined to add accelerator functionality.
 		do
 			-- Not applicable with Vision2
 		end
+
+	reusable_message: WEL_MSG
+			-- Reusable message object.
 
 	process_underlying_toolkit_event_queue is
 			-- Process event queue from underlying toolkit.
@@ -549,11 +552,15 @@ feature {NONE} -- Implementation
 			msg: WEL_MSG
 		do
 			from
-				create msg.make
+				msg := reusable_message
 				msg.peek_all
+				user_events_processed_from_underlying_toolkit := False
 			until
 				not msg.last_boolean_result or else is_destroyed
 			loop
+				if not user_events_processed_from_underlying_toolkit then
+					user_events_processed_from_underlying_toolkit := msg.user_generated
+				end
 				process_message (msg)
 				msg.peek_all
 			end

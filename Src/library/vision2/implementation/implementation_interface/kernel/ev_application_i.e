@@ -97,6 +97,7 @@ feature {EV_ANY_I} -- Implementation
 				process_underlying_toolkit_event_queue
 					-- There are no more events left so call idle actions if read lock can be attained.
 				if user_events_processed_from_underlying_toolkit then
+						-- If any user events have been processed then we reset the `idle_iteration_count'
 					idle_iteration_count := 1
 				elseif a_relinquish_cpu then
 						-- We only want to increase the count if the event loop is not forced.

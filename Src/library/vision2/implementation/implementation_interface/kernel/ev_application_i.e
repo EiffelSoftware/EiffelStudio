@@ -87,7 +87,7 @@ feature {EV_ANY_I} -- Implementation
 
 	process_event_queue (a_relinquish_cpu: BOOLEAN)
 			-- Process all posted events on the event queue.
-			-- CPU will be relinquished if the idle actions are successfully executed.
+			-- CPU will be relinquished if `a_relinquish_cpu' and idle actions are successfully executed.
 		local
 			l_retry_count: INTEGER
 			l_locked: BOOLEAN
@@ -101,7 +101,7 @@ feature {EV_ANY_I} -- Implementation
 				elseif a_relinquish_cpu then
 						-- We only want to increase the count if the event loop is not forced.
 					idle_iteration_count := idle_iteration_count + 1
-					if idle_iteration_count \\ idle_iteration_boundary = 0 then
+					if idle_iteration_count = idle_iteration_boundary then
 						create l_memory
 						l_memory.full_collect
 						l_memory.full_coalesce

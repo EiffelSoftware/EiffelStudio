@@ -1241,6 +1241,7 @@ test	bad-boolean-inline			ccomp057 tcf pass c_compilation
 test	agent-on-constant-attribute ccomp058 tcf pass c_compilation
 test	add-generic-c-compile-failure ccomp059 tcf fail c_compilation
 test	last-reverse-assignment-to-expanded	ccomp060 tcf pass c_compilation expanded
+test	adding-removing-classes-c-compile-error	ccomp061 tcf pass c_compilation expanded
 
 -- Storable tests
 

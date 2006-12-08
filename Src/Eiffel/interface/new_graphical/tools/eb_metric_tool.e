@@ -111,7 +111,6 @@ feature -- Basic operations
 			-- Go to result tab.
 		local
 			l_notebook: EV_NOTEBOOK
-			l_result_panel_index: INTEGER
 		do
 			l_notebook := metric_notebook
 			if l_notebook.selected_item /= detail_result_panel then

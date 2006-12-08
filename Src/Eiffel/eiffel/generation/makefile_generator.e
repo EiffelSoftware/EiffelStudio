@@ -339,6 +339,11 @@ feature -- Actual generation
 			generate_ending
 
 			make_file.close
+
+				-- Cleanup
+			cleanup_generated_makefiles (C_prefix, object_baskets)
+			cleanup_generated_makefiles (system_object_prefix, system_baskets)
+
 			object_baskets := Void
 			system_baskets := Void
 			cecil_rt_basket.wipe_out
@@ -390,6 +395,8 @@ feature -- Sub makefile generation
 
 	generate_sub_makefiles (sub_dir: CHARACTER; baskets: ARRAY [LINKED_LIST [STRING]]) is
 				-- Generate makefile in subdirectories.
+		require
+			baskets_not_void: baskets /= Void
 		local
 			new_makefile, old_makefile: INDENT_FILE
 			nb, i: INTEGER
@@ -404,7 +411,7 @@ feature -- Sub makefile generation
 				i > nb
 			loop
 				basket := baskets.item (i)
-				if not basket.is_empty then
+				if basket /= Void and then not basket.is_empty then
 					if system.in_final_mode then
 						create f_name.make_from_string (project_location.final_path)
 					else
@@ -448,6 +455,35 @@ feature -- Sub makefile generation
 				i := i + 1
 			end
 			make_file := old_makefile
+		end
+
+	cleanup_generated_makefiles (sub_dir: CHARACTER; baskets: ARRAY [LINKED_LIST [STRING]]) is
+			-- Remove directory when associated baskets is empty.
+		require
+			baskets_not_void: baskets /= Void
+		local
+			nb, i: INTEGER
+			f_name: FILE_NAME
+			basket: LINKED_LIST [STRING]
+		do
+			from
+				nb := baskets.count
+				i := 1
+			until
+				i > nb
+			loop
+				basket := baskets.item (i)
+				if basket /= Void and then basket.is_empty then
+					if system.in_final_mode then
+						create f_name.make_from_string (project_location.final_path)
+					else
+						create f_name.make_from_string (project_location.workbench_path)
+					end
+					f_name.extend (packet_name (sub_dir, i))
+					safe_recursive_delete (f_name)
+				end
+				i := i + 1
+			end
 		end
 
 feature -- Generation, Header
@@ -1238,6 +1274,26 @@ feature {NONE} -- Implementation
 				end
 				i := i - 1
 			end
+		end
+
+	safe_recursive_delete (a_dir: STRING) is
+			-- Delete `a_dir' content.
+		require
+			a_dir_not_void: a_dir /= Void
+			a_dir_not_empty: not a_dir.is_empty
+		local
+			retried: BOOLEAN
+			l_dir: DIRECTORY
+		do
+			if not retried then
+				create l_dir.make (a_dir)
+				if l_dir.exists then
+					l_dir.recursive_delete
+				end
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Constants

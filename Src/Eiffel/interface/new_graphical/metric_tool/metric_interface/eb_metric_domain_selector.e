@@ -139,6 +139,7 @@ feature {NONE} -- Initialization
 
 				-- Setup agents
 			grid.drop_actions.extend (agent on_drop (?))
+			grid.drop_actions.set_veto_pebble_function (agent veto_pebble_function)
 			add_item_btn.select_actions.extend (agent on_add_scope_from_dialog)
 			remove_item_btn.select_actions.extend (agent on_remove_selected_scopes)
 			remove_item_btn.drop_actions.extend (agent on_item_drop_on_remove_button)
@@ -287,6 +288,18 @@ feature -- Element change
 			-- Used in synchronization.
 		do
 			set_domain (domain)
+		end
+
+	block_domain_change_actions is
+			-- Block `doomain_change_actions'.
+		do
+			domain_change_actions.block
+		end
+
+	resume_domain_change_actions is
+			-- Resume `domain_chagne_actions'.
+		do
+			domain_change_actions.resume
 		end
 
 feature -- Status report
@@ -531,8 +544,6 @@ feature{NONE} -- Implementation/Data
 	scope_selection_dialog_internal: like scope_selection_dialog
 			-- Implementation of `scope_selection_dialog'
 
-feature{NONE} -- Implementation
-
 	insert_domain_item (a_domain_item: EB_METRIC_DOMAIN_ITEM) is
 			-- Insert `a_domain_item' into `grid'.
 		require
@@ -548,6 +559,31 @@ feature{NONE} -- Implementation
 			grid.header.i_th (1).remove_pixmap
 			grid.row (grid.row_count).ensure_visible
 			grid.column (1).resize_to_content
+		end
+
+	veto_pebble_function (a_pebble: ANY): BOOLEAN is
+			-- Function to decide if `a_pebble' can be dropped into current		
+		local
+			l_classi_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_feature_stone: FEATURE_STONE
+			l_target_stone: TARGET_STONE
+			l_stone: STONE
+			l_domain: like domain
+		do
+			l_stone ?= a_pebble
+			l_domain := domain
+			if
+				l_stone /= Void and then
+				not l_domain.has_delayed_domain_item and then
+				not domain_has (l_domain, metric_domain_item_from_stone (l_stone))
+			then
+				l_classi_stone ?= a_pebble
+				l_cluster_stone ?= a_pebble
+				l_feature_stone ?= a_pebble
+				l_target_stone ?= a_pebble
+				Result := l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void or l_target_stone /= Void
+			end
 		end
 
 feature{NONE} -- Implementation/Sorting

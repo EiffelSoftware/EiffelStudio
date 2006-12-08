@@ -273,10 +273,6 @@ feature -- Status setting
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			history_manager.synchronize
-			if eiffel_layout.has_metrics then
-					-- Inform metric of classes recompilation.
-				metrics.set_recompiled (True)
-			end
 			conv_dev ?= manager
 			if conv_dev /= Void then
 				if not conv_dev.unified_stone then
@@ -503,9 +499,6 @@ feature -- Stone management
 				editor.set_stone (a_stone)
 			end
 			stone := a_stone
-			if eiffel_layout.has_metrics then
-				metrics.set_stone (a_stone)
-			end
 		end
 
 	advanced_set_stone (a_stone: STONE) is

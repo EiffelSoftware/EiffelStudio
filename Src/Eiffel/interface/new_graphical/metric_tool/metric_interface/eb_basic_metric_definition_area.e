@@ -238,18 +238,6 @@ feature -- Setting
 			combination_toolbar_area.disable_sensitive
 		end
 
-	attach_metric_selector (a_metric_selector: like metric_selector) is
-			-- Set `metric_selector' with `a_metric_selector'.
-		do
-			metric_selector := a_metric_selector
-		end
-
-	detach_metric_selector is
-			-- Detach `metric_selector'.
-		do
-			metric_selector := Void
-		end
-
 	set_stone (a_stone: STONE) is
 			-- Notify that `a_stone' is dropped on Current.
 		local

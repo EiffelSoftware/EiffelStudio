@@ -60,7 +60,7 @@ feature -- Setting
 		do
 			create {STRING_32}message.make_from_string (a_message)
 		ensure
-			message_set: message /= Void and then message.is_equal (a_message)
+			message_set: message /= Void
 		end
 
 	set_location (a_location: like location) is
@@ -85,7 +85,7 @@ feature -- Setting
 				to_do := Void
 			end
 		ensure
-			to_do_set: (a_to_do = Void implies to_do = Void) and (a_to_do /= Void implies (to_do /= Void and then to_do.is_equal (a_to_do)))
+			to_do_set: (a_to_do = Void implies to_do = Void) and (a_to_do /= Void implies to_do /= Void)
 		end
 
 invariant

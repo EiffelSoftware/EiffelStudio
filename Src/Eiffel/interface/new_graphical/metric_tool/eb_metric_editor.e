@@ -123,25 +123,41 @@ feature -- Setting
 			uuid_set: uuid = a_uuid
 		end
 
-	attach_metric_selector (a_metric_selector: like metric_selector) is
-			-- Set `metric_selector' with `a_metric_selector'.
-		require
-			a_metric_selector_attached: a_metric_selector /= Void
-		deferred
-		ensure
-			metric_selector_set: metric_selector = a_metric_selector
-		end
-
-	detach_metric_selector is
-			-- Detach `metric_selector'.
-		deferred
-		ensure
-			metric_selector_detached: metric_selector = Void
-		end
-
 	set_stone (a_stone: STONE) is
 			-- Notify that `a_stone' is dropped on Current.
 		deferred
+		end
+
+	check_vadility_for_metric is
+			-- Check vadility for `metric'.
+		local
+			l_vadility: EB_METRIC_ERROR
+			l_metric: like metric
+		do
+			l_metric := metric
+			if
+				not l_metric.name.is_empty and then (
+				original_metric_name = Void or else
+				(not l_metric.name.is_case_insensitive_equal (original_metric_name)))
+			then
+				if metric_manager.has_metric (l_metric.name) then
+					create l_vadility.make (metric_names.err_duplicated_metric_name (l_metric.name))
+				end
+			end
+			if l_vadility = Void then
+				metric_vadility_checker.process_metric (l_metric)
+				l_vadility := metric_vadility_checker.last_error
+			end
+			if l_vadility = Void then
+				status_area.status_text.set_text (metric_names.t_metric_valid)
+				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_tick_icon)
+				status_area.show_to_do_message_btn.disable_sensitive
+			else
+				status_area.status_text.set_text (l_vadility.message_with_location)
+				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_error_icon)
+				status_area.show_to_do_message_btn.enable_sensitive
+			end
+			status_area.set_to_do_message (l_vadility)
 		end
 
 feature -- Access
@@ -242,8 +258,8 @@ feature -- Access
 	uuid: UUID
 			-- UUID of current edited metric
 
-	metric_selector: EB_METRIC_SELECTOR
-			-- Metric selector associated with current editor
+--	metric_selector: EB_METRIC_SELECTOR
+--			-- Metric selector associated with current editor
 
 feature -- Actions
 
@@ -276,10 +292,12 @@ feature -- Actions
 			change_actions.call ([])
 		end
 
-feature -- Status report
+feature -- Access
 
 	mode: INTEGER
 			-- Mode of current editor
+
+feature -- Status report
 
 	is_definition_changed: BOOLEAN
 			-- Is metric definition changed?
@@ -353,38 +371,6 @@ feature{NONE} -- Implementation
 				name_area.set_name (metric_manager.next_metric_name_with_unit (unit))
 				name_area.set_description ("")
 			end
-		end
-
-	check_vadility_for_metric is
-			-- Check vadility for `metric'.
-		local
-			l_vadility: EB_METRIC_ERROR
-			l_metric: like metric
-		do
-			l_metric := metric
-			if
-				not l_metric.name.is_empty and then (
-				original_metric_name = Void or else
-				(not l_metric.name.is_case_insensitive_equal (original_metric_name)))
-			then
-				if metric_manager.has_metric (l_metric.name) then
-					create l_vadility.make (metric_names.err_duplicated_metric_name (l_metric.name))
-				end
-			end
-			if l_vadility = Void then
-				metric_vadility_checker.process_metric (l_metric)
-				l_vadility := metric_vadility_checker.last_error
-			end
-			if l_vadility = Void then
-				status_area.status_text.set_text (metric_names.t_metric_valid)
-				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_tick_icon)
-				status_area.show_to_do_message_btn.disable_sensitive
-			else
-				status_area.status_text.set_text (l_vadility.message_with_location)
-				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_error_icon)
-				status_area.show_to_do_message_btn.enable_sensitive
-			end
-			status_area.set_to_do_message (l_vadility)
 		end
 
 invariant

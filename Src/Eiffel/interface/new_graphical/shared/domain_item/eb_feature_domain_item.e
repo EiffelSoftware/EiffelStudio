@@ -22,6 +22,11 @@ inherit
 			is_equal
 		end
 
+	SHARED_TEXT_ITEMS
+		undefine
+			is_equal
+		end
+
 create
 	make
 
@@ -48,6 +53,7 @@ feature -- Access
 			-- Text of current item
 		local
 			l_feature_name: STRING
+			l_class_name: STRING
 		do
 			if feature_of_id (id) /= Void then
 				Result := ql_feature.name
@@ -55,6 +61,10 @@ feature -- Access
 				l_feature_name := last_feature_name
 				if l_feature_name /= Void and then not l_feature_name.is_empty then
 					Result := l_feature_name.twin
+					l_class_name := last_class_name
+					if l_class_name /= Void and then not l_class_name.is_empty then
+						Result.prepend (ti_l_curly + l_class_name.twin + ti_r_curly + ti_dot)
+					end
 				else
 					Result := Precursor
 				end

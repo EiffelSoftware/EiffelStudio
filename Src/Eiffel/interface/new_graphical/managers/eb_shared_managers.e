@@ -85,6 +85,14 @@ feature -- Status report
 			create Result
 		end
 
+	metric_manager: EB_METRIC_MANAGER is
+			-- Metric manager
+		once
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Implementation
 
 	Refactoring_manager: ERF_MANAGER is

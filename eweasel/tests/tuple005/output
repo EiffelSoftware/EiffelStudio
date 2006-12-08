@@ -1,0 +1,9 @@
+Comparison status: False False
+is_equal? False
+Comparison status: True True
+is_equal? True
+Comparison status: True False
+is_equal? False
+Comparison status: False True
+is_equal? False
+Execution completed

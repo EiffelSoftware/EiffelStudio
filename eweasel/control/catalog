@@ -1297,6 +1297,7 @@ test	tuple-manipulation	tuple001	tcf	pass tuple
 test	named-tuple-validation	tuple002	tcf	pass tuple
 test	named-tuple-as-argument	tuple003	tcf	pass tuple
 test	tuple-hashcode		tuple004	tcf	pass tuple
+test	tuple-comparison	tuple005	tcf	pass tuple
 
 -- Systematic validity tests
 

@@ -78,6 +78,9 @@ feature {EV_APPLICATION} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
+	cpu_relinquishment_time: INTEGER is 10
+		-- Number of milliseconds to relinquish CPU when idling.
+
 	idle_iteration_count: NATURAL_32
 		-- Number of iterations that the application has been idle.
 
@@ -116,8 +119,8 @@ feature {EV_ANY_I} -- Implementation
 					unlock
 					l_locked := False
 					if a_relinquish_cpu then
-							-- We only relinquish CPU is requested and a lock for the idle actions has been attained..
-						relinquish_cpu_slice
+							-- We only relinquish CPU if requested and a lock for the idle actions has been attained.
+						sleep (cpu_relinquishment_time)
 					end
 				end
 			elseif l_retry_count = 1 then
@@ -151,9 +154,6 @@ feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- A
 	dockable_targets: ARRAYED_LIST [INTEGER]
 
 feature -- Access
-
-	cpu_relinquishment_time: INTEGER is 10
-		-- Number of milliseconds to relinquish CPU when idling.
 
 	pnd_targets: HASH_TABLE [INTEGER, INTEGER]
 			-- Global list of pick and drop target object ids.
@@ -267,12 +267,6 @@ feature -- Element Change
 		end
 
 feature -- Basic operation
-
-	relinquish_cpu_slice is
-			-- Give timeslice back to kernel so as to not take all CPU.
-		do
-			sleep (cpu_relinquishment_time)
-		end
 
 	process_events is
 			-- Process any pending events.

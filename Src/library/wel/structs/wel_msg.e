@@ -91,6 +91,32 @@ feature -- Element change
 
 feature -- Status report
 
+	user_generated: BOOLEAN
+			-- Is `Current' the result of a user-generated action, ie: mouse move or button click?
+		do
+			Result := True
+			inspect
+				cwel_msg_get_message (item)
+			when wm_mousemove  then
+			when wm_mousewheel then
+			when wm_lbuttondown then
+			when wm_lbuttonup then
+			when wm_lbuttondblclk then
+			when wm_mbuttondown then
+			when wm_mbuttonup then
+			when wm_mbuttondblclk then
+			when wm_rbuttondown then
+			when wm_rbuttonup then
+			when wm_rbuttondblclk then
+			when wm_keydown then
+			when wm_keyup then
+			when wm_syskeydown then
+			when wm_syskeyup then
+			else
+				Result := False
+			end
+		end
+
 	last_boolean_result: BOOLEAN
 			-- Last result of `get', `get_all', `translate',
 			-- `translate_accelerator', `dispatch', and

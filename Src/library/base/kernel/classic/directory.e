@@ -21,7 +21,7 @@ create
 feature -- Initialization
 
 	make (dn: STRING) is
-			-- Create directory object for the directory
+			-- Create directory object for directory
 			-- of name `dn'.
 		require
 			string_exists: dn /= Void
@@ -31,7 +31,7 @@ feature -- Initialization
 		end
 
 	make_open_read (dn: STRING) is
-			-- Create directory object for the directory
+			-- Create directory object for directory
 			-- of name `dn' and open it for reading.
 		require
 			string_exists: dn /= Void
@@ -56,7 +56,7 @@ feature -- Access
 	readentry is
 			-- Read next directory entry
 			-- make result available in `lastentry'.
-			-- Make result void if all entries have been read.
+			-- Make result Void if all entries have been read.
 		require
 			is_opened: not is_closed
 		do
@@ -85,7 +85,7 @@ feature -- Access
 		end
 
 	open_read is
-			-- Open directory `name' for reading.
+			-- Open directory for reading.
 		local
 			external_name: ANY
 		do
@@ -112,10 +112,10 @@ feature -- Access
 		end
 
 	change_name (new_name: STRING) is
-			-- Change file name to `new_name'
+			-- Change directory `name' to `new_name'.
 		require
 			new_name_not_void: new_name /= Void
-			file_exists: exists
+			directory_exists: exists
 		local
 			ext_old_name, ext_new_name: ANY
 		do
@@ -250,7 +250,7 @@ feature -- Status report
 feature -- Removal
 
 	delete is
-			-- Delete directory if empty
+			-- Delete directory if empty.
 		require
 			directory_exists: exists
 			empty_directory: is_empty
@@ -262,7 +262,7 @@ feature -- Removal
 		end
 
 	delete_content is
-			-- Delete all files located in directory and its subdirectories.
+			-- Delete all files located in directory and subdirectories.
 		require
 			directory_exists: exists
 		local
@@ -303,7 +303,7 @@ feature -- Removal
 		end
 
 	recursive_delete is
-			-- Delete directory, its files and its subdirectories.
+			-- Delete directory and all content contained within.
 		require
 			directory_exists: exists
 		do
@@ -318,8 +318,7 @@ feature -- Removal
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
 		is
-			-- Delete all files located in current directory and its
-			-- subdirectories.
+			-- Delete all files located in directory and subdirectories.
 			--
 			-- `action' is called each time `file_number' files has
 			-- been deleted and before the function exits.
@@ -412,7 +411,7 @@ feature -- Removal
 			is_cancel_requested: FUNCTION [ANY, TUPLE, BOOLEAN]
 			file_number: INTEGER)
 		is
-			-- Delete directory, its files and its subdirectories.
+			-- Delete directory and all content contained within.
 			--
 			-- `action' is called each time `file_number' files has
 			-- been deleted and before the function exits.

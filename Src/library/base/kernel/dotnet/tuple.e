@@ -204,31 +204,66 @@ feature -- Access
 
 feature -- Comparison
 
+	object_comparison: BOOLEAN is
+			-- Must search operations use `equal' rather than `='
+			-- for comparing references? (Default: no, use `='.)
+		do
+			Result ?= native_array.item (0)
+		end
+
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		local
 			i, nb: INTEGER
 			l_cur, l_other: like native_array
+			l_object_compare: BOOLEAN
 		do
 			l_cur := native_array
 			l_other := other.native_array
 			nb := l_cur.count
 			if nb = l_other.count then
-				from
-					Result := True
-					i := 1
-				until
-					i = nb or not Result
-				loop
-					if is_reference_item (i) then
-						Result := l_cur.item (i) = l_other.item (i)
-					else
-						Result := equal (l_cur.item (i), l_other.item (i))
+				l_object_compare := object_comparison
+				Result := l_object_compare = other.object_comparison
+				if Result then
+					from
+						i := 1
+					until
+						i = nb or not Result
+					loop
+						if is_reference_item (i) then
+							if l_object_compare then
+								Result := equal (l_cur.item (i), l_other.item (i))
+							else
+								Result := l_cur.item (i) = l_other.item (i)
+							end
+						else
+							Result := equal (l_cur.item (i), l_other.item (i))
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
+		end
+
+feature -- Status setting
+
+	compare_objects is
+			-- Ensure that future search operations will use `equal'
+			-- rather than `=' for comparing references.
+		do
+			native_array.put (0, True)
+		ensure
+			object_comparison: object_comparison
+		end
+
+	compare_references is
+			-- Ensure that future search operations will use `='
+			-- rather than `equal' for comparing references.
+		do
+			native_array.put (0, False)
+		ensure
+			reference_comparison: not object_comparison
 		end
 
 feature -- Duplication

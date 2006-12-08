@@ -10,10 +10,13 @@ class
 
 inherit
 	HASHABLE
+		redefine
+			is_equal
+		end
 
 	MISMATCH_CORRECTOR
 		redefine
-			correct_mismatch
+			correct_mismatch, is_equal
 		end
 
 create
@@ -186,6 +189,63 @@ feature -- Access
 			is_real_or_integer: is_real_item (index)
 		do
 			Result := eif_real_32_item ($Current, index)
+		end
+
+feature -- Comparison
+
+	object_comparison: BOOLEAN is
+			-- Must search operations use `equal' rather than `='
+			-- for comparing references? (Default: no, use `='.)
+		do
+			Result := eif_boolean_item ($Current, 0)
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		local
+			i, nb: INTEGER
+			l_object_compare: BOOLEAN
+		do
+			l_object_compare := object_comparison
+			if l_object_compare = other.object_comparison then
+				if l_object_compare then
+					nb := count
+					if nb = other.count then
+						from
+							Result := True
+							i := 1
+						until
+							i = nb or not Result
+						loop
+							Result := equal (item (i), other.item (i))
+							i := i + 1
+						end
+					end
+				else
+					Result := Precursor {HASHABLE} (other)
+				end
+			end
+		end
+
+feature -- Status setting
+
+	compare_objects is
+			-- Ensure that future search operations will use `equal'
+			-- rather than `=' for comparing references.
+		do
+			eif_put_boolean_item ($Current, 0, True)
+		ensure
+			object_comparison: object_comparison
+		end
+
+	compare_references is
+			-- Ensure that future search operations will use `='
+			-- rather than `equal' for comparing references.
+		do
+			eif_put_boolean_item ($Current, 0, False)
+		ensure
+			reference_comparison: not object_comparison
 		end
 
 feature -- Status report

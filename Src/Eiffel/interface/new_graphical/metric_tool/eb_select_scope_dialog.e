@@ -23,11 +23,12 @@ feature{NONE} -- Implementation
 			a_add_scope_action_attached: a_add_scope_action /= Void
 		do
 			set_add_scope_action (a_add_scope_action)
-			create class_dialog.make
+			create class_dialog.make_with_targets
 			class_dialog.set_title (metric_names.t_select_domain_scope)
 			class_dialog.set_cluster_add_action (agent on_add_cluster)
 			class_dialog.set_class_add_action (agent on_add_class)
 			class_dialog.set_folder_add_action (agent on_add_folder)
+			class_dialog.set_target_add_action (agent on_add_target)
 		ensure
 			add_scope_action_set: add_scope_action = a_add_scope_action
 		end
@@ -127,6 +128,14 @@ feature{NONE} -- Implementation
 			a_folder_attached: a_folder /= Void
 		do
 			add_scope_action.call ([create{CLUSTER_STONE}.make_subfolder (a_folder.cluster, a_folder.path, a_folder.name)])
+		end
+
+	on_add_target (a_target: CONF_TARGET) is
+			-- Action to be performed when `a_target' is added.
+		require
+			a_target_attached: a_target /= Void
+		do
+			add_scope_action.call ([create{TARGET_STONE}.make (a_target)])
 		end
 
 invariant

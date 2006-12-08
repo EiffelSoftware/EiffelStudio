@@ -25,6 +25,14 @@ inherit
 
 	EB_SHARED_METRIC_NAMES
 
+	EB_CLUSTER_MANAGER_OBSERVER
+		redefine
+			on_project_loaded,
+			on_project_unloaded
+		end
+
+	EB_METRIC_ACTION_SEQUENCES
+
 create
 	make
 
@@ -35,6 +43,7 @@ feature{NONE} -- Initialization
 		do
 			create {LINKED_LIST [EB_METRIC]} metrics.make
 			create metrics_vadility.make (100)
+			manager.add_observer (Current)
 		end
 
 feature -- Setting
@@ -171,6 +180,18 @@ feature -- Status report
 			l_b_name.right_adjust
 			Result := l_a_name.is_case_insensitive_equal (l_b_name)
 		end
+
+	is_eiffel_compiling: BOOLEAN
+			-- Is eiffel compiling?
+
+	is_metric_evaluating: BOOLEAN
+			-- Is metric being evaluated?
+
+	is_archive_calculating: BOOLEAN
+			-- Is metric archive being calculated?
+
+	is_project_loaded: BOOLEAN
+			-- Is a project loaded?		
 
 feature -- Access
 
@@ -483,6 +504,7 @@ feature -- Metric management
 				is_metric_loaded := True
 				resume
 				notify (Void)
+				metric_loaded_actions.call ([])
 			end
 		end
 
@@ -719,6 +741,103 @@ feature -- Metric archive
 		rescue
 			l_retried := True
 			create last_error.make (metric_names.err_file_not_writable (a_file_name))
+		end
+
+feature -- Setting
+
+	set_is_eiffel_compiling (b: BOOLEAN) is
+			-- Set `is_eiffel_compiling' with `b'.
+		do
+			is_eiffel_compiling := b
+		ensure
+			is_eiffel_compiling_set: is_eiffel_compiling = b
+		end
+
+	set_is_archive_calculating (b: BOOLEAN) is
+			-- Set `is_archive_calculating' with `b'.
+		do
+			is_archive_calculating := b
+		ensure
+			is_archive_calculating_set: is_archive_calculating = b
+		end
+
+	set_is_metric_evaluating (b: BOOLEAN) is
+			-- Set `is_metric_evaluating' with `b'.
+		do
+			is_metric_evaluating := b
+		ensure
+			is_metric_evaluating_set: is_metric_evaluating = b
+		end
+
+	set_is_project_loaded (b: BOOLEAN) is
+			-- Set `is_project_loaded' with `b'.
+		do
+			is_project_loaded := b
+		ensure
+			is_project_loaded_set: is_project_loaded = b
+		end
+
+
+feature -- Actions
+
+	on_project_loaded is
+			-- A new project has been loaded.
+		do
+			set_is_project_loaded (True)
+			project_load_actions.call ([])
+		end
+
+	on_project_unloaded is
+			-- Current project has been closed.
+		do
+			set_is_project_loaded (False)
+			project_unload_actions.call ([])
+		end
+
+	on_compile_start is
+			-- Action to be performed when Eiffel compilation starts
+		do
+			set_is_eiffel_compiling (True)
+			compile_start_actions.call ([])
+		end
+
+	on_compile_stop is
+			-- Action to be performed when Eiffel compilation stops
+		do
+			set_is_eiffel_compiling (False)
+			compile_stop_actions.call ([])
+		end
+
+	on_metric_evaluation_starts (a_data: ANY) is
+			-- Action to be performed when metric evaluation starts
+			-- `a_data' can be the metric tool panel from which metric evaluation starts.
+		do
+			set_is_metric_evaluating (True)
+			metric_evaluation_start_actions.call ([a_data])
+		end
+
+	on_metric_evaluation_stops (a_data: ANY) is
+			-- Action to be performed when metric evaluation stops
+			-- `a_data' can be the metric tool panel from which metric evaluation stops.
+		do
+			set_is_metric_evaluating (False)
+			metric_evaluation_stop_actions.call ([a_data])
+		end
+
+	on_archive_calculation_starts (a_data: ANY) is
+			-- Action to be performed when metric archive calculation starts
+			-- `a_data' can be the metric tool panel from which metric archive calculation starts.
+		do
+			set_is_archive_calculating (True)
+			archive_calculation_start_actions.call ([a_data])
+		end
+
+	on_archive_calculation_stops (a_data: ANY) is
+			-- Action to be performed when metric archive calculation stops
+			-- `a_data' can be the metric tool panel from which metric archive calculation stops.
+		do
+			set_is_archive_calculating (False)
+			archive_calculation_stop_actions.call ([a_data])
 		end
 
 feature{NONE} -- Implementation

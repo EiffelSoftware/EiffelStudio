@@ -14,15 +14,9 @@ inherit
 
 	EB_SHARED_METRIC_NAMES
 
-feature -- Access
+	EB_SHARED_MANAGERS
 
-	metric_manager: EB_METRIC_MANAGER is
-			-- Metric manager
-		once
-			create Result.make
-		ensure
-			result_attached: Result /= Void
-		end
+feature -- Access
 
 	metric_vadility_checker: EB_METRIC_VADILITY_VISITOR is
 			-- Metric vadility checker

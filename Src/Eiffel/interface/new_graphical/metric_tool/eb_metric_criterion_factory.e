@@ -469,6 +469,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_name_criterion (assertion_scope, query_language_names.ql_cri_text_contain), query_language_names.ql_cri_text_contain)
 
 			l_hash_table.put (agent new_nary_criterion (assertion_scope, query_language_names.ql_cri_and), query_language_names.ql_cri_and)
+			l_hash_table.put (agent new_nary_criterion (assertion_scope, query_language_names.ql_cri_or), query_language_names.ql_cri_or)
 
 			l_hash_table.put (agent new_path_criterion (assertion_scope, query_language_names.ql_cri_contain_ast), query_language_names.ql_cri_contain_ast)
 		end

@@ -34,17 +34,24 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_targets
 
 feature {NONE} -- Initialization
 
 	make is
-			-- Initialize the dialog.
+			-- Initialize the dialog.			
 		do
 			default_create
 			set_title (Interface_names.t_Add_search_scope)
-
 			prepare
+		end
+
+	make_with_targets is
+			-- Initialize the dialog and make sure targets are displayed in current dialog.
+		do
+			show_targets := True
+			make
 		end
 
 	prepare is
@@ -70,7 +77,11 @@ feature {NONE} -- Initialization
 			extend_button (buttons_box, ok_button)
 
 				-- Create the controls.
-			create classes_tree.make_without_targets
+			if show_targets then
+				create classes_tree.make
+			else
+				create classes_tree.make_without_targets
+			end
 			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
 			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))
 			classes_tree.refresh
@@ -96,6 +107,9 @@ feature -- Access
 	selected: BOOLEAN
 			-- Has the user selected a class (True) or pushed
 			-- the cancel button (False)?
+
+	show_targets: BOOLEAN
+			-- Will targets be shown in curernt dialog?
 
 	class_name: STRING is
 			-- class selected by the user, if any.
@@ -130,6 +144,16 @@ feature -- Element Change
 			on_folder_add := action
 		end
 
+	set_target_add_action (action: like on_target_add) is
+			-- Set `on_target_add' with `action'.
+		require
+			a_action_attached: action /= Void
+		do
+			on_target_add := action
+		ensure
+			on_target_add_set: on_target_add = action
+		end
+
 feature {NONE} -- Implementation
 
 	selected_class_name: STRING
@@ -151,13 +175,17 @@ feature {NONE} -- Vision2 events
 			l_cluster: EB_SORTED_CLUSTER
 			l_item : EB_CLASSES_TREE_FOLDER_ITEM
 			l_conf_cluster: CONF_CLUSTER
+			l_target: EB_CLASSES_TREE_TARGET_ITEM
 		do
 			if classes_tree.selected_item /= Void then
 				l_class ?= classes_tree.selected_item.data
 				l_cluster ?= classes_tree.selected_item.data
 				l_item ?= classes_tree.selected_item
+				l_target ?= classes_tree.selected_item
 				if l_class /= Void then
 					on_class_add.call ([l_class])
+				elseif l_target /= Void and then on_target_add /= Void then
+					on_target_add.call ([l_target.stone.target])
 				elseif l_cluster /= Void and then l_cluster.actual_group /= Void then
 					if l_item /= Void and then not l_item.path.is_empty then
 						l_conf_cluster ?= l_cluster.actual_group
@@ -177,6 +205,8 @@ feature {NONE} -- Vision2 events
 	on_cluster_add: PROCEDURE [ANY, TUPLE [CONF_GROUP]]
 
 	on_folder_add: PROCEDURE [ANY, TUPLE [EB_FOLDER]]
+
+	on_target_add: PROCEDURE [ANY, TUPLE [CONF_TARGET]]
 
 	on_ok is
 			-- Terminate the dialog and clear the selection.

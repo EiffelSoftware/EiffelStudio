@@ -184,20 +184,6 @@ feature -- Setting
 			toolbar_area.disable_sensitive
 		end
 
-	attach_metric_selector (a_metric_selector: like metric_selector) is
-			-- Set `metric_selector' with `a_metric_selector'.
-		do
-			metric_selector := a_metric_selector
-		end
-
-	detach_metric_selector is
-			-- Detach `metric_selector'.
-		do
-			if metric_selector /= Void then
-				metric_selector := Void
-			end
-		end
-
 	set_stone (a_stone: STONE) is
 			-- Notify that `a_stone' is dropped on Current.
 		do
@@ -298,7 +284,7 @@ feature{NONE} -- Implementation/Actions
 				-- Setup variable metric item.
 			create l_metric_item.make_with_text (a_name)
 			l_metric_item.set_foreground_color (color_of_metric (a_name))
-			if metric_manager.has_metric (a_name) then
+			if metric_manager.has_metric (a_name) and then metric_manager.metric_with_name (a_name).unit = unit then
 				l_metric := metric_manager.metric_with_name (a_name)
 				l_metric_item.set_pixmap (pixmap_from_metric (l_metric))
 			else
@@ -352,11 +338,10 @@ feature{NONE} -- Implementation/Actions
 		end
 
 	on_add_variable_metric (a_item: EV_GRID_LABEL_ITEM) is
-			-- Action to be performed to add selected metric in `metric_selector' into current linear definition area
+			-- Action to be performed to add a metric into current linear definition area
 		require
 			a_item_attached: a_item /= Void
 			a_item_parented: a_item.parent /= Void
-			metric_selector_attached: metric_selector /= Void
 		local
 			l_row: EV_GRID_ROW
 			l_row_index: INTEGER
@@ -668,7 +653,7 @@ feature{NONE} -- Implementation
 			l_manager: like metric_manager
 		do
 			l_manager := metric_manager
-			if l_manager.has_metric (a_name) and then l_manager.is_metric_valid (a_name) then
+			if l_manager.has_metric (a_name) and then l_manager.is_metric_valid (a_name) and then l_manager.metric_with_name (a_name).unit = unit then
 				Result := (black_color)
 			else
 				Result := (red_color)

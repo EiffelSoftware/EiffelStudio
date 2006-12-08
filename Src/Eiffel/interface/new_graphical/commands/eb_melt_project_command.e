@@ -165,6 +165,7 @@ feature {NONE} -- Compilation implementation
 			end
 			output_manager.scroll_to_end
 			Eb_debugger_manager.on_compile_stop
+			metric_manager.on_compile_stop
 
 			if dynamic_lib_window_is_valid and then dynamic_lib_window.is_visible then
 				dynamic_lib_window.refresh

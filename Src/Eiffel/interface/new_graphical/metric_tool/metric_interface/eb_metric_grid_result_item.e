@@ -58,6 +58,7 @@ feature -- Initialization
 			l_path_style: like item_path_style
 			l_feature: QL_FEATURE
 		do
+			image_internal := ""
 			default_create
 			column_index := a_column_index
 			row_index := a_row_index

@@ -851,6 +851,7 @@ feature -- Events
 			refactoring_manager.disable_sensitive
 			for_all (agent c_compilation_start_action)
 			compile_start_actions.call ([])
+			metric_manager.on_compile_start
 		end
 
 	on_refactoring_start is

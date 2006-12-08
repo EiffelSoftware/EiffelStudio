@@ -43,13 +43,13 @@ feature -- Access
 			Result := cwel_msg_get_message (item)
 		end
 
-	wparam: INTEGER is
+	wparam: POINTER is
 			-- Additional information about `message'
 		do
 			Result := cwel_msg_get_wparam (item)
 		end
 
-	lparam: INTEGER is
+	lparam: POINTER is
 			-- Additional information about `message'
 		do
 			Result := cwel_msg_get_lparam (item)
@@ -73,7 +73,7 @@ feature -- Element change
 			message_set: message = a_message
 		end
 
-	set_wparam (a_wparam: INTEGER) is
+	set_wparam (a_wparam: POINTER) is
 			-- Set `wparam' with `a_wparam'.
 		do
 			cwel_msg_set_wparam (item, a_wparam)
@@ -81,7 +81,7 @@ feature -- Element change
 			wparam_set: wparam = a_wparam
 		end
 
-	set_lparam (a_lparam: INTEGER) is
+	set_lparam (a_lparam: POINTER) is
 			-- Set `lparam' with `a_lparam'.
 		do
 			cwel_msg_set_lparam (item, a_lparam)
@@ -319,12 +319,12 @@ feature {NONE} -- Externals
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_set_lparam (ptr: POINTER; value: INTEGER) is
+	cwel_msg_set_lparam (ptr: POINTER; value: POINTER) is
 		external
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_set_wparam (ptr: POINTER; value: INTEGER) is
+	cwel_msg_set_wparam (ptr: POINTER; value: POINTER) is
 		external
 			"C [macro <msg.h>]"
 		end
@@ -339,12 +339,12 @@ feature {NONE} -- Externals
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_get_wparam (ptr: POINTER): INTEGER is
+	cwel_msg_get_wparam (ptr: POINTER): POINTER is
 		external
 			"C [macro <msg.h>]"
 		end
 
-	cwel_msg_get_lparam (ptr: POINTER): INTEGER is
+	cwel_msg_get_lparam (ptr: POINTER): POINTER is
 		external
 			"C [macro <msg.h>]"
 		end

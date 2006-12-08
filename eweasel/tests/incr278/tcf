@@ -1,0 +1,24 @@
+test_name changing-formals-invariant-not-removed
+test_description When a generic class which has an agent has its generic parameters modified, the old C code for the invariant is still generated in efrozen and thus it causes a C compilation error since the code has been replaced by another routine.
+
+define GENERIC "G"
+copy_sub Ace $TEST Ace
+copy_sub test.e $CLUSTER test.e
+copy_sub a.e $CLUSTER a.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+define GENERIC "reference G"
+copy_sub a.e $CLUSTER a.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+test_end

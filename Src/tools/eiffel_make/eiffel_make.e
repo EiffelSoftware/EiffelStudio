@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 							-- this is necessary on Windows where depending on wether or not
 							-- you had a final directory separator the results are bogus.
 						if l_dir.exists then
-								l_sorted_list.force_last (l_dir_name)
+							l_sorted_list.force_last (l_dir_name)
 						else
 							create l_file.make (l_name)
 							if l_file.exists and then l_file.is_directory then

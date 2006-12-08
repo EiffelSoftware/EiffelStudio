@@ -588,6 +588,7 @@ test	gc-crash-in-melted-agent-creation incr274 tcf pass incrementality
 test	expanded-not-expanded			incr275 tcf pass incrementality
 test	finalize-changed-agent-to-changed-feature incr276 tcf pass incrementality
 test	inline-agent-from-scratch-bug	incr277 tcf pass incrementality
+test	changing-formals-invariant-not-removed	incr278 tcf pass incrementality
 
 
 -- Melting

@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			extend (root_window_button)
 			extend (include_directory_button)
 			extend (show_hide_empty_directories_button)
-			is_initialized := True
+			Precursor {EV_TOOL_BAR}
 		end
 
 feature -- Access

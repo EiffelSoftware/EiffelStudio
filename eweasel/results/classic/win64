@@ -35,6 +35,8 @@ Test string-regression (string001): passed
 Test insert-default-key (table001): passed
 Test replace_key_cycle (table002): passed
 Test replace_key_conflict_not_found (table003): passed
+Test replace_key_replace_item (table004): passed
+Test iteration-with-default-key (table005): passed
 Test test-auto-resize (fake002): passed
 Test many-similar-class-names (fake003): passed
 Test test1 (fake004): passed
@@ -1284,6 +1286,9 @@ Test wiping-out-types (incr272): passed
 Test noclass-syntax (incr273): passed
 Test gc-crash-in-melted-agent-creation (incr274): passed
 Test expanded-not-expanded (incr275): passed
+Test finalize-changed-agent-to-changed-feature (incr276): passed
+Test inline-agent-from-scratch-bug (incr277): passed
+Test changing-formals-invariant-not-removed (incr278): passed
 Test divide-melt-panic (melt001): passed
 Test bit-melt-metamorphose (melt002): passed
 Test manifest-array-with-old (melt003): passed
@@ -2114,6 +2119,7 @@ Test anchor-on-feature-with-formal (exec262): failed
 	Reason: files being compared do not have identical contents
 
 Test generating-type-of-type-parameter (exec263): passed
+Test agent-on-attribute-with-open-target (exec264): passed
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
 Test long-identifiers (term003): passed
@@ -2425,15 +2431,7 @@ Test polymorphic-dollar-agent-incorrect-wrapper (ccomp055): passed
 Test bad-macro-wrapping (ccomp056): passed
 Test bad-boolean-inline (ccomp057): passed
 Test agent-on-constant-attribute (ccomp058): passed
-Test add-generic-c-compile-failure (ccomp059): failed
-	Description: Adding a formal generic causes a C compilation failure.
-	Execution error in file C:\work\eweasel\eweasel\tests\ccomp059\tcf at line 27
-	Original text:    c_compile_result ok
-	Substituted text: c_compile_result ok
-	Reason: actual C compilation result does not match expected result
-	Actual result: failure C_compilation_not_completed
-	Expected result: no_failure C_compilation_completed
-
+Test add-generic-c-compile-failure (ccomp059): passed
 Test last-reverse-assignment-to-expanded (ccomp060): failed
 	Description: Reverse assignment to an expanded result should not produce incorrect C code.
 	Execution error in file C:\work\eweasel\eweasel\tests\ccomp060\tcf at line 18
@@ -2445,6 +2443,7 @@ Test last-reverse-assignment-to-expanded (ccomp060): failed
 	Expected result:
 		Final status:  completed 
 
+Test adding-removing-classes-c-compile-error (ccomp061): passed
 Test freeze-retrieval-mismatch (store001): passed
 Test retrieve-corrupted-file (store002): passed
 Test melt-retrieval-mismatch (store003): passed
@@ -2506,6 +2505,7 @@ Test tuple-hashcode (tuple004): failed
 	Substituted text: compare exec_output1 output
 	Reason: files being compared do not have identical contents
 
+Test tuple-comparison (tuple005): passed
 Test validity-vsrt1-one-generic (vsrt101): passed
 Test validity-vsrt1-two-generics (vsrt102): passed
 Test validity-vsrt1-many-generics (vsrt103): passed
@@ -2737,8 +2737,8 @@ Test assertion-evaluation-order (dotnet033): passed
 Test pointer-to-external-expanded (dotnet034): passed
 Test real-output-no-locale (dotnet036): passed
 
-Passed:  1284 / 1442  (89%)
-Failed:  139 / 1442  (10%)
-Manual:  16 / 1442  (2%)
-Skipped:  3 / 1442  (1%)
+Passed:  1293 / 1450  (89%)
+Failed:  138 / 1450  (10%)
+Manual:  16 / 1450  (2%)
+Skipped:  3 / 1450  (1%)
 

@@ -239,6 +239,7 @@ rt_public void dexit(int code)
 #ifdef USE_ADD_LOG
 	add_log(12, "exiting with status %d", code);
 #endif
+	/* FIXME jfiat [2006/11/23] : may be we should kill the app if it is still alive */
 #ifdef EIF_WINDOWS
 	if (daemon_data.d_as) {
 		close_stream (daemon_data.d_as);

@@ -162,7 +162,6 @@ feature {EV_ANY} -- Initialization
 			create item_parent
 			control_holder.extend (item_parent)
 			control_holder.disable_item_expand (item_parent)
-			is_initialized := True
 		end
 
 feature -- Access

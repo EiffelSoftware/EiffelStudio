@@ -1,0 +1,128 @@
+msgid ""
+msgstr ""
+"Language-Team: YOUR TEAM HERE\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Last-Translator: YOUR NAME HERE\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+
+
+msgid ""
+"Members of the team:\n   - Leo Fellmann\n   - Etienne Reichenbach\n   - Bernd "
+"Schoeller\n   - Martino Trosi\n   - Hong Zhang"
+msgstr ""
+"члены team:\n - leo Fellmann\n - Etienne Reichenbach\n - Bernd"
+"Schoeller\n - Martino Trosi\n - Hong Zhang"
+
+msgid "Application"
+msgstr "применение"
+
+
+msgid ""
+"Demo application made by i18n Team ETHZ\n\nFor bugs, suggestions or other, ple"
+"ase write a mail to: es-i18n@origo.ethz.ch\n\n"
+msgstr ""
+"применение Demo сделанное черепашками ETHZ\n\nFor команды i18n, "
+"предложениями или другим, пожалуйста пишет почту к: es-i18n@origo.ethz.ch\n\n"
+
+msgid "Full date-time: $1"
+msgstr "вполне date-time: $1 "
+
+
+msgid "Update date and time"
+msgstr "дата и время уточнения"
+
+
+msgid "A hovercraft costs you: $1"
+msgstr "A hovercraft costs you: $1"
+
+
+msgid "Buy a hovercraft"
+msgstr "купите ховеркрафт"
+
+msgid "arabic"
+msgstr "арабско [ar]"
+
+msgid "italian"
+msgstr "итальянско [it]"
+
+msgid "greek"
+msgstr "греческо [gr]"
+
+msgid "hebrew"
+msgstr "древнееврейско [he]"
+
+msgid "japanese"
+msgstr "японско [ja]"
+
+msgid "russian"
+msgstr "русско [ru]"
+
+msgid "chinese"
+msgstr "китайско [zh]"
+
+msgid "english"
+msgstr "английско [en]"
+
+msgid "hungarian"
+msgstr "венгерско [hu]"
+
+msgid "Unknown"
+msgstr "Неизвестно"
+
+
+msgid "Your have $1 on your bank conto"
+msgstr "ваш имейте $1 на вашем conto крена"
+
+
+msgid "The mortage rate is $1%"
+msgstr "ставкаа процента по закладной $1%"
+
+
+msgid "File"
+msgstr "Архив"
+
+
+msgid "Select language"
+msgstr "отборный язык"
+
+
+msgid "Time: $1"
+msgstr "время: $1 "
+
+
+msgid "sell hovercraft"
+msgstr "ховеркрафт надувательства"
+
+
+msgid "Date: $1"
+msgstr "дата: $1 "
+
+
+msgid "About Dialog"
+msgstr "О Диалоге"
+
+
+msgid "OK"
+msgstr "о'кейо"
+
+
+msgid "My hovercraft is full of eels"
+msgid_plural "My $1 hovercraft are full of eels"
+msgstr[0] "мой ховеркрафт полн eels"
+msgstr[1] "мой ховеркрафт $1 полн eels-1"
+msgstr[2] "мой ховеркрафт $1 полн eels-2"
+msgstr[3] "мой ховеркрафт $1 полн eels-3"
+
+
+msgid "About"
+msgstr "о"
+
+
+msgid "You can sell a hovercraft for $1"
+msgstr "вы можете продать ховеркрафт для $1"
+
+msgid "This string is written in the application's sourcecode"
+msgstr "Russian is a language that has 4 different pluralforms"

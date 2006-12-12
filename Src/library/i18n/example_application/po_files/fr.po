@@ -1,0 +1,125 @@
+msgid ""
+msgstr ""
+"Language-Team: YOUR TEAM HERE\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Last-Translator: Leo Fellmann <leof@student.ethz.ch>\n"
+"Plural-Forms: nplurals=2; plural=n>1;\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2006-10-22 00:13+0100\n"
+
+msgid ""
+"Members of the team:\n"
+"   - Leo Fellmann\n"
+"   - Etienne Reichenbach\n"
+"   - Bernd Schoeller\n"
+"   - Martino Trosi\n"
+"   - Hong Zhang"
+msgstr ""
+"Membres de l'équipe:\n"
+"   - Leo Fellmann\n"
+"   - Etienne Reichenbach\n"
+"   - Bernd Schoeller\n"
+"   - Martino Trosi\n"
+"   - Hong Zhang"
+
+msgid "Application"
+msgstr "Application"
+
+msgid ""
+"Demo application made by i18n Team ETHZ\n"
+"\n"
+"For bugs, suggestions or other, please write a mail to: es-i18n@origo.ethz.ch\n"
+"\n"
+msgstr ""
+"Application de démonstration faite par l'equipe i18n de l'ETHZ\n"
+"Pour signaler bugs, suggestions ou autre, yous pouvez envoyer un mail à es-i18n@origo.ethz.ch\n"
+"\n"
+
+msgid "french"
+msgstr "français [fr_FR]"
+
+msgid "Full date-time: $1"
+msgstr "Temps et date complets: $1"
+
+msgid "Update date and time"
+msgstr "Mettre à jour temps et date"
+
+msgid "A hovercraft costs you: $1"
+msgstr "Un aéroglisseur vous coûte: $1"
+
+msgid "Buy a hovercraft"
+msgstr "Acheter un aéroglisseur"
+
+msgid "english"
+msgstr "anglais [en]"
+
+msgid "Your have $1 on your bank conto"
+msgstr "Vous avez $1 sur votre compte bancaire"
+
+msgid "chinese"
+msgstr "chinois [zh_CN]"
+
+msgid "The mortage rate is $1%"
+msgstr "Le taux d'hypothèquage est d'$1%"
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "greek"
+msgstr "grec  [gr_GR]"
+
+msgid "Select language"
+msgstr "Choisir langue"
+
+msgid "arabic"
+msgstr "arabe [ar_SA]"
+
+msgid "hebrew"
+msgstr "hébreu [he_IL]"
+
+msgid "Time: $1"
+msgstr "Temps: $1"
+
+msgid "italian"
+msgstr "italien [it_IT]"
+
+msgid "sell hovercraft"
+msgstr "Vendre aéroglisseur"
+
+msgid "Date: $1"
+msgstr "Date: $1"
+
+msgid "japanese"
+msgstr "japonais [ja_JA]"
+
+msgid "russian"
+msgstr "russe [ru_RU]"
+
+msgid "hungarian"
+msgstr "hongrois [hu]"
+
+msgid "Unknown"
+msgstr "Inconnu"
+
+msgid "About Dialog"
+msgstr "Dialogue d'informations"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "My hovercraft is full of eels"
+msgid_plural "My $1 hovercraft are full of eels"
+msgstr[0] "Mon aéroglisseur est rempli d'anguilles."
+msgstr[1] "Mes $1 aéroglisseurs sont remplis d'anguilles."
+
+msgid "About"
+msgstr "Informations"
+
+msgid "You can sell a hovercraft for $1"
+msgstr "Vous pouvez vendre un aéroglisseur pour $1"
+
+msgid "This string is written in the application's sourcecode"
+msgstr "full french translation"

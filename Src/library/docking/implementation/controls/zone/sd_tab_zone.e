@@ -19,7 +19,8 @@ inherit
 			is_maximized,
 			set_max,
 			set_focus_color,
-			set_non_focus_selection_color
+			set_non_focus_selection_color,
+			save_content_title
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -155,7 +156,6 @@ feature -- Command
 			internal_title_bar.set_show_normal_max (a_show)
 		ensure then
 			set: a_show = internal_title_bar.is_show_normal_max
-
 		end
 
 	set_show_stick (a_show: BOOLEAN) is
@@ -232,6 +232,15 @@ feature -- Command
 			end
 		end
 
+feature {SD_CONFIG_MEDIATOR} --
+
+	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
+			-- Redefine.
+		do
+			Precursor {SD_MULTI_CONTENT_ZONE}(a_config_data)
+			a_config_data.set_selected_tab_index (selected_item_index)
+		end
+
 feature {SD_TAB_STATE} -- Internal issues.
 
 	selected_item_index: INTEGER is
@@ -247,6 +256,7 @@ feature {SD_TAB_STATE} -- Internal issues.
 			has (a_content)
 		do
 			internal_notebook.select_item (a_content, a_focus)
+			on_select_tab
 		ensure
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
@@ -394,7 +404,7 @@ feature {NONE} -- Implementation
 				end
 				internal_title_bar.extend_custom_area (a_content.mini_toolbar)
 			else
-				internal_title_bar.wipe_out_custom_area
+				internal_title_bar.clear_custom_widget
 			end
 		end
 

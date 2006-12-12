@@ -118,7 +118,6 @@ feature {NONE} -- Initialization
 			-- Build associated tool bar
 		local
 			tbb: EV_TOOL_BAR_BUTTON
-			tbtb: EV_TOOL_BAR_TOGGLE_BUTTON
 			scmd: EB_STANDARD_CMD
 		do
 			create mini_toolbar

@@ -1475,5 +1475,3 @@ indexing
 		]"
 
 end -- class HASH_TABLE
-
-

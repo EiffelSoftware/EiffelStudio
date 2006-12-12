@@ -23,15 +23,11 @@ feature {NONE} -- Initlization
 
 	make is
 			-- Creation method.
-		local
-			l_zero_size_container: EV_HORIZONTAL_BOX
 		do
 			create internal_shared
 			default_create
 
-			is_focused_color := True
-
-			create container
+			create fixed
 			create internal_border.make
 
 			extend (internal_border)
@@ -40,34 +36,14 @@ feature {NONE} -- Initlization
 			internal_border.set_border_color (internal_shared.border_color)
 			internal_border.set_border_style ({SD_ENUMERATION}.bottom)
 
-			internal_border.extend (container)
+			create viewport
+			internal_border.extend (viewport)
+			viewport.set_minimum_height (internal_shared.title_bar_height - 1)
+			viewport.extend (fixed)
 
-			create l_zero_size_container
-			container.extend (l_zero_size_container)
-
-			create internal_highlight_area_before
-			internal_highlight_area_before.set_minimum_width (4)
-			internal_highlight_area_before.expose_actions.force_extend (agent on_expose)
-			l_zero_size_container.extend (internal_highlight_area_before)
-			l_zero_size_container.disable_item_expand (internal_highlight_area_before)
-
-			internal_title := ""
-			create internal_drawing_area
-			internal_drawing_area.expose_actions.force_extend (agent on_expose)
-			l_zero_size_container.extend (internal_drawing_area)
-
-			create internal_highlight_area_after
-			internal_highlight_area_after.set_minimum_width (internal_shared.highlight_tail_width)
-			internal_highlight_area_after.expose_actions.force_extend (agent on_expose)
-			l_zero_size_container.extend (internal_highlight_area_after)
-			l_zero_size_container.disable_item_expand (internal_highlight_area_after)
-
-			create custom_area
-			l_zero_size_container.extend (custom_area)
-			l_zero_size_container.disable_item_expand (custom_area)
-
-			l_zero_size_container.set_minimum_width (0)
-			l_zero_size_container.resize_actions.extend (agent on_zero_size_container_resize)
+			create internal_title.make
+			internal_title.set_focused_color (True)
+			fixed.extend (internal_title)
 
 			create stick
 			stick.set_pixmap (internal_shared.icons.unstick)
@@ -86,40 +62,18 @@ feature {NONE} -- Initlization
 			normal_max.select_actions.extend (agent on_normal_max)
 			close.select_actions.extend (agent on_close)
 
-			init_actions
+			internal_title.pointer_double_press_actions.force_extend (agent on_normal_max)
 
 			create internal_tool_bar
 			internal_tool_bar.extend (stick)
 			internal_tool_bar.extend (normal_max)
 			internal_tool_bar.extend (close)
 
-			container.extend (internal_tool_bar)
-			container.disable_item_expand (internal_tool_bar)
+			fixed.extend (internal_tool_bar)
 
 			-- default setting
 		 	disable_focus_color
-		end
-
-	init_actions is
-			-- Initlize actions.
-		do
-			internal_highlight_area_before.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_highlight_area_before.pointer_button_release_actions.force_extend (agent on_pointer_release)
-			internal_highlight_area_before.pointer_leave_actions.force_extend (agent on_pointer_leave)
-			internal_highlight_area_before.pointer_motion_actions.extend (agent on_pointer_motion)
-			internal_highlight_area_before.pointer_double_press_actions.force_extend (agent on_normal_max)
-
-			internal_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_drawing_area.pointer_button_release_actions.force_extend (agent on_pointer_release)
-			internal_drawing_area.pointer_leave_actions.force_extend (agent on_pointer_leave)
-			internal_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
-			internal_drawing_area.pointer_double_press_actions.force_extend (agent on_normal_max)
-
-			internal_highlight_area_after.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_highlight_area_after.pointer_button_release_actions.force_extend (agent on_pointer_release)
-			internal_highlight_area_after.pointer_leave_actions.force_extend (agent on_pointer_leave)
-			internal_highlight_area_after.pointer_motion_actions.extend (agent on_pointer_motion)
-			internal_highlight_area_after.pointer_double_press_actions.force_extend (agent on_normal_max)
+		 	viewport.resize_actions.extend (agent on_fixed_resize)
 		end
 
 feature -- Command
@@ -129,10 +83,10 @@ feature -- Command
 		require
 			a_title_not_void: a_title /= Void
 		do
-			internal_title := a_title
-			on_expose
+			internal_title.set_title (a_title)
+			internal_title.refresh
 		ensure
-			set: internal_title = a_title
+			set: internal_title.title = a_title
 		end
 
 	set_stick (a_stick: BOOLEAN) is
@@ -208,13 +162,13 @@ feature -- Command
 	enable_focus_color is
 			-- Enable focus color.
 		do
-			is_focus_color_enable := True
-			is_focused_color := True
+			internal_title.set_focus_color_enable (True)
+			internal_title.set_focused_color (True)
 
-			set_focus_background_color
+			internal_title.set_focus_background_color
+			internal_title.refresh
 
-			on_expose
-
+			internal_border.set_border_color (internal_title.hightlight_color)
 		ensure
 			is_focus_color_enable_set: is_focus_color_enable
 		end
@@ -222,20 +176,24 @@ feature -- Command
 	enable_non_focus_active_color is
 			-- Enable non-focused active color.
 		do
-			is_focus_color_enable := True
-			is_focused_color := False
 
-			set_non_focus_active_background_color
-			on_expose
+			internal_title.set_focus_color_enable (True)
+			internal_title.set_focused_color (False)
+
+			internal_title.set_non_focus_active_background_color
+			internal_title.refresh
+
+			internal_border.set_border_color (internal_title.hightlight_non_focus_color)
 		end
 
 	disable_focus_color is
 			-- Disable focus color.
 
 		do
-			is_focus_color_enable := False
-			set_disable_focus_background_color
-			on_expose
+			internal_title.set_focus_color_enable (False)
+			internal_title.set_disable_focus_background_color
+			internal_title.refresh
+			internal_border.set_border_color (internal_shared.border_color)
 		ensure
 			is_focus_color_enable_set: not is_focus_color_enable
 		end
@@ -243,20 +201,24 @@ feature -- Command
 	extend_custom_area (a_widget: EV_WIDGET) is
 			-- Extend `custom_area' with a_widget
 		do
-			custom_area.wipe_out
-			custom_area.extend (a_widget)
+			if internal_custom_widget /= a_widget and fixed.has (internal_custom_widget) then
+				-- Prune the old one
+				fixed.prune (internal_custom_widget)
+			end
 			internal_custom_widget := a_widget
+			on_fixed_resize (0, 0, fixed.width, fixed.height)
 		ensure
 			set: internal_custom_widget = a_widget
-			added: custom_area.has (a_widget)
 		end
 
-	wipe_out_custom_area is
+	clear_custom_widget is
 			-- Wipe out custom area.
 		do
-			custom_area.wipe_out
+			fixed.prune (internal_custom_widget)
+			internal_custom_widget := Void
+			on_fixed_resize (0, 0, fixed.width, fixed.height)
 		ensure
-			wuped_out: custom_area.count = 0
+			wuped_out: internal_custom_widget = Void
 		end
 
 	destroy is
@@ -273,7 +235,7 @@ feature -- Query
 	title: STRING is
 			-- Title
 		do
-			Result := internal_title
+			Result := internal_title.title
 		ensure
 			not_void: Result /= Void
 		end
@@ -296,8 +258,11 @@ feature -- Query
 			Result := internal_tool_bar.has (stick)
 		end
 
-	is_focus_color_enable: BOOLEAN
+	is_focus_color_enable: BOOLEAN is
 			-- If show highlight color now?
+		do
+			Result := internal_title.is_focus_color_enable
+		end
 
 feature -- Actions
 
@@ -334,13 +299,10 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	drag_actions: like internal_drag_actions is
+	drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
 			-- Drag actions.
 		do
-			if internal_drag_actions = Void then
-				create internal_drag_actions
-			end
-			Result := internal_drag_actions
+			Result := internal_title.drag_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -360,45 +322,53 @@ feature {NONE} -- Agents
 			l_dialog.set_focus
 		end
 
-	on_zero_size_container_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
-			-- Handle `l_zero_size_container' resize actions.
+	on_fixed_resize (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32) is
+			-- Handle fixed resize actions.
 		do
-			if not ignore_resize and then internal_custom_widget /= Void then
-				ignore_resize := True
-				if a_width >= internal_highlight_area_before.minimum_width + internal_drawing_area.minimum_width + internal_highlight_area_after.minimum_width + internal_custom_widget.minimum_width then
-					if internal_tool_bar.has (mini_tool_bar_indicator) then
-						internal_tool_bar.prune (mini_tool_bar_indicator)
-					end
-					if not custom_area.is_destroyed and then not custom_area.has (internal_custom_widget) then
-						custom_area.wipe_out
-						if internal_custom_widget.parent /= Void then
-							internal_custom_widget.parent.prune (internal_custom_widget)
+			if a_width > 0 and a_height > 0 and not fixed.is_destroyed then
+				fixed.set_minimum_width (a_width)
+				viewport.set_item_width (a_width)
+
+				if internal_custom_widget /= Void then
+					if a_width >= tool_bar_width + internal_custom_widget.width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
+						-- There is enough space for mini tool bar.
+						if internal_tool_bar.has (mini_tool_bar_indicator) then
+							internal_tool_bar.prune (mini_tool_bar_indicator)
 						end
-						custom_area.extend (internal_custom_widget)
+
+						if not fixed.has (internal_custom_widget) then
+							if internal_custom_widget.parent /= Void then
+								internal_custom_widget.parent.prune (internal_custom_widget)
+							end
+							fixed.extend (internal_custom_widget)
+						end
+						fixed.set_item_x_position (internal_custom_widget, a_width - tool_bar_width - internal_custom_widget.width)
+						fixed.set_item_size (internal_title, a_width - tool_bar_width - internal_custom_widget.width, a_height)
+					else
+						-- There is not enough space for mini tool bar.
+						if not internal_tool_bar.has (mini_tool_bar_indicator) then
+							internal_tool_bar.start
+							internal_tool_bar.put_left (mini_tool_bar_indicator)
+						end
+
+						if fixed.has (internal_custom_widget) then
+							fixed.prune (internal_custom_widget)
+						end
+						if a_width - tool_bar_width >= 0 then
+							fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
+						end
 					end
 				else
-						-- Remove `internal_custom_widget' , add `mini_tool_bar_indicator' to `internal_tool_bar'.
-					wipe_out_custom_area
-
-					if mini_tool_bar_indicator = Void then
-						create mini_tool_bar_indicator
-						mini_tool_bar_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
-						mini_tool_bar_indicator.set_tooltip (internal_shared.tooltip_mini_toolbar_hidden_toolbar_indicator)
-						mini_tool_bar_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
+					if a_width - tool_bar_width >= 0 then
+						fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
 					end
 
-					--FIXIT: who set parent?
-					--FIXIT: Why prune/add tool bar item here there'll be problems?
-					if mini_tool_bar_indicator.parent /= Void then
-						mini_tool_bar_indicator.parent.prune (mini_tool_bar_indicator)
-					end
-
-					internal_tool_bar.start
-					check not_before: not internal_tool_bar.before end
-					internal_tool_bar.put_left (mini_tool_bar_indicator)
 				end
-				ignore_resize := False
+
+				fixed.set_item_x_position (internal_title, 0)
+				fixed.set_item_x_position (internal_tool_bar, a_width - tool_bar_width)
 			end
+
 		end
 
 	ignore_resize: BOOLEAN
@@ -437,104 +407,33 @@ feature {NONE} -- Agents
 			close_request_actions.call ([])
 		end
 
-	pressed: BOOLEAN
-			-- Is pointer button pressed?
-
-	on_pointer_press is
-			-- Handle pointer press.
-		do
-			pressed := True
-		ensure
-			set: pressed = True
-		end
-
-	on_pointer_release is
-			-- Handle pointer release.
-		do
-			pressed := False
-		ensure
-			set: pressed = False
-		end
-
-	on_pointer_leave is
-			-- Hanle pointer leave.
-		do
-			pressed := False
-		end
-
-	on_pointer_motion (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Handle pointer motion.
-		do
-			if pressed then
-				drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
-				pressed := False
-			end
-		end
-
-	on_expose is
-			-- Handle expose actions.
-		local
-			l_helper: SD_COLOR_HELPER
-		do
-			create l_helper
-			internal_highlight_area_after.set_background_color (hightlight_gray_color)
-			if is_focus_color_enable then
-				-- We set background color here, it's for theme changed actions the background color will not update except
-				-- After called enable_focus_color
-
-				if is_focused_color then
-					internal_drawing_area.set_background_color (hightlight_color)
-				 	internal_highlight_area_before.set_background_color (hightlight_color)
-					set_focus_background_color
-					internal_highlight_area_before.set_foreground_color (hightlight_color)
-					l_helper.draw_color_change_gradually (internal_highlight_area_after, hightlight_color)
-				else
-					internal_drawing_area.set_background_color (hightlight_non_focus_color)
-				 	internal_highlight_area_before.set_background_color (hightlight_non_focus_color)
-
-					set_non_focus_active_background_color
-					internal_highlight_area_before.set_foreground_color (hightlight_non_focus_color)
-					l_helper.draw_color_change_gradually (internal_highlight_area_after, hightlight_non_focus_color)
-				end
-
-				internal_highlight_area_before.fill_rectangle (0, 0, internal_highlight_area_before.width, internal_highlight_area_before.height)
-				internal_drawing_area.clear
-				internal_drawing_area.draw_ellipsed_text_top_left (internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, internal_title, internal_drawing_area.width)
-			else
-				-- We set background color here, it's for theme changed actions the background color will not update except
-				-- After called disable_focus_color
-				internal_drawing_area.set_background_color (hightlight_gray_color)
-				set_disable_focus_background_color
-			 	internal_highlight_area_before.set_background_color (hightlight_gray_color)
-				internal_highlight_area_before.clear
-				internal_highlight_area_after.clear
-				internal_drawing_area.clear
-				internal_drawing_area.draw_ellipsed_text_top_left (internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, internal_title, internal_drawing_area.width)
-			end
-		end
-
 feature {NONE} -- Implementation
-
-	custom_area: EV_CELL
-			-- Contains custom widget.
 
 	internal_border: SD_CELL_WITH_BORDER
 			-- Internal border
 
-	internal_highlight_area_before, internal_highlight_area_after: EV_DRAWING_AREA
-			-- Hightlight area at beginning and end.
-
 	internal_custom_widget: EV_WIDGET
 			-- Custom widget which is setted by client programmer.
 
-	internal_title: STRING
+	internal_title: SD_TITLE_BAR_TITLE
 			-- Internal_title
-
-	internal_drawing_area: EV_DRAWING_AREA
-			-- Drawing area which draw `internal_title'.
 
 	internal_tool_bar: EV_TOOL_BAR
 			-- Tool bar which hold `stick', `normal_max', `close' buttons.
+
+	tool_bar_width: INTEGER is
+			-- Actual width of `internal_tool_bar'
+			-- If we query internal_tool_bar.width directly, we will always get maximum width on Windows.
+		do
+			from
+				internal_tool_bar.start
+			until
+				internal_tool_bar.after
+			loop
+				Result := Result + internal_tool_bar.item.width
+				internal_tool_bar.forth
+			end
+		end
 
 	stick: EV_TOOL_BAR_BUTTON
 			-- Sitck button
@@ -545,13 +444,31 @@ feature {NONE} -- Implementation
 	close: EV_TOOL_BAR_BUTTON
 			-- Close button
 
-	mini_tool_bar_indicator: EV_TOOL_BAR_BUTTON
+	mini_tool_bar_indicator: EV_TOOL_BAR_BUTTON is
+			-- Factory method for `internal_mini_tool_bar_indicator'.
+		do
+			if internal_mini_tool_bar_indicator = Void then
+				create internal_mini_tool_bar_indicator
+				internal_mini_tool_bar_indicator.set_pixmap (internal_shared.icons.tool_bar_indicator)
+				internal_mini_tool_bar_indicator.set_tooltip (internal_shared.tooltip_mini_toolbar_hidden_toolbar_indicator)
+				internal_mini_tool_bar_indicator.select_actions.extend (agent on_mini_tool_bar_indicator_clicked)
+			end
+			Result := internal_mini_tool_bar_indicator
+		ensure
+			not_void: Result /= Void
+		end
+
+	internal_mini_tool_bar_indicator: EV_TOOL_BAR_BUTTON
 			-- Indicator for mini tool bar. Shown when not enough space for `internal_custom_widget'.
 
 	internal_shared: SD_SHARED
 			-- All singletons
 
-	container: EV_HORIZONTAL_BOX
+	viewport: EV_VIEWPORT
+			-- Viewport which contain `fixed'.
+
+	fixed: EV_FIXED
+			-- Fixed widget which contain `internal_custom_widget', `internal_title' and `internal_tool_bar'.
 
 	internal_pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer double press actions.
@@ -559,67 +476,11 @@ feature {NONE} -- Implementation
 	internal_stick_select_actions, internal_close_request_actions, internal_normal_max_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Title bar actions.
 
-	internal_drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
-			-- Drag actions.
-
-	set_non_focus_active_background_color is
-			-- Set non focus active background colors
-		local
-			l_text_color: EV_COLOR
-		do
-			internal_drawing_area.set_background_color (hightlight_non_focus_color)
-			l_text_color := internal_shared.non_focused_title_text_color
-			internal_drawing_area.set_foreground_color (l_text_color)
-			internal_border.set_border_color (hightlight_non_focus_color)
-		end
-
-	set_focus_background_color is
-			-- Set focus background colors
-		local
-			l_text_color: EV_COLOR
-		do
-			internal_drawing_area.set_background_color (hightlight_color)
-			l_text_color := internal_shared.focused_title_text_color
-			internal_drawing_area.set_foreground_color (l_text_color)
-			internal_border.set_border_color (hightlight_color)
-		end
-
-	set_disable_focus_background_color is
-			-- Set background color for disable status.
-		local
-			l_text_color: EV_COLOR
-			l_color_helper: SD_COLOR_HELPER
-		do
-			create l_color_helper
-			internal_drawing_area.set_background_color (hightlight_gray_color)
-
-			l_text_color := l_color_helper.text_color_by (hightlight_gray_color)
-			internal_drawing_area.set_foreground_color (l_text_color)
-			internal_border.set_border_color (internal_shared.border_color)
-		end
-
-feature {NONE} -- Implementation (Colors)
-
-	is_focused_color: BOOLEAN
+	is_focused_color: BOOLEAN is
 			-- If Current use focused color?
 			-- Otherwise we use non-focused color.
-
-	hightlight_color: EV_COLOR is
-			-- Highlight color.
 		do
-			Result := internal_shared.focused_color
-		end
-
-	hightlight_non_focus_color: EV_COLOR is
-			-- Highligh nonfocus color.
-		do
-			Result := internal_shared.non_focused_title_color
-		end
-
-	hightlight_gray_color: EV_COLOR is
-			-- Highlight gray color.
-		do
-			Result := internal_shared.non_focused_color
+			Result := internal_title.is_focused_color
 		end
 
 invariant

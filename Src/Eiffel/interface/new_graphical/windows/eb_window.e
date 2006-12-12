@@ -141,7 +141,7 @@ feature -- Access
 			end
 			Result.extend (item)
 			create item.make_with_text (Interface_names.m_Raise)
-			item.select_actions.extend (agent raise)
+			item.select_actions.extend (agent show)
 			Result.extend (item)
 
 			create sep
@@ -250,21 +250,11 @@ feature -- Window management / Status Report
 feature -- Window management / Status Setting
 
 	show is
-			-- Make tool visible.
+			-- Show current window.
 		require
 			exists: not destroyed
 		do
 			window_manager.show_window (Current)
-		ensure
-			shown: is_visible
-		end
-
-	raise is
-			-- Raise window in front, bringing it into focus.
-		require
-			exists: not destroyed
-		do
-			window_manager.raise_window (Current)
 		ensure
 			shown: is_visible
 		end

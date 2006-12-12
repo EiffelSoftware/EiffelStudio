@@ -77,7 +77,7 @@ feature -- Basic operations
 					config_windows.search (l_config)
 					if config_windows.found and then config_windows.found_item.is_show_requested then
 						configuration_window := config_windows.found_item
-						configuration_window.bring_to_front
+						configuration_window.raise
 					else
 						create l_fact
 						create l_load.make (l_fact)
@@ -164,7 +164,7 @@ feature {NONE} -- Actions
 					config_windows.search (l_config)
 					if config_windows.found and then config_windows.found_item.is_show_requested then
 						configuration_window := config_windows.found_item
-						configuration_window.bring_to_front
+						configuration_window.raise
 					else
 						create l_fact
 						create l_load.make (l_fact)

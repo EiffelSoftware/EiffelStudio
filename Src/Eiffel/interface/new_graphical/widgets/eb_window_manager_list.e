@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			if selected_item /= Void then
 				selected_window ?= selected_item.data
 				if selected_window /= Void then
-					selected_window.raise
+					selected_window.show
 				end
 			end
 		end

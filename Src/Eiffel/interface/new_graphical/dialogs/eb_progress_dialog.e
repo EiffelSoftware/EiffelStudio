@@ -23,8 +23,7 @@ class
 inherit
 	EB_DIALOG
 		redefine
-			initialize,
-			show
+			initialize
 		end
 
 	EB_CONSTANTS
@@ -223,25 +222,13 @@ feature -- Status setting
 
 feature -- Basic operation
 
-	show is
-			-- Show dialog if not shown yet it to front.
-		do
-			update_progress_bar_color
-			if not is_show_requested then
-				Precursor {EB_DIALOG}
-			end
-			if is_minimized then
-				restore
-			end
-			raise
-		end
-
 	start (nr_items: INTEGER) is
 			-- Set to zero percent.
 			-- Prepare to process `nr_items'.
 		do
 			progress_bar.reset_with_range (0 |..| nr_items)
-			show
+			update_progress_bar_color
+			raise
 			graphical_update
 		end
 

@@ -87,11 +87,7 @@ feature -- Basic Operations
 			-- Display a dialog to organize the favorites.
 		do
 				-- Show the dialog if not already shown, otherwise raise the dialog topmost.
-			if not organize_favorites_dialog.is_displayed then
-				organize_favorites_dialog.show
-			else
-				organize_favorites_dialog.raise
-			end
+			organize_favorites_dialog.raise
 		end
 
 feature -- Load / Save / Reset...

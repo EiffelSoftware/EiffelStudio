@@ -202,12 +202,6 @@ feature {NONE} -- Implementation
 					else
 						argument_dialog.update
 					end
-					if not argument_dialog.is_displayed then
-						argument_dialog.show
-					end
-					if argument_dialog.is_minimized then
-						argument_dialog.restore
-					end
 					argument_dialog.raise
 				end
 			end

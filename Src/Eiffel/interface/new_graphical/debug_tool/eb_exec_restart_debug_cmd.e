@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 					preferences.preferences)
 			cd.set_ok_action (agent kill)
 			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
-			window_manager.last_focused_window.raise
+			window_manager.last_focused_window.show
 		end
 
 	kill is

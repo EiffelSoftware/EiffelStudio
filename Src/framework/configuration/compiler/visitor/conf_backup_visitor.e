@@ -49,10 +49,21 @@ feature -- Visit nodes
 		local
 			l_loc: CONF_DIRECTORY_LOCATION
 			l_dir: KL_DIRECTORY
+			l_path: STRING
 		do
 			create l_loc.make (a_cluster.name, a_cluster.target)
 			a_cluster.set_location (l_loc)
-			create l_dir.make (l_loc.evaluated_path)
+			l_path := l_loc.evaluated_path
+			check
+				l_path_not_empty: not l_path.is_empty
+			end
+			if {PLATFORM}.is_windows and then l_path.item (l_path.count) = '\' then
+					-- Special handling on windows where a path terminating with a directory separator
+					-- sign would be declared to not exist even if it really exists.
+				l_path := l_path.twin
+				l_path.remove_tail (1)
+			end
+			create l_dir.make (l_path)
 			l_dir.recursive_create_directory
 		end
 

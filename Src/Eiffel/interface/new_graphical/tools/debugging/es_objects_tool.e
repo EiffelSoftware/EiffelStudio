@@ -1180,7 +1180,9 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				displayed_objects.extend (n_obj)
 				g.insert_new_row (g.row_count + 1)
 				n_obj.attach_to_row (g.row (g.row_count))
-				n_obj.row.ensure_visible
+				if n_obj.row.is_displayed then
+					n_obj.row.ensure_visible
+				end
 				n_obj.row.enable_select
 			end
 		end

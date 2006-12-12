@@ -70,8 +70,23 @@ feature -- Entry
 
 					c := strat.sorted_breakable_lines.count
 					if c > 0 then
-						l_line_start := strat.sorted_breakable_lines.item ((1 + a_bp_index + a_delta_lower).max (1))
-						l_line_end := strat.sorted_breakable_lines.item ((1 + a_bp_index + a_delta_upper).min (c))
+							--| Lower line index
+						i := 1 + a_bp_index + a_delta_lower
+						if i < 1 then
+							i := 1
+						elseif i > c then
+							i := c
+						end
+						l_line_start := strat.sorted_breakable_lines.item (i)
+
+							--| Upper line index
+						i := 1 + a_bp_index + a_delta_upper
+						if i > c then
+							i := c
+						elseif i < 1 then
+							i := 1
+						end
+						l_line_end := strat.sorted_breakable_lines.item (i)
 					else
 						l_line_start := l_as.complete_start_location (leaf_as_list).line - 1
 						l_line_end := l_as.last_token (leaf_as_list).line
@@ -529,6 +544,7 @@ feature {NONE} -- Auto Span Declaration
 			l_end_loc: LOCATION_AS
 
 			l_start_token, l_end_token: LEAF_AS
+			l_id_as: ID_AS
 			reg: ERT_TOKEN_REGION
 		do
 			l_start := start_as
@@ -546,10 +562,20 @@ feature {NONE} -- Auto Span Declaration
 			l_end_token := a_as.last_token (leaf_as_list)
 			if l_start_token /= Void and l_end_token /= Void then
 				if l_start_token = l_end_token then
-					l_span.i_text := l_start_token.text (leaf_as_list)
+					l_id_as ?= l_start_token
+					if l_id_as /= Void then
+						l_span.i_text := l_id_as.name
+					else
+						l_span.i_text := l_start_token.text (leaf_as_list)
+					end
+--					l_span.i_text := l_start_token.literal_text (leaf_as_list)
 				else
 					create reg.make (l_start_token.index, l_end_token.index)
-					l_span.i_text := leaf_as_list.text (reg)
+					if leaf_as_list.valid_region (reg) then
+						l_span.i_text := leaf_as_list.text (reg)
+					else
+						do_nothing
+					end
 				end
 			end
 			auto_expression (l_span)

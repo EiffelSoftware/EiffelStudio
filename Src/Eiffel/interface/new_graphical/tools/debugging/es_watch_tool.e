@@ -583,6 +583,7 @@ feature {NONE} -- Event handling
 		local
 			l_auto: AST_DEBUGGER_AUTO_EXPRESSION_VISITOR
 			expressions: LIST [STRING]
+			s: STRING
 		do
 			watched_items.wipe_out
 			clean_watched_grid
@@ -595,7 +596,10 @@ feature {NONE} -- Event handling
 				until
 					expressions.after
 				loop
-					add_new_expression_for_context (expressions.item)
+					s := expressions.item
+					if s /= Void then
+						add_new_expression_for_context (s.as_string_32)
+					end
 					expressions.forth
 				end
 			end
@@ -1045,7 +1049,9 @@ feature {NONE} -- Event handling
 					expr_item.compute_grid_display
 				end
 				watches_grid.remove_selection
-				expr_item.row.ensure_visible
+				if expr_item.row.is_displayed then
+					expr_item.row.ensure_visible
+				end
 				expr_item.row.enable_select
 			end
 		end

@@ -160,7 +160,7 @@ feature {NONE} -- Initialization
 			radio_parent.extend (draw_pie_slice_radio_button)
 			draw_pie_slice_radio_button.select_actions.extend (agent setup_draw_pie_slice)
 			
-			is_initialized := True
+			Precursor {EV_FRAME}
 		end
 		
 feature {NONE} -- Implementation

@@ -189,7 +189,7 @@ feature {NONE} -- GUI building
 			-- Start directory for browsing dialog.
 		do
 			Result := field.text
-			if Result = Void or else Result.is_empty then
+			if Result.is_empty then
 				Result := default_start_directory
 			end
 		end

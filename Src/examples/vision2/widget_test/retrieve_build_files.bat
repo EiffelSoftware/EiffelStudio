@@ -6,8 +6,8 @@ svn co %1/Src/build Src\build
 REM Check out bitmaps from Build delivery
 svn co %1/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
 
-REM Check out files from vision2_tour
-svn co %1/Delivery/vision2_tour Delivery/vision2_demo
+REM Check out files from vision2_demo
+svn co %1/Delivery/vision2_demo Delivery/vision2_demo
 
 GOTO files_checked_out
 
@@ -19,8 +19,8 @@ svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Src/build Src\build
 REM Check out bitmaps from Build delivery
 svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/esbuilder/bitmaps Delivery\esbuilder\bitmaps
 
-REM Check out files from vision2_tour
-svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/vision2_tour Delivery\vision2_demo
+REM Check out files from vision2_demo
+svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/Delivery/vision2_demo Delivery\vision2_demo
 
 :files_checked_out
 REM Copy template files
@@ -79,7 +79,7 @@ XCOPY /Y Src\build\interface\properties\gb_ev_tooltipable_editor_constructor.e .
 REM Copy image used for executable icon.
 
 XCOPY /Y %EIFFEL_SRC%\library\vision2\Clib\default_vision2_icon.ico .
-ren default_vision2_icon.ico vision2_tour.ico
+ren default_vision2_icon.ico vision2_demo.ico
 
 
 REM Remove all temporary checked out files.

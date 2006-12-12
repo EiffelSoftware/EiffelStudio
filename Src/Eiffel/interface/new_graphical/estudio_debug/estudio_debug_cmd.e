@@ -200,18 +200,7 @@ feature -- Command
 			if not w.is_destroyed then
 				acc := accelerator (w, True)
 	    		if acc /= Void then
-	    			from
-	    				w.accelerators.start
-	    			until
-	    				w.accelerators.after
-	    			loop
-	    				if w.accelerators.item = acc then
-	    					w.accelerators.remove
-	    				else
-	    					w.accelerators.forth
-	    				end
-	    			end
---					w.accelerators.prune_all (acc)
+					w.accelerators.prune_all (acc)
 	    		end
 			end
 		end

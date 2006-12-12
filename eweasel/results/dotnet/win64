@@ -41,6 +41,8 @@ Test string-regression (string001): failed
 Test insert-default-key (table001): passed
 Test replace_key_cycle (table002): passed
 Test replace_key_conflict_not_found (table003): passed
+Test replace_key_replace_item (table004): passed
+Test iteration-with-default-key (table005): passed
 Test test-auto-resize (fake002): passed
 Test many-similar-class-names (fake003): passed
 Test test1 (fake004): passed
@@ -1393,6 +1395,9 @@ Test wiping-out-types (incr272): passed
 Test noclass-syntax (incr273): passed
 Test gc-crash-in-melted-agent-creation (incr274): passed
 Test expanded-not-expanded (incr275): passed
+Test finalize-changed-agent-to-changed-feature (incr276): passed
+Test inline-agent-from-scratch-bug (incr277): passed
+Test changing-formals-invariant-not-removed (incr278): passed
 Test divide-melt-panic (melt001): passed
 Test bit-melt-metamorphose (melt002): failed
 	Description: Operations on BIT types with class melted
@@ -2705,6 +2710,7 @@ Test anchor-on-feature-with-formal (exec262): failed
 	Reason: files being compared do not have identical contents
 
 Test generating-type-of-type-parameter (exec263): passed
+Test agent-on-attribute-with-open-target (exec264): passed
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
 Test long-identifiers (term003): passed
@@ -3140,6 +3146,7 @@ Test last-reverse-assignment-to-expanded (ccomp060): failed
 	Expected result:
 		Final status:  completed 
 
+Test adding-removing-classes-c-compile-error (ccomp061): passed
 Test freeze-retrieval-mismatch (store001): passed
 Test retrieve-corrupted-file (store002): passed
 Test melt-retrieval-mismatch (store003): passed
@@ -3227,6 +3234,7 @@ Test tuple-manipulation (tuple001): passed
 Test named-tuple-validation (tuple002): passed
 Test named-tuple-as-argument (tuple003): passed
 Test tuple-hashcode (tuple004): passed
+Test tuple-comparison (tuple005): passed
 Test validity-vsrt1-one-generic (vsrt101): passed
 Test validity-vsrt1-two-generics (vsrt102): passed
 Test validity-vsrt1-many-generics (vsrt103): passed
@@ -3558,8 +3566,8 @@ Test real-output-no-locale (dotnet036): passed
 Test overload-with-argument-type (dotnet037): passed
 Test compatible-single-and-interface (dotnet038): passed
 
-Passed:  1214 / 1462  (83%)
-Failed:  229 / 1462  (16%)
-Manual:  16 / 1462  (2%)
-Skipped:  3 / 1462  (1%)
+Passed:  1222 / 1470  (83%)
+Failed:  229 / 1470  (16%)
+Manual:  16 / 1470  (2%)
+Skipped:  3 / 1470  (1%)
 

@@ -21,6 +21,8 @@ inherit
 
 	EXCEPTIONS
 
+	MEMORY
+
 feature {EV_APPLICATION} -- Initialization
 
 	initialize is
@@ -61,6 +63,8 @@ feature {EV_APPLICATION} -- Initialization
 				end
 
 			idle_iteration_count := 1
+				-- Enable `invoke_garbage_collection_when_inactive'.
+			set_invoke_garbage_collection_when_inactive (True)
 			set_is_initialized (True)
 		end
 
@@ -78,6 +82,9 @@ feature {EV_APPLICATION} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
+	invoke_garbage_collection_when_inactive: BOOLEAN
+		-- Should garbage collection be invoked when application is inactive.
+
 	cpu_relinquishment_time: INTEGER is 10
 		-- Number of milliseconds to relinquish CPU when idling.
 
@@ -94,7 +101,6 @@ feature {EV_ANY_I} -- Implementation
 		local
 			l_retry_count: INTEGER
 			l_locked: BOOLEAN
-			l_memory: MEMORY
 		do
 			if l_retry_count = 0 then
 				process_underlying_toolkit_event_queue
@@ -106,9 +112,11 @@ feature {EV_ANY_I} -- Implementation
 						-- We only want to increase the count if the event loop is not forced.
 					idle_iteration_count := idle_iteration_count + 1
 					if idle_iteration_count = idle_iteration_boundary then
-						create l_memory
-						l_memory.full_collect
-						l_memory.full_coalesce
+							-- We have reached a fully idle/inactive state.
+						if invoke_garbage_collection_when_inactive then
+							full_collect
+							full_coalesce
+						end
 						idle_iteration_count := 1
 					end
 				end
@@ -211,6 +219,12 @@ feature -- Access
 		end
 
 feature -- Element Change
+
+	set_invoke_garbage_collection_when_inactive (a_enabled: BOOLEAN)
+			-- Set `invoke_garbage_collection_when_inactive' to `a_enabled'.
+		do
+			invoke_garbage_collection_when_inactive := a_enabled
+		end
 
 	set_captured_widget (a_captured_widget: EV_WIDGET) is
 			-- Set `captured_widget' to the widget that has the current capture 'a_capture_widget'.

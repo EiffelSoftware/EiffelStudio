@@ -1,0 +1,95 @@
+# translation of hu.po to
+msgid ""
+msgstr ""
+"Language-Team:  <it@li.org>\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"MIME-Version: 1.0\n"
+"Last-Translator: Etienne Reichenbach\n"
+"PO-Revision-Date: 2006-10-23 00:14+0200\n"
+"Project-Id-Version: hu\n"
+"X-Generator: KBabel 1.11.2\n"
+
+msgid ""
+"Members of the team:\n   - Leo Fellmann\n   - Etienne Reichenbach\n   - Bernd "
+"Schoeller\n   - Martino Trosi\n   - Hong Zhang"
+msgstr ""
+
+msgid "Application"
+msgstr "programok"
+
+msgid ""
+"Demo application made by i18n Team ETHZ\n\nFor bugs, suggestions or other, ple"
+"ase write a mail to: es-i18n@origo.ethz.ch\n\n"
+msgstr "demonstràcio programok\n\n a hibàknak ajànlatok irjàl neki es-i18n@origo.ethz.ch\n\n"
+
+msgid "french"
+msgstr "francia [fr]"
+
+msgid "Full date-time: $1"
+msgstr "idö és dàtum"
+
+msgid "Update date and time"
+msgstr "ujitani idö és dàtum"
+
+msgid "A hovercraft costs you: $1"
+msgstr "a hovercraft enyibe kerül: $1"
+
+msgid "Buy a hovercraft"
+msgstr "vegyél egy hovercraft"
+
+msgid "english"
+msgstr "angol [en]"
+
+msgid "Your have $1 on your bank conto"
+msgstr "neked $1 van bank kontodon"
+
+msgid "chinese"
+msgstr "kinaiul [zh]"
+
+msgid "greek"
+msgstr "görögül"
+
+msgid "Select language"
+msgstr "vàlasz egy nyelvet"
+
+msgid "arabic"
+msgstr "arabul [ar]"
+
+msgid "Time: $1"
+msgstr "idö: $1"
+
+msgid "italian"
+msgstr "olaszul [it]"
+
+msgid "sell hovercraft"
+msgstr "eladok egy hovercraft"
+
+msgid "Date: $1"
+msgstr "dàtum"
+
+msgid "japanese"
+msgstr "japànul [jp]"
+
+msgid "russian"
+msgstr "oroszul [ru]"
+
+msgid "hungarian"
+msgstr "magyarul [hu]"
+
+msgid "About Dialog"
+msgstr "informàciok"
+
+msgid "My hovercraft is full of eels"
+msgid_plural "My $1 hovercraft are full of eels"
+msgstr[0] "az én hovercraftom tele van eels"
+msgstr[1] "az én $1 hovercraftom tele vannak eels"
+
+msgid "About"
+msgstr "informàciok"
+
+msgid "You can sell a hovercraft for $1"
+msgstr "el tudsz adni eyg hovercraftot enyiér"
+
+msgid "This string is written in the application's sourcecode"
+msgstr "Not completely translated"

@@ -6,7 +6,7 @@
 
 -- This is a test control file
 
-test_name expanded-object-conversion
+test_name versioned-interface_implementation
 test_description The compiler should generate the correct .override il constructs for features from versioned interface, where a newer interface version will replicate the definition of an older one.
 copy_bin VersionedInterfaceLibrary.dll $CLUSTER VersionedInterfaceLibrary.dll
 

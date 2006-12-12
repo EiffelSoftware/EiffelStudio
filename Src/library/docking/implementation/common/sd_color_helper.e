@@ -46,10 +46,13 @@ feature -- Saturation
 			a_drawing_area.fill_ellipse (- a_drawing_area.width, 0, a_drawing_area.width * 2, a_drawing_area.height * 2)
 		end
 
-	draw_color_change_gradually (a_drawing_area: EV_DRAWING_AREA; a_color: EV_COLOR) is
+	draw_color_change_gradually (a_drawing_area: EV_DRAWING_AREA; a_start, a_to: EV_COLOR; a_start_x, a_to_x: INTEGER) is
 			-- Draw color changed gradually on `a_drawing_area' from start x position.
+		local
+			l_rect: EV_RECTANGLE
 		do
-			draw_color_change_gradually_from (a_drawing_area, 0, a_color, a_drawing_area.background_color)
+			create l_rect.make (a_start_x, 0, a_to_x - a_start_x, a_drawing_area.height)
+			draw_color_change_gradually_in_area (a_drawing_area, l_rect, a_start, a_to)
 		end
 
 	draw_color_change_gradually_from (a_drawing_area: EV_DRAWING_AREA; a_start_x: INTEGER; a_start_color, a_to_color: EV_COLOR) is
@@ -69,14 +72,15 @@ feature -- Saturation
 			l_count: INTEGER
 			l_pixmap: EV_PIXMAP
 		do
-			if a_area.width >0 and a_area.height > 0 then
+			if a_area.width > 0 and a_area.height > 0 then
 				from
 					create l_pixmap.make_with_size (a_area.width, a_area.height)
+					l_count := a_area.left
 				until
-					l_count >= l_pixmap.width
+					l_count >= a_area.right
 				loop
-					l_pixmap.set_foreground_color (color_mix (a_start_color, a_to_color, (1 - l_count / l_pixmap.width)))
-					l_pixmap.draw_segment (l_count, a_area.top, l_count, a_area.bottom)
+					l_pixmap.set_foreground_color (color_mix (a_to_color, a_start_color, ((l_count - a_area.left) / a_area.width)))
+					l_pixmap.draw_segment (l_count - a_area.left, a_area.top, l_count - a_area.left, a_area.bottom)
 					l_count := l_count + 1
 				end
 				a_drawing_area.draw_pixmap (a_area.left, a_area.top, l_pixmap)

@@ -80,6 +80,14 @@ feature -- Call stack
 		deferred
 		end
 
+	append_debugger_information (dbg: DEBUGGER_MANAGER; st: TEXT_FORMATTER) is
+			-- Display information about debugger
+		require
+			dbg /= Void
+			non_void_st: st /= Void
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	append_tabs (st: TEXT_FORMATTER; indent: INTEGER) is

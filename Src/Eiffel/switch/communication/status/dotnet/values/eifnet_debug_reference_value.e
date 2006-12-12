@@ -153,7 +153,7 @@ feature -- Access
 							is_external_type := True
 						end
 					else
-						internal_dynamic_class := Eiffel_system.System.system_object_class.compiled_class
+						internal_dynamic_class := debugger_manager.compiler_data.system_object_class_c
 						Result := internal_dynamic_class.types.first
 					end
 					internal_dynamic_class_type := Result

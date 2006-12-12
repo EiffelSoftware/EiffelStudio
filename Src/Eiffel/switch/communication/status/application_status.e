@@ -14,11 +14,6 @@ inherit
 
 	APPLICATION_STATUS_CONSTANTS
 
-	SHARED_DEBUG
-		export
-			{NONE} all
-		end
-
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all

@@ -27,11 +27,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_EIFFEL_PROJECT
-		export
-			{NONE} all
-		end
-
 	DEBUG_OUTPUT_SYSTEM_I
 		export
 			{NONE} all
@@ -206,7 +201,7 @@ feature -- Dotnet creation
 			type := Type_object
 
 			dynamic_class_type := Void
-			dynamic_class := eiffel_system.system.native_array_class.compiled_class
+			dynamic_class := debugger_manager.compiler_data.native_array_class_c
 			if dynamic_class = Void then
 				dynamic_class := a_eifnet_dnav.static_class
 			end
@@ -344,7 +339,8 @@ feature -- Status report
 			-- or conform to DEBUG_OUTPUT
 		local
 			dc: CLASS_C
-			string_c, string_32_c, system_string_c: CLASS_I
+			string_c, string_32_c, system_string_c: CLASS_C
+			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
 			if type = Type_string then
 				Result := True
@@ -352,25 +348,23 @@ feature -- Status report
 				Result := not is_void
 			elseif is_type_object and not is_void then
 				if dynamic_class /= Void then
-					string_c := Eiffel_system.system.string_8_class
-					string_32_c := Eiffel_system.system.string_32_class
-					system_string_c := eiffel_system.system.system_string_class
+					comp_data := debugger_manager.compiler_data
+					string_c := comp_data.string_8_class_c
+					string_32_c := comp_data.string_32_class_c
+					system_string_c := comp_data.system_string_class_c
 					if
 						string_c /= Void
-						and then string_c.is_compiled
-						and then dynamic_class.simple_conform_to (string_c.compiled_class)
+						and then dynamic_class.simple_conform_to (string_c)
 					then
 						Result := True
 					elseif
 						string_32_c /= Void
-						and then string_32_c.is_compiled
-						and then dynamic_class.simple_conform_to (string_32_c.compiled_class)
+						and then dynamic_class.simple_conform_to (string_32_c)
 					then
 						Result := True
 					elseif
 						system_string_c /= Void
-						and then system_string_c.is_compiled
-						and then dynamic_class.simple_conform_to (system_string_c.compiled_class)
+						and then dynamic_class.simple_conform_to (system_string_c)
 					then
 						Result := True
 					elseif debug_output_evaluation_enabled then
@@ -539,10 +533,12 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			done: BOOLEAN
 			l_area_name, l_count_name: STRING
 			l_slice_max: INTEGER
+			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
 			if dynamic_class /= Void then
-				sc8 := Eiffel_system.system.string_8_class.compiled_class
-				sc32 := Eiffel_system.system.string_32_class.compiled_class
+				comp_data := debugger_manager.compiler_data
+				sc8 := comp_data.string_8_class_c
+				sc32 := comp_data.string_32_class_c
 				if dynamic_class = sc8 or dynamic_class = sc32 then
 					sc := dynamic_class
 					l_area_name := area_name
@@ -636,16 +632,17 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			is_dotnet_system
 		local
 			sc, sc8, sc32: CLASS_C
-			si: CLASS_I
 			l_eifnet_debugger: EIFNET_DEBUGGER
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_size: INTEGER
+			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
 			l_eifnet_debugger := Eifnet_debugger
 
 			if dynamic_class /= Void then
-				sc8 := Eiffel_system.system.string_8_class.compiled_class
-				sc32 := Eiffel_system.system.string_32_class.compiled_class
+				comp_data := debugger_manager.compiler_data
+				sc8 := comp_data.string_8_class_c
+				sc32 := comp_data.string_32_class_c
 				if dynamic_class = sc8 or dynamic_class = sc32 then
 					sc := dynamic_class
 				elseif dynamic_class.simple_conform_to (sc8) then
@@ -665,9 +662,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 						l_icdov.clean_on_dispose
 					end
 				else
-					si := Eiffel_system.system.system_string_class
-					if si /= Void and then si.is_compiled then
-						sc := si.compiled_class
+					sc := comp_data.system_string_class_c
+					if sc /= Void then
 						if dynamic_class = sc or dynamic_class.simple_conform_to (sc) then
 							if value_string_dotnet /= Void then
 								Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)

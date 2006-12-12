@@ -31,7 +31,7 @@ inherit
 			set_maximum_stack_depth,
 			notify_breakpoints_changes,
 			debugger_output_message, debugger_warning_message, debugger_status_message,
-			display_application_status, display_system_info,
+			display_application_status, display_system_info, display_debugger_info,
 			set_error_message,
 			windows_handle
 		end
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 							end
 					)
 
-				pbool := Preferences.debug_tool_data.debug_output_evaluation_enabled_preference
+				pbool := preferences.debug_tool_data.debug_output_evaluation_enabled_preference
 				dump_value_factory.set_debug_output_evaluation_enabled (pbool.value)
 				pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
 
@@ -106,29 +106,29 @@ feature -- Settings
 
 	classic_debugger_timeout: INTEGER is
 		do
-			if Preferences.debugger_data /= Void then
-				Result := Preferences.debugger_data.classic_debugger_timeout
+			if preferences.debugger_data /= Void then
+				Result := preferences.debugger_data.classic_debugger_timeout
 			end
 		end
 
 	classic_debugger_location: STRING is
 		do
-			if Preferences.debugger_data /= Void then
-				Result := Preferences.debugger_data.classic_debugger_location
+			if preferences.debugger_data /= Void then
+				Result := preferences.debugger_data.classic_debugger_location
 			end
 		end
 
 	classic_close_dbg_daemon_on_end_of_debugging: BOOLEAN is
 		do
-			if Preferences.debugger_data /= Void then
-				Result := Preferences.debugger_data.close_classic_dbg_daemon_on_end_of_debugging
+			if preferences.debugger_data /= Void then
+				Result := preferences.debugger_data.close_classic_dbg_daemon_on_end_of_debugging
 			end
 		end
 
 	dotnet_keep_stepping_info_non_eiffel_feature_pref: BOOLEAN_PREFERENCE is
 		do
-			if Preferences.debugger_data /= Void then
-				Result := Preferences.debugger_data.keep_stepping_info_dotnet_feature_preference
+			if preferences.debugger_data /= Void then
+				Result := preferences.debugger_data.keep_stepping_info_dotnet_feature_preference
 			end
 		end
 
@@ -437,6 +437,20 @@ feature -- Output
 			output_manager.display_system_info
 		end
 
+	display_debugger_info is
+		do
+			text_formatter_visitor.append_debugger_information (Current, output_manager)
+		end
+
+	display_system_status is
+		do
+			if application_is_executing then
+				display_debugger_info
+			else
+				display_system_info
+			end
+		end
+
 feature -- Change
 
 	set_error_message (s: STRING) is
@@ -646,7 +660,7 @@ feature -- Status setting
 				objects_tool.set_manager (debugging_window)
 				objects_tool.change_attach_notebook (debugging_tools)
 			end
-			objects_tool.set_cleaning_delay (Preferences.Debug_tool_data.delay_before_cleaning_objects_grid)
+			objects_tool.set_cleaning_delay (preferences.debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.request_update
 
 				--| Watches tool
@@ -1291,7 +1305,7 @@ feature {NONE} -- Implementation
 			system_info_cmd.set_menu_name (Interface_names.m_Display_system_info)
 			system_info_cmd.set_name ("System_info")
 			system_info_cmd.set_tooltext (Interface_names.b_System_info)
-			system_info_cmd.add_agent (agent display_system_info)
+			system_info_cmd.add_agent (agent display_system_status)
 			toolbarable_commands.extend (system_info_cmd)
 
 			create set_critical_stack_depth_cmd.make
@@ -1592,6 +1606,16 @@ feature {NONE} -- MSIL system implementation
 			-- DLL type constant for MSIL system
 
 feature {NONE} -- specific implementation
+
+	text_running: STRING is
+		do
+			Result := interface_names.e_running
+		end
+
+	text_running_no_stop_points: STRING is
+		do
+			Result := interface_names.e_Running_no_stop_points
+		end
 
 	implementation: EB_DEBUGGER_MANAGER_IMP;
 

@@ -33,7 +33,7 @@ inherit
 			is_equal, copy, default_create
 		end
 
-	SHARED_DEBUG
+	SHARED_DEBUGGED_OBJECT_MANAGER
 		export
 			{NONE} all
 		undefine
@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			display_attributes := True
 			display_onces := False
 
-			set_object_spec_slices (min_slice_ref.item, max_slice_ref.item)
+			set_object_spec_slices (debugger_manager.min_slice, debugger_manager.max_slice)
 
 			create compute_grid_row_completed_action
 			parent_grid := g
@@ -946,7 +946,7 @@ feature {NONE} -- Filling
 				if
 					dcl /= Void
 					and then Eb_debugger_manager.display_agent_details
-					and then dcl.conform_to (debugger_manager.Eiffel_system.System.routine_class.compiled_class)
+					and then dcl.conform_to (debugger_manager.compiler_data.routine_class_c)
 				then
 					fill_extra_attributes_for_agent (a_row, list_cursor)
 				end
@@ -1069,7 +1069,7 @@ feature {NONE} -- Agent filling
 			from
 				list_cursor.start
 			until
-				list_cursor.after or ag_fe /= Void
+				list_cursor.after or (ag_ct_id > 0 and ag_fe_id > 0) -- ag_fe /= Void
 			loop
 				vitem ?= list_cursor.item
 				if
@@ -1078,24 +1078,27 @@ feature {NONE} -- Agent filling
 				then
 					if ag_ct_id = 0 and then vitem.name.is_equal ("class_id") then
 						ag_ct_id := vitem.value + 1
-						ag_ct := debugger_manager.eiffel_system.system.class_type_of_static_type_id (ag_ct_id)
 					elseif ag_fe_id = 0 and then vitem.name.is_equal ("feature_id") then
 						ag_fe_id := vitem.value
-						if ag_ct /= Void and then ag_fe_id /= 0 then
-							ag_fe := ag_ct.associated_class.feature_with_feature_id (ag_fe_id)
-							if ag_fe = Void then
-								ag_ecc ?= ag_ct.associated_class
-								if ag_ecc /= Void then
-									ag_fi := ag_ecc.inline_agent_of_id (ag_fe_id)
-									if ag_fi /= Void then
-										ag_fe := ag_fi.api_feature (ag_ecc.class_id)
-									end
-								end
+					end
+				end
+				list_cursor.forth
+			end
+			if ag_ct_id > 0 and ag_fe_id > 0 then
+				ag_ct := debugger_manager.eiffel_system.system.class_type_of_static_type_id (ag_ct_id)
+				if ag_ct /= Void and then ag_fe_id /= 0 then
+					ag_ecc ?= ag_ct.associated_class
+					if ag_ecc /= Void then
+						ag_fe := ag_ecc.feature_with_feature_id (ag_fe_id)
+						if ag_fe = Void then
+							ag_fi := ag_ecc.inline_agent_of_id (ag_fe_id)
+							if ag_fi /= Void then
+									--| Test ag_fi.is_fake_inline_agent to deal with agent on attribute
+								ag_fe := ag_fi.api_feature (ag_ecc.class_id)
 							end
 						end
 					end
 				end
-				list_cursor.forth
 			end
 			if ag_fe /= Void then
 				ag_fe := real_feature (ag_fe)

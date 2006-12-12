@@ -29,7 +29,7 @@ inherit
 			is_equal
 		end;
 
-	SHARED_DEBUG
+	SHARED_DEBUGGED_OBJECT_MANAGER
 		export
 			{NONE} all
 		undefine
@@ -199,13 +199,13 @@ feature {NONE} -- Property
 	min_slice: INTEGER is
 			-- From which attribute number should special objects be displayed?
 		do
-			Result := min_slice_ref.item
+			Result := debugger_manager.min_slice
 		end
 
 	max_slice: INTEGER is
 			-- Up to which attribute number should special objects be displayed?
 		do
-			Result := max_slice_ref.item
+			Result := debugger_manager.max_slice
 		end
 
 	dynamic_type_id: INTEGER;

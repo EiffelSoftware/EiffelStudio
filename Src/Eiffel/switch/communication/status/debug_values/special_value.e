@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 				is_null := True
 				capacity := 0
 			else
-				set_sp_bounds (min_slice_ref.item, max_slice_ref.item)
+				set_sp_bounds (debugger_manager.min_slice, debugger_manager.max_slice)
 				capacity := -1;
 			end
 		end
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	items_exists: items /= Void;
+	items_exists: items_computed implies items /= Void;
 	address_not_void: address /= Void;
 	is_attribute: is_attribute
 

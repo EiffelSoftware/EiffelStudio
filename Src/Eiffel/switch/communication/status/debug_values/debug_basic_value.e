@@ -137,7 +137,7 @@ feature -- Access
 			end
 		end
 
-feature {NONE} -- Output
+feature {DEBUG_VALUE_EXPORTER} -- Output
 
 	output_value: STRING_32 is
 			-- Return a string representing `Current'.
@@ -184,24 +184,24 @@ feature {NONE} -- Setting
 				sk_type = sk_char or sk_type = sk_wchar or sk_type = sk_real32 or sk_type = sk_real64 or
 				sk_type = sk_bool or sk_type = sk_pointer
 		local
-			system: SYSTEM_I
+			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
-			system := Eiffel_system.system
+			comp_data := debugger_manager.compiler_data
 			inspect sk_type
-			when sk_uint8   then dynamic_class := system.natural_8_class.compiled_class
-			when sk_uint16  then dynamic_class := system.natural_16_class.compiled_class
-			when sk_uint32  then dynamic_class := system.natural_32_class.compiled_class
-			when sk_uint64  then dynamic_class := system.natural_64_class.compiled_class
-			when sk_int8    then dynamic_class := system.Integer_8_class.compiled_class
-			when sk_int16   then dynamic_class := system.Integer_16_class.compiled_class
-			when sk_int32   then dynamic_class := system.Integer_32_class.compiled_class
-			when sk_int64   then dynamic_class := system.Integer_64_class.compiled_class
-			when sk_bool    then dynamic_class := system.Boolean_class.compiled_class
-			when sk_char    then dynamic_class := system.character_8_class.compiled_class
-			when sk_wchar   then dynamic_class := system.character_32_class.compiled_class
-			when sk_real32  then dynamic_class := system.real_32_class.compiled_class
-			when sk_real64  then dynamic_class := system.real_64_class.compiled_class
-			when sk_pointer then dynamic_class := system.Pointer_class.compiled_class
+			when sk_uint8   then dynamic_class := comp_data.natural_8_class_c
+			when sk_uint16  then dynamic_class := comp_data.natural_16_class_c
+			when sk_uint32  then dynamic_class := comp_data.natural_32_class_c
+			when sk_uint64  then dynamic_class := comp_data.natural_64_class_c
+			when sk_int8    then dynamic_class := comp_data.Integer_8_class_c
+			when sk_int16   then dynamic_class := comp_data.Integer_16_class_c
+			when sk_int32   then dynamic_class := comp_data.Integer_32_class_c
+			when sk_int64   then dynamic_class := comp_data.Integer_64_class_c
+			when sk_bool    then dynamic_class := comp_data.Boolean_class_c
+			when sk_char    then dynamic_class := comp_data.character_8_class_c
+			when sk_wchar   then dynamic_class := comp_data.character_32_class_c
+			when sk_real32  then dynamic_class := comp_data.real_32_class_c
+			when sk_real64  then dynamic_class := comp_data.real_64_class_c
+			when sk_pointer then dynamic_class := comp_data.Pointer_class_c
 			end
 		ensure
 			dynamic_class_not_void: dynamic_class /= Void

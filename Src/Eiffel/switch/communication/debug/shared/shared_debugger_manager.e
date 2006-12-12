@@ -1,8 +1,9 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Objects that shared an instance of DEBUGGER_MANAGER"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	SHARED_DEBUGGER_MANAGER
@@ -14,7 +15,7 @@ feature -- Access
 		do
 			Result := Debugger_manager_cell.item
 			if Result = Void then
-				create {EB_DEBUGGER_MANAGER} Result.make
+				Result := (create {DEBUGGER_MANAGER_FACTORY}).new_debugger_manager
 				set_debugger_manager (Result)
 			end
 		ensure
@@ -27,13 +28,6 @@ feature -- Access
 		ensure
 			Debugger_manager_is_set: Debugger_manager = v
 		end
-
-feature {NONE} -- Helper
-
---	application: APPLICATION_EXECUTION is
---		do
---			Result := Debugger_manager.application
---		end
 
 feature {NONE} -- Cell
 

@@ -68,7 +68,7 @@ feature -- Access
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
 		do
-			Result := Eiffel_system.system.system_object_class.compiled_class
+			Result := debugger_manager.compiler_data.system_object_class_c
 		end
 
 	dump_value: DUMP_VALUE is

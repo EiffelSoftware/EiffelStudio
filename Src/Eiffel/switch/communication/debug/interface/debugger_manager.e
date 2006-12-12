@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that represents a debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "$Author$"
@@ -19,14 +19,12 @@ inherit
 
 	EXECUTION_ENVIRONMENT
 
-	EB_CONSTANTS
-
 	BREAKPOINTS_MANAGER
 		redefine
 			clear_debugging_information
 		end
 
-create {SHARED_DEBUGGER_MANAGER}
+create
 	make
 
 feature {NONE} -- Initialization
@@ -45,6 +43,7 @@ feature {NONE} -- Initialization
 
 	set_default_parameters is
 		do
+			set_slices (0, 50)
 			set_displayed_string_size (60)
 			set_critical_stack_depth (-1) --| Dft: 1000
 			set_interrupt_number (1)
@@ -122,6 +121,10 @@ feature -- Output helpers
 		end
 
 	display_system_info	is
+		do
+		end
+
+	display_debugger_info is
 		do
 		end
 
@@ -224,6 +227,13 @@ feature -- Properties
 		end
 
 feature -- Parameters
+
+	min_slice: INTEGER
+			-- Minimum bound asked for special objects.			
+
+
+	max_slice: INTEGER
+			-- Maximum bound asked for special objects.			
 
 	displayed_string_size: INTEGER
 			-- Size of string to be retrieved from the application
@@ -449,6 +459,29 @@ feature -- Helpers
 			end
 		end
 
+feature -- Bridge to compiler data
+
+	compiler_data: DEBUGGER_DATA_FROM_COMPILER
+
+feature {NONE} -- Bridge to compiler data implementation
+
+	compute_class_c_data is
+		require
+			defined: Eiffel_project.system_defined
+			compiler_data_void: compiler_data = Void
+		do
+			create compiler_data.make
+		ensure
+			compiler_data_not_void: compiler_data /= Void
+		end
+
+	reset_class_c_data is
+		do
+			compiler_data := Void
+		ensure
+			compiler_data_void: compiler_data = Void
+		end
+
 feature -- Change
 
 	change_current_thread_id (tid: INTEGER) is
@@ -462,6 +495,13 @@ feature -- Change
 				s.switch_to_current_thread_id
 				s.reload_current_call_stack
 			end
+		end
+
+	set_slices (i,j: INTEGER) is
+			-- set minimum and maximum slices
+		do
+			min_slice := i
+			max_slice := j
 		end
 
 	set_interrupt_number (a_nbr: like interrupt_number) is
@@ -546,6 +586,7 @@ feature -- Debugging events
 	on_application_before_launching is
 		do
 			debugging_operation_id := 0
+			compute_class_c_data
 		end
 
 	on_application_launched is
@@ -555,9 +596,9 @@ feature -- Debugging events
 
 			check application_initialized end
 			if application.execution_mode = {EXEC_MODES}.No_stop_points then
-				debugger_status_message (Interface_names.e_Running_no_stop_points)
+				debugger_status_message (debugger_names.t_Running_no_stop_points)
 			else
-				debugger_status_message (Interface_names.e_Running)
+				debugger_status_message (debugger_names.t_Running)
 			end
 
 				--| Observers
@@ -605,11 +646,11 @@ feature -- Debugging events
 		do
 			incremente_debugging_operation_id
 			if application.execution_mode = {EXEC_MODES}.No_stop_points then
-				debugger_status_message (Interface_names.e_Running_no_stop_points)
-				debugger_output_message (Interface_names.e_Running_no_stop_points)
+				debugger_status_message (debugger_names.t_Running_no_stop_points)
+				debugger_output_message (debugger_names.t_Running_no_stop_points)
 			else
-				debugger_status_message (Interface_names.e_Running)
-				debugger_output_message (Interface_names.e_Running)
+				debugger_status_message (debugger_names.t_Running)
+				debugger_output_message (debugger_names.t_Running)
 			end
 
 				--| Observers
@@ -625,7 +666,7 @@ feature -- Debugging events
 			incremente_debugging_operation_id
 
 			if application_is_executing then
-				debugger_status_message (Interface_names.E_not_running)
+				debugger_status_message (debugger_names.t_not_running)
 				display_system_info
 
 					--| Observers
@@ -644,6 +685,7 @@ feature -- Debugging events
 			application_quit_actions.call (Void)
 
 			destroy_application
+			reset_class_c_data
 
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_quit : done%N")
@@ -709,10 +751,18 @@ feature -- Debuggee Objects management
 
 feature {APPLICATION_EXECUTION} -- specific implementation
 
+	debugger_names: DEBUGGER_NAMES is
+		once
+			create Result
+		end
+
 	implementation: DEBUGGER_MANAGER_IMP;
 
 invariant
 
+	implementation /= Void
+	controller /= Void
+	
 	application_initialized_not_void: application_initialized implies application /= Void
 	application /= Void implies application.debugger_manager = Current
 	debug_info /= Void

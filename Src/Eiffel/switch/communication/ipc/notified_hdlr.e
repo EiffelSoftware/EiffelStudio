@@ -9,8 +9,6 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
-	OBJECT_ADDR
-
 create
 
 	make

@@ -361,6 +361,9 @@ feature -- Constants
 	Focuse_border_width: INTEGER is 1
 			-- Border width of a zone. This is width show focus color surround a zone.
 
+	Highlight_before_width: INTEGER is 4
+			-- Title highlight area width before drawn title texts.
+			
 	Highlight_tail_width: INTEGER is 30
 			-- Tilte highlight area width which shown color chang gradually.
 

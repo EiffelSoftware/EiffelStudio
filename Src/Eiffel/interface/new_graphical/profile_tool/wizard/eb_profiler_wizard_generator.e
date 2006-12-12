@@ -277,7 +277,6 @@ feature {NONE} -- Implementation
 		do
 			create new_window.make_default
 			new_window.update_window (pq, po, profinfo)
-			new_window.show
 			new_window.raise
 		end
 

@@ -2668,31 +2668,6 @@ feature -- Resource Update
 
 feature -- Window management
 
-	show_window is
-			-- Show the window
-		do
-			show
-		end
-
-	raise_window is
-			-- Show the window and set the focus to it.
-		do
-			show
-			--| FIXME, set the focus.
-		end
-
-	hide_window is
-			-- Hide the window
-		do
-			hide
-		end
-
-	destroy_window is
-			-- Destroy the window.
-		do
-			destroy
-		end
-
 	give_focus is
 			-- Give the focus to the address manager.
 		do

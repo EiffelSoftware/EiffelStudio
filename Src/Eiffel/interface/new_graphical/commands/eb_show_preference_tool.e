@@ -46,7 +46,6 @@ feature {NONE} -- Execution
 			end
 			preference_window.set_size (preferences.misc_data.preference_window_width, preferences.misc_data.preference_window_height)
 			preference_window.set_show_hidden_preferences (l_show_hidden_flag)
-			preference_window.show
 			preference_window.raise
 		end
 

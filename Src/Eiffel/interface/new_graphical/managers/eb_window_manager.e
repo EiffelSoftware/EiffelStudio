@@ -193,7 +193,6 @@ feature -- Basic operations
 
 				-- Show the window
 			dynamic_lib_window.show
-			dynamic_lib_window.raise
 			dynamic_lib_window.give_focus
 		ensure
 			valid_dynamic_lib_window: dynamic_lib_window_is_valid
@@ -406,32 +405,15 @@ feature -- Status report
 
 feature -- Actions on a given window
 
-	show_window (a_window: EB_WINDOW) is
-			-- Show the window
-		do
-			a_window.window.show
-			notify_observers (a_window, Notify_shown_window)
-		end
-
-	raise_window (a_window: EB_WINDOW)  is
-			-- Show the window and set the focus to it.
+	show_window (a_window: EB_WINDOW)  is
+			-- Show the window.
 		local
 			real_window: EV_TITLED_WINDOW
 		do
-			real_window := a_window.window
-
-				-- Show the window if not already done.
-			if not real_window.is_show_requested then
-				show_window (a_window)
-			end
-
-				-- Restore the window is it was minimized.
-			if real_window.is_minimized then
-				real_window.restore
-			end
-
-				-- Raise the window.
-			real_window.raise
+				-- We call `raise' since it takes care of really showing the window
+				-- in case it is hidden or minimized.
+			a_window.window.raise
+			notify_observers (a_window, Notify_shown_window)
 		end
 
 	hide_window (a_window: EB_WINDOW) is
@@ -534,7 +516,7 @@ feature -- Actions on all windows
 	raise_all is
 			-- Raise all windows.
 		do
-			for_all (agent raise_window)
+			for_all (agent show_window)
 		end
 
 	close_all is
@@ -1122,7 +1104,7 @@ feature {NONE} -- Implementation
 			if a_textable_window /= Void and then
 			   a_textable_window.text_area.changed
 			then
-				a_window.raise
+				a_window.show
 			else
 				a_dev ?= a_window
 				if
@@ -1130,7 +1112,7 @@ feature {NONE} -- Implementation
 				and then
 					a_dev.changed
 				then
-					a_window.raise
+					a_window.show
 				end
 			end
 		end

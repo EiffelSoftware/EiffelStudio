@@ -82,9 +82,6 @@ feature {EV_APPLICATION} -- Initialization
 
 feature {EV_ANY_I} -- Implementation
 
-	invoke_garbage_collection_when_inactive: BOOLEAN
-		-- Should garbage collection be invoked when application is inactive.
-
 	cpu_relinquishment_time: INTEGER is 10
 		-- Number of milliseconds to relinquish CPU when idling.
 
@@ -162,6 +159,9 @@ feature {EV_DOCKABLE_SOURCE_I, EV_DOCKABLE_TARGET_I, EV_SHARED_TRANSPORT_I} -- A
 	dockable_targets: ARRAYED_LIST [INTEGER]
 
 feature -- Access
+
+	invoke_garbage_collection_when_inactive: BOOLEAN
+		-- Should garbage collection be invoked when application is inactive.
 
 	pnd_targets: HASH_TABLE [INTEGER, INTEGER]
 			-- Global list of pick and drop target object ids.

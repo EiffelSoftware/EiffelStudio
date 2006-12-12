@@ -287,7 +287,8 @@ feature -- Action
 						-- check if the directory for the system has been created
 					create l_dir_name.make_from_string (workbench.backup_subdirectory)
 
-						-- if this is the system of the application target, create an empty file with the uuid to make it easier to find the application configuration file.
+						-- if this is the system of the application target, create an empty file with
+						-- the uuid to make it easier to find the application configuration file.
 					l_system := lace_class.cluster.target.system
 					l_uuid := l_system.uuid.out
 					if l_system = l_system.application_target.system then
@@ -2100,7 +2101,14 @@ feature {NONE} -- Backup implementation
 				until
 					l_over.after
 				loop
-					copy_class (l_over.item, a_location)
+						-- Compute actual location of cluster where overriden class is located.
+					create l_dir_name.make_from_string (workbench.backup_subdirectory)
+					l_dir_name.extend (l_over.item.group.target.system.uuid.out)
+					create l_dir.make (l_dir_name)
+					if not l_dir.exists then
+						l_dir.create_directory
+					end
+					copy_class (l_over.item, l_dir_name)
 					l_over.forth
 				end
 			end

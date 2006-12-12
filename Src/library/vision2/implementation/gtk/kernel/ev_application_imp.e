@@ -20,6 +20,8 @@ inherit
 				pointer_button_release_actions_internal
 			{EV_ANY_I, EV_INTERMEDIARY_ROUTINES}
 				is_destroyed
+		undefine
+			dispose
 		redefine
 			launch
 		end

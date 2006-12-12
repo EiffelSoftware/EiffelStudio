@@ -2737,7 +2737,7 @@ Test assertion-evaluation-order (dotnet033): passed
 Test pointer-to-external-expanded (dotnet034): passed
 Test real-output-no-locale (dotnet036): passed
 
-Passed:  1293 / 1450  (89%)
+Passed:  1293 / 1450  (90%)
 Failed:  138 / 1450  (10%)
 Manual:  16 / 1450  (2%)
 Skipped:  3 / 1450  (1%)

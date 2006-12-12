@@ -314,7 +314,9 @@ feature {NONE} -- Implementation
 
 						if tid = l_status.current_thread_id then
 							row.set_background_color (row_highlight_bg_color)
-							row.ensure_visible
+							if row.is_displayed then
+								row.ensure_visible
+							end
 						end
 
 						s := l_status.thread_name (tid)

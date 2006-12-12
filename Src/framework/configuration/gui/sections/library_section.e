@@ -60,7 +60,7 @@ feature -- Basic operations
 			config_windows.search (l_config)
 			if config_windows.found and then config_windows.found_item.is_show_requested then
 				l_lib_conf := config_windows.found_item
-				l_lib_conf.bring_to_front
+				l_lib_conf.raise
 			else
 				create l_load.make (configuration_window.conf_factory)
 				l_load.retrieve_configuration (l_config)

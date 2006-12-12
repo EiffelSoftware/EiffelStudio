@@ -268,21 +268,6 @@ feature -- Command
 			config_windows.remove (conf_system.file_name)
 		end
 
-	bring_to_front is
-			-- Put `Current' to the front. Restore its state if necessary.
-		require
-			not_destroyed: not is_destroyed
-		do
-			if not is_show_requested then
-				show
-			end
-			if is_minimized then
-				restore
-			end
-			raise
-		end
-
-
 feature {NONE} -- Agents
 
 	refresh_current: PROCEDURE [ANY, TUPLE[]]

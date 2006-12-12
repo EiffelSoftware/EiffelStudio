@@ -17,8 +17,9 @@ feature -- Debugger manager
 		do
 			if is_gui then
 				create {EB_DEBUGGER_MANAGER} Result.make
-			else
-				create {TTY_DEBUGGER_MANAGER} Result.make
+--| Not yet ready
+--			else
+--				create {TTY_DEBUGGER_MANAGER} Result.make
 			end
 		end
 

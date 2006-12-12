@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEBUGGER_MANAGER
+		export
+			{NONE} all
+		end
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -261,7 +266,7 @@ feature -- Queries
 				if has_object_interface then
 					Result := Il_debug_info_recorder.class_type_for_module_class_token (value_module_file_name, value_class_token)
 				else
-					Result := Eiffel_system.System.system_object_class.compiled_class.types.first
+					Result := debugger_manager.compiler_data.system_object_class_c.types.first
 						--| FIXME jfiat 2004/03/29 : Any smarter way to find the real type ?
 						-- even in case of external type ?
 				end
@@ -293,13 +298,11 @@ feature -- Queries
 					--| FIXME jfiat 2004/04/02 : maybe having
 					--| eiffel_universe.class_from_assembly_filename (...
 				ci := eiffel_universe.class_from_assembly (an, cn)
-				if ci = Void then
+				if ci /= Void then
+					Result := ci.compiled_class
+				else
 					fixme ("FIXME JFIAT: Ugly .. but for now .. far enought")
-					ci := Eiffel_system.System.system_object_class
-				end
-				Result := ci.compiled_class
-				if Result = Void then
-					Result := Eiffel_system.System.system_object_class.compiled_class
+					Result := debugger_manager.compiler_data.system_object_class_c
 				end
 			end
 		ensure

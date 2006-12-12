@@ -49,11 +49,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
-		export
-			{NONE} all
-		end
-
 	COMPILER_EXPORTER --| To access:  ERROR_HANDLER.wipe_out
 		export
 			{NONE} all
@@ -300,7 +295,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_string_b ?= a_expr_b
 			if l_string_b /= Void then
 				tmp_result_value := Debugger_manager.Dump_value_factory.new_manifest_string_value (l_string_b.value,
-					system.string_8_class.compiled_class)
+					debugger_manager.compiler_data.string_8_class_c)
 			else
 					--| NotYetReady |--
 				notify_error_not_implemented (a_expr_b.generator + Cst_error_not_yet_ready)
@@ -320,8 +315,10 @@ feature {NONE} -- EXPR_B evaluation
 			l_cl: CLASS_C
 			-- ...
 			d_fact: DUMP_VALUE_FACTORY
+			comp_data: DEBUGGER_DATA_FROM_COMPILER
 		do
 			d_fact := Debugger_manager.Dump_value_factory
+			comp_data := debugger_manager.compiler_data
 			l_cl := cl
 			if a_value_i.is_integer then
 				l_integer ?= a_value_i
@@ -354,49 +351,49 @@ feature {NONE} -- EXPR_B evaluation
 				else
 						--| This should not occur, but in case it does
 						--| let's display it as INTEGER_64
-					l_cl := System.integer_64_class.compiled_class
+					l_cl := comp_data.integer_64_class_c
 					tmp_result_value := d_fact.new_integer_64_value (l_integer.integer_64_value, l_cl)
 				end
 			elseif a_value_i.is_string then
 				l_string ?= a_value_i
 				if l_cl = Void then
-					l_cl := System.string_8_class.compiled_class
+					l_cl := comp_data.string_8_class_c
 				end
 				tmp_result_value := d_fact.new_manifest_string_value (l_string.string_value, l_cl)
 			elseif a_value_i.is_boolean then
 				if l_cl = Void then
-					l_cl := System.boolean_class.compiled_class
+					l_cl := comp_data.boolean_class_c
 				end
 				tmp_result_value := d_fact.new_boolean_value (a_value_i.boolean_value, l_cl)
 			elseif a_value_i.is_character then
 				l_char ?= a_value_i
 				if l_char.is_character_32 then
 					if l_cl = Void then
-						l_cl := System.Character_32_class.compiled_class
+						l_cl := comp_data.character_32_class_c
 					end
 					tmp_result_value := d_fact.new_character_32_value (l_char.character_value, l_cl)
 				else
 					if l_cl = Void then
-						l_cl := System.Character_8_class.compiled_class
+						l_cl := comp_data.character_8_class_c
 					end
 					tmp_result_value := d_fact.new_character_value (l_char.character_value.to_character_8, l_cl)
 				end
 			elseif a_value_i.is_real_32 then
 				l_real ?= a_value_i
 				if l_cl = Void then
-					l_cl := System.real_32_class.compiled_class
+					l_cl := comp_data.real_32_class_c
 				end
 				tmp_result_value := d_fact.new_real_value (l_real.real_32_value, l_cl)
 			elseif a_value_i.is_real_64 then
 				l_real ?= a_value_i
 				if l_cl = Void then
-					l_cl := System.real_64_class.compiled_class
+					l_cl := comp_data.real_64_class_c
 				end
 				tmp_result_value := d_fact.new_real_64_value (l_real.real_32_value, l_cl)
 			elseif a_value_i.is_bit then
 				l_bit ?= a_value_i
 				if l_cl = Void then
-					l_cl := System.bit_class.compiled_class
+					l_cl := comp_data.bit_class_c
 				end
 				tmp_result_value := d_fact.new_bits_value (l_bit.bit_value, l_cl.class_signature, l_cl);
 			else
@@ -445,7 +442,7 @@ feature {NONE} -- EXPR_B evaluation
 					end
 				end
 				if not error_occurred then
-					tmp_result_static_type := System.boolean_class.compiled_class
+					tmp_result_static_type := debugger_manager.compiler_data.boolean_class_c
 					tmp_result_value := Debugger_manager.Dump_value_factory.new_boolean_value (res, tmp_result_static_type)
 				end
 			end
@@ -631,7 +628,7 @@ feature {NONE} -- EXPR_B evaluation
 			elseif context_class /= Void then
 				cl := context_class
 			else
-				cl := system.tuple_class.compiled_class
+				cl := debugger_manager.compiler_data.tuple_class_c
 			end
 			fi := cl.feature_named ("item")
 			create params.make (1)

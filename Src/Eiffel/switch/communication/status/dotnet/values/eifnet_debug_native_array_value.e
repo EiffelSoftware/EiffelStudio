@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			end
 			register_dotnet_data
 
-			set_sp_bounds (min_slice_ref.item, max_slice_ref.item)
+			set_sp_bounds (debugger_manager.min_slice, debugger_manager.max_slice)
 		ensure
 			value_set: icd_value = a_prepared_value
 		end
@@ -99,7 +99,7 @@ feature -- Access
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
 		once
-			Result := Eiffel_system.system.native_array_class.compiled_class
+			Result := debugger_manager.compiler_data.native_array_class_c
 		ensure then
 			non_void_result: Result /= Void
 		end

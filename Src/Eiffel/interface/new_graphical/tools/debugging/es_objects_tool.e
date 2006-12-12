@@ -30,11 +30,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUG
-		export
-			{NONE} all
-		end
-
 	VALUE_TYPES
 		export
 			{NONE} all
@@ -62,15 +57,14 @@ feature {NONE} -- Initialization
 			a_debugger_not_void: a_debugger /= Void
 		do
 			set_debugger_manager (a_debugger)
-			min_slice_ref.set_item (preferences.debug_tool_data.min_slice)
-			max_slice_ref.set_item (preferences.debug_tool_data.max_slice)
+			debugger_manager.set_slices (preferences.debug_tool_data.min_slice, preferences.debug_tool_data.max_slice)
 
 			display_first_attributes := True
 			display_first_onces := False
 			display_first_special := True
 			display_first := True
 
-			cleaning_delay := Preferences.debug_tool_data.delay_before_cleaning_objects_grid
+			cleaning_delay := preferences.debug_tool_data.delay_before_cleaning_objects_grid
 			create objects_grids.make (2)
 			create objects_grids_layout_initialized.make (2)
 			create objects_grids_empty.make (2)
@@ -379,7 +373,7 @@ feature {NONE} -- Interface
 			apref: ARRAY_PREFERENCE
 			ap: ARRAY [STRING]
 		do
-			apref := Preferences.Debug_tool_data.objects_tool_layout_preference
+			apref := preferences.debug_tool_data.objects_tool_layout_preference
 			ap := apref.value
 			ap[ap.lower + a_pos - objects_grids_positions.lower] := a_gid
 			apref.set_value (ap) --| Should trigger "update"
@@ -715,8 +709,8 @@ feature -- Status Setting
 			g: like objects_grid
 		do
 			reset_update_on_idle
-			preferences.debug_tool_data.min_slice_preference.set_value (min_slice_ref.item)
-			preferences.debug_tool_data.max_slice_preference.set_value (max_slice_ref.item)
+			preferences.debug_tool_data.min_slice_preference.set_value (debugger_manager.min_slice)
+			preferences.debug_tool_data.max_slice_preference.set_value (debugger_manager.max_slice)
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug
 			if current_object /= Void then

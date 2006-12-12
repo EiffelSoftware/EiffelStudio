@@ -213,7 +213,7 @@ feature -- Access
 			Result := number_of_stack_elements = 0
 		end
 
-feature {DEAD_HDLR, STOPPED_HDLR, SHARED_DEBUG, APPLICATION_EXECUTION} -- Implemenation
+feature {DEAD_HDLR, STOPPED_HDLR, SHARED_DEBUGGER_MANAGER, APPLICATION_EXECUTION} -- Implemenation
 
 	process_termination is
 			-- Process the termination of the executed

@@ -35,13 +35,13 @@ feature
 			output_manager.add_string ("Launching system :")
 			output_manager.add_new_line
 			output_manager.add_comment ("  - directory = ")
-			output_manager.add_quoted_text (application_working_directory)
+			output_manager.add_quoted_text (param_working_directory)
 			output_manager.add_new_line
 			output_manager.add_comment_text ("  - arguments = ")
-			if current_cmd_line_argument.is_empty then
+			if param_arguments.is_empty then
 				output_manager.add_string ("<Empty>")
 			else
-				output_manager.add_quoted_text (current_cmd_line_argument)
+				output_manager.add_quoted_text (param_arguments)
 			end
 --| For now useless since the output panel display those info just a few nanoseconds ...
 --			if environment_vars /= Void and then not environment_vars.is_empty then

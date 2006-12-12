@@ -8,10 +8,6 @@ class
 	DEBUGGER_CONTROLLER
 
 inherit
-	EB_SHARED_ARGUMENTS
-		export
-			{NONE} all
-		end
 
 	SHARED_EIFFEL_PROJECT
 		export
@@ -38,8 +34,6 @@ inherit
 			{NONE} all
 		end
 
---	EXEC_MODES
-
 create {DEBUGGER_MANAGER}
 	make
 
@@ -51,42 +45,39 @@ feature {NONE} -- Initialization
 			manager := a_manager
 		end
 
-feature -- Status
+feature -- Access
 
-	workbench_application_available: BOOLEAN is
+	param_arguments: STRING
+
+	param_working_directory: STRING
+
+	param_environment_variables: HASH_TABLE [STRING_32, STRING_32]
+
+feature -- Change
+
+	clear_params is
 		do
+			set_param_arguments (Void)
+			set_param_working_directory (Void)
+			set_param_environment_variables (Void)
 		end
 
-	finalized_application_available: BOOLEAN is
+	set_param_arguments (v: like param_arguments) is
+			-- set `v' to `param_arguments'.
 		do
+			param_arguments := v
 		end
 
-feature -- Callbacks
-
-	before_starting is
+	set_param_working_directory (v: like param_working_directory) is
+			-- set `v' to `param_working_directory'.
 		do
+			param_working_directory := v
 		end
 
-	after_starting is
+	set_param_environment_variables (v: like param_environment_variables) is
+			-- set `v' to `param_environment_variables'.
 		do
-		end
-
-	warning (msg: STRING) is
-		do
-			manager.debugger_warning_message (msg)
-		end
-
-	if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE]) is
-		do
-		end
-
-	discardable_if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE];
-			a_button_count: INTEGER; a_pref_string: STRING) is
-		do
-		end
-
-	activate_debugger_environment (b: BOOLEAN) is
-		do
+			param_environment_variables := v
 		end
 
 feature -- Debug Operation
@@ -149,7 +140,7 @@ feature -- Debug Operation
 											-- Launch cordbg.exe.
 										(create {COMMAND_EXECUTOR}).execute_with_args
 											(l_app_string,
-												"%"" + eiffel_system.application_name (True) + "%" " + current_cmd_line_argument)
+												"%"" + eiffel_system.application_name (True) + "%" " + param_arguments)
 										launch_program := True
 									elseif l_il_env.use_dbgclr (dotnet_debugger) then
 											-- Launch DbgCLR.exe.
@@ -161,7 +152,7 @@ feature -- Debug Operation
 								else
 										--| Without BP, we just launch the execution as it is
 									(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
-										current_cmd_line_argument)
+										param_arguments)
 									launch_program := True
 								end
 							end
@@ -204,52 +195,6 @@ feature -- Debug Operation
 			end
 		end
 
-	debug_workbench_application (a_execution_mode: INTEGER) is
-		local
-			working_dir: STRING
-			environment_vars: like application_environment_variables
-			l_cmd_line_arg: STRING
-			app_exec: APPLICATION_EXECUTION
-		do
-			before_starting
-
-				--| Getting well formatted workind directory path
-			working_dir := application_working_directory
-			environment_vars := application_environment_variables
-
-				--| Building the command line argument
-			l_cmd_line_arg := current_cmd_line_argument
-
-			if not directory_exists (working_dir) then
-				warning (Warning_messages.w_Invalid_working_directory (working_dir))
-				activate_debugger_environment (False)
-			else
-					-- Raise debugger before launching.
-				if not manager.application_initialized then
-					manager.create_application
-				end
-
-				activate_debugger_environment (True)
-				app_exec := manager.application
-				app_exec.set_execution_mode (a_execution_mode)
-				app_exec.run (l_cmd_line_arg, working_dir, environment_vars)
-				if manager.application_is_executing then
-					if app_exec.execution_mode = {EXEC_MODES}.No_stop_points then
-						manager.debugger_status_message ("System is running (ignoring breakpoints)")
-					else
-						manager.debugger_message ("System is running")
-					end
-					app_exec.on_application_launched
-				else
-						-- Something went wrong
-					warning (app_exec.can_not_launch_system_message)
-					app_exec.on_application_quit
-
-					activate_debugger_environment (False)
-				end
-			end
-		end
-
 	resume_workbench_application is
 			-- Continue the execution of the program (stepping ...)
 		local
@@ -280,12 +225,60 @@ feature -- Debug Operation
 			end
 		end
 
-	c_compile is
-			-- Freeze system.
+feature {DEBUGGER_MANAGER} -- Debugging operation
+
+	debug_step_next is
+		require
+			safe_application_is_stopped: manager.safe_application_is_stopped
 		do
-			if Eiffel_project.initialized then
-				Eiffel_project.call_finish_freezing (True)
-			end
+			manager.application.set_execution_mode ({EXEC_MODES}.step_by_step)
+			resume_workbench_application
+		end
+
+	debug_step_into is
+		require
+			safe_application_is_stopped: manager.safe_application_is_stopped
+		do
+			manager.application.set_execution_mode ({EXEC_MODES}.step_into)
+			resume_workbench_application
+		end
+
+	debug_step_out is
+		require
+			safe_application_is_stopped: manager.safe_application_is_stopped
+		do
+			manager.application.set_execution_mode ({EXEC_MODES}.out_of_routine)
+			resume_workbench_application
+		end
+
+	debug_run is
+		require
+			safe_application_is_stopped: manager.safe_application_is_stopped
+		do
+			manager.application.set_execution_mode ({EXEC_MODES}.user_stop_points)
+			resume_workbench_application
+		end
+
+	debug_run_without_stop_points is
+		require
+			safe_application_is_stopped: manager.safe_application_is_stopped
+		do
+			manager.application.set_execution_mode ({EXEC_MODES}.no_stop_points)
+			resume_workbench_application
+		end
+
+	debug_kill is
+		require
+			safe_application_is_stopped: manager.safe_application_is_stopped
+		do
+			manager.application.kill
+		end
+
+	debug_interrupt is
+		require
+			application_is_executing: manager.application_is_executing
+		do
+			manager.application.interrupt
 		end
 
 feature -- Start Operation
@@ -323,7 +316,7 @@ feature -- Start Operation
 							-- No need to check the `exe' as it is guaranteed to have been
 							-- generated by the Eiffel compiler.
 						create cmd_exec
-						cmd_exec.execute_with_args_and_working_directory (appl_name, current_cmd_line_argument, application_working_directory)
+						cmd_exec.execute_with_args_and_working_directory (appl_name, param_arguments, param_working_directory)
 					else
 						create f_name.make_from_string (project_location.final_path)
 						f_name.set_file_name (Makefile_SH)
@@ -332,7 +325,7 @@ feature -- Start Operation
 							warning (Warning_messages.w_MakefileSH_more_recent)
 						else
 							create cmd_exec
-							cmd_exec.execute_with_args_and_working_directory (appl_name, current_cmd_line_argument, application_working_directory)
+							cmd_exec.execute_with_args_and_working_directory (appl_name, param_arguments, param_working_directory)
 						end
 					end
 				end
@@ -372,7 +365,7 @@ feature -- Start Operation
 							-- No need to check the `exe' as it is guaranteed to have been
 							-- generated by the Eiffel compiler.
 						create cmd_exec
-						cmd_exec.execute_with_args_and_working_directory (appl_name, current_cmd_line_argument, application_working_directory)
+						cmd_exec.execute_with_args_and_working_directory (appl_name, param_arguments, param_working_directory)
 					else
 						create f_name.make_from_string (project_location.workbench_path)
 						f_name.set_file_name (Makefile_SH)
@@ -381,20 +374,107 @@ feature -- Start Operation
 							warning (Warning_messages.w_MakefileSH_more_recent)
 						else
 							create cmd_exec
-							cmd_exec.execute_with_args_and_working_directory (appl_name, current_cmd_line_argument, application_working_directory)
+							cmd_exec.execute_with_args_and_working_directory (appl_name, param_arguments, param_working_directory)
 						end
 					end
 				end
 			end
 		end
 
-feature -- Access
 
-feature -- Change
 
-feature {NONE} -- Implementation
+feature {NONE} -- Callbacks
+
+	before_starting is
+		do
+			manager.display_debugger_info
+		end
+
+	after_starting is
+		do
+		end
+
+	warning (msg: STRING) is
+		do
+			manager.debugger_warning_message (msg)
+		end
+
+	if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE]) is
+		do
+		end
+
+	discardable_if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE];
+			a_button_count: INTEGER; a_pref_string: STRING) is
+		do
+		end
+
+	activate_debugger_environment (b: BOOLEAN) is
+		do
+		end
+
+feature {NONE} -- debugging
+
+	debug_workbench_application (a_execution_mode: INTEGER) is
+		require
+			param_working_directory /= Void
+		local
+			working_dir: STRING
+			environment_vars: like param_environment_variables
+			l_cmd_line_arg: STRING
+			app_exec: APPLICATION_EXECUTION
+		do
+			before_starting
+
+				--| Getting well formatted workind directory path
+			working_dir := param_working_directory
+			environment_vars := param_environment_variables
+
+				--| Building the command line argument
+			l_cmd_line_arg := param_arguments
+
+			if not directory_exists (working_dir) then
+				warning (Warning_messages.w_Invalid_working_directory (working_dir))
+				activate_debugger_environment (False)
+			else
+					-- Raise debugger before launching.
+				if not manager.application_initialized then
+					manager.create_application
+				end
+
+				activate_debugger_environment (True)
+				app_exec := manager.application
+				app_exec.set_execution_mode (a_execution_mode)
+				app_exec.run (l_cmd_line_arg, working_dir, environment_vars)
+				if manager.application_is_executing then
+					if app_exec.execution_mode = {EXEC_MODES}.No_stop_points then
+						manager.debugger_status_message ("System is running (ignoring breakpoints)")
+					else
+						manager.debugger_message ("System is running")
+					end
+					app_exec.on_application_launched
+				else
+						-- Something went wrong
+					warning (app_exec.can_not_launch_system_message)
+					app_exec.on_application_quit
+
+					activate_debugger_environment (False)
+				end
+			end
+		end
+
+	c_compile is
+			-- Freeze system.
+		do
+			if Eiffel_project.initialized then
+				Eiffel_project.call_finish_freezing (True)
+			end
+		end
+
+feature {DEBUGGER_MANAGER} -- Implementation
 
 	manager: DEBUGGER_MANAGER
+
+feature {NONE} -- Implementation
 
 	directory_exists (a_dirname: STRING): BOOLEAN is
 			-- Is directory named `a_dirname' exists ?

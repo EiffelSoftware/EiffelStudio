@@ -80,6 +80,43 @@ feature -- Generic
 
 feature -- Application status
 
+	append_debugger_information (dbg: DEBUGGER_MANAGER; tf: TEXT_FORMATTER) is
+			-- Append debugger information
+		local
+			ctlr: DEBUGGER_CONTROLLER
+		do
+			ctlr := dbg.controller
+				--| Display information
+			tf.add_string ("Launching system :")
+			tf.add_new_line
+			tf.add_comment ("  - directory = ")
+			tf.add_quoted_text (ctlr.param_working_directory)
+			tf.add_new_line
+			tf.add_comment_text ("  - arguments = ")
+			if ctlr.param_arguments.is_empty then
+				tf.add_string ("<Empty>")
+			else
+				tf.add_quoted_text (ctlr.param_arguments)
+			end
+--| For now useless since the output panel display those info just a few nanoseconds ...
+--			if ctlr.environment_vars /= Void and then not ctlr.environment_vars.is_empty then
+--				tf.add_comment_text ("  - environment : ")
+--				from
+--					ctlr.environment_vars.start
+--				until
+--					ctlr.environment_vars.after
+--				loop
+--					tf.add_new_line
+--					tf.add_indent
+--					tf.add_string (ctlr.environment_vars.key_for_iteration)
+--					tf.add_string ("=")
+--					tf.add_quoted_text (ctlr.environment_vars.item_for_iteration)
+--					ctlr.environment_vars.forth
+--				end
+--			end
+			tf.add_new_line
+		end
+
 	append_status (appstatus: APPLICATION_STATUS; st: TEXT_FORMATTER) is
 			-- Display the status of the running application.
 		local
@@ -640,7 +677,7 @@ feature {NONE} -- append_type_and_value implementation
 		do
 			v.dynamic_class.append_name (st)
 			st.add_string (Equal_sign_str);
-			st.add_string (v.value.out)
+			st.add_string (v.output_value)
 		end
 
 	exception_debug_value_append_type_and_value (v: EXCEPTION_DEBUG_VALUE; st: TEXT_FORMATTER) is

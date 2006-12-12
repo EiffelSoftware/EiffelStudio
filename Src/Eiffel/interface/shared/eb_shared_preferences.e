@@ -28,7 +28,7 @@ feature {ES} -- Initialization
 feature -- Access
 
 	preferences: EB_PREFERENCES is
-			-- All preferences for EiffelStudio.				
+			-- All preferences for `ec'.
 		require
 			initialized: preferences_initialized
 		once

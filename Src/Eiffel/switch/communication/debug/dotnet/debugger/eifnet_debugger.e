@@ -14,8 +14,12 @@ inherit
 	WEL_PROCESS_LAUNCHER
 
 	EIFNET_DEBUGGER_INFO_ACCESSOR
+		rename
+			eifnet_debugger_info as info
 		export
-			{NONE} Eifnet_debugger_info
+			{EIFNET_EXPORTER} info
+		redefine
+			make
 		end
 
 	SHARED_ICOR_OBJECTS_MANAGER
@@ -55,7 +59,7 @@ inherit
 			estudio_callback_event
 		end
 
-	SHARED_DEBUG
+	SHARED_DEBUGGED_OBJECT_MANAGER
 		export
 			{NONE} all
 		end
@@ -82,14 +86,6 @@ inherit
 create
 	make
 
-feature {EIFNET_EXPORTER} -- refact
-
-	info: EIFNET_DEBUGGER_INFO is
-			-- Restricted access to Eifnet_debugger_info
-		do
-			Result := Eifnet_debugger_info
-		end
-
 feature -- Initialization
 
 	make is
@@ -98,6 +94,7 @@ feature -- Initialization
 			debug ("debugger")
 				print ("call " + generator + ".make%N")
 			end
+			Precursor
 		end
 
 	init is
@@ -108,7 +105,7 @@ feature -- Initialization
 			end
 
 			if edv_external_formatter = Void then
-				create edv_external_formatter.make (Eifnet_debugger_info)
+				create edv_external_formatter.make (info)
 			end
 		end
 
@@ -179,7 +176,6 @@ feature -- Initialization
 			if eifnet_dbg_evaluator = Void then
 				create eifnet_dbg_evaluator.make (Current)
 			end
---			Eifnet_debugger_info.set_debugger (Current)
 		end
 
 	reset_debugging_data is
@@ -195,7 +191,6 @@ feature -- Initialization
 				-- not required
 			last_dbg_call_success := 0
 			last_string_value_length := 0
---			context_output_tool := Void
 		ensure
 			not is_inside_function_evaluation
 		end
@@ -358,20 +353,10 @@ fixme ("[jfiat] : check if this is not too violent, maybe use ExitProcess")
 
 feature {NONE} -- Logging
 
---	context_output_tool: EB_OUTPUT_TOOL
---			-- Context's output tool.
-
 	debugger_message (m: STRING) is
 			-- Put message on context tool's output
 		do
 			Debugger_manager.debugger_message (m)
---			if context_output_tool /= Void then
---				create st.make
---				st.add_string (m)
---				st.add_new_line
---				context_output_tool.process_text (st)
---				context_output_tool.scroll_to_end
---			end
 		end
 
 feature -- Status
@@ -416,8 +401,8 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			on_estudio_callback_just_arrived (cb_id)
 			if not is_inside_function_evaluation then
 				reset_current_callstack
-				eifnet_debugger_info.set_last_icd_breakpoint (Default_pointer)
-				eifnet_debugger_info.set_last_icd_exception (Default_pointer)
+				info.set_last_icd_breakpoint (Default_pointer)
+				info.set_last_icd_exception (Default_pointer)
 				reset_exception_info
 			end
 				--| Consume Callback data (stored on the C side in struct)
@@ -450,8 +435,8 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 						end
 					else
 							--| Set current thread id and active thread id.
-						s.set_active_thread_id (eifnet_debugger_info.last_icd_thread_id)
-						s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
+						s.set_active_thread_id (info.last_icd_thread_id)
+						s.set_current_thread_id (info.last_icd_thread_id)
 					end
 					debug ("debugger_trace_callback")
 						print (" - Info : Debuggee is STOPPED %N")
@@ -572,7 +557,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				set_last_process_by_pointer (p)
  				r := dbg_cb_info_integer_item (2) -- error_hr
  				i := dbg_cb_info_integer_item (3) -- error_code
-				Eifnet_debugger_info.notify_debugger_error (r, i)
+				info.notify_debugger_error (r, i)
 
 			when Cst_managed_cb_edit_and_continue_remap then
 					--| p_app_domain, p_thread, p_function, f_accurate
@@ -609,7 +594,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				if not is_inside_function_evaluation then
 					set_last_exception_handled (i /= 1)
 					set_last_exception_by_pointer (p)
-					if eifnet_debugger_info.last_exception_is_handled then
+					if info.last_exception_is_handled then
 						debugger_message ("First chance exception occurred")
 					else
 						debugger_message ("Unhandled exception occurred")
@@ -668,7 +653,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					debug ("debugger_trace_callback_data")
 						io.error.put_string ("Module loaded : %"" + l_module.get_name + "%" %N")
 					end
-					Eifnet_debugger_info.register_new_module (l_module)
+					info.register_new_module (l_module)
 					debugger_message ("Module loaded : %"" + l_module.module_name + "%"")
 				end
 
@@ -695,7 +680,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				p := dbg_cb_info_pointer_item (2) -- p_thread
 				if p /= Default_pointer then
 					set_last_thread_by_pointer (p)
-					Eifnet_debugger_info.refresh_last_thread_details
+					info.refresh_last_thread_details
 				end
 
 			when Cst_managed_cb_step_complete then
@@ -709,7 +694,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 
 				debug ("debugger_trace_callback", "debugger_trace_callback_data")
 					io.error.put_string ("Last step complete reason : "
-						+ enum_cor_debug_step_reason_to_string (eifnet_debugger_info.last_step_complete_reason)
+						+ enum_cor_debug_step_reason_to_string (info.last_step_complete_reason)
 						+ "%N")
 				end
 			when Cst_managed_cb_unload_assembly then
@@ -755,7 +740,7 @@ feature {EIFNET_EXPORTER} -- Callback access
 	is_inside_function_evaluation: BOOLEAN is
 			-- Is the current context correspond to a function evaluation ?
 		do
-			Result := Eifnet_debugger_info.is_evaluating
+			Result := info.is_evaluating
 		end
 
 feature {NONE} -- Callback actions
@@ -827,7 +812,7 @@ feature {NONE} -- Callback actions
 	execution_stopped_on_end_of_breakpoint_callback: BOOLEAN is
 			-- Process end_of_breakpoint_callback and then return if is stopped.
 		require
-			top_callstack_data_initialised: Eifnet_debugger_info.current_callstack_initialized
+			top_callstack_data_initialised: info.current_callstack_initialized
 		do
 			if last_control_mode_is_stepping then
 				Result := execution_stopped_on_end_of_breakpoint_callback_while_stepping
@@ -848,7 +833,7 @@ feature {NONE} -- Callback actions
 			l_class_type: CLASS_TYPE
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do
-			dbg_info := Eifnet_debugger_info
+			dbg_info := info
 			l_previous_stack_info := dbg_info.previous_stack_info
 			l_current_stack_info := dbg_info.current_stack_info
 
@@ -884,7 +869,7 @@ feature {NONE} -- Callback actions
 	execution_stopped_on_end_of_step_complete_callback: BOOLEAN is
 			-- Process end_of_step_complete_callback and then return if is stopped.
 		require
-			top_callstack_data_initialised: Eifnet_debugger_info.current_callstack_initialized
+			top_callstack_data_initialised: info.current_callstack_initialized
 		local
 			unknown_eiffel_info_for_call_stack_stop: BOOLEAN
 			inside_valid_feature_call_stack_stepping: BOOLEAN
@@ -902,7 +887,7 @@ feature {NONE} -- Callback actions
 			l_il_debug_info: IL_DEBUG_INFO_RECORDER
 			dbg_info: EIFNET_DEBUGGER_INFO
 		do
-			dbg_info := Eifnet_debugger_info
+			dbg_info := info
 			l_current_stack_info := dbg_info.current_stack_info
 
 				--| If we were stepping ...
@@ -1196,7 +1181,7 @@ feature -- Interaction with .Net Debugger
 				on_exit_process
 			else
 				debug ("debugger_eifnet_data")
-					print ("Last control mode = " + eifnet_debugger_info.last_control_mode_as_string + "%N")
+					print ("Last control mode = " + info.last_control_mode_as_string + "%N")
 				end
 				l_controller.stop (infinite_time)
 				last_dbg_call_success := l_controller.last_call_success
@@ -1240,9 +1225,9 @@ feature {NONE} -- Stepping Implementation
 		do
 			thid := application_status.current_thread_id
 			if thid = 0 then
-				thid := eifnet_debugger_info.last_icd_thread_id
+				thid := info.last_icd_thread_id
 			end
-			edti := eifnet_debugger_info.managed_thread (thid)
+			edti := info.managed_thread (thid)
 			if edti /= Void then
 				Result := edti.new_stepper
 				if Result /= Void then
@@ -1330,7 +1315,7 @@ feature -- Stepping Access
 			end
 			st := application_status
 			thid := st.current_thread_id
-			tids := eifnet_debugger_info.loaded_managed_threads.current_keys
+			tids := info.loaded_managed_threads.current_keys
 
 			from
 				i := tids.lower
@@ -1434,7 +1419,7 @@ feature -- Exception
 
 	reset_evaluation_exception is
 		do
-			eifnet_debugger_info.reset_last_evaluation_icd_exception
+			info.reset_last_evaluation_icd_exception
 		end
 
 	reset_exception_info is
@@ -1579,7 +1564,7 @@ feature -- Exception
 	active_exception_value: ICOR_DEBUG_VALUE is
 			-- Active Exception value retrieved each call from .Net debugger
 		do
-			Result := eifnet_debugger_info.icd_exception
+			Result := info.icd_exception
 		end
 
 	new_active_exception_value_from_thread: ICOR_DEBUG_VALUE is
@@ -1919,7 +1904,7 @@ feature -- Specific function evaluation
 					l_icdov := l_value_info.new_interface_debug_object_value
 					if l_icdov /= Void then
 							--| the result should be a STRING instance
-						Result := string_value_from_string_class_value (Eiffel_system.system.string_8_class.compiled_class, l_icd, l_icdov, 0, -1)
+						Result := string_value_from_string_class_value (debugger_manager.compiler_data.string_8_class_c, l_icd, l_icdov, 0, -1)
 						l_icdov.clean_on_dispose
 					end
 					l_value_info.icd_prepared_value.clean_on_dispose
@@ -2007,7 +1992,7 @@ feature -- Specific function evaluation
 					l_icdov := l_value_info.new_interface_debug_object_value
 					if l_icdov /= Void then
 							--| This is a STRING instance
-						Result := string_value_from_string_class_value (Eiffel_system.system.string_8_class.compiled_class, l_icd, l_icdov, min, max)
+						Result := string_value_from_string_class_value (debugger_manager.compiler_data.string_8_class_c, l_icd, l_icdov, min, max)
 						l_icdov.clean_on_dispose
 					end
 					l_value_info.icd_prepared_value.clean_on_dispose
@@ -2101,7 +2086,7 @@ feature -- Specific function evaluation
 			end
 -- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
 --			l_icd := a_icd
-			l_icd_module := eifnet_debugger_info.icor_debug_module_for_mscorlib
+			l_icd_module := info.icor_debug_module_for_mscorlib
 			l_feature_token := Edv_external_formatter.token_Exception_get_Message
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 			if l_func /= Void then
@@ -2280,7 +2265,7 @@ feature -- Specific function evaluation
 --			l_meth_token: INTEGER
 --			l_icdf: ICOR_DEBUG_FUNCTION
 --		do
---			l_icdm := eifnet_debugger_info.icor_debug_module_for_mscorlib
+--			l_icdm := info.icor_debug_module_for_mscorlib
 --			l_md_import := l_icdm.interface_md_import
 --			l_gc_class_token := l_md_import.find_type_def_by_name ("System.GC", 0)
 --			l_meth_token := l_md_import.find_method (l_gc_class_token, "KeepAlive")

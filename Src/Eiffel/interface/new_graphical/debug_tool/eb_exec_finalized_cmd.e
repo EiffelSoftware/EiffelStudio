@@ -63,8 +63,15 @@ feature -- Execution
 
 	execute is
 			-- Execute Current.
+		local
+			ctlr: DEBUGGER_CONTROLLER
 		do
-			Debugger_manager.controller.start_finalized_application
+			ctlr := debugger_manager.controller
+			ctlr.set_param_arguments (current_cmd_line_argument)
+			ctlr.set_param_working_directory (application_working_directory)
+			ctlr.set_param_environment_variables (application_environment_variables)
+			ctlr.start_finalized_application
+			ctlr.clear_params
 		end
 
 feature -- Properties

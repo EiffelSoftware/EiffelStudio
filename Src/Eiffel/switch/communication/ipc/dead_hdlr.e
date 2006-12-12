@@ -7,7 +7,6 @@ inherit
 
 	RQST_HANDLER;
 	SHARED_DEBUGGER_MANAGER;
-	OBJECT_ADDR
 
 create
 

@@ -1,27 +1,25 @@
 indexing
+	description: "Objects that create instance of DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-class SHARED_DEBUG
+class
+	DEBUGGER_MANAGER_FACTORY
 
 inherit
+	SHARED_FLAGS
 
-	SHARED_DEBUGGED_OBJECT_MANAGER
+feature -- Debugger manager
 
-feature
-
-	min_slice_ref: INTEGER_REF is
-			-- Minimum bound asked for special objects.
-		once
-			create Result
-			Result.set_item (0)
-		end
-
-	max_slice_ref: INTEGER_REF is
-			-- Maximum bound asked for special objects.
-		once
-			create Result
-			Result.set_item (50)
+	new_debugger_manager: DEBUGGER_MANAGER is
+		do
+			if is_gui then
+				create {EB_DEBUGGER_MANAGER} Result.make
+			else
+				create {TTY_DEBUGGER_MANAGER} Result.make
+			end
 		end
 
 indexing

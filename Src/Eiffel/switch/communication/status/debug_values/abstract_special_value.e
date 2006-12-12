@@ -17,7 +17,7 @@ inherit
 			debug_value_type_id
 		end
 
-	SHARED_DEBUG
+	SHARED_DEBUGGED_OBJECT_MANAGER
 		export
 			{NONE} all
 		undefine

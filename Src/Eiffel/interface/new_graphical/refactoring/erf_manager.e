@@ -11,7 +11,7 @@ class
 inherit
 	EB_SHARED_PREFERENCES
 		rename
-			preferences AS eb_preferences
+			preferences as eb_preferences
 		end
 
 	EB_SHARED_WINDOW_MANAGER

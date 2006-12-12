@@ -18,8 +18,6 @@ inherit
 
 	EB_SHARED_PREFERENCES
 
-	SHARED_DEBUG
-
 	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
@@ -107,8 +105,7 @@ feature -- Execution
 		do
 			if for_tool then
 				get_slice_limits_on_global
-				min_slice_ref.set_item (slice_min)
-				max_slice_ref.set_item (slice_max)
+				debugger_manager.set_slices (slice_min, slice_max)
 				debug ("debugger_interface")
 					io.put_string ("Messages are displayed%N")
 				end
@@ -286,8 +283,8 @@ feature {NONE} -- Implementation
 				end
 				cb_disp_str_limit.select_actions.extend (agent on_cb_disp_str_limit_cb (cb_disp_str_limit, tf_disp_str_size))
 
-				slice_min := min_slice_ref.item
-				slice_max := max_slice_ref.item
+				slice_min := debugger_manager.min_slice
+				slice_max := debugger_manager.max_slice
 			else
 				if obj /= Void then
 						-- A special value is available, that's an easy one!

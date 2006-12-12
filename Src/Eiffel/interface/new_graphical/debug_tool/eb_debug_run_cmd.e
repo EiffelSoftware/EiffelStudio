@@ -251,8 +251,15 @@ feature -- Execution
 
 	launch_application (a_execution_mode: INTEGER) is
 			-- Launch the program from the project target.
+		local
+			ctlr: DEBUGGER_CONTROLLER
 		do
-			debugger_manager.controller.debug_application (a_execution_mode)
+			ctlr := debugger_manager.controller
+			ctlr.set_param_arguments (current_cmd_line_argument)
+			ctlr.set_param_working_directory (application_working_directory)
+			ctlr.set_param_environment_variables (application_environment_variables)
+			ctlr.debug_application (a_execution_mode)
+			ctlr.clear_params
 		end
 
 	resume_application is

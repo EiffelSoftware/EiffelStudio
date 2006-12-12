@@ -18,15 +18,15 @@
 		</file_rule>
 
 		<!-- header files for c-code -->
-		<external_include location="$(EIFFEL_I18N)/include/"/>
+		<external_include location="$(ISE_LIBRARY)/library/i18n/include/"/>
 
 		<!-- object files -->
-		<external_object location="$(EIFFEL_I18N)/spec/$(ISE_PLATFORM)/lib/posix_locale.a">
+		<external_object location="$(ISE_LIBRARY)/library/i18n/spec/$(ISE_PLATFORM)/lib/posix_locale.a">
 			<condition>
 				<platform value="unix"/>
 			</condition>
 		</external_object>
-		<external_object location="$(EIFFEL_I18N)/spec/windows/lib/$(ISE_C_COMPILER)/nls_locale.lib">
+		<external_object location="$(ISE_LIBRARY)/library/i18n/spec/windows/lib/$(ISE_C_COMPILER)/nls_locale.lib">
 			<condition>
 				<platform value="windows"/>
 				<dotnet value="false"/>

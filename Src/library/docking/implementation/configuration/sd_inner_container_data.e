@@ -27,6 +27,17 @@ feature -- Tab and Docking datas.
 			added: titles.has (a_title)
 		end
 
+	selected_tab_index: INTEGER
+			-- If have multi contents (tab zone), remember the one is seleted.
+
+	set_selected_tab_index (a_int: INTEGER) is
+			-- Set `selected_tab_index'
+		do
+			selected_tab_index := a_int
+		ensure
+			set: selected_tab_index = a_int
+		end
+
 	split_position: INTEGER
 			-- If current is a split area, this is spliter position. -1 if current spliter not full.
 

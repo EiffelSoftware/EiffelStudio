@@ -709,7 +709,6 @@ feature -- Implementation
 					exception_dialog.set_title ("Uncaught Exception: " + an_exception.tag)
 					exception_dialog.set_minimum_height (350)
 					exception_dialog.set_size (500, 300)
-					exception_dialog.show
 					exception_dialog.raise
 						--| FIXME Behavior would be better if dialog has full application modality.
 

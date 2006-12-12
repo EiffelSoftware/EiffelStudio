@@ -101,7 +101,8 @@ feature -- Status report
 feature -- Status setting
 
 	raise is
-			-- Request that window be displayed above all other windows.
+			-- Request that window be displayed above all other windows
+			-- (if `is_minimized', window is restored).
 		require
 			not_destroyed: not is_destroyed
 		do

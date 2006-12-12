@@ -586,6 +586,9 @@ feature -- Element change
 			--
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
+		local
+			l_default_key: H
+			l_pos: like position
 		do
 			internal_search (key)
 			if found then
@@ -602,12 +605,18 @@ feature -- Element change
 				end
 				if deleted_position /= Impossible_position then
 					position := deleted_position
-					deleted_marks.put (False, position)
+					l_pos := position
+					deleted_marks.put (False, l_pos)
 				else
+					l_pos := position
 					used_slot_count := used_slot_count + 1
 				end
 				count := count + 1
-				put_at_position (new, key, position)
+				content.put (new, l_pos)
+				keys.put (key, l_pos)
+				if key = l_default_key then
+					has_default := True
+				end
 				found_item := new
 				control := inserted_constant
 			end
@@ -699,19 +708,27 @@ feature -- Element change
 			-- see `instructions' in the Indexing clause.
 		require
 			not_present: not has (key)
+		local
+			l_default_key: H
+			l_pos: like position
 		do
 			search_for_insertion (key)
 			if soon_full then
 				add_space
 				search_for_insertion (key)
 			end
-			if position < capacity and then deleted_marks.item (position) then
-				deleted_marks.put (False, position)
+			l_pos := position
+			if l_pos < capacity and then deleted_marks.item (l_pos) then
+				deleted_marks.put (False, l_pos)
 			else
 				used_slot_count := used_slot_count + 1
 			end
 			count := count + 1
-			put_at_position (new, key, position)
+			content.put (new, l_pos)
+			keys.put (key, l_pos)
+			if key = l_default_key then
+				has_default := True
+			end
 			control := inserted_constant
 		ensure
 			inserted: inserted
@@ -763,7 +780,7 @@ feature -- Element change
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
 		local
-			insert_position: INTEGER
+			insert_position, l_pos: INTEGER
 			l_default_value: G
 			l_default_key: H
 		do
@@ -773,11 +790,17 @@ feature -- Element change
 				insert_position := position
 				internal_search (old_key)
 				if found then
-					content.put (content.item (position), insert_position)
+					l_pos := position
+					content.put (content.item (l_pos), insert_position)
 					if old_key = l_default_key then
 						set_no_default
 					else
-						remove_at_position (position)
+						content.put (l_default_value, l_pos)
+						keys.put (l_default_key, l_pos)
+						deleted_marks.put (True, l_pos)
+						if iteration_position = l_pos then
+							forth
+						end
 					end
 					if new_key = l_default_key then
 						has_default := True
@@ -787,7 +810,12 @@ feature -- Element change
 						-- to the item previously associated with `old_key'.
 				else
 					position := insert_position
-					remove_at_position (insert_position)
+					content.put (l_default_value, insert_position)
+					keys.put (l_default_key, insert_position)
+					deleted_marks.put (True, insert_position)
+					if iteration_position = insert_position then
+						forth
+					end
 					check
 						not_found: not_found
 					end
@@ -843,13 +871,20 @@ feature -- Removal
 		local
 			l_default_key: H
 			l_default_value: G
+			l_pos: like position
 		do
 			internal_search (key)
 			if found then
 				if key = l_default_key then
 					set_no_default
 				else
-					remove_at_position (position)
+					l_pos := position
+					content.put (l_default_value, l_pos)
+					keys.put (l_default_key, l_pos)
+					deleted_marks.put (True, l_pos)
+					if iteration_position = l_pos then
+						forth
+					end
 				end
 				count := count - 1
 				control := removed_constant
@@ -1260,49 +1295,6 @@ feature {NONE} -- Implementation
 				deleted (position) or (key_at (position) = computed_default_key)
 			default_iff_at_capacity:
 				(position = capacity) = (key = computed_default_key)
-		end
-
-	put_at_position (new: G; key: H; a_pos: INTEGER) is
-			-- Put `new' with `key' at `position'.
-		require
-			in_bounds: a_pos >= 0 and a_pos <= capacity
-			default_if_at_capacity:
-				(a_pos = capacity) implies (key = computed_default_key)
-		local
-			l_default_key: H
-		do
-			content.put (new, a_pos)
-			keys.put (key, a_pos)
-			if key = l_default_key then
-				has_default := True
-			end
-		ensure
-			item_at_position: content.item (a_pos) = new
-			key_at_position: key_at (a_pos) = key
-			default_if_at_capacity:
-				(a_pos = capacity) implies has_default
-		end
-
-	remove_at_position (a_pos: INTEGER) is
-			-- Remove item at `a_pos'
-		require
-			in_bounds: a_pos >= 0 and a_pos <= capacity
-		local
-			l_default_value: G
-			l_default_key: H
-		do
-			content.put (l_default_value, a_pos)
-			keys.put (l_default_key, a_pos)
-			deleted_marks.put (True, a_pos)
-			if iteration_position = a_pos then
-				forth
-			end
-		ensure
-			deleted: deleted (a_pos)
-			status_not_changed: control = old control
-			count_not_changed: count = old count
-			slot_count_not_changed: used_slot_count = old used_slot_count
-			key_at (a_pos) = computed_default_key
 		end
 
 	key_at (n: INTEGER): H is

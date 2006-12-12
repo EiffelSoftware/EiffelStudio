@@ -25,6 +25,8 @@ inherit
 			{NONE} all
 		end
 
+	CONF_PARSER_CONTROLLER
+
 create
 	make_build
 
@@ -44,21 +46,6 @@ feature {NONE} -- Initialization
 
 				-- add the application target to the libraries list
 			libraries.force (application_target, application_target.system.uuid)
-		end
-
-feature -- Status
-
-	is_ignore_bad_libraries: BOOLEAN
-			-- Should bad libraries be ignored?
-
-feature -- Update
-
-	enable_ignore_bad_libraries is
-			-- Ignore bad libraries.
-		do
-			is_ignore_bad_libraries := True
-		ensure
-			is_ignore_bad_libraries: is_ignore_bad_libraries
 		end
 
 feature -- Visit nodes
@@ -103,18 +90,29 @@ feature -- Visit nodes
 			create l_load.make (factory)
 			l_load.retrieve_uuid (l_path)
 			if l_load.is_error then
+				l_ferr ?= l_load.last_error
+				if l_ferr /= Void then
+					l_ferr.set_config (a_library.target.system.file_name)
+					l_ferr.set_original_file (a_library.location.original_path)
+				end
 				if is_ignore_bad_libraries then
+						-- Add the warning.
+					if last_warnings = Void then
+						last_warnings := l_load.last_warnings
+					else
+						last_warnings.append (l_load.last_warnings)
+					end
+					add_warning (l_ferr)
+
+						-- Now continue as if the library was not included by creating this
+						-- compiler specific condition which is always false (as if library was excluded
+						-- from current build).
 					create l_cond.make
 					l_cond.add_custom ("backup_ignore_bad_library", "false")
 					a_library.set_conditions (Void)
 					a_library.add_condition (l_cond)
 				else
-					l_ferr ?= l_load.last_error
-					if l_ferr /= Void then
-						l_ferr.set_config (a_library.target.system.file_name)
-						l_ferr.set_original_file (a_library.location.original_path)
-					end
-					add_and_raise_error (l_load.last_error)
+					add_and_raise_error (l_ferr)
 				end
 			else
 					-- add warnings

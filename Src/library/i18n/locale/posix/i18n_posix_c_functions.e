@@ -35,45 +35,42 @@ feature -- nl_langinfo
 	unix_get_locale_info (a_int: INTEGER): POINTER is
 			--
 		external
-			"C inline use %"posix_locale.h%""
+			"C inline use <langinfo.h>, <iconv.h>"
 		alias
 			"[
 				char *dname;
-				wchar_t *out;
-				size_t insize, outsize;
+				wchar_t *out = NULL;
+				size_t insize, outsize = 0;
 
 				dname = nl_langinfo($a_int);
 				insize = strlen(dname) + 1;
-				convert (dname, insize, &out, &outsize);
 				
 				{
 					iconv_t cd;
 					size_t nconv, avail, alloc;
 					char *res, *tres, *wrptr, *inptr;
 
-					*out = NULL;
-					*outsize = 0;
 					alloc = avail = insize + insize/4;
 					if (!(res = malloc(alloc))) {
 					  perror("malloc");
-					  return;
+					  return NULL;
 					}
 
-					wrptr = res;   // duplicate pointers because they
-					inptr = dname; // get modified by iconv
+					wrptr = res;   /* duplicate pointers because they */
+					inptr = dname; /* get modified by iconv */
 
-					char *charset = nl_langinfo (CODESET);   //get charset used by current locale
+					char *charset = nl_langinfo (CODESET);   /*get charset used by current locale */
 					cd = iconv_open ("UTF-8", charset);
 					if (cd == (iconv_t)(-1)) {
 							perror("iconv_open");
 							free(res);
-							return;
+							return NULL;
 					}
 
 					do {
-							nconv = iconv (cd, &inptr, &insize, &wrptr, &avail); //convertions
+							nconv = iconv (cd, (const char **) &inptr, &insize, &wrptr, &avail); /*convertions */
 							if (nconv == (size_t)(-1)) {
-									if (errno == E2BIG) { // need more room for result
+									if (errno == E2BIG) { /* need more room for result */
 											tres = realloc(res, alloc += 20);
 											avail += 20;
 											if (!tres) {
@@ -83,7 +80,7 @@ feature -- nl_langinfo
 											wrptr = tres + (wrptr - res);
 											res = tres;
 									}
-									else // something wrong with input
+									else /* something wrong with input */
 											break;
 							}
 					} while (insize);
@@ -91,9 +88,9 @@ feature -- nl_langinfo
 					if (iconv_close(cd))
 							perror("iconv_close");
 				   
-					*out = (wchar_t*) res;
-					*outsize = wrptr - res; // should be == to (alloc - avail + 1)
-					// TODO: should possibly null-terminate the result
+					out = (wchar_t*) res;
+					outsize = wrptr - res; /* should be == to (alloc - avail + 1) */
+					/* TODO: should possibly null-terminate the result */
 				}
 				return out;
 			]"

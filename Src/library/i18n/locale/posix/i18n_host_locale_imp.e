@@ -38,11 +38,8 @@ feature -- Initialization
 	create_locale_info (a_locale_id : I18N_LOCALE_ID): I18N_LOCALE_INFO is
 			-- Creation procedure
 			-- Create locale with a_locale_id
-		local
-			l_c_string : C_STRING
 		do
-			create l_c_string.make (a_locale_id.name)
-			set_locale (l_c_string.item)
+			unix_set_locale (a_locale_id.name)
 			create Result.make
 			fill (Result)
 			Result.set_id(a_locale_id)
@@ -57,11 +54,8 @@ feature -- Informations
 
 	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN is
 			-- is 'a_locale' available?
-		local
-			l_c_string: C_STRING
 		do
-			create l_c_string.make (a_locale_id.name)
-			Result := c_is_available (l_c_string.item)
+			Result := unix_is_available (a_locale_id.name)
 		end
 
 	available_locales : LINKED_LIST[I18N_LOCALE_ID] is
@@ -92,12 +86,8 @@ feature -- Informations
 		end
 
 	default_locale_id: I18N_LOCALE_ID is
-			--
-		local
-			l_c_string : C_STRING
 		do
-			create l_c_string.make ("")
-			set_locale (l_c_string.item)
+			unix_set_locale ("")
 			Result := current_locale_id
 		end
 
@@ -113,7 +103,7 @@ feature -- Informations
 			dot_index,
 			at_index: INTEGER
 		do
-			create Result.make_from_c (c_locale_name)
+			Result := unix_locale_name
 			-- remove codeset from name
 			dot_index := Result.index_of ('.', 1)
 			at_index := Result.index_of ('@', 1)
@@ -193,7 +183,7 @@ feature {NONE} -- Date and time formatting
 			-- get the long date format string
 			-- according the current locale setting
 		do
-			Result := utf8_pointer_to_string (get_locale_info (D_fmt))
+			Result := utf8_pointer_to_string (unix_get_locale_info (D_fmt))
 			Result.replace_substring_all ("%%","&")
 		ensure
 			result_exists: Result /= Void
@@ -203,7 +193,7 @@ feature {NONE} -- Date and time formatting
 			-- get the long time format string
 			-- according the current locale setting
 		do
-			Result := utf8_pointer_to_string (get_locale_info (T_fmt))
+			Result := utf8_pointer_to_string (unix_get_locale_info (T_fmt))
 			Result.replace_substring_all ("%%","&")
 		--	io.put_string(Result)
 		ensure
@@ -214,7 +204,7 @@ feature {NONE} -- Date and time formatting
 			-- get the am suffix
 			-- if the not available: empty_string
 		do
-			Result := utf8_pointer_to_string (get_locale_info (Am_str))
+			Result := utf8_pointer_to_string (unix_get_locale_info (Am_str))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -223,7 +213,7 @@ feature {NONE} -- Date and time formatting
 			-- get the pm suffix
 			-- if the not available: empty_string
 		do
-			Result := utf8_pointer_to_string (get_locale_info (Pm_str))
+			Result := utf8_pointer_to_string (unix_get_locale_info (Pm_str))
 		ensure
 			result_exists: Result /= Void
 		end
@@ -231,7 +221,7 @@ feature {NONE} -- Date and time formatting
 	get_date_time_format: STRING_32 is
 			-- time and date in a locale-specific way.
 		do
-			Result := utf8_pointer_to_string (get_locale_info (D_t_fmt))
+			Result := utf8_pointer_to_string (unix_get_locale_info (D_t_fmt))
 			Result.replace_substring_all ("%%","&")
 		ensure
 			result_exists: Result /= Void
@@ -256,7 +246,7 @@ feature {NONE} -- day/months names
 			until
 				i > Result.upper
 			loop
-				create l_string.make_from_string( utf8_pointer_to_string (get_locale_info (Day_1 +((i-1)\\upper))))
+				create l_string.make_from_string( utf8_pointer_to_string (unix_get_locale_info (Day_1 +((i-1)\\upper))))
 				Result.put (l_string, i)
 				i := i + 1
 			end
@@ -280,7 +270,7 @@ feature {NONE} -- day/months names
 			until
 				i > Result.upper
 			loop
-				create l_string.make_from_string( utf8_pointer_to_string  (get_locale_info (Mon_1 +i-1)))
+				create l_string.make_from_string( utf8_pointer_to_string  (unix_get_locale_info (Mon_1 +i-1)))
 				Result.put (l_string, i)
 				i := i + 1
 			end
@@ -306,7 +296,7 @@ feature {NONE} -- day/months names
 			until
 				i > Result.upper
 			loop
-				create l_string.make_from_string (utf8_pointer_to_string (get_locale_info (Abday_1 +((i-1)\\upper))))
+				create l_string.make_from_string (utf8_pointer_to_string (unix_get_locale_info (Abday_1 +((i-1)\\upper))))
 				Result.put (l_string, i)
 				i := i + 1
 			end
@@ -330,7 +320,7 @@ feature {NONE} -- day/months names
 			until
 				i > Result.upper
 			loop
-				create l_string.make_from_string (utf8_pointer_to_string  (get_locale_info (Abmon_1 +i-1)))
+				create l_string.make_from_string (utf8_pointer_to_string  (unix_get_locale_info (Abmon_1 +i-1)))
 				Result.put (l_string, i)
 				i := i + 1
 			end
@@ -375,7 +365,7 @@ feature	{NONE} -- currency formatting
 			-- get the currency symbol
 			-- according the current locales setting
 		do
-			Result := utf8_pointer_to_string (get_locale_info (Crncystr))
+			Result := utf8_pointer_to_string (unix_get_locale_info (Crncystr))
 			Result.remove_head (1)
 				-- could use:
 				-- create Result.make_from_c (currency_symbol (localeconv))
@@ -390,7 +380,7 @@ feature	{NONE} -- currency formatting
 		local
 			l_string: STRING_32
 		do
-			create l_string.make_from_string(utf8_pointer_to_string (get_locale_info (Crncystr)))
+			create l_string.make_from_string(utf8_pointer_to_string (unix_get_locale_info (Crncystr)))
 			if	l_string.item (1).is_equal ('-') then
 				Result := {I18N_LOCALE_INFO}.Currency_symbol_prefixed
 			elseif l_string.item (1).is_equal ('+') then

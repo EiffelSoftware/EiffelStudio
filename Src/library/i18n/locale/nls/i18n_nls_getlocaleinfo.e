@@ -8,44 +8,51 @@ indexing
 class
 	I18N_NLS_GETLOCALEINFO
 
-	inherit
-		UC_IMPORTED_UTF16_ROUTINES
-		SHARED_I18N_NLS_LC_CTYPE_CONSTANTS
+inherit
+	UC_IMPORTED_UTF16_ROUTINES
+	SHARED_I18N_NLS_LC_CTYPE_CONSTANTS
 
 
 feature -- Interface
 
-	extract_locale_integer(lcid: INTEGER; lc_ctype: INTEGER): INTEGER is
-		--
-	external
-		"C (int, int): int| %"nls_locale.h%""
-	alias
-		"extract_locale_int"
-	end
+	extract_locale_integer (lcid: INTEGER; lc_ctype: INTEGER): INTEGER is
+			--
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				int temp;
+				GetLocaleInfo ((LCID) $lcid, ((LCTYPE) $lc_ctype | LOCALE_RETURN_NUMBER), (LPTSTR) &temp, 2);
+				return (EIF_INTEGER) temp;
+			]"
+		end
 
 	extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER): STRING_32 is
-		--
-	local
-		pointer: POINTER
-	do
-		pointer := c_extract_locale_string(lcid, lc_ctype, bufferlen)
-		Result := pointer_to_string (pointer)
-		pointer.memory_free
-	end
-
+			--
+		local
+			pointer: POINTER
+		do
+			pointer := c_extract_locale_string(lcid, lc_ctype, bufferlen)
+			Result := pointer_to_string (pointer)
+			pointer.memory_free
+		end
 
 feature {NONE} -- C helper
 
+	c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER ): POINTER is
+			--
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				TCHAR *string;
+				string = malloc(sizeof(TCHAR)*$bufferlen);
+				GetLocaleInfo((LCID) $lcid, (LCTYPE) $lc_ctype, string, (int) $bufferlen);
+				return string;
+			]"
+		end
 
-c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER ): POINTER is
-		--
-	external
-		"C(int, int, int): TCHAR * | %"nls_locale.h%""
-	alias
-		"extract_locale_string"
-	end
-
-	feature {NONE} -- utf16-LE (aka "wide string") handling
+feature {NONE} -- utf16-LE (aka "wide string") handling
 
 	pointer_to_string(ptr: POINTER): STRING_32 is
 			-- takes a pointer to a utf16-LE string (the LE is important!)
@@ -99,13 +106,11 @@ c_extract_locale_string(lcid: INTEGER; lc_ctype: INTEGER; bufferlen: INTEGER ): 
 
 		end
 
-
-
 	c_wcslen (ptr: POINTER): INTEGER is
-	external
-		"C (void *): EIF_INTEGER| %"nls_locale.h%""
-	alias
-		"wcslen"
-	end
+		external
+			"C (void *): EIF_INTEGER| <string.h>"
+		alias
+			"wcslen"
+		end
 
 end

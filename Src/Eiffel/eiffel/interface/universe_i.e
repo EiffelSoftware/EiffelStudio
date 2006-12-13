@@ -522,6 +522,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 								l_classes.forth
 							end
 						end
+							-- Reflect possible changes to the number of classes.
+						l_count := l_classes.count
 					end
 				end
 				if l_count = 0 then

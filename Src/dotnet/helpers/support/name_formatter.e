@@ -522,7 +522,10 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_CONVERT", "System.Convert")
 			Result.put ("SYSTEM_TYPE", "System.Type")
 			Result.put ("SYSTEM_VOID", "System.Void")
-			Result.put ("SYSTEM_ATTRIBUTE", "System.Attribute")
+			Result.put ("SYSTEM_POINTER", "System.Reflection.Pointer")
+
+				-- Specialize implementations
+			Result.put ("NATIVE_ATTRIBUTE", "System.Attribute")
 			Result.put ("NATIVE_EXCEPTION", "System.Exception")
 
 				-- Threading conflicts

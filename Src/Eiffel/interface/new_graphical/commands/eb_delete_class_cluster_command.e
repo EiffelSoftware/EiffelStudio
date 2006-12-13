@@ -67,13 +67,13 @@ feature -- Access
 
 feature -- Properties
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Comment about `Current' for customization.
 		do
 			Result := Interface_names.e_Remove_class_cluster
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name of the menu corresponding to `Current'.
 		do
 			Result := Interface_names.m_Remove_class_cluster
@@ -94,13 +94,13 @@ feature -- Properties
 			Result := pixmaps.mini_pixmaps.general_delete_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Text string that appears when focus is given to `Current's buttons.
 		once
 			Result := description
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text that appears on toolbar button
 		once
 			Result := Interface_names.B_remove_class_cluster
@@ -130,7 +130,7 @@ feature -- Basic operations
 		local
 			classst: CLASSI_STONE
 			clust: CLUSTER_STONE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			classst ?= window.stone
 			if classst /= Void then
@@ -167,8 +167,8 @@ feature {NONE} -- Implementation
 			-- Ask confirmation before removing `class_i' or `group'
 			-- from the system and from the disk.
 		local
-			cd: EV_CONFIRMATION_DIALOG
-			wd: EV_WARNING_DIALOG
+			cd: EB_CONFIRMATION_DIALOG
+			wd: EB_WARNING_DIALOG
 			str: STRING
 			l_cluster: CONF_CLUSTER
 			l_sort_cl: EB_SORTED_CLUSTER
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			could_not_delete_initialized: could_not_delete
 		local
 			file: PLAIN_TEXT_FILE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then

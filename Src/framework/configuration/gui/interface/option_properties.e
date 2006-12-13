@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	update_assertion (an_option, a_inherited_option: CONF_OPTION; a_name: STRING; a_value: BOOLEAN) is
+	update_assertion (an_option, a_inherited_option: CONF_OPTION; a_name: STRING_GENERAL; a_value: BOOLEAN) is
 			-- Update the assertion setting of `an_option' with `a_name' to `a_value'.
 		require
 			an_option_not_void: an_option /= Void

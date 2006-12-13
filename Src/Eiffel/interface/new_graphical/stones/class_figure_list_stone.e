@@ -11,18 +11,18 @@ class
 
 inherit
 	STONE
-	
+
 create
 	make_with_list
-	
+
 feature {NONE} -- Initialization
 
 	make_with_list (a_list: LIST [EIFFEL_CLASS_FIGURE])  is
-			-- 
+			--
 		do
 			classes := a_list
 		end
-		
+
 feature -- Properties
 
 	stone_cursor: EV_POINTER_STYLE is
@@ -44,21 +44,21 @@ feature  -- Access
 	classes: LIST [EIFFEL_CLASS_FIGURE]
 			-- Classes transported with this stone.
 
-	stone_signature: STRING is 
+	stone_signature: STRING is
 			-- Short string to describe Current
 			-- (basically the name of the stoned object).
 		do
 			Result := "List of classes"
 		end
 
-	header: STRING is 
+	header: STRING_GENERAL is
 			-- String to describe Current
 			-- (as it may be described in the title of a development window).
 		do
 			Result := stone_signature
 		end
 
-	history_name: STRING is 
+	history_name: STRING is
 			-- Name used in the history list,
 			-- (By default, it is the stone_signature
 			-- and a string to describe the type of stone (Class, feature,...)).

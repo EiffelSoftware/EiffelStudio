@@ -226,8 +226,8 @@ feature {NONE} -- Graphical initialization and changes
 			end
 
 				--| Create the labels.
-			create cn_l.make_with_text (Interface_names.l_Class_name)
-			create oa_l.make_with_text (Interface_names.l_Address)
+			create cn_l.make_with_text (Interface_names.l_Class_name (""))
+			create oa_l.make_with_text (Interface_names.l_Address_colon)
 
 				--| Create and set up the buttons.
 			create ok_button.make_with_text (Interface_names.b_Ok)
@@ -517,7 +517,7 @@ feature {NONE} -- Event handling
 			cl_i: LIST [CLASS_I]
 			cl: CLASS_C
 			t: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			oe: STRING_32
 			do_not_close_dialog: BOOLEAN
 		do

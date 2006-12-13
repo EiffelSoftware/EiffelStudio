@@ -1435,6 +1435,7 @@ feature {NONE} -- Menu Building
 			os_cmd: EB_ON_SELECTION_COMMAND
 			editor: EB_SMART_EDITOR
 			ln_cmd: EB_TOGGLE_LINE_NUMBERS_COMMAND
+			l_string: STRING_GENERAL
 		do
 			editor := editor_tool.text_area
 			create command_controller.make
@@ -1517,7 +1518,10 @@ feature {NONE} -- Menu Building
 
 				-- Search
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_search + "%T" + preferences.editor_data.shortcuts.item ("show_search_panel").display_string)
+			l_string := Interface_names.m_search
+			l_string.append ("%T")
+			l_string.append (preferences.editor_data.shortcuts.item ("show_search_panel").display_string.as_string_32)
+			cmd.set_menu_name (l_string)
 			cmd.add_agent (agent search)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
@@ -1536,7 +1540,10 @@ feature {NONE} -- Menu Building
 
 				-- Replace
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_replace + "%T" + preferences.editor_data.shortcuts.item ("show_search_and_replace_panel").display_string)
+			l_string := Interface_names.m_replace
+			l_string.append ("%T")
+			l_string.append (preferences.editor_data.shortcuts.item ("show_search_and_replace_panel").display_string.as_string_32)
+			cmd.set_menu_name (l_string)
 			cmd.add_agent (agent editor.replace)
 			cmd.set_needs_editable (True)
 			command_menu_item := cmd.new_menu_item
@@ -1550,7 +1557,10 @@ feature {NONE} -- Menu Building
 
 				-- Find next
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_find_next + "%T" + preferences.editor_data.shortcuts.item ("search_forward").display_string)
+			l_string := Interface_names.m_find_next
+			l_string.append ("%T")
+			l_string.append (preferences.editor_data.shortcuts.item ("search_forward").display_string.as_string_32)
+			cmd.set_menu_name (l_string)
 			cmd.add_agent (agent find_next)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
@@ -1559,7 +1569,10 @@ feature {NONE} -- Menu Building
 
 				-- Find previous
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_find_previous + "%T" + preferences.editor_data.shortcuts.item ("search_backward").display_string)
+			l_string := Interface_names.m_find_previous
+			l_string.append ("%T")
+			l_string.append (preferences.editor_data.shortcuts.item ("search_backward").display_string.as_string_32)
+			cmd.set_menu_name (l_string)
 			cmd.add_agent (agent find_previous)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
@@ -1568,7 +1581,10 @@ feature {NONE} -- Menu Building
 
 				-- Find selection forward
 			create os_cmd.make (Current)
-			os_cmd.set_menu_name (Interface_names.m_find_next_selection + "%T" + preferences.editor_data.shortcuts.item ("search_selection_forward").display_string)
+			l_string := Interface_names.m_find_next_selection
+			l_string.append ("%T")
+			l_string.append (preferences.editor_data.shortcuts.item ("search_selection_forward").display_string.as_string_32)
+			os_cmd.set_menu_name (l_string)
 			os_cmd.add_agent (agent find_next_selection)
 			command_menu_item := os_cmd.new_menu_item
 			command_controller.add_selection_command (os_cmd)
@@ -1577,7 +1593,10 @@ feature {NONE} -- Menu Building
 
 				-- Find selection backward
 			create os_cmd.make (Current)
-			os_cmd.set_menu_name (Interface_names.m_find_previous_selection + "%T" + preferences.editor_data.shortcuts.item ("search_selection_backward").display_string)
+			l_string := Interface_names.m_find_previous_selection
+			l_string.append ("%T")
+			l_string.append (preferences.editor_data.shortcuts.item ("search_selection_backward").display_string.as_string_32)
+			os_cmd.set_menu_name (l_string)
 			os_cmd.add_agent (agent find_next_selection)
 			command_menu_item := os_cmd.new_menu_item
 			command_controller.add_selection_command (os_cmd)
@@ -1676,7 +1695,10 @@ feature {NONE} -- Menu Building
 				-- Complete word
 			create cmd.make
 			cmd.set_needs_editable (True)
-			cmd.set_menu_name (Interface_names.m_complete_word + "%T" + preferences.editor_data.shortcuts.item ("autocomplete").display_string)
+			l_string := Interface_names.m_complete_word
+			l_string.append ("%T")
+			l_string.append (preferences.editor_data.shortcuts.item ("autocomplete").display_string.as_string_32)
+			cmd.set_menu_name (l_string)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			cmd.add_agent (agent editor.complete_feature_name)
@@ -1687,7 +1709,10 @@ feature {NONE} -- Menu Building
 				-- Complete class name
 			create cmd.make
 			cmd.set_needs_editable (True)
-			cmd.set_menu_name (Interface_names.m_complete_class_name + "%T" + preferences.editor_data.shortcuts.item ("class_autocomplete").display_string)
+			l_string := Interface_names.m_complete_class_name
+			l_string.append ("%T")
+			l_string.append (preferences.editor_data.shortcuts.item ("class_autocomplete").display_string.as_string_32)
+			cmd.set_menu_name (l_string)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			cmd.add_agent (agent editor.complete_class_name)
@@ -2101,7 +2126,7 @@ feature -- Stone process
 	set_stone (a_stone: STONE) is
 			-- Change the currently focused stone.
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 			cv_cst: CLASSI_STONE
 			ef_stone: EXTERNAL_FILE_STONE
 			l: LIST [EB_DEVELOPMENT_WINDOW]
@@ -2519,7 +2544,7 @@ feature -- Resource Update
 	perform_check_before_save is
 			-- Perform any pre-save operations/checks
 		local
-			dial: EV_CONFIRMATION_DIALOG
+			dial: EB_CONFIRMATION_DIALOG
 		do
 				-- Remove trailing blanks.
 			if preferences.editor_data.auto_remove_trailing_blank_when_saving then
@@ -2531,10 +2556,10 @@ feature -- Resource Update
 
 			if editor_tool.text_area.open_backup then
 				create dial.make_with_text(Warning_messages.w_save_backup)
-				dial.set_buttons_and_actions(<<"Continue", "Cancel">>, <<agent continue_save, agent cancel_save>>)
-				dial.set_default_push_button(dial.button("Continue"))
-				dial.set_default_cancel_button(dial.button("Cancel"))
-				dial.set_title ("Save Backup")
+				dial.set_buttons_and_actions(<<interface_names.b_continue, interface_names.b_cancel>>, <<agent continue_save, agent cancel_save>>)
+				dial.set_default_push_button(dial.button(interface_names.b_continue))
+				dial.set_default_cancel_button(dial.button(interface_names.b_cancel))
+				dial.set_title (interface_names.t_save_backup)
 				dial.show_modal_to_window (window)
 			else
 				check_passed := True
@@ -2572,7 +2597,7 @@ feature -- Resource Update
 	on_text_saved is
 			-- Notify the editor that the text has been saved
 		local
-			str: STRING
+			str: STRING_32
 		do
 			Precursor
 			editor_tool.on_text_saved
@@ -2581,7 +2606,7 @@ feature -- Resource Update
 				editor_tool.text_area.update_click_list (True)
 			end
 			save_only := False
-			str := title.twin
+			str := title.twin.as_string_32
 			if str @ 1 = '*' then
 				str.keep_tail (str.count - 2)
 				set_title (str)
@@ -2995,7 +3020,7 @@ feature {NONE} -- Implementation
 			test_stone: CLASSI_STONE
 			externali: EXTERNAL_CLASS_I
 			external_cons: CONSUMED_TYPE
-			str: STRING
+			str: STRING_32
 			dotnet_class: BOOLEAN
 			l_short_formatter: EB_SHORT_FORMATTER
 			l_flat_formatter: EB_FLAT_SHORT_FORMATTER
@@ -3304,7 +3329,7 @@ feature {NONE} -- Implementation
 					-- Update the title of the window
 				if a_stone /= Void then
 					if changed then
-						str := a_stone.header.twin
+						str := a_stone.header.as_string_32
 						str.prepend ("* ")
 						set_title (str)
 					else
@@ -3874,9 +3899,9 @@ feature {NONE} -- Implementation
 			-- The main editor has just been wiped out
 			-- before loading a new file.
 		local
-			str: STRING
+			str: STRING_32
 		do
-			str := title.twin
+			str := title.twin.as_string_32
 			if str @ 1 = '*' then
 				str.keep_tail (str.count - 2)
 				set_title (str)
@@ -3920,9 +3945,9 @@ feature {NONE} -- Implementation
 
 	on_text_back_to_its_last_saved_state is
 		local
-			str: STRING
+			str: STRING_32
 		do
-			str := title.twin
+			str := title.twin.as_string_32
 			if str @ 1 = '*' then
 				str.keep_tail (str.count - 2)
 				set_title (str)
@@ -3939,11 +3964,11 @@ feature {NONE} -- Implementation
 			-- The text in the editor is modified, add the '*' in the title.
 			-- Gray out the formatters.
 		local
-			str: STRING
+			str: STRING_32
 			cst: CLASSI_STONE
 		do
 			if not text_edited then
-				str := title.twin
+				str := title.twin.as_string_32
 				if str @ 1 /= '*' then
 					str.prepend ("* ")
 					set_title (str)
@@ -4030,7 +4055,7 @@ feature {NONE} -- Implementation
 	destroy is
 			-- check if current text has been saved and destroy
 		local
-			dialog_w: EV_WARNING_DIALOG
+			dialog_w: EB_WARNING_DIALOG
 		do
 			if Window_manager.development_windows_count > 1 and then process_manager.is_external_command_running and then Current = external_output_manager.target_development_window then
 				process_manager.confirm_external_command_termination (agent terminate_external_command_and_destroy, agent do_nothing, window)
@@ -4038,9 +4063,9 @@ feature {NONE} -- Implementation
 				if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
 					if Window_manager.development_windows_count > 1 then
 						create dialog_w.make_with_text (Warning_messages.w_save_before_closing)
-						dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
-						dialog_w.set_default_push_button (dialog_w.button("Yes"))
-						dialog_w.set_default_cancel_button (dialog_w.button("Cancel"))
+						dialog_w.set_buttons_and_actions (<<interface_names.b_yes, interface_names.b_no, interface_names.b_cancel>>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
+						dialog_w.set_default_push_button (dialog_w.button(interface_names.b_yes))
+						dialog_w.set_default_cancel_button (dialog_w.button(interface_names.b_cancel))
 						dialog_w.show_modal_to_window (window)
 					else
 							-- We let the window manager handle the saving, along with other windows

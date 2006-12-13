@@ -17,7 +17,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_msg: STRING) is
+	make (a_msg: like text) is
 			-- Initialize `text' with `a_msg'.
 		require
 			a_msg_attached: a_msg /= Void
@@ -36,12 +36,12 @@ feature -- Access
 			Result := "INTERRUPT"
 		end
 
-	text: STRING
+	text: STRING_GENERAL
 			-- The error message.
 
 invariant
 	text_attached: text /= Void
-	
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

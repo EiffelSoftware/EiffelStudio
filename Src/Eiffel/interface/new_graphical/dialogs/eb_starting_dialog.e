@@ -338,7 +338,7 @@ feature {NONE} -- Execution
 			-- Create a new project using the ISE Wizard.
 		local
 			li: EV_GRID_LABEL_ITEM
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			currently_selected_wizard: EB_NEW_PROJECT_WIZARD
 		do
 			if not wizards_list.selected_rows.is_empty then

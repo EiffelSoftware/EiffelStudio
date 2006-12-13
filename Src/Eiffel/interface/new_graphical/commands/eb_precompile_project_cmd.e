@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 	confirm_and_compile is
 			-- Ask for confirmation, and compile thereafter.
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			start_c_compilation := True
 			if is_dotnet_project then
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Precompile
@@ -108,7 +108,7 @@ feature {NONE} -- Attributes
 	name: STRING is "Precompile"
 			-- Name of precompile command.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name used in menu entry
 		once
 			Result := Interface_names.m_Precompile_new

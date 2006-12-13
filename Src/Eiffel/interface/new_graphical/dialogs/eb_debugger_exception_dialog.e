@@ -160,8 +160,8 @@ feature {NONE} -- Initialization
 		do
 			window.set_size (400, 400)
 			set_title_and_label (
-					"Debugger :: Exception message",
-					"Exception message from debugger"
+					interface_names.l_debugger_exception_message,
+					interface_names.l_exception_message_from_debugger
 					)
 
 			details_box.hide

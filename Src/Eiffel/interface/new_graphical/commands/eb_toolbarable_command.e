@@ -28,14 +28,14 @@ feature -- Access
 		do
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		deferred
 		ensure
 			valid_result: Result /= Void
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text displayed on the toolbar button.
 		do
 			Result := ""
@@ -46,7 +46,7 @@ feature -- Access
 	has_text: BOOLEAN is
 			-- Does `Current' show text when displayed
 		do
-			Result := tooltext /= Void and then not tooltext.is_equal ("")
+			Result := tooltext /= Void and then not tooltext.is_empty
 		end
 
 	is_tooltext_important: BOOLEAN is
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 	initialize_toolbar_item (a_item: EB_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN) is
 			-- Initialize `a_item'
 		local
-			tt: STRING
+			tt: STRING_GENERAL
 		do
 			if display_text and then has_text then
 				a_item.set_text (tooltext)

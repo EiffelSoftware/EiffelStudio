@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 			-- Handle all classes in `affected_classes'.
 		local
 			chk_writable: ERF_CLASSES_WRITABLE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_class: CLASS_I
 			i: INTEGER
 		do
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 				loop
 					status_bar.display_progress_value (i)
 					l_class := affected_classes.item_for_iteration
-					status_bar.display_message ("Updating " + l_class.name)
+					status_bar.display_message (interface_names.l_updating (l_class.name))
 					apply_to_class (l_class)
 					i := i + 1
 					affected_classes.forth

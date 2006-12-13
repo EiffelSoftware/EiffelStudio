@@ -574,7 +574,7 @@ feature {NONE} -- Validation and warning generation
 			a_name_not_void: a_name /= Void
 		local
 			l_targets: HASH_TABLE [CONF_TARGET, STRING]
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			l_targets := conf_system.targets
 			l_targets.search (a_name.as_lower)

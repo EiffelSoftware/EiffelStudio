@@ -29,7 +29,7 @@ feature -- Status report
 			-- Text that will be printed next time.
 			--| To print a file, just generate a TEXT_FORMATTER with one token for example...
 
-	job_name: STRING
+	job_name: STRING_GENERAL
 			-- Name for the print job.
 			--| Optional, only used on Windows.
 
@@ -70,7 +70,7 @@ feature -- Status setting
 			context = pc
 		end
 
-	set_job_name (nname: STRING) is
+	set_job_name (nname: like job_name) is
 			-- Set the name of the next print job.
 			--| Only used on Windows. Optional.
 		do
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation: graphical interface
 			text_set: text /= Void
 			window_set: window /= Void
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			fn: FILE_NAME
 			f: FILE
 		do

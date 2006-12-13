@@ -28,7 +28,7 @@ feature -- Basic operations
 			-- Pop up class wizard.
 		local
 			dial: EB_CREATE_CLASS_DIALOG
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if Workbench.is_already_compiled then
 				if
@@ -58,7 +58,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_create_new_class
@@ -70,19 +70,19 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.new_class_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_create_new_class
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_create_new_class
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.f_create_new_class

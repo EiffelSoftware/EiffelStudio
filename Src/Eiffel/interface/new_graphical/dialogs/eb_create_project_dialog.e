@@ -553,7 +553,7 @@ feature {NONE} -- Callbacks
 	retrieve_directory (dialog: EV_DIRECTORY_DIALOG) is
 			-- Get callback information from `dialog', then send it to the directory field.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			dir_name: STRING
 		do
 			dir_name := dialog.directory
@@ -568,14 +568,14 @@ feature {NONE} -- Callbacks
 	retrieve_ace_file (dialog: EV_FILE_OPEN_DIALOG) is
 			-- Get callback information from `dialog', then send it to the ace file name field.
 		local
-			cd: EV_CONFIRMATION_DIALOG
+			cd: EB_CONFIRMATION_DIALOG
 			file_name: STRING
 		do
 			file_name := dialog.file_name
 			if file_name.is_empty then
 				create cd.make_with_text (Warning_messages.w_Not_a_file_retry (file_name))
 				cd.show_modal_to_window (Current)
-				if cd.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+				if cd.is_ok_selected then
 					browse_ace_file
 				end
 			else

@@ -11,7 +11,7 @@ class
 
 feature -- Access
 
-	error_messages: LINKED_LIST [STRING] is
+	error_messages: LINKED_LIST [STRING_GENERAL] is
 			-- Current error messages.
 		once
 			create Result.make
@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Element change
 
-	add_error_message, set_error_message (an_error_message: STRING) is
+	add_error_message, set_error_message (an_error_message: STRING_GENERAL) is
 			-- Add `an_error_message' to the list of error messages.
 		do
 			error_messages.extend (an_error_message)

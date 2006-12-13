@@ -549,7 +549,7 @@ feature {NONE} -- Implementation
 			conv_cluster: EB_CLASSES_TREE_FOLDER_ITEM
 			titem: EV_TREE_NODE
 			testfile: RAW_FILE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			titem := selected_item
 			if

@@ -94,13 +94,13 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_depth_of_relations_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_context_depth
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name for the menu entry.
 		do
 			Result := Interface_names.m_diagram_context_depth

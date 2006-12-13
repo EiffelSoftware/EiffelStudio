@@ -127,7 +127,7 @@ feature -- Application status
 			ccs: EIFFEL_CALL_STACK
 		do
 			if not appstatus.is_stopped then
-				st.add_string (interface_names.e_running)
+				st.add_string (interface_names.ee_Running)
 				st.add_new_line
 			else -- Application is stopped.
 				-- Print object address.
@@ -164,28 +164,28 @@ feature -- Application status
 				st.add_string ("Reason: ")
 				inspect appstatus.reason
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_break then
-					st.add_string (Interface_names.l_Stop_point_reached)
+					st.add_string (Interface_names.le_Stop_point_reached)
 					st.add_new_line
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_interrupt then
-					st.add_string (Interface_names.l_Execution_interrupted)
+					st.add_string (Interface_names.le_Execution_interrupted)
 					st.add_new_line
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_raise then
-					st.add_string (Interface_names.l_Explicit_exception_pending)
+					st.add_string (Interface_names.le_Explicit_exception_pending)
 					st.add_new_line
 					append_exception (appstatus, st)
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_viol then
-					st.add_string (Interface_names.l_Implicit_exception_pending)
+					st.add_string (Interface_names.le_Implicit_exception_pending)
 					st.add_new_line
 					append_exception (appstatus, st)
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_new_breakpoint then
-					st.add_string (Interface_names.l_New_breakpoint)
+					st.add_string (Interface_names.le_New_breakpoint)
 					st.add_new_line
 					append_exception (appstatus ,st)
 				when {APPLICATION_STATUS_CONSTANTS}.Pg_step then
-					st.add_string (Interface_names.l_Stepped)
+					st.add_string (Interface_names.le_Stepped)
 					st.add_new_line
 				else
-					st.add_string (Interface_names.l_Unknown_status)
+					st.add_string (Interface_names.le_Unknown_status)
 					st.add_new_line
 				end
 				ccs := appstatus.current_call_stack

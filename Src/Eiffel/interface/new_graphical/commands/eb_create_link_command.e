@@ -73,7 +73,7 @@ feature -- Status setting
 			valid_type: a_type = Inheritance or else a_type = Supplier or else a_type = Aggregate
 		local
 			tbb: EB_COMMAND_TOOL_BAR_BUTTON
-			tt: STRING
+			tt: STRING_GENERAL
 		do
 			selected_type := a_type
 			execute
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			if selected_type = inheritance then
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.l_diagram_create_links

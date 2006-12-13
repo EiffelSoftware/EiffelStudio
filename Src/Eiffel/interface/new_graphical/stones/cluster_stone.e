@@ -76,15 +76,16 @@ feature -- Access
 			Result := group.name.twin
 		end
 
-	header: STRING is
+	header: STRING_GENERAL is
 		do
-			Result := history_name + Interface_names.l_Located_in + group.location.evaluated_path
+			Result := history_name.twin
+			Result.append (Interface_names.l_Located_in (group.location.evaluated_path))
 		end
 
-	history_name: STRING is
+	history_name: STRING_GENERAL is
 			-- What represents `Current' in the history.
 		do
-			Result := Interface_names.s_Cluster_stone + stone_signature
+			Result := Interface_names.s_Cluster_stone.as_string_32 + stone_signature
 		end
 
 	stone_cursor: EV_POINTER_STYLE is

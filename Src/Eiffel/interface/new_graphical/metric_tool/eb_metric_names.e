@@ -9,198 +9,211 @@ indexing
 class
 	EB_METRIC_NAMES
 
+inherit
+	SHARED_LOCALE
+
 feature -- Text
 
-	e_evaluate_metric: STRING is "Evaluate metric: "
-	e_not_evaluated: STRING is "Not evaluated"
-	e_evaluating: STRING is "Evaluating: "
-	e_evaluating_value: STRING is "Evaluating..."
-	e_undefined_value: STRING is "Undefined"
-	e_value: STRING is "Value:"
-	e_interrupted_by_user: STRING is "Interrupted by user"
-	e_interrupted_by_compile: STRING is "Interrupted because Eiffel complication starts"
-	e_no_metric_is_selected: STRING is "No metric is selected."
+	e_evaluate_metric: STRING_GENERAL is do Result := locale.translate ("Evaluate metric: ") end
+	e_not_evaluated: STRING_GENERAL is do Result := locale.translate ("Not evaluated") end
+	e_evaluating: STRING_GENERAL is do Result := locale.translate ("Evaluating: ") end
+	e_evaluating_value: STRING_GENERAL is do Result := locale.translate ("Evaluating...") end
+	e_undefined_value: STRING_GENERAL is do Result := locale.translate ("Undefined") end
+	e_value: STRING_GENERAL is do Result := locale.translate ("Value:") end
+	e_interrupted_by_user: STRING_GENERAL is do Result := locale.translate ("Interrupted by user") end
+	e_interrupted_by_compile: STRING_GENERAL is do Result := locale.translate ("Interrupted because Eiffel complication starts") end
+	e_no_metric_is_selected: STRING_GENERAL is do Result := locale.translate ("No metric is selected.") end
 
 feature -- Titles
 
-	t_expression: STRING is "Expression:"
-	t_criterion: STRING is "Criterion"
-	t_properties: STRING is "Properties"
-	t_status: STRING is "Status"
-	t_ok: STRING is "OK"
-	t_cancel: STRING is "Cancel"
-	t_type: STRING is "type"
-	t_value_of_reference: STRING is "Reference value"
-	t_value_of_current: STRING is "Current value"
-	t_difference: STRING is "Difference"
-	t_ratio: STRING is "ratio"
-	t_basic: STRING is "basic"
-	t_linear: STRING is "linear"
-	t_definition_tab: STRING is "Metric Definition"
-	t_evaluation_tab: STRING is "Metric Evaluation"
-	t_archive_tab: STRING is "Metric Archive"
-	t_detail_result_tab: STRING is "Detailed Result"
-	t_path: STRING is "Location"
-	t_group: STRING is "Group"
-	t_metrics: STRING is "Metrics"
-	t_coefficient: STRING is "Coefficient"
-	t_metric_valid: STRING is "Metric is valid."
-	t_save_metric: STRING is "Current metric has been modified, save it?"
-	t_discard_remove_prompt: STRING is "Do not ask me again and always remove selected metric"
-	t_discard_save_prompt: STRING is "Do not ask me again and always save modified metric"
-	t_name_cannot_be_empty: STRING is "Metric name is empty."
-	t_metric_with_name: STRING is "Metric with name"
-	t_metric_exists: STRING is "already exists."
-	t_metric_not_saved: STRING is "Note: Metric is not saved."
-	t_select_archive: STRING is "Select a metric archive file"
-	t_metric_no_metric_selected: STRING is "No metric is selected"
-	t_metric_is_not_valid: STRING is "is invalid"
-	t_selected_metric: STRING is "Selected metric"
-	t_selected_file_not_exists: STRING is "Specified file doesn't exist"
-	t_selected_archive_not_valid: STRING is "Metric archive in specified file is not valid, it must be cleaned"
-	t_metric: STRING is "metric"
-	t_metric_name_can_not_be_empty: STRING is "Metric name cannot be empty"
-	t_remove_metric: STRING is "Remove metric "
-	t_no_archive_selected: STRING is "No metric archive is selected."
-	t_archive_management: STRING is "Archive Management"
-	t_archive_comparison: STRING is "Archive Comparison"
-	t_location: STRING is "Location:"
-	t_select_source_domain: STRING is "Select input domain:"
-	t_select_metric: STRING is "Select metric:"
-	t_select_reference_archive: STRING is "Select reference archive (URL acceptable):"
-	t_select_current_archive: STRING is "Select current archive (URL acceptable):"
-	t_archive_comparison_result: STRING is "Archive comparison result:"
-	t_clean: STRING is "Clean"
-	t_compare: STRING is "Compare"
-	t_input_domain: STRING is "Input domain"
-	t_result: STRING is "Results:"
-	t_input_domain_title: STRING is "Input domain:"
-	t_metric_criterion_definition: STRING is "Criterion definition:"
-	t_select_domain_scope: STRING is "Select domain scope"
-	t_predefined_text_not_editable: STRING is "Text not editable because current metric is predefined."
-	t_text_not_editable: STRING is "Text not editable."
-	t_metric_definition: STRING is "Metric definition"
-	t_checking_metric_vadility: STRING is "Checking metric validity"
-	t_loading_metrics: STRING is "Loading metrics..."
-	t_analysing_archive: STRING is "Analyzing metric archive(s)..."
-	t_saving_metrics: STRING is "Saving metrics..."
-	t_removing_metrics: STRING is "Removing metrics..."
-	t_result_not_up_to_date: STRING is "Current metric result may not be up-to-date"
-	t_feature_version_setting: STRING is "Feature version setting:"
-	t_only_current_version: STRING is "Only current version"
-	t_descendant_version: STRING is "Current version and all its descendant versions"
-	t_to_do: STRING is "To do:"
-	t_close: STRING is "Close"
-	t_metric_definition_error_wizard: STRING is "Metric definition error wizard"
-	t_metric_archive_calculation_finished: STRING is "Metric archive calculation finished."
-	t_import_metric_title: STRING is "Import Metrics"
-	t_import_selected_metrics: STRING is "Import Selected Metrics"
-	t_backup_user_defined_metrics: STRING is "Backup User-defined Metrics"
-	t_metric_definition_file: STRING is "Metric Definition File:"
-	t_load: STRING is "Load"
-	t_import: STRING is "Import"
-	t_metric_original_name: STRING is "Original metric name"
-	t_metric_name: STRING is "Metric name"
-	t_metric_description: STRING is "Description"
-	t_metric_unit: STRING is "Unit"
-	t_select_all_metrics: STRING is "Select All Metrics"
-	t_deselect_all_metrics: STRING is "Deselect All Metrics"
-	t_select_integral_metrics: STRING is "Select Integral Metrics"
-	t_deselect_integral_metrics: STRING is "Deselect Integral Metrics"
+	t_expression: STRING_GENERAL is do Result := locale.translate ("Expression:") end
+	t_criterion: STRING_GENERAL is do Result := locale.translate ("Criterion") end
+	t_properties: STRING_GENERAL is do Result := locale.translate ("Properties") end
+	t_status: STRING_GENERAL is do Result := locale.translate ("Status") end
+	t_ok: STRING_GENERAL is do Result := locale.translate ("OK") end
+	t_cancel: STRING_GENERAL is do Result := locale.translate ("Cancel") end
+	t_type: STRING_GENERAL is do Result := locale.translate ("type") end
+	t_value_of_reference: STRING_GENERAL is do Result := locale.translate ("Reference value") end
+	t_value_of_current: STRING_GENERAL is do Result := locale.translate ("Current value") end
+	t_difference: STRING_GENERAL is do Result := locale.translate ("Difference") end
+	t_ratio: STRING_GENERAL is do Result := locale.translate ("ratio") end
+	t_basic: STRING_GENERAL is do Result := locale.translate ("basic") end
+	t_linear: STRING_GENERAL is do Result := locale.translate ("linear") end
+	t_definition_tab: STRING_GENERAL is do Result := locale.translate ("Metric Definition") end
+	t_evaluation_tab: STRING_GENERAL is do Result := locale.translate ("Metric Evaluation") end
+	t_archive_tab: STRING_GENERAL is do Result := locale.translate ("Metric Archive") end
+	t_detail_result_tab: STRING_GENERAL is do Result := locale.translate ("Detailed Result") end
+	t_path: STRING_GENERAL is do Result := locale.translate ("Location") end
+	t_group: STRING_GENERAL is do Result := locale.translate ("Group") end
+	t_metrics: STRING_GENERAL is do Result := locale.translate ("Metrics") end
+	t_coefficient: STRING_GENERAL is do Result := locale.translate ("Coefficient") end
+	t_metric_valid: STRING_GENERAL is do Result := locale.translate ("Metric is valid.") end
+	t_save_metric: STRING_GENERAL is do Result := locale.translate ("Current metric has been modified, save it?") end
+	t_discard_remove_prompt: STRING_GENERAL is do Result := locale.translate ("Do not ask me again and always remove selected metric") end
+	t_discard_save_prompt: STRING_GENERAL is do Result := locale.translate ("Do not ask me again and always save modified metric") end
+	t_name_cannot_be_empty: STRING_GENERAL is do Result := locale.translate ("Metric name is empty.") end
+	t_metric_with_name: STRING_GENERAL is do Result := locale.translate ("Metric with name") end
+	t_metric_exists: STRING_GENERAL is do Result := locale.translate ("already exists.") end
+	t_metric_not_saved: STRING_GENERAL is do Result := locale.translate ("Note: Metric is not saved.") end
+	t_select_archive: STRING_GENERAL is do Result := locale.translate ("Select a metric archive file") end
+	t_metric_no_metric_selected: STRING_GENERAL is do Result := locale.translate ("No metric is selected") end
+	t_metric_is_not_valid: STRING_GENERAL is do Result := locale.translate ("is invalid") end
+	t_selected_metric: STRING_GENERAL is do Result := locale.translate ("Selected metric") end
+	t_selected_file_not_exists: STRING_GENERAL is do Result := locale.translate ("Specified file doesn't exist") end
+	t_selected_archive_not_valid: STRING_GENERAL is do Result := locale.translate ("Metric archive in specified file is not valid, it must be cleaned") end
+	t_metric: STRING_GENERAL is do Result := locale.translate ("metric") end
+	t_metric_name_can_not_be_empty: STRING_GENERAL is do Result := locale.translate ("Metric name cannot be empty") end
+	t_remove_metric: STRING_GENERAL is do Result := locale.translate ("Remove metric ") end
+	t_no_archive_selected: STRING_GENERAL is do Result := locale.translate ("No metric archive is selected.") end
+	t_archive_management: STRING_GENERAL is do Result := locale.translate ("Archive Management") end
+	t_archive_comparison: STRING_GENERAL is do Result := locale.translate ("Archive Comparison") end
+	t_location: STRING_GENERAL is do Result := locale.translate ("Location:") end
+	t_select_source_domain: STRING_GENERAL is do Result := locale.translate ("Select input domain:") end
+	t_select_metric: STRING_GENERAL is do Result := locale.translate ("Select metric:") end
+	t_select_reference_archive: STRING_GENERAL is do Result := locale.translate ("Select reference archive (URL acceptable):") end
+	t_select_current_archive: STRING_GENERAL is do Result := locale.translate ("Select current archive (URL acceptable):") end
+	t_archive_comparison_result: STRING_GENERAL is do Result := locale.translate ("Archive comparison result:") end
+	t_clean: STRING_GENERAL is do Result := locale.translate ("Clean") end
+	t_compare: STRING_GENERAL is do Result := locale.translate ("Compare") end
+	t_input_domain: STRING_GENERAL is do Result := locale.translate ("Input domain") end
+	t_result: STRING_GENERAL is do Result := locale.translate ("Results:") end
+	t_input_domain_title: STRING_GENERAL is do Result := locale.translate ("Input domain:") end
+	t_metric_criterion_definition: STRING_GENERAL is do Result := locale.translate ("Criterion definition:") end
+	t_select_domain_scope: STRING_GENERAL is do Result := locale.translate ("Select domain scope") end
+	t_predefined_text_not_editable: STRING_GENERAL is do Result := locale.translate ("Text not editable because current metric is predefined.") end
+	t_text_not_editable: STRING_GENERAL is do Result := locale.translate ("Text not editable.") end
+	t_metric_definition: STRING_GENERAL is do Result := locale.translate ("Metric definition") end
+	t_checking_metric_vadility: STRING_GENERAL is do Result := locale.translate ("Checking metric validity") end
+	t_loading_metrics: STRING_GENERAL is do Result := locale.translate ("Loading metrics...") end
+	t_analysing_archive: STRING_GENERAL is do Result := locale.translate ("Analyzing metric archive(s)...") end
+	t_saving_metrics: STRING_GENERAL is do Result := locale.translate ("Saving metrics...") end
+	t_removing_metrics: STRING_GENERAL is do Result := locale.translate ("Removing metrics...") end
+	t_result_not_up_to_date: STRING_GENERAL is do Result := locale.translate ("Current metric result may not be up-to-date") end
+	t_feature_version_setting: STRING_GENERAL is do Result := locale.translate ("Feature version setting:") end
+	t_only_current_version: STRING_GENERAL is do Result := locale.translate ("Only current version") end
+	t_descendant_version: STRING_GENERAL is do Result := locale.translate ("Current version and all its descendant versions") end
+	t_to_do: STRING_GENERAL is do Result := locale.translate ("To do:") end
+	t_close: STRING_GENERAL is do Result := locale.translate ("Close") end
+	t_metric_definition_error_wizard: STRING_GENERAL is do Result := locale.translate ("Metric definition error wizard") end
+	t_metric_archive_calculation_finished: STRING_GENERAL is do Result := locale.translate ("Metric archive calculation finished.") end
+	t_import_metric_title: STRING_GENERAL is do Result := locale.translate ("Import Metrics") end
+	t_import_selected_metrics: STRING_GENERAL is do Result := locale.translate ("Import Selected Metrics") end
+	t_backup_user_defined_metrics: STRING_GENERAL is do Result := locale.translate ("Backup User-defined Metrics") end
+	t_metric_definition_file: STRING_GENERAL is do Result := locale.translate ("Metric Definition File:") end
+	t_load: STRING_GENERAL is do Result := locale.translate ("Load") end
+	t_import: STRING_GENERAL is do Result := locale.translate ("Import") end
+	t_metric_original_name: STRING_GENERAL is do Result := locale.translate ("Original metric name") end
+	t_metric_name: STRING_GENERAL is do Result := locale.translate ("Metric name") end
+	t_metric_description: STRING_GENERAL is do Result := locale.translate ("Description") end
+	t_metric_unit: STRING_GENERAL is do Result := locale.translate ("Unit") end
+	t_select_all_metrics: STRING_GENERAL is do Result := locale.translate ("Select All Metrics") end
+	t_deselect_all_metrics: STRING_GENERAL is do Result := locale.translate ("Deselect All Metrics") end
+	t_select_integral_metrics: STRING_GENERAL is do Result := locale.translate ("Select Integral Metrics") end
+	t_deselect_integral_metrics: STRING_GENERAL is do Result := locale.translate ("Deselect Integral Metrics") end
 
-	t_backup_metrics: STRING is "Backup user-defined metrics"
-	t_select_file_for_backup: STRING is "Select a file for user-defined metrics backup:"
-	t_backup: STRING is "Backup"
-	t_importing_metrics: STRING is "Importing metrics..."
-	t_metrics_imported: STRING is "Metric(s) imported."
-	t_metric_backuped: STRING is "User-defined metrics backup finished."
-	t_metrics_list: STRING is "Metric List:"
+	t_backup_metrics: STRING_GENERAL is do Result := locale.translate ("Backup user-defined metrics") end
+	t_select_file_for_backup: STRING_GENERAL is do Result := locale.translate ("Select a file for user-defined metrics backup:") end
+	t_backup: STRING_GENERAL is do Result := locale.translate ("Backup") end
+	t_importing_metrics: STRING_GENERAL is do Result := locale.translate ("Importing metrics...") end
+	t_metrics_imported: STRING_GENERAL is do Result := locale.translate ("Metric(s) imported.") end
+	t_metric_backuped: STRING_GENERAL is do Result := locale.translate ("User-defined metrics backup finished.") end
+	t_metrics_list: STRING_GENERAL is do Result := locale.translate ("Metric List:") end
+
+feature -- Titles for editor token
+
+	te_input_domain: STRING is "Input domain"
 
 feature -- Labels
 
-	l_select_input_domain: STRING is "Select input domain:"
-	l_select_metric: STRING is "Select metric:"
-	l_parse_error: STRING is "Parse error:"
-	l_ratio_metric: STRING is "ratio metric"
-	l_linear_metric: STRING is "linear metric"
-	l_basic_metric: STRING is "basic metric"
-	l_denominator_metric: STRING is "denominator metric"
-	l_numerator_metric: STRING is "numerator metric"
-	l_variable_metric: STRING is "variable metric"
-	l_metric: STRING is "metric"
-	l_metric_archive_node: STRING is "metric archive node"
-	l_criterion: STRING is "criterion"
+	l_select_input_domain: STRING_GENERAL is do Result := locale.translate ("Select input domain:") end
+	l_select_metric: STRING_GENERAL is do Result := locale.translate ("Select metric:") end
+	l_parse_error: STRING_GENERAL is do Result := locale.translate ("Parse error:") end
+	l_ratio_metric: STRING_GENERAL is do Result := locale.translate ("ratio metric") end
+	l_linear_metric: STRING_GENERAL is do Result := locale.translate ("linear metric") end
+	l_basic_metric: STRING_GENERAL is do Result := locale.translate ("basic metric") end
+	l_denominator_metric: STRING_GENERAL is do Result := locale.translate ("denominator metric") end
+	l_numerator_metric: STRING_GENERAL is do Result := locale.translate ("numerator metric") end
+	l_variable_metric: STRING_GENERAL is do Result := locale.translate ("variable metric") end
+	l_metric: STRING_GENERAL is do Result := locale.translate ("metric") end
+	l_metric_archive_node: STRING_GENERAL is do Result := locale.translate ("metric archive node") end
+	l_criterion: STRING_GENERAL is do Result := locale.translate ("criterion") end
+	l_name_colon: STRING_GENERAL is do Result := locale.translate ("Name:") end
+	l_type_colon: STRING_GENERAL is do Result := locale.translate ("Type:") end
+	l_unit_colon: STRING_GENERAL is do Result := locale.translate ("Unit:") end
+	l_description_colon: STRING_GENERAL is do Result := locale.translate ("Description:") end
+	l_no_result_available: STRING_GENERAL is do Result := locale.translate ("No result available.") end
+	l_metric_definition_file: STRING_GENERAL is do Result := locale.translate ("Metrics definition file:") end
 
 feature -- Tooltip
 
-	f_quick_metric_definition: STRING is "Define quick metric"
-	f_run: STRING is "Run selected metric"
-	f_go_to_definition: STRING is "Go to definition"
-	f_stop: STRING is "Stop metric evaluation"
-	f_move_row_up: STRING is "Move selected row up"
-	f_move_row_down: STRING is "Move selected row down"
-	f_del_row: STRING is "Delete selected row"
-	f_clear_rows: STRING is "Remove all rows"
-	f_indent_with_and_criterion: STRING is "Indent selected row using an %"AND%" criterion"
-	f_indent_with_or_criterion: STRING is "Indent selected row using an %"OR%" criterion"
-	f_drop_metric_here: STRING is "Pick and drop metric here"
-	f_reload_metrics: STRING is "Reload metrics"
+	f_quick_metric_definition: STRING_GENERAL is do Result := locale.translate ("Define quick metric") end
+	f_run: STRING_GENERAL is do Result := locale.translate ("Run selected metric") end
+	f_go_to_definition: STRING_GENERAL is do Result := locale.translate ("Go to definition") end
+	f_stop: STRING_GENERAL is do Result := locale.translate ("Stop metric evaluation") end
+	f_move_row_up: STRING_GENERAL is do Result := locale.translate ("Move selected row up") end
+	f_move_row_down: STRING_GENERAL is do Result := locale.translate ("Move selected row down") end
+	f_del_row: STRING_GENERAL is do Result := locale.translate ("Delete selected row") end
+	f_clear_rows: STRING_GENERAL is do Result := locale.translate ("Remove all rows") end
+	f_indent_with_and_criterion: STRING_GENERAL is do Result := locale.translate ("Indent selected row using an %"AND%" criterion") end
+	f_indent_with_or_criterion: STRING_GENERAL is do Result := locale.translate ("Indent selected row using an %"OR%" criterion") end
+	f_drop_metric_here: STRING_GENERAL is do Result := locale.translate ("Pick and drop metric here") end
+	f_reload_metrics: STRING_GENERAL is do Result := locale.translate ("Reload metrics") end
 
-	f_start_archive: STRING is "Start metric archive evaluation"
-	f_stop_archive: STRING is "Stop metric archive evaluation"
-	f_select_exist_archive_file: STRING is "Select an existing metric archive file"
-	f_clean_archive: STRING is "Clean archive?"
+	f_start_archive: STRING_GENERAL is do Result := locale.translate ("Start metric archive evaluation") end
+	f_stop_archive: STRING_GENERAL is do Result := locale.translate ("Stop metric archive evaluation") end
+	f_select_exist_archive_file: STRING_GENERAL is do Result := locale.translate ("Select an existing metric archive file") end
+	f_clean_archive: STRING_GENERAL is do Result := locale.translate ("Clean archive?") end
 
-	f_compare_archive: STRING is "Compare metric archive"
-	f_select_current_archive: STRING is "Select current metric archive file"
-	f_select_reference_archive: STRING is "Select reference metric archive file"
-	f_select_userdefined_metrics: STRING is "Select/deselect user-defined metrics"
-	f_select_predefined_metrics: STRING is "Select/deselect predefined metrics"
-	f_group_metric_by_unit: STRING is "Group metrics by unit"
+	f_compare_archive: STRING_GENERAL is do Result := locale.translate ("Compare metric archive") end
+	f_select_current_archive: STRING_GENERAL is do Result := locale.translate ("Select current metric archive file") end
+	f_select_reference_archive: STRING_GENERAL is do Result := locale.translate ("Select reference metric archive file") end
+	f_select_userdefined_metrics: STRING_GENERAL is do Result := locale.translate ("Select/deselect user-defined metrics") end
+	f_select_predefined_metrics: STRING_GENERAL is do Result := locale.translate ("Select/deselect predefined metrics") end
+	f_group_metric_by_unit: STRING_GENERAL is do Result := locale.translate ("Group metrics by unit") end
 
-	f_add_scope: STRING is "Add scope"
-	f_remove_scope: STRING is "Remove selected scope(s)"
-	f_remove_all_scopes: STRING is "Remove all scopes"
-	f_delayed_scope: STRING is "Use input domain as criterion domain."
+	f_add_scope: STRING_GENERAL is do Result := locale.translate ("Add scope") end
+	f_remove_scope: STRING_GENERAL is do Result := locale.translate ("Remove selected scope(s)") end
+	f_remove_all_scopes: STRING_GENERAL is do Result := locale.translate ("Remove all scopes") end
+	f_delayed_scope: STRING_GENERAL is do Result := locale.translate ("Use input domain as criterion domain.") end
 
-	f_save: STRING is "Save"
-	f_new: STRING is "New metric"
-	f_remove: STRING is "Remove current selected metric"
-	f_domain_item_invalid: STRING is "Item invalid in current system"
-	f_application_scope: STRING is "Add current application target scope"
-	f_search_for_class: STRING is "Search for group/class/feature"
-	f_filter_result: STRING is "Filter result which is not visible from input domain"
-	f_pick_and_drop_items: STRING is "Pick and drop items like group/class/feature here"
-	f_insert_text_here: STRING is "Insert text here"
-	f_get_criterion_list: STRING is "Available criterion list";
-	f_get_negation: STRING is "You can put %"not%" before a criterion name to negate it"
-	f_open_metric_file_in_external_editor: STRING is "Open user defined metric file in external editor"
-	f_create_new_metric_using_current_data: STRING is "Clone selected metric to a new metric"
-	f_setup_criterion_domain: STRING is "Setup criterion domain properties"
-	f_setup_criterion_text: STRING is "Setup criterion text properties"
-	f_double_click_to_go_to_definition: STRING is "(Double click to go to definition)"
-	f_display_in_percentage: STRING is "Display result in percentage? (Only applicable for ratio metrics)"
-	f_add_linear_variable_metric: STRING is "Add selected metric"
-	f_run_metric_again: STRING is "Evaluate metric again to get up-to-date result"
-	f_auto_go_to_result: STRING is "Automatically go to result panel after metric evaluation?"
-	f_press_esc_to_wipe_out: STRING is "Press ESC to wipe out"
-	f_move_unit_up: STRING is "Move metric unit up.%N"
-	f_move_unit_down: STRING is "Move metric unit down.%N"
-	f_rearrange_unit: STRING is "Or you can pick a metric unit and drop it on another metric to rearrange their order."
-	f_show_to_do_message: STRING is "Display a message about how to deal with the metric definition error"
-	f_import_metrics: STRING is "Import metrics from file"
+	f_save: STRING_GENERAL is do Result := locale.translate ("Save") end
+	f_new: STRING_GENERAL is do Result := locale.translate ("New metric") end
+	f_remove: STRING_GENERAL is do Result := locale.translate ("Remove current selected metric") end
+	f_domain_item_invalid: STRING_GENERAL is do Result := locale.translate ("Item invalid in current system") end
+	f_application_scope: STRING_GENERAL is do Result := locale.translate ("Add current application target scope") end
+	f_search_for_class: STRING_GENERAL is do Result := locale.translate ("Search for group/class/feature") end
+	f_filter_result: STRING_GENERAL is do Result := locale.translate ("Filter result which is not visible from input domain") end
+	f_pick_and_drop_items: STRING_GENERAL is do Result := locale.translate ("Pick and drop items like group/class/feature here") end
+	f_insert_text_here: STRING_GENERAL is do Result := locale.translate ("Insert text here") end
+	f_get_criterion_list: STRING_GENERAL is do Result := locale.translate ("Available criterion list") end;
+	f_get_negation: STRING_GENERAL is do Result := locale.translate ("You can put %"not%" before a criterion name to negate it") end
+	f_open_metric_file_in_external_editor: STRING_GENERAL is do Result := locale.translate ("Open user defined metric file in external editor") end
+	f_create_new_metric_using_current_data: STRING_GENERAL is do Result := locale.translate ("Clone selected metric to a new metric") end
+	f_setup_criterion_domain: STRING_GENERAL is do Result := locale.translate ("Setup criterion domain properties") end
+	f_setup_criterion_text: STRING_GENERAL is do Result := locale.translate ("Setup criterion text properties") end
+	f_double_click_to_go_to_definition: STRING_GENERAL is do Result := locale.translate ("(Double click to go to definition)") end
+	f_display_in_percentage: STRING_GENERAL is do Result := locale.translate ("Display result in percentage? (Only applicable for ratio metrics)") end
+	f_add_linear_variable_metric: STRING_GENERAL is do Result := locale.translate ("Add selected metric") end
+	f_run_metric_again: STRING_GENERAL is do Result := locale.translate ("Evaluate metric again to get up-to-date result") end
+	f_auto_go_to_result: STRING_GENERAL is do Result := locale.translate ("Automatically go to result panel after metric evaluation?") end
+	f_press_esc_to_wipe_out: STRING_GENERAL is do Result := locale.translate ("Press ESC to wipe out") end
+	f_move_unit_up: STRING_GENERAL is do Result := locale.translate ("Move metric unit up.%N") end
+	f_move_unit_down: STRING_GENERAL is do Result := locale.translate ("Move metric unit down.%N") end
+	f_rearrange_unit: STRING_GENERAL is do Result := locale.translate ("Or you can pick a metric unit and drop it on another metric to rearrange their order.") end
+	f_show_to_do_message: STRING_GENERAL is do Result := locale.translate ("Display a message about how to deal with the metric definition error") end
+	f_import_metrics: STRING_GENERAL is do Result := locale.translate ("Import metrics from file") end
 
-	l_target_unit: STRING is "Target"
-	l_group_unit: STRING is "Group"
-	l_class_unit: STRING is "Class"
-	l_feature_unit: STRING is "Feature"
-	l_generic_unit: STRING is "Generic"
-	l_assertion_unit: STRING is "Assertion"
-	l_argument_unit: STRING is "Argument"
-	l_line_unit: STRING is "Line"
-	l_compilation_unit: STRING is "Compilation"
-	l_local_unit: STRING is "Local"
-	l_ratio_unit: STRING is "Ratio"
+	l_target_unit: STRING_GENERAL is do Result := locale.translate("Target") end
+	l_group_unit: STRING_GENERAL is do Result := locale.translate("Group") end
+	l_class_unit: STRING_GENERAL is do Result := locale.translate("Class") end
+	l_feature_unit: STRING_GENERAL is do Result := locale.translate("Feature") end
+	l_generic_unit: STRING_GENERAL is do Result := locale.translate("Generic") end
+	l_assertion_unit: STRING_GENERAL is do Result := locale.translate("Assertion") end
+	l_argument_unit: STRING_GENERAL is do Result := locale.translate("Argument") end
+	l_line_unit: STRING_GENERAL is do Result := locale.translate("Line") end
+	l_compilation_unit: STRING_GENERAL is do Result := locale.translate("Compilation") end
+	l_local_unit: STRING_GENERAL is do Result := locale.translate("Local") end
+	l_ratio_unit: STRING_GENERAL is do Result := locale.translate("Ratio") end
 
 feature -- Error/warning message
 
@@ -209,8 +222,7 @@ feature -- Error/warning message
 		require
 			a_name_attached: a_name /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Metric named %"" + a_name.as_string_32 + "%" already exists in your metrics."
+			Result := locale.format_string (locale.translate ("Metric named %"$1%" already exists in your metrics."), [a_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -221,8 +233,7 @@ feature -- Error/warning message
 		require
 			a_metric_names_attached: a_metric_names /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Referenced metric(s): " + a_metric_names.as_string_32 + " not selected."
+			Result := locale.format_string (locale.translate ("Referenced metric(s): $1 not selected."), [a_metric_names])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -232,8 +243,7 @@ feature -- Error/warning message
 		require
 			a_metric_name_attached: a_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Referenced metric(s): " + a_metric_name.as_string_32 + " not found."
+			Result := locale.format_string (locale.translate ("Referenced metric(s): $1 not found."), [a_metric_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -243,8 +253,7 @@ feature -- Error/warning message
 		require
 			a_name_attached: a_name /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "There is already a metric named " + a_name.as_string_32 + ".%NChange its name in %"Metric name%" column to make it importable.";
+			Result := locale.format_string (locale.translate ("There is already a metric named $1.%NChange its name in %"Metric name%" column to make it importable."), [a_name]);
 		ensure
 			result_attached: Result /= Void
 		end
@@ -254,8 +263,7 @@ feature -- Error/warning message
 		require
 			a_real_error_attached: a_real_error /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "When loading predefined metrics:%N" + a_real_error.as_string_32 + "%NPredefined metrics not loaded."
+			Result := locale.format_string (locale.translate ("When loading predefined metrics:%N$1%NPredefined metrics not loaded."), [a_real_error])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -265,16 +273,15 @@ feature -- Error/warning message
 		require
 			a_real_error_attached: a_real_error /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "When loading user-defined metrics:%N" + a_real_error.as_string_32 + "%NUser-defined metrics not loaded."
+			Result := locale.format_string (locale.translate ("When loading user-defined metrics:%N$1%NUser-defined metrics not loaded."), [a_real_error])
 		ensure
 			result_attached: Result /= Void
 		end
 
-	err_invalid_tag: STRING is "Invalid tag."
+	err_invalid_tag: STRING_GENERAL is do Result := locale.translate ("Invalid tag.") end
 			-- Invalid tag error
 
-	err_invalid_description_tag: STRING is "Invalid description tag."
+	err_invalid_description_tag: STRING_GENERAL is do Result := locale.translate ("Invalid description tag.") end
 			-- Invalid description tag error
 
 	err_file_not_readable (a_file_name: STRING_GENERAL): STRING_GENERAL is
@@ -282,8 +289,7 @@ feature -- Error/warning message
 		require
 			a_file_name_attached: a_file_name /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Cannot open file: " + a_file_name.as_string_32 + "."
+			Result := locale.format_string (locale.translate ("Cannot open file: $1."), [a_file_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -293,8 +299,7 @@ feature -- Error/warning message
 		require
 			a_file_name_attached: a_file_name /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Cannot write file: " + a_file_name.as_string_32 + "."
+			Result := locale.format_string (locale.translate ("Cannot write file: $1."), [a_file_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -304,8 +309,7 @@ feature -- Error/warning message
 		require
 			a_dir_name_attached: a_dir_name /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Cannot create directroy: " + a_dir_name.as_string_32 + "."
+			Result := locale.format_string (locale.translate ("Cannot create directroy: $1."), [a_dir_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -313,8 +317,7 @@ feature -- Error/warning message
 	err_too_many_criteria: STRING_GENERAL is
 			-- Too many criteria error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Too many crieria is specified in %"criterion%" section. Only one is expected."
+			Result := locale.translate ("Too many crieria is specified in %"criterion%" section. Only one is expected.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -322,16 +325,14 @@ feature -- Error/warning message
 	err_too_many_domain: STRING_GENERAL is
 			-- Too many domain error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Too many %"domain%" section specified. Only one is expected."
+			Result := locale.translate ("Too many %"domain%" section specified. Only one is expected.")
 		ensure
 			result_attached: Result /= Void
 		end
 	err_too_many_criterion_section: STRING_GENERAL is
 			-- Too many criterion section error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Too many crierion section specified. Only one criterion section is expected."
+			Result := locale.translate ("Too many crierion section specified. Only one criterion section is expected.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -342,8 +343,7 @@ feature -- Error/warning message
 			a_new_metric_name_attached: a_new_metric_name /= Void
 			a_old_metric_name_attached: a_old_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "There is already metric named %"" + a_new_metric_name.as_string_32 + "%" in import metric list.%NThe name %"" + a_new_metric_name.as_string_32 + "%" will be changed back to %"" + a_old_metric_name.as_string_32 + "%".";
+			Result := locale.format_string (locale.translate ("There is already metric named %"$1%" in import metric list.%NThe name %"$2%" will be changed back to %"$3%"."), [a_new_metric_name, a_new_metric_name, a_old_metric_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -351,7 +351,7 @@ feature -- Error/warning message
 	err_metric_name_missing_in_metric_definition: STRING_GENERAL is
 			-- Error message given when metric name is missing
 		do
-			create {STRING_32} Result.make_from_string ("Metric name is missing in metric definition.")
+			Result :=  locale.translate ("Metric name is missing in metric definition.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -359,7 +359,7 @@ feature -- Error/warning message
 	err_metric_name_missing_in_archive_node: STRING_GENERAL is
 			-- Error message given when metric name is missing in archive node
 		do
-			create {STRING_32} Result.make_from_string ("Metric name is missing in metric archive node.")
+			Result :=  locale.translate ("Metric name is missing in metric archive node.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -369,8 +369,7 @@ feature -- Error/warning message
 		require
 			a_metric_name_attached: a_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Duplicated metric name %"" + a_metric_name.as_string_32 + "%" in metric definition."
+			Result := locale.format_string (locale.translate ("Duplicated metric name %"$1%" in metric definition."), [a_metric_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -378,8 +377,7 @@ feature -- Error/warning message
 	err_numerator_metric_missing: STRING_GENERAL is
 			-- Numerator metric missing error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Numerator metric is missing."
+			Result := locale.translate ("Numerator metric is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -387,8 +385,7 @@ feature -- Error/warning message
 	err_denominator_metric_missing: STRING_GENERAL is
 			-- Numerator metric missing error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Denominator metric is missing."
+			Result := locale.translate ("Denominator metric is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -396,8 +393,7 @@ feature -- Error/warning message
 	err_uuid_missing: STRING_GENERAL is
 			-- UUID missing error	
 		do
-			create {STRING_32} Result.make (0)
-			Result := "UUID is missing."
+			Result := locale.translate ("UUID is missing.")
 		end
 
 	err_invalid_attribute (a_attribute: STRING_GENERAL): STRING_GENERAL is
@@ -405,8 +401,7 @@ feature -- Error/warning message
 		require
 			a_attribute_attached: a_attribute /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Invalid attribute %"" + a_attribute.as_string_32 + "%"."
+			Result := locale.format_string (locale.translate ("Invalid attribute %"$1%"."), [a_attribute])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -416,8 +411,7 @@ feature -- Error/warning message
 		require
 			a_tag_attached: a_tag /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Invalid tag/tag position %"" + a_tag.as_string_32 + "%"."
+			Result := locale.format_string (locale.translate ("Invalid tag/tag position %"$1%"."), [a_tag])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -427,8 +421,7 @@ feature -- Error/warning message
 		require
 			a_invalid_uuid_attached: a_invalid_uuid /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "UUID %"" + a_invalid_uuid.as_string_32 + "%" is invalid."
+			Result := locale.format_string (locale.translate ("UUID %"$1%" is invalid."), [a_invalid_uuid])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -436,8 +429,7 @@ feature -- Error/warning message
 	err_variable_metric_name_missing: STRING_GENERAL is
 			-- Variable metric name missing error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Variable metric name is missing."
+			Result := locale.translate ("Variable metric name is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -445,8 +437,7 @@ feature -- Error/warning message
 	err_coefficient_missing: STRING_GENERAL is
 			-- Coefficient missing error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Coefficient of variable metric is missing."
+			Result := locale.translate ("Coefficient of variable metric is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -456,8 +447,7 @@ feature -- Error/warning message
 		require
 			a_coefficient_attached: a_coefficient /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Coefficient %"" + a_coefficient.as_string_32 + "%" of variable metric is invalid. A real number is expected."
+			Result := locale.format_string (locale.translate ("Coefficient %"$1%" of variable metric is invalid. A real number is expected."), [a_coefficient])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -465,8 +455,7 @@ feature -- Error/warning message
 	err_case_sensitive_attr_missing: STRING_GENERAL is
 			-- Case sensitive attribute missing error
 		do
-			create{STRING_32} Result.make (0)
-			Result := "Attribute %"case_sensitive%" is missing."
+			Result := locale.translate ("Attribute %"case_sensitive%" is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -474,8 +463,7 @@ feature -- Error/warning message
 	err_regular_expression_attr_missing: STRING_GENERAL is
 			-- Regular expression attribute missing error
 		do
-			create{STRING_32} Result.make (0)
-			Result := "Attribute %"regular_expression%" is missing."
+			Result := locale.translate ("Attribute %"regular_expression%" is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -485,8 +473,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Value %"" + a_value.as_string_32 + "%" of attribute %"case_sensitive%" is invalid. A boolean is expected."
+			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"case_sensitive%" is invalid. A boolean is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -496,8 +483,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Value %"" + a_value.as_string_32 + "%" of attribute %"regular_expression%" is invalid. A boolean is expected."
+			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"regular_expression%" is invalid. A boolean is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -505,8 +491,7 @@ feature -- Error/warning message
 	err_criterion_name_missing: STRING_GENERAL is
 			-- Criterion name missing error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Criterion name is missing."
+			Result := locale.translate ("Criterion name is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -514,8 +499,7 @@ feature -- Error/warning message
 	err_unit_name_missing: STRING_GENERAL is
 			-- Unit name missing error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Unit name is missing."
+			Result := locale.translate ("Unit name is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -525,8 +509,7 @@ feature -- Error/warning message
 		require
 			a_unit_name_attached: a_unit_name /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Unit name %"" + a_unit_name.as_string_32 + "%" is invalid."
+			Result := locale.format_string (locale.translate ("Unit name %"$1%" is invalid."), [a_unit_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -536,8 +519,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Value %"" + a_value.as_string_32 + "%" of attribute %"negation%" is invalid. A boolean is expected."
+			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"negation%" is invalid. A boolean is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -547,8 +529,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Value %"" + a_value.as_string_32 + "%" of attribute %"only_current_version%" is invalid. A boolean is expected."
+			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"only_current_version%" is invalid. A boolean is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -556,8 +537,7 @@ feature -- Error/warning message
 	err_domain_item_id_is_missing: STRING_GENERAL is
 			-- Domain item id missing error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Domain item id is missing."
+			Result := locale.translate ("Domain item id is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -565,8 +545,7 @@ feature -- Error/warning message
 	err_domain_item_type_is_missing: STRING_GENERAL is
 			-- Domain item type missing error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Domain item type is missing."
+			Result := locale.translate ("Domain item type is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -576,8 +555,7 @@ feature -- Error/warning message
 		require
 			a_type_attached: a_type /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Domain item type %"" + a_type.as_string_32 + "%" is invalid."
+			Result := locale.format_string (locale.translate ("Domain item type %"$1%" is invalid."), [a_type])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -587,8 +565,7 @@ feature -- Error/warning message
 		require
 			a_uuid_attached: a_uuid /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Library target UUID %"" + a_uuid.as_string_32 + "%" is invalid."
+			Result := locale.format_string (locale.translate ("Library target UUID %"$1%" is invalid."), [a_uuid])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -596,8 +573,7 @@ feature -- Error/warning message
 	err_metric_type_missing: STRING_GENERAL is
 			-- Metric type missing error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Attribute %"type%" is missing ."
+			Result := locale.translate ("Attribute %"type%" is missing .")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -607,8 +583,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Value %"" + a_value.as_string_32 + "%" of attribute %"type%" is invalid."
+			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"type%" is invalid."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -616,8 +591,7 @@ feature -- Error/warning message
 	err_archive_time_missing: STRING_GENERAL is
 			-- Archive time missing error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Attribute %"time%" is missing."
+			Result := locale.translate ("Attribute %"time%" is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -627,8 +601,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Value %"" + a_value.as_string_32 + "%" of attribute %"time%" is invalid."
+			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"time%" is invalid."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -636,8 +609,7 @@ feature -- Error/warning message
 	err_archive_value_missing: STRING_GENERAL is
 			-- Archive value missing error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Archive value is missing."
+			Result := locale.translate ("Archive value is missing.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -647,8 +619,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Value %"" + a_value.as_string_32 + "%" of attribute %"value%" is invalid. A real number is expected."
+			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"value%" is invalid. A real number is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -656,8 +627,7 @@ feature -- Error/warning message
 	err_variable_metric_missing: STRING_GENERAL is
 			-- Variable metric missing error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Variable metric is missng. At least one variable metric should be defined."
+			Result := locale.translate ("Variable metric is missng. At least one variable metric should be defined.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -665,8 +635,7 @@ feature -- Error/warning message
 	err_variable_metric_not_defined: STRING_GENERAL is
 			-- Variable metric not defined error
 		do
-			create {STRING_32} Result.make (0)
-			Result := "No definition for variable metric."
+			Result := locale.translate ("No definition for variable metric.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -677,8 +646,7 @@ feature -- Error/warning message
 			a_wrong_unit_attached: a_wrong_unit /= Void
 			a_right_unit_attached: a_right_unit /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Unit %"" + a_wrong_unit.as_string_32 + "%" of variable metric is different from unit %"" + a_right_unit.as_string_32 + "%" of linear metric."
+			Result := locale.format_string (locale.translate ("Unit %"$1%" of variable metric is different from unit %"$2%" of linear metric."), [a_wrong_unit, a_right_unit])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -688,8 +656,7 @@ feature -- Error/warning message
 		require
 			a_numerator_attached: a_numerator /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Numerator metric %"" + a_numerator.as_string_32 + " is not defined."
+			Result := locale.format_string (locale.translate ("Numerator metric %"$1%" is not defined."), [a_numerator])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -699,8 +666,7 @@ feature -- Error/warning message
 		require
 			a_denominator_attached: a_denominator /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Denominator metric %"" + a_denominator.as_string_32 + " is not defined."
+			Result := locale.format_string (locale.translate ("Denominator metric %"$1%" is not defined."), [a_denominator])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -711,8 +677,7 @@ feature -- Error/warning message
 			a_criterion_unit_attached: a_criterion_unit /= Void
 			a_metric_unit_attached: a_metric_unit /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Criterion unit %"" + a_criterion_unit.as_string_32 + "%" is different from basic metric unit %"" + a_metric_unit.as_string_32 + "%"."
+			Result := locale.format_string (locale.translate ("Criterion unit %"$1%" is different from basic metric unit %"$2%"."), [a_criterion_unit, a_metric_unit])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -723,8 +688,7 @@ feature -- Error/warning message
 			a_criterion_name_attached: a_criterion_name /= Void
 			a_unit_name_attached: a_unit_name /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Criterion %"" + a_criterion_name.as_string_32 + "%" of unit %"" + a_unit_name.as_string_32 + "%" doesn't exits."
+			Result := locale.format_string (locale.translate ("Criterion %"$1%" of unit %"$2%" doesn't exits."), [a_criterion_name, a_unit_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -732,8 +696,7 @@ feature -- Error/warning message
 	err_domain_item_not_exist: STRING_GENERAL is
 			-- Domain item doesn't exits error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "No domain item defined. At least one domain item should be defined in a relation criterion."
+			Result := locale.translate ("No domain item defined. At least one domain item should be defined in a relation criterion.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -741,8 +704,7 @@ feature -- Error/warning message
 	err_text_in_text_criterion_empty: STRING_GENERAL is
 			-- Text in text criterion empty error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Text in text criterion is empty."
+			Result := locale.translate ("Text in text criterion is empty.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -750,8 +712,7 @@ feature -- Error/warning message
 	err_metric_name_empty: STRING_GENERAL is
 			-- Metric name is empty error
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Metric name is empty."
+			Result := locale.translate ("Metric name is empty.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -761,8 +722,7 @@ feature -- Error/warning message
 		require
 			a_invalid_name_attached: a_invalid_name /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Metric name %"" + a_invalid_name.as_string_32 + "%" is invalid."
+			Result := locale.format_string (locale.translate ("Metric name %"$1%" is invalid."), [a_invalid_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -773,8 +733,7 @@ feature -- Error/warning message
 			a_feature_name_attached: a_feature_name /= Void
 			a_domain_item_id_attached: a_domain_item_id /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Feature `" + a_feature_name.as_string_32 + "' (ID = %"" + a_domain_item_id.as_string_32 + "%") is invalid."
+			Result := locale.format_string (locale.translate ("Feature `$1' (ID = %"$2%") is invalid."), [a_feature_name, a_domain_item_id])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -785,8 +744,7 @@ feature -- Error/warning message
 			a_folder_name_attached: a_folder_name /= Void
 			a_domain_item_id_attached: a_domain_item_id /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Folder %"" + a_folder_name.as_string_32 + "%" (ID = %"" + a_domain_item_id.as_string_32 + "%") is invalid."
+			Result := locale.format_string (locale.translate ("Folder %"$1%" (ID = %"$2%") is invalid."), [a_folder_name, a_domain_item_id])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -797,8 +755,7 @@ feature -- Error/warning message
 			a_group_name_attached: a_group_name /= Void
 			a_domain_item_id_attached: a_domain_item_id /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Group %"" + a_group_name.as_string_32 + "%" (ID = %"" + a_domain_item_id.as_string_32 + "%") is invalid."
+			Result := locale.format_string (locale.translate ("Group %"$1%" (ID = %"$2%") is invalid."), [a_group_name, a_domain_item_id])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -809,8 +766,7 @@ feature -- Error/warning message
 			a_class_name_attached: a_class_name /= Void
 			a_domain_item_id_attached: a_domain_item_id /= Void
 		do
-			create {STRING_32}Result.make (0)
-			Result := "Class %"" + a_class_name.as_string_32 + "%" (ID = %"" + a_domain_item_id.as_string_32 + "%") is invalid."
+			Result := locale.format_string (locale.translate ("Class %"$1%" (ID = %"$2%") is invalid."), [a_class_name, a_domain_item_id])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -820,7 +776,7 @@ feature -- Error/warning message
 		require
 			a_recursive_name_attached: a_recursive_name /= Void
 		do
-			Result := "Recursive definition for metric name %"" + a_recursive_name.as_string_32 + "%"."
+			Result := locale.format_string (locale.translate ("Recursive definition for metric name %"$1%"."), [a_recursive_name])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -830,8 +786,7 @@ feature -- Error/warning message
 		require
 			a_real_error_attached: a_real_error /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Metrics loading error:%N" + a_real_error.as_string_32
+			Result := locale.format_string (locale.translate ("Metrics loading error:%N$1"), [a_real_error])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -841,56 +796,50 @@ feature -- To do messages
 
 	variable_metric_missing_to_do: STRING_GENERAL is
 		do
-			create {STRING_32} Result.make (0)
-			Result := linear_metric_info + ("Make sure that at lease one variable metric is listed in a linear metric definition.").as_string_32
+			Result := linear_metric_info.as_string_32 + locale.translate ("Make sure that at lease one variable metric is listed in a linear metric definition.")
 		ensure
 			result_attached: Result /= Void
 		end
 
 	variable_metric_not_defined_to_do: STRING_GENERAL is
 		do
-			create {STRING_32} Result.make (0)
-			Result := linear_metric_info + ("Make sure every variable metric referenced by a linear metric is defined.").as_string_32
+			Result := linear_metric_info.as_string_32 + locale.translate ("Make sure every variable metric referenced by a linear metric is defined.")
 		ensure
 			result_attached: Result /= Void
 		end
 
 	variable_metric_unit_not_correct_to_do: STRING_GENERAL is
 		do
-			create {STRING_32} Result.make (0)
-			Result := linear_metric_info + ("Make sure unit of every variable metric is same as that of the linear metric.").as_string_32
+			Result := linear_metric_info.as_string_32 + locale.translate ("Make sure unit of every variable metric is same as that of the linear metric.")
 		ensure
 			result_attached: Result /= Void
 		end
 
 	numerator_denominator_metric_not_defined_to_do: STRING_GENERAL is
 		do
-			create {STRING_32} Result.make (0)
-			Result := ratio_metric_info + ("Make sure that numerator and denominator metric referenced by ratio metric are defined.").as_string_32
+			Result := ratio_metric_info.as_string_32 + locale.translate ("Make sure that numerator and denominator metric referenced by ratio metric are defined.")
 		ensure
 			result_attached: Result /= Void
 		end
 
-	unit_in_basic_metric_not_same_to_do: STRING is "Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric."
-	criterion_not_exist_to_do: STRING is "Make sure that the criterion of given unit exists."
-	domain_item_not_exists_to_do: STRING is "Make sure that at least one domain item is listed in a domain criterion."
-	text_in_text_criterion_empty_to_do: STRING is "Make sure to specify a non-empty string for a text criterion."
+	unit_in_basic_metric_not_same_to_do: STRING_GENERAL is do Result := locale.translate ("Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric.") end
+	criterion_not_exist_to_do: STRING_GENERAL is do Result := locale.translate ("Make sure that the criterion of given unit exists.") end
+	domain_item_not_exists_to_do: STRING_GENERAL is do Result := locale.translate ("Make sure that at least one domain item is listed in a domain criterion.") end
+	text_in_text_criterion_empty_to_do: STRING_GENERAL is do Result := locale.translate ("Make sure to specify a non-empty string for a text criterion.") end
 
 	metric_name_empty_to_do: STRING_GENERAL is
 		do
-			create {STRING_32} Result.make (0)
-			Result := metric_name_info + ("Make sure metric name is not empty and contains valid charactors.").as_string_32
+			Result := metric_name_info.as_string_32 + locale.translate ("Make sure metric name is not empty and contains valid charactors.")
 		ensure
 			result_attached: Result /= Void
 		end
 
-	recursive_definition_to_do: STRING is "In linear metric, make sure that every variable metric doesn't involve %Nrecursive metric.%NIn ratio metric, make sure that numerator metric or denominator metric %Ndoesn't involve recursive metric."
+	recursive_definition_to_do: STRING_GENERAL is do Result := locale.translate ("In linear metric, make sure that every variable metric doesn't involve %Nrecursive metric.%NIn ratio metric, make sure that numerator metric or denominator metric %Ndoesn't involve recursive metric.") end
 
 	metric_name_info: STRING_GENERAL is
 			-- Information of metric name
 		do
-			create {STRING_32} Result.make (0)
-			Result := "A valid metric name is a non-empty string which doesn't start with space, enter or tab, and doesn't end with space, enter or tab.%NMake sure specified metric name is valid."
+			Result := locale.translate ("A valid metric name is a non-empty string which doesn't start with space, enter or tab, and doesn't end with space, enter or tab.%NMake sure specified metric name is valid.")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -898,8 +847,7 @@ feature -- To do messages
 	linear_metric_info: STRING_GENERAL is
 			-- Information of linear metric
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Linear metric is of the form:%N%N%Ta * metric1 + b * metric2 + c * metric3 + ...%N%Na, b, c are coefficients and %Nmetric1, metric2, metric3 are variable metrics.%N%N"
+			Result := locale.translate ("Linear metric is of the form:%N%N%Ta * metric1 + b * metric2 + c * metric3 + ...%N%Na, b, c are coefficients and %Nmetric1, metric2, metric3 are variable metrics.%N%N")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -907,8 +855,7 @@ feature -- To do messages
 	ratio_metric_info: STRING_GENERAL is
 			-- Information of ratio metric
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Ratio metric is of the form:%N%N%TNumerator metric / Denominator metric%N%NNumerator metric and denominator metric can be of any valid unit.%N%N"
+			Result := locale.translate ("Ratio metric is of the form:%N%N%TNumerator metric / Denominator metric%N%NNumerator metric and denominator metric can be of any valid unit.%N%N")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -916,8 +863,7 @@ feature -- To do messages
 	invalid_domain_item_info: STRING_GENERAL is
 			-- Information of invalid domain item
 		do
-			create {STRING_32} Result.make (0)
-			Result := "Make sure that every item specified in a domain is valid.%NFollowing are some reasons which can cause a domain item invalid:%N * Domain item ID is damaged or incorrect.%N * Domain item doesn't exist (Maybe due to removal/rename of a folder, group, class or feature).%N"
+			Result := locale.translate ("Make sure that every item specified in a domain is valid.%NFollowing are some reasons which can cause a domain item invalid:%N * Domain item ID is damaged or incorrect.%N * Domain item doesn't exist (Maybe due to removal/rename of a folder, group, class or feature).%N")
 		ensure
 			result_attached: Result /= Void
 		end
@@ -927,8 +873,7 @@ feature -- Separator
 	new_line_separator: STRING_GENERAL is
 			-- New line separator
 		do
-			create {STRING_32}Result.make (0)
-			Result := ("%N").as_string_32
+			Result := "%N"
 		ensure
 			result_attached: Result /= Void
 		end
@@ -936,8 +881,7 @@ feature -- Separator
 	comma_separator: STRING_GENERAL is
 			-- Comma separator
 		do
-			create {STRING_32}Result.make (0)
-			Result := (", ").as_string_32
+			Result := ", "
 		ensure
 			result_attached: Result /= Void
 		end
@@ -945,8 +889,7 @@ feature -- Separator
 	space_separator: STRING_GENERAL is
 			-- Space separator
 		do
-			create {STRING_32}Result.make (0)
-			Result := (" ").as_string_32
+			Result := " "
 		ensure
 			result_attached: Result /= Void
 		end
@@ -954,8 +897,7 @@ feature -- Separator
 	location_separator: STRING_GENERAL is
 			-- Space separator
 		do
-			create {STRING_32}Result.make (0)
-			Result := (" : ").as_string_32
+			Result := " : "
 		ensure
 			result_attached: Result /= Void
 		end
@@ -1059,7 +1001,6 @@ feature -- Utilities
 		require
 			a_metric_name_attached: a_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := metric_location_section (a_metric_name, l_linear_metric)
 		ensure
 			result_attached: Result /= Void
@@ -1070,7 +1011,6 @@ feature -- Utilities
 		require
 			a_metric_name_attached: a_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := metric_location_section (a_metric_name, l_basic_metric)
 		ensure
 			result_attached: Result /= Void
@@ -1081,7 +1021,6 @@ feature -- Utilities
 		require
 			a_metric_name_attached: a_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := metric_location_section (a_metric_name, l_ratio_metric)
 		ensure
 			result_attached: Result /= Void
@@ -1092,7 +1031,6 @@ feature -- Utilities
 		require
 			a_criterion_name_attached: a_criterion_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := location_section (a_criterion_name, l_criterion)
 		ensure
 			result_attached: Result /= Void
@@ -1104,7 +1042,6 @@ feature -- Utilities
 			a_variable_metric_name_attached: a_variable_metric_name /= Void
 			a_linear_metric_name_attached: a_linear_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := location (<<location_section (a_linear_metric_name, l_linear_metric), location_section (a_variable_metric_name, l_variable_metric)>>)
 		ensure
 			result_attached: Result /= Void
@@ -1116,7 +1053,6 @@ feature -- Utilities
 			a_basic_metric_name_attached: a_basic_metric_name /= Void
 			a_criterion_name_attached: a_criterion_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := location (<<basic_metric_location_section (a_basic_metric_name), criterion_location_section (a_criterion_name)>>)
 		ensure
 			result_attached: Result /= Void
@@ -1128,7 +1064,6 @@ feature -- Utilities
 			a_numerator_name_attached: a_numerator_name /= Void
 			a_ratio_metric_name_attached: a_ratio_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := location (<<ratio_metric_location_section (a_ratio_metric_name), location_section (a_numerator_name, l_numerator_metric)>>)
 		ensure
 			result_attached: Result /= Void
@@ -1140,7 +1075,6 @@ feature -- Utilities
 			a_denominator_name_attached: a_denominator_name /= Void
 			a_ratio_metric_name_attached: a_ratio_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := location (<<ratio_metric_location_section (a_ratio_metric_name), location_section (a_denominator_name, l_denominator_metric)>>)
 		ensure
 			result_attached: Result /= Void
@@ -1151,7 +1085,6 @@ feature -- Utilities
 		require
 			a_archive_metric_name_attached: a_archive_metric_name /= Void
 		do
-			create {STRING_32}Result.make (0)
 			Result := location_section (a_archive_metric_name, l_metric_archive_node)
 		ensure
 			result_attached: Result /= Void
@@ -1162,8 +1095,7 @@ feature -- Utilities
 		require
 			a_location_attached: a_location /= Void
 		do
-			create {STRING_32} Result.make (0)
-			Result := " Location: " + a_location.as_string_32
+			Result := locale.format_string (locale.translate (" Location: $1"), [a_location])
 		ensure
 			result_attached: Result /= Void
 		end

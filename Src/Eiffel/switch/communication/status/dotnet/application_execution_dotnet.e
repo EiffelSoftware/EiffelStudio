@@ -177,7 +177,7 @@ feature {APPLICATION_EXECUTION} -- load and save
 --	load_dotnet_debug_info is
 --			-- Load debug information
 --		local
---			w_dlg: EV_WARNING_DIALOG
+--			w_dlg: EB_WARNING_DIALOG
 --		do
 --			Il_debug_info_recorder.load_data_for_debugging
 --			if not Il_debug_info_recorder.load_successful then
@@ -435,7 +435,7 @@ feature -- Query
 					if l_eifnet_debugger.last_once_available then
 						if not l_eifnet_debugger.last_once_already_called then
 							create err_dv.make_with_name  (l_feat.feature_name)
-							err_dv.set_message (Interface_names.l_Not_yet_called)
+							err_dv.set_message (Interface_names.le_Not_yet_called)
 							err_dv.set_display_kind (Void_value)
 							odv := err_dv
 						elseif l_eifnet_debugger.last_once_failed then
@@ -459,7 +459,7 @@ feature -- Query
 						end
 					else
 						create err_dv.make_with_name  (l_feat.feature_name)
-						err_dv.set_message (Interface_names.l_Not_yet_called)
+						err_dv.set_message (Interface_names.le_Not_yet_called)
 						err_dv.set_display_kind (Void_value)
 						odv := err_dv
 					end
@@ -941,7 +941,7 @@ feature {NONE} -- Events on notification
 	notify_execution_on_debugger_error is
 			-- Notify the system is exiting on debugger error
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 --			st: TEXT_FORMATTER
 			l_err_msg: STRING
 			dbg_info: EIFNET_DEBUGGER_INFO

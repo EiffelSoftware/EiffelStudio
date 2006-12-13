@@ -48,7 +48,7 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.view_editor_icon, 2)
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showtext_new
@@ -165,7 +165,7 @@ feature {NONE} -- Properties
 	classi: CLASS_I
 			-- Class currently associated with `Current'.
 
-	command_name: STRING is
+	command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Basic_text

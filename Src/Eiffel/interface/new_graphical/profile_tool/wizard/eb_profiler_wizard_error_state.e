@@ -11,12 +11,12 @@ class
 
 inherit
 	EB_WIZARD_ERROR_STATE_WINDOW
-	
+
 	EB_ERROR_MANAGER
 		export
 			{NONE} all
 		end
-		
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -29,7 +29,7 @@ feature -- basic Operations
 
 	display_state_text is
 		local
-			errors: STRING
+			errors: STRING_32
 		do
 				-- Compute the error message
 			create errors.make (20)
@@ -48,9 +48,9 @@ feature -- basic Operations
 				-- Display the error message
 			title.set_text (Interface_names.wt_Generation_Error)
 			message.set_text (errors)
-			
+
 				-- Clear the error log
-			clear_error_messages	
+			clear_error_messages
 		end
 
 indexing

@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 		local
 			project_modifier: ERF_PROJECT_TEXT_MODIFICATION
 			file_rename: ERF_CLASS_FILE_RENAME
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
         do
         		-- if the renamed class was the root class
         	if system.root_class.name.is_equal (preferences.new_class_name) then

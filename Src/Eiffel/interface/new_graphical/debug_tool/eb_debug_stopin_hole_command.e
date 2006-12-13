@@ -27,19 +27,19 @@ inherit
 
 feature -- Access
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What is printed in the customize dialog.
 		do
 			Result := Interface_names.f_Enable_stop_points
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Pop-up help on buttons.
 		do
 			Result := description
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_bkpt_enable
@@ -65,7 +65,7 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := Interface_names.m_Enable_stop_points
@@ -124,7 +124,7 @@ feature -- Update
 			-- Process feature stone.
 		local
 			f: E_FEATURE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			bpm: BREAKPOINTS_MANAGER
 		do
 			f := fs.e_feature

@@ -22,7 +22,7 @@ feature{NONE} -- Initialization
 			a_time_attached: a_time /= Void
 		do
 			create metric_name.make_from_string (a_metric_name)
-			create type.make_from_string (a_type)
+			create {STRING_32}type.make_from_string (a_type)
 			is_reference_value_set := a_is_ref_set
 			is_current_value_set := a_is_cur_set
 			reference_value := a_reference_value
@@ -38,7 +38,7 @@ feature -- Access
 	metric_name: STRING
 			-- Metric name
 
-	type: STRING
+	type: STRING_GENERAL
 			-- Metric type
 
 	reference_value: DOUBLE

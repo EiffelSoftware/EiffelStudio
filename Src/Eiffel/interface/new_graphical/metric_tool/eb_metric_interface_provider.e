@@ -24,6 +24,8 @@ inherit
 
 	EB_SHARED_ID_SOLUTION
 
+	SHARED_LOCALE
+
 	EB_DOMAIN_ITEM_UTILITY
 
 feature -- Metric menu
@@ -141,17 +143,14 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
-	displayed_name (a_name: STRING): STRING is
+	displayed_name (a_name: STRING_GENERAL): STRING_GENERAL is
 			-- Displayed name for `a_name'
 		require
 			a_name_attached: a_name /= Void
-		local
-			l_char: CHARACTER
 		do
-			Result := a_name.as_lower
+			Result := string_general_to_lower (a_name)
 			if not a_name.is_empty then
-				l_char := Result.item (1)
-				Result.put (l_char.as_upper, 1)
+				Result := first_character_to_upper_case (Result)
 			end
 		ensure
 			result_attached: Result /= Void
@@ -199,7 +198,7 @@ feature -- Names
 			result_attached: Result /= Void
 		end
 
-	name_of_metric_type (a_type: INTEGER): STRING is
+	name_of_metric_type (a_type: INTEGER): STRING_GENERAL is
 			-- Name of metric type `a_type'
 		require
 			a_type_valid: is_metric_type_valid (a_type)
@@ -326,13 +325,13 @@ feature -- Names
 
 feature -- Dialog
 
-	show_warning_dialog (a_msg: STRING; a_window: EV_WINDOW) is
+	show_warning_dialog (a_msg: STRING_GENERAL; a_window: EV_WINDOW) is
 			-- Show warning dialog to display `a_msg'.
 		require
 			a_msg_attached: a_msg /= Void
 			a_window_attached: a_window /= Void
 		local
-			l_dialog: EV_WARNING_DIALOG
+			l_dialog: EB_WARNING_DIALOG
 		do
 			create l_dialog.make_with_text (a_msg)
 			l_dialog.show_modal_to_window (a_window)
@@ -340,7 +339,7 @@ feature -- Dialog
 
 feature -- Actions binding
 
-	attach_non_editable_warning_to_text (a_msg: STRING; a_text: EV_TEXT_COMPONENT; a_window: EV_WINDOW) is
+	attach_non_editable_warning_to_text (a_msg: STRING_GENERAL; a_text: EV_TEXT_COMPONENT; a_window: EV_WINDOW) is
 			-- Attach actions to display `a_msg' to `a_text'.
 			-- A warning dialog will be displayed when a key is pressed on `a_text'.
 		require
@@ -353,7 +352,7 @@ feature -- Actions binding
 
 feature -- Feedback dialog
 
-	show_feedback_dialog (a_msg: STRING; a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_INFORMATION_DIALOG; a_window: EV_WINDOW) is
+	show_feedback_dialog (a_msg: STRING_GENERAL; a_agent: PROCEDURE [ANY, TUPLE]; a_dialog: EV_INFORMATION_DIALOG; a_window: EV_WINDOW) is
 			-- Show a feedback information `a_dialog' modal to `a_window' to display information `a_msg'.
 			-- `a_agent' will be added into `on_show_actions' of that dialog.
 		require
@@ -420,7 +419,7 @@ feature -- Metric editor mode
 
 feature{NONE} -- Implementation
 
-	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING; a_window: EV_WINDOW) is
+	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING_GENERAL; a_window: EV_WINDOW) is
 			-- Action to be performed when `a_key' is pressed
 		require
 			a_key_attached: a_key /= Void

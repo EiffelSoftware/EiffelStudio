@@ -32,7 +32,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_task: like task; a_type: STRING; a_target: like target; a_window: like configuration_window) is
+	make (a_task: like task; a_type: like type; a_target: like target; a_window: like configuration_window) is
 			-- Create.
 		require
 			a_task_not_void: a_task /= Void
@@ -55,10 +55,10 @@ feature -- Access
 	task: CONF_ACTION
 			-- Task for which information are displayed.
 
-	type: STRING
+	type: STRING_GENERAL
 			-- Type of the task.
 
-	name: STRING is
+	name: STRING_GENERAL is
 			-- Name of the section.
 		do
 			Result := task.command
@@ -75,7 +75,7 @@ feature -- Element update
 	ask_remove_task is
 			-- Ask for confirmation and remove `Current'.
 		local
-			l_cd: EV_CONFIRMATION_DIALOG
+			l_cd: EB_CONFIRMATION_DIALOG
 		do
 			create l_cd.make_with_text_and_actions (conf_interface_names.target_remove_task (name), <<agent remove_task>>)
 			l_cd.show_modal_to_window (configuration_window)

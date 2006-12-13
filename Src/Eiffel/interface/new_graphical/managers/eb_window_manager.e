@@ -407,8 +407,6 @@ feature -- Actions on a given window
 
 	show_window (a_window: EB_WINDOW)  is
 			-- Show the window.
-		local
-			real_window: EV_TITLED_WINDOW
 		do
 				-- We call `raise' since it takes care of really showing the window
 				-- in case it is hidden or minimized.
@@ -574,7 +572,6 @@ feature -- Actions on all windows
 			else
 				for_all (agent for_all (agent c_compilation_stop_action))
 			end
-
 			for_all (agent synchronize_action)
 		end
 
@@ -608,10 +605,10 @@ feature -- Actions on all windows
 			end
 		end
 
-	display_message (m: STRING) is
+	display_message (m: STRING_GENERAL) is
 			-- Display a message in status bars of all development windows.
 		require
-			one_line_message: m /= Void and then (not m.has ('%N') and not m.has ('%R'))
+			one_line_message: m /= Void and then (not m.has_code (('%N').natural_32_code) and not m.has_code (('%R').natural_32_code))
 		local
 			l_managed_windows: like managed_windows
 			cv_dev: EB_DEVELOPMENT_WINDOW
@@ -662,7 +659,7 @@ feature -- Actions on all windows
 			end
 		end
 
-	display_c_compilation_progress (mess: STRING) is
+	display_c_compilation_progress (mess: STRING_GENERAL) is
 			-- Display `mess' in status bars of all development windows.
 		require
 			mess_not_void: mess /= Void
@@ -750,8 +747,8 @@ feature {NONE} -- Exit implementation
 	confirm_and_quit is
 			-- If a compilation is under way, do not exit.
 		local
-			wd: EV_WARNING_DIALOG
-			qd: EV_QUESTION_DIALOG
+			wd: EB_WARNING_DIALOG
+			qd: EB_QUESTION_DIALOG
 			evcsts: EV_DIALOG_CONSTANTS
 		do
 			if Eiffel_project.initialized and then Eiffel_project.is_compiling then
@@ -762,8 +759,8 @@ feature {NONE} -- Exit implementation
 				Exit_application_cmd.set_already_confirmed (True)
 				create qd.make_with_text (Interface_names.L_exit_warning)
 				create evcsts
-				qd.button (evcsts.ev_yes).select_actions.extend (agent save_and_quit)
-				qd.button (evcsts.ev_no).select_actions.extend (agent quit)
+				qd.button (interface_names.b_yes).select_actions.extend (agent save_and_quit)
+				qd.button (interface_names.b_no).select_actions.extend (agent quit)
 				qd.show_modal_to_window (last_focused_development_window.window)
 			else
 				quit
@@ -1307,13 +1304,15 @@ feature {EB_C_COMPILER_LAUNCHER, EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU,
 
 feature {NONE} -- Implementation
 
-	new_title: STRING is
+	new_title: STRING_GENERAL is
 			-- Find an empty titled not yet used.
 		local
 			saved_cursor: CURSOR
-			empty_title: STRING
-			window_titles: ARRAYED_LIST [STRING]
+			empty_title: STRING_GENERAL
+			window_titles: ARRAYED_LIST [STRING_GENERAL]
 			i: INTEGER
+			l_found: BOOLEAN
+			l_str: STRING_GENERAL
 		do
 				-- Remember the title of all windows.
 			create window_titles.make (managed_windows.count)
@@ -1331,15 +1330,21 @@ feature {NONE} -- Implementation
 			managed_windows.go_to (saved_cursor)
 
 				-- Look for a title not yet used.
-			empty_title := Interface_names.t_Empty_development_window + " #"
+			empty_title := Interface_names.t_Empty_development_window.twin
+			empty_title.append (" #")
 			from
 				i := 1
 			until
-				not window_titles.has (empty_title + i.out)
+				l_found
 			loop
+				l_str := empty_title.twin
+				l_str.append (i.out)
+				if not window_titles.has (l_str) then
+					l_found := True
+				end
 				i := i + 1
 			end
-			Result := empty_title + i.out
+			Result := l_str
 		end
 
 	stop_ev_application is

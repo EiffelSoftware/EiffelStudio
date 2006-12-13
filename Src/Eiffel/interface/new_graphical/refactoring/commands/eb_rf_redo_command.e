@@ -49,19 +49,19 @@ feature -- Status
 
 feature -- Access
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What is printed in the customize dialog.
 		do
 			Result := interface_names.f_refactoring_redo
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Pop-up help on buttons.
 		do
 			Result := description
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for toolbar button
 		do
 			Result := interface_names.b_refactoring_redo
@@ -73,7 +73,7 @@ feature -- Access
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := tooltext
@@ -93,7 +93,7 @@ feature -- Execution
 	execute is
 			-- Execute.
 		local
-			l_cd: EV_CONFIRMATION_DIALOG
+			l_cd: EB_CONFIRMATION_DIALOG
 		do
 			create l_cd.make_with_text_and_actions (interface_names.e_refactoring_redo_sure, <<agent manager.redo_last>>)
 			l_cd.show_modal_to_window (window_manager.last_focused_development_window.window)

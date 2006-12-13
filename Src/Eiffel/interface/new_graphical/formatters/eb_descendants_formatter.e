@@ -31,7 +31,7 @@ feature -- Properties
 	class_cmd: E_SHOW_DESCENDANTS
 			-- Class command that can generate the information.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showdescendants
@@ -45,7 +45,7 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Descendants

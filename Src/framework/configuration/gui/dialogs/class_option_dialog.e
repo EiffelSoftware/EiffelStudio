@@ -155,7 +155,7 @@ feature {NONE} -- Agents
 	on_ok is
 			-- Ok was pressed.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if wd = Void then
 				Precursor {PROPERTY_DIALOG}
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
 			-- Expanded status of sections of class options.
 		once
 			create Result.make (4)

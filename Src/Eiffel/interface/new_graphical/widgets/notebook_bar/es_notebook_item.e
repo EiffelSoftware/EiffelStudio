@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: STRING) is
+	make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: like title) is
 			-- Initialization
 		require
 			parent_not_void: a_parent /= Void
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 	make_with_mini_toolbar (
 		a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET;
-				a_title: STRING; a_mini_toolbar: EV_TOOL_BAR) is
+				a_title: like title; a_mini_toolbar: EV_TOOL_BAR) is
 			-- Initialization
 		require else
 			parent_not_void: a_parent /= Void
@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 			mini_toolbar := a_mini_toolbar
 			make (a_parent, a_widget, a_title)
 		end
-		
+
 	make_with_info (
 		a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET;
-				a_title: STRING; info: EV_HORIZONTAL_BOX; a_mini_toolbar: EV_TOOL_BAR) is
+				a_title: like title; info: EV_HORIZONTAL_BOX; a_mini_toolbar: EV_TOOL_BAR) is
 			-- Initialization
 		require else
 			parent_not_void: a_parent /= Void
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			make (a_parent, a_widget, a_title)
 		end
 
-	generic_make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: STRING) is
+	generic_make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: like title) is
 			-- Generic Initialization
 		require
 			a_parent_not_void: a_parent /= Void
@@ -76,20 +76,20 @@ feature {NONE} -- Initialization
 			parent := a_parent
 			widget := a_widget
 			title := a_title
-			
+
 			create tab_cell
 			create vb
 			create inside_toolbar_box
 			vb.extend (inside_toolbar_box)
 			vb.disable_item_expand (inside_toolbar_box)
 			inside_toolbar_box.hide
-			
+
 			vb.extend (widget)
 			tab_cell.extend (vb)
-			
+
 			tab_widget := tab_cell
 		end
-		
+
 feature -- Access
 
 	hash_code: INTEGER is
@@ -97,18 +97,18 @@ feature -- Access
 			Result := title.hash_code
 		end
 
-	title: STRING
+	title: STRING_GENERAL
 
 	mini_toolbar: EV_TOOL_BAR
-	
+
 	header_box: EV_HORIZONTAL_BOX
 
 	parent: ES_NOTEBOOK
 
 	tab: EV_NOTEBOOK_TAB
-	
+
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
-	
+
 	pointer_button_pressed_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
@@ -120,9 +120,9 @@ feature -- Access
 
 	is_destroyed: BOOLEAN is
 		do
-			Result := tab_widget.is_destroyed	
+			Result := tab_widget.is_destroyed
 		end
-		
+
 feature -- Change
 
 	close is
@@ -136,8 +136,8 @@ feature -- Change
 				parent.prune (Current)
 				tab := Void
 			end
-			
-		end	
+
+		end
 
 feature {ES_NOTEBOOK} -- Implementation
 
@@ -173,7 +173,7 @@ feature {ES_DOCKABLE_NOTEBOOK} -- Docking
 				if par /= Void then
 					par.prune_all (header_box)
 				end
-			end			
+			end
 		end
 
 	on_docking_ended is
@@ -206,14 +206,14 @@ feature {ES_DOCKABLE_NOTEBOOK} -- Docking
 
 					create lab.make_with_text (title)
 					hb.extend (lab)
-					hb.disable_item_expand (lab)					
-					
+					hb.disable_item_expand (lab)
+
 					if mini_toolbar /= Void then
 							--| here we suppose the generic_make always add the content_box the way it is now
 							--| and when we dock this item back to other place ..
 							--| it will remove and put the minitoolbar somewhere else
 						hb.extend (mini_toolbar)
-						hb.disable_item_expand (mini_toolbar)					
+						hb.disable_item_expand (mini_toolbar)
 					end
 					if header_box /= Void then
 							--| here we suppose the generic_make always add the content_box the way it is now
@@ -238,7 +238,7 @@ feature {ES_NOTEBOOK} -- Restricted access
 		do
 			tab := t
 		end
-	
+
 feature {NONE} -- Implementation
 
 	parent_dockable_dialog (w: EV_WIDGET): ES_DOCKABLE_DIALOG is

@@ -69,6 +69,13 @@ inherit
 			default_create, copy
 		end
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 feature {EV_ANY} -- Initialization
 
 	initialize is
@@ -78,22 +85,22 @@ feature {EV_ANY} -- Initialization
 			hsep: EV_HORIZONTAL_SEPARATOR
 		do
 			Precursor
-			set_title ("Project documentation")
+			set_title (interface_names.t_project_documentation)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			set_default_settings
 			create vb
 			create button_bar
 			button_bar.extend (create {EV_CELL})
-			create cancel_button.make_with_text ("Cancel")
+			create cancel_button.make_with_text (interface_names.b_cancel)
 			cancel_button.select_actions.extend (agent cancel)
 			extend_button (button_bar, cancel_button)
-			create previous_button.make_with_text ("Previous")
+			create previous_button.make_with_text (interface_names.b_previous)
 			previous_button.select_actions.extend (agent previous)
 			extend_button (button_bar, previous_button)
-			create next_button.make_with_text ("Next")
+			create next_button.make_with_text (interface_names.b_next)
 			next_button.select_actions.extend (agent next)
 			extend_button (button_bar, next_button)
-			create finish_button.make_with_text ("Finish")
+			create finish_button.make_with_text (interface_names.b_finish)
 			finish_button.select_actions.extend (agent finish)
 			extend_button (button_bar, finish_button)
 			create wizard_area
@@ -152,13 +159,13 @@ feature {NONE} -- Implementation
 			create directory_field.make_with_text (Eiffel_system.document_path)
 			directory_field.return_actions.extend (agent on_directory_return_pressed)
 			hb.extend (directory_field)
-			create b.make_with_text ("Browse...")
+			create b.make_with_text (interface_names.b_browse)
 			b.select_actions.extend (agent on_browse)
 			hb.extend (b)
 			hb.disable_item_expand (b)
 			directory_area.extend (create {EV_CELL})
 			directory_area.extend (create {EV_LABEL}.make_with_text (
-				"Click `Finish' to generate the documentation."
+				interface_names.l_finish_to_generate
 			))
 		end
 
@@ -451,13 +458,13 @@ feature {NONE} -- Implementation
 				update_filters := False
 			end
 			wizard_area.replace (list_area)
-			wizard_area.set_text ("Select format for output")
+			wizard_area.set_text (interface_names.l_select_format_for_output)
 		end
 
 	show_cluster_selection is
 		do
 			wizard_area.wipe_out
-			wizard_area.set_text ("Select clusters to generate documentation for")
+			wizard_area.set_text (interface_names.l_select_cluster_to_generate)
 			if update_clusters then
 				set_pointer_style (Default_pixmaps.Wait_cursor)
 				fill_cluster_box (cluster_include)
@@ -469,13 +476,13 @@ feature {NONE} -- Implementation
 
 	show_indexing_selection is
 		local
-			dial: EV_WARNING_DIALOG
+			dial: EB_WARNING_DIALOG
 			err: SYNTAX_ERROR
 			retried: BOOLEAN
 		do
 			if not retried then
 				wizard_area.wipe_out
-				wizard_area.set_text ("Select indexing items to include in HTML meta tags")
+				wizard_area.set_text (interface_names.l_select_indexing_to_generate)
 				if update_indexes then
 					set_pointer_style (Default_pixmaps.Wait_cursor)
 					fill_indexing_box (indexing_include)
@@ -491,7 +498,7 @@ feature {NONE} -- Implementation
 				err ?= Error_handler.error_list.first
 					if err /= void then
 						Error_handler.error_list.wipe_out
-						create dial.make_with_text ("Indexing clause has syntax error")
+						create dial.make_with_text (interface_names.l_indexing_clause_error)
 						dial.show_modal_to_window (Window_manager.last_focused_development_window.window)
 					end
 			end
@@ -502,7 +509,7 @@ feature {NONE} -- Implementation
 	show_option_selection is
 		do
 			wizard_area.replace (option_page)
-			wizard_area.set_text ("Select the formats to use")
+			wizard_area.set_text (interface_names.l_select_format_to_use)
 		end
 
 	show_view_selection is
@@ -511,14 +518,14 @@ feature {NONE} -- Implementation
 			fill_view_page (view_page)
 			set_pointer_style (Default_pixmaps.Standard_cursor)
 			wizard_area.replace (view_page)
-			wizard_area.set_text ("Select the diagrams to generate")
+			wizard_area.set_text (interface_names.l_select_diagrams_to_generate)
 			set_size (wizard_width, wizard_height)
 		end
 
 	show_directory_selection is
 		do
 			wizard_area.replace (directory_area)
-			wizard_area.set_text ("Select directory to generate the documentation in")
+			wizard_area.set_text (interface_names.l_select_directory_to_generate)
 		end
 
 feature {NONE} -- Implementation
@@ -688,13 +695,13 @@ feature {NONE} -- Implementation
 			cf: CLASS_FORMAT
 			af: LINEAR [INTEGER]
 		do
-			create class_list_button.make_with_text ("Alphabetical class list")
+			create class_list_button.make_with_text (interface_names.b_alphabetical_class_list)
 			class_list_button.enable_select
 			p.extend (class_list_button)
-			create cluster_list_button.make_with_text ("Alphabetical cluster list")
+			create cluster_list_button.make_with_text (interface_names.b_alphabetical_cluster_list)
 			cluster_list_button.enable_select
 			p.extend (cluster_list_button)
-			create cluster_hierarchy_button.make_with_text ("Cluster hierarchy")
+			create cluster_hierarchy_button.make_with_text (interface_names.b_cluster_hierarchy)
 			cluster_hierarchy_button.enable_select
 			p.extend (cluster_hierarchy_button)
 
@@ -702,12 +709,11 @@ feature {NONE} -- Implementation
 			p.extend (vs)
 			p.disable_item_expand (vs)
 
-			create cluster_charts_button.make_with_text ("Cluster charts")
+			create cluster_charts_button.make_with_text (interface_names.b_cluster_charts)
 			cluster_charts_button.enable_select
 			p.extend (cluster_charts_button)
 
-			create cluster_diagrams_button.make_with_text ("Cluster diagrams %
-				%  (may take a long time !)")
+			create cluster_diagrams_button.make_with_text (interface_names.b_cluster_diagram)
 			cluster_diagrams_button.disable_select
 			p.extend (cluster_diagrams_button)
 
@@ -718,7 +724,7 @@ feature {NONE} -- Implementation
 			af := all_class_formats.linear_representation
 			from af.start until af.after loop
 				create cf.make (af.item)
-				create cb.make_with_text (cf.description)
+				create cb.make_with_text (cf.name)
 				cb.select_actions.extend (agent on_cf_toggle (cf, cb))
 				if cf.is_generated then
 					cb.enable_select
@@ -749,9 +755,9 @@ feature {NONE} -- Implementation
 			create right_vb
 			create button_hb
 			create view_list
-			create set_view_button.make_with_text_and_action ("Set", agent on_set_view_button_pressed)
+			create set_view_button.make_with_text_and_action (interface_names.b_set, agent on_set_view_button_pressed)
 			set_view_button.disable_sensitive
-			create view_label.make_with_text ("Select a cluster to display available views")
+			create view_label.make_with_text (interface_names.l_select_cluster_to_display)
 			cluster_list := cluster_include.include_list
 			from
 				cluster_list.start
@@ -776,8 +782,8 @@ feature {NONE} -- Implementation
 				end
 				cluster_list.forth
 			end
-			view_mcl.set_column_title ("Cluster", 1)
-			view_mcl.set_column_title ("View", 2)
+			view_mcl.set_column_title (interface_names.l_cluster, 1)
+			view_mcl.set_column_title (interface_names.l_view, 2)
 			view_mcl.resize_column_to_content (1)
 			view_mcl.set_minimum_width (240)
 			main_hb.extend (view_mcl)
@@ -817,10 +823,10 @@ feature {NONE} -- Implementation
 					views.forth
 				end
 				if views.is_empty then
-					view_label.set_text ("No views are available for this cluster")
+					view_label.set_text (interface_names.l_no_views_are_available)
 					set_view_button.disable_sensitive
 				else
-					view_label.set_text ("Select the view you want to use")
+					view_label.set_text (interface_names.l_select_the_view)
 					set_view_button.enable_sensitive
 				end
 			end

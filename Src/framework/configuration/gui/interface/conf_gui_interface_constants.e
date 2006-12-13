@@ -19,6 +19,12 @@ inherit
 			copy
 		end
 
+	FRAMEWORK_CONSTANTS
+		undefine
+			copy,
+			default_create
+		end
+
 feature -- Update
 
 	set_pixmaps (a_pixmaps: CONF_PIXMAPS)

@@ -102,14 +102,14 @@ feature {NONE} -- Initialization
 			hb.extend (create {EV_CELL})
 			hb.set_padding (layout_constants.default_padding_size)
 
-			create l_btn.make_with_text (ev_ok)
+			create l_btn.make_with_text (b_ok)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_push_button (l_btn)
 			l_btn.select_actions.extend (agent on_ok)
 			layout_constants.set_default_width_for_button (l_btn)
 
-			create l_btn.make_with_text (ev_cancel)
+			create l_btn.make_with_text (b_cancel)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			set_default_cancel_button (l_btn)
@@ -208,7 +208,7 @@ feature {NONE} -- Actions
 	on_ok is
 			-- Add group and close the dialog.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			if not name.text.is_empty and not location.text.is_empty then

@@ -910,7 +910,7 @@ feature {NONE} -- Actions
 			l_load: CONF_LOAD
 			l_system: CONF_SYSTEM
 			l_window: CONFIGURATION_WINDOW
-			l_wd: EV_WARNING_DIALOG
+			l_wd: EB_WARNING_DIALOG
 			l_ed: EV_ERROR_DIALOG
 			l_row: like last_selected_row
 		do
@@ -919,7 +919,7 @@ feature {NONE} -- Actions
 			l_load.retrieve_configuration (selected_path)
 			if l_load.is_error then
 				create l_ed.make_with_text (l_load.last_error.out)
-				l_ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
+				l_ed.set_buttons (<<interface_names.b_ok>>)
 				l_ed.show_modal_to_window (parent_window)
 			else
 					-- display warnings

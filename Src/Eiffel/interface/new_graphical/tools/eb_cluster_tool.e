@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			end
 
 			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (
-				explorer_bar, widget, title, True, mini_toolbar
+				explorer_bar, widget, title, title_for_pre, True, mini_toolbar
 			)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
@@ -116,13 +116,19 @@ feature -- Access
 	window: EB_DEVELOPMENT_WINDOW
 			-- development window `Current' is in.
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- title of the tool.
 		do
 			Result := Interface_names.t_Cluster_tool
 		end
 
-	menu_name: STRING is
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_cluster_tool
+		end
+
+	menu_name: STRING_GENERAL is
 			-- name as it may appear in a menu.
 		do
 			Result := Interface_names.m_Cluster_tool
@@ -212,7 +218,7 @@ feature {NONE} -- Implementation
 		local
 			conv_class: CLASSI_STONE
 			conv_cluster: CLUSTER_STONE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then

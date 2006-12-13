@@ -126,7 +126,7 @@ feature -- Execution
 		require
 			a_window_not_void: a_window /= Void
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if is_c_compilation_running then
 				if is_freezing_running then
@@ -152,7 +152,7 @@ feature -- Execution
 		require
 			a_window_not_void: a_window /= Void
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 			l_output: STRING
 			l_output2: STRING
 			l_discard_msg: STRING
@@ -241,7 +241,7 @@ feature -- Execution
 		require
 			a_window_not_void: a_window /= Void
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if is_external_command_running then
 				create cd.make_initialized (

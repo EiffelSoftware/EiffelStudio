@@ -9,7 +9,7 @@ class
 	EB_CONFIRM_SAVE_DIALOG
 
 inherit
-	EV_QUESTION_DIALOG
+	EB_QUESTION_DIALOG
 
 	EB_CONSTANTS
 		export
@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 				cls_name := clsi_stone.class_name
 			end
 			make_with_text (Warning_messages.w_File_changed (cls_name))
-			button (ev_yes).select_actions.extend (agent save_text)
-			button (ev_no).select_actions.extend (agent dont_save_text)
-			
+			button (interface_names.b_yes).select_actions.extend (agent save_text)
+			button (interface_names.b_no).select_actions.extend (agent dont_save_text)
+
 			show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 

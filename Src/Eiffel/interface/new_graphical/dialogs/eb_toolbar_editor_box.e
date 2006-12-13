@@ -47,7 +47,7 @@ feature -- Initialization
 			square_container: EV_HORIZONTAL_BOX
 			pool_label: EV_LABEL
 			current_label: EV_LABEL
-			combo_strings: ARRAY [STRING]
+			combo_strings: ARRAY [STRING_GENERAL]
 			text_combo_box: EV_HORIZONTAL_BOX
 			text_combo_label: EV_LABEL
 			widget_minimum_width: INTEGER

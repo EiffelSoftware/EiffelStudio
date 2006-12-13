@@ -36,13 +36,13 @@ feature -- Access
 	history: EB_HISTORY_DIALOG
 			-- History of undoable commands.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name on corresponding menu items
 		do
 			Result := "Diagram command"
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := tooltip

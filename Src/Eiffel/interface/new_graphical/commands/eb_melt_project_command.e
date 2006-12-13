@@ -140,10 +140,10 @@ feature {NONE} -- Compilation implementation
 			-- Display status of eiffel compilation.
 		do
 			if Workbench.successful then
-				output_manager.add_string (Interface_names.E_compilation_succeeded)
+				output_manager.add_string (Interface_names.ee_compilation_succeeded)
 				output_manager.add_new_line
 			else
-				output_manager.add_string (Interface_names.e_compilation_failed)
+				output_manager.add_string (Interface_names.ee_compilation_failed)
 				output_manager.add_new_line
 			end
 		end
@@ -270,8 +270,8 @@ feature {NONE} -- Execution
 			-- Recompile the project and start C compilation if `c_compilation_enabled'
 			-- is True.
 		local
-			wd: EV_WARNING_DIALOG
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			wd: EB_WARNING_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			start_c_compilation := c_compilation_enabled
 			if c_compilation_enabled then
@@ -327,7 +327,7 @@ feature {NONE} -- Execution
 			-- user so and ask for a confirmation.
 			-- If confirmation successful then compile.
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			if
 				not Debugger_manager.application_is_executing
@@ -359,7 +359,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Implementation
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text displayed in toolbar
 		do
 			Result := Interface_names.b_Compile
@@ -371,7 +371,7 @@ feature {NONE} -- Implementation
 			Result := tooltext.is_equal (Interface_names.b_Compile)
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Melt_new
@@ -383,13 +383,13 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.project_melt_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Melt
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for the command.
 		do
 			Result := Interface_names.f_Melt

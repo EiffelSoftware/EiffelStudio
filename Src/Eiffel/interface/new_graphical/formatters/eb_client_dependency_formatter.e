@@ -25,13 +25,13 @@ feature -- Access
 			Result.put (pixmaps.icon_pixmaps.class_clients_icon, 2)
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showclients
 		end
 
-	command_name: STRING is
+	command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
 			Result := Interface_names.l_clients

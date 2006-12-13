@@ -14,9 +14,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_title: like title; a_menu_name: like menu_name; a_pixmap: like pixmap) is
+	make (a_title: like title; a_title_for_pre: like title_for_pre; a_menu_name: like menu_name; a_pixmap: like pixmap) is
 		do
 			title := a_title
+			title_for_pre := a_title_for_pre
 			menu_name := a_menu_name
 			pixmap := a_pixmap
 			create items.make (3)
@@ -46,7 +47,7 @@ feature {NONE} -- Initialization
 				create header_box
 			end
 			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_info (
-				explorer_bar, widget, title, False, header_box, Void
+				explorer_bar, widget, title, title_for_pre, False, header_box, Void
 			)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
@@ -57,9 +58,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	title: STRING
+	title: STRING_GENERAL
 
-	menu_name: STRING
+	title_for_pre: STRING
+			-- Title for preference, STRING_8
+
+	menu_name: STRING_GENERAL
 
 	pixmap: EV_PIXMAP
 

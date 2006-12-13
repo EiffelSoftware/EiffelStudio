@@ -93,7 +93,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			inspect style
@@ -119,13 +119,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := description
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for the toolbar button.
 		do
 			inspect style
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			Result := conv_st /= Void and then conv_st.is_storable and then conv_st.is_valid
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this commane
 		do
 			inspect style

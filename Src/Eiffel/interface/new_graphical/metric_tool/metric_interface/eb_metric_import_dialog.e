@@ -92,6 +92,7 @@ feature {NONE} -- Initialization
 			set_size (700, 500)
 			l_metric_names := metric_names
 			set_title (l_metric_names.t_import_metric_title)
+			import_file_lbl.set_text (l_metric_names.l_metric_definition_file)
 
 			backup_btn.set_text (l_metric_names.t_backup_user_defined_metrics)
 			backup_btn.select_actions.extend (agent on_backup_user_defined_metrics)
@@ -224,7 +225,7 @@ feature {NONE} -- Actions
 		local
 			l_name: STRING
 			l_error_dlg: EV_ERROR_DIALOG
-			l_warning_dlg: EV_WARNING_DIALOG
+			l_warning_dlg: EB_WARNING_DIALOG
 		do
 			if not is_in_name_changing_mode then
 				l_name := a_row.name.twin

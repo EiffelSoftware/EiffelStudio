@@ -17,11 +17,44 @@ inherit
 			hide,
 			on_close,
 			on_window_resize,
+			on_restore,
 			update_grid_columns,
 			preference_name_column,
 			preference_value_column,
 			grid,
-			build_filter_icons
+			build_filter_icons,
+			try_to_translate,
+
+				-- Interface names
+			l_name,
+			l_literal_value,
+			l_status,
+			l_type,
+			l_request_restart,
+			p_default_value,
+			user_value,
+			auto_value,
+			no_description_text,
+			preferences_title,
+			restore_preference_string,
+			w_Preferences_delayed_resources,
+			l_tree_view,
+			f_switch_to_tree_view,
+			l_flat_view,
+			f_switch_to_flat_view,
+			l_updating_the_view,
+			l_filter,
+			l_tree_or_flat_view,
+			l_restore_defaults,
+			l_close,
+			l_display_window,
+			l_description,
+			l_matches_of_total_preferences,
+			l_count_preferences,
+			l_restore_default,
+			l_no_default_value,
+			l_building_flat_view,
+			l_building_tree_view
 		end
 
 	EB_SHARED_PIXMAPS
@@ -33,6 +66,12 @@ inherit
 		end
 
 	EB_SHARED_PREFERENCES
+		undefine
+			copy,
+			default_create
+		end
+
+	EB_CONSTANTS
 		undefine
 			copy,
 			default_create
@@ -153,6 +192,50 @@ feature -- Access
 			Precursor
 		end
 
+feature {NONE} -- Names
+
+	l_name: STRING_GENERAL is							do Result := interface_names.l_name								end
+	l_literal_value: STRING_GENERAL is					do Result := interface_names.l_Literal_value					end
+	l_status: STRING_GENERAL is							do Result := interface_names.l_status							end
+	l_type: STRING_GENERAL is							do Result := interface_names.l_type								end
+	l_request_restart: STRING_GENERAL is				do Result := interface_names.l_request_restart					end
+	p_default_value: STRING_GENERAL is					do Result := interface_names.l_default							end
+	user_value: STRING_GENERAL is						do Result := interface_names.l_user_set							end
+	auto_value: STRING_GENERAL is						do Result := interface_names.l_auto								end
+	no_description_text: STRING_GENERAL is				do Result := interface_names.l_no_description_text				end
+	preferences_title: STRING_GENERAL is				do Result := interface_names.t_preference_window				end
+	restore_preference_string: STRING_GENERAL is		do Result := interface_names.l_restore_preference_string		end
+	w_Preferences_delayed_resources: STRING_GENERAL is	do Result := interface_names.l_preferences_delayed_resources	end
+			-- Texts used in the dialog that tells the user
+			-- they have to restart the application to use the new preferences.
+
+
+	l_tree_view: STRING_GENERAL is						do Result := interface_names.l_Tree_view						end
+	f_switch_to_tree_view: STRING_GENERAL is 			do Result := interface_names.f_switch_to_tree_view				end
+	l_flat_view: STRING_GENERAL is						do Result := interface_names.l_Flat_view 						end
+	f_switch_to_flat_view: STRING_GENERAL is 			do Result := interface_names.f_switch_to_flat_view				end
+	l_updating_the_view: STRING_GENERAL is 				do Result := interface_names.l_update_the_view					end
+	l_filter: STRING_GENERAL is							do Result := interface_names.l_filter 							end
+	l_tree_or_flat_view: STRING_GENERAL					do Result := interface_names.l_tree_or_flat_view 				end
+	l_restore_defaults: STRING_GENERAL 					do Result := interface_names.l_restore_defaults 				end
+	l_restore_default: STRING_GENERAL					do Result := interface_names.l_restore_default 					end
+	l_no_default_value: STRING_GENERAL 					do Result := interface_names.l_no_default_value 				end
+	l_close: STRING_GENERAL								do Result := interface_names.b_close 							end
+	l_display_window: STRING_GENERAL 					do Result := interface_names.l_display_window 					end
+	l_description: STRING_GENERAL						do Result := interface_names.l_description 						end
+	l_building_flat_view: STRING_GENERAL				do Result := interface_names.l_building_flat_view 				end
+	l_building_tree_view: STRING_GENERAL				do Result := interface_names.l_building_tree_view 				end
+
+	l_matches_of_total_preferences (a_count: STRING_GENERAL; a_total_count: STRING_GENERAL): STRING_GENERAL is
+		do
+			Result := interface_names.l_matches_of_total_preferences (a_count, a_total_count)
+		end
+
+	l_count_preferences (a_count: STRING_GENERAL): STRING_GENERAL is
+		do
+			Result := interface_names.l_count_preferences (a_count)
+		end
+
 feature {NONE} -- Events
 
 	on_window_resize is
@@ -161,6 +244,19 @@ feature {NONE} -- Events
 			l_width: INTEGER
 		do
 			l_width := grid.width - (grid.column (1).width + grid.column (2).width + grid.column (3).width)
+		end
+
+	on_restore is
+			-- Restore all preferences to their default values.
+		local
+			l_confirmation_dialog: EB_CONFIRMATION_DIALOG
+		do
+			create l_confirmation_dialog
+			l_confirmation_dialog.set_text (restore_preference_string)
+			l_confirmation_dialog.show_modal_to_window (parent_window)
+			if l_confirmation_dialog.selected_button.is_equal (l_confirmation_dialog.ok) then
+				view_preferences.restore_defaults
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -197,6 +293,12 @@ feature {NONE} -- Implementation
 					grid.set_focus
 				end
 			end
+		end
+
+	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL is
+			-- Try to translate `a_string'.
+		do
+			Result := interface_names.find_translation (a_string)
 		end
 
 indexing

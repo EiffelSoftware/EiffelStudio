@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			Precursor {EB_DIALOG}
 		end
 
-	create_button (a_text: STRING): EV_BUTTON is
+	create_button (a_text: STRING_GENERAL): EV_BUTTON is
 			-- Create a new button labeled `a_text'
 		do
 			create Result
@@ -198,14 +198,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Deferred Constants
 
-	check_button_label: STRING is
+	check_button_label: STRING_GENERAL is
 			-- Label for `check_button'.
 		deferred
 		ensure
 			valid_label: Result /= Void and then not Result.is_empty
 		end
 
-	ok_button_label: STRING is
+	ok_button_label: STRING_GENERAL is
 			-- Label for the Ok/Yes button.
 		do
 			Result := Interface_names.b_ok
@@ -213,7 +213,7 @@ feature {NONE} -- Deferred Constants
 			valid_label: Result /= Void and then not Result.is_empty
 		end
 
-	warning_message_label: STRING is
+	warning_message_label: STRING_GENERAL is
 			-- Label for the confirmation message.
 		deferred
 		ensure

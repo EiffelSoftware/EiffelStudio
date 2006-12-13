@@ -74,7 +74,7 @@ feature {NONE} -- Initialization
 			end
 
 			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (
-				explorer_bar, widget, title, True, mini_toolbar
+				explorer_bar, widget, title, title_for_pre, True, mini_toolbar
 			)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
@@ -95,13 +95,19 @@ feature -- Access
 	tree: EB_FEATURES_TREE
 			-- Widget corresponding to the tree of features.
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool
 		do
 			Result := Interface_names.t_features_tool
 		end
 
-	menu_name: STRING is
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_features_tool
+		end
+
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := Interface_names.m_features_tool

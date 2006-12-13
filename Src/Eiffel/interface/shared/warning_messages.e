@@ -15,6 +15,11 @@ inherit
 			{NONE} workbench_name
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
 feature -- Project file/directory warnings
 
 	w_Select_project_to_load: STRING is
@@ -807,9 +812,11 @@ feature -- Dynamic library warnings
 		"This file seems to be corrupted.%N%
 		%Not all items inside could be loaded."
 
-	w_Unsaved_changes: STRING is
+	w_Unsaved_changes: STRING_GENERAL is
 			-- The user tries to exit the dialog although some modifications were not saved.
-		"This will discard the modifications."
+		do
+			Result := locale.translate ("This will discard the modifications.")
+		end
 
 feature -- Ace/Project settings warnings
 
@@ -880,9 +887,9 @@ feature -- Project creation, retrieval, ...
 
 feature -- Refactoring
 
-	w_Feature_not_written_in_class: STRING is "Feature is not written in selected class."
-	w_Select_class_feature_to_rename: STRING is "Select class or feature to rename.%NEither use pick and drop or target the editor to the feature or class."
-	w_Select_feature_to_pull: STRING is "Select a feature to pull up.%NEither use pick and drop or target the editor to the feature to pull up."
+	w_Feature_not_written_in_class: STRING_GENERAL is do Result := locale.translate ("Feature is not written in selected class.") end
+	w_Select_class_feature_to_rename: STRING_GENERAL is do Result := locale.translate ("Select class or feature to rename.%NEither use pick and drop or target the editor to the feature or class.") end
+	w_Select_feature_to_pull: STRING_GENERAL is do Result := locale.translate ("Select a feature to pull up.%NEither use pick and drop or target the editor to the feature to pull up.") end
 
 feature -- Warning messages
 
@@ -1037,10 +1044,10 @@ feature -- Warning messages
 										%before calling this command.%N%
 										%It will then be removed."
 
-	w_Specify_a_class: STRING is "Please specify a compiled class (or * for all classes)."
+	w_Specify_a_class: STRING_GENERAL is do Result := locale.translate ("Please specify a compiled class (or * for all classes).") end
 
-	w_Exiting_stops_compilation: STRING is "It is not possible to exit EiffelStudio%N%
-											%while the project is being compiled."
+	w_Exiting_stops_compilation: STRING_GENERAL is do Result := locale.translate ("It is not possible to exit EiffelStudio%N%
+																					%while the project is being compiled.") end
 
 	w_Exiting_stops_c_compilation: STRING is "It is not possible to exit EiffelStudio%N%
 											%while c compilation is running."
@@ -1048,23 +1055,23 @@ feature -- Warning messages
 	w_Exiting_stops_external: STRING is "It is not possible to exit EiffelStudio%N%
 											%while an external command is running."
 
-	w_Save_before_closing: STRING is "Do you want to save your changes%N%
-									%before closing the window?"
+	w_Save_before_closing: STRING_GENERAL is do Result := locale.translate ("Do you want to save your changes%N%
+																			%before closing the window?") end
 
-	w_Stop_debugger: STRING is "This command will stop the debugger."
+	w_Stop_debugger: STRING_GENERAL is do Result := locale.translate ("This command will stop the debugger.") end
 
-	w_Exiting_stops_debugger: STRING is "Exiting will stop the debugger."
+	w_Exiting_stops_debugger: STRING_GENERAL is do Result := locale.translate ("Exiting will stop the debugger.") end
 
-	w_Closing_stops_debugger: STRING is "Closing the window will stop the debugger."
+	w_Closing_stops_debugger: STRING_GENERAL is do Result := locale.translate ("Closing the window will stop the debugger.") end
 
 	w_Unexisting_system: STRING is "System doesn't exist."
 
-	w_File_changed (class_name: STRING): STRING is
+	w_File_changed (class_name: STRING_GENERAL): STRING_GENERAL is
 		do
 			if class_name = Void then
-				Result := "File has been modified.%NDo you want to save changes?"
+				Result := locale.translate ("File has been modified.%NDo you want to save changes?")
 			else
-				Result := "Class "+ class_name + " has been modified.%NDo you want to save changes?"
+				Result := locale.format_string (locale.translate ("Class $1 has been modified.%NDo you want to save changes?"), [class_name])
 			end
 		end
 

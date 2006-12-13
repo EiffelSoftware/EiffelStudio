@@ -28,7 +28,7 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.feature_descendents_icon, 1)
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Identifier of `Current' in menus.
 		do
 			Result := Interface_names.m_Showfuture
@@ -36,7 +36,7 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
 			Result := Interface_names.l_Routine_descendants

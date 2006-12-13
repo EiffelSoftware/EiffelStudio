@@ -44,11 +44,11 @@ feature -- Access
 			Result := error_i.code
 		end
 
-	header: STRING is
+	header: STRING_GENERAL is
 		do
-			Result := code
+			Result := code.as_string_32
 			if Result = Void then
-				create Result.make (0)
+				create {STRING_32}Result.make (0)
 			end
 		end
 
@@ -69,7 +69,7 @@ feature -- Access
 
 	history_name: STRING is
 		do
-			Result := "Error " + header
+			Result := interface_names.err_error.as_string_32 + header
 		end
 
 	file_name: FILE_NAME is

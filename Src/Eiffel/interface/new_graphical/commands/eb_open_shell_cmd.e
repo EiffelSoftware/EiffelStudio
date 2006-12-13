@@ -219,7 +219,7 @@ feature {NONE} -- Implementation properties
 			Result := preferences.misc_data.external_editor_command.twin
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_external_editor
@@ -231,19 +231,19 @@ feature {NONE} -- Implementation properties
 			Result := pixmaps.icon_pixmaps.command_send_to_external_editor_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.e_shell
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Textp for the toolbar button.
 		do
 			Result := Interface_names.b_shell
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.e_shell

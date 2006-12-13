@@ -261,7 +261,7 @@ feature {NONE} -- Retrieving backup
 			-- Display a dialog asking the user whether he wants to open
 			-- the original file or the backup one, and set `open_backup' accordingly.
 		local
-			dial: EV_WARNING_DIALOG
+			dial: EB_WARNING_DIALOG
 		do
 			create dial.make_with_text (Warning_messages.w_Found_backup)
 			dial.set_buttons_and_actions (<<Interface_names.b_Open_backup, Interface_names.b_Open_original>>, <<agent open_backup_selected, agent open_normal_selected>>)

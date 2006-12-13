@@ -40,7 +40,7 @@ feature -- Access
 			if not is_valid then
 				Result := Precursor
 			else
-				Result := metric_names.t_input_domain
+				Result := metric_names.te_input_domain
 			end
 		end
 

@@ -630,11 +630,11 @@ feature{NONE} -- Implementation/Sorting
 			a_scope_a_attached: a_scope_a /= Void
 			a_scope_b_attached: a_scope_b /= Void
 		local
-			l_name_a: STRING
-			l_name_b: STRING
+			l_name_a: STRING_32
+			l_name_b: STRING_32
 		do
-			l_name_a := a_scope_a.name.as_lower
-			l_name_b := a_scope_b.name.as_lower
+			l_name_a := string_general_to_lower (a_scope_a.name) 
+			l_name_b := string_general_to_lower (a_scope_b.name)
 			if a_order = ascending_order then
 				Result := l_name_a < l_name_b
 			elseif a_order = descending_order then

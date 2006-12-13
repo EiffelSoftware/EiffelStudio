@@ -84,13 +84,13 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.general_delete_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_delete
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.l_diagram_delete
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 		local
 			fs: CLASSI_FIGURE_STONE
 			es_class: ES_CLASS
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			referenced_classes: STRING
 			msg: STRING
 			l_ss: LIST [CLASS_C]
@@ -161,7 +161,7 @@ feature {NONE} -- Implementation
 			-- Remove `class_i' from the system.
 		local
 			file: PLAIN_TEXT_FILE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 			es_class: ES_CLASS
 			es_classes: ARRAYED_LIST [ES_CLASS]

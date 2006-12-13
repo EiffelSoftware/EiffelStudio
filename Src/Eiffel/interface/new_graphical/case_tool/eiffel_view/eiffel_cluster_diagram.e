@@ -1092,7 +1092,7 @@ feature {NONE} -- Implementation
 			l_array_redo, l_array_undo: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
 			remove_links: LIST [ES_ITEM]
-			l_string: STRING
+			l_string: STRING_GENERAL
 		do
 			l_clusters := model.top_level_clusters
 			create l_array_redo.make (5)

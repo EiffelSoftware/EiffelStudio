@@ -79,7 +79,7 @@ feature -- Change text
 		local
 			menu_items: like internal_managed_menu_items
 			toolbar_items: like internal_managed_toolbar_items
-			t: STRING
+			t: STRING_GENERAL
 			p: like pixmap
 		do
 			p := pixmap
@@ -115,19 +115,19 @@ feature -- Change text
 
 feature {NONE} -- Attributes
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Dbg_assertion_checking
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text displayed on `Current's buttons.
 		do
 			if assertion_checking_changed then
@@ -140,7 +140,7 @@ feature {NONE} -- Attributes
 	name: STRING is "Assertion_checking_handler"
 			-- Name of the command.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
 			if assertion_checking_changed then

@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 				l_feature := a_class.feature_named (name)
 				if l_feature /= Void and then (not ignore_deferred or not l_feature.is_deferred) then
 					success := False
-					error_message := "There is already a feature with this name in class "+a_class.name_in_upper+". This would lead to a conflict."
+					error_message := interface_names.l_there_is_already_a_feature_in (a_class.name_in_upper)
 				end
 
 				if recursive then

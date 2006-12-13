@@ -199,12 +199,14 @@ feature -- Settings
 			end
 		end
 
-	set_label_string_and_size (a_string: STRING; a_size: INTEGER) is
+	set_label_string_and_size (a_string: STRING_GENERAL; a_size: INTEGER) is
 			-- Set the label text to `a_string' and the minimum width for
 			-- the label to `a_size'.
 		require
 			valid_string: a_string /= Void and then not a_string.is_empty
 			valid_size: a_size >= 0
+		local
+			l_str: STRING_32
 		do
 			if generated then
 				if label = Void then
@@ -215,17 +217,23 @@ feature -- Settings
 						label.disable_sensitive
 					end
 				end
-				label.set_text (" "+a_string+":")
+				create l_str.make_from_string (" ")
+				l_str.append_string_general (a_string)
+				l_str.append (":")
+				label.set_text (l_str)
 				if a_size > 0 then
 					label.set_minimum_width (a_size)
 				end
 			else
-				label_string := " "+a_string+":"
+				create l_str.make_from_string (" ")
+				l_str.append_string_general (a_string)
+				l_str.append (":")
+				label_string := l_str
 				label_size := a_size
 			end
 		end
 
-	set_label_string (a_string: STRING) is
+	set_label_string (a_string: STRING_GENERAL) is
 			-- Set the label text to `a_string'.
 		require
 			valid_string: a_string /= Void and then not a_string.is_empty

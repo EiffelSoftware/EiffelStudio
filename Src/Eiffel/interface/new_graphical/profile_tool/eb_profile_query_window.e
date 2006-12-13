@@ -1876,7 +1876,7 @@ feature {NONE} -- execution
 			parser: EB_QUERY_PARSER
 			txt: STRING
 			operator: SUBQUERY_OPERATOR
-			error_dialog: EV_WARNING_DIALOG
+			error_dialog: EB_WARNING_DIALOG
 		do
 			txt := subquery
 			if txt /= Void and then not txt.is_empty then

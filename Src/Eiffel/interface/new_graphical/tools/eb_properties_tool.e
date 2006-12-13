@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		do
-			create explorer_bar_item.make (explorer_bar, widget, title, True)
+			create explorer_bar_item.make (explorer_bar, widget, title, title_for_pre, True)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -101,13 +101,19 @@ feature -- Access
 	widget: EV_VERTICAL_BOX
 			-- Widget representing Current
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool
 		do
 			Result := Interface_names.t_Properties_tool
 		end
 
-	menu_name: STRING is
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_properties_tool
+		end
+
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := Interface_names.m_Properties_tool
@@ -162,7 +168,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Actions
 			l_writable: BOOLEAN
 			l_app_sys: CONF_SYSTEM
 			l_class_options, l_inh_options: CONF_OPTION
-			l_name_prop: STRING_PROPERTY [STRING]
+			l_name_prop: STRING_PROPERTY [STRING_GENERAL]
 			l_extends: BOOLEAN
 			l_debugs: SEARCH_TABLE [STRING]
 		do
@@ -302,7 +308,7 @@ feature {NONE} -- Implementation
 	stone: STONE
 			-- Stone we display properties for.
 
-	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
 			-- Expanded status of sections of groups.
 		once
 			create Result.make (5)
@@ -313,7 +319,7 @@ feature {NONE} -- Implementation
 			Result.force (False, conf_interface_names.section_advanced)
 		end
 
-	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+	class_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
 			-- Expanded status of sections of class options.
 		once
 			create Result.make (4)
@@ -323,7 +329,7 @@ feature {NONE} -- Implementation
 			Result.force (False, conf_interface_names.section_debug)
 		end
 
-	target_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+	target_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
 			-- Expanded status of sections of targets.
 		once
 			create Result.make (5)

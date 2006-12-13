@@ -140,7 +140,7 @@ feature{NONE} -- Actions
 
 	on_exit is
 		do
-			external_output_manager.display_state (l_command_has_exited+" with code "+external_launcher.exit_code.out, False)
+			external_output_manager.display_state (l_command_has_exited_with_code (external_launcher.exit_code), False)
 			synchronize_on_external_exit
 		end
 

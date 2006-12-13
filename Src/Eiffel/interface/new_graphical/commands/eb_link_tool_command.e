@@ -39,6 +39,7 @@ feature -- Basic operations
 		local
 			l_all_saved_edges: like all_saved_edges
 			l_world: EIFFEL_WORLD
+			l_string: STRING_GENERAL
 		do
 			if is_sensitive then
 				l_all_saved_edges := all_saved_edges
@@ -60,7 +61,9 @@ feature -- Basic operations
 						[<<agent l_world.disable_right_angles, agent l_world.remove_right_angles, agent disable_select>>],
 						[<<agent l_world.enable_right_angles, agent l_world.apply_right_angles, agent enable_select>>])
 				end
-				current_button.set_tooltip (tooltip + shortcut_string)
+				l_string := tooltip.twin
+				l_string.append (shortcut_string.as_string_32)
+				current_button.set_tooltip (l_string)
 			end
 		end
 
@@ -188,7 +191,7 @@ feature {EB_LINK_TOOL_DIALOG} -- Implementation
 
 feature -- Access
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			if current_button.is_selected then
@@ -209,7 +212,7 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_force_right_angles_icon
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name of the menu entry
 		do
 			Result := Interface_names.m_diagram_link_tool

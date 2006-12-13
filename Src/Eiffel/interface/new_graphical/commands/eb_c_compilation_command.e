@@ -55,7 +55,7 @@ feature -- Execution
 		local
 			makefile_sh_name: FILE_NAME
 			file: PLAIN_TEXT_FILE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if is_workbench then
 				create makefile_sh_name.make_from_string (project_location.workbench_path)
@@ -74,7 +74,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			if is_workbench then

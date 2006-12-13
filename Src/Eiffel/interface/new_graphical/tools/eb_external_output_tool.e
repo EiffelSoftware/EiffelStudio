@@ -482,7 +482,7 @@ feature{NONE} -- Actions
 		local
 			str: STRING
 			ec: EB_EXTERNAL_COMMAND
-			warn_dlg: EV_WARNING_DIALOG
+			warn_dlg: EB_WARNING_DIALOG
 		do
 			ec := corresponding_external_command
 			if ec /= Void then
@@ -677,7 +677,7 @@ feature -- Status reporting
 
 feature -- State setting
 
-	display_state (s: STRING; warning: BOOLEAN) is
+	display_state (s: STRING_GENERAL; warning: BOOLEAN) is
 			-- Display state `s' in state bar of this output tool
 			-- If this is a `warning' state, display in red color,
 			-- otherwise in black color.
@@ -699,7 +699,7 @@ feature{NONE}
 			msg_not_empty: not msg.is_empty
 			a_window_not_void: a_window /= Void
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			create wd.make_with_text (msg)
 			wd.show_modal_to_window (a_window)

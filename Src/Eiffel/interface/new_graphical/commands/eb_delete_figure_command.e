@@ -47,13 +47,13 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.general_reset_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_remove
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.l_diagram_remove
@@ -65,7 +65,7 @@ feature -- Access
 
 	explain_dialog: EB_INFORMATION_DIALOG
 			-- Dialog explaining how to use `Current'.
-			
+
 feature {NONE} -- Implementation
 
 	execute_with_class_stone (a_stone: CLASSI_FIGURE_STONE) is

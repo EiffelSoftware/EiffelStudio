@@ -1218,7 +1218,7 @@ feature {NONE} -- Implementation
 	context_editor: EB_CONTEXT_EDITOR
 			--
 
-	warning_dialog: EV_WARNING_DIALOG
+	warning_dialog: EB_WARNING_DIALOG
 			-- Window that warns user of incorrect syntax or file modification.
 
 	invalidate_text is

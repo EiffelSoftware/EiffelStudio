@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with '&' symbol).
 		deferred
 		ensure
@@ -82,7 +82,7 @@ feature -- Basic operations
 	initialize_menu_item (a_menu_item: EB_COMMAND_MENU_ITEM) is
 			-- Initialize `a_menu_item'
 		local
-			mname: STRING
+			mname: STRING_GENERAL
 		do
 			mname := menu_name.twin
 			if accelerator /= Void then

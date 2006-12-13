@@ -34,7 +34,7 @@ feature{NONE} -- Initialization
 
 feature{NONE} -- Implementation
 
-	warning_dialog: EV_WARNING_DIALOG
+	warning_dialog: EB_WARNING_DIALOG
 		-- Warning to display message	
 
 	owner_window: EV_WINDOW
@@ -75,7 +75,7 @@ feature -- Save
 			retried: BOOLEAN
 			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 			str: STRING
-			con_dlg: EV_CONFIRMATION_DIALOG
+			con_dlg: EB_CONFIRMATION_DIALOG
 			filter_str: STRING
 			l_count, l_count2: INTEGER
 		do

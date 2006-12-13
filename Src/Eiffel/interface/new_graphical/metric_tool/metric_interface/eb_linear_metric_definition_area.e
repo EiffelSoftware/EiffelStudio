@@ -105,12 +105,12 @@ feature {NONE} -- Initialization
 			up_btn.remove_text
 			up_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_up_icon)
 			up_btn.select_actions.extend (agent on_up)
-			up_btn.set_tooltip (metric_names.f_move_row_up + " (" + move_up_shortcut.out + ")")
+			up_btn.set_tooltip (metric_names.f_move_row_up.as_string_32 + " (" + move_up_shortcut.out + ")")
 
 			down_btn.remove_text
 			down_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_down_icon)
 			down_btn.select_actions.extend (agent on_down)
-			down_btn.set_tooltip (metric_names.f_move_row_down + " (" + move_down_shortcut.out + ")")
+			down_btn.set_tooltip (metric_names.f_move_row_down.as_string_32 + " (" + move_down_shortcut.out + ")")
 
 			remove_metric_btn.remove_text
 			remove_metric_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
@@ -118,14 +118,14 @@ feature {NONE} -- Initialization
 			remove_all_metric_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
 			remove_all_metric_btn.select_actions.extend (agent on_remove_all_metrics)
 			remove_metric_btn.select_actions.extend (agent on_remove_metric)
-			remove_metric_btn.set_tooltip (metric_names.f_del_row + " (" + del_key_shortcut.out + ")")
+			remove_metric_btn.set_tooltip (metric_names.f_del_row.as_string_32 + " (" + del_key_shortcut.out + ")")
 			remove_all_metric_btn.set_tooltip (metric_names.f_clear_rows)
 
 			create l_text
 			expression_text.set_background_color (l_text.background_color)
 
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
-			metric_definition_lbl.set_text (metric_names.t_metric_definition + ":")
+			metric_definition_lbl.set_text (metric_names.t_metric_definition.as_string_32 + ":")
 
 				-- Delete following in docking EiffelStudio.
 			linear_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)

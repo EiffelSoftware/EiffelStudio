@@ -125,7 +125,7 @@ feature -- Basic Operations
 			end
 		end
 
-	display_state (s: STRING; warning: BOOLEAN) is
+	display_state (s: STRING_GENERAL; warning: BOOLEAN) is
 			-- Display process state `s' to external command output panel.
 			-- If `warning' is True, display in red color, otherwise in black color.
 		local

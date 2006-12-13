@@ -57,7 +57,7 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.general_undo_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_undo

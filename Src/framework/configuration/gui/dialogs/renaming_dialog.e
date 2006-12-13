@@ -9,7 +9,7 @@ class
 	RENAMING_DIALOG
 
 inherit
-	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [STRING, STRING]]
+	PROPERTY_DIALOG [EQUALITY_HASH_TABLE [STRING_GENERAL, STRING_GENERAL]]
 		redefine
 			initialize,
 			on_ok
@@ -119,7 +119,7 @@ feature {NONE} -- Agents
 	on_ok is
 			-- Ok was pressed.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if wd = Void then
 				Precursor {PROPERTY_DIALOG}
@@ -130,24 +130,30 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	update_key (an_old_key, a_new_key: STRING) is
+	update_key (an_old_key, a_new_key: STRING_GENERAL) is
 			-- Update `an_old_key' with `a_new_key'.
 		require
 			an_old_key_ok: value /= Void and then value.has (an_old_key)
+		local
+			l_string: STRING_GENERAL
 		do
-			if a_new_key /= Void and then not a_new_key.is_empty and then not value.has (a_new_key) then
-				value.replace_key (a_new_key.as_upper, an_old_key)
+			l_string := conf_interface_names.string_general_to_upper (a_new_key)
+			if a_new_key /= Void and then not a_new_key.is_empty and then not value.has (l_string) then
+				value.replace_key (l_string, an_old_key)
 			end
 			refresh
 		end
 
-	update_value (a_key, a_new_value: STRING) is
+	update_value (a_key, a_new_value: STRING_GENERAL) is
 			-- Update value of `a_key' to `a_new_value'
 		require
 			a_key_ok: value /= Void and then value.has (a_key)
+		local
+			l_string: STRING_GENERAL
 		do
-			if a_new_value /= Void and then not a_new_value.is_empty and then not value.has_item (a_new_value.as_upper) then
-				value.force (a_new_value.as_upper, a_key)
+			l_string := conf_interface_names.string_general_to_upper (a_new_value)
+			if a_new_value /= Void and then not a_new_value.is_empty and then not value.has_item (l_string) then
+				value.force (l_string, a_key)
 			end
 			refresh
 		end
@@ -157,7 +163,7 @@ feature {NONE} -- Implementation
 		require
 			initialized: is_initialized
 		local
-			l_tp: STRING_PROPERTY [STRING]
+			l_tp: STRING_PROPERTY [STRING_GENERAL]
 			i: INTEGER
 		do
 			grid.clear

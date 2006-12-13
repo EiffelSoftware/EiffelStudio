@@ -100,7 +100,7 @@ feature -- Access
 
 feature -- Element Change
 
-	set_summary (a_string: STRING) is
+	set_summary (a_string: STRING_GENERAL) is
 			-- Set summary label text.
 		require
 			a_string_not_void: a_string /= Void

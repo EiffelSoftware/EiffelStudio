@@ -362,7 +362,7 @@ feature -- Element change
 			old_file: RAW_FILE
 			new_file: RAW_FILE
 			input: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 			fname: FILE_NAME
 			tdirsrc, tdirdes: KL_DIRECTORY
@@ -520,7 +520,7 @@ feature -- Element change
 			a_group_not_void: a_group /= Void
 			a_path_not_void: a_path /= Void
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if not error_in_config then
 				remove_group_from_config (a_group, a_path)

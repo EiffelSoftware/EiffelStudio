@@ -108,7 +108,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_4)
 			l_ev_cell_1.set_minimum_width (5)
-			l_ev_label_1.set_text ("Find : ")
+			l_ev_label_1.set_text ("Find: ")
 			l_ev_label_1.align_text_left
 			keyword_field.set_minimum_width (250)
 			l_ev_cell_2.set_minimum_width (3)
@@ -117,7 +117,7 @@ feature {NONE}-- Initialization
 			l_ev_cell_3.set_minimum_width (3)
 			match_case_button.set_text ("Match case")
 			match_case_button.set_tooltip ("Match case?")
-			regular_expression_button.set_text ("Regex")
+			regular_expression_button.set_text ("Regexp")
 			regular_expression_button.set_tooltip ("Use regular expression?")
 			l_ev_cell_4.set_minimum_width (3)
 			advanced_button.set_tooltip ("Advanced search")

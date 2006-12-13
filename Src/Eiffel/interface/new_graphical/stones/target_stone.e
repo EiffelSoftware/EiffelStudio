@@ -60,7 +60,7 @@ feature -- Access
 			Result := target.name
 		end
 
-	header: STRING is
+	header: STRING_GENERAL is
 			-- String to describe Current
 			-- (as it may be described in the title of a development window).
 		do

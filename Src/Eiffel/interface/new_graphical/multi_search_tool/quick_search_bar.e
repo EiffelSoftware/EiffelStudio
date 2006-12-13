@@ -47,7 +47,7 @@ inherit
 			copy
 		end
 
-	INTERFACE_NAMES
+	EB_CONSTANTS
 		export
 			{NONE} all
 		undefine
@@ -78,6 +78,15 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			next_button.set_tooltip (interface_names.b_next)
+			previous_button.set_tooltip (interface_names.b_previous)
+			match_case_button.set_text (interface_names.l_match_case)
+			match_case_button.set_tooltip (interface_names.f_match_case_question)
+			regular_expression_button.set_text (interface_names.l_regexp)
+			regular_expression_button.set_tooltip (interface_names.f_use_regular_expression_question)
+			advanced_button.set_tooltip (interface_names.f_advanced_search)
+			close_button.set_tooltip (interface_names.f_close)
+
 			next_button.set_pixmap (icon_pixmaps.general_arrow_down_icon)
 			previous_button.set_pixmap (icon_pixmaps.general_arrow_up_icon)
 			advanced_button.set_pixmap (icon_pixmaps.tool_advanced_search_icon)
@@ -87,8 +96,8 @@ feature {NONE} -- Initialization
 													icon_pixmaps.search_first_reached_icon.height)
 			bottom_reached_pixmap.set_minimum_size (icon_pixmaps.search_first_reached_icon.width,
 														icon_pixmaps.search_first_reached_icon.height)
-			first_reached_pixmap.set_tooltip (t_first_match_reached)
-			bottom_reached_pixmap.set_tooltip (t_bottom_reached)
+			first_reached_pixmap.set_tooltip (interface_names.t_first_match_reached)
+			bottom_reached_pixmap.set_tooltip (interface_names.t_bottom_reached)
 			message_box.extend (first_reached_pixmap)
 			message_box.extend (bottom_reached_pixmap)
 			first_reached_pixmap.hide

@@ -255,9 +255,9 @@ feature {NONE} -- Error reporting
 		do
 			create Result
 			Result.set_title ("Configuration Loading Error")
-			Result.set_buttons (<< ev_ok >>)
-			Result.set_default_push_button (Result.button (ev_ok))
-			Result.set_default_cancel_button (Result.button (ev_ok))
+			Result.set_buttons (<< interface_names.b_ok >>)
+			Result.set_default_push_button (Result.button (interface_names.b_ok))
+			Result.set_default_cancel_button (Result.button (interface_names.b_ok))
 		end
 
 	report_non_readable_configuration_file (a_file_name: STRING) is
@@ -366,7 +366,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 				-- Ace file included in the header of the .epr file...we can recompile if needed.
 			create cd.make_initialized (
@@ -422,12 +422,12 @@ feature {NONE} -- Error reporting
 	report_project_loaded_successfully is
 			-- Report that project was loaded successfully.
 		local
-			l_title: STRING
+			l_title: STRING_GENERAL
 		do
 			l_title := Interface_names.l_loaded_project.twin
 			l_title.append (target_name)
 			if Eiffel_system.is_precompiled then
-				l_title.append ("  (precompiled)")
+				l_title.append (interface_names.l_precompiled)
 			end
 			window_manager.display_message (l_title)
 			recent_projects_manager.add_recent_project (config_file_name)
@@ -471,9 +471,9 @@ feature {NONE} -- User interaction
 			create l_ev
 			l_save_as_msg := "Save As..."
 			l_ev.set_title ("Configuration Loading Message")
-			l_ev.set_buttons (<< ev_ok, l_save_as_msg, ev_cancel>>)
-			l_ev.set_default_push_button (l_ev.button (ev_ok))
-			l_ev.set_default_cancel_button (l_ev.button (ev_cancel))
+			l_ev.set_buttons (<<interface_names.b_ok, l_save_as_msg, interface_names.b_cancel>>)
+			l_ev.set_default_push_button (l_ev.button (interface_names.b_ok))
+			l_ev.set_default_cancel_button (l_ev.button (interface_names.b_ok))
 			l_ev.set_text ("Your old configration file needs to be converted to the new format.%N%
 				%The default name for the new configuration is '" + a_file_name + "'.%N%
 				%Select OK if you want to keep this name, or 'Save As...' to choose a different name.")
@@ -486,8 +486,8 @@ feature {NONE} -- User interaction
 			l_save_as.cancel_actions.extend (agent set_has_error)
 
 			l_ev.button (l_save_as_msg).select_actions.extend (agent l_save_as.show_modal_to_window (parent_window))
-			l_ev.button (ev_cancel).select_actions.extend (agent on_cancelled (l_ev))
-			l_ev.button (ev_ok).select_actions.extend (agent a_action.call ([l_file_name.string]))
+			l_ev.button (interface_names.b_cancel).select_actions.extend (agent on_cancelled (l_ev))
+			l_ev.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([l_file_name.string]))
 			l_ev.show_modal_to_window (parent_window)
 		end
 
@@ -501,7 +501,7 @@ feature {NONE} -- User interaction
 			a_action_not_void: a_action /= Void
 		local
 			file_name: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			file: RAW_FILE
 		do
 				-- This is a callback from the name chooser when user click OK.
@@ -510,11 +510,11 @@ feature {NONE} -- User interaction
 			create file.make (file_name)
 			if file.exists then
 				create wd.make_with_text (Warning_messages.w_file_exists (file_name))
-				wd.set_buttons (<< ev_ok, ev_cancel >>)
-				wd.set_default_push_button (wd.button (ev_ok))
-				wd.set_default_cancel_button (wd.button (ev_cancel))
-				wd.button (ev_cancel).select_actions.extend (agent a_dlg.show_modal_to_window (parent_window))
-				wd.button (ev_ok).select_actions.extend (agent a_action.call ([file_name]))
+				wd.set_buttons (<< interface_names.b_ok, interface_names.b_cancel >>)
+				wd.set_default_push_button (wd.button (interface_names.b_ok))
+				wd.set_default_cancel_button (wd.button (interface_names.b_cancel))
+				wd.button (interface_names.b_cancel).select_actions.extend (agent a_dlg.show_modal_to_window (parent_window))
+				wd.button (interface_names.b_ok).select_actions.extend (agent a_action.call ([file_name]))
 
 					-- Display the warning window. If user presses `Cancel' we ask him again
 					-- for a file name, otherwise if he presses `OK' we simply override
@@ -530,7 +530,7 @@ feature {NONE} -- User interaction
 			-- If not Void, `a_target' is the one selected by user.
 		local
 			l_dialog: EV_DIALOG
-			l_error_dialog: EV_WARNING_DIALOG
+			l_error_dialog: EB_WARNING_DIALOG
 			l_list: EV_LIST
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
@@ -597,7 +597,7 @@ feature {NONE} -- User interaction
 				l_hbox.extend (l_select_button)
 				l_hbox.disable_item_expand (l_select_button)
 
-				create l_button.make_with_text_and_action (ev_cancel, agent on_cancelled (l_dialog))
+				create l_button.make_with_text_and_action (interface_names.b_cancel, agent on_cancelled (l_dialog))
 				set_default_width_for_button (l_button)
 				l_hbox.extend (l_button)
 				l_hbox.disable_item_expand (l_button)
@@ -650,10 +650,10 @@ feature {NONE} -- User interaction
 	ask_environment_update (a_key, a_old_val, a_new_val: STRING) is
 			-- Should new environment values be accepted?
 		local
-			l_cd: EV_CONFIRMATION_DIALOG
+			l_cd: EB_CONFIRMATION_DIALOG
 		do
 			create l_cd.make_with_text (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val))
-			l_cd.set_buttons_and_actions (<<"Yes", "No">>,
+			l_cd.set_buttons_and_actions (<<interface_names.b_yes, interface_names.b_no>>,
 				<<agent do is_update_environment := True end, agent do is_update_environment := False end>>)
 			l_cd.show_modal_to_window (parent_window)
 		end

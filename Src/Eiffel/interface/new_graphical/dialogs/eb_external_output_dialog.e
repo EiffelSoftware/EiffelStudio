@@ -19,6 +19,13 @@ inherit
 			copy, default_create
 		end
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			copy, default_create
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -41,7 +48,7 @@ feature {NONE} -- Initialization
 			text_field.disable_edit
 			l_vb.extend (text_field)
 
-			create cancel_button.make_with_text_and_action ((create {EV_DIALOG_CONSTANTS}).ev_cancel, agent
+			create cancel_button.make_with_text_and_action (interface_names.b_cancel, agent
 				do
 					if process /= Void then
 						process.terminate_tree

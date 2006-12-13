@@ -158,7 +158,7 @@ feature {NONE} -- Agents
 	on_ok is
 			-- Ok was pressed.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if wd = Void then
 				Precursor {PROPERTY_DIALOG}

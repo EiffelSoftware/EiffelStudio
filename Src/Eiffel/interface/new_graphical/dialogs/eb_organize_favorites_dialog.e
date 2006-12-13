@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 		local
 			folder_name_dialog: EB_TYPE_FOLDER_DIALOG
 			folder_name: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			create folder_name_dialog.make
 			folder_name_dialog.show_modal_to_window (Current)
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			item_to_move: EB_FAVORITES_ITEM
 			conv_folder: EB_FAVORITES_FOLDER
 			conv_item: EB_FAVORITES_ITEM
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 				-- Retrieve item to move
 			item_to_move ?= favorites_tree.selected_item.data

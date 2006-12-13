@@ -332,7 +332,7 @@ feature{NONE}	-- Implementation
 	show_no_system_defined_dlg is
 			-- Show a dialog warning no eiffel system defined.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			create wd.make_with_text (Warning_messages.w_No_system_defined)
 			wd.show_modal_to_window (owner.window)
@@ -345,7 +345,7 @@ feature{NONE}	-- Implementation
 			msg_not_empty: not msg.is_empty
 			a_window_not_void: a_window /= Void
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			create wd.make_with_text (msg)
 			wd.show_modal_to_window (a_window)
@@ -456,7 +456,7 @@ feature{NONE}	-- Implementation
 			end
 		end
 
-	display_status_message (a_msg: STRING) is
+	display_status_message (a_msg: STRING_GENERAL) is
 			-- Display message `a_msg' in `message_label'.
 		require
 			a_msg_attached: a_msg /= Void

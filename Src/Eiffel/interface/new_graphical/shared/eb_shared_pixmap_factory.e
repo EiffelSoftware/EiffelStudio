@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 		local
 			full_path: FILE_NAME
 			retried: BOOLEAN
-			warning_dialog: EV_WARNING_DIALOG
+			warning_dialog: EB_WARNING_DIALOG
 		do
 			if not retried then
 					-- Initialize the pathname & load the file

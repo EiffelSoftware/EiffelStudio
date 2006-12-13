@@ -95,7 +95,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Print
@@ -107,19 +107,19 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.general_print_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Print
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Print
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.e_Print
@@ -165,7 +165,7 @@ feature {NONE} -- implementation
 		local
 			char: CHARACTER
 			new_file: PLAIN_TEXT_FILE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			saved := False
 			if not a_filename.is_empty then

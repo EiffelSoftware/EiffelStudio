@@ -43,7 +43,7 @@ feature {NONE} -- Initialize
 			option_frame: EV_FRAME
 		do
 					-- Search box
-			create label_search.make_with_text (Interface_names.l_Search_for + " ")
+			create label_search.make_with_text (Interface_names.l_Search_for)
 			label_search.align_text_left
 			size := label_search.minimum_width
 
@@ -80,7 +80,7 @@ feature {NONE} -- Initialize
 			create hbox
 			replace_box.extend (hbox)
 			replace_box.disable_item_expand (hbox)
-			create label.make_with_text (interface_names.l_replace_with + " ")
+			create label.make_with_text (interface_names.l_replace_with)
 
 			hbox.extend (label)
 			hbox.disable_item_expand (label)
@@ -192,7 +192,7 @@ feature {NONE} -- Initialize
 			notebook.extend (vbox)
 			notebook.extend (scope_tab)
 			notebook.item_tab (vbox).set_text (interface_names.t_search_tool)
-			notebook.item_tab (scope_tab).set_text (interface_names.l_scope)
+			notebook.item_tab (scope_tab).set_text (interface_names.l_scope.twin)
 
 			create vbox
 			vbox.extend (notebook)
@@ -330,13 +330,19 @@ feature -- EB_TOOL
 	widget: EV_WIDGET
 			-- Widget representing Current
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool
 		do
 			Result := Interface_names.t_Search_tool
 		end
 
-	menu_name: STRING is
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_Search_tool
+		end
+
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := Interface_names.m_Search_tool
@@ -638,7 +644,7 @@ feature {NONE} -- Implementation
 	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
 			-- Build explorer bar item
 		do
-			create explorer_bar_item.make (explorer_bar, widget, title, True)
+			create explorer_bar_item.make (explorer_bar, widget, title, title_for_pre, True)
 			explorer_bar_item.set_menu_name (menu_name)
 			explorer_bar_item.set_pixmap (pixmap)
 			explorer_bar.add (explorer_bar_item)

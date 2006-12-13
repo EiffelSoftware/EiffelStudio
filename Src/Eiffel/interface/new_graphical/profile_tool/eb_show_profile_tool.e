@@ -17,7 +17,7 @@ inherit
 
 feature -- Access
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry associated with `Current'.
 		do
 			Result := Interface_names.m_Profile_tool

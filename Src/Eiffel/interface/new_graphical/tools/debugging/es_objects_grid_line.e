@@ -560,7 +560,7 @@ feature -- Graphical changes
 			grid_cell_set_text (glab, v)
 		end
 
-	set_type (v: STRING) is
+	set_type (v: STRING_GENERAL) is
 		require
 			is_attached_to_row: is_attached_to_row
 		local
@@ -602,7 +602,7 @@ feature -- Graphical changes
 			grid_cell_set_text (glab, v)
 		end
 
-	set_context (v: STRING) is
+	set_context (v: STRING_GENERAL) is
 		local
 			glab: EV_GRID_LABEL_ITEM
 		do
@@ -1126,12 +1126,12 @@ feature {NONE} -- Implementation
 			Result := parent_grid.Title_font
 		end
 
-	folder_label_item (s: STRING): EV_GRID_LABEL_ITEM is
+	folder_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM is
 		do
 			Result := parent_grid.folder_label_item (s)
 		end
 
-	slice_label_item (s: STRING): EV_GRID_LABEL_ITEM is
+	slice_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM is
 		do
 			create Result
 			grid_cell_set_text (Result, s)

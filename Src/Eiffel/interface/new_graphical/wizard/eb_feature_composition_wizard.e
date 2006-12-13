@@ -85,18 +85,18 @@ feature {NONE} -- Initialization
 		local
 			h_box: EV_HORIZONTAL_BOX
 		do
-			create feature_select.make_with_text ("Select feature type")
+			create feature_select.make_with_text (interface_names.l_select_feature_type)
 			create h_box
 			extend_no_expand (h_box, create {EV_CELL})
 			h_box.i_th (1).set_minimum_width (layout_constants.default_padding_size)
 			feature_select.extend (h_box)
-			create proc_button.make_with_text ("Procedure")
+			create proc_button.make_with_text (interface_names.l_procedure)
 			h_box.extend (proc_button)
 			proc_button.select_actions.extend (agent on_proc_select)
-			create func_button.make_with_text ("Function")
+			create func_button.make_with_text (interface_names.l_function)
 			h_box.extend (func_button)
 			func_button.select_actions.extend (agent on_func_select)
-			create attr_button.make_with_text ("Attribute")
+			create attr_button.make_with_text (interface_names.l_Attribute)
 			h_box.extend (attr_button)
 			attr_button.select_actions.extend (agent on_attr_select)
 		end

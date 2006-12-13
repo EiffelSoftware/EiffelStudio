@@ -55,7 +55,7 @@ feature -- Access
 	version: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			-- Enabled for a certain version number? Indexed by the type of the version number.
 
-	custom: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]], STRING]
+	custom: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
 			-- Custom variables that have to be fullfilled indexed by the variable name.
 
 feature -- Queries
@@ -65,12 +65,12 @@ feature -- Queries
 		require
 			a_state_not_void: a_state /= Void
 		local
-			l_cust_cond: EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]]
-			l_vars: EQUALITY_HASH_TABLE [STRING, STRING]
+			l_cust_cond: EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]]
+			l_vars: EQUALITY_HASH_TABLE [STRING_GENERAL, STRING_GENERAL]
 			l_version: HASH_TABLE [CONF_VERSION, STRING]
 			l_ver_cond: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
 			l_ver_state: CONF_VERSION
-			l_var_key, l_var_val: STRING
+			l_var_key, l_var_val: STRING_GENERAL
 		do
 			Result := True
 				-- multithreaded
@@ -126,7 +126,10 @@ feature -- Queries
 					l_var_key := custom.key_for_iteration
 					l_var_val := l_vars.item (l_var_key)
 					if l_var_val = Void then
-						l_var_val := execution_environment.variable_value (l_var_key)
+						check
+							l_var_key_valid_as_string_8: l_var_key.is_valid_as_string_8
+						end
+						l_var_val := execution_environment.variable_value (l_var_key.as_string_8)
 					end
 					Result := equal (l_var_val, l_cust_cond.item.value) xor l_cust_cond.item.invert
 					custom.forth
@@ -248,7 +251,7 @@ feature -- Update
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		do
-			custom.force ([a_value, False], a_name)
+			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, False]), a_name)
 		end
 
 	exclude_custom (a_name, a_value: STRING) is
@@ -257,7 +260,7 @@ feature -- Update
 			a_name_not_void: a_name /= Void
 			a_value_not_void: a_value /= Void
 		do
-			custom.force ([a_value, True], a_name)
+			custom.force (create {EQUALITY_TUPLE [TUPLE [STRING_GENERAL, BOOLEAN]]}.make ([a_value, True]), a_name)
 		end
 
 	wipe_out_custom is
@@ -401,13 +404,17 @@ feature -- Output
 			until
 				custom.after
 			loop
-				Result.append (custom.key_for_iteration)
+				check
+					is_valid_as_string_8: custom.key_for_iteration.is_valid_as_string_8
+					is_valid_as_string_8: custom.item_for_iteration.item.value.is_valid_as_string_8
+				end
+				Result.append (custom.key_for_iteration.as_string_8)
 				if custom.item_for_iteration.item.invert then
 					Result.append (" /= ")
 				else
 					Result.append (" = ")
 				end
-				Result.append (custom.item_for_iteration.item.value + " and ")
+				Result.append (custom.item_for_iteration.item.value.as_string_8 + " and ")
 				custom.forth
 			end
 

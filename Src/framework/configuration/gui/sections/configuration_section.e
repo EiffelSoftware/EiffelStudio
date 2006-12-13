@@ -58,7 +58,7 @@ feature	-- Access
 	configuration_window: CONFIGURATION_WINDOW
 			-- Window where to display information.
 
-	name: STRING is
+	name: STRING_GENERAL is
 			-- Name of the section.
 		deferred
 		ensure

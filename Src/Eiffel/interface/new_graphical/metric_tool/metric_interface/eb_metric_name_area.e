@@ -60,6 +60,10 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT_FIELD
 		do
+			name_lbl.set_text (metric_names.l_name_colon)
+			type_lbl.set_text (metric_names.l_type_colon)
+			unit_lbl.set_text (metric_names.l_unit_colon)
+			description_lbl.set_text (metric_names.l_description_colon)
 			name_text_read_only.hide
 			description_text_read_only.hide
 			create l_text

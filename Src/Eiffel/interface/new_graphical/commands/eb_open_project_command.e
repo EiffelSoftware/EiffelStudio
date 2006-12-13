@@ -89,7 +89,7 @@ feature -- Execution
 		require
 			a_project_file_name_valid: a_project_file_name /= Void
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			file: RAW_FILE
 			ebench_name: STRING
 			l_project_loader: EB_GRAPHICAL_PROJECT_LOADER

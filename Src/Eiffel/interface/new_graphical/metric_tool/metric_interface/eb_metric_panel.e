@@ -150,7 +150,7 @@ feature -- Actions
 		do
 			ev_application.process_events
 			if a_item /= Void then
-				display_status_message (metric_names.e_evaluating + a_item.path)
+				display_status_message (metric_names.e_evaluating.as_string_32 + a_item.path)
 			end
 		end
 
@@ -217,7 +217,7 @@ feature{NONE} -- Implementation
 			metric_tool.display_error_message
 		end
 
-	display_message (a_message: STRING) is
+	display_message (a_message: STRING_GENERAL) is
 			-- Display `a_message' in a prompt-out information dialog.
 		require
 			a_message_attached: a_message /= Void

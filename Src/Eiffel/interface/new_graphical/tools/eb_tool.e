@@ -77,14 +77,14 @@ feature -- Access
 		deferred
 		end
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool
 		deferred
 		ensure
 			valid_title: title /= Void and then not title.is_empty
 		end
 
-	minimized_title: STRING is
+	minimized_title: STRING_GENERAL is
 			-- Title of the tool when minimized.
 			--
 			-- By default this name is the same as `title', redefine this
@@ -95,7 +95,7 @@ feature -- Access
 			valid_minimized_title: minimized_title /= Void and then not minimized_title.is_empty
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 			--
 			-- By default this name is the same as `title', redefine this

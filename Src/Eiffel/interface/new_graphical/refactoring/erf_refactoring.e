@@ -24,6 +24,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature {ERF_REFACTORING} -- Initialization
 
 	make (an_undo_stack: STACK [LIST [ERF_ACTION]]; a_preference: PREFERENCES) is
@@ -56,8 +61,8 @@ feature -- Basic actions
 		local
 			all_checks_ok: BOOLEAN
 			compiler_check: ERF_COMPILATION_SUCCESSFUL
-			wd: EV_WARNING_DIALOG
-			qd: EV_QUESTION_DIALOG
+			wd: EB_WARNING_DIALOG
+			qd: EB_QUESTION_DIALOG
 			evcsts: EV_DIALOG_CONSTANTS
 		do
 			success := False
@@ -98,11 +103,11 @@ feature -- Basic actions
 						if not success then
 								-- success, because, now the user can choose to keep the changes or if he rollbacks, success will be set to False
 							success := True
-							create qd.make_with_text (compiler_check.error_message+" Rollback?")
+							create qd.make_with_text (compiler_check.error_message.as_string_32+" " + interface_names.l_rollback_question)
 							create evcsts
-							qd.button (evcsts.ev_yes).select_actions.extend (agent rollback)
-							qd.button (evcsts.ev_no).select_actions.extend (agent commit)
-							qd.button (evcsts.ev_cancel).hide
+							qd.button (interface_names.b_yes).select_actions.extend (agent rollback)
+							qd.button (interface_names.b_no).select_actions.extend (agent commit)
+							qd.button (interface_names.b_cancel).hide
 							qd.show_modal_to_window (window_manager.last_focused_development_window.window)
 						else
 							commit
@@ -297,7 +302,7 @@ feature {NONE} -- Implementation
 		require
 			c_not_void: c /= Void
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			c.execute
 			Result := c.success

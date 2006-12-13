@@ -45,7 +45,7 @@ feature -- Access
 			end
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Identifier of `Current' in menus.
 		do
 			inspect flag
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end
 
-	command_name: STRING is
+	command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
 			inspect flag

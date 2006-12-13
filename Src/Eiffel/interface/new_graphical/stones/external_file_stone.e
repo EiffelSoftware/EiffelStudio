@@ -19,7 +19,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_file: FILE) is
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
- 
+
 --	class_i: CLASS_I is
 --		do
 --			Result := actual_class_i
@@ -77,7 +77,7 @@ feature -- Properties
 
 	history_name: STRING is
 		do
-			Result := Interface_names.s_Class_stone + stone_signature
+			Result := Interface_names.s_Class_stone.as_string_32 + stone_signature
 		end
 
 	same_as (other: STONE): BOOLEAN is
@@ -93,17 +93,13 @@ feature -- Access
 
 	file: FILE
 
-	header: STRING is
-			-- Display class name, class' cluster and class location in 
+	header: STRING_GENERAL is
+			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
-			create Result.make (20)
-			Result.append (stone_signature)
-			Result.append ("(not an Eiffel class file) ")
-			Result.append ("  located in ")
-			Result.append (file.name)
+			Result := interface_names.l_not_eiffel_class_file (stone_signature, file.name)
 		end
- 
+
 	is_valid: BOOLEAN is
 			-- Is `Current' a valid stone?
 		do
@@ -112,14 +108,14 @@ feature -- Access
 --
 --	synchronized_stone: CLASSI_STONE is
 --			-- Clone of `Current' after a recompilation
---			-- (May be Void if not valid anymore. It may also 
+--			-- (May be Void if not valid anymore. It may also
 --			-- be a classc_stone if the class is compiled now)
 --		local
 --			new_cluster: CLUSTER_I
 --			new_ci: CLASS_I
 --		do
 --			if class_i /= Void then
---				new_cluster := Eiffel_Universe.cluster_of_name 
+--				new_cluster := Eiffel_Universe.cluster_of_name
 --							(class_i.cluster.cluster_name)
 --				if new_cluster /= Void then
 --					new_ci := new_cluster.class_with_name (class_i.name)

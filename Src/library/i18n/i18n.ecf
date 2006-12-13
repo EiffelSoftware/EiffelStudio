@@ -16,7 +16,6 @@
 			<warning name="vjrv" enabled="false"/>
 			<warning name="vweq" enabled="false"/>
 		</option>
-		<setting name="platform" value="unix"/>
 		<external_include location="$(ISE_LIBRARY)/library/i18n/include/"/>
 		<external_object location="$(ISE_LIBRARY)/library/i18n/spec/$(ISE_PLATFORM)/lib/posix_locale.a">
 			<condition>

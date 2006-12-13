@@ -151,12 +151,13 @@ feature -- Status setting
 	raise is
 			-- Request that window be displayed above all other windows.
 		do
-			if not is_displayed then
-				{EV_GTK_EXTERNALS}.gdk_window_show ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
-					-- `gdk_window_show' will automatically raise the window.
-			else
-				{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			if not is_show_requested then
+				show
 			end
+			if is_minimized then
+				restore
+			end
+			{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
 	lower is

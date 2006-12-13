@@ -82,15 +82,15 @@ feature {NONE} -- Contract support
 			not_destroyed: not is_destroyed
 		local
 			c: CURSOR
-			l: LINKED_LIST [G]
+			l: ARRAYED_LIST [G]
 		do
-			create l.make
+			create l.make (count)
 			Result := True
 			c := cursor
 			from
 				start
 			until
-				after or Result = False
+				after or not Result
 			loop
 				if l.has (item) then
 					Result := False

@@ -1096,57 +1096,61 @@ feature -- Metadata description
 			l_attributes: INTEGER
 			l_uni_string: UNI_STRING
 		do
-			class_c := class_type.associated_class
-			l_name := class_type.full_il_type_name
-			create l_uni_string.make (l_name)
+			if class_mapping.item (class_type.static_type_id) = 0 then
 
-			if
-				class_type.is_precompiled or
-				il_code_generator.il_module (class_type) /= Current
-			then
-				l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
-			else
-				update_parents (class_type, class_c, True)
-
-				l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
-					{MD_TYPE_ATTRIBUTES}.Auto_layout |
-					{MD_TYPE_ATTRIBUTES}.Ansi_class
-
-				if class_type.is_generated_as_single_type then
-					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_class |
-						{MD_TYPE_ATTRIBUTES}.Serializable
-					if class_c.is_deferred then
-						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.abstract
-					end
-					if class_c.is_frozen or class_type.is_expanded then
-						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
-					end
-
-					single_parent_mapping.put (single_inheritance_parent_id,
-						class_type.implementation_id)
-				else
-					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_interface |
-						{MD_TYPE_ATTRIBUTES}.Abstract
-				end
-
-				l_type_token := md_emit.define_type (l_uni_string, l_attributes,
-					single_inheritance_token, last_parents)
-
-				if not il_code_generator.is_single_module then
-					class_type.set_last_type_token (l_type_token)
-				end
+				class_c := class_type.associated_class
+				l_name := class_type.full_il_type_name
+				create l_uni_string.make (l_name)
 
 				if
-					is_debug_info_enabled and then
-					internal_dbg_documents.item (class_c.class_id) = Void
+					class_type.is_precompiled or
+					il_code_generator.il_module (class_type) /= Current
 				then
-					l_uni_string.set_string (class_c.file_name)
-					internal_dbg_documents.put (dbg_writer.define_document (l_uni_string,
-						language_guid, vendor_guid, document_type_guid), class_c.class_id)
-				end
-			end
+					l_type_token := md_emit.define_type_ref (l_uni_string, assembly_token (class_type))
+				else
+					update_parents (class_type, class_c, True)
 
-			class_mapping.put (l_type_token, class_type.static_type_id)
+					l_attributes := {MD_TYPE_ATTRIBUTES}.Public |
+						{MD_TYPE_ATTRIBUTES}.Auto_layout |
+						{MD_TYPE_ATTRIBUTES}.Ansi_class
+
+					if class_type.is_generated_as_single_type then
+						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_class |
+							{MD_TYPE_ATTRIBUTES}.Serializable
+						if class_c.is_deferred then
+							l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.abstract
+						end
+						if class_c.is_frozen or class_type.is_expanded then
+							l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
+						end
+
+						single_parent_mapping.put (single_inheritance_parent_id,
+							class_type.implementation_id)
+					else
+						l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Is_interface |
+							{MD_TYPE_ATTRIBUTES}.Abstract
+					end
+
+					l_type_token := md_emit.define_type (l_uni_string, l_attributes,
+						single_inheritance_token, last_parents)
+
+					if not il_code_generator.is_single_module then
+						class_type.set_last_type_token (l_type_token)
+					end
+
+					if
+						is_debug_info_enabled and then
+						internal_dbg_documents.item (class_c.class_id) = Void
+					then
+						l_uni_string.set_string (class_c.file_name)
+						internal_dbg_documents.put (dbg_writer.define_document (l_uni_string,
+							language_guid, vendor_guid, document_type_guid), class_c.class_id)
+					end
+				end
+
+				class_mapping.put (l_type_token, class_type.static_type_id)
+
+			end
 		end
 
 	generate_implementation_class_mapping (class_type: CLASS_TYPE) is
@@ -1236,6 +1240,7 @@ feature -- Metadata description
 			l_single_inheritance_parent_id: like single_inheritance_parent_id
 			l_has_an_eiffel_parent: BOOLEAN
 			interface_class_type: CLASS_TYPE
+			gen_type: GEN_TYPE_I
 		do
 			parents := class_c.parents
 			from
@@ -1343,9 +1348,40 @@ feature -- Metadata description
 						interface_class_type := class_c.types.search_item (class_type.type.reference_type)
 						l_parents.force (actual_class_type_token (interface_class_type.static_type_id), i)
 						i := i + 1
-					elseif not for_interface then
-						l_parents.force (actual_class_type_token (class_type.static_type_id), i)
-						i := i + 1
+						if class_c.is_generic then
+							gen_type ?= interface_class_type.type
+							gen_type.enumerate_interfaces (
+								agent (c: CLASS_TYPE; p: ARRAY [INTEGER])
+									do
+										p.force (actual_class_type_token (c.static_type_id), p.count)
+									end
+								(?, l_parents)
+							)
+							i := l_parents.count
+						end
+					else
+						if not for_interface then
+							l_parents.force (actual_class_type_token (class_type.static_type_id), i)
+							i := i + 1
+						end
+						if class_c.is_generic then
+							gen_type ?= class_type.type
+							gen_type.enumerate_interfaces (
+								agent (c: CLASS_TYPE; p: ARRAY [INTEGER])
+									local
+										j: INTEGER
+									do
+											-- Replace the last entry if 0 or add a new one.
+										j := p.upper
+										if p.item (j) /= 0 then
+											j := j + 1
+										end
+										p.force (actual_class_type_token (c.static_type_id), j)
+									end
+								(?, l_parents)
+							)
+							i := l_parents.count
+						end
 					end
 				end
 				l_parents.force (0, i)

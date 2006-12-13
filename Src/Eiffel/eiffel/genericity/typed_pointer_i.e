@@ -34,7 +34,7 @@ inherit
 		redefine
 			is_feature_pointer, description, sk_value,
 			element_type, tuple_code, true_reference_type,
-			name, hash_code
+			name, hash_code, generic_derivation
 		end
 
 create
@@ -92,6 +92,30 @@ feature -- Access
 			-- Tuple code for class type
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.pointer_tuple_code
+		end
+
+	generic_derivation: like Current is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_I
+			-- which can be used to search its associated CLASS_TYPE.
+		local
+			c: like cr_info
+		do
+			if system.il_generation then
+					-- We need to keep track of all generic derivation,
+					-- thus we can keep current as a valid generic derivation.
+				c := cr_info
+					-- Remove creation information.
+				cr_info := Void
+				Result := twin
+				cr_info := c
+				Result.set_meta_generic (meta_generic.twin)
+				Result.set_true_generics (true_generics.twin)
+				Result.meta_generic.put (Result.meta_generic.item (1).generic_derivation, 1)
+				Result.true_generics.put (Result.true_generics.item (1).generic_derivation, 1)
+			else
+				Result := Precursor {ONE_GEN_TYPE_I}
+			end
 		end
 
 feature

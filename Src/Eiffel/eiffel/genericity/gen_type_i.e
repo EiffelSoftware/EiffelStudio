@@ -490,7 +490,59 @@ feature {NONE} -- Generic conformance
 			make_gen_type_byte_code (ba, True)
 		end
 
+feature {GEN_TYPE_I} -- Generic conformance
+
+	enumerate_interfaces_recursively (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]; n: INTEGER) is
+			-- Enumerate all class types for which an object of this type can be attached to
+			-- using `n' as an upper bound for generic parameters that can be changed.
+		require
+			processor_attached: processor /= Void
+			valid_n: 1 <= n and n <= meta_generic.count
+		local
+			gen_type: GEN_TYPE_I
+			parameter: TYPE_I
+			cl_type: CL_TYPE_I
+			i: INTEGER
+		do
+				-- Enumerate types where expanded parameters are replaced with reference ones.
+			from
+				i := n
+			until
+				i <= 0
+			loop
+				parameter := true_generics [i]
+				if parameter.is_expanded then
+					gen_type := duplicate
+					cl_type ?= parameter
+					check
+						cl_type_attached: cl_type /= Void
+					end
+					gen_type.true_generics [i] := cl_type.reference_type
+					gen_type.meta_generic [i] := reference_c_type
+					processor.call ([gen_type.associated_class_type])
+					if i > 1 then
+						gen_type.enumerate_interfaces_recursively (processor, i - 1)
+					end
+				end
+				i := i - 1
+			end
+		end
+
 feature -- Generic conformance
+
+	enumerate_interfaces (processor: PROCEDURE [ANY, TUPLE [CLASS_TYPE]]) is
+			-- Enumerate all class types for which an object of this type can be attached to.
+		require
+			processor_attached: processor /= Void
+		do
+			-- TODO:
+			-- 1. Rule out generic types with too many generic parameters to
+			-- avoid explosure of artificially introduced types.
+			-- 2. Ensure generated code works as expected.
+			-- 3. Remove validity rule that prevents reattaching derivations
+			-- with expanded parameters to derivations with reference parameters.
+			-- enumerate_interfaces_recursively (processor, meta_generic.count)
+		end
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
 

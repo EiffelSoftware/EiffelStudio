@@ -10,6 +10,9 @@ class
 
 inherit
 	ONE_GEN_TYPE_I
+		redefine
+			generic_derivation
+		end
 
 create
 	make
@@ -70,6 +73,30 @@ feature -- Access
 			end
 			create Result.make (class_id, array)
 			Result.set_mark (declaration_mark)
+		end
+
+	generic_derivation: like Current is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_I
+			-- which can be used to search its associated CLASS_TYPE.
+		local
+			c: like cr_info
+		do
+			if system.il_generation then
+					-- We need to keep track of all generic derivation,
+					-- thus we can keep current as a valid generic derivation.
+				c := cr_info
+				if c = Void then
+					Result := Current
+				else
+						-- Remove creation information.
+					cr_info := Void
+					Result := twin
+					cr_info := c
+				end
+			else
+				Result := Precursor {ONE_GEN_TYPE_I}
+			end
 		end
 
 invariant

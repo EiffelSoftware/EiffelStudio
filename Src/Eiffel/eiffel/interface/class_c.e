@@ -85,6 +85,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 	SHARED_STATELESS_VISITOR
 		export
 			{NONE} all
@@ -1980,30 +1985,94 @@ feature {NONE} -- Incrementality
 			-- return the associated class type.
 		require
 			data_not_void: data /= Void
+		local
+			g: GEN_TYPE_I
+		do
+			if data.meta_generic /= Void then
+					-- Register this generic type and other required types.
+				g ?= data
+				Result := register_generic_type (g, g.meta_generic.count)
+			elseif types.has_type (data) then
+				Result := types.found_item
+			else
+					-- Found a new type for the class
+				Result := register_new_type (data)
+			end
+		ensure
+			result_not_void: Result /= Void
+			data_is_registered: types.has_type (data)
+		end
+
+	register_new_type (data: CL_TYPE_I): CLASS_TYPE is
+			-- Register new type `data' and return the corresponding descriptor.
+		require
+			data_attached: data /= Void
+			data_is_new: not types.has_type (data)
+		do
+debug ("GENERICITY")
+	io.error.put_string ("new type%N")
+end
+			Result := new_type (normalized_type_i (data))
+				-- If the $ operator is used in the class,
+				-- an encapsulation of the feature must be generated
+			if System.address_table.class_has_dollar_operator (class_id) then
+				System.set_freeze
+			end
+				-- Mark the class `changed4' because there is a new type
+			changed4 := True
+			Degree_2.insert_new_class (Current)
+				-- Insertion of the new class type
+			types.extend (Result)
+			System.insert_class_type (Result)
+		ensure
+			result_attached: Result /= Void
+			data_is_registered: types.has_type (data)
+		end
+
+	register_generic_type (data: GEN_TYPE_I; n: INTEGER): CLASS_TYPE is
+			-- Ensure that `data' has an associated class type by creating
+			-- a new class type descriptor if it is not already created;
+			-- return the associated class type. Register all the types
+			-- required by this type for code generation.
+		local
+			g: GEN_TYPE_I
+			t: ARRAY [TYPE_I]
+			p: TYPE_I
+			c: CL_TYPE_I
+			i: INTEGER
+			a: NATIVE_ARRAY_TYPE_I
 		do
 			if types.has_type (data) then
 				Result := types.found_item
 			else
 					-- Found a new type for the class
-debug ("GENERICITY")
-	io.error.put_string ("new type%N")
-end
-				Result := new_type (normalized_type_i (data))
-					-- If the $ operator is used in the class,
-					-- an encapsulation of the feature must be generated
-				if System.address_table.class_has_dollar_operator (class_id) then
-					System.set_freeze
+				Result := register_new_type (data)
+				a ?= data
+				if False then
+					-- TODO: see GEN_TYPE_I.enumerate_interfaces
+				-- if a = Void then
+						-- Register all types where expanded parameters are replaced with reference ones.
+					t := data.true_generics
+					from
+						i := n
+					until
+						i <= 0
+					loop
+						p := t [i]
+						if p.is_expanded then
+							g := data.duplicate
+							c ?= p
+							check
+								c_attached: c /= Void
+							end
+							g.true_generics [i] := c.reference_type
+							g.meta_generic [i] := reference_c_type
+							register_generic_type (g, i - 1).do_nothing
+						end
+						i := i - 1
+					end
 				end
-					-- Mark the class `changed4' because there is a new type
-				changed4 := True
-				Degree_2.insert_new_class (Current)
-					-- Insertion of the new class type
-				types.extend (Result)
-				System.insert_class_type (Result)
 			end
-		ensure
-			result_not_void: Result /= Void
-			data_is_registered: types.has_type (data)
 		end
 
 	normalized_type_i (data: CL_TYPE_I): CL_TYPE_I is
@@ -2062,7 +2131,10 @@ debug ("GENERICITY")
 	io.error.put_string (filter.base_class.name)
 	io.error.put_new_line
 end
-				if filter.has_formal implies filter.base_class.original_class = system.native_array_class then
+				if filter.has_formal implies
+					(filter.base_class.original_class = system.native_array_class or else
+					filter.base_class.original_class = system.typed_pointer_class)
+				then
 					filter.base_class.update_types (filter)
 				end
 				class_filters.go_to (class_filters_cursor)

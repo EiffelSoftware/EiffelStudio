@@ -63,7 +63,7 @@ feature -- Access
 	class_type: CLASS_TYPE
 			-- Associated CLASS_TYPE.
 
-	parents: SEARCH_TABLE [CLASS_INTERFACE]
+	parents: ARRAYED_LIST [CLASS_INTERFACE]
 			-- List of parent interfaces implemented by current interface.
 
 	features: SEARCH_TABLE [INTEGER]

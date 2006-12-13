@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 		require
 			class_type_not_void: class_type /= Void
 		local
-			parents: SEARCH_TABLE [CLASS_INTERFACE]
+			parents: ARRAYED_LIST [CLASS_INTERFACE]
 			l_interface: CLASS_INTERFACE
 			l_cl_type: CLASS_TYPE
 		do
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			until
 				parents.after
 			loop
-				l_interface := parents.item_for_iteration
+				l_interface := parents.item
 				l_cl_type := l_interface.class_type
 				if l_cl_type.associated_class = class_type.associated_class.main_parent then
 					processed_tbl.put (l_cl_type.static_type_id)
@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 		require
 			class_interface_not_void: class_interface /= Void
 		local
-			parents: SEARCH_TABLE [CLASS_INTERFACE]
+			parents: ARRAYED_LIST [CLASS_INTERFACE]
 			l_interface: CLASS_INTERFACE
 			l_cl_type: CLASS_TYPE
 		do
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			until
 				parents.after
 			loop
-				l_interface := parents.item_for_iteration
+				l_interface := parents.item
 				l_cl_type := l_interface.class_type
 
 				if not processed_tbl.has (l_cl_type.static_type_id) then

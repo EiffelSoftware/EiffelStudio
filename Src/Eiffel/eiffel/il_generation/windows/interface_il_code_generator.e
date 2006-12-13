@@ -212,7 +212,7 @@ feature -- IL Generation
 			local_feature_processor_not_void: local_feature_processor /= Void
 			inherited_feature_processor_not_void: inherited_feature_processor /= Void
 		local
-			parents: SEARCH_TABLE [CLASS_INTERFACE]
+			parents: ARRAYED_LIST [CLASS_INTERFACE]
 			l_interface: CLASS_INTERFACE
 			l_cl_type: CLASS_TYPE
 		do
@@ -222,7 +222,7 @@ feature -- IL Generation
 			until
 				parents.after
 			loop
-				l_interface := parents.item_for_iteration
+				l_interface := parents.item
 				l_cl_type := l_interface.class_type
 
 				if not processed_tbl.has (l_cl_type.static_type_id) then

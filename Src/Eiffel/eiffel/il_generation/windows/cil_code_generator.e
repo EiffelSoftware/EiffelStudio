@@ -1135,7 +1135,7 @@ feature -- Class info
 			class_type_not_void: class_type /= Void
 			class_c_not_void: class_c /= Void
 		local
-			pars: SEARCH_TABLE [CLASS_INTERFACE]
+			pars: ARRAYED_LIST [CLASS_INTERFACE]
 			class_interface: CLASS_INTERFACE
 			parent_type: CL_TYPE_I
 			parents: FIXED_LIST [CL_TYPE_A]
@@ -3618,6 +3618,8 @@ feature -- IL Generation
 			l_token: like last_non_recorded_feature_token
 			l_args: FEAT_ARG
 			l_type_i: like argument_actual_type
+			cl_type_i: CL_TYPE_I
+			l_parent_arg_type_i: like argument_actual_type
 		do
 			l_parent_type_id := parent_type.static_type_id
 			l_cur_sig := signatures (current_type_id, cur_feat.feature_id)
@@ -3667,8 +3669,12 @@ feature -- IL Generation
 						if l_cur_sig.item (i) /= l_inh_sig.item (i) then
 							l_type_i := argument_actual_type (l_args.item.type_i)
 							if l_type_i.is_basic then
-								generate_load_address (l_type_i)
-								generate_load_from_address_as_basic (l_type_i)
+								l_parent_arg_type_i := argument_actual_type_in (cur_feat.arguments [i].type_i, parent_type)
+									-- Do nothing if a TYPED_POINTER derivation is being reattached to another TYPED_POINTER derivation.
+								if not l_parent_arg_type_i.is_basic then
+									generate_load_address (l_type_i)
+									generate_load_from_address_as_basic (l_type_i)
+								end
 							elseif l_type_i.is_expanded then
 								generate_unmetamorphose (l_type_i)
 							elseif is_verifiable then
@@ -3738,7 +3744,11 @@ feature -- IL Generation
 					start_new_body (l_setter_token)
 					generate_current
 					generate_argument (1)
-					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
+					cl_type_i ?= result_type_in (cur_feat, current_class_type)
+					if l_return_type.is_reference and then cl_type_i /= Void and then cl_type_i.is_expanded then
+							-- Unbox argument.
+						generate_external_unmetamorphose (cl_type_i)
+					elseif is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
 						method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
 							mapped_class_type_token (l_cur_sig.item (0)))
 					end

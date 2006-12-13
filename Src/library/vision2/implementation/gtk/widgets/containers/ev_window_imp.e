@@ -311,16 +311,18 @@ feature {NONE} -- Accelerators
 			acc_imp: EV_ACCELERATOR_IMP
 			a_property, a_origin, a_value: EV_GTK_C_STRING
 		do
-			acc_imp ?= an_accel.implementation
-			acc_imp.add_accel (Current)
+			if an_accel /= Void then
+				acc_imp ?= an_accel.implementation
+				acc_imp.add_accel (Current)
 
-			if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
-					-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
-				a_property := once "gtk-menu-bar-accel"
-				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
-					-- This is a value that is highly unlikely to be used
-				a_origin := once "Vision2"
-				{EV_GTK_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
+				if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
+						-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
+					a_property := once "gtk-menu-bar-accel"
+					a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
+						-- This is a value that is highly unlikely to be used
+					a_origin := once "Vision2"
+					{EV_GTK_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)
+				end
 			end
 		end
 
@@ -329,8 +331,10 @@ feature {NONE} -- Accelerators
 		local
 			acc_imp: EV_ACCELERATOR_IMP
 		do
-			acc_imp ?= an_accel.implementation
-			acc_imp.remove_accel (Current)
+			if an_accel /= Void then
+				acc_imp ?= an_accel.implementation
+				acc_imp.remove_accel (Current)
+			end
 		end
 
 feature {EV_ANY_IMP} -- Implementation

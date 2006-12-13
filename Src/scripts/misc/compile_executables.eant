@@ -31,7 +31,7 @@
 		<echo message=" geant ${opt} compile_ec_batch"/>
 		<echo message=" geant ${opt} finalize_ec_batch"/>
 		<echo message="       ----------"/>
-		<echo message=" geant ${opt} test_compile_ec_unix_on_windows"/>
+		<echo message=" geant ${opt} compile_ec_unix_on_windows"/>
 		<echo message="       ----------"/>
 		<echo message=" geant ${opt} clean_estudio"/>
 		<echo message=" geant ${opt} finalize_estudio"/>
@@ -58,6 +58,9 @@
 		<echo message=" geant ${opt} clean_esbuilder"/>
 		<echo message=" geant ${opt} compile_esbuilder"/>
 		<echo message=" geant ${opt} finalize_esbuilder"/>
+		<echo message="       ----------"/>
+		<echo message=" geant ${opt} clean_compile_all"/>
+		<echo message=" geant ${opt} finalize_compile_all"/>
 	</target>
 	<target name="clean">
 		<set name="opt" value=" -Dforce_clean=true " />
@@ -235,7 +238,7 @@
 
 	<!-- unix ec -->
 	<target name="init_ec_unix_on_windows" depend="init_ec">
-		<set name="system_target" value="unix_bench" if="${is_windows}" />
+		<set name="system_target" value="bench_unix" if="${is_windows}" />
 		<setenv name="ISE_PLATFORM" value="linux-x86" />
 	</target>
 	<target name="compile_ec_unix_on_windows" depend="init_ec_unix_on_windows">
@@ -300,6 +303,22 @@
 		<geant file="ise_eiffel.eant" target="compile" reuse_variables="true" dir="${misc_dir}" fork="false"/>
 	</target>
 	<target name="finalize_esbuilder" depend="init_esbuilder">
+		<echo message="Compilation : $system in $system_dir"/>
+		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
+	</target>
+
+	<!-- compile_all -->
+	<target name="init_compile_all" depend="init_system">
+		<set name="system" value="compile_all"/>
+		<set name="system_target" value="compile_all" />
+		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}tools${path_separator}compile_all${path_separator}compile_all.ecf" />
+		<set name="system_dir" value="${compile_dir}" />
+	</target>
+	<target name="clean_compile_all" depend="init_compile_all">
+		<echo message="Cleaning : $system in $system_dir"/>
+		<geant file="ise_eiffel.eant" target="clean" reuse_variables="true" dir="${misc_dir}" fork="false"/>
+	</target>
+	<target name="finalize_compile_all" depend="init_compile_all">
 		<echo message="Compilation : $system in $system_dir"/>
 		<geant file="ise_eiffel.eant" target="finalize" reuse_variables="true" dir="${misc_dir}"  fork="false"/>
 	</target>

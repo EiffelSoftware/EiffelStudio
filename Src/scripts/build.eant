@@ -58,6 +58,9 @@
 		<echo message=" geant ${opt} compile_ebuild"/>
 		<echo message=" geant ${opt} finalize_ebuild"/>
 		<echo message="       ----------"/>
+		<echo message=" geant ${opt} clean_compile_all"/>
+		<echo message=" geant ${opt} finalize_compile_all"/>
+		<echo message="       ----------"/>
 		<echo message=" geant ${opt} build_es"/>
 	</target>
 	<target name="clean">
@@ -187,7 +190,7 @@
 		<set name="c_compile" value="false" />
 		<set name="finalize" value="false" />
 		<geant target="tmp_compile_executable" reuse_variables="true" fork="false" >
-			<argument name="executable_target" value="ec" />
+			<argument name="executable_target" value="ec_unix_on_windows" />
 		</geant>
 	</target>
 
@@ -235,6 +238,18 @@
 	<target name="finalize_esbuilder" depend="init">
 		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
 			<argument name="executable_target" value="esbuilder" />
+		</geant>
+	</target>
+
+	<!-- compile_all -->
+	<target name="clean_compile_all" depend="init">
+		<geant target="tmp_clean_executable" reuse_variables="true" fork="false" >
+			<argument name="executable_target" value="compile_all" />
+		</geant>
+	</target>
+	<target name="finalize_compile_all" depend="init">
+		<geant target="tmp_finalize_executable" reuse_variables="true" fork="false" >
+			<argument name="executable_target" value="compile_all" />
 		</geant>
 	</target>
 	

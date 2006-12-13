@@ -53,19 +53,19 @@ feature {NONE} -- Attributes
 	debugger_manager: DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_kill
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Exec_kill
@@ -74,7 +74,7 @@ feature {NONE} -- Attributes
 	name: STRING is "Exec_quit"
 			-- Name of the command.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := Interface_names.m_Debug_kill
@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 	ask_and_kill is
 			-- Pop up a discardable confirmation dialog before killing the application.
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create cd.make_initialized (2, preferences.dialog_data.confirm_kill_string,
 					Interface_names.l_Confirm_kill, Interface_names.l_Do_not_show_again,

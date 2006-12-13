@@ -358,12 +358,11 @@ feature -- Graphical changes
 			if expression /= Void then
 				l_tag := expression.expression.twin
 				if l_tag /= Void then
-					l_tag.prepend_string ("Error on expression : %"")
-					l_tag.append_string ("%"%N")
+					l_tag := interface_names.l_error_on_expression (l_tag)
 				end
 			end
 			create dlg.make (l_tag, txt)
-			dlg.set_title_and_label ("Watch tool :: error message", "Error message :")
+			dlg.set_title_and_label (interface_names.t_watch_tool_error_message, interface_names.l_error_message)
 			dlg.show_modal_to_window (parent_window_from (row.parent.parent))
 		end
 
@@ -423,22 +422,22 @@ feature -- Graphical changes
 							set_title (expression.context_address)
 						end
 						if title /= Void then
-							l_tooltip.append_string ("OBJECT NAME: ")
+							l_tooltip.append_string (interface_names.l_object_name)
 							l_tooltip.append_string (title)
 						end
 					else
 						set_expression_text (expression.expression)
-						l_tooltip.append_string ("EXPRESSION: " + expression.expression)
+						l_tooltip.append_string (interface_names.l_expression_capital + expression.expression)
 					end
-					l_tooltip.append_string ("%NCONTEXT: " + expression.context + "%N")
+					l_tooltip.append_string (interface_names.l_context_is (expression.context))
 
 					if expression.evaluation_disabled then
-						set_expression_info ("Disabled")
+						set_expression_info (interface_names.l_disabled)
 						set_expression_result_address (Void)
 						set_expression_result ("")
 						set_pixmap (pixmaps.icon_pixmaps.debugger_object_watched_disabled_icon)
 					elseif not expression.is_evaluated then
-						set_expression_info ("Unevaluated")
+						set_expression_info (interface_names.l_unevaluated)
 						set_expression_result_address (Void)
 						set_expression_result ("")
 						set_pixmap (Void)
@@ -454,7 +453,7 @@ feature -- Graphical changes
 								l_tooltip.prepend_string ("%N%N")
 								l_tooltip.prepend_string (l_error_message.as_string_32)
 							end
-							l_tooltip.prepend_string ("ERROR OCCURRED: %N")
+							l_tooltip.prepend_string (interface_names.l_error_occurred)
 							if l_error_tag /= Void then
 								l_error_tag := "[" + l_error_tag + "] "
 							else
@@ -463,7 +462,7 @@ feature -- Graphical changes
 							set_expression_info (l_error_tag)
 
 							create glab
-							grid_cell_set_text (glab, "Error occurred (double click to see details)")
+							grid_cell_set_text (glab, interface_names.l_error_occurred_click)
 							glab.pointer_double_press_actions.force_extend (agent show_error_dialog (l_error_message))
 							row.set_item (Col_expression_result_index, glab)
 
@@ -480,7 +479,7 @@ feature -- Graphical changes
 							l_exception_dump_value := expression_evaluator.final_result_value
 							if l_exception_dump_value /= Void and then l_exception_dump_value.is_type_exception then
 								if expression_evaluator.has_error_exception then
-									l_title := "Exception object"
+									l_title := interface_names.l_Exception_object
 								end
 								attach_debug_value_to_grid_row (grid_extended_new_subrow (row), l_exception_dump_value.value_exception, l_title)
 							end
@@ -489,8 +488,12 @@ feature -- Graphical changes
 								add := object_address
 								res := object_value
 								typ := object_type_representation
-								l_tooltip.append_string ("TYPE: " + typ + "%N")
-								l_tooltip.append_string ("VALUE: " + res + "%N")
+								l_tooltip.append (interface_names.l_type_capital)
+								l_tooltip.append (typ)
+								l_tooltip.append ("%N")
+								l_tooltip.append (interface_names.l_value_capital)
+								l_tooltip.append (res)
+								l_tooltip.append ("%N")
 								if not last_dump_value.is_basic and not last_dump_value.is_void then
 									row.ensure_expandable
 									set_expand_action (agent on_row_expand)

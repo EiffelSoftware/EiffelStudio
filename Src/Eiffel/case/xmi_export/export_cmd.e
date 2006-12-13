@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Access
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with '&' symbol).
 		do
 			Result := Interface_names.m_Export_XMI
@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 			wizard_not_void: wizard /= Void
 		local
 			xe: XMI_EXPORT
-			dial: EV_WARNING_DIALOG
+			dial: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then

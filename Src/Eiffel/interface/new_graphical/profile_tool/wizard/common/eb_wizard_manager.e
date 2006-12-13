@@ -16,7 +16,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature -- Initialization
 
 	make_and_show (a_parent_window: EV_WINDOW; a_wizard_initial_state: EB_WIZARD_INITIAL_STATE_WINDOW) is
@@ -36,21 +36,21 @@ feature -- Initialization
 			wizard_window.load_first_state (a_wizard_initial_state)
 			wizard_window.set_title (wizard_title)
 			first_window.show_modal_to_window (a_parent_window)
-			
+
 				-- Clean up
-			history.wipe_out								
+			history.wipe_out
 			remove_first_window
 		end
-		
+
 feature {NONE} -- Implementation
 
-	wizard_title: STRING is
+	wizard_title: STRING_GENERAL is
 			-- Title for the wizard
 		deferred
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
 		end
-	
+
 	wizard_pixmap: EV_PIXMAP is
 			-- Pixmap for the initial and final states of the wizard.
 			-- This pixmap is displayed on the left of the window.
@@ -61,8 +61,8 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 			Result_has_valid_size: Result.width >= 165 and Result.height >= 312
-		end		
-	
+		end
+
 	wizard_icon_pixmap: EV_PIXMAP is
 			-- Pixmap for the intermediary states.
 			--
@@ -73,14 +73,14 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 			Result_has_valid_size: Result.width = 60 and Result.height = 60
 		end
-		
+
 	wizard_window_icon: EV_PIXMAP is
 			-- Icon for the wizard window
 			--
 			-- Return Void to use the default vision2 icon.
 		deferred
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			l_hdr: EB_CLASSES_TREE_HEADER_ITEM
 			clu: EB_SORTED_CLUSTER
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			is_top_level := False
 			if cluster_list.selected_item /= Void then
@@ -306,7 +306,7 @@ feature {NONE} -- Implementation
 			dir: DIRECTORY
 			test_file: RAW_FILE
 			base_name: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			in_recursive: BOOLEAN
 			l_clu: CONF_CLUSTER
 		do
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 			current_state_is_valid: aok
 		local
 			cn: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			cn := cluster_name
 			aok := not cn.is_empty and then (create {EIFFEL_SYNTAX_CHECKER}).is_valid_group_name (cn)
@@ -433,7 +433,7 @@ feature {NONE} -- Implementation
 		local
 			cp: STRING
 			icp: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			cp := folder_entry.text

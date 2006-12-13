@@ -1593,6 +1593,7 @@ feature {NONE} -- Events
 			level, scale_factor: DOUBLE
 			old_scale: INTEGER
 			new_scale: INTEGER
+			l_str: STRING_GENERAL
 		do
 			level_text := zoom_selector.selected_item.text.twin
 			level_text.keep_head (level_text.count - 1)
@@ -1606,8 +1607,12 @@ feature {NONE} -- Events
 			crop_diagram
 			new_scale := (world.scale_factor * 100).rounded
 			restart_force_directed
+			l_str := interface_names.t_diagram_zoom_cmd
+			l_str.append (" ")
+			l_str.append (level_text.out)
+			l_str.append ("%%")
 			history.register_named_undoable (
-				interface_names.t_diagram_zoom_cmd + " " + level_text.out + "%%",
+				l_str,
 				[<<agent world.scale (scale_factor), agent crop_diagram, agent zoom_selector.show_as_text (new_scale), agent restart_force_directed>>],
 				[<<agent world.scale (1/scale_factor), agent crop_diagram, agent zoom_selector.show_as_text (old_scale), agent restart_force_directed>>])
 		end

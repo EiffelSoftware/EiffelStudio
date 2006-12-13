@@ -41,7 +41,7 @@ feature -- Basic operations
 				until
 					error_messages.after
 				loop
-					error_string := error_messages.item + "%N%N"
+					error_string := error_messages.item.as_string_32 + "%N%N"
 					error_messages.forth
 				end
 			end
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 		do
 			catch_exception := new_state
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

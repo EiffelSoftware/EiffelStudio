@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 
 			if mode then
 					-- Cluster label.
-				create label.make_with_text ("Cluster")
+				create label.make_with_text (interface_names.l_cluster)
 				hbox.extend (label)
 				hbox.disable_item_expand (label)
 
@@ -89,7 +89,7 @@ feature {NONE} -- Initialization
 			end
 
 				-- Class label.
-			create label.make_with_text ("Class")
+			create label.make_with_text (interface_names.l_class)
 			hbox.extend (label)
 			hbox.disable_item_expand (label)
 
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			hbox.extend (class_address)
 
 				-- Feature label.
-			create label.make_with_text ("Feature")
+			create label.make_with_text (interface_names.l_feature)
 			hbox.extend (label)
 			hbox.disable_item_expand (label)
 
@@ -110,7 +110,7 @@ feature {NONE} -- Initialization
 
 			if not mode then
 					-- View label
-				create label.make_with_text ("View")
+				create label.make_with_text (interface_names.l_view)
 				hbox.extend (label)
 				hbox.disable_item_expand (label)
 			end
@@ -215,7 +215,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_format_name (a_name: STRING) is
+	set_format_name (a_name: STRING_GENERAL) is
 			-- Set `format_name' to `a_name'.
 			-- `a_name' cannot be Void nor empty.
 		require
@@ -223,10 +223,17 @@ feature -- Element change
 			a_name_non_empty: not a_name.is_empty
 			-- `a_name' should be the name of a known formatter
 		local
-			name_copy: STRING
+			l_str: STRING
+			name_copy: STRING_GENERAL
 			found: BOOLEAN
 		do
-			name_copy := a_name.as_lower
+			if a_name.is_valid_as_string_8 then
+				l_str := a_name.as_string_8
+				l_str.to_lower
+				name_copy := l_str
+			else
+				name_copy := a_name.twin
+			end
 			from
 				known_formatters.start
 			until
@@ -412,8 +419,7 @@ feature -- Observer management
 				cell := list.item
 				f ?= cell.item1
 				if f /= Void then
-					create nitem.make_with_text (
-						f.feature_name + l_From + f.class_i.name)
+					create nitem.make_with_text (interface_names.l_from (f.feature_name, f.class_i.name))
 					nitem.set_data (cell.item2)
 					if f.e_feature /= Void then
 						nitem.set_pixmap (pixmap_from_e_feature (f.e_feature))
@@ -721,7 +727,7 @@ feature {NONE} -- Execution
 			-- Finish processing the class after the user chose it.
 		local
 			ctxt: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_classc: CLASS_C
 		do
 			remove_error_message
@@ -1117,7 +1123,7 @@ feature {NONE} -- open new class
 			cluster: CLUSTER_I
 			cluster_name: STRING
 			matcher: KMP_WILD
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_classes: DS_HASH_SET [CLASS_I]
 		do
 			class_i := Void
@@ -1769,21 +1775,24 @@ feature {NONE} -- open new class
 			-- The user typed a new key in the feature combo.
 			-- Try to complete the feature name.
 		local
-			str: STRING
+			str: STRING_32
 			nb, minc: INTEGER
 			j: INTEGER
 			list: FEATURE_TABLE
-			current_found: STRING
-			cname: STRING
+			current_found: STRING_32
+			cname: STRING_32
 			do_not_complete: BOOLEAN
 			last_caret_position: INTEGER
 			same_st, dif: BOOLEAN
-			str_area, current_area, other_area: SPECIAL [CHARACTER]
+			str_area, current_area, other_area: SPECIAL [CHARACTER_32]
 			truncated: BOOLEAN
 		do
 			feature_address.change_actions.block
 			str := feature_address.text
-			if not str.is_empty and then not (str.substring_index (l_From, 1) > 0) then
+
+			--|FIXME: The way used to decide if a name should be completed is bad.
+--			if not str.is_empty and then not (str.substring_index (l_From, 1) > 0) then
+			if not str.is_empty and then not (str.substring_index (interface_names.l_from ("", ""), 1) > 0) then
 				last_caret_position := feature_address.caret_position
 					-- Only perform `left_adjust' so that we can type `infix "X"' in the combo box.
 				str.left_adjust
@@ -2207,7 +2216,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			lab.set_font (a_font)
 		end
 
-	maximum_label_width (a_text: STRING): INTEGER is
+	maximum_label_width (a_text: STRING_GENERAL): INTEGER is
 			-- Maximum width of a label when set with text `a_text'
 		require
 			a_text_not_void: a_text /= Void
@@ -2221,7 +2230,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			lab.set_font (Default_font)
 		end
 
-	display_error_message (a_message: STRING) is
+	display_error_message (a_message: STRING_GENERAL) is
 			-- Display error message `a_message'.
 		require
 			a_message_not_void: a_message /= Void
@@ -2260,26 +2269,27 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			Result := preferences.development_window_data.class_completion --, True
 		end
 
-	default_class_name: STRING is
+	default_class_name: STRING_GENERAL is
 			-- Default name for class
 		do
-			Result := "(no_class)"
+			Result := interface_names.l_no_class_bra
 		end
 
-	default_feature_name: STRING is
+	default_feature_name: STRING_GENERAL is
 			-- Default name for feature
 		do
-			Result := "(no_feature)"
+			Result := interface_names.l_no_feature_bra
 		end
 
-	default_cluster_name: STRING is
+	default_cluster_name: STRING_GENERAL is
 			-- Default name for cluster		
 		do
-			Result := "(no_cluster)"
+			Result := interface_names.l_no_cluster_bra
 		end
 
-	l_From: STRING is " from "
 	l_Space: STRING is " "
+
+	l_From: STRING is " from "
 
 	bold_ratio: DOUBLE is 1.19;
 

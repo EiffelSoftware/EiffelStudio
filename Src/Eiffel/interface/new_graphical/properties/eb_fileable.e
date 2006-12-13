@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	stone: STONE
@@ -205,14 +210,14 @@ feature {NONE} -- Execution
 			-- This function is called when mouse cames on tool window.
 		local
 			f: PLAIN_TEXT_FILE
-			qd: EV_QUESTION_DIALOG
+			qd: EB_QUESTION_DIALOG
 		do
 			if file_name /= Void then
 				create f.make (file_name)
 				if f.exists and then f.date > last_saving_date then
-					create qd.make_with_text ("File has been changed by another tool/editor%NDo you want to load the changes?")
-					qd.button ("Yes").select_actions.extend (agent revert)
-					qd.button ("Cancel").hide
+					create qd.make_with_text (interface_names.l_file_changed_by_other_tool)
+					qd.button (interface_names.b_yes).select_actions.extend (agent revert)
+					qd.button (interface_names.b_cancel).hide
 					set_last_saving_date (f.date)
 				end
 			end

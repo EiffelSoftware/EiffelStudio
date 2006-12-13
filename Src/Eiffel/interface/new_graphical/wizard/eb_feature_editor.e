@@ -75,7 +75,7 @@ feature -- Error
 			a_parent_window_not_void: a_parent_window /= Void
 			a_parent_window_not_destroyed: not a_parent_window.is_destroyed
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			check
 				field_not_void: feature_name_field /= Void

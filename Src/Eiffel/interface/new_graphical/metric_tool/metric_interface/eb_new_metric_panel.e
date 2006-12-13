@@ -279,7 +279,7 @@ feature -- Actions
 			l_new_metric: EB_METRIC
 			l_dlg: EV_ERROR_DIALOG
 			l_ok: BOOLEAN
-			l_message: STRING
+			l_message: STRING_32
 		do
 			check current_metric_editor /= Void end
 			l_old_metric := original_metric
@@ -293,7 +293,7 @@ feature -- Actions
 				metric_manager.has_metric (l_new_metric.name)
 			then
 				l_ok := False
-				l_message := metric_names.t_metric_with_name + " %"" + l_new_metric.name + "%" " + metric_names.t_metric_exists
+				l_message := metric_names.t_metric_with_name.as_string_32 + " %"" + l_new_metric.name + "%" " + metric_names.t_metric_exists
 			elseif
 				current_metric_editor.mode = {EB_METRIC_EDITOR}.edit_mode and then
 				l_old_metric /= Void and then
@@ -301,7 +301,7 @@ feature -- Actions
 				metric_manager.has_metric (l_new_metric.name)
 			then
 				l_ok := False
-				l_message := metric_names.t_metric_with_name + " %"" + l_new_metric.name + "%" " + metric_names.t_metric_exists
+				l_message := metric_names.t_metric_with_name.as_string_32 + " %"" + l_new_metric.name + "%" " + metric_names.t_metric_exists
 			end
 			if l_ok then
 				metric_manager.save_metric (l_new_metric, current_metric_editor.mode = {EB_METRIC_EDITOR}.new_mode, l_old_metric)
@@ -339,7 +339,7 @@ feature -- Actions
 	on_remove_metric is
 			-- Action to be performed when user wants to remove selected metric
 		local
-			l_dlg: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			l_dlg: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			check
 				original_metric /= Void
@@ -347,7 +347,7 @@ feature -- Actions
 			end
 			create l_dlg.make_initialized (
 				2, preferences.dialog_data.confirm_remove_metric_string,
-				metric_names.t_remove_metric +  "%"" + current_metric_editor.name_area.name.twin + "%"?",
+				metric_names.t_remove_metric.as_string_32 +  "%"" + current_metric_editor.name_area.name.twin + "%"?",
 				metric_names.t_discard_remove_prompt,
 				preferences.preferences
 			)

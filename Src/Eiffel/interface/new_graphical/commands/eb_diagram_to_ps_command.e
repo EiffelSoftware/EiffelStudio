@@ -55,7 +55,7 @@ feature -- Basic operations
 			dial: EB_FILE_SAVE_DIALOG
 			test_file: RAW_FILE
 			error: INTEGER
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_pref: STRING_PREFERENCE
 		do
 			if is_sensitive then
@@ -116,13 +116,13 @@ feature -- Basic operations
 			Result := pixmaps.icon_pixmaps.diagram_export_to_png_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_to_png
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name for the menu entry.
 		do
 			Result := Interface_names.m_diagram_to_png

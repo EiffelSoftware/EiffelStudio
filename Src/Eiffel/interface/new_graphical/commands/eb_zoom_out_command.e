@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_zoom_out_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_zoom_out

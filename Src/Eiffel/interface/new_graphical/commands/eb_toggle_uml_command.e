@@ -65,7 +65,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			if current_button.is_selected then
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_view_uml_icon
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.l_diagram_uml_visibility

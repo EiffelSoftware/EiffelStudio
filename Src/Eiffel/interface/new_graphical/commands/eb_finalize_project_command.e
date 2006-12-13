@@ -84,7 +84,7 @@ feature {NONE} -- Implementation
 			-- Ask for confirmation if the assertion are to be kept, and
 			-- finalize thereafter.
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create cd.make_initialized (
 				3, preferences.dialog_data.confirm_finalize_string,
@@ -121,13 +121,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for the command.
 		do
 			Result := Interface_names.f_Finalize
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Finalize_new
@@ -139,13 +139,13 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.project_finalize_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Finalize
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Finalize

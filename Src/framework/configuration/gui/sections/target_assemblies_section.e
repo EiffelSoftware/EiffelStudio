@@ -16,7 +16,7 @@ create
 
 feature -- Access
 
-	name: STRING is
+	name: STRING_GENERAL is
 			-- Name of the section.
 		once
 			Result := conf_interface_names.group_assembly_tree

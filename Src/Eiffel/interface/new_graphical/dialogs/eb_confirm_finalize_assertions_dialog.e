@@ -26,44 +26,44 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
-		rename 
+		rename
 			preferences as studio_preferences
 		export
-			{NONE} all		
+			{NONE} all
 		undefine
-			default_create, copy		
-		end		
+			default_create, copy
+		end
 
 create
 	default_create
 
 feature -- Access
-	
+
 	Buttons_count: INTEGER is 3
 
 feature {NONE} -- Deferred Constants
 
-	check_button_label: STRING is
+	check_button_label: STRING_GENERAL is
 			-- Label for `check_button'.
 		do
 			Result := Interface_names.l_Discard_finalize_assertions
 		end
 
-	no_button_label: STRING is
+	no_button_label: STRING_GENERAL is
 			-- Label for the No button.
 		do
 			Result := Interface_names.b_Keep_assertions
 		end
 
-	ok_button_label: STRING is
+	ok_button_label: STRING_GENERAL is
 			-- Label for the Cancel/No button.
 		do
 			Result := Interface_names.b_Discard_assertions
 		end
 
-	confirmation_message_label: STRING is
+	confirmation_message_label: STRING_GENERAL is
 			-- Label for the confirmation message.
 		do
 			Result := Warning_messages.w_Assertion_warning

@@ -51,7 +51,7 @@ feature {NONE} -- Actions
 	on_ok is
 			-- Add library and close the dialog.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 				-- library choosen?
 			if not location.text.is_empty and not name.text.is_empty then

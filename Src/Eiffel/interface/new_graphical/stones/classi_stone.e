@@ -80,9 +80,9 @@ feature -- Properties
 			Result := class_i.name
 		end
 
-	history_name: STRING is
+	history_name: STRING_GENERAL is
 		do
-			Result := Interface_names.s_Class_stone + stone_signature
+			Result := Interface_names.s_Class_stone.as_string_32 + stone_signature
 		end
 
 	same_as (other: STONE): BOOLEAN is
@@ -97,17 +97,11 @@ feature -- Properties
 
 feature -- Access
 
-	header: STRING is
+	header: STRING_GENERAL is
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
-			create Result.make (20)
-			Result.append (stone_signature)
-			Result.append ("  in cluster ")
-			Result.append (class_i.group.name)
-			Result.append ("  (not in system)")
-			Result.append ("  located in ")
-			Result.append (class_i.file_name)
+			Result := interface_names.l_classi_header (stone_signature, class_i.group.name, class_i.file_name)
 		end
 
 	is_valid: BOOLEAN is

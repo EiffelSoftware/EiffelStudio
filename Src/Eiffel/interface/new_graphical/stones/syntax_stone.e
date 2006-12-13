@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
- 
+
 	syntax_message: SYNTAX_MESSAGE
 			-- Associated message about syntax issue.
 
@@ -61,9 +61,9 @@ feature -- Access
 			Result := Interface_names.h_No_help_available.twin
 		end
 
-	history_name: STRING is
+	history_name: STRING_GENERAL is
 		do
-			Result := "Error " + header
+			Result := interface_names.err_error.as_string_32 + header
 		end
 
 	stone_signature: STRING is
@@ -71,11 +71,11 @@ feature -- Access
 			Result := code
 		end
 
-	header: STRING is 
-		do 
-			Result := code
+	header: STRING_GENERAL is
+		do
+			Result := code.as_string_32
 			if Result = Void then
-				create Result.make (0)
+				create {STRING_32}Result.make (0)
 			end
 		end
 

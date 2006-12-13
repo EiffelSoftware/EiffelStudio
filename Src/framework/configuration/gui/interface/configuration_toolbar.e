@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	name_with_key (a_name: STRING; a_key: EV_ACCELERATOR): STRING is
+	name_with_key (a_name: STRING_GENERAL; a_key: EV_ACCELERATOR): STRING_GENERAL is
 			-- Format text with `a_name' and `a_key'.
 		require
 			a_name_not_void: a_name /= Void
@@ -266,7 +266,7 @@ feature {NONE} -- Implementation
 			if a_key /= Void then
 				Result.append (" (")
 				Result.append (a_key.out)
-				Result.append_character (')')
+				Result.append (")")
 			end
 		ensure
 			Result_not_void: Result /= Void

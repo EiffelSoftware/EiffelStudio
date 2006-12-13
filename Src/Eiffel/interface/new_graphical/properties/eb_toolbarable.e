@@ -31,7 +31,7 @@ feature {EB_CUSTOMIZABLE_LIST_ITEM, EB_CUSTOM_TOOLBAR_LIST} -- Implementation
 		deferred
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description of the command as it appears in the
 			-- "customize" dialog.
 		deferred

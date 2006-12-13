@@ -69,10 +69,10 @@ feature -- Properties
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for `Current'.
 		do
-			Result := "Debugging options"
+			Result := interface_names.b_Debugging_options
 		end
 
 	pixmap: EV_PIXMAP is
@@ -81,20 +81,27 @@ feature -- Properties
 			Result := pixmaps.icon_pixmaps.tool_config_icon
 		end
 
-	name: STRING is "Debugging_options"
+	name: STRING is
 			-- Name of the command.
+		do
+			Result := "Debugging_options"
+		end
 
-	menu_name: STRING is "De&bugging Options"
+	menu_name: STRING_GENERAL is
+			-- Menu name
+		do
+			Result := interface_names.m_debugging_options
+		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Default text displayed in toolbar button
 		do
-			Result := "Debugging options"
+			Result := interface_names.b_Debugging_options
 		end
 
 feature {NONE} -- Attributes
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip

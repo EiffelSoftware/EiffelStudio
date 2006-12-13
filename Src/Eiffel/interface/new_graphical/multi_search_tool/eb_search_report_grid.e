@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 		require
 			a_search_tool_attached: a_search_tool /= Void
 		do
-			create report_summary_string.make_empty
+			create {STRING_32}report_summary_string.make_empty
 			search_tool := a_search_tool
 			default_create
 			enable_default_tree_navigation_behavior (True, True, True, True)
@@ -55,12 +55,26 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	grid_head_class: STRING is				"Class"
-	grid_head_line_number: STRING is 		"Line"
-	grid_head_found: STRING is				"Found"
-	grid_head_context: STRING is			"Context"
-	grid_head_file_location: STRING is		"File location"
-			-- Grid header texts
+	grid_head_class: STRING_GENERAL is
+		do
+			Result := interface_names.l_class
+		end
+	grid_head_line_number: STRING_GENERAL is
+		do
+			Result := interface_names.l_line
+		end
+	grid_head_found: STRING_GENERAL is
+		do
+			Result := interface_names.l_found
+		end
+	grid_head_context: STRING_GENERAL is
+		do
+			Result := interface_names.l_context
+		end
+	grid_head_file_location: STRING_GENERAL is
+		do
+			Result := interface_names.l_file_location
+		end
 
 	search_tool: EB_MULTI_SEARCH_TOOL
 
@@ -171,11 +185,11 @@ feature {EB_MULTI_SEARCH_TOOL} -- Redraw
 								l_new_row.set_data (l_text_item)
 							end
 							set_item (1,
-														l_row_count,
-														new_label_item ("Line " + l_text_item.line_number.out + ":"))
+									l_row_count,
+									new_label_item (interface_names.l_line.as_string_32 + " " + l_text_item.line_number.out + " :"))
 							set_item (2,
-														l_row_count,
-														new_label_item (replace_rnt_to_space (l_text_item.text)))
+									l_row_count,
+									new_label_item (replace_rnt_to_space (l_text_item.text)))
 							item (2, l_row_count).set_foreground_color (preferences.editor_data.operator_text_color)
 							create l_grid_drawable_item
 							set_item (3, l_row_count, l_grid_drawable_item)
@@ -195,7 +209,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Redraw
 									insert_new_row_parented (l_row_count, row (submatch_parent))
 									set_item (1,
 																l_row_count,
-																new_label_item ("Capture " +
+																new_label_item (interface_names.l_capture.as_string_32 + " " +
 																				l_text_item.captured_submatches.index.out +
 																				": " +
 																				l_text_item.captured_submatches.item))
@@ -241,7 +255,7 @@ feature {NONE} -- Interface
 			set_minimum_width (100)
 		end
 
-	new_label_item (a_string: STRING): EV_GRID_LABEL_ITEM is
+	new_label_item (a_string: STRING_GENERAL): EV_GRID_LABEL_ITEM is
 			-- Create uniformed label item
 		require
 			string_attached: a_string /= Void
@@ -337,7 +351,7 @@ feature {NONE} -- Interface
 			end
 		end
 
-	report_summary_string: STRING
+	report_summary_string: STRING_GENERAL
 
 	adjust_grid_column_width is
 			-- Adjust grid column width to best fit visible area.
@@ -450,26 +464,10 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 			performer_launched: multi_search_performer.is_search_launched
 		local
 			l_text_found, l_class_found: INTEGER
-			l_found_string: STRING
-			l_class_string: STRING
 		do
 			l_text_found := multi_search_performer.text_found_count
 			l_class_found := multi_search_performer.class_count
-			if l_text_found > 1 or l_text_found = 0 then
-				l_found_string := " matches in "
-			else
-				l_found_string := " match in "
-			end
-			if l_class_found > 1 or l_class_found = 0 then
-				l_class_string := " classes"
-			else
-				l_class_string := " class"
-			end
-			report_summary_string := "   " +
-										l_text_found.out +
-										l_found_string +
-										l_class_found.out +
-										l_class_string
+			report_summary_string := ("   ").as_string_32 + interface_names.l_n_matches (l_text_found) + " " + interface_names.l_in_n_classes (l_class_found)
 			search_tool.report_tool.set_summary (report_summary_string)
 		end
 
@@ -509,7 +507,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 				label_item ?= a_label_item
 				if label_item /= Void then
 					if text_height = 0 then
-						text_height := a_font.string_size ("a").integer_item (2)
+						text_height := a_font.string_size (once "a").integer_item (2)
 					end
 					client_height := label_item.height - label_item.top_border - label_item.bottom_border
 					vertical_text_offset_into_available_space := client_height - text_height
@@ -582,7 +580,7 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 		local
 			l_text_item: MSR_TEXT_ITEM
 			l_editor: EB_EDITOR
-			l_saving_string: STRING
+			l_saving_string: STRING_GENERAL
 			l_start, l_end: INTEGER
 		do
 			search_tool.set_new_search_set (false)
@@ -629,11 +627,11 @@ feature {EB_MULTI_SEARCH_TOOL} -- Implementation
 					search_tool.bottom_reached_actions.call ([False])
 					search_tool.first_result_reached_actions.call ([False])
 					if search_tool.is_customized or search_tool.is_whole_project_searched then
-						l_saving_string := " saving file and"
+						l_saving_string := interface_names.l_try_saving_file_and_searching
 					else
-						l_saving_string := ""
+						l_saving_string := interface_names.l_try_searching
 					end
-					search_tool.report_tool.set_summary (report_summary_string + "   Item expires. Try" + l_saving_string + " searching again.")
+					search_tool.report_tool.set_summary (report_summary_string.as_string_32 + "   " + l_saving_string)
 					search_tool.report_tool.set_new_search_button_visible (True)
 				end
 			else

@@ -249,10 +249,10 @@ feature{NONE} -- Command substitution
 	sub_group_path: INTEGER is 6
 	sub_line: INTEGER is 7
 
-	show_warning_dialog (msg: STRING) is
+	show_warning_dialog (msg: STRING_GENERAL) is
 			-- Show a warning dialog to display `msg'.
 		local
-			wdlg: EV_WARNING_DIALOG
+			wdlg: EB_WARNING_DIALOG
 		do
 			create wdlg.make_with_text (msg)
 			wdlg.show_modal_to_window (window_manager.last_focused_development_window.window)
@@ -475,7 +475,7 @@ feature -- Execution
 			wd: STRING
 			args: LIST [STRING]
 			use_argument: BOOLEAN
-			msg: STRING
+			msg: STRING_32
 			ok: BOOLEAN
 		do
 			if external_launcher.launched and then not external_launcher.has_exited then
@@ -537,16 +537,16 @@ feature -- Execution
 
 feature -- Properties
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Representation of `Current' in menus.
 		do
-			create Result.make (name.count + 15)
-			Result.append_character ('&')
-			Result.append (index.out)
-			Result.append_character (' ')
-			Result.append (interface_names.escaped_string_for_menu_item (name))
-			Result.append (Tabulation)
-			Result.append ((create {EB_EXTERNAL_COMMANDS_EDITOR}.make).accelerators.item (index).out)
+			create {STRING_32}Result.make (name.count + 15)
+			Result.append (("&").as_string_32)
+			Result.append (index.out.as_string_32)
+			Result.append ((" ").as_string_32)
+			Result.append (interface_names.escaped_string_for_menu_item (name).as_string_32)
+			Result.append (Tabulation.as_string_32)
+			Result.append ((create {EB_EXTERNAL_COMMANDS_EDITOR}.make).accelerators.item (index).out.as_string_32)
 		end
 
 	name: STRING
@@ -703,7 +703,7 @@ feature {NONE} -- Implementation
 	create_directory_dialog is
 			--
 		do
-			create dir_dlg.make_with_title ("Select working directory")
+			create dir_dlg.make_with_title (interface_names.t_select_working_directory)
 			dir_dlg.ok_actions.extend (agent on_directory_dialog_ok)
 			dir_dlg.show_modal_to_window (dialog)
 		end
@@ -743,7 +743,7 @@ feature {NONE} -- Implementation
 
 			create hb1.default_create
 			create working_directory_field
-			create wd.make_with_text ("Working directory:")
+			create wd.make_with_text (interface_names.l_working_directory.as_string_32 + ": ")
 			wd.align_text_left
 			create dir_btn.default_create
 			dir_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
@@ -820,7 +820,7 @@ feature {NONE} -- Implementation
 			-- User pressed OK in `dialog'.
 			-- Try to update `Current's status.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			ix: INTEGER
 		do
 			ix := index_field.value

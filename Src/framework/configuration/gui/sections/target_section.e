@@ -43,7 +43,7 @@ feature -- Access
 	target: CONF_TARGET
 			-- Target for which information are displayed.
 
-	name: STRING is
+	name: STRING_GENERAL is
 			-- Name of the section.
 		do
 			Result := conf_interface_names.section_target (target.name)
@@ -90,8 +90,8 @@ feature -- Element update
 	ask_remove_target is
 			-- Ask for confirmation and remove Current.
 		local
-			l_cd: EV_CONFIRMATION_DIALOG
-			l_wd: EV_WARNING_DIALOG
+			l_cd: EB_CONFIRMATION_DIALOG
+			l_wd: EB_WARNING_DIALOG
 			l_targets: ARRAYED_LIST [CONF_TARGET]
 		do
 			if target.system.targets.count = 1 then

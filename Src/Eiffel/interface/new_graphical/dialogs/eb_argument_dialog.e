@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			a_window_not_void: a_window /= Void
 			cmd_not_void: cmd /= Void
 		do
-			make_with_title ("Debugging Options")
+			make_with_title (interface_names.t_Debugging_options)
 			set_icon_pixmap (pixmaps.icon_pixmaps.general_dialog_icon)
 			Debugger_manager.add_observer (Current)
 			set_size (600, 400)
@@ -106,13 +106,13 @@ feature {NONE} -- Initialization
 			b.select_actions.extend (agent on_cancel)
 
 			if run /= Void then
-				create run_button.make_with_text ("Run")
+				create run_button.make_with_text (interface_names.b_run)
 				vbox.extend (run_button)
 				Layout_constants.set_default_width_for_button (run_button)
 				vbox.disable_item_expand (run_button)
 				run_button.select_actions.extend (agent execute)
 
-				create run_and_close_button.make_with_text ("Run & Close")
+				create run_and_close_button.make_with_text (interface_names.b_run_and_close)
 				vbox.extend (run_and_close_button)
 				Layout_constants.set_default_width_for_button (run_and_close_button)
 				vbox.disable_item_expand (run_and_close_button)

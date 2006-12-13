@@ -108,6 +108,8 @@ feature {NONE} -- Initialization
 			l_text: EV_TEXT
 			l_font: EV_FONT
 		do
+			unit_lbl.set_text (metric_names.l_unit_colon)
+			
 				-- Setup basic metric definition area.
 			create metric_definer.make (metric_tool, Current, new_mode, class_unit)
 			metric_definer.change_actions_internal.extend (agent on_definition_change)
@@ -618,7 +620,7 @@ feature{NONE} -- Implementation
 	domain_generator_internal: QL_DOMAIN_GENERATOR
 			-- Domain generator used to setup metric evaluation
 
-	stop_metric_evaluation (a_msg: STRING) is
+	stop_metric_evaluation (a_msg: STRING_GENERAL) is
 			-- Stop metric evaluation.
 			-- `a_msg' contains reason for the stoppage.
 		require

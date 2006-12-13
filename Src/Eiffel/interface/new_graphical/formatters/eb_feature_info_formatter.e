@@ -28,25 +28,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	temp_header: STRING is
+	temp_header: STRING_GENERAL is
 			-- Temporary header displayed during the format processing.
 		do
-			Result := Interface_names.l_Working_formatter.twin
-			Result.append (command_name)
-			Result.append (Interface_names.l_Of_feature)
-			Result.append (associated_feature.name)
-			Result.append (Interface_names.l_Three_dots)
+			Result := Interface_names.l_working_formatter (command_name, associated_feature.name, True)
 		end
 
-	header: STRING is
+	header: STRING_GENERAL is
 			-- Header displayed when current formatter is selected.
 		do
 			if associated_feature /= Void then
-				Result := capital_command_name.twin
-				Result.append (Interface_names.l_Of_feature)
-				Result.append (associated_feature.name)
-				Result.append (Interface_names.l_Of_class)
-				Result.append (associated_feature.associated_class.name_in_upper)
+				Result := Interface_names.l_Header_feature (capital_command_name, associated_feature.name, associated_feature.associated_class.name_in_upper)
 			else
 				Result := Interface_names.l_No_feature
 			end

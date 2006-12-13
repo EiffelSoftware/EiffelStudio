@@ -390,11 +390,11 @@ feature -- Status setting
 	destroy is
 			-- Destroy `Current'.
 		local
-			cd: EV_CONFIRMATION_DIALOG
+			cd: EB_CONFIRMATION_DIALOG
 		do
 			if changed and not confirmed then
 				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button ("OK").select_actions.extend (agent force_destroy)
+				cd.button (cd.OK).select_actions.extend (agent force_destroy)
 				cd.show_modal_to_window (window)
 			else
 				Precursor {EB_WINDOW}
@@ -461,11 +461,11 @@ feature {NONE} -- Implementation: File operations
 			-- Let the user select a `.def' file and open it.
 			-- Cancelling is possible.
 		local
-			cd: EV_CONFIRMATION_DIALOG
+			cd: EB_CONFIRMATION_DIALOG
 		do
 			if changed then
 				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button ("OK").select_actions.extend (agent ask_for_file_name (True, agent load_dynamic_lib))
+				cd.button (cd.ok).select_actions.extend (agent ask_for_file_name (True, agent load_dynamic_lib))
 				cd.show_modal_to_window (window)
 			else
 				ask_for_file_name (True, agent load_dynamic_lib)
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation: File operations
 			-- Prompt the user for a file name otherwise.
 			-- Cancelling is possible.
 		local
-			qd: EV_QUESTION_DIALOG
+			qd: EB_QUESTION_DIALOG
 			pb: INTEGER
 		do
 			pb := export_definition_problem
@@ -485,7 +485,7 @@ feature {NONE} -- Implementation: File operations
 				actually_save
 			else
 				create qd.make_with_text (Warning_messages.w_Save_invalid_definition)
-				qd.button ("Yes").select_actions.extend (agent actually_save)
+				qd.button (interface_names.b_yes).select_actions.extend (agent actually_save)
 				qd.show_modal_to_window (window)
 			end
 		end
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation: File operations
 			-- Prompt the user for a file name and save the contents of `Current' to it.
 			-- Cancelling is possible.
 		local
-			qd: EV_QUESTION_DIALOG
+			qd: EB_QUESTION_DIALOG
 			pb: INTEGER
 		do
 			pb := export_definition_problem
@@ -502,7 +502,7 @@ feature {NONE} -- Implementation: File operations
 				ask_for_file_name (False, agent actually_save)
 			else
 				create qd.make_with_text (Warning_messages.w_Save_invalid_definition)
-				qd.button ("Yes").select_actions.extend (agent ask_for_file_name (False, agent actually_save))
+				qd.button (interface_names.b_yes).select_actions.extend (agent ask_for_file_name (False, agent actually_save))
 				qd.show_modal_to_window (window)
 			end
 		end
@@ -511,11 +511,11 @@ feature {NONE} -- Implementation: File operations
 			-- Prompt the user for a file name and create a new `.def' file.
 			-- Cancelling is possible.
 		local
-			cd: EV_CONFIRMATION_DIALOG
+			cd: EB_CONFIRMATION_DIALOG
 		do
 			if changed then
 				create cd.make_with_text (Warning_messages.w_Unsaved_changes)
-				cd.button ("OK").select_actions.extend (agent reset)
+				cd.button (cd.ok).select_actions.extend (agent reset)
 				cd.show_modal_to_window (window)
 			else
 				reset
@@ -558,7 +558,7 @@ feature {NONE} -- Implementation: Feature operations
 			-- Prompt the user for the creation routine, if necessary.
 			-- May be cancelled.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			current_class := fst.e_feature.associated_class
 			current_feature := fst.e_feature
@@ -784,7 +784,7 @@ feature {NONE} -- Implementation: Creation routine selection
 		require
 			current_class_set: valid_class (current_class)
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			call_back := next_action
 			creation_routine_list := valid_creation_routines (current_class)
@@ -927,7 +927,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 		require
 			valid_dynamic_library: dynamic_library /= Void
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			rescued: BOOLEAN
 			f: PLAIN_TEXT_FILE
 		do
@@ -963,7 +963,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 	load_dynamic_lib is
 			-- Initialize `dynamic_lib' from `file_name'.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			rescued: BOOLEAN
 			f: PLAIN_TEXT_FILE
 		do
@@ -1161,8 +1161,8 @@ feature {NONE} -- Implementation: Properties dialog
 
 				-- Determine the width of the info labels.
 			f := create {EV_FONT}
-			info_width := f.string_width (Interface_names.l_Class)
-			info_width := info_width.max (f.string_width (Interface_names.l_Feature))
+			info_width := f.string_width (Interface_names.l_class_colon)
+			info_width := info_width.max (f.string_width (Interface_names.l_Feature_colon))
 			info_width := info_width.max (f.string_width (Interface_names.l_Alias_name))
 			info_width := info_width.max (f.string_width (Interface_names.l_Creation))
 			info_width := info_width.max (f.string_width (Interface_names.l_Index))
@@ -1170,7 +1170,7 @@ feature {NONE} -- Implementation: Properties dialog
 
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)
-			create ilab.make_with_text (Interface_names.l_Class)
+			create ilab.make_with_text (Interface_names.l_class_colon)
 			ilab.align_text_left
 			ilab.set_minimum_width (info_width)
 			hb.extend (ilab)
@@ -1203,7 +1203,7 @@ feature {NONE} -- Implementation: Properties dialog
 
 			create hb
 			hb.set_padding (Layout_constants.default_padding_size)
-			create ilab.make_with_text (Interface_names.l_Feature)
+			create ilab.make_with_text (Interface_names.l_Feature_colon)
 			ilab.align_text_left
 			ilab.set_minimum_width (info_width)
 			hb.extend (ilab)
@@ -1399,7 +1399,7 @@ feature {NONE} -- Implementation: Properties dialog
 			al: STRING
 			ind: INTEGER
 			cc: STRING
-			cd: EV_WARNING_DIALOG
+			cd: EB_WARNING_DIALOG
 		do
 			cl := modified_exported_feature.compiled_class
 			f := modified_exported_feature.routine
@@ -1483,7 +1483,7 @@ feature {NONE} -- Implementation: Properties dialog
 			al: STRING
 			ind: INTEGER
 			cc: STRING
-			cd: EV_WARNING_DIALOG
+			cd: EB_WARNING_DIALOG
 			tmp: STRING
 			exp: DYNAMIC_LIB_EXPORT_FEATURE
 			clist: LIST [CLASS_I]

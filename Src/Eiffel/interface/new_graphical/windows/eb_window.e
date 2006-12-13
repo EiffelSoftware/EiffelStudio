@@ -154,10 +154,10 @@ feature -- Access
 
 feature -- Status report
 
-	title: STRING
+	title: STRING_GENERAL
 			-- Title of the window
 
-	minimized_title: STRING
+	minimized_title: STRING_GENERAL
 			-- Title of the window in minimized state
 
 	pixmap: EV_PIXMAP is
@@ -167,7 +167,7 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_title (a_title: STRING) is
+	set_title (a_title: like title) is
 			-- Set `title' to `a_title'.
 		require
 			valid_title: a_title /= Void
@@ -184,7 +184,7 @@ feature -- Status setting
 			end
 		end
 
-	set_minimized_title (a_title: STRING) is
+	set_minimized_title (a_title: like title) is
 			-- Set `minimized_title' to `a_title'.
 		do
 			if not equal (minimized_title, a_title) then
@@ -272,7 +272,7 @@ feature -- Window management / Status Setting
 	destroy is
 			-- Destroy Current window.
 		local
-			cd: EV_CONFIRMATION_DIALOG
+			cd: EB_CONFIRMATION_DIALOG
 			l_window: EB_WINDOW
 		do
 			if not destroyed then
@@ -288,7 +288,7 @@ feature -- Window management / Status Setting
 					else
 						create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
 					end
-					cd.button ("OK").select_actions.extend (agent window_manager.try_to_destroy_window (Current))
+					cd.button (cd.ok).select_actions.extend (agent window_manager.try_to_destroy_window (Current))
 					cd.show_modal_to_window (window)
 				else
 					window_manager.try_to_destroy_window (Current)
@@ -520,7 +520,7 @@ feature {NONE} -- Implementation / Flags
 		require
 			valid_ctxt: ctxt /= Void
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			help_engine.show (ctxt)
 			if not help_engine.last_show_successful then

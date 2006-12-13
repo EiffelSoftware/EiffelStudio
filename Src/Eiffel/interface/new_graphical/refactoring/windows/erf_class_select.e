@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 	on_ok_pressed is
 			-- The user pressed OK.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if selected_class /= Void then
 				ok_pressed := True

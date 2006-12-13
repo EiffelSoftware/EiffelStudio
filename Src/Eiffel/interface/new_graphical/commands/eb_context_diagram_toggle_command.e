@@ -13,6 +13,8 @@ feature -- Status setting
 
 	enable_select is
 			-- Make `Current' selected.
+		local
+			l_string: STRING_GENERAL
 		do
 			if current_button /= Void then
 				if not current_button.is_selected then
@@ -20,12 +22,16 @@ feature -- Status setting
 					current_button.toggle
 					current_button.select_actions.resume
 				end
-				current_button.set_tooltip (tooltip + shortcut_string)
+				l_string := tooltip.twin
+				l_string.append (shortcut_string.as_string_32)
+				current_button.set_tooltip (l_string)
 			end
 		end
 
 	disable_select is
 			-- Make `Current' deselected.
+		local
+			l_string: STRING_GENERAL
 		do
 			if current_button /= Void then
 				if current_button.is_selected then
@@ -33,7 +39,9 @@ feature -- Status setting
 					current_button.toggle
 					current_button.select_actions.resume
 				end
-				current_button.set_tooltip (tooltip + shortcut_string)
+				l_string := tooltip.twin
+				l_string.append (shortcut_string.as_string_32)
+				current_button.set_tooltip (l_string)
 			end
 		end
 
@@ -43,7 +51,7 @@ feature -- Access
 		deferred
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 		deferred
 		end
 

@@ -63,7 +63,7 @@ feature -- Access
 			end
 		end
 
-	name: STRING is
+	name: STRING_GENERAL is
 			-- Name of the section.
 		once
 			Result := conf_interface_names.section_groups

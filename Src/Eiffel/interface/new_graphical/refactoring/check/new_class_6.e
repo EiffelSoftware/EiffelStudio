@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		do
 			new_name := a_name
 			group := a_group
-			error_message := "There is already a class with the same name."
+			error_message := interface_names.l_there_is_already_a_class_with_the_same_name
 		end
 
 feature -- Basic operation

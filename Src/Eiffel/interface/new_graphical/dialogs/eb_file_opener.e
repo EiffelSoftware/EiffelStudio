@@ -25,8 +25,8 @@ feature {NONE} -- Initialization
 			-- Initialize with parent window `a_parent'
 		local
 			aok: BOOLEAN
-			wd: EV_WARNING_DIALOG
-			qd: EV_QUESTION_DIALOG
+			wd: EB_WARNING_DIALOG
+			qd: EB_QUESTION_DIALOG
 			warning_message: STRING
 			file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 		do
@@ -35,29 +35,29 @@ feature {NONE} -- Initialization
 				aok := True
 				if file.exists and then not file.is_plain then
 					warning_message := Warning_messages.w_Not_a_plain_file (fn)
-					
+
 				elseif file.exists and then not file.is_writable then
 					warning_message := Warning_messages.w_Not_writable (fn)
-					
+
 				elseif not file.is_creatable then
 					warning_message := Warning_messages.w_Not_creatable (fn)
-					
+
 				elseif file.exists and then file.is_writable then
 					create qd.make_with_text (Warning_messages.w_File_exists (fn))
 					qd.show_modal_to_window (parent_window)
-					aok := qd.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_yes)
+					aok := qd.selected_button.is_equal (interface_names.b_yes.as_string_32)
 				end
 			else
 				warning_message := Warning_messages.w_Not_a_plain_file (fn)
 			end
-			
+
 			if warning_message /= Void then
 				aok := False
 				create wd.make_with_text (warning_message)
 				wd.show_modal_to_window (parent_window)
 			end
-			
-			if aok then 
+
+			if aok then
 				caller.save_file (file)
 			end
 		end

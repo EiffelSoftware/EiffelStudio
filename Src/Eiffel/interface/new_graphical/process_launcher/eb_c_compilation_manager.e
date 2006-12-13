@@ -260,7 +260,7 @@ feature{NONE} -- Implementation
 		local
 			str: STRING
 
-			dlg: EV_CONFIRMATION_DIALOG
+			dlg: EB_CONFIRMATION_DIALOG
 			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 			maps: EV_STOCK_PIXMAPS
 		do
@@ -292,7 +292,7 @@ feature{NONE} -- Implementation
 		local
 			str: STRING
 
-			dlg: EV_WARNING_DIALOG
+			dlg: EB_WARNING_DIALOG
 			--actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 			maps: EV_STOCK_PIXMAPS
 		do

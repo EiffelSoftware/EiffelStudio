@@ -120,7 +120,7 @@ feature -- Basic operations
 			redo_exhausted_actions.call (Void)
 		end
 
-	do_named_undoable (a_name: STRING; an_action, an_undo_procedure: ANY) is
+	do_named_undoable (a_name: STRING_GENERAL; an_action, an_undo_procedure: ANY) is
 			-- Perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 		require

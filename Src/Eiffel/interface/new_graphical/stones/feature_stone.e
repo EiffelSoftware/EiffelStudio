@@ -98,14 +98,10 @@ feature -- Access
 			end
 		end
 
-	history_name: STRING is
+	history_name: STRING_GENERAL is
 			-- Name used in the history list
 		do
-			create Result.make (0)
-			Result.append (Interface_names.s_feature_stone)
-			Result.append (feature_name)
-			Result.append (" from ")
-			Result.append (e_class.class_signature)
+			Result := interface_names.l_from (Interface_names.s_feature_stone.as_string_32 + feature_name, e_class.class_signature)
 		end
 
 	same_as (other: STONE): BOOLEAN is
@@ -167,12 +163,12 @@ feature -- dragging
 			Result := e_feature.feature_signature
 		end
 
-	header: STRING is
+	header: STRING_GENERAL is
 			-- Name for the stone.
 		local
 			a_base_name: STRING
 		do
-			create Result.make (20)
+			create {STRING_32}Result.make (20)
 			Result.append ("{")
 			Result.append (e_class.name_in_upper)
 			Result.append ("}.")
@@ -180,9 +176,7 @@ feature -- dragging
 			if class_i /= Void then
 				a_base_name := class_i.file_name
 				if a_base_name /= Void then
-					Result.append (" (located in ")
-					Result.append (a_base_name)
-					Result.append (")")
+					Result.append (interface_names.l_located_in (a_base_name))
 				end
 			end
 		end

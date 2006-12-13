@@ -250,7 +250,7 @@ feature {NONE} -- Initialization
 			if mini_toolbar = Void then
 				build_mini_toolbar
 			end
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, mini_toolbar)
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, title_for_pre, False, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -289,16 +289,22 @@ feature -- Access
 	exception: EV_TEXT_FIELD
 			-- Exception application has encountered.
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool.
 		do
 			Result := Interface_names.t_Call_stack_tool
 		end
 
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_Call_stack_tool
+		end
+
 	stack_grid: ES_GRID
 			-- Graphical representation of the execution stack.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := Interface_names.m_Call_stack_tool
@@ -730,14 +736,14 @@ feature {NONE} -- Implementation
 			a_row_not_void: a_row /= Void
 		local
 			dc, oc: CLASS_C
-			l_tooltip: STRING
+			l_tooltip: STRING_32
 			l_nb_stack: INTEGER
 			e_cse: EIFFEL_CALL_STACK_ELEMENT
 			ext_cse: EXTERNAL_CALL_STACK_ELEMENT
 			dotnet_cse: CALL_STACK_ELEMENT_DOTNET
 			l_feature_info: STRING
 			l_class_info: STRING
-			l_orig_class_info: STRING
+			l_orig_class_info: STRING_GENERAL
 			l_same_name: BOOLEAN
 			l_breakindex_info: STRING
 			l_obj_address_info: STRING
@@ -749,6 +755,12 @@ feature {NONE} -- Implementation
 
 			e_cse ?= elem
 
+				--| Class name
+			l_class_info := elem.class_name
+			if l_class_info /= Void then
+				l_tooltip.append ("{" + l_class_info + "}.")
+			end
+
 				--| Routine name
 			l_feature_info := elem.routine_name
 			if l_feature_info /= Void then
@@ -756,13 +768,7 @@ feature {NONE} -- Implementation
 			else
 				create l_feature_info.make_empty
 			end
-			l_tooltip.append_string (l_feature_info)
-
-				--| Class name
-			l_class_info := elem.class_name
-			if l_class_info /= Void then
-				l_tooltip.prepend_string ("{" + l_class_info + "}.")
-			end
+			l_tooltip.append (l_feature_info)
 
 				--| Break Index
 			l_breakindex_info := elem.break_index.out
@@ -776,7 +782,7 @@ feature {NONE} -- Implementation
 				oc := e_cse.written_class
 				if oc /= Void then
 					l_orig_class_info := oc.name_in_upper
-					l_tooltip.prepend_string (" (from " + l_orig_class_info + ")")
+					l_tooltip.prepend_string (interface_names.l_from_class (l_orig_class_info))
 					l_same_name := oc.is_equal (dc)
 				else
 					l_orig_class_info := Interface_names.l_Same_class_name
@@ -785,12 +791,12 @@ feature {NONE} -- Implementation
 					--| Routine name
 				if e_cse.is_melted then
 					l_feature_info.append_string ("*")
-					l_tooltip.append_string ("%N   + compilation = melted")
+					l_tooltip.append_string (interface_names.l_compilation_equal_melted)
 				end
 
 				dotnet_cse ?= e_cse
 				if dotnet_cse /= Void and then dotnet_cse.dotnet_module_name /= Void then
-					l_tooltip.append_string ("%N   + Module = " + dotnet_cse.dotnet_module_name)
+					l_tooltip.append_string (interface_names.l_module_is (dotnet_cse.dotnet_module_name))
 				end
 
 				a_row.set_data (level)
@@ -808,8 +814,8 @@ feature {NONE} -- Implementation
 				--| Tooltip addition
 			l_nb_stack := app_exec.status.current_call_stack.count
 			l_tooltip.prepend_string ((elem.level_in_stack).out + "/" + l_nb_stack.out + ": ")
-			l_tooltip.append_string ("%N   + break index = " + l_breakindex_info)
-			l_tooltip.append_string ("%N   + address     = <" + l_obj_address_info + ">")
+			l_tooltip.append_string (interface_names.l_break_index_is (l_breakindex_info))
+			l_tooltip.append_string (interface_names.l_address_is (l_obj_address_info))
 			if l_extra_info /= Void then
 				l_tooltip.append_string ("%N    + " + l_extra_info)
 			end
@@ -957,8 +963,8 @@ feature {NONE} -- Implementation
 			f: RAW_FILE
 			fn, fp: STRING
 			retried: BOOLEAN
-			wd: EV_WARNING_DIALOG
-			dlg: EV_QUESTION_DIALOG
+			wd: EB_WARNING_DIALOG
+			dlg: EB_QUESTION_DIALOG
 		do
 			if not retried then
 					--| We create a file (or open it).
@@ -966,8 +972,8 @@ feature {NONE} -- Implementation
 				fp := fd.file_path
 				create f.make (fn)
 				if f.exists then
-					create dlg.make_with_text ("File " + fn + " already exists,%N Do you want to ?")
-					dlg.set_buttons_and_actions (<<"Overwrite", "Append", "Cancel">>,
+					create dlg.make_with_text (interface_names.l_file_exits (fn))
+					dlg.set_buttons_and_actions (<<interface_names.b_overwrite, interface_names.b_append, interface_names.b_cancel>>,
 							<<
 								agent save_call_stack_to_filename	(fp, fn, False),
 								agent save_call_stack_to_filename	(fp, fn, True),
@@ -995,7 +1001,7 @@ feature {NONE} -- Implementation
 		local
 			fn: FILE_WINDOW
 			retried: BOOLEAN
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if not retried then
 					--| We create a file (or open it).
@@ -1059,7 +1065,7 @@ feature {NONE} -- Implementation
 			mi: EV_MENU_ITEM
 			tid: INTEGER
 			arr: LIST [INTEGER]
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_item_text, s: STRING
 			l_status: APPLICATION_STATUS
 		do

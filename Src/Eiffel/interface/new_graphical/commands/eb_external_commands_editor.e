@@ -116,7 +116,7 @@ feature -- Status report
 			Result := pixmaps.icon_pixmaps.tool_external_commands_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := description
@@ -126,7 +126,7 @@ feature -- Status report
 			-- Name of the command. Use to store the command in the
 			-- preferences.
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Pop up help on the toolbar button.
 		do
 			Result := Interface_names.l_manage_external_commands
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Properties
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name of `Current' as it appears in menus.
 		do
 			Result := interface_names.m_Edit_external_commands

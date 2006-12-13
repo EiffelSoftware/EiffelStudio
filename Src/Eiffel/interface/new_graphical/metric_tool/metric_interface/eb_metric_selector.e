@@ -143,11 +143,11 @@ feature {NONE} -- Initialization
 			cached_key_field.set_tooltip (metric_names.f_press_esc_to_wipe_out)
 
 			move_unit_up_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_up_icon)
-			move_unit_up_btn.set_tooltip (metric_names.f_move_unit_up + metric_names.f_rearrange_unit)
+			move_unit_up_btn.set_tooltip (metric_names.f_move_unit_up.as_string_32 + metric_names.f_rearrange_unit)
 			move_unit_up_btn.select_actions.extend (agent on_move_unit (True, False))
 
 			move_unit_down_btn.set_pixmap (pixmaps.icon_pixmaps.general_move_down_icon)
-			move_unit_down_btn.set_tooltip (metric_names.f_move_unit_down + metric_names.f_rearrange_unit)
+			move_unit_down_btn.set_tooltip (metric_names.f_move_unit_down.as_string_32 + metric_names.f_rearrange_unit)
 			move_unit_down_btn.select_actions.extend (agent on_move_unit (False, True))
 		ensure then
 			metric_selected_actions_attached: metric_selected_actions /= Void
@@ -731,7 +731,7 @@ feature -- Metric management
 			l_grid_item: EV_GRID_LABEL_ITEM
 			l_grid_row: EV_GRID_ROW
 			l_font: EV_FONT
-			l_tooltip: STRING
+			l_tooltip: STRING_GENERAL
 			l_vadility: EB_METRIC_ERROR
 			l_red: EV_COLOR
 			l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM

@@ -181,13 +181,13 @@ feature -- Access
 
 feature -- Element change
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING_GENERAL) is
 			-- Assign `a_name' to `name'.
 		require
 			a_name_not_void: a_name /= Void
 			a_name_not_empty: not a_name.is_empty
 		do
-			current_name.set_text (interface_names.l_class_name + a_name)
+			current_name.set_text (interface_names.l_class_name (a_name))
 			if a_name.is_empty then
 				name_field.remove_text
 			else

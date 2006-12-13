@@ -106,8 +106,8 @@ feature -- Execution
 	execute_with_mode (execution_mode: INTEGER) is
 			-- Launch program in debugger with mode `execution_mode'.
 		local
-			wd: EV_WARNING_DIALOG
-			l_dial: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			wd: EB_WARNING_DIALOG
+			l_dial: EB_DISCARDABLE_CONFIRMATION_DIALOG
 			l_wb: WORKBENCH_I
 		do
 				--| At this point we define the 'type' on debug operation
@@ -167,7 +167,7 @@ feature -- Execution
 			trigger: EV_CONTAINABLE
 			cont: EV_ANY
 			window: EV_WINDOW
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			from
 				trigger := widget
@@ -200,7 +200,7 @@ feature -- Execution
 			f: E_FEATURE
 			body_index: INTEGER
 			old_bp_status: INTEGER
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			cond: EB_EXPRESSION
 			bp_exists: BOOLEAN
 			dbg: DEBUGGER_MANAGER
@@ -279,13 +279,13 @@ feature {NONE} -- Implementation / Attributes
 			Result := d.exists
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Toolbar button text for the command
 		do
 			Result := Interface_names.b_Launch
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the command.
 		do
 			Result := Interface_names.f_Debug_run
@@ -297,13 +297,13 @@ feature {NONE} -- Implementation / Attributes
 			Result := True
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for the command.
 		do
 			Result := Interface_names.f_Debug_run
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Debug_run

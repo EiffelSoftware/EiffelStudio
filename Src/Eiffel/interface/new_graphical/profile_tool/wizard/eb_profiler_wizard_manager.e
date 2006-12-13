@@ -11,7 +11,7 @@ class
 
 inherit
 	EB_WIZARD_MANAGER
-	
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -31,18 +31,18 @@ feature {NONE} -- Initialization
 		do
 			create wizard_initial_info.make
 			create wizard_initial_state.make (wizard_initial_info)
-			
+
 			make_and_show (a_parent_window, wizard_initial_state)
 		end
-		
+
 feature {NONE} -- Implementation
 
-	wizard_title: STRING is
+	wizard_title: STRING_GENERAL is
 			-- Title for the wizard
 		do
 			Result := Interface_names.t_Profiler_Wizard
 		end
-	
+
 	wizard_pixmap: EV_PIXMAP is
 			-- Pixmap for the initial and final states of the wizard.
 			-- This pixmap is displayed on the left of the window.
@@ -51,8 +51,8 @@ feature {NONE} -- Implementation
 			-- corner.)
 		do
 			Result := Pixmaps.bm_Wizard_blue
-		end		
-	
+		end
+
 	wizard_icon_pixmap: EV_PIXMAP is
 			-- Pixmap for the intermediary states.
 			--
@@ -61,13 +61,13 @@ feature {NONE} -- Implementation
 		do
 			Result := Pixmaps.bm_Wizard_profiler_icon
 		end
-		
+
 	wizard_window_icon: EV_PIXMAP is
 			-- Icon for the wizard window
 		do
 			Result := Pixmaps.Icon_profiler_window
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

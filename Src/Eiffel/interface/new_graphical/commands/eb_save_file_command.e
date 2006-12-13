@@ -65,7 +65,7 @@ feature -- Execution
 			-- Save a file with the chosen name.
 		local
 			compileok: BOOLEAN
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 				-- FIXME XR: We add a test `is_sensitive' to prevent calls from the accelerator.
 				-- It would be nicer to use the `executable' feature but that's 5.1 :)
@@ -97,7 +97,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Save_new
@@ -109,19 +109,19 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.general_save_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Save
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Save
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Save

@@ -48,19 +48,19 @@ feature -- Status
 
 feature -- Access
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What is printed in the customize dialog.
 		do
 			Result := interface_names.f_refactoring_rename
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Pop-up help on buttons.
 		do
 			Result := description
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for toolbar button
 		do
 			Result := interface_names.b_refactoring_rename
@@ -75,7 +75,7 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop)
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := tooltext
@@ -97,7 +97,7 @@ feature -- Events
 		local
 			feature_i: FEATURE_I
 			rf: ERF_FEATURE_RENAME
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			feature_i := fs.class_i.compiled_class.feature_of_feature_id (fs.e_feature.feature_id)
 			if feature_i /= Void and then fs.e_feature.associated_class.class_id = feature_i.written_in then
@@ -144,7 +144,7 @@ feature -- Execution
 		local
 			cs: CLASSI_STONE
 			fs: FEATURE_STONE
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			window: EB_DEVELOPMENT_WINDOW
 		do
 			window := window_manager.last_focused_development_window

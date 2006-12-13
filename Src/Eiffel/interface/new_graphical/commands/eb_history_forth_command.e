@@ -46,19 +46,19 @@ feature {NONE} -- Implementation
 			Result :=pixmaps.icon_pixmaps.view_next_icon
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_History_forth
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_History_forth
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.e_History_forth

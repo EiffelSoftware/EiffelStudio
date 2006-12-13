@@ -46,19 +46,19 @@ feature {NONE} -- Attributes
 	name: STRING is "Exec_into"
 			-- Name of the command.
 
-	internal_tooltip: STRING is
+	internal_tooltip: STRING_GENERAL is
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_into
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for toolbar button.
 		do
 			Result := Interface_names.b_Exec_into
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name used in menu entry
 		once
 			Result := Interface_names.m_Exec_into

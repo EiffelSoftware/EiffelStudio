@@ -110,7 +110,7 @@ feature -- Output helpers
 			debugger_output_message (msg)
 		end
 
-	debugger_status_message (msg: STRING) is
+	debugger_status_message (msg: STRING_GENERAL) is
 		require
 			msg /= Void
 		do
@@ -646,11 +646,21 @@ feature -- Debugging events
 		do
 			incremente_debugging_operation_id
 			if application.execution_mode = {EXEC_MODES}.No_stop_points then
+--<<<<<<< .mine
+--				debugger_status_message (Interface_names.e_Running_no_stop_points)
+--				debugger_output_message (Interface_names.ee_Running_no_stop_points)
+--=======
 				debugger_status_message (debugger_names.t_Running_no_stop_points)
 				debugger_output_message (debugger_names.t_Running_no_stop_points)
+-->>>>>>> .r65512
 			else
+--<<<<<<< .mine
+--				debugger_status_message (Interface_names.e_Running)
+--				debugger_output_message (Interface_names.ee_Running)
+--=======
 				debugger_status_message (debugger_names.t_Running)
 				debugger_output_message (debugger_names.t_Running)
+-->>>>>>> .r65512
 			end
 
 				--| Observers
@@ -762,7 +772,7 @@ invariant
 
 	implementation /= Void
 	controller /= Void
-	
+
 	application_initialized_not_void: application_initialized implies application /= Void
 	application /= Void implies application.debugger_manager = Current
 	debug_info /= Void

@@ -49,7 +49,7 @@ feature -- Status setting
 
 feature -- Interface
 
-	command_name: STRING is
+	command_name: STRING_GENERAL is
 			-- Name of current command throughout the interface (in lower case).
 		deferred
 		ensure
@@ -57,10 +57,10 @@ feature -- Interface
 			lower_case: is_lower_case (Result)
 		end
 
-	capital_command_name: STRING
+	capital_command_name: STRING_GENERAL
 			-- Name of current command throughout the interface (in lower case, but the first letter).
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- String representation in the associated menu.
 		deferred
 		ensure
@@ -100,24 +100,26 @@ feature -- Access
 
 feature -- Implementation
 
-	valid_string (str: STRING): BOOLEAN is
-			-- Is `str' neither Void nor empty nor filled with blanks?
+	valid_string (str: STRING_GENERAL): BOOLEAN is
+			-- Is `str' neither Void nor empty
+			-- It used to be nor filled with blanks with STRING_8
 			--| Cannot be in a non exported part because post conditions use it.
-		local
-			blank_string: STRING
 		do
-			if str /= Void and then not str.is_equal ("") then
-				create blank_string.make (str.count)
-				blank_string.fill_blank
-				Result := not str.is_equal (blank_string)
-			end
+			Result := str /= Void and then not str.is_empty
 		end
 
-	is_lower_case (str: STRING): BOOLEAN is
+	is_lower_case (str: STRING_GENERAL): BOOLEAN is
 			-- Is `str' lower case?
 			--| Cannot be in a non exported part because post conditions use it.
+		local
+			l_str: STRING
 		do
-			Result := str.as_lower.is_equal (str)
+			if str.is_valid_as_string_8 then
+				l_str := str.as_string_8
+				Result := l_str.as_lower.is_equal (l_str)
+			else
+				Result := True
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -456,8 +456,8 @@ feature {NONE} -- Implementation
 			l_condition: CONF_CONDITION
 			l_done: BOOLEAN
 			l_platforms, l_builds: ARRAYED_LIST [INTEGER]
-			l_custs: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]], STRING]
-			l_custom: EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]]
+			l_custs: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
+			l_custom: EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]]
 			l_versions: HASH_TABLE [EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]], STRING]
 			l_name: STRING
 			l_ver: EQUALITY_TUPLE [TUPLE [min: CONF_VERSION; max: CONF_VERSION]]
@@ -560,7 +560,11 @@ feature {NONE} -- Implementation
 							else
 								l_name := "value"
 							end
-							append_text_indent ("<custom name=%""+l_custs.key_for_iteration+"%" "+l_name+"=%""+l_custom.item.value+"%"/>%N")
+							check
+								is_valid_as_string_8: l_custs.key_for_iteration.is_valid_as_string_8
+								is_valid_as_string_8: l_custom.item.value.is_valid_as_string_8
+							end
+							append_text_indent ("<custom name=%""+l_custs.key_for_iteration.as_string_8+"%" "+l_name+"=%""+l_custom.item.value.as_string_8+"%"/>%N")
 							l_custs.forth
 						end
 

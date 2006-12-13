@@ -235,7 +235,7 @@ feature -- Status setting
 	refresh is
 			-- Recompute the displayed text.
 		local
-			l_dlg: EV_WARNING_DIALOG
+			l_dlg: EB_WARNING_DIALOG
 			l_trunc_str: STRING_32
 			l_real_str_length: INTEGER
 			l_length_str: STRING_32
@@ -334,7 +334,7 @@ feature {NONE} -- Event handling
 		local
 			lower, upper: INTEGER
 			valid: BOOLEAN
-			error_dialog: EV_WARNING_DIALOG
+			error_dialog: EB_WARNING_DIALOG
 		do
 			valid := True
 			if lower_slice_field.text.is_integer then

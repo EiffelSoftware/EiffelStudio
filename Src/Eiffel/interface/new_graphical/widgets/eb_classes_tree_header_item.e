@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; an_icon: EV_PIXMAP) is
+	make (a_name: STRING_GENERAL; an_icon: EV_PIXMAP) is
 			-- Create a header with `a_name' and `an_icon'.
 		do
 			default_create

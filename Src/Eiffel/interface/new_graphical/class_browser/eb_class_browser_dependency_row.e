@@ -338,7 +338,7 @@ feature{NONE} -- Implementation
 			feature_list_valid: feature_list /= Void and then not feature_list.is_empty
 		do
 			complete_generic_class_style.set_class_c (feature_list.first.class_c)
-			plain_text_style.set_source_text (interface_names.l_from)
+			plain_text_style.set_source_text (interface_names.l_from_x)
 			Result := (plain_text_style + complete_generic_class_style).text
 		ensure
 			result_attached: Result /= Void
@@ -404,7 +404,7 @@ feature{NONE} -- Implementation
 			l_plain_text_style: like plain_text_style
 		do
 			l_plain_text_style := plain_text_style
-			l_plain_text_style.set_source_text (interface_names.l_location_colon)
+			l_plain_text_style.set_source_text (interface_names.le_location_colon)
 			Result := l_plain_text_style.text
 			Result.append (path_grid_item_text (a_class, True, False, True))
 		end

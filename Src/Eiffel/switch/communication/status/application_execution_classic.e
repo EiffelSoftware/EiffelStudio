@@ -262,7 +262,7 @@ feature -- Query
 					end
 				else
 					create err_dv.make_with_name  (l_feat.feature_name)
-					err_dv.set_message (Interface_names.l_Not_yet_called)
+					err_dv.set_message (Interface_names.le_Not_yet_called)
 					err_dv.set_display_kind (Void_value)
 					odv := err_dv
 				end

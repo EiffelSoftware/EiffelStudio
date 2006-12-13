@@ -162,7 +162,7 @@ feature -- Access
 	target_stone: TARGET_STONE
 			-- Target stone
 
-	name: STRING is
+	name: STRING_GENERAL is
 			-- Name of current row
 		do
 			Result := domain_item.string_representation
@@ -189,7 +189,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip of current scope
 			-- Only return non Void value when `is_subfolder' is True
 		do
@@ -199,7 +199,7 @@ feature -- Access
 				if is_subfolder then
 					Result := cluster_stone.group.name + subfolder_path
 				elseif is_feature_scope then
-					Result := interface_names.l_version_in + " " + feature_stone.e_feature.associated_class.name
+					Result := interface_names.l_version_in (feature_stone.e_feature.associated_class.name)
 				end
 			end
 		end
@@ -276,7 +276,7 @@ feature -- Grid binding
 			a_grid_attached: a_grid /= Void
 		local
 			l_grid_row: EV_GRID_ROW
-			l_tooltip: STRING
+			l_tooltip: STRING_GENERAL
 			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
 		do
 			create l_editor_token_item

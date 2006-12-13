@@ -94,7 +94,7 @@ feature -- Access
 			Result := routine.feature_signature
 		end
 
-	header: STRING is
+	header: STRING_GENERAL is
 		do
 			Result := "Stop point in " + routine.name + " at line " + index.out
 		end

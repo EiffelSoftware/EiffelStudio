@@ -31,9 +31,9 @@ feature -- Initialization
 		do
 			manager := a_manager
 			capital_command_name := command_name.twin
-			capital_command_name.left_adjust
+			capital_command_name := interface_names.string_general_left_adjust (capital_command_name)
 				-- Set the first character to upper case.
-			capital_command_name.put ((capital_command_name @ 1) - 32, 1)
+			capital_command_name := interface_names.first_character_to_upper_case (capital_command_name)
 			create post_execution_action
 		ensure
 			valid_capital_command_name: valid_string (capital_command_name)
@@ -150,7 +150,7 @@ feature -- Interface
 	new_menu_item: EV_RADIO_MENU_ITEM is
 			-- Create a new menu item for `Current'.
 		local
-			mname: STRING
+			mname: STRING_GENERAL
 		do
 			mname := menu_name.twin
 			if accelerator /= Void then
@@ -164,7 +164,7 @@ feature -- Interface
 	new_button: EV_TOOL_BAR_RADIO_BUTTON is
 			-- Create a new tool bar button representing `Current'.
 		local
-			tt: STRING
+			tt: STRING_GENERAL
 		do
 			create Result
 			Result.set_pixmap (symbol @ 1)
@@ -406,12 +406,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	header: STRING is
+	header: STRING_GENERAL is
 			-- Text displayed in the ouput_line when current formatter is displayed.
 		deferred
 		end
 
-	temp_header: STRING is
+	temp_header: STRING_GENERAL is
 			-- Text displayed in the ouput_line when current formatter is working.
 		deferred
 		end

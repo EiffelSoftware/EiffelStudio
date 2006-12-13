@@ -222,7 +222,7 @@ feature {NONE} -- ecdbgd status
 		local
 			retried: BOOLEAN
 			old_delay: INTEGER
-			dlg: EV_WARNING_DIALOG
+			dlg: EB_WARNING_DIALOG
 		do
 			if not retried then
 				if ecdbgd_alive_checking_timer /= Void then

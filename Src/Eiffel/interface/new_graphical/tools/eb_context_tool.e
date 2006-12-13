@@ -161,7 +161,7 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (history_manager.back_command.new_mini_toolbar_item)
 			mini_toolbar.extend (history_manager.forth_command.new_mini_toolbar_item)
 			create explorer_bar_item.make_with_info (
-				explorer_bar, widget, title, True, header_box, mini_toolbar)
+				explorer_bar, widget, title, title_for_pre, True, header_box, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
 			check
 				pixmap_not_void: pixmap /= Void
@@ -243,16 +243,22 @@ feature -- Access
 	notebook: EV_NOTEBOOK
 			-- Container of `output_view', `external_output_view', `c_compilation_output_view', `editor', `class_view', `feature_view' and `metric'.
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool
 		do
 			Result := Interface_names.t_Context_tool
 		end
 
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_Context_tool
+		end
+
 	mini_toolbar: EV_TOOL_BAR
 			-- Toolbar containing the history commands.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := Interface_names.m_Context_tool

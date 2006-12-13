@@ -119,7 +119,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	do_named_undoable (a_name: STRING; action, undo_procedure: ANY) is
+	do_named_undoable (a_name: STRING_GENERAL; action, undo_procedure: ANY) is
 			-- Perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 			-- Update `action_list' as well.
@@ -193,7 +193,7 @@ feature -- Basic operations
 			do_actions.call (Void)
 		end
 
-	register_named_undoable (a_name: STRING; action, undo_procedure: ANY) is
+	register_named_undoable (a_name: STRING_GENERAL; action, undo_procedure: ANY) is
 			-- DO NOT perform `action' and put an undo/redo pair on the undo list.
 			-- Disgard pairs above the current position.
 			-- Update `action_list' as well.

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_file: FILE_NAME
-			l_warn: EV_WARNING_DIALOG
+			l_warn: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			retried := True
 			retry
 		end
-		
+
 feature -- Access
 
 	pixel_width: INTEGER is 32
@@ -592,7 +592,7 @@ feature -- Access
 			Result := raw_buffer.sub_pixel_buffer (pixel_rectangle (10, 3))
 		end
 
-		
+
 feature {NONE} -- Query
 
 	frozen pixel_rectangle (a_x: INTEGER; a_y: INTEGER): EV_RECTANGLE is

@@ -192,7 +192,7 @@ feature {NONE} -- Exception handling
 	try_to_save_files is
 			-- In case of a crash, try to make a backup of all edited files.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then

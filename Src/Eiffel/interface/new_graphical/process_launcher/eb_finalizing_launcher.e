@@ -48,31 +48,31 @@ feature -- Message
 	c_compilation_launched_msg: STRING is
 			-- Message to indicate c compilation launched successfully
 		do
-			Result := interface_names.e_finalizing_launched
+			Result := interface_names.ee_finalizing_launched
 		end
 
 	c_compilation_launch_failed_msg: STRING is
 			-- Message to indicate c compilation launch failed
 		do
-			Result := interface_names.e_finalizing_launch_failed
+			Result := interface_names.ee_finalizing_launch_failed
 		end
 
 	c_compilation_succeeded_msg: STRING is
 			-- Message to indicate c compilation exited successfully
 		do
-			Result := interface_names.e_finalizing_succeeded
+			Result := interface_names.ee_finalizing_succeeded
 		end
 
 	c_compilation_failed_msg: STRING is
 			-- Message to indicate c compilation failed
 		do
-			Result := interface_names.e_finalizing_failed
+			Result := interface_names.ee_finalizing_failed
 		end
 
 	c_compilation_terminated_msg: STRING is
 			-- Message to indicate c compilation has been terminated
 		do
-			Result := interface_names.e_finalizing_terminated
+			Result := interface_names.ee_finalizing_terminated
 		end
 
 feature -- Setting

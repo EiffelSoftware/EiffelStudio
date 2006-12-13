@@ -49,7 +49,7 @@ feature -- Update
 			column := a_column
 		end
 
-	set_message (a_message: STRING) is
+	set_message (a_message: like message) is
 			-- Set the extended error message to `a_message'.
 		do
 			message := a_message

@@ -55,7 +55,7 @@ feature -- Access
 	system: CONF_SYSTEM
 			-- Configuration system for which information should be displayed.
 
-	name: STRING is
+	name: STRING_GENERAL is
 			-- Name of the section.
 		once
 			Result := conf_interface_names.section_system

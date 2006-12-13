@@ -59,7 +59,7 @@ feature -- Basic operations
 			new_file, tmp_file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			create_backup, new_created: BOOLEAN
 			tmp_name: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 				-- Always assume a saving is successful.
 			last_saving_success := True

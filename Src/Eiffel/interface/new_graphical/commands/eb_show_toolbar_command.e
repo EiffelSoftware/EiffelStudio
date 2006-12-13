@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_menu_name: STRING) is
+	make (a_target: like target; a_menu_name: STRING_GENERAL) is
 			-- Initialize Current with target `a_target' and `menu_name' set to `a_menu_name'.
 		do
 			command_make (a_target)
@@ -113,10 +113,10 @@ feature -- Basic operations
 
 feature -- Access
 
-	menu_name: STRING
+	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu.
 
-	name: STRING;
+	name: STRING_GENERAL;
 			-- Name for the command.
 
 indexing

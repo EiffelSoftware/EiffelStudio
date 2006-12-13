@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 		do
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			if is_selected then
@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			Result := target.features_tool.is_assigner_enabled
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.l_toggle_assigner

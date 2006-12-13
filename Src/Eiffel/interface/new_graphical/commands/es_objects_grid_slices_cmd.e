@@ -49,10 +49,10 @@ feature -- Initialization
 
 feature -- Access
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu name for `Current'.
 		once
-			Result := Interface_names.m_Set_slice_size + "New"
+			Result := Interface_names.m_Set_slice_size
 		end
 
 	pixmap: EV_PIXMAP is
@@ -67,7 +67,7 @@ feature -- Access
 			Result := pixmaps.mini_pixmaps.debugger_set_sizes_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := description
@@ -92,7 +92,7 @@ feature -- Status report
 			Result := Interface_names.l_Set_slice_limits + "New"
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description of the command.
 		once
 			Result := Interface_names.l_Set_slice_limits_desc
@@ -462,7 +462,7 @@ feature {NONE} -- Implementation
 			str1, str2, str3: STRING
 			i: INTEGER
 			disp_size: INTEGER
-			errd: EV_WARNING_DIALOG
+			errd: EB_WARNING_DIALOG
 			ok: BOOLEAN
 		do
 			ok := True

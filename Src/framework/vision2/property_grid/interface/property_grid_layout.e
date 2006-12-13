@@ -9,6 +9,8 @@ class
 inherit
 	EV_DIALOG_CONSTANTS
 
+	SHARED_LOCALE
+
 feature {NONE} -- Button constants
 
 	button_width: INTEGER is 75
@@ -68,18 +70,18 @@ feature {NONE} -- Colors
 
 feature {NONE} -- Text
 
-	force_inheritance: STRING is "Force inheritance on child elements."
-	use_inherited: STRING is "Use inherited value."
+	force_inheritance: STRING_GENERAL is do Result := locale.translate ("Force inheritance on child elements.")	end
+	use_inherited: STRING_GENERAL is do Result := locale.translate ("Use inherited value.")	end
 
-	up_button_text: STRING is "Up"
-	down_button_text: STRING is "Down"
-	plus_button_text: STRING is "+"
-	minus_button_text: STRING is "-"
-	change_button_text: STRING is "Change"
+	up_button_text: STRING_GENERAL is do Result := locale.translate ("Up")	end
+	down_button_text: STRING_GENERAL is do Result := locale.translate ("Down")	end
+	plus_button_text: STRING_GENERAL is do Result := locale.translate ("+")	end
+	minus_button_text: STRING_GENERAL is do Result := locale.translate ("-")	end
+	change_button_text: STRING_GENERAL is do Result := locale.translate ("Change")	end
 
-	dialog_title (a_name: STRING): STRING is
+	dialog_title (a_name: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := "Edit "+a_name
+			Result := locale.format_string (locale.translate ("Edit $1"), [a_name])
 		end
 
 feature -- Update set default global settings.

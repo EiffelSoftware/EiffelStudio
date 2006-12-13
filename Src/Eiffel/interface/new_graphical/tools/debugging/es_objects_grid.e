@@ -29,12 +29,17 @@ inherit
 			on_pebble_function
 		end
 
+	EB_CONSTANTS
+		undefine
+			default_create, copy
+		end
+
 create
 	make_with_name
 
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: STRING; a_id: STRING) is
+	make_with_name (a_name: like name; a_id: STRING) is
 			-- Create current with a_name and a_tool
 		do
 			default_create
@@ -104,7 +109,7 @@ feature -- Properties
 	generating_type_evaluation_enabled: BOOLEAN
 			-- Is generating type representation evaluating {ANY}.generating_type ?
 
-	name: STRING
+	name: STRING_GENERAL
 			-- associated name to identify the related grid.
 
 	id: STRING
@@ -215,7 +220,7 @@ feature -- Change with preferences
 					l_title      := sp.item
 					sp.forth
 
-					dts[i] :=  [l_id, l_displayed, l_autoresize, l_width, l_title]
+					dts[i] :=  [l_id, l_displayed, l_autoresize, l_width, interface_names.find_translation (l_title), l_title]
 					i := i + 1
 				end
 				set_columns_layout (5, 1, dts)
@@ -249,7 +254,7 @@ feature -- Change with preferences
 					Result.append_character (sep)
 					Result.append_string (t.width.out)
 					Result.append_character (sep)
-					Result.append_string (t.title)
+					Result.append_string (t.title_for_pre)
 					Result.append_character (sep)
 					i := i + 1
 				end
@@ -293,7 +298,7 @@ feature -- Change
 			a_pos_not_greater_than_column_count: a_pos <= column_count
 		local
 			c,w: INTEGER
-			s: STRING
+			s: STRING_GENERAL
 			col: EV_GRID_COLUMN
 		do
 			c := t.col_index
@@ -312,6 +317,7 @@ feature -- Change
 			end
 			col := column (a_pos)
 			w := t.width
+			col.set_data (t.title_for_pre)
 			if w > 0 then
 				s := t.title
 				col.set_title (s)
@@ -325,13 +331,14 @@ feature -- Change
 			set_auto_resizing_column (c, t.has_auto_resizing)
 		end
 
-	column_layout (c: INTEGER): TUPLE [col_index:INTEGER; is_displayed:BOOLEAN; has_auto_resizing:BOOLEAN; width:INTEGER; title:STRING] is
+	column_layout (c: INTEGER): TUPLE [col_index:INTEGER; is_displayed:BOOLEAN; has_auto_resizing:BOOLEAN; width:INTEGER; title:STRING_GENERAL; title_for_pre: STRING] is
 		require
 			c_positive: c > 0
 			c_not_greater_than_column_count: c <= column_count
 		local
 			col: EV_GRID_COLUMN
 			cindex: INTEGER
+			l_str: STRING
 		do
 			col := column (c)
 			if c = col_name_index then
@@ -345,7 +352,11 @@ feature -- Change
 			elseif c = col_context_index then
 				cindex := Col_context_id
 			end
-			Result := [cindex, col.is_displayed, column_has_auto_resizing (c), col.width, col.title.as_string_8]
+			l_str ?= col.data
+			check
+				l_str_not_void: l_str /= Void
+			end
+			Result := [cindex, col.is_displayed, column_has_auto_resizing (c), col.width, col.title, l_str]
 		end
 
 	set_slices_cmd (v: like slices_cmd) is
@@ -371,7 +382,7 @@ feature {ES_OBJECTS_TOOL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJE
 			litem.attach_to_row (a_row)
 		end
 
-	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_title: STRING) is
+	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_title: STRING_GENERAL) is
 		require
 			dv /= Void
 		do
@@ -413,10 +424,10 @@ feature -- Menu
 			mci: EV_CHECK_MENU_ITEM
 		do
 			Result := Precursor
-			Result.set_text ("Grid %"" + name + "%"")
+			Result.set_text (interface_names.m_grid_name (name))
 
 			if layout_manager /= Void then
-				create mci.make_with_text ("Keep grid layout")
+				create mci.make_with_text (interface_names.m_keep_grid_layout)
 				if is_layout_managed then
 					mci.enable_select
 					mci.select_actions.extend (agent disable_layout_management)
@@ -839,14 +850,14 @@ feature -- Graphical look
 			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 		end
 
-	folder_label_item (s: STRING): EV_GRID_LABEL_ITEM is
+	folder_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM is
 		do
 			create Result
 			grid_cell_set_text (Result, s)
 			Result.set_foreground_color (folder_row_fg_color)
 		end
 
-	name_label_item (s: STRING): EV_GRID_LABEL_ITEM is
+	name_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM is
 		do
 			create Result
 			grid_cell_set_text (Result, s)

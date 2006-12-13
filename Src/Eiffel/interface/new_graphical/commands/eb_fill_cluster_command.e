@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_fill_cluster_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_fill_cluster

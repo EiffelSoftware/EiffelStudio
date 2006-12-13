@@ -50,7 +50,7 @@ feature -- Access
 	conf_external: CONF_EXTERNAL
 			-- External for which information are displayed.
 
-	name: STRING is
+	name: STRING_GENERAL is
 			-- Name of the section.
 		do
 			Result := conf_external.location
@@ -66,7 +66,7 @@ feature -- Element update
 	ask_remove_external is
 			-- Ask for confirmation and remove `Current'.
 		local
-			l_cd: EV_CONFIRMATION_DIALOG
+			l_cd: EB_CONFIRMATION_DIALOG
 		do
 			create l_cd.make_with_text_and_actions (conf_interface_names.target_remove_external (name), <<agent remove_external>>)
 			l_cd.show_modal_to_window (configuration_window)

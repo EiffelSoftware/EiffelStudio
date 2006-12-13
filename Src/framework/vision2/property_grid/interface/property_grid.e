@@ -70,7 +70,7 @@ feature -- Access
 		end
 
 	current_section: EV_GRID_ROW
-	current_section_name: STRING
+	current_section_name: STRING_GENERAL
 			-- Current section, that will be used for insertion.
 
 feature -- Update
@@ -112,7 +112,7 @@ feature -- Update
 		end
 
 
-	add_section (a_name: STRING) is
+	add_section (a_name: STRING_GENERAL) is
 			-- If there is no section with `a_name', add a new section with `a_name' and use this section for further additions of properties.
 			-- Else use the existing section.
 		require
@@ -198,7 +198,7 @@ feature -- Update
 			description_field_set: description_field = a_field
 		end
 
-	set_expanded_section_store (a_store: HASH_TABLE [BOOLEAN, STRING]) is
+	set_expanded_section_store (a_store: HASH_TABLE [BOOLEAN, STRING_GENERAL]) is
 			-- Store for the expanded sections, will get updated if sections are expanded or collapsed.
 		require
 			a_store_not_void: a_store /= Void
@@ -294,7 +294,7 @@ feature {NONE} -- Actions
 			a_property.activate
 		end
 
-	update_expanded_status (a_is_expanded: BOOLEAN; a_section: STRING) is
+	update_expanded_status (a_is_expanded: BOOLEAN; a_section: STRING_GENERAL) is
 			-- Update expanded status to `a_is_expanded' of `a_section'.
 		require
 			a_section_ok: a_section /= Void and then not a_section.is_empty
@@ -393,7 +393,7 @@ feature {NONE} -- Actions
 				elseif a_property.description.is_empty then
 					description_field.set_and_wrap_text (a_property.name)
 				else
-					description_field.set_and_wrap_text (a_property.name + ": " + a_property.description)
+					description_field.set_and_wrap_text (a_property.name.as_string_32 + ": " + a_property.description)
 				end
 			end
 		end
@@ -415,13 +415,13 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	sections: HASH_TABLE [EV_GRID_ROW, STRING]
+	sections: HASH_TABLE [EV_GRID_ROW, STRING_GENERAL]
 			-- Property sections.
 
 	description_field: ES_LABEL
 			-- Place to put descriptions.
 
-	expanded_section_store: HASH_TABLE [BOOLEAN, STRING]
+	expanded_section_store: HASH_TABLE [BOOLEAN, STRING_GENERAL]
 			-- Expanded status of the sections.
 
 feature {NONE} -- Once

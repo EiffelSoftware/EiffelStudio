@@ -39,7 +39,7 @@ feature {NONE} -- Actions
 	on_ok is
 			-- Add group and close the dialog.
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_loc: CONF_DIRECTORY_LOCATION
 		do
 			if not name.text.is_empty and not location.text.is_empty then

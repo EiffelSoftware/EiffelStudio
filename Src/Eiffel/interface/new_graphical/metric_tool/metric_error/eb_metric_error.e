@@ -58,7 +58,7 @@ feature -- Setting
 		require
 			a_message_attached: a_message /= Void
 		do
-			create {STRING_32}message.make_from_string (a_message)
+			message := a_message.twin
 		ensure
 			message_set: message /= Void
 		end
@@ -67,7 +67,7 @@ feature -- Setting
 			-- Set `location 'with `a_location'.
 		do
 			if a_location /= Void then
-				create {STRING_32}location.make_from_string (a_location)
+				location := a_location.twin
 			else
 				location := Void
 			end
@@ -80,7 +80,7 @@ feature -- Setting
 			-- Set `to_do' with `a_to_do'.
 		do
 			if a_to_do /= Void then
-				create {STRING_32}to_do.make_from_string (a_to_do)
+				to_do := a_to_do.twin
 			else
 				to_do := Void
 			end

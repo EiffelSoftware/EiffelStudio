@@ -58,12 +58,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_manager: like manager; a_title: like title) is
+	make_with_title (a_manager: like manager; a_title: like title; a_title_for_pre: like title_for_pre) is
 		do
 			if a_title = Void or else a_title.is_empty then
 				set_title (interface_names.t_Watch_tool)
+				set_title_for_pre (interface_names.to_Watch_tool)
 			else
 				set_title (a_title)
+				set_title_for_pre (a_title_for_pre)
 			end
 			auto_expression_enabled := False
 			make (a_manager)
@@ -81,11 +83,11 @@ feature {NONE} -- Initialization
 			esgrid.set_column_count_to (5)
 			esgrid.set_columns_layout (5, 1,
 					<<
-						[1, True, False, 150, "Expression"],
-						[2, True, False, 150, "Value"],
-						[3, True, False, 100, "Type"],
-						[4, True, False, 80, "Address"],
-						[5, True, False, 200, "Context"]
+						[1, True, False, 150, interface_names.l_Expression, interface_names.to_expression],
+						[2, True, False, 150, interface_names.l_value, interface_names.to_value],
+						[3, True, False, 100, interface_names.l_type, interface_names.to_type],
+						[4, True, False, 80, interface_names.l_address, interface_names.to_address],
+						[5, True, False, 200, interface_names.l_Context, interface_names.to_context]
 					>>
 					)
 
@@ -124,7 +126,7 @@ feature {NONE} -- Initialization
 
 			create scmd.make
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
-			scmd.set_tooltip ("Open Watch tool menu")
+			scmd.set_tooltip (interface_names.f_Open_watch_tool_menu)
 			scmd.add_agent (agent open_watch_menu (mini_toolbar, 0, 0))
 			scmd.enable_sensitive
 			mini_toolbar.extend (scmd.new_mini_toolbar_item)
@@ -173,14 +175,14 @@ feature {NONE} -- Initialization
 
 			create move_up_cmd.make
 			move_up_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_up_icon)
-			move_up_cmd.set_tooltip ("Move item up")
+			move_up_cmd.set_tooltip (interface_names.f_move_item_up)
 			move_up_cmd.add_agent (agent move_selected (watches_grid, -1))
 			tbb := move_up_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)
 
 			create move_down_cmd.make
 			move_down_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_down_icon)
-			move_down_cmd.set_tooltip ("Move item down")
+			move_down_cmd.set_tooltip (interface_names.f_move_item_down)
 			move_down_cmd.add_agent (agent move_selected (watches_grid, +1))
 			tbb := move_down_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)
@@ -198,7 +200,7 @@ feature {NONE} -- Initialization
 			if mini_toolbar = Void then
 				build_mini_toolbar
 			end
-			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, mini_toolbar)
+			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, title_for_pre, False, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -238,10 +240,13 @@ feature -- Access
 			Result := watches_grid
 		end
 
-	title: STRING
+	title: STRING_GENERAL
 			-- Title of the tool.
 
-	menu_name: STRING is
+	title_for_pre: STRING
+			-- Title for prefence, STRING_8
+
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := interface_names.m_Watch_tool
@@ -275,6 +280,15 @@ feature -- Change
 			end
 		ensure
 			title_set: title.is_equal (a_title)
+		end
+
+	set_title_for_pre (a_title: like title_for_pre) is
+		require
+			title_for_pre_valid: a_title /= Void and then not a_title.is_empty
+		do
+			title_for_pre := a_title
+		ensure
+			title_set: title_for_pre.is_equal (a_title)
 		end
 
 feature -- Properties setting
@@ -457,7 +471,7 @@ feature {NONE} -- add new expression from the grid
 				then
 					new_expression_row := watches_grid.extended_new_row
 					create glab.make_with_text ("...")
-					grid_cell_set_tooltip (glab, "Click here to add a new expression")
+					grid_cell_set_tooltip (glab, interface_names.f_add_new_expression)
 
 					new_expression_row.set_item (1, glab)
 					glab.pointer_double_press_actions.force_extend (agent glab.activate)
@@ -499,7 +513,7 @@ feature {NONE} -- Event handling
 				create m
 					--| Auto expressions
 				create mci
-				mci.set_text ("Auto expressions")
+				mci.set_text (interface_names.m_auto_expressions)
 				if auto_expression_enabled then
 					mci.enable_select
 				end
@@ -508,10 +522,10 @@ feature {NONE} -- Event handling
 				m.extend (create {EV_MENU_SEPARATOR})
 
 					--| Watch management
-				create mi.make_with_text_and_action ("Create new watch", agent open_new_created_watch_tool)
+				create mi.make_with_text_and_action (interface_names.f_create_new_watch, agent open_new_created_watch_tool)
 				m.extend (mi)
 				if Eb_debugger_manager.watch_tool_list.count > 1 then
-					create mi.make_with_text_and_action ("Close " + title, agent Eb_debugger_manager.close_watch_tool (Current))
+					create mi.make_with_text_and_action (interface_names.b_Close_tool (title), agent Eb_debugger_manager.close_watch_tool (Current))
 					m.extend (mi)
 				end
 

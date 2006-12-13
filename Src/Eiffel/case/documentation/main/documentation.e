@@ -258,7 +258,7 @@ feature -- Actions
 			end
 		end
 
-	generated_class_formats_string: STRING is
+	generated_class_formats_string: STRING_32 is
 			-- To display when user is wasting time watching slow progressing.
 		local
 			af: LINEAR [INTEGER]

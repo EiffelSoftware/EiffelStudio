@@ -54,19 +54,19 @@ feature {NONE} -- Attributes
 	debugger_manager: DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.	
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_stop
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Exec_stop
@@ -75,7 +75,7 @@ feature {NONE} -- Attributes
 	name: STRING is "Exec_stop"
 			-- Name of the command.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
 			Result := Interface_names.m_Debug_interrupt_new

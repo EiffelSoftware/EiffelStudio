@@ -183,13 +183,13 @@ feature {NONE}-- Initialization
 			hb.extend (create {EV_CELL})
 			hb.set_padding (layout_constants.default_padding_size)
 
-			create ok_button.make_with_text_and_action (ev_ok, agent on_ok)
+			create ok_button.make_with_text_and_action (b_ok, agent on_ok)
 			layout_constants.set_default_width_for_button (ok_button)
 			hb.extend (ok_button)
 			hb.disable_item_expand (ok_button)
 			set_default_push_button (ok_button)
 
-			create l_btn.make_with_text_and_action (ev_cancel, agent on_cancel)
+			create l_btn.make_with_text_and_action (b_cancel, agent on_cancel)
 			layout_constants.set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
@@ -554,7 +554,7 @@ feature {TARGET_SECTION, SYSTEM_SECTION} -- Target creation
 
 feature {CONFIGURATION_SECTION} -- Section tree selection agents
 
-	show_empty_section (a_message: STRING)
+	show_empty_section (a_message: STRING_GENERAL)
 			-- Show `a_message' for an empty section.
 		local
 			l_label: ES_LABEL
@@ -732,7 +732,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			properties_ok: properties /= Void and then not properties.is_destroyed
 		end
 
-	show_properties_target_tasks (a_target: CONF_TARGET; a_task: CONF_ACTION; a_type: STRING) is
+	show_properties_target_tasks (a_target: CONF_TARGET; a_task: CONF_ACTION; a_type: STRING_GENERAL) is
 			-- Show task properties for `a_task'.
 		require
 			is_initialized: is_initialized
@@ -940,7 +940,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 
 feature {NONE} -- Implementation
 
-	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING] is
+	group_section_expanded_status: HASH_TABLE [BOOLEAN, STRING_GENERAL] is
 			-- Expanded status of sections of groups.
 		once
 			create Result.make (5)
@@ -974,7 +974,7 @@ feature {NONE} -- Implementation
 				check
 					section: l_section /= Void
 				end
-				if not l_section.name.is_equal (l_section.text) then
+				if not l_section.name.as_string_32.is_equal (l_section.text.as_string_32) then
 					l_section.set_text (l_section.name)
 				end
 
@@ -1174,7 +1174,7 @@ feature {NONE} -- Implementation
 			properties.current_section.expand
 		end
 
-	initialize_properties_target_tasks (a_task: CONF_ACTION; a_type: STRING) is
+	initialize_properties_target_tasks (a_task: CONF_ACTION; a_type: STRING_GENERAL) is
 			-- Initialize `properties' for task target settings.
 		require
 			properties_ok: properties /= Void and then not properties.is_destroyed
@@ -1374,7 +1374,7 @@ feature {NONE} -- Validation and warning generation
 			target_of_system: a_target /= Void and then not a_target.is_empty implies conf_system.targets.has (a_target)
 		local
 			l_target: CONF_TARGET
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if a_target /= Void and then not a_target.is_empty then
 				l_target := conf_system.targets.item (a_target)

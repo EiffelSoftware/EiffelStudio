@@ -157,7 +157,7 @@ feature -- Access
 	text_area: EB_CLICKABLE_EDITOR
 			-- Editor to handle the displayed text is displayed.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := Interface_names.m_Output

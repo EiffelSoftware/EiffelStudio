@@ -45,19 +45,19 @@ feature -- Status setting
 
 feature -- Status report
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Explanatory text for this command.
 		do
 			Result := Interface_names.e_Display_error_help
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for `Current's toolbar button.
 		do
 			Result := Interface_names.e_Display_error_help
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for `Current's toolbar button.
 		do
 			Result := Interface_names.b_Display_error_help
@@ -72,7 +72,7 @@ feature -- Status report
 			Result := pixmaps.icon_pixmaps.command_error_info_icon
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Text used for menu items for `Current'.
 		do
 			Result := Interface_names.m_Display_error_help

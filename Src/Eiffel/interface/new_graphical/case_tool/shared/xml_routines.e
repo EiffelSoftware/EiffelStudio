@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		ensure
 			relative_window_set : relative_window = a_relative_window
 		end
-		
+
 feature {NONE} -- Access
 
 	relative_window: EV_WINDOW
@@ -46,7 +46,7 @@ feature {SHARED_XML_ROUTINES} -- Status report
 			-- Number of valid tags read.
 
 feature {SHARED_XML_ROUTINES} -- Status setting
-	
+
 	reset_valid_tags is
 			-- Reset `valid_tags'.
 		do
@@ -295,7 +295,7 @@ feature {SHARED_XML_ROUTINES} -- Error management
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
 		local
-			l_warning_window: EV_WARNING_DIALOG
+			l_warning_window: EB_WARNING_DIALOG
 		do
 			create l_warning_window.make_with_text (a_warning_msg)
 			l_warning_window.show
@@ -320,7 +320,7 @@ feature {SHARED_XML_ROUTINES} -- Error management
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
 			non_void_parent_window: a_parent_window /= Void
 		local
-			l_warning_window: EV_WARNING_DIALOG
+			l_warning_window: EB_WARNING_DIALOG
 		do
 			create l_warning_window.make_with_text (a_warning_msg)
 			l_warning_window.show_modal_to_window (a_parent_window)

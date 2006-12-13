@@ -140,7 +140,7 @@ feature {DOCUMENTATION} -- Basic operations
 			str: STRING
 			ptf: PLAIN_TEXT_FILE
 			minimum_pixmap: EV_PIXMAP
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			layout: EIFFEL_INHERITANCE_LAYOUT
 		do
 			check

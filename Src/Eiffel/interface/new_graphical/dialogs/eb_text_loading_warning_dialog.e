@@ -27,13 +27,13 @@ feature {NONE} -- Initialisation
 
 feature {NONE} -- Deferred Constants
 
-	check_button_label: STRING is
+	check_button_label: STRING_GENERAL is
 			-- Label for `check_button'.
 		do
 			Result := Interface_names.l_Dont_ask_me_again
 		end
 
-	warning_message_label: STRING is
+	warning_message_label: STRING_GENERAL is
 			-- Label for the confirmation message.
 		do
 			Result := Interface_names.l_Text_loading

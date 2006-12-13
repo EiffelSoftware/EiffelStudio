@@ -70,19 +70,19 @@ feature -- Dialog
 
 feature {NONE} -- Attributes
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What appears in the customize dialog box.
 		do
 			Result := tooltip
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Dbg_exception_handler
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text displayed on `Current's buttons.
 		do
 			Result := Interface_names.b_Dbg_exception_handler
@@ -91,7 +91,7 @@ feature {NONE} -- Attributes
 	name: STRING is "Exception_handler"
 			-- Name of the command.
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		once
 			Result := Interface_names.m_Dbg_exception_handler

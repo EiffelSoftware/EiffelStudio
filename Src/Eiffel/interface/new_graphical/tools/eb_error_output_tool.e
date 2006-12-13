@@ -77,8 +77,8 @@ feature {NONE} -- Implementation
 			parent_notebook_attached: parent_notebook /= Void
 			widget_attached: widget /= Void
 		local
-			l_name: STRING
-			l_title: STRING
+			l_name: STRING_GENERAL
+			l_title: STRING_32
 		do
 			l_name := interface_names.l_tab_error_output
 			if a_count > 0 then
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 				l_title.append_integer (a_count)
 				l_title.append_character (')')
 			else
-				l_title := l_name
+				l_title := l_name.as_string_32
 			end
 			parent_notebook.set_item_text (widget, l_title)
 		end

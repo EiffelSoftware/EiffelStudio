@@ -465,7 +465,7 @@ feature {NONE} -- Actions
 		local
 			l_ver: STRING
 			l_min, l_max: CONF_VERSION
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			l_ver := version_min_compiler.text
 			if not l_ver.is_empty then
@@ -496,7 +496,7 @@ feature {NONE} -- Actions
 		local
 			l_ver: STRING
 			l_min, l_max: CONF_VERSION
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			l_ver := version_min_msil_clr.text
 			if not l_ver.is_empty then
@@ -522,7 +522,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	update_variable (a_new_key: STRING; an_old_key: STRING) is
+	update_variable (a_new_key: STRING_GENERAL; an_old_key: STRING_GENERAL) is
 			-- Update variable name from `an_old_key' to `a_new_key'.
 		require
 			an_old_key_ok: an_old_key /= Void and then data.custom /= Void and then data.custom.has (an_old_key)
@@ -534,7 +534,7 @@ feature {NONE} -- Actions
 			fill_custom
 		end
 
-	update_invert (a_value: STRING; a_key: STRING) is
+	update_invert (a_value: STRING_GENERAL; a_key: STRING_GENERAL) is
 			-- Update inversion status of custom condition of `a_key'.
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
@@ -547,7 +547,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	update_value (a_value: STRING; a_key: STRING) is
+	update_value (a_value: STRING_GENERAL; a_key: STRING_GENERAL) is
 			-- Update value of custom condition of `a_key'.
 		require
 			a_key_ok: a_key /= Void and then data.custom /= Void and then data.custom.has (a_key)
@@ -645,11 +645,11 @@ feature {NONE} -- Implementation
 	fill_custom is
 			-- Fill custom conditions.
 		local
-			l_cust: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING; invert: BOOLEAN]], STRING]
-			l_text: STRING_PROPERTY [STRING]
-			l_choice: STRING_CHOICE_PROPERTY [STRING]
+			l_cust: HASH_TABLE [EQUALITY_TUPLE [TUPLE [value: STRING_GENERAL; invert: BOOLEAN]], STRING_GENERAL]
+			l_text: STRING_PROPERTY [STRING_GENERAL]
+			l_choice: STRING_CHOICE_PROPERTY [STRING_GENERAL]
 			i: INTEGER
-			l_key: STRING
+			l_key: STRING_GENERAL
 		do
 			custom.wipe_out
 			custom.enable_last_column_use_all_width

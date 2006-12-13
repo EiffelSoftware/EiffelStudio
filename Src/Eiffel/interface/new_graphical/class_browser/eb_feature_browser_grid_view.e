@@ -608,7 +608,7 @@ feature{NONE} -- Implementation
 			-- A grid item to display branch id
 		do
 			create Result
-			branch_item_style.set_source_text (interface_names.l_branch + a_branch_id.out)
+			branch_item_style.set_source_text (interface_names.le_branch (a_branch_id))
 			Result.set_text_with_tokens (branch_item_style.text)
 			Result.set_pixmap (pixmaps.icon_pixmaps.feature_group_icon)
 		ensure

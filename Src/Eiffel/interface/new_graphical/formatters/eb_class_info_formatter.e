@@ -45,25 +45,18 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	temp_header: STRING is
+	temp_header: STRING_GENERAL is
 			-- Temporary header displayed during the format processing.
 		do
 			check associated_class /= Void end
-			create Result.make (128)
-			Result.append (Interface_names.l_Working_formatter.twin)
-			Result.append (command_name)
-			Result.append (Interface_names.l_Of_class)
-			Result.append (associated_class.name)
-			Result.append (Interface_names.l_Three_dots)
+			Result := interface_names.l_working_formatter (command_name, associated_class.name, True)
 		end
 
-	header: STRING is
+	header: STRING_GENERAL is
 			-- Header displayed when current formatter is selected.
 		do
 			if associated_class /= Void then
-				Result := capital_command_name.twin
-				Result.append (Interface_names.l_Of_class)
-				Result.append (associated_class.name_in_upper)
+				Result := interface_names.l_Header_class (capital_command_name, associated_class.name_in_upper)
 			else
 				Result := Interface_names.l_Not_in_system_no_info
 			end

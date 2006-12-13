@@ -323,7 +323,7 @@ feature -- tools management
 			l_tool: EB_TOOL
 			l_tools: ARRAY [EB_TOOL]
 			i: INTEGER
-			s: STRING
+			s: STRING_GENERAL
 		do
 			if raised then
 				l_tools := menuable_debugging_tools
@@ -354,8 +354,10 @@ feature -- tools management
 			manager /= Void
 		local
 			l_watch_tool: ES_WATCH_TOOL
+			i: INTEGER
 		do
-			create l_watch_tool.make_with_title (manager, interface_names.t_watch_tool + " #" + new_watch_tool_number.out)
+			i := new_watch_tool_number
+			create l_watch_tool.make_with_title (manager, interface_names.t_watch_tool.as_string_32 + " #" + i.out, interface_names.to_watch_tool + " #")
 			l_watch_tool.attach_to_notebook (nb)
 			watch_tool_list.extend (l_watch_tool)
 		end
@@ -644,6 +646,7 @@ feature -- Status setting
 			if debugging_tools = Void then
 				create debugging_tools.make (
 						interface_names.t_Debugging_tool,
+						interface_names.to_debugging_tool,
 						interface_names.m_Debugging_tool,
 						Void
 					)
@@ -1607,12 +1610,12 @@ feature {NONE} -- MSIL system implementation
 
 feature {NONE} -- specific implementation
 
-	text_running: STRING is
+	text_running: STRING_GENERAL is
 		do
 			Result := interface_names.e_running
 		end
 
-	text_running_no_stop_points: STRING is
+	text_running_no_stop_points: STRING_GENERAL is
 		do
 			Result := interface_names.e_Running_no_stop_points
 		end

@@ -285,7 +285,7 @@ feature -- Load archive
 		require
 			nodes_valid: not (ref_node = Void and then cur_node = Void)
 		local
-			l_type_name: STRING
+			l_type_name: STRING_32
 		do
 			if ref_node = Void then
 				create Result.make (cur_node.metric_name, name_of_metric_type (cur_node.metric_type), 0, False, cur_node.value, True, cur_node.calculated_time)

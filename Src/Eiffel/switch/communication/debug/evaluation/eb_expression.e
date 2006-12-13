@@ -192,7 +192,7 @@ feature -- Status report
 					(context_class.is_valid and then context_class.has_feature_table))
 		end
 
-	context: STRING is
+	context: STRING_GENERAL is
 			-- Return a string representing `Current's context.
 		do
 			if on_class then

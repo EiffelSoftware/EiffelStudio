@@ -28,19 +28,19 @@ inherit
 
 feature -- Access
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- What is printed in the customize dialog.
 		do
 			Result := Interface_names.f_Clear_breakpoints
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Pop-up help on buttons.
 		do
 			Result := description
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for toolbar button
 		do
 			Result := Interface_names.b_bkpt_remove
@@ -66,7 +66,7 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding tp `Current'.
 		do
 			Result := Interface_names.m_Clear_breakpoints
@@ -160,7 +160,7 @@ feature -- Execution
 	execute is
 			-- Execute with confirmation dialog.
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 			bpm: BREAKPOINTS_MANAGER
 		do
 			bpm := Debugger_manager

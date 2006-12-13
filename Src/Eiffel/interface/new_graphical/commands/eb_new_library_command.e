@@ -31,7 +31,7 @@ feature -- Basic operations
 			-- Pop up cluster wizard.
 		local
 			dial: CREATE_LIBRARY_DIALOG
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_factory: CONF_COMP_FACTORY
 		do
 			if Workbench.is_already_compiled then
@@ -68,7 +68,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do
 			Result := Interface_names.m_Create_new_library
@@ -80,19 +80,19 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.new_library_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_Create_new_library
 		end
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Text for the toolbar button.
 		do
 			Result := Interface_names.b_Create_new_library
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.f_create_new_library

@@ -140,8 +140,8 @@ feature {NONE} -- Interface
 				--| Build interface
 
 			create displayed_objects.make
-			create_objects_grid ("Objects tool: left", first_grid_id)
-			create_objects_grid ("Objects tool: right", second_grid_id)
+			create_objects_grid (interface_names.l_object_tool_left, first_grid_id)
+			create_objects_grid (interface_names.l_object_tool_right, second_grid_id)
 
 			stack_objects_grid := objects_grid (first_grid_id)
 			debugged_objects_grid := objects_grid (second_grid_id)
@@ -183,7 +183,7 @@ feature {NONE} -- Interface
 			refresh_objects_layout_from_preference (preferences.debug_tool_data.objects_tool_layout_preference)
 		end
 
-	create_objects_grid (a_name, a_id: STRING) is
+	create_objects_grid (a_name: STRING_GENERAL; a_id: STRING) is
 			-- Create an objects grid named `a_name' and identified by `a_id'
 		local
 			spref: STRING_PREFERENCE
@@ -197,11 +197,11 @@ feature {NONE} -- Interface
 			g.set_columns_layout_from_string_preference (
 					preferences.debug_tool_data.grid_column_layout_preference_for (g.id),
 						<<
-							[1, True, False, 150, "Name"],
-							[2, True, False, 150, "Value"],
-							[3, True, False, 200, "Type"],
-							[4, True, False, 80, "Address"],
-							[5, False, False, 0, "Context ..."]
+							[1, True, False, 150, interface_names.l_name, interface_names.to_name],
+							[2, True, False, 150, interface_names.l_value, interface_names.to_value],
+							[3, True, False, 200, interface_names.l_type, interface_names.to_type],
+							[4, True, False, 80, interface_names.l_address, interface_names.to_address],
+							[5, False, False, 0, interface_names.l_context_dot, interface_names.to_context_dot]
 						>>
 					)
 
@@ -240,7 +240,7 @@ feature {NONE} -- Interface
 
 			create scmd.make
 			scmd.set_mini_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
-			scmd.set_tooltip ("Open Objects tool menu")
+			scmd.set_tooltip (interface_names.f_Open_object_tool_menu)
 			scmd.add_agent (agent open_objects_menu (mini_toolbar, 0, 0))
 			scmd.enable_sensitive
 			mini_toolbar.extend (scmd.new_mini_toolbar_item)
@@ -292,7 +292,7 @@ feature {NONE} -- Interface
 			if header_box = Void then
 				build_header_box
 			end
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_info (explorer_bar, widget, title, False, header_box, mini_toolbar)
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_info (explorer_bar, widget, title, title_for_pre, False, header_box, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -321,7 +321,7 @@ feature {NONE} -- Interface
 			og: like objects_grid
 			lid: STRING
 			i: INTEGER
-			pos_titles: ARRAY [STRING]
+			pos_titles: ARRAY [STRING_GENERAL]
 		do
 			if not objects_grids.is_empty then
 				create m
@@ -349,11 +349,11 @@ feature {NONE} -- Interface
 					loop
 						create mci
 						if lid.is_case_insensitive_equal (objects_grids_positions[i]) then
-							mci.set_text ("Item [" + pos_titles[i] + "] is attached to %"" + og.name + "%"")
+							mci.set_text (interface_names.l_item_is_attached_to (pos_titles[i], og.name))
 							mci.enable_select
 							mci.disable_sensitive
 						else
-							mci.set_text ("Move [" + pos_titles[i] + "] to %"" + og.name + "%"")
+							mci.set_text (interface_names.l_move_to (pos_titles[i], og.name))
 							mci.disable_select
 							mci.select_actions.extend (agent assign_objects_grids_position (lid, i))
 						end
@@ -460,13 +460,19 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Widget representing Current.
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool.
 		do
 			Result := interface_names.t_object_tool
 		end
 
-	menu_name: STRING is
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_object_tool
+		end
+
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := interface_names.m_object_tools
@@ -1024,6 +1030,7 @@ feature {NONE} -- Current objects grid Implementation
 		local
 			value: ABSTRACT_DEBUG_VALUE
 			item: ES_OBJECTS_GRID_LINE
+			l_str: STRING_GENERAL
 			dn_st: APPLICATION_STATUS_DOTNET
 			app: APPLICATION_EXECUTION
 		do
@@ -1052,7 +1059,10 @@ feature {NONE} -- Current objects grid Implementation
 				current_object.set_display_onces (display_first_onces)
 				item := current_object
 				if item.title /= Void then
-					item.set_title (Interface_names.l_Current_object + ": " + item.title)
+					l_str := Interface_names.l_Current_object.twin
+					l_str.append (": ")
+					l_str.append (item.title)
+					item.set_title (l_str)
 				else
 					item.set_title (Interface_names.l_Current_object)
 				end
@@ -1417,7 +1427,7 @@ feature {NONE} -- Impl : Stack objects grid
 					l_exception_module_detail := dotnet_status.exception_module_name
 					if l_exception_module_detail /= Void then
 						row := a_target_grid.extended_new_subrow (exception_row)
-						glab := a_target_grid.name_label_item ("Module")
+						glab := a_target_grid.name_label_item (interface_names.l_module)
 						a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
 						row.set_item (1, glab)
 						create es_glab
@@ -1432,7 +1442,7 @@ feature {NONE} -- Impl : Stack objects grid
 --				l_exception_message := dotnet_status.exception_to_string
 				if l_exception_message /= Void and then not l_exception_message.is_empty then
 					row := a_target_grid.extended_new_subrow (exception_row)
-					glab := a_target_grid.name_label_item ("Note")
+					glab := a_target_grid.name_label_item (interface_names.l_note)
 					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.icon_pixmaps.general_mini_error_icon)
 					row.set_item (1, glab)
 					create es_glab
@@ -1446,19 +1456,31 @@ feature {NONE} -- Impl : Stack objects grid
 					exc_dv := dotnet_status.exception_debug_value
 					if exc_dv /= Void then
 						row := a_target_grid.extended_new_subrow (exception_row)
-						a_target_grid.attach_debug_value_to_grid_row (row, exc_dv, "Exception object")
+						a_target_grid.attach_debug_value_to_grid_row (row, exc_dv, interface_names.l_exception_object)
 					end
 				end
 			end
 		end
 
-	Cst_exception_double_click_text: STRING is "Double click to see Exception or Ctrl-C to copy to clipboard"
+	Cst_exception_double_click_text: STRING_GENERAL is
+		do
+			Result := interface_names.l_exception_double_click_text
+		end
 
-	Cst_exception_raised_text: STRING is "Exception raised"
+	Cst_exception_raised_text: STRING_GENERAL is
+		do
+			Result := interface_names.l_exception_raised
+		end
 
-	Cst_exception_first_chance_text: STRING is "First chance"
+	Cst_exception_first_chance_text: STRING_GENERAL is
+		do
+			Result := interface_names.l_first_chance
+		end
 
-	Cst_exception_unhandled_text: STRING is "UnHandled"
+	Cst_exception_unhandled_text: STRING_GENERAL is
+		do
+			Result := interface_names.l_unhandled
+		end
 
 	build_result_row (a_target_grid: ES_OBJECTS_GRID; cse: EIFFEL_CALL_STACK_ELEMENT) is
 			-- Create the row containing Result

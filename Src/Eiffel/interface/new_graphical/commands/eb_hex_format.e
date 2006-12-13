@@ -43,7 +43,7 @@ feature -- Access
 			Result := pixmaps.mini_pixmaps.debugger_show_hex_value_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.e_switch_num_format_to_hex
@@ -62,7 +62,7 @@ feature -- Status report
 			Result := Interface_names.e_Switch_num_formating
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description of the command.
 		do
 			Result := Interface_names.l_Switch_num_format_desc

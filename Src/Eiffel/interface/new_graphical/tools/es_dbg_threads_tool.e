@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 --			end
 --			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, mini_toolbar)
 
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make (explorer_bar, widget, title, True)
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make (explorer_bar, widget, title, title_for_pre, True)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -111,16 +111,22 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Widget representing Current.
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool.
 		do
-			Result := "Threads" -- Interface_names.t_Call_stack_tool
+			Result := Interface_names.t_Threads_tool -- Interface_names.t_Call_stack_tool
 		end
 
-	menu_name: STRING is
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_Threads_tool
+		end
+
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
-			Result := "Threads" -- Interface_names.m_Call_stack_tool
+			Result := interface_names.m_threads_tool -- Interface_names.m_Call_stack_tool
 		end
 
 	pixmap: EV_PIXMAP is

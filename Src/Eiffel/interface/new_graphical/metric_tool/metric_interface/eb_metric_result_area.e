@@ -97,6 +97,7 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT
 		do
+			dummy_text.set_text (metric_names.l_no_result_available)
 			create metric_result.make (metric_tool, Current)
 			create archive_result.make (metric_tool, Current)
 			metric_result_area.extend (metric_result)

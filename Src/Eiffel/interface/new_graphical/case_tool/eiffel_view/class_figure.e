@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 							world.context_editor.history.remove_last
 						end
 						world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_set_center_class + ": " + model.name,
+						interface_names.t_diagram_set_center_class.as_string_32 + ": " + model.name,
 						[<<
 							agent old_center.set_is_fixed (False),
 							agent cg.set_new_center_class (model),
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 							world.context_editor.history.remove_last
 						end
 						world.context_editor.history.register_named_undoable (
-						interface_names.t_diagram_set_center_class + ": " + model.name,
+						interface_names.t_diagram_set_center_class.as_string_32 + ": " + model.name,
 						[<<
 							agent cg.set_new_center_class (model),
 							agent layout.layout,
@@ -375,9 +375,9 @@ feature {NONE} -- Implementation (adding relations)
 	on_class_drop (a_stone: CLASSI_FIGURE_STONE) is
 			-- `a_stone' was dropped on `Current'.
 		local
-			dial: EV_CONFIRMATION_DIALOG
+			dial: EB_CONFIRMATION_DIALOG
 			class_file: PLAIN_TEXT_FILE
-			l_error_window: EV_WARNING_DIALOG
+			l_error_window: EB_WARNING_DIALOG
 		do
 			create class_file.make (a_stone.class_i.file_name)
 			if not class_file.exists then

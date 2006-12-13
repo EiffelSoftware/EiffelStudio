@@ -28,7 +28,7 @@ feature -- Initialization
 
 feature -- Access
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with '&' symbol).
 		do
 			Result := Interface_names.m_Generate_documentation
@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			wizard_not_void: wizard /= Void
 		local
 			doc: DOCUMENTATION
-			dial: EV_WARNING_DIALOG
+			dial: EB_WARNING_DIALOG
 			retried: BOOLEAN
 			l_str: STRING
 		do

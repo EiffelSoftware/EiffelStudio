@@ -26,7 +26,7 @@ feature -- Access
 
 feature -- Access
 
-	text: STRING is
+	text: STRING_GENERAL is
 			-- The error message.
 		deferred
 		end
@@ -34,7 +34,7 @@ feature -- Access
 	out: STRING is
 			-- Output
 		do
-			Result := text
+			Result := text.as_string_8
 		end
 
 indexing

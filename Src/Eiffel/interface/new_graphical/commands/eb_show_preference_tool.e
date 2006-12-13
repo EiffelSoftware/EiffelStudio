@@ -54,10 +54,10 @@ feature -- Properties
 	name: STRING is
 			-- Command name
 		do
-			Result := Interface_names.f_Preferences
+			Result := "Preferences"
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Preferences

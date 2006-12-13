@@ -118,7 +118,7 @@ feature -- Basic operations
 			end
 		end
 
-	load_metrics (a_force: BOOLEAN; a_msg: STRING) is
+	load_metrics (a_force: BOOLEAN; a_msg: STRING_GENERAL) is
 			-- Load metrics is they are not already loaded.
 			-- If `a_force' is True, load metrics even thought they are already loaded.
 			-- When loading metrics, `a_msg' will be displayed in a dialog.

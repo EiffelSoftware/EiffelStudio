@@ -51,6 +51,11 @@ inherit
 			default_create, copy
 		end
 
+	INTERFACE_NAMES
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -89,7 +94,7 @@ feature {NONE} -- Initialization
 			Result.disable_item_expand (l_hbox)
 
 				-- "Options" label
-			create l_label.make_with_text (interface_names.l_options + ": ")
+			create l_label.make_with_text (interface_names.l_Options_colon)
 			l_hbox.extend (l_label)
 			l_hbox.disable_item_expand (l_label)
 
@@ -118,7 +123,7 @@ feature {NONE} -- Initialization
 			show_signature_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_signature_icon)
 			l_tooltip := preferences.editor_data.show_completion_signature_preference.description
 			if l_tooltip /= Void then
-				show_signature_button.set_tooltip (l_tooltip)
+				show_signature_button.set_tooltip (locale.translate (l_tooltip))
 			end
 			option_bar.extend (show_signature_button)
 
@@ -440,17 +445,17 @@ feature {NONE} -- Option behaviour
 	apply_filter_completion_list (a_b: BOOLEAN) is
 			-- Apply filtering completion list.
 		local
-			l_name: like name_type
-			l_index: INTEGER
+			local_name: like name_type
+			local_index: INTEGER
 			l_list: like choice_list
 		do
 			l_list := choice_list
 			lock_update
 				-- Save selected item
 			if not l_list.selected_rows.is_empty then
-				l_name ?= l_list.selected_rows.first.data
+				local_name ?= l_list.selected_rows.first.data
 				check
-					l_name_not_void: l_name /= Void
+					local_name_not_void: local_name /= Void
 				end
 			end
 
@@ -458,13 +463,13 @@ feature {NONE} -- Option behaviour
 
 				-- Try to selected saved item
 				-- If does not exist any more, we call `ensure_item_selection'
-			l_index := grid_row_by_data (l_name)
-			if l_index = 0 then
+			local_index := grid_row_by_data (local_name)
+			if local_index = 0 then
 				ensure_item_selection
 			else
 				l_list.remove_selection
-				l_list.row (l_index).enable_select
-				l_list.row (l_index).ensure_visible
+				l_list.row (local_index).enable_select
+				l_list.row (local_index).ensure_visible
 			end
 			resize_column_to_window_width
 			unlock_update
@@ -473,22 +478,22 @@ feature {NONE} -- Option behaviour
 	apply_show_return_type (a_b: BOOLEAN) is
 			-- Apply showing return type.
 		local
-			l_index: INTEGER
+			local_index: INTEGER
 			l_row: EV_GRID_ROW
 			l_list: like choice_list
 		do
 			l_list := choice_list
 			lock_update
 			if not l_list.selected_rows.is_empty then
-				l_index := l_list.selected_rows.first.index
+				local_index := l_list.selected_rows.first.index
 			end
 			build_displayed_list (buffered_input)
-			if l_index > 0 and then l_list.row_count > 0 then
+			if local_index > 0 and then l_list.row_count > 0 then
 				check
-					l_index_valid: l_index <= l_list.row_count
+					local_index_valid: local_index <= l_list.row_count
 				end
 				l_list.remove_selection
-				l_row := l_list.row (l_index)
+				l_row := l_list.row (local_index)
 				if is_displayed then
 					if l_row.parent_row /= Void and then
 						l_row.parent_row.is_expandable and then
@@ -683,9 +688,9 @@ feature {NONE} -- Implementation
 	complete_feature is
 			-- Complete feature name
 		local
-			l_feature: EB_FEATURE_FOR_COMPLETION
+			local_feature: EB_FEATURE_FOR_COMPLETION
 			l_name_item: like name_type
-			l_name: STRING
+			local_name: STRING
 			l_row: EV_GRID_ROW
 		do
 			if not choice_list.selected_rows.is_empty then
@@ -705,21 +710,21 @@ feature {NONE} -- Implementation
 				end
 				if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
 					if l_name_item.has_dot then
-						l_name := l_name_item.full_insert_name
+						local_name := l_name_item.full_insert_name
 					else
-						l_name := " " + l_name_item.full_insert_name
+						local_name := " " + l_name_item.full_insert_name
 					end
 				else
 					if l_name_item.has_dot then
-						l_name := l_name_item.insert_name
+						local_name := l_name_item.insert_name
 					else
-						l_name := " " + l_name_item.insert_name
+						local_name := " " + l_name_item.insert_name
 					end
 				end
-				code_completable.complete_feature_from_window (l_name, True, character_to_append, remainder)
-				l_feature ?= l_name_item
-				if l_feature /= Void then
-					last_completed_feature_had_arguments := l_feature.has_arguments
+				code_completable.complete_feature_from_window (local_name, True, character_to_append, remainder)
+				local_feature ?= l_name_item
+				if local_feature /= Void then
+					last_completed_feature_had_arguments := local_feature.has_arguments
 				else
 					last_completed_feature_had_arguments := False
 				end
@@ -731,7 +736,7 @@ feature {NONE} -- Implementation
 		local
 			l_row: EV_GRID_ROW
 			l_name_item: NAME_FOR_COMPLETION
-			l_name: STRING
+			local_name: STRING
 		do
 			if not choice_list.selected_rows.is_empty then
 				l_row := choice_list.selected_rows.first
@@ -739,8 +744,8 @@ feature {NONE} -- Implementation
 				check
 					l_name_item_not_void: l_name_item /= Void
 				end
-				l_name := l_name_item.insert_name
-				code_completable.complete_class_from_window (l_name, '%U', remainder)
+				local_name := l_name_item.insert_name
+				code_completable.complete_class_from_window (local_name, '%U', remainder)
 			else
 				if not buffered_input.is_empty then
 					code_completable.complete_class_from_window (buffered_input, character_to_append, remainder)

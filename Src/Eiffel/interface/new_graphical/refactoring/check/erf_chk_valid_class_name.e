@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= void
 		do
 			new_name := a_name
-			error_message := "The class name is not valid."
+			error_message := interface_names.l_class_name_not_valid
 		end
 
 feature -- Basic operation

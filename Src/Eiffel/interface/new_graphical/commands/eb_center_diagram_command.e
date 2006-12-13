@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_target_cluster_or_class_icon
 		end
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.F_retarget_diagram

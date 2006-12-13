@@ -304,7 +304,7 @@ feature -- Access
 		local
 			l_provider: EB_METRIC_CRITERION_PROVIDER
 			l_shortcut_pref: SHORTCUT_PREFERENCE
-			l_tooltip: STRING
+			l_tooltip: STRING_32
 		do
 			if criterion_item_internal = Void then
 				create criterion_item_internal

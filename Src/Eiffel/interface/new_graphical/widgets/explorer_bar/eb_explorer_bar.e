@@ -295,7 +295,7 @@ feature -- Access
 				item_list.after
 			loop
 				curr_item := item_list.item
-				Result.put (curr_item.title, i)
+				Result.put (curr_item.title_for_pre, i)
 				if curr_item.is_visible then
 					if external_representation.has (curr_item.widget) then
 						state := "external"
@@ -357,7 +357,7 @@ feature -- Access
 			until
 				item_list.is_empty
 			loop
-				items_by_name.put (item_list.item, item_list.item.title)
+				items_by_name.put (item_list.item, item_list.item.title_for_pre)
 				item_list.item.close
 				item_list.remove
 			end

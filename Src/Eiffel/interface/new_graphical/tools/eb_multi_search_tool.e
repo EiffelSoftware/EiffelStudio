@@ -408,7 +408,7 @@ feature -- Action
 	confirm_and_replace_all is
 			-- Ask for confirmation, then replace all.
 		local
-			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
 			hindered: BOOLEAN
 		do
 			if is_current_editor_searched then
@@ -749,6 +749,8 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 
 	toggle_scope_detail (a_button: EV_RADIO_BUTTON) is
 			-- Show and hide the scope detail according to the scope box's selection.
+		local
+			l_str: STRING_GENERAL
 		do
 			if is_customized then
 				scope.enable_sensitive
@@ -766,7 +768,10 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Actions handler
 						set_focus
 					end
 				end
-				notebook.item_tab (notebook.i_th (2)).set_text (interface_names.l_scope + ": " + a_button.text)
+				l_str := interface_names.l_scope.twin
+				l_str.append (": ")
+				l_str.append (a_button.text)
+				notebook.item_tab (notebook.i_th (2)).set_text (l_str)
 			end
 		end
 
@@ -1405,22 +1410,11 @@ feature {NONE} -- Replacement Implementation
 			valid_replace_report: not a_did_nothing implies multi_search_performer.replace_report /= Void
 		local
 			l_classes: INTEGER
-			l_class_str: STRING
 		do
 			if not a_did_nothing then
 				l_classes := multi_search_performer.replace_report.class_replaced
-				if l_classes = 0 or else l_classes > 1 then
-					l_class_str := l_classes.out + " classes"
-				else
-					l_class_str := l_classes.out + " class"
-				end
-				report_tool.set_summary ("   " +
-										multi_search_performer.replace_report.text_replaced.out +
-										" replaced in " +
-										l_class_str)
-			else
-				report_tool.set_summary ("0 replaced in 0 classes")
 			end
+			report_tool.set_summary (interface_names.l_replace_report (multi_search_performer.replace_report.text_replaced, l_classes))
 		end
 
 feature {NONE} -- Shortcuts

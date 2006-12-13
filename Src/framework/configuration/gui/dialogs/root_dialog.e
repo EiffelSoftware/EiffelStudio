@@ -143,7 +143,7 @@ feature {NONE} -- Agents
 		local
 			l_root: CONF_ROOT
 			l_cluster, l_class, l_feature: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 
 		do
 			if all_classes.is_selected then

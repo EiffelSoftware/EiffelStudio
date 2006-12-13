@@ -52,7 +52,7 @@ feature -- Basic operations
 			l_config: STRING
 			l_load: CONF_LOAD
 			ed: EV_ERROR_DIALOG
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_lib_conf: CONFIGURATION_WINDOW
 		do
 			l_config := group.location.evaluated_path
@@ -66,11 +66,11 @@ feature -- Basic operations
 				l_load.retrieve_configuration (l_config)
 				if l_load.is_error then
 					create ed.make_with_text (l_load.last_error.out)
-					ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
+					ed.set_buttons (<<b_ok>>)
 					ed.show_modal_to_window (configuration_window)
 				elseif l_load.last_system.library_target = Void then
 					create ed.make_with_text ((create {CONF_ERROR_NOLIB}.make (group.name)).out)
-					ed.set_buttons (<<(create {EV_DIALOG_CONSTANTS}).ev_ok>>)
+					ed.set_buttons (<<b_ok>>)
 					ed.show_modal_to_window (configuration_window)
 				else
 					if l_load.is_warning then

@@ -296,7 +296,7 @@ feature -- Actions
 			-- Action to be performed to start metric calcuation for generating archive information
 		local
 			l_selected_metrics: LIST [STRING]
-			l_msg: STRING
+			l_msg: STRING_GENERAL
 			l_error_dialog: EV_ERROR_DIALOG
 			l_retried: BOOLEAN
 			l_file_name: STRING
@@ -556,7 +556,7 @@ feature {NONE} -- Implementation
 			a_timer.set_interval (0)
 		end
 
-	check_selected_metrics (a_list: LIST [STRING]): STRING is
+	check_selected_metrics (a_list: LIST [STRING]): STRING_GENERAL is
 			-- Check vadility of metrics whose names are in `a_list'.
 			-- Return message if error occurs, otherwise, return Void.
 		require
@@ -571,7 +571,7 @@ feature {NONE} -- Implementation
 					a_list.after or Result /= Void
 				loop
 					if not metric_manager.is_metric_valid (a_list.item) then
-						Result := metric_names.t_metric + " %"" + a_list.item + "%" " + metric_names.t_metric_is_not_valid + "."
+						Result := metric_names.t_metric.as_string_32 + " %"" + a_list.item + "%" " + metric_names.t_metric_is_not_valid + "."
 					else
 						a_list.forth
 					end
@@ -800,7 +800,7 @@ feature -- Overwritting
 	overwrite: BOOLEAN
 		-- Overwrite file?
 
-	confirm_dialog: EV_CONFIRMATION_DIALOG
+	confirm_dialog: EB_CONFIRMATION_DIALOG
 			-- Dialog to confirm file overwritting.
 
 	actions_array: ARRAY [PROCEDURE [ANY, TUPLE]] is

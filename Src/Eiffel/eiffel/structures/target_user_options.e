@@ -54,7 +54,7 @@ feature -- Debugging settings
 			-- List of arguments used by current project.
 			-- Obsolete
 
-	last_profile: TUPLE [title:STRING; cwd:STRING; args:STRING; env:HASH_TABLE [STRING_32, STRING_32]] is
+	last_profile: TUPLE [title:STRING_32; cwd:STRING; args:STRING; env:HASH_TABLE [STRING_32, STRING_32]] is
 			-- List of profiles used by current project.
 		do
 			if last_profile_index > 0 then

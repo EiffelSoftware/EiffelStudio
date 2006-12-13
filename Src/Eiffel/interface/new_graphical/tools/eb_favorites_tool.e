@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		do
-			create explorer_bar_item.make (explorer_bar, widget, title, True)
+			create explorer_bar_item.make (explorer_bar, widget, title, title_for_pre, True)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -58,13 +58,19 @@ feature -- Access
 			Result := favorites_manager.widget
 		end
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title of the tool
 		do
 			Result := Interface_names.t_Favorites_tool
 		end
 
-	menu_name: STRING is
+	title_for_pre: STRING is
+			-- Title for prefence, STRING_8
+		do
+			Result := Interface_names.to_Favorites_tool
+		end
+
+	menu_name: STRING_GENERAL is
 			-- Name as it may appear in a menu.
 		do
 			Result := Interface_names.m_Favorites_tool

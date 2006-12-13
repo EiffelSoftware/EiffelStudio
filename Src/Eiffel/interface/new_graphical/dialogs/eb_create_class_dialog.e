@@ -129,9 +129,9 @@ feature {NONE} -- Initialization
 				-- Build the frames
 			create properties_frame.make_with_text (Interface_names.l_general)
 			create identification_frame.make_with_text (Interface_names.l_identification)
-			create name_label.make_with_text (Interface_names.l_class_name)
+			create name_label.make_with_text (Interface_names.l_class_name (""))
 			name_label.align_text_left
-			create cluster_label.make_with_text (Interface_names.l_cluster)
+			create cluster_label.make_with_text (Interface_names.l_cluster_colon)
 			cluster_label.align_text_left
 			create file_label.make_with_text (Interface_names.l_file_name)
 			file_label.align_text_left
@@ -294,7 +294,7 @@ feature {NONE} -- Access
 		local
 			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			clu: EB_SORTED_CLUSTER
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			if cluster_list.selected_item /= Void then
 				l_folder ?= cluster_list.selected_item
@@ -386,7 +386,7 @@ feature {NONE} -- Implementation
 			f_name: FILE_NAME
 			file: RAW_FILE -- Windows specific
 			base_name: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			input: RAW_FILE
 			in_buf: STRING
 			cr: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			retried: BOOLEAN
 			writing: BOOLEAN
 			clf: FILE_NAME
@@ -578,7 +578,7 @@ feature {NONE} -- Implementation
 		require
 			current_state_is_valid: aok
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 			l_classes: HASH_TABLE [CONF_CLASS, STRING]
 		do
 			l_classes := cluster.classes
@@ -595,7 +595,7 @@ feature {NONE} -- Implementation
 			current_state_is_valid: aok
 		local
 			cn: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			cn := class_name
 			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (cn)
@@ -612,7 +612,7 @@ feature {NONE} -- Implementation
 			creation_check_selected: creation_check.is_selected
 		local
 			fn: STRING
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			fn := creation_entry.text
 			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name (fn)

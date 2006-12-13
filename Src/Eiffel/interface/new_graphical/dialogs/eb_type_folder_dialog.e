@@ -94,7 +94,7 @@ feature {NONE} -- Vision2 events
 	on_ok is
 			-- Terminate the dialog
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			folder_name := folder_name_entry.text
 			if folder_name.is_empty then

@@ -57,7 +57,7 @@ feature -- Basic operations
 
 feature -- Access
 
-	tooltip: STRING is
+	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
 			Result := Interface_names.f_diagram_force_settings
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_physics_settings_icon
 		end
 
-	description: STRING is
+	description: STRING_GENERAL is
 			-- Description for this command.
 		do
 			Result := Interface_names.f_diagram_force_settings

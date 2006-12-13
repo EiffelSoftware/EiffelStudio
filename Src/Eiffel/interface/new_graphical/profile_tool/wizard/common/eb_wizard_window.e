@@ -16,7 +16,7 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 create
 	make
 
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 			set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
 			create v1
-			v1.extend (wizard_page)	
+			v1.extend (wizard_page)
 			build_navigation_bar (v1)
 			extend (v1)
-			
+
 			set_default_push_button (next_b)
 			set_default_cancel_button (cancel_b)
 		end
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			h1: EV_HORIZONTAL_BOX
 			h2: EV_HORIZONTAL_BOX
 			h_sep: EV_HORIZONTAL_SEPARATOR
-		do	
+		do
 			Create h_sep
 			a_box.extend(h_sep)
 			a_box.disable_item_expand(h_sep)
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			a_box.disable_item_expand (h1)
 
 			Create previous_b.make_with_text_and_action ("< Back ", agent previous_page)
-			Create next_b.make_with_text_and_action ("Next >", agent next_page)	
+			Create next_b.make_with_text_and_action ("Next >", agent next_page)
 			Create cancel_b.make_with_text_and_action ("Cancel", agent cancel_actions)
 
 			h1.extend (create {EV_CELL})
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 
 feature {EB_WIZARD_STATE_WINDOW} -- Basic Operations	
 
-	set_final_state (text: STRING) is
+	set_final_state (text: STRING_GENERAL) is
 			-- Current state is final, hence a special process.
 		do
 			next_b.set_text(text)
@@ -147,7 +147,7 @@ feature -- Basic Operations
 			end
 			update_navigation
 		end
-	
+
 	update_navigation is
 			-- Update navigation buttons.
 		do
@@ -157,7 +157,7 @@ feature -- Basic Operations
 				previous_b.enable_sensitive
 			else
 				previous_b.enable_sensitive
-				next_b.set_text("Next >")				
+				next_b.set_text("Next >")
 			end
 		end
 

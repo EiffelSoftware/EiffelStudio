@@ -75,7 +75,7 @@ feature {NONE} -- Attributes
 	name: STRING is "Exec_debug"
 			-- Name of the command.
 
-	tooltext: STRING is
+	tooltext: STRING_GENERAL is
 			-- Default text displayed in toolbar button
 		do
 			Result := Interface_names.b_launch
@@ -87,13 +87,13 @@ feature {NONE} -- Attributes
 			Result := True
 		end
 
-	internal_tooltip: STRING is
+	internal_tooltip: STRING_GENERAL is
 			-- Tooltip displayed on `Current's buttons.
 		do
 			Result := Interface_names.e_Exec_debug
 		end
 
-	menu_name: STRING is
+	menu_name: STRING_GENERAL is
 			-- Name used in menu entry.
 		once
 			Result := Interface_names.m_Debug_run_new

@@ -68,12 +68,12 @@
 		<mkdir directory="${OUTPUT_DIR}" />
 		<!-- run-time -->
 		<echo message="Compile runtime ..." to_file="$build_es_logfile" append="true" />
-		<geant target="compile_runtime" />
+		<geant target="compile_runtime" reuse_variables="true" />
 		<echo message="Error occurred during 'compile_runtime_dll' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 
 		<!-- library -->
 		<echo message="Compile library ..." to_file="$build_es_logfile" append="true" />
-		<geant target="compile_library" />
+		<geant target="compile_library" reuse_variables="true" />
 		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<available resource="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" variable="tmp_available"/>
 		<copy file="${EIFFEL_SRC}\library\wel\spec\msc\dll\wel_hook.dll" to_file="${OUTPUT_DIR}${path_separator}wel_hook.dll" if="${tmp_available}=true" />
@@ -212,6 +212,7 @@
 	</target>
 	<target name="make_delivery" depend="init_deliv" >
 		<echo message="Task: make_delivery"/>
+		<echo message="Task: make_delivery" to_file="$build_es_logfile" append="true" />
 		<set name="NEW_ISE_EIFFEL" value="${cwd}" unless="${NEW_ISE_EIFFEL}" />
 		<geant target="make_delivery_common" reuse_variables="true" fork="false" dir="${NEW_ISE_EIFFEL}" />
 		<geant target="make_delivery_windows" reuse_variables="true" fork="false" if="${is_windows}" dir="${NEW_ISE_EIFFEL}" />
@@ -220,8 +221,8 @@
 		<!-- compile NEW_ISE_EIFFEL library -->
 		<set name="old_ISE_LIBRARY" value="${ISE_LIBRARY}" />
 		<setenv name="ISE_LIBRARY" value="${NEW_ISE_EIFFEL}" />
-		<geant target="compile_library" />
-		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" />
+		<geant target="compile_library" reuse_variables="true" />
+		<echo message="Error occurred during 'compile_library' (${return_code})" unless="${return_code}=0" to_file="$build_es_logfile" append="true" />
 		<setenv name="ISE_LIBRARY" value="${old_ISE_LIBRARY}" />
 		<unset name="old_ISE_LIBRARY" />
 		<set name="return_code" value="0" />
@@ -229,6 +230,7 @@
 
 	<target name="update_delivery" depend="init_deliv" >
 		<echo message="Task: update_delivery"/>
+		<echo message="Task: update_delivery" to_file="$build_es_logfile" append="true" />
 		<set name="NEW_ISE_EIFFEL" value="${cwd}" />
 		<geant target="make_delivery" reuse_variables="true" fork="false" />
 	</target>

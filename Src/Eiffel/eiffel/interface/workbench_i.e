@@ -562,7 +562,7 @@ feature -- Automatic backup
 			file: PLAIN_TEXT_FILE
 		do
 			create file.make (backup_info_file_name)
-			if file.is_creatable or else file.exists and file.is_writable then
+			if file.is_creatable or else (file.exists and then file.is_writable) then
 				file.open_write
 				file.put_string ("Compiler version: ")
 				file.put_string (Version_number)

@@ -383,11 +383,10 @@ feature {NONE} -- C functions
 	is_valid_locale(lcid:INTEGER; flags:INTEGER):BOOLEAN is
 			-- encapsulation of IsValidLocaleName
 	external
-		"C (int, int): int| %"nls_locale.h%""
+		"C signature (LCID, DWORD): BOOL use <windows.h>"
 	alias
 		"IsValidLocale"
 	end
-
 
 invariant
 	locales /= Void

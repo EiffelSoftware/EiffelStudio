@@ -1596,3 +1596,6 @@ if DOTNET test ambiguous-dotnet-types	dotnet035	tcf pass dotnet expanded
 test real-output-no-locale	dotnet036	tcf pass dotnet real locale
 if DOTNET test overload-with-argument-type	dotnet037	tcf pass dotnet
 if DOTNET test compatible-single-and-interface	dotnet038	tcf pass dotnet
+if DOTNET test versioned-interface_implementation	dotnet039	tcf pass dotnet
+if DOTNET test renamed-frozen-interface-implementation-for-single	dotnet040	tcf pass dotnet
+if DOTNET test deferred-property-generation dotnet041	tcf pass dotnet

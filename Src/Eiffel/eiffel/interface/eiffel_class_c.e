@@ -2088,9 +2088,12 @@ feature {NONE} -- Backup implementation
 			create l_dir.make (l_dir_name)
 			l_dir.create_directory
 
-				-- copy file
+				-- copy file using as target the eiffel class name, as in a cluster/library there
+				-- cannot be two classes with the same name, but you can have two classes with the same
+				-- file name.
 			create l_fname.make_from_string (l_dir_name)
-			l_fname.extend (a_class.file_name)
+			l_fname.extend (a_class.name.as_lower)
+			l_fname.add_extension ("e")
 			file_system.copy_file (a_class.full_file_name, l_fname)
 
 				-- if the class does override, also copy the overriden classes

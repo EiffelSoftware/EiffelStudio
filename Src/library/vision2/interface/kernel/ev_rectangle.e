@@ -141,21 +141,8 @@ feature -- Status report
 			-- Does `other' at least partially overlap `Current'?
 		require
 			other_not_void: other /= Void
-		local
-			y_test: BOOLEAN
 		do
-			if left <= other.left then
-				y_test := right >= other.left
-			else
-				y_test := left <= other.right
-			end
-			if y_test then
-				if top <= other.bottom then
-					Result := bottom >= other.top
-				else
-					Result := top <= other.bottom
-				end
-			end
+			Result := not (left >= other.right or right <= other.left or top >= other.bottom or bottom <= other.top)
 		end
 
 	intersection (other: like Current): like Current

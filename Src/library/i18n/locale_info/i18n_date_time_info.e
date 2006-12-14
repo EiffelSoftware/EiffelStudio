@@ -54,7 +54,6 @@ feature	-- day and month names
 	abbreviated_day_names: ARRAY[STRING_32]
 	abbreviated_month_names: ARRAY[STRING_32]
 
-
 feature -- Element change
 
 	set_day_names (a_day_names : ARRAY[STRING_32]) is
@@ -106,7 +105,6 @@ feature -- Element change
 		ensure
 			long_date_format_set: date_time_format.is_equal(format.as_string_32)
 		end
-
 
 	set_long_date_format(format:STRING_GENERAL) is
 			-- set the long date format string
@@ -187,8 +185,6 @@ feature -- Element change
 		ensure
 			separator_set: date_separator.is_equal(sep.as_string_32)
 		end
-
-
 
 feature -- Default Values
 

@@ -8,24 +8,22 @@ indexing
 class
 	I18N_NLS_LCID_TOOLS
 
-	inherit
-		I18N_NLS_GETLOCALEINFO
+inherit
+	I18N_NLS_GETLOCALEINFO
 
 create
 	initialize_locales
 
 feature --Access
 
-
-
 	is_supported_locale(lcid:INTEGER):BOOLEAN is
-		-- Is the given LCID supported _and_ installed?
-	do
-		-- Possible flags, from winnls.h :
-		--#define LCID_INSTALLED            0x00000001  // installed locale ids
-		--#define LCID_SUPPORTED            0x00000002  // supported locale ids
-		Result := is_valid_locale(lcid, 2)
-	end
+			-- Is the given LCID supported _and_ installed?
+		do
+				-- Possible flags, from winnls.h :
+				--#define LCID_INSTALLED            0x00000001  // installed locale ids
+				--#define LCID_SUPPORTED            0x00000002  // supported locale ids
+			Result := is_valid_locale(lcid, 2)
+		end
 
 	supported_locales: LIST[I18N_LOCALE_ID] is
 			--  List all installed locales
@@ -45,9 +43,6 @@ feature --Access
 			end
 		end
 
-
-
-
 	lcid_to_locale_id(lcid: INTEGER):I18N_LOCALE_ID is
 			-- Only Windows Vista can manage to give you the correct identifier in one query.
 			-- Everyone else needs to take a crash course on how these identifiers are composed:
@@ -56,79 +51,76 @@ feature --Access
 			-- In older Windows versions (actually current when I am typing this) we need to get each one
 			-- and glue them together.
 			-- We still need to refer to a table to find out if there is a script, sadly
-
-			local
-				iso639: STRING_32
-				iso3166: STRING_32
-				script: STRING_32
-				i: INTEGER
-			do
-				iso639 := extract_locale_string (lcid, nls_constants.locale_siso639langname,
-													nls_constants.locale_siso639langname_maxlen )
-				iso3166 := extract_locale_string (lcid, nls_constants.locale_siso3166ctryname,
-													nls_constants.locale_siso3166ctryname_maxlen )
+		local
+			iso639: STRING_32
+			iso3166: STRING_32
+			script: STRING_32
+			i: INTEGER
+		do
+			iso639 := extract_locale_string (lcid, nls_constants.locale_siso639langname,
+												nls_constants.locale_siso639langname_maxlen )
+			iso3166 := extract_locale_string (lcid, nls_constants.locale_siso3166ctryname,
+												nls_constants.locale_siso3166ctryname_maxlen )
 				-- We can get away with this because we know scripts is a small array
-				from
-					i := 1
-				until
-					i > scripts.upper
-				loop
-					if scripts.item (i).lcid = lcid then
-						script := scripts.item (i).script
-						i := scripts.upper
-					end
-					i := i + 1
+			from
+				i := 1
+			until
+				i > scripts.upper
+			loop
+				if scripts.item (i).lcid = lcid then
+					script := scripts.item (i).script
+					i := scripts.upper
 				end
-				create Result.make (iso639, iso3166, script)
+				i := i + 1
 			end
-
+			create Result.make (iso639, iso3166, script)
+		end
 
 	locale_id_to_lcid(id: I18N_LOCALE_ID):INTEGER is
 			-- takes an locale id and returns corresponding LCID
 			-- if it returns 0 Something Is Wrong
+		require
+			argument_not_void: id /= Void
+		local
+			left, right, middle: INTEGER
+			found: BOOLEAN
+			name, t_string: STRING_32
+		do
 
-			require
-				argument_not_void: id /= Void
-			local
-				left, right, middle: INTEGER
-				found: BOOLEAN
-				name, t_string: STRING_32
-			do
-
-				create name.make_from_string(id.language)
-				if (id.script /= Void and then not id.script.is_equal ("euro")) then
-					name.append_string("-"+id.script)
-				end
-				name.append_string ("-"+id.region)
+			create name.make_from_string(id.language)
+			if (id.script /= Void and then not id.script.is_equal ("euro")) then
+				name.append_string("-"+id.script)
+			end
+			name.append_string ("-"+id.region)
 				-- locales is sorted by iso_code, so we can use etienne's well-contracted binary search
 
-				from
-					left := locales.lower
-					right := locales.upper
-				invariant
-					right < locales.upper
-							implies locales.item(right + 1).iso_code <= locales.item(locales.upper).iso_code
-					left <= locales.upper and left > locales.lower
-							implies locales.item(left - 1).iso_code <= locales.item(locales.upper).iso_code
-				variant
-					right - left + 1
-				until
-					left > right or found
-				loop
-					middle := ((left + right).as_natural_32 |>> 1).as_integer_32
-					t_string := locales.item(middle).iso_code
-					if name < t_string then
-						right := middle - 1
-					elseif name > t_string then
-						left := middle + 1
-					else
+			from
+				left := locales.lower
+				right := locales.upper
+			invariant
+				right < locales.upper
+						implies locales.item(right + 1).iso_code <= locales.item(locales.upper).iso_code
+				left <= locales.upper and left > locales.lower
+						implies locales.item(left - 1).iso_code <= locales.item(locales.upper).iso_code
+			variant
+				right - left + 1
+			until
+				left > right or found
+			loop
+				middle := ((left + right).as_natural_32 |>> 1).as_integer_32
+				t_string := locales.item(middle).iso_code
+				if name < t_string then
+					right := middle - 1
+				elseif name > t_string then
+					left := middle + 1
+				else
 						-- Found
-						found := True
-						Result := locales.item (middle).lcid
-						left := left + 1 -- not nice but required to decrease variant
-					end
+					found := True
+					Result := locales.item (middle).lcid
+					left := left + 1 -- not nice but required to decrease variant
 				end
 			end
+		end
 
 feature {NONE}  -- LCIDS
 
@@ -382,14 +374,15 @@ feature {NONE} -- C functions
 
 	is_valid_locale(lcid:INTEGER; flags:INTEGER):BOOLEAN is
 			-- encapsulation of IsValidLocaleName
-	external
-		"C signature (LCID, DWORD): BOOL use <windows.h>"
-	alias
-		"IsValidLocale"
-	end
+		external
+			"C signature (LCID, DWORD): BOOL use <windows.h>"
+		alias
+			"IsValidLocale"
+		end
 
 invariant
 	locales /= Void
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

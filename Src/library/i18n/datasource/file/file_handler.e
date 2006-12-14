@@ -11,29 +11,27 @@ indexing
 deferred class
 	I18N_FILE_HANDLER
 
-
 feature  -- chain-of-responsability
 
-		next: I18N_FILE_HANDLER
+	next: I18N_FILE_HANDLER
 
-		set_next (next_handler: I18N_FILE_HANDLER) is
-				-- set next handler in chain
-				do
-					next := next_handler
-				ensure
-					next_set: next = next_handler
-				end
+	set_next (next_handler: I18N_FILE_HANDLER) is
+			-- set next handler in chain
+		do
+			next := next_handler
+		ensure
+			next_set: next = next_handler
+		end
 
-		can_handle (a_path:STRING_32): BOOLEAN is
-				-- can this class handle the file pointed to?
-				-- Check extension, magic number, doctype or whatever you have to.
-			require
-				a_path_exists: a_path /= Void
-			deferred
-			end
+	can_handle (a_path:STRING_32): BOOLEAN is
+			-- can this class handle the file pointed to?
+			-- Check extension, magic number, doctype or whatever you have to.
+		require
+			a_path_exists: a_path /= Void
+		deferred
+		end
 
-		handled: BOOLEAN
-
+	handled: BOOLEAN
 
 feature -- locale
 
@@ -67,8 +65,6 @@ feature -- locale
 		deferred
 		end
 
-
-
 feature -- dictionary
 
 	get_file_dictionary (a_path: STRING_32): I18N_DICTIONARY is
@@ -93,7 +89,6 @@ feature -- dictionary
 			not (can_handle(a_path) and then next = Void) implies not handled
 		end
 
-
 	extract_dictionary (a_path: STRING_32): I18N_DICTIONARY is
 			-- Current handler can handle the file at `a_path',
 			-- get appropriate dictionary
@@ -105,13 +100,9 @@ feature -- dictionary
 			result_exists: Result /= Void
 		end
 
+feature {NONE} 	-- Implementation
 
-
- feature {NONE}
- 	-- Implementation
 	file: I18N_FILE;
-
-
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

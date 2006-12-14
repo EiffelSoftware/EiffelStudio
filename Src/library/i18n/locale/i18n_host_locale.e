@@ -46,6 +46,7 @@ feature -- Informations
 			-- default locale id
 		deferred
 		end
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

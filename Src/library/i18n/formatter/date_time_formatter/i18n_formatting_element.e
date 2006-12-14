@@ -5,8 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-deferred class I18N_FORMATTING_ELEMENT
+deferred class
+	I18N_FORMATTING_ELEMENT
 
 feature -- Output
 

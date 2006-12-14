@@ -37,7 +37,6 @@ feature -- Basic Operations
 			else
 				Result := original
 			end
-
 		ensure
 			result_exists: Result /= Void
 		end
@@ -61,7 +60,6 @@ feature -- Basic Operations
 		ensure
 			result_exists: Result /= Void
 		end
-
 
 	format_string (original: STRING_GENERAL; token_values: TUPLE[ANY]): STRING_32 is
 			-- replace tokens in the result of

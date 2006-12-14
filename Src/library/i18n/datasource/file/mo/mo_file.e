@@ -40,20 +40,20 @@ feature
 				if file.is_open_read then
 					read_magic_number
 					if valid then
-						-- Read mo file version.
+							-- Read mo file version.
 						version := read_integer
-						-- Read number of strings/entries
-						-- (gettext documentation is a bit hazy on this: probably they mean "strings" as in "original strings").
+							-- Read number of strings/entries
+							-- (gettext documentation is a bit hazy on this: probably they mean "strings" as in "original strings").
 						entry_count := read_integer
-						-- Read offset of original strings' table.
+							-- Read offset of original strings' table.
 						original_table_offset := read_integer
-						-- Read offset of translated strings' table.
+							-- Read offset of translated strings' table.
 						translated_table_offset := read_integer
-						-- Read size of hash table.
+							-- Read size of hash table.
 						hash_table_size := read_integer
-						-- Read offset of hashing table.
+							-- Read offset of hashing table.
 						hash_table_offset := read_integer
-						-- Read plural information
+							-- Read plural information
 						plural_form := plural_tools.unknown_plural_form
 						read_plural_form
 						opened := True
@@ -61,7 +61,6 @@ feature
 				end
 			end
 		end
-
 
 	close is
 			-- closes file
@@ -86,7 +85,6 @@ feature -- Access
 			get_original_entries (i)
 			Result := last_original.list.count > 1
 		end
-
 
 	original_singular_string (i:INTEGER): STRING_32 is
 			-- `i'-th original string
@@ -133,7 +131,6 @@ feature -- Access
 			end
 		end
 
-
 	locale:STRING_32 is
 			-- Best guess at locale of the file. This could also be a language.
 		local
@@ -159,10 +156,6 @@ feature -- Access
 				end
 			end
 		end
-
-
-
-
 
 feature --Entries
 
@@ -191,7 +184,6 @@ feature --Entries
 			last_translated.list /= Void
 		end
 
-
 feature -- Status
 
 	valid: BOOLEAN is
@@ -204,93 +196,89 @@ feature {NONE} -- Implementation
 
 	read_magic_number is
 			-- reads the magic number and sets big/little endianness of machine and file  -> This will, hopefully, make valid true
-			require
-				file_opened: file.is_open_read
-			local
-				l_magic_number: INTEGER
-				t_magic_number: ARRAY[NATURAL_8]
-			do
-				is_big_endian_file := False
-				is_little_endian_file := False
-				-- Read magic number.
-				file.go (0)
-				file.read_integer
-				l_magic_number := file.last_integer
-				file.go(0)
-				-- Read magic number byte-by-byte.
-				t_magic_number := get_integer
-				if t_magic_number.is_equal (<<0xde,0x12,0x04,0x95>>) then
-					is_little_endian_file := True
-					if l_magic_number = 0xde120495 then
-						is_big_endian_machine := True
-					elseif l_magic_number = 0x950412de then
-						is_little_endian_machine := True
-					end
-				elseif t_magic_number.is_equal (<<0x95,0x04,0x12,0xde>>) then
-					is_big_endian_file := True
-					if l_magic_number = 0xde120495 then
-						is_little_endian_machine := True
-					elseif l_magic_number = 0x950412de then
-						is_big_endian_machine := True
-					end
+		require
+			file_opened: file.is_open_read
+		local
+			l_magic_number: INTEGER
+			t_magic_number: ARRAY[NATURAL_8]
+		do
+			is_big_endian_file := False
+			is_little_endian_file := False
+			-- Read magic number.
+			file.go (0)
+			file.read_integer
+			l_magic_number := file.last_integer
+			file.go(0)
+			-- Read magic number byte-by-byte.
+			t_magic_number := get_integer
+			if t_magic_number.is_equal (<<0xde,0x12,0x04,0x95>>) then
+				is_little_endian_file := True
+				if l_magic_number = 0xde120495 then
+					is_big_endian_machine := True
+				elseif l_magic_number = 0x950412de then
+					is_little_endian_machine := True
+				end
+			elseif t_magic_number.is_equal (<<0x95,0x04,0x12,0xde>>) then
+				is_big_endian_file := True
+				if l_magic_number = 0xde120495 then
+					is_little_endian_machine := True
+				elseif l_magic_number = 0x950412de then
+					is_big_endian_machine := True
 				end
 			end
+		end
 
 	read_plural_form is
 			-- Reads the Plural-Form header
-			require
-				correct_file: file.is_open_read and valid
-			local
-				t_list : LIST[STRING_32]
-				t_string : STRING_32
-				index : INTEGER
-				char0: WIDE_CHARACTER
-				code0: INTEGER
-				conditional: STRING_32
-				nplurals: INTEGER
-			do
-				char0 := '0'
-				code0 := char0.code
+		require
+			correct_file: file.is_open_read and valid
+		local
+			t_list : LIST[STRING_32]
+			t_string : STRING_32
+			index : INTEGER
+			char0: WIDE_CHARACTER
+			code0: INTEGER
+			conditional: STRING_32
+			nplurals: INTEGER
+		do
+			char0 := '0'
+			code0 := char0.code
 				-- Get the first translated string of the first entry in the .mo file - this is the headers entry (the empty string)
-				get_translated_entries (1)
-				t_list := last_translated.list.i_th(1).split('%N')
+			get_translated_entries (1)
+			t_list := last_translated.list.i_th(1).split('%N')
 			 	-- Search the headers
-				from
-					t_list.start
-				until
-					t_string /= Void or t_list.after
-				loop
-					if t_list.item.has_substring ("Plural-Forms") then
-						t_string := t_list.item
-					end
-					t_list.forth
+			from
+				t_list.start
+			until
+				t_string /= Void or t_list.after
+			loop
+				if t_list.item.has_substring ("Plural-Forms") then
+					t_string := t_list.item
 				end
+				t_list.forth
+			end
 				-- Process the Plural-Forms header. For now we do a string comparison.
 				-- Doing it properly would mean parsing the C-conditional so that it can be evaluated by reduce in I8N_PLURAL_TOOLS
-				if t_string /= Void then
+			if t_string /= Void then
 					-- There is a Plural-Forms header. This should have the form: 	
 					-- Plural-Forms: nplurals=x; plural=y;
 					-- x being a number, y a C conditional.
 					-- The following code is not very nice.
-					index := t_string.index_of (';', 1)
-					if index > 1 and t_string.has_substring ("nplurals=") then
-						nplurals := (t_string.item_code(index-1) - code0)
-					--		-- ?????? Does this find out the integer value of the represented character???
-						index := t_string.index_of ('=', index)+1
-					    conditional := t_string.substring (index, t_string.count)
-					    plural_form := plural_tools.mo_header_to_plural_form (nplurals, conditional)
-					end
+				index := t_string.index_of (';', 1)
+				if index > 1 and t_string.has_substring ("nplurals=") then
+					nplurals := (t_string.item_code(index-1) - code0)
+						-- ?????? Does this find out the integer value of the represented character???
+					index := t_string.index_of ('=', index)+1
+				    conditional := t_string.substring (index, t_string.count)
+				    plural_form := plural_tools.mo_header_to_plural_form (nplurals, conditional)
 				end
-				if t_string = Void or plural_form = plural_tools.unknown_plural_form then
+			end
+			if t_string = Void or plural_form = plural_tools.unknown_plural_form then
 					-- No informations found or invalid information found
 					-- set to default values (Germanic languages, coincidentally what English uses)
-					plural_form := plural_tools.two_plural_forms_singular_one
-				end
-
-
+				plural_form := plural_tools.two_plural_forms_singular_one
 			end
-
-
+		end
 
 feature {NONE} -- Implementation (helpers)
 
@@ -374,8 +362,6 @@ feature {NONE} -- Implementation (helpers)
 			Result := << b0, b1, b2, b3 >>
 		end
 
-
-
 feature {NONE} -- Implementation (parameters)
 
 	is_big_endian_file,	is_little_endian_file: BOOLEAN
@@ -398,8 +384,6 @@ feature {NONE} -- Implementation (parameters)
 
 	hash_table_offset: INTEGER
 		-- Offset of the hash table
-
-
 
 invariant
 	last_translated /= Void

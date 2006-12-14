@@ -38,7 +38,7 @@ feature -- Utility
 			elseif currency_symbol_location= {I18N_CURRENCY_INFO}.currency_symbol_radix then
 				create Result.make_from_string (currency_value_formatter.format_real_64 (a_value))
 			else
-				-- default: prefixed
+					-- default: prefixed
 				create Result.make_from_string (currency_symbol+" "+
 												  currency_value_formatter.format_real_64 (a_value))
 			end
@@ -51,13 +51,13 @@ feature {NONE} -- Implementation
 
 	currency_symbol: STRING_32
 		-- the currency symbol
+
 	currency_symbol_location: INTEGER
 		-- location of currency_symbol
 
 	currency_value_formatter: I18N_CURRENCY_VALUE_FORMATTER
 
 invariant
-
 	currency_symbol_exist: currency_symbol /= Void
 	currency_value_formatter_exists: currency_value_formatter /= Void
 

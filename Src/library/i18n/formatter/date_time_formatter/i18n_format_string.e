@@ -5,9 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-class I18N_FORMAT_STRING
-
+class
+	I18N_FORMAT_STRING
 
 inherit
 	I18N_FORMATTING_ELEMENT
@@ -52,7 +51,6 @@ feature {NONE} -- Actions
 		-- extracted by a format string
 
 invariant
-
 	correct_element_list: elements_list /= Void
 
 indexing

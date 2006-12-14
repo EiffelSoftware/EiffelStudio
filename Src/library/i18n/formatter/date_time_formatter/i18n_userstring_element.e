@@ -5,7 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class I18N_USERSTRING_ELEMENT
+class
+	I18N_USERSTRING_ELEMENT
 
 inherit
 	I18N_FORMATTING_ELEMENT
@@ -34,8 +35,7 @@ feature {NONE} -- Implementation
 	user_string: STRING_32
 
 invariant
-
-correct_user_string: user_string /= Void
+	correct_user_string: user_string /= Void
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

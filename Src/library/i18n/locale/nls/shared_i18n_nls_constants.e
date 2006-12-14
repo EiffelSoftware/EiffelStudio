@@ -9,10 +9,12 @@ class
 	SHARED_I18N_NLS_LC_CTYPE_CONSTANTS
 
 feature -- Shared object
+
 	nls_constants: I18N_NLS_LC_CTYPE_CONSTANTS is
 		once
 			create Result
 		end
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

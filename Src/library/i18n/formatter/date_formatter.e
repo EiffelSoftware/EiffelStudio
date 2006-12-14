@@ -8,8 +8,8 @@ indexing
 class
 	I18N_DATE_FORMATTER
 
-	create
-		make
+create
+	make
 
 feature	-- Creation
 
@@ -49,15 +49,13 @@ feature	-- Access
 			Result := date_time_format.filled(date_time.date, date_time.time)
 		end
 
-
 feature {NONE} -- Implementation
 
-		long_date_format: I18N_FORMAT_STRING
-		long_time_format: I18N_FORMAT_STRING
-		date_time_format: I18N_FORMAT_STRING
+	long_date_format: I18N_FORMAT_STRING
+	long_time_format: I18N_FORMAT_STRING
+	date_time_format: I18N_FORMAT_STRING
 
 invariant
-
 	long_date_format_exists: long_date_format /= Void
 	long_time_format_exists: long_time_format /= Void
 	date_time_format_exists: date_time_format /= VOid

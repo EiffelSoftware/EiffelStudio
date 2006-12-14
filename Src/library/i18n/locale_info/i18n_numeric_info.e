@@ -5,7 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class I18N_NUMERIC_INFO
+class
+	I18N_NUMERIC_INFO
 
 create
 	make
@@ -23,7 +24,6 @@ feature -- Initialization
 			set_value_positive_sign (default_positive_sign)
 			set_value_negative_sign (default_negative_sign)
 		end
-
 
 feature	-- number formatting
 
@@ -63,7 +63,6 @@ feature -- Default values
 		once
 			Result := "-"
 		end
-
 
 	default_value_grouping: ARRAY[INTEGER] is
 		once
@@ -132,7 +131,6 @@ feature -- Element change
 			value_negative_sign_set: value_negative_sign.is_equal (a_string)
 		end
 
-
 	set_value_grouping (a_array: ARRAY[INTEGER]) is
 			-- set the grouping rules
 		require
@@ -142,7 +140,6 @@ feature -- Element change
 		ensure
 			groiping_set: value_grouping = a_array
 		end
-
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

@@ -154,19 +154,19 @@ feature {NONE} -- Implementation
 				i > grouping.upper or pos < 1
 			loop
 				if grouping.item (i) > 0 then
-					-- Current item is the number of digits that comprise the current group.
+						-- Current item is the number of digits that comprise the current group.
 					if pos - grouping.item (i) > 0 then
-						-- there are enougth elements for a new group
+							-- there are enougth elements for a new group
 						Result.prepend (a_string.substring (pos-grouping.item (i)+1,pos))
 						Result.prepend (group_separator)
 						pos := pos-grouping.item (i)
 					else
-						--run out of digits, append rest and finish
+							--run out of digits, append rest and finish
 						Result.prepend (a_string.substring (1, pos))
 						pos := 0
 					end
 				elseif i-1 >= grouping.lower then
-					-- The previous element has to be repeatedly used for the remainder of the digits.
+						-- The previous element has to be repeatedly used for the remainder of the digits.
 					from
 					variant
 						pos
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 							Result.prepend (group_separator)
 							pos := pos-grouping.item (i-1)
 						else
-							--run out of digits, append rest and finish
+								--run out of digits, append rest and finish
 							Result.prepend (a_string.substring (1,pos))
 							pos := 0
 						end
@@ -218,6 +218,7 @@ invariant
 	reasonable_numbers_after_decimal_separator: numbers_after_decimal_separator >= 0
 	group_separator_exists: group_separator  /= Void
 	valid_grouping: grouping /= Void and then grouping.count > 0
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

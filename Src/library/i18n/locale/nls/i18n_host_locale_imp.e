@@ -14,7 +14,6 @@ inherit
 	I18N_NLS_GETLOCALEINFO
 	I18N_NLS_PICTURE_TOOLS
 
-
 feature -- Creation
 
 	create_locale_info_from_user_locale: I18N_LOCALE_INFO is
@@ -116,7 +115,6 @@ feature {NONE} -- Value formatting
 			Result := extract_locale_string (current_lcid, nls_constants.locale_sdecimal,
 											nls_constants.locale_sdecimal_maxlen)
 		end
-
 
 	get_value_numbers_after_decimal_separator: INTEGER is
 			--

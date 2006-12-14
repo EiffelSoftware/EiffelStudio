@@ -28,10 +28,8 @@ feature -- Creation
 				reduction_agent_set: reduction_agent /= Void
 			end
 
-
-feature  -- Manipulation
-
-	-- this should be restricted
+feature -- Manipulation
+		-- this should be restricted
 
 	extend (a_entry: I18N_DICTIONARY_ENTRY) is
 			-- add a_entry in the datastructure
@@ -85,29 +83,30 @@ feature -- Access
 
 feature --Information
 
-		plural_form: INTEGER --valid constant from I18N_PLURAL_TOOLS
+	plural_form: INTEGER
+			-- valid constant from I18N_PLURAL_TOOLS
 
-		count: INTEGER is
-				 deferred
-				 ensure
-				 	count_non_negative: Result >= 0
-				 end
+	count: INTEGER is
 			-- number of entries in the dictionary
+		 deferred
+		 ensure
+		 	count_non_negative: Result >= 0
+		 end
 
 feature {NONE} --Helpers
 
-		reduce (quantity: INTEGER): INTEGER is
-				-- reduce a given plural forms to a smallest one
-			do
-				Result := reduction_agent.item([quantity.abs])
-			ensure
-				well_formed_result: Result < 4 and Result >= 0
-			end
+	reduce (quantity: INTEGER): INTEGER is
+			-- reduce a given plural forms to a smallest one
+		do
+			Result := reduction_agent.item([quantity.abs])
+		ensure
+			well_formed_result: Result < 4 and Result >= 0
+		end
 
-		reduction_agent: FUNCTION[ANY, TUPLE[INTEGER], INTEGER]
+	reduction_agent: FUNCTION[ANY, TUPLE[INTEGER], INTEGER]
 
-		nplural_max: INTEGER
-		nplural_lower: INTEGER is 0;
+	nplural_max: INTEGER
+	nplural_lower: INTEGER is 0;
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

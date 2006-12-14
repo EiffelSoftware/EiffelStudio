@@ -13,13 +13,12 @@ class
 			--  max_index should be >=1
 			--  I think there is something wrong with `array.full' in class ARRAY, that is implemation from Eiffel
 
+inherit
 
-	inherit
-		I18N_DICTIONARY
-			redefine
-				make
-			end
-
+	I18N_DICTIONARY
+		redefine
+			make
+		end
 
 create
 	make
@@ -28,12 +27,12 @@ feature --Creation
 
 	make(a_plural_form:INTEGER) is
 			-- create the datastructure
-			do
-				Precursor(a_plural_form)
-				create array.make (min_index, default_number_of_entries)
-				current_index :=1
-				max_index :=default_number_of_entries
-			end
+		do
+			Precursor(a_plural_form)
+			create array.make (min_index, default_number_of_entries)
+			current_index :=1
+			max_index :=default_number_of_entries
+		end
 
 feature --Insertion
 
@@ -43,14 +42,14 @@ feature --Insertion
 			-- auto resize when the capacity of `array' is filled
 			-- without duplicate check, let insertion_sort do it
 		do
-				if last_index < default_number_of_entries then
-					array.put (a_entry, current_index)
-				else
-					array.force (a_entry, current_index)
-					max_index :=max_index+1
-				end
-				current_index :=current_index+1
-				search_index_and_insert
+			if last_index < default_number_of_entries then
+				array.put (a_entry, current_index)
+			else
+				array.force (a_entry, current_index)
+				max_index :=max_index+1
+			end
+			current_index :=current_index+1
+			search_index_and_insert
 		end
 
 feature --Access
@@ -60,7 +59,6 @@ feature --Access
 			-- use binary search algorithm
 			-- require `array'is sorted
 			-- use has_index has a help function
-
 		local
 			index:INTEGER
 		do
@@ -70,8 +68,7 @@ feature --Access
 			end
 		end
 
-feature--{NONE}
-	--help functions
+feature--{NONE}	--help functions
 
 	search_index_and_insert is
 			-- `array' is sorted except the last  inserted element
@@ -79,53 +76,48 @@ feature--{NONE}
 			-- compare with its neighbour recursively until the right_index for it is found
 			-- subcopy  `array' from the right_index to current_index-2  to position from right_index-1
 			-- put the last_input in `array' with right_index
+		local
+			left, right, middle: INTEGER
+			cur_entry: I18N_DICTIONARY_ENTRY
+			mid_entry: I18N_DICTIONARY_ENTRY
+			right_index: INTEGER
+		do
+				-- one element case will do nothing
+			if (last_index >1) then
 
-	local
-		left, right, middle: INTEGER
-		cur_entry: I18N_DICTIONARY_ENTRY
-		mid_entry: I18N_DICTIONARY_ENTRY
-		right_index: INTEGER
+				cur_entry:= array.item (last_index)
 
-	do
-		-- one element case will do nothing
-		if (last_index >1) then
-
-			cur_entry:= array.item (last_index)
-
-			if cur_entry < array.item(1) then
-				right_index := 1
-			elseif cur_entry > array.item(last_index-1) then
-				right_index := last_index
-			else
-				--cur_entry < array.item (last_index-1) and cur_entry > array.item(1)
-				-- search the right index for the last inserted elem
-				-- with binary search
-				from
-					left := 2
-					right := last_index-2
-				until
-					left > right
-				loop
-					middle := ((left + right).as_natural_32 |>> 1).as_integer_32
-					mid_entry := array.item(middle)
-					if cur_entry < mid_entry then
-						right := middle - 1
-					else
-						left := middle + 1
+				if cur_entry < array.item(1) then
+					right_index := 1
+				elseif cur_entry > array.item(last_index-1) then
+					right_index := last_index
+				else
+						--cur_entry < array.item (last_index-1) and cur_entry > array.item(1)
+						-- search the right index for the last inserted elem
+						-- with binary search
+					from
+						left := 2
+						right := last_index-2
+					until
+						left > right
+					loop
+						middle := ((left + right).as_natural_32 |>> 1).as_integer_32
+						mid_entry := array.item(middle)
+						if cur_entry < mid_entry then
+							right := middle - 1
+						else
+							left := middle + 1
+						end
 					end
-				end
 					right_index := left
+				end
+					-- put the last inserted elem in the right index	
+				 if right_index /= last_index then
+				 	array.subcopy (array, right_index, last_index-1, right_index+1)
+				 	array.put (cur_entry, right_index)
+				 end
 			end
-
-			-- put the last inserted elem in the right index	
-			 if right_index /= last_index then
-			 	array.subcopy (array, right_index, last_index-1, right_index+1)
-			 	array.put (cur_entry, right_index)
-			 end
-
 		end
-	end
-
 
 	has_index(original:STRING_GENERAL):INTEGER is
 			-- does the dictionary have this entry?
@@ -159,9 +151,9 @@ feature--{NONE}
 					right := middle - 1
 				elseif original.as_string_32 > m_string then
 					left := middle + 1
-			---?? i do not know whether original could be used or not
+						---?? i do not know whether original could be used or not
 				else
-					--Found
+						--Found
 					found := True
 					Result := middle
 					left := left + 1 -- not nice but required to decrease variant
@@ -210,8 +202,8 @@ feature	-- Access
 		do
 			index:=has_index(original_singular.as_string_32)
 
-			-- i do not know whether it is necessary to check `index /= -1'
-			-- because `has_plural' has checked it already
+				-- i do not know whether it is necessary to check `index /= -1'
+				-- because `has_plural' has checked it already
 
 			if index /= -1 then
 				entry := array.item (index)
@@ -227,13 +219,13 @@ feature --Information
 			Result := current_index-1
 		end
 
-
-feature {NONE} --Implementation
+feature {NONE} -- Implementation
 
 	array: ARRAY[I18N_DICTIONARY_ENTRY]
 	min_index: INTEGER is 1
 	max_index: INTEGER
 		-- should be updated after it is equal to `default_number_of_entries'
+
 	last_index: INTEGER is
 			--actually last_index is equal to `count'
 		do
@@ -242,10 +234,10 @@ feature {NONE} --Implementation
 
 	current_index: INTEGER
 		 -- the index which is to be filled next
+
 	default_number_of_entries: INTEGER is 50
 
 invariant
-
 	count_equal_current_index: count=current_index-1
 	count_equal_last_index: count=last_index
 

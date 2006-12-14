@@ -9,14 +9,14 @@ class
 	SHARED_I18N_URI_PARSER
 
 feature	-- Shared object
-		parser: I18N_URI_PARSER is
-				-- shared I18N_URI_PARSER
-			once
-				create Result
-			ensure
-				result_not_void: Result /= Void
-			end
 
+	parser: I18N_URI_PARSER is
+			-- shared I18N_URI_PARSER
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

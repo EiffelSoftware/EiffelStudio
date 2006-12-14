@@ -10,7 +10,6 @@ class I18N_CURRENCY_INFO
 create
 	make
 
-
 feature -- Initialization
 
 	make is
@@ -36,7 +35,6 @@ feature -- Initialization
 
 		end
 
-
 feature	-- Normal currency Informations
 
 	currency_symbol: STRING_32
@@ -52,9 +50,7 @@ feature	-- Normal currency Informations
 	currency_negative_sign: STRING_32
 	currency_grouping: ARRAY[INTEGER]
 
-
 feature -- International currency Informations
-
 
 	currency_international_symbol: STRING_32
 	currency_international_symbol_location: INTEGER
@@ -67,11 +63,6 @@ feature -- International currency Informations
 	currency_international_number_list_separator: STRING_32
 	currency_international_grouping: ARRAY[INTEGER]
 
-
-
-
-
-
 feature -- Default values
 
 	default_currency_symbol: STRING_32 is
@@ -79,11 +70,11 @@ feature -- Default values
 			Result := ""
 		end
 
-
 	default_currency_decimal_separator: STRING_32 is
 		once
 			Result := "."
 		end
+
 	default_currency_symbol_location: INTEGER is 0
 
 	default_currency_numbers_after_decimal_separator: INTEGER is 2
@@ -108,7 +99,6 @@ feature -- Default values
 		once
 			Result := "-"
 		end
-
 
 	default_currency_grouping: ARRAY[INTEGER] is
 		once
@@ -278,7 +268,6 @@ feature -- International Element change
 		ensure
 			grouping_set: currency_international_grouping = a_array
 		end
-
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

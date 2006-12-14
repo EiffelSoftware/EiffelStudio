@@ -25,6 +25,8 @@ inherit
 
 	OUTPUT_ROUTINES
 
+	THREAD_CONTROL
+
 create
 	make
 
@@ -96,7 +98,7 @@ feature -- Access
 	on_application_launched is
 		do
 			Precursor
-			implementation.tty_wait_until_application_is_dead
+			wait_until_application_is_dead
 		end
 
 	on_application_just_stopped is
@@ -104,6 +106,27 @@ feature -- Access
 			Precursor
 			debugger_message (debugger_names.t_paused)
 			raise_dbg_running_menu (False)
+		end
+
+	wait_until_application_is_dead is
+			-- Wait until application is dead
+		local
+			stop_process_loop_on_events: BOOLEAN
+		do
+			from
+				stop_process_loop_on_events := False
+			until
+				stop_process_loop_on_events
+			loop
+				if not inside_debugger_menu then
+					implementation.process_underlying_toolkit_event_queue
+				end
+				if application_initialized then
+					sleep (10 * 1000)
+				else
+					stop_process_loop_on_events := True
+				end
+			end
 		end
 
 feature -- Interaction
@@ -119,15 +142,15 @@ feature -- Interaction
 			Result.enter_actions.extend (agent do inside_debugger_menu := True end)
 			Result.quit_actions.extend (agent do inside_debugger_menu := False end)
 
-			Result.add_conditional_entry ("N", "Step next", 
+			Result.add_conditional_entry ("N", "Step next",
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.step_by_step, Result),
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("I", "Step into", 
+			Result.add_conditional_entry ("I", "Step into",
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.step_into, Result),
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("O", "Step out", 
+			Result.add_conditional_entry ("O", "Step out",
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.out_of_routine, Result),
 						ag_is_stopped)
 
@@ -135,7 +158,7 @@ feature -- Interaction
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.user_stop_points, Result),
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("G", "Run without stop point", 
+			Result.add_conditional_entry ("G", "Run without stop point",
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.no_stop_points, Result),
 						ag_is_stopped)
 

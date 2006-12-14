@@ -14,38 +14,21 @@ inherit
 			interface
 		end
 
-	THREAD_CONTROL
-
 create {DEBUGGER_MANAGER}
 	make
 
 feature {DEBUGGER_MANAGER} -- Access
 
-	tty_wait_until_application_is_dead is
-		local
-			stop_process_loop_on_events: BOOLEAN
+	process_underlying_toolkit_event_queue is
 		do
-			from
-				stop_process_loop_on_events := False
-				messages_loop.dispatch_only_timer_messages
-			until
-				stop_process_loop_on_events
-			loop
-				if not interface.inside_debugger_menu then
-					messages_loop.process_message_queue
-				end
-				if interface.application_initialized then
-					sleep (10 * 1000)
-				else
-					stop_process_loop_on_events := True
-				end
-			end
+			messages_loop.process_message_queue
 		end
 
 	messages_loop: WINDOWS_MESSAGES_QUEUE_PROCESSOR is
 		once
-			create Result
-		end		
+			create Result.make
+			Result.dispatch_only_timer_messages
+		end
 
 feature {NONE} -- Interface
 

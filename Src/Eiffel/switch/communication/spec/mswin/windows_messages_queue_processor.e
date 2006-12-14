@@ -9,6 +9,16 @@ indexing
 class
 	WINDOWS_MESSAGES_QUEUE_PROCESSOR
 
+create
+	make
+feature {NONE} -- Initialization
+
+	make is
+			-- Initialize current
+		do
+			reusable_pointer := reusable_pointer.memory_calloc (1, c_size_of_msg)
+		end
+
 feature -- Windows message loop
 
 	process_message_queue is
@@ -18,7 +28,7 @@ feature -- Windows message loop
 			res: INTEGER
 		do
 			from
-				p := p.memory_calloc (1, c_size_of_msg)
+				p := reusable_pointer
 				b := True
 			until
 				not b
@@ -53,6 +63,9 @@ feature -- Message type
 		end
 
 feature {NONE} -- Filtering implementation
+
+	reusable_pointer: POINTER
+			-- Reusable pointer to avoid performance issue with GC.
 
 	message_filter: INTEGER
 

@@ -201,6 +201,9 @@ feature {NONE} -- Implementation
 			l_added_pre: HASH_TABLE [STRING, STRING]
 		do
 			l_select_lang := locale_id_preference.selected_value
+			if l_select_lang = Void then
+				l_select_lang := "en"
+			end
 			l_available_locales := locale_manager.available_locales
 			create l_id.make_from_string (l_select_lang)
 			l_b := locale_manager.has_translations (l_id)

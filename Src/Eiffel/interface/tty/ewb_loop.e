@@ -73,6 +73,7 @@ feature -- Initialization
 			end
 
 			Result.add_entry (create {EWB_STRING}.make (system_cmd_name, system_help, system_abb, system_menu))
+
 			if eiffel_layout.has_profiler then
 				Result.add_entry (
 					create {EWB_STRING}.make (profile_cmd_name, profile_help, profile_abb, profile_menu))
@@ -183,15 +184,16 @@ feature -- Initialization
 		end
 
 	c_menu: EWB_MENU is
-			-- Menu options for c compilations
+			-- Menu options for execution
 		do
-			create Result.make (1,8)
+			create Result.make (1,9)
 			Result.add_entry (create {EWB_ARGS})
 			Result.add_entry (create {EWB_F_COMPILE})
 			Result.add_entry (create {EWB_FINALIZE}.make (False))
 			Result.add_entry (create {EWB_FREEZE})
 			Result.add_entry (create {EWB_COMP})
 			Result.add_entry (create {EWB_QUICK_MELT})
+			Result.add_entry (create {EWB_DEBUG})
 			Result.add_entry (create {EWB_RUN})
 			Result.add_entry (create {EWB_W_COMPILE})
 		ensure

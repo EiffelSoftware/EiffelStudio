@@ -1,26 +1,76 @@
 indexing
-	description: "Objects that create instance of DEBUGGER_MANAGER"
+	description: "TTY debugger's controller."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	DEBUGGER_MANAGER_FACTORY
+	TTY_DEBUGGER_CONTROLLER
 
 inherit
-	SHARED_FLAGS
+	DEBUGGER_CONTROLLER
+		redefine
+			manager,
+			before_starting,
+			after_starting,
+			if_confirmed_do,
+			discardable_if_confirmed_do,
+			activate_debugger_environment
+		end
 
-feature -- Debugger manager
+feature
 
-	new_debugger_manager: DEBUGGER_MANAGER is
+	before_starting is
 		do
-			if is_gui then
-				create {EB_DEBUGGER_MANAGER} Result.make
-			else
-				create {TTY_DEBUGGER_MANAGER} Result.make
+			Precursor
+			manager.display_debugger_info
+		end
+
+	after_starting is
+		do
+			Precursor
+		end
+
+	if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE]) is
+		local
+			is_yes: BOOLEAN
+		do
+			io.put_string (msg + " [y/n] ?")
+			io.read_line
+			is_yes := io.last_string.is_empty or else io.last_string.item (1).is_equal ('y')
+			if is_yes then
+				a_action.call (Void)
 			end
 		end
+
+	discardable_if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE];
+			a_button_count: INTEGER; a_pref_string: STRING) is
+		local
+			bp: BOOLEAN_PREFERENCE
+		do
+			bp ?= preferences.preferences.get_preference (a_pref_string)
+			if bp /= Void and then bp.value then
+				a_action.call (Void)
+			else
+				if_confirmed_do (msg, a_action)
+			end
+		end
+
+	activate_debugger_environment (b: BOOLEAN) is
+		do
+			Precursor {DEBUGGER_CONTROLLER} (b)
+			if b then
+				io.put_string ("Debugger environment started%N")
+			else
+				io.put_string ("Debugger environment closed%N")
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	manager: TTY_DEBUGGER_MANAGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

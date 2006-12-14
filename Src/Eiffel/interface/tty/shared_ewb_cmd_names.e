@@ -52,6 +52,8 @@ feature {NONE}
 
 	Convert_profile_cmd_name: STRING is "convert"
 
+	debug_cmd_name: STRING is "debug"
+
 	Defaults_cmd_name: STRING is "defaults"
 
 	deferred_cmd_name: STRING is "deferred"

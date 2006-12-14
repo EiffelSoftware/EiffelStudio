@@ -269,7 +269,7 @@ feature {DEBUGGER_MANAGER} -- Debugging operation
 
 	debug_kill is
 		require
-			safe_application_is_stopped: manager.safe_application_is_stopped
+			application_is_executing: manager.application_is_executing
 		do
 			manager.application.kill
 		end

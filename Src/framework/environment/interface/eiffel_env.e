@@ -624,7 +624,7 @@ feature -- Access: file name
 			is_valid_environment: is_valid_environment
 		once
 			if is_unix_layout then
-				Result := unix_layout_base_path.twin
+				Result := unix_layout_share_path.twin
 				Result.extend_from_array (<< unix_layout_locale_dir, product_version_name >>)
 			else
 				Result := shared_application_path.twin
@@ -1057,6 +1057,14 @@ feature {NONE} -- Configuration of layout
 			-- Base for the unix layout. e.g. "/usr" or "/usr/local"
 		once
 			create Result.make_from_string ("/usr/local") -- Comment to finde line for replacement UNIX_BASE_PATH
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	unix_layout_share_path: DIRECTORY_NAME
+			-- share for the unix layout. e.g. "/usr/share"
+		once
+			create Result.make_from_string ("/usr/share") -- Comment to finde line for replacement UNIX_BASE_PATH
 		ensure
 			Result_not_void: Result /= Void
 		end

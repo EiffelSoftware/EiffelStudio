@@ -27,7 +27,7 @@ feature -- Element change
 			-- Extend `an_item' and remove it again after it is called.
 		do
 			extend (an_item)
-			prune_when_called (an_item)
+			kamikazes.extend (agent prune_all (an_item))
 		end
 
 indexing

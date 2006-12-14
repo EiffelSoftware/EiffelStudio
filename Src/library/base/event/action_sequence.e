@@ -74,32 +74,34 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		local
-			l_routines: SPECIAL [PROCEDURE [ANY, EVENT_DATA]]
+			l_routines_snapshot: SPECIAL [like item]
 			l_count: INTEGER
-			l_action: PROCEDURE [ANY, EVENT_DATA]
-			l_kamikazes: SPECIAL [PROCEDURE [ANY, TUPLE]]
+			l_action: like item
+			l_kamikazes: SPECIAL [like item]
 			l_kamikazes_internal: like kamikazes_internal
 			l_is_aborted_stack: like is_aborted_stack
 			i: INTEGER
 		do
 			if count > 0 then
-				create l_routines.make (count)
-				l_routines.copy_data (area, 0, 0, count)
+					-- Create a snapshot of the routine objects in `Current'.
+				create l_routines_snapshot.make (count)
+				l_routines_snapshot.copy_data (area, 0, 0, count)
+					-- Iterate agents contained `kamikazes' and remove them from `Current'
+					-- The agents will still be called from `l_routines_snapshot'.
 				l_kamikazes_internal := kamikazes_internal
 				if l_kamikazes_internal /= Void and then not l_kamikazes_internal.is_empty then
 					from
+						l_kamikazes := l_kamikazes_internal.area
 						l_count := l_kamikazes_internal.count
-						create l_kamikazes.make (l_count)
-						l_kamikazes.copy_data (l_kamikazes_internal.area, 0, 0, l_count)
-						kamikazes_internal.wipe_out
 						i := 0
 					until
 						i = l_count
 					loop
-						l_kamikazes.item (i).call (Void)
+						prune_all (l_kamikazes @ i)
 						i := i + 1
 					end
-					l_kamikazes := Void
+						-- Reset kamikazes list.
+					l_kamikazes_internal.wipe_out
 				end
 				inspect
 					state
@@ -109,7 +111,7 @@ feature -- Basic operations
 					from
 						l_is_aborted_stack := is_aborted_stack
 						l_is_aborted_stack.extend (False)
-						l_count := l_routines.count
+						l_count := l_routines_snapshot.count
 						i := 0
 					variant
 						l_count - i
@@ -117,7 +119,7 @@ feature -- Basic operations
 						i = l_count
 						or l_is_aborted_stack.item
 					loop
-						l_action := l_routines @ i
+						l_action := l_routines_snapshot @ i
 						if l_action /= Void then
 							l_action.call (event_data)
 						end
@@ -255,7 +257,7 @@ feature -- Element Change
 		require
 			has (an_action)
 		do
-			kamikazes.extend (agent prune_all (an_action))
+			kamikazes.extend (an_action)
 		end
 
 feature -- Event handling
@@ -355,7 +357,7 @@ feature {NONE} -- Implementation
 	dummy_event_data_internal: EVENT_DATA
 			-- See dummy_event_data.
 
-	kamikazes: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
+	kamikazes: ARRAYED_LIST [like item]
 			-- Used by `prune_when_called'.
 		do
 			if kamikazes_internal = Void then

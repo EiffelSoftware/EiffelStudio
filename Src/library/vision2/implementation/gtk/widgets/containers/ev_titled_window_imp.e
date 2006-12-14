@@ -153,8 +153,7 @@ feature -- Status setting
 		do
 			if not is_show_requested then
 				show
-			end
-			if is_minimized then
+			elseif is_minimized then
 				restore
 			end
 			{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))

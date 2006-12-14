@@ -49,7 +49,6 @@ feature -- Initialization
  			Execution_environment.change_working_directory (a_project_location.path)
 			retrieve
 			if not error_occurred then
-				is_finalizing := False
 				Workbench.on_project_loaded
 				manager.on_project_create
 				manager.on_project_loaded
@@ -384,9 +383,6 @@ feature -- Status report
 			Result := degree_output_cell.item
 		end
 
-	is_finalizing: BOOLEAN
-			-- Are we in the middle of a finalization?
-
 feature -- Status setting
 
 	set_degree_output (a_degree_ouput: like degree_output) is
@@ -540,7 +536,7 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			is_finalizing := True
+			Compilation_modes.set_is_finalizing
 
 			melt
 				-- Add warning for non-optimal finalization.
@@ -556,13 +552,10 @@ feature -- Update
 			end
 			error_handler.trace_warnings
 			Workbench.stop_compilation
-			is_finalizing := False
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
-		rescue
-			is_finalizing := False
 		end
 
 	call_finish_freezing (workbench_mode: BOOLEAN) is
@@ -611,7 +604,7 @@ feature -- Update
 			invoke_finish_freezing (path, l_cmd, False, workbench_mode)
 		end
 
-	precompile (licensed: BOOLEAN) is
+	precompile (is_finalizing: BOOLEAN) is
 			-- Precompile eiffel project.
 		require
 			able_to_compile: able_to_compile
@@ -620,13 +613,15 @@ feature -- Update
 			set_error_status (ok_status)
 			Compilation_modes.set_is_precompiling (True)
 			Compilation_modes.set_is_freezing
+			if is_finalizing then
+				Compilation_modes.set_is_finalizing
+			end
 			Workbench.recompile
 
 			if successful then
-				Comp_system.set_licensed_precompilation (licensed)
 				Comp_system.save_precompilation_info
 				if not save_error then
-					save_precomp (licensed)
+					save_precomp
 				end
 				if
 					not manager.is_project_loaded and then
@@ -645,14 +640,13 @@ feature -- Update
 			is_compiling_ref.set_item (False)
 		end
 
-	finalize_precompile (licensed: BOOLEAN; keep_assertions: BOOLEAN) is
+	finalize_precompile (keep_assertions: BOOLEAN) is
 			-- precompile eiffel project and then finalize it (i.e generate
 			-- optimize C code for workbench mode).
 		require
 			able_to_compile: able_to_compile
 		do
-			is_finalizing := True
-			precompile (licensed)
+			precompile (True)
 			if successful and then comp_system.il_generation then
 				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)
@@ -662,14 +656,11 @@ feature -- Update
 				is_compiling_ref.set_item (False)
 			end
 			Workbench.stop_compilation
-			is_finalizing := False
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
 			successful_implies_freezing_occurred: successful implies freezing_occurred
-		rescue
-			is_finalizing := False
 		end
 
 	delete_generation_directory (
@@ -755,7 +746,7 @@ feature -- Output
 			error_implies: error_occurred implies save_error
 		end
 
-	save_precomp (licensed: BOOLEAN) is
+	save_precomp is
 			-- Save precompilation information to disk.
 		require
 			initialized: initialized
@@ -765,7 +756,7 @@ feature -- Output
 			l_epr_file: PROJECT_EIFFEL_FILE
 		do
 			error_status_mode.set_item (Ok_status)
-			create precomp_info.make (Precompilation_directories, licensed)
+			create precomp_info.make (Precompilation_directories)
 			create l_epr_file.make (project_directory.precompilation_file_name)
 			l_epr_file.store (precomp_info, comp_system.compilation_id)
 
@@ -825,7 +816,6 @@ feature {NONE} -- Retrieval
 						incompatible_version_number.append (p_eif.project_version_number)
 					end
 				else
---!! FIXME: check Concurrent_Eiffel license
 					system := e_project.system
 					dynamic_lib := e_project.dynamic_lib
 					Workbench.update_from_retrieved_project (e_project.saved_workbench)
@@ -833,7 +823,6 @@ feature {NONE} -- Retrieval
 						precomp_dirs := Workbench.precompiled_directories
 						Precompilation_directories.copy (precomp_dirs)
 						create remote_dir.make (project_directory)
-						remote_dir.set_licensed (Comp_system.licensed_precompilation)
 						remote_dir.set_system_name (Comp_system.name)
 						remote_dir.set_is_precompile_finalized (comp_system.is_precompile_finalized)
 						Precompilation_directories.force
@@ -1017,11 +1006,6 @@ feature {NONE} -- Implementation
 			file_name: FILE_NAME
 		do
 			if Comp_system.uses_precompiled then
--- FIXME: check Makefile.SH
--- FIXME: check Makefile.SH
--- FIXME: check Makefile.SH
--- FIXME: check Makefile.SH
-
 					-- Target
 				create file_name.make_from_string (project_directory.workbench_path)
 				file_name.set_file_name (System.name)

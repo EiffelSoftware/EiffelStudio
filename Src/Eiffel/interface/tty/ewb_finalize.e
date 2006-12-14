@@ -19,8 +19,7 @@ inherit
 	SHARED_ERROR_HANDLER
 
 create
-
-	make, do_nothing
+	make
 
 feature -- Initialization
 

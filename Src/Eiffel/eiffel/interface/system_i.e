@@ -984,7 +984,7 @@ end
 			if automatic_backup then
 				create l_file_name.make_from_string (workbench.backup_subdirectory)
 				l_file_name.set_file_name (backup_info)
-				create l_file.make_open_write (l_file_name)
+				create l_file.make_open_append (l_file_name)
 			end
 			l_classes := l_vis_build.removed_classes
 			from
@@ -999,13 +999,31 @@ end
 				end
 				l_class_i.compiled_class.recompile_syntactical_clients
 				if automatic_backup then
-					l_file.put_string (l_class_i.name+": "+l_class_i.group.name+": "+l_class_i.file_name+"%N")
+					l_file.put_string ("REMOVED: " +
+						l_class_i.name + " " +
+						l_class_i.group.target.system.uuid.out + " " +
+						l_class_i.group.name + "%N")
 				end
 				remove_class (l_class_i.compiled_class)
 				real_removed_classes.force (l_class_i)
 				l_classes.forth
 			end
+
 			if automatic_backup then
+					-- Process classes that are not in the override.
+				l_classes := l_vis_build.removed_classes_from_override
+				from
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_class_i ?= l_classes.item_for_iteration
+					l_file.put_string ("OVERRIDE_REMOVED: " +
+						l_class_i.name + " " +
+						l_class_i.group.target.system.uuid.out + " " +
+						l_class_i.group.name + "%N")
+					l_classes.forth
+				end
 				l_file.close
 			end
 

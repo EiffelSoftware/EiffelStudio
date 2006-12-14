@@ -83,6 +83,9 @@ feature -- Access
 	removed_classes: DS_HASH_SET [CONF_CLASS]
 			-- The list of removed classes.
 
+	removed_classes_from_override: DS_HASH_SET [CONF_CLASS]
+			-- The list of removed classes from override clusters.
+
 	partly_removed_classes: ARRAYED_LIST [EQUALITY_TUPLE [TUPLE [conf_class: CONF_CLASS; system: CONF_SYSTEM]]]
 			-- The list of classes that have been removed from a certain system only.
 			-- (if a library that is still used somewhere else has been removed)
@@ -116,12 +119,13 @@ feature -- Update
 		end
 
 	reset_classes is
-			-- Reset `modified_classes', `added_classes' and `removed_classes'.
+			-- Reset `xxx_classes' data structures.
 		do
 			reset
 			create modified_classes.make (modified_classes_per_system)
 			create added_classes.make (added_classes_per_system)
 			create removed_classes.make (removed_classes_per_system)
+			create removed_classes_from_override.make (removed_classes_from_override_per_system)
 			create new_assemblies.make (15)
 			create partly_removed_classes.make (removed_classes_per_system)
 		end
@@ -799,6 +803,7 @@ feature {NONE} -- Implementation
 							-- for override classes, mark the classes that used to be overriden as modified
 						l_overrides := l_cl.overrides
 						if l_overrides /= Void then
+							removed_classes_from_override.force (l_cl)
 							from
 								l_overrides.start
 							until
@@ -952,25 +957,28 @@ feature {NONE} -- contracts
 
 feature {NONE} -- Size constants
 
-	Classes_per_cluster: INTEGER is 200
+	classes_per_cluster: INTEGER is 200
 			-- How many classes do we have per average cluster.
 
-	Classes_per_system: INTEGER is 3000
+	classes_per_system: INTEGER is 3000
 			-- How many classes do we have per average system.
 
-	Groups_per_system: INTEGER is 100
+	groups_per_system: INTEGER is 100
 			-- How many groups do we have per average system.
 
-	Modified_classes_per_system: INTEGER is 100
+	modified_classes_per_system: INTEGER is 100
 			-- How many classes do we have per average system.
 
-	Added_classes_per_system: INTEGER is 3000
+	removed_classes_from_override_per_system: INTEGER is 5
+			-- How many classes do we have each time they get removed from an override.
+
+	added_classes_per_system: INTEGER is 3000
 			-- How many classes do we have per average system.
 
-	Removed_classes_per_system: INTEGER is 10
+	removed_classes_per_system: INTEGER is 10
 			-- How many classes do we have per average system.
 
-	Libraries_per_target: INTEGER is 5
+	libraries_per_target: INTEGER is 5
 			-- How many libraries do we have per average target.
 
 invariant
@@ -979,6 +987,7 @@ invariant
 	modified_classes_not_void: modified_classes /= Void
 	added_classes_not_void: added_classes /= Void
 	removed_classes_not_void: removed_classes /= Void
+	removed_classes_from_override_not_void: removed_classes_from_override /= Void
 	application_target_not_void: application_target /= Void
 	libraries_no_intersection: not libraries_intersection (libraries, old_libraries)
 	factory_not_void: factory /= Void

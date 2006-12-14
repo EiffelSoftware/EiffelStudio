@@ -14,32 +14,38 @@ inherit
 			interface
 		end
 
-	THREAD_CONTROL
-
 create {DEBUGGER_MANAGER}
 	make
 
 feature {DEBUGGER_MANAGER} -- Access
 
-	tty_wait_until_application_is_dead is
-		local
---			stop_process_loop_on_events: BOOLEAN
+	process_underlying_toolkit_event_queue is
 		do
-			io.put_string ("Console based debugger is not yet ready on non windows platforms%N")
-			interface.application.kill
---			from
---				stop_process_loop_on_events := False
---			until
---				stop_process_loop_on_events
---			loop
---				if interface.application_initialized then
---					sleep (10 * 1000)
---				else
---					stop_process_loop_on_events := True
---				end
---			end
+			from
+				l_motion_tuple := motion_tuple
+				user_events_processed_from_underlying_toolkit := False
+			until
+				l_no_more_events
+			loop
+				dispatch_events
+				l_no_more_events := not events_pending
+			end
 		end
 
+	frozen dispatch_events is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_main_context_dispatch(g_main_context_default())"
+		end		
+
+	frozen events_pending: BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_main_context_pending (g_main_context_default())"
+		end		
+	
 feature {NONE} -- Interface
 
 	interface: TTY_DEBUGGER_MANAGER;

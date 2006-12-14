@@ -751,10 +751,12 @@ feature -- Basic operation
 	destroy is
 			-- End the application.
 		do
-			{EV_GTK_EXTERNALS}.object_unref (tooltips)
-			set_is_destroyed (True)
-				-- This will exit our main loop
-			interface.destroy_actions.call (Void)
+			if not is_destroyed then
+				{EV_GTK_EXTERNALS}.object_unref (tooltips)
+				set_is_destroyed (True)
+					-- This will exit our main loop
+				interface.destroy_actions.call (Void)
+			end
 		end
 
 feature -- Status report

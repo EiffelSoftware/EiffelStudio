@@ -23,13 +23,6 @@ feature -- Element change
 		deferred
 		end
 
-	extend_kamikaze (an_item: like item) is
-			-- Extend `an_item' and remove it again after it is called.
-		do
-			extend (an_item)
-			kamikazes.extend (agent prune_all (an_item))
-		end
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

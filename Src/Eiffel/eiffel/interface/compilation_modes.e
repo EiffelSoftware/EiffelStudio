@@ -22,22 +22,33 @@ feature -- Access
 		do
 			if is_precompiling then
 				if is_finalizing then
-					Result := "Precompile+Finalize"
+					Result := precompile_finalize_type
 				else
-					Result := "Precompile"
+					Result := precompile_type
 				end
 			elseif is_quick_melt then
-				Result := "Quick_melt"
+				Result := quick_melt_type
 			elseif is_override_scan then
-				Result := "Override_scan"
+				Result := override_scan_type
 			elseif is_discover then
-				Result := "Discover"
+				Result := discover_type
 			elseif is_freezing then
-				Result := "Freeze"
+				Result := freeze_type
 			elseif is_finalizing then
-				Result := "Finalize"
+				Result := finalize_type
 			end
+			Result := Result.twin
+		ensure
+			string_representation_not_void: Result /= Void
 		end
+
+	precompile_type: STRING is "Precompile"
+	precompile_finalize_type: STRING is "Precompile+Finalize"
+	quick_melt_type: STRING is "Quick_melt"
+	override_scan_type: STRING is "Override_scan"
+	discover_type: STRING is "Discover"
+	freeze_type: STRING is "Freeze"
+	finalize_type: STRING is "Finalize"
 
 feature -- Update
 

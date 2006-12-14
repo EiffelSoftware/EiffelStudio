@@ -1,5 +1,7 @@
 indexing
 	description: "Objects that allows to acces a C struct of type lconv defined in locale.h"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "ES-i18n team (es-i18n@origo.ethz.ch)"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -246,4 +248,17 @@ feature -- Access
 --		external
 --			"C struct struct lconv access int_n_sign_posn use <locale.h>"
 --		end
+indexing
+	library:   "EiffelBase: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
+
 end -- Class Locale Conv

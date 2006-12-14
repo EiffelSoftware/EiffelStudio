@@ -50,7 +50,9 @@ feature -- Access
 	selected_value: STRING is
 			-- Value of the selected index.
 		do
-			Result := value.item (selected_index)
+			if value.valid_index (selected_index) then
+				Result := value.item (selected_index)
+			end
 		end
 
 	selected_index: INTEGER

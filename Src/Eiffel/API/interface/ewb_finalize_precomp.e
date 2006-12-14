@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Finalize precompiled eiffel system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -8,14 +8,10 @@ indexing
 
 class
 	EWB_FINALIZE_PRECOMP
-	
+
 inherit
 
 	EWB_PRECOMP
-		rename
-			make as make_precompile
-		export
-			{NONE} make_precompile
 		undefine
 			loop_action
 		redefine
@@ -25,7 +21,7 @@ inherit
 		select
 			save_project_again
 		end;
-		
+
 	EWB_FINALIZE
 		rename
 			save_project_again as save_project_again_finalize,
@@ -36,20 +32,19 @@ inherit
 			name, help_message, abbreviation,
 			execute, loop_action, perform_compilation,
 			process_finish_freezing
-		end;		
-		
+		end;
+
 	SHARED_ERROR_HANDLER
 
 create
-	make, do_nothing
+	make
 
 feature -- Initialization
 
-	make (is_licensed: like licensed; keep: like keep_assertions) is
+	make (keep: like keep_assertions) is
 			-- Initialize Current with keep_assertions as `keep'
 			-- and project `proj'.
 		do
-			make_precompile (is_licensed)
 			make_finalize (keep)
 		end;
 
@@ -82,10 +77,10 @@ feature {NONE} -- Execution
 				io.error.put_string (Eiffel_project.name);
 				io.error.put_string ("%" already exists.%N%
 					%It needs to be deleted before a precompilation.%N");
-			elseif 
-				command_line_io.confirmed 
+			elseif
+				command_line_io.confirmed
 						("Finalizing implies some C compilation and linking.%
-							%%NDo you want to do it now") 
+							%%NDo you want to do it now")
 			then
 				io.put_string ("--> Keep assertions (y/n): ");
 				command_line_io.wait_for_return;
@@ -129,8 +124,7 @@ feature {NONE} -- Execution
 					-- last time.
 				System.set_finalize
 			end
-
-			Eiffel_project.finalize_precompile (licensed, keep_assertions)
+			Eiffel_project.finalize_precompile (keep_assertions)
 		end
 
 	process_finish_freezing (finalized_dir: BOOLEAN) is

@@ -54,9 +54,6 @@ feature -- Access for precompilation configuration
 			-- Does a `preobj' file exist for the current precompiled project?
 			-- This file might not exist as a result of merging precompilations
 
-	licensed_precompilation: BOOLEAN
-			-- Is the precompiled library protected by a license?
-
 feature -- Update
 
 	add_new_debug_clause (a_text_formatter: STRING) is
@@ -144,12 +141,6 @@ feature -- Update for the precompilation
 			-- Set `has_precompiled_preobj' to `b'.
 		do
 			has_precompiled_preobj := b
-		end
-
-	set_licensed_precompilation (b: BOOLEAN) is
-			-- Set `licensed_precompilation' to `b'.
-		do
-			licensed_precompilation := b
 		end
 
 indexing

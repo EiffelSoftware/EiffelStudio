@@ -377,7 +377,7 @@ feature -- Commands
 				save_backup_info
 			end
 
-			if not Eiffel_project.is_finalizing then
+			if not compilation_modes.is_finalizing then
 				stop_compilation
 			end
 		ensure
@@ -444,7 +444,6 @@ feature -- Commands
 				-- merging of SERVER_CONTROLs from the different precompiled libraries.
 			System.prepare_before_saving (not was_precompiling)
 			if was_precompiling then
-				System.set_licensed_precompilation (False)
 				System.save_precompilation_info
 			end
 				-- NOTE: possible speed improvement by saving the project when this
@@ -454,7 +453,7 @@ feature -- Commands
 				-- is corrupted.
 			Eiffel_project.save_project
 			if was_precompiling then
-				Eiffel_project.save_precomp (False)
+				Eiffel_project.save_precomp
 			end
 		end
 
@@ -563,9 +562,12 @@ feature -- Automatic backup
 		do
 			create file.make (backup_info_file_name)
 			if file.is_creatable or else (file.exists and then file.is_writable) then
-				file.open_write
+				file.open_append
 				file.put_string ("Compiler version: ")
 				file.put_string (Version_number)
+				file.put_new_line
+				file.put_string ("Type: ")
+				file.put_string (compilation_modes.string_representation)
 				file.put_new_line
 				file.put_string ("batch mode: ")
 				file.put_boolean (Eiffel_project.batch_mode)

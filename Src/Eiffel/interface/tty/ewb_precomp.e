@@ -10,23 +10,11 @@ indexing
 class EWB_PRECOMP
 
 inherit
-
 	EWB_COMP
 		redefine
 			name, help_message, abbreviation,
 			execute, perform_compilation,
 			save_project_again
-		end
-
-create
-	make
-
-feature -- Initialization
-
-	make (license_check: BOOLEAN) is
-			-- Set `licensed' to `license_check'
-		do
-			licensed := license_check
 		end
 
 feature -- Properties
@@ -45,9 +33,6 @@ feature -- Properties
 		do
 			Result := precompile_abb
 		end;
-
-	licensed: BOOLEAN
-			-- Is this precompilation protected by a license?
 
 feature {NONE} -- Execution
 
@@ -70,7 +55,7 @@ feature {NONE} -- Execution
 
 	perform_compilation is
 		do
-			Eiffel_project.precompile (licensed)
+			Eiffel_project.precompile (False)
 		end;
 
 	save_project_again is
@@ -95,7 +80,7 @@ feature {NONE} -- Execution
 					if finished then
 						lic_die (-1)
 					else
-						Eiffel_project.save_precomp (licensed)
+						Eiffel_project.save_precomp
 					end;
 				else
 					Precursor {EWB_COMP}

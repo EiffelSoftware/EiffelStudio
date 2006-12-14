@@ -15,6 +15,30 @@ feature -- Properties
 	is_override_scan, is_discover: BOOLEAN
 			-- Type of compilation.
 
+feature -- Access
+
+	string_representation: STRING is
+			-- Normalized output for current compilation mode.
+		do
+			if is_precompiling then
+				if is_finalizing then
+					Result := "Precompile+Finalize"
+				else
+					Result := "Precompile"
+				end
+			elseif is_quick_melt then
+				Result := "Quick_melt"
+			elseif is_override_scan then
+				Result := "Override_scan"
+			elseif is_discover then
+				Result := "Discover"
+			elseif is_freezing then
+				Result := "Freeze"
+			elseif is_finalizing then
+				Result := "Finalize"
+			end
+		end
+
 feature -- Update
 
 	set_is_freezing is

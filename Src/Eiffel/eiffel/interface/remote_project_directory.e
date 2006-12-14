@@ -60,12 +60,6 @@ feature -- Status setting
 			has_precompiled_preobj := b
 		end
 
-	set_licensed (b: BOOLEAN) is
-			-- Set `licensed' to `b'.
-		do
-			licensed := b
-		end
-
 	set_system_name (n: STRING) is
 			-- Set `system_name' to `n'
 		do
@@ -117,9 +111,6 @@ feature -- Access
 		do
 			Result := project_location.compilation_path
 		end
-
-	licensed: BOOLEAN
-			-- Is this precompilation protected by a license?
 
 	project_epr_location: FILE_NAME is
 			-- Full name of the file where the

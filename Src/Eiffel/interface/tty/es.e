@@ -456,7 +456,7 @@ feature -- Update
 				-- Default command
 			if (not option_error) and then (command = Void) then
 				if is_precompiling then
-					create {EWB_PRECOMP} command.make (False)
+					create {EWB_PRECOMP} command
 				else
 					create {EWB_QUICK_MELT} command
 				end
@@ -1033,7 +1033,7 @@ feature -- Update
 				if command /= Void then
 					option_error := True
 				else
-					create {EWB_PRECOMP} command.make (True)
+					create {EWB_PRECOMP} command
 				end
 			elseif option.is_equal ("-metadata_cache_path") then
 				if current_option + 1 < argument_count then
@@ -1070,7 +1070,7 @@ feature -- Update
 						end
 					end
 					if is_precompiling then
-						create {EWB_FINALIZE_PRECOMP} command.make (False, keep)
+						create {EWB_FINALIZE_PRECOMP} command.make (keep)
 					else
 						create {EWB_FINALIZE} command.make (keep)
 					end

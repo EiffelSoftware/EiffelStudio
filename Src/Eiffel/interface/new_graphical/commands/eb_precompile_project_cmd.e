@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 			-- The actual compilation process.
 		do
 			if finalize_precompile then
-				Eiffel_project.finalize_precompile (False, False)
+				Eiffel_project.finalize_precompile (False)
 			else
 				Eiffel_project.precompile (False)
 			end

@@ -38,6 +38,8 @@ feature {NONE}
 
 	Documentation: STRING is "Documentation"
 
+	dot_e: STRING is ".e"
+
 	Dot_c: STRING is ".c"
 
 	Dot_cpp: STRING is ".cpp"

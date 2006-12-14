@@ -69,10 +69,6 @@ feature {NONE} -- Execution
 			check_arguments_and_execute
 		end
 
-invariant
-
-	filter_name_not_void: filter_name /= Void
-
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

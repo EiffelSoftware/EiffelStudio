@@ -46,21 +46,9 @@ feature {EV_APPLICATION} -- Initialization
 				-- Create and initialize action sequences.
 			create pnd_targets.make (8)
 			create dockable_targets.make (8)
-			create internal_idle_actions
 
 				-- Create idle actions as this is called in the event loop.
 			idle_actions.call (Void)
-			create once_idle_actions
-
-			do_once_idle_actions_agent := agent
-				local
-					snapshot: like once_idle_actions
-				do
-					snapshot := once_idle_actions.twin
-					once_idle_actions.wipe_out
-					internal_idle_actions.prune_all (do_once_idle_actions_agent)
-					snapshot.call (Void)
-				end
 
 			idle_iteration_count := 1
 				-- Enable `invoke_garbage_collection_when_inactive'.
@@ -119,7 +107,6 @@ feature {EV_ANY_I} -- Implementation
 				end
 				if try_lock then
 					l_locked := True
-					internal_idle_actions.call (Void)
 					idle_actions_internal.call (Void)
 					unlock
 					l_locked := False
@@ -135,7 +122,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		rescue
 			if l_locked then
-					-- If a crash occurred whilst calling the idle actions then we have must unlock the mutex.
+					-- If a crash occurred whilst calling the idle actions then we must unlock the mutex.
 				unlock
 				l_locked := False
 			end
@@ -359,8 +346,8 @@ feature -- Basic operation
 			a_idle_action_not_void: a_idle_action /= Void
 		do
 			lock
-			if not idle_actions.has (a_idle_action) then
-				idle_actions.extend (a_idle_action)
+			if not idle_actions_internal.has (a_idle_action) then
+				idle_actions_internal.extend (a_idle_action)
 			end
 			unlock
 		end
@@ -375,7 +362,7 @@ feature -- Basic operation
 			l_idle_actions: like idle_actions
 		do
 			lock
-			l_idle_actions := idle_actions
+			l_idle_actions := idle_actions_internal
 			l_cursor := l_idle_actions.cursor
 			l_idle_actions.prune_all (a_idle_action)
 			if l_idle_actions.valid_cursor (l_cursor) then
@@ -401,28 +388,15 @@ feature -- Basic operation
 
 feature -- Events
 
-	internal_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to be performed when no events are in queue.
-
-	once_idle_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions to be preformed once when no events are in queue.
-			-- Wiped out after being called.
-
 	do_once_on_idle (an_action: PROCEDURE [ANY, TUPLE]) is
 			-- Perform `an_action' one time only on idle.
 		do
 			lock
-			if not once_idle_actions.has (an_action) then
-				once_idle_actions.extend (an_action)
-			end
-			if not internal_idle_actions.has (do_once_idle_actions_agent) then
-				internal_idle_actions.extend (do_once_idle_actions_agent)
+			if not idle_actions_internal.has (an_action) then
+				idle_actions_internal.extend_kamikaze (an_action)
 			end
 			unlock
 		end
-
-	do_once_idle_actions_agent: PROCEDURE [EV_APPLICATION_I, TUPLE]
-			-- Agent for `do_once_idle_actions'.
 
 feature -- Event handling
 
@@ -868,12 +842,6 @@ invariant
 	dockable_targets_not_void: is_usable implies dockable_targets /= Void
 	pnd_targets_not_void: is_usable implies pnd_targets /= void
 	windows_not_void: is_usable implies windows /= void
-	internal_idle_actions_not_void: is_usable implies
-		internal_idle_actions /= Void
-	once_idle_actions_not_void: is_usable implies
-		once_idle_actions /= Void
-	do_once_idle_actions_agent: is_usable implies
-		do_once_idle_actions_agent /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

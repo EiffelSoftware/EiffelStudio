@@ -59,7 +59,6 @@ feature {EV_ANY_I} -- Implementation
 	idle_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `idle_actions'.
 
-
 feature -- Event handling
 
 	pick_actions: EV_PND_ACTION_SEQUENCE is

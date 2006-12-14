@@ -604,6 +604,7 @@
 	<PREF NAME="general.preference_window_width" DESCRIPTION="Height of preferences window." HIDDEN="True"><INTEGER>450</INTEGER></PREF>
 	<PREF NAME="general.preference_window_height" DESCRIPTION="Width of preferences window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 	<PREF NAME="general.show_hidden_preferences" DESCRIPTION="Show hidden preferences in preference window?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="general.locale" DESCRIPTION="Locale current system uses. (Restart to take effect)" HIDDEN="False"><LIST>[en]</LIST></PREF>
 
 	<PREF NAME="tools.search_tool.init_incremental" DESCRIPTION="Initial status of incremental search."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.search_tool.init_match_case" DESCRIPTION="Initial status of match case."><BOOLEAN>False</BOOLEAN></PREF>

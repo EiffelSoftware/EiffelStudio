@@ -1,7 +1,7 @@
 indexing
 	description: "Constants for NLS locale information"
-	author: "ES-i18n team (es-18n@origo.ethz.ch)"
-	license: "Eiffel Forum License v2 (see forum.txt)"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -157,6 +157,19 @@ feature -- LC_CTYPE constants from winnnls.h
 	LOCALE_SISO639LANGNAME: INTEGER is        0x00000059   -- ISO abbreviated language name
 	locale_siso639langname_maxlen: INTEGER is 9
 	LOCALE_SISO3166CTRYNAME: INTEGER is       0x0000005A   -- ISO abbreviated country name
-	locale_siso3166ctryname_maxlen: INTEGER is 9
+	locale_siso3166ctryname_maxlen: INTEGER is 9;
+
+indexing
+	library:   "EiffelBase: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
 
 end

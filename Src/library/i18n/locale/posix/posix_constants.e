@@ -1,5 +1,7 @@
 indexing
 	description: "Constants for nl_locale_info"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	author: "ES-i18n team (es-i18n@origo.ethz.ch)"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
@@ -54,5 +56,18 @@ feature -- Constants
 	D_fmt: INTEGER is 0x20029	-- date in a locale-specific way.
 	T_fmt: INTEGER is 0x2002A	-- time in a locale-specific way.
 	T_fmt_ampm: INTEGER is 0x2002B -- time in US method
-	Crncystr: INTEGER is 0x4000F	-- currency symbol
+	Crncystr: INTEGER is 0x4000F;	-- currency symbol
+indexing
+	library:   "EiffelBase: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			356 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+
+
 end

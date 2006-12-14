@@ -42,7 +42,7 @@ feature -- Access
 	more_arguments: BOOLEAN is
 			-- Are there more arguments?
 		do
-			Result := argument_position <= argument_count
+			Result := argument_count > 0 and then (argument_position <= argument_count)
 		end
 
 feature -- Update

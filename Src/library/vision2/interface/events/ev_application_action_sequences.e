@@ -38,6 +38,8 @@ feature -- Event handling
 			-- Use of `idle_actions' is not thread-safe.  For thread-safe idle
 			-- actions handling use 'add_idle_action', `remove_idle_action'
 			-- or `do_once_on_idle' in conjunction with EV_THREAD_APPLICATION.
+		obsolete
+			"Use add_idle_action, do_once_on_idle or remove_idle_action instead"
 		require
 			single_threaded: not {PLATFORM}.is_thread_capable
 		do

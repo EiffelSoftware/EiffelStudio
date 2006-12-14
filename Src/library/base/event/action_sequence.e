@@ -64,11 +64,7 @@ feature {NONE} -- Initialization
 			-- Begin in `Normal_state'.
 		do
 			arrayed_list_make (0)
-			create is_aborted_stack.make
-			create call_buffer.make
 			state := Normal_state
-			create not_empty_actions.make (0)
-			create empty_actions.make (0)
 		end
 
 feature -- Basic operations
@@ -78,37 +74,56 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		local
-			snapshot: ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
+			l_routines: SPECIAL [PROCEDURE [ANY, EVENT_DATA]]
+			l_count: INTEGER
 			l_action: PROCEDURE [ANY, EVENT_DATA]
+			l_kamikazes: SPECIAL [PROCEDURE [ANY, TUPLE]]
+			l_kamikazes_internal: like kamikazes_internal
+			l_is_aborted_stack: like is_aborted_stack
 			i: INTEGER
 		do
 			if count > 0 then
-				snapshot := twin
-				if kamikazes /= Void then
-					call_action_list (kamikazes)
-					kamikazes := Void
+				create l_routines.make (count)
+				l_routines.copy_data (area, 0, 0, count)
+				l_kamikazes_internal := kamikazes_internal
+				if l_kamikazes_internal /= Void and then not l_kamikazes_internal.is_empty then
+					from
+						l_count := l_kamikazes_internal.count
+						create l_kamikazes.make (l_count)
+						l_kamikazes.copy_data (l_kamikazes_internal.area, 0, 0, l_count)
+						kamikazes_internal.wipe_out
+						i := 0
+					until
+						i = l_count
+					loop
+						l_kamikazes.item (i).call (Void)
+						i := i + 1
+					end
+					l_kamikazes := Void
 				end
-				inspect 
+				inspect
 					state
 				when
 					Normal_state
 				then
 					from
-						is_aborted_stack.extend (False)
-						i := 1
+						l_is_aborted_stack := is_aborted_stack
+						l_is_aborted_stack.extend (False)
+						l_count := l_routines.count
+						i := 0
 					variant
-						snapshot.count + 1 - i
+						l_count - i
 					until
-						i > snapshot.count
-						or is_aborted_stack.item
+						i = l_count
+						or l_is_aborted_stack.item
 					loop
-						l_action := snapshot.i_th (i)
+						l_action := l_routines @ i
 						if l_action /= Void then
-							l_action.call (event_data)							
+							l_action.call (event_data)
 						end
 						i := i + 1
 					end
-					is_aborted_stack.remove
+					l_is_aborted_stack.remove
 				when
 					Paused_state
 				then
@@ -192,14 +207,17 @@ feature -- Status setting
 	resume is
 			-- Used after `block' or `pause' to resume normal `call'
 			-- execution.  Executes any buffered `call's.
+		local
+			l_call_buffer: like call_buffer
 		do
 			state := Normal_state
 			from
+				l_call_buffer := call_buffer
 			until
-				call_buffer.is_empty
+				l_call_buffer.is_empty
 			loop
-				call (call_buffer.item)
-				call_buffer.remove
+				call (l_call_buffer.item)
+				l_call_buffer.remove
 			end
 		ensure
 			normal_state: state = Normal_state
@@ -215,7 +233,7 @@ feature -- Status setting
 
 feature -- Status report
 
-	state: INTEGER 
+	state: INTEGER
 			-- One of `Normal_state' `Paused_state' or `Blocked_state'
 
 	Normal_state: INTEGER is 1
@@ -237,9 +255,6 @@ feature -- Element Change
 		require
 			has (an_action)
 		do
-			if kamikazes = Void then
-				create kamikazes.make (1)
-			end
 			kamikazes.extend (agent prune_all (an_action))
 		end
 
@@ -247,23 +262,35 @@ feature -- Event handling
 
 	not_empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Actions to be performed on transition from `is_empty' to not `is_empty'.
+		do
+			if not_empty_actions_internal = Void then
+				create not_empty_actions_internal.make (0)
+			end
+			Result := not_empty_actions_internal
+		end
 
 	empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Actions to be performed on transition from not `is_empty' to `is_empty'.
+		do
+			if empty_actions_internal = Void then
+				create empty_actions_internal.make (0)
+			end
+			Result := empty_actions_internal
+		end
 
 feature {NONE} -- Implementation, ARRAYED_LIST
 
 	set_count (new_count: INTEGER) is
 			-- Set `count' to `new_count'
 		do
-			if count /= 0 and new_count = 0 then
+			if empty_actions_internal /= Void and then count /= 0 and new_count = 0 then
 					-- Transition from not `is_empty' to `is_empty'.
 				call_action_list (empty_actions)
-			elseif count = 0 and new_count /= 0 then
+			elseif not_empty_actions_internal /= Void and then count = 0 and new_count /= 0 then
 					-- Transition from `is_empty' to not `is_empty'.
 				call_action_list (not_empty_actions)
 			end
-			
+
 				-- Adjust `count'
 			count := new_count
 		end
@@ -278,26 +305,46 @@ feature {NONE} -- Implementation
 			snapshot: like actions
 			i: INTEGER
 		do
-			snapshot := actions.twin
-			from
-				i := 1
-			until
-				i > snapshot.count
-			loop
-				if snapshot.i_th (i) /= Void then
-					snapshot.i_th (i).call (Void)
+			if not actions.is_empty then
+				snapshot := actions.twin
+				from
+					i := 1
+				until
+					i > snapshot.count
+				loop
+					if snapshot @ i /= Void then
+						snapshot.i_th (i).call (Void)
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
 	is_aborted_stack: LINKED_STACK [BOOLEAN]
 			-- `item' holds abort status of
 			-- innermost of possibly recursive `call's.
+		do
+			if is_aborted_stack_internal = Void then
+				create is_aborted_stack_internal.make
+			end
+			Result := is_aborted_stack_internal
+		end
+
+	is_aborted_stack_internal: like is_aborted_stack
+		-- Internal storage for `is_aborted_stack'.
 
 	call_buffer: LINKED_QUEUE [EVENT_DATA]
 			-- Holds calls made while `is_paused'
 			-- to be executed on `resume'.
+		do
+			if call_buffer_internal = Void then
+				create call_buffer_internal.make
+			end
+			Result := call_buffer_internal
+		end
+
+	call_buffer_internal: like call_buffer
+			-- Internal storage for `call_buffer'.
 
 	name_internal: STRING
 			-- See name.
@@ -307,9 +354,24 @@ feature {NONE} -- Implementation
 
 	dummy_event_data_internal: EVENT_DATA
 			-- See dummy_event_data.
-	
+
 	kamikazes: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Used by `prune_when_called'.
+		do
+			if kamikazes_internal = Void then
+				create kamikazes_internal.make (0)
+			end
+			Result := kamikazes_internal
+		end
+
+	kamikazes_internal: like kamikazes
+			-- Internal storage for `kamikazes'.
+
+	not_empty_actions_internal: like not_empty_actions
+			-- Internal storage for `not_empty_actions'.
+
+	empty_actions_internal: like empty_actions
+			-- Internal storage for `empty_actions'.
 
 feature -- Obsolete
 
@@ -332,7 +394,7 @@ feature -- Obsolete
 			not_empty_actions.extend (a_source_connection_agent)
 			if not is_empty then
 				a_source_connection_agent.call (Void)
-			end 
+			end
 		end
 
 invariant
@@ -362,4 +424,4 @@ indexing
 
 
 
-end -- class ACTION_SEQUENCE 
+end -- class ACTION_SEQUENCE

@@ -97,6 +97,7 @@ feature {NONE} -- Properties
 			else
 				Result := Interface_names.l_callers
 			end
+			Result := interface_names.string_general_to_lower (Result)
 		end
 
 	post_fix: STRING is

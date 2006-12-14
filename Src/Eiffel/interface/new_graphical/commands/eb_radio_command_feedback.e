@@ -111,15 +111,8 @@ feature -- Implementation
 	is_lower_case (str: STRING_GENERAL): BOOLEAN is
 			-- Is `str' lower case?
 			--| Cannot be in a non exported part because post conditions use it.
-		local
-			l_str: STRING
 		do
-			if str.is_valid_as_string_8 then
-				l_str := str.as_string_8
-				Result := l_str.as_lower.is_equal (l_str)
-			else
-				Result := True
-			end
+			Result := interface_names.is_string_general_lower (str)
 		end
 
 feature {NONE} -- Implementation

@@ -77,7 +77,7 @@ feature -- Basic operatioin
 			create item_matched_internal.make (0)
 			if is_subcluster_searched then
 				subcluster := cluster_i.sub_clusters
-				if not subcluster.is_empty then
+				if subcluster /= Void and then not subcluster.is_empty then
 					from
 						subcluster.start
 					until

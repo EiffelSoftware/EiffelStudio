@@ -53,6 +53,8 @@ feature {NONE}
 
 	Convert_profile_help: STRING is "convert profiler output files"
 
+	Debug_help: STRING is "debug the system"
+
 	defaults_help: STRING is "reset all values to their defaults"
 
 	deferred_help: STRING is "show the deferred features of a class"

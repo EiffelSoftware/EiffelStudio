@@ -500,6 +500,12 @@ feature -- Update
 				else
 					option_error := True
 				end
+			elseif option.is_equal ("-" + debug_cmd_name) then
+				if command = Void then
+					create {EWB_DEBUG} command
+				else
+					option_error := True
+				end
 			elseif eiffel_layout.has_documentation_generation and then option.is_equal ("-implementers") then
 				if current_option < argument_count then
 					if command /= Void then

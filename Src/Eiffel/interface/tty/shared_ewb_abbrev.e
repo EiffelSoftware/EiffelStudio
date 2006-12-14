@@ -41,6 +41,8 @@ feature
 
 	Convert_profile_abb: CHARACTER is 'c'
 
+	Debug_abb: CHARACTER is 'd'
+
 	Defaults_abb: CHARACTER is 'e'
 
 	Descendants_abb: CHARACTER is 'd'

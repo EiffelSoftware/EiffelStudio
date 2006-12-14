@@ -1,26 +1,48 @@
 indexing
-	description: "Objects that create instance of DEBUGGER_MANAGER"
+	description: "implementation for DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	DEBUGGER_MANAGER_FACTORY
+	TTY_DEBUGGER_MANAGER_IMP
 
 inherit
-	SHARED_FLAGS
-
-feature -- Debugger manager
-
-	new_debugger_manager: DEBUGGER_MANAGER is
-		do
-			if is_gui then
-				create {EB_DEBUGGER_MANAGER} Result.make
-			else
-				create {TTY_DEBUGGER_MANAGER} Result.make
-			end
+	DEBUGGER_MANAGER_IMP
+		redefine
+			interface
 		end
+
+	THREAD_CONTROL
+
+create {DEBUGGER_MANAGER}
+	make
+
+feature {DEBUGGER_MANAGER} -- Access
+
+	tty_wait_until_application_is_dead is
+		local
+--			stop_process_loop_on_events: BOOLEAN
+		do
+			io.put_string ("Console based debugger is not yet ready on non windows platforms%N")
+			interface.application.kill
+--			from
+--				stop_process_loop_on_events := False
+--			until
+--				stop_process_loop_on_events
+--			loop
+--				if interface.application_initialized then
+--					sleep (10 * 1000)
+--				else
+--					stop_process_loop_on_events := True
+--				end
+--			end
+		end
+
+feature {NONE} -- Interface
+
+	interface: TTY_DEBUGGER_MANAGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1,26 +1,55 @@
 indexing
-	description: "Objects that create instance of DEBUGGER_MANAGER"
+	description: "implementation for DEBUGGER_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	DEBUGGER_MANAGER_FACTORY
+	TTY_DEBUGGER_MANAGER_IMP
 
 inherit
-	SHARED_FLAGS
+	DEBUGGER_MANAGER_IMP
+		redefine
+			interface
+		end
 
-feature -- Debugger manager
+	THREAD_CONTROL
 
-	new_debugger_manager: DEBUGGER_MANAGER is
+create {DEBUGGER_MANAGER}
+	make
+
+feature {DEBUGGER_MANAGER} -- Access
+
+	tty_wait_until_application_is_dead is
+		local
+			stop_process_loop_on_events: BOOLEAN
 		do
-			if is_gui then
-				create {EB_DEBUGGER_MANAGER} Result.make
-			else
-				create {TTY_DEBUGGER_MANAGER} Result.make
+			from
+				stop_process_loop_on_events := False
+				messages_loop.dispatch_only_timer_messages
+			until
+				stop_process_loop_on_events
+			loop
+				if not interface.inside_debugger_menu then
+					messages_loop.process_message_queue
+				end
+				if interface.application_initialized then
+					sleep (10 * 1000)
+				else
+					stop_process_loop_on_events := True
+				end
 			end
 		end
+
+	messages_loop: WINDOWS_MESSAGES_QUEUE_PROCESSOR is
+		once
+			create Result
+		end		
+
+feature {NONE} -- Interface
+
+	interface: TTY_DEBUGGER_MANAGER;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -90,10 +90,14 @@ feature -- Application status
 			tf.add_string ("Launching system :")
 			tf.add_new_line
 			tf.add_comment ("  - directory = ")
-			tf.add_quoted_text (ctlr.param_working_directory)
+			if ctlr.param_working_directory /= Void then
+				tf.add_quoted_text (ctlr.param_working_directory)
+			else
+				tf.add_string ("<Empty>")
+			end
 			tf.add_new_line
 			tf.add_comment_text ("  - arguments = ")
-			if ctlr.param_arguments.is_empty then
+			if ctlr.param_arguments = Void or else ctlr.param_arguments.is_empty then
 				tf.add_string ("<Empty>")
 			else
 				tf.add_quoted_text (ctlr.param_arguments)

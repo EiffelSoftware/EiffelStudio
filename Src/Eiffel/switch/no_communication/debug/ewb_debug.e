@@ -1,26 +1,38 @@
 indexing
-	description: "Objects that create instance of DEBUGGER_MANAGER"
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
 
-class
-	DEBUGGER_MANAGER_FACTORY
+	description:
+		"Command to run an eiffel application."
+	legal: "See notice at end of class."
+	status: "See notice at end of class.";
+	date: "$Date$";
+	revision: "$Revision $"
+
+class EWB_DEBUG
 
 inherit
-	SHARED_FLAGS
 
-feature -- Debugger manager
-
-	new_debugger_manager: DEBUGGER_MANAGER is
-		do
-			if is_gui then
-				create {EB_DEBUGGER_MANAGER} Result.make
-			else
-				create {TTY_DEBUGGER_MANAGER} Result.make
-			end
+	EWB_CMD
+		rename
+			name as debug_cmd_name,
+			help_message as debug_help,
+			abbreviation as debug_abb
+		redefine
+			loop_action
 		end
+
+feature {NONE} -- Implementation
+
+	loop_action is
+			-- Execute the generated application
+		do
+			execute
+		end
+
+	execute is
+			-- This command is available only for the `loop' mode
+		do
+			print ("Not available in this version%N")
+		end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -54,4 +66,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end
+end -- class EWB_RUN

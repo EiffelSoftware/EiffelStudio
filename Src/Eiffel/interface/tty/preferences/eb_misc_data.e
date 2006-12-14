@@ -9,6 +9,9 @@ indexing
 class
 	EB_MISC_DATA
 
+inherit
+	SHARED_LOCALE
+
 create
 	make
 
@@ -104,6 +107,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := file_browser_command_preference.value
 		end
 
+	locale_id: STRING is
+			-- Locale ID of current language
+		do
+			Result := locale_id_preference.selected_value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	acrobat_reader_preference: STRING_PREFERENCE
@@ -119,6 +128,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
 	console_shell_command_preference: STRING_PREFERENCE
 	file_browser_command_preference: STRING_PREFERENCE
+	locale_id_preference: ARRAY_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -135,6 +145,7 @@ feature {NONE} -- Preference Strings
 	show_hidden_preferences_string: STRING is "general.show_hidden_preferences"
 	console_shell_command_string: STRING is "general.console_shell_command"
 	file_browser_command_string: STRING is "general.file_browser_command"
+	locale_id_preference_string: STRING is "general.locale"
 
 feature {NONE} -- Implementation
 
@@ -165,12 +176,63 @@ feature {NONE} -- Implementation
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "xterm -geometry 80x40")
 				file_browser_command_preference := l_manager.new_string_preference_value (l_manager, file_browser_command_string, "xterm -geometry 80x40")
 				external_editor_command_preference := l_manager.new_string_preference_value (l_manager, external_editor_command_string, "xterm -geometry 80x40 -e vi +$line $target")
-
 			end
+			locale_id_preference := l_manager.new_array_preference_value (l_manager, locale_id_preference_string, <<"en">>)
+			locale_id_preference.set_is_choice (True)
+			init_locale
 		end
 
 	preferences: PREFERENCES
 			-- Preferences
+
+feature {NONE} -- Implementation
+
+	init_locale is
+			-- Init available locales.
+		require
+			locale_id_preference_not_void: locale_id_preference /= Void
+		local
+			l_select_lang: STRING
+			l_id: I18N_LOCALE_ID
+			l_b: BOOLEAN
+			l_available_lang: STRING
+			l_available_locales: LIST [I18N_LOCALE_ID]
+			l_str: STRING
+			l_added_pre: HASH_TABLE [STRING, STRING]
+		do
+			l_select_lang := locale_id_preference.selected_value
+			l_available_locales := locale_manager.available_locales
+			create l_id.make_from_string (l_select_lang)
+			l_b := locale_manager.has_translations (l_id)
+			create l_added_pre.make (100)
+			create l_available_lang.make (20)
+			from
+				l_available_locales.start
+			until
+				l_available_locales.after
+			loop
+				if locale_manager.has_translations (l_available_locales.item) then
+					check
+						name_of_locale_id_is_string_8: l_available_locales.item.name.is_valid_as_string_8
+					end
+					l_str := l_available_locales.item.name.as_string_8
+					if not l_added_pre.has (l_str) then
+						if not l_added_pre.is_empty then
+							l_available_lang.extend (';')
+						end
+						l_added_pre.force (l_str, l_str)
+						if l_b and then l_available_locales.item.is_equal (l_id) then
+								-- Set this item selected.
+							set_locale_with_id (l_str)
+							l_str := "[" + l_str + "]"
+						end
+						l_available_lang.append (l_str)
+					end
+				end
+				l_available_locales.forth
+			end
+			locale_id_preference.set_value_from_string (l_available_lang)
+		end
 
 invariant
 	preferences_not_void: preferences /= Void
@@ -184,6 +246,7 @@ invariant
 	editor_left_side_preference_not_void: editor_left_side_preference /= Void
 	default_displayed_string_size_preference_not_void: default_displayed_string_size_preference /= Void
 	console_shell_command_preference_not_void: console_shell_command_preference /= Void
+	locale_id_preference_not_void: locale_id_preference /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -69,6 +69,7 @@ feature -- Access
 			else
 				Result := Interface_names.l_callees
 			end
+			Result := interface_names.string_general_to_lower (Result)
 		end
 
 feature{NONE} -- Implementation

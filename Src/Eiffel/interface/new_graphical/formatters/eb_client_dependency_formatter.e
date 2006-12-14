@@ -34,7 +34,7 @@ feature -- Access
 	command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
-			Result := Interface_names.l_clients
+			Result := Interface_names.string_general_to_lower (interface_names.l_clients)
 		end
 
 	post_fix: STRING is "cli"

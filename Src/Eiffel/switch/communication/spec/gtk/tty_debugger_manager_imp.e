@@ -20,10 +20,10 @@ create {DEBUGGER_MANAGER}
 feature {DEBUGGER_MANAGER} -- Access
 
 	process_underlying_toolkit_event_queue is
+		local
+			l_no_more_events: BOOLEAN
 		do
 			from
-				l_motion_tuple := motion_tuple
-				user_events_processed_from_underlying_toolkit := False
 			until
 				l_no_more_events
 			loop
@@ -37,15 +37,15 @@ feature {DEBUGGER_MANAGER} -- Access
 			"C inline use <gtk/gtk.h>"
 		alias
 			"g_main_context_dispatch(g_main_context_default())"
-		end		
+		end
 
 	frozen events_pending: BOOLEAN is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"g_main_context_pending (g_main_context_default())"
-		end		
-	
+		end
+
 feature {NONE} -- Interface
 
 	interface: TTY_DEBUGGER_MANAGER;

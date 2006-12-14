@@ -6,9 +6,11 @@ indexing
 	revision: "$Revision$"
 
 
-class I18N_DATE_ELEMENT
+class
+	I18N_DATE_ELEMENT
 
-inherit I18N_FORMATTING_ELEMENT
+inherit
+	I18N_FORMATTING_ELEMENT
 
 create
 	make
@@ -36,9 +38,9 @@ feature --Output
 			Result := date_action.item ([a_date])
  		end
 
-
 invariant
 	correct_date_action: date_action /= Void
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

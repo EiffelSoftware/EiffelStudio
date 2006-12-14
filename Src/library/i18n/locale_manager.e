@@ -14,7 +14,8 @@ inherit
 			{NONE} all
 		end
 
-create make
+create
+	make
 
 feature -- Initialization
 
@@ -55,7 +56,6 @@ feature -- Access
 		do
 			Result := get_locale(host_locale.default_locale_id)
 		end
-
 
 feature -- Status report
 

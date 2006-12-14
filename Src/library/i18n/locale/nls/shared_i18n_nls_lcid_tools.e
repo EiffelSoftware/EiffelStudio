@@ -8,13 +8,13 @@ indexing
 class
 	SHARED_I18N_NLS_LCID_TOOLS
 
-	feature -- Shared object
-		lcid_tools: I18N_NLS_LCID_TOOLS is
-				--
-			once
-				create Result.initialize_locales
-			end
+feature -- Shared object
 
+	lcid_tools: I18N_NLS_LCID_TOOLS is
+			--
+		once
+			create Result.initialize_locales
+		end
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

@@ -8,17 +8,18 @@ indexing
 class
 	I18N_LANGUAGE_ID
 
-	inherit
-		ANY
+inherit
+	ANY
 		redefine
 			is_equal
 		end
-		HASHABLE
+
+	HASHABLE
 		undefine
 			is_equal
 		end
-	create
-		make
+create
+	make
 
 feature --Identification
 

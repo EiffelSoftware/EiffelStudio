@@ -8,8 +8,8 @@ indexing
 deferred class
 	I18N_FILE
 
-	inherit
-		SHARED_I18N_PLURAL_TOOLS
+inherit
+	SHARED_I18N_PLURAL_TOOLS
 
 feature	-- creation
 
@@ -48,65 +48,65 @@ feature	-- information
 
 feature -- entry access
 
-		entry_has_plurals (i: INTEGER): BOOLEAN is
-				-- does this entry have any plurals?
-			require
-				file_open: opened
-				i_valid_index: valid_index (i)
-			deferred
-			end
+	entry_has_plurals (i: INTEGER): BOOLEAN is
+			-- does this entry have any plurals?
+		require
+			file_open: opened
+			i_valid_index: valid_index (i)
+		deferred
+		end
 
+	original_singular_string (i: INTEGER): STRING_32 is
+			-- Get the original singular string for this entry
+		require
+			file_open: opened
+			i_valid_index: valid_index (i)
+		deferred
+		end
 
-		original_singular_string (i: INTEGER): STRING_32 is
-				-- Get the original singular string for this entry
-			require
-				file_open: opened
-				i_valid_index: valid_index (i)
-			deferred
-			end
+	original_plural_string (i:INTEGER): STRING_32 is
+			--  Get the original plural string for this entry. May return Void if there are none!
+		require
+			file_open: opened
+			i_valid_index: valid_index (i)
+			plurals_exist: entry_has_plurals(i)
+		deferred
+		end
 
-		original_plural_string (i:INTEGER): STRING_32 is
-				--  Get the original plural string for this entry. May return Void if there are none!
-			require
-				file_open: opened
-				i_valid_index: valid_index (i)
-				plurals_exist: entry_has_plurals(i)
-			deferred
-			end
+	translated_plural_strings (i:INTEGER): ARRAY[STRING_32] is
+			--  get the translated plural strings for this entry. May return Void if there are none!
+			-- array indexes should be 0 t0 3
+		require
+			file_open: opened
+			i_valid_index: valid_index (i)
+			plurals_exist: entry_has_plurals(i)
+		deferred
+		ensure
+			result_exists: Result /= Void
+			correct_lower_index: Result.lower = 0
+			correct_upper_index: Result.upper = 3
+		end
 
-		translated_plural_strings (i:INTEGER): ARRAY[STRING_32] is
-				--  get the translated plural strings for this entry. May return Void if there are none!
-				-- array indexes should be 0 t0 3
-			require
-				file_open: opened
-				i_valid_index: valid_index (i)
-				plurals_exist: entry_has_plurals(i)
-			deferred
-			ensure
-				result_exists: Result /= Void
-				correct_lower_index: Result.lower = 0
-				correct_upper_index: Result.upper = 3
-			end
+	translated_singular_string (i:INTEGER): STRING_32 is
+			-- get the translated singular string for this entry
+		require
+			file_open: opened
+			i_valid_index: valid_index (i)
+		deferred
+		end
 
-		translated_singular_string (i:INTEGER): STRING_32 is
-				-- get the translated singular string for this entry
-			require
-				file_open: opened
-				i_valid_index: valid_index (i)
-			deferred
-			end
-
-		valid_index(i:INTEGER):BOOLEAN is
-				-- is this a valid index for an entry?
-			require
-				file_open: opened
-			deferred
-			end
-
+	valid_index(i:INTEGER):BOOLEAN is
+			-- is this a valid index for an entry?
+		require
+			file_open: opened
+		deferred
+		end
 
 feature -- mechanics
 
-	opened: BOOLEAN -- is the file opened?
+	opened: BOOLEAN
+		-- is the file opened?
+
 	valid: BOOLEAN is
 		-- could the file be parsed correctly?
 		deferred
@@ -128,7 +128,6 @@ feature -- mechanics
 		deferred
 		end
 
-
 feature {NONE}
 
 	file: FILE
@@ -137,6 +136,7 @@ invariant
 	plural_form_correct: plural_form < 10 and plural_form >= 0
 	opened_only_if_valid: opened implies valid
 	opened_means_file_exists: opened implies file.exists
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

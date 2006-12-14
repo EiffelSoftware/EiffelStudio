@@ -5,7 +5,6 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class I18N_FORMATTING_UTILITY
 
 feature -- Pad

@@ -5,9 +5,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class I18N_CURRENCY_VALUE_FORMATTER
+class
+	I18N_CURRENCY_VALUE_FORMATTER
 
-inherit I18N_VALUE_FORMATTER
+inherit
+	I18N_VALUE_FORMATTER
 		rename
 			make as make_from_locale_info
 		redefine
@@ -44,7 +46,6 @@ feature -- Initialization
 		do
 			make_from_currency_info (a_locale_info)
 		end
-
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

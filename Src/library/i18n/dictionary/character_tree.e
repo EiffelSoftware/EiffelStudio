@@ -26,7 +26,6 @@ feature {CHARACTER_TREE} -- Init
 			character_trees_list := a_character_list
 		end
 
-
 feature -- Interface
 
 	insert (a_item: G; a_key: STRING_32) is
@@ -41,17 +40,17 @@ feature -- Interface
 					-- it is a node
 				tree_el:= search_character_tree (a_key.substring (key.count+1, a_key.count))
 				if tree_el = Void or  not  a_key.substring (1,key.count).is_equal (key) then
-					-- element not in the node
+						-- element not in the node
 					insert_character_tree (a_item, a_key)
 				else -- similar element in the node, insert there
 					tree_el.insert (a_item,a_key.substring (key.count+1, a_key.count))
 				end
 			elseif key = Void then
-				-- it is a empty leaf
+					-- it is a empty leaf
 				key := a_key
 				item := a_item
 			else
-				-- it is a 1 element leaf
+					-- it is a 1 element leaf
 				split (a_item, a_key)
 			end
 		end
@@ -71,7 +70,6 @@ feature -- Interface
 				Result := item
 			end
 		end
-
 
 	has (a_item: G; s: STRING_32): BOOLEAN is
 			-- Does current tree have `a_item' with `a_key' as key?
@@ -114,22 +112,22 @@ feature {CHARACTER_TREE} -- character_trees_list
 			-- search tree which represents a_character
 			-- void if not available
 		do
-			-- User move to front method
-				from
-					character_trees_list.start
-				until
-					Result /= Void or character_trees_list.after
-				loop
-					if character_trees_list.item.key_corresponds(a_string) then
-						Result := character_trees_list.item.twin
-						character_trees_list.remove
-						character_trees_list.put_front (Result)
+				-- User move to front method
+			from
+				character_trees_list.start
+			until
+				Result /= Void or character_trees_list.after
+			loop
+				if character_trees_list.item.key_corresponds(a_string) then
+					Result := character_trees_list.item.twin
+					character_trees_list.remove
+					character_trees_list.put_front (Result)
  						character_trees_list.start
  						Result := character_trees_list.item
-					else
-						character_trees_list.forth
-					end
+				else
+					character_trees_list.forth
 				end
+			end
 		end
 
 	insert_character_tree (a_item: G; a_key: STRING_32) is
@@ -203,8 +201,6 @@ feature {CHARACTER_TREE} -- Information
 			key:= a_string + key
 		end
 
-
-
 	item: G
 
 feature {CHARACTER_TREE} -- Implementation
@@ -255,7 +251,7 @@ feature --display
 
 
 invariant
- i2:	is_leaf implies character_trees_list = Void
+	i2:	is_leaf implies character_trees_list = Void
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

@@ -5,8 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
-class I18N_TIME_ELEMENT
+class
+	I18N_TIME_ELEMENT
 
 inherit
 	I18N_FORMATTING_ELEMENT
@@ -36,10 +36,9 @@ feature --Output
 			Result := time_action.item ([a_time])
  		end
 
-
 invariant
-
 	correct_date_action: time_action /= Void
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

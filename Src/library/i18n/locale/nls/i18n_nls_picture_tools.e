@@ -57,12 +57,12 @@ feature -- Do the work through the power of agents
 					in.item (i) = ':' or in.item (i) = ',' or
 					in.item (i) = '.'
 				then
-					-- append character to string, as we preserve them
-					-- slash, dot, comma and colon should be thrown away according to MS
-					-- documentation, but apparently it's wrong.
+						-- append character to string, as we preserve them
+						-- slash, dot, comma and colon should be thrown away according to MS
+						-- documentation, but apparently it's wrong.
 					Result.append_character(in.item(i))
 				elseif in.item (i) = '%'' then -- hope that was a ' character
-					-- start of 'user' string that we must preserve: read this to the end
+						-- start of 'user' string that we must preserve: read this to the end
 					from
 						j := i+1
 					until
@@ -70,7 +70,7 @@ feature -- Do the work through the power of agents
 					loop
 						j := j+1
 					end
-					-- special case: is the string ''?
+						-- special case: is the string ''?
 					if j <= in.count and j-i = 1 then
 						Result.append_character('%'')
 					else
@@ -80,7 +80,7 @@ feature -- Do the work through the power of agents
 				elseif
 					is_code_character.item([in.item(i)])
 				then
-					--start of formatting code: this _must_ be a sequence of in.item(i).code
+						--start of formatting code: this _must_ be a sequence of in.item(i).code
 					from
 						j := i+1
 					until
@@ -88,7 +88,7 @@ feature -- Do the work through the power of agents
 					loop
 						j := j+1
 					end
-					-- what did we get?
+						-- what did we get?
 					Result.append(process_code.item([in.substring(i, j-1)]))
 					i := j-1  -- character at j was not part of the format string
 				end
@@ -165,7 +165,7 @@ feature -- Helper functions
 		end
 
 	process_time_code(code:STRING_32): STRING_32 is
-		-- Transforms a time format code.
+			-- Transforms a time format code.
 		require
 			argument_not_void: code /= Void
 		do
@@ -206,6 +206,7 @@ feature -- Helper functions
 		ensure
 			Result_not_void: Result /= Void
 		end
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

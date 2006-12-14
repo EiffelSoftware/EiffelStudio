@@ -5,13 +5,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class I18N_FORMATTING_ACTIONS
+class
+	I18N_FORMATTING_ACTIONS
 
-inherit SHARED_I18N_FORMATTING_UTILITY
-			export
-				{NONE} all
-			end
-
+inherit
+	SHARED_I18N_FORMATTING_UTILITY
+		export
+			{NONE} all
+		end
 
 feature -- Time related actions
 

@@ -7,12 +7,12 @@ indexing
 
 class
 	I18N_STRING_FORMATTER
+
 inherit
 	ANY
 		redefine
 			default_create
 		end
-
 
 create
 	default_create,
@@ -36,7 +36,6 @@ feature -- Initialization
 			escape_character_set: escape_character = a_escape_character
 		end
 
-
 feature -- Utility
 
 	format_string (a_string: STRING_32; args_tuple: TUPLE): STRING_32 is
@@ -56,7 +55,7 @@ feature -- Utility
 			l_list := a_string.split (escape_character)
 			create Result.make_empty
 			from
-				-- Append first string to Result
+					-- Append first string to Result
 				l_list.start
 				Result.append (l_list.item)
 				l_list.forth
@@ -64,10 +63,10 @@ feature -- Utility
 				l_list.after
 			loop
 				if l_list.item.is_empty then
-					-- It wasn't a escape_character
+						-- It wasn't a escape_character
 					Result.append(escape_character.out)
 				else
-					-- it's possibly an escape_character
+						-- it's possibly an escape_character
 					from
 						i := 1
 						l_string := l_list.item.substring(i,i)
@@ -79,9 +78,9 @@ feature -- Utility
 					end
 					l_string := l_list.item.substring(1,i-1)
 					if l_string.is_integer then
-						-- It was en escape character
+							-- It was en escape character
 
-						--FIXME!!! HACK because 'out' in ANY possibly gives a STRING_8 and this is not so good for STRING_32
+							--FIXME!!! HACK because 'out' in ANY possibly gives a STRING_8 and this is not so good for STRING_32
 						test ?= args_tuple.item(l_string.to_integer)
 						if test /= Void then
 							Result.append (test.as_string_32)
@@ -122,8 +121,6 @@ feature -- Check functions
 				i := i + 1
 			end
 		end
-
-
 
 	required_arguments (a_string: STRING_32): INTEGER is
 			-- how many argumnents does `a_string' require?

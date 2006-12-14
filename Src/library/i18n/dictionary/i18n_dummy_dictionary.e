@@ -8,17 +8,15 @@ indexing
 class
 	I18N_DUMMY_DICTIONARY
 
-	inherit
-		I18N_DICTIONARY
+inherit
+	I18N_DICTIONARY
 
 create
 	make
 
-
 feature -- Reporting
 
 	count: INTEGER is 0
-
 
 feature -- Entries
 
@@ -52,11 +50,6 @@ feature -- Retrieval
 		do
 			Result := ""
 		end
-
-
-
-
-
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

@@ -70,27 +70,27 @@ feature -- Reading
 			loop
 				l_ch := a_special.item (i).to_character_8
 				if ch_len > 0 then
-					-- we are in the middle of a multi-byte char
+						-- we are in the middle of a multi-byte char
 					ch_len := ch_len - 1 -- one byte fewer to decode
 					code := code | ( l_ch.natural_32_code.bit_and (63) |<< (6*ch_len) )
 					if ch_len <= 0 then
-						-- this was last byte
+							-- this was last byte
 						Result.append_character (code.to_character_32)
 						code := 0
 					end
 				elseif utf8.is_encoded_first_byte (l_ch) then
 					ch_len := utf8.encoded_byte_count (l_ch)
 					if ch_len = 1 then
-						-- this is an ascii character
+							-- this is an ascii character
 						Result.append_character (l_ch.to_character_32)
 					else
-						-- first byte of a multibyte character
+							-- first byte of a multibyte character
 						code := l_ch.natural_32_code & ({NATURAL_8}.max_value.bit_shift_right (ch_len).as_natural_32) |<< (6*(ch_len-1))
 					end
 					ch_len := ch_len - 1
 				else
-					-- something was wrong in the bytes sequence
-					-- just discard the character
+						-- something was wrong in the bytes sequence
+						-- just discard the character
 					ch_len := 0
 					code := 0
 				end
@@ -133,7 +133,7 @@ feature -- Writing
 				until
 					ch_len <= 0
 				loop
-					-- following bytes
+						-- following bytes
 					ch_len := ch_len - 1
 					l_byte := (0x80).to_natural_8 | (l_code |>> (ch_len*6) & 0x3F).to_natural_8
 					a_file.put_natural_8 (l_byte)

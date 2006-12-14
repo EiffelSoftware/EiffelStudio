@@ -10,13 +10,12 @@ class
 
 feature -- Shared object
 
-		plural_tools: I18N_PLURAL_TOOLS is
-			once
-				create Result
-			ensure
-				result_exists: Result /= Void
-			end
-
+	plural_tools: I18N_PLURAL_TOOLS is
+		once
+			create Result
+		ensure
+			result_exists: Result /= Void
+		end
 
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."

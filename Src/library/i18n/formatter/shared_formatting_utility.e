@@ -5,7 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class SHARED_I18N_FORMATTING_UTILITY
+class
+	SHARED_I18N_FORMATTING_UTILITY
 
 feature -- Shared object
 

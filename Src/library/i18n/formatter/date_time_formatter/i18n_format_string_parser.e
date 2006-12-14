@@ -8,19 +8,22 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class I18N_FORMAT_STRING_PARSER
+class
+	I18N_FORMAT_STRING_PARSER
 
 inherit
 	I18N_FORMATTING_CHARACTERS
 		export
 			{NONE} all
 		end
+
 	I18N_FORMATTING_ACTIONS
 		export
 			{NONE} all
 		end
 
-create make
+create
+	make
 
 feature -- Parser
 
@@ -31,7 +34,6 @@ feature -- Parser
 		do
 			locale_info := a_locale_info
 		end
-
 
 	parse (a_string: STRING_32): LINKED_LIST [I18N_FORMATTING_ELEMENT]
 			-- parse `a_string', for every format character, create
@@ -206,10 +208,10 @@ feature -- Parser
  			when modified_year then
 				create {I18N_DATE_ELEMENT} Result.make (agent year_4_action (?))
  			else
- 				-- not supported, it may be one of:
- 				--		. `modified_base_year_name'
- 				--		. `modified_base_year_offset'
- 				-- Insert a space
+	 				-- not supported, it may be one of:
+	 				--		. `modified_base_year_name'
+	 				--		. `modified_base_year_offset'
+	 				-- Insert a space
 				create {I18N_USERSTRING_ELEMENT} Result.make (" ")
  			end
  		ensure
@@ -251,9 +253,9 @@ feature -- Parser
 			when modified_week_number_monday_as_first_2, modified_week_number_monday_as_first_1 then
 				create {I18N_DATE_ELEMENT} Result.make (agent week_number_sunday_as_first_action (?))
  			else
- 				-- not supported, it may be one of:
- 				--		. `modified_era'
- 				-- Insert a space
+	 				-- not supported, it may be one of:
+	 				--		. `modified_era'
+	 				-- Insert a space
 				create {I18N_USERSTRING_ELEMENT} Result.make (" ")
  			end
  		ensure
@@ -262,6 +264,7 @@ feature -- Parser
 
 invariant
 	locale_info_exists: locale_info /= Void
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

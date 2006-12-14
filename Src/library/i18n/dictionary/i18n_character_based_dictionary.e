@@ -7,6 +7,7 @@ indexing
 
 class
 	I18N_CHARACTER_BASED_DICTIONARY
+
 inherit
 	I18N_DICTIONARY
 		redefine
@@ -26,18 +27,17 @@ feature -- Initialization
 			create plural_char_tree
 		end
 
-feature  -- Manipulation
-
-	-- this should be restricted
+feature -- Manipulation
+		-- this should be restricted
 
 	extend (a_entry : I18N_DICTIONARY_ENTRY) is
 			-- add a_entry in the datastructure
 		do
 			if not a_entry.has_plural then
-				-- entry has no plurals
+					-- entry has no plurals
 				singular_char_tree.insert (a_entry, a_entry.original_singular)
 			else
-				-- entry has plurasl
+					-- entry has plurasl
 				plural_char_tree.insert (a_entry, a_entry.original_singular)
 			end
 			count := count + 1
@@ -89,10 +89,9 @@ feature -- Access
 
 feature --Information
 
+	count: INTEGER
+		-- number of entries in the dictionary
 
-		count: INTEGER
-
-			-- number of entries in the dictionary
 feature {NONE}  -- Implementation
 
 	singular_char_tree: CHARACTER_TREE[I18N_DICTIONARY_ENTRY]

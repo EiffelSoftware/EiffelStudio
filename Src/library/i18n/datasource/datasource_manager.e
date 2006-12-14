@@ -41,14 +41,13 @@ feature -- Informations
 		ensure
 			result_exists: Result /= Void
 		end
-		
+
 	available_languages: LINEAR[I18N_LANGUAGE_ID] is
 			-- list of the available languages
 		deferred
 		ensure
 			result_exists: Result /= Void
 		end
-
 
 	has_locale ( a_locale_id: I18N_LOCALE_ID): BOOLEAN is
 			-- is `a_locale_id'  available?
@@ -69,7 +68,6 @@ feature -- Informations
 		ensure
 			correct_result: Result = available_languages.has (a_language_id)
 		end
-
 
 feature {NONE}
 

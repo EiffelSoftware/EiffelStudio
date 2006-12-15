@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	LOCALE_INTERFACE_CONSTANTS
+	LOCALE_NAMES
 
 inherit
 	SHARED_LOCALE

@@ -24,8 +24,6 @@ inherit
 
 	EB_SHARED_ID_SOLUTION
 
-	SHARED_LOCALE
-
 	EB_DOMAIN_ITEM_UTILITY
 
 feature -- Metric menu

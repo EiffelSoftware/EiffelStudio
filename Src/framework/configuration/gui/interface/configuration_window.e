@@ -183,13 +183,13 @@ feature {NONE}-- Initialization
 			hb.extend (create {EV_CELL})
 			hb.set_padding (layout_constants.default_padding_size)
 
-			create ok_button.make_with_text_and_action (b_ok, agent on_ok)
+			create ok_button.make_with_text_and_action (names.b_ok, agent on_ok)
 			layout_constants.set_default_width_for_button (ok_button)
 			hb.extend (ok_button)
 			hb.disable_item_expand (ok_button)
 			set_default_push_button (ok_button)
 
-			create l_btn.make_with_text_and_action (b_cancel, agent on_cancel)
+			create l_btn.make_with_text_and_action (names.b_cancel, agent on_cancel)
 			layout_constants.set_default_width_for_button (l_btn)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)

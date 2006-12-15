@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 
-	FRAMEWORK_CONSTANTS
+	SHARED_NAMES
 		undefine
 			default_create,
 			copy
@@ -31,12 +31,12 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_QUESTION_DIALOG}
-			set_title (t_question)
+			set_title (names.t_question)
 			set_pixmap (Default_pixmaps.Question_pixmap)
 			set_icon_pixmap (Default_pixmaps.Question_pixmap)
-			set_buttons (<<b_yes, b_no, b_cancel>>)
-			set_default_push_button(button (b_yes))
-			set_default_cancel_button(button (b_cancel))
+			set_buttons (<<names.b_yes, names.b_no, names.b_cancel>>)
+			set_default_push_button(button (names.b_yes))
+			set_default_cancel_button(button (names.b_cancel))
 		end
 
 indexing

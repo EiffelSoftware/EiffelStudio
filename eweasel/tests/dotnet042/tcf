@@ -1,0 +1,20 @@
+test_name merged-typed-pointer-argument
+test_description An argument of type TYPED_POINTER coming from an external interface should not cause the compiler to crash.
+
+copy_sub Ace $TEST Ace
+copy_bin ImplTest.dll $CLUSTER ImplTest.dll
+copy_raw basic.e $CLUSTER basic.e
+copy_raw impl.e $CLUSTER impl.e
+copy_raw test.e $CLUSTER test.e
+
+compile_frozen
+compile_result ok
+
+c_compile_work
+c_compile_result ok
+
+execute_work 	NONE 	exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

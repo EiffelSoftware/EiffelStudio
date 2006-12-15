@@ -641,16 +641,18 @@ feature {NONE} -- Implementation
 		require
 			preference_not_void: a_preference /= Void
 		local
-			l_text: STRING
+			l_text: STRING_GENERAL
 		do
 			if a_preference.description /= Void then
-				l_text := a_preference.description
+					-- We know that descriptions of preference have been extacted out
+					-- from the config file.
+				l_text := try_to_translate (a_preference.description)
 			else
 				l_text := no_description_text
 			end
 
 			if a_preference.restart_required then
-				description_text.set_text (l_text + once " (REQUIRES RESTART)")
+				description_text.set_text (l_text.as_string_32 + l_request_restart)
 			else
 				description_text.set_text (l_text)
 			end
@@ -776,6 +778,16 @@ feature {NONE} -- Implementation
 			-- List of the preferences currently in view.
 		once
 			create Result.make (10)
+		end
+
+	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL is
+			-- Try to translate `a_string'.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			Result := a_string
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Private attributes

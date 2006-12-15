@@ -14,6 +14,8 @@ inherit
 
 	EB_METRIC_SHARED
 
+	HASHABLE
+
 create
 	make
 
@@ -36,6 +38,8 @@ feature{NONE} -- Initialization
 			set_value (a_value)
 			set_input_domain (a_input)
 			set_uuid (create {UUID}.make_from_string (a_uuid))
+			set_is_up_to_date (True)
+			set_is_value_valid (True)
 		end
 
 feature -- Access
@@ -58,6 +62,93 @@ feature -- Access
 
 	uuid: UUID
 			-- UUID of current metric
+
+	previous_value: DOUBLE is
+			-- Previous calculated value, used in archive comparison.
+			-- If a metric archive is just loaded, there is no prevous value.
+			-- When a metric archive is calculated again, then we get a current value,
+			-- so we can compare between current value and `previous_value'.
+		require
+			previous_value_exists: has_previous_value
+		do
+			Result := previous_value_internal
+		end
+
+	metric: EB_METRIC is
+			-- Metric associated with Current archive, i.e., metric over which current archive is calculated.
+		require
+			metric_exists: is_metric_valid
+		do
+			Result := metric_manager.metric_with_name (metric_name)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result :=uuid.hash_code
+		end
+
+	detailed_result: QL_DOMAIN
+			-- Last detailed result
+
+feature -- Status report
+
+	has_previous_value: BOOLEAN
+			-- Does `previous_value' exist?
+			-- See `previous_value' for more information.
+
+	has_detailed_result: BOOLEAN is
+			-- Does current archive contain detailed result?
+		do
+			Result := detailed_result /= Void
+		end
+
+	is_metric_valid: BOOLEAN is
+			-- Is metric associated with `archive_node' valid?
+		do
+			Result := metric_manager.has_metric (metric_name) and then
+					  metric_type_id (metric_manager.metric_with_name (metric_name)) = metric_type and then
+					  metric_manager.is_metric_valid (metric_name)
+		end
+
+	is_mergable (other: like Current): BOOLEAN is
+			-- Can `other' be merged into Current?
+			-- If `other' is calculated over the same metric as Current's and with the same input domain, it's mergable.
+			-- A merge means update `value' and `calculated_time' with value and time from `other', and put original `value'
+			-- into `previous_value'.
+		require
+			other_attached: other /= Void and then other.is_metric_valid
+		do
+			Result :=
+				metric_manager.is_metric_name_equal (metric_name, other.metric_name) and then
+				metric_type = other.metric_type
+				and then input_domain.is_equivalent (other.input_domain)
+		ensure
+			symmetric: Result implies other.is_mergable (Current)
+		end
+
+	is_input_domain_valid: BOOLEAN is
+			-- Is `input_domain' valid for current application?
+		do
+			Result := input_domain.is_valid
+		end
+
+	is_recalculatable: BOOLEAN is
+			-- Can current archive be recalculated?
+		do
+			Result := is_metric_valid and then is_input_domain_valid
+		end
+
+	is_up_to_date: BOOLEAN
+			-- Is current archive up-to-date?
+			-- An archive can be not up-to-date because of Eiffel compilation (which may cause system changes)
+			-- Default: True
+
+	is_value_valid: BOOLEAN
+			-- Is `value' valid?
+			-- Default: True
 
 feature -- Setting
 
@@ -117,6 +208,64 @@ feature -- Setting
 			uuid_set: uuid = a_uuid
 		end
 
+	set_has_previous_value (b: BOOLEAN) is
+			-- Set `has_previous_value' with `b'.
+		do
+			has_previous_value := b
+		ensure
+			result_attached: has_previous_value = b
+		end
+
+	set_previous_value (a_value: like previous_value) is
+			-- Set `previous_value' with `a_value'.
+		do
+			previous_value_internal := a_value
+		ensure
+			previous_value_set: previous_value = a_value
+		end
+
+	set_is_up_to_date (b: BOOLEAN) is
+			-- Set `is_up_to_date' with `b'.
+		do
+			is_up_to_date := b
+		ensure
+			is_up_to_date_set: is_up_to_date = b
+		end
+
+	set_detailed_result (a_result: like detailed_result) is
+			-- Set `detailed_result' with `a_result'.
+		do
+			detailed_result := a_result
+		ensure
+			detailed_result_set: detailed_result = a_result
+		end
+
+	set_is_value_valid (b: BOOLEAN) is
+			-- Set `is_value_valid' with `b'.
+		do
+			is_value_valid := b
+		ensure
+			is_value_valid_set: is_value_valid = b
+		end
+
+	merge (a_archive: like Current) is
+			-- Update Current with information from `a_archive'.
+		require
+			current_valid: is_metric_valid
+			a_archive_attached: a_archive /= Void
+			metric_from_a_archive_is_valid: a_archive.is_metric_valid
+			a_archive_mergable: is_mergable (a_archive)
+		do
+			set_has_previous_value (True)
+			set_previous_value (value)
+			set_value (a_archive.value)
+			set_calculated_time (a_archive.calculated_time)
+			set_detailed_result (a_archive.detailed_result)
+		ensure
+			value_set: value = a_archive.value
+			calculated_Time_set: calculated_time.is_equal (a_archive.calculated_time)
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is
@@ -124,6 +273,11 @@ feature -- Process
 		do
 			a_visitor.process_metric_archive_node (Current)
 		end
+
+feature{NONE} -- Implementation
+
+	previous_value_internal: like previous_value
+			-- Implementation of `previous_value'.		
 
 invariant
 	metric_name_attached: metric_name /= Void

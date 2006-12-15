@@ -363,12 +363,6 @@ feature -- Actions
 			l_last_row: EB_METRIC_CRITERION_ROW
 			l_insert_index: INTEGER
 			l_stone: STONE
-
-			l_target_stone: TARGET_STONE
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_feature_stone: FEATURE_STONE
-			l_domain_item: EB_METRIC_DOMAIN_ITEM
 			l_domain_grid_item: EB_METRIC_DOMAIN_GRID_ITEM
 			l_domain: EB_METRIC_DOMAIN
 		do
@@ -377,22 +371,13 @@ feature -- Actions
 				l_stone ?= a_pebble
 				if l_stone /= Void then
 						-- Pebble is a stone.
-					l_target_stone ?= a_pebble
-					l_classi_stone ?= a_pebble
-					l_cluster_stone ?= a_pebble
-					l_feature_stone ?= a_pebble
-					if l_target_stone /= Void or l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void then
-						l_domain_grid_item ?= a_item
-						if l_domain_grid_item /= Void then
-							l_domain_item := metric_domain_item_from_stone (l_stone)
-							l_domain := l_domain_grid_item.domain
-							l_domain.compare_objects
-							if not l_domain.has (l_domain_item) then
-								l_domain.extend (l_domain_item)
-								l_domain_grid_item.set_domain (l_domain)
-								resize_column (2, 0)
-							end
-						end
+					l_domain_grid_item ?= a_item
+					if l_domain_grid_item /= Void then
+						check l_domain_grid_item.is_pebble_droppable (a_pebble) end
+						l_domain := l_domain_grid_item.domain.twin
+						l_domain.extend (metric_domain_item_from_stone (l_stone))
+						l_domain_grid_item.set_domain (l_domain)
+						resize_column (2, 0)
 					end
 				else
 					l_dest_row := a_item.row
@@ -573,20 +558,14 @@ feature{NONE} -- Implementation
 		end
 
 	veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
-			--
+			-- Function to decide if `a_pebble' can be dropped on `a_item'
+			-- True value means drop is allowed.
 		local
 			l_source_row: EV_GRID_ROW
 			l_source_data: EB_METRIC_CRITERION_ROW
 			l_dest_row: EV_GRID_ROW
 			l_dest_data: EB_METRIC_CRITERION_ROW
-
-			l_stone: STONE
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-			l_feature_stone: FEATURE_STONE
-			l_target_stone: TARGET_STONE
 			l_domain_item: EB_METRIC_DOMAIN_GRID_ITEM
-			l_domain: EB_METRIC_DOMAIN
 		do
 			if a_item /= Void then
 				if a_item.column.index = 1 then
@@ -605,17 +584,7 @@ feature{NONE} -- Implementation
 				elseif a_item.column.index = 2 then
 						-- Dropped on criterion property column
 					l_domain_item ?= a_item
-					if l_domain_item /= Void then
-						l_target_stone ?= a_pebble
-						l_classi_stone ?= a_pebble
-						l_cluster_stone ?= a_pebble
-						l_feature_stone ?= a_pebble
-						if l_target_stone /= Void or l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void then
-							l_stone ?= a_pebble
-							l_domain := l_domain_item.domain
-							Result := not l_domain.has (metric_domain_item_from_stone (l_stone)) and then not l_domain.has_delayed_domain_item
-						end
-					end
+					Result := l_domain_item /= Void and then l_domain_item.is_pebble_droppable (a_pebble)
 				end
 			end
 		end

@@ -66,7 +66,6 @@ feature {NONE} -- Implementation
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			create text_field
-				-- Hide the border of the text field.
 			text_field.set_completion_possibilities_provider (completion_possibilities_provider)
 			text_field.set_save_list_position_action (agent on_save_auto_complete_window_position)
 			if completion_possibilities_provider /= Void then

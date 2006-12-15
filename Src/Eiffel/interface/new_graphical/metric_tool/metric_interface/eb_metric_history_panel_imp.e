@@ -10,7 +10,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EB_METRIC_TOOL_PANEL_IMP
+	EB_METRIC_HISTORY_PANEL_IMP
 
 inherit
 	EV_VERTICAL_BOX
@@ -26,18 +26,58 @@ feature {NONE}-- Initialization
 			Precursor {EV_VERTICAL_BOX}
 			
 				-- Create all widgets.
-			create metric_notebook
-			create metric_evaluation_tab
-			create new_metric_tab
-			create metric_archive_tab
-			create result_tab
+			create toolbar_area
+			create l_ev_tool_bar_1
+			create run_btn
+			create stop_btn
+			create keep_result_btn
+			create remove_detailed_result_btn
+			create l_ev_tool_bar_separator_1
+			create remove_btn
+			create group_btn
+			create l_ev_tool_bar_separator_2
+			create l_ev_cell_1
+			create hide_old_btn
+			create old_item_area
+			create hide_old_item_lbl
+			create age_text
+			create day_lbl
+			create selector_toolbar
+			create l_ev_tool_bar_separator_3
+			create select_all_btn
+			create deselect_all_btn
+			create select_recalculatable_btn
+			create deselect_recalculatable_btn
+			create l_ev_cell_2
+			create flat_grid_area
+			create tree_grid_area
 			
 				-- Build widget structure.
-			extend (metric_notebook)
-			metric_notebook.extend (metric_evaluation_tab)
-			metric_notebook.extend (new_metric_tab)
-			metric_notebook.extend (metric_archive_tab)
-			metric_notebook.extend (result_tab)
+			extend (toolbar_area)
+			toolbar_area.extend (l_ev_tool_bar_1)
+			l_ev_tool_bar_1.extend (run_btn)
+			l_ev_tool_bar_1.extend (stop_btn)
+			l_ev_tool_bar_1.extend (keep_result_btn)
+			l_ev_tool_bar_1.extend (remove_detailed_result_btn)
+			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_1)
+			l_ev_tool_bar_1.extend (remove_btn)
+			l_ev_tool_bar_1.extend (group_btn)
+			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_2)
+			toolbar_area.extend (l_ev_cell_1)
+			toolbar_area.extend (hide_old_btn)
+			toolbar_area.extend (old_item_area)
+			old_item_area.extend (hide_old_item_lbl)
+			old_item_area.extend (age_text)
+			old_item_area.extend (day_lbl)
+			toolbar_area.extend (selector_toolbar)
+			selector_toolbar.extend (l_ev_tool_bar_separator_3)
+			selector_toolbar.extend (select_all_btn)
+			selector_toolbar.extend (deselect_all_btn)
+			selector_toolbar.extend (select_recalculatable_btn)
+			selector_toolbar.extend (deselect_recalculatable_btn)
+			toolbar_area.extend (l_ev_cell_2)
+			extend (flat_grid_area)
+			extend (tree_grid_area)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -52,10 +92,19 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			metric_notebook.set_item_text (metric_evaluation_tab, "Metric Evaluation")
-			metric_notebook.set_item_text (new_metric_tab, "Metric Definition")
-			metric_notebook.set_item_text (metric_archive_tab, "Metric Archive")
-			metric_notebook.set_item_text (result_tab, "Result")
+			toolbar_area.disable_item_expand (l_ev_tool_bar_1)
+			toolbar_area.disable_item_expand (l_ev_cell_1)
+			toolbar_area.disable_item_expand (hide_old_btn)
+			toolbar_area.disable_item_expand (old_item_area)
+			toolbar_area.disable_item_expand (l_ev_cell_2)
+			l_ev_cell_1.set_minimum_width (10)
+			old_item_area.disable_item_expand (age_text)
+			age_text.set_minimum_width (30)
+			flat_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			flat_grid_area.set_border_width (1)
+			tree_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
+			set_padding (5)
+			disable_item_expand (toolbar_area)
 			
 			set_all_attributes_using_constants
 			
@@ -70,8 +119,22 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	metric_notebook: EV_NOTEBOOK
-	metric_evaluation_tab, new_metric_tab, metric_archive_tab, result_tab: EV_VERTICAL_BOX
+	selector_toolbar: EV_TOOL_BAR
+	keep_result_btn, group_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	run_btn, stop_btn, remove_detailed_result_btn,
+	remove_btn, select_all_btn, deselect_all_btn, select_recalculatable_btn, deselect_recalculatable_btn: EV_TOOL_BAR_BUTTON
+	toolbar_area,
+	old_item_area, flat_grid_area, tree_grid_area: EV_HORIZONTAL_BOX
+	hide_old_btn: EV_CHECK_BUTTON
+	hide_old_item_lbl, day_lbl: EV_LABEL
+	age_text: EV_TEXT_FIELD
+
+feature {NONE} -- Implementation
+
+	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
+	l_ev_cell_1,
+	l_ev_cell_2: EV_CELL
+	l_ev_tool_bar_1: EV_TOOL_BAR
 
 feature {NONE} -- Implementation
 

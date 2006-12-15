@@ -1081,7 +1081,7 @@ feature{NONE} -- Implementation
 			if a_name = Void or else a_name.is_empty then
 				set_parse_error_message (metric_names.err_metric_name_empty, Void)
 			else
-				if not a_name.item (1).is_graph or else (a_name.count > 1 and then (not a_name.item (a_name.count).is_graph)) then
+				if not metric_manager.is_metric_name_valid (a_name) then
 					set_parse_error_message (metric_names.err_metric_name_invalid (a_name), Void)
 				end
 			end

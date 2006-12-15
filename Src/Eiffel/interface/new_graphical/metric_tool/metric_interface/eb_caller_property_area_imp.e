@@ -26,11 +26,11 @@ feature {NONE}-- Initialization
 			Precursor {EV_VERTICAL_BOX}
 			
 				-- Create all widgets.
-			create l_ev_vertical_box_1
+			create feature_vertion_area
 			create feature_vertion_lbl
 			create l_ev_horizontal_box_1
 			create l_ev_cell_1
-			create l_ev_vertical_box_2
+			create l_ev_vertical_box_1
 			create only_current_version_checkbox
 			create descendant_version_checkbox
 			create l_ev_cell_2
@@ -38,14 +38,14 @@ feature {NONE}-- Initialization
 			create domain_selector
 			
 				-- Build widget structure.
-			extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (feature_vertion_lbl)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			extend (feature_vertion_area)
+			feature_vertion_area.extend (feature_vertion_lbl)
+			feature_vertion_area.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
-			l_ev_horizontal_box_1.extend (l_ev_vertical_box_2)
-			l_ev_vertical_box_2.extend (only_current_version_checkbox)
-			l_ev_vertical_box_2.extend (descendant_version_checkbox)
-			l_ev_vertical_box_1.extend (l_ev_cell_2)
+			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (only_current_version_checkbox)
+			l_ev_vertical_box_1.extend (descendant_version_checkbox)
+			feature_vertion_area.extend (l_ev_cell_2)
 			extend (criterion_domain_lbl)
 			extend (domain_selector)
 			
@@ -62,22 +62,22 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			l_ev_vertical_box_1.set_padding (3)
-			l_ev_vertical_box_1.disable_item_expand (feature_vertion_lbl)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_2)
+			feature_vertion_area.set_padding (3)
+			feature_vertion_area.disable_item_expand (feature_vertion_lbl)
+			feature_vertion_area.disable_item_expand (l_ev_cell_2)
 			feature_vertion_lbl.set_text ("Feature version setting:")
 			feature_vertion_lbl.align_text_left
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_2)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_1)
 			l_ev_cell_1.set_minimum_width (10)
-			l_ev_vertical_box_2.disable_item_expand (only_current_version_checkbox)
-			l_ev_vertical_box_2.disable_item_expand (descendant_version_checkbox)
+			l_ev_vertical_box_1.disable_item_expand (only_current_version_checkbox)
+			l_ev_vertical_box_1.disable_item_expand (descendant_version_checkbox)
 			l_ev_cell_2.set_minimum_height (10)
 			criterion_domain_lbl.set_text ("Criterion domain:")
 			criterion_domain_lbl.align_text_left
 			set_minimum_width (0)
 			set_padding (3)
-			disable_item_expand (l_ev_vertical_box_1)
+			disable_item_expand (feature_vertion_area)
 			disable_item_expand (criterion_domain_lbl)
 			
 			set_all_attributes_using_constants
@@ -95,6 +95,7 @@ feature -- Access
 
 	only_current_version_checkbox, descendant_version_checkbox: EV_RADIO_BUTTON
 	domain_selector: EB_METRIC_DOMAIN_SELECTOR
+	feature_vertion_area: EV_VERTICAL_BOX
 	feature_vertion_lbl,
 	criterion_domain_lbl: EV_LABEL
 
@@ -102,7 +103,7 @@ feature {NONE} -- Implementation
 
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

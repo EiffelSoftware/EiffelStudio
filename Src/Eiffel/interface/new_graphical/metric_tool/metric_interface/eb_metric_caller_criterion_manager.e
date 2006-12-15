@@ -27,7 +27,7 @@ feature -- Access
 			-- Grid item used to display properties
 		do
 			Result := Precursor
-			Result.dialog.property_area.only_current_version_checkbox.show
+			Result.dialog.property_area.feature_vertion_area.show
 			Result.dialog.set_grid (grid)
 		end
 

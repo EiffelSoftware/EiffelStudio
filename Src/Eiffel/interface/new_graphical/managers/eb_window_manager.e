@@ -794,6 +794,12 @@ feature {NONE} -- Exit implementation
 			else
 				Exit_application_cmd.ask_confirmation
 			end
+
+			metric_manager.set_is_exit_requested (True)
+				-- Store metric archive history.
+			if metric_manager.has_archive_been_loaded then
+				metric_manager.store_archive_history
+			end
 		end
 
 feature -- Events

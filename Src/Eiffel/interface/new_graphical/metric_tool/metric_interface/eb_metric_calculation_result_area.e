@@ -208,6 +208,10 @@ feature {NONE} -- Initialization
 			filter_invisible_item_btn.select_actions.extend (agent on_filter_result)
 			tool_bar.hide
 
+			send_to_history_btn.set_pixmap (pixmaps.icon_pixmaps.metric_send_to_archive_icon)
+			send_to_history_btn.set_tooltip (metric_names.f_send_to_history)
+			send_to_history_btn.select_actions.extend (agent on_send_metric_to_history)
+
 			show_percentage_btn.set_text ("%%")
 			show_percentage_btn.set_tooltip (metric_names.f_display_in_percentage)
 			show_percentage_btn.select_actions.extend (agent on_show_percentage_changes)
@@ -331,7 +335,7 @@ feature{NONE} -- Implementation/Access
 	domain: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
 			-- Domain to be displayed in Current
 
-	metric_panel: EB_METRIC_PANEL
+	metric_panel: EB_METRIC_RESULT_AREA
 			-- Metric panel to which current is attached
 
 feature{NONE} -- Implementation/Basic operation
@@ -814,6 +818,12 @@ feature{NONE} -- Implementation
 
 	on_show_percentage_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_show_precentage_change_from_outside'
+
+	on_send_metric_to_history is
+			-- Action to be performed to send last calculated metric value in history
+		do
+			metric_panel.on_send_metric_to_history
+		end
 
 feature {NONE} -- Recycle
 

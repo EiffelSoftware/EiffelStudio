@@ -235,6 +235,11 @@ feature -- Basic operations
 			update_ui
 		end
 
+	force_drop_stone (a_stone: STONE) is
+			-- Force to drop `a_stone' in `domain_selector'.
+		do
+		end
+
 feature -- Actions
 
 	on_copy_current_metric_to_a_new_metric is
@@ -319,12 +324,6 @@ feature -- Actions
 			end
 		end
 
-	on_select is
-			-- Action to be performed when current is selected
-		do
-			update_ui
-		end
-
 	on_create_new_metric (a_type: INTEGER; a_unit: QL_METRIC_UNIT) is
 			-- Action to be performed when create a new metric of type `a_type' and unit `a_unit'.
 			-- For metric type information, see `basic_metric_type', `linear_metric_type' and `ratio_metric_type'.
@@ -403,6 +402,11 @@ feature -- Actions
 			if l_import_dlg.should_metric_be_refreshed then
 				on_reload_metrics
 			end
+		end
+
+	on_metric_sent_to_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
+			-- Action to be performed when metric calculation information contained in `a_archive' has been sent to history
+		do
 		end
 
 feature{NONE} -- Implementation
@@ -572,6 +576,27 @@ feature{NONE} -- Actions
 			update_ui
 		end
 
+	on_history_recalculation_start (a_data: ANY) is
+			-- Action to be performed when archive history recalculation starts
+			-- `a_data' can be the metric tool panel from which metric history recalculation starts.
+		do
+			set_is_up_to_date (False)
+			update_ui
+		end
+
+	on_history_recalculation_stop (a_data: ANY) is
+			-- Action to be performed when archive history recalculation stops
+			-- `a_data' can be the metric tool panel from which metric history recalculation stops.
+		do
+			set_is_up_to_date (False)
+			update_ui
+		end
+
+	on_metric_renamed (a_old_name, a_new_name: STRING) is
+			-- Action to be performed when a metric with `a_old_name' has been renamed to `a_new_name'.
+		do
+		end
+
 feature{NONE} -- UI Update
 
 	update_ui is
@@ -581,10 +606,11 @@ feature{NONE} -- UI Update
 			l_mode: INTEGER
 		do
 			if is_selected and then not is_up_to_date then
-				if (not is_project_loaded) or is_eiffel_compiling or is_archive_calculating or is_metric_evaluating then
+				if (not is_project_loaded) or is_eiffel_compiling or is_archive_calculating or is_history_recalculationg_running or is_metric_evaluating then
 					disable_sensitive
 				else
 					enable_sensitive
+					metric_tool.load_metrics (False, metric_names.t_loading_metrics)
 					if not metric_tool.is_metric_validation_checked.item then
 						metric_tool.check_metric_validation
 					end

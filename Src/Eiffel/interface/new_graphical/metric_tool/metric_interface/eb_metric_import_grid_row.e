@@ -218,24 +218,11 @@ feature{NONE} -- Implementation
 					-- If this metric is ready to be imported.
 				l_status_lbl.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
 			end
-			l_status_lbl.set_layout_procedure (agent status_layout)
+			l_status_lbl.set_layout_procedure (agent center_pixmap_layout)
 
 			Result := l_status_lbl
 		ensure
 			result_attached: Result /= Void
-		end
-
-	status_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT) is
-			-- Set layout into `a_layout' for `a_item'.
-		require
-			a_item_attached: a_item /= Void
-			a_layout_attached: a_layout /= Void
-		local
-			l_pixmap: EV_PIXMAP
-		do
-			l_pixmap := pixmaps.icon_pixmaps.general_tick_icon
-			a_layout.set_pixmap_x ((a_item.width - l_pixmap.width) // 2)
-			a_layout.set_pixmap_y ((a_item.height - l_pixmap.height) // 2)
 		end
 
 	origianl_metric_name_item: EV_GRID_ITEM is

@@ -379,20 +379,19 @@ feature -- Domain item
 			l_domain_item: EB_DOMAIN_ITEM
 		do
 			l_domain_item := domain_item_from_stone (a_stone)
-			check l_domain_item /= Void end
-			if l_domain_item.is_feature_item then
-				create {EB_METRIC_FEATURE_DOMAIN_ITEM} Result.make (l_domain_item.id)
-			elseif l_domain_item.is_class_item then
-				create {EB_METRIC_CLASS_DOMAIN_ITEM} Result.make (l_domain_item.id)
-			elseif l_domain_item.is_folder_item then
-				create {EB_METRIC_FOLDER_DOMAIN_ITEM} Result.make (l_domain_item.id)
-			elseif l_domain_item.is_group_item then
-				create {EB_METRIC_GROUP_DOMAIN_ITEM} Result.make (l_domain_item.id)
-			elseif l_domain_item.is_target_item then
-				create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
+			if l_domain_item /= Void then
+				if l_domain_item.is_feature_item then
+					create {EB_METRIC_FEATURE_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				elseif l_domain_item.is_class_item then
+					create {EB_METRIC_CLASS_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				elseif l_domain_item.is_folder_item then
+					create {EB_METRIC_FOLDER_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				elseif l_domain_item.is_group_item then
+					create {EB_METRIC_GROUP_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				elseif l_domain_item.is_target_item then
+					create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
+				end
 			end
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature -- Metric editor mode
@@ -415,6 +414,21 @@ feature -- Metric editor mode
 			Result := a_mode = readonly_mode or a_mode = new_mode or a_mode = edit_mode
 		ensure
 			good_result: Result implies (a_mode = readonly_mode or a_mode = new_mode or a_mode = edit_mode)
+		end
+
+feature -- Layout
+
+	center_pixmap_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT) is
+			-- Layout to align pixmap of `a_item' in center
+		require
+			a_item_attached: a_item /= Void
+			a_layout_attached: a_layout /= Void
+		local
+			l_pixmap: EV_PIXMAP
+		do
+			l_pixmap := pixmaps.icon_pixmaps.general_tick_icon
+			a_layout.set_pixmap_x ((a_item.width - l_pixmap.width) // 2)
+			a_layout.set_pixmap_y ((a_item.height - l_pixmap.height) // 2)
 		end
 
 feature{NONE} -- Implementation

@@ -39,7 +39,6 @@ feature{NONE} -- Initialization
 		do
 			create property_area
 			Precursor {PROPERTY_DIALOG}
-			property_area.only_current_version_checkbox.hide
 			element_container.extend (property_area)
 			show_actions.extend (agent on_show)
 			set_size (350, 350)
@@ -136,12 +135,6 @@ feature -- Status setting
 		ensure
 			grid_set: grid = a_grid
 		end
-
---invariant
---	property_area_attached: property_area /= Void
---	ok_actions_attached: ok_actions /= Void
---	cancel_actions_attached: cancel_actions /= Void
---	show_actions_attached: show_actions /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -55,6 +55,11 @@ feature -- Basic operations
 					confirm_stop_debug
 				end
 			end
+				-- Store metric archive history.
+			metric_manager.set_is_exit_requested (True)
+			if metric_manager.has_archive_been_loaded then
+				metric_manager.store_archive_history
+			end
 		end
 
 feature -- Status setting

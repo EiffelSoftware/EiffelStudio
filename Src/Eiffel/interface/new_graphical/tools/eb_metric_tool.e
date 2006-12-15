@@ -14,11 +14,6 @@ inherit
 
 	EB_RECYCLABLE
 
-	QL_OBSERVABLE
-		export
-			{NONE} all
-		end
-
 	EB_METRIC_INTERFACE_PROVIDER
 
 	EB_RECYCLER
@@ -47,17 +42,20 @@ feature -- Initialization
 			create new_metric_panel.make (Current)
 			create metric_archive_panel.make (Current)
 			create detail_result_panel.make (Current)
+			create metric_history_panel.make (Current)
 
 			metric_notebook.extend (metric_evaluation_panel)
 			metric_notebook.extend (new_metric_panel)
 			metric_notebook.extend (metric_archive_panel)
 			metric_notebook.extend (detail_result_panel)
+			metric_notebook.extend (metric_history_panel)
 
 				-- Setup tab names			
 			metric_notebook.set_item_text (metric_notebook.i_th (1), metric_names.t_evaluation_tab)
 			metric_notebook.set_item_text (metric_notebook.i_th (2), metric_names.t_definition_tab)
 			metric_notebook.set_item_text (metric_notebook.i_th (3), metric_names.t_archive_tab)
 			metric_notebook.set_item_text (metric_notebook.i_th (4), metric_names.t_detail_result_tab)
+			metric_notebook.set_item_text (metric_notebook.i_th (5), metric_names.t_history_tab)
 
 			metric_notebook.selection_actions.extend (agent on_tab_change)
 			metric_notebook.select_item (metric_evaluation_panel)
@@ -67,9 +65,6 @@ feature -- Initialization
 			install_agents (metric_manager)
 		end
 
-	metric_notebook: EV_NOTEBOOK
-			-- Notebook for metric tool panels
-
 feature -- Actions
 
 	on_select is
@@ -77,6 +72,10 @@ feature -- Actions
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				load_metrics (False, metric_names.t_loading_metrics)
+--				if not metric_manager.has_archive_been_loaded then
+--					metric_manager.load_archive_history
+--					display_error_message
+--				end
 			end
 			set_is_shown (True)
 			on_tab_change
@@ -87,6 +86,16 @@ feature -- Actions
 		do
 			set_is_shown (False)
 			on_tab_change
+		end
+
+	on_send_metric_value_in_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
+			-- Action to be performed to send last evaluated metric value (stored in `a_archive') in history
+			-- `a_panel' is the metric tool panel from which the sending request occurs.
+		require
+			a_archive_attached: a_archive /= Void
+		do
+			set_last_metric_value_historied (True)
+			send_metric_value_in_history_actions.call ([a_archive, a_panel])
 		end
 
 feature -- Basic operations
@@ -144,13 +153,14 @@ feature -- Basic operations
 			development_window.window_manager.display_message ("")
 		end
 
-	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN) is
+	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN; a_time: DATE_TIME; a_from_history: BOOLEAN) is
 			-- Register metric result for display.
 		require
 			a_metric_attached: a_metric /= Void
 			a_input_attached: a_input /= Void
+			a_time_attached: a_time /= Void
 		do
-			detail_result_panel.on_display_metric_value (a_metric, a_value, a_input, a_result)
+			detail_result_panel.on_display_metric_value (a_metric, a_value, a_input, a_result, a_time, a_from_history)
 		end
 
 	register_archive_result_for_display (ref_archive, cur_archive: LIST [EB_METRIC_ARCHIVE_NODE]) is
@@ -173,14 +183,16 @@ feature -- Basic operations
 		local
 			l_dlg: EV_ERROR_DIALOG
 		do
-			if metric_manager.has_error then
-				if feedback_dialog.is_show_requested then
-					feedback_dialog.hide
+			if not metric_manager.is_exit_requested then
+				if metric_manager.has_error then
+					if feedback_dialog.is_show_requested then
+						feedback_dialog.hide
+					end
+					create l_dlg.make_with_text (metric_manager.last_error.message_with_location)
+					l_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
+					l_dlg.show_relative_to_window (development_window.window)
+					metric_manager.clear_last_error
 				end
-				create l_dlg.make_with_text (metric_manager.last_error.message_with_location)
-				l_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
-				l_dlg.show_relative_to_window (development_window.window)
-				metric_manager.clear_last_error
 			end
 		end
 
@@ -195,6 +207,14 @@ feature -- Basic operations
 			is_shown := b
 		ensure
 			is_shown_set: is_shown = b
+		end
+
+	set_last_metric_value_historied (b: BOOLEAN) is
+			-- Set `last_metric_value_historied' with `b'.
+		do
+			last_metric_value_historied := b
+		ensure
+			last_metric_value_historied_set: last_metric_value_historied = b
 		end
 
 feature -- Access
@@ -223,6 +243,24 @@ feature -- Access
 	metric_archive_panel: EB_METRIC_ARCHIVE_PANEL
 			-- Metric archive panel
 
+	metric_history_panel: EB_METRIC_HISTORY_PANEL
+			-- Metric history panel
+
+	metric_notebook: EV_NOTEBOOK
+			-- Notebook for metric tool panels
+
+	send_metric_value_in_history_actions: ACTION_SEQUENCE [TUPLE [a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY]] is
+			-- Actions to be performed when last evalauted metric (stored in `a_archive') has been sent into history
+			-- `a_panel' is the metric tool panel from which the sending request occurs.			
+		do
+			if send_metric_value_in_history_actions_internal = Void then
+				create send_metric_value_in_history_actions_internal
+			end
+			Result := send_metric_value_in_history_actions_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Memory management
 
 	internal_recycle is
@@ -244,9 +282,6 @@ feature {NONE} -- Memory management
 		end
 
 feature -- Status report
-
-	is_compiling: BOOLEAN
-			-- Is Eiffel compilation under going?
 
 	is_shown: BOOLEAN
 			-- Is `Current' currently displayed in the context tool?
@@ -291,6 +326,15 @@ feature -- Status report
 		do
 			Result := metric_manager.is_project_loaded
 		end
+
+	is_history_recalculation_running: BOOLEAN is
+			-- Is metric history recalculation running?
+		do
+			Result := metric_manager.is_history_recalculation_running
+		end
+
+	last_metric_value_historied: BOOLEAN
+			-- Has last evaluated metric value been sent to history?
 
 feature{NONE} -- Actions
 
@@ -356,6 +400,7 @@ feature{NONE} -- Actions
 			-- Action to be performed when metric evaluation stops
 			-- `a_data' can be the metric tool panel from which metric evaluation stops.
 		do
+			set_last_metric_value_historied (False)
 			metric_evaluation_stop_actions.call ([a_data])
 		end
 
@@ -363,7 +408,7 @@ feature{NONE} -- Actions
 			-- Action to be performed when metric archive calculation starts
 			-- `a_data' can be the metric tool panel from which metric archive calculation starts.
 		do
-			archive_calculation_stop_actions.call ([a_data])
+			archive_calculation_start_actions.call ([a_data])
 		end
 
 	on_archive_calculation_stop (a_data: ANY) is
@@ -404,21 +449,43 @@ feature{NONE} -- Actions
 		local
 			l_stone: STONE
 			l_tab_index: INTEGER
+			l_panel: EB_METRIC_PANEL
 		do
 			l_stone ?= a_pebble
 			if l_stone /= Void then
 				l_tab_index := metric_notebook.pointed_tab_index
 				if l_tab_index > 0 then
-					if metric_notebook.i_th (l_tab_index) = metric_evaluation_panel then
-						metric_notebook.select_item (metric_evaluation_panel)
-						metric_evaluation_panel.force_drop_stone (l_stone)
-					elseif metric_notebook.i_th (l_tab_index) = metric_archive_panel then
-						metric_notebook.select_item (metric_archive_panel)
-						metric_archive_panel.force_drop_stone (l_stone)
-					end
+					l_panel ?= metric_notebook.i_th (l_tab_index)
+					check l_panel /= Void end
+					l_panel.force_drop_stone (l_stone)
 				end
 			end
 		end
+
+	on_history_recalculation_start (a_data: ANY) is
+			-- Action to be performed when history recalculation starts
+			-- `a_data' can be the metric tool panel from which history recalculation starts.
+		do
+			history_recalculation_start_actions.call ([a_data])
+		end
+
+	on_history_recalculation_stop (a_data: ANY) is
+			-- Action to be performed when history recalculation stops
+			-- `a_data' can be the metric tool panel from which history recalculation stops.
+		do
+			history_recalculation_stop_actions.call ([a_data])
+		end
+
+	on_metric_renamed (a_old_name, a_new_name: STRING) is
+			-- Action to be performed when a metric with `a_old_name' has been renamed to `a_new_name'.
+		do
+			metric_renamed_actions.call ([a_old_name, a_new_name])
+		end
+
+feature{NONE} -- Implementation
+
+		send_metric_value_in_history_actions_internal: like send_metric_value_in_history_actions;
+			-- Implementation of `send_metric_value_in_history_actions'
 
 invariant
 	feedback_dialog_attached: feedback_dialog /= Void

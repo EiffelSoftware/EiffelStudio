@@ -73,6 +73,34 @@ feature -- Actions
 		deferred
 		end
 
+	on_history_recalculation_start (a_data: ANY) is
+			-- Action to be performed when archive history recalculation starts
+			-- `a_data' can be the metric tool panel from which metric history recalculation starts.
+		deferred
+		end
+
+	on_history_recalculation_stop (a_data: ANY) is
+			-- Action to be performed when archive history recalculation stops
+			-- `a_data' can be the metric tool panel from which metric history recalculation stops.
+		deferred
+		end
+
+	on_metric_sent_to_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
+			-- Action to be performed when metric calculation information contained in `a_archive' has been sent to history
+		require
+			a_archive_attached: a_archive /= Void
+		deferred
+		end
+
+	on_metric_sent_to_history_agent: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE, ANY]] is
+			-- Agent of `on_metric_sent_to_history'		
+		do
+			if on_metric_sent_to_history_agent_internal = Void then
+				on_metric_sent_to_history_agent_internal := agent on_metric_sent_to_history
+			end
+			Result := on_metric_sent_to_history_agent_internal
+		end
+
 feature -- Status report
 
 	is_eiffel_compiling: BOOLEAN is
@@ -100,6 +128,18 @@ feature -- Status report
 			-- Is a project loaded?
 		do
 			Result := metric_tool.is_project_loaded
+		end
+
+	is_history_recalculationg_running: BOOLEAN is
+			-- Is history recalculation running?
+		do
+			Result := metric_tool.is_history_recalculation_running
+		end
+
+	last_metric_value_historyed: BOOLEAN is
+			-- Has last calculated metric been sent to history?
+		do
+			Result := metric_tool.last_metric_value_historied
 		end
 
 feature -- Status report
@@ -136,11 +176,41 @@ feature -- Basic operations
 			is_metric_reloaded_set: is_metric_reloaded = b
 		end
 
+	force_drop_stone (a_stone: STONE) is
+			-- Force to drop `a_stone' in Current panel.
+		require
+			a_stone_attached: a_stone /= Void
+		deferred
+		end
+
+	install_metric_history_agent is
+			-- Install actions related to metric history manipulation.
+		local
+			l_tool: like metric_tool
+		do
+			l_tool := metric_tool
+			if not metric_tool.send_metric_value_in_history_actions.has (on_metric_sent_to_history_agent) then
+				l_tool.send_metric_value_in_history_actions.extend (on_metric_sent_to_history_agent)
+			end
+		end
+
+	uninstall_metric_history_agent is
+			-- Uninstall actions related to metric history manipulation.
+		local
+			l_tool: like metric_tool
+		do
+			l_tool := metric_tool
+			if not l_tool.send_metric_value_in_history_actions.has (on_metric_sent_to_history_agent) then
+				l_tool.send_metric_value_in_history_actions.extend (on_metric_sent_to_history_agent)
+			end
+		end
+
 feature -- Actions
 
 	on_select is
 			-- Action to be performed when current panel is selected
-		deferred
+		do
+			update_ui
 		ensure
 			is_up_to_date: is_up_to_date
 		end
@@ -149,8 +219,12 @@ feature -- Actions
 			-- Action to be performed to process gui events
 		do
 			ev_application.process_events
-			if a_item /= Void then
-				display_status_message (metric_names.e_evaluating.as_string_32 + a_item.path)
+			if not metric_manager.is_exit_requested then
+				if a_item /= Void then
+					display_status_message (metric_names.e_evaluating.as_string_32 + a_item.path)
+				end
+			else
+				metric_manager.terminate_evaluation
 			end
 		end
 
@@ -208,7 +282,9 @@ feature{NONE} -- Implementation
 		require
 			a_msg_attached: a_msg /= Void
 		do
-			metric_tool.development_window.status_bar.display_message (a_msg)
+			if metric_tool /= Void and then metric_tool.development_window /= Void and then metric_tool.development_window.status_bar /= Void then
+				metric_tool.development_window.status_bar.display_message (a_msg)
+			end
 		end
 
 	display_error_message is
@@ -235,6 +311,9 @@ feature{NONE} -- Implementation
 		ensure
 			ui_updated: is_selected implies is_up_to_date
 		end
+
+	on_metric_sent_to_history_agent_internal: like on_metric_sent_to_history_agent;
+			-- Implementation of `on_metric_sent_to_history_agent'
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

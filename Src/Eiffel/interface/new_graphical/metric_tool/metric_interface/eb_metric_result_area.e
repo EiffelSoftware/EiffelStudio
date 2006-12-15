@@ -80,6 +80,7 @@ feature {NONE} -- Initialization
 		do
 			metric_tool := a_tool
 			install_agents (metric_tool)
+			install_metric_history_agent
 			on_unit_order_change_agent := agent on_unit_order_change
 			default_create
 			set_is_up_to_date (True)
@@ -128,6 +129,9 @@ feature -- Access
 	last_value: DOUBLE
 			-- Last calculated value
 
+	last_metric_calculation_time: DATE_TIME
+			-- Last calculation time for `last_metric'
+
 	last_source_domain: EB_METRIC_DOMAIN
 			-- Last source domain	
 
@@ -139,6 +143,9 @@ feature -- Access
 
 	last_current_archive: LIST [EB_METRIC_ARCHIVE_NODE]
 			-- Last current archive
+
+	is_last_metric_result_from_history: BOOLEAN
+			-- Is last metric result from history panel?
 
 feature -- Status report
 
@@ -173,14 +180,17 @@ feature -- Status report
 			should_refresh_metric_result_set: should_refresh_metric_result = b
 		end
 
-feature -- Setting
+feature -- Actions
 
-	on_display_metric_value (a_metric: like last_metric; a_value: like last_value; a_source_domain: like last_source_domain; a_domain: like last_result_domain) is
+	on_display_metric_value (a_metric: like last_metric; a_value: like last_value; a_source_domain: like last_source_domain; a_domain: like last_result_domain; a_time: like last_metric_calculation_time; a_from_history: BOOLEAN) is
 			-- Switch current panel to display metric evaluation `a_value' for `a_metric' calculated against `a_source_domain'.
 			-- `a_domain' is the detailed metric result. `a_domain' can be Void.
+			-- `a_time' is when `a_metric' was calculated.
+			-- `a_from_history' mean if current result is from history panel
 		require
 			a_metric_attached: a_metric /= Void
 			a_source_domain_attached: a_source_domain /= Void
+			a_time_attached: a_time /= Void
 		do
 			last_reference_archive := Void
 			last_current_archive := Void
@@ -188,9 +198,11 @@ feature -- Setting
 			last_value := a_value
 			last_source_domain := a_source_domain
 			last_result_domain := a_domain
+			last_metric_calculation_time := a_time
 			should_metric_result_be_displayed := True
 			set_has_last_result_been_displayed (False)
 			set_is_up_to_date (False)
+			is_last_metric_result_from_history := a_from_history
 			update_ui
 		end
 
@@ -211,12 +223,23 @@ feature -- Setting
 			update_ui
 		end
 
-feature -- Actions
-
-	on_select is
-			-- Action to be performed when current is selected
+	on_send_metric_to_history is
+			-- Action to be performed to send last calculated metric to history
+		require
+			last_metric_attached: last_metric /= Void
+			last_source_domain_attached: last_source_domain /= Void
 		do
-			update_ui
+			metric_tool.on_send_metric_value_in_history (
+				create{EB_METRIC_ARCHIVE_NODE}.make (last_metric.name, metric_type_id (last_metric), last_metric_calculation_time, last_value, last_source_domain, uuid_gen.generate_uuid.out),
+				Current
+			)
+		end
+
+feature -- Basic operations
+
+	force_drop_stone (a_stone: STONE) is
+			-- Force to drop `a_stone' in `domain_selector'.
+		do
 		end
 
 feature {NONE} -- Recycle
@@ -226,6 +249,8 @@ feature {NONE} -- Recycle
 		do
 			metric_result.recycle
 			uninstall_agents (metric_tool)
+			metric_tool.send_metric_value_in_history_actions.prune_all (on_metric_sent_to_history_agent)
+			uninstall_metric_history_agent
 		end
 
 feature{NONE} -- Actions
@@ -285,6 +310,34 @@ feature{NONE} -- Actions
 			set_is_metric_reloaded (True)
 		end
 
+	on_history_recalculation_start (a_data: ANY) is
+			-- Action to be performed when archive history recalculation starts
+			-- `a_data' can be the metric tool panel from which metric history recalculation starts.
+		do
+			set_is_up_to_date (False)
+			update_ui
+		end
+
+	on_history_recalculation_stop (a_data: ANY) is
+			-- Action to be performed when archive history recalculation stops
+			-- `a_data' can be the metric tool panel from which metric history recalculation stops.
+		do
+			set_is_up_to_date (False)
+			update_ui
+		end
+
+	on_metric_sent_to_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
+			-- Action to be performed when metric calculation information contained in `a_archive' has been sent to history
+		do
+			set_is_up_to_date (False)
+			update_ui
+		end
+
+	on_metric_renamed (a_old_name, a_new_name: STRING) is
+			-- Action to be performed when a metric with `a_old_name' has been renamed to `a_new_name'.
+		do
+		end
+
 feature{NONE} -- UI Update
 
 	update_ui is
@@ -308,8 +361,17 @@ feature{NONE} -- UI Update
 				end
 				if should_refresh_metric_result then
 					metric_result.refresh_grid
-					metric_result.update_warning_area.show
+					if last_metric /= Void then
+						metric_result.update_warning_area.show
+					end
 					set_should_refresh_metric_result (False)
+				end
+				if should_metric_result_be_displayed then
+					if last_metric_value_historyed or else is_last_metric_result_from_history then
+						metric_result.send_to_history_btn.disable_sensitive
+					else
+						metric_result.send_to_history_btn.enable_sensitive
+					end
 				end
 				set_is_up_to_date (True)
 			end

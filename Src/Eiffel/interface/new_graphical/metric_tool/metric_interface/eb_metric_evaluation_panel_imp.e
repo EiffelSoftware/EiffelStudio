@@ -46,6 +46,7 @@ feature {NONE}-- Initialization
 			create show_percent_btn
 			create l_ev_tool_bar_6
 			create auto_go_to_result_btn
+			create send_to_history_btn
 			create toolbar_empty_area
 			create l_ev_horizontal_split_area_1
 			create metric_source_domain_area
@@ -92,6 +93,7 @@ feature {NONE}-- Initialization
 			percentage_tool_bar.extend (show_percent_btn)
 			toolbar_area.extend (l_ev_tool_bar_6)
 			l_ev_tool_bar_6.extend (auto_go_to_result_btn)
+			l_ev_tool_bar_6.extend (send_to_history_btn)
 			toolbar_area.extend (toolbar_empty_area)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
 			l_ev_horizontal_split_area_1.extend (metric_source_domain_area)
@@ -208,7 +210,7 @@ feature -- Access
 	control_toolbar, percentage_tool_bar: EV_TOOL_BAR
 	quick_metric_btn, filter_result_btn, show_percent_btn,
 	auto_go_to_result_btn: EV_TOOL_BAR_TOGGLE_BUTTON
-	run_metric_btn, stop_metric_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
+	run_metric_btn, stop_metric_btn, send_to_history_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
 	toolbar_area,
 	value_area, main_area, grid_wrapper, quick_metric_empty_area, unit_area: EV_HORIZONTAL_BOX
 	metric_source_domain_area,

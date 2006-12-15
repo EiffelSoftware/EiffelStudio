@@ -216,8 +216,9 @@ feature {NONE} -- Implementation
 
 			create compilation_info_text
 			compilation_info_text.disable_word_wrapping
-			compilation_info_text.set_minimum_size (500, 100)
+			compilation_info_text.set_minimum_size (600, 150)
 			l_vbox1.extend (compilation_info_text)
+			l_vbox1.disable_item_expand (compilation_info_text)
 
 			create l_label.make_with_text ("File activity: ")
 			l_label.align_text_left
@@ -225,7 +226,7 @@ feature {NONE} -- Implementation
 			l_vbox1.disable_item_expand (l_label)
 			create files_output
 			files_output.disable_word_wrapping
-			files_output.set_minimum_size (500, 100)
+			files_output.set_minimum_size (600, 300)
 			l_vbox1.extend (files_output)
 
 			l_frame.extend (l_vbox1)
@@ -394,7 +395,7 @@ feature {NONE} -- Implementation
 							l_file_name.set_file_name (l_class_name + dot_e)
 							create l_file.make (l_file_name)
 							if l_file.exists and then l_file.is_writable then
-								files_output.append_text ("%T" + l_file.name + "%N")
+								files_output.append_text (" " + l_file.name + "%N")
 								l_file.delete
 							end
 						end
@@ -471,7 +472,7 @@ feature {NONE} -- Implementation
 								l_source_file.copy_to (l_dest_file)
 								l_source_file.close
 								l_dest_file.close
-								files_output.append_text ("%T" + l_source_file.name + "%N")
+								files_output.append_text (" " + l_source_file.name + "%N")
 							end
 						end
 					end

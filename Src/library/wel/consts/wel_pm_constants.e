@@ -16,7 +16,9 @@ feature -- Access
 
 	Pm_noyield: INTEGER is 2;
 
-	Pm_qs_paint: INTEGER is 0x200000;
+	Pm_qs_paint: INTEGER is 0x200000
+
+	Pm_qs_postmessage: INTEGER is 0x980000;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

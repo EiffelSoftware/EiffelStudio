@@ -200,7 +200,7 @@ feature -- Property
 
 feature {NONE} -- ecdbgd status
 
-	ecdbgd_alive_checking_timer: EV_TIMEOUT
+	ecdbgd_alive_checking_timer: DEBUGGER_TIMER
 
 	start_ecdbgd_alive_checking is
 		do

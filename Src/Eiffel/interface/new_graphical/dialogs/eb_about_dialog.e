@@ -176,7 +176,7 @@ feature {NONE} -- Constant strings
 			create Result.make (100)
 			Result.append (Interface_names.t_Project)
 			Result.append (" ")
-			Result.append_integer (Major_version_number)
+			Result.append_integer (compiler_version_number.major)
 			Result.append (" (")
 			Result.append (Version_number)
 			Result.append (")")

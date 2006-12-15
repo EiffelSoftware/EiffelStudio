@@ -36,6 +36,8 @@ feature -- Access
 				Result := freeze_type
 			elseif is_finalizing then
 				Result := finalize_type
+			else
+				Result := "Unknown"
 			end
 			Result := Result.twin
 		ensure

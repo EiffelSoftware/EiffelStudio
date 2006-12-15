@@ -727,7 +727,7 @@ feature{NONE} -- Implementation
 				a_item.pointer_double_press_actions.extend (agent on_go_to_result (?, ?, ?, ?, ?, ?, ?, ?, a_archive_node, a_go_to_result_action))
 				a_item.set_tooltip (metric_names.f_double_click_to_go_to_result_panel)
 			else
-				a_item.set_pixmap (Void)
+				a_item.remove_pixmap
 				a_item.set_layout_procedure (Void)
 				a_item.set_tooltip (Void)
 			end

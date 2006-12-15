@@ -578,6 +578,9 @@ feature -- Automatic backup
 				file.put_string ("successful: ")
 				file.put_boolean (successful)
 				file.put_new_line
+				file.put_string ("date: ")
+				file.put_string ((create {DATE_TIME}.make_now).out)
+				file.put_new_line
 				file.close
 			end
 

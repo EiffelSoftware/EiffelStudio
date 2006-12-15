@@ -397,9 +397,6 @@ feature -- Commands
 					compilation_counter := compilation_counter + 1
 					save_project (Compilation_modes.is_precompiling)
 				end
-				if not Compilation_modes.is_precompiling then
-					Compilation_modes.reset_modes
-				end
 				Rescue_status.set_is_error_exception (False)
 				retried := retried + 1
 				if not missing_class_error then

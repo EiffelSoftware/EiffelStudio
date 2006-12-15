@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		do
 			window := w
 			default_create
-			set_text (Major_version_number.out + "." + Minor_version_number.out + "." +Build_version_number.out)
+			set_text (compiler_version_number.version)
 
 				--| Memory tool
 			create menu_item.make_with_text_and_action ("Memory Analyzer", agent launch_memory_tool)

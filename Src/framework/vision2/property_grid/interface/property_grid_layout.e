@@ -7,9 +7,7 @@ class
 	PROPERTY_GRID_LAYOUT
 
 inherit
-	EV_DIALOG_CONSTANTS
-
-	SHARED_LOCALE
+	SHARED_NAMES
 
 feature {NONE} -- Button constants
 
@@ -70,19 +68,19 @@ feature {NONE} -- Colors
 
 feature {NONE} -- Text
 
-	force_inheritance: STRING_GENERAL is do Result := locale.translate ("Force inheritance on child elements.")	end
-	use_inherited: STRING_GENERAL is do Result := locale.translate ("Use inherited value.")	end
-
-	up_button_text: STRING_GENERAL is do Result := locale.translate ("Up")	end
-	down_button_text: STRING_GENERAL is do Result := locale.translate ("Down")	end
-	plus_button_text: STRING_GENERAL is do Result := locale.translate ("+")	end
-	minus_button_text: STRING_GENERAL is do Result := locale.translate ("-")	end
-	change_button_text: STRING_GENERAL is do Result := locale.translate ("Change")	end
+	force_inheritance: STRING_GENERAL is do Result := names.l_force_inheritance	end
+	use_inherited: STRING_GENERAL is do Result := names.l_use_inherited	end
+	up_button_text: STRING_GENERAL is do Result := names.b_Up_text	end
+	down_button_text: STRING_GENERAL is do Result := names.b_Down_text	end
+	change_button_text: STRING_GENERAL is do Result := names.b_change	end
 
 	dialog_title (a_name: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := locale.format_string (locale.translate ("Edit $1"), [a_name])
+			Result := names.t_dialog_title (a_name)
 		end
+
+	plus_button_text: STRING_GENERAL is do Result := "+"	end
+	minus_button_text: STRING_GENERAL is do Result := "-"	end
 
 feature -- Update set default global settings.
 

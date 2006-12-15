@@ -9,15 +9,8 @@ indexing
 class
 	EB_SHARED_METRIC_NAMES
 
-feature -- Access
-
-	metric_names: EB_METRIC_NAMES is
-			-- Names used in metric interface
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
+inherit
+	SHARED_NAMES
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

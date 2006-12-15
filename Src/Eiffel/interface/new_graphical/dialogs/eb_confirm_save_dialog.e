@@ -11,14 +11,14 @@ class
 inherit
 	EB_QUESTION_DIALOG
 
-	EB_CONSTANTS
+	EB_SHARED_WINDOW_MANAGER
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
 
-	EB_SHARED_WINDOW_MANAGER
+	EB_CONSTANTS
 		export
 			{NONE} all
 		undefine

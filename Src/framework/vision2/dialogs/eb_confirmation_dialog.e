@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 
-	FRAMEWORK_CONSTANTS
+	SHARED_NAMES
 		undefine
 			default_create,
 			copy
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_CONFIRMATION_DIALOG}
-			set_title (t_confirmation)
-			set_buttons (<<b_ok, b_cancel>>)
-			set_default_push_button (button (b_ok))
-			set_default_cancel_button (button (b_cancel))
+			set_title (names.t_confirmation)
+			set_buttons (<<names.b_ok, names.b_cancel>>)
+			set_default_push_button (button (names.b_ok))
+			set_default_cancel_button (button (names.b_cancel))
 		end
 
 feature -- Status report
@@ -55,12 +55,12 @@ feature -- Constants
 
 	ok: STRING_GENERAL is
 		once
-			Result := b_ok
+			Result := names.b_ok
 		end
 
 	cancel: STRING_GENERAL is
 		once
-			Result := b_cancel
+			Result := names.b_cancel
 		end
 
 indexing

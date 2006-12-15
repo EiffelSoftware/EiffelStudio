@@ -41,6 +41,7 @@ feature -- Button texts
 	b_Apply: STRING_GENERAL is							do Result := locale.translate("Apply")	end
 	b_Browse: STRING_GENERAL is							do Result := locale.translate("Browse...")	end
 	b_C_functions: STRING_GENERAL is					do Result := locale.translate("C Functions")	end
+	b_change: STRING_GENERAL is do Result := locale.translate ("Change")	end
 	b_Close: STRING_GENERAL is							do Result := locale.translate("Close")	end
 	b_Close_tool (a_tool: STRING_GENERAL): STRING_GENERAL is
 		require a_tool_not_void: a_tool /= Void
@@ -717,6 +718,7 @@ feature -- Label texts
 	l_Feature: STRING_GENERAL is				do Result := locale.translate("Feature")	end
 	l_Feature_colon: STRING_GENERAL is				do Result := locale.translate("Feature:")	end
 	l_Feature_properties: STRING_GENERAL is		do Result := locale.translate("Feature properties")	end
+	l_force_inheritance: STRING_GENERAL is do Result := locale.translate ("Force inheritance on child elements.")	end
 	l_file_location: STRING_GENERAL is 			do Result := locale.translate ("File location") end
 	l_File_name: STRING_GENERAL is				do Result := locale.translate("File name:")	end
 	l_file_changed_by_other_tool: STRING_GENERAL is do Result := locale.translate ("File has been changed by another tool/editor%NDo you want to load the changes?") end
@@ -916,6 +918,7 @@ feature -- Label texts
 	l_Use_wildcards: STRING_GENERAL is			do Result := locale.translate("Use wildcards")	end
 	l_Use_wizard: STRING_GENERAL is 			do Result := locale.translate("Create project")	end
 	l_user_set: STRING_GENERAL is				do Result := locale.translate ("user set") end
+	l_use_inherited: STRING_GENERAL is do Result := locale.translate ("Use inherited value.")	end
 	l_Value: STRING_GENERAL is					do Result := locale.translate("Value")	end
 	l_Whole_project: STRING_GENERAL is			do Result := locale.translate("Whole project")	end
 	l_Whole_word: STRING_GENERAL is				do Result := locale.translate("Whole word")	end
@@ -1419,14 +1422,21 @@ feature -- Title part
 	t_Object_tool: STRING_GENERAL is					do Result := locale.translate ("Objects")	end
 	t_threads_tool: STRING_GENERAL is					do Result := locale.translate ("Threads")	end
 	t_Properties_tool: STRING_GENERAL is				do Result := locale.translate ("Properties")	end
+	t_question: STRING_GENERAL is 						do Result := locale.translate ("Question") end
 	t_Search_tool: STRING_GENERAL is					do Result := locale.translate ("Search")	end
 	t_Windows_tool: STRING_GENERAL is					do Result := locale.translate ("Windows")	end
 	t_Watch_tool: STRING_GENERAL is						do Result := locale.translate ("Watch")	end
 	t_watch_tool_error_message: STRING_GENERAL is		do Result := locale.translate ("Watch tool :: error message")	end
+	t_warning: STRING_GENERAL is 						do Result := locale.translate ("Warning") end
 	t_Features_tool: STRING_GENERAL is					do Result := locale.translate ("Features")	end
 	t_Editor: STRING_GENERAL is							do Result := locale.translate("Editor")	end
 	t_Debugging_options: STRING_GENERAL is					do Result := locale.translate("Debugging Options")	end
 	t_Debugging_tool: STRING_GENERAL is					do Result := locale.translate("Debugging")	end
+
+	t_dialog_title (a_name: STRING_GENERAL): STRING_GENERAL is
+		do
+			Result := locale.format_string (locale.translate ("Edit $1"), [a_name])
+		end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

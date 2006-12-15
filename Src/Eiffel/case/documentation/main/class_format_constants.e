@@ -9,7 +9,7 @@ class
 	CLASS_FORMAT_CONSTANTS
 
 inherit
-	FRAMEWORK_CONSTANTS
+	SHARED_NAMES
 
 feature -- Constants
 

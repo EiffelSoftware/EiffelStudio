@@ -19,7 +19,7 @@ inherit
 			copy
 		end
 
-	FRAMEWORK_CONSTANTS
+	SHARED_NAMES
 		undefine
 			copy,
 			default_create

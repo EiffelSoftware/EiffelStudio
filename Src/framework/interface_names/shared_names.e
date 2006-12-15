@@ -7,29 +7,42 @@ indexing
 	revision: "$Revision$"
 
 class
-	FRAMEWORK_CONSTANTS
+	SHARED_NAMES
 
 inherit
 	SHARED_LOCALE
 
 feature -- Names
 
-	b_cancel: STRING_GENERAL is do Result := locale.translate ("Cancel") end
-	b_ok: STRING_GENERAL is do Result := locale.translate ("OK") end
-	b_yes: STRING_GENERAL is do Result := locale.translate ("Yes") end
-	b_no: STRING_GENERAL is do Result := locale.translate ("No") end
+	names: INTERFACE_NAMES is
+			-- Names used in interface
+		once
+			create Result
+		end
 
-	t_confirmation: STRING_GENERAL is do Result := locale.translate ("Confimation") end
-	t_warning: STRING_GENERAL is do Result := locale.translate ("Warning") end
-	t_question: STRING_GENERAL is do Result := locale.translate ("Question") end
+	metric_names: EB_METRIC_NAMES is
+			-- Names used in metric tools
+		once
+			create Result
+		end
 
-	lb_chart: STRING_GENERAL is		do Result := locale.translate("Chart") end
-	lb_relations: STRING_GENERAL is		do Result := locale.translate("Relations")	end
-	lb_text: STRING_GENERAL is		do Result := locale.translate("Text")	end
-	lb_Flat: STRING_GENERAL is					do Result := locale.translate("flat view")	end
-	lb_flat_contracts:  STRING_GENERAL is		do Result := locale.translate("Flat contracts")	end
-	lb_Flatshort: STRING_GENERAL is				do Result := locale.translate("interface view")	end
-	lb_contract: STRING_GENERAL is		do Result := locale.translate("Contract")	end
+	external_output_names: EB_EXTERNAL_OUTPUT_NAMES
+			-- Names for external output tools.
+		once
+			create Result
+		end
+
+	warnings: WARNING_MESSAGES
+			-- Warning messages.
+		once
+			create Result
+		end
+
+	locale_names: LOCALE_NAMES
+			-- Names for locales.
+		once
+			create Result
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

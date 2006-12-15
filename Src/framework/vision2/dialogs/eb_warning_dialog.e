@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 
-	FRAMEWORK_CONSTANTS
+	SHARED_NAMES
 		undefine
 			default_create,
 			copy
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_WARNING_DIALOG}
-			set_title (t_warning)
+			set_title (names.t_warning)
 			set_buttons (<<ok>>)
 			set_default_push_button (button (ok))
 			set_default_cancel_button (button (ok))
@@ -41,7 +41,7 @@ feature -- Constants
 
 	ok: STRING_GENERAL is
 		once
-			Result := b_ok
+			Result := names.b_ok
 		end
 
 indexing

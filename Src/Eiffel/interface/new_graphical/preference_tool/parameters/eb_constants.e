@@ -23,13 +23,13 @@ feature {NONE} -- Resources
 	Interface_names: INTERFACE_NAMES is
 			-- All names used in the interface
 		once
-			create Result
+			Result := (create {SHARED_NAMES}).names
 		end
 
 	Warning_messages: WARNING_MESSAGES is
 			-- All warnings used in the interface
 		once
-			create Result
+			Result := (create {SHARED_NAMES}).warnings
 		end
 
 	Layout_constants: EV_LAYOUT_CONSTANTS is

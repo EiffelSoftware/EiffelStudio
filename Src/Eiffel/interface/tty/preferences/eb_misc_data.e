@@ -234,6 +234,9 @@ feature {NONE} -- Implementation
 				end
 				l_available_locales.forth
 			end
+			if l_available_lang.is_empty then
+				l_available_lang := "en"
+			end
 			locale_id_preference.set_value_from_string (l_available_lang)
 		end
 

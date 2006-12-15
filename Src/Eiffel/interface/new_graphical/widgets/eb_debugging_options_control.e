@@ -441,7 +441,7 @@ feature -- Status Setting
 
 feature -- Data change
 
-	change_title_on (v: STRING; p: like profile_from_row) is
+	change_title_on (v: STRING_GENERAL; p: like profile_from_row) is
 		require
 			v /= Void
 		do
@@ -642,7 +642,7 @@ feature {NONE} -- Profile actions
 			p: like profile_from_row
 			gi: EV_GRID_LABEL_ITEM
 			srow: EV_GRID_ROW
-			l_title: STRING
+			l_title: STRING_32
 			l_args: STRING
 			l_cwd: STRING
 			l_env: HASH_TABLE [STRING_32, STRING_32]
@@ -671,11 +671,10 @@ feature {NONE} -- Profile actions
 			srow := a_row.subrow (a_row.subrow_count)
 			create gi.make_with_text (interface_names.l_note)
 			srow.set_item (1, gi)
-			s := l_title
-			if s = Void then
-				s := ""
+			if l_title = Void then
+				l_title := ""
 			end
-			create gei.make_with_text (s)
+			create gei.make_with_text (l_title)
 			srow.set_item (2, gei)
 			gei.deactivate_actions.extend (agent
 					(a_prof: like profile_from_row; a_gi: EV_GRID_EDITABLE_ITEM)
@@ -792,12 +791,12 @@ feature {NONE} -- Profile actions
 		local
 			p: like profile_from_row
 			l_item: EV_GRID_SPAN_LABEL_ITEM
-			s: STRING
+			s: STRING_32
 		do
 			p := profile_from_row (a_row)
 			s := p.title
 			if s = Void or else s.is_empty then
-				s := description_from_profile (p)
+				s := description_from_profile (p).as_string_32
 			end
 			l_item ?= a_row.item (1)
 			l_item.set_text (s)

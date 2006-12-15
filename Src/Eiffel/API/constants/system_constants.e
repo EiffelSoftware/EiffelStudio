@@ -162,16 +162,20 @@ feature {AUXILIARY_FILES} -- Versioning
 
 	Compiler_version_number: CONF_VERSION is
 			-- Version of the compiler
-		local
-			l_svn_revision: NATURAL_32
 		once
-				-- 0000 because it will be replace by the svn version number by the build script
-			l_svn_revision := 0000
 			create Result.make_version (
 				eiffel_layout.major_version,
 				eiffel_layout.minor_version,
-				(l_svn_revision // {NATURAL_16}.max_value).as_natural_16,
-				(l_svn_revision \\ {NATURAL_16}.max_value).as_natural_16)
+				(svn_revision // 10000).as_natural_16,
+				(svn_revision \\ 10000).as_natural_16)
+		end
+
+	svn_revision: NATURAL_32 is
+			-- SVN revision that build the compiler.
+			-- We use `0000' because it is replaced by the actual svn revision number
+			-- when doing a delivery.
+		do
+			Result := 0000
 		end
 
 	Version_number: STRING is

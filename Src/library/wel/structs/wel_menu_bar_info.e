@@ -1,6 +1,5 @@
 indexing
-	description: "TODO: comments"
-	author: ""
+	description: "Wrapper around MENUBARINFO C structure"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,12 +19,10 @@ create
 feature {NONE} -- Initialization
 
 	make is
-			--
 		do
 			structure_make
 			cwel_menubarinfo_set_cbsize (item, c_size_of_menubarinfo)
 		end
-
 
 feature -- Access
 

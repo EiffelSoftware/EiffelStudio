@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			Precursor
 			create actions.make
 
-			if gtk_init_check then			
+			if gtk_init_check then
 				marshal_init (Current, $marshal)
 				marshal_set_is_enabled (True)
 			end
@@ -63,6 +63,11 @@ feature {NONE} -- Implementation
 			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""
 		alias
 			"gtk_init_check (&eif_argc, &eif_argv)"
+		end
+
+	gtk_timeout_remove (a_timeout_handler_id: INTEGER) is
+		external
+			"C (guint) | <gtk/gtk.h>"
 		end
 
 	frozen marshal_init (object: like Current; a_marshal: POINTER)

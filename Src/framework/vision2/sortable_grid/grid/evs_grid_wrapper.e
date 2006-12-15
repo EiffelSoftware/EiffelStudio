@@ -410,6 +410,61 @@ feature -- Access
 			Result := extreme_index_of_sorted_columns (False)
 		end
 
+	string_representation_of_sorted_columns: STRING is
+			-- String representation of a list of sorted columns from `a_columns'
+		local
+			c: INTEGER
+			l_sorting_snapshot: like sorting_order_snapshort
+			l_tuple: TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]
+		do
+			create Result.make (20)
+			l_sorting_snapshot := sorting_order_snapshort
+			from
+				l_sorting_snapshot.start
+				c := l_sorting_snapshot.count
+			until
+				l_sorting_snapshot.after
+			loop
+				l_tuple := l_sorting_snapshot.item
+				if l_tuple /= Void then
+					Result.append (l_tuple.a_column_index.out)
+					Result.append_character (':')
+					Result.append (l_tuple.a_sorting_order.out)
+					if l_sorting_snapshot.index < c then
+						Result.append_character (',')
+					end
+				end
+				l_sorting_snapshot.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	sorted_columns_from_string (a_str: STRING): LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]] is
+			-- A list of sorting columns from its string representation
+		require
+			a_str_attached: a_str /= Void
+		local
+			l_list: LIST [STRING]
+			l_list2: LIST [STRING]
+		do
+			create Result.make
+			from
+				l_list := a_str.split (',')
+				l_list.start
+			until
+				l_list.after
+			loop
+				l_list2 := l_list.item.split (':')
+				if l_list2.count = 2 and then l_list2.first.is_integer and then l_list2.last.is_integer then
+					Result.extend ([l_list2.first.to_integer, l_list2.last.to_integer])
+				end
+				l_list.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Virtual grid
 
 	is_grid_empty: BOOLEAN is
@@ -555,34 +610,8 @@ feature{NONE} -- Implementation
 			-- 	The first two arguments are rows to be compared with each other
 			-- 	The third integer argument is current sorting order
 			-- 	Return value of this comparator should be True if the first row is less thant the second one.			
---		local
---			l_columns: like sorted_columns
---			l_sort_info: like column_sort_info
---			l_action_list: ARRAYED_LIST [FUNCTION [ANY, TUPLE [G, G, INTEGER], BOOLEAN]]
---			l_order_list: ARRAYED_LIST [INTEGER]
---			l_index_list: ARRAYED_LIST [INTEGER]
---			l_sort_info_item: EVS_GRID_SORTING_INFO [G]
 		do
 			Result := comparator (sorted_columns)
---			l_columns := sorted_columns
---			l_sort_info := column_sort_info
---			create l_action_list.make (l_columns.count)
---			create l_order_list.make (l_columns.count)
---			create l_index_list.make (l_columns.count)
---			from
---				l_columns.start
---			until
---				l_columns.after
---			loop
---				l_sort_info_item := l_sort_info.item (l_columns.item)
---				if l_sort_info_item /= Void then
---					l_action_list.extend (l_sort_info_item.comparator)
---					l_order_list.extend (l_sort_info_item.current_order)
---					l_index_list.extend (l_columns.item)
---				end
---				l_columns.forth
---			end
---			create Result.make (l_action_list, l_order_list, l_index_list)
 		ensure
 			result_attached: Result /= Void
 		end

@@ -99,7 +99,7 @@ feature -- Visit nodes
 						-- Add the warning.
 					if last_warnings = Void then
 						last_warnings := l_load.last_warnings
-					else
+					elseif l_load.last_warnings /= Void then
 						last_warnings.append (l_load.last_warnings)
 					end
 					add_warning (l_ferr)

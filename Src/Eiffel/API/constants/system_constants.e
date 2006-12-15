@@ -162,35 +162,24 @@ feature {AUXILIARY_FILES} -- Versioning
 
 	Compiler_version_number: CONF_VERSION is
 			-- Version of the compiler
+		local
+			l_svn_revision: NATURAL_32
 		once
 				-- 0000 because it will be replace by the svn version number by the build script
-			create Result.make_version (eiffel_layout.major_version, eiffel_layout.minor_version, 0000, 0)
+			l_svn_revision := 0000
+			create Result.make_version (
+				eiffel_layout.major_version,
+				eiffel_layout.minor_version,
+				(l_svn_revision // {NATURAL_16}.max_value).as_natural_16,
+				(l_svn_revision \\ {NATURAL_16}.max_value).as_natural_16)
 		end
-
-	Major_version_number: INTEGER is
-		once
-			Result := compiler_version_number.major
-		end
-	Minor_version_number: INTEGER is
-		once
-			Result := compiler_version_number.minor
-		end
-	Build_version_number: INTEGER is
-		once
-			Result := compiler_version_number.release
-		end
-			-- Version number
 
 	Version_number: STRING is
 			-- Version number composed of
-			-- `Major_version_number' . `Minor_version_number' . `Build_version_number'.
+			-- `Major' . `Minor' . `Release' . `Build'.
 		once
 			create Result.make (30)
-			Result.append_integer (Major_version_number)
-			Result.append_character ('.')
-			Result.append_integer (Minor_version_number)
-			Result.append_character ('.')
-			Result.append_integer (Build_version_number)
+			Result.append (compiler_version_number.version)
 			Result.append_character (' ')
 			Result.append_string (version_type_name)
 		end

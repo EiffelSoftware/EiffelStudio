@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Object that represents action sequences for metric tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -37,11 +37,20 @@ feature{NONE} -- Agent mantainning
 			if not a_action_sequences.metric_loaded_actions.has (on_metric_loaded_agent) then
 				a_action_sequences.metric_loaded_actions.extend (on_metric_loaded_agent)
 			end
-			if not a_action_sequences.project_load_actions .has (on_project_loaded_agent) then
+			if not a_action_sequences.project_load_actions.has (on_project_loaded_agent) then
 				a_action_sequences.project_load_actions.extend (on_project_loaded_agent)
 			end
-			if not a_action_sequences.project_unload_actions .has (on_project_unloaded_agent) then
+			if not a_action_sequences.project_unload_actions.has (on_project_unloaded_agent) then
 				a_action_sequences.project_unload_actions.extend (on_project_unloaded_agent)
+			end
+			if not a_action_sequences.history_recalculation_start_actions.has (on_history_recalculation_start_agent) then
+				a_action_sequences.history_recalculation_start_actions.extend (on_history_recalculation_start_agent)
+			end
+			if not a_action_sequences.history_recalculation_stop_actions.has (on_history_recalculation_stop_agent) then
+				a_action_sequences.history_recalculation_stop_actions.extend (on_history_recalculation_stop_agent)
+			end
+			if not a_action_sequences.metric_renamed_actions.has (on_metric_renamed_agent) then
+				a_action_sequences.metric_renamed_actions.extend (on_metric_renamed_agent)
 			end
 		end
 
@@ -71,8 +80,17 @@ feature{NONE} -- Agent mantainning
 			if a_action_sequences.metric_loaded_actions.has (on_metric_loaded_agent) then
 				a_action_sequences.metric_loaded_actions.prune_all (on_metric_loaded_agent)
 			end
-			if a_action_sequences.project_unload_actions .has (on_project_unloaded_agent) then
+			if a_action_sequences.project_unload_actions.has (on_project_unloaded_agent) then
 				a_action_sequences.project_unload_actions.prune_all (on_project_unloaded_agent)
+			end
+			if a_action_sequences.history_recalculation_start_actions.has (on_history_recalculation_start_agent) then
+				a_action_sequences.history_recalculation_start_actions.prune_all (on_history_recalculation_start_agent)
+			end
+			if a_action_sequences.history_recalculation_stop_actions.has (on_history_recalculation_stop_agent) then
+				a_action_sequences.history_recalculation_stop_actions.prune_all (on_history_recalculation_stop_agent)
+			end
+			if a_action_sequences.metric_renamed_actions.has (on_metric_renamed_agent) then
+				a_action_sequences.metric_renamed_actions.prune_all (on_metric_renamed_agent)
 			end
 		end
 
@@ -126,6 +144,25 @@ feature{NONE} -- Actions
 			-- Action to be performed when metrics loaded in `metric_manager'
 		deferred
 		end
+
+	on_history_recalculation_start (a_data: ANY) is
+			-- Action to be performed when history recalculation starts
+			-- `a_data' can be the metric tool panel from which history recalculation starts.
+		deferred
+		end
+
+	on_history_recalculation_stop (a_data: ANY) is
+			-- Action to be performed when history recalculation stops
+			-- `a_data' can be the metric tool panel from which history recalculation stops.
+		deferred
+		end
+
+	on_metric_renamed (a_old_name, a_new_name: STRING) is
+			-- Action to be performed when a metric with `a_old_name' has been renamed to `a_new_name'.
+		deferred
+		end
+
+feature{NONE} -- Agents
 
 	on_project_loaded_agent: PROCEDURE [ANY, TUPLE] is
 			-- Agent of `on_project_loaded'.
@@ -199,6 +236,24 @@ feature{NONE} -- Actions
 			Result := on_archive_calculation_stop_agent_internal
 		end
 
+	on_history_recalculation_stop_agent: PROCEDURE [ANY, TUPLE [ANY]] is
+			-- Agent of `on_history_recalculation_stop'
+		do
+			if on_history_recalculation_stop_agent_internal = Void then
+				on_history_recalculation_stop_agent_internal := agent on_history_recalculation_stop
+			end
+			Result := on_history_recalculation_stop_agent_internal
+		end
+
+	on_history_recalculation_start_agent: PROCEDURE [ANY, TUPLE [ANY]] is
+			-- Agent of `on_history_recalculation_start'
+		do
+			if on_history_recalculation_start_agent_internal = Void then
+				on_history_recalculation_start_agent_internal := agent on_history_recalculation_start
+			end
+			Result := on_history_recalculation_start_agent_internal
+		end
+
 	on_metric_loaded_agent: PROCEDURE [ANY, TUPLE] is
 			-- Agent of `on_metric_loaded'
 		do
@@ -207,6 +262,17 @@ feature{NONE} -- Actions
 			end
 			Result := on_metric_loaded_agent_internal
 		end
+
+	on_metric_renamed_agent: PROCEDURE [ANY, TUPLE [a_old_name: STRING; a_new_name: STRING]] is
+			-- Agent of `on_metric_renamed'
+		do
+			if on_metric_rename_agent_internal = Void then
+				on_metric_rename_agent_internal := agent on_metric_renamed
+			end
+			Result := on_metric_rename_agent_internal
+		end
+
+feature{NONE} -- Implementation
 
 	on_project_loaded_agent_internal: like on_project_loaded_agent
 			-- Implementation of `on_project_loaded_agent'
@@ -232,8 +298,17 @@ feature{NONE} -- Actions
 	on_compile_stop_agent_internal: like on_compile_stop_agent
 			-- Implementation of `on_compile_stop_agent'
 
-	on_metric_loaded_agent_internal: like on_metric_loaded_agent;
+	on_metric_loaded_agent_internal: like on_metric_loaded_agent
 			-- Implementation of `on_metric_loaded_agent'
+
+	on_history_recalculation_stop_agent_internal: like on_history_recalculation_stop_agent
+			-- Implementation of `on_history_recalculation_stop_agent'
+
+	on_history_recalculation_start_agent_internal: like on_history_recalculation_start_agent
+			-- Implementation of `on_history_recalculation_start_agent'
+
+	on_metric_rename_agent_internal: like on_metric_renamed_agent;
+			-- Implementation of `on_metric_rename_agent_internal'			
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

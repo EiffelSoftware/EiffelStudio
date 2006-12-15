@@ -30,6 +30,11 @@ inherit
 			is_equal
 		end
 
+	HASHABLE
+		undefine
+			is_equal
+		end
+		
 feature{NONE} -- Initialization
 
 	make (a_id: STRING) is
@@ -90,6 +95,17 @@ feature -- Comparison
 
 feature -- Access
 
+	id: STRING
+			-- Id of current domain item		
+
+	text_of_id: STRING is
+			-- Text of id if it is a id item, otherwise, an empty string
+		do
+			Result := id
+		ensure
+			result_attached: Result /= Void
+		end
+
 	domain (a_scope: QL_SCOPE): QL_DOMAIN is
 			-- New query lanaguage domain representing current item
 			-- `a_scope' is only used to generate delayed domain.
@@ -120,17 +136,6 @@ feature -- Access
 		deferred
 		end
 
-	text_of_id: STRING is
-			-- Text of id if it is a id item, otherwise, an empty string
-		do
-			Result := id
-		ensure
-			result_attached: Result /= Void
-		end
-
-	id: STRING
-			-- Id of current domain item		
-
 	string_representation: STRING is
 			-- Text of current item
 		do
@@ -152,6 +157,12 @@ feature -- Access
 			-- for feature item, return the group in which the feature's associated class is located,
 			-- for other kinds of item, return Void.
 		deferred
+		end
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := id.hash_code
 		end
 
 feature -- Setting

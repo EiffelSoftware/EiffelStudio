@@ -59,6 +59,34 @@ feature -- Status report
                       )
 		end
 
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to Current?
+			-- Equivalent means that every item from `other' is also in `Current', and
+			-- every item from `Current' is also in `other', i.e., set equal.
+		require
+			other_attached: other /= Void
+		local
+			l_set: DS_HASH_SET [EB_DOMAIN_ITEM]
+		do
+			Result := count = other.count
+			if Result and then count > 0 then
+				create l_set.make (count)
+				l_set.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [EB_DOMAIN_ITEM]}.make (agent is_domain_item_equal))
+				do_all (agent l_set.force_last ({EB_METRIC_DOMAIN_ITEM}?))
+				Result := other.for_all (agent l_set.has ({EB_METRIC_DOMAIN_ITEM}?))
+			end
+		end
+
+	is_domain_item_equal (a_domain_item, b_domain_item: EB_DOMAIN_ITEM): BOOLEAN is
+			-- Is `a_domain_item' equal to `b_domain_item'?
+		do
+			if a_domain_item = Void then
+				Result := b_domain_item = Void
+			else
+				Result := b_domain_item /= Void and then a_domain_item.is_equal (b_domain_item)
+			end
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -47,21 +47,23 @@ feature {NONE}-- Initialization
 			create l_ev_tool_bar_separator_1
 			create ratio_btn_toolbar
 			create show_percentage_btn
-			create l_ev_cell_7
+			create l_ev_tool_bar_3
+			create send_to_history_btn
+			create information_bar_empty_area
 			create update_warning_area
 			create update_warning_pixmap
 			create update_warning_lbl
-			create information_bar_empty_area
 			create input_area
 			create input_lbl
 			create input_grid_area
 			create result_grid_holder
 			create l_ev_horizontal_box_1
 			create result_lable
-			create l_ev_cell_8
+			create l_ev_cell_7
 			create tool_bar
 			create filter_invisible_item_btn
 			create result_grid_area
+			create l_ev_cell_8
 			
 				-- Build widget structure.
 			extend (l_ev_cell_1)
@@ -85,21 +87,23 @@ feature {NONE}-- Initialization
 			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_1)
 			metric_area.extend (ratio_btn_toolbar)
 			ratio_btn_toolbar.extend (show_percentage_btn)
-			metric_area.extend (l_ev_cell_7)
+			metric_area.extend (l_ev_tool_bar_3)
+			l_ev_tool_bar_3.extend (send_to_history_btn)
+			metric_area.extend (information_bar_empty_area)
 			metric_area.extend (update_warning_area)
 			update_warning_area.extend (update_warning_pixmap)
 			update_warning_area.extend (update_warning_lbl)
-			metric_area.extend (information_bar_empty_area)
 			extend (input_area)
 			input_area.extend (input_lbl)
 			input_area.extend (input_grid_area)
 			extend (result_grid_holder)
 			result_grid_holder.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (result_lable)
-			l_ev_horizontal_box_1.extend (l_ev_cell_8)
+			l_ev_horizontal_box_1.extend (l_ev_cell_7)
 			l_ev_horizontal_box_1.extend (tool_bar)
 			tool_bar.extend (filter_invisible_item_btn)
 			result_grid_holder.extend (result_grid_area)
+			extend (l_ev_cell_8)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -133,7 +137,8 @@ feature {NONE}-- Initialization
 			metric_area.disable_item_expand (value_text)
 			metric_area.disable_item_expand (l_ev_tool_bar_1)
 			metric_area.disable_item_expand (ratio_btn_toolbar)
-			metric_area.disable_item_expand (l_ev_cell_7)
+			metric_area.disable_item_expand (l_ev_tool_bar_3)
+			metric_area.disable_item_expand (information_bar_empty_area)
 			metric_area.disable_item_expand (update_warning_area)
 			metric_lbl.set_text ("Metric:")
 			metric_lbl.align_text_left
@@ -159,7 +164,7 @@ feature {NONE}-- Initialization
 			value_lbl.align_text_left
 			value_text.set_minimum_width (100)
 			value_text.disable_edit
-			l_ev_cell_7.set_minimum_width (15)
+			information_bar_empty_area.set_minimum_width (10)
 			update_warning_area.set_padding (3)
 			update_warning_area.disable_item_expand (update_warning_pixmap)
 			update_warning_area.disable_item_expand (update_warning_lbl)
@@ -178,11 +183,13 @@ feature {NONE}-- Initialization
 			result_lable.align_text_left
 			result_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			result_grid_area.set_border_width (1)
+			l_ev_cell_8.set_minimum_width (15)
 			set_padding (5)
 			set_border_width (5)
 			disable_item_expand (l_ev_cell_1)
 			disable_item_expand (metric_area)
 			disable_item_expand (input_area)
+			disable_item_expand (l_ev_cell_8)
 			
 			set_all_attributes_using_constants
 			
@@ -200,6 +207,7 @@ feature -- Access
 	information_bar_empty_area: EV_CELL
 	ratio_btn_toolbar, tool_bar: EV_TOOL_BAR
 	show_percentage_btn, filter_invisible_item_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	send_to_history_btn: EV_TOOL_BAR_BUTTON
 	type_pixmap,
 	unit_pixmap, update_warning_pixmap: EV_PIXMAP
 	metric_area, update_warning_area: EV_HORIZONTAL_BOX
@@ -215,7 +223,7 @@ feature {NONE} -- Implementation
 	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5,
 	l_ev_cell_6, l_ev_cell_7, l_ev_cell_8: EV_CELL
-	l_ev_tool_bar_1: EV_TOOL_BAR
+	l_ev_tool_bar_1, l_ev_tool_bar_3: EV_TOOL_BAR
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 
 feature {NONE} -- Implementation

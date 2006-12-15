@@ -44,6 +44,13 @@ inherit
 			is_equal
 		end
 
+	EB_METRIC_INTERFACE_PROVIDER
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -55,7 +62,6 @@ feature{NONE} -- Initialization
 			a_domain_attached: a_domain /= Void
 		do
 			default_create
-			domain := a_domain
 			setting_change_actions.extend (agent on_setting_change)
 
 			create ellipsis_actions
@@ -66,6 +72,7 @@ feature{NONE} -- Initialization
 			create show_dialog_actions
 			create hide_dialog_actions
 
+			set_domain (a_domain)
 			expose_actions.extend (agent perform_redraw)
 			dialog.ok_actions.extend (agent on_ok)
 			dialog.cancel_actions.extend (agent on_cancel)
@@ -73,7 +80,6 @@ feature{NONE} -- Initialization
 			dialog.hide_actions.extend (agent on_hide)
 			ellipsis_actions.extend (agent show_dialog)
 		ensure
-			domain_set: domain = a_domain
 			ellipsis_actions_attached: ellipsis_actions /= Void
 			width_change_actions_attached: width_change_actions /= Void
 			dialog_ok_actions_attached: dialog_ok_actions /= Void
@@ -127,6 +133,23 @@ feature -- Status report
 			Result := domain_field.has_focus or button.has_focus
 		end
 
+	is_pebble_droppable (a_pebble: ANY): BOOLEAN is
+			-- Can `a_pebble' be dropped on Current?
+		local
+			l_stone: STONE
+			l_domain_item: EB_METRIC_DOMAIN_ITEM
+		do
+			l_stone ?= a_pebble
+			if l_stone /= Void then
+					-- Pebble is a stone.
+				l_domain_item := metric_domain_item_from_stone (l_stone)
+				if l_domain_item /= Void then
+					domain.compare_objects
+					Result := (not domain.has (l_domain_item)) and then (not domain.has_delayed_domain_item)
+				end
+			end
+		end
+
 feature -- Access
 
 	button: EV_BUTTON
@@ -164,12 +187,12 @@ feature -- Setting
 			a_domain_attached: a_domain /= Void
 		do
 			lock_update
-			domain := a_domain
+			domain := a_domain.twin
 			is_position_up_to_date := False
 			unlock_update
 			try_call_setting_change_actions
 		ensure
-			domain_set: domain = a_domain
+			domain_set: domain.is_equivalent (a_domain)
 		end
 
 	set_padding (a_padding: INTEGER) is
@@ -233,6 +256,40 @@ feature -- Setting
 			end
 			dialog.show_relative_to_window (parent_window)
 			dialog.set_focus
+		end
+
+	add_pebble (a_pebble: ANY; a_agent: PROCEDURE [ANY, TUPLE]) is
+			-- Add domain item contained in `a_pebble' if any.
+			-- If `a_pebble' is added successfully, call `a_agent' is it's not Void.
+		local
+			l_stone: STONE
+			l_target_stone: TARGET_STONE
+			l_classi_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_feature_stone: FEATURE_STONE
+			l_domain: EB_METRIC_DOMAIN
+			l_domain_item: EB_METRIC_DOMAIN_ITEM
+		do
+			l_stone ?= a_pebble
+			if l_stone /= Void then
+					-- Pebble is a stone.
+				l_target_stone ?= a_pebble
+				l_classi_stone ?= a_pebble
+				l_cluster_stone ?= a_pebble
+				l_feature_stone ?= a_pebble
+				if l_target_stone /= Void or l_classi_stone /= Void or l_cluster_stone /= Void or l_feature_stone /= Void then
+					l_domain_item := metric_domain_item_from_stone (l_stone)
+					l_domain := domain
+					l_domain.compare_objects
+					if not l_domain.has (l_domain_item) then
+						l_domain.extend (l_domain_item)
+						set_domain (l_domain)
+						if a_agent /= Void then
+							a_agent.call ([])
+						end
+					end
+				end
+			end
 		end
 
 feature{NONE} -- Implementation

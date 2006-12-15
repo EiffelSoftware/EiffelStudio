@@ -76,18 +76,18 @@ feature {NONE} -- Initialization
 			l_pref: STRING_PREFERENCE
 		do
 			metric_tool := a_tool
+			create calculator
+			calculator.step_actions.extend (agent on_stop_metric_evaluation)
+			calculator.step_actions.extend (agent on_process_gui)
 			install_agents (metric_tool)
 
 				-- Setup timers.
 			create internal_timer.make_with_interval (0)
 			create current_archive_timer.make_with_interval (0)
 			create reference_archive_timer.make_with_interval (0)
-
 			on_unit_order_change_agent := agent on_unit_order_change
-			on_stop_metric_evaluation_agent := agent on_stop_metric_evaluation
-			on_process_gui_agent := agent on_process_gui
-			default_create
 
+			default_create
 				-- Setup `open_file_dialog'.
 			l_pref := preferences.dialog_data.last_opened_metric_browse_archive_directory_preference
 			if l_pref.value = Void or else l_pref.value.is_empty then
@@ -98,9 +98,6 @@ feature {NONE} -- Initialization
 			open_file_dialog.filters.extend (["*.xml", "XML files"])
 			open_file_dialog.filters.extend (["*.*", "All files"])
 			set_is_metric_reloaded (True)
-		ensure
-			on_stop_metric_evaluation_agent_attached: on_stop_metric_evaluation_agent /= Void
-			on_process_gui_agent_attached: on_process_gui_agent /= Void
 		end
 
 	user_initialization is
@@ -227,21 +224,21 @@ feature -- Basic operations
 			is_original_starter_set: is_original_starter = b
 		end
 
+	set_is_cancel_evaluation_requested (b: BOOLEAN) is
+			-- Set `is_cancel_evaluation_requested' with `b'.
+		do
+			is_cancel_evaluation_requested := b
+		ensure
+			is_cancel_evaluation_requested_set: is_cancel_evaluation_requested = b
+		end
+
 	force_drop_stone (a_stone: STONE) is
 			-- Force to drop `a_stone' in `domain_selector'.
-		require
-			a_stone_attached: a_stone /= Void
 		do
 			domain_selector.on_drop (a_stone)
 		end
 
 feature -- Actions
-
-	on_select is
-			-- Action to be performed when current panel is selected
-		do
-			update_ui
-		end
 
 	on_open_new_archive (a_selection_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Action to be performed to open a dialog to select a file name when create/update a metric archive
@@ -298,44 +295,27 @@ feature -- Actions
 			l_selected_metrics: LIST [STRING]
 			l_msg: STRING_GENERAL
 			l_error_dialog: EV_ERROR_DIALOG
-			l_retried: BOOLEAN
 			l_file_name: STRING
 			l_archive: LIST [EB_METRIC_ARCHIVE_NODE]
-			l_source_domain: EB_METRIC_DOMAIN
-			l_metric: EB_METRIC
-			l_value: DOUBLE
-			l_archive_node: EB_METRIC_ARCHIVE_NODE
-			l_domain_generator: QL_TARGET_DOMAIN_GENERATOR
 			l_archive_tbl: HASH_TABLE [EB_METRIC_ARCHIVE_NODE, STRING]
 		do
-			create l_domain_generator
-			if not l_retried then
-				l_selected_metrics := metric_selector.selected_metrics
-				l_msg := check_selected_metrics (l_selected_metrics)
-				if l_msg /= Void then
-					create l_error_dialog.make_with_text (l_msg)
-					l_error_dialog.set_buttons (<<metric_names.t_ok>>)
-					l_error_dialog.show_modal_to_window (metric_tool_window)
+			set_is_cancel_evaluation_requested (False)
+			l_selected_metrics := metric_selector.selected_metrics
+			l_msg := check_selected_metrics (l_selected_metrics)
+			if l_msg /= Void then
+				create l_error_dialog.make_with_text (l_msg)
+				l_error_dialog.set_buttons (<<metric_names.t_ok>>)
+				l_error_dialog.show_modal_to_window (metric_tool_window)
+			else
+				l_file_name := new_archive_file_name_text.text
+				create {ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE]} l_archive.make (l_selected_metrics.count)
+				metric_manager.on_archive_calculation_starts (Current)
+				calculator.calculate_archive (archive_calculatation_task (l_selected_metrics, domain_selector.domain))
+				metric_manager.on_archive_calculation_stops (Current)
+				if calculator.has_error then
+					display_status_message (calculator.last_error_message)
 				else
-					l_file_name := new_archive_file_name_text.text
-					create {ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE]} l_archive.make (l_selected_metrics.count)
-					l_source_domain := domain_selector.domain
-					setup_metric_evaluation_callback (l_domain_generator)
-					metric_manager.on_archive_calculation_starts (Current)
-					from
-						l_selected_metrics.start
-					until
-						l_selected_metrics.after
-					loop
-						l_metric := metric_manager.metric_with_name (l_selected_metrics.item)
-						l_metric.disable_fill_domain
-						l_value := l_metric.value (l_source_domain).first.value
-						create l_archive_node.make (l_metric.name, metric_type_id (l_metric), create{DATE_TIME}.make_now, l_value, l_source_domain, l_metric.uuid.out)
-						l_archive.extend (l_archive_node)
-						l_selected_metrics.forth
-					end
-					metric_manager.on_archive_calculation_stops (Current)
-					synchronize_after_metric_evaluation (l_domain_generator)
+					l_archive.append (calculator.calculated_archives)
 					if not clean_btn.is_selected then
 						l_archive_tbl := metric_archive_from_file (l_file_name)
 						if l_archive_tbl /= Void then
@@ -349,22 +329,7 @@ feature -- Actions
 					on_current_metric_archive_text_change
 					display_message (metric_names.t_metric_archive_calculation_finished)
 				end
-				metric_manager.on_archive_calculation_stops (Current)
 			end
-		rescue
-			l_retried := True
-			synchronize_after_metric_evaluation (l_domain_generator)
-			if not is_cancel_evaluation_requested then
-				display_error_message
-			else
-				if l_domain_generator.error_handler.has_error then
-					display_status_message (l_domain_generator.error_handler.error_list.last.out)
-				else
-					display_status_message (tag_name)
-				end
-			end
-			metric_manager.on_archive_calculation_stops (Current)
-			retry
 		end
 
 	on_stop_metric_evaluation (a_item: QL_ITEM) is
@@ -385,7 +350,7 @@ feature -- Actions
 	on_stop_metric_evaluation_button_pressed is
 			-- Action to be performed when stop button is pressed.
 		do
-			is_cancel_evaluation_requested := True
+			set_is_cancel_evaluation_requested (True)
 		end
 
 	on_comparison_archive_selected (a_text_field: EV_TEXT_FIELD) is
@@ -512,6 +477,16 @@ feature -- Actions
 			on_new_archive_file_name_changes (current_archive_timer, current_metric_archive_text, agent on_current_archive_checked)
 		end
 
+	on_metric_sent_to_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
+			-- Action to be performed when metric calculation information contained in `a_archive' has been sent to history
+		do
+		end
+
+	on_metric_renamed (a_old_name, a_new_name: STRING) is
+			-- Action to be performed when a metric with `a_old_name' has been renamed to `a_new_name'.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	open_file_dialog: EB_FILE_OPEN_DIALOG
@@ -629,38 +604,6 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
-		end
-
-	setup_metric_evaluation_callback (a_domain_generator: QL_DOMAIN_GENERATOR) is
-			-- Setup metric evaluation callback, because when metric is running, we want to keep GUI alive.
-		require
-			a_domain_generator_attached: a_domain_generator /= Void
-		local
-			l_tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]]
-		do
-			last_domain_generator_tick_interval := a_domain_generator.interval
-			l_tick_actions := a_domain_generator.tick_actions
-			a_domain_generator.set_interval (20)
-			if not l_tick_actions.has (on_stop_metric_evaluation_agent) then
-				l_tick_actions.extend (on_stop_metric_evaluation_agent)
-			end
-			if not l_tick_actions.has (on_process_gui_agent) then
-				l_tick_actions.extend (on_process_gui_agent)
-			end
-			is_cancel_evaluation_requested := False
-		end
-
-	synchronize_after_metric_evaluation (a_domain_generator: QL_DOMAIN_GENERATOR) is
-			-- Synchronize domain generator after metric evaluation.
-		require
-			a_domain_generator_attached: a_domain_generator /= Void
-		local
-			l_tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]]
-		do
-			l_tick_actions := a_domain_generator.tick_actions
-			l_tick_actions.prune_all (on_stop_metric_evaluation_agent)
-			l_tick_actions.prune_all (on_process_gui_agent)
-			a_domain_generator.set_interval (last_domain_generator_tick_interval)
 		end
 
 	red_color: EV_COLOR is
@@ -789,11 +732,29 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_stop_metric_evaluation_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
-			-- Agent of `on_stop_metric_evalation_agent'.
+	calculator: EB_METRIC_ARCHIVE_CALCULATOR
+			-- Archive calculator	
 
-	on_process_gui_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
-			-- Agent of `on_process_gui'		
+	archive_calculatation_task (a_metric_names: LIST [STRING]; a_input_domain: EB_METRIC_DOMAIN): LIST [TUPLE [EB_METRIC, EB_METRIC_DOMAIN, BOOLEAN]] is
+			-- Archive calculation task from `a_metric_names' and `a_input_domain'
+		require
+			a_metric_names_attached: a_metric_names /= Void
+			not_a_metric_names_is_empty: not a_metric_names.is_empty
+			a_input_domain_attached: a_input_domain /= Void
+			a_input_domain_valid: a_input_domain.is_valid
+		do
+			create {LINKED_LIST [TUPLE [EB_METRIC, EB_METRIC_DOMAIN, BOOLEAN]]} Result.make
+			from
+				a_metric_names.start
+			until
+				a_metric_names.after
+			loop
+				Result.extend ([metric_manager.metric_with_name (a_metric_names.item), a_input_domain, False])
+				a_metric_names.forth
+			end
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Overwritting
 
@@ -867,6 +828,10 @@ feature{NONE} -- Actions
 	on_compile_start is
 			-- Action to be performed when Eiffel compilation starts
 		do
+			if is_archive_calculating then
+				on_stop_metric_evaluation_button_pressed
+				metric_manager.on_archive_calculation_stops (Current)
+			end
 			set_is_up_to_date (False)
 			update_ui
 		end
@@ -923,13 +888,31 @@ feature{NONE} -- Actions
 			update_ui
 		end
 
+	on_history_recalculation_start (a_data: ANY) is
+			-- Action to be performed when archive history recalculation starts
+			-- `a_data' can be the metric tool panel from which metric history recalculation starts.
+		do
+			set_is_up_to_date (False)
+			update_ui
+		end
+
+	on_history_recalculation_stop (a_data: ANY) is
+			-- Action to be performed when archive history recalculation stops
+			-- `a_data' can be the metric tool panel from which metric history recalculation stops.
+		do
+			set_is_up_to_date (False)
+			update_ui
+		end
+
+
+
 feature{NONE} -- UI Update
 
 	update_ui is
 			-- Update interface
 		do
 			if is_selected and then not is_up_to_date then
-				if is_eiffel_compiling or is_metric_evaluating or not is_project_loaded then
+				if is_eiffel_compiling or is_metric_evaluating or is_history_recalculationg_running or not is_project_loaded then
 					disable_sensitive
 				else
 					enable_sensitive
@@ -950,6 +933,7 @@ feature{NONE} -- UI Update
 						archive_comparison_area.enable_sensitive
 						stop_btn.disable_sensitive
 						metric_selector.enable_sensitive
+						metric_tool.load_metrics (False, metric_names.t_loading_metrics)
 						if not metric_tool.is_metric_validation_checked.item then
 							metric_tool.check_metric_validation
 						end
@@ -1012,8 +996,7 @@ invariant
 	current_archive_timer_attched: current_archive_timer /= Void
 	domain_selector_attached: domain_selector /= Void
 	metric_selector_attached: metric_selector /= Void
-	on_stop_metric_evaluation_agent_attached: on_stop_metric_evaluation_agent /= Void
-	on_process_gui_agent_attached: on_process_gui_agent /= Void
+	calculator_attached: calculator /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -65,24 +65,34 @@ feature -- Metric calculation
 		local
 			l_cri: like evaluated_criteria
 			l_dummy_domain: QL_DOMAIN
+			l_metric: QL_METRIC
+			l_has_delayed_domain: BOOLEAN
 		do
 			create {QL_TARGET_DOMAIN} l_dummy_domain.make
 			last_result_domain := Void
 			internal_value := 0.0
-			metric.remove_criteria
+
+			l_metric := metric
 			l_cri := evaluated_criteria
 			if l_cri /= Void then
-				metric.set_criterion (l_cri)
+				l_metric.set_criterion (l_cri)
 			end
+			l_has_delayed_domain := l_metric.has_delayed_domain
 			from
 				a_scope.start
 			until
 				a_scope.after
 			loop
 				if unit.scope /= Void then
-					calculate_domain (a_scope.item_domain (unit.scope))
+					calculate_domain (l_metric, a_scope.item_domain (unit.scope))
 				else
-					calculate_domain (l_dummy_domain)
+					calculate_domain (l_metric, l_dummy_domain)
+				end
+				if l_has_delayed_domain then
+					l_metric := metric
+					if l_cri /= Void then
+						l_metric.set_criterion (l_cri)
+					end
 				end
 				a_scope.forth
 			end
@@ -118,49 +128,41 @@ feature{NONE} -- Implementation
 	metric: QL_METRIC is
 			-- Query language metric used to calculation result
 		do
-			if metric_internal = Void then
-				metric_internal := ql_metric (unit)
-			end
-			Result := metric_internal
+			Result := ql_metric (unit)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	metric_internal: like metric
-			-- Implementation of `metric'
-
 	internal_value: DOUBLE
 			-- Internal value used when current metric is being calculated
 
-	calculate_domain (a_domain: QL_DOMAIN) is
-			-- Calculate metric value for `a_domain'.
+	calculate_domain (a_metric: QL_METRIC; a_domain: QL_DOMAIN) is
+			-- Calculate `a_metric' value for `a_domain'.
 			-- Added calculated value into `internal_value'.
 			-- If `is_fill_domain_enabled' store generated domain into `last_result_domain'.
 		require
+			a_metric_attached: a_metric /= Void
 			a_domain_attached: a_domain /= Void
-		local
-			l_metric: like metric
 		do
-			l_metric := metric
 			if is_fill_domain_enabled then
-				l_metric.enable_fill_domain
+				a_metric.enable_fill_domain
 			else
-				l_metric.disable_fill_domain
+				a_metric.disable_fill_domain
 			end
-			if l_metric.has_delayed_domain then
-				l_metric.replace_delayed_domain_by (a_domain)
-				internal_value := internal_value + l_metric.value (current_application_target_domain).first.value
+			if a_metric.has_delayed_domain then
+				a_metric.replace_delayed_domain_by (a_domain)
+				internal_value := internal_value + a_metric.value (current_application_target_domain).first.value
 			else
-				internal_value := internal_value + l_metric.value (a_domain).first.value
+				internal_value := internal_value + a_metric.value (a_domain).first.value
 			end
 			if is_fill_domain_enabled then
 				check
-					l_metric.last_domain /= Void
+					a_metric.last_domain /= Void
 				end
 				if last_result_domain = Void then
-					last_result_domain := l_metric.last_domain.twin
+					last_result_domain := a_metric.last_domain.twin
 				else
-					last_result_domain := last_result_domain.union (l_metric.last_domain)
+					last_result_domain := last_result_domain.union (a_metric.last_domain)
 				end
 			end
 		end
@@ -218,9 +220,6 @@ feature{NONE} -- Visitor
 		ensure
 			result_attached: Result /= Void
 		end
-
-invariant
-	metric_attached: metric /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

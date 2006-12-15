@@ -43,6 +43,7 @@ feature -- Titles
 	t_evaluation_tab: STRING_GENERAL is do Result := locale.translate ("Metric Evaluation") end
 	t_archive_tab: STRING_GENERAL is do Result := locale.translate ("Metric Archive") end
 	t_detail_result_tab: STRING_GENERAL is do Result := locale.translate ("Detailed Result") end
+	t_history_tab: STRING_GENERAL is do Result := locale.translate ("Metric History") end
 	t_path: STRING_GENERAL is do Result := locale.translate ("Location") end
 	t_group: STRING_GENERAL is do Result := locale.translate ("Group") end
 	t_metrics: STRING_GENERAL is do Result := locale.translate ("Metrics") end
@@ -118,6 +119,32 @@ feature -- Titles
 	t_metrics_imported: STRING_GENERAL is do Result := locale.translate ("Metric(s) imported.") end
 	t_metric_backuped: STRING_GENERAL is do Result := locale.translate ("User-defined metrics backup finished.") end
 	t_metrics_list: STRING_GENERAL is do Result := locale.translate ("Metric List:") end
+	t_short_line: STRING_GENERAL is do Result := locale.translate ("-") end
+	t_archive_not_up_to_date: STRING_GENERAL is do Result := locale.translate ("Current archive value may not up-to-date") end
+	err_input_domain_invalid: STRING_GENERAL is do Result := locale.translate ("Input domain invalid") end
+	t_previous_value: STRING_GENERAL is do Result := locale.translate ("Previous value") end
+	t_calculated_time: STRING_GENERAL is do Result := locale.translate ("Calculated time") end
+
+	f_run_history_recalculation: STRING_GENERAL is do Result := locale.translate ("Recalculate selected metric(s)") end
+	f_stop_history_recalculation: STRING_GENERAL is do Result := locale.translate ("Stop metric recalculation") end
+	f_remove_history_node: STRING_GENERAL is do Result := locale.translate ("Remove selected metric history") end
+	f_display_history_in_tree_view: STRING_GENERAL is do Result := locale.translate ("Display history in tree view?") end
+	f_send_to_history: STRING_GENERAL is do Result := locale.translate ("Send last calculated metric value to history") end
+	t_hide_old_archive: STRING_GENERAL is do Result := locale.translate ("Hide archives more than ") end
+	t_days: STRING_GENERAL is do Result := locale.translate (" days old.") end
+	f_keep_detailed_result: STRING_GENERAL is do Result := locale.translate ("Keep detailed result when recalculating archive?") end
+	f_remove_detailed_result: STRING_GENERAL is do Result := locale.translate ("Remove detailed result?") end
+	t_detailed_result: STRING_GENERAL is do Result := locale.translate ("Result") end
+	f_double_click_to_go_to_result_panel: STRING_GENERAL  is do Result := locale.translate ("Double click to go to result panel") end
+	f_select_all_history: STRING_GENERAL is do Result := locale.translate ("Select all history items") end
+	f_deselect_all_history: STRING_GENERAL is do Result := locale.translate ("Deselect all history items") end
+	f_select_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Select recalculatable history items") end
+	f_deselect_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Deselect recalculatable history items") end
+	t_select_all_history: STRING_GENERAL is do Result := locale.translate ("Select All") end
+	t_deselect_all_history: STRING_GENERAL is do Result := locale.translate ("Deselect All") end
+	t_select_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Select Recalculatable") end
+	t_deselect_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Deselect Recalculatable") end
+
 
 feature -- Titles for editor token
 
@@ -791,6 +818,16 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
+	err_metric_not_exist (a_type: STRING_GENERAL): STRING_GENERAL is
+			-- Metric doesn't exist error
+		require
+			a_type_attached: a_type /= Void
+			not_a_type_is_empty: not a_type.is_empty
+		do
+			Result := locale.format_string (locale.translate ("Metric of type %"$1%" doesn't exist or that metric is invalid."), [a_type])
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- To do messages
 

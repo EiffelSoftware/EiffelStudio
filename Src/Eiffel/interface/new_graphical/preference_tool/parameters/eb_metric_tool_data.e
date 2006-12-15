@@ -82,6 +82,42 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			result_attached: Result /= Void
 		end
 
+	is_tree_view_for_history: BOOLEAN is
+			-- Is tree view used to display metric history?
+		do
+			Result := tree_view_for_history_preference.value
+		end
+
+	history_flat_view_sorting_order: STRING is
+			-- History flat view sorting order
+		do
+			Result := flat_view_sorting_order_preference.value
+		end
+
+	history_tree_view_sorting_order: STRING is
+			-- History tree view sorting order
+		do
+			Result := tree_view_sorting_order_preference.value
+		end
+
+	is_old_archive_item_hidden: BOOLEAN is
+			-- Should old archive items be hidden?
+		do
+			Result := hide_old_item_preference.value
+		end
+
+	old_archive_item_age: INTEGER is
+			-- Age in days for an archive item to be considered old
+		do
+			Result := old_item_day_preference.value
+		end
+
+	is_detailed_result_kept: BOOLEAN is
+			-- Is detailed result kept when recalculation metric archive history?
+		do
+			Result := keep_detailed_result_preference.value
+		end
+
 feature -- Setting
 
 	set_unit_order (a_unit_list: LIST [QL_METRIC_UNIT]) is
@@ -119,6 +155,12 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	display_percentage_for_ratio_preference: BOOLEAN_PREFERENCE
 	automatic_go_to_result_panel_preference: BOOLEAN_PREFERENCE
 	unit_order_preference: STRING_PREFERENCE
+	tree_view_for_history_preference: BOOLEAN_PREFERENCE
+	flat_view_sorting_order_preference: STRING_PREFERENCE
+	tree_view_sorting_order_preference: STRING_PREFERENCE
+	hide_old_item_preference: BOOLEAN_PREFERENCE
+	old_item_day_preference: INTEGER_PREFERENCE
+	keep_detailed_result_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -128,6 +170,12 @@ feature {NONE} -- Preference Strings
 	display_percentage_for_ratio_string: STRING is "tools.metric_tool.display_percentage_for_ratio"
 	automatic_go_to_result_panel_string: STRING is "tools.metric_tool.automatic_go_to_result_panel"
 	unit_order_string: STRING is "tools.metric_tool.unit_order"
+	tree_view_for_history_string: STRING is "tools.metric_tool.tree_view_for_metrc_history"
+	flat_view_sorting_order_string: STRING is "tools.metric_tool.history_flat_view_sorting_order"
+	tree_view_sorting_order_string: STRING is "tools.metric_tool.history_tree_view_sorting_order"
+	hide_old_item_string: STRING is "tools.metric_tool.hide_old_archive"
+	old_item_day_string: STRING is "tools.metric_tool.old_archive_age_in_days"
+	keep_detailed_result_string: STRING is "tools.metric_tool.keep_detailed_result"
 
 feature {NONE} -- Implementation
 
@@ -145,6 +193,14 @@ feature {NONE} -- Implementation
 			unit_order_preference := l_manager.new_string_preference_value (l_manager, unit_order_string, initial_unit_order)
 			criterion_completion_list_width_preference.set_hidden (True)
 			criterion_completion_list_height_preference.set_hidden (True)
+			tree_view_for_history_preference := l_manager.new_boolean_preference_value (l_manager, tree_view_for_history_string, False)
+			flat_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, flat_view_sorting_order_string, "1:1")
+			flat_view_sorting_order_preference.set_hidden (True)
+			tree_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, tree_view_sorting_order_string, "1:1")
+			tree_view_sorting_order_preference.set_hidden (True)
+			hide_old_item_preference := l_manager.new_boolean_preference_value (l_manager, hide_old_item_string, False)
+			old_item_day_preference := l_manager.new_integer_preference_value (l_manager, old_item_day_string, 30)
+			keep_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_detailed_result_string, False)
 		end
 
 	preferences: PREFERENCES

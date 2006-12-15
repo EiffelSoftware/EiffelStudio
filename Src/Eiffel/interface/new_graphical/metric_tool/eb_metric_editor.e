@@ -258,9 +258,6 @@ feature -- Access
 	uuid: UUID
 			-- UUID of current edited metric
 
---	metric_selector: EB_METRIC_SELECTOR
---			-- Metric selector associated with current editor
-
 feature -- Actions
 
 	on_definition_change is

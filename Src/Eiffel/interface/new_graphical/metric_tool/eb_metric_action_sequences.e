@@ -118,6 +118,37 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	history_recalculation_start_actions: ACTION_SEQUENCE [TUPLE [ANY]] is
+			-- Action to be performed when metric history recalculation starts.
+			-- The only argument maybe the metric tool panel from which
+			-- metric history recalculation starts (if used in graphical mode)
+		do
+			if history_recalculation_start_actions_internal = Void then
+				create history_recalculation_start_actions_internal
+			end
+			Result := history_recalculation_start_actions_internal
+		end
+
+	history_recalculation_stop_actions: ACTION_SEQUENCE [TUPLE [ANY]] is
+			-- Action to be performed when metric history recalculation stops.
+			-- The only argument maybe the metric tool panel from which
+			-- metric history recalculation stops (if used in graphical mode)
+		do
+			if history_recalculation_stop_actions_internal = Void then
+				create history_recalculation_stop_actions_internal
+			end
+			Result := history_recalculation_stop_actions_internal
+		end
+
+	metric_renamed_actions: ACTION_SEQUENCE [TUPLE [a_old_name: STRING; a_new_name: STRING]] is
+			-- Actions to be performed when a metric name changed from `a_old_name' to `a_new_name'.
+		do
+			if metric_renamed_actions_internal = Void then
+				create metric_renamed_actions_internal
+			end
+			Result := metric_renamed_actions_internal
+		end
+
 feature {NONE} -- Implementation
 
 	metric_evaluation_stop_actions_internal: like metric_evaluation_stop_actions
@@ -145,7 +176,16 @@ feature {NONE} -- Implementation
 			-- Implementation of `project_load_actions'
 
 	project_unload_actions_internal: like project_unload_actions
-			-- Implementation of `project_unload_actions'		
+			-- Implementation of `project_unload_actions'	
+
+	history_recalculation_start_actions_internal: like history_recalculation_start_actions
+			-- Implementation of `history_recalculation_start_actions'
+
+	history_recalculation_stop_actions_internal: like history_recalculation_stop_actions
+			-- Implementation of `history_recalculation_stop_actions'
+
+	metric_renamed_actions_internal: like metric_renamed_actions
+			-- Implementation of `metric_renamed_actions'			
 
 invariant
 	compile_start_actions_attached: compile_start_actions /= Void
@@ -157,6 +197,9 @@ invariant
 	archive_calculation_stop_actions_attached: archive_calculation_stop_actions /= Void
 	project_load_actions_attatched: project_load_actions /= Void
 	project_unload_actions_attached: project_unload_actions /= Void
+	history_recalculation_start_actions_attached: history_recalculation_start_actions /= Void
+	history_recalculation_stop_actions_attached: history_recalculation_stop_actions /= Void
+	metric_renamed_actions_attached: metric_renamed_actions /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

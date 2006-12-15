@@ -128,26 +128,15 @@ feature {NONE} -- Implementation
 			"sizeof (MSG)"
 		end
 
-	Pm_remove: INTEGER is
-		external
-			"C [macro <msg.h>]"
-		alias
-			"PM_REMOVE"
-		end
+	Pm_noremove: INTEGER is 0
 
-	Pm_noremove: INTEGER is
-		external
-			"C [macro <msg.h>]"
-		alias
-			"PM_NOREMOVE"
-		end
+	Pm_remove: INTEGER is 1
 
-	Pm_qs_postmessage: INTEGER is
-		external
-			"C [macro <msg.h>]"
-		alias
-			"PM_QS_POSTMESSAGE"
-		end
+	Pm_noyield: INTEGER is 2
+
+	Pm_qs_paint: INTEGER is 0x200000
+
+	Pm_qs_postmessage: INTEGER is 0x980000;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

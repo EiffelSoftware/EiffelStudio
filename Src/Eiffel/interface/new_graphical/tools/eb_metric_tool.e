@@ -72,10 +72,6 @@ feature -- Actions
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				load_metrics (False, metric_names.t_loading_metrics)
---				if not metric_manager.has_archive_been_loaded then
---					metric_manager.load_archive_history
---					display_error_message
---				end
 			end
 			set_is_shown (True)
 			on_tab_change

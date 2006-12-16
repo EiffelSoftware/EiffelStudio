@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			if Result then
 				l_call := is_visible_function
 				if l_call /= Void then
-					Result ?= l_call.invoke (a_type, create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (0))
+					Result ?= l_call.invoke_object_object_array (a_type, create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (0))
 				end
 			end
 		end

@@ -163,6 +163,8 @@ feature {AUXILIARY_FILES} -- Versioning
 	Compiler_version_number: CONF_VERSION is
 			-- Version of the compiler
 		once
+				-- We put (9999 + 1) because if we were to put 10000 the 4 zeros
+				-- will get replaced by the delivery scripts (see comments for `snv_revision'.
 			create Result.make_version (
 				eiffel_layout.major_version,
 				eiffel_layout.minor_version,
@@ -175,7 +177,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- We use `0000' because it is replaced by the actual svn revision number
 			-- when doing a delivery.
 		do
-			Result := 0000
+			Result := 0315
 		end
 
 	Version_number: STRING is

@@ -67,12 +67,14 @@ feature -- Metric calculation
 			l_dummy_domain: QL_DOMAIN
 			l_metric: QL_METRIC
 			l_has_delayed_domain: BOOLEAN
+			l_criterion_set: BOOLEAN
 		do
 			create {QL_TARGET_DOMAIN} l_dummy_domain.make
 			last_result_domain := Void
 			internal_value := 0.0
 
 			l_metric := metric
+			evaluated_criteria_internal := Void
 			l_cri := evaluated_criteria
 			if l_cri /= Void then
 				l_metric.set_criterion (l_cri)
@@ -90,6 +92,8 @@ feature -- Metric calculation
 				end
 				if l_has_delayed_domain then
 					l_metric := metric
+					evaluated_criteria_internal := Void
+					l_cri := evaluated_criteria
 					if l_cri /= Void then
 						l_metric.set_criterion (l_cri)
 					end

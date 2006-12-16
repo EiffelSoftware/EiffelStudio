@@ -1104,8 +1104,8 @@ feature -- update processing
 			-- but in the studio graphical loop
 		do
 				--FIXME jfiat: may be we should move this EV_... to another class
-			ev_application.idle_actions.prune_all (agent_update_notify_on_after_stopped)
-			ev_application.idle_actions.extend (agent_update_notify_on_after_stopped)
+			ev_application.remove_idle_action (agent_update_notify_on_after_stopped)
+			ev_application.add_idle_action (agent_update_notify_on_after_stopped)
 		end
 
 	real_update_notify_on_after_stopped is
@@ -1118,7 +1118,7 @@ feature -- update processing
 				debug ("debugger_trace")
 					io.error.put_string (generator + ".real_update_notify_on_after_stopped %N")
 				end
-				ev_application.idle_actions.prune_all (agent_update_notify_on_after_stopped)
+				ev_application.remove_idle_action (agent_update_notify_on_after_stopped)
 				if not callback_notification_processing then
 					debug ("debugger_trace")
 						io.error.put_string (generator + ".real_update_notify_on_after_stopped : call real notification%N")
@@ -1128,7 +1128,7 @@ feature -- update processing
 					debug ("debugger_trace")
 						io.error.put_string (generator + ".real_update_notify_on_after_stopped : postpone real notification%N")
 					end
-					ev_application.idle_actions.extend (agent_update_notify_on_after_stopped)
+					ev_application.add_idle_action (agent_update_notify_on_after_stopped)
 				end
 			else
 				debug ("debugger_trace")

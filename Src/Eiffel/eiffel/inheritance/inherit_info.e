@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	INHERIT_INFO 
+	INHERIT_INFO
 
 inherit
 	COMPARABLE
@@ -15,7 +15,7 @@ inherit
 		undefine
 			is_equal
 		end
-	
+
 create
 	make
 
@@ -94,6 +94,26 @@ feature -- Status
 			end
 		end
 
+	has_property_getter: BOOLEAN is
+			-- Has an associated feature a property getter?
+		require
+			a_feature_attached: a_feature /= Void
+		do
+			Result := a_feature.has_property_getter
+		ensure
+			definition: Result = a_feature.has_property_getter
+		end
+
+	has_property_setter: BOOLEAN is
+			-- Has an associated feature a property setter?
+		require
+			a_feature_attached: a_feature /= Void
+		do
+			Result := a_feature.has_property_setter
+		ensure
+			definition: Result = a_feature.has_property_setter
+		end
+
 feature -- Debug
 
 	trace is
@@ -108,7 +128,7 @@ feature -- Debug
 				io.put_new_line
 			end
 		end
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -142,4 +162,4 @@ indexing
 		]"
 
 end
-			
+

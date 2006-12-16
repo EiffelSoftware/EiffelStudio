@@ -67,7 +67,6 @@ feature -- Metric calculation
 			l_dummy_domain: QL_DOMAIN
 			l_metric: QL_METRIC
 			l_has_delayed_domain: BOOLEAN
-			l_criterion_set: BOOLEAN
 		do
 			create {QL_TARGET_DOMAIN} l_dummy_domain.make
 			last_result_domain := Void

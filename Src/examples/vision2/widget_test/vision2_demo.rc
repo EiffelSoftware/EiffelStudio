@@ -1,4 +1,4 @@
-1    ICON    DISCARDABLE     "vision2_tour.ico"
+1    ICON    DISCARDABLE     "vision2_demo.ico"
 
 // It should be 
 // CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "vision2_demo.exe.manifest"

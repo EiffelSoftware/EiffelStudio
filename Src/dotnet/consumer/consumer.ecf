@@ -6,14 +6,13 @@
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option trace="false" profile="false" debug="false" namespace="EiffelSoftware.MetadataConsumer">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true"/>
 		</option>
 		<setting name="cls_compliant" value="false"/>
 		<setting name="console_application" value="true"/>
 		<setting name="dead_code_removal" value="true"/>
 		<setting name="dotnet_naming_convention" value="false"/>
 		<setting name="executable_name" value="EiffelSoftware.MetadataConsumer"/>
-		<setting name="il_verifiable" value="false"/>
 		<setting name="msil_assembly_compatibility" value="None"/>
 		<setting name="msil_clr_version" value="v2.0.50727"/>
 		<setting name="msil_generation" value="true"/>

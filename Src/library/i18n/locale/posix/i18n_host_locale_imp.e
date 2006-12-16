@@ -68,7 +68,7 @@ feature -- Informations
 			dir_entries: ARRAYED_LIST[STRING]
 		do
 			create Result.make
-			create directory.make_open_read ("/usr/share/i18n/locales/")
+			create directory.make ("/usr/share/i18n/locales/")
 			if directory.exists then
 					-- if it does not exist, unfortunately the system
 					-- does not follow POSIX

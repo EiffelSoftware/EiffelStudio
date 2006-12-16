@@ -729,6 +729,8 @@ feature -- Incrementality
 				and then assigner_name_id = other.assigner_name_id
 				and then has_property = other.has_property
 				and then (has_property implies property_name.is_equal (other.property_name))
+				and then has_property_getter = other.has_property_getter
+				and then has_property_setter = other.has_property_setter
 debug ("ACTIVITY")
 	if not Result then
 			io.error.put_boolean (written_in = other.written_in) io.error.put_new_line;

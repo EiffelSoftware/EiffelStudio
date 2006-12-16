@@ -55,11 +55,6 @@ feature -- Basic operations
 					confirm_stop_debug
 				end
 			end
-				-- Store metric archive history.
-			metric_manager.set_is_exit_requested (True)
-			if metric_manager.has_archive_been_loaded then
-				metric_manager.store_archive_history
-			end
 		end
 
 feature -- Status setting
@@ -95,6 +90,8 @@ feature {NONE} -- Callbacks
 
 	exit_application is
 			-- Exit the application
+		local
+			l_err_dlg: EV_ERROR_DIALOG
 		do
 				-- If an application was being debugged, kill it.
 			if Debugger_manager.application_is_executing then
@@ -108,6 +105,17 @@ feature {NONE} -- Callbacks
 
 				-- We will save all the preferences for next time we are opened
 			preferences.preferences.save_preferences
+
+				-- Store metric archive history.
+			metric_manager.set_is_exit_requested (True)
+			if metric_manager.has_archive_been_loaded then
+				metric_manager.store_archive_history
+			end
+			if metric_manager.has_error then
+				create l_err_dlg.make_with_text (metric_manager.last_error.message)
+				l_err_dlg.set_buttons (<<interface_names.b_ok>>)
+				l_err_dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
+			end
 
 				-- Destroy all development windows.
 			window_manager.close_all

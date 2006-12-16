@@ -628,7 +628,7 @@ feature -- Access
 						end
 							-- Invoke method that is going to give us a RT_TYPE instance representing the
 							-- static type of the field for the base class of `type_id'.
-						l_rt_type ?= l_meth.invoke ({ACTIVATOR}.create_instance (l_current_type), Void)
+						l_rt_type ?= l_meth.invoke_object_object_array ({ACTIVATOR}.create_instance (l_current_type), Void)
 						check
 							l_rt_type_not_void: l_rt_type /= Void
 						end

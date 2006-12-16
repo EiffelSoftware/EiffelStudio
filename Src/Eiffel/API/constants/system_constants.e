@@ -177,7 +177,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- We use `0000' because it is replaced by the actual svn revision number
 			-- when doing a delivery.
 		do
-			Result := 0315
+			Result := 0000
 		end
 
 	Version_number: STRING is

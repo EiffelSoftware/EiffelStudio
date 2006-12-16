@@ -166,8 +166,8 @@ feature {AUXILIARY_FILES} -- Versioning
 			create Result.make_version (
 				eiffel_layout.major_version,
 				eiffel_layout.minor_version,
-				(svn_revision // 10000).as_natural_16,
-				(svn_revision \\ 10000).as_natural_16)
+				(svn_revision // (9999 + 1)).as_natural_16,
+				(svn_revision \\ (9999 + 1)).as_natural_16)
 		end
 
 	svn_revision: NATURAL_32 is

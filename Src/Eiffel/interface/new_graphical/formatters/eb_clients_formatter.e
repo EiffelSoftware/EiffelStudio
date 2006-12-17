@@ -12,7 +12,8 @@ inherit
 	EB_CLASS_HIERARCHY_FORMATTER
 		redefine
 			is_tree_node_highlight_enabled,
-			is_reference_formatter
+			is_reference_formatter,
+			browser
 		end
 
 create
@@ -33,6 +34,11 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showclients
 		end
+
+	browser: EB_CLASS_BROWSER_TREE_VIEW
+			-- Browser where information gets displayed
+
+feature -- Status report
 
 	is_tree_node_highlight_enabled: BOOLEAN is False
 			-- Is tree node highlight enabled?
@@ -65,7 +71,7 @@ feature {NONE} -- Implementation
 		do
 			check associated_class /= Void end
 			l_class := query_class_item_from_class_c (associated_class)
-			create {QL_CLASS_CLIENT_RELATION_CRI}Result.make (l_class.wrapped_domain, True, False)
+			create {QL_CLASS_CLIENT_RELATION_CRI}Result.make (l_class.wrapped_domain, browser.syntactical_button.is_selected, False)
 		end
 
 

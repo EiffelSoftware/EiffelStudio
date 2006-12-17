@@ -307,15 +307,16 @@ feature -- Actions
 	on_compile_stop is
 			-- Action to be performed when Eiffel compilation stops
 		do
-			set_is_up_to_date (False)
-			archive.mark_archive_as_old
-			if grid.has_grid_been_binded then
-				set_grid_refresh_level (grid_update_level)
-			else
-				set_grid_refresh_level (grid_rebind_level)
+			if workbench.system_defined and then workbench.is_already_compiled then
+				set_is_up_to_date (False)
+				archive.mark_archive_as_old
+				if grid.has_grid_been_binded then
+					set_grid_refresh_level (grid_update_level)
+				else
+					set_grid_refresh_level (grid_rebind_level)
+				end
+				update_ui
 			end
-
-			update_ui
 		end
 
 	on_metric_evaluation_start (a_data: ANY) is

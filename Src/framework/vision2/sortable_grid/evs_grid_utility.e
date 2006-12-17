@@ -19,11 +19,19 @@ feature -- Access
 			not_a_grid_is_destroyed: not a_grid.is_destroyed
 		local
 			l_header_height: INTEGER
+			l_x, l_y: INTEGER
 		do
 			if a_grid.is_header_displayed then
 				l_header_height := a_grid.header.height
 			end
-			Result := a_grid.item_at_virtual_position (a_grid.virtual_x_position + a_x, a_grid.virtual_y_position + a_y - l_header_height)
+			l_x := a_grid.virtual_x_position + a_x
+			l_y := a_grid.virtual_y_position + a_y - l_header_height
+			if
+				l_x >=0 and then l_x <= a_grid.virtual_width and then
+				l_y >=0 and then l_y <= a_grid.virtual_height
+			then
+				Result := a_grid.item_at_virtual_position (l_x, l_y)
+			end
 		end
 
 feature -- Resizeing

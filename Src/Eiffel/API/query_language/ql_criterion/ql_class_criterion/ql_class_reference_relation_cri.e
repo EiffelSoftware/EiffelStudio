@@ -128,8 +128,8 @@ feature{NONE} -- Implementation
 		end
 
 	mark_only_syntactical_classes (a_syntactical_class_list: LIST [CLASS_C]; a_non_syntactical_class_list: LIST [CLASS_C]): DS_HASH_SET [CLASS_C] is
-			-- 	Mark only syntactically referenced classes in `only_syntactical_class_set' using data from and
-			-- Return a class set which are distinct classes retrieved from `a_syntactical_class_list' and `a_non_syntactical_class_list' (Because
+			-- 	Mark only syntactically referenced classes in `only_syntactical_class_set' and
+			-- return a class set which are distinct classes retrieved from `a_syntactical_class_list' and `a_non_syntactical_class_list' (Because
 			-- referenced classes (`suppliers' or `clients') from a class may overlap with syntactically referenced classes (`syntactical_suppliers' or
 			-- `syntactical_clients') from that class.
 			-- `a_syntactical_class_list' and `a_non_syntactical_class_list'.
@@ -192,7 +192,8 @@ feature{NONE} -- Implementation
 		end
 
 	find_referenced_classes (a_class_c: CLASS_C; a_recursive: BOOLEAN) is
-			-- Find all supplier of `a_class_c' and put them in `candidate_class_list'.
+			-- Find all referenced classes (from `referenced_classes' or `syntactical_referenced_classes') of
+			-- `a_class_c' and put them in `candidate_class_list'.
 			-- `a_recursive' indicates if recursive referenced classes should be retrieved also.
 		local
 			l_list: LIST [CLASS_C]
@@ -211,8 +212,6 @@ feature{NONE} -- Implementation
 				-- We only process unprocessed class to avod reference cycle.
 			if not l_processed_classes.has (l_source_id) then
 				l_processed_classes.force (l_source_id)
-
-				l_list := a_class_c.suppliers.classes
 				l_list := referenced_classes (a_class_c)
 				if is_syntactical_class_enabled then
 					l_syn_list := syntactical_referenced_classes (a_class_c)

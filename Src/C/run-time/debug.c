@@ -728,6 +728,7 @@ rt_shared void safe_dbreak (int why)
 	RT_GET_CONTEXT
 	REQUIRE("is debugging", debug_mode);
 
+#ifdef ISE_GC
 #ifdef NEVER
 	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
 	dserver();
@@ -738,6 +739,17 @@ rt_shared void safe_dbreak (int why)
 	dserver();					/* Put application in server mode */
 	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 	esresume();					/* Restore run-time context */
+#endif
+#else
+	/* FIXME: We need a synchronization here when we are not using the one from
+	 * the ISE_GC. */
+#ifdef NEVER
+	dserver();
+#else
+	escontext(why);				/* Save run-time context */
+	dserver();					/* Put application in server mode */
+	esresume();					/* Restore run-time context */
+#endif
 #endif
 
 

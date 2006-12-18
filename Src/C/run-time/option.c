@@ -1026,8 +1026,9 @@ void prof_stack_free(void)
 
 	if(egc_prof_enabled) {
 		EIF_GET_CONTEXT
-		eif_rt_xfree((char *)(prof_stack->st_cur));	/* Free memory used by chunk */
+		st_reset (prof_stack);						/* Free memory used by chunks */
 		eif_rt_xfree((char *)prof_stack);			/* Free memory used by stack */
+		prof_stack = NULL;							/* Mark `prof_stack' as clean. */
 	}
 }
 

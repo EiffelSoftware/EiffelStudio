@@ -692,10 +692,14 @@ feature -- Basic operation
 						l_widget_imp ?= eif_object_from_gtk_object (gtkwid)
 						if
 							l_widget_imp /= Void and then
-							not l_widget_imp.is_destroyed and then
-							l_widget_imp.file_drop_actions_internal /= Void
+							not l_widget_imp.is_destroyed
 						then
-							l_widget_imp.file_drop_actions.call ([l_file_list])
+							if l_widget_imp.file_drop_actions_internal /= Void then
+								l_widget_imp.file_drop_actions.call ([l_file_list])
+							end
+							if file_drop_actions_internal /= Void then
+								file_drop_actions_internal.call ([l_widget_imp.interface, l_file_list])
+							end
 						end
 					end
 				end

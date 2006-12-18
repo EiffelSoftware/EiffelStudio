@@ -93,6 +93,66 @@ feature -- output
 			text_formatter_visitor.append_arguments (application_status.current_call_stack_element, tty_output)
 		end
 
+	display_breakpoints (on_select_proc: PROCEDURE [ANY, TUPLE [BREAKPOINT]]; a_proc_message: STRING) is
+			-- Display on breakpoints
+		local
+			bl: BREAK_LIST
+			b: BREAKPOINT
+			i: INTEGER
+			s: STRING
+			arr: ARRAY [BREAKPOINT]
+		do
+			bl := debug_info.breakpoints
+			from
+				i := 1
+				if on_select_proc /= Void then
+					create arr.make (1, bl.count)
+				end
+				io.put_string ("*** " + bl.count.out + " Breakpoints *** %N")
+				bl.start
+			until
+				bl.after
+			loop
+
+				b := bl.item_for_iteration
+				if arr /= Void then
+					io.put_string (" [" + i.out + "] ")
+					arr[i] := b
+				else
+					io.put_string (" - ")
+				end
+				io.put_string (b.string_representation (True) + "%N")
+				bl.forth
+				i := i + 1
+			end
+			if on_select_proc /= Void then
+				from
+					io.put_string (" [0] Cancel %N")
+					if a_proc_message /= Void then
+						io.put_string (" -> " + a_proc_message + ": ")
+					end
+					i := 1
+					b := Void
+				until
+					b /= Void or i = 0
+				loop
+					io.read_line
+					s := io.last_string
+					s.left_adjust
+					s.right_adjust
+					if s.is_integer then
+						i:= s.to_integer
+						if arr.lower <= i and i <= arr.upper then
+							b := arr[i]
+						end
+					end
+				end
+				if b /= Void then
+					on_select_proc.call ([b])
+				end
+			end
+		end
+
 feature -- Access
 
 	on_application_launched is
@@ -165,6 +225,8 @@ feature -- Interaction
 			Result.add_entry ("K", "Kill application", agent controller.debug_kill)
 			Result.add_entry ("P", "Pause application", agent controller.debug_interrupt)
 			Result.add_separator (" --- ")
+			Result.add_conditional_entry ("B", "Breakpoints control", agent raise_debugger_menu_breakpoints,
+						ag_is_stopped)
 			Result.add_conditional_entry ("D", "Display information", agent raise_debugger_menu_display,
 						ag_is_stopped)
 
@@ -186,12 +248,19 @@ feature -- Interaction
 			dbg_running_menu.execute (sm)
 		end
 
+	raise_debugger_menu_display is
+		do
+			dbg_display_menu.execute (True)
+		end
+
+	raise_debugger_menu_breakpoints	is
+		do
+			dbg_breakpoints_menu.execute (True)
+		end
+
 	dbg_display_menu: TTY_MENU is
 		do
 			create Result.make ("--< Debugger menu :: Display >--")
-			Result.enter_actions.extend (agent do inside_debugger_menu := True end)
-			Result.quit_actions.extend (agent do inside_debugger_menu := False end)
-
 			Result.add_entry ("L", "locals", agent display_locals)
 			Result.add_entry ("A", "arguments", agent display_arguments)
 			Result.add_entry ("C", "callstack", agent display_callstack)
@@ -217,35 +286,180 @@ feature -- Interaction
 				)
 			Result.add_entry (Void, Void, Void)
 			Result.add_entry ("H", "Help", agent Result.execute)
-			Result.add_quit_entry ("Q", "Quit")
+			Result.add_quit_entry ("..", "Back to parent menu")
 		end
 
-	raise_debugger_menu_display is
+	dbg_breakpoints_menu: TTY_MENU is
 		do
-			dbg_display_menu.execute (True)
+			create Result.make ("--< Debugger menu :: Breakpoints >--")
+
+			Result.add_entry ("A", "Add breakpoint", agent add_breakpoint)
+			Result.add_entry ("M", "Modify existing breakpoint", agent display_breakpoints (agent modify_breakpoint, "Modify breakpoint"))
+			Result.add_entry ("L", "list breakpoints", agent display_breakpoints (Void, Void))
+			Result.add_entry (Void, Void, Void)
+			Result.add_entry ("H", "Help", agent Result.execute)
+			Result.add_quit_entry ("..", "Back to parent menu")
 		end
 
-	string_started_by (s: STRING; pref: STRING): BOOLEAN is
-		require
-			s /= Void
-			pref /= Void
+feature -- Breakpoints management
+
+	add_breakpoint is
 		local
-			i,j: INTEGER
+			s: STRING
+			i: INTEGER
+			curr_bi: INTEGER
+			ci_lst: LIST [CLASS_I]
+			curr_cc, cc: CLASS_C
+			curr_fe, fe: E_FEATURE
+			l_added: BOOLEAN
 		do
-			if s.count >= pref.count then
-				from
-					i := 1
-					j := 1
-					Result := True
-				until
-					not Result or j > pref.count
-				loop
-
-					if s.item (i) /= ' ' then
-						Result := s.item (i).as_lower = pref.item (j).as_lower
-						j := j + 1
+			io.put_string (" -> class name: ")
+			curr_cc := current_debugging_class_c
+			if curr_cc /= Void then
+				io.put_string ("[" + curr_cc.name_in_upper + "] ")
+			end
+			io.read_line
+			s := io.last_string
+			s.left_adjust
+			s.right_adjust
+			if s.is_empty then
+				if curr_cc /= Void then
+					cc := curr_cc
+				else
+					s := Void
+				end
+			else
+				i := s.index_of ('[', 1)
+				if i > 0 then
+					s := s.substring (1, i - 1)
+				end
+				s.prune_all (' ')
+				if s /= Void and then not s.is_case_insensitive_equal (curr_cc.name) then
+					ci_lst := Eiffel_universe.classes_with_name (s)
+					if ci_lst /= Void and then not ci_lst.is_empty then
+						cc := ci_lst.first.compiled_class
+					else
+						io.put_string (" => Could not find class {" + s + "}. %N")
 					end
-					i := i + 1
+				else
+					cc := curr_cc
+				end
+			end
+
+			if cc /= Void then
+				io.put_string (" -> feature name: (*=all feature)")
+				if cc = curr_cc then
+					curr_fe := current_debugging_feature
+					if curr_fe /= Void then
+						io.put_string ("[" + curr_fe.name + "] ")
+					end
+				end
+				io.read_line
+				s := io.last_string
+				s.left_adjust
+				s.right_adjust
+				if s.is_empty then
+					if curr_fe /= Void then
+						fe := curr_fe
+					end
+				else
+					if s.item (1) = '*' then
+						debug_info.enable_breakpoints_in_class (cc)
+						l_added := True
+						io.put_string (" => Added breakpoints in class {" + cc.name_in_upper + "}. %N")
+					else
+						fe := cc.feature_with_name (s)
+						if fe = Void then
+							io.put_string (" => Could not find feature {" + cc.name_in_upper + "}." + s + " %N")
+						end
+					end
+				end
+				if fe /= Void then
+					io.put_string (" -> break index: ")
+					if fe = curr_fe then
+						curr_bi := current_debugging_breakable_index
+						if curr_bi > 0 then
+							io.put_string ("[" + curr_bi.out + "] ")
+						end
+					end
+					io.read_line
+					s := io.last_string
+					if s.is_empty then
+						if curr_bi > 0 then
+							i := curr_bi
+						end
+					else
+						if s.is_integer then
+							i := s.to_integer
+						else
+							i := 0
+						end
+					end
+					if i > 0 then
+						debug_info.enable_breakpoint (fe, i)
+						l_added := True
+						io.put_string (" => Added breakpoint {" + cc.name_in_upper + "}." + fe.name + "@" + i.out +" %N")
+					end
+				end
+			end
+			if not l_added then
+				io.put_string (" => No breakpoint addition%N")
+			end
+		end
+
+	modify_breakpoint (bp: BREAKPOINT) is
+		local
+			m: TTY_MENU
+			s: STRING
+		do
+			create m.make ("*** Modify breakpoint " + bp.string_representation (False) + " ***")
+			if not bp.is_enabled then
+				m.add_entry ("E", "Enable breakpoint", agent bp.enable)
+			end
+			if not bp.is_disabled then
+				m.add_entry ("D", "Disable breakpoint", agent bp.disable)
+			end
+			m.add_entry ("R", "Remove breakpoint", agent bp.discard)
+			if bp.has_condition then
+				s := bp.condition.expression.as_string_8
+				if s.count > 22 then
+					s.keep_head (20)
+					s.append ("..")
+				end
+				m.add_separator ("--( condition: %"" + s + "%")--")
+				m.add_entry ("I", "Edit condition", agent edit_breakpoint_condition (bp))
+				m.add_entry ("R", "Remove condition", agent bp.remove_condition)
+			else
+				m.add_entry ("C", "Add condition", agent edit_breakpoint_condition (bp))
+			end
+			m.add_separator (Void)
+			m.add_quit_entry ("..", "Back to previous menu")
+			m.execute (True)
+		end
+
+	edit_breakpoint_condition (bp: BREAKPOINT) is
+		local
+			s: STRING
+			exp: EB_EXPRESSION
+			fe: E_FEATURE
+		do
+			if bp.has_condition then
+				s := bp.condition.expression.as_string_8
+				io.put_string (" -> Current condition: %"" + s + "%" %N")
+			end
+			io.put_string (" -> Enter new condition (empty to cancel) :")
+			io.read_line
+			s := io.last_string.twin
+			s.left_adjust
+			s.right_adjust
+			if not s.is_empty then
+				fe := bp.routine
+				create exp.make_for_context (s)
+				if (fe /= Void and then not exp.is_condition (fe)) or else exp.error_occurred then
+					io.put_string (" => This is not a valid condition. %N")
+				else
+					bp.set_condition (exp)
+					io.put_string (" => New condition applied. %N")
 				end
 			end
 		end

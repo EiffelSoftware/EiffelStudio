@@ -61,6 +61,14 @@ feature -- Creation
 feature -- debug output
 
 	debug_output: STRING is
+		do
+			Result := string_representation (True)
+		end
+
+feature -- Output
+
+	string_representation (wih_details: BOOLEAN): STRING is
+			-- String representation of current Breakpoint.
 		local
 			lcl: CLASS_C
 		do
@@ -82,6 +90,24 @@ feature -- debug output
 			Result.append_string (" [" + breakable_line_number.out + "] ")
 			if condition /= Void then
 				Result.append_string (" (*) ")
+			end
+			if wih_details then
+				if is_corrupted then
+					Result.append_string (" <corrupted> ")
+				end
+				if is_set then
+					if is_enabled then
+						Result.append_string (" <enabled> ")
+					end
+					if is_disabled then
+						Result.append_string (" <disabled> ")
+					end
+				else
+					Result.append_string (" <not set> ")
+				end
+				if is_set_for_application then
+					Result.append_string (" <set for application> ")
+				end
 			end
 		end
 

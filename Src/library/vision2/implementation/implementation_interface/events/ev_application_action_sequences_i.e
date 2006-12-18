@@ -147,6 +147,19 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+	file_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EV_WIDGET, LIST [STRING_32]]]
+			-- Actions to be performed when an OS file drop is performed on `Current'.
+			-- `widget' is the widget on which the file(s) where dropped on to.
+			-- `file_list' is a list of the file paths being dropped on to `widget'.
+		do
+			if file_drop_actions_internal = Void then
+				create file_drop_actions_internal
+			end
+			Result := file_drop_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
 	uncaught_exception_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EXCEPTION]] is
 		-- Actions to be performed when an
 		-- action sequence called via callback
@@ -163,15 +176,18 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	create_pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE is
+	create_pnd_motion_actions: like pnd_motion_actions is
 			-- Create a pnd motion action sequence.
 		deferred
 		end
 
-	pnd_motion_actions_internal: EV_PND_MOTION_ACTION_SEQUENCE
+	pnd_motion_actions_internal: like pnd_motion_actions
 		-- Implementation of once per object `pnd_motion_actions'.
 
-	uncaught_exception_actions_internal: EV_LITE_ACTION_SEQUENCE [TUPLE [EXCEPTION]]
+	file_drop_actions_internal: like file_drop_actions
+		-- Implementation of once per object `file_drop_actions'.
+
+	uncaught_exception_actions_internal: like uncaught_exception_actions
 		-- Implementation of once per object `uncaught_exception_actions'.
 
 feature

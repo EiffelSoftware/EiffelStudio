@@ -162,13 +162,15 @@ feature -- Number formatting
 
 feature -- Change with preferences
 
-	set_columns_layout_from_string_preference (spref: STRING_PREFERENCE; dft_value: ARRAY [like column_layout]) is
+	set_columns_layout_from_string_preference (spref: STRING_PREFERENCE) is
+		require
+			default_columns_layout_not_void: default_columns_layout /= Void
 		local
 			s: STRING
 		do
 			s := spref.value
 			if s = Void or else s.is_empty then
-				set_columns_layout (5, 1, dft_value)
+				set_columns_layout (1, default_columns_layout)
 				save_columns_layout_to_string_preference (spref)
 			else
 				set_columns_layout_from_string (spref.value)
@@ -223,7 +225,9 @@ feature -- Change with preferences
 					dts[i] :=  [l_id, l_displayed, l_autoresize, l_width, interface_names.find_translation (l_title), l_title]
 					i := i + 1
 				end
-				set_columns_layout (5, 1, dts)
+				set_columns_layout (1, dts)
+			elseif default_columns_layout /= Void then
+				set_columns_layout (col_pixmap_index, default_columns_layout)
 			end
 		rescue
 			retried := True
@@ -265,20 +269,82 @@ feature -- Change with preferences
 			retry
 		end
 
+feature -- Columns layout access
+
+	default_columns_layout: ARRAY [like column_layout]
+			-- Default columns layout		
+
+	columns_layout_to_array: like default_columns_layout is
+		local
+			i: INTEGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				from
+					create Result.make (1, column_count)
+					i := 1
+				until
+					i > column_count
+				loop
+					Result[i] := column_layout (i)
+					i := i + 1
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	column_layout (c: INTEGER): TUPLE [col_index:INTEGER; is_displayed:BOOLEAN; has_auto_resizing:BOOLEAN; width:INTEGER; title:STRING_GENERAL; title_for_pre: STRING] is
+		require
+			c_positive: c > 0
+			c_not_greater_than_column_count: c <= column_count
+		local
+			col: EV_GRID_COLUMN
+			cindex: INTEGER
+			l_str: STRING
+		do
+			col := column (c)
+			if c = col_name_index then
+				cindex := Col_name_id
+			elseif c = col_value_index then
+				cindex := Col_value_id
+			elseif c = col_type_index then
+				cindex := Col_type_id
+			elseif c = col_address_index then
+				cindex := Col_address_id
+			elseif c = col_context_index then
+				cindex := Col_context_id
+			end
+			l_str ?= col.data
+			check
+				l_str_not_void: l_str /= Void
+			end
+			Result := [cindex, col.is_displayed, column_has_auto_resizing (c), col.width, col.title, l_str]
+		end
+
 feature -- Change
 
+	set_default_columns_layout (d: like default_columns_layout) is
+			-- Set `default_columns_layout' value
+		require
+			d /= Void
+		do
+			default_columns_layout	:= d
+		end
+
 	set_columns_layout (
-				a_cols_count: INTEGER;
 				a_col_pixmap_index: INTEGER;
 				a_col_details: ARRAY [like column_layout] --| name, address, value, type, context
 				) is
 		require
-			a_col_details.count = 5
-			a_cols_count >= a_col_details.count
+			a_col_details.count > 0
 		local
 			i: INTEGER
 		do
-			set_column_count_to (a_cols_count)
+			if column_count < a_col_details.count then
+				set_column_count_to (a_col_details.count)
+			end
 			col_pixmap_index := a_col_pixmap_index
 
 			from
@@ -329,34 +395,6 @@ feature -- Change
 				col.hide
 			end
 			set_auto_resizing_column (c, t.has_auto_resizing)
-		end
-
-	column_layout (c: INTEGER): TUPLE [col_index:INTEGER; is_displayed:BOOLEAN; has_auto_resizing:BOOLEAN; width:INTEGER; title:STRING_GENERAL; title_for_pre: STRING] is
-		require
-			c_positive: c > 0
-			c_not_greater_than_column_count: c <= column_count
-		local
-			col: EV_GRID_COLUMN
-			cindex: INTEGER
-			l_str: STRING
-		do
-			col := column (c)
-			if c = col_name_index then
-				cindex := Col_name_id
-			elseif c = col_value_index then
-				cindex := Col_value_id
-			elseif c = col_type_index then
-				cindex := Col_type_id
-			elseif c = col_address_index then
-				cindex := Col_address_id
-			elseif c = col_context_index then
-				cindex := Col_context_id
-			end
-			l_str ?= col.data
-			check
-				l_str_not_void: l_str /= Void
-			end
-			Result := [cindex, col.is_displayed, column_has_auto_resizing (c), col.width, col.title, l_str]
 		end
 
 	set_slices_cmd (v: like slices_cmd) is
@@ -422,6 +460,7 @@ feature -- Menu
 	grid_menu: EV_MENU is
 		local
 			mci: EV_CHECK_MENU_ITEM
+			mi: EV_MENU_ITEM
 		do
 			Result := Precursor
 			Result.set_text (interface_names.m_grid_name (name))
@@ -436,6 +475,11 @@ feature -- Menu
 				end
 				Result.put_front (create {EV_MENU_SEPARATOR})
 				Result.put_front (mci)
+			end
+			if default_columns_layout /= Void then
+				Result.put_front (create {EV_MENU_SEPARATOR})
+				create mi.make_with_text_and_action ("Reset layout", agent set_columns_layout (col_pixmap_index ,default_columns_layout))
+				Result.put_front (mi)
 			end
 		end
 

@@ -194,8 +194,7 @@ feature {NONE} -- Interface
 
 			g.set_objects_grid_item_function (agent get_object_display_item)
 			spref := preferences.debug_tool_data.grid_column_layout_preference_for (g.id)
-			g.set_columns_layout_from_string_preference (
-					preferences.debug_tool_data.grid_column_layout_preference_for (g.id),
+			g.set_default_columns_layout (
 						<<
 							[1, True, False, 150, interface_names.l_name, interface_names.to_name],
 							[2, True, False, 150, interface_names.l_value, interface_names.to_value],
@@ -204,6 +203,7 @@ feature {NONE} -- Interface
 							[5, False, False, 0, interface_names.l_context_dot, interface_names.to_context_dot]
 						>>
 					)
+			g.set_columns_layout_from_string_preference (preferences.debug_tool_data.grid_column_layout_preference_for (g.id))
 
 				-- Set scrolling preferences.
 			g.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)

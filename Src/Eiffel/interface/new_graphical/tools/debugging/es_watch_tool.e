@@ -81,15 +81,15 @@ feature {NONE} -- Initialization
 			create esgrid.make_with_name (title, "watches")
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (5)
-			esgrid.set_columns_layout (5, 1,
-					<<
+			esgrid.set_default_columns_layout (<<
 						[1, True, False, 150, interface_names.l_Expression, interface_names.to_expression],
 						[2, True, False, 150, interface_names.l_value, interface_names.to_value],
 						[3, True, False, 100, interface_names.l_type, interface_names.to_type],
 						[4, True, False, 80, interface_names.l_address, interface_names.to_address],
 						[5, True, False, 200, interface_names.l_Context, interface_names.to_context]
 					>>
-					)
+				)
+			esgrid.set_columns_layout (1, esgrid.default_columns_layout)
 
 				-- Set scrolling preferences.
 			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)

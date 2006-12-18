@@ -81,28 +81,20 @@ feature -- Query
 			until
 				l_group_count > internal_items.count or l_stop
 			loop
-
 				if algorithm.maximum_group_width (l_group_count) <= max_width_allowed then
 					l_stop := True
-					l_group_info := algorithm.best_grouping
+					l_group_info := algorithm.best_grouping_when (l_group_count).deep_twin
 					from
 						l_group_info.start
 					until
 						l_group_info.after
 					loop
-						l_one_group := l_group_info.item
-						from
-							l_one_group.start
-						until
-							l_one_group.after
-						loop
-							if not l_one_group.is_last then
-								internal_items.i_th (l_one_group.key_for_iteration).set_wrap (False)
-							else
-								internal_items.i_th (l_one_group.key_for_iteration).set_wrap (True)
-							end
-							l_one_group.forth
+						if l_group_info.is_new_group then
+							internal_items.i_th (l_group_info.index).set_wrap (True)
+						else
+							internal_items.i_th (l_group_info.index).set_wrap (False)
 						end
+
 						l_group_info.forth
 					end
 				end

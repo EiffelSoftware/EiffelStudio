@@ -17,7 +17,7 @@ feature -- Event handling
 			-- Actions to be performed when an OS file drop occurs on `Current'.
 		do
 			if file_drop_actions_internal = Void then
-				create file_drop_actions_internal
+				file_drop_actions_internal := create_file_drop_actions
 			end
 			Result := file_drop_actions_internal
 		ensure
@@ -43,6 +43,12 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	create_file_drop_actions: like file_drop_actions_internal is
+			-- Create a file_drop action sequence.
+		do
+			create Result
+		end
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
 			-- Create a pointer_motion action sequence.

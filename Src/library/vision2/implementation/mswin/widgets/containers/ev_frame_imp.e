@@ -22,6 +22,8 @@ inherit
 		end
 
 	EV_SINGLE_CHILD_CONTAINER_IMP
+		undefine
+			on_wm_dropfiles
 		redefine
 			client_x,
 			client_y,

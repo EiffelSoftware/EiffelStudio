@@ -36,7 +36,7 @@ inherit
 			interface,
 			initialize
 		end
-		
+
 	EV_DOCKABLE_TARGET_IMP
 		redefine
 			interface
@@ -45,6 +45,8 @@ inherit
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
 			make as ev_wel_control_container_make
+		undefine
+			on_wm_dropfiles
 		redefine
 			top_level_window_imp
 		end
@@ -62,9 +64,9 @@ feature {NONE} -- Initialization
 			border_width := Default_border_width
 		end
 
-	
+
 	initialize is
-			
+
 		do
 			Precursor {EV_WIDGET_LIST_IMP}
 			remove_item_actions.extend (agent removed_so_update_non_expandable_children (?))
@@ -82,7 +84,7 @@ feature -- Access
 				Result := (child_cell.width - 2 * border_width).max (0)
 			end
 		end
-	
+
 	client_height: INTEGER is
 			-- Height of the client area of `Current'.
 		do
@@ -110,13 +112,13 @@ feature -- Access
 
 	childvisible_nb: INTEGER
 			-- Number of visible children.
- 
+
 	compute_childexpand_nb is
 			-- Compute number of visible children which are expanded
 			-- and assign to `child_expand_number'.
 		local
 			l_cursor: CURSOR
-		do			
+		do
 			childexpand_nb := childvisible_nb
 			if non_expandable_children /= Void then
 				from
@@ -133,7 +135,7 @@ feature -- Access
 				non_expandable_children.go_to (l_cursor)
 			end
 		end
-		
+
 	childexpand_nb: INTEGER
 			-- Number of visible children which are expanded.
 
@@ -229,7 +231,7 @@ feature -- Contract support
  			child_imp ?= new_child
  			Result := ev_children.has (child_imp)
  		end
- 								
+
 feature {NONE} -- Basic operation
 
 	removed_so_update_non_expandable_children (wid: EV_WIDGET) is
@@ -288,10 +290,10 @@ feature {NONE} -- Basic operation
 				end
 			end
 		end
- 
+
 	rest (total_rest: INTEGER): INTEGER is
 				-- `Result' is rest we must add to the current child of
-				-- `ev_children' when the size of the parent is not a 
+				-- `ev_children' when the size of the parent is not a
 				-- multiple of the number of children.
 				-- Dependent on `total_rest'.
 		do
@@ -305,7 +307,7 @@ feature {NONE} -- Basic operation
 		end
 
 feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
-	
+
 	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 			-- List of the children of the `Current'.
 
@@ -330,7 +332,7 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 				loop
 					widget_imp := list.item
 					if flag then
-						widget_imp.disable_sensitive 
+						widget_imp.disable_sensitive
 					else
 						if not widget_imp.internal_non_sensitive then
 							widget_imp.enable_sensitive

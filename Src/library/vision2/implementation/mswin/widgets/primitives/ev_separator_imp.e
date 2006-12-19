@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description: "EiffelVision horizontal separator. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,8 @@ inherit
 	EV_WEL_CONTROL_WINDOW
 		undefine
 			on_sys_key_down,
-			on_getdlgcode
+			on_getdlgcode,
+			on_wm_dropfiles
 		redefine
 			default_style,
 			background_brush,

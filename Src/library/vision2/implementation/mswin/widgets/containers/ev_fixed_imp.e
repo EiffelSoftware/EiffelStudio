@@ -29,6 +29,8 @@ inherit
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
 			make as ev_wel_control_container_make
+		undefine
+			on_wm_dropfiles
 		redefine
 			top_level_window_imp,
 			default_style,

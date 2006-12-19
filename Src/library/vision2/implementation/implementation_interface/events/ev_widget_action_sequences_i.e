@@ -46,8 +46,7 @@ feature {EV_ANY_I} -- Implementation
 
 	create_file_drop_actions: like file_drop_actions_internal is
 			-- Create a file_drop action sequence.
-		do
-			create Result
+		deferred
 		end
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is

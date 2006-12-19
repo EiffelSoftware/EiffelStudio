@@ -26,7 +26,8 @@ inherit
 		redefine
 			interface,
 			set_default_colors,
-			refresh_now
+			refresh_now,
+			create_file_drop_actions
 		end
 
 	EV_SIZEABLE_IMP
@@ -51,6 +52,9 @@ inherit
 		end
 
 	EV_WIDGET_ACTION_SEQUENCES_IMP
+		redefine
+			create_file_drop_actions
+		end
 
 	WEL_WINDOWS_ROUTINES
 		export
@@ -1440,6 +1444,60 @@ feature -- Deferred features
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		deferred
+		end
+
+feature {NONE} -- Implementation
+
+	create_file_drop_actions: like file_drop_actions
+			-- Create and initialize
+		do
+			create Result
+			Result.not_empty_actions.extend (agent enable_drag_accept_files)
+			Result.empty_actions.extend (agent disable_drag_accept_files)
+		end
+
+	enable_drag_accept_files
+			-- Allow `Current' to be a file drag and drop target.
+		deferred
+		end
+
+	disable_drag_accept_files
+			-- Disallow `Current' from being a file drag and drop target.
+		deferred
+		end
+
+	on_wm_dropfiles (wparam: POINTER)
+			-- Wm_dropfile message
+		require
+			exists: exists
+		local
+			l_filecount, l_chars_copied: INTEGER_32
+			l_string: WEL_STRING
+			l_max_length: INTEGER_32
+			i: INTEGER_32
+			l_file_list: ARRAYED_LIST [STRING_32]
+		do
+			l_filecount := {WEL_API}.drag_query_file (wparam, -1, default_pointer, 0)
+			if l_filecount > 0 then
+				from
+					i := 0
+					l_max_length := 255
+					create l_string.make_empty (l_max_length)
+					create l_file_list.make_filled (l_filecount)
+				until
+					i = l_filecount
+				loop
+					l_chars_copied := {WEL_API}.drag_query_file (wparam, i, l_string.item, l_max_length)
+					l_file_list.put_i_th (l_string.substring (1, l_chars_copied), l_filecount - i)
+					i := i + 1
+				end
+				if file_drop_actions_internal /= Void then
+					file_drop_actions_internal.call ([l_file_list])
+				end
+				if application_imp.file_drop_actions_internal /= Void then
+					application_imp.file_drop_actions_internal.call ([interface, l_file_list])
+				end
+			end
 		end
 
 feature -- Feature that should be directly implemented by externals

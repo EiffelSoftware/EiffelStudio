@@ -1,20 +1,20 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision cell, Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_CELL_IMP
-	
+
 inherit
 	EV_CELL_I
 		redefine
 			interface
 		end
-		
+
 	EV_DOCKABLE_TARGET_IMP
 		redefine
 			interface
@@ -34,6 +34,8 @@ inherit
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
 			make as ev_wel_control_container_make
+		undefine
+			on_wm_dropfiles
 		redefine
 			top_level_window_imp
 		end

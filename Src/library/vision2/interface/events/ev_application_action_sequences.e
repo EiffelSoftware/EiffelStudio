@@ -87,6 +87,18 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+	file_drop_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [widget: EV_WIDGET; file_list: LIST [STRING_32]]]
+			-- Actions to be performed when an OS file drop is performed on `Current'.
+			-- `widget' is the widget on which the file(s) where dropped on to.
+			-- `file_list' is a list of the file paths being dropped on to `widget'.
+			-- In order for `file_drop_actions' to be called an agent has to be already
+			-- present in the `file_drop_actions' of `widget' otherwise a drop is disallowed.
+		do
+			Result := implementation.file_drop_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 	uncaught_exception_actions: EV_LITE_ACTION_SEQUENCE [TUPLE [EXCEPTION]] is
 			-- Actions to be performed when an
 			-- action sequence called via callback

@@ -10,20 +10,20 @@ class
 
 inherit
 	EV_LIST_I
-		redefine	
+		redefine
 			interface, initialize, selected_item, selected_items, wipe_out
 		end
-		
+
 	EV_LIST_ITEM_LIST_IMP
 		redefine
 			initialize, interface, wipe_out
 		end
-		
+
 	EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 		redefine
 			interface
 		end
-	
+
 	EV_PRIMITIVE_IMP
 		undefine
 			on_right_button_down, on_left_button_down,
@@ -53,12 +53,13 @@ inherit
 		undefine
 			set_width, set_height, on_left_button_down, on_middle_button_down,
 			on_right_button_down, on_left_button_up, on_middle_button_up,
-			on_right_button_up, on_left_button_double_click, 
+			on_right_button_up, on_left_button_double_click,
 			on_middle_button_double_click, on_right_button_double_click,
 			on_mouse_move, on_key_down, on_key_up, on_char, on_set_focus,
 			on_desactivate, on_kill_focus, on_set_cursor, show, hide,
 			x_position, y_position, on_sys_key_down, on_sys_key_up,
-			default_process_message, on_mouse_wheel, on_getdlgcode
+			default_process_message, on_mouse_wheel, on_getdlgcode,
+			on_wm_dropfiles
 		redefine
 			on_lvn_itemchanged, on_size, on_erase_background, default_style,
 			default_ex_style
@@ -81,10 +82,10 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
-	
-	make (an_interface: like interface) is         
+
+	make (an_interface: like interface) is
 			-- Create `Current' with interface `an_interface'.
 			-- `Current' will be in single selection mode.
 		local
@@ -99,7 +100,7 @@ feature {NONE} -- Initialization
 			create wel_lv_column.make
 			append_column (wel_lv_column)
 			set_extended_view_style (default_ex_style)
-		end	
+		end
 
 	initialize is
 			-- Initialize `Current'.
@@ -110,7 +111,7 @@ feature {NONE} -- Initialization
 
 				-- Set the WEL extended view style
 			if comctl32_version >= version_470 then
-				set_extended_view_style (get_extended_view_style + 
+				set_extended_view_style (get_extended_view_style +
 					Lvs_ex_fullrowselect)
 			end
 		end
@@ -205,11 +206,11 @@ feature -- Status setting
 			if not multiple_selection_enabled then
 				set_style (default_style - Lvs_singlesel)
 				multiple_selection_enabled := True
-				
+
 					-- The scroll bars become hidden, but by calling `update_item'
 					-- it forces `Current' to redisplay them if necessary.
 				if count > 0 then
-					update_item (count - 1)	
+					update_item (count - 1)
 				end
 			end
 		end
@@ -236,11 +237,11 @@ feature -- Status setting
 					-- The scroll bars become hidden, but by calling `update_item'
 					-- it forces `Current' to redisplay them if necessary.
 				if count > 0 then
-					update_item (count - 1)	
+					update_item (count - 1)
 				end
 			end
 		end
-	
+
 	selected_items_at_disable_sensitive: ARRAYED_LIST [EV_LIST_ITEM]
 		-- All the selected items at the point `disable_sensitive'
 		-- was called. When we call `disable_sensitive' on a list, we
@@ -270,7 +271,7 @@ feature -- Status setting
 						end
 						selected_items_at_disable_sensitive.forth
 					end
-					internal_selected_items_uptodate := False	
+					internal_selected_items_uptodate := False
 				end
 				Precursor
 				invalidate
@@ -294,7 +295,7 @@ feature -- Status setting
 				update
 			end
 		end
-		
+
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
@@ -347,7 +348,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			if pre_drop_it /= Void and pre_drop_it.is_transport_enabled and
 				not parent_is_pnd_source and pre_drop_it.parent /= Void then
 				pre_drop_it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
-			elseif pnd_item_source /= Void then 
+			elseif pnd_item_source /= Void then
 				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			end
 
@@ -370,7 +371,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 
 					-- If there is an item where the button press was recieved,
 					-- and it has not changed from the start of this procedure
-					-- then call `pointer_button_press_actions'. 
+					-- then call `pointer_button_press_actions'.
 					--| Internal_propagate_pointer_press in
 					--| EV_MULTI_COLUMN_LIST_IMP has a complete explanation.
 				if post_drop_it /= Void and pre_drop_it = post_drop_it and call_press_event then
@@ -450,7 +451,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 		end
 
 	refresh_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Refresh current so that it take into account 
+			-- Refresh current so that it take into account
 			-- changes made in `item_imp'
 		do
 			wel_replace_item (item_imp.lv_item)
@@ -495,7 +496,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			i := ev_children.index_of (item_imp, 1) - 1
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (Lvis_selected + Lvis_focused)
-			litem.set_statemask (Lvis_selected + Lvis_focused)	
+			litem.set_statemask (Lvis_selected + Lvis_focused)
 			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
@@ -508,7 +509,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			i := ev_children.index_of (item_imp, 1) - 1
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (0)
-			litem.set_statemask (Lvis_selected + Lvis_focused)	
+			litem.set_statemask (Lvis_selected + Lvis_focused)
 			{WEL_API}.send_message (wel_item, Lvm_setitemstate, to_wparam (i), litem.item)
 		end
 
@@ -542,7 +543,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 				child_imp.on_orphaned
 				remove_item_actions.call ([child_imp.interface])
 				child_imp.set_parent_imp (Void)
-				if internal_selected_items.has (child_imp.interface) then	
+				if internal_selected_items.has (child_imp.interface) then
 					if child_imp.deselect_actions_internal /= Void then
 						child_imp.deselect_actions_internal.call (Void)
 					end
@@ -651,7 +652,7 @@ feature {EV_ANY_I} -- Implementation
 						if select_actions_internal /= Void then
 							select_actions_internal.call (Void)
 						end
-	
+
 					elseif flag_set(info.uoldstate, Lvis_selected) and
 						not flag_set(info.unewstate, Lvis_selected)
 					then
@@ -726,7 +727,7 @@ feature {EV_ANY_I} -- Implementation
 				-- Create a brush corresponding to the background color.
 			if is_sensitive then
 				if background_color_imp = Void then
-					bkg_color := get_background_color	
+					bkg_color := get_background_color
 				else
 					bkg_color := background_color_imp
 				end
@@ -787,7 +788,7 @@ feature {EV_ANY_I} -- Implementation
 			reg.delete
 			brush.delete
 		end
-		
+
 	background_color: EV_COLOR is
 			-- Color used for the background of `Current'.
 			-- This has been redefined as the background color of
@@ -827,7 +828,7 @@ feature {NONE} -- Implementation
 				interf ?= (c @ (wel_sel_items @ i + 1)).interface
 				Result.extend (interf)
 				i := i + 1
-			end		
+			end
 		end
 
 	valid_selected_items (a_selected_items: like selected_items): BOOLEAN is
@@ -860,16 +861,16 @@ feature {NONE} -- Implementation
 				good_selected_items.forth
 			end
 		end
-		
+
 	on_char (character_code, key_data: INTEGER) is
-			-- Executed when a key is pressed. 
+			-- Executed when a key is pressed.
 		do
 			Precursor {EV_PRIMITIVE_IMP} (character_code, key_data)
 			if default_key_processing_disabled then
 				disable_default_processing
 			end
 		end
-		
+
 	destroy is
 			-- Destroy `Current'.
 		do

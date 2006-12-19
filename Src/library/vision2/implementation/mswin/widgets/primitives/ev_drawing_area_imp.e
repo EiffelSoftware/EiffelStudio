@@ -39,7 +39,8 @@ inherit
 			on_sys_key_down,
 			wel_set_font,
 			wel_font,
-			on_getdlgcode
+			on_getdlgcode,
+			on_wm_dropfiles
 		redefine
 			on_paint,
 			on_erase_background,

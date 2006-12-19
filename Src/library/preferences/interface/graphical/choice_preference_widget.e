@@ -54,6 +54,15 @@ feature -- Status Setting
 			activate_combo
 		end
 
+	set_displayed_value (a_mapping: like value_mapping) is
+			-- Set values for display.
+			-- If values are not found, original ones are displayed.
+		do
+			value_mapping := a_mapping
+			change_item_widget.set_item_strings (displayed_values)
+			change_item_widget.set_text (displayed_selected_value)
+		end
+
 feature {NONE} -- Command
 
 	update_changes is
@@ -61,6 +70,7 @@ feature {NONE} -- Command
 		local
 			l_value,
 			l_item: STRING
+			l_displayed_value: STRING_32
 			l_cnt: INTEGER
 		do
 			from
@@ -70,7 +80,14 @@ feature {NONE} -- Command
 				l_cnt > preference.value.count
 			loop
 				l_item := preference.value.item (l_cnt)
-				if change_item_widget.text.is_equal (l_item) then
+				l_displayed_value := Void
+				if value_mapping /= Void and then not l_item.is_empty then
+					l_displayed_value ?= value_mapping.item (l_item)
+				end
+				if l_displayed_value = Void then
+					l_displayed_value := l_item
+				end
+				if change_item_widget.text.is_equal (l_displayed_value) then
 					l_value.append_character ('[')
 					l_value.append (l_item)
 					l_value.append_character (']')
@@ -94,7 +111,7 @@ feature {NONE} -- Command
 			-- Reset.
 		do
 			Precursor {PREFERENCE_WIDGET}
-			change_item_widget.set_text (preference.selected_value)
+			change_item_widget.set_text (displayed_selected_value)
 		end
 
 feature {NONE} -- Implementation
@@ -106,8 +123,8 @@ feature {NONE} -- Implementation
 			-- Create and setup `change_item_widget'.
 		do
 			create change_item_widget
-			change_item_widget.set_item_strings (preference.value)
-			change_item_widget.set_text (preference.selected_value)
+			change_item_widget.set_item_strings (displayed_values)
+			change_item_widget.set_text (displayed_selected_value)
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate_combo)
 			change_item_widget.deactivate_actions.extend (agent update_changes)
 		end
@@ -119,6 +136,50 @@ feature {NONE} -- Implementation
 				change_item_widget.activate
 			end
 		end
+
+	displayed_values: ARRAY [STRING_GENERAL] is
+			-- Displayed values
+			-- If `value_mapping' is Void or empty, original values are used.
+		local
+			l_array: ARRAY [STRING]
+			i: INTEGER
+		do
+			if value_mapping /= Void and not value_mapping.is_empty then
+				l_array := preference.value
+				create Result.make (l_array.lower, l_array.upper)
+				from
+					i := l_array.lower
+				until
+					i > l_array.upper
+				loop
+					if value_mapping.has_key (l_array.item (i)) then
+						Result.put (value_mapping.found_item, i)
+					else
+						Result.put (l_array.item (i), i)
+					end
+					i := i + 1
+				end
+			else
+				Result := preference.value
+			end
+		end
+
+	displayed_selected_value: STRING_GENERAL is
+			-- Displayed value
+		do
+			if value_mapping /= Void then
+				Result := value_mapping.item (preference.selected_value)
+			end
+			if Result = Void then
+				Result := preference.selected_value
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	value_mapping: HASH_TABLE [STRING_GENERAL, STRING];
+			-- Key: values
+			-- Item: strings displayed
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -40,6 +40,23 @@
 			</Directory>
 			<Directory Id="Application" Name=".">
 				<Directory Id="studio1" Name="studio">
+					<Directory Id="lang" Name="lang">
+						<Directory Id="mo_files" Name="mo_files">
+							<Component Id="mo_files" Guid="6666eeac-4455-4d01-85b1-9d8b3ca11b69">
+								<File Id="en_mo" Name="en.mo" />
+								<File Id="fr_mo" Name="fr.mo" />
+								<File Id="zh_cn_mo" Name="zh_CN.mo" />
+							</Component>
+						</Directory>
+						<Directory Id="po_files" Name="po_files">
+							<Component Id="po_files" Guid="6a7ed8b9-8091-4fa1-abd4-bc1def60c5b8">
+								<File Id="en_po" Name="en.po" />
+								<File Id="estudio_pot" Name="estudio.pot" />
+								<File Id="fr_po" Name="fr.po" />
+								<File Id="zh_cn_po" Name="zh_CN.po" />
+							</Component>
+						</Directory>
+					</Directory>
 					<Directory Id="metrics" Name="metrics">
 						<Component Id="metrics" Guid="BACFC21E-A641-45cd-97F1-F2511B121B33">
 							<File Id="predefined_metrics_xml" Name="PREDEF~1.XML" LongName="predefined_metrics.xml" />

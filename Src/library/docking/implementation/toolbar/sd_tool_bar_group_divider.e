@@ -149,7 +149,7 @@ feature -- Query
 			Result := algorithm.group_count
 		end
 
-	best_grouping_by_width (a_width: INTEGER): SD_TOOL_BAR_GROUP_INFO is
+	best_grouping_by_width_to_right (a_width: INTEGER): SD_TOOL_BAR_GROUP_INFO is
 			-- Best groupinp, Result is calculated by `a_width'.
 		require
 			valid: a_width > 0
@@ -163,7 +163,8 @@ feature -- Query
 			until
 				l_list.before or Result /= Void
 			loop
-				if a_width < l_list.item.maximum_width_sub then
+				if (not l_list.item.has_sub_info and a_width < l_list.item.maximum_width) or
+					(l_list.item.has_sub_info and a_width < l_list.item.maximum_width_sub) then
 					Result := l_list.item
 				else
 					last_group_index := last_group_index - 1
@@ -173,6 +174,38 @@ feature -- Query
 			if Result = Void then
 				Result := l_list.first
 				last_group_index := 1
+			end
+		ensure
+			not_void: Result /= Void
+			valid: last_group_index >= 1 and last_group_index <= group_infos.count
+		end
+
+	best_grouping_by_width_to_left (a_width: INTEGER): SD_TOOL_BAR_GROUP_INFO is
+			-- Best groupinp, Result is calculated by `a_width'.
+			-- When pointer is moving to left, use this feature.
+		require
+			valid: a_width > 0
+		local
+			l_list : ARRAYED_LIST [SD_TOOL_BAR_GROUP_INFO]
+		do
+			from
+				last_group_index := 1
+				l_list := group_infos.linear_representation
+				l_list.start
+			until
+				l_list.after or Result /= Void
+			loop
+				if (not l_list.item.has_sub_info and a_width > l_list.item.maximum_width) or
+					(l_list.item.has_sub_info and a_width > l_list.item.maximum_width_sub) then
+					Result := l_list.item
+				else
+					last_group_index := last_group_index + 1
+					l_list.forth
+				end
+			end
+			if Result = Void then
+				Result := l_list.last
+				last_group_index := l_list.count
 			end
 		ensure
 			not_void: Result /= Void

@@ -270,7 +270,6 @@ feature {NONE} -- Implementation functions
 			-- Maximum row width of a_group
 		require
 			not_void: a_group /= Void
-			valid: a_group.count = group_count
 		local
 			l_one_group: DS_HASH_TABLE [INTEGER, INTEGER]
 			l_one_group_width: INTEGER
@@ -280,8 +279,11 @@ feature {NONE} -- Implementation functions
 			until
 				a_group.after
 			loop
-				l_one_group_width := 0
+				if a_group.is_new_group then
+					l_one_group_width := 0
+				end
 				l_one_group := a_group.item
+
 				l_one_group_width := l_one_group_width + one_row_width (l_one_group.twin)
 				if Result < l_one_group_width then
 					Result := l_one_group_width

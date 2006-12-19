@@ -147,6 +147,16 @@ feature -- Messages
 			"SendMessage ((HWND) $hwnd, (UINT) $msg, (WPARAM) $wparam, (LPARAM) $lparam)"
 		end
 
+feature -- File Drop Handling
+
+	frozen drag_query_file (hdrop: POINTER; ifile: INTEGER; buffer_pointer: POINTER; buffer_size: INTEGER): INTEGER is
+			-- SDK DragQueryFile
+		external
+			"C inline use %"wel.h%""
+		alias
+			"DragQueryFile ((HDROP) $hdrop, (UINT) $ifile, (LPTSTR) $buffer_pointer, (UINT) $buffer_size)"
+		end
+
 feature -- Scrolling
 
 	frozen set_control_scroll_info (hwnd: POINTER; info: POINTER; redraw: BOOLEAN): INTEGER is

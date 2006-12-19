@@ -1600,3 +1600,4 @@ if DOTNET test versioned-interface_implementation	dotnet039	tcf pass dotnet
 if DOTNET test renamed-frozen-interface-implementation-for-single	dotnet040	tcf pass dotnet
 if DOTNET test deferred-property-generation	dotnet041	tcf pass dotnet
 if DOTNET test merged-typed-pointer-argument	dotnet042	tcf pass dotnet
+if DOTNET test correct-bound-property-assigner dotnet043	tcf pass dotnet

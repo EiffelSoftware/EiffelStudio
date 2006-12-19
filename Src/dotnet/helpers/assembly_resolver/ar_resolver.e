@@ -121,6 +121,7 @@ feature -- Resolution
 			l_cursor: CURSOR
 			l_paths: like resolve_paths
 			l_file_name: FILE_NAME
+			l_file_path: STRING
 			l_name: ASSEMBLY_NAME
 		do
 			debug ("trace")
@@ -153,18 +154,19 @@ feature -- Resolution
 					debug ("trace")
 						{SYSTEM_DLL_TRACE}.write_line_string ("Looking for '" + l_file_name + "'.")
 					end
-					if (create {RAW_FILE}.make (l_file_name)).exists then
+					l_file_path := l_file_name.string
+					if {SYSTEM_FILE}.exists (l_file_path) then
 						debug ("trace")
-							{SYSTEM_DLL_TRACE}.write_line_string ("Matching '" + l_file_name + "'.")
+							{SYSTEM_DLL_TRACE}.write_line_string ("Matching '" + l_file_path + "'.")
 						end
-						l_name := get_assembly_name (l_file_name)
+						l_name := get_assembly_name (l_file_path)
 						if l_name /= Void then
 							if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
 								debug ("trace")
-									{SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_name + "'.")
+									{SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_path + "'.")
 								end
 
-								Result := l_file_name
+								Result := l_file_path
 							end
 						end
 					end

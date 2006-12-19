@@ -660,6 +660,13 @@ feature {NONE} -- Private Implementation
 
 feature -- Delegated features
 
+	create_file_drop_actions: like file_drop_actions
+			-- Create `file_drop_actions'
+		do
+			promote_to_widget
+			Result := interface.implementation.create_file_drop_actions
+		end
+
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
 			-- `Result' is widget implementation at current
 			-- cursor position.

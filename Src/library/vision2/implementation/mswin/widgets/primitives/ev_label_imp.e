@@ -96,7 +96,8 @@ inherit
 			on_sys_key_down,
 			on_sys_key_up,
 			default_process_message,
-			on_getdlgcode
+			on_getdlgcode,
+			on_wm_dropfiles
 		redefine
 			default_style, on_erase_background
 		end

@@ -101,7 +101,8 @@ inherit
 			on_sys_key_down,
 			on_sys_key_up,
 			on_notify,
-			default_process_message
+			default_process_message,
+			on_wm_dropfiles
 		redefine
 			default_style,
 			default_ex_style,

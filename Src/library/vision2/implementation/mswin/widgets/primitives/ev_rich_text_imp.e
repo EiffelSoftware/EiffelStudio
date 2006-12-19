@@ -148,7 +148,8 @@ inherit
 			show,
 			destroy,
 			wel_make,
-			on_getdlgcode
+			on_getdlgcode,
+			on_wm_dropfiles
 		redefine
 			default_style,
 			default_ex_style,

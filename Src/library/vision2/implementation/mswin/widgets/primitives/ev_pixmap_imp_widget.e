@@ -26,7 +26,7 @@ inherit
 			set_actual_drop_target_agent, has_parent, parent_is_sensitive,
 			internal_set_pointer_style, widget_imp_at_pointer_position,
 			pnd_screen, internal_enable_dockable, internal_disable_dockable,
-			update_buttons, refresh_now
+			update_buttons, refresh_now, create_file_drop_actions
 		redefine
 			interface, initialize,
 			read_from_named_file,
@@ -57,7 +57,8 @@ inherit
 	EV_WEL_CONTROL_WINDOW
 		undefine
 			on_sys_key_down,
-			wel_font, wel_set_font, on_getdlgcode
+			wel_font, wel_set_font, on_getdlgcode,
+			on_wm_dropfiles
 		redefine
 			on_paint, on_erase_background,
 			class_background,

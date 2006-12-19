@@ -1282,6 +1282,12 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	create_file_drop_actions: like file_drop_actions
+			-- Create `file_drop_actions'
+		do
+			create Result
+		end
+
 	update_fields(
 		error_code		: INTEGER -- Loadpixmap_error_xxxx
 		data_type		: INTEGER -- Loadpixmap_hicon, ...

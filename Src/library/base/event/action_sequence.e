@@ -86,7 +86,7 @@ feature -- Basic operations
 					-- Create a snapshot of the routine objects in `Current'.
 				create l_routines_snapshot.make (count)
 				l_routines_snapshot.copy_data (area, 0, 0, count)
-					-- Iterate agents contained `kamikazes' and remove them from `Current'
+					-- Iterate agents contained in `kamikazes' and remove them from `Current'
 					-- The agents will still be called from `l_routines_snapshot'.
 				l_kamikazes_internal := kamikazes_internal
 				if l_kamikazes_internal /= Void and then not l_kamikazes_internal.is_empty then

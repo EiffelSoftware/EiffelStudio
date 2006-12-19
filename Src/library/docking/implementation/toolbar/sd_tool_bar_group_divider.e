@@ -163,8 +163,8 @@ feature -- Query
 			until
 				l_list.before or Result /= Void
 			loop
-				if (not l_list.item.has_sub_info and a_width < l_list.item.maximum_width) or
-					(l_list.item.has_sub_info and a_width < l_list.item.maximum_width_sub) then
+				if (not l_list.item.has_any_sub_info and a_width < l_list.item.maximum_width) or
+					(l_list.item.has_any_sub_info and a_width < l_list.item.maximum_width_sub) then
 					Result := l_list.item
 				else
 					last_group_index := last_group_index - 1
@@ -195,8 +195,8 @@ feature -- Query
 			until
 				l_list.after or Result /= Void
 			loop
-				if (not l_list.item.has_sub_info and a_width > l_list.item.maximum_width) or
-					(l_list.item.has_sub_info and a_width > l_list.item.maximum_width_sub) then
+				if (not l_list.item.has_any_sub_info and a_width > l_list.item.maximum_width) or
+					(l_list.item.has_any_sub_info and a_width > l_list.item.maximum_width_sub) then
 					Result := l_list.item
 				else
 					last_group_index := last_group_index + 1

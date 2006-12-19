@@ -53,7 +53,7 @@ feature -- Query
 			l_maximum_index := maximum_width_group_index
 			if not has_sub_info then
 			-- This function is calculate inlclude sub level
-			-- But it's not calcule sub sub level, so we pass True here
+			-- But it's not calculate "sub sub" level, so we pass True here
 				Result := group_maximum_width (l_maximum_index)
 			else
 				Result := sub_grouping.item (l_maximum_index).maximum_width_sub
@@ -106,14 +106,12 @@ feature -- Query
 				l_group_count > l_total_group
 			loop
 				l_group_width := group_maximum_width (l_group_count)
-
 				if l_group_width > l_maximum_width then
 					l_maximum_width := l_group_width
 					Result := l_group_count
 				end
 				l_group_count := l_group_count + 1
 			end
-
 		ensure
 			valid: Result > 0 and Result <= group_count
 		end
@@ -149,13 +147,11 @@ feature -- Query
 			until
 				l_group_count > l_total_group
 			loop
-
 				l_group_width := group_maximum_width (l_group_count)
 				if l_group_width > l_maximum_width then
 					l_maximum_width := l_group_width
 					Result := l_group_count
 				end
-
 				l_group_count := l_group_count + 1
 			end
 		ensure
@@ -447,6 +443,12 @@ feature -- Query for iteration
 			-- One row info.
 		do
 			Result := internal_group_info.item
+		end
+
+	has_any_sub_info: BOOLEAN is
+			-- Do current grouping has any sub infos?
+		do
+			Result := sub_grouping.count > 0
 		end
 
 	has_sub_info: BOOLEAN is

@@ -714,6 +714,7 @@ feature -- Label texts
 	l_Explicit_exception_pending: STRING_GENERAL is do Result := locale.translate("Explicit exception pending")	end
 	l_Exported: STRING_GENERAL is				do Result := locale.translate("exported features")	end
 	l_Expression: STRING_GENERAL is				do Result := locale.translate("Expression")	end
+	l_false: STRING_GENERAL is					do Result := locale.translate ("False") end
 	l_External: STRING_GENERAL is				do Result := locale.translate("external features")	end
 	l_Feature: STRING_GENERAL is				do Result := locale.translate("Feature")	end
 	l_Feature_colon: STRING_GENERAL is				do Result := locale.translate("Feature:")	end
@@ -902,6 +903,7 @@ feature -- Label texts
 	l_Three_dots: STRING_GENERAL is				do Result := locale.translate("...")	end
 	l_tree_or_flat_view: STRING_GENERAL is		do Result := locale.translate ("Tree/Flat View") end
 	l_Tree_view: STRING_GENERAL is				do Result := locale.translate ("Tree View") end
+	l_true: STRING_GENERAL is					do Result := locale.translate ("True") end
 	l_try_saving_file_and_searching: STRING_GENERAL is 	do Result := locale.translate ("Item expires. Try saving file and searching again.") end
 	l_try_searching: STRING_GENERAL is 	do Result := locale.translate ("Item expires. Try searching again.") end
 	l_Text_loading: STRING_GENERAL is		do Result := locale.translate("Current text is being loaded. It is therefore%Nnot editable nor pickable.")	end

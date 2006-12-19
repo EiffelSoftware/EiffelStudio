@@ -24,6 +24,8 @@ inherit
 			grid,
 			build_filter_icons,
 			try_to_translate,
+			new_boolean_widget,
+			new_choice_widget,
 
 				-- Interface names
 			l_name,
@@ -71,7 +73,7 @@ inherit
 			default_create
 		end
 
-	EB_CONSTANTS
+	SHARED_NAMES
 		undefine
 			copy,
 			default_create
@@ -111,7 +113,16 @@ feature -- Access
 			l_ifp: IDENTIFIED_FONT_PREFERENCE
 			l_scp: SHORTCUT_PREFERENCE
 		do
-			Result := Precursor {PREFERENCES_GRID}(a_pref)
+			create Result
+			if a_pref.name /= Void then
+				if show_full_preference_name then
+					Result.set_text (build_full_name_to_display (a_pref))
+				else
+					Result.set_text (try_to_translate (formatted_name (short_preference_name (a_pref.name))))
+				end
+			else
+				Result.set_text ("")
+			end
 			if Result /= Void then
 				l_bp ?= a_pref
 				if l_bp = Void then
@@ -157,7 +168,6 @@ feature -- Access
 			end
 		end
 
-
 	preference_value_column (a_pref: PREFERENCE): EV_GRID_ITEM is
 			--
 		local
@@ -194,46 +204,46 @@ feature -- Access
 
 feature {NONE} -- Names
 
-	l_name: STRING_GENERAL is							do Result := interface_names.l_name								end
-	l_literal_value: STRING_GENERAL is					do Result := interface_names.l_Literal_value					end
-	l_status: STRING_GENERAL is							do Result := interface_names.l_status							end
-	l_type: STRING_GENERAL is							do Result := interface_names.l_type								end
-	l_request_restart: STRING_GENERAL is				do Result := interface_names.l_request_restart					end
-	p_default_value: STRING_GENERAL is					do Result := interface_names.l_default							end
-	user_value: STRING_GENERAL is						do Result := interface_names.l_user_set							end
-	auto_value: STRING_GENERAL is						do Result := interface_names.l_auto								end
-	no_description_text: STRING_GENERAL is				do Result := interface_names.l_no_description_text				end
-	preferences_title: STRING_GENERAL is				do Result := interface_names.t_preference_window				end
-	restore_preference_string: STRING_GENERAL is		do Result := interface_names.l_restore_preference_string		end
-	w_Preferences_delayed_resources: STRING_GENERAL is	do Result := interface_names.l_preferences_delayed_resources	end
+	l_name: STRING_GENERAL is							do Result := names.l_name								end
+	l_literal_value: STRING_GENERAL is					do Result := names.l_Literal_value					end
+	l_status: STRING_GENERAL is							do Result := names.l_status							end
+	l_type: STRING_GENERAL is							do Result := names.l_type								end
+	l_request_restart: STRING_GENERAL is				do Result := names.l_request_restart					end
+	p_default_value: STRING_GENERAL is					do Result := names.l_default							end
+	user_value: STRING_GENERAL is						do Result := names.l_user_set							end
+	auto_value: STRING_GENERAL is						do Result := names.l_auto								end
+	no_description_text: STRING_GENERAL is				do Result := names.l_no_description_text				end
+	preferences_title: STRING_GENERAL is				do Result := names.t_preference_window				end
+	restore_preference_string: STRING_GENERAL is		do Result := names.l_restore_preference_string		end
+	w_Preferences_delayed_resources: STRING_GENERAL is	do Result := names.l_preferences_delayed_resources	end
 			-- Texts used in the dialog that tells the user
 			-- they have to restart the application to use the new preferences.
 
 
-	l_tree_view: STRING_GENERAL is						do Result := interface_names.l_Tree_view						end
-	f_switch_to_tree_view: STRING_GENERAL is 			do Result := interface_names.f_switch_to_tree_view				end
-	l_flat_view: STRING_GENERAL is						do Result := interface_names.l_Flat_view 						end
-	f_switch_to_flat_view: STRING_GENERAL is 			do Result := interface_names.f_switch_to_flat_view				end
-	l_updating_the_view: STRING_GENERAL is 				do Result := interface_names.l_update_the_view					end
-	l_filter: STRING_GENERAL is							do Result := interface_names.l_filter 							end
-	l_tree_or_flat_view: STRING_GENERAL					do Result := interface_names.l_tree_or_flat_view 				end
-	l_restore_defaults: STRING_GENERAL 					do Result := interface_names.l_restore_defaults 				end
-	l_restore_default: STRING_GENERAL					do Result := interface_names.l_restore_default 					end
-	l_no_default_value: STRING_GENERAL 					do Result := interface_names.l_no_default_value 				end
-	l_close: STRING_GENERAL								do Result := interface_names.b_close 							end
-	l_display_window: STRING_GENERAL 					do Result := interface_names.l_display_window 					end
-	l_description: STRING_GENERAL						do Result := interface_names.l_description 						end
-	l_building_flat_view: STRING_GENERAL				do Result := interface_names.l_building_flat_view 				end
-	l_building_tree_view: STRING_GENERAL				do Result := interface_names.l_building_tree_view 				end
+	l_tree_view: STRING_GENERAL is						do Result := names.l_Tree_view						end
+	f_switch_to_tree_view: STRING_GENERAL is 			do Result := names.f_switch_to_tree_view				end
+	l_flat_view: STRING_GENERAL is						do Result := names.l_Flat_view 						end
+	f_switch_to_flat_view: STRING_GENERAL is 			do Result := names.f_switch_to_flat_view				end
+	l_updating_the_view: STRING_GENERAL is 				do Result := names.l_update_the_view					end
+	l_filter: STRING_GENERAL is							do Result := names.l_filter 							end
+	l_tree_or_flat_view: STRING_GENERAL					do Result := names.l_tree_or_flat_view 				end
+	l_restore_defaults: STRING_GENERAL 					do Result := names.l_restore_defaults 				end
+	l_restore_default: STRING_GENERAL					do Result := names.l_restore_default 					end
+	l_no_default_value: STRING_GENERAL 					do Result := names.l_no_default_value 				end
+	l_close: STRING_GENERAL								do Result := names.b_close 							end
+	l_display_window: STRING_GENERAL 					do Result := names.l_display_window 					end
+	l_description: STRING_GENERAL						do Result := names.l_description 						end
+	l_building_flat_view: STRING_GENERAL				do Result := names.l_building_flat_view 				end
+	l_building_tree_view: STRING_GENERAL				do Result := names.l_building_tree_view 				end
 
 	l_matches_of_total_preferences (a_count: STRING_GENERAL; a_total_count: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := interface_names.l_matches_of_total_preferences (a_count, a_total_count)
+			Result := names.l_matches_of_total_preferences (a_count, a_total_count)
 		end
 
 	l_count_preferences (a_count: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := interface_names.l_count_preferences (a_count)
+			Result := names.l_count_preferences (a_count)
 		end
 
 feature {NONE} -- Events
@@ -270,6 +280,34 @@ feature {NONE} -- Implementation
 			icon_down := icon_pixmaps.sort_descending_icon
 		end
 
+	build_full_name_to_display (a_pref: PREFERENCE): STRING_32 is
+			-- Build a translated full name of a preference.
+		require
+			a_pref_not_void: a_pref /= Void
+		local
+			l_str_32: STRING_32
+			l_string: STRING
+			l_list: LIST [STRING]
+		do
+			l_string := a_pref.name
+			create l_str_32.make (l_string.count)
+			l_list := l_string.split ('.')
+			if not l_list.is_empty then
+				from
+					l_list.start
+				until
+					l_list.after
+				loop
+					l_str_32.append (try_to_translate (formatted_name (l_list.item)).as_string_32)
+					l_list.forth
+					if not l_list.after then
+						l_str_32.extend ('.')
+					end
+				end
+			end
+			Result := l_str_32
+		end
+
 	update_grid_columns is
 			-- Update the grid columns widths and borders depending on current display type
 		local
@@ -298,7 +336,50 @@ feature {NONE} -- Implementation
 	try_to_translate (a_string: STRING_GENERAL): STRING_GENERAL is
 			-- Try to translate `a_string'.
 		do
-			Result := interface_names.find_translation (a_string)
+			Result := names.find_translation (a_string)
+		end
+
+feature {NONE} -- Widget initialization
+
+	new_boolean_widget (a_pref: BOOLEAN_PREFERENCE): BOOLEAN_PREFERENCE_WIDGET is
+		do
+			Result := Precursor (a_pref)
+			Result.set_displayed_booleans (names.l_true, names.l_false)
+		end
+
+	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET is
+		local
+			l_array: ARRAY [STRING]
+			l_value: STRING
+			l_displayed_names: HASH_TABLE [STRING_GENERAL, STRING]
+			l_displayed_name: STRING_GENERAL
+			l_langs, l_locales: HASH_TABLE [STRING_GENERAL, STRING]
+			i: INTEGER
+		do
+			Result := Precursor (a_pref)
+			if a_pref = preferences.misc_data.locale_id_preference then
+				l_langs := locale_names.languages
+				l_locales := locale_names.locales
+				l_array := a_pref.value
+				create l_displayed_names.make (a_pref.value.upper - a_pref.value.lower + 1)
+				from
+					i := l_array.lower
+				until
+					i > l_array.upper
+				loop
+					l_value := l_array.item (i).as_lower
+					if l_locales.has_key (l_value) then
+						l_displayed_name := l_locales.found_item
+					elseif l_langs.has_key (l_value) then
+						l_displayed_name := l_langs.found_item
+					else
+						l_displayed_name := l_array.item (i)
+					end
+					l_displayed_names.force (l_displayed_name, l_array.item (i))
+					i := i + 1
+				end
+				Result.set_displayed_value (l_displayed_names)
+			end
 		end
 
 indexing

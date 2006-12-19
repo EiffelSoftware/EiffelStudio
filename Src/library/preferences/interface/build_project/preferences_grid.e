@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 				l_row := grid.row (grid.row_count)
 			end
 			check l_row /= Void end
-			create l_grid_label.make_with_text (formatted_name (l_short_name))
+			create l_grid_label.make_with_text (try_to_translate (formatted_name (l_short_name)))
 			if folder_icon /= Void then
 				l_grid_label.set_pixmap (folder_icon)
 			end
@@ -732,7 +732,7 @@ feature {NONE} -- Implementation
 				if show_full_preference_name then
 					Result.set_text (a_pref.name)
 				else
-					Result.set_text (formatted_name (short_preference_name (a_pref.name)))
+					Result.set_text (short_preference_name (a_pref.name))
 				end
 			else
 				Result.set_text ("")
@@ -786,7 +786,7 @@ feature {NONE} -- Implementation
 		do
 			l_bool ?= a_pref
 			if l_bool /= Void then
-				create l_bool_widget.make_with_preference (l_bool)
+				l_bool_widget := new_boolean_widget (l_bool)
 				l_bool_widget.change_actions.extend (agent on_preference_changed)
 				Result := l_bool_widget.change_item_widget
 				Result.set_data (l_bool_widget)
@@ -799,7 +799,7 @@ feature {NONE} -- Implementation
 				elseif a_pref.generating_preference_type.is_equal ("COMBO") then
 					l_array ?= a_pref
 					if l_array /= Void then
-						create l_choice_widget.make_with_preference (l_array)
+						l_choice_widget := new_choice_widget (l_array)
 						l_choice_widget.change_actions.extend (agent on_preference_changed)
 						Result := l_choice_widget.change_item_widget
 						Result.set_data (l_choice_widget)
@@ -1052,6 +1052,26 @@ feature {NONE} -- Implementation
 			Result := a_string
 		ensure
 			result_not_void: Result /= Void
+		end
+
+feature {NONE} -- Widgets initialization
+
+	new_boolean_widget (a_pref: BOOLEAN_PREFERENCE): BOOLEAN_PREFERENCE_WIDGET is
+		require
+			a_pref_not_void: a_pref /= Void
+		do
+			create Result.make_with_preference (a_pref)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	new_choice_widget (a_pref: ARRAY_PREFERENCE): CHOICE_PREFERENCE_WIDGET is
+		require
+			a_pref_not_void: a_pref /= Void
+		do
+			create Result.make_with_preference (a_pref)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Sorting

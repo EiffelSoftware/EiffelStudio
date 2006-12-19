@@ -44,7 +44,7 @@ feature -- Access
 	split_position: INTEGER is
 			-- Position from the left/top of the splitter from `Current'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_paned_struct_child1_size (container_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_paned_struct_child1_size (container_widget).max (minimum_split_position).min (maximum_split_position)
 		end
 
 	set_first (an_item: like item) is

@@ -170,7 +170,6 @@ safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
 safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\bcb
 safe_md %INSTALL_DIR\rb
-safe_md %INSTALL_DIR\rb\bin
 
 cdd %INIT_DIR
 give_time_to organize the delivery and to start filling it

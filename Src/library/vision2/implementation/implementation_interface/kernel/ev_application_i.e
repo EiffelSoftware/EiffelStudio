@@ -104,6 +104,9 @@ feature {EV_ANY_I} -- Implementation
 						end
 						idle_iteration_count := 1
 					end
+				else
+					idle_iteration_count := 1
+						-- Reset idle iteration counter if CPU is not relinquished.
 				end
 				if try_lock then
 					l_locked := True

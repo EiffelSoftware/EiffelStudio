@@ -1717,33 +1717,7 @@ feature {WEL_WINDOW} -- Implementation
 			-- Wm_dropfile message
 		require
 			exists: exists
-		local
-			l_filecount, l_chars_copied: INTEGER
-			l_string: WEL_STRING
-			l_max_length: INTEGER
-			i: INTEGER
-			l_file_list: ARRAYED_LIST [STRING_32]
 		do
-				-- Retrieve number of filenames dropped
-			l_filecount := cwin_drag_query_file (wparam, -1, default_pointer, 0)
-
-			if l_filecount > 0 then
-					-- Retrieve filenames
-				from
-					i := 0
-					l_max_length := 255
-					create l_string.make_empty (l_max_length)
-					create l_file_list.make_filled (l_filecount)
-				until
-					i >= l_filecount
-				loop
-					l_chars_copied := cwin_drag_query_file (wparam, i, l_string.item, l_max_length)
-						-- We reverse the file order to match the order in which the user selected the items
-					l_file_list.put_i_th (l_string.substring (1, l_chars_copied), l_filecount - i)
-					i := i + 1
-				end
-			end
-			--| FIXME Move code to Vision2
 		end
 
 	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is

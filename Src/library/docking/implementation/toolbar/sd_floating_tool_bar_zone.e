@@ -9,7 +9,7 @@ class
 	SD_FLOATING_TOOL_BAR_ZONE
 
 inherit
-	EV_UNTITLED_DIALOG
+	EV_POPUP_WINDOW
 		rename
 			show as show_allow_to_back,
 			extend as extend_to_dialog,
@@ -57,6 +57,7 @@ feature {NONE} -- Initlization
 
 			last_group_count := 1
 
+			accelerators.append (internal_docking_manager.main_window.accelerators)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -166,7 +167,12 @@ feature {NONE} -- Implementation of resize issues.
 					l_old_position := screen_x + width
 					l_pointer_offset := (screen_x + width) - a_screen_x
 					if l_pointer_offset > 0 then
-						l_temp_group_info := group_divider.best_grouping_by_width (l_pointer_offset)
+						if start_width < l_pointer_offset then
+							l_temp_group_info := group_divider.best_grouping_by_width_to_right (l_pointer_offset)
+						else
+							l_temp_group_info := group_divider.best_grouping_by_width_to_left (l_pointer_offset)
+						end
+
 						l_temp_group_count := group_divider.last_group_index
 						if l_temp_group_count /= last_group_count then
 							lock_update
@@ -178,7 +184,11 @@ feature {NONE} -- Implementation of resize issues.
 					end
 				when {SD_ENUMERATION}.right then
 					if a_screen_x - screen_x > 0 then
-						l_temp_group_info := group_divider.best_grouping_by_width (a_screen_x - screen_x)
+						if start_width < a_screen_x - screen_x then
+							l_temp_group_info := group_divider.best_grouping_by_width_to_right (a_screen_x - screen_x)
+						else
+							l_temp_group_info := group_divider.best_grouping_by_width_to_left (a_screen_x - screen_x)
+						end
 						l_temp_group_count := group_divider.last_group_index
 						if l_temp_group_count /= last_group_count then
 							assistant.position_groups (l_temp_group_info)
@@ -286,6 +296,7 @@ feature {NONE} -- Implementation of resize issues.
 			if a_button = 1 then
 				setter.before_enable_capture
 				internal_border_box.enable_capture
+				start_width := width
 			end
 		end
 
@@ -320,6 +331,9 @@ feature {SD_FLOATING_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_DRAGGING_AGENTS} -- Im
 
 			zone.assistant.dock_last_state
 		end
+
+	start_width: INTEGER
+			-- Window width when starting dragging.
 
 	group_divider: SD_TOOL_BAR_GROUP_DIVIDER
 			-- Divider to divide tool bar groups.

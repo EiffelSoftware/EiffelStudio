@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="po_generation_tool" uuid="4EE327BA-5DF8-4A53-8088-0D2E3F33456E">
+	<target name="po_generation_tool">
+		<root class="ROOT_CLASS" feature="make"/>
+		<option debug="false" warning="true">
+			<debug name="__unnamed_debug__" enabled="false"/>
+			<assertions precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base" location="$ISE_EIFFEL\library\base\base.ecf" readonly="true"/>
+		<library name="gobo" location="$ISE_LIBRARY\library\gobo\gobo.ecf" readonly="true"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="true"/>
+		<cluster name="root_cluster" location=".\" recursive="true">
+			<file_rule>
+				<exclude>EIFGENs</exclude>
+				<exclude>.svn</exclude>
+				<exclude>CVS</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

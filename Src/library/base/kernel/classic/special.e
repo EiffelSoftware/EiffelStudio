@@ -349,18 +349,7 @@ feature -- Resizing
 			i, nb: INTEGER
 		do
 			create Result.make (n)
-			from
-				nb := count
-			invariant
-				i >= 0 and i <= nb
-			variant
-				nb - i
-			until
-				i = nb
-			loop
-				Result.put (item (i), i)
-				i := i + 1
-			end
+			Result.copy_data (Current, 0, 0, count)
 		ensure
 			Result_not_void: Result /= Void
 			Result_different_from_current: Result /= Current

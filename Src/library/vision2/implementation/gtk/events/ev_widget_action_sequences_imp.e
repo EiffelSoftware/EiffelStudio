@@ -126,6 +126,12 @@ feature -- Event handling
 			signal_connect (event_widget, once "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate, False)
 		end
 
+	create_file_drop_actions: like file_drop_actions_internal
+			-- Create a file_drop action sequence.
+		do
+			create Result
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is

@@ -3933,6 +3933,9 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			vertical_box, l_vertical_box: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
+				-- We need to set interface.is_initialized to True to satisfy invariants
+				-- when calling back through the interface, it needs to be unset at the end.
+			set_state_flag (interface_is_initialized_flag, True)
 			set_minimum_size (default_minimum_size, default_minimum_size)
 			is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width := True
 			is_horizontal_scrolling_per_item := False
@@ -4099,6 +4102,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			set_separator_color (black.twin)
 			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
 			create locked_indexes.make (1)
+			set_state_flag (interface_is_initialized_flag, False)
 		end
 
 	resize_viewport_in_static_fixed (an_x, a_y, a_width, a_height: INTEGER) is

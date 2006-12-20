@@ -1,0 +1,6172 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2006-12-19 16:20-0800\n"
+"Last-Translator: Eiffel Software\n"
+"Language-Team: Eiffel Software\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: SWITZERLAND\n"
+
+msgid "Working Directory"
+msgstr "Arbeitsverzeichnis"
+
+msgid "Location:"
+msgstr "Ort:"
+
+msgid "Automatically generate a backup during recompilation?"
+msgstr "Ein automatisches Backup während der Rekompilation erstellen?"
+
+msgid "&Project"
+msgstr "&Projekt"
+
+msgid "Organize Favorites"
+msgstr "Favoriten Organisieren"
+
+msgid "Create a new window"
+msgstr "Neues Fenster erstellen"
+
+msgid "Delete graphical items"
+msgstr "Graphisches Objekt löschen"
+
+msgid "criterion"
+msgstr "Kriterium"
+
+msgid "Attribute \"time\" is missing."
+msgstr "Attribut \"time\" fehlt"
+
+msgid "Stop and restart the application?"
+msgstr "Stoppen und Applikation neu starten?"
+
+msgid "Feature"
+msgstr "Feature"
+
+msgid "Choose Feature(s) to Delete"
+msgstr "Wähle Feature(s) zum löschen"
+
+msgid "External command not launched."
+msgstr "Externer Befehl nicht gestartet"
+
+msgid "Current metric has been modified, save it?"
+msgstr "Aktuelle Metrik wurde geändert. Soll diese gespeichert werden?"
+
+msgid "F&ormat"
+msgstr "F&ormat"
+
+msgid "Evaluate invariant assertions?"
+msgstr "Invariant assertions auswerten?"
+
+msgid "callees"
+msgstr "callees"
+
+msgid "Creat&ions"
+msgstr ""
+
+msgid "Hide clusters"
+msgstr "Cluster verbergen"
+
+msgid "Do not ask again, and always terminate running external command."
+msgstr "Nicht nochmals fragen und immer externen Befehl beenden."
+
+msgid "E&mbed in \"Debug...\"\tCtrl+D"
+msgstr "In \"&Debug...\" einschliessen\tCtrl+D"
+
+msgid "ratio"
+msgstr ""
+
+msgid "Choose New Slice Limits for Special Objects"
+msgstr ""
+
+msgid "&Crop Diagram"
+msgstr "Diagramm abschneiden"
+
+msgid "&About $1..."
+msgstr "&Über $1"
+
+msgid "Continue"
+msgstr "Fortsetzen"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Pull up Feature"
+msgstr ""
+
+msgid "&Go to"
+msgstr "&Gehe zu"
+
+msgid "Undo"
+msgstr "Rückgängig"
+
+msgid "New &Window"
+msgstr "Neues &Fenster"
+
+msgid "Recompile project"
+msgstr "Projekt rekompilieren"
+
+msgid "Link or not the context tool to other components"
+msgstr ""
+
+msgid "(no_cluster)"
+msgstr ""
+
+msgid "Name:"
+msgstr "Name:"
+
+msgid "Environment variables"
+msgstr "Umgebungsvariablen"
+
+msgid "Location of this group."
+msgstr "Ort dieser Gruppe."
+
+msgid "Step into a routine"
+msgstr "In Routine eintreten"
+
+msgid "Start application and stop at breakpoints"
+msgstr "Applikation starten und bei Breakpoints stoppen"
+
+msgid "Turn on physics"
+msgstr "Physik anschalten"
+
+msgid "basic"
+msgstr ""
+
+msgid "Add first breakpoints in class"
+msgstr "Ersten Breakpoint in der Klasse setzen"
+
+msgid "Setup criterion text properties"
+msgstr ""
+
+msgid "System Info"
+msgstr "Systeminformation"
+
+msgid "Result"
+msgstr "Resultat"
+
+msgid "Metrics definition file:"
+msgstr ""
+
+msgid "Error "
+msgstr "Fehler"
+
+msgid "Don't ask me again and always replace all"
+msgstr "Nicht nochmal fragen und immer alles ersetzen"
+
+msgid "Class specific options."
+msgstr "Klassenspezifische optionen."
+
+msgid "Scope"
+msgstr "Bereich"
+
+msgid "Are you sure you want to remove $1?"
+msgstr "Sind Sie sicher dass sie $1 entfernen wollen?"
+
+msgid "Application is paused"
+msgstr "Applikation ist pausiert"
+
+msgid "Trademark"
+msgstr ""
+
+msgid "Text finished loading"
+msgstr "Laden des Textes beendet"
+
+msgid "Reset current view"
+msgstr "Aktuelle Ansicht zurücksetzen"
+
+msgid "Advanced"
+msgstr "Fortgeschritten"
+
+msgid "Includes:"
+msgstr "Beinhaltet:"
+
+msgid "Add Sub cluster"
+msgstr "Sub cluster hinzufügen"
+
+msgid "Define new subquery"
+msgstr ""
+
+msgid "Set as default"
+msgstr "Als Standard setzen"
+
+msgid "Group \"$1\" (ID = \"$2\") is invalid."
+msgstr "Gruppe \"$1\" (ID = \"$2\") ist invalid."
+
+msgid "Missing Class Export"
+msgstr ""
+
+msgid "Attribute \"regular_expression\" is missing."
+msgstr "Attribut \"regular_expression\" fehlt."
+
+msgid "Expand All"
+msgstr "Alle aufklappen"
+
+msgid "variable metric"
+msgstr ""
+
+msgid ""
+"\n"
+"   + Module = $1"
+msgstr ""
+"\n"
+"   + Module = $1"
+
+msgid "Select the information you need and formulate your query."
+msgstr ""
+
+msgid "Target "
+msgstr "Ziel"
+
+msgid "Select/deselect predefined metrics"
+msgstr ""
+
+msgid "+"
+msgstr "+"
+
+msgid "-"
+msgstr "-"
+
+msgid "Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode."
+msgstr ""
+
+msgid "Refactoring: Feature Rename (Compiled Classes)"
+msgstr ""
+
+msgid "Change class name and generics"
+msgstr "Ändere Klassennamen und Generics"
+
+msgid "&Add to Favorites"
+msgstr "Zu den Favoriten &hinzufügen"
+
+msgid "Switch to hexadecimal format"
+msgstr "Zu hexadezimalem Format wechseln"
+
+msgid "Warn about assignment attempts on formal or expanded targets (VJRV)?"
+msgstr ""
+
+msgid "Add class descendants to diagram"
+msgstr ""
+
+msgid "Require"
+msgstr ""
+
+msgid "Cannot open file: $1."
+msgstr "Kann Datei nicht öffnen: $1."
+
+msgid "Metric Evaluation"
+msgstr ""
+
+msgid "Toggle visibility of client link labels"
+msgstr ""
+
+msgid "No metric is selected."
+msgstr "Keine Metrik selektiert."
+
+msgid "&Disable This Breakpoint"
+msgstr "Diesen Breakpoint &deaktivieren"
+
+msgid "&Remove This Breakpoint"
+msgstr "Diesen Breakpoint löschen"
+
+msgid "Toggle between UML and BON view"
+msgstr "Zwischen UML und BON Ansicht wechseln"
+
+msgid "Errors"
+msgstr "Fehler"
+
+msgid "Add a precompile"
+msgstr "Precompile hinzufügen"
+
+msgid "Start command"
+msgstr "Befehl starten"
+
+msgid "Exception message from debugger"
+msgstr "Fehlernachricht vom Debugger"
+
+msgid "Output switches"
+msgstr ""
+
+msgid "Automatic Backup"
+msgstr "Automatisches Backup"
+
+msgid "Exception handling"
+msgstr "Fehlerbehandlung"
+
+msgid "Available criterion list"
+msgstr "Verfügbare Kriterien"
+
+msgid ""
+"Please drop a class, a cluster or a midpoint\n"
+"on this button. Use right click for both\n"
+"pick and drop actions."
+msgstr ""
+
+msgid "Target: $1"
+msgstr ""
+
+msgid "Start application without stopping at breakpoints"
+msgstr "Applikation starten und Breakpoints ignorieren"
+
+msgid "Expression"
+msgstr "Ausdruck"
+
+msgid "clickable view"
+msgstr ""
+
+msgid "Add an assembly"
+msgstr ""
+
+msgid "Add Assembly"
+msgstr ""
+
+msgid "Descendant Time"
+msgstr ""
+
+msgid "Possible stack overflow"
+msgstr "Möglicher Stacküberlauf"
+
+msgid "External editor not defined"
+msgstr "Externer Editor nicht definiert"
+
+msgid "Dependency"
+msgstr "Abhängigkeit"
+
+msgid "C&ontract"
+msgstr "C&ontract"
+
+msgid "Remove Project"
+msgstr "Projekt entfernen"
+
+msgid "Build"
+msgstr ""
+
+msgid "Command line:"
+msgstr "Kommandozeile:"
+
+msgid "&Out of Routine"
+msgstr ""
+
+msgid "Brea&kpoint Information"
+msgstr "Brea&kpoint-Information"
+
+msgid "Create"
+msgstr "Erzeuge"
+
+msgid "Basic application (no graphics library included)"
+msgstr "Einfache Anwendung (keine graphische Bibliothek eingefügt)"
+
+msgid "Stop metric archive evaluation"
+msgstr ""
+
+msgid "Group"
+msgstr "Gruppe"
+
+msgid "Text not editable because current metric is predefined."
+msgstr "Text nicht editierbar da die aktuelle Metrik vordefiniert ist."
+
+msgid "Run & Close"
+msgstr "Beenden & Starten"
+
+msgid "Select a cluster to display available views"
+msgstr "Cluster wählen um vorhandene Ansichten anzuzeigen"
+
+msgid "Copy (Ctrl+C)"
+msgstr "Kopieren (Ctrl+C)"
+
+msgid "Save Cop&y As..."
+msgstr "Speichere &Kopie Als ..."
+
+msgid "Background Finalized C compilation Failed"
+msgstr "Abschliessende C-Kompilation im Hintergrund fehlgeschlagen"
+
+msgid "Apply"
+msgstr "Anwenden"
+
+msgid "&Edit..."
+msgstr "&Editieren"
+
+msgid "No metric is selected"
+msgstr "Keine Metrik selektiert"
+
+msgid "for the next objects you will add in the object tree."
+msgstr "für das nächste Objekt das in den Objektbaum eingefügt wird"
+
+msgid "Make sure metric name is not empty and contains valid charactors."
+msgstr ""
+
+msgid "Display information concerning current system"
+msgstr ""
+
+msgid "Tool&bars"
+msgstr "S&ymbolleisten"
+
+msgid "Toggle visibility of cluster legend"
+msgstr "Sichtbarkeit der Cluster-Legende umschalten"
+
+msgid "Do not ask again, and always save files before compiling"
+msgstr "Nicht nochmals fragen und Dateien vor dem Kompilieren immer speichern"
+
+msgid "The descending class $1 already has another feature with the new name."
+msgstr ""
+
+msgid "&Dynamic Library Builder..."
+msgstr ""
+
+msgid "&Freeze..."
+msgstr "Ein&frieren..."
+
+msgid "Back"
+msgstr "Zurück"
+
+msgid "Breakpoint Info"
+msgstr "Breakpoint-Information"
+
+msgid "Supplier Precondition"
+msgstr ""
+
+msgid "Freeze"
+msgstr "Einfrieren"
+
+msgid "Select feature type"
+msgstr "Feature typ wählen"
+
+msgid "Renaming"
+msgstr ""
+
+msgid "Invalid attribute \"$1\"."
+msgstr "Ungültiges Attribut \"$1\"."
+
+msgid "Remove anchor"
+msgstr "Anker entfernen"
+
+msgid "Context"
+msgstr "Kontext"
+
+msgid "Pre Compilation Tasks"
+msgstr ""
+
+msgid "New Ta&b"
+msgstr ""
+
+msgid "A&ttributes"
+msgstr ""
+
+msgid "Do not detect stack overflows"
+msgstr ""
+
+msgid "&Ancestors"
+msgstr ""
+
+msgid "Locals"
+msgstr ""
+
+msgid "Remove all"
+msgstr ""
+
+msgid "E&xit"
+msgstr ""
+
+msgid "Resynchronizing Breakpoints"
+msgstr ""
+
+msgid "&Debugging Tools"
+msgstr ""
+
+msgid "New Feature"
+msgstr ""
+
+msgid "Generate default feature clauses"
+msgstr ""
+
+msgid "Alias:"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "Show/Hide information about breakpoints"
+msgstr ""
+
+msgid "Locate currently edited class or cluster"
+msgstr ""
+
+msgid "Edit Object Content"
+msgstr ""
+
+msgid "Terminate current C compilation in progress"
+msgstr ""
+
+msgid "Cluster name "
+msgstr ""
+
+msgid "Or you can pick a metric unit and drop it on another metric to rearrange their order."
+msgstr ""
+
+msgid "Expand cluster '$1'"
+msgstr ""
+
+msgid "Class Relations"
+msgstr ""
+
+msgid "Rename Feature/Class"
+msgstr ""
+
+msgid "Unlink the context tool from the other components"
+msgstr ""
+
+msgid "Additional details"
+msgstr ""
+
+msgid "Visible Classes"
+msgstr ""
+
+msgid "Pause application at current point"
+msgstr ""
+
+msgid "Search for group/class/feature"
+msgstr ""
+
+msgid ".NET (msil)"
+msgstr ".NET (msil)"
+
+msgid "Hidden"
+msgstr "Versteckt"
+
+msgid "Path"
+msgstr "Pfad"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Prefix which all classes in this group get."
+msgstr "Präfix aller Klassen dieser Gruppe."
+
+msgid "Arguments"
+msgstr "Argumente"
+
+msgid ""
+"Ratio metric is of the form:\n"
+"\n"
+"\tNumerator metric / Denominator metric\n"
+"\n"
+"Numerator metric and denominator metric can be of any valid unit.\n"
+"\n"
+msgstr ""
+
+msgid "auto"
+msgstr "auto"
+
+msgid "Report >>"
+msgstr "Report >>"
+
+msgid ""
+"Please drop a class on this button.\n"
+"Use right click for both\n"
+"pick and drop actions."
+msgstr ""
+
+msgid "Add Search Scope"
+msgstr ""
+
+msgid "Import Metrics"
+msgstr ""
+
+msgid "Archive Management"
+msgstr ""
+
+msgid "Should this library use options from the application instead of from the library?"
+msgstr ""
+
+msgid "Directory where the EIFGENs folder is."
+msgstr "Verzeichnis des EIFGENs-Ordners."
+
+msgid "Toggle &Line Numbers"
+msgstr ""
+
+msgid "Remove selected scope(s)"
+msgstr ""
+
+msgid "Metric archive in specified file is not valid, it must be cleaned"
+msgstr ""
+
+msgid "Step Into"
+msgstr ""
+
+msgid "&Raise"
+msgstr ""
+
+msgid "Redo last action"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Groups this override is overriding."
+msgstr ""
+
+msgid "UUID"
+msgstr ""
+
+msgid "Exception raised"
+msgstr ""
+
+msgid "Compilation Error &Wizard..."
+msgstr ""
+
+msgid "Root Class"
+msgstr ""
+
+msgid "Specifies if any applicable application-orientated optimizations should be applied to a finalized compilation."
+msgstr ""
+
+msgid "Options: "
+msgstr ""
+
+msgid "Wizard to precompile libraries"
+msgstr ""
+
+msgid "Step"
+msgstr ""
+
+msgid "Deleting Files"
+msgstr ""
+
+msgid "There is already a class with the same name."
+msgstr "Eine Klasse mit diesem Namen existiert bereits."
+
+msgid "Run-time information record"
+msgstr ""
+
+msgid "&OK"
+msgstr "&OK"
+
+msgid "Give help on compilation errors"
+msgstr "Hilfe bei Kompilationsfehlern geben"
+
+msgid "Coefficient \"$1\" of variable metric is invalid. A real number is expected."
+msgstr ""
+
+msgid "&New Project..."
+msgstr "&Neues Projekt..."
+
+msgid "Should cluster names be used as namespaces?"
+msgstr "Sollen Clusternamen als Namespaces verwendet werden?"
+
+msgid "Deselect All Metrics"
+msgstr ""
+
+msgid "Clean"
+msgstr ""
+
+msgid ""
+"It is not possible to exit EiffelStudio\n"
+"while the project is being compiled."
+msgstr ""
+"Es ist nicht möglich EiffelStudio zu verlassen\n"
+"während das Projekt kompiliert wird."
+
+msgid "Save As"
+msgstr "Speichern als"
+
+msgid ".NET Naming Convention"
+msgstr ".NET Namenskonvention"
+
+msgid "Duplicated metric name \"$1\" in metric definition."
+msgstr ""
+
+msgid "Universal unique identifier for the system."
+msgstr ""
+
+msgid "Find in Cluster Tree"
+msgstr ""
+
+msgid "Loading metrics..."
+msgstr ""
+
+msgid "Feat&ure Views"
+msgstr ""
+
+msgid "Send input data into the running command"
+msgstr "Eingabedaten zum laufenden Befehl senden"
+
+msgid ""
+"Linear metric is of the form:\n"
+"\n"
+"\ta * metric1 + b * metric2 + c * metric3 + ...\n"
+"\n"
+"a, b, c are coefficients and \n"
+"metric1, metric2, metric3 are variable metrics.\n"
+"\n"
+msgstr ""
+
+msgid "Debugger :: Exception message"
+msgstr "Debugger :: Fehlernachricht"
+
+msgid "Type of compilation."
+msgstr "Kompilationstyp"
+
+msgid "Stop metric evaluation"
+msgstr ""
+
+msgid "Select a target/group/folder/class to show information about it."
+msgstr "Wähle ein Ziel/Gruppe/Verzeichnis/Klasse um Informationen darüber anzuzeigen."
+
+msgid "Library Target"
+msgstr ""
+
+msgid "Active query"
+msgstr ""
+
+msgid "Please select a sub node."
+msgstr ""
+
+msgid "Whole word"
+msgstr "Ganzes wort"
+
+msgid "Categorize classes in folder?"
+msgstr "Klassen in Ordnern kategorisieren?"
+
+msgid "Class text has syntax error"
+msgstr "Syntaxfehler im Klassentext"
+
+msgid "Removing metrics..."
+msgstr "Metrik entfernen..."
+
+msgid "Remove current selected metric"
+msgstr "Selektierte Metrik entfernen"
+
+msgid "Eiffel Features"
+msgstr ""
+
+msgid "Coefficient"
+msgstr "Koeffizient"
+
+msgid " (from $1)"
+msgstr "(von $1)"
+
+msgid "Make sure that at lease one variable metric is listed in a linear metric definition."
+msgstr ""
+
+msgid "---"
+msgstr "---"
+
+msgid "Specified file doesn't exist"
+msgstr "Angegebene Datei existiert nicht"
+
+msgid "Add Project..."
+msgstr "Projekt hinzufügen..."
+
+msgid "External E&ditor"
+msgstr "Externer E&ditor"
+
+msgid "Name: "
+msgstr "Name: "
+
+msgid "&Stop Application"
+msgstr "Applikation &stoppen"
+
+msgid "&Recent Projects"
+msgstr "&Zuletzt geöffnete Projekte"
+
+msgid "Percentage"
+msgstr "Anteil"
+
+msgid "&Ancestor Versions"
+msgstr ""
+
+msgid "Abstract"
+msgstr "Abstrakt"
+
+msgid "Collapse Cluster '$1'"
+msgstr "Cluster '$1' zuklappen"
+
+msgid "Total Time"
+msgstr "Gesamtzeit"
+
+msgid "Exclude:"
+msgstr "Ausschliessen:"
+
+msgid "Name of the generated binary."
+msgstr "Name der ausführbaren Datei."
+
+msgid "Cannot write file: $1."
+msgstr "Kann Datei nicht schreiben: $1."
+
+msgid "Maximum Call Stack Depth"
+msgstr "Maximale Aufrufstack Tiefe"
+
+msgid "Show supplier links"
+msgstr ""
+
+msgid "Call stack"
+msgstr "Aufrufstack"
+
+msgid "Feature in client class"
+msgstr ""
+
+msgid "Find"
+msgstr "Finde"
+
+msgid "Discover unreferenced externally added classes and recompile."
+msgstr "Finde nicht referenzierte Klassen welche neu hinzugefügt wurden und kompiliere neu."
+
+msgid "Remove all breakpoints"
+msgstr "Alle Breakpoints entferenen"
+
+msgid "Recursive Functions"
+msgstr "Rekursive Funktionen"
+
+msgid "&Run\tCtrl+R"
+msgstr "&Ausführen\tCtrl+A"
+
+msgid "Location where information about external assemblies is stored."
+msgstr ""
+
+msgid "Collapse All"
+msgstr "Alles zuklappen"
+
+msgid "Feature properties"
+msgstr "Feature Eigenschaften"
+
+msgid "As object"
+msgstr "Als Objekt"
+
+msgid "Up"
+msgstr "Auf"
+
+msgid "Call&ees"
+msgstr ""
+
+msgid "Display breakpoints separated by status"
+msgstr "Breakpoints nach Status getrennt anzeigen"
+
+msgid "Print the currently edited text"
+msgstr "Den aktuellen Text drucken"
+
+msgid "Toggle visibility of inheritance links"
+msgstr "Sichtbarkeit der Vererbungsverbindung umschalten"
+
+msgid "Select the destination folder "
+msgstr ""
+
+msgid ""
+"The changes you have made to the following resources\n"
+"will be taken into account after you restart.\n"
+"\n"
+msgstr ""
+
+msgid "Library target UUID \"$1\" is invalid."
+msgstr ""
+
+msgid "Procedure"
+msgstr ""
+
+msgid "&Output"
+msgstr ""
+
+msgid "S&uppliers"
+msgstr ""
+
+msgid "Show text labels"
+msgstr ""
+
+msgid "Project Settings"
+msgstr ""
+
+msgid "Runtime Information Record Error"
+msgstr ""
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "About $1"
+msgstr "Über $1"
+
+msgid "Loaded project: "
+msgstr ""
+
+msgid "Remove all rows"
+msgstr "Alle Zeilen entfernen"
+
+msgid "Do you really want to delete current view?"
+msgstr "Möchten Sie die aktuelle Ansicht wirklich löschen?"
+
+msgid "Switches and Query"
+msgstr ""
+
+msgid "Explicit exception pending"
+msgstr ""
+
+msgid "Domain item type is missing."
+msgstr ""
+
+msgid "Shared Library Definition"
+msgstr ""
+
+msgid "Metric archive calculation finished."
+msgstr ""
+
+msgid "Interrupted by user"
+msgstr ""
+
+msgid "Insert text here"
+msgstr ""
+
+msgid "&Delete Current View"
+msgstr ""
+
+msgid "New Search?"
+msgstr ""
+
+msgid "Pr&operties"
+msgstr ""
+
+msgid "Select depth of relations"
+msgstr ""
+
+msgid "No domain item defined. At least one domain item should be defined in a relation criterion."
+msgstr ""
+
+msgid "$1 of $2"
+msgstr ""
+
+msgid "Application is running (ignoring breakpoints)"
+msgstr ""
+
+msgid "Updating $1"
+msgstr ""
+
+msgid "Subcluster"
+msgstr ""
+
+msgid "Invariant"
+msgstr ""
+
+msgid "$1  in cluster $2  (precompiled)"
+msgstr ""
+
+msgid "Set which values are shown in special objects"
+msgstr ""
+
+msgid "Warn about class options of unknown classes?"
+msgstr ""
+
+msgid "&New Class..."
+msgstr ""
+
+msgid "Go back"
+msgstr "Zurück"
+
+msgid "Duplicate"
+msgstr ""
+
+msgid "Compile W&orkbench C Code"
+msgstr ""
+
+msgid "Metric is valid."
+msgstr ""
+
+msgid "Root cluster, class, feature of the system."
+msgstr ""
+
+msgid "&Introduction to Eiffel"
+msgstr ""
+
+msgid "Objects tool: left"
+msgstr ""
+
+msgid "Refactoring: Class Rename"
+msgstr ""
+
+msgid "Select Integral Metrics"
+msgstr ""
+
+msgid "Please specify a compiled class (or * for all classes)."
+msgstr ""
+
+msgid "Send input to command"
+msgstr ""
+
+msgid "Check VAPE"
+msgstr ""
+
+msgid "Cu&t\tCtrl+X"
+msgstr ""
+
+msgid "Go to W_code directory of this system, or right click to open W_code in specified file browser"
+msgstr ""
+
+msgid "numerator metric"
+msgstr ""
+
+msgid "&Organize Favorites..."
+msgstr "Favoriten &organisieren..."
+
+msgid "Flat contracts"
+msgstr ""
+
+msgid "Recompile &Overrides"
+msgstr ""
+
+msgid "Use current environment variables"
+msgstr ""
+
+msgid "Raise all windows"
+msgstr ""
+
+msgid "&Go to..."
+msgstr "&Gehe zu..."
+
+msgid "F_code"
+msgstr "F_code"
+
+msgid "Bottom reached."
+msgstr ""
+
+msgid "Assembly "
+msgstr ""
+
+msgid "Assembly Key"
+msgstr ""
+
+msgid "New Window"
+msgstr "Neues Fenster"
+
+msgid "assignees"
+msgstr ""
+
+msgid "Evaluate metric again to get up-to-date result"
+msgstr ""
+
+msgid "Remove selected expressions"
+msgstr ""
+
+msgid "EXPRESSION: "
+msgstr ""
+
+msgid "Disable High Quality"
+msgstr ""
+
+msgid "Launching..."
+msgstr ""
+
+msgid "Maximum index displayed"
+msgstr ""
+
+msgid "Documentation"
+msgstr ""
+
+msgid "Unevaluated"
+msgstr ""
+
+msgid "Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric."
+msgstr ""
+
+msgid "W_code"
+msgstr ""
+
+msgid "Display numerical value as Hexadecimal or Decimal formating"
+msgstr ""
+
+msgid "Choose Your Directory"
+msgstr ""
+
+msgid "Criterion \"$1\" of unit \"$2\" doesn't exits."
+msgstr ""
+
+msgid "Warnings"
+msgstr ""
+
+msgid "Terminate C Compilation"
+msgstr ""
+
+msgid "Variables"
+msgstr ""
+
+msgid "Environment"
+msgstr ""
+
+msgid "Maximum displayed string size"
+msgstr ""
+
+msgid "Error occurred (double click to see details)"
+msgstr ""
+
+msgid "Automatically go to result panel after metric evaluation?"
+msgstr ""
+
+msgid "Value \"$1\" of attribute \"only_current_version\" is invalid. A boolean is expected."
+msgstr ""
+
+msgid "&Preferences..."
+msgstr ""
+
+msgid "Context ..."
+msgstr ""
+
+msgid "Cluster "
+msgstr ""
+
+msgid ""
+"Please drop a class, a cluster or a link\n"
+"on this button. Use right click for both\n"
+"pick and drop actions."
+msgstr ""
+
+msgid "From Class"
+msgstr ""
+
+msgid "Recursive definition for metric name \"$1\"."
+msgstr ""
+
+msgid "Not evaluated"
+msgstr ""
+
+msgid "(no_class)"
+msgstr ""
+
+msgid "&Replace..."
+msgstr ""
+
+msgid "Recursive"
+msgstr ""
+
+msgid "Expand an Object"
+msgstr ""
+
+msgid "Go to definition"
+msgstr ""
+
+msgid "Add, remove or edit external commands"
+msgstr ""
+
+msgid "Renamed name: "
+msgstr ""
+
+msgid "Save call stack to a text file"
+msgstr ""
+
+msgid "Select clusters to generate documentation for"
+msgstr ""
+
+msgid "Explorer bar item"
+msgstr ""
+
+msgid "Analyzing metric archive(s)..."
+msgstr ""
+
+msgid "Backup User-defined Metrics"
+msgstr ""
+
+msgid "[Unnamed feature clause]"
+msgstr ""
+
+msgid "System running"
+msgstr ""
+
+msgid "Delete Client Link '$1'"
+msgstr ""
+
+msgid "Precompile"
+msgstr ""
+
+msgid "Precompilation &Wizard..."
+msgstr ""
+
+msgid "Cluster:"
+msgstr ""
+
+msgid "Coefficient of variable metric is missing."
+msgstr ""
+
+msgid ""
+"A valid metric name is a non-empty string which doesn't start with space, enter or tab, and doesn't end with space, enter or tab.\n"
+"Make sure specified metric name is valid."
+msgstr ""
+
+msgid "Too many \"domain\" section specified. Only one is expected."
+msgstr ""
+
+msgid "Disable Assertion Checking"
+msgstr ""
+
+msgid "Assemblies"
+msgstr ""
+
+msgid "Finalized mode"
+msgstr ""
+
+msgid "Enter Condition"
+msgstr ""
+
+msgid "Obsolete Classes"
+msgstr ""
+
+msgid "No definition for variable metric."
+msgstr ""
+
+msgid "Enable Breakpoints"
+msgstr ""
+
+msgid "Tasks"
+msgstr ""
+
+msgid "New breakpoint(s) to commit"
+msgstr ""
+
+msgid "Open Original File"
+msgstr ""
+
+msgid "New Name:"
+msgstr ""
+
+msgid " (located in $1)"
+msgstr ""
+
+msgid "New name"
+msgstr ""
+
+msgid "Copyright"
+msgstr ""
+
+msgid "&Address Bar"
+msgstr ""
+
+msgid "Threads"
+msgstr ""
+
+msgid "Show static callers"
+msgstr ""
+
+msgid "Select working directory"
+msgstr ""
+
+msgid "Use inherited value."
+msgstr ""
+
+msgid "Value:"
+msgstr ""
+
+msgid "Exception object"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Show "
+msgstr ""
+
+msgid "Customize P&roject Toolbar..."
+msgstr ""
+
+msgid "Domain item id is missing."
+msgstr ""
+
+msgid "Start metric archive evaluation"
+msgstr ""
+
+msgid "Current feature"
+msgstr ""
+
+msgid "&Alter size New"
+msgstr ""
+
+msgid "Inactive subqueries"
+msgstr ""
+
+msgid "Evaluating: "
+msgstr ""
+
+msgid "Setup criterion domain properties"
+msgstr ""
+
+msgid "Save Backup"
+msgstr "Sicherheitskopie speichern"
+
+msgid "Create a new feature"
+msgstr ""
+
+msgid "Toggle quality level"
+msgstr ""
+
+msgid "Dynamic runtime"
+msgstr ""
+
+msgid "(no_feature)"
+msgstr ""
+
+msgid "Domain item type \"$1\" is invalid."
+msgstr ""
+
+msgid "&Unindent Selection\tShift+Tab"
+msgstr ""
+
+msgid "Finish"
+msgstr "Beenden"
+
+msgid "Clusters"
+msgstr "Clusters"
+
+msgid ""
+"Please drop this button on the diagram.\n"
+"Use right click for both\n"
+"pick and drop actions."
+msgstr ""
+
+msgid "Public key token that identifies the asssembly."
+msgstr ""
+
+msgid "Hide figure"
+msgstr ""
+
+msgid "New metric"
+msgstr ""
+
+msgid "&Embed in \"if...\"\tCtrl+I"
+msgstr ""
+
+msgid "Tree/Flat View"
+msgstr ""
+
+msgid "Feature in supplier class"
+msgstr ""
+
+msgid "Save output to file"
+msgstr ""
+
+msgid "Set &Conditional Breakpoint"
+msgstr ""
+
+msgid "Put Handle Left"
+msgstr ""
+
+msgid "CLS Compliant"
+msgstr ""
+
+msgid "Dependencies"
+msgstr ""
+
+msgid "Assertion"
+msgstr ""
+
+msgid "Importing metrics..."
+msgstr ""
+
+msgid "linear"
+msgstr ""
+
+msgid "Switch to high quality"
+msgstr ""
+
+msgid "&Close Window\tAlt+F4"
+msgstr ""
+
+msgid "Version information."
+msgstr ""
+
+msgid "Metric definition"
+msgstr ""
+
+msgid "Auto-Complete"
+msgstr ""
+
+msgid "Question"
+msgstr ""
+
+msgid "Exception Trace"
+msgstr ""
+
+msgid "Background C Compilation Launched"
+msgstr "C-Kompilation im Hintergrund gestartet"
+
+msgid ""
+"When loading predefined metrics:\n"
+"$1\n"
+"Predefined metrics not loaded."
+msgstr ""
+
+msgid "Remove right angles"
+msgstr ""
+
+msgid "Eiffel Compilation Failed"
+msgstr "Eiffel-Kompilation fehlgeschlagen"
+
+msgid "New Tab"
+msgstr ""
+
+msgid "Folder "
+msgstr ""
+
+msgid "&Guided Tour"
+msgstr ""
+
+msgid "Scope >>"
+msgstr ""
+
+msgid "Open a new context window"
+msgstr ""
+
+msgid "Selected text is not a valid file name or the file cannot be found"
+msgstr ""
+
+msgid "&Debug"
+msgstr ""
+
+msgid "Complete Class &Name"
+msgstr ""
+
+msgid "System"
+msgstr ""
+
+msgid "Find &Next"
+msgstr ""
+
+msgid "The feature name is not valid."
+msgstr ""
+
+msgid "Rename File"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "Description of the external."
+msgstr ""
+
+msgid "Reset user settings"
+msgstr ""
+
+msgid "$1 match"
+msgid_plural "$1 matches"
+msgstr[0] ""
+
+msgid "Pro&filer..."
+msgstr ""
+
+msgid "&Raise All"
+msgstr ""
+
+msgid "Warn about usage of obsolete classes?"
+msgstr ""
+
+msgid "Compile"
+msgstr ""
+
+msgid "Loop"
+msgstr ""
+
+msgid "Add Pre Compilation Task"
+msgstr ""
+
+msgid "Root class name: "
+msgstr ""
+
+msgid "Attribute \"type\" is missing ."
+msgstr ""
+
+msgid "Create project"
+msgstr ""
+
+msgid "Unknown application status"
+msgstr ""
+
+msgid "Old Verbatim Strings"
+msgstr ""
+
+msgid "Class name: $1"
+msgstr ""
+
+msgid "Move to Folder..."
+msgstr ""
+
+msgid "General"
+msgstr ""
+
+msgid "Class Options"
+msgstr ""
+
+msgid "clients"
+msgstr ""
+
+msgid "Custom"
+msgstr ""
+
+msgid "Conditions for this group to be used."
+msgstr ""
+
+msgid "Note"
+msgstr ""
+
+msgid "&Run to This Point"
+msgstr ""
+
+msgid "Flat View"
+msgstr ""
+
+msgid "invariants"
+msgstr ""
+
+msgid "&View"
+msgstr ""
+
+msgid "On object"
+msgstr ""
+
+msgid "Use an optimized version of a precompile?"
+msgstr ""
+
+msgid "Minimum index displayed"
+msgstr ""
+
+msgid "basic metric"
+msgstr ""
+
+msgid "Unit:"
+msgstr ""
+
+msgid "Compile current project"
+msgstr ""
+
+msgid "Resynchronizing Tools"
+msgstr ""
+
+msgid "Te&xt"
+msgstr ""
+
+msgid "&Copy\tCtrl+C"
+msgstr ""
+
+msgid "De&scendants"
+msgstr ""
+
+msgid "Icon option: "
+msgstr ""
+
+msgid "Callees from supplier class"
+msgstr ""
+
+msgid "Search for: "
+msgstr ""
+
+msgid "Finalize"
+msgstr ""
+
+msgid "Show dependency on self?"
+msgstr ""
+
+msgid "Open the Eiffel Assembly Cache browser tool"
+msgstr ""
+
+msgid "Hide inheritance links"
+msgstr ""
+
+msgid "Execution Profile"
+msgstr ""
+
+msgid "Show stop points"
+msgstr ""
+
+msgid "Toggle visibility of feature signature"
+msgstr ""
+
+msgid "Data"
+msgstr ""
+
+msgid "&Show Favorites"
+msgstr ""
+
+msgid "&Homonyms"
+msgstr ""
+
+msgid "Absolute path to use as base for relative paths."
+msgstr ""
+
+msgid "Replace with..."
+msgstr ""
+
+msgid "Renames only occurances of the class name in compiled classes."
+msgstr ""
+
+msgid "Exception Handling"
+msgstr ""
+
+msgid "No file name is selected."
+msgstr ""
+
+msgid "&Open...\tCtrl+O"
+msgstr ""
+
+msgid "creations"
+msgstr ""
+
+msgid "Breakpoints"
+msgstr ""
+
+msgid "Enforce all class names to be system wide unique?"
+msgstr ""
+
+msgid "Is this an abstract target that cannot be used to compile?"
+msgstr ""
+
+msgid "Pull Up"
+msgstr ""
+
+msgid "Note: Metric is not saved."
+msgstr ""
+
+msgid "suppliers"
+msgstr ""
+
+msgid "Compilation mode"
+msgstr ""
+
+msgid "&Interface"
+msgstr ""
+
+msgid "Rollback?"
+msgstr ""
+
+msgid "Welcome to the Profiler Wizard"
+msgstr ""
+
+msgid "Read Only"
+msgstr ""
+
+msgid "already exists."
+msgstr ""
+
+msgid "Filter result which is not visible from input domain"
+msgstr ""
+
+msgid "Unit name is missing."
+msgstr ""
+
+msgid "And-term 1"
+msgstr ""
+
+msgid "Show selective text on the right of buttons"
+msgstr ""
+
+msgid "Remove and-term"
+msgstr ""
+
+msgid "Special type mappings."
+msgstr ""
+
+msgid "Debugging options"
+msgstr ""
+
+msgid " Location: $1"
+msgstr ""
+
+msgid "Indent selected row using an \"OR\" criterion"
+msgstr ""
+
+msgid "Location of the configuration file."
+msgstr ""
+
+msgid "Check the validity of the library definition"
+msgstr ""
+
+msgid "Prefix"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Calling Convention"
+msgstr ""
+
+msgid "profile #"
+msgstr ""
+
+msgid "descendants"
+msgstr ""
+
+msgid "Are you sure you want to remove the reference to $1?"
+msgstr ""
+
+msgid "Referenced metric(s): $1 not selected."
+msgstr ""
+
+msgid "Add Precompile"
+msgstr ""
+
+msgid "Object"
+msgstr ""
+
+msgid "Compilation Progress for "
+msgstr ""
+
+msgid "Dead Code Removal"
+msgstr ""
+
+msgid "Version"
+msgstr ""
+
+msgid "Start"
+msgstr ""
+
+msgid "Save All"
+msgstr ""
+
+msgid "Advanced search"
+msgstr ""
+
+msgid "Excludes:"
+msgstr ""
+
+msgid "&Customize Standard Toolbar..."
+msgstr ""
+
+msgid "Create new watch"
+msgstr ""
+
+msgid "Stop Application"
+msgstr ""
+
+msgid "Enable Profiles"
+msgstr ""
+
+msgid "Add first breakpoints in feature"
+msgstr ""
+
+msgid "Export diagram to PNG"
+msgstr ""
+
+msgid "This will discard the modifications."
+msgstr ""
+
+msgid "Literal Value"
+msgstr ""
+
+msgid "Metric List:"
+msgstr ""
+
+msgid "   $1 replaced in $2 class"
+msgid_plural "   $1 replaced in $2 classes"
+msgstr[0] ""
+
+msgid "&Save"
+msgstr ""
+
+msgid "Metadata Cache Path"
+msgstr ""
+
+msgid "Type of the task."
+msgstr ""
+
+msgid "&Comment\tCtrl+K"
+msgstr ""
+
+msgid "Version from class $1"
+msgstr ""
+
+msgid "Specify the file the compiler uses to generate the exported functions."
+msgstr ""
+
+msgid "Move item up"
+msgstr ""
+
+msgid "Default precompiles"
+msgstr ""
+
+msgid "Switch to Tree View"
+msgstr ""
+
+msgid "Address Expression"
+msgstr ""
+
+msgid "This command will stop the debugger."
+msgstr ""
+
+msgid "Class name"
+msgstr ""
+
+msgid "Cli&ents"
+msgstr ""
+
+msgid "System launched"
+msgstr ""
+
+msgid "Application is not running"
+msgstr ""
+
+msgid "Pause"
+msgstr ""
+
+msgid "Freeze..."
+msgstr ""
+
+msgid "Capture"
+msgstr ""
+
+msgid "&Edit"
+msgstr ""
+
+msgid "Warn about locals that are not used?"
+msgstr ""
+
+msgid "Does this task have to finish successful for the compilation to continue?"
+msgstr ""
+
+msgid "Delete graphical items, remove code from system"
+msgstr ""
+
+msgid "Class "
+msgstr ""
+
+msgid "Click `Finish' to generate the documentation."
+msgstr ""
+
+msgid ""
+"You can generate the Execution Profile from a Run-time Information Record\n"
+"created by a profiler, or you can reuse an existing Execution Profile if you\n"
+"have already generated one for this system."
+msgstr ""
+
+msgid "Show Signature"
+msgstr ""
+
+msgid "Feature `$1' (ID = \"$2\") is invalid."
+msgstr ""
+
+msgid "Toggle visibility of supplier links"
+msgstr ""
+
+msgid "Fit to screen"
+msgstr ""
+
+msgid "No breakpoints"
+msgstr ""
+
+msgid "Generic"
+msgstr ""
+
+msgid "Execute the application one line at a time"
+msgstr ""
+
+msgid "Indexing clause has syntax error"
+msgstr ""
+
+msgid "Background Workbench C Compilation Succeeded"
+msgstr ""
+
+msgid "Unnamed Debugs"
+msgstr ""
+
+msgid "Don't ask me again and always finalize."
+msgstr ""
+
+msgid "Is this a hidden cluster that can not be used if the system is used as a library?"
+msgstr ""
+
+msgid "Text option: "
+msgstr ""
+
+msgid "Remove Condition"
+msgstr ""
+
+msgid "Assembly"
+msgstr ""
+
+msgid "denominator metric"
+msgstr ""
+
+msgid "Feature version setting:"
+msgstr ""
+
+msgid "Sen&d to"
+msgstr ""
+
+msgid " of "
+msgstr ""
+
+msgid "&Search"
+msgstr ""
+
+msgid "default"
+msgstr ""
+
+msgid "Warn about usage of old syntax?"
+msgstr ""
+
+msgid "ancestors"
+msgstr ""
+
+msgid ""
+"Are you sure you want to redo the refactoring?\n"
+" If classes have been modified since the undo of the refactoring this can lead to corrupt classes and lost information!"
+msgstr ""
+
+msgid "Add new external"
+msgstr ""
+
+msgid "Raise Windows"
+msgstr ""
+
+msgid "Do not ask me again and always save modified metric"
+msgstr ""
+
+msgid "Assembly Culture"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "C Output"
+msgstr ""
+
+msgid "Redo"
+msgstr ""
+
+msgid "Cannot change to directory "
+msgstr ""
+
+msgid "In Feature"
+msgstr ""
+
+msgid "Warn about renamings of unknown classes?"
+msgstr ""
+
+msgid "Hide labels"
+msgstr ""
+
+msgid "Edit an expression"
+msgstr ""
+
+msgid "Watch tool :: error message"
+msgstr ""
+
+msgid "Classes to Go:"
+msgstr ""
+
+msgid "Line Generation"
+msgstr ""
+
+msgid "Description of the task."
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+msgid "Denominator metric \"$1\" is not defined."
+msgstr ""
+
+msgid "Select a class which is fully compiled to have information about it."
+msgstr ""
+
+msgid ""
+"\n"
+"CONTEXT: $1\n"
+msgstr ""
+
+msgid "&File"
+msgstr ""
+
+msgid "new_value"
+msgstr ""
+
+msgid "Parent cluster"
+msgstr ""
+
+msgid "Criterion definition:"
+msgstr ""
+
+msgid "Make sure unit of every variable metric is same as that of the linear metric."
+msgstr ""
+
+msgid "Saving metrics..."
+msgstr ""
+
+msgid "Show only:"
+msgstr ""
+
+msgid "Insert Midpoint"
+msgstr ""
+
+msgid "Metric name \"$1\" is invalid."
+msgstr ""
+
+msgid "Are warnings enabled?"
+msgstr ""
+
+msgid "&Show Formatting Marks"
+msgstr ""
+
+msgid "Attributes"
+msgstr ""
+
+msgid "Checking metric validity"
+msgstr ""
+
+msgid "Output Name"
+msgstr ""
+
+msgid "Item [$1] is attached to \"$2\""
+msgstr ""
+
+msgid "new"
+msgstr ""
+
+msgid "Version of the assembly."
+msgstr ""
+
+msgid "Displayed buttons"
+msgstr ""
+
+msgid "Save &All"
+msgstr ""
+
+msgid "Input domain:"
+msgstr ""
+
+msgid "Edit Library Configuration"
+msgstr ""
+
+msgid "File Selection"
+msgstr ""
+
+msgid "Add scope"
+msgstr ""
+
+msgid "Import metrics from file"
+msgstr ""
+
+msgid "Evaluate postcondition assertions?"
+msgstr ""
+
+msgid "Add Library"
+msgstr ""
+
+msgid "&Flat"
+msgstr ""
+
+msgid "deferred features"
+msgstr ""
+
+msgid "Condition"
+msgstr ""
+
+msgid "Edit command"
+msgstr ""
+
+msgid "Libraries"
+msgstr ""
+
+msgid "Remaining: "
+msgstr ""
+
+msgid "Link Tool"
+msgstr ""
+
+msgid "&Refactoring"
+msgstr ""
+
+msgid "Step In&to"
+msgstr ""
+
+msgid "Are you sure you want to remove $1 and any children of it?"
+msgstr ""
+
+msgid "ratio metric"
+msgstr ""
+
+msgid "Don't show this dialog at startup"
+msgstr ""
+
+msgid "Metric named \"$1\" already exists in your metrics."
+msgstr ""
+
+msgid "Profiler Wizard"
+msgstr ""
+
+msgid "Move Midpoint"
+msgstr ""
+
+msgid "&Ignore Breakpoints"
+msgstr ""
+
+msgid "Application is running"
+msgstr ""
+
+msgid "&Disable All Breakpoints"
+msgstr ""
+
+msgid "Branch #$1"
+msgstr ""
+
+msgid "Ex&ported"
+msgstr ""
+
+msgid "Add Client-Supplier Relation Between '$1' and '$2'"
+msgstr ""
+
+msgid "Restore Defaults"
+msgstr ""
+
+msgid "flat view"
+msgstr ""
+
+msgid "Current editor"
+msgstr ""
+
+msgid ""
+"Some files have not been saved.\n"
+"Do you want to save them before exiting?"
+msgstr ""
+
+msgid "<= MSIL CLR version <= "
+msgstr ""
+
+msgid "Criterion name is missing."
+msgstr ""
+
+msgid "Disable assertion checking"
+msgstr ""
+
+msgid "Command output:\n"
+msgstr ""
+
+msgid "Edit the properties of the selected feature"
+msgstr ""
+
+msgid "Remove Right Angles"
+msgstr ""
+
+msgid ""
+"Your external command list is full.\n"
+"Use Tools->External Command... to delete one."
+msgstr ""
+
+msgid "&Put Right Angles"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid ""
+"File has been changed by another tool/editor\n"
+"Do you want to load the changes?"
+msgstr ""
+
+msgid "Choose Your Project Name and Directory"
+msgstr ""
+
+msgid "Metric Definition File:"
+msgstr ""
+
+msgid "Name"
+msgstr "Name"
+
+msgid "<- Remove"
+msgstr ""
+
+msgid "Redo Last Refactoring (only works as long as no file that was refactored has been changed by hand)"
+msgstr ""
+
+msgid "Open"
+msgstr ""
+
+msgid "Check"
+msgstr ""
+
+msgid "New Expression"
+msgstr ""
+
+msgid "&Deferred"
+msgstr ""
+
+msgid "Display limit reached"
+msgstr ""
+
+msgid ""
+"Command is currently executing.\n"
+"Press OK to ignore the output."
+msgstr ""
+
+msgid "Remove currently selected object"
+msgstr ""
+
+msgid "Restrictors"
+msgstr ""
+
+msgid "Show Assigner Command Name"
+msgstr ""
+
+msgid "Library Readonly"
+msgstr ""
+
+msgid "&Editor"
+msgstr ""
+
+msgid "Remove Handles"
+msgstr ""
+
+msgid "Cannot create directroy: $1."
+msgstr ""
+
+msgid "Whole project"
+msgstr ""
+
+msgid "Class \"$1\" (ID = \"$2\") is invalid."
+msgstr ""
+
+msgid "Execution interrupted"
+msgstr ""
+
+msgid "Current metric result may not be up-to-date"
+msgstr ""
+
+msgid "Group metrics by unit"
+msgstr ""
+
+msgid "St&art"
+msgstr "St&art"
+
+msgid "Creating new project, please wait..."
+msgstr "Erstelle neues Projekt. Bitte warten..."
+
+msgid "Tooltip"
+msgstr "Tooltip"
+
+msgid "Overflow Prevention"
+msgstr ""
+
+msgid "Or"
+msgstr ""
+
+msgid "Down"
+msgstr ""
+
+msgid "File Name"
+msgstr "Dateiname"
+
+msgid "Find Next &Selection"
+msgstr "Nächste &Selektion finden"
+
+msgid "Save C Compilation output to file"
+msgstr "Ausgabe der C-Kompilation in Datei speichern"
+
+msgid "Restore Assertion Checking"
+msgstr ""
+
+msgid "Cluster options "
+msgstr "Cluster optionen"
+
+msgid "(Double click to go to definition)"
+msgstr "(Doppelklick um zur Definition zu gehen)"
+
+msgid "Use existing profile: "
+msgstr "Existierendes Profil verwenden:"
+
+msgid "Clusters to Go:"
+msgstr ""
+
+msgid "Denominator metric is missing."
+msgstr ""
+
+msgid "Execution Profile Error"
+msgstr ""
+
+msgid "&Remove Current Item"
+msgstr ""
+
+msgid "Platform"
+msgstr ""
+
+msgid "Open Backup File"
+msgstr ""
+
+msgid "Recompile Overrides"
+msgstr ""
+
+msgid "Renames occurances of the class name in any class. (Slow)"
+msgstr ""
+
+msgid "Open a project"
+msgstr ""
+
+msgid "Do not ask again, and always compile C code"
+msgstr ""
+
+msgid "Building tree view ..."
+msgstr ""
+
+msgid "Full name of the assembly as found in the GAC."
+msgstr ""
+
+msgid "Evaluate metric: "
+msgstr ""
+
+msgid "Zoom"
+msgstr ""
+
+msgid "Use Application Options"
+msgstr ""
+
+msgid "Updating the view ..."
+msgstr ""
+
+msgid "expanded"
+msgstr ""
+
+msgid "Parents:"
+msgstr ""
+
+msgid "Replace all"
+msgstr ""
+
+msgid "$1 matches of $2 total preferences"
+msgstr ""
+
+msgid "&Select Depth of Relations"
+msgstr ""
+
+msgid "Evaluate precondition assertions of suppliers?"
+msgstr ""
+
+msgid ""
+"There is already metric named \"$1\" in import metric list.\n"
+"The name \"$2\" will be changed back to \"$3\"."
+msgstr ""
+
+msgid "Undo Last Refactoring (only works as long as no file that was refactored has been changed by hand)"
+msgstr ""
+
+msgid "C Functions"
+msgstr ""
+
+msgid "Use Cluster Name as Namespace"
+msgstr ""
+
+msgid "Create new aggregate client-supplier links"
+msgstr ""
+
+msgid "Contract"
+msgstr ""
+
+msgid "External Output"
+msgstr ""
+
+msgid "Inlining Size"
+msgstr ""
+
+msgid "Erase Class '$1'"
+msgstr ""
+
+msgid "Type of the group."
+msgstr ""
+
+msgid "descendant versions"
+msgstr ""
+
+msgid "Select input domain:"
+msgstr ""
+
+msgid "You can put \"not\" before a criterion name to negate it"
+msgstr ""
+
+msgid "External Commands"
+msgstr ""
+
+msgid "Toggle visibility of clusters"
+msgstr ""
+
+msgid "Add L&ibrary..."
+msgstr ""
+
+msgid "Implicit exception pending"
+msgstr ""
+
+msgid "From $1"
+msgstr ""
+
+msgid "Must succeed"
+msgstr ""
+
+msgid "Old name"
+msgstr ""
+
+msgid "Compare"
+msgstr ""
+
+msgid "Configuration file"
+msgstr ""
+
+msgid "Use regular expression?"
+msgstr ""
+
+msgid "EIFGENs location"
+msgstr ""
+
+msgid "Completed: "
+msgstr ""
+
+msgid "Only current version"
+msgstr ""
+
+msgid "Reuse or Generate an Execution Profile."
+msgstr ""
+
+msgid "Step completed"
+msgstr ""
+
+msgid "Maximal number of instructions in a feature for the feature to be inlined."
+msgstr ""
+
+msgid "Referenced metric(s): $1 not found."
+msgstr ""
+
+msgid "Remove Class/Cluster"
+msgstr ""
+
+msgid "Item invalid in current system"
+msgstr ""
+
+msgid "Replace with: "
+msgstr ""
+
+msgid "Help Tool"
+msgstr ""
+
+msgid "Value \"$1\" of attribute \"case_sensitive\" is invalid. A boolean is expected."
+msgstr ""
+
+msgid "Initial match reached."
+msgstr ""
+
+msgid "Exclude Rules"
+msgstr ""
+
+msgid "Should names follow the .NET naming convention?"
+msgstr ""
+
+msgid "Select the diagrams to generate"
+msgstr ""
+
+msgid "  (precompiled)"
+msgstr ""
+
+msgid "Select the formats to use"
+msgstr ""
+
+msgid "Add a variable (double click or Enter); Use an existing variable (right click or Ctrl+Enter)"
+msgstr ""
+
+msgid "Ensure"
+msgstr ""
+
+msgid "Feature "
+msgstr ""
+
+msgid "Customize Toolbar"
+msgstr ""
+
+msgid "Select a file for user-defined metrics backup:"
+msgstr ""
+
+msgid "Current version and all its descendant versions"
+msgstr ""
+
+msgid "NEW_NAME"
+msgstr ""
+
+msgid "Double click to go to first occurrence"
+msgstr ""
+
+msgid "&New"
+msgstr ""
+
+msgid "Erase Classes"
+msgstr ""
+
+msgid "Rename Class '$1' Locally to '$2'"
+msgstr ""
+
+msgid "Add"
+msgstr ""
+
+msgid "Invalid description tag."
+msgstr ""
+
+msgid "Remove metric "
+msgstr ""
+
+msgid " error"
+msgstr ""
+
+msgid ""
+"Once an execution of an instrumented system has generated the proper file,\n"
+"you must process it through a profile converter to produce the Execution\n"
+"Profile. The need for the converter comes from the various formats that\n"
+"profilers use to record run-time information during an execution.\n"
+"\n"
+"Provide the Run-time information record produced by the profiler and\n"
+"select the profiler used to create this record.\n"
+"The Execution Profile will be generated under the file \"profinfo.pfi\"."
+msgstr ""
+
+msgid "Error message :"
+msgstr ""
+
+msgid "ERROR OCCURRED: \n"
+msgstr ""
+
+msgid "Renaming Unknown Class"
+msgstr ""
+
+msgid "System name: "
+msgstr ""
+
+msgid "Go forth"
+msgstr ""
+
+msgid "Class:"
+msgstr ""
+
+msgid "Do not ask again, and always terminate freezing when needed."
+msgstr ""
+
+msgid "Name of the current project"
+msgstr ""
+
+msgid "homonyms"
+msgstr ""
+
+msgid "Error on expression : \"$1\""
+msgstr ""
+
+msgid "Feature:"
+msgstr ""
+
+msgid "Project Settings ($1)"
+msgstr ""
+
+msgid "Dynamic Runtime"
+msgstr ""
+
+msgid "Difference"
+msgstr ""
+
+msgid "Make sure to specify a non-empty string for a text criterion."
+msgstr ""
+
+msgid "Windows"
+msgstr ""
+
+msgid "Disable or restore Assertion checking handling during debugging"
+msgstr ""
+
+msgid ""
+"Make sure that every item specified in a domain is valid.\n"
+"Following are some reasons which can cause a domain item invalid:\n"
+" * Domain item ID is damaged or incorrect.\n"
+" * Domain item doesn't exist (Maybe due to removal/rename of a folder, group, class or feature).\n"
+msgstr ""
+
+msgid "Copy"
+msgstr ""
+
+msgid "&External Commands..."
+msgstr ""
+
+msgid "Find P&revious Selection"
+msgstr ""
+
+msgid "Groups"
+msgstr ""
+
+msgid "Create a new expression"
+msgstr ""
+
+msgid "Select Cluster"
+msgstr ""
+
+msgid "Debugging"
+msgstr ""
+
+msgid "Class"
+msgstr ""
+
+msgid "recursive"
+msgstr ""
+
+msgid "&Export Diagram to PNG"
+msgstr ""
+
+msgid "Move Class '$1'"
+msgstr ""
+
+msgid "&Features"
+msgstr ""
+
+msgid "Put Two Handles Right"
+msgstr ""
+
+msgid "UUID is missing."
+msgstr ""
+
+msgid "&Indent Selection\tTab"
+msgstr ""
+
+msgid "Open a file"
+msgstr ""
+
+msgid "Select a Run-time information record to generate the Execution profile"
+msgstr ""
+
+msgid "Add..."
+msgstr ""
+
+msgid "Signing Key"
+msgstr ""
+
+msgid "Conditions for this task to be executed."
+msgstr ""
+
+msgid "Deselect Integral Metrics"
+msgstr ""
+
+msgid "Create Folder..."
+msgstr ""
+
+msgid "Include"
+msgstr ""
+
+msgid "Add a cluster"
+msgstr ""
+
+msgid "Description of the system."
+msgstr ""
+
+msgid "Finali&ze..."
+msgstr ""
+
+msgid "&Special"
+msgstr ""
+
+msgid "Root feature: "
+msgstr ""
+
+msgid "Use the old format for verbatim strings?"
+msgstr ""
+
+msgid "Features"
+msgstr ""
+
+msgid "Show descendant classes?"
+msgstr ""
+
+msgid "Set"
+msgstr ""
+
+msgid "Obsolete Features"
+msgstr ""
+
+msgid "Select type of new links"
+msgstr ""
+
+msgid "Do not ask again, and always convert old projects"
+msgstr ""
+
+msgid "New Con&text Window"
+msgstr ""
+
+msgid "Library "
+msgstr ""
+
+msgid "Unused Locals"
+msgstr ""
+
+msgid "Add a new command"
+msgstr ""
+
+msgid "Index"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+msgid "Onces in Generics"
+msgstr ""
+
+msgid "Edit Configuration"
+msgstr ""
+
+msgid "Item expires. Try saving file and searching again."
+msgstr ""
+
+msgid "I&nterrupt Application"
+msgstr ""
+
+msgid "Old Name"
+msgstr ""
+
+msgid "Select a File"
+msgstr ""
+
+msgid "Run command hidden"
+msgstr ""
+
+msgid "Save this dynamic library definition"
+msgstr ""
+
+msgid "New Context"
+msgstr ""
+
+msgid "Dynamic Feature Evaluation"
+msgstr ""
+
+msgid "Chart"
+msgstr ""
+
+msgid "Compilation Error Wizard"
+msgstr ""
+
+msgid "Assertions"
+msgstr ""
+
+msgid "Move metric unit up.\n"
+msgstr ""
+
+msgid "Target to cluster or class"
+msgstr ""
+
+msgid "Results:"
+msgstr ""
+
+msgid "Rename Class '$1' Globally to '$2'"
+msgstr ""
+
+msgid "Remove Breakpoints"
+msgstr ""
+
+msgid "Include:"
+msgstr ""
+
+msgid "Dead Code Removal Completed"
+msgstr ""
+
+msgid "Unknown class name"
+msgstr ""
+
+msgid "Identification"
+msgstr ""
+
+msgid "&Run Finalized System"
+msgstr ""
+
+msgid "E&dit Condition"
+msgstr ""
+
+msgid "Crop diagram"
+msgstr ""
+
+msgid "Command"
+msgstr ""
+
+msgid "Scope <<"
+msgstr ""
+
+msgid "Hide cluster legend"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "offset $1"
+msgstr ""
+
+msgid "Select a metric archive file"
+msgstr ""
+
+msgid "Background Workbench C Compilation Launch Failed"
+msgstr ""
+
+msgid "Confimation"
+msgstr ""
+
+msgid "Platforms"
+msgstr ""
+
+msgid ".NET"
+msgstr ""
+
+msgid "Select domain scope"
+msgstr ""
+
+msgid "Preferences"
+msgstr ""
+
+msgid "&Close"
+msgstr ""
+
+msgid "Pick and drop metric here"
+msgstr ""
+
+msgid "Action:"
+msgstr ""
+
+msgid "Zoom in"
+msgstr ""
+
+msgid "Expression:"
+msgstr ""
+
+msgid "Regular expressions which exclude/include sub folders and/or files."
+msgstr ""
+
+msgid "Previous"
+msgstr ""
+
+msgid "Open Objects tool menu"
+msgstr ""
+
+msgid "Generate extra information for external debuggers?"
+msgstr ""
+
+msgid "Hide Alias Name"
+msgstr ""
+
+msgid "Metric name cannot be empty"
+msgstr ""
+
+msgid "Name of the group."
+msgstr ""
+
+msgid "Manually Edit Configuration"
+msgstr ""
+
+msgid "System is being compiled"
+msgstr ""
+
+msgid "Select current archive (URL acceptable):"
+msgstr ""
+
+msgid "Project documentation"
+msgstr ""
+
+msgid "Name of the system."
+msgstr ""
+
+msgid "Current object"
+msgstr ""
+
+msgid "Undo last action"
+msgstr ""
+
+msgid "Eiffel Compilation Succeeded"
+msgstr ""
+
+msgid "Launch Without Stopping"
+msgstr ""
+
+msgid "Launch failed"
+msgstr ""
+
+msgid "&Hide Formatting Marks"
+msgstr ""
+
+msgid "Do not show again"
+msgstr ""
+
+msgid "Use wildcards"
+msgstr ""
+
+msgid "Add rule"
+msgstr ""
+
+msgid "Copy of "
+msgstr ""
+
+msgid "Select reference metric archive file"
+msgstr ""
+
+msgid "Force compilation for 32bits?"
+msgstr ""
+
+msgid "New Ed&itor Window"
+msgstr ""
+
+msgid "&Project Bar"
+msgstr ""
+
+msgid "&Routines"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Condition:"
+msgstr ""
+
+msgid "Add and-term"
+msgstr ""
+
+msgid "Location: "
+msgstr ""
+
+msgid "&Find..."
+msgstr ""
+
+msgid "Classes per Module"
+msgstr ""
+
+msgid "&Precompile"
+msgstr ""
+
+msgid "Show labels"
+msgstr ""
+
+msgid "Abort"
+msgstr ""
+
+msgid "Remove rule"
+msgstr ""
+
+msgid "Move Cluster '$1'"
+msgstr ""
+
+msgid ""
+"Key to be able to add the generated binary to the Global Assembly Cache (GAC). \n"
+"Chose a new, non existing filename to create a new key file."
+msgstr ""
+
+msgid "Put Two Handles Left"
+msgstr ""
+
+msgid "Complete &Word"
+msgstr ""
+
+msgid "Version of the .NET runtime to use."
+msgstr ""
+
+msgid "&Object"
+msgstr ""
+
+msgid "Grid \"$1\""
+msgstr ""
+
+msgid "Compilation Type"
+msgstr ""
+
+msgid "ancestor versions"
+msgstr ""
+
+msgid "Empty Development Tool"
+msgstr ""
+
+msgid "Make sure every variable metric referenced by a linear metric is defined."
+msgstr ""
+
+msgid "routines"
+msgstr ""
+
+msgid "Select format for output"
+msgstr ""
+
+msgid "Alphabetical class list"
+msgstr ""
+
+msgid "Redo Refactoring"
+msgstr ""
+
+msgid ".NET Namespace"
+msgstr ""
+
+msgid "Enable/Disable expressions"
+msgstr ""
+
+msgid "Language type"
+msgstr ""
+
+msgid "Paste"
+msgstr ""
+
+msgid "&Reset Current View"
+msgstr ""
+
+msgid "Detailed Result"
+msgstr ""
+
+msgid "basic text view"
+msgstr ""
+
+msgid "Should inlining be enabled?"
+msgstr ""
+
+msgid "(Windows only)"
+msgstr ""
+
+msgid "UUID \"$1\" is invalid."
+msgstr ""
+
+msgid "&Minimize All"
+msgstr ""
+
+msgid "Disable Breakpoints"
+msgstr ""
+
+msgid "Creation Procedure"
+msgstr ""
+
+msgid "Exiting will stop the debugger."
+msgstr ""
+
+msgid "TYPE: "
+msgstr ""
+
+msgid "&Help"
+msgstr ""
+
+msgid "&Paste\tCtrl+V"
+msgstr ""
+
+msgid "Display Exception Trace"
+msgstr ""
+
+msgid "Command is running"
+msgstr ""
+
+msgid "Warn about usage of onces in generics?"
+msgstr ""
+
+msgid "Supplier group"
+msgstr ""
+
+msgid "Background Finalized C Compilation Terminated"
+msgstr ""
+
+msgid "Root cluster: "
+msgstr ""
+
+msgid "&Print"
+msgstr ""
+
+msgid "Command name: "
+msgstr ""
+
+msgid "Generation Error"
+msgstr ""
+
+msgid "Select a Directory"
+msgstr ""
+
+msgid "Compile All Classes?"
+msgstr ""
+
+msgid "Edit..."
+msgstr ""
+
+msgid "Add a library"
+msgstr ""
+
+msgid "Make sure that numerator and denominator metric referenced by ratio metric are defined."
+msgstr ""
+
+msgid "&Open Project..."
+msgstr ""
+
+msgid "Warning: Modifications will be taken into account"
+msgstr ""
+
+msgid "Select indexing items to include in HTML meta tags"
+msgstr ""
+
+msgid "Evaluation"
+msgstr ""
+
+msgid "$1 preferences"
+msgstr ""
+
+msgid "Dynamic feature evaluation"
+msgstr ""
+
+msgid "Execution Profile Generation"
+msgstr ""
+
+msgid "Redo (Ctrl+Y)"
+msgstr ""
+
+msgid ""
+"File has been modified.\n"
+"Do you want to save changes?"
+msgstr ""
+
+msgid "metric archive node"
+msgstr ""
+
+msgid "&Hide Favorites"
+msgstr ""
+
+msgid "Index:"
+msgstr ""
+
+msgid "Text Generators"
+msgstr ""
+
+msgid "Show Alias Name"
+msgstr ""
+
+msgid ""
+"Do you want to save your changes\n"
+"before closing the window?"
+msgstr ""
+
+msgid "Collapse all selected level(s)"
+msgstr ""
+
+msgid "Select directory to generate the documentation in"
+msgstr ""
+
+msgid "Generate &Documentation..."
+msgstr ""
+
+msgid "Finalize..."
+msgstr ""
+
+msgid "contract view"
+msgstr ""
+
+msgid "Select Depths"
+msgstr ""
+
+msgid "Regexp"
+msgstr ""
+
+msgid "Standard (C/byte code)"
+msgstr ""
+
+msgid "Select All Metrics"
+msgstr ""
+
+msgid "Show only synctactically referenced classes also?"
+msgstr ""
+
+msgid "Background Workbench C Compilation Terminated"
+msgstr ""
+
+msgid "Library Root"
+msgstr ""
+
+msgid "Default libraries"
+msgstr ""
+
+msgid "Use Recursive Cluster Name as Namespace"
+msgstr ""
+
+msgid "Attribute"
+msgstr ""
+
+msgid ""
+"Select a feature to pull up.\n"
+"Either use pick and drop or target the editor to the feature to pull up."
+msgstr ""
+
+msgid "Add C&luster..."
+msgstr ""
+
+msgid "S&ynchronize Context Tool"
+msgstr ""
+
+msgid "First chance"
+msgstr ""
+
+msgid "&Object Tools"
+msgstr ""
+
+msgid "Delete current view"
+msgstr ""
+
+msgid "callers"
+msgstr ""
+
+msgid "Description:"
+msgstr ""
+
+msgid "Clients of Class "
+msgstr ""
+
+msgid "Should unused code be removed?"
+msgstr ""
+
+msgid "New Name"
+msgstr ""
+
+msgid "Show all stack elements"
+msgstr ""
+
+msgid "Reverse Engineering Project"
+msgstr ""
+
+msgid "Background Workbench C Compilation Launched"
+msgstr ""
+
+msgid "Forward"
+msgstr ""
+
+msgid "&Forward"
+msgstr ""
+
+msgid "E&xternals"
+msgstr ""
+
+msgid ""
+"\n"
+"   + break index = $1"
+msgstr ""
+
+msgid "Warn about missing classes in export clauses (VTCM)?"
+msgstr ""
+
+msgid "Extracting $1 of feature $2..."
+msgstr ""
+
+msgid "&Windows"
+msgstr ""
+
+msgid "Cursor position (line:column)"
+msgstr ""
+
+msgid ""
+"There is already a metric named $1.\n"
+"Change its name in \"Metric name\" column to make it importable."
+msgstr ""
+
+msgid "Uncomment selected lines"
+msgstr ""
+
+msgid "Makefile"
+msgstr ""
+
+msgid "Show BON"
+msgstr ""
+
+msgid "Description of the group."
+msgstr ""
+
+msgid "F&avorites"
+msgstr ""
+
+msgid " (REQUIRES RESTART)"
+msgstr ""
+
+msgid "&Remove"
+msgstr ""
+
+msgid "Variable metric is missng. At least one variable metric should be defined."
+msgstr ""
+
+msgid "Restore assertion checking"
+msgstr ""
+
+msgid "Use Optimized Precompile"
+msgstr ""
+
+msgid "implementers"
+msgstr ""
+
+msgid "C&lickable"
+msgstr ""
+
+msgid "Add Override Cluster"
+msgstr ""
+
+msgid "Some classes were edited since last compilation"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Type Mapping"
+msgstr ""
+
+msgid "Show ancestor classes?"
+msgstr ""
+
+msgid "Root Cluster"
+msgstr ""
+
+msgid "In&variants"
+msgstr ""
+
+msgid "Find &Added Classes && Recompile"
+msgstr ""
+
+msgid "External Editor"
+msgstr ""
+
+msgid "Terminate running command"
+msgstr ""
+
+msgid "Target"
+msgstr ""
+
+msgid "Do you really want to reset current view?"
+msgstr ""
+
+msgid "Make sure that the criterion of given unit exists."
+msgstr ""
+
+msgid "Match case"
+msgstr ""
+
+msgid "Open a dynamic library definition"
+msgstr ""
+
+msgid "Delete Inheritance Link Between '$1' and '$2'"
+msgstr ""
+
+msgid "Workbench mode"
+msgstr ""
+
+msgid "Add Include"
+msgstr ""
+
+msgid "Assignment on Formal/Expanded"
+msgstr ""
+
+msgid "Move item down"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+msgid "Assembly Name"
+msgstr ""
+
+msgid "Zoom Out"
+msgstr ""
+
+msgid "Cut (Ctrl+X)"
+msgstr ""
+
+msgid "Switch numerical formating"
+msgstr ""
+
+msgid "Add Resource"
+msgstr ""
+
+msgid "Available buttons"
+msgstr ""
+
+msgid "Ma&ximize"
+msgstr ""
+
+msgid "Select &All\tCtrl+A"
+msgstr ""
+
+msgid "Folder \"$1\" (ID = \"$2\") is invalid."
+msgstr ""
+
+msgid "is invalid"
+msgstr ""
+
+msgid "Change"
+msgstr ""
+
+msgid "Edit Object content"
+msgstr ""
+
+msgid "Editor"
+msgstr ""
+
+msgid "Calling convention:"
+msgstr ""
+
+msgid "Turn on/off physics"
+msgstr ""
+
+msgid "or And-term $1"
+msgstr ""
+
+msgid "Create a new dynamic library definition"
+msgstr ""
+
+msgid "Display an expanded view of objects"
+msgstr ""
+
+msgid "Root Feature"
+msgstr ""
+
+msgid "Force right angles"
+msgstr ""
+
+msgid "Open user defined metric file in external editor"
+msgstr ""
+
+msgid "External Edition"
+msgstr ""
+
+msgid "Feature Name"
+msgstr ""
+
+msgid "Choose a Class"
+msgstr ""
+
+msgid "Multithreaded"
+msgstr ""
+
+msgid "Post Compilation Tasks"
+msgstr ""
+
+msgid "Add selected metric"
+msgstr ""
+
+msgid "Function"
+msgstr ""
+
+msgid "Add Cluster"
+msgstr ""
+
+msgid "Find &Previous"
+msgstr ""
+
+msgid "History Tool"
+msgstr ""
+
+msgid "Overwrite"
+msgstr ""
+
+msgid "interface view"
+msgstr ""
+
+msgid "metric"
+msgstr ""
+
+msgid "Display a message about how to deal with the metric definition error"
+msgstr ""
+
+msgid "Auto expressions"
+msgstr ""
+
+msgid "Browse..."
+msgstr ""
+
+msgid "Move selected row up"
+msgstr ""
+
+msgid "Delete command"
+msgstr ""
+
+msgid "Generating: "
+msgstr ""
+
+msgid "EAC Browser"
+msgstr ""
+
+msgid "And"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Name of the target."
+msgstr ""
+
+msgid "Keep grid layout"
+msgstr ""
+
+msgid "Run selected metric"
+msgstr ""
+
+msgid "Metric name is empty."
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Clone selected metric to a new metric"
+msgstr ""
+
+msgid "Delete selected row"
+msgstr ""
+
+msgid "Reload"
+msgstr ""
+
+msgid "Select Feature"
+msgstr ""
+
+msgid "Show clusters"
+msgstr ""
+
+msgid "Stack information"
+msgstr ""
+
+msgid "Do not ask me again"
+msgstr ""
+
+msgid "Hide Signature"
+msgstr ""
+
+msgid "Metric Archive"
+msgstr ""
+
+msgid "attributes"
+msgstr ""
+
+msgid "Classes visible for external code."
+msgstr ""
+
+msgid "Move selected row down"
+msgstr ""
+
+msgid "Add Object"
+msgstr ""
+
+msgid "Overrides"
+msgstr ""
+
+msgid "once routines and constants"
+msgstr ""
+
+msgid ""
+"Are you sure you want to undo the refactoring?\n"
+" If classes have been modified since the refactoring this can lead to corrupt classes and lost information!"
+msgstr ""
+
+msgid "&Undo\tCtrl+Z"
+msgstr ""
+
+msgid "Force 32bits"
+msgstr ""
+
+msgid "Closing the window will stop the debugger."
+msgstr ""
+
+msgid "No result available."
+msgstr ""
+
+msgid "Background Finalized C Compilation Launch Failed"
+msgstr ""
+
+msgid "No help available for this element"
+msgstr ""
+
+msgid "Background C Compilation in Progress"
+msgstr ""
+
+msgid "..."
+msgstr ""
+
+msgid ".NET Runtime Version"
+msgstr ""
+
+msgid "Text in text criterion is empty."
+msgstr ""
+
+msgid "Value \"$1\" of attribute \"type\" is invalid."
+msgstr ""
+
+msgid "Enter the name of the new folder: "
+msgstr ""
+
+msgid "Find Added Classes & Recompile"
+msgstr ""
+
+msgid "Customize Re&factoring Toolbar..."
+msgstr ""
+
+msgid "Diagram"
+msgstr ""
+
+msgid "Criterion"
+msgstr ""
+
+msgid "Selected metric"
+msgstr ""
+
+msgid "&Assignees"
+msgstr ""
+
+msgid "New Editor"
+msgstr ""
+
+msgid "Replace Name in Strings"
+msgstr ""
+
+msgid "Remove all scopes"
+msgstr ""
+
+msgid "Overflow &Prevention..."
+msgstr ""
+
+msgid "Input"
+msgstr ""
+
+msgid ""
+"Extracting the homonyms\n"
+"may take a long time."
+msgstr ""
+
+msgid "&Callers"
+msgstr ""
+
+msgid "S&ave As..."
+msgstr ""
+
+msgid "Enable all breakpoints"
+msgstr ""
+
+msgid "In Class"
+msgstr ""
+
+msgid "Edit condition"
+msgstr ""
+
+msgid "$1  in cluster $2  (not in system)  located in $3"
+msgstr ""
+
+msgid "Hide Assigner Command Name"
+msgstr ""
+
+msgid "Set Center Class"
+msgstr ""
+
+msgid "Alphabetical cluster list"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "OLD_NAME"
+msgstr ""
+
+msgid "Zoom out"
+msgstr ""
+
+msgid "Makefiles"
+msgstr ""
+
+msgid "Undo not possible."
+msgstr ""
+
+msgid "Switch to low quality"
+msgstr ""
+
+msgid "Command error output:\n"
+msgstr ""
+
+msgid "Run Finalized"
+msgstr ""
+
+msgid "Objects tool: right"
+msgstr ""
+
+msgid "Location"
+msgstr ""
+
+msgid "&Standard Buttons"
+msgstr ""
+
+msgid ""
+"The file you have supplied as existring Execution Provide does\n"
+"not exist or is not valid. Please provide a valid file or generate\n"
+"a new one.\n"
+"Click Back and select a valid file or choose the generate option."
+msgstr ""
+
+msgid "Press ESC to wipe out"
+msgstr ""
+
+msgid "Copy call stack to clipboard"
+msgstr ""
+
+msgid "Are simplified address expressions enabled?"
+msgstr ""
+
+msgid "Numerator metric is missing."
+msgstr ""
+
+msgid "De&bugging Options"
+msgstr ""
+
+msgid "Cluster"
+msgstr ""
+
+msgid "S&ystem Info"
+msgstr ""
+
+msgid "Override"
+msgstr ""
+
+msgid "New Class"
+msgstr ""
+
+msgid "&Creators"
+msgstr ""
+
+msgid "Address:"
+msgstr ""
+
+msgid "Add new variable"
+msgstr ""
+
+msgid "Edit $1"
+msgstr ""
+
+msgid "Backup Found"
+msgstr ""
+
+msgid "Groups this cluster depends on."
+msgstr ""
+
+msgid "Keep Assertions"
+msgstr ""
+
+msgid "Compare metric archive"
+msgstr ""
+
+msgid "All breakpoints together"
+msgstr ""
+
+msgid "Properties"
+msgstr ""
+
+msgid "Parse error:"
+msgstr ""
+
+msgid "Invalid tag."
+msgstr ""
+
+msgid "Stop application"
+msgstr ""
+
+msgid "Remove the selected feature from this dynamic library definition"
+msgstr ""
+
+msgid "Minimize All"
+msgstr ""
+
+msgid "Search backwards"
+msgstr ""
+
+msgid "Synchronize"
+msgstr ""
+
+msgid "Metric name is missing in metric definition."
+msgstr ""
+
+msgid "Add class clients to diagram"
+msgstr ""
+
+msgid "Generate profiling information?"
+msgstr ""
+
+msgid "Create new client-supplier links"
+msgstr ""
+
+msgid "Dynamic Library Builder"
+msgstr ""
+
+msgid "New Project"
+msgstr ""
+
+msgid "Once routines"
+msgstr ""
+
+msgid "Step out of a routine"
+msgstr ""
+
+msgid "assigners"
+msgstr ""
+
+msgid "Warn about incompatible types in equality comparisons (VWEQ)?"
+msgstr ""
+
+msgid "Toggle visibility of feature alias name"
+msgstr ""
+
+msgid "Function Time"
+msgstr ""
+
+msgid "&Clusters"
+msgstr ""
+
+msgid "Put Right Angles"
+msgstr ""
+
+msgid "Show UML"
+msgstr ""
+
+msgid "Display a warning when the call stack depth reaches:"
+msgstr ""
+
+msgid "Type:"
+msgstr ""
+
+msgid "The class name is not valid."
+msgstr ""
+
+msgid "Add Override"
+msgstr ""
+
+msgid "Alias"
+msgstr ""
+
+msgid "Creation procedure:"
+msgstr ""
+
+msgid "Incompatible Types Equality"
+msgstr ""
+
+msgid "Zoom In"
+msgstr ""
+
+msgid "Dropped references"
+msgstr ""
+
+msgid "Raise &Unsaved Windows"
+msgstr ""
+
+msgid "Are sub folders recursively included?"
+msgstr ""
+
+msgid "Value \"$1\" of attribute \"regular_expression\" is invalid. A boolean is expected."
+msgstr ""
+
+msgid "Include Class '$1'"
+msgstr ""
+
+msgid "$1 of feature $2 of class"
+msgstr ""
+
+msgid "Overriding"
+msgstr ""
+
+msgid "No default value"
+msgstr ""
+
+msgid "Re&do\tCtrl+Y"
+msgstr ""
+
+msgid "Cut"
+msgstr ""
+
+msgid "Close $1"
+msgstr ""
+
+msgid "Generate a multithreaded application?"
+msgstr ""
+
+msgid "Link the context tool to the other components"
+msgstr ""
+
+msgid "Supplier class"
+msgstr ""
+
+msgid "Should the generated binary be IL verifiable?"
+msgstr ""
+
+msgid "Metric name is missing in metric archive node."
+msgstr ""
+
+msgid "Display name of all called features during execution?"
+msgstr ""
+
+msgid "Apply Application Optimizations"
+msgstr ""
+
+msgid "Change project settings, right click to open external editor"
+msgstr ""
+
+msgid "No views are available for this cluster"
+msgstr ""
+
+msgid "Disable all breakpoints"
+msgstr ""
+
+msgid "Root"
+msgstr ""
+
+msgid "Metric name"
+msgstr ""
+
+msgid "Paste (Ctrl+V)"
+msgstr ""
+
+msgid "Number of Calls"
+msgstr ""
+
+msgid "All Classes"
+msgstr ""
+
+msgid "Open a new editor window"
+msgstr ""
+
+msgid "Should generated assemblies be marked as CLS compliant?"
+msgstr ""
+
+msgid "Ad&vanced"
+msgstr ""
+
+msgid "UnHandled"
+msgstr ""
+
+msgid "Should names of folders in recursive clusters be used as namespaces?"
+msgstr ""
+
+msgid "&How to's"
+msgstr ""
+
+msgid "Cluster hierarchy"
+msgstr ""
+
+msgid "Original value is \"$1=$2\""
+msgstr ""
+
+msgid "Options Unknown Class"
+msgstr ""
+
+msgid "Assembly Version"
+msgstr ""
+
+msgid "&Add..."
+msgstr ""
+
+msgid "Hide "
+msgstr ""
+
+msgid "Cluster charts"
+msgstr ""
+
+msgid "File location"
+msgstr ""
+
+msgid "Criterion unit \"$1\" is different from basic metric unit \"$2\"."
+msgstr ""
+
+msgid "Short Name"
+msgstr ""
+
+msgid "Features from ANY"
+msgstr ""
+
+msgid "Class Header"
+msgstr ""
+
+msgid " enabled"
+msgstr ""
+
+msgid ""
+"This will reset ALL preferences to their default values\n"
+" and all previous settings will be overwritten.  Are you sure?"
+msgstr ""
+
+msgid "Command has exited with code $1"
+msgstr ""
+
+msgid "Erase Cluster '$1'"
+msgstr ""
+
+msgid "Open selected file name in specified external editor"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid ""
+"Class $1 has been modified.\n"
+"Do you want to save changes?"
+msgstr ""
+
+msgid "IL Verifiable"
+msgstr ""
+
+msgid "Type of binary to generate."
+msgstr ""
+
+msgid "Query"
+msgstr ""
+
+msgid "Move [$1] to \"$2\""
+msgstr ""
+
+msgid "Do not ask again, and always terminate finalizing when needed."
+msgstr ""
+
+msgid "Run finalized system"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Click here to add a new expression"
+msgstr ""
+
+msgid "System properties"
+msgstr ""
+
+msgid "&Compile"
+msgstr ""
+
+msgid "Warn about usage of obsolete features?"
+msgstr ""
+
+msgid "The class $1 is not writable."
+msgstr ""
+
+msgid "$1 of class $2"
+msgstr ""
+
+msgid "Set maximum call stack depth"
+msgstr ""
+
+msgid "Includes"
+msgstr ""
+
+msgid "Generation Type"
+msgstr ""
+
+msgid "Backup"
+msgstr ""
+
+msgid "Archive value is missing."
+msgstr ""
+
+msgid "Externals"
+msgstr ""
+
+msgid "Double click to see Exception or Ctrl-C to copy to clipboard"
+msgstr ""
+
+msgid "Renaming of classes in this group."
+msgstr ""
+
+msgid ""
+"\n"
+"   + compilation = melted"
+msgstr ""
+
+msgid ""
+"Please drop a class or a cluster on this button \n"
+"to view its diagram.\n"
+"Use right click for both pick and drop actions."
+msgstr ""
+
+msgid "Metric definition error wizard"
+msgstr ""
+
+msgid ""
+"The project location is the place where compilation\n"
+"files will be generated by the compiler"
+msgstr ""
+
+msgid "Should the generated executable use a shared library of the runtime?"
+msgstr ""
+
+msgid "Pre Compilation"
+msgstr ""
+
+msgid "Local"
+msgstr ""
+
+msgid "Create a new class"
+msgstr ""
+
+msgid "Call Stack"
+msgstr ""
+
+msgid "Executable is up-to-date"
+msgstr ""
+
+msgid "Breakpoint reached"
+msgstr ""
+
+msgid "Include Library '$1'"
+msgstr ""
+
+msgid "Raise all unsaved windows"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Warn about usage of old verbatim strings?"
+msgstr ""
+
+msgid ""
+"When loading user-defined metrics:\n"
+"$1\n"
+"User-defined metrics not loaded."
+msgstr ""
+
+msgid "Undefined"
+msgstr ""
+
+msgid "library"
+msgstr ""
+
+msgid "Conte&xt"
+msgstr ""
+
+msgid "Value \"$1\" of attribute \"time\" is invalid."
+msgstr ""
+
+msgid "Variable"
+msgstr ""
+
+msgid "No command is running"
+msgstr ""
+
+msgid "Metrics"
+msgstr ""
+
+msgid "$1(not an Eiffel class file)   located in $2"
+msgstr ""
+
+msgid "Add Target"
+msgstr ""
+
+msgid "No description available for this preference."
+msgstr ""
+
+msgid "Interrupted because Eiffel complication starts"
+msgstr ""
+
+msgid "E&xport XMI..."
+msgstr ""
+
+msgid "Erase Midpoint"
+msgstr ""
+
+msgid "Select reference archive (URL acceptable):"
+msgstr ""
+
+msgid "Background Finalized C Compilation Launched"
+msgstr ""
+
+msgid "Add feature"
+msgstr ""
+
+msgid "Metric with name"
+msgstr ""
+
+msgid ""
+"Please drop a class or a cluster with an\n"
+"anchor on this button.\n"
+"Use right click for both\n"
+"pick and drop actions."
+msgstr ""
+
+msgid "User-defined metrics backup finished."
+msgstr ""
+
+msgid " disabled"
+msgstr ""
+
+msgid "&Tools"
+msgstr ""
+
+msgid "Console Application"
+msgstr ""
+
+msgid "Undo (Ctrl+Z)"
+msgstr ""
+
+msgid "To do:"
+msgstr ""
+
+msgid "Link Context"
+msgstr ""
+
+msgid "Select a fully compiled feature to have information about it."
+msgstr ""
+
+msgid "Select the view you want to use"
+msgstr ""
+
+msgid "Add ->"
+msgstr ""
+
+msgid "Unlin&k Context Tool"
+msgstr ""
+
+msgid "Add Make"
+msgstr ""
+
+msgid "Should not be read"
+msgstr ""
+
+msgid "Are debug clauses globally enabled?"
+msgstr ""
+
+msgid "OBJECT NAME: "
+msgstr ""
+
+msgid "Specify arguments"
+msgstr ""
+
+msgid "Replace"
+msgstr ""
+
+msgid "Print"
+msgstr ""
+
+msgid "Reload metrics"
+msgstr ""
+
+msgid "Favorites"
+msgstr ""
+
+msgid "Profile Query Window"
+msgstr ""
+
+msgid "exported features"
+msgstr ""
+
+msgid "Declared in class"
+msgstr ""
+
+msgid "Other"
+msgstr ""
+
+msgid "Too many crierion section specified. Only one criterion section is expected."
+msgstr ""
+
+msgid "Add &Precompile"
+msgstr ""
+
+msgid "wrap"
+msgstr ""
+
+msgid "Unit name \"$1\" is invalid."
+msgstr ""
+
+msgid "Library"
+msgstr ""
+
+msgid "Lin&k Context Tool"
+msgstr ""
+
+msgid "Tree View"
+msgstr ""
+
+msgid "Background C Compilation Launch Failed"
+msgstr ""
+
+msgid "Remove an object from the tree"
+msgstr ""
+
+msgid "Include all classes of cluster"
+msgstr ""
+
+msgid "Switch to Flat View"
+msgstr ""
+
+msgid "Text not editable."
+msgstr ""
+
+msgid "Add a new feature to this dynamic library definition"
+msgstr ""
+
+msgid "New Favorite Class..."
+msgstr ""
+
+msgid "Fav&orites"
+msgstr ""
+
+msgid "Same UUID"
+msgstr ""
+
+msgid "Evaluating..."
+msgstr ""
+
+msgid "Is this system read only per default if it is used as a library?"
+msgstr ""
+
+msgid "Inlining"
+msgstr ""
+
+msgid "Found"
+msgstr ""
+
+msgid "Error with $1 line $2"
+msgstr ""
+
+msgid "A&ssigners"
+msgstr ""
+
+msgid "Module"
+msgstr ""
+
+msgid "Backup user-defined metrics"
+msgstr ""
+
+msgid "Value \"$1\" of attribute \"value\" is invalid. A real number is expected."
+msgstr ""
+
+msgid "Show inheritance links"
+msgstr ""
+
+msgid "Minimize all windows"
+msgstr ""
+
+msgid "Select Class"
+msgstr ""
+
+msgid "Feature is not written in selected class."
+msgstr ""
+
+msgid "Feature Properties"
+msgstr ""
+
+msgid "Type input data here"
+msgstr ""
+
+msgid "Only compiled classes"
+msgstr ""
+
+msgid "There is already a feature with this name in class $1. This would lead to a conflict."
+msgstr ""
+
+msgid "Compile F&inalized C Code"
+msgstr ""
+
+msgid "Step Out"
+msgstr ""
+
+msgid "File rule $1"
+msgstr ""
+
+msgid "Show physics settings dialog"
+msgstr ""
+
+msgid "Put Handle Right"
+msgstr ""
+
+msgid "Argument"
+msgstr ""
+
+msgid "<= compiler version <= "
+msgstr ""
+
+msgid "Ratio"
+msgstr ""
+
+msgid "Op&en..."
+msgstr "Öffn&en..."
+
+msgid "Show cluster legend"
+msgstr "Cluster Legende anzeigen"
+
+msgid "creators"
+msgstr ""
+
+msgid "Remove a class or a cluster from the system"
+msgstr "Klasse oder Cluster vom System entfernen"
+
+msgid "Compilation was not successful."
+msgstr "Kompilation fehlgeschlagen."
+
+msgid "Report <<"
+msgstr "Report <<"
+
+msgid "Project &Settings..."
+msgstr "Projekt &Einstellungen..."
+
+msgid "Retry"
+msgstr ""
+
+msgid "Cancel"
+msgstr "Abbrechen"
+
+msgid "&Back"
+msgstr "Zurück"
+
+msgid "Click Back if you can correct the problem or Click Abort."
+msgstr ""
+
+msgid "Discard Assertions"
+msgstr ""
+
+msgid "Include Cluster '$1'"
+msgstr ""
+
+msgid "Toggle visibility of assigner command name"
+msgstr ""
+
+msgid "Background C Compilation Succeeded"
+msgstr "Hintergrund C-Kompilation erfolgreich"
+
+msgid "user set"
+msgstr "benutzerdefiniert"
+
+msgid "Unit \"$1\" of variable metric is different from unit \"$2\" of linear metric."
+msgstr ""
+
+msgid "&Enable This Breakpoint"
+msgstr "Diesen Breakpoint &aktivieren"
+
+msgid "Start With Arguments"
+msgstr ""
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Assembly Public Key Token"
+msgstr ""
+
+msgid "deferred"
+msgstr ""
+
+msgid "Enable High Quality"
+msgstr ""
+
+msgid "Resource"
+msgstr "Ressource"
+
+msgid "Confirmation"
+msgstr "Bestätigung"
+
+msgid "Indent selected row using an \"AND\" criterion"
+msgstr ""
+
+msgid "Background Workbench C Compilation Failed"
+msgstr "Hintergrund C-Kompilation fehlgeschlagen"
+
+msgid "Invalid tag/tag position \"$1\"."
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Synchronize context"
+msgstr ""
+
+msgid "Product"
+msgstr "Produkt"
+
+msgid "Use regular expression"
+msgstr "Reguläre Ausdrücke verwenden"
+
+msgid "type"
+msgstr "typ"
+
+msgid "Watch Tool"
+msgstr ""
+
+msgid "Define quick metric"
+msgstr ""
+
+msgid "Exceptions"
+msgstr ""
+
+msgid "Hide supplier links"
+msgstr ""
+
+msgid "Root class: "
+msgstr ""
+
+msgid "Compilation"
+msgstr "Kompilierung"
+
+msgid "Create new inheritance links"
+msgstr "Neue Vererbungsverbindung erstellen"
+
+msgid "Select current metric archive file"
+msgstr ""
+
+msgid ""
+"Using this wizard you can analyze the result of a profiling.\n"
+"\n"
+"Profiling a system is used to analyze its run-time properties\n"
+"and in particular the cost of each routine: number of calls,\n"
+"time spent, etc. The profiler is a precious tool to understand\n"
+"and optimize a system.\n"
+"\n"
+"To continue you need to have already executed your system\n"
+"with the profiler activated. If this is not the case, please\n"
+"refer to the documentation on how to profile a system.\n"
+"\n"
+"\n"
+"To continue, click Next."
+msgstr ""
+
+msgid "&Step-by-Step"
+msgstr ""
+
+msgid "Generate creation procedure"
+msgstr ""
+
+msgid "Too many crieria is specified in \"criterion\" section. Only one is expected."
+msgstr ""
+
+msgid "Cluster diagrams (may take a long time!)"
+msgstr ""
+
+msgid "Force inheritance on child elements."
+msgstr ""
+
+msgid "external features"
+msgstr ""
+
+msgid "Add current application target scope"
+msgstr ""
+
+msgid "Information cannot be retrieved."
+msgstr ""
+
+msgid "U&ncomment\tCtrl+Shift+K"
+msgstr ""
+
+msgid "Clean archive?"
+msgstr ""
+
+msgid "Load From..."
+msgstr ""
+
+msgid "in $1 class"
+msgid_plural "in $1 classes"
+msgstr[0] ""
+
+msgid "Add &Assembly..."
+msgstr ""
+
+msgid "Change Class Color"
+msgstr ""
+
+msgid "Numerator metric \"$1\" is not defined."
+msgstr ""
+
+msgid "Load"
+msgstr "Laden"
+
+msgid ""
+"Current text is being loaded. It is therefore\n"
+"not editable nor pickable."
+msgstr ""
+
+msgid "Trace"
+msgstr ""
+
+msgid "Is the project a console application?"
+msgstr ""
+
+msgid "Culture of the assembly."
+msgstr ""
+
+msgid "Import Selected Metrics"
+msgstr ""
+
+msgid "linear metric"
+msgstr ""
+
+msgid "Replace Name in Comments"
+msgstr ""
+
+msgid "Enforce unique class names"
+msgstr ""
+
+msgid "Re&factoring Bar"
+msgstr ""
+
+msgid "Attribute \"case_sensitive\" is missing."
+msgstr ""
+
+msgid "Choose a Folder Name"
+msgstr "Ordnername wählen"
+
+msgid "Display result in percentage? (Only applicable for ratio metrics)"
+msgstr ""
+
+msgid ""
+"An external command is running now. \n"
+"Please wait until it exits."
+msgstr ""
+
+msgid "Degree:"
+msgstr "Grad:"
+
+msgid "Output"
+msgstr "Ausgabe"
+
+msgid "Show all callers"
+msgstr "Alle Aufrufer anzeigen"
+
+msgid "Relations"
+msgstr ""
+
+msgid "Input domain"
+msgstr ""
+
+msgid ""
+"In linear metric, make sure that every variable metric doesn't involve \n"
+"recursive metric.\n"
+"In ratio metric, make sure that numerator metric or denominator metric \n"
+"doesn't involve recursive metric."
+msgstr ""
+
+msgid "&Implementers"
+msgstr ""
+
+msgid "Background C Compilation Terminated"
+msgstr "Hintergrund C-Kompilation beendet"
+
+msgid "Add class"
+msgstr "Klasse hinzufügen"
+
+msgid "Archive comparison result:"
+msgstr ""
+
+msgid "Add new task"
+msgstr ""
+
+msgid "Target used if system is used as a library."
+msgstr ""
+
+msgid "Metric"
+msgstr ""
+
+msgid "Evaluate precondition assertions?"
+msgstr ""
+
+msgid "Restore Default"
+msgstr ""
+
+msgid "Callers from client class"
+msgstr ""
+
+msgid "Expression Evaluation"
+msgstr ""
+
+msgid ""
+"A class figure(s) must either be selected\n"
+"or dropped on this button via right clicking."
+msgstr ""
+
+msgid "Select the Compilation mode."
+msgstr "Kompilationstyp wählen."
+
+msgid "Remove group"
+msgstr "Gruppe entfernen"
+
+msgid "Command terminated"
+msgstr "Befehl beendet"
+
+msgid "Compile project"
+msgstr "Projekt kompilieren"
+
+msgid "Debugging Options"
+msgstr ""
+
+msgid "Variable metric name is missing."
+msgstr ""
+
+msgid "Add Inheritance Relation Between '$1' and '$2'"
+msgstr ""
+
+msgid "Generate profile from Run-time information record"
+msgstr ""
+
+msgid ""
+"Select class or feature to rename.\n"
+"Either use pick and drop or target the editor to the feature or class."
+msgstr ""
+
+msgid "Open project"
+msgstr "Projekt öffnen"
+
+msgid "Expand selected level(s)"
+msgstr "Gewählte(r) Level aufklappen"
+
+msgid "Append"
+msgstr ""
+
+msgid "Clear output"
+msgstr "Ausgabe löschen"
+
+msgid "Description"
+msgstr "Beschreibung"
+
+msgid "Command to execute."
+msgstr ""
+
+msgid "Add class ancestors to diagram"
+msgstr ""
+
+msgid "&Window"
+msgstr ""
+
+msgid "Unit"
+msgstr ""
+
+msgid "Original metric name"
+msgstr ""
+
+msgid ""
+"File $1 already exists,\n"
+" Do you want to ?"
+msgstr ""
+
+msgid "Show unchanged features from class ANY?"
+msgstr ""
+
+msgid "Rename"
+msgstr ""
+
+msgid "$1  in cluster $2  located in $3"
+msgstr ""
+
+msgid "Add class suppliers to diagram"
+msgstr ""
+
+msgid ""
+"Add a new variable : double click or [enter]\n"
+"Use an existing variable: right click or [Ctrl+enter]"
+msgstr ""
+
+msgid "Recompile override clusters"
+msgstr ""
+
+msgid "No metric archive is selected."
+msgstr ""
+
+msgid "Are you sure you want to quit $1?"
+msgstr "$1 beenden?"
+
+msgid "Evaluate check assertions?"
+msgstr ""
+
+msgid "Open Watch tool menu"
+msgstr ""
+
+msgid "Show class location?"
+msgstr ""
+
+msgid "Do not ask again, and always discard assertions when finalizing"
+msgstr ""
+
+msgid "Metric(s) imported."
+msgstr ""
+
+msgid "Pick and drop items like group/class/feature here"
+msgstr ""
+
+msgid "Reference value"
+msgstr ""
+
+msgid "Background Finalized C Compilation Succeeded"
+msgstr "Abschliessende Hintergrund C-Kompilation erfolgreich"
+
+msgid "Cla&ss Views"
+msgstr ""
+
+msgid "Edit Project"
+msgstr "Projekt editieren"
+
+msgid "Show tooltips?"
+msgstr "Tooltips anzeigen?"
+
+msgid "Chec&k Export Clauses"
+msgstr ""
+
+msgid "Company"
+msgstr ""
+
+msgid "Match case?"
+msgstr ""
+
+msgid "Continue Anyway"
+msgstr "Trotzdem fortfahren"
+
+msgid "History tool"
+msgstr ""
+
+msgid "Filter: "
+msgstr ""
+
+msgid "$1 from $2"
+msgstr ""
+
+msgid "Add Post Compilation Task"
+msgstr ""
+
+msgid "Text was saved"
+msgstr ""
+
+msgid "Viewpoints: "
+msgstr ""
+
+msgid "Description of the target."
+msgstr ""
+
+msgid "Top-level"
+msgstr ""
+
+msgid "Enabled"
+msgstr "Aktiviert"
+
+msgid "Compiled Classes"
+msgstr ""
+
+msgid "Is this group read only?"
+msgstr ""
+
+msgid "Mi&nimize"
+msgstr ""
+
+msgid "Warn about different files with the same UUID?"
+msgstr ""
+
+msgid "Main Editor Views"
+msgstr ""
+
+msgid "&Contents"
+msgstr ""
+
+msgid "Override the detected platform to use in conditions."
+msgstr ""
+
+msgid ""
+"Metrics loading error:\n"
+"$1"
+msgstr ""
+
+msgid "Should a complete exception trace be generated in the finalized version?"
+msgstr "Soll in der abschliessenden Version ein kompletter Stacktrace generiert werden?"
+
+msgid "Searching selected file..."
+msgstr "Suche augewählte Datei..."
+
+msgid "Conditions for this external."
+msgstr ""
+
+msgid "Do not ask again, and always build precompile"
+msgstr "Nicht nochmals fragen und immer Precompile erstellen"
+
+msgid "Switch to decimal format"
+msgstr "Zum Dezimalformat wechseln"
+
+msgid "Old Syntax"
+msgstr "Alte Syntax"
+
+msgid "&Indexing clauses"
+msgstr ""
+
+msgid "Move metric unit down.\n"
+msgstr ""
+
+msgid "Item expires. Try searching again."
+msgstr ""
+
+msgid "Make sure that at least one domain item is listed in a domain criterion."
+msgstr ""
+
+msgid "Metric Definition"
+msgstr ""
+
+msgid "VALUE: "
+msgstr "WERT:"
+
+msgid "Evaluate loop assertions?"
+msgstr "Loop-assertions auswerten?"
+
+msgid "Resources"
+msgstr "Ressourcen"
+
+msgid "Use current environment value"
+msgstr "Benutze aktuelle Umgebungsvariablen"
+
+msgid "Warning"
+msgstr "Warnung"
+
+msgid "Value \"$1\" of attribute \"negation\" is invalid. A boolean is expected."
+msgstr ""
+
+msgid "Profiler used to produce the above record: "
+msgstr ""
+
+msgid "Use input domain as criterion domain."
+msgstr ""
+
+msgid "No text labels"
+msgstr ""
+
+msgid "Set to &Lowercase\tCtrl+Shift+U"
+msgstr ""
+
+msgid "Namespace for .NET"
+msgstr "Namespace für .NET"
+
+msgid "Go to F_code directory of this system, or right click to open F_code in specified file browser"
+msgstr "Gehe zum F_code Verzeichnis dieses Systems oder benutze Rechtsklick um das F_code Verzeichnis im angegebenen Dateibrowser zu öffnen"
+
+msgid "Exclude platform(s)"
+msgstr "Platform(en) auschschliessen"
+
+msgid "Not yet called"
+msgstr "Noch nicht aufgerufen"
+
+msgid "Select an existing metric archive file"
+msgstr ""
+
+msgid "Debug"
+msgstr ""
+
+msgid "Line"
+msgstr "Linie"
+
+msgid "&Apply"
+msgstr "&Anwenden"
+
+msgid "Collapse selected level(s)"
+msgstr "Gewählte(r) Level zuklappen"
+
+msgid "elements."
+msgstr "elemente."
+
+msgid "&Enable All Breakpoints"
+msgstr "Alle Breakpoints &einschalten"
+
+msgid "O&nce/Constants"
+msgstr ""
+
+msgid "File name:"
+msgstr "Dateiname:"
+
+msgid "Selected text is not a correct file name."
+msgstr "Selektierter Text ist kein korrekter Dateiname."
+
+msgid "Send to external editor"
+msgstr "Sende zu externem Editor"
+
+msgid "Working directory"
+msgstr "Arbeitsverzeichnis"
+
+msgid "&Descendant Versions"
+msgstr "&Nachfahr Versionen"
+
+msgid "Archive Comparison"
+msgstr "Archivvergleich"
+
+msgid "C&reators"
+msgstr "E&rzeuger"
+
+msgid "External Command"
+msgstr "Externer Befehl"
+
+msgid "Current value"
+msgstr "Aktueller Wert"
+
+msgid "Watch"
+msgstr "Beobachte"
+
+msgid "Objects"
+msgstr "Objekte"
+
+msgid "Directory where the command will be executed."
+msgstr "Verzeichnis in dem der Befehl ausgeführt wird."
+
+msgid ""
+"\n"
+"   + address     = <$1>"
+msgstr ""
+
+msgid "Post Compilation"
+msgstr ""
+
+msgid "Extracting $1 of class $2..."
+msgstr ""
+
+msgid "Do not ask me again and always remove selected metric"
+msgstr ""
+
+msgid "Background C Compilation Failed"
+msgstr "Hintergrund C-Kompilation fehlgeschlagen"
+
+msgid "Stop the application?"
+msgstr "Applikation anhalten?"
+
+msgid "Re&move All Breakpoints"
+msgstr "Alle Breakpoints &entfernen"
+
+msgid "Location of the external."
+msgstr "Ort des externen Objekts."
+
+msgid "Client group"
+msgstr "Klientengruppe"
+
+msgid "Dummy"
+msgstr "Dummy"
+
+msgid "Select metric:"
+msgstr "Wähle Metrik:"
+
+msgid "Building flat view ..."
+msgstr "Flache Ansicht wird erstellt..."
+
+msgid "System not running"
+msgstr "System läuft nicht"
+
+msgid "Select/deselect user-defined metrics"
+msgstr ""
+
+msgid "Run"
+msgstr "Ausführen"
+
+msgid "New Fea&ture..."
+msgstr "Neues Fea&ture..."
+
+msgid "Compile to have information"
+msgstr ""
+
+msgid "Client class"
+msgstr ""
+
+msgid "Enforce VAPE validity constraint?"
+msgstr ""
+
+msgid "Change color"
+msgstr ""
+
+msgid "Undo Refactoring"
+msgstr ""
+
+msgid "Set to U&ppercase\tCtrl+U"
+msgstr ""
+
+msgid ""
+"The file you have supplied as Runtime Information Record\n"
+"does not exist or is not valid.\n"
+"Do not forget that the Runtime Information Record has to\n"
+"be located in the project directory:\n"
+"$1\n"
+"\n"
+"Please provide a valid file or execute your profiler again to\n"
+"generate a valid Runtime Information Record.\n"
+"\n"
+"Click Back and select a valid file or Click Abort."
+msgstr ""
+
+msgid "Turn off physics"
+msgstr ""
+
+msgid "Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)."
+msgstr ""
+
+msgid "Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."
+msgstr ""
+
+msgid "Default number of displayed characters of a STRING (increasing this value might slow down debugging)."
+msgstr ""
+
+msgid "Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."
+msgstr ""
+
+msgid "Default number of call stack elements shown in Call Stack tool (-1 to show all of them)."
+msgstr ""
+
+msgid "Delay (in milliseconds) before clearing the stacks and objects grid.  By tuning this value, you can reduce the potential flickering of the related grid."
+msgstr ""
+
+msgid "Should the info about the agent object be displayed?"
+msgstr ""
+
+msgid "Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."
+msgstr ""
+
+msgid "Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."
+msgstr ""
+
+msgid "Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."
+msgstr ""
+
+msgid "Number of instructions that will be executed before interrupting the execution."
+msgstr ""
+
+msgid "Close the eiffel debugger daemon (classic) after each debug session (recommended)"
+msgstr ""
+
+msgid "Timeout used to start the Eiffel debugger daemon (classic only). Leave it to 0 to use the default environment value."
+msgstr ""
+
+msgid "Path to the Eiffel debugger daemon (classic). Leave it empty to use the default environment value."
+msgstr ""
+
+msgid "Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."
+msgstr ""
+
+msgid "Should we always try to debug non-Eiffel code in case it calls back into some Eiffel code?"
+msgstr ""
+
+msgid "Disk location of last saved stack path information."
+msgstr ""
+
+msgid "Items/tools shown in navigation layout when in debug mode."
+msgstr ""
+
+msgid "Position of main horizontal splitter bar."
+msgstr ""
+
+msgid "Maximum evaluation duration before cancelling evaluation. (this is only applicable for a .NET system)"
+msgstr ""
+
+msgid "Largest number of items displayed in list data."
+msgstr ""
+
+msgid "Smallest number of items displayed in list data."
+msgstr ""
+
+msgid "Default number of watch tools."
+msgstr ""
+
+msgid "Debug toolbar items and layout information."
+msgstr ""
+
+msgid "Proportion of the local/arguments part of the `Objects' tab in the Debugging tool."
+msgstr ""
+
+msgid "Items/tools shown on editor side when in debug mode."
+msgstr ""
+
+msgid "Highlight background color"
+msgstr ""
+
+msgid "Unsensitive foreground color"
+msgstr ""
+
+msgid "Select call stack entry on double click?"
+msgstr ""
+
+msgid "Enable/Disable the layout management for the stack values (keep value expanded or not, and highlight difference)."
+msgstr ""
+
+msgid "Enable/Disable the layout management for the debugged values (keep value expanded or not, and highlight difference)."
+msgstr ""
+
+msgid "Enable/Disable the layout management for the watches expressions (keep value expanded or not, and highlight difference)."
+msgstr ""
+
+msgid ""
+"Configuration of the stack objects grid.\n"
+" This should be a list of 5 sequences: nature_id;is_shown;is_auto_resized;width;header_name; \n"
+"The position in the list indicate the column.\n"
+"The nature_id are: 1:name; 2:value; 3:type; 4:address; 5:context..."
+msgstr ""
+
+msgid ""
+"Configuration of the debugged objects grid.\n"
+"Check grid_column_layout_stack_objects for full description."
+msgstr ""
+
+msgid ""
+"Configuration of the watches objects grid. \n"
+"Check grid_column_layout_stack_objects for full description."
+msgstr ""
+
+msgid "Location of main objects tool's items <<'Current object', 'Stack information', 'Argument(s)', 'Local(s)', 'Result', 'Dropped references'>>. The left grid is represented by '1' and the right grid by '2'"
+msgstr ""
+
+msgid "Should text be shown alongside preselected toolbar items?"
+msgstr ""
+
+msgid "Should text be shown alongside all toolbar items?"
+msgstr ""
+
+msgid "Background Color for Diagram Tool"
+msgstr ""
+
+msgid "Font for class names in BON class figures."
+msgstr ""
+
+msgid "Color for class names in BON class figures."
+msgstr ""
+
+msgid "Color for BON class figures."
+msgstr ""
+
+msgid "Color for uncompiled BON class figures."
+msgstr ""
+
+msgid "Font for generics in BON class figures."
+msgstr ""
+
+msgid "Color for generics in BON class figures."
+msgstr ""
+
+msgid "Font for feature names on BON client supplier links."
+msgstr ""
+
+msgid "Color for feature names on BON client supplier links."
+msgstr ""
+
+msgid "Color for BON client supplier links."
+msgstr ""
+
+msgid "Line width for BON client supplier links."
+msgstr ""
+
+msgid "Color for BON cluster line."
+msgstr ""
+
+msgid "Iconified BON Cluster fill color."
+msgstr ""
+
+msgid "BON cluster name area fill color."
+msgstr ""
+
+msgid "BON cluster name color."
+msgstr ""
+
+msgid "BON cluster name font."
+msgstr ""
+
+msgid "Color for BON inheritance links."
+msgstr ""
+
+msgid "Line width for BON inheritance links."
+msgstr ""
+
+msgid "Font for class names in UML class figures."
+msgstr ""
+
+msgid "Font for names of deferred classes in UML class figures."
+msgstr ""
+
+msgid "Font for class properties in UML class figures."
+msgstr ""
+
+msgid "Color for class properties in UML class figures."
+msgstr ""
+
+msgid "Color for class names in UML class figures."
+msgstr ""
+
+msgid "Color for UML class figures."
+msgstr ""
+
+msgid "Font for generics in UML class figures."
+msgstr ""
+
+msgid "Color for generics in UML class figures."
+msgstr ""
+
+msgid "Font for class features in UML class figures."
+msgstr ""
+
+msgid "Color for class features in UML class figures."
+msgstr ""
+
+msgid "Font for class feature sections in UML class figures."
+msgstr ""
+
+msgid "Color for class feature sections in UML class figures."
+msgstr ""
+
+msgid "Line width for UML client supplier links."
+msgstr ""
+
+msgid "Color for UML client supplier links."
+msgstr ""
+
+msgid "Color for feature names on UML client supplier links."
+msgstr ""
+
+msgid "Font for feature names on UML client supplier links."
+msgstr ""
+
+msgid "Color for UML cluster line."
+msgstr ""
+
+msgid "Iconified UML Cluster fill color."
+msgstr ""
+
+msgid "UML cluster name area fill color."
+msgstr ""
+
+msgid "UML cluster name color."
+msgstr ""
+
+msgid "UML cluster name font."
+msgstr ""
+
+msgid "Line width for UML inheritance links."
+msgstr ""
+
+msgid "Color for UML inheritance links."
+msgstr ""
+
+msgid "Show ancestors of a class up to a level of preference value."
+msgstr ""
+
+msgid "Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."
+msgstr ""
+
+msgid "Show clients of a class up to a level of preference value."
+msgstr ""
+
+msgid "Show descendants of a class down to a level of preference value."
+msgstr ""
+
+msgid "The visible toolbar items for the Diagram Tool toolbar."
+msgstr ""
+
+msgid "Names of classes that should not appear in generated diagrams."
+msgstr ""
+
+msgid "Show ALL classes in the diagram (ignore the following list)?"
+msgstr ""
+
+msgid "Show subclusters of a cluster down to a level of preference value."
+msgstr ""
+
+msgid "Show superclusters of a cluster up to a level of preference value."
+msgstr ""
+
+msgid "Show suppliers of a class up to a level of preference value."
+msgstr ""
+
+msgid "Show all callers (as opposed to local callers) in `callers' form."
+msgstr ""
+
+msgid "Indexing items that need not be included in formatted texts."
+msgstr ""
+
+msgid "Class format that is selected by default."
+msgstr ""
+
+msgid "Feature format that is selected by default."
+msgstr ""
+
+msgid "Number of cached formatted text in history."
+msgstr ""
+
+msgid "Show Detailed Result when computation done."
+msgstr ""
+
+msgid "Display confirmation dialog on exit."
+msgstr ""
+
+msgid "Display confirmation dialog on replacing all."
+msgstr ""
+
+msgid "Display confirmation dialog for C compilation on finalize operation."
+msgstr ""
+
+msgid "Display confirmation dialog for C compilation on freeze operation."
+msgstr ""
+
+msgid "Display confirmation dialog on compilation when some files have not been saved."
+msgstr ""
+
+msgid "Display confirmation dialog for assertions on finalize operation."
+msgstr ""
+
+msgid "Display confirmation dialog on clearing breakpoints."
+msgstr ""
+
+msgid "Display confirmation dialog when starting the application without stopping at breakpoints."
+msgstr ""
+
+msgid "Display confirmation dialog before converting an old project."
+msgstr ""
+
+msgid "Display confirmation dialog before building a needed precompile."
+msgstr ""
+
+msgid "Display dialog that warns that text is being loaded and is not editable or clickable."
+msgstr ""
+
+msgid "Display confirmation dialog for finalizing a .NET precompiled library."
+msgstr ""
+
+msgid "Display confirmation dialog for terminating the C compilation of a freeze."
+msgstr ""
+
+msgid "Display confirmation dialog for terminating the C compilationa of a finalize."
+msgstr ""
+
+msgid "Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."
+msgstr ""
+
+msgid "Display confirmation dialog for terminating an external command."
+msgstr ""
+
+msgid "Display New/Open project dialog at startup."
+msgstr ""
+
+msgid "Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective."
+msgstr ""
+
+msgid "Display dialog that warns that homonym format can take a long time."
+msgstr ""
+
+msgid "Display dialog when an application is running and a compilation is launched."
+msgstr ""
+
+msgid "Display dialog before killing a debugged application."
+msgstr ""
+
+msgid "Display dialog when editing the same class in two development windows."
+msgstr ""
+
+msgid "Display dialog while running an external command."
+msgstr ""
+
+msgid "File open and save dialogs each remember their last selected directory."
+msgstr ""
+
+msgid "Directory of last project opened."
+msgstr ""
+
+msgid "Directory of last dynamic lib library opened."
+msgstr ""
+
+msgid "Directory of last file opened."
+msgstr ""
+
+msgid "Directory of last metric browse archive opened."
+msgstr ""
+
+msgid "Directory of last dynamic lib saved."
+msgstr ""
+
+msgid "Directory of last call stack saved."
+msgstr ""
+
+msgid "Directory of last debugger exception saved."
+msgstr ""
+
+msgid "Directory of last diagram postscript file saved."
+msgstr ""
+
+msgid "Directory of last exception saved."
+msgstr ""
+
+msgid "Directory of last save file as saved."
+msgstr ""
+
+msgid "Directory of last profile result saved."
+msgstr ""
+
+msgid "Width of the project settings dialog."
+msgstr ""
+
+msgid "Height of the project settings dialog."
+msgstr ""
+
+msgid "Screen x position of the project settings dialog."
+msgstr ""
+
+msgid "Screen y position of the project settings dialog."
+msgstr ""
+
+msgid "Position of the split area."
+msgstr ""
+
+msgid "Width of the starting dialog."
+msgstr ""
+
+msgid "Height of the starting dialog."
+msgstr ""
+
+msgid "Width of the open project dialog."
+msgstr ""
+
+msgid "Height of the open project dialog."
+msgstr ""
+
+msgid "Should the C output panel be shown when a C compilation is launched?"
+msgstr ""
+
+msgid "The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."
+msgstr ""
+
+msgid "Should all applicable docking feedback indicators be shown when dragging a tool or a editor tab?"
+msgstr ""
+
+msgid "Allow class name completion in the address combo boxes?"
+msgstr ""
+
+msgid "Receivers of control-right-click."
+msgstr ""
+
+msgid "Docked tools track main window?"
+msgstr ""
+
+msgid "Display editor on left?"
+msgstr ""
+
+msgid "Is EiffelStudio Debug menu allowed?"
+msgstr ""
+
+msgid "When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug menu shown by accelerator?"
+msgstr ""
+
+msgid "Should EiffelStudio Debug menu be shown"
+msgstr ""
+
+msgid "Automatically expand the feature tree."
+msgstr ""
+
+msgid "Display signature ?"
+msgstr ""
+
+msgid "Display alias name ?"
+msgstr ""
+
+msgid "Display assigner command ?"
+msgstr ""
+
+msgid "Order used to sort feature clauses in formatted texts."
+msgstr ""
+
+msgid "Disable graphical output."
+msgstr ""
+
+msgid "Is window maximized?"
+msgstr ""
+
+msgid "Directory of last browsed cluster."
+msgstr ""
+
+msgid "Items/tools information for navigation panel."
+msgstr ""
+
+msgid "Show only one tool (Features, Clusters, Search, Windows) at a time."
+msgstr ""
+
+msgid "Maximum number of items displayed in the history combo boxes."
+msgstr ""
+
+msgid "Color for progress bar."
+msgstr ""
+
+msgid "Should size of completion list be remembered between completions in the editor?"
+msgstr ""
+
+msgid "Items/tools information for editor panel."
+msgstr ""
+
+msgid "Should address toolbar be shown?"
+msgstr ""
+
+msgid "Should project toolbar be shown?"
+msgstr ""
+
+msgid "Should refactoring toolbar be shown?"
+msgstr ""
+
+msgid "Should selective text of toolbar items in general toolbar?"
+msgstr ""
+
+msgid "Is text of toolbar items displayed?"
+msgstr ""
+
+msgid "Items shown in refactoring toolbar."
+msgstr ""
+
+msgid "Should general toolbar be shown?"
+msgstr ""
+
+msgid "Items shown in general toolbar."
+msgstr ""
+
+msgid "Link the context tool with other components by default?"
+msgstr ""
+
+msgid "Use animated icons in the status bar?"
+msgstr ""
+
+msgid "Width of navigation panel"
+msgstr ""
+
+msgid "Width of development window."
+msgstr ""
+
+msgid "Height of development window."
+msgstr ""
+
+msgid "Screen x position of development window."
+msgstr ""
+
+msgid "Screen y position of development window."
+msgstr ""
+
+msgid "Height of completion list.  Used if 'remember_completion_list_size' is set to True."
+msgstr ""
+
+msgid "Width of completion list.  Used if 'remember_completion_list_size' is set to True."
+msgstr ""
+
+msgid "List of recently opened projects."
+msgstr ""
+
+msgid "Number of recent projects to keep in the list."
+msgstr ""
+
+msgid "Are brackets and parentheses closed automatically?"
+msgstr ""
+
+msgid "Are quotes closed automatically?"
+msgstr ""
+
+msgid "Should completion window appear automatically after typing a `.'?"
+msgstr ""
+
+msgid "Should completion automatically complete words when a single best match is available?"
+msgstr ""
+
+msgid "Should trailing blanks be auto-removed when saving?"
+msgstr ""
+
+msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."
+msgstr ""
+
+msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 2."
+msgstr ""
+
+msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3."
+msgstr ""
+
+msgid "Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."
+msgstr ""
+
+msgid "Does completion change the first character of onces and constants with an upper case character?"
+msgstr ""
+
+msgid "Do features of class ANY appear in the feature call complete window?"
+msgstr ""
+
+msgid "Does completion list show feature signatures?"
+msgstr ""
+
+msgid "Does completion list show query return type?"
+msgstr ""
+
+msgid "Does completion list show disambiguated name?"
+msgstr ""
+
+msgid "Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."
+msgstr ""
+
+msgid "Format to use when saving class text. True means using Windows text format, False means using Unix text format."
+msgstr ""
+
+msgid "Command to open an external editor."
+msgstr ""
+
+msgid "Is underscore `_' used as a word separator?"
+msgstr ""
+
+msgid "Color for breakable marks and breakpoints."
+msgstr ""
+
+msgid "Foreground color for assertion tags."
+msgstr ""
+
+msgid "Background color for assertion tags."
+msgstr ""
+
+msgid "Foreground color for indexing tags."
+msgstr ""
+
+msgid "Background color for indexing tags."
+msgstr ""
+
+msgid "Foreground color for reserved words."
+msgstr ""
+
+msgid "Background color for reserved words."
+msgstr ""
+
+msgid "Foreground color for generics."
+msgstr ""
+
+msgid "Background color for generics."
+msgstr ""
+
+msgid "Foreground color for locals."
+msgstr ""
+
+msgid "Background color for locals."
+msgstr ""
+
+msgid "Foreground color for classes."
+msgstr ""
+
+msgid "Background color for classes."
+msgstr ""
+
+msgid "Foreground color for features."
+msgstr ""
+
+msgid "Background color for features."
+msgstr ""
+
+msgid "Foreground color for clusters."
+msgstr ""
+
+msgid "Background color for clusters."
+msgstr ""
+
+msgid "Foreground color for errors."
+msgstr ""
+
+msgid "Background color for errors."
+msgstr ""
+
+msgid "Foreground color for object addresses."
+msgstr ""
+
+msgid "Background color for object addresses."
+msgstr ""
+
+msgid "Autocomplete indexing?"
+msgstr ""
+
+msgid "Use default autocomplete?"
+msgstr ""
+
+msgid "Customized autocomplete (Space after keyword was typed)"
+msgstr ""
+
+msgid "Customized autocomplete (Return after keyword was typed)"
+msgstr ""
+
+msgid "Customized autocomplete (Space, other cases)"
+msgstr ""
+
+msgid "Customized autocomplete (Return, other cases)"
+msgstr ""
+
+msgid "Autocomplete class?"
+msgstr ""
+
+msgid "Autocomplete inherit?"
+msgstr ""
+
+msgid "Autocomplete creation?"
+msgstr ""
+
+msgid "Autocomplete feature?"
+msgstr ""
+
+msgid "Autocomplete is?"
+msgstr ""
+
+msgid "Autocomplete require?"
+msgstr ""
+
+msgid "Autocomplete require else?"
+msgstr ""
+
+msgid "Autocomplete local?"
+msgstr ""
+
+msgid "Autocomplete do?"
+msgstr ""
+
+msgid "Autocomplete once?"
+msgstr ""
+
+msgid "Autocomplete deferred?"
+msgstr ""
+
+msgid "Autocomplete external?"
+msgstr ""
+
+msgid "Autocomplete rescue?"
+msgstr ""
+
+msgid "Autocomplete ensure?"
+msgstr ""
+
+msgid "Autocomplete ensure then?"
+msgstr ""
+
+msgid "Autocomplete alias?"
+msgstr ""
+
+msgid "Autocomplete if?"
+msgstr ""
+
+msgid "Autocomplete then?"
+msgstr ""
+
+msgid "Autocomplete else if?"
+msgstr ""
+
+msgid "Autocomplete else?"
+msgstr ""
+
+msgid "Autocomplete inspect?"
+msgstr ""
+
+msgid "Autocomplete when?"
+msgstr ""
+
+msgid "Autocomplete from?"
+msgstr ""
+
+msgid "Autocomplete variant?"
+msgstr ""
+
+msgid "Autocomplete debug?"
+msgstr ""
+
+msgid "Autocomplete check?"
+msgstr ""
+
+msgid "Autocomplete rename?"
+msgstr ""
+
+msgid "Autocomplete redefine?"
+msgstr ""
+
+msgid "Autocomplete undefine?"
+msgstr ""
+
+msgid "Autocomplete select?"
+msgstr ""
+
+msgid "Autocomplete export?"
+msgstr ""
+
+msgid "Autocomplete Precursor?"
+msgstr ""
+
+msgid "Autocomplete create?"
+msgstr ""
+
+msgid "Autocomplete obsolete?"
+msgstr ""
+
+msgid "Autocomplete invariant?"
+msgstr ""
+
+msgid "Autocomplete end?"
+msgstr ""
+
+msgid "String to be inserted."
+msgstr ""
+
+msgid "Toggle filter button in completion list."
+msgstr ""
+
+msgid "Toggle show type in completion list."
+msgstr ""
+
+msgid "Key"
+msgstr ""
+
+msgid "Trigger feature completion."
+msgstr ""
+
+msgid "Trigger class completion"
+msgstr ""
+
+msgid "Trigger collapsing of all tree nodes."
+msgstr ""
+
+msgid "Trigger collapsing of current tree node."
+msgstr ""
+
+msgid "Trigger insertion of customized string #1."
+msgstr ""
+
+msgid "Trigger insertion of customized string #2."
+msgstr ""
+
+msgid "Trigger insertion of customized string #3."
+msgstr ""
+
+msgid "Trigger expansion of all tree nodes."
+msgstr ""
+
+msgid "Trigger expansion of current tree node."
+msgstr ""
+
+msgid "Trigger backward search."
+msgstr ""
+
+msgid "Trigger forward search."
+msgstr ""
+
+msgid "Trigger search on current selection and goes to previous result."
+msgstr ""
+
+msgid "Trigger search on current selection and goes to next result."
+msgstr ""
+
+msgid "Trigger quick search bar."
+msgstr ""
+
+msgid "Trigger display of search panel focused on replace."
+msgstr ""
+
+msgid "Trigger display of search panel."
+msgstr ""
+
+msgid "Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"
+msgstr ""
+
+msgid "Does text cursor blink?"
+msgstr ""
+
+msgid "All-purpose editor font."
+msgstr ""
+
+msgid "Editor header font."
+msgstr ""
+
+msgid "Keyword editor font"
+msgstr ""
+
+msgid "Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."
+msgstr ""
+
+msgid "Number of lines that will stay visible when you perform a page down or a page up operation."
+msgstr ""
+
+msgid "Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"
+msgstr ""
+
+msgid "Number of lines scrolled using the mouse wheel."
+msgstr ""
+
+msgid "Does a quadruple click select the entire document?"
+msgstr ""
+
+msgid "Automatically remove trailing white space from lines?"
+msgstr ""
+
+msgid "Should editor perform auto-indenting?"
+msgstr ""
+
+msgid "Number of spaces that a tabulation character represents."
+msgstr ""
+
+msgid "Should tab character be used for auto-indentation?"
+msgstr ""
+
+msgid "Background color of line number margin."
+msgstr ""
+
+msgid "Color of separator between line number margin and editor."
+msgstr ""
+
+msgid "Color of line number text."
+msgstr ""
+
+msgid "Background color used to highlight line with cursor in it."
+msgstr ""
+
+msgid "Background color used to highlight lines."
+msgstr ""
+
+msgid "Color for normal text."
+msgstr ""
+
+msgid "Background color for normal text."
+msgstr ""
+
+msgid "Color of selected text."
+msgstr ""
+
+msgid "Background color of selected text."
+msgstr ""
+
+msgid "Background color of selected text when not focused."
+msgstr ""
+
+msgid "Color of string text."
+msgstr ""
+
+msgid "Background color of string text."
+msgstr ""
+
+msgid "Color of keyword text."
+msgstr ""
+
+msgid "Background color of keyword text."
+msgstr ""
+
+msgid "Color of space characters."
+msgstr ""
+
+msgid "Background color of space characters."
+msgstr ""
+
+msgid "Color of comments text."
+msgstr ""
+
+msgid "Background color of coments text."
+msgstr ""
+
+msgid "Color of operator text."
+msgstr ""
+
+msgid "Background color of operator text."
+msgstr ""
+
+msgid "Color of number text."
+msgstr ""
+
+msgid "Background color of number text."
+msgstr ""
+
+msgid "Indicates if editor line drawing is first buffered and then drawn, or just drawn directly to the screen.  If set to True, content will not flicker, but drawing performance will be reduced."
+msgstr ""
+
+msgid "Indicates if editor displays the line numbers by default."
+msgstr ""
+
+msgid "Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."
+msgstr ""
+
+msgid "Place new editor tab at left side of editor's area?"
+msgstr ""
+
+msgid "First external command."
+msgstr "1. externer Befehl"
+
+msgid "Second external command."
+msgstr "2. externer Befehl"
+
+msgid "Third external command."
+msgstr "3. externer Befehl"
+
+msgid "Forth external command."
+msgstr "4. externer Befehl"
+
+msgid "Fifth external command."
+msgstr "5. externer Befehl"
+
+msgid "Sixth external command."
+msgstr "6. externer Befehl"
+
+msgid "Seventh external command."
+msgstr "7. externer Befehl"
+
+msgid "Eighth external command."
+msgstr "8. externer Befehl"
+
+msgid "Ninth external command."
+msgstr "9. externer Befehl"
+
+msgid "Tenth external command."
+msgstr "10. externer Befehl"
+
+msgid "First external command shortcut."
+msgstr "Schnelltaste für 1. externen Befehl"
+
+msgid "Second external command shortcut."
+msgstr "Schnelltaste für 2. externen Befehl"
+
+msgid "Third external command shortcut."
+msgstr "Schnelltaste für 3. externen Befehl"
+
+msgid "Forth external command shortcut."
+msgstr "Schnelltaste für 4. externen Befehl"
+
+msgid "Fifth external command shortcut."
+msgstr "Schnelltaste für 5. externen Befehl"
+
+msgid "Sixth external command shortcut."
+msgstr "Schnelltaste für 6. externen Befehl"
+
+msgid "Seventh external command shortcut."
+msgstr "Schnelltaste für 7. externen Befehl"
+
+msgid "Eighth external command shortcut."
+msgstr "Schnelltaste für 8. externen Befehl"
+
+msgid "Ninth external command shortcut."
+msgstr "Schnelltaste für 9. externeb Befehl"
+
+msgid "Tenth external command shortcut."
+msgstr "Schnelltaste für 10. externen Befehl"
+
+msgid "Command to read Adobe Acrobat files."
+msgstr "Befehl um Adobe Acrobat Dateien zu lesen."
+
+msgid "Internet browser."
+msgstr "Internet browser."
+
+msgid "Height of dynamic library window."
+msgstr ""
+
+msgid "Width of dynamic library window."
+msgstr ""
+
+msgid "Height of preferences window."
+msgstr ""
+
+msgid "Width of preferences window."
+msgstr ""
+
+msgid "Show hidden preferences in preference window?"
+msgstr ""
+
+msgid "Initial status of incremental search."
+msgstr ""
+
+msgid "Initial status of match case."
+msgstr ""
+
+msgid "Initial status of using regular_expression."
+msgstr "Standardwert der 'Benutze Reguläre Ausdrücke' Option."
+
+msgid "Initial status of whole word."
+msgstr "Standardwert der 'Ganzes Wort' Option."
+
+msgid "Initial status of search backwards."
+msgstr "Standardwert der Rückwärtssuche."
+
+msgid "Initial search scope."
+msgstr "Standardwert des Suchbereichs."
+
+msgid "Initial status of only compiled classes."
+msgstr "Standardwert der 'Nur kompilierte Klassen' Option."
+
+msgid "Initial status of searching subclusters."
+msgstr "Standardwert der 'In Subcluster suchen' Option."
+
+msgid "Background color of none result keyword field."
+msgstr ""
+
+msgid "Show unchanged features in class ANY by default?"
+msgstr "Ungeänderte features in der Klasse ANY standardmässig anzeigen?"
+
+msgid "Show tooltip?"
+msgstr "Tooltip anzeigen?"
+
+msgid "Backgroud color of odd rows in class browser."
+msgstr "Hintergrundfarbe für ungerade Zeilen im Klassenbrowser."
+
+msgid "Backgroud color of even rows in class browser."
+msgstr "Hintergrundfarbe für gerade Zeilen im Klassenbrowser."
+
+msgid "Default name for a renamed feature."
+msgstr "Standardname für umbenannte features."
+
+msgid "Should occurrences of the feature name in comments be changed?"
+msgstr "Soll Featurename in Kommentaren geändert werden?"
+
+msgid "Should occurrences of the feature name in strings be changed?"
+msgstr "Soll Featurename in Strings geändert werden?"
+
+msgid "Should file be renamed to a new name?"
+msgstr "Soll die Datei umbenennt werden?"
+
+msgid "Old name of class"
+msgstr "Alter Name der Klasse"
+
+msgid "New name of class"
+msgstr "Neuer Name der Klasse"
+
+msgid "Should all classes be processed?"
+msgstr "Sollen alle Klassen verarbeitet werden?"
+
+msgid "Should occurrences of the class name in comments be changed?"
+msgstr "Sollen Klassennamen in Kommentaren geändert werden?"
+
+msgid "Should occurrences of the class name in strings be changed?"
+msgstr "Sollen Klassennamen in Strings geändert werden?"
+

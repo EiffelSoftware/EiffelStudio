@@ -866,8 +866,8 @@ feature {NONE} -- Implemention
 			loop
 				a_coord := l_coord_area @ i
 				j := i * 2
-				l_area.put (a_coord.x, j)
-				l_area.put (a_coord.y, j + 1)
+				l_area @ j := a_coord.x
+				l_area @ (j + 1) := a_coord.y
 				i := i + 1
 			end
 		ensure

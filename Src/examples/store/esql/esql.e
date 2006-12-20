@@ -1,8 +1,12 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class ESQL inherit
+	date: "$Date$"
+	revision: "$Revision$"
 
+class ESQL
+
+inherit
 	RDB_HANDLE
 
 	ACTION
@@ -11,7 +15,6 @@ class ESQL inherit
 		end
 
 create
-
 	make
 
 feature {NONE}
@@ -20,7 +23,7 @@ feature {NONE}
 
 	base_selection: DB_SELECTION
 
-feature 
+feature {NONE} -- Initialization
 
 	make is
 			-- Start SQL_MONITOR
@@ -29,32 +32,38 @@ feature
 			base_update: DB_CHANGE
 			tmp_string: STRING
 		do
-			-- Ask for user's name and password
 			io.putstring ("Database user authentication:%N")
+			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
+				io.putstring ("Data Source Name: ")
+				io.readline
+				set_data_source(io.laststring.twin)
+ 			end
+
+				-- Ask for user's name and password
 			io.putstring ("Name: ")
 			io.readline
 			tmp_string := io.laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 
-			-- Set user's name and password
+				-- Set user's name and password
 			login (tmp_string, io.laststring)
 
-			-- Initialization of the Relational Database:
-			-- This will set various informations to perform a correct
-			-- Connection to the Relational database
+				-- Initialization of the Relational Database:
+				-- This will set various informations to perform a correct
+				-- Connection to the Relational database
 			set_base
 
-			-- Create usefull classes
-			-- 'session_control' provides informations control access and 
-			--  the status of the database.
-			-- 'base_selection' provides a SELECT query mechanism.
-			-- 'base_update' provides updating facilities.
+				-- Create usefull classes
+				-- 'session_control' provides informations control access and 
+				--  the status of the database.
+				-- 'base_selection' provides a SELECT query mechanism.
+				-- 'base_update' provides updating facilities.
 			create session_control.make
 			create base_selection.make
 			create base_update.make
 
-			-- Start session
+				-- Start session
 			session_control.connect
 
 			if not session_control.is_connected then
@@ -69,14 +78,14 @@ feature
 				io.putstring (session_database.name)
 				io.putstring ("%N%TType 'exit' to terminate%N%N")
 
-				-- Set action to be executed after each 'load_result' iteration step.
-				-- 'init' and 'execute' method of the current class are to be used.
+					-- Set action to be executed after each 'load_result' iteration step.
+					-- 'init' and 'execute' method of the current class are to be used.
 				base_selection.set_action (Current)
 
-				-- Main loop of the monitor
+					-- Main loop of the monitor
 				from
 				until
-					-- Terminate?
+						-- Terminate?
 					tmp_string.is_equal ("exit") or
 					io.input.end_of_file
 				loop
@@ -87,24 +96,24 @@ feature
 						tmp_string := io.laststring
 					end
 					if is_select_statement (tmp_string) then
-						-- The query is a SELECT, so we have to use
-						-- DB_SELECTION.query 
+							-- The query is a SELECT, so we have to use
+							-- DB_SELECTION.query 
 						base_selection.query (tmp_string)
 						if session_control.is_ok then
-							-- Iterate through resulting data,
-							-- and display them.
+								-- Iterate through resulting data,
+								-- and display them
 							base_selection.load_result
 						else
 							manage_errors_and_warnings (session_control)
 						end
 						base_selection.terminate
 					elseif not tmp_string.is_equal ("exit") then
-						-- The user updates the database
+							-- The user updates the database
 						base_update.modify (tmp_string)
 					end
 					manage_errors_and_warnings (session_control)
 				end
-				-- Terminate session
+					-- Terminate session
 				session_control.disconnect
 			end
 		end
@@ -116,7 +125,7 @@ feature {NONE}
 			-- occurred during last operation.
 		do
 			if not session_control.is_ok then
-				-- There was an error!
+					-- There was an error!
 				session_control.raise_error
 				session_control.reset
 				io.new_line
@@ -145,21 +154,32 @@ feature {NONE}
 		require
 			st_not_void: st /= Void
 		do
+			st.left_adjust 
 			if st.count /= 0 then
 				seq_string.wipe_out
 				seq_string.append (st)
 				seq_string.start
 				seq_string.search_string_after ("select", 0)
 				Result := not seq_string.off
+				if seq_string.off then
+					seq_string.wipe_out
+					seq_string.append (st)
+					seq_string.to_lower
+					seq_string.start
+					seq_string.search_string_after ("sql", 0)
+					Result := not seq_string.off
+					if seq_string.off then
+						Result := st.substring(1,1).is_equal("{")
+					end
+				end
 			end
 		end
 
 	init is
-		-- This method is used by the class DB_SELECTION, and is executed after the first
-		-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
-		-- display data resulting of a query.
-		-- In this example, it simply prompts column name on standard output.
-		
+			-- This method is used by the class DB_SELECTION, and is executed after the first
+			-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
+			-- display data resulting of a query.
+			-- In this example, it simply prompts column name on standard output.
 		local
 			i: INTEGER
 			tuple: DB_TUPLE
@@ -179,12 +199,11 @@ feature {NONE}
 		end
 
 	execute is
-		-- This method is also used by the class DB_SELECTION, and is executed after each
-		-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
-		-- display data resulting of a query.
-		-- In this example, it simply prompts column name on standard output.
-
-		-- Prompt column values on standard output.
+			-- This method is also  used by the class DB_SELECTION, and is executed after each
+			-- iteration step of 'load_result', it provides some facilities to control, manage, and/or
+			-- display data resulting of a query.
+			-- In this example, it simply prompts column name on standard output.
+			-- Prompt column values on standard output.
 		local
 			i: INTEGER
 			r_int: INTEGER_REF
@@ -219,7 +238,7 @@ feature {NONE}
 				else
 					io.putstring("*void*")
 				end
-				io.putchar ('%T')
+				io.putstring (" %T")
 				i := i + 1
 			end
 			io.new_line
@@ -236,7 +255,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class ESQL
-
-
+end

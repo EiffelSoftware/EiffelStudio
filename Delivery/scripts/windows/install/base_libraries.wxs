@@ -633,6 +633,7 @@
 								<File Id="memory_structure.e" Name="MEMORY~3.E" LongName="memory_structure.e" />
 								<File Id="mismatch_corrector.e" Name="MISMAT~2.E" LongName="mismatch_corrector.e" />
 								<File Id="primes.e" Name="primes.e" />
+								<File Id="proxy_comparable.e" Name="PROXY_~1.E" LongName="proxy_comparable.e" />
 								<File Id="random.e" Name="random.e" />
 							</Component>
 							<Directory Id="dotnet3" Name="dotnet">

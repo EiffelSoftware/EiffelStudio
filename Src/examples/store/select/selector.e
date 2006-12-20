@@ -57,17 +57,17 @@ feature
 
 				-- Start session: establishes connection to database
 			session_control.connect
-				-- A 'repository' is used to store objects, and to access
-				-- them as Eiffel objects, or DB tuples.
-				-- The table used to store Eiffel book objects will be called
-				-- "DB_BOOK".
-			create repository.make (Table_name)
-
 			if not session_control.is_connected then
 				session_control.raise_error
 					-- Something went wrong, and the connection failed
 				io.putstring ("Can't connect to database.%N")
 			else
+					-- A 'repository' is used to store objects, and to access
+					-- them as Eiffel objects, or DB tuples.
+					-- The table used to store Eiffel book objects will be called
+					-- "DB_BOOK".
+				create repository.make (Table_name)
+
 					--  The Eiffel program is now connected to the database
 					-- Try to load table from the DB
 				repository.load

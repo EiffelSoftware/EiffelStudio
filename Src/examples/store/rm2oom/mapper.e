@@ -11,7 +11,7 @@ create
 
 	make
 
-feature 
+feature
 
 	make is
 		local
@@ -21,6 +21,13 @@ feature
 		do
 	 			-- Ask for user's name and password
 			io.putstring("Database user authentication:%N");
+
+			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
+				io.putstring ("Data Source Name: ")
+				io.readline
+				set_data_source(io.laststring.twin)
+ 			end
+
 			io.putstring ("Name: ")
 			io.readline;
 			tmp_string := io.laststring.twin
@@ -49,18 +56,18 @@ feature
 				io.putstring("Can't connect to the database.%N")
 			else
 				--  The Eiffel program is now connected to the database
-				
+
 				io.putstring ("%NEnter path of directory where files will be generated: ")
 				io.readline
 				path_name := io.laststring.twin
-				from 
+				from
 					io.putstring("%NEnter repository name (`exit' to terminate): ");
 					io.readline;
 					create repository.make (io.laststring.twin);
 				until
 					io.laststring.is_equal("exit")
 				loop
-						-- Objects from the DB will be accessed through a 
+						-- Objects from the DB will be accessed through a
 						-- DB_REPOSITORY whose name is read from standard input
 					repository.change_name(io.laststring.twin);
 						-- Try to load some book objects from the DB

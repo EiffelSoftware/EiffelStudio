@@ -861,14 +861,15 @@ feature {NONE} -- Implemention
 				l_coord_area := pts.area
 				l_area := Result.area
 				i := 0
+				j := 0
 			until
 				i = array_count
 			loop
 				a_coord := l_coord_area @ i
-				j := i * 2
 				l_area @ j := a_coord.x
 				l_area @ (j + 1) := a_coord.y
 				i := i + 1
+				j := j + 2
 			end
 		ensure
 			Result_exists: Result /= Void

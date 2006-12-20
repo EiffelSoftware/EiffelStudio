@@ -861,6 +861,7 @@ feature {NONE} -- Implemention
 				l_area := Result.area
 				i := array_count - 1
 				j := array_count * 2 - 1
+					-- Iterate backwards as comparing against zero generates faster C code.
 			until
 				i < 0
 			loop

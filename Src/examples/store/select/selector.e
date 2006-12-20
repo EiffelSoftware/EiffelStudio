@@ -91,6 +91,12 @@ feature {NONE}
 		local
 			tmp_string: STRING
 		do
+			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
+				io.putstring ("Data Source Name: ")
+				io.readline
+				set_data_source(io.laststring.twin)
+			end
+
 				-- Ask for user's name and password
 			io.putstring ("Name: ")
 			io.readline

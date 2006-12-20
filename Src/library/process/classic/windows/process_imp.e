@@ -311,9 +311,9 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess IO
 			succ: BOOLEAN
 			bytes_avail: INTEGER
 		do
-			succ := cwin_peek_named_pipe (child_process.std_output, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
+			succ := cwin_peek_named_pipe (child_process.std_error, default_pointer, 0, default_pointer, $bytes_avail, default_pointer)
 			if succ and bytes_avail > 0 then
-				error_file_handle.read_stream (child_process.std_output, buffer_size.min (bytes_avail))
+				error_file_handle.read_stream (child_process.std_error, buffer_size.min (bytes_avail))
 				succ := error_file_handle.last_read_successful
 				if succ then
 					last_error_bytes := error_file_handle.last_read_bytes

@@ -131,6 +131,7 @@ feature -- Dotnet creation
 	set_string_for_dotnet_value  (a_eifnet_dsv: EIFNET_DEBUG_STRING_VALUE) is
 			-- make a object ICorDebugStringValue item initialized to `value'
 		require
+			is_dotnet_system
 			arg_not_void: a_eifnet_dsv /= Void
 		do
 			is_dotnet_value := True
@@ -154,6 +155,7 @@ feature -- Dotnet creation
 	set_object_for_dotnet_value  (a_eifnet_drv: EIFNET_DEBUG_REFERENCE_VALUE) is
 			-- make a object ICorDebugObjectValue item initialized to `value'
 		require
+			is_dotnet_system
 			arg_not_void: a_eifnet_drv /= Void
 		do
 			is_dotnet_value := True
@@ -186,6 +188,7 @@ feature -- Dotnet creation
 	set_native_array_object_for_dotnet_value  (a_eifnet_dnav: EIFNET_DEBUG_NATIVE_ARRAY_VALUE) is
 			-- make a object ICorDebugObjectValue item initialized to `value'
 		require
+			is_dotnet_system
 			arg_not_void: a_eifnet_dnav /= Void
 		do
 			is_dotnet_value := True
@@ -217,7 +220,7 @@ feature -- Dotnet access
 
 	is_classic_system: BOOLEAN is
 		do
-			Result := not is_dotnet_value
+			Result := not is_dotnet_system
 		end
 
 	is_dotnet_value: BOOLEAN
@@ -738,7 +741,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		do
 			if debugger_manager.safe_application_is_stopped then
 				l_feat := generating_type_feature_i (dynamic_class)
-				if is_dotnet then
+				if is_dotnet_value then
 					if dynamic_class_type /= Void then
 						l_icdov := new_value_object_dotnet
 						if l_icdov /= Void then

@@ -24,6 +24,13 @@ feature
 		do
 				-- Ask for user's name and password
 			io.putstring ("Database user authentication:%N")
+
+			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
+				io.putstring ("Data Source Name: ")
+				io.readline
+				set_data_source(io.laststring.twin)
+ 			end
+
 			io.putstring ("Name: ")
 			io.readline
 			tmp_string := io.laststring.twin

@@ -77,6 +77,8 @@ feature -- Element change
 	refresh is
 			-- Refresh current item.
 		deferred
+		ensure
+			same_string_representation: string_representation.is_equal (old string_representation)
 		end
 
 feature -- Interactivity

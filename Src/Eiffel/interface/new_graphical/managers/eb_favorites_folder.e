@@ -36,10 +36,18 @@ feature {NONE} -- Initialization
 			-- Initialize Current with `name' set to `a_name' and
 			-- with parent `a_parent'.
 		do
-			item_list_make (5)
+				--| To prevent forgetting about current sub items
+				--| create the item_list only if never done.
+			if not item_list_make_done then
+				item_list_make (5)
+				item_list_make_done := True
+			end
 			name := a_name
 			parent := a_parent
 		end
+
+	item_list_make_done: BOOLEAN
+			-- is `item_list_make' already called
 
 feature -- Status
 
@@ -71,7 +79,6 @@ feature -- Element change
 			-- Refresh this item.
 		do
 		end
-
 
 feature -- Basic operations
 

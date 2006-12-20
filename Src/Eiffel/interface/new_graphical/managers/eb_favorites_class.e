@@ -68,8 +68,6 @@ feature {NONE} -- Access
 		do
 			Precursor {EB_FAVORITES_FOLDER} (a_name, a_parent)
 			get_class_i
-
-			item_list_make (5)
 		end
 
 	make_from_class_stone (a_stone: CLASSI_STONE; a_parent: EB_FAVORITES_ITEM_LIST) is

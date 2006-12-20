@@ -1447,15 +1447,17 @@
 									<File Id="ev_character_format_constants.e" Name="EV_CHA~6.E" LongName="ev_character_format_constants.e" />
 									<File Id="ev_active_list.e" Name="EV_ACT~2.E" LongName="ev_active_list.e" />
 									<File Id="ev_notebook_tab.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab.e" />
-									<File Id="ev_pointer_style_constants_e" Name="EV_POI~1.E" LongName="ev_pointer_style_constants.e" />
+									<File Id="ev_pointer_style_constants_e" Name="EV_POI~2.E" LongName="ev_pointer_style_constants.e" />
 									<File Id="ev_pixel_buffer_e" Name="EV_PIX~1.E" LongName="ev_pixel_buffer.e" />
 									<File Id="ev_pixel_buffer_pixel.e" Name="EV_PIX~2.E" LongName="ev_pixel_buffer_pixel.e" />
 									<File Id="ev_pixel_iterator.e" Name="EV_PIX~3.E" LongName="ev_pixel_iterator.e" />
 									<File Id="ev_region_e" Name="EV_REG~1.E" LongName="ev_region.e" />
+									<File Id="ev_pointer_constants.e" Name="EV_POI~1.E" LongName="ev_pointer_constants.e" />
 								</Component>
 							</Directory>
 							<Directory Id="items" Name="items">
 								<Component Id="ev_dynamic_tree_item.e" Guid="30D7A7BB-627D-4331-AA07-D61443405073">
+									<File Id="ev_grid_checkable_label_item.e" Name="EV7B97~1.E" LongName="ev_grid_checkable_label_item.e" />
 									<File Id="ev_grid_drawable_item_e" Name="EVF755~1.E" LongName="ev_grid_drawable_item.e" />
 									<File Id="ev_grid_choice_item_e" Name="EV0610~1.E" LongName="ev_grid_choice_item.e" />
 									<File Id="ev_grid_column_e" Name="EV_GRI~1.E" LongName="ev_grid_column.e" />
@@ -1643,6 +1645,7 @@
 									<File Id="ev_rich_text_action_sequences.e" Name="EV_RIC~6.E" LongName="ev_rich_text_action_sequences.e" />
 									<File Id="ev_header_action_sequences_e" Name="EV_HEA~1.E" LongName="ev_header_action_sequences.e" />
 									<File Id="ev_header_item_action_sequence_e" Name="EV_HEA~2.E" LongName="ev_header_item_action_sequence.e" />
+									<File Id="ev_lite_action_sequence.e" Name="EV_LIT~1.E" LongName="ev_lite_action_sequence.e" />
 								</Component>
 							</Directory>
 							<Directory Id="kernel32" Name="kernel">
@@ -1680,6 +1683,7 @@
 									<File Id="ev_selectable.e" Name="EV_SEL~1.E" LongName="ev_selectable.e" />
 									<File Id="ev_positioned.e" Name="EV_POS~4.E" LongName="ev_positioned.e" />
 									<File Id="ev_containable.e" Name="EV_CON~3.E" LongName="ev_containable.e" />
+									<File Id="ev_identifiable.e" Name="EV_IDE~1.E" LongName="ev_identifiable.e" />
 									<File Id="ev_fontable.e" Name="EV_FON~6.E" LongName="ev_fontable.e" />
 									<File Id="ev_dockable_source.e" Name="EV_DOC~A.E" LongName="ev_dockable_source.e" />
 									<File Id="ev_dockable_target.e" Name="EV_DOC~B.E" LongName="ev_dockable_target.e" />
@@ -1690,6 +1694,7 @@
 									<File Id="ev_positionable.e" Name="EV_POS~6.E" LongName="ev_positionable.e" />
 									<File Id="ev_item_pixmap_scaler.e" Name="EV_ITE~8.E" LongName="ev_item_pixmap_scaler.e" />
 									<File Id="ev_drawable.e" Name="EV_DRA~A.E" LongName="ev_drawable.e" />
+									<File Id="ev_pnd_target_data_e" Name="EV_PND~1.E" LongName="ev_pnd_target_data.e" />
 								</Component>
 							</Directory>
 							<Directory Id="widgets17" Name="widgets">
@@ -2079,6 +2084,7 @@
 								</Directory>
 								<Directory Id="items30" Name="items">
 									<Component Id="ev_tree_node_i.e" Guid="9A970CF0-59DC-47BF-9C7B-4AB1D7380A03">
+										<File Id="ev_grid_checkable_label_item_i_e" Name="EV2C30~1.E" LongName="ev_grid_checkable_label_item_i.e" />
 										<File Id="ev_grid_drawable_item_i_e" Name="EV3E1D~1.E" LongName="ev_grid_drawable_item_i.e" />
 										<File Id="ev_grid_column_i_e" Name="EV_GRI~1.E" LongName="ev_grid_column_i.e" />
 										<File Id="ev_grid_item_i_e" Name="EV_GRI~2.E" LongName="ev_grid_item_i.e" />
@@ -2520,6 +2526,7 @@
 								<File Id="wel_xform_e" LongName="wel_xform.e" Name="WEL_XF~1.E" />
 								<File Id="wel_color_matrix_e" Name="WEL_CO~3.E" LongName="wel_color_matrix.e" />
 								<File Id="wel_composition_form_e" Name="WEL_CO~4.E" LongName="wel_composition_form.e" />
+								<File Id="wel_menu_bar_info.e" Name="WEL_ME~1.E" LongName="wel_menu_bar_info.e" />
 							</Component>
 						</Directory>
 						<Directory Id="messages" Name="messages">
@@ -2610,6 +2617,7 @@
 						</Directory>
 						<Directory Id="consts" Name="consts">
 							<Component Id="wel_swp_constants.e" Guid="AFEB6CFB-3C86-4EFC-9A48-AD1E5720BB87">
+								<File Id="wel_objid_constants_e" Name="WEL_OB~1.E" LongName="wel_objid_constants.e" />
 								<File Id="wel_bi_compression_constants_e" Name="WEL_BI~2.E" LongName="wel_bi_compression_constants.e" />
 								<File Id="wel_ccm_constants_e" Name="WEL_CC~2.E" LongName="wel_ccm_constants.e" />
 								<File Id="wel_composition_string_constants_e" Name="WEL_CO~1.E" LongName="wel_composition_string_constants.e" />
@@ -2943,7 +2951,8 @@
 						</Directory>
 						<Directory Id="shared" Name="shared">
 							<Component Id="wel_shared_fonts.e" Guid="CC80173D-242D-4C88-B046-3EC61FD9E22E">
-								<File Id="wel_shared_fonts.e" Name="WEL_SH~4.E" LongName="wel_shared_fonts.e" KeyPath="yes" />
+								<File Id="wel_shared_fonts.e" Name="WEL_SH~4.E" LongName="wel_shared_fonts.e" />
+								<File Id="wel_shared_metrics.e" Name="WEL_SH~1.E" LongName="wel_shared_metrics.e" />
 							</Component>
 						</Directory>
 						<Directory Id="spec41" Name="spec">

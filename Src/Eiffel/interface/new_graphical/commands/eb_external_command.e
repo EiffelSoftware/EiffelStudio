@@ -529,6 +529,7 @@ feature -- Execution
 							use_argument := True
 						end
 						external_launcher.set_hidden (True)
+						external_storage.wipe_out
 						external_launcher.launch (True, use_argument)
 					end
 				end

@@ -21,7 +21,7 @@ feature
 
 	select_string: STRING is
 		once
-			Result := 
+			Result :=
 			"select TABLE_NAME from USER_TABLES"
 		end
 

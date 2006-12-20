@@ -1,20 +1,19 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-class BOOK2 
 
-inherit 
-	
+class BOOK2
+
+inherit
 	ANY
 		redefine
 			out
 		end
 
 create
-
 	make
 
-feature 
+feature
 
 	title: STRING
 
@@ -38,7 +37,6 @@ feature
 			title = t
 		end
 
-
 	set_author (a: STRING) is
 			-- Set `author' with `a'
 		require
@@ -49,23 +47,20 @@ feature
 			author = a
 		end
 
-
 	set_quantity (q: INTEGER) is
 			-- Set `quantity' with `q'
 		do
 			quantity := q
 		end
 
-
 	set_year (y: INTEGER) is
 			-- Set `year' with `y'
 		local
-			date: DATE 
+			date: DATE
 		do
 			create date.make(y,1,1)
 			year.set_date(date)
 		end
-
 
 	set_price (p: DOUBLE) is
             		-- Set `price' with `p'
@@ -99,7 +94,7 @@ feature
 		do
 			create title.make (80)
 			create author.make (80)
-			create year.make_now 
+			create year.make_now
 		end
 
 

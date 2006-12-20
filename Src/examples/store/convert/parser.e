@@ -1,6 +1,9 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class PARSER
 
 inherit
@@ -9,9 +12,9 @@ inherit
 
 create
 
-	make 
+	make
 
-feature 
+feature
 
 	make is
 		do
@@ -39,16 +42,16 @@ feature {NONE}
 			converter1.set_descriptor (descriptor);
 			converter1.set_file_name ("example1.dat");
 			converter1.parse_file;
-			if converter1.conv_error then 
+			if converter1.conv_error then
 				io.putstring (converter1.conv_message)
 			else
 				from
-					i:=1 
-				until 
+					i:=1
+				until
 					i > converter1.container_size
 				loop
 					print (converter1.container.item (i));
-					i := i +1 
+					i := i +1
 				end
 			end;
 			io.putstring ("Second example file:%N");
@@ -71,16 +74,16 @@ feature {NONE}
 				converter2.set_descriptor (descriptor);
 				converter2.set_file_name ("example2.dat");
 				converter2.parse_file;
-				if converter2.conv_error then 
+				if converter2.conv_error then
 					io.putstring (converter2.conv_message)
 				else
 					from
-						i:=1 
-					until 
+						i:=1
+					until
 						i > converter2.container_size
 					loop
 						print (converter2.container.item (i));
-						i := i +1 
+						i := i +1
 					end
 				end
 			end

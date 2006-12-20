@@ -61,7 +61,7 @@ feature {NONE}  -- Initialization
 		do
 			default_create
 			set_origin (an_origin)
-		end	
+		end
 
 	make_with_origin_and_position (
 		an_origin: EV_RELATIVE_POINT; new_x, new_y: INTEGER) is
@@ -71,7 +71,7 @@ feature {NONE}  -- Initialization
 			set_origin (an_origin)
 			set_x (new_x)
 			set_y (new_y)
-		end	
+		end
 
 	make_with_position (new_x, new_y: INTEGER) is
 			-- Create on position (`new_x', `new_y').
@@ -79,14 +79,14 @@ feature {NONE}  -- Initialization
 			default_create
 			set_x (new_x)
 			set_y (new_y)
-		end	
+		end
 
 	make_with_positioner (pos_agent: like positioner) is
 			-- Create with `pos_agent'.
 		do
 			default_create
 			set_positioner (pos_agent)
-		end	
+		end
 
 feature -- Access
 
@@ -160,7 +160,7 @@ feature -- Access
 			Result := last_angle_abs
 		ensure
 			Result_assigned: Result = last_angle_abs
-		end		
+		end
 
 	scale_x_abs: DOUBLE is
 			-- Final horizontal scaling factor. Updates if necessary.
@@ -169,7 +169,7 @@ feature -- Access
 			Result := last_scale_x_abs
 		ensure
 			Result_assigned: Result = last_scale_x_abs
-		end		
+		end
 
 	scale_y_abs: DOUBLE is
 			-- Final vertical scaling factor. Updates if necessary.
@@ -178,7 +178,7 @@ feature -- Access
 			Result := last_scale_y_abs
 		ensure
 			Result_assigned: Result = last_scale_y_abs
-		end		
+		end
 
 feature -- Status report
 
@@ -200,7 +200,7 @@ feature -- Status report
 			-- This is not the case when it is being positioned.
 			--| Used in preconditions of x_rel_to and y_rel_to.
 			--| A point is not relative to itself.
-		do 
+		do
 			if origin = org then
 				Result := True
 			elseif origin = Void or else has_positioner then
@@ -537,6 +537,8 @@ feature -- Representation
 		do
 			if origin /= Void then
 				Result := origin.out_rel + "+"
+			else
+				Result := ""
 			end
 			Result := Result + "(" + x.out + ", " + y.out + ")"
 		end

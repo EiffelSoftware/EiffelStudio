@@ -7,32 +7,28 @@
 		<setting name="console_application" value="true"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf" readonly="true">
-			<option warning="false">
-			</option>
-		</library>
+		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 	</target>
-	<target name="ingres" extends="common">
+	<target name="select_ingres" extends="common">
 		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres.ecf"/>
 		<cluster name="handle" location="..\Utilities\ingres\"/>
 		<cluster name="root_cluster" location=".\"/>
 		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
-	<target name="sybase" extends="common">
+	<target name="select_sybase" extends="common">
 		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase.ecf"/>
 		<cluster name="handle" location="..\Utilities\sybase\"/>
 		<cluster name="root_cluster" location=".\"/>
 		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
-	<target name="oracle" extends="common">
+	<target name="select_oracle" extends="common">
 		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle.ecf"/>
 		<cluster name="handle" location="..\Utilities\oracle\"/>
 		<cluster name="root_cluster" location=".\"/>
 		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
-	<target name="odbc" extends="common">
-		<root cluster="root_cluster" class="SELECTOR_ODBC" feature="make"/>
+	<target name="select_odbc" extends="common">
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf"/>
 		<cluster name="handle" location="..\Utilities\odbc\"/>
 		<cluster name="root_cluster" location=".\"/>

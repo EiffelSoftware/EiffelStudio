@@ -1,6 +1,9 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class INSERTER
 
 inherit
@@ -19,28 +22,24 @@ feature {NONE}
 
 	repository: DB_REPOSITORY
 
-feature 
+feature {NONE} -- Initialization
 
 	make is
 		local
 			-- The object that we will use is a book
 			book: BOOK2
 		do
-			-- Initialize and start session
+				-- Initialize and start session
 			init
 
 			if not session_control.is_connected then
-
-				-- Something went wrong, and the connection failed
+					-- Something went wrong, and the connection failed
 				session_control.raise_error
 				io.putstring ("Can't connect to the database.%N")
-
 			else
-				--  The Eiffel program is now connected to the database
-
+					--  The Eiffel program is now connected to the database
 				create book.make
-
-				-- Does the table `db_book' exit?
+					-- Does the table `db_book' exit?
 				if not table_exists (Table_name) then
 					io.putstring ("Table `DB_BOOK' does not exist...")
 					repository.allocate (book)
@@ -48,7 +47,7 @@ feature
 					io.putstring ("Table created.%N")
 				end
 
-				-- What new book does the user want to add ?
+					-- What new book does the user want to add ?
 				io.putstring ("What new book should I create?")
 				io.new_line
 				io.putstring ("Author? ")
@@ -74,57 +73,66 @@ feature
 				base_store.put (book)
 
 				if not session_control.is_ok then
-					-- The attempt to insert a new object 
-					-- failed
+						-- The attempt to insert a new object
+						-- failed
 					io.putstring (session_control.error_message)
 					io.new_line
 				else
 					io.putstring ("Object inserted%N")
 				end
-				-- Terminate session
+					-- Terminate session
 				session_control.disconnect
 			end
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	init is
 			-- Init session.
+		do
+			io.putstring ("Database user authentication:%N")
+			perform_login
+
+				-- Initialization of the Relational Database:
+				-- This will set various informations to perform a correct
+				-- connection to the Relational database
+			set_base
+
+				-- Create usefull classes
+				-- 'session_control' provides informations control access and
+				--  the status of the database.
+				-- 'base_store' provides updating facilities.
+			create session_control.make
+			create base_store.make
+
+				-- Start session
+			session_control.connect
+		ensure
+			not (session_control = Void)
+			not (base_store = Void)
+		end
+
+	perform_login is
 		local
 			tmp_string: STRING
 		do
-			-- Ask for user's name and password
-			io.putstring ("Database user authentication:%N")
+			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
+				io.putstring ("Data Source Name: ")
+				io.readline
+				set_data_source(io.laststring.twin)
+ 			end
+
+				-- Ask for user's name and password
 			io.putstring ("Name: ")
 			io.readline
 			tmp_string := io.laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 
-			-- Set user's name and password
+				-- Set user's name and password
 			login (tmp_string, io.laststring)
-
-			-- Initialization of the Relational Database:
-			-- This will set various informations to perform a correct
-			-- connection to the Relational database
-			set_base
-
-
-			-- Create usefull classes
-			-- 'session_control' provides informations control access and 
-			--  the status of the database.
-			-- 'base_store' provides updating facilities.
-			create session_control.make
-			create base_store.make
-
-			-- Start session
-			session_control.connect
-
-		ensure
-			not (session_control = Void)
-			not (base_store = Void)
 		end
-	
+
 	table_exists (table: STRING): BOOLEAN is
 			-- Does table `table' exist in the database?
 		require
@@ -154,7 +162,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class INSERTER
-
-
+end

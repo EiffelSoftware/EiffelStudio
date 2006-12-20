@@ -1,17 +1,14 @@
 indexing
-
 	description: "Nested queries example."
 	legal: "See notice at end of class.";
 	product: "EiffelStore";
-	database: "ODBC";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$";
-	author: "Patrice Khawam"
 
 class TEST_I inherit
 
-	TEST_ODBC
+	TEST
 
 create
 

@@ -851,7 +851,6 @@ feature {NONE} -- Implemention
 			pts_exists: pts /= Void
 		local
 			i, j, array_count: INTEGER
-			a_coord: EV_COORDINATE
 			l_area: SPECIAL [INTEGER]
 			l_coord_area: SPECIAL [EV_COORDINATE]
 		do
@@ -860,16 +859,16 @@ feature {NONE} -- Implemention
 				create Result.make (1, array_count * 2)
 				l_coord_area := pts.area
 				l_area := Result.area
-				i := 0
-				j := 0
+				i := array_count - 1
+				j := array_count * 2 - 1
 			until
-				i = array_count
+				i < 0
 			loop
-				a_coord := l_coord_area @ i
-				l_area @ j := a_coord.x
-				l_area @ (j + 1) := a_coord.y
-				i := i + 1
-				j := j + 2
+				l_area @ j := (l_coord_area @ i).y
+				j := j - 1
+				l_area @ j := (l_coord_area @ i).x
+				i := i - 1
+				j := j - 1
 			end
 		ensure
 			Result_exists: Result /= Void

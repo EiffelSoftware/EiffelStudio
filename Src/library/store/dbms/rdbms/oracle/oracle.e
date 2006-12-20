@@ -13,7 +13,6 @@ inherit
 		redefine
 			normal_parse,
 			parse,
-			update_map_table_error,
 			convert_string_type
 		end
 
@@ -145,13 +144,6 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			is_error_updated := False
 		end
 
-feature -- For DATABASE_STORE
-
-	update_map_table_error (uhandle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is
-		do
-			map_table.put (0, ind)
-		end
-
 feature -- DATABASE_STRING
 
 	sql_name_string: STRING is
@@ -211,12 +203,16 @@ feature -- For database types
 			data_type: INTEGER_REF
 		do
 			if field_name.is_equal ("data_type") then
-				if class_name.is_equal ("STRING") then
+				if class_name.is_equal (("").generator) then
 					create data_type
 					if r_any.is_equal ("VARCHAR2") or else r_any.is_equal ("CHAR") then
 						data_type.set_item (ora_string_type)
 					elseif r_any.is_equal ("NUMBER") then
 						data_type.set_item (ora_number_type)
+					elseif r_any.is_equal ("FLOAT") then
+						data_type.set_item (ora_float_type)
+					elseif r_any.is_equal ("INT") then
+						data_type.set_item (ora_int_type)
 					elseif r_any.is_equal ("DATE") then
 						data_type.set_item (ora_date_type)
 					end
@@ -225,7 +221,7 @@ feature -- For database types
 					Result := r_any
 				end
 			elseif field_name.is_equal ("nullable") then
-				if class_name.is_equal ("STRING") then
+				if class_name.is_equal (("").generator) then
 					create data_type
 					if r_any.is_equal ("Y") then
 						data_type.set_item (1)
@@ -801,6 +797,20 @@ feature {NONE} -- External features
 			"C [macro %"oracle.h%"]"
 		alias
 			"VARCHAR2_TYPE"
+		end
+
+	ora_int_type: INTEGER is
+		external
+			"C [macro %"oracle.h%"]"
+		alias
+			"INT_TYPE"
+		end
+
+	ora_float_type: INTEGER is
+		external
+			"C [macro %"oracle.h%"]"
+		alias
+			"FLOAT_TYPE"
 		end
 
 	ora_number_type: INTEGER is

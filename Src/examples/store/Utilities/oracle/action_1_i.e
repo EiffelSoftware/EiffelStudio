@@ -14,7 +14,7 @@ class ACTION_1_I inherit
 	ACTION_1
 
 create
-        
+
 	make
 
 feature
@@ -25,11 +25,11 @@ feature
 			new_selection: DB_SELECTION
 			tuple: DB_TUPLE
 			table_name: STRING
-		do      
+		do
 			create tuple.copy (selection.cursor)
 			table_name ?= tuple.item (1)
 			if table_name /= Void then
-				io.putstring ("-- Column(s) for table ") 
+				io.putstring ("-- Column(s) for table ")
 				io.putstring (table_name)
 				io.new_line
 				create new_selection.make

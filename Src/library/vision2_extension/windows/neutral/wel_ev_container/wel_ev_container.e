@@ -9,20 +9,20 @@ indexing
 
 class
 	WEL_EV_CONTAINER
-	
+
 inherit
 
 	EV_CELL
 		redefine
-			implementation, 
+			implementation,
 			create_implementation
 		end
-		
+
 create
 	make_with_parent
-	
+
 feature {NONE} -- Initialization
-	
+
 	make_with_parent (a_parent: WEL_WINDOW; x_pos, y_pos, a_width, a_height: INTEGER) is
 			-- Create `Current' with parent `a_parent', x_position `x_pos', y_position `y_pos',
 			-- a width of `a_width' and a height of `a_height'.
@@ -30,10 +30,10 @@ feature {NONE} -- Initialization
 			-- will be created during the execution of this feature. To find if an instance of
 			-- EV_APPLICATION exists, (create {EV_ENVIRONMENT}).application.
 			-- Note that internally, we need to initialize a new EV_WINDOW which will be included
-			-- in `windows' from EV_APPLICATION. 
+			-- in `windows' from EV_APPLICATION.
 		do
-			default_create_called := True
 			create {WEL_EV_CONTAINER_IMP} implementation.make (Current)
+			implementation.set_state_flag ({EV_ANY_I}.interface_default_create_called_flag, True)
 			implementation.initialize
 			implementation.set_real_parent (a_parent, x_position, y_position, a_width, a_height)
 			initialize
@@ -51,7 +51,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: WEL_EV_CONTAINER_I
 			-- Responsible for interaction with native graphics toolkit.
-			
+
 feature {NONE} -- Implementation
 
 	create_implementation is

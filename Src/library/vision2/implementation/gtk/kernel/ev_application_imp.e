@@ -119,12 +119,14 @@ feature {EV_ANY_IMP} -- Implementation
 			l_widget_imp: EV_WIDGET_IMP
 			l_top_level_window_imp: EV_WINDOW_IMP
 			l_gtk_widget_imp: EV_GTK_WIDGET_IMP
-			l_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
+			l_motion_tuple: like motion_tuple
+			l_app_motion_tuple: like app_motion_tuple
 			l_no_more_events: BOOLEAN
 			i, l_widget_x, l_widget_y, l_screen_x, l_screen_y: INTEGER
 		do
 			from
 				l_motion_tuple := motion_tuple
+				l_app_motion_tuple := app_motion_tuple
 				user_events_processed_from_underlying_toolkit := False
 			until
 				l_no_more_events or else is_destroyed
@@ -152,13 +154,13 @@ feature {EV_ANY_IMP} -- Implementation
 							l_screen_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer
 							l_screen_y := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 							l_widget_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer
-							l_widget_y := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_Y (gdk_event).truncated_to_integer
-							stored_display_data.put_pointer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event), 1)
-							stored_display_data.put_integer (l_screen_x, 2)
-							stored_display_data.put_integer (l_screen_y, 3)
-							stored_display_data.put_integer ({EV_GTK_EXTERNALS}.gdk_event_motion_struct_state (gdk_event), 4)
-							stored_display_data.put_integer (l_widget_x, 5)
-							stored_display_data.put_integer (l_widget_y, 6)
+							l_widget_y := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer
+							stored_display_data.window := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_window (gdk_event)
+							stored_display_data.x := l_screen_x
+							stored_display_data.y := l_screen_y
+							stored_display_data.mask := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_state (gdk_event)
+							stored_display_data.originating_x := l_widget_x
+							stored_display_data.originating_y := l_widget_y
 
 							l_call_event := False
 
@@ -178,13 +180,12 @@ feature {EV_ANY_IMP} -- Implementation
 										if pointer_motion_actions_internal /= Void then
 											l_widget_imp ?= l_pnd_imp
 											if l_widget_imp /= Void then
-													pointer_motion_actions_internal.call (
-													[
-														l_widget_imp.interface,
-														l_screen_x,
-														l_screen_y
-													]
-												)
+													l_app_motion_tuple.widget := l_widget_imp.interface
+													l_app_motion_tuple.x := l_screen_x
+													l_app_motion_tuple.y := l_screen_y
+													pointer_motion_actions_internal.call (l_app_motion_tuple)
+														-- Void out reference so that it gets GC'd
+													l_app_motion_tuple.widget := Void
 											end
 										end
 										if {EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_imp.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM then
@@ -194,13 +195,13 @@ feature {EV_ANY_IMP} -- Implementation
 												l_widget_x := l_screen_x - l_widget_x
 												l_widget_y := l_screen_y - l_widget_y
 											end
-											l_motion_tuple.put_integer (l_widget_x, 1)
-											l_motion_tuple.put_integer (l_widget_y, 2)
-											l_motion_tuple.put_double (0.5, 3)
-											l_motion_tuple.put_double (0.5, 4)
-											l_motion_tuple.put_double (0.5, 5)
-											l_motion_tuple.put_integer (l_screen_x, 6)
-											l_motion_tuple.put_integer (l_screen_y, 7)
+											l_motion_tuple.x := l_widget_x
+											l_motion_tuple.y := l_widget_y
+											l_motion_tuple.x_tilt := 0.5
+											l_motion_tuple.y_tilt := 0.5
+											l_motion_tuple.pressure := 0.5
+											l_motion_tuple.screen_x := l_screen_x
+											l_motion_tuple.screen_y := l_screen_y
 											l_pnd_imp.on_pointer_motion (l_motion_tuple)
 										end
 									end
@@ -529,9 +530,15 @@ feature -- Basic operation
 		end
 
 	motion_tuple: TUPLE [x: INTEGER; y: INTEGER; x_tilt: DOUBLE; y_tilt: DOUBLE; pressure: DOUBLE; screen_x: INTEGER; screen_y: INTEGER; originating_x: INTEGER; originating_y: INTEGER] is
-			-- Tuple optimizations
+			-- Tuple optimization
 		once
-			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0, 0, 0]
+			create Result
+		end
+
+	app_motion_tuple: TUPLE [widget: EV_WIDGET; x: INTEGER; y: INTEGER]
+			-- Tuple optimization
+		once
+			create Result
 		end
 
 	process_key_event (a_gdk_event: POINTER) is

@@ -67,23 +67,23 @@ feature {EV_ANY_IMP} -- Access
 			an_agent.call (translate.item (integer_pointer_tuple))
 		end
 
-	dimension_tuple (a_1, a_2, a_3, a_4: INTEGER): like internal_dimension_tuple is
+	dimension_tuple (a_x, a_y, a_width, a_height: INTEGER): like internal_dimension_tuple is
 			-- Return a dimension tuple from given arguments.
 		do
 			Result := internal_dimension_tuple
-			Result.put_integer (a_1, 1)
-			Result.put_integer (a_2, 2)
-			Result.put_integer (a_3, 3)
-			Result.put_integer (a_4, 4)
+			Result.x := a_x
+			Result.y := a_y
+			Result.width := a_width
+			Result.height := a_height
 		end
 
 	key_tuple (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN): like internal_key_tuple is
 			-- Return a key tuple from given arguments.
 		do
 			Result := internal_key_tuple
-			Result.put_reference (a_key, 1)
-			Result.put_reference (a_key_string, 2)
-			Result.put_boolean (a_key_press, 3)
+			Result.key := a_key
+			Result.string := a_key_string
+			Result.key_press := a_key_press
 		end
 
 feature {EV_ANY_IMP, EV_APPLICATION_IMP}
@@ -294,8 +294,8 @@ feature {NONE} -- Implementation
 		do
 			if l_retry_count = 0 then
 				l_integer_pointer_tuple := integer_pointer_tuple
-				l_integer_pointer_tuple.put_integer (n_args, 1)
-				l_integer_pointer_tuple.put_pointer (args, 2)
+				l_integer_pointer_tuple.integer := n_args
+				l_integer_pointer_tuple.pointer := args
 				action.call (l_integer_pointer_tuple)
 			elseif l_retry_count = 1 then
 				app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
@@ -311,41 +311,38 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Tuple optimizations.
 
-	internal_dimension_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	internal_dimension_tuple: TUPLE [x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER] is
 			-- Once function used for global access of dimension tuple.
 		once
-			Result := [0, 0, 0, 0]
+			create Result
 		end
 
-	internal_key_tuple: TUPLE [EV_KEY, STRING_32, BOOLEAN] is
+	internal_key_tuple: TUPLE [key: EV_KEY; string: STRING_32; key_press: BOOLEAN] is
 			-- Once function used for global access of key tuple.
 		once
-			Result := [Void, Void, False]
+			create Result
 		end
 
-feature {EV_ANY_IMP} -- Tuple optimizations
-
-	pointer_tuple: TUPLE [POINTER] is
-			--
+	pointer_tuple: TUPLE [pointer: POINTER] is
 		once
-			Result := [Default_pointer]
+			create Result
 		end
 
-	integer_tuple: TUPLE [INTEGER] is
+	integer_tuple: TUPLE [integer: INTEGER] is
 		once
-			Result := [0]
+			create Result
 		end
 
-	integer_pointer_tuple: TUPLE [INTEGER, POINTER] is
+	integer_pointer_tuple: TUPLE [integer: INTEGER; pointer: POINTER] is
 		once
-			Result := [0, default_pointer]
+			create Result
 		end
 
-	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
+	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [pointer: POINTER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			pointer_tuple.put_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args), 1)
 			Result := pointer_tuple
+			Result.pointer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
 		end
 
 feature {EV_GTK_CALLBACK_MARSHAL} -- Externals

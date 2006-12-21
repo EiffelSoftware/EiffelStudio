@@ -1226,45 +1226,6 @@ void odbc_unset_catalog_flag(int no_desc) {
 }
 
 /*****************************************************************/
-/*                                                               */
-/*                     ROUTINE  DESCRIPTION                      */
-/*                                                               */
-/* NAME: odbc_date_to_str(int y,m,d,hr,min,sec,fraction mode             */
-/* PARAMETER: mode -- 0: get time string                         */
-/*                 -- 1: get date string                         */
-/*                 -- others: get timestamp string               */
-/* DESCRIPTION:                                                  */
-/*   to change an Eiffel DATE data into a STRING in the following*/
-/* format: 'yyyy-mm-dd hh:mm:ss'                                 */
-/*                                                               */
-/*****************************************************************/
-char *odbc_date_to_str(int year, int month, int day, int hour, int minute, int sec, int type) {
-	int mo1,mo2,d1,d2,h1,h2,m1,m2,s1,s2;
-
-	mo1 = month / 10;
-	mo2 = month % 10;
-	d1 = day / 10;
-	d2 = day % 10;
-	h1 = hour / 10;
-	h2 = hour % 10;
-	m1 = minute / 10;
-	m2 = minute % 10;
-	s1 = sec / 10;
-	s2 = sec % 10;
-	switch (type) {
-		case ODBC_TIME: /* TIME type */
-			sprintf(odbc_date_string, "%d%d:%d%d:%d%d", h1,h2,m1,m2,s1,s2);
-			break;
-		case ODBC_DATE: /* DATE type */
-			sprintf(odbc_date_string, "%d-%d%d-%d%d", year,mo1,mo2,d1,d2);
-			break;
-		default: /* TIMESTAMP type */
-			sprintf(odbc_date_string, "%d-%d%d-%d%d %d%d:%d%d:%d%d", year,mo1,mo2,d1,d2,h1,h2,m1,m2,s1,s2);
-	}
-	return odbc_date_string;
-}
-
-/*****************************************************************/
 /*The following are the function related with DATABASE CONTROL   */
 /*****************************************************************/
 

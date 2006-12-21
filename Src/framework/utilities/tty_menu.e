@@ -85,7 +85,6 @@ feature -- Access
 			-- Execute the menu
 		local
 			menu_shown: BOOLEAN
-			menu_asked: BOOLEAN
 			retried: BOOLEAN
 			e: like entry
 		do
@@ -131,7 +130,15 @@ feature -- Access
 			leave := True
 		end
 
+	request_menu_display is
+		do
+			menu_asked := True
+		end
+
 feature {NONE} -- Implementation
+
+	menu_asked: BOOLEAN
+			-- Display menu next time.
 
 	leave: BOOLEAN
 			-- Leave when possible.

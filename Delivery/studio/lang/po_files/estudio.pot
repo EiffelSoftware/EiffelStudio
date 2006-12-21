@@ -2450,7 +2450,7 @@ msgstr ""
 msgid "Wolof (Senegal)"
 msgstr ""
 
-msgid "Find"
+msgid "Select Cluster"
 msgstr ""
 
 msgid "Add scope"
@@ -2666,6 +2666,9 @@ msgid "Add Pre Compilation Task"
 msgstr ""
 
 msgid "Hide Assigner Command Name"
+msgstr ""
+
+msgid "Find: "
 msgstr ""
 
 msgid "Polish (Poland)"
@@ -4562,9 +4565,6 @@ msgid "Make sure metric name is not empty and contains valid charactors."
 msgstr ""
 
 msgid "Cannot create directroy: $1."
-msgstr ""
-
-msgid "Select Cluster"
 msgstr ""
 
 msgid "Stop application"
@@ -9226,4 +9226,16 @@ msgid "Should occurrences of the class name in comments be changed?"
 msgstr ""
 
 msgid "Should occurrences of the class name in strings be changed?"
+msgstr ""
+
+msgid "Command used to launch a console."
+msgstr ""
+
+msgid "Console shell command"
+msgstr ""
+
+msgid "Command used to launch  an external editor."
+msgstr ""
+
+msgid "External editor command"
 msgstr ""

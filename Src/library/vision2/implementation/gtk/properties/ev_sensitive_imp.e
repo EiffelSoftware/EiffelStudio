@@ -31,10 +31,7 @@ feature -- Status report
 		do
 			-- Shift to put bit in least significant place then take mod 2
 			if not is_destroyed then
-				Result := (
-					({EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object)
-					// {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) \\ 2
-				) = 1
+				Result := {EV_GTK_EXTERNALS}.gtk_widget_is_sensitive (c_object)
 			end
 		end
 

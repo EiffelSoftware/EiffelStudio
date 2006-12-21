@@ -604,7 +604,7 @@ feature -- Basic operation
 					-- or if the widget is insensitive or the top level window has a modal child.
 				l_ignore_event :=
 					l_popup_parent /= Void and then {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (a_gdk_event) = 3 and then (l_pnd_item.pebble = Void and l_pnd_item.pebble_function = Void) or else
-					not ({EV_GTK_EXTERNALS}.gtk_object_struct_flags (l_pnd_item.c_object) & {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM = {EV_GTK_EXTERNALS}.GTK_SENSITIVE_ENUM) or else
+					not {EV_GTK_EXTERNALS}.gtk_widget_is_sensitive (l_pnd_item.c_object) or else
 					l_top_level_window_imp /= Void and then l_top_level_window_imp.has_modal_window
 			end
 

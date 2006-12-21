@@ -63,7 +63,7 @@ feature -- Execution
 			actions.call (Void)
 		end
 
-feature -- Externals
+feature {NONE} -- Implementation
 
 	tty_dbg_manager_imp: TTY_DEBUGGER_MANAGER_IMP;
 

@@ -32,6 +32,10 @@ feature {DEBUGGER_MANAGER} -- Access
 			end
 		end
 
+	timer_win32_handle: POINTER is
+		do
+		end
+
 	frozen dispatch_events is
 		external
 			"C inline use <gtk/gtk.h>"

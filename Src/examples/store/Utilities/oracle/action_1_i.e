@@ -37,7 +37,9 @@ feature
 				new_selection.set_action (my_action)
 				new_selection.set_map_name (table_name, "table_name")
 				new_selection.query (select_string)
-				new_selection.load_result
+				if new_selection.is_ok then
+					new_selection.load_result
+				end
 				new_selection.unset_map_name ("table_name")
 				new_selection.terminate
 			end

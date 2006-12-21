@@ -379,8 +379,8 @@ rt_private void dbg_resume_estudio_thread () {
 #define DBG_CLOSE_ESTUDIO_THREAD_HANDLE dbg_close_estudio_thread_handle ()
 
 #ifdef DBGTRACE_ENABLED
-#define DBG_SUSPEND_ESTUDIO_THREAD_DEBUG dbg_suspend_estudio_thread ();
-#define DBG_RESUME_ESTUDIO_THREAD_DEBUG  dbg_resume_estudio_thread (); 
+#define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread ();
+#define DBG_RESUME_ESTUDIO_THREAD  dbg_resume_estudio_thread (); 
 #else
 #define DBG_SUSPEND_ESTUDIO_THREAD SuspendThread(estudio_thread_handle)
 #define DBG_RESUME_ESTUDIO_THREAD ResumeThread (estudio_thread_handle) 
@@ -437,9 +437,9 @@ rt_private void dbg_trigger_estudio_callback_event (Callback_ids cb_id) {
 }
 
 #define DBG_NOTIFY_ESTUDIO(cb_id)  \
-	DBGTRACE("[Synchro] Notify EC : START"); \
+	DBGTRACE2("[Synchro] Notify EC : START :", Callback_name(cb_id)); \
 	dbg_trigger_estudio_callback_event (cb_id); \
-	DBGTRACE("[Synchro] Notify EC : END");
+	DBGTRACE2("[Synchro] Notify EC : END :", Callback_name(cb_id));
 
 /*
 ///////////////////////////////////////////////////////////
@@ -532,7 +532,7 @@ rt_public void dbg_restore_cb_notification_state () {
 */
 rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
 	Callback_ids cb_id;
-	DBGTRACE("[ES] enter timer action");
+	DBGTRACE_DWORD("[ES] enter timer callback = ", idEvent);
 	if (LOCKED_DBG_STATE_IS_NOT_EQUAL (1)) {
 		/* <not 1> */
 #ifdef DBGTRACE_ENABLED
@@ -577,6 +577,7 @@ rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, 
 			DBGTRACE("[ES] exit timer callback WITHOUT unlocking dbg, already done !!");
 		}
 	}
+	DBGTRACE_DWORD("[ES] exit timer callback = ", idEvent);
 }
 
 /*

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2006-12-20 16:43-0800\n"
+"PO-Revision-Date: 2006-12-20 18:03-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -2990,13 +2990,13 @@ msgid "&Reset Current View"
 msgstr ""
 
 msgid "Detailed Result"
-msgstr ""
+msgstr "Detailiertes Resultat"
 
 msgid "basic text view"
-msgstr ""
+msgstr "Einfache Text-Ansicht"
 
 msgid "Should inlining be enabled?"
-msgstr ""
+msgstr "Soll inlining aktiviert werden?"
 
 msgid "(Windows only)"
 msgstr "(nur für Windows)"
@@ -3041,7 +3041,7 @@ msgid "Background Finalized C Compilation Terminated"
 msgstr "Optimierte C-Kompilierung im Hintergrund beendet."
 
 msgid "Root cluster: "
-msgstr ""
+msgstr "Wurzel-Cluster:"
 
 msgid "&Print"
 msgstr "&Drucken"
@@ -3050,7 +3050,7 @@ msgid "Command name: "
 msgstr "Befehlname:"
 
 msgid "Generation Error"
-msgstr ""
+msgstr "Erstellungsfehler"
 
 msgid "Select a Directory"
 msgstr "Verzeichnis wählen"
@@ -3065,7 +3065,7 @@ msgid "Add a library"
 msgstr "Bibliothek hinzufügen"
 
 msgid "Make sure that numerator and denominator metric referenced by ratio metric are defined."
-msgstr ""
+msgstr "Verschiere dass Zähler- und Nennermetrik von der Quotientenmetrik referenziert sind."
 
 msgid "&Open Project..."
 msgstr "Projekt &Öffnen..."
@@ -3086,7 +3086,7 @@ msgid "Dynamic feature evaluation"
 msgstr "Dynamische Feature-Auswertung"
 
 msgid "Execution Profile Generation"
-msgstr ""
+msgstr "Ausführungsprofil-Erstellung"
 
 msgid "Redo (Ctrl+Y)"
 msgstr "Wiederherstellen (Ctrl+Y)"
@@ -3099,7 +3099,7 @@ msgstr ""
 "Sollen Änderungen gespeichert werden?"
 
 msgid "metric archive node"
-msgstr ""
+msgstr "Metrik-Archiv-Knoten"
 
 msgid "&Hide Favorites"
 msgstr "Favoriten verbergen."
@@ -3108,7 +3108,7 @@ msgid "Index:"
 msgstr "Index:"
 
 msgid "Text Generators"
-msgstr ""
+msgstr "Text Generatoren"
 
 msgid "Show Alias Name"
 msgstr "Aliasnamen anzeigen"
@@ -3148,13 +3148,13 @@ msgid "Select All Metrics"
 msgstr "Alle Metriken auswählen"
 
 msgid "Show only synctactically referenced classes also?"
-msgstr ""
+msgstr "Nur syntaktisch referenzierte Klassen anzeigen?"
 
 msgid "Background Workbench C Compilation Terminated"
 msgstr "C-Kompilierung im Hintergrund beendet"
 
 msgid "Library Root"
-msgstr ""
+msgstr "Bibliothekswurzel"
 
 msgid "Default libraries"
 msgstr "Standardbibliotheken"
@@ -3174,13 +3174,13 @@ msgid "Add C&luster..."
 msgstr "C&luster hinzufügen..."
 
 msgid "S&ynchronize Context Tool"
-msgstr ""
+msgstr "S&ynchronisiere Kontextwerkzeug"
 
 msgid "First chance"
-msgstr ""
+msgstr "Erste möglichkeit"
 
 msgid "&Object Tools"
-msgstr ""
+msgstr "&Objekt-Werkzeug"
 
 msgid "Delete current view"
 msgstr "Aktuelle Ansicht löschen"
@@ -3224,10 +3224,10 @@ msgid ""
 msgstr ""
 
 msgid "Warn about missing classes in export clauses (VTCM)?"
-msgstr ""
+msgstr "Warnung ausgeben für fehlnde Klassen in Export-Klauseln (VTCM)?"
 
 msgid "Extracting $1 of feature $2..."
-msgstr ""
+msgstr "Extrahiere $1 von Feature $2..."
 
 msgid "&Windows"
 msgstr "&Fenster"
@@ -3239,6 +3239,8 @@ msgid ""
 "There is already a metric named $1.\n"
 "Change its name in \"Metric name\" column to make it importable."
 msgstr ""
+"Eine Metrik mit dem Namen $1 existiert bereits.\n"
+"Ändere Namen in \"Metric name\" Spalte um den Import zu ermöglichen."
 
 msgid "Uncomment selected lines"
 msgstr "Selektierte Linien unkommentieren"
@@ -3301,7 +3303,7 @@ msgid "Find &Added Classes && Recompile"
 msgstr "Hinzugefügte Klassen finden && Neu kompilieren"
 
 msgid "External Editor"
-msgstr ""
+msgstr "Externer Editor"
 
 msgid "Terminate running command"
 msgstr "Laufenden Befehl beenden"
@@ -3316,7 +3318,7 @@ msgid "Make sure that the criterion of given unit exists."
 msgstr ""
 
 msgid "Match case"
-msgstr ""
+msgstr "Gross-/Kleinschreibung beachten"
 
 msgid "Open a dynamic library definition"
 msgstr ""
@@ -3331,7 +3333,7 @@ msgid "Add Include"
 msgstr ""
 
 msgid "Assignment on Formal/Expanded"
-msgstr ""
+msgstr "Zuweisung auf Formal/Expanded"
 
 msgid "Move item down"
 msgstr ""
@@ -3340,7 +3342,7 @@ msgid "Close"
 msgstr "Schliessen"
 
 msgid "Assembly Name"
-msgstr ""
+msgstr "Assembly Name"
 
 msgid "Zoom Out"
 msgstr "Herauszoomen"
@@ -3349,7 +3351,7 @@ msgid "Cut (Ctrl+X)"
 msgstr "Ausschneiden (Ctrl+X)"
 
 msgid "Switch numerical formating"
-msgstr ""
+msgstr "Numerische formatierung wechseln"
 
 msgid "Add Resource"
 msgstr "Ressource hinzfügen"
@@ -3364,13 +3366,13 @@ msgid "Select &All\tCtrl+A"
 msgstr "&Alle selektieren\tCtrl+A"
 
 msgid "Folder \"$1\" (ID = \"$2\") is invalid."
-msgstr ""
+msgstr "Ordner \"$1\" (ID = \"$2\") ist ungültig."
 
 msgid "is invalid"
 msgstr "ist ungültig"
 
 msgid "Change"
-msgstr ""
+msgstr "Ändere"
 
 msgid "Edit Object content"
 msgstr "Objektinhalt editieren"
@@ -3379,7 +3381,7 @@ msgid "Editor"
 msgstr "Editor"
 
 msgid "Calling convention:"
-msgstr ""
+msgstr "Aufruf-Konventionen:"
 
 msgid "Turn on/off physics"
 msgstr "Physik an/abstellen"
@@ -3391,7 +3393,7 @@ msgid "Create a new dynamic library definition"
 msgstr ""
 
 msgid "Display an expanded view of objects"
-msgstr ""
+msgstr "Aufgeklappte Ansicht der Objekte anzeigen"
 
 msgid "Root Feature"
 msgstr ""
@@ -3400,7 +3402,7 @@ msgid "Force right angles"
 msgstr "Rechte Winkel erzwingen"
 
 msgid "Open user defined metric file in external editor"
-msgstr ""
+msgstr "Benutzerdefinierte Metrikdatei in externem Editor öffnen"
 
 msgid "External Edition"
 msgstr ""
@@ -3415,10 +3417,10 @@ msgid "Multithreaded"
 msgstr ""
 
 msgid "Post Compilation Tasks"
-msgstr ""
+msgstr "Aufgaben nach der Kompilierung"
 
 msgid "Add selected metric"
-msgstr ""
+msgstr "Gewählte Metrik hinzufügen"
 
 msgid "Function"
 msgstr "Funktion"
@@ -3427,7 +3429,7 @@ msgid "Add Cluster"
 msgstr "Cluster hinzufügen"
 
 msgid "Find &Previous"
-msgstr ""
+msgstr "&Vorherige finden"
 
 msgid "History Tool"
 msgstr ""
@@ -3490,7 +3492,7 @@ msgid "Delete selected row"
 msgstr "Gewählte Zeile löschen"
 
 msgid "Reload"
-msgstr ""
+msgstr "Neu laden"
 
 msgid "Select Feature"
 msgstr "Feature wählen"
@@ -3514,7 +3516,7 @@ msgid "attributes"
 msgstr "Attribute"
 
 msgid "Classes visible for external code."
-msgstr ""
+msgstr "Klassen sichtbar für externen Code."
 
 msgid "Move selected row down"
 msgstr "Gewählte Zeile nach unten verschieben"
@@ -3587,7 +3589,7 @@ msgid "Selected metric"
 msgstr "Gewählte Metrik"
 
 msgid "&Assignees"
-msgstr ""
+msgstr "&Zugewiesene"
 
 msgid "New Editor"
 msgstr "Neuer Editor"
@@ -3622,10 +3624,10 @@ msgid "In Class"
 msgstr "In Klasse"
 
 msgid "Edit condition"
-msgstr ""
+msgstr "Kondition editieren"
 
 msgid "$1  in cluster $2  (not in system)  located in $3"
-msgstr ""
+msgstr "$1 in Cluster $2 (nicht im System) aufgefunden in $3"
 
 msgid "Hide Assigner Command Name"
 msgstr ""
@@ -3677,7 +3679,7 @@ msgid ""
 msgstr ""
 
 msgid "Press ESC to wipe out"
-msgstr ""
+msgstr "ESC drücken zum auslöschen"
 
 msgid "Copy call stack to clipboard"
 msgstr ""
@@ -3773,19 +3775,19 @@ msgid "New Project"
 msgstr "Neues Projekt"
 
 msgid "Once routines"
-msgstr ""
+msgstr "Once Routinen"
 
 msgid "Step out of a routine"
-msgstr ""
+msgstr "Aus Routine heraus"
 
 msgid "assigners"
-msgstr ""
+msgstr "Zuweiser"
 
 msgid "Warn about incompatible types in equality comparisons (VWEQ)?"
 msgstr ""
 
 msgid "Toggle visibility of feature alias name"
-msgstr ""
+msgstr "Sichtbarkeit von Aliasnamen von Featuren umschalten"
 
 msgid "Function Time"
 msgstr "Funktionszeit"
@@ -3794,7 +3796,7 @@ msgid "&Clusters"
 msgstr "&Clusters"
 
 msgid "Put Right Angles"
-msgstr ""
+msgstr "Rechte Winkel setzen"
 
 msgid "Show UML"
 msgstr "UML anzeigen"
@@ -3830,7 +3832,7 @@ msgid "Raise &Unsaved Windows"
 msgstr "Ungespeicherte Fenster hervorheben"
 
 msgid "Are sub folders recursively included?"
-msgstr ""
+msgstr "Sind Unterordner rekursiv eingebunden?"
 
 msgid "Value \"$1\" of attribute \"regular_expression\" is invalid. A boolean is expected."
 msgstr "Wert \"$1\" des Attributs \"regular_expression\" ist ungültig. Ein boolscher Wert wird erwartet."
@@ -3839,7 +3841,7 @@ msgid "Include Class '$1'"
 msgstr "Klasse '$1' einbinden"
 
 msgid "$1 of feature $2 of class"
-msgstr ""
+msgstr "$1 von feature $2 von Klasse"
 
 msgid "Overriding"
 msgstr ""
@@ -3851,7 +3853,7 @@ msgid "Re&do\tCtrl+Y"
 msgstr ""
 
 msgid "Cut"
-msgstr ""
+msgstr "Ausschneiden"
 
 msgid "Close $1"
 msgstr "Schliesse $1"
@@ -3866,7 +3868,7 @@ msgid "Supplier class"
 msgstr ""
 
 msgid "Should the generated binary be IL verifiable?"
-msgstr ""
+msgstr "Soll das generierte Programm IL-verifizierbar sein?"
 
 msgid "Metric name is missing in metric archive node."
 msgstr "Metrikname fehlt im Archivknoten der Metrik"
@@ -3875,19 +3877,19 @@ msgid "Display name of all called features during execution?"
 msgstr "Sollen Namen der aufgerufenen Features während der Ausführung angezeigt werden?"
 
 msgid "Apply Application Optimizations"
-msgstr ""
+msgstr "Applikationsoptimierungen anwenden"
 
 msgid "Change project settings, right click to open external editor"
 msgstr "Projekteinstellungen ändern. Rechtsklick um externen Editor zu öffnen"
 
 msgid "No views are available for this cluster"
-msgstr ""
+msgstr "Kein Ansichten verfügbar für dieses Cluster"
 
 msgid "Disable all breakpoints"
 msgstr "Alle Haltepunkte deaktivieren"
 
 msgid "Root"
-msgstr ""
+msgstr "Wurzel"
 
 msgid "Metric name"
 msgstr "Metrikname"
@@ -3905,7 +3907,7 @@ msgid "Open a new editor window"
 msgstr "Neues Editorfenster öffnen"
 
 msgid "Should generated assemblies be marked as CLS compliant?"
-msgstr ""
+msgstr "Sollen die erstellten Assemblies als CLS kompatibel markiert werden?"
 
 msgid "Ad&vanced"
 msgstr "&Fortgeschritten"
@@ -3914,7 +3916,7 @@ msgid "UnHandled"
 msgstr ""
 
 msgid "Should names of folders in recursive clusters be used as namespaces?"
-msgstr ""
+msgstr "Sollen die Namen von Ordnern in rekursiven Clustern als Namespaces verwendet werden?"
 
 msgid "&How to's"
 msgstr ""
@@ -3923,13 +3925,13 @@ msgid "Cluster hierarchy"
 msgstr "Clusterhierarchie"
 
 msgid "Original value is \"$1=$2\""
-msgstr ""
+msgstr "Ursprünglicher Wert ist \"$1=$2\""
 
 msgid "Options Unknown Class"
 msgstr ""
 
 msgid "Assembly Version"
-msgstr ""
+msgstr "Assembly Version"
 
 msgid "&Add..."
 msgstr "&Hinzufügen..."
@@ -3962,6 +3964,9 @@ msgid ""
 "This will reset ALL preferences to their default values\n"
 " and all previous settings will be overwritten.  Are you sure?"
 msgstr ""
+"Dies setzt ALLE Einstellungen auf den Standardwert zurück.\n"
+"Benutzerdefinierte Einstellungen werden überschrieben.\n"
+"Trotzdem fortfahren?"
 
 msgid "Command has exited with code $1"
 msgstr "Befehl beendet mit Code $1"
@@ -3986,7 +3991,7 @@ msgid "IL Verifiable"
 msgstr "IL Verifizierbar"
 
 msgid "Type of binary to generate."
-msgstr ""
+msgstr "Typ der Binärdatei die erstellt wird."
 
 msgid "Query"
 msgstr ""
@@ -4004,16 +4009,16 @@ msgid "Save"
 msgstr "Speichern"
 
 msgid "Click here to add a new expression"
-msgstr ""
+msgstr "Hier klicken um neuen Ausdruck hinzuzufügen"
 
 msgid "System properties"
-msgstr ""
+msgstr "Systemeigenschaften"
 
 msgid "&Compile"
 msgstr "&Kompilieren"
 
 msgid "Warn about usage of obsolete features?"
-msgstr ""
+msgstr "Warnung ausgeben für den gebrauch überholter Features?"
 
 msgid "The class $1 is not writable."
 msgstr "Die Klasse $1 ist schreibgeschützt."
@@ -4037,18 +4042,20 @@ msgid "Archive value is missing."
 msgstr "Archivwert fehlt."
 
 msgid "Externals"
-msgstr ""
+msgstr "Externe Objekte"
 
 msgid "Double click to see Exception or Ctrl-C to copy to clipboard"
-msgstr ""
+msgstr "Doppelclick um Fehler zu sehen oder Ctrl-C um zur Zwischenablage zu kopieren"
 
 msgid "Renaming of classes in this group."
-msgstr ""
+msgstr "Umbenennen der Klassen dieser Gruppe."
 
 msgid ""
 "\n"
 "   + compilation = melted"
 msgstr ""
+"\n"
+"   + kompilierung = geschmolzen"
 
 msgid ""
 "Please drop a class or a cluster on this button \n"
@@ -4063,96 +4070,100 @@ msgid ""
 "The project location is the place where compilation\n"
 "files will be generated by the compiler"
 msgstr ""
+"Der Projektort ist der Ort wo die vom Compiler\n"
+"generierten Datein gelagert werden"
 
 msgid "Should the generated executable use a shared library of the runtime?"
 msgstr ""
 
 msgid "Pre Compilation"
-msgstr ""
+msgstr "Vor-Kompilierung"
 
 msgid "Local"
-msgstr ""
+msgstr "Lokale Variable"
 
 msgid "Create a new class"
-msgstr ""
+msgstr "Neue Klasse erstellen"
 
 msgid "Call Stack"
-msgstr ""
+msgstr "Aufrufstack"
 
 msgid "Executable is up-to-date"
-msgstr ""
+msgstr "Ausführbare Datei ist auf dem neuesten Stand"
 
 msgid "Breakpoint reached"
 msgstr "Haltepunkt erreicht."
 
 msgid "Include Library '$1'"
-msgstr ""
+msgstr "Bibliothek '$1' einbinden"
 
 msgid "Raise all unsaved windows"
-msgstr ""
+msgstr "Alle ungespeicherten Fenster hervorheben"
 
 msgid "Edit"
-msgstr ""
+msgstr "Editieren"
 
 msgid "Warn about usage of old verbatim strings?"
-msgstr ""
+msgstr "Warnung ausgeben für den Gebrauch von alten 'verbatim' Zeichenketten?"
 
 msgid ""
 "When loading user-defined metrics:\n"
 "$1\n"
 "User-defined metrics not loaded."
 msgstr ""
+"Beim Laden benutzerdefinierter Metriken:n$1\n"
+"Benutzerdefinierte Metriken nicht geladen."
 
 msgid "Undefined"
-msgstr ""
+msgstr "Undefiniert"
 
 msgid "library"
-msgstr ""
+msgstr "Bibliothek"
 
 msgid "Conte&xt"
-msgstr ""
+msgstr "Konte&xt"
 
 msgid "Value \"$1\" of attribute \"time\" is invalid."
-msgstr ""
+msgstr "Wert \"$1\" des Attributs \"time\" ist ungültig."
 
 msgid "Variable"
-msgstr ""
+msgstr "Variable"
 
 msgid "No command is running"
 msgstr ""
 
 msgid "Metrics"
-msgstr ""
+msgstr "Metriken"
 
 msgid "$1(not an Eiffel class file)   located in $2"
-msgstr ""
+msgstr "$1 (keine Datei einer Eiffelklasse) aufgefunden in $2"
 
 msgid "Add Target"
-msgstr ""
+msgstr "Ziel hinzufügen"
 
 msgid "No description available for this preference."
-msgstr ""
+msgstr "Für diese Einstellung gibt es keine Beschreibung."
 
 msgid "Interrupted because Eiffel complication starts"
-msgstr ""
+msgstr "Unterbrochen da Eiffel-Kompilation startet"
 
 msgid "E&xport XMI..."
-msgstr ""
+msgstr "E&xport XMI..."
 
 msgid "Erase Midpoint"
-msgstr ""
+msgstr "Zwischenpunkt löschen"
 
 msgid "Select reference archive (URL acceptable):"
-msgstr ""
+msgstr "Referenzarchiv wählen (URL aktzeptabel):"
 
 msgid "Background Finalized C Compilation Launched"
-msgstr ""
+msgstr "Optimierte C-Kompilation im Hintergrund gestartet"
 
 msgid "Add feature"
-msgstr ""
+msgstr "Feature hinzufügen"
 
 msgid "Metric with name"
-msgstr ""
+msgstr "Metrik mit Namen"
 
 msgid ""
 "Please drop a class or a cluster with an\n"
@@ -4162,16 +4173,16 @@ msgid ""
 msgstr ""
 
 msgid "User-defined metrics backup finished."
-msgstr ""
+msgstr "Sicherheitskopie der benutzerdefinierten Metriken beendet."
 
 msgid " disabled"
-msgstr ""
+msgstr "deaktiviert"
 
 msgid "&Tools"
-msgstr ""
+msgstr "&Werkzeuge"
 
 msgid "Console Application"
-msgstr ""
+msgstr "Konsolenapplikation"
 
 msgid "Undo (Ctrl+Z)"
 msgstr ""
@@ -4186,10 +4197,10 @@ msgid "Select a fully compiled feature to have information about it."
 msgstr ""
 
 msgid "Select the view you want to use"
-msgstr ""
+msgstr "Ansicht wählen die verwendet werden soll"
 
 msgid "Add ->"
-msgstr ""
+msgstr "Hinzufügen ->"
 
 msgid "Unlin&k Context Tool"
 msgstr ""
@@ -4198,37 +4209,37 @@ msgid "Add Make"
 msgstr ""
 
 msgid "Should not be read"
-msgstr ""
+msgstr "Sollte nicht gelesen werden"
 
 msgid "Are debug clauses globally enabled?"
-msgstr ""
+msgstr "Sind Debug-Klauseln global aktiviert?"
 
 msgid "OBJECT NAME: "
-msgstr ""
+msgstr "OBJEKT NAME:"
 
 msgid "Specify arguments"
-msgstr ""
+msgstr "Argumente angeben"
 
 msgid "Replace"
-msgstr ""
+msgstr "Ersetzen"
 
 msgid "Print"
-msgstr ""
+msgstr "Drucken"
 
 msgid "Reload metrics"
-msgstr ""
+msgstr "Metrick neu laden"
 
 msgid "Favorites"
-msgstr ""
+msgstr "Favoriten"
 
 msgid "Profile Query Window"
 msgstr ""
 
 msgid "exported features"
-msgstr ""
+msgstr "exportierte Features"
 
 msgid "Declared in class"
-msgstr ""
+msgstr "In Klasse deklariert"
 
 msgid "Other"
 msgstr ""
@@ -4237,118 +4248,118 @@ msgid "Too many crierion section specified. Only one criterion section is expect
 msgstr ""
 
 msgid "Add &Precompile"
-msgstr ""
+msgstr "&Precompile hinzufügen"
 
 msgid "wrap"
 msgstr ""
 
 msgid "Unit name \"$1\" is invalid."
-msgstr ""
+msgstr "Einheitname \"$1\" is ungültig."
 
 msgid "Library"
-msgstr ""
+msgstr "Bibliothek"
 
 msgid "Lin&k Context Tool"
 msgstr ""
 
 msgid "Tree View"
-msgstr ""
+msgstr "Baumansicht"
 
 msgid "Background C Compilation Launch Failed"
-msgstr ""
+msgstr "C-Kompilation fehlgeschlagen"
 
 msgid "Remove an object from the tree"
-msgstr ""
+msgstr "Ein Objekt vom Baum entfernen"
 
 msgid "Include all classes of cluster"
-msgstr ""
+msgstr "Alle Klassen des Clusters einbeziehen"
 
 msgid "Switch to Flat View"
-msgstr ""
+msgstr "Zur flachen Ansicht wechseln"
 
 msgid "Text not editable."
-msgstr ""
+msgstr "Text nicht editierbar."
 
 msgid "Add a new feature to this dynamic library definition"
-msgstr ""
+msgstr "Neues Feature zu dieser Definition der dynamischen Bibliothek hinzufügen"
 
 msgid "New Favorite Class..."
-msgstr ""
+msgstr "Neue Favoriten-Klasse..."
 
 msgid "Fav&orites"
-msgstr ""
+msgstr "Fav&oriten"
 
 msgid "Same UUID"
-msgstr ""
+msgstr "Dieselbe UUID"
 
 msgid "Evaluating..."
-msgstr ""
+msgstr "Auswerten..."
 
 msgid "Is this system read only per default if it is used as a library?"
-msgstr ""
+msgstr "Ist dieses System standardmässig schreibgeschützt wenn es als Bibliothek verwendet wird?"
 
 msgid "Inlining"
 msgstr ""
 
 msgid "Found"
-msgstr ""
+msgstr "Gefunden"
 
 msgid "Error with $1 line $2"
-msgstr ""
+msgstr "Error mit $1 in Zeile $2"
 
 msgid "A&ssigners"
-msgstr ""
+msgstr "Zuwei&ser"
 
 msgid "Module"
-msgstr ""
+msgstr "Modul"
 
 msgid "Backup user-defined metrics"
-msgstr ""
+msgstr "Sicherheitskopie benutzerdefinierter Metriken erstellen"
 
 msgid "Value \"$1\" of attribute \"value\" is invalid. A real number is expected."
-msgstr ""
+msgstr "Wert \"$1\" von Attribut \"value\" is ungültig. Eine reele Zahl wird erwartet."
 
 msgid "Show inheritance links"
-msgstr ""
+msgstr "Vererbungsverbindung anzeigen"
 
 msgid "Minimize all windows"
-msgstr ""
+msgstr "Alle Fenster minimieren"
 
 msgid "Select Class"
-msgstr ""
+msgstr "Klasse wählen"
 
 msgid "Feature is not written in selected class."
-msgstr ""
+msgstr "Feature ist nicht in der gewählten Klasse geschrieben."
 
 msgid "Feature Properties"
-msgstr ""
+msgstr "Feature Eigenschaften"
 
 msgid "Type input data here"
-msgstr ""
+msgstr "Eingabedaten hier eingeben"
 
 msgid "Only compiled classes"
-msgstr ""
+msgstr "Nur kompilierte Klassen"
 
 msgid "There is already a feature with this name in class $1. This would lead to a conflict."
-msgstr ""
+msgstr "Ein Feature mit diesem Namen existiert bereits in Klasse $1. Dies würde zu einem Konflikt führen."
 
 msgid "Compile F&inalized C Code"
-msgstr ""
+msgstr "Optimierten C-Code kompilieren"
 
 msgid "Step Out"
-msgstr ""
+msgstr "Hinaus"
 
 msgid "File rule $1"
-msgstr ""
+msgstr "Dateregel $1"
 
 msgid "Show physics settings dialog"
-msgstr ""
+msgstr "Zeige Dialog für Physikeigenschaften"
 
 msgid "Put Handle Right"
 msgstr ""
 
 msgid "Argument"
-msgstr ""
+msgstr "Argument"
 
 msgid "<= compiler version <= "
 msgstr ""
@@ -4363,7 +4374,7 @@ msgid "Show cluster legend"
 msgstr "Cluster Legende anzeigen"
 
 msgid "creators"
-msgstr ""
+msgstr "Erzeuger"
 
 msgid "Remove a class or a cluster from the system"
 msgstr "Klasse oder Cluster vom System entfernen"
@@ -4378,7 +4389,7 @@ msgid "Project &Settings..."
 msgstr "Projekt &Einstellungen..."
 
 msgid "Retry"
-msgstr ""
+msgstr "Neu versuchen"
 
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -4390,10 +4401,10 @@ msgid "Click Back if you can correct the problem or Click Abort."
 msgstr ""
 
 msgid "Discard Assertions"
-msgstr ""
+msgstr "Zusicherungen verwerfen"
 
 msgid "Include Cluster '$1'"
-msgstr ""
+msgstr "Cluster '$1' einbinden"
 
 msgid "Toggle visibility of assigner command name"
 msgstr ""
@@ -4411,7 +4422,7 @@ msgid "&Enable This Breakpoint"
 msgstr "Diesen Haltepunkt &aktivieren"
 
 msgid "Start With Arguments"
-msgstr ""
+msgstr "Mit Argumenten starten"
 
 msgid "Profile"
 msgstr "Profil"
@@ -4423,7 +4434,7 @@ msgid "deferred"
 msgstr ""
 
 msgid "Enable High Quality"
-msgstr ""
+msgstr "Hohe Qualität aktivieren"
 
 msgid "Resource"
 msgstr "Ressource"
@@ -4432,7 +4443,7 @@ msgid "Confirmation"
 msgstr "Bestätigung"
 
 msgid "Indent selected row using an \"AND\" criterion"
-msgstr ""
+msgstr "Gewählte Zeile mit einem \"UND\" Kriterium einrücken"
 
 msgid "Background Workbench C Compilation Failed"
 msgstr "C-Kompilierung im Hintergrund fehlgeschlagen"
@@ -4441,10 +4452,10 @@ msgid "Invalid tag/tag position \"$1\"."
 msgstr ""
 
 msgid "Reset"
-msgstr ""
+msgstr "Zurücksetzen"
 
 msgid "Synchronize context"
-msgstr ""
+msgstr "Kontext synchronisieren"
 
 msgid "Product"
 msgstr "Produkt"
@@ -4456,19 +4467,19 @@ msgid "type"
 msgstr "typ"
 
 msgid "Watch Tool"
-msgstr ""
+msgstr "Beobachtungswerkzeug"
 
 msgid "Define quick metric"
-msgstr ""
+msgstr "Schnelle Metrik definieren"
 
 msgid "Exceptions"
-msgstr ""
+msgstr "Fehler"
 
 msgid "Hide supplier links"
 msgstr ""
 
 msgid "Root class: "
-msgstr ""
+msgstr "Wurzelklasse:"
 
 msgid "Compilation"
 msgstr "Kompilierung"
@@ -4477,7 +4488,7 @@ msgid "Create new inheritance links"
 msgstr "Neue Vererbungsverbindung erstellen"
 
 msgid "Select current metric archive file"
-msgstr ""
+msgstr "Wähle aktulle Metrikarchiv-Datei"
 
 msgid ""
 "Using this wizard you can analyze the result of a profiling.\n"
@@ -4505,19 +4516,19 @@ msgid "Too many crieria is specified in \"criterion\" section. Only one is expec
 msgstr ""
 
 msgid "Cluster diagrams (may take a long time!)"
-msgstr ""
+msgstr "Clusterdiagramme (Kann eine lange Zeit beanspruchen!)"
 
 msgid "Force inheritance on child elements."
 msgstr ""
 
 msgid "external features"
-msgstr ""
+msgstr "externe Features"
 
 msgid "Add current application target scope"
 msgstr ""
 
 msgid "Information cannot be retrieved."
-msgstr ""
+msgstr "Information kann nicht abgerufen werden."
 
 msgid "U&ncomment\tCtrl+Shift+K"
 msgstr ""
@@ -4539,7 +4550,7 @@ msgid "Change Class Color"
 msgstr "Klassenfarbe wechseln"
 
 msgid "Numerator metric \"$1\" is not defined."
-msgstr ""
+msgstr "Zählermetrik  \"$1\" nicht definiert."
 
 msgid "Load"
 msgstr "Laden"
@@ -4548,6 +4559,8 @@ msgid ""
 "Current text is being loaded. It is therefore\n"
 "not editable nor pickable."
 msgstr ""
+"Aktueller Text wird geladen. Deswegen ist er\n"
+"nicht editierbar oder selektierbar."
 
 msgid "Trace"
 msgstr ""
@@ -4571,7 +4584,7 @@ msgid "Enforce unique class names"
 msgstr "Eindeutige Klassennamen erzwingen"
 
 msgid "Re&factoring Bar"
-msgstr ""
+msgstr "Re&factoring Leiste"
 
 msgid "Attribute \"case_sensitive\" is missing."
 msgstr "Attribut \"case_sensitive\" fehlt."
@@ -4580,7 +4593,7 @@ msgid "Choose a Folder Name"
 msgstr "Ordnername wählen"
 
 msgid "Display result in percentage? (Only applicable for ratio metrics)"
-msgstr ""
+msgstr "Resultat in Prozent angeben? (Nur für Quotientenmetriken)"
 
 msgid ""
 "An external command is running now. \n"
@@ -4602,7 +4615,7 @@ msgid "Relations"
 msgstr "Beziehungen"
 
 msgid "Input domain"
-msgstr ""
+msgstr "Eingabedomäne"
 
 msgid ""
 "In linear metric, make sure that every variable metric doesn't involve \n"
@@ -4621,10 +4634,10 @@ msgid "Add class"
 msgstr "Klasse hinzufügen"
 
 msgid "Archive comparison result:"
-msgstr ""
+msgstr "Resultat des Archivvergleichs:"
 
 msgid "Add new task"
-msgstr ""
+msgstr "Neue Aufgabe hinzufügen"
 
 msgid "Target used if system is used as a library."
 msgstr ""
@@ -4734,13 +4747,13 @@ msgid "Recompile override clusters"
 msgstr ""
 
 msgid "No metric archive is selected."
-msgstr ""
+msgstr "Kein Metrikarchiv gewählt."
 
 msgid "Are you sure you want to quit $1?"
 msgstr "$1 beenden?"
 
 msgid "Evaluate check assertions?"
-msgstr ""
+msgstr "'check' auswerten?"
 
 msgid "Open Watch tool menu"
 msgstr ""
@@ -4749,22 +4762,22 @@ msgid "Show class location?"
 msgstr ""
 
 msgid "Do not ask again, and always discard assertions when finalizing"
-msgstr ""
+msgstr "Nicht nochmals fragen und Zusicherungen immer verwerfen wenn optimierter Code erstellt wird."
 
 msgid "Metric(s) imported."
-msgstr ""
+msgstr "Metrik(en) importiert."
 
 msgid "Pick and drop items like group/class/feature here"
 msgstr ""
 
 msgid "Reference value"
-msgstr ""
+msgstr "Referenzwert"
 
 msgid "Background Finalized C Compilation Succeeded"
 msgstr "Optimierte C-Kompilierung im Hintergrund erfolgreich"
 
 msgid "Cla&ss Views"
-msgstr ""
+msgstr "Kla&ssen-Ansichten"
 
 msgid "Edit Project"
 msgstr "Projekt editieren"
@@ -4791,10 +4804,10 @@ msgid "Filter: "
 msgstr ""
 
 msgid "$1 from $2"
-msgstr ""
+msgstr "$1 von $2"
 
 msgid "Add Post Compilation Task"
-msgstr ""
+msgstr "Aufgabe nach der Kompilierung hinzufügen"
 
 msgid "Text was saved"
 msgstr "Text wurde gespeichert."
@@ -4846,7 +4859,7 @@ msgid "Searching selected file..."
 msgstr "Suche augewählte Datei..."
 
 msgid "Conditions for this external."
-msgstr ""
+msgstr "Konditionen für dieses externe Objekt."
 
 msgid "Do not ask again, and always build precompile"
 msgstr "Nicht nochmals fragen und immer Precompile erstellen"
@@ -4980,10 +4993,10 @@ msgid ""
 msgstr ""
 
 msgid "Post Compilation"
-msgstr ""
+msgstr "Nachkompilierung"
 
 msgid "Extracting $1 of class $2..."
-msgstr ""
+msgstr "Extrahiere $1 von Klasse $2..."
 
 msgid "Do not ask me again and always remove selected metric"
 msgstr "Nicht nochmals fragen und gewählte Metrik immer entfernen"
@@ -5283,25 +5296,25 @@ msgid "Font for feature names on UML client supplier links."
 msgstr ""
 
 msgid "Color for UML cluster line."
-msgstr ""
+msgstr "Farbe für UML Clusterlinie."
 
 msgid "Iconified UML Cluster fill color."
 msgstr ""
 
 msgid "UML cluster name area fill color."
-msgstr ""
+msgstr "Füllfarbe für Bereich der UML Clusternamen"
 
 msgid "UML cluster name color."
-msgstr ""
+msgstr "Farbe für UML Clusternamen."
 
 msgid "UML cluster name font."
-msgstr ""
+msgstr "Font für UML Clusternamen."
 
 msgid "Line width for UML inheritance links."
-msgstr ""
+msgstr "Linienbreite für UML Vererbungsbeziehungen."
 
 msgid "Color for UML inheritance links."
-msgstr ""
+msgstr "Farbe für UML Vererbungsbeziehungen."
 
 msgid "Show ancestors of a class up to a level of preference value."
 msgstr ""

@@ -170,7 +170,7 @@ feature {NONE} -- Preference Strings
 	display_percentage_for_ratio_string: STRING is "tools.metric_tool.display_percentage_for_ratio"
 	automatic_go_to_result_panel_string: STRING is "tools.metric_tool.automatic_go_to_result_panel"
 	unit_order_string: STRING is "tools.metric_tool.unit_order"
-	tree_view_for_history_string: STRING is "tools.metric_tool.tree_view_for_metrc_history"
+	tree_view_for_history_string: STRING is "tools.metric_tool.tree_view_for_metric_history"
 	flat_view_sorting_order_string: STRING is "tools.metric_tool.history_flat_view_sorting_order"
 	tree_view_sorting_order_string: STRING is "tools.metric_tool.history_tree_view_sorting_order"
 	hide_old_item_string: STRING is "tools.metric_tool.hide_old_archive"
@@ -190,7 +190,8 @@ feature {NONE} -- Implementation
 			filter_invisible_result_preference := l_manager.new_boolean_preference_value (l_manager, filter_invisible_result_string, False)
 			display_percentage_for_ratio_preference := l_manager.new_boolean_preference_value (l_manager, display_percentage_for_ratio_string, True)
 			automatic_go_to_result_panel_preference := l_manager.new_boolean_preference_value (l_manager, automatic_go_to_result_panel_string, True)
-			unit_order_preference := l_manager.new_string_preference_value (l_manager, unit_order_string, initial_unit_order)
+			unit_order_preference := l_manager.new_string_preference_value (l_manager, unit_order_string, "")
+			unit_order_preference.set_value_from_string (initial_unit_order)
 			criterion_completion_list_width_preference.set_hidden (True)
 			criterion_completion_list_height_preference.set_hidden (True)
 			tree_view_for_history_preference := l_manager.new_boolean_preference_value (l_manager, tree_view_for_history_string, False)

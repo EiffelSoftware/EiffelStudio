@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			regular_expression_button.set_tooltip (interface_names.f_use_regular_expression_question)
 			advanced_button.set_tooltip (interface_names.f_advanced_search)
 			close_button.set_tooltip (interface_names.f_close)
+			l_ev_label_1.set_text (interface_names.t_find)
 
 			next_button.set_pixmap (icon_pixmaps.general_arrow_down_icon)
 			previous_button.set_pixmap (icon_pixmaps.general_arrow_up_icon)

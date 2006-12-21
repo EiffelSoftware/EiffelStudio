@@ -5,15 +5,11 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_BOOLEAN [G -> DATABASE create default_create end]
 
 inherit
-
 	DB_TYPE
-		redefine
-			eiffel_name
-		end
 
 	HANDLE_SPEC [G]
 
@@ -24,19 +20,11 @@ feature -- Status report
 		do
 			Result := db_spec.sql_name_boolean
 		end
-	
-	eiffel_name: STRING is
-			-- Eiffel type name for boolean
-		once
-			Result := "BOOLEAN"
-		ensure then
-			textual_outlook: Result.is_equal ("BOOLEAN")
-		end
 
-	eiffel_ref: BOOLEAN_REF is
+	eiffel_ref: ANY is
 			-- Shared boolean reference
 		once
-			create Result
+			Result := False
 		end
 
 indexing

@@ -5,15 +5,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_INTEGER [G -> DATABASE create default_create end]
 
 inherit
-
 	DB_TYPE
-		redefine
-			eiffel_name
-		end
 
 	HANDLE_SPEC [G]
 
@@ -24,19 +20,11 @@ feature -- Status report
 		do
 			Result := db_spec.sql_name_integer
 		end
-	
-	eiffel_name: STRING is
-			-- Eiffel type name for integer
-		once
-			Result := "INTEGER"
-		ensure then
-			Result.is_equal ("INTEGER")
-		end
 
-	eiffel_ref: INTEGER_REF is
+	eiffel_ref: ANY is
 			-- Shared integer reference
 		once
-			create Result
+			Result := {INTEGER_32} 0
 		end
 
 indexing

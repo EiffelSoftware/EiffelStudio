@@ -18,7 +18,7 @@ inherit
 	DB_EXEC_USE
 
 	EXT_INTERNAL
-		export 
+		export
 			{NONE} all
 		end
 
@@ -40,8 +40,10 @@ feature -- Initialization
 		do
 			create ht.make (name_table_size)
 			create ht_order.make (name_table_size)
+			ht_order.compare_objects
 			implementation := handle.database.db_selection
 			implementation.set_ht (ht)
+			implementation.set_ht_order (ht_order)
 		end
 
 feature -- Access
@@ -69,7 +71,7 @@ feature -- Status report
 			Result := not is_ok or else exhausted or else
 					(stop_condition /= Void and then stop_condition.found)
 		ensure
-			Result implies 
+			Result implies
 				(not is_ok or else exhausted or else
 				(stop_condition /= Void and then stop_condition.found))
 		end
@@ -81,7 +83,7 @@ feature -- Status report
 	is_allocatable: BOOLEAN is
 			-- Can `Current' be added to other concurrently opened selections?
 		do
-			Result := implementation.descriptor_available	
+			Result := implementation.descriptor_available
 		end
 
 	after: BOOLEAN is
@@ -92,7 +94,7 @@ feature -- Status report
 			Result := container.after
 		end
 
-	error_m: STRING is 
+	error_m: STRING is
 			-- Error message.
 		Obsolete
 			"Please use `{DB_CONTROL}.error_message'."
@@ -132,7 +134,7 @@ feature -- Status setting
 		end
 
 	object_convert (ref: ANY) is
-			-- Set `object' with `reference', reference to an Eiffel 
+			-- Set `object' with `reference', reference to an Eiffel
 			-- object to be filled in with `cursor' field values.
 			-- Use this before `load_result' for performance.
 		require

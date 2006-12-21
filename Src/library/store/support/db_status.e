@@ -73,14 +73,9 @@ feature -- Status setting
 			is_connected_reset: is_connected = new_value
 		end
 
-	set (new_value: INTEGER) is
-			-- Should be removed!
-		do
-		end
-
 	reset is
 			-- Reset database error status.
-			
+
 		do
 			implementation.reset
 			error_code_stored := 0
@@ -88,8 +83,8 @@ feature -- Status setting
 			warning_message_stored := ""
 		ensure
 			no_error: error_code_stored = 0
-			no_message_error: error_message_stored.is_equal ("") 
-			no_message_warning: warning_message_stored.is_equal ("") 
+			no_message_error: error_message_stored.is_equal ("")
+			no_message_warning: warning_message_stored.is_equal ("")
 		end
 
 feature {NONE} -- Implementation

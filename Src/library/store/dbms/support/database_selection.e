@@ -135,16 +135,27 @@ feature -- Status setting
 			end
 		end
 
-	set_ht (table: HASH_TABLE [ANY, STRING]) is
+	set_ht (table: like ht) is
 			-- Obtain bind variables table.
 			-- Set `ht' with `table'.
-		require else
+		require
 			table_exists: table /= Void
 		do
 			ht := table
-		ensure then
+		ensure
 			ht = table
 		end
+
+	set_ht_order (table: like ht_order) is
+			--
+		require
+			table_not_void: table /= Void
+		do
+			ht_order := table
+		ensure
+			ht_order_set: ht_order = table
+		end
+
 
 feature -- Status report
 

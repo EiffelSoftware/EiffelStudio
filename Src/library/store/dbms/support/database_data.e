@@ -93,7 +93,6 @@ feature -- Element change
 					map_table.put (index, ind)
 				else
 					db_spec.update_map_table_error (handle, map_table, ind)
-					ind := count
 				end
 				ind := ind + 1
 			end

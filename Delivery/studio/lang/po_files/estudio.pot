@@ -340,9 +340,6 @@ msgstr ""
 msgid "Exception object"
 msgstr ""
 
-msgid "Exception Handling"
-msgstr ""
-
 msgid "External editor not defined"
 msgstr ""
 
@@ -2385,6 +2382,9 @@ msgid "Forward"
 msgstr ""
 
 msgid "C Output"
+msgstr ""
+
+msgid "Syriac (Syria)"
 msgstr ""
 
 msgid "Background Finalized C Compilation Launch Failed"
@@ -4762,6 +4762,9 @@ msgstr ""
 msgid "Maximum Call Stack Depth"
 msgstr ""
 
+msgid "Grid column layout"
+msgstr ""
+
 msgid "Swedish (Finland)"
 msgstr ""
 
@@ -4830,7 +4833,7 @@ msgstr ""
 msgid "CLS Compliant"
 msgstr ""
 
-msgid "Syriac (Syria)"
+msgid "Exception Handling"
 msgstr ""
 
 msgid "Disable assertion checking"
@@ -6432,6 +6435,12 @@ msgstr ""
 msgid "Show all text in project toolbar"
 msgstr ""
 
+msgid "Layout of watch tools."
+msgstr ""
+
+msgid "Watch tools layout"
+msgstr ""
+
 msgid "Background Color for Diagram Tool"
 msgstr ""
 
@@ -6782,6 +6791,12 @@ msgstr ""
 msgid "Formatters history size"
 msgstr ""
 
+msgid "Default dependency formatter that should be popped up automatically."
+msgstr ""
+
+msgid "Default dependency formatter index"
+msgstr ""
+
 msgid "Show Detailed Result when computation done."
 msgstr ""
 
@@ -6789,6 +6804,93 @@ msgid "Metric tool"
 msgstr ""
 
 msgid "Automatic go to result panel"
+msgstr ""
+
+msgid "Is percentage for ratio metric displayed?"
+msgstr ""
+
+msgid "Display percentage for ratio"
+msgstr ""
+
+msgid "Is invisible result item filtered?"
+msgstr ""
+
+msgid "Filter invisible result"
+msgstr ""
+
+msgid "Should old archive items be hidden?"
+msgstr ""
+
+msgid "Hide old archive"
+msgstr ""
+
+msgid "Is detailed result kept when recalculation metric archive history?"
+msgstr ""
+
+msgid "Keep detailed result"
+msgstr ""
+
+msgid "Age in days for an archive item to be considered old"
+msgstr ""
+
+msgid "Old archive age in days"
+msgstr ""
+
+msgid "Is tree view used to display metric history?"
+msgstr ""
+
+msgid "Tree view for metric history"
+msgstr ""
+
+msgid "List of metric units in order"
+msgstr ""
+
+msgid "Unit order"
+msgstr ""
+
+msgid "Should classes be categorized in physical folders where they locates?"
+msgstr ""
+
+msgid "Class browser"
+msgstr ""
+
+msgid "Classes categorized folder"
+msgstr ""
+
+msgid "Should referenced classes in dependency view be expanded by default?"
+msgstr ""
+
+msgid "Expand referenced class"
+msgstr ""
+
+msgid "Should referencer classes in dependency view be expanded by default?"
+msgstr ""
+
+msgid "Expand referencer class"
+msgstr ""
+
+msgid "Should inheritance classes be displayed?"
+msgstr ""
+
+msgid "Inheritance classes"
+msgstr ""
+
+msgid "Is item path shown?"
+msgstr ""
+
+msgid "Show item path"
+msgstr ""
+
+msgid "Is dependency on self shown?"
+msgstr ""
+
+msgid "Show self dependency"
+msgstr ""
+
+msgid "Should syntactical referenced classes be displayed?"
+msgstr ""
+
+msgid "Syntactical classes"
 msgstr ""
 
 msgid "Display confirmation dialog on exit."
@@ -6936,6 +7038,26 @@ msgstr ""
 msgid "Confirm kill"
 msgstr ""
 
+msgid ""
+"Display dialog before killing a debugged application and restarting a new "
+"one."
+msgstr ""
+
+msgid "Confirm kill and restart"
+msgstr ""
+
+msgid "Display dialog before removing a metric."
+msgstr ""
+
+msgid "Confirm remove metric"
+msgstr ""
+
+msgid "Display dialog before saving a metric."
+msgstr ""
+
+msgid "Confirm save metric"
+msgstr ""
+
 msgid "Display dialog when editing the same class in two development windows."
 msgstr ""
 
@@ -7018,6 +7140,12 @@ msgid "Directory of last profile result saved."
 msgstr ""
 
 msgid "Last saved profile result directory"
+msgstr ""
+
+msgid "Directory of last imported metric definition directory."
+msgstr ""
+
+msgid "Last imported metric definition directory"
 msgstr ""
 
 msgid "Width of the project settings dialog."
@@ -7611,6 +7739,15 @@ msgid "Background color for object addresses."
 msgstr ""
 
 msgid "Object background color"
+msgstr ""
+
+msgid "Background color for target text."
+msgstr ""
+
+msgid "Target text color"
+msgstr ""
+
+msgid "Target text background color"
 msgstr ""
 
 msgid "Autocomplete indexing?"
@@ -9147,9 +9284,6 @@ msgstr ""
 msgid "Show unchanged features in class ANY by default?"
 msgstr ""
 
-msgid "Class browser"
-msgstr ""
-
 msgid "Show unchanged feature from any"
 msgstr ""
 
@@ -9238,4 +9372,10 @@ msgid "Command used to launch  an external editor."
 msgstr ""
 
 msgid "External editor command"
+msgstr ""
+
+msgid "Command to open a file in external browser."
+msgstr ""
+
+msgid "File browser command"
 msgstr ""

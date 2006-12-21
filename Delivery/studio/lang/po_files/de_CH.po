@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2006-12-19 16:20-0800\n"
+"PO-Revision-Date: 2006-12-20 16:43-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,7 @@ msgid "Location:"
 msgstr "Ort:"
 
 msgid "Automatically generate a backup during recompilation?"
-msgstr "Ein automatisches Backup während der Rekompilation erstellen?"
+msgstr "Ein automatisches Backup während der Rekompilierung erstellen?"
 
 msgid "&Project"
 msgstr "&Projekt"
@@ -126,7 +126,7 @@ msgid "Step into a routine"
 msgstr "In Routine eintreten"
 
 msgid "Start application and stop at breakpoints"
-msgstr "Applikation starten und bei Breakpoints stoppen"
+msgstr "Applikation starten und bei Haltepunkten stoppen"
 
 msgid "Turn on physics"
 msgstr "Physik anschalten"
@@ -135,7 +135,7 @@ msgid "basic"
 msgstr ""
 
 msgid "Add first breakpoints in class"
-msgstr "Ersten Breakpoint in der Klasse setzen"
+msgstr "Ersten Haltepunkt in der Klasse setzen"
 
 msgid "Setup criterion text properties"
 msgstr ""
@@ -265,10 +265,10 @@ msgid "No metric is selected."
 msgstr "Keine Metrik selektiert."
 
 msgid "&Disable This Breakpoint"
-msgstr "Diesen Breakpoint &deaktivieren"
+msgstr "Diesen Haltepunkt &deaktivieren"
 
 msgid "&Remove This Breakpoint"
-msgstr "Diesen Breakpoint löschen"
+msgstr "Diesen Haltepunkt löschen"
 
 msgid "Toggle between UML and BON view"
 msgstr "Zwischen UML und BON Ansicht wechseln"
@@ -307,7 +307,7 @@ msgid "Target: $1"
 msgstr ""
 
 msgid "Start application without stopping at breakpoints"
-msgstr "Applikation starten und Breakpoints ignorieren"
+msgstr "Applikation starten und Haltepunkte ignorieren"
 
 msgid "Expression"
 msgstr "Ausdruck"
@@ -379,7 +379,7 @@ msgid "Save Cop&y As..."
 msgstr "Speichere &Kopie Als ..."
 
 msgid "Background Finalized C compilation Failed"
-msgstr "Abschliessende C-Kompilation im Hintergrund fehlgeschlagen"
+msgstr "Optimierte C-Kompilierung im Hintergrund fehlgeschlagen"
 
 msgid "Apply"
 msgstr "Anwenden"
@@ -421,7 +421,7 @@ msgid "Back"
 msgstr "Zurück"
 
 msgid "Breakpoint Info"
-msgstr "Breakpoint-Information"
+msgstr "Haltepunkt-Information"
 
 msgid "Supplier Precondition"
 msgstr ""
@@ -643,7 +643,7 @@ msgid "&OK"
 msgstr "&OK"
 
 msgid "Give help on compilation errors"
-msgstr "Hilfe bei Kompilationsfehlern geben"
+msgstr "Hilfe bei Kompilierungsfehlern geben"
 
 msgid "Coefficient \"$1\" of variable metric is invalid. A real number is expected."
 msgstr ""
@@ -705,7 +705,7 @@ msgid "Debugger :: Exception message"
 msgstr "Debugger :: Fehlernachricht"
 
 msgid "Type of compilation."
-msgstr "Kompilationstyp"
+msgstr "Kompilierungstyp"
 
 msgid "Stop metric evaluation"
 msgstr ""
@@ -813,7 +813,7 @@ msgid "Discover unreferenced externally added classes and recompile."
 msgstr "Finde nicht referenzierte Klassen welche neu hinzugefügt wurden und kompiliere neu."
 
 msgid "Remove all breakpoints"
-msgstr "Alle Breakpoints entferenen"
+msgstr "Alle Haltepunkte entferenen"
 
 msgid "Recursive Functions"
 msgstr "Rekursive Funktionen"
@@ -840,7 +840,7 @@ msgid "Call&ees"
 msgstr ""
 
 msgid "Display breakpoints separated by status"
-msgstr "Breakpoints nach Status getrennt anzeigen"
+msgstr "Haltepunkte nach Status getrennt anzeigen"
 
 msgid "Print the currently edited text"
 msgstr "Den aktuellen Text drucken"
@@ -1379,7 +1379,7 @@ msgid "Exception Trace"
 msgstr ""
 
 msgid "Background C Compilation Launched"
-msgstr "C-Kompilation im Hintergrund gestartet"
+msgstr "C-Kompilierung im Hintergrund gestartet"
 
 msgid ""
 "When loading predefined metrics:\n"
@@ -1391,7 +1391,7 @@ msgid "Remove right angles"
 msgstr ""
 
 msgid "Eiffel Compilation Failed"
-msgstr "Eiffel-Kompilation fehlgeschlagen"
+msgstr "Eiffel-Kompilierung fehlgeschlagen"
 
 msgid "New Tab"
 msgstr ""
@@ -2248,7 +2248,7 @@ msgid "Find Next &Selection"
 msgstr "Nächste &Selektion finden"
 
 msgid "Save C Compilation output to file"
-msgstr "Ausgabe der C-Kompilation in Datei speichern"
+msgstr "Ausgabe der C-Kompilierung in Datei speichern"
 
 msgid "Restore Assertion Checking"
 msgstr ""
@@ -2999,167 +2999,171 @@ msgid "Should inlining be enabled?"
 msgstr ""
 
 msgid "(Windows only)"
-msgstr ""
+msgstr "(nur für Windows)"
 
 msgid "UUID \"$1\" is invalid."
-msgstr ""
+msgstr "UUID \"$1\" is ungültig."
 
 msgid "&Minimize All"
-msgstr ""
+msgstr "Alle &Minimieren"
 
 msgid "Disable Breakpoints"
-msgstr ""
+msgstr "Haltepunkte deaktivieren"
 
 msgid "Creation Procedure"
-msgstr ""
+msgstr "Erzeugungsprozedur"
 
 msgid "Exiting will stop the debugger."
-msgstr ""
+msgstr "Beenden wird den Debugger stoppen."
 
 msgid "TYPE: "
-msgstr ""
+msgstr "TYP:"
 
 msgid "&Help"
-msgstr ""
+msgstr "&Hilfe"
 
 msgid "&Paste\tCtrl+V"
-msgstr ""
+msgstr "E&infügen\tCtrl+V"
 
 msgid "Display Exception Trace"
-msgstr ""
+msgstr "Fehlerprotokoll anzeigen"
 
 msgid "Command is running"
-msgstr ""
+msgstr "Befehl läuft"
 
 msgid "Warn about usage of onces in generics?"
-msgstr ""
+msgstr "Warnen wenn 'once' in generischen Typen verwendet wird?"
 
 msgid "Supplier group"
 msgstr ""
 
 msgid "Background Finalized C Compilation Terminated"
-msgstr ""
+msgstr "Optimierte C-Kompilierung im Hintergrund beendet."
 
 msgid "Root cluster: "
 msgstr ""
 
 msgid "&Print"
-msgstr ""
+msgstr "&Drucken"
 
 msgid "Command name: "
-msgstr ""
+msgstr "Befehlname:"
 
 msgid "Generation Error"
 msgstr ""
 
 msgid "Select a Directory"
-msgstr ""
+msgstr "Verzeichnis wählen"
 
 msgid "Compile All Classes?"
-msgstr ""
+msgstr "Alle Klassen kompilieren?"
 
 msgid "Edit..."
-msgstr ""
+msgstr "Editieren..."
 
 msgid "Add a library"
-msgstr ""
+msgstr "Bibliothek hinzufügen"
 
 msgid "Make sure that numerator and denominator metric referenced by ratio metric are defined."
 msgstr ""
 
 msgid "&Open Project..."
-msgstr ""
+msgstr "Projekt &Öffnen..."
 
 msgid "Warning: Modifications will be taken into account"
-msgstr ""
+msgstr "Warnung: Änderungen werden berücksichtigt"
 
 msgid "Select indexing items to include in HTML meta tags"
-msgstr ""
+msgstr "Wähle Indexbegriffe welche zu den HTML meta tags hinzugefügt werden"
 
 msgid "Evaluation"
-msgstr ""
+msgstr "Auswertung"
 
 msgid "$1 preferences"
-msgstr ""
+msgstr "$1 Einstellungen"
 
 msgid "Dynamic feature evaluation"
-msgstr ""
+msgstr "Dynamische Feature-Auswertung"
 
 msgid "Execution Profile Generation"
 msgstr ""
 
 msgid "Redo (Ctrl+Y)"
-msgstr ""
+msgstr "Wiederherstellen (Ctrl+Y)"
 
 msgid ""
 "File has been modified.\n"
 "Do you want to save changes?"
 msgstr ""
+"Datei wurde geändert.\n"
+"Sollen Änderungen gespeichert werden?"
 
 msgid "metric archive node"
 msgstr ""
 
 msgid "&Hide Favorites"
-msgstr ""
+msgstr "Favoriten verbergen."
 
 msgid "Index:"
-msgstr ""
+msgstr "Index:"
 
 msgid "Text Generators"
 msgstr ""
 
 msgid "Show Alias Name"
-msgstr ""
+msgstr "Aliasnamen anzeigen"
 
 msgid ""
 "Do you want to save your changes\n"
 "before closing the window?"
 msgstr ""
+"Sollen Änderungen gespeichert werden\n"
+"bevor das Fenster geschlossen wird?"
 
 msgid "Collapse all selected level(s)"
-msgstr ""
+msgstr "Alle gewählten Level(s) zuklappen"
 
 msgid "Select directory to generate the documentation in"
-msgstr ""
+msgstr "Verzeichnis wählen in dem die Dokumentation generiert werden soll"
 
 msgid "Generate &Documentation..."
-msgstr ""
+msgstr "&Documentation erstellen..."
 
 msgid "Finalize..."
-msgstr ""
+msgstr "Optimieren..."
 
 msgid "contract view"
-msgstr ""
+msgstr "Zusicherungs-Ansicht"
 
 msgid "Select Depths"
-msgstr ""
+msgstr "Tiefe wählen"
 
 msgid "Regexp"
-msgstr ""
+msgstr "Regexp"
 
 msgid "Standard (C/byte code)"
-msgstr ""
+msgstr "Standard (C/byte code)"
 
 msgid "Select All Metrics"
-msgstr ""
+msgstr "Alle Metriken auswählen"
 
 msgid "Show only synctactically referenced classes also?"
 msgstr ""
 
 msgid "Background Workbench C Compilation Terminated"
-msgstr ""
+msgstr "C-Kompilierung im Hintergrund beendet"
 
 msgid "Library Root"
 msgstr ""
 
 msgid "Default libraries"
-msgstr ""
+msgstr "Standardbibliotheken"
 
 msgid "Use Recursive Cluster Name as Namespace"
-msgstr ""
+msgstr "Rekursive Clusternamen als Namespaces verwenden"
 
 msgid "Attribute"
-msgstr ""
+msgstr "Attribut"
 
 msgid ""
 "Select a feature to pull up.\n"
@@ -3167,7 +3171,7 @@ msgid ""
 msgstr ""
 
 msgid "Add C&luster..."
-msgstr ""
+msgstr "C&luster hinzufügen..."
 
 msgid "S&ynchronize Context Tool"
 msgstr ""
@@ -3179,40 +3183,40 @@ msgid "&Object Tools"
 msgstr ""
 
 msgid "Delete current view"
-msgstr ""
+msgstr "Aktuelle Ansicht löschen"
 
 msgid "callers"
-msgstr ""
+msgstr "Aufrufer"
 
 msgid "Description:"
-msgstr ""
+msgstr "Beschreibung:"
 
 msgid "Clients of Class "
-msgstr ""
+msgstr "Klienten der Klasse"
 
 msgid "Should unused code be removed?"
-msgstr ""
+msgstr "Soll nicht benötigter Code entfernt werden?"
 
 msgid "New Name"
-msgstr ""
+msgstr "Neuer Name"
 
 msgid "Show all stack elements"
-msgstr ""
+msgstr "Alle Stackelemente anzeigen"
 
 msgid "Reverse Engineering Project"
 msgstr ""
 
 msgid "Background Workbench C Compilation Launched"
-msgstr ""
+msgstr "C-Kompilierung im Hintergrund gestartet"
 
 msgid "Forward"
-msgstr ""
+msgstr "Vorwärts"
 
 msgid "&Forward"
-msgstr ""
+msgstr "&Vorwärts"
 
 msgid "E&xternals"
-msgstr ""
+msgstr "E&xterne Objekte"
 
 msgid ""
 "\n"
@@ -3226,10 +3230,10 @@ msgid "Extracting $1 of feature $2..."
 msgstr ""
 
 msgid "&Windows"
-msgstr ""
+msgstr "&Fenster"
 
 msgid "Cursor position (line:column)"
-msgstr ""
+msgstr "Cursor Position (zeile:spalte)"
 
 msgid ""
 "There is already a metric named $1.\n"
@@ -3237,25 +3241,25 @@ msgid ""
 msgstr ""
 
 msgid "Uncomment selected lines"
-msgstr ""
+msgstr "Selektierte Linien unkommentieren"
 
 msgid "Makefile"
-msgstr ""
+msgstr "Makefile"
 
 msgid "Show BON"
-msgstr ""
+msgstr "BON anzeigen"
 
 msgid "Description of the group."
-msgstr ""
+msgstr "Beschreibung der Gruppe."
 
 msgid "F&avorites"
-msgstr ""
+msgstr "F&avoriten"
 
 msgid " (REQUIRES RESTART)"
-msgstr ""
+msgstr "(BENÖTIGT NEUSTART)"
 
 msgid "&Remove"
-msgstr ""
+msgstr "&Entfernen"
 
 msgid "Variable metric is missng. At least one variable metric should be defined."
 msgstr ""
@@ -3264,49 +3268,49 @@ msgid "Restore assertion checking"
 msgstr ""
 
 msgid "Use Optimized Precompile"
-msgstr ""
+msgstr "Benutze optimiertes Precompile"
 
 msgid "implementers"
 msgstr ""
 
 msgid "C&lickable"
-msgstr ""
+msgstr "K&lickbar"
 
 msgid "Add Override Cluster"
 msgstr ""
 
 msgid "Some classes were edited since last compilation"
-msgstr ""
+msgstr "Einige Klassen wurden seit der letzten Kompilierung geändert"
 
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 msgid "Type Mapping"
 msgstr ""
 
 msgid "Show ancestor classes?"
-msgstr ""
+msgstr "Vorfahren anzeigen?"
 
 msgid "Root Cluster"
 msgstr ""
 
 msgid "In&variants"
-msgstr ""
+msgstr "In&varianten"
 
 msgid "Find &Added Classes && Recompile"
-msgstr ""
+msgstr "Hinzugefügte Klassen finden && Neu kompilieren"
 
 msgid "External Editor"
 msgstr ""
 
 msgid "Terminate running command"
-msgstr ""
+msgstr "Laufenden Befehl beenden"
 
 msgid "Target"
-msgstr ""
+msgstr "Ziel"
 
 msgid "Do you really want to reset current view?"
-msgstr ""
+msgstr "Die aktuelle Ansicht zurücksetzen?"
 
 msgid "Make sure that the criterion of given unit exists."
 msgstr ""
@@ -3333,52 +3337,52 @@ msgid "Move item down"
 msgstr ""
 
 msgid "Close"
-msgstr ""
+msgstr "Schliessen"
 
 msgid "Assembly Name"
 msgstr ""
 
 msgid "Zoom Out"
-msgstr ""
+msgstr "Herauszoomen"
 
 msgid "Cut (Ctrl+X)"
-msgstr ""
+msgstr "Ausschneiden (Ctrl+X)"
 
 msgid "Switch numerical formating"
 msgstr ""
 
 msgid "Add Resource"
-msgstr ""
+msgstr "Ressource hinzfügen"
 
 msgid "Available buttons"
 msgstr ""
 
 msgid "Ma&ximize"
-msgstr ""
+msgstr "Ma&ximieren"
 
 msgid "Select &All\tCtrl+A"
-msgstr ""
+msgstr "&Alle selektieren\tCtrl+A"
 
 msgid "Folder \"$1\" (ID = \"$2\") is invalid."
 msgstr ""
 
 msgid "is invalid"
-msgstr ""
+msgstr "ist ungültig"
 
 msgid "Change"
 msgstr ""
 
 msgid "Edit Object content"
-msgstr ""
+msgstr "Objektinhalt editieren"
 
 msgid "Editor"
-msgstr ""
+msgstr "Editor"
 
 msgid "Calling convention:"
 msgstr ""
 
 msgid "Turn on/off physics"
-msgstr ""
+msgstr "Physik an/abstellen"
 
 msgid "or And-term $1"
 msgstr ""
@@ -3393,7 +3397,7 @@ msgid "Root Feature"
 msgstr ""
 
 msgid "Force right angles"
-msgstr ""
+msgstr "Rechte Winkel erzwingen"
 
 msgid "Open user defined metric file in external editor"
 msgstr ""
@@ -3402,10 +3406,10 @@ msgid "External Edition"
 msgstr ""
 
 msgid "Feature Name"
-msgstr ""
+msgstr "Feature Name"
 
 msgid "Choose a Class"
-msgstr ""
+msgstr "Klasse wählen"
 
 msgid "Multithreaded"
 msgstr ""
@@ -3417,10 +3421,10 @@ msgid "Add selected metric"
 msgstr ""
 
 msgid "Function"
-msgstr ""
+msgstr "Funktion"
 
 msgid "Add Cluster"
-msgstr ""
+msgstr "Cluster hinzufügen"
 
 msgid "Find &Previous"
 msgstr ""
@@ -3429,94 +3433,94 @@ msgid "History Tool"
 msgstr ""
 
 msgid "Overwrite"
-msgstr ""
+msgstr "Überschreiben"
 
 msgid "interface view"
 msgstr ""
 
 msgid "metric"
-msgstr ""
+msgstr "Metrik"
 
 msgid "Display a message about how to deal with the metric definition error"
-msgstr ""
+msgstr "Nachricht anzeigen wie mit einem Metrikfehler umgegangen wird"
 
 msgid "Auto expressions"
 msgstr ""
 
 msgid "Browse..."
-msgstr ""
+msgstr "Durchsuchen..."
 
 msgid "Move selected row up"
-msgstr ""
+msgstr "Gewählte Zeile nach oben verschieben"
 
 msgid "Delete command"
-msgstr ""
+msgstr "Löschbefehl"
 
 msgid "Generating: "
-msgstr ""
+msgstr "Generiere:"
 
 msgid "EAC Browser"
-msgstr ""
+msgstr "EAC Browser"
 
 msgid "And"
-msgstr ""
+msgstr "Und"
 
 msgid "Details"
-msgstr ""
+msgstr "Details"
 
 msgid "Name of the target."
-msgstr ""
+msgstr "Name des Ziels."
 
 msgid "Keep grid layout"
-msgstr ""
+msgstr "Gitterlayout beibehalten"
 
 msgid "Run selected metric"
-msgstr ""
+msgstr "Gewählte Metrik ausführen"
 
 msgid "Metric name is empty."
-msgstr ""
+msgstr "Metrikname ist leer."
 
 msgid "Options"
-msgstr ""
+msgstr "Optionen"
 
 msgid "Clone selected metric to a new metric"
-msgstr ""
+msgstr "Gewählte Metrik klonen"
 
 msgid "Delete selected row"
-msgstr ""
+msgstr "Gewählte Zeile löschen"
 
 msgid "Reload"
 msgstr ""
 
 msgid "Select Feature"
-msgstr ""
+msgstr "Feature wählen"
 
 msgid "Show clusters"
-msgstr ""
+msgstr "Cluster anzeigen"
 
 msgid "Stack information"
-msgstr ""
+msgstr "Stackinformationen"
 
 msgid "Do not ask me again"
-msgstr ""
+msgstr "Nicht nochmals fragen"
 
 msgid "Hide Signature"
-msgstr ""
+msgstr "Signatur verbergen"
 
 msgid "Metric Archive"
-msgstr ""
+msgstr "Metrikarchiv"
 
 msgid "attributes"
-msgstr ""
+msgstr "Attribute"
 
 msgid "Classes visible for external code."
 msgstr ""
 
 msgid "Move selected row down"
-msgstr ""
+msgstr "Gewählte Zeile nach unten verschieben"
 
 msgid "Add Object"
-msgstr ""
+msgstr "Objekt hinzufügen"
 
 msgid "Overrides"
 msgstr ""
@@ -3528,66 +3532,68 @@ msgid ""
 "Are you sure you want to undo the refactoring?\n"
 " If classes have been modified since the refactoring this can lead to corrupt classes and lost information!"
 msgstr ""
+"Das Refactoring rückgängig machen?\n"
+"Falls Klassen geändert wurden seit dem letzten Refactoring kann dies zu korrupten Klassen und Informationsverlust führen."
 
 msgid "&Undo\tCtrl+Z"
-msgstr ""
+msgstr "&Wiederherstellen\tCtrl+Z"
 
 msgid "Force 32bits"
-msgstr ""
+msgstr "32 Bit erzwingen"
 
 msgid "Closing the window will stop the debugger."
-msgstr ""
+msgstr "Das Schliessen des Fensters stoppt den Debugger."
 
 msgid "No result available."
-msgstr ""
+msgstr "Keine Resultate vorhanden."
 
 msgid "Background Finalized C Compilation Launch Failed"
-msgstr ""
+msgstr "Optimierte C-Kompilation fehlgeschlagen"
 
 msgid "No help available for this element"
-msgstr ""
+msgstr "Keine Hilfe vorhanden für dieses Element"
 
 msgid "Background C Compilation in Progress"
-msgstr ""
+msgstr "C-Kompilation läuft im Hintergrund"
 
 msgid "..."
-msgstr ""
+msgstr "..."
 
 msgid ".NET Runtime Version"
-msgstr ""
+msgstr ".NET Laufzeitversion"
 
 msgid "Text in text criterion is empty."
-msgstr ""
+msgstr "Text im Textkriterium ist leer."
 
 msgid "Value \"$1\" of attribute \"type\" is invalid."
-msgstr ""
+msgstr "Wert \"$1\" vom Attribut \"type\" is ungültig."
 
 msgid "Enter the name of the new folder: "
-msgstr ""
+msgstr "Name des Ordners eingeben:"
 
 msgid "Find Added Classes & Recompile"
-msgstr ""
+msgstr "Hinzugefügte Klassen finden und Rekompilieren"
 
 msgid "Customize Re&factoring Toolbar..."
 msgstr ""
 
 msgid "Diagram"
-msgstr ""
+msgstr "Diagramm"
 
 msgid "Criterion"
-msgstr ""
+msgstr "Kriterium"
 
 msgid "Selected metric"
-msgstr ""
+msgstr "Gewählte Metrik"
 
 msgid "&Assignees"
 msgstr ""
 
 msgid "New Editor"
-msgstr ""
+msgstr "Neuer Editor"
 
 msgid "Replace Name in Strings"
-msgstr ""
+msgstr "Namen in Strings ersetzen"
 
 msgid "Remove all scopes"
 msgstr ""
@@ -3596,7 +3602,7 @@ msgid "Overflow &Prevention..."
 msgstr ""
 
 msgid "Input"
-msgstr ""
+msgstr "Eingabe"
 
 msgid ""
 "Extracting the homonyms\n"
@@ -3604,16 +3610,16 @@ msgid ""
 msgstr ""
 
 msgid "&Callers"
-msgstr ""
+msgstr "&Aufrufer"
 
 msgid "S&ave As..."
-msgstr ""
+msgstr "Speichern &als..."
 
 msgid "Enable all breakpoints"
-msgstr ""
+msgstr "Alle Haltepunkte aktivieren"
 
 msgid "In Class"
-msgstr ""
+msgstr "In Klasse"
 
 msgid "Edit condition"
 msgstr ""
@@ -3628,37 +3634,37 @@ msgid "Set Center Class"
 msgstr ""
 
 msgid "Alphabetical cluster list"
-msgstr ""
+msgstr "Alphabetische Clusterliste"
 
 msgid "Update"
 msgstr ""
 
 msgid "OLD_NAME"
-msgstr ""
+msgstr "OLD_NAME"
 
 msgid "Zoom out"
-msgstr ""
+msgstr "Herauszoomen"
 
 msgid "Makefiles"
-msgstr ""
+msgstr "Makefiles"
 
 msgid "Undo not possible."
-msgstr ""
+msgstr "Wiederherstellen nicht möglich."
 
 msgid "Switch to low quality"
-msgstr ""
+msgstr "Zu tieferer Qualität wechseln"
 
 msgid "Command error output:\n"
-msgstr ""
+msgstr "Fehlerausgabe des Befehls:\n"
 
 msgid "Run Finalized"
-msgstr ""
+msgstr "Optimierte Version starten"
 
 msgid "Objects tool: right"
 msgstr ""
 
 msgid "Location"
-msgstr ""
+msgstr "Ort"
 
 msgid "&Standard Buttons"
 msgstr ""
@@ -3686,76 +3692,76 @@ msgid "De&bugging Options"
 msgstr ""
 
 msgid "Cluster"
-msgstr ""
+msgstr "Cluster"
 
 msgid "S&ystem Info"
-msgstr ""
+msgstr "S&ystem Information"
 
 msgid "Override"
 msgstr ""
 
 msgid "New Class"
-msgstr ""
+msgstr "Neue Klasse"
 
 msgid "&Creators"
-msgstr ""
+msgstr "&Erzeuger"
 
 msgid "Address:"
-msgstr ""
+msgstr "Adresse:"
 
 msgid "Add new variable"
-msgstr ""
+msgstr "Neue Variable hinzufügen"
 
 msgid "Edit $1"
 msgstr ""
 
 msgid "Backup Found"
-msgstr ""
+msgstr "Sicherheitskopie gefunden"
 
 msgid "Groups this cluster depends on."
-msgstr ""
+msgstr "Gruppe von welchem dieses Cluster abhängt"
 
 msgid "Keep Assertions"
-msgstr ""
+msgstr "Zusicherungen beibehalten"
 
 msgid "Compare metric archive"
-msgstr ""
+msgstr "Metrikarchiv vergleichen"
 
 msgid "All breakpoints together"
-msgstr ""
+msgstr "Alle Haltepunkte zusammen"
 
 msgid "Properties"
-msgstr ""
+msgstr "Eigenschaften"
 
 msgid "Parse error:"
-msgstr ""
+msgstr "Parserfehler:"
 
 msgid "Invalid tag."
-msgstr ""
+msgstr "Ungültige Marke."
 
 msgid "Stop application"
-msgstr ""
+msgstr "Applikation stoppen"
 
 msgid "Remove the selected feature from this dynamic library definition"
-msgstr ""
+msgstr "Die gewählten Features von der Definition der dynamischen Bibliothek entfernen"
 
 msgid "Minimize All"
-msgstr ""
+msgstr "Alle minimieren"
 
 msgid "Search backwards"
-msgstr ""
+msgstr "Rückwärts suchen"
 
 msgid "Synchronize"
-msgstr ""
+msgstr "Synchronisieren"
 
 msgid "Metric name is missing in metric definition."
-msgstr ""
+msgstr "Metrikname fehlt in der Metrikdefinition."
 
 msgid "Add class clients to diagram"
-msgstr ""
+msgstr "Klassenklienten zum Diagramm hinzufügen"
 
 msgid "Generate profiling information?"
-msgstr ""
+msgstr "Profilinformationen erstellen?"
 
 msgid "Create new client-supplier links"
 msgstr ""
@@ -3764,7 +3770,7 @@ msgid "Dynamic Library Builder"
 msgstr ""
 
 msgid "New Project"
-msgstr ""
+msgstr "Neues Projekt"
 
 msgid "Once routines"
 msgstr ""
@@ -3782,55 +3788,55 @@ msgid "Toggle visibility of feature alias name"
 msgstr ""
 
 msgid "Function Time"
-msgstr ""
+msgstr "Funktionszeit"
 
 msgid "&Clusters"
-msgstr ""
+msgstr "&Clusters"
 
 msgid "Put Right Angles"
 msgstr ""
 
 msgid "Show UML"
-msgstr ""
+msgstr "UML anzeigen"
 
 msgid "Display a warning when the call stack depth reaches:"
-msgstr ""
+msgstr "Warnung anzeigen wenn die Aufruf-Stack-Tiefe volgenden Wert erreicht:"
 
 msgid "Type:"
-msgstr ""
+msgstr "Typ:"
 
 msgid "The class name is not valid."
-msgstr ""
+msgstr "Der Klassenname ist ungültig."
 
 msgid "Add Override"
 msgstr ""
 
 msgid "Alias"
-msgstr ""
+msgstr "Alias"
 
 msgid "Creation procedure:"
-msgstr ""
+msgstr "Erzeugerprozedur:"
 
 msgid "Incompatible Types Equality"
 msgstr ""
 
 msgid "Zoom In"
-msgstr ""
+msgstr "Hineinzoomen"
 
 msgid "Dropped references"
 msgstr ""
 
 msgid "Raise &Unsaved Windows"
-msgstr ""
+msgstr "Ungespeicherte Fenster hervorheben"
 
 msgid "Are sub folders recursively included?"
 msgstr ""
 
 msgid "Value \"$1\" of attribute \"regular_expression\" is invalid. A boolean is expected."
-msgstr ""
+msgstr "Wert \"$1\" des Attributs \"regular_expression\" ist ungültig. Ein boolscher Wert wird erwartet."
 
 msgid "Include Class '$1'"
-msgstr ""
+msgstr "Klasse '$1' einbinden"
 
 msgid "$1 of feature $2 of class"
 msgstr ""
@@ -3839,7 +3845,7 @@ msgid "Overriding"
 msgstr ""
 
 msgid "No default value"
-msgstr ""
+msgstr "Kein Standardwert"
 
 msgid "Re&do\tCtrl+Y"
 msgstr ""
@@ -3848,7 +3854,7 @@ msgid "Cut"
 msgstr ""
 
 msgid "Close $1"
-msgstr ""
+msgstr "Schliesse $1"
 
 msgid "Generate a multithreaded application?"
 msgstr ""
@@ -3863,46 +3869,46 @@ msgid "Should the generated binary be IL verifiable?"
 msgstr ""
 
 msgid "Metric name is missing in metric archive node."
-msgstr ""
+msgstr "Metrikname fehlt im Archivknoten der Metrik"
 
 msgid "Display name of all called features during execution?"
-msgstr ""
+msgstr "Sollen Namen der aufgerufenen Features während der Ausführung angezeigt werden?"
 
 msgid "Apply Application Optimizations"
 msgstr ""
 
 msgid "Change project settings, right click to open external editor"
-msgstr ""
+msgstr "Projekteinstellungen ändern. Rechtsklick um externen Editor zu öffnen"
 
 msgid "No views are available for this cluster"
 msgstr ""
 
 msgid "Disable all breakpoints"
-msgstr ""
+msgstr "Alle Haltepunkte deaktivieren"
 
 msgid "Root"
 msgstr ""
 
 msgid "Metric name"
-msgstr ""
+msgstr "Metrikname"
 
 msgid "Paste (Ctrl+V)"
-msgstr ""
+msgstr "Einfügen (Ctrl+V)"
 
 msgid "Number of Calls"
-msgstr ""
+msgstr "Anzahl Aufrufe"
 
 msgid "All Classes"
-msgstr ""
+msgstr "Alle Klassen"
 
 msgid "Open a new editor window"
-msgstr ""
+msgstr "Neues Editorfenster öffnen"
 
 msgid "Should generated assemblies be marked as CLS compliant?"
 msgstr ""
 
 msgid "Ad&vanced"
-msgstr ""
+msgstr "&Fortgeschritten"
 
 msgid "UnHandled"
 msgstr ""
@@ -3914,7 +3920,7 @@ msgid "&How to's"
 msgstr ""
 
 msgid "Cluster hierarchy"
-msgstr ""
+msgstr "Clusterhierarchie"
 
 msgid "Original value is \"$1=$2\""
 msgstr ""
@@ -3926,10 +3932,10 @@ msgid "Assembly Version"
 msgstr ""
 
 msgid "&Add..."
-msgstr ""
+msgstr "&Hinzufügen..."
 
 msgid "Hide "
-msgstr ""
+msgstr "Verbergen"
 
 msgid "Cluster charts"
 msgstr ""
@@ -3941,16 +3947,16 @@ msgid "Criterion unit \"$1\" is different from basic metric unit \"$2\"."
 msgstr ""
 
 msgid "Short Name"
-msgstr ""
+msgstr "Kurzname"
 
 msgid "Features from ANY"
-msgstr ""
+msgstr "Features von ANY"
 
 msgid "Class Header"
 msgstr ""
 
 msgid " enabled"
-msgstr ""
+msgstr "aktiviert"
 
 msgid ""
 "This will reset ALL preferences to their default values\n"
@@ -3958,24 +3964,26 @@ msgid ""
 msgstr ""
 
 msgid "Command has exited with code $1"
-msgstr ""
+msgstr "Befehl beendet mit Code $1"
 
 msgid "Erase Cluster '$1'"
-msgstr ""
+msgstr "Cluste '$1' auslöschen"
 
 msgid "Open selected file name in specified external editor"
-msgstr ""
+msgstr "Angegebe Datei in externem Editor öffnen"
 
 msgid "Value"
-msgstr ""
+msgstr "Wert"
 
 msgid ""
 "Class $1 has been modified.\n"
 "Do you want to save changes?"
 msgstr ""
+"Klasse $1 wurde geändert.\n"
+"Sollen Änderungen gespeichert werden?"
 
 msgid "IL Verifiable"
-msgstr ""
+msgstr "IL Verifizierbar"
 
 msgid "Type of binary to generate."
 msgstr ""
@@ -3984,16 +3992,16 @@ msgid "Query"
 msgstr ""
 
 msgid "Move [$1] to \"$2\""
-msgstr ""
+msgstr "Verschiebe [$1] nach \"$2\""
 
 msgid "Do not ask again, and always terminate finalizing when needed."
-msgstr ""
+msgstr "Nicht nochmals fragen und optimierte Kompilierung immer abbrechen wenn nötig."
 
 msgid "Run finalized system"
-msgstr ""
+msgstr "Optimiertes System starten"
 
 msgid "Save"
-msgstr ""
+msgstr "Speichern"
 
 msgid "Click here to add a new expression"
 msgstr ""
@@ -4002,19 +4010,19 @@ msgid "System properties"
 msgstr ""
 
 msgid "&Compile"
-msgstr ""
+msgstr "&Kompilieren"
 
 msgid "Warn about usage of obsolete features?"
 msgstr ""
 
 msgid "The class $1 is not writable."
-msgstr ""
+msgstr "Die Klasse $1 ist schreibgeschützt."
 
 msgid "$1 of class $2"
-msgstr ""
+msgstr "$1 der Klasse $2"
 
 msgid "Set maximum call stack depth"
-msgstr ""
+msgstr "Maximale Aufruf-Stack-Tiefe angeben"
 
 msgid "Includes"
 msgstr ""
@@ -4023,10 +4031,10 @@ msgid "Generation Type"
 msgstr ""
 
 msgid "Backup"
-msgstr ""
+msgstr "Sicherheitskopie"
 
 msgid "Archive value is missing."
-msgstr ""
+msgstr "Archivwert fehlt."
 
 msgid "Externals"
 msgstr ""
@@ -4075,7 +4083,7 @@ msgid "Executable is up-to-date"
 msgstr ""
 
 msgid "Breakpoint reached"
-msgstr ""
+msgstr "Haltepunkt erreicht."
 
 msgid "Include Library '$1'"
 msgstr ""
@@ -4361,7 +4369,7 @@ msgid "Remove a class or a cluster from the system"
 msgstr "Klasse oder Cluster vom System entfernen"
 
 msgid "Compilation was not successful."
-msgstr "Kompilation fehlgeschlagen."
+msgstr "Kompilierung fehlgeschlagen."
 
 msgid "Report <<"
 msgstr "Report <<"
@@ -4391,7 +4399,7 @@ msgid "Toggle visibility of assigner command name"
 msgstr ""
 
 msgid "Background C Compilation Succeeded"
-msgstr "Hintergrund C-Kompilation erfolgreich"
+msgstr "C-Kompilierung im Hintergrund erfolgreich"
 
 msgid "user set"
 msgstr "benutzerdefiniert"
@@ -4400,7 +4408,7 @@ msgid "Unit \"$1\" of variable metric is different from unit \"$2\" of linear me
 msgstr ""
 
 msgid "&Enable This Breakpoint"
-msgstr "Diesen Breakpoint &aktivieren"
+msgstr "Diesen Haltepunkt &aktivieren"
 
 msgid "Start With Arguments"
 msgstr ""
@@ -4427,7 +4435,7 @@ msgid "Indent selected row using an \"AND\" criterion"
 msgstr ""
 
 msgid "Background Workbench C Compilation Failed"
-msgstr "Hintergrund C-Kompilation fehlgeschlagen"
+msgstr "C-Kompilierung im Hintergrund fehlgeschlagen"
 
 msgid "Invalid tag/tag position \"$1\"."
 msgstr ""
@@ -4488,10 +4496,10 @@ msgid ""
 msgstr ""
 
 msgid "&Step-by-Step"
-msgstr ""
+msgstr "&Schritt-für-Schritt"
 
 msgid "Generate creation procedure"
-msgstr ""
+msgstr "Erzeugerporzedur erstellen"
 
 msgid "Too many crieria is specified in \"criterion\" section. Only one is expected."
 msgstr ""
@@ -4518,17 +4526,17 @@ msgid "Clean archive?"
 msgstr ""
 
 msgid "Load From..."
-msgstr ""
+msgstr "Lade von..."
 
 msgid "in $1 class"
 msgid_plural "in $1 classes"
 msgstr[0] ""
 
 msgid "Add &Assembly..."
-msgstr ""
+msgstr "&Assembly hinzufügen..."
 
 msgid "Change Class Color"
-msgstr ""
+msgstr "Klassenfarbe wechseln"
 
 msgid "Numerator metric \"$1\" is not defined."
 msgstr ""
@@ -4545,28 +4553,28 @@ msgid "Trace"
 msgstr ""
 
 msgid "Is the project a console application?"
-msgstr ""
+msgstr "Ist das Projekt eine Konsolenapplikation?"
 
 msgid "Culture of the assembly."
 msgstr ""
 
 msgid "Import Selected Metrics"
-msgstr ""
+msgstr "Gewälhte Metriken importieren"
 
 msgid "linear metric"
-msgstr ""
+msgstr "Lineare Metrik"
 
 msgid "Replace Name in Comments"
-msgstr ""
+msgstr "Namen in Kommentaren erstezten"
 
 msgid "Enforce unique class names"
-msgstr ""
+msgstr "Eindeutige Klassennamen erzwingen"
 
 msgid "Re&factoring Bar"
 msgstr ""
 
 msgid "Attribute \"case_sensitive\" is missing."
-msgstr ""
+msgstr "Attribut \"case_sensitive\" fehlt."
 
 msgid "Choose a Folder Name"
 msgstr "Ordnername wählen"
@@ -4578,6 +4586,8 @@ msgid ""
 "An external command is running now. \n"
 "Please wait until it exits."
 msgstr ""
+"Ein externer Befehl läuft.\n"
+"Bitte warten Sie bis dieser beendet ist."
 
 msgid "Degree:"
 msgstr "Grad:"
@@ -4589,7 +4599,7 @@ msgid "Show all callers"
 msgstr "Alle Aufrufer anzeigen"
 
 msgid "Relations"
-msgstr ""
+msgstr "Beziehungen"
 
 msgid "Input domain"
 msgstr ""
@@ -4605,7 +4615,7 @@ msgid "&Implementers"
 msgstr ""
 
 msgid "Background C Compilation Terminated"
-msgstr "Hintergrund C-Kompilation beendet"
+msgstr "C-Kompilierung im Hintergrund beendet"
 
 msgid "Add class"
 msgstr "Klasse hinzufügen"
@@ -4620,16 +4630,16 @@ msgid "Target used if system is used as a library."
 msgstr ""
 
 msgid "Metric"
-msgstr ""
+msgstr "Metrik"
 
 msgid "Evaluate precondition assertions?"
-msgstr ""
+msgstr "Vorbedingungen auswerten?"
 
 msgid "Restore Default"
-msgstr ""
+msgstr "Standard wiederherstellen"
 
 msgid "Callers from client class"
-msgstr ""
+msgstr "Aufrufer der Klientenklasse"
 
 msgid "Expression Evaluation"
 msgstr ""
@@ -4640,7 +4650,7 @@ msgid ""
 msgstr ""
 
 msgid "Select the Compilation mode."
-msgstr "Kompilationstyp wählen."
+msgstr "Kompilierungstyp wählen."
 
 msgid "Remove group"
 msgstr "Gruppe entfernen"
@@ -4652,13 +4662,13 @@ msgid "Compile project"
 msgstr "Projekt kompilieren"
 
 msgid "Debugging Options"
-msgstr ""
+msgstr "Debuggeroptionen"
 
 msgid "Variable metric name is missing."
 msgstr ""
 
 msgid "Add Inheritance Relation Between '$1' and '$2'"
-msgstr ""
+msgstr "Vererbungsbeziehung zwischen '$1' und '$2' hinzufügen"
 
 msgid "Generate profile from Run-time information record"
 msgstr ""
@@ -4687,16 +4697,16 @@ msgid "Command to execute."
 msgstr ""
 
 msgid "Add class ancestors to diagram"
-msgstr ""
+msgstr "Klassenvorfahren zum Diagramm hinzufügen"
 
 msgid "&Window"
-msgstr ""
+msgstr "&Fenster"
 
 msgid "Unit"
-msgstr ""
+msgstr "Einheit"
 
 msgid "Original metric name"
-msgstr ""
+msgstr "Original Metrikname"
 
 msgid ""
 "File $1 already exists,\n"
@@ -4704,13 +4714,13 @@ msgid ""
 msgstr ""
 
 msgid "Show unchanged features from class ANY?"
-msgstr ""
+msgstr "Ungeänderte Features von ANZ anzeigen?"
 
 msgid "Rename"
-msgstr ""
+msgstr "Umbenennen"
 
 msgid "$1  in cluster $2  located in $3"
-msgstr ""
+msgstr "$1 im Cluster $2 in $3"
 
 msgid "Add class suppliers to diagram"
 msgstr ""
@@ -4751,7 +4761,7 @@ msgid "Reference value"
 msgstr ""
 
 msgid "Background Finalized C Compilation Succeeded"
-msgstr "Abschliessende Hintergrund C-Kompilation erfolgreich"
+msgstr "Optimierte C-Kompilierung im Hintergrund erfolgreich"
 
 msgid "Cla&ss Views"
 msgstr ""
@@ -4769,7 +4779,7 @@ msgid "Company"
 msgstr ""
 
 msgid "Match case?"
-msgstr ""
+msgstr "Gross-/Kleinschreibung beachten?"
 
 msgid "Continue Anyway"
 msgstr "Trotzdem fortfahren"
@@ -4787,13 +4797,13 @@ msgid "Add Post Compilation Task"
 msgstr ""
 
 msgid "Text was saved"
-msgstr ""
+msgstr "Text wurde gespeichert."
 
 msgid "Viewpoints: "
 msgstr ""
 
 msgid "Description of the target."
-msgstr ""
+msgstr "Beschreibung des Ziels."
 
 msgid "Top-level"
 msgstr ""
@@ -4802,22 +4812,22 @@ msgid "Enabled"
 msgstr "Aktiviert"
 
 msgid "Compiled Classes"
-msgstr ""
+msgstr "Kompilierte Klassen"
 
 msgid "Is this group read only?"
-msgstr ""
+msgstr "Ist diese Gruppe schreibgeschützt?"
 
 msgid "Mi&nimize"
-msgstr ""
+msgstr "Mi&nimieren"
 
 msgid "Warn about different files with the same UUID?"
-msgstr ""
+msgstr "Eine Warnung ausgeben falls verschiedene Dateien dieselbe UUID haben?"
 
 msgid "Main Editor Views"
 msgstr ""
 
 msgid "&Contents"
-msgstr ""
+msgstr "&Inhalte"
 
 msgid "Override the detected platform to use in conditions."
 msgstr ""
@@ -4826,6 +4836,8 @@ msgid ""
 "Metrics loading error:\n"
 "$1"
 msgstr ""
+"Fehler beim laden der Metrik:\n"
+"$1"
 
 msgid "Should a complete exception trace be generated in the finalized version?"
 msgstr "Soll in der abschliessenden Version ein kompletter Stacktrace generiert werden?"
@@ -4846,10 +4858,10 @@ msgid "Old Syntax"
 msgstr "Alte Syntax"
 
 msgid "&Indexing clauses"
-msgstr ""
+msgstr "&Indexklauseln"
 
 msgid "Move metric unit down.\n"
-msgstr ""
+msgstr "Metrikeinheit nach unten verschieben.\n"
 
 msgid "Item expires. Try searching again."
 msgstr ""
@@ -4858,7 +4870,7 @@ msgid "Make sure that at least one domain item is listed in a domain criterion."
 msgstr ""
 
 msgid "Metric Definition"
-msgstr ""
+msgstr "Metrikdefinition"
 
 msgid "VALUE: "
 msgstr "WERT:"
@@ -4876,7 +4888,7 @@ msgid "Warning"
 msgstr "Warnung"
 
 msgid "Value \"$1\" of attribute \"negation\" is invalid. A boolean is expected."
-msgstr ""
+msgstr "Wert \"$1\" vom Attribut \"negation\" ist ungültig. Ein boolscher Wert wird erwartet."
 
 msgid "Profiler used to produce the above record: "
 msgstr ""
@@ -4888,7 +4900,7 @@ msgid "No text labels"
 msgstr ""
 
 msgid "Set to &Lowercase\tCtrl+Shift+U"
-msgstr ""
+msgstr "Alles &Kleinbuchstaben\tCtrl+Shift+U"
 
 msgid "Namespace for .NET"
 msgstr "Namespace für .NET"
@@ -4903,10 +4915,10 @@ msgid "Not yet called"
 msgstr "Noch nicht aufgerufen"
 
 msgid "Select an existing metric archive file"
-msgstr ""
+msgstr "Eine existierende Metrik-Archiv-Datei wählen"
 
 msgid "Debug"
-msgstr ""
+msgstr "Debug"
 
 msgid "Line"
 msgstr "Linie"
@@ -4921,7 +4933,7 @@ msgid "elements."
 msgstr "elemente."
 
 msgid "&Enable All Breakpoints"
-msgstr "Alle Breakpoints &einschalten"
+msgstr "Alle Haltepunkte &einschalten"
 
 msgid "O&nce/Constants"
 msgstr ""
@@ -4974,16 +4986,16 @@ msgid "Extracting $1 of class $2..."
 msgstr ""
 
 msgid "Do not ask me again and always remove selected metric"
-msgstr ""
+msgstr "Nicht nochmals fragen und gewählte Metrik immer entfernen"
 
 msgid "Background C Compilation Failed"
-msgstr "Hintergrund C-Kompilation fehlgeschlagen"
+msgstr "C-Kompilierung im Hintergrund fehlgeschlagen"
 
 msgid "Stop the application?"
 msgstr "Applikation anhalten?"
 
 msgid "Re&move All Breakpoints"
-msgstr "Alle Breakpoints &entfernen"
+msgstr "Alle Haltepunkte &entfernen"
 
 msgid "Location of the external."
 msgstr "Ort des externen Objekts."
@@ -5004,7 +5016,7 @@ msgid "System not running"
 msgstr "System läuft nicht"
 
 msgid "Select/deselect user-defined metrics"
-msgstr ""
+msgstr "Wählen/Abwählen der Benutzerdefinierten Metrik"
 
 msgid "Run"
 msgstr "Ausführen"
@@ -5013,22 +5025,22 @@ msgid "New Fea&ture..."
 msgstr "Neues Fea&ture..."
 
 msgid "Compile to have information"
-msgstr ""
+msgstr "Kompilieren um Informationen zu erhalten"
 
 msgid "Client class"
-msgstr ""
+msgstr "Klientenklasse"
 
 msgid "Enforce VAPE validity constraint?"
-msgstr ""
+msgstr "VAPE Gültigkeitsbedingung durchsetzen?"
 
 msgid "Change color"
-msgstr ""
+msgstr "Farbe wechseln"
 
 msgid "Undo Refactoring"
-msgstr ""
+msgstr "Refactoring rückgängig machen"
 
 msgid "Set to U&ppercase\tCtrl+U"
-msgstr ""
+msgstr "Alles &Grossbuchstaben\tCtrl+U"
 
 msgid ""
 "The file you have supplied as Runtime Information Record\n"
@@ -5044,7 +5056,7 @@ msgid ""
 msgstr ""
 
 msgid "Turn off physics"
-msgstr ""
+msgstr "Physik deaktivieren."
 
 msgid "Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)."
 msgstr ""
@@ -5053,22 +5065,22 @@ msgid "Display DEBUG_OUTPUT.debug_output for objects whose base class inherits f
 msgstr ""
 
 msgid "Default number of displayed characters of a STRING (increasing this value might slow down debugging)."
-msgstr ""
+msgstr "Standardwert der angezeigten Zeichen eines STRINGs (Erhöhen des Wertes kann den Debugger verlangsamen)"
 
 msgid "Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."
-msgstr ""
+msgstr "Standardwert der angezeigten Zeichen in der aufgeklappten Ansicht (Erhöhen des Wertes kann den Debugger verlangsamen)"
 
 msgid "Default number of call stack elements shown in Call Stack tool (-1 to show all of them)."
-msgstr ""
+msgstr "Standardwert der Aufruf-Stack Elemente die angezeigt werden (-1 um alle anzuzeigen)"
 
 msgid "Delay (in milliseconds) before clearing the stacks and objects grid.  By tuning this value, you can reduce the potential flickering of the related grid."
-msgstr ""
+msgstr "Verzögerung in Millisekunden bevor der Stack und das Objektfeld geleert werden. Durch Feineinstellung dieses Wertes kann mögliches Flickern reduziert werden."
 
 msgid "Should the info about the agent object be displayed?"
-msgstr ""
+msgstr "Soll Informationen über ein Agenten-Objekt angezeigt werden?"
 
 msgid "Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."
-msgstr ""
+msgstr "Welchen .NET Debugger soll gestartet werden: `EiffelStudio Dbg' um den EiffelStudio Debugger zu verwenden; `cordbg' um den Kommandozeilen-Debugger des .NET SDK zu verwenden; `DebugCLR' um den graphischen Debugger des .NET SDK zu verwenden."
 
 msgid "Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."
 msgstr ""
@@ -5077,10 +5089,10 @@ msgid "Display the base type of an object if enabled, otherwise just the base cl
 msgstr ""
 
 msgid "Number of instructions that will be executed before interrupting the execution."
-msgstr ""
+msgstr "Anzahl Instruktionen die ausgeführt werden bevor die Ausführung unterbrochen wird."
 
 msgid "Close the eiffel debugger daemon (classic) after each debug session (recommended)"
-msgstr ""
+msgstr "Den Eiffel Debugger Daemon (classic) nach jeder Debugsitzung schliessen (empfohlen)"
 
 msgid "Timeout used to start the Eiffel debugger daemon (classic only). Leave it to 0 to use the default environment value."
 msgstr ""
@@ -5092,7 +5104,7 @@ msgid "Do not show the dialog that asks if a compilation should be started befor
 msgstr ""
 
 msgid "Should we always try to debug non-Eiffel code in case it calls back into some Eiffel code?"
-msgstr ""
+msgstr "Soll versucht werden Nicht-Eiffelcode immer zu debuggen im Falle wieder Eiffelcode aufgerufen wird?"
 
 msgid "Disk location of last saved stack path information."
 msgstr ""
@@ -5436,13 +5448,13 @@ msgid "Directory of last diagram postscript file saved."
 msgstr ""
 
 msgid "Directory of last exception saved."
-msgstr ""
+msgstr "Speichere Verzeichnis des letzen Fehlers."
 
 msgid "Directory of last save file as saved."
-msgstr ""
+msgstr "Speichere Verzeichnis der zuletzt gepseicherten Datei."
 
 msgid "Directory of last profile result saved."
-msgstr ""
+msgstr "Speichere Verzeichnis des letzen Profilresultats."
 
 msgid "Width of the project settings dialog."
 msgstr ""
@@ -5460,19 +5472,19 @@ msgid "Position of the split area."
 msgstr ""
 
 msgid "Width of the starting dialog."
-msgstr ""
+msgstr "Breite des Startdialogs."
 
 msgid "Height of the starting dialog."
-msgstr ""
+msgstr "Höhe des Startdialogs."
 
 msgid "Width of the open project dialog."
-msgstr ""
+msgstr "Breite des Projektdialogs."
 
 msgid "Height of the open project dialog."
-msgstr ""
+msgstr "Höhe des Projektdialogs."
 
 msgid "Should the C output panel be shown when a C compilation is launched?"
-msgstr ""
+msgstr "Soll der C-Output angezeigt werden wenn eine C-Kompilierung gestartet wird?"
 
 msgid "The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."
 msgstr ""
@@ -5499,43 +5511,43 @@ msgid "When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug m
 msgstr ""
 
 msgid "Should EiffelStudio Debug menu be shown"
-msgstr ""
+msgstr "Soll das EiffelStudio Debugmenu angezeigt werden?"
 
 msgid "Automatically expand the feature tree."
-msgstr ""
+msgstr "Feature-Baum automatisch aufklappen."
 
 msgid "Display signature ?"
-msgstr ""
+msgstr "Signatur anzeigen?"
 
 msgid "Display alias name ?"
-msgstr ""
+msgstr "Alias-Namen anzeigen?"
 
 msgid "Display assigner command ?"
-msgstr ""
+msgstr "Zuweisungsbefehl anzeigen?"
 
 msgid "Order used to sort feature clauses in formatted texts."
 msgstr ""
 
 msgid "Disable graphical output."
-msgstr ""
+msgstr "Graphische Ausgabe deaktivieren."
 
 msgid "Is window maximized?"
-msgstr ""
+msgstr "Ist das Fenster maximiert?"
 
 msgid "Directory of last browsed cluster."
-msgstr ""
+msgstr "Verzeichnis des zuletzt durchsuchten Clusters."
 
 msgid "Items/tools information for navigation panel."
 msgstr ""
 
 msgid "Show only one tool (Features, Clusters, Search, Windows) at a time."
-msgstr ""
+msgstr "Nur ein Werkzeug (Features, Clusters, Suche, Fenster) auf einmal anzeigen."
 
 msgid "Maximum number of items displayed in the history combo boxes."
 msgstr ""
 
 msgid "Color for progress bar."
-msgstr ""
+msgstr "Farbe für Fortschritssbalken."
 
 msgid "Should size of completion list be remembered between completions in the editor?"
 msgstr ""
@@ -5544,10 +5556,10 @@ msgid "Items/tools information for editor panel."
 msgstr ""
 
 msgid "Should address toolbar be shown?"
-msgstr ""
+msgstr "Soll Adress-Symbolleiste angezeigt werden?"
 
 msgid "Should project toolbar be shown?"
-msgstr ""
+msgstr "Soll Projekt-Symbolleiste angezeigt werden?"
 
 msgid "Should refactoring toolbar be shown?"
 msgstr ""
@@ -5571,49 +5583,49 @@ msgid "Link the context tool with other components by default?"
 msgstr ""
 
 msgid "Use animated icons in the status bar?"
-msgstr ""
+msgstr "Sollen animierte Symbole in der Statusleiste verwendet werden?"
 
 msgid "Width of navigation panel"
-msgstr ""
+msgstr "Breite der Navigation."
 
 msgid "Width of development window."
-msgstr ""
+msgstr "Breite des Entwicklungsfensters."
 
 msgid "Height of development window."
-msgstr ""
+msgstr "Höhe des Entwicklungsfensters."
 
 msgid "Screen x position of development window."
-msgstr ""
+msgstr "X Position des Entwicklungsfensters."
 
 msgid "Screen y position of development window."
-msgstr ""
+msgstr "Y Position des Entwicklungsfensters."
 
 msgid "Height of completion list.  Used if 'remember_completion_list_size' is set to True."
-msgstr ""
+msgstr "Höhe der Vervollständigungsliste. Dies wird benutzt falls 'remember_completion_list_size' auf 'True' gesetzt wird."
 
 msgid "Width of completion list.  Used if 'remember_completion_list_size' is set to True."
-msgstr ""
+msgstr "Breite der Vervollständigungsliste. Dies wird benutzt falls 'remember_completion_list_size' auf 'True' gesetzt wird."
 
 msgid "List of recently opened projects."
-msgstr ""
+msgstr "Liste der zuletzt geöffneten Projekte."
 
 msgid "Number of recent projects to keep in the list."
-msgstr ""
+msgstr "Anzahl Projekte in der Liste der zuletzt geöffneten Projekte."
 
 msgid "Are brackets and parentheses closed automatically?"
-msgstr ""
+msgstr "Sollen Klammern automatisch geschlossen werden?"
 
 msgid "Are quotes closed automatically?"
-msgstr ""
+msgstr "Sollen Anführungszeichen automatisch geschlossen werden?"
 
 msgid "Should completion window appear automatically after typing a `.'?"
-msgstr ""
+msgstr "Soll die Vervollständigung nach dem eingeben eines Punktes automatisch erscheinen?"
 
 msgid "Should completion automatically complete words when a single best match is available?"
-msgstr ""
+msgstr "Soll die Vervollständigung ein Wort automatisch vervollständigen wenn es nur eine gute Möglichkeit kennt."
 
 msgid "Should trailing blanks be auto-removed when saving?"
-msgstr ""
+msgstr "Sollen Leerschläge am Ende von Zeilen automatisch entfernt werden beim speichern?"
 
 msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."
 msgstr ""
@@ -5628,28 +5640,28 @@ msgid "Should non-matching entries from completion list be hidden while completi
 msgstr ""
 
 msgid "Does completion change the first character of onces and constants with an upper case character?"
-msgstr ""
+msgstr "Soll Vervollständigung den ersten Buchstaben von Konstanten und 'once'-Features in einen Grossbuchstaben ändern?"
 
 msgid "Do features of class ANY appear in the feature call complete window?"
-msgstr ""
+msgstr "Sollen Features von ANY im Vervolständigungsfenster angezeigt werden?"
 
 msgid "Does completion list show feature signatures?"
-msgstr ""
+msgstr "Soll Vervollständigung Feature Signaturen anzeigen?"
 
 msgid "Does completion list show query return type?"
-msgstr ""
+msgstr "Soll Vervollständigung den Rückgabewert anzeigen?"
 
 msgid "Does completion list show disambiguated name?"
-msgstr ""
+msgstr "Soll Vervollständigung eindeutige Namen anzeigen?"
 
 msgid "Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."
-msgstr ""
+msgstr "Sollen Schlüsselwörter vervollständigt werden? Die Vervollständigung von Schlüsselwörtern kann im Abschnitt Editor->Eiffel->Autocomplete geändert werden."
 
 msgid "Format to use when saving class text. True means using Windows text format, False means using Unix text format."
 msgstr ""
 
 msgid "Command to open an external editor."
-msgstr ""
+msgstr "Befehl um externen Editor zu öffnen."
 
 msgid "Is underscore `_' used as a word separator?"
 msgstr ""
@@ -5658,193 +5670,193 @@ msgid "Color for breakable marks and breakpoints."
 msgstr ""
 
 msgid "Foreground color for assertion tags."
-msgstr ""
+msgstr "Farbe für Tags bei Zusicherungen."
 
 msgid "Background color for assertion tags."
-msgstr ""
+msgstr "Hintergrundfarbe für Tags bei Zusicherungen."
 
 msgid "Foreground color for indexing tags."
-msgstr ""
+msgstr "Farbe für Index-Tags."
 
 msgid "Background color for indexing tags."
-msgstr ""
+msgstr "Hintergrundfarbe für Index-Tags."
 
 msgid "Foreground color for reserved words."
-msgstr ""
+msgstr "Farbe für reservierte Worte."
 
 msgid "Background color for reserved words."
-msgstr ""
+msgstr "Hintergrundfarbe für reservierte Worte."
 
 msgid "Foreground color for generics."
-msgstr ""
+msgstr "Farbe für generischen Parameter."
 
 msgid "Background color for generics."
-msgstr ""
+msgstr "Hintergrundfarbe für generischen Parameter."
 
 msgid "Foreground color for locals."
-msgstr ""
+msgstr "Farbe für lokale Variablen."
 
 msgid "Background color for locals."
-msgstr ""
+msgstr "Hintergrundfarbe für lokale Variablen."
 
 msgid "Foreground color for classes."
-msgstr ""
+msgstr "Farbe für Klassen."
 
 msgid "Background color for classes."
-msgstr ""
+msgstr "Hintergrundfarbe für Klassen."
 
 msgid "Foreground color for features."
-msgstr ""
+msgstr "Farbe für Features."
 
 msgid "Background color for features."
-msgstr ""
+msgstr "Hintergrundfarbe für Features."
 
 msgid "Foreground color for clusters."
-msgstr ""
+msgstr "Farbe für Cluster."
 
 msgid "Background color for clusters."
-msgstr ""
+msgstr "Hintergrundfarbe für Cluster."
 
 msgid "Foreground color for errors."
-msgstr ""
+msgstr "Farbe für Fehler."
 
 msgid "Background color for errors."
-msgstr ""
+msgstr "Hintergrundfarbe für Fehler."
 
 msgid "Foreground color for object addresses."
-msgstr ""
+msgstr "Farbe für Objektadressen."
 
 msgid "Background color for object addresses."
-msgstr ""
+msgstr "Hintergrundfarbe für Objektadressen."
 
 msgid "Autocomplete indexing?"
-msgstr ""
+msgstr "Autovervollständigung für 'indexing'?"
 
 msgid "Use default autocomplete?"
-msgstr ""
+msgstr "Standard-Autovervollständigung benutzen?"
 
 msgid "Customized autocomplete (Space after keyword was typed)"
-msgstr ""
+msgstr "Benutzerdefinierte Autovervollständigung (Leerschlag nach einem Schlüsselwort)"
 
 msgid "Customized autocomplete (Return after keyword was typed)"
-msgstr ""
+msgstr "Benutzerdefinierte Autovervollständigung (Eingabetaste nach einem Schlüsselwort)"
 
 msgid "Customized autocomplete (Space, other cases)"
-msgstr ""
+msgstr "Benutzerdefinierte Autovervollständigung (Leerschlag, andere Fälle)"
 
 msgid "Customized autocomplete (Return, other cases)"
-msgstr ""
+msgstr "Benutzerdefinierte Autovervollständigung (Eingabetaste, andere Fälle)"
 
 msgid "Autocomplete class?"
-msgstr ""
+msgstr "Autovervollständigung für 'class'?"
 
 msgid "Autocomplete inherit?"
-msgstr ""
+msgstr "Autovervollständigung für 'inherit'?"
 
 msgid "Autocomplete creation?"
-msgstr ""
+msgstr "Autovervollständigung für 'creation'?"
 
 msgid "Autocomplete feature?"
-msgstr ""
+msgstr "Autovervollständigung für 'feature'?"
 
 msgid "Autocomplete is?"
-msgstr ""
+msgstr "Autovervollständigung für 'is'?"
 
 msgid "Autocomplete require?"
-msgstr ""
+msgstr "Autovervollständigung für 'require'?"
 
 msgid "Autocomplete require else?"
-msgstr ""
+msgstr "Autovervollständigung für 'require else'?"
 
 msgid "Autocomplete local?"
-msgstr ""
+msgstr "Autovervollständigung für 'local'?"
 
 msgid "Autocomplete do?"
-msgstr ""
+msgstr "Autovervollständigung für 'do'?"
 
 msgid "Autocomplete once?"
-msgstr ""
+msgstr "Autovervollständigung für 'once'?"
 
 msgid "Autocomplete deferred?"
-msgstr ""
+msgstr "Autovervollständigung für 'deferred'?"
 
 msgid "Autocomplete external?"
-msgstr ""
+msgstr "Autovervollständigung für 'external'?"
 
 msgid "Autocomplete rescue?"
-msgstr ""
+msgstr "Autovervollständigung für 'rescue'?"
 
 msgid "Autocomplete ensure?"
-msgstr ""
+msgstr "Autovervollständigung für 'ensure'?"
 
 msgid "Autocomplete ensure then?"
-msgstr ""
+msgstr "Autovervollständigung für 'ensure then'?"
 
 msgid "Autocomplete alias?"
-msgstr ""
+msgstr "Autovervollständigung für 'alias'?"
 
 msgid "Autocomplete if?"
-msgstr ""
+msgstr "Autovervollständigung für 'if'?"
 
 msgid "Autocomplete then?"
-msgstr ""
+msgstr "Autovervollständigung für 'then'?"
 
 msgid "Autocomplete else if?"
-msgstr ""
+msgstr "Autovervollständigung für 'else if'?"
 
 msgid "Autocomplete else?"
-msgstr ""
+msgstr "Autovervollständigung für 'else'?"
 
 msgid "Autocomplete inspect?"
-msgstr ""
+msgstr "Autovervollständigung für 'inspect'?"
 
 msgid "Autocomplete when?"
-msgstr ""
+msgstr "Autovervollständigung für 'when'?"
 
 msgid "Autocomplete from?"
-msgstr ""
+msgstr "Autovervollständigung für 'from'?"
 
 msgid "Autocomplete variant?"
-msgstr ""
+msgstr "Autovervollständigung für 'variant'?"
 
 msgid "Autocomplete debug?"
-msgstr ""
+msgstr "Autovervollständigung für 'debug'?"
 
 msgid "Autocomplete check?"
-msgstr ""
+msgstr "Autovervollständigung für 'check'?"
 
 msgid "Autocomplete rename?"
-msgstr ""
+msgstr "Autovervollständigung für 'rename'?"
 
 msgid "Autocomplete redefine?"
-msgstr ""
+msgstr "Autovervollständigung für 'redefine'?"
 
 msgid "Autocomplete undefine?"
-msgstr ""
+msgstr "Autovervollständigung für 'undefine'?"
 
 msgid "Autocomplete select?"
-msgstr ""
+msgstr "Autovervollständigung für 'select'?"
 
 msgid "Autocomplete export?"
-msgstr ""
+msgstr "Autovervollständigung für 'export'?"
 
 msgid "Autocomplete Precursor?"
-msgstr ""
+msgstr "Autovervollständigung für 'Precursor'?"
 
 msgid "Autocomplete create?"
-msgstr ""
+msgstr "Autovervollständigung für 'create'?"
 
 msgid "Autocomplete obsolete?"
-msgstr ""
+msgstr "Autovervollständigung für 'obsolete'?"
 
 msgid "Autocomplete invariant?"
-msgstr ""
+msgstr "Autovervollständigung für 'invariant'?"
 
 msgid "Autocomplete end?"
-msgstr ""
+msgstr "Autovervollständigung für 'end'"
 
 msgid "String to be inserted."
-msgstr ""
+msgstr "Einzufügende Zeichenkette."
 
 msgid "Toggle filter button in completion list."
 msgstr ""
@@ -5853,7 +5865,7 @@ msgid "Toggle show type in completion list."
 msgstr ""
 
 msgid "Key"
-msgstr ""
+msgstr "Schlüssel"
 
 msgid "Trigger feature completion."
 msgstr ""
@@ -5904,124 +5916,124 @@ msgid "Trigger display of search panel."
 msgstr ""
 
 msgid "Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"
-msgstr ""
+msgstr "Soll ein Dokument automatisch neu geladen werden wenn es extern geändert wurde aber nicht im Editor?"
 
 msgid "Does text cursor blink?"
-msgstr ""
+msgstr "Soll der Text-Cursor blinken?"
 
 msgid "All-purpose editor font."
-msgstr ""
+msgstr "Generelle Schrift im Editor."
 
 msgid "Editor header font."
-msgstr ""
+msgstr "Schrift für Überschriften im Editor."
 
 msgid "Keyword editor font"
-msgstr ""
+msgstr "Schrift für Schlüsselworte."
 
 msgid "Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."
-msgstr ""
+msgstr "Breite des linken Randes des Editors. Dies ist nicht der Bereich der für Haltepunkte verwendet wird, sondern der Bereich links vom Editor."
 
 msgid "Number of lines that will stay visible when you perform a page down or a page up operation."
-msgstr ""
+msgstr "Anzahl Zeilen die sichtbar bleiben wenn PAGE UP oder PAGE DOWN verwendet wird."
 
 msgid "Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"
-msgstr ""
+msgstr "Soll das Mausrad das Dokument eine ganze Seite umblättern? (Wenn Ja überschreibt dies die Option 'Zeilen pro Mausrad')"
 
 msgid "Number of lines scrolled using the mouse wheel."
-msgstr ""
+msgstr "Anzahl der Zeilen die gescrollt werden mit dem Mausrad."
 
 msgid "Does a quadruple click select the entire document?"
-msgstr ""
+msgstr "Soll ein Vierfach-Klick das gesamte Dokument anwählen?"
 
 msgid "Automatically remove trailing white space from lines?"
-msgstr ""
+msgstr "Sollen Leerschläge am Ende von Zeilen automatisch entfernt werden?"
 
 msgid "Should editor perform auto-indenting?"
-msgstr ""
+msgstr "Soll der Editor automatisch Einrücken?"
 
 msgid "Number of spaces that a tabulation character represents."
-msgstr ""
+msgstr "Anzahl Leerschläge pro Tabulator."
 
 msgid "Should tab character be used for auto-indentation?"
-msgstr ""
+msgstr "Soll Tabulator beim automatischen Einrücken verwendet werden?"
 
 msgid "Background color of line number margin."
-msgstr ""
+msgstr "Hintergrundfarbe der Zeilennummern."
 
 msgid "Color of separator between line number margin and editor."
-msgstr ""
+msgstr "Farbe der Trennlinie zwischen Zeilennummern und Editor."
 
 msgid "Color of line number text."
-msgstr ""
+msgstr "Farbe der Zeilennummern."
 
 msgid "Background color used to highlight line with cursor in it."
-msgstr ""
+msgstr "Hintergrundfarbe um Linien hervorzuheben welche den Cursor beinhalten."
 
 msgid "Background color used to highlight lines."
-msgstr ""
+msgstr "Hintergrundfarbe um Linien hervorzuheben."
 
 msgid "Color for normal text."
-msgstr ""
+msgstr "Farbe von normalem Text."
 
 msgid "Background color for normal text."
-msgstr ""
+msgstr "Hintergrundfarbe von normalem Text."
 
 msgid "Color of selected text."
-msgstr ""
+msgstr "Farbe von selektiertem Text."
 
 msgid "Background color of selected text."
-msgstr ""
+msgstr "Hintergrundfarbe von selektiertem Text."
 
 msgid "Background color of selected text when not focused."
-msgstr ""
+msgstr "Hintergrundfarbe von selektiertem Text wenn der Editor kein Fokus hat."
 
 msgid "Color of string text."
-msgstr ""
+msgstr "Farbe von Zeichenketten."
 
 msgid "Background color of string text."
-msgstr ""
+msgstr "Hintergrundfarbe von Zeichenketten."
 
 msgid "Color of keyword text."
-msgstr ""
+msgstr "Farbe von Schüsselworten."
 
 msgid "Background color of keyword text."
-msgstr ""
+msgstr "Hintergrundfarbe von Schlüsselworten."
 
 msgid "Color of space characters."
-msgstr ""
+msgstr "Farbe von Leerschlägen."
 
 msgid "Background color of space characters."
-msgstr ""
+msgstr "Hintergrundfarbe von Leerschlägen."
 
 msgid "Color of comments text."
-msgstr ""
+msgstr "Farbe von Kommentaren."
 
 msgid "Background color of coments text."
-msgstr ""
+msgstr "Hintergrundfarbe von Kommentaren."
 
 msgid "Color of operator text."
-msgstr ""
+msgstr "Farbe von Operatoren."
 
 msgid "Background color of operator text."
-msgstr ""
+msgstr "Hintergrundfarbe von Operatoren."
 
 msgid "Color of number text."
-msgstr ""
+msgstr "Farbe von Zahlen."
 
 msgid "Background color of number text."
-msgstr ""
+msgstr "Hintergrundfarbe von Zahlen."
 
 msgid "Indicates if editor line drawing is first buffered and then drawn, or just drawn directly to the screen.  If set to True, content will not flicker, but drawing performance will be reduced."
-msgstr ""
+msgstr "Soll das Neuzeichnen des Editor gepuffert werden? Falls Ja wird des Inhalt nicht flickern, aber die Zeichnungsleistung wird reduziert."
 
 msgid "Indicates if editor displays the line numbers by default."
-msgstr ""
+msgstr "Soll der Editor Zeilennummern standardmässig anzeigen?"
 
 msgid "Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."
-msgstr ""
+msgstr "Soll der Editor bei der Taste HOME zum ersten sichtbaren Zeichen der Zeile springen?"
 
 msgid "Place new editor tab at left side of editor's area?"
-msgstr ""
+msgstr "Einen neuen Editor-Reiter auf der linken Seite des Editors platzieren?"
 
 msgid "First external command."
 msgstr "1. externer Befehl"
@@ -6090,16 +6102,16 @@ msgid "Internet browser."
 msgstr "Internet browser."
 
 msgid "Height of dynamic library window."
-msgstr ""
+msgstr "Höhe des Fensters 'Dynamische Bibliothek'"
 
 msgid "Width of dynamic library window."
-msgstr ""
+msgstr "Breite des Fensters 'Dynamische Bibliothek'"
 
 msgid "Height of preferences window."
-msgstr ""
+msgstr "Höhe des Fensters 'Einstellungen'."
 
 msgid "Width of preferences window."
-msgstr ""
+msgstr "Breite des Fensters 'Einstellungen'."
 
 msgid "Show hidden preferences in preference window?"
 msgstr ""

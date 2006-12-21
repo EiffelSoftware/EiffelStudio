@@ -29,6 +29,8 @@ feature -- Status report
 
 	item (index: INTEGER): ANY is
 			-- Retrieved value at `index' position in `data'.
+		require
+			valid_index: valid_index (index)
 		do
 			Result := implementation.item (index)
 		end
@@ -37,6 +39,12 @@ feature -- Status report
 			-- Name of `index'-th item in Current tuple.
 		do
 			Result := implementation.column_name (index)
+		end
+
+	valid_index (index: INTEGER): BOOLEAN is
+			-- Is `index' a valid index for Current?
+		do
+			Result := implementation.valid_index (index)
 		end
 
 	count: INTEGER is
@@ -58,7 +66,7 @@ feature -- Status report
 			-- Is Curren tuple empty?
 		do
 			if implementation = Void then
-				Result := true	
+				Result := true
 			else
 				Result := (count = 0)
 			end

@@ -13,25 +13,25 @@
 	<target name="inserter_ingres" extends="common">
 		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres.ecf"/>
 		<cluster name="handle" location="..\Utilities\ingres\"/>
-		<cluster name="utilities" location="..\Utilities\"/>
 		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
 	<target name="inserter_sybase" extends="common">
 		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase.ecf"/>
 		<cluster name="handle" location="..\Utilities\sybase\"/>
-		<cluster name="utilities" location="..\Utilities\"/>
 		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
 	<target name="inserter_oracle" extends="common">
 		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle.ecf"/>
 		<cluster name="handle" location="..\Utilities\oracle\"/>
-		<cluster name="utilities" location="..\Utilities\"/>
 		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
 	<target name="inserter_odbc" extends="common">
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf"/>
 		<cluster name="handle" location="..\Utilities\odbc\"/>
-		<cluster name="utilities" location="..\Utilities\"/>
 		<cluster name="root_cluster" location=".\"/>
+		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
 </system>

@@ -65,7 +65,6 @@ feature -- String
 		require
 			a_s_not_void: a_s /= Void
 		local
-			l_str: STRING
 			c: NATURAL_32
 		do
 			Result := a_s

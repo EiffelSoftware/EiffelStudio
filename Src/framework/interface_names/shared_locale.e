@@ -66,15 +66,14 @@ feature -- String
 			a_s_not_void: a_s /= Void
 		local
 			l_str: STRING
+			c: NATURAL_32
 		do
-			if not a_s.is_empty and then a_s.is_valid_as_string_8 then
-				l_str := a_s.as_string_8
-				l_str.left_adjust
-					-- Set the first character to upper case.
-				l_str.put (l_str.item (1).as_upper, 1)
-				Result := l_str
-			else
-				Result := a_s
+			Result := a_s
+			if not Result.is_empty then
+				c := Result.code (1)
+				if c <= {CHARACTER_8}.max_value.to_natural_32 then
+					Result.put_code (c.to_character_8.as_upper.natural_32_code, 1)
+				end
 			end
 		ensure
 			Result_not_void: Result /= Void

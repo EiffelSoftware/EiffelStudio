@@ -1,5 +1,4 @@
 indexing
-
 	status: "See notice at end of class.";
 	Date: "$Date$"
 	Revision: "$Revision$"
@@ -31,6 +30,8 @@ feature -- Status setting
 			ht_order.extend (key)
 		ensure
 			ht.count = old ht.count + 1
+			ht_order.count = old ht_order.count + 1
+			mapped: is_mapped (key)
 		end
 
 	unset_map_name (key: STRING) is
@@ -40,10 +41,11 @@ feature -- Status setting
 			key_exists: key /= Void
 			item_exists: is_mapped (key)
 		do
-			ht.remove(key)
+			ht.remove (key)
 			ht_order.prune (key)
 		ensure
 			ht.count = old ht.count - 1
+			ht_order.count = old ht_order.count - 1
 		end
 
 feature -- Status report

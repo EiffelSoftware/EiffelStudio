@@ -161,6 +161,8 @@ feature -- global
 			end
 		end
 
+feature -- Status
+
 	has_breakpoints: BOOLEAN is
 			-- Does the program have a breakpoint (enabled or disabled) ?
 		local
@@ -304,7 +306,7 @@ feature -- changing breakpoints for a feature
 			end
 		end
 
-	remove_breakpoints_in_feature(f: E_FEATURE) is
+	remove_breakpoints_in_feature (f: E_FEATURE) is
 			-- remove all breakpoints set for feature 'f'
 		local
 			f_body_index: INTEGER
@@ -336,7 +338,7 @@ feature -- changing breakpoints for a feature
 			retry
 		end
 
-	disable_breakpoints_in_feature(f: E_FEATURE) is
+	disable_breakpoints_in_feature (f: E_FEATURE) is
 			-- disable all breakpoints set for feature 'f'
 		local
 			f_body_index: INTEGER
@@ -368,7 +370,7 @@ feature -- changing breakpoints for a feature
 			retry
 		end
 
-	enable_breakpoints_in_feature(f: E_FEATURE) is
+	enable_breakpoints_in_feature (f: E_FEATURE) is
 			-- enable all breakpoints set for feature 'f'
 		local
 			f_body_index: INTEGER
@@ -677,21 +679,21 @@ feature -- changing a specified breakpoint
 		require
 			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
 		local
-			bp: BREAKPOINT;
+			bpk: BREAKPOINT_KEY
 		do
 			error_in_bkpts := False
 				-- create a 'fake' breakpoint, in order to get the real
 				-- one in hash tables
-			create bp.make(f, i)
+			create bpk.make(f, i)
 
-			if not bp.is_corrupted then
+			if not bpk.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has_key (bp) then
+				if breakpoints.has_key (bpk) then
 						-- yes, the breakpoint is already known, so switch it
 					breakpoints.found_item.switch
 				else
 						-- unknown breakpoint, add it
-					breakpoints.add_breakpoint (bp)
+					breakpoints.add_breakpoint (breakpoints.new_breakpoint (bpk))
 				end
 			else
 				error_in_bkpts := True
@@ -703,16 +705,16 @@ feature -- changing a specified breakpoint
 		require
 			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
 		local
-			bp: BREAKPOINT;
+			bpk: BREAKPOINT_KEY
 		do
 			error_in_bkpts := False
 				-- create a 'fake' breakpoint, in order to get the real
 				-- one in hash tables
-			create bp.make (f, i)
+			create bpk.make (f, i)
 
-			if not bp.is_corrupted then
+			if not bpk.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has_key (bp) then
+				if breakpoints.has_key (bpk) then
 						-- yes, the breakpoint is already known, so switch it
 					breakpoints.found_item.discard
 				end
@@ -727,19 +729,21 @@ feature -- changing a specified breakpoint
 		require
 			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
 		local
-			bp: BREAKPOINT;
+			bpk: BREAKPOINT_KEY
+			bp: BREAKPOINT
 		do
 			error_in_bkpts := False
 				-- create a 'fake' breakpoint, in order to get the real one in hash table
-			create bp.make (f, i)
+			create bpk.make (f, i)
 
-			if not bp.is_corrupted then
+			if not bpk.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has_key (bp) then
+				if breakpoints.has_key (bpk) then
 						-- yes, the breakpoint is already known, so switch it
 					breakpoints.found_item.disable
 				else
 						-- unknown breakpoint, set it as disabled and add it
+					bp := breakpoints.new_breakpoint (bpk)
 					bp.disable
 					breakpoints.add_breakpoint (bp)
 				end
@@ -754,22 +758,22 @@ feature -- changing a specified breakpoint
 		require
 			valid_f: not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique)
 		local
-			bp: BREAKPOINT;
+			bpk: BREAKPOINT_KEY
 		do
 			error_in_bkpts := False
 
 			if f.body_index /= 0 then
 					-- create a 'fake' breakpoint, in order to get the real one in hash table
-				create bp.make (f, i)
+				create bpk.make (f, i)
 			end
 
-			if bp /= Void and then not bp.is_corrupted then
+			if bpk /= Void and then not bpk.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has_key (bp) then
+				if breakpoints.has_key (bpk) then
 						-- yes, the breakpoint is already known, so switch it
 					breakpoints.found_item.enable
 				else
-					breakpoints.add_breakpoint (bp)
+					breakpoints.add_breakpoint (breakpoints.new_breakpoint (bpk))
 				end
 			else
 				error_in_bkpts := True
@@ -785,19 +789,21 @@ feature -- changing a specified breakpoint
 			valid_expr: expr /= Void and then not expr.syntax_error_occurred
 			good_semantics: expr.is_condition (f)
 		local
+			bpk: BREAKPOINT_KEY
 			bp: BREAKPOINT
 		do
 			error_in_bkpts := False
 				-- create a 'fake' breakpoint, in order to get the real one in hash table
-			create bp.make (f, i)
+			create bpk.make (f, i)
 
-			if not bp.is_corrupted then
+			if not bpk.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has_key (bp) then
+				if breakpoints.has_key (bpk) then
 						-- yes, the breakpoint is already known, so set its condition.
 					breakpoints.found_item.set_condition (expr)
 				else
 						-- No, create it and set its condition.
+					bp := breakpoints.new_breakpoint (bpk)
 					breakpoints.add_breakpoint (bp)
 					bp.set_condition (expr)
 				end
@@ -811,15 +817,15 @@ feature -- changing a specified breakpoint
 		require
 			valid_breakpoint: is_breakpoint_set (f, i)
 		local
-			bp: BREAKPOINT
+			bpk: BREAKPOINT_KEY
 		do
 			error_in_bkpts := False
 				-- create a 'fake' breakpoint, in order to get the real one in hash table
-			create bp.make (f, i)
+			create bpk.make (f, i)
 
-			if not bp.is_corrupted then
+			if not bpk.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has_key (bp) then
+				if breakpoints.has_key (bpk) then
 						-- yes, the breakpoint is already known, so remove its condition.
 					breakpoints.found_item.remove_condition
 				end
@@ -835,15 +841,15 @@ feature -- getting the status of a specified breakpoint
 		require
 			valid_breakpoint: is_breakpoint_set (f, i)
 		local
-			bp: BREAKPOINT
+			bpk: BREAKPOINT_KEY
 		do
 			error_in_bkpts := False
 				-- create a 'fake' breakpoint, in order to get the real one in hash table
-			create bp.make (f, i)
+			create bpk.make (f, i)
 
-			if not bp.is_corrupted then
+			if not bpk.is_corrupted then
 					-- is the breakpoint known ?
-				if breakpoints.has_key (bp) then
+				if breakpoints.has_key (bpk) then
 						-- yes, the breakpoint is already known, so remove its condition.
 					Result := breakpoints.found_item
 				end
@@ -868,14 +874,14 @@ feature -- getting the status of a specified breakpoint
 	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
 			-- Is the `i'-th breakpoint of `f' set? (enabled or disabled)
 		local
-			bp: BREAKPOINT
+			bpk: BREAKPOINT_KEY
 		do
 			error_in_bkpts := False
 			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
 					-- create a 'fake' breakpoint, in order to get the real one in hash table
-				create bp.make(f,i)
-				if not bp.is_corrupted then
-					if breakpoints.has_key (bp) then
+				create bpk.make(f,i)
+				if not bpk.is_corrupted then
+					if breakpoints.has_key (bpk) then
 						Result := breakpoints.found_item.is_set
 					end
 				else
@@ -887,13 +893,13 @@ feature -- getting the status of a specified breakpoint
 	is_breakpoint_enabled (f: E_FEATURE; i: INTEGER): BOOLEAN is
 			-- Is the `i'-th breakpoint of `f' enabled
 		local
-			bp: BREAKPOINT
+			bpk: BREAKPOINT_KEY
 		do
 			error_in_bkpts := False
 			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique or else f.real_body_id = 0) then
-				create bp.make(f,i)
-				if not bp.is_corrupted then
-					if breakpoints.has_key (bp) then
+				create bpk.make(f,i)
+				if not bpk.is_corrupted then
+					if breakpoints.has_key (bpk) then
 						Result := breakpoints.found_item.is_enabled
 					end
 				else
@@ -905,13 +911,13 @@ feature -- getting the status of a specified breakpoint
 	is_breakpoint_disabled (f: E_FEATURE; i: INTEGER): BOOLEAN is
 			-- Is the `i'-th breakpoint of `f' disabled
 		local
-			bp: BREAKPOINT
+			bpk: BREAKPOINT_KEY
 		do
 			error_in_bkpts := False
 			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
-				create bp.make(f,i)
-				if not bp.is_corrupted then
-					if breakpoints.has_key(bp) then
+				create bpk.make (f,i)
+				if not bpk.is_corrupted then
+					if breakpoints.has_key (bpk) then
 						Result := breakpoints.found_item.is_disabled
 					end
 				else
@@ -934,6 +940,7 @@ feature -- getting the status of a specified breakpoint
 			--         `breakpoint_disabled' if breakpoint is set but disabled,
 			--		   `breakpoint_condition_disabled' if breakpoint is disabled and has a condition
 		local
+			bpk: BREAKPOINT_KEY
 			bp: BREAKPOINT
 		do
 --|			if not (f.is_deferred or else f.is_attribute or else f.is_constant or else f.is_unique) then
@@ -941,10 +948,10 @@ feature -- getting the status of a specified breakpoint
 			Result := breakpoint_not_set
 			if f.valid_body_index then
 				if f.real_body_id /= 0 then
-					create bp.make(f,i)
+					create bpk.make(f,i)
 				end
-				if bp /= Void and then not bp.is_corrupted then
-					if breakpoints.has_key(bp) then
+				if bpk /= Void and then not bpk.is_corrupted then
+					if breakpoints.has_key (bpk) then
 						bp := breakpoints.found_item
 						if bp.is_enabled then
 							if bp.condition = Void then
@@ -966,21 +973,21 @@ feature -- getting the status of a specified breakpoint
 			end
 		end
 
-feature -- Debug
+--feature -- Debug
 
-	trace is
-		do
-			io.put_string ("============ class DEBUG INFO ===========%N%N");
-			from
-				breakpoints.start
-			until
-				breakpoints.after
-			loop
-				breakpoints.item_for_iteration.trace
-				breakpoints.forth
-			end
-			io.put_string ("===================================%N%N");
-		end
+--	trace is
+--		do
+--			io.put_string ("============ class DEBUG INFO ===========%N%N");
+--			from
+--				breakpoints.start
+--			until
+--				breakpoints.after
+--			loop
+--				breakpoints.item_for_iteration.trace
+--				breakpoints.forth
+--			end
+--			io.put_string ("===================================%N%N");
+--		end
 
 feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 
@@ -1028,15 +1035,15 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 			end
 		end
 
-	features_with_breakpoint_set: LIST[E_FEATURE] is
+	features_with_breakpoint_set: LIST [E_FEATURE] is
 			-- list of all feature with a breakpoint set (enabled or disabled)
 		local
 			bp: BREAKPOINT
-			known_features: ARRAYED_LIST[INTEGER]
+			known_features: ARRAYED_LIST [INTEGER]
 			body_index: INTEGER
 		do
 			error_in_bkpts := False
-			create {LINKED_LIST[E_FEATURE]} Result.make
+			create {LINKED_LIST [E_FEATURE]} Result.make
 			create known_features.make(5)
 
 			from

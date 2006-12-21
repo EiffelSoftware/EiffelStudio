@@ -1,58 +1,23 @@
 indexing
-	description: "Preferences for EiffelStudio."
+	description: "Preferences for debugger components of the Eiffel Compiler.  Facade."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_PREFERENCES
-
-inherit
-	EC_PREFERENCES
-		rename
-			make as make_batch
-		end
-
-	EB_GUI_PREFERENCES
-		rename
-			make as make_gui
-		end
-
 	DBG_PREFERENCES
-		rename
-			make as make_dbg
-		end
 
 create
 	make
-
+	
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES; gui_mode: BOOLEAN; dbg_mode: BOOLEAN) is
-			-- Create `Current' using `a_preferences'
-		require
-			a_preferences_not_void: a_preferences /= Void
-		do
-			make_batch (a_preferences)
-			if gui_mode then
-				make_gui (a_preferences)
-			end
-			if dbg_mode then
-				make_dbg (a_preferences)
-			end
-			preferences := a_preferences
-		end
-
-feature -- Access
-
-	preferences: PREFERENCES
-			-- Actual preferences.  Use only to get a preference which you do not know the type
-			-- of at runtime through `get_resource'.
-
-invariant
-	preferences_not_void: preferences /= Void
-
+	make (a_preferences: PREFERENCES) is
+			-- Create
+		do			
+		end		
+	
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
@@ -85,4 +50,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_PREFERENCES
+end -- class DBG_PREFERENCES

@@ -14,7 +14,7 @@ class
 	BREAK_LIST
 
 inherit
-	HASH_TABLE [BREAKPOINT, BREAKPOINT]
+	HASH_TABLE [BREAKPOINT, BREAKPOINT_KEY]
 		rename
 			make as ht_make
 		end
@@ -28,6 +28,17 @@ feature -- Initialization
 			-- Create an empty list of break points.
 		do
 			ht_make (50)
+		end
+
+feature -- Element factory
+
+	new_breakpoint (bpk: BREAKPOINT_KEY): BREAKPOINT is
+			-- Real breakpoint from `bpk'.
+		do
+			Result ?= bpk
+			if Result = Void then
+				create Result.make (bpk.routine, bpk.breakable_line_number)
+			end
 		end
 
 feature -- Element change

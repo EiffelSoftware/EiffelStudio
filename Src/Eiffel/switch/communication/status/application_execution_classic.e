@@ -18,7 +18,7 @@ inherit
 			recycle,
 			make_with_debugger,
 			is_classic_system,
-			is_dotnet
+			is_dotnet_system
 		end
 
 	OBJECT_ADDR
@@ -46,7 +46,7 @@ create {DEBUGGER_MANAGER}
 
 feature
 	is_classic_system: BOOLEAN is True
-	is_dotnet: BOOLEAN is False
+	is_dotnet_system: BOOLEAN is False
 
 feature {NONE} -- Initialization
 

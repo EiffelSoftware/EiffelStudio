@@ -1,27 +1,20 @@
 indexing
-	description: "Preferences for EiffelStudio."
+	description	: "TIMER for debugger on mswin"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_PREFERENCES
+	TTY_DEBUGGER_TIMER
 
 inherit
-	EC_PREFERENCES
-		rename
-			make as make_batch
-		end
 
-	EB_GUI_PREFERENCES
-		rename
-			make as make_gui
-		end
+	IDENTIFIED
 
-	DBG_PREFERENCES
-		rename
-			make as make_dbg
+	DEBUGGER_TIMER
+		undefine
+			is_equal, copy
 		end
 
 create
@@ -29,29 +22,50 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES; gui_mode: BOOLEAN; dbg_mode: BOOLEAN) is
-			-- Create `Current' using `a_preferences'
-		require
-			a_preferences_not_void: a_preferences /= Void
+	make (dmi: TTY_DEBUGGER_MANAGER_IMP) is
 		do
-			make_batch (a_preferences)
-			if gui_mode then
-				make_gui (a_preferences)
-			end
-			if dbg_mode then
-				make_dbg (a_preferences)
-			end
-			preferences := a_preferences
+			tty_dbg_manager_imp := dmi
+			create actions
 		end
 
 feature -- Access
 
-	preferences: PREFERENCES
-			-- Actual preferences.  Use only to get a preference which you do not know the type
-			-- of at runtime through `get_resource'.
+	interval: INTEGER
 
-invariant
-	preferences_not_void: preferences /= Void
+	actions: ACTION_SEQUENCE [TUPLE]
+
+feature -- Change
+
+	set_interval (i: like interval) is
+		do
+			interval := i
+			if i = 0 then
+				kill_timer
+			else
+				set_timer
+			end
+		end
+
+	set_timer is
+		do
+			tty_dbg_manager_imp.set_timer (object_id, interval)
+		end
+
+	kill_timer is
+		do
+			tty_dbg_manager_imp.kill_timer (object_id)
+		end
+
+feature -- Execution
+
+	execute is
+		do
+			actions.call (Void)
+		end
+
+feature -- Externals
+
+	tty_dbg_manager_imp: TTY_DEBUGGER_MANAGER_IMP;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -85,4 +99,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_PREFERENCES
+end

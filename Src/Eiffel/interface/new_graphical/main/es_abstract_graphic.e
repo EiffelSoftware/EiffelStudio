@@ -72,7 +72,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 				-- Initialization of compiler resources.
 			create preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
-			initialize_preferences (preference_access, True)
+			initialize_preferences (preference_access, True, True)
 
 				-- Create and setup the output manager / Error displayer
 			create an_output_manager

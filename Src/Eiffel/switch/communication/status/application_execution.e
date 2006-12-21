@@ -69,7 +69,7 @@ feature -- execution mode
 			Result := debugger_manager.is_classic_project
 		end
 
-	is_dotnet: BOOLEAN is
+	is_dotnet_system: BOOLEAN is
 			-- Is this application a dotnet system ?
 		do
 			Result := debugger_manager.is_dotnet_project

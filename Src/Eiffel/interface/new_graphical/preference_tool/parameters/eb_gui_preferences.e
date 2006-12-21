@@ -22,7 +22,6 @@ feature {NONE} -- Initialization
 			create context_tool_data.make (a_preferences)
 			create debug_tool_data.make (a_preferences)
 			create diagram_tool_data.make (a_preferences)
-			create debugger_data.make (a_preferences)
 			create development_window_data.make (a_preferences)
 			create recent_projects_data.make (a_preferences)
 			create editor_data.make (a_preferences)
@@ -42,9 +41,6 @@ feature -- Access
 
 	debug_tool_data: EB_DEBUG_TOOL_DATA
 			-- Preference data for debugger tool.
-
-	debugger_data: EB_DEBUGGER_DATA
-			-- Preference data for debugger.		
 
 	development_window_data: EB_DEVELOPMENT_WINDOW_PREFERENCES
 			-- Preference data for the EiffelStudio main development window.
@@ -74,7 +70,6 @@ invariant
 	dialog_data_not_void: dialog_data /= Void
 	context_tool_data_not_void: context_tool_data /= Void
 	debug_tool_data_not_void: debug_tool_data /= Void
-	debugger_data_not_void: debugger_data /= Void
 	development_window_data_not_void: development_window_data /= Void
 	recent_projects_data_not_void: recent_projects_data /= Void
 	editor_data_not_void: editor_data /= Void

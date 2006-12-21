@@ -40,7 +40,7 @@ feature -- Application status
 		require
 			appstatus_not_void: appstatus /= Void
 			non_void_st: st /= Void
-			valid_code: appstatus.exception_code > 0
+--			valid_code: ({APPLICATION_STATUS_DOTNET} #? appstatus /= Void) implies	appstatus.exception_code > 0
 		deferred
 		end
 

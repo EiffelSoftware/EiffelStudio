@@ -1,11 +1,13 @@
 indexing
-	description	: "Describes a breakpoint. A breakpoint is represented by its `body_index' %
-				  %and its `breakable_line_number' (line number in stop points view). We %
-				  %also keep the 'real_body_id` because the run-time handles breakpoints %
-				  %through `real_body_id' and `breakable_line_number'."
+	description	: "[
+					Describes a breakpoint. A breakpoint is represented by its `body_index' 
+				  	and its `breakable_line_number' (line number in stop points view). 
+					The run-time handles breakpoints through `real_body_id' 
+					and `breakable_line_number'.
+				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	author		: "$Author$"
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -13,49 +15,39 @@ class BREAKPOINT
 
 inherit
 
-	DEBUG_OUTPUT
+	BREAKPOINT_KEY
 		redefine
-			is_equal
+			make
 		end
 
-	HASHABLE
-		redefine
+	DEBUG_OUTPUT
+		undefine
 			is_equal
 		end
 
 	E_FEATURE_COMPARER
-		redefine
+		undefine
 			is_equal
 		end
 
 	COMPILER_EXPORTER
-		redefine
+		undefine
 			is_equal
 		end
-
 create
 	make
 
-feature -- Creation
+feature {DEBUG_INFO, BREAK_LIST} -- Creation
 
-	make (given_feature: E_FEATURE; given_breakable_line_number: INTEGER) is
-			-- Create a breakpoint in the feature `given_feature'
-			-- at the line `given_breakable_line_number'.
-		require
-			valid_breakpoint: 	given_feature /= Void and then
-								given_breakable_line_number > 0 and then
-								given_feature.body_index /= 0
+	make (a_feature: E_FEATURE; a_breakable_index: INTEGER) is
+			-- Create a breakpoint in the feature `a_feature'
+			-- at the line `a_breakable_index'.
 		do
+			Precursor {BREAKPOINT_KEY} (a_feature, a_breakable_index)
 			if not is_corrupted then
-				breakable_line_number := given_breakable_line_number
-				routine := given_feature
 				application_status := Application_breakpoint_not_set
 				bench_status := Bench_breakpoint_set
-				body_index := routine.body_index
 			end
-		rescue
-			is_corrupted := True
-			retry
 		end
 
 feature -- debug output
@@ -112,15 +104,6 @@ feature -- Output
 		end
 
 feature -- Properties
-
-	breakable_line_number: INTEGER
-			-- Line number of the breakpoint in the stoppoint view under $EiffelGraphicalCompiler$.
-
-	routine: E_FEATURE
-			-- Feature where this breakpoint is situated.
-
-	body_index: INTEGER
-			-- `body_index' of the feature where this breakpoint is situated
 
 	bench_status: INTEGER
 			-- Current status within $EiffelGraphicalCompiler$.
@@ -179,17 +162,6 @@ feature -- Query
 
 feature -- Access
 
-	hash_code: INTEGER is
-			-- Hash code for breakpoint.
-		do
-			Result := body_index * 100 + breakable_line_number
-				-- here we take the absolute value of the
-				-- result if  an overflow occurred
-			if Result < 0 then
-				Result := - Result
-			end
-		end
-
 	is_not_useful: BOOLEAN is
 			-- Is the structure still useful?
 			--
@@ -201,9 +173,6 @@ feature -- Access
 		ensure
 			is_not_usefull: Result implies bench_status = Bench_breakpoint_not_set and application_status = Application_breakpoint_not_set
 		end
-
-	is_corrupted: BOOLEAN
-			-- False unless there was a problem at initialization (no feature).
 
 	is_valid: BOOLEAN is
 				-- Is using `Current' safe?
@@ -463,19 +432,6 @@ feature {EWB_REQUEST, APPLICATION_EXECUTION} -- application status access
 			-- Is the breakpoint set for the application?
 		do
 			Result := (application_status = Application_breakpoint_set)
-		end
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `other' equal to `Current'?
-			-- `other' equals to `Current' if they represent
-			-- the same physical breakpoint, in other words they
-			-- have the same `body_index' and `offset'.
-			-- We use 'body_index' because it does not change after
-			-- a recompilation
-		do
-			Result := (other.breakable_line_number = breakable_line_number) and (other.body_index = body_index)
 		end
 
 feature {NONE} -- Implementation

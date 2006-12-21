@@ -8,9 +8,6 @@ indexing
 class
 	EB_DEBUGGER_DATA
 
-inherit
-	ES_TOOLBAR_PREFERENCE
-
 create
 	make
 
@@ -44,44 +41,39 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			end
 		end
 
-	default_expanded_view_size: INTEGER is
-			-- Default size for expanded view dialog
+	interrupt_every_n_instructions: INTEGER is
 		do
-			Result := default_expanded_view_size_preference.value
-			if Result < 1 then
-				Result := 500
-			end
+			Result := interrupt_every_n_instructions_preference.value
 		end
 
-	show_text_in_project_toolbar: BOOLEAN is
-			-- Show selected text in the project toolbar?
+	debug_output_evaluation_enabled: BOOLEAN is
 		do
-			Result := show_text_in_project_toolbar_preference.value
+			Result := debug_output_evaluation_enabled_preference.value
 		end
 
-	show_all_text_in_project_toolbar: BOOLEAN is
-			-- Show all selected text in the project toolbar?
+	generating_type_evaluation_enabled: BOOLEAN is
 		do
-			Result := show_all_text_in_project_toolbar_preference.value
+			Result := generating_type_evaluation_enabled_preference.value
 		end
 
-	keep_stepping_info_dotnet_feature: BOOLEAN is
-			-- Do we keep stepping into dotnet feature or keep out as soon as possible ?
+	min_slice: INTEGER is
+			-- From which attribute number should special objects be displayed?
 		do
-			Result := keep_stepping_info_dotnet_feature_preference.value
+			Result := min_slice_preference.value
 		end
 
-	dotnet_debugger: ARRAY [STRING] is
-			-- .NET debugger to launch
+	max_slice: INTEGER is
+			-- Up to which attribute number should special objects be displayed?
 		do
-			Result := dotnet_debugger_preference.value
+			Result := max_slice_preference.value
 		end
 
-	project_toolbar_layout: ARRAY [STRING] is
-			-- Toolbar organization
+	max_evaluation_duration: INTEGER is
 		do
-			Result := project_toolbar_layout_preference.value
+			Result := max_evaluation_duration_preference.value
 		end
+
+feature {EB_SHARED_PREFERENCES} -- Classic specific
 
 	close_classic_dbg_daemon_on_end_of_debugging: BOOLEAN is
 			-- Do we close the classic dbg daemon when the debugging is finished ?
@@ -99,58 +91,53 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := classic_debugger_location_preference.value
 		end
 
+feature {EB_SHARED_PREFERENCES} -- Dotnet specific
+
+	keep_stepping_info_dotnet_feature: BOOLEAN is
+			-- Do we keep stepping into dotnet feature or keep out as soon as possible ?
+		do
+			Result := keep_stepping_info_dotnet_feature_preference.value
+		end
+
+	dotnet_debugger: ARRAY [STRING] is
+			-- .NET debugger to launch
+		do
+			Result := dotnet_debugger_preference.value
+		end
+
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE
 	critical_stack_depth_preference: INTEGER_PREFERENCE
-	default_expanded_view_size_preference: INTEGER_PREFERENCE
-	show_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
-	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
-	project_toolbar_layout_preference: ARRAY_PREFERENCE
+	interrupt_every_n_instructions_preference: INTEGER_PREFERENCE
 	keep_stepping_info_dotnet_feature_preference: BOOLEAN_PREFERENCE
 	dotnet_debugger_preference: ARRAY_PREFERENCE
 	close_classic_dbg_daemon_on_end_of_debugging_preference: BOOLEAN_PREFERENCE
 	classic_debugger_timeout_preference: INTEGER_PREFERENCE
 	classic_debugger_location_preference: STRING_PREFERENCE
+	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
+	generating_type_evaluation_enabled_preference: BOOLEAN_PREFERENCE
+	min_slice_preference: INTEGER_PREFERENCE
+	max_slice_preference: INTEGER_PREFERENCE
+	max_evaluation_duration_preference: INTEGER_PREFERENCE
 
-feature -- Toolbar Convenience
-
-	retrieve_project_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
-			-- Retreive the project toolbar using the available commands in `command_pool'
-		do
-			Result := retrieve_toolbar (command_pool, project_toolbar_layout_preference.value)
-			if show_text_in_project_toolbar then
-				Result.enable_important_text
-			elseif show_all_text_in_project_toolbar then
-				Result.enable_text_displayed
-			end
-		end
-
-	save_project_toolbar (project_toolbar: EB_TOOLBAR) is
-			-- Save the project toolbar `project_toolbar' layout/status into the preferences.
-			-- Call `save_preferences' to have the changes actually saved.
-		do
-			project_toolbar_layout_preference.set_value (save_toolbar (project_toolbar))
-			show_text_in_project_toolbar_preference.set_value (project_toolbar.is_text_important)
-			show_all_text_in_project_toolbar_preference.set_value (project_toolbar.is_text_displayed)
-			preferences.save_preference (project_toolbar_layout_preference)
-			preferences.save_preference (show_text_in_project_toolbar_preference)
-			preferences.save_preference (show_all_text_in_project_toolbar_preference)
-		end
 
 feature {NONE} -- Preference Strings
 
-	project_toolbar_layout_string: STRING is "debugger.project_toolbar_layout"
 	critical_stack_depth_string: STRING is "debugger.critical_stack_depth"
-	show_text_in_project_toolbar_string: STRING is "debugger.show_text_in_project_toolbar"
-	show_all_text_in_project_toolbar_string: STRING is "debugger.show_all_text_in_project_toolbar"
-	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
 	default_maximum_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"
 	keep_stepping_info_dotnet_feature_string: STRING is "debugger.dotnet.keep_stepping_info_dotnet_feature"
 	dotnet_debugger_string: STRING is "debugger.dotnet_debugger"
 	close_classic_dbg_daemon_on_end_of_debugging_string: STRING is "debugger.classic_debugger.close_dbg_daemon_on_end_of_debugging"
 	classic_debugger_timeout_string: STRING is "debugger.classic_debugger.timeout"
 	classic_debugger_location_string: STRING is "debugger.classic_debugger.debugger_location"
+	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_N_instructions"
+	debug_output_evaluation_enabled_string: STRING is "debugger.debug_output_evaluation"
+	generating_type_evaluation_enabled_string: STRING is "debugger.generating_type_evaluation"
+	min_slice_string: STRING is "debugger.min_slice"
+	max_slice_string: STRING is "debugger.max_slice"
+	max_evaluation_duration_preference_string: STRING is "debugger.max_evaluation_duration"
 
 feature {NONE} -- Implementation
 
@@ -163,10 +150,12 @@ feature {NONE} -- Implementation
 
 			default_maximum_stack_depth_preference := l_manager.new_integer_preference_value (l_manager, default_maximum_stack_depth_string, 500)
 			critical_stack_depth_preference := l_manager.new_integer_preference_value (l_manager, critical_stack_depth_string, 500)
-			default_expanded_view_size_preference := l_manager.new_integer_preference_value (l_manager, default_expanded_view_size_string, 50)
-			show_text_in_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_project_toolbar_string, True)
-			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_project_toolbar_string, True)
-			project_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
+			interrupt_every_n_instructions_preference := l_manager.new_integer_preference_value (l_manager, interrupt_every_n_instructions_string, 1)
+			debug_output_evaluation_enabled_preference := l_manager.new_boolean_preference_value (l_manager, debug_output_evaluation_enabled_string, True)
+			generating_type_evaluation_enabled_preference := l_manager.new_boolean_preference_value (l_manager, generating_type_evaluation_enabled_string, True)
+			min_slice_preference := l_manager.new_integer_preference_value (l_manager, min_slice_string, 0)
+			max_slice_preference := l_manager.new_integer_preference_value (l_manager, max_slice_string, 50)
+			max_evaluation_duration_preference := l_manager.new_integer_preference_value (l_manager, max_evaluation_duration_preference_string, 5)
 			keep_stepping_info_dotnet_feature_preference := l_manager.new_boolean_preference_value (l_manager, keep_stepping_info_dotnet_feature_string, False)
 			dotnet_debugger_preference := l_manager.new_array_preference_value (l_manager, dotnet_debugger_string, <<"[EiffelStudio Dbg];cordbg;DbgCLR">>)
 			dotnet_debugger_preference.set_is_choice (True)
@@ -182,14 +171,15 @@ invariant
 	preferences_not_void: preferences /= Void
 	default_maximum_stack_depth_preference_not_void: default_maximum_stack_depth_preference /= Void
 	critical_stack_depth_preference_not_void: critical_stack_depth_preference /= Void
-	default_expanded_view_size_preference_not_void: default_expanded_view_size_preference /= Void
-	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
-	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void
-	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
 	close_classic_dbg_daemon_on_end_of_debugging_preference_not_void:  close_classic_dbg_daemon_on_end_of_debugging_preference /= Void
 	classic_debugger_timeout_preference_not_void: classic_debugger_timeout_preference /= Void
 	classic_debugger_location_preference_not_void: classic_debugger_location_preference /= Void
 	keep_stepping_info_dotnet_feature_preference_not_void: keep_stepping_info_dotnet_feature_preference /= Void
+	interrupt_every_n_instructions_preference_not_void: interrupt_every_n_instructions_preference /= Void
+	debug_output_evaluation_enabled_preference_not_void: debug_output_evaluation_enabled_preference /= Void
+	generating_type_evaluation_enabled_preference_not_void: generating_type_evaluation_enabled_preference /= Void
+	min_slice_preference_not_void: min_slice_preference /= Void
+	max_slice_preference_not_void: max_slice_preference /= Void
 
 --	_preference_not_void: _preference /= Void
 

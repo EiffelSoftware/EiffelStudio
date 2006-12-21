@@ -30,6 +30,7 @@ inherit
 			implementation,
 			set_maximum_stack_depth,
 			notify_breakpoints_changes,
+			add_idle_action, remove_idle_action, new_timer,
 			debugger_output_message, debugger_warning_message, debugger_status_message,
 			display_application_status, display_system_info, display_debugger_info,
 			set_error_message,
@@ -48,6 +49,8 @@ inherit
 		rename
 			set_error_message as eb_set_error_message
 		end
+
+	EV_SHARED_APPLICATION
 
 create
 	make
@@ -78,19 +81,19 @@ feature {NONE} -- Initialization
 							end
 					)
 
-				pbool := preferences.debug_tool_data.debug_output_evaluation_enabled_preference
+				pbool := preferences.debugger_data.debug_output_evaluation_enabled_preference
 				dump_value_factory.set_debug_output_evaluation_enabled (pbool.value)
 				pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
 
 				set_displayed_string_size (preferences.misc_data.default_displayed_string_size)
 				if preferences.debug_tool_data /= Void then
-					set_max_evaluation_duration (preferences.debug_tool_data.max_evaluation_duration)
-					preferences.debug_tool_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
+					set_max_evaluation_duration (preferences.debugger_data.max_evaluation_duration)
+					preferences.debugger_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
 				end
 				check
 					displayed_string_size: displayed_string_size = preferences.misc_data.default_displayed_string_size
-					max_evaluation_duration_set: preferences.debug_tool_data /= Void implies
-								max_evaluation_duration = preferences.debug_tool_data.max_evaluation_duration
+					max_evaluation_duration_set: preferences.debugger_data /= Void implies
+								max_evaluation_duration = preferences.debugger_data.max_evaluation_duration
 				end
 
 
@@ -177,7 +180,7 @@ feature -- tools management
 	new_toolbar: EB_TOOLBAR is
 			-- Toolbar containing all debugging commands.
 		do
-			Result := preferences.debugger_data.retrieve_project_toolbar (toolbarable_commands)
+			Result := preferences.debug_tool_data.retrieve_project_toolbar (toolbarable_commands)
 		end
 
 	new_debug_menu: EV_MENU is
@@ -368,6 +371,24 @@ feature -- tools management
 		do
 			wt.close
 			watch_tool_list.prune_all (wt)
+		end
+
+
+feature -- Events helpers
+
+	new_timer: EV_DEBUGGER_TIMER is
+		do
+			create Result
+		end
+
+	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+		do
+			ev_application.add_idle_action (v)
+		end
+
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+		do
+			ev_application.remove_idle_action (v)
 		end
 
 feature -- GUI Access
@@ -931,7 +952,7 @@ feature -- Status setting
 	save_interface (toolbar: EB_TOOLBAR) is
 			-- Save the interface configuration using `toolbar'.
 		do
-			preferences.debugger_data.save_project_toolbar (toolbar)
+			preferences.debug_tool_data.save_project_toolbar (toolbar)
 		end
 
 feature -- Debugging events
@@ -1019,7 +1040,6 @@ feature -- Debugging events
 				io.put_string (generator + ".on_application_just_stopped : start%N")
 			end
 			Window_manager.display_message (Interface_names.E_paused)
-			application.set_current_execution_stack_number (1)
 			stop_cmd.disable_sensitive
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive

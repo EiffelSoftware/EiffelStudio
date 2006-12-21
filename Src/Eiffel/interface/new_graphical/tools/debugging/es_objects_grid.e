@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 		local
 			bp: BOOLEAN_PREFERENCE
 		do
-			bp := preferences.debug_tool_data.generating_type_evaluation_enabled_preference
+			bp := preferences.debugger_data.generating_type_evaluation_enabled_preference
 			generating_type_evaluation_enabled := bp.value
 			bp.typed_change_actions.extend (agent (b: BOOLEAN)
 					do
@@ -320,7 +320,7 @@ feature -- Columns layout access
 			check
 				l_str_not_void: l_str /= Void
 			end
-			Result := [cindex, col.is_displayed, column_has_auto_resizing (c), col.width, col.title, l_str]
+			Result := [cindex, col.is_show_requested, column_has_auto_resizing (c), col.width, col.title, l_str]
 		end
 
 feature -- Change

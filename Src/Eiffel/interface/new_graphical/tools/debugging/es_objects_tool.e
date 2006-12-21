@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			a_debugger_not_void: a_debugger /= Void
 		do
 			set_debugger_manager (a_debugger)
-			debugger_manager.set_slices (preferences.debug_tool_data.min_slice, preferences.debug_tool_data.max_slice)
+			debugger_manager.set_slices (preferences.debugger_data.min_slice, preferences.debugger_data.max_slice)
 
 			display_first_attributes := True
 			display_first_onces := False
@@ -715,8 +715,8 @@ feature -- Status Setting
 			g: like objects_grid
 		do
 			reset_update_on_idle
-			preferences.debug_tool_data.min_slice_preference.set_value (debugger_manager.min_slice)
-			preferences.debug_tool_data.max_slice_preference.set_value (debugger_manager.max_slice)
+			preferences.debugger_data.min_slice_preference.set_value (debugger_manager.min_slice)
+			preferences.debugger_data.max_slice_preference.set_value (debugger_manager.max_slice)
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug
 			if current_object /= Void then

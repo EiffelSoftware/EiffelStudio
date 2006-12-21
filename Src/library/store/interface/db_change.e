@@ -79,6 +79,7 @@ feature {NONE} -- Initialization
 			implementation := handle.database.db_change
 			create ht.make (name_table_size)
 			create ht_order.make (name_table_size)
+			ht_order.compare_objects
 			implementation.set_ht (ht)
 			implementation.set_ht_order (ht_order)
 		end

@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_PROC [G -> DATABASE create default_create end]
 inherit
 
@@ -15,7 +15,7 @@ inherit
 	HANDLE_SPEC [G]
 
 create -- Creation procedure
-	
+
 	make
 
 feature -- Initialization
@@ -47,7 +47,7 @@ feature -- Status report
 						seq := 1
 					until
 						seq > row_number
-					loop	
+					loop
        					private_selection.set_map_name (seq , "seq")
      					private_selection.query (Select_text (name))
      					private_selection.load_result
@@ -57,7 +57,7 @@ feature -- Status report
      					tmp_text.append(row_text)
 						seq := seq + 1
 					end
- 
+
 				else
 					private_selection.query (Select_text (name))
 					private_selection.load_result
@@ -92,7 +92,7 @@ feature -- Basic operations
 			-- Store current procedure performing `sql' statement.
 		require else
 			argument_not_void: sql /= Void
-		local   
+		local
 			sql_temp: STRING
 		do
 			if db_spec.support_stored_proc then
@@ -106,46 +106,31 @@ feature -- Basic operations
 				private_string.append (db_spec.sql_as)
 				private_string.append (sql_temp)
 				private_string.append (db_spec.sql_end)
-				if (handle.execution_type.immediate_execution) then
-					private_change.modify (private_string)
-				else 
-						-- Does not work with Oracle.
-		--			handle.execution_type.set_immediate
-					private_change.modify (private_string)
-		--			handle.execution_type.unset_immediate
-				end
+				private_change.modify (private_string)
 			else
 				db_spec.store_proc_not_supported
 			end
 		end
-		
+
 	execute (destination: DB_EXPRESSION) is
 			-- Execute current procedure with `destination'
 			-- as a DB_SELECTION or a DB_CHANGE object mapping
 			-- entity values with procedure parameter names
-			-- if any. 
+			-- if any.
 		require else
 			argument_not_void: destination /= Void
 		do
-			if (db_spec.support_proc > 0) then
+			if db_spec.support_proc then
 				private_string.wipe_out
 				private_string.append (db_spec.sql_execution)
 				private_string.append (proc_name)
-				
+
 				if arguments_set then
 					append_in_args_value (private_string)
 				end
-				private_string.append (db_spec.sql_after_exec)							
+				private_string.append (db_spec.sql_after_exec)
 				destination.set_query (private_string)
-				if (handle.execution_type.immediate_execution) then
-					destination.execute_query
-				else
-					-- DB_CHANGE/Oracle has a problem with immediate execution (ORA-01001: Invalid cursor) [but
-					-- it works], so let's use normal execution, which works better (Is it slower?).
-		--FIXME			handle.execution_type.set_immediate
-					destination.execute_query
-		--FIXME			handle.execution_type.unset_immediate
-				end
+				destination.execute_query
 			else
 				db_spec.exec_proc_not_supported
 			end
@@ -159,7 +144,7 @@ feature -- Basic operations
 			destination.set_query (private_string)
 			destination.execute_query
 		end
-	
+
 	drop is
 			-- Drop current procedure from server.
 		do
@@ -193,7 +178,7 @@ feature -- Status report
 		do
 			Result := (arguments_name /= Void and arguments_type /= Void)
 		ensure
-			arguments_set: Result implies 
+			arguments_set: Result implies
 								(arguments_name /= Void and arguments_type /= Void)
 		end
 
@@ -209,12 +194,12 @@ feature -- Element change
 		ensure then
 			name_changed: name = new_name
 		end
-			
+
 	set_arguments (args_name: like arguments_name;
 			 			args_type: like arguments_type) is
-			-- Set `arguments_name' and `arguments_type' 
-			-- of current as a variable list of argument 
-			-- names and a variable list of argument 
+			-- Set `arguments_name' and `arguments_type'
+			-- of current as a variable list of argument
+			-- names and a variable list of argument
 			-- types, respectively.
 		require
 			args_name_not_void: args_name /= Void
@@ -223,7 +208,7 @@ feature -- Element change
 		do
 			arguments_name := args_name
 			arguments_type := args_type
-		ensure			
+		ensure
 			arguments_set
 			set_with_input_parameter1: arguments_name = args_name
 			set_with_input_parameter2: arguments_type = args_type
@@ -250,7 +235,7 @@ feature {NONE} -- Implementation
 			temp_string: STRING
 			tuple: DB_TUPLE
 		do
-			if (db_spec.support_proc > 0) then
+			if db_spec.support_proc then
 				private_selection.set_map_name (name, "name")
 				private_selection.query (Select_exists)
 				p_exists := handle.status.found
@@ -275,7 +260,7 @@ feature {NONE} -- Implementation
 								-- Added for ODBC, should really be abstracted
 							temp_string ?= tuple.item (3)
 							p_exists := temp_string /= Void and then not temp_string.is_empty
-							
+
 						end
 					end
 				else
@@ -351,12 +336,12 @@ feature {NONE} -- Implementation
 feature {NONE} -- Status report
 
 	row_number: INTEGER
-			-- record the number of segments into which the stored 
+			-- record the number of segments into which the stored
 			-- procedure is divided by INGRES
-	
+
 	name: STRING
 			-- Stored procedure name
-		
+
 	qualifier: STRING
 			-- the qualifier of the procedure
 
@@ -370,7 +355,7 @@ feature {NONE} -- Status report
 			sep: STRING
 		do
 			create Result.make (100)
-			
+
 			create quoter.make(1)
 			create sep.make(1)
 			quoter := db_spec.identifier_quoter

@@ -69,7 +69,7 @@ feature -- Status setting
 		do
 			data_source := udata_source.twin
 		ensure
-	--FIXME(worx without)		data_source_set: data_source.is_equal(udata_source)
+			data_source_set: data_source.is_equal(udata_source)
 		end
 
 	set_role (uroleId, urolePassWd: STRING) is

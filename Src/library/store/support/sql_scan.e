@@ -87,30 +87,27 @@ feature -- Basic operations
 			r_bool: BOOLEAN_REF
 			r_double: DOUBLE_REF
 		do
-				-- TO DO: Arbitrarily inserting NULL for void or uninitialized objects is not a good idea
-				-- since columns may require non-NULL values and the insert will crash.  Need to check column
-				-- for nullability before attempting to do this.
---			if is_void (obj) then
---				str.append (Null_string)
---			else
+			if is_void (obj) then
+				str.append (null_string)
+			else
 				if is_integer (obj) then
 					r_int ?= obj
 					if r_int.item = numeric_null_value.truncated_to_integer then
-						str.append ("0")
+						str.append (null_string)
 					else
 						str.append (r_int.out)
 					end
 				elseif is_double (obj) then
 					r_double ?= obj
 					if r_double.item = numeric_null_value then
-						str.append ("0.0")
+						str.append (null_string)
 					else
 						str.append (r_double.out)
 					end
 				elseif is_real (obj) then
 					r_real ?= obj
 					if r_real.item = numeric_null_value.truncated_to_real then
-						str.append ("0.0")
+						str.append (null_string)
 					else
 						str.append (r_real.out)
 					end
@@ -121,12 +118,8 @@ feature -- Basic operations
 					str.extend ('%'')
 				elseif is_string (obj) then
 					r_string ?= obj
-					if not r_string.is_empty then
-						buffer.copy (r_string)
-						str.append (string_format (buffer))
-					else
-						str.append ("''")
-					end
+					buffer.copy (r_string)
+					str.append (string_format (buffer))
 				elseif is_boolean (obj) then
 					r_bool ?= obj
 					str.append (boolean_format (r_bool.item))
@@ -136,7 +129,7 @@ feature -- Basic operations
 				else
 					get_complex_value (obj, str)
 				end
---			end
+			end
 		end
 
 	get_complex_value (obj: ANY; str: STRING) is
@@ -152,10 +145,19 @@ feature -- Basic operations
 			r_double: DOUBLE
 			r_character: CHARACTER
 			i_obj_field: ANY
-			ind: INTEGER
+			ind, l_identity_index: INTEGER
 			table: DB_TABLE
 		do
 			table ?= obj
+			if table /= Void and then not db_spec.insert_auto_identity_column then
+					-- There was an explicit requirement from the database to exclude
+					-- the identity column from the statement.
+				l_identity_index := table.table_description.identity_column
+			else
+					-- No such requirement, we simply assign `-1' so that we add
+					-- all the columns.
+				l_identity_index := -1
+			end
 			from
 				start (obj)
 				ind := 1
@@ -163,7 +165,7 @@ feature -- Basic operations
 				ind > max_index
 			loop
 				i := next_index (ind)
-				if not db_spec.insert_auto_identity_column and then table /= Void and then not (table.table_description.identity_column = i) then
+				if i > 0 and then l_identity_index /= i then
 					i_obj_type := field_type (i, obj)
 					if i_obj_type = Integer_type then
 						r_int := integer_field (i, obj)

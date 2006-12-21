@@ -119,9 +119,41 @@ feature -- For DATABASE_STORE
 
 	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]; obj: ANY): STRING is
 			-- Add the columns names to sql_string in the feature put
-			-- Redefined for ODBC
+		local
+			i, j, nb: INTEGER
+			l_identity_index: INTEGER
+			table: DB_TABLE
 		do
-			Result := ""
+			create Result.make (1)
+			Result.append (" (")
+			table ?= obj
+			if table /= Void and then not insert_auto_identity_column then
+					-- There was an explicit requirement from the database to exclude
+					-- the identity column from the statement.
+				l_identity_index := table.table_description.identity_column
+			else
+					-- No such requirement, we simply assign `-1' so that we add
+					-- all the columns.
+				l_identity_index := -1
+			end
+			from
+				j := 1
+				nb := repository.dimension
+			until
+				j > nb
+			loop
+				if map_table.item (j) > 0 then
+					if i /= 0 then
+						Result.append (", ")
+					end
+					if l_identity_index /= j then
+						Result.append (repository.column_name (j))
+						i := 1
+					end
+				end
+				j := j + 1
+ 			end
+			Result.append (") ")
 		end
 
 	dim_rep_diff (repository_dimension, db_field_count: INTEGER): BOOLEAN is
@@ -133,10 +165,10 @@ feature -- For DATABASE_STORE
 		end
 
 	update_map_table_error (db_handle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is
-			-- Set error number as 200
 			-- Except for ODBC and for Oracle
 		do
-			db_handle.status.set (200)
+				-- Put signaling value.
+			map_table.put (0, ind)
 		end
 
 feature -- DATABASE_STRING
@@ -209,12 +241,12 @@ feature -- LOGIN and DATABASE_APPL only for password_ok
 
 feature -- For DATABASE_PROC
 
-	support_proc: INTEGER is
+	support_proc: BOOLEAN is
 			-- Does the database support stored procedure?
 			-- 1 if True, 0 if False
 			-- Redefined for ODBC
 		do
-			Result := 1
+			Result := True
 		end
 
 	has_row_number: BOOLEAN is

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_ALL_TYPES [G -> DATABASE create default_create end]
 
 inherit
@@ -33,7 +33,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-		
+
 	db_type (object: ANY): DB_TYPE is
 			-- DB_TYPE instance associated to `object'
 		do

@@ -1,14 +1,15 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class RUNNER_ING
 
 inherit
-
 	RDB_HANDLE
 
 create
-
 	make
 
 feature {NONE}
@@ -43,8 +44,6 @@ feature
 			login (tmp_string, io.laststring)
 			set_base
 
-			create repository.make (Table_name)
-
 			create session_control.make
 			create base_change.make
 
@@ -56,6 +55,7 @@ feature
 				session_control.raise_error
 				io.putstring ("Can't connect to database.%N")
 			else
+				create repository.make (Table_name)
 				repository.load
 				if repository.exists then
 					make_change_ing
@@ -124,13 +124,11 @@ feature {NONE}
 feature {NONE}
 
 	Select_text: STRING is
-		"update db_book set %
-		%author = author, price = :price, year = :pub_date where author = :author"
+		"update db_book set author = author, price = :price, year = :pub_date where author = :author"
 
-	Table_name: STRING is
-		"db_book"
+	Table_name: STRING is "DB_BOOK"
 
-	Proc_name: STRING is "db_book_proc";
+	Proc_name: STRING is "DB_BOOK_PROC";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
@@ -143,7 +141,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class RUNNER_ING
-
-
+end

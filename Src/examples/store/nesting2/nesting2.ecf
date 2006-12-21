@@ -1,60 +1,36 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="nesting2" uuid="F2A8613C-87A4-43ED-86C9-DCE4C0395E5E">
+<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-1-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-1-0 http://www.eiffel.com/developers/xml/configuration-1-1-0.xsd" name="nesting2" uuid="F2A8613C-87A4-43ED-86C9-DCE4C0395E5E">
 	<target name="common" abstract="true">
 		<root class="TEST_I" feature="make"/>
 		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
+		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf">
-			<option warning="false">
-			</option>
-		</library>
+		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 	</target>
-	<target name="ingres" extends="common">
-		<setting name="multithreaded" value="true"/>
-		<precompile name="vision2-mt_pre" location="$ISE_PRECOMP\vision2-mt.ecf"/>
+	<target name="nesting2_ingres" extends="common">
 		<library name="ingres" location="$ISE_LIBRARY\library\store\dbms\rdbms\ingres\ingres.ecf"/>
-		<cluster name="handle" location="..\Utilities\ingres\">
-			<file_rule>
-				<exclude>/action_(1|2)_i\.e$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="root_cluster" location=".\"/>
+		<cluster name="handle" location="..\Utilities\ingres\"/>
 		<cluster name="utilities" location="..\Utilities\"/>
+		<override name="root_cluster" location=".\"/>
 	</target>
-	<target name="sybase" extends="common">
-		<setting name="multithreaded" value="true"/>
-		<precompile name="vision2-mt_pre" location="$ISE_PRECOMP\vision2-mt.ecf"/>
+	<target name="nesting2_sybase" extends="common">
 		<library name="sybase" location="$ISE_LIBRARY\library\store\dbms\rdbms\sybase\sybase.ecf"/>
-		<cluster name="handle" location="..\Utilities\sybase\">
-			<file_rule>
-				<exclude>/action_(1|2)_i\.e$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="root_cluster" location=".\"/>
+		<cluster name="handle" location="..\Utilities\sybase\"/>
 		<cluster name="utilities" location="..\Utilities\"/>
+		<override name="root_cluster" location=".\"/>
 	</target>
-	<target name="oracle" extends="common">
-		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
+	<target name="nesting2_oracle" extends="common">
 		<library name="oracle" location="$ISE_LIBRARY\library\store\dbms\rdbms\oracle\oracle.ecf"/>
-		<cluster name="handle" location="..\Utilities\oracle\">
-			<file_rule>
-				<exclude>/action_(1|2)_i\.e$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="root_cluster" location=".\"/>
+		<cluster name="handle" location="..\Utilities\oracle\"/>
 		<cluster name="utilities" location="..\Utilities\"/>
+		<override name="root_cluster" location=".\"/>
 	</target>
-	<target name="odbc" extends="common">
-		<precompile name="vision2_pre" location="$ISE_PRECOMP\vision2.ecf"/>
+	<target name="nesting2_odbc" extends="common">
 		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf"/>
-		<cluster name="handle" location="..\Utilities\odbc\">
-			<file_rule>
-				<exclude>/action_(1|2)_i\.e$</exclude>
-			</file_rule>
-		</cluster>
-		<cluster name="root_cluster" location=".\"/>
+		<cluster name="handle" location="..\Utilities\odbc\"/>
 		<cluster name="utilities" location="..\Utilities\"/>
+		<override name="root_cluster" location=".\"/>
 	</target>
 </system>

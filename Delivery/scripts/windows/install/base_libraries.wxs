@@ -227,7 +227,6 @@
 							<Component Id="rm2oom" Guid="3C640042-EFA9-45D9-8818-533496D8C9F0">
 								<File Id="rm2oom.ecf" Name="rm2oom.ecf" />
 								<File Id="mapper.e" Name="mapper.e" />
-								<File Id="mapODBC.e" Name="mapODBC.e" />
 								<File Id="Readme218" Name="Readme" />
 							</Component>
 						</Directory>
@@ -246,23 +245,10 @@
 								<File Id="model.e" Name="model.e" />
 							</Component>
 						</Directory>
-						<Directory Id="nesting2" Name="nesting2">
-							<Component Id="nesting2" Guid="676322C6-B170-4098-89B2-53DF5A070DA8">
-								<File Id="nesting2.ecf" Name="nesting2.ecf" />
-								<File Id="test.e128" Name="test.e" />
-								<File Id="testODBC.e" Name="testODBC.e" />
-								<File Id="action_1_i.e157" Name="ACTION~4.E" LongName="action_1_i.e" />
-								<File Id="Readme165" Name="Readme" />
-								<File Id="action_2_i.e166" Name="ACTION~6.E" LongName="action_2_i.e" />
-								<File Id="action_1.e" Name="action_1.e" />
-								<File Id="action_2.e" Name="action_2.e" />
-							</Component>
-						</Directory>
 						<Directory Id="st_proc" Name="st_proc">
 							<Component Id="st_proc" Guid="2BD89CA2-E082-4C02-8AC4-131F41C705DE">
 								<File Id="stored.ecf" Name="stored.ecf" />
 								<File Id="runner_ora.e" Name="RUNNER~2.E" LongName="runner_ora.e" KeyPath="yes" />
-								<File Id="runODBC.e" Name="runODBC.e" />
 								<File Id="runner_ing.e" Name="RUNNER~1.E" LongName="runner_ing.e" />
 								<File Id="runner.e" Name="runner.e" />
 								<File Id="Readme201" Name="Readme" />
@@ -272,7 +258,6 @@
 							<Component Id="nesting" Guid="00FA9F46-8900-4444-A051-D5F9537BF1AE">
 								<File Id="nesting.ecf" Name="nesting.ecf" />
 								<File Id="Readme123" Name="Readme" KeyPath="yes" />
-								<File Id="testODBC.e145" Name="testODBC.e" />
 								<File Id="test.e180" Name="test.e" />
 								<File Id="action_1.e192" Name="action_1.e" />
 								<File Id="action_2.e198" Name="action_2.e" />
@@ -283,7 +268,6 @@
 								<File Id="inserter.ecf" Name="inserter.ecf" />
 								<File Id="Readme130" Name="Readme" />
 								<File Id="inserter.e" Name="inserter.e" />
-								<File Id="insODBC.e" Name="insODBC.e" />
 							</Component>
 						</Directory>
 						<Directory Id="esql" Name="esql">
@@ -291,7 +275,6 @@
 								<File Id="esql.ecf" Name="esql.ecf" />
 								<File Id="esql.e" Name="esql.e" />
 								<File Id="Readme153" Name="Readme" />
-								<File Id="esqlODBC.e" Name="esqlODBC.e" />
 							</Component>
 						</Directory>
 						<Directory Id="select" Name="select">
@@ -300,7 +283,6 @@
 								<File Id="data.sql.sybase" Name="DATASQ~1.SYB" LongName="data.sql.sybase" KeyPath="yes" />
 								<File Id="Readme138" Name="Readme" />
 								<File Id="data.sql.odbc" Name="DATASQ~1.ODB" LongName="data.sql.odbc" />
-								<File Id="selODBC.e" Name="selODBC.e" />
 								<File Id="data.sql.ingres" Name="DATASQ~1.ING" LongName="data.sql.ingres" />
 								<File Id="data.sql.oracle" Name="DATASQ~1.ORA" LongName="data.sql.oracle" />
 								<File Id="selector.e" Name="selector.e" />

@@ -736,6 +736,8 @@ feature -- Label texts
 	l_general: STRING_GENERAL is				do Result := locale.translate("General")	end
 	l_Generate_profile_from_rtir: STRING_GENERAL is do Result := locale.translate("Generate profile from Run-time information record")	end
 	l_Generate_creation: STRING_GENERAL is		do Result := locale.translate("Generate creation procedure")	end
+	l_grid_column_layout: STRING_GENERAL is		do Result := locale.translate ("Grid column layout") end
+			-- Preferece name prefix. For "debugger.grid_column_layout_XX".
 	l_Homonyms: STRING_GENERAL is				do Result := locale.translate("homonyms")	end
 	l_Homonym_confirmation: STRING_GENERAL is	do Result := locale.translate("Extracting the homonyms%Nmay take a long time.")	end
 	l_Identification: STRING_GENERAL is			do Result := locale.translate("Identification")	end
@@ -1241,7 +1243,7 @@ feature -- Title part
 	t_Feature: STRING_GENERAL is						do Result := locale.translate("In Feature")	end
 	t_Feature_properties: STRING_GENERAL is				do Result := locale.translate("Feature Properties")	end
 	t_File_selection: STRING_GENERAL is					do Result := locale.translate("File Selection")	end
-	t_Find: STRING_GENERAL is							do Result := locale.translate("Find")	end
+	t_Find: STRING_GENERAL is							do Result := locale.translate("Find: ")	end
 	t_Index: STRING_GENERAL is							do Result := locale.translate("Index")	end
 	t_New_class: STRING_GENERAL is						do Result := locale.translate("New Class")	end
 	t_New_cluster: STRING_GENERAL is					do Result := locale.translate("Add Cluster")	end

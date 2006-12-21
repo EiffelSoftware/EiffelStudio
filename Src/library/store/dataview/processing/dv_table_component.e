@@ -49,7 +49,9 @@ feature -- Access
 	selected_tablerow: DB_TABLE is
 			-- Currently selected table row.
 		do
-			Result := tablerow_set.item
+			if not tablerow_set.is_empty then
+				Result := tablerow_set.item
+			end
 		end
 		
 feature -- Status report

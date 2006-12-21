@@ -1,14 +1,15 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class RUNNER_ORA
 
 inherit
-
 	RDB_HANDLE
 
 create
-
 	make
 
 feature {NONE}
@@ -18,14 +19,14 @@ feature {NONE}
 	proc: DB_PROC
 
 	repository: DB_REPOSITORY
-			
+
 	session_control: DB_CONTROL
 
 	data_file: PLAIN_TEXT_FILE
 
 	book: BOOK2
-	
-feature 
+
+feature
 
 	make is
 		local
@@ -40,8 +41,6 @@ feature
 			login (tmp_string, io.laststring)
 			set_base
 
-			create repository.make (Table_name)
-
 			create session_control.make
 			create base_change.make
 
@@ -53,6 +52,7 @@ feature
 				session_control.raise_error
 				io.putstring ("Can't connect to database.%N")
 			else
+				create repository.make (Table_name)
 				repository.load
 				if repository.exists then
 					make_change_ing
@@ -74,7 +74,7 @@ feature {NONE}
 		do
 			create author.make (10)
 			price := 222
-			create pub_date.make_now 
+			create pub_date.make_now
 
 			create proc.make (Proc_name)
 			proc.load
@@ -118,15 +118,12 @@ feature {NONE}
 				io.readline
 			end
 		end
-	
+
 feature {NONE}
 
-	Select_text: STRING is
-		"update DB_BOOK set %
-		%price = new_price, year = new_date where author = new_author"
+	Select_text: STRING is "update DB_BOOK set price = new_price, year = new_date where author = new_author"
 
-	Table_name: STRING is
-		"DB_BOOK"
+	Table_name: STRING is "DB_BOOK"
 
 	Proc_name: STRING is "DB_BOOK_PROCEDURE";
 
@@ -141,7 +138,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class RUNNER_ORA
-
-
+end

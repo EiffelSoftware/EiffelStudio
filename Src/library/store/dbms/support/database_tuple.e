@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_TUPLE [G -> DATABASE create default_create end]
 
 inherit
@@ -28,14 +28,22 @@ feature -- Initialization
 
 feature -- Status report
 
-	data: DATABASE_DATA [G] 
+	data: DATABASE_DATA [G]
 			-- Associated data description
 
 	item (index: INTEGER): ANY is
 			-- Value of `index' column in current row
 			-- pointed to by active database cursor
+		require
+			valid_index: valid_index (index)
 		do
 			Result := data.item (index)
+		end
+
+	valid_index (index: INTEGER): BOOLEAN is
+			-- Is `index' valid for `item'?
+		do
+			Result := data.valid_index (index)
 		end
 
 	map_table: ARRAY [INTEGER] is

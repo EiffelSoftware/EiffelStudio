@@ -1,12 +1,15 @@
 indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision :$"
+
 class RUNNER
 
 inherit
 
 	ACTION
-		redefine 
+		redefine
 			execute
 		end
 
@@ -23,20 +26,25 @@ feature {NONE}
 	proc: DB_PROC
 
 	repository: DB_REPOSITORY
-			
+
 	session_control: DB_CONTROL
 
 	data_file: PLAIN_TEXT_FILE
 
 	book: BOOK2
-	
-feature 
+
+feature
 
 	make is
 		local
 			tmp_string: STRING
 		do
 			io.putstring ("Database user authentication:%N")
+			if db_spec.database_handle_name.is_case_insensitive_equal ("odbc") then
+				io.putstring ("Data Source Name: ")
+				io.readline
+				set_data_source(io.laststring.twin)
+ 			end
 			io.putstring ("Name: ")
 			io.readline
 			tmp_string := io.laststring.twin
@@ -45,8 +53,6 @@ feature
 
 			login (tmp_string, io.laststring)
 			set_base
-
-			create repository.make (Table_name)
 
 			create session_control.make
 			create base_selection.make
@@ -59,9 +65,11 @@ feature
 				session_control.raise_error
 				io.putstring ("Can't connect to database.%N")
 			else
+				create repository.make (Table_name)
 				repository.load
 				if repository.exists then
 					make_selection
+					session_control.commit
 					session_control.disconnect
 				else
 					io.putstring ("Table not found!");
@@ -80,52 +88,58 @@ feature {NONE}
 			create author.make (10)
 			price := 51
 			create pub_date.make (1984, 01, 01, 00, 00, 00)
+
 			create proc.make (Proc_name)
 			proc.load
-			proc.set_arguments (<<"author", "price", "pub_date">>,
-						<<author, price, pub_date >>)
+			proc.set_arguments (
+				<<"author", "price", "pub_date">>,
+				<<author, price, pub_date >>)
 
 			if proc.exists then
-				io.putstring ("Stored procedure text: ")
-				io.putstring (proc.text)
-				io.new_line
+				if proc.text /= Void then
+					io.putstring ("Stored procedure text: ")
+					io.putstring (proc.text)
+					io.new_line
+				end
 			else
 				proc.store (Select_text)
-				io.putstring ("Procedure created.%N")
-				proc.load
+				if proc.is_ok then
+					proc.load
+					io.putstring ("Procedure created.%N")
+				end
 			end
 
-			from
-				io.putstring ("Author? ('exit' to terminate):")
-				io.readline
-				base_selection.set_action (Current)
-			until
-				io.laststring.is_equal ("exit")
-			loop
-				author := io.laststring.twin
-				io.putstring ("Seeking for books whose author's name match: ")
-				io.putstring (author)
-				io.new_line
-				io.new_line
+			if proc.exists then
+				from
+					io.putstring ("Author? ('exit' to terminate):")
+					io.readline
+					base_selection.set_action (Current)
+				until
+					io.laststring.is_equal ("exit")
+				loop
+					author := io.laststring.twin
+					io.putstring ("Seeking for books whose author's name match: ")
+					io.putstring (author)
+					io.new_line
 
-				base_selection.set_map_name (author, "author")
-				base_selection.set_map_name (price, "price")
-				base_selection.set_map_name (pub_date, "pub_date")
+					base_selection.set_map_name (author, "author")
+					base_selection.set_map_name (price, "price")
+					base_selection.set_map_name (pub_date, "pub_date")
 
-				proc.execute (base_selection)
+					proc.execute (base_selection)
+					base_selection.load_result
 
-				base_selection.load_result
+					base_selection.unset_map_name ("author")
+					base_selection.unset_map_name ("price")
+					base_selection.unset_map_name ("pub_date")
 
-				base_selection.unset_map_name ("author")
-				base_selection.unset_map_name ("price")
-				base_selection.unset_map_name ("pub_date")
-
-				io.new_line
-				io.putstring ("Author? ('exit' to terminate):")
-				io.readline
+					io.new_line
+					io.putstring ("Author? ('exit' to terminate):")
+					io.readline
+				end
 			end
 		end
-	
+
 	execute is
 		do
 			base_selection.object_convert (book)
@@ -137,13 +151,12 @@ feature {NONE}
 feature {NONE}
 
 	Select_text: STRING is
-		"select * from DB_BOOK where author = :author %
-		 %or price = :price or year = :pub_date"
+		"select * from DB_BOOK where author = :author or price = :price or year = :pub_date"
 
 	Table_name: STRING is
 		"DB_BOOK"
 
-	Proc_name: STRING is "db_book_proc";
+	Proc_name: STRING is "DB_BOOK_PROC";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

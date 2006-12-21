@@ -332,13 +332,19 @@ feature
 			"GTK_WIDGET_UNSET_FLAGS"
 		end
 
+	frozen gtk_widget_is_sensitive (a_widget: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_IS_SENSITIVE"
+		end
+
 	frozen gtk_widget_no_window (a_wid: POINTER): BOOLEAN is
 		external
 			"C [macro <gtk/gtk.h>]"
 		alias
 			"GTK_WIDGET_NO_WINDOW"
 		end
-
 
 	frozen c_gdk_color_struct_size: INTEGER is
 		external

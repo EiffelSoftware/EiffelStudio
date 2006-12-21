@@ -7,7 +7,7 @@
 		<setting name="console_application" value="true"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf" readonly="false"/>
+		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 	</target>
 	<target name="stored_ingres" extends="common">
@@ -31,7 +31,7 @@
 		<cluster name="utilities" location="..\Utilities\"/>
 	</target>
 	<target name="stored_odbc" extends="common">
-		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf" readonly="false"/>
+		<library name="odbc" location="$ISE_LIBRARY\library\store\dbms\rdbms\odbc\odbc.ecf"/>
 		<cluster name="handle" location="..\Utilities\odbc\"/>
 		<cluster name="root_cluster" location=".\"/>
 		<cluster name="utilities" location="..\Utilities\"/>

@@ -8,6 +8,9 @@ indexing
 class
 	EB_DEBUG_TOOL_DATA
 
+inherit
+	ES_TOOLBAR_PREFERENCE
+
 create
 	make
 
@@ -31,36 +34,31 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := last_saved_stack_path_preference.value
 		end
 
-	interrupt_every_n_instructions: INTEGER is
+	default_expanded_view_size: INTEGER is
+			-- Default size for expanded view dialog
 		do
-			Result := interrupt_every_n_instructions_preference.value
+			Result := default_expanded_view_size_preference.value
+			if Result < 1 then
+				Result := 500
+			end
 		end
 
-	debug_output_evaluation_enabled: BOOLEAN is
+	show_text_in_project_toolbar: BOOLEAN is
+			-- Show selected text in the project toolbar?
 		do
-			Result := debug_output_evaluation_enabled_preference.value
+			Result := show_text_in_project_toolbar_preference.value
 		end
 
-	generating_type_evaluation_enabled: BOOLEAN is
+	show_all_text_in_project_toolbar: BOOLEAN is
+			-- Show all selected text in the project toolbar?
 		do
-			Result := generating_type_evaluation_enabled_preference.value
+			Result := show_all_text_in_project_toolbar_preference.value
 		end
 
-	min_slice: INTEGER is
-			-- From which attribute number should special objects be displayed?
+	project_toolbar_layout: ARRAY [STRING] is
+			-- Toolbar organization
 		do
-			Result := min_slice_preference.value
-		end
-
-	max_slice: INTEGER is
-			-- Up to which attribute number should special objects be displayed?
-		do
-			Result := max_slice_preference.value
-		end
-
-	max_evaluation_duration: INTEGER is
-		do
-			Result := max_evaluation_duration_preference.value
+			Result := project_toolbar_layout_preference.value
 		end
 
 	main_splitter_position: INTEGER is
@@ -143,12 +141,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	always_compile_before_debug_preference: BOOLEAN_PREFERENCE
 	last_saved_stack_path_preference: STRING_PREFERENCE
-	interrupt_every_n_instructions_preference: INTEGER_PREFERENCE
-	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
-	generating_type_evaluation_enabled_preference: BOOLEAN_PREFERENCE
-	min_slice_preference: INTEGER_PREFERENCE
-	max_slice_preference: INTEGER_PREFERENCE
-	max_evaluation_duration_preference: INTEGER_PREFERENCE
+	default_expanded_view_size_preference: INTEGER_PREFERENCE
 	main_splitter_position_preference: INTEGER_PREFERENCE
 	local_vs_object_proportion_preference: STRING_PREFERENCE
 	left_debug_layout_preference: ARRAY_PREFERENCE
@@ -163,6 +156,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	is_debugged_grid_layout_managed_preference: BOOLEAN_PREFERENCE
 	is_watches_grids_layout_managed_preference: BOOLEAN_PREFERENCE
 	display_agent_details_preference: BOOLEAN_PREFERENCE
+	show_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
+	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
+	project_toolbar_layout_preference: ARRAY_PREFERENCE
 	watch_tools_layout_preference: ARRAY_PREFERENCE
 
 	objects_tool_layout_preference: ARRAY_PREFERENCE
@@ -186,16 +182,35 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 			Result.compare_objects
 		end
 
+feature -- Toolbar Convenience
+
+	retrieve_project_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+			-- Retreive the project toolbar using the available commands in `command_pool'
+		do
+			Result := retrieve_toolbar (command_pool, project_toolbar_layout_preference.value)
+			if show_text_in_project_toolbar then
+				Result.enable_important_text
+			elseif show_all_text_in_project_toolbar then
+				Result.enable_text_displayed
+			end
+		end
+
+	save_project_toolbar (project_toolbar: EB_TOOLBAR) is
+			-- Save the project toolbar `project_toolbar' layout/status into the preferences.
+			-- Call `save_preferences' to have the changes actually saved.
+		do
+			project_toolbar_layout_preference.set_value (save_toolbar (project_toolbar))
+			show_text_in_project_toolbar_preference.set_value (project_toolbar.is_text_important)
+			show_all_text_in_project_toolbar_preference.set_value (project_toolbar.is_text_displayed)
+			preferences.save_preference (project_toolbar_layout_preference)
+			preferences.save_preference (show_text_in_project_toolbar_preference)
+			preferences.save_preference (show_all_text_in_project_toolbar_preference)
+		end
+
 feature -- Preference Strings
 
 	always_compile_before_debug_string: STRING is "debugger.always_compile_before_debug"
 	last_saved_stack_path_string: STRING is "debugger.last_saved_stack_path"
-	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_N_instructions"
-	debug_output_evaluation_enabled_string: STRING is "debugger.debug_output_evaluation"
-	generating_type_evaluation_enabled_string: STRING is "debugger.generating_type_evaluation"
-	min_slice_string: STRING is "debugger.min_slice"
-	max_slice_string: STRING is "debugger.max_slice"
-	max_evaluation_duration_preference_string: STRING is "debugger.max_evaluation_duration"
 	main_splitter_position_string: STRING is "debugger.main_splitter_position"
 	local_vs_object_proportion_string: STRING is "debugger.proportion"
 	left_debug_layout_string: STRING is "debugger.left_debug_layout"
@@ -213,6 +228,10 @@ feature -- Preference Strings
 	watch_tools_layout_string: STRING is "debugger.watch_tools_layout"
 	display_agent_details_string: STRING is "debugger.display_agent_details"
 	grid_column_layout_prefix: STRING is "debugger.grid_column_layout_"
+	project_toolbar_layout_string: STRING is "debugger.project_toolbar_layout"
+	show_text_in_project_toolbar_string: STRING is "debugger.show_text_in_project_toolbar"
+	show_all_text_in_project_toolbar_string: STRING is "debugger.show_all_text_in_project_toolbar"
+	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
 
 feature {NONE} -- Implementation
 
@@ -226,13 +245,11 @@ feature {NONE} -- Implementation
 			always_compile_before_debug_preference := l_manager.new_boolean_preference_value (l_manager, always_compile_before_debug_string, True)
 			last_saved_stack_path_preference := l_manager.new_string_preference_value (l_manager, last_saved_stack_path_string, "")
 			last_saved_stack_path_preference.set_hidden (True)
-			interrupt_every_n_instructions_preference := l_manager.new_integer_preference_value (l_manager, interrupt_every_n_instructions_string, 1)
-			debug_output_evaluation_enabled_preference := l_manager.new_boolean_preference_value (l_manager, debug_output_evaluation_enabled_string, True)
-			generating_type_evaluation_enabled_preference := l_manager.new_boolean_preference_value (l_manager, generating_type_evaluation_enabled_string, True)
-			min_slice_preference := l_manager.new_integer_preference_value (l_manager, min_slice_string, 0)
-			max_slice_preference := l_manager.new_integer_preference_value (l_manager, max_slice_string, 50)
-			max_evaluation_duration_preference := l_manager.new_integer_preference_value (l_manager, max_evaluation_duration_preference_string, 5)
+			default_expanded_view_size_preference := l_manager.new_integer_preference_value (l_manager, default_expanded_view_size_string, 50)
 			main_splitter_position_preference := l_manager.new_integer_preference_value (l_manager, main_splitter_position_string, 250)
+			show_text_in_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_text_in_project_toolbar_string, True)
+			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_preference_value (l_manager, show_all_text_in_project_toolbar_string, True)
+			project_toolbar_layout_preference := l_manager.new_array_preference_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
 			local_vs_object_proportion_preference := l_manager.new_string_preference_value (l_manager, local_vs_object_proportion_string, "0.5")
 			local_vs_object_proportion_preference.set_hidden (True)
 
@@ -258,11 +275,10 @@ feature {NONE} -- Implementation
 invariant
 	preferences_not_void: preferences /= Void
 	last_saved_stack_path_preference_not_void: last_saved_stack_path_preference /= Void
-	interrupt_every_n_instructions_preference_not_void: interrupt_every_n_instructions_preference /= Void
-	debug_output_evaluation_enabled_preference_not_void: debug_output_evaluation_enabled_preference /= Void
-	generating_type_evaluation_enabled_preference_not_void: generating_type_evaluation_enabled_preference /= Void
-	min_slice_preference_not_void: min_slice_preference /= Void
-	max_slice_preference_not_void: max_slice_preference /= Void
+	default_expanded_view_size_preference_not_void: default_expanded_view_size_preference /= Void
+	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
+	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void
+	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
 	main_splitter_position_preference_not_void: main_splitter_position_preference /= Void
 	local_vs_object_proportion_preference_not_void: local_vs_object_proportion_preference /= Void
 	left_debug_layout_preference_not_void: left_debug_layout_preference /= Void

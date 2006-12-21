@@ -19,6 +19,8 @@ inherit
 			display_system_info,
 			display_application_status,
 			display_debugger_info,
+			add_idle_action, remove_idle_action, new_timer,
+			windows_handle,
 			controller,
 			implementation
 		end
@@ -38,6 +40,7 @@ feature {NONE} -- Initialization
 			Precursor
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
 			create {TERM_WINDOW} tty_output
+			create idle_actions
 		end
 
 feature -- Output helpers
@@ -165,28 +168,9 @@ feature -- Access
 		do
 			Precursor
 			debugger_message (debugger_names.t_paused)
-			raise_dbg_running_menu (False)
-		end
 
-	wait_until_application_is_dead is
-			-- Wait until application is dead
-		local
-			stop_process_loop_on_events: BOOLEAN
-		do
-			from
-				stop_process_loop_on_events := False
-			until
-				stop_process_loop_on_events
-			loop
-				if not inside_debugger_menu then
-					implementation.process_underlying_toolkit_event_queue
-				end
-				if application_initialized then
-					sleep (10 * 1000)
-				else
-					stop_process_loop_on_events := True
-				end
-			end
+				--| Activate user interaction
+			raise_dbg_running_menu (False)
 		end
 
 feature -- Interaction
@@ -196,8 +180,11 @@ feature -- Interaction
 	dbg_running_menu: TTY_MENU is
 		local
 			ag_is_stopped: FUNCTION [ANY, TUPLE, BOOLEAN]
+			ag_is_executing: FUNCTION [ANY, TUPLE, BOOLEAN]
 		once
 			ag_is_stopped := agent safe_application_is_stopped
+			ag_is_executing := agent application_is_executing
+			
 			create Result.make ("--< Debugger execution menu >--")
 			Result.enter_actions.extend (agent do inside_debugger_menu := True end)
 			Result.quit_actions.extend (agent do inside_debugger_menu := False end)
@@ -222,8 +209,10 @@ feature -- Interaction
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.no_stop_points, Result),
 						ag_is_stopped)
 
-			Result.add_entry ("K", "Kill application", agent controller.debug_kill)
-			Result.add_entry ("P", "Pause application", agent controller.debug_interrupt)
+			Result.add_conditional_entry ("K", "Kill application", agent controller.debug_kill,
+						ag_is_executing)
+			Result.add_conditional_entry ("P", "Pause application", agent controller.debug_interrupt,
+						ag_is_executing)
 			Result.add_separator (" --- ")
 			Result.add_conditional_entry ("B", "Breakpoints control", agent raise_debugger_menu_breakpoints,
 						ag_is_stopped)
@@ -231,7 +220,7 @@ feature -- Interaction
 						ag_is_stopped)
 
 			Result.add_conditional_entry ("Q", "Quit", agent Result.quit, agent :BOOLEAN do Result := not application_is_executing end)
-			Result.add_entry ("H", "Help", agent Result.execute)
+			Result.add_entry ("H", "Help", agent Result.request_menu_display)
 		end
 
 	tty_controller_do_if_stopped (a_exec_mode: INTEGER; a_menu: TTY_MENU) is
@@ -277,7 +266,11 @@ feature -- Interaction
 						create x.make_for_context (io.last_string.twin)
 						x.evaluate
 						if x.error_occurred then
-							io.put_string (x.expression_evaluator.short_text_from_error_messages)
+							if x.expression_evaluator.short_text_from_error_messages /= Void then
+								io.put_string (x.expression_evaluator.short_text_from_error_messages)
+							else
+								io.put_string ("Error occurred...")
+							end
 						else
 							tty_output.add_string (x.expression + " => " + x.expression_evaluator.final_result_value.output_for_debugger + "%N")
 						end
@@ -285,7 +278,7 @@ feature -- Interaction
 					end
 				)
 			Result.add_entry (Void, Void, Void)
-			Result.add_entry ("H", "Help", agent Result.execute)
+			Result.add_entry ("H", "Help", agent Result.request_menu_display)
 			Result.add_quit_entry ("..", "Back to parent menu")
 		end
 
@@ -297,7 +290,7 @@ feature -- Interaction
 			Result.add_entry ("M", "Modify existing breakpoint", agent display_breakpoints (agent modify_breakpoint, "Modify breakpoint"))
 			Result.add_entry ("L", "list breakpoints", agent display_breakpoints (Void, Void))
 			Result.add_entry (Void, Void, Void)
-			Result.add_entry ("H", "Help", agent Result.execute)
+			Result.add_entry ("H", "Help", agent Result.request_menu_display)
 			Result.add_quit_entry ("..", "Back to parent menu")
 		end
 
@@ -461,6 +454,67 @@ feature -- Breakpoints management
 					bp.set_condition (exp)
 					io.put_string (" => New condition applied. %N")
 				end
+			end
+		end
+
+feature -- Access
+
+	windows_handle: POINTER is
+		do
+			Result := implementation.timer_win32_handle
+		end
+
+feature -- Events
+
+	new_timer: TTY_DEBUGGER_TIMER is
+		do
+			create Result.make (implementation)
+		end
+
+	wait_until_application_is_dead is
+			-- Wait until application is dead
+		local
+			stop_process_loop_on_events: BOOLEAN
+		do
+			from
+				stop_process_loop_on_events := False
+			until
+				stop_process_loop_on_events
+			loop
+				if not inside_debugger_menu then
+					implementation.process_underlying_toolkit_event_queue
+					idle_actions.call (Void)
+				end
+				if application_initialized then
+					sleep (10 * 1000)
+				else
+					stop_process_loop_on_events := True
+				end
+			end
+		end
+
+	idle_actions: ACTION_SEQUENCE [TUPLE]
+			-- Internal idle actions.
+
+	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+			-- Extend `idle_actions' with `v'.
+		do
+			if not idle_actions.has (v) then
+				idle_actions.extend (v)
+			end
+		end
+
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+			-- Remove `v' from `idle_actions'
+		local
+			l_cursor: CURSOR
+			l_idle_actions: like idle_actions
+		do
+			l_idle_actions := idle_actions
+			l_cursor := l_idle_actions.cursor
+			l_idle_actions.prune_all (v)
+			if l_idle_actions.valid_cursor (l_cursor) then
+				l_idle_actions.go_to (l_cursor)
 			end
 		end
 

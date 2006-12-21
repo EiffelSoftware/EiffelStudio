@@ -25,7 +25,6 @@ feature
 	before_starting is
 		do
 			Precursor
-			manager.display_debugger_info
 		end
 
 	after_starting is

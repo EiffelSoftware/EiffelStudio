@@ -205,7 +205,7 @@ feature {NONE} -- ecdbgd status
 	start_ecdbgd_alive_checking is
 		do
 			if ecdbgd_alive_checking_timer = Void then
-				create ecdbgd_alive_checking_timer
+				ecdbgd_alive_checking_timer := debugger_manager.new_timer
 				ecdbgd_alive_checking_timer.actions.extend (agent check_ecdbgd_alive)
 			end
 			ecdbgd_alive_checking_timer.set_interval (1000)

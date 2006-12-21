@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 
 	default_slice_max_value: INTEGER is
 		do
-			Result := preferences.debugger_data.default_expanded_view_size
+			Result := preferences.debug_tool_data.default_expanded_view_size
 		end
 
 	user_initialization is

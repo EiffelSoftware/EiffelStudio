@@ -81,7 +81,7 @@ feature -- Initialization
 				-- Initialization of compiler resources.
 			create l_preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
-			initialize_preferences (l_preference_access, False)
+			initialize_preferences (l_preference_access, False, True)
 
 			execute
 		end

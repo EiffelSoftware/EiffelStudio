@@ -11,28 +11,248 @@ class
 inherit
 	DEBUGGER_MANAGER_IMP
 		redefine
+			make,
 			interface
 		end
 
 create {DEBUGGER_MANAGER}
 	make
 
+feature {NONE} -- Initialization
+
+	make (dm: DEBUGGER_MANAGER) is
+			-- Initialize current
+		do
+			Precursor (dm)
+			reusable_pointer := reusable_pointer.memory_calloc (1, c_size_of_msg)
+
+				--| Maybe useless ...
+			timer_win32_handle := cwin_new_window_handle
+		end
+
 feature {DEBUGGER_MANAGER} -- Access
 
 	process_underlying_toolkit_event_queue is
+		local
+			p: POINTER
+			b: BOOLEAN
+			res: INTEGER
+			wparam: POINTER
+			timer_processed: BOOLEAN
 		do
-			messages_loop.process_message_queue
+			from
+				p := reusable_pointer
+				b := True
+			until
+				not b
+			loop
+				b := cwin_peek_message (p, default_pointer, 0, 0, Pm_qs_postmessage | Pm_remove)
+				if b then
+					if c_msg_get_message (p) = WM_TIMER then
+						wparam := c_msg_get_wparam (p)
+						timer_processed := on_timer (wparam.to_integer_32)
+					end
+					if not timer_processed then
+						b := cwin_translate_message (p)
+						res := cwin_dispatch_message (p)
+					end
+				end
+			end
 		end
 
-	messages_loop: WINDOWS_MESSAGES_QUEUE_PROCESSOR is
-		once
-			create Result.make
-			Result.dispatch_only_timer_messages
-		end
+	timer_win32_handle: POINTER
+			-- Win32 HWND handle for timer processing.
 
 feature {NONE} -- Interface
 
-	interface: TTY_DEBUGGER_MANAGER;
+	interface: TTY_DEBUGGER_MANAGER
+			-- Interface instance.
+
+feature {TTY_DEBUGGER_TIMER} -- Timer Access
+
+	on_timer (id: INTEGER): BOOLEAN is
+			-- Wm_timer message.
+		local
+			dbg_timer: TTY_DEBUGGER_TIMER
+		do
+			if timers /= Void then
+				dbg_timer ?= eif_id_any_object (timers.item (id))
+				if dbg_timer /= Void then
+					dbg_timer.execute
+					Result := True
+				end
+			end
+		end
+
+	set_timer (a_obj_id: INTEGER; a_interval: INTEGER) is
+			-- SetTimer
+		local
+			l_timer_id: INTEGER
+		do
+			if timers = Void then
+				create timers.make (3)
+			end
+			l_timer_id := cwin_set_timer (timer_win32_handle, a_obj_id, a_interval, Default_pointer)
+			timers.force (a_obj_id, l_timer_id)
+		end
+
+	kill_timer (a_timer_id: INTEGER) is
+			-- SetTimer
+		do
+			cwin_kill_timer (timer_win32_handle, a_timer_id)
+			timers.remove (a_timer_id)
+		end
+
+	timers: HASH_TABLE [INTEGER, INTEGER]
+			-- HT [obj_id, timer_id]
+
+feature {NONE} -- Window related externals
+
+	cwin_new_window_handle: POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+				{
+					HANDLE hInst;
+					WNDCLASSEX WinClass;
+					LRESULT CALLBACK MainWndProc(HWND, UINT, WPARAM, LPARAM); 					
+					
+					HWND dummy_window = NULL;
+					int successful = 0;
+
+					hInst = GetModuleHandle(NULL);
+
+					WinClass.cbSize=sizeof(WNDCLASSEX);
+					WinClass.hInstance=hInst;
+					WinClass.lpszClassName="DummyTimerWindow";
+					WinClass.lpfnWndProc=DefWindowProc;
+					WinClass.style=CS_HREDRAW | CS_VREDRAW;
+					WinClass.hIcon=LoadIcon(NULL, IDI_APPLICATION);
+					WinClass.hIconSm=0;
+					WinClass.hCursor=LoadCursor(NULL, IDC_ARROW);
+					WinClass.lpszMenuName=NULL;
+					WinClass.cbClsExtra=0;
+					WinClass.cbWndExtra=0;
+					WinClass.hbrBackground=(HBRUSH)GetStockObject(WHITE_BRUSH);
+
+					successful = (int) RegisterClassEx(&WinClass);
+					if (successful) {
+					    dummy_window = CreateWindow(
+						        "DummyTimerWindow",
+						        "DummyTimerWindow",
+						        WS_OVERLAPPEDWINDOW,
+						        0,
+						        0,
+						        0,
+						        0,
+						        HWND_DESKTOP,
+						        (HMENU) NULL,
+						        hInst,
+						        (LPVOID) NULL
+					        );
+					}
+				    return (EIF_POINTER) dummy_window;
+				 }
+			]"
+		end
+
+feature {NONE} -- Timer related externals
+
+	Wm_timer: INTEGER is
+		external
+			"C [macro <msg.h>]"
+		alias
+			"WM_TIMER"
+		end
+
+	cwin_set_timer (hwnd: POINTER; a_timer_id: INTEGER; time_out: INTEGER; proc: POINTER): INTEGER is
+			-- SDK SetTimer
+		external
+			"C [macro <Windows.h>] (HWND, UINT, UINT, TIMERPROC): EIF_POINTER"
+		alias
+			"SetTimer"
+		end
+
+	cwin_kill_timer (hwnd: POINTER; a_timer_id: INTEGER) is
+			-- SDK KillTimer
+		external
+			"C [macro <Windows.h>] (HWND, UINT)"
+		alias
+			"KillTimer"
+		end
+
+	frozen eif_id_any_object (an_id: INTEGER): ANY is
+			-- Object associated with `an_id'
+		external
+			"C | %"eif_object_id.h%""
+		alias
+			"eif_id_object"
+		end
+
+feature {NONE} -- Message related externals
+
+	reusable_pointer: POINTER
+			-- Reusable pointer to avoid performance issue with GC.
+
+	c_msg_get_message (p: POINTER): INTEGER is
+		external
+			"C inline use <msg.h>"
+		alias
+			"(((MSG *) $p)->message)"
+		end
+
+	c_msg_get_wparam (p: POINTER): POINTER is
+		external
+			"C inline use <msg.h>"
+		alias
+			"(((MSG *) $p)->wParam)"
+		end
+
+	cwin_peek_message (ptr, a_hwnd: POINTER;
+			first_msg, last_msg, flags: INTEGER): BOOLEAN is
+			-- SDK PeekMessage
+		external
+			"C [macro <Windows.h>] (MSG *, HWND, UINT, UINT, UINT):%
+				%EIF_BOOLEAN"
+		alias
+			"PeekMessage"
+		end
+
+	cwin_translate_message (ptr: POINTER): BOOLEAN
+			-- SDK TranslateMessage
+			-- (export status {NONE})
+		external
+			"C [macro <Windows.h>] (MSG *): EIF_BOOLEAN"
+		alias
+			"TranslateMessage"
+		end
+
+	cwin_dispatch_message (ptr: POINTER): INTEGER
+			-- SDK DispatchMessage
+			-- (export status {NONE})
+		external
+			"C [macro <windows.h>] (MSG *): EIF_INTEGER"
+		alias
+			"DispatchMessage"
+		end
+
+	c_size_of_msg: INTEGER is
+		external
+			"C [macro <msg.h>]"
+		alias
+			"sizeof (MSG)"
+		end
+
+	Pm_noremove: INTEGER is 0
+
+	Pm_remove: INTEGER is 1
+
+	Pm_noyield: INTEGER is 2
+
+	Pm_qs_paint: INTEGER is 0x200000
+
+	Pm_qs_postmessage: INTEGER is 0x980000;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -276,6 +276,27 @@ feature -- Exception handling
 
 	internal_exceptions_handler: like exceptions_handler
 
+feature -- Events helpers
+
+	new_timer: DEBUGGER_TIMER is
+		do
+			check to_be_implemented: False end
+		end
+
+	add_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+		require
+			v_not_void: v /= Void
+		do
+			check to_be_implemented: False end
+		end
+
+	remove_idle_action (v: PROCEDURE [ANY, TUPLE]) is
+		require
+			v_not_void: v /= Void
+		do
+			check to_be_implemented: False end
+		end
+
 feature {DEBUGGER_OBSERVER} -- Observer implementation
 
 	add_observer (o: DEBUGGER_OBSERVER) is
@@ -630,6 +651,9 @@ feature -- Debugging events
 			if has_stopped_action then
 				stopped_actions.call (Void)
 			end
+				--| Reset current stack number to 1 (top level)
+			application.set_current_execution_stack_number (1)
+
 				--| Observers
 			observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_stopped)
 		end

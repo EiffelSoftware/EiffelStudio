@@ -126,6 +126,7 @@ feature -- Debug Operation
 						if is_dotnet_system then
 								--| String indicating the .NET debugger to launch if specified in the
 								--| Preferences Tool.
+							check preferences.debugger_data /= Void end
 							dotnet_debugger := preferences.debugger_data.dotnet_debugger.item (1)
 
 							create l_il_env.make (Eiffel_system.System.clr_runtime_version)
@@ -431,6 +432,9 @@ feature {NONE} -- debugging
 
 				--| Building the command line argument
 			l_cmd_line_arg := param_arguments
+			if l_cmd_line_arg = Void then
+				create l_cmd_line_arg.make_empty
+			end
 
 			if not directory_exists (working_dir) then
 				warning (Warning_messages.w_Invalid_working_directory (working_dir))

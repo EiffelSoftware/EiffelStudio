@@ -16,10 +16,11 @@ feature -- Access
 	locale: I18N_LOCALE is
 			-- Current locale
         do
-			if locale_internal.item = Void then
-				locale_internal.put (locale_manager.get_system_locale)
-			end
 			Result := locale_internal.item
+			if Result = Void then
+				Result := locale_manager.get_system_locale
+				locale_internal.put (Result)
+			end
 		end
 
 	locale_manager: I18N_LOCALE_MANAGER is

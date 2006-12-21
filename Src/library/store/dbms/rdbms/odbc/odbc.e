@@ -533,7 +533,7 @@ feature -- External
 			check
 				Result <= max_len
 			end
-
+			ar.resize (Result)
 			ar.set_count (Result)
 
 			from
@@ -550,24 +550,25 @@ feature -- External
 		local
 			l_area: MANAGED_POINTER
 			i: INTEGER
+			l_data, l_null: POINTER
 		do
-			create l_area.make (max_len)
-
-			Result := odbc_put_data (no_descriptor, index, l_area.item)
-
-			check
-				Result <= max_len
-			end
-
+			Result := odbc_put_data (no_descriptor, index, $l_data)
+			ar.resize (Result)
 			ar.set_count (Result)
-
-			from
-				i := 1
-			until
-				i > Result
-			loop
-				ar.put (l_area.read_integer_8 (i - 1).to_character_8, i)
-				i := i + 1
+			if Result > 0 then
+				create l_area.share_from_pointer (l_data, Result)
+				from
+					i := 1
+				until
+					i > Result
+				loop
+					ar.put (l_area.read_integer_8 (i - 1).to_character_8, i)
+					i := i + 1
+				end
+			end
+			if l_data /= l_null then
+					-- `odbc_put_data' allocate some memory, we need to free it.
+				l_data.memory_free
 			end
 		end
 
@@ -823,7 +824,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_put_data (no_descriptor: INTEGER; index: INTEGER; ar: POINTER): INTEGER is
+	odbc_put_data (no_descriptor: INTEGER; index: INTEGER; ar: TYPED_POINTER [POINTER]): INTEGER is
 		external
 			"C use %"odbc.h%""
 		end

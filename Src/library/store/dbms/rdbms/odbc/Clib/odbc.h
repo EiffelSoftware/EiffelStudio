@@ -234,7 +234,7 @@ extern int odbc_get_col_len (int no_des, int index);
 extern int odbc_get_data_len (int no_des, int index);
 extern int odbc_conv_type (int typeCode);
 extern int odbc_get_col_type (int no_des, int index);
-extern int odbc_put_data (int no_des, int index, char *result);
+extern int odbc_put_data (int no_des, int index, char **result);
 extern int odbc_get_integer_data (int no_des, int index);
 extern int odbc_get_boolean_data (int no_des, int index);
 extern double odbc_get_float_data (int no_des, int index);
@@ -254,8 +254,6 @@ extern char * odbc_get_error_message ();
 extern char * odbc_get_warn_message ();
 extern void odbc_clear_error ();
 extern int odbc_c_type(int odbc_type);
-extern void odbc_disp_c_type();
-extern void odbc_disp_rec(int no_des);
 extern void odbc_get_col_desc (int no_desc, int index);
 
 /*****************************************************************/

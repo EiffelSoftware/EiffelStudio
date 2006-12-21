@@ -38,8 +38,6 @@
 
 void odbc_error_handler (HSTMT,int);
 void odbc_clear_error ();
-void odbc_disp_rec(int);
-void odbc_disp_c_type();
 void odbc_unhide_qualifier(char *);
 int	 odbc_c_type(int odbc_type);
 
@@ -1580,7 +1578,7 @@ int odbc_get_col_type (int no_des, int index)
   return odbc_conv_type (GetDbColType(odbc_descriptor[no_des], i));
 }
 
-int odbc_put_data (int no_des, int index, char *result)
+int odbc_put_data (int no_des, int index, char **result)
 {
   int i = index -1;
   ODBCSQLDA * dap = odbc_descriptor[no_des];
@@ -1588,14 +1586,11 @@ int odbc_put_data (int no_des, int index, char *result)
 
   memcpy((char *)(&odbc_tmp_indicator), (char *)(&(odbc_indicator[no_des][i])), DB_SIZEOF_UDWORD);
   if (is_null_data = odbc_tmp_indicator == SQL_NULL_DATA) {
-  /* the retrived value is NULL, we use empty string to represent NULL */
-	result[0] = '\0';
 	return 0;
-
   }
 
-  memcpy(result, GetDbColPtr(dap, i), odbc_tmp_indicator);
-  /*result[odbc_tmp_indicator] = '\0';*/
+  *result = malloc(odbc_tmp_indicator);
+  memcpy(*result, GetDbColPtr(dap, i), odbc_tmp_indicator);
   return(odbc_tmp_indicator);
 }
 
@@ -1989,96 +1984,6 @@ int odbc_c_type(int odbc_type) {
 		default:
 			return SQL_C_DEFAULT;
 	}
-}
-
-
-void odbc_disp_c_type() {
-	printf("SQL_C_CHAR = %d\n", SQL_C_CHAR);
-	printf("SQL_C_DATE = %d\n", SQL_C_DATE);
-	printf("SQL_C_TIME = %d\n", SQL_C_TIME);
-	printf("SQL_C_TIMESTAMP = %d\n", SQL_C_TIMESTAMP);
-	printf("SQL_C_BIT = %d\n", SQL_C_BIT);
-	printf("SQL_C_STINYINT = %d\n", SQL_C_STINYINT);
-	printf("SQL_C_SSHORT = %d\n", SQL_C_SSHORT);
-	printf("SQL_C_SLONG = %d\n", SQL_C_SLONG);
-	printf("SQL_C_FLOAT = %d\n", SQL_C_FLOAT);
-	printf("SQL_C_DOUBLE = %d\n", SQL_C_DOUBLE);
-	printf("SQL_C_BINARY = %d\n", SQL_C_BINARY);
-	printf("SQL_C_DEFAULT = %d\n", SQL_C_DEFAULT);
-	return;
-}
-
-void odbc_disp_rec(int no_des) {
-	int i=1,j, type;
-	//SWORD indColName;
-	//short colNum;
-	//SWORD tmpScale;
-	//SWORD tmpNullable;
-	//TIME_STRUCT *timeP;
-	//DATE_STRUCT *dateP;
-	//TIMESTAMP_STRUCT *stampP;
-	char buff[255];
-
-	ODBCSQLDA *dap = odbc_descriptor[no_des];
-
-	 printf("\n===================================================================\n");
-	 printf("In SQLDA, var#: %d, col#: %d \n",dap->sqln,dap->sqld);
-	 printf("In SQLDA, The columns are :\n");
-	 for(i=0; i<dap->sqld; i++) {
-
-		cut_tail_blank(dap->sqlvar[i].sqlname.sqlnamec);
-		printf(" %d: c_type=%d, type=%d, len=%d, ptr=%x, name='%s', ",i,dap->sqlvar[i].c_type, dap->sqlvar[i].sqltype,dap->sqlvar[i].sqllen,GetDbColPtr(dap,i),dap->sqlvar[i].sqlname.sqlnamec);
-		type = dap->sqlvar[i].c_type;
-		switch (type) {
-		//case SQL_C_TIME:
-		case SQL_C_TYPE_TIME:
-			j = odbc_get_date_data(no_des, i+1);
-			printf(" TIME = %d:%d:%d ", odbc_get_hour(), odbc_get_min(), odbc_get_sec());
-			break;
-		//case SQL_C_DATE:
-		case SQL_C_TYPE_DATE:
-			j = odbc_get_date_data(no_des, i+1);
-			printf(" DATE = %d/%d/%d ", odbc_get_month(), odbc_get_day(), odbc_get_year());
-			break;
-		//case SQL_C_TIMESTAMP:
-		case SQL_C_TYPE_TIMESTAMP:
-			j = odbc_get_date_data(no_des, i+1);
-			printf(" TIMESTAMP = %d:%d:%d  %d/%d/%d ", odbc_get_hour(), odbc_get_min(), odbc_get_sec(), odbc_get_month(), odbc_get_day(), odbc_get_year());
-
-			break;
-		case SQL_C_BIT:
-			printf(" data=%d ",odbc_get_boolean_data(no_des, i+1));
-			break;
-		case SQL_C_CHAR:
-			j = odbc_put_data(no_des, i+1, buff);
-			buff[j] = '\0';
-			printf(" data='%s' ", buff);
-			break;
-		case SQL_C_STINYINT:
-			printf(" data=%d ",odbc_get_integer_data(no_des, i+1));
-			break;
-		case SQL_C_SSHORT:
-			printf(" data=%d ",odbc_get_integer_data(no_des, i+1));
-			break;
-		case SQL_C_SLONG:
-			printf(" data=%d ",odbc_get_integer_data(no_des, i+1));
-			break;
-		case SQL_C_FLOAT:
-			printf(" data=%f ",odbc_get_real_data(no_des, i+1));
-			break;
-		case SQL_C_DOUBLE:
-			printf(" data=%f ",odbc_get_float_data(no_des, i+1));
-			break;
-		default:
-			printf("Error Datatype:%d ", type);
-		}
-		if (odbc_indicator[no_des][i])
-			printf(" **** indicator = %d \n", odbc_indicator[no_des][i]);
-		else
-			printf("\n");
-	 }
-	 printf("===================================================================\n");
-
 }
 
 

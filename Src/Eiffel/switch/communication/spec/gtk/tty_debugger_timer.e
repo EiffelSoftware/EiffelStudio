@@ -11,14 +11,15 @@ class
 inherit
 
 	DEBUGGER_TIMER
-		redefine default_create end
+
+create
+	make
 
 feature {NONE} -- Initialization
 
-	default_create is
-			-- Create Current debugger timer
+	make (dmi: TTY_DEBUGGER_MANAGER_IMP) is
 		do
-			Precursor
+			tty_dbg_manager_imp := dmi
 			create actions.make
 
 			if gtk_init_check then
@@ -49,6 +50,8 @@ feature -- Change
 		end
 
 feature {NONE} -- Implementation
+
+	tty_dbg_manager_imp: TTY_DEBUGGER_MANAGER_IMP;
 
 	timeout_connection_id: INTEGER
 

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"PO-Revision-Date: 2006-12-21 09:57+0800\n"
+"PO-Revision-Date: 2006-12-21 12:25+0800\n"
 
 msgid "Filipino (Philippines)"
 msgstr "菲律宾语 (菲律宾共和国)"
@@ -2475,8 +2475,8 @@ msgstr "排除:"
 msgid "Wolof (Senegal)"
 msgstr "沃洛夫语 (塞内加尔)"
 
-msgid "Find"
-msgstr "查找"
+msgid "Select Cluster"
+msgstr "选择类簇"
 
 msgid "Add scope"
 msgstr "添加范围"
@@ -2694,6 +2694,9 @@ msgstr "添加预编译任务"
 
 msgid "Hide Assigner Command Name"
 msgstr "隐藏赋值命令名"
+
+msgid "Find: "
+msgstr "查找: "
 
 msgid "Polish (Poland)"
 msgstr "波兰语 (波兰)"
@@ -4613,9 +4616,6 @@ msgstr "请确保度量名称非空, 并且不包含非法字符。"
 
 msgid "Cannot create directroy: $1."
 msgstr "不能创建目录: $1。"
-
-msgid "Select Cluster"
-msgstr "选择类簇"
 
 msgid "Stop application"
 msgstr "停止程序"
@@ -9188,4 +9188,16 @@ msgstr "改变注释中出现类吗？"
 
 msgid "Should occurrences of the class name in strings be changed?"
 msgstr "改变字符串中出现类吗？"
+
+msgid "Command used to launch a console."
+msgstr "打开终端的命令"
+
+msgid "Console shell command"
+msgstr "终端命令"
+
+msgid "Command used to launch  an external editor."
+msgstr "打开外部编辑器命令"
+
+msgid "External editor command"
+msgstr "外部编辑器命令"
 

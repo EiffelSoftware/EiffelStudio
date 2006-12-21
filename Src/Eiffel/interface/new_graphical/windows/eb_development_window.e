@@ -2831,15 +2831,19 @@ feature -- Multiple editor management
 	current_editor: EB_EDITOR is
 			-- current editor, if none, main editor
 		do
-			if current_editor_index /= 0 then
-				Result := editors @ current_editor_index
-			else
-				Result := editors.first
+			if editors /= Void then
+				if current_editor_index /= 0 then
+					Result := editors @ current_editor_index
+				else
+					Result := editors.first
+				end
 			end
 		end
 
 	set_current_editor (an_editor: EB_EDITOR) is
 			-- set `an_editor' as main editor
+		require
+			an_editor_not_void: an_editor /= Void
 		local
 			old_index: INTEGER
 			new_index: INTEGER
@@ -2866,17 +2870,22 @@ feature -- Multiple editor management
 			-- Update `editor_paste_cmd'. To be performed when an editor grabs the focus.
 		do
 			if update_paste_cmd_agent = Void then
-				update_paste_cmd_agent := agent do
-					if
-						not current_editor.is_empty and then
-						current_editor.is_editable and then
-						current_editor.clipboard.has_text
-					then
-						editor_paste_cmd.enable_sensitive
-					else
-						editor_paste_cmd.disable_sensitive
+				update_paste_cmd_agent := agent
+					local
+						l_editor: like current_editor
+					do
+						l_editor := current_editor
+						if
+							l_editor /= Void and then
+							not l_editor.is_empty and then
+							l_editor.is_editable and then
+							l_editor.clipboard.has_text
+						then
+							editor_paste_cmd.enable_sensitive
+						else
+							editor_paste_cmd.disable_sensitive
+						end
 					end
-				end
 			end
 			ev_application.do_once_on_idle (update_paste_cmd_agent)
 		end

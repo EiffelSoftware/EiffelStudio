@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2006-12-20 18:03-0800\n"
+"PO-Revision-Date: 2006-12-21 17:59-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -1768,7 +1768,7 @@ msgid "Specify the file the compiler uses to generate the exported functions."
 msgstr ""
 
 msgid "Move item up"
-msgstr ""
+msgstr "Element nach oben verschieben"
 
 msgid "Default precompiles"
 msgstr ""
@@ -2987,7 +2987,7 @@ msgid "Paste"
 msgstr ""
 
 msgid "&Reset Current View"
-msgstr ""
+msgstr "Aktuelle Ansicht zurücksetzten"
 
 msgid "Detailed Result"
 msgstr "Detailiertes Resultat"
@@ -3288,13 +3288,13 @@ msgid "Status"
 msgstr "Status"
 
 msgid "Type Mapping"
-msgstr ""
+msgstr "Typabbildung"
 
 msgid "Show ancestor classes?"
 msgstr "Vorfahren anzeigen?"
 
 msgid "Root Cluster"
-msgstr ""
+msgstr "Wurzel-Cluster"
 
 msgid "In&variants"
 msgstr "In&varianten"
@@ -3324,7 +3324,7 @@ msgid "Open a dynamic library definition"
 msgstr ""
 
 msgid "Delete Inheritance Link Between '$1' and '$2'"
-msgstr ""
+msgstr "Vererbungsbeziehung zwischen '$1' und '$2' löschen"
 
 msgid "Workbench mode"
 msgstr ""
@@ -3336,7 +3336,7 @@ msgid "Assignment on Formal/Expanded"
 msgstr "Zuweisung auf Formal/Expanded"
 
 msgid "Move item down"
-msgstr ""
+msgstr "Element nach unten verschieben"
 
 msgid "Close"
 msgstr "Schliessen"
@@ -3357,7 +3357,7 @@ msgid "Add Resource"
 msgstr "Ressource hinzfügen"
 
 msgid "Available buttons"
-msgstr ""
+msgstr "Verfügbare Schaltflächen"
 
 msgid "Ma&ximize"
 msgstr "Ma&ximieren"
@@ -3396,7 +3396,7 @@ msgid "Display an expanded view of objects"
 msgstr "Aufgeklappte Ansicht der Objekte anzeigen"
 
 msgid "Root Feature"
-msgstr ""
+msgstr "Wurzel-Feature"
 
 msgid "Force right angles"
 msgstr "Rechte Winkel erzwingen"
@@ -3601,7 +3601,7 @@ msgid "Remove all scopes"
 msgstr ""
 
 msgid "Overflow &Prevention..."
-msgstr ""
+msgstr "Überlauf-&Sicherung..."
 
 msgid "Input"
 msgstr "Eingabe"
@@ -3610,6 +3610,8 @@ msgid ""
 "Extracting the homonyms\n"
 "may take a long time."
 msgstr ""
+"Die Homonyme zu extrahieren\n"
+"kann lange dauern."
 
 msgid "&Callers"
 msgstr "&Aufrufer"
@@ -3639,7 +3641,7 @@ msgid "Alphabetical cluster list"
 msgstr "Alphabetische Clusterliste"
 
 msgid "Update"
-msgstr ""
+msgstr "Aktualisieren"
 
 msgid "OLD_NAME"
 msgstr "OLD_NAME"
@@ -3663,7 +3665,7 @@ msgid "Run Finalized"
 msgstr "Optimierte Version starten"
 
 msgid "Objects tool: right"
-msgstr ""
+msgstr "Objektwerkzeuge: Rechts"
 
 msgid "Location"
 msgstr "Ort"
@@ -3682,16 +3684,16 @@ msgid "Press ESC to wipe out"
 msgstr "ESC drücken zum auslöschen"
 
 msgid "Copy call stack to clipboard"
-msgstr ""
+msgstr "Aufrufstack zur Zwischenablage kopieren"
 
 msgid "Are simplified address expressions enabled?"
-msgstr ""
+msgstr "Sind vereinfachte Ausdrücke für Adressen aktiviert?"
 
 msgid "Numerator metric is missing."
-msgstr ""
+msgstr "Zähler-Metrik fehlt."
 
 msgid "De&bugging Options"
-msgstr ""
+msgstr "De&buggeroptionen"
 
 msgid "Cluster"
 msgstr "Cluster"
@@ -3715,7 +3717,7 @@ msgid "Add new variable"
 msgstr "Neue Variable hinzufügen"
 
 msgid "Edit $1"
-msgstr ""
+msgstr "Editiere $1"
 
 msgid "Backup Found"
 msgstr "Sicherheitskopie gefunden"
@@ -4074,7 +4076,7 @@ msgstr ""
 "generierten Datein gelagert werden"
 
 msgid "Should the generated executable use a shared library of the runtime?"
-msgstr ""
+msgstr "Soll das erzeugte Programm die dynamische Bibliothek der Laufzeitumgebung verwenden?"
 
 msgid "Pre Compilation"
 msgstr "Vor-Kompilierung"
@@ -4194,7 +4196,7 @@ msgid "Link Context"
 msgstr ""
 
 msgid "Select a fully compiled feature to have information about it."
-msgstr ""
+msgstr "Ein kompiliertes Feature wählen um Informationen anzuzeigen."
 
 msgid "Select the view you want to use"
 msgstr "Ansicht wählen die verwendet werden soll"
@@ -4242,10 +4244,10 @@ msgid "Declared in class"
 msgstr "In Klasse deklariert"
 
 msgid "Other"
-msgstr ""
+msgstr "Andere"
 
 msgid "Too many crierion section specified. Only one criterion section is expected."
-msgstr ""
+msgstr "Zu viele Kriterien angegeben. Es wird nur ein Kriterium erwartet."
 
 msgid "Add &Precompile"
 msgstr "&Precompile hinzufügen"
@@ -4513,13 +4515,13 @@ msgid "Generate creation procedure"
 msgstr "Erzeugerporzedur erstellen"
 
 msgid "Too many crieria is specified in \"criterion\" section. Only one is expected."
-msgstr ""
+msgstr "Zu viele Kriterien angegeben unter \"Kriterium\". Es wird nur eines erwartet."
 
 msgid "Cluster diagrams (may take a long time!)"
 msgstr "Clusterdiagramme (Kann eine lange Zeit beanspruchen!)"
 
 msgid "Force inheritance on child elements."
-msgstr ""
+msgstr "Vererbung auf Kindelemente erzwingen."
 
 msgid "external features"
 msgstr "externe Features"
@@ -4531,7 +4533,7 @@ msgid "Information cannot be retrieved."
 msgstr "Information kann nicht abgerufen werden."
 
 msgid "U&ncomment\tCtrl+Shift+K"
-msgstr ""
+msgstr "U&nkommentieren\tCtrl+Shift+K"
 
 msgid "Clean archive?"
 msgstr ""
@@ -4640,7 +4642,7 @@ msgid "Add new task"
 msgstr "Neue Aufgabe hinzufügen"
 
 msgid "Target used if system is used as a library."
-msgstr ""
+msgstr "Konfigurationsziel falls das System als Bibliothek verwendet wird."
 
 msgid "Metric"
 msgstr "Metrik"
@@ -4684,7 +4686,7 @@ msgid "Add Inheritance Relation Between '$1' and '$2'"
 msgstr "Vererbungsbeziehung zwischen '$1' und '$2' hinzufügen"
 
 msgid "Generate profile from Run-time information record"
-msgstr ""
+msgstr "Profil aus den Laufzeitinformatinen erstellen"
 
 msgid ""
 "Select class or feature to rename.\n"
@@ -4707,7 +4709,7 @@ msgid "Description"
 msgstr "Beschreibung"
 
 msgid "Command to execute."
-msgstr ""
+msgstr "Auszuführender Befehl."
 
 msgid "Add class ancestors to diagram"
 msgstr "Klassenvorfahren zum Diagramm hinzufügen"
@@ -4742,6 +4744,8 @@ msgid ""
 "Add a new variable : double click or [enter]\n"
 "Use an existing variable: right click or [Ctrl+enter]"
 msgstr ""
+"Neue Variable hinzufügen: Doppelclick oder [Eingabetaste]\n"
+"Eine existierende Variable verwenden: Rechtsklick oder [Ctrl+Eingabetaste]"
 
 msgid "Recompile override clusters"
 msgstr ""
@@ -4756,7 +4760,7 @@ msgid "Evaluate check assertions?"
 msgstr "'check' auswerten?"
 
 msgid "Open Watch tool menu"
-msgstr ""
+msgstr "Öffne Menü des Beobachtungswerkzeugs"
 
 msgid "Show class location?"
 msgstr ""
@@ -4798,10 +4802,10 @@ msgid "Continue Anyway"
 msgstr "Trotzdem fortfahren"
 
 msgid "History tool"
-msgstr ""
+msgstr "Historien-Werkzeug"
 
 msgid "Filter: "
-msgstr ""
+msgstr "Filter:"
 
 msgid "$1 from $2"
 msgstr "$1 von $2"
@@ -4843,7 +4847,7 @@ msgid "&Contents"
 msgstr "&Inhalte"
 
 msgid "Override the detected platform to use in conditions."
-msgstr ""
+msgstr "Die gefunden Platform in Konditionen überschreiben."
 
 msgid ""
 "Metrics loading error:\n"
@@ -4877,7 +4881,7 @@ msgid "Move metric unit down.\n"
 msgstr "Metrikeinheit nach unten verschieben.\n"
 
 msgid "Item expires. Try searching again."
-msgstr ""
+msgstr "Element abgelaufen. Suche nochmals versuchen."
 
 msgid "Make sure that at least one domain item is listed in a domain criterion."
 msgstr ""
@@ -4904,7 +4908,7 @@ msgid "Value \"$1\" of attribute \"negation\" is invalid. A boolean is expected.
 msgstr "Wert \"$1\" vom Attribut \"negation\" ist ungültig. Ein boolscher Wert wird erwartet."
 
 msgid "Profiler used to produce the above record: "
-msgstr ""
+msgstr "Das Profilwerkzeug das für den obigen Auszug benutzt wurde:"
 
 msgid "Use input domain as criterion domain."
 msgstr ""
@@ -5072,10 +5076,10 @@ msgid "Turn off physics"
 msgstr "Physik deaktivieren."
 
 msgid "Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)."
-msgstr ""
+msgstr "Erkennung von Stack-Überlauf: Tiefe des Stacks bei dem die Ausführung pausiert wird und für die weitere Ausführung nachgefragt wird (funktioniert nur im klassichen Eiffel)."
 
 msgid "Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."
-msgstr ""
+msgstr "Für Erben der Klasse DEBUG_OUTPUT  das Resultat des Features 'debug_output' anzeigen."
 
 msgid "Default number of displayed characters of a STRING (increasing this value might slow down debugging)."
 msgstr "Standardwert der angezeigten Zeichen eines STRINGs (Erhöhen des Wertes kann den Debugger verlangsamen)"
@@ -5111,7 +5115,7 @@ msgid "Timeout used to start the Eiffel debugger daemon (classic only). Leave it
 msgstr ""
 
 msgid "Path to the Eiffel debugger daemon (classic). Leave it empty to use the default environment value."
-msgstr ""
+msgstr "Pfad zum Eiffel Debugger-Daemon (klassich). Leer lassen um die Umgebungsvariable zu verwenden."
 
 msgid "Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."
 msgstr ""
@@ -5120,10 +5124,10 @@ msgid "Should we always try to debug non-Eiffel code in case it calls back into 
 msgstr "Soll versucht werden Nicht-Eiffelcode immer zu debuggen im Falle wieder Eiffelcode aufgerufen wird?"
 
 msgid "Disk location of last saved stack path information."
-msgstr ""
+msgstr "Speicherort der zuletzt gespeicherten Stackpfad-Information."
 
 msgid "Items/tools shown in navigation layout when in debug mode."
-msgstr ""
+msgstr "Elemente/Werkzeuge die im Debugmodus im Navigationslayout angezeigt werden."
 
 msgid "Position of main horizontal splitter bar."
 msgstr ""
@@ -5138,7 +5142,7 @@ msgid "Smallest number of items displayed in list data."
 msgstr ""
 
 msgid "Default number of watch tools."
-msgstr ""
+msgstr "Vorgegebene Anzahl Beobachtungswerkzeuge."
 
 msgid "Debug toolbar items and layout information."
 msgstr ""
@@ -5150,13 +5154,13 @@ msgid "Items/tools shown on editor side when in debug mode."
 msgstr ""
 
 msgid "Highlight background color"
-msgstr ""
+msgstr "Hintergrundfarbe für Hervorhebungen"
 
 msgid "Unsensitive foreground color"
-msgstr ""
+msgstr "Hintergrundfarbe für Unsensitives"
 
 msgid "Select call stack entry on double click?"
-msgstr ""
+msgstr "Eintrag des Aufrufstacks mit Doppelklick auswählen?"
 
 msgid "Enable/Disable the layout management for the stack values (keep value expanded or not, and highlight difference)."
 msgstr ""
@@ -5194,7 +5198,7 @@ msgid "Should text be shown alongside all toolbar items?"
 msgstr ""
 
 msgid "Background Color for Diagram Tool"
-msgstr ""
+msgstr "Hintergrundfarbe für Diagrammwerkzeug"
 
 msgid "Font for class names in BON class figures."
 msgstr ""
@@ -5317,25 +5321,25 @@ msgid "Color for UML inheritance links."
 msgstr "Farbe für UML Vererbungsbeziehungen."
 
 msgid "Show ancestors of a class up to a level of preference value."
-msgstr ""
+msgstr "Vorfahren einer Klasse bis zu einem "
 
 msgid "Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."
 msgstr ""
 
 msgid "Show clients of a class up to a level of preference value."
-msgstr ""
+msgstr "Klienten einer Klasse bis zu dem in den Einstellungen angegebenen Level anzeigen."
 
 msgid "Show descendants of a class down to a level of preference value."
-msgstr ""
+msgstr "Erben einer Klasse bis zu dem in den Einstellungen angegebenen Level anzeigen."
 
 msgid "The visible toolbar items for the Diagram Tool toolbar."
 msgstr ""
 
 msgid "Names of classes that should not appear in generated diagrams."
-msgstr ""
+msgstr "Namen der Klassen die nicht im generierten Diagramm erscheinen sollen."
 
 msgid "Show ALL classes in the diagram (ignore the following list)?"
-msgstr ""
+msgstr "ALLE Klassen im Diagramm anzeigen (und die volgende Liste ignorieren)?"
 
 msgid "Show subclusters of a cluster down to a level of preference value."
 msgstr ""
@@ -5470,16 +5474,16 @@ msgid "Directory of last profile result saved."
 msgstr "Speichere Verzeichnis des letzen Profilresultats."
 
 msgid "Width of the project settings dialog."
-msgstr ""
+msgstr "Breite des Dialogs 'Projekteinstellungen'"
 
 msgid "Height of the project settings dialog."
-msgstr ""
+msgstr "Höhe des Dialogs 'Projekteinstellungen'."
 
 msgid "Screen x position of the project settings dialog."
-msgstr ""
+msgstr "X Position des Dialogs 'Projekteinstellungen'."
 
 msgid "Screen y position of the project settings dialog."
-msgstr ""
+msgstr "Y Position des Dialogs 'Projekteinstellungen'."
 
 msgid "Position of the split area."
 msgstr ""
@@ -5506,16 +5510,16 @@ msgid "Should all applicable docking feedback indicators be shown when dragging 
 msgstr ""
 
 msgid "Allow class name completion in the address combo boxes?"
-msgstr ""
+msgstr "Klassennamen in der Adressliste vervollständigen?"
 
 msgid "Receivers of control-right-click."
-msgstr ""
+msgstr "Empfänger des Control-Rechtsklick."
 
 msgid "Docked tools track main window?"
 msgstr ""
 
 msgid "Display editor on left?"
-msgstr ""
+msgstr "Editor auf der linken Seite zeigen?"
 
 msgid "Is EiffelStudio Debug menu allowed?"
 msgstr ""
@@ -5557,7 +5561,7 @@ msgid "Show only one tool (Features, Clusters, Search, Windows) at a time."
 msgstr "Nur ein Werkzeug (Features, Clusters, Suche, Fenster) auf einmal anzeigen."
 
 msgid "Maximum number of items displayed in the history combo boxes."
-msgstr ""
+msgstr "Maximale Anzahl der Elemente welche in der Historien-Liste angezeigt werden."
 
 msgid "Color for progress bar."
 msgstr "Farbe für Fortschritssbalken."
@@ -5575,22 +5579,22 @@ msgid "Should project toolbar be shown?"
 msgstr "Soll Projekt-Symbolleiste angezeigt werden?"
 
 msgid "Should refactoring toolbar be shown?"
-msgstr ""
+msgstr "Soll Refactoring-Symbolleiste angezeigt werden?"
 
 msgid "Should selective text of toolbar items in general toolbar?"
 msgstr ""
 
 msgid "Is text of toolbar items displayed?"
-msgstr ""
+msgstr "Soll der Text der Elemente in der Symbolleiste angezeigt werden?"
 
 msgid "Items shown in refactoring toolbar."
-msgstr ""
+msgstr "Elemente die in der Refactoring-Symbolleiste angezeigt werden."
 
 msgid "Should general toolbar be shown?"
-msgstr ""
+msgstr "Soll allgemeine Symbolleiste angezeigt werden?"
 
 msgid "Items shown in general toolbar."
-msgstr ""
+msgstr "Elemente die in der allgemeinen Symbolleiste angezeigt werden."
 
 msgid "Link the context tool with other components by default?"
 msgstr ""
@@ -5641,13 +5645,13 @@ msgid "Should trailing blanks be auto-removed when saving?"
 msgstr "Sollen Leerschläge am Ende von Zeilen automatisch entfernt werden beim speichern?"
 
 msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."
-msgstr ""
+msgstr "Benutzerdefinierte Zeichenkette die eingefügt wird wenn die Tastenkombination ausgelöst wird welche unter 'Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1' definiert ist."
 
 msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 2."
-msgstr ""
+msgstr "Benutzerdefinierte Zeichenkette die eingefügt wird wenn die Tastenkombination ausgelöst wird welche unter 'Editor->Eiffel->Keyboard Shortcuts->Customized insertion 2' definiert ist."
 
 msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3."
-msgstr ""
+msgstr "Benutzerdefinierte Zeichenkette die eingefügt wird wenn die Tastenkombination ausgelöst wird welche unter 'Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3' definiert ist."
 
 msgid "Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."
 msgstr ""
@@ -5677,7 +5681,7 @@ msgid "Command to open an external editor."
 msgstr "Befehl um externen Editor zu öffnen."
 
 msgid "Is underscore `_' used as a word separator?"
-msgstr ""
+msgstr "Wird Unterstrich `_' zum trennen von Worten verwendet?"
 
 msgid "Color for breakable marks and breakpoints."
 msgstr ""
@@ -5881,52 +5885,52 @@ msgid "Key"
 msgstr "Schlüssel"
 
 msgid "Trigger feature completion."
-msgstr ""
+msgstr "Feature-Vervollständigung auslösen."
 
 msgid "Trigger class completion"
-msgstr ""
+msgstr "Klassen-Vervollständigung auslösen."
 
 msgid "Trigger collapsing of all tree nodes."
-msgstr ""
+msgstr "Zuklappen aller Knoten auslösen."
 
 msgid "Trigger collapsing of current tree node."
-msgstr ""
+msgstr "Zuklappen des aktuellen Knotens auslösen."
 
 msgid "Trigger insertion of customized string #1."
-msgstr ""
+msgstr "Einfügen der benutzerdefinierten Zeichenkette #1 auslösen."
 
 msgid "Trigger insertion of customized string #2."
-msgstr ""
+msgstr "Einfügen der benutzerdefinierten Zeichenkette #2 auslösen."
 
 msgid "Trigger insertion of customized string #3."
-msgstr ""
+msgstr "Einfügen der benutzerdefinierten Zeichenkette #3 auslösen."
 
 msgid "Trigger expansion of all tree nodes."
-msgstr ""
+msgstr "Aufklappen aller Baumknoten auslösen."
 
 msgid "Trigger expansion of current tree node."
-msgstr ""
+msgstr "Aufklappen des aktuellen Knotens auslösen."
 
 msgid "Trigger backward search."
-msgstr ""
+msgstr "Rückwärtssuche auslösen."
 
 msgid "Trigger forward search."
-msgstr ""
+msgstr "Forwärtssuche auslösen."
 
 msgid "Trigger search on current selection and goes to previous result."
-msgstr ""
+msgstr "Suche auf aktueller Selektion auslösen und zum vorherigen Resultat springen."
 
 msgid "Trigger search on current selection and goes to next result."
-msgstr ""
+msgstr "Suche auf aktueller Selektion auslösen und zum nächsten Resultat springen."
 
 msgid "Trigger quick search bar."
-msgstr ""
+msgstr "Schnellsuch-Leiste auslösen."
 
 msgid "Trigger display of search panel focused on replace."
 msgstr ""
 
 msgid "Trigger display of search panel."
-msgstr ""
+msgstr "Anzeige der Suchmaske auslösen."
 
 msgid "Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"
 msgstr "Soll ein Dokument automatisch neu geladen werden wenn es extern geändert wurde aber nicht im Editor?"
@@ -6127,13 +6131,13 @@ msgid "Width of preferences window."
 msgstr "Breite des Fensters 'Einstellungen'."
 
 msgid "Show hidden preferences in preference window?"
-msgstr ""
+msgstr "Verborgene Einstellungen in den Einstellungen anzeigen?"
 
 msgid "Initial status of incremental search."
-msgstr ""
+msgstr "Standardwert für 'Inkrementelle Suche'."
 
 msgid "Initial status of match case."
-msgstr ""
+msgstr "Standardwert für 'Gross-/Kleinschreibung beachten'."
 
 msgid "Initial status of using regular_expression."
 msgstr "Standardwert der 'Benutze Reguläre Ausdrücke' Option."

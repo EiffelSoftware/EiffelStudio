@@ -602,22 +602,25 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					end
 					if count_attribute /= Void then
 						l_count := count_attribute.value
-
-						if area_attribute /= Void then
-								--| Now we have the real count, we'll get the l_slice_max items
-								--| and not all the capacity
-							if max < 0 then
-								l_slice_max := l_count - 1
-							else
-								l_slice_max := max.min (l_count - 1)
+						if l_count = 0 then
+							Result := ""
+						else
+							if area_attribute /= Void then
+									--| Now we have the real count, we'll get the l_slice_max items
+									--| and not all the capacity
+								if max < 0 then
+									l_slice_max := l_count - 1
+								else
+									l_slice_max := max.min (l_count - 1)
+								end
+								area_attribute.reset_items
+								area_attribute.get_items (min, l_slice_max)
+								Result := area_attribute.truncated_raw_string_value (l_count)
 							end
-							area_attribute.reset_items
-							area_attribute.get_items (min, l_slice_max)
-							Result := area_attribute.truncated_raw_string_value (l_count)
 						end
 					end
 				end
-				if Result /= Void then
+				if Result /= Void and then Result.count > l_count then
 						--| We now have retrieved the full `area' of STRING object. Let's check
 						--| if we need to display the complete area, or just part of it.
 					Result.keep_head (l_count.min (Result.count))

@@ -1,0 +1,23 @@
+test_name changing-formals-precursor-crash
+test_description When a generic class which has a call to a Precursor has its generic parameters modified, and the parent type for the precursor has also its generic parameters modified, the compiler crashes because it did not update the code to reflect that change.
+
+define ACTUAL "STRING"
+define FORMAL "G"
+copy_sub Ace $TEST Ace
+copy_sub test.e $CLUSTER test.e
+copy_sub test1.e $CLUSTER test1.e
+copy_sub test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+define ACTUAL "STRING, STRING"
+define FORMAL "G, H"
+copy_sub test.e $CLUSTER test.e
+copy_sub test1.e $CLUSTER test1.e
+copy_sub test2.e $CLUSTER test2.e
+
+compile_melted
+compile_result ok
+
+test_end

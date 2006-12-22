@@ -186,7 +186,7 @@ feature -- Access
 			-- written in current class.
 
 	changed4: BOOLEAN
-			-- Has the class a new class type ?
+			-- Has the class a new class type, or changed its generics?
 
 	is_generic: BOOLEAN is
 			-- Is current class generic?

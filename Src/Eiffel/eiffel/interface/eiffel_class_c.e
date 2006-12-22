@@ -549,8 +549,11 @@ feature -- Third pass: byte code production and type check
 						feature_i.create_default_rescue (def_resc.feature_name_id)
 					end
 
-						-- For a feature written in the class
-					feature_changed := 	changed_features.has (feature_name_id)
+						-- For a changed feature written in the class or for all
+						-- features of the class when `changed4' is true (it fixes test#incr279
+						-- for which some nodes needed to be updated to reflect the change
+						-- of generic parameters).
+					feature_changed := 	changed_features.has (feature_name_id) or changed4
 
 					if not feature_changed then
 							-- Force a change on all feature of current class if line

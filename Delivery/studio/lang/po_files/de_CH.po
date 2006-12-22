@@ -75,7 +75,7 @@ msgid "E&mbed in \"Debug...\"\tCtrl+D"
 msgstr "In \"&Debug...\" einschliessen\tCtrl+D"
 
 msgid "ratio"
-msgstr ""
+msgstr "Verhältnis"
 
 msgid "Choose New Slice Limits for Special Objects"
 msgstr ""
@@ -93,7 +93,7 @@ msgid "Delete"
 msgstr "Löschen"
 
 msgid "Pull up Feature"
-msgstr ""
+msgstr "Feature herausziehen"
 
 msgid "&Go to"
 msgstr "&Gehe zu"
@@ -132,7 +132,7 @@ msgid "Turn on physics"
 msgstr "Physik anschalten"
 
 msgid "basic"
-msgstr ""
+msgstr "einfach"
 
 msgid "Add first breakpoints in class"
 msgstr "Ersten Haltepunkt in der Klasse setzen"
@@ -147,7 +147,7 @@ msgid "Result"
 msgstr "Resultat"
 
 msgid "Metrics definition file:"
-msgstr ""
+msgstr "Metrik-Definitions-Datei"
 
 msgid "Error "
 msgstr "Fehler"
@@ -168,7 +168,7 @@ msgid "Application is paused"
 msgstr "Applikation ist pausiert"
 
 msgid "Trademark"
-msgstr ""
+msgstr "Handelszeichen"
 
 msgid "Text finished loading"
 msgstr "Laden des Textes beendet"
@@ -186,7 +186,7 @@ msgid "Add Sub cluster"
 msgstr "Sub cluster hinzufügen"
 
 msgid "Define new subquery"
-msgstr ""
+msgstr "Definiere neue Unterabfrage"
 
 msgid "Set as default"
 msgstr "Als Standard setzen"
@@ -195,7 +195,7 @@ msgid "Group \"$1\" (ID = \"$2\") is invalid."
 msgstr "Gruppe \"$1\" (ID = \"$2\") ist invalid."
 
 msgid "Missing Class Export"
-msgstr ""
+msgstr "Fehlder Klassen "
 
 msgid "Attribute \"regular_expression\" is missing."
 msgstr "Attribut \"regular_expression\" fehlt."
@@ -214,13 +214,13 @@ msgstr ""
 "   + Module = $1"
 
 msgid "Select the information you need and formulate your query."
-msgstr ""
+msgstr "Wählen Sie die gewünschte Information und formulieren Sie eine Abfrage."
 
 msgid "Target "
 msgstr "Ziel"
 
 msgid "Select/deselect predefined metrics"
-msgstr ""
+msgstr "Anwählen/Abwählen von vordefinierten Metriken"
 
 msgid "+"
 msgstr "+"
@@ -229,10 +229,10 @@ msgid "-"
 msgstr "-"
 
 msgid "Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode."
-msgstr ""
+msgstr "Anzahl von Klassen generiert pro .NET Modul während der inkrementellen Kompilierung. Wenn Sie diesen Wert erhöhen, wird die Kompilation verlangsamt. Dafür lädt ein Assembly schneller, während dem Debuggen im Workbench-Modus."
 
 msgid "Refactoring: Feature Rename (Compiled Classes)"
-msgstr ""
+msgstr "Refactoring: Feature umbenennen (nur für kompilierte Klassen) "
 
 msgid "Change class name and generics"
 msgstr "Ändere Klassennamen und Generics"
@@ -244,10 +244,10 @@ msgid "Switch to hexadecimal format"
 msgstr "Zu hexadezimalem Format wechseln"
 
 msgid "Warn about assignment attempts on formal or expanded targets (VJRV)?"
-msgstr ""
+msgstr "Sollen Warnungen ausgegeben werden für Zuweisungsversuche an exapanded und formal-generische Typen?"
 
 msgid "Add class descendants to diagram"
-msgstr ""
+msgstr "Füge Subklassen dem Diagramm hinzu"
 
 msgid "Require"
 msgstr ""
@@ -256,10 +256,10 @@ msgid "Cannot open file: $1."
 msgstr "Kann Datei nicht öffnen: $1."
 
 msgid "Metric Evaluation"
-msgstr ""
+msgstr "Metrikauswertung"
 
 msgid "Toggle visibility of client link labels"
-msgstr ""
+msgstr "Schalte die Sichtbarkeit der Beschriftungen der Client-Verknüpfungen um"
 
 msgid "No metric is selected."
 msgstr "Keine Metrik selektiert."
@@ -286,7 +286,7 @@ msgid "Exception message from debugger"
 msgstr "Fehlernachricht vom Debugger"
 
 msgid "Output switches"
-msgstr ""
+msgstr "Ausgabe-Parameter"
 
 msgid "Automatic Backup"
 msgstr "Automatisches Backup"
@@ -301,10 +301,10 @@ msgid ""
 "Please drop a class, a cluster or a midpoint\n"
 "on this button. Use right click for both\n"
 "pick and drop actions."
-msgstr ""
+msgstr "Bitte werfen Sie eine Klasse, einen Cluster oder einen Zwischenpunkt über dieser Schaltfläche ab."
 
 msgid "Target: $1"
-msgstr ""
+msgstr "Ziel: $1"
 
 msgid "Start application without stopping at breakpoints"
 msgstr "Applikation starten und Haltepunkte ignorieren"
@@ -313,16 +313,16 @@ msgid "Expression"
 msgstr "Ausdruck"
 
 msgid "clickable view"
-msgstr ""
+msgstr "Ansicht zum Klicken"
 
 msgid "Add an assembly"
-msgstr ""
+msgstr "Füge ein Assembly hinzu"
 
 msgid "Add Assembly"
-msgstr ""
+msgstr "Füge Assembly hinzu"
 
 msgid "Descendant Time"
-msgstr ""
+msgstr "Zeit der Subklasse"
 
 msgid "Possible stack overflow"
 msgstr "Möglicher Stacküberlauf"
@@ -340,13 +340,13 @@ msgid "Remove Project"
 msgstr "Projekt entfernen"
 
 msgid "Build"
-msgstr ""
+msgstr "Erstellen"
 
 msgid "Command line:"
 msgstr "Kommandozeile:"
 
 msgid "&Out of Routine"
-msgstr ""
+msgstr "&Aus der Routine"
 
 msgid "Brea&kpoint Information"
 msgstr "Brea&kpoint-Information"
@@ -358,7 +358,7 @@ msgid "Basic application (no graphics library included)"
 msgstr "Einfache Anwendung (keine graphische Bibliothek eingefügt)"
 
 msgid "Stop metric archive evaluation"
-msgstr ""
+msgstr "Stop die Auswertung des Metrikarchives"
 
 msgid "Group"
 msgstr "Gruppe"
@@ -394,10 +394,10 @@ msgid "for the next objects you will add in the object tree."
 msgstr "für das nächste Objekt das in den Objektbaum eingefügt wird"
 
 msgid "Make sure metric name is not empty and contains valid charactors."
-msgstr ""
+msgstr "Stellen Sie sicher, dass sie einen Metriknamen angegeben haben und er nur erlaubte Zeichen enthält."
 
 msgid "Display information concerning current system"
-msgstr ""
+msgstr "Zeige Informationen über das momentanen Systems an"
 
 msgid "Tool&bars"
 msgstr "S&ymbolleisten"
@@ -409,10 +409,10 @@ msgid "Do not ask again, and always save files before compiling"
 msgstr "Nicht nochmals fragen und Dateien vor dem Kompilieren immer speichern"
 
 msgid "The descending class $1 already has another feature with the new name."
-msgstr ""
+msgstr "Der Subklasse $1 hat bereits ein Feature mit diesem Namen."
 
 msgid "&Dynamic Library Builder..."
-msgstr ""
+msgstr "Erstellung einer dynamischen Bibliothek..."
 
 msgid "&Freeze..."
 msgstr "Ein&frieren..."
@@ -424,7 +424,7 @@ msgid "Breakpoint Info"
 msgstr "Haltepunkt-Information"
 
 msgid "Supplier Precondition"
-msgstr ""
+msgstr "Vorbedingungen der Aufgerufenen"
 
 msgid "Freeze"
 msgstr "Einfrieren"
@@ -433,7 +433,7 @@ msgid "Select feature type"
 msgstr "Feature typ wählen"
 
 msgid "Renaming"
-msgstr ""
+msgstr "Umbenennung"
 
 msgid "Invalid attribute \"$1\"."
 msgstr "Ungültiges Attribut \"$1\"."
@@ -445,31 +445,31 @@ msgid "Context"
 msgstr "Kontext"
 
 msgid "Pre Compilation Tasks"
-msgstr ""
+msgstr "Aufgaben vor der Kompilierung"
 
 msgid "New Ta&b"
-msgstr ""
+msgstr "Neuer Ta&b"
 
 msgid "A&ttributes"
-msgstr ""
+msgstr "A&ttribute"
 
 msgid "Do not detect stack overflows"
-msgstr ""
+msgstr "Detektiere keine Stacküberläufe"
 
 msgid "&Ancestors"
-msgstr ""
+msgstr "&Vorfahren"
 
 msgid "Locals"
-msgstr ""
+msgstr "Lokale Variablen"
 
 msgid "Remove all"
-msgstr ""
+msgstr "Alle entfernen"
 
 msgid "E&xit"
-msgstr ""
+msgstr "B&eenden"
 
 msgid "Resynchronizing Breakpoints"
-msgstr ""
+msgstr "Haltepunkte resynchronisieren"
 
 msgid "&Debugging Tools"
 msgstr ""

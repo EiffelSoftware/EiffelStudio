@@ -12,13 +12,13 @@ deferred class
 
 inherit
 	EV_DRAWING_AREA_ACTION_SEQUENCES_I
-		export 
+		export
 			{EV_INTERMEDIARY_ROUTINES} expose_actions_internal
 		end
 
-	EV_ANY_IMP 
-		undefine 
-			dispose, destroy 
+	EV_ANY_IMP
+		undefine
+			dispose, destroy
 		end
 
 feature -- Event handling
@@ -28,7 +28,7 @@ feature -- Event handling
 			-- Attach to GTK "expose-event" signal.
 		do
 			create Result
-			real_signal_connect_after (visual_widget, once "expose-event", agent (App_implementation.gtk_marshal).create_expose_actions_intermediary (c_object, ?, ?, ?, ?), App_implementation.default_translate)
+			real_signal_connect_after (visual_widget, once "expose-event", agent (App_implementation.gtk_marshal).create_expose_actions_intermediary (c_object, ?, ?, ?, ?), App_implementation.gtk_marshal.expose_translate_agent)
 		end
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

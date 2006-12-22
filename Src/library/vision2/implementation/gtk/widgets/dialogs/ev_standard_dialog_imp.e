@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 			l_app_imp := App_implementation
 			l_gtk_marshal := l_app_imp.gtk_marshal
 			on_key_event_intermediary_agent := agent (l_gtk_marshal).on_key_event_intermediary (internal_id, ?, ?, ?)
-			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
+			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, l_gtk_marshal.key_event_translate_agent)
 			signal_connect_true (l_app_imp.delete_event_string, agent l_gtk_marshal.on_window_close_request (c_object))
 		end
 

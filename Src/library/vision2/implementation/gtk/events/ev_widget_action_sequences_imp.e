@@ -55,7 +55,7 @@ feature -- Event handling
 				event_widget,
 				App_imp.enter_notify_event_string,
 				agent (App_imp.gtk_marshal).pointer_enter_leave_action_intermediary (c_object, True),
-				App_imp.default_translate,
+				Void,
 				False
 			)
 		end
@@ -72,7 +72,7 @@ feature -- Event handling
 				event_widget,
 				App_imp.leave_notify_event_string,
 				agent (App_imp.gtk_marshal).pointer_enter_leave_action_intermediary (c_object, False),
-				App_imp.default_translate,
+				Void,
 				False
 			)
 		end
@@ -111,11 +111,14 @@ feature -- Event handling
 
 	create_resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is
 			-- Create a resize action sequence.
+		local
+			l_app_imp: like app_implementation
 		do
 			create Result
 			if not {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
+				l_app_imp := app_implementation
 					-- Window resize events are connected separately
-				signal_connect (c_object, App_implementation.size_allocate_event_string, agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent, False)
+				signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, False)
 			end
 		end
 
@@ -134,23 +137,10 @@ feature -- Event handling
 
 feature {EV_ANY_I} -- Implementation
 
-	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Translation agent used for size allocation events
-		once
-			Result := agent (App_implementation.gtk_marshal).configure_translate
-		end
-
-	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Translation agent used for size allocation events
-		once
-			Result := agent (App_implementation.gtk_marshal).size_allocate_translate
-		end
-
 	event_widget: POINTER is
 			-- Pointer to the gtk event widget
 		deferred
 		end
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -5,9 +5,11 @@ create
 feature
 
 	make is
+		local
+			t: TEST2 [$ACTUAL]
 		do
+			create t
+			t.make
 		end
-
-	t: TEST2 [$ACTUAL]
 
 end

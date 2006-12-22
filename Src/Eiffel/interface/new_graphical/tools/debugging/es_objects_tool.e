@@ -291,6 +291,8 @@ feature {NONE} -- Interface
 			end
 			if header_box = Void then
 				build_header_box
+			else
+				clean_header_box
 			end
 			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_info (explorer_bar, widget, title, title_for_pre, False, header_box, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
@@ -307,6 +309,8 @@ feature {NONE} -- Interface
 			end
 			if header_box = Void then
 				build_header_box
+			else
+				clean_header_box
 			end
 			create notebook_item.make_with_info (nb, widget, title, header_box, mini_toolbar)
 			nb.extend (notebook_item)
@@ -488,6 +492,15 @@ feature -- Access
 
 feature {NONE} -- Notebook item's behavior
 
+	header_class_label: EV_LABEL
+			-- Label to display class information in `header_box'.
+
+	header_text_label: EV_LABEL
+			-- Label to display information in `header_box'.
+
+	header_feature_label: EV_LABEL
+			-- Label to display feature information in `header_box'.
+
 	clean_header_box is
 		do
 			if header_box /= Void then
@@ -510,18 +523,41 @@ feature {NONE} -- Notebook item's behavior
 		local
 			app: APPLICATION_EXECUTION
 			ecse: EIFFEL_CALL_STACK_ELEMENT
-			lab, flab, clab: EV_LABEL
 			l_fstone: FEATURE_STONE
 			l_cstone: CLASSC_STONE
 			hbox: EV_BOX
 			sep: EV_CELL
 		do
-			clean_header_box
 			hbox := header_box
-			create sep
-			sep.set_minimum_width (30)
-			hbox.extend (sep)
-			hbox.disable_item_expand (sep)
+			if header_text_label = Void or else header_text_label.parent /= hbox then
+				clean_header_box
+				create sep
+				sep.set_minimum_width (30)
+				hbox.extend (sep)
+				hbox.disable_item_expand (sep)
+
+				create header_class_label
+				header_class_label.set_foreground_color (preferences.editor_data.class_text_color)
+				hbox.extend (header_class_label)
+				hbox.disable_item_expand (header_class_label)
+
+				create header_text_label
+				hbox.extend (header_text_label)
+				hbox.disable_item_expand (header_text_label)
+
+				create header_feature_label
+				header_feature_label.set_foreground_color (preferences.editor_data.feature_text_color)
+				hbox.extend (header_feature_label)
+				hbox.disable_item_expand (header_feature_label)
+
+				hbox.extend (create {EV_CELL})
+			end
+			check
+				header_class_label /= Void
+				header_text_label /= Void
+				header_feature_label /= Void
+				header_text_label.parent = header_box
+			end
 			if
 				debugger_manager.application_is_executing
 			then
@@ -530,49 +566,36 @@ feature {NONE} -- Notebook item's behavior
 					if not app.current_call_stack_is_empty then
 						ecse ?= current_stack_element
 						if ecse /= Void then
-							create lab.make_with_text ("{")
-							hbox.extend (lab)
-							hbox.disable_item_expand (lab)
-
-							create clab.make_with_text (ecse.dynamic_class.name_in_upper)
+							header_class_label.set_text ("{" + ecse.dynamic_class.name_in_upper.twin + "}")
 							create l_cstone.make (ecse.dynamic_class)
-							clab.set_pebble (l_cstone)
-							clab.set_accept_cursor (l_cstone.stone_cursor)
-							clab.set_deny_cursor (l_cstone.x_stone_cursor)
-							clab.set_foreground_color (preferences.editor_data.class_text_color)
-							hbox.extend (clab)
-							hbox.disable_item_expand (clab)
+							header_class_label.set_pebble (l_cstone)
+							header_class_label.set_accept_cursor (l_cstone.stone_cursor)
+							header_class_label.set_deny_cursor (l_cstone.x_stone_cursor)
 
-							create lab.make_with_text ("}.")
-							hbox.extend (lab)
-							hbox.disable_item_expand (lab)
+							header_text_label.set_text (".")
 
-							create flab.make_with_text (ecse.routine_name)
+							header_feature_label.set_text (ecse.routine_name)
 							create l_fstone.make (ecse.routine)
-							flab.set_pebble (l_fstone)
-							flab.set_accept_cursor (l_fstone.stone_cursor)
-							flab.set_deny_cursor (l_fstone.x_stone_cursor)
-							flab.set_foreground_color (preferences.editor_data.feature_text_color)
-							hbox.extend (flab)
-							hbox.disable_item_expand (flab)
+							header_feature_label.set_pebble (l_fstone)
+							header_feature_label.set_accept_cursor (l_fstone.stone_cursor)
+							header_feature_label.set_deny_cursor (l_fstone.x_stone_cursor)
 						end
 					else
-						create lab
-						hbox.extend (lab)
-						hbox.disable_item_expand (lab)
+						header_class_label.remove_text
+						header_text_label.set_text (Interface_names.l_unknown_status)
+						header_feature_label.remove_text
 					end
 				else
-					create lab.make_with_text (Interface_names.l_System_running)
-					hbox.extend (lab)
-					hbox.disable_item_expand (lab)
+					header_class_label.remove_text
+					header_text_label.set_text (Interface_names.l_System_running)
+					header_feature_label.remove_text
 				end
 			else
-				create lab.make_with_text (Interface_names.l_System_not_running)
-				hbox.extend (lab)
-				hbox.disable_item_expand (lab)
-			end
+				header_class_label.remove_text
+				header_text_label.set_text (Interface_names.l_System_not_running)
+				header_feature_label.remove_text
 
-			hbox.extend (create {EV_CELL})
+			end
 		end
 
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query

@@ -186,14 +186,14 @@ feature -- Redefine
 		do
 			if a_state /= {SD_TOOL_BAR_ITEM_STATE}.normal and theme_data = default_pointer then
 				if a_state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
-					-- We reuse the code here, button check adge is looks same as pressed toggle button.
-					theme_drawer.draw_button_edge (a_dc, {WEL_THEME_TS_CONSTANTS}.ts_checked, a_rect)
+					draw_flat_button_edge_pressed (a_dc, a_rect)
 				elseif a_state = {SD_TOOL_BAR_ITEM_STATE}.checked then
 					a_dc.draw_frame_control (a_rect, Wel_drawing_constants.dfcs_button3state, Wel_drawing_constants.dfcs_checked)
+					draw_flat_button_edge_hot_pressed (a_dc, a_rect)
 				elseif a_state = {SD_TOOL_BAR_ITEM_STATE}.hot_checked then
-					a_dc.draw_frame_control (a_rect, Wel_drawing_constants.dfcs_button3state, Wel_drawing_constants.dfcs_pushed)
+					draw_flat_button_edge_pressed (a_dc, a_rect)
 				else
-					theme_drawer.draw_button_edge (a_dc, to_mswin_state (a_state), a_rect)
+					draw_flat_button_edge_hot (a_dc, a_rect)
 				end
 			end
 			create l_brush.make_solid (a_dc.background_color)
@@ -520,6 +520,73 @@ feature {NONE} -- Implementation
 
 				l_j := l_j + 1
 			end
+		end
+
+	draw_flat_button_edge_hot (a_dc: WEL_DC; a_rect: WEL_RECT) is
+			-- Draw flat style button edge when is hot.
+		require
+			not_void: a_dc /= Void
+			not_void: a_rect /= Void
+		local
+			l_color: WEL_COLOR_REF
+			l_drawer: SD_CLASSIC_THEME_DRAWER
+		do
+			create l_drawer
+			-- Draw | at left
+			l_color := l_drawer.rhighlight
+			l_drawer.draw_line (a_dc, a_rect.left, a_rect.top, a_rect.left, a_rect.bottom, l_color)
+			-- Draw - at top
+			l_drawer.draw_line (a_dc, a_rect.left, a_rect.top, a_rect.right, a_rect.top, l_color)
+
+			-- Draw | at right
+			l_color := l_drawer.rshadow
+			l_drawer.draw_line (a_dc, a_rect.right - 1, a_rect.top, a_rect.right - 1, a_rect.bottom, l_color)
+			-- Draw _ at bottom	
+			l_drawer.draw_line (a_dc, a_rect.left, a_rect.bottom - 1, a_rect.right, a_rect.bottom - 1, l_color)
+		end
+
+	draw_flat_button_edge_hot_pressed (a_dc: WEL_DC; a_rect: WEL_RECT) is
+			-- Draw flat style button edge when is hot and checked.
+		require
+			not_void: a_dc /= Void
+			not_void: a_rect /= Void
+		local
+			l_color: WEL_COLOR_REF
+			l_drawer: SD_CLASSIC_THEME_DRAWER
+		do
+			draw_flat_button_edge_pressed (a_dc, a_rect)
+
+			create l_drawer
+			-- Clear extra line drawn by native call
+			create l_color.make_system ({WEL_COLOR_CONSTANTS}.color_btnface)
+			-- clear top -
+			l_drawer.draw_line (a_dc, a_rect.left + 1, a_rect.top + 1, a_rect.right - 1, a_rect.top + 1, l_color)
+			-- clear left |
+			l_drawer.draw_line (a_dc, a_rect.left + 1, a_rect.top + 1, a_rect.left + 1, a_rect.bottom - 1, l_color)
+		end
+
+	draw_flat_button_edge_pressed (a_dc: WEL_DC; a_rect: WEL_RECT) is
+			-- Draw flat style button edge when is pressed.
+		require
+			not_void: a_dc /= Void
+			not_void: a_rect /= Void
+		local
+			l_color: WEL_COLOR_REF
+			l_drawer: SD_CLASSIC_THEME_DRAWER
+		do
+			create l_drawer
+
+			-- Draw | at left
+			l_color := l_drawer.rshadow
+			l_drawer.draw_line (a_dc, a_rect.left, a_rect.top, a_rect.left, a_rect.bottom, l_color)
+			-- Draw - at top
+			l_drawer.draw_line (a_dc, a_rect.left, a_rect.top, a_rect.right, a_rect.top, l_color)
+
+			-- Draw | at right
+			l_color := l_drawer.rhighlight
+			l_drawer.draw_line (a_dc, a_rect.right - 1, a_rect.top, a_rect.right - 1, a_rect.bottom, l_color)
+			-- Draw _ at bottom	
+			l_drawer.draw_line (a_dc, a_rect.left, a_rect.bottom - 1, a_rect.right, a_rect.bottom - 1, l_color)
 		end
 
 invariant

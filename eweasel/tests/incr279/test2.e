@@ -2,7 +2,7 @@ class
 	TEST2 [$FORMAL]
 
 inherit
-	TEST1 [$FORMAL]
+	TEST1 [$FORMAL_2]
 		redefine
 			make
 		end

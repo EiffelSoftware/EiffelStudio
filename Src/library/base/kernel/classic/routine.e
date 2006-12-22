@@ -199,13 +199,14 @@ feature -- Duplication
 feature -- Basic operations
 
 	call (args: OPEN_ARGS) is
+			-- Call routine with `args'.
 		require
 			valid_operands: valid_operands (args)
 		deferred
 		end
 
 	apply is
-			-- Call routine with `args' as last set.
+			-- Call routine with `operands' as last set.
 		require
 			valid_operands: valid_operands (operands)
 		deferred
@@ -241,7 +242,7 @@ feature {ROUTINE} -- Implementation
 			-- Routine dispatcher
 
 	frozen calc_rout_addr: POINTER
-			-- Address of the final routinei
+			-- Address of the final routine
 
 	frozen open_map: SPECIAL [INTEGER]
 			-- Index map for open arguments
@@ -253,13 +254,13 @@ feature {ROUTINE} -- Implementation
 
 	frozen feature_id: INTEGER
 
-	frozen is_precompiled: BOOLEAN 
+	frozen is_precompiled: BOOLEAN
 
-	frozen is_basic: BOOLEAN 
+	frozen is_basic: BOOLEAN
 
 	frozen is_target_closed: BOOLEAN
 
-	frozen is_inline_agent: BOOLEAN 
+	frozen is_inline_agent: BOOLEAN
 
 	frozen set_rout_disp (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
 						  a_class_id, a_feature_id: INTEGER; a_open_map: SPECIAL [INTEGER]
@@ -270,7 +271,7 @@ feature {ROUTINE} -- Implementation
 			target_valid: a_is_target_closed implies valid_target (a_closed_operands)
 		do
 			set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr, a_class_id, a_feature_id,
-							   a_open_map, a_is_precompiled, a_is_basic, a_is_target_closed, 
+							   a_open_map, a_is_precompiled, a_is_basic, a_is_target_closed,
 							   a_is_inline_agent, a_closed_operands, a_open_count)
 		end
 
@@ -285,7 +286,7 @@ feature {ROUTINE} -- Implementation
 			is_target_closed := a_is_target_closed
 			open_count := a_open_count
 		end
-		
+
 	frozen set_rout_disp_int (a_rout_disp, a_encaps_rout_disp, a_calc_rout_addr: POINTER
 						  	  a_class_id, a_feature_id: INTEGER; a_open_map: SPECIAL [INTEGER]
 	 						  a_is_precompiled, a_is_basic, a_is_target_closed, a_is_inline_agent: BOOLEAN

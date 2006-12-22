@@ -121,6 +121,7 @@ feature -- IL code generation
 			f_type: INTEGER
 			long: INTEGER_I
 			nat: NATURAL_I
+			typed_pointer_i: TYPED_POINTER_I
 		do
 			f_type := function_type
 			inspect f_type
@@ -278,7 +279,12 @@ feature -- IL code generation
 
 			when generator_type then
 				il_generator.pop
-				il_generator.put_manifest_string (type.name)
+				typed_pointer_i ?= type
+				if typed_pointer_i /= Void then
+					il_generator.put_manifest_string ("POINTER")
+				else
+					il_generator.put_manifest_string (type.name)
+				end
 
 			when from_integer_to_enum_type then
 					-- Argument value becomes the enum value, we discard

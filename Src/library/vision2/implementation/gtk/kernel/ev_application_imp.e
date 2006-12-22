@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 				{EV_GTK_EXTERNALS}.gtk_object_sink (tooltips)
 				set_tooltip_delay (500)
 
-				stored_display_data := [default_pointer, 0, 0, 0, 0, 0]
+				create stored_display_data
 					-- Initialize display retrieval storage for use by motion actions.
 
 					-- Initialize the marshal object.
@@ -1005,12 +1005,6 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 		do
 			temp_style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_descent ({EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
-		end
-
-	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is
-			-- Default Gdk event marshaller.
-		once
-			Result := agent gtk_marshal.gdk_event_to_tuple
 		end
 
 	fg_color: POINTER is

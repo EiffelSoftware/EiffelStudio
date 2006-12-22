@@ -102,17 +102,17 @@ feature {NONE} -- Initialization
 			default_width := -1
 
 			on_key_event_intermediary_agent := agent (l_gtk_marshal).on_key_event_intermediary (internal_id, ?, ?, ?)
-			signal_connect (l_c_object, app_imp.key_press_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
-			signal_connect (l_c_object, app_imp.key_release_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
+			signal_connect (l_c_object, app_imp.key_press_event_string, on_key_event_intermediary_agent, l_gtk_marshal.key_event_translate_agent, False)
+			signal_connect (l_c_object, app_imp.key_release_event_string, on_key_event_intermediary_agent, l_gtk_marshal.key_event_translate_agent, False)
 
-			signal_connect (l_c_object, app_imp.set_focus_event_string, agent (l_gtk_marshal).on_set_focus_event_intermediary (internal_id, ?), set_focus_event_translate_agent, True)
+			signal_connect (l_c_object, app_imp.set_focus_event_string, agent (l_gtk_marshal).on_set_focus_event_intermediary (internal_id, ?), l_gtk_marshal.set_focus_event_translate_agent, True)
 				-- Used to propagate focus events between internal gtk widgets.
 
 			signal_connect (l_c_object, app_imp.focus_in_event_string, agent (l_gtk_marshal).window_focus_intermediary (internal_id, True), Void, True)
 			signal_connect (l_c_object, app_imp.focus_out_event_string, agent (l_gtk_marshal).window_focus_intermediary (internal_id, False), Void, True)
 				-- Used to handle explicit Window focus handling.
 
-			signal_connect (l_c_object, app_imp.configure_event_string, agent (l_gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent, False)
+			signal_connect (l_c_object, app_imp.configure_event_string, agent (l_gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_gtk_marshal.configure_translate_agent, False)
 
 			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then

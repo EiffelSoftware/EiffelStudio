@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2006-12-21 17:59-0800\n"
+"PO-Revision-Date: 2006-12-22 10:27-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -111,7 +111,7 @@ msgid "Link or not the context tool to other components"
 msgstr ""
 
 msgid "(no_cluster)"
-msgstr ""
+msgstr "(keine gruppe)"
 
 msgid "Name:"
 msgstr "Name:"
@@ -592,7 +592,7 @@ msgid "Metric archive in specified file is not valid, it must be cleaned"
 msgstr ""
 
 msgid "Step Into"
-msgstr ""
+msgstr "In Routine eintreten"
 
 msgid "&Raise"
 msgstr ""
@@ -1035,7 +1035,7 @@ msgid "New Window"
 msgstr "Neues Fenster"
 
 msgid "assignees"
-msgstr ""
+msgstr "Zugewiesene"
 
 msgid "Evaluate metric again to get up-to-date result"
 msgstr ""
@@ -1044,19 +1044,19 @@ msgid "Remove selected expressions"
 msgstr ""
 
 msgid "EXPRESSION: "
-msgstr ""
+msgstr "AUSDRUCK:"
 
 msgid "Disable High Quality"
-msgstr ""
+msgstr "Hohe Qualität deaktivieren"
 
 msgid "Launching..."
-msgstr ""
+msgstr "Starte..."
 
 msgid "Maximum index displayed"
 msgstr ""
 
 msgid "Documentation"
-msgstr ""
+msgstr "Dokumentation"
 
 msgid "Unevaluated"
 msgstr ""
@@ -1071,22 +1071,22 @@ msgid "Display numerical value as Hexadecimal or Decimal formating"
 msgstr ""
 
 msgid "Choose Your Directory"
-msgstr ""
+msgstr "Verzeichnis wählen"
 
 msgid "Criterion \"$1\" of unit \"$2\" doesn't exits."
 msgstr ""
 
 msgid "Warnings"
-msgstr ""
+msgstr "Warnungen"
 
 msgid "Terminate C Compilation"
-msgstr ""
+msgstr "C-Kompilierung abbrechen"
 
 msgid "Variables"
-msgstr ""
+msgstr "Variablen"
 
 msgid "Environment"
-msgstr ""
+msgstr "Umgebung"
 
 msgid "Maximum displayed string size"
 msgstr ""
@@ -1101,13 +1101,13 @@ msgid "Value \"$1\" of attribute \"only_current_version\" is invalid. A boolean 
 msgstr ""
 
 msgid "&Preferences..."
-msgstr ""
+msgstr "&Einstellungen..."
 
 msgid "Context ..."
-msgstr ""
+msgstr "Kontext..."
 
 msgid "Cluster "
-msgstr ""
+msgstr "Cluster "
 
 msgid ""
 "Please drop a class, a cluster or a link\n"
@@ -1116,28 +1116,28 @@ msgid ""
 msgstr ""
 
 msgid "From Class"
-msgstr ""
+msgstr "Von Klasse"
 
 msgid "Recursive definition for metric name \"$1\"."
 msgstr ""
 
 msgid "Not evaluated"
-msgstr ""
+msgstr "Nicht ausgewertet"
 
 msgid "(no_class)"
-msgstr ""
+msgstr "(keine klasse)"
 
 msgid "&Replace..."
-msgstr ""
+msgstr "E&rsetzen..."
 
 msgid "Recursive"
-msgstr ""
+msgstr "Rekursiv"
 
 msgid "Expand an Object"
 msgstr ""
 
 msgid "Go to definition"
-msgstr ""
+msgstr "Zur Definition gehen"
 
 msgid "Add, remove or edit external commands"
 msgstr ""
@@ -1146,16 +1146,16 @@ msgid "Renamed name: "
 msgstr ""
 
 msgid "Save call stack to a text file"
-msgstr ""
+msgstr "Aufrufstack in Datei speichern"
 
 msgid "Select clusters to generate documentation for"
-msgstr ""
+msgstr "Cluster wählen von dem die Dokumentation erstellt werden soll"
 
 msgid "Explorer bar item"
 msgstr ""
 
 msgid "Analyzing metric archive(s)..."
-msgstr ""
+msgstr "Metrikarchiv wird analysiert..."
 
 msgid "Backup User-defined Metrics"
 msgstr ""
@@ -1164,7 +1164,7 @@ msgid "[Unnamed feature clause]"
 msgstr ""
 
 msgid "System running"
-msgstr ""
+msgstr "System läuft"
 
 msgid "Delete Client Link '$1'"
 msgstr ""
@@ -1176,7 +1176,7 @@ msgid "Precompilation &Wizard..."
 msgstr ""
 
 msgid "Cluster:"
-msgstr ""
+msgstr "Cluster:"
 
 msgid "Coefficient of variable metric is missing."
 msgstr ""
@@ -1199,7 +1199,7 @@ msgid "Finalized mode"
 msgstr ""
 
 msgid "Enter Condition"
-msgstr ""
+msgstr "Kondition eingeben"
 
 msgid "Obsolete Classes"
 msgstr ""
@@ -1208,25 +1208,25 @@ msgid "No definition for variable metric."
 msgstr ""
 
 msgid "Enable Breakpoints"
-msgstr ""
+msgstr "Haltepunkte aktivieren"
 
 msgid "Tasks"
-msgstr ""
+msgstr "Aufgaben"
 
 msgid "New breakpoint(s) to commit"
 msgstr ""
 
 msgid "Open Original File"
-msgstr ""
+msgstr "Originaldatei öffnen"
 
 msgid "New Name:"
-msgstr ""
+msgstr "Neuer Name:"
 
 msgid " (located in $1)"
 msgstr ""
 
 msgid "New name"
-msgstr ""
+msgstr "Neuer Name"
 
 msgid "Copyright"
 msgstr ""
@@ -1241,22 +1241,22 @@ msgid "Show static callers"
 msgstr ""
 
 msgid "Select working directory"
-msgstr ""
+msgstr "Arbeitsverzeichnis wählen"
 
 msgid "Use inherited value."
 msgstr ""
 
 msgid "Value:"
-msgstr ""
+msgstr "Wert:"
 
 msgid "Exception object"
-msgstr ""
+msgstr "Fehlerobjekt"
 
 msgid "Address"
-msgstr ""
+msgstr "Adresse"
 
 msgid "Show "
-msgstr ""
+msgstr "Anzeigen"
 
 msgid "Customize P&roject Toolbar..."
 msgstr ""
@@ -1268,7 +1268,7 @@ msgid "Start metric archive evaluation"
 msgstr ""
 
 msgid "Current feature"
-msgstr ""
+msgstr "Aktuelles Feature"
 
 msgid "&Alter size New"
 msgstr ""
@@ -1286,16 +1286,16 @@ msgid "Save Backup"
 msgstr "Sicherheitskopie speichern"
 
 msgid "Create a new feature"
-msgstr ""
+msgstr "Neues Feature erstellen"
 
 msgid "Toggle quality level"
-msgstr ""
+msgstr "Qualitätslevel umschalten"
 
 msgid "Dynamic runtime"
-msgstr ""
+msgstr "Dynamische Laufzeit"
 
 msgid "(no_feature)"
-msgstr ""
+msgstr "(kein feature)"
 
 msgid "Domain item type \"$1\" is invalid."
 msgstr ""
@@ -1319,25 +1319,25 @@ msgid "Public key token that identifies the asssembly."
 msgstr ""
 
 msgid "Hide figure"
-msgstr ""
+msgstr "Figur verbergen"
 
 msgid "New metric"
-msgstr ""
+msgstr "Neue Metrik"
 
 msgid "&Embed in \"if...\"\tCtrl+I"
 msgstr ""
 
 msgid "Tree/Flat View"
-msgstr ""
+msgstr "Baum/Flache Ansicht"
 
 msgid "Feature in supplier class"
 msgstr ""
 
 msgid "Save output to file"
-msgstr ""
+msgstr "Ausgabe in Datei speichern"
 
 msgid "Set &Conditional Breakpoint"
-msgstr ""
+msgstr "&Konditionalen Haltepunkt setzen"
 
 msgid "Put Handle Left"
 msgstr ""
@@ -1346,22 +1346,22 @@ msgid "CLS Compliant"
 msgstr ""
 
 msgid "Dependencies"
-msgstr ""
+msgstr "Abhängigkeiten"
 
 msgid "Assertion"
-msgstr ""
+msgstr "Zusicherung"
 
 msgid "Importing metrics..."
-msgstr ""
+msgstr "Metrik importieren..."
 
 msgid "linear"
-msgstr ""
+msgstr "linear"
 
 msgid "Switch to high quality"
-msgstr ""
+msgstr "Zur hohen Qualität wechseln"
 
 msgid "&Close Window\tAlt+F4"
-msgstr ""
+msgstr "Fenster &Schliessen\tAlt+F4"
 
 msgid "Version information."
 msgstr ""
@@ -1370,7 +1370,7 @@ msgid "Metric definition"
 msgstr ""
 
 msgid "Auto-Complete"
-msgstr ""
+msgstr "Autovervollständigung"
 
 msgid "Question"
 msgstr ""
@@ -1388,7 +1388,7 @@ msgid ""
 msgstr ""
 
 msgid "Remove right angles"
-msgstr ""
+msgstr "Rechte Winkel entfernen"
 
 msgid "Eiffel Compilation Failed"
 msgstr "Eiffel-Kompilierung fehlgeschlagen"
@@ -1397,7 +1397,7 @@ msgid "New Tab"
 msgstr ""
 
 msgid "Folder "
-msgstr ""
+msgstr "Ordner"
 
 msgid "&Guided Tour"
 msgstr ""
@@ -1406,31 +1406,31 @@ msgid "Scope >>"
 msgstr ""
 
 msgid "Open a new context window"
-msgstr ""
+msgstr "Neues Kontextfenster öffnen"
 
 msgid "Selected text is not a valid file name or the file cannot be found"
 msgstr ""
 
 msgid "&Debug"
-msgstr ""
+msgstr "&Debug"
 
 msgid "Complete Class &Name"
-msgstr ""
+msgstr "Kompletter Klassenname"
 
 msgid "System"
-msgstr ""
+msgstr "System"
 
 msgid "Find &Next"
 msgstr ""
 
 msgid "The feature name is not valid."
-msgstr ""
+msgstr "Der Featurename ist ungültig."
 
 msgid "Rename File"
-msgstr ""
+msgstr "Datei umbenennen"
 
 msgid "Text"
-msgstr ""
+msgstr "Text"
 
 msgid "Description of the external."
 msgstr ""
@@ -1446,13 +1446,13 @@ msgid "Pro&filer..."
 msgstr ""
 
 msgid "&Raise All"
-msgstr ""
+msgstr "Alle &Hervorheben"
 
 msgid "Warn about usage of obsolete classes?"
 msgstr ""
 
 msgid "Compile"
-msgstr ""
+msgstr "Kompilieren"
 
 msgid "Loop"
 msgstr ""
@@ -1461,34 +1461,34 @@ msgid "Add Pre Compilation Task"
 msgstr ""
 
 msgid "Root class name: "
-msgstr ""
+msgstr "Name der Wurzelklasse:"
 
 msgid "Attribute \"type\" is missing ."
-msgstr ""
+msgstr "Attribut \"type\" fehlt."
 
 msgid "Create project"
-msgstr ""
+msgstr "Projekt erstellen"
 
 msgid "Unknown application status"
-msgstr ""
+msgstr "Unbekannter Applikationszustand"
 
 msgid "Old Verbatim Strings"
 msgstr ""
 
 msgid "Class name: $1"
-msgstr ""
+msgstr "Klassenname: $1"
 
 msgid "Move to Folder..."
-msgstr ""
+msgstr "Zum Ordner verschieben..."
 
 msgid "General"
-msgstr ""
+msgstr "Generell"
 
 msgid "Class Options"
-msgstr ""
+msgstr "Klassenoptionen"
 
 msgid "clients"
-msgstr ""
+msgstr "Klienten"
 
 msgid "Custom"
 msgstr ""
@@ -1503,13 +1503,13 @@ msgid "&Run to This Point"
 msgstr ""
 
 msgid "Flat View"
-msgstr ""
+msgstr "Flache Ansicht"
 
 msgid "invariants"
-msgstr ""
+msgstr "Invarianten"
 
 msgid "&View"
-msgstr ""
+msgstr "&Ansicht"
 
 msgid "On object"
 msgstr ""
@@ -1524,22 +1524,22 @@ msgid "basic metric"
 msgstr ""
 
 msgid "Unit:"
-msgstr ""
+msgstr "Einheit:"
 
 msgid "Compile current project"
-msgstr ""
+msgstr "Aktuelles Projekt kompilieren"
 
 msgid "Resynchronizing Tools"
-msgstr ""
+msgstr "Werkzeuge neu synchronisieren"
 
 msgid "Te&xt"
-msgstr ""
+msgstr "Te&xt"
 
 msgid "&Copy\tCtrl+C"
-msgstr ""
+msgstr "&Kopieren\tCtrl+C"
 
 msgid "De&scendants"
-msgstr ""
+msgstr "&Nachfahren"
 
 msgid "Icon option: "
 msgstr ""
@@ -1548,10 +1548,10 @@ msgid "Callees from supplier class"
 msgstr ""
 
 msgid "Search for: "
-msgstr ""
+msgstr "Suche:"
 
 msgid "Finalize"
-msgstr ""
+msgstr "Optimieren"
 
 msgid "Show dependency on self?"
 msgstr ""
@@ -1560,49 +1560,49 @@ msgid "Open the Eiffel Assembly Cache browser tool"
 msgstr ""
 
 msgid "Hide inheritance links"
-msgstr ""
+msgstr "Vererbungsbeziehungen verbergen"
 
 msgid "Execution Profile"
-msgstr ""
+msgstr "Ausführungsprofil"
 
 msgid "Show stop points"
 msgstr ""
 
 msgid "Toggle visibility of feature signature"
-msgstr ""
+msgstr "Sichtbarkeit der Featuresignatur umschalten"
 
 msgid "Data"
-msgstr ""
+msgstr "Daten"
 
 msgid "&Show Favorites"
-msgstr ""
+msgstr "Favoriten &anzeigen"
 
 msgid "&Homonyms"
-msgstr ""
+msgstr "&Homonyme"
 
 msgid "Absolute path to use as base for relative paths."
 msgstr ""
 
 msgid "Replace with..."
-msgstr ""
+msgstr "Ersetzen mit..."
 
 msgid "Renames only occurances of the class name in compiled classes."
 msgstr ""
 
 msgid "Exception Handling"
-msgstr ""
+msgstr "Fehlerbehandlung"
 
 msgid "No file name is selected."
-msgstr ""
+msgstr "Kein Dateiname ausgewählt."
 
 msgid "&Open...\tCtrl+O"
-msgstr ""
+msgstr "&Öffnen...\tCtrl+O"
 
 msgid "creations"
 msgstr ""
 
 msgid "Breakpoints"
-msgstr ""
+msgstr "Haltepunkte"
 
 msgid "Enforce all class names to be system wide unique?"
 msgstr ""
@@ -1635,22 +1635,22 @@ msgid "Read Only"
 msgstr ""
 
 msgid "already exists."
-msgstr ""
+msgstr "existiert bereits."
 
 msgid "Filter result which is not visible from input domain"
 msgstr ""
 
 msgid "Unit name is missing."
-msgstr ""
+msgstr "Name der Einheit fehlt."
 
 msgid "And-term 1"
-msgstr ""
+msgstr "Und-Term 1"
 
 msgid "Show selective text on the right of buttons"
 msgstr ""
 
 msgid "Remove and-term"
-msgstr ""
+msgstr "Und-Term entfernen"
 
 msgid "Special type mappings."
 msgstr ""
@@ -1668,13 +1668,13 @@ msgid "Location of the configuration file."
 msgstr ""
 
 msgid "Check the validity of the library definition"
-msgstr ""
+msgstr "Gültigkeit der Bibliotheksdefinition überprüfen"
 
 msgid "Prefix"
-msgstr ""
+msgstr "Präfix"
 
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 msgid "Calling Convention"
 msgstr ""
@@ -1683,7 +1683,7 @@ msgid "profile #"
 msgstr ""
 
 msgid "descendants"
-msgstr ""
+msgstr "erben"
 
 msgid "Are you sure you want to remove the reference to $1?"
 msgstr ""
@@ -1695,25 +1695,25 @@ msgid "Add Precompile"
 msgstr ""
 
 msgid "Object"
-msgstr ""
+msgstr "Objekt"
 
 msgid "Compilation Progress for "
-msgstr ""
+msgstr "Kompilierungsfortschritt für"
 
 msgid "Dead Code Removal"
 msgstr ""
 
 msgid "Version"
-msgstr ""
+msgstr "Version"
 
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 msgid "Save All"
-msgstr ""
+msgstr "Alle speichern"
 
 msgid "Advanced search"
-msgstr ""
+msgstr "Erweiterte Suche"
 
 msgid "Excludes:"
 msgstr ""
@@ -1725,16 +1725,16 @@ msgid "Create new watch"
 msgstr ""
 
 msgid "Stop Application"
-msgstr ""
+msgstr "Applikation stoppen"
 
 msgid "Enable Profiles"
-msgstr ""
+msgstr "Profile aktivieren"
 
 msgid "Add first breakpoints in feature"
-msgstr ""
+msgstr "Ersten Haltepunkt im Feature hinzufügen"
 
 msgid "Export diagram to PNG"
-msgstr ""
+msgstr "Diagramm zu PNG exportieren"
 
 msgid "This will discard the modifications."
 msgstr ""
@@ -1743,26 +1743,26 @@ msgid "Literal Value"
 msgstr ""
 
 msgid "Metric List:"
-msgstr ""
+msgstr "Metrikliste:"
 
 msgid "   $1 replaced in $2 class"
 msgid_plural "   $1 replaced in $2 classes"
 msgstr[0] ""
 
 msgid "&Save"
-msgstr ""
+msgstr "&Speichern"
 
 msgid "Metadata Cache Path"
 msgstr ""
 
 msgid "Type of the task."
-msgstr ""
+msgstr "Typ der Aufgabe."
 
 msgid "&Comment\tCtrl+K"
-msgstr ""
+msgstr "&Auskommentieren\tCtrl+K"
 
 msgid "Version from class $1"
-msgstr ""
+msgstr "Version der Klasse $1"
 
 msgid "Specify the file the compiler uses to generate the exported functions."
 msgstr ""
@@ -1774,40 +1774,40 @@ msgid "Default precompiles"
 msgstr ""
 
 msgid "Switch to Tree View"
-msgstr ""
+msgstr "Zu Baumansicht wechseln"
 
 msgid "Address Expression"
 msgstr ""
 
 msgid "This command will stop the debugger."
-msgstr ""
+msgstr "Dieser Befehl stoppt den Debugger."
 
 msgid "Class name"
-msgstr ""
+msgstr "Klassenname"
 
 msgid "Cli&ents"
-msgstr ""
+msgstr "Kli&enten"
 
 msgid "System launched"
-msgstr ""
+msgstr "System gestartet"
 
 msgid "Application is not running"
-msgstr ""
+msgstr "Applikation läuft nicht"
 
 msgid "Pause"
-msgstr ""
+msgstr "Pausieren"
 
 msgid "Freeze..."
-msgstr ""
+msgstr "Einfrieren..."
 
 msgid "Capture"
 msgstr ""
 
 msgid "&Edit"
-msgstr ""
+msgstr "B&earbeiten"
 
 msgid "Warn about locals that are not used?"
-msgstr ""
+msgstr "Warnung ausgeben für nicht benutzte lokale Variablen?"
 
 msgid "Does this task have to finish successful for the compilation to continue?"
 msgstr ""
@@ -1816,7 +1816,7 @@ msgid "Delete graphical items, remove code from system"
 msgstr ""
 
 msgid "Class "
-msgstr ""
+msgstr "Klasse "
 
 msgid "Click `Finish' to generate the documentation."
 msgstr ""
@@ -1828,10 +1828,10 @@ msgid ""
 msgstr ""
 
 msgid "Show Signature"
-msgstr ""
+msgstr "Signatur anzeigen"
 
 msgid "Feature `$1' (ID = \"$2\") is invalid."
-msgstr ""
+msgstr "Feature `$1' (ID = \"$2\") ist ungültig."
 
 msgid "Toggle visibility of supplier links"
 msgstr ""
@@ -1840,25 +1840,25 @@ msgid "Fit to screen"
 msgstr ""
 
 msgid "No breakpoints"
-msgstr ""
+msgstr "Keine Haltepunkte"
 
 msgid "Generic"
-msgstr ""
+msgstr "Generisch"
 
 msgid "Execute the application one line at a time"
-msgstr ""
+msgstr "Applikation Zeile für Zeile ausführen"
 
 msgid "Indexing clause has syntax error"
-msgstr ""
+msgstr "Syntaxfehler in der Indexklausel"
 
 msgid "Background Workbench C Compilation Succeeded"
-msgstr ""
+msgstr "C-Kompilierung erfolgreich"
 
 msgid "Unnamed Debugs"
 msgstr ""
 
 msgid "Don't ask me again and always finalize."
-msgstr ""
+msgstr "Nicht nochmals fragen und immer optimieren."
 
 msgid "Is this a hidden cluster that can not be used if the system is used as a library?"
 msgstr ""
@@ -1867,7 +1867,7 @@ msgid "Text option: "
 msgstr ""
 
 msgid "Remove Condition"
-msgstr ""
+msgstr "Kondition entfernen"
 
 msgid "Assembly"
 msgstr ""
@@ -1879,13 +1879,13 @@ msgid "Feature version setting:"
 msgstr ""
 
 msgid "Sen&d to"
-msgstr ""
+msgstr "Sen&de zu"
 
 msgid " of "
-msgstr ""
+msgstr " von"
 
 msgid "&Search"
-msgstr ""
+msgstr "&Suche"
 
 msgid "default"
 msgstr ""
@@ -1894,7 +1894,7 @@ msgid "Warn about usage of old syntax?"
 msgstr ""
 
 msgid "ancestors"
-msgstr ""
+msgstr "Vorfahren"
 
 msgid ""
 "Are you sure you want to redo the refactoring?\n"
@@ -1902,31 +1902,31 @@ msgid ""
 msgstr ""
 
 msgid "Add new external"
-msgstr ""
+msgstr "Neues externes Objekt hinzufügen"
 
 msgid "Raise Windows"
-msgstr ""
+msgstr "Fenster hervorheben"
 
 msgid "Do not ask me again and always save modified metric"
-msgstr ""
+msgstr "Nicht nochmals fragen und geänderte Metriken immer speichern"
 
 msgid "Assembly Culture"
 msgstr ""
 
 msgid "Next"
-msgstr ""
+msgstr "Nächste"
 
 msgid "C Output"
-msgstr ""
+msgstr "C Ausgabe"
 
 msgid "Redo"
 msgstr ""
 
 msgid "Cannot change to directory "
-msgstr ""
+msgstr "Kann nicht zu Verzeichnis wechseln"
 
 msgid "In Feature"
-msgstr ""
+msgstr "In Feature"
 
 msgid "Warn about renamings of unknown classes?"
 msgstr ""
@@ -1935,10 +1935,10 @@ msgid "Hide labels"
 msgstr ""
 
 msgid "Edit an expression"
-msgstr ""
+msgstr "Ausdruck bearbeiten"
 
 msgid "Watch tool :: error message"
-msgstr ""
+msgstr "Beobachtungswerkzeug :: Fehlernachricht"
 
 msgid "Classes to Go:"
 msgstr ""
@@ -1947,10 +1947,10 @@ msgid "Line Generation"
 msgstr ""
 
 msgid "Description of the task."
-msgstr ""
+msgstr "Beschreibung der Aufgabe."
 
 msgid "View"
-msgstr ""
+msgstr "Ansicht"
 
 msgid "Denominator metric \"$1\" is not defined."
 msgstr ""
@@ -1964,10 +1964,10 @@ msgid ""
 msgstr ""
 
 msgid "&File"
-msgstr ""
+msgstr "&Datei"
 
 msgid "new_value"
-msgstr ""
+msgstr "neuer_wert"
 
 msgid "Parent cluster"
 msgstr ""
@@ -1979,7 +1979,7 @@ msgid "Make sure unit of every variable metric is same as that of the linear met
 msgstr ""
 
 msgid "Saving metrics..."
-msgstr ""
+msgstr "Metrik speichern..."
 
 msgid "Show only:"
 msgstr ""
@@ -1988,73 +1988,73 @@ msgid "Insert Midpoint"
 msgstr ""
 
 msgid "Metric name \"$1\" is invalid."
-msgstr ""
+msgstr "Metrikname \"$1\" ist ungültig."
 
 msgid "Are warnings enabled?"
 msgstr ""
 
 msgid "&Show Formatting Marks"
-msgstr ""
+msgstr "Formatierungsmarken &zeigen"
 
 msgid "Attributes"
-msgstr ""
+msgstr "Attribute"
 
 msgid "Checking metric validity"
-msgstr ""
+msgstr "Gültigkeit der Metrik wird überprüft"
 
 msgid "Output Name"
-msgstr ""
+msgstr "Ausgabename"
 
 msgid "Item [$1] is attached to \"$2\""
 msgstr ""
 
 msgid "new"
-msgstr ""
+msgstr "neu"
 
 msgid "Version of the assembly."
-msgstr ""
+msgstr "Assembly-Version."
 
 msgid "Displayed buttons"
-msgstr ""
+msgstr "Angezeigte Schaltflächen"
 
 msgid "Save &All"
-msgstr ""
+msgstr "&Alle speichern"
 
 msgid "Input domain:"
 msgstr ""
 
 msgid "Edit Library Configuration"
-msgstr ""
+msgstr "Konfiguration der Bibliothek bearbeiten"
 
 msgid "File Selection"
-msgstr ""
+msgstr "Selektion finden"
 
 msgid "Add scope"
 msgstr ""
 
 msgid "Import metrics from file"
-msgstr ""
+msgstr "Metrik von Datei importieren"
 
 msgid "Evaluate postcondition assertions?"
 msgstr ""
 
 msgid "Add Library"
-msgstr ""
+msgstr "Bibliothek hinzufügen"
 
 msgid "&Flat"
-msgstr ""
+msgstr "&Flach"
 
 msgid "deferred features"
 msgstr ""
 
 msgid "Condition"
-msgstr ""
+msgstr "Kondition"
 
 msgid "Edit command"
 msgstr ""
 
 msgid "Libraries"
-msgstr ""
+msgstr "Bibliotheken"
 
 msgid "Remaining: "
 msgstr ""
@@ -2063,10 +2063,10 @@ msgid "Link Tool"
 msgstr ""
 
 msgid "&Refactoring"
-msgstr ""
+msgstr "&Refactoring"
 
 msgid "Step In&to"
-msgstr ""
+msgstr "In Routine eintreten"
 
 msgid "Are you sure you want to remove $1 and any children of it?"
 msgstr ""
@@ -2075,25 +2075,25 @@ msgid "ratio metric"
 msgstr ""
 
 msgid "Don't show this dialog at startup"
-msgstr ""
+msgstr "Diesen Dialog beim Start nicht anzeigen"
 
 msgid "Metric named \"$1\" already exists in your metrics."
-msgstr ""
+msgstr "Metrik \"$1\" existiert bereits."
 
 msgid "Profiler Wizard"
 msgstr ""
 
 msgid "Move Midpoint"
-msgstr ""
+msgstr "Zwischenpunkt verschieben"
 
 msgid "&Ignore Breakpoints"
-msgstr ""
+msgstr "Haltepunkte &ignorieren"
 
 msgid "Application is running"
-msgstr ""
+msgstr "Applikation läuft"
 
 msgid "&Disable All Breakpoints"
-msgstr ""
+msgstr "Alle Haltepunkte &deaktivieren"
 
 msgid "Branch #$1"
 msgstr ""
@@ -2108,21 +2108,23 @@ msgid "Restore Defaults"
 msgstr ""
 
 msgid "flat view"
-msgstr ""
+msgstr "flache Ansicht"
 
 msgid "Current editor"
-msgstr ""
+msgstr "Aktueller Editor"
 
 msgid ""
 "Some files have not been saved.\n"
 "Do you want to save them before exiting?"
 msgstr ""
+"Einige Dateien wurden nicht gespeichert.\n"
+"Sollen diese vor dem Schliessen gespeichert werden?"
 
 msgid "<= MSIL CLR version <= "
-msgstr ""
+msgstr "<= MSIL CLR Version <= "
 
 msgid "Criterion name is missing."
-msgstr ""
+msgstr "Name des Kriteriums fehlt."
 
 msgid "Disable assertion checking"
 msgstr ""
@@ -2131,10 +2133,10 @@ msgid "Command output:\n"
 msgstr ""
 
 msgid "Edit the properties of the selected feature"
-msgstr ""
+msgstr "Eigenschaften des gewälhten Features bearbeiten"
 
 msgid "Remove Right Angles"
-msgstr ""
+msgstr "Rechte Winkel entfernen"
 
 msgid ""
 "Your external command list is full.\n"
@@ -2142,18 +2144,20 @@ msgid ""
 msgstr ""
 
 msgid "&Put Right Angles"
-msgstr ""
+msgstr "Rechte Winkel &Setzen"
 
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 msgid ""
 "File has been changed by another tool/editor\n"
 "Do you want to load the changes?"
 msgstr ""
+"Datei wurde von einem anderen Editor/Werkzeug geändert\n"
+"Sollen die Änderungen geladen werden?"
 
 msgid "Choose Your Project Name and Directory"
-msgstr ""
+msgstr "Projektnamen und Verzeichnis wählen"
 
 msgid "Metric Definition File:"
 msgstr ""
@@ -2162,19 +2166,19 @@ msgid "Name"
 msgstr "Name"
 
 msgid "<- Remove"
-msgstr ""
+msgstr "<- Entfernen"
 
 msgid "Redo Last Refactoring (only works as long as no file that was refactored has been changed by hand)"
 msgstr ""
 
 msgid "Open"
-msgstr ""
+msgstr "Öffnen"
 
 msgid "Check"
 msgstr ""
 
 msgid "New Expression"
-msgstr ""
+msgstr "Neuer Ausdruck"
 
 msgid "&Deferred"
 msgstr ""
@@ -2186,9 +2190,11 @@ msgid ""
 "Command is currently executing.\n"
 "Press OK to ignore the output."
 msgstr ""
+"Befehl läuft zurzeit.\n"
+"OK drücken um Eingabe zu ignorieren."
 
 msgid "Remove currently selected object"
-msgstr ""
+msgstr "Aktuell gewähltes Objekt entfernen"
 
 msgid "Restrictors"
 msgstr ""
@@ -2197,31 +2203,31 @@ msgid "Show Assigner Command Name"
 msgstr ""
 
 msgid "Library Readonly"
-msgstr ""
+msgstr "Bibliothek schreibgeschützt"
 
 msgid "&Editor"
-msgstr ""
+msgstr "&Editor"
 
 msgid "Remove Handles"
 msgstr ""
 
 msgid "Cannot create directroy: $1."
-msgstr ""
+msgstr "Kann Verzeichnis nicht erstellen: $1."
 
 msgid "Whole project"
-msgstr ""
+msgstr "Ganzes Projekt"
 
 msgid "Class \"$1\" (ID = \"$2\") is invalid."
-msgstr ""
+msgstr "Klasse \"$1\" (ID = \"$2\") ist ungültig."
 
 msgid "Execution interrupted"
-msgstr ""
+msgstr "Ausführung unterbrochen"
 
 msgid "Current metric result may not be up-to-date"
-msgstr ""
+msgstr "Aktuelles Resultat der Metrik kann veraltet sein"
 
 msgid "Group metrics by unit"
-msgstr ""
+msgstr "Metriken anhand der Einheiten gruppieren"
 
 msgid "St&art"
 msgstr "St&art"
@@ -2233,10 +2239,10 @@ msgid "Tooltip"
 msgstr "Tooltip"
 
 msgid "Overflow Prevention"
-msgstr ""
+msgstr "Überlaufsicherung"
 
 msgid "Or"
-msgstr ""
+msgstr "Oder"
 
 msgid "Down"
 msgstr ""
@@ -2269,61 +2275,61 @@ msgid "Denominator metric is missing."
 msgstr ""
 
 msgid "Execution Profile Error"
-msgstr ""
+msgstr "Fehler im Ausführungsprofil"
 
 msgid "&Remove Current Item"
-msgstr ""
+msgstr "Aktuelles Element &entfernen"
 
 msgid "Platform"
-msgstr ""
+msgstr "Platform"
 
 msgid "Open Backup File"
-msgstr ""
+msgstr "Sicherheitskopie öffnen"
 
 msgid "Recompile Overrides"
 msgstr ""
 
 msgid "Renames occurances of the class name in any class. (Slow)"
-msgstr ""
+msgstr "Klassennamen in allen Klassen umbenennen. (Langsam)"
 
 msgid "Open a project"
-msgstr ""
+msgstr "Projekt öffnen"
 
 msgid "Do not ask again, and always compile C code"
-msgstr ""
+msgstr "Nicht nochmals fragen und immer C Code kompilieren"
 
 msgid "Building tree view ..."
-msgstr ""
+msgstr "Baumansicht wird erstellt..."
 
 msgid "Full name of the assembly as found in the GAC."
 msgstr ""
 
 msgid "Evaluate metric: "
-msgstr ""
+msgstr "Metrik evaluieren:"
 
 msgid "Zoom"
-msgstr ""
+msgstr "Zoom"
 
 msgid "Use Application Options"
-msgstr ""
+msgstr "Applikationsoptionen verwenden"
 
 msgid "Updating the view ..."
-msgstr ""
+msgstr "Aktualiesiere Ansicht..."
 
 msgid "expanded"
 msgstr ""
 
 msgid "Parents:"
-msgstr ""
+msgstr "Eltern:"
 
 msgid "Replace all"
-msgstr ""
+msgstr "Alle ersetzen"
 
 msgid "$1 matches of $2 total preferences"
-msgstr ""
+msgstr "$1 Treffer von $2 Einstellungen"
 
 msgid "&Select Depth of Relations"
-msgstr ""
+msgstr "Tiefe der Relationen au&swählen"
 
 msgid "Evaluate precondition assertions of suppliers?"
 msgstr ""
@@ -2337,67 +2343,67 @@ msgid "Undo Last Refactoring (only works as long as no file that was refactored 
 msgstr ""
 
 msgid "C Functions"
-msgstr ""
+msgstr "C Funktionen"
 
 msgid "Use Cluster Name as Namespace"
-msgstr ""
+msgstr "Clustername als Namensraum verwenden"
 
 msgid "Create new aggregate client-supplier links"
 msgstr ""
 
 msgid "Contract"
-msgstr ""
+msgstr "Vertrag"
 
 msgid "External Output"
-msgstr ""
+msgstr "Externe Ausgabe"
 
 msgid "Inlining Size"
-msgstr ""
+msgstr "'Inlining' Grösse"
 
 msgid "Erase Class '$1'"
 msgstr ""
 
 msgid "Type of the group."
-msgstr ""
+msgstr "Typ der Gruppe."
 
 msgid "descendant versions"
-msgstr ""
+msgstr "Versionen der Erben"
 
 msgid "Select input domain:"
 msgstr ""
 
 msgid "You can put \"not\" before a criterion name to negate it"
-msgstr ""
+msgstr "Sie können \"not\" vor ein Kriterium setzen um es zu negieren"
 
 msgid "External Commands"
-msgstr ""
+msgstr "Externe Befehle"
 
 msgid "Toggle visibility of clusters"
-msgstr ""
+msgstr "Sichtbarkeit der Clusters umschalten"
 
 msgid "Add L&ibrary..."
-msgstr ""
+msgstr "B&ibliothek hinzufügen..."
 
 msgid "Implicit exception pending"
 msgstr ""
 
 msgid "From $1"
-msgstr ""
+msgstr "Von $1"
 
 msgid "Must succeed"
-msgstr ""
+msgstr "Muss erfolgreich sein"
 
 msgid "Old name"
-msgstr ""
+msgstr "Alter Name"
 
 msgid "Compare"
-msgstr ""
+msgstr "Vergleiche"
 
 msgid "Configuration file"
-msgstr ""
+msgstr "Konfigurationsdatei"
 
 msgid "Use regular expression?"
-msgstr ""
+msgstr "Regulären Ausdruck verwenden?"
 
 msgid "EIFGENs location"
 msgstr ""
@@ -2406,7 +2412,7 @@ msgid "Completed: "
 msgstr ""
 
 msgid "Only current version"
-msgstr ""
+msgstr "Nur aktuelle Version"
 
 msgid "Reuse or Generate an Execution Profile."
 msgstr ""
@@ -2415,43 +2421,43 @@ msgid "Step completed"
 msgstr ""
 
 msgid "Maximal number of instructions in a feature for the feature to be inlined."
-msgstr ""
+msgstr "Maximale Anzahl Instruktionen in einem Feature damit es noch 'inlined' wird."
 
 msgid "Referenced metric(s): $1 not found."
-msgstr ""
+msgstr "Referenzierte Metrik(en): $1 nicht gefunden."
 
 msgid "Remove Class/Cluster"
-msgstr ""
+msgstr "Klasse/Cluster entfernen"
 
 msgid "Item invalid in current system"
-msgstr ""
+msgstr "Element ungültig im aktuellen System"
 
 msgid "Replace with: "
-msgstr ""
+msgstr "Ersetzen mit:"
 
 msgid "Help Tool"
-msgstr ""
+msgstr "Hilfswerkzeug"
 
 msgid "Value \"$1\" of attribute \"case_sensitive\" is invalid. A boolean is expected."
-msgstr ""
+msgstr "Wert \"$1\" des Attributs \"case_sensitive\" ist ungültig. Ein boolscher Wert wird erwartet."
 
 msgid "Initial match reached."
 msgstr ""
 
 msgid "Exclude Rules"
-msgstr ""
+msgstr "Regeln ausschliessen"
 
 msgid "Should names follow the .NET naming convention?"
 msgstr ""
 
 msgid "Select the diagrams to generate"
-msgstr ""
+msgstr "Die Diagramme wählen die erstellt werden sollen"
 
 msgid "  (precompiled)"
-msgstr ""
+msgstr " (vorkompiliert)"
 
 msgid "Select the formats to use"
-msgstr ""
+msgstr "Die Formate wählen die benutzt werden sollen"
 
 msgid "Add a variable (double click or Enter); Use an existing variable (right click or Ctrl+Enter)"
 msgstr ""
@@ -2460,43 +2466,43 @@ msgid "Ensure"
 msgstr ""
 
 msgid "Feature "
-msgstr ""
+msgstr "Feature "
 
 msgid "Customize Toolbar"
-msgstr ""
+msgstr "Symbolleiste anpassen"
 
 msgid "Select a file for user-defined metrics backup:"
-msgstr ""
+msgstr "Datei wählen für die Sicherheitskopie der benutzerdefinierten Metriken:"
 
 msgid "Current version and all its descendant versions"
 msgstr ""
 
 msgid "NEW_NAME"
-msgstr ""
+msgstr "NEUER_NAME"
 
 msgid "Double click to go to first occurrence"
 msgstr ""
 
 msgid "&New"
-msgstr ""
+msgstr "&Neu"
 
 msgid "Erase Classes"
 msgstr ""
 
 msgid "Rename Class '$1' Locally to '$2'"
-msgstr ""
+msgstr "Klasse '$1' lokal nach '$2' umbenennen"
 
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 msgid "Invalid description tag."
-msgstr ""
+msgstr "Ungültige Beschreibungsmarke."
 
 msgid "Remove metric "
-msgstr ""
+msgstr "Metrik entfernen"
 
 msgid " error"
-msgstr ""
+msgstr "fehler"
 
 msgid ""
 "Once an execution of an instrumented system has generated the proper file,\n"
@@ -2510,43 +2516,43 @@ msgid ""
 msgstr ""
 
 msgid "Error message :"
-msgstr ""
+msgstr "Fehlernachricht :"
 
 msgid "ERROR OCCURRED: \n"
-msgstr ""
+msgstr "EIN FEHLER IST AUFGETRETEN: \n"
 
 msgid "Renaming Unknown Class"
-msgstr ""
+msgstr "Unbekannte Klassen umbenennen"
 
 msgid "System name: "
-msgstr ""
+msgstr "Systemname:"
 
 msgid "Go forth"
 msgstr ""
 
 msgid "Class:"
-msgstr ""
+msgstr "Klasse:"
 
 msgid "Do not ask again, and always terminate freezing when needed."
-msgstr ""
+msgstr "Nicht nochmals fragen und das Einfrieren immer abbrechen wenn nötig."
 
 msgid "Name of the current project"
-msgstr ""
+msgstr "Name des aktuellen Projekts"
 
 msgid "homonyms"
-msgstr ""
+msgstr "homonyme"
 
 msgid "Error on expression : \"$1\""
-msgstr ""
+msgstr "Fehler in Ausdruck : \"$1\""
 
 msgid "Feature:"
-msgstr ""
+msgstr "Feature:"
 
 msgid "Project Settings ($1)"
-msgstr ""
+msgstr "Projekteinstellunten ($1)"
 
 msgid "Dynamic Runtime"
-msgstr ""
+msgstr "Dynamische Laufzeitumgebung"
 
 msgid "Difference"
 msgstr ""
@@ -2555,7 +2561,7 @@ msgid "Make sure to specify a non-empty string for a text criterion."
 msgstr ""
 
 msgid "Windows"
-msgstr ""
+msgstr "Fenster"
 
 msgid "Disable or restore Assertion checking handling during debugging"
 msgstr ""
@@ -2568,58 +2574,58 @@ msgid ""
 msgstr ""
 
 msgid "Copy"
-msgstr ""
+msgstr "Kopieren"
 
 msgid "&External Commands..."
-msgstr ""
+msgstr "&Externe Befehle..."
 
 msgid "Find P&revious Selection"
-msgstr ""
+msgstr "&Vorherige Selektion finden"
 
 msgid "Groups"
-msgstr ""
+msgstr "Gruppen"
 
 msgid "Create a new expression"
-msgstr ""
+msgstr "Neuen Ausdruck erstellen"
 
 msgid "Select Cluster"
-msgstr ""
+msgstr "Cluster wählen"
 
 msgid "Debugging"
-msgstr ""
+msgstr "Debugging"
 
 msgid "Class"
-msgstr ""
+msgstr "Klasse"
 
 msgid "recursive"
-msgstr ""
+msgstr "rekursiv"
 
 msgid "&Export Diagram to PNG"
-msgstr ""
+msgstr "Diagramm zu PNG exportieren"
 
 msgid "Move Class '$1'"
-msgstr ""
+msgstr "Verschiebe Klasse '$1'"
 
 msgid "&Features"
-msgstr ""
+msgstr "&Features"
 
 msgid "Put Two Handles Right"
 msgstr ""
 
 msgid "UUID is missing."
-msgstr ""
+msgstr "UUID fehlt."
 
 msgid "&Indent Selection\tTab"
-msgstr ""
+msgstr "Selektion e&inrücken\tTab"
 
 msgid "Open a file"
-msgstr ""
+msgstr "Datei öffnen"
 
 msgid "Select a Run-time information record to generate the Execution profile"
-msgstr ""
+msgstr "Eine Laufzeitinformations-Protokoll wählen um ein Ausführungsprofil zu erstellen"
 
 msgid "Add..."
-msgstr ""
+msgstr "Hinzufügen..."
 
 msgid "Signing Key"
 msgstr ""
@@ -2631,82 +2637,82 @@ msgid "Deselect Integral Metrics"
 msgstr ""
 
 msgid "Create Folder..."
-msgstr ""
+msgstr "Ordner erstellen..."
 
 msgid "Include"
-msgstr ""
+msgstr "Einbinden"
 
 msgid "Add a cluster"
-msgstr ""
+msgstr "Cluster hinzufügen"
 
 msgid "Description of the system."
-msgstr ""
+msgstr "Beschreibung des Systems."
 
 msgid "Finali&ze..."
-msgstr ""
+msgstr "&Optimiere..."
 
 msgid "&Special"
-msgstr ""
+msgstr "&Spezial"
 
 msgid "Root feature: "
-msgstr ""
+msgstr "Eintrittsfunktion:"
 
 msgid "Use the old format for verbatim strings?"
 msgstr ""
 
 msgid "Features"
-msgstr ""
+msgstr "Features"
 
 msgid "Show descendant classes?"
-msgstr ""
+msgstr "Erben anzeigen?"
 
 msgid "Set"
 msgstr ""
 
 msgid "Obsolete Features"
-msgstr ""
+msgstr "Veraltete Features"
 
 msgid "Select type of new links"
 msgstr ""
 
 msgid "Do not ask again, and always convert old projects"
-msgstr ""
+msgstr "Nicht nochmals fragen und immer alte Projekte konvertieren"
 
 msgid "New Con&text Window"
-msgstr ""
+msgstr "Neues Kontextfenster"
 
 msgid "Library "
-msgstr ""
+msgstr "Bibliothek"
 
 msgid "Unused Locals"
-msgstr ""
+msgstr "Nicht benutze lokale Variablen"
 
 msgid "Add a new command"
-msgstr ""
+msgstr "Neuer Befehl hinzufügen"
 
 msgid "Index"
-msgstr ""
+msgstr "Index"
 
 msgid "Error"
-msgstr ""
+msgstr "Fehler"
 
 msgid "Onces in Generics"
 msgstr ""
 
 msgid "Edit Configuration"
-msgstr ""
+msgstr "Konfiguration bearbeiten"
 
 msgid "Item expires. Try saving file and searching again."
 msgstr ""
 
 msgid "I&nterrupt Application"
-msgstr ""
+msgstr "Applikation u&nterbrechen"
 
 msgid "Old Name"
-msgstr ""
+msgstr "Alter Name"
 
 msgid "Select a File"
-msgstr ""
+msgstr "Datei wählen"
 
 msgid "Run command hidden"
 msgstr ""
@@ -2715,7 +2721,7 @@ msgid "Save this dynamic library definition"
 msgstr ""
 
 msgid "New Context"
-msgstr ""
+msgstr "Neuer Kontext"
 
 msgid "Dynamic Feature Evaluation"
 msgstr ""
@@ -2727,55 +2733,55 @@ msgid "Compilation Error Wizard"
 msgstr ""
 
 msgid "Assertions"
-msgstr ""
+msgstr "Zusicherungen"
 
 msgid "Move metric unit up.\n"
-msgstr ""
+msgstr "Metrik nach oben verschieben.\n"
 
 msgid "Target to cluster or class"
 msgstr ""
 
 msgid "Results:"
-msgstr ""
+msgstr "Resultate:"
 
 msgid "Rename Class '$1' Globally to '$2'"
-msgstr ""
+msgstr "Klasse '$1' global zu '$2' umbenennen"
 
 msgid "Remove Breakpoints"
-msgstr ""
+msgstr "Haltepunkte entfernen"
 
 msgid "Include:"
-msgstr ""
+msgstr "Einbinden:"
 
 msgid "Dead Code Removal Completed"
 msgstr ""
 
 msgid "Unknown class name"
-msgstr ""
+msgstr "Unbekannter Klassenname"
 
 msgid "Identification"
-msgstr ""
+msgstr "Identifizierung"
 
 msgid "&Run Finalized System"
-msgstr ""
+msgstr "Optimiertes System &starten"
 
 msgid "E&dit Condition"
-msgstr ""
+msgstr "Kondition &Bearbeiten"
 
 msgid "Crop diagram"
 msgstr ""
 
 msgid "Command"
-msgstr ""
+msgstr "Befehl"
 
 msgid "Scope <<"
 msgstr ""
 
 msgid "Hide cluster legend"
-msgstr ""
+msgstr "Cluster-Legende verbergen"
 
 msgid "Import"
-msgstr ""
+msgstr "Importieren"
 
 msgid "offset $1"
 msgstr ""
@@ -2784,151 +2790,151 @@ msgid "Select a metric archive file"
 msgstr ""
 
 msgid "Background Workbench C Compilation Launch Failed"
-msgstr ""
+msgstr "Starten der C Kompilierung fehlgeschlagen"
 
 msgid "Confimation"
-msgstr ""
+msgstr "Bestätigung"
 
 msgid "Platforms"
-msgstr ""
+msgstr "Platformen"
 
 msgid ".NET"
-msgstr ""
+msgstr ".NET"
 
 msgid "Select domain scope"
 msgstr ""
 
 msgid "Preferences"
-msgstr ""
+msgstr "Einstellungen"
 
 msgid "&Close"
-msgstr ""
+msgstr "&Schliessen"
 
 msgid "Pick and drop metric here"
 msgstr ""
 
 msgid "Action:"
-msgstr ""
+msgstr "Aktion:"
 
 msgid "Zoom in"
-msgstr ""
+msgstr "Hineinzoomen"
 
 msgid "Expression:"
-msgstr ""
+msgstr "Ausdruck:"
 
 msgid "Regular expressions which exclude/include sub folders and/or files."
-msgstr ""
+msgstr "Regulärer Ausdruck welcher Unterordner und/oder Dateien einbindet oder ausschliest."
 
 msgid "Previous"
 msgstr ""
 
 msgid "Open Objects tool menu"
-msgstr ""
+msgstr "Menu des Objektwerkzeugs öffnen"
 
 msgid "Generate extra information for external debuggers?"
-msgstr ""
+msgstr "Extrainformationen für den externen Debugger erstellen?"
 
 msgid "Hide Alias Name"
-msgstr ""
+msgstr "Aliasnamen verbergen"
 
 msgid "Metric name cannot be empty"
-msgstr ""
+msgstr "Metrikname muss ausgefüllt werden"
 
 msgid "Name of the group."
-msgstr ""
+msgstr "Name der Gruppe."
 
 msgid "Manually Edit Configuration"
-msgstr ""
+msgstr "Konfiguration manuell editieren"
 
 msgid "System is being compiled"
-msgstr ""
+msgstr "System wird kompiliert"
 
 msgid "Select current archive (URL acceptable):"
-msgstr ""
+msgstr "Aktuelles Archiv wählen (URL wird akteptiert):"
 
 msgid "Project documentation"
-msgstr ""
+msgstr "Projektdokumentation"
 
 msgid "Name of the system."
-msgstr ""
+msgstr "Name des Systems."
 
 msgid "Current object"
-msgstr ""
+msgstr "Akutelles Objekt"
 
 msgid "Undo last action"
-msgstr ""
+msgstr "Letze Aktion rückgängig machen"
 
 msgid "Eiffel Compilation Succeeded"
-msgstr ""
+msgstr "Eiffel-Kompilierung erfolgreich"
 
 msgid "Launch Without Stopping"
-msgstr ""
+msgstr "Starten und Haltepunkte ignorieren"
 
 msgid "Launch failed"
-msgstr ""
+msgstr "Start fehlgeschlagen"
 
 msgid "&Hide Formatting Marks"
-msgstr ""
+msgstr "Formatierungsmarkierungen &verbergen"
 
 msgid "Do not show again"
-msgstr ""
+msgstr "Nicht nochmals anzeigen"
 
 msgid "Use wildcards"
-msgstr ""
+msgstr "Platzhalter verwenden"
 
 msgid "Add rule"
-msgstr ""
+msgstr "Regel hinzufügen"
 
 msgid "Copy of "
-msgstr ""
+msgstr "Kopie von"
 
 msgid "Select reference metric archive file"
-msgstr ""
+msgstr "Referenzmetrik vom Archiv wählen"
 
 msgid "Force compilation for 32bits?"
-msgstr ""
+msgstr "Kompilation für 32 Bit erzwingen?"
 
 msgid "New Ed&itor Window"
-msgstr ""
+msgstr "Neues Ed&itorfenster"
 
 msgid "&Project Bar"
-msgstr ""
+msgstr "&Projektleiste"
 
 msgid "&Routines"
-msgstr ""
+msgstr "&Routinen"
 
 msgid "Remove"
-msgstr ""
+msgstr "Entfernen"
 
 msgid "Condition:"
-msgstr ""
+msgstr "Kondition:"
 
 msgid "Add and-term"
-msgstr ""
+msgstr "Und-Term hinzfügen"
 
 msgid "Location: "
-msgstr ""
+msgstr "Pfad:"
 
 msgid "&Find..."
-msgstr ""
+msgstr "&Finden..."
 
 msgid "Classes per Module"
-msgstr ""
+msgstr "Klassen pro Modul"
 
 msgid "&Precompile"
-msgstr ""
+msgstr "&Vorkompilierung"
 
 msgid "Show labels"
-msgstr ""
+msgstr "Beschriftungen anzeigen"
 
 msgid "Abort"
-msgstr ""
+msgstr "Abbrechen"
 
 msgid "Remove rule"
-msgstr ""
+msgstr "Regel entfernen"
 
 msgid "Move Cluster '$1'"
-msgstr ""
+msgstr "Cluster '$1' verschieben"
 
 msgid ""
 "Key to be able to add the generated binary to the Global Assembly Cache (GAC). \n"
@@ -2939,52 +2945,52 @@ msgid "Put Two Handles Left"
 msgstr ""
 
 msgid "Complete &Word"
-msgstr ""
+msgstr "Ganzes &Wort"
 
 msgid "Version of the .NET runtime to use."
-msgstr ""
+msgstr "Version der .NET Laufzeitumgebung die verwendet werden soll."
 
 msgid "&Object"
-msgstr ""
+msgstr "&Objekt"
 
 msgid "Grid \"$1\""
-msgstr ""
+msgstr "Gitter \"$1\""
 
 msgid "Compilation Type"
-msgstr ""
+msgstr "Kompilierungstyp"
 
 msgid "ancestor versions"
-msgstr ""
+msgstr "Vorfahrversionen"
 
 msgid "Empty Development Tool"
-msgstr ""
+msgstr "Leeres Entwicklungswerkzeug"
 
 msgid "Make sure every variable metric referenced by a linear metric is defined."
-msgstr ""
+msgstr "Stellen Sie sicher das jede Variablenmetrik definiert ist welche von einer lineraren Metrik referenziert wird."
 
 msgid "routines"
-msgstr ""
+msgstr "Routinen"
 
 msgid "Select format for output"
-msgstr ""
+msgstr "Format für die Ausgabe wählen"
 
 msgid "Alphabetical class list"
-msgstr ""
+msgstr "Alphabetische Klassenliste"
 
 msgid "Redo Refactoring"
-msgstr ""
+msgstr "Refactoring wiederholen"
 
 msgid ".NET Namespace"
-msgstr ""
+msgstr ".NET Namensraum"
 
 msgid "Enable/Disable expressions"
-msgstr ""
+msgstr "Ausdruck aktivieren/deaktivieren"
 
 msgid "Language type"
-msgstr ""
+msgstr "Sprachtyp"
 
 msgid "Paste"
-msgstr ""
+msgstr "Einfügen"
 
 msgid "&Reset Current View"
 msgstr "Aktuelle Ansicht zurücksetzten"
@@ -3041,7 +3047,7 @@ msgid "Background Finalized C Compilation Terminated"
 msgstr "Optimierte C-Kompilierung im Hintergrund beendet."
 
 msgid "Root cluster: "
-msgstr "Wurzel-Cluster:"
+msgstr "Basiscluster:"
 
 msgid "&Print"
 msgstr "&Drucken"
@@ -3154,7 +3160,7 @@ msgid "Background Workbench C Compilation Terminated"
 msgstr "C-Kompilierung im Hintergrund beendet"
 
 msgid "Library Root"
-msgstr "Bibliothekswurzel"
+msgstr ""
 
 msgid "Default libraries"
 msgstr "Standardbibliotheken"
@@ -3294,7 +3300,7 @@ msgid "Show ancestor classes?"
 msgstr "Vorfahren anzeigen?"
 
 msgid "Root Cluster"
-msgstr "Wurzel-Cluster"
+msgstr "Basiscluster"
 
 msgid "In&variants"
 msgstr "In&varianten"
@@ -3396,7 +3402,7 @@ msgid "Display an expanded view of objects"
 msgstr "Aufgeklappte Ansicht der Objekte anzeigen"
 
 msgid "Root Feature"
-msgstr "Wurzel-Feature"
+msgstr "Eintrittsfunktion"
 
 msgid "Force right angles"
 msgstr "Rechte Winkel erzwingen"
@@ -3780,7 +3786,7 @@ msgid "Once routines"
 msgstr "Once Routinen"
 
 msgid "Step out of a routine"
-msgstr "Aus Routine heraus"
+msgstr "Aus Routine austreten"
 
 msgid "assigners"
 msgstr "Zuweiser"
@@ -4349,7 +4355,7 @@ msgid "Compile F&inalized C Code"
 msgstr "Optimierten C-Code kompilieren"
 
 msgid "Step Out"
-msgstr "Hinaus"
+msgstr "Aus Routine austreten"
 
 msgid "File rule $1"
 msgstr "Dateregel $1"

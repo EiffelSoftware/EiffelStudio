@@ -840,6 +840,28 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
+	err_numerator_coefficient_invalid (a_value: STRING_GENERAL): STRING_GENERAL is
+			-- Numerator metric coefficient invalid error
+		require
+			a_value_attached: a_value /= Void
+		do
+			Result := locale.format_string (locale.translate ("Coefficient %"$1%" for numerator metric is invalid. A real number is expected."), [a_value])
+		ensure
+			result_attached: Result /= Void
+		end
+
+	err_denominator_coefficient_invalid (a_value: STRING_GENERAL): STRING_GENERAL is
+			-- Numerator metric coefficient invalid error
+		require
+			a_value_attached: a_value /= Void
+		do
+			Result := locale.format_string (locale.translate ("Coefficient %"$1%" for denominator metric is invalid. A real number is expected."), [a_value])
+		ensure
+			result_attached: Result /= Void
+		end
+
+	err_denominator_coefficient_is_zero: STRING_GENERAL is do Result := locale.translate ("Coefficient for denominator metric is zero. A non-zero real numer is expected.") end
+
 feature -- To do messages
 
 	variable_metric_missing_to_do: STRING_GENERAL is
@@ -883,6 +905,7 @@ feature -- To do messages
 		end
 
 	recursive_definition_to_do: STRING_GENERAL is do Result := locale.translate ("In linear metric, make sure that every variable metric doesn't involve %Nrecursive metric.%NIn ratio metric, make sure that numerator metric or denominator metric %Ndoesn't involve recursive metric.") end
+	make_sure_denominator_coefficient_non_zero_to_do: STRING_GENERAL is do Result := locale.translate ("Make sure coefficient for denominator metric is a non-zero real number.") end
 
 	metric_name_info: STRING_GENERAL is
 			-- Information of metric name
@@ -946,6 +969,14 @@ feature -- Separator
 			-- Space separator
 		do
 			Result := " : "
+		ensure
+			result_attached: Result /= Void
+		end
+
+	colon: STRING_GENERAL is
+			-- Colon
+		do
+			Result := ":"
 		ensure
 			result_attached: Result /= Void
 		end

@@ -112,10 +112,16 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := old_item_day_preference.value
 		end
 
-	is_detailed_result_kept: BOOLEAN is
+	is_archive_detailed_result_kept: BOOLEAN is
 			-- Is detailed result kept when recalculation metric archive history?
 		do
-			Result := keep_detailed_result_preference.value
+			Result := keep_archive_detailed_result_preference.value
+		end
+
+	is_metric_detailed_result_kept: BOOLEAN is
+			-- Is detailed result kept when metric is evaluated?
+		do
+			Result := keep_metric_detailed_result_preference.value
 		end
 
 feature -- Setting
@@ -160,7 +166,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	tree_view_sorting_order_preference: STRING_PREFERENCE
 	hide_old_item_preference: BOOLEAN_PREFERENCE
 	old_item_day_preference: INTEGER_PREFERENCE
-	keep_detailed_result_preference: BOOLEAN_PREFERENCE
+	keep_archive_detailed_result_preference: BOOLEAN_PREFERENCE
+	keep_metric_detailed_result_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -175,7 +182,8 @@ feature {NONE} -- Preference Strings
 	tree_view_sorting_order_string: STRING is "tools.metric_tool.history_tree_view_sorting_order"
 	hide_old_item_string: STRING is "tools.metric_tool.hide_old_archive"
 	old_item_day_string: STRING is "tools.metric_tool.old_archive_age_in_days"
-	keep_detailed_result_string: STRING is "tools.metric_tool.keep_detailed_result"
+	keep_archive_detailed_result_string: STRING is "tools.metric_tool.keep_archive_detailed_result"
+	keep_metric_detailed_result_string: STRING is "tools.metric_tool.keep_metric_detailed_result"
 
 feature {NONE} -- Implementation
 
@@ -201,7 +209,8 @@ feature {NONE} -- Implementation
 			tree_view_sorting_order_preference.set_hidden (True)
 			hide_old_item_preference := l_manager.new_boolean_preference_value (l_manager, hide_old_item_string, False)
 			old_item_day_preference := l_manager.new_integer_preference_value (l_manager, old_item_day_string, 30)
-			keep_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_detailed_result_string, False)
+			keep_archive_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_archive_detailed_result_string, False)
+			keep_metric_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_metric_detailed_result_string, True)
 		end
 
 	preferences: PREFERENCES

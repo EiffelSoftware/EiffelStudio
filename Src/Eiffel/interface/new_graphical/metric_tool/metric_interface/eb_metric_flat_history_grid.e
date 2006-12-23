@@ -28,20 +28,21 @@ feature{NONE} -- Initialization
 			metric_history_panel := a_panel
 			create row_archive_table.make (20)
 			old_make (create {ES_GRID})
-			grid.set_column_count_to (8)
+			grid.set_column_count_to (9)
 			grid.column (1).header_item.set_text (metric_names.t_metric_name)
 			grid.column (3).header_item.set_text (metric_names.t_value_of_current)
 			grid.column (4).header_item.set_text (metric_names.t_previous_value)
 			grid.column (5).header_item.set_text (metric_names.t_difference)
-			grid.column (6).header_item.set_text (metric_names.t_detailed_result)
-			grid.column (7).header_item.set_text (metric_names.t_calculated_time)
-			grid.column (8).header_item.set_text (metric_names.t_input_domain)
+			grid.column (6).header_item.set_text (metric_names.t_filter)
+			grid.column (7).header_item.set_text (metric_names.t_detailed_result)
+			grid.column (8).header_item.set_text (metric_names.t_calculated_time)
+			grid.column (9).header_item.set_text (metric_names.t_input_domain)
 			set_sort_info (1, create {EVS_GRID_THREE_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent metric_name_tester, ascending_order))
 			set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_status_tester, ascending_order))
 			set_sort_info (3, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_value_tester, ascending_order))
 			set_sort_info (4, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_previous_value_tester, ascending_order))
 			set_sort_info (5, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_difference_tester, ascending_order))
-			set_sort_info (7, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_time_tester, ascending_order))
+			set_sort_info (8, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_time_tester, ascending_order))
 			grid.enable_single_row_selection
 			grid.enable_row_separators
 			grid.enable_column_separators
@@ -82,9 +83,10 @@ feature{NONE} -- Implementation
 			l_column_tbl.put ([100, 200], 3)
 			l_column_tbl.put ([100, 200], 4)
 			l_column_tbl.put ([100, 200], 5)
-			l_column_tbl.put ([60, 60], 6)
-			l_column_tbl.put ([160, 200], 7)
-			l_column_tbl.put (Void, 8)
+			l_column_tbl.put ([40, 40], 6)
+			l_column_tbl.put ([60, 60], 7)
+			l_column_tbl.put ([160, 200], 8)
+			l_column_tbl.put (Void, 9)
 			auto_resize_columns (grid, l_column_tbl)
 		end
 
@@ -101,7 +103,9 @@ feature{NONE} -- Implementation
 			l_grid_row: EV_GRID_ROW
 			l_grid: like grid
 			l_row_count: INTEGER
+--			l_profiler: PROFILING_SETTING
 		do
+--			create l_profiler.make
 			if a_selected_nodes = Void then
 				l_selected_archives := selected_archives
 			else
@@ -116,6 +120,7 @@ feature{NONE} -- Implementation
 			l_cursor := l_archive.new_cursor
 			row_archive_table.wipe_out
 			selection_change_actions.block
+--			l_profiler.start_profiling
 			from
 				l_cursor.start
 				l_row_count := 1
@@ -135,6 +140,7 @@ feature{NONE} -- Implementation
 				l_row_count := l_row_count + 1
 				l_cursor.forth
 			end
+--			l_profiler.stop_profiling
 			if not has_grid_been_binded then
 				set_has_grid_been_binded (True)
 				auto_resize
@@ -155,9 +161,11 @@ feature{NONE} -- Implementation
 			a_row.set_item (3, value_item (a_archive))
 			a_row.set_item (4, previous_value_item (a_archive))
 			a_row.set_item (5, value_difference_item (a_archive))
-			a_row.set_item (6, detailed_result_item (a_archive, agent go_to_result_panel))
-			a_row.set_item (7, time_item (a_archive))
-			a_row.set_item (8, input_domain_item (a_archive))
+			a_row.set_item (6, filter_result_item (a_archive))
+			a_row.set_item (7, detailed_result_item (a_archive, agent go_to_result_panel))
+			a_row.set_item (8, time_item (a_archive))
+			a_row.set_item (9, input_domain_item (a_archive))
+			a_row.set_data (a_archive)
 		end
 
 	update_row (a_archive_node: EB_METRIC_ARCHIVE_NODE) is
@@ -172,6 +180,7 @@ feature{NONE} -- Implementation
 			l_detailed_result_item: like detailed_result_item
 			l_time_item: like time_item
 			l_input_domain_item: like input_domain_item
+			l_filter_item: like filter_result_item
 		do
 			l_grid_row := row_archive_table.item (a_archive_node)
 			if l_grid_row /= Void then
@@ -183,19 +192,29 @@ feature{NONE} -- Implementation
 				end
 				l_checkbox_item ?= l_grid_row.item (1)
 				update_metric_name_item (l_checkbox_item, a_archive_node, True)
+
 				l_status_item ?= l_grid_row.item (2)
 				update_status_item (l_status_item, a_archive_node)
+
 				l_value_item ?= l_grid_row.item (3)
 				update_value_item (l_value_item, a_archive_node)
+
 				l_previous_value_item ?= l_grid_row.item (4)
 				update_previous_value_item (l_previous_value_item, a_archive_node)
+
 				l_value_difference_item ?= l_grid_row.item (5)
 				update_value_difference_item (l_value_difference_item, a_archive_node)
-				l_detailed_result_item ?= l_grid_row.item (6)
+
+				l_filter_item ?= l_grid_row.item (6)
+				update_filter_result_item (l_filter_item, a_archive_node)
+
+				l_detailed_result_item ?= l_grid_row.item (7)
 				update_detailed_result_item (l_detailed_result_item, a_archive_node, agent go_to_result_panel)
-				l_time_item ?= l_grid_row.item (7)
+
+				l_time_item ?= l_grid_row.item (8)
 				update_time_item (l_time_item, a_archive_node)
-				l_input_domain_item ?= l_grid_row.item (8)
+
+				l_input_domain_item ?= l_grid_row.item (9)
 				update_input_domain_item (l_input_domain_item, a_archive_node)
 			end
 		end

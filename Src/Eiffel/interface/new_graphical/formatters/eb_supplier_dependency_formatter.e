@@ -63,7 +63,7 @@ feature{NONE} -- Implementation
 	dependency_criterion (a_domain: QL_DOMAIN): QL_CLASS_CRITERION is
 			-- Criterion to filter dependency classes		
 		do
-			create {QL_CLASS_SUPPLIER_RELATION_CRI} Result.make (a_domain, browser.syntactical_button.is_selected, False)
+			create {QL_CLASS_SUPPLIER_RELATION_CRI} Result.make (a_domain, browser.normal_referenced_button.is_selected, browser.syntactical_button.is_selected, False)
 			if browser.inheritance_button.is_selected then
 				Result := Result or (create {QL_CLASS_ANCESTOR_RELATION_CRI}.make (a_domain, {QL_CLASS_ANCESTOR_RELATION_CRI}.proper_ancestor_type))
 			end

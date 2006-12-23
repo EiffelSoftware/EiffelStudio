@@ -33,7 +33,8 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Does current represent a valid domain item?
 		do
-			Result := id.is_empty or else target_of_id (id) /= Void
+			update
+			Result := id.is_empty or else conf_target /= Void
 		end
 
 feature -- Access
@@ -44,39 +45,23 @@ feature -- Access
 			if id.is_empty then
 				Result := query_target_item_from_conf_target (universe.target).wrapped_domain
 			else
-				Result := query_target_item_from_conf_target (target_of_id (id)).wrapped_domain
+				update
+				Result := query_language_item.wrapped_domain
 			end
 		end
 
 	string_representation: STRING is
 			-- Text of current item
-		local
-			l_target: CONF_TARGET
-			l_target_name: STRING
 		do
-			if id.is_empty then
-				Result := "Application target"
-			else
-				l_target := target_of_id (id)
-				if l_target /= Void then
-					Result := l_target.name
-				else
-					l_target_name := last_target_name
-					if l_target_name /= Void and then not l_target_name.is_empty then
-						Result := l_target_name
-					else
-						Result := Precursor
-					end
-				end
-			end
+			update
+			Result := string_representation_internal
 		end
 
 	query_language_item: QL_ITEM is
 			-- Query language item representation of current domain item
 		do
-			if not id.is_empty then
-				Result := query_target_item_from_conf_target (target_of_id (id))
-			end
+			update
+			Result := query_language_target
 		end
 
 	group: QL_GROUP is
@@ -85,6 +70,38 @@ feature -- Access
 		ensure then
 			result_not_attached: Result = Void
 		end
+
+feature{NONE} -- Implemenation
+
+	update is
+			-- Update status of current item.			
+		do
+			if not is_up_to_date then
+				query_language_target := Void
+				if id.is_empty then
+					string_representation_internal := interface_names.l_application_target.twin
+				else
+					conf_target := target_of_id (id)
+					if conf_target /= Void then
+						string_representation_internal := conf_target.name
+						query_language_target := query_target_item_from_conf_target (conf_target)
+					else
+						if last_target_name /= Void and then not last_target_name.is_empty then
+							string_representation_internal := last_target_name.twin
+						else
+							string_representation_internal := interface_names.l_invalid_item
+						end
+					end
+				end
+				update_last_compilation_count
+			end
+		end
+
+	conf_target: CONF_TARGET
+			-- Configuration target represented by Current
+
+	query_language_target: QL_TARGET;
+			-- Query language target represented by Current
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

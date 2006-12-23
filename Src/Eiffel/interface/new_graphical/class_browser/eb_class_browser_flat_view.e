@@ -87,29 +87,11 @@ feature -- Actions
 		end
 
 	on_show_feature_from_any_changed is
-			-- Action to be performed when selection status of `show_feature_from_any_checkbox' changes
+			-- Action to be performed when selection status of `show_feature_from_any_button' changes
 		do
 			if not is_displaying_class_any then
 				is_up_to_date := False
 				update_view
-				preferences.class_browser_data.show_feature_from_any_preference.set_value (show_feature_from_any_checkbox.is_selected)
-			end
-		end
-
-	on_show_feature_from_any_changed_from_outside is
-			-- Action to be performed when selection status of `show_feature_from_any' changes from outside
-		local
-			l_displayed: BOOLEAN
-		do
-			if not is_displaying_class_any then
-				l_displayed := preferences.class_browser_data.is_feature_from_any_shown
-				if l_displayed /= show_feature_from_any_checkbox.is_selected then
-					if l_displayed then
-						show_feature_from_any_checkbox.enable_select
-					else
-						show_feature_from_any_checkbox.disable_select
-					end
-				end
 			end
 		end
 
@@ -281,9 +263,9 @@ feature -- Status report
 	should_tooltip_be_displayed: BOOLEAN is
 			-- Should tooltip display be vetoed?
 		do
-			Result := show_tooltip_checkbox.is_selected
+			Result := show_tooltip_button.is_selected
 		ensure then
-			good_result: Result = show_tooltip_checkbox.is_selected
+			good_result: Result = show_tooltip_button.is_selected
 		end
 
 	is_displaying_class_any: BOOLEAN is
@@ -294,20 +276,18 @@ feature -- Status report
 
 feature -- Access
 
-	show_feature_from_any_checkbox: EV_TOOL_BAR_TOGGLE_BUTTON is
+	show_feature_from_any_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
 			-- Checkbox to indicate whether or not unchanged features from ANY is displayed
 		do
-			if show_feature_from_any_checkbox_internal = Void then
-				create show_feature_from_any_checkbox_internal
-				show_feature_from_any_checkbox_internal.set_tooltip (interface_names.h_show_feature_from_any)
-				show_feature_from_any_checkbox_internal.set_pixmap (pixmaps.icon_pixmaps.command_show_features_of_any_icon)
-				if preferences.class_browser_data.is_feature_from_any_shown then
-					show_feature_from_any_checkbox_internal.enable_select
-				else
-					show_feature_from_any_checkbox_internal.disable_select
-				end
+			if show_feature_from_any_button_internal = Void then
+				create show_feature_from_any_button_internal.make (
+					pixmaps.icon_pixmaps.command_show_features_of_any_icon,
+					interface_names.h_show_feature_from_any,
+					preferences.class_browser_data.show_feature_from_any_preference,
+					agent on_show_feature_from_any_changed
+				)
 			end
-			Result := show_feature_from_any_checkbox_internal
+			Result := show_feature_from_any_button_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -353,8 +333,8 @@ feature -- Access
 				create l_tool_bar
 				create l_tool_bar3
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
-				l_tool_bar.extend (show_tooltip_checkbox)
-				l_tool_bar.extend (show_feature_from_any_checkbox)
+				l_tool_bar.extend (show_tooltip_button)
+				l_tool_bar.extend (show_feature_from_any_button)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)
@@ -409,10 +389,10 @@ feature{NONE} -- Update
 			if not is_up_to_date then
 				if data /= Void then
 					if is_displaying_class_any then
-						show_feature_from_any_checkbox.enable_select
-						show_feature_from_any_checkbox.disable_sensitive
+						show_feature_from_any_button.enable_select
+						show_feature_from_any_button.disable_sensitive
 					else
-						show_feature_from_any_checkbox.enable_sensitive
+						show_feature_from_any_button.enable_sensitive
 					end
 					text.hide
 					component_widget.show
@@ -566,13 +546,6 @@ feature{NONE} -- Initialization
 			filter_engine.set_multiline (False)
 			filter_engine.set_caseless (True)
 			grid.key_press_actions.extend (agent on_key_pressed)
-			show_feature_from_any_checkbox.select_actions.extend (agent on_show_feature_from_any_changed)
-			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
-
-			on_show_tooltip_changed_from_outside_agent := agent on_show_tooltip_changed_from_outside
-			on_show_feature_from_any_changed_from_outside_agent := agent on_show_feature_from_any_changed_from_outside
-			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
-			preferences.class_browser_data.show_feature_from_any_preference.change_actions.extend (on_show_feature_from_any_changed_from_outside_agent)
 			enable_editor_token_pnd
 		end
 
@@ -604,8 +577,8 @@ feature{NONE} -- Implementation/Data
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Tool bar of current view
 
-	show_feature_from_any_checkbox_internal: like show_feature_from_any_checkbox
-			-- Implementation of `show_feature_from_any_checkbox'
+	show_feature_from_any_button_internal: like show_feature_from_any_button
+			-- Implementation of `show_feature_from_any_button'
 
 feature{NONE} -- Implementation			
 
@@ -632,7 +605,7 @@ feature{NONE} -- Implementation
 				rows.wipe_out
 			end
 			l_any_class_id := system.any_id
-			l_feature_from_any_displayed := show_feature_from_any_checkbox.is_selected or is_displaying_class_any
+			l_feature_from_any_displayed := show_feature_from_any_button.is_selected or is_displaying_class_any
 			l_filter_name := feature_name_list.text
 			l_filter_name.left_adjust
 			l_filter_name.right_adjust
@@ -740,13 +713,8 @@ feature{NONE} -- Implementation
 	recycle_agents is
 			-- Recycle agents
 		do
+			show_feature_from_any_button.recycle
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
-			if on_show_tooltip_changed_from_outside_agent /= Void then
-				preferences.class_browser_data.show_tooltip_preference.change_actions.prune_all (on_show_tooltip_changed_from_outside_agent)
-			end
-			if on_show_feature_from_any_changed_from_outside_agent /= Void then
-				preferences.class_browser_data.show_feature_from_any_preference.change_actions.prune_all (on_show_feature_from_any_changed_from_outside_agent)
-			end
 		end
 
 	collapse_item (a_item: EV_GRID_ITEM) is
@@ -807,9 +775,6 @@ feature{NONE} -- Implementation
 			is_up_to_date := False
 			update_view
 		end
-
-	on_show_feature_from_any_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent kept for recycling
 
 	wait_to_update_view_time: INTEGER is 500
 			-- Time interval (in milliseconds) to wait before we update view

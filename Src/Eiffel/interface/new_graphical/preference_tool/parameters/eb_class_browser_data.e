@@ -120,6 +120,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := inheritance_class_preference.value
 		end
 
+	is_normal_referenced_class_shown: BOOLEAN is
+			-- Should normally referenced classes be displayed?
+		do
+			Result := normal_referenced_class_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	odd_row_background_color_preference: COLOR_PREFERENCE
@@ -137,6 +143,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	categorized_folder_preference: BOOLEAN_PREFERENCE
 	syntactical_class_preference: BOOLEAN_PREFERENCE
 	inheritance_class_preference: BOOLEAN_PREFERENCE
+	normal_referenced_class_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -155,6 +162,7 @@ feature {NONE} -- Preference Strings
 	categorized_folder_string: STRING is "tools.class_browser.classes_categorized_folder"
 	syntactical_class_string: STRING is "tools.class_browser.syntactical_classes"
 	inheritance_class_string: STRING is "tools.class_browser.inheritance_classes"
+	normal_referenced_class_string: STRING is "tools.class_browser.normal_referenced_classes"
 
 feature {NONE} -- Implementation
 
@@ -184,6 +192,7 @@ feature {NONE} -- Implementation
 			categorized_folder_preference := l_manager.new_boolean_preference_value (l_manager, categorized_folder_string, False)
 			syntactical_class_preference := l_manager.new_boolean_preference_value (l_manager, syntactical_class_string, False)
 			inheritance_class_preference := l_manager.new_boolean_preference_value (l_manager, inheritance_class_string, False)
+			normal_referenced_class_preference := l_manager.new_boolean_preference_value (l_manager, normal_referenced_class_string, True)
 		end
 
 	preferences: PREFERENCES

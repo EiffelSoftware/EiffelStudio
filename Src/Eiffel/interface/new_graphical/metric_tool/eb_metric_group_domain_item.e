@@ -14,7 +14,6 @@ inherit
 
 	EB_METRIC_DOMAIN_ITEM
 		undefine
-			string_representation,
 			is_valid,
 			is_group_item
 		end

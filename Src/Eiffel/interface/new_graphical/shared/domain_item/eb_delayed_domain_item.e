@@ -61,6 +61,20 @@ feature -- Access
 			result_not_attached: Result = Void
 		end
 
+	string_representation: STRING is
+			-- Text of current item
+		do
+			Result := interface_names.l_delayed_item
+		end
+
+feature{NONE} -- Implemenation
+
+	update is
+			-- Update status of current item.			
+		do
+			update_last_compilation_count
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

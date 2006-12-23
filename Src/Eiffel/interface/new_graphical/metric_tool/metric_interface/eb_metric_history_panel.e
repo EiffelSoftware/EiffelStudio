@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 			preferences.metric_tool_data.hide_old_item_preference.change_actions.extend (on_hide_old_item_change_from_outside_agent)
 			preferences.metric_tool_data.old_item_day_preference.change_actions.extend (on_item_age_change_from_outside_agent)
 			preferences.metric_tool_data.tree_view_for_history_preference.change_actions.extend (on_display_tree_view_changed_from_outside_agent)
-			preferences.metric_tool_data.keep_detailed_result_preference.change_actions.extend (on_keep_result_selection_change_from_outside_agent)
+			preferences.metric_tool_data.keep_archive_detailed_result_preference.change_actions.extend (on_keep_result_selection_change_from_outside_agent)
 
 			set_metric_tool (a_tool)
 			tree_grid.selection_change_actions.extend (agent on_selection_changes)
@@ -98,8 +98,8 @@ feature {NONE} -- Initialization
 			day_lbl.set_text (metric_names.t_days)
 
 			keep_result_btn.set_pixmap (pixmaps.icon_pixmaps.metric_run_and_show_details_icon)
-			keep_result_btn.set_tooltip (metric_names.f_keep_detailed_result)
-			if preferences.metric_tool_data.is_detailed_result_kept then
+			keep_result_btn.set_tooltip (metric_names.f_keep_archive_detailed_result)
+			if preferences.metric_tool_data.is_archive_detailed_result_kept then
 				keep_result_btn.enable_select
 			else
 				keep_result_btn.disable_select
@@ -475,7 +475,7 @@ feature -- Actions
 	on_keep_result_selection_change is
 			-- Action to be performed when selection status of `keep_result_btn' changes
 		do
-			preferences.metric_tool_data.keep_detailed_result_preference.set_value (keep_result_btn.is_selected)
+			preferences.metric_tool_data.keep_archive_detailed_result_preference.set_value (keep_result_btn.is_selected)
 		end
 
 	on_keep_result_selection_change_from_outside is
@@ -483,7 +483,7 @@ feature -- Actions
 		local
 			l_selected: BOOLEAN
 		do
-			l_selected := preferences.metric_tool_data.is_detailed_result_kept
+			l_selected := preferences.metric_tool_data.is_archive_detailed_result_kept
 			if l_selected /= keep_result_btn.is_selected then
 				if l_selected then
 					keep_result_btn.enable_select
@@ -648,7 +648,7 @@ feature{NONE} -- Recycle
 			preferences.metric_tool_data.tree_view_for_history_preference.change_actions.prune_all (on_display_tree_view_changed_from_outside_agent)
 			preferences.metric_tool_data.hide_old_item_preference.change_actions.prune_all (on_hide_old_item_change_from_outside_agent)
 			preferences.metric_tool_data.old_item_day_preference.change_actions.prune_all (on_item_age_change_from_outside_agent)
-			preferences.metric_tool_data.keep_detailed_result_preference.change_actions.prune_all (on_keep_result_selection_change_from_outside_agent)
+			preferences.metric_tool_data.keep_archive_detailed_result_preference.change_actions.prune_all (on_keep_result_selection_change_from_outside_agent)
 			uninstall_agents (metric_tool)
 			uninstall_metric_history_agent
 		end
@@ -703,9 +703,10 @@ feature{NONE} -- Implementation
 			a_source_archive_node.merge (a_new_archive_node)
 			a_source_archive_node.set_is_up_to_date (True)
 			a_source_archive_node.set_is_value_valid (True)
+			a_source_archive_node.set_is_result_filtered (a_new_archive_node.is_result_filtered)
 		end
 
-	recalculation_task (a_selected_archives: LINEAR [EB_METRIC_ARCHIVE_NODE]): LINKED_LIST [TUPLE [EB_METRIC, EB_METRIC_DOMAIN, BOOLEAN]] is
+	recalculation_task (a_selected_archives: LINEAR [EB_METRIC_ARCHIVE_NODE]): LINKED_LIST [TUPLE [EB_METRIC, EB_METRIC_DOMAIN, BOOLEAN, BOOLEAN]] is
 			-- Task for history recalculation
 		require
 			a_selected_archives_attached: a_selected_archives /= Void
@@ -716,7 +717,7 @@ feature{NONE} -- Implementation
 			until
 				a_selected_archives.after
 			loop
-				Result.extend ([a_selected_archives.item.metric, a_selected_archives.item.input_domain, keep_result_btn.is_selected])
+				Result.extend ([a_selected_archives.item.metric, a_selected_archives.item.input_domain, keep_result_btn.is_selected, a_selected_archives.item.is_result_filtered])
 				a_selected_archives.forth
 			end
 		ensure

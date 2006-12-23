@@ -28,7 +28,8 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Does current represent a valid domain item?
 		do
-			Result := group_of_id (id) /= Void
+			update
+			Result := conf_group /= Void
 		end
 
 feature -- Access
@@ -41,32 +42,18 @@ feature -- Access
 
 	string_representation: STRING is
 			-- Text of current item
-		local
-			l_conf_group: CONF_GROUP
-			l_group_name: STRING
 		do
-			l_conf_group := group_of_id (id)
-			if l_conf_group /= Void then
-				Result := l_conf_group.name
-			else
-				l_group_name := last_group_name
-				if l_group_name /= Void and then not l_group_name.is_empty then
-					Result := l_group_name
-				else
-					Result := Precursor
-				end
-			end
+			update
+			Result := string_representation_internal
 		end
 
 	ql_group: QL_GROUP is
 			-- Query language item of current
 		require
 			valid: is_valid
-		local
-			l_conf_group: CONF_GROUP
 		do
-			l_conf_group := group_of_id (id)
-			Result := query_group_item_from_conf_group (l_conf_group)
+			update
+			Result := ql_group_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -85,6 +72,34 @@ feature -- Access
 		ensure then
 			result_attached: Result /= Void
 		end
+
+feature{NONE} -- Implemenation
+
+	update is
+			-- Update status of current item.			
+		do
+			if not is_up_to_date then
+				conf_group := group_of_id (id)
+				if conf_group /= Void then
+					ql_group_internal := query_group_item_from_conf_group (conf_group)
+					string_representation_internal := conf_group.name
+				else
+					if last_group_name /= Void and then not last_group_name.is_empty then
+						string_representation_internal := last_group_name.twin
+					else
+						string_representation_internal := interface_names.l_invalid_item
+					end
+					ql_group_internal := Void
+				end
+				update_last_compilation_count
+			end
+		end
+
+	conf_group: CONF_GROUP
+			-- Configuration group represented by Current
+
+	ql_group_internal: QL_GROUP;
+			-- Query language group represented by Current
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

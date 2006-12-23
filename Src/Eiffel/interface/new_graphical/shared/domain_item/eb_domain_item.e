@@ -34,15 +34,23 @@ inherit
 		undefine
 			is_equal
 		end
-		
+
+	SHARED_WORKBENCH
+		undefine
+			is_equal
+		end
+
 feature{NONE} -- Initialization
 
 	make (a_id: STRING) is
 			-- Initialize `id' with `a_id'.
 		require
 			a_id_attached: a_id /= Void
+			system_defined_and_compiled: workbench.system_defined and then workbench.is_already_compiled
 		do
 			create id.make_from_string (a_id)
+			last_compilation_count := -1
+			update
 		ensure
 			id_set: id /= Void and then id.is_equal (a_id)
 		end
@@ -82,6 +90,13 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Does current represent a valid domain item?
 		do
+		end
+
+	is_up_to_date: BOOLEAN is
+			-- Is current domain item up-to-date?
+			-- An item can become old when new Eiffel compilation occurs.
+		do
+			Result := workbench.compilation_counter = last_compilation_count
 		end
 
 feature -- Comparison
@@ -138,10 +153,7 @@ feature -- Access
 
 	string_representation: STRING is
 			-- Text of current item
-		do
-			if not is_valid then
-				Result := interface_names.l_invalid_item
-			end
+		deferred
 		ensure
 			result_attached: Result /= Void
 		end
@@ -184,6 +196,8 @@ feature -- Setting
 			a_id_attached: a_id /= Void
 		do
 			create id.make_from_string (a_id)
+			last_compilation_count := -1
+			update
 		ensure
 			id_set: id /= Void and then id.is_equal (a_id)
 		end
@@ -197,6 +211,29 @@ feature -- UUID
 		ensure
 			result_attached: Result /= Void
 		end
+
+feature{NONE} -- Implementation
+
+	last_compilation_count: INTEGER
+			-- Compilation count when current itme is updated the last time
+
+	update_last_compilation_count is
+			-- Set `last_compilation_count' with `a_count'.
+		do
+			last_compilation_count := workbench.compilation_counter
+		ensure
+			last_compilation_count_set: last_compilation_count = workbench.compilation_counter
+		end
+
+	update is
+			-- Update status of current item.			
+		deferred
+		ensure
+			is_up_to_date: is_up_to_date
+		end
+
+	string_representation_internal: like string_representation;
+			-- Implementation of `string_representation'
 
 invariant
 	id_attached: id /= Void

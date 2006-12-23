@@ -13,23 +13,13 @@ inherit
 	EB_METRIC_DOMAIN_PROPERTY_MANAGER
 		redefine
 			criterion_type,
-			property_item,
 			load_properties,
-			store_properties
+			store_properties,
+			on_before_dialog_display
 		end
 
 create
 	make
-
-feature -- Access
-
-	property_item: EB_METRIC_DOMAIN_GRID_ITEM is
-			-- Grid item used to display properties
-		do
-			Result := Precursor
-			Result.dialog.property_area.feature_vertion_area.show
-			Result.dialog.set_grid (grid)
-		end
 
 feature -- Properties management
 
@@ -37,18 +27,14 @@ feature -- Properties management
 			-- Load porperties from `a_criterion' into current manager
 		do
 			Precursor (a_criterion)
-			if a_criterion.only_current_version then
-				property_item.dialog.property_area.only_current_version_checkbox.enable_select
-			else
-				property_item.dialog.property_area.descendant_version_checkbox.enable_select
-			end
+			property_item.set_is_only_current_version (a_criterion.only_current_version)
 		end
 
 	store_properties (a_criterion: like criterion_type) is
 			-- Store properties in current manager into `a_criterion'.
 		do
 			Precursor (a_criterion)
-			if property_item.dialog.property_area.only_current_version_checkbox.is_selected then
+			if property_item.is_only_current_version then
 				a_criterion.enable_only_current_version
 			else
 				a_criterion.disable_only_current_version
@@ -57,8 +43,15 @@ feature -- Properties management
 
 feature{NONE} -- Implementation
 
-	criterion_type: EB_METRIC_CALLER_CALLEE_CRITERION;
+	criterion_type: EB_METRIC_CALLER_CALLEE_CRITERION
 			-- Anchor type
+
+	on_before_dialog_display (a_dialog: EB_METRIC_DOMAIN_PROPERTY_DIALOG) is
+			-- Action to be performed before `a_dialog' is displayed
+		do
+			a_dialog.set_grid_item (property_item)
+			a_dialog.property_area.feature_vertion_area.show
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

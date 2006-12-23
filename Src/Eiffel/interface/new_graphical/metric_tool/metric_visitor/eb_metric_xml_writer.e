@@ -347,6 +347,7 @@ feature{NONE} -- Process
 			l_attr.put (a_item.calculated_time.out, n_time)
 			l_attr.put (a_item.value.out, n_value)
 			l_attr.put (a_item.uuid.out, n_uuid)
+			l_attr.put (a_item.is_result_filtered.out, n_filter)
 			append_indent
 			append_start_tag (n_metric, l_attr)
 			append_new_line

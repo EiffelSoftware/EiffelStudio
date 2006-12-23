@@ -28,7 +28,8 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Does current represent a valid domain item?
 		do
-			Result := folder_of_id (id) /= Void
+			update
+			Result := folder_internal /= Void
 		end
 
 feature -- Access
@@ -39,35 +40,16 @@ feature -- Access
 			l_class_domain_generator: QL_CLASS_DOMAIN_GENERATOR
 			l_folder: EB_FOLDER
 		do
-			l_folder := folder_of_id (id)
-			check l_folder /= Void end
+			l_folder := folder_internal
 			create l_class_domain_generator.make (create{QL_CLASS_PATH_IN_CRI}.make (l_folder.path), True)
 			Result := query_group_item_from_conf_group (l_folder.cluster).wrapped_domain.new_domain (l_class_domain_generator)
 		end
 
 	string_representation: STRING is
 			-- Text of current item
-		local
-			l_folder: EB_FOLDER
-			l_folder_name: STRING
 		do
-			if not is_valid then
-				Result := Precursor
-			else
-				l_folder := folder_of_id (id)
-			end
-
-			l_folder := folder_of_id (id)
-			if l_folder /= Void then
-				Result := l_folder.name
-			else
-				l_folder_name := last_folder_name
-				if l_folder_name /= Void and then not l_folder_name.is_empty then
-					Result := l_folder_name.twin
-				else
-					Result := Precursor
-				end
-			end
+			update
+			Result := string_representation_internal
 		end
 
 	folder: EB_FOLDER is
@@ -75,7 +57,8 @@ feature -- Access
 		require
 			valid: is_valid
 		do
-			Result := folder_of_id (id)
+			update
+			Result := folder_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -83,7 +66,8 @@ feature -- Access
 	query_language_item: QL_ITEM is
 			-- Query language item representation of current domain item
 		do
-			Result := query_group_item_from_conf_group (folder.cluster)
+			update
+			Result := query_language_item_internal
 		end
 
 	group: QL_GROUP is
@@ -94,6 +78,34 @@ feature -- Access
 		ensure then
 			result_attached: Result /= Void
 		end
+
+feature{NONE} -- Implemenation
+
+	update is
+			-- Update status of current item.			
+		do
+			if not is_up_to_date then
+				folder_internal := folder_of_id (id)
+				if folder_internal /= Void then
+					query_language_item_internal := query_group_item_from_conf_group (folder_internal.cluster)
+					string_representation_internal := folder_internal.name
+				else
+					query_language_item_internal := Void
+					if last_folder_name /= Void and then not last_folder_name.is_empty then
+						string_representation_internal := last_folder_name.twin
+					else
+						string_representation_internal := interface_names.l_invalid_item
+					end
+				end
+				update_last_compilation_count
+			end
+		end
+
+	folder_internal: EB_FOLDER;
+			-- Folder represented by `id'
+
+	query_language_item_internal: like query_language_item;
+			-- Implementation of `query_language_item'
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -390,24 +390,6 @@ feature -- Access
 			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
 			-- If `starting_element' is Void, don't build tree.
 
-	show_tooltip_checkbox: EV_TOOL_BAR_TOGGLE_BUTTON is
-			-- Checkbox to indicate whether or not tooltip is displayed
-		do
-			if show_tooltip_checkbox_internal = Void then
-				create show_tooltip_checkbox_internal
-				show_tooltip_checkbox_internal.set_pixmap (pixmaps.icon_pixmaps.general_show_tool_tips_icon)
-				show_tooltip_checkbox_internal.set_tooltip (interface_names.h_show_tooltip)
-				if preferences.class_browser_data.is_tooltip_shown then
-					show_tooltip_checkbox_internal.enable_select
-				else
-					show_tooltip_checkbox_internal.disable_select
-				end
-			end
-			Result := show_tooltip_checkbox_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
 	grid: ES_GRID
 			-- Grid used to display information
 
@@ -429,6 +411,22 @@ feature -- Access
 				create retrieve_data_actions_internal
 			end
 			Result := retrieve_data_actions_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	show_tooltip_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+			-- Checkbox to indicate whether or not tooltip is displayed
+		do
+			if show_tooltip_button_internal = Void then
+				create show_tooltip_button_internal.make (
+					pixmaps.icon_pixmaps.general_show_tool_tips_icon,
+					interface_names.h_show_tooltip,
+					preferences.class_browser_data.show_tooltip_preference,
+					agent on_show_tooltip_changed
+				)
+			end
+			Result := show_tooltip_button_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -561,25 +559,10 @@ feature{NONE} -- Actions
 		end
 
 	on_show_tooltip_changed is
-			-- Action to be performed when selection status of `show_tooltip_checkbox' changes
+			-- Action to be performed when selection status of `show_tooltip_button' changes
 		do
-			if preferences.class_browser_data.is_tooltip_shown /= show_tooltip_checkbox.is_selected then
-				preferences.class_browser_data.show_tooltip_preference.set_value (show_tooltip_checkbox.is_selected)
-			end
-		end
-
-	on_show_tooltip_changed_from_outside is
-			-- Action to be performed when selection status of `show_tooltip_checkbox' changes from outside
-		local
-			l_displayed: BOOLEAN
-		do
-			l_displayed := preferences.class_browser_data.is_tooltip_shown
-			if l_displayed /= show_tooltip_checkbox.is_selected then
-				if l_displayed then
-					show_tooltip_checkbox.enable_select
-				else
-					show_tooltip_checkbox.disable_select
-				end
+			if preferences.class_browser_data.is_tooltip_shown /= show_tooltip_button.is_selected then
+				preferences.class_browser_data.show_tooltip_preference.set_value (show_tooltip_button.is_selected)
 			end
 		end
 
@@ -601,6 +584,7 @@ feature {NONE} -- Recycle
 		do
 			desynchronize_color_or_font_change_with_editor
 			desynchronize_scroll_behavior_with_editor
+			show_tooltip_button.recycle
 		end
 
 feature {NONE} -- Implementation
@@ -712,13 +696,10 @@ feature {NONE} -- Implementation
 			not_result_is_empty: not Result.is_empty
 		end
 
-	on_show_tooltip_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent kept for recycling
+	show_tooltip_button_internal: like show_tooltip_button
+			-- Implementation of `show_tooltip_button'		
 
 feature{NONE} -- Implementation
-
-	show_tooltip_checkbox_internal: like show_tooltip_checkbox
-			-- Implementation of `show_tooltip_checkbox'
 
 	trace: STRING
 			-- Trace message

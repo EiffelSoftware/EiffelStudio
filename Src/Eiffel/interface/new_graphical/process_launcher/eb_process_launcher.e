@@ -28,7 +28,9 @@ inherit
 feature -- Launching parameters setting
 
 	prepare_command_line (cmd: STRING; args: LIST [STRING]; a_working_directory: STRING) is
-			--
+			-- Prepare command line for process launching.
+			-- `cmd' is the process command to launch, `args' are possible arguments and
+			-- `a_working_directory' is the path where process will be launched.
 		require
 			process_not_in_action: (not launched) or (launched and has_exited)
 			cmd_not_void: cmd /= Void
@@ -243,6 +245,7 @@ feature -- Control
 				dir := ee.current_working_directory
 				ee.change_working_directory (working_directory)
 			end
+			data_storage.wipe_out
 			prc.launch
 
 			if ee /= Void then

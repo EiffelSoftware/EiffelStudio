@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 			end
 
 			l_class := query_class_item_from_class_c (associated_class)
-			create {QL_CLASS_SUPPLIER_RELATION_CRI}Result.make (l_class.wrapped_domain, browser.syntactical_button.is_selected, False)
+			create {QL_CLASS_SUPPLIER_RELATION_CRI}Result.make (l_class.wrapped_domain, browser.normal_referenced_button.is_selected, browser.syntactical_button.is_selected, False)
 		end
 
 indexing

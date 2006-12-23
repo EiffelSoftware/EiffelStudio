@@ -34,8 +34,7 @@ feature -- Access
 				property_item_internal.dialog_ok_actions.extend (agent grid.resize_column (2, 0))
 				property_item_internal.dialog_ok_actions.extend (agent change_actions.call ([]))
 				property_item_internal.set_tooltip (metric_names.f_pick_and_drop_items)
-				property_item_internal.dialog.set_grid (grid)
-				property_item_internal.dialog.property_area.feature_vertion_area.hide
+				property_item_internal.before_show_dialog_actions.extend (agent on_before_dialog_display)
 			end
 			Result := property_item_internal
 		end
@@ -64,8 +63,17 @@ feature{NONE} -- Implementation
 	criterion_type: EB_METRIC_DOMAIN_CRITERION
 			-- Anchor type
 
-	property_item_internal: like property_item;
+	property_item_internal: like property_item
 			-- Implementation of `property_item'
+
+	on_before_dialog_display (a_dialog: EB_METRIC_DOMAIN_PROPERTY_DIALOG) is
+			-- Action to be performed before `a_dialog' is displayed
+		require
+			a_dialog_attached: a_dialog /= Void
+		do
+			a_dialog.set_grid_item (property_item)
+			a_dialog.property_area.feature_vertion_area.hide
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

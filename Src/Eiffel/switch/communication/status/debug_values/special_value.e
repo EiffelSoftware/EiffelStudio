@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			-- nevertheless at this point we don't have the `capacity'
 			-- value, so we'll fetch this value when needed
 		do
+			set_default_name
 			is_attribute := False;
 			if a_reference /= Default_pointer then
 				address := a_reference.out
@@ -280,10 +281,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-
 	items_exists: items_computed implies items /= Void;
-	address_not_void: address /= Void;
-	is_attribute: is_attribute
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -1155,6 +1155,7 @@ test	separate-panic				term142 tcf pass termination
 test	creation-expression-in-inherited-assertion	term143 tcf pass termination
 test	inspect-using-static-procedure	term144 tcf pass termination
 test	constraint-type-comparison	term145 tcf pass termination generic
+test	missing-actual-generic-crash	term146 tcf pass termination generic
 
 -- Config
 

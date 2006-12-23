@@ -1073,6 +1073,7 @@ feature -- Parent checking
 			l_tuple: TUPLE [BOOLEAN, BOOLEAN]
 			l_compiled_parent_generator: AST_PARENT_C_GENERATOR
 			l_parent_type: CL_TYPE_A
+			l_vtug: VTUG
 		do
 				-- Reset flag
 			need_new_parents := False
@@ -1152,6 +1153,17 @@ feature -- Parent checking
 							end
 						end
 
+							-- This addresses eweasel test#term146 where we assumed before at degree 4
+							-- they had the correct number of formal generics and thus performed conformance
+							-- checking blindly. Now we check the error at the end of degree 5 to prevent
+							-- this problem.
+						if not l_parent_type.good_generics then
+							l_vtug := l_parent_type.error_generics
+							l_vtug.set_class (Current)
+							l_vtug.set_location (l_parent_as.start_location)
+							error_handler.insert_error (l_vtug)
+						end
+
 						parents.extend (l_parent_type)
 							-- Insertion in `parents_classes'.
 						parents_classes.extend (l_parent_class)
@@ -1226,7 +1238,6 @@ feature -- Parent checking
 		require
 			parents_not_void: parents /= Void
 		local
-			vtug: VTUG
 			vtcg4: VTCG4
 			vifi1: VIFI1
 			vifi2: VIFI2
@@ -1258,25 +1269,21 @@ feature -- Parent checking
 					l_single_classes.finish
 				end
 
-				if not parent_actual_type.good_generics then
-						-- Wrong number of geneneric parameters in parent
-					vtug := parent_actual_type.error_generics
-					vtug.set_class (Current)
-					fixme ("Shouldn't we be able to provide a location?")
-					Error_handler.insert_error (vtug)
-				else
-					if parent_actual_type.generics /= Void then
-							-- Check constrained genericity validity rule
-						parent_actual_type.reset_constraint_error_list
-						parent_actual_type.check_constraints (Current)
-						if not parent_actual_type.constraint_error_list.is_empty then
-							create vtcg4
-							vtcg4.set_class (Current)
-							vtcg4.set_error_list (parent_actual_type.constraint_error_list)
-							vtcg4.set_parent_type (parent_actual_type)
-							fixme ("Shouldn't we be able to provide a location?")
-							Error_handler.insert_error (vtcg4)
-						end
+				check
+						-- This has already been checked in `fill_parents'.
+					valid_generics: parent_actual_type.good_generics
+				end
+				if parent_actual_type.generics /= Void then
+						-- Check constrained genericity validity rule
+					parent_actual_type.reset_constraint_error_list
+					parent_actual_type.check_constraints (Current)
+					if not parent_actual_type.constraint_error_list.is_empty then
+						create vtcg4
+						vtcg4.set_class (Current)
+						vtcg4.set_error_list (parent_actual_type.constraint_error_list)
+						vtcg4.set_parent_type (parent_actual_type)
+						fixme ("Shouldn't we be able to provide a location?")
+						Error_handler.insert_error (vtcg4)
 					end
 				end
 

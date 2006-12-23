@@ -2625,7 +2625,8 @@ end
 		local
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
-			a_class: CLASS_C
+			l_class: CLASS_C
+			l_eiffel_class: EIFFEL_CLASS_C
 		do
 				-- Reinitialization of control flags of the topological
 				-- sort.
@@ -2636,15 +2637,19 @@ end
 			class_array := classes
 			nb := class_counter.count
 			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
-				if a_class /= Void then
-					a_class.set_changed (False)
-					a_class.set_changed2 (False)
-					a_class.set_changed3a (False)
-					a_class.set_need_type_check (False)
+				l_class := class_array.item (i)
+				if l_class /= Void then
+					l_class.set_changed (False)
+					l_class.set_changed2 (False)
+					l_class.set_changed3a (False)
+					l_class.set_need_type_check (False)
 					-- FIXME: changed4, changed5, changed6
-					a_class.changed_features.clear_all
-					a_class.propagators.wipe_out
+					l_class.changed_features.clear_all
+					l_class.propagators.wipe_out
+					l_eiffel_class ?= l_class
+					if l_eiffel_class /= Void then
+						l_eiffel_class.set_new_byte_code_needed (False)
+					end
 				end
 				i := i + 1
 			end

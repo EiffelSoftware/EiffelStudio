@@ -52,6 +52,10 @@ feature -- Initialization
 
 feature -- Access
 
+	new_byte_code_needed: BOOLEAN
+			-- Should code be regenerated at degree 3 for all features to be generated in Current
+			-- even if they did not change?
+
 	original_class: EIFFEL_CLASS_I
 			-- Original class.
 
@@ -122,6 +126,16 @@ feature -- Access
 					Result := feat.api_feature (class_id)
 				end
 			end
+		end
+
+feature -- Settings
+
+	set_new_byte_code_needed (v: like new_byte_code_needed) is
+			-- Set `new_byte_code_needed' with `v'.
+		do
+			new_byte_code_needed := v
+		ensure
+			new_byte_code_needed_set: new_byte_code_needed = v
 		end
 
 feature -- Status report
@@ -550,10 +564,10 @@ feature -- Third pass: byte code production and type check
 					end
 
 						-- For a changed feature written in the class or for all
-						-- features of the class when `changed4' is true (it fixes test#incr279
-						-- for which some nodes needed to be updated to reflect the change
-						-- of generic parameters).
-					feature_changed := 	changed_features.has (feature_name_id) or changed4
+						-- features of the class when `new_byte_code_needed' is true
+						-- (This fixes test#incr279 for which some nodes needed to
+						-- be updated to reflect the change of generic parameters).
+					feature_changed := 	changed_features.has (feature_name_id) or new_byte_code_needed
 
 					if not feature_changed then
 							-- Force a change on all feature of current class if line
@@ -784,8 +798,7 @@ feature -- Third pass: byte code production and type check
 			else
 				invariant_changed := propagators.invariant_changed
 				if not (invariant_changed or else f_suppliers = Void) then
-					invariant_changed :=
-						not propagators.melted_empty_intersection (f_suppliers)
+					invariant_changed := not propagators.melted_empty_intersection (f_suppliers)
 				end
 
 				if not invariant_changed then
@@ -794,14 +807,14 @@ feature -- Third pass: byte code production and type check
 						-- line information on non-changed features.
 						-- This should also be done for IL code generation, otherwise
 						-- debug info is inconsistent.
+						-- We also do it if `new_byte_code_needed' has been set.
 					invariant_changed := invariant_feature /= Void and then
-						(System.line_generation or System.il_generation)
+						(System.line_generation or System.il_generation or new_byte_code_needed)
 				end
 				if invariant_changed then
 					if invariant_feature = Void then
 						create invariant_feature.make (Current)
-						invariant_feature.set_body_index
-											(Body_index_counter.next_id)
+						invariant_feature.set_body_index (Body_index_counter.next_id)
 						invariant_feature.set_feature_id (feature_id_counter.next)
 					end
 				end
@@ -1401,7 +1414,8 @@ feature {NONE} -- Class initialization
 			old_is_deferred: BOOLEAN
 			old_is_frozen: BOOLEAN
 			old_parents: like parents_classes
-			a_client: CLASS_C
+			l_class: CLASS_C
+			l_eiffel_class: EIFFEL_CLASS_C
 			changed_status, changed_frozen: BOOLEAN
 			is_exp, changed_generics, changed_expanded: BOOLEAN
 			gens: like generics
@@ -1501,23 +1515,23 @@ feature {NONE} -- Class initialization
 				until
 					syntactical_clients.after
 				loop
-					a_client := syntactical_clients.item
+					l_class := syntactical_clients.item
 					if changed_expanded then
 							-- `changed' is set to True so that a complete
 							-- pass2 is done on the client. `feature_unit'
 							-- will find the type changes
-						if not a_client.changed then
-							a_client.set_changed (True)
+						if not l_class.changed then
+							l_class.set_changed (True)
 								-- The ast is in the temporary server
 								-- so Degree 4 can be done the same way
-							Degree_5.insert_changed_class (a_client)
+							Degree_5.insert_changed_class (l_class)
 						end
 					else
 						set_changed2 (True)
 					end
-					Degree_4.set_supplier_status_modified (a_client)
-					Degree_3.insert_new_class (a_client)
-					Degree_2.insert_new_class (a_client)
+					Degree_4.set_supplier_status_modified (l_class)
+					Degree_3.insert_new_class (l_class)
+					Degree_2.insert_new_class (l_class)
 					syntactical_clients.forth
 				end
 
@@ -1574,27 +1588,32 @@ feature {NONE} -- Class initialization
 				until
 					syntactical_clients.after
 				loop
-					a_client := syntactical_clients.item
-					Workbench.add_class_to_recompile (a_client.original_class)
-					a_client.set_changed (True)
-					a_client.set_changed3a (True)
-					a_client.set_need_type_check (True)
+					l_class := syntactical_clients.item
+					Workbench.add_class_to_recompile (l_class.original_class)
+					l_class.set_changed (True)
+					l_class.set_changed3a (True)
+					l_class.set_need_type_check (True)
+						-- The code below will force a recompilation of features written in
+						-- all syntactical clients whereas we only wanted to do that for `descendants'.
+						-- Unfortunately `descendants' is reset at degree 5 and thus we have to do it for
+						-- all syntactical clients.
+						-- We need to recompile the features because their code might still contain
+						-- reference to the former generics. This fixes eweasel test#incr279.
+					l_eiffel_class ?= l_class
+					if l_eiffel_class /= Void then
+						l_eiffel_class.set_new_byte_code_needed (True)
+					end
 					syntactical_clients.forth
 				end
 					-- We need to reset its `types' so that they are recomputed.
 				remove_types
 
+					-- All the routines need to be regenerated.
+				set_new_byte_code_needed (True)
+
 					-- We need to get rid of content of `filters' since it may contain
 					-- incorrect data using Formals that are not there anymore.
 				filters.make
-
-				fixme ("[
-						Manu: 01/12/2004:
-						This is not complete. We also need to type check and regenerate
-						the byte code for all the routines of descendants classes as even
-						though they haven't changed their code may refer to the former
-						generic type.
-					]")
 			end
 
 			if changed_frozen then
@@ -1606,9 +1625,9 @@ feature {NONE} -- Class initialization
 				until
 					clients.after
 				loop
-					a_client := clients.item
-					Workbench.add_class_to_recompile (a_client.original_class)
-					a_client.set_changed (True)
+					l_class := clients.item
+					Workbench.add_class_to_recompile (l_class.original_class)
+					l_class.set_changed (True)
 					clients.forth
 				end
 					-- We need to reset its `types' so that they are recomputed.

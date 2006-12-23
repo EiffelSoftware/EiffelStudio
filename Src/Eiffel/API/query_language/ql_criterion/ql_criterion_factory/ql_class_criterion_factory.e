@@ -504,7 +504,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, False, False)
+			create Result.make (a_domain, True, False, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -514,7 +514,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, False, True)
+			create Result.make (a_domain, True, False, True)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -524,7 +524,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, False, False)
+			create Result.make (a_domain, True, False, False)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -534,7 +534,7 @@ feature{NONE} -- New criterion
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, False, True)
+			create Result.make (a_domain, True, False, True)
 		ensure
 			result_attached: Result /= Void
 		end

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2006-12-22 16:47-0800\n"
+"PO-Revision-Date: 2006-12-22 17:01-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -385,7 +385,7 @@ msgid "Apply"
 msgstr "Anwenden"
 
 msgid "&Edit..."
-msgstr "&Editieren"
+msgstr "&Bearbeiten"
 
 msgid "No metric is selected"
 msgstr "Keine Metrik selektiert"
@@ -1436,7 +1436,7 @@ msgid "Description of the external."
 msgstr "Beschreibung des externen Objekts."
 
 msgid "Reset user settings"
-msgstr "Benutzerdefinierte Einstellungen zurüchsetzen"
+msgstr "Benutzerdefinierte Einstellungen zurücksetzen"
 
 msgid "$1 match"
 msgid_plural "$1 matches"
@@ -2844,7 +2844,7 @@ msgid "Name of the group."
 msgstr "Name der Gruppe."
 
 msgid "Manually Edit Configuration"
-msgstr "Konfiguration manuell editieren"
+msgstr "Konfiguration manuell bearbeiten"
 
 msgid "System is being compiled"
 msgstr "System wird kompiliert"
@@ -3065,7 +3065,7 @@ msgid "Compile All Classes?"
 msgstr "Alle Klassen kompilieren?"
 
 msgid "Edit..."
-msgstr "Editieren..."
+msgstr "Bearbeiten..."
 
 msgid "Add a library"
 msgstr "Bibliothek hinzufügen"
@@ -3381,7 +3381,7 @@ msgid "Change"
 msgstr "Ändere"
 
 msgid "Edit Object content"
-msgstr "Objektinhalt editieren"
+msgstr "Objektinhalt bearbeiten"
 
 msgid "Editor"
 msgstr "Editor"
@@ -3632,7 +3632,7 @@ msgid "In Class"
 msgstr "In Klasse"
 
 msgid "Edit condition"
-msgstr "Kondition editieren"
+msgstr "Kondition bearbeiten"
 
 msgid "$1  in cluster $2  (not in system)  located in $3"
 msgstr "$1 in Cluster $2 (nicht im System) aufgefunden in $3"
@@ -4109,7 +4109,7 @@ msgid "Raise all unsaved windows"
 msgstr "Alle ungespeicherten Fenster hervorheben"
 
 msgid "Edit"
-msgstr "Editieren"
+msgstr "Bearbeiten"
 
 msgid "Warn about usage of old verbatim strings?"
 msgstr "Warnung ausgeben für den Gebrauch von alten 'verbatim' Zeichenketten?"
@@ -4790,7 +4790,7 @@ msgid "Cla&ss Views"
 msgstr "Kla&ssen-Ansichten"
 
 msgid "Edit Project"
-msgstr "Projekt editieren"
+msgstr "Projekt bearbeiten"
 
 msgid "Show tooltips?"
 msgstr "Tooltips anzeigen?"

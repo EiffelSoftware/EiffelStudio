@@ -955,7 +955,7 @@ feature -- Label texts
 			a_feat_name_not_void: a_feat_name /= Void
 			a_class_name_not_void: a_class_name /= Void
 		do
-			Result := locale.format_string (locale.translate ("$1 of feature $2 of class"), [a_command_name, a_class_name, a_class_name])
+			Result := locale.format_string (locale.translate ("$1 of feature `$2' of class $3"), [a_command_name, a_feat_name, a_class_name])
 		end
 
 	l_Header_dependency (a_command_name, a_object_name: STRING_GENERAL): STRING_GENERAL is
@@ -1142,13 +1142,16 @@ feature -- Label texts
 	l_callees_from_supplier_class: STRING_GENERAL is do Result := locale.translate("Callees from supplier class") end
 	l_from_x: STRING is "From "
 	h_categorize_folder: STRING_GENERAL is do Result := locale.translate("Categorize classes in folder?") end
-	h_show_syntactical_classes: STRING_GENERAL is do Result := locale.translate("Show only synctactically referenced classes also?") end
+	h_show_syntactical_classes: STRING_GENERAL is do Result := locale.translate("Show only synctactically referenced classes?") end
+	h_show_normal_referenced_classes: STRING_GENERAL is do Result := locale.translate("Show normal referenced classes?") end
 	h_show_ancestor_classes: STRING_GENERAL is do Result := locale.translate("Show ancestor classes?") end
 	h_show_descendant_classes: STRING_GENERAL is do Result := locale.translate("Show descendant classes?") end
 	l_only_syntactically_related: STRING is "Only syntactically related"
 	l_ancestor_related: STRING is "Ancestor related"
 	l_descendant_related: STRING is "Descendant related"
 	l_invalid_item: STRING is "Invalid item"
+	l_application_target: STRING is "Application target"
+	l_delayed_item: STRING is "Delayed item"
 	l_ellipsis: STRING is "..."
 	l_ancestor_of: STRING is "Ancestor of "
 	l_descendant_of: STRING is "Descendant of "

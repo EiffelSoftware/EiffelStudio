@@ -16,7 +16,7 @@ define OVERNAME "LIST"
 copy_sub	list.e $OVERRIDE_CLUSTER list.e
 copy_sub 	test.e $CLUSTER test.e
 compile_quick_melted
-compile_result validity_error TEST VTUG(1) 
+compile_result validity_error DYNAMIC_LIST VTUG(1) 
 
 define OVERNAME "WEASEL_LIST"
 copy_sub	list.e $OVERRIDE_CLUSTER list.e

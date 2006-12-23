@@ -937,7 +937,7 @@ feature -- Label texts
 			if a_for_class then
 				Result := locale.format_string (locale.translate("Extracting $1 of class $2..."), [a_command_name, a_object_name])
 			else
-				Result := locale.format_string (locale.translate("Extracting $1 of feature $2..."), [a_command_name, a_object_name])
+				Result := locale.format_string (locale.translate("Extracting $1 of feature `$2'..."), [a_command_name, a_object_name])
 			end
 		end
 

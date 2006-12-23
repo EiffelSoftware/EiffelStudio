@@ -345,8 +345,6 @@ feature -- Resizing
 			-- Create a copy of Current with a count of `n'.
 		require
 			valid_new_count: n > count
-		local
-			i, nb: INTEGER
 		do
 			create Result.make (n)
 			Result.copy_data (Current, 0, 0, count)

@@ -755,12 +755,6 @@ feature{NONE} -- Implementation
 			update_ui
 		end
 
-	cancel_delayed_update is
-			-- Cancel delayed update.
-		do
-			delayed_timeout.cancel_request
-		end
-
 	remove_detailed_result (a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Remove detailed result stored in `a_archive_node'.
 		require

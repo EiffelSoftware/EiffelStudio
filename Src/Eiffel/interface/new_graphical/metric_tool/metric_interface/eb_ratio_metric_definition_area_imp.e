@@ -26,58 +26,76 @@ feature {NONE}-- Initialization
 			Precursor {EV_VERTICAL_BOX}
 			
 				-- Create all widgets.
-			create definition_frame
+			create definition_area
+			create numerator_frame
 			create l_ev_vertical_box_1
+			create l_ev_horizontal_box_1
+			create numerator_coefficient_lbl
+			create numerator_coefficient_txt
 			create numerator_area
 			create numerator_lbl
 			create l_ev_frame_1
-			create l_ev_horizontal_box_1
+			create l_ev_horizontal_box_2
 			create numerator_text
 			create numerator_btn
 			create l_ev_cell_1
 			create numerator_target_pixmap
 			create numerator_empty_area
+			create denominator_frame
+			create l_ev_vertical_box_2
+			create l_ev_horizontal_box_3
+			create denominator_coefficient_lbl
+			create denominator_coefficient_txt
 			create denominator_area
 			create denominator_lbl
 			create l_ev_frame_2
-			create l_ev_horizontal_box_2
+			create l_ev_horizontal_box_4
 			create denominator_text
 			create denominator_btn
 			create l_ev_cell_2
 			create denominator_target_pixmap
 			create denominator_empty_area
 			create expression_area
-			create l_ev_horizontal_box_3
+			create l_ev_horizontal_box_5
 			create expression_lbl
 			create expression_lbl_empty_area
 			create expression_text
 			create ratio_definition_empty_area
 			
 				-- Build widget structure.
-			extend (definition_frame)
-			definition_frame.extend (l_ev_vertical_box_1)
+			extend (definition_area)
+			definition_area.extend (numerator_frame)
+			numerator_frame.extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (numerator_coefficient_lbl)
+			l_ev_horizontal_box_1.extend (numerator_coefficient_txt)
 			l_ev_vertical_box_1.extend (numerator_area)
 			numerator_area.extend (numerator_lbl)
 			numerator_area.extend (l_ev_frame_1)
-			l_ev_frame_1.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (numerator_text)
-			l_ev_horizontal_box_1.extend (numerator_btn)
+			l_ev_frame_1.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (numerator_text)
+			l_ev_horizontal_box_2.extend (numerator_btn)
 			numerator_area.extend (l_ev_cell_1)
 			numerator_area.extend (numerator_target_pixmap)
 			numerator_area.extend (numerator_empty_area)
-			l_ev_vertical_box_1.extend (denominator_area)
+			definition_area.extend (denominator_frame)
+			denominator_frame.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_2.extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (denominator_coefficient_lbl)
+			l_ev_horizontal_box_3.extend (denominator_coefficient_txt)
+			l_ev_vertical_box_2.extend (denominator_area)
 			denominator_area.extend (denominator_lbl)
 			denominator_area.extend (l_ev_frame_2)
-			l_ev_frame_2.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (denominator_text)
-			l_ev_horizontal_box_2.extend (denominator_btn)
+			l_ev_frame_2.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (denominator_text)
+			l_ev_horizontal_box_4.extend (denominator_btn)
 			denominator_area.extend (l_ev_cell_2)
 			denominator_area.extend (denominator_target_pixmap)
 			denominator_area.extend (denominator_empty_area)
 			extend (expression_area)
-			expression_area.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (expression_lbl)
-			l_ev_horizontal_box_3.extend (expression_lbl_empty_area)
+			expression_area.extend (l_ev_horizontal_box_5)
+			l_ev_horizontal_box_5.extend (expression_lbl)
+			l_ev_horizontal_box_5.extend (expression_lbl_empty_area)
 			expression_area.extend (expression_text)
 			extend (ratio_definition_empty_area)
 			
@@ -94,51 +112,63 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
+			definition_area.set_padding (10)
 			l_ev_vertical_box_1.set_padding (10)
 			l_ev_vertical_box_1.set_border_width (5)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (numerator_area)
-			l_ev_vertical_box_1.disable_item_expand (denominator_area)
+			l_ev_horizontal_box_1.disable_item_expand (numerator_coefficient_lbl)
+			l_ev_horizontal_box_1.disable_item_expand (numerator_coefficient_txt)
+			numerator_coefficient_lbl.set_minimum_width (100)
+			numerator_coefficient_lbl.align_text_left
+			numerator_coefficient_txt.set_minimum_width (50)
 			numerator_area.set_padding (3)
 			numerator_area.disable_item_expand (numerator_lbl)
 			numerator_area.disable_item_expand (l_ev_frame_1)
 			numerator_area.disable_item_expand (l_ev_cell_1)
 			numerator_area.disable_item_expand (numerator_target_pixmap)
-			numerator_lbl.set_text ("Numerator Metric:")
-			numerator_lbl.set_minimum_width (125)
+			numerator_lbl.set_minimum_width (96)
 			numerator_lbl.align_text_left
 			l_ev_frame_1.set_style (1)
-			l_ev_horizontal_box_1.disable_item_expand (numerator_text)
-			l_ev_horizontal_box_1.disable_item_expand (numerator_btn)
+			l_ev_horizontal_box_2.disable_item_expand (numerator_text)
+			l_ev_horizontal_box_2.disable_item_expand (numerator_btn)
 			numerator_text.set_minimum_width (150)
 			l_ev_cell_1.set_minimum_width (5)
 			numerator_target_pixmap.set_minimum_width (16)
 			numerator_target_pixmap.set_minimum_height (16)
+			l_ev_vertical_box_2.set_padding (10)
+			l_ev_vertical_box_2.set_border_width (5)
+			l_ev_vertical_box_2.disable_item_expand (denominator_area)
+			l_ev_horizontal_box_3.disable_item_expand (denominator_coefficient_lbl)
+			l_ev_horizontal_box_3.disable_item_expand (denominator_coefficient_txt)
+			denominator_coefficient_lbl.set_minimum_width (100)
+			denominator_coefficient_lbl.align_text_left
+			denominator_coefficient_txt.set_minimum_width (50)
 			denominator_area.set_padding (3)
 			denominator_area.disable_item_expand (denominator_lbl)
 			denominator_area.disable_item_expand (l_ev_frame_2)
 			denominator_area.disable_item_expand (l_ev_cell_2)
 			denominator_area.disable_item_expand (denominator_target_pixmap)
-			denominator_lbl.set_text ("Denominator Metric:")
-			denominator_lbl.set_minimum_width (125)
+			denominator_lbl.set_minimum_width (96)
 			denominator_lbl.align_text_left
 			l_ev_frame_2.set_style (1)
-			l_ev_horizontal_box_2.disable_item_expand (denominator_text)
-			l_ev_horizontal_box_2.disable_item_expand (denominator_btn)
+			l_ev_horizontal_box_4.disable_item_expand (denominator_text)
+			l_ev_horizontal_box_4.disable_item_expand (denominator_btn)
 			denominator_text.set_minimum_width (150)
 			l_ev_cell_2.set_minimum_width (5)
 			denominator_target_pixmap.set_minimum_width (16)
 			denominator_target_pixmap.set_minimum_height (16)
 			expression_area.set_padding (3)
-			expression_area.disable_item_expand (l_ev_horizontal_box_3)
+			expression_area.disable_item_expand (l_ev_horizontal_box_5)
 			expression_area.disable_item_expand (expression_text)
-			l_ev_horizontal_box_3.disable_item_expand (expression_lbl)
+			l_ev_horizontal_box_5.disable_item_expand (expression_lbl)
 			expression_lbl.set_text ("Expression:")
 			expression_lbl.align_text_left
 			expression_text.set_minimum_width (35)
 			expression_text.set_minimum_height (35)
 			expression_text.disable_edit
 			set_padding (10)
-			disable_item_expand (definition_frame)
+			disable_item_expand (definition_area)
 			disable_item_expand (expression_area)
 			
 			set_all_attributes_using_constants
@@ -160,18 +190,20 @@ feature -- Access
 	numerator_btn, denominator_btn: EV_BUTTON
 	numerator_target_pixmap,
 	denominator_target_pixmap: EV_PIXMAP
-	numerator_area, denominator_area: EV_HORIZONTAL_BOX
+	definition_area, numerator_area, denominator_area: EV_HORIZONTAL_BOX
 	expression_area: EV_VERTICAL_BOX
-	numerator_lbl,
-	denominator_lbl, expression_lbl: EV_LABEL
-	numerator_text, denominator_text: EV_TEXT_FIELD
-	definition_frame: EV_FRAME
+	numerator_coefficient_lbl,
+	numerator_lbl, denominator_coefficient_lbl, denominator_lbl, expression_lbl: EV_LABEL
+	numerator_coefficient_txt,
+	numerator_text, denominator_coefficient_txt, denominator_text: EV_TEXT_FIELD
+	numerator_frame, denominator_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
+	l_ev_horizontal_box_4, l_ev_horizontal_box_5: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2: EV_VERTICAL_BOX
 	l_ev_frame_1,
 	l_ev_frame_2: EV_FRAME
 

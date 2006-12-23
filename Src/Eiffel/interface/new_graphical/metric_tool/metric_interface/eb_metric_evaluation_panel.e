@@ -511,9 +511,9 @@ feature -- Actions
 				metric_definition_area.show
 				metric_selection_area.hide
 			else
-				metric_selector.try_to_selected_last_metric
 				metric_definition_area.hide
 				metric_selection_area.show
+				metric_selector.try_to_selected_last_metric
 			end
 		end
 

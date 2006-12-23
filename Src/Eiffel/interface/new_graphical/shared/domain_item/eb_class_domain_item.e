@@ -26,9 +26,10 @@ feature -- Status report
 			-- Is current a class item?
 
 	is_valid: BOOLEAN is
-			-- Does current represent a valid domain item?
+			-- Does current represent a valid domain item?			
 		do
-			Result := class_of_id (id) /= Void
+			update
+			Result := conf_class /= Void
 		end
 
 feature -- Access
@@ -41,30 +42,18 @@ feature -- Access
 
 	string_representation: STRING is
 			-- Text of current item
-		local
-			l_class_name: STRING
 		do
-			if class_of_id (id) /= Void then
-				Result := ql_class.name
-			else
-				l_class_name := last_class_name
-				if l_class_name /= Void and then not l_class_name.is_empty then
-					Result := l_class_name.twin
-				else
-					Result := Precursor
-				end
-			end
+			update
+			Result := string_representation_internal
 		end
 
 	ql_class: QL_CLASS is
 			-- QL_CLASS object representing current item
 		require
 			valid: is_valid
-		local
-			l_conf_class: CONF_CLASS
 		do
-			l_conf_class := class_of_id (id)
-			Result := query_class_item_from_conf_class (l_conf_class)
+			update
+			Result := query_class_item
 		end
 
 	query_language_item: QL_ITEM is
@@ -81,6 +70,37 @@ feature -- Access
 		ensure then
 			result_attached: Result /= Void
 		end
+
+feature{NONE} -- Implemenation
+
+	update is
+			-- Update status of current item.			
+		do
+			if not is_up_to_date then
+				conf_class := class_of_id (id)
+				if conf_class /= Void then
+					query_class_item := query_class_item_from_conf_class (conf_class)
+					string_representation_internal := query_class_item.name
+				else
+					if last_class_name /= Void and then not last_class_name.is_empty then
+						string_representation_internal := last_class_name.twin
+					else
+						string_representation_internal := interface_names.l_invalid_item
+					end
+					query_class_item := Void
+				end
+				update_last_compilation_count
+			end
+		end
+
+	conf_class: CONF_CLASS
+			-- Class represented by `id'
+
+	query_class_item: QL_CLASS
+			-- Query language class item represented by `id'
+
+invariant
+	class_exists: is_valid implies conf_class /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

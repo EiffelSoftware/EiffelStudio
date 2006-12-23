@@ -112,6 +112,8 @@ feature{NONE} -- Process
 			l_name: STRING
 			l_type_str: STRING
 			l_uuid: UUID
+			l_filter: STRING
+			l_filter_value: BOOLEAN
 		do
 			l_name := current_attributes.item (at_name)
 			if not has_error then
@@ -168,6 +170,19 @@ feature{NONE} -- Process
 				end
 			end
 			if not has_error then
+				l_filter := current_attributes.item (at_filter)
+				if l_filter /= Void then
+					if l_filter.is_boolean then
+						l_filter_value := l_filter.to_boolean
+					else
+						set_parse_error_message (
+							metric_names.err_filter_invalid (l_filter),
+							metric_names.archive_location (l_name)
+						)
+					end
+				end
+			end
+			if not has_error then
 				l_uuid_str := current_attributes.item (at_uuid)
 				check_uuid_vadility (
 					l_uuid_str,
@@ -184,7 +199,8 @@ feature{NONE} -- Process
 					create {DATE_TIME}.make_from_string_default (l_time),
 					l_value.to_double,
 					create {EB_METRIC_DOMAIN}.make,
-					l_uuid_str)
+					l_uuid_str,
+					l_filter_value)
 				create current_domain.make
 			end
 		end
@@ -305,12 +321,13 @@ feature{NONE} -- Implementation
 				-- * time
 				-- * uuid
 				-- * value
-			create l_attr.make (2)
+			create l_attr.make (6)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_type, n_type)
 			l_attr.force (at_time, n_time)
 			l_attr.force (at_value, n_value)
 			l_attr.force (at_uuid, n_uuid)
+			l_attr.force (at_filter, n_filter)
 			Result.force (l_attr, t_metric)
 
 				-- domain_item

@@ -149,14 +149,14 @@ feature -- Basic operations
 			development_window.window_manager.display_message ("")
 		end
 
-	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN; a_time: DATE_TIME; a_from_history: BOOLEAN) is
+	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN; a_time: DATE_TIME; a_from_history: BOOLEAN; a_filtered: BOOLEAN) is
 			-- Register metric result for display.
 		require
 			a_metric_attached: a_metric /= Void
 			a_input_attached: a_input /= Void
 			a_time_attached: a_time /= Void
 		do
-			detail_result_panel.on_display_metric_value (a_metric, a_value, a_input, a_result, a_time, a_from_history)
+			detail_result_panel.on_display_metric_value (a_metric, a_value, a_input, a_result, a_time, a_from_history, a_filtered)
 		end
 
 	register_archive_result_for_display (ref_archive, cur_archive: LIST [EB_METRIC_ARCHIVE_NODE]) is

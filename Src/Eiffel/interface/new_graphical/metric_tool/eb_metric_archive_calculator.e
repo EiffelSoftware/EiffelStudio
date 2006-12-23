@@ -78,9 +78,11 @@ feature -- Setting
 
 feature -- Calculation
 
-	calculate_archive (a_task: LINEAR [TUPLE [a_metric: EB_METRIC; a_input_domain: EB_METRIC_DOMAIN; a_keep_result: BOOLEAN]]) is
+	calculate_archive (a_task: LINEAR [TUPLE [a_metric: EB_METRIC; a_input_domain: EB_METRIC_DOMAIN; a_keep_result: BOOLEAN; a_filter_result: BOOLEAN]]) is
 			-- Calculate metric archive in `a_task' and store `calculated_archives'.
 			-- `a_task' is a list of metrics with there input domain.
+			-- `a_keep_result' indicates if detailed result should be kept.
+			-- `a_filter_result' indicates if result should be filtered out if they are invisible.
 		require
 			a_task_attached: a_task /= Void
 		local
@@ -119,11 +121,13 @@ feature -- Calculation
 					else
 						l_metric.disable_fill_domain
 					end
-						-- Fixme: For the moment, only calculate with filter disabled.
-						-- Add the option to calculate with filter enabled or disabled in the future. (Jason)
-					l_metric.disable_filter_result
+					if a_task.item.a_filter_result then
+						l_metric.enable_filter_result
+					else
+						l_metric.disable_filter_result
+					end
 					l_value := l_metric.value (l_input_domain).first.value
-					create l_archive_node.make (l_metric.name, metric_type_id (l_metric), l_time, l_value, l_input_domain, uuid_gen.generate_uuid.out)
+					create l_archive_node.make (l_metric.name, metric_type_id (l_metric), l_time, l_value, l_input_domain, uuid_gen.generate_uuid.out, a_task.item.a_filter_result)
 					l_archives.extend (l_archive_node)
 					l_archive_calculated_actions.call ([l_archive_node])
 					if l_metric.last_result_domain /= Void then

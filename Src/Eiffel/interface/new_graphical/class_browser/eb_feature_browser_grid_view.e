@@ -40,9 +40,9 @@ feature -- Status report
 	should_tooltip_be_displayed: BOOLEAN is
 			-- Should tooltip display be vetoed?
 		do
-			Result := show_tooltip_checkbox.is_selected
+			Result := show_tooltip_button.is_selected
 		ensure then
-			good_result: Result = show_tooltip_checkbox.is_selected
+			good_result: Result = show_tooltip_button.is_selected
 		end
 
 	is_last_sorted_column_valid (a_column_index: INTEGER): BOOLEAN is
@@ -210,7 +210,7 @@ feature -- Access
 				create control_tool_bar
 				create l_tool_bar
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
-				l_tool_bar.extend (show_tooltip_checkbox)
+				l_tool_bar.extend (show_tooltip_button)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)
@@ -295,9 +295,6 @@ feature{NONE} -- Initialization
 				grid.drop_actions.fill (drop_actions)
 			end
 			enable_ctrl_right_click_to_open_new_window
-			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
-			on_show_tooltip_changed_from_outside_agent := agent on_show_tooltip_changed_from_outside
-			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
 			enable_editor_token_pnd
 		end
 
@@ -577,9 +574,6 @@ feature -- Recyclable
 			-- Recyclable
 		do
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
-			if on_show_tooltip_changed_from_outside_agent /= Void then
-				preferences.class_browser_data.show_tooltip_preference.change_actions.prune_all (on_show_tooltip_changed_from_outside_agent)
-			end
 		end
 
 feature{NONE} -- Implementation

@@ -106,8 +106,11 @@ feature -- Access
 	property_area: EB_CALLER_PROPERTY_AREA
 			-- Property area
 
-	grid: ES_GRID
-			-- Grid which should retrieve focus after Current is hidden
+--	grid: ES_GRID
+--			-- Grid which should retrieve focus after Current is hidden
+
+	grid_item: EV_GRID_ITEM
+			-- Item associated with Current
 
 feature -- Status setting
 
@@ -115,25 +118,37 @@ feature -- Status setting
 			-- Request that `Current' not be displayed even when its parent is.
 			-- If successful, make `is_show_requested' `False'.
 		local
-			l_grid: like grid
+			l_grid: EV_GRID
 		do
 			Precursor
-			l_grid := grid
-			if l_grid /= Void and then not l_grid.is_destroyed and then l_grid.is_displayed and then l_grid.is_sensitive then
-				l_grid.set_focus
+			if grid_item /= Void and then grid_item.parent /= Void then
+				l_grid := grid_item.parent
+				if l_grid /= Void and then not l_grid.is_destroyed and then l_grid.is_displayed and then l_grid.is_sensitive then
+					l_grid.set_focus
+				end
+				window_manager.last_focused_development_window.window.set_focus
+				hide_actions.call ([])
 			end
-			window_manager.last_focused_development_window.window.set_focus
-			hide_actions.call ([])
 		end
 
-	set_grid (a_grid: like grid) is
-			-- Set `grid' with `a_grid'.
+--	set_grid (a_grid: like grid) is
+--			-- Set `grid' with `a_grid'.
+--		require
+--			a_grid_attached: a_grid /= Void
+--		do
+--			grid := a_grid
+--		ensure
+--			grid_set: grid = a_grid
+--		end
+
+	set_grid_item (a_item: like grid_item) is
+			-- Set `item' with `a_item'.
 		require
-			a_grid_attached: a_grid /= Void
+			a_item_attached: a_item /= Void
 		do
-			grid := a_grid
+			grid_item := a_item
 		ensure
-			grid_set: grid = a_grid
+			grid_item_set: grid_item = a_item
 		end
 
 indexing

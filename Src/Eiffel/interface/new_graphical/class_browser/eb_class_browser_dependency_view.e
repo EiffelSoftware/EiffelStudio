@@ -27,8 +27,6 @@ inherit
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
 
---	SHARED_WORKBENCH
-
 	EV_SHARED_APPLICATION
 
 	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
@@ -57,9 +55,10 @@ feature -- Access
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
 				l_tool_bar.extend (show_self_dependency_button)
 				l_tool_bar.extend (categorize_folder_button)
+				l_tool_bar.extend (normal_referenced_button)
 				l_tool_bar.extend (syntactical_button)
 				l_tool_bar.extend (inheritance_button)
-				l_tool_bar.extend (show_tooltip_checkbox)
+				l_tool_bar.extend (show_tooltip_button)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)
@@ -80,28 +79,50 @@ feature -- Access
 	post_row_bind_action_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [EV_GRID_ROW]], INTEGER]
 			-- Table of action to be performed after a row whose level index is specified by key of the table has been binded into `grid'.
 
-	syntactical_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+	syntactical_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if syntactical supplier/clients are displayed
 		do
 			if syntactical_button_internal = Void then
-				create syntactical_button_internal
-				syntactical_button_internal.set_pixmap (pixmaps.icon_pixmaps.class_overriden_normal_icon)
-				syntactical_button_internal.set_tooltip (interface_names.h_show_syntactical_classes)
+				create syntactical_button_internal.make (
+					pixmaps.icon_pixmaps.class_overriden_normal_icon,
+					interface_names.h_show_syntactical_classes,
+					preferences.class_browser_data.syntactical_class_preference,
+					agent on_retrieve_data
+				)
 			end
 			Result := syntactical_button_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	inheritance_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+	inheritance_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if inheritance are displayed
 		do
 			if inheritance_button_internal = Void then
-				create inheritance_button_internal
-				inheritance_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_inheritance_link_icon)
-				inheritance_button_internal.select_actions.extend (agent on_show_inheritance_class_changed)
+				create inheritance_button_internal.make (
+					pixmaps.icon_pixmaps.diagram_inheritance_link_icon,
+					interface_names.h_show_ancestor_classes,
+					preferences.class_browser_data.inheritance_class_preference,
+					agent on_retrieve_data
+				)
 			end
 			Result := inheritance_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	normal_referenced_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+			-- Toggle button to indicate if normal referenced supplier/clients are displayed
+		do
+			if normal_referenced_button_internal = Void then
+				create normal_referenced_button_internal.make (
+					pixmaps.icon_pixmaps.diagram_supplier_link_icon,
+					interface_names.h_show_normal_referenced_classes,
+					preferences.class_browser_data.normal_referenced_class_preference,
+					agent on_retrieve_data
+				)
+			end
+			Result := normal_referenced_button_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -111,7 +132,7 @@ feature -- Status report
 	should_tooltip_be_displayed: BOOLEAN is
 			-- Should tooltip display be vetoed?
 		do
-			Result := show_tooltip_checkbox.is_selected
+			Result := show_tooltip_button.is_selected
 		end
 
 	has_grid_been_binded_for_current_data: BOOLEAN
@@ -292,30 +313,6 @@ feature -- Actions
 			preferences.class_browser_data.dependency_view_sorting_order_preference.set_value (string_representation_of_sorted_columns)
 		end
 
-	on_show_self_dependency_changed is
-			-- Action to be performed when selection status of `show_self_dependency_button' changes
-		do
-			if data /= Void then
-				bind_grid
-			end
-			preferences.class_browser_data.show_self_dependency_preference.set_value (show_self_dependency_button.is_selected)
-		end
-
-	on_show_self_dependency_changed_from_outside is
-			-- Action to be performed when selection status of `show_self_dependency_button' changes from outside
-		local
-			l_displayed: BOOLEAN
-		do
-			l_displayed := preferences.class_browser_data.is_self_dependency_shown
-			if l_displayed /= show_self_dependency_button.is_selected then
-				if l_displayed then
-					show_self_dependency_button.enable_select
-				else
-					show_self_dependency_button.disable_select
-				end
-			end
-		end
-
 	on_categorized_folder_changed is
 			-- Action to be performed when selection status of `categorized_folder_button' changes
 		do
@@ -328,22 +325,6 @@ feature -- Actions
 				disable_force_multi_column_sorting
 				enable_auto_sort_order_change
 				bind_grid
-			end
-			preferences.class_browser_data.categorized_folder_preference.set_value (categorize_folder_button.is_selected)
-		end
-
-	on_categorized_folder_changed_from_outside is
-			-- Action to be performed when selection status of `categorized_folder_button' changes from outside
-		local
-			l_selected: BOOLEAN
-		do
-			l_selected := preferences.class_browser_data.is_class_categorized_in_folder
-			if l_selected /= categorize_folder_button.is_selected then
-				if l_selected then
-					categorize_folder_button.enable_select
-				else
-					categorize_folder_button.disable_select
-				end
 			end
 		end
 
@@ -375,53 +356,20 @@ feature -- Actions
 			end
 		end
 
-	on_show_syntactical_class_changed is
-			-- Action to be performed when selection status of `syntactical_button' changes
+	on_retrieve_data is
+			-- Action to be performed to retrieve data
 		do
 			is_up_to_date := False
 			if data /= Void then
 				retrieve_data_actions.call ([])
 			end
-			preferences.class_browser_data.syntactical_class_preference.set_value (syntactical_button.is_selected)
 		end
 
-	on_show_syntactical_class_changed_from_outside is
-			-- Action to be performed when selection status of `syntactical_button' changes from outside
-		local
-			l_displayed: BOOLEAN
+	on_show_self_dependency_changed is
+			-- Action to be performed when selection status of `show_self_dependency_button' changes
 		do
-			l_displayed := preferences.class_browser_data.is_syntactical_class_shown
-			if l_displayed /= syntactical_button.is_selected then
-				if l_displayed then
-					syntactical_button.enable_select
-				else
-					syntactical_button.disable_select
-				end
-			end
-		end
-
-	on_show_inheritance_class_changed is
-			-- Action to be performed when selection status of `inheritance_button' changes
-		do
-			is_up_to_date := False
 			if data /= Void then
-				retrieve_data_actions.call ([])
-			end
-			preferences.class_browser_data.inheritance_class_preference.set_value (inheritance_button.is_selected)
-		end
-
-	on_show_inheritance_class_changed_from_outside is
-			-- Action to be performed when selection status of `inheritance_button' changes from outside
-		local
-			l_displayed: BOOLEAN
-		do
-			l_displayed := preferences.class_browser_data.is_inheritance_class_shown
-			if l_displayed /= inheritance_button.is_selected then
-				if l_displayed then
-					inheritance_button.enable_select
-				else
-					inheritance_button.disable_select
-				end
+				bind_grid
 			end
 		end
 
@@ -1139,7 +1087,7 @@ feature{NONE} -- Implementation
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	show_self_dependency_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+	show_self_dependency_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to turn on/off item path display
 			-- For examples, if we are displaying suppliers for a given group "demo",
 			-- actually we are displaying supplier classes of every class in that group,
@@ -1148,27 +1096,22 @@ feature{NONE} -- Implementation
 			-- In this case, we can choose not to show self dependency.
 		do
 			if show_self_dependency_button_internal = Void then
-				create show_self_dependency_button_internal
-				show_self_dependency_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
-				show_self_dependency_button_internal.set_tooltip (interface_names.h_show_dependency_on_self)
-				if preferences.class_browser_data.is_item_path_shown then
-					show_self_dependency_button_internal.enable_select
-				else
-					show_self_dependency_button_internal.disable_select
-				end
+				create show_self_dependency_button_internal.make (
+					pixmaps.icon_pixmaps.metric_unit_group_icon,
+					interface_names.h_show_dependency_on_self,
+					preferences.class_browser_data.show_self_dependency_preference,
+					agent on_show_self_dependency_changed
+				)
 			end
 			Result := show_self_dependency_button_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	on_show_self_dependency_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent for `on_show_self_dependency_changed_from_outside'					
-
 	show_self_dependency_button_internal: like show_self_dependency_button
 			-- Implementation of `show_self_dependency_button'
 
-	categorize_folder_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+	categorize_folder_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to decide if classes in a given group should be displayed in physical folders where they locates.
 			-- For example, if this button is not selected, the following will be displayed:
 			-- + base
@@ -1183,14 +1126,12 @@ feature{NONE} -- Implementation
 			--		 +- ARRAY
 		do
 			if categorize_folder_button_internal = Void then
-				create categorize_folder_button_internal
-				categorize_folder_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_fill_cluster_icon)
-				categorize_folder_button_internal.set_tooltip (interface_names.h_categorize_folder)
-				if preferences.class_browser_data.is_class_categorized_in_folder then
-					categorize_folder_button_internal.enable_select
-				else
-					categorize_folder_button_internal.disable_select
-				end
+				create categorize_folder_button_internal.make (
+					pixmaps.icon_pixmaps.diagram_fill_cluster_icon,
+					interface_names.h_categorize_folder,
+					preferences.class_browser_data.categorized_folder_preference,
+					agent on_categorized_folder_changed
+				)
 			end
 			Result := categorize_folder_button_internal
 		ensure
@@ -1199,9 +1140,6 @@ feature{NONE} -- Implementation
 
 	categorize_folder_button_internal: like categorize_folder_button
 			-- Implementation of `categorize_folder_button'
-
-	on_categorized_folder_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent for `on_categorized_folder_changed_from_outside'			
 
 	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
 			-- Ensure that `a_item' is visible.
@@ -1621,22 +1559,12 @@ feature{NONE} -- Implementation
 	recycle_agents is
 			-- Recycle agents
 		do
+			categorize_folder_button.recycle
+			show_self_dependency_button.recycle
+			inheritance_button.recycle
+			normal_referenced_button.recycle
+			syntactical_button.recycle
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
-			if on_show_self_dependency_changed_from_outside_agent /= Void then
-				preferences.class_browser_data.show_self_dependency_preference.change_actions.prune_all (on_show_self_dependency_changed_from_outside_agent)
-			end
-			if on_show_tooltip_changed_from_outside_agent /= Void then
-				preferences.class_browser_data.show_tooltip_preference.change_actions.prune_all (on_show_tooltip_changed_from_outside_agent)
-			end
-			if on_categorized_folder_changed_from_outside_agent /= Void then
-				preferences.class_browser_data.categorized_folder_preference.change_actions.prune_all (on_categorized_folder_changed_from_outside_agent)
-			end
-			if on_show_syntactical_class_changed_from_outside_agent /= Void then
-				preferences.class_browser_data.syntactical_class_preference.change_actions.prune_all (on_show_syntactical_class_changed_from_outside_agent)
-			end
-			if on_show_inheritance_class_changed_from_outside_agent /= Void then
-				preferences.class_browser_data.inheritance_class_preference.change_actions.prune_all (on_show_inheritance_class_changed_from_outside_agent)
-			end
 		end
 
 	referenced_class_column_name (a_relation_name: STRING_GENERAL; a_name_of_starting_element: STRING_GENERAL): STRING_GENERAL is
@@ -1682,14 +1610,8 @@ feature{NONE} -- Implementation
 	syntactical_button_internal: like syntactical_button
 			-- Implementation of `syntactical_button'
 
-	on_show_syntactical_class_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent for `on_show_syntactical_class_changed_from_outside'
-
 	inheritance_button_internal: like inheritance_button
 			-- Implementation of `inheritance_button'
-
-	on_show_inheritance_class_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent for `on_show_inheritance_class_changed_from_outside'
 
 	is_class_inheritance_related (a_class, b_class: QL_CLASS): BOOLEAN is
 			-- Are `a_class' and `b_class' related by inheritance relationship?
@@ -1713,6 +1635,9 @@ feature{NONE} -- Implementation
 			l_class_domain.compare_objects
 			Result := l_class_domain.has (a_class)
 		end
+
+	normal_referenced_button_internal: like normal_referenced_button
+			-- Implementation of `normal_referenced_button'
 
 feature{NONE} -- Initialization
 
@@ -1741,26 +1666,6 @@ feature{NONE} -- Initialization
 			enable_editor_token_pnd
 			set_select_all_action (agent do  end)
 			enable_tree_node_highlight
-
-			show_self_dependency_button.select_actions.extend (agent on_show_self_dependency_changed)
-			on_show_self_dependency_changed_from_outside_agent := agent on_show_self_dependency_changed_from_outside
-			preferences.class_browser_data.show_self_dependency_preference.change_actions.extend (on_show_self_dependency_changed_from_outside_agent)
-
-			show_tooltip_checkbox.select_actions.extend (agent on_show_tooltip_changed)
-			on_show_tooltip_changed_from_outside_agent := agent on_show_tooltip_changed_from_outside
-			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
-
-		 	categorize_folder_button.select_actions.extend (agent on_categorized_folder_changed)
-			on_categorized_folder_changed_from_outside_agent := agent on_categorized_folder_changed_from_outside
-			preferences.class_browser_data.show_tooltip_preference.change_actions.extend (on_show_tooltip_changed_from_outside_agent)
-
-			syntactical_button.select_actions.extend (agent on_show_syntactical_class_changed)
-			on_show_syntactical_class_changed_from_outside_agent := agent on_show_syntactical_class_changed_from_outside
-			preferences.class_browser_data.syntactical_class_preference.change_actions.extend (on_show_syntactical_class_changed_from_outside_agent)
-
-			inheritance_button.select_actions.extend (agent on_show_inheritance_class_changed)
-			on_show_inheritance_class_changed_from_outside_agent := agent on_show_inheritance_class_changed_from_outside
-			preferences.class_browser_data.inheritance_class_preference.change_actions.extend (on_show_inheritance_class_changed_from_outside_agent)
 
 			create_index_info
 		end

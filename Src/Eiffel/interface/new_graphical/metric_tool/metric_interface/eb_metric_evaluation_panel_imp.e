@@ -36,6 +36,7 @@ feature {NONE}-- Initialization
 			create filter_result_btn
 			create run_metric_btn
 			create stop_metric_btn
+			create detailed_result_btn
 			create l_ev_tool_bar_separator_2
 			create value_area
 			create metric_value_lbl
@@ -83,6 +84,7 @@ feature {NONE}-- Initialization
 			control_toolbar.extend (filter_result_btn)
 			control_toolbar.extend (run_metric_btn)
 			control_toolbar.extend (stop_metric_btn)
+			control_toolbar.extend (detailed_result_btn)
 			control_toolbar.extend (l_ev_tool_bar_separator_2)
 			toolbar_area.extend (value_area)
 			value_area.extend (metric_value_lbl)
@@ -208,15 +210,16 @@ feature -- Access
 	toolbar_empty_area, grid_wrapper_empty_area, metric_definition_empty_area: EV_CELL
 	quick_metric_toolbar,
 	control_toolbar, percentage_tool_bar: EV_TOOL_BAR
-	quick_metric_btn, filter_result_btn, show_percent_btn,
-	auto_go_to_result_btn: EV_TOOL_BAR_TOGGLE_BUTTON
-	run_metric_btn, stop_metric_btn, send_to_history_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
-	toolbar_area,
-	value_area, main_area, grid_wrapper, quick_metric_empty_area, unit_area: EV_HORIZONTAL_BOX
-	metric_source_domain_area,
-	metric_domain_selector_area, metric_selection_area, metric_definition_area, criterion_area: EV_VERTICAL_BOX
-	metric_value_lbl,
-	choose_input_domain_lbl, choose_metric_lbl, unit_lbl: EV_LABEL
+	quick_metric_btn, filter_result_btn, detailed_result_btn,
+	show_percent_btn, auto_go_to_result_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	run_metric_btn, stop_metric_btn, send_to_history_btn,
+	go_to_definition_btn: EV_TOOL_BAR_BUTTON
+	toolbar_area, value_area, main_area, grid_wrapper, quick_metric_empty_area,
+	unit_area: EV_HORIZONTAL_BOX
+	metric_source_domain_area, metric_domain_selector_area, metric_selection_area,
+	metric_definition_area, criterion_area: EV_VERTICAL_BOX
+	metric_value_lbl, choose_input_domain_lbl,
+	choose_metric_lbl, unit_lbl: EV_LABEL
 	metric_value_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation

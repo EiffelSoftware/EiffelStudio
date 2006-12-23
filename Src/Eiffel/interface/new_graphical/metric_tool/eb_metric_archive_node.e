@@ -21,7 +21,7 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: like input_domain; a_uuid: STRING) is
+	make (a_metric_name: STRING; a_metric_type: INTEGER; a_time: DATE_TIME; a_value: DOUBLE; a_input: like input_domain; a_uuid: STRING; a_filtered: BOOLEAN) is
 			-- Initialize `metric_name' with `a_metric_name', `metric_type' with `a_metric_type', `calculated_time' with `a_time',
 			-- `value' with `a_value', `input_domain' with `a_input' and `uuid' with `a_uuid'.
 		require
@@ -40,6 +40,7 @@ feature{NONE} -- Initialization
 			set_uuid (create {UUID}.make_from_string (a_uuid))
 			set_is_up_to_date (True)
 			set_is_value_valid (True)
+			set_is_result_filtered (a_filtered)
 		end
 
 feature -- Access
@@ -150,6 +151,9 @@ feature -- Status report
 			-- Is `value' valid?
 			-- Default: True
 
+	is_result_filtered: BOOLEAN
+			-- Should result be filtered if they are not visible?
+
 feature -- Setting
 
 	set_metric_name (a_name: STRING) is
@@ -246,6 +250,14 @@ feature -- Setting
 			is_value_valid := b
 		ensure
 			is_value_valid_set: is_value_valid = b
+		end
+
+	set_is_result_filtered (b: BOOLEAN) is
+			-- Set `is_result_filtered' with `b'.
+		do
+			is_result_filtered := b
+		ensure
+			is_result_filtered_set: is_result_filtered = b
 		end
 
 	merge (a_archive: like Current) is

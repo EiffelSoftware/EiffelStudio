@@ -38,7 +38,8 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Does current represent a valid domain item?
 		do
-			Result := feature_of_id (id) /= Void
+			update
+			Result := e_feature /= Void
 		end
 
 feature -- Access
@@ -51,36 +52,18 @@ feature -- Access
 
 	string_representation: STRING is
 			-- Text of current item
-		local
-			l_feature_name: STRING
-			l_class_name: STRING
 		do
-			if feature_of_id (id) /= Void then
-				Result := ql_feature.name
-			else
-				l_feature_name := last_feature_name
-				if l_feature_name /= Void and then not l_feature_name.is_empty then
-					Result := l_feature_name.twin
-					l_class_name := last_class_name
-					if l_class_name /= Void and then not l_class_name.is_empty then
-						Result.prepend (ti_l_curly + l_class_name.twin + ti_r_curly + ti_dot)
-					end
-				else
-					Result := Precursor
-				end
-			end
+			update
+			Result := string_representation_internal
 		end
 
 	ql_feature: QL_FEATURE is
 			-- QL_FEATURE object representing current item
 		require
 			valid: is_valid
-		local
-			l_e_feature: E_FEATURE
 		do
-			l_e_feature := feature_of_id (id)
-			check l_e_feature /= Void end
-			Result := query_feature_item_from_e_feature (l_e_feature)
+			update
+			Result := ql_feature_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -103,6 +86,34 @@ feature -- Access
 		ensure then
 			result_attached: Result /= Void
 		end
+
+feature{NONE} -- Implemenation
+
+	update is
+			-- Update status of current item.			
+		do
+			if not is_up_to_date then
+				e_feature := feature_of_id (id)
+				if e_feature /= Void then
+					ql_feature_internal := query_feature_item_from_e_feature (e_feature)
+					string_representation_internal := e_feature.name
+				else
+					ql_feature_internal := Void
+					if last_feature_name /= Void and then not last_feature_name.is_empty then
+						string_representation_internal := last_feature_name.twin
+					else
+						string_representation_internal := interface_names.l_invalid_item
+					end
+				end
+				update_last_compilation_count
+			end
+		end
+
+	ql_feature_internal: QL_FEATURE
+			-- Query feature item represented by Current
+
+	e_feature: E_FEATURE;
+			-- E_FEATURE represented by Current
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -429,6 +429,16 @@ feature -- Layout
 			a_layout.set_pixmap_y ((a_item.height - l_pixmap.height) // 2)
 		end
 
+feature -- Domain item dialog
+
+	domain_selector_dialog: EB_METRIC_DOMAIN_PROPERTY_DIALOG is
+			-- Domain selector dialog
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature{NONE} -- Implementation
 
 	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING_GENERAL; a_window: EV_WINDOW) is

@@ -84,6 +84,7 @@ feature{NONE} -- Initialization
 			on_filter_result_change_from_outside_agent := agent on_filter_result_change_from_outside
 			on_auto_go_to_result_change_from_outside_agent := agent on_auto_go_to_result_change_from_outside
 			on_unit_order_change_agent := agent on_unit_order_change
+			on_keep_detailed_result_changed_from_outside_agent := agent on_keep_detailed_result_changed_from_outside
 			install_agents (metric_tool)
 			install_metric_history_agent
 			on_process_gui_agent := agent on_process_gui
@@ -151,6 +152,9 @@ feature {NONE} -- Initialization
 			stop_metric_btn.set_tooltip (metric_names.f_stop)
 			stop_metric_btn.select_actions.extend (agent on_stop_metric_evaluation_button_pressed)
 
+			detailed_result_btn.set_pixmap (pixmaps.icon_pixmaps.metric_run_and_show_details_icon)
+			detailed_result_btn.set_tooltip (metric_names.f_keep_metric_detailed_result)
+			detailed_result_btn.select_actions.extend (agent on_keep_result_change)
 
 			go_to_definition_btn.select_actions.extend (agent on_go_to_definition_button_pressed)
 			go_to_definition_btn.remove_text
@@ -205,6 +209,7 @@ feature {NONE} -- Initialization
 			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.extend (on_filter_result_change_from_outside_agent)
 			preferences.metric_tool_data.automatic_go_to_result_panel_preference.change_actions.extend (on_auto_go_to_result_change_from_outside_agent)
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
+			preferences.metric_tool_data.keep_metric_detailed_result_preference.change_actions.extend (on_keep_detailed_result_changed_from_outside_agent)
 			on_show_percentage_btn_change_from_outside
 			on_filter_result_change_from_outside
 			on_auto_go_to_result_change_from_outside
@@ -240,6 +245,9 @@ feature -- Status report
 
 	is_send_to_history_status_up_to_date: BOOLEAN
 			-- Is status of `send_to_history_btn' up-to-date?
+
+	is_result_filtered_for_last_metric: BOOLEAN
+			-- Is result filtered for last calculated metric?
 
 feature -- Access
 
@@ -330,6 +338,14 @@ feature -- Basic operations
 			is_send_to_history_status_up_to_date_set: is_send_to_history_status_up_to_date = b
 		end
 
+	set_is_result_filtered_for_last_metric (b: BOOLEAN) is
+			-- Set `is_result_filtered_for_last_metric' with `b'.
+		do
+			is_result_filtered_for_last_metric := b
+		ensure
+			is_result_filtered_for_last_metric_set: is_result_filtered_for_last_metric = b
+		end
+
 	force_drop_stone (a_stone: STONE) is
 			-- Force to drop `a_stone' in `domain_selector'.
 		do
@@ -367,6 +383,7 @@ feature -- Actions
 				set_last_calculation_time (create {DATE_TIME}.make_now)
 				metric_manager.on_metric_evaluation_starts (Current)
 				setup_evaluation_environment (True)
+				set_is_result_filtered_for_last_metric (filter_result_btn.is_selected)
 				if filter_result_btn.is_selected then
 					l_metric.enable_filter_result
 				else
@@ -375,7 +392,11 @@ feature -- Actions
 
 					-- Setup metric evaluator.
 				if l_metric.is_basic then
-					l_metric.enable_fill_domain
+					if detailed_result_btn.is_selected then
+						l_metric.enable_fill_domain
+					else
+						l_metric.disable_filter_result
+					end
 						-- Special setting for metric of line unit.
 					if l_metric.is_basic and then l_metric.unit = line_unit then
 						l_metric_basic ?= l_metric
@@ -395,9 +416,9 @@ feature -- Actions
 				l_value_text := metric_value (l_value, show_percent_btn.is_sensitive and then show_percent_btn.is_selected)
 				metric_value_text.set_text (l_value_text)
 				if l_metric.is_fill_domain_enabled then
-					metric_tool.register_metric_result_for_display (l_metric, l_input_domain, l_value, l_metric.last_result_domain, last_calculation_time, False)
+					metric_tool.register_metric_result_for_display (l_metric, l_input_domain, l_value, l_metric.last_result_domain, last_calculation_time, False, is_result_filtered_for_last_metric)
 				else
-					metric_tool.register_metric_result_for_display (l_metric, l_input_domain, l_value, Void, last_calculation_time, False)
+					metric_tool.register_metric_result_for_display (l_metric, l_input_domain, l_value, Void, last_calculation_time, False, is_result_filtered_for_last_metric)
 				end
 			end
 			setup_evaluation_environment (False)
@@ -539,7 +560,7 @@ feature -- Actions
 			end
 		end
 
-	on_filter_result_change is
+	on_keep_result_change is
 			-- Action to be performed when selection status of `filter_result_btn' changes
 		local
 			l_selected: BOOLEAN
@@ -589,8 +610,6 @@ feature -- Actions
 
 	on_send_metric_to_history is
 			-- Action to be performed to send last calculated metric to history
-		local
-
 		do
 			check
 				last_metric /= Void
@@ -598,7 +617,7 @@ feature -- Actions
 				last_calculation_time /= Void
 			end
 			metric_tool.on_send_metric_value_in_history (
-				create {EB_METRIC_ARCHIVE_NODE}.make (last_metric.name, metric_type_id (last_metric), last_calculation_time, last_value, last_input_domain, uuid_gen.generate_uuid.out),
+				create {EB_METRIC_ARCHIVE_NODE}.make (last_metric.name, metric_type_id (last_metric), last_calculation_time, last_value, last_input_domain, uuid_gen.generate_uuid.out, is_result_filtered_for_last_metric),
 				Current
 			)
 		end
@@ -779,6 +798,30 @@ feature {NONE} -- Implementation
 			update_ui
 		end
 
+	on_filter_result_changed is
+			-- Action to be performed when selection status of `detailed_result_btn' changes
+		do
+			preferences.metric_tool_data.keep_metric_detailed_result_preference.set_value (detailed_result_btn.is_selected)
+		end
+
+	on_keep_detailed_result_changed_from_outside is
+			-- Action to be performed when selection status of `detailed_result_btn' changes from outside
+		local
+			l_selected: BOOLEAN
+		do
+			l_selected := preferences.metric_tool_data.is_metric_detailed_result_kept
+			if l_selected /= detailed_result_btn.is_selected then
+				if l_selected then
+					detailed_result_btn.enable_select
+				else
+					detailed_result_btn.disable_select
+				end
+			end
+		end
+
+	on_keep_detailed_result_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_filter_result_changed_from_outside'
+
 feature {NONE} -- Recycle
 
 	internal_recycle is
@@ -788,6 +831,7 @@ feature {NONE} -- Recycle
 			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.prune_all (on_filter_result_change_from_outside_agent)
 			preferences.metric_tool_data.automatic_go_to_result_panel_preference.change_actions.prune_all (on_auto_go_to_result_change_from_outside_agent)
 			preferences.metric_tool_data.unit_order_preference.change_actions.prune_all (on_unit_order_change_agent)
+			preferences.metric_tool_data.keep_metric_detailed_result_preference.change_actions.prune_all (on_keep_detailed_result_changed_from_outside_agent)
 			on_show_percentage_btn_change_from_outside
 			on_filter_result_change_from_outside
 			on_auto_go_to_result_change_from_outside
@@ -958,6 +1002,7 @@ feature-- UI Update
 						auto_go_to_result_btn.disable_sensitive
 						metric_definition_area.disable_sensitive
 						metric_selection_area.disable_sensitive
+						detailed_result_btn.disable_sensitive
 						domain_selector.disable_sensitive
 						if is_original_starter then
 							stop_metric_btn.enable_sensitive
@@ -1005,7 +1050,13 @@ feature-- UI Update
 							show_percent_btn.disable_sensitive
 							percentage_tool_bar.wipe_out
 						end
-
+						if l_metric /= Void then
+							if l_metric.is_basic then
+								detailed_result_btn.enable_sensitive
+							else
+								detailed_result_btn.disable_sensitive
+							end
+						end
 						if is_metric_runnable then
 							run_metric_btn.enable_sensitive
 						else
@@ -1034,6 +1085,7 @@ invariant
 	on_unit_order_change_agent_attached: on_unit_order_change_agent /= Void
 	on_show_percentage_btn_change_from_outside_agent_attached: on_show_percentage_btn_change_from_outside_agent /= Void
 	on_process_gui_agent_attached: on_process_gui_agent /= Void
+	on_keep_detailed_result_changed_from_outside_agent_attached: on_keep_detailed_result_changed_from_outside_agent /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -330,7 +330,7 @@ feature{NONE} -- Grid item generation
 			Result.set_padding (8)
 			Result.pointer_button_press_actions.force_extend (agent Result.activate)
 			Result.dialog_ok_actions.extend (agent set_input_domain_back_to_archive_node (Result, a_archive_node))
-			Result.dialog.property_area.feature_vertion_area.hide
+			Result.before_show_dialog_actions.extend (agent on_before_domain_dialog_display (?, Result))
 		ensure
 			result_attached: Result /= Void
 		end
@@ -369,6 +369,149 @@ feature{NONE} -- Grid item generation
 			update_detailed_result_item (Result, a_archive_node, a_go_to_result_action)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	filter_result_item (a_archive_node: EB_METRIC_ARCHIVE_NODE): EV_GRID_CHECKABLE_LABEL_ITEM is
+			-- Filter result item
+		do
+			create Result
+			Result.checked_changed_actions.extend (agent on_filter_change (?, a_archive_node))
+			update_filter_result_item (Result, a_archive_node)
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature{NONE} -- Item updator
+
+	update_status_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update `a_item' with `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			if a_archive_node.is_up_to_date and then a_archive_node.is_value_valid then
+				a_item.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
+				a_item.set_tooltip (Void)
+			else
+				a_item.set_pixmap (pixmaps.icon_pixmaps.general_warning_icon)
+				a_item.set_tooltip (metric_names.t_archive_not_up_to_date)
+			end
+		end
+
+	update_input_domain_item (a_item: EB_METRIC_DOMAIN_GRID_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update `a_item' with `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			a_item.set_domain (a_archive_node.input_domain)
+		end
+
+	update_value_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update `a_item' with `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			if a_archive_node.is_value_valid then
+				a_item.set_text (a_archive_node.value.out)
+				a_item.align_text_left
+			else
+				a_item.set_text (metric_names.t_short_line)
+				a_item.align_text_center
+			end
+		end
+
+	update_metric_name_item (a_item: EV_GRID_CHECKABLE_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_name_required: BOOLEAN) is
+			-- Update `a_item' with `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			if a_archive_node.is_recalculatable then
+				a_item.set_foreground_color (normal_color)
+			else
+				a_item.set_foreground_color (red_color)
+			end
+			if a_name_required then
+				a_item.set_text (a_archive_node.metric_name)
+				a_item.set_pixmap (pixmap_from_metric_type (a_archive_node.metric_type))
+			end
+			if not a_archive_node.is_metric_valid then
+				a_item.set_tooltip (metric_names.err_metric_not_exist (metric_type_name (a_archive_node.metric_type)))
+			elseif not a_archive_node.is_input_domain_valid then
+				a_item.set_tooltip (metric_names.err_input_domain_invalid)
+			end
+		end
+
+	update_previous_value_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update `a_item' with `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			if a_archive_node.has_previous_value then
+				a_item.set_text (a_archive_node.previous_value.out)
+				a_item.align_text_left
+			else
+				a_item.set_text (metric_names.t_short_line)
+				a_item.align_text_center
+			end
+		end
+
+	update_value_difference_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update `a_item' with `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			if a_archive_node.has_previous_value and then a_archive_node.is_value_valid then
+				a_item.set_text ((a_archive_node.value - a_archive_node.previous_value).out)
+				a_item.align_text_left
+			else
+				a_item.set_text (metric_names.t_short_line)
+				a_item.align_text_center
+			end
+		end
+
+
+	update_time_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update `a_item' with `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			a_item.set_text (a_archive_node.calculated_time.out)
+		end
+
+	update_detailed_result_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_go_to_result_action: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE]]) is
+			-- Update `a_item' with `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			a_item.pointer_double_press_actions.wipe_out
+			if a_archive_node.has_detailed_result and then a_archive_node.is_recalculatable then
+				a_item.set_pixmap (pixmaps.icon_pixmaps.metric_run_and_show_details_icon)
+				a_item.set_layout_procedure (agent center_pixmap_layout)
+				a_item.pointer_double_press_actions.extend (agent on_go_to_result (?, ?, ?, ?, ?, ?, ?, ?, a_archive_node, a_go_to_result_action))
+				a_item.set_tooltip (metric_names.f_double_click_to_go_to_result_panel)
+			else
+				a_item.remove_pixmap
+				a_item.set_layout_procedure (Void)
+				a_item.set_tooltip (Void)
+			end
+		end
+
+	update_filter_result_item (a_item: EV_GRID_CHECKABLE_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update status of `a_item' using information from `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			a_item.checked_changed_actions.block
+			a_item.set_is_checked (a_archive_node.is_result_filtered)
+			a_item.checked_changed_actions.resume
 		end
 
 feature{NONE} -- Implementation/Sorting
@@ -609,128 +752,8 @@ feature{NONE} -- Implementation
 			a_archive_node_attached: a_archive_node /= Void
 			a_archive_node_has_detailed_result: a_archive_node.has_detailed_result
 		do
-			metric_history_panel.metric_tool.register_metric_result_for_display (metric_manager.metric_with_name (a_archive_node.metric_name), a_archive_node.input_domain, a_archive_node.value, a_archive_node.detailed_result, a_archive_node.calculated_time, True)
+			metric_history_panel.metric_tool.register_metric_result_for_display (metric_manager.metric_with_name (a_archive_node.metric_name), a_archive_node.input_domain, a_archive_node.value, a_archive_node.detailed_result, a_archive_node.calculated_time, True, a_archive_node.is_result_filtered)
 			metric_history_panel.metric_tool.go_to_result
-		end
-
-	update_status_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
-			-- Update `a_item' with `a_archive_node'.
-		require
-			a_item_attached: a_item /= Void
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			if a_archive_node.is_up_to_date and then a_archive_node.is_value_valid then
-				a_item.set_pixmap (pixmaps.icon_pixmaps.general_tick_icon)
-				a_item.set_tooltip (Void)
-			else
-				a_item.set_pixmap (pixmaps.icon_pixmaps.general_warning_icon)
-				a_item.set_tooltip (metric_names.t_archive_not_up_to_date)
-			end
-		end
-
-	update_input_domain_item (a_item: EB_METRIC_DOMAIN_GRID_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
-			-- Update `a_item' with `a_archive_node'.
-		require
-			a_item_attached: a_item /= Void
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			a_item.set_domain (a_archive_node.input_domain)
-		end
-
-	update_value_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
-			-- Update `a_item' with `a_archive_node'.
-		require
-			a_item_attached: a_item /= Void
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			if a_archive_node.is_value_valid then
-				a_item.set_text (a_archive_node.value.out)
-				a_item.align_text_left
-			else
-				a_item.set_text (metric_names.t_short_line)
-				a_item.align_text_center
-			end
-		end
-
-	update_metric_name_item (a_item: EV_GRID_CHECKABLE_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_name_required: BOOLEAN) is
-			-- Update `a_item' with `a_archive_node'.
-		require
-			a_item_attached: a_item /= Void
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			if a_archive_node.is_recalculatable then
-				a_item.set_foreground_color (normal_color)
-			else
-				a_item.set_foreground_color (red_color)
-			end
-			if a_name_required then
-				a_item.set_text (a_archive_node.metric_name)
-				a_item.set_pixmap (pixmap_from_metric_type (a_archive_node.metric_type))
-			end
-			if not a_archive_node.is_metric_valid then
-				a_item.set_tooltip (metric_names.err_metric_not_exist (metric_type_name (a_archive_node.metric_type)))
-			elseif not a_archive_node.is_input_domain_valid then
-				a_item.set_tooltip (metric_names.err_input_domain_invalid)
-			end
-		end
-
-	update_previous_value_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
-			-- Update `a_item' with `a_archive_node'.
-		require
-			a_item_attached: a_item /= Void
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			if a_archive_node.has_previous_value then
-				a_item.set_text (a_archive_node.previous_value.out)
-				a_item.align_text_left
-			else
-				a_item.set_text (metric_names.t_short_line)
-				a_item.align_text_center
-			end
-		end
-
-	update_value_difference_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
-			-- Update `a_item' with `a_archive_node'.
-		require
-			a_item_attached: a_item /= Void
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			if a_archive_node.has_previous_value and then a_archive_node.is_value_valid then
-				a_item.set_text ((a_archive_node.value - a_archive_node.previous_value).out)
-				a_item.align_text_left
-			else
-				a_item.set_text (metric_names.t_short_line)
-				a_item.align_text_center
-			end
-		end
-
-
-	update_time_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
-			-- Update `a_item' with `a_archive_node'.
-		require
-			a_item_attached: a_item /= Void
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			a_item.set_text (a_archive_node.calculated_time.out)
-		end
-
-	update_detailed_result_item (a_item: EV_GRID_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_go_to_result_action: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE]]) is
-			-- Update `a_item' with `a_archive_node'.
-		require
-			a_item_attached: a_item /= Void
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			a_item.pointer_double_press_actions.wipe_out
-			if a_archive_node.has_detailed_result and then a_archive_node.is_recalculatable then
-				a_item.set_pixmap (pixmaps.icon_pixmaps.metric_run_and_show_details_icon)
-				a_item.set_layout_procedure (agent center_pixmap_layout)
-				a_item.pointer_double_press_actions.extend (agent on_go_to_result (?, ?, ?, ?, ?, ?, ?, ?, a_archive_node, a_go_to_result_action))
-				a_item.set_tooltip (metric_names.f_double_click_to_go_to_result_panel)
-			else
-				a_item.remove_pixmap
-				a_item.set_layout_procedure (Void)
-				a_item.set_tooltip (Void)
-			end
 		end
 
 	set_input_domain_back_to_archive_node (a_item: EB_METRIC_DOMAIN_GRID_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
@@ -819,6 +842,25 @@ feature{NONE} -- Implementation
 		require
 			a_archive_node_attached: a_archive_node /= Void
 		deferred
+		end
+
+	on_filter_change (a_item: EV_GRID_CHECKABLE_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Action to be performed when check status of `a_item' changes
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			a_archive_node.set_is_result_filtered (a_item.is_checked)
+		end
+
+	on_before_domain_dialog_display (a_doman_grid_dialog: EB_METRIC_DOMAIN_PROPERTY_DIALOG; a_grid_item: EV_GRID_ITEM) is
+			-- Acton to be performed before `a_doman_grid_dialog' which associated with `a_grid_item' is displayed
+		require
+			a_doman_grid_dialog_attached: a_doman_grid_dialog /= Void
+			a_grid_item_attached: a_grid_item /= Void
+		do
+			a_doman_grid_dialog.set_grid_item (a_grid_item)
+			a_doman_grid_dialog.property_area.feature_vertion_area.hide
 		end
 
 invariant

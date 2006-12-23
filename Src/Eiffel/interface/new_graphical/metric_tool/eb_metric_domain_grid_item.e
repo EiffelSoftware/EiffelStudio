@@ -65,27 +65,20 @@ feature{NONE} -- Initialization
 			setting_change_actions.extend (agent on_setting_change)
 
 			create ellipsis_actions
-			create dialog
 			create width_change_actions
 			create dialog_ok_actions
 			create dialog_cancel_actions
-			create show_dialog_actions
-			create hide_dialog_actions
+			create before_show_dialog_actions
 
 			set_domain (a_domain)
 			expose_actions.extend (agent perform_redraw)
-			dialog.ok_actions.extend (agent on_ok)
-			dialog.cancel_actions.extend (agent on_cancel)
-			dialog.show_actions.extend (agent on_show)
-			dialog.hide_actions.extend (agent on_hide)
 			ellipsis_actions.extend (agent show_dialog)
 		ensure
 			ellipsis_actions_attached: ellipsis_actions /= Void
 			width_change_actions_attached: width_change_actions /= Void
 			dialog_ok_actions_attached: dialog_ok_actions /= Void
 			dialog_cancel_actions_attached: dialog_cancel_actions /= Void
-			show_dialog_actions_attached: show_dialog_actions /= Void
-			hide_dialog_actions: hide_dialog_actions /= Void
+			before_show_dialog_actions_attached: before_show_dialog_actions /= Void
 		end
 
 feature -- Access
@@ -102,9 +95,6 @@ feature -- Access
 	font: EV_FONT
 			-- Typeface appearance for `Current'.
 
-	dialog: EB_METRIC_DOMAIN_PROPERTY_DIALOG
-			-- Dialog to display domain in detail
-
 	width_change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when width of current item changes
 
@@ -114,11 +104,8 @@ feature -- Access
 	dialog_cancel_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when Cancel button in `dialog' is pressed
 
-	show_dialog_actions: ACTION_SEQUENCE [TUPLE]
-			-- Actions to be performed when `dialog' is shown
-
-	hide_dialog_actions: ACTION_SEQUENCE [TUPLE]
-			-- Actions to be performed when `dialog' is hiden
+	before_show_dialog_actions: ACTION_SEQUENCE [TUPLE [EB_METRIC_DOMAIN_PROPERTY_DIALOG]]
+			-- Actions to be performed when domain before dialog is displayed
 
 feature -- Status report
 
@@ -149,6 +136,9 @@ feature -- Status report
 				end
 			end
 		end
+
+	is_only_current_version: BOOLEAN
+			-- Is only current version taken into consideration?
 
 feature -- Access
 
@@ -245,17 +235,26 @@ feature -- Setting
 			popup_window: popup_window /= Void
 			activated: is_activated
 		local
-			l_version: BOOLEAN_REF
+			l_dialog: like domain_selector_dialog
 		do
-			if dialog.value = Void then
-				dialog.set_value ([domain, False])
+			l_dialog := domain_selector_dialog
+			l_dialog.ok_actions.wipe_out
+			l_dialog.cancel_actions.wipe_out
+			l_dialog.show_actions.wipe_out
+			l_dialog.hide_actions.wipe_out
+
+			l_dialog.ok_actions.extend (agent on_ok (l_dialog))
+			l_dialog.cancel_actions.extend (agent on_cancel)
+
+			before_show_dialog_actions.call ([l_dialog])
+			l_dialog.property_area.domain_selector.set_domain (domain)
+			if is_only_current_version then
+				l_dialog.property_area.only_current_version_checkbox.enable_select
 			else
-				l_version ?= dialog.value.item (2)
-				check l_version /= Void end
-				dialog.set_value ([domain, l_version.item])
+				l_dialog.property_area.descendant_version_checkbox.enable_select
 			end
-			dialog.show_relative_to_window (parent_window)
-			dialog.set_focus
+			l_dialog.show_relative_to_window (parent_window)
+			l_dialog.set_focus
 		end
 
 	add_pebble (a_pebble: ANY; a_agent: PROCEDURE [ANY, TUPLE]) is
@@ -290,6 +289,14 @@ feature -- Setting
 					end
 				end
 			end
+		end
+
+	set_is_only_current_version (b: BOOLEAN) is
+			-- Set `is_only_current_version' with `b'.
+		do
+			is_only_current_version := b
+		ensure
+			is_only_current_version_set: is_only_current_version = b
 		end
 
 feature{NONE} -- Implementation
@@ -547,27 +554,34 @@ feature{NONE} -- Actions
 			dialog_cancel_actions.call ([])
 		end
 
-	on_show is
-			-- Action to be performed when `dialog' is shown.
-		do
-			show_dialog_actions.call ([])
-		end
+--	on_show is
+--			-- Action to be performed when `dialog' is shown.
+--		do
+--		end
 
-	on_hide is
-			-- Action to be performed when `dialog' is hidden.		
-		do
-			hide_dialog_actions.call ([])
-			deactivate
-		end
+--	on_hide is
+--			-- Action to be performed when `dialog' is hidden.		
+--		do
+----			hide_dialog_actions.call ([])
+--			deactivate
+--		end
 
-	on_ok is
+	on_ok (a_dialog: like domain_selector_dialog) is
 			-- Action to be performed when "OK" button is pressed in `dialog'
+		require
+			a_dialog_attached: a_dialog /= Void
 		local
 			l_domain: EB_METRIC_DOMAIN
+			l_only_current_version: BOOLEAN_REF
 		do
-			l_domain ?= dialog.value.item (1)
-			check l_domain /= Void end
+			l_domain ?= a_dialog.value.item (1)
+			l_only_current_version ?= a_dialog.value.item (2)
+			check
+				l_domain /= Void
+				l_only_current_version /= Void
+			end
 			set_domain (l_domain)
+			is_only_current_version := l_only_current_version.item
 			dialog_ok_actions.call ([])
 		end
 
@@ -684,8 +698,7 @@ invariant
 	width_change_actions_attached: width_change_actions /= Void
 	dialog_ok_actions_attached: dialog_ok_actions /= Void
 	dialog_cancel_actions_attached: dialog_cancel_actions /= Void
-	show_dialog_actions_attached: show_dialog_actions /= Void
-	hide_dialog_actions: hide_dialog_actions /= Void
+	before_show_dialog_actions_attached: before_show_dialog_actions /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

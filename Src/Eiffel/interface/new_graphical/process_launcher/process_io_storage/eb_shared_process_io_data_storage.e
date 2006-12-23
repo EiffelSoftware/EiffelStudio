@@ -9,10 +9,10 @@ indexing
 class
 	EB_SHARED_PROCESS_IO_DATA_STORAGE
 
-feature
+feature -- Access
 
 	freezing_storage: EB_PROCESS_IO_STORAGE is
-			--
+			-- Storage for IO redirection from launched c compiler in freezing period
 		indexing
 			once_status: global
 		once
@@ -20,7 +20,7 @@ feature
 		end
 
 	finalizing_storage: EB_PROCESS_IO_STORAGE is
-			--
+			-- Storeage for IO redirection from launched c compiler in finalizing period
 		indexing
 			once_status: global
 		once
@@ -28,7 +28,7 @@ feature
 		end
 
 	external_storage: EB_PROCESS_IO_STORAGE is
-			--
+			-- Storage for IO redirection from launched external process
 		indexing
 			once_status: global
 		once

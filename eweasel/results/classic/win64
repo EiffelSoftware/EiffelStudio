@@ -37,6 +37,7 @@ Test replace_key_cycle (table002): passed
 Test replace_key_conflict_not_found (table003): passed
 Test replace_key_replace_item (table004): passed
 Test iteration-with-default-key (table005): passed
+Test infinite-loop-on-removal-then-addition (table006): passed
 Test test-auto-resize (fake002): passed
 Test many-similar-class-names (fake003): passed
 Test test1 (fake004): passed
@@ -939,17 +940,7 @@ Test change-numeric-formal-argument (incr125): passed
 Test generic-veen-sneak (incr126): passed
 Test add-unused-formal-generic (incr127): passed
 Test make-generic-expanded-freeze (incr128): passed
-Test vtcg-in-generic-constraint (incr129): failed
-	Description: After initial compilation, a constraint is added to the formal generic parameter of a class which is used in the generic constraint of another class.  When the system is recompiled, the compiler correctly reports a VTCG error.  But when the newly added constraint is removed and compilation is resumed, the compiler dies with a segmentation fault during degree 2.
-	Execution error in file C:\work\eweasel\eweasel\tests\incr129\tcf at line 32
-	Original text:    execute_result ok
-	Substituted text: execute_result ok
-	Reason: actual execution result does not match expected result
-	Actual result:
-		Final status:  system_failed 
-	Expected result:
-		Final status:  completed 
-
+Test vtcg-in-generic-constraint (incr129): passed
 Test vtct-vtcg-die-degree-5 (incr130): passed
 Test finalize-remove-expanded-type (incr131): passed
 Test external-arg-signature-mismatch (incr132): passed
@@ -1289,6 +1280,7 @@ Test expanded-not-expanded (incr275): passed
 Test finalize-changed-agent-to-changed-feature (incr276): passed
 Test inline-agent-from-scratch-bug (incr277): passed
 Test changing-formals-invariant-not-removed (incr278): passed
+Test changing-formals-precursor-crash (incr279): passed
 Test divide-melt-panic (melt001): passed
 Test bit-melt-metamorphose (melt002): passed
 Test manifest-array-with-old (melt003): passed
@@ -2120,6 +2112,7 @@ Test anchor-on-feature-with-formal (exec262): failed
 
 Test generating-type-of-type-parameter (exec263): passed
 Test agent-on-attribute-with-open-target (exec264): passed
+Test generator-on-typed-pointer (exec265): passed
 Test add-inheritance-cycle (term001): passed
 Test remove-root-creation-proc (term002): passed
 Test long-identifiers (term003): passed
@@ -2304,6 +2297,7 @@ Test separate-panic (term142): passed
 Test creation-expression-in-inherited-assertion (term143): passed
 Test inspect-using-static-procedure (term144): passed
 Test constraint-type-comparison (term145): passed
+Test missing-actual-generic-crash (term146): passed
 Test config-override (config001): passed
 Test config-debug-disabled (config002): passed
 Test config-quick-melt-override (config003): passed
@@ -2737,8 +2731,8 @@ Test assertion-evaluation-order (dotnet033): passed
 Test pointer-to-external-expanded (dotnet034): passed
 Test real-output-no-locale (dotnet036): passed
 
-Passed:  1293 / 1450  (90%)
-Failed:  138 / 1450  (10%)
-Manual:  16 / 1450  (2%)
-Skipped:  3 / 1450  (1%)
+Passed:  1298 / 1454  (90%)
+Failed:  137 / 1454  (10%)
+Manual:  16 / 1454  (2%)
+Skipped:  3 / 1454  (1%)
 

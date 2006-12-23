@@ -132,7 +132,8 @@ feature -- Titles
 	f_send_to_history: STRING_GENERAL is do Result := locale.translate ("Send last calculated metric value to history") end
 	t_hide_old_archive: STRING_GENERAL is do Result := locale.translate ("Hide archives more than ") end
 	t_days: STRING_GENERAL is do Result := locale.translate (" days old.") end
-	f_keep_detailed_result: STRING_GENERAL is do Result := locale.translate ("Keep detailed result when recalculating archive?") end
+	f_keep_archive_detailed_result: STRING_GENERAL is do Result := locale.translate ("Keep detailed result when recalculating archive?") end
+	f_keep_metric_detailed_result: STRING_GENERAL is do Result := locale.translate ("Keep detailed result when evaluating metric?") end
 	f_remove_detailed_result: STRING_GENERAL is do Result := locale.translate ("Remove detailed result?") end
 	t_detailed_result: STRING_GENERAL is do Result := locale.translate ("Result") end
 	f_double_click_to_go_to_result_panel: STRING_GENERAL  is do Result := locale.translate ("Double click to go to result panel") end
@@ -144,7 +145,7 @@ feature -- Titles
 	t_deselect_all_history: STRING_GENERAL is do Result := locale.translate ("Deselect All") end
 	t_select_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Select Recalculatable") end
 	t_deselect_recalculatable_history: STRING_GENERAL is do Result := locale.translate ("Deselect Recalculatable") end
-
+	t_filter: STRING_GENERAL is do Result := locale.translate ("Filter") end
 
 feature -- Titles for editor token
 
@@ -825,6 +826,16 @@ feature -- Error/warning message
 			not_a_type_is_empty: not a_type.is_empty
 		do
 			Result := locale.format_string (locale.translate ("Metric of type %"$1%" doesn't exist or that metric is invalid."), [a_type])
+		ensure
+			result_attached: Result /= Void
+		end
+
+	err_filter_invalid (a_filter: STRING_GENERAL): STRING_GENERAL is
+			-- Filter value invalid error
+		require
+			a_filter_attached: a_filter /= Void
+		do
+			Result := locale.format_string (locale.translate ("Filter value %"$1%" is invalid."), [a_filter])
 		ensure
 			result_attached: Result /= Void
 		end

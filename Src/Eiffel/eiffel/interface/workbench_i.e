@@ -300,6 +300,15 @@ feature -- Commands
 			l_pre_actions_done: BOOLEAN
 		do
 			not_actions_successful := False
+			if retried = 0 and then (system = Void or else system.automatic_backup) then
+					-- Even if backup is not enabled, we will always create a BACKUP
+					-- directory. This will be done only once if `automatic_backup' is not
+					-- enabled.
+				backup_counter := backup_counter + 1
+				create_backup_directory
+				save_starting_backup_info
+			end
+
 			start_compilation
 				-- We perform a degree 6 only when it is the first the compilation or
 				-- when there was an error during the compilation concerning a missing
@@ -314,11 +323,6 @@ feature -- Commands
 				end
 
 				if Lace.successful then
-					if system.automatic_backup then
-						backup_counter := backup_counter + 1
-						create_backup_directory
-					end
-
 					if not l_pre_actions_done then
 						process_actions (universe.conf_system.all_pre_compile_action)
 						l_pre_actions_done := True
@@ -374,7 +378,7 @@ feature -- Commands
 				--|	(the next compilation will be stored in a different
 				--| directory)
 			if system /= Void and then system.automatic_backup then
-				save_backup_info
+				save_ending_backup_info
 			end
 
 			if not compilation_modes.is_finalizing then
@@ -552,8 +556,8 @@ feature -- Automatic backup
 			Result.set_file_name (Backup_info)
 		end
 
-	save_backup_info is
-			-- Save the information about this recompilation
+	save_starting_backup_info is
+			-- Save the information about this compilation
 		local
 			file: PLAIN_TEXT_FILE
 		do
@@ -572,10 +576,27 @@ feature -- Automatic backup
 				file.put_string ("new session: ")
 				file.put_boolean (new_session)
 				file.put_new_line
-				file.put_string ("successful: ")
+				file.put_string ("starting date: ")
+				file.put_string ((create {DATE_TIME}.make_now).out)
+				file.put_new_line
+				file.close
+			end
+
+			new_session := False
+		end
+
+	save_ending_backup_info is
+			-- Save the information about the status of this compilation
+		local
+			file: PLAIN_TEXT_FILE
+		do
+			create file.make (backup_info_file_name)
+			if file.is_creatable or else (file.exists and then file.is_writable) then
+				file.open_append
+				file.put_string ("Compilation status is: ")
 				file.put_boolean (successful)
 				file.put_new_line
-				file.put_string ("date: ")
+				file.put_string ("ending date: ")
 				file.put_string ((create {DATE_TIME}.make_now).out)
 				file.put_new_line
 				file.close

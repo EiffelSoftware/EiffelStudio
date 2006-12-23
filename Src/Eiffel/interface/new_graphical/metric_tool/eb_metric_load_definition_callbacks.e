@@ -216,12 +216,18 @@ feature{NONE} -- Process
 			l_den_uuid_str: STRING
 			l_num_uuid: UUID
 			l_den_uuid: UUID
+			l_num_coefficient_str: STRING
+			l_den_coefficient_str: STRING
+			l_num_coefficient: DOUBLE
+			l_den_coefficient: DOUBLE
 		do
 			l_id := current_metric_identifier (ratio_metric_type)
 			if not has_error then
 				l_num := current_attributes.item (at_numerator)
 				l_den := current_attributes.item (at_denominator)
 				l_num_uuid_str := current_attributes.item (at_numerator_uuid)
+				l_num_coefficient_str := current_attributes.item (at_numerator_coefficient)
+				l_den_coefficient_str := current_attributes.item (at_denominator_coefficient)
 				l_den_uuid_str := current_attributes.item (at_denominator_uuid)
 				if l_num = Void then
 					set_parse_error_message (
@@ -254,7 +260,28 @@ feature{NONE} -- Process
 					end
 				end
 				if not has_error then
-					current_ratio_metric := factory.new_ratio_metric (l_id.name, unit_table.item (l_id.unit), l_id.uuid, l_num, l_num_uuid, l_den, l_den_uuid)
+					l_num_coefficient := coefficient_for_ratio_metric (
+						l_num_coefficient_str,
+						metric_names.err_numerator_coefficient_invalid (l_num_coefficient_str),
+						metric_names.numerator_location (l_id.name, l_num)
+					)
+				end
+				if not has_error then
+					l_den_coefficient := coefficient_for_ratio_metric (
+						l_den_coefficient_str,
+						metric_names.err_denominator_coefficient_invalid (l_den_coefficient_str),
+						metric_names.denominator_location (l_id.name, l_den)
+					)
+				end
+				if not has_error then
+					current_ratio_metric := factory.new_ratio_metric (
+						l_id.name,
+						unit_table.item (l_id.unit),
+						l_id.uuid, l_num, l_num_uuid,
+						l_den, l_den_uuid,
+						l_num_coefficient,
+						l_den_coefficient
+					)
 					current_metric := current_ratio_metric
 				end
 			end
@@ -279,6 +306,7 @@ feature{NONE} -- Process
 			l_coefficient: STRING
 			l_metric: STRING
 			l_uuid_str: STRING
+			l_coefficient_value: DOUBLE
 		do
 			check current_linear_metric /= Void end
 			l_coefficient := current_attributes.item (at_coefficient)
@@ -296,18 +324,22 @@ feature{NONE} -- Process
 						metric_names.err_coefficient_missing,
 						metric_names.variable_metric_location (current_linear_metric.name, l_metric)
 					)
-				elseif not l_coefficient.is_real then
-					set_parse_error_message (
+				else
+					test_double_attribute (
+						l_coefficient,
 						metric_names.err_coefficient_invalid (l_coefficient),
 						metric_names.variable_metric_location (current_linear_metric.name, l_metric)
 					)
+					if not has_error then
+						l_coefficient_value := last_tested_double
+					end
 				end
 			end
 			if not has_error then
 				check
 					current_linear_metric_attached: current_linear_metric /= Void
 				end
-				current_linear_metric.coefficient.extend (l_coefficient.to_double)
+				current_linear_metric.coefficient.extend (l_coefficient_value)
 				current_linear_metric.variable_metric.extend (l_metric)
 			end
 			if not has_error then
@@ -645,7 +677,7 @@ feature{NONE} -- Implementation
 	last_criterion: EB_METRIC_CRITERION
 			-- Last processed criterion
 
-feature{NONE} -- Implementation
+feature{NONE} -- Implementation/XML structure
 
 	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
@@ -817,7 +849,9 @@ feature{NONE} -- Implementation
 				-- * numerator uuid
 				-- * denominator
 				-- * denominator uuid
-			create l_attr.make (7)
+				-- * numerator coefficient
+				-- * denominator coefficient
+			create l_attr.make (9)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_unit, n_unit)
 			l_attr.force (at_uuid, n_uuid)
@@ -825,6 +859,8 @@ feature{NONE} -- Implementation
 			l_attr.force (at_numerator_uuid, n_numerator_uuid)
 			l_attr.force (at_denominator, n_denominator)
 			l_attr.force (at_denominator_uuid, n_denominator_uuid)
+			l_attr.force (at_numerator_coefficient, n_numerator_coefficient)
+			l_attr.force (at_denominator_coefficient, n_denominator_coefficient)
 			Result.force (l_attr, t_ratio_metric)
 
 				-- scope_ratio_metric
@@ -1025,13 +1061,13 @@ feature{NONE} -- Implementation
 			end
 			if not has_error then
 				if l_negation /= Void then
-					if not l_negation.is_boolean then
-						set_parse_error_message (
-							metric_names.err_negation_attr_invalid (l_negation),
-							metric_names.criterion_location (current_metric.name, l_name)
-						)
-					else
-						l_negation_used := l_negation.to_boolean
+					test_boolean_attribute (
+						l_negation,
+						metric_names.err_negation_attr_invalid (l_negation),
+						metric_names.criterion_location (current_metric.name, l_name)
+					)
+					if not has_error then
+						l_negation_used := last_tested_boolean
 					end
 				end
 			end
@@ -1084,6 +1120,64 @@ feature{NONE} -- Implementation
 				if not metric_manager.is_metric_name_valid (a_name) then
 					set_parse_error_message (metric_names.err_metric_name_invalid (a_name), Void)
 				end
+			end
+		end
+
+	test_boolean_attribute (a_boolean_str: STRING; a_error_message: STRING_GENERAL; a_location: STRING_GENERAL) is
+			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean'.
+			-- Otherwise fire an error with error message given by `a_error_message' and location information given by `a_localtion'.
+		require
+			a_boolean_str_attached: a_boolean_str /= Void
+			a_error_message_attached: a_error_message /= Void
+			a_location_attached: a_location /= Void
+		do
+			if a_boolean_str.is_boolean then
+				last_tested_boolean := a_boolean_str.to_boolean
+			else
+				set_parse_error_message (a_error_message, a_location)
+			end
+		ensure
+			last_tested_boolean_set: a_boolean_str.is_boolean implies last_tested_boolean = a_boolean_str.to_boolean
+		end
+
+	last_tested_boolean: BOOLEAN
+			-- Last boolean value successfully tested by `test_boolean_attribute'
+
+	test_double_attribute (a_double_str: STRING; a_error_message: STRING_GENERAL; a_location: STRING_GENERAL) is
+			-- Test if `a_double_str' represents a valid double value. If so, store the boolean value in `last_tested_double'.
+			-- Otherwise fire an error with error message given by `a_error_message' and location information given by `a_localtion'.
+		require
+			a_double_str_attached: a_double_str /= Void
+			a_error_message_attached: a_error_message /= Void
+			a_location_attached: a_location /= Void
+		do
+			if a_double_str.is_double then
+				last_tested_double := a_double_str.to_double
+			else
+				set_parse_error_message (a_error_message, a_location)
+			end
+		ensure
+			last_tested_double_set: a_double_str.is_double implies last_tested_double = a_double_str.to_double
+		end
+
+	last_tested_double: DOUBLE
+			-- Last double value successfully tested by `test_double_attribute'
+
+	coefficient_for_ratio_metric (a_value: STRING; a_error_message, a_location: STRING_GENERAL): DOUBLE is
+			-- Coefficient from `a_value' for ratio metric.
+			-- If `a_value' doesn't represent a valid double, file an error with error message given by `a_error_message'
+			-- and location information given `a_location'.
+		require
+			a_error_message_attached: a_error_message /= Void
+			a_location_attached: a_location /= Void
+		do
+			if a_value /= Void then
+				test_double_attribute (a_value, a_error_message, a_location)
+				if not has_error then
+					Result := last_tested_double
+				end
+			else
+				Result := 1
 			end
 		end
 

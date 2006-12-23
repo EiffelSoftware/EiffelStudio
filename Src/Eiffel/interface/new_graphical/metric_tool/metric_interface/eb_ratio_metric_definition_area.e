@@ -56,14 +56,14 @@ feature {NONE} -- Initialization
 			default_create
 			create numerator_delayed_timer.make (agent on_numerator_text_change_confirmed, 500)
 			create denominator_delayed_timer.make (agent on_denominator_text_change_confirmed, 500)
+			create numerator_coefficient_delayed_timer.make (agent check_coefficient (numerator_coefficient_txt), 500)
+			create denominator_coefficient_delayed_timer.make (agent check_coefficient (denominator_coefficient_txt), 500)
 			set_unit (a_unit)
 			set_mode (a_mode)
 			setup_editor
 		ensure
 			metric_tool_set: metric_tool = a_tool
 			metric_panel_set: metric_panel = a_panel
-			numerator_delayed_timer_attached: numerator_delayed_timer /= Void
-			denominator_delayed_timer_attached: denominator_delayed_timer /= Void
 		end
 
 	user_initialization is
@@ -75,7 +75,6 @@ feature {NONE} -- Initialization
 		local
 			l_text: EV_TEXT_FIELD
 		do
-			definition_frame.set_text (metric_names.t_metric_definition)
 			numerator_text.drop_actions.extend (agent on_drop (?, numerator_text))
 			numerator_text.set_accept_cursor (cursors.cur_metric)
 			numerator_text.set_deny_cursor (cursors.cur_x_metric)
@@ -100,6 +99,16 @@ feature {NONE} -- Initialization
 			denominator_btn.set_pixmap (pixmaps.mini_pixmaps.toolbar_dropdown_icon)
 			denominator_btn.select_actions.extend (agent on_open_metric_menu (denominator_btn, denominator_text))
 			denominator_btn.key_press_actions.extend (agent on_key_pressed_in_open_metric_btn (denominator_btn, denominator_text, ?))
+
+
+			numerator_frame.set_text (interface_names.first_character_to_upper_case (metric_names.l_numerator_metric))
+			denominator_frame.set_text (interface_names.first_character_to_upper_case (metric_names.l_denominator_metric))
+			numerator_coefficient_lbl.set_text (interface_names.first_character_to_upper_case (metric_names.t_coefficient) + metric_names.colon.as_string_32)
+			denominator_coefficient_lbl.set_text (interface_names.first_character_to_upper_case (metric_names.t_coefficient) + metric_names.colon.as_string_32)
+			numerator_lbl.set_text (interface_names.first_character_to_upper_case (metric_names.t_metric) + metric_names.colon.as_string_32)
+			denominator_lbl.set_text (interface_names.first_character_to_upper_case (metric_names.t_metric) + metric_names.colon.as_string_32)
+			numerator_coefficient_txt.change_actions.extend (agent on_numerator_coefficient_change)
+			denominator_coefficient_txt.change_actions.extend (agent on_denominator_coefficient_change)
 
 			numerator_target_pixmap.hide
 			denominator_target_pixmap.hide
@@ -140,19 +149,27 @@ feature -- Setting
 			load_metric_name_and_description (a_metric, mode = readonly_mode)
 			numerator_text.change_actions.block
 			denominator_text.change_actions.block
+			numerator_coefficient_txt.change_actions.block
+			denominator_coefficient_txt.change_actions.block
 			if a_metric /= Void then
 				numerator_text.set_text (a_metric.numerator_metric_name)
 				on_text_change_in_text_field (a_metric.numerator_metric_name, numerator_text, a_metric.numerator_metric_uuid)
 				denominator_text.set_text (a_metric.denominator_metric_name)
 				on_text_change_in_text_field (a_metric.denominator_metric_name, denominator_text, a_metric.denominator_metric_uuid)
+				numerator_coefficient_txt.set_text (a_metric.numerator_coefficient.out)
+				denominator_coefficient_txt.set_text (a_metric.denominator_coefficient.out)
 			else
 				numerator_text.set_text ("")
 				on_text_change_in_text_field ("", numerator_text, metric_manager.uuid_generator.generate_uuid)
 				denominator_text.set_text ("")
 				on_text_change_in_text_field ("", denominator_text, metric_manager.uuid_generator.generate_uuid)
+				numerator_coefficient_txt.set_text ("1")
+				denominator_coefficient_txt.set_text ("1")
 			end
 			numerator_text.change_actions.resume
 			denominator_text.change_actions.resume
+			numerator_coefficient_txt.change_actions.resume
+			denominator_coefficient_txt.change_actions.resume
 			on_change
 		end
 
@@ -201,6 +218,8 @@ feature -- Access
 			l_den_uuid ?= denominator_text.data
 			check l_den_uuid /= Void end
 			Result.set_denominator_metric_uuid (l_den_uuid)
+			Result.set_numerator_coefficient (numerator_coefficient_txt.text.to_double)
+			Result.set_denominator_coefficient (denominator_coefficient_txt.text.to_double)
 		end
 
 	metric_type: INTEGER is
@@ -331,6 +350,18 @@ feature {NONE} -- Actions
 			on_change
 		end
 
+	on_numerator_coefficient_change is
+			-- Action to be performed when text in `numerator_coefficient_txt' changes
+		do
+			numerator_coefficient_delayed_timer.request_call
+		end
+
+	on_denominator_coefficient_change is
+			-- Action to be performed when text in `denominator_coefficient_txt' changes
+		do
+			denominator_coefficient_delayed_timer.request_call
+		end
+
 feature{NONE} -- Implementation
 
 	setup_menu (a_menu: EV_MENU; a_text: EV_TEXT_FIELD) is
@@ -366,12 +397,37 @@ feature{NONE} -- Implementation
 	numerator_delayed_timer: ES_DELAYED_ACTION
 			-- Numerator metric text field delayed timer
 
-	denominator_delayed_timer: ES_DELAYED_ACTION;
+	denominator_delayed_timer: ES_DELAYED_ACTION
 			-- Denominator metric text field delayed timer
+
+	numerator_coefficient_delayed_timer: ES_DELAYED_ACTION
+			-- Numerator coefficient text field change
+
+	denominator_coefficient_delayed_timer: ES_DELAYED_ACTION
+			-- Denominator coefficient text field change	
+
+	check_coefficient (a_text_field: EV_TEXT_FIELD) is
+			-- Check if changes in `a_text_field' is valid.
+		require
+			a_text_field_attached: a_text_field /= Void
+		local
+			l_str: STRING_32
+		do
+			l_str := a_text_field.text
+			if not l_str.is_double then
+				a_text_field.change_actions.block
+				a_text_field.set_text ("1")
+				a_text_field.set_caret_position (a_text_field.text.count + 1)
+				a_text_field.change_actions.resume
+			end
+			on_change
+		end
 
 invariant
 	numerator_delayed_timer_attached: numerator_delayed_timer /= Void
 	denominator_delayed_timer_attached: denominator_delayed_timer /= Void
+	numerator_coefficient_delayed_timer_attached: numerator_coefficient_delayed_timer /= Void
+	denominator_coefficient_delayed_timer_attached: denominator_coefficient_delayed_timer /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -407,4 +463,5 @@ indexing
 
 
 end -- class EB_RATIO_METRIC_DEFINITION_AREA
+
 

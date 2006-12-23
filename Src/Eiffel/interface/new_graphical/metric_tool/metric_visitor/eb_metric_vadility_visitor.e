@@ -171,6 +171,8 @@ feature -- Process
 			-- Process `a_ratio_metric'.
 			-- A ratio metric is valid if and only if:
 			--		* numerator and denomerator metric are valid
+			--		* numerator coefficient is valid (valid real number)
+			--		* denominator coefficient is valid (valid non-zero real number)
 			--		* no recursive definition
 		local
 			l_num_metric: EB_METRIC
@@ -213,6 +215,17 @@ feature -- Process
 				end
 				if not has_error then
 					l_den_metric.process (Current)
+				end
+
+					-- Check denominator coefficient
+				if not has_error then
+					if a_ratio_metric.denominator_coefficient = 0 then
+						create_last_error_with_to_do (
+							metric_names.err_denominator_coefficient_is_zero,
+							metric_names.ratio_metric_location_section (a_ratio_metric.name),
+							metric_names.make_sure_denominator_coefficient_non_zero_to_do
+						)
+					end
 				end
 			end
 		end

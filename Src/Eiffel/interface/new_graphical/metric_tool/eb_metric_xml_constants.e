@@ -54,7 +54,9 @@ feature{NONE} -- Attribute constants
 	at_numerator_uuid,
 	at_denominator_uuid,
 	at_library_target_uuid,
-	at_filter: INTEGER is unique
+	at_filter,
+	at_numerator_coefficient,
+	at_denominator_coefficient: INTEGER is unique
 
 feature{NONE} -- Text
 
@@ -107,7 +109,9 @@ feature{NONE} -- Text
 	n_numerator_uuid: STRING is "numerator_uuid"
 	n_denominator_uuid: STRING is "denominator_uuid"
 	n_library_target_uuid: STRING is "library_target_uuid"
-	n_filter: STRING is "filter";
+	n_filter: STRING is "filter"
+	n_numerator_coefficient: STRING is "numerator_coefficient"
+	n_denominator_coefficient: STRING is "denominator_coefficient";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

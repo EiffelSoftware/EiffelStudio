@@ -26,10 +26,10 @@ feature -- Node creation
 			create Result.make (a_name, a_unit, a_uuid)
 		end
 
-	new_ratio_metric (a_name: STRING; a_unit: QL_METRIC_UNIT; a_uuid: UUID; a_num_name: STRING; a_num_uuid: UUID; a_den_name: STRING; a_den_uuid: UUID): EB_METRIC_RATIO is
+	new_ratio_metric (a_name: STRING; a_unit: QL_METRIC_UNIT; a_uuid: UUID; a_num_name: STRING; a_num_uuid: UUID; a_den_name: STRING; a_den_uuid: UUID; a_num_coefficient: DOUBLE; a_den_coefficient: DOUBLE): EB_METRIC_RATIO is
 			-- New ratio metric
 		do
-			create Result.make_with_numerator_and_denominator (a_name, a_unit, a_uuid, a_num_name, a_num_uuid, a_den_name, a_den_uuid)
+			create Result.make_with_numerator_and_denominator (a_name, a_unit, a_uuid, a_num_name, a_num_uuid, a_den_name, a_den_uuid, a_num_coefficient, a_den_coefficient)
 		end
 
 feature -- Criterion creation

@@ -145,8 +145,10 @@ feature{NONE} -- Process
 			l_attr_tbl := metric_identifier_table (a_ratio_metric)
 			l_attr_tbl.put (a_ratio_metric.numerator_metric_name, n_numerator)
 			l_attr_tbl.put (a_ratio_metric.numerator_metric_uuid.out, n_numerator_uuid)
+			l_attr_tbl.put (a_ratio_metric.numerator_coefficient.out, n_numerator_coefficient)
 			l_attr_tbl.put (a_ratio_metric.denominator_metric_name, n_denominator)
 			l_attr_tbl.put (a_ratio_metric.denominator_metric_uuid.out, n_denominator_uuid)
+			l_attr_tbl.put (a_ratio_metric.denominator_coefficient.out, n_denominator_coefficient)
 			append_start_tag (n_ratio_metric, l_attr_tbl)
 			append_end_tag (n_ratio_metric)
 			append_new_line

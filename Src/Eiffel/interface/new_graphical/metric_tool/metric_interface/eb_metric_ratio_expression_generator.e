@@ -37,21 +37,30 @@ feature -- Basic operation
 		do
 			reset
 			if metric /= Void then
-				append_metric (metric.numerator_metric_name)
+				append_metric (metric.numerator_coefficient.out, metric.numerator_metric_name)
 				text_list.extend (once " / ")
 				format_list.extend (operator_format)
-				append_metric (metric.denominator_metric_name)
+				append_metric (metric.denominator_coefficient.out, metric.denominator_metric_name)
 			end
 		end
 
 feature{NONE} -- Implementation
 
-	append_metric (a_metric_name: STRING) is
-			-- Append `a_metric_name'
+	append_metric (a_coefficient: STRING; a_metric_name: STRING) is
+			-- Append `a_metric_name' with `a_coefficient'.
 		require
+			a_coefficient_attached: a_coefficient /= Void
 			a_metric_name_attached: a_metric_name /= Void
 		do
 			text_list.extend (once "(")
+			format_list.extend (normal_format)
+			text_list.extend (a_coefficient)
+			format_list.extend (number_format)
+			text_list.extend (" ")
+			format_list.extend (normal_format)
+			text_list.extend ("*")
+			format_list.extend (operator_format)
+			text_list.extend (" ")
 			format_list.extend (normal_format)
 			if a_metric_name.is_empty then
 				text_list.extend ("No metric")

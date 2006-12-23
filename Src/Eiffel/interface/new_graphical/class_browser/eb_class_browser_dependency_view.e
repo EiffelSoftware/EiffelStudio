@@ -171,11 +171,11 @@ feature -- Setting
 		require
 			a_name_of_starting_element_attached: a_name_of_starting_element /= Void
 		do
-			grid.header.i_th (1).set_text (interface_names.l_supplier_group)
-			grid.header.i_th (2).set_text (interface_names.l_supplier_class)
-			grid.header.i_th (3).set_text (referenced_class_column_name (interface_names.l_client_class, a_name_of_starting_element))
-			grid.header.i_th (4).set_text (interface_names.l_feature_in_client_class)
-			grid.header.i_th (5).set_text (interface_names.l_callees_from_supplier_class)
+			grid.column (1).header_item.set_text (interface_names.l_supplier_group)
+			grid.column (2).header_item.set_text (interface_names.l_supplier_class)
+			grid.column (3).header_item.set_text (referenced_class_column_name (interface_names.l_client_class, a_name_of_starting_element))
+			grid.column (4).header_item.set_text (interface_names.l_feature_in_client_class)
+			grid.column (5).header_item.set_text (interface_names.l_callees_from_supplier_class)
 			set_is_displaying_suppliers (True)
 			inheritance_button.set_tooltip (interface_names.h_show_ancestor_classes)
 		ensure
@@ -186,11 +186,11 @@ feature -- Setting
 			-- Prepare for display client dependency.
 			-- `a_name_of_starting_element' is the name displayed in referenced class column.
 		do
-			grid.header.i_th (1).set_text (interface_names.l_client_group)
-			grid.header.i_th (2).set_text (interface_names.l_client_class)
-			grid.header.i_th (3).set_text (referenced_class_column_name (interface_names.l_supplier_class, a_name_of_starting_element))
-			grid.header.i_th (4).set_text (interface_names.l_feature_in_supplier_class)
-			grid.header.i_th (5).set_text (interface_names.l_callers_from_client_class)
+			grid.column (1).header_item.set_text (interface_names.l_client_group)
+			grid.column (2).header_item.set_text (interface_names.l_client_class)
+			grid.column (3).header_item.set_text (referenced_class_column_name (interface_names.l_supplier_class, a_name_of_starting_element))
+			grid.column (4).header_item.set_text (interface_names.l_feature_in_supplier_class)
+			grid.column (5).header_item.set_text (interface_names.l_callers_from_client_class)
 			set_is_displaying_suppliers (False)
 			inheritance_button.set_tooltip (interface_names.h_show_descendant_classes)
 		ensure

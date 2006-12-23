@@ -556,7 +556,7 @@ feature{NONE} -- Implementation/Data
 			if not grid.column (1).is_displayed then
 				grid.column (1).show
 			end
-			grid.header.i_th (1).remove_pixmap
+			grid.column (1).header_item.remove_pixmap
 			grid.row (grid.row_count).ensure_visible
 			grid.column (1).resize_to_content
 		end
@@ -633,7 +633,7 @@ feature{NONE} -- Implementation/Sorting
 			l_name_a: STRING_32
 			l_name_b: STRING_32
 		do
-			l_name_a := string_general_to_lower (a_scope_a.name) 
+			l_name_a := string_general_to_lower (a_scope_a.name)
 			l_name_b := string_general_to_lower (a_scope_b.name)
 			if a_order = ascending_order then
 				Result := l_name_a < l_name_b

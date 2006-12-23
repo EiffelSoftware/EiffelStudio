@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 	temp_header: STRING_GENERAL is
 			-- Temporary header displayed during the format processing.
 		do
-			Result := Interface_names.l_working_formatter (command_name, associated_feature.name, True)
+			Result := Interface_names.l_working_formatter (command_name, associated_feature.name, False)
 		end
 
 	header: STRING_GENERAL is

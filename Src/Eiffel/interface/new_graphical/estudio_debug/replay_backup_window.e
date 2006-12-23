@@ -307,8 +307,12 @@ feature {NONE} -- Implementation
 			create l_file.make (l_path)
 			if l_file.exists and then l_file.is_readable then
 				l_file.open_read
-				l_file.read_stream (l_file.count)
-				Result := l_file.last_string
+				if l_file.readable then
+					l_file.read_stream (l_file.count)
+					Result := l_file.last_string
+				else
+					Result := "Compilation failed and not information was stored."
+				end
 				l_file.close
 			else
 				Result := "File `" + l_path + "' does not exist."

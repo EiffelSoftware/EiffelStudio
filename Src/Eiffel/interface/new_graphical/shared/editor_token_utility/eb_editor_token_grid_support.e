@@ -64,20 +64,35 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	editor_token_at_position (a_x, a_y: INTEGER): EDITOR_TOKEN is
-			-- Editor token at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
-			-- Void if no item is found.
+	stone_and_index_at_position (a_x, a_y: INTEGER): like stone_and_index_from_editor_token_item is
+			-- Stone of editor token and its index at position (`a_x', `a_y') which is related to the top-left coordinate of `grid'
+			-- Void if no item is found or that item contains no stone.			
 		local
 			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_index: INTEGER
 		do
 			l_editor_token_item ?= grid_item_at_position (grid, a_x, a_y)
 			if l_editor_token_item /= Void then
-				l_index := l_editor_token_item.token_index_at_current_position
-				if l_index > 0 then
-					Result := l_editor_token_item.token_at_position (l_index)
+				Result := stone_and_index_from_editor_token_item (l_editor_token_item)
+			end
+		ensure
+			good_result: Result /= Void implies (Result.stone /= Void and then Result.index > 0)
+		end
+
+	stone_and_index_from_editor_token_item (a_item: EB_GRID_EDITOR_TOKEN_ITEM): TUPLE [stone: STONE; index: INTEGER] is
+			-- Stone and its editor token index from `a_item'
+		local
+			l_index: INTEGER
+			l_stone: STONE
+		do
+			l_index := a_item.token_index_at_current_position
+			if l_index > 0 then
+				l_stone ?= a_item.token_at_position (l_index).pebble
+				if l_stone /= Void then
+					Result := [l_stone, l_index]
 				end
 			end
+		ensure
+			good_result: Result /= Void implies (Result.stone /= Void and then Result.index > 0)
 		end
 
 	last_picked_item: EV_GRID_ITEM
@@ -282,25 +297,21 @@ feature{NONE} -- Pick and drop
 			-- Action performed when pick on `a_item'.
 		local
 			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_stone: STONE
-			l_index: INTEGER
+			l_data: like stone_and_index_from_editor_token_item
 		do
 			if not ev_application.ctrl_pressed then
 				last_picked_item := Void
 				l_item ?= a_item
-				if l_item /= Void then
-					l_index := l_item.token_index_at_current_position
-					if l_index > 0 then
-						Result := l_item.editor_token_pebble (l_index)
-						l_stone ?= Result
-						if l_stone /= Void then
-							grid.remove_selection
-							grid.set_accept_cursor (l_stone.stone_cursor)
-							grid.set_deny_cursor (l_stone.x_stone_cursor)
-							l_item.set_last_picked_token (l_index)
-							l_item.redraw
-							last_picked_item := l_item
-						end
+				if l_item /= Void and then l_item.is_parented then
+					l_data := stone_and_index_from_editor_token_item (l_item)
+					if l_data /= Void then
+						Result := l_data.stone
+						grid.remove_selection
+						grid.set_accept_cursor (l_data.stone.stone_cursor)
+						grid.set_deny_cursor (l_data.stone.x_stone_cursor)
+						l_item.set_last_picked_token (l_data.index)
+						l_item.redraw
+						last_picked_item := l_item
 					end
 				end
 			end
@@ -310,15 +321,17 @@ feature{NONE} -- Pick and drop
 			-- Action to be performed when pointer right click on `grid'
 			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.
 		local
-			l_editor_token: EDITOR_TOKEN
+			l_data: like stone_and_index_at_position
 			l_stone: STONE
 		do
-			if a_button = 3 and then ev_application.ctrl_pressed then
-				l_editor_token := editor_token_at_position (a_x, a_y)
-				if l_editor_token /= Void then
-					l_stone ?= l_editor_token.pebble
-					if l_stone /= Void and then l_stone.is_valid then
-						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+			if a_button = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
+				l_data := stone_and_index_at_position (a_x, a_y)
+				if l_data /= Void then
+					l_stone := l_data.stone
+					if l_stone.is_valid then
+						if l_stone /= Void and then l_stone.is_valid then
+							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+						end
 					end
 				end
 			end

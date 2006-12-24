@@ -122,6 +122,7 @@ feature -- Actions
 
 	pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer moves.
+			-- Note: `pointer_motion_actions' of associated grid item will be always invoked.
 		do
 			if pointer_motion_actions_internal = Void then
 				create pointer_motion_actions_internal
@@ -133,6 +134,7 @@ feature -- Actions
 
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is pressed.
+			-- Note: `pointer_button_press_actions' of associated grid item will be always invoked.
 		do
 			if pointer_button_press_actions_internal = Void then
 				create pointer_button_press_actions_internal
@@ -144,6 +146,7 @@ feature -- Actions
 
 	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer is double clicked.
+			-- Note: `pointer_double_press_actions' of associated grid item will be always invoked.
 		do
 			if pointer_double_press_actions_internal = Void then
 				create pointer_double_press_actions_internal
@@ -155,6 +158,7 @@ feature -- Actions
 
 	pointer_button_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer button is released.
+			-- Note: `pointer_button_release_actions' of associated grid item will be always invoked.
 		do
 			if pointer_button_release_actions_internal = Void then
 				create pointer_button_release_actions_internal
@@ -166,6 +170,8 @@ feature -- Actions
 
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer enters widget.
+			-- Note: `pointer_enter_actions' of associated grid item will be invoked as well if
+			--       pointer moves from outside of the grid item.
 		do
 			if pointer_enter_actions_internal = Void then
 				create pointer_enter_actions_internal
@@ -177,6 +183,8 @@ feature -- Actions
 
 	pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer leaves widget.
+			-- Note: `pointer_leave_actions' of associated grid item will be invoked as well if
+			--       pointer moves outside of the grid item.			
 		do
 			if pointer_leave_actions_internal = Void then
 				create pointer_leave_actions_internal

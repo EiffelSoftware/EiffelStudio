@@ -1413,8 +1413,10 @@ feature {NONE} -- Replacement Implementation
 		do
 			if not a_did_nothing then
 				l_classes := multi_search_performer.replace_report.class_replaced
+				report_tool.set_summary (interface_names.l_replace_report (multi_search_performer.replace_report.text_replaced, l_classes))
+			else
+				report_tool.set_summary (interface_names.l_replace_report (0, 0))
 			end
-			report_tool.set_summary (interface_names.l_replace_report (multi_search_performer.replace_report.text_replaced, l_classes))
 		end
 
 feature {NONE} -- Shortcuts

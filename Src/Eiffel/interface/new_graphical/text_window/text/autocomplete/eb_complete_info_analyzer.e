@@ -244,6 +244,9 @@ feature {NONE} -- Private Status
 	is_parenthesized: BOOLEAN
 			-- was auto-complete called after parenthesis "(feature.function_call)." ?
 
+	found_agent_keyword: BOOLEAN
+			-- was auto-complete called after "agent {CLASS}"?
+
 	build_overload_list: BOOLEAN
 
 feature -- Class names completion
@@ -442,7 +445,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					last_type := type
-				elseif is_static or is_parenthesized then
+				elseif is_static or is_parenthesized or found_agent_keyword then
 					Result := found_class
 				end
 			end
@@ -768,11 +771,14 @@ feature {NONE} -- Implementation
 			line: EDITOR_LINE
 			token: EDITOR_TOKEN
 			par_cnt: INTEGER
+			l_temp_token: EDITOR_TOKEN
+			l_temp_line: EDITOR_LINE
 		do
 			line := current_line
 			current_line := a_line
 			token := current_token
 			current_token := a_token
+			found_agent_keyword := False
 			if token_image_is_same_as_word (current_token, Closing_brace) then
 				from
 					par_cnt := 1
@@ -786,8 +792,18 @@ feature {NONE} -- Implementation
 						par_cnt:= par_cnt + 1
 					end
 				end
+					-- Check if "agent" is preceding.
+				l_temp_token := current_token
+				l_temp_line := current_line
+				go_to_previous_token
+				if current_token /= Void and then current_token.image.as_lower.is_equal ("agent") then
+					found_agent_keyword := True
+				end
+				current_token := l_temp_token
+				current_line := l_temp_line
+
 				go_to_next_token
-				error := error or else current_token = Void or else type_of_class_corresponding_to_current_token = Void
+				error := error or else found_agent_keyword or else current_token = Void or else type_of_class_corresponding_to_current_token = Void
 				if not error then
 					Result := True
 				end

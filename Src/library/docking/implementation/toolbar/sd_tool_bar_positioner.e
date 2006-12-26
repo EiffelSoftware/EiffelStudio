@@ -102,6 +102,46 @@ feature -- Command
 				end
 			end
 			on_resize (internal_tool_bar_row.size)
+			check_if_correct
+		end
+
+	check_if_correct is
+			-- After recover last_position, if enough max space, check if current position no overlay problem.
+		local
+			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
+			l_last_x, l_last_width: INTEGER
+			l_conflict: BOOLEAN
+		do
+			if internal_sizer.is_enough_max_space (False) then
+				l_tool_bars := internal_tool_bar_row.zones
+				from
+					l_tool_bars.start
+				until
+					l_tool_bars.after or l_conflict
+				loop
+
+					if l_tool_bars.index > 1 then
+						l_conflict := (l_last_x + l_last_width) > l_tool_bars.item_for_iteration.position
+					end
+					l_last_x := l_tool_bars.item_for_iteration.position
+					l_last_width := l_tool_bars.item_for_iteration.size
+					l_tool_bars.forth
+				end
+				if l_conflict then
+					from
+						l_last_x := 0
+						l_last_width := 0
+						l_tool_bars.start
+					until
+						l_tool_bars.after
+					loop
+						internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration.tool_bar, l_last_x + l_last_width)
+						l_last_x := l_tool_bars.item_for_iteration.position
+						l_last_width := l_tool_bars.item_for_iteration.size
+						l_tool_bars.forth
+					end
+				end
+			end
 		end
 
 	on_pointer_motion (a_relative_position: INTEGER) is
@@ -168,6 +208,8 @@ feature -- Command
 			if internal_sizer.is_enough_max_space (False) then
 				-- Position from right to left
 				position_tool_bar_back_to_front (a_size)
+
+				check_if_correct
 			else
 				-- All tool bar position must be one by one.
 				from

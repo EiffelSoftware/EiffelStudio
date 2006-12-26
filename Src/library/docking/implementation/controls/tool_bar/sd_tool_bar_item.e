@@ -75,7 +75,12 @@ feature -- Query
 	rectangle: EV_RECTANGLE is
 			--  Button rectangle area
 		do
-			create Result.make (tool_bar.item_x (Current), tool_bar.item_y (Current), width, tool_bar.row_height)
+			if tool_bar /= Void then
+				create Result.make (tool_bar.item_x (Current), tool_bar.item_y (Current), width, tool_bar.row_height)
+			else
+				-- Current is hidden when current line is not enough horizontal space.
+				create Result.make (0, 0, 0, 0)
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -109,10 +114,10 @@ feature -- Properties
 	is_displayed: BOOLEAN
 			-- If it is displayed on SD_TOOL_BAR_ZONE.
 
-	description: STRING
+	description: STRING_GENERAL
 			-- Description when use SD_TOOL_BAR_CUSTOMIZE_DIALOG to customize SD_TOOL_BAR.
 
-	set_description (a_description: STRING) is
+	set_description (a_description: STRING_GENERAL) is
 			-- Set `description'
 		require
 			not_void: a_description /= Void
@@ -161,10 +166,10 @@ feature -- Properties
 			set: pixel_buffer = a_pixel_buffer
 		end
 
-	name: STRING
+	name: STRING_GENERAL
 			-- Name which is used for store configuration
 
-	set_name (a_name: STRING) is
+	set_name (a_name: STRING_GENERAL) is
 			-- Set `name'
 		require
 			not_void: a_name /= Void

@@ -53,10 +53,13 @@ feature {NONE} -- Initlization
 			create internal_tool_bar
 			create internal_minimize_all_button
 			internal_minimize_all_button.set_pixmap (internal_shared.icons.minimize)
+			internal_minimize_all_button.set_tooltip (internal_shared.tooltip_mini_toolbar_minimize)
 			create internal_minimize_button
 			internal_minimize_button.set_pixmap (internal_shared.icons.minimize)
+			internal_minimize_button.set_tooltip (internal_shared.tooltip_mini_toolbar_minimize)
 			create internal_normal_max_button
 			internal_normal_max_button.set_pixmap (internal_shared.icons.maximize)
+			internal_normal_max_button.set_tooltip (internal_shared.tooltip_mini_toolbar_maximize)
 
 -- FIXIT: Currently minimize functionality not works good, so we hide this button now.
 --			internal_tool_bar.extend (internal_minimize_all_button)
@@ -141,8 +144,10 @@ feature -- Command
 		do
 			if a_maximized then
 				internal_normal_max_button.set_pixmap (internal_shared.icons.normal)
+				internal_normal_max_button.set_tooltip (internal_shared.tooltip_mini_toolbar_restore)
 			else
 				internal_normal_max_button.set_pixmap (internal_shared.icons.maximize)
+				internal_normal_max_button.set_tooltip (internal_shared.tooltip_mini_toolbar_maximize)
 			end
 			is_maximized := a_maximized
 		end
@@ -152,8 +157,10 @@ feature -- Command
 		do
 			if not a_minimized then
 				internal_minimize_button.set_pixmap (internal_shared.icons.minimize)
+				internal_minimize_button.set_tooltip (internal_shared.tooltip_mini_toolbar_minimize)
 			else
 				internal_minimize_button.set_pixmap (internal_shared.icons.normal)
+				internal_minimize_button.set_tooltip (internal_shared.tooltip_mini_toolbar_restore)
 			end
 		end
 
@@ -162,8 +169,10 @@ feature -- Command
 		do
 			if a_is_minimize then
 				internal_minimize_all_button.set_pixmap (internal_shared.icons.minimize)
+				internal_minimize_all_button.set_tooltip (internal_shared.tooltip_mini_toolbar_minimize)
 			else
 				internal_minimize_all_button.set_pixmap (internal_shared.icons.normal)
+				internal_minimize_all_button.set_tooltip (internal_shared.tooltip_mini_toolbar_restore)
 			end
 		end
 

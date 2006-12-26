@@ -56,9 +56,9 @@ feature -- Command
 		require
 			a_actions_not_void: a_actions /= Void
 		do
-			-- FIXIT: To be implemented.
+			drop_actions := a_actions
 		ensure
-
+			set: drop_actions = a_actions
 		end
 
 	set_width_not_enough_space (a_width: INTEGER) is
@@ -114,6 +114,9 @@ feature -- Command
 		end
 
 feature -- Query
+
+	drop_actions: EV_PND_ACTION_SEQUENCE
+			-- Drop actions.
 
 	internal_draw_pixmap: BOOLEAN
 			-- If draw `pixmap'?
@@ -198,10 +201,10 @@ feature -- Query
 
 feature -- Properties
 
-	text: STRING
+	text: STRING_GENERAL
 			-- Text shown on Current.
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -284,13 +287,26 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 
 	on_expose is
 			-- Handle expose actions.
+		local
+			l_box: SD_NOTEBOOK_TAB_AREA
+			l_avail_width: INTEGER
 		do
-			on_expose_with_width (internal_width)
+			l_box ?= parent.parent
+			check not_void: l_box /= Void end
+			l_avail_width := l_box.width
+			if l_avail_width > 0 then
+				if l_avail_width >= internal_width then
+					on_expose_with_width (internal_width)
+				else
+					on_expose_with_width (l_avail_width)
+				end
+			end
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Hanlde pointer motion.
 		do
+
 			if is_pointer_pressed then
 				is_pointer_pressed := False
 				parent.disable_capture (Current)
@@ -327,9 +343,6 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 		local
 			l_menu: SD_ZONE_MANAGEMENT_MENU
 		do
-			debug ("docking")
-				print ("%NSD_NOTEBOOK_TAB  on_pointer_press")
-			end
 			inspect
 				a_button
 			when 1 then
@@ -350,7 +363,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			when 3 then
 				select_actions.call ([])
 				create l_menu.make (internal_notebook)
-				l_menu.show_at (parent, a_x + x, a_y)
+				l_menu.show_at (parent, a_x, a_y)
 			else
 
 			end
@@ -376,7 +389,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			-- Handle pointer enter actions.
 		do
 			is_hot := True
-			on_expose_with_width (internal_width)
+			on_expose
 		ensure
 			set: is_hot = True
 		end
@@ -385,7 +398,7 @@ feature {SD_NOTEBOOK_TAB_BOX} -- Command
 			-- Handle pointer leave actions.
 		do
 			is_hot := False
-			on_expose_with_width (internal_width)
+			on_expose
 		ensure
 			set: is_hot = False
 		end

@@ -70,10 +70,10 @@ feature -- Key setting
 
 feature -- Properties
 
-	text: STRING
+	text: STRING_GENERAL
 			-- Text
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text'
 		require
 			not_void: a_text /= Void
@@ -260,6 +260,9 @@ feature -- Size issues
 	start_y_position: INTEGER is 0
 			-- Start y position of drawing a pixmap.
 
+	start_y_position_text: INTEGER is 3
+			-- Start y position of drawing a pixmap.
+
 	start_y_close: INTEGER is
 			-- Start y position of drawing a close button
 		do
@@ -325,12 +328,12 @@ feature {NONE} -- Implementation
 			if is_top_side_tab then
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, gap_height, text)
+				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text)
 			else
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, 0, pixmap)
 				-- Draw text
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, 0, text)
+				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, + start_y_position_text, text)
 			end
 
 			draw_close_button (a_pixmap, internal_shared.icons.close)
@@ -346,9 +349,9 @@ feature {NONE} -- Implementation
 				a_pixmap.set_foreground_color (internal_shared.tab_text_color)
 				if a_width - start_x_text_internal >= 0 then
 					if is_top_side_tab then
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, a_width - start_x_text_internal)
 					else
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position + gap_height, text, a_width - start_x_text_internal)
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height, text, a_width - start_x_text_internal)
 					end
 				end
 				-- Draw pixmap
@@ -356,7 +359,7 @@ feature {NONE} -- Implementation
 					if is_top_side_tab then
 						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height, pixmap)
 					else
-						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position, pixmap)
+						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + 1, pixmap)
 					end
 				end
 

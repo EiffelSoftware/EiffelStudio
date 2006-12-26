@@ -173,6 +173,66 @@ feature -- Access
 			set: default_screen_y = a_y
 		end
 
+	zone_navigation_accelerator_key: INTEGER is
+			-- Accelerator key setting for zone navigation dialog.
+			-- On Windows by default is Ctlr + Tab.
+		do
+			Result := zone_navigation_accelerator_key_cell.item
+		end
+
+	zone_navigation_accelerator_ctrl: BOOLEAN is
+			-- Accelerator ctrl setting for zone navigation dialog.
+			-- On Windows by default is Ctlr + Tab.
+		do
+			Result := zone_navigation_accelerator_ctrl_cell.item
+		end
+
+	zone_navigation_accelerator_alt: BOOLEAN is
+			-- Accelerator alt setting for zone navigation dialog.
+			-- On Windows by default is Ctlr + Tab.
+		do
+			Result := zone_navigation_accelerator_alt_cell.item
+		end
+
+	zone_navigation_accelerator_shift: BOOLEAN is
+			-- Accelerator shift setting for zone navigation dialog.
+			-- On Windows by default is Ctlr + Tab.
+		do
+			Result := zone_navigation_accelerator_shift_cell.item
+		end
+
+	set_zone_navigation_accelerator_key (a_key: INTEGER) is
+			-- Set `zone_navigation_accelerator_key' with `a_key'.
+		do
+			zone_navigation_accelerator_key_cell.put (a_key)
+		ensure
+			set: zone_navigation_accelerator_key = a_key
+		end
+
+	set_zone_navigation_accelerator_ctrl (a_bool: BOOLEAN) is
+			-- Set `zone_navigation_accelerator_ctrl' with `a_bool'.
+		do
+			zone_navigation_accelerator_ctrl_cell.put (a_bool)
+		ensure
+			set: zone_navigation_accelerator_ctrl = a_bool
+		end
+
+	set_zone_navigation_accelerator_alt (a_bool: BOOLEAN) is
+			-- Set `zone_navigation_accelerator_alt' with `a_bool'.
+		do
+			zone_navigation_accelerator_alt_cell.put (a_bool)
+		ensure
+			set: zone_navigation_accelerator_alt = a_bool
+		end
+
+	set_zone_navigation_accelerator_shift (a_bool: BOOLEAN) is
+			-- Set `zone_navigation_accelerator_shift' with `a_bool'.
+		do
+			zone_navigation_accelerator_shift_cell.put (a_bool)
+		ensure
+			set: zone_navigation_accelerator_shift = a_bool
+		end
+
 feature  -- Colors
 
 	non_focused_color: EV_COLOR is
@@ -310,7 +370,7 @@ feature -- Constants
 	Auto_hide_panel_gap_size: INTEGER is 4
 			-- Auto hide panel's Gap size.
 
-	Line_width: INTEGER is 2
+	Line_width: INTEGER is 4
 			-- Width of feedback line.
 
 	Resize_bar_width_height: INTEGER is 5
@@ -363,7 +423,7 @@ feature -- Constants
 
 	Highlight_before_width: INTEGER is 4
 			-- Title highlight area width before drawn title texts.
-			
+
 	Highlight_tail_width: INTEGER is 30
 			-- Tilte highlight area width which shown color chang gradually.
 
@@ -385,8 +445,14 @@ feature -- Constants
 	Floating_title_bar_height: INTEGER is 15
 			-- Height of SD_FLOATING_TOOL_BAR_ZONE's title bar.
 
-	Editor_place_holder_content_name: STRING is "docking manager editor place holder"
+	Notebook_minimum_width: INTEGER is 77
+			-- Minimumu width for SD_NOTEBOOK, it's useful when a zone is minimized.	
+
+	Editor_place_holder_content_name: STRING_GENERAL is
 			-- Content name for `place_holder_content' in SD_DOCKING_MANAGER_ZONES.
+		once
+			Result := "docking manager editor place holder"
+		end
 
 	Zone_navigation_column_count: INTEGER is 8
 			-- How many items per column in zone navigation dialog which is normally activated by Ctrl + Tab.
@@ -394,32 +460,68 @@ feature -- Constants
 	Auto_hide_tab_stub_show_delay: INTEGER is 1000
 			-- Auto hide tab stub delay time in milliseconds.
 
-	Zone_navigation_left_column_name: STRING is "Tools"
+	Zone_navigation_left_column_name: STRING_GENERAL is
 			-- Left column name of SD_ZONE_NAVIGATION_DIALOG.
+		once
+			Result := "Tools"
+		end
 
-	Zone_navigation_right_column_name: STRING is "Targets"
+	Zone_navigation_right_column_name: STRING_GENERAL is
 			-- Right column name of SD_ZONE_NAVIGATION_DIALOG.
+		once
+			Result := "Targets"
+		end
 
-	Tooltip_mini_toolbar_stick: STRING is "Auto Hide"
+	Tooltip_mini_toolbar_stick: STRING_GENERAL is
 			-- Tooltip for mini toolbar pin buttons.
-	Tooltip_mini_toolbar_stick_unpin: STRING is "Auto Hide"
+		once
+			Result := "Auto Hide"
+		end
+	Tooltip_mini_toolbar_stick_unpin: STRING_GENERAL is
 			-- Tooltip for mini toolbar unpin buttons.
-	Tooltip_mini_toolbar_maximize: STRING is "Maximize"
+		once
+			Result := "Auto Hide"
+		end
+	Tooltip_mini_toolbar_maximize: STRING_GENERAL is
 			-- Tooltip for mini toolbar maximize buttons.
-	Tooltip_mini_toolbar_restore: STRING is "Restore"
+		once
+			Result :=  "Maximize"
+		end
+	Tooltip_mini_toolbar_restore: STRING_GENERAL is
 			-- Tooltip for mini toolbar restore buttons.
-	Tooltip_mini_toolbar_minimize: STRING is "Minimize"
+		once
+			Result := "Restore"
+		end
+	Tooltip_mini_toolbar_minimize: STRING_GENERAL is
 			-- Tooltip for mini toolbar minimize buttons.
-	Tooltip_mini_toolbar_close: STRING is "Close"
+		once
+			Result :=  "Minimize"
+		end
+	Tooltip_mini_toolbar_close: STRING_GENERAL is
 			-- Tooltip for mini toolbar close buttons.
-	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING is "Show Mini Toolbar"
+		once
+			Result := "Close"
+		end
+	Tooltip_mini_toolbar_hidden_toolbar_indicator: STRING_GENERAL is
 			-- Tooltip for mini toolbar hidden tool bar indicators.
-	Tooltip_mini_toolbar_hidden_tab_indicator: STRING is "Show List"
+		once
+			Result := "Show Mini Toolbar"
+		end
+	Tooltip_mini_toolbar_hidden_tab_indicator: STRING_GENERAL is
 			-- Tooltip for mini toolbar hidden tab indicators.
-	Tooltip_toolbar_tail_indicator: STRING is "Toolbar Options"
+		once
+			Result := "Show List"
+		end
+	Tooltip_toolbar_tail_indicator: STRING_GENERAL is
 			-- Tooltip for tool bar tail indicators.
-	Tooltip_toolbar_floating_close: STRING is "Close"
+		once
+			Result := "Toolbar Options"
+		end
+	Tooltip_toolbar_floating_close: STRING_GENERAL is
 			-- Tooltip for tool bar close button.
+		once
+			Result := "Close"
+		end
 
 feature {NONE} -- Implementation
 
@@ -478,6 +580,30 @@ feature {NONE} -- Implementation
 			create Result
 		ensure
 			not_void: Result /= Void
+		end
+
+	zone_navigation_accelerator_key_cell: CELL [INTEGER] is
+			-- Singleton cell for `zone_navigation_accelerator_key'
+		once
+			create Result.put ({EV_KEY_CONSTANTS}.key_tab)
+		end
+
+	zone_navigation_accelerator_ctrl_cell: CELL [BOOLEAN] is
+			-- Singleton cell for `zone_navigation_accelerator_ctrl'
+		do
+			create Result.put (True)
+		end
+
+	zone_navigation_accelerator_alt_cell: CELL [BOOLEAN] is
+			-- Singleton cell for `zone_navigation_accelerator_alt'
+		do
+			create Result.put (False)
+		end
+
+	zone_navigation_accelerator_shift_cell: CELL [BOOLEAN] is
+			-- Singleton cell for `zone_navigation_accelerator_shift'
+		do
+			create Result.put (False)
 		end
 
 indexing

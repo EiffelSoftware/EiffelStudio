@@ -66,7 +66,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 		local
 			l_new_split_area: EV_SPLIT_AREA
 			l_target_zone_parent: EV_CONTAINER
-			l_old_zone_parent_type: STRING
+			l_old_zone_parent_type: STRING_GENERAL
 			l_target_zone_parent_split_position: INTEGER
 			l_target_zone_parent_spliter: EV_SPLIT_AREA
 		do
@@ -203,7 +203,12 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 
 			l_tab_state.set_direction (l_orignal_direction)
 			state.change_state (l_tab_state)
-			update_last_content_state (l_parent)
+
+			-- Maybe we are opening layout config, so the parent is Void.
+			if l_parent /= Void then
+				update_last_content_state (l_parent)
+			end
+
 		ensure
 --			has: a_target_zone.has (content)
 --			moved: a_target_zone.parent.has (internal_content.state.zone)
@@ -269,7 +274,10 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_docking_state.dock_at_top_level (a_multi_dock_area)
 			state.change_state (l_docking_state)
 
-			update_last_content_state (l_parent)
+			if l_parent /= Void then
+				update_last_content_state (l_parent)
+			end
+
 --			tab_zone.enable_on_select_tab
 		ensure
 			docked:
@@ -284,14 +292,22 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_split_position: INTEGER
 			l_split_area: EV_SPLIT_AREA
 			l_widget: EV_WIDGET
+			l_second_parent: EV_CONTAINER
 		do
 			if state.tab_zone.count = 1 then
 				l_split_area ?= state.tab_zone.parent
 				if l_split_area /= Void then
 					l_split_position := l_split_area.split_position
 				end
+				l_second_parent := state.tab_zone.parent
 				internal_docking_manager.zones.prune_zone (state.tab_zone)
-				create l_docking_state.make_for_tab_zone (state.tab_zone.last_content, a_parent, state.direction)
+				if a_parent.full then
+					-- If a tab want to dock at it's own tab area, then a_parent is full, we use l_second_parent (old tab_zone parent) instead.
+					create l_docking_state.make_for_tab_zone (state.tab_zone.last_content, l_second_parent, state.direction)
+				else
+					create l_docking_state.make_for_tab_zone (state.tab_zone.last_content, a_parent, state.direction)
+				end
+
 				if state.zone.is_maximized then
 					l_docking_state.set_widget_main_area (state.zone.main_area_widget , state.zone.main_area, state.zone.internal_parent, state.zone.internal_parent_split_position)
 				end

@@ -12,9 +12,19 @@ class
 	SD_HORIZONTAL_SPLIT_AREA
 
 inherit
+	SD_MIDDLE_CONTAINER
+		undefine
+			is_in_default_state,
+			initialize,
+			copy
+		end
+
 	EV_HORIZONTAL_SPLIT_AREA
 		redefine
 			initialize
+		select
+			implementation,
+			may_contain
 		end
 
 feature {NONE} -- Redefine

@@ -67,7 +67,7 @@ feature -- Properties
 
 	is_opening_config: BOOLEAN
 			-- If current is opening layout config?
-			
+
 feature {SD_CONFIG_MEDIATOR} -- Setting
 
 	set_is_opening_config (a_bool: BOOLEAN) is

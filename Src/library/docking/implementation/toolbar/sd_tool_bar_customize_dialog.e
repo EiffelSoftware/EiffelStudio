@@ -139,7 +139,6 @@ feature -- Initialization
 			main_container.set_padding (l_layout_constants.Default_padding_size)
 			main_container.set_border_width (l_layout_constants.Default_border_size)
 			main_container.extend (square_container)
-
 				-- Add widgets to our window
 			extend (main_container)
 

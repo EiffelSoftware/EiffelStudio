@@ -316,7 +316,7 @@ feature {NONE} -- Externals
 feature {NONE} -- Features inherit from EV_ANY.
 
 	create_implementation is
-			-- Fack.
+			-- Fake.
 		do
 		end
 

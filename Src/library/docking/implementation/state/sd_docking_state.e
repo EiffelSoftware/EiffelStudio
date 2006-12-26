@@ -79,23 +79,29 @@ feature {SD_TAB_STATE_ASSISTANT} -- Initlization
 
 feature -- Redefine.
 
-	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
 			-- Redefine.
 		local
 			l_content: SD_CONTENT
+			l_titles: ARRAYED_LIST [STRING_GENERAL]
 		do
 			create internal_shared
-			a_titles.start
-			l_content := internal_docking_manager.query.content_by_title_for_restore (a_titles.item)
+			l_titles := a_data.titles
+			l_titles.start
+			l_content := internal_docking_manager.query.content_by_title_for_restore (l_titles.item)
 
 			-- If we don't find SD_CONTENT, ignore it.
 			if l_content /= Void then
 				internal_content := l_content
-				Precursor {SD_STATE} (a_titles, a_container, a_direction)
+				Precursor {SD_STATE} (a_data, a_container)
 				make (l_content, {SD_ENUMERATION}.left, 1)
 				a_container.extend (zone)
 				change_state (Current)
-				direction := a_direction
+				direction := a_data.direction
+			end
+
+			if a_data.is_minimized then
+				restore_minimize
 			end
 		end
 
@@ -110,7 +116,7 @@ feature -- Redefine.
 			end
 		end
 
-	change_title (a_title: STRING; a_content: SD_CONTENT) is
+	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
 			-- Redefine.
 		do
 			zone.set_title (a_title)
@@ -189,12 +195,14 @@ feature -- Redefine.
 		ensure then
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
 		rescue
-			internal_docking_manager.command.unlock_update
-			if l_called then
+			if not l_retried then
 				internal_docking_manager.command.unlock_update
+				if l_called then
+					internal_docking_manager.command.unlock_update
+				end
+				l_retried := True
+				retry
 			end
-			l_retried := True
-			retry
 		end
 
 stick (a_direction: INTEGER) is
@@ -268,12 +276,14 @@ stick (a_direction: INTEGER) is
 		ensure then
 			parent_changed: old zone.parent /= zone.parent
 		rescue
-			internal_docking_manager.command.unlock_update
-			if l_called then
+			if not l_retried then
 				internal_docking_manager.command.unlock_update
+				if l_called then
+					internal_docking_manager.command.unlock_update
+				end
+				l_retried := True
+				retry
 			end
-			l_retried := True
-			retry
 		end
 
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_first: BOOLEAN) is
@@ -326,8 +336,8 @@ stick (a_direction: INTEGER) is
 			Precursor {SD_STATE}
 			zone.hide
 			l_spliter ?= zone.parent
-			if l_spliter /= Void then
-				if not l_spliter.first.is_displayed and not l_spliter.second.is_displayed then
+			if l_spliter /= Void and then l_spliter.is_displayed then
+				if l_spliter.full and then (not l_spliter.first.is_displayed and not l_spliter.second.is_displayed) then
 					l_spliter.hide
 				end
 			end
@@ -338,7 +348,7 @@ stick (a_direction: INTEGER) is
 			end
 			docking_manager.command.resize (False)
 		end
-
+		
 	set_user_widget (a_widget: EV_WIDGET) is
 			-- Redefine
 		do

@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP; a_unique_title: STRING) is
+	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP; a_unique_title: STRING_GENERAL) is
 			-- Creation method.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 			short_title_not_void: short_title /= Void
 		end
 
-	make_with_widget (a_widget: EV_WIDGET; a_unique_title: STRING) is
+	make_with_widget (a_widget: EV_WIDGET; a_unique_title: STRING_GENERAL) is
 			-- Creation method.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -80,10 +80,10 @@ feature -- Access
 			result_valid: Result = internal_unique_title
 		end
 
-	long_title: STRING
+	long_title: STRING_GENERAL
 			-- Client programmer's widget's long title. Which is shown at SD_TITLE_BAR.
 
-	short_title: STRING
+	short_title: STRING_GENERAL
 			-- Client programmer's widget's short title. Which is shown at SD_TAB_STUB.		
 
 	pixmap: like internal_pixmap is
@@ -94,10 +94,10 @@ feature -- Access
 			result_valid: Result = internal_pixmap
 		end
 
-	description: STRING
+	description: STRING_GENERAL
 			-- When show zone navigation dialog, we use this description if exist.
 
-	detail: STRING
+	detail: STRING_GENERAL
 			-- When show zone navigation dialog, we use this detail if exist.
 
 	pixel_buffer: like internal_pixel_buffer is
@@ -132,7 +132,7 @@ feature -- Access
 			Result := docking_manager.focused_content = Current
 		end
 
-	is_title_unique_except_current (a_title: STRING): BOOLEAN is
+	is_title_unique_except_current (a_title: STRING_GENERAL): BOOLEAN is
 			-- If `a_title' unique?
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
@@ -146,7 +146,7 @@ feature -- Access
 					l_contents.after or not Result
 				loop
 					if l_contents.item /= Current then
-						if l_contents.item.unique_title.is_equal (a_title) then
+						if l_contents.item.unique_title.as_string_32.is_equal (a_title.as_string_32) then
 							Result := False
 						end
 					end
@@ -161,9 +161,46 @@ feature -- Access
 			Result := unique_title.hash_code
 		end
 
+	floating_width: INTEGER is
+			-- If Current floating, the width of the floating window which contain Current.
+		do
+			Result := state.last_floating_width
+		end
+
+	floating_height: INTEGER is
+			-- If Current floating, the height of the floating window which contain Current.
+		do
+			Result := state.last_floating_height
+		end
+
+	state_value: INTEGER is
+			-- Current state.
+		local
+			l_void: SD_STATE_VOID
+			l_docking: SD_DOCKING_STATE
+			l_tab: SD_TAB_STATE
+			l_auto_hide: SD_AUTO_HIDE_STATE
+		do
+			l_void ?= state
+			l_docking ?= state
+			l_tab ?= state
+			l_auto_hide ?= state
+			if l_void /= Void then
+				Result := {SD_ENUMERATION}.state_void
+			elseif l_docking /= Void then
+				Result := {SD_ENUMERATION}.docking
+			elseif l_tab /= Void then
+				Result := {SD_ENUMERATION}.tab
+			elseif l_auto_hide /= Void then
+				Result := {SD_ENUMERATION}.auto_hide
+			end
+		ensure
+			vaild: (create {SD_ENUMERATION}).is_state_valid (Result)
+		end
+
 feature -- Set
 
-	set_long_title (a_long_title: STRING) is
+	set_long_title (a_long_title: STRING_GENERAL) is
 			-- Set `long_title'.
 		require
 			a_long_title_not_void: a_long_title /= Void
@@ -174,7 +211,7 @@ feature -- Set
 			set: a_long_title = long_title
 		end
 
-	set_short_title (a_short_title: STRING)	is
+	set_short_title (a_short_title: STRING_GENERAL)	is
 			-- Set `short_title'.
 		require
 			a_short_title_not_void: a_short_title /= Void
@@ -185,7 +222,7 @@ feature -- Set
 			set: a_short_title = short_title
 		end
 
-	set_unique_title (a_unique_title: STRING) is
+	set_unique_title (a_unique_title: STRING_GENERAL) is
 			-- Set `unique_title'
 		require
 			a_unique_title_not_void: a_unique_title /= Void
@@ -279,6 +316,26 @@ feature -- Set
 			state.set_user_widget (a_widget)
 		end
 
+	set_floating_width (a_width: INTEGER) is
+			-- Set `floating_width'
+		require
+			valid: a_width >= 0
+		do
+			state.set_last_floating_width (a_width)
+		ensure
+			set: floating_width = a_width
+		end
+
+	set_floating_height (a_height: INTEGER) is
+			-- Set `floating_height'
+		require
+			vaild: a_height >= 0
+		do
+			state.set_last_floating_height (a_height)
+		ensure
+			set: floating_height = a_height
+		end
+
 feature -- Set Position
 
 	set_relative (a_relative: SD_CONTENT; a_direction: INTEGER) is
@@ -299,6 +356,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 		do
+			state.set_direction (a_direction)
 			state.dock_at_top_level (docking_manager.query.inner_container_main)
 			set_focus
 		end
@@ -361,6 +419,12 @@ feature -- Set Position
 			no_place_holder: not manager_has_place_holder
 		end
 
+	set_split_proportion (a_proportion: REAL) is
+			-- If current content is docking or tabbed, set parent splitter proportion to `a_proportion'.
+		do
+			state.set_split_proportion (a_proportion)
+		end
+
 feature -- Actions
 
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -419,6 +483,12 @@ feature -- Command
 		do
 			state.show
 			is_visible := True
+		end
+
+	minimize is
+			-- Minimize if possible
+		do
+			state.minimize
 		end
 
 feature -- States report
@@ -522,7 +592,7 @@ feature {NONE}  -- Implemention.
 	internal_user_widget: EV_WIDGET
 			-- Client programmer's widget.
 
-	internal_unique_title: STRING
+	internal_unique_title: STRING_GENERAL
 			-- The internal_user_widget's internal_unique_title.
 
 	internal_pixmap: EV_PIXMAP

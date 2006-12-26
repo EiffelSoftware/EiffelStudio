@@ -83,14 +83,14 @@ feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
 			set: internal_docking_manager = a_docking_manager
 		end
 
-	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
 			-- `titles' is content name. `a_container' is zone parent.
 		require
-			more_than_one_title: content_count_valid (a_titles)
+			more_than_one_title: content_count_valid (a_data.titles)
 			a_container_not_void: a_container /= Void
 			a_container_not_full: not a_container.full
-			a_direction_valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
-				or a_direction = {SD_ENUMERATION}.left or a_direction = {SD_ENUMERATION}.right
+			a_direction_valid: a_data.direction = {SD_ENUMERATION}.top or a_data.direction = {SD_ENUMERATION}.bottom
+				or a_data.direction = {SD_ENUMERATION}.left or a_data.direction = {SD_ENUMERATION}.right
 		do
 			content.set_visible (True)
 		end
@@ -167,6 +167,28 @@ feature -- Commands
 		do
 		end
 
+	minimize is
+			-- Minimize if possible
+		local
+			l_zone: SD_UPPER_ZONE
+		do
+			l_zone ?= zone
+			if l_zone /= Void and then not l_zone.is_minimized then
+				l_zone.on_minimize
+			end
+		end
+
+	set_split_proportion (a_proportion: REAL) is
+			-- Set parent splitter proportion to `a_proportion' if is possible.
+		local
+			l_parent: EV_SPLIT_AREA
+		do
+			l_parent ?= zone.parent
+			if l_parent /= Void then
+				l_parent.set_proportion (a_proportion)
+			end
+		end
+
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
 			-- Change zone position to `a_target_zone''s parent at `a_direction'.
 		require
@@ -240,7 +262,7 @@ feature -- Properties
 
 feature {SD_CONTENT} -- SD_CONTENT called functions.
 
-	change_title (a_title: STRING; a_content: SD_CONTENT) is
+	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
 			-- Change title
 		require
 			a_title_not_void: a_title /= Void
@@ -284,7 +306,7 @@ feature  -- States report
 			Result := internal_content = Void
 		end
 
-	content_count_valid (a_titles: ARRAYED_LIST [STRING]): BOOLEAN is
+	content_count_valid (a_titles: ARRAYED_LIST [STRING_GENERAL]): BOOLEAN is
 			-- If `a_titles' vaild?
 		require
 			a_titles_not_void: a_titles /= Void
@@ -407,6 +429,17 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			result_valid: Result >= a_spliter.minimum_split_position and Result <= a_spliter.maximum_split_position
+		end
+
+	restore_minimize is
+			-- Restore minimize state.
+		local
+			l_upper_zone: SD_UPPER_ZONE
+		do
+			l_upper_zone ?= internal_content.state.zone
+			if l_upper_zone /= Void then
+				l_upper_zone.minimize_for_restore
+			end
 		end
 
 	internal_content: SD_CONTENT

@@ -64,7 +64,7 @@ feature -- Status report
 	is_search_launched: BOOLEAN
 			-- Is search_launched?
 
-	last_searched: STRING
+	last_searched: STRING_GENERAL
 			-- Last searched string.
 
 feature -- Behavior
@@ -86,18 +86,18 @@ feature -- Behavior
 
 feature {NONE} -- Implementation
 
-	search_perform (a_str: STRING) is
+	search_perform (a_str: STRING_GENERAL) is
 			-- Perform searching.
 		do
 			create texts_found_internal.make (10)
 			create found_indexs_in_texts_internal.make (10)
-			pcre_re.compile (a_str)
+			pcre_re.compile (a_str.as_string_8)
 			from
 				texts.start
 			until
 				texts.after or not pcre_re.is_compiled
 			loop
-				pcre_re.match (texts.item)
+				pcre_re.match (texts.item.as_string_8)
 				if pcre_re.has_matched then
 					texts_found_internal.extend (texts.item)
 					found_indexs_in_texts_internal.extend (texts.index)

@@ -54,7 +54,7 @@ feature -- Command
 		do
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Do nothing.
 		do
 		end
@@ -74,7 +74,7 @@ feature -- Query
 			 Result := a_content = internal_docking_manager.zones.place_holder_content
 		end
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title
 		local
 			l_shared: SD_SHARED

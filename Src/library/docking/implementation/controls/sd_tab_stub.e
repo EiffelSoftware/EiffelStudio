@@ -102,7 +102,7 @@ feature {NONE} -- Initlization
 
 feature -- Query
 
-	text: STRING is
+	text: STRING_GENERAL is
 			-- Title.
 		do
 			Result := internal_text
@@ -143,7 +143,7 @@ feature -- Query
 
 feature -- Command
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `title'.
 		do
 			internal_text := a_text
@@ -399,7 +399,7 @@ feature {NONE} -- Implementation
 	internal_drawing_area: EV_DRAWING_AREA
 			-- Drawing area draw `internal_pixmap'.
 
-	internal_text: STRING
+	internal_text: STRING_GENERAL
 			-- Text on `internal_drawing_area'.
 
 	internal_shared: SD_SHARED

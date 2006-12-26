@@ -35,10 +35,10 @@ feature {NONE} -- Initlization
 
 feature -- Properties
 
-	title: STRING
+	title: STRING_GENERAL
 			-- Text showing on Current.
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set `title' with `a_title'.
 		require
 			not_void: a_title /= Void

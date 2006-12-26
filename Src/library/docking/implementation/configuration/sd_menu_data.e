@@ -45,10 +45,10 @@ feature -- Floating datas
 			set: a_is_floating = is_floating
 		end
 
-	title: STRING
+	title: STRING_GENERAL
 			-- Title of floating zone.
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set `a_title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -75,7 +75,7 @@ feature -- Docking datas
 	rows: ARRAYED_LIST [like tool_bar_data]
 			-- All row datas in `Current'.
 
-	row (a_title: STRING): like tool_bar_data is
+	row (a_title: STRING_GENERAL): like tool_bar_data is
 			-- Row data contain a_title. If not found, create a new one.
 		require
 			a_title_not_void: a_title /= Void
@@ -120,7 +120,7 @@ feature -- SD_TOOL_BAR_ZONE last state
 
 feature  {NONE} -- Implementation
 
-	tool_bar_data: ARRAYED_LIST [TUPLE [STRING, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
+	tool_bar_data: ARRAYED_LIST [TUPLE [STRING_GENERAL, INTEGER, SD_TOOL_BAR_ZONE_STATE]]
 			-- When `Current' is docking tool bar data, 1st is tool bar content's title, 2nd is this tool bar position in tool bar row.
 
 invariant

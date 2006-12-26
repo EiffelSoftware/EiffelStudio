@@ -78,7 +78,7 @@ feature {NONE} -- Initlization
 
 feature -- Command
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set the title on the title bar.
 		require
 			a_title_not_void: a_title /= Void
@@ -232,7 +232,7 @@ feature -- Command
 
 feature -- Query
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title
 		do
 			Result := internal_title.title

@@ -80,7 +80,7 @@ feature -- Redefine
 			internal_notebook.set_focus_color (False)
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Redefine
 		do
 			internal_notebook.set_item_text (internal_content, a_title)
@@ -121,7 +121,7 @@ feature -- Redefine
 			Result := internal_notebook.is_maximized
 		end
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Redefine
 		do
 			Result := internal_notebook.item_text (internal_content)

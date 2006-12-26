@@ -85,7 +85,7 @@ feature -- Command
 			window.set_show_stick (a_show)
 		end
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set title.
 		do
 			window.title_bar.set_title (a_title)
@@ -121,7 +121,7 @@ feature -- Command
 
 feature -- Query
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Redefine
 		do
 			Result := window.title_bar.title

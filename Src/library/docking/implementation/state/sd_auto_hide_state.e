@@ -125,7 +125,7 @@ feature -- Redefine.
 			retry
 		end
 
- 	change_title (a_title: STRING; a_content: SD_CONTENT) is
+ 	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
 			-- Redefine
 		do
 			tab_stub.set_text (a_title)
@@ -139,13 +139,13 @@ feature -- Redefine.
 			tab_stub.on_redraw (0, 0, tab_stub.width, tab_stub.height)
 		end
 
-	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
 			-- Redefine.
 		do
 			-- This class can created by make (not like SD_DOCKING_STATE, created by INTERNAL), so this routine do less work.
 			change_state (Current)
-			direction := a_direction
-			Precursor {SD_STATE} (a_titles, a_container, a_direction)
+			direction := a_data.direction
+			Precursor {SD_STATE} (a_data, a_container)
 		end
 
 	record_state is

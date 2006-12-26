@@ -27,6 +27,8 @@ inherit
 			is_dock_at_top,
 			hide,
 			has,
+			set_last_floating_width,
+			set_last_floating_height,
 			restore
 		end
 create
@@ -125,7 +127,7 @@ feature {NONE} -- Initlization
 
 feature -- Redefine
 
-	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
 			-- Redefine.
 		local
 			l_content: SD_CONTENT
@@ -133,42 +135,58 @@ feature -- Redefine
 			l_first_tab: BOOLEAN
 			l_docking_state: SD_DOCKING_STATE
 			l_third_time: BOOLEAN
+			l_tab_zone: SD_TAB_ZONE
+			l_titles: ARRAYED_LIST [STRING_GENERAL]
+			l_selected_index: INTEGER
 		do
-			direction := a_direction
+			direction := a_data.direction
+			l_titles := a_data.titles
+			l_selected_index := a_data.selected_tab_index
 			create internal_shared
 			from
-				a_titles.start
+				l_titles.start
 				l_first_tab := True
 			until
-				a_titles.after
+				l_titles.after
 			loop
-				l_content := internal_docking_manager.query.content_by_title_for_restore (a_titles.item)
+				l_content := internal_docking_manager.query.content_by_title_for_restore (l_titles.item)
 				if l_content /= Void then
 					if l_first_tab then
 						internal_content := l_content
-						Precursor {SD_STATE} (a_titles, a_container, a_direction)
-						create l_docking_state.make_for_tab_zone (l_content, a_container, a_direction)
+						Precursor {SD_STATE} (a_data, a_container)
+						create l_docking_state.make_for_tab_zone (l_content, a_container, a_data.direction)
 						l_content.change_state (l_docking_state)
 
-						l_docking_state.set_direction (a_direction)
+						l_docking_state.set_direction (a_data.direction)
 						l_first_tab := False
 					elseif not l_third_time then
 	 					create l_tab_state.make (l_content, l_docking_state.zone, direction)
 	 					l_content.set_visible (True)
 						l_content.change_state (l_tab_state)
-						l_tab_state.set_direction (a_direction)
+						l_tab_state.set_direction (a_data.direction)
 						l_third_time := True
 					elseif l_third_time then
 						create l_tab_state.make_with_tab_zone (l_content, l_tab_state.zone, direction)
 						l_content.set_visible (True)
 						l_content.change_state (l_tab_state)
-						l_tab_state.set_direction (a_direction)
+						l_tab_state.set_direction (a_data.direction)
 					end
 				end
-				a_titles.forth
+				l_titles.forth
 			end
---			update_last_content_state
 
+			l_tab_zone ?= internal_content.state.zone
+			check not_void: l_tab_zone /= Void end
+			if l_tab_zone.contents.count >= l_selected_index then
+				l_tab_zone.select_item (l_tab_zone.contents.i_th (l_selected_index), False)
+			end
+
+			if a_data.is_minimized then
+				restore_minimize
+			end
+
+			is_set_width_after_restore := True
+			is_set_height_after_restore := True
 		ensure then
 			restored:
 		end
@@ -226,11 +244,14 @@ feature -- Redefine
 			-- Redefine.
 		local
 			l_parent: EV_CONTAINER
+			l_state_void: SD_STATE_VOID
 		do
 			internal_docking_manager.command.lock_update (zone, False)
 			l_parent := tab_zone.parent
 			tab_zone.prune (internal_content, True)
 			assistant.update_last_content_state (l_parent)
+			create l_state_void.make (content)
+			change_state (l_state_void)
 			internal_docking_manager.command.remove_empty_split_area
 			internal_docking_manager.command.unlock_update
 		end
@@ -249,7 +270,10 @@ feature -- Redefine
 				l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 				change_state (l_docking_state)
 				internal_docking_manager.command.lock_update (zone, False)
-				assistant.update_last_content_state (l_parent)
+				if l_parent /= Void then
+					assistant.update_last_content_state (l_parent)
+				end
+
 				internal_docking_manager.command.unlock_update
 				internal_docking_manager.command.unlock_update
 			else
@@ -357,7 +381,7 @@ feature -- Redefine
 
 feature {SD_CONTENT} -- Redefine
 
-	change_title (a_title: STRING; a_content: SD_CONTENT) is
+	change_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
 			-- Redefine.
 		do
 			tab_zone.set_title (a_title, a_content)
@@ -368,6 +392,65 @@ feature {SD_CONTENT} -- Redefine
 		do
 			tab_zone.set_pixmap (a_pixmap, a_content)
 		end
+
+feature {SD_CONFIG_MEDIATOR, SD_STATE} -- Redefine
+
+	set_last_floating_width (a_int: INTEGER) is
+			-- Redefine
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_state: SD_TAB_STATE
+		do
+			if is_set_width_after_restore then
+				from
+					-- We must query zone from `content' but not query zone directly, because when restore `change_state' called.
+					l_state ?= content.state
+					check not_void: l_state /= Void end
+					l_contents := l_state.zone.contents
+					l_contents.start
+				until
+					l_contents.after
+				loop
+					l_contents.item.state.set_last_floating_width (a_int)
+					l_contents.forth
+				end
+				is_set_width_after_restore := False
+			end
+
+			Precursor {SD_STATE}(a_int)
+		ensure then
+			flag_cleared: is_set_width_after_restore = False
+		end
+
+	set_last_floating_height (a_int: INTEGER) is
+			-- Redefine
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_state: SD_TAB_STATE
+		do
+			if is_set_height_after_restore then
+				from
+					-- We must query zone from `content' but not query zone directly, because when restore `change_state' called.
+					l_state ?= content.state
+					check not_void: l_state /= Void end
+					l_contents := l_state.zone.contents
+					l_contents.start
+				until
+					l_contents.after
+				loop
+					l_contents.item.state.set_last_floating_height (a_int)
+					l_contents.forth
+				end
+				is_set_height_after_restore := False
+			end
+
+			Precursor {SD_STATE}(a_int)
+		ensure then
+			flag_cleared: is_set_height_after_restore = False
+		end
+
+	is_set_width_after_restore, is_set_height_after_restore: BOOLEAN
+			-- Is set `last_floating_width' and `last_floating_height' after restore?
 
 feature -- Properties redefine.
 
@@ -390,7 +473,7 @@ feature -- Properties redefine.
 
 feature -- Query
 
-	content_count_valid (a_titles: ARRAYED_LIST [STRING]): BOOLEAN is
+	content_count_valid (a_titles: ARRAYED_LIST [STRING_GENERAL]): BOOLEAN is
 		do
 			Result := a_titles.count > 1
 		end

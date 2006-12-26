@@ -51,7 +51,7 @@ feature -- Redefine.
 		do
 		end
 
-	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
+	restore (a_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
 			-- Redefine.
 		do
 			content.set_visible (False)
@@ -182,11 +182,13 @@ feature -- Redefine.
 					change_state (l_new_state)
 				end
 			else
-				float (0, 0)
+				float (internal_shared.default_screen_x, internal_shared.default_screen_y)
 			end
 		rescue
-			l_restired := True
-			retry
+			if not l_restired then
+				l_restired := True
+				retry
+			end
 		end
 
 	close is

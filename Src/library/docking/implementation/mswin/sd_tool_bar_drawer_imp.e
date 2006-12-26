@@ -260,7 +260,7 @@ feature {NONE} -- Implementation
 			l_imp: EV_PIXMAP_IMP
 		do
 			l_button ?= a_arguments.item
-			if l_button /= Void and then l_button.pixmap /= Void then
+			if l_button /= Void and then l_button.pixmap /= Void and l_button.tool_bar /= Void then
 				if not a_arguments.item.is_sensitive then
 					l_orignal_pixmap := a_arguments.item.pixmap
 					l_grey_pixmap := l_orignal_pixmap.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_orignal_pixmap.width, l_orignal_pixmap.height))

@@ -128,7 +128,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING) is
+	set_item_name (an_item: PROCEDURE [ANY, TUPLE [ANY]]; a_name: STRING_GENERAL) is
 			-- Acociate `a_name' with `an_item'.
 		do
 			names.force (a_name, an_item)
@@ -136,7 +136,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	names: HASH_TABLE [STRING, PROCEDURE [ANY, TUPLE]]
+	names: HASH_TABLE [STRING_GENERAL, PROCEDURE [ANY, TUPLE]]
 
 invariant
 	names_not_void: names /= Void

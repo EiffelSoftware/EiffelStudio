@@ -52,6 +52,7 @@ feature {NONE} -- Initlization
 			drop_actions.set_veto_pebble_function (agent on_veto_pebble_function)
 
 			create internal_shared
+			set_background_color (internal_shared.default_background_color)
 		end
 
 feature -- Properties
@@ -326,7 +327,8 @@ feature {SD_TOOL_BAR_DRAWER_IMP, SD_TOOL_BAR_ITEM, SD_TOOL_BAR} -- Internal issu
 				until
 					l_items.after
 				loop
-					if l_items.item.is_need_redraw then
+					-- item's tool bar query maybe Void, because it's hidden when not enough space to display.
+					if l_items.item.is_need_redraw and l_items.item.tool_bar /= Void then
 						l_rect := l_items.item.rectangle
 						drawer.start_draw (l_rect)
 						redraw_item (l_items.item)
@@ -374,12 +376,7 @@ feature {NONE} -- Agents
 			-- Handle expose actions.
 		local
 			l_items: like internal_items
-
-			l_colors: EV_STOCK_COLORS
 		do
-			create l_colors
-			set_background_color (l_colors.default_background_color)
-
 			drawer.start_draw (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height))
 			from
 				l_items := items
@@ -632,6 +629,7 @@ feature {SD_TOOL_BAR} -- Implementation
 
 	pointer_entered: BOOLEAN
 			-- Has pointer enter actions been called?
+			-- The reason why have this flag see `on_pointer_enter''s comments.
 
 	internal_shared: SD_SHARED
 			-- All singletons.

@@ -20,14 +20,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_vertical: BOOLEAN; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_vertical: BOOLEAN; a_docking_manager: SD_DOCKING_MANAGER; a_is_menu_bar: BOOLEAN) is
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			create internal_shared
 			docking_manager := a_docking_manager
-			create {SD_WIDGET_TOOL_BAR} tool_bar.make (create {SD_TOOL_BAR}.make)
+			if not a_is_menu_bar then
+				create {SD_WIDGET_TOOL_BAR} tool_bar.make (create {SD_TOOL_BAR}.make)
+			else
+				create {SD_MENU_BAR} tool_bar.make
+			end
+
 			is_vertical := a_vertical
 
 			create internal_tool_bar_dot_drawer.make (tool_bar.background_color)
@@ -218,6 +223,7 @@ feature -- Command
 			extend_one_item (tail_indicator)
 			tail_indicator.set_pixmap (internal_shared.icons.tool_bar_customize_indicator)
 			tail_indicator.set_pixel_buffer (internal_shared.icons.tool_bar_customize_indicator_buffer)
+			tail_indicator.set_tooltip (internal_shared.tooltip_toolbar_tail_indicator)
 			tail_indicator.select_actions.extend (agent assistant.on_tail_indicator_selected)
 
 			compute_minmum_size
@@ -358,6 +364,26 @@ feature -- Query
 			Result := tool_bar.has (a_item)
 		end
 
+	has_right_click_action (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- If button at `a_screen_x', `a_screen_y' has pointer actions?
+		local
+			l_button: SD_TOOL_BAR_BUTTON
+		do
+			if tool_bar.is_item_position_valid (a_screen_x, a_screen_y) then
+				from
+					tool_bar_items.start
+				until
+					tool_bar_items.after or Result
+				loop
+					l_button ?= tool_bar_items.item
+					if l_button /= Void and l_button.rectangle.has_x_y (a_screen_x - tool_bar.screen_x, a_screen_y - tool_bar.screen_y) then
+						Result := l_button.pointer_button_press_actions.count > 0
+					end
+					tool_bar_items.forth
+				end
+			end
+		end
+
 feature {NONE} -- Agents
 
 	on_redraw_drag_area (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
@@ -425,7 +451,7 @@ feature {NONE} -- Implmentation
 			end
 		end
 
-	internal_text: ARRAYED_LIST [STRING]
+	internal_text: ARRAYED_LIST [STRING_GENERAL]
 			-- When `is_vertical' we hide all texts, store orignal texts here.
 
 	internal_hidden_widget_items: DS_HASH_TABLE [SD_TOOL_BAR_WIDGET_ITEM, INTEGER]
@@ -481,8 +507,16 @@ feature {SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_HIDDEN_ITEM_DIALOG, SD_FLOATING
 
 	extend_one_item (a_item: SD_TOOL_BAR_ITEM) is
 			-- Extend `a_item' if `a_item' is_displayed.
+		local
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			if a_item.is_displayed then
+				l_widget_item ?= a_item
+				if l_widget_item /= Void then
+					if l_widget_item.widget.parent /= Void then
+						l_widget_item.widget.parent.prune (l_widget_item.widget)
+					end
+				end
 				tool_bar.extend (a_item)
 			end
 		end

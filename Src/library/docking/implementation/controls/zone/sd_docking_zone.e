@@ -38,7 +38,7 @@ inherit
 
 feature -- Command
 
-	set_title (a_title: STRING) is
+	set_title (a_title: STRING_GENERAL) is
 			-- Set title
 		require
 			not_void: a_title /= Void
@@ -68,7 +68,7 @@ feature -- Command
 
 feature -- Query
 
-	title: STRING is
+	title: STRING_GENERAL is
 			-- Title
 		deferred
 		end

@@ -30,7 +30,7 @@ feature {NONE} -- Initlization
 
 feature -- Properties
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `text', can set Void text.
 		do
 			text := a_text
@@ -38,7 +38,7 @@ feature -- Properties
 			set: text = a_text
 		end
 
-	text: STRING
+	text: STRING_GENERAL
 			-- Text shown on item.
 
 	set_tooltip (a_tip: like tooltip) is
@@ -51,7 +51,7 @@ feature -- Properties
 			set: tooltip =  a_tip
 		end
 
-	tooltip: STRING
+	tooltip: STRING_GENERAL
 			-- Tooltip shown on item.
 
 feature -- Command
@@ -210,7 +210,7 @@ feature {SD_TOOL_BAR} -- Agents
 			-- Redefine
 		do
 			if has_position (a_relative_x, a_relative_y) then
-				if tooltip /= Void and not tooltip.is_equal (tool_bar.tooltip) then
+				if tooltip /= Void and not tooltip.as_string_32.is_equal (tool_bar.tooltip.as_string_32) then
 					tool_bar.set_tooltip (tooltip)
 				elseif tooltip = Void then
 					tool_bar.remove_tooltip

@@ -69,7 +69,7 @@ feature -- Command
 			set: pixmap = a_pixmap
 		end
 
-	set_text (a_text: STRING) is
+	set_text (a_text: STRING_GENERAL) is
 			-- Set `a_text'
 		require
 			a_text_not_void: a_text /= Void
@@ -111,7 +111,7 @@ feature -- Query
 	pixmap: EV_PIXMAP
 			-- Pixmap on current.
 
-	text: STRING is
+	text: STRING_GENERAL is
 			-- Text on current.
 		do
 			Result := internal_label.text

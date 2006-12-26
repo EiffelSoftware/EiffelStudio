@@ -166,7 +166,7 @@ feature -- Command
 			set: a_show = internal_title_bar.is_show_stick
 		end
 
-	set_title (a_title: STRING; a_content: SD_CONTENT) is
+	set_title (a_title: STRING_GENERAL; a_content: SD_CONTENT) is
 			-- Set title.
 		require
 			a_title_not_void: a_title /= Void
@@ -256,6 +256,7 @@ feature {SD_TAB_STATE} -- Internal issues.
 			has (a_content)
 		do
 			internal_notebook.select_item (a_content, a_focus)
+			update_mini_tool_bar (a_content)
 			on_select_tab
 		ensure
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)

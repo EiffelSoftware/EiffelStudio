@@ -44,7 +44,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	content_by_title (a_unique_title: STRING): SD_CONTENT is
+	content_by_title (a_unique_title: STRING_GENERAL): SD_CONTENT is
 			-- Content by a_title.
 		require
 			a_title_not_void: a_unique_title /= Void
@@ -75,7 +75,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	content_by_title_for_restore (a_unique_title: STRING): SD_CONTENT is
+	content_by_title_for_restore (a_unique_title: STRING_GENERAL): SD_CONTENT is
 			-- Content by a_unique_title. Result = Void if not found.
 		require
 			a_unique_title_not_void: a_unique_title /= Void
@@ -88,10 +88,17 @@ feature -- Querys
 			until
 				l_contents.after or Result /= Void
 			loop
-				if l_contents.item.unique_title.is_equal (a_unique_title) then
+				if l_contents.item.unique_title.as_string_32.is_equal (a_unique_title.as_string_32) then
 					Result := l_contents.item
 				end
 				l_contents.forth
+			end
+
+			if Result = Void then
+				-- Maybe place holder content not be shown, we query it here.
+				if a_unique_title.as_string_32.is_equal (internal_docking_manager.zones.place_holder_content.unique_title.as_string_32) then
+					Result := internal_docking_manager.zones.place_holder_content
+				end
 			end
 		end
 
@@ -233,7 +240,7 @@ feature -- Querys
 				l_containers.after
 			loop
 				if l_containers.item.parent /= Void then
-					l_floating_zone ?= l_containers.item.parent.parent
+					l_floating_zone ?= l_containers.item.parent.parent.parent.parent
 					if l_floating_zone /= Void then
 						Result.extend (l_floating_zone)
 					end
@@ -245,7 +252,7 @@ feature -- Querys
 			not_void: Result /= Void
 		end
 
-	is_title_unique (a_title: STRING): BOOLEAN is
+	is_title_unique (a_title: STRING_GENERAL): BOOLEAN is
 			-- If `a_title' unique in all contents unique_title?
 		local
 			l_content: ARRAYED_LIST [SD_CONTENT]

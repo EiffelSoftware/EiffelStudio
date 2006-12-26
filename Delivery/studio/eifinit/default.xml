@@ -107,7 +107,8 @@
 	<PREF NAME="tools.metric_tool.old_archive_age_in_days" DESCRIPTION="Age in days for an archive item to be considered old"><INTEGER>30</INTEGER></PREF>
 	<PREF NAME="tools.metric_tool.tree_view_for_metric_history" DESCRIPTION="Is tree view used to display metric history?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.metric_tool.unit_order" DESCRIPTION="List of metric units in order"><STRING></STRING></PREF>
-	
+	<PREF NAME="tools.metric_tool.keep_metric_detailed_result" DESCRIPTION="Keep metric detailed result?"><BOOLEAN>True</BOOLEAN></PREF>
+
 	<PREF NAME="tools.class_browser.classes_categorized_folder" HIDDEN="false" DESCRIPTION="Should classes be categorized in physical folders where they locates?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.expand_referenced_class" HIDDEN="false" DESCRIPTION="Should referenced classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.expand_referencer_class" HIDDEN="false" DESCRIPTION="Should referencer classes in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>
@@ -115,6 +116,7 @@
 	<PREF NAME="tools.class_browser.show_item_path" HIDDEN="false" DESCRIPTION="Is item path shown?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.show_self_dependency" HIDDEN="false" DESCRIPTION="Is dependency on self shown?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.syntactical_classes" HIDDEN="false" DESCRIPTION="Should syntactical referenced classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.class_browser.normal_referenced_classes" HIDDEN="false" DESCRIPTION="Will normal referenced supplier/client classes be shown"><BOOLEAN>True</BOOLEAN></PREF>
 	
 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_replace_all" DESCRIPTION="Display confirmation dialog on replacing all."><BOOLEAN>True</BOOLEAN></PREF>

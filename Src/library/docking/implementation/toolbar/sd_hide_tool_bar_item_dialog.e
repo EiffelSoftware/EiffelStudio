@@ -9,14 +9,15 @@ class
 	SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
 
 inherit
-	EV_UNTITLED_DIALOG
+	EV_SHADOW_DIALOG
 		export
 			{NONE}	all
-			{ANY} show_relative_to_window
+			{ANY} show
 		end
 
 create
-	make
+	make,
+	make_for_menu
 
 feature {NONE}  -- Initlization
 
@@ -25,9 +26,16 @@ feature {NONE}  -- Initlization
 		require
 			not_void: a_hidden_items /= Void
 			not_void: a_tool_bar /= Void
+		local
+			l_shared: SD_SHARED
 		do
 			default_create
+			disable_user_resize
 			create internal_vertical_box
+			create l_shared
+			internal_vertical_box.set_border_width (l_shared.border_width)
+			internal_vertical_box.set_background_color (l_shared.border_color)
+			
 			extend (internal_vertical_box)
 
 			init_grouping (a_hidden_items)
@@ -39,6 +47,17 @@ feature {NONE}  -- Initlization
 			parent_tool_bar := a_tool_bar
 		ensure
 			set: parent_tool_bar = a_tool_bar
+		end
+
+	make_for_menu (a_tool_bar: SD_TOOL_BAR_ZONE) is
+			-- Creation method for right-click menu.
+		require
+			not_void: a_tool_bar /= Void
+		local
+			l_list: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+		do
+			create l_list.make (1)
+			make (l_list, a_tool_bar)
 		end
 
 	init_grouping (a_hidden_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
@@ -57,19 +76,24 @@ feature {NONE}  -- Initlization
 			-- Add hidden items to Current.
 		local
 			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
 		do
 			create internal_horizontal_box
 			internal_vertical_box.extend (internal_horizontal_box)
 
 			from
 				a_hidden_items.start
-				create internal_tool_bar.make
+				create internal_tool_bar.make (create {SD_TOOL_BAR}.make)
 				internal_horizontal_box.extend (internal_tool_bar)
 			until
 				a_hidden_items.after
 			loop
 				l_separator ?= a_hidden_items.item
+				l_widget_item ?= a_hidden_items.item
 				if l_separator = Void then
+					if l_widget_item /= Void and then l_widget_item.widget /= Void and then l_widget_item.widget.parent /= Void then
+						l_widget_item.widget.parent.prune (l_widget_item.widget)
+					end
 					internal_tool_bar.extend (a_hidden_items.item)
 				end
 				a_hidden_items.forth
@@ -100,7 +124,12 @@ feature {NONE}  -- Initlization
 			focus_out_actions.extend (agent on_focus_out)
 		end
 
-feature {NONE} -- Implementation
+feature -- Query
+
+	content: SD_TOOL_BAR_CONTENT
+			-- Tool bar content that will customize.
+
+feature {SD_TOOL_BAR_MANAGER} -- Command
 
 	on_customize is
 			-- Handle customize actions.
@@ -126,12 +155,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Implementation
+
 	save_items_layout (a_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]) is
 			-- Save `a_tool_bar' items layout to it's data.
 		require
 			not_void: a_items /= Void
 		local
-			l_datas: ARRAYED_LIST [TUPLE [STRING, BOOLEAN]]
+			l_datas: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
 		do
 			from
 				create l_datas.make (a_items.count)
@@ -150,7 +181,7 @@ feature {NONE} -- Implementation
 	parent_tool_bar: SD_TOOL_BAR_ZONE
 			-- Tool bar which Current belong to.
 
-	internal_tool_bar: SD_TOOL_BAR
+	internal_tool_bar: SD_WIDGET_TOOL_BAR
 			-- Tool bar contain all hidden items and "Customize" label.
 
 	on_focus_out is
@@ -162,7 +193,7 @@ feature {NONE} -- Implementation
 				-- FIXIT: can't destroy directly?
 --				destroy
 				create l_env
-				l_env.application.idle_actions.extend_kamikaze (agent destroy)
+				l_env.application.do_once_on_idle (agent destroy)
 			end
 		end
 

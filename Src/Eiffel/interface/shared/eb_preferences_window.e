@@ -112,7 +112,7 @@ feature -- Access
 			l_fp: FONT_PREFERENCE
 			l_ifp: IDENTIFIED_FONT_PREFERENCE
 			l_scp: SHORTCUT_PREFERENCE
-			l_short_name, l_full_name: STRING_GENERAL
+			l_short_name: STRING_GENERAL
 		do
 			create Result
 			if a_pref.name /= Void then

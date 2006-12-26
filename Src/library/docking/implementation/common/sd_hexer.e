@@ -14,12 +14,12 @@ inherit
 
 feature
 
-	hex_to_integer_32 (s: STRING): INTEGER is
+	hex_to_integer_32 (s: STRING_GENERAL): INTEGER is
 		require
 			s_not_void: s /= Void
 		local
 			i, nb: INTEGER;
-			temp: STRING;
+			temp: STRING_GENERAL;
 			char: CHARACTER
 		do
 			temp := s.as_lower
@@ -46,12 +46,12 @@ feature
 			end
 		end
 
-	hex_to_integer_64 (s: STRING): INTEGER_64 is
+	hex_to_integer_64 (s: STRING_GENERAL): INTEGER_64 is
 		require
 			s_not_void: s /= Void
 		local
 			i, nb: INTEGER;
-			temp: STRING;
+			temp: STRING_GENERAL;
 			char: CHARACTER
 		do
 			temp := s.as_lower
@@ -78,7 +78,7 @@ feature
 			end
 		end
 
-	hex_to_pointer (s: STRING): POINTER is
+	hex_to_pointer (s: STRING_GENERAL): POINTER is
 		require
 			s_not_void: s /= Void
 		local

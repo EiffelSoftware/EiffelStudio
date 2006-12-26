@@ -152,26 +152,28 @@ feature -- Command
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_hot_index: INTEGER
 		do
-			caller_position := a_relative_position
-			l_hot_index := put_hot_tool_bar_at (a_relative_position)
-			try_set_position (a_relative_position, l_hot_index)
-			if is_possible_set_position (a_relative_position, l_hot_index) then
-				from
-					l_tool_bars := internal_tool_bar_row.zones
-					l_tool_bars.delete (internal_mediator.caller)
-					positions_and_sizes_try.start
-					l_tool_bars.start
-					check right_size: positions_and_sizes (True).count = l_tool_bars.count end
-				until
-					positions_and_sizes_try.after
-				loop
-					check non_negative: positions_and_sizes_try.item.integer_32_item (1) >= 0 end
-					check not_outside: positions_and_sizes_try.item.integer_32_item (1) + l_tool_bars.item (positions_and_sizes_try.index).size <= internal_tool_bar_row.size end
-					internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration.tool_bar, positions_and_sizes_try.item.integer_32_item (1))
-					l_tool_bars.forth
-					positions_and_sizes_try.forth
+			if internal_mediator /= Void then
+				caller_position := a_relative_position
+				l_hot_index := put_hot_tool_bar_at (a_relative_position)
+				try_set_position (a_relative_position, l_hot_index)
+				if is_possible_set_position (a_relative_position, l_hot_index) then
+					from
+						l_tool_bars := internal_tool_bar_row.zones
+						l_tool_bars.delete (internal_mediator.caller)
+						positions_and_sizes_try.start
+						l_tool_bars.start
+						check right_size: positions_and_sizes (True).count = l_tool_bars.count end
+					until
+						positions_and_sizes_try.after
+					loop
+						check non_negative: positions_and_sizes_try.item.integer_32_item (1) >= 0 end
+						check not_outside: positions_and_sizes_try.item.integer_32_item (1) + l_tool_bars.item (positions_and_sizes_try.index).size <= internal_tool_bar_row.size end
+						internal_tool_bar_row.internal_set_item_position (l_tool_bars.item_for_iteration.tool_bar, positions_and_sizes_try.item.integer_32_item (1))
+						l_tool_bars.forth
+						positions_and_sizes_try.forth
+					end
+					internal_tool_bar_row.internal_set_item_position (internal_mediator.caller.tool_bar, caller_position)
 				end
-				internal_tool_bar_row.internal_set_item_position (internal_mediator.caller.tool_bar, caller_position)
 			end
 		end
 

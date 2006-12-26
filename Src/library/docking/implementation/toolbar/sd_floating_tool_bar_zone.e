@@ -310,7 +310,7 @@ feature {NONE} -- Implementation of resize issues.
 		end
 
 	setter: SD_SYSTEM_SETTER is
-			--
+			-- Smart Docking library system setter.
 		once
 			create {SD_SYSTEM_SETTER_IMP} Result
 		end
@@ -377,7 +377,7 @@ feature {NONE} -- Implementation
 			create l_helper.make
 			l_rect := internal_title_bar.custom_rectangle
 			l_helper.set_tool_bar_floating_dialog_position (l_dialog, l_rect.x, l_rect.y, l_rect.width, l_rect.height)
-			l_dialog.show_relative_to_window (Current)
+			l_dialog.show
 		end
 
 invariant

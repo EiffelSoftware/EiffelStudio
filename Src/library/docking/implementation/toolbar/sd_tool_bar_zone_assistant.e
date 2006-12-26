@@ -154,14 +154,18 @@ feature -- Command
 					if internal_hidden_items.count > 0 then
 						if not zone.is_vertical then
 							zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items)
+							zone.tail_indicator.set_pixel_buffer (l_shared.icons.tool_bar_customize_indicator_with_hidden_items_buffer)
 						else
 							zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_with_hidden_items_horizontal)
+							zone.tail_indicator.set_pixel_buffer (l_shared.icons.tool_bar_customize_indicator_with_hidden_items_horizontal_buffer)
 						end
 					else
 						if not zone.is_vertical then
 							zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator)
+							zone.tail_indicator.set_pixel_buffer (l_shared.icons.tool_bar_customize_indicator_buffer)
 						else
 							zone.tail_indicator.set_pixmap (l_shared.icons.tool_bar_customize_indicator_horizontal)
+							zone.tail_indicator.set_pixel_buffer (l_shared.icons.tool_bar_customize_indicator_horizontal_buffer)
 						end
 					end
 					l_items := zone.tool_bar.items
@@ -217,7 +221,7 @@ feature -- Command
 				l_helper.set_tool_bar_hidden_dialog_vertical_position (l_dialog, zone.hidden_dialog_position.x, zone.hidden_dialog_position.y, zone.tail_indicator.rectangle.height)
 			end
 
-			l_dialog.show_relative_to_window (zone.docking_manager.main_window)
+			l_dialog.show
 		end
 
 	dock_last_state is
@@ -307,8 +311,8 @@ feature -- Command
 		local
 			l_item: SD_TOOL_BAR_ITEM
 			l_all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
-			l_name: STRING
-			l_datas: ARRAYED_LIST [TUPLE [STRING, BOOLEAN]]
+			l_name: STRING_GENERAL
+			l_datas: ARRAYED_LIST [TUPLE [STRING_GENERAL, BOOLEAN]]
 			l_content: SD_TOOL_BAR_CONTENT
 			l_separator: SD_TOOL_BAR_SEPARATOR
 		do

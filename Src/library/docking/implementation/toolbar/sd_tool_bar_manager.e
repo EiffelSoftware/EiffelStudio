@@ -25,9 +25,21 @@ feature {NONE} -- Initialization
 			contents.remove_actions.extend (agent on_remove_tool_bar_content)
 			create floating_tool_bars.make (1)
 
+			init_right_click_menu
 		ensure
 			action_added: contents.add_actions.count = 1 and contents.remove_actions.count = 1
 			set: internal_docking_manager = a_docking_manager
+		end
+
+	init_right_click_menu is
+			-- Initialize right click menu.
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			application_right_click_agent := agent on_menu_area_click
+			create l_env
+			l_env.application.pointer_button_press_actions.extend (application_right_click_agent)
+
 		end
 
 feature -- Query
@@ -35,7 +47,7 @@ feature -- Query
 	contents: ACTIVE_LIST [SD_TOOL_BAR_CONTENT]
 			-- All tool bar contents.
 
-	content_by_title (a_title: STRING): SD_TOOL_BAR_CONTENT is
+	content_by_title (a_title: STRING_GENERAL): SD_TOOL_BAR_CONTENT is
 			-- SD_tool_bar_CONTENT which has `a_title'.
 		require
 			a_title_not_void: a_title /= Void
@@ -45,11 +57,22 @@ feature -- Query
 			until
 				contents.after or Result /= Void
 			loop
-				if contents.item.title.is_equal (a_title) then
+				if contents.item.title.as_string_32.is_equal (a_title.as_string_32) then
 					Result := contents.item
 				end
 				contents.forth
 			end
+		end
+
+feature -- Command
+
+	destroy is
+			-- Release hooks.
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			create l_env
+			l_env.application.pointer_button_press_actions.prune (application_right_click_agent)
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_CONTENT} -- Internal functions.
@@ -58,14 +81,12 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 			-- Handle main window resize event.
 		do
 			if last_width /= a_width or last_height /= a_height or a_force then
-				internal_docking_manager.command.lock_update (Void, True)
 				if last_width /= a_width or a_force then
 					notify_four_area (a_width, a_height, True)
 				end
 				if last_height /= a_height or a_force then
 					notify_four_area (a_width, a_height, False)
 				end
-				internal_docking_manager.command.unlock_update
 			 	last_width := a_width
 			 	last_height := a_height
 			end
@@ -131,7 +152,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 			l_container: EV_CONTAINER
 		do
 			a_content.set_manager (Current)
-			create l_tool_bar_zone.make (False, internal_docking_manager)
+			create l_tool_bar_zone.make (False, internal_docking_manager, a_content.is_menu_bar)
 			l_tool_bar_zone.extend (a_content)
 
 			create l_tool_bar_row.make (False)
@@ -231,6 +252,14 @@ feature {NONE} -- Agents
 			end
 		end
 
+	on_menu_area_click (a_widget: EV_WIDGET; a_button, a_screen_x, a_screen_y: INTEGER) is
+			-- Handle menu area right click.
+		do
+			if is_at_menu_area (a_widget) and a_button = {EV_POINTER_CONSTANTS}.right and not has_pointer_actions (a_screen_x, a_screen_y) then
+				right_click_menu.show
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	notify_four_area (a_width, a_height: INTEGER; a_resize_horizontal: BOOLEAN) is
@@ -280,6 +309,102 @@ feature {NONE} -- Implementation
 				l_rows.forth
 			end
 		end
+
+	is_at_menu_area (a_widget: EV_WIDGET): BOOLEAN is
+			-- If `a_widget' in menus area?
+		do
+			Result := internal_docking_manager.tool_bar_container.top.has_recursive (a_widget)
+				or internal_docking_manager.tool_bar_container.bottom.has_recursive (a_widget)
+				or internal_docking_manager.tool_bar_container.left.has_recursive (a_widget)
+				or internal_docking_manager.tool_bar_container.right.has_recursive (a_widget)
+
+			if not Result then
+				from
+					floating_tool_bars.start
+				until
+					floating_tool_bars.after or Result
+				loop
+					Result := floating_tool_bars.item.has_recursive (a_widget) or Result
+					floating_tool_bars.forth
+				end
+			end
+		end
+
+	has_pointer_actions (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- If SD_TOOL_BAR_BUTTON at `a_screen_x', `a_screen_y' has pointer button actions?
+		do
+			from
+				contents.start
+			until
+				contents.after or Result
+			loop
+				Result := contents.item.zone.has_right_click_action (a_screen_x, a_screen_y)
+				contents.forth
+			end
+		end
+
+	right_click_menu: EV_MENU is
+			-- Construct a right click menu
+		local
+			l_menu_item: EV_CHECK_MENU_ITEM
+			l_separator: EV_MENU_SEPARATOR
+			l_custom_dialog: SD_TOOL_BAR_HIDDEN_ITEM_DIALOG
+			l_string: STRING_GENERAL
+		do
+			create Result
+			from
+				contents.start
+			until
+				contents.after
+			loop
+				create l_menu_item.make_with_text (contents.item.title)
+				if contents.item.is_visible then
+					l_menu_item.enable_select
+					l_menu_item.select_actions.extend (agent (contents.item).hide)
+				else
+					l_menu_item.disable_select
+					l_menu_item.select_actions.extend (agent (contents.item).show)
+				end
+
+				Result.extend (l_menu_item)
+				contents.forth
+			end
+
+			create l_separator
+			Result.extend (l_separator)
+			-- Custome menu items
+
+			from
+				contents.start
+			until
+				contents.after
+			loop
+
+				create l_custom_dialog.make_for_menu (contents.item.zone)
+				l_string := customize_string_start.as_string_32
+				l_string.append (contents.item.title)
+				l_string.append (customize_string_end)
+				create l_menu_item.make_with_text_and_action (l_string, agent l_custom_dialog.on_customize)
+				Result.extend (l_menu_item)
+				contents.forth
+			end
+
+		end
+
+	customize_string_start: STRING_GENERAL is
+			-- String for customize
+		once
+			Result := "Customize "
+		end
+
+	customize_string_end: STRING_GENERAL is
+			-- String for customize
+		once
+			Result := "..."
+		end
+
+	application_right_click_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER_32, INTEGER_32, INTEGER_32]]
+			-- Pointer button right click hander instance.
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager Current belong to.

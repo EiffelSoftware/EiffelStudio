@@ -9,7 +9,7 @@ class
 	SD_NOTEBOOK_HIDE_TAB_DIALOG
 
 inherit
-	EV_POPUP_WINDOW
+	EV_SHADOW_DIALOG
 		rename
 			extend as extend_dialog,
 			has as has_dialog
@@ -33,10 +33,16 @@ feature {NONE}  -- Initlization
 			create internal_text_box
 			create internal_label_box.make
 			create internal_tab_labels.make (1)
+			create {EV_VERTICAL_BOX} top_box
 
-			extend_dialog (internal_vertical_box)
+			extend_dialog (top_box)
+			top_box.extend (internal_vertical_box)
+			top_box.set_border_width (internal_shared.border_width)
+			top_box.set_background_color (internal_shared.border_color)
+
 			internal_vertical_box.set_border_width (internal_shared.border_width)
 			internal_vertical_box.set_padding_width (internal_shared.padding_width)
+
 			internal_vertical_box.extend (internal_text_box)
 			internal_vertical_box.disable_item_expand (internal_text_box)
 
@@ -56,7 +62,7 @@ feature {NONE}  -- Initlization
 			disable_user_resize
 		ensure
 			set: internal_notebook = a_note_book
-			extended: has_dialog (internal_vertical_box) and internal_vertical_box.has (internal_text_box)
+			extended: has_dialog (top_box) and internal_vertical_box.has (internal_text_box)
 				and internal_vertical_box.has (internal_label_box)
 		end
 
@@ -72,7 +78,7 @@ feature -- Command
 	show is
 			-- Redefine
 		do
-			Precursor {EV_POPUP_WINDOW}
+			Precursor {EV_SHADOW_DIALOG}
 			internal_text_box.set_focus
 		end
 
@@ -135,8 +141,19 @@ feature {NONE} -- Implementation agents.
 			-- Handle user click one label.
 		require
 			a_index_valid: a_index > 0 and a_index <= internal_tab_labels.count
+		local
+			l_content, l_old_content: SD_CONTENT
 		do
-			internal_notebook.select_item (internal_notebook.content_by_tab (internal_tab_labels.i_th (a_index)), True)
+			l_old_content := internal_notebook.selected_item
+			l_content := internal_notebook.content_by_tab (internal_tab_labels.i_th (a_index))
+
+			if l_old_content /= Void and then l_content /= l_old_content then
+				l_old_content.focus_out_actions.call ([])
+			end
+
+			l_content.focus_in_actions.call ([])
+			internal_notebook.select_item (l_content, True)
+
 			destroy
 		ensure
 			destroyed: is_destroyed
@@ -274,7 +291,7 @@ feature {NONE} -- Implementation functions.
 	init_search is
 			-- Initialize search issues.
 		local
-			l_texts: ARRAYED_LIST [STRING]
+			l_texts: ARRAYED_LIST [STRING_GENERAL]
 		do
 			create l_texts.make (internal_tab_labels.count)
 			from
@@ -300,6 +317,9 @@ feature {NONE} -- Implementation functions.
 		end
 
 feature {NONE}  --Implementation attributes.
+
+	top_box: EV_BOX
+		-- Top level box
 
 	internal_label_box: SD_NOTEBOOK_HIDE_TAB_LABEL_BOX
 			-- Vertical box hold SD_NOTEBOOK_HIDE_TAB_LABELs.

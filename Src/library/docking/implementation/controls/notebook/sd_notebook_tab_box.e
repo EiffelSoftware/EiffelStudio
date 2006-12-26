@@ -45,9 +45,8 @@ feature {NONE} -- Initialization
 			pointer_leave_actions.extend (agent on_pointer_leave)
 			set_minimum_height (internal_shared.title_bar_height)
 
-			-- FIXIT: To implement drop actions.
---			drop_actions.extend (agent on_drop_action)
---			drop_actions.set_veto_pebble_function (agent on_drop_actions_veto_pebble)
+			drop_actions.extend (agent on_drop_action)
+			drop_actions.set_veto_pebble_function (agent on_drop_actions_veto_pebble)
 		end
 
 feature -- Command
@@ -208,9 +207,10 @@ feature {NONE} -- Agents
 	on_pointer_motion (a_x: INTEGER_32; a_y: INTEGER_32; a_x_tilt: REAL_64; a_y_tilt: REAL_64; a_pressure: REAL_64; a_screen_x: INTEGER_32; a_screen_y: INTEGER_32) is
 			-- Handle pointer motion actions.
 		do
+
 			if captured_tab /= Void then
 				captured_tab.on_pointer_motion (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-			else
+			elseif pointer_entered then
 				from
 					internal_tabs.start
 				until
@@ -239,9 +239,11 @@ feature {NONE} -- Agents
 				from
 					internal_tabs.start
 				until
-					internal_tabs.after
+					-- the internal_tabs.index maybe 2 more than internal_tabs.count?
+					-- So we can't use after here.
+					internal_tabs.index > internal_tabs.count
 				loop
-					if internal_tabs.item.rectangle.has_x_y (a_x, a_y) then
+					if internal_tabs.item.rectangle.has_x_y (a_x, a_y) and internal_tabs.item.is_displayed then
 						internal_tabs.item.on_pointer_press (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 					internal_tabs.forth
@@ -260,7 +262,7 @@ feature {NONE} -- Agents
 				until
 					internal_tabs.after
 				loop
-					if internal_tabs.item.rectangle.has_x_y (a_x, a_y) then
+					if internal_tabs.item.rectangle.has_x_y (a_x, a_y) and internal_tabs.item.is_displayed then
 						internal_tabs.item.on_pointer_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 					end
 					internal_tabs.forth
@@ -275,6 +277,7 @@ feature {NONE} -- Agents
 			l_x: INTEGER
 			l_found: BOOLEAN
 		do
+			pointer_entered := True
 			if captured_tab = Void then
 				create l_screen
 				l_x := l_screen.pointer_position.x - screen_x
@@ -290,24 +293,26 @@ feature {NONE} -- Agents
 					internal_tabs.forth
 				end
 			end
+		ensure
+			set: pointer_entered
 		end
 
 	on_pointer_leave is
 			-- Handle pointer leave actions
+		require
+			entered: pointer_entered = True
 		local
-			l_screen: EV_SCREEN
 			l_x: INTEGER
 			l_found: BOOLEAN
 		do
+			pointer_entered := False
 			if captured_tab = Void then
-				create l_screen
-				l_x := l_screen.pointer_position.x - screen_x
 				from
 					internal_tabs.start
 				until
 					internal_tabs.after or l_found
 				loop
-					if l_x < internal_tabs.item.x + internal_tabs.item.width then
+					if internal_tabs.item.is_hot  then
 						l_found := True
 						internal_tabs.item.on_pointer_leave
 					end
@@ -317,9 +322,70 @@ feature {NONE} -- Agents
 					internal_tabs.forth
 				end
 			end
+		ensure
+			cleared: pointer_entered = False
+		end
+
+	on_drop_action (a_pebble: ANY) is
+			-- Handle drop actions.
+		local
+			l_tab: SD_NOTEBOOK_TAB
+		do
+			l_tab := tab_under_pointer
+			if l_tab /= Void then
+				check accept:l_tab.drop_actions.accepts_pebble (a_pebble) end
+				l_tab.drop_actions.call ([a_pebble])
+			end
+		end
+
+	on_drop_actions_veto_pebble (a_pebble: ANY): BOOLEAN is
+			-- Handle veto pebble drop actions.
+		local
+			l_tab: SD_NOTEBOOK_TAB
+		do
+			l_tab := tab_under_pointer
+			if l_tab /= Void then
+				Result := l_tab.drop_actions.accepts_pebble (a_pebble)
+			end
 		end
 
 feature -- Implementation
+
+	pointer_entered: BOOLEAN
+			-- If pointer enter actions called?
+			-- We have this flag for the same reason as SD_TOOL_BAR's pointer_entered.
+
+	tab_at (a_x: INTEGER): SD_NOTEBOOK_TAB is
+			--  Tab at `a_x' which is relative position
+		require
+			valid: a_x >= 0 and a_x <= width
+		do
+			from
+				internal_tabs.start
+			until
+				internal_tabs.after or Result /= Void
+			loop
+				if item_x (internal_tabs.item) <= a_x and a_x <= item_x (internal_tabs.item) + internal_tabs.item.width then
+					Result := internal_tabs.item
+				end
+				internal_tabs.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	tab_under_pointer: SD_NOTEBOOK_TAB is
+			-- Tab at `a_screen_x'.
+		local
+			l_screen: EV_SCREEN
+			l_relative_x: INTEGER
+		do
+			create l_screen
+			l_relative_x := l_screen.pointer_position.x - screen_x
+			if l_relative_x >= 0 and l_relative_x <= width then
+				Result := tab_at (l_relative_x)
+			end
+		end
 
 	captured_tab: SD_NOTEBOOK_TAB
 			-- Tab which enabled capture

@@ -25,9 +25,10 @@ feature {NONE}  -- Initlization
 			internal_docking_manager := a_docking_manager
 			create locked_windows.make_default
 
+			create internal_shared
 			-- Initialize zone navigation accelerator key.
-			create l_key.make_with_code ({EV_KEY_CONSTANTS}.key_tab)
-			create l_acc.make_with_key_combination (l_key, True, False, False)
+			create l_key.make_with_code (internal_shared.zone_navigation_accelerator_key)
+			create l_acc.make_with_key_combination (l_key, internal_shared.zone_navigation_accelerator_ctrl, internal_shared.zone_navigation_accelerator_alt, internal_shared.zone_navigation_accelerator_shift)
 			l_acc.actions.extend (agent on_zone_navigation (False))
 			l_window ?= internal_docking_manager.main_window
 			if l_window /= Void then
@@ -71,9 +72,10 @@ feature -- Commands
 					lock_update_internal (a_zone, a_main_window)
 				end
 			else
-				if not ignore_update then
-					lock_update_internal (a_zone, a_main_window)
-				end
+				-- If we do it like this, it'll cause more whole Windows desktop flickers.
+--				if not ignore_update then
+--					lock_update_internal (a_zone, a_main_window)
+--				end
 			end
 			lock_call_time := lock_call_time + 1
 
@@ -89,9 +91,9 @@ feature -- Commands
 				end
 				ignore_update := False
 			else
-				if not ignore_update then
-					unlock_update_internal
-				end
+--				if not ignore_update then
+--					unlock_update_internal
+--				end
 			end
 		end
 
@@ -230,6 +232,9 @@ feature -- Contract Support
 		end
 
 feature {NONE}  -- Implementation
+
+	internal_shared: SD_SHARED
+			-- All Singletons.
 
 	ignore_update: BOOLEAN
 			-- If ignore update?

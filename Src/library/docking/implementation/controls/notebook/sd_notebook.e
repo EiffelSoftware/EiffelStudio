@@ -53,7 +53,7 @@ feature {NONE}  -- Initlization
 			internal_border_for_tab_area.set_border_color (internal_shared.border_color)
 			internal_border_for_tab_area.set_border_style ({SD_ENUMERATION}.top)
 			extend_vertical_box (internal_border_for_tab_area)
-
+			set_minimum_width ({SD_SHARED}.Notebook_minimum_width)
 			internal_border_for_tab_area.extend (internal_tab_box)
 			internal_tab_box.set_gap (False)
 
@@ -77,10 +77,14 @@ feature -- Command
 		do
 			if a_focus then
 				internal_border_box.set_background_color (internal_shared.focused_color)
-				notify_tab (tab_by_content (selected_item), True)
+				if selected_item /= Void  then
+					notify_tab (tab_by_content (selected_item), True)
+				end
 			else
 				internal_border_box.set_background_color (internal_shared.border_color)
-				notify_tab (tab_by_content (selected_item), False)
+				if selected_item /= Void then
+					notify_tab (tab_by_content (selected_item), False)
+				end
 			end
 		end
 
@@ -92,7 +96,7 @@ feature -- Command
 			end
 		end
 
-	set_item_text (a_content: SD_CONTENT; a_text: STRING) is
+	set_item_text (a_content: SD_CONTENT; a_text: STRING_GENERAL) is
 			-- Assign `a_text' to label of `an_item'.
 		require
 			has: has (a_content)
@@ -137,7 +141,6 @@ feature -- Command
 			end
 			notify_tab (tab_by_content (a_content), a_focus)
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
-
 		ensure
 			selectd: selected_item = a_content
 		end
@@ -175,7 +178,9 @@ feature -- Command
 			internal_contents.start
 			internal_contents.search (a_content)
 			internal_tabs.go_i_th (internal_contents.index)
-			internal_tabs.item.destroy
+			if internal_tabs.item /= Void then
+				internal_tabs.item.destroy
+			end
 			internal_tabs.remove
 
 			internal_contents.start
@@ -195,6 +200,7 @@ feature -- Command
 				end
 			end
 			internal_tab_box.resize_tabs (internal_tab_box.tab_box_predered_width)
+
 		ensure
 			pruned: not has (a_content)
 		end
@@ -262,7 +268,7 @@ feature -- Command
 			l_tab: SD_NOTEBOOK_TAB
 		do
 			debug ("docking")
-				print ("%NSD_NOTEBOOK set_content_position a_content is: " + a_content.unique_title + " a_index is:" + a_index.out )
+				print ("%NSD_NOTEBOOK set_content_position a_content is: " + a_content.unique_title.as_string_8 + " a_index is:" + a_index.out )
 			end
 			if contents.i_th (a_index) /= a_content then
 				l_tab := tab_by_content (a_content)
@@ -364,7 +370,7 @@ feature -- Query
 			Result := internal_tabs.item.pixmap
 		end
 
-	item_text (a_content: SD_CONTENT): STRING is
+	item_text (a_content: SD_CONTENT): STRING_GENERAL is
 			-- `a_content''s pixmap.
 		require
 			has: has (a_content)

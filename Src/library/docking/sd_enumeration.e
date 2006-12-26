@@ -53,12 +53,16 @@ feature -- State
 
 	state_void: INTEGER is 1
 		-- FIXIT: not a good name?
+		-- Initialial state.
 
 	docking: INTEGER is 2
+		-- Docking state.
 
 	tab: INTEGER is 3
+		-- Tab state which content is in notebook container.
 
 	auto_hide: INTEGER is 4
+		-- Auto hide state which content will hide at side of main container.
 
 feature -- Contract support
 
@@ -67,7 +71,6 @@ feature -- Contract support
 	 	do
 			Result := a_direction = top or a_direction = bottom or a_direction = left or a_direction = right
 	 	end
-
 
 	is_type_valid (a_type: INTEGER): BOOLEAN is
 			-- If `a_type' valid?

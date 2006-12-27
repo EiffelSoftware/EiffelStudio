@@ -199,18 +199,25 @@ feature -- Element change
 		local
 			font_imp: EV_FONT_IMP
 			t: TUPLE [INTEGER, INTEGER]
+			l_text: like text
 		do
+			l_text := text
+				-- Add a space before and after `l_text'.
+				-- Adding it dynamically inline will result in a STRING_8 object being created.
+			l_text.prepend (" ")
+			l_text.append (" ")
+				-- `l_text' is a copy of `text'.
 			if private_font /= Void then
-					font_imp ?= private_font.implementation
-					check
-						font_not_void: font_imp /= Void
-					end
-					t := font_imp.wel_font.string_size (" " + text + " ")
-				else
-					t := private_wel_font.string_size (" " + text + " ")
+				font_imp ?= private_font.implementation
+				check
+					font_not_void: font_imp /= Void
 				end
-				text_width := t.integer_item (1)
-				text_height := t.integer_item (2)
+				t := font_imp.string_size (l_text)
+			else
+				t := private_wel_font.string_size (l_text)
+			end
+			text_width := t.integer_item (1)
+			text_height := t.integer_item (2)
 		end
 
 

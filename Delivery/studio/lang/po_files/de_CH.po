@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2006-12-22 17:01-0800\n"
+"PO-Revision-Date: 2006-12-26 18:02-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -60,10 +60,10 @@ msgid "Evaluate invariant assertions?"
 msgstr "Invariant assertions auswerten?"
 
 msgid "callees"
-msgstr "callees"
+msgstr "Aufgerufene"
 
 msgid "Creat&ions"
-msgstr "&Erzeuger"
+msgstr "&Erzeugte"
 
 msgid "Hide clusters"
 msgstr "Cluster verbergen"
@@ -613,7 +613,7 @@ msgid "Exception raised"
 msgstr ""
 
 msgid "Compilation Error &Wizard..."
-msgstr ""
+msgstr "&Hilfe bei Kompilierungsfehlern..."
 
 msgid "Root Class"
 msgstr ""
@@ -700,6 +700,13 @@ msgid ""
 "metric1, metric2, metric3 are variable metrics.\n"
 "\n"
 msgstr ""
+"Eine lineare Metrik ist von folgender Form:\n"
+"\n"
+"\ta * metrik1 + b * metrik2 + c * metrik3 + ...\n"
+"\n"
+"a, b, c sind Koeffizienten \n"
+"metrik1, metrik2, metrik3 sind Variablenmetriken.\n"
+"\n"
 
 msgid "Debugger :: Exception message"
 msgstr "Debugger :: Ausnahmenachricht"
@@ -747,7 +754,7 @@ msgid " (from $1)"
 msgstr "(von $1)"
 
 msgid "Make sure that at lease one variable metric is listed in a linear metric definition."
-msgstr ""
+msgstr "Sicherstellen dass in der Definition einer linearen Metrik mindestens eine Variablenmetrik aufgelistet ist."
 
 msgid "---"
 msgstr "---"
@@ -858,7 +865,7 @@ msgid ""
 msgstr ""
 
 msgid "Library target UUID \"$1\" is invalid."
-msgstr ""
+msgstr "Bibliotheksziel mit UUID \"$1\" ist ungültig."
 
 msgid "Procedure"
 msgstr "Prozedur"
@@ -924,7 +931,7 @@ msgid "Pr&operties"
 msgstr "&Eigenschaften"
 
 msgid "Select depth of relations"
-msgstr ""
+msgstr "Relationstiefe auswählen"
 
 msgid "No domain item defined. At least one domain item should be defined in a relation criterion."
 msgstr ""
@@ -963,7 +970,7 @@ msgid "Duplicate"
 msgstr "Duplizieren"
 
 msgid "Compile W&orkbench C Code"
-msgstr "C Code kompilieren"
+msgstr "C-Code kompilieren"
 
 msgid "Metric is valid."
 msgstr "Metrik ist gültig."
@@ -1059,7 +1066,7 @@ msgid "Documentation"
 msgstr "Dokumentation"
 
 msgid "Unevaluated"
-msgstr ""
+msgstr "Nicht ausgewertet"
 
 msgid "Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric."
 msgstr ""
@@ -1092,10 +1099,10 @@ msgid "Maximum displayed string size"
 msgstr ""
 
 msgid "Error occurred (double click to see details)"
-msgstr ""
+msgstr "Fehler aufgetreten (Doppelklick um Details anzuzeigen)"
 
 msgid "Automatically go to result panel after metric evaluation?"
-msgstr ""
+msgstr "Nach der Auswertung einer Metrik zur Resultatanzeige wechseln?"
 
 msgid "Value \"$1\" of attribute \"only_current_version\" is invalid. A boolean is expected."
 msgstr ""
@@ -1119,7 +1126,7 @@ msgid "From Class"
 msgstr "Von Klasse"
 
 msgid "Recursive definition for metric name \"$1\"."
-msgstr ""
+msgstr "Metrik \"$1\" ist rekursiv definiert."
 
 msgid "Not evaluated"
 msgstr "Nicht ausgewertet"
@@ -1167,7 +1174,7 @@ msgid "System running"
 msgstr "System läuft"
 
 msgid "Delete Client Link '$1'"
-msgstr ""
+msgstr "Klientenbeziehung '$1' löschen"
 
 msgid "Precompile"
 msgstr "Vorkompilieren"
@@ -1199,10 +1206,10 @@ msgid "Finalized mode"
 msgstr ""
 
 msgid "Enter Condition"
-msgstr "Kondition eingeben"
+msgstr "Bedingung eingeben"
 
 msgid "Obsolete Classes"
-msgstr ""
+msgstr "Veraltete Klassen"
 
 msgid "No definition for variable metric."
 msgstr ""
@@ -1265,7 +1272,7 @@ msgid "Domain item id is missing."
 msgstr ""
 
 msgid "Start metric archive evaluation"
-msgstr ""
+msgstr "Auswertung des Metrikarchivs starten"
 
 msgid "Current feature"
 msgstr "Aktuelles Feature"
@@ -1337,7 +1344,7 @@ msgid "Save output to file"
 msgstr "Ausgabe in Datei speichern"
 
 msgid "Set &Conditional Breakpoint"
-msgstr "&Konditionalen Haltepunkt setzen"
+msgstr "&Bedingten Haltepunkt setzen"
 
 msgid "Put Handle Left"
 msgstr ""
@@ -1364,16 +1371,16 @@ msgid "&Close Window\tAlt+F4"
 msgstr "Fenster &Schliessen\tAlt+F4"
 
 msgid "Version information."
-msgstr ""
+msgstr "Versionsinformation."
 
 msgid "Metric definition"
-msgstr ""
+msgstr "Metrikdefinition"
 
 msgid "Auto-Complete"
 msgstr "Autovervollständigung"
 
 msgid "Question"
-msgstr ""
+msgstr "Frage"
 
 msgid "Exception Trace"
 msgstr ""
@@ -1409,7 +1416,7 @@ msgid "Open a new context window"
 msgstr "Neues Kontextfenster öffnen"
 
 msgid "Selected text is not a valid file name or the file cannot be found"
-msgstr ""
+msgstr "Der selektierte Text ist kein gültiger Dateiname oder die Datei kann nicht gefunden werden"
 
 msgid "&Debug"
 msgstr "&Debug"
@@ -1449,7 +1456,7 @@ msgid "&Raise All"
 msgstr "Alle &Hervorheben"
 
 msgid "Warn about usage of obsolete classes?"
-msgstr ""
+msgstr "Beim Gebrauch von veralteten Klassen warnen?"
 
 msgid "Compile"
 msgstr "Kompilieren"
@@ -1494,13 +1501,13 @@ msgid "Custom"
 msgstr ""
 
 msgid "Conditions for this group to be used."
-msgstr ""
+msgstr "Bedingung damit diese Gruppe verwendet wird."
 
 msgid "Note"
 msgstr ""
 
 msgid "&Run to This Point"
-msgstr ""
+msgstr "Zu diesem Punkt &fortschreiten"
 
 msgid "Flat View"
 msgstr "Flache Ansicht"
@@ -1515,7 +1522,7 @@ msgid "On object"
 msgstr ""
 
 msgid "Use an optimized version of a precompile?"
-msgstr ""
+msgstr "Eine optimierte Version der vorkompilierten Bibliothek verwenden?"
 
 msgid "Minimum index displayed"
 msgstr ""
@@ -1605,10 +1612,10 @@ msgid "Breakpoints"
 msgstr "Haltepunkte"
 
 msgid "Enforce all class names to be system wide unique?"
-msgstr ""
+msgstr "Erzwingen dass alle Klassennamen systemweit eindeutig sind?"
 
 msgid "Is this an abstract target that cannot be used to compile?"
-msgstr ""
+msgstr "Ist dies ein abstraktes Ziel, welches nicht zum kompilieren verwendet werden kann?"
 
 msgid "Pull Up"
 msgstr ""
@@ -1686,13 +1693,13 @@ msgid "descendants"
 msgstr "erben"
 
 msgid "Are you sure you want to remove the reference to $1?"
-msgstr ""
+msgstr "Soll die Referenz zu $1 wirklich entfernt werden?"
 
 msgid "Referenced metric(s): $1 not selected."
 msgstr ""
 
 msgid "Add Precompile"
-msgstr ""
+msgstr "Vorkompilierte Bibliothek hinufügen"
 
 msgid "Object"
 msgstr "Objekt"
@@ -1737,7 +1744,7 @@ msgid "Export diagram to PNG"
 msgstr "Diagramm zu PNG exportieren"
 
 msgid "This will discard the modifications."
-msgstr ""
+msgstr "Dies wird die Änderungen verwerfen."
 
 msgid "Literal Value"
 msgstr ""
@@ -1810,10 +1817,10 @@ msgid "Warn about locals that are not used?"
 msgstr "Warnung ausgeben für nicht benutzte lokale Variablen?"
 
 msgid "Does this task have to finish successful for the compilation to continue?"
-msgstr ""
+msgstr "Muss diese Aufgabe erfolgreich beendet werden für die weitere Kompilierung?"
 
 msgid "Delete graphical items, remove code from system"
-msgstr ""
+msgstr "Graphische Elemente löschen, Code vom System entfernen"
 
 msgid "Class "
 msgstr "Klasse "
@@ -1867,7 +1874,7 @@ msgid "Text option: "
 msgstr ""
 
 msgid "Remove Condition"
-msgstr "Kondition entfernen"
+msgstr "Bedingung entfernen"
 
 msgid "Assembly"
 msgstr ""
@@ -2048,7 +2055,7 @@ msgid "deferred features"
 msgstr ""
 
 msgid "Condition"
-msgstr "Kondition"
+msgstr "Bedingung"
 
 msgid "Edit command"
 msgstr ""
@@ -2649,7 +2656,7 @@ msgid "Description of the system."
 msgstr "Beschreibung des Systems."
 
 msgid "Finali&ze..."
-msgstr "&Optimiere..."
+msgstr "&Optimieren..."
 
 msgid "&Special"
 msgstr "&Spezial"
@@ -2730,7 +2737,7 @@ msgid "Chart"
 msgstr ""
 
 msgid "Compilation Error Wizard"
-msgstr ""
+msgstr "Hilfe bei Kompilierungsfehlern"
 
 msgid "Assertions"
 msgstr "Zusicherungen"
@@ -2766,7 +2773,7 @@ msgid "&Run Finalized System"
 msgstr "Optimiertes System &starten"
 
 msgid "E&dit Condition"
-msgstr "Kondition &Bearbeiten"
+msgstr "Bedingung &Bearbeiten"
 
 msgid "Crop diagram"
 msgstr ""
@@ -2907,7 +2914,7 @@ msgid "Remove"
 msgstr "Entfernen"
 
 msgid "Condition:"
-msgstr "Kondition:"
+msgstr "Bedingung:"
 
 msgid "Add and-term"
 msgstr "Und-Term hinzfügen"
@@ -2960,10 +2967,10 @@ msgid "Compilation Type"
 msgstr "Kompilierungstyp"
 
 msgid "ancestor versions"
-msgstr "Vorfahrversionen"
+msgstr "Versionen der Vorfahren"
 
 msgid "Empty Development Tool"
-msgstr "Leeres Entwicklungswerkzeug"
+msgstr "Leere Entwicklungsumgebung"
 
 msgid "Make sure every variable metric referenced by a linear metric is defined."
 msgstr "Stellen Sie sicher das jede Variablenmetrik definiert ist welche von einer lineraren Metrik referenziert wird."
@@ -3632,7 +3639,7 @@ msgid "In Class"
 msgstr "In Klasse"
 
 msgid "Edit condition"
-msgstr "Kondition bearbeiten"
+msgstr "Bedingung bearbeiten"
 
 msgid "$1  in cluster $2  (not in system)  located in $3"
 msgstr "$1 in Cluster $2 (nicht im System) aufgefunden in $3"
@@ -3849,7 +3856,7 @@ msgid "Include Class '$1'"
 msgstr "Klasse '$1' einbinden"
 
 msgid "$1 of feature $2 of class"
-msgstr "$1 von feature $2 von Klasse"
+msgstr "$1 von Feature $2 von Klasse $3"
 
 msgid "Overriding"
 msgstr ""
@@ -4078,7 +4085,7 @@ msgid ""
 "The project location is the place where compilation\n"
 "files will be generated by the compiler"
 msgstr ""
-"Der Projektort ist der Ort wo die vom Compiler\n"
+"Der Projekpfad ist der Ort wo die vom Compiler\n"
 "generierten Datein gelagert werden"
 
 msgid "Should the generated executable use a shared library of the runtime?"
@@ -4292,7 +4299,7 @@ msgid "Add a new feature to this dynamic library definition"
 msgstr "Neues Feature zu dieser Definition der dynamischen Bibliothek hinzufügen"
 
 msgid "New Favorite Class..."
-msgstr "Neue Favoriten-Klasse..."
+msgstr "Neue Klasse zu den Favoriten..."
 
 msgid "Fav&orites"
 msgstr "Fav&oriten"
@@ -4598,7 +4605,7 @@ msgid "Attribute \"case_sensitive\" is missing."
 msgstr "Attribut \"case_sensitive\" fehlt."
 
 msgid "Choose a Folder Name"
-msgstr "Ordnername wählen"
+msgstr "Ordnernamen wählen"
 
 msgid "Display result in percentage? (Only applicable for ratio metrics)"
 msgstr "Resultat in Prozent angeben? (Nur für Quotientenmetriken)"
@@ -4853,7 +4860,7 @@ msgid "&Contents"
 msgstr "&Inhalte"
 
 msgid "Override the detected platform to use in conditions."
-msgstr "Die gefunden Platform in Konditionen überschreiben."
+msgstr ""
 
 msgid ""
 "Metrics loading error:\n"
@@ -4869,7 +4876,7 @@ msgid "Searching selected file..."
 msgstr "Suche augewählte Datei..."
 
 msgid "Conditions for this external."
-msgstr "Konditionen für dieses externe Objekt."
+msgstr "Bedingungen für dieses externe Objekt."
 
 msgid "Do not ask again, and always build precompile"
 msgstr "Nicht nochmals fragen und immer Precompile erstellen"
@@ -4974,7 +4981,7 @@ msgid "Working directory"
 msgstr "Arbeitsverzeichnis"
 
 msgid "&Descendant Versions"
-msgstr "&Nachfahr Versionen"
+msgstr "Versionen der &Erben"
 
 msgid "Archive Comparison"
 msgstr "Archivvergleich"
@@ -5510,7 +5517,7 @@ msgid "Should the C output panel be shown when a C compilation is launched?"
 msgstr "Soll die Ausgabe des Compilers angezeigt werden wenn eine C-Kompilierung gestartet wird?"
 
 msgid "The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."
-msgstr ""
+msgstr "Geschwindigkeit in Millisekunden bis Werkzeuge welche sich automatisch verstecken vollständig angezeigt oder verborgen sind. '0' um die Animation zu deaktivieren."
 
 msgid "Should all applicable docking feedback indicators be shown when dragging a tool or a editor tab?"
 msgstr ""

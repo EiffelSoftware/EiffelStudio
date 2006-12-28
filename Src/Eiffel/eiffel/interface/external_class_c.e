@@ -993,6 +993,7 @@ feature {NONE} -- Initialization
 			l_property: CONSUMED_PROPERTY
 			l_fields: ARRAYED_LIST [CONSUMED_FIELD]
 			l_getter, l_setter: CONSUMED_ENTITY
+			l_feat: FEATURE_I
 			l_extrn_func_i: EXTERNAL_FUNC_I
 			l_def_func_i: DEF_FUNC_I
 			l_feat_i: FEATURE_I
@@ -1023,11 +1024,13 @@ feature {NONE} -- Initialization
 								l_def_func_i ?= l_feat_i
 							end
 							check func_attached: l_extrn_func_i /= Void or l_def_func_i /= Void end
-							if l_inherited.has (l_property) then
+							l_setter_name := l_setter.eiffel_name
+							if l_inherited /= Void and then l_inherited.has (l_property) then
 									-- property is inherited so use inherit setter name (fixes test#dotnet043)
-								l_setter_name := l_feat_i.written_class.feature_named (l_getter.eiffel_name).assigner_name
-							else
-								l_setter_name := l_setter.eiffel_name
+								l_feat := l_feat_i.written_class.feature_named (l_getter.eiffel_name)
+								if l_feat /= Void and then l_feat.assigner_name /= Void then
+									l_setter_name := l_feat.assigner_name
+								end
 							end
 							check l_setter_name_attached: l_setter_name /= Void end
 							l_feat_i := a_feat_tbl.item (l_setter_name)

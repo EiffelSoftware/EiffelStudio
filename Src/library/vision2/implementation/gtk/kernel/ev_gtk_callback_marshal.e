@@ -257,9 +257,11 @@ feature {NONE} -- Implementation
 			app_imp: EV_APPLICATION_IMP
 		do
 			if l_retry_count = 0 then
-				l_integer_pointer_tuple := integer_pointer_tuple
-				l_integer_pointer_tuple.integer := n_args
-				l_integer_pointer_tuple.pointer := args
+				if n_args > 0 then
+					l_integer_pointer_tuple := integer_pointer_tuple
+					l_integer_pointer_tuple.integer := n_args
+					l_integer_pointer_tuple.pointer := args
+				end
 				action.call (l_integer_pointer_tuple)
 			elseif l_retry_count = 1 then
 				app_imp ?= (create {EV_ENVIRONMENT}).application.implementation

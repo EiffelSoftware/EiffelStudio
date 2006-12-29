@@ -54,7 +54,7 @@ feature -- Implementation
 			-- Call actions and increment count if not already executing.
 		do
 				-- Do not process timeout if `Current' is already executing.
-			if not is_timeout_executing then
+			if not is_destroyed and then not is_timeout_executing then
 				is_timeout_executing := True
 				interface.actions.call (Void)
 				count := count + 1
@@ -62,7 +62,7 @@ feature -- Implementation
 			end
 		ensure
 			count_incremented_or_reset:
-				not is_timeout_executing implies (count = old count + 1 or else count = 1)
+				(not is_destroyed and not is_timeout_executing) implies (count = old count + 1 or else count = 1)
 		end
 
 	is_timeout_executing: BOOLEAN

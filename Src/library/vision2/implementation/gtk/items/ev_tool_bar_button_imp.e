@@ -39,8 +39,6 @@ inherit
 		end
 
 	EV_TOOLTIPABLE_IMP
-		undefine
-			visual_widget
 		redefine
 			interface,
 			set_tooltip,

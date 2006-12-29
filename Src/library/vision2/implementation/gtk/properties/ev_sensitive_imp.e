@@ -16,14 +16,6 @@ inherit
 			interface
 		end
 
-	EV_ANY_IMP
-		undefine
-			destroy,
-			needs_event_box
-		redefine
-			interface
-		end
-
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
@@ -58,6 +50,10 @@ feature -- Status setting
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	c_object: POINTER
+		deferred
+		end
 
 	has_parent: BOOLEAN is
 			-- Is `Current' parented?

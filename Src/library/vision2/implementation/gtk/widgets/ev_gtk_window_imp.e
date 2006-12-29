@@ -21,6 +21,8 @@ inherit
 			y_position
 		end
 
+	EV_GTK_KEY_CONVERSION
+
 feature {NONE} -- Implementation
 
 	parent_imp: EV_CONTAINER_IMP is
@@ -269,7 +271,100 @@ feature -- Basic operations
 			Result := is_destroyed or else not is_show_requested or else app_implementation.is_destroyed
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES}
+feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
+
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
+			-- `a_key' has either been pressed or released
+		deferred
+		end
+
+	process_key_event (a_key_event: POINTER)
+			-- Translation routine used for key events
+		local
+			keyval: NATURAL_32
+			a_key_string: STRING_32
+			a_key: EV_KEY
+			a_key_press: BOOLEAN
+			a_cs: EV_GTK_C_STRING
+			l_app_imp: like app_implementation
+			a_focus_widget: EV_WIDGET_IMP
+			l_block_events: BOOLEAN
+			l_tab_controlable: EV_TAB_CONTROLABLE_I
+			l_char: CHARACTER_32
+			l_handled: BOOLEAN
+		do
+			l_app_imp := app_implementation
+
+				-- Perform translation on key values from gdk.
+			keyval := {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (a_key_event)
+			if keyval > 0 and then valid_gtk_code (keyval) then
+				create a_key.make_with_code (key_code_from_gtk (keyval))
+			end
+			if {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (a_key_event) = {EV_GTK_EXTERNALS}.gdk_key_press_enum then
+				a_key_press := True
+				create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gdk_event_key_struct_string (a_key_event))
+				a_key_string := a_cs.string
+				if a_key_string /= Void and then a_key_string.valid_index (1) then
+					l_char := a_key_string @ 1
+					if l_char.is_character_8 then
+						if not l_char.to_character_8.is_printable and then l_char.code <= 127 then
+							a_key_string := Void
+								-- Non displayable characters
+						end
+					end
+				end
+				if a_key /= Void and then a_key.out.count /= 1 and then not a_key.is_numpad then
+					inspect a_key.code
+					when {EV_KEY_CONSTANTS}.key_space then
+						a_key_string := once " "
+					when {EV_KEY_CONSTANTS}.key_enter then
+						a_key_string := once "%N"
+					when {EV_KEY_CONSTANTS}.key_tab then
+						a_key_string := once "%T"
+					else
+						a_key_string := Void
+					end
+				end
+			end
+
+			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
+			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
+				if a_key /= Void then
+					if a_focus_widget.default_key_processing_handler /= Void then
+						l_block_events := not a_focus_widget.default_key_processing_handler.item ([a_key])
+					end
+					if not l_block_events then
+						l_tab_controlable ?= a_focus_widget
+						if l_tab_controlable /= Void and then not l_tab_controlable.is_tabable_from then
+							l_block_events := a_key.is_arrow or else a_key.code = {EV_KEY_CONSTANTS}.key_tab
+						end
+					end
+					if not l_block_events then
+						{EV_GTK_EXTERNALS}.gtk_main_do_event (a_key_event)
+					end
+				end
+				if l_app_imp.pick_and_drop_source /= Void and then a_key_press and then a_key /= Void and then (a_key.code = {EV_KEY_CONSTANTS}.key_escape or a_key.code = {EV_KEY_CONSTANTS}.key_alt) then
+					l_app_imp.pick_and_drop_source.end_transport (0, 0, 0, 0, 0, 0, 0, 0)
+				else
+					if a_key_press then
+						if a_key /= Void and then l_app_imp.key_press_actions_internal /= Void then
+							l_app_imp.key_press_actions_internal.call ([a_focus_widget.interface, a_key])
+						end
+						if a_key_string /= Void and then l_app_imp.key_press_string_actions_internal /= Void then
+							l_app_imp.key_press_string_actions_internal.call ([a_focus_widget.interface, a_key_string])
+						end
+					else
+						if a_key /= Void and then l_app_imp.key_release_actions_internal /= Void then
+							l_app_imp.key_release_actions_internal.call ([a_focus_widget.interface, a_key])
+						end
+					end
+					if a_focus_widget /= Current then
+						on_key_event (a_key, a_key_string, a_key_press)
+					end
+					a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
+				end
+			end
+		end
 
 	call_close_request_actions is
 			-- Call the close request actions.

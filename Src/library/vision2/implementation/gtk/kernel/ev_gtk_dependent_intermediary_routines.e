@@ -17,12 +17,10 @@ inherit
 
 	EV_GTK_KEY_CONVERSION
 
-feature {EV_ANY_I} -- Implementation
+feature -- Implementation
 
 	new_toolbar_item_select_actions_intermediary (a_object_id: INTEGER) is
 			-- Intermediary agent for toolbar button select action
-			-- (from EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES)
-			-- (export status {EV_ANY_I})
 		local
 			a_toolbar_button_imp: EV_TOOL_BAR_BUTTON_IMP
 			a_radio_button_imp: EV_TOOL_BAR_RADIO_BUTTON_IMP
@@ -89,40 +87,6 @@ feature {EV_ANY_I} -- Implementation
 				a_text_iter := {EV_GTK_EXTERNALS}.gtk_value_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_array_i_th (args, 1))
 				a_text_mark := {EV_GTK_EXTERNALS}.gtk_value_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_array_i_th (args, 2))
 				a_rich_text.on_text_mark_changed (a_text_iter, a_text_mark )
-			end
-		end
-
-	window_state_intermediary (a_object_id: INTEGER; n_args: INTEGER; args: POINTER) is
-			-- The window state of the window `a_object_id' has changed
-		local
-			gdk_event: POINTER
-			window_flags: INTEGER
-			titled_window_imp: EV_TITLED_WINDOW_IMP
-		do
-			titled_window_imp ?= eif_id_object (a_object_id)
-			gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
-			window_flags := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_event_window_state_struct_new_window_state (gdk_event)
-			if titled_window_imp /= Void and then not titled_window_imp.is_destroyed then
-				if window_flags & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
-					--print ("Window minimized%N")
-					titled_window_imp.call_window_state_event ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum)
-				elseif window_flags & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
-					--print ("Window maximized%N")
-					titled_window_imp.call_window_state_event ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum)
-				elseif window_flags & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_above_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_above_enum then
-					--print ("Window above%N")
-				elseif window_flags & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_below_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_below_enum then
-					--print ("Window below%N")
-				elseif window_flags & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_sticky_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_sticky_enum then
-					--print ("Window sticky%N")
-				elseif window_flags & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_fullscreen_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_fullscreen_enum then
-					--print ("Window fullscreen%N")
-				elseif window_flags & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_withdrawn_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_withdrawn_enum then
-					--print ("Window withdrawn%N")
-				else
-					--print ("Window restored%N")
-					titled_window_imp.call_window_state_event ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum | {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum)
-				end
 			end
 		end
 

@@ -10,14 +10,18 @@ class
 
 inherit
 	EV_TIMEOUT_I
+		export
+			{EV_INTERMEDIARY_ROUTINES}
+				is_destroyed
 		redefine
 			interface
 		end
 
-	EV_ANY_IMP
+	IDENTIFIED
+		undefine
+			is_equal,
+			copy
 		redefine
-			interface,
-			destroy,
 			dispose
 		end
 
@@ -32,7 +36,6 @@ feature -- Initialization
 			l_null: POINTER
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_label_new (l_null))
 		end
 
 	initialize is
@@ -71,7 +74,15 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 	interface: EV_TIMEOUT
 		-- Interface object.
 
+	app_implementation: EV_APPLICATION_IMP is
+			-- Return the instance of EV_APPLICATION_IMP.
+		once
+			Result ?= (create {EV_ENVIRONMENT}).application.implementation
+		end
+
 feature {NONE} -- Implementation
+
+	timeout_object: POINTER
 
 	timeout_connection_id: INTEGER
 		-- GTK handle on timeout connection.
@@ -85,7 +96,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Render `Current' unusable.
 		do
 			set_interval (0)
-			Precursor {EV_ANY_IMP}
+			set_is_destroyed (True)
 		end
 
 feature {NONE} -- Implementation
@@ -96,7 +107,7 @@ feature {NONE} -- Implementation
 			if timeout_connection_id > 0 then
 				{EV_GTK_EXTERNALS}.gtk_timeout_remove (timeout_connection_id)
 			end
-			Precursor {EV_ANY_IMP}
+			Precursor
 		end
 
 indexing

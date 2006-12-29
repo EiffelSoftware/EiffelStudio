@@ -16,14 +16,6 @@ inherit
 			interface
 		end
 
-	EV_ANY_IMP
-		undefine
-			needs_event_box,
-			destroy
-		redefine
-			interface
-		end
-
 feature -- Initialization
 
 	pixmapable_imp_initialize is
@@ -83,7 +75,7 @@ feature {EV_ANY_I} -- Implementation
 			p: POINTER
 		do
 			p := gtk_pixmap
-			if p /= NULL then
+			if p /= default_pointer then
 				--| We want p to be deallocated by gtk.
 				{EV_GTK_EXTERNALS}.gtk_container_remove (pixmap_box, p)
 			end

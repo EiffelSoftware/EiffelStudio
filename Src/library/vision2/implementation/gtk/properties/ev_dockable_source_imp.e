@@ -14,14 +14,6 @@ inherit
 			interface
 		end
 
-	EV_ANY_IMP
-		undefine
-			destroy,
-			needs_event_box
-		redefine
-			interface
-		end
-
 feature -- Status setting
 
 	start_dragable_filter (
@@ -163,6 +155,10 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	app_implementation: EV_APPLICATION_IMP
+		deferred
+		end
 
 	pointer_style: EV_POINTER_STYLE is
 			--

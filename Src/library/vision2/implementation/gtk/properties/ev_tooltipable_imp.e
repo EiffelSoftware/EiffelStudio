@@ -16,14 +16,6 @@ inherit
 			interface
 		end
 
-	EV_ANY_IMP
-		undefine
-			needs_event_box,
-			destroy
-		redefine
-			interface
-		end
-
 feature -- Initialization
 
 	tooltip: STRING_32 is
@@ -73,6 +65,14 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	visual_widget: POINTER
+		deferred
+		end
+
+	app_implementation: EV_APPLICATION_IMP
+		deferred
+		end
 
 	tooltips_pointer: POINTER is
 			-- Pointer to the tooltips pointer

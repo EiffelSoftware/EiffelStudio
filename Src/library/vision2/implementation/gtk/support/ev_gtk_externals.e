@@ -7994,7 +7994,6 @@ feature
 			"C (GtkWindow*, gchar*, gchar*) | <gtk/gtk.h>"
 		end
 
-
 	frozen gdk_color_struct_blue (a_c_struct: POINTER): INTEGER is
 		external
 			"C [struct <gtk/gtk.h>] (GdkColor): EIF_INTEGER"
@@ -8035,6 +8034,13 @@ feature
 			"C [struct <gtk/gtk.h>] (GdkColormap): EIF_INTEGER"
 		alias
 			"size"
+		end
+
+	frozen gdk_event_focus_struct_in (a_c_struct: POINTER): INTEGER
+		external
+			"C [struct <gtk/gtk.h>] (GdkEventFocus): EIF_INTEGER"
+		alias
+			"in"
 		end
 
 	frozen gdk_event_any_struct_send_event (a_c_struct: POINTER): INTEGER is

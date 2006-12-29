@@ -22,6 +22,12 @@ inherit
 			interface
 		end
 
+	EV_ANY_IMP
+		redefine
+			interface,
+			needs_event_box
+		end
+
 create
 	make
 

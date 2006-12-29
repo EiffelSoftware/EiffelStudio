@@ -334,7 +334,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	last_key_backspace: BOOLEAN
 		-- Was the last key pressed a backspace, used for select region hack for EiffelStudio.
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- A key event has occurred
 		do
 			if a_key_press then
@@ -342,7 +342,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					last_key_backspace := a_key.code = {EV_KEY_CONSTANTS}.key_back_space
 				end
 			end
-			Precursor {EV_TEXT_COMPONENT_IMP} (a_key, a_key_string, a_key_press, call_application_events)
+			Precursor {EV_TEXT_COMPONENT_IMP} (a_key, a_key_string, a_key_press)
 		end
 
 feature {NONE} -- Implementation

@@ -12,14 +12,6 @@ deferred class
 inherit
 	EV_ANY_IMP
 
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
-
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
-			-- Used for key event actions sequences, redefined by descendants
-		do
-
-		end
-
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	Gdk_events_mask: INTEGER is

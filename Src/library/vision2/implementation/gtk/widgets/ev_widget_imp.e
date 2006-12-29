@@ -24,7 +24,6 @@ inherit
 			destroy,
 			minimum_width,
 			minimum_height,
-			on_key_event,
 			x_position,
 			y_position
 		end
@@ -40,18 +39,6 @@ inherit
 		end
 
 	EV_WIDGET_ACTION_SEQUENCES_IMP
-		export
-			{EV_INTERMEDIARY_ROUTINES}
-				focus_in_actions_internal,
-				focus_out_actions_internal,
-				pointer_motion_actions_internal,
-				pointer_button_release_actions,
-				pointer_leave_actions,
-				pointer_leave_actions_internal,
-				pointer_enter_actions_internal
-		redefine
-			interface
-		end
 
 	EV_DOCKABLE_SOURCE_IMP
 		redefine
@@ -91,72 +78,24 @@ feature {NONE} -- Initialization
 			]"
 		end
 
-feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
+feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
-		local
-			temp_key_string: STRING_32
-			l_char: CHARACTER_32
-			app_imp: like app_implementation
 		do
-			app_imp := app_implementation
-			if has_focus then
-					-- We make sure that only the widget with focus receives key events
-				if a_key_press then
-						-- The event is a key press event.
-					if app_imp.key_press_actions_internal /= Void and then call_application_events then
-						app_imp.key_press_actions_internal.call ([interface, a_key])
+			if a_key_press then
+				if a_key /= Void and then key_press_actions_internal /= Void then
+					key_press_actions_internal.call ([a_key])
+				end
+				if key_press_string_actions_internal /= Void then
+					if a_key_string /= Void then
+						key_press_string_actions_internal.call ([a_key_string])
 					end
-					if a_key /= Void and then key_press_actions_internal /= Void then
-						key_press_actions_internal.call ([a_key])
-					end
-					if key_press_string_actions_internal /= Void then
-							-- Check to see if the character is a printable character.
-						if a_key_string /= Void and then a_key_string.valid_index (1) then
-							l_char := a_key_string.item (1)
-							if l_char.is_character_8 then
-								if l_char.to_character_8.is_printable or else l_char.code >= 128 then
-										--| FIXME `is_printable' should return True for characters above 127
-									temp_key_string := a_key_string
-								end
-							else
-								temp_key_string := a_key_string
-							end
-						end
-						if a_key /= Void then
-							if a_key.out.count /= 1 and not a_key.is_numpad then
-									-- The key pressed is an action key, we only want
-								inspect
-									a_key.code
-								when {EV_KEY_CONSTANTS}.Key_space then
-									temp_key_string := once  " "
-								when {EV_KEY_CONSTANTS}.Key_enter then
-									temp_key_string := once "%N"
-								when {EV_KEY_CONSTANTS}.Key_tab then
-									temp_key_string := once "%T"
-								else
-										-- The action key pressed has no printable value
-									temp_key_string := Void
-								end
-							end
-						end
-						if temp_key_string /= Void then
-							if app_imp.key_press_string_actions_internal /= Void and then call_application_events then
-								app_imp.key_press_string_actions_internal.call ([interface, temp_key_string])
-							end
-							key_press_string_actions_internal.call ([temp_key_string])
-						end
-					end
-				else
-						-- The event is a key release event.
-					if a_key /= Void then
-						if app_imp.key_release_actions_internal /= Void and then call_application_events then
-							app_imp.key_release_actions.call ([interface, a_key])
-						end
-						if key_release_actions_internal /= Void then
-							key_release_actions_internal.call ([a_key])
-						end
+				end
+			else
+				if a_key /= Void then
+					if key_release_actions_internal /= Void then
+						key_release_actions_internal.call ([a_key])
 					end
 				end
 			end

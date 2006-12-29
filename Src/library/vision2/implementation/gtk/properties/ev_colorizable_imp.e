@@ -18,13 +18,6 @@ inherit
 			set_default_colors
 		end
 
-	EV_ANY_IMP
-		undefine
-			destroy
-		redefine
-			interface
-		end
-
 feature -- Access
 
 	background_color: EV_COLOR is
@@ -206,6 +199,18 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	visual_widget: POINTER
+		deferred
+		end
+
+	c_object: POINTER
+		deferred
+		end
+
+	needs_event_box: BOOLEAN
+		deferred
+		end
 
 	background_color_imp: EV_COLOR_IMP
 		-- Color used for the background of `Current'

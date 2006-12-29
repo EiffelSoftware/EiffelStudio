@@ -12,7 +12,7 @@ class
 inherit
 	EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES
 
-feature {EV_ANY_IMP} -- Timeout intermediary agent routine
+feature -- Timeout intermediary agent routine
 
 	on_timeout_intermediary (a_object_id: INTEGER) is
 			-- Timeout has occurred.
@@ -20,9 +20,11 @@ feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 			a_timeout_imp: EV_TIMEOUT_IMP
 		do
 			a_timeout_imp ?= eif_id_object (a_object_id)
-			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed and then not a_timeout_imp.app_implementation.is_destroyed then
-				-- Timeout may possibly have been gc'ed.
-				a_timeout_imp.on_timeout
+			if a_timeout_imp /= Void and then not a_timeout_imp.is_destroyed and then not a_timeout_imp.is_timeout_executing then
+					-- Timeout may possibly have been gc'ed.
+				a_timeout_imp.app_implementation.do_once_on_idle (agent a_timeout_imp.on_timeout)
+					-- We call timeout action on idle as not giving back gtk control from a timeout
+					-- can cause memory corrupt if events are processed during the timeout call.
 			end
 		end
 
@@ -37,7 +39,7 @@ feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 			a_notebook_imp.page_switch (a_page.to_integer_32)
 		end
 
-feature {EV_ANY_IMP} -- Drawing Area intermediary agent routines
+feature -- Drawing Area intermediary agent routines
 
 	on_drawing_area_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER) is
 			-- Drawing area focus lost or gained
@@ -82,20 +84,7 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 			a_gauge_imp.value_changed_handler
 		end
 
-feature {EV_ANY_IMP} -- Key Event intermediary agent routines
-
-	on_key_event_intermediary (a_object_id: INTEGER; a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
-			-- Key event
-		local
-			a_widget: EV_GTK_WIDGET_IMP
-		do
-			a_widget ?= eif_id_object (a_object_id)
-			if a_widget /= Void and then not a_widget.is_destroyed then
-				a_widget.on_key_event (a_key, a_key_string, a_key_press, True)
-			end
-		end
-
-feature {EV_ANY_IMP} -- Widget intermediary agent routines
+feature -- Widget intermediary agent routines
 
 	accel_activate_intermediary (a_object_id: INTEGER; n: INTEGER; p: POINTER) is
 			-- Call accelerators for window `a_object_id'
@@ -123,17 +112,6 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			a_widget ?= eif_id_object (a_object_id)
 			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
-			end
-		end
-
-	window_focus_intermediary (a_object_id: INTEGER; a_focused: BOOLEAN) is
-			-- Focus handling intermediary.
-		local
-			a_widget: EV_WIDGET_IMP
-		do
-			a_widget ?= eif_id_object (a_object_id)
-			if a_widget /= Void and then not a_widget.is_destroyed then
-				a_widget.on_focus_changed (a_focused)
 			end
 		end
 
@@ -168,7 +146,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			a_text_field_imp.return_actions_internal.call (Void)
 		end
 
-feature {EV_ANY_IMP} -- Button intermediary agent routines	
+feature -- Button intermediary agent routines	
 
 	button_select_intermediary (a_c_object: POINTER) is
 			-- Selected
@@ -204,18 +182,6 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 
 feature {EV_ANY_IMP} -- Window intermediary agent routines
 
-	on_window_close_request (a_c_object: POINTER) is
-			-- Close requested
-		local
-			a_window_imp: EV_GTK_WINDOW_IMP
-		do
-			a_window_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			check
-				a_window_imp_not_void: a_window_imp /= Void
-			end
-			a_window_imp.call_close_request_actions
-		end
-
 	on_widget_show (a_c_object: POINTER) is
 			-- Widget has been shown
 		local
@@ -240,7 +206,7 @@ feature {EV_ANY_IMP} -- Menu intermediary agent routines
 			end
 		end
 
-feature {EV_ANY_IMP} -- Pointer intermediary agent routines	
+feature -- Pointer intermediary agent routines	
 
 	pointer_enter_leave_action_intermediary (a_c_object: POINTER; a_enter_leave: BOOLEAN) is
 			-- Pointer entered

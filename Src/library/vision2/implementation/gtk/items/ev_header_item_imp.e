@@ -21,14 +21,20 @@ inherit
 
 	EV_TEXTABLE_IMP
 		redefine
-			interface,
-			process_gdk_event
+			interface
 		end
 
 	EV_PIXMAPABLE_IMP
 		redefine
+			interface
+		end
+
+	EV_ANY_IMP
+		redefine
 			interface,
-			process_gdk_event
+			needs_event_box,
+			process_gdk_event,
+			destroy
 		end
 
 create

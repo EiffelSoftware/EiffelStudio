@@ -18,8 +18,6 @@ inherit
 		redefine
 			interface,
 			default_wm_decorations,
-			on_key_event,
-			initialize,
 			blocking_condition,
 			show_modal_to_window
 		end
@@ -29,23 +27,6 @@ inherit
 	EV_DIALOG_CONSTANTS
 		export
 			{NONE} all
-		end
-
-feature {NONE} -- Implementation
-
-	initialize is
-			-- Initialize dialog
-		local
-			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING_32, BOOLEAN]]
-			l_app_imp: EV_APPLICATION_IMP
-			l_gtk_marshal: EV_GTK_CALLBACK_MARSHAL
-		do
-			Precursor {EV_GTK_WINDOW_IMP}
-			l_app_imp := App_implementation
-			l_gtk_marshal := l_app_imp.gtk_marshal
-			on_key_event_intermediary_agent := agent (l_gtk_marshal).on_key_event_intermediary (internal_id, ?, ?, ?)
-			real_signal_connect (event_widget, "key_press_event", on_key_event_intermediary_agent, l_gtk_marshal.key_event_translate_agent)
-			signal_connect_true (l_app_imp.delete_event_string, agent l_gtk_marshal.on_window_close_request (c_object))
 		end
 
 feature -- Access
@@ -95,7 +76,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN; call_application_events: BOOLEAN) is
+	on_key_event (a_key: EV_KEY; a_key_string: STRING_32; a_key_press: BOOLEAN) is
 			-- `a_key' has either been pressed or released
 		do
 			if a_key /= Void then

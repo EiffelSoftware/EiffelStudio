@@ -21,13 +21,6 @@ inherit
 			remove_i_th
 		end
 
-	EV_ANY_IMP
-		undefine
-			needs_event_box
-		redefine
-			interface
-		end
-
 	EV_MENU_ITEM_LIST_ACTION_SEQUENCES_IMP
 
 feature {EV_MENU_ITEM_IMP} -- implementation
@@ -78,14 +71,14 @@ feature {NONE} -- Implementation
 					sep_imp := separator_imp_by_index (pos)
 					if sep_imp /= Void then
 						radio_imp.set_radio_group (sep_imp.radio_group)
-						if sep_imp.radio_group /= NULL then
+						if sep_imp.radio_group /= default_pointer then
 							{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						sep_imp.set_radio_group (radio_imp.radio_group)
 					else
 						radio_imp.set_radio_group (radio_group)
 						radio_item_pointer := radio_imp.radio_group
-						if radio_group /= NULL then
+						if radio_group /= default_pointer then
 							{EV_GTK_EXTERNALS}.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 						end
 						set_radio_group (radio_imp.radio_group)
@@ -248,6 +241,14 @@ feature {NONE} -- Implementation
 	radio_group_ref_internal: POINTER_REF
 
 feature {EV_ANY_I} -- Implementation
+
+	eif_object_from_c (a_c_object: POINTER): EV_ANY_IMP
+		deferred
+		end
+
+	c_object: POINTER
+		deferred
+		end
 
 	interface: EV_MENU_ITEM_LIST;
 

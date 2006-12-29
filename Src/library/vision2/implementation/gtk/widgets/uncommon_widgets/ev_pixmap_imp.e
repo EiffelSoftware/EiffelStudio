@@ -44,11 +44,6 @@ inherit
 		end
 
 	EV_PIXMAP_ACTION_SEQUENCES_IMP
-		redefine
-			needs_event_box,
-			interface,
-			destroy
-		end
 
 create
 	make

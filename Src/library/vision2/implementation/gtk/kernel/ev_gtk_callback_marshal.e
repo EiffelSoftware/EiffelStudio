@@ -81,7 +81,7 @@ feature {EV_ANY_IMP} -- Access
 			Result.key_press := a_key_press
 		end
 
-feature {EV_ANY_IMP}
+feature -- Implementation
 
 	signal_connect (
 		a_c_object: POINTER;
@@ -111,7 +111,7 @@ feature {EV_ANY_IMP}
 	last_signal_connection_id: INTEGER
 		-- Last signal connection id.
 
-feature {EV_ANY_IMP} -- Agent functions.
+feature -- Agent functions.
 
 	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- Translation agent used for key events

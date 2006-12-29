@@ -33,9 +33,7 @@ inherit
 
 	EV_FONTABLE_IMP
 		redefine
-			interface,
-			visual_widget,
-			dispose
+			interface
 		end
 
 create

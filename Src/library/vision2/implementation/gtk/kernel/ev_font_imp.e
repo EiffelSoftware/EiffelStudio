@@ -437,7 +437,7 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 			end
 		end
 
-feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
+feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP, EV_FONTABLE_IMP} -- Implementation
 
 	font_description: POINTER
 		-- Pointer to the PangoFontDescription struct

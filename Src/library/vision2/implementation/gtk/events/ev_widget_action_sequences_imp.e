@@ -12,8 +12,16 @@ deferred class
 
 inherit
 	EV_WIDGET_ACTION_SEQUENCES_I
-
-EV_ANY_IMP undefine dispose, destroy end
+		export
+			{EV_INTERMEDIARY_ROUTINES}
+				focus_in_actions_internal,
+				focus_out_actions_internal,
+				pointer_motion_actions_internal,
+				pointer_button_release_actions,
+				pointer_leave_actions,
+				pointer_leave_actions_internal,
+				pointer_enter_actions_internal
+		end
 
 feature -- Event handling
 
@@ -51,7 +59,7 @@ feature -- Event handling
 		do
 			app_imp := app_implementation
 			create Result
-			signal_connect (
+			app_imp.gtk_marshal.signal_connect (
 				event_widget,
 				App_imp.enter_notify_event_string,
 				agent (App_imp.gtk_marshal).pointer_enter_leave_action_intermediary (c_object, True),
@@ -68,7 +76,7 @@ feature -- Event handling
 		do
 			app_imp := app_implementation
 			create Result
-			signal_connect (
+			app_imp.gtk_marshal.signal_connect (
 				event_widget,
 				App_imp.leave_notify_event_string,
 				agent (App_imp.gtk_marshal).pointer_enter_leave_action_intermediary (c_object, False),
@@ -118,15 +126,18 @@ feature -- Event handling
 			if not {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
 				l_app_imp := app_implementation
 					-- Window resize events are connected separately
-				signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, False)
+				l_app_imp.gtk_marshal.signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, False)
 			end
 		end
 
 	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
 			-- Create a mouse_wheel action sequence.
+		local
+			l_app_imp: like app_implementation
 		do
 			create Result
-			signal_connect (event_widget, once "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate, False)
+			l_app_imp := app_implementation
+			l_app_imp.gtk_marshal.signal_connect (event_widget, once "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate, False)
 		end
 
 	create_file_drop_actions: like file_drop_actions_internal
@@ -136,6 +147,22 @@ feature -- Event handling
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	internal_id: INTEGER
+		deferred
+		end
+
+	app_implementation: EV_APPLICATION_IMP
+		deferred
+		end
+
+	visual_widget: POINTER
+		deferred
+		end
+
+	c_object: POINTER
+		deferred
+		end
 
 	event_widget: POINTER is
 			-- Pointer to the gtk event widget

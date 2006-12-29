@@ -149,17 +149,6 @@ feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 			l_app_imp.gtk_marshal.signal_connect (a_c_object, l_app_imp.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)
 		end
 
-	signal_connect (
-		a_c_object: like c_object;
-		a_signal_name: EV_GTK_C_STRING;
-		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
-		invoke_after_handler: BOOLEAN) is
-				--
-		do
-			app_implementation.gtk_marshal.signal_connect (a_c_object, a_signal_name, an_agent, translate, invoke_after_handler)
-		end
-
 	last_signal_connection_id: INTEGER is
 			-- GTK signal connection id of the most recent `signal_connect'.
 		do

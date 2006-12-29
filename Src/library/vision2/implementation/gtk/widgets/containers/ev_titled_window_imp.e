@@ -26,15 +26,10 @@ inherit
 			make,
 			default_wm_decorations,
 			is_displayed,
-			initialize
+			call_window_state_event
 		end
 
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
-		export {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
-			minimize_actions_internal,
-			maximize_actions_internal,
-			restore_actions_internal
-		end
 
 create
 	make
@@ -48,22 +43,20 @@ feature {NONE} -- Initialization
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
 		end
 
-	initialize is
-			-- Setup accelerators for window
-		local
-			app_imp: like app_implementation
-		do
-			app_imp := app_implementation
-			Precursor {EV_WINDOW_IMP}
-			signal_connect (c_object, app_imp.window_state_event_string, agent (app_imp.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void, False)
-		end
-
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 
 	call_window_state_event (a_window_state: INTEGER) is
-			-- Call either minimize, maximize or restore actions for window
+			-- Handle either minimize, maximize or restore actions for window
 		do
-			if a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
+			if a_window_state = ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum | {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum) then
+				if is_maximized or is_minimized then
+					is_maximized := False
+					is_minimized := False
+					if restore_actions_internal /= Void then
+						restore_actions_internal.call (Void)
+					end
+				end
+			elseif a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
 				if not is_minimized then
 					is_minimized := True
 					is_maximized := False
@@ -78,13 +71,6 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 					if maximize_actions_internal /= Void then
 						maximize_actions_internal.call (Void)
 					end
-				end
-
-			else
-				is_maximized := False
-				is_minimized := False
-				if restore_actions_internal /= Void then
-					restore_actions_internal.call (Void)
 				end
 			end
 		end

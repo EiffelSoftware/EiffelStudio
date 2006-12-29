@@ -14,12 +14,6 @@ inherit
 			interface
 		end
 
-	EV_GTK_WIDGET_IMP
-		redefine
-			interface,
-			destroy
-		end
-
 	EV_PICK_AND_DROPABLE_IMP
 		redefine
 			interface,
@@ -69,7 +63,7 @@ feature -- Access
 			Result := item_parent_imp
 		end
 
-feature {EV_ANY_IMP} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	destroy is
 			-- Destroy `Current'
@@ -77,7 +71,7 @@ feature {EV_ANY_IMP} -- Implementation
 			if parent_imp /= Void then
 					parent_imp.interface.prune (interface)
 			end
-			Precursor {EV_GTK_WIDGET_IMP}
+			Precursor {EV_PICK_AND_DROPABLE_IMP}
 		end
 
 	item_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM]

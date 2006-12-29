@@ -400,12 +400,14 @@ feature -- Basic operations
 			column_width: INTEGER
 			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
 			intersection_found: BOOLEAN
+			l_cursor: CURSOR
 		do
 			locked_items := grid.locked_indexes
 
 				-- We iterate in reverse as we wish to find the topmost item
 				-- first, ignoring all those beneath
 			from
+				l_cursor := locked_items.cursor
 				locked_items.finish
 			until
 				locked_items.off or intersection_found
@@ -449,6 +451,7 @@ feature -- Basic operations
 				end
 				locked_items.back
 			end
+			locked_items.go_to (l_cursor)
 		end
 
 	locked_row_at_position (a_y: INTEGER): EV_GRID_ROW_I is
@@ -459,12 +462,14 @@ feature -- Basic operations
 			locked_row: EV_GRID_LOCKED_ROW_I
 			row_height: INTEGER
 			intersection_found: BOOLEAN
+			l_cursor: CURSOR
 		do
 			locked_items := grid.locked_indexes
 
 				-- We iterate in reverse as we wish to find the topmost item
 				-- first, ignoring all those beneath
 			from
+				l_cursor := locked_items.cursor
 				locked_items.finish
 			until
 				locked_items.off or intersection_found
@@ -482,6 +487,7 @@ feature -- Basic operations
 				end
 				locked_items.back
 			end
+			locked_items.go_to (l_cursor)
 		end
 
 	locked_column_at_position (an_x: INTEGER): EV_GRID_COLUMN_I is
@@ -492,12 +498,14 @@ feature -- Basic operations
 			locked_column: EV_GRID_LOCKED_COLUMN_I
 			column_width: INTEGER
 			intersection_found: BOOLEAN
+			l_cursor: CURSOR
 		do
 			locked_items := grid.locked_indexes
 
 				-- We iterate in reverse as we wish to find the topmost item
 				-- first, ignoring all those beneath
 			from
+				l_cursor := locked_items.cursor
 				locked_items.finish
 			until
 				locked_items.off or intersection_found
@@ -511,6 +519,7 @@ feature -- Basic operations
 				end
 				locked_items.back
 			end
+			locked_items.go_to (l_cursor)
 		end
 
 

@@ -336,7 +336,7 @@ feature {EV_ANY_I} -- Implementation
 							end
 							user_events_processed_from_underlying_toolkit := True
 							l_call_event := False
-							l_gtk_window_imp ?= eif_object_from_gtk_object (event_widget)
+							l_gtk_window_imp ?= eif_object_from_gtk_object (grab_widget)
 							if l_gtk_window_imp /= Void then
 								l_top_level_window_imp ?= l_gtk_window_imp
 								if l_top_level_window_imp = Void or else not l_top_level_window_imp.has_modal_window then

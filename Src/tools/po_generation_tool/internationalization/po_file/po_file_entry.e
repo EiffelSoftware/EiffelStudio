@@ -160,6 +160,7 @@ feature {NONE} -- Internal formatting
 	break_line(line:STRING_32):LINKED_LIST[STRING_32] is
 			-- breaks a line into 78-character chunks and returns them in a list
 			-- NOTE: this will break in the middle of words.
+			-- The ending charater of a line is not '\', so more than 78 char is possible.
 		local
 			linear : LINEAR[WIDE_CHARACTER]
 			counter: INTEGER
@@ -179,6 +180,16 @@ feature {NONE} -- Internal formatting
 				loop
 					accumulator.extend (linear.item)
 					if counter >= 78 then
+							-- Make sure the end character is not '\'.
+						from
+						until
+							linear.item.code /= ('\').code or else linear.after
+						loop
+							linear.forth
+							if not linear.after then
+								accumulator.extend (linear.item)
+							end
+						end
 						Result.extend (accumulator)
 						accumulator := ""
 						counter := 1

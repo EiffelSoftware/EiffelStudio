@@ -407,7 +407,16 @@ feature {EV_ANY_I} -- Implementation
 						end
 					else
 							--| Handle events not associated with a gtk widget.
-						{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+						inspect
+							{EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
+						when GDK_SETTING then
+							debug ("GDK_SETTING")
+								print ("GDK_SETTING")
+						 	end
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+						else
+							{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+						end
 					end
 					{EV_GTK_EXTERNALS}.gdk_event_free (gdk_event)
 				else
@@ -927,6 +936,9 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			-- The current gtk style has changed.
 		do
 			-- This is called when the user externally changes the gtk style.
+			if theme_changed_actions_internal /= Void then
+				theme_changed_actions_internal.call (Void)
+			end
 		end
 
 	default_gdk_window: POINTER is

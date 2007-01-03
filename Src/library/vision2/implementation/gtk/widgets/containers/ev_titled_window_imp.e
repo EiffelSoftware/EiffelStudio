@@ -45,32 +45,37 @@ feature {NONE} -- Initialization
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 
-	call_window_state_event (a_window_state: INTEGER) is
-			-- Handle either minimize, maximize or restore actions for window
+	call_window_state_event (a_changed_mask, a_new_state: INTEGER) is
+			-- Handle either minimize, maximize or restore event for `Current'.
+		local
+			l_call_restore: BOOLEAN
 		do
-			if a_window_state = ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum | {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum) then
-				if is_maximized or is_minimized then
-					is_maximized := False
-					is_minimized := False
-					if restore_actions_internal /= Void then
-						restore_actions_internal.call (Void)
-					end
-				end
-			elseif a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
-				if not is_minimized then
+			if a_changed_mask & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
+				if a_new_state & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
 					is_minimized := True
 					is_maximized := False
 					if minimize_actions_internal /= Void then
 						minimize_actions_internal.call (Void)
 					end
+				else
+					l_call_restore := True
 				end
-			elseif a_window_state = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
-				if not is_maximized then
+			elseif a_changed_mask & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
+				if a_new_state & {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum = {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
 					is_maximized := True
 					is_minimized := False
 					if maximize_actions_internal /= Void then
 						maximize_actions_internal.call (Void)
 					end
+				else
+					l_call_restore := True
+				end
+			end
+			if l_call_restore then
+				is_minimized := False
+				is_maximized := False
+				if restore_actions_internal /= Void then
+					restore_actions_internal.call (Void)
 				end
 			end
 		end
@@ -154,15 +159,17 @@ feature -- Status setting
 	minimize is
 			-- Display iconified/minimised.
 		do
+			is_minimized := True
+			is_maximized := False
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_iconify (c_object)
-			call_window_state_event ({EV_GTK_EXTERNALS}.gdk_window_state_iconified_enum)
 		end
 
 	maximize is
 			-- Display at maximum size.
 		do
+			is_maximized := False
+			is_minimized := True
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_maximize (c_object)
-			call_window_state_event ({EV_GTK_EXTERNALS}.gdk_window_state_maximized_enum)
 		end
 
 	restore is
@@ -171,7 +178,7 @@ feature -- Status setting
 			if is_maximized then
 				is_maximized := False
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_unmaximize (c_object)
-			else
+			elseif is_minimized then
 				is_minimized := False
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_deiconify (c_object)
 			end

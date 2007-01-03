@@ -428,7 +428,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 			end
 		end
 
-	call_window_state_event (a_window_state: INTEGER) is
+	call_window_state_event (a_changed_mask, a_new_state: INTEGER) is
 			-- Call either minimize, maximize or restore actions for window
 		do
 			-- Move implementation from EV_TITLED_WINDOW_IMP when necessary

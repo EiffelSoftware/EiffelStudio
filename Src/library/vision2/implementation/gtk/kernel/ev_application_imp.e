@@ -313,7 +313,10 @@ feature {EV_ANY_I} -- Implementation
 							end
 							l_top_level_window_imp ?= eif_object_from_gtk_object (event_widget)
 							if l_top_level_window_imp /= Void then
-								l_top_level_window_imp.call_window_state_event ({EV_GTK_EXTERNALS}.gdk_event_window_state_struct_changed_mask (gdk_event))
+								l_top_level_window_imp.call_window_state_event (
+									{EV_GTK_EXTERNALS}.gdk_event_window_state_struct_changed_mask (gdk_event),
+									{EV_GTK_EXTERNALS}.gdk_event_window_state_struct_new_window_state (gdk_event)
+								)
 								l_top_level_window_imp := Void
 							end
 						when GDK_ENTER_NOTIFY, GDK_LEAVE_NOTIFY then

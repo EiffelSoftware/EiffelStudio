@@ -58,6 +58,8 @@ feature {REPLAY_BACKUP_WINDOW} -- Implementation: Access
 
 	ignore_missing_library_check: EV_CHECK_BUTTON
 
+	copy_ecf_file_check: EV_CHECK_BUTTON
+
 	backup_path_text: EV_PATH_FIELD
 			-- UI for `backup_path_pref'.
 
@@ -82,6 +84,11 @@ feature {NONE} -- Preferences
 
 	compilation_counter_pref: INTEGER_PREFERENCE
 			-- Index of compilation being done.
+
+	copy_ecf_allowed: BOOLEAN
+			-- Should we copy new ecf file over?
+			-- Usually disabled when we have to modify the `config.ecf' file manually because
+			-- something wrong with it.
 
 feature {NONE} -- Actions
 
@@ -160,6 +167,8 @@ feature {NONE} -- Implementation
 
 			compilation_counter_pref := l_pref_factory.new_integer_preference_value (l_manager, "BACKUP.counter", 1)
 			compilation_counter_pref.set_hidden (True)
+
+			copy_ecf_allowed := True
 		end
 
 	build_interface is
@@ -182,6 +191,14 @@ feature {NONE} -- Implementation
 				end)
 			l_vbox1.extend (ignore_missing_library_check)
 			l_vbox1.disable_item_expand (ignore_missing_library_check)
+
+			create copy_ecf_file_check.make_with_text ("Copy new ecf file")
+			copy_ecf_file_check.select_actions.extend (agent
+				do
+					copy_ecf_allowed := copy_ecf_file_check.is_selected
+				end)
+			l_vbox1.extend (copy_ecf_file_check)
+			l_vbox1.disable_item_expand (copy_ecf_file_check)
 
 			create backup_path_text.make_with_text_and_parent ("Path to BACKUP: ", window)
 			l_vbox1.extend (backup_path_text)
@@ -269,6 +286,13 @@ feature {NONE} -- Implementation
 				ignore_missing_library_check.disable_select
 			end
 			ignore_missing_library_check.select_actions.resume
+
+				-- Always bad libraries.
+			if copy_ecf_allowed then
+				copy_ecf_file_check.enable_select
+			else
+				copy_ecf_file_check.disable_select
+			end
 
 				-- Backup path
 			backup_path_text.field.change_actions.block
@@ -466,7 +490,7 @@ feature {NONE} -- Implementation
 								l_dest_file.open_read
 								l_dest_file.read_stream (l_dest_file.count)
 								l_dest_file.close
-								l_copy_content := not l_source_file.last_string.is_equal (l_dest_file.last_string)
+								l_copy_content := not l_source_file.last_string.is_equal (l_dest_file.last_string) and copy_ecf_allowed
 							else
 								l_copy_content := True
 							end
@@ -489,6 +513,7 @@ invariant
 		-- UI
 	window_not_void: window /= Void
 	ignore_missing_library_check_not_void: ignore_missing_library_check /= Void
+	copy_ecf_file_check_not_void: copy_ecf_file_check /= Void
 	backup_path_text_not_void: backup_path_text /= Void
 	compilation_info_text_not_void: compilation_info_text /= Void
 	counter_not_void: counter /= Void
@@ -497,6 +522,7 @@ invariant
 	files_output_not_void: files_output /= Void
 	ui_valid: not window.is_destroyed and
 		not ignore_missing_library_check.is_destroyed and
+		not copy_ecf_file_check.is_destroyed and
 		not backup_path_text.is_destroyed and
 		not compilation_info_text.is_destroyed and
 		not counter.is_destroyed and

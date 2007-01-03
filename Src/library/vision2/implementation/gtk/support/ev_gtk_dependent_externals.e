@@ -10,6 +10,11 @@ class
 
 feature -- Externals
 
+	frozen gdk_window_get_state (a_window: POINTER): INTEGER
+		external
+			"C signature (GdkWindow*): GdkWindowState use <gtk/gtk.h>"
+		end
+
 	frozen gdk_region_intersect (a_region1, a_region2: POINTER) is
 		external
 			"C signature (GdkRegion*, GdkRegion*) use <gtk/gtk.h>"

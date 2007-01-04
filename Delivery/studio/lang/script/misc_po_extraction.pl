@@ -1,17 +1,28 @@
 #!/bin/perl
-#This script extracts descriptions from default.xml,
-#and put them into generated preference.pot file.
+#This script extracts miscellious
 
+# File testing
 unless (open DATABASE, "../../eifinit/default.xml") {
-	die "Error: Couldn't open default.xml: $!; aborting";
+	die "Error: Couldn't open ../../eifinit/default.xml: $!; aborting";
 }
 
 unless (open DATABASE, "../../eifinit/spec/unix/default.xml") {
-	die "Error: Couldn't open default.xml: $!; aborting";
+	die "Error: Couldn't open ../../eifinit/spec/unix/default.xml: $!; aborting";
+}
+
+unless (open DATABASE, "../../eifinit/spec/windows/default.xml") {
+	die "Error: Couldn't open ../../eifinit/spec/windows/default.xml: $!; aborting";
 }
 
 unless (open POT_FILE, ">>../po_files/estudio.pot") {
-	die "Error: Couldn't open estudio.pot: $!; aborting";
+	die "Error: Couldn't open ../po_files/estudio.pot: $!; aborting";
+}
+
+my @pm_files = glob "../../wizards/new_projects/*.dsc";
+foreach $dsc_file (@pm_files){
+	unless (open DATABASE, $dsc_file) {
+		die "Error: Couldn't open $dsc_file: $!; aborting";
+	}
 }
 
 select POT_FILE;
@@ -23,6 +34,8 @@ select POT_FILE;
 #print "\"Plural-Forms: nplurals=2; plural=n>1;\\n\"\n";
 #print "\"MIME-Version: 1.0\\n\"\n";
 #print "\"Last-Translator: YOUR NAME HERE\\n\"\n\n";
+
+# Extracting names and descriptions from preference xml files.
 unless (open DATABASE, "../../eifinit/default.xml") {
 	die "Error: Couldn't open default.xml: $!; aborting";
 }
@@ -31,10 +44,26 @@ unless (open DATABASE, "../../eifinit/spec/windows/default.xml") {
 	die "Error: Couldn't open default.xml: $!; aborting";
 }
 &extract;
-unless (open DATABASE, "../../eifinit/spec/windows/default.xml") {
+unless (open DATABASE, "../../eifinit/spec/unix/default.xml") {
 	die "Error: Couldn't open default.xml: $!; aborting";
 }
 &extract;
+
+# Extracting names from wizard discription files.
+foreach $dsc_file (@pm_files){
+	unless (open DATABASE, $dsc_file) {
+		die "Error: Couldn't open $dsc_file: $!; aborting";
+	}
+	while ($line = <DATABASE>) {
+		chomp;
+		if ($line =~ /NAME\s*=\s*\"((?:[^"]|\"\")+)\"/i) {
+			$extracted = $1;
+			print "msgid \"$extracted\"\n";
+			print "msgstr \"\"\n\n";
+		}
+	}
+}
+
 select STDOUT;
 
 sub extract {

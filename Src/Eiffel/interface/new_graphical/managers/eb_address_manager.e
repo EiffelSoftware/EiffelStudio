@@ -1635,12 +1635,14 @@ feature {NONE} -- open new class
 						index := index + 1
 					end
 					if current_found /= Void then
-						current_found := current_found.as_upper
-						class_address.set_text (current_found)
-						if nb < current_found.count then
-							class_address.select_region (nb + 1, current_found.count)
-						else
-							class_address.set_caret_position (current_found.count + 1)
+						if not last_key_was_backspace then
+							current_found := current_found.as_upper
+							class_address.set_text (current_found)
+							if nb < current_found.count then
+								class_address.select_region (nb + 1, current_found.count)
+							else
+								class_address.set_caret_position (current_found.count + 1)
+							end
 						end
 					elseif not (last_key_was_backspace and had_selection) then
 						str.to_upper
@@ -1749,11 +1751,13 @@ feature {NONE} -- open new class
 						list.forth
 					end
 					if current_found /= Void then
-						cluster_address.set_text (current_found)
-						if nb < current_found.count then
-							cluster_address.select_region (nb + 1, current_found.count)
-						else
-							cluster_address.set_caret_position (current_found.count + 1)
+						if not last_key_was_backspace then
+							cluster_address.set_text (current_found)
+							if nb < current_found.count then
+								cluster_address.select_region (nb + 1, current_found.count)
+							else
+								cluster_address.set_caret_position (current_found.count + 1)
+							end
 						end
 					elseif not (last_key_was_backspace and cluster_had_selection) then
 						cluster_address.set_text (str)
@@ -1865,11 +1869,13 @@ feature {NONE} -- open new class
 						list.forth
 					end
 					if current_found /= Void then
-						feature_address.set_text (current_found)
-						if nb < current_found.count then
-							feature_address.select_region (nb + 1, current_found.count)
-						else
-							feature_address.set_caret_position (current_found.count + 1)
+						if not last_key_was_backspace then
+							feature_address.set_text (current_found)
+							if nb < current_found.count then
+								feature_address.select_region (nb + 1, current_found.count)
+							else
+								feature_address.set_caret_position (current_found.count + 1)
+							end
 						end
 					elseif not (last_key_was_backspace and feature_had_selection) then
 						feature_address.set_text (str)

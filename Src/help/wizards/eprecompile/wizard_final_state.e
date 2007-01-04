@@ -107,19 +107,14 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("Launch Precompilations")
-			message.set_text (
-				"The precompilation(s) will be launched as soon%N%
-				%as you push the Finish button%N%
-				%%N%
-				%Be patient, this can take a while!"
-				)
+			title.set_text (interface_names.t_launch_precompilations)
+			message.set_text (interface_names.m_precompilation_will_be_launch)
 		end
 
-	final_message: STRING is
+	final_message: STRING_GENERAL is
 			-- final message for the last message dialog at the end of all the precompilations
 		do
-			Result:= "Precompilations done !"
+			Result:= interface_names.m_precompilation_done
 		end
 
 	launch_precompilations is
@@ -136,8 +131,8 @@ feature {NONE} -- Implementation
 			if not rescued then
 				progress.set_proportion (0)
 				progress_2.set_proportion (0)
-				progress_text.set_text ("Total Progress: ")
-				progress_text_2.set_text ("Preparing precompilations ...")
+				progress_text.set_text (interface_names.l_total_progress)
+				progress_text_2.set_text (interface_names.l_preparing_precompilation)
 
 				from
 					wizard_information.l_to_precompile.start
@@ -158,9 +153,7 @@ feature {NONE} -- Implementation
 			end
 		rescue
 			rescued := True
-			create error_dialog.make_with_text (
-				"An internal error has occurred.%N%
-				%The wizard will terminate.%N")
+			create error_dialog.make_with_text (interface_names.m_internal_error_ocurred)
 			error_dialog.show_modal_to_window (first_window)
 			retry
 		end
@@ -200,7 +193,7 @@ feature {NONE} -- Implementation
 				compt := 1 -- Not needed if the file is used....
 				to_end := False
 				time_left := 0
-				progress_text_2.set_text ("Precompiling " + lib_name + " library: ")
+				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name))
 				create command.make (50)
 				command.append (eiffel_layout.ec_command_name)
 				command.append (" -precompile -config ")
@@ -224,11 +217,11 @@ feature {NONE} -- Implementation
 					end
 				end
 				progress_2.set_proportion (time_left / 100)
-				progress_text_2.set_text ("Precompiling " + lib_name + " library: " + time_left.out + "%%")
+				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name).as_string_32 + time_left.out + "%%")
 
 				total_prog := ((time_left + 100*n_lib_done)/(n_lib_to_precompile)).floor
 				progress.set_proportion ((time_left + 100*n_lib_done)/(100*n_lib_to_precompile))
-				progress_text.set_text ("Total progress: " + total_prog.out + "%%")
+				progress_text.set_text (interface_names.l_total_progress_is (total_prog.out))
 			end
 			n_lib_done := n_lib_done + 1
 		end

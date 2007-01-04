@@ -14,7 +14,7 @@ inherit
 		redefine
 			proceed_with_current_info
 		end
-		
+
 	WIZARD_WIZARD_CONSTANTS
 		export
 			{NONE} all
@@ -44,14 +44,10 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 			-- Display message text relative to current state.
-		local
-			message_text: STRING
 		do
-			message_text :=	Interface_names.m_Final_state(wizard_information.compile_project,
-					wizard_information.project_name, wizard_information.project_location)
-
 			title.set_text (Interface_names.t_Final_state)
-			message.set_text (message_text)
+			message.set_text (Interface_names.m_Final_state(wizard_information.compile_project,
+					wizard_information.project_name, wizard_information.project_location))
 		end
 
 	final_message: STRING is
@@ -64,7 +60,7 @@ feature {NONE} -- Implementation
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

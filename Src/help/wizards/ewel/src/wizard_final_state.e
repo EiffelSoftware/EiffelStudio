@@ -20,6 +20,8 @@ inherit
 			command_line as ex_command_line
 		end
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
@@ -36,23 +38,14 @@ feature -- Basic Operations
 feature -- Access
 
 	display_state_text is
-		local
-			word: STRING
 		do
-			title.set_text ("Completing the New WEL%NApplication Wizard")
-			if wizard_information.compile_project then
-				word :=" and compile "
-			else
-				word := " "
-			end
+			title.set_text (interface_names.t_completing_wizard)
 			message.set_text (
-				"You have specified the following settings:%N%
-				%%N%
-				%Project name: %T" + wizard_information.project_name + "%N%
-				%Location:     %T" + wizard_information.project_location + "%N%
-				%%N%
-				%%N%
-				%Click Finish to generate" + word + "this project")
+				interface_names.m_you_have_specified_the_following_setting (wizard_information.project_name,
+																	wizard_information.project_location).as_string_32
+				+ "%N%N"
+				+ interface_names.m_click_finish_to (wizard_information.compile_project)
+			)
 		end
 
 	final_message: STRING is

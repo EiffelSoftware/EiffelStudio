@@ -82,7 +82,7 @@ feature -- Formatting
 						if f_name = Void or else f_name.is_empty then
 							f_name := classi.file_name
 						end
-						editor.display_message (Warning_messages.w_Cannot_read_file (f_name))
+						editor.display_message (Warning_messages.w_Cannot_read_file (f_name).out)
 					end
 				else
 					editor.clear_window

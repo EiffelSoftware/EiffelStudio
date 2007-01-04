@@ -17,21 +17,23 @@ inherit
 			build
 		end
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
 feature -- Basic Operation
 
-	build is 
+	build is
 			-- Build entries.
 		local
 			radio_box: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
-		do 
-			create add_menu_bar.make_with_text ("Menu Bar")
-			create add_tool_bar.make_with_text ("Tool Bar")
-			create add_status_bar.make_with_text ("Status Bar")
-			create add_about_dialog.make_with_text ("About DialogBox")
+		do
+			create add_menu_bar.make_with_text (interface_names.l_menu_bar)
+			create add_tool_bar.make_with_text (interface_names.l_tool_bar)
+			create add_status_bar.make_with_text (interface_names.l_status_bar)
+			create add_about_dialog.make_with_text (interface_names.l_about_dialogbox)
 
 			create radio_box
 			radio_box.extend (add_menu_bar)
@@ -64,7 +66,7 @@ feature -- Basic Operation
 			else
 				add_about_dialog.disable_select
 			end
-				
+
 			create preview_pixmap
 			change_preview -- set the right pixmap depending on `dialog_information'.
 			preview_pixmap.set_minimum_size (preview_pixmap.width, preview_pixmap.height)
@@ -77,7 +79,7 @@ feature -- Basic Operation
 			choice_box.extend (hbox)
 
 			set_updatable_entries(<<
-				add_menu_bar.select_actions, 
+				add_menu_bar.select_actions,
 				add_tool_bar.select_actions,
 				add_status_bar.select_actions,
 				add_about_dialog.select_actions>>)
@@ -117,7 +119,7 @@ feature -- Basic Operation
 			preview_pixmap.set_with_named_file (fn)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		do
 			Precursor
 			proceed_with_new_state (create {WIZARD_FINAL_STATE}.make(wizard_information))
@@ -138,9 +140,9 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("Vision2 Application Appearance")
-			subtitle.set_text ("You can choose the appearance of your application.")
-			message.set_text ("Click the checkboxes to change the appearance.")
+			title.set_text (interface_names.t_vision2_application_appearance)
+			subtitle.set_text (interface_names.t_subtitle)
+			message.set_text (interface_names.m_click_checkboxes_to)
 		end
 
 	add_menu_bar: EV_CHECK_BUTTON

@@ -15,15 +15,21 @@ inherit
 			Wizard_title
 		end
 
+	WIZARD_PROJECT_SHARED
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make_and_launch
 
 feature -- Initialization
 
-	Wizard_title: STRING is
+	Wizard_title: STRING_GENERAL is
 			-- Window title for this wizard.
 		once
-			Result := "New WEL Application Wizard"
+			Result := interface_names.t_new_wel_wizard
 		end
 
  	wizard_factory: BENCH_WIZARD_FACTORY is

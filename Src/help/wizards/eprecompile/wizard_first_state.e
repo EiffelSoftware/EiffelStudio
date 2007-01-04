@@ -418,7 +418,7 @@ feature {NONE} -- Tools
 			error_dialog: EV_WARNING_DIALOG
 		do
 			create file_open_dialog
-			file_open_dialog.filters.extend (["*.ecf", "Eiffel Configuration Files (*.ecf)"])
+			file_open_dialog.filters.extend (["*.ecf", interface_names.l_eiffel_conf_file])
 			file_open_dialog.show_modal_to_window (first_window)
 
 			file_path := file_open_dialog.file_path
@@ -436,11 +436,11 @@ feature {NONE} -- Tools
 						it.enable_select
 						it.disable_select
 					else
-						create error_dialog.make_with_text ("The configuration file you have selected is already listed.")
+						create error_dialog.make_with_text (interface_names.m_configuration_file_is_already_listed)
 						error_dialog.show_modal_to_window (first_window)
 					end
 				else
-					create error_dialog.make_with_text ("The configuration file you have selected is not valid.")
+					create error_dialog.make_with_text (interface_names.m_configuration_file_is_not_valid)
 					error_dialog.show_modal_to_window (first_window)
 				end
 			end
@@ -488,8 +488,8 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("Choose Libraries to precompile")
-			subtitle.set_text ("Choose the libraries you want to precompile.%NYou can even add your own library.")
+			title.set_text (interface_names.t_choose_libraries)
+			subtitle.set_text (interface_names.t_choose_libraries_subtitle)
 			message.remove_text
 		end
 

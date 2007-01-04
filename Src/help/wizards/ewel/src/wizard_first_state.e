@@ -17,19 +17,21 @@ inherit
 			build
 		end
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
 feature -- Basic Operation
 
-	build is 
+	build is
 			-- Build entries.
 		local
 			radio_box: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
-		do 
-			create win_application.make_with_text ("Frame application")
-			create dialog_application.make_with_text ("Dialog application")
+		do
+			create win_application.make_with_text (interface_names.l_frame_application)
+			create dialog_application.make_with_text (interface_names.l_dialog_application)
 
 			create radio_box
 			radio_box.extend (win_application)
@@ -39,7 +41,7 @@ feature -- Basic Operation
 			radio_box.extend (create {EV_CELL})
 
 			create preview_pixmap
-				-- Set the right pixmap depending on `dialog_information' and 
+				-- Set the right pixmap depending on `dialog_information' and
 				-- select the right radio button
 			if wizard_information.dialog_application then
 				preview_pixmap.set_with_named_file (Preview_dialog_pixmap)
@@ -73,7 +75,7 @@ feature -- Basic Operation
 			end
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		do
 			Precursor
 			if dialog_application.is_selected then
@@ -95,19 +97,15 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("WEL Application Type")
-			subtitle.set_text ("You can choose the type of your application between%N a Frame-based or a Dialog based window")
-			message.set_text ("A Frame-Based Application uses a main window, or %"frame%", which can have %
-								%%Nmenus, subwindows, etc. (EiffelStudio is an example of Frame-Based Application.)%
-								%%N%NA Dialog-Based Application uses a sequence of dialogs.%
-								%%N(This wizard is an example of Dialog-Based Application.)%
-								%")
+			title.set_text (interface_names.t_wel_app_type)
+			subtitle.set_text (interface_names.t_choose_type_subtitle)
+			message.set_text (interface_names.m_a_frame_based_application)
 		end
 
 feature {NONE} -- Constants
 
 	Preview_dialog_pixmap: FILE_NAME is
-			-- Filename for the pixmap representing a dialog-based application 
+			-- Filename for the pixmap representing a dialog-based application
 		once
 			create Result.make_from_string (wizard_pixmaps_path)
 			Result.set_file_name ("dialog_application")
@@ -115,7 +113,7 @@ feature {NONE} -- Constants
 		end
 
 	Preview_frame_pixmap: FILE_NAME is
-			-- Filename for the pixmap representing a frame-based application 
+			-- Filename for the pixmap representing a frame-based application
 		once
 			create Result.make_from_string (wizard_pixmaps_path)
 			Result.set_file_name ("frame_application")

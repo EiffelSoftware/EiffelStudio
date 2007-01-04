@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			resource_parser: RESOURCE_PARSER
 			test_file: RAW_FILE
 			retried: BOOLEAN
-			error_msg: STRING
+			error_msg: STRING_32
 		once
 			if retried then
 				error_msg := warning_messages.w_cannot_read_file (eiffel_layout.compiler_configuration)
@@ -49,8 +49,7 @@ feature {NONE} -- Initialization
 					create resource_parser
 					resource_parser.parse_file (eiffel_layout.compiler_configuration, configure_resources)
 				else
-					error_msg := eiffel_layout.compiler_configuration.twin
-					error_msg.append (Warning_messages.w_file_does_not_exist_execution_impossible)
+					error_msg := Warning_messages.w_file_does_not_exist_execution_impossible (eiffel_layout.compiler_configuration.twin)
 				end
 			end
 			if error_msg /= Void then

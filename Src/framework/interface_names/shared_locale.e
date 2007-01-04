@@ -21,6 +21,8 @@ feature -- Access
 				Result := locale_manager.get_system_locale
 				locale_internal.put (Result)
 			end
+		ensure
+			locale_not_void: Result /= Void
 		end
 
 	locale_manager: I18N_LOCALE_MANAGER is

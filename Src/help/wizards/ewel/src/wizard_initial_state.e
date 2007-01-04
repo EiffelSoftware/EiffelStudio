@@ -15,12 +15,14 @@ inherit
 			proceed_with_current_info
 		end
 
+	WIZARD_PROJECT_SHARED
+
 creation
 	make
 
 feature -- basic Operations
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		do
 			Precursor
 			proceed_with_new_state(Create {WIZARD_PROJECT_NAME_AND_LOCATION_STATE}.make(wizard_information))
@@ -29,13 +31,8 @@ feature -- basic Operations
 	display_state_text is
 			-- Dispay the text for the current state.
 		do
-			title.set_text ("Welcome to the New WEL%NApplication Wizard")
-			message.set_text (
-				"Using this wizard you can create a Windows application%N%
-				%based on the WEL library.%N%
-				%%N%
-				%%N%
-				%To continue, click Next.")
+			title.set_text (interface_names.t_welcome_to_the_wizard)
+			message.set_text (interface_names.m_wizard_introduction)
 		end
 
 	pixmap_icon_location: FILE_NAME is
@@ -44,7 +41,7 @@ feature -- basic Operations
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -11,10 +11,13 @@ class
 create
 	make
 
-feature -- Basic Operations
+feature {NONE} -- Initialization
 
 	make (a_dictionary: I18N_DICTIONARY; a_locale_info: I18N_LOCALE_INFO) is
 			--assign info and dictionary with input values
+		require
+			a_dictionary_not_void: a_dictionary /= Void
+			a_locale_info_not_void: a_locale_info /= Void
 		do
 			info:=a_locale_info
 			dictionary:=a_dictionary
@@ -24,6 +27,12 @@ feature -- Basic Operations
 			create currency_formatter.make (a_locale_info)
 		end
 
+feature -- Access
+
+	info : I18N_LOCALE_INFO
+			-- specific information about the locale
+
+feature -- Basic Operations
 
 	translate (original: STRING_GENERAL): STRING_32 is
 			-- translate `original' if it exists
@@ -72,19 +81,35 @@ feature -- Basic Operations
 			result_exists: Result /= Void
 		end
 
+	wide_character_to_multibyte (a_str: STRING_32): STRING_8 is
+			-- Convert `a_str', a Unicode string, to multibyte string
+			-- according to codepage current represents.
+		require
+			a_str_not_void: a_str /= Void
+		do
+		ensure
+			wide_character_to_multibyte_not_void: Result /= Void
+		end
+
+	multibyte_to_wide_character (a_str: STRING_8): STRING_32 is
+			-- Convert `a_str', a multibyte string, to Unicode string
+			-- according to codepage current represents.
+		require
+			a_str_not_void: a_str /= Void
+		do
+		ensure
+			multibyte_to_wide_character: Result /= Void
+		end
+
 feature -- Formatters
 
 	date_formatter:		I18N_DATE_FORMATTER
 	value_formatter:	I18N_VALUE_FORMATTER
 	currency_formatter: I18N_CURRENCY_FORMATTER
 
-feature -- Implementation
-
-	info : I18N_LOCALE_INFO
-		-- specific information about the locale
+feature {NONE} -- Implementation
 
 	dictionary:		I18N_DICTIONARY
-
 	string_formatter:	I18N_STRING_FORMATTER;
 
 indexing

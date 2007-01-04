@@ -1,59 +1,22 @@
 indexing
-	description	: "Command to start the precompilation wizard."
+	description	: "This class is inherited by all the application"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 
 class
-	EB_WIZARD_PRECOMPILE_COMMAND
+	WIZARD_PROJECT_SHARED
 
 inherit
-	EB_MENUABLE_COMMAND
-
-	EB_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
 	EIFFEL_LAYOUT
-		export
-			{NONE} all
-		end
 
-	SHARED_LOCALE
-		export
-			{NONE} all
-		end
+feature {NONE} -- Constants
 
-feature -- Execution
-
-	execute is
-			-- Start the precompilation wizard.
-		local
-			command: STRING
-		do
-			create command.make (50)
-			command.append (eiffel_layout.Precompilation_wizard_command_name)
-			command.append (" ")
-			command.append (eiffel_layout.precompilation_wizard_resources_directory)
-			command.append (" ")
-			command.append (locale.info.id.name.out)
-			launch(command)
-		end
-
-feature {NONE} -- Implementation
-
-	menu_name: STRING_GENERAL is
-			-- Name as it appears in the menu (with & symbol).
-		do
-			Result := Interface_names.m_Wizard_precompile
+	Interface_names: INTERFACE_NAMES is
+			-- Interface names for buttons, label, ...
+		once
+			create Result
 		end
 
 indexing
@@ -87,5 +50,4 @@ indexing
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
 		]"
-
-end -- class EB_WIZARD_PRECOMPILE_COMMAND
+end -- class PROJECT_WIZARD_SHARED

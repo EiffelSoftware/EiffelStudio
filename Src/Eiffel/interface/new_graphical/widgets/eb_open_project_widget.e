@@ -560,7 +560,7 @@ feature {NONE} -- Implementation
 			l_project_file: PROJECT_EIFFEL_FILE
 			l_options: USER_OPTIONS
 			l_pixmap: EV_PIXMAP
-			l_tooltip: STRING
+			l_tooltip: STRING_GENERAL
 			l_last_location, l_last_target: STRING
 			l_targets: DS_ARRAYED_LIST [STRING]
 			l_force_clean: BOOLEAN

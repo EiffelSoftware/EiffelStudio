@@ -505,7 +505,7 @@ feature {NONE} -- Settings
 	retrieve_or_create_project (a_project_path: STRING) is
 			-- Retrieve or create project.
 		local
-			msg: STRING
+			msg: STRING_32
 		do
 				--| Define temporary default directory structure for project
 			lace.process_user_file (a_project_path, not ignore_user_configuration_file)
@@ -832,7 +832,7 @@ feature {NONE} -- Error reporting
 			has_error_set: has_error
 		end
 
-	report_cannot_open_project (a_msg: STRING) is
+	report_cannot_open_project (a_msg: STRING_GENERAL) is
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		require
@@ -840,7 +840,7 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_incompatible_project (a_msg: STRING) is
+	report_incompatible_project (a_msg: STRING_GENERAL) is
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		require
@@ -848,7 +848,7 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_project_corrupted (a_msg: STRING) is
+	report_project_corrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		require
@@ -856,14 +856,14 @@ feature {NONE} -- Error reporting
 		deferred
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING) is
+	report_project_retrieval_interrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when project retrieval was stopped.
 		require
 			a_msg_not_void: a_msg /= Void
 		deferred
 		end
 
-	report_project_incomplete (a_msg: STRING) is
+	report_project_incomplete (a_msg: STRING_GENERAL) is
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		require

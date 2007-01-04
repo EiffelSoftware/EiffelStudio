@@ -17,6 +17,8 @@ inherit
 
 	WIZARD_PROJECT_SHARED
 
+	BENCH_WIZARD_CONSTANTS
+
 create
 	make
 
@@ -51,32 +53,14 @@ feature -- Access
 
 	display_state_text is
 			-- Display message text relative to current state.
-		local
-			word: STRING
 		do
 			title.set_text (Interface_names.m_Final_title)
-			if wizard_information.compile_project then
-				word := Space + Text_if_compile + Space
-			else
-				word := Space
-			end
 			message_text_field.set_text (Common_message)
-			message.set_text (final_state_message (word))
+			message.set_text (interface_names.m_final_state_message (wizard_information.compile_project))
 		end
 
-	final_message: STRING is
+	final_message: STRING_GENERAL is
 		do
-		end
-
-	final_state_message (a_word: STRING): STRING is
-			-- Final state message according to `a_word'
-		require
-			non_void_word: a_word /= Void
-		do
-			Result := "Click Finish to generate" + a_word + "this project."
-		ensure
-			non_void_message: Result /= Void
-			not_empty_message: not Result.is_empty
 		end
 
 feature {NONE} -- Widgets
@@ -112,42 +96,42 @@ feature {NONE} -- Constants
 	h_filename: STRING is "help/wizards/edotnet/docs/reference/40_settings_summary/index.html"
 			-- Path to HTML help file
 
-	Common_message: STRING is
+	Common_message: STRING_32 is
 			-- Message to the user (no matter if there are selected assemblies)
 		local
 			creation_routine_name,
 			l_root_class_name: STRING
 		do
 			create Result.make (3000)
-			Result.append ("You have specified the following settings:" + New_line + New_line +
-					"Project name: " + Tab + Tab + wizard_information.project_name + New_line +
-					"Location: " + Tab + Tab + Tab + wizard_information.project_location + New_line +
-					"Application type: " + Tab + Tab)
+			Result.append (interface_names.l_you_have_specified_following_settings.as_string_32 + New_line + New_line +
+					 bench_interface_names.l_Project_name.as_string_32 + ": " + New_line + Tab + wizard_information.project_name + New_line +
+					 bench_interface_names.l_project_location.as_string_32 + ": " + New_line + Tab + wizard_information.project_location + New_line +
+					interface_names.l_application_type.as_string_32 + ": " + New_line + Tab)
 			if wizard_information.generate_dll then
-				Result.append ("Library (.dll)")
+				Result.append (interface_names.l_Dll_type)
 			else
-				Result.append ("Application (.exe)")
+				Result.append (interface_names.l_Exe_type)
 			end
 			Result.append (New_line)
-			Result.append ("Console application: " + Tab)
+			Result.append (interface_names.l_Console_application.as_string_32 + ": " + New_line + Tab)
 			if wizard_information.console_application then
-				Result.append ("Yes")
+				Result.append (interface_names.l_yes)
 			else
-				Result.append ("No")
+				Result.append (interface_names.l_no)
 			end
 
 			Result.append (New_line + New_line)
 			l_root_class_name := wizard_information.root_class_name.twin
-			Result.append ("Root class name: " + Tab + Tab + l_root_class_name + New_line)
+			Result.append (interface_names.l_Root_class_name.as_string_32 + ": " + New_line + Tab + l_root_class_name + New_line)
 			creation_routine_name := wizard_information.creation_routine_name
 			l_root_class_name.to_lower
 			if not l_root_class_name.is_equal (interface_names.l_none_class) and then creation_routine_name /= Void and then not creation_routine_name.is_empty then
-				Result.append ("Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line)
+				Result.append (interface_names.l_Creation_routine_name.as_string_32 + ": " + New_line + Tab + wizard_information.creation_routine_name + New_line)
 			end
 			Result.append (New_line)
-			Result.append ("Targetted CLR version:" + Tab)
+			Result.append (interface_names.l_clr_version.as_string_32 + New_line + Tab)
 			if wizard_information.is_most_recent_clr_version then
-				Result.append ("Most recent clr version")
+				Result.append (interface_names.l_clr_most_recent_version_summary)
 			else
 				Result.append (wizard_information.clr_version)
 			end
@@ -157,11 +141,8 @@ feature {NONE} -- Constants
 			not_empty_message: not Result.is_empty
 		end
 
-	Space: STRING is " "
+	Space: STRING is " ";
 			-- Space
-
-	Text_if_compile: STRING is "and compile";
-			-- Text appended to the current state text in case the user asked for project compilation
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

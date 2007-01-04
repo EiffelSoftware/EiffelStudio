@@ -12,7 +12,7 @@ class
 inherit
 	WIZARD_SHARED
 
-create	
+create
 	make
 
 feature -- Initialization
@@ -44,7 +44,7 @@ feature -- Initialization
 
 			if has_browse_button then
 					-- Create the browse button
-				create browse_button.make_with_text("Browse...")
+				create browse_button.make_with_text(b_browse)
 				browse_button.select_actions.extend (browse_button_action)
 
 				create textfield_box
@@ -60,7 +60,7 @@ feature -- Initialization
 			label.set_minimum_width (label_size)
 			label.align_text_left
 			if label_string /= Void then
-				label.set_text (" "+label_string)
+				label.set_text ((" ").as_string_32+label_string)
 			end
 			textfield.set_capacity (textfield_capacity)
 			textfield.return_actions.extend (agent caller.next)
@@ -89,7 +89,7 @@ feature -- Initialization
 
 feature -- Access
 
-	text: STRING is 
+	text: STRING is
 			-- Text of the textfield
 		do
 			if generated then
@@ -127,7 +127,7 @@ feature -- Access
 		end
 
 feature -- Status report
-	
+
 	is_password: BOOLEAN
 			-- Is the text in the text field replaced by stars (for passwords).
 
@@ -138,11 +138,11 @@ feature -- Status report
 			-- Has the widget been generated?
 
 feature -- Settings
-	
+
 	set_text, set_textfield_string (a_string: STRING) is
 			-- Set the text of the text field to `txt'.
 		do
-			if generated then 
+			if generated then
 				textfield.set_text (a_string)
 			else
 				textfield_string := a_string
@@ -152,22 +152,22 @@ feature -- Settings
 	remove_text is
 			-- Remove the text of the text field.
 		do
-			if generated then 
+			if generated then
 				textfield.remove_text
 			else
 				textfield_string := Void
 			end
 		end
 
-	set_label_string_and_size (a_string: STRING; a_size: INTEGER) is
+	set_label_string_and_size (a_string: STRING_GENERAL; a_size: INTEGER) is
 			-- Set the label text to `a_string' and the minimum width for
 			-- the label to `a_size'.
 		do
 			if generated then
-				label.set_text (a_string+":")
+				label.set_text (a_string.as_string_32+":")
 				label.set_minimum_width (a_size)
 			else
-				label_string := a_string+":"
+				label_string := a_string.as_string_32+":"
 				label_size := a_size
 			end
 		end
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 	browse_file is
 			-- Launch a file Browser.
 		local
-			file_selector: EV_FILE_OPEN_DIALOG  
+			file_selector: EV_FILE_OPEN_DIALOG
 		do
 			create file_selector
 			file_selector.set_filter (browse_file_filter)
@@ -270,11 +270,11 @@ feature {NONE} -- Implementation
 			end_char: CHARACTER
 		do
 			create dir_selector
-
+			dir_selector.set_title (t_choose_directory)
 				-- Retrieve the string from the textfield, and set
 				-- the starting directory with it if it's a directory.
 			start_directory := textfield.text.twin
-			
+
 			if not start_directory.is_empty then
 				end_char := start_directory @ start_directory.count
 				if end_char = '\' or end_char = '/' then
@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 		end
 
 	directory_selected (dir_selector: EV_DIRECTORY_DIALOG) is
-			-- The user selected a directory from the browser. 
+			-- The user selected a directory from the browser.
 			-- It updates the text fields accordingly.
 		require
 			selector_exists: dir_selector /= Void
@@ -300,7 +300,7 @@ feature {NONE} -- Implementation
 		end
 
 	file_selected (file_selector: EV_FILE_OPEN_DIALOG) is
-			-- The user selected a file from the file dialog. 
+			-- The user selected a file from the file dialog.
 			-- Updates the text field accordingly.
 		require
 			selector_exists: file_selector /= Void
@@ -321,13 +321,13 @@ feature {NONE} -- Implementation
 
 	label_size: INTEGER
 			-- Requested size for the label.
-	
-	label_string: STRING
+
+	label_string: STRING_GENERAL
 			-- Requested Text for the Label.
 
 	textfield_capacity: INTEGER
 			-- Requested capacity for the text field.
-	
+
 	textfield_string: STRING
 			-- Requested text for the text field.
 

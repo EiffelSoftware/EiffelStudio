@@ -22,110 +22,73 @@ inherit
 
 feature -- Project file/directory warnings
 
-	w_Select_project_to_load: STRING is
-		"Please select a project in the list or Click%N%
-		%on the %"Browse%" button to open a project."
+	w_Select_project_to_create: STRING_GENERAL is do Result := locale.translate ("Please select the kind of project you want to create.") end
 
-	w_Select_project_to_create: STRING is
-		"Please select the kind of project you want to create."
+	w_Cannot_open_project: STRING_GENERAL is do Result := locale.translate ("Project is not readable. Check permissions.") end
 
-	w_Cannot_open_project: STRING is
-		"Project is not readable. Check permissions."
-
-	w_Cannot_create_project_directory (dir_name: STRING): STRING is
+	w_Cannot_create_project_directory (dir_name: STRING): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void
 		do
-			create Result.make (128)
-			Result.append ("Cannot create project directory in: ")
-			Result.append (dir_name)
-			Result.append ("%NYou may try again after fixing the permissions.")
+			Result := locale.format_string (locale.translate ("Cannot create project directory in: $1%NYou may try again after fixing the permissions."), [dir_name])
 		end
 
-	w_Project_directory_not_exist (file_name, dir_name: STRING): STRING is
+	w_Project_directory_not_exist (file_name, dir_name: STRING): STRING_GENERAL is
 			-- Error message when something is missing in the Project directory.
 		require
 			dir_name_not_void: dir_name /= Void
 		do
-			create Result.make (256)
-			Result.append ("%NCannot open project `")
-			Result.append (file_name)
-			Result.append ("'.%N%NMake sure you have a complete EIFGEN directory in `")
-			Result.append (dir_name)
-			Result.append ("'.")
+			Result := locale.format_string (locale.translate ("%NCannot open project `$1'.%N%NMake sure you have a complete EIFGEN directory in `$2'."), [file_name, dir_name])
 		end
 
-	w_Cannot_compile: STRING is "Read-only project: cannot compile."
+	w_Cannot_compile: STRING_GENERAL is do Result := locale.translate ("Read-only project: cannot compile.") end
 
-	w_Project_exists (dir_name: STRING): STRING is
+	w_Project_corrupted (dir_name: STRING): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void
 		do
-			create Result.make (128)
-			Result.append ("In `")
-			Result.append (dir_name)
-			Result.append ("' an Eiffel project already exists.%N")
-			Result.append ("Do you wish to overwrite it?")
+			Result := locale.format_string (locale.translate ("Project in: $1%Nis corrupted. Cannot continue."), [dir_name])
 		end
 
-	w_Project_corrupted (dir_name: STRING): STRING is
+	w_configuration_files_needs_to_be_converted (a_file_name: STRING_GENERAL): STRING_GENERAL is
 		require
-			dir_name_not_void: dir_name /= Void
+			a_file_name_not_void: a_file_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("Project in: ")
-			Result.append (dir_name)
-			Result.append ("%Nis corrupted. Cannot continue.")
+			Result := locale.format_string (locale.translate ("Your old configration file needs to be converted to the new format.%N%
+				%The default name for the new configuration is '$1'.%N%
+				%Select OK if you want to keep this name, or 'Save As...' to choose a different name."), [a_file_name])
 		end
 
-	w_Project_incompatible (dir_name: STRING; comp_version, incomp_version: STRING): STRING is
+	w_project_constains_no_compilable_target: STRING_GENERAL is do Result := locale.translate ("This project contains no compilable target.%NPlease open a different project.") end
+
+	w_Project_incompatible (dir_name: STRING; comp_version, incomp_version: STRING): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void
 			valid_version: comp_version /= Void and then incomp_version /= Void
 		do
 			if incomp_version.is_empty then
-				create Result.make (30)
-				Result.append ("No version information about project found in:%N")
-				Result.append (dir_name)
-				Result.append (".")
+				Result := locale.format_string (locale.translate ("No version information about project found in:%N$1."), [dir_name])
 			else
-				create Result.make (30)
-				Result.append ("Incompatible version for project compiled in: ")
-				Result.append (dir_name)
-				Result.append (".%N")
-				Result.append (Workbench_name)
-				Result.append (" version is ")
-				Result.append (comp_version)
-				Result.append (".%NProject was compiled with version ")
-				Result.append (incomp_version)
-				Result.append (".")
+				Result := locale.format_string (locale.translate (
+				"Incompatible version for project compiled in: $1.%N$2 version is $3.%NProject was compiled with version $4."),
+				[dir_name, workbench_name, comp_version, incomp_version])
 			end
 		end
 
-	w_Project_incompatible_version (dir_name: STRING; comp_version, incomp_version: STRING): STRING is
+	w_Project_incompatible_version (dir_name: STRING; comp_version, incomp_version: STRING): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void and then not dir_name.is_empty
 			valid_comp_version: comp_version /= Void and then not comp_version.is_empty
 			valid_incomp_version: incomp_version /= Void
 		do
-			create Result.make (30)
-			Result.append ("Incompatible version for project compiled in: ")
-			Result.append (dir_name)
-			Result.append (".%N")
-			Result.append (Workbench_name)
-			Result.append (" version is ")
-			Result.append (comp_version)
-			Result.append (".%NProject was compiled with version ")
-			Result.append (incomp_version)
-			Result.append (".%N%N")
-			Result.append ("Click OK to convert this project to version ")
-			Result.append (comp_version)
-			Result.append (".%N")
+			Result := locale.format_string (locale.translate (
+			"Incompatible version for project compiled in: $1.%N$2 version is $3.%NProject was compiled with version $4.%N%NClick OK to convert this project to version $5.%N"),
+			[dir_name, workbench_name, comp_version, incomp_version, comp_version])
 		end
 
-	w_project_build_precompile: STRING is "Project needs a precompile, should the precompile be built?"
+	w_project_build_precompile: STRING_GENERAL is do Result := locale.translate ("Project needs a precompile, should the precompile be built?") end
 
-	w_project_build_precompile_error: STRING is "Could not generate needed precompile."
+	w_project_build_precompile_error: STRING_GENERAL is do Result := locale.translate ("Could not generate needed precompile.") end
 
 	w_Project_interrupted (dir_name: STRING): STRING is
 		require
@@ -137,68 +100,59 @@ feature -- Project file/directory warnings
 			Result.append ("%Nwas interrupted. Cannot continue.")
 		end
 
-	w_no_compilable_target: STRING is "Cannot compile project: no valid target found."
+	w_no_compilable_target: STRING_GENERAL is do Result := locale.translate ("Cannot compile project: no valid target found.") end
 			-- Error when no compilable target was found.
 
 	w_None_system: STRING is "A system with an all classes root is not runnable."
 
+	w_unable_to_retrieve_wizard_list: STRING_GENERAL is do Result := locale.translate ("Unable to retrieve the list of installed wizard.") end
+
+	w_unable_to_initiate_project: STRING_GENERAL is do Result := locale.translate ("Unable to initialize the project generated by the wizard") end
+
 feature -- File warnings
 
-	w_Cannot_create_file (file_name: STRING): STRING is
+	w_Cannot_create_file (file_name: STRING): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("Cannot create file:%N")
-			Result.append (file_name)
-			Result.append (".")
+			Result := locale.format_string (locale.translate ("Cannot create file:%N$1."), [file_name])
 		end
 
-	w_Cannot_create_directory (file_name: STRING): STRING is
+	w_Cannot_create_directory (file_name: STRING): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("Cannot create directory:%N")
-			Result.append (file_name)
-			Result.append (".")
+			Result := locale.format_string (locale.translate ("Cannot create directory:%N$1."), [file_name])
 		end
 
-	w_Cannot_read_file (file_name: STRING): STRING is
+	w_Cannot_read_file (file_name: STRING): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			create Result.make (file_name.count + 25)
-			Result.append ("File: '")
-			Result.append (file_name)
-			Result.append ("' cannot be read.")
+			Result := locale.format_string (locale.translate ("File: '$1' cannot be read."), [file_name])
 		end
 
-	w_cannot_read_ace_file_from_epr (epr_name, file_name: STRING): STRING is
+	w_cannot_read_ace_file_from_epr (epr_name, file_name: STRING): STRING_GENERAL is
 		require
 			epr_name_not_void: epr_name /= Void
 		do
-			create Result.make (50)
 			if file_name = Void then
-				Result.append ("Cannot read Ace file from configuration file '")
-				Result.append (epr_name)
-				Result.append ("'.")
+				Result := locale.format_string (locale.translate ("Cannot read Ace file from configuration file '$1'.%NSelect a 5.6 or older version of an Eiffel project."), [epr_name])
 			else
-				Result.append ("Ace file: '")
-				Result.append (file_name)
-				Result.append ("'%Nreferenced from configuration file: '")
-				Result.append (epr_name)
-				Result.append ("' cannot be read.")
+				Result := locale.format_string (locale.translate ("Ace file: '$1'%Nreferenced from configuration file: '$2' cannot be read.%NSelect a 5.6 or older version of an Eiffel project."), [file_name, epr_name])
 			end
-			Result.append ("%NSelect a 5.6 or older version of an Eiffel project.")
 		end
 
 	w_Cannot_read_file_retry (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
+		local
+			l_str: STRING_32
 		do
-			Result := w_Cannot_read_file (file_name)
-			Result.append (". Try again?")
+			l_str := w_Cannot_read_file (file_name).as_string_32
+			l_str.append (" ")
+			l_str.append_string_general (locale.translate ("Try again?"))
+			Result := l_str
 		end
 
 	w_file_not_exist (f_name: STRING): STRING is
@@ -212,7 +166,12 @@ feature -- File warnings
 			Result.append ("%Ndoes not exist.")
 		end
 
-	w_File_does_not_exist_execution_impossible: STRING is " does not exist.%NExecution impossible.%N"
+	w_File_does_not_exist_execution_impossible (a_file_name: STRING): STRING_GENERAL is
+		require
+			a_file_name_not_void: a_file_name /= Void
+		do
+			Result := locale.format_string (locale.translate ("$1 does not exist.%NExecution impossible.%N"), [a_file_name])
+		end
 
 	w_Directory_not_exist (dir_name: STRING): STRING is
 			-- Error message when a directory does not exist.

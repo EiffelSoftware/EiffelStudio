@@ -15,6 +15,8 @@ inherit
 			proceed_with_current_info
 		end
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
@@ -30,18 +32,14 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("Precompilation Wizard Error")
-			message.set_text (
-				"You must choose at least one library.%N%
-				%%N%
-				%If you want to precompile one or more libraries, click Back%N%
-				%and add the libraries you want to precompile into the right list%N%
-				%%N%
-				%If you don't want to precompile any library, click Cancel"
-				)
+			title.set_text (interface_names.t_wizard_error)
+			message.set_text (interface_names.m_you_must_choose_library)
 		end
 
-	final_message: STRING is "Bye"
+	final_message: STRING_GENERAL is
+		do
+			Result := interface_names.l_bye
+		end
 
 feature -- Access
 
@@ -51,7 +49,7 @@ feature -- Access
 			create Result.make_from_string ("eiffel_wizard_icon")
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

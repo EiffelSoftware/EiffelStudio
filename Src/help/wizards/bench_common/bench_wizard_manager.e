@@ -46,6 +46,7 @@ feature {NONE} -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
+				setup_locale
 				Precursor
 
 				create icon_pixmap
@@ -58,6 +59,23 @@ feature {NONE} -- Initialization
 		rescue
 			retried := True
 			retry
+		end
+
+	setup_locale is
+			-- Setup locale
+		local
+			l_manager: I18N_LOCALE_MANAGER
+			l_arg: STRING
+			l_locale: like locale
+			l_layout: WIZARD_EIFFEL_LAYOUT
+		do
+			create l_layout
+			create l_manager.make (l_layout.language_path)
+			if argument_count >= 2 then
+				l_arg := argument (2)
+				l_locale := l_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))
+			end
+			locale_cell.put (l_locale)
 		end
 
 indexing

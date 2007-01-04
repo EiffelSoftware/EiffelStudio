@@ -86,6 +86,7 @@ feature -- Button texts
 	b_Remove_text: STRING_GENERAL is 					do Result := locale.translate("<- Remove")	end
 	b_Retry: STRING_GENERAL is							do Result := locale.translate("Retry")	end
 	b_Search: STRING_GENERAL is							do Result := locale.translate("Search")	end
+	b_select_target: STRING_GENERAL is					do Result := locale.translate ("Select target") end
 	b_set: STRING_GENERAL is							do Result := locale.translate("Set")	end
 	b_New_search: STRING_GENERAL is 					do Result := locale.translate("New Search?")	end
 	b_Save: STRING_GENERAL is							do Result := locale.translate("Save")	end
@@ -108,7 +109,7 @@ feature -- Button texts
 	b_New_context: STRING_GENERAL is					do Result := locale.translate("New Context")	end
 	b_New_window: STRING_GENERAL is						do Result := locale.translate("New Window")	end
 	b_Open: STRING_GENERAL is							do Result := locale.translate("Open")	end
-	b_Save_as: STRING_GENERAL is						do Result := locale.translate("Save As")	end
+	b_Save_as: STRING_GENERAL is						do Result := locale.translate("Save As...")	end
 	b_Shell: STRING_GENERAL is							do Result := locale.translate("External Editor")	end
 	b_Print: STRING_GENERAL is							do Result := locale.translate("Print")	end
 	b_Undo: STRING_GENERAL is							do Result := locale.translate("Undo")	end
@@ -609,6 +610,7 @@ feature -- Label texts
 	l_contract: STRING_GENERAL is		do Result := locale.translate("Contract")	end
 	l_flat_contracts:  STRING_GENERAL is		do Result := locale.translate("Flat contracts")	end
 	l_Choose_folder: STRING_GENERAL is			do Result := locale.translate("Select the destination folder ")	end
+	l_one_target_among: STRING_GENERAL is			do Result := locale.translate("Choose one target among: ")	end
 	l_class: STRING_GENERAL is					do Result := locale.translate ("Class") end
 	l_class_colon: STRING_GENERAL is					do Result := locale.translate("Class:")	end
 	l_class_is_not_writable (a_class: STRING_GENERAL): STRING_GENERAL is
@@ -891,6 +893,12 @@ feature -- Label texts
 	l_Tab_feature_info: STRING_GENERAL is 		do Result := locale.translate("Feature")	end
 	l_Tab_diagram: STRING_GENERAL is 			do Result := locale.translate("Diagram")	end
 	l_target: STRING_GENERAL is					do Result := locale.translate("Target")	end
+	l_target_does_not_exist (a_target: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_target_not_void: a_target /= Void
+		do
+			Result := locale.format_string (locale.translate ("Target `$1' does not exist or is not compilable.%NChoose one target among:"), [a_target])
+		end
 	l_Text_loaded: STRING_GENERAL is			do Result := locale.translate("Text finished loading")	end
 	l_Text_saved: STRING_GENERAL is				do Result := locale.translate("Text was saved")	end
 	l_the_feature_name_is_not_valid: STRING_GENERAL is 	do Result := locale.translate("The feature name is not valid.")	end
@@ -1222,10 +1230,13 @@ feature -- Title part
 	t_Choose_class: STRING_GENERAL is					do Result := locale.translate("Choose a Class")	end
 	t_Choose_directory: STRING_GENERAL is 				do Result := locale.translate("Choose Your Directory")	end
 	t_Choose_folder_name: STRING_GENERAL is				do Result := locale.translate("Choose a Folder Name")	end
+	t_choose_name_for_new_configuration_file: STRING_GENERAL is do Result := locale.translate ("Choose name for new configuration file") end
 	t_Choose_project_and_directory: STRING_GENERAL is 	do Result := locale.translate("Choose Your Project Name and Directory")	end
 	t_Class: STRING_GENERAL is							do Result := locale.translate("Class")	end
 	t_Clients_of: STRING_GENERAL is						do Result := locale.translate("Clients of Class ")	end
 	t_Creation_routine: STRING_GENERAL is				do Result := locale.translate("Creation Procedure")	end
+	t_configuration_loading_error: STRING_GENERAL is	do Result := locale.translate("Configuration Loading Error")	end
+	t_configuration_loading_message: STRING_GENERAL is	do Result := locale.translate("Configuration Loading Message")	end
 	t_confirmation: STRING_GENERAL is					do Result := locale.translate ("Confirmation") end
 	t_Customize_toolbar_text: STRING_GENERAL is 		do Result := locale.translate("Customize Toolbar")	end
 	t_Default_print_job_name: STRING_GENERAL is
@@ -1275,8 +1286,10 @@ feature -- Title part
 		once
 			Result := Workbench_name
 		end
+	t_precompile_progress: STRING_GENERAL is 			do Result := locale.translate ("Precompilation Progress") end
 	t_Slice_limits: STRING_GENERAL is					do Result := locale.translate("Choose New Slice Limits for Special Objects")	end
 	t_System: STRING_GENERAL is							do Result := locale.translate("Project Settings")	end
+	t_target_selection: STRING_GENERAL is 				do Result := locale.translate ("Target Selection") end
 	t_Empty_development_window: STRING_GENERAL is 		do Result := locale.translate("Empty Development Tool")	end
 	t_Autocomplete_window: STRING_GENERAL is			do Result := locale.translate("Auto-Complete")	end
 	t_Diagram_class_header: STRING_GENERAL is			do Result := locale.translate("Class Header")	end

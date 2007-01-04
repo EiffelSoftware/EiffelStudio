@@ -627,7 +627,8 @@ feature -- Access: file name
 				Result := unix_layout_share_path.twin
 				Result.extend_from_array (<< unix_layout_locale_dir, product_version_name >>)
 			else
-				Result := shared_application_path.twin
+				Result := shared_path.twin
+				Result.extend (short_studio_name)
 				Result.extend_from_array (<<"lang", "mo_files">>)
 			end
 		end

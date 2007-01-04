@@ -46,15 +46,15 @@ feature -- Basic Operation
 			l_runtimes: DS_LINEAR [STRING]
 			l_item: EV_LIST_ITEM
 		do
-			create rb_project_type_exe.make_with_text (Exe_type)
+			create rb_project_type_exe.make_with_text (interface_names.l_Exe_type)
 			rb_project_type_exe.select_actions.extend (agent on_change_generation_type)
-			create rb_project_type_dll.make_with_text (Dll_type)
+			create rb_project_type_dll.make_with_text (interface_names.l_Dll_type)
 			rb_project_type_dll.select_actions.extend (agent on_change_generation_type)
 
 			create l_horiz_box
 			l_horiz_box.set_padding (dialog_unit_to_pixels(20))
 			create l_vert
-			create console_app_b.make_with_text (l_Console_application)
+			create console_app_b.make_with_text (interface_names.l_Console_application)
 			if wizard_information.console_application then
 				console_app_b.enable_select
 			else
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 	display_state_text is
 		do
 			title.set_text (interface_names.t_Second_state)
-			subtitle.set_text (Subtitle_text)
+			subtitle.set_text (interface_names.l_second_Subtitle_text)
 			message.set_text (interface_names.m_Second_state)
 		end
 
@@ -329,18 +329,6 @@ feature {NONE} -- Constants
 
 	most_recent_clr_version: STRING
 			-- The most recent clr version found on this system
-
-	Exe_type: STRING is "Executable"
-			-- Meaning of EXE
-
-	Dll_type: STRING is "Dynamic-Link Library"
-			-- Meaning of DLL
-
-	Subtitle_text: STRING is "You can choose to create a .exe or a .dll file%N%
-					%and select the names of the root class and its creation routine."
-
-	l_Console_application: STRING is "Console application"
-			-- Text associated to `console_app_b'.
 
 	console_app_b: EV_CHECK_BUTTON
 			-- Console application check box.

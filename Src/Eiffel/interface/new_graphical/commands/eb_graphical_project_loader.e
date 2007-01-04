@@ -134,7 +134,7 @@ feature -- Settings
 			l_prc_launcher.set_hidden (True)
 			create l_dialog
 			l_dialog.set_process (l_prc_launcher)
-			l_dialog.set_title ("Precompilation Progress")
+			l_dialog.set_title (interface_names.t_precompile_progress)
 			l_prc_launcher.redirect_output_to_agent (agent l_dialog.append_in_gui_thread)
 			l_prc_launcher.redirect_error_to_same_as_output
 			l_prc_launcher.set_on_exit_handler (agent l_dialog.hide_in_gui_thread)
@@ -254,7 +254,7 @@ feature {NONE} -- Error reporting
 			-- New error dialog properly initialized.
 		do
 			create Result
-			Result.set_title ("Configuration Loading Error")
+			Result.set_title (interface_names.t_configuration_loading_error)
 			Result.set_buttons (<< interface_names.b_ok >>)
 			Result.set_default_push_button (Result.button (interface_names.b_ok))
 			Result.set_default_cancel_button (Result.button (interface_names.b_ok))
@@ -350,7 +350,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_cannot_open_project (a_msg: STRING) is
+	report_cannot_open_project (a_msg: STRING_GENERAL) is
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		local
@@ -362,7 +362,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_incompatible_project (a_msg: STRING) is
+	report_incompatible_project (a_msg: STRING_GENERAL) is
 			-- Report an error when retrieving an incompatible project and possibly
 			-- propose user to upgrade.
 		local
@@ -384,7 +384,7 @@ feature {NONE} -- Error reporting
 			end
 		end
 
-	report_project_corrupted (a_msg: STRING) is
+	report_project_corrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		local
@@ -396,7 +396,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_retrieval_interrupted (a_msg: STRING) is
+	report_project_retrieval_interrupted (a_msg: STRING_GENERAL) is
 			-- Report an error when project retrieval was stopped.
 		local
 			l_ev: EV_ERROR_DIALOG
@@ -407,7 +407,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_project_incomplete (a_msg: STRING) is
+	report_project_incomplete (a_msg: STRING_GENERAL) is
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		local
@@ -463,22 +463,20 @@ feature {NONE} -- User interaction
 			l_save_as: EV_FILE_SAVE_DIALOG
 			l_file_name: FILE_NAME
 			l_ev: EV_MESSAGE_DIALOG
-			l_save_as_msg: STRING
+			l_save_as_msg: STRING_32
 		do
 			create l_file_name.make_from_string (a_dir_name)
 			l_file_name.set_file_name (a_file_name)
 
 			create l_ev
-			l_save_as_msg := "Save As..."
-			l_ev.set_title ("Configuration Loading Message")
+			l_save_as_msg := interface_names.b_Save_as
+			l_ev.set_title (interface_names.t_configuration_loading_message)
 			l_ev.set_buttons (<<interface_names.b_ok, l_save_as_msg, interface_names.b_cancel>>)
 			l_ev.set_default_push_button (l_ev.button (interface_names.b_ok))
 			l_ev.set_default_cancel_button (l_ev.button (interface_names.b_ok))
-			l_ev.set_text ("Your old configration file needs to be converted to the new format.%N%
-				%The default name for the new configuration is '" + a_file_name + "'.%N%
-				%Select OK if you want to keep this name, or 'Save As...' to choose a different name.")
+			l_ev.set_text (warning_messages.w_configuration_files_needs_to_be_converted (a_file_name))
 
-			create l_save_as.make_with_title ("Choose name for new configuration file")
+			create l_save_as.make_with_title (interface_names.t_choose_name_for_new_configuration_file)
 			l_save_as.set_start_directory (a_dir_name)
 			l_save_as.set_file_name (a_file_name)
 			l_save_as.filters.extend ([config_files_filter, config_files_description])
@@ -549,19 +547,19 @@ feature {NONE} -- User interaction
 			end
 			if l_need_choice then
 				if a_targets.is_empty then
-					create l_error_dialog.make_with_text ("This project contains no compilable target.%NPlease open a different project.")
+					create l_error_dialog.make_with_text (warning_messages.w_project_constains_no_compilable_target)
 					l_error_dialog.show_modal_to_window (parent_window)
 					has_error := True
 					l_need_choice := False
 				end
 			end
 			if l_need_choice then
-				create l_dialog.make_with_title ("Target Selection")
+				create l_dialog.make_with_title (interface_names.t_target_selection)
 
 				if a_target = Void then
-					create l_label.make_with_text ("Choose one target among: ")
+					create l_label.make_with_text (interface_names.l_one_target_among)
 				else
-					create l_label.make_with_text ("Target `" + a_target + "' does not exist or is not compilable.%NChoose one target among:")
+					create l_label.make_with_text (interface_names.l_target_does_not_exist (a_target))
 				end
 				l_label.align_text_left
 				create l_list
@@ -592,7 +590,7 @@ feature {NONE} -- User interaction
 				l_vbox.disable_item_expand (l_hbox)
 
 				l_hbox.extend (create {EV_CELL})
-				create l_select_button.make_with_text_and_action ("Select target", agent on_select_button_pushed (l_dialog, l_list))
+				create l_select_button.make_with_text_and_action (interface_names.b_select_target, agent on_select_button_pushed (l_dialog, l_list))
 				set_default_width_for_button (l_select_button)
 				l_hbox.extend (l_select_button)
 				l_hbox.disable_item_expand (l_select_button)

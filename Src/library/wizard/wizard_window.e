@@ -63,19 +63,19 @@ feature {NONE} -- Initialization
 			h1: EV_HORIZONTAL_BOX
 			h_sep: EV_HORIZONTAL_SEPARATOR
 		do
-			create previous_b.make_with_text_and_action ("< Back ", agent previous_page)
+			create previous_b.make_with_text_and_action (b_back, agent previous_page)
 			previous_b.align_text_center
 			set_default_size_for_button (previous_b)
 
-			create next_b.make_with_text_and_action ("Next >", agent next_page)
+			create next_b.make_with_text_and_action (b_next, agent next_page)
 			next_b.align_text_center
 			set_default_size_for_button (next_b)
 
-			create cancel_b.make_with_text_and_action ("Cancel", agent cancel_actions)
+			create cancel_b.make_with_text_and_action (b_cancel, agent cancel_actions)
 			cancel_b.align_text_center
 			set_default_size_for_button (cancel_b)
 
-			create help_b.make_with_text_and_action ("Help", agent show_help)
+			create help_b.make_with_text_and_action (b_help, agent show_help)
 			help_b.align_text_center
 			set_default_size_for_button (help_b)
 			help_b.hide
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 
 feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations	
 
-	set_final_state (text: STRING) is
+	set_final_state (text: STRING_GENERAL) is
 			-- Current state is final, hence a special process.
 		do
 			next_b.set_text(text)
@@ -233,7 +233,7 @@ feature -- Basic Operations
 				previous_b.enable_sensitive
 			else
 				previous_b.enable_sensitive
-				next_b.set_text("Next >")
+				next_b.set_text(b_next)
 			end
 		end
 

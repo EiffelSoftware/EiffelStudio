@@ -17,17 +17,19 @@ inherit
 			build
 		end
 
+	WIZARD_PROJECT_SHARED
+
 create
 	make
 
 feature -- Basic Operation
 
-	build is 
+	build is
 			-- Build entries.
-		do 
+		do
 			create icon_location.make (Current)
 			icon_location.set_textfield_string (wizard_information.icon_location)
-			icon_location.set_label_string_and_size ("Project icon", 10)
+			icon_location.set_label_string_and_size (interface_names.l_project_icon, 10)
 			icon_location.enable_file_browse_button ("*.ico")
 			icon_location.generate
 
@@ -39,7 +41,7 @@ feature -- Basic Operation
 			set_updatable_entries(<<icon_location.change_actions>>)
 		end
 
-	proceed_with_current_info is 
+	proceed_with_current_info is
 		do
 			Precursor
 			proceed_with_new_state(Create {WIZARD_FINAL_STATE}.make(wizard_information))
@@ -66,11 +68,9 @@ feature {NONE} -- Implementation
 
 	display_state_text is
 		do
-			title.set_text ("Project icon")
-			subtitle.set_text ("Choose an icon for you project.")
-			message.set_text (
-				"You have chosen to build a Frame-Based Application.%N%
-				%You can provide an icon or use the default icon")
+			title.set_text (interface_names.t_project_icon)
+			subtitle.set_text (interface_names.t_choose_icon_subtitle)
+			message.set_text (interface_names.m_choose_icon)
 		end
 
 	icon_location: WIZARD_SMART_TEXT_FIELD;

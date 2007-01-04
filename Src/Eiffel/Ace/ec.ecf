@@ -4,7 +4,7 @@
 			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option trace="false" profile="false" debug="false" warning="true">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+			<assertions precondition="true" postcondition="true" check="true"/>
 			<warning name="old_verbatim_strings" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
@@ -83,10 +83,10 @@
 		<library name="emitter_loader" location="$EIFFEL_SRC\framework\emitter_loader\emitter_loader.ecf" readonly="false" use_application_options="true"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf" readonly="false" use_application_options="true"/>
 		<library name="framework" location="$EIFFEL_SRC\framework\framework.ecf" readonly="false">
-			<class_option class="CHOICE_PROPERTY">
+			<class_option class="ELLIPSIS_PROPERTY">
 				<warning name="once_in_generic" enabled="false"/>
 			</class_option>
-			<class_option class="ELLIPSIS_PROPERTY">
+			<class_option class="CHOICE_PROPERTY">
 				<warning name="once_in_generic" enabled="false"/>
 			</class_option>
 		</library>

@@ -56,7 +56,9 @@ feature {NONE} -- Error reporting
 	report_non_readable_configuration_file (a_file_name: STRING) is
 			-- Report an error when `a_file_name' cannot be read.
 		do
-			io.put_string (warning_messages.w_cannot_read_file (a_file_name))
+			--|FIXME: `out' could cause information loss.
+			-- encoding of the argument should have been localized.
+			io.put_string (warning_messages.w_cannot_read_file (a_file_name).out)
 			io.put_new_line
 			set_has_error
 		end
@@ -65,7 +67,9 @@ feature {NONE} -- Error reporting
 			-- Report an error when ace file `a_file_name' cannot be accessed from epr file `a_epr_name'.
 			-- Note that `a_file_name' can be Void if `a_epr_name' does not mention it.
 		do
-			io.put_string (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
+			--|FIXME: `out' could cause information loss.
+			-- encoding of the argument should have been localized.
+			io.put_string (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name).out)
 			io.put_new_line
 			set_has_error
 		end
@@ -100,7 +104,9 @@ feature {NONE} -- Error reporting
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
-			io.put_string (warning_messages.w_cannot_save_file (a_file_name))
+			--|FIXME: `out' could cause information loss.
+			-- encoding of the argument should have been localized.
+			io.put_string (warning_messages.w_cannot_save_file (a_file_name).out)
 			io.put_new_line
 			set_has_error
 		end
@@ -109,7 +115,9 @@ feature {NONE} -- Error reporting
 			-- Report an error when result of a conversion from ace to new format cannot be stored
 			-- in file `a_file_name'.
 		do
-			io.put_string (warning_messages.w_cannot_convert_file (a_file_name))
+			--|FIXME: `out' could cause information loss.
+			-- encoding of the argument should have been localized.
+			io.put_string (warning_messages.w_cannot_convert_file (a_file_name).out)
 			io.put_new_line
 			set_has_error
 		end
@@ -117,7 +125,9 @@ feature {NONE} -- Error reporting
 	report_cannot_create_project (a_dir_name: STRING) is
 			-- Report an error when we cannot create project in `a_dir_name'.
 		do
-			io.put_string (warning_messages.w_cannot_create_project_directory (a_dir_name))
+			--|FIXME: `out' could cause information loss.
+			-- encoding of the argument should have been localized.
+			io.put_string (warning_messages.w_cannot_create_project_directory (a_dir_name).out)
 			io.put_new_line
 			set_has_error
 		end
@@ -138,7 +148,7 @@ feature {NONE} -- Error reporting
 			l_answered: BOOLEAN
 		do
 			io.put_string (Warning_messages.w_project_incompatible_version (config_file_name, version_number,
-					Eiffel_project.incompatible_version_number))
+					Eiffel_project.incompatible_version_number).out)
 			io.put_new_line
 			if not should_stop_on_prompt then
 				from
@@ -195,7 +205,9 @@ feature {NONE} -- Error reporting
 	report_precompilation_error is
 			-- Report that precompilation did not work.
 		do
-			io.put_string (warning_messages.w_project_build_precompile_error)
+			--|FIXME: `out' could cause information loss.
+			-- encoding of the argument should have been localized.
+			io.put_string (warning_messages.w_project_build_precompile_error.out)
 			io.put_new_line
 			set_has_error
 		end
@@ -375,7 +387,7 @@ feature {NONE} -- User interaction
 				until
 					l_answered
 				loop
-					io.put_string (warning_messages.w_project_build_precompile + " [y|n] ")
+					io.put_string (warning_messages.w_project_build_precompile.out + " [y|n] ")
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
 						is_user_wants_precompile := True

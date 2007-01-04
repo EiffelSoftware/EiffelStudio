@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Initialize and launch application
 		do
 			if argument_count < 1 then
-				io.put_string("wizard -arg1 [resource_path]%N")
+				io.put_string("wizard -arg1 [resource_path] [-arg2 [locale_id]]%N")
 			else
 				default_create
 				set_application (Current)
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
 
-	Wizard_title: STRING is
+	Wizard_title: STRING_GENERAL is
 			-- Window title for this wizard.
 		once
 			Result := "Wizard Version 1.1"

@@ -23,6 +23,13 @@ inherit
 			default_create, copy
 		end
 
+	WIZARD_PROJECT_SHARED
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make_and_launch
 
@@ -36,18 +43,39 @@ feature -- Initialization
 			create l_layout
 			set_eiffel_layout (l_layout)
 
+			setup_locale
+
 			Precursor
 		end
 
-	Wizard_title: STRING is
+	Wizard_title: STRING_GENERAL is
 			-- Window title for this wizard.
 		once
-			Result := "Precompilation Wizard"
+			Result := interface_names.t_precompilation_wizard
 		end
 
 	wizard_factory: PRECOMPILE_WIZARD_FACTORY is
 		once
 			create Result
+		end
+
+feature {NONE} -- Implementation
+
+	setup_locale is
+			-- Setup locale
+		local
+			l_manager: I18N_LOCALE_MANAGER
+			l_arg: STRING
+			l_locale: like locale
+			l_layout: WIZARD_EIFFEL_LAYOUT
+		do
+			create l_layout
+			create l_manager.make (l_layout.language_path)
+			if argument_count >= 2 then
+				l_arg := argument (2)
+				l_locale := l_manager.get_locale (create {I18N_LOCALE_ID}.make_from_string (l_arg))
+			end
+			locale_cell.put (l_locale)
 		end
 
 indexing

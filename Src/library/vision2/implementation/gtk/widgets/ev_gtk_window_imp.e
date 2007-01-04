@@ -363,6 +363,9 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 					end
 					a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 				end
+			else
+					-- Execute the gdk event as normal.
+				{EV_GTK_EXTERNALS}.gtk_main_do_event (a_key_event)
 			end
 		end
 

@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			set_pixmap (gdkpix, gdkmask)
 				-- Initialize the Graphical Context
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, l_app_imp.fg_color)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg_color)
 			init_default_values
 			clear
 		end
@@ -257,7 +257,7 @@ feature -- Element change
 				if oldmask /= loc_default_pointer then
 					mask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (oldmask, a_width, a_height, Monochrome_color_depth)
 					maskgc := {EV_GTK_EXTERNALS}.gdk_gc_new (mask)
-					{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (maskgc, app_implementation.bg_color)
+					{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (maskgc, bg_color)
 					{EV_GTK_EXTERNALS}.gdk_draw_rectangle (mask, maskgc, 1, 0, 0, a_width, a_height)
 					{EV_GTK_DEPENDENT_EXTERNALS}.gdk_draw_drawable (mask, maskgc, oldmask, 0, 0, 0, 0, l_width, l_height)
 					{EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)

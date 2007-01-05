@@ -16,96 +16,128 @@ feature -- Access
 			-- White.
 		once
 			create Result.make_with_rgb (1, 1, 1)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Black: EV_COLOR is
 			-- Black.
 		once
 			create Result.make_with_rgb (0, 0, 0)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Grey, Gray: EV_COLOR is
 			-- Grey.
 		once
 			create Result.make_with_rgb (0.7, 0.7, 0.7)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Dark_grey, Dark_gray: EV_COLOR is
 			-- Dark grey.
 		once
 			create Result.make_with_rgb (0.5, 0.5, 0.5)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Blue: EV_COLOR is
 			-- Blue.
 		once
 			create Result.make_with_rgb (0, 0, 1)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Dark_blue: EV_COLOR is
 			-- Dark blue.
 		once
 			create Result.make_with_rgb (0, 0, 0.5)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Cyan: EV_COLOR is
 			-- Cyan.
 		once
 			create Result.make_with_rgb (0, 1, 1)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Dark_cyan: EV_COLOR is
 			-- Dark cyan.
 		once
 			create Result.make_with_rgb (0, 0.5, 0.5)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Green: EV_COLOR is
 			-- Green.
 		once
 			create Result.make_with_rgb (0, 1, 0)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Dark_green: EV_COLOR is
 			-- Dark green.
 		once
 			create Result.make_with_rgb (0, 0.5, 0)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Yellow: EV_COLOR is
 			-- Yellow.
 		once
 			create Result.make_with_rgb (1, 1, 0)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Dark_yellow: EV_COLOR is
 			-- Dark yellow.
 		once
 			create Result.make_with_rgb (0.5, 0.5, 0)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Red: EV_COLOR is
 			-- Red.
 		once
 			create Result.make_with_rgb (1, 0, 0)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Dark_red: EV_COLOR is
 			-- Dark red.
 		once
 			create Result.make_with_rgb (0.5, 0, 0)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Magenta: EV_COLOR is
 			-- Magenta.
 		once
 			create Result.make_with_rgb (1, 0, 1)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Dark_magenta: EV_COLOR is
 			-- Dark magenta.
 		once
 			create Result.make_with_rgb (0.5, 0, 0.5)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Access
@@ -113,50 +145,64 @@ feature -- Access
 	Color_dialog, Color_3d_face: EV_COLOR is
 			-- Used for dialog box background.
 			-- Name: "color dialog".
-		once
+		do
 			Result := implementation.Color_3d_face
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Color_3d_highlight: EV_COLOR is
 			-- Used for 3D-effects (light color)
 			-- Name "color highlight"
-		once
+		do
 			Result := implementation.Color_3d_highlight
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Color_3d_shadow: EV_COLOR is
 			-- Used for 3D-effects (dark color)
 			-- Name "color shadow"
-		once
+		do
 			Result := implementation.Color_3d_shadow
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Color_read_only: EV_COLOR is
 			-- Used for background of editable when read-only.
 			-- Name: "color read only".
-		once
+		do
 			Result := implementation.Color_read_only
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Color_read_write: EV_COLOR is
 			-- Used for background of editable when write/write enabled.
 			-- Name: "color read write".
-		once
+		do
 			Result := implementation.Color_read_write
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Default_background_color: EV_COLOR is
 			-- Used for background of most widgets.
 			-- Name: "default background".
-		once
+		do
 			Result := implementation.default_background_color
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	Default_foreground_color: EV_COLOR is
 			-- Used for foreground of most widgets.
 			-- Name: "default foreground".
-		once
+		do
 			Result := implementation.default_foreground_color
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Basic operations
@@ -167,9 +213,7 @@ feature -- Basic operations
 			create Result.make
 			Result.force (White)
 			Result.force (Black)
-			Result.force (Gray)
 			Result.force (Grey)
-			Result.force (Dark_gray)
 			Result.force (Dark_grey)
 			Result.force (Blue)
 			Result.force (Dark_blue)
@@ -184,7 +228,8 @@ feature -- Basic operations
 			Result.force (Magenta)
 			Result.force (Dark_magenta)
 		ensure
-			all_colors_included: Result.count = 18
+			result_not_void: Result /= Void
+			all_colors_included: Result.count = 16
 		end
 
 feature {NONE} -- Implementation
@@ -194,32 +239,6 @@ feature {NONE} -- Implementation
 		once
 			create Result
 		end
-
-invariant
-	White_not_void: White /= Void
-	Black_not_void:  Black /= Void
-	Grey_not_void:  Grey /= Void
-	Gray_not_void:  Gray /= Void
-	Dark_grey_not_void:  Dark_grey /= Void
-	Dark_gray_not_void:  Dark_gray /= Void
-	Blue_not_void:  Blue /= Void
-	Dark_blue_not_void:  Dark_blue /= Void
-	Cyan_not_void:  Cyan /= Void
-	Dark_cyan_not_void:  Dark_cyan /= Void
-	Green_not_void:  Green /= Void
-	Dark_green_not_void:  Dark_green /= Void
-	Yellow_not_void:  Yellow /= Void
-	Dark_yellow_not_void:  Dark_yellow /= Void
-	Red_not_void:  Red /= Void
-	Dark_red_not_void:  Dark_red /= Void
-	Magenta_not_void:  Magenta /= Void
-	Dark_magenta_not_void:  Dark_magenta /= Void
-	Color_dialog_not_void:  Color_dialog /= Void
-	Color_read_only_not_void:  Color_read_only /= Void
-	Color_read_write_not_void:  Color_read_write /= Void
-	Default_background_color_not_void:  Default_background_color /= Void
-	Default_foreground_color_not_void:  Default_foreground_color /= Void
-	All_colors_not_void:  All_colors /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

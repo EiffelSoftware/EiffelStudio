@@ -66,8 +66,8 @@ feature -- Status Setting
 	clear_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Erase rectangle specified with `background_color'.
 		do
-			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, app_implementation.fg_color)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, app_implementation.bg_color)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg_color)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, bg_color)
 
 			{EV_GTK_EXTERNALS}.gdk_draw_rectangle (drawable, gc, 1, a_x, a_y, a_width, a_height)
 
@@ -124,8 +124,8 @@ feature {NONE} -- Implementation
 	set_default_colors is
 			-- Set foreground and background color to their default values.
 		do
-			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, app_implementation.bg_color)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, app_implementation.fg_color)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, bg_color)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, fg_color)
 		end
 
 	destroy is

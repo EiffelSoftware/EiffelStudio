@@ -990,33 +990,6 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_descent ({EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
 
-	fg_color: POINTER is
-			-- Default allocated background color.
-		local
-			a_success: BOOLEAN
-		once
-			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
-		end
-
-	bg_color: POINTER is
-			-- Default allocate foreground color.
-		local
-			a_success: BOOLEAN
-		once
-			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (Result, 65535)
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (Result, 65535)
-			{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (Result, 65535)
-			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
-		end
-
-	reusable_color_struct: POINTER is
-			-- Persistent GdkColorStruct
-		once
-			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
-		end
-
 	reusable_rectangle_struct: POINTER is
 			-- Persistent GdkColorStruct
 		once
@@ -1043,6 +1016,12 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP, EV_INTERMEDIARY_ROUTINES} 
 			-- Persistent EV_GTK_C_STRING.
 		once
 			create Result.set_with_eiffel_string ("")
+		end
+
+	reusable_color_struct: POINTER is
+			-- Persistent GdkColorStruct
+		once
+			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 		end
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling

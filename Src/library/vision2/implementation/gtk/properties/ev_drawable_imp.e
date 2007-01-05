@@ -934,6 +934,27 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
+	fg_color: POINTER is
+			-- Default allocated background color.
+		local
+			a_success: BOOLEAN
+		once
+			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
+		end
+
+	bg_color: POINTER is
+			-- Default allocate foreground color.
+		local
+			a_success: BOOLEAN
+		once
+			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (Result, 65535)
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (Result, 65535)
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (Result, 65535)
+			a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
+		end
+
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"

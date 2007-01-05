@@ -21,7 +21,6 @@ inherit
 		redefine
 			interface,
 			initialize,
-			background_color_pointer,
 			foreground_color_pointer
 		end
 
@@ -69,19 +68,11 @@ feature -- Resizing
 
 feature {NONE} -- Implementation
 
-	background_color_pointer: POINTER is
-			-- Pointer to bg color for `a_widget'.
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_base (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget)
-			)
-		end
-
 	foreground_color_pointer: POINTER is
 			-- Pointer to fg color for `a_widget'.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_text (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget)
+				{EV_GTK_EXTERNALS}.gtk_rc_get_style (visual_widget)
 			)
 		end
 

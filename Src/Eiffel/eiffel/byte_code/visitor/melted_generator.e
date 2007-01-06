@@ -1537,7 +1537,6 @@ feature {NONE} -- Implementation
 		local
 			l_expression_type: TYPE_I
 			l_hector_b: HECTOR_B
-			l_typed_pointer_type: TYPED_POINTER_I
 		do
 			an_expr.process (Current)
 			l_expression_type := context.real_type (an_expr.type)
@@ -1552,13 +1551,7 @@ feature {NONE} -- Implementation
 				if l_expression_type.is_basic then
 						-- Source is basic and target is a reference:
 						-- metamorphose
-					l_typed_pointer_type ?= l_expression_type
-					if l_typed_pointer_type = Void then
-						ba.append (Bc_metamorphose)
-					else
-						ba.append (Bc_box)
-						l_typed_pointer_type.make_full_type_byte_code (ba)
-					end
+					ba.append (Bc_metamorphose)
 				elseif l_expression_type.is_expanded then
 						-- Source is expanded and target is a reference:
 						-- clone

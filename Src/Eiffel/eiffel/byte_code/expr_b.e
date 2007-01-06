@@ -245,6 +245,7 @@ feature -- C generation
 		local
 			expression_type: TYPE_I
 			basic_i: BASIC_I
+			typed_pointer_i: TYPED_POINTER_I
 			buf: GENERATION_BUFFER
 		do
 			generate
@@ -253,6 +254,11 @@ feature -- C generation
 			if target_type.is_reference and then expression_type.is_expanded then
 				if expression_type.is_basic then
 					basic_i ?= expression_type
+					typed_pointer_i ?= basic_i
+					if typed_pointer_i /= Void then
+							-- Use POINTER instead of TYPED_POINTER to follow .NET semantics.
+						basic_i := pointer_c_type
+					end
 					basic_i.metamorphose (target_register, Current, buf, context.workbench_mode)
 				else
 					target_register.print_register

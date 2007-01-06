@@ -167,7 +167,7 @@
 				<cell><local_variable>x</local_variable> <symbol>:=</symbol> <local_variable>y</local_variable></cell>
 				<cell>No, object is copied to new object of the corresponding reference type</cell>
 				<cell>Yes</cell>
-				<cell>Yes, except for TYPED_POINTER under .NET that is converted to POINTER before reattachment</cell>
+				<cell>Yes, except for TYPED_POINTER that is converted to POINTER before reattachment</cell>
 			</row>
 			<row>
 				<cell>Reverse assignment</cell>

@@ -117,27 +117,29 @@ feature -- Status report
 			int: INTERNAL
 			open_type_codes: STRING
 		do
-			create int
 			if args = Void then
 					-- Void operands are only allowed
 					-- if object has no open operands.
 				Result := (open_count = 0)
-			elseif int.generic_count (args) >= open_count then
-				from
-					Result := True
-					open_type_codes := eif_gen_typecode_str ($Current)
-					i := 1
-				until
-					i > open_count or not Result
-				loop
-					arg_type_code := args.item_code (i)
-					Result := arg_type_code = open_type_codes.item (i + 1).code
-					if Result and then arg_type_code = {TUPLE}.reference_code then
-						arg := args.item (i)
-						Result := arg = Void or else
-							int.type_conforms_to (int.dynamic_type (arg), open_operand_type (i))
+			else
+				create int
+				if int.generic_count (args) >= open_count then
+					from
+						Result := True
+						open_type_codes := eif_gen_typecode_str ($Current)
+						i := 1
+					until
+						i > open_count or not Result
+					loop
+						arg_type_code := args.item_code (i)
+						Result := arg_type_code = open_type_codes.item (i + 1).code
+						if Result and then arg_type_code = {TUPLE}.reference_code then
+							arg := args.item (i)
+							Result := arg = Void or else
+								int.type_conforms_to (int.dynamic_type (arg), open_operand_type (i))
+						end
+						i := i + 1
 					end
-					i := i + 1
 				end
 			end
 			if Result and then not is_target_closed then

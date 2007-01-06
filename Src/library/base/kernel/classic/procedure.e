@@ -27,6 +27,7 @@ feature -- Calls
 		end
 
 	call (args: OPEN_ARGS) is
+			-- Call procedure with `args'.
 		local
 			l_closed_count: INTEGER
 		do

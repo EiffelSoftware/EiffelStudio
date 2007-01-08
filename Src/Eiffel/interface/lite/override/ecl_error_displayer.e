@@ -12,12 +12,48 @@ inherit
 	ERROR_DISPLAYER
 
 	OUTPUT_WINDOW_USER
+		rename
+			make as make_base
 		export
 			{NONE} all
 		end
 
 create
 	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: like application_name; a_window: like output_window) is
+			-- Initialize error displayer using an output window `a_window' and a application name `a_name'
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			a_window_attached: a_window /= Void
+		do
+			application_name := a_name
+			make_base (a_window)
+		ensure
+			application_name_set: application_name = a_name
+			output_window_set: output_window = a_window
+		end
+
+feature -- Access
+
+	application_name: STRING assign set_application_name
+			-- Name of application to use when displaying errors
+
+feature -- Element change
+
+	set_application_name (a_name: like application_name) is
+			-- Set `application_name' with `a_name'
+		require
+			a_name_attached: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+		do
+			application_name := a_name
+		ensure
+			application_name_set: application_name = a_name
+		end
 
 feature -- Output
 
@@ -50,6 +86,7 @@ feature -- Output
 	force_display is
 			-- Make sure the user can see the messages we send.
 		do
+			output_window.display
 		end
 
 feature {NONE} -- Implementation
@@ -72,6 +109,7 @@ feature {NONE} -- Implementation
 			l_se: SYNTAX_ERROR
 			l_code: INTEGER
 			l_file: PLAIN_TEXT_FILE
+			l_parse_error: CONF_ERROR_PARSE
 			l_line: STRING
 			l_pos: INTEGER
 		do
@@ -87,7 +125,15 @@ feature {NONE} -- Implementation
 				a_window.put_string (a_error.line.out)
 				a_window.put_string (")")
 			else
-				a_window.put_string ("ECL")
+				a_window.put_string (application_name)
+				l_parse_error ?= a_error
+				if l_parse_error /= Void then
+					a_window.put_string ("(")
+					a_window.put_string (l_parse_error.column.out)
+					a_window.put_string (", ")
+					a_window.put_string (l_parse_error.row.out)
+					a_window.put_string (")")
+				end
 			end
 
 				-- Code
@@ -192,6 +238,10 @@ feature {NONE} -- Implementation
 		ensure
 			result_attached: Result /= Void
 		end
+
+invariant
+	application_name_attached: application_name /= Void
+	not_application_name_is_empty: not application_name.is_empty
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -970,7 +970,6 @@ feature -- Resizing
 
 	resize (n: INTEGER) is
 			-- Reallocate `item' to hold `n' bytes.
-			-- If `n' smaller than `count', does nothing.
 		require
 			n_non_negative: n >= 0
 			not_shared: not is_shared

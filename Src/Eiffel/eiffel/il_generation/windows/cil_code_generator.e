@@ -2139,8 +2139,11 @@ feature -- Features info
 						end
 						if l_feat.has_property and then l_is_single_class and then not is_override then
 								-- Use a field name different from the property name.
-							l_name := "$$" + il_casing.camel_casing (l_naming_convention, l_feat.feature_name)
+							if l_is_attribute_generated_as_field then
+								l_name := "$$" + il_casing.camel_casing (l_naming_convention, l_feat.feature_name)
+							end
 						end
+						check l_name_attached: l_name /= Void end
 					end
 				end
 			end
@@ -4991,9 +4994,9 @@ feature -- Conversion
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_i4 then convert_to_integer_32
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_i8 then convert_to_integer_64
 			else
-				check
-					False
-				end
+				--check
+				--	False
+				--end
 			end
 		end
 

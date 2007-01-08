@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 				-- Initialization of compiler resources.
 			create l_preference_access.make_with_defaults_and_location (
 				<<eiffel_layout.general_preferences, eiffel_layout.platform_preferences>>, eiffel_layout.eiffel_preferences)
-			initialize_preferences (l_preference_access, False)
+			initialize_preferences (l_preference_access, False, False)
 
 				-- We are always in batch mode
 			set_stop_on_error (True)
@@ -95,11 +95,9 @@ feature {NONE} -- Initialization
 			l_loader: PROJECT_LOADER
 			l_resources: TTY_RESOURCES
 			l_window: OUTPUT_WINDOW_STREAM
+			l_err_window: OUTPUT_WINDOW_STREAM
 			l_degree_out: ECL_DEGREE_OUTPUT
-			l_system: CONF_SYSTEM
-			l_target: CONF_TARGET
-			l_conf_loader: CONF_LOAD
-			l_factory: CONF_COMP_FACTORY
+			l_name: STRING
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -111,7 +109,13 @@ feature {NONE} -- Initialization
 				l_command.set_output_window (l_window)
 
 					-- Initialization of the display	
-				create l_displayer.make (create {OUTPUT_WINDOW_STREAM}.make (io.error))
+				l_name := a_parser.project_alias
+				if l_name = Void then
+					l_name := a_parser.system_name
+				end
+
+				create l_err_window.make (io.error)
+				create l_displayer.make (l_name, l_err_window)
 				eiffel_project.set_error_displayer (l_displayer)
 				eiffel_project.set_batch_mode (True)
 
@@ -127,9 +131,16 @@ feature {NONE} -- Initialization
 					l_command.execute
 				end
 			else
+				l_window.put_new_line
+				l_window.display
+				l_err_window.display
 				if l_displayer /= Void then
+
 					if not error_handler.warning_list.is_empty then
 						l_displayer.trace_warnings (error_handler)
+						l_window.put_new_line
+						l_window.display
+						l_err_window.display
 					end
 					l_displayer.trace_errors (error_handler)
 					l_displayer.force_display
@@ -150,9 +161,9 @@ feature {NONE} -- Query
 		do
 			if a_parser.precompile then
 				if a_parser.optimize then
-					create {EWB_FINALIZE_PRECOMP}Result.make (False, a_parser.optimized_options.keep_assertions)
+					create {EWB_FINALIZE_PRECOMP}Result.make (a_parser.optimized_options.keep_assertions)
 				else
-					create {EWB_PRECOMP}Result.make (False)
+					create {EWB_PRECOMP}Result
 				end
 			else
 				if a_parser.optimize then
@@ -177,17 +188,15 @@ feature {NONE} -- Query
 		local
 			l_system: CONF_SYSTEM
 			l_target: CONF_TARGET
-			l_conf_loader: CONF_LOAD
 			l_visitor: CONF_PRINT_VISITOR
 			l_settings: HASH_TABLE [STRING, STRING]
 			l_loader: EC_PROJECT_LOADER
 			l_file: PLAIN_TEXT_FILE
-			l_src_file: PLAIN_TEXT_FILE
 			l_file_name: STRING
 			l_cursor: CURSOR
 		do
 			create l_loader
-			l_loader.set_should_stop_on_prompt (True)
+			l_loader.set_should_stop_on_prompt (not a_parser.interactive_mode)
 			l_loader.set_has_library_conversion (False)
 			l_loader.set_ignore_user_configuration_file (True)
 
@@ -198,7 +207,7 @@ feature {NONE} -- Query
 				if l_file /= Void then
 					if inject_src_configuration_file (a_parser.configuration_file, l_file) then
 						l_file.close
-						
+
 						l_file_name := l_file.name
 						l_loader.open_project_file (l_file_name, a_parser.target, a_parser.project_location, a_parser.clean_project)
 						if not l_loader.has_error then
@@ -265,7 +274,6 @@ feature {NONE} -- Query
 			a_parser_successful: a_parser.successful
 		local
 			l_cfg_file: STRING
-			l_file: STRING
 			l_file_name: FILE_NAME
 			l_project_location: STRING
 			l_slash_pos: INTEGER

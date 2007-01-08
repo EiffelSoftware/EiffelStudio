@@ -14,7 +14,7 @@ inherit
 			make as make_parser
 		export
 			{NONE} all
-			{ANY} successful, execute
+			{ANY} successful, execute, system_name
 		redefine
 			switch_groups
 		end
@@ -84,6 +84,21 @@ feature -- Access
 			Result ?= option_of_name (finalize_switch)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	project_alias: STRING
+			-- Project alias name (hidden switch value)
+		require
+			successful: successful
+		local
+			l_opt: ARGUMENT_OPTION
+		do
+			l_opt := option_of_name (alias_switch)
+			if l_opt /= Void then
+				Result := l_opt.value
+			end
+		ensure
+			not_result_is_empty: Result /= Void implies not Result.is_empty
 		end
 
 feature -- Status report
@@ -166,6 +181,14 @@ feature -- Status report
 			Result := has_option (clean_switch)
 		end
 
+	interactive_mode: BOOLEAN is
+			-- Indiciates if compiler should interacte with user
+		require
+			successful: successful
+		once
+			Result := has_option (interactive_switch)
+		end
+
 	verbose_output: BOOLEAN is
 			-- Indiciates if compiler should display verbose information on compiler output
 		require
@@ -220,10 +243,12 @@ feature {NONE} -- Usage
 			Result.extend (create {ARGUMENT_SWITCH}.make (force_switch, "Forces re-examination of directory structures for new or removed classes.", False, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (freeze_switch, "Freezes any melted code.", False, False))
 			Result.extend (create {OPTIMIZED_ARGUMENT_SWITCH}.make (finalize_switch, "Optimizes and finalizes code generation.", True, False, "Flags", "Optimization flags.", True, l_optimize_flags, False))
-			Result.extend (create {SETTING_ARGUMENT_SWITCH}.make (set_switch, "Overrides or sets a configuration file setting.", True, True, "<setting>", "A configuration setting in the form of <setting>=<value>.", False))
+			Result.extend (create {SETTING_ARGUMENT_SWITCH}.make (set_switch, "Overrides or sets a configuration file setting.", True, True, "Setting", "A configuration setting in the form of <setting>=<value>.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (c_compile_switch, "Automatically compiles an C code at the end of an Eiffel compilation.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (clean_switch, "Cleans project before compiling.", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (interactive_switch, "When used the compiler will prompt for information when required.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Displays verbose compiler output.", True, False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make_hidden (alias_switch, "Sets a project alias for error reporting.", True, False, "Name", "Project alias name", False))
 		end
 
 	switch_groups: ARRAYED_LIST [ARGUMENT_GROUP] is
@@ -237,6 +262,8 @@ feature {NONE} -- Usage
 				switch_of_name (c_compile_switch),
 				switch_of_name (set_switch),
 				switch_of_name (clean_switch),
+				switch_of_name (interactive_switch),
+				switch_of_name (alias_switch),
 				switch_of_name (verbose_switch)>>, True))
 
 			Result.extend (create {ARGUMENT_GROUP}.make (<<
@@ -246,6 +273,8 @@ feature {NONE} -- Usage
 				switch_of_name (c_compile_switch),
 				switch_of_name (set_switch),
 				switch_of_name (clean_switch),
+				switch_of_name (interactive_switch),
+				switch_of_name (alias_switch),
 				switch_of_name (verbose_switch)>>, True))
 
 			Result.extend (create {ARGUMENT_GROUP}.make (<<
@@ -255,6 +284,8 @@ feature {NONE} -- Usage
 				switch_of_name (c_compile_switch),
 				switch_of_name (set_switch),
 				switch_of_name (clean_switch),
+				switch_of_name (interactive_switch),
+				switch_of_name (alias_switch),
 				switch_of_name (verbose_switch)>>, True))
 
 			Result.extend (create {ARGUMENT_GROUP}.make (<<
@@ -263,6 +294,8 @@ feature {NONE} -- Usage
 				switch_of_name (c_compile_switch),
 				switch_of_name (set_switch),
 				switch_of_name (clean_switch),
+				switch_of_name (interactive_switch),
+				switch_of_name (alias_switch),
 				switch_of_name (verbose_switch)>>, True))
 		end
 
@@ -279,6 +312,8 @@ feature {NONE} -- Option names
 	c_compile_switch: STRING = "c_compile"
 	verbose_switch: STRING = "verbose"
 	set_switch: STRING = "set"
+	interactive_switch: STRING = "prompt"
+	alias_switch: STRING = "alias"
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

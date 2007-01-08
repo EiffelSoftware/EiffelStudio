@@ -587,6 +587,7 @@ feature {NONE} -- Implementation: status report
 			b_not_void: b /= Void
 		local
 			l_convert: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
+			l_type: NAMED_TYPE_A
 		do
 				-- First check if there are no conversion to `b' from `a'.
 			l_convert := a.convert_to
@@ -596,7 +597,10 @@ feature {NONE} -- Implementation: status report
 				until
 					l_convert.after or Result
 				loop
-					Result := l_convert.key_for_iteration.associated_class = b
+					l_type := l_convert.key_for_iteration
+					if l_type.has_associated_class then
+						Result := l_type.associated_class = b
+					end
 					l_convert.forth
 				end
 			end
@@ -612,7 +616,10 @@ feature {NONE} -- Implementation: status report
 					until
 						l_convert.after or Result
 					loop
-						Result := l_convert.key_for_iteration.associated_class = a
+						l_type := l_convert.key_for_iteration
+						if l_type.has_associated_class then
+							Result := l_type.associated_class = a
+						end
 						l_convert.forth
 					end
 				end

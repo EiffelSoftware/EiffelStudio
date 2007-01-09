@@ -10,16 +10,18 @@ indexing
 
 class
 	ES_DOCKABLE_NOTEBOOK
-	
+
 inherit
 	ES_NOTEBOOK
 		redefine
 			build_interface
 		end
 
+	EV_UTILITIES
+
 create
 	make
-		
+
 feature {NONE} -- Initialization
 
 	build_interface is
@@ -29,7 +31,7 @@ feature {NONE} -- Initialization
 			notebook.pointer_button_release_actions.extend (agent release_received)
 			notebook.pointer_motion_actions.extend (agent motion_received)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -49,7 +51,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 		do
 			debug ("es_dockable_notebook")
@@ -66,14 +68,14 @@ feature {NONE} -- Implementation
 					update_pointer_style
 				end
 			end
-		end		
-		
+		end
+
 	release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 		local
 			pointed_tab_index: INTEGER
 			dock_source_index: INTEGER
 			dock_source_text: STRING
-			
+
 			dock_source_item: ES_NOTEBOOK_ITEM
 			l_tab: EV_NOTEBOOK_TAB
 			l_win: EV_WINDOW
@@ -103,7 +105,7 @@ feature {NONE} -- Implementation
 						dock_source.parent.prune (dock_source)
 						dockable_dialog.set_original_parent (notebook)
 						dockable_dialog.extend (dock_source)
-						
+
 						dockable_dialog.set_title (dock_source_text)
 						dockable_dialog.enable_closeable
 						dockable_dialog.close_request_actions.extend (agent close_dockable_dialog (dockable_dialog))
@@ -123,7 +125,7 @@ feature {NONE} -- Implementation
 							if pointed_tab_index < dock_source_index then
 								notebook.go_i_th (pointed_tab_index)
 								notebook.put_left (dock_source)
-							else 
+							else
 								notebook.go_i_th (pointed_tab_index - 1)
 								notebook.put_right (dock_source)
 							end
@@ -141,12 +143,12 @@ feature {NONE} -- Implementation
 			end
 			dock_source	:= Void
 			awaiting_movement := False
-			if dock_executing then 
+			if dock_executing then
 				dock_executing := False
 				update_pointer_style
 			end
 		end
-		
+
 	close_dockable_dialog (a_dialog: ES_DOCKABLE_DIALOG) is
 			--
 		local
@@ -175,7 +177,7 @@ feature {NONE} -- Implementation
 			a_tab.set_text (l_title)
 			a_dialog.destroy
 			a_tab.enable_select
-		end	
+		end
 
 	update_pointer_style is
 		local
@@ -184,7 +186,7 @@ feature {NONE} -- Implementation
 			win := parent_window (widget)
 			if win /= Void then
 				if dock_executing then
-					orig_cursor := win.pointer_style					
+					orig_cursor := win.pointer_style
 					win.set_pointer_style (drag_cursor)
 				else
 					win.set_pointer_style (orig_cursor)
@@ -192,7 +194,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	drag_cursor: EV_POINTER_STYLE is
 			-- Cursor used when `Current' is being transported.
 		once
@@ -200,36 +202,16 @@ feature {NONE} -- Implementation
 		end
 
 	orig_cursor: EV_POINTER_STYLE
-		
-	awaiting_movement: BOOLEAN
-		
-	initial_x, initial_y: INTEGER
-	
-	dock_executing: BOOLEAN
-	
-	dock_source: EV_WIDGET
-	
-	dockable_dialog: ES_DOCKABLE_DIALOG
-	
-feature {NONE} -- Vision2 helper Implementation
 
-	parent_window (w: EV_WIDGET): EV_WINDOW is
-			-- `Result' is window parent of `widget'.
-			-- `Void' if none.
-		require
-			widget_not_void: w /= Void
-		local
-			win: EV_WINDOW
-		do
-			win ?= w.parent
-			if win = Void then
-				if w.parent /= Void then
-					Result := parent_window (w.parent)
-				end
-			else
-				Result := win
-			end
-		end	
+	awaiting_movement: BOOLEAN
+
+	initial_x, initial_y: INTEGER
+
+	dock_executing: BOOLEAN
+
+	dock_source: EV_WIDGET
+
+	dockable_dialog: ES_DOCKABLE_DIALOG;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

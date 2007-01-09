@@ -295,7 +295,7 @@ feature{NONE} -- Initialization
 				grid.drop_actions.fill (drop_actions)
 			end
 			enable_ctrl_right_click_to_open_new_window
-			enable_editor_token_pnd
+			enable_grid_item_pnd_support
 		end
 
 	build_sortable_and_searchable is

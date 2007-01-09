@@ -590,6 +590,7 @@ feature{NONE} -- Grid binding
 		do
 			l_domain_item := domain_item_from_stone (starting_element)
 			create l_grid_item
+			token_writer.new_line
 			l_grid_item.set_text_with_tokens (token_name_from_domain_item (l_domain_item))
 			l_grid_item.set_pixmap (pixmap_from_domain_item (l_domain_item))
 			l_grid_item.set_image (l_grid_item.text)
@@ -1663,7 +1664,7 @@ feature{NONE} -- Initialization
 			grid.set_tree_node_connector_color ((create {EV_STOCK_COLORS}).gray)
 			grid.row_expand_actions.extend (agent on_row_expanded_or_collapsed (?, True))
 			grid.row_collapse_actions.extend (agent on_row_expanded_or_collapsed (?, False))
-			enable_editor_token_pnd
+			enable_grid_item_pnd_support
 			set_select_all_action (agent do  end)
 			enable_tree_node_highlight
 

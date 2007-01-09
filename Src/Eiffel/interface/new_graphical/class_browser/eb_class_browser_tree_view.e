@@ -733,7 +733,7 @@ feature{NONE} -- Initialization
 			grid.row_deselect_actions.extend (agent dehighlight_row)
 			grid.key_press_actions.extend (agent on_key_pressed)
 			grid.enable_multiple_row_selection
-			enable_editor_token_pnd
+			enable_grid_item_pnd_support
 			set_select_all_action (agent do  end)
 		end
 

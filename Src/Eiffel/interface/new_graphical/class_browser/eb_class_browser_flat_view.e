@@ -546,7 +546,7 @@ feature{NONE} -- Initialization
 			filter_engine.set_multiline (False)
 			filter_engine.set_caseless (True)
 			grid.key_press_actions.extend (agent on_key_pressed)
-			enable_editor_token_pnd
+			enable_grid_item_pnd_support
 		end
 
 	build_sortable_and_searchable is

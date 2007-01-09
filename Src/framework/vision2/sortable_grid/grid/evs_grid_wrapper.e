@@ -118,10 +118,11 @@ feature -- Setting
 			sort_action_set: sort_action = a_action
 		end
 
-	set_sorting_status (a_status:  LINKED_LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
+	set_sorting_status (a_status:  LIST [TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]]) is
 			-- Set sorting status to `a_status'.
 		require
 			a_status_attached: a_status /= Void
+			a_status_valid: is_sorting_status_valid (a_status)
 		local
 			l_columns: like sorted_columns
 			l_tuple: TUPLE [a_column_index: INTEGER; a_sorting_order: INTEGER]
@@ -304,6 +305,29 @@ feature -- Status report
 	is_multi_column_sorting_forced: BOOLEAN
 			-- Is multi-column soring forced?
 			-- This means we conduct a multi-column sorting even though Ctrl key is not pressed
+
+	is_sorting_status_valid (a_status: LIST [TUPLE [a_sorted_column: INTEGER; a_sorting_order: INTEGER]]): BOOLEAN is
+			-- Is `a_status' valid for `grid'?
+			-- e.g., every column whose index is `a_sorted_clumn' is a valid sortable column and `a_sorting_order' is
+			-- a valid sorting order for that column?
+		require
+			a_status_attached: a_status /= Void
+		local
+			l_cursor: CURSOR
+			l_column_sort_info: like column_sort_info
+		do
+			l_cursor := a_status.cursor
+			Result := True
+			from
+				a_status.start
+			until
+				a_status.after or a_status.item = Void or (not Result)
+			loop
+				Result := is_column_sortable (a_status.item.a_sorted_column)
+				a_status.forth
+			end
+			a_status.go_to (l_cursor)
+		end
 
 feature -- Access
 

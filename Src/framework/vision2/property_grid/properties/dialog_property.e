@@ -47,12 +47,13 @@ feature {NONE} -- Agents
 	show_dialog is
 			-- Show text editor.
 		require
-			parent_window: parent_window /= Void
+			parented: is_parented
+			parent_window: parent_window (parent) /= Void
 		local
 			l_parent: EV_WINDOW
 		do
 			update_text_on_deactivation
-			l_parent := parent_window
+			l_parent := parent_window (parent)
 			is_dialog_open := True
 			if dialog = Void then
 				create dialog

@@ -19,6 +19,12 @@ inherit
 			set_text
 		end
 
+	EV_UTILITIES
+		undefine
+			default_create,
+			copy
+		end
+
 --create
 --	default_create,
 --	make_with_text
@@ -208,21 +214,6 @@ feature {NONE} -- Implementation
 			Result.set_mask (l_mask)
 		ensure
 			Result_set: Result /= Void
-		end
-
-	parent_window: EV_WINDOW is
-			-- Return the parent window (if any), where the property has been put.
-		local
-			l_parent: EV_CONTAINER
-		do
-			from
-				l_parent := parent
-			until
-				Result /= Void or l_parent = Void
-			loop
-				Result ?= l_parent
-				l_parent := l_parent.parent
-			end
 		end
 
 indexing

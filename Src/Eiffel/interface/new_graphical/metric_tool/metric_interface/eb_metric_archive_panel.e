@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 			-- Timer used in `current_metric_archive_text'
 
 	check_archive_validity (a_text_field: EV_TEXT_FIELD; a_action: PROCEDURE [ANY, TUPLE [a_file_exist: BOOLEAN; a_archive_valid: BOOLEAN; a_archive: LIST [EB_METRIC_ARCHIVE_NODE]]]; a_timer: EV_TIMEOUT) is
-			-- Check vadility of archive defined in `a_text_field' and invoke `a_action' after checking.
+			-- Check validity of archive defined in `a_text_field' and invoke `a_action' after checking.
 			-- If the specified archive file doesn't exist, the first boolean argument (a_file_exist) of `a_action' will be False, otherwise True.
 			-- If the archive file exists, the second will be set to True if the archive is valid, otherwise False.
 			-- If `a_archive_valid' is True, `a_archive' is the archive, otherwise, `a_archive' is Void.
@@ -518,7 +518,7 @@ feature {NONE} -- Implementation
 		end
 
 	check_selected_metrics (a_list: LIST [STRING]): STRING_GENERAL is
-			-- Check vadility of metrics whose names are in `a_list'.
+			-- Check validity of metrics whose names are in `a_list'.
 			-- Return message if error occurs, otherwise, return Void.
 		require
 			a_list_attached: a_list /= Void

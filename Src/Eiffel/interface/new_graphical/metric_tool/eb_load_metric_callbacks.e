@@ -166,7 +166,7 @@ feature{NONE} -- Implementation
 		end
 
 	check_uuid_validity (a_uuid_str: STRING_GENERAL; a_location: STRING_GENERAL) is
-			-- Check vadility of `a_uuid_str'.
+			-- Check validity of `a_uuid_str'.
 			-- `a_location' is where `a_uuid_str' appears.
 		require
 			a_location_attached: a_location /= Void

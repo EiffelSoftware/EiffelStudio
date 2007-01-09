@@ -18,8 +18,8 @@ inherit
 
 feature -- Access
 
-	metric_validity_checker: EB_METRIC_VADILITY_VISITOR is
-			-- Metric vadility checker
+	metric_validity_checker: EB_METRIC_VALIDITY_VISITOR is
+			-- Metric validity checker
 		once
 			create Result.make (metric_manager)
 		ensure

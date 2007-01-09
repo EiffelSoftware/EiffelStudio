@@ -734,7 +734,7 @@ feature -- Metric management
 			l_grid_row: EV_GRID_ROW
 			l_font: EV_FONT
 			l_tooltip: STRING_GENERAL
-			l_vadility: EB_METRIC_ERROR
+			l_validity: EB_METRIC_ERROR
 			l_red: EV_COLOR
 			l_check_item: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
@@ -743,8 +743,8 @@ feature -- Metric management
 			create l_font
 			l_red := (create {EV_STOCK_COLORS}).red
 			l_grid_item.set_font (l_font)
-			l_vadility := metric_manager.metric_validity (a_metric.name)
-			if l_vadility /= Void then
+			l_validity := metric_manager.metric_validity (a_metric.name)
+			if l_validity /= Void then
 				l_grid_item.set_foreground_color (l_red)
 			end
 			l_tooltip := metric_tooltip (a_metric, should_tooltip_contain_go_to_definition_message)

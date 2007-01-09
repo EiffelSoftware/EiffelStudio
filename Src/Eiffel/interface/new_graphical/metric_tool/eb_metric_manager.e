@@ -90,7 +90,7 @@ feature -- Validation
 			a_name_attached: a_name /= Void
 			metric_exists: has_metric (a_name)
 		local
-			l_validator: EB_METRIC_VADILITY_VISITOR
+			l_validator: EB_METRIC_VALIDITY_VISITOR
 			l_error_table: HASH_TABLE [EB_METRIC_ERROR, STRING]
 			l_validity_table: like metrics_validity
 		do
@@ -108,7 +108,7 @@ feature -- Validation
 			end
 		end
 
-feature{EB_METRIC_VADILITY_VISITOR} -- Validity setting
+feature{EB_METRIC_VALIDITY_VISITOR} -- Validity setting
 
 	set_metric_validity (a_metric_name: STRING; a_validity: EB_METRIC_ERROR) is
 			-- Set validity of metric named `a_metric_name' with `a_validity'.
@@ -246,7 +246,7 @@ feature -- Status report
 			-- Has archive history been loaded from `archive_history_file' into `archvie_history'?
 
 	is_metric_validity_checked (a_name: STRING): BOOLEAN is
-			-- Is vadility of metric named `a_name' checked?
+			-- Is validity of metric named `a_name' checked?
 		require
 			a_name_attached: a_name /= Void
 			metric_exists: has_metric (a_name)
@@ -425,7 +425,7 @@ feature -- Access
 		end
 
 	metric_validity (a_name: STRING): EB_METRIC_ERROR is
-			-- Vadility status of metric named `a_name'
+			-- Validity status of metric named `a_name'
 		require
 			a_name_attached: a_name /= Void
 			metric_exists: has_metric (a_name)
@@ -999,7 +999,7 @@ feature{NONE} -- Implementation
 feature{NONE} -- Implementation
 
 	metrics_validity: HASH_TABLE [EB_METRIC_ERROR, STRING]
-			-- Table of metric vadility.
+			-- Table of metric validity.
 			-- Key is name of metric, value is the error message.
 			-- Value is Void indicates that the metric is valid.
 
@@ -1101,7 +1101,7 @@ feature{NONE} -- Implementation
 
 invariant
 	metrics_attached: metrics /= Void
-	metrics_vadility_attached: metrics_validity /= Void
+	metrics_validity_attached: metrics_validity /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

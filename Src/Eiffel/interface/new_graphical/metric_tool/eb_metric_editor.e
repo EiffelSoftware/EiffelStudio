@@ -129,9 +129,9 @@ feature -- Setting
 		end
 
 	check_validity_for_metric is
-			-- Check vadility for `metric'.
+			-- Check validity for `metric'.
 		local
-			l_vadility: EB_METRIC_ERROR
+			l_validity: EB_METRIC_ERROR
 			l_metric: like metric
 		do
 			l_metric := metric
@@ -141,23 +141,23 @@ feature -- Setting
 				(not l_metric.name.is_case_insensitive_equal (original_metric_name)))
 			then
 				if metric_manager.has_metric (l_metric.name) then
-					create l_vadility.make (metric_names.err_duplicated_metric_name (l_metric.name))
+					create l_validity.make (metric_names.err_duplicated_metric_name (l_metric.name))
 				end
 			end
-			if l_vadility = Void then
+			if l_validity = Void then
 				metric_validity_checker.check_metric_validity (l_metric, True)
-				l_vadility := metric_validity_checker.error_table.item (l_metric.name)
+				l_validity := metric_validity_checker.error_table.item (l_metric.name)
 			end
-			if l_vadility = Void then
+			if l_validity = Void then
 				status_area.status_text.set_text (metric_names.t_metric_valid)
 				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_tick_icon)
 				status_area.show_to_do_message_btn.disable_sensitive
 			else
-				status_area.status_text.set_text (l_vadility.message_with_location)
+				status_area.status_text.set_text (l_validity.message_with_location)
 				status_area.status_pixmap.copy (pixmaps.icon_pixmaps.general_error_icon)
 				status_area.show_to_do_message_btn.enable_sensitive
 			end
-			status_area.set_to_do_message (l_vadility)
+			status_area.set_to_do_message (l_validity)
 		end
 
 feature -- Access

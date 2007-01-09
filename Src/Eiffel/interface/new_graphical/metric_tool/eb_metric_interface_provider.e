@@ -278,18 +278,18 @@ feature -- Names
 			a_metric_attached: a_metric /= Void
 			a_metric_exists: metric_manager.has_metric (a_metric.name)
 		local
-			l_vadility: EB_METRIC_ERROR
+			l_validity: EB_METRIC_ERROR
 		do
 			create Result.make (128)
-			l_vadility := metric_manager.metric_validity (a_metric.name)
-			if l_vadility = Void then
+			l_validity := metric_manager.metric_validity (a_metric.name)
+			if l_validity = Void then
 				if a_metric.is_predefined or else a_metric.description /= Void then
 					if a_metric.description /= Void then
 						Result.append (a_metric.description)
 					end
 				end
 			else
-				Result.append (l_vadility.message_with_location)
+				Result.append (l_validity.message_with_location)
 			end
 			if a_go_to_definition then
 				if not Result.is_empty then

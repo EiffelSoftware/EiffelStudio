@@ -1,5 +1,5 @@
 indexing
-	description: "Metric vadility visitor"
+	description: "Metric validity visitor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_METRIC_VADILITY_VISITOR
+	EB_METRIC_VALIDITY_VISITOR
 
 inherit
 	EB_METRIC_VISITOR
@@ -102,7 +102,7 @@ feature{NONE} -- Process
 						l_criteria := a_basic_metric.criteria
 						if l_criteria /= Void then
 							if not has_error then
-									-- Check vadility of criteria.
+									-- Check validity of criteria.
 								if not has_error then
 									l_criteria.process (Current)
 								end
@@ -137,7 +137,7 @@ feature{NONE} -- Process
 				if not has_error then
 					detect_recursive (a_linear_metric)
 					if not has_error then
-							-- Check sub metrics' vadility.
+							-- Check sub metrics' validity.
 						l_sub_metrics := a_linear_metric.variable_metric
 						if l_sub_metrics.is_empty then
 							create_last_error_with_to_do (
@@ -167,7 +167,7 @@ feature{NONE} -- Process
 								end
 								l_sub_metrics.forth
 							end
-								-- Check vadility of every sub metric.
+								-- Check validity of every sub metric.
 							if not has_error then
 								from
 									l_sub_metrics.start
@@ -231,7 +231,7 @@ feature{NONE} -- Process
 							l_den_metric := metric_manager.metric_with_name (a_ratio_metric.denominator_metric_name)
 						end
 					end
-						-- Check vadility of numerator and denominator metric.
+						-- Check validity of numerator and denominator metric.
 					if not has_error then
 						l_num_metric.process (Current)
 					end
@@ -405,7 +405,7 @@ feature{NONE} -- Process
 								metric_names.no_value_tester_specified_to_do)
 						end
 					end
-						-- Check vadility of referenced metric by current value criterion.
+						-- Check validity of referenced metric by current value criterion.
 					if not has_error then
 						l_metric.process (Current)
 					end
@@ -696,7 +696,7 @@ feature{NONE} -- Implementation
 		end
 
 	test_metric (a_metric_name: STRING) is
-			-- Test vadility of metric named `a_metric_name'.
+			-- Test validity of metric named `a_metric_name'.
 			-- tests include existance, recursive definition.
 			-- If `a_metric_name' represents a valid metric, make that metric in `last_tested_metric'.
 			-- If error occurs, fire that error.

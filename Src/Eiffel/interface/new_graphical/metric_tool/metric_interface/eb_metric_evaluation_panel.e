@@ -1004,6 +1004,7 @@ feature-- UI Update
 						metric_selection_area.disable_sensitive
 						detailed_result_btn.disable_sensitive
 						domain_selector.disable_sensitive
+						send_to_history_btn.disable_sensitive
 						if is_original_starter then
 							stop_metric_btn.enable_sensitive
 							metric_value_text.set_text (metric_names.e_evaluating_value)

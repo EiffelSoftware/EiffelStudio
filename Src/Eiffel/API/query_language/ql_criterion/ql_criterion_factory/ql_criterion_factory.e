@@ -136,6 +136,12 @@ feature{NONE} -- Implementation
 	criterion_type: QL_CRITERION
 			-- Criterion anchor type
 
+	item_type: QL_ITEM
+			-- Item anchor type
+
+	simple_criterion_type: QL_SIMPLE_CRITERION
+			-- Simple criterion type
+
 	agent_table: HASH_TABLE [like creation_function, INTEGER]
 			-- Agent table for create a criterion.
 			-- Key is agent index, value is that agent.
@@ -177,6 +183,15 @@ feature{NONE} -- Implementation
 			end
 		ensure
 			result_attached: Result /= Void
+		end
+
+	value_criterion_evalaute_agent (a_item: QL_ITEM; a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): BOOLEAN is
+			-- Value agent for value criterion.
+		require
+			a_item_attached: a_item /= Void
+			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
+		do
+			Result := a_evaluate_value_func.item ([a_item])
 		end
 
 invariant

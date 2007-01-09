@@ -125,7 +125,7 @@ feature -- Evaluate
 					if is_case_sensitive then
 						Result := a_name.has_substring (name)
 					else
-						Result := name.as_lower.has_substring (lower_name)
+						Result := a_name.as_lower.has_substring (lower_name)
 					end
 				else
 					search_engine.match (a_name)

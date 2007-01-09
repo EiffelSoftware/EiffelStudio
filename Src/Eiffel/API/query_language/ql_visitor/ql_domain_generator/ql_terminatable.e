@@ -13,6 +13,7 @@ feature -- Access
 
 	tick_actions: ACTION_SEQUENCE [TUPLE [QL_ITEM]] is
 			-- Actions to be performaed after every `interval_counter' items have been processed.
+			-- Note: Argument passed to `tick_actions' may be Void.
 		do
 			Result := interval_tick_actions_cell.item
 		ensure

@@ -64,6 +64,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_list: like candidate_class_list
 			l_class: QL_CLASS
 			l_syntactical_classes: like only_syntactical_class_set
+			l_generator: like used_in_domain_generator
 		do
 			if not is_criterion_domain_evaluated then
 				initialize_domain
@@ -72,6 +73,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			create Result.make
 			l_list := candidate_class_list
 			l_syntactical_classes := only_syntactical_class_set
+			l_generator := used_in_domain_generator
 			from
 				l_list.start
 			until
@@ -83,6 +85,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 					l_class.set_data (1)
 				end
 				Result.extend (l_class)
+				l_generator.increase_internal_counter (l_class)
 				l_list.forth
 			end
 		end

@@ -69,6 +69,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_feature_callee: like callee_list_for_feature
 			l_data_feature: QL_FEATURE
 			l_e_feature: E_FEATURE
+			l_generator: like used_in_domain_generator
 		do
 			if not is_criterion_domain_evaluated then
 				initialize_domain
@@ -78,6 +79,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 			l_current_domain.clear_cache
 			l_feature_callee := callee_list_for_feature
 			l_feature_list := feature_list
+			l_generator := used_in_domain_generator
 			create Result.make
 			from
 				l_feature_list.start
@@ -90,6 +92,7 @@ feature{QL_DOMAIN} -- Intrinsic domain
 					l_data_feature := query_feature_item (l_feature_callee.i_th (l_feature_list.index))
 					l_feature.set_data (l_data_feature)
 					Result.extend (l_feature)
+					l_generator.increase_internal_counter (l_feature)
 				end
 				l_feature_list.forth
 			end
@@ -108,7 +111,8 @@ feature{QL_DOMAIN} -- Intrinsic domain
 					l_data_feature := query_feature_item (l_invariant_callee.item)
 					l_feature.set_data (l_data_feature)
 					Result.extend (l_feature)
-				l_invariant_list.forth
+					l_generator.increase_internal_counter (l_feature)
+					l_invariant_list.forth
 					l_invariant_callee.forth
 				end
 			end
@@ -141,6 +145,7 @@ feature{NONE} -- Implementation
 			l_branch_id_list: like user_data_list
 			l_invariant_callee: like callee_list_for_invariant
 			l_feature_callee: like callee_list_for_feature
+			l_domain_generator: like used_in_domain_generator
 		do
 			l_invariant_list := invariant_list
 			l_feature_list := feature_list
@@ -149,6 +154,7 @@ feature{NONE} -- Implementation
 			clients := l_class.clients
 			create table.make (20)
 			create classes.make
+			l_domain_generator := used_in_domain_generator
 			from
 				clients.start
 			until
@@ -161,6 +167,7 @@ feature{NONE} -- Implementation
 					classes.put_front (client.lace_class)
 				end
 				clients.forth
+				l_domain_generator.increase_internal_counter (Void)
 			end
 			l_invariant_callee := callee_list_for_invariant
 			l_feature_callee := callee_list_for_feature
@@ -181,10 +188,12 @@ feature{NONE} -- Implementation
 					if cfeat.is_equal (invariant_name) then
 						l_invariant_list.extend (client)
 						l_invariant_callee.extend (l_feat)
+						l_domain_generator.increase_internal_counter (Void)
 					else
 						l_feature_list.extend (client.feature_with_name (cfeat))
 						l_feature_callee.extend (l_feat)
 						l_branch_id_list.extend (1)
+						l_domain_generator.increase_internal_counter (Void)
 					end
 					list.forth
 				end

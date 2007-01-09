@@ -194,7 +194,6 @@ feature {NONE} -- Implementation
 		local
 			l_select_lang: STRING
 			l_id: I18N_LOCALE_ID
-			l_b: BOOLEAN
 			l_available_lang: STRING
 			l_available_locales: LIST [I18N_LOCALE_ID]
 			l_str: STRING
@@ -202,11 +201,13 @@ feature {NONE} -- Implementation
 		do
 			l_select_lang := locale_id_preference.selected_value
 			if l_select_lang = Void then
-				l_select_lang := "en"
+				l_select_lang := "en_US"
 			end
 			l_available_locales := locale_manager.available_locales
 			create l_id.make_from_string (l_select_lang)
-			l_b := locale_manager.has_translations (l_id)
+			if not locale_manager.has_translations (l_id) then
+				create l_id.make_from_string ("en_US")
+			end
 			create l_added_pre.make (100)
 			create l_available_lang.make (20)
 			from
@@ -224,7 +225,7 @@ feature {NONE} -- Implementation
 							l_available_lang.extend (';')
 						end
 						l_added_pre.force (l_str, l_str)
-						if l_b and then l_available_locales.item.is_equal (l_id) then
+						if l_available_locales.item.is_equal (l_id) then
 								-- Set this item selected.
 							set_locale_with_id (l_str)
 							l_str := "[" + l_str + "]"
@@ -235,7 +236,7 @@ feature {NONE} -- Implementation
 				l_available_locales.forth
 			end
 			if l_available_lang.is_empty then
-				l_available_lang := "en"
+				l_available_lang := "en_US"
 			end
 			locale_id_preference.set_value_from_string (l_available_lang)
 		end

@@ -1193,6 +1193,13 @@ feature -- Label texts
 			Result := locale.format_string (locale.translate ("File $1 already exists,%N Do you want to ?"), [s])
 		end
 
+	l_target_domain_item: STRING_GENERAL is do Result := locale.translate ("target item") end
+	l_group_domain_item: STRING_GENERAL is do Result := locale.translate ("group item") end
+	l_folder_domain_item: STRING_GENERAL is do Result := locale.translate ("folder item") end
+	l_class_domain_item: STRING_GENERAL is do Result := locale.translate ("class item") end
+	l_feature_domain_item: STRING_GENERAL is do Result := locale.translate ("feature item") end
+	l_delayed_domain_item: STRING_GENERAL is do Result := locale.translate ("delayed item") end
+
 feature -- Label text, no translation (for the editor)
 
 	le_version_from_message: STRING is " (version from)"

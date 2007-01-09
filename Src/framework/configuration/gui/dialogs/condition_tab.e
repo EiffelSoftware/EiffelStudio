@@ -44,6 +44,13 @@ inherit
 			is_equal
 		end
 
+	EV_UTILITIES
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -479,11 +486,11 @@ feature {NONE} -- Actions
 			if (l_min /= Void and then l_min.is_error) or (l_max /= Void and then l_max.is_error) then
 				fill_compiler_version
 				create wd.make_with_text (conf_interface_names.version_valid_format)
-				wd.show_modal_to_window (parent_window)
+				wd.show_modal_to_window (parent_window (Current))
 			elseif l_min /= Void and l_max /= Void and l_min > l_max then
 				fill_compiler_version
 				create wd.make_with_text (conf_interface_names.version_min_max)
-				wd.show_modal_to_window (parent_window)
+				wd.show_modal_to_window (parent_window (Current))
 			elseif l_min /= Void or l_max /= Void then
 				data.add_version (l_min, l_max, v_compiler)
 			else
@@ -510,11 +517,11 @@ feature {NONE} -- Actions
 			if (l_min /= Void and then l_min.is_error) or (l_max /= Void and then l_max.is_error) then
 				fill_msil_clr_version
 				create wd.make_with_text (conf_interface_names.version_valid_format)
-				wd.show_modal_to_window (parent_window)
+				wd.show_modal_to_window (parent_window (Current))
 			elseif l_min /= Void and l_max /= Void and l_min > l_max then
 				fill_msil_clr_version
 				create wd.make_with_text (conf_interface_names.version_min_max)
-				wd.show_modal_to_window (parent_window)
+				wd.show_modal_to_window (parent_window (Current))
 			elseif l_min /= Void or l_max /= Void then
 				data.add_version (l_min, l_max, v_msil_clr)
 			else
@@ -694,21 +701,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-	parent_window: EV_WINDOW is
-			-- Return the parent window (if any).
-		local
-			l_parent: EV_CONTAINER
-		do
-			from
-				l_parent := parent
-			until
-				Result /= Void or l_parent = Void
-			loop
-				Result ?= l_parent
-				l_parent := l_parent.parent
-			end
-		end
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

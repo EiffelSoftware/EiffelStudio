@@ -35,6 +35,13 @@ inherit
 			is_equal
 		end
 
+	EV_UTILITIES
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -286,7 +293,7 @@ feature {NONE} -- Actions
 		do
 			create l_dial
 			l_dial.set_value (data.internal_conditions)
-			l_dial.show_modal_to_window (parent_window)
+			l_dial.show_modal_to_window (parent_window (Current))
 			if l_dial.is_ok then
 				data.set_conditions (l_dial.value)
 			end
@@ -294,21 +301,6 @@ feature {NONE} -- Actions
 				condition.set_text (data.internal_conditions.out)
 			else
 				condition.set_text ("")
-			end
-		end
-
-	parent_window: EV_WINDOW is
-			-- Return the parent window (if any).
-		local
-			l_parent: EV_CONTAINER
-		do
-			from
-				l_parent := parent
-			until
-				Result /= Void or l_parent = Void
-			loop
-				Result ?= l_parent
-				l_parent := l_parent.parent
 			end
 		end
 

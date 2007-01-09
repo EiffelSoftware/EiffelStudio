@@ -23,6 +23,13 @@ inherit
 			initialize
 		end
 
+	EV_UTILITIES
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	initialize is
@@ -1851,26 +1858,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			all_holders.remove
 			all_holders.go_i_th (real_new_position)
 			all_holders.put_left (a_holder)
-		end
-
-	parent_window (widget: EV_WIDGET): EV_WINDOW is
-			-- `Result' is window parent of `widget'.
-			-- `Void' if none.
-		require
-			widget_not_void: widget /= Void
-		local
-			window: EV_WINDOW
-		do
-			window ?= widget.parent
-			if window = Void then
-				if widget.parent /= Void then
-					Result := parent_window (widget.parent)
-				end
-			else
-				Result := window
-			end
-		ensure
-			shown_implies_result_not_void: widget.is_displayed implies Result /= Void
 		end
 
 	set_holder_tool_height (a_height: INTEGER) is

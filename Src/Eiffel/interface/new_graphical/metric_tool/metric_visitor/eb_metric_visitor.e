@@ -69,7 +69,14 @@ feature -- Process
 		deferred
 		end
 
-	process_caller_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+			-- Process `a_criterion'.
+		require
+			a_criterion_attached: a_criterion /= Void
+		deferred
+		end
+
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
@@ -97,6 +104,13 @@ feature -- Process
 		deferred
 		end
 
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Process `a_criterion'.
+		require
+			a_criterion_attached: a_criterion /= Void
+		deferred
+		end
+
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
 			-- Process `a_criterion'.
 		require
@@ -115,6 +129,13 @@ feature -- Process
 			-- Process `a_criterion'.
 		require
 			a_criterion_attached: a_criterion /= Void
+		deferred
+		end
+
+	process_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Process `a_domain'.
+		require
+			a_domain_attached: a_domain /= Void
 		deferred
 		end
 
@@ -173,6 +194,29 @@ feature -- Process
 			a_item_attached: a_item /= Void
 		deferred
 		end
+
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+			-- Process `a_item'.
+		require
+			a_item_attached: a_item /= Void
+		deferred
+		end
+
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		require
+			a_item_attached: a_item /= Void
+		deferred
+		end
+
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		require
+			a_item_attached: a_item /= Void
+		deferred
+		end
+
+feature{NONE} -- Implementation
 
 	safe_process_item (a_item: EB_METRIC_VISITABLE) is
 			-- Safe process `a_item'.

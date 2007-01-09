@@ -19,7 +19,6 @@ inherit
 			default_create
 		redefine
 			metric,
-			expression_generator,
 			is_basic_metric_editor
 		end
 
@@ -70,7 +69,6 @@ feature {NONE} -- Initialization
 			a_mode_valid: is_mode_valid (a_mode)
 			a_unit_attached: a_unit /= Void
 		do
-			create expression_generator.make
 			create change_actions_internal
 			create change_actions
 			set_metric_tool (a_tool)
@@ -356,9 +354,11 @@ feature{NONE} -- Actions
 			l_criterion: EB_METRIC_CRITERION
 		do
 			l_criterion := combination_grid.criterion
-			expression_generator.set_criterion (l_criterion)
-			expression_generator.generate_expression
-			expression_generator.load_expression (expression_text)
+			rich_text_output.wipe_out
+			if l_criterion /= Void then
+				expression_generator.generate_output (l_criterion)
+			end
+			rich_text_output.load_expression (expression_text)
 			change_actions_internal.call ([l_criterion])
 			on_definition_change
 		end
@@ -367,9 +367,6 @@ feature{NONE} -- Implementation/Access
 
 	combination_grid: EB_METRIC_CRITERION_GRID
 			-- Criterion combination grid
-
-	expression_generator: EB_METRIC_CRITERION_EXPRESSION_GENERATOR
-			-- Criterion expression generator
 
 feature -- Key shortcuts
 

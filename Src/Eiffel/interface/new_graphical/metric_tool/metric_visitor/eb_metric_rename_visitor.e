@@ -38,9 +38,7 @@ feature -- Process
 		require
 			a_metric_attached: a_metric /= Void
 		do
-			if a_metric.name.is_case_insensitive_equal (old_metric_name) then
-				a_metric.set_name (new_metric_name.twin)
-			end
+			replace_name (a_metric.name, agent a_metric.set_name)
 			a_metric.process (Current)
 		end
 
@@ -73,9 +71,7 @@ feature{NONE} -- Process
 				until
 					l_variable_metric.after
 				loop
-					if l_variable_metric.item.is_case_insensitive_equal (old_metric_name) then
-						l_variable_metric.replace (new_metric_name.twin)
-					end
+					replace_name (l_variable_metric.item, agent l_variable_metric.replace)
 					l_variable_metric.forth
 				end
 				l_variable_metric.go_to (l_cursor)
@@ -85,12 +81,8 @@ feature{NONE} -- Process
 	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
 			-- Process `a_ratio_metric'.
 		do
-			if a_ratio_metric.numerator_metric_name .is_case_insensitive_equal (old_metric_name) then
-				a_ratio_metric.set_numerator_metric_name (new_metric_name)
-			end
-			if a_ratio_metric.denominator_metric_name.is_case_insensitive_equal (old_metric_name) then
-				a_ratio_metric.set_denominator_metric_name (new_metric_name)
-			end
+			replace_name (a_ratio_metric.numerator_metric_name, agent a_ratio_metric.set_numerator_metric_name)
+			replace_name (a_ratio_metric.denominator_metric_name, agent a_ratio_metric.set_denominator_metric_name)
 		end
 
 	process_criterion (a_criterion: EB_METRIC_CRITERION) is
@@ -103,7 +95,12 @@ feature{NONE} -- Process
 		do
 		end
 
-	process_caller_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+			-- Process `a_criterion'.
+		do
+		end
+
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
 			-- Process `a_criterion'.
 		do
 		end
@@ -123,6 +120,12 @@ feature{NONE} -- Process
 		do
 		end
 
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			replace_name (a_criterion.metric_name, agent a_criterion.set_metric_name)
+		end
+
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
 			-- Process `a_criterion'.
 		do
@@ -139,6 +142,11 @@ feature{NONE} -- Process
 			-- Process `a_criterion'.
 		do
 			process_nary_criterion (a_criterion)
+		end
+
+	process_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Process `a_domain'.
+		do
 		end
 
 	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
@@ -179,6 +187,36 @@ feature{NONE} -- Process
 	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
 			-- Process `a_item'.
 		do
+		end
+
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+			-- Process `a_item'.
+		do
+		end
+
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+		end
+
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+			replace_name (a_item.metric_name, agent a_item.set_metric_name)
+		end
+
+feature{NONE} -- Implementation
+
+	replace_name (a_old_name: STRING; a_name_setter: PROCEDURE [ANY, TUPLE [STRING]]) is
+			-- If `a_old_name' is considered to be the same as `old_metric_name',
+			-- invoke `a_name_setter' to set `new_metric_name'.
+		require
+			a_old_name_attached: a_old_name /= Void
+			a_name_setter_attached: a_name_setter /= Void
+		do
+			if a_old_name.is_case_insensitive_equal (old_metric_name) then
+				a_name_setter.call ([new_metric_name.twin])
+			end
 		end
 
 invariant

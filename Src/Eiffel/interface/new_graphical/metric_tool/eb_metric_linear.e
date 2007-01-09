@@ -40,7 +40,7 @@ feature -- Status report
 feature -- Metric calculation
 
 	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN is
-			-- Calcualte current domain using `a_scope'.
+			-- Value of current metric calculated over `a_scope'
 		local
 			l_value: DOUBLE
 		do
@@ -137,7 +137,7 @@ feature{NONE} -- Implementation
 			else
 				a_metric.disable_filter_result
 			end
-			Result := a_metric.value (a_scope).first.value * a_coefficient
+			Result := a_metric.value_item (a_scope) * a_coefficient
 		end
 
 	variable_metric_uuid_internal: like variable_metric_uuid

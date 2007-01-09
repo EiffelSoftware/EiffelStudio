@@ -56,6 +56,15 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	calculated_archive: EB_METRIC_ARCHIVE is
+			-- Archive generated from `calculated_archives'
+		do
+			create Result.make
+			calculated_archives.do_all (agent Result.insert_archive_node)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Status report
 
 	has_error: BOOLEAN is
@@ -126,7 +135,7 @@ feature -- Calculation
 					else
 						l_metric.disable_filter_result
 					end
-					l_value := l_metric.value (l_input_domain).first.value
+					l_value := l_metric.value_item (l_input_domain)
 					create l_archive_node.make (l_metric.name, metric_type_id (l_metric), l_time, l_value, l_input_domain, uuid_gen.generate_uuid.out, a_task.item.a_filter_result)
 					l_archives.extend (l_archive_node)
 					l_archive_calculated_actions.call ([l_archive_node])

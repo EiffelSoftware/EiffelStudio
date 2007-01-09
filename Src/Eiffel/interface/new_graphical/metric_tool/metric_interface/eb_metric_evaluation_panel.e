@@ -408,7 +408,7 @@ feature -- Actions
 					l_metric.disable_fill_domain
 				end
 
-				l_value := l_metric.value (l_input_domain).first.value
+				l_value := l_metric.value_item (l_input_domain)
 				set_last_value (l_value)
 				set_is_last_evaluation_successful (True)
 				display_status_message ("")
@@ -963,8 +963,8 @@ feature-- UI Update
 			l_metric := current_selected_metric
 			if l_metric /= Void then
 				if is_using_quick_metric then
-					metric_vadility_checker.process_metric (l_metric)
-					Result := not metric_vadility_checker.has_error
+					metric_validity_checker.check_metric_validity (l_metric, True)
+					Result := not metric_validity_checker.has_error
 				else
 					Result := metric_manager.is_metric_valid (l_metric.name)
 				end

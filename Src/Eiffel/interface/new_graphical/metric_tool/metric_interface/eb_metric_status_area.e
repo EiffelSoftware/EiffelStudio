@@ -65,18 +65,8 @@ feature -- Setting
 
 	set_to_do_message (a_error: EB_METRIC_ERROR) is
 			-- Set to-do message with `a_error'.`to_do'.
-		local
-			l_to_do: STRING_GENERAL
-
 		do
-			if a_error /= Void then
-				l_to_do := a_error.to_do
-			end
-			if l_to_do /= Void then
-				to_do_message := l_to_do.twin
-			else
-				to_do_message := Void
-			end
+			error := a_error
 			on_open_to_do_dialog (False)
 		end
 
@@ -86,7 +76,11 @@ feature{NONE} -- Actions
 			-- Action to be performed to open a dialog to display help information about how to solve current metric definition error
 			-- If `a_force' is True, display `to_do_dialog', otherwise, don't display `to_do_dialog' if it is hidden.
 		do
-			to_do_dialog.load_text (to_do_message)
+			if error = Void then
+				to_do_dialog.load_text ("", "", "")
+			else
+				to_do_dialog.load_text (error.message, error.location, error.to_do)
+			end
 			if not to_do_dialog.is_displayed and then a_force then
 				to_do_dialog.show_relative_to_window (metric_tool_window)
 			end
@@ -98,14 +92,12 @@ feature{NONE} -- Impelementation
 			-- Dialog to display help information about hwo to solve current metric definition error
 		once
 			create Result.make (metric_tool)
-			Result.set_title (metric_names.t_metric_definition_error_wizard)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	to_do_message: STRING_GENERAL;
-			-- To do message
-
+	error: EB_METRIC_ERROR;
+			-- Error to be displayed
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

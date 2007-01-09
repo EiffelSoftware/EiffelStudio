@@ -21,7 +21,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_SHARED_METRIC_NAMES
+	SHARED_NAMES
 
 	EB_CLUSTER_MANAGER_OBSERVER
 		redefine
@@ -33,6 +33,8 @@ inherit
 
 	EB_METRIC_FILE_LOADER
 
+	SHARED_FLAGS
+
 create
 	make
 
@@ -42,7 +44,7 @@ feature{NONE} -- Initialization
 			-- Initialize.
 		do
 			create {LINKED_LIST [EB_METRIC]} metrics.make
-			create metrics_vadility.make (100)
+			create metrics_validity.make (100)
 			manager.add_observer (Current)
 		end
 
@@ -64,13 +66,16 @@ feature -- Validation
 		local
 			l_cursor: CURSOR
 		do
+			if a_force then
+				metrics_validity.wipe_out
+			end
 			l_cursor := metrics.cursor
 			from
 				metrics.start
 			until
 				metrics.after
 			loop
-				if a_force or not is_metric_vadility_checked (metrics.item.name) then
+				if not is_metric_validity_checked (metrics.item.name) then
 					check_validation_for_metric (metrics.item.name)
 				end
 				metrics.forth
@@ -86,10 +91,34 @@ feature -- Validation
 			metric_exists: has_metric (a_name)
 		local
 			l_validator: EB_METRIC_VADILITY_VISITOR
+			l_error_table: HASH_TABLE [EB_METRIC_ERROR, STRING]
+			l_validity_table: like metrics_validity
 		do
 			create l_validator.make (Current)
-			l_validator.process_metric (metric_with_name (a_name))
-			metrics_vadility.force (l_validator.last_error, a_name)
+			l_validator.check_metric_validity (metric_with_name (a_name), False)
+			l_error_table := l_validator.error_table
+			l_validity_table := metrics_validity
+			from
+				l_error_table.start
+			until
+				l_error_table.after
+			loop
+				l_validity_table.force (l_error_table.item_for_iteration, l_error_table.key_for_iteration)
+				l_error_table.forth
+			end
+		end
+
+feature{EB_METRIC_VADILITY_VISITOR} -- Validity setting
+
+	set_metric_validity (a_metric_name: STRING; a_validity: EB_METRIC_ERROR) is
+			-- Set validity of metric named `a_metric_name' with `a_validity'.
+		require
+			a_metric_name_attached: a_metric_name /= Void
+			metric_exists: has_metric (a_metric_name)
+		do
+			metrics_validity.force (a_validity, a_metric_name)
+		ensure
+			metrc_validity_set: metric_validity (a_metric_name) = a_validity
 		end
 
 feature -- Status report
@@ -127,10 +156,18 @@ feature -- Status report
 			a_name_attached: a_name /= Void
 			metric_exists: has_metric (a_name)
 		do
-			if not is_metric_vadility_checked (a_name) then
+			if not is_metric_validity_checked (a_name) then
 				check_validation_for_metric (a_name)
 			end
-			Result := metric_vadility (a_name) = Void
+			Result := metric_validity (a_name) = Void
+		end
+
+	is_metric_calculatable (a_name: STRING): BOOLEAN is
+			-- Is metric named `a_name' calculatable (i.e., metric exists and is valid)?
+		require
+			a_name_attached: a_name /= Void
+		do
+			Result := has_metric (a_name) and then is_metric_valid (a_name)
 		end
 
 	is_valid_order (a_order: INTEGER): BOOLEAN is
@@ -208,8 +245,14 @@ feature -- Status report
 	has_archive_been_loaded: BOOLEAN
 			-- Has archive history been loaded from `archive_history_file' into `archvie_history'?
 
-	is_exit_requested: BOOLEAN
-			-- Is exiting EiffelStudio requrested?
+	is_metric_validity_checked (a_name: STRING): BOOLEAN is
+			-- Is vadility of metric named `a_name' checked?
+		require
+			a_name_attached: a_name /= Void
+			metric_exists: has_metric (a_name)
+		do
+			Result := metrics_validity.has (a_name)
+		end
 
 feature -- Access
 
@@ -381,16 +424,16 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_vadility (a_name: STRING): EB_METRIC_ERROR is
+	metric_validity (a_name: STRING): EB_METRIC_ERROR is
 			-- Vadility status of metric named `a_name'
 		require
 			a_name_attached: a_name /= Void
 			metric_exists: has_metric (a_name)
 		do
-			if not is_metric_vadility_checked (a_name) then
+			if not is_metric_validity_checked (a_name) then
 				check_validation_for_metric (a_name)
 			end
-			Result := metrics_vadility.item (a_name)
+			Result := metrics_validity.item (a_name)
 		end
 
 	units: LIST [QL_METRIC_UNIT] is
@@ -486,7 +529,7 @@ feature -- Metric management
 			if workbench.system_defined and then workbench.is_already_compiled then
 				clear_last_error
 				metrics.wipe_out
-				metrics_vadility.wipe_out
+				metrics_validity.wipe_out
 					-- Load predefined metrics.
 				create l_file.make (eiffel_layout.predefined_metrics_file)
 				if not l_file.exists then
@@ -859,14 +902,6 @@ feature -- Setting
 			has_archive_been_loaded_set: has_archive_been_loaded = b
 		end
 
-	set_is_exit_requested (b: BOOLEAN) is
-			-- Set `is_exit_requested' with `b'.
-		do
-			is_exit_requested := b
-		ensure
-			is_exit_requested_set: is_exit_requested = b
-		end
-
 feature -- Actions
 
 	on_project_loaded is
@@ -961,18 +996,9 @@ feature{NONE} -- Implementation
 			metric_registered: has_metric (a_metric.name) and a_metric.manager = Current and (a_predefined implies a_metric.is_predefined)
 		end
 
-	is_metric_vadility_checked (a_name: STRING): BOOLEAN is
-			-- Is vadility of metric named `a_name' checked?
-		require
-			a_name_attached: a_name /= Void
-			metric_exists: has_metric (a_name)
-		do
-			Result := metrics_vadility.has (a_name)
-		end
-
 feature{NONE} -- Implementation
 
-	metrics_vadility: HASH_TABLE [EB_METRIC_ERROR, STRING]
+	metrics_validity: HASH_TABLE [EB_METRIC_ERROR, STRING]
 			-- Table of metric vadility.
 			-- Key is name of metric, value is the error message.
 			-- Value is Void indicates that the metric is valid.
@@ -1075,7 +1101,7 @@ feature{NONE} -- Implementation
 
 invariant
 	metrics_attached: metrics /= Void
-	metrics_vadility_attached: metrics_vadility /= Void
+	metrics_vadility_attached: metrics_validity /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

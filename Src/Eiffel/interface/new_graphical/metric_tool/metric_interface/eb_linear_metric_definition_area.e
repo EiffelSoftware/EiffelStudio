@@ -19,7 +19,6 @@ inherit
 			default_create
 		redefine
 			metric,
-			expression_generator,
 			is_linear_metric_editor
 		end
 
@@ -58,7 +57,6 @@ feature {NONE} -- Initialization
 		do
 			set_metric_tool (a_tool)
 			set_metric_panel (a_panel)
-			create expression_generator.make
 			create change_actions
 			default_create
 			set_mode (a_mode)
@@ -262,9 +260,6 @@ feature -- Access
 	metric_grid: ES_GRID
 			-- Grid to display current metric
 
-	expression_generator: EB_METRIC_LINEAR_EXPRESSION_GENERATOR
-			-- Expression generator
-
 feature{NONE} -- Implementation/Actions
 
 	load_metric_in_row (a_name: STRING; a_coefficient: STRING; a_uuid: UUID; a_row: EV_GRID_ROW) is
@@ -448,9 +443,9 @@ feature{NONE} -- Implementation/Actions
 	on_change is
 			-- Action to be performed when definition of current linear metric changes
 		do
-			expression_generator.set_metric (metric)
-			expression_generator.generate_expression
-			expression_generator.load_expression (expression_text)
+			rich_text_output.wipe_out
+			expression_generator.generate_output (metric)
+			rich_text_output.load_expression (expression_text)
 			on_definition_change
 		end
 
@@ -653,7 +648,7 @@ feature{NONE} -- Implementation
 			l_manager: like metric_manager
 		do
 			l_manager := metric_manager
-			if l_manager.has_metric (a_name) and then l_manager.is_metric_valid (a_name) and then l_manager.metric_with_name (a_name).unit = unit then
+			if l_manager.is_metric_calculatable (a_name) and then l_manager.metric_with_name (a_name).unit = unit then
 				Result := (black_color)
 			else
 				Result := (red_color)

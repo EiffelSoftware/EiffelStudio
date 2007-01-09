@@ -14,7 +14,9 @@ inherit
 		rename
 			make as old_make
 		redefine
-			is_parameter_valid
+			is_parameter_valid,
+			replace_delayed_input_domain,
+			is_nary_criterion
 		end
 
 feature{NONE} -- Initialization
@@ -59,6 +61,32 @@ feature -- Status report
 					operands.forth
 				end
 				operands.go_to (l_cursor)
+			end
+		end
+
+	is_nary_criterion: BOOLEAN is True
+			-- Is current a nary criterion?
+
+feature{NONE} -- Implementation
+
+	delayed_input_domain_in_operand (a_operand: EB_METRIC_CRITERION): BOOLEAN is
+			-- Does `a_operand' contain delayed input domain?
+		require
+			a_operand_attached: a_operand /= Void
+		do
+			Result := a_operand.has_delayed_input_domain
+		end
+
+	replace_delayed_input_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Replace delayed input domain contained in Current by `a_domain'.
+		do
+			from
+				operands.start
+			until
+				operands.after
+			loop
+				operands.item.replace_delayed_input_domain (a_domain)
+				operands.forth
 			end
 		end
 

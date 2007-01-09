@@ -184,7 +184,7 @@ feature{NONE} -- Process
 			end
 			if not has_error then
 				l_uuid_str := current_attributes.item (at_uuid)
-				check_uuid_vadility (
+				check_uuid_validity (
 					l_uuid_str,
 					metric_names.archive_location (l_name)
 				)

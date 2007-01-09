@@ -10,7 +10,7 @@ class
 	EB_METRIC_FILE_LOADER
 
 inherit
-	EB_SHARED_METRIC_NAMES
+	SHARED_NAMES
 
 feature -- Basic operations
 

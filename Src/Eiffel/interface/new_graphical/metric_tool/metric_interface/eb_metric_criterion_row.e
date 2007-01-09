@@ -27,6 +27,8 @@ create
 
 feature{NONE} -- Initialization
 
+	a_selector: EB_METRIC_VALUE_CRITERION_SELECTOR
+
 	make (a_criterion: like criterion; a_row: EV_GRID_ROW; a_grid: like grid; a_readonly: BOOLEAN; a_scope: like scope) is
 			-- Initialize.
 		require
@@ -85,68 +87,30 @@ feature -- Loading
 			l_nary_cri: EB_METRIC_NARY_CRITERION
 			l_row: EB_METRIC_CRITERION_ROW
 			l_cursor: CURSOR
-			l_domain_criterion, l_domain_criterion2: EB_METRIC_DOMAIN_CRITERION
-			l_caller_criterion, l_caller_criterion2: EB_METRIC_CALLER_CALLEE_CRITERION
-			l_text_criterion, l_text_criterion2: EB_METRIC_TEXT_CRITERION
-			l_path_criterion: EB_METRIC_PATH_CRITERION
+			l_criterion_data_retriever: EB_METRIC_CRITERION_DATA_RETRIEVER
 		do
 				-- Load current row.
 			initialize_row (a_row)
+			if a_original_criterion /= Void then
+				create l_criterion_data_retriever
+				l_criterion_data_retriever.set_original_criterion (a_original_criterion)
+				l_criterion_data_retriever.retrieve_data (a_criterion)
+			end
+
 			if a_criterion.is_normal_criterion then
 				create {EB_METRIC_NORMAL_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
-			elseif a_criterion.is_caller_criterion then
-				l_caller_criterion ?= a_criterion
+			elseif a_criterion.is_caller_callee_criterion then
 				create {EB_METRIC_CALLER_CRITERION_MANAGER} property_manager.make (grid)
-				if a_original_criterion /= Void then
-					if a_original_criterion.is_domain_criterion then
-						l_domain_criterion ?= a_original_criterion
-						l_caller_criterion.set_domain (l_domain_criterion.domain)
-					elseif a_original_criterion.is_caller_criterion then
-						l_caller_criterion2 ?= a_original_criterion
-						l_caller_criterion.set_domain (l_caller_criterion2.domain)
-						if l_caller_criterion2.only_current_version then
-							l_caller_criterion.enable_only_current_version
-						else
-							l_caller_criterion.disable_only_current_version
-						end
-					end
-				end
+			elseif a_criterion.is_supplier_client_criterion then
+				create {EB_METRIC_SUPPLIER_CLIENT_CRITERION_MANAGER} property_manager.make (grid)
+			elseif a_criterion.is_value_criterion then
+				create {EB_METRIC_VALUE_CRITERION_MANAGER} property_manager.make (grid)
 			elseif a_criterion.is_domain_criterion then
 				create {EB_METRIC_DOMAIN_PROPERTY_MANAGER} property_manager.make (grid)
-				l_domain_criterion ?= a_criterion
-				if a_original_criterion /= Void and then a_original_criterion.is_domain_criterion then
-					l_domain_criterion2 ?= a_original_criterion
-					l_domain_criterion.set_domain (l_domain_criterion2.domain)
-				end
 			elseif a_criterion.is_path_criterion then
 				create {EB_METRIC_PATH_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
-				l_path_criterion ?= a_criterion
-				if a_original_criterion /= Void and then (a_original_criterion.is_text_criterion or a_original_criterion.is_path_criterion) then
-					l_text_criterion2 ?= a_original_criterion
-					l_path_criterion.set_path (l_text_criterion2.text)
-				end
 			elseif a_criterion.is_text_criterion then
 				create {EB_METRIC_TEXT_CRITERION_PROPERTY_MANAGER} property_manager.make (grid)
-				l_text_criterion ?= a_criterion
-				if a_original_criterion /= Void and then (a_original_criterion.is_text_criterion or a_original_criterion.is_path_criterion) then
-					l_text_criterion2 ?= a_original_criterion
-					l_text_criterion.set_text (l_text_criterion2.text)
-					if l_text_criterion2.is_text_criterion then
-						if l_text_criterion2.is_case_sensitive then
-							l_text_criterion.enable_case_sensitive
-						else
-							l_text_criterion.disable_case_sensitive
-						end
-						if l_text_criterion2.is_identical_comparison_used then
-							l_text_criterion.enable_identical_comparison
-						else
-							l_text_criterion.disable_identical_comparison
-						end
-					else
-						l_text_criterion.disable_case_sensitive
-						l_text_criterion.disable_identical_comparison
-					end
-				end
 			end
 			property_manager.change_actions.extend (agent (grid.change_actions).call ([]))
 			property_manager.load_properties (a_criterion)
@@ -551,12 +515,6 @@ feature{NONE} -- Implementation
 			if a_row.subrow_count_recursive > 0 then
 				grid.remove_rows (a_row.index + 1, a_row.index + a_row.subrow_count_recursive)
 			end
---			from
---			until
---				a_row.subrow_count = 0
---			loop
---				a_row.parent.remove_row (a_row.subrow (a_row.subrow_count).index)
---			end
 		ensure
 			no_subrow_exists: a_row.subrow_count_recursive = 0
 		end

@@ -9,6 +9,15 @@ indexing
 deferred class
 	EB_METRIC_VISITABLE
 
+feature -- Access
+
+	visitable_name: STRING_GENERAL is
+			-- Name of current visitable item
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is

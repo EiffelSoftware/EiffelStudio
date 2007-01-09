@@ -128,7 +128,7 @@ feature -- Setting
 		deferred
 		end
 
-	check_vadility_for_metric is
+	check_validity_for_metric is
 			-- Check vadility for `metric'.
 		local
 			l_vadility: EB_METRIC_ERROR
@@ -145,8 +145,8 @@ feature -- Setting
 				end
 			end
 			if l_vadility = Void then
-				metric_vadility_checker.process_metric (l_metric)
-				l_vadility := metric_vadility_checker.last_error
+				metric_validity_checker.check_metric_validity (l_metric, True)
+				l_vadility := metric_validity_checker.error_table.item (l_metric.name)
 			end
 			if l_vadility = Void then
 				status_area.status_text.set_text (metric_names.t_metric_valid)
@@ -209,21 +209,24 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	expression_generator: EB_METRIC_EXPRESSION_GENERATOR
+	expression_generator: EB_METRIC_EXPRESSION_GENERATOR is
 			-- Expression generator
-
-	red_color: EV_COLOR is
-			-- Red color
-		once
-			Result := (create {EV_STOCK_COLORS}).red
+		do
+			if expression_generator_internal = Void then
+				create expression_generator_internal.make (rich_text_output)
+			end
+			Result := expression_generator_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	black_color: EV_COLOR is
-			-- Black color
-		once
-			Result := (create {EV_STOCK_COLORS}).black
+	rich_text_output: EB_METRIC_EXPRESSION_RICH_TEXT_OUTPUT is
+			-- Output from `expression_generator' in rich text format
+		do
+			if rich_text_output_internal = Void then
+				create rich_text_output_internal.make
+			end
+			Result := rich_text_output_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -264,7 +267,7 @@ feature -- Actions
 			-- Action to be performed when definition of metric changes
 		do
 			if not is_loading_metric then
-				check_vadility_for_metric
+				check_validity_for_metric
 				on_metric_change
 				is_definition_changed := True
 			end
@@ -369,6 +372,12 @@ feature{NONE} -- Implementation
 				name_area.set_description ("")
 			end
 		end
+
+	expression_generator_internal: like expression_generator
+			-- Implementation of `expression_generator'
+
+	rich_text_output_internal: like rich_text_output
+			-- Implementation of `rich_text_output'
 
 invariant
 	mode_valid: is_mode_valid (mode)

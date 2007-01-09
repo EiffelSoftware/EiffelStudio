@@ -62,6 +62,7 @@ feature {NONE} -- Initialization
 			file_name_area.key_press_actions.extend (agent on_key_pressed_in_file_name_area)
 			show_actions.extend (agent file_name_area.set_focus)
 			set_default_cancel_button (close_btn)
+			set_icon_pixmap (pixmaps.icon_pixmaps.tool_metric_icon)
 		end
 
 feature{NONE} -- Actions

@@ -79,6 +79,18 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	sorting_order_index: INTEGER is
+			-- Sorting order index
+		do
+			Result := folder_index
+		end
+
+	item_type_name: STRING_GENERAL is
+			-- Name of type of current item
+		do
+			Result := interface_names.l_folder_domain_item
+		end
+
 feature{NONE} -- Implemenation
 
 	update is

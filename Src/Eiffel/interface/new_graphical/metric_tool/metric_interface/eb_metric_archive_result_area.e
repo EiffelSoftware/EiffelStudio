@@ -10,7 +10,11 @@ class
 	EB_METRIC_ARCHIVE_RESULT_AREA
 
 inherit
-	EB_METRIC_ARCHIVE_RESULT_AREA_IMP
+	EV_VERTICAL_BOX
+		redefine
+			initialize,
+			is_in_default_state
+		end
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
 		undefine
@@ -66,20 +70,28 @@ feature {NONE} -- Initialization
 			metric_panel_set: metric_panel = a_panel
 		end
 
-	user_initialization is
-			-- Called by `initialize'.
-			-- Any custom user initialization that
-			-- could not be performed in `initialize',
-			-- (due to regeneration of implementation class)
-			-- can be added here.
+	initialize is
+			-- Initialize Current.
 		local
+			l_title_lbl: EV_LABEL
+
 			l_name_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
 			l_type_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
 			l_reference_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
 			l_current_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
 			l_difference_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
 			l_ratio_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
+
 		do
+			create l_title_lbl.make_with_text (metric_names.t_archive_comparison_result)
+			l_title_lbl.align_text_left
+
+			Precursor {EV_VERTICAL_BOX}
+			set_padding (3)
+			extend (l_title_lbl)
+			disable_item_expand (l_title_lbl)
+
+
 				-- Setup `result_grid'.
 			create result_grid
 			result_grid.set_column_count_to (6)
@@ -109,8 +121,8 @@ feature {NONE} -- Initialization
 			grid_wrapper.enable_auto_sort_order_change
 			grid_wrapper.set_item_text_function (agent text_of_grid_item)
 			grid_wrapper.enable_copy
-			grid_area.extend (grid_wrapper.component_widget)
-			title_lbl.set_text (metric_names.t_archive_comparison_result)
+			extend (grid_wrapper.component_widget)
+--			title_lbl.set_text (metric_names.t_archive_comparison_result)
 
 				-- Delete following in docking EiffelStudio.
 			result_grid.drop_actions.extend (agent metric_panel.drop_cluster)
@@ -119,7 +131,64 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent metric_panel.drop_cluster)
 			drop_actions.extend (agent metric_panel.drop_class)
 			drop_actions.extend (agent metric_panel.drop_feature)
+
+--			extend (grid_area)
 		end
+
+--	user_initialization is
+--			-- Called by `initialize'.
+--			-- Any custom user initialization that
+--			-- could not be performed in `initialize',
+--			-- (due to regeneration of implementation class)
+--			-- can be added here.
+--		local
+--			l_name_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
+--			l_type_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
+--			l_reference_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
+--			l_current_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
+--			l_difference_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
+--			l_ratio_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_RESULT_ROW]
+--		do
+--				-- Setup `result_grid'.
+--			create result_grid
+--			result_grid.set_column_count_to (6)
+--			result_grid.column (1).set_title (displayed_name (metric_names.t_metric))
+--			result_grid.column (2).set_title (displayed_name (metric_names.t_type))
+--			result_grid.column (3).set_title (displayed_name (metric_names.t_value_of_reference))
+--			result_grid.column (4).set_title (displayed_name (metric_names.t_value_of_current))
+--			result_grid.column (5).set_title (displayed_name (metric_names.t_difference))
+--			result_grid.column (6).set_title (displayed_name (metric_names.t_ratio))
+--			result_grid.enable_multiple_row_selection
+
+--				-- Setup sortable wrapper.
+--			create grid_wrapper.make (result_grid)
+--			create l_name_sort_info.make (agent metric_name_tester, ascending_order)
+--			create l_type_sort_info.make (agent metric_type_tester, ascending_order)
+--			create l_reference_sort_info.make (agent reference_value_tester, ascending_order)
+--			create l_current_sort_info.make (agent current_value_tester, ascending_order)
+--			create l_difference_sort_info.make (agent difference_value_tester, ascending_order)
+--			create l_ratio_sort_info.make (agent ratio_value_tester, ascending_order)
+--			grid_wrapper.set_sort_info (1, l_name_sort_info)
+--			grid_wrapper.set_sort_info (2, l_type_sort_info)
+--			grid_wrapper.set_sort_info (3, l_reference_sort_info)
+--			grid_wrapper.set_sort_info (4, l_current_sort_info)
+--			grid_wrapper.set_sort_info (5, l_difference_sort_info)
+--			grid_wrapper.set_sort_info (6, l_ratio_sort_info)
+--			grid_wrapper.set_sort_action (agent sort_agent)
+--			grid_wrapper.enable_auto_sort_order_change
+--			grid_wrapper.set_item_text_function (agent text_of_grid_item)
+--			grid_wrapper.enable_copy
+--			grid_area.extend (grid_wrapper.component_widget)
+--			title_lbl.set_text (metric_names.t_archive_comparison_result)
+
+--				-- Delete following in docking EiffelStudio.
+--			result_grid.drop_actions.extend (agent metric_panel.drop_cluster)
+--			result_grid.drop_actions.extend (agent metric_panel.drop_class)
+--			result_grid.drop_actions.extend (agent metric_panel.drop_feature)
+--			drop_actions.extend (agent metric_panel.drop_cluster)
+--			drop_actions.extend (agent metric_panel.drop_class)
+--			drop_actions.extend (agent metric_panel.drop_feature)
+--		end
 
 feature -- Load archive
 
@@ -489,6 +558,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
+		do
+			Result := True
+		end
+
 invariant
 	result_grid_attached: result_grid /= Void
 	grid_wrapper_attached: grid_wrapper /= Void
@@ -528,4 +603,5 @@ indexing
 
 
 end -- class EB_METRIC_ARCHIVE_RESULT_AREA
+
 

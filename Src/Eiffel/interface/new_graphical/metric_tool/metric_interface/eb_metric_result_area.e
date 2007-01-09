@@ -10,7 +10,11 @@ class
 	EB_METRIC_RESULT_AREA
 
 inherit
-	EB_METRIC_RESULT_AREA_IMP
+	EV_VERTICAL_BOX
+		redefine
+			initialize,
+			is_in_default_state
+		end
 
 	EB_CONSTANTS
 		undefine
@@ -89,16 +93,25 @@ feature {NONE} -- Initialization
 			metric_tool_attached: metric_tool = a_tool
 		end
 
-	user_initialization is
-			-- Called by `initialize'.
-			-- Any custom user initialization that
-			-- could not be performed in `initialize',
-			-- (due to regeneration of implementation class)
-			-- can be added here.
+	initialize is
+			-- Initialize `Current'.
 		local
 			l_text: EV_TEXT
 		do
+			Precursor {EV_VERTICAL_BOX}
+				-- Create all widgets.
+			create metric_result_area
+			create archive_result_area
+			create dummy_area
+			create dummy_text
+
+				-- Build widget structure.
+			extend (metric_result_area)
+			extend (archive_result_area)
+			extend (dummy_area)
+			dummy_text.disable_edit
 			dummy_text.set_text (metric_names.l_no_result_available)
+			dummy_area.extend (dummy_text)
 			create metric_result.make (metric_tool, Current)
 			create archive_result.make (metric_tool, Current)
 			metric_result_area.extend (metric_result)
@@ -382,6 +395,17 @@ feature{NONE} -- UI Update
 			end
 		end
 
+feature{NONE} -- Implementation
+
+	dummy_text: EV_TEXT
+	metric_result_area, archive_result_area, dummy_area: EV_VERTICAL_BOX
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state.
+		do
+			Result := True
+		end
+
 invariant
 	metric_result_attached: metric_result /= Void
 	archive_result_attached: archive_result /= Void
@@ -420,4 +444,5 @@ indexing
 
 
 end -- class EB_METRIC_RESULT_AREA
+
 

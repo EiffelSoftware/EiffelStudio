@@ -161,15 +161,11 @@ feature {NONE} -- Initialization
 			toolbar_area.drop_actions.extend (agent drop_cluster)
 			toolbar_area.drop_actions.extend (agent drop_class)
 			toolbar_area.drop_actions.extend (agent drop_feature)
-			empty_lbl.drop_actions.extend (agent drop_cluster)
-			empty_lbl.drop_actions.extend (agent drop_class)
-			empty_lbl.drop_actions.extend (agent drop_feature)
 			metric_definition_area.drop_actions.extend (agent drop_cluster)
 			metric_definition_area.drop_actions.extend (agent drop_class)
 			metric_definition_area.drop_actions.extend (agent drop_feature)
 
 			select_metric_lbl.set_text (metric_names.t_select_metric)
-			empty_lbl.set_text ("   ")
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
 		end
 

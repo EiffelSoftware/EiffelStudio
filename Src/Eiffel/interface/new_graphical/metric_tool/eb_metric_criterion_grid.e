@@ -54,6 +54,8 @@ feature{NONE} -- Initialization
 
 	make is
 			-- Initialize `scope' with `a_scope'
+		local
+			l_grid_supprot: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
 			create change_actions
 			default_create
@@ -72,6 +74,10 @@ feature{NONE} -- Initialization
 			set_selected_rows_function (agent selected_rows_internal)
 			enable_default_tree_navigation_behavior (True, True, True, True)
 			key_press_string_actions.extend (agent on_key_string_pressed)
+			set_focused_selection_color (preferences.editor_data.selection_background_color)
+			enable_selection_on_single_button_click
+			create l_grid_supprot.make_with_grid (Current)
+			l_grid_supprot.enable_grid_item_pnd_support
 		ensure then
 			tree_enabled: is_tree_enabled
 		end
@@ -363,20 +369,25 @@ feature -- Actions
 			l_last_row: EB_METRIC_CRITERION_ROW
 			l_insert_index: INTEGER
 			l_stone: STONE
-			l_domain_grid_item: EB_METRIC_DOMAIN_GRID_ITEM
-			l_domain: EB_METRIC_DOMAIN
+			l_domain_grid_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
+			l_value_criterion_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM
+			l_metric: EB_METRIC
 		do
 			if a_item /= Void then
 				change_actions.block
 				l_stone ?= a_pebble
+				l_metric ?= a_pebble
 				if l_stone /= Void then
 						-- Pebble is a stone.
 					l_domain_grid_item ?= a_item
 					if l_domain_grid_item /= Void then
-						check l_domain_grid_item.is_pebble_droppable (a_pebble) end
-						l_domain := l_domain_grid_item.domain.twin
-						l_domain.extend (metric_domain_item_from_stone (l_stone))
-						l_domain_grid_item.set_domain (l_domain)
+						l_domain_grid_item.drop_pebble (l_stone)
+						resize_column (2, 0)
+					end
+				elseif l_metric /= Void then
+					l_value_criterion_item ?= a_item
+					if l_value_criterion_item /= Void then
+						l_value_criterion_item.drop_pebble (l_metric)
 						resize_column (2, 0)
 					end
 				else
@@ -465,7 +476,7 @@ feature{NONE} -- Implementation/Actions
 			-- Action to be performed when `a_key' is pressed on Current
 		local
 			l_selected_items: LIST [EV_GRID_ITEM]
-			l_domain_criterion_item: EB_METRIC_DOMAIN_GRID_ITEM
+			l_domain_criterion_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
 			l_grid_item: EV_GRID_ITEM
 			l_key_code: INTEGER
 		do
@@ -565,7 +576,7 @@ feature{NONE} -- Implementation
 			l_source_data: EB_METRIC_CRITERION_ROW
 			l_dest_row: EV_GRID_ROW
 			l_dest_data: EB_METRIC_CRITERION_ROW
-			l_domain_item: EB_METRIC_DOMAIN_GRID_ITEM
+			l_domain_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
 		do
 			if a_item /= Void then
 				if a_item.column.index = 1 then

@@ -25,13 +25,19 @@ feature{NONE} -- Element constants
 	t_text_criterion,
 	t_path_criterion,
 	t_caller_criterion,
+	t_client_criterion,
 	t_and_criterion,
 	t_or_criterion,
+	t_value_criterion,
 	t_text,
 	t_path,
 	t_domain,
 	t_domain_item,
-	t_metric_archive: INTEGER is unique
+	t_metric_archive,
+	t_tester,
+	t_tester_item,
+	t_constant_value,
+	t_metric_value: INTEGER is unique
 
 feature{NONE} -- Attribute constants
 
@@ -56,7 +62,12 @@ feature{NONE} -- Attribute constants
 	at_library_target_uuid,
 	at_filter,
 	at_numerator_coefficient,
-	at_denominator_coefficient: INTEGER is unique
+	at_denominator_coefficient,
+	at_normal,
+	at_only_syntactical,
+	at_indirect,
+	at_metric_name,
+	at_relation: INTEGER is unique
 
 feature{NONE} -- Text
 
@@ -73,11 +84,12 @@ feature{NONE} -- Text
 	n_text_criterion: STRING is "text_criterion"
 	n_path_criterion: STRING is "path_criterion"
 	n_caller_criterion: STRING is "caller_criterion"
+	n_client_criterion: STRING is "client_criterion"
 	n_text: STRING is "text"
 	n_path: STRING is "path"
 	n_domain: STRING is "domain"
 	n_domain_item: STRING is "domain_item"
-
+	n_metric_value: STRING is "metric_value"
 	n_name: STRING is "name"
 	n_unit: STRING is "unit"
 	n_numerator: STRING is "numerator"
@@ -111,7 +123,17 @@ feature{NONE} -- Text
 	n_library_target_uuid: STRING is "library_target_uuid"
 	n_filter: STRING is "filter"
 	n_numerator_coefficient: STRING is "numerator_coefficient"
-	n_denominator_coefficient: STRING is "denominator_coefficient";
+	n_denominator_coefficient: STRING is "denominator_coefficient"
+	n_normal: STRING is "normal"
+	n_only_syntactical: STRING is "only_syntactical"
+	n_indirect: STRING is "indirect"
+	n_delayed_domain_id: STRING is "delayed"
+	n_value_criterion: STRING is "value_criterion"
+	n_tester: STRING is "tester";
+	n_tester_item: STRING is "tester_item"
+	n_constant_value: STRING is "constant_value"
+	n_relation: STRING is "relation"
+	n_metric_name: STRING is "metric_name";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

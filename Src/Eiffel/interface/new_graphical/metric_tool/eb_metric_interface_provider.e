@@ -281,7 +281,7 @@ feature -- Names
 			l_vadility: EB_METRIC_ERROR
 		do
 			create Result.make (128)
-			l_vadility := metric_manager.metric_vadility (a_metric.name)
+			l_vadility := metric_manager.metric_validity (a_metric.name)
 			if l_vadility = Void then
 				if a_metric.is_predefined or else a_metric.description /= Void then
 					if a_metric.description /= Void then
@@ -429,12 +429,74 @@ feature -- Layout
 			a_layout.set_pixmap_y ((a_item.height - l_pixmap.height) // 2)
 		end
 
-feature -- Domain item dialog
+feature -- Domain dialog
 
-	domain_selector_dialog: EB_METRIC_DOMAIN_PROPERTY_DIALOG is
-			-- Domain selector dialog
+	plain_domain_setup_dialog: EB_METRIC_GRID_PLAIN_DOMAIN_DIALOG is
+			-- Dialog to setup a metric domain
 		once
 			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+	client_domain_setup_dialog: EB_METRIC_GRID_SUPPLIER_CLIENT_CLASS_DIALOG is
+			-- Dialog to setup a client domain
+		once
+			create Result
+			Result.enable_for_client_class
+		ensure
+			result_attached: Result /= Void
+		end
+
+	supplier_domain_setup_dialog: EB_METRIC_GRID_SUPPLIER_CLIENT_CLASS_DIALOG is
+			-- Dialog to setup a supplier domain
+		once
+			create Result
+			Result.enable_for_supplier_class
+		ensure
+			result_attached: Result /= Void
+		end
+
+	caller_callee_domain_setup_dialog: EB_METRIC_GRID_CALLER_CALLEE_DIALOG is
+			-- Dialog to setup caller/callee domain
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
+	value_criterion_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
+			-- Dialog to setup value criterion
+		once
+			create Result.make (True)
+			Result.set_width (600)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	metric_value_retriever_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
+			-- Dialog to setup metric value retriever
+		once
+			create Result.make (False)
+			Result.set_title (metric_names.l_setup_metric_value_retriever)
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Color
+
+	red_color: EV_COLOR is
+			-- Red color
+		once
+			Result := (create {EV_STOCK_COLORS}).red
+		ensure
+			result_attached: Result /= Void
+		end
+
+	black_color: EV_COLOR is
+			-- Black color
+		once
+			Result := (create {EV_STOCK_COLORS}).black
 		ensure
 			result_attached: Result /= Void
 		end
@@ -484,6 +546,16 @@ feature{NONE} -- Implementation
 		do
 			a_agent.call (Void)
 			a_dialog.hide
+		end
+
+	activate_grid_item (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_grid_item: EV_GRID_ITEM) is
+			-- Action to be performed to activate `a_grid_item'
+		require
+			a_grid_item_attached: a_grid_item /= Void
+		do
+			if a_grid_item.is_parented and then button = {EV_POINTER_CONSTANTS}.left then
+				a_grid_item.activate
+			end
 		end
 
 indexing

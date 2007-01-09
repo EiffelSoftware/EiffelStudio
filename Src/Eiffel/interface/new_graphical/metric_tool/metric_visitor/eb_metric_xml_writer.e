@@ -16,6 +16,8 @@ inherit
 
 	EB_METRIC_SHARED
 
+	QL_SHARED_NAMES
+
 create
 	make
 
@@ -169,14 +171,14 @@ feature{NONE} -- Process
 			append_start_tag (n_domain_criterion, criterion_identifier_table (a_criterion))
 			append_new_line
 			indent
-			append_domain (a_criterion.domain)
+			a_criterion.domain.process (Current)
 			exdent
 			append_indent
 			append_end_tag (n_domain_criterion)
 			append_new_line
 		end
 
-	process_caller_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
 			-- Process `a_criterion'.
 		local
 			l_attr_tbl: like criterion_identifier_table
@@ -187,10 +189,30 @@ feature{NONE} -- Process
 			append_start_tag (n_caller_criterion, l_attr_tbl)
 			append_new_line
 			indent
-			append_domain (a_criterion.domain)
+			a_criterion.domain.process (Current)
 			exdent
 			append_indent
 			append_end_tag (n_caller_criterion)
+			append_new_line
+		end
+
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_attr_tbl: like criterion_identifier_table
+		do
+			l_attr_tbl := criterion_identifier_table (a_criterion)
+			l_attr_tbl.put (a_criterion.indirect_referenced_class_retrieved.out, n_indirect)
+			l_attr_tbl.put (a_criterion.normal_referenced_class_retrieved.out, n_normal)
+			l_attr_tbl.put (a_criterion.only_syntactically_referencedd_class_retrieved.out, n_only_syntactical)
+			append_indent
+			append_start_tag (n_client_criterion, l_attr_tbl)
+			append_new_line
+			indent
+			a_criterion.domain.process (Current)
+			exdent
+			append_indent
+			append_end_tag (n_client_criterion)
 			append_new_line
 		end
 
@@ -244,6 +266,26 @@ feature{NONE} -- Process
 			append_new_line
 		end
 
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Process `a_criterion'.
+		local
+			l_attr_tbl: like criterion_identifier_table
+		do
+			l_attr_tbl := criterion_identifier_table (a_criterion)
+			l_attr_tbl.put (a_criterion.metric_name, n_metric_name)
+
+			append_indent
+			append_start_tag (n_value_criterion, l_attr_tbl)
+			append_new_line
+			indent
+			a_criterion.domain.process (Current)
+			a_criterion.value_tester.process (Current)
+			exdent
+			append_indent
+			append_end_tag (n_value_criterion)
+			append_new_line
+		end
+
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
 			-- Process `a_criterion'.
 		do
@@ -281,6 +323,20 @@ feature{NONE} -- Process
 			exdent
 			append_indent
 			append_end_tag (n_or_criterion)
+			append_new_line
+		end
+
+	process_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Process `a_domain'.
+		do
+			append_indent
+			append_start_tag (n_domain, Void)
+			append_new_line
+			indent
+			a_domain.do_all (agent safe_process_item ({EB_METRIC_DOMAIN_ITEM}?))
+			exdent
+			append_indent
+			append_end_tag (n_domain)
 			append_new_line
 		end
 
@@ -354,10 +410,86 @@ feature{NONE} -- Process
 			append_start_tag (n_metric, l_attr)
 			append_new_line
 			indent
-			append_domain (a_item.input_domain)
+			a_item.input_domain.process (Current)
 			exdent
 			append_indent
 			append_end_tag (n_metric)
+			append_new_line
+		end
+
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+			-- Process `a_item'.
+		local
+			l_attr: HASH_TABLE [STRING, STRING]
+			l_item_attr: HASH_TABLE [STRING, STRING]
+			l_testers: LIST [TUPLE [EB_METRIC_VALUE_RETRIEVER, INTEGER]]
+			l_tester: TUPLE [l_retriever: EB_METRIC_VALUE_RETRIEVER; l_operator: INTEGER]
+		do
+			create l_attr.make (1)
+			create l_item_attr.make (2)
+			if a_item.is_anded then
+				l_attr.put (query_language_names.ql_cri_and, n_relation)
+			else
+				l_attr.put (query_language_names.ql_cri_or, n_relation)
+			end
+			append_indent
+			append_start_tag (n_tester, l_attr)
+			append_new_line
+			indent
+			from
+				l_testers := a_item.criteria
+				l_testers.start
+			until
+				l_testers.after
+			loop
+				l_item_attr.wipe_out
+				append_indent
+				l_tester := l_testers.item
+				l_item_attr.put (operator_table.item (l_tester.l_operator), n_name)
+				append_start_tag (n_tester_item, l_item_attr)
+				append_new_line
+				indent
+				l_tester.l_retriever.process (Current)
+				exdent
+				append_indent
+				append_end_tag (n_tester_item)
+				append_new_line
+				l_testers.forth
+			end
+			exdent
+			append_indent
+			append_end_tag (n_tester)
+			append_new_line
+		end
+
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		local
+			l_attr: HASH_TABLE [STRING, STRING]
+		do
+			create l_attr.make (1)
+			l_attr.put (a_item.value.out, n_value)
+			append_indent
+			append_start_tag (n_constant_value, l_attr)
+			append_end_tag (n_constant_value)
+			append_new_line
+		end
+
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		local
+			l_attr: HASH_TABLE [STRING, STRING]
+		do
+			create l_attr.make (1)
+			l_attr.put (a_item.metric_name, n_metric_name)
+			append_indent
+			append_start_tag (n_metric_value, l_attr)
+			append_new_line
+			indent
+			a_item.input_domain.process (Current)
+			exdent
+			append_indent
+			append_end_tag (n_metric_value)
 			append_new_line
 		end
 
@@ -504,7 +636,6 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-
 	indent is
 			-- Increase `indent_level' by 1.
 		do
@@ -550,29 +681,6 @@ feature{NONE} -- Implementation
 			append_indent
 			append_start_tag (n_variable_metric, l_attr_table)
 			append_end_tag (n_variable_metric)
-			append_new_line
-		end
-
-	append_domain (a_domain: EB_METRIC_DOMAIN) is
-			-- Append `a_domain' into `text'.
-		require
-			a_domain_attached: a_domain /= Void
-		do
-			append_indent
-			append_start_tag (n_domain, Void)
-			append_new_line
-			indent
-			from
-				a_domain.start
-			until
-				a_domain.after
-			loop
-				a_domain.item.process (Current)
-				a_domain.forth
-			end
-			exdent
-			append_indent
-			append_end_tag (n_domain)
 			append_new_line
 		end
 

@@ -18,6 +18,8 @@ inherit
 
 	EB_METRIC_VISITABLE
 
+	EB_METRIC_SHARED
+
 feature{NONE} -- Initialization
 
 	make (a_scope: like scope; a_name: STRING) is
@@ -28,17 +30,6 @@ feature{NONE} -- Initialization
 		do
 			set_name (a_name)
 			set_scope (a_scope)
-		end
-
-	make_with_setting (a_scope: like scope; a_name: STRING; a_negation: BOOLEAN) is
-			-- Initialize `scope' with `a_scope', `name' with `a_name',
-			-- `is_negation_used' with `a_negation'.
-		require
-			a_scope_attached: a_scope /= Void
-			a_name_attached: a_name /= Void
-		do
-			make (a_scope, a_name)
-			set_is_negation_used (a_negation)
 		end
 
 feature -- Access
@@ -58,6 +49,12 @@ feature -- Access
 		deferred
 		ensure
 			result_attached: Result /= Void
+		end
+
+	visitable_name: STRING_GENERAL is
+			-- Name of current visitable item
+		do
+			Result := metric_names.visitable_name (metric_names.string_general_to_lower (metric_names.t_criterion), name)
 		end
 
 feature -- Status report
@@ -80,8 +77,18 @@ feature -- Status report
 		do
 		end
 
-	is_caller_criterion: BOOLEAN is
-			-- Is current a caller criterion?
+	is_caller_callee_criterion: BOOLEAN is
+			-- Is current criterion for caller/callee features?
+		do
+		end
+
+	is_supplier_client_criterion: BOOLEAN is
+			-- Is current a criterion for supplier/client classe?
+		do
+		end
+
+	is_value_criterion: BOOLEAN is
+			-- Is crrent a value criterion?
 		do
 		end
 
@@ -100,6 +107,11 @@ feature -- Status report
 		do
 		end
 
+	is_nary_criterion: BOOLEAN is
+			-- Is current a nary criterion?
+		do
+		end
+
 	is_name_valid: BOOLEAN is
 			-- Is `name' with `scope' valid?
 		do
@@ -115,6 +127,12 @@ feature -- Status report
 			-- Is current valid?
 		do
 			Result := is_name_valid and then is_parameter_valid
+		end
+
+	has_delayed_input_domain: BOOLEAN is
+			-- Does current domain contain reference to a delayed domain which represents an delayed input domain?
+			-- An delayed input domain should be replaced by actual input domain before metric calculation.
+		do
 		end
 
 feature -- Setting
@@ -147,22 +165,20 @@ feature -- Setting
 			is_negation_used_set: is_negation_used = b
 		end
 
+	replace_delayed_input_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Replace delayed input domain contained in Current by `a_domain'.
+		require
+			a_domain_attached: a_domain /= Void
+			a_domain_not_contain_delayed_input_domain: not a_domain.has_delayed_input_domain_item
+		do
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is
 			-- Process current using `a_visitor'.
 		do
 			a_visitor.process_criterion (Current)
-		end
-
-feature{NONE} -- Implementation
-
-	criterion_factory: EB_METRIC_CRITERION_FACTORY is
-			-- Criterion factory
-		once
-			create Result.make
-		ensure
-			result_attached: Result /= Void
 		end
 
 invariant

@@ -665,10 +665,9 @@ feature -- Measure
 	pebble (a_index: INTEGER): ANY is
 			-- Pebble of item at position `a_index'.
 		do
-			check
-				a_index_valid: a_index >= 1 and a_index <= adapted_tokens.count
+			if a_index >= 1 and a_index <= adapted_tokens.count then
+				Result := adapted_tokens.i_th (a_index).pebble
 			end
-			Result := adapted_tokens.i_th (a_index).pebble
 		end
 
 feature{NONE} -- Display

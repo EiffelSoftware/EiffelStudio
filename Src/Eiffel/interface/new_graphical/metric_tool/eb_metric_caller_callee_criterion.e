@@ -12,14 +12,23 @@ class
 inherit
 	EB_METRIC_DOMAIN_CRITERION
 		redefine
+			make,
 			new_criterion,
 			process,
-			is_caller_criterion
+			is_caller_callee_criterion
 		end
 
 create
-	make,
-	make_with_setting
+	make
+
+feature{NONE}	-- Initialization
+
+	make (a_scope: like scope; a_name: STRING) is
+			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
+		do
+			Precursor (a_scope, a_name)
+			enable_only_current_version
+		end
 
 feature -- Access
 
@@ -49,7 +58,7 @@ feature -- Status report
 	only_current_version: BOOLEAN
 			-- Only current version?
 
-	is_caller_criterion: BOOLEAN is True
+	is_caller_callee_criterion: BOOLEAN is True
 			-- Is current a caller criterion?
 
 feature -- Setting
@@ -75,7 +84,7 @@ feature -- Process
 	process (a_visitor: EB_METRIC_VISITOR) is
 			-- Process current using `a_visitor'.
 		do
-			a_visitor.process_caller_criterion (Current)
+			a_visitor.process_caller_callee_criterion (Current)
 		end
 
 indexing

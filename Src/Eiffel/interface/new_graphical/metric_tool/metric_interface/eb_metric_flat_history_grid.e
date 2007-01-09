@@ -11,50 +11,12 @@ class
 
 inherit
 	EB_METRIC_HISTORY_GRID
-		rename
-			make as old_make
+		redefine
+			initialize_grid
 		end
 
 create
 	make
-
-feature{NONE} -- Initialization
-
-	make (a_panel: like metric_history_panel) is
-			-- Initialize Current.
-		require
-			a_panel_attached: a_panel /= Void
-		do
-			metric_history_panel := a_panel
-			create row_archive_table.make (20)
-			old_make (create {ES_GRID})
-			grid.set_column_count_to (9)
-			grid.column (1).header_item.set_text (metric_names.t_metric_name)
-			grid.column (3).header_item.set_text (metric_names.t_value_of_current)
-			grid.column (4).header_item.set_text (metric_names.t_previous_value)
-			grid.column (5).header_item.set_text (metric_names.t_difference)
-			grid.column (6).header_item.set_text (metric_names.t_filter)
-			grid.column (7).header_item.set_text (metric_names.t_detailed_result)
-			grid.column (8).header_item.set_text (metric_names.t_calculated_time)
-			grid.column (9).header_item.set_text (metric_names.t_input_domain)
-			set_sort_info (1, create {EVS_GRID_THREE_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent metric_name_tester, ascending_order))
-			set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_status_tester, ascending_order))
-			set_sort_info (3, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_value_tester, ascending_order))
-			set_sort_info (4, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_previous_value_tester, ascending_order))
-			set_sort_info (5, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_difference_tester, ascending_order))
-			set_sort_info (8, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_time_tester, ascending_order))
-			grid.enable_single_row_selection
-			grid.enable_row_separators
-			grid.enable_column_separators
-			grid.set_separator_color ((create {EV_STOCK_COLORS}).grey)
-			enable_auto_sort_order_change
-			set_sort_action (agent sort_agent (?, ?))
-			post_sort_actions.extend (agent on_post_sort)
-			set_sorting_status (sorted_columns_from_string (sorting_order_preference.value))
-			grid.item_drop_actions.extend (agent on_drop_on_item)
-			grid.set_item_veto_pebble_function (agent is_item_droppable)
-			grid.key_press_actions.extend (agent on_key_pressed)
-		end
 
 feature -- Access
 
@@ -103,9 +65,7 @@ feature{NONE} -- Implementation
 			l_grid_row: EV_GRID_ROW
 			l_grid: like grid
 			l_row_count: INTEGER
---			l_profiler: PROFILING_SETTING
 		do
---			create l_profiler.make
 			if a_selected_nodes = Void then
 				l_selected_archives := selected_archives
 			else
@@ -120,7 +80,6 @@ feature{NONE} -- Implementation
 			l_cursor := l_archive.new_cursor
 			row_archive_table.wipe_out
 			selection_change_actions.block
---			l_profiler.start_profiling
 			from
 				l_cursor.start
 				l_row_count := 1
@@ -140,7 +99,6 @@ feature{NONE} -- Implementation
 				l_row_count := l_row_count + 1
 				l_cursor.forth
 			end
---			l_profiler.stop_profiling
 			if not has_grid_been_binded then
 				set_has_grid_been_binded (True)
 				auto_resize
@@ -217,6 +175,27 @@ feature{NONE} -- Implementation
 				l_input_domain_item ?= l_grid_row.item (9)
 				update_input_domain_item (l_input_domain_item, a_archive_node)
 			end
+		end
+
+	initialize_grid is
+			-- Initialize `grid'.
+		do
+			grid.set_column_count_to (9)
+			grid.column (1).header_item.set_text (metric_names.t_metric_name)
+			grid.column (3).header_item.set_text (metric_names.t_value_of_current)
+			grid.column (4).header_item.set_text (metric_names.t_previous_value)
+			grid.column (5).header_item.set_text (metric_names.t_difference)
+			grid.column (6).header_item.set_text (metric_names.t_filter)
+			grid.column (7).header_item.set_text (metric_names.t_detailed_result)
+			grid.column (8).header_item.set_text (metric_names.t_calculated_time)
+			grid.column (9).header_item.set_text (metric_names.t_input_domain)
+			set_sort_info (1, create {EVS_GRID_THREE_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent metric_name_tester, ascending_order))
+			set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_status_tester, ascending_order))
+			set_sort_info (3, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_value_tester, ascending_order))
+			set_sort_info (4, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_previous_value_tester, ascending_order))
+			set_sort_info (5, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_difference_tester, ascending_order))
+			set_sort_info (8, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_ARCHIVE_NODE]}.make (agent archive_time_tester, ascending_order))
+			Precursor
 		end
 
 indexing

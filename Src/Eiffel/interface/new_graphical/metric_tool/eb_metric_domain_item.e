@@ -17,6 +17,20 @@ inherit
 			is_equal
 		end
 
+	EB_METRIC_SHARED
+		undefine
+			is_equal
+		end
+
+feature -- Access
+
+	visitable_name: STRING_GENERAL is
+			-- Name of current visitable item
+		do
+			update
+			Result := metric_names.visitable_name (item_type_name, string_representation)
+		end
+
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -72,7 +72,11 @@ feature {NONE} -- Initialization
 			hbox: like widget
 			vb: EV_VERTICAL_BOX
 			label: EV_LABEL
+			l_item: SD_TOOL_BAR_ITEM
+			l_hbox: EV_HORIZONTAL_BOX
 		do
+			create tool_bar_items.make (10)
+
 			create hbox
 			hbox.set_padding (Layout_constants.Small_border_size)
 
@@ -84,35 +88,92 @@ feature {NONE} -- Initialization
 
 					-- Cluster selector.
 				create cluster_address
-				cluster_address.set_minimum_width (130)
+				cluster_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(130))
 				hbox.extend (cluster_address)
 			end
 
 				-- Class label.
 			create label.make_with_text (interface_names.l_class)
-			hbox.extend (label)
-			hbox.disable_item_expand (label)
+
+
+			if mode then
+				hbox.extend (label)
+				hbox.disable_item_expand (label)
+			else
+				create l_hbox
+				l_hbox.set_border_width (Layout_constants.Small_border_size)
+				l_hbox.extend (label)
+
+				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (l_hbox)
+				l_item.set_description ("Class label")
+
+				l_item.set_name (l_item.description)
+
+				tool_bar_items.extend (l_item)
+			end
 
 				-- Class selector.
 			create class_address
-			class_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(130))
-			hbox.extend (class_address)
+			class_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(200))
 
+			if mode then
+				hbox.extend (class_address)
+			else
+				-- Then we build a `class_addre
+				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (class_address)
+				l_item.set_description ("Class address")
+				l_item.set_name (l_item.description)
+
+				tool_bar_items.extend (l_item)
+			end
 				-- Feature label.
 			create label.make_with_text (interface_names.l_feature)
-			hbox.extend (label)
-			hbox.disable_item_expand (label)
 
+			if mode then
+				hbox.extend (label)
+				hbox.disable_item_expand (label)
+			else
+				create l_hbox
+				l_hbox.set_border_width (Layout_constants.Small_border_size)
+				l_hbox.extend (label)
+
+				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (l_hbox)
+				l_item.set_description ("Feature label")
+
+				l_item.set_name (l_item.description)
+
+				tool_bar_items.extend (l_item)
+			end
 				-- Feature selector
 			create feature_address
-			feature_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(90))
-			hbox.extend (feature_address)
+			feature_address.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(200))
 
+			if mode then
+				hbox.extend (feature_address)
+			else
+				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (feature_address)
+				l_item.set_description ("Feature address")
+				l_item.set_name (l_item.description)
+				tool_bar_items.extend (l_item)
+			end
 			if not mode then
 					-- View label
 				create label.make_with_text (interface_names.l_view)
-				hbox.extend (label)
-				hbox.disable_item_expand (label)
+
+				create l_hbox
+				l_hbox.set_border_width (Layout_constants.Small_border_size)
+				l_hbox.extend (label)
+
+				create {SD_TOOL_BAR_WIDGET_ITEM} l_item.make (l_hbox)
+
+				l_item.set_description ("View label")
+				l_item.set_name (l_item.description)
+
+				tool_bar_items.extend (l_item)
+			end
+			if not mode then
+				build_viewpoints
+				parent_widget.set_view_points (view_points_combo)
 			end
 
 				-- Setup the widget.
@@ -155,6 +216,30 @@ feature {NONE} -- Initialization
 			lost_focus_action_enabled := True
 		end
 
+	build_viewpoints is
+			-- Build viewpoint selection list
+		local
+			l_label: EV_LABEL
+			l_view_points_widget: EV_HORIZONTAL_BOX
+			l_view_points_combo: EB_VIEWPOINT_COMBO_BOX
+		do
+			create l_view_points_widget
+			view_points_widget := l_view_points_widget
+			create l_label.make_with_text (parent_widget.interface_names.l_viewpoints)
+			l_view_points_widget.extend (l_label)
+			l_view_points_widget.disable_item_expand (l_label)
+
+			create l_view_points_combo
+			view_points_combo := l_view_points_combo
+			l_view_points_combo.disable_sensitive
+			l_view_points_combo.select_actions.extend (agent parent_widget.on_viewpoint_changed)
+			l_view_points_combo.disable_edit
+			l_view_points_combo.set_minimum_width (120)
+
+			l_view_points_widget.extend (l_view_points_combo)
+			l_view_points_widget.disable_item_expand (l_view_points_combo)
+		end
+
 feature -- Access
 
 	parent: EB_HISTORY_OWNER
@@ -163,8 +248,21 @@ feature -- Access
 	widget: EV_HORIZONTAL_BOX
 			-- Vision2 widget representing the control.
 
-	header_info: EV_VIEWPORT
-			-- Box containing labels representing the history status.
+	tool_bar_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			-- Tool bar items representing Current.
+
+	new_view_points_tool_bar_item: SD_TOOL_BAR_ITEM is
+			-- New view points docking widget
+		do
+			create {SD_TOOL_BAR_WIDGET_ITEM} Result.make (view_points_widget)
+			Result.set_name ("Viewpoints")
+			Result.set_description (Result.name)
+		ensure
+			not_void: Result /= Void
+		end
+
+	header_info: EV_HORIZONTAL_BOX
+			-- Container for Cluser, Class and Feature selector.
 
 	cluster_label_text: STRING is
 			-- Name of the class as it appears in the cluster label.
@@ -199,7 +297,7 @@ feature -- Access
 			-- Void if none.
 
 	parent_widget: EB_DEVELOPMENT_WINDOW is
-			--
+			-- Development window.
 		require
 			not_context_mode: not mode
 		do
@@ -255,7 +353,7 @@ feature -- Element change
 			new_formatters_non_void: new_formatters /= Void
 			for_development_window: not mode
 		local
-			but: EV_TOOL_BAR_BUTTON
+			l_but: SD_TOOL_BAR_BUTTON
 			l_cnt: INTEGER
 		do
 			create formatters_combo
@@ -265,9 +363,9 @@ feature -- Element change
 			until
 				l_cnt > 5
 			loop
-				but := known_formatters.i_th (l_cnt).new_button
-				but.drop_actions.set_veto_pebble_function (agent is_not_feature_stone (?))
-				formatters_combo.extend (but)
+				l_but := known_formatters.i_th (l_cnt).new_sd_button
+				l_but.drop_actions.set_veto_pebble_function (agent is_not_feature_stone (?))
+				tool_bar_items.extend (l_but)
 				l_cnt := l_cnt + 1
 			end
 			widget.extend (formatters_combo)
@@ -518,7 +616,18 @@ feature -- Observer management
 			on_update
 		end
 
-feature {NONE} -- Memory management
+	on_new_tab_command is
+			-- Handle EB_NEW_TAB_EDITOR_COMMAND.
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			if class_address.is_displayed and class_address.is_sensitive then
+				create l_env
+				l_env.application.do_once_on_idle (agent class_address.set_focus)
+			end
+		end
+
+feature -- Memory management
 
 	internal_recycle is
 			-- Recycle `Current' and leave it in an unstable state,
@@ -531,7 +640,7 @@ feature {NONE} -- Memory management
 			parent := Void
 		end
 
-feature {EB_DEVELOPMENT_WINDOW} -- Vision2 Controls
+feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Vision2 Controls
 
 	cluster_address: EV_COMBO_BOX
 			-- Cluster part of the address.
@@ -541,6 +650,12 @@ feature {EB_DEVELOPMENT_WINDOW} -- Vision2 Controls
 
 	feature_address: EV_COMBO_BOX
 			-- Feature part of the address.
+
+	view_points_combo: EB_VIEWPOINT_COMBO_BOX
+			-- Combo box used to a select viewpoints
+
+	view_points_widget: EV_HORIZONTAL_BOX
+			-- Widget to contain viewpoints box
 
 feature -- Properties
 
@@ -565,7 +680,6 @@ feature -- Updating
 				feature_label.set_foreground_color (preferences.editor_data.feature_text_color)
 			end
 		end
-
 
 	on_project_created is
 			-- A new project has been loaded. Enable all controls.
@@ -635,7 +749,7 @@ feature -- Updating
 			end
 		end
 
-feature {EB_DEVELOPMENT_WINDOW} -- Execution
+feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Execution
 
 	execute_with_cluster is
 			-- The user just entered a new cluster name, process it.
@@ -2162,7 +2276,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		require
 	   		for_context_tool: mode
 		do
-			pop_up_address_bar_at_position (header_info.screen_x, header_info.screen_y, 0)
+			pop_up_address_bar_at_position ((header_info.screen_x + header_info.width // 2) - address_dialog.width // 2, header_info.screen_y, 0)
 		end
 
 	button_action (combo: EV_COMBO_BOX; x, y, b: INTEGER; d1, d2, d3: DOUBLE; ax, ay: INTEGER) is

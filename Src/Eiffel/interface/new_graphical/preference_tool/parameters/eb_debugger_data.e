@@ -122,7 +122,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	max_slice_preference: INTEGER_PREFERENCE
 	max_evaluation_duration_preference: INTEGER_PREFERENCE
 
-
 feature {NONE} -- Preference Strings
 
 	critical_stack_depth_string: STRING is "debugger.critical_stack_depth"

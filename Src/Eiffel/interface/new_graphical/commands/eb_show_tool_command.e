@@ -19,52 +19,47 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
+			new_sd_toolbar_item,
 			new_menu_item,
-			initialize_menu_item,
 			tooltext,
-			is_tooltext_important
+			is_tooltext_important,
+			pixel_buffer,
+			mini_pixmap
 		end
-
-	EB_SELECTABLE
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_target: EB_DEVELOPMENT_WINDOW; an_explorer_bar_item: EB_EXPLORER_BAR_ITEM) is
+	make (a_target: EB_DEVELOPMENT_WINDOW; a_tool: EB_TOOL) is
+			-- Creation method.
 		require
-			valid_item: an_explorer_bar_item /= Void and then an_explorer_bar_item.is_closeable
-			item_has_pixmap: an_explorer_bar_item.pixmap /= Void
+			valid_item: a_tool /= Void
+			item_has_pixmap: a_tool.content.pixmap /= Void
 		do
 			target_make (a_target)
-			explorer_bar_item := an_explorer_bar_item
-			explorer_bar_item.set_associated_command (Current)
-			is_selected := explorer_bar_item.is_visible
+			tool := a_tool
 			is_sensitive := True
-				-- Show tools are always sensitive
 		end
 
 feature -- Access
 
-	explorer_bar_item: EB_EXPLORER_BAR_ITEM
-			-- Tool associated with Current.
-
+	tool: EB_TOOL
+			-- Tool managed.
+			
 	tooltip: STRING_GENERAL is
 			-- Tooltip for Current
 		do
-			if is_selected then
-				Result := interface_names.f_hide.twin
-			else
-				Result := interface_names.f_show.twin
-			end
-			Result.append (explorer_bar_item.title)
+			Result := interface_names.f_hide.twin
+			Result.append (interface_names.f_show.twin)
+			Result.append (tool.content.long_title)
 		end
 
 	tooltext: STRING_GENERAL is
 			-- Text for toolbar button.
 		do
-			Result := explorer_bar_item.title
+			Result := tool.content.short_title
 		end
 
 	is_tooltext_important: BOOLEAN is
@@ -76,72 +71,85 @@ feature -- Access
 	description: STRING_GENERAL is
 			-- Description for current command.
 		do
-			Result := ("Show/hide ").as_string_32 + explorer_bar_item.title
+			Result := ("Show/hide ").as_string_32 + tool.content.short_title
 		end
 
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in menus.
 		do
-			Result := explorer_bar_item.menu_name
+			Result := tool.content.short_title
 		end
 
 	name: STRING is
 			-- Name to be displayed.
 		do
-			Result := explorer_bar_item.title_for_pre
+			Result := tool.title_for_pre
 		end
 
 	pixmap: EV_PIXMAP is
 			-- Pixmap representing the item (for buttons)
 		do
-			Result := explorer_bar_item.pixmap
+			Result := tool.content.pixmap
+		end
+
+	mini_pixmap: EV_PIXMAP
+			-- Mini pixmap		
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := tool.content.pixel_buffer
 		end
 
 feature -- Execution
 
 	execute is
 			-- Execute command (toggle between show and hide).
+		local
+			l_shared: SD_SHARED
+			l_x, l_y: INTEGER
+			l_window: EV_WINDOW
 		do
-			set_selected (not is_selected)
-		end
+			if not tool.content.is_visible then
+				create l_shared
+				l_window := window_manager.last_focused_development_window.window
+				l_x := l_window.screen_x + l_window.width // 2 - l_shared.default_floating_window_width // 2
+				l_y := l_window.screen_y + l_window.height // 2 - l_shared.default_floating_window_height // 2
 
-	enable_selected is
-			-- Set `is_selected' to True.
-		do
-			set_selected (True)
-		end
+				l_shared.set_defualt_screen_x (l_x)
+				l_shared.set_default_screen_y (l_y)
 
-	disable_selected is
-			-- Set `is_selected' to False.
-		do
-			set_selected (False)
+				tool.content.show
+			end
+			tool.content.set_focus
 		end
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
 			create Result.make (Current)
 			initialize_toolbar_item (Result, display_text)
-			if is_selected then
-				Result.enable_select
-			end
 			Result.select_actions.extend (agent execute)
 			Result.select_actions.extend (agent update_tooltip (Result))
 		end
 
-	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is
+	new_sd_toolbar_item (a_display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			create Result.make (Current)
+			initialize_sd_toolbar_item (Result, a_display_text)
+			Result.select_actions.extend (agent execute)
+			Result.select_actions.extend (agent update_sd_tooltip (Result))
+		end
+
+	new_menu_item: EB_COMMAND_MENU_ITEM is
 			-- Create a new menu entry for this command.
 		do
 				-- Create the menu item
 			create Result.make (Current)
 			initialize_menu_item (Result)
-			if is_selected then
-				Result.enable_select
-			else
-				Result.disable_select
-			end
 			Result.select_actions.extend (agent execute)
 		end
 
@@ -157,7 +165,15 @@ feature -- Element change
 			accelerator_not_void: accelerator = a_accel
 		end
 
-feature {NONE} -- Recyclable
+	set_mini_pixmap (a_mini_pixmap: EV_PIXMAP) is
+			-- Set `mini_pixmap' with `a_mini_pixmap'.
+		do
+			mini_pixmap := a_mini_pixmap
+		ensure
+			mini_pixmap_set: mini_pixmap = a_mini_pixmap
+		end
+
+feature -- Recyclable
 
 	internal_recycle is
 			-- Recycle
@@ -168,71 +184,19 @@ feature {NONE} -- Recyclable
 
 feature {NONE} -- Implementation
 
-	set_selected (a_selected: BOOLEAN)is
-			-- Set `is_selected' to `a_selected'.
-		local
-			toolbar_items: like internal_managed_toolbar_items
-			menu_items: like internal_managed_menu_items
-		do
-			if not safety_flag then
-				safety_flag := True
-				is_selected := a_selected
-				toolbar_items := internal_managed_toolbar_items
-				if toolbar_items /= Void then
-					from
-						toolbar_items.start
-					until
-						toolbar_items.after
-					loop
-						if a_selected then
-							toolbar_items.item.enable_select
-						else
-							toolbar_items.item.disable_select
-						end
-						toolbar_items.forth
-					end
-				end
-
-				menu_items := internal_managed_menu_items
-				if menu_items /= Void then
-					from
-						menu_items.start
-					until
-						menu_items.after
-					loop
-						if a_selected then
-							menu_items.item.enable_select
-						else
-							menu_items.item.disable_select
-						end
-						menu_items.forth
-					end
-				end
-
-				if a_selected then
-					explorer_bar_item.show
-				else
-					explorer_bar_item.close
-				end
-				safety_flag := False
-			end
-		end
-
-	update_tooltip (toggle: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON) is
+	update_tooltip (toggle: EB_COMMAND_TOOL_BAR_BUTTON) is
 			-- Update tooltip of `toggle'.
 		do
 			toggle.set_tooltip (tooltip)
 		end
 
-feature {NONE} -- Implementation
-
-	initialize_menu_item (a_menu_item: EB_COMMAND_MENU_ITEM) is
-			-- Create a new menu entry for this command.
+	update_sd_tooltip (a_toogle: EB_SD_COMMAND_TOOL_BAR_BUTTON) is
+			-- Update tooltip of `a_toggle'.
 		do
-			Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (a_menu_item)
-				-- We do not want pixmaps for check items.
-			a_menu_item.remove_pixmap
+			a_toogle.set_tooltip (tooltip)
 		end
+
+feature {NONE} -- Implementation
 
 	safety_flag: BOOLEAN;
 			-- Are we changing the `is_selected' attribute? (To prevent stack overflows)

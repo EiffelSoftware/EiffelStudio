@@ -160,6 +160,16 @@ feature {NONE} -- Attributes
 			end
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			if assertion_checking_changed then
+				Result := pixmaps.icon_pixmaps.debug_resume_assertions_icon_buffer
+			else
+				Result := pixmaps.icon_pixmaps.debug_disable_assertions_icon_buffer
+			end
+		end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

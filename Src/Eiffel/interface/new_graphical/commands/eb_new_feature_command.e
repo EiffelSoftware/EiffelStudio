@@ -12,7 +12,8 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			mini_pixmap,
-			tooltext
+			tooltext,
+			pixel_buffer
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -85,6 +86,12 @@ feature {NONE} -- Implementation
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.new_feature_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.new_feature_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

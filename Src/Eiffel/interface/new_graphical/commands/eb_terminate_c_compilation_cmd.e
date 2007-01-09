@@ -75,6 +75,12 @@ feature -- Status report
 			Result := Void
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	menu_name: STRING_GENERAL is
 			-- Text used for menu items for `Current'.
 		do

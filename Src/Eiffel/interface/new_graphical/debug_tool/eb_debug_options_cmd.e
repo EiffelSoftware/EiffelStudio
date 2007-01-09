@@ -75,6 +75,12 @@ feature -- Properties
 			Result := interface_names.b_Debugging_options
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer which representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.debug_run_icon_buffer
+		end
+
 	pixmap: EV_PIXMAP is
 			-- Pixmap for the button.
 		do

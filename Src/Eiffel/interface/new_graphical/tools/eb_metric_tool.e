@@ -10,6 +10,13 @@ class
 	EB_METRIC_TOOL
 
 inherit
+	EB_TOOL
+		redefine
+			make,
+			pixmap,
+			pixel_buffer
+		end
+
 	SHARED_WORKBENCH
 
 	EB_RECYCLABLE
@@ -27,11 +34,10 @@ create
 
 feature -- Initialization
 
-	make (dw: EB_DEVELOPMENT_WINDOW; ctxt_tl: EB_CONTEXT_TOOL) is
+	make (dw: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize `Current'.
 		do
-			development_window := dw
-			context_tool := ctxt_tl
+			develop_window := dw
 			create widget
 			create metric_notebook
 
@@ -63,6 +69,35 @@ feature -- Initialization
 			metric_notebook.drop_actions.set_veto_pebble_function (agent on_tab_droppable)
 			widget.extend (metric_notebook)
 			install_agents (metric_manager)
+		end
+
+	build_interface is
+			-- Redefine
+		do
+		end
+
+	title: STRING_GENERAL is
+			-- Redefine
+		do
+			Result := interface_names.t_metric_tool
+		end
+
+	title_for_pre: STRING is
+			-- Redefine
+		do
+			Result := interface_names.to_metric_tool
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap
+		do
+			Result := pixmaps.icon_pixmaps.tool_metric_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer
+		do
+			Result := pixmaps.icon_pixmaps.tool_metric_icon_buffer
 		end
 
 feature -- Actions
@@ -133,7 +168,7 @@ feature -- Basic operations
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				if a_force or else not metric_manager.is_metric_loaded then
-					show_feedback_dialog (a_msg, agent metric_manager.load_metrics, feedback_dialog, development_window.window)
+					show_feedback_dialog (a_msg, agent metric_manager.load_metrics, feedback_dialog, develop_window.window)
 					display_error_message
 					check_metric_validation
 				end
@@ -143,10 +178,10 @@ feature -- Basic operations
 	check_metric_validation is
 			-- Check metric validation.
 		do
-			development_window.window_manager.display_message (metric_names.t_checking_metric_vadility)
+			develop_window.window_manager.display_message (metric_names.t_checking_metric_vadility)
 			metric_manager.check_validation (True)
 			is_metric_validation_checked.put (True)
-			development_window.window_manager.display_message ("")
+			develop_window.window_manager.display_message ("")
 		end
 
 	register_metric_result_for_display (a_metric: EB_METRIC; a_input: EB_METRIC_DOMAIN; a_value: DOUBLE; a_result: QL_DOMAIN; a_time: DATE_TIME; a_from_history: BOOLEAN; a_filtered: BOOLEAN) is
@@ -186,7 +221,7 @@ feature -- Basic operations
 					end
 					create l_dlg.make_with_text (metric_manager.last_error.message_with_location)
 					l_dlg.set_buttons_and_actions (<<metric_names.t_ok>>, <<agent do_nothing>>)
-					l_dlg.show_relative_to_window (development_window.window)
+					l_dlg.show_relative_to_window (develop_window.window)
 					metric_manager.clear_last_error
 				end
 			end
@@ -214,12 +249,6 @@ feature -- Basic operations
 		end
 
 feature -- Access
-
-	development_window: EB_DEVELOPMENT_WINDOW
-			-- Application main window.
-
-	context_tool: EB_CONTEXT_TOOL
-			-- Container of `Current'.
 
 	widget: EV_VERTICAL_BOX
 			-- Graphical object of `Current'
@@ -272,8 +301,7 @@ feature {NONE} -- Memory management
 			new_metric_panel := Void
 			metric_archive_panel := Void
 			detail_result_panel := Void
-			development_window := Void
-			context_tool := Void
+			develop_window := Void
 			uninstall_agents (metric_manager)
 		end
 

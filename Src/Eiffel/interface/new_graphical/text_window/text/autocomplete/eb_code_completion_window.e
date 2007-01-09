@@ -137,7 +137,10 @@ feature {NONE} -- Initialization
 
 			create remember_size_button
 			remember_size_button.set_pixmap (pixmaps.mini_pixmaps.completion_remember_size_icon)
-			remember_size_button.set_tooltip (preferences.development_window_data.remember_completion_list_size_preference.description)
+			l_tooltip := preferences.development_window_data.remember_completion_list_size_preference.description
+			if l_tooltip /= Void then
+				remember_size_button.set_tooltip (l_tooltip)
+			end
 			option_bar.extend (remember_size_button)
 		end
 

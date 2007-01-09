@@ -26,9 +26,6 @@ feature {NONE} -- Creation
 			save_size (a_window_data.width, a_window_data.height)
 			save_window_state (a_window_data.is_minimized, a_window_data.is_maximized)
 			save_position (a_window_data.x_position, a_window_data.y_position)
-			save_left_panel_layout (a_window_data.left_panel_layout)
-			save_left_panel_width (a_window_data.left_panel_width)
-			save_right_panel_layout (a_window_data.right_panel_layout)
 			general_toolbar_layout := a_window_data.general_toolbar_layout.twin
 			refactoring_toolbar_layout := a_window_data.refactoring_toolbar_layout.twin
 			show_general_toolbar := a_window_data.show_general_toolbar
@@ -39,10 +36,20 @@ feature {NONE} -- Creation
 			show_address_toolbar := a_window_data.show_address_toolbar
 		end
 
-feature {EB_DEVELOPMENT_WINDOW} -- Access
+feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 	file_name: FILE_NAME
 			-- Filename that the development window is currently targeted to.
+
+	open_classes: HASH_TABLE [FILE_NAME, STRING]
+			-- Open classes
+			-- 1st parametar is class name
+			-- 2nd parameter is docking content unique name
+
+	open_clusters: HASH_TABLE [STRING, STRING]
+			-- Open clusters
+			-- 1st parametar is cluster name
+			-- 2nd parameter is docking content unique name			
 
 	context_cluster_string: STRING
 			-- String representing any targeted cluster in the context pane.
@@ -134,6 +141,26 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			file_name_cloned: file_name /= a_filename and then file_name.is_equal (a_filename)
 		end
 
+	save_open_classes (a_open_classes: like open_classes) is
+			-- Save Open classes
+		require
+			a_open_classes_not_void: a_open_classes /= Void
+		do
+			open_classes := a_open_classes
+		ensure
+			open_classes_not_void: open_classes /= Void
+		end
+
+	save_open_clusters (a_open_clusters: like open_clusters) is
+			-- Save open clusters
+		require
+			a_open_clusters_not_void: a_open_clusters /= Void
+		do
+			open_clusters := a_open_clusters
+		ensure
+			open_clusters_not_void: open_clusters /= Void
+		end
+
 	save_context_data (a_cluster_string, a_class_string, a_feature_string: STRING; a_tab_index: INTEGER) is
 			-- Save the context information of the window.
 		do
@@ -174,36 +201,18 @@ feature {EB_DEVELOPMENT_WINDOW} -- Element change
 			y_position := a_y
 		end
 
-	save_left_panel_width (a_width: INTEGER) is
-			-- Save the width of the left panel of the window.
-		do
-			left_panel_width := a_width
-		end
-
-	save_left_panel_layout (a_layout: ARRAY [STRING]) is
-			-- Save the layout of the left panel of the window.
-		do
-			left_panel_layout := a_layout.twin
-		end
-
-	save_right_panel_layout (a_layout: ARRAY [STRING]) is
-			-- Save the layout of the left panel of the window.
-		do
-			right_panel_layout := a_layout.twin
-		end
-
 feature -- Basic operations
 
-	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Retreive the general toolbar using the available commands in `command_pool'
 		do
-			Result := retrieve_toolbar (command_pool, general_toolbar_layout)
+			Result := retrieve_toolbar_items (command_pool, general_toolbar_layout)
 		end
 
-	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Retreive the refactoring toolbar using the available commands in `command_pool'
 		do
-			Result := retrieve_toolbar (command_pool, refactoring_toolbar_layout)
+			Result := retrieve_toolbar_items (command_pool, refactoring_toolbar_layout)
 		end
 
 indexing

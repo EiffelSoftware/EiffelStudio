@@ -7,10 +7,12 @@ indexing
 
 class
 	EB_RF_RENAME_COMMAND
+
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
+			new_sd_toolbar_item,
 			tooltext,
 			is_tooltext_important
 		end
@@ -75,6 +77,15 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop)
 		end
 
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for `Current'.
+		do
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
+			Result.drop_actions.extend (agent drop_class (?))
+			Result.drop_actions.extend (agent drop_feature (?))
+			Result.drop_actions.set_veto_pebble_function (agent can_drop)
+		end
+
 	menu_name: STRING_GENERAL is
 			-- Menu entry corresponding to `Current'.
 		do
@@ -85,6 +96,12 @@ feature -- Access
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.icon_pixmaps.refactor_rename_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.refactor_rename_icon_buffer
 		end
 
 	Name: STRING is "RF_rename"

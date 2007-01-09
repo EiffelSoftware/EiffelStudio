@@ -43,6 +43,12 @@ feature {NONE} -- Attributes
 			Result := pixmaps.icon_pixmaps.debug_step_into_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.debug_step_into_icon_buffer
+		end
+
 	name: STRING is "Exec_into"
 			-- Name of the command.
 

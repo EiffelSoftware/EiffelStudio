@@ -14,7 +14,12 @@ inherit
 		redefine
 			menu_name,
 			pixmap,
-			on_shown
+			pixel_buffer,
+			on_shown,
+			attach_to_docking_manager,
+			mini_toolbar,
+			build_mini_toolbar,
+			show
 		end
 
 	EB_RECYCLABLE
@@ -120,25 +125,20 @@ feature {NONE} -- Initialization
 				clear_bkpt_button := Eb_debugger_manager.clear_bkpt.new_mini_toolbar_item
 				mini_toolbar.extend (clear_bkpt_button)
 			end
-		ensure
+		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
 
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
-		do
-			if mini_toolbar = Void then
-				build_mini_toolbar
-			end
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, title_for_pre, True, mini_toolbar)
+feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 
-			explorer_bar_item.set_menu_name (menu_name)
-			if pixmap /= Void then
-				explorer_bar_item.set_pixmap (pixmap)
-			end
-			explorer_bar_item.show_actions.extend (agent on_bar_item_shown)
-			explorer_bar.add (explorer_bar_item)
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Attach to docking manager
+		do
+			build_docking_content (a_docking_manager)
+
+			check not_already_has: not a_docking_manager.has_content (content) end
+			a_docking_manager.contents.extend (content)
+			check friend_created: develop_window.tools.cluster_tool /= Void end
 		end
 
 feature -- Properties
@@ -178,13 +178,21 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.tool_breakpoints_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer as it may appear in toolbars and menus.
+		do
+			Result := pixmaps.icon_pixmaps.tool_breakpoints_icon_buffer
+		end
+
 feature {NONE} -- Commands
 
 	toggle_layout_cmd: EB_STANDARD_CMD
+			-- Toggle layout command
 
 feature -- Events
 
 	on_item_pebble_function (gi: EV_GRID_ITEM): STONE is
+			-- Handle item pebble function
 		do
 			if gi /= Void then
 				Result ?= gi.data
@@ -192,6 +200,7 @@ feature -- Events
 		end
 
 	on_item_pebble_accept_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE is
+			-- Handle item pebble accpet cursor
 		local
 			st: STONE
 		do
@@ -202,6 +211,7 @@ feature -- Events
 		end
 
 	on_item_pebble_deny_cursor (gi: EV_GRID_ITEM): EV_POINTER_STYLE is
+			-- Handle item pebble deny cursor
 		local
 			st: STONE
 		do
@@ -227,16 +237,19 @@ feature -- Events
 		end
 
 	synchronize	is
+			-- Synchronize
 		do
 			update
 		end
 
 	on_project_loaded is
+			-- Handle project loaded actions
 		do
 			update
 		end
 
 	on_shown is
+			-- Handle show actions
 		do
 			update
 		end
@@ -248,36 +261,27 @@ feature -- Events
 			refresh_breakpoints_info
 		end
 
-	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
-			-- Change the window and explorer bar `Current' is in.
-		require
-			a_manager_exists: a_manager /= Void
-			an_explorer_bar_exists: an_explorer_bar /= Void
+	show is
+			-- Show tool.
 		do
-				-- Link with the manager and the explorer.
-			set_manager (a_manager)
-			change_attach_explorer (an_explorer_bar)
+			Precursor {EB_TOOL}
+			grid.set_focus
 		end
 
-feature {NONE} -- Memory management
+feature -- Memory management
 
 	enable_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+			-- Enable breakpoint button
 
 	disable_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+			-- Disable breakpoint button
 
 	clear_bkpt_button: EB_COMMAND_TOOL_BAR_BUTTON
+			-- Clear breakpoint button
 
 	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
-		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
-			end
-			reset_tool
-		end
-
-	reset_tool is
 		do
 			enable_bkpt_button.recycle
 			disable_bkpt_button.recycle
@@ -286,14 +290,16 @@ feature {NONE} -- Memory management
 			toggle_layout_cmd := Void
 			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.prune_all (set_row_highlight_bg_color_agent)
 			set_row_highlight_bg_color_agent := Void
-			manager := Void
+			develop_window := Void
 		end
 
 feature {NONE} -- Grid layout Implementation
 
 	grid_layout_manager: ES_GRID_LAYOUT_MANAGER
+			-- Grid layout manager
 
 	record_grid_layout is
+			-- Record grid layout
 		do
 			if grid_layout_manager = Void then
 				create grid_layout_manager.make (grid, "Breakpoints")
@@ -302,6 +308,7 @@ feature {NONE} -- Grid layout Implementation
 		end
 
 	restore_grid_layout is
+			-- Restore grid layout
 		do
 			if grid_layout_manager /= Void then
 				grid_layout_manager.restore
@@ -311,7 +318,7 @@ feature {NONE} -- Grid layout Implementation
 feature {NONE} -- Implementation
 
 	toggle_breakpoint_layout_mode (tt: EV_TOOLTIPABLE) is
-			-- toggle `breakpoints_separated_by_status' mode
+			-- Toggle `breakpoints_separated_by_status' mode
 		do
 			breakpoints_separated_by_status := not breakpoints_separated_by_status
 			if breakpoints_separated_by_status then
@@ -502,6 +509,7 @@ feature {NONE} -- Impl bp
 		end
 
 	insert_feature_bp_detail (f: E_FEATURE; a_row: EV_GRID_ROW; display_enabled, display_disabled: BOOLEAN) is
+			-- Insert features breakpoints details.
 		require
 			f /= Void
 			a_row /= Void
@@ -616,6 +624,7 @@ feature {NONE} -- Impl bp
 		end
 
 	on_line_cell_right_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER) is
+			-- Handle a cell right click actions.
 		require
 			f /= Void
 			i > 0
@@ -703,10 +712,16 @@ feature {NONE} -- Impl bp
 feature {NONE} -- Implementation, cosmetic
 
 	Disabled_bp_symbol: STRING is "-"
+			-- Disable breakpoint symbol.
+
 	Conditional_bp_symbol: STRING is "*"
+			-- Conditional breakpoint symbol.
+
 	Disabled_conditional_bp_symbol: STRING is "*-"
+			-- Disable conditional breakpoint symbol.
 
 	Breakable_icons: ES_PIXMAPS_12X12 is
+			-- Breakable icons.
 		local
 			l_shared: EB_SHARED_PIXMAPS
 		once
@@ -717,27 +732,35 @@ feature {NONE} -- Implementation, cosmetic
 		end
 
 	bg_separator_color: EV_COLOR is
+			-- Background separator color.
 		once
 			create Result.make_with_8_bit_rgb (220, 220, 240)
 		end
 
 	class_color: EV_COLOR
+			-- Class color
 	feature_color: EV_COLOR
+			-- Feature color
 	condition_color: EV_COLOR
+			-- Condition color
 	condition_font: EV_FONT is
+			-- Condition font
 		once
 			create Result
 			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 		end
 
 	set_row_highlight_bg_color_agent : PROCEDURE [ANY, TUPLE]
+			-- Set row highlight background color agent.
 
 	set_row_highlight_bg_color (v: COLOR_PREFERENCE) is
+			-- Set row highlight background color.
 		do
 			row_highlight_bg_color := v.value
 		end
 
 	row_highlight_bg_color: EV_COLOR;
+			-- Row highlight background color.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

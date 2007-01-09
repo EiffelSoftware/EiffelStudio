@@ -13,6 +13,7 @@ inherit
 	EB_COMMAND_FEEDBACK
 		redefine
 			button,
+			sd_button,
 			menu_item
 		end
 
@@ -26,6 +27,11 @@ feature -- Status setting
 				button.select_actions.block
 				button.enable_select
 				button.select_actions.resume
+			end
+			if sd_button /= Void then
+				sd_button.select_actions.block
+				sd_button.enable_select
+				sd_button.select_actions.resume
 			end
 			if menu_item /= Void then
 				menu_item.select_actions.block
@@ -78,6 +84,9 @@ feature -- Status setting
 feature -- Access
 
 	button: EV_TOOL_BAR_RADIO_BUTTON
+			-- Button on the toolbar.
+
+	sd_button: SD_TOOL_BAR_RADIO_BUTTON
 			-- Button on the toolbar.
 
 	menu_item: EV_RADIO_MENU_ITEM

@@ -95,6 +95,8 @@ feature -- Basic operation
 		local
 			l_item : MSR_TEXT_ITEM
 			class_i: CLASS_I
+			editors_manager: EB_EDITORS_MANAGER
+			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_string: STRING
 			l_text: SMART_TEXT
 		do
@@ -102,10 +104,12 @@ feature -- Basic operation
 			if l_item /= Void then
 				class_i ?= l_item.data
 				if class_i /= Void then
-					if is_class_i_editing (class_i) and
-							search_tool.check_class_succeed and not
-							search_tool.is_item_source_changed (l_item)
-					then
+					editors_manager := search_tool.develop_window.editors_manager
+					l_editors := editors_manager.editor_editing (class_i)
+					if not l_editors.is_empty then
+						editor := l_editors @ 1
+					end
+					if not l_editors.is_empty and search_tool.check_class_succeed and not search_tool.is_item_source_changed (l_item) then
 						l_text ?= editor.text_displayed
 						check
 							l_text_is_smart_text: l_text /= Void
@@ -184,7 +188,7 @@ feature {NONE} -- Implementation
 		do
 			class_i ?= a_item.data
 			if class_i /= Void then
-				Result := not (is_class_i_editing (class_i))
+				Result := not (search_tool.develop_window.editors_manager.is_class_editing (class_i.file_name))
 			end
 		end
 
@@ -207,7 +211,7 @@ feature {NONE} -- Implementation
 					l.after
 				loop
 					from
-						l_editor := l.item.editor_tool.text_area
+						l_editor := l.item.editors_manager.current_editor
 					until
 						editor.text_is_fully_loaded
 					loop
@@ -249,6 +253,7 @@ feature {NONE} -- Implementation
 		end
 
 	editor : EB_EDITOR
+			-- Current editor
 
 	smart_text: SMART_TEXT is
 			-- Smart text in editor.
@@ -260,6 +265,7 @@ feature {NONE} -- Implementation
 		end
 
 	search_tool: EB_MULTI_SEARCH_TOOL;
+			-- Search tool
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

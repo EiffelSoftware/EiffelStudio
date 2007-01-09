@@ -40,17 +40,17 @@ feature -- Basic operations
 				end
 			else
 				create explain_dialog.make_with_text (Interface_names.e_Diagram_hole)
-				explain_dialog.show_modal_to_window (tool.development_window.window)
+				explain_dialog.show_modal_to_window (tool.develop_window.window)
 				warned := True
 			end
 			if clu /= Void then
 				create clu_s.make (clu)
 				if clu_s.is_valid then
-					tool.tool.set_stone (clu_s)
+					tool.develop_window.tools.set_stone (clu_s)
 				end
 			elseif not warned then
 				create explain_dialog.make_with_text (Warning_messages.W_does_not_have_enclosing_cluster)
-				explain_dialog.show_modal_to_window (tool.development_window.window)
+				explain_dialog.show_modal_to_window (tool.develop_window.window)
 			end
 		end
 
@@ -60,7 +60,7 @@ feature -- Basic operations
 			if a_stone.is_valid then
 				was_dropped := True
 				tool.set_is_rebuild_world_needed (True)
-				tool.tool.launch_stone (a_stone)
+			tool.launch_stone (a_stone)
 			end
 		end
 
@@ -70,7 +70,7 @@ feature -- Basic operations
 			if a_stone.is_valid then
 				was_dropped := True
 				tool.set_is_rebuild_world_needed (True)
-				tool.tool.launch_stone (a_stone)
+			tool.launch_stone (a_stone)
 			end
 		end
 
@@ -95,7 +95,7 @@ feature {NONE} -- Implementation
 			tbi: EB_COMMAND_TOOL_BAR_BUTTON
 		do
 			if not was_dropped then
-				Result := tool.tool.stone
+				Result := tool.develop_window.tools.stone
 				check
 					internal_managed_toolbar_items /= Void
 					not internal_managed_toolbar_items.is_empty
@@ -133,6 +133,12 @@ feature {NONE} -- Implementation
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_target_cluster_or_class_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
 		end
 
 	tooltip: STRING_GENERAL is

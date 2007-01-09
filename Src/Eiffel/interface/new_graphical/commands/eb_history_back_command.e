@@ -52,6 +52,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.view_previous_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.view_previous_icon_buffer
+		end
+
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

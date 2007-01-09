@@ -31,7 +31,7 @@ feature -- Basic operations
 		do
 			create change_color_dialog
 			change_color_dialog.set_color (bon_class_fill_color)
-			change_color_dialog.show_modal_to_window (tool.development_window.window)
+			change_color_dialog.show_modal_to_window (tool.develop_window.window)
 
 			create class_list.make (20)
 			create old_color_table.make (20)
@@ -82,7 +82,7 @@ feature {NONE} -- Implementation
 		do
 			create change_color_dialog
 			change_color_dialog.set_color (bon_class_fill_color)
-			change_color_dialog.show_modal_to_window (tool.development_window.window)
+			change_color_dialog.show_modal_to_window (tool.develop_window.window)
 
 			create class_list.make (1)
 			create old_color_table.make (1)
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 			if cf /= Void then
 				create change_color_dialog
 				change_color_dialog.set_color (cf.background_color)
-				change_color_dialog.show_modal_to_window (tool.development_window.window)
+				change_color_dialog.show_modal_to_window (tool.develop_window.window)
 				if not change_color_dialog.color.is_equal (cf.background_color) then
 					history.do_named_undoable (
 						Interface_names.t_Diagram_change_color_cmd,
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 		do
 			create change_color_dialog
 			change_color_dialog.set_color (bon_class_fill_color)
-			change_color_dialog.show_modal_to_window (tool.development_window.window)
+			change_color_dialog.show_modal_to_window (tool.develop_window.window)
 
 			l_classes := a_list.classes
 			create old_color_table.make (l_classes.count)
@@ -235,6 +235,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_choose_color_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

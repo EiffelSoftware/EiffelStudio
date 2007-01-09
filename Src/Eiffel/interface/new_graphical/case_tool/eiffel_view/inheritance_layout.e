@@ -24,8 +24,8 @@ feature {NONE} -- Initialization
 			-- Initialize `table'.
 		do
 			create table.make (20)
-			vertical_spacing := {EB_CONTEXT_EDITOR}.default_bon_vertical_spacing
-			horizontal_spacing := {EB_CONTEXT_EDITOR}.default_bon_horizontal_spacing
+			vertical_spacing := {EB_DIAGRAM_TOOL}.default_bon_vertical_spacing
+			horizontal_spacing := {EB_DIAGRAM_TOOL}.default_bon_horizontal_spacing
 		end
 
 feature -- Access

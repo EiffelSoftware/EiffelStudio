@@ -10,10 +10,10 @@ indexing
 
 class
 	EB_TOOL_WINDOW
-	
+
 create
 	make_with_info
-	
+
 feature {NONE} -- Initialization
 
 	make_with_info (a_window: EV_WINDOW; a_tool: EV_WIDGET; a_development_window: EB_DEVELOPMENT_WINDOW; an_x_position, a_y_position: INTEGER) is
@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			tool := a_tool
 			x_position := an_x_position
 			y_position := a_y_position
-			development_window.add_tool_window (Current)
 		end
 
 feature -- Access
@@ -40,13 +39,13 @@ feature -- Access
 	window: EV_WINDOW
 		-- Window represented by `Current', an externally docked tool that must be tracked
 		-- by `development_window'.
-	
+
 	x_position: INTEGER
 		-- X position of `window', relative to `development_window'.
-	
+
 	y_position: INTEGER
 		-- Y position of `window', relative to `development_window'.
-	
+
 	development_window: EB_DEVELOPMENT_WINDOW
 		-- A development window to which `window' is displayed to.
 
@@ -57,7 +56,7 @@ feature -- Status setting
 		do
 			x_position := an_x_position
 		end
-		
+
 	set_y_position (a_y_position: INTEGER) is
 			-- Assign `a_y_position' to `y_position'.
 		do

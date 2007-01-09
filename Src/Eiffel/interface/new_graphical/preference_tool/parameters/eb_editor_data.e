@@ -45,7 +45,7 @@ feature {EB_PREFERENCES} -- Initialization
 			Precursor {EDITOR_DATA} (a_preferences)
 		end
 
-feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
+feature {EB_EDITORS_MANAGER, EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 
 	breakpoint_background_color: EV_COLOR is
 			-- Background color used to display breakpoints		
@@ -251,6 +251,12 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			Result := customized_string_3_preference.value
 		end
 
+	new_tab_at_left: BOOLEAN is
+			-- When creating new tab, should added it at the begin of the target notebook?
+		do
+			Result := new_tab_at_left_preference.value
+		end
+
 	left_side: BOOLEAN
 
 	maximized: BOOLEAN
@@ -330,6 +336,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	customized_string_3_preference: STRING_PREFERENCE
 			-- strings defined by the user.			
 
+	new_tab_at_left_preference: BOOLEAN_PREFERENCE
+			-- When create new tab, should it created at the begin of the target notebook?
+
 feature {NONE} -- Preference Strings
 
 	assertion_tag_text_color_string: STRING is "editor.eiffel.colors.assertion_tag_text_color"
@@ -401,6 +410,9 @@ feature {NONE} -- Preference Strings
 	customized_string_2_string: STRING is "editor.eiffel.customized_string_2"
 	customized_string_3_string: STRING is "editor.eiffel.customized_string_3"
 			-- strings defined by the user.
+			
+	new_tab_at_left_string: STRING is "editor.general.new_tab_at_left"
+			-- Create new tab at left side of the target notebook?
 
 feature {NONE} -- Init colors and fonts.
 
@@ -504,6 +516,7 @@ feature {NONE} -- Initialization
 			customized_strings.extend (customized_string_2_preference)
 			customized_string_3_preference := l_manager.new_string_preference_value (l_manager, customized_string_3_string, "")
 			customized_strings.extend (customized_string_3_preference)
+			new_tab_at_left_preference := l_manager.new_boolean_preference_value (l_manager, new_tab_at_left_string, True)
 
 				-- Auto colors
 			indexing_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
@@ -567,6 +580,7 @@ feature {NONE} -- Initialization
 			customized_string_1_preference.change_actions.extend (agent update)
 			customized_string_2_preference.change_actions.extend (agent update)
 			customized_string_3_preference.change_actions.extend (agent update)
+			new_tab_at_left_preference.change_actions.extend (agent update)
 			normal_text_color_preference.change_actions.extend (agent update)
 
 			initialize_autocomplete_prefs
@@ -941,7 +955,6 @@ invariant
 	customized_string_1_preference_not_void: customized_string_1_preference /= Void
 	customized_string_2_preference_not_void: customized_string_2_preference /= Void
 	customized_string_3_preference_not_void: customized_string_3_preference /= Void
-
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

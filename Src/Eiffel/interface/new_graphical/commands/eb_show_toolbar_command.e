@@ -28,12 +28,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: like target; a_menu_name: STRING_GENERAL) is
+	make (a_target: SD_TOOL_BAR_CONTENT; a_menu_name: STRING_GENERAL) is
 			-- Initialize Current with target `a_target' and `menu_name' set to `a_menu_name'.
+		require
+			not_void: a_target /= Void
 		do
-			command_make (a_target)
 			menu_name := a_menu_name
 			name := a_menu_name
+			content := a_target
+		ensure
+			set: content = a_target
 		end
 
 feature -- Status setting
@@ -41,13 +45,14 @@ feature -- Status setting
 	enable_visible is
 			-- Set `is_visible' to True.
 		local
-			menu_items: like internal_managed_menu_items
+			menu_items: like managed_menu_items
 			citem: EB_COMMAND_CHECK_MENU_ITEM
 		do
 			if not is_visible then
 				is_visible := True
-				target.show
-				menu_items := internal_managed_menu_items
+				content.show
+
+				menu_items := managed_menu_items
 				if menu_items /= Void then
 					from
 						menu_items.start
@@ -69,11 +74,12 @@ feature -- Status setting
 	disable_visible is
 			-- Set `is_visible' to True.
 		local
-			menu_items: like internal_managed_menu_items
+			menu_items: like managed_menu_items
 			citem: EB_COMMAND_CHECK_MENU_ITEM
 		do
+
 			if is_visible then
-				menu_items := internal_managed_menu_items
+				menu_items := managed_menu_items
 				if menu_items /= Void then
 					from
 						menu_items.start
@@ -90,7 +96,7 @@ feature -- Status setting
 					end
 				end
 				is_visible := False
-				target.hide
+				content.hide
 			end
 		end
 
@@ -109,6 +115,9 @@ feature -- Basic operations
 				Result.disable_select
 			end
 			Result.select_actions.extend (agent execute)
+			if pixmap /= Void then
+				Result.set_pixmap (pixmap)
+			end
 		end
 
 feature -- Access
@@ -116,8 +125,16 @@ feature -- Access
 	menu_name: STRING_GENERAL
 			-- Name as it appears in the menu.
 
-	name: STRING_GENERAL;
+	name: STRING_GENERAL
 			-- Name for the command.
+
+	pixmap: EV_PIXMAP
+			-- Pixmap	
+
+feature {NONE} -- Implementation
+
+	content: SD_TOOL_BAR_CONTENT;
+			-- Tool bar content managed.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

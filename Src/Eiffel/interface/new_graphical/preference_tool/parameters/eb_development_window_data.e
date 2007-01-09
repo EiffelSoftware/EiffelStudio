@@ -9,7 +9,7 @@ deferred class
 	EB_DEVELOPMENT_WINDOW_DATA
 
 
-feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES} -- Value
+feature {EB_DEVELOPMENT_WINDOW_DATA, EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_BUILDER} -- Value
 
 	width: INTEGER is
 			-- Width for the development window
@@ -145,34 +145,14 @@ feature -- Element change
 			y_set: a_y = y_position
 		end
 
-	save_left_panel_width (a_width: INTEGER) is
-			-- Save the width of the left panel of the window.
-			-- Call `commit_save' to have the changes actually saved.
-		deferred
-		ensure
-			width_set: a_width = left_panel_width
-		end
-
-	save_left_panel_layout (a_layout: ARRAY [STRING]) is
-			-- Save the layout of the left panel of the window.
-			-- Call `commit_save' to have the changes actually saved.
-		deferred
-		end
-
-	save_right_panel_layout (a_layout: ARRAY [STRING]) is
-			-- Save the layout of the left panel of the window.
-			-- Call `commit_save' to have the changes actually saved.
-		deferred
-		end
-
 feature -- Basic operations
 
-	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Retreive the general toolbar using the available commands in `command_pool'
 		deferred
 		end
 
-	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Retreive the refactoring toolbar using the available commands in `command_pool'
 		deferred
 		end

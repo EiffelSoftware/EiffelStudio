@@ -11,10 +11,21 @@ class
 
 inherit
 	EB_OUTPUT_TOOL
+		export
+			{EB_EXTERNAL_OUTPUT_MANAGER}
+				develop_window
+		undefine
+			Ev_application
 		redefine
-			make,  drop_breakable, drop_class, drop_feature, drop_cluster,
+			make_with_tool,
 			clear, internal_recycle, scroll_to_end,set_focus,
-			quick_refresh_editor,quick_refresh_margin, is_general
+			quick_refresh_editor,quick_refresh_margin, is_general,
+			build_docking_content,
+			attach_to_docking_manager,
+			pixmap,
+			title,
+			title_for_pre,
+			show
 		end
 
 	EB_SHARED_PIXMAPS
@@ -37,14 +48,52 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_tool: EB_DEVELOPMENT_WINDOW; m: EB_CONTEXT_TOOL) is
+	make_with_tool is
 			-- Create a new external output tool.
 		do
-			owner := a_tool
-			initialization (a_tool)
+			initialization (develop_window)
 			widget := main_frame
 			external_output_manager.extend (Current)
-			stone_manager := m
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build docking content
+		local
+			l_constants: EB_CONSTANTS
+		do
+			Precursor {EB_OUTPUT_TOOL} (a_docking_manager)
+			content.drop_actions.extend (agent drop_class)
+			content.drop_actions.extend (agent drop_feature)
+			create l_constants
+			content.set_long_title (title)
+			content.set_short_title (title)
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_external_output_icon
+		end
+
+	title: STRING_GENERAL is
+			-- Pixmap
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.interface_names.l_tab_external_output
+		end
+
+	title_for_pre: STRING is
+			-- Title
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.interface_names.to_external_ouput_tool
 		end
 
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
@@ -139,7 +188,7 @@ feature{NONE} -- Initialization
 			cmd_toolbar.extend (tbs)
 			cmd_toolbar.extend (edit_cmd_detail_btn)
 
-			toolbar.extend (a_tool.edit_external_commands_cmd)
+			toolbar.extend (a_tool.commands.edit_external_commands_cmd)
 			toolbar.update_toolbar
 
 			l_del_tool_bar.extend (del_cmd_btn)
@@ -189,7 +238,6 @@ feature{NONE} -- Initialization
 
 			state_label.set_minimum_height (State_bar_height)
 			state_label.align_text_right
-
 			state_label.drop_actions.extend (agent drop_class)
 			state_label.drop_actions.extend (agent drop_feature)
 			state_label.drop_actions.extend (agent drop_cluster)
@@ -251,6 +299,16 @@ feature{NONE} -- Initialization
 			end
 		end
 
+feature
+
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Attach to docking manager
+		do
+			build_docking_content (a_docking_manager)
+			check not_already_has: not a_docking_manager.has_content (content) end
+			a_docking_manager.contents.extend (content)
+		end
+
 feature -- Basic operation
 
 	synchronize_on_process_starts (cmd_line: STRING) is
@@ -263,10 +321,10 @@ feature -- Basic operation
 			hidden_btn.disable_sensitive
 			cmd_lst.disable_sensitive
 			del_cmd_btn.disable_sensitive
-			owner.Edit_external_commands_cmd.disable_sensitive
+			develop_window.commands.Edit_external_commands_cmd.disable_sensitive
 			save_output_btn.disable_sensitive
 			if external_output_manager.target_development_window /= Void then
-				if owner = external_output_manager.target_development_window then
+				if develop_window = external_output_manager.target_development_window then
 					send_input_btn.enable_sensitive
 					terminate_btn.enable_sensitive
 					input_field.enable_sensitive
@@ -295,12 +353,12 @@ feature -- Basic operation
 			edit_cmd_detail_btn.enable_sensitive
 			hidden_btn.enable_sensitive
 			cmd_lst.enable_sensitive
-			owner.Edit_external_commands_cmd.enable_sensitive
+			develop_window.commands.Edit_external_commands_cmd.disable_sensitive
 			save_output_btn.enable_sensitive
 			input_field.disable_sensitive
 			send_input_btn.disable_sensitive
 			terminate_btn.disable_sensitive
-			if owner_development_window = external_output_manager.target_development_window then
+			if develop_window = external_output_manager.target_development_window then
 				if cmd_lst.is_displayed then
 					cmd_lst.set_focus
 				end
@@ -326,7 +384,7 @@ feature -- Basic operation
 	scroll_to_end is
 			-- Scroll the console to the bottom.
 		do
-			output_text.scroll_to_end
+			output_text.scroll_to_line (output_text.line_count)
 		end
 
 	set_focus is
@@ -366,7 +424,7 @@ feature -- Basic operation
 		do
 			if cmd_lst.is_sensitive then
 				str := cmd_lst.text
-				ms := owner.Edit_external_commands_cmd.commands
+				ms := develop_window.commands.Edit_external_commands_cmd.commands
 				cmd_lst.wipe_out
 				from
 					i := ms.lower
@@ -409,28 +467,11 @@ feature -- Basic operation
 			end
 		end
 
-	drop_breakable (st: BREAKABLE_STONE) is
-			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
+	show is
+			-- Show tool.
 		do
-			Precursor (st)
-		end
-
-	drop_class (st: CLASSI_STONE) is
-			-- Drop `st' in the context tool and pop the `class info' tab.
-		do
-			Precursor (st)
-		end
-
-	drop_feature (st: FEATURE_STONE) is
-			-- Drop `st' in the context tool and pop the `feature info' tab.
-		do
-			Precursor (st)
-		end
-
-	drop_cluster (st: CLUSTER_STONE) is
-			-- Drop `st' in the context tool.
-		do
-			Precursor (st)
+			Precursor {EB_OUTPUT_TOOL}
+			set_focus
 		end
 
 feature{NONE} -- Actions
@@ -488,25 +529,25 @@ feature{NONE} -- Actions
 			if ec /= Void then
 					-- If external command indicated by text in command list box
 					-- exists, pop up an edit dialog and let user edit this command.
-				ec.edit_properties (owner.window)
+				ec.edit_properties (develop_window.window)
 			else
 					-- If user has just input a new external command,
 					-- first check whether we have room for this command.
-				if owner.edit_external_commands_cmd.menus.count = 10 then
+				if develop_window.commands.edit_external_commands_cmd.menus.count = 10 then
 					create warn_dlg.make_with_text (interface_names.e_external_command_list_full)
-					warn_dlg.show_modal_to_window (owner.window)
+					warn_dlg.show_modal_to_window (develop_window.window)
 				else
 						-- If we have room for this command, pop up a new command
 						-- dialog and let user add this new command.
 					create str.make_from_string (cmd_lst.text)
 					str.left_adjust
 					str.right_adjust
-					create ec.make_from_new_command_line (owner.window, str)
+					create ec.make_from_new_command_line (develop_window.window, str)
 				end
 			end
 			on_cmd_lst_text_change
-			owner.edit_external_commands_cmd.refresh_list_from_outside
-			owner.edit_external_commands_cmd.update_menus_from_outside
+			develop_window.commands.edit_external_commands_cmd.refresh_list_from_outside
+			develop_window.commands.edit_external_commands_cmd.update_menus_from_outside
 		end
 
 	on_run_process is
@@ -600,9 +641,9 @@ feature{NONE} -- Actions
 			save_tool: EB_SAVE_STRING_TOOL
 		do
 			if process_manager.is_external_command_running then
-				show_warning_dialog (Warning_messages.w_cannot_save_when_external_running, owner.window)
+				show_warning_dialog (Warning_messages.w_cannot_save_when_external_running, develop_window.window)
 			else
-				create save_tool.make_and_save (output_text.text, owner.window)
+				create save_tool.make_and_save (output_text.text, develop_window.window)
 			end
 		end
 
@@ -619,9 +660,9 @@ feature{NONE} -- Actions
 		do
 			comm := corresponding_external_command
 			if comm /= Void then
-				owner.edit_external_commands_cmd.commands.put (Void, comm.index)
-				owner.edit_external_commands_cmd.refresh_list_from_outside
-				owner.edit_external_commands_cmd.update_menus_from_outside
+				develop_window.commands.edit_external_commands_cmd.commands.put (Void, comm.index)
+				develop_window.commands.edit_external_commands_cmd.refresh_list_from_outside
+				develop_window.commands.edit_external_commands_cmd.update_menus_from_outside
 				cmd_lst.set_text ("")
 				external_output_manager.synchronize_command_list (Void)
 			else
@@ -630,12 +671,6 @@ feature{NONE} -- Actions
 		end
 
 feature -- Status reporting
-
-	owner_development_window: EB_DEVELOPMENT_WINDOW is
-			-- Development window which `Current' is belonged to
-		do
-			Result := owner
-		end
 
 	corresponding_external_command: EB_EXTERNAL_COMMAND is
 			-- If external command indicated by text in command list box
@@ -655,9 +690,9 @@ feature -- Status reporting
 					i := 0
 					done := False
 				until
-					i >= owner.edit_external_commands_cmd.commands.count or done
+					i >= develop_window.commands.edit_external_commands_cmd.commands.count or done
 				loop
-					e_cmd ?= owner.edit_external_commands_cmd.commands.item (i)
+					e_cmd ?= develop_window.commands.edit_external_commands_cmd.commands.item (i)
 					if e_cmd /= Void then
 						if e_cmd.external_command.is_equal (str) then
 							done := True
@@ -717,12 +752,11 @@ feature {NONE} -- Recycle
 			widget.destroy
 			widget := Void
 			text_area := Void
-			owner := Void
-			stone_manager := Void
+			develop_window := Void
 		end
 
 	recycle_widgets is
-			--
+			-- Recycle widgets.
 		do
 			cmd_lst.destroy
 			terminate_btn.destroy

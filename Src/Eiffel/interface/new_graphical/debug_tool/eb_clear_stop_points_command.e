@@ -5,7 +5,8 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class EB_CLEAR_STOP_POINTS_COMMAND
+class
+	EB_CLEAR_STOP_POINTS_COMMAND
 
 inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -76,6 +77,12 @@ feature -- Access
 			-- Icon for `Current'.
 		do
 			Result := pixmaps.icon_pixmaps.breakpoints_delete_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.breakpoints_delete_icon_buffer
 		end
 
 	mini_pixmap: EV_PIXMAP is

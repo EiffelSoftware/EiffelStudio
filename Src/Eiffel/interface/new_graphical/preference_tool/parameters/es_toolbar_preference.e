@@ -14,88 +14,173 @@ inherit
 
 feature {NONE} -- Implementation
 
-	retrieve_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]; layout: ARRAY [STRING]): EB_TOOLBAR is
+	retrieve_toolbar (a_command_pool: LIST [EB_TOOLBARABLE_COMMAND]; a_layout: ARRAY [STRING_GENERAL]): EB_TOOLBAR is
 		local
-			i: INTEGER
-			command_name: STRING
-			command_visibility: BOOLEAN
-			command_suffix: STRING
-			command_name_count: INTEGER
-			found: BOOLEAN
-			toolbarable_command: EB_TOOLBARABLE_COMMAND
-			toolbarable_separator: EB_TOOLBARABLE_SEPARATOR
-			toolbarable_name: STRING
-			separator_name: STRING
+			l_i: INTEGER
+			l_command_name: STRING_GENERAL
+			l_command_visibility: BOOLEAN
+			l_command_suffix: STRING_GENERAL
+			l_command_name_count: INTEGER
+			l_found: BOOLEAN
+			l_toolbarable_command: EB_TOOLBARABLE_COMMAND
+			l_toolbarable_separator: EB_TOOLBARABLE_SEPARATOR
+			l_toolbarable_name: STRING_GENERAL
+			l_separator_name: STRING_GENERAL
 		do
 			create Result
-			separator_name := (create {EB_TOOLBARABLE_SEPARATOR}).name
+			l_separator_name := (create {EB_TOOLBARABLE_SEPARATOR}).name
 
 			from
-				i := layout.lower
+				l_i := a_layout.lower
 			until
-				i > layout.upper
+				l_i > a_layout.upper
 			loop
-				command_name := layout.item (i).twin
-				command_name_count := command_name.count
-				if command_name.is_equal (separator_name) then
+				l_command_name := a_layout.item (l_i).twin
+				l_command_name_count := l_command_name.count
+				if l_command_name.is_equal (l_separator_name) then
 						-- This is a separator.
-					create toolbarable_separator
-					Result.extend (toolbarable_separator)
+					create l_toolbarable_separator
+					Result.extend (l_toolbarable_separator)
 				else
 						-- This is a command.
 					check
-						command_name_not_void: command_name /= Void
-						command_name_long_enough: command_name_count >= 9
+						command_name_not_void: l_command_name /= Void
+						command_name_long_enough: l_command_name_count >= 9
 							-- should be long enough to contain "__visible" or "__hidden"
 					end
-					command_suffix := command_name.substring (command_name_count - 8, command_name_count)
-					if command_suffix.is_equal ("__visible") then
-						command_visibility := True
-						command_name := command_name.substring (1, command_name_count - 9)
+					l_command_suffix := l_command_name.substring (l_command_name_count - 8, l_command_name_count)
+					if l_command_suffix.is_equal ("__visible") then
+						l_command_visibility := True
+						l_command_name := l_command_name.substring (1, l_command_name_count - 9)
 					else
-						command_suffix := command_name.substring (command_name_count - 7, command_name_count)
-						if command_suffix.is_equal ("__hidden") then
-							command_visibility := False
-							command_name := command_name.substring (1, command_name_count - 8)
+						l_command_suffix := l_command_name.substring (l_command_name_count - 7, l_command_name_count)
+						if l_command_suffix.is_equal ("__hidden") then
+							l_command_visibility := False
+							l_command_name := l_command_name.substring (1, l_command_name_count - 8)
 						else
 							-- Error in suffix, it is not "__hidden" or "__visible", default is "__hidden".
 							-- We leave the command_name inchanged.
-							command_visibility := False
+							l_command_visibility := False
 						end
 					end
-
 						-- Look for this command in the pool
 					from
-						command_pool.start
-						found := False
+						a_command_pool.start
+						l_found := False
 					until
-						found or command_pool.after
+						l_found or a_command_pool.after
 					loop
-						toolbarable_command := command_pool.item
-						toolbarable_name := toolbarable_command.name
-						if toolbarable_name.is_equal (command_name) then
-							found := True
+						l_toolbarable_command := a_command_pool.item
+						l_toolbarable_name := l_toolbarable_command.name
+						if l_toolbarable_name.is_equal (l_command_name) then
+							l_found := True
 								-- Add this command in the toolbar and set its visibility
-							Result.extend (toolbarable_command)
-							if command_visibility then
-								toolbarable_command.enable_displayed
+							Result.extend (l_toolbarable_command)
+
+							if l_command_visibility then
+								l_toolbarable_command.enable_displayed
+
 							else
-								toolbarable_command.disable_displayed
+								l_toolbarable_command.disable_displayed
+
 							end
 						end
-						command_pool.forth
+						a_command_pool.forth
 					end
 				end
-
 					-- prepare next iteration
-				i := i + 1
+				l_i := l_i + 1
+			end
+		end
+
+	retrieve_toolbar_items (a_command_pool: LIST [EB_TOOLBARABLE_COMMAND]; a_layout: ARRAY [STRING_GENERAL]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
+			-- Retriebe toolbar items.
+		local
+			l_i: INTEGER
+			l_command_name: STRING_GENERAL
+			l_command_visibility: BOOLEAN
+			l_command_suffix: STRING_GENERAL
+			l_command_name_count: INTEGER
+			l_found: BOOLEAN
+			l_button: SD_TOOL_BAR_BUTTON
+			l_toolbarable_command: EB_TOOLBARABLE_COMMAND
+			l_separator: SD_TOOL_BAR_SEPARATOR
+			l_toolbarable_name: STRING_GENERAL
+			l_separator_name: STRING_GENERAL
+		do
+			create Result.make (8)
+			l_separator_name := (create {EB_TOOLBARABLE_SEPARATOR}).name
+
+			from
+				l_i := a_layout.lower
+			until
+				l_i > a_layout.upper
+			loop
+				l_command_name := a_layout.item (l_i).twin
+				l_command_name_count := l_command_name.count
+				if l_command_name.is_equal (l_separator_name) then
+						-- This is a separator.
+					create l_separator.make
+					Result.extend (l_separator)
+				else
+						-- This is a command.
+					check
+						command_name_not_void: l_command_name /= Void
+						command_name_long_enough: l_command_name_count >= 9
+							-- should be long enough to contain "__visible" or "__hidden"
+					end
+					l_command_suffix := l_command_name.substring (l_command_name_count - 8, l_command_name_count)
+					if l_command_suffix.is_equal ("__visible") then
+						l_command_visibility := True
+						l_command_name := l_command_name.substring (1, l_command_name_count - 9)
+					else
+						l_command_suffix := l_command_name.substring (l_command_name_count - 7, l_command_name_count)
+						if l_command_suffix.is_equal ("__hidden") then
+							l_command_visibility := False
+							l_command_name := l_command_name.substring (1, l_command_name_count - 8)
+						else
+							-- Error in suffix, it is not "__hidden" or "__visible", default is "__hidden".
+							-- We leave the command_name inchanged.
+							l_command_visibility := False
+						end
+					end
+						-- Look for this command in the pool
+					from
+						a_command_pool.start
+						l_found := False
+					until
+						l_found or a_command_pool.after
+					loop
+						l_toolbarable_command := a_command_pool.item
+						l_toolbarable_name := l_toolbarable_command.name
+						if l_toolbarable_name.is_equal (l_command_name) then
+							l_found := True
+								-- Add this command in the toolbar and set its visibility
+							l_button := l_toolbarable_command.new_sd_toolbar_item (l_toolbarable_command.is_tooltext_important)
+							if not l_toolbarable_command.is_sensitive then
+								l_button.disable_sensitive
+							end
+							Result.extend (l_button)
+							if l_command_visibility then
+								l_toolbarable_command.enable_displayed
+								l_button.enable_displayed
+							else
+								l_toolbarable_command.disable_displayed
+								l_button.disable_displayed
+							end
+						end
+						a_command_pool.forth
+					end
+				end
+					-- prepare next iteration
+				l_i := l_i + 1
 			end
 		end
 
 	save_toolbar (a_toolbar: EB_TOOLBAR): ARRAY [STRING] is
 			-- Turn `a_toolbar' into a storable string.
 		local
-			storage_name: STRING
+			storage_name: STRING_GENERAL
 			toolbar_item: EB_TOOLBARABLE
 			command: EB_TOOLBARABLE_COMMAND
 			index: INTEGER
@@ -117,7 +202,7 @@ feature {NONE} -- Implementation
 						storage_name.append ("__hidden")
 					end
 				end
-				Result.put (storage_name, index)
+				Result.put (storage_name.as_string_8, index)
 
 					-- Prepare next iteration
 				a_toolbar.forth

@@ -15,7 +15,11 @@ inherit
 			make as tool_make
 		redefine
 			menu_name,
-			pixmap
+			pixmap,
+			pixel_buffer,
+			mini_toolbar,
+			build_mini_toolbar,
+			show
 		end
 
 	EB_SHARED_MANAGERS
@@ -32,7 +36,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_TOOL_MANAGER; a_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW; a_window: EB_DEVELOPMENT_WINDOW) is
 			-- Make a new cluster tool.
 		require
 			a_manager_exists: a_manager /= Void
@@ -63,13 +67,13 @@ feature {NONE} -- Initialization
 			show_current_class_cluster_cmd.set_menu_name (Interface_names.m_Show_class_cluster)
 
 			create mini_toolbar
-			mini_toolbar.extend (window.new_cluster_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (window.new_library_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (window.commands.new_cluster_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (window.commands.new_library_cmd.new_mini_toolbar_item)
 			if eiffel_layout.default_il_environment.is_dotnet_installed then
-				mini_toolbar.extend (window.new_assembly_cmd.new_mini_toolbar_item)
+				mini_toolbar.extend (window.commands.new_assembly_cmd.new_mini_toolbar_item)
 			end
-			mini_toolbar.extend (window.new_class_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (window.delete_class_cluster_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (window.commands.new_class_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (window.commands.delete_class_cluster_cmd.new_mini_toolbar_item)
 			create sep
 			mini_toolbar.extend (sep)
 			but := show_current_class_cluster_cmd.new_mini_toolbar_item
@@ -83,26 +87,8 @@ feature {NONE} -- Initialization
 			else
 				show_current_class_cluster_cmd.disable_sensitive
 			end
-		ensure
+		ensure then
 			toolbar_exists: mini_toolbar /= Void
-		end
-
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'.
-		do
-			if mini_toolbar = Void then
-				build_mini_toolbar
-			end
-
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (
-				explorer_bar, widget, title, title_for_pre, True, mini_toolbar
-			)
-			explorer_bar_item.set_menu_name (menu_name)
-			if pixmap /= Void then
-				explorer_bar_item.set_pixmap (pixmap)
-			end
-			explorer_bar.add (explorer_bar_item)
 		end
 
 feature -- Access
@@ -140,8 +126,23 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.tool_clusters_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer
+		do
+			Result := pixmaps.icon_pixmaps.tool_clusters_icon_buffer
+		end
+
 	show_current_class_cluster_cmd: EB_STANDARD_CMD
 			-- Command that highlights currently edited object in the cluster tree.
+
+feature -- Command
+
+	show is
+			-- Show tool.
+		do
+			Precursor {EB_TOOL}
+			widget.set_focus
+		end
 
 feature -- Status setting
 
@@ -188,15 +189,12 @@ feature {NONE} -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			if explorer_bar_item /= Void then
-				explorer_bar_item.recycle
-			end
 			show_current_class_cluster_cmd.recycle
 			show_current_class_cluster_cmd := Void
 			widget.recycle
 			widget := Void
 			window := Void
-			manager := Void
+			develop_window := Void
 		end
 
 feature {NONE} -- Implementation

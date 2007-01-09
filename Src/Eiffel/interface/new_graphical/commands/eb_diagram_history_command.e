@@ -35,7 +35,7 @@ feature -- Basic operations
 			-- Display history dialog.
 		do
 			if is_sensitive then
-				history.show_relative_to_window (tool.development_window.window)
+				history.show_relative_to_window (tool.develop_window.window)
 			end
 		end
 
@@ -54,6 +54,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.general_undo_history_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

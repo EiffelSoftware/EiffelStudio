@@ -26,7 +26,7 @@ feature -- Basic operations
 	execute is
 			-- show/hide signature
 		do
-			target.features_tool.toggle_signatures
+			target.tools.features_tool.toggle_signatures
 		end
 
 feature -- Access
@@ -44,10 +44,16 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
-			if target.features_tool.is_signature_enabled then
+			if target.tools.features_tool.is_signature_enabled then
 				Result := Interface_names.f_hide_signature
 			else
 				Result := Interface_names.f_show_signature
@@ -56,7 +62,7 @@ feature {NONE} -- Implementation
 
 	is_selected: BOOLEAN is
 		do
-			Result := target.features_tool.is_signature_enabled
+			Result := target.tools.features_tool.is_signature_enabled
 		end
 
 	description: STRING_GENERAL is

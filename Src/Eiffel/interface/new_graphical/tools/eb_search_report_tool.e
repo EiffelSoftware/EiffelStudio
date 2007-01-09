@@ -14,6 +14,19 @@ inherit
 
 	EB_RECYCLABLE
 
+	EB_TOOL
+		rename
+			make as make_tool,
+			widget as report_box
+		redefine
+			build_docking_content,
+			build_mini_toolbar,
+			mini_toolbar,
+			pixmap,
+			pixel_buffer,
+			show
+		end
+
 create
 	make
 
@@ -25,12 +38,12 @@ feature {NONE} -- Initialization
 			a_search_tool_not_void: a_search_tool /= Void
 		do
 			search_tool := a_search_tool
-			report_box := build_report_box
+			make_tool (a_search_tool.develop_window)
 		ensure
 			search_tool_not_void: search_tool /= Void
 		end
 
-	build_report_box : EV_VERTICAL_BOX is
+	build_interface is
 			-- Create and return a box containing result grid.
 		local
 			frm: EV_FRAME
@@ -78,14 +91,48 @@ feature {NONE} -- Initialization
 
 			create search_report_grid.make (search_tool)
 
-			create Result
-			Result.extend (frm)
-			Result.disable_item_expand (frm)
+			create report_box
+			report_box.extend (frm)
+			report_box.disable_item_expand (frm)
 
 			create report
 
 			report.extend (search_report_grid)
-			Result.extend (report)
+			report_box.extend (report)
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Redefine
+		do
+			create content.make_with_widget (report_box, title)
+			content.close_request_actions.extend (agent close)
+			content.set_long_title (title)
+			content.set_short_title (title)
+			if pixmap /= Void then
+				content.set_pixmap (pixmap)
+			end
+			if pixel_buffer /= Void then
+				content.set_pixel_buffer (pixel_buffer)
+			end
+			content.focus_in_actions.extend (agent show)
+		end
+
+feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialize
+
+	build_mini_toolbar is
+			-- Build mini tool bar.
+		local
+			l_cmd: EB_SHOW_TOOL_COMMAND
+		do
+			create mini_toolbar
+			l_cmd := develop_window.commands.show_tool_commands.item (search_tool)
+				-- Pixmap should be changed.
+			l_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.general_search_icon)
+			mini_toolbar.extend (l_cmd.new_mini_toolbar_item)
+
+			content.set_mini_toolbar (mini_toolbar)
+		ensure then
+			mini_toolbar_exists: mini_toolbar /= Void
 		end
 
 feature -- Access
@@ -94,9 +141,46 @@ feature -- Access
 			-- Grid to contain search report
 
 	search_tool: EB_MULTI_SEARCH_TOOL
+			-- Search tool
 
 	report_box: EV_VERTICAL_BOX
-		-- Widget
+			-- Widget
+
+	title_for_pre: STRING is
+			-- Title
+		do
+			Result := interface_names.to_search_report_tool
+		end
+
+	title: STRING_GENERAL is
+			-- Redefine
+		do
+			Result := interface_names.t_search_report_tool
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap
+		do
+			Result := pixmaps.icon_pixmaps.tool_find_results_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer
+		do
+			Result := pixmaps.icon_pixmaps.tool_find_results_icon_buffer
+		end
+
+	mini_toolbar: EV_TOOL_BAR
+			-- Mini tool bar
+
+feature -- Command
+
+	show is
+			-- Show tool.
+		do
+			Precursor {EB_TOOL}
+			search_report_grid.set_focus
+		end
 
 feature -- Element Change
 
@@ -166,9 +250,6 @@ feature {NONE} -- Implementation
 				report_button.set_text (Interface_names.l_Search_report_hide)
 			end
 		end
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

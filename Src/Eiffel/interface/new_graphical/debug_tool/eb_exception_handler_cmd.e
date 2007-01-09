@@ -103,6 +103,12 @@ feature {NONE} -- Attributes
 			Result := pixmaps.icon_pixmaps.debug_exception_handling_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.debug_exception_handling_icon_buffer
+		end
+
 feature -- Handler dialog by code
 
 	build_handler_by_code_dialog is

@@ -23,6 +23,11 @@ feature -- Access
 		deferred
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer which representing the command.
+		deferred
+		end
+
 	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing the command for mini toolbars.
 		do
@@ -120,12 +125,19 @@ feature -- Basic operations
 
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
-			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
 			-- it will never be garbage collected.
 		do
 			create Result.make (Current)
 			initialize_toolbar_item (Result, display_text)
+			Result.select_actions.extend (agent execute)
+		end
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new docking tool bar button for this command.
+		do
+			create Result.make (Current)
+			initialize_sd_toolbar_item (Result, display_text)
 			Result.select_actions.extend (agent execute)
 		end
 
@@ -150,7 +162,7 @@ feature {NONE} -- Implementation
 	initialize_toolbar_item (a_item: EB_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN) is
 			-- Initialize `a_item'
 		local
-			tt: STRING_GENERAL
+			l_tt: STRING_GENERAL
 		do
 			if display_text and then has_text then
 				a_item.set_text (tooltext)
@@ -161,13 +173,13 @@ feature {NONE} -- Implementation
 			else
 				a_item.disable_sensitive
 			end
-			tt := tooltip.twin
+			l_tt := tooltip.twin
 			if accelerator /= Void then
-				tt.append (opening_parenthesis)
-				tt.append (accelerator.out)
-				tt.append (closing_parenthesis)
+				l_tt.append (opening_parenthesis)
+				l_tt.append (accelerator.out)
+				l_tt.append (closing_parenthesis)
 			end
-			a_item.set_tooltip (tt)
+			a_item.set_tooltip (l_tt)
 		end
 
 feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
@@ -178,6 +190,34 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 			managed_toolbar_items.extend (a_toolbar_item)
 		ensure
 			managed_toolbar_items_has_item: managed_toolbar_items.has (a_toolbar_item)
+		end
+
+	initialize_sd_toolbar_item (a_item: EB_SD_COMMAND_TOOL_BAR_BUTTON; display_text: BOOLEAN) is
+			-- Initialize `a_item'
+		local
+			l_tt: STRING_GENERAL
+		do
+			if display_text and then has_text then
+				a_item.set_text (tooltext)
+			end
+			a_item.set_pixmap (pixmap)
+			if pixel_buffer /= Void then
+				a_item.set_pixel_buffer (pixel_buffer)
+			end
+			a_item.set_tooltip (tooltip)
+			a_item.set_description (description)
+			if is_sensitive then
+				a_item.enable_sensitive
+			else
+				a_item.disable_sensitive
+			end
+			l_tt := tooltip.twin
+			if accelerator /= Void then
+				l_tt.append (opening_parenthesis)
+				l_tt.append (accelerator.out)
+				l_tt.append (closing_parenthesis)
+			end
+			a_item.set_tooltip (l_tt)
 		end
 
 	remove_toolbar_item (a_toolbar_item: like new_toolbar_item) is
@@ -191,6 +231,10 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 			managed_toolbar_items_not_has_item: not managed_toolbar_items.has (a_toolbar_item)
 		end
 
+feature {EB_COMMAND_TOOL_BAR_BUTTON, EB_SD_COMMAND_TOOL_BAR_BUTTON} -- Implementation
+
+	internal_managed_sd_toolbar_items: ARRAYED_LIST [like new_sd_toolbar_item]
+
 	managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item] is
 			-- Toolbar items associated with this command.
 		do
@@ -202,7 +246,18 @@ feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 			managed_toolbar_items_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementaiton
+feature {EB_SD_COMMAND_TOOL_BAR_BUTTON} -- Implementaiton
+
+	managed_sd_toolbar_items: ARRAYED_LIST [like new_sd_toolbar_item] is
+			--
+		do
+			if internal_managed_sd_toolbar_items = Void then
+				create internal_managed_sd_toolbar_items.make (1)
+			end
+			Result := internal_managed_sd_toolbar_items
+		end
+
+feature {NONE} -- Implementation
 
 	internal_managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
 

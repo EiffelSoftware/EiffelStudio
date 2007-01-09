@@ -407,17 +407,13 @@ feature{NONE} -- Command substitution
 			sub_str_attached: sub_str /= Void
 		local
 			dev: EB_DEVELOPMENT_WINDOW
-			l_editor_tool: EB_EDITOR_TOOL
 			l_text_area: EB_SMART_EDITOR
 		do
 			dev := Window_manager.last_focused_development_window
 			if dev /= Void then
-				l_editor_tool := dev.editor_tool
-				if l_editor_tool /= Void then
-					l_text_area := l_editor_tool.text_area
-					if l_text_area /= Void and then not l_text_area.is_empty then
-						cmd.replace_substring_all (sub_string_list.i_th (sub_line), l_text_area.cursor_y_position.out)
-					end
+				l_text_area := dev.editors_manager.current_editor
+				if l_text_area /= Void and then not l_text_area.is_empty then
+					cmd.replace_substring_all (sub_string_list.i_th (sub_line), l_text_area.cursor_y_position.out)
 				end
 			else
 				set_is_command_ok (False)

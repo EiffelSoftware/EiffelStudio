@@ -79,7 +79,7 @@ feature -- Access
 	projector: EIFFEL_PROJECTOR
 			-- The projector used to project the `world'.
 
-	tool: EB_CONTEXT_EDITOR
+	tool: EB_DIAGRAM_TOOL
 			-- Tool the `world' is displayed in.
 
 	world: EIFFEL_WORLD

@@ -81,7 +81,7 @@ feature -- Basic Operations
 	process_block_text (text: EB_PROCESS_IO_DATA_BLOCK) is
 			-- Print `text' in all output tools.
 		local
-			eo: EB_C_COMPILATION_OUTPUT_TOOL
+			eo: EB_C_OUTPUT_TOOL
 		do
 			from
 				managed_output_tools.start
@@ -100,7 +100,7 @@ feature -- Basic Operations
 	notify_c_compilation_output_finished is
 			-- Notify all output tools that all output from c compilation has been finished.
 		local
-			eo: EB_C_COMPILATION_OUTPUT_TOOL
+			eo: EB_C_OUTPUT_TOOL
 		do
 			from
 				managed_output_tools.start

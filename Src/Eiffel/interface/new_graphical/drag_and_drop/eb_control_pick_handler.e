@@ -45,11 +45,9 @@ feature -- Basic operations
 					window_manager.last_created_window.set_stone (st)
 				elseif pref.is_equal (new_context) then
 					window_manager.create_context_window
-					window_manager.last_created_window.context_tool.advanced_set_stone (st)
 				elseif pref.is_equal (editor) then
 					window_manager.last_focused_development_window.set_stone (st)
 				elseif pref.is_equal (context) then
-					window_manager.last_focused_development_window.context_tool.advanced_set_stone (st)
 				elseif pref.is_equal (external_editor) then
 					cv_cst ?= st
 					if cv_cst /= Void then

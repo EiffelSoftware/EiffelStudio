@@ -296,7 +296,7 @@ feature -- Access
 			Result := progress_bar.value
 		end
 
-feature {EIFFEL_WORLD, EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW} -- Access
+feature {EIFFEL_WORLD, EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Access
 
 	label: EV_LABEL
 			-- Label where messages are displayed.

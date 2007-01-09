@@ -167,7 +167,7 @@ feature -- Element change
 	last_included_classes: LIST [EG_LINKABLE]
 			-- Last classes added by `include_all_classes'.
 
-feature {EB_CONTEXT_EDITOR} -- Synchronization
+feature {EB_DIAGRAM_TOOL} -- Synchronization
 
 	synchronize is
 			-- Contexts need to be updated because of recompilation
@@ -193,16 +193,16 @@ feature {NONE} -- Implementation
 				nb_of_items := number_of_superclusters (center_cluster.group, supercluster_depth) +
 							   number_of_subclusters (center_cluster.group, subcluster_depth)
 
-				context_editor.development_window.status_bar.reset_progress_bar_with_range (0 |..| nb_of_items)
+				context_editor.develop_window.status_bar.reset_progress_bar_with_range (0 |..| nb_of_items)
 			end
 
 			if context_editor /= Void then
-				context_editor.development_window.status_bar.display_message ("Exploring superclusters of " + center_cluster.name)
+				context_editor.develop_window.status_bar.display_message ("Exploring superclusters of " + center_cluster.name)
 			end
 			explore_superclusters (center_cluster, supercluster_depth)
 
 			if context_editor /= Void then
-				context_editor.development_window.status_bar.display_message ("Exploring subclusters of " + center_cluster.name)
+				context_editor.develop_window.status_bar.display_message ("Exploring subclusters of " + center_cluster.name)
 			end
 			explore_subclusters (center_cluster, subcluster_depth, True, True)
 		end
@@ -264,8 +264,8 @@ feature {NONE} -- Implementation
 						create es_cluster.make (l_cluster.parent)
 						add_cluster (es_cluster)
 						if context_editor /= Void then
-							context_editor.development_window.status_bar.display_progress_value (
-								context_editor.development_window.status_bar.current_progress_value + 1
+							context_editor.develop_window.status_bar.display_progress_value (
+								context_editor.develop_window.status_bar.current_progress_value + 1
 							)
 						end
 						include_all_classes (es_cluster)
@@ -286,8 +286,8 @@ feature {NONE} -- Implementation
 							create es_cluster.make (l_libs.item)
 							add_cluster (es_cluster)
 							if context_editor /= Void then
-								context_editor.development_window.status_bar.display_progress_value (
-									context_editor.development_window.status_bar.current_progress_value + 1
+								context_editor.develop_window.status_bar.display_progress_value (
+									context_editor.develop_window.status_bar.current_progress_value + 1
 								)
 							end
 							include_all_classes (es_cluster)
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 		do
 			if depth > 0 then
 				if context_editor /= Void then
-					l_status_bar := context_editor.development_window.status_bar
+					l_status_bar := context_editor.develop_window.status_bar
 				end
 				l_group := a_group.group
 				if l_group.is_cluster then

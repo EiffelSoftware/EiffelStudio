@@ -171,7 +171,7 @@ feature {NONE} -- Initialization
 			input_lbl.set_text (metric_names.t_input_domain_title)
 
 				-- Prepare search facilities
-			create quick_search_bar.make (metric_tool.development_window)
+			create quick_search_bar.make (metric_tool.develop_window)
 			quick_search_bar.attach_tool (grid_wrapper)
 			grid_wrapper.enable_search
 

@@ -1,5 +1,5 @@
 indexing
-	description	: "View with information about a feature."
+	description	: "Tools with information about a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author		: "Xavier Rousselot"
@@ -7,9 +7,21 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EB_FEATURES_VIEW
+	EB_FEATURES_RELATION_TOOL
 
 inherit
+	EB_TOOL
+		redefine
+			attach_to_docking_manager,
+			pixmap,
+			mini_toolbar,
+			build_mini_toolbar,
+			build_docking_content,
+			show
+		end
+
+	EB_CONSTANTS
+
 	WIDGET_OWNER
 
 	SHARED_WORKBENCH
@@ -20,12 +32,19 @@ inherit
 
 	EB_VIEWPOINT_AREA
 
+	EB_HISTORY_OWNER
+		rename
+			set_stone as drop_stone
+		redefine
+			internal_recycle
+		end
+
 create
-	make_with_tool
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_tool (a_tool: EB_DEVELOPMENT_WINDOW; a_context: EB_CONTEXT_TOOL) is
+	make_with_tool (a_tool: EB_DEVELOPMENT_WINDOW) is
 			-- Set default values.
 		require
 			formatters_initialized: a_tool.managed_feature_formatters /= Void
@@ -39,16 +58,15 @@ feature {NONE} -- Initialization
 			l_feature_content_formatter: EB_FEATURE_CONTENT_FORMATTER
 			l_drop_actions: EV_PND_ACTION_SEQUENCE
 		do
-			context := a_context
 			formatters := a_tool.managed_feature_formatters
 			create managed_formatters.make (10)
-			create shared_editor.make (a_tool)
-			shared_editor.widget.set_border_width (1)
-			shared_editor.widget.set_background_color ((create {EV_STOCK_COLORS}).gray)
+			create editor.make (a_tool)
+			editor.widget.set_border_width (1)
+			editor.widget.set_background_color ((create {EV_STOCK_COLORS}).gray)
 			create l_drop_actions
 			l_drop_actions.extend (agent drop_stone)
-			shared_editor.disable_line_numbers
-			shared_editor.drop_actions.extend (agent drop_stone)
+			editor.disable_line_numbers
+			editor.drop_actions.extend (agent drop_stone)
 			create l_browser.make (a_tool, l_drop_actions)
 			l_browser.set_sorting_status (l_browser.sorted_columns_from_string (preferences.class_browser_data.feature_view_sorting_order))
 			from
@@ -59,7 +77,7 @@ feature {NONE} -- Initialization
 				l_formatter := formatters.item
 				conv_ft ?= l_formatter
 				if conv_ft /= Void then
-					conv_ft.set_editor (shared_editor)
+					conv_ft.set_editor (editor)
 					conv_ft.set_viewpoints (viewpoints)
 					l_flat_formatter ?= l_formatter
 					if l_flat_formatter /= Void then
@@ -82,6 +100,98 @@ feature {NONE} -- Initialization
 				formatters.forth
 			end
 			fill_in
+
+			-- Now (for new docking Eiffel Studio) there is now on_select actions..
+			-- We directly set the widget
+			set_widget (editor.widget)
+			-- Added following for set `internal_shown' flag.
+			on_select
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build dockable content.
+		do
+			Precursor {EB_TOOL}(a_docking_manager)
+			content.drop_actions.extend (agent drop_stone)
+		end
+
+feature -- EB_TOOL issues
+
+	title: STRING_GENERAL is
+			-- Title
+		local
+			l_constatns: EB_CONSTANTS
+		do
+			create l_constatns
+			Result := l_constatns.interface_names.l_tab_feature_info
+		end
+
+	title_for_pre: STRING is
+			-- Title
+		local
+			l_constatns: EB_CONSTANTS
+		do
+			create l_constatns
+			Result := l_constatns.interface_names.to_Feature_relation_tool
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_feature_icon
+		end
+
+	build_mini_toolbar is
+			-- Redefine
+		do
+			create history_toolbar
+			history_toolbar.extend (history_manager.back_command.new_mini_toolbar_item)
+			history_toolbar.extend (history_manager.forth_command.new_mini_toolbar_item)
+
+			create mini_toolbar
+			mini_toolbar.extend (address_manager.header_info)
+			mini_toolbar.extend (history_toolbar)
+		end
+
+	build_interface is
+			-- Build interface
+		do
+			make_with_tool (develop_window)
+
+			create history_manager.make (Current)
+
+			-- FIXIT: Address manager issues is common among 	EB_CLASS_TOOL, EB_FEATURE_RELATION_TOOL, EB_DIAGRAM_TOOL.
+			-- So, common ancestor or a common helper class?			
+			create address_manager.make (Current, True)
+		end
+
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Attach to docking manager
+		do
+			build_docking_content (a_docking_manager)
+
+			check friend_tool_created: develop_window.tools.class_tool /= Void end
+			check not_already_has: not a_docking_manager.has_content (content) end
+			a_docking_manager.contents.extend (content)
+		end
+
+	show is
+			-- Show tool.
+		do
+			Precursor {EB_TOOL}
+			from
+				managed_formatters.start
+			until
+				managed_formatters.after
+			loop
+				if managed_formatters.item.selected then
+					managed_formatters.item.set_focus
+				end
+				managed_formatters.forth
+			end
 		end
 
 feature -- Access
@@ -103,12 +213,11 @@ feature -- Access
 	stone: STONE is
 			-- Currently managed stone.
 		do
-			if internal_stone = Void then
-				Result := context.stone
-			else
-				Result := internal_stone
-			end
+			Result := internal_stone
 		end
+
+	address_manager: EB_ADDRESS_MANAGER
+			-- Manager for the header info.
 
 	last_widget: EV_WIDGET is
 			-- Last set widget
@@ -119,12 +228,6 @@ feature -- Access
 		end
 
 feature -- Status setting
-
-	set_parent (explorer: EB_EXPLORER_BAR_ITEM) is
-			-- Set `explorer_parent' to `explorer'.
-		do
-			explorer_parent := explorer
-		end
 
 	set_stone (new_stone: STONE) is
 			-- Send a stone to feature formatters.
@@ -164,6 +267,7 @@ feature -- Status setting
 					managed_formatters.forth
 				end
 				internal_stone := Void
+				history_manager.extend (new_stone)
 			elseif
 				internal_stone = Void or else
 				(internal_stone /= Void and then not same_feature (internal_stone.e_feature, fst.e_feature))
@@ -177,6 +281,7 @@ feature -- Status setting
 					managed_formatters.forth
 				end
 				internal_stone := fst
+				history_manager.extend (new_stone)
 			end
 			flat_formatter.show_debugged_line
 		end
@@ -205,7 +310,8 @@ feature -- Status setting
 						end
 					end
 					if not found then
-						context.class_view.pop_default_formatter
+						develop_window.tools.class_tool.show
+						develop_window.tools.class_tool.pop_default_formatter
 					end
 				end
 				if not found and ofst /= Void then
@@ -214,7 +320,10 @@ feature -- Status setting
 						ofst.feature_name, st.class_i.name))
 				end
 				if not found then
-					launch_stone (st)
+					develop_window.tools.class_tool.set_stone (st)
+					develop_window.tools.class_tool.content.show
+					develop_window.tools.class_tool.content.set_focus
+					develop_window.tools.class_tool.set_focus
 				end
 			else
 				launch_stone (fst)
@@ -226,7 +335,15 @@ feature -- Status setting
 		require
 			valid_stone: st /= Void
 		do
-			context.launch_stone (st)
+			if develop_window.unified_stone then
+				develop_window.set_stone (st)
+			else
+				set_stone (st)
+			end
+			if content.is_visible then
+				set_focus
+				content.set_focus
+			end
 		end
 
 	on_select is
@@ -291,13 +408,13 @@ feature -- Status setting
 	quick_refresh_editor is
 			-- Refresh the editor.
 		do
-			shared_editor.refresh
+			editor.refresh
 		end
 
 	quick_refresh_margin is
 			-- Refresh the editor's margin.
 		do
-			shared_editor.margin.refresh
+			editor.margin.refresh
 		end
 
 	set_parent_notebook (a_notebook: EV_NOTEBOOK) is
@@ -356,19 +473,6 @@ feature -- Status setting
 			then
 				parent_notebook.select_item (widget)
 			end
-			if
-				explorer_parent /= Void and then
-				not is_parent_visible
-			then
-				explorer_parent.associated_command.execute
-			end
-			if
-					-- Another tool is maximized.
-				 not explorer_parent.is_maximized and
-				 explorer_parent.parent.is_maximized
-			then
-				explorer_parent.parent.unmaximize
-			end
 		end
 
 	pop_feature_flat is
@@ -396,9 +500,9 @@ feature -- Status setting
 	set_focus is
 			-- Give the focus to the editor.
 		require
-			focusable: widget.is_displayed and widget.is_sensitive
+			focusable: content.is_visible and widget.is_sensitive
 		do
-			shared_editor.set_focus
+			editor.set_focus
 		end
 
 feature -- Actions
@@ -412,12 +516,13 @@ feature -- Actions
 
 feature -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Remove all references to `Current' and its descendants.
 		do
-			shared_editor.recycle
-			shared_editor := Void
-			context := Void
+			editor.recycle
+			editor := Void
+			content := Void
+			develop_window := Void
 		end
 
 feature {NONE} -- Implementation
@@ -554,28 +659,33 @@ feature {NONE} -- Implementation
 			formatter.set_output_line (output_line)
 		end
 
-	context: EB_CONTEXT_TOOL
-			-- Container of `Current'. Stone manager.
-
 	managed_formatters: ARRAYED_LIST [EB_FEATURE_INFO_FORMATTER]
 			-- Formatters available in `Current' view.
 
 	visible: BOOLEAN
 			-- Are we displayed by `parent_notebook'.
 
-	shared_editor: EB_CLICKABLE_EDITOR
+	editor: EB_CLICKABLE_EDITOR
 			-- Editor shared by all feature formatters.
 
-	is_parent_visible: BOOLEAN is
-			-- Is `explorer_parent' displayed?
+	mini_toolbar: EV_HORIZONTAL_BOX
+			-- Mini tool bar.
+
+	history_toolbar: EV_TOOL_BAR;
+			-- Toolbar containing the history commands.
+
+	window: EV_WINDOW is
+			-- Window dialogs can refer to.
+		local
+			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			if explorer_parent /= Void then
-				Result := explorer_parent.is_visible
+			conv_dev ?= develop_window
+			if conv_dev /= Void then
+				Result := conv_dev.window
+			else
+				create Result
 			end
 		end
-
-	explorer_parent: EB_EXPLORER_BAR_ITEM
-			-- Explorer bar item that contains `Current'.
 
 	formatter_tool_bar_area: EV_HORIZONTAL_BOX
 			-- Area to contain tool bar from formatter

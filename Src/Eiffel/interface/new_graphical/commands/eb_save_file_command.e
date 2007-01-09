@@ -9,6 +9,7 @@ class
 	EB_SAVE_FILE_COMMAND
 
 inherit
+
 	EB_FILEABLE_COMMAND
 		redefine
 			make
@@ -22,7 +23,8 @@ inherit
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			tooltext
+			tooltext,
+			pixel_buffer
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -109,6 +111,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.general_save_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_save_icon_buffer
+		end
+
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
@@ -136,7 +144,6 @@ feature {NONE} -- Implementation
 		do
 			enable_sensitive
 		end
-
 
 	on_text_reset is
 			-- make the command insensitive

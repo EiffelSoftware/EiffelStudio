@@ -126,6 +126,19 @@ feature -- Access
 	dev_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window
 
+	docking_content: SD_CONTENT
+			-- Docking content.
+
+feature -- Docking
+
+	set_docking_content (a_content: SD_CONTENT) is
+			-- Set `docking_content' with `a_content' and associate `widget' to `a_content'.
+		require
+			a_content_attached: a_content /= Void
+		do
+			docking_content := a_content
+		end
+
 feature -- Text Loading
 
 	load_file (a_filename: STRING) is
@@ -235,7 +248,7 @@ feature {NONE} -- Handle keystokes
 			end
 		end
 
-feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW} -- Edition Operations on text
+feature {EB_COMMAND, EB_SEARCH_PERFORMER, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Edition Operations on text
 
 	comment_selection is
 			-- Comment selected lines if possible.

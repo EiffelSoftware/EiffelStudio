@@ -17,12 +17,15 @@ inherit
 			objects_grid_item as get_object_display_item
 		end
 
-	ES_NOTEBOOK_ATTACHABLE
-
 	EB_TOOL
 		redefine
 			menu_name,
-			pixmap
+			pixmap,
+			make,
+			mini_toolbar,
+			build_mini_toolbar,
+			build_docking_content,
+			show
 		end
 
 	EB_RECYCLABLE
@@ -51,14 +54,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_debugger (a_manager: EB_TOOL_MANAGER; a_debugger: like debugger_manager) is
-			-- Initialize `Current'.
+	make_with_debugger (a_manager: EB_DEVELOPMENT_WINDOW; a_debugger: EB_DEBUGGER_MANAGER) is
+			-- Initialize with `a_debugger'.
 		require
 			a_debugger_not_void: a_debugger /= Void
 		do
 			set_debugger_manager (a_debugger)
-			debugger_manager.set_slices (preferences.debugger_data.min_slice, preferences.debugger_data.max_slice)
+			make (a_manager)
+		end
 
+	make (a_manager: EB_DEVELOPMENT_WINDOW) is
+			-- Initialize `Current'.
+		do
+			debugger_manager.set_slices (preferences.debugger_data.min_slice, preferences.debugger_data.max_slice)
 			display_first_attributes := True
 			display_first_onces := False
 			display_first_special := True
@@ -71,7 +79,8 @@ feature {NONE} -- Initialization
 
 			create objects_grids_positions.make (Position_current, Position_objects)
 
-			make (a_manager)
+			Precursor {EB_TOOL}(a_manager)
+
 		end
 
 feature {NONE} -- Internal properties
@@ -278,44 +287,17 @@ feature {NONE} -- Interface
 				objects_grids.item_for_iteration.set_slices_cmd (slices_cmd)
 				objects_grids.forth
 			end
-		ensure
+
+		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
 
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build docking content
 		do
-			if mini_toolbar = Void then
-				build_mini_toolbar
-			end
-			if header_box = Void then
-				build_header_box
-			else
-				clean_header_box
-			end
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_info (explorer_bar, widget, title, title_for_pre, False, header_box, mini_toolbar)
-			explorer_bar_item.set_menu_name (menu_name)
-			if pixmap /= Void then
-				explorer_bar_item.set_pixmap (pixmap)
-			end
-			explorer_bar.add (explorer_bar_item)
-		end
-
-	build_notebook_item (nb: ES_NOTEBOOK) is
-		do
-			if mini_toolbar = Void then
-				build_mini_toolbar
-			end
-			if header_box = Void then
-				build_header_box
-			else
-				clean_header_box
-			end
-			create notebook_item.make_with_info (nb, widget, title, header_box, mini_toolbar)
-			nb.extend (notebook_item)
-			notebook_item.drop_actions.extend (agent add_debugged_object)
-			notebook_item.drop_actions.extend (agent drop_stack_element)
+			Precursor {EB_TOOL} (a_docking_manager)
+			content.drop_actions.extend (agent add_debugged_object)
+			content.drop_actions.extend (agent drop_stack_element)
 		end
 
 	open_objects_menu (w: EV_WIDGET; ax, ay: INTEGER) is
@@ -485,6 +467,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
+			Result := pixmaps.icon_pixmaps.tool_objects_icon
 		end
 
 	debugger_manager: EB_DEBUGGER_MANAGER
@@ -716,14 +699,16 @@ feature -- Change
 			debugger_manager := a_manager
 		end
 
-	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
-			-- Change the window and explorer bar `Current' is in.
-		require
-			a_manager_exists: a_manager /= Void
-			an_explorer_bar_exists: an_explorer_bar /= Void
+	show is
+			-- Show tool.
+		local
+			l_grid: like objects_grid
 		do
-			set_manager (a_manager)
-			change_attach_explorer (an_explorer_bar)
+			Precursor {EB_TOOL}
+			l_grid := objects_grid (first_grid_id)
+			if not l_grid.is_destroyed and then l_grid.is_displayed and then l_grid.is_sensitive then
+				l_grid.set_focus
+			end
 		end
 
 feature -- Status report
@@ -768,9 +753,6 @@ feature {NONE} -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
-			end
 			reset_tool
 		end
 

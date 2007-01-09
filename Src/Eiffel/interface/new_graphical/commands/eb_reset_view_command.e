@@ -40,7 +40,7 @@ feature -- Basic operations
 			if is_sensitive then
 				dial := confirmation
 				dial.disable_user_resize
-				dial.show_modal_to_window (tool.development_window.window)
+				dial.show_modal_to_window (tool.develop_window.window)
 			end
 		end
 
@@ -52,6 +52,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.general_reset_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

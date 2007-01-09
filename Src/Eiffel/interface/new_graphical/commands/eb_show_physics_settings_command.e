@@ -40,7 +40,7 @@ feature -- Basic operations
 		do
 			if is_sensitive then
 				create dialog.make (tool.force_directed_layout, tool)
-				dialog.show_modal_to_window (tool.development_window.window)
+				dialog.show_modal_to_window (tool.develop_window.window)
 			end
 		end
 
@@ -71,6 +71,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_physics_settings_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	description: STRING_GENERAL is
 			-- Description for this command.
 		do

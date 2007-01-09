@@ -39,6 +39,9 @@ feature -- Access
 	pixmap: EV_PIXMAP
 			-- Icon for tool bar button representing `Current'.
 
+	pixel_buffer: EV_PIXEL_BUFFER
+			-- Icon for tool bar button representing `Current'.
+
 	mini_pixmap: EV_PIXMAP
 			-- Icon for mini tool bar button representing `Current'.
 
@@ -65,6 +68,14 @@ feature -- Status setting
 			new_p_non_void: new_p /= Void
 		do
 			pixmap := new_p
+		end
+
+	set_pixel_buffer (a_buffer: EV_PIXEL_BUFFER) is
+			-- Define pixel buffer associated with `Current'.
+		require
+			a_buffer_not_void: a_buffer /= Void
+		do
+			pixel_buffer := a_buffer
 		end
 
 	set_tooltip (s: like tooltip) is

@@ -72,6 +72,12 @@ feature -- Status report
 			Result := pixmaps.icon_pixmaps.command_error_info_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.command_error_info_icon_buffer
+		end
+
 	menu_name: STRING_GENERAL is
 			-- Text used for menu items for `Current'.
 		do

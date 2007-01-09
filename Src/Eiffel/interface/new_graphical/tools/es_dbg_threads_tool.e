@@ -13,7 +13,10 @@ inherit
 	EB_TOOL
 		redefine
 			menu_name,
-			pixmap
+			pixmap,
+			pixel_buffer,
+			mini_toolbar,
+			show
 		end
 
 	EB_RECYCLABLE
@@ -74,31 +77,6 @@ feature {NONE} -- Initialization
 			widget := box
 		end
 
---	build_mini_toolbar is
---			-- Build the associated tool bar
---		do
---			create mini_toolbar
---		ensure
---			mini_toolbar_exists: mini_toolbar /= Void
---		end
-
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
-		do
---			if mini_toolbar = Void then
---				build_mini_toolbar
---			end
---			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, mini_toolbar)
-
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make (explorer_bar, widget, title, title_for_pre, True)
-			explorer_bar_item.set_menu_name (menu_name)
-			if pixmap /= Void then
-				explorer_bar_item.set_pixmap (pixmap)
-			end
-			explorer_bar.add (explorer_bar_item)
-		end
-
 feature -- Properties
 
 	grid: ES_GRID
@@ -114,7 +92,7 @@ feature -- Access
 	title: STRING_GENERAL is
 			-- Title of the tool.
 		do
-			Result := Interface_names.t_Threads_tool -- Interface_names.t_Call_stack_tool
+			Result := Interface_names.t_Threads_tool
 		end
 
 	title_for_pre: STRING is
@@ -132,8 +110,13 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
---| To be done.
---			Result := Pixmaps.Icon_call_stack
+			Result := pixmaps.icon_pixmaps.tool_threads_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer as it may appear in toolbars and menus.
+		do
+			Result := pixmaps.icon_pixmaps.tool_threads_icon_buffer
 		end
 
 feature -- Status setting
@@ -203,16 +186,11 @@ feature -- Status setting
 			end
 		end
 
-	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
-			-- Change the window and explorer bar `Current' is in.
-		require
-			a_manager_exists: a_manager /= Void
-			an_explorer_bar_exists: an_explorer_bar /= Void
+	show is
+			-- Show tool.
 		do
-			set_manager (a_manager)
-			change_attach_explorer (an_explorer_bar)
-		ensure
-			explorer_changed: explorer_bar_item.parent = an_explorer_bar
+			Precursor {EB_TOOL}
+			grid.set_focus
 		end
 
 	reset_tool is
@@ -229,12 +207,8 @@ feature {NONE} -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
-			end
 			reset_tool
 		end
-
 
 feature {NONE} -- Implementation
 

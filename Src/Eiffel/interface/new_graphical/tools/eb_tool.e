@@ -15,7 +15,7 @@ inherit
 
 	REFACTORING_HELPER
 
-	EB_EXPLORER_BAR_ATTACHABLE
+	EB_DOCKING_MANAGER_ATTACHABLE
 
 	EB_RECYCLABLE
 
@@ -41,16 +41,18 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_manager: like manager) is
+	make (a_manager: like develop_window) is
 			-- Create a new tool with `a_manager' as manager.
 		require
 			a_manager_exists: a_manager /= Void
 		do
 				-- Link with the manager and the explorer.
-			manager := a_manager
+			develop_window := a_manager
 
 				-- Register and initialize
 			build_interface
+		ensure
+			set: develop_window = a_manager
 		end
 
 	build_interface is
@@ -60,14 +62,44 @@ feature {NONE} -- Initialization
 			widget_created: widget /= Void
 		end
 
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER)is
+			-- Build the `content' item and
+			-- Add it to `a_docking_manager'.
+		do
+			build_mini_toolbar
+
+			create content.make_with_widget (widget, title_for_pre)
+
+			content.set_long_title (title)
+			content.set_short_title (title)
+
+			if mini_toolbar /= Void then
+				content.set_mini_toolbar (mini_toolbar)
+			end
+
+			if pixmap /= Void then
+				content.set_pixmap (pixmap)
+			end
+			if pixel_buffer /= Void then
+				content.set_pixel_buffer (pixel_buffer)
+			end
+			content.close_request_actions.extend (agent close)
+			content.focus_in_actions.extend (agent show)
+		end
+
+	build_mini_toolbar is
+			-- Build `mini_toolbar'
+		do
+		end
+
 feature -- Change
 
-	set_manager (m: like manager) is
-			-- set value `m' to `manager'
+	set_manager (m: like develop_window) is
+			-- Set value `m' to `develop_window'
 		require
 			m /= Void
 		do
-			manager := m
+			develop_window := m
 		end
 
 feature -- Access
@@ -77,12 +109,22 @@ feature -- Access
 		deferred
 		end
 
-	title: STRING_GENERAL is
+	title_for_pre: STRING is
 			-- Title of the tool
 		deferred
-		ensure
-			valid_title: title /= Void and then not title.is_empty
+		ensure then
+			valid_title: Result /= Void and then not Result.is_empty
 		end
+
+	title: STRING_GENERAL is
+			-- Title of the tool which for show, it maybe not in English.
+		deferred
+		ensure then
+			valid_title: Result /= Void and then not Result.is_empty
+		end
+
+	mini_toolbar: EV_WIDGET
+			-- Mini tool bar assiociate with Current.
 
 	minimized_title: STRING_GENERAL is
 			-- Title of the tool when minimized.
@@ -111,13 +153,21 @@ feature -- Access
 		do
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer as it appears in toolbars and menu, there is no pixmap by default.
+		do
+		end
+
+	develop_window: EB_DEVELOPMENT_WINDOW
+			-- Development window.
+
 feature -- Status report
 
 	shown: BOOLEAN is
 			-- Is Current shown on the screen?
 		do
-			if explorer_bar_item /= Void then
-				Result := explorer_bar_item.is_visible
+			if content /= Void then
+				Result := content.is_visible
 			end
 		end
 
@@ -126,23 +176,28 @@ feature -- Status setting
 	close is
 			-- Close the tool (if possible)
 		do
-			if explorer_bar_item /= Void and then explorer_bar_item.is_closeable then
-				explorer_bar_item.close
-			end
+			content.hide
+			ev_application.do_once_on_idle (agent set_focus_to_editor_when_idle)
 		end
 
 	show is
 			-- Show the tool (if possible)
 		do
-			if explorer_bar_item /= Void and then (not explorer_bar_item.is_visible) then
-				explorer_bar_item.show
+			if not content.is_visible then
+				content.show
+			end
+			content.set_focus
+		end
+
+	has_focus: BOOLEAN is
+			-- Any widget of the tool has focus?
+		do
+			if widget /= Void then
+				Result := has_focus_on_widgets_internal (widget)
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	manager: EB_TOOL_MANAGER
-			-- Manager for Current
 
 	on_bar_item_shown is
 			-- The explorer bar item is now displayed.
@@ -155,6 +210,48 @@ feature {NONE} -- Implementation
 	on_shown is
 			-- Perform update actions when the tool is displayed.
 		do
+		end
+
+	has_focus_on_widgets_internal (a_widget: EV_WIDGET): BOOLEAN is
+			-- Any widget has focus.
+		local
+			l_container: EV_CONTAINER
+			l_linear_representation: LINEAR [EV_WIDGET]
+		do
+			l_container ?= a_widget
+			if l_container /= Void then
+				l_linear_representation := l_container.linear_representation
+				if l_linear_representation /= Void and then not l_linear_representation.is_empty then
+					from
+						l_linear_representation.start
+					until
+						l_linear_representation.after or Result
+					loop
+						if l_linear_representation.item.has_focus then
+							Result := true
+						else
+							Result := has_focus_on_widgets_internal (l_linear_representation.item)
+						end
+						l_linear_representation.forth
+					end
+				elseif l_container.has_focus then
+					Result := true
+				end
+			elseif a_widget.has_focus then
+				Result := true
+			end
+		end
+
+	set_focus_to_editor_when_idle is
+			-- Set focus to editor when idle.
+		local
+			l_editor: EB_SMART_EDITOR
+		do
+			l_editor := develop_window.editors_manager.current_editor
+			if l_editor /= Void then
+				develop_window.editors_manager.select_editor (l_editor)
+				l_editor.editor_drawing_area.set_focus
+			end
 		end
 
 feature -- Obsolete

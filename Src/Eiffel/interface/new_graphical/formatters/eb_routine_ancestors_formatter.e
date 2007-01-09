@@ -28,6 +28,12 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.feature_ancestors_icon, 2)
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Graphical representation of the command.
+		once
+			Result := pixmaps.icon_pixmaps.feature_ancestors_icon_buffer
+		end
+
 	menu_name: STRING_GENERAL is
 			-- Identifier of `Current' in menus.
 		do

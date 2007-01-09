@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			if not tool.cluster_graph.last_included_classes.is_empty then
 				a_cluster_fig.reset_user_size
 				tool.world.update
-				tool.layout.set_spacing ({EB_CONTEXT_EDITOR}.default_bon_horizontal_spacing, {EB_CONTEXT_EDITOR}.default_bon_vertical_spacing)
+				tool.layout.set_spacing ({EB_DIAGRAM_TOOL}.default_bon_horizontal_spacing, {EB_DIAGRAM_TOOL}.default_bon_vertical_spacing)
 				tool.layout.layout_cluster_only (a_cluster_fig)
 
 				a_cluster_fig.set_port_position (port_x, port_y)
@@ -118,6 +118,12 @@ feature {NONE} -- Implementation
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_fill_cluster_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
 		end
 
 	tooltip: STRING_GENERAL is

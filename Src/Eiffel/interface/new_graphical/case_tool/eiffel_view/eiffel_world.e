@@ -104,7 +104,7 @@ feature -- Status report
 
 feature -- Access
 
-	context_editor: EB_CONTEXT_EDITOR
+	context_editor: EB_DIAGRAM_TOOL
 			-- Context showing `Current'.
 
 	model: ES_GRAPH
@@ -466,7 +466,7 @@ feature -- Element change.
 			end
 		end
 
-feature {EB_CONTEXT_EDITOR} -- Status settings
+feature {EB_DIAGRAM_TOOL} -- Status settings
 
 	show_anchors is
 			-- Show all anchors of fixed linkable figures.
@@ -491,7 +491,7 @@ feature {EB_CHANGE_COLOR_COMMAND, EB_DELETE_FIGURE_COMMAND, EG_FIGURE} -- Cluste
 			end
 		end
 
-feature {EB_CONTEXT_EDITOR} -- Legend
+feature {EB_DIAGRAM_TOOL} -- Legend
 
 	cluster_legend: EIFFEL_CLUSTER_LEGEND
 			-- Legend of clusters and colors.
@@ -712,7 +712,7 @@ feature -- Store/Retrive
 						--context_editor.development_window.status_bar.progress_bar.reset_with_range (0 |..| 0)
 						nb_of_tags := xml_routines.number_of_tags (view_input)
 						--context_editor.progress_dialog.start (nb_of_tags)
-						context_editor.development_window.status_bar.reset_progress_bar_with_range (0 |..| nb_of_tags)
+						context_editor.develop_window.status_bar.reset_progress_bar_with_range (0 |..| nb_of_tags)
 						--context_editor.progress_dialog.set_degree ("Loading:")
 						xml_routines.valid_tag_read_actions.extend (agent on_valid_tag_read)
 					end
@@ -798,7 +798,7 @@ feature -- Store/Retrive
 			Precursor {EG_FIGURE_WORLD} (node)
 		end
 
-feature {EB_CONTEXT_EDITOR} -- Statistic
+feature {EB_DIAGRAM_TOOL} -- Statistic
 
 	set_last_draw_time (ms: INTEGER) is
 			-- Set time needed for draw.
@@ -1428,7 +1428,7 @@ feature {NONE} -- Implementation
 		local
 			lpd: EB_PERCENT_PROGRESS_BAR
 		do
-			lpd := context_editor.development_window.status_bar.progress_bar
+			lpd := context_editor.develop_window.status_bar.progress_bar
 			if lpd /= Void then
 				if lpd.value < lpd.range.upper then
 					lpd.set_value (lpd.value + 1)

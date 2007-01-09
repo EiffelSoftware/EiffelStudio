@@ -18,8 +18,7 @@ inherit
 		end
 
 create
-	make,
-	make_with_setting
+	make
 
 feature{NONE} -- Initialization
 

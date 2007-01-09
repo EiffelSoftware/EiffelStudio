@@ -12,6 +12,18 @@ class
 inherit
 	LINKED_LIST [EB_METRIC_DOMAIN_ITEM]
 
+	EB_METRIC_VISITABLE
+		undefine
+			copy,
+			is_equal
+		end
+
+	EB_METRIC_SHARED
+		undefine
+			copy,
+			is_equal
+		end
+
 create
 	make
 
@@ -25,6 +37,12 @@ feature -- Access
 			a_scope_attached: a_scope /= Void
 		do
 			Result := item.domain (a_scope)
+		end
+
+	visitable_name: STRING_GENERAL is
+			-- Name of current visitable item
+		do
+			Result := metric_names.l_domain
 		end
 
 feature -- Status report
@@ -59,6 +77,16 @@ feature -- Status report
                       )
 		end
 
+	has_delayed_input_domain_item: BOOLEAN is
+			-- Does current domain has delayed input domain item?
+		do
+			Result := there_exists (
+						agent (a_domain_item: EB_METRIC_DOMAIN_ITEM): BOOLEAN
+							do Result := a_domain_item /= Void and then a_domain_item.is_input_domain_item
+						end
+                      )
+		end
+
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to Current?
 			-- Equivalent means that every item from `other' is also in `Current', and
@@ -85,6 +113,14 @@ feature -- Status report
 			else
 				Result := b_domain_item /= Void and then a_domain_item.is_equal (b_domain_item)
 			end
+		end
+
+feature -- Process
+
+	process (a_visitor: EB_METRIC_VISITOR) is
+			-- Process current using `a_visitor'.
+		do
+			a_visitor.process_domain (Current)
 		end
 
 indexing

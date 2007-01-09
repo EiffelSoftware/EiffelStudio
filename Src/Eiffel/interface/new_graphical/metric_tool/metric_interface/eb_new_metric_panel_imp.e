@@ -45,7 +45,7 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_1
 			create l_ev_cell_1
 			create l_ev_vertical_box_1
-			create empty_lbl
+			create l_ev_cell_2
 			create metric_definition_area
 			create no_metric_frame
 			create no_metric_area
@@ -71,7 +71,7 @@ feature {NONE}-- Initialization
 			main_area.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (empty_lbl)
+			l_ev_vertical_box_1.extend (l_ev_cell_2)
 			l_ev_vertical_box_1.extend (metric_definition_area)
 			metric_definition_area.extend (no_metric_frame)
 			no_metric_frame.extend (no_metric_area)
@@ -104,7 +104,9 @@ feature {NONE}-- Initialization
 			l_ev_cell_1.set_minimum_width (10)
 			l_ev_cell_1.set_minimum_height (5)
 			l_ev_vertical_box_1.set_padding (3)
-			l_ev_vertical_box_1.disable_item_expand (empty_lbl)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_2)
+			l_ev_cell_2.set_minimum_width (5)
+			l_ev_cell_2.set_minimum_height (13)
 			no_metric_area.set_border_width (10)
 			no_metric_area.disable_item_expand (no_metric_lbl)
 			no_metric_lbl.set_text ("No metric is selected.")
@@ -134,13 +136,13 @@ feature -- Access
 	metric_definition_area: EV_HORIZONTAL_BOX
 	metric_selector_panel, metric_selector_area, no_metric_area: EV_VERTICAL_BOX
 	select_metric_lbl,
-	empty_lbl, no_metric_lbl: EV_LABEL
+	no_metric_lbl: EV_LABEL
 	no_metric_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
-	l_ev_cell_1: EV_CELL
+	l_ev_cell_1, l_ev_cell_2: EV_CELL
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 

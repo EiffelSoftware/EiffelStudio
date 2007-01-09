@@ -254,39 +254,37 @@ feature{NONE} -- Implementation
 			metric_valid: metric.is_linear or metric.is_ratio
 		local
 			l_str_list: LINKED_LIST [STRING_GENERAL]
-			l_linear: EB_METRIC_LINEAR
-			l_ratio: EB_METRIC_RATIO
 		do
 			create l_str_list.make
 			l_str_list.extend (metric_names.t_expression)
-			if metric.is_linear then
-				l_linear ?= metric
-				linear_expr_generator.set_metric (l_linear)
-				linear_expr_generator.generate_expression
-				l_str_list.extend (linear_expr_generator.string_representation)
-			elseif metric.is_ratio then
-				l_ratio ?= metric
-				ratio_expr_generator.set_metric (l_ratio)
-				ratio_expr_generator.generate_expression
-				l_str_list.extend (ratio_expr_generator.string_representation)
+			if metric.is_linear or metric.is_ratio then
+				rich_text_output.wipe_out
+				expression_generator.generate_output (metric)
+				l_str_list.extend (rich_text_output.string_representation)
 			end
 			Result := metric_names.concatenated_string (l_str_list, metric_names.space_separator)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	linear_expr_generator: EB_METRIC_LINEAR_EXPRESSION_GENERATOR is
-			-- Expression generator for linear metric
-		once
-			create Result.make
+	expression_generator: EB_METRIC_EXPRESSION_GENERATOR is
+			--  Expression generator		
+		do
+			if expression_generator_internal = Void then
+				create expression_generator_internal.make (rich_text_output)
+			end
+			Result := expression_generator_internal
 		ensure
 			result_attached: Result /= Void
 		end
 
-	ratio_expr_generator: EB_METRIC_RATIO_EXPRESSION_GENERATOR is
-			-- Expression generator for ratio metric
-		once
-			create Result.make
+	rich_text_output: EB_METRIC_EXPRESSION_RICH_TEXT_OUTPUT is
+			-- Output from `expression_generator' in rich text format
+		do
+			if rich_text_output_internal = Void then
+				create rich_text_output_internal.make
+			end
+			Result := rich_text_output_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -319,6 +317,12 @@ feature{NONE} -- Actions
 				name_change_actions.call ([old_name.twin, Current])
 			end
 		end
+
+	expression_generator_internal: like expression_generator
+			-- Implementation of `expression_generator'
+
+	rich_text_output_internal: like rich_text_output
+			-- Implementation of `rich_text_output'
 
 invariant
 	metric_attached: metric /= Void

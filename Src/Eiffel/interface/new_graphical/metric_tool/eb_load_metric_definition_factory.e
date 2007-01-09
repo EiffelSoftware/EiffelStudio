@@ -58,8 +58,14 @@ feature -- Criterion creation
 			create Result.make (a_scope, a_name)
 		end
 
-	new_caller_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_CALLER_CALLEE_CRITERION is
+	new_caller_callee_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_CALLER_CALLEE_CRITERION is
 			-- New caller/callee criterion
+		do
+			create Result.make (a_scope, a_name)
+		end
+
+	new_supplier_client_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_SUPPLIER_CLIENT_CRITERION is
+			-- New supplier/client criterion
 		do
 			create Result.make (a_scope, a_name)
 		end
@@ -72,6 +78,12 @@ feature -- Criterion creation
 
 	new_or_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_OR_CRITERION is
 			-- New or criterion
+		do
+			create Result.make (a_scope, a_name)
+		end
+
+	new_value_criterion (a_name: STRING; a_scope: QL_SCOPE): EB_METRIC_VALUE_CRITERION is
+			-- New value criterion
 		do
 			create Result.make (a_scope, a_name)
 		end

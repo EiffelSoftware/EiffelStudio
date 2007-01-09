@@ -87,6 +87,38 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	sorting_order_index: INTEGER is
+			-- Sorting order index
+		do
+			Result := feature_index
+		end
+
+	associated_class_domain_item: EB_CLASS_DOMAIN_ITEM is
+			-- Class item for associated class of current feature
+		require
+			valid: is_valid
+		do
+			create Result.make (id_of_class (e_feature.associated_class.lace_class.config_class))
+		ensure
+			result_attached: Result /= Void
+		end
+
+	written_class_domain_item: EB_CLASS_DOMAIN_ITEM is
+			-- Class item for written class of current feature
+		require
+			valid: is_valid
+		do
+			create Result.make (id_of_class (e_feature.written_class.lace_class.config_class))
+		ensure
+			result_attached: Result /= Void
+		end
+
+	item_type_name: STRING_GENERAL is
+			-- Name of type of current item
+		do
+			Result := interface_names.l_feature_domain_item
+		end
+
 feature{NONE} -- Implemenation
 
 	update is

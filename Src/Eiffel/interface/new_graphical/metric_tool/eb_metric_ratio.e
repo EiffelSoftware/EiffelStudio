@@ -171,11 +171,11 @@ feature -- Process
 feature -- Metric calculation
 
 	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN is
-			-- Calcualte current domain using `a_scope'.
+			-- Value of current metric calculated over `a_scope'
 		local
 			l_num_metric: EB_METRIC
 			l_den_metric: EB_METRIC
-			l_den_value: QL_QUANTITY_DOMAIN
+			l_den_value: DOUBLE
 		do
 			l_num_metric := manager.metric_with_name (numerator_metric_name)
 			l_den_metric := manager.metric_with_name (denominator_metric_name)
@@ -186,15 +186,15 @@ feature -- Metric calculation
 				l_num_metric.disable_filter_result
 				l_den_metric.disable_filter_result
 			end
-			if denominator_coefficient = 0.0 then
+			if denominator_coefficient =0.0 then
 				raise ("Devided by 0")
 			else
-				l_den_value := l_den_metric.value (a_scope)
-				if l_den_value.first.value = 0.0 then
+				l_den_value := l_den_metric.value_item (a_scope)
+				if l_den_value = 0.0 then
 					raise ("Devided by 0")
 				else
 					create Result.make
-					Result.extend (create {QL_QUANTITY}.make_with_value ((numerator_coefficient * (l_num_metric.value (a_scope).first.value)) /  (denominator_coefficient * l_den_value.first.value)))
+					Result.extend (create {QL_QUANTITY}.make_with_value ((numerator_coefficient * (l_num_metric.value_item (a_scope))) /  (denominator_coefficient * l_den_value)))
 				end
 			end
 		end

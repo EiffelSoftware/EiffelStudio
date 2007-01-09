@@ -13,18 +13,27 @@ inherit
 	EB_DELAYED_DOMAIN_ITEM
 		undefine
 			string_representation
+		redefine
+			domain
 		end
 
 	EB_METRIC_DOMAIN_ITEM
 		undefine
 			is_valid,
 			is_equal,
-			is_delayed_item
+			is_delayed_item,
+			is_real_delayed_item,
+			is_input_domain_item
 		redefine
 			string_representation
 		end
 
 	EB_METRIC_SHARED
+		undefine
+			is_equal
+		end
+
+	EB_METRIC_EVALUATION_CONTEXT
 		undefine
 			is_equal
 		end
@@ -37,10 +46,20 @@ feature -- Access
 	string_representation: STRING is
 			-- Text of current item
 		do
-			if not is_valid then
+			if not is_valid or else not id.is_empty then
 				Result := Precursor
 			else
 				Result := metric_names.te_input_domain
+			end
+		end
+
+	domain (a_scope: QL_SCOPE): QL_DOMAIN is
+			-- New query lanaguage domain representing current item
+		do
+			if is_real_delayed_item and then delayed_domain = Void then
+				Result := a_scope.delayed_domain
+			else
+				Result := delayed_domain
 			end
 		end
 

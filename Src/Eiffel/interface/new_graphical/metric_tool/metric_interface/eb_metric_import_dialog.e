@@ -156,6 +156,7 @@ feature {NONE} -- Initialization
 
 			show_actions.extend (agent file_name_combo.set_focus)
 			set_default_cancel_button (close_btn)
+			set_icon_pixmap (pixmaps.icon_pixmaps.tool_metric_icon)
 		end
 
 feature {NONE} -- Actions
@@ -1091,7 +1092,13 @@ feature{NONE} -- Process
 			process_list (a_criterion.domain)
 		end
 
-	process_caller_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			process_domain_criterion (a_criterion)
+		end
+
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
 			-- Process `a_criterion'.
 		do
 			process_domain_criterion (a_criterion)
@@ -1112,6 +1119,12 @@ feature{NONE} -- Process
 		do
 		end
 
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			process_domain_criterion (a_criterion)
+		end
+
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
 			-- Process `a_criterion'.
 		do
@@ -1130,6 +1143,11 @@ feature{NONE} -- Process
 			process_nary_criterion (a_criterion)
 		end
 
+	process_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Process `a_domain'.
+		do
+		end
+
 	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
 			-- Process `a_item'.
 		local
@@ -1141,9 +1159,7 @@ feature{NONE} -- Process
 				if l_libraries.has (a_item.library_target_uuid) then
 					l_id := substitute_target_uuid (a_item.id.twin, universe.target.system.uuid.out)
 					l_id := substitute_target_name (l_id, universe.target.name)
-					io.put_string (l_id + " ")
 					l_id := substitute_group (l_id, l_libraries.item (a_item.library_target_uuid))
-					io.put_string (l_id + "%N")
 					a_item.set_id (l_id)
 				end
 			end
@@ -1188,6 +1204,22 @@ feature{NONE} -- Process
 	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
 			-- Process `a_item'.
 		do
+		end
+
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+			-- Process `a_item'.
+		do
+		end
+
+	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+		end
+
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+			a_item.input_domain.process (Current)
 		end
 
 invariant

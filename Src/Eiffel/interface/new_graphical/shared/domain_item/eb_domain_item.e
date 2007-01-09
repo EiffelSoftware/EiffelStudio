@@ -40,6 +40,21 @@ inherit
 			is_equal
 		end
 
+	EB_SHARED_WRITER
+		undefine
+			is_equal
+		end
+
+	EB_SHARED_EDITOR_TOKEN_UTILITY
+		undefine
+			is_equal
+		end
+
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		undefine
+			is_equal
+		end
+
 feature{NONE} -- Initialization
 
 	make (a_id: STRING) is
@@ -87,6 +102,21 @@ feature -- Status report
 		do
 		end
 
+	is_input_domain_item: BOOLEAN is
+			-- Is current an input domain item?
+		do
+		end
+
+	is_real_delayed_item: BOOLEAN is
+			-- Is current a real delayed item?
+		do
+		end
+
+	is_wrapper_item: BOOLEAN is
+			-- Is current a wrapper item?
+		do
+		end
+
 	is_valid: BOOLEAN is
 			-- Does current represent a valid domain item?
 		do
@@ -99,13 +129,38 @@ feature -- Status report
 			Result := workbench.compilation_counter = last_compilation_count
 		end
 
+	is_sorting_order_index_valid (a_index: INTEGER): BOOLEAN is
+			-- Is `a_index' a valid sorting order index?
+		do
+			Result := a_index = wrapper_index or else
+					  a_index = target_index or else
+					  a_index = cluster_index or else
+					  a_index = library_index or else
+					  a_index = assembly_index or else
+					  a_index = folder_index or else
+					  a_index = class_index or else
+					  a_index = feature_index or else
+					  a_index = delayed_index
+		end
+
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := text_of_id.is_equal (other.text_of_id)
+			if
+				(is_target_item and then other.is_target_item) or else
+				(is_group_item and then other.is_group_item) or else
+				(is_folder_item and then other.is_folder_item) or else
+				(is_class_item and then other.is_class_item) or else
+				(is_feature_item and then other.is_feature_item) or else
+				(is_delayed_item and then other.is_delayed_item)
+			then
+				Result := text_of_id.is_equal (other.text_of_id)
+			elseif (is_wrapper_item and then other.is_wrapper_item) then
+				Result := query_language_item.is_equal (other.query_language_item)
+			end
 		end
 
 feature -- Access
@@ -177,6 +232,31 @@ feature -- Access
 			Result := id.hash_code
 		end
 
+	sorting_order_index: INTEGER is
+			-- Sorting order index
+		deferred
+		end
+
+	item_type_name: STRING_GENERAL is
+			-- Name of type of current item
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Sorting order index
+
+	wrapper_index: INTEGER is 0
+	target_index: INTEGER is 1
+	cluster_index: INTEGER is 2
+	library_index: INTEGER is 3
+	assembly_index: INTEGER is 4
+	folder_index: INTEGER is 5
+	class_index: INTEGER is 6
+	feature_index: INTEGER is 7
+	delayed_index: INTEGER is 8
+			-- Sorting order index
+
 feature -- Setting
 
 	set_library_target_uuid (a_uuid: STRING) is
@@ -237,6 +317,7 @@ feature{NONE} -- Implementation
 
 invariant
 	id_attached: id /= Void
+	sorting_order_index_valid: is_sorting_order_index_valid (sorting_order_index)
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

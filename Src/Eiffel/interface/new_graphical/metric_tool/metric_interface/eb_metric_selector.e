@@ -575,7 +575,9 @@ feature -- Basic operations
 								l_row.parent_row.expand
 							end
 							l_row.enable_select
-							l_row.ensure_visible
+							if l_row.is_displayed then
+								l_row.ensure_visible
+							end
 							done := True
 						end
 					end
@@ -741,7 +743,7 @@ feature -- Metric management
 			create l_font
 			l_red := (create {EV_STOCK_COLORS}).red
 			l_grid_item.set_font (l_font)
-			l_vadility := metric_manager.metric_vadility (a_metric.name)
+			l_vadility := metric_manager.metric_validity (a_metric.name)
 			if l_vadility /= Void then
 				l_grid_item.set_foreground_color (l_red)
 			end

@@ -81,8 +81,6 @@ feature{NONE} -- Process
 			-- Process `a_criterion'.
 		local
 			l_format: EV_CHARACTER_FORMAT
-			l_domain: EB_METRIC_DOMAIN
-			l_count: INTEGER
 		do
 			check a_criterion.is_name_valid end
 			append_negation_start (a_criterion)
@@ -91,28 +89,19 @@ feature{NONE} -- Process
 			format_list.extend (criterion_name_format)
 			text_list.extend (" (")
 			format_list.extend (l_format)
-			from
-				l_domain := a_criterion.domain
-				l_count := l_domain.count
-				l_domain.start
-			until
-				l_domain.after
-			loop
-				if l_domain.item /= Void then
-					l_domain.item.process (Current)
-				end
-				if l_domain.index < l_count then
-					text_list.extend (", ")
-					format_list.extend (normal_format)
-				end
-				l_domain.forth
-			end
+			append_domain (a_criterion.domain)
 			text_list.extend (")")
 			format_list.extend (normal_format)
 			append_negation_end (a_criterion)
 		end
 
-	process_caller_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			process_domain_criterion (a_criterion)
+		end
+
+	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
 			-- Process `a_criterion'.
 		do
 			process_domain_criterion (a_criterion)
@@ -148,6 +137,22 @@ feature{NONE} -- Process
 				text_list.extend (a_criterion.name)
 				format_list.extend (error_format)
 			end
+		end
+
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			text_list.extend ("value of metric (")
+			format_list.extend (normal_format)
+			text_list.extend (a_criterion.metric_name)
+			format_list.extend (normal_format)
+			text_list.extend (") over (")
+			format_list.extend (normal_format)
+			append_domain (a_criterion.domain)
+			text_list.extend (") ")
+			text_list.extend (") is ")
+			format_list.extend (normal_format)
+			a_criterion.value_tester.process (Current)
 		end
 
 	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
@@ -188,7 +193,7 @@ feature{NONE} -- Process
 				end
 				if l_operands.index < l_count then
 					text_list.extend (" " + a_criterion.name + " ")
-					format_list.extend (keyword_format)
+					format_list.extend (criterion_name_format)
 				end
 				a_criterion.operands.forth
 			end
@@ -209,6 +214,11 @@ feature{NONE} -- Process
 			-- Process `a_criterion'.
 		do
 			process_nary_criterion (a_criterion)
+		end
+
+	process_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Process `a_domain'.
+		do
 		end
 
 	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
@@ -256,6 +266,8 @@ feature{NONE} -- Process
 
 	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
 			-- Process `a_item'.
+		local
+			l_class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM
 		do
 			if not a_item.is_valid then
 				text_list.extend (a_item.string_representation)
@@ -263,7 +275,7 @@ feature{NONE} -- Process
 			else
 				text_list.extend (ti_l_curly)
 				format_list.extend (operator_format)
-				process_class_domain_item (a_item.class_domain_item)
+				process_class_domain_item (create {EB_METRIC_CLASS_DOMAIN_ITEM}.make (id_of_class (a_item.ql_feature.class_c.lace_class.config_class)))
 				text_list.extend (ti_r_curly)
 				format_list.extend (operator_format)
 				text_list.extend (ti_dot)
@@ -283,6 +295,45 @@ feature{NONE} -- Process
 	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
 			-- Process `a_item'.
 		do
+		end
+
+	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
+			-- Process `a_item'.
+		local
+			l_cri_list: LIST [TUPLE [l_value: DOUBLE; l_criterion_type: INTEGER]]
+			l_count: INTEGER
+			l_connector: STRING
+		do
+			text_list.extend ("(")
+			format_list.extend (normal_format)
+			if a_item.is_anded then
+				l_connector := query_language_names.ql_cri_and
+			else
+				l_connector := query_language_names.ql_cri_or
+			end
+			from
+				l_cri_list := a_item.criteria
+				l_count := l_cri_list.count
+				l_cri_list.start
+			until
+				l_cri_list.after
+			loop
+				text_list.extend (operator_table.item (l_cri_list.item.l_criterion_type))
+				format_list.extend (operator_format)
+				text_list.extend (l_cri_list.item.l_value.out)
+				format_list.extend (number_format)
+				if l_cri_list.index < l_count then
+					text_list.extend (" ")
+					format_list.extend (normal_format)
+					text_list.extend (l_connector)
+					format_list.extend (keyword_format)
+					text_list.extend (" ")
+					format_list.extend (normal_format)
+				end
+				l_cri_list.forth
+			end
+			text_list.extend (")")
+			format_list.extend (normal_format)
 		end
 
 feature{NONE} -- Implementation
@@ -322,6 +373,30 @@ feature{NONE} -- Implementation
 			create Result.make_with_font_and_color (normal_font, normal_color, background_color)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	append_domain (a_domain: EB_METRIC_DOMAIN) is
+			-- Append `a_domain' into text.
+		require
+			a_domain_attached: a_domain /= Void
+		local
+			l_count: INTEGER
+		do
+			from
+				l_count := a_domain.count
+				a_domain.start
+			until
+				a_domain.after
+			loop
+				if a_domain.item /= Void then
+					a_domain.item.process (Current)
+				end
+				if a_domain.index < l_count then
+					text_list.extend (", ")
+					format_list.extend (normal_format)
+				end
+				a_domain.forth
+			end
 		end
 
 invariant

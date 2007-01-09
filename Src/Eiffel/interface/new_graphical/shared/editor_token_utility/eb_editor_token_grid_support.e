@@ -25,33 +25,15 @@ inherit
 
 	EV_SHARED_APPLICATION
 
+	EVS_GRID_PND_SUPPORT
+		redefine
+			enable_grid_item_pnd_support
+		end
+
 create
 	make_with_grid
 
-feature{NONE} -- Initialization
-
-	make_with_grid (a_grid: like grid) is
-			-- Initialize `grid' with `a_grid'.
-		require
-			a_grid_attached: a_grid /= Void
-		do
-			internal_grid := a_grid
-		ensure
-			grid_set: grid = a_grid
-		end
-
 feature -- Access
-
-	grid: ES_GRID is
-			-- Grid to which supports apply
-		do
-			Result := internal_grid
-		ensure
-			result_attached: Result /= Void
-		end
-
-	old_item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
-			-- Old `item_pebble_function' in `grid' before last `enable_editor_token_pnd'
 
 	color_or_font_change_actions: ACTION_SEQUENCE [TUPLE] is
 			-- Actions to be performed when color or font in editor changes
@@ -86,7 +68,7 @@ feature -- Access
 		do
 			l_index := a_item.token_index_at_current_position
 			if l_index > 0 then
-				l_stone ?= a_item.token_at_position (l_index).pebble
+				l_stone ?= a_item.editor_token_pebble (l_index)
 				if l_stone /= Void then
 					Result := [l_stone, l_index]
 				end
@@ -95,28 +77,89 @@ feature -- Access
 			good_result: Result /= Void implies (Result.stone /= Void and then Result.index > 0)
 		end
 
-	last_picked_item: EV_GRID_ITEM
-			-- Last picked item	
-			-- Void if no item is picked.		
+feature -- Pick and drop support for grid items
+
+	on_pick_start_from_grid_editor_token_item (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
+			-- Action performed when pick on `a_item'.
+			-- `a_grid_support' is responsible for managing pick and drop for `a_item'.
+		require
+			a_grid_support_attached: a_grid_support /= Void
+		local
+			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+			l_data: like stone_and_index_from_editor_token_item
+			l_grid: EV_GRID
+		do
+			if a_item /= Void and then a_item.is_parented and then not ev_application.ctrl_pressed then
+				l_item ?= a_item
+				if l_item /= Void and then l_item.is_parented then
+					l_data := stone_and_index_from_editor_token_item (l_item)
+					if l_data /= Void then
+						l_grid := l_item.parent
+						a_grid_support.set_last_pebble (l_data.stone)
+						a_grid_support.set_last_picked_item (l_item)
+						l_grid.remove_selection
+						l_grid.set_accept_cursor (l_data.stone.stone_cursor)
+						l_grid.set_deny_cursor (l_data.stone.x_stone_cursor)
+						l_item.set_last_picked_token (l_data.index)
+						l_item.redraw
+					end
+				end
+			end
+		end
+
+	on_pick_ended_from_grid_editor_token_item (a_item: EV_GRID_ITEM) is
+			-- Action performed when pick ends
+		local
+			l_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			l_item ?= a_item
+			if l_item /= Void then
+				l_item.set_last_picked_token (0)
+				if l_item.is_parented and then l_item.is_selectable then
+					l_item.enable_select
+				end
+				if l_item.is_parented then
+					l_item.redraw
+				end
+			end
+		end
+
+	on_pick_start_from_metric_grid_domain_item (a_grid_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
+			-- Action to be performed when pick starts from `a_grid_item'.
+		require
+			a_grid_support_attached: a_grid_support /= Void
+		local
+			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
+			l_grid: EV_GRID
+			l_stone: STONE
+		do
+			l_item ?= a_grid_item
+			if l_item /= Void and then l_item.is_parented and then not ev_application.ctrl_pressed then
+				l_stone ?= l_item.on_pick
+				if l_stone /= Void then
+					a_grid_support.set_last_pebble (l_stone)
+					a_grid_support.set_last_picked_item (l_item)
+					grid.remove_selection
+					l_grid ?= a_grid_item.parent
+					l_grid.set_accept_cursor (l_stone.stone_cursor)
+					l_grid.set_deny_cursor (l_stone.x_stone_cursor)
+					check a_grid_support.last_picked_item /= Void end
+				end
+			end
+		end
+
+	on_pick_end_from_metric_grid_domain_item (a_grid_item: EV_GRID_ITEM) is
+			-- Action to be performed when pick ends from `a_grid_item'.
+		local
+			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
+		do
+			l_item ?= a_grid_item
+			if l_item /= Void then
+				l_item.on_pick_ends
+			end
+		end
 
 feature -- Setting
-
-	enable_editor_token_pnd is
-			-- Enable pick and drop on individual editor token.
-		do
-			if not grid.pick_ended_actions.has (on_pick_ended_action) then
-				grid.pick_ended_actions.force_extend (on_pick_ended_action)
-			end
-			old_item_pebble_function := grid.item_pebble_function
-			grid.set_item_pebble_function (on_pick_function)
-		end
-
-	disable_editor_token_pnd is
-			-- Disable pick and drop on individual editor token.
-		do
-			grid.pick_ended_actions.prune_all (on_pick_ended_action)
-			grid.set_item_pebble_function (old_item_pebble_function)
-		end
 
 	synchronize_scroll_behavior_with_editor is
 			-- Sychronize scroll behavior with editor.
@@ -197,30 +240,20 @@ feature -- Setting
 			grid.pointer_button_press_actions.prune_all (on_pointer_right_click_agent)
 		end
 
+	enable_grid_item_pnd_support is
+			-- Enable pick and drop on individual editor token.
+			-- This will overwrite the currently set `item_pebble_function'.
+			-- Actions in `pick_start_actions' will be invoked when pick starts and
+			-- actions in `pick_end_actions' will be invoked when pick ends.
+		do
+			Precursor
+			pick_start_actions.extend (agent on_pick_start_from_grid_editor_token_item (?, Current))
+			pick_start_actions.extend (agent on_pick_start_from_metric_grid_domain_item (?, Current))
+			pick_end_actions.extend (agent on_pick_ended_from_grid_editor_token_item)
+			pick_end_actions.extend (agent on_pick_end_from_metric_grid_domain_item)
+		end
 
 feature{NONE} -- Actions
-
-	on_pick_ended_action: PROCEDURE [ANY, TUPLE [a_item: EV_ABSTRACT_PICK_AND_DROPABLE]] is
-			-- Agent object of `on_pick_ended'
-		do
-			if on_pick_ended_action_internal = Void then
-				on_pick_ended_action_internal := agent on_pick_ended
-			end
-			Result := on_pick_ended_action_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	on_pick_function: FUNCTION [ANY, TUPLE [a_item: EV_GRID_ITEM], ANY] is
-			-- Agent object of `on_pick'
-		do
-			if on_pick_function_internal = Void then
-				on_pick_function_internal := agent on_pick
-			end
-			Result := on_pick_function_internal
-		ensure
-			result_attached: Result /= Void
-		end
 
 	on_color_or_font_change is
 			-- Action to be performed when color or font in editor changes
@@ -237,6 +270,40 @@ feature{NONE} -- Actions
 			grid.scrolling_behavior.set_mouse_wheel_scroll_size (editor_preferences.mouse_wheel_scroll_size)
 			grid.scrolling_behavior.set_scrolling_common_line_count (editor_preferences.scrolling_common_line_count)
 		end
+
+	on_pointer_right_click (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Action to be performed when pointer right click on `grid'
+			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.
+		local
+			l_data: like stone_and_index_at_position
+			l_stone: STONE
+		do
+			if a_button = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
+				l_data := stone_and_index_at_position (a_x, a_y)
+				if l_data /= Void then
+					l_stone := l_data.stone
+					if l_stone.is_valid then
+						if l_stone /= Void and then l_stone.is_valid then
+							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
+						end
+					end
+				end
+			end
+		end
+
+feature{NONE} -- Implementation
+
+	color_or_font_change_actions_internal: like color_or_font_change_actions
+			-- Implementation of `color_or_font_change_actions'	
+
+	on_color_or_font_change_agent_internal: like on_color_or_font_change_agent
+			-- Implementation of `on_color_or_font_change_agent'
+
+	on_scroll_behavior_change_agent_internal: like on_scroll_behavior_change_agent
+			-- Implementation of `on_scroll_behavior_change_agent'
+
+	on_pointer_right_click_agent_internal: like on_pointer_right_click_agent
+			-- Implementation of `on_pointer_right_click_agent'
 
 	on_color_or_font_change_agent: PROCEDURE [ANY, TUPLE] is
 			-- Agent of `on_color_or_font_change'
@@ -270,95 +337,6 @@ feature{NONE} -- Actions
 		ensure
 			result_attached: Result /= Void
 		end
-
-feature{NONE} -- Pick and drop
-
-	on_pick_ended (a_item: EV_ABSTRACT_PICK_AND_DROPABLE) is
-			-- Action performed when pick ends
-		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-		do
-			l_item ?= last_picked_item
-			if l_item /= Void then
-				l_item.set_last_picked_token (0)
-				if l_item.is_parented and then l_item.is_selectable then
-					l_item.enable_select
-				end
-				if l_item.is_parented then
-					l_item.redraw
-				end
-			end
-			last_picked_item := Void
-		ensure
-			last_picked_item_not_attached: last_picked_item = Void
-		end
-
-	on_pick (a_item: EV_GRID_ITEM): ANY is
-			-- Action performed when pick on `a_item'.
-		local
-			l_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_data: like stone_and_index_from_editor_token_item
-		do
-			if not ev_application.ctrl_pressed then
-				last_picked_item := Void
-				l_item ?= a_item
-				if l_item /= Void and then l_item.is_parented then
-					l_data := stone_and_index_from_editor_token_item (l_item)
-					if l_data /= Void then
-						Result := l_data.stone
-						grid.remove_selection
-						grid.set_accept_cursor (l_data.stone.stone_cursor)
-						grid.set_deny_cursor (l_data.stone.x_stone_cursor)
-						l_item.set_last_picked_token (l_data.index)
-						l_item.redraw
-						last_picked_item := l_item
-					end
-				end
-			end
-		end
-
-	on_pointer_right_click (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Action to be performed when pointer right click on `grid'
-			-- Behavior is launch the stone contained in pointer hovered editor token in a new development window.
-		local
-			l_data: like stone_and_index_at_position
-			l_stone: STONE
-		do
-			if a_button = {EV_POINTER_CONSTANTS}.right and then ev_application.ctrl_pressed then
-				l_data := stone_and_index_at_position (a_x, a_y)
-				if l_data /= Void then
-					l_stone := l_data.stone
-					if l_stone.is_valid then
-						if l_stone /= Void and then l_stone.is_valid then
-							(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
-						end
-					end
-				end
-			end
-		end
-
-feature{NONE} -- Implementation
-
-	internal_grid: like grid
-			-- Implementation of `grid'
-
-	on_pick_ended_action_internal: like on_pick_ended_action
-			-- Implementation of `on_pick_ended_action'
-
-	on_pick_function_internal: like on_pick_function
-			-- Implementation of `on_pick_function'
-
-	color_or_font_change_actions_internal: like color_or_font_change_actions
-			-- Implementation of `color_or_font_change_actions'	
-
-	on_color_or_font_change_agent_internal: like on_color_or_font_change_agent
-			-- Implementation of `on_color_or_font_change_agent'
-
-	on_scroll_behavior_change_agent_internal: like on_scroll_behavior_change_agent
-			-- Implementation of `on_scroll_behavior_change_agent'
-
-	on_pointer_right_click_agent_internal: like on_pointer_right_click_agent
-			-- Implementation of `on_pointer_right_click_agent'
 
 invariant
 	grid_attached: grid /= Void

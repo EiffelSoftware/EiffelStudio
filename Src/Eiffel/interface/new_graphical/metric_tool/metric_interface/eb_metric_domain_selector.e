@@ -61,6 +61,20 @@ inherit
 			copy
 		end
 
+	EB_METRIC_XML_CONSTANTS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
+	EV_UTILITIES
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	default_create,
 	make
@@ -84,7 +98,7 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		local
-			l_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_METRIC_DOMAIN_ITEM_ROW]
+			l_sort_info: EVS_GRID_THREE_WAY_SORTING_INFO [EB_METRIC_DOMAIN_ITEM]
 			l_border: EV_VERTICAL_BOX
 			l_colors: EV_STOCK_COLORS
 		do
@@ -92,12 +106,15 @@ feature {NONE} -- Initialization
 			create domain_change_actions
 
 				-- Setup scope type
-			add_delayed_scope_btn.set_tooltip (metric_names.f_delayed_scope)
-			add_delayed_scope_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
-			add_delayed_scope_btn.select_actions.extend (agent on_delayed_scope_added)
+			add_input_scope_btn.set_tooltip (metric_names.f_delayed_scope)
+			add_input_scope_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
+			add_input_scope_btn.select_actions.extend (agent on_input_scope_added)
 			add_application_scope_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
 			add_application_scope_btn.select_actions.extend (agent on_application_scope_added)
 			add_application_scope_btn.set_tooltip (metric_names.f_application_scope)
+			add_delayed_scope_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
+			add_delayed_scope_btn.set_tooltip (metric_names.f_use_delayed_scope)
+			add_delayed_scope_btn.select_actions.extend (agent on_delayed_scope_added)
 
 				-- Build tool bar buttons for scope grid.
 			add_item_btn.remove_text
@@ -123,7 +140,7 @@ feature {NONE} -- Initialization
 
 			create grid_support.make_with_grid (grid)
 			grid_support.enable_ctrl_right_click_to_open_new_window
-			grid_support.enable_editor_token_pnd
+			grid_support.enable_grid_item_pnd_support
 
 			create scope_grid.make (grid)
 			scope_grid.disable_search
@@ -162,14 +179,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	relative_window: EV_WINDOW
-			-- A window which can be used when show `scope_selection_dialog'.
-
 	domain: EB_METRIC_DOMAIN is
 			-- Selected domain
 		local
 			l_row_index: INTEGER
-			l_scope_row: EB_METRIC_DOMAIN_ITEM_ROW
+			l_scope_row: EB_METRIC_DOMAIN_ITEM
 			l_grid: like grid
 			l_row_count: INTEGER
 		do
@@ -183,9 +197,7 @@ feature -- Access
 					l_row_index > l_row_count
 				loop
 					l_scope_row ?= l_grid.row (l_row_index).data
-					if l_scope_row /= Void then
-						Result.extend (l_scope_row.domain_item)
-					end
+					Result.extend (l_scope_row)
 					l_row_index := l_row_index + 1
 				end
 			end
@@ -225,14 +237,6 @@ feature -- Element change
 			on_drop (new_stone)
 		end
 
-	set_relative_window (a_window: like relative_window) is
-			-- Set `relative_window' with `a_window'.
-		do
-			relative_window := a_window
-		ensure
-			relative_window_set: relative_window = a_window
-		end
-
 	disable_delayed_domain is
 			-- Disable delayed domain selection.
 		do
@@ -252,22 +256,27 @@ feature -- Element change
 		require
 			a_domain_attached: a_domain /= Void
 		local
-			done: BOOLEAN
+			l_blocked: BOOLEAN
 		do
 			if grid.row_count > 0 then
 				grid.remove_rows (1, grid.row_count)
+			end
+			l_blocked := domain_change_actions.state = domain_change_actions.blocked_state
+			if not l_blocked then
+				domain_change_actions.block
 			end
 			if a_domain /= Void then
 				from
 					a_domain.start
 				until
-					a_domain.after or done
+					a_domain.after
 				loop
 					insert_domain_item (a_domain.item)
 					a_domain.forth
 				end
 			end
-			if not done then
+			if not l_blocked then
+				domain_change_actions.resume
 				on_domain_change
 			end
 		end
@@ -393,12 +402,12 @@ feature{NONE} -- Actions
 			-- Action to be performed when user wants to add scope from a scope dialog
 		do
 			if not scope_selection_dialog.is_displayed then
-				scope_selection_dialog.show (relative_window)
+				scope_selection_dialog.show (parent_window (Current))
 			end
 		end
 
-	on_delayed_scope_added is
-			-- Action to be performed when a delayed scope is added
+	on_input_scope_added is
+			-- Action to be performed when an input scope is added
 		local
 			l_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM
 			l_domain: like domain
@@ -428,23 +437,20 @@ feature{NONE} -- Actions
 			end
 		end
 
-	grid_item_pebble (a_item: EV_GRID_ITEM): ANY is
-			-- Pebble in `a_item'
+	on_delayed_scope_added is
+			-- Action to be performed when delayed domain is added
 		local
-			l_row: EB_METRIC_DOMAIN_ITEM_ROW
-			l_stone: STONE
+			l_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM
+			l_domain: like domain
 		do
-			if not ev_application.ctrl_pressed and then a_item /= Void then
-				l_row ?= a_item.data
-				if l_row /= Void and then l_row.is_valid then
-					l_stone := l_row.stone
-					grid.set_accept_cursor (l_stone.stone_cursor)
-					grid.set_deny_cursor (l_stone.x_stone_cursor)
-					last_picked_row_index := a_item.row.index
-					Result := l_stone
-				else
-					last_picked_row_index := 0
-				end
+			l_domain := domain
+			create l_delayed_item.make (n_delayed_domain_id)
+			if not domain_has (l_domain, l_delayed_item) then
+				domain_change_actions.block
+				on_remove_all_scopes
+				domain_change_actions.resume
+				insert_domain_item (l_delayed_item)
+				on_domain_change
 			end
 		end
 
@@ -497,21 +503,21 @@ feature{NONE} -- Implementation/Data
 	last_picked_row_index: INTEGER
 			-- Row index of last picked item
 
-	scope_grid: EVS_SEARCHABLE_COMPONENT [EB_METRIC_DOMAIN_ITEM_ROW]
+	scope_grid: EVS_SEARCHABLE_COMPONENT [EB_METRIC_DOMAIN_ITEM]
 			-- Scope grid
 
 	grid: ES_GRID
 			-- Grid in `scope_grid'
 
-	rows: DS_LIST [EB_METRIC_DOMAIN_ITEM_ROW] is
+	rows: DS_LIST [EB_METRIC_DOMAIN_ITEM] is
 			-- List of rows in `grid'
 		local
 			l_grid: like grid
 			l_row_index: INTEGER
 			l_row_count: INTEGER
-			l_scope_row: EB_METRIC_DOMAIN_ITEM_ROW
+			l_scope_row: EB_METRIC_DOMAIN_ITEM
 		do
-			create {DS_ARRAYED_LIST [EB_METRIC_DOMAIN_ITEM_ROW]}Result.make (grid.row_count)
+			create {DS_ARRAYED_LIST [EB_METRIC_DOMAIN_ITEM]}Result.make (grid.row_count)
 			l_grid := grid
 			l_row_count := l_grid.row_count
 			if l_row_count > 0 then
@@ -549,16 +555,18 @@ feature{NONE} -- Implementation/Data
 		require
 			a_domain_item_attached: a_domain_item /= Void
 		local
-			l_row: EB_METRIC_DOMAIN_ITEM_ROW
+			l_grid: like grid
 		do
-			create l_row.make (a_domain_item)
-			l_row.bind_grid (grid)
-			if not grid.column (1).is_displayed then
-				grid.column (1).show
+			bind_row (a_domain_item)
+			l_grid := grid
+			if not l_grid.column (1).is_displayed then
+				l_grid.column (1).show
 			end
-			grid.column (1).header_item.remove_pixmap
-			grid.row (grid.row_count).ensure_visible
-			grid.column (1).resize_to_content
+			l_grid.column (1).header_item.remove_pixmap
+			if l_grid.is_displayed then
+				l_grid.row (grid.row_count).ensure_visible
+			end
+			l_grid.column (1).resize_to_content
 		end
 
 	veto_pebble_function (a_pebble: ANY): BOOLEAN is
@@ -588,13 +596,13 @@ feature{NONE} -- Implementation/Data
 
 feature{NONE} -- Implementation/Sorting
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_DOMAIN_ITEM_ROW]) is
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_DOMAIN_ITEM]) is
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
 		local
-			l_sorter: DS_QUICK_SORTER [EB_METRIC_DOMAIN_ITEM_ROW]
+			l_sorter: DS_QUICK_SORTER [EB_METRIC_DOMAIN_ITEM]
 			l_rows: like rows
 		do
 			create l_sorter.make (a_comparator)
@@ -607,8 +615,6 @@ feature{NONE} -- Implementation/Sorting
 			-- Bind `a_rows' in `grid'.
 		require
 			a_rows_attached: a_rows /= Void
-		local
-			l_scope_row: EB_METRIC_DOMAIN_ITEM_ROW
 		do
 			if grid.row_count > 0 then
 				grid.remove_rows (1, grid.row_count)
@@ -618,13 +624,52 @@ feature{NONE} -- Implementation/Sorting
 			until
 				a_rows.after
 			loop
-				create l_scope_row.make (a_rows.item_for_iteration.domain_item)
-				l_scope_row.bind_grid (grid)
+				bind_row (a_rows.item_for_iteration)
 				a_rows.forth
 			end
 		end
 
-	scope_order_tester (a_scope_a, a_scope_b: EB_METRIC_DOMAIN_ITEM_ROW; a_order: INTEGER): BOOLEAN is
+	bind_row (a_domain_item: EB_METRIC_DOMAIN_ITEM) is
+			-- Bind `a_domain_item' in `grid'.
+		local
+			l_grid_row: EV_GRID_ROW
+			l_tooltip: STRING_GENERAL
+			l_editor_token_item: EB_GRID_EDITOR_TOKEN_ITEM
+		do
+			create l_editor_token_item
+			l_editor_token_item.set_pixmap (pixmap_from_domain_item (a_domain_item))
+			token_writer.new_line
+			l_editor_token_item.set_text_with_tokens (token_name_from_domain_item (a_domain_item))
+			l_editor_token_item.set_data (Current)
+			l_editor_token_item.set_overriden_fonts (label_font_table)
+			grid.insert_new_row (grid.row_count + 1)
+			l_grid_row := grid.row (grid.row_count)
+			l_grid_row.set_data (a_domain_item)
+			l_tooltip := tooltip (a_domain_item)
+			if l_tooltip /= Void then
+				l_editor_token_item.set_tooltip (l_tooltip)
+			end
+			l_grid_row.set_item (1, l_editor_token_item)
+		end
+
+	tooltip (a_domain_item: EB_METRIC_DOMAIN_ITEM): STRING_GENERAL is
+			-- Tooltip of current scope
+		require
+			a_domain_item_attached: a_domain_item /= Void
+		local
+			l_folder: EB_METRIC_FOLDER_DOMAIN_ITEM
+		do
+			if not a_domain_item.is_valid then
+				Result := metric_names.f_domain_item_invalid
+			else
+				if a_domain_item.is_folder_item then
+					l_folder ?= a_domain_item
+					Result := l_folder.group.name + l_folder.folder.path
+				end
+			end
+		end
+
+	scope_order_tester (a_scope_a, a_scope_b: EB_METRIC_DOMAIN_ITEM; a_order: INTEGER): BOOLEAN is
 			-- Tester to test is `a_scope_a' is less than `a_scope_b' using sorting order `a_order'
 		require
 			a_scope_a_attached: a_scope_a /= Void
@@ -632,16 +677,20 @@ feature{NONE} -- Implementation/Sorting
 		local
 			l_name_a: STRING_32
 			l_name_b: STRING_32
+			l_index_a: INTEGER
+			l_index_b: INTEGER
 		do
-			l_name_a := string_general_to_lower (a_scope_a.name)
-			l_name_b := string_general_to_lower (a_scope_b.name)
+			l_name_a := string_general_to_lower (a_scope_a.string_representation)
+			l_name_b := string_general_to_lower (a_scope_b.string_representation)
 			if a_order = ascending_order then
 				Result := l_name_a < l_name_b
 			elseif a_order = descending_order then
 				Result := l_name_a > l_name_b
 			elseif a_order = topology_order then
-				if a_scope_a.index /= a_scope_b.index then
-					Result := a_scope_a.index < a_scope_b.index
+				l_index_a := a_scope_a.sorting_order_index
+				l_index_b := a_scope_b.sorting_order_index
+				if l_index_a /= l_index_b then
+					Result := l_index_a < l_index_b
 				else
 					Result := l_name_a < l_name_b
 				end

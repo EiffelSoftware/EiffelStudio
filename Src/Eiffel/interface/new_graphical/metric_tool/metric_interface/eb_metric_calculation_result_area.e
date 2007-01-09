@@ -127,14 +127,19 @@ feature {NONE} -- Initialization
 			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
 			l_text: EV_TEXT_FIELD
 			l_font: EV_FONT
+			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
-				-- Setup `input_grid'.
+				-- Setup `input_grid'.			
 			create input_grid
 			input_grid.hide_header
 			input_grid.set_column_count_to (1)
 			input_grid.set_row_count_to (1)
 			input_grid.set_minimum_height (40)
+			input_grid.set_focused_selection_color (editor_preferences.selection_background_color)
 			input_grid_area.extend (input_grid)
+			input_grid.enable_selection_on_single_button_click
+			create l_grid_support.make_with_grid (input_grid)
+			l_grid_support.enable_grid_item_pnd_support
 
 				-- Setup sortable `result_grid'.
 			create result_grid
@@ -148,7 +153,7 @@ feature {NONE} -- Initialization
 
 				-- Setup `editor_token_grid_support'.
 			create editor_token_grid_support.make_with_grid (result_grid)
-			editor_token_grid_support.enable_editor_token_pnd
+			editor_token_grid_support.enable_grid_item_pnd_support
 			editor_token_grid_support.color_or_font_change_actions.extend (agent on_color_or_font_changed)
 			editor_token_grid_support.synchronize_color_or_font_change_with_editor
 			editor_token_grid_support.synchronize_scroll_behavior_with_editor
@@ -284,12 +289,9 @@ feature -- Result loading
 		require
 			a_input_attached: a_input /= Void
 		local
-			l_item: EB_METRIC_DOMAIN_GRID_ITEM
+			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
 		do
 			create l_item.make (a_input)
-			l_item.set_spacing (2)
-			l_item.set_padding (5)
-			l_item.set_left_border (3)
 			input_grid.set_item (1, 1, l_item)
 			input_grid.column (1).resize_to_content
 		end

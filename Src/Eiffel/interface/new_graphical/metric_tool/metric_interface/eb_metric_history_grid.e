@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	EVS_GRID_WRAPPER [EB_METRIC_ARCHIVE_NODE]
+		rename
+			make as old_make
 		redefine
 			grid
 		end
@@ -18,6 +20,19 @@ inherit
 	EB_METRIC_INTERFACE_PROVIDER
 
 	EVS_GRID_TWO_WAY_SORTING_ORDER
+
+feature{NONE} -- Initialization
+
+	make (a_panel: like metric_history_panel) is
+			-- Initialize Current.
+		require
+			a_panel_attached: a_panel /= Void
+		do
+			metric_history_panel := a_panel
+			create row_archive_table.make (20)
+			old_make (create {ES_GRID})
+			initialize_grid
+		end
 
 feature -- Access
 
@@ -127,7 +142,7 @@ feature -- Status report
 	is_item_droppable (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
 			-- Can `a_pebble' be dropped on `a_item'?
 		local
-			l_item: EB_METRIC_DOMAIN_GRID_ITEM
+			l_item: EB_METRIC_GRID_DOMAIN_ITEM  [ANY]
 		do
 			l_item ?= a_item
 			Result := l_item /= Void and then l_item.is_pebble_droppable (a_pebble)
@@ -321,16 +336,15 @@ feature{NONE} -- Grid item generation
 			result_attached: Result /= Void
 		end
 
-	input_domain_item (a_archive_node: EB_METRIC_ARCHIVE_NODE): EB_METRIC_DOMAIN_GRID_ITEM is
+	input_domain_item (a_archive_node: EB_METRIC_ARCHIVE_NODE): EB_METRIC_GRID_DOMAIN_ITEM [ANY] is
 			-- Input domain item for `a_archive_node'	
 		require
 			a_archive_node_attached: a_archive_node /= Void
 		do
 			create Result.make (a_archive_node.input_domain)
-			Result.set_padding (8)
-			Result.pointer_button_press_actions.force_extend (agent Result.activate)
+			Result.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Result))
 			Result.dialog_ok_actions.extend (agent set_input_domain_back_to_archive_node (Result, a_archive_node))
-			Result.before_show_dialog_actions.extend (agent on_before_domain_dialog_display (?, Result))
+			Result.set_dialog_function (agent plain_domain_setup_dialog)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -398,7 +412,7 @@ feature{NONE} -- Item updator
 			end
 		end
 
-	update_input_domain_item (a_item: EB_METRIC_DOMAIN_GRID_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+	update_input_domain_item (a_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Update `a_item' with `a_archive_node'.
 		require
 			a_item_attached: a_item /= Void
@@ -704,14 +718,6 @@ feature{NONE} -- Implementation
 			Result := a_archive_node.is_recalculatable
 		end
 
-	red_color: EV_COLOR is
-			-- Red color
-		do
-			Result := (create {EV_STOCK_COLORS}).red
-		ensure
-			result_attached: Result /= Void
-		end
-
 	normal_color: EV_COLOR is
 			-- Normal color for text
 		do
@@ -756,14 +762,14 @@ feature{NONE} -- Implementation
 			metric_history_panel.metric_tool.go_to_result
 		end
 
-	set_input_domain_back_to_archive_node (a_item: EB_METRIC_DOMAIN_GRID_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+	set_input_domain_back_to_archive_node (a_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Set domain from `a_item' into `a_archive_node'.
 		require
 			a_item_attached: a_item /= Void
 			a_archive_node_attached: a_archive_node /= Void
 		do
 			if not a_archive_node.input_domain.is_equivalent (a_item.domain) then
-				a_archive_node.set_input_domain (a_item.domain.twin)
+				a_archive_node.set_input_domain (a_item.domain)
 				a_archive_node.set_is_value_valid (False)
 				a_archive_node.set_detailed_result (Void)
 				input_domain_change_actions.call ([])
@@ -775,7 +781,7 @@ feature{NONE} -- Implementation
 	on_drop_on_item (a_item: EV_GRID_ITEM; a_pebble: ANY) is
 			-- Action to be performed when `a_pebble' is dropped on `a_item'.
 		local
-			l_item: EB_METRIC_DOMAIN_GRID_ITEM
+			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
 			l_archive_node: EB_METRIC_ARCHIVE_NODE
 		do
 			l_item ?= a_item
@@ -853,14 +859,28 @@ feature{NONE} -- Implementation
 			a_archive_node.set_is_result_filtered (a_item.is_checked)
 		end
 
-	on_before_domain_dialog_display (a_doman_grid_dialog: EB_METRIC_DOMAIN_PROPERTY_DIALOG; a_grid_item: EV_GRID_ITEM) is
-			-- Acton to be performed before `a_doman_grid_dialog' which associated with `a_grid_item' is displayed
-		require
-			a_doman_grid_dialog_attached: a_doman_grid_dialog /= Void
-			a_grid_item_attached: a_grid_item /= Void
+feature{NONE} -- Implementation
+
+	initialize_grid is
+			-- Initialize `grid'.
+		local
+			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
-			a_doman_grid_dialog.set_grid_item (a_grid_item)
-			a_doman_grid_dialog.property_area.feature_vertion_area.hide
+			grid.enable_selection_on_single_button_click
+			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
+			enable_auto_sort_order_change
+			set_sort_action (agent sort_agent (?, ?))
+			post_sort_actions.extend (agent on_post_sort)
+			set_sorting_status (sorted_columns_from_string (sorting_order_preference.value))
+			grid.item_drop_actions.extend (agent on_drop_on_item)
+			grid.set_item_veto_pebble_function (agent is_item_droppable)
+			grid.key_press_actions.extend (agent on_key_pressed)
+			create l_grid_support.make_with_grid (grid)
+			l_grid_support.enable_grid_item_pnd_support
+			grid.enable_row_separators
+			grid.enable_column_separators
+			grid.enable_single_row_selection
+			grid.set_separator_color ((create {EV_STOCK_COLORS}).grey)
 		end
 
 invariant

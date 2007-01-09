@@ -11,6 +11,10 @@ class
 
 inherit
 	EB_FEATURE_DOMAIN_ITEM
+		redefine
+			associated_class_domain_item,
+			written_class_domain_item
+		end
 
 	EB_METRIC_DOMAIN_ITEM
 		undefine
@@ -23,14 +27,16 @@ create
 
 feature -- Access
 
-	class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM is
-			-- Class domain item for associated class of current feature
-		require
-			valid: is_valid
+	associated_class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM is
+			-- Class item for associated class of current feature
 		do
-			create Result.make (id_of_class (ql_feature.class_c.lace_class.config_class))
-		ensure
-			result_attached: Result /= Void
+			create Result.make (id_of_class (e_feature.associated_class.lace_class.config_class))
+		end
+
+	written_class_domain_item: EB_METRIC_CLASS_DOMAIN_ITEM is
+			-- Class item for written class of current feature
+		do
+			create Result.make (id_of_class (e_feature.written_class.lace_class.config_class))
 		end
 
 feature -- Process

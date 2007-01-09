@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Grid item used to input criterion name in metric tool"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

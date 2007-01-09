@@ -27,23 +27,29 @@ feature {NONE}-- Initialization
 			
 				-- Create all widgets.
 			create l_ev_vertical_box_1
+			create error_message_lbl
+			create error_message_txt
+			create l_ev_cell_1
 			create to_do_lbl
 			create editor_area
-			create l_ev_cell_1
-			create l_ev_horizontal_box_1
 			create l_ev_cell_2
-			create close_btn
+			create l_ev_horizontal_box_1
 			create l_ev_cell_3
+			create close_btn
+			create l_ev_cell_4
 			
 				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
+			l_ev_vertical_box_1.extend (error_message_lbl)
+			l_ev_vertical_box_1.extend (error_message_txt)
+			l_ev_vertical_box_1.extend (l_ev_cell_1)
 			l_ev_vertical_box_1.extend (to_do_lbl)
 			l_ev_vertical_box_1.extend (editor_area)
-			l_ev_vertical_box_1.extend (l_ev_cell_1)
+			l_ev_vertical_box_1.extend (l_ev_cell_2)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_cell_2)
-			l_ev_horizontal_box_1.extend (close_btn)
 			l_ev_horizontal_box_1.extend (l_ev_cell_3)
+			l_ev_horizontal_box_1.extend (close_btn)
+			l_ev_horizontal_box_1.extend (l_ev_cell_4)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -60,16 +66,19 @@ feature {NONE}-- Initialization
 			create color_constant_retrieval_functions.make (10)
 			l_ev_vertical_box_1.set_padding (3)
 			l_ev_vertical_box_1.set_border_width (5)
-			l_ev_vertical_box_1.disable_item_expand (to_do_lbl)
+			l_ev_vertical_box_1.disable_item_expand (error_message_lbl)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
+			l_ev_vertical_box_1.disable_item_expand (to_do_lbl)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
-			to_do_lbl.set_text ("To do:")
-			to_do_lbl.align_text_left
-			editor_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
-			editor_area.set_border_width (1)
+			error_message_lbl.align_text_left
+			error_message_txt.set_minimum_height (50)
 			l_ev_cell_1.set_minimum_height (10)
+			to_do_lbl.align_text_left
+			editor_area.set_minimum_height (60)
+			editor_area.set_border_width (1)
+			l_ev_cell_2.set_minimum_height (10)
 			l_ev_horizontal_box_1.disable_item_expand (close_btn)
-			close_btn.set_text ("Close")
 			close_btn.set_minimum_width (70)
 			set_title ("Display window")
 			
@@ -87,12 +96,13 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	close_btn: EV_BUTTON
+	error_message_txt: EV_TEXT
 	editor_area: EV_HORIZONTAL_BOX
-	to_do_lbl: EV_LABEL
+	error_message_lbl, to_do_lbl: EV_LABEL
 
 feature {NONE} -- Implementation
 
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
 

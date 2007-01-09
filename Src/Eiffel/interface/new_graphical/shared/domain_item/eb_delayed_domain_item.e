@@ -12,7 +12,8 @@ inherit
 		redefine
 			is_delayed_item,
 			is_valid,
-			is_equal
+			is_input_domain_item,
+			is_real_delayed_item
 		end
 
 	EB_CONSTANTS
@@ -31,13 +32,16 @@ feature -- Status report
 	is_valid: BOOLEAN is True
 			-- Does current represent a valid domain item?
 
-	is_equal (other: like Current): BOOLEAN is
-			-- Is `other' attached to an object considered
-			-- equal to current object?
+	is_input_domain_item: BOOLEAN is
+			-- Does Current delayed item represents an input domain item?
 		do
-			if Current.same_type (other) then
-				Result := True
-			end
+			Result := id.is_empty
+		end
+
+	is_real_delayed_item: BOOLEAN is
+			-- Does Current delayed item represents a real delayed domain item?
+		do
+			Result := not id.is_empty
 		end
 
 feature -- Access
@@ -65,6 +69,18 @@ feature -- Access
 			-- Text of current item
 		do
 			Result := interface_names.l_delayed_item
+		end
+
+	sorting_order_index: INTEGER is
+			-- Sorting order index
+		do
+			Result := delayed_index
+		end
+
+	item_type_name: STRING_GENERAL is
+			-- Name of type of current item
+		do
+			Result := interface_names.l_delayed_domain_item
 		end
 
 feature{NONE} -- Implemenation

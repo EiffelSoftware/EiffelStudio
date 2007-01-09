@@ -99,6 +99,16 @@ feature -- Setting
 			lines_is_empty: lines.is_empty
 		end
 
+feature -- Process
+
+	add_editor_tokens (a_tokens: LIST [EDITOR_TOKEN]) is
+			-- Add `a_tokens' into `last_line'.
+		require
+			a_tokens_attached: a_tokens /= Void
+		do
+			a_tokens.do_all (agent (a_token: EDITOR_TOKEN) do if a_token /= Void then last_line.append_token (a_token) end end)
+		end
+
 feature -- Status report
 
 	is_multiline_mode: BOOLEAN

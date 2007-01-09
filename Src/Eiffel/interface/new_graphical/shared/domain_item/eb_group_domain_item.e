@@ -73,6 +73,29 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	sorting_order_index: INTEGER is
+			-- Sorting order index
+		do
+			update
+			if is_valid then
+				if conf_group.is_cluster then
+					Result := cluster_index
+				elseif conf_group.is_library then
+					Result := library_index
+				elseif conf_group.is_assembly then
+					Result := assembly_index
+				end
+			else
+				Result := cluster_index
+			end
+		end
+
+	item_type_name: STRING_GENERAL is
+			-- Name of type of current item
+		do
+			Result := interface_names.l_group_domain_item
+		end
+
 feature{NONE} -- Implemenation
 
 	update is

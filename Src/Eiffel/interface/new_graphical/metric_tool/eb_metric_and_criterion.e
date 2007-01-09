@@ -16,7 +16,8 @@ inherit
 		redefine
 			process,
 			is_and_criterion,
-			new_criterion
+			new_criterion,
+			has_delayed_input_domain
 		end
 
 create
@@ -60,8 +61,15 @@ feature -- Process
 
 feature -- Status report
 
-	is_and_criterion: BOOLEAN is True;
+	is_and_criterion: BOOLEAN is True
 			-- Is current an "and" criterion?
+
+	has_delayed_input_domain: BOOLEAN is
+			-- Does current domain contain reference to a delayed domain which represents an delayed input domain?
+			-- An delayed input domain should be replaced by actual input domain before metric calculation.
+		do
+			Result := operands.for_all (agent delayed_input_domain_in_operand)
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -12,14 +12,30 @@ class
 inherit
 	EB_METRIC_DOMAIN_PROPERTY_MANAGER
 		redefine
+			property_item,
 			criterion_type,
 			load_properties,
-			store_properties,
-			on_before_dialog_display
+			store_properties
 		end
 
 create
 	make
+
+feature -- Access
+
+	property_item: EB_METRIC_GRID_DOMAIN_ITEM [BOOLEAN] is
+			-- Grid item used to display properties
+		do
+			if property_item_internal = Void then
+				create property_item_internal.make (create {EB_METRIC_DOMAIN}.make)
+				property_item_internal.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, property_item_internal))
+				property_item_internal.dialog_ok_actions.extend (agent grid.resize_column (2, 0))
+				property_item_internal.dialog_ok_actions.extend (agent change_actions.call ([]))
+				property_item_internal.set_tooltip (metric_names.f_pick_and_drop_items)
+				property_item_internal.set_dialog_function (agent caller_callee_domain_setup_dialog)
+			end
+			Result := property_item_internal
+		end
 
 feature -- Properties management
 
@@ -27,14 +43,14 @@ feature -- Properties management
 			-- Load porperties from `a_criterion' into current manager
 		do
 			Precursor (a_criterion)
-			property_item.set_is_only_current_version (a_criterion.only_current_version)
+			property_item.set_value (a_criterion.only_current_version)
 		end
 
 	store_properties (a_criterion: like criterion_type) is
 			-- Store properties in current manager into `a_criterion'.
 		do
 			Precursor (a_criterion)
-			if property_item.is_only_current_version then
+			if property_item.value then
 				a_criterion.enable_only_current_version
 			else
 				a_criterion.disable_only_current_version
@@ -43,15 +59,8 @@ feature -- Properties management
 
 feature{NONE} -- Implementation
 
-	criterion_type: EB_METRIC_CALLER_CALLEE_CRITERION
+	criterion_type: EB_METRIC_CALLER_CALLEE_CRITERION;
 			-- Anchor type
-
-	on_before_dialog_display (a_dialog: EB_METRIC_DOMAIN_PROPERTY_DIALOG) is
-			-- Action to be performed before `a_dialog' is displayed
-		do
-			a_dialog.set_grid_item (property_item)
-			a_dialog.property_area.feature_vertion_area.show
-		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

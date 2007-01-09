@@ -94,6 +94,12 @@ feature -- Access
 	detailed_result: QL_DOMAIN
 			-- Last detailed result
 
+	visitable_name: STRING_GENERAL is
+			-- Name of current visitable item
+		do
+			Result := metric_names.visitable_name (metric_names.l_metric_archive_node, metric_name)
+		end
+
 feature -- Status report
 
 	has_previous_value: BOOLEAN

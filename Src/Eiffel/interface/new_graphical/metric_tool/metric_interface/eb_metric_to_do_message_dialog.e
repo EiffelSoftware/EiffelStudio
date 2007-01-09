@@ -61,12 +61,16 @@ feature {NONE} -- Initialization
 			close_btn.set_text (metric_names.t_close)
 			close_btn.select_actions.extend (agent hide)
 			create editor
---			editor.set_cursors (create {EB_EDITOR_CURSORS})
---			editor.set_reference_window (Current)
---			editor.widget.set_minimum_size (Layout_constants.dialog_unit_to_pixels (200), Layout_constants.dialog_unit_to_pixels (100))
+			editor.disable_edit
+			editor.set_background_color (l_text.background_color)
 			editor_area.extend (editor)
 			set_size (Layout_constants.dialog_unit_to_pixels (700), Layout_constants.dialog_unit_to_pixels (300))
 			set_default_cancel_button (close_btn)
+			set_title (metric_names.t_metric_definition_error_wizard)
+			set_icon_pixmap (pixmaps.icon_pixmaps.tool_metric_icon)
+			error_message_txt.disable_edit
+			error_message_txt.set_background_color (l_text.background_color)
+			error_message_lbl.set_text (metric_names.coloned_string (metric_names.l_error_message, True))
 		end
 
 feature -- Access
@@ -76,13 +80,27 @@ feature -- Access
 
 feature -- Basic operations
 
-	load_text (a_text: STRING_GENERAL) is
-			-- Load `a_text' in `editor'.			
+	load_text (a_error: STRING_GENERAL; a_location: STRING_GENERAL; a_to_do: STRING_GENERAL) is
+			-- Load error message `a_error', location `a_location' and to-do message `a_to_do' into Current.
+		local
+			l_text: STRING_GENERAL
 		do
-			if a_text = Void then
+			if a_error = Void then
+				error_message_txt.set_text ("")
+			else
+				l_text := a_error.twin
+				if a_location /= Void then
+					l_text.append ("%N")
+					l_text.append (metric_names.t_location)
+					l_text.append (metric_names.colon)
+					l_text.append (a_location)
+				end
+				error_message_txt.set_text (l_text)
+			end
+			if a_to_do = Void then
 				editor.set_text ("")
 			else
-				editor.set_text (a_text)
+				editor.set_text (a_to_do)
 			end
 		end
 

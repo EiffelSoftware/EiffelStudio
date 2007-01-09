@@ -35,6 +35,9 @@ inherit
 	EB_SHARED_PREFERENCES
 		export {NONE} all end
 
+	SHARED_FLAGS
+		export {NONE} all end
+
 feature -- Basic operations
 
 	execute is
@@ -107,7 +110,7 @@ feature {NONE} -- Callbacks
 			preferences.preferences.save_preferences
 
 				-- Store metric archive history.
-			metric_manager.set_is_exit_requested (True)
+			set_is_exit_requested (True)
 			if metric_manager.has_archive_been_loaded then
 				metric_manager.store_archive_history
 			end

@@ -185,6 +185,9 @@ feature -- Initialization
 			end
 				-- Add features from ANY
 			add_features_of_any (l_feat_tbl)
+			if is_enum then
+				add_enum_conversion (l_feat_tbl)
+			end
 
 				-- Clean `overloaded_names' to remove non-overloaded routines.
 			clean_overloaded_names (l_feat_tbl)
@@ -1070,6 +1073,35 @@ feature {NONE} -- Initialization
 						end
 					end
 					l_fields.forth
+				end
+			end
+		end
+
+	add_enum_conversion (a_feat_tbl: like feature_table) is
+			-- Binds a conversion routine to an Enum type for artifical `to_integer' feature.
+		require
+			is_enum: is_enum
+			a_feat_tbl_attached: a_feat_tbl /= Void
+			convert_to_unattached: convert_to = Void
+		local
+			l_feat: FEATURE_I
+			l_type: NAMED_TYPE_A
+			l_checker: CONVERTIBILITY_CHECKER
+		do
+			l_feat := a_feat_tbl.item_id ({NAMES_HEAP}.to_integer_name_id)
+			check
+				l_feat_attached: l_feat /= Void
+			end
+			if l_feat /= Void then
+				l_type ?= l_feat.type
+				check
+					l_type_attached: l_type /= Void
+					l_type_is_integer: l_type.is_integer
+				end
+				if l_type /= Void then
+					create convert_to.make (1)
+					convert_to.set_key_equality_tester (create {CONVERTIBILITY_CHECKER})
+					convert_to.force ({NAMES_HEAP}.to_integer_name_id, l_type)
 				end
 			end
 		end

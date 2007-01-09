@@ -27,6 +27,14 @@ feature -- Setting
 			compilation_cell_set: compilation_cell.item = b
 		end
 
+	set_is_exit_requested (b: BOOLEAN) is
+			-- Set `is_exit_requested' with `b'.
+		do
+			exit_request_cell.put (b)
+		ensure
+			is_exit_requested_set: is_exit_requested = b
+		end
+
 feature -- Status reporting
 
 	is_gui: BOOLEAN is
@@ -53,6 +61,14 @@ feature -- Status reporting
 			good_result: Result = not compilation_cell.item
 		end
 
+	is_exit_requested: BOOLEAN is
+			-- Is exit requested?
+		do
+			Result := exit_request_cell.item
+		ensure
+			good_result: Result = exit_request_cell.item
+		end
+
 feature{NONE} -- Implementation
 
 	gui_cell: CELL [BOOLEAN] is
@@ -67,6 +83,11 @@ feature{NONE} -- Implementation
 			create Result.put (True)
 		end
 
+	exit_request_cell: CELL[BOOLEAN] is
+			-- Exit request cell
+		once
+			create Result.put (False)
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

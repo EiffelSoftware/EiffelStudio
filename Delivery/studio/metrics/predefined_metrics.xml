@@ -398,41 +398,41 @@
 	<basic_metric name="Clients" unit="class" uuid="A4272F1A-54C9-4ED4-AEFC-595C0DB87349">
 		<description>Number of clients</description>
 		<criterion>
-			<domain_criterion negation="False" name="supplier_is" unit="class">
+			<client_criterion negation="False" name="supplier_is" unit="class" normal="true" only_syntactical="false" indirect="false">
 				<domain>
 					<domain_item type="delayed" id=""></domain_item>
 				</domain>
-			</domain_criterion>
+			</client_criterion>
 		</criterion>
 	</basic_metric>
 	<basic_metric name="Indirect clients" unit="class" uuid="940EEA00-2B7E-4456-90CB-6B1A7C998913">
 		<description>Number of indirect clients</description>
 		<criterion>
-			<domain_criterion negation="False" name="indirect_supplier_is" unit="class">
+			<client_criterion negation="False" name="supplier_is" unit="class" normal="true" only_syntactical="false" indirect="true">
 				<domain>
 					<domain_item type="delayed" id=""></domain_item>
 				</domain>
-			</domain_criterion>
+			</client_criterion>
 		</criterion>
 	</basic_metric>
 	<basic_metric name="Suppliers" unit="class" uuid="EA607F1D-A90A-4141-A39F-FCFC71962D05">
 		<description>Number of suppliers</description>
 		<criterion>
-			<domain_criterion negation="False" name="client_is" unit="class">
+			<client_criterion negation="False" name="client_is" unit="class" normal="true" only_syntactical="false" indirect="false">
 				<domain>
 					<domain_item type="delayed" id=""></domain_item>
 				</domain>
-			</domain_criterion>
+			</client_criterion>
 		</criterion>
 	</basic_metric>
 	<basic_metric name="Indirect suppliers" unit="class" uuid="E1CD0F6F-CCA1-4122-B418-1A4A9056B56D">
 		<description>Number of indirect suppliers</description>
 		<criterion>
-			<domain_criterion negation="False" name="indirect_client_is" unit="class">
+			<client_criterion negation="False" name="client_is" unit="class" normal="true" only_syntactical="false" indirect="true">
 				<domain>
 					<domain_item type="delayed" id=""></domain_item>
 				</domain>
-			</domain_criterion>
+			</client_criterion>
 		</criterion>
 	</basic_metric>
 	<basic_metric name="Parents" unit="class" uuid="40575DA0-2114-4110-A23C-63B253FAA6FF">
@@ -502,6 +502,7 @@
 			</or_criterion>
 		</criterion>
 	</basic_metric>		
+	<ratio_metric numerator="" denominator_coefficient="5" name="r1" denominator="" numerator_uuid="414CA4A7-FC9E-4211-AA58-0F78DF64A1FF" denominator_uuid="E4FE2ABD-FB05-41A9-B02E-611664D04AD2" numerator_coefficient="3" uuid="D4EC8167-67D2-407D-94D1-F2BFCF9E228A" unit="ratio"></ratio_metric>
 </metric>
 
 

@@ -914,22 +914,24 @@ feature -- Window management
 		local
 			l_file: RAW_FILE
 			l_result: BOOLEAN
-			l_restried: BOOLEAN
+			retried: BOOLEAN
 			l_fn: FILE_NAME
 		do
-			if not l_restried then
+			if not retried then
 				l_fn := docking_standard_layout_path.twin
 				l_fn.set_file_name ("standard_layout.wb")
-				create l_file.make_open_read (l_fn )
+				create l_file.make (l_fn )
 				if l_file.exists then
 					l_result := docking_manager.open_config (l_fn)
+					check l_result end
+				else
+					internal_construct_standard_layout_by_code
 				end
-				check l_result end
 			else
 				internal_construct_standard_layout_by_code
 			end
 		rescue
-			l_restried := True
+			retried := True
 			retry
 		end
 

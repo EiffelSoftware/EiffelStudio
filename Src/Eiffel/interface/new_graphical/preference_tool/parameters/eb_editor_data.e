@@ -123,6 +123,16 @@ feature {EB_EDITORS_MANAGER, EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			Result := feature_background_color_preference.value
 		end
 
+	target_text_color: EV_COLOR is
+		do
+			Result := target_text_color_preference.value
+		end
+
+	target_background_color: EV_COLOR is
+		do
+			Result := target_background_color_preference.value
+		end
+
 	cluster_text_color: EV_COLOR is
 		do
 			Result := cluster_text_color_preference.value

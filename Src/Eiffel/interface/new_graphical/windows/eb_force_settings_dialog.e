@@ -206,7 +206,7 @@ feature -- Access
 
 	physics: EIFFEL_FORCE_LAYOUT
 
-	tool: EB_CONTEXT_EDITOR
+	tool: EB_DIAGRAM_TOOL
 
 feature {NONE} -- Implementation
 

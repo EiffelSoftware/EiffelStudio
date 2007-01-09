@@ -162,7 +162,9 @@ feature -- change properties
 			elseif expression.error_occurred then
 				a_item.set_foreground_color (parent_grid.error_row_fg_color)
 			else
-				a_item.set_foreground_color (parent_grid.parent.foreground_color)
+				if parent_grid.parent /= Void then
+					a_item.set_foreground_color (parent_grid.parent.foreground_color)
+				end
 			end
 		end
 

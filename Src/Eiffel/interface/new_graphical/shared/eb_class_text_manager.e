@@ -37,11 +37,11 @@ feature -- Access
 			a_class_not_void: a_class /= Void
 		local
 			l: LIST [EB_DEVELOPMENT_WINDOW]
-			unchanged_editor, changed_editor: EB_DEVELOPMENT_WINDOW
-			editor: EB_SMART_EDITOR
+			unchanged_editor, changed_editor: EB_SMART_EDITOR
+			editor: ARRAYED_LIST [EB_SMART_EDITOR]
 			l_app: like ev_application
 		do
-			l := Window_manager.development_windows_with_class (a_class.name)
+			l := Window_manager.development_windows_with_class (a_class.file_name)
 			if not l.is_empty then
 				from
 					l_app := ev_application
@@ -49,25 +49,26 @@ feature -- Access
 				until
 					l.after
 				loop
+						-- Wait for the editor to read class text.
+					editor := l.item.editors_manager.editor_editing (a_class)
+					if not editor.is_empty then
+						from
+							l.item.window.set_pointer_style (default_pixmaps.wait_cursor)
+						until
+							l.item.editors_manager.full_loaded
+						loop
+								-- As editor text is loaded on idle, unless idle_actions are called EiffelStudio
+								-- stays in an infinite loop.
+							l_app.process_events
+						end
+						l.item.window.set_pointer_style (default_pixmaps.standard_cursor)
 
-					from
-							-- Wait for the editor to read class text.
-						editor := l.item.editor_tool.text_area
-						l.item.window.set_pointer_style (default_pixmaps.wait_cursor)
-					until
-						editor.text_is_fully_loaded
-					loop
-							-- As editor text is loaded on idle, unless idle_actions are called EiffelStudio
-							-- stays in an infinite loop.
-						l_app.process_events
-					end
-					l.item.window.set_pointer_style (default_pixmaps.standard_cursor)
-
-					if editor.is_editable then
-						if l.item.changed then
-							changed_editor := l.item
-						else
-							unchanged_editor := l.item
+						if editor.first.is_editable then
+							if l.item.changed then
+								changed_editor := editor.first
+							else
+								unchanged_editor := editor.first
+							end
 						end
 					end
 					l.forth
@@ -95,21 +96,35 @@ feature -- Element change
 		local
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			in_tool: BOOLEAN
+			l_editor: EB_SMART_EDITOR
+			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 		do
-			l := Window_manager.development_windows_with_class (a_class.name)
+			l := Window_manager.development_windows_with_class (a_class.file_name)
 			from
 				l.start
 			until
 				l.after
 			loop
-				if l.item.editor_tool.text_area.is_editable then
-					l.item.editor_tool.text_area.no_save_before_next_load
-					l.item.set_text (a_text)
-					in_tool := True
+				l_editors := l.item.editors_manager.editor_editing (a_class)
+				if not l_editors.is_empty then
+					from
+						l_editors.start
+					until
+						l_editors.after or l_editor /= Void
+					loop
+						if l_editors.item.is_editable then
+							l_editor := l_editors.item
+						end
+						l_editors.forth
+					end
+					if l_editor /= Void then
+						l_editor.no_save_before_next_load
+						l_editor.set_editor_text (a_text)
+						in_tool := True
+					end
 				end
 				l.forth
 			end
-
 			if not in_tool then
 				save (a_class.file_name, a_text)
 			end

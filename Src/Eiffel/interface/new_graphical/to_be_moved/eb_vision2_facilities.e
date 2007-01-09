@@ -9,7 +9,7 @@ indexing
 
 class
 	EB_VISION2_FACILITIES
-	
+
 inherit
 	EB_CONSTANTS
 

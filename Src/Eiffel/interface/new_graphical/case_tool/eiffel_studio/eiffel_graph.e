@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	context_editor: EB_CONTEXT_EDITOR
+	context_editor: EB_DIAGRAM_TOOL
 			-- Container of `Current'.
 			-- Used to access surface on which `Current' is displayed.
 
@@ -357,7 +357,7 @@ feature -- Element change
 			end
 		end
 
-feature {EB_CONTEXT_EDITOR} -- Synchronization
+feature {EB_DIAGRAM_TOOL} -- Synchronization
 
 	synchronize is
 			-- Contexts need to be updated because of recompilation
@@ -368,9 +368,9 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 			nr_of_items: INTEGER
 			is_cancelled: BOOLEAN
 		do
-			context_editor.development_window.window.set_pointer_style (wait_cursor)
+			context_editor.develop_window.window.set_pointer_style (wait_cursor)
 			if not is_cancelled then
-				l_status_bar := context_editor.development_window.status_bar
+				l_status_bar := context_editor.develop_window.status_bar
 
 				nr_of_items := 1 + nodes.count + clusters.count + links.count + 1 + 1
 				l_status_bar.reset_progress_bar_with_range (0 |..| nr_of_items)
@@ -398,7 +398,7 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 
 				l_status_bar.reset
 			end
-			context_editor.development_window.window.set_pointer_style (standard_cursor)
+			context_editor.develop_window.window.set_pointer_style (standard_cursor)
 		rescue
 			context_editor.clear_area
 			is_cancelled := True

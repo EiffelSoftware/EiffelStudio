@@ -25,7 +25,7 @@ feature -- Basic operations
 			-- Perform operation.
 		do
 			create explain_dialog.make_with_text (Interface_names.e_diagram_remove_anchor)
-			explain_dialog.show_modal_to_window (tool.development_window.window)
+			explain_dialog.show_modal_to_window (tool.develop_window.window)
 		end
 
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
@@ -106,6 +106,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_remove_anchor_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

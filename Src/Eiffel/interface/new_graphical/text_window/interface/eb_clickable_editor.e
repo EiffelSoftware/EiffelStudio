@@ -57,9 +57,9 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR} (a_dev_window)
 			if dev_window /= Void then
-				dev_window.add_editor_to_list (Current)
+				dev_window.ui.add_editor_to_list (Current)
 					-- Register the dev_window as an observer of `Current'
-				text_displayed.add_selection_observer (dev_window)
+				text_displayed.add_selection_observer (dev_window.agents)
 			end
 			create after_reading_text_actions.make
 
@@ -650,7 +650,7 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
 			if dev_window /= Void then
-				dev_window.set_current_editor (Current)
+				dev_window.ui.set_current_editor (Current)
 			end
 		end
 

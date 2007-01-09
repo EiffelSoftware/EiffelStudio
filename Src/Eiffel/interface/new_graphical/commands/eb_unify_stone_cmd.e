@@ -47,7 +47,16 @@ feature -- Status report
 			else
 				Result := pixmaps.icon_pixmaps.context_link_icon
 			end
+		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			if window.unified_stone then
+				Result := pixmaps.icon_pixmaps.context_unlink_icon_buffer
+			else
+				Result := pixmaps.icon_pixmaps.context_link_icon_buffer
+			end
 		end
 
 	tooltip: STRING_GENERAL is

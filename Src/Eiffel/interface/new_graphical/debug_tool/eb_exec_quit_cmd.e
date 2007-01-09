@@ -86,6 +86,12 @@ feature {NONE} -- Attributes
 			Result := pixmaps.icon_pixmaps.debug_stop_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.debug_stop_icon_buffer
+		end
+
 feature {NONE} -- Implementation
 
 	ask_and_kill is

@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 				pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
 
 				set_displayed_string_size (preferences.misc_data.default_displayed_string_size)
+
 				if preferences.debug_tool_data /= Void then
 					set_max_evaluation_duration (preferences.debugger_data.max_evaluation_duration)
 					preferences.debugger_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
@@ -95,7 +96,6 @@ feature {NONE} -- Initialization
 					max_evaluation_duration_set: preferences.debugger_data /= Void implies
 								max_evaluation_duration = preferences.debugger_data.max_evaluation_duration
 				end
-
 
 					--| End of settings
 				init_commands
@@ -168,16 +168,13 @@ feature -- tools
 
 	watch_tool_list: LINKED_SET [ES_WATCH_TOOL]
 
-	debugging_tools: ES_DOCKABLE_NOTEBOOK
-			-- A tool that contains various debugging tools.
-
 feature -- Output visitor
 
 	text_formatter_visitor: DEBUGGER_TEXT_FORMATTER_VISITOR
 
 feature -- tools management
 
-	new_toolbar: EB_TOOLBAR is
+	new_toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Toolbar containing all debugging commands.
 		do
 			Result := preferences.debug_tool_data.retrieve_project_toolbar (toolbarable_commands)
@@ -284,7 +281,7 @@ feature -- tools management
 			l_tool: EB_TOOL
 			i: INTEGER
 		do
-			m := w.debugging_tools_menu
+			m := w.menus.debugging_tools_menu
 			m.wipe_out
 			if raised then
 				l_tools := menuable_debugging_tools
@@ -315,7 +312,7 @@ feature -- tools management
 	update_all_debugging_tools_menu is
 			-- Update all debugging_tools_menu in all development windows
 		do
-			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.update_debug_menu)
+			window_manager.for_all_development_windows (agent update_debugging_tools_menu_from)
 		end
 
 	show_hide_debugging_tools (mit: EV_MENU_ITEM) is
@@ -352,17 +349,75 @@ feature -- tools management
 			end
 		end
 
-	create_new_watch_tool_inside_notebook (manager: EB_TOOL_MANAGER; nb: ES_NOTEBOOK) is
+	show_thread_tool is
+			-- Show thread tool if any.
+		do
+			if threads_tool /= Void then
+				threads_tool.show
+			end
+		end
+
+	show_object_tool is
+			-- Show object tool if any.
+		do
+			if objects_tool /= Void then
+				objects_tool.show
+			end
+		end
+
+	show_a_hidden_watch_tool is
+			-- Show a hidden watch tool if any.
+			-- If all shown, show next one.
+		local
+			l_watch_tools: like watch_tool_list
+			l_shown: BOOLEAN
+			l_watch_tool: ES_WATCH_TOOL
+			l_focused_watch_index: INTEGER
+		do
+			l_watch_tools := watch_tool_list
+			from
+				l_watch_tools.start
+			until
+				l_watch_tools.after
+			loop
+				if l_watch_tools.item.content.has_focus then
+					l_shown := True
+					l_focused_watch_index := l_watch_tools.index
+				end
+				if l_watch_tool = Void and then not l_watch_tools.item.shown then
+					l_watch_tool := l_watch_tools.item
+				end
+				l_watch_tools.forth
+			end
+			if l_watch_tool /= Void then
+				l_watch_tool.show
+			elseif not l_watch_tools.is_empty then
+				if l_focused_watch_index = l_watch_tools.count then
+					l_focused_watch_index := 1
+				else
+					l_focused_watch_index := l_focused_watch_index + 1
+				end
+				l_watch_tools.i_th (l_focused_watch_index).show
+			end
+		end
+
+	create_new_watch_tool_inside_notebook (a_manager: EB_DEVELOPMENT_WINDOW; a_watch_tool: ES_WATCH_TOOL) is
+			-- Create a new watch tool.
 		require
-			manager /= Void
+			a_manager /= Void
 		local
 			l_watch_tool: ES_WATCH_TOOL
 			i: INTEGER
 		do
 			i := new_watch_tool_number
-			create l_watch_tool.make_with_title (manager, interface_names.t_watch_tool.as_string_32 + " #" + i.out, interface_names.to_watch_tool + " #")
-			l_watch_tool.attach_to_notebook (nb)
+			create l_watch_tool.make_with_title (a_manager, interface_names.t_watch_tool.as_string_32 + " #" + i.out, interface_names.to_watch_tool + " #")
+			if a_watch_tool /= Void then
+			 	l_watch_tool.attach_to_docking_manager_with (a_manager.docking_manager, a_watch_tool)
+			else
+				l_watch_tool.attach_to_docking_manager (a_manager.docking_manager)
+			end
 			watch_tool_list.extend (l_watch_tool)
+			assgin_watch_tool_unique_titles
 		end
 
 	close_watch_tool (wt: ES_WATCH_TOOL) is
@@ -372,7 +427,6 @@ feature -- tools management
 			wt.close
 			watch_tool_list.prune_all (wt)
 		end
-
 
 feature -- Events helpers
 
@@ -427,7 +481,6 @@ feature -- Output
 			check output_manager /= Void end
 			output_manager.add_string (m)
 			output_manager.add_new_line
---			output_manager.scroll_to_end
 		end
 
 	debugger_warning_message (m: STRING) is
@@ -489,7 +542,7 @@ feature -- Change
 		do
 			conv_dev := last_focused_development_window (False)
 			if conv_dev /= Void then
-				bp_tool := conv_dev.breakpoints_tool
+				bp_tool := conv_dev.tools.breakpoints_tool
 				if bp_tool /= Void then
 					if bp_tool.shown then
 						bp_tool.close
@@ -509,7 +562,7 @@ feature -- Change
 		do
 			conv_dev := last_focused_development_window (False)
 			if conv_dev /= Void then
-				bp_tool := conv_dev.breakpoints_tool
+				bp_tool := conv_dev.tools.breakpoints_tool
 				if bp_tool /= Void then
 					if bp_tool.shown then
 						bp_tool.refresh
@@ -623,10 +676,8 @@ feature -- Status setting
 		local
 			split: EV_SPLIT_AREA
 			i: INTEGER
-			rl, rr: ARRAY_PREFERENCE
 			l_watch_tool: ES_WATCH_TOOL
-			s: STRING
-			wlays: ARRAY [STRING]
+			nwt: INTEGER
 		do
 			disable_debugging_commands (False)
 			initialize_debugging_window
@@ -634,10 +685,8 @@ feature -- Status setting
 				debugging_window_set: debugging_window /= Void
 			end
 			debugging_window.window.lock_update
+			debugging_window.save_tools_docking_layout
 
-			normal_left_layout := debugging_window.left_panel.save_to_resource
-			normal_right_layout := debugging_window.right_panel.save_to_resource
-			normal_splitter_position := debugging_window.panel.split_position
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("Right normal layout: %N")
 	 			from
@@ -662,66 +711,48 @@ feature -- Status setting
 				-- Change the state of the debugging window.
 			debugging_window.hide_tools
 
-				--| Create tools. |--
-				--| ES debugging tools |--
-			if debugging_tools = Void then
-				create debugging_tools.make (
-						interface_names.t_Debugging_tool,
-						interface_names.to_debugging_tool,
-						interface_names.m_Debugging_tool,
-						Void
-					)
-				debugging_tools.attach_to_explorer_bar (debugging_window.right_panel)
-			else
-				debugging_tools.change_attach_explorer (debugging_window.right_panel)
-			end
-
 				--| Grid Objects Tool
 			if objects_tool = Void then
 				create objects_tool.make_with_debugger (debugging_window, Current)
-				objects_tool.attach_to_notebook (debugging_tools)
 			else
 				objects_tool.set_manager (debugging_window)
-				objects_tool.change_attach_notebook (debugging_tools)
 			end
+			objects_tool.attach_to_docking_manager (debugging_window.docking_manager)
+
 			objects_tool.set_cleaning_delay (preferences.debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.request_update
 
 				--| Watches tool
-			wlays := preferences.debug_tool_data.watch_tools_layout_preference.value
-			check wlays /= Void end
-			if watch_tool_list.is_empty then
-					--| At least one watch tool.
-				create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
-			end
-			from
-				watch_tool_list.start
-				i := wlays.lower
-			until
-				i > wlays.upper and watch_tool_list.after
-			loop
-				s := Void
-				if wlays.valid_index (i) then
-					s := wlays [i]
-					if s /= Void and then s.is_empty then
-						s := Void
+			nwt := Preferences.debug_tool_data.number_of_watch_tools.max (1)
+			if watch_tool_list.count < nwt  then
+				from
+					l_watch_tool := Void
+					if not watch_tool_list.is_empty then
+						l_watch_tool := watch_tool_list.last
 					end
+				until
+					watch_tool_list.count >= nwt
+				loop
+					create_new_watch_tool_inside_notebook (debugging_window, l_watch_tool)
 				end
-				if s /= Void and then watch_tool_list.after then
-					create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
-					watch_tool_list.finish
+			else
+				from
+					l_watch_tool := Void
+					if not watch_tool_list.is_empty then
+						l_watch_tool := watch_tool_list.last
+					end
+					watch_tool_list.start
+				until
+					watch_tool_list.after
+				loop
+					l_watch_tool := watch_tool_list.item
+					if l_watch_tool /= Void then
+						l_watch_tool.set_manager (debugging_window)
+						l_watch_tool.attach_to_docking_manager_with (debugging_window.docking_manager, l_watch_tool)
+					end
+					watch_tool_list.forth
 				end
-				l_watch_tool := watch_tool_list.item
-				watch_tool_list.forth
 
-				if l_watch_tool /= Void then
-					if s /= Void then
-						l_watch_tool.watches_grid.set_columns_layout_from_string (s)
-					end
-					l_watch_tool.set_manager (debugging_window)
-					l_watch_tool.change_attach_notebook (debugging_tools)
-				end
-				i := i + 1
 			end
 
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
@@ -730,68 +761,29 @@ feature -- Status setting
 				--| Threads Tool
 			if threads_tool = Void then
 				create threads_tool.make (debugging_window)
-				threads_tool.attach_to_explorer_bar (debugging_window.left_panel)
-			else
-				threads_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
 			end
+			threads_tool.attach_to_docking_manager (debugging_window.docking_manager)
 			threads_tool.request_update
 
 				--| Call Stack Tool
 			if call_stack_tool = Void then
 				create call_stack_tool.make (debugging_window)
-				call_stack_tool.attach_to_explorer_bar (debugging_window.left_panel)
-			else
-				call_stack_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
 			end
+			call_stack_tool.attach_to_docking_manager (debugging_window.docking_manager)
 			call_stack_tool.request_update
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
-			end
-
-				-- Update the debugging tool
-			debugging_tools.update
 
 				-- Show Tools and final visual settings
 			debugging_window.show_tools
-			if debug_left_layout = Void then
-				debug ("DEBUGGER_INTERFACE")
-					io.put_string("Searching resource%N")
-				end
-				rl ?= preferences.preferences.get_preference (preferences.debug_tool_data.left_debug_layout_string)
-				rr ?= preferences.preferences.get_preference (preferences.debug_tool_data.right_debug_layout_string)
-				if rl /= Void and rr /= Void then
-					debug ("DEBUGGER_INTERFACE")
-						io.put_string("Found resource%N")
-					end
 
-					debugging_window.left_panel.load_from_resource (rl.value)
-					debugging_window.right_panel.load_from_resource (rr.value)
-				else
-						--| Only minimize the editor.
-					debugging_window.editor_tool.explorer_bar_item.minimize
-				end
-			else
-				debugging_window.left_panel.load_from_resource (debug_left_layout)
-				debugging_window.right_panel.load_from_resource (debug_right_layout)
-			end
+			restore_debug_docking_layout
 
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
 			split ?= objects_tool.widget
 			if split /= Void then
-				split.set_proportion (objects_split_proportion)
+				if 0 <= objects_split_proportion and objects_split_proportion <= 1then
+					split.set_proportion (objects_split_proportion)
+				end
 				split := Void
-			end
-
-			if debugging_window.panel.full then
-				debugging_window.panel.set_split_position (
-					debug_splitter_position
-						.max (debugging_window.panel.minimum_split_position)
-						.min (debugging_window.panel.maximum_split_position)
-					)
-			end
-
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height during debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 
 			raised := True
@@ -801,6 +793,74 @@ feature -- Status setting
 			raised
 		end
 
+	restore_debug_docking_layout is
+			-- Restore debug docking layout
+		local
+			l_result: BOOLEAN
+			l_file: RAW_FILE
+
+		do
+			create l_file.make (debugging_window.docking_debug_config_file)
+			if l_file.exists then
+				l_result := debugging_window.docking_manager.open_tools_config (debugging_window.docking_debug_config_file)
+			end
+			if not l_result then
+				restore_standard_debug_docking_layout
+			end
+				-- FIXME: To be implemented.
+--			debugging_window.update_items_states
+--			debugging_window.update_menu_item_state
+		end
+
+	save_debug_docking_layout is
+			-- Save debug docking layout
+		do
+			debugging_window.docking_manager.save_tools_config (debugging_window.docking_debug_config_file)
+		end
+
+	restore_standard_debug_docking_layout is
+			-- Restore standard debug docking layout.
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			if debugging_window.tools.features_relation_tool.content.is_visible and debugging_window.tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				-- But it is possible that is auto hide state.
+				objects_tool.content.set_relative (debugging_window.tools.features_relation_tool.content, {SD_ENUMERATION}.bottom)
+			else
+				objects_tool.content.set_top ({SD_ENUMERATION}.bottom)
+			end
+
+			from
+				watch_tool_list.start
+			until
+				watch_tool_list.after
+			loop
+				watch_tool_list.item.content.set_tab_with (objects_tool.content, False)
+				watch_tool_list.forth
+			end
+
+			if debugging_window.tools.features_tool.content.is_visible and debugging_window.tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				call_stack_tool.content.set_relative (debugging_window.tools.features_tool.content, {SD_ENUMERATION}.bottom)
+			elseif debugging_window.tools.cluster_tool.content.is_visible and debugging_window.tools.cluster_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				call_stack_tool.content.set_relative (debugging_window.tools.cluster_tool.content, {SD_ENUMERATION}.bottom)
+			else
+				call_stack_tool.content.set_top ({SD_ENUMERATION}.left)
+			end
+
+			-- Minimize all editors
+			from
+				l_contents := debugging_window.docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				if l_contents.item.type = {SD_ENUMERATION}.editor then
+					l_contents.item.minimize
+				end
+				l_contents.forth
+			end
+		end
+
 	unraise is
 			-- Make the debug tools disappear from `a_window'.
 		require
@@ -808,40 +868,16 @@ feature -- Status setting
 		local
 			i: INTEGER
 			split: EV_SPLIT_AREA
-			wlays: ARRAY [STRING]
 		do
-			debugging_window.window.lock_update
-
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+			if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+				debugging_window.window.lock_update
 			end
-
-			debug_left_layout := debugging_window.left_panel.save_to_resource
-			debug_right_layout := debugging_window.right_panel.save_to_resource
-			debug_splitter_position := debugging_window.panel.split_position
 
 			objects_tool.save_grids_preferences
-			from
-				i := 1
-				create wlays.make (1, watch_tool_list.count)
-				watch_tool_list.start
-			until
-				watch_tool_list.after
-			loop
-				wlays.put (watch_tool_list.item.watches_grid.columns_layout_to_string, i)
-				watch_tool_list.forth
-				i := i + 1
-			end
-			preferences.debug_tool_data.watch_tools_layout_preference.set_value (wlays)
-
 			split ?= objects_tool.widget
 			if split /= Void then
 				objects_split_proportion := split.split_position / split.width
 			end
-			preferences.debug_tool_data.left_debug_layout_preference.set_value (debug_left_layout)
-			preferences.debug_tool_data.right_debug_layout_preference.set_value (debug_right_layout)
-			preferences.debug_tool_data.main_splitter_position_preference.set_value (debug_splitter_position)
-			preferences.debug_tool_data.set_local_vs_object_proportion (objects_split_proportion)
 
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("Right debug layout: %N")
@@ -864,43 +900,30 @@ feature -- Status setting
 	 			end
 			end
 
-				-- Hide debugging tools.
-			debugging_window.left_panel.block
-			debugging_window.right_panel.block
+			save_debug_docking_layout
+			objects_tool.content.close
+			Preferences.debug_tool_data.number_of_watch_tools_preference.set_value (watch_tool_list.count)
+			from
+				watch_tool_list.start
+			until
+				watch_tool_list.after
+			loop
+				watch_tool_list.item.content.close
+				watch_tool_list.forth
+			end
 
-				-- Free and reset tools
+			call_stack_tool.content.close
+			threads_tool.content.close
+
+				-- Free and recycle tools
 			reset_tools
-
-			debugging_window.right_panel.unblock
-			debugging_window.left_panel.unblock
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
-			end
-
 			raised := False
-				-- Clear all tool windows from `debugging_window' as we will now rebuild
-				-- the left and right panels. Note that it is only necessary to clear the tool
-				-- windows after debugging, as a number of tools may be docked out that are
-				-- not contained in the standard layout when not debugging so are not hidden
-				-- as a result of rebuilding the panels.
-			debugging_window.remove_all_tool_windows
-				-- Change the state of the debugging window.
-			if debugging_window.panel.full then
-				debugging_window.panel.set_split_position (normal_splitter_position.
-					max (debugging_window.panel.minimum_split_position))
-			end
-			debugging_window.left_panel.load_from_resource (normal_left_layout)
-			debugging_window.right_panel.load_from_resource (normal_right_layout)
 
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
-			end
-
-			assertion_checking_handler_cmd.reset
 			enable_debugging_commands
-
 			update_all_debugging_tools_menu
 			debugging_window.window.unlock_update
+
+			debugging_window.restore_tools_docking_layout
 		ensure
 			not raised
 		end
@@ -955,6 +978,19 @@ feature -- Status setting
 			preferences.debug_tool_data.save_project_toolbar (toolbar)
 		end
 
+	assgin_watch_tool_unique_titles is
+			-- Reassgn all unique titles of watch tools.
+		do
+			from
+				watch_tool_list.start
+			until
+				watch_tool_list.after
+			loop
+				watch_tool_list.item.content.set_unique_title (once "watch_tool_" + watch_tool_list.index.out)
+				watch_tool_list.forth
+			end
+		end
+
 feature -- Debugging events
 
 	resume_application is
@@ -975,7 +1011,7 @@ feature -- Debugging events
 	launch_stone (st: STONE) is
 			-- Set `st' in the debugging window as the new stone.
 		do
-			debugging_window.context_tool.launch_stone (st)
+			debugging_window.tools.launch_stone (st)
 		end
 
 	on_application_before_launching is
@@ -993,8 +1029,7 @@ feature -- Debugging events
 				io.put_string (generator + ".on_application_launched %N")
 			end
 
-				--| Context tool
-			debugging_window.context_tool.feature_view.pop_feature_flat
+			debugging_window.tools.features_relation_tool.pop_feature_flat
 
 				-- Modify the debugging window display.
 			stop_cmd.enable_sensitive
@@ -1013,9 +1048,8 @@ feature -- Debugging events
 				close_dialog
 			end
 
-				--| Update Watch tool
+				-- Update Watch tool
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
-
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_launched : done%N")
 			end
@@ -1059,6 +1093,11 @@ feature -- Debugging events
 				st := first_valid_call_stack_stone
 				if st /= Void then
 					launch_stone (st)
+					-- After launch_stone, the call stack tool will show something, so we want the feature relation tool show up too.
+					if call_stack_tool.widget.is_displayed then
+						debugging_window.tools.features_relation_tool.show
+					end
+
 				end
 			end
 			window_manager.quick_refresh_all_margins
@@ -1077,7 +1116,6 @@ feature -- Debugging events
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
 			debugger_output_message ("Application stopped")
-
 			debugging_window.window.raise
 
 			if application_status.reason_is_overflow then
@@ -1108,6 +1146,7 @@ feature -- Debugging events
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_resumed%N")
 			end
+
 			stop_cmd.enable_sensitive
 			no_stop_cmd.disable_sensitive
 			debug_cmd.disable_sensitive
@@ -1153,14 +1192,13 @@ feature -- Debugging events
 				io.put_string (generator + ".on_application_quit %N")
 			end
 			was_executing := application_is_executing
-
 			Precursor
-
 			if was_executing then
 					-- Modify the debugging window display.
 				window_manager.quick_refresh_all_margins
 
 				disable_debugging_commands (False)
+
 					-- Make all debugging tools disappear.
 				if debugging_window.destroyed then
 					debugging_window := Void
@@ -1216,7 +1254,7 @@ feature -- Debugging events
 			result_is_valid: Result /= Void implies Result.is_valid
 		end
 
-feature {EB_DEVELOPMENT_WINDOW} -- Implementation
+feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_PART} -- Implementation
 
 	system_info_cmd: EB_STANDARD_CMD
 			-- Command that displays information about current system in the output tool.
@@ -1314,6 +1352,7 @@ feature {NONE} -- Implementation
 
 			create bkpt_info_cmd.make
 			bkpt_info_cmd.set_pixmap (pixmaps.icon_pixmaps.tool_breakpoints_icon)
+			bkpt_info_cmd.set_pixel_buffer (pixmaps.icon_pixmaps.tool_breakpoints_icon_buffer)
 			bkpt_info_cmd.set_tooltip (Interface_names.e_Bkpt_info)
 			bkpt_info_cmd.set_menu_name (Interface_names.m_Bkpt_info)
 			bkpt_info_cmd.set_tooltext (Interface_names.b_Bkpt_info)
@@ -1324,6 +1363,7 @@ feature {NONE} -- Implementation
 
 			create system_info_cmd.make
 			system_info_cmd.set_pixmap (pixmaps.icon_pixmaps.command_system_info_icon)
+			system_info_cmd.set_pixel_buffer (pixmaps.icon_pixmaps.command_system_info_icon_buffer)
 			system_info_cmd.set_tooltip (Interface_names.e_Display_system_info)
 			system_info_cmd.set_menu_name (Interface_names.m_Display_system_info)
 			system_info_cmd.set_name ("System_info")

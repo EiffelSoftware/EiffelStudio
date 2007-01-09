@@ -47,7 +47,7 @@ feature -- Basic operations
 					cd := tool.cluster_view
 					create dial.make_for_cluster_view
 					dial.preset_for_cluster_view (cd)
-					dial.show_modal_to_window (tool.development_window.window)
+					dial.show_modal_to_window (tool.develop_window.window)
 					if
 						not dial.cancelled
 					and
@@ -62,7 +62,7 @@ feature -- Basic operations
 				else
 					create dial.make_for_class_view
 					dial.preset_for_class_view (d)
-					dial.show_modal_to_window (tool.development_window.window)
+					dial.show_modal_to_window (tool.develop_window.window)
 					cg := d.model
 					if
 						not dial.cancelled
@@ -92,6 +92,12 @@ feature {NONE} -- Implementation
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.diagram_depth_of_relations_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
 		end
 
 	tooltip: STRING_GENERAL is

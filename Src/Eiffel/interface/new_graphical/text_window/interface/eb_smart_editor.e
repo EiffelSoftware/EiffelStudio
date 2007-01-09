@@ -30,6 +30,8 @@ inherit
 			internal_recycle	,
 			file_loading_setup,
 			on_text_back_to_its_last_saved_state,
+			on_text_edited,
+			on_text_reset,
 			on_key_down,
 			make
 		end
@@ -60,7 +62,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make(a_dev_window: EB_DEVELOPMENT_WINDOW) is
+	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize the editor.
 		do
 			Precursor {EB_CLICKABLE_EDITOR} (a_dev_window)
@@ -122,6 +124,17 @@ feature -- Status report
 			Result := text_displayed.exploring_current_class
 		end
 
+	is_text_loaded (a_stone: STONE): BOOLEAN is
+			-- If text loaded?
+		do
+			if is_text_loaded_called then
+				Result := a_stone = stone
+			else
+				-- Do this for initialization
+				is_text_loaded_called := True
+			end
+		end
+
 feature -- Status setting
 
 	no_save_before_next_load is
@@ -160,7 +173,7 @@ feature -- Search
 			Result := text_displayed.found_feature
 		end
 
-feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
+feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Commands
 
 	complete_feature_name is
 			-- Complete feature name.
@@ -189,6 +202,9 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 	embed_in_block (keyword: STRING; pos_in_keyword: INTEGER) is
 			-- Embed selection or current line in block formed by `keyword' and "end".
 			-- Cursor is positioned to the `pos_in_keyword'-th character of `keyword'.
+		require
+			keyword_not_void: keyword /= Void
+			pos_in_keyword_valid: pos_in_keyword > 0 and then pos_in_keyword <= keyword.count
 		do
 			if is_editable and then not is_empty then
 				text_displayed.embed_in_block (keyword, pos_in_keyword)
@@ -228,7 +244,25 @@ feature {NONE} -- Text loading
 				text_displayed.update_click_list (dev_window.stone, True)
 				text_displayed.clear_syntax_error
 			end
+			set_title_saved (true)
 		end
+
+	on_text_reset is
+			-- Redefine
+		do
+			Precursor
+			set_title_saved (true)
+		end
+
+	on_text_edited (directly_edited: BOOLEAN) is
+			-- Redefine
+		do
+			Precursor (directly_edited)
+			set_title_saved (false)
+		end
+
+	is_text_loaded_called: BOOLEAN
+			-- If text loaded called?
 
 feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 
@@ -596,6 +630,42 @@ feature {EB_CODE_COMPLETION_WINDOW} -- automatic completion
 			end
 		end
 
+feature {EB_SAVE_FILE_COMMAND, EB_SAVE_ALL_FILE_COMMAND, EB_DEVELOPMENT_WINDOW} -- Docking title
+
+	set_title_saved (a_saved: BOOLEAN) is
+			-- Set '*' in the title base on `a_saved'.
+		local
+			l_title: STRING
+		do
+			if docking_content /= Void then
+				if docking_content.short_title /= Void then
+					l_title := docking_content.short_title.as_string_8
+				else
+					create l_title.make_empty
+				end
+				if not l_title.is_empty then
+					if l_title.item (1).code = ('*').code then
+						if a_saved then
+							l_title.keep_tail (l_title.count - 1)
+							docking_content.set_short_title (l_title)
+							docking_content.set_long_title (l_title)
+						end
+					else
+						if not a_saved then
+							l_title := "*" + l_title
+							docking_content.set_short_title (l_title)
+							docking_content.set_long_title (l_title)
+						end
+					end
+				else
+					if not a_saved then
+						docking_content.set_short_title ("*")
+						docking_content.set_long_title ("*")
+					end
+				end
+			end
+		end
+
 feature {NONE} -- Autocomplete implementation
 
 	on_key_down (ev_key: EV_KEY)is
@@ -788,11 +858,26 @@ feature -- Text Loading
 
 	load_text (s: STRING) is
 			-- Load text represented by `s' in the editor.
+		local
+			l_d_class : DOCUMENT_CLASS
+			l_scanner: EDITOR_EIFFEL_SCANNER
+			l_stone: CLASSI_STONE
 		do
 			if (not load_without_save) and then changed then
 				load_without_save := True
 				dev_window.save_and (agent load_text (s))
 			else
+				l_d_class := get_class_from_type (once "e")
+				set_current_document_class (l_d_class)
+				l_scanner ?= l_d_class.scanner
+				if l_scanner /= Void then
+					text_displayed.set_lexer (l_scanner)
+					l_stone ?= stone
+					if l_stone /= Void then
+						l_scanner.set_current_class (l_stone.class_i.config_class)
+					end
+				end
+				text_displayed.set_current_document_class (get_class_from_type (once "e"))
 				Precursor {EB_CLICKABLE_EDITOR} (s)
 			end
 			load_without_save := False

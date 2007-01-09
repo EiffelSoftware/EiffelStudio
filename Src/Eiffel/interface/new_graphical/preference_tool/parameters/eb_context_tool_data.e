@@ -24,7 +24,7 @@ feature {EB_PREFERENCES} -- Initialization
 			preferences_not_void: preferences /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Value
+feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Value
 
 	default_class_formatter_index: INTEGER is
 			-- Default class formatter that should be popped up automatically.

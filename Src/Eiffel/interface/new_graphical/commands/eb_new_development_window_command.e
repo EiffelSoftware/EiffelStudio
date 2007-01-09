@@ -13,7 +13,9 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
-			tooltext
+			new_sd_toolbar_item,
+			tooltext,
+			pixel_buffer
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -79,6 +81,14 @@ feature -- Basic operations
 			Result.drop_actions.set_veto_pebble_function (agent is_storable)
 		end
 
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor (display_text)
+			Result.drop_actions.extend (agent execute_with_stone (?))
+			Result.drop_actions.set_veto_pebble_function (agent is_storable)
+		end
+
 feature -- Access
 
 	style: INTEGER
@@ -116,6 +126,19 @@ feature {NONE} -- Implementation
 				Result := pixmaps.icon_pixmaps.new_editor_icon
 			when context_style then
 				Result := Pixmaps.icon_new_context_tool
+			end
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			inspect style
+			when default_style then
+				Result := pixmaps.icon_pixmaps.new_window_icon_buffer
+			when editor_style then
+				Result := pixmaps.icon_pixmaps.new_editor_icon_buffer
+			when context_style then
+				-- No pixel buffer for this case.
 			end
 		end
 

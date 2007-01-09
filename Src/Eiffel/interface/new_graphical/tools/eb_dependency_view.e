@@ -10,6 +10,11 @@ class
 	EB_DEPENDENCY_VIEW
 
 inherit
+	EB_TOOL
+		redefine
+			pixmap
+		end
+
 	WIDGET_OWNER
 
 	SHARED_WORKBENCH
@@ -19,11 +24,11 @@ inherit
 	EB_VIEWPOINT_AREA
 
 create
-	make_with_tool
+	make
 
 feature {NONE} -- Initialization
 
-	make_with_tool (a_tool: EB_DEVELOPMENT_WINDOW; a_context: EB_CONTEXT_TOOL) is
+	make_with_tool (a_tool: EB_DEVELOPMENT_WINDOW) is
 			-- Set default values.
 		require
 			formatters_initialized: a_tool.managed_class_formatters /= Void
@@ -32,7 +37,6 @@ feature {NONE} -- Initialization
 			conv_ct: EB_DEPENDENCY_FORMATTER
 			l_drop_actions: EV_PND_ACTION_SEQUENCE
 		do
-			context := a_context
 			formatters := a_tool.managed_dependency_formatters
 			create managed_formatters.make (10)
 			create l_drop_actions
@@ -62,23 +66,43 @@ feature {NONE} -- Initialization
 	shared_browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW
 			-- Browser used to display dependency information
 
+	build_interface is
+			-- Redefine
+		do
+			make_with_tool (develop_window)
+		end
+
 feature -- Access
 
 	widget: EV_VERTICAL_BOX
 			-- Graphical object of `Current'.
 
+	title_for_pre: STRING is
+			-- Redefine
+		do
+			Result := interface_names.to_dependency_tool
+		end
+
+	title: STRING_GENERAL is
+			-- Redefine
+		do
+			Result := interface_names.l_tab_dependency_info
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Redefine
+		do
+			Result := pixmaps.icon_pixmaps.diagram_supplier_link_icon
+		end
+
 	formatter_container: EV_CELL
 			-- Cell containing the selected formatter's widget.
-
-	parent_notebook: EV_NOTEBOOK
-			-- Needed to pop up when corresponding menus are selected.
-			--| Not in implementation because it is used in a precondition.
 
 	stone: STONE is
 			-- Currently managed stone.
 		do
 			if internal_stone = Void then
-				Result := context.stone
+				Result := develop_window.tools.stone
 			else
 				Result := internal_stone
 			end
@@ -121,12 +145,6 @@ feature -- Status report
 		end
 
 feature -- Status setting
-
-	set_parent (explorer: EB_EXPLORER_BAR_ITEM) is
-			-- Set `explorer_parent' to `explorer'.
-		do
-			explorer_parent := explorer
-		end
 
 	set_stone (new_stone: STONE) is
 			-- Send a stone to class formatters.
@@ -193,7 +211,7 @@ feature -- Status setting
 	launch_stone (st: STONE) is
 			-- Notify the development window of a new stone.
 		do
-			context.launch_stone (st)
+			develop_window.tools.launch_stone (st)
 		end
 
 	on_select is
@@ -265,15 +283,6 @@ feature -- Status setting
 		do
 		end
 
-	set_parent_notebook (a_notebook: EV_NOTEBOOK) is
-			-- Set `parent_notebok' to `a_notebook'.
-		require
-			a_notebook_non_void: a_notebook /= Void
-			a_notebook_really_parent: a_notebook.has (widget)
-		do
-			parent_notebook := a_notebook
-		end
-
 	set_widget (new_widget: EV_WIDGET) is
 			-- Display `new_widget' under the tool bar.
 		local
@@ -311,25 +320,7 @@ feature -- Status setting
 	force_display is
 			-- Jump to this tab and display `explorer_parent'.
 		do
-			if
-				parent_notebook /= Void and then
-				not visible
-			then
-				parent_notebook.select_item (widget)
-			end
-			if
-				explorer_parent /= Void and then
-				not is_parent_visible
-			then
-				explorer_parent.associated_command.execute
-			end
-			if
-					-- Another tool is maximized.
-				 not explorer_parent.is_maximized and
-				 explorer_parent.parent.is_maximized
-			then
-				explorer_parent.parent.unmaximize
-			end
+			content.show
 		end
 
 	pop_default_formatter is
@@ -360,10 +351,10 @@ feature -- Status setting
 
 feature -- Memory management
 
-	recycle is
+	internal_recycle is
 			-- Remove all references to `Current' and its descendants.
 		do
-			context := Void
+			develop_window := Void
 		end
 
 feature {NONE} -- Implementation
@@ -476,22 +467,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	context: EB_CONTEXT_TOOL
-			-- Container of `Current'. Stone manager.
-
 	managed_formatters: ARRAYED_LIST [EB_DEPENDENCY_FORMATTER]
 			-- Formatters available in `Current' view.
 
 	visible: BOOLEAN
 			-- Are we displayed by `parent_notebook'.
-
-	is_parent_visible: BOOLEAN is
-			-- Is `explorer_parent' displayed?
-		do
-			if explorer_parent /= Void then
-				Result := explorer_parent.is_visible
-			end
-		end
 
 	drop_stone (st: STONE) is
 			-- Set `st' in the stone manager and pop up the feature view if it is a feature stone.
@@ -500,13 +480,10 @@ feature {NONE} -- Implementation
 		do
 			fst ?= st
 			if fst /= Void then
-				context.feature_view.pop_default_formatter
+				develop_window.tools.features_relation_tool.pop_default_formatter
 			end
 			launch_stone (st)
 		end
-
-	explorer_parent: EB_EXPLORER_BAR_ITEM
-			-- Explorer bar item that contains `Current'.
 
 	outer_container: EV_CELL
 			-- Container to hold `formatter_container' and `editor_frame' (if current formatter is an editor formatter)

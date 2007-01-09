@@ -157,7 +157,7 @@ feature -- Basic Operations
 				eo ?= managed_output_tools.item
 				if eo /= Void then
 					if target_development_window /= Void then
-						if eo.owner_development_window = target_development_window then
+						if eo.develop_window = target_development_window then
 							eo.process_block_text (text)
 						end
 					else

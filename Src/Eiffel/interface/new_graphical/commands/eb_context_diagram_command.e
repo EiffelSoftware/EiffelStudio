@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tool: EB_CONTEXT_EDITOR
+	tool: EB_DIAGRAM_TOOL
 			-- Associated with `Current'.
 
 	history: EB_HISTORY_DIALOG

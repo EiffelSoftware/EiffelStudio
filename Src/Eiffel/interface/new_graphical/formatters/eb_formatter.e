@@ -147,6 +147,11 @@ feature -- Interface
 		deferred
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representation.
+		deferred
+		end
+
 	new_menu_item: EV_RADIO_MENU_ITEM is
 			-- Create a new menu item for `Current'.
 		local
@@ -177,6 +182,26 @@ feature -- Interface
 			Result.set_tooltip (tt)
 			set_button (Result)
 			Result.drop_actions.extend (agent on_stone_drop)
+		end
+
+	new_sd_button: SD_TOOL_BAR_RADIO_BUTTON is
+			-- Create a new tool bar button representing `Current'
+		local
+			tt: STRING_GENERAL
+		do
+			create Result.make
+			Result.set_pixmap (symbol @ 1)
+			Result.set_pixel_buffer (pixel_buffer)
+			tt := capital_command_name.twin
+			if accelerator /= Void then
+				tt.append (Opening_parenthesis)
+				tt.append (accelerator.out)
+				tt.append (Closing_parenthesis)
+			end
+			Result.set_tooltip (tt)
+			Result.set_name (capital_command_name)
+			Result.set_description (capital_command_name)
+			set_sd_button (Result)
 		end
 
 feature -- Pop up

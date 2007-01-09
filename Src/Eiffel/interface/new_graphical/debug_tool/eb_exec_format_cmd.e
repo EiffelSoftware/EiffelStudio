@@ -13,6 +13,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
+			new_sd_toolbar_item,
 			new_menu_item
 		end
 
@@ -67,13 +68,23 @@ feature -- Properties
 feature -- Access
 
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar item.
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
 			Result.select_actions.put_front (agent execute_from (Result))
 			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
 		end
 
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new docking toolbar item.
+		do
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text)
+			Result.select_actions.put_front (agent execute_from (eb_debugger_manager.debugging_window.window))
+			Result.pointer_button_press_actions.put_front (agent button_right_click_action)
+		end
+
 	new_menu_item: EB_COMMAND_MENU_ITEM is
+			-- Create a new menu item
 		do
 			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			Result.select_actions.put_front (agent execute_from (Result))

@@ -24,7 +24,7 @@ feature -- Basic operations
 		local
 			dialog: EB_CREATE_CLASS_DIALOG
 		do
-			create dialog.make_default (tool.development_window)
+			create dialog.make_default (tool.develop_window)
 			dialog.set_stone_when_finished
 			dialog.call_default
 		end
@@ -46,6 +46,12 @@ feature {NONE} -- Implementation
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.new_class_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.new_class_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

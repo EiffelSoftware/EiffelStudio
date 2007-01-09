@@ -50,14 +50,13 @@ feature -- Basic operations
 
 		end
 
-
 	save (a_file_name: STRING; a_text: STRING) is
 			-- Save `a_text' into `a_file_name'. Creates file if it doesn't already exist.
 		require
 			a_file_name_not_void: a_file_name /= Void
 		local
 			new_file, tmp_file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
-			create_backup, new_created: BOOLEAN
+			aok, create_backup, new_created: BOOLEAN
 			tmp_name: STRING
 			wd: EB_WARNING_DIALOG
 		do
@@ -65,9 +64,10 @@ feature -- Basic operations
 			last_saving_success := True
 			create new_file.make (a_file_name)
 
+			aok := True
 			if not new_file.exists then
 				if not new_file.is_creatable then
-					last_saving_success := False
+					aok := False
 					create wd.make_with_text (warning_messages.w_not_creatable (new_file.name))
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				else
@@ -75,26 +75,25 @@ feature -- Basic operations
 				end
 			else
 				if not new_file.is_plain then
-					last_saving_success := False
+					aok := False
 					create wd.make_with_text (warning_messages.w_not_a_plain_file (new_file.name))
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				elseif not new_file.is_writable then
-					last_saving_success := False
+					aok := False
 					create wd.make_with_text (warning_messages.w_not_writable (new_file.name))
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 			end
 
-			if last_saving_success then
-					-- Create a backup of the file in case there will be a problem during the savings.
-				tmp_name := a_file_name.twin
-				tmp_name.append (".swp")
-				create tmp_file.make (tmp_name)
-				create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
-				if not create_backup then
-					tmp_file := new_file
-				end
-
+			-- Create a backup of the file in case there will be a problem during the savings.
+			tmp_name := a_file_name.twin
+			tmp_name.append (".swp")
+			create tmp_file.make (tmp_name)
+			create_backup := not new_created and not tmp_file.exists and then tmp_file.is_creatable
+			if not create_backup then
+				tmp_file := new_file
+			end
+			if aok then
 				tmp_file.open_write
 				if not a_text.is_empty then
 					a_text.prune_all ('%R')
@@ -110,7 +109,7 @@ feature -- Basic operations
 				tmp_file.close
 				if create_backup then
 					robust_rename (tmp_file, a_file_name)
-				else
+				elseif last_saving_success then
 					create new_file.make (tmp_name)
 					if new_file.exists then
 						robust_delete (new_file)
@@ -151,16 +150,22 @@ feature {NONE} -- Implementation
 			l_retried, l_user_ask_for_retry: BOOLEAN
 			l_ed: EV_ERROR_DIALOG
 			l_win: EV_WINDOW
+			l_editor: EB_SMART_EDITOR
 		do
 			if l_retried then
+				l_editor := window_manager.last_focused_development_window.editors_manager.current_editor
 				create l_ed.make_with_text (warning_messages.w_Not_rename_swp (a_file.name, a_new_name))
 				l_ed.set_buttons (<<ev_retry, ev_ignore>>)
 				l_win := window_manager.last_focused_development_window.window
 				l_win.focus_in_actions.block
-				window_manager.last_focused_development_window.editor_tool.text_area.editor_drawing_area.focus_in_actions.block
+				if l_editor /= Void then
+					l_editor.editor_drawing_area.focus_in_actions.block
+				end
 				l_ed.show_modal_to_window (l_win)
 				l_win.focus_in_actions.resume
-				window_manager.last_focused_development_window.editor_tool.text_area.editor_drawing_area.focus_in_actions.resume
+				if l_editor /= Void then
+					l_editor.editor_drawing_area.focus_in_actions.resume
+				end
 				l_user_ask_for_retry := l_ed.selected_button.is_equal (ev_retry)
 				l_retried := False
 			else

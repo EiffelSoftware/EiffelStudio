@@ -139,13 +139,13 @@ feature{NONE}  -- Actions
 	start_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW) is
 			-- Start pixmap animation on `a_dev_window'.
 		do
-			a_dev_window.start_c_output_pixmap_timer
+			a_dev_window.tools.c_output_tool.start_c_output_pixmap_timer
 		end
 
 	stop_pixmap_animation_timer (a_dev_window: EB_DEVELOPMENT_WINDOW) is
 			-- Stop pixmap animation on `a_dev_window'.
 		do
-			a_dev_window.stop_c_output_pixmap_timer
+			a_dev_window.tools.c_output_tool.stop_c_output_pixmap_timer
 		end
 
 	on_start is
@@ -157,15 +157,20 @@ feature{NONE}  -- Actions
 	on_exit is
 			-- Handler called when c compiler exits
 		do
-			synchronize_on_c_compilation_exit
 			if launched then
 				if exit_code /= 0 then
 					c_compilation_successful_cell.put (False)
+				else
+					c_compilation_successful_cell.put (True)
+				end
+			end
+			synchronize_on_c_compilation_exit
+			if launched then
+				if exit_code /= 0 then
 					window_manager.display_message (Interface_names.e_c_compilation_failed)
 					display_message_on_main_output (c_compilation_failed_msg, True)
 					show_compilation_error_dialog
 				else
-					c_compilation_successful_cell.put (True)
 					window_manager.display_message (Interface_names.e_c_compilation_succeeded)
 					display_message_on_main_output (c_compilation_succeeded_msg, True)
 				end
@@ -180,8 +185,8 @@ feature{NONE}  -- Actions
 	on_launch_failed is
 			-- Handler called when c compiler launch failed
 		do
-			synchronize_on_c_compilation_exit
 			c_compilation_successful_cell.put (False)
+			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			display_message_on_main_output (c_compilation_launch_failed_msg, True)
 			show_compiler_launch_fail_dialog (window_manager.last_created_window.window)

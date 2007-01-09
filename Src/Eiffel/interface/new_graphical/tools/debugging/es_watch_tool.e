@@ -14,13 +14,15 @@ inherit
 
 	ES_OBJECTS_GRID_MANAGER
 
-	ES_NOTEBOOK_ATTACHABLE
-
 	EB_TOOL
 		redefine
 			menu_name,
 			pixmap,
-			close
+			show,
+			close,
+			mini_toolbar,
+			build_mini_toolbar,
+			build_docking_content
 		end
 
 	EB_CONSTANTS
@@ -58,7 +60,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_title (a_manager: like manager; a_title: like title; a_title_for_pre: like title_for_pre) is
+	make_with_title (a_manager: like develop_window; a_title: like title; a_title_for_pre: like title_for_pre) is
 		do
 			if a_title = Void or else a_title.is_empty then
 				set_title (interface_names.t_Watch_tool)
@@ -189,43 +191,29 @@ feature {NONE} -- Initialization
 
 				--| Attach the slices_cmd to the objects grid
 			watches_grid.set_slices_cmd (slices_cmd)
-		ensure
+		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
 
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
-		do
-			if mini_toolbar = Void then
-				build_mini_toolbar
-			end
-			create explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, title_for_pre, False, mini_toolbar)
-			explorer_bar_item.set_menu_name (menu_name)
-			if pixmap /= Void then
-				explorer_bar_item.set_pixmap (pixmap)
-			end
-			explorer_bar.add (explorer_bar_item)
-		end
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build content for docking.
 
-	build_notebook_item (nb: ES_NOTEBOOK) is
 		do
-			if mini_toolbar = Void then
-				build_mini_toolbar
-			end
-			create notebook_item.make_with_mini_toolbar (nb, widget, title, mini_toolbar)
-			notebook_item.drop_actions.extend (agent on_element_drop)
-			notebook_item.pointer_button_pressed_actions.extend (agent on_notebook_item_pointer_button_pressed)
-			nb.extend (notebook_item)
+			Precursor {EB_TOOL} (a_docking_manager)
+			content.drop_actions.extend (agent on_element_drop)
 		end
 
 feature {EB_DEBUGGER_MANAGER} -- Closing
 
 	close is
 		do
-			Precursor
-			if notebook_item /= Void then
-				unattach_from_notebook
+				-- We keep at least one watch tool.
+			if eb_debugger_manager.watch_tool_list.count > 1 then
+				Precursor
+				recycle
+				eb_debugger_manager.watch_tool_list.prune_all (Current)
+				eb_debugger_manager.assgin_watch_tool_unique_titles
+				content.close
 			end
 		end
 
@@ -255,6 +243,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
+			Result := pixmaps.icon_pixmaps.tool_watch_icon
 		end
 
 	can_refresh: BOOLEAN
@@ -270,13 +259,9 @@ feature -- Change
 			title_valid: a_title /= Void and then not a_title.is_empty
 		do
 			title := a_title
-			if
-				notebook_item /= Void
-				and then not notebook_item.is_destroyed
-				and then notebook_item.tab /= Void
-				and then not notebook_item.tab.is_destroyed
-			then
-				notebook_item.tab.set_text (title)
+			if content /= Void then
+				content.set_short_title (title)
+				content.set_long_title (title)
 			end
 		ensure
 			title_set: title.is_equal (a_title)
@@ -289,6 +274,15 @@ feature -- Change
 			title_for_pre := a_title
 		ensure
 			title_set: title_for_pre.is_equal (a_title)
+		end
+
+	show is
+			-- Show tool
+		do
+			Precursor {EB_TOOL}
+			if watches_grid.is_displayed then
+				watches_grid.set_focus
+			end
 		end
 
 feature -- Properties setting
@@ -397,16 +391,7 @@ feature -- Status setting
 			update
 		end
 
-	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
-			-- Change the window and explorer bar `Current' is in.
-		require
-			a_manager_exists: a_manager /= Void
-			an_explorer_bar_exists: an_explorer_bar /= Void
-		do
-			set_manager (a_manager)
-			change_attach_explorer (an_explorer_bar)
-		end
-
+feature -- Memory management
 	reset_tool is
 		do
 			reset_update_on_idle
@@ -423,9 +408,6 @@ feature {NONE} -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
-			end
 			reset_tool
 		end
 
@@ -451,6 +433,11 @@ feature {NONE} -- Memory management
 				end
 			end
 		end
+
+	set_mouse_wheel_scroll_size_agent : PROCEDURE [ANY, TUPLE [INTEGER_32]]
+	set_mouse_wheel_scroll_full_page_agent: PROCEDURE [ES_OBJECTS_GRID, TUPLE [BOOLEAN]]
+	set_scrolling_common_line_count_agent: PROCEDURE [ANY, TUPLE [INTEGER_32]]
+			-- Agents for recycling
 
 feature {NONE} -- add new expression from the grid
 
@@ -509,47 +496,36 @@ feature {NONE} -- Event handling
 			mi: EV_MENU_ITEM
 			mci: EV_CHECK_MENU_ITEM
 		do
-			if notebook_item /= Void then
-				create m
-					--| Auto expressions
-				create mci
-				mci.set_text (interface_names.m_auto_expressions)
-				if auto_expression_enabled then
-					mci.enable_select
-				end
-				mci.select_actions.extend (agent toggle_auto_expressions (not auto_expression_enabled))
-				m.extend (mci)
-				m.extend (create {EV_MENU_SEPARATOR})
-
-					--| Watch management
-				create mi.make_with_text_and_action (interface_names.f_create_new_watch, agent open_new_created_watch_tool)
-				m.extend (mi)
-				if Eb_debugger_manager.watch_tool_list.count > 1 then
-					create mi.make_with_text_and_action (interface_names.b_Close_tool (title), agent Eb_debugger_manager.close_watch_tool (Current))
-					m.extend (mi)
-				end
-
-				m.show_at (w, ax, ay)
+			create m
+				--| Auto expressions
+			create mci
+			mci.set_text (interface_names.m_auto_expressions)
+			if auto_expression_enabled then
+				mci.enable_select
 			end
+			mci.select_actions.extend (agent toggle_auto_expressions (not auto_expression_enabled))
+			m.extend (mci)
+			m.extend (create {EV_MENU_SEPARATOR})
+
+				--| Watch management
+			create mi.make_with_text_and_action (interface_names.f_create_new_watch, agent open_new_created_watch_tool)
+			m.extend (mi)
+			if Eb_debugger_manager.watch_tool_list.count > 1 then
+				create mi.make_with_text_and_action (interface_names.b_Close_tool (title), agent Eb_debugger_manager.close_watch_tool (Current))
+				m.extend (mi)
+			end
+
+			m.show_at (w, ax, ay)
 		end
 
 	open_new_created_watch_tool is
+			-- Open new created watch tool.
 		local
 			wt: like Current
 		do
-			if notebook_item /= Void then
-				Eb_debugger_manager.create_new_watch_tool_inside_notebook (manager, notebook_item.parent)
-				wt := Eb_debugger_manager.watch_tool_list.last
-				if wt /= Void then
-					if
-						wt.notebook_item /= Void
-						and then wt.notebook_item.tab /= Void
-					then
-						wt.notebook_item.tab.enable_select
-					end
-				end
-				wt.update
-			end
+			Eb_debugger_manager.create_new_watch_tool_inside_notebook (develop_window, Current)
+			wt := Eb_debugger_manager.watch_tool_list.last
+			wt.update
 		end
 
 	define_new_expression is
@@ -559,7 +535,7 @@ feature {NONE} -- Event handling
 			ce: EB_EDITOR
 			l_text: STRING
 		do
-			ce := Eb_debugger_manager.debugging_window.current_editor
+			ce := Eb_debugger_manager.debugging_window.ui.current_editor
 			if ce /= Void and then ce.has_selection then
 				l_text := ce.string_selection
 				if l_text.has ('%N') then
@@ -804,6 +780,7 @@ feature {NONE} -- Event handling
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			oname: STRING
 		do
+			show
 			fost ?= s
 			if fost /= Void then
 				oname := fost.feature_name
@@ -1073,8 +1050,7 @@ feature {NONE} -- Event handling
 feature {NONE} -- Event handling on notebook item
 
 	on_notebook_item_pointer_button_pressed (ax, ay, ab: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-		require
-			notebook_item /= Void
+			-- FIXIT: this feature seems useless?
 		do
 			if
 				ab = 3
@@ -1082,7 +1058,7 @@ feature {NONE} -- Event handling on notebook item
 				and then not Ev_application.shift_pressed
 				and then not Ev_application.alt_pressed
 			then
-				open_watch_menu (notebook_item.parent.widget, ax, ay)
+--				open_watch_menu (notebook_item.parent.widget, ax, ay)
 			end
 		end
 

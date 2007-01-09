@@ -29,7 +29,7 @@ feature -- Basic operations
 			-- Display information about `Current'.
 		do
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_class_header)
-			explain_dialog.show_modal_to_window (tool.development_window.window)
+			explain_dialog.show_modal_to_window (tool.develop_window.window)
 		end
 
 feature -- Access
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 							change_name_dialog.set_generics ("")
 							old_generics := ""
 						end
-						change_name_dialog.show_modal_to_window (tool.development_window.window)
+						change_name_dialog.show_modal_to_window (tool.develop_window.window)
 						if change_name_dialog.ok_pressed then
 							create cnr
 							s := change_name_dialog.name
@@ -116,13 +116,13 @@ feature {NONE} -- Implementation
 							end
 							if not cnr.valid_new_class_name (s) then
 								create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
-								invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+								invalid_name_dialog.show_modal_to_window (tool.develop_window.window)
 							else
 								if cnr.class_name_in_use (s) then
 									create confirmation.make_with_text (Warning_messages.w_Class_already_exists_info (s))
 									confirmation.button (ev_ok).set_text (ev_yes)
 									confirmation.button (ev_cancel).set_text (ev_no)
-									confirmation.show_modal_to_window (tool.development_window.window)
+									confirmation.show_modal_to_window (tool.develop_window.window)
 								end
 								if confirmation = Void or else confirmation.selected_button.is_equal (ev_ok) then
 									g := change_name_dialog.generics
@@ -134,13 +134,13 @@ feature {NONE} -- Implementation
 									if stone_as = Void then
 										create invalid_name_dialog.make_with_text (
 											Warning_messages.w_Class_header_syntax_error (src.class_i.name))
-										invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+										invalid_name_dialog.show_modal_to_window (tool.develop_window.window)
 									else
 										try_change_name (stone_text, s, g)
 										parse_string (stone_text)
 										if stone_as = Void then
 											create invalid_name_dialog.make_with_text (Warning_messages.w_Wrong_class_name)
-											invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+											invalid_name_dialog.show_modal_to_window (tool.develop_window.window)
 										else
 											if not change_name_dialog.global_replace then
 												history.do_named_undoable (
@@ -181,11 +181,11 @@ feature {NONE} -- Implementation
 					end
 				else
 					create invalid_name_dialog.make_with_text ("Class is not editable")
-					invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+					invalid_name_dialog.show_modal_to_window (tool.develop_window.window)
 				end
 			else
 				create invalid_name_dialog.make_with_text ("Class must be on the diagram")
-				invalid_name_dialog.show_modal_to_window (tool.development_window.window)
+				invalid_name_dialog.show_modal_to_window (tool.develop_window.window)
 			end
 			tool.projector.project
 		end
@@ -225,12 +225,12 @@ feature {NONE} -- Implementation
 		local
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
-			l_status_bar := tool.development_window.status_bar
-			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
+			l_status_bar := tool.develop_window.status_bar
+			tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
 			change_name_locally (a_class, new_name, new_generics)
 			l_status_bar.display_message ("Updating references in compiled classes")
 			cnr.global_class_name_replace (old_name, new_name, True, l_status_bar)
-			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+			tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 		end
 
 	change_name_universe_classes (a_class: ES_CLASS; cnr: CLASS_NAME_REPLACER; old_name, new_name, new_generics: STRING) is
@@ -242,12 +242,12 @@ feature {NONE} -- Implementation
 		local
 			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
-			l_status_bar := tool.development_window.status_bar
-			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
+			l_status_bar := tool.develop_window.status_bar
+			tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
 			change_name_locally (a_class, new_name, new_generics)
 			l_status_bar.display_message ("Updating references in cluster universe")
-			cnr.global_class_name_replace (old_name, new_name, False, tool.development_window.status_bar)
-			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+			cnr.global_class_name_replace (old_name, new_name, False, tool.develop_window.status_bar)
+			tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 		end
 
 	parse_string (str: STRING) is

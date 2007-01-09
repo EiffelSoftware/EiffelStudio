@@ -24,6 +24,12 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.class_features_routine_icon, 2)
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Graphical representation of the command.
+		once
+			Result := pixmaps.icon_pixmaps.class_features_routine_icon_buffer
+		end
+
 	class_cmd: E_SHOW_ROUTINES
 			-- Class command that can generate the information.
 

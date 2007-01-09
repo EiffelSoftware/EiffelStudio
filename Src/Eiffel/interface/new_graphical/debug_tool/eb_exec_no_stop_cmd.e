@@ -43,6 +43,12 @@ feature {NONE} -- Attributes
 			Result := pixmaps.icon_pixmaps.debug_run_without_breakpoint_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.debug_run_without_breakpoint_icon_buffer
+		end
+
 	name: STRING is "Exec_no_stop"
 			-- Name of the command.
 

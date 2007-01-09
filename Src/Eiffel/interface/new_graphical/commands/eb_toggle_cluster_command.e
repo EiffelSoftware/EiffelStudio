@@ -89,6 +89,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.tool_clusters_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.tool_clusters_icon_buffer
+		end
+
 	description: STRING_GENERAL is
 			-- Description for this command.
 		do
@@ -99,7 +105,7 @@ feature {NONE} -- Implementation
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-feature {EB_CONTEXT_EDITOR} -- Implementation
+feature {EB_DIAGRAM_TOOL} -- Implementation
 
 	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON;
 			-- Current toggle button.

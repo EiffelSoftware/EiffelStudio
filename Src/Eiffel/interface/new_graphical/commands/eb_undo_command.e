@@ -12,7 +12,8 @@ inherit
 	EB_UNDO_REDO_COMMAND
 		redefine
 			executable,
-			tooltext
+			tooltext,
+			pixel_buffer
 		end
 
 
@@ -24,7 +25,9 @@ feature -- Status report
 	executable: BOOLEAN is
 			-- Is the operation possible?
 		do
-			Result := editor.undo_is_possible
+			if editor /= Void then
+				Result := editor.undo_is_possible
+			end
 		end
 
 feature -- Execution
@@ -32,7 +35,9 @@ feature -- Execution
 	execute is
 			-- Execute the undo/redo operation
 		do
-			editor.undo
+			if editor /= Void then
+				editor.undo
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -47,6 +52,12 @@ feature {NONE} -- Implementation
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_undo_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_undo_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

@@ -14,7 +14,8 @@ inherit
 		redefine
 			name,
 			executable,
-			new_toolbar_item
+			new_toolbar_item,
+			pixel_buffer
 		end
 
 	EB_CONSTANTS
@@ -114,6 +115,12 @@ feature -- Status report
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.tool_external_commands_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.tool_external_commands_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is
@@ -430,8 +437,23 @@ feature {NONE} -- Implementation
 
 	update_menus is
 			-- Refresh the 'tools' menus of all development windows.
+		local
+			l_builder: EB_DEVELOPMENT_WINDOW_MENU_BUILDER
+			l_managed_windows: ARRAYED_SET [EB_WINDOW]
+			l_develop_window: EB_DEVELOPMENT_WINDOW
 		do
-			Window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.rebuild_tools_menu)
+			from
+				l_managed_windows := window_manager.managed_windows
+				l_managed_windows.start
+			until
+				l_managed_windows.after
+			loop
+				l_develop_window ?= l_managed_windows.item
+				check not_void: l_develop_window /= Void end
+				create l_builder.make (l_develop_window)
+				l_builder.rebuild_tools_menu
+				l_managed_windows.forth
+			end
 		end
 
 feature {NONE} -- Properties

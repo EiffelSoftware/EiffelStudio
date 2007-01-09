@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 		local
 			l_output_manager: EB_OUTPUT_MANAGER
 		do
-			l_output_manager := world.context_editor.development_window.output_manager
+			l_output_manager := world.context_editor.develop_window.output_manager
 			l_output_manager.add_indexing_string ("Loading diagram:")
 			l_output_manager.add_new_line
 			l_output_manager.add_indent
@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 		local
 			l_output_manager: EB_OUTPUT_MANAGER
 		do
-			l_output_manager := world.context_editor.development_window.output_manager
+			l_output_manager := world.context_editor.develop_window.output_manager
 			l_output_manager.add_indexing_string ("Loading diagram:")
 			l_output_manager.add_new_line
 			l_output_manager.add_indent

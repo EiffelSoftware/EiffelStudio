@@ -25,11 +25,16 @@ feature {EB_PREFERENCES} -- Initialization
 		do
 			preferences := a_preferences
 			initialize_preferences
+
+			-- Update default value for docking library.
+			on_auto_hide_animation_speed_changed
+			on_show_all_applicable_docking_indicators_changed
 		ensure
 			preferences_not_void: preferences /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
+feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA,
+		 EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER} -- Value
 
 	width: INTEGER is
 			-- Width for the development window
@@ -224,6 +229,17 @@ feature {EB_SHARED_PREFERENCES, EB_DEVELOPMENT_WINDOW_SESSION_DATA} -- Value
 			Result := c_output_panel_prompted_preference.value
 		end
 
+	auto_hide_animation_speed: INTEGER is
+			-- The speed of auto hide zone animation in milliseconds. 0 to disable animation effect.
+		do
+			Result := auto_hide_animation_speed_preference.value
+		end
+
+	show_all_applicable_docking_indicators: BOOLEAN is
+			-- If we need to show all feedback indicators when dragging a zone?
+		do
+			Result := show_all_applicable_docking_indicators_preference.value
+		end
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -320,6 +336,13 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	c_output_panel_prompted_preference: BOOLEAN_PREFERENCE
 			-- Should C output panel prompt out when c compilation starts?
 
+	auto_hide_animation_speed_preference: INTEGER_PREFERENCE
+			-- The speed of auto hide zone animation in milliseconds if `auto_hide_zone_use_animation_preference' True.
+			-- 0 to disable animation effect.
+
+	show_all_applicable_docking_indicators_preference: BOOLEAN_PREFERENCE
+			-- If we need to show all feedback indicators when dragging a zone?
+
 feature -- Element change
 
 	save_size (a_width, a_height: INTEGER) is
@@ -386,16 +409,16 @@ feature -- Element change
 
 feature -- Basic operations
 
-	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+	retrieve_general_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Retreive the general toolbar using the available commands in `command_pool'
 		do
-			Result := retrieve_toolbar (command_pool, general_toolbar_layout)
+			Result := retrieve_toolbar_items (command_pool, general_toolbar_layout)
 		end
 
-	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
+	retrieve_refactoring_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Retreive the refactoring toolbar using the available commands in `command_pool'
 		do
-			Result := retrieve_toolbar (command_pool, refactoring_toolbar_layout)
+			Result := retrieve_toolbar_items (command_pool, refactoring_toolbar_layout)
 		end
 
 feature {NONE} -- Preference Strings
@@ -432,6 +455,8 @@ feature {NONE} -- Preference Strings
 	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"
 	use_animated_icons_string: STRING is "interface.development_window.use_animated_icons"
 	c_output_panel_prompted_string: STRING is "interface.development_window.c_output_panel_prompted"
+	auto_hide_animation_speed_string: STRING is "interface.development_window.auto_hide_animation_speed"
+	show_all_applicable_docking_indicators_string: STRING is "interface.development_window.show_all_applicable_docking_indicators"
 
 	estudio_dbg_menu_allowed_string: STRING is "interface.development_window.estudio_dbg_menu_allowed"
 	estudio_dbg_menu_accelerator_allowed_string: STRING is "interface.development_window.estudio_dbg_menu_accelerator_allowed"
@@ -479,12 +504,16 @@ feature {NONE} -- Implementation
 			graphical_output_disabled_preference := l_manager.new_boolean_preference_value (l_manager, graphical_output_disabled_string, False)
 			use_animated_icons_preference := l_manager.new_boolean_preference_value (l_manager, use_animated_icons_string, True)
 			c_output_panel_prompted_preference := l_manager.new_boolean_preference_value (l_manager, c_output_panel_prompted_string, False)
+			auto_hide_animation_speed_preference := l_manager.new_integer_preference_value (l_manager, auto_hide_animation_speed_string, 50)
+			show_all_applicable_docking_indicators_preference := l_manager.new_boolean_preference_value (l_manager, show_all_applicable_docking_indicators_string, True)
 
 			estudio_dbg_menu_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_allowed_string, True)
 			estudio_dbg_menu_accelerator_allowed_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_accelerator_allowed_string, True)
 			estudio_dbg_menu_enabled_preference := l_manager.new_boolean_preference_value (l_manager, estudio_dbg_menu_enabled_string, False)
 			estudio_dbg_menu_enabled_preference.set_hidden (not estudio_dbg_menu_allowed_preference.value)
 			estudio_dbg_menu_enabled_preference.change_actions.extend (agent update_estudio_dbg_menu)
+			auto_hide_animation_speed_preference.change_actions.extend (agent on_auto_hide_animation_speed_changed)
+			show_all_applicable_docking_indicators_preference.change_actions.extend (agent on_show_all_applicable_docking_indicators_changed)
 		end
 
 	preferences: PREFERENCES
@@ -498,6 +527,24 @@ feature {NONE} -- Implementation
 			else
 				estudio_debug_cmd.unattach_window (Void)
 			end
+		end
+
+	on_auto_hide_animation_speed_changed is
+			-- Handle change actions of `auto_hide_animation_speed_preference'.
+		local
+			l_shared: SD_SHARED
+		do
+			create l_shared
+			l_shared.set_auto_hide_tab_slide_timer_interval (auto_hide_animation_speed)
+		end
+
+	on_show_all_applicable_docking_indicators_changed is
+			-- Handle change actions of `show_all_applicable_docking_indicators_preference'.
+		local
+			l_shared: SD_SHARED
+		do
+			create l_shared
+			l_shared.set_show_all_feedback_indicator (show_all_applicable_docking_indicators)
 		end
 
 invariant

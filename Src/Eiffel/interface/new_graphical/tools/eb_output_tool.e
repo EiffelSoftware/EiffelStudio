@@ -10,6 +10,13 @@ class
 	EB_OUTPUT_TOOL
 
 inherit
+	EB_TOOL
+		redefine
+			menu_name,
+			attach_to_docking_manager,
+			pixmap
+		end
+
 	EB_SHARED_MANAGERS
 
 	EB_RECYCLABLE
@@ -25,31 +32,90 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_tool: EB_DEVELOPMENT_WINDOW; m: EB_CONTEXT_TOOL) is
+	make_with_tool is
 			-- Create a new output tool.
 		local
-			f: EV_FRAME
+			l_f: EV_FRAME
 		do
-			create f
-			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
-			create text_area.make (a_tool)
+			create l_f
+			l_f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			create text_area.make (develop_window)
 			text_area.drop_actions.extend (agent drop_class)
 			text_area.drop_actions.extend (agent drop_feature)
 			text_area.drop_actions.extend (agent drop_cluster)
 			text_area.disable_line_numbers
-			f.extend (text_area.widget)
-			widget := f
+			l_f.extend (text_area.widget)
+			widget := l_f
 			graphical_output_manager.extend (Current)
-			owner := a_tool
-
-			stone_manager := m
 
 				-- Output text is not editable
 			text_area.set_read_only (True)
 			create output_display_factory
 		end
 
-feature {NONE} -- Clean up
+	build_interface is
+			-- Build interface
+		do
+			make_with_tool
+		end
+
+	title_for_pre: STRING is
+			-- Title
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.interface_names.to_output_tool
+		end
+
+	title: STRING_GENERAL is
+			-- Redefine
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.interface_names.l_tab_output
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap shown when c compilation failed.
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_output_icon
+		end
+
+	pixmap_failure: EV_PIXMAP is
+			--
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_output_failed_icon
+		end
+
+	pixmap_success: EV_PIXMAP is
+			-- Pixmap shown when c compilation successed.
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_output_successful_icon
+		end
+
+feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
+
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Attach to docking manager
+		do
+			build_docking_content (a_docking_manager)
+
+			check not_already_has: not a_docking_manager.has_content (content) end
+			a_docking_manager.contents.extend (content)
+		end
+
+feature -- Clean up
 
 	internal_recycle is
 			-- To be called before destroying this objects
@@ -57,17 +123,10 @@ feature {NONE} -- Clean up
 			graphical_output_manager.prune (Current)
 			text_area.recycle
 			text_area := Void
-			stone_manager := Void
-			owner := Void
+			develop_window := Void
 		end
 
 feature -- Status setting
-
-	set_parent (explorer: EB_EXPLORER_BAR_ITEM) is
-			-- Set `explorer_parent' to `explorer'.
-		do
-			explorer_parent := explorer
-		end
 
 	set_parent_notebook (a_notebook: EV_NOTEBOOK) is
 			-- Set `parent_notebok' to `a_notebook'.
@@ -82,32 +141,8 @@ feature -- Status setting
 			-- Jump to this tab and display `explorer_parent'.
 			-- Only if `Current' is in the focused window.
 		do
-			if owner = Window_manager.last_focused_window then
-				if
-					explorer_parent /= Void and then
-					not is_parent_visible
-				then
-					explorer_parent.associated_command.execute
-				end
-				if
-						-- Another tool is maximized.
-					 not explorer_parent.is_maximized and
-					 explorer_parent.parent.is_maximized
-				then
-					explorer_parent.parent.unmaximize
-				end
-				if
-					explorer_parent /= Void and then
-					explorer_parent.is_minimized
-				then
-					explorer_parent.restore
-				end
-				if
-					parent_notebook /= Void and then
-					not visible
-				then
-					parent_notebook.select_item (widget)
-				end
+			if content.is_visible and then develop_window = Window_manager.last_focused_window then
+				content.set_focus
 			end
 		end
 
@@ -164,6 +199,7 @@ feature -- Access
 		end
 
 	output_display_factory: EB_TEXT_OUTPUT_FACTORY
+			-- Output display factory.
 
 feature -- Basic operation
 
@@ -205,24 +241,20 @@ feature -- Basic operation
 			end
 		end
 
+	update_pixmap is
+			-- Update pixmap after compilation
+		do
+			if develop_window.project_manager.eiffel_project.successful then
+				content.set_pixmap (pixmap_success)
+			else
+				content.set_pixmap (pixmap_failure)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	visible: BOOLEAN
 			-- Are we displayed by `parent_notebook'.
-
-	owner: EB_DEVELOPMENT_WINDOW
-			-- Window `Current' is in.
-
-	stone_manager: EB_CONTEXT_TOOL
-			-- Stone manager for `Current'.
-
-	is_parent_visible: BOOLEAN is
-			-- Is `explorer_parent' displayed?
-		do
-			if explorer_parent /= Void then
-				Result := explorer_parent.is_visible
-			end
-		end
 
 	drop_breakable (st: BREAKABLE_STONE) is
 			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
@@ -243,14 +275,23 @@ feature {NONE} -- Implementation
 		require
 			st_valid: st /= Void
 		local
-			conv_fst: FEATURE_STONE
+			l_class_tool: EB_CLASS_TOOL
+			l_feature_tool: EB_FEATURES_RELATION_TOOL
+			l_feature_stone: FEATURE_STONE
 		do
-			conv_fst ?= st
-			if conv_fst = Void then
-				stone_manager.launch_stone (st)
-				stone_manager.class_view.pop_default_formatter
+			l_feature_stone ?= st
+			if l_feature_stone /= Void then
+				l_feature_tool := develop_window.tools.features_relation_tool
+				l_feature_tool.set_stone (st)
+				l_feature_tool.content.show
+				l_feature_tool.content.set_focus
+				l_feature_tool.set_focus
 			else
-				-- The stone is already dropped through `drop_feature'.
+				l_class_tool := develop_window.tools.class_tool
+				l_class_tool.set_stone (st)
+				l_class_tool.content.show
+				l_class_tool.content.set_focus
+				l_class_tool.set_focus
 			end
 		end
 
@@ -258,9 +299,14 @@ feature {NONE} -- Implementation
 			-- Drop `st' in the context tool and pop the `feature info' tab.
 		require
 			st_valid: st /= Void
+		local
+			l_feature_tool: EB_FEATURES_RELATION_TOOL
 		do
-			stone_manager.launch_stone (st)
-			stone_manager.feature_view.pop_default_formatter
+			l_feature_tool := develop_window.tools.features_relation_tool
+			l_feature_tool.set_stone (st)
+			l_feature_tool.content.show
+			l_feature_tool.content.set_focus
+			l_feature_tool.set_focus
 		end
 
 	drop_cluster (st: CLUSTER_STONE) is
@@ -268,11 +314,8 @@ feature {NONE} -- Implementation
 		require
 			st_valid: st /= Void
 		do
-			stone_manager.launch_stone (st)
+			develop_window.tools.launch_stone (st)
 		end
-
-	explorer_parent: EB_EXPLORER_BAR_ITEM;
-			-- Explorer bar item that contains `Current'.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

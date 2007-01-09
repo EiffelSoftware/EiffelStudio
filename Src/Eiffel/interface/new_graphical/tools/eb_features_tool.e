@@ -13,9 +13,14 @@ inherit
 		redefine
 			menu_name,
 			pixmap,
+			pixel_buffer,
 			on_shown,
 			widget,
-			make
+			make,
+			attach_to_docking_manager,
+			mini_toolbar,
+			build_mini_toolbar,
+			show
 		end
 
 	EB_SHARED_PREFERENCES
@@ -30,10 +35,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_TOOL_MANAGER) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW) is
 			-- Make a new features tool.
 		do
-			development_window ?= a_manager
+			develop_window ?= a_manager
 			is_signature_enabled := Preferences.feature_tool_data.is_signature_enabled
 			is_alias_enabled := Preferences.feature_tool_data.is_alias_enabled
 			is_assigner_enabled := Preferences.feature_tool_data.is_assigner_enabled
@@ -53,35 +58,27 @@ feature {NONE} -- Initialization
 			-- Build the associated toolbar
 		do
 			create mini_toolbar
-			mini_toolbar.extend (development_window.new_feature_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (development_window.toggle_feature_alias_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (development_window.toggle_feature_signature_cmd.new_mini_toolbar_item)
-			mini_toolbar.extend (development_window.toggle_feature_assigner_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (develop_window.commands.new_feature_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (develop_window.commands.toggle_feature_alias_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (develop_window.commands.toggle_feature_signature_cmd.new_mini_toolbar_item)
+			mini_toolbar.extend (develop_window.commands.toggle_feature_assigner_cmd.new_mini_toolbar_item)
 
-			development_window.toggle_feature_signature_cmd.set_select (is_signature_enabled)
-			development_window.toggle_feature_alias_cmd.set_select (is_alias_enabled)
-			development_window.toggle_feature_assigner_cmd.set_select (is_assigner_enabled)
-		ensure
+			develop_window.commands.toggle_feature_signature_cmd.set_select (is_signature_enabled)
+			develop_window.commands.toggle_feature_alias_cmd.set_select (is_alias_enabled)
+			develop_window.commands.toggle_feature_assigner_cmd.set_select (is_assigner_enabled)
+		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
 
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
-		do
-			if mini_toolbar = Void then
-				build_mini_toolbar
-			end
+feature
 
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (
-				explorer_bar, widget, title, title_for_pre, True, mini_toolbar
-			)
-			explorer_bar_item.set_menu_name (menu_name)
-			if pixmap /= Void then
-				explorer_bar_item.set_pixmap (pixmap)
-			end
-			explorer_bar_item.show_actions.extend (agent on_bar_item_shown)
-			explorer_bar.add (explorer_bar_item)
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Attach to docking manager
+		do
+			build_docking_content (a_docking_manager)
+
+			check not_already_has: not a_docking_manager.has_content (content) end
+			a_docking_manager.contents.extend (content)
 		end
 
 feature -- Access
@@ -119,6 +116,23 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.tool_features_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.tool_features_icon_buffer
+		end
+
+feature -- Command
+
+	show is
+			-- Show tool.
+		do
+			Precursor {EB_TOOL}
+			if tree.is_displayed then
+				tree.set_focus
+			end
+		end
+
 feature -- Behavior
 
 	is_assigner_enabled: BOOLEAN
@@ -131,6 +145,7 @@ feature -- Behavior
 			-- Do we display signature of feature ?
 
 	update_tree is
+			-- Update tree.
 		do
 			if tree /= Void then
 				tree.update_all
@@ -170,14 +185,10 @@ feature {NONE} -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			if explorer_bar_item /= Void then
-				explorer_bar_item.recycle
-			end
 			widget.destroy
 			widget := Void
 			tree := Void
-			manager := Void
-			development_window := Void
+			develop_window := Void
 		end
 
 feature -- Element change
@@ -254,6 +265,9 @@ feature -- Element change
 			feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
 			conv_cst: CLASSI_STONE
 		do
+			debug ("docking_integration")
+				print ("%N EB_FEATURES_TOOL set_stone")
+			end
 			conv_cst ?= c
 			if conv_cst /= Void then
 				current_stone := conv_cst
@@ -271,7 +285,7 @@ feature -- Element change
 						if classc_stone.e_class /= current_compiled_class then
 							widget.wipe_out
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
-							if classc_stone.e_class.is_precompiled or not classc_stone.e_class.file_is_readable then
+							if classc_stone.e_class.is_precompiled then
 								current_class := classc_stone.e_class.ast
 							else
 								current_class := classc_stone.e_class.eiffel_class_c.parsed_ast (False)
@@ -335,13 +349,10 @@ feature {EB_FEATURES_TREE} -- Status setting
 		local
 			feature_stone: FEATURE_STONE
 		do
---			if current_compiled_class /= Void and then current_compiled_class.has_feature_table then
---				ef := current_compiled_class.feature_with_name (a_feature.feature_name)
-				create feature_stone.make (a_feature)
-				development_window.set_feature_locating (true)
-				development_window.set_stone (feature_stone)
-				development_window.set_feature_locating (false)
---			end
+			create feature_stone.make (a_feature)
+			develop_window.set_feature_locating (true)
+			develop_window.set_stone (feature_stone)
+			develop_window.set_feature_locating (false)
 		end
 
 	go_to_clause (a_clause: FEATURE_CLAUSE_AS) is
@@ -352,17 +363,17 @@ feature {EB_FEATURES_TREE} -- Status setting
 			s: STRING
 			l_formatter: EB_BASIC_TEXT_FORMATTER
 		do
-			if a_clause.start_position > 0 then
+			if a_clause.start_position > 0 and then develop_window.editors_manager.current_editor /= Void then
 				s := current_compiled_class.text
 				if s = Void then
-					s := development_window.editor_tool.text_area.text
+					s := develop_window.editors_manager.current_editor.text
 				end
 				check
 					s_not_void: s /= Void
 				end
-				l_formatter ?= development_window.pos_container
+				l_formatter ?= develop_window.pos_container
 				if l_formatter /= Void then
-					development_window.editor_tool.text_area.display_line_at_top_when_ready (
+					develop_window.editors_manager.current_editor.display_line_at_top_when_ready (
 						character_line (a_clause.start_position, s))
 				end
 			end
@@ -374,12 +385,12 @@ feature {EB_FEATURES_TREE} -- Status setting
 		local
 			l_formatter: EB_BASIC_TEXT_FORMATTER
 		do
-			if a_line > 0 then
-				l_formatter ?= development_window.pos_container
+			if a_line > 0 and then develop_window.editors_manager.current_editor /= Void then
+				l_formatter ?= develop_window.pos_container
 				if l_formatter = Void then
-					development_window.managed_main_formatters.first.execute
+					develop_window.managed_main_formatters.first.execute
 				end
-				development_window.editor_tool.text_area.display_line_at_top_when_ready (
+				develop_window.editors_manager.current_editor.display_line_at_top_when_ready (
 					a_line)
 			end
 		end
@@ -392,11 +403,13 @@ feature {EB_FEATURES_TREE} -- Status setting
 		local
 			l_formatter: EB_BASIC_TEXT_FORMATTER
 		do
-			l_formatter ?= development_window.pos_container
-			if l_formatter = Void then
-				development_window.managed_main_formatters.first.execute
+			if develop_window.editors_manager.current_editor /= Void then
+				l_formatter ?= develop_window.pos_container
+				if l_formatter = Void then
+					develop_window.managed_main_formatters.first.execute
+				end
+				develop_window.editors_manager.current_editor.find_feature_named (a_name)
 			end
-			development_window.editor_tool.text_area.find_feature_named (a_name)
 		end
 
 feature {EB_FEATURES_TREE} -- Implementation
@@ -405,15 +418,12 @@ feature {EB_FEATURES_TREE} -- Implementation
 			-- Class currently opened.	
 
 	current_compiled_class: CLASS_C
-			-- Class currently opened.	
+			-- Class currently opened.
 
 feature {NONE} -- Implementation	
 
 	current_stone: CLASSI_STONE
 			-- Classc stone that was last dropped into `Current'.
-
-	development_window: EB_DEVELOPMENT_WINDOW
-			-- Associated development window.
 
 	character_line (pos: INTEGER; s: STRING): INTEGER is
 			-- Line number of character number `pos' in `s'.

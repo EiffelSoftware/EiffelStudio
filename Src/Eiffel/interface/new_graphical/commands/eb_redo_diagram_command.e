@@ -38,7 +38,7 @@ feature -- Basic operations
 			end
 		end
 
-feature {EB_DEVELOPMENT_WINDOW} -- Accelerator action
+feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Accelerator action
 
 	on_ctrl_y is
 			-- Redo last cancelled action if possible and if the diagram
@@ -55,6 +55,12 @@ feature {NONE} -- Implementation
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.general_redo_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_redo_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

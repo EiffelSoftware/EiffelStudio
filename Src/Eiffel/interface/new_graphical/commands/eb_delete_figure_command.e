@@ -24,7 +24,7 @@ feature -- Basic operations
 			-- Display information about `Current'.
 		do
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_delete_figure)
-			explain_dialog.show_modal_to_window (tool.development_window.window)
+			explain_dialog.show_modal_to_window (tool.develop_window.window)
 		end
 
 feature -- Access
@@ -47,6 +47,12 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.general_reset_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

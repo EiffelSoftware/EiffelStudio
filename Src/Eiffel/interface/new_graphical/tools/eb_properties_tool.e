@@ -16,7 +16,10 @@ inherit
 			layout_constants
 		redefine
 			menu_name,
-			pixmap
+			pixmap,
+			pixel_buffer,
+			build_docking_content,
+			show
 		end
 
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -57,7 +60,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_manager: EB_TOOL_MANAGER) is
+	make (a_manager: EB_DEVELOPMENT_WINDOW) is
 			-- Make a new properties tool.
 		require
 			a_manager_exists: a_manager /= Void
@@ -67,6 +70,14 @@ feature {NONE} -- Initialization
 			cluster_manager.extend (Current)
 			create {CONF_COMP_FACTORY} conf_factory
 			window := a_manager.window
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build docking content
+		do
+			Precursor {EB_TOOL}(a_docking_manager)
+			content.drop_actions.extend (agent add_stone)
+			content.drop_actions.set_veto_pebble_function (agent dropable)
 		end
 
 	build_interface is
@@ -79,18 +90,6 @@ feature {NONE} -- Initialization
 
 			properties.drop_actions.extend (agent add_stone)
 			properties.drop_actions.set_veto_pebble_function (agent dropable)
-		end
-
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
-		do
-			create explorer_bar_item.make (explorer_bar, widget, title, title_for_pre, True)
-			explorer_bar_item.set_menu_name (menu_name)
-			if pixmap /= Void then
-				explorer_bar_item.set_pixmap (pixmap)
-			end
-			explorer_bar.add (explorer_bar_item)
 		end
 
 feature -- Access
@@ -125,18 +124,30 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.tool_properties_icon
 		end
 
-feature {NONE} -- Memory management
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer
+		do
+			Result := pixmaps.icon_pixmaps.project_settings_system_icon_buffer
+		end
+
+feature -- Command
+
+	show is
+			-- Show tool.
+		do
+			Precursor {EB_TOOL}
+			properties.set_focus
+		end
+
+feature -- Memory management
 
 	internal_recycle is
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			if explorer_bar_item /= Void then
-				explorer_bar_item.recycle
-				explorer_bar_item := Void
-			end
 			cluster_manager.remove_observer (Current)
-			manager := Void
+			develop_window := Void
+			content := Void
 		end
 
 feature {NONE} -- External changes to classes/clusters
@@ -153,7 +164,7 @@ feature {NONE} -- External changes to classes/clusters
 			refresh
 		end
 
-feature {EB_DEVELOPMENT_WINDOW} -- Actions
+feature {EB_STONE_CHECKER} -- Actions
 
 	add_stone (a_stone: STONE) is
 			-- Add `a_stone'.
@@ -351,7 +362,7 @@ feature {NONE} -- Implementation
 				end
 				is_storing := True
 				current_system.store
-				manager.cluster_manager.refresh
+				develop_window.cluster_manager.refresh
 				if a_has_group_changed then
 					system.force_rebuild
 				end

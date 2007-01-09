@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 	extend_history is
 			-- Register move in the history.
 		local
-			ce: EB_CONTEXT_EDITOR
+			ce: EB_DIAGRAM_TOOL
 		do
 			ce := world.context_editor
 			world.context_editor.history.do_named_undoable (

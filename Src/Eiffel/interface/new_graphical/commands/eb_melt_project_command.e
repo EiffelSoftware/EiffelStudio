@@ -110,7 +110,6 @@ feature {NONE} -- Compilation implementation
 			if not Eiffel_project.is_compiling then
 				reset_debugger
 				Window_manager.on_compile
-				output_manager.clear
 				perform_compilation
 				display_eiffel_compilation_status
 				if Eiffel_project.successful then
@@ -240,6 +239,7 @@ feature -- Execution
 				if process_manager.is_c_compilation_running then
 					process_manager.confirm_process_termination (agent go_on_compile, Void, window_manager.last_focused_development_window.window)
 				else
+					window_manager.last_focused_development_window.tools.output_tool.content.set_focus
 					go_on_compile
 				end
 			end
@@ -262,6 +262,7 @@ feature -- Execution
 		do
 			output_manager.clear
 			execute_with_c_compilation_flag (True)
+			window_manager.last_focused_development_window.tools.output_tool.update_pixmap
 		end
 
 feature {NONE} -- Execution
@@ -381,6 +382,12 @@ feature {NONE} -- Implementation
 			-- Pixmap representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.project_melt_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.project_melt_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

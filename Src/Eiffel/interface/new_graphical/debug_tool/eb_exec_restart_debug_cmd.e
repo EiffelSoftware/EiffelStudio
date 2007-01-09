@@ -93,6 +93,12 @@ feature {NONE} -- Attributes
 			Result := pixmaps.icon_pixmaps.debug_restart_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER
+			-- Pixel buffer for the button.
+		do
+			Result := pixmaps.icon_pixmaps.debug_restart_icon_buffer
+		end
+
 	name: STRING is "Exec_restart_debug"
 			-- Name of the command.
 

@@ -56,30 +56,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new window.
 		do
-				-- Vision2 initialization
-			create window
-			window.show_actions.extend (agent window_displayed)
-			init_size_and_position
-			window.close_request_actions.wipe_out
-			window.close_request_actions.put_front (agent destroy)
-			window.set_icon_pixmap (pixmap)
-
-				-- Initialize commands and connect them.
-			init_commands
-
-				-- Build widget system & menus.
-			build_interface
-			build_menus
-
-				-- Set up the minimize title if it's not done
-			if minimized_title = Void or else minimized_title.is_empty then
-				set_minimized_title (title)
-			end
-			create help_engine.make
-
-			window.focus_in_actions.extend (agent window_manager.set_focused_window (Current))
-
-			initialized := True
 		end
 
 	init_size_and_position is
@@ -93,24 +69,6 @@ feature {NONE} -- Initialization
 			-- Initialize commands.
 		do
 			create show_dynamic_lib_tool.make
-		end
-
-	build_interface is
-			-- Build all the windows widgets.
-		deferred
-		end
-
-	build_menus is
-			-- Build all menus.
-		do
-				-- Build each menu
-			build_file_menu
-			build_edit_menu
-			build_window_menu
-			build_help_menu
-
-				-- Build the menu bar.
-			build_menu_bar
 		end
 
 feature -- Access
@@ -328,22 +286,29 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 	destroy_imp is
 			-- Destroy window.
 		do
-			window_manager.remove_observer (window_menu)
+			if window_menu /= Void then
+				window_manager.remove_observer (window_menu)
+			end
 			destroy_recyclable_items
-			edit_menu.destroy
-			file_menu.destroy
-			help_menu.destroy
-				-- The tools menu is never created?!
---			tools_menu.destroy
-			file_menu := Void
-			edit_menu := Void
-			help_menu := Void
+			if edit_menu /= Void then
+				edit_menu.destroy
+				edit_menu := Void
+			end
+			if file_menu /= Void then
+				file_menu.destroy
+				file_menu := Void
+			end
+			if help_menu /= Void then
+				help_menu.destroy
+				help_menu := Void
+			end
+
 			destroyed := True
 			window.destroy
 			window := Void
 		end
 
-feature {NONE} -- Controls & widgets
+feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Controls & widgets
 
 	file_menu: EV_MENU
 			-- "File" menu
@@ -389,94 +354,8 @@ feature {NONE} -- Menus initializations
 			edit_menu_created: edit_menu /= Void
 		end
 
-	build_tools_menu is
-			-- Create and build `tools_menu'
-		local
-			show_profiler: EB_SHOW_PROFILE_TOOL
-			menu_item: EV_MENU_ITEM
-			command_menu_item: EB_COMMAND_MENU_ITEM
-		do
-			create tools_menu.make_with_text (Interface_names.m_Tools)
-
-					-- Dynamic Library Window
-			create menu_item.make_with_text (Interface_names.m_New_dynamic_lib)
-			menu_item.select_actions.extend (agent show_dynamic_lib_tool.execute)
-			tools_menu.extend (menu_item)
-
-					-- Profiler Window
-			create show_profiler
-			create menu_item.make_with_text (Interface_names.m_Profile_tool)
-			menu_item.select_actions.extend (agent show_profiler.execute)
-			tools_menu.extend (menu_item)
-
-					-- Precompile Wizard
-			command_menu_item := wizard_precompile_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-			tools_menu.extend (create {EV_MENU_SEPARATOR})
-
-					-- Preferences
-			command_menu_item := Show_preferences_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-		ensure
-			tools_menu_created: tools_menu /= Void
-		end
-
-	build_window_menu is
-			-- Create and build `edit_menu'
-		do
-			window_menu := window_manager.new_menu
-			add_recyclable (window_menu)
-		ensure
-			window_menu_created: window_menu /= Void
-		end
-
-	build_help_menu is
-			-- Create and build `help_menu'
-		local
-			menu_item: EV_MENU_ITEM
-			about_cmd: EB_ABOUT_COMMAND
-			menu_sep: EV_MENU_SEPARATOR
-		do
-			create help_menu.make_with_text (Interface_names.m_Help)
-
-				-- Guided Tour
-			create menu_item.make_with_text (Interface_names.m_Guided_tour)
-			menu_item.select_actions.extend (agent display_guided_tour)
-			help_menu.extend (menu_item)
-
-				-- Contents
-			create menu_item.make_with_text (Interface_names.m_Contents)
-			menu_item.select_actions.extend (agent display_help_contents)
-			help_menu.extend (menu_item)
-
-				-- How to's
-			create menu_item.make_with_text (Interface_names.m_How_to_s)
-			menu_item.select_actions.extend (agent display_how_to_s)
-			help_menu.extend (menu_item)
-
-				-- Eiffel introduction
-			create menu_item.make_with_text (Interface_names.m_Eiffel_introduction)
-			menu_item.select_actions.extend (agent display_eiffel_introduction)
-			help_menu.extend (menu_item)
-
-				-- Add the separator
-			create menu_sep
-			help_menu.extend (menu_sep)
-
-				-- About
-			create menu_item.make_with_text (Interface_names.m_About)
-			create about_cmd
-			menu_item.select_actions.extend (agent about_cmd.execute)
-			help_menu.extend (menu_item)
-		ensure
-			help_menu_created: help_menu /= Void
-		end
-
 	build_menu_bar is
-				-- Build the menu bar and put it into the window.
+			-- Build the menu bar and put it into the window.
 		local
 			menu_bar: EV_MENU_BAR
 		do
@@ -490,12 +369,12 @@ feature {NONE} -- Menus initializations
 			window.set_menu_bar (menu_bar)
 		end
 
-feature {EB_WINDOW_MANAGER} -- Commands
+feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- Commands
 
 	show_dynamic_lib_tool: EB_STANDARD_CMD
 			-- Command to display the dynamic library editor.
 
-feature {NONE} -- Implementation / Flags
+feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER} -- Implementation / Flags
 
 	window_displayed is
 			-- `Current' has been displayed on screen.

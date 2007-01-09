@@ -16,7 +16,11 @@ inherit
 			{NONE} show
 		redefine
 			menu_name,
-			pixmap
+			pixmap,
+			pixel_buffer,
+			mini_toolbar,
+			build_mini_toolbar,
+			show
 		end
 
 	EB_SHARED_PREFERENCES
@@ -198,7 +202,6 @@ feature {NONE} -- Initialize
 			vbox.extend (notebook)
 			vbox.disable_item_expand (notebook)
 
-			vbox.extend (report_box)
 			create frame
 			frame.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_raised)
 			frame.extend (vbox)
@@ -325,6 +328,24 @@ feature {NONE} -- Initialize
 			report_tool_not_void: report_tool /= Void
 		end
 
+feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialize
+
+	build_mini_toolbar is
+			-- Build mini tool bar.
+		local
+			l_cmd: EB_SHOW_TOOL_COMMAND
+		do
+			create mini_toolbar
+			l_cmd := develop_window.commands.show_tool_commands.item (report_tool)
+				-- Pixmap should be changed.
+			l_cmd.set_mini_pixmap (pixmaps.mini_pixmaps.callstack_send_to_external_editor_icon)
+			mini_toolbar.extend (l_cmd.new_mini_toolbar_item)
+
+			content.set_mini_toolbar (mini_toolbar)
+		ensure then
+			mini_toolbar_exists: mini_toolbar /= Void
+		end
+
 feature -- EB_TOOL
 
 	widget: EV_WIDGET
@@ -354,17 +375,19 @@ feature -- EB_TOOL
 			Result := pixmaps.icon_pixmaps.tool_advanced_search_icon
 		end
 
-	show_and_set_focus is
-			-- show the search tool and set focus to the search text field
-		require
-			explorer_bar_item_not_void: explorer_bar_item /= Void
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer
 		do
-			fixme ("it can occurs the explorer_bar_item is bad (void or maybe destroyed ..")
-			explorer_bar_item.show
-			if explorer_bar_item.is_minimized then
-				explorer_bar_item.restore
-			end
-			if currently_searched /= Void and then not currently_searched.is_empty then
+			Result := pixmaps.icon_pixmaps.tool_advanced_search_icon_buffer
+		end
+
+	show_and_set_focus is
+			-- Show the search tool and set focus to the search text field
+		require
+			not_void: content /= Void
+		do
+			show
+			if currently_searched /= Void and then currently_searched.is_empty then
 				keyword_field.set_text (currently_searched)
 			end
 			if currently_replacing /= Void and then not currently_replacing.is_empty then
@@ -374,13 +397,13 @@ feature -- EB_TOOL
 		end
 
 	mode_is_search: BOOLEAN is
-			-- are replace fields/buttons inactive ?
+			-- Are replace fields/buttons inactive ?
 		do
 			Result := not replace_check_button.is_selected
 		end
 
 	set_mode_is_search (value: BOOLEAN) is
-			-- show/hide replace field according to `value'
+			-- Show/hide replace field according to `value'
 		do
 			if value then
 				if replace_check_button.is_selected then
@@ -392,9 +415,17 @@ feature -- EB_TOOL
 			end
 		end
 
+	show is
+			-- Show tool.
+		do
+			Precursor {EB_TOOL}
+			keyword_field.set_focus
+		end
+
 feature -- Access
 
 	report_tool: EB_SEARCH_REPORT_TOOL
+			-- Report tool.
 
 	show_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions called when the item becomes visible.
@@ -477,6 +508,10 @@ feature -- Widgets
 			-- button to search backward
 
 	options: EV_FRAME
+			-- Options widget
+
+	mini_toolbar: EV_TOOL_BAR
+			-- Mini tool bar.
 
 feature -- Status report
 
@@ -589,15 +624,14 @@ feature {NONE} -- Destroy behavior.
 			-- Recycle
 		do
 			save_preferences
-			explorer_bar_item.recycle
-			explorer_bar_item := Void
 			show_actions.wipe_out
 			report_tool.recycle
 			report_tool := Void
 			widget.destroy
 			recycle_widgets
 			widget := Void
-			manager := Void
+			content := Void
+			develop_window := Void
 		end
 
 	recycle_widgets is
@@ -640,19 +674,6 @@ feature {NONE} -- Implementation
 	currently_replacing: STRING is
 		deferred
 		end
-
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build explorer bar item
-		do
-			create explorer_bar_item.make (explorer_bar, widget, title, title_for_pre, True)
-			explorer_bar_item.set_menu_name (menu_name)
-			explorer_bar_item.set_pixmap (pixmap)
-			explorer_bar.add (explorer_bar_item)
-			explorer_bar_item.show_actions.extend (agent show_actions.call ([Void]))
-		end
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

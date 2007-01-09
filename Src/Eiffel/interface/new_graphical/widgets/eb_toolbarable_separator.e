@@ -32,6 +32,12 @@ feature -- Basic operations
 			create {EV_TOOL_BAR_SEPARATOR} Result
 		end
 
+	new_sd_toolbar_item (a_display_text: BOOLEAN): SD_TOOL_BAR_ITEM is
+			-- Create a new toolbar item for Current
+		do
+			create {SD_TOOL_BAR_SEPARATOR} Result.make
+		end
+
 feature -- Implementation
 
 	pixmap: EV_PIXMAP is

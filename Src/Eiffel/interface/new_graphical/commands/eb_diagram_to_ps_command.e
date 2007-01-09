@@ -72,7 +72,7 @@ feature -- Basic operations
 					else
 						dial.set_file_name (tool.cluster_graph.center_cluster.name + ".png")
 					end
-					dial.show_modal_to_window (tool.development_window.window)
+					dial.show_modal_to_window (tool.develop_window.window)
 					if not dial.file_name.is_empty then
 						error := 1
 						p := tool.projector.world_as_pixmap (5)
@@ -82,9 +82,9 @@ feature -- Basic operations
 							if test_file.is_writable then
 								test_file.close
 								create png_format
-								tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
+								tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
 								p.save_to_named_file (png_format, png_file)
-								tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+								tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 								error := 0
 							else
 								test_file.close
@@ -97,7 +97,7 @@ feature -- Basic operations
 					elseif error = 2 then
 						create wd.make_with_text (Warning_messages.W_cannot_generate_png)
 					end
-					wd.show_modal_to_window (tool.development_window.window)
+					wd.show_modal_to_window (tool.develop_window.window)
 				end
 			end
 		rescue
@@ -106,7 +106,7 @@ feature -- Basic operations
 			else
 				error := 1
 			end
-			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+			tool.develop_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 			retry
 		end
 
@@ -116,6 +116,12 @@ feature -- Basic operations
 			Result := pixmaps.icon_pixmaps.diagram_export_to_png_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

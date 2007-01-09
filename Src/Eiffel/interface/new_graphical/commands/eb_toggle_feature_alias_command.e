@@ -26,7 +26,7 @@ feature -- Basic operations
 	execute is
 			-- show/hide alias name
 		do
-			target.features_tool.toggle_alias
+			target.tools.features_tool.toggle_alias
 		end
 
 feature -- Access
@@ -44,6 +44,12 @@ feature {NONE} -- Implementation
 		do
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
@@ -56,7 +62,7 @@ feature {NONE} -- Implementation
 
 	is_selected: BOOLEAN is
 		do
-			Result := target.features_tool.is_alias_enabled
+			Result := target.tools.features_tool.is_alias_enabled
 		end
 
 	description: STRING_GENERAL is

@@ -17,6 +17,7 @@ inherit
 			mini_pixmap,
 			new_toolbar_item,
 			new_mini_toolbar_item,
+			new_sd_toolbar_item,
 			tooltext
 		end
 
@@ -65,6 +66,14 @@ feature -- Access
 			Result.drop_actions.extend (agent drop_cluster)
 		end
 
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create tool bar button for docking.
+		do
+			Result := Precursor (display_text)
+			Result.drop_actions.extend (agent drop_class)
+			Result.drop_actions.extend (agent drop_cluster)
+		end
+
 feature -- Properties
 
 	description: STRING_GENERAL is
@@ -86,6 +95,12 @@ feature -- Properties
 			-- Pixmap representing `Current' in toolbars.
 		once
 			Result := pixmaps.icon_pixmaps.general_delete_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_delete_icon_buffer
 		end
 
 	mini_pixmap: EV_PIXMAP is
@@ -110,17 +125,29 @@ feature -- Events
 
 	drop_class (st: CLASSI_STONE) is
 			-- Extract the class that should be removed from `st' and erase it.
+		local
+			l_editor: EB_SMART_EDITOR
 		do
+			l_editor := window.editors_manager.editor_with_stone (st)
 			class_i := st.class_i
 			real_execute
+			if not could_not_delete and l_editor /= Void then
+				window.editors_manager.close_editor (l_editor)
+			end
 		end
 
 	drop_cluster (st: CLUSTER_STONE) is
 			-- Extract the cluster that should be removed from `st' and erase it.
+		local
+			l_editor: EB_SMART_EDITOR
 		do
+			l_editor := window.editors_manager.editor_with_stone (st)
 			group := st.group
 			path := st.path
 			real_execute
+			if not could_not_delete and l_editor /= Void then
+				window.editors_manager.close_editor (l_editor)
+			end
 		end
 
 feature -- Basic operations
@@ -135,17 +162,11 @@ feature -- Basic operations
 			classst ?= window.stone
 			if classst /= Void then
 				drop_class (classst)
-				if not could_not_delete then
-					window.set_stone (Void)
-				end
 			else
 				clust ?= window.stone
 				if clust /= Void then
 					drop_cluster (clust)
 					real_execute
-					if not could_not_delete then
-						window.set_stone (Void)
-					end
 				else
 					create wd.make_with_text (Warning_messages.w_Select_class_cluster_to_remove)
 					wd.show_modal_to_window (window.window)

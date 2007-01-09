@@ -50,6 +50,9 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
+	pixmap: EV_PIXMAP
+			-- Pixmap
+
 	menu_name: STRING_GENERAL is
 			-- Name as it appears in the menu (with & symbol).
 		do

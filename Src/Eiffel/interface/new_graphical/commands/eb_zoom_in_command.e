@@ -66,6 +66,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_zoom_in_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

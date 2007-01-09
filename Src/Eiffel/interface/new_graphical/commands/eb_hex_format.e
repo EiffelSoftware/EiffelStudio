@@ -37,6 +37,12 @@ feature -- Access
 			--| No big pixmap is required for this command.
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			--| No big pixmap is required for this command.
+		end
+
 	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing the command for mini toolbars.
 		do

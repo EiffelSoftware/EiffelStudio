@@ -17,6 +17,7 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
+			new_sd_toolbar_item,
 			tooltext
 		end
 
@@ -47,6 +48,14 @@ feature {NONE} -- Initialization
 feature -- Basic operations
 
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for this command.
+		do
+			Result := Precursor (display_text)
+			Result.drop_actions.extend (agent drop (?))
+			Result.drop_actions.set_veto_pebble_function (agent is_droppable)
+		end
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor (display_text)
@@ -156,6 +165,7 @@ feature {NONE} -- Implementation
 		end
 
 	execute is
+			-- Redefine
 		local
 			req: COMMAND_EXECUTOR
 			cmd_string: STRING
@@ -166,7 +176,7 @@ feature {NONE} -- Implementation
 			empty: BOOLEAN
 		do
 			development_window := target
-			editor := development_window.editor_tool.text_area
+			editor := development_window.editors_manager.current_editor
 			if editor /= Void then
 				empty := editor.is_empty
 
@@ -229,6 +239,12 @@ feature {NONE} -- Implementation properties
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.command_send_to_external_editor_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.command_send_to_external_editor_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

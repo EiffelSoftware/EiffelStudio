@@ -57,7 +57,7 @@ feature{NONE} -- Initialization
 			a_dev_window_attached: a_dev_window /= Void
 		do
 			create delayed_timer.make (agent search_internal, wait_to_search_time)
-			make_search_bar (a_dev_window.search_tool)
+			make_search_bar (a_dev_window.tools.search_tool)
 		ensure
 			delayed_timer_attached: delayed_timer /= Void
 		end

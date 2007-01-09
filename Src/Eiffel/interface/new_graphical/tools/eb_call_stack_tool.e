@@ -13,7 +13,10 @@ inherit
 	EB_TOOL
 		redefine
 			menu_name,
-			pixmap
+			pixmap,
+			mini_toolbar,
+			build_mini_toolbar,
+			show
 		end
 
 	EB_RECYCLABLE
@@ -69,7 +72,7 @@ feature {NONE} -- Initialization
 			t_label: EV_LABEL
 			special_label_col: EV_COLOR
 		do
-			development_window ?= manager
+			development_window ?= develop_window
 
 				--| UI look
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
@@ -239,23 +242,8 @@ feature {NONE} -- Initialization
 			set_stack_depth_cmd.add_agent (agent set_stack_depth)
 			set_stack_depth_cmd.enable_sensitive
 			mini_toolbar.extend (set_stack_depth_cmd.new_mini_toolbar_item)
-		ensure
+		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
-		end
-
-	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
-			-- Build the associated explorer bar item and
-			-- Add it to `explorer_bar'
-		do
-			if mini_toolbar = Void then
-				build_mini_toolbar
-			end
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, title_for_pre, False, mini_toolbar)
-			explorer_bar_item.set_menu_name (menu_name)
-			if pixmap /= Void then
-				explorer_bar_item.set_pixmap (pixmap)
-			end
-			explorer_bar.add (explorer_bar_item)
 		end
 
 feature -- Box management
@@ -289,16 +277,16 @@ feature -- Access
 	exception: EV_TEXT_FIELD
 			-- Exception application has encountered.
 
-	title: STRING_GENERAL is
+	title_for_pre: STRING is
 			-- Title of the tool.
 		do
-			Result := Interface_names.t_Call_stack_tool
+			Result := Interface_names.to_Call_stack_tool
 		end
 
-	title_for_pre: STRING is
+	title: STRING_GENERAL is
 			-- Title for prefence, STRING_8
 		do
-			Result := Interface_names.to_Call_stack_tool
+			Result := Interface_names.t_Call_stack_tool
 		end
 
 	stack_grid: ES_GRID
@@ -313,8 +301,7 @@ feature -- Access
 	pixmap: EV_PIXMAP is
 			-- Pixmap as it may appear in toolbars and menus.
 		do
---| To be done.
---			Result := Pixmaps.Icon_call_stack
+			Result := pixmaps.icon_pixmaps.tool_call_stack_icon
 		end
 
 feature -- Status setting
@@ -380,17 +367,16 @@ feature -- Status setting
 			end
 		end
 
-	change_manager_and_explorer_bar (a_manager: EB_TOOL_MANAGER; an_explorer_bar: EB_EXPLORER_BAR) is
-			-- Change the window and explorer bar `Current' is in.
-		require
-			a_manager_exists: a_manager /= Void
-			an_explorer_bar_exists: an_explorer_bar /= Void
+	show is
+			-- Show tool
 		do
-			set_manager (a_manager)
-			change_attach_explorer (an_explorer_bar)
-		ensure
-			explorer_changed: explorer_bar_item.parent = an_explorer_bar
+			Precursor {EB_TOOL}
+			if stack_grid.is_sensitive then
+				stack_grid.set_focus
+			end
 		end
+
+feature -- Memory management
 
 	reset_tool is
 		do
@@ -411,9 +397,6 @@ feature {NONE} -- Memory management
 			-- Recycle `Current', but leave `Current' in an unstable state,
 			-- so that we know whether we're still referenced or not.
 		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
-			end
 			reset_tool
 		end
 

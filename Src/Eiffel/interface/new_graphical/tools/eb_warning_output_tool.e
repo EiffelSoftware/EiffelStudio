@@ -2,23 +2,50 @@ indexing
 	description	: "Tool where information warnings are displayed."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_WARNING_OUTPUT_TOOL
+	EB_WARNINGS_TOOL
 
 inherit
 	EB_OUTPUT_TOOL
 		redefine
 			process_warnings, process_errors,
 			is_general,
-			clear
+			title,
+			title_for_pre,
+			clear,
+			attach_to_docking_manager,
+			pixmap,
+			build_docking_content,
+			show
 		end
 
 create
 	make
+
+feature {NONE} -- Initialize
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build docking content.
+		do
+			Precursor {EB_OUTPUT_TOOL}(a_docking_manager)
+			content.drop_actions.extend (agent drop_class)
+			content.drop_actions.extend (agent drop_feature)
+		end
+
+feature -- Docking management
+
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Attach to docking manager
+		do
+			build_docking_content (a_docking_manager)
+
+			check friend_tool_created: develop_window.tools.errors_tool /= Void end
+			check not_already_has: not a_docking_manager.has_content (content) end
+			a_docking_manager.contents.extend (content)
+		end
 
 feature -- Basic Operations
 
@@ -67,14 +94,51 @@ feature -- Basic Operations
 			set_title (warnings.count)
 		end
 
+	show is
+			-- Show tool.
+		do
+			Precursor {EB_OUTPUT_TOOL}
+			if text_area /= Void and then not text_area.is_empty then
+				text_area.editor_drawing_area.set_focus
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	is_general: BOOLEAN is false;
+			-- If current general output tool?
+
+	title: STRING_GENERAL is
+			-- Title
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.interface_names.l_tab_warning_output
+		end
+
+	title_for_pre: STRING is
+			-- Title
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.interface_names.to_warning_tool
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_warning_icon
+		end
 
 	set_title (a_count: INTEGER) is
 			-- Sets tool title base on `a_count' of warnings
 		require
-			parent_notebook_attached: parent_notebook /= Void
+			content_created: content /= Void
 			widget_attached: widget /= Void
 		local
 			l_name: STRING_GENERAL
@@ -90,7 +154,8 @@ feature {NONE} -- Implementation
 			else
 				l_title := l_name.as_string_32
 			end
-			parent_notebook.set_item_text (widget, l_title)
+			content.set_long_title (l_title)
+			content.set_short_title (l_title)
 		end
 
 indexing

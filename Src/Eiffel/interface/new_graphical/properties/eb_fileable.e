@@ -180,6 +180,12 @@ feature -- "Save command" related features
 			save_cmd.execute
 		end
 
+	save_all is
+			-- Launch the save all command.
+		do
+			save_all_cmd.execute
+		end
+
 	perform_check_before_save is
 			-- Perform checks, if any, before saving
 		do
@@ -199,8 +205,11 @@ feature -- Commands
 			-- be usefull later, that's why we keep it here
 
 	save_cmd: EB_SAVE_FILE_COMMAND
-		-- Command to save current text in the associated file.
-		-- If no file is associated, `save_as_cmd' is executed.
+			-- Command to save current text in the associated file.
+			-- If no file is associated, `save_as_cmd' is executed.
+
+	save_all_cmd: EB_SAVE_ALL_FILE_COMMAND
+			-- Command t sava all tabs's text in the associated file.
 
 feature {NONE} -- Execution
 

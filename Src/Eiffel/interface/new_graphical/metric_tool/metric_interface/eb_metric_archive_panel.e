@@ -154,23 +154,6 @@ feature {NONE} -- Initialization
 			reference_archive_lbl.set_text (metric_names.t_select_reference_archive)
 			current_archive_lbl.set_text (metric_names.t_select_current_archive)
 
-				-- Delete following in docking EiffelStudio.
-			comparison_toolbar_area.drop_actions.extend (agent drop_cluster)
-			comparison_toolbar_area.drop_actions.extend (agent drop_class)
-			comparison_toolbar_area.drop_actions.extend (agent drop_feature)
-			comparison_area.drop_actions.extend (agent drop_cluster)
-			comparison_area.drop_actions.extend (agent drop_class)
-			comparison_area.drop_actions.extend (agent drop_feature)
-			comparison_empty_cell.drop_actions.extend (agent drop_cluster)
-			comparison_empty_cell.drop_actions.extend (agent drop_class)
-			comparison_empty_cell.drop_actions.extend (agent drop_feature)
-			reference_empty_area.drop_actions.extend (agent drop_cluster)
-			reference_empty_area.drop_actions.extend (agent drop_class)
-			reference_empty_area.drop_actions.extend (agent drop_feature)
-			current_archive_empty_area.drop_actions.extend (agent drop_cluster)
-			current_archive_empty_area.drop_actions.extend (agent drop_class)
-			current_archive_empty_area.drop_actions.extend (agent drop_feature)
-
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
 		end
 
@@ -718,9 +701,9 @@ feature {NONE} -- Implementation
 					error_dialog.show_modal_to_window (metric_tool_window)
 				else
 					transfer_manager_builder.build_manager
-					metric_tool_window.set_pointer_style (metric_tool.development_window.Wait_cursor)
+					metric_tool_window.set_pointer_style (metric_tool.develop_window.Wait_cursor)
 					transfer_manager_builder.transfer
-					metric_tool_window.set_pointer_style (metric_tool.development_window.Standard_cursor)
+					metric_tool_window.set_pointer_style (metric_tool.develop_window.Standard_cursor)
 					if transfer_manager_builder.transfer_succeeded then
 						Result := file_name
 					else

@@ -78,7 +78,7 @@ feature -- Execution
 			printer: EB_PRINTER
 			l_txt_gen: EB_PRINTER_TEXT_GENERATOR
 		do
-			create l_txt_gen.make (dev_window.editor_tool.text_area)
+			create l_txt_gen.make (dev_window.editors_manager.current_editor)
 			if not dev_window.is_empty then
 				create printer.make
 				printer.set_text (l_txt_gen.text_for_printing)
@@ -107,6 +107,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.general_print_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+		
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do

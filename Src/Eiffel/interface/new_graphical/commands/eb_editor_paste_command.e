@@ -12,7 +12,8 @@ inherit
 	EB_CLIPBOARD_COMMAND
 		redefine
 			executable,
-			tooltext
+			tooltext,
+			pixel_buffer
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -55,6 +56,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.general_paste_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_paste_icon_buffer
+		end
+
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
@@ -70,7 +77,7 @@ feature {NONE} -- Implementation
 	editor: EB_EDITOR is
 			-- Editor corresponding to Current
 		do
-			Result := target.current_editor
+			Result := target.ui.current_editor
 		end
 
 	description: STRING_GENERAL is

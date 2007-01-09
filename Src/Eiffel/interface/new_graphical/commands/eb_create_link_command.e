@@ -116,6 +116,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			-- Currently there is no pixel buffer for this command.
+		end
+
 	tooltip: STRING_GENERAL is
 			-- Tooltip for the toolbar button.
 		do
@@ -169,7 +175,7 @@ feature {NONE} -- Implementation
 			menu.show_at (current_button.parent, current_button.parent.pointer_position.x, current_button.parent.height)
 		end
 
-feature {EB_CONTEXT_EDITOR} -- Implementation
+feature {EB_DIAGRAM_TOOL} -- Implementation
 
 	current_button: EB_COMMAND_TOOL_BAR_BUTTON;
 			-- Current toggle button.

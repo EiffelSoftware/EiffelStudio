@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			dev_window.window.focus_in_actions.extend (check_search_bar_visible_procedure)
 			make_editor
 			initialize_customizable_commands
-			search_tool.show_actions.extend (agent hide_search_bar)
 		end
 
 	user_initialization is
@@ -72,7 +71,7 @@ feature -- Access
 	search_tool: EB_MULTI_SEARCH_TOOL is
 			-- Current search tool.
 		do
-			Result := dev_window.search_tool
+			Result := dev_window.tools.search_tool
 		end
 
 feature -- Quick search bar basic operation
@@ -451,23 +450,13 @@ feature {NONE} -- Implementation
 	prepare_search_tool (a_replace: BOOLEAN) is
 			-- Show and give focus to search panel.
 		do
-			if search_tool.is_visible then
-				if not a_replace then
-					search_tool.set_focus
-				else
-					search_tool.show_and_set_focus_replace
-				end
+			search_tool.notebook.select_item (search_tool.notebook.i_th (1))
+			if not a_replace then
+				search_tool.show_and_set_focus
 			else
-				if search_tool.explorer_bar_item.is_minimized then
-					search_tool.explorer_bar_item.restore
-				end
-				search_tool.notebook.select_item (search_tool.notebook.i_th (1))
-				if not a_replace then
-					search_tool.show_and_set_focus
-				else
-					search_tool.show_and_set_focus_replace
-				end
+				search_tool.show_and_set_focus_replace
 			end
+
 			if not text_displayed.is_empty and then not text_displayed.selection_is_empty then
 				search_tool.set_current_searched (text_displayed.selected_string)
 			end

@@ -8,7 +8,7 @@ indexing
 class
 	EB_CONSTANTS
 
-feature {NONE} -- Resources
+feature {EB_TOOL} -- Resources
 
 	Pixmaps: EB_SHARED_PIXMAPS is
 		once

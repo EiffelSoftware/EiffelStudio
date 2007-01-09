@@ -66,6 +66,12 @@ feature -- Access
 			Result := pixmaps.mini_pixmaps.new_assembly_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command for mini toolbars.
+		do
+			Result := pixmaps.mini_pixmaps.new_assembly_icon_buffer
+		end
+
 feature {NONE} -- Implementation
 
 	menu_name: STRING_GENERAL is

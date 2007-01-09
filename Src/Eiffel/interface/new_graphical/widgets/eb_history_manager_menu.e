@@ -128,7 +128,11 @@ feature -- Observer pattern
 				-- Create a new entry for `a_item' in the menu.
 			create menu_item
 			menu_item.select_actions.extend (agent history_manager.go_i_th (index_item))
-			menu_item.set_text (an_item.history_name)
+			if an_item /= Void then
+				menu_item.set_text (an_item.history_name)
+			else
+				menu_item.set_text ("")
+			end
 			menu_item.set_data (index_item)
 			extend (menu_item)
 		end

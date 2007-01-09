@@ -85,6 +85,12 @@ feature -- Access
 			Result := pixmaps.icon_pixmaps.general_undo_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.general_undo_icon_buffer
+		end
+
 	Name: STRING is "RF_undo"
 			-- Name of `Current' to identify it.
 

@@ -7,15 +7,25 @@ indexing
 	author		: ""
 
 class
-	EB_C_COMPILATION_OUTPUT_TOOL
+	EB_C_OUTPUT_TOOL
 
 inherit
 	EB_OUTPUT_TOOL
+		undefine
+			Ev_application
 		redefine
 			make,
 			clear, internal_recycle, scroll_to_end,set_focus,
 			quick_refresh_editor,quick_refresh_margin,
-			is_general
+			is_general,
+			title,
+			title_for_pre,
+			pixmap,
+			attach_to_docking_manager,
+			build_docking_content,
+			show,
+			pixmap_failure,
+			pixmap_success
 		end
 
 	EB_SHARED_PIXMAPS
@@ -44,14 +54,21 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_tool: EB_DEVELOPMENT_WINDOW; m: EB_CONTEXT_TOOL) is
+	make (a_tool: EB_DEVELOPMENT_WINDOW) is
 			-- Create a new external output tool.
 		do
-			owner := a_tool
+			develop_window := a_tool
 			initialization (a_tool)
 			widget := l_ev_vertical_box_1
 			c_compilation_output_manager.extend (Current)
-			stone_manager := m
+		end
+
+	build_docking_content (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Build docking content.
+		do
+			Precursor {EB_OUTPUT_TOOL}(a_docking_manager)
+			content.drop_actions.extend (agent drop_class)
+			content.drop_actions.extend (agent drop_feature)
 		end
 
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
@@ -128,6 +145,63 @@ feature{NONE} -- Initialization
 			message_label.set_foreground_color ((create{EV_STOCK_COLORS}).red)
 		end
 
+	title_for_pre: STRING is
+			-- Title
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.interface_names.to_c_output_tool
+		end
+
+	title: STRING_GENERAL is
+			-- Title
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.interface_names.l_tab_c_output
+		end
+
+	pixmap: EV_PIXMAP is
+			-- Pixmap
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_c_output_icon
+		end
+
+	pixmap_failure: EV_PIXMAP is
+			-- Pixmap shown when c compilation failed.
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_c_output_failed_icon
+		end
+
+	pixmap_success: EV_PIXMAP is
+			-- Pixmap shown when c compilation successed.
+		local
+			l_constants: EB_CONSTANTS
+		do
+			create l_constants
+			Result := l_constants.pixmaps.icon_pixmaps.tool_c_output_successful_icon
+		end
+
+feature -- Command
+
+	attach_to_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Attach to docking manager
+		do
+			build_docking_content (a_docking_manager)
+
+			check friend_tool_created: develop_window.tools.external_output_tool /= Void end
+			check not_already_has: not a_docking_manager.has_content (content) end
+			a_docking_manager.contents.extend (content)
+		end
+
 feature -- Basic operation
 
 	clear is
@@ -170,6 +244,15 @@ feature -- Basic operation
 			end
 		end
 
+	show is
+			-- Show tool.
+		do
+			Precursor {EB_OUTPUT_TOOL}
+			if text_area /= Void then
+				text_area.editor_drawing_area.set_focus
+			end
+		end
+
 feature -- Action
 
 	on_c_compilation_output_finished is
@@ -184,9 +267,9 @@ feature -- Action
 			save_tool: EB_SAVE_STRING_TOOL
 		do
 			if process_manager.is_c_compilation_running then
-				show_warning_dialog (Warning_messages.w_cannot_save_when_c_compilation_running, owner.window)
+				show_warning_dialog (Warning_messages.w_cannot_save_when_c_compilation_running, develop_window.window)
 			else
-				create save_tool.make_and_save (output_text.text, owner.window)
+				create save_tool.make_and_save (output_text.text, develop_window.window)
 			end
 		end
 
@@ -194,7 +277,7 @@ feature -- Action
 			-- Clear output window.
 		do
 			if process_manager.is_c_compilation_running then
-				show_warning_dialog (Warning_messages.w_cannot_clear_when_c_compilation_running, owner.window)
+				show_warning_dialog (Warning_messages.w_cannot_clear_when_c_compilation_running, develop_window.window)
 			else
 				clear
 			end
@@ -289,11 +372,61 @@ feature -- Status reporting
 	owner_development_window: EB_DEVELOPMENT_WINDOW is
 			-- Development window which `Current' is belonged to
 		do
-			Result := owner
+			Result := develop_window
 		end
 
 	is_general: BOOLEAN is false
 			-- Is general output tool?	
+
+feature -- C output pixmap management
+
+	start_c_output_pixmap_timer is
+			-- Start timer to draw pixmap animation on c output panel
+		do
+			c_output_timer_counter := 1
+			c_output_pixmap_timer.set_interval (300)
+		end
+
+	stop_c_output_pixmap_timer is
+			-- Stop timer to draw pixmap animation on c output panel
+		do
+			c_output_pixmap_timer.set_interval (0)
+			-- When stop c output, we set pixmap base on the C compilation result.
+
+			if develop_window.finalizing_launcher.is_last_c_compilation_successful then
+				draw_pixmap_on_tab (pixmap_success)
+			else
+				draw_pixmap_on_tab (pixmap_failure)
+			end
+		end
+
+	c_output_timer_counter: INTEGER
+			-- Counter to indicate which pixmap should be displayed
+
+	c_output_pixmap_timer: EV_TIMEOUT is
+			-- Timer to draw c output pixmap
+		once
+			Create Result
+			Result.set_interval (0)
+			Result.actions.extend (agent on_draw_c_output_pixmap)
+		end
+
+	on_draw_c_output_pixmap is
+			-- Draw pixmap animation for C output.
+		do
+			draw_pixmap_on_tab (icon_compiling.item (c_output_timer_counter))
+			c_output_timer_counter := c_output_timer_counter + 1
+			if c_output_timer_counter > 10 then
+				c_output_timer_counter := 1
+			end
+		end
+
+	draw_pixmap_on_tab (a_pixmap: EV_PIXMAP) is
+			-- Draw `a_pixmap' on `a_tab'.
+			-- If `a_pixmap' is Void, clear any existing pixmap on `a_tab'.
+		do
+			content.set_pixmap (a_pixmap)
+		end
 
 feature{NONE}	-- Implementation
 
@@ -335,7 +468,7 @@ feature{NONE}	-- Implementation
 			wd: EB_WARNING_DIALOG
 		do
 			create wd.make_with_text (Warning_messages.w_No_system_defined)
-			wd.show_modal_to_window (owner.window)
+			wd.show_modal_to_window (develop_window.window)
 		end
 
 	show_warning_dialog (msg: STRING; a_window: EV_WINDOW) is
@@ -419,7 +552,7 @@ feature{NONE}	-- Implementation
 				l_end_with_separator := path_end_with_dir_separator (start_path)
 				l_name := start_path.twin
 				if not l_start_with_separator and not l_end_with_separator then
-					l_name.append_character (operating_environment.directory_separator)
+					l_name.append_character (directory_separator)
 				end
 				l_name.append (keyword)
 				create l_file.make (l_name)
@@ -432,7 +565,7 @@ feature{NONE}	-- Implementation
 					create l_path.make (start_path.count + 50)
 					l_path.append (start_path)
 					if not l_end_with_separator then
-						l_path.append (operating_environment.directory_separator.out)
+						l_path.append (directory_separator.out)
 					end
 					from
 						l_dir.readentry
@@ -495,6 +628,15 @@ feature{NONE} -- Implementation
 			Result := preferences.misc_data.external_editor_command.twin
 		end
 
+	directory_separator: CHARACTER is
+			-- Directory separator
+		local
+			l_obj: ANY
+		once
+			create l_obj
+			Result := l_obj.operating_environment.directory_separator
+		end
+
 	path_end_with_dir_separator (path: STRING): BOOLEAN is
 			-- Does `path' end with dir separator of current running system?
 		require
@@ -531,8 +673,7 @@ feature {NONE} -- Recycle
 			-- To be called before destroying this objects
 		do
 			c_compilation_output_manager.prune (Current)
-			owner := Void
-			stone_manager := Void
+			develop_window := Void
 		end
 
 indexing

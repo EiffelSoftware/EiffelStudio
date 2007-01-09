@@ -99,7 +99,7 @@ feature -- Basic operations
 					link_tool_dialog.set_maximum_size (link_tool_dialog.width, link_tool_dialog.height)
 				end
 
-				link_tool_dialog.show_relative_to_window (tool.development_window.window)
+				link_tool_dialog.show_relative_to_window (tool.develop_window.window)
 			end
 		end
 
@@ -212,6 +212,12 @@ feature {NONE} -- Implementation
 			Result := pixmaps.icon_pixmaps.diagram_force_right_angles_icon
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command.
+		do
+			Result := pixmaps.icon_pixmaps.context_link_icon_buffer
+		end
+
 	menu_name: STRING_GENERAL is
 			-- Name of the menu entry
 		do
@@ -272,7 +278,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {EB_CONTEXT_EDITOR} -- Implementation
+feature {EB_DIAGRAM_TOOL} -- Implementation
 
 	current_button: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON;
 			-- Current toggle button.

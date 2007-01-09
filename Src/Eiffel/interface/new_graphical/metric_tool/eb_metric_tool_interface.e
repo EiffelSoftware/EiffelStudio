@@ -17,7 +17,7 @@ feature -- Access
 	metric_tool_window: EV_WINDOW is
 			-- Window where `metric_too' belongs
 		do
-			Result := metric_tool.development_window.window
+			Result := metric_tool.develop_window.window
 		ensure
 			result_attached: Result /= Void
 		end

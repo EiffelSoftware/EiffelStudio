@@ -4,25 +4,30 @@ indexing
 	status: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "$Author$"
 
 class
 	EB_DEVELOPMENT_WINDOW
 
 inherit
 	EB_TOOL_MANAGER
+		rename
+			file_menu as file_menu_not_use,
+			edit_menu as edit_menu_not_use,
+			tools_menu as tools_menu_not_use,
+			window_menu as window_menu_not_use,
+			help_menu as help_menu_not_use
+		export
+			{EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, EB_ADDRESS_MANAGER}
+				Warning_messages, Interface_names,
+				init_commands, Pixmaps
+			{EB_DEVELOPMENT_WINDOW_DIRECTOR}
+				make
+			{EB_DEVELOPMENT_WINDOW_COMMANDS, EB_TOOL, EB_STONE_CHECKER}
+				Debugger_manager
+			{EB_STONE_FIRST_CHECKER}
+				Ev_application
 		redefine
 			make,
-			init_size_and_position,
-			window_displayed,
-			init_commands,
-			build_menu_bar,
-			build_menus,
-			build_file_menu,
-			build_edit_menu,
-			build_view_menu,
-			build_tools_menu,
-			build_favorites_menu,
 			refresh,
 			internal_recycle,
 			destroy_imp,
@@ -53,9 +58,10 @@ inherit
 		rename
 			set_stone as old_set_stone
 		export {NONE}
-			old_set_stone,
 			set_position,
 			set_pos_container
+				{EB_STONE_CHECKER}
+			old_set_stone
 		redefine
 			reset,
 			stone,
@@ -67,14 +73,15 @@ inherit
 			pos_container
 		end
 
-
 		-- Shared tools & contexts
-
 	SHARED_EIFFEL_PROJECT
 
 	PROJECT_CONTEXT
 
 	EB_SHARED_MANAGERS
+		export
+			{EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} Refactoring_manager
+		end
 
 	EB_SHARED_GRAPHICAL_COMMANDS
 
@@ -90,25 +97,21 @@ inherit
 		-- Errors
 	EB_GRAPHICAL_ERROR_MANAGER
 
-	TEXT_OBSERVER
-		redefine
-			on_text_reset, on_text_edited,
-			on_text_back_to_its_last_saved_state,
-			on_text_fully_loaded, on_cursor_moved
-		end
-
-	EB_CLUSTER_MANAGER_OBSERVER
-		rename
-			on_project_loaded as on_project_loaded_cluster,
-			on_project_unloaded as on_project_unloaded_cluster,
-			refresh as refresh_cluster
-		redefine
-			on_class_moved
-		end
-
 	EV_KEY_CONSTANTS
 		export
 			{NONE} All
+		end
+
+	EC_EIFFEL_LAYOUT
+		export
+			{EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, EB_DIAGRAM_TOOL}
+				 has_case, has_metrics, has_dll_generation, has_profiler, has_documentation_generation, has_xmi_generation
+			{NONE} All
+		end
+
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		export
+			{EB_STONE_FIRST_CHECKER} pixmap_from_class_i
 		end
 
 	SHARED_TEXT_ITEMS
@@ -121,691 +124,37 @@ inherit
 			{NONE} all
 		end
 
-	EIFFEL_LAYOUT
-		export
-			{NONE} all
-		end
-
-create {EB_WINDOW_MANAGER}
-	make,
-	make_with_session_data,
-	make_as_context_tool,
-	make_as_editor
+create {EB_DEVELOPMENT_WINDOW_DIRECTOR}
+	make
 
 feature {NONE} -- Initialization
 
-	make_as_context_tool is
-			-- Create a new development window and expand the context tool.
-		do
-			make
-				-- Perform window setting from `show_actions', as the
-				-- resizing executed as a result only works correctly
-				-- while the window is displayed.
-			window.show_actions.extend (agent set_context_mode)
-		end
-
-	set_context_mode is
-			-- Set `current' into context mode, that is the context tool
-			-- maximized, and the non editor panel is hidden.
-		do
-			if not context_tool.shown then
-				context_tool.show
-			end
-			if not unified_stone then
-				toggle_stone_cmd.execute
-			end
-			context_tool.explorer_bar_item.maximize
-			close_all_bars_except (right_panel)
-		end
-
-	make_as_editor is
-			-- Create a new development window and expand the editor tool.
-		do
-			make
-				-- Perform window setting from `show_actions', as the resizing executed
-				-- must be performed after `current' is displayed.
-			window.show_actions.extend (agent (editor_tool.explorer_bar_item).maximize)
-			window.show_actions.extend (agent close_all_bars_except (right_panel))
-		end
-
-	make_with_session_data (a_session_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
-			-- Recreate a previously existing development window using `a_session_data'.
-		local
-			l_cluster_string, l_class_string, l_feature_string: STRING
-		do
-			internal_development_window_data := a_session_data
-			make
-			if context_tool /= Void then
-					-- Presumption is made that if the strings are not void then they represent
-					-- valid entities in the project.
-				l_cluster_string := a_session_data.context_cluster_string
-				l_class_string := a_session_data.context_class_string
-				l_feature_string := a_session_data.context_feature_string
-				if l_feature_string /= Void then
-					context_tool.address_manager.feature_address.set_text (l_feature_string)
-					context_tool.address_manager.class_address.set_text (l_class_string)
-					context_tool.address_manager.execute_with_feature
-				elseif l_class_string /= Void then
-					context_tool.address_manager.class_address.set_text (l_class_string)
-					context_tool.address_manager.execute_with_class
-				elseif l_cluster_string /= Void then
-					context_tool.address_manager.cluster_address.set_text (l_cluster_string)
-					context_tool.address_manager.execute_with_cluster
-				end
-					-- Set the appropriate notebook tab
-				context_tool.notebook.select_item (context_tool.notebook.i_th (a_session_data.context_tab_index))
-			end
-		end
-
 	make is
-			-- Create a new development window.
+			-- Creation method.
 		do
-			unified_stone := preferences.development_window_data.context_unified_stone
-				-- Build the history manager, the address manager, ...
-			create history_manager.make (Current)
-			create address_manager.make (Current, False)
-			build_viewpoints
-			build_formatters
-			address_manager.set_formatters (managed_main_formatters)
-			address_manager.set_viewpoints (view_points_widget)
-
-
-				-- Init commands, build interface, build menus, ...
-			Precursor
-
-			initialized := False -- Reset the flag since initialization is not yet complete.
-			set_up_accelerators
-
-			window.focus_in_actions.extend (agent on_focus)
-
-				-- Create the toolbars.
-			build_toolbars_area
-			container.put_front (toolbars_area)
-			container.disable_item_expand (toolbars_area)
-
-				-- Update widgets visibilities
-			window.show_actions.extend (agent update)
-			status_bar.remove_cursor_position
-			address_manager.set_output_line (status_bar.label)
-
-				-- Finish initializing the main editor formatters
-			end_build_formatters
-
-			address_manager.disable_formatters
-			if Eiffel_project.manager.is_project_loaded then
-				on_project_created
-				on_project_loaded
-			elseif Eiffel_project.manager.is_created then
-				on_project_unloaded
-				on_project_created
-			else
-				on_project_unloaded
-			end
-
-			window.move_actions.force_extend (agent window_moved)
-
-				-- Register us in the cluster observer
-			manager.extend (Current)
-
-			initialized := True
-			is_destroying := False
+			create commands.make (Current)
+			create menus.make (Current)
+			create agents.make (Current)
+			create tools.make (Current)
+			create ui.make (Current)
 		end
 
-	init_size_and_position is
-			-- Initialize window size.
-		local
-			screen: EB_STUDIO_SCREEN
-			l_x, l_y: INTEGER
+feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
+
+	set_save_cmd (a_cmd: like save_cmd) is
+			-- Set `save_cmd'
 		do
-			create screen
-				-- FIXME: Querying the width/height of the main display is not good enough.
-			window.set_size (
-				development_window_data.width.min (screen.width),
-				development_window_data.height.min (screen.height))
-			l_x := development_window_data.x_position
-			if l_x < screen.virtual_left or l_x > screen.virtual_right then
-					-- Somehow screens have changed, reset it to 0
-				l_x := 0
-			end
-			l_y := development_window_data.y_position
-			if l_y < screen.virtual_top or l_y > screen.virtual_bottom then
-					-- Somehow screens have changed, reset it to 0
-				l_y := 0
-			end
-			window.set_position (l_x, l_y)
+			save_cmd := a_cmd
+		ensure
+			set: save_cmd = a_cmd
 		end
 
-	window_displayed is
-			-- `Current' has been displayed on screen.
+	set_save_all_cmd (a_cmd: like save_all_cmd) is
+			-- Set `save_all_cmd'
 		do
-				-- Minimize or Maximize window if needed.
-			if development_window_data.is_maximized then
-				window.maximize
-			elseif development_window_data.is_minimized then
-				window.minimize
-			end
-		end
-
-	init_commands is
-			-- Initialize commands.
-		local
-			accel: EV_ACCELERATOR
-		do
-			Precursor
-			create toolbarable_commands.make (15)
-
-				-- Open, save, ...
-			toolbarable_commands.extend (new_editor_cmd)
-
-			toolbarable_commands.extend (new_context_tool_cmd)
-
-			create save_cmd.make (Current)
-			toolbarable_commands.extend (save_cmd)
-
-			create save_as_cmd.make (Current)
-			if editor_tool = Void or else editor_tool.text_area.is_empty then
-				save_as_cmd.disable_sensitive
-			else
-				save_as_cmd.enable_sensitive
-			end
-
-			create shell_cmd.make (Current)
-			toolbarable_commands.extend (shell_cmd)
-
-			create print_cmd.make (Current)
-			if is_empty then
-				print_cmd.disable_sensitive
-			else
-				print_cmd.enable_sensitive
-			end
-			toolbarable_commands.extend (print_cmd)
-
-				-- Compilation
-			create c_workbench_compilation_cmd.make_workbench (Current)
-			create c_finalized_compilation_cmd.make_finalized (Current)
-			if eiffel_layout.has_dll_generation then
-				create show_dynamic_lib_tool.make
-				show_dynamic_lib_tool.set_menu_name (Interface_names.m_new_dynamic_lib)
-				show_dynamic_lib_tool.add_agent (agent show_dynamic_library_dialog)
-			end
-			if eiffel_layout.has_profiler then
-				create show_profiler
-			end
-
-				-- Undo/redo, cut, copy, paste.
-			create undo_cmd.make (Current)
-			toolbarable_commands.extend (undo_cmd)
-
-			create redo_cmd.make (Current)
-			toolbarable_commands.extend (redo_cmd)
-
-			create editor_paste_cmd.make (Current)
-			toolbarable_commands.extend (editor_paste_cmd)
-
-			create new_cluster_cmd.make (Current)
-			toolbarable_commands.extend (new_cluster_cmd)
-
-			create new_library_cmd.make (Current)
-			toolbarable_commands.extend (new_library_cmd)
-
-			create new_assembly_cmd.make (Current)
-			toolbarable_commands.extend (new_assembly_cmd)
-
-			create new_class_cmd.make (Current)
-			toolbarable_commands.extend (new_class_cmd)
-
-			create delete_class_cluster_cmd.make (Current)
-			toolbarable_commands.extend (delete_class_cluster_cmd)
-
-			create new_feature_cmd.make (Current)
-			toolbarable_commands.extend (new_feature_cmd)
-
-			create toggle_feature_alias_cmd.make (Current)
-			toolbarable_commands.extend (toggle_feature_alias_cmd)
-
-			create toggle_feature_signature_cmd.make (Current)
-			toolbarable_commands.extend (toggle_feature_signature_cmd)
-
-			create toggle_feature_assigner_cmd.make (Current)
-			toolbarable_commands.extend (toggle_feature_assigner_cmd)
-
-			create toggle_stone_cmd.make (Current)
-			toolbarable_commands.extend (toggle_stone_cmd)
-
-			create send_stone_to_context_cmd.make
-			send_stone_to_context_cmd.set_pixmap (pixmaps.icon_pixmaps.context_sync_icon)
-			send_stone_to_context_cmd.set_tooltip (Interface_names.e_send_stone_to_context)
-			send_stone_to_context_cmd.set_menu_name (Interface_names.m_send_stone_to_context)
-			send_stone_to_context_cmd.set_name ("Send_to_context")
-			send_stone_to_context_cmd.set_tooltext (Interface_names.b_send_stone_to_context)
-			send_stone_to_context_cmd.add_agent (agent send_stone_to_context)
-			create accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_down), False, True, False
-			)
-			accel.actions.extend (agent send_stone_to_context)
-			send_stone_to_context_cmd.set_accelerator (accel)
-			send_stone_to_context_cmd.disable_sensitive
-			toolbarable_commands.extend (send_stone_to_context_cmd)
-
-			toolbarable_commands.extend (window_manager.minimize_all_cmd)
-			window_manager.minimize_all_cmd.enable_sensitive
-			toolbarable_commands.extend (window_manager.raise_all_cmd)
-			window_manager.raise_all_cmd.enable_sensitive
-
-			toolbarable_commands.extend (New_development_window_cmd)
-				-- Show tool/toolbar commands (will be filled when tools will
-				-- be created)
-			create show_tool_commands.make (7)
-			create show_toolbar_commands.make (3)
-
-			new_feature_cmd.disable_sensitive
-			toggle_feature_alias_cmd.disable_sensitive
-			toggle_feature_signature_cmd.disable_sensitive
-			toggle_feature_assigner_cmd.disable_sensitive
-
-			create editors.make (5)
-		end
-
-	set_up_accelerators is
-			-- Fill the accelerator of `window' with the accelerators of the `toolbarable_commands'.
-		local
-			cmds: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
-			i: INTEGER
-		do
-				--| Accelerators related to toolbarable_commands
-			from
-				cmds := toolbarable_commands
-				cmds.start
-			until
-				cmds.after
-			loop
-				if cmds.item.accelerator /= Void then
-					window.accelerators.extend (cmds.item.accelerator)
-				end
-				cmds.forth
-			end
-
-				--| Accelerators related to debugging toolbarable_commands
-			from
-				cmds := Eb_debugger_manager.toolbarable_commands
-				cmds.start
-			until
-				cmds.after
-			loop
-				if
-					cmds.item.accelerator /= Void
-				then
-					window.accelerators.extend (cmds.item.accelerator)
-				end
-				cmds.forth
-			end
-
-				--| Accelerators related to external commands
-			from
-				i := 0
-			until
-				i > 9
-			loop
-				window.accelerators.extend (edit_external_commands_cmd.accelerators.item (i))
-				i := i + 1
-			end
-		end
-
-	build_formatters is
-			-- Build all formatters used.
-		local
-			form: EB_CLASS_TEXT_FORMATTER
-			accel: EV_ACCELERATOR
-		do
-			create managed_class_formatters.make (17)
-			managed_class_formatters.extend (create {EB_CLICKABLE_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_FLAT_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_SHORT_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_FLAT_SHORT_FORMATTER}.make (Current))
-			managed_class_formatters.extend (Void)
-			managed_class_formatters.extend (create {EB_ANCESTORS_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_DESCENDANTS_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_CLIENTS_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_SUPPLIERS_FORMATTER}.make (Current))
-			managed_class_formatters.extend (Void)
-			managed_class_formatters.extend (create {EB_ATTRIBUTES_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_ROUTINES_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_INVARIANTS_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_CREATORS_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_DEFERREDS_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_ONCES_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_EXTERNALS_FORMATTER}.make (Current))
-			managed_class_formatters.extend (create {EB_EXPORTED_FORMATTER}.make (Current))
-
-			create managed_feature_formatters.make (12)
-			managed_feature_formatters.extend (create {EB_BASIC_FEATURE_FORMATTER}.make (Current))
-			managed_feature_formatters.extend (create {EB_ROUTINE_FLAT_FORMATTER}.make (Current))
-			managed_feature_formatters.extend (Void)
-			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current, 0))
-			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current,
-				{DEPEND_UNIT}.is_in_assignment_flag))
-			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current,
-				{DEPEND_UNIT}.is_in_creation_flag))
-			managed_feature_formatters.extend (Void)
-
-			managed_feature_formatters.extend (create {EB_CALLEES_FORMATTER}.make (Current, 0))
-			managed_feature_formatters.extend (create {EB_CALLEES_FORMATTER}.make (Current,
-				{DEPEND_UNIT}.is_in_assignment_flag))
-			managed_feature_formatters.extend (create {EB_CALLEES_FORMATTER}.make (Current,
-				{DEPEND_UNIT}.is_in_creation_flag))
-			managed_feature_formatters.extend (Void)
-
-			managed_feature_formatters.extend (create {EB_IMPLEMENTERS_FORMATTER}.make (Current))
-			managed_feature_formatters.extend (create {EB_ROUTINE_ANCESTORS_FORMATTER}.make (Current))
-			managed_feature_formatters.extend (create {EB_ROUTINE_DESCENDANTS_FORMATTER}.make (Current))
-			managed_feature_formatters.extend (Void)
-			managed_feature_formatters.extend (create {EB_HOMONYMS_FORMATTER}.make (Current))
-
-			create managed_dependency_formatters.make (2)
-			managed_dependency_formatters.extend (create {EB_CLIENT_DEPENDENCY_FORMATTER}.make (Current))
-			managed_dependency_formatters.extend (create {EB_SUPPLIER_DEPENDENCY_FORMATTER}.make (Current))
-
-			create managed_main_formatters.make (6)
-
-			create {EB_BASIC_TEXT_FORMATTER} form.make (Current)
-			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_t),
-					True, False, True)
-			accel.actions.extend (agent save_and_switch_formatter (form))
-			form.set_accelerator (accel)
-			form.set_viewpoints (view_points_combo)
-			form.post_execution_action.extend (agent update_viewpoints)
-			managed_main_formatters.extend (form)
-
-			create {EB_CLICKABLE_FORMATTER} form.make (Current)
-			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_c),
-					True, False, True)
-			accel.actions.extend (agent save_and_switch_formatter (form))
-			form.set_accelerator (accel)
-			form.set_viewpoints (view_points_combo)
-			form.post_execution_action.extend (agent update_viewpoints)
-			managed_main_formatters.extend (form)
-
-			create {EB_FLAT_FORMATTER} form.make (Current)
-			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_f),
-					True, False, True)
-			accel.actions.extend (agent save_and_switch_formatter (form))
-			form.set_accelerator (accel)
-			form.set_viewpoints (view_points_combo)
-			form.post_execution_action.extend (agent update_viewpoints)
-			managed_main_formatters.extend (form)
-
-			create {EB_SHORT_FORMATTER} form.make (Current)
-			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_o),
-					True, False, True)
-			accel.actions.extend (agent save_and_switch_formatter (form))
-			form.set_accelerator (accel)
-			form.set_viewpoints (view_points_combo)
-			form.post_execution_action.extend (agent update_viewpoints)
-			managed_main_formatters.extend (form)
-
-			create {EB_FLAT_SHORT_FORMATTER} form.make (Current)
-			create accel.make_with_key_combination (
-					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_i),
-					True, False, True)
-			accel.actions.extend (agent save_and_switch_formatter (form))
-			form.set_accelerator (accel)
-			form.set_viewpoints (view_points_combo)
-			form.post_execution_action.extend (agent update_viewpoints)
-			managed_main_formatters.extend (form)
-		end
-
-	end_build_formatters is
-			-- Finish initialization of formatters (associate them with editor
-			-- and select a formatter).
-		local
-			f_ind: INTEGER
-		do
-			from
-				managed_class_formatters.start
-			until
-				managed_class_formatters.after
-			loop
-				if managed_class_formatters.item /= Void then
-					managed_class_formatters.item.set_manager (context_tool)
-				end
-				managed_class_formatters.forth
-			end
-			from
-				managed_feature_formatters.start
-			until
-				managed_feature_formatters.after
-			loop
-				if managed_feature_formatters.item /= Void then
-					managed_feature_formatters.item.set_manager (context_tool)
-				end
-				managed_feature_formatters.forth
-			end
-			from
-				managed_main_formatters.start
-			until
-				managed_main_formatters.after
-			loop
-				managed_main_formatters.item.set_editor (editor_tool.text_area)
-				managed_main_formatters.item.on_shown
-				if managed_main_formatters.item.accelerator /= Void then
-					window.accelerators.extend (managed_main_formatters.item.accelerator)
-				end
-				managed_main_formatters.forth
-			end
-
-			from
-				managed_dependency_formatters.start
-			until
-				managed_dependency_formatters.after
-			loop
-				if managed_dependency_formatters.item /= Void then
-					managed_dependency_formatters.item.set_manager (context_tool)
-				end
-				managed_dependency_formatters.forth
-			end
-
-			(managed_main_formatters @ 1).enable_select;
-
-				-- We now select the correct class formatter.
-			f_ind := preferences.context_tool_data.default_class_formatter_index
-				--| This takes the formatter separators in consideration.
-			if f_ind > 4 then
-				f_ind := f_ind + 1
-			end
-			if f_ind > 8 then
-				f_ind := f_ind + 1
-			end
-			if f_ind < 1 or f_ind > managed_class_formatters.count then
-				f_ind := 6
-			end
-			(managed_class_formatters @ f_ind).enable_select;
-				-- We now select the correct feature formatter.
-			f_ind := preferences.context_tool_data.default_feature_formatter_index
-			if f_ind > 2 then
-				f_ind := f_ind + 1
-			end
-			if f_ind < 1 or f_ind > managed_feature_formatters.count then
-				f_ind := 2
-			end
-			managed_class_formatters.i_th (f_ind).enable_select
-
-			f_ind := preferences.context_tool_data.default_dependency_formatter_index
-			if f_ind < 1 or f_ind > managed_dependency_formatters.count then
-				f_ind := 1
-			end
-			managed_dependency_formatters.i_th (f_ind).enable_select
-		end
-
-	build_tools is
-			-- Build all tools that can take place in this window and put them
-			-- in `left_tools' or `bottom_tools'.
-		local
-			show_cmd: EB_SHOW_TOOL_COMMAND
-			l_accel: EV_ACCELERATOR
-			l_shortcut_preference: SHORTCUT_PREFERENCE
-		do
-			lock_update
-				-- Build the features tool
-			create features_tool.make (Current)
-			features_tool.attach_to_explorer_bar (left_panel)
-			left_tools.extend (features_tool.explorer_bar_item)
-			create show_cmd.make (Current, features_tool.explorer_bar_item)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_t), True, True, False)
-			l_accel.actions.extend (agent show_cmd.execute)
-			show_cmd.set_accelerator (l_accel)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (features_tool)
-
-				-- Build the breakpoints tool
-			create breakpoints_tool.make (Current)
-			breakpoints_tool.attach_to_explorer_bar (left_panel)
-			left_tools.extend (breakpoints_tool.explorer_bar_item)
-			create show_cmd.make (Current, breakpoints_tool.explorer_bar_item)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_b), True, True, False)
-			l_accel.actions.extend (agent show_cmd.execute)
-			show_cmd.set_accelerator (l_accel)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (breakpoints_tool)
-
-				-- Build the cluster tool
-			create cluster_tool.make (Current, Current)
-			cluster_tool.attach_to_explorer_bar (left_panel)
-			left_tools.extend (cluster_tool.explorer_bar_item)
-			create show_cmd.make (Current, cluster_tool.explorer_bar_item)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_l), True, True, False)
-			l_accel.actions.extend (agent show_cmd.execute)
-			show_cmd.set_accelerator (l_accel)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (cluster_tool)
-
-				-- Build the favorites tool
-			create favorites_tool.make (Current, favorites_manager)
-			favorites_tool.attach_to_explorer_bar (left_panel)
-			left_tools.extend (favorites_tool.explorer_bar_item)
-			create show_cmd.make (Current, favorites_tool.explorer_bar_item)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_a), True, True, False)
-			l_accel.actions.extend (agent show_cmd.execute)
-			show_cmd.set_accelerator (l_accel)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (favorites_tool)
-
-				-- Build the properties tool
-			create properties_tool.make (Current)
-			properties_tool.attach_to_explorer_bar (left_panel)
-			left_tools.extend (properties_tool.explorer_bar_item)
-			create show_cmd.make (Current, properties_tool.explorer_bar_item)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f4), False, False, False)
-			l_accel.actions.extend (agent show_cmd.execute)
-			show_cmd.set_accelerator (l_accel)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (properties_tool)
-
-				-- Build the windows tool (formerly known as Selector tool)
-			create windows_tool.make (Current)
-			windows_tool.attach_to_explorer_bar (left_panel)
-			left_tools.extend (windows_tool.explorer_bar_item)
-			create show_cmd.make (Current, windows_tool.explorer_bar_item)
-			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_n), True, True, False)
-			l_accel.actions.extend (agent show_cmd.execute)
-			show_cmd.set_accelerator (l_accel)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (windows_tool)
-
-				-- Build the search tool
-			create search_tool.make (Current)
-			search_tool.attach_to_explorer_bar (right_panel)
-			bottom_tools.extend (search_tool.explorer_bar_item)
-			create show_cmd.make (Current, search_tool.explorer_bar_item)
-			l_shortcut_preference := preferences.editor_data.shortcuts.item ("show_search_panel")
-			create l_accel.make_with_key_combination (l_shortcut_preference.key, l_shortcut_preference.is_ctrl, l_shortcut_preference.is_alt, l_shortcut_preference.is_shift)
-			l_accel.actions.extend (agent search_tool.prepare_search)
-			show_cmd.set_accelerator (l_accel)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (search_tool)
-
-				-- Build the editor tool
-			create editor_tool.make (Current)
-			editor_tool.attach_to_explorer_bar (right_panel)
-			bottom_tools.extend (editor_tool.explorer_bar_item)
-			editor_tool.text_area.add_edition_observer(save_cmd)
-			editor_tool.text_area.add_edition_observer(save_as_cmd)
-			editor_tool.text_area.add_edition_observer(print_cmd)
-			editor_tool.text_area.add_edition_observer(Current)
-			editor_tool.text_area.add_edition_observer(search_tool)
-			editor_tool.text_area.add_cursor_observer (Current)
-			create show_cmd.make(Current, editor_tool.explorer_bar_item)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-
-				-- The minimim height masks a bug on windows to do with the sizing of the editors
-				-- scroll bars, which were affecting the resizing although they should not have done so.
-				-- Having a default minimum height on the editor is perfectly reasonable.
-			editor_tool.widget.set_minimum_height (20)
-			add_recyclable (editor_tool)
-
-				-- Build the context tool
-			create context_tool.make (Current)
-			context_tool.attach_to_explorer_bar (right_panel)
-			bottom_tools.extend (context_tool.explorer_bar_item)
-			create show_cmd.make (Current, context_tool.explorer_bar_item)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (context_tool)
-
-				-- Build the refactoring tools
-			toolbarable_commands.extend (refactoring_manager.pull_command)
-			toolbarable_commands.extend (refactoring_manager.rename_command)
-			toolbarable_commands.extend (refactoring_manager.undo_command)
-			toolbarable_commands.extend (refactoring_manager.redo_command)
-
-				-- Set the flag "Tools initialized"
-			tools_initialized := True
-
-				-- Initialize undo / redo accelerators
-			create undo_accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (Key_z), True, False, False)
-			if eiffel_layout.has_case then
-				undo_accelerator.actions.extend (agent (context_tool.editor.undo_cmd).on_ctrl_z)
-			end
-			create redo_accelerator.make_with_key_combination (
-				create {EV_KEY}.make_with_code (Key_y), True, False, False)
-			if eiffel_layout.has_case then
-				redo_accelerator.actions.extend (agent (context_tool.editor.redo_cmd).on_ctrl_y)
-			end
-			window.accelerators.extend (undo_accelerator)
-			window.accelerators.extend (redo_accelerator)
-			unlock_update
-		end
-
-	build_viewpoints is
-			-- Build viewpoint selection list
-		local
-			l_label: EV_LABEL
-		do
-			create view_points_widget
-			create l_label.make_with_text (interface_names.l_viewpoints)
-			view_points_widget.extend (l_label)
-			view_points_widget.disable_item_expand (l_label)
-
-			create view_points_combo
-			view_points_combo.disable_sensitive
-			view_points_combo.select_actions.extend (agent on_viewpoint_changed)
-			view_points_combo.disable_edit
-			view_points_combo.set_minimum_width (120)
-
-			view_points_widget.extend (view_points_combo)
-			view_points_widget.disable_item_expand (view_points_combo)
+			save_all_cmd := a_cmd
+		ensure
+			set: save_all_cmd = a_cmd
 		end
 
 feature -- Access
@@ -837,29 +186,40 @@ feature -- Access
 			end
 		end
 
-	feature_name: STRING is
-			-- Name of the current feature, Void if none.
-		local
-			feature_stone: FEATURE_STONE
+feature -- Querys
+
+	docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager, one instance per one EB_DEVELOPMENT_WINDOW.
+
+	editors_manager: EB_EDITORS_MANAGER
+			-- Editors manager
+
+feature -- Settings
+
+	set_docking_manager (a_manager: SD_DOCKING_MANAGER) is
+			-- Set `docking_manager'
 		do
-			feature_stone ?= stone
-			if feature_stone /= Void then
-				Result := feature_stone.feature_name
-			end
+			docking_manager := a_manager
+		ensure
+			set: docking_manager = a_manager
+		end
+
+	set_editors_manager (a_manager: like editors_manager) is
+			-- Set `editors_manager'
+		do
+			editors_manager := a_manager
+		ensure
+			set: editors_manager = a_manager
 		end
 
 feature -- Status setting
 
-	disable_sensitive is
-			-- Disable sensitivity of all widgets.
+	set_focus_to_main_editor is
+			-- Set focus to main current editor.
 		do
-			window.disable_sensitive
-		end
-
-	enable_sensitive is
-			-- Enable sensitivity of all widgets.
-		do
-			window.enable_sensitive
+			if editors_manager.current_editor /= Void then
+				editors_manager.select_editor (editors_manager.current_editor)
+			end
 		end
 
 feature -- Window Settings
@@ -870,35 +230,34 @@ feature -- Window Settings
 			initialized := True
 		end
 
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to `text'.
-		require
-			a_text_not_void: a_text /= Void
-		do
-			editor_tool.text_area.set_editor_text (a_text)
-		ensure
-			--| FIXME This needs to work: text_assigned: text.is_equal (a_text)
-			--| FIXME changed_flag_set: changed
-		end
-
 feature -- Window Properties
 
 	changed: BOOLEAN is
 			-- Has something been changed and not yet been saved?
 		do
-			Result := editor_tool.changed
+			if editors_manager.current_editor /= Void then
+				Result := editors_manager.current_editor.changed
+			end
+		end
+
+	any_editor_changed: BOOLEAN
+			-- Has any editor been changed?
+		do
+			Result := editors_manager.changed
 		end
 
 	is_empty: BOOLEAN is
 			-- Does `Current's text is empty?
 		do
-			Result := editor_tool = Void or else editor_tool.text_area.is_empty
+			Result := editors_manager = Void or else editors_manager.current_editor = Void or else editors_manager.current_editor.is_empty
 		end
 
 	text: STRING is
 			-- Text representing Current
 		do
-			Result := editor_tool.text_area.text
+			if editors_manager.current_editor /= Void then
+				Result := editors_manager.current_editor.text
+			end
 		end
 
 	pixmap: EV_PIXMAP is
@@ -907,40 +266,42 @@ feature -- Window Properties
 			Result := pixmaps.icon_pixmaps.general_dialog_icon
 		end
 
-feature -- Pulldown Menus
-
-	format_menu: EV_MENU
-			-- ID Menu for formats.
-			-- Only used during debugging
-
-	compile_menu: EV_MENU
-			-- Compile ID menu.
-
-	refactoring_menu: EV_MENU
-			-- Refactoring menu.
-
-	debug_menu: EV_MENU
-			-- Debug ID menu.
-
-	debugging_tools_menu: EV_MENU
-			-- Debugging tools menu item
-
-	update_debug_menu is
-			-- Update debug menu
+	close_focusing_content is
+			-- Close focusing content.
+		local
+			l_content: SD_CONTENT
+			l_tools: ARRAYED_LIST [EB_TOOL]
+			l_tool: EB_TOOL
+			l_comb: EV_COMBO_BOX
+			l_is_comb: BOOLEAN
 		do
-			Eb_debugger_manager.update_debugging_tools_menu_from (Current)
+			l_content := docking_manager.focused_content
+			l_comb ?= ev_application.focused_widget
+			l_is_comb := l_comb /= Void
+			if l_content /= Void then
+				l_tools := tools.all_tools
+				from
+					l_tools.start
+				until
+					l_tools.after or l_tool /= Void
+				loop
+					if l_tools.item.content = l_content then
+					 	l_tool := l_tools.item
+					end
+					l_tools.forth
+				end
+				if l_tool /= Void and then (l_tool.has_focus or not l_is_comb) then
+					l_tool.close
+				else
+					if editors_manager.current_editor /= Void and then
+						editors_manager.current_editor.docking_content = l_content and then
+						(editors_manager.current_editor.has_focus or not l_is_comb)
+					then
+						editors_manager.close_editor (editors_manager.current_editor)
+					end
+				end
+			end
 		end
-
-feature -- Modifiable menus
-
-	melt_menu_item: EV_MENU_ITEM
-			-- Melt menu entry
-
-	freeze_menu_item: EV_MENU_ITEM
-			-- Freeze menu entry
-
-	finalize_menu_item: EV_MENU_ITEM
-			-- Finalize menu entry
 
 feature -- Update
 
@@ -951,6 +312,7 @@ feature -- Update
 			l_text_area: EB_SMART_EDITOR
 		do
 			during_synchronization := True
+
 			if
 				stone = Void and then
 				eiffel_project.system_defined and then
@@ -968,15 +330,27 @@ feature -- Update
 				if
 					eiffel_system.universe.target.clusters.count = 1
 				then
-					cluster_tool.show_current_class_cluster_cmd.execute
+					tools.cluster_tool.show_current_class_cluster_cmd.execute
 				end
 			end
+
 			favorites_manager.refresh
-			context_tool.synchronize
-			cluster_tool.synchronize
+
+			tools.synchronize
+
+			if not unified_stone then
+
+			end
+			tools.class_tool.invalidate
+			tools.features_relation_tool.invalidate
+			if has_case then
+				tools.diagram_tool.synchronize
+			end
+
+			tools.cluster_tool.synchronize
 			history_manager.synchronize
-			features_tool.synchronize
-			breakpoints_tool.synchronize
+			tools.features_tool.synchronize
+			tools.breakpoints_tool.synchronize
 				-- Update main views
 			managed_main_formatters.i_th (2).invalidate
 			managed_main_formatters.i_th (3).invalidate
@@ -985,16 +359,19 @@ feature -- Update
 			if stone /= Void then
 				st := stone.synchronized_stone
 			end
-			l_text_area := editor_tool.text_area
-			l_text_area.update_click_list (False)
-			if l_text_area.file_loaded then
-				editor_tool.text_area.check_document_modifications_and_reload
+			l_text_area := editors_manager.current_editor
+			if l_text_area /= Void then
+				l_text_area.update_click_list (False)
+				if l_text_area.file_loaded then
+					l_text_area.check_document_modifications_and_reload
+				end
 			end
+
 			set_stone (st)
 			update_save_symbol
 			address_manager.refresh
 			during_synchronization := False
-			search_tool.rebuild_scope_list
+			tools.search_tool.rebuild_scope_list
 		end
 
 	synchronize_routine_tool_to_default is
@@ -1009,1099 +386,6 @@ feature -- Update
 			--| FIXME ARNAUD: To be implemented
 		end
 
-	build_menus is
-			-- Build all menus displayed in the development window.
-		do
-				-- Build each menu
-			build_file_menu
-			build_edit_menu
-			build_view_menu
-			build_favorites_menu
-			build_project_menu
-			build_debug_menu
-			build_tools_menu
-			build_refactoring_menu
-			build_window_menu
-			build_help_menu
-				-- Build the menu bar.
-			build_menu_bar
-		end
-
-	build_debug_menu is
-			-- Build the `Debug' menu through the debugger_manager.
-		local
-			conv_mit: EB_COMMAND_MENU_ITEM
-		do
-			debug_menu := Eb_debugger_manager.new_debug_menu
-			from
-				debug_menu.start
-			until
-				debug_menu.after
-			loop
-				conv_mit ?= debug_menu.item
-				if conv_mit /= Void then
-					add_recyclable (conv_mit)
-				end
-				debug_menu.forth
-			end
-				--| Debugging tools menu
-			debugging_tools_menu := Eb_debugger_manager.new_debugging_tools_menu
-			debug_menu.extend (create {EV_MENU_SEPARATOR})
-			debug_menu.extend (debugging_tools_menu)
-			update_debug_menu
-		end
-
-	build_menu_bar is
-			-- Build the menu bar
-		local
-			mb: EV_MENU_BAR
-		do
-			check
-				window.menu_bar /= Void implies not window.menu_bar.is_empty
-				-- If a menu bar was already present, it shouldn't be empty.
-			end
-			if window.menu_bar /= Void then
-				mb := window.menu_bar
-				from
-					mb.start
-					mb.forth
-				until
-					mb.after
-				loop
-					mb.remove
-				end
-			else
-				create mb
-				window.set_menu_bar (mb)
-				mb.extend (file_menu)
-			end
-
-			if Eiffel_project.manager.is_created then
-				mb.extend (edit_menu)
-				mb.extend (view_menu)
-				mb.extend (favorites_menu)
-				mb.extend (project_menu)
-				mb.extend (debug_menu)
-				mb.extend (refactoring_menu)
-			else
-				mb.extend (view_menu)
-			end
-			mb.extend (tools_menu)
-			mb.extend (window_menu)
-			mb.extend (help_menu)
-
-			estudio_debug_cmd.attach_window (window)
-		end
-
-feature -- Graphical Interface
-
-	build_general_toolbar is
-			-- Set up the general toolbar (New, Save, Search, Shell, Undo, Redo, ...)
-		local
-			cell: EV_CELL
-			hsep: EV_HORIZONTAL_SEPARATOR
-			hbox: EV_HORIZONTAL_BOX
-		do
-				-- Create the toolbar.
-			create general_toolbar
-			general_customizable_toolbar := development_window_data.retrieve_general_toolbar (toolbarable_commands)
-			if development_window_data.show_text_in_general_toolbar then
-				general_customizable_toolbar.enable_important_text
-			elseif development_window_data.show_all_text_in_general_toolbar then
-				general_customizable_toolbar.enable_text_displayed
-			end
-
-			create hbox
-			hbox.extend (general_customizable_toolbar.widget)
-			hbox.disable_item_expand (general_customizable_toolbar.widget)
-
-				-- Generate the toolbar.
-			general_customizable_toolbar.update_toolbar
-
-				-- Cell to fill in empty space and receive the right click menu holder.
-			create cell
-			cell.pointer_button_release_actions.extend (agent toolbar_right_click_action)
-			hbox.extend (cell)
-
-				-- Create the vertical layout (separator + toolbar)
-			create hsep
-			general_toolbar.set_padding (2)
-			general_toolbar.extend (hsep)
-			general_toolbar.disable_item_expand (hsep)
-			general_toolbar.extend (hbox)
-
-				-- Create the command to show/hide this toolbar.
-			create show_general_toolbar_command.make (general_toolbar, Interface_names.m_general_toolbar)
-			show_toolbar_commands.extend (show_general_toolbar_command)
-			if development_window_data.show_general_toolbar then
-				show_general_toolbar_command.enable_visible
-			else
-				show_general_toolbar_command.disable_visible
-			end
-
-		end
-
-	build_address_toolbar is
-			-- Set up the address toolbar (Back, Forward, Current, Class name, feature name, ...)
-		local
-			tb: EV_TOOL_BAR
---			address_bar: EV_HORIZONTAL_BOX -- Contains "Class" + Combobox + "Feature" + Combobox + "Format" + Combobox
-			hsep: EV_HORIZONTAL_SEPARATOR
-			hbox: EV_HORIZONTAL_BOX -- Contains HistoryToolbar (back, forth, current) + `address_bar'
-			cell: EV_CELL
-			accel: EV_ACCELERATOR
-		do
-				-- Create the toolbar
-			create address_toolbar
-			create hsep
-			create hbox
---			create address_bar
-			create tb
-			address_toolbar.set_padding (2)
-			address_toolbar.extend (hsep)
-			address_toolbar.disable_item_expand (hsep)
-			address_toolbar.extend (hbox)
-
-			hbox.extend (tb)
-			hbox.disable_item_expand (tb)
---			hbox.extend (address_bar)
---			hbox.disable_item_expand (address_bar)
-
-				-- Back icon
-			tb.extend (history_manager.back_command.new_toolbar_item (False))
-
-				-- Forward icon
-			tb.extend (history_manager.forth_command.new_toolbar_item (False))
-
-				-- Set up the accelerators.
-			create accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_right), False, True, False
-			)
-			accel.actions.extend (agent on_forth)
-			window.accelerators.extend (accel)
-
-			create accel.make_with_key_combination (
-				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_left), False, True, False
-			)
-			accel.actions.extend (agent on_back)
-			window.accelerators.extend (accel)
-
-			------------------------------------------
-			-- Address bar (Class name & feature name)
-			------------------------------------------
-			hbox.extend (address_manager.widget)
---			editor_tool.text_area.add_cursor_observer (address_manager)
-
-				-- Create the command to show/hide this toolbar.
-			create show_address_toolbar_command.make (address_toolbar, Interface_names.m_address_toolbar)
-			show_toolbar_commands.extend (show_address_toolbar_command)
-
-			if development_window_data.show_address_toolbar then
-				show_address_toolbar_command.enable_visible
-			else
-				show_address_toolbar_command.disable_visible
-			end
-
-				-- Cell to fill in empty space and receive the right click menu holder.
-			create cell
-			cell.pointer_button_release_actions.extend (agent toolbar_right_click_action)
-			hbox.extend (cell)
-		end
-
-	build_project_toolbar is
-			-- Build toolbar corresponding to the project options bar
-		local
-			cell: EV_CELL
-			hsep: EV_HORIZONTAL_SEPARATOR
-			hbox: EV_HORIZONTAL_BOX
-		do
-			create project_toolbar
-			create hsep
-			project_toolbar.extend (hsep)
-			project_toolbar.disable_item_expand (hsep)
-
-				-- Generate the toolbar.
-			create hbox
-			project_customizable_toolbar := Eb_debugger_manager.new_toolbar
-			hbox.extend (project_customizable_toolbar.widget)
-			hbox.disable_item_expand (project_customizable_toolbar.widget)
-
-			project_customizable_toolbar.update_toolbar
-
-				-- Create the command to show/hide this toolbar.
-			create show_project_toolbar_command.make (project_toolbar, Interface_names.m_project_toolbar)
-			show_toolbar_commands.extend (show_project_toolbar_command)
-			if development_window_data.show_project_toolbar then
-				show_project_toolbar_command.enable_visible
-			else
-				show_project_toolbar_command.disable_visible
-			end
-
-				-- Cell to fill in empty space and receive the right click menu holder.
-			create cell
-			cell.pointer_button_release_actions.extend (agent toolbar_right_click_action)
-			hbox.extend (cell)
-			project_toolbar.extend (hbox)
-		end
-
-	build_refactoring_toolbar is
-			-- Build refactoring toolbar.
-		local
-			cell: EV_CELL
-			hsep: EV_HORIZONTAL_SEPARATOR
-			hbox: EV_HORIZONTAL_BOX
-		do
-				-- Create the toolbar.
-			create refactoring_toolbar
-			refactoring_customizable_toolbar := development_window_data.retrieve_refactoring_toolbar (toolbarable_commands)
-			if development_window_data.show_text_in_refactoring_toolbar then
-				refactoring_customizable_toolbar.enable_important_text
-			elseif development_window_data.show_all_text_in_refactoring_toolbar then
-				refactoring_customizable_toolbar.enable_text_displayed
-			end
-
-			create hbox
-			hbox.extend (refactoring_customizable_toolbar.widget)
-			hbox.disable_item_expand (refactoring_customizable_toolbar.widget)
-
-				-- Generate the toolbar.
-			refactoring_customizable_toolbar.update_toolbar
-
-				-- Cell to fill in empty space and receive the right click menu holder.
-			create cell
-			cell.pointer_button_release_actions.extend (agent toolbar_right_click_action)
-			hbox.extend (cell)
-
-				-- Create the vertical layout (separator + toolbar)
-			create hsep
-			refactoring_toolbar.set_padding (2)
-			refactoring_toolbar.extend (hsep)
-			refactoring_toolbar.disable_item_expand (hsep)
-			refactoring_toolbar.extend (hbox)
-
-				-- Create the command to show/hide this toolbar.
-			create show_refactoring_toolbar_command.make (refactoring_toolbar, Interface_names.m_refactoring_toolbar)
-			show_toolbar_commands.extend (show_refactoring_toolbar_command)
-			if development_window_data.show_refactoring_toolbar then
-				show_refactoring_toolbar_command.enable_visible
-			else
-				show_refactoring_toolbar_command.disable_visible
-			end
-		end
-
-
-feature {NONE} -- Menu Building
-
-	build_file_menu is
-			-- Build the file menu.
-		local
-			new_project_cmd: EB_NEW_PROJECT_COMMAND
-			open_project_cmd: EB_OPEN_PROJECT_COMMAND
-			menu_item: EV_MENU_ITEM
-			command_menu_item: EB_COMMAND_MENU_ITEM
-		do
-			create file_menu.make_with_text (Interface_names.m_file)
-
-				-- New
-			command_menu_item := New_development_window_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			file_menu.extend (command_menu_item)
-
-				-- New editor
-			command_menu_item := New_editor_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			file_menu.extend (command_menu_item)
-
-				-- New context tool
-			command_menu_item := New_context_tool_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			file_menu.extend (command_menu_item)
-
-				-- Close
-			create menu_item.make_with_text (Interface_names.m_close)
-			menu_item.select_actions.extend (agent destroy)
-			file_menu.extend (menu_item)
-
-				-- Separator --------------------------------------
-			file_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Save
-			command_menu_item := save_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			file_menu.extend (command_menu_item)
-
-				-- Save as
-			command_menu_item := save_as_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			file_menu.extend (command_menu_item)
-
-				-- External editor
-			command_menu_item := shell_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			file_menu.extend (command_menu_item)
-
-				-- Separator --------------------------------------
-			file_menu.extend (create {EV_MENU_SEPARATOR})
-			command_menu_item := print_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			file_menu.extend (command_menu_item)
-
-				-- Separator --------------------------------------
-			file_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- New Project
-			create new_project_cmd.make_with_parent (window)
-			create menu_item.make_with_text (Interface_names.m_new_project)
-			menu_item.select_actions.extend (agent new_project_cmd.execute)
-			file_menu.extend (menu_item)
-
-				-- Open Project
-			create open_project_cmd.make_with_parent (window)
-			create menu_item.make_with_text (Interface_names.m_open_project)
-			menu_item.select_actions.extend (agent open_project_cmd.execute)
-			file_menu.extend (menu_item)
-
-				-- Recent Projects
-			recent_projects_menu := recent_projects_manager.new_menu
-			add_recyclable (recent_projects_menu)
-			file_menu.extend (recent_projects_menu)
-
-				-- Separator --------------------------------------
-			file_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Exit
-			command_menu_item := Exit_application_cmd.new_menu_item
-			add_recyclable (Command_menu_item)
-			file_menu.extend (command_menu_item)
-		end
-
-	build_class_info_menu: EV_MENU is
-			-- Build the class format sub-menu.
-		local
-			form: EB_CLASS_INFO_FORMATTER
-			empty_menu: EV_MENU_ITEM
-			i: INTEGER
-		do
-			create Result.make_with_text (Interface_names.m_class_info)
-			i := 1
-
-			create empty_menu.make_with_text (Interface_names.m_formatter_separators @ i)
-			i := i + 1
-			empty_menu.disable_sensitive
-			Result.extend (empty_menu)
-			from
-				managed_class_formatters.start
-			until
-				managed_class_formatters.after
-			loop
-				form := managed_class_formatters.item
-				if form /= Void then
-					Result.extend (form.new_menu_item)
-				else
-					create empty_menu.make_with_text (Interface_names.m_formatter_separators @ i)
-					i := i + 1
-					empty_menu.disable_sensitive
-					Result.extend (empty_menu)
-				end
-				managed_class_formatters.forth
-			end
-		end
-
-	build_feature_info_menu: EV_MENU is
-			-- Build the feature format sub-menu.
-		local
-			form: EB_FEATURE_INFO_FORMATTER
-		do
-			create Result.make_with_text (Interface_names.m_feature_info)
-			from
-				managed_feature_formatters.start
-			until
-				managed_feature_formatters.after
-			loop
-				form := managed_feature_formatters.item
-				if form /= Void then
-					Result.extend (form.new_menu_item)
-				end
-				managed_feature_formatters.forth
-			end
-		end
-
-	build_edit_menu is
-			-- Create and build `edit_menu'
-		local
-			command_menu_item: EB_COMMAND_MENU_ITEM
-			sub_menu: EV_MENU
-			cmd: EB_EDITOR_COMMAND
-			os_cmd: EB_ON_SELECTION_COMMAND
-			editor: EB_SMART_EDITOR
-			ln_cmd: EB_TOGGLE_LINE_NUMBERS_COMMAND
-			l_string: STRING_GENERAL
-		do
-			editor := editor_tool.text_area
-			create command_controller.make
-
-			create edit_menu.make_with_text (Interface_names.m_edit)
-
-				-- Undo
-			command_menu_item := undo_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Redo
-			command_menu_item := redo_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Separator --------------------------------------
-			edit_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Cut
-			create os_cmd.make (Current)
-			os_cmd.set_menu_name (Interface_names.M_cut)
-			os_cmd.set_pixmap (pixmaps.icon_pixmaps.general_cut_icon)
-			os_cmd.set_name ("Editor_cut")
-			os_cmd.set_tooltip (interface_names.f_cut)
-			os_cmd.add_agent (agent cut_selection)
-			os_cmd.set_tooltext (Interface_names.b_cut)
-			toolbarable_commands.extend (os_cmd)
-			os_cmd.set_needs_editable (True)
-			command_controller.add_selection_command (os_cmd)
-			command_menu_item := os_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Copy
-			create os_cmd.make (Current)
-			os_cmd.set_menu_name (Interface_names.M_copy)
-			os_cmd.set_pixmap (pixmaps.icon_pixmaps.general_copy_icon)
-			os_cmd.set_name ("Editor_copy")
-			os_cmd.set_tooltip (interface_names.f_copy)
-			os_cmd.set_tooltext (Interface_names.b_copy)
-			os_cmd.add_agent (agent copy_selection)
-			toolbarable_commands.extend (os_cmd)
-			os_cmd.set_needs_editable (False)
-			command_controller.add_selection_command (os_cmd)
-			command_menu_item := os_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Paste
-			command_menu_item := editor_paste_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Separator --------------------------------------
-			edit_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Select all
-			create cmd.make
-			cmd.set_menu_name (Interface_names.m_select_all)
-			cmd.add_agent (agent select_all)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Separator --------------------------------------
-			edit_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Line numbers
-			create ln_cmd.make
-			command_menu_item := ln_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-			window.accelerators.extend (ln_cmd.accelerator)
-
-
-				-- Separator --------------------------------------
-			edit_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Search
-			create cmd.make
-			l_string := Interface_names.m_search
-			l_string.append ("%T")
-			l_string.append (preferences.editor_data.shortcuts.item ("show_search_panel").display_string.as_string_32)
-			cmd.set_menu_name (l_string)
-			cmd.add_agent (agent search)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Go to
-			create cmd.make
-			cmd.set_menu_name (Interface_names.m_go_to)
-			cmd.add_agent (agent goto)
-			cmd.set_needs_editable (False)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Replace
-			create cmd.make
-			l_string := Interface_names.m_replace
-			l_string.append ("%T")
-			l_string.append (preferences.editor_data.shortcuts.item ("show_search_and_replace_panel").display_string.as_string_32)
-			cmd.set_menu_name (l_string)
-			cmd.add_agent (agent editor.replace)
-			cmd.set_needs_editable (True)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			edit_menu.extend (command_menu_item)
-
-				-- Find sub menu
-
-			create sub_menu.make_with_text (Interface_names.m_find)
-
-				-- Find next
-			create cmd.make
-			l_string := Interface_names.m_find_next
-			l_string.append ("%T")
-			l_string.append (preferences.editor_data.shortcuts.item ("search_forward").display_string.as_string_32)
-			cmd.set_menu_name (l_string)
-			cmd.add_agent (agent find_next)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-				-- Find previous
-			create cmd.make
-			l_string := Interface_names.m_find_previous
-			l_string.append ("%T")
-			l_string.append (preferences.editor_data.shortcuts.item ("search_backward").display_string.as_string_32)
-			cmd.set_menu_name (l_string)
-			cmd.add_agent (agent find_previous)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-				-- Find selection forward
-			create os_cmd.make (Current)
-			l_string := Interface_names.m_find_next_selection
-			l_string.append ("%T")
-			l_string.append (preferences.editor_data.shortcuts.item ("search_selection_forward").display_string.as_string_32)
-			os_cmd.set_menu_name (l_string)
-			os_cmd.add_agent (agent find_next_selection)
-			command_menu_item := os_cmd.new_menu_item
-			command_controller.add_selection_command (os_cmd)
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-				-- Find selection backward
-			create os_cmd.make (Current)
-			l_string := Interface_names.m_find_previous_selection
-			l_string.append ("%T")
-			l_string.append (preferences.editor_data.shortcuts.item ("search_selection_backward").display_string.as_string_32)
-			os_cmd.set_menu_name (l_string)
-			os_cmd.add_agent (agent find_next_selection)
-			command_menu_item := os_cmd.new_menu_item
-			command_controller.add_selection_command (os_cmd)
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-			edit_menu.extend (sub_menu)
-
-
-				-- Separator --------------------------------------
-			edit_menu.extend (create {EV_MENU_SEPARATOR})
-
-			create sub_menu.make_with_text (Interface_names.m_advanced)
-
-			create os_cmd.make (Current)
-			os_cmd.set_needs_editable (True)
-			command_controller.add_selection_command (os_cmd)
-			os_cmd.set_menu_name (Interface_names.m_indent)
-			os_cmd.add_agent (agent editor.indent_selection)
-			command_menu_item := os_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-			create os_cmd.make (Current)
-			os_cmd.set_needs_editable (True)
-			command_controller.add_selection_command (os_cmd)
-			os_cmd.set_menu_name (Interface_names.m_unindent)
-			os_cmd.add_agent (agent editor.unindent_selection)
-			command_menu_item := os_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-			create os_cmd.make (Current)
-			os_cmd.set_needs_editable (True)
-			command_controller.add_selection_command (os_cmd)
-			os_cmd.set_menu_name (Interface_names.m_to_lower)
-			os_cmd.add_agent (agent editor.set_selection_case (True))
-			command_menu_item := os_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-			create os_cmd.make (Current)
-			os_cmd.set_needs_editable (True)
-			command_controller.add_selection_command (os_cmd)
-			os_cmd.set_menu_name (Interface_names.m_to_upper)
-			os_cmd.add_agent (agent editor.set_selection_case (False))
-			command_menu_item := os_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-			create cmd.make
-			cmd.set_needs_editable (True)
-			cmd.set_menu_name (Interface_names.m_comment)
-			cmd.add_agent (agent editor.comment_selection)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-			create cmd.make
-			cmd.set_needs_editable (True)
-			cmd.set_menu_name (Interface_names.m_uncomment)
-			cmd.add_agent (agent editor.uncomment_selection)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-				-- Separator --------------------------------------
-			sub_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Insert if block
-			create cmd.make
-			cmd.set_needs_editable (True)
-			cmd.set_menu_name (Interface_names.m_if_block)
-			cmd.add_agent (agent editor.embed_in_block("if  then", 3))
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-				-- Insert debug block
-			create cmd.make
-			cmd.set_needs_editable (True)
-			cmd.set_menu_name (Interface_names.m_debug_block)
-			cmd.add_agent (agent editor.embed_in_block("debug", 5))
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-
-				-- Separator --------------------------------------
-			sub_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Complete word
-			create cmd.make
-			cmd.set_needs_editable (True)
-			l_string := Interface_names.m_complete_word
-			l_string.append ("%T")
-			l_string.append (preferences.editor_data.shortcuts.item ("autocomplete").display_string.as_string_32)
-			cmd.set_menu_name (l_string)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			cmd.add_agent (agent editor.complete_feature_name)
-
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-				-- Complete class name
-			create cmd.make
-			cmd.set_needs_editable (True)
-			l_string := Interface_names.m_complete_class_name
-			l_string.append ("%T")
-			l_string.append (preferences.editor_data.shortcuts.item ("class_autocomplete").display_string.as_string_32)
-			cmd.set_menu_name (l_string)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			cmd.add_agent (agent editor.complete_class_name)
-
-			add_recyclable (command_menu_item)
-			sub_menu.extend (command_menu_item)
-
-			sub_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- show/hide formatting marks.
-			create cmd.make
-			if editor_tool.text_area.view_invisible_symbols then
-				cmd.set_menu_name (Interface_names.m_hide_formatting_marks)
-			else
-				cmd.set_menu_name (Interface_names.m_show_formatting_marks)
-			end
-			formatting_marks_command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
-			cmd.add_agent (agent toggle_formatting_marks)
-
-			add_recyclable (formatting_marks_command_menu_item)
-			sub_menu.extend (formatting_marks_command_menu_item)
-
-			edit_menu.extend (sub_menu)
-		end
-
-	build_view_menu is
-			-- Build the view menu.
-		local
-			form: EB_CLASS_INFO_FORMATTER
-			new_menu_item: EB_COMMAND_MENU_ITEM
-			new_basic_item: EV_MENU_ITEM
-		do
-			Precursor
-
-			new_menu_item := toggle_stone_cmd.new_menu_item
-			view_menu.extend (new_menu_item)
-			add_recyclable (new_menu_item)
-
-			new_menu_item := send_stone_to_context_cmd.new_menu_item
-			view_menu.extend (new_menu_item)
-			add_recyclable (new_menu_item)
-				-- Go to menu
-			new_basic_item := history_manager.new_menu
-			view_menu.extend (new_basic_item)
-
-				-- Separator --------------------------------------
-			view_menu.extend (create {EV_MENU_SEPARATOR})
-			view_menu.extend (build_class_info_menu)
-			view_menu.extend (build_feature_info_menu)
-
-				-- Separator --------------------------------------
-			view_menu.extend (create {EV_MENU_SEPARATOR})
-
-			from
-				managed_main_formatters.start
-			until
-				managed_main_formatters.after
-			loop
-				form := managed_main_formatters.item
-				new_basic_item := form.new_menu_item
-				new_basic_item.select_actions.put_front (agent form.invalidate)
-				view_menu.extend (new_basic_item)
-				--add_recyclable (new_basic_item)
-				managed_main_formatters.forth
-			end
-		end
-
-	build_favorites_menu is
-			-- Build the favorites menu
-		do
-			Precursor {EB_TOOL_MANAGER}
-
-			create show_favorites_menu_item
-			update_show_favorites_menu_item
-			show_favorites_menu_item.select_actions.extend (agent execute_show_favorites)
-
-			favorites_menu.start
-			favorites_menu.put_right (show_favorites_menu_item)
-			favorites_menu.select_actions.extend (agent update_show_favorites_menu_item)
-		end
-
-	-- Jason Wei modified the following on Aug 31 2005
-	build_project_menu is
-			-- Build the project menu.
-		local
-			command_menu_item: EB_COMMAND_MENU_ITEM
-		do
-			create project_menu.make_with_text (Interface_names.m_project)
-
-				-- Melt
-			command_menu_item := Melt_project_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Discover melt
-			command_menu_item := discover_melt_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Override scan
-			command_menu_item := override_scan_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Freeze
-			command_menu_item := Freeze_project_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Finalize
-			command_menu_item := Finalize_project_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Precompile
-			command_menu_item := precompilation_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Cancel
-			command_menu_item := project_cancel_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Separator -------------------------------------------------
-			project_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Compile Workbench C code
-			command_menu_item := c_workbench_compilation_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Compile Finalized C code
-			command_menu_item := c_finalized_compilation_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-			-- Jason Wei
-				-- Terminate C compilation
-			command_menu_item := Terminate_c_compilation_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-			-- Jason Wei
-
-				-- Execute Finalized code
-			command_menu_item := run_finalized_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Separator -------------------------------------------------
-			project_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- System Tool window
-			command_menu_item := system_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- System information
-			command_menu_item := system_info_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-				-- Error information
-			command_menu_item := display_error_help_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
-
-			if eiffel_layout.has_documentation_generation or eiffel_layout.has_xmi_generation then
-					-- Separator -------------------------------------------------
-				project_menu.extend (create {EV_MENU_SEPARATOR})
-			end
-
-			if eiffel_layout.has_documentation_generation then
-					-- Generate Documentation
-				command_menu_item := document_cmd.new_menu_item
-				add_recyclable (command_menu_item)
-				project_menu.extend (command_menu_item)
-			end
-
-			if eiffel_layout.has_xmi_generation then
-					-- Export XMI
-				command_menu_item := export_cmd.new_menu_item
-				add_recyclable (command_menu_item)
-				project_menu.extend (command_menu_item)
-			end
-		end
-
-------- This is the original version
---	build_project_menu is
---			-- Build the project menu.
---		local
---			command_menu_item: EB_COMMAND_MENU_ITEM
---		do
---			create project_menu.make_with_text (Interface_names.m_project)
---
---				-- Melt
---			command_menu_item := Melt_project_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Quick melt
---			command_menu_item := Quick_melt_project_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Freeze
---			command_menu_item := Freeze_project_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Finalize
---			command_menu_item := Finalize_project_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Precompile
---			command_menu_item := precompilation_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Separator -------------------------------------------------
---			project_menu.extend (create {EV_MENU_SEPARATOR})
---
---				-- Compile Workbench C code
---			command_menu_item := c_workbench_compilation_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Compile Finalized C code
---			command_menu_item := c_finalized_compilation_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Execute Finalized code
---			command_menu_item := run_finalized_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Separator -------------------------------------------------
---			project_menu.extend (create {EV_MENU_SEPARATOR})
---
---				-- System Tool window
---			command_menu_item := system_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- System information
---			command_menu_item := system_info_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---				-- Error information
---			command_menu_item := display_error_help_cmd.new_menu_item
---			add_recyclable (command_menu_item)
---			project_menu.extend (command_menu_item)
---
---			if has_documentation_generation or has_xmi_generation then
---					-- Separator -------------------------------------------------
---				project_menu.extend (create {EV_MENU_SEPARATOR})
---			end
---
---			if has_documentation_generation then
---					-- Generate Documentation
---				command_menu_item := document_cmd.new_menu_item
---				add_recyclable (command_menu_item)
---				project_menu.extend (command_menu_item)
---			end
---
---			if has_xmi_generation then
---					-- Export XMI
---				command_menu_item := export_cmd.new_menu_item
---				add_recyclable (command_menu_item)
---				project_menu.extend (command_menu_item)
---			end
---		end
-	-- Jason Wei modified the above on Aug 31 2005
-
-	build_tools_menu is
-			-- Create and build `tools_menu'
-		local
-			command_menu_item: EB_COMMAND_MENU_ITEM
-		do
-			create tools_menu.make_with_text (Interface_names.m_tools)
-
-				-- New Cluster command.
-			command_menu_item := new_cluster_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- New Library command.
-			command_menu_item := new_library_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- New Assembly command.
-			command_menu_item := new_assembly_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			if eiffel_layout.default_il_environment.is_dotnet_installed then
-				tools_menu.extend (command_menu_item)
-			end
-
-				-- New Class command.
-			command_menu_item := new_class_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- New Feature command.
-			command_menu_item := new_feature_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- Delete class/cluster command.
-			command_menu_item := delete_class_cluster_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-				-- Separator --------------------------------------
-			tools_menu.extend (create {EV_MENU_SEPARATOR})
-
-			if eiffel_layout.has_profiler then
-					-- Profiler Window
-				command_menu_item := show_profiler.new_menu_item
-				add_recyclable (command_menu_item)
-				tools_menu.extend (command_menu_item)
-			end
-
-				-- Precompile Wizard
-			command_menu_item := wizard_precompile_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-			if eiffel_layout.has_dll_generation then
-					-- Dynamic Library Window
-				command_menu_item := show_dynamic_lib_tool.new_menu_item
-				add_recyclable (command_menu_item)
-				tools_menu.extend (command_menu_item)
-			end
-
-				-- Separator -------------------------------------------------
-			tools_menu.extend (create {EV_MENU_SEPARATOR})
-
-					-- Preferences
-			command_menu_item := Show_preferences_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-					-- External commands editor
-			command_menu_item := Edit_external_commands_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
-
-			rebuild_tools_menu
-		end
-
-	build_refactoring_menu is
-			-- Create and build `refactoring_menu'.
-		local
-			command_menu_item: EB_COMMAND_MENU_ITEM
-		do
-			create refactoring_menu.make_with_text (Interface_names.m_refactoring)
-
-				-- Pull up command.
-			command_menu_item := refactoring_manager.pull_command.new_menu_item
-			add_recyclable (command_menu_item)
-			refactoring_menu.extend (command_menu_item)
-
-				-- Rename command.
-			command_menu_item := refactoring_manager.rename_command.new_menu_item
-			add_recyclable (command_menu_item)
-			refactoring_menu.extend (command_menu_item)
-
-				-- Separator -------------------------------------------------
-			refactoring_menu.extend (create {EV_MENU_SEPARATOR})
-
-				-- Undo command.
-			command_menu_item := refactoring_manager.undo_command.new_menu_item
-			add_recyclable (command_menu_item)
-			refactoring_menu.extend (command_menu_item)
-
-				-- Redo command.
-			command_menu_item := refactoring_manager.redo_command.new_menu_item
-			add_recyclable (command_menu_item)
-			refactoring_menu.extend (command_menu_item)
-		ensure
-			refactoring_menu_created: refactoring_menu /= Void
-		end
-
-
 feature -- Stone process
 
 	stone: STONE
@@ -2113,13 +397,11 @@ feature -- Stone process
 			unified_stone := not unified_stone
 			if unified_stone then
 				send_stone_to_context
-				send_stone_to_context_cmd.disable_sensitive
-				context_tool.link_to_development_window
+				commands.send_stone_to_context_cmd.disable_sensitive
 			else
 				if stone /= Void then
-					send_stone_to_context_cmd.enable_sensitive
+					commands.send_stone_to_context_cmd.enable_sensitive
 				end
-				context_tool.cut_from_development_window
 			end
 		end
 
@@ -2130,15 +412,15 @@ feature -- Stone process
 			cv_cst: CLASSI_STONE
 			ef_stone: EXTERNAL_FILE_STONE
 			l: LIST [EB_DEVELOPMENT_WINDOW]
-			l_filename: STRING
+			l_filename: FILE_NAME
 		do
 			cv_cst ?= a_stone
 			if cv_cst /= Void then
-				l_filename := cv_cst.class_i.name
+				l_filename := cv_cst.file_name
 			else
 				ef_stone ?= a_stone
 				if ef_stone /= Void then
-					l_filename := ef_stone.file_name.string
+					l_filename := ef_stone.file_name
 				end
 			end
 
@@ -2159,98 +441,16 @@ feature -- Stone process
 			else
 				set_stone_after_first_check (a_stone)
 			end
+			update_save_symbol
 		end
 
 	set_stone_after_first_check (a_stone: STONE) is
 			-- Display text associated with `a_stone', if any and if possible
 		local
-			feature_stone: FEATURE_STONE
-			old_class_stone: CLASSI_STONE
-			test_stone: CLASSI_STONE
-			same_class: BOOLEAN
-			conv_ferrst: FEATURE_ERROR_STONE
-			ef_stone: EXTERNAL_FILE_STONE
-			cluster_st: CLUSTER_STONE
-			new_class_stone: CLASSI_STONE
-			conv_errst: ERROR_STONE
-			conv_brkstone: BREAKABLE_STONE
+			l_checker: EB_STONE_FIRST_CHECKER
 		do
-			old_class_stone ?= stone
-			feature_stone ?= a_stone
-			ef_stone ?= a_stone
-			new_class_stone ?= a_stone
-			cluster_st ?= a_stone
-
-				-- Update the history.
-			conv_brkstone ?= a_stone
-			conv_errst ?= a_stone
-			if
-				conv_brkstone = Void and
-				conv_errst = Void and
-				ef_stone = Void
-			then
-				if
-					new_class_stone /= Void
-				then
-					history_manager.extend (new_class_stone)
-				elseif
-					cluster_st /= Void
-				then
-					history_manager.extend (cluster_st)
-				end
-			end
-
-			if old_class_stone /= Void then
-				create test_stone.make (old_class_stone.class_i)
-				same_class := test_stone.same_as (a_stone)
-					-- We need to compare classes. If `old_class_stone' is a FEATURE_STONE
-					-- `same_as' will compare features. Therefore, we need `test_stone' to be sure
-					-- we have a CLASSI_STONE.
-				if same_class and then feature_stone /= Void then
-					same_class := False
-						-- if the stone corresponding to a feature of currently opened class is dropped
-						-- we attempt to scroll to the feature without asking to save the file
-						-- except if it is during a resynchronization, in which case we do not scroll at all.
-					if editor_tool.text_area.text_is_fully_loaded then
-						if not during_synchronization and then feature_stone.e_feature /= Void then
-							scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
-							feature_stone_already_processed := True
-						else
-							feature_stone_already_processed := True
-						end
-						conv_ferrst ?= feature_stone
-						if feature_stone_already_processed and conv_ferrst /= Void then
-								-- Scroll to the line of the error.
-							if not during_synchronization then
-								editor_tool.text_area.display_line_when_ready (conv_ferrst.line_number, True)
-							end
-						end
-					end
-				end
-			elseif ef_stone /= Void then
-			end
-
-				-- first, let's check if there is already something in this window
-				-- if there's nothing, there's no need to save anything...
-			if stone = Void or else not changed or else feature_stone_already_processed or else same_class then
-				set_stone_after_check (a_stone)
-				feature_stone_already_processed := False
-			else
-					-- there is something to be saved
-					-- if user chooses to save, current file will be parsed
-					-- if there is a syntax_error, new file is not loaded
-				save_and (agent set_stone_after_check (a_stone))
-				if text_saved and then not syntax_is_correct then
-					text_saved := False
-					during_synchronization := True
-					set_stone_after_check (stone)
-					during_synchronization := False
-					address_manager.refresh
-				end
-			end
-			if not editor_tool.text_area.has_focus then
-				ev_application.do_once_on_idle (agent editor_tool.set_focus)
-			end
+			create l_checker.make (Current)
+			l_checker.set_stone_after_first_check (a_stone)
 		end
 
 	force_stone (s: STONE) is
@@ -2261,44 +461,9 @@ feature -- Stone process
 			if s.is_storable then
 				set_stone (s)
 				if not unified_stone then
-					context_tool.advanced_set_stone (s)
+					tools.set_stone (s)
 				end
 			end
-		end
-
-	process_class (s: CLASSI_STONE) is
-			-- Process class stone
-		do
-			set_stone (s)
-		end
-
-	process_feature_error (s: FEATURE_ERROR_STONE) is
-			-- Process feature error stone.
-		local
-			cl_stone: CLASSC_STONE
-			e_class: CLASS_C
-		do
-			set_default_format
-			e_class := s.e_feature.written_class
-			create cl_stone.make (e_class)
-			set_stone (cl_stone)
-			editor_tool.text_area.deselect_all
-			if s.line_number > 0 then
-				editor_tool.text_area.highlight_selected (s.line_number, s.line_number)
-			end
-		end
-
-
-	process_class_syntax (s: CL_SYNTAX_STONE) is
-			-- Process class syntax.
-		local
-			cl_stone: CLASSC_STONE
-		do
-				-- call set_stone to ensure the proper class is displayed
-			create cl_stone.make (s.e_class)
-			set_stone (cl_stone)
-			editor_tool.text_area.deselect_all
-			editor_tool.text_area.highlight_when_ready (s.line, s.line)
 		end
 
 	refresh is
@@ -2308,45 +473,47 @@ feature -- Stone process
 	--			synchronise_stone
 	--| END FIXME
 	--| FIXME XR: Refresh current display in the editor.
-			editor_tool.text_area.update_click_list (False)
+			if editors_manager.current_editor /= Void then
+				editors_manager.current_editor.update_click_list (False)
+			end
 			update_save_symbol
 			address_manager.refresh
 				-- The cluster manager should already be refreshed by the window manager.
-	--			cluster_manager.refresh
-	--			context_tool.refresh
+--			cluster_manager.refresh
+
+			tools.refresh
 		end
 
 	quick_refresh_editors is
 			-- Redraw editors' drawing area.
 		do
-			editor_tool.text_area.refresh
-			context_tool.quick_refresh_editors
+			if editors_manager.current_editor /= Void then
+				editors_manager.current_editor.refresh
+			end
+			tools.output_tool.quick_refresh_editor
+			tools.external_output_tool.quick_refresh_editor
+			tools.c_output_tool.quick_refresh_editor
+			tools.class_tool.quick_refresh_editor
+			tools.features_relation_tool.quick_refresh_editor
+
+			tools.errors_tool.quick_refresh_editor
+			tools.warnings_tool.quick_refresh_editor
 		end
 
 	quick_refresh_margins is
 			-- Redraw the main editor's drawing area.
 		do
-			editor_tool.text_area.margin.refresh
-			context_tool.quick_refresh_margins
-		end
+			if editors_manager.current_editor /= Void then
+				editors_manager.current_editor.margin.refresh
+			end
+			tools.output_tool.quick_refresh_margin
+			tools.external_output_tool.quick_refresh_margin
+			tools.c_output_tool.quick_refresh_margin
+			tools.class_tool.quick_refresh_margin
+			tools.features_relation_tool.quick_refresh_margin
 
-	set_default_format is
-			-- Default format of windows.
-	--| FIXME ARNAUD: To be implemented.
-	--		local
-	--			f: EB_FORMATTER
-		do
-	--			if stone /= Void then
-	--				if stone.class_i.hide_implementation then
-	--					f := format_list.precompiled_default_format
-	--				else
-	--					f := format_list.default_format
-	--				end
-	--			else
-	--				f := format_list.default_format
-	--			end
-	--			set_last_format (f)
-	--| END FIXME
+			tools.errors_tool.quick_refresh_margin
+			tools.warnings_tool.quick_refresh_margin
 		end
 
 feature -- Position provider
@@ -2354,7 +521,9 @@ feature -- Position provider
 	position: like position_internal is
 			-- Currently shown text position in the editor
 		do
-			Result := editor_tool.text_area.first_line_displayed
+			if editors_manager.current_editor /= Void then
+				Result := editors_manager.current_editor.first_line_displayed
+			end
 		end
 
 	pos_container: like pos_container_internal is
@@ -2364,305 +533,6 @@ feature -- Position provider
 		end
 
 feature -- Resource Update
-
-	update is
-			-- Update Current with the registered resources.
-		do
-			lock_update
-				-- Show/hide general toolbar
-			if development_window_data.show_general_toolbar then
-				show_general_toolbar_command.enable_visible
-			else
-				show_general_toolbar_command.disable_visible
-			end
-
-				-- Show/hide address toolbar
-			if development_window_data.show_address_toolbar then
-				show_address_toolbar_command.enable_visible
-			else
-				show_address_toolbar_command.disable_visible
-			end
-
-				-- Show/hide project toolbar
-			if development_window_data.show_project_toolbar then
-				show_project_toolbar_command.enable_visible
-			else
-				show_project_toolbar_command.disable_visible
-			end
-
-				-- Show/hide refactoring toolbar
-			if development_window_data.show_refactoring_toolbar then
-				show_refactoring_toolbar_command.enable_visible
-			else
-				show_refactoring_toolbar_command.disable_visible
-			end
-
-			left_panel.load_from_resource (development_window_data.left_panel_layout)
-			right_panel.load_from_resource (development_window_data.right_panel_layout)
-			splitter_position := development_window_data.left_panel_width
-			update_splitters
-			unlock_update
-		end
-
-	update_splitters is
-			-- Refresh the position of the splitter on screen according to
-			-- our internal values.
-		do
-				-- Set the interior layout
-			if panel.full then
-				panel.set_split_position (splitter_position.max (panel.minimum_split_position))
-			end
-		end
-
-	register is
-			-- Register to preferences we want notification of.
-		do
-		end
-
-	unregister is
-			-- unregister to preferences we want notification of.
-		do
-		end
-
-	reset is
-			-- Reset the window contents
-		do
-			Precursor
-			address_manager.reset
-
-	--| FIXME ARNAUD, multiformat not yet implemented.
-	--			format_list.enable_imp_formats_sensitive
-	--| END FIXME
-		end
-
-	rebuild_tools_menu is
-			-- Refresh the list of external commands.
-		local
-			ms: LIST [EB_COMMAND_MENU_ITEM]
-			l_sep: EV_MENU_SEPARATOR
-		do
-				-- Remove all the external commands, which are at the end of the menu.
-			from
-				tools_menu.go_i_th (tools_menu.count + 1 - number_of_displayed_external_commands)
-			until
-				tools_menu.after
-			loop
-				tools_menu.remove
-			end
-			ms := Edit_external_commands_cmd.menus
-			number_of_displayed_external_commands := ms.count
-
-			if not ms.is_empty and not tools_menu.is_empty then
-				l_sep ?= tools_menu.last
-				if l_sep = Void then
-					create l_sep
-					tools_menu.extend (l_sep)
-					number_of_displayed_external_commands := number_of_displayed_external_commands + 1
-				end
-			end
-
-			from
-				ms.start
-			until
-				ms.after
-			loop
-				tools_menu.extend (ms.item)
-				add_recyclable (ms.item)
-				ms.forth
-			end
-		end
-
-	syntax_is_correct: BOOLEAN is
-			-- file was successfully parsed.
-		do
-			Result := editor_tool.text_area.syntax_is_correct
-		end
-
-	on_project_created is
-			-- Inform tools that the current project has been loaded or re-loaded.
-		do
-			build_menu_bar
-			enable_commands_on_project_created
-			context_tool.on_project_created
-			address_manager.on_project_created
-			if eiffel_layout.has_dll_generation then
-				show_dynamic_lib_tool.enable_sensitive
-			end
-			if eiffel_layout.has_profiler then
-				show_profiler.enable_sensitive
-			end
-		end
-
-	on_project_loaded is
-			-- Inform tools that the current project has been loaded or re-loaded.
-		do
---			cluster_manager.on_project_loaded
-			enable_commands_on_project_loaded
-			cluster_tool.on_project_loaded
-			context_tool.on_project_loaded
-			breakpoints_tool.on_project_loaded
-		end
-
-	on_project_unloaded is
-			-- Inform tools that the current project will soon been unloaded.
-		do
---			cluster_manager.on_project_unloaded
-			disable_commands_on_project_unloaded
-			cluster_tool.on_project_unloaded
-			context_tool.on_project_unloaded
-			address_manager.on_project_unloaded
-			build_menu_bar
-			if eiffel_layout.has_dll_generation then
-				show_dynamic_lib_tool.disable_sensitive
-			end
-			if eiffel_layout.has_profiler then
-				show_profiler.disable_sensitive
-			end
-		end
-
-	on_c_compilation_starts is
-			-- Enable commands when freezing or finalizing starts.
-		do
-			c_workbench_compilation_cmd.disable_sensitive
-			c_finalized_compilation_cmd.disable_sensitive
-		end
-
-	on_c_compilation_stops is
-			-- Disable commands when freezing or finalizing stops.
-		do
-			c_workbench_compilation_cmd.enable_sensitive
-			c_finalized_compilation_cmd.enable_sensitive
-		end
-
-	save_before_compiling is
-			-- save the text but do not update clickable positions
-		do
-			save_only := True
-			save_text
-		end
-
-	perform_check_before_save is
-			-- Perform any pre-save operations/checks
-		local
-			dial: EB_CONFIRMATION_DIALOG
-		do
-				-- Remove trailing blanks.
-			if preferences.editor_data.auto_remove_trailing_blank_when_saving then
-				editor_tool.text_area.text_displayed.remove_trailing_blanks
-			else
-				editor_tool.text_area.text_displayed.remove_trailing_fake_blanks
-			end
-			editor_tool.text_area.refresh_now
-
-			if editor_tool.text_area.open_backup then
-				create dial.make_with_text(Warning_messages.w_save_backup)
-				dial.set_buttons_and_actions(<<interface_names.b_continue, interface_names.b_cancel>>, <<agent continue_save, agent cancel_save>>)
-				dial.set_default_push_button(dial.button(interface_names.b_continue))
-				dial.set_default_cancel_button(dial.button(interface_names.b_cancel))
-				dial.set_title (interface_names.t_save_backup)
-				dial.show_modal_to_window (window)
-			else
-				check_passed := True
-			end
-		end
-
-	continue_save is
-			-- continue saving
-		do
-			check_passed := True
-		end
-
-	cancel_save is
-			-- cancel saving
-		do
-			check_passed := False
-		end
-
-	process is
-			-- process the user entry in the address bar
-		local
-			l_class_stone: CLASSI_STONE
-			l_multi_search_tool: EB_MULTI_SEARCH_TOOL
-		do
-			save_canceled := False
-			l_class_stone ?= stone
-			if l_class_stone /= Void then
-				l_multi_search_tool ?= search_tool
-				if l_multi_search_tool /= Void then
-					l_multi_search_tool.class_changed (l_class_stone.class_i)
-				end
-			end
-		end
-
-	on_text_saved is
-			-- Notify the editor that the text has been saved
-		local
-			str: STRING_32
-		do
-			Precursor
-			editor_tool.on_text_saved
-			text_saved := True
-			if not save_only then
-				editor_tool.text_area.update_click_list (True)
-			end
-			save_only := False
-			str := title.twin.as_string_32
-			if str @ 1 = '*' then
-				str.keep_tail (str.count - 2)
-				set_title (str)
-			end
-			update_formatters
-			lock_update
-			features_tool.synchronize
-			refresh_cursor_position
-			refresh_context_info
-			unlock_update
-			if editor_tool.text_area.syntax_is_correct then
-				status_bar.display_message ("")
-			else
-				status_bar.display_message (Interface_names.L_syntax_error)
-			end
-			text_edited := False
-		end
-
-	on_focus is
-			-- Focus gained
-		local
-			editor: EB_SMART_EDITOR
-			l_class_i_stone: CLASSI_STONE
-		do
-			editor := editor_tool.text_area
-			if editor /= Void then
-					-- If the class currently being edited had its read-only status changed
-					-- we made sure that the editor is updated accordingly.
-				l_class_i_stone ?= stone
-				if l_class_i_stone /= Void then
-					if editor.is_read_only and selected_formatter.is_editable then
-							-- Only possible action is to go from a read-only class to a
-							-- non-readonly class.
-						editor.set_read_only (l_class_i_stone.class_i.is_read_only)
-					else
-							-- Here if the class is read-only and that there were
-							-- already some modification being done, we don't do anything.
-							-- The error will be reported only when trying to save our changes.
-							-- Therefore we don't change the `is_read_only' status of the `editor'.
-					end
-				end
-				editor.on_focus
-			end
-		end
-
-	save_and (an_action: PROCEDURE [ANY, TUPLE]) is
-		local
-			save_dialog: EB_CONFIRM_SAVE_DIALOG
-		do
-			save_canceled := True
-			text_saved := False
-			create save_dialog.make_and_launch (Current,Current)
-			if not save_canceled and then syntax_is_correct then
-				an_action.call(Void)
-			end
-		end
 
 	update_viewpoints is
 			-- Update viewpoints
@@ -2691,18 +561,197 @@ feature -- Resource Update
 			end
 		end
 
+	update_splitters is
+			-- Refresh the position of the splitter on screen according to
+			-- our internal values.
+		do
+		end
+
+	register is
+			-- Register to preferences we want notification of.
+		do
+		end
+
+	unregister is
+			-- unregister to preferences we want notification of.
+		do
+		end
+
+	reset is
+			-- Reset the window contents
+		do
+			Precursor
+			address_manager.reset
+
+	--| FIXME ARNAUD, multiformat not yet implemented.
+	--			format_list.enable_imp_formats_sensitive
+	--| END FIXME
+		end
+
+	syntax_is_correct: BOOLEAN is
+			-- Current editor was successfully parsed?
+		do
+			if editors_manager.current_editor /= Void then
+				Result := editors_manager.current_editor.syntax_is_correct
+			else
+				Result := True
+			end
+		end
+
+	save_before_compiling is
+			-- save the text but do not update clickable positions
+		do
+			save_only := True
+			save_all
+		end
+
+	perform_check_before_save is
+			-- Perform any pre-save operations/checks
+		do
+			-- FIXIT: temp comment by larry
+			-- May be problems here of tabbed editor
+			if editors_manager.current_editor /= Void then
+				perform_check_before_save_with (editors_manager.current_editor)
+			end
+		end
+
+	perform_check_before_save_with (a_editor: EB_SMART_EDITOR) is
+			-- Perform any pre-save operations with `a_editor'
+		require
+			a_editor_not_void: a_editor /= Void
+		local
+			dial: EB_CONFIRMATION_DIALOG
+		do
+				-- Remove trailing blanks.
+			if preferences.editor_data.auto_remove_trailing_blank_when_saving then
+				a_editor.text_displayed.remove_trailing_blanks
+			else
+				a_editor.text_displayed.remove_trailing_fake_blanks
+			end
+			a_editor.refresh_now
+
+			if a_editor.open_backup then
+				dial := ui.save_backup_dialog
+				dial.show_modal_to_window (window)
+			else
+				check_passed := True
+			end
+		end
+
+	continue_save is
+			-- Continue saving
+		do
+			check_passed := True
+		end
+
+	cancel_save is
+			-- Cancel saving
+		do
+			check_passed := False
+		end
+
+	process is
+			-- process the user entry in the address bar
+		local
+			l_class_stone: CLASSI_STONE
+			l_multi_search_tool: EB_MULTI_SEARCH_TOOL
+		do
+			save_canceled := False
+			l_class_stone ?= stone
+			if l_class_stone /= Void then
+				l_multi_search_tool ?= tools.search_tool
+				if l_multi_search_tool /= Void then
+					l_multi_search_tool.class_changed (l_class_stone.class_i)
+				end
+			end
+		end
+
+	save_and (an_action: PROCEDURE [ANY, TUPLE]) is
+			-- Save and `an_actions'.
+		local
+			save_dialog: EB_CONFIRM_SAVE_DIALOG
+		do
+			save_canceled := True
+			text_saved := False
+			create save_dialog.make_and_launch (Current,Current)
+			if not save_canceled and then syntax_is_correct then
+				an_action.call(Void)
+			end
+		end
+
+	set_classi_changed (a_class: CLASS_I) is
+			-- Change a_class in shared project.
+		do
+			Eiffel_project.Workbench.change_class (a_class)
+		end
+
+	on_text_saved is
+			-- Notify the editor that the text has been saved
+		local
+			str: STRING_32
+		do
+			Precursor
+			if editors_manager.current_editor /= Void then
+				editors_manager.current_editor.on_text_saved
+				if not save_only then
+					editors_manager.current_editor.update_click_list (True)
+				end
+			end
+			text_saved := True
+			save_only := False
+			str := title.twin.as_string_32
+			if str @ 1 = '*' then
+				str.keep_tail (str.count - 2)
+				set_title (str)
+			end
+			update_formatters
+			lock_update
+			tools.features_tool.synchronize
+			refresh_cursor_position
+			refresh_context_info
+			unlock_update
+			if editors_manager.current_editor.syntax_is_correct then
+				status_bar.display_message ("")
+			else
+				status_bar.display_message (Interface_names.L_syntax_error)
+			end
+			text_edited := False
+		end
+
+	disable_editors_command is
+			-- Disable `a_command'.
+		require
+			editors_manager_not_void: editors_manager /= Void
+			commands_not_void: commands /= Void and then commands.editor_commands /= Void
+		local
+			l_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
+		do
+			l_commands := commands.editor_commands
+			if editors_manager.editors.count = 0 then
+				from
+					l_commands.start
+				until
+					l_commands.after
+				loop
+					l_commands.item.disable_sensitive
+					l_commands.forth
+				end
+			end
+		end
+
 feature -- Window management
 
 	give_focus is
 			-- Give the focus to the address manager.
 		do
-			address_manager.set_focus
+			if address_manager.widget.is_displayed then
+				address_manager.set_focus
+			end
 		end
 
 	save_layout is
 			-- Store layout of `current'.
 		do
-			save_layout_to_window_data (development_window_data)
 				-- Commit saves
 			preferences.preferences.save_preferences
 		end
@@ -2713,74 +762,205 @@ feature -- Window management
 			a_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
 			a_class_i: CLASSI_STONE
 		do
+			save_window_state
 			create a_window_data.make_from_window_data (preferences.development_window_data)
 
 			a_class_i ?= stone
 			if a_class_i /= Void then
 				a_window_data.save_filename (a_class_i.file_name)
-				a_window_data.save_editor_position (editor_tool.text_area.current_cursor_position)
+				if editors_manager.current_editor /= Void then
+					a_window_data.save_editor_position (editors_manager.current_editor.text_displayed.current_line_number)
+				end
 			end
 
-			if context_tool /= Void then
-				a_window_data.save_context_data (
-					context_tool.address_manager.cluster_label_text,
-					context_tool.address_manager.class_label_text,
-					context_tool.address_manager.feature_label_text,
-					context_tool.notebook.selected_item_index
-				)
+			save_editors_to_session_data (a_window_data)
+
+			save_editors_docking_layout
+
+			if tools.class_tool /= Void then
+				a_window_data.save_context_data (tools.features_relation_tool.address_manager.cluster_label_text, tools.features_relation_tool.address_manager.class_label_text, tools.features_relation_tool.address_manager.feature_label_text, 1)
 			end
 
-			save_layout_to_window_data (a_window_data)
-
-				-- Add the session data of `Current' to the session object.
+ 				-- Add the session data of `Current' to the session object.
 			a_session.window_session_data.extend (a_window_data)
 		end
 
-	save_layout_to_window_data (a_window_data: EB_DEVELOPMENT_WINDOW_DATA) is
-			-- Store window data of `Current' in `a_window_data'.
-		require
-			a_window_data_not_void: a_window_data /= Void
+	save_editors_to_session_data (a_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
+			-- Save editor number, open classes and open clusters.
+		local
+			l_open_classes: HASH_TABLE [FILE_NAME, STRING]
 		do
-				-- Now save the windows's layout, but only if the
-				-- debugger is not displayed in `Current'. By saving the layout,
-				-- we ensure that future windows may use exactly the same layout.
-				-- If the debugger is displayed, the previous layout is already saved,
-				-- and this is the one that must be used, as only one debugger is ever displayed.
-			if
-				(Debugger_manager.application_is_executing and Eb_debugger_manager.debugging_window /= Current)
-				or not Debugger_manager.application_is_executing
-			then
-				a_window_data.save_left_panel_layout (left_panel.save_to_resource)
-				a_window_data.save_right_panel_layout (right_panel.save_to_resource)
-				a_window_data.save_left_panel_width (panel.split_position)
-					-- Save width & height.
-				a_window_data.save_size (window.width, window.height)
-				a_window_data.save_window_state (window.is_minimized, window.is_maximized)
-				a_window_data.save_position (window.x_position, window.y_position)
+			l_open_classes := editors_manager.open_classes
+			l_open_classes.merge (editors_manager.open_fake_classes)
+			a_window_data.save_open_classes (l_open_classes)
+			a_window_data.save_open_clusters (editors_manager.open_clusters)
+		end
+
+	save_tools_docking_layout is
+			-- Save all tools docking layout.
+		do
+			docking_manager.save_tools_config (docking_config_tools_file)
+		end
+
+	save_editors_docking_layout is
+			-- Save all editors docking layout.
+		do
+			docking_manager.save_editors_config (docking_config_editors_file)
+		end
+
+	open_tools_docking_layout is
+			-- Open tools docking layout.
+		local
+			l_result: BOOLEAN
+		do
+			l_result := docking_manager.open_tools_config (docking_config_tools_file)
+		end
+
+	open_editors_docking_layout is
+			-- Open editors docking layout.
+		do
+			docking_manager.open_editors_config (docking_config_editors_file)
+		end
+
+	internal_construct_standard_layout_by_code is
+			-- After docking manager have all widgets, set all tools to standard default layout.
+		local
+			l_tool: EB_TOOL
+			l_tool_bar_content: SD_TOOL_BAR_CONTENT
+		do
+			-- Right bottom tools
+			l_tool := tools.output_tool
+			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
+			l_tool := tools.diagram_tool
+			l_tool.content.set_tab_with (tools.output_tool.content, False)
+			l_tool := tools.class_tool
+			l_tool.content.set_tab_with (tools.diagram_tool.content, False)
+			l_tool := tools.features_relation_tool
+			l_tool.content.set_tab_with (tools.class_tool.content, False)
+
+			l_tool := tools.dependency_tool
+			l_tool.content.set_tab_with (tools.features_relation_tool.content, False)
+
+			l_tool := tools.metric_tool
+			l_tool.content.set_tab_with (tools.dependency_tool.content, False)
+			l_tool := tools.external_output_tool
+			l_tool.content.set_tab_with (tools.metric_tool.content, False)
+			l_tool := tools.c_output_tool
+			l_tool.content.set_tab_with (tools.external_output_tool.content, False)
+			l_tool := tools.errors_tool
+			l_tool.content.set_tab_with (tools.c_output_tool.content, False)
+			l_tool := tools.warnings_tool
+			l_tool.content.set_tab_with (tools.errors_tool.content, False)
+			l_tool.content.set_split_proportion (0.7)
+
+			-- Left tools
+			l_tool := tools.features_tool
+			l_tool.content.set_top ({SD_ENUMERATION}.left)
+			l_tool := tools.cluster_tool
+			l_tool.content.set_relative (tools.features_tool.content, {SD_ENUMERATION}.bottom)
+			l_tool.content.set_split_proportion (0.2)
+
+			-- Tool bars
+			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.t_standard_toolbar)
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+
+			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.t_address_toolbar)
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+
+			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.t_project_toolbar)
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+
+			l_tool_bar_content := docking_manager.tool_bar_manager.content_by_title (interface_names.t_refactory_toolbar)
+			check not_void: l_tool_bar_content /= Void end
+			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
+
+		end
+
+	restore_tools_docking_layout is
+			-- Restore docking layout information.
+		local
+			l_raw_file: RAW_FILE
+			l_result: BOOLEAN
+		do
+			create l_raw_file.make (docking_config_tools_file)
+			if l_raw_file.exists then
+				l_result := docking_manager.open_tools_config (docking_config_tools_file)
+			end
+
+			if not l_result then
+				restore_standard_tools_docking_layout
 			end
 		end
 
+	restore_editors_docking_layout is
+			-- Restore docking layout information.
+		local
+			l_raw_file: RAW_FILE
+		do
+			create l_raw_file.make (docking_config_editors_file)
+			if l_raw_file.exists then
+				-- We call it here to prevent Windows Desktop flickers.
+				window.lock_update
+				docking_manager.open_editors_config (docking_config_editors_file)
+				window.unlock_update
+			end
+		end
+
+	restore_standard_tools_docking_layout is
+			-- Restore statndard layout.
+		local
+			l_file: RAW_FILE
+			l_result: BOOLEAN
+			l_restried: BOOLEAN
+			l_fn: FILE_NAME
+		do
+			if not l_restried then
+				l_fn := docking_standard_layout_path.twin
+				l_fn.set_file_name ("standard_layout.wb")
+				create l_file.make_open_read (l_fn )
+				if l_file.exists then
+					l_result := docking_manager.open_config (l_fn)
+				end
+				check l_result end
+			else
+				internal_construct_standard_layout_by_code
+			end
+		rescue
+			l_restried := True
+			retry
+		end
+
+	docking_config_tools_file: FILE_NAME is
+			-- Docking config file name.
+		local
+			l_env: EC_EIFFEL_LAYOUT
+		once
+			create l_env
+			create Result.make_from_string (l_env.docking_standard_layout_path)
+			Result.set_file_name ("layout.wb")
+		end
+
+	docking_config_editors_file: FILE_NAME is
+			-- Docking config file name.
+		do
+			create Result.make_from_string (project_location.location)
+			Result.set_file_name ("layout.wb")
+		end
+
+	docking_debug_config_file: FILE_NAME is
+			-- Docking config file when debugging.
+		local
+			l_env: EC_EIFFEL_LAYOUT
+		once
+			create l_env
+			create Result.make_from_string (l_env.docking_standard_layout_path)
+			Result.set_file_name ("debug_layout.wb")
+		end
 
 feature -- Tools & Controls
-
-	editor_tool: EB_EDITOR_TOOL
-
-	favorites_tool: EB_FAVORITES_TOOL
-
-	properties_tool: EB_PROPERTIES_TOOL
-
-	cluster_tool: EB_CLUSTER_TOOL
-
-	search_tool: EB_MULTI_SEARCH_TOOL
-
-	features_tool: EB_FEATURES_TOOL
-
-	breakpoints_tool: ES_BREAKPOINTS_TOOL
-
-	windows_tool: EB_WINDOWS_TOOL
-
-	context_tool: EB_CONTEXT_TOOL
-			-- Context explorer for current class and system.
 
 	address_manager: EB_ADDRESS_MANAGER
 			-- Text field in the toolbar
@@ -2802,69 +982,16 @@ feature -- Tools & Controls
 	managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			-- All formatters that can be displayed in the main editor frame.
 
-	view_points_combo: EB_VIEWPOINT_COMBO_BOX
-			-- Combo box used to a select viewpoints
-
-	view_points_widget: EV_HORIZONTAL_BOX
-			-- Widget to contain viewpoints box
-
 	unified_stone: BOOLEAN
 			-- Is the stone common with the context tool or not?
 
-	arguments_dialog: EB_ARGUMENT_DIALOG
-			-- The arguments dialog for current, if any
-
-	goto_dialog: EB_GOTO_DIALOG
-			-- The goto dialog for line number access
+	view_points_combo: EB_VIEWPOINT_COMBO_BOX
+			-- Combo box used to a select viewpoints
 
 	managed_dependency_formatters: ARRAYED_LIST [EB_DEPENDENCY_FORMATTER]
 			-- All formatters to display dependency relationship of a target/group/folder/class
 
 feature -- Multiple editor management
-
-	add_editor_to_list (an_editor: EB_EDITOR) is
-			-- adds `an_editor' to `editors'
-		do
-			editors.extend (an_editor)
-		end
-
-	current_editor: EB_EDITOR is
-			-- current editor, if none, main editor
-		do
-			if editors /= Void then
-				if current_editor_index /= 0 then
-					Result := editors @ current_editor_index
-				else
-					Result := editors.first
-				end
-			end
-		end
-
-	set_current_editor (an_editor: EB_EDITOR) is
-			-- set `an_editor' as main editor
-		require
-			an_editor_not_void: an_editor /= Void
-		local
-			old_index: INTEGER
-			new_index: INTEGER
-		do
-			old_index := current_editor_index
-			new_index := editors.index_of (an_editor, 1)
-			if
-				editors.valid_index (new_index) and
-				old_index /= new_index
-			then
-				current_editor_index := new_index
-				update_paste_cmd
-					-- Last thing, update the menu entry for the formatting marks.
-				if current_editor.view_invisible_symbols then
-					formatting_marks_command_menu_item.set_text (Interface_names.m_hide_formatting_marks)
-				else
-					formatting_marks_command_menu_item.set_text(Interface_names.m_show_formatting_marks)
-				end
-				command_controller.set_current_editor (an_editor)
-			end
-		end
 
 	update_paste_cmd is
 			-- Update `editor_paste_cmd'. To be performed when an editor grabs the focus.
@@ -2872,18 +999,18 @@ feature -- Multiple editor management
 			if update_paste_cmd_agent = Void then
 				update_paste_cmd_agent := agent
 					local
-						l_editor: like current_editor
+						l_editor: EB_EDITOR
 					do
-						l_editor := current_editor
+						l_editor := ui.current_editor
 						if
 							l_editor /= Void and then
 							not l_editor.is_empty and then
 							l_editor.is_editable and then
 							l_editor.clipboard.has_text
 						then
-							editor_paste_cmd.enable_sensitive
+							commands.editor_paste_cmd.enable_sensitive
 						else
-							editor_paste_cmd.disable_sensitive
+							commands.editor_paste_cmd.disable_sensitive
 						end
 					end
 			end
@@ -2893,15 +1020,45 @@ feature -- Multiple editor management
 	update_paste_cmd_agent: PROCEDURE [ANY, TUPLE]
 		-- Agent used for updating the paste command.
 
-feature {NONE} -- Multiple editor management
+feature {EB_EDITOR_TOOL, EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 
-	editors: ARRAYED_LIST [EB_EDITOR]
-			-- editor contained in `Current'
+	is_dropping_on_editor: BOOLEAN
+			-- Is pick and droping on an editor?
 
-	current_editor_index: INTEGER
-			-- Index in `editors' of the editor that has the focus.
+	set_dropping_on_editor (a_dropping: BOOLEAN) is
+			-- Set `Is dropping_on_editor' with `a_dropping'.
+		do
+			is_dropping_on_editor := a_dropping
+		end
 
-feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS} -- Feature Clauses
+	refresh_tab (a_stone: STONE) is
+			-- Refresh pixmap and title of current editor's tab.
+		local
+			l_class_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_group: CONF_GROUP
+		do
+			if editors_manager.current_editor /= Void then
+				if a_stone /= Void then
+					l_class_stone ?= a_stone
+					l_cluster_stone ?= a_stone
+					if l_class_stone /= Void then
+						editors_manager.current_editor.docking_content.set_pixmap (pixmap_from_class_i (l_class_stone.class_i))
+						editors_manager.current_editor.docking_content.set_short_title (l_class_stone.class_name)
+						editors_manager.current_editor.docking_content.set_long_title (l_class_stone.class_name)
+						editors_manager.current_editor.set_title_saved (not changed)
+					elseif l_cluster_stone /= Void then
+						l_group := l_cluster_stone.group
+						editors_manager.current_editor.docking_content.set_pixmap (pixmap_from_group (l_group))
+						editors_manager.current_editor.docking_content.set_short_title (l_group.name)
+						editors_manager.current_editor.docking_content.set_long_title (l_group.name)
+					end
+				end
+			end
+
+		end
+
+feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Feature Clauses
 
 	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is
 			-- Set 'features' to 'a_features' and store in hash table with key 'a_type' denoting name of consumed
@@ -2938,7 +1095,7 @@ feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS} -- Feature Clauses
 	feature_locating: BOOLEAN
 			-- Is feature tool locating a feature?
 
-feature {EB_WINDOW_MANAGER} -- Window management / Implementation
+feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window management / Implementation
 
 	destroy_imp is
 			-- Destroy window.
@@ -2946,21 +1103,17 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				-- To avoid reentrance
 			if not is_destroying then
 				is_destroying := True
+
 					-- If a launched application is still running, kill it.
 				if
-					Debugger_manager.application_is_executing
+					Eb_debugger_manager.application_is_executing
 					and then Eb_debugger_manager.debugging_window = Current
 				then
-					Debugger_manager.application.kill
-				else
-					development_window_data.save_left_panel_layout (left_panel.save_to_resource)
-					development_window_data.save_right_panel_layout (right_panel.save_to_resource)
+					Eb_debugger_manager.application.kill
 				end
-				development_window_data.save_left_panel_width (panel.split_position)
+
 					-- Save width & height.
-				development_window_data.save_size (window.width, window.height)
-				development_window_data.save_window_state (window.is_minimized, window.is_maximized)
-				development_window_data.save_position (window.x_position, window.y_position)
+				save_window_state
 				hide
 
 					-- Commit saves
@@ -2969,868 +1122,150 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				estudio_debug_cmd.unattach_window (window)
 				toolbars_area.wipe_out
 				address_manager.recycle
+				favorites_manager.recycle
+				cluster_manager.recycle
+				menus.recycle_menus
+				history_manager.recycle
+
 				Precursor {EB_TOOL_MANAGER}
-				left_panel.recycle
-				right_panel.recycle
+				if menus.view_menu /= Void then
+					menus.view_menu.destroy
+				end
+
 				managed_class_formatters.wipe_out
 				managed_class_formatters := Void
 				managed_feature_formatters.wipe_out
 				managed_feature_formatters := Void
 				managed_main_formatters.wipe_out
 				managed_main_formatters := Void
-				editors.wipe_out
-				editors := Void
+				commands.toolbarable_commands.wipe_out
+				ui.editors.wipe_out
+
+				if editors_manager /= Void then
+					editors_manager.recycle
+					editors_manager := Void
+				end
+
 				stone := Void
 			end
 		end
 
-feature -- C output pixmap management
-
-	start_c_output_pixmap_timer is
-			-- Start timer to draw c output pixmap.
+	save_size is
+			-- Save window size.
 		do
-			if context_tool /= Void then
-				context_tool.start_c_output_pixmap_timer
+			if not window.is_maximized and not window.is_minimized then
+					development_window_data.save_size (window.width, window.height)
 			end
 		end
 
-	stop_c_output_pixmap_timer is
-			-- Stop timer to draw c output pixmap.
+	save_position is
+			-- Save window position.
 		do
-			if context_tool /= Void then
-				context_tool.stop_c_output_pixmap_timer
+			if not window.is_maximized and not window.is_minimized then
+				development_window_data.save_position (window.screen_x, window.screen_y)
 			end
 		end
 
-feature {NONE} -- Implementation
+	 save_window_state is
+	 		-- Save window state information to preference data.
+	 	do
+			development_window_data.save_window_state (window.is_minimized, window.is_maximized)
+	 	end
+
+feature {EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation
 
 	set_stone_after_check (a_stone: STONE) is
+			-- Set stone after check
 		local
-			old_stone: STONE
-			new_class_stone: CLASSI_STONE
-			old_class_stone: CLASSI_STONE
-			conv_classc: CLASSC_STONE
-			conv_brkstone: BREAKABLE_STONE
-			cluster_st: CLUSTER_STONE
-			old_cluster_st: CLUSTER_STONE
-			feature_stone: FEATURE_STONE
-			conv_ferrst: FEATURE_ERROR_STONE
-			target_stone: TARGET_STONE
-
-			ef_stone: EXTERNAL_FILE_STONE
-			f: FILE
-
-			conv_errst: ERROR_STONE
-			cl_syntax_stone: CL_SYNTAX_STONE
-			error_line: INTEGER
-			class_file: RAW_FILE
-			class_text_exists: BOOLEAN
-			same_class: BOOLEAN
-			test_stone: CLASSI_STONE
-			externali: EXTERNAL_CLASS_I
-			external_cons: CONSUMED_TYPE
-			str: STRING_32
-			dotnet_class: BOOLEAN
-			l_short_formatter: EB_SHORT_FORMATTER
-			l_flat_formatter: EB_FLAT_SHORT_FORMATTER
-			l_main_formatter: EB_CLASS_TEXT_FORMATTER
-			bpm: BREAKPOINTS_MANAGER
+			l_checker: EB_STONE_CHECKER
 		do
-				-- the text does not change if the text was saved with syntax errors
-			cur_wid := window
-			if cur_wid = Void then
-				--| Do nothing.
-			else
-				if old_cur = Void then
-					old_cur := cur_wid.pointer_style
-				end
-	--				cur_wid.enable_capture
-				cur_wid.set_pointer_style (Wait_cursor)
-			end
-
-			conv_brkstone ?= a_stone
-			conv_errst ?= a_stone
-			ef_stone ?= a_stone
-			target_stone ?= a_stone
-			if conv_brkstone /= Void then
-				bpm := Debugger_manager
-				if bpm.is_breakpoint_enabled (conv_brkstone.routine, conv_brkstone.index) then
-					bpm.remove_breakpoint (conv_brkstone.routine, conv_brkstone.index)
-				else
-					bpm.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
-				end
-				Debugger_manager.notify_breakpoints_changes
-			elseif conv_errst /= Void then
-				display_error_help_cmd.execute_with_stone (conv_errst)
-			elseif ef_stone /= Void then
-				f := ef_stone.file
-				f.make_open_read (f.name)
-				f.read_stream (f.count)
-				f.close
-				editor_tool.text_area.set_stone (a_stone)
-				editor_tool.text_area.load_text (f.last_string)
-			elseif target_stone /= Void and then target_stone.is_valid then
-				properties_tool.add_stone (target_stone)
-			else
-					-- Remember previous stone.
-				old_stone := stone
-				old_class_stone ?= stone
-				old_cluster_st ?= stone
-
-					-- New stone properties
-				new_class_stone ?= a_stone
-
-					-- Set the stone.
-				old_set_stone (a_stone)
-				cluster_st ?= a_stone
-
-				new_feature_cmd.disable_sensitive
-				toggle_feature_alias_cmd.disable_sensitive
-				toggle_feature_signature_cmd.disable_sensitive
-				toggle_feature_assigner_cmd.disable_sensitive
-
-					-- We update the state of the `Add to Favorites' command.
-				if new_class_stone /= Void then
-					favorites_menu.first.enable_sensitive
-				else
-					favorites_menu.first.disable_sensitive
-				end
-
-					-- Update the address manager if needed.
-				address_manager.refresh
-				if new_class_stone /= Void then
-					if not during_synchronization then
-						view_points_combo.set_conf_class (new_class_stone.class_i.config_class)
-					end
-						-- Text is now editable.
-					editor_tool.text_area.set_read_only (False)
-
-					if new_class_stone.is_valid then
-						properties_tool.add_stone (new_class_stone)
-					end
-
-						-- class stone was dropped
-					create class_file.make (new_class_stone.class_i.file_name)
-					class_text_exists := class_file.exists or else new_class_stone.class_i.is_external_class
-					feature_stone ?= a_stone
-						--| We have to create a classi_stone to check whether the stones are really similar.
-						--| Otherwise a redefinition of same_as may be called.
-					create test_stone.make (new_class_stone.class_i)
-					if test_stone.same_as (old_class_stone) then
-						same_class := True
-					end
-					if not feature_stone_already_processed then
-						if same_class and then text_saved then
-								-- nothing changed in the editor
-								-- we only have to update click_list
-							if editor_tool.text_area.is_editable then
-								editor_tool.text_area.update_click_list (False)
-							end
-						else
-							if changed then
-									-- user has already chosen not to save the file
-									-- do not ask again
-								editor_tool.text_area.no_save_before_next_load
-							end
-						end
-					end
-
-					conv_classc ?= new_class_stone
-
-						-- First choose possible formatter
-					l_main_formatter ?= new_class_stone.pos_container
-					if l_main_formatter /= Void and not during_synchronization then
-						if
-							not (conv_classc /= Void and class_text_exists and (not changed or not same_class))
-						then
-							l_main_formatter.enable_select
-						elseif feature_stone = Void then
-							if l_main_formatter /= pos_container then
-								l_main_formatter.enable_select
-							end
-							if new_class_stone.position > 0 then
-								editor_tool.text_area.display_line_at_top_when_ready (new_class_stone.position)
-							end
-						end
-					end
-
-					if conv_classc = Void or else
-						conv_classc.e_class.is_external or else
-						feature_stone /= Void and not
-						feature_stone_already_processed and not
-						(same_class and context_tool.sending_stone) then
-							-- If a classi_stone or a feature_stone or a external call
-							-- has been dropped, check to see if a .NET class.
-						if class_text_exists then
-							if new_class_stone.class_i.is_external_class then
-								externali ?= new_class_stone.class_i
-								check
-									externali_not_void: externali /= Void
-								end
-								external_cons := externali.external_consumed_type
-								if external_cons /= Void then
-									-- A .NET class.
-									dotnet_class := True
-									l_short_formatter ?= managed_main_formatters.i_th (4)
-									l_flat_formatter ?= managed_main_formatters.i_th (5)
-									if l_short_formatter /= Void then
-										l_short_formatter.set_dotnet_mode (True)
-									end
-									if l_flat_formatter /= Void then
-										l_flat_formatter.set_dotnet_mode (True)
-									end
-								end
-							elseif feature_stone /= Void then
-								from
-									managed_main_formatters.start
-								until
-									managed_main_formatters.after
-								loop
-									managed_main_formatters.item.set_stone (new_class_stone)
-									managed_main_formatters.forth
-								end
-							else
-								managed_main_formatters.first.set_stone (new_class_stone)
-								managed_main_formatters.first.execute
-							end
-						else
-							editor_tool.text_area.clear_window
-							editor_tool.text_area.display_message (
-								Warning_messages.w_file_not_exist (
-									new_class_stone.class_i.file_name))
-						end
-					end
-					if conv_classc = Void then
-							--| The dropped class is not compiled.
-							--| Display only the textual formatter.
-						if dotnet_class then
-							managed_main_formatters.i_th (4).set_stone (new_class_stone)
-							managed_main_formatters.i_th (5).set_stone (new_class_stone)
-							managed_main_formatters.i_th (4).execute
-						end
-						address_manager.disable_formatters
-					else
-							--| We have a compiled class.
-						if
-							class_text_exists and then
-							Eiffel_project.Workbench.last_reached_degree <= 2
-						then
-							new_feature_cmd.enable_sensitive
-							toggle_feature_alias_cmd.enable_sensitive
-							toggle_feature_signature_cmd.enable_sensitive
-							toggle_feature_assigner_cmd.enable_sensitive
-						end
-
-						--address_manager.enable_formatters
-						update_formatters
-						if not class_text_exists then
-								--| Disable the textual formatter.
-							managed_main_formatters.first.disable_sensitive
-							from
-								managed_main_formatters.start
-							until
-								managed_main_formatters.after
-							loop
-								managed_main_formatters.item.set_stone (new_class_stone)
-								managed_main_formatters.forth
-							end
-							if not is_stone_external then
-								managed_main_formatters.i_th (2).execute
-							end
-						else
-							if not changed or not same_class then
-									--| Enable all formatters.
-								if
-									(not feature_stone_already_processed or
-									not managed_main_formatters.first.selected) and
-									feature_stone = Void
-								then
-									from
-										managed_main_formatters.start
-									until
-										managed_main_formatters.after
-									loop
-										managed_main_formatters.item.set_stone (new_class_stone)
-										managed_main_formatters.forth
-									end
-								end
-							else
-								if not feature_stone_already_processed then
-									address_manager.disable_formatters
-									from
-										managed_main_formatters.start
-									until
-										managed_main_formatters.after
-									loop
-										managed_main_formatters.item.set_stone (new_class_stone)
-										managed_main_formatters.forth
-									end
-								end
-							end
-						end
-					end
-					if not managed_main_formatters.first.selected then
-						editor_tool.text_area.set_read_only (True)
-					elseif new_class_stone /= Void and then new_class_stone.class_i.is_read_only then
-						editor_tool.text_area.set_read_only (True)
-					end
-				else
-						-- not a class text : cannot be edited
-					editor_tool.text_area.set_read_only (True)
-					address_manager.disable_formatters
-
-						--| Disable all formatters.
-					from
-						managed_main_formatters.start
-					until
-						managed_main_formatters.after
-					loop
-						managed_main_formatters.item.set_stone (Void)
-						managed_main_formatters.forth
-					end
-					if cluster_st /= Void then
-						if cluster_st.is_valid then
-							properties_tool.add_stone (cluster_st)
-						end
-						if not during_synchronization then
-							view_points_combo.set_conf_group (cluster_st.group)
-						end
-						formatted_context_for_group (cluster_st.group, cluster_st.path)
-						if cluster_st.position > 0 then
-							editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
-						end
-					end
-				end
-				if class_text_exists then
-					if feature_stone /= Void and not feature_stone_already_processed and not (same_class and context_tool.sending_stone) then
-						conv_ferrst ?= feature_stone
-						if conv_ferrst /= Void then
-							error_line := conv_ferrst.line_number
-						else
-								-- if a feature_stone has been dropped
-								-- scroll to the corresponding feature in the basic text format
-							if not during_synchronization and then feature_stone.e_feature /= Void then
-								scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
-							end
-						end
-					else
-						cl_syntax_stone ?= a_stone
-						if cl_syntax_stone /= Void then
-							error_line := cl_syntax_stone.line
-						end
-					end
-					if error_line > 0 then
-							-- Scroll to the line of the error.
-						if not during_synchronization then
-							if not managed_main_formatters.first.selected then
-								managed_main_formatters.first.execute
-								check
-									new_class_stone_not_void: new_class_stone /= Void
-								end
-								if new_class_stone.class_i.is_read_only then
-									editor_tool.text_area.set_read_only (True)
-								end
-							end
-							editor_tool.text_area.display_line_when_ready (error_line, True)
-						end
-					end
-				end
-					-- Update the title of the window
-				if a_stone /= Void then
-					if changed then
-						str := a_stone.header.as_string_32
-						str.prepend ("* ")
-						set_title (str)
-					else
-						set_title (a_stone.header)
-					end
-				else
-					set_title (Interface_names.t_empty_development_window)
-				end
-
-					-- Refresh the tools.
-				features_tool.set_stone (a_stone)
-				cluster_tool.set_stone (a_stone)
-					-- Update the context tool.
-				if unified_stone then
-					context_tool.set_stone (a_stone)
-				end
-
-			end
-			if
-				stone /= Void and then
-				not unified_stone
-			then
-				send_stone_to_context_cmd.enable_sensitive
-			else
-				send_stone_to_context_cmd.disable_sensitive
-			end
-			if cur_wid = Void then
-				--| Do nothing.
-			else
-				cur_wid.set_pointer_style (old_cur)
-				old_cur := Void
-	--					cur_wid.disable_capture
-				cur_wid := Void
-			end
-			update_viewpoints
-		end
-
-	formatted_context_for_group (a_group: CONF_GROUP; a_path: STRING) is
-			-- Formatted context representing the list of classes inside `a_group'.
-		require
-			a_group_not_void: a_group /= Void
-			a_path_not_void: a_path /= Void
-		local
-			l_assembly: CONF_ASSEMBLY
-			l_phys_as: CONF_PHYSICAL_ASSEMBLY
-			l_cluster: CONF_CLUSTER
-			l_sorted_cluster: EB_SORTED_CLUSTER
-			l_subclu: DS_LIST [EB_SORTED_CLUSTER]
-			l_classes: DS_ARRAYED_LIST [CLASS_I]
-			l_in_classes: DS_ARRAYED_LIST [CLASS_I]
-			l_out_classes: DS_ARRAYED_LIST [CLASS_I]
-			l_over_classes: DS_ARRAYED_LIST [CLASS_I]
-			l_cl_i, l_overridden_class: CLASS_I
-			l_cl_c: CLASS_C
-			l_assert_level: ASSERTION_I
-			l_format_context: TEXT_FORMATTER_DECORATOR
-			l_description: STRING
-		do
-			create l_format_context.make_for_case (editor_tool.text_area.text_displayed)
-			editor_tool.text_area.handle_before_processing (False)
-			l_format_context.process_keyword_text (ti_indexing_keyword, Void)
-			l_format_context.put_new_line
-			l_format_context.indent
-
-				-- additional informations for assemblies
-			if a_group.is_assembly then
-				l_assembly ?= a_group
-				check
-					assembly: l_assembly /= Void
-				end
-				if l_assembly.physical_assembly /= Void then
-					l_format_context.process_indexing_tag_text ("assembly_name")
-					l_format_context.set_without_tabs
-					l_format_context.process_symbol_text (ti_colon)
-					l_format_context.put_space
-					l_phys_as ?= l_assembly.physical_assembly
-					check
-						physical_assembly: l_phys_as /= Void
-					end
-					l_format_context.put_quoted_string_item (l_phys_as.assembly_name)
-					l_format_context.put_new_line
-				end
-
-				l_format_context.process_indexing_tag_text ("assembly")
-			elseif a_group.is_physical_assembly then
-				l_phys_as ?= a_group
-				check
-					assembly: l_phys_as /= Void
-				end
-				l_format_context.process_indexing_tag_text ("assembly_name")
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_colon)
-				l_format_context.put_space
-				l_format_context.put_quoted_string_item (l_phys_as.assembly_name)
-				l_format_context.put_new_line
-			elseif a_group.is_override then
-				l_format_context.process_indexing_tag_text ("override")
-				l_cluster ?= a_group
-				check
-					cluster: l_cluster /= Void
-				end
-			elseif a_group.is_cluster then
-				l_format_context.process_indexing_tag_text ("cluster")
-				l_cluster ?= a_group
-				check
-					cluster: l_cluster /= Void
-				end
-			elseif a_group.is_precompile then
-				l_format_context.process_indexing_tag_text ("precompile")
-			elseif a_group.is_library then
-				l_format_context.process_indexing_tag_text ("library")
-			else
-				check
-					should_not_reach: False
-				end
-			end
-				-- name
-			l_format_context.set_without_tabs
-			l_format_context.process_symbol_text (ti_colon)
-			l_format_context.put_space
-			l_format_context.add_group (a_group, a_group.name)
-			l_format_context.put_new_line
-
-				-- location
-			l_format_context.process_indexing_tag_text ("path")
-			l_format_context.set_without_tabs
-			l_format_context.process_symbol_text (ti_colon)
-			l_format_context.put_space
-			l_format_context.put_quoted_string_item (a_group.location.evaluated_path)
-
-				-- path/namespace
-			if a_path /= Void and then not a_path.is_empty then
-				l_format_context.put_space
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_l_parenthesis)
-				l_format_context.put_quoted_string_item (a_path)
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_r_parenthesis)
-			end
-			l_format_context.put_new_line
-
-				-- Now try to get the description of the cluster, and if not
-				-- we take the one from its target.
-			l_description := a_group.description
-			if l_description = Void then
-				l_description := a_group.target.description
-			end
-			if l_description /= Void then
-				l_format_context.process_indexing_tag_text ("description")
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_colon)
-				l_format_context.put_space
-				l_format_context.set_in_indexing_clause (True)
-				l_format_context.process_symbol_text (ti_double_quote)
-				l_format_context.process_symbol_text (ti_l_bracket)
-				l_format_context.put_new_line
-				if l_description.has ('%N') then
-						-- Indenting looks strange below because
-						-- `add_multiline_string' does not take into accounts
-						-- how many indents already exists.
-					l_format_context.exdent
-					l_format_context.add_multiline_string (l_description, 3)
-					l_format_context.indent
-				else
-					l_format_context.indent
-					l_format_context.indent
-					l_format_context.add_string (l_description)
-					l_format_context.exdent
-					l_format_context.exdent
-				end
-				l_format_context.put_new_line
-				l_format_context.indent
-				l_format_context.process_symbol_text (ti_r_bracket)
-				l_format_context.process_symbol_text (ti_double_quote)
-				l_format_context.exdent
-				l_format_context.put_new_line
-			end
-
-				-- parent
-			if l_cluster /= Void and then l_cluster.parent /= Void then
-				l_format_context.process_indexing_tag_text ("parent cluster")
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_colon)
-				l_format_context.put_new_line
-				l_format_context.indent
-				l_format_context.put_manifest_string (" - ")
-
-				l_format_context.add_group (l_cluster.parent, l_cluster.parent.name)
-				l_format_context.put_new_line
-				l_format_context.exdent
-			end
-
-			create l_sorted_cluster.make (a_group)
-			l_sorted_cluster.initialize
-
-				-- sub clusters
-			if not a_group.is_library and then not l_sorted_cluster.clusters.is_empty then
-				l_format_context.process_indexing_tag_text ("sub cluster(s)")
-				l_format_context.set_without_tabs
-				l_format_context.process_symbol_text (ti_colon)
-				l_format_context.put_new_line
-				l_format_context.indent
-				from
-					l_subclu := l_sorted_cluster.clusters
-					l_subclu.start
-				until
-					l_subclu.after
-				loop
-					l_cluster := l_subclu.item_for_iteration.actual_cluster
-					l_format_context.put_manifest_string (" - ")
-					l_format_context.add_group (l_cluster, l_cluster.name)
-					l_format_context.put_space
-					l_format_context.set_without_tabs
-					l_format_context.process_symbol_text (ti_L_parenthesis)
-					l_format_context.process_comment_text (l_cluster.classes.count.out, Void)
-					l_format_context.set_without_tabs
-					l_format_context.process_symbol_text (ti_R_parenthesis)
-					l_format_context.put_new_line
-					l_subclu.forth
-				end
-				l_format_context.exdent
-			end
-
-				-- classes
-			if not l_sorted_cluster.classes.is_empty then
-				l_classes := l_sorted_cluster.classes
-				from
-					l_classes.start
-					create l_in_classes.make (l_classes.count)
-					create l_out_classes.make (l_classes.count)
-					create l_over_classes.make (l_classes.count)
-				until
-					l_classes.after
-				loop
-					l_cl_i := l_classes.item_for_iteration
-					if
-						a_path.is_empty
-						or else is_string_started_by (l_cl_i.path, a_path)
-					then
-						if l_cl_i.compiled_representation /= Void then
-							l_in_classes.put_last (l_cl_i)
-						elseif l_cl_i.config_class.is_overriden then
-							l_over_classes.put_last (l_cl_i)
-						else
-							l_out_classes.put_last (l_cl_i)
-						end
-					end
-					l_classes.forth
-				end
-				l_classes := Void
-
-				if l_in_classes.count > 0 then
-					l_format_context.put_new_line
-					if l_in_classes.count = 1 then
-						l_format_context.process_indexing_tag_text ("1 compiled class")
-					else
-						l_format_context.process_indexing_tag_text (
-							l_in_classes.count.out + " compiled classes")
-					end
-					l_format_context.set_without_tabs
-					l_format_context.process_symbol_text (ti_colon)
-					l_format_context.put_new_line
-					l_format_context.indent
-
-					from
-						l_in_classes.start
-					until
-						l_in_classes.after
-					loop
-						l_cl_i := l_in_classes.item_for_iteration
-						l_cl_c := l_cl_i.compiled_representation
-						check compiled: l_cl_c /= Void end
-
-						l_assert_level := l_cl_i.assertion_level
-						l_format_context.put_manifest_string (" - ")
-						l_format_context.put_classi (l_cl_c.original_class)
-						l_format_context.set_without_tabs
-						l_format_context.process_symbol_text (ti_colon)
-						if l_assert_level.level = 0  then
-							l_format_context.put_space
-							l_format_context.process_comment_text (once "None", Void)
-						else
-							if l_assert_level.is_precondition then
-								l_format_context.put_space
-								l_format_context.set_without_tabs
-								l_format_context.process_keyword_text (ti_Require_keyword, Void)
-							end
-							if l_assert_level.is_postcondition then
-								l_format_context.put_space
-								l_format_context.set_without_tabs
-								l_format_context.process_keyword_text (ti_Ensure_keyword, Void)
-							end
-							if l_assert_level.is_check then
-								l_format_context.put_space
-								l_format_context.set_without_tabs
-								l_format_context.process_keyword_text (ti_Check_keyword, Void)
-							end
-							if l_assert_level.is_loop then
-								l_format_context.put_space
-								l_format_context.set_without_tabs
-								l_format_context.process_keyword_text (ti_Loop_keyword, Void)
-							end
-							if l_assert_level.is_invariant then
-								l_format_context.put_space
-								l_format_context.set_without_tabs
-								l_format_context.process_keyword_text (ti_Invariant_keyword, Void)
-							end
-						end
-						l_format_context.put_new_line
-						l_in_classes.forth
-					end
-					l_format_context.exdent
-				end
-				l_in_classes := Void
-
-				if l_out_classes.count > 0 then
-					l_format_context.put_new_line
-					if l_out_classes.count = 1 then
-						l_format_context.process_indexing_tag_text ("1 class not in system")
-					else
-						l_format_context.process_indexing_tag_text (
-							l_out_classes.count.out + " classes not in system")
-					end
-					l_format_context.set_without_tabs
-					l_format_context.process_symbol_text (ti_colon)
-					l_format_context.put_new_line
-					l_format_context.indent
-					from
-						l_out_classes.start
-					until
-						l_out_classes.after
-					loop
-						l_cl_i := l_out_classes.item_for_iteration
-						check not_in_system: not l_cl_i.is_compiled end
-						l_format_context.put_manifest_string (" - ")
-						l_format_context.put_classi (l_cl_i)
-						l_format_context.put_new_line
-						l_out_classes.forth
-					end
-					l_format_context.exdent
-				end
-				l_out_classes := Void
-
-				if
-					l_over_classes.count > 0 and then
-					a_group.overriders /= Void and then not a_group.overriders.is_empty
-				then
-					l_format_context.put_new_line
-					l_format_context.process_indexing_tag_text ("Overriden")
-					l_format_context.set_without_tabs
-					l_format_context.process_symbol_text (ti_colon)
-					l_format_context.put_new_line
-					l_format_context.indent
-					from
-						l_over_classes.start
-					until
-						l_over_classes.after
-					loop
-						l_cl_i := l_over_classes.item_for_iteration
-						check is_overriden_class: l_cl_i.config_class.is_overriden end
-
-						l_format_context.put_manifest_string (" - ")
-
-						l_overridden_class ?= l_cl_i.config_class.overriden_by
-						if l_overridden_class /= Void then
-							l_cl_c := l_overridden_class.compiled_representation
-							if l_cl_c /= Void then
-								l_format_context.put_classi (l_cl_c.original_class)
-							else
-								l_format_context.put_classi (l_overridden_class)
-							end
-							l_format_context.put_manifest_string (" in ")
-							l_format_context.add_group (l_cl_i.config_class.overriden_by.group, l_cl_i.config_class.overriden_by.group.name)
-							l_format_context.put_new_line
-						end
-						l_over_classes.forth
-					end
-					l_format_context.exdent
-					l_format_context.put_new_line
-				end
-				l_over_classes := Void
-			end
-
-			l_format_context.exdent
-			l_format_context.put_new_line
-			editor_tool.text_area.handle_after_processing
-		end
-
-	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is
-			-- highlight the feature correspnding to `feat_as' in the class represented by `displayed_class'
-		require
-			class_is_not_void: displayed_class /= Void
-			feat_as_is_not_void: feat_as /= Void
-		local
-			begin_index, offset: INTEGER
-			tmp_text: STRING
-			l_feat_as: FEATURE_AS
-			l_feature: E_FEATURE
-			l_names: EIFFEL_LIST [FEATURE_NAME]
-		do
-			if not feat_as.is_il_external then
-				if not managed_main_formatters.first.selected then
-					if feat_as.ast /= Void then
-						editor_tool.text_area.find_feature_named (feat_as.name)
-					end
-				else
-					if displayed_class.is_compiled then
-							-- We need to adapt E_FEATURE to the current displayed class
-							-- since we could manipulate the E_FEATURE of a descendant class
-							-- whose name is different from its definition in the displayed_class.
-							-- Fixes bug#11330.
-						l_feature := feat_as.ancestor_version (displayed_class.compiled_class)
-						if l_feature = Void then
-								-- It should not happen, but maybe the system is in a very unstable state.
-							l_feature := feat_as
-						end
-					else
-						l_feature := feat_as
-					end
-					l_feat_as := l_feature.ast
-					if l_feat_as /= Void then
-						from
-							l_names := l_feat_as.feature_names
-							l_names.start
-						until
-							l_names.after or else
-							l_feature.name.is_case_insensitive_equal (l_names.item.internal_name.name)
-						loop
-							l_names.forth
-						end
-						if not l_names.after then
-							begin_index := l_names.item.start_position
-						else
-								-- Something wrong happened, the feature does not exist anymore.
-								-- We simply take the position of the first one.
-							begin_index := l_names.start_position
-						end
-						tmp_text := displayed_class.text
-						if tmp_text /= Void then
-							tmp_text := tmp_text.substring (1, begin_index)
-							offset := tmp_text.occurrences('%R')
-							editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
-						end
-					end
-				end
-			else
-					-- Nothing for .NET features for now.
-				fixme ("It should be implemented.")
-			end
+			create l_checker.make (Current)
+			l_checker.set_stone_after_check (a_stone)
 		end
 
 	check_passed: BOOLEAN
+			-- If check passed?
 
 	save_canceled: BOOLEAN
-		-- did user cancel save ?
+			-- did user cancel save ?
 
 	save_only: BOOLEAN
-		-- skip parse and update after save ?
-
-	text_saved: BOOLEAN
-			-- has the user chosen to save the file
+			-- skip parse and update after save ?
 
 	is_destroying: BOOLEAN
 			-- Is `current' being currently destroyed?
+
+	on_cursor_moved is
+			-- The cursor has moved, reflect the change in the status bar.
+			-- And reflect location editing in the text in features tool and address bar.
+		do
+			refresh_cursor_position
+			if context_refreshing_timer = Void then
+				create context_refreshing_timer.make_with_interval (100)
+				context_refreshing_timer.actions.extend (agent refresh_context_info)
+			end
+			if feature_locating then
+				context_refreshing_timer.set_interval (0)
+			else
+				context_refreshing_timer.set_interval (100)
+			end
+		end
+
+	all_editor_closed is
+			-- All editor closed.
+		do
+			if editors_manager.editors.count <= 0 then
+				disable_editors_command
+				tools.features_tool.set_stone (Void)
+				set_title (window_manager.new_title)
+			end
+		end
+
+feature {EB_STONE_CHECKER, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_PART} -- Internal issues with EB_STONE_CHECKER
+
+	is_text_loaded: BOOLEAN is
+			-- Text is loaded in current editor?
+		do
+			if editors_manager.current_editor /= Void then
+				Result := editors_manager.current_editor.is_text_loaded (stone)
+			else
+				Result := True
+			end
+		end
+
+	set_feature_stone_already_processed (a_bool: like feature_stone_already_processed) is
+			-- Set `feature_stone_already_processed'
+		do
+			feature_stone_already_processed := a_bool
+		ensure
+			set: feature_stone_already_processed = a_bool
+		end
 
 	feature_stone_already_processed: BOOLEAN
 			-- Is the processed stone a feature stone and has it
 			-- been already processed by the editor ?
 
-feature {NONE} -- Implementation
-
-	update_save_symbol is
+	set_text_saved (a_bool: like text_saved) is
+			-- Set `text_saved'
 		do
-			Precursor {EB_FILEABLE}
-			if changed then
-				save_cmd.enable_sensitive
-				address_manager.disable_formatters
-			else
-				save_cmd.disable_sensitive
-				update_formatters
-			end
-			if is_empty then
-				print_cmd.disable_sensitive
-				save_as_cmd.disable_sensitive
-			else
-				print_cmd.enable_sensitive
-				save_as_cmd.enable_sensitive
-			end
+			text_saved := a_bool
+		ensure
+			set: text_saved = a_bool
 		end
 
-	is_stone_external: BOOLEAN
-			-- Does 'stone' contain a .NET consumed type?
+	text_saved: BOOLEAN
+			-- has the user chosen to save the file
+
+	set_during_synchronization (a_bool: BOOLEAN) is
+			-- Set `during_synchronization'
+		do
+			during_synchronization := a_bool
+		ensure
+			set: during_synchronization = a_bool
+		end
+
+	during_synchronization: BOOLEAN
+			-- Are we during a resynchronization?
 
 	update_formatters is
 			-- Give a correct sensitivity to formatters.
@@ -3838,6 +1273,7 @@ feature {NONE} -- Implementation
 			cist: CLASSI_STONE
 			cst: CLASSC_STONE
 			type_changed: BOOLEAN
+			cluster_st: CLUSTER_STONE
 		do
 			cst ?= stone
 			cist ?= stone
@@ -3878,11 +1314,114 @@ feature {NONE} -- Implementation
 				end
 			else
 				address_manager.disable_formatters
-				if cist /= stone then
+				cluster_st ?= stone
+				if cist /= stone and cluster_st = Void then
 					managed_main_formatters.first.execute
 				end
 			end
 		end
+
+	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is
+			-- highlight the feature correspnding to `feat_as' in the class represented by `displayed_class'
+		require
+			class_is_not_void: displayed_class /= Void
+			feat_as_is_not_void: feat_as /= Void
+		local
+			begin_index, offset: INTEGER
+			tmp_text: STRING
+			l_feat_as: FEATURE_AS
+			l_feature: E_FEATURE
+			l_names: EIFFEL_LIST [FEATURE_NAME]
+		do
+			if not feat_as.is_il_external then
+				if not managed_main_formatters.first.selected then
+					if feat_as.ast /= Void then
+						editors_manager.current_editor.find_feature_named (feat_as.name)
+					end
+				else
+					if displayed_class.is_compiled then
+							-- We need to adapt E_FEATURE to the current displayed class
+							-- since we could manipulate the E_FEATURE of a descendant class
+							-- whose name is different from its definition in the displayed_class.
+							-- Fixes bug#11330.
+						l_feature := feat_as.ancestor_version (displayed_class.compiled_class)
+						if l_feature = Void then
+								-- It should not happen, but maybe the system is in a very unstable state.
+							l_feature := feat_as
+						end
+					else
+						l_feature := feat_as
+					end
+					l_feat_as := l_feature.ast
+					if l_feat_as /= Void then
+						from
+							l_names := l_feat_as.feature_names
+							l_names.start
+						until
+							l_names.after or else
+							l_feature.name.is_case_insensitive_equal (l_names.item.internal_name.name)
+						loop
+							l_names.forth
+						end
+						if not l_names.after then
+							begin_index := l_names.item.start_position
+						else
+								-- Something wrong happened, the feature does not exist anymore.
+								-- We simply take the position of the first one.
+							begin_index := l_names.start_position
+						end
+						tmp_text := displayed_class.text
+						if tmp_text /= Void then
+							tmp_text := tmp_text.substring (1, begin_index)
+							offset := tmp_text.occurrences('%R')
+							editors_manager.current_editor.scroll_to_when_ready (begin_index.item - offset)
+						end
+					end
+				end
+			else
+					-- Nothing for .NET features for now.
+				fixme ("It should be implemented.")
+			end
+		end
+
+feature {EB_DEVELOPMENT_WINDOW_PART, EB_STONE_FIRST_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER} -- Implementation
+
+	update_save_symbol is
+			-- Update save symbol.
+		do
+			Precursor {EB_FILEABLE}
+			if editors_manager.current_editor /= Void then
+				if changed then
+					save_cmd.enable_sensitive
+					address_manager.disable_formatters
+					editors_manager.current_editor.set_title_saved (false)
+				else
+					save_cmd.disable_sensitive
+					update_formatters
+					editors_manager.current_editor.set_title_saved (true)
+				end
+			end
+			if is_empty then
+				commands.print_cmd.disable_sensitive
+				commands.save_as_cmd.disable_sensitive
+			else
+				commands.print_cmd.enable_sensitive
+				commands.save_as_cmd.enable_sensitive
+			end
+			if any_editor_changed then
+				save_all_cmd.enable_sensitive
+			else
+				save_all_cmd.disable_sensitive
+			end
+			if editors_manager.editors.count > 0 then
+				commands.shell_cmd.enable_sensitive
+			else
+				commands.shell_cmd.disable_sensitive
+			end
+		end
+
+	is_stone_external: BOOLEAN
+			-- Does 'stone' contain a .NET consumed type?
 
 	enable_dotnet_formatters is
 			-- Enable only the .NET class text formatters.
@@ -3904,192 +1443,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_text_reset is
-			-- The main editor has just been wiped out
-			-- before loading a new file.
-		local
-			str: STRING_32
-		do
-			str := title.twin.as_string_32
-			if str @ 1 = '*' then
-				str.keep_tail (str.count - 2)
-				set_title (str)
-			end
-			address_manager.disable_formatters
-			status_bar.reset
-			status_bar.remove_cursor_position
-			text_edited := False
-		end
-
-	on_cursor_moved is
-			-- The cursor has moved, reflect the change in the status bar.
-			-- And reflect location editing in the text in features tool and address bar.
-		do
-			refresh_cursor_position
-			if context_refreshing_timer = Void then
-				create context_refreshing_timer.make_with_interval (100)
-				context_refreshing_timer.actions.extend (agent refresh_context_info)
-			end
-			if feature_locating then
-				context_refreshing_timer.set_interval (0)
-			else
-				context_refreshing_timer.set_interval (100)
-			end
-
-		end
-
-	on_text_fully_loaded is
-			-- The main editor has just been reloaded.
-		do
-			update_paste_cmd
-			update_formatters
-			if editor_tool.text_area.syntax_is_correct then
-				status_bar.reset
-			else
-				status_bar.display_message (Interface_names.L_syntax_error)
-			end
-			refresh_cursor_position
-			text_edited := False
-		end
-
-	on_text_back_to_its_last_saved_state is
-		local
-			str: STRING_32
-		do
-			str := title.twin.as_string_32
-			if str @ 1 = '*' then
-				str.keep_tail (str.count - 2)
-				set_title (str)
-			end
-			update_formatters
-			text_edited := False
-		end
-
 	text_edited: BOOLEAN
 			-- Do we know that the text was edited?
 			-- If so, no need to update the display each time it is edited.
 
-	on_text_edited (unused: BOOLEAN) is
-			-- The text in the editor is modified, add the '*' in the title.
-			-- Gray out the formatters.
-		local
-			str: STRING_32
-			cst: CLASSI_STONE
-		do
-			if not text_edited then
-				str := title.twin.as_string_32
-				if str @ 1 /= '*' then
-					str.prepend ("* ")
-					set_title (str)
-				end
-				address_manager.disable_formatters
-				cst ?= stone
-				if cst /= Void then
-					Eiffel_project.Manager.class_is_edited (cst.class_i)
-				end
-				text_edited := True
-			end
-			if not status_bar.message.is_equal (interface_names.e_c_compilation_running) then
-					-- We don't want the "Background C compilation in progress" message flash every time
-					-- user presses a key.
-				status_bar.display_message ("")
-			end
-		end
-
-	on_back is
-			-- User pressed Alt+left.
-			-- Go back in the history (or the context history).
-		do
-			if context_tool_has_focus then
-				if context_tool.history_manager.is_back_possible then
-					context_tool.history_manager.back_command.execute
-				end
-			elseif history_manager.is_back_possible then
-				history_manager.back_command.execute
-			end
-		end
-
-	on_forth is
-			-- User pressed Alt+right.
-			-- Go forth in the history (or the context history).
-		do
-			if context_tool_has_focus then
-				if context_tool.history_manager.is_forth_possible then
-					context_tool.history_manager.forth_command.execute
-				end
-			elseif history_manager.is_forth_possible then
-				history_manager.forth_command.execute
-			end
-		end
-
-	context_tool_has_focus: BOOLEAN is
-			-- Does the context tool or one of its children has the focus?
-		local
-			fw: EV_WIDGET
-			cont: EV_CONTAINER
-			wid: EV_WIDGET
-		do
-			fw := (create {EV_ENVIRONMENT}).application.focused_widget
-			wid := context_tool.explorer_bar_item.widget
-			if wid = fw then
-				Result := True
-			elseif fw = Void then
-				Result := False
-			else
-				from
-					cont := fw.parent
-				until
-					cont = wid or cont = Void
-				loop
-					cont := cont.parent
-				end
-				if cont = wid then
-					Result := True
-				end
-			end
-		end
-
 	saved_cursor: CURSOR
 			-- Saved cursor position for displaying the stack.
-
-	send_stone_to_context is
-			-- Send current stone to the context tool.
-			-- Used by `send_stone_to_context_cmd'.
-		do
-			if stone /= Void then
-				context_tool.set_stone (stone)
-			end
-		end
-
-	destroy is
-			-- check if current text has been saved and destroy
-		local
-			dialog_w: EB_WARNING_DIALOG
-		do
-			if Window_manager.development_windows_count > 1 and then process_manager.is_external_command_running and then Current = external_output_manager.target_development_window then
-				process_manager.confirm_external_command_termination (agent terminate_external_command_and_destroy, agent do_nothing, window)
-			else
-				if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
-					if Window_manager.development_windows_count > 1 then
-						create dialog_w.make_with_text (Warning_messages.w_save_before_closing)
-						dialog_w.set_buttons_and_actions (<<interface_names.b_yes, interface_names.b_no, interface_names.b_cancel>>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
-						dialog_w.set_default_push_button (dialog_w.button(interface_names.b_yes))
-						dialog_w.set_default_cancel_button (dialog_w.button(interface_names.b_cancel))
-						dialog_w.show_modal_to_window (window)
-					else
-							-- We let the window manager handle the saving, along with other windows
-							-- (not development windows)
-						force_destroy
-					end
-				else
-					Precursor {EB_TOOL_MANAGER}
-					if context_refreshing_timer /= Void then
-						context_refreshing_timer.destroy
-						context_refreshing_timer := Void
-					end
-				end
-			end
-		end
 
 	terminate_external_command_and_destroy is
 			-- Terminate running external command and destroy.
@@ -4101,6 +1460,7 @@ feature {NONE} -- Implementation
 		end
 
 	save_and_destroy is
+			-- Save text then destroy.
 		do
 			save_text
 			destroy
@@ -4117,28 +1477,8 @@ feature {NONE} -- Implementation
 	confirmed: BOOLEAN
 			-- Did the user say he wanted to exit?
 
-	show_dynamic_library_dialog is
-			-- Create a new dynamic library window and display it.
-		do
-			Window_manager.create_dynamic_lib_window
-		end
-
 	context_refreshing_timer: EV_TIMEOUT
 			-- Timer to refresh feature tree address bar.
-
-	on_viewpoint_changed is
-			-- Switch viewpoint.
-		local
-			l_formatter: EB_CLASS_TEXT_FORMATTER
-			l_line: INTEGER
-		do
-			l_formatter := selected_formatter
-			if l_formatter.button.is_sensitive and then l_formatter /= managed_main_formatters.first then
-				l_line := editor_tool.text_area.first_line_displayed
-				l_formatter.execute
-				editor_tool.text_area.display_line_at_top_when_ready (l_line)
-			end
-		end
 
 	selected_formatter: EB_CLASS_TEXT_FORMATTER is
 			-- Current selected formatter
@@ -4168,99 +1508,40 @@ feature {NONE} -- Implementation
 feature {NONE} -- Recycle
 
 	internal_recycle is
-			-- Call the precursors.
+			-- Recycle all.
 		do
 			recycle_command
 			recycle_formatters
 			recycle_menu
 			Precursor {EB_TOOL_MANAGER}
-			save_as_cmd.recycle
+		  	commands.save_as_cmd.recycle
 			save_cmd.recycle
-			save_as_cmd := Void
+			commands.set_save_as_cmd (Void)
 			save_cmd := Void
 			command_controller.recycle
 			if refactoring_manager /= Void then
 				refactoring_manager.destroy
 			end
-			windows_tool := Void
-			editor_tool := Void
-			favorites_tool := Void
-			properties_tool := Void
+			tools.set_windows_tool (Void)
+			tools.set_favorites_tool (Void)
 			history_manager := Void
-			features_tool := Void
-			breakpoints_tool := Void
+			tools.set_features_tool (Void)
+			tools.set_breakpoints_tool (Void)
 			favorites_manager := Void
 			cluster_manager := Void
-			search_tool := Void
-			editors.wipe_out
+			tools.set_search_tool (Void)
 
-			manager.remove_observer (Current)
+			editors_manager.recycle
+			editors_manager := Void
+
+			agents.manager.remove_observer (agents)
+			docking_manager.destory
 		end
 
 	recycle_command is
 			-- Recycle command
-		local
-			os_cmd: EB_RECYCLABLE
 		do
-			c_finalized_compilation_cmd.recycle
-			c_workbench_compilation_cmd.recycle
-			editor_paste_cmd.recycle
-			new_class_cmd.recycle
-			new_cluster_cmd.recycle
-			new_library_cmd.recycle
-			new_assembly_cmd.recycle
-			new_feature_cmd.recycle
-			shell_cmd.recycle
-			toggle_feature_alias_cmd.recycle
-			toggle_feature_assigner_cmd.recycle
-			toggle_feature_signature_cmd.recycle
-			undo_cmd.recycle
-			redo_cmd.recycle
-			toggle_stone_cmd.recycle
-			delete_class_cluster_cmd.recycle
-			print_cmd.recycle
-			from
-				show_tool_commands.start
-			until
-				show_tool_commands.after
-			loop
-				show_tool_commands.item.recycle
-				show_tool_commands.forth
-			end
-			show_tool_commands.wipe_out
-			show_tool_commands := Void
-
-			from
-				toolbarable_commands.start
-			until
-				toolbarable_commands.after
-			loop
-				os_cmd ?= toolbarable_commands.item
-				if os_cmd /= Void then
-					os_cmd.recycle
-				end
-				toolbarable_commands.forth
-			end
-			toolbarable_commands.wipe_out
-			toolbarable_commands := Void
-
-			c_finalized_compilation_cmd := Void
-			c_workbench_compilation_cmd := Void
-			editor_paste_cmd := Void
-			new_class_cmd := Void
-			new_cluster_cmd := Void
-			new_library_cmd := Void
-			new_assembly_cmd := Void
-			new_feature_cmd := Void
-			shell_cmd := Void
-			toggle_feature_alias_cmd := Void
-			toggle_feature_assigner_cmd := Void
-			toggle_feature_signature_cmd := Void
-			undo_cmd := Void
-			redo_cmd := Void
-			toggle_stone_cmd := Void
-			delete_class_cluster_cmd := Void
-			print_cmd := Void
+			commands.recycle_commands
 		end
 
 	recycle_formatters is
@@ -4301,29 +1582,30 @@ feature {NONE} -- Recycle
 		end
 
 	recycle_menu is
-			--
+			-- Recycle menus.
 		do
-			tools_menu.destroy
-			window_menu.destroy
---			compile_menu.destroy
-			debug_menu.destroy
-			debugging_tools_menu.destroy
-			favorites_menu.destroy
-			view_menu.destroy
-			refactoring_menu.destroy
-
-			tools_menu := Void
-			window_menu := Void
-			format_menu := Void
-			compile_menu := Void
-			debug_menu := Void
-			debugging_tools_menu := Void
-			favorites_menu := Void
-			view_menu := Void
-			refactoring_menu := Void
+			menus.recycle_menus
 		end
 
-feature {NONE} -- Implementation: Editor commands
+feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initliazed by EB_DEVELOPMENT_WINDOW_BUILDER
+
+	show_dynamic_library_dialog is
+			-- Create a new dynamic library window and display it.
+		do
+			Window_manager.create_dynamic_lib_window
+		end
+
+	send_stone_to_context is
+			-- Send current stone to the context tool.
+			-- Used by `send_stone_to_context_cmd'.
+		do
+			if stone /= Void then
+				tools.set_stone (stone)
+			end
+		end
+
+feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
+			EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation: Editor commands
 
 	refresh_cursor_position is
 			-- Display the current cursor position in the status bar.
@@ -4332,9 +1614,11 @@ feature {NONE} -- Implementation: Editor commands
 		local
 			l, c, v: INTEGER
 		do
-			l := editor_tool.text_area.cursor_y_position
-			c := editor_tool.text_area.cursor_x_position
-			v := editor_tool.text_area.cursor_visible_x_position
+			if editors_manager.current_editor /= Void then
+				l := editors_manager.current_editor.cursor_y_position
+				c := editors_manager.current_editor.cursor_x_position
+				v := editors_manager.current_editor.cursor_visible_x_position
+			end
 			status_bar.set_cursor_position (l, c, v)
 		end
 
@@ -4353,7 +1637,7 @@ feature {NONE} -- Implementation: Editor commands
 					-- We only do that for the clickable view
 				l_classc_stone ?= stone
 				if l_classc_stone /= Void then
-					l_feature := editor_tool.text_area.text_displayed.current_feature_containing
+					l_feature := editors_manager.current_editor.text_displayed.current_feature_containing
 					if l_feature /= Void then
 						set_editing_location_by_feature (l_feature.name)
 					else
@@ -4387,7 +1671,7 @@ feature {NONE} -- Implementation: Editor commands
 				if l_efeature /= Void then
 					seek_item_in_feature_tool (l_efeature)
 				else
-					features_tool.seek_ast_item_in_feature_tool (a_feature_name.internal_name.name)
+					tools.features_tool.seek_ast_item_in_feature_tool (a_feature_name.internal_name.name)
 				end
 			else
 				address_manager.set_feature_text_simply (once "")
@@ -4399,14 +1683,17 @@ feature {NONE} -- Implementation: Editor commands
 			-- Seek and select item contains data of `a_feature' in features tool.
 			-- If `a_feature' is void, deselect item in features tool.
 		do
-			features_tool.seek_item_in_feature_tool (a_feature)
+			tools.features_tool.seek_item_in_feature_tool (a_feature)
 		end
 
 	select_all is
 			-- Select the whole text in the focused editor.
+		local
+			l_editor: EB_EDITOR
 		do
-			if not current_editor.is_empty then
-				current_editor.select_all
+			l_editor := ui.current_editor
+			if l_editor /= Void and then not l_editor.is_empty then
+				l_editor.select_all
 			end
 		end
 
@@ -4415,7 +1702,7 @@ feature {NONE} -- Implementation: Editor commands
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			cv_ced ?= current_editor
+			cv_ced ?= ui.current_editor
 			if cv_ced /= Void then
 				cv_ced.search
 			end
@@ -4425,11 +1712,13 @@ feature {NONE} -- Implementation: Editor commands
 			-- Display a dialog to select a line to go to in the editor.
 		local
 			ed: EB_EDITOR
+			l_dialog: EB_GOTO_DIALOG
 		do
-			ed ?= current_editor
+			ed ?= ui.current_editor
 			if ed /= Void then
-				create goto_dialog.make (ed)
-				goto_dialog.show_modal_to_window (Current.window)
+				create l_dialog.make (ed)
+				ui.set_goto_dialog (l_dialog)
+				l_dialog.show_modal_to_window (Current.window)
 			end
 		end
 
@@ -4444,13 +1733,13 @@ feature {NONE} -- Implementation: Editor commands
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			if search_tool.currently_searched /= Void then
-				cv_ced ?= current_editor
+			if tools.search_tool.currently_searched /= Void then
+				cv_ced ?= ui.current_editor
 				if cv_ced /= Void then
 					cv_ced.find_next
 				end
 			else
-				search_tool.show_and_set_focus
+				tools.search_tool.show_and_set_focus
 			end
 		end
 
@@ -4459,13 +1748,13 @@ feature {NONE} -- Implementation: Editor commands
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			if search_tool.currently_searched /= Void then
-				cv_ced ?= current_editor
+			if tools.search_tool.currently_searched /= Void then
+				cv_ced ?= ui.current_editor
 				if cv_ced /= Void then
 					cv_ced.find_previous
 				end
 			else
-				search_tool.show_and_set_focus
+				tools.search_tool.show_and_set_focus
 			end
 		end
 
@@ -4474,7 +1763,7 @@ feature {NONE} -- Implementation: Editor commands
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			cv_ced ?= current_editor
+			cv_ced ?= editors_manager.current_editor
 			if cv_ced /= Void then
 				cv_ced.find_next_selection
 			end
@@ -4485,7 +1774,7 @@ feature {NONE} -- Implementation: Editor commands
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			cv_ced ?= current_editor
+			cv_ced ?= editors_manager.current_editor
 			if cv_ced /= Void then
 				cv_ced.find_previous_selection
 			end
@@ -4494,336 +1783,300 @@ feature {NONE} -- Implementation: Editor commands
 	cut_selection is
 			-- Cut the selection in the current editor.
 		do
-			current_editor.cut_selection
+			ui.current_editor.cut_selection
 		end
 
 	copy_selection is
 			-- Cut the selection in the current editor.
 		do
-			current_editor.copy_selection
+			ui.current_editor.copy_selection
 		end
 
 	toggle_formatting_marks is
 			-- Show/Hide formatting marks in the editor and update related menu item.
 		do
-			current_editor.toggle_view_invisible_symbols
-			if current_editor.view_invisible_symbols then
+			ui.current_editor.toggle_view_invisible_symbols
+			if ui.current_editor.view_invisible_symbols then
 				formatting_marks_command_menu_item.set_text (Interface_names.m_hide_formatting_marks)
 			else
 				formatting_marks_command_menu_item.set_text(Interface_names.m_show_formatting_marks)
 			end
 		end
 
-feature {NONE} -- Implementation / Menus
+feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Implementation / Menus
 
-	number_of_displayed_external_commands: INTEGER
-			-- Number of external commands in the tools menu.
-
-	old_cur: EV_POINTER_STYLE
-			-- Cursor saved while displaying the hourglass cursor.
-
-	cur_wid: EV_WIDGET
-			-- Widget on which the hourglass cursor was set.
-
-	project_menu: EV_MENU
-			-- Menu for entries relative to the Project.
-
-	recent_projects_menu: EB_RECENT_PROJECTS_MANAGER_MENU
-			-- SubMenu for recent projects.
-
-	during_synchronization: BOOLEAN
-			-- Are we during a resynchronization?
-
-	formatting_marks_command_menu_item: EB_COMMAND_MENU_ITEM
-			-- Menu item used to shw/hide formatting marks.
+	set_undo_accelerator (a_accelerator: like undo_accelerator) is
+			-- Set `undo_accelerator'
+		do
+			undo_accelerator := a_accelerator
+		ensure
+			set: undo_accelerator = a_accelerator
+		end
 
 	undo_accelerator: EV_ACCELERATOR
 			-- Accelerator for Ctrl+Z
 
+	set_redo_accelerator (a_accelerator: like redo_accelerator) is
+			-- Set `redo_accelerator'
+		do
+			redo_accelerator := a_accelerator
+		ensure
+			set: redo_accelerator = a_accelerator
+		end
+
 	redo_accelerator: EV_ACCELERATOR
 			-- Accelerator for Ctrl+Y
 
-feature {EB_TOOL} -- Implementation / Commands
+feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} -- Builder issues
 
-	shell_cmd: EB_OPEN_SHELL_COMMAND
-			-- Command to use an external editor.
+	set_tools_initialized (a_bool: like tools_initialized) is
+			-- Set `tools_initialized'
+		do
+			tools_initialized := a_bool
+		ensure
+			set: tools_initialized = a_bool
+		end
 
-	undo_cmd: EB_UNDO_COMMAND
-			-- Command to undo in the editor.
+	set_toolbars_area (a_area: like toolbars_area) is
+			-- Set `toolbars_area'
+		do
+			toolbars_area := a_area
+		ensure
+			set: toolbars_area = a_area
+		end
 
-	redo_cmd: EB_REDO_COMMAND
-			-- Command to redo in the editor.
+	set_view_points_combo (a_view_points_combo: like view_points_combo) is
+			-- Set `view_points_combo'
+		do
+			view_points_combo := a_view_points_combo
+		ensure
+			set: view_points_combo = a_view_points_combo
+		end
 
-	editor_paste_cmd: EB_EDITOR_PASTE_COMMAND
-			-- Command to paste text in the editor.
+	set_managed_class_formatters (a_formatters: like managed_class_formatters) is
+			-- Set `managed_class_formatters'
+		do
+			managed_class_formatters := a_formatters
+		ensure
+			set: managed_class_formatters = a_formatters
+		end
 
-	melt_cmd: EB_MELT_PROJECT_COMMAND
-			-- Command to start compilation.
+	set_managed_feature_formatters (a_formatters: like managed_feature_formatters) is
+			-- Set `managed_feature_formatters'
+		do
+			managed_feature_formatters := a_formatters
+		ensure
+			set: managed_feature_formatters = a_formatters
+		end
 
-feature{EB_TOOL, EB_C_COMPILER_LAUNCHER}
+	set_managed_main_formatters (a_formatters: like managed_main_formatters) is
+			-- Set `managed_main_formatters'
+		do
+			managed_main_formatters := a_formatters
+		ensure
+			set: managed_main_formatters = a_formatters
+		end
 
-	c_workbench_compilation_cmd: EB_C_COMPILATION_COMMAND
-			-- Command to compile the workbench C code.
+	set_managed_dependency_formatters (a_formatters: like managed_dependency_formatters) is
+			-- Set `managed_dependency_formatters'
+		do
+			managed_dependency_formatters := a_formatters
+		ensure
+			set: managed_dependency_formatters = a_formatters
+		end
 
-	c_finalized_compilation_cmd: EB_C_COMPILATION_COMMAND
-			-- Command to compile the finalized C code.
+	set_help_engine (a_engine: like help_engine) is
+			-- Set `help_engine'
+		do
+			help_engine := a_engine
+		ensure
+			set: help_engine = a_engine
+		end
 
-feature{EB_TOOL}
+	set_container (a_container: like container) is
+			-- Set `container'
+		do
+			container := a_container
+		ensure
+			set: container = a_container
+		end
 
-	new_cluster_cmd: EB_NEW_CLUSTER_COMMAND
-			-- Command to create a new cluster.
+	set_panel (a_panel: like panel) is
+			-- Set `panel'
+		do
+			panel := a_panel
+		ensure
+			set: panel = a_panel
+		end
 
-	new_library_cmd: EB_NEW_LIBRARY_COMMAND
-			-- Command to create a new library.
+	set_status_bar (a_bar: like status_bar) is
+			-- Set `status_bar'
+		do
+			status_bar := a_bar
+		ensure
+			set: status_bar = a_bar
+		end
 
-	new_assembly_cmd: EB_NEW_ASSEMBLY_COMMAND
-			-- Command to create a new assembly.
+	set_window (a_window: like window) is
+			-- Set `window'
+		do
+			window := a_window
+		ensure
+			set: window = a_window
+		end
 
-	new_class_cmd: EB_NEW_CLASS_COMMAND
-			-- Command to create a new class.
+	on_viewpoint_changed is
+			-- Switch viewpoint.
+		local
+			l_formatter: EB_CLASS_TEXT_FORMATTER
+			l_line: INTEGER
+		do
+			l_formatter := selected_formatter
+			if l_formatter.button.is_sensitive and then
+				l_formatter /= managed_main_formatters.first and then
+				editors_manager.current_editor /= Void
+			then
+				l_line := editors_manager.current_editor.first_line_displayed
+				l_formatter.execute
+				editors_manager.current_editor.display_line_at_top_when_ready (l_line)
+			end
+		end
 
-	new_feature_cmd: EB_NEW_FEATURE_COMMAND
-			-- Command to execute the feature wizard.
+feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART} -- EB_DEVELOPMENT_WINDOW_MENU_BUILDER issues
 
-	toggle_feature_alias_cmd: EB_TOGGLE_FEATURE_ALIAS_COMMAND
-			-- Show/Hide alias name of feature node in eb_feature_tool
+	destroy is
+			-- check if current text has been saved and destroy
+		local
+			dialog_w: EB_WARNING_DIALOG
+		do
+			if Window_manager.development_windows_count > 1 and then process_manager.is_external_command_running and then Current = external_output_manager.target_development_window then
+				process_manager.confirm_external_command_termination (agent terminate_external_command_and_destroy, agent do_nothing, window)
+			else
+				if changed and then not confirmed then
+					if Window_manager.development_windows_count > 1 then
+						create dialog_w.make_with_text (Warning_messages.w_save_before_closing)
+						dialog_w.set_buttons_and_actions (<<interface_names.b_yes, interface_names.b_no, interface_names.b_cancel>>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
+						dialog_w.set_default_push_button (dialog_w.button(interface_names.b_yes))
+						dialog_w.set_default_cancel_button (dialog_w.button(interface_names.b_cancel))
+						dialog_w.show_modal_to_window (window)
+					else
+							-- We let the window manager handle the saving, along with other windows
+							-- (not development windows)
+						force_destroy
+					end
+				else
+					Precursor {EB_TOOL_MANAGER}
+					if context_refreshing_timer /= Void then
+						context_refreshing_timer.destroy
+						context_refreshing_timer := Void
+					end
+				end
+			end
+		end
 
-	toggle_feature_signature_cmd: EB_TOGGLE_FEATURE_SIGNATURE_COMMAND
-			-- Show/Hide signature of feature node in eb_feature_tool
+	set_command_controller (a_controller: like command_controller) is
+			-- Set `command_controller'
+		do
+			command_controller := a_controller
+		ensure
+			set: command_controller = a_controller
+		end
 
-	toggle_feature_assigner_cmd: EB_TOGGLE_FEATURE_ASSIGNER_COMMAND
-			-- Show/Hide assigner name of feature node in eb_feature_tool
+	set_formatting_marks_command_menu_item (a_item: like formatting_marks_command_menu_item) is
+			-- Set `formatting_marks_command_menu_item'
+		do
+			formatting_marks_command_menu_item := a_item
+		ensure
+			set: formatting_marks_command_menu_item = a_item
+		end
 
-	toggle_stone_cmd: EB_UNIFY_STONE_CMD
-			-- Command to toggle between the stone management modes.
+	formatting_marks_command_menu_item: EB_COMMAND_MENU_ITEM
+			-- Menu item used to shw/hide formatting marks.
 
-	delete_class_cluster_cmd: EB_DELETE_CLASS_CLUSTER_COMMAND
-			-- Command to remove a class or a cluster from the system
-			-- (permanent deletion).
+	number_of_displayed_external_commands: INTEGER
+			-- Number of external commands in the tools menu.
 
-	show_profiler: EB_SHOW_PROFILE_TOOL
-			-- What allows us to display the profiler window.
+	set_number_of_displayed_external_commands (a_number: INTEGER) is
+			-- Set `number_of_displayed_external_commands'
+		do
+			number_of_displayed_external_commands := a_number
+		ensure
+			set: number_of_displayed_external_commands = a_number
+		end
 
-	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
-			-- All commands that can be put in a toolbar.
+	set_show_dynamic_lib_tool (a_cmd: like show_dynamic_lib_tool) is
+			-- Set `show_dynamic_lib_tool'
+		do
+			show_dynamic_lib_tool := a_cmd
+		ensure
+			set: show_dynamic_lib_tool = a_cmd
+		end
+
+feature {EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_BUILDER, EB_ADDRESS_MANAGER} --EB_DEVELOPMENT_WINDOW_DIRECTOR issues.
+
+	set_unified_stone (a_bool: like unified_stone) is
+			-- Set `unified_stone'
+		do
+			unified_stone := a_bool
+		ensure
+			set: unified_stone = a_bool
+		end
+
+	set_history_manager (a_manager: like history_manager) is
+			-- Set `history_manager'
+		do
+			history_manager := a_manager
+		ensure
+			set: history_manager = a_manager
+		end
+
+	set_address_manager (a_manager: like address_manager) is
+			-- Set `address_manager'
+		do
+			address_manager := a_manager
+		ensure
+			set: address_manager = a_manager
+		end
+
+	set_view_points (a_view_points: like view_points_combo) is
+			-- Set `view_points_combo'
+		do
+			view_points_combo := a_view_points
+		ensure
+			set: view_points_combo = a_view_points
+		end
+
+	set_initialized_for_builder (a_bool: like initialized) is
+			-- Set `initialized'
+		do
+			initialized := a_bool
+		ensure
+			set: initialized = a_bool
+		end
+
+	set_is_destroying (a_bool: like is_destroying) is
+			-- Set `is_destroying'
+		do
+			is_destroying := a_bool
+		ensure
+			set: is_destroying = a_bool
+		end
+
+feature{EB_TOOL, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_PART}
 
 	command_controller: EB_EDITOR_COMMAND_CONTROLLER
 			-- Object that takes care of updating the sensitivity of all editor commands.
 
-	save_as_cmd: EB_SAVE_FILE_AS_COMMAND
-			-- Command to save a class with a different file name.
-
-feature{EB_TOOL, EB_EXTERNAL_OUTPUT_TOOL}
-
-	Edit_external_commands_cmd: EB_EXTERNAL_COMMANDS_EDITOR is
-			-- Command that lets the user add new external commands to the tools menu.
-		once
-			create Result.make
-			Result.enable_sensitive
-		end
-
-feature{EB_TOOL}
-
-	system_info_cmd: EB_STANDARD_CMD is
-			-- Command to display information about the system (root class,...)
-		do
-			Result := Eb_debugger_manager.system_info_cmd
-		end
-
-	display_error_help_cmd: EB_ERROR_INFORMATION_CMD is
-			-- Command to pop up a dialog giving help on compilation errors.
-		do
-			Result := Eb_debugger_manager.display_error_help_cmd
-		end
-
-	send_stone_to_context_cmd: EB_STANDARD_CMD
-			-- Command to send the current stone to the context tool.
-
-	print_cmd: EB_PRINT_COMMAND
-			-- Command to print the content of editor with focus
-
-	show_favorites_menu_item: EV_MENU_ITEM
-			-- Show/Hide favorites menu item.
-
-	update_show_favorites_menu_item is
-			-- Update `show_favorites_menu_item' menu label.
-		do
-			if favorites_tool.shown then
-				show_favorites_menu_item.set_text (Interface_names.m_hide_favorites)
-			else
-				show_favorites_menu_item.set_text (Interface_names.m_show_favorites)
-			end
-		end
+feature{EB_TOOL, EB_STONE_CHECKER, EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_MENU_BUILDER}
 
 	execute_show_favorites is
 			-- Show `favorites_tool' if it is closed, close
 			-- it in the opposite case.
 		do
-			update_show_favorites_menu_item
-			if favorites_tool.shown then
-				favorites_tool.close
-			else
-				favorites_tool.show
-			end
+			tools.favorites_tool.show
 		end
 
-feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR, EB_DEBUGGER_MANAGER} -- Floating tool handling
-
-	all_tool_windows: ARRAYED_LIST [EB_TOOL_WINDOW]
-		-- All tool windows under the control of `Current'.
-
-	add_tool_window (a_tool_window: EB_TOOL_WINDOW) is
-			-- Add `a_tool_window' to `all_tool_windows', ensuring it is
-			-- then under the control of `Current'.
-		require
-			a_tool_window_not_void: a_tool_window /= Void
-		do
-			if all_tool_windows = Void then
-				create all_tool_windows.make (2)
-			end
-			all_tool_windows.extend (a_tool_window)
-		ensure
-			extended: all_tool_windows.has (a_tool_window)
-		end
-
-	remove_tool_window (a_widget: EV_WIDGET) is
-			-- Remove tool window associate with `a_widget'.
-		require
-			a_widget_not_void: a_widget /= Void
-		do
-			if all_tool_windows /= Void then
-				from
-					all_tool_windows.start
-				until
-					all_tool_windows.off
-				loop
-					if all_tool_windows.item.tool = a_widget then
-						all_tool_windows.remove
-						all_tool_windows.finish
-					end
-					all_tool_windows.forth
-				end
-			end
-		end
-
-	remove_all_tool_windows is
-			-- Ensure `all_tool_windows' is empty if non Void.
-		do
-			if all_tool_windows /= Void then
-				all_tool_windows.wipe_out
-			end
-		ensure
-			tool_windows_empty: all_tool_windows /= Void implies all_tool_windows.is_empty
-		end
-
-	window_moved (x_pos, y_pos: INTEGER) is
-			-- `Current' has been moved, so move all associated tool windows within `all_tool_windows'.
-		local
-			tool_window: EB_TOOL_WINDOW
-		do
-			if all_tool_windows /= Void then
-				from
-					all_tool_windows.start
-				until
-					all_tool_windows.off
-				loop
-					tool_window := all_tool_windows.item
-					check
-						not_destroyed: not tool_window.window.is_destroyed
-					end
-					if preferences.development_window_data.dock_tracking then
-						tool_window.window.move_actions.block
-						tool_window.window.set_x_position (x_pos + tool_window.x_position)
-						tool_window.window.set_y_position (y_pos + tool_window.y_position)
-						tool_window.window.move_actions.resume
-					else
-							-- If we are not performing dock tracking, we must update the relative position
-							-- of the tool window, so that if dock tracking is enabled, the relative
-							-- positions are correct.
-						tool_window.set_x_position ( tool_window.window.screen_x - x_pos)
-						tool_window.set_y_position ( tool_window.window.screen_y - y_pos)
-					end
-					all_tool_windows.forth
-				end
-			end
-		end
-
-feature {NONE} -- Execution
-
-	toolbar_right_click_action (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Action called when the user right-click in the toolbar.
-			-- Display a popup menu to show/hide toolbars and customize the general toolbar.
-		local
-			popup_menu: EV_MENU
-		do
-			if a_button = 3 then
-				popup_menu := build_toolbar_menu
-				popup_menu.show
-			end
-		end
-
-	enable_commands_on_project_created is
-			-- Enable commands when a new project has been created (not yet compiled)
-		do
-			system_info_cmd.enable_sensitive
-			if
-				stone /= Void and then
-				not unified_stone
-			then
-				send_stone_to_context_cmd.enable_sensitive
-			end
-		end
-
-	enable_commands_on_project_loaded is
-			-- Enable commands when a new project has been created and compiled
-		do
-			if eiffel_layout.has_profiler then
-				show_profiler.enable_sensitive
-			end
-			if eiffel_layout.has_dll_generation then
-				show_dynamic_lib_tool.enable_sensitive
-			end
-			new_class_cmd.enable_sensitive
-			new_cluster_cmd.enable_sensitive
-			new_library_cmd.enable_sensitive
-			new_assembly_cmd.enable_sensitive
-			system_info_cmd.enable_sensitive
-			if unified_stone then
-				send_stone_to_context_cmd.disable_sensitive
-			elseif stone /= Void then
-				send_stone_to_context_cmd.enable_sensitive
-			end
-			new_class_cmd.enable_sensitive
-			new_cluster_cmd.enable_sensitive
-			delete_class_cluster_cmd.enable_sensitive
-			c_workbench_compilation_cmd.enable_sensitive
-			c_finalized_compilation_cmd.enable_sensitive
-			refactoring_manager.enable_sensitive
-		end
-
-	disable_commands_on_project_unloaded is
-			-- Enable commands when a project has been closed.
-		do
-			if eiffel_layout.has_dll_generation then
-				show_dynamic_lib_tool.disable_sensitive
-			end
-			if eiffel_layout.has_profiler then
-				show_profiler.disable_sensitive
-			end
-			new_class_cmd.disable_sensitive
-			new_cluster_cmd.disable_sensitive
-			new_library_cmd.disable_sensitive
-			new_assembly_cmd.disable_sensitive
-			if not project_manager.is_created then
-				system_info_cmd.disable_sensitive
-				send_stone_to_context_cmd.disable_sensitive
-			end
-			delete_class_cluster_cmd.disable_sensitive
-			c_workbench_compilation_cmd.disable_sensitive
-			c_finalized_compilation_cmd.disable_sensitive
-			refactoring_manager.disable_sensitive
-			refactoring_manager.forget_undo_redo
-		end
+feature {EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Execution
 
 	save_and_switch_formatter (a_formatter: EB_FORMATTER) is
 			-- Save the file before switching bewteen main formatters when the file is not saved.
@@ -4837,55 +2090,55 @@ feature {NONE} -- Execution
 			end
 		end
 
-feature {NONE} -- Access
+feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Access
 
 	development_window_data: EB_DEVELOPMENT_WINDOW_DATA is
 			-- Meta data describing `Current'.
 		do
-			if internal_development_window_data /= Void then
-				Result := internal_development_window_data
-			else
-				Result := preferences.development_window_data
-			end
+			Result := preferences.development_window_data
 		end
 
-	internal_development_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA;
-		-- Internal custom meta data for `Current'.
+feature -- Parts
 
-feature {NONE} -- Events
+	commands: EB_DEVELOPMENT_WINDOW_COMMANDS
+			-- All commands except commands from EB_FILEABLE, EB_SHARED_GRAPHICAL_COMMANDS, `show_dynamic_lib_tool'
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING) is
-			-- A class was moved, check if we have to update `file_name'.
-		local
-			l_cs: CLASSI_STONE
+	menus: EB_DEVELOPMENT_WINDOW_MENUS
+			-- All menus.
+
+	agents: EB_DEVELOPMENT_WINDOW_AGENTS
+			-- All agents.
+
+	tools: EB_DEVELOPMENT_WINDOW_TOOLS
+			-- All tools.
+
+	ui: EB_DEVELOPMENT_WINDOW_UI
+			-- All widgets, such as save file dialogs.
+
+feature {EB_DEVELOPMENT_WINDOW_PART}
+
+	set_text_edited (a_bool: like text_edited) is
+			-- Set `text_edited'
 		do
-			l_cs ?= stone
-			if l_cs /= Void and then l_cs.class_i.config_class = a_class then
-				set_file_name_from_stone (l_cs)
-			end
+			text_edited := a_bool
+		ensure
+			set: text_edited = a_bool
 		end
 
-feature {NONE} -- Implementation
-
-	is_string_started_by (s1, s2: STRING_GENERAL): BOOLEAN is
-			-- Is `s1' starting by `s2' characters
-		require
-			s2_not_void: s2 /= Void
-		local
-			i: INTEGER
+	set_context_refreshing_timer (a_timer: like context_refreshing_timer) is
+			-- Set `context_refreshing_timer'
 		do
-			if s1 /= Void and then s1.count >= s2.count then
-				from
-					i := 1
-					Result := True
-				until
-					i > s2.count or not Result
-				loop
-					Result := s1.code (i) = s2.code (i)
-					i := i + 1
-				end
-			end
+			context_refreshing_timer := a_timer
+		ensure
+			set: context_refreshing_timer = a_timer
 		end
+
+invariant
+	not_void: commands /= Void
+	not_void: menus /= Void
+	not_void: agents /= Void
+	not_void: tools /= Void
+	not_void: ui /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -4905,7 +2158,7 @@ indexing
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 			See the	GNU General Public License for more details.
-			
+
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,

@@ -110,6 +110,12 @@ feature -- Properties
 			Result.put (pixmaps.icon_pixmaps.view_clickable_feature_icon, 2)
 		end
 
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representation.
+		once
+			Result := pixmaps.icon_pixmaps.view_clickable_feature_icon_buffer
+		end
+
 	menu_name: STRING_GENERAL is
 			-- Identifier of `Current' in menus.
 		do

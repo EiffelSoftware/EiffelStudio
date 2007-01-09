@@ -17,6 +17,7 @@ inherit
 			menu_name
 		redefine
 			new_toolbar_item,
+			new_sd_toolbar_item,
 			description,
 			internal_recycle
 		select
@@ -34,6 +35,7 @@ inherit
 			disable_sensitive,
 			new_toolbar_item,
 			new_mini_toolbar_item,
+			new_sd_toolbar_item,
 			mini_pixmap,
 			description,
 			tooltip,
@@ -65,13 +67,23 @@ feature -- Access
 			-- Display information about `Current'.
 		do
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_delete_item)
-			explain_dialog.show_modal_to_window (tool.development_window.window)
+			explain_dialog.show_modal_to_window (tool.develop_window.window)
 		end
 
 	new_toolbar_item (display_text: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		do
 			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND} (display_text)
+			Result.drop_actions.extend (agent execute_with_inherit_stone)
+			Result.drop_actions.extend (agent execute_with_client_stone)
+			Result.drop_actions.extend (agent drop_class)
+			Result.drop_actions.extend (agent drop_cluster)
+		end
+
+	new_sd_toolbar_item (display_text: BOOLEAN): EB_SD_COMMAND_TOOL_BAR_BUTTON is
+			-- Create a new toolbar button for docking.
+		do
+			Result := Precursor {EB_CONTEXT_DIAGRAM_COMMAND}(display_text)
 			Result.drop_actions.extend (agent execute_with_inherit_stone)
 			Result.drop_actions.extend (agent execute_with_client_stone)
 			Result.drop_actions.extend (agent drop_class)

@@ -55,7 +55,10 @@ feature -- Access
 			if not is_empty then
 				Result := history.i_th (index_active)
 				if Result /= Void and then not Result.is_valid then
-					Result := Void
+					Result := Result.synchronized_stone
+					if Result /= Void and then not Result.is_valid then
+						Result := Void
+					end
 				end
 			end
 		ensure
@@ -310,9 +313,8 @@ feature -- Element change
 					-- Add the new stone at the end of the history.
 				fst := Void
 				fst2 ?= a_stone
-				if fst2 /= Void and then fst2.e_feature /= Void then
-					create fst.make (fst2.e_feature)
-					history.extend (fst)
+				if fst2 /= Void  then
+					history.extend (fst2)
 				else
 					history.extend (a_stone)
 				end

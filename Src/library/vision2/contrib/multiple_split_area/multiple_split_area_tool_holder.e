@@ -13,6 +13,13 @@ class
 inherit
 	EV_HORIZONTAL_BOX
 
+	EV_UTILITIES
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+
 create
 	make_with_tool
 
@@ -555,24 +562,6 @@ feature {NONE} -- Implementation
 				-- we have just been docked from `parent_area'.
 			original_height := 0
 			original_width := 0
-		end
-
-	parent_window (widget: EV_WIDGET): EV_WINDOW is
-			-- `Result' is window parent of `widget'.
-			-- `Void' if none.
-		require
-			widget_not_void: widget /= Void
-		local
-			window: EV_WINDOW
-		do
-			window ?= widget.parent
-			if window = Void then
-				if widget.parent /= Void then
-					Result := parent_window (widget.parent)
-				end
-			else
-				Result := window
-			end
 		end
 
 	change_minimized_state is

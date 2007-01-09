@@ -1020,7 +1020,7 @@ feature -- Multiple editor management
 	update_paste_cmd_agent: PROCEDURE [ANY, TUPLE]
 		-- Agent used for updating the paste command.
 
-feature {EB_EDITOR_TOOL, EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
+feature {EB_EDITORS_MANAGER, EB_STONE_CHECKER} -- Tabbed editor
 
 	is_dropping_on_editor: BOOLEAN
 			-- Is pick and droping on an editor?

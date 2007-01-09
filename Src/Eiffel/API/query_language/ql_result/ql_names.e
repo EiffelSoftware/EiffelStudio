@@ -74,9 +74,7 @@ feature -- Criterion names
 	ql_cri_heir_is: STRING is "heir_is"
 	ql_cri_indirect_heir_is: STRING is "indirect_heir_is"
 	ql_cri_client_is: STRING is "client_is"
-	ql_cri_indirect_client_is: STRING is "indirect_client_is"
 	ql_cri_supplier_is: STRING is "supplier_is"
-	ql_cri_indirect_supplier_is: STRING is "indirect_supplier_is"
 	ql_cri_is_deferred: STRING is "is_deferred"
 	ql_cri_is_expanded: STRING is "is_expanded"
 	ql_cri_is_external: STRING is "is_external"
@@ -162,6 +160,8 @@ feature -- Criterion names
 	ql_cri_is_blank: STRING is "is_blank"
 	ql_cri_is_comment: STRING is "is_comment"
 	ql_cri_contain_ast: STRING is "contain_ast"
+
+	ql_cri_value_of_metric_is: STRING is "value_of_metric_is"
 
 feature -- Metric names
 

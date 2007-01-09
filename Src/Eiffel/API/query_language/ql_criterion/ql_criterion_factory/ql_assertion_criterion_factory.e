@@ -12,7 +12,9 @@ class
 inherit
 	QL_CRITERION_FACTORY
 		redefine
-			criterion_type
+			criterion_type,
+			item_type,
+			simple_criterion_type
 		end
 create
 	make
@@ -40,6 +42,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
 			agent_table.put (agent new_contain_ast_criterion, c_contain_ast)
+			agent_table.put (agent new_value_criterion, c_value_of_metric_is)
 
 			create name_table.make (20)
 			name_table.put (c_false, query_language_names.ql_cri_false)
@@ -59,12 +62,19 @@ feature{NONE} -- Initialization
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
 			name_table.put (c_contain_ast, query_language_names.ql_cri_contain_ast)
+			name_table.put (c_value_of_metric_is, query_language_names.ql_cri_value_of_metric_is)
 		end
 
 feature{NONE} -- Implementation
 
 	criterion_type: QL_ASSERTION_CRITERION
 			-- Criterion anchor type
+
+	item_type: QL_ASSERTION
+			-- Item anchor type
+
+	simple_criterion_type: QL_SIMPLE_ASSERTION_CRITERION
+			-- Simple criterion type
 
 feature{NONE} -- New criterion
 
@@ -213,6 +223,14 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type is
+			-- New value criterion
+		require
+			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
+		do
+			create Result.make (agent value_criterion_evalaute_agent ({QL_ASSERTION}?, a_evaluate_value_func), False)
+		end
+
 feature -- Criterion index
 
 	c_false,
@@ -231,7 +249,8 @@ feature -- Criterion index
 	c_true,
 	c_name_is,
 	c_text_contain,
-	c_contain_ast: INTEGER is unique
+	c_contain_ast,
+	c_value_of_metric_is: INTEGER is unique
 
 feature{NONE} -- Implementation
 

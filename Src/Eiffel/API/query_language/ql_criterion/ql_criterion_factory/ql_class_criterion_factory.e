@@ -12,7 +12,9 @@ class
 inherit
 	QL_CRITERION_FACTORY
 		redefine
-			criterion_type
+			criterion_type,
+			item_type,
+			simple_criterion_type
 		end
 
 create
@@ -60,9 +62,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_heir_is_criterion, c_parent_is)
 			agent_table.put (agent new_indirect_heir_is_criterion, c_indirect_parent_is)
 			agent_table.put (agent new_supplier_criterion, c_client_is)
-			agent_table.put (agent new_indirect_supplier_criterion, c_indirect_client_is)
 			agent_table.put (agent new_client_criterion, c_supplier_is)
-			agent_table.put (agent new_indirect_client_criterion, c_indirect_supplier_is)
 
 			agent_table.put (agent new_name_is_criterion, c_name_is)
 			agent_table.put (agent new_text_contain_criterion, c_text_contain)
@@ -73,6 +73,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_bottom_indexing_has_tag_criterion, c_bottom_indexing_has_tag)
 			agent_table.put (agent new_indexing_has_tag_criterion, c_indexing_has_tag)
 			agent_table.put (agent new_contain_ast_criterion, c_contain_ast)
+			agent_table.put (agent new_value_criterion, c_value_of_metric_is)
 
 			create name_table.make (45)
 			name_table.put (c_false, query_language_names.ql_cri_false)
@@ -111,9 +112,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_heir_is, query_language_names.ql_cri_heir_is)
 			name_table.put (c_indirect_heir_is, query_language_names.ql_cri_indirect_heir_is)
 			name_table.put (c_supplier_is, query_language_names.ql_cri_supplier_is)
-			name_table.put (c_indirect_supplier_is, query_language_names.ql_cri_indirect_supplier_is)
 			name_table.put (c_client_is, query_language_names.ql_cri_client_is)
-			name_table.put (c_indirect_client_is, query_language_names.ql_cri_indirect_client_is)
 
 			name_table.put (c_name_is, query_language_names.ql_cri_name_is)
 			name_table.put (c_text_contain, query_language_names.ql_cri_text_contain)
@@ -125,6 +124,7 @@ feature{NONE} -- Initialization
 			name_table.put (c_indexing_has_tag, query_language_names.ql_cri_indexing_has_tag)
 
 			name_table.put (c_contain_ast, query_language_names.ql_cri_contain_ast)
+			name_table.put (c_value_of_metric_is, query_language_names.ql_cri_value_of_metric_is)
 		end
 
 
@@ -132,6 +132,12 @@ feature{NONE} -- Implementation
 
 	criterion_type: QL_CLASS_CRITERION
 			-- Criterion anchor type
+
+	item_type: QL_CLASS
+			-- Item anchor type
+
+	simple_criterion_type: QL_SIMPLE_CLASS_CRITERION
+			-- Simple criterion type
 
 feature{NONE} -- New criterion
 
@@ -499,42 +505,22 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_supplier_criterion (a_domain: QL_DOMAIN): QL_CLASS_SUPPLIER_RELATION_CRI is
+	new_supplier_criterion (a_domain: QL_DOMAIN; a_indirect: BOOLEAN; a_normal: BOOLEAN; a_syntactical: BOOLEAN): QL_CLASS_SUPPLIER_RELATION_CRI is
 			-- New {QL_CLASS_SUPPLIER_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, True, False, False)
+			create Result.make (a_domain, a_normal, a_syntactical, a_indirect)
 		ensure
 			result_attached: Result /= Void
 		end
 
-	new_indirect_supplier_criterion (a_domain: QL_DOMAIN): QL_CLASS_SUPPLIER_RELATION_CRI is
-			-- New {QL_CLASS_SUPPLIER_RELATION_CRI} criterion.
-		require
-			a_domain_attached: a_domain /= Void
-		do
-			create Result.make (a_domain, True, False, True)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	new_client_criterion (a_domain: QL_DOMAIN): QL_CLASS_CLIENT_RELATION_CRI is
+	new_client_criterion (a_domain: QL_DOMAIN; a_indirect: BOOLEAN; a_normal: BOOLEAN; a_syntactical: BOOLEAN): QL_CLASS_CLIENT_RELATION_CRI is
 			-- New {QL_CLASS_CLIENT_RELATION_CRI} criterion.
 		require
 			a_domain_attached: a_domain /= Void
 		do
-			create Result.make (a_domain, True, False, False)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	new_indirect_client_criterion (a_domain: QL_DOMAIN): QL_CLASS_CLIENT_RELATION_CRI is
-			-- New {QL_CLASS_CLIENT_RELATION_CRI} criterion.
-		require
-			a_domain_attached: a_domain /= Void
-		do
-			create Result.make (a_domain, True, False, True)
+			create Result.make (a_domain, a_normal, a_syntactical, a_indirect)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -550,6 +536,14 @@ feature{NONE} -- New criterion
 			create Result.make (agent l_visitor.is_code_structure_item_satisfied ({QL_CLASS}?), True)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type is
+			-- New value criterion
+		require
+			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
+		do
+			create Result.make (agent value_criterion_evalaute_agent ({QL_CLASS}?, a_evaluate_value_func), False)
 		end
 
 feature -- Criterion index
@@ -589,9 +583,7 @@ feature -- Criterion index
 	c_heir_is,
 	c_indirect_heir_is,
 	c_supplier_is,
-	c_indirect_supplier_is,
 	c_client_is,
-	c_indirect_client_is,
 	c_is_valid,
 	c_is_always_compiled,
 	c_is_partial,
@@ -599,7 +591,8 @@ feature -- Criterion index
 	c_is_overriden,
 	c_is_overrider,
 	c_is_visible,
-	c_contain_ast: INTEGER is unique;
+	c_contain_ast,
+	c_value_of_metric_is: INTEGER is unique;
 
 feature{NONE} -- Implementation/Evaluate agent
 

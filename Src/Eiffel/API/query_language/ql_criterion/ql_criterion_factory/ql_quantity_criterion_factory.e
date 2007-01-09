@@ -13,7 +13,9 @@ inherit
 	QL_CRITERION_FACTORY
 
 		redefine
-			criterion_type
+			criterion_type,
+			item_type,
+			simple_criterion_type
 		end
 create
 	make
@@ -27,17 +29,25 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_false_criterion, c_false)
 			agent_table.put (agent new_is_compiled_criterion, c_is_compiled)
 			agent_table.put (agent new_true_criterion, c_true)
+			agent_table.put (agent new_value_criterion, c_value_of_metric_is)
 
 			create name_table.make (3)
 			name_table.put (c_false, query_language_names.ql_cri_false)
 			name_table.put (c_true, query_language_names.ql_cri_true)
 			name_table.put (c_is_compiled, query_language_names.ql_cri_is_compiled)
+			name_table.put (c_value_of_metric_is, query_language_names.ql_cri_value_of_metric_is)
 		end
 
 feature{NONE} -- Implementation
 
 	criterion_type: QL_QUANTITY_CRITERION
 			-- Criterion anchor type
+
+	item_type: QL_QUANTITY
+			-- Item anchor type
+
+	simple_criterion_type: QL_SIMPLE_QUANTITY_CRITERION
+			-- Simple criterion type			
 
 feature{NONE} -- New criterion
 
@@ -65,11 +75,20 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
+	new_value_criterion (a_evaluate_value_func: FUNCTION [ANY, TUPLE [QL_ITEM], BOOLEAN]): like simple_criterion_type is
+			-- New value criterion
+		require
+			a_evaluate_value_func_attached: a_evaluate_value_func /= Void
+		do
+			create Result.make (agent value_criterion_evalaute_agent ({QL_QUANTITY}?, a_evaluate_value_func), False)
+		end
+
 feature -- Criterion index
 
 	c_false,
 	c_true,
-	c_is_compiled: INTEGER is unique
+	c_is_compiled,
+	c_value_of_metric_is: INTEGER is unique
 
 feature{NONE} -- Implementation
 

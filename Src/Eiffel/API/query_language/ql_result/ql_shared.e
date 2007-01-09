@@ -46,6 +46,14 @@ feature -- Access
 			Result := criterion_factory_table.item (a_scope).criterion_with_name (a_name, a_argu)
 		end
 
+	metric_factory: QL_METRIC_FACTORY is
+			-- Metric factory
+		once
+			create Result
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Domain
 
 	system_target_domain: QL_TARGET_DOMAIN is

@@ -105,11 +105,6 @@ feature -- Setting
 			fill_domain_disabled: not is_fill_domain_enabled
 		end
 
-	replace_delayed_domain_by (a_domain: QL_DOMAIN) is
-			-- Replace all delayed domains in `criterion' by `a_domain'.
-		deferred
-		end
-
 feature -- Status report
 
 	is_fill_domain_enabled: BOOLEAN

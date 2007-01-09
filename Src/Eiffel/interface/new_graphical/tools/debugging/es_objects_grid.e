@@ -22,7 +22,7 @@ inherit
 
 	EB_EDITOR_TOKEN_GRID_SUPPORT
 		rename
-			on_pick as on_pebble_function
+			on_pick_start_from_grid_editor_token_item as on_pebble_function
 		undefine
 			default_create, copy
 		redefine
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			row_collapse_actions.extend (agent on_row_collapse)
 
 --			set_item_pebble_function (agent on_pebble_function)
-			enable_editor_token_pnd
+			enable_grid_item_pnd_support
 
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)
 			set_item_deny_cursor_function (agent on_pnd_deny_cursor_function)
@@ -551,15 +551,19 @@ feature -- Query
 
 feature {NONE} -- Actions implementation
 
-	on_pebble_function (a_item: EV_GRID_ITEM): ANY is
+	on_pebble_function (a_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
+		local
+			l_pebble: ANY
 		do
 			if
 				not ev_application.ctrl_pressed
 				and a_item /= Void
 			then
-				Result := grid_pebble_from_cell (a_item)
-				if Result = Void then
-					Result := Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}(a_item)
+				l_pebble := grid_pebble_from_cell (a_item)
+				if l_pebble = Void then
+					Precursor {EB_EDITOR_TOKEN_GRID_SUPPORT}(a_item, a_grid_support)
+				else
+					set_last_pebble (l_pebble)
 				end
 			end
 		end

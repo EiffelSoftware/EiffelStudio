@@ -890,7 +890,7 @@ feature -- Label texts
 	l_System_not_running: STRING_GENERAL is		do Result := locale.translate("System not running")	end
 	l_Tab_output: STRING_GENERAL is 			do Result := locale.translate("Output")	end
 	l_Tab_class_info: STRING_GENERAL is 		do Result := locale.translate("Class")	end
-	l_Tab_feature_info: STRING_GENERAL is 		do Result := locale.translate("Feature")	end
+	l_Tab_feature_info: STRING_GENERAL is 		do Result := locale.translate("Feature Relation")	end
 	l_Tab_diagram: STRING_GENERAL is 			do Result := locale.translate("Diagram")	end
 	l_target: STRING_GENERAL is					do Result := locale.translate("Target")	end
 	l_target_does_not_exist (a_target: STRING_GENERAL): STRING_GENERAL is
@@ -1444,6 +1444,7 @@ feature -- Title part
 	t_Properties_tool: STRING_GENERAL is				do Result := locale.translate ("Properties")	end
 	t_question: STRING_GENERAL is 						do Result := locale.translate ("Question") end
 	t_Search_tool: STRING_GENERAL is					do Result := locale.translate ("Search")	end
+	t_Search_Report_tool: STRING_GENERAL is				do Result := locale.translate ("Search Report")	end
 	t_Windows_tool: STRING_GENERAL is					do Result := locale.translate ("Windows")	end
 	t_Watch_tool: STRING_GENERAL is						do Result := locale.translate ("Watch")	end
 	t_watch_tool_error_message: STRING_GENERAL is		do Result := locale.translate ("Watch tool :: error message")	end
@@ -1452,6 +1453,11 @@ feature -- Title part
 	t_Editor: STRING_GENERAL is							do Result := locale.translate("Editor")	end
 	t_Debugging_options: STRING_GENERAL is					do Result := locale.translate("Debugging Options")	end
 	t_Debugging_tool: STRING_GENERAL is					do Result := locale.translate("Debugging")	end
+
+	t_Standard_toolbar: STRING_GENERAL is				do Result := locale.translate ("Standard Buttons") end
+	t_Address_toolbar: STRING_GENERAL is				do Result := locale.translate ("Address Bar") end
+	t_Project_toolbar: STRING_GENERAL is				do Result := locale.translate ("Project Bar") end
+	t_Refactory_toolbar: STRING_GENERAL is				do Result := locale.translate ("Refactoring Bar") end
 
 	t_dialog_title (a_name: STRING_GENERAL): STRING_GENERAL is
 		do
@@ -1465,16 +1471,28 @@ feature -- Titles translation needless (Title Original) for preference strings.
 	to_Cluster_tool: STRING is					"Clusters"
 	to_Context_tool: STRING is					"Context"
 	to_Favorites_tool: STRING is				"Favorites"
-	to_metric_tool: STRING is 					"Metrics"
 	to_Object_tool: STRING is					"Objects"
 	to_threads_tool: STRING is					"Threads"
 	to_Properties_tool: STRING is				"Properties"
 	to_Search_tool: STRING is					"Search"
+	to_Search_Report_tool: STRING is			"Search Report"
 	to_Windows_tool: STRING is					"Windows"
 	to_Watch_tool: STRING is					"Watch"
 	to_Features_tool: STRING is					"Features"
 	to_Editor: STRING is						"Editor"
 	to_Debugging_tool: STRING is				"Debugging"
+
+
+	to_Output_tool: STRING is					"Output"
+	to_Diagram_tool: STRING is					"Diagram"
+	to_Class_tool: STRING is					"Class"
+	to_Feature_relation_tool: STRING is			"Feature Relation"
+	to_Dependency_tool: STRING is				"Dependency"
+	to_Metric_tool: STRING is					"Metrics"
+	to_External_Ouput_tool: STRING is			"External Output"
+	to_C_Output_tool: STRING is					"C Output"
+	to_Error_tool: STRING is					"Error"
+	to_Warning_tool: STRING is					"Warning"
 
 	to_name: STRING is 							"Name"
 	to_expression: STRING is 					"Expression"

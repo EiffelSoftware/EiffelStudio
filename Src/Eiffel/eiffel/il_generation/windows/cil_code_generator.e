@@ -3590,6 +3590,11 @@ feature -- IL Generation
 	 				end
 	 			end
 			end
+			if Result and then class_type.is_external then
+					-- Ensure the feature is declared in `class_type'
+					-- to avoid generating a MethodImpl twice.
+				Result := inh_feat.written_in = class_type.associated_class.class_id
+			end
 			if not Result then
 					-- When we handle an attribute defined in an inherited Eiffel class in a class now
 					-- generated as `is_single_class' we have to generate a MethodImpl, because

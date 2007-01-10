@@ -502,12 +502,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		require
 			object_with_debug_output: address /= Void and has_formatted_output
 		do
-			debug ("debugger_trace")
-				print (generating_type + ".raw_string_representation (" + min.out + ", " + max.out + ")%N")
-			end
-
-			debug ("debug_recv")
-				print ("DUMP_VALUE.raw_string_representation of " + dynamic_class.name_in_upper + "%N")
+			debug ("debugger_trace", "debug_recv")
+				print (generating_type + ".raw_string_representation (" + min.out + ", " + max.out + ") from " + dynamic_class.name_in_upper +" %N")
 			end
 			last_string_representation_length := 0
 			if is_dotnet_value then

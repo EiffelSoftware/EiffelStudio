@@ -109,8 +109,10 @@ feature -- Properties
 			set: padding_width = a_width
 		end
 
-	gap_height: INTEGER is 2
+	gap_height: INTEGER is
 			-- Gap height
+		deferred
+		end
 
 	width: INTEGER is
 			-- Width of Current will draw.
@@ -257,11 +259,15 @@ feature -- Size issues
 			end
 		end
 
-	start_y_position: INTEGER is 0
+	start_y_position: INTEGER is
 			-- Start y position of drawing a pixmap.
+		deferred
+		end
 
-	start_y_position_text: INTEGER is 3
+	start_y_position_text: INTEGER is
 			-- Start y position of drawing a pixmap.
+		deferred
+		end
 
 	start_y_close: INTEGER is
 			-- Start y position of drawing a close button
@@ -323,17 +329,22 @@ feature {NONE} -- Implementation
 			-- Draw pixmap and text when unselected.
 		require
 			not_void: a_pixmap /= Void
+		local
+			l_font: EV_FONT
 		do
 			a_pixmap.set_foreground_color (internal_shared.tab_text_color)
+			l_font := a_pixmap.font
+			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
+			a_pixmap.set_font (l_font)
 			if is_top_side_tab then
 				-- Draw pixmap
 				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
 				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text)
 			else
 				-- Draw pixmap
-				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, 0, pixmap)
+				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position, pixmap)
 				-- Draw text
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, + start_y_position_text, text)
+				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, start_y_position_text, text)
 			end
 
 			draw_close_button (a_pixmap, internal_shared.icons.close)
@@ -343,11 +354,16 @@ feature {NONE} -- Implementation
 			-- Draw pixmap and text when selected.
 		require
 			not_void: a_pixmap /= Void
+		local
+			l_font: EV_FONT
 		do
 			if a_pixmap.height > 0 then
 				-- Draw text
 				a_pixmap.set_foreground_color (internal_shared.tab_text_color)
 				if a_width - start_x_text_internal >= 0 then
+					l_font := a_pixmap.font
+					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+					a_pixmap.set_font (l_font)
 					if is_top_side_tab then
 						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, a_width - start_x_text_internal)
 					else

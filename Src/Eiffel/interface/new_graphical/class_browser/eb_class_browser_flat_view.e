@@ -276,7 +276,7 @@ feature -- Status report
 
 feature -- Access
 
-	show_feature_from_any_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	show_feature_from_any_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Checkbox to indicate whether or not unchanged features from ANY is displayed
 		do
 			if show_feature_from_any_button_internal = Void then

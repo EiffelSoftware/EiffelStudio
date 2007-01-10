@@ -79,7 +79,7 @@ feature -- Access
 	post_row_bind_action_table: HASH_TABLE [PROCEDURE [ANY, TUPLE [EV_GRID_ROW]], INTEGER]
 			-- Table of action to be performed after a row whose level index is specified by key of the table has been binded into `grid'.
 
-	syntactical_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	syntactical_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if syntactical supplier/clients are displayed
 		do
 			if syntactical_button_internal = Void then
@@ -95,7 +95,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	inheritance_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	inheritance_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if inheritance are displayed
 		do
 			if inheritance_button_internal = Void then
@@ -111,7 +111,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	normal_referenced_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	normal_referenced_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if normal referenced supplier/clients are displayed
 		do
 			if normal_referenced_button_internal = Void then
@@ -1088,7 +1088,7 @@ feature{NONE} -- Implementation
 	control_tool_bar: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	show_self_dependency_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	show_self_dependency_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to turn on/off item path display
 			-- For examples, if we are displaying suppliers for a given group "demo",
 			-- actually we are displaying supplier classes of every class in that group,
@@ -1112,7 +1112,7 @@ feature{NONE} -- Implementation
 	show_self_dependency_button_internal: like show_self_dependency_button
 			-- Implementation of `show_self_dependency_button'
 
-	categorize_folder_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	categorize_folder_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to decide if classes in a given group should be displayed in physical folders where they locates.
 			-- For example, if this button is not selected, the following will be displayed:
 			-- + base

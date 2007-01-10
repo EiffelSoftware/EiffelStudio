@@ -308,7 +308,7 @@ feature -- Start Operation
 				check
 					System_defined: Eiffel_system.Workbench.system_defined
 				end
-				appl_name := Eiffel_system.application_name (False)
+				appl_name := Eiffel_system.application_name (True)
 				create f.make (appl_name)
 				if not f.exists then
 					warning (Warning_messages.w_Unexisting_system)
@@ -319,7 +319,7 @@ feature -- Start Operation
 						create cmd_exec
 						cmd_exec.execute_with_args_and_working_directory (appl_name, param_arguments, param_working_directory)
 					else
-						create f_name.make_from_string (project_location.final_path)
+						create f_name.make_from_string (project_location.workbench_path)
 						f_name.set_file_name (Makefile_SH)
 						create make_f.make (f_name)
 						if make_f.exists and then make_f.date > f.date then
@@ -357,7 +357,7 @@ feature -- Start Operation
 				check
 					System_defined: Eiffel_system.Workbench.system_defined
 				end
-				appl_name := Eiffel_system.application_name (True)
+				appl_name := Eiffel_system.application_name (False)
 				create f.make (appl_name)
 				if not f.exists then
 					warning (Warning_messages.w_Unexisting_system)
@@ -368,7 +368,7 @@ feature -- Start Operation
 						create cmd_exec
 						cmd_exec.execute_with_args_and_working_directory (appl_name, param_arguments, param_working_directory)
 					else
-						create f_name.make_from_string (project_location.workbench_path)
+						create f_name.make_from_string (project_location.final_path)
 						f_name.set_file_name (Makefile_SH)
 						create make_f.make (f_name)
 						if make_f.exists and then make_f.date > f.date then

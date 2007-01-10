@@ -1,14 +1,13 @@
 indexing
 	description: "[
-					Toolbar toggle button used in class browser
-					It has the ability to synchronize with its related preference.
+					Toolbar toggle button with the ability to synchronize its status with its related preference.
 				]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON
+	EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
 
 inherit
 	EV_TOOL_BAR_TOGGLE_BUTTON

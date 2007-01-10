@@ -415,7 +415,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	show_tooltip_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	show_tooltip_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Checkbox to indicate whether or not tooltip is displayed
 		do
 			if show_tooltip_button_internal = Void then

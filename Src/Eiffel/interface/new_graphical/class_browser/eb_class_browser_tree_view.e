@@ -89,7 +89,7 @@ feature -- Access
 			-- This is used when a tree view is to be built. And starting element serves as the root of that tree.
 			-- If `starting_element' is Void, don't build tree.
 
-	syntactical_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	syntactical_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if syntactical supplier/clients are displayed
 		do
 			if syntactical_button_internal = Void then
@@ -105,7 +105,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	normal_referenced_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	normal_referenced_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to indicate if normal referenced supplier/clients are displayed
 		do
 			if normal_referenced_button_internal = Void then
@@ -675,7 +675,7 @@ feature{NONE} -- Implementation
 	control_tool_internal: EV_HORIZONTAL_BOX
 			-- Implementation of `control_bar'
 
-	display_path_button: EB_CLASS_BROWSER_TOOL_BAR_TOGGLE_BUTTON is
+	display_path_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
 			-- Toggle button to turn on/off item path display
 		do
 			if display_path_button_internal = Void then

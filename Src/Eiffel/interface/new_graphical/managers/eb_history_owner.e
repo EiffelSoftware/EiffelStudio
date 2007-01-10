@@ -37,7 +37,9 @@ feature {NONE} -- Removal
 			-- Free references to `Current'.
 		do
 			Precursor {EB_RECYCLER}
-			history_manager.recycle
+			if history_manager /= Void then
+				history_manager.recycle
+			end
 		end
 
 feature -- Status setting

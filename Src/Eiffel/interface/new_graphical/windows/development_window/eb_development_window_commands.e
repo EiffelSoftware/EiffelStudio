@@ -11,6 +11,8 @@ class
 inherit
 	EB_DEVELOPMENT_WINDOW_PART
 
+	EB_RECYCLABLE
+
 create
 	make
 
@@ -364,7 +366,7 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 
 feature -- Recycle
 
-	recycle_commands is
+	internal_recycle is
 			-- Recycle all commands.
 		local
 			os_cmd: EB_ON_SELECTION_COMMAND

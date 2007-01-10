@@ -1516,8 +1516,12 @@ feature {NONE} -- Recycle
 			recycle_formatters
 			recycle_menu
 			Precursor {EB_TOOL_MANAGER}
-		  	commands.save_as_cmd.recycle
-			save_cmd.recycle
+			if commands.save_as_cmd /= Void then
+				commands.save_as_cmd.recycle
+			end
+			if save_cmd /= Void then
+				save_cmd.recycle
+			end
 			commands.set_save_as_cmd (Void)
 			save_cmd := Void
 			command_controller.recycle
@@ -1533,8 +1537,10 @@ feature {NONE} -- Recycle
 			cluster_manager := Void
 			tools.set_search_tool (Void)
 
-			editors_manager.recycle
-			editors_manager := Void
+			if editors_manager /= Void then
+				editors_manager.recycle
+				editors_manager := Void
+			end
 
 			agents.manager.remove_observer (agents)
 			docking_manager.destory
@@ -1543,7 +1549,7 @@ feature {NONE} -- Recycle
 	recycle_command is
 			-- Recycle command
 		do
-			commands.recycle_commands
+			commands.recycle
 		end
 
 	recycle_formatters is

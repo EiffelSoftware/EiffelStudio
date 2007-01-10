@@ -68,8 +68,6 @@ feature -- Access
 
 	active_border_color: EV_COLOR is
 			-- Active border color
-		local
-			l_color: EV_STOCK_COLORS
 		do
 			Result := dark_color
 		end

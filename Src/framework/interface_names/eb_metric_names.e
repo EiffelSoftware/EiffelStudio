@@ -1150,6 +1150,20 @@ feature -- Separator
 			result_attached: Result /= Void
 		end
 
+	left_parenthesis: STRING_GENERAL is
+		do
+			Result := "("
+		ensure
+			result_attached: Result /= Void
+		end
+
+	right_parenthesis: STRING_GENERAL is
+		do
+			Result := ")"
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Utilities
 
 	concatenated_string (a_str_list: LINEAR [STRING_GENERAL]; a_separator: STRING_GENERAL): STRING_GENERAL is
@@ -1337,12 +1351,13 @@ feature -- Utilities
 			a_visitable_name_attached: a_visitable_name /= Void
 		do
 			Result := a_visitable_type.twin
-			Result.append ("(")
+			Result.append (left_parenthesis)
 			Result.append (a_visitable_name)
-			Result.append (")")
+			Result.append (right_parenthesis)
 		ensure
 			result_attached: Result /= Void
 		end
+
 
 	coloned_string (a_string: STRING_GENERAL; a_first_letter_upper: BOOLEAN): STRING_GENERAL is
 			-- String which is `a_string' suffixed with a colon

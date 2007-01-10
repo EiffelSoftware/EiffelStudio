@@ -1086,7 +1086,6 @@ feature {NONE} -- Initialization
 		local
 			l_feat: FEATURE_I
 			l_type: NAMED_TYPE_A
-			l_checker: CONVERTIBILITY_CHECKER
 		do
 			l_feat := a_feat_tbl.item_id ({NAMES_HEAP}.to_integer_name_id)
 			check

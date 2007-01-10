@@ -462,6 +462,15 @@ feature{NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
+	gap_height: INTEGER is 2
+	 		-- Redefine
+
+	start_y_position: INTEGER is 0
+	 		-- Redefine
+
+	start_y_position_text: INTEGER is 3
+			-- Redefine
+
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- Theme drawer
 

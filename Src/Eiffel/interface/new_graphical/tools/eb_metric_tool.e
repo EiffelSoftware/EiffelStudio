@@ -14,7 +14,9 @@ inherit
 		redefine
 			make,
 			pixmap,
-			pixel_buffer
+			pixel_buffer,
+			show,
+			close
 		end
 
 	SHARED_WORKBENCH
@@ -105,11 +107,13 @@ feature -- Actions
 	on_select is
 			-- Metric tool has been selected, synchronize.
 		do
-			if workbench.system_defined and then workbench.is_already_compiled then
-				load_metrics (False, metric_names.t_loading_metrics)
+			if content.is_visible then
+				if workbench.system_defined and then workbench.is_already_compiled then
+					load_metrics (False, metric_names.t_loading_metrics)
+				end
+				set_is_shown (True)
+				on_tab_change
 			end
-			set_is_shown (True)
-			on_tab_change
 		end
 
 	on_deselect is
@@ -127,6 +131,20 @@ feature -- Actions
 		do
 			set_last_metric_value_historied (True)
 			send_metric_value_in_history_actions.call ([a_archive, a_panel])
+		end
+
+	show is
+			-- Redefine
+		do
+			Precursor {EB_TOOL}
+			on_select
+		end
+
+	close is
+			-- Redefine
+		do
+			Precursor {EB_TOOL}
+			on_deselect
 		end
 
 feature -- Basic operations

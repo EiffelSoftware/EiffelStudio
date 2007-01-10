@@ -2,6 +2,8 @@ indexing
 	description: "[
 					Gtk implementation to draw native looking notebook tabs.
 					]"
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,6 +12,23 @@ class
 
 inherit
 	SD_NOTEBOOK_TAB_DRAWER_I
+		redefine
+			draw_pixmap_text_selected,
+			draw_pixmap_text_unselected
+		end
+
+	EV_BUTTON_IMP -- Only for export
+		rename
+			make as make_not_use,
+			pixmap as pixmap_not_use,
+			set_pixmap as set_pixmap_not_use,
+			text as text_not_use,
+			set_text as set_text_not_use,
+			height as height_not_use,
+			width as width_not_use
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -34,25 +53,129 @@ feature -- Command
 			internal_expose (a_width, internal_tab.x, False)
 		end
 
-	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP) is
+	tool_bar_drawer: SD_TOOL_BAR_DRAWER_IMP is
+			-- Tool bar drawer which used for drawing close button.
+		once
+			create Result.make
+		ensure
+			not_void: Result /= Void
+		end
+
+	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP)
 			-- Redefine
+		local
+			l_vision_rect: EV_RECTANGLE
+			l_imp: EV_DRAWING_AREA_IMP
 		do
-			-- To be implemented.
+			if (internal_tab.is_hot or internal_tab.is_selected)and is_top_side_tab then
+
+				l_vision_rect := close_rectangle
+				l_vision_rect.move (internal_tab.x + l_vision_rect.x, l_vision_rect.y)
+
+				-- Draw hot state background
+				if internal_tab.is_pointer_in_close_area then
+					l_imp ?= internal_tab.parent.implementation
+					check not_void: l_imp /= Void end
+					if internal_tab.is_pointer_pressed then
+						tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.pressed)
+					else
+						tool_bar_drawer.draw_button_background (l_imp.c_object, l_vision_rect, {SD_TOOL_BAR_ITEM_STATE}.hot)
+					end
+				end
+
+				-- We draw close button
+				if internal_tab.is_pointer_pressed and internal_tab.is_pointer_in_close_area then
+					a_drawable.draw_pixmap (internal_tab.x + start_x_close + 1, start_y_close, a_close_pixmap)
+				else
+					a_drawable.draw_pixmap (internal_tab.x + start_x_close, start_y_close, a_close_pixmap)
+				end
+			end
+		end
+
+	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
+			-- Redefine
+		local
+			l_font: EV_FONT
+		do
+			if a_pixmap.height > 0 then
+				-- Draw text
+				a_pixmap.set_foreground_color (internal_shared.tab_text_color)
+				if a_width - start_x_text_internal >= 0 then
+					l_font := a_pixmap.font
+					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+					a_pixmap.set_font (l_font)
+					if is_top_side_tab then
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, a_width - start_x_text_internal)
+					else
+						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height, text, a_width - start_x_text_internal)
+					end
+				end
+				-- Draw pixmap
+				if is_draw_pixmap then
+					if is_top_side_tab then
+						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
+					else
+						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + 1, pixmap)
+					end
+				end
+
+				draw_close_button (a_pixmap, internal_shared.icons.close)
+			end
+		end
+
+
+	draw_pixmap_text_unselected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
+			-- Redefine
+		local
+			l_font: EV_FONT
+		do
+			a_pixmap.set_foreground_color (internal_shared.tab_text_color)
+			l_font := a_pixmap.font
+			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
+			a_pixmap.set_font (l_font)
+			if is_top_side_tab then
+				-- Draw pixmap
+				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
+				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text)
+			else
+				-- Draw pixmap
+				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + 1, pixmap)
+				-- Draw text
+				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, start_y_position_text, text)
+			end
+
+			draw_close_button (a_pixmap, internal_shared.icons.close)
 		end
 
 feature {NONE}  -- Implementation	
+
+	gap_height: INTEGER is 0
+			-- Redefine
+
+	start_y_position: INTEGER is 1
+			-- Redefine
+
+	start_y_position_text: INTEGER is 2
+			-- Redefine
+
+	clear (a_width, a_x: INTEGER) is
+			-- Clear `internal_tab''s area.
+		do
+			internal_tab.parent.set_foreground_color (internal_tab.parent.background_color)
+			internal_tab.parent.fill_rectangle (a_x, 0, a_width, internal_tab.parent.height)
+		end
 
 	internal_expose (a_width: INTEGER; a_x: INTEGER; a_is_selected: BOOLEAN) is
 			-- Expose implementation
 		local
 			l_imp: SD_DRAWING_AREA_IMP
-			l_temp_widget, l_style: POINTER
 		do
+			clear (a_width, a_x)
+
 			l_imp ?= internal_tab.parent.implementation
 			check not_void: l_imp /= Void end
 
-			l_temp_widget := {EV_GTK_EXTERNALS}.gtk_notebook_new
-			l_style := {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_temp_widget)
+			l_style := {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_imp.c_object)
 
 			c_gtk_paint_extension (l_imp.c_object, l_style, a_is_selected,
 									 a_x, 0 ,a_width, internal_tab.height, is_top_side_tab)
@@ -99,5 +222,18 @@ feature {NONE}  -- Implementation
 			}
 			]"
 		end
+
+indexing
+	library:	"SmartDocking: Library of reusable components for Eiffel."
+	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Eiffel Software
+			 356 Storke Road, Goleta, CA 93117 USA
+			 Telephone 805-685-1006, Fax 805-685-6869
+			 Website http://www.eiffel.com
+			 Customer support http://support.eiffel.com
+		]"
+
 
 end

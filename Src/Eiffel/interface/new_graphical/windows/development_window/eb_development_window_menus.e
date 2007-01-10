@@ -195,12 +195,24 @@ feature -- Recycle
 	recycle_menus is
 			-- Recycyle all menus.
 		do
-			tools_menu.destroy
-			window_menu.destroy
-			debug_menu.destroy
-			debugging_tools_menu.destroy
-			favorites_menu.destroy
-			view_menu.destroy
+			if tools_menu /= Void then
+				tools_menu.destroy
+			end
+			if window_menu /= Void then
+				window_menu.destroy
+			end
+			if debug_menu /= Void then
+				debug_menu.destroy
+			end
+			if debugging_tools_menu /= Void then
+				debugging_tools_menu.destroy
+			end
+			if favorites_menu /= Void then
+				favorites_menu.destroy
+			end
+			if view_menu /= Void then
+				view_menu.destroy
+			end
 
 			tools_menu := Void
 			window_menu := Void

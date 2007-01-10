@@ -182,11 +182,6 @@ feature -- Setting
 			toolbar_area.disable_sensitive
 		end
 
-	set_stone (a_stone: STONE) is
-			-- Notify that `a_stone' is dropped on Current.
-		do
-		end
-
 feature -- Access
 
 	data_in_row (a_row: EV_GRID_ROW): TUPLE [criterion_name: STRING; coefficient: STRING; uuid: UUID] is

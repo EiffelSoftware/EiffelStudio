@@ -44,21 +44,6 @@ feature{NONE} -- Initialization
 
 feature -- Status report
 
-	is_value_valid: BOOLEAN is
-			-- Is `value' valid?
-		local
-			l_value: like value
-			l_metric_name: STRING
-			l_tester: EB_METRIC_VALUE_TESTER
-		do
-			l_value := value
-			if l_value /= Void then
-				l_metric_name ?= l_value.item (1)
-				l_tester ?= l_value.item (2)
-				Result := l_metric_name /= Void and then l_tester /= Void
-			end
-		end
-
 	is_pebble_droppable (a_pebble: ANY): BOOLEAN is
 			-- Can `a_pebble' be dropped on Current?
 		local

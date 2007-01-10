@@ -236,19 +236,6 @@ feature -- Setting
 			combination_toolbar_area.disable_sensitive
 		end
 
-	set_stone (a_stone: STONE) is
-			-- Notify that `a_stone' is dropped on Current.
-		local
-			l_selected_items: LIST [EV_GRID_ITEM]
-		do
-			if mode /= readonly_mode then
-				l_selected_items := combination_grid.selected_items
-				if not l_selected_items.is_empty then
-					combination_grid.on_item_drop (l_selected_items.first, a_stone)
-				end
-			end
-		end
-
 feature -- Access
 
 	metric: EB_METRIC_BASIC is

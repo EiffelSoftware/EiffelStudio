@@ -128,14 +128,6 @@ feature -- Access
 
 feature -- Status report
 
-	is_recalculatable (a_archive_list: LINEAR [EB_METRIC_ARCHIVE_NODE]): BOOLEAN is
-			-- Is `a_archive_list' ready to be recalculated?
-		require
-			a_archive_list_attached: a_archive_list /= Void
-		do
-			Result := (not a_archive_list.is_empty) and then a_archive_list.for_all (agent is_archive_recalculatable)
-		end
-
 	has_grid_been_binded: BOOLEAN
 			-- Has grid been binded?
 
@@ -146,20 +138,6 @@ feature -- Status report
 		do
 			l_item ?= a_item
 			Result := l_item /= Void and then l_item.is_pebble_droppable (a_pebble)
-		end
-
-feature -- Display
-
-	show is
-			-- Display current
-		do
-			grid.show
-		end
-
-	hide is
-			-- Hide current
-		do
-			grid.hide
 		end
 
 feature -- Setting

@@ -17,9 +17,9 @@ inherit
 			on_content
 		end
 
-	EB_METRIC_UTILITY
-
 	EB_METRIC_SHARED
+
+	QL_SHARED_UNIT
 
 create
 	make_with_factory
@@ -463,7 +463,7 @@ feature{NONE} -- Process
 
 					-- Validate "case_sensitive" attribute.
 				l_case_sensitive_value := False
-				l_case_sensitive := internal_name (current_attributes.item (at_case_sensitive))
+				l_case_sensitive := current_attributes.item (at_case_sensitive)
 				l_boolean_set := test_ommitable_boolean_attribute (
 					l_case_sensitive,
 					agent metric_names.err_case_sensitive_attr_invalid,
@@ -476,7 +476,7 @@ feature{NONE} -- Process
 					-- Validate "regular_expression" attribute.				
 				if not has_error then
 					l_regular_expression_value := True
-					l_regular_expression := internal_name (current_attributes.item (at_regular_expression))
+					l_regular_expression := current_attributes.item (at_regular_expression)
 					l_boolean_set := test_ommitable_boolean_attribute (
 						l_regular_expression,
 						agent metric_names.err_regular_expression_attr_invalid,
@@ -763,7 +763,7 @@ feature{NONE} -- Process
 							metric_names.criterion_location (current_metric.name, last_criterion.name)
 						)
 					else
-						l_type := internal_name (l_type)
+						l_type.to_lower
 						if not is_domain_item_type_valid (l_type) then
 							set_parse_error_message (
 								metric_names.err_domain_item_type_invalid (l_type),
@@ -1475,7 +1475,7 @@ feature{NONE} -- Implementation
 			l_uuid_str: STRING
 		do
 			l_name := current_attributes.item (at_name)
-			l_unit := internal_name (current_attributes.item (at_unit))
+			l_unit := current_attributes.item (at_unit)
 			l_uuid_str := current_attributes.item (at_uuid)
 			if not has_error then
 				if l_name = Void then
@@ -1490,7 +1490,7 @@ feature{NONE} -- Implementation
 						metric_names.err_unit_name_missing,
 						metric_names.metric_location_section (l_name, metric_type_name (a_metric_type_id))
 					)
-				elseif not is_unit_valid (l_unit) then
+				elseif not is_unit_valid (l_unit.as_lower) then
 					set_parse_error_message (
 						metric_names.err_unit_name_invalid (l_unit),
 						metric_names.metric_location_section (l_name, metric_type_name (a_metric_type_id))
@@ -1520,9 +1520,9 @@ feature{NONE} -- Implementation
 			l_negation_used: BOOLEAN
 		do
 			check current_metric /= Void end
-			l_name := internal_name (current_attributes.item (at_name))
-			l_scope := internal_name (current_attributes.item (at_unit))
-			l_negation := internal_name (current_attributes.item (at_negation))
+			l_name := current_attributes.item (at_name)
+			l_scope := current_attributes.item (at_unit)
+			l_negation := current_attributes.item (at_negation)
 			if l_name = Void then
 				set_parse_error_message (
 					metric_names.err_criterion_name_missing,
@@ -1744,6 +1744,16 @@ feature{NONE} -- Implementation
 			current_tester_item_attached: current_tester_item /= Void
 		do
 			current_tester_item.put (a_item, 1)
+		end
+
+	is_unit_valid (a_unit: STRING): BOOLEAN is
+			-- Is `a_unit' valid?
+			-- `a_unit' should be left and right trimmed and should be in lowercase.
+		require
+			a_unit_attached: a_unit /= Void
+			not_a_unit_is_empty: not a_unit.is_empty
+		do
+			Result := unit_table.has (a_unit)
 		end
 
 invariant

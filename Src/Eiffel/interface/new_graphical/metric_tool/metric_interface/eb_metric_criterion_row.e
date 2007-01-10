@@ -235,14 +235,6 @@ feature -- Basic operation
 			binded_to_grid: is_binded_to_grid
 		end
 
-	colors: EV_STOCK_COLORS is
-			-- Color factory
-		once
-			create Result
-		ensure
-			result_attached: Result /= Void
-		end
-
 	resize_grid is
 			-- Resize `grid' according to size changes of column.
 		do

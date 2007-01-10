@@ -276,8 +276,7 @@ feature {NONE} -- Externals
 
 				gtk_paint_box ($a_style, l_widget->window,
 					$a_gtk_state_type, $a_gtk_shadow_type,
-					//NULL, l_widget, "toolbar",
-	NULL, l_widget, "button",				
+					NULL, l_widget, "button",				
 					$a_x, $a_y, $a_width, $a_height);
 			}
 			]"

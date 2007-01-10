@@ -83,15 +83,12 @@ feature -- Redefine
 
 	on_theme_changed is
 			-- Redefine
-		local
 		do
-			-- FIXIT: how to receive theme change actions?
 		end
 
 	desatuation (a_pixmap: EV_PIXMAP; a_k: REAL) is
 			-- Redefine
 		do
-
 		end
 
 	set_tool_bar (a_tool_bar: SD_TOOL_BAR) is

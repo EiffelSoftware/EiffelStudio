@@ -68,8 +68,10 @@ feature -- Access
 
 	active_border_color: EV_COLOR is
 			-- Active border color
+		local
+			l_color: EV_STOCK_COLORS
 		do
-			Result := prelight_color
+			Result := dark_color
 		end
 
 	focused_title_text_color: EV_COLOR is
@@ -123,6 +125,20 @@ feature {NONE} -- GTK text_aa colors.
 			color: POINTER
 		do
 			color := active_bg_color({EV_GTK_EXTERNALS}.gtk_style_struct_bg ({EV_GTK_EXTERNALS}.gtk_rc_get_style (tree_view)))
+			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
+			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
+			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)
+			create Result
+			Result.set_rgb_with_16_bit (r, g, b)
+		end
+
+	dark_color: EV_COLOR is
+			-- Dark color of a widget.
+		local
+			r, g, b: INTEGER
+			color: POINTER
+		do
+			color := normal_bg_color({EV_GTK_EXTERNALS}.gtk_style_struct_dark ({EV_GTK_EXTERNALS}.gtk_rc_get_style (tree_view)))
 			r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (color)
 			g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (color)
 			b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (color)

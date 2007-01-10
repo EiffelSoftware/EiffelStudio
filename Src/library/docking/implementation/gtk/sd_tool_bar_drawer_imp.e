@@ -55,7 +55,6 @@ feature -- Redefine
 			l_tool_bar_imp: EV_DRAWING_AREA_IMP
 			l_rect: EV_RECTANGLE
 			l_button: SD_TOOL_BAR_BUTTON
-			l_temp_widget, l_style: POINTER
 			l_c_string: EV_GTK_C_STRING
 		do
 			l_tool_bar_imp ?= a_arguments.tool_bar.implementation
@@ -63,20 +62,9 @@ feature -- Redefine
 			l_rect := a_arguments.item.rectangle
 			l_button ?= a_arguments.item
 			if l_button /= Void then
-
 				-- Paint background
---				l_temp_widget := {EV_GTK_EXTERNALS}.gtk_button_new
---l_temp_widget := l_tool_bar_imp.c_object
---{EV_GTK_EXTERNALS}.gtk_widget_reset_rc_styles (l_temp_widget)
---				l_style := {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_temp_widget)
---l_style := {EV_GTK_EXTERNALS}.*style*
-
-
 				if a_arguments.item.state /= {SD_TOOL_BAR_ITEM_STATE}.normal then
 					c_gtk_paint_box (style_of (l_tool_bar_imp.c_object) , l_tool_bar_imp.c_object, to_gtk_state (a_arguments.item.state), gtk_shadow_type (a_arguments.item.state), l_rect.x, l_rect.y, l_rect.width, l_rect.height)
---c_gtk_paint_box (style_of (l_tool_bar_imp.c_object), l_tool_bar_imp.c_object,  {EV_GTK_EXTERNALS}.gtk_state_active_enum, {EV_GTK_EXTERNALS}.gtk_shadow_etched_out_enum, l_rect.x, l_rect.y, l_rect.width, l_rect.height)
---a_arguments.tool_bar.set_foreground_color ((create {EV_STOCK_COLORS}).red)
---a_arguments.tool_bar.fill_rectangle (l_rect.x, l_rect.y, l_rect.width, l_rect.height)
 				end
 
 				-- Paint pixmap

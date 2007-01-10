@@ -936,7 +936,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			Result := locale.format_string (locale.translate ("Normal supplier/client class attribute %"$1%" is invalid. A boolean value is expected."), [a_value])
+			Result := locale.format_string (locale.translate ("Value %"$1%" of %"normal%" attribute is invalid. A boolean value is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -954,7 +954,7 @@ feature -- Error/warning message
 		require
 			a_value_attached: a_value /= Void
 		do
-			Result := locale.format_string (locale.translate ("Indirect supplier/client class attribute %"$1%" is invalid. A boolean value is expected."), [a_value])
+			Result := locale.format_string (locale.translate ("Value %"$1%" of attribute %"indirect%" is invalid. A boolean value is expected."), [a_value])
 		ensure
 			result_attached: Result /= Void
 		end
@@ -970,7 +970,7 @@ feature -- Error/warning message
 	err_too_many_tester: STRING_GENERAL is
 			-- Too many tester sections error
 		do
-			Result := locale.translate ("Too many tester sections. Only one tester section is expected.")
+			Result := locale.translate ("Too many %"value_tester%" sections. Only one is expected.")
 		ensure
 			result_attached: Result /= Void
 		end

@@ -871,7 +871,14 @@ Assigner_mark_opt: -- Empty
 Constant_attribute: Manifest_constant
 			{ $$ := ast_factory.new_constant_as ($1) }
 	|	TE_UNIQUE
-			{ $$ := ast_factory.new_constant_as ($1) }
+			{
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+						once "The keyword `unique' might be removed in the future since not supported by the ECMA specification. Use a manifest integer constant instead."))
+				end
+				$$ := ast_factory.new_constant_as ($1)
+			}
 	;
 
 -- Inheritance
@@ -886,7 +893,6 @@ Inheritance: -- Empty
 						create {SYNTAX_WARNING}.make (line, column, filename,
 						once "Use `inherit ANY' or do not specify an empty inherit clause"))
 				end
-				--- $$ := Void
 				$$ := ast_factory.new_eiffel_list_parent_as (0)
 				if $$ /= Void then
 					$$.set_inherit_keyword ($1)

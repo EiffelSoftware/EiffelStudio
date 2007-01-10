@@ -5857,7 +5857,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval39 := ast_factory.new_constant_as (yyvs8.item (yyvsp8)) 
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make (line, column, filename,
+						once "The keyword `unique' might be removed in the future since not supported by the ECMA specification. Use a manifest integer constant instead."))
+				end
+				yyval39 := ast_factory.new_constant_as (yyvs8.item (yyvsp8))
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
 	yyvsp39 := yyvsp39 + 1
@@ -5931,7 +5937,6 @@ end
 						create {SYNTAX_WARNING}.make (line, column, filename,
 						once "Use `inherit ANY' or do not specify an empty inherit clause"))
 				end
-				--- $$ := Void
 				yyval107 := ast_factory.new_eiffel_list_parent_as (0)
 				if yyval107 /= Void then
 					yyval107.set_inherit_keyword (yyvs12.item (yyvsp12))

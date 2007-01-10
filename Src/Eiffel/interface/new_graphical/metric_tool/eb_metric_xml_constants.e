@@ -46,7 +46,6 @@ feature{NONE} -- Attribute constants
 	at_numerator,
 	at_denominator,
 	at_denominator_scope,
-	at_scope,
 	at_negation,
 	at_case_sensitive,
 	at_regular_expression,
@@ -76,7 +75,6 @@ feature{NONE} -- Text
 	n_basic_metric: STRING is "basic_metric"
 	n_linear_metric: STRING is "linear_metric"
 	n_ratio_metric: STRING is "ratio_metric"
-	n_scope_ratio_metric: STRING is "scope_ratio"
 	n_variable_metric: STRING is "variable_metric"
 	n_criterion: STRING is "criterion"
 	n_normal_criterion: STRING is "normal_criterion"
@@ -95,7 +93,6 @@ feature{NONE} -- Text
 	n_numerator: STRING is "numerator"
 	n_denominator: STRING is "denominator"
 	n_denominator_scope: STRING is "denominator_scope"
-	n_scope: STRING is"scope"
 	n_negation: STRING is "negation"
 	n_case_sensitive: STRING is "case_sensitive"
 	n_regular_expression: STRING is "regular_expression"

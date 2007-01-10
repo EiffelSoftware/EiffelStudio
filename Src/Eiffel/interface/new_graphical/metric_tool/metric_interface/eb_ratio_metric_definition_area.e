@@ -161,11 +161,6 @@ feature -- Setting
 			denominator_metric_setter.set_is_read_only (True)
 		end
 
-	set_stone (a_stone: STONE) is
-			-- Notify that `a_stone' is dropped on Current.
-		do
-		end
-
 feature -- Access
 
 	metric: EB_METRIC_RATIO is

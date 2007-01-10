@@ -17,8 +17,6 @@ inherit
 			on_content
 		end
 
-	EB_METRIC_UTILITY
-
 	EB_METRIC_SHARED
 
 create
@@ -241,7 +239,7 @@ feature{NONE} -- Process
 						metric_names.archive_location (current_archive_node.metric_name)
 					)
 				else
-					l_type := internal_name (l_type)
+					l_type.to_lower
 					if not is_domain_item_type_valid (l_type) then
 						set_parse_error_message (
 							metric_names.err_domain_item_type_invalid (l_type),
@@ -349,7 +347,7 @@ feature{NONE} -- Implementation
 		local
 			l_name: STRING
 		do
-			l_name := internal_name (a_type_name)
+			l_name := a_type_name.as_lower
 			if l_name.is_equal (n_basic) then
 				Result := basic_metric_type
 			elseif l_name.is_equal (n_linear) then

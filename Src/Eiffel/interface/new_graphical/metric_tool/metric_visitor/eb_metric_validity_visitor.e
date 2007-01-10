@@ -56,6 +56,8 @@ feature -- Setting
 			remove_error
 			error_table.wipe_out
 			metric_stack.wipe_out
+			location_stack.wipe_out
+			original_location_stack.wipe_out
 		end
 
 feature -- Validate
@@ -759,7 +761,6 @@ feature{NONE} -- Implementation
 			l_cnt: INTEGER
 		do
 			l_level := original_location_stack.count - location_stack.count + 1
-			l_last_error_loc := ""
 			if l_level > 0 then
 				from
 					l_relative_loc_stack := original_location_stack.duplicate (l_level)
@@ -776,7 +777,11 @@ feature{NONE} -- Implementation
 				until
 					l_loc_list.after
 				loop
-					l_last_error_loc.append (l_loc_list.item)
+					if l_last_error_loc = Void then
+						l_last_error_loc := l_loc_list.item.twin
+					else
+						l_last_error_loc.append (l_loc_list.item)
+					end
 					if l_loc_list.index < l_cnt then
 						l_last_error_loc.append (metric_names.location_connector)
 					end

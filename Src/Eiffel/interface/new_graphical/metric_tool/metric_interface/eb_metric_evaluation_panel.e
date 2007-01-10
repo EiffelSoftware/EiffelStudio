@@ -683,15 +683,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	current_application_target_domain: EB_METRIC_DOMAIN is
-			-- Current application target domain
-		do
-			create Result.make
-			Result.extend (create{EB_METRIC_TARGET_DOMAIN_ITEM}.make (""))
-		ensure
-			result_attached: Result /= Void
-		end
-
 	on_stop_metric_evaluation_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
 			-- Agent of `stop_metric_evaluation_agnet'
 

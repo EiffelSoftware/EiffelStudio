@@ -123,11 +123,6 @@ feature -- Setting
 			uuid_set: uuid = a_uuid
 		end
 
-	set_stone (a_stone: STONE) is
-			-- Notify that `a_stone' is dropped on Current.
-		deferred
-		end
-
 	check_validity_for_metric is
 			-- Check validity for `metric'.
 		local

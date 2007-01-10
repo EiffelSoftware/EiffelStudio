@@ -281,17 +281,6 @@ feature -- Element change
 			end
 		end
 
-	display_domain (a_domain: like domain) is
-			-- Display content of `a_domain' in current selector.
-		do
-			if grid.row_count > 0 then
-				grid.remove_rows (1, grid.row_count)
-			end
-			if a_domain /= Void then
-				a_domain.do_all (agent insert_domain_item)
-			end
-		end
-
 	refresh is
 			-- Refresh selected domain.
 			-- Used in synchronization.

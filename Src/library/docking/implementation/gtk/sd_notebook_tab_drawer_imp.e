@@ -175,9 +175,7 @@ feature {NONE}  -- Implementation
 			l_imp ?= internal_tab.parent.implementation
 			check not_void: l_imp /= Void end
 
-			l_style := {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_imp.c_object)
-
-			c_gtk_paint_extension (l_imp.c_object, l_style, a_is_selected,
+			c_gtk_paint_extension (l_imp.c_object, {EV_GTK_EXTERNALS}.gtk_rc_get_style (l_imp.c_object), a_is_selected,
 									 a_x, 0 ,a_width, internal_tab.height, is_top_side_tab)
 			if a_is_selected then
 				draw_pixmap_text_selected (internal_tab.parent, internal_tab.x, a_width)

@@ -22,6 +22,8 @@ inherit
 			show
 		end
 
+	EB_VETO_FACTORY
+
 	EB_RECYCLABLE
 
 	EB_SHARED_DEBUGGER_MANAGER
@@ -88,6 +90,9 @@ feature {NONE} -- Initialization
 			grid.set_item_pebble_function (agent on_item_pebble_function)
 			grid.set_item_accept_cursor_function (agent on_item_pebble_accept_cursor)
 			grid.set_item_deny_cursor_function (agent on_item_pebble_deny_cursor)
+
+			grid.drop_actions.extend (agent on_stone_dropped)
+			grid.drop_actions.set_veto_pebble_function (agent can_drop_debuggable_feature_or_class)
 
 			box.extend (grid)
 
@@ -190,6 +195,27 @@ feature {NONE} -- Commands
 			-- Toggle layout command
 
 feature -- Events
+
+	on_stone_dropped (a_stone: STONE) is
+			--	Stone dropped
+		local
+			fs: FEATURE_STONE
+			cs: CLASSC_STONE
+		do
+			fs ?= a_stone
+			if fs /= Void then
+				if not debugger_manager.is_breakpoint_set (fs.e_feature, 1) then
+					debugger_manager.enable_first_breakpoint_of_feature (fs.e_feature)
+					debugger_manager.notify_breakpoints_changes
+				end
+			else
+				cs ?= a_stone
+				if cs /= Void then
+					debugger_manager.enable_first_breakpoints_in_class (cs.e_class)
+					debugger_manager.notify_breakpoints_changes
+				end
+			end
+		end
 
 	on_item_pebble_function (gi: EV_GRID_ITEM): STONE is
 			-- Handle item pebble function

@@ -2,8 +2,6 @@ indexing
 	description: "External C functions used by the POSIX implementation of I18N_HOST_LOCALE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "ES-i18n team (es-i18n@origo.ethz.ch)"
-	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -116,6 +114,16 @@ feature -- Available locales
 		end
 
 feature {NONE} -- Implementation: C externals
+
+	c_current_codeset: POINTER is
+			-- Current codeset name.
+		external
+			"C inline use <langinfo.h>"
+		alias
+			"[
+				return nl_langinfo (CODESET);
+			]"
+		end
 
 	unix_locale_name: STRING is
 			-- see: `locale_name'

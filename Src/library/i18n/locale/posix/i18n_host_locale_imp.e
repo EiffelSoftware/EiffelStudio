@@ -2,8 +2,6 @@ indexing
 	description: "Implementation of I18N_HOST_LOCALE for posix platforms"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "ES-i18n team (es-i18n@origo.ethz.ch)"
-	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -50,8 +48,6 @@ feature -- Initialization
 						locale_name.is_equal ("C") and a_locale_id.name.is_equal ("POSIX")
 		end
 
-
-
 feature -- Informations
 
 	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN is
@@ -93,6 +89,11 @@ feature -- Informations
 			Result := current_locale_id
 		end
 
+	system_locale_id: I18N_LOCALE_ID is
+		do
+			Result := default_locale_id
+		end
+
 	current_locale_id : I18N_LOCALE_ID is
 			-- current locale id
 		do
@@ -106,14 +107,13 @@ feature -- Informations
 			at_index: INTEGER
 		do
 			Result := unix_locale_name
-			-- remove codeset from name
+				-- remove codeset from name
 			dot_index := Result.index_of ('.', 1)
 			at_index := Result.index_of ('@', 1)
 			if dot_index > 0 then
 					-- there is a codeset but not a skript
 				Result.remove_substring (dot_index, Result.count)
 			elseif dot_index > 0 and at_index > 0 then
-
 				Result.remove_substring (dot_index, at_index)
 			end
 		end
@@ -128,6 +128,7 @@ feature -- Informations
 				fill_date_time_info (a_locale_info)
 				fill_numeric_info (a_locale_info)
 				fill_currency_info (a_locale_info)
+				fill_code_page_info (a_locale_info)
  			end
 
  		fill_date_time_info (a_date_time_info: I18N_DATE_TIME_INFO) is
@@ -135,13 +136,13 @@ feature -- Informations
  			require
  				a_date_time_info_exists: a_date_time_info /= Void
  			do
- 				-- set date time formatting
+ 					-- set date time formatting
  				a_date_time_info.set_date_time_format (get_date_time_format)
 				a_date_time_info.set_long_date_format (get_long_date_format)
 				a_date_time_info.set_long_time_format (get_long_time_format)
  				a_date_time_info.set_am_suffix (get_am_suffix)
 				a_date_time_info.set_pm_suffix (get_pm_suffix)
-				-- set day/month names
+					-- set day/month names
 				a_date_time_info.set_day_names (get_day_names)
 				a_date_time_info.set_month_names (get_month_names)
  				a_date_time_info.set_abbreviated_day_names (get_abbreviated_day_names)
@@ -153,7 +154,7 @@ feature -- Informations
  			require
  				a_numeric_info_exists: a_numeric_info /= Void
  			do
- 				-- set number formatting
+ 					-- set number formatting
 				a_numeric_info.set_value_decimal_separator (get_value_decimal_separator)
 				a_numeric_info.set_value_group_separator (get_value_group_separator)
 				a_numeric_info.set_value_grouping (get_value_grouping)
@@ -164,7 +165,7 @@ feature -- Informations
  			require
  				a_currency_info_exists: a_currency_info /= Void
  			do
- 				-- set currency formatting
+ 					-- set currency formatting
 				a_currency_info.set_currency_symbol (get_currency_symbol)
 				a_currency_info.set_currency_symbol_location (get_currency_symbol_location)
  				a_currency_info.set_currency_decimal_separator (get_currency_decimal_separator)
@@ -173,9 +174,17 @@ feature -- Informations
  				a_currency_info.set_currency_positive_sign (get_currency_positive_sign)
  				a_currency_info.set_currency_negative_sign (get_currency_negative_sign)
  				a_currency_info.set_currency_grouping (get_currency_grouping)
-				-- set international currency formatting
+					-- set international currency formatting
 				a_currency_info.set_international_currency_symbol (get_int_currency_symbol)
 				a_currency_info.set_international_currency_numbers_after_decimal_separator (get_int_currency_numbers_after_decimal_separator)
+ 			end
+
+ 		fill_code_page_info (a_code_page_info: I18N_CODE_PAGE_INFO) is
+ 				-- fill `a_code_page_info' with the availiable informations
+ 			require
+ 				a_code_page_info_exists: a_code_page_info /= Void
+ 			do
+ 				a_code_page_info.set_code_page (get_code_page.as_string_8)
  			end
 
 feature {NONE} -- Date and time formatting
@@ -228,7 +237,6 @@ feature {NONE} -- Date and time formatting
 		ensure
 			result_exists: Result /= Void
 		end
-
 
 feature {NONE} -- day/months names
 
@@ -331,7 +339,6 @@ feature {NONE} -- day/months names
 			correct_size: Result.count = {DATE_CONSTANTS}.Months_in_year
 		end
 
-
 feature	{NONE} -- number formatting
 
 	get_value_decimal_separator: STRING_32 is
@@ -359,7 +366,6 @@ feature	{NONE} -- number formatting
 		ensure
 			result_exists: Result /= Void
 		end
-
 
 feature	{NONE} -- currency formatting
 
@@ -390,7 +396,7 @@ feature	{NONE} -- currency formatting
 			elseif l_string.item (1).is_equal ('.') then
 				Result := {I18N_LOCALE_INFO}.Currency_symbol_radix
 			else
-				-- Return as default value currency_symbol_prefixed
+					-- Return as default value currency_symbol_prefixed
 				Result := {I18N_LOCALE_INFO}.Currency_symbol_prefixed
 			end
 		ensure
@@ -453,6 +459,14 @@ feature	{NONE} -- currency formatting
 			result_exists: Result /= Void
 		end
 
+feature {NONE} -- Code Page
+
+	get_code_page: STRING_32 is
+			-- Codeset name
+		do
+			Result := utf8_pointer_to_string (c_current_codeset)
+		end
+
 feature {NONE} -- International currency formatting
 
 	get_int_currency_symbol: STRING_32 is
@@ -460,7 +474,6 @@ feature {NONE} -- International currency formatting
 		do
 			create Result.make_from_c (int_curr_symbol (localeconv))
 		end
-
 
 	get_int_currency_numbers_after_decimal_separator: INTEGER is
 			-- numbers after the decimal separator for currencynumbers
@@ -490,7 +503,7 @@ feature {NONE} --Implementation
 			loop
 				t := (l_string.item (i)).natural_32_code.as_integer_32
 				if t = {CHARACTER}.Max_value then
-					-- finished with the string
+						-- finished with the string
 					i := l_string.count
 				else
 					Result.put (t, i)
@@ -510,7 +523,6 @@ feature {NONE} --Implementation
 		alias
 			"strlen"
 		end
-
 
 	utf8_pointer_to_string (ptr:POINTER): STRING_32 is
 			-- convert a C UTF-8 string

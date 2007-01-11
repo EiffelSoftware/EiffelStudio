@@ -2,8 +2,6 @@ indexing
 	description: "Objects that allows to acces a C struct of type lconv defined in locale.h"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "ES-i18n team (es-i18n@origo.ethz.ch)"
-	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -58,7 +56,6 @@ feature -- Access
 		external
 			"C struct struct lconv access grouping use <locale.h>"
 		end
-
 
 	int_curr_symbol (p: POINTER): POINTER is
 			-- Get `p->int_curr_symbol'
@@ -148,7 +145,6 @@ feature -- Access
 			"C struct struct lconv access p_cs_precedes use <locale.h>"
 		end
 
-
 	p_sep_by_space (p: POINTER): CHARACTER is
 			-- Get `p->p_sep_by_space'
 			-- Set to a value indicating the separation of the currency_symbol,
@@ -168,8 +164,6 @@ feature -- Access
 			"C struct struct lconv access n_cs_precedes use <locale.h>"
 		end
 
-
-
 	n_sep_by_space (p: POINTER): CHARACTER is
 			-- Get `p->n_sep_by_space'
 			-- Set to 1 if the currency_symbol precedes the value
@@ -179,8 +173,6 @@ feature -- Access
 		external
 			"C struct struct lconv access n_sep_by_space use <locale.h>"
 		end
-
-
 
 	p_sign_posn (p: POINTER): CHARACTER is
 			-- Get `p->p_sign_posn'
@@ -199,7 +191,6 @@ feature -- Access
 		external
 			"C struct struct lconv access n_sign_posn use <locale.h>"
 		end
-
 
 --	int_p_cs_precedes (p: POINTER): CHARACTER is
 			-- Get `p->int_p_cs_precedes'

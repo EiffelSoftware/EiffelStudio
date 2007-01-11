@@ -291,7 +291,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			l_block_events: BOOLEAN
 			l_tab_controlable: EV_TAB_CONTROLABLE_I
 			l_char: CHARACTER_32
-			l_handled: BOOLEAN
+			l_any: ANY
 		do
 			l_app_imp := app_implementation
 
@@ -358,7 +358,8 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 							l_app_imp.key_release_actions_internal.call ([a_focus_widget.interface, a_key])
 						end
 					end
-					if a_focus_widget /= Current then
+					l_any := Current
+					if a_focus_widget /= l_any then
 						on_key_event (a_key, a_key_string, a_key_press)
 					end
 					a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)

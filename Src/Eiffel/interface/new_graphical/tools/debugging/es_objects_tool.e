@@ -334,12 +334,11 @@ feature {NONE} -- Interface
 						i > objects_grids_positions.upper
 					loop
 						create mci
+						mci.set_text (pos_titles[i])
 						if lid.is_case_insensitive_equal (objects_grids_positions[i]) then
-							mci.set_text (interface_names.l_item_is_attached_to (pos_titles[i], og.name))
 							mci.enable_select
 							mci.disable_sensitive
 						else
-							mci.set_text (interface_names.l_move_to (pos_titles[i], og.name))
 							mci.disable_select
 							mci.select_actions.extend (agent assign_objects_grids_position (lid, i))
 						end

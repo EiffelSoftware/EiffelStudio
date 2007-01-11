@@ -47,6 +47,11 @@ feature -- Informations
 		deferred
 		end
 
+	system_locale_id: I18N_LOCALE_ID is
+			-- system locale id
+		deferred
+		end
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

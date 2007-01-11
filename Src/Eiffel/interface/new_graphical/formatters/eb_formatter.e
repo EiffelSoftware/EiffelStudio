@@ -31,9 +31,9 @@ feature -- Initialization
 		do
 			manager := a_manager
 			capital_command_name := command_name.twin
-			capital_command_name := interface_names.string_general_left_adjust (capital_command_name)
+			capital_command_name := interface_names.string_general_as_left_adjusted (capital_command_name)
 				-- Set the first character to upper case.
-			capital_command_name := interface_names.first_character_to_upper_case (capital_command_name)
+			capital_command_name := interface_names.first_character_as_upper (capital_command_name)
 			create post_execution_action
 		ensure
 			valid_capital_command_name: valid_string (capital_command_name)

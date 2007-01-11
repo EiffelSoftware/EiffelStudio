@@ -55,7 +55,7 @@ feature {NONE} -- Properties
 	command_name: STRING_GENERAL is
 			-- Name of the command.
 		do
-			Result := Interface_names.string_general_to_lower (interface_names.l_Suppliers)
+			Result := Interface_names.string_general_as_lower (interface_names.l_Suppliers)
 		end
 
 	post_fix: STRING is "sup"

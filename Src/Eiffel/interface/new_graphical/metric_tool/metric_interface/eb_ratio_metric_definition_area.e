@@ -83,12 +83,12 @@ feature {NONE} -- Initialization
 
 			create l_text
 			expression_text.set_background_color (l_text.background_color)
-			numerator_frame.set_text (interface_names.first_character_to_upper_case (metric_names.l_numerator_metric))
-			denominator_frame.set_text (interface_names.first_character_to_upper_case (metric_names.l_denominator_metric))
-			numerator_coefficient_lbl.set_text (interface_names.first_character_to_upper_case (metric_names.t_coefficient) + metric_names.colon.as_string_32)
-			denominator_coefficient_lbl.set_text (interface_names.first_character_to_upper_case (metric_names.t_coefficient) + metric_names.colon.as_string_32)
-			numerator_lbl.set_text (interface_names.first_character_to_upper_case (metric_names.t_metric) + metric_names.colon.as_string_32)
-			denominator_lbl.set_text (interface_names.first_character_to_upper_case (metric_names.t_metric) + metric_names.colon.as_string_32)
+			numerator_frame.set_text (interface_names.first_character_as_upper (metric_names.l_numerator_metric))
+			denominator_frame.set_text (interface_names.first_character_as_upper (metric_names.l_denominator_metric))
+			numerator_coefficient_lbl.set_text (interface_names.first_character_as_upper (metric_names.t_coefficient) + metric_names.colon.as_string_32)
+			denominator_coefficient_lbl.set_text (interface_names.first_character_as_upper (metric_names.t_coefficient) + metric_names.colon.as_string_32)
+			numerator_lbl.set_text (interface_names.first_character_as_upper (metric_names.t_metric) + metric_names.colon.as_string_32)
+			denominator_lbl.set_text (interface_names.first_character_as_upper (metric_names.t_metric) + metric_names.colon.as_string_32)
 			numerator_coefficient_txt.change_actions.extend (agent on_numerator_coefficient_change)
 			denominator_coefficient_txt.change_actions.extend (agent on_denominator_coefficient_change)
 			numerator_coefficient_txt.set_background_color (l_text.background_color)

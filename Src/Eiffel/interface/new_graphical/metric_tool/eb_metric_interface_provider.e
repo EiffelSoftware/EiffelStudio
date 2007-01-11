@@ -146,9 +146,9 @@ feature -- Names
 		require
 			a_name_attached: a_name /= Void
 		do
-			Result := string_general_to_lower (a_name)
+			Result := string_general_as_lower (a_name)
 			if not a_name.is_empty then
-				Result := first_character_to_upper_case (Result)
+				Result := first_character_as_upper (Result)
 			end
 		ensure
 			result_attached: Result /= Void

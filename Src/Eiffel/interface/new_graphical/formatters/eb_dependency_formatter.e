@@ -114,30 +114,30 @@ feature -- Properties
 			l_target_stone ?= a_stone
 			create Result.make (64)
 			if l_feature_stone /= Void then
-				Result.append (interface_names.string_general_to_lower (interface_names.s_feature_stone))
+				Result.append (interface_names.string_general_as_lower (interface_names.s_feature_stone))
 				Result.append (l_feature_stone.e_feature.name)
 			elseif l_class_stone /= Void then
-				Result.append (interface_names.string_general_to_lower (interface_names.s_class_stone))
+				Result.append (interface_names.string_general_as_lower (interface_names.s_class_stone))
 				Result.append (l_class_stone.class_name)
 			elseif l_cluster_stone /= Void then
 				if not l_cluster_stone.path.is_empty then
 						-- For a folder
-					Result.append (interface_names.string_general_to_lower (interface_names.s_folder_stone))
+					Result.append (interface_names.string_general_as_lower (interface_names.s_folder_stone))
 					Result.append (l_cluster_stone.folder_name)
 				else
 						-- For a group
 					l_group := l_cluster_stone.group
 					if l_group.is_library then
-						Result.append (interface_names.string_general_to_lower (interface_names.s_library_stone))
+						Result.append (interface_names.string_general_as_lower (interface_names.s_library_stone))
 					elseif l_group.is_cluster then
-						Result.append (interface_names.string_general_to_lower (interface_names.s_cluster_stone))
+						Result.append (interface_names.string_general_as_lower (interface_names.s_cluster_stone))
 					elseif l_group.is_assembly then
-						Result.append (interface_names.string_general_to_lower (interface_names.s_assembly_stone))
+						Result.append (interface_names.string_general_as_lower (interface_names.s_assembly_stone))
 					end
 					Result.append (l_group.name)
 				end
 			elseif l_target_stone /= Void then
-				Result.append (interface_names.string_general_to_lower (interface_names.s_target_stone))
+				Result.append (interface_names.string_general_as_lower (interface_names.s_target_stone))
 				Result.append (l_target_stone.target.name)
 			end
 		ensure

@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 		local
 			l_string: STRING_GENERAL
 		do
-			l_string := conf_interface_names.string_general_to_upper (a_new_key)
+			l_string := conf_interface_names.string_general_as_upper (a_new_key)
 			if a_new_key /= Void and then not a_new_key.is_empty and then not value.has (l_string) then
 				value.replace_key (l_string, an_old_key)
 			end
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 		local
 			l_string: STRING_GENERAL
 		do
-			l_string := conf_interface_names.string_general_to_upper (a_new_value)
+			l_string := conf_interface_names.string_general_as_upper (a_new_value)
 			if a_new_value /= Void and then not a_new_value.is_empty and then not value.has_item (l_string) then
 				value.force (l_string, a_key)
 			end

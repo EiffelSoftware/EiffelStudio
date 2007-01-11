@@ -64,7 +64,7 @@ feature{NONE} -- Initialization
 			create l_ver
 			create l_hor
 			create l_split_area
-			create l_lbl.make_with_text (interface_names.first_character_to_upper_case (metric_names.t_metric).as_string_32 + ":")
+			create l_lbl.make_with_text (interface_names.first_character_as_upper (metric_names.t_metric).as_string_32 + ":")
 			l_lbl.align_text_left
 
 			l_hor.extend (l_lbl)

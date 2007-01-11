@@ -67,14 +67,14 @@ feature {NONE} -- Implementation
 
 feature -- String
 
-	first_character_to_upper_case (a_s: STRING_GENERAL): STRING_GENERAL is
+	first_character_as_upper (a_s: STRING_GENERAL): STRING_GENERAL is
 			-- First character to upper case if possible
 		require
 			a_s_not_void: a_s /= Void
 		local
 			c: NATURAL_32
 		do
-			Result := a_s
+			Result := a_s.twin
 			if not Result.is_empty then
 				c := Result.code (1)
 				if c <= {CHARACTER_8}.max_value.to_natural_32 then
@@ -83,9 +83,10 @@ feature -- String
 			end
 		ensure
 			Result_not_void: Result /= Void
+			Identity: Result /= a_s
 		end
 
-	string_general_to_lower (a_s: STRING_GENERAL): STRING_GENERAL is
+	string_general_as_lower (a_s: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_s_not_void: a_s /= Void
 		local
@@ -95,14 +96,15 @@ feature -- String
 				l_str := a_s.as_string_8
 				Result := l_str.as_lower
 			else
-				Result := a_s
+				Result := a_s.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
 			Result_is_lower: is_string_general_lower (Result)
+			Identity: Result /= a_s
 		end
 
-	string_general_to_upper (a_s: STRING_GENERAL): STRING_GENERAL is
+	string_general_as_upper (a_s: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_s_not_void: a_s /= Void
 		local
@@ -112,14 +114,15 @@ feature -- String
 				l_str := a_s.as_string_8
 				Result := l_str.as_upper
 			else
-				Result := a_s
+				Result := a_s.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
 			Result_is_upper: is_string_general_upper (Result)
+			Identity: Result /= a_s
 		end
 
-	string_general_left_adjust (a_s: STRING_GENERAL): STRING_GENERAL is
+	string_general_as_left_adjusted (a_s: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_s_not_void: a_s /= Void
 		local
@@ -130,10 +133,11 @@ feature -- String
 				l_str.left_adjust
 				Result := l_str
 			else
-				Result := a_s
+				Result := a_s.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
+			Identity: Result /= a_s
 		end
 
 	is_string_general_lower (a_str: STRING_GENERAL): BOOLEAN is

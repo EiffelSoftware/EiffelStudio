@@ -1366,7 +1366,7 @@ feature -- Utilities
 			a_string_attached: a_string /= Void
 		do
 			if a_first_letter_upper then
-				Result := first_character_to_upper_case (a_string)
+				Result := first_character_as_upper (a_string)
 			else
 				Result := a_string.twin
 			end

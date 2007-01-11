@@ -54,7 +54,7 @@ feature -- Access
 	visitable_name: STRING_GENERAL is
 			-- Name of current visitable item
 		do
-			Result := metric_names.visitable_name (metric_names.string_general_to_lower (metric_names.t_criterion), name)
+			Result := metric_names.visitable_name (metric_names.string_general_as_lower (metric_names.t_criterion), name)
 		end
 
 feature -- Status report

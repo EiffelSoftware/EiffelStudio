@@ -116,7 +116,7 @@ feature -- Execution
 				l_x := l_window.screen_x + l_window.width // 2 - l_shared.default_floating_window_width // 2
 				l_y := l_window.screen_y + l_window.height // 2 - l_shared.default_floating_window_height // 2
 
-				l_shared.set_defualt_screen_x (l_x)
+				l_shared.set_default_screen_x (l_x)
 				l_shared.set_default_screen_y (l_y)
 
 				tool.content.show

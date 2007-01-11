@@ -153,7 +153,7 @@ feature -- Access
 			Result := default_screen_y_cell.item
 		end
 
-	set_defualt_screen_x (a_x: INTEGER) is
+	set_default_screen_x (a_x: INTEGER) is
 			-- Set `default_screen_x'
 		require
 			valid: default_screen_x >= 0
@@ -166,7 +166,7 @@ feature -- Access
 	set_default_screen_y (a_y: INTEGER) is
 			-- Set `default_screen_y'
 		require
-			vaild: default_screen_y >= 0
+			valid: default_screen_y >= 0
 		do
 			default_screen_y_cell.put (a_y)
 		ensure

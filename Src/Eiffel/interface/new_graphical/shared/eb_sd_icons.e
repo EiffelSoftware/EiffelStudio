@@ -105,6 +105,7 @@ feature -- Implementation
 
 			create l_font
 			l_font.set_height_in_points (7)
+			l_font.set_family ({EV_FONT_CONSTANTS}.family_roman)
 			Result.set_font (l_font)
 
 			if a_hide_number < 10 then

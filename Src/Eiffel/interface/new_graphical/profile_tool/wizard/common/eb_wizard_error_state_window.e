@@ -21,7 +21,7 @@ feature -- Initialization
 	build is
 		do
 			Precursor {EB_WIZARD_FINAL_STATE_WINDOW}
-			first_window.set_final_state ("Abort")
+			first_window.set_final_state (interface_names.b_Abort)
 		end
 
 feature -- basic Operations

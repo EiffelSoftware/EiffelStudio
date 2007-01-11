@@ -53,9 +53,9 @@ feature {NONE} -- Initialization
 			a_box.extend (h1)
 			a_box.disable_item_expand (h1)
 
-			Create previous_b.make_with_text_and_action ("< Back ", agent previous_page)
-			Create next_b.make_with_text_and_action ("Next >", agent next_page)
-			Create cancel_b.make_with_text_and_action ("Cancel", agent cancel_actions)
+			Create previous_b.make_with_text_and_action (interface_names.b_arrow_back, agent previous_page)
+			Create next_b.make_with_text_and_action (interface_names.b_arrow_next, agent next_page)
+			Create cancel_b.make_with_text_and_action (interface_names.b_cancel, agent cancel_actions)
 
 			h1.extend (create {EV_CELL})
 
@@ -157,7 +157,7 @@ feature -- Basic Operations
 				previous_b.enable_sensitive
 			else
 				previous_b.enable_sensitive
-				next_b.set_text("Next >")
+				next_b.set_text(interface_names.b_Next)
 			end
 		end
 

@@ -41,7 +41,7 @@ feature -- Button texts
 	b_Apply: STRING_GENERAL is							do Result := locale.translate("Apply")	end
 	b_Browse: STRING_GENERAL is							do Result := locale.translate("Browse...")	end
 	b_C_functions: STRING_GENERAL is					do Result := locale.translate("C Functions")	end
-	b_change: STRING_GENERAL is do Result := locale.translate ("Change")	end
+	b_change: STRING_GENERAL is 						do Result := locale.translate ("Change")	end
 	b_Close: STRING_GENERAL is							do Result := locale.translate("Close")	end
 	b_Close_tool (a_tool: STRING_GENERAL): STRING_GENERAL is
 		require a_tool_not_void: a_tool /= Void
@@ -125,6 +125,8 @@ feature -- Button texts
 	b_Project_settings: STRING_GENERAL is				do Result := locale.translate("Project Settings")	end
 	b_previous: STRING_GENERAL is 						do Result := locale.translate ("Previous") end
 	b_System_info: STRING_GENERAL is					do Result := locale.translate("System Info")	end
+	b_arrow_back: STRING_GENERAL is						do Result := locale.translate ("< Back") end
+	b_arrow_next: STRING_GENERAL is						do Result := locale.translate ("Next >") end
 	b_Bkpt_info: STRING_GENERAL is						do Result := locale.translate("Breakpoint Info")	end
 	b_Bkpt_enable: STRING_GENERAL is					do Result := locale.translate("Enable Breakpoints")	end
 	b_Bkpt_disable: STRING_GENERAL is					do Result := locale.translate("Disable Breakpoints")	end
@@ -197,7 +199,7 @@ feature -- Accelerator, focus label and menu name
 	m_add_first_breakpoints_in_class: STRING_GENERAL is 	do Result := locale.translate("Add first breakpoints in class" )	end
 	m_add_first_breakpoints_in_feature: STRING_GENERAL is 	do Result := locale.translate("Add first breakpoints in feature" )	end
 	f_add_new_expression: STRING_GENERAL is 	do Result := locale.translate ("Click here to add a new expression") end
-	m_add_new_variable: STRING_GENERAL is 	do Result := locale.translate ("Add new variable") end
+	m_add_new_variable: STRING_GENERAL is 		do Result := locale.translate ("Add new variable") end
 	f_add_a_new_variable: STRING_GENERAL is
 		do
 			Result := locale.translate ("[

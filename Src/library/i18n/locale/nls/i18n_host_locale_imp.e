@@ -46,6 +46,12 @@ feature -- Information
 			Result := lcid_tools.lcid_to_locale_id (user_locale)
 		end
 
+	system_locale_id: I18N_LOCALE_ID is
+			--
+		do
+			Result := lcid_tools.lcid_to_locale_id (system_locale)
+		end
+
 	is_available (a_locale_id : I18N_LOCALE_ID) : BOOLEAN is
 			--
 		do
@@ -90,8 +96,28 @@ feature {NONE} -- fill
 			Result.set_value_group_separator (get_value_group_separator)
 			Result.set_value_number_list_separator (get_value_number_list_separator)
 			Result.set_value_numbers_after_decimal_separator (get_value_numbers_after_decimal_separator)
+			Result.set_code_page (ansi_code_page)
 		end
 
+feature -- Code page
+
+	ansi_code_page: STRING_32 is
+		do
+			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultansicodepage,
+											nls_constants.locale_idefaultansicodepage_maxlen)
+		end
+
+	oem_code_page: STRING_32 is
+		do
+			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultcodepage,
+											nls_constants.locale_idefaultcodepage_maxlen)
+		end
+
+	mac_code_page: STRING_32 is
+		do
+			Result := extract_locale_string (current_lcid, nls_constants.locale_idefaultmaccodepage,
+											nls_constants.locale_idefaultmaccodepage_maxlen)
+		end
 
 feature {NONE} -- Value formatting
 

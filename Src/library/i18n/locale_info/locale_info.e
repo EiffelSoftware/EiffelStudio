@@ -24,6 +24,11 @@ inherit
 			make as initialize_date_time_info
 		end
 
+	I18N_CODE_PAGE_INFO
+		rename
+			make as initialize_code_page_info
+		end
+
 creation
 	make
 
@@ -41,6 +46,8 @@ feature --creation
 			initialize_numeric_info
 
 			initialize_currency_info
+
+			initialize_code_page_info
 
 				-- Set an empty id
 			create id.make_from_string ("")

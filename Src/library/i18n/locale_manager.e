@@ -49,12 +49,16 @@ feature -- Access
 				create l_locale_info.make -- will have default values	
 			end
 			create Result.make (l_dictionary, l_locale_info)
+		ensure
+			get_locale_not_void: Result /= Void
 		end
 
 	get_system_locale : I18N_LOCALE is
 			-- Get the default locale in the system
 		do
-			Result := get_locale(host_locale.default_locale_id)
+			Result := get_locale(host_locale.system_locale_id)
+		ensure
+			get_system_locale_not_void: Result /= Void
 		end
 
 feature -- Status report
@@ -77,6 +81,8 @@ feature -- Status report
 				end
 				temp.forth
 			end
+		ensure
+			available_locales_not_void: Result /= Void
 		end
 
 	has_translations (a_locale_id: I18N_LOCALE_ID): BOOLEAN is

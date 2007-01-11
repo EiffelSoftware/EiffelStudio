@@ -30,8 +30,11 @@ feature -- LC_CTYPE constants from winnnls.h
 	LOCALE_IDEFAULTLANGUAGE: INTEGER is        0x00000009   -- default language id
 	LOCALE_IDEFAULTCOUNTRY: INTEGER is         0x0000000A   -- default country code
 	LOCALE_IDEFAULTCODEPAGE: INTEGER is        0x0000000B   -- default oem code page
+	locale_idefaultcodepage_maxlen: INTEGER is 6
 	LOCALE_IDEFAULTANSICODEPAGE: INTEGER is    0x00001004   -- default ansi code page
+	locale_idefaultansicodepage_maxlen: INTEGER is 6
 	LOCALE_IDEFAULTMACCODEPAGE: INTEGER is     0x00001011   -- default mac code page
+	locale_idefaultmaccodepage_maxlen: INTEGER is 6
 
 	LOCALE_SLIST: INTEGER is                   0x0000000C   -- list item separator
 	locale_slist_maxlen:INTEGER is 4

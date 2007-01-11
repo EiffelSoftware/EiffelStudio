@@ -81,26 +81,6 @@ feature -- Basic Operations
 			result_exists: Result /= Void
 		end
 
-	wide_character_to_multibyte (a_str: STRING_32): STRING_8 is
-			-- Convert `a_str', a Unicode string, to multibyte string
-			-- according to codepage current represents.
-		require
-			a_str_not_void: a_str /= Void
-		do
-		ensure
-			wide_character_to_multibyte_not_void: Result /= Void
-		end
-
-	multibyte_to_wide_character (a_str: STRING_8): STRING_32 is
-			-- Convert `a_str', a multibyte string, to Unicode string
-			-- according to codepage current represents.
-		require
-			a_str_not_void: a_str /= Void
-		do
-		ensure
-			multibyte_to_wide_character: Result /= Void
-		end
-
 feature -- Formatters
 
 	date_formatter:		I18N_DATE_FORMATTER
@@ -108,6 +88,11 @@ feature -- Formatters
 	currency_formatter: I18N_CURRENCY_FORMATTER
 
 feature {NONE} -- Implementation
+
+	host_locale: I18N_HOST_LOCALE is
+		once
+			create {I18N_HOST_LOCALE_IMP}Result
+		end
 
 	dictionary:		I18N_DICTIONARY
 	string_formatter:	I18N_STRING_FORMATTER;

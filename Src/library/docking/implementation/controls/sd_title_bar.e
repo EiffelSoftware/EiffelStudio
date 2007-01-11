@@ -137,6 +137,7 @@ feature -- Command
 					internal_tool_bar.prune (normal_max)
 				end
 			end
+			on_fixed_resize (0, 0, fixed.width, fixed.height)
 		ensure
 			set: a_show = internal_tool_bar.has (normal_max)
 		end
@@ -155,6 +156,7 @@ feature -- Command
 					internal_tool_bar.prune (stick)
 				end
 			end
+			on_fixed_resize (0, 0, fixed.width, fixed.height)
 		ensure
 			set: a_show = internal_tool_bar.has (stick)
 		end

@@ -23,6 +23,11 @@ inherit
 			{ANY} supported_filters
 		end
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -56,7 +61,7 @@ feature -- Initialization
 
 			if has_browse_button then
 					-- Create the browse button
-				create browse_button.make_with_text("Browse...")
+				create browse_button.make_with_text(interface_names.b_browse)
 				browse_button.select_actions.extend (browse_button_action)
 
 				create textfield_box

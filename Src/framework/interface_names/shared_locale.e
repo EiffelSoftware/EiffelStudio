@@ -18,7 +18,7 @@ feature -- Access
         do
 			Result := locale_internal.item
 			if Result = Void then
-				Result := locale_manager.get_system_locale
+				Result := system_locale
 				locale_internal.put (Result)
 			end
 		ensure
@@ -49,7 +49,7 @@ feature -- Status change
 			if locale_manager.has_locale (l_id) then
 				locale_internal.put (locale_manager.get_locale (l_id))
 			else
-				locale_internal.put (locale_manager.get_system_locale)
+				locale_internal.put (system_locale)
 			end
 		end
 
@@ -58,6 +58,11 @@ feature {NONE} -- Implementation
 	locale_internal: CELL [I18N_LOCALE] is
 		once
 			create Result
+		end
+
+	system_locale: I18N_LOCALE
+		once
+			Result := locale_manager.get_system_locale
 		end
 
 feature -- String

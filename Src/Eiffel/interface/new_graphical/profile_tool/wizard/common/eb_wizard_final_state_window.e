@@ -22,7 +22,7 @@ feature -- Basic Operations
 	display is
 			-- Display Current State
 		do
-			first_window.set_final_state ("Finish")
+			first_window.set_final_state (interface_names.b_Finish)
 			build
 		end
 

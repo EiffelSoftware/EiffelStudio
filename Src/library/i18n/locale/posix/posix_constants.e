@@ -2,8 +2,6 @@ indexing
 	description: "Constants for nl_locale_info"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "ES-i18n team (es-i18n@origo.ethz.ch)"
-	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -2,12 +2,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-01-11 17:39+0300\n"
+"PO-Revision-Date: 2007-01-12 00:03+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Russian\n"
 
 msgid "&Remove Current Item"
 msgstr ""
@@ -61,7 +62,7 @@ msgid "Spanish (Peru)"
 msgstr "Испанский (Перу)"
 
 msgid "Insert Midpoint"
-msgstr ""
+msgstr "Вставить среднюю точку"
 
 msgid "Don't show this dialog at startup"
 msgstr "Не показывать этот диалог при запуске"
@@ -90,7 +91,7 @@ msgid "Back"
 msgstr "Назад"
 
 msgid "Redo (Ctrl+Y)"
-msgstr ""
+msgstr "Повторить (Ctrl+Y)"
 
 msgid "Open Backup File"
 msgstr ""
@@ -102,7 +103,7 @@ msgid "Description of the task."
 msgstr "Описание задачи."
 
 msgid "Metric Definition File:"
-msgstr ""
+msgstr "Файл определения метрики:"
 
 msgid "Breton (France)"
 msgstr ""
@@ -128,7 +129,7 @@ msgid "Root class name: "
 msgstr "Имя корневого класса:"
 
 msgid "<- Remove all"
-msgstr ""
+msgstr "<- Удалить все"
 
 msgid "Watch tool :: error message"
 msgstr ""
@@ -140,7 +141,7 @@ msgid "Metric name"
 msgstr "Имя метрики"
 
 msgid "Assertion"
-msgstr ""
+msgstr "Утверждение"
 
 msgid "Czech"
 msgstr "Чешский"
@@ -179,7 +180,7 @@ msgid "Unused Locals"
 msgstr "Неиспользованные локальные переменные"
 
 msgid "Choose name for new configuration file"
-msgstr ""
+msgstr "Укажите имя нового файла конфигурации"
 
 msgid "Archive comparison result:"
 msgstr ""
@@ -191,7 +192,7 @@ msgid "You can put \"not\" before a criterion name to negate it"
 msgstr ""
 
 msgid "Show labels"
-msgstr ""
+msgstr "Показывать ярлыки"
 
 msgid "Remove all value retriever"
 msgstr ""
@@ -224,7 +225,7 @@ msgid "Regexp"
 msgstr ""
 
 msgid "already exists."
-msgstr ""
+msgstr "уже существует."
 
 msgid "Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric."
 msgstr ""
@@ -233,7 +234,7 @@ msgid "Add scope"
 msgstr ""
 
 msgid "Root class .NET name"
-msgstr ""
+msgstr ".NET имя корневого класса"
 
 msgid "Remove and-term"
 msgstr ""
@@ -260,10 +261,10 @@ msgid "Move Cluster '$1'"
 msgstr ""
 
 msgid "EIFGENs location"
-msgstr ""
+msgstr "Расположение каталога EIFGEN"
 
 msgid "Warn about usage of old syntax?"
-msgstr ""
+msgstr "Предупреждать об использовании старого синтаксиса?"
 
 msgid "File name:"
 msgstr "Имя файла:"
@@ -272,13 +273,13 @@ msgid "Undo (Ctrl+Z)"
 msgstr "Отменить (Ctrl+Z)"
 
 msgid "Reset"
-msgstr ""
+msgstr "Сбросить"
 
 msgid "Metric archive in specified file is not valid, it must be cleaned"
 msgstr ""
 
 msgid "Resource"
-msgstr ""
+msgstr "Ресурс"
 
 msgid "Remove selected scope(s)"
 msgstr ""
@@ -301,16 +302,16 @@ msgid "Flat View"
 msgstr ""
 
 msgid "Browse..."
-msgstr ""
+msgstr "Обзор..."
 
 msgid "Evaluate precondition assertions?"
-msgstr ""
+msgstr "Вычислять предусловия?"
 
 msgid "Project icon"
 msgstr ""
 
 msgid "Synchronize"
-msgstr ""
+msgstr "Синхронизировать"
 
 msgid "Sami"
 msgstr ""
@@ -328,13 +329,13 @@ msgid "Dari"
 msgstr ""
 
 msgid "Alias"
-msgstr ""
+msgstr "Псевдоним"
 
 msgid "Coefficient \"$1\" for numerator metric is invalid. A real number is expected."
 msgstr ""
 
 msgid "Open a new context window"
-msgstr ""
+msgstr "Открыть новое окно контекста"
 
 msgid "Khmer (Cambodia)"
 msgstr ""
@@ -441,10 +442,10 @@ msgid "Freeze..."
 msgstr ""
 
 msgid "Hide Alias Name"
-msgstr ""
+msgstr "Скрыть имя псевдонима"
 
 msgid "Add Object"
-msgstr ""
+msgstr "Добавить объект"
 
 msgid "Show all stack elements"
 msgstr "Показать все элементы стека"
@@ -501,10 +502,10 @@ msgid "Evaluate metric: "
 msgstr ""
 
 msgid "Location"
-msgstr ""
+msgstr "Расположение"
 
 msgid "Location: "
-msgstr ""
+msgstr "Расположение: "
 
 msgid ""
 "Using this wizard you can create a Windows application\n"
@@ -541,7 +542,7 @@ msgid "Check the validity of the library definition"
 msgstr ""
 
 msgid "Reload"
-msgstr ""
+msgstr "Перегрузить"
 
 msgid "Command output:\n"
 msgstr ""
@@ -571,7 +572,7 @@ msgid "&Preferences..."
 msgstr ""
 
 msgid "Show UML"
-msgstr ""
+msgstr "Показать UML"
 
 msgid "Command is running"
 msgstr ""
@@ -589,13 +590,13 @@ msgid "Display history in tree view?"
 msgstr ""
 
 msgid "Bashkir (Russia)"
-msgstr ""
+msgstr "Башкирский (Россия)"
 
 msgid "Warn about missing classes in export clauses (VTCM)?"
-msgstr ""
+msgstr "Предупреждать об отсутствующих классах в предложениях экспорта (VTCM)?"
 
 msgid "Module"
-msgstr ""
+msgstr "Модуль"
 
 msgid "&OK"
 msgstr ""
@@ -622,25 +623,25 @@ msgid "Value \"$1\" of \"normal\" attribute is invalid. A boolean value is expec
 msgstr ""
 
 msgid "Evaluate invariant assertions?"
-msgstr ""
+msgstr "Вычислять инварианты?"
 
 msgid "Search for group/class/feature"
 msgstr ""
 
 msgid "Overwrite"
-msgstr ""
+msgstr "Перезаписать"
 
 msgid "Add ->"
-msgstr ""
+msgstr "Добавить ->"
 
 msgid "Croatian (Bosnia and Herzegovina, Latin)"
-msgstr ""
+msgstr "Хорватский (Босния и Герцеговина, латиница)"
 
 msgid "Overflow Prevention"
-msgstr ""
+msgstr "Предупреждение переполнения"
 
 msgid "Conte&xt"
-msgstr ""
+msgstr "Кон&текст"
 
 msgid "Include Library '$1'"
 msgstr ""
@@ -660,10 +661,10 @@ msgid ""
 msgstr ""
 
 msgid "Command"
-msgstr ""
+msgstr "Команда"
 
 msgid "Renames occurances of the class name in any class. (Slow)"
-msgstr ""
+msgstr "Переименовывает вхождения имени класса в любом классе. (Медленно)"
 
 msgid "Should generated assemblies be marked as CLS compliant?"
 msgstr ""
@@ -681,10 +682,10 @@ msgid "Descendant Time"
 msgstr ""
 
 msgid "Add Sub cluster"
-msgstr ""
+msgstr "Добавить подкластер"
 
 msgid "Enable Breakpoints"
-msgstr ""
+msgstr "Разрешить точки останова"
 
 msgid "Warn about usage of obsolete features?"
 msgstr ""
@@ -698,7 +699,7 @@ msgid "Library"
 msgstr "Библиотека"
 
 msgid "Status Bar"
-msgstr ""
+msgstr "Панель состояния"
 
 msgid "Show Assigner Command Name"
 msgstr ""
@@ -729,7 +730,7 @@ msgid ""
 msgstr ""
 
 msgid "New metric"
-msgstr ""
+msgstr "Новая метрика"
 
 msgid "for the next objects you will add in the object tree."
 msgstr ""
@@ -747,7 +748,7 @@ msgid "Bye"
 msgstr ""
 
 msgid "Selected metric"
-msgstr ""
+msgstr "Выбранная метрика"
 
 msgid "Frame application"
 msgstr ""
@@ -771,7 +772,7 @@ msgid "Wizard to precompile libraries"
 msgstr ""
 
 msgid "Overflow &Prevention..."
-msgstr ""
+msgstr "Предупреждение &переполнения..."
 
 msgid "Frisian"
 msgstr ""
@@ -785,6 +786,10 @@ msgid ""
 "\n"
 "Make sure you have a complete EIFGEN directory in `$2'."
 msgstr ""
+"\n"
+"Невозможно открыть проект `$1'.\n"
+"\n"
+"Удостоверьтесь, что весь каталог EIFGEN доступен в `$2'."
 
 msgid "ratio metric"
 msgstr ""
@@ -810,7 +815,7 @@ msgid "Retrieve normally referenced supplier classes"
 msgstr ""
 
 msgid "E&xport XMI..."
-msgstr ""
+msgstr "Экспорт &XMI..."
 
 msgid "Open Objects tool menu"
 msgstr ""
@@ -831,7 +836,7 @@ msgid "Delete"
 msgstr "Удалить"
 
 msgid "Confirmation"
-msgstr ""
+msgstr "Подтверждение"
 
 msgid ""
 "File has been modified.\n"
@@ -844,7 +849,7 @@ msgid "Pause"
 msgstr "Приостановить"
 
 msgid "Compile to have information"
-msgstr ""
+msgstr "Скомпилируйте, чтобы получить информацию"
 
 msgid "Edit Object content"
 msgstr ""
@@ -862,13 +867,13 @@ msgid "Add first breakpoints in feature"
 msgstr ""
 
 msgid "Is the project a console application?"
-msgstr ""
+msgstr "Проект - консольное приложение?"
 
 msgid "&Comment\tCtrl+K"
 msgstr "&Закомментировать\tCtrl+K"
 
 msgid "&Precompile"
-msgstr ""
+msgstr "&Прекомпилировать"
 
 msgid "Remove currently selected object"
 msgstr ""
@@ -883,7 +888,7 @@ msgid "Empty Creation Routine .NET Name Error"
 msgstr ""
 
 msgid "Clients of Class "
-msgstr ""
+msgstr "Клиенты класса"
 
 msgid "Include"
 msgstr ""
@@ -1029,13 +1034,13 @@ msgid "Recalculate selected metric(s)"
 msgstr ""
 
 msgid "Enable/Disable expressions"
-msgstr ""
+msgstr "Разрешить/запретить выражения"
 
 msgid "Vietnamese (Vietnam)"
 msgstr "Вьетнамский (Вьетнам)"
 
 msgid "Missing Class Export"
-msgstr ""
+msgstr "Экспорт отсутствующего класса"
 
 msgid "&Deferred"
 msgstr ""
@@ -1113,7 +1118,7 @@ msgid "Editor"
 msgstr "Редактор"
 
 msgid "I&nterrupt Application"
-msgstr "&Прервать приложение"
+msgstr "&Приостановить приложение"
 
 msgid "Detailed Result"
 msgstr ""
@@ -1194,10 +1199,10 @@ msgid "Call&ees"
 msgstr ""
 
 msgid "Location of this group."
-msgstr ""
+msgstr "Расположение этой группы."
 
 msgid "Check"
-msgstr ""
+msgstr "Проверка"
 
 msgid ""
 "Using this wizard you can create a graphical application\n"
@@ -1241,7 +1246,7 @@ msgid "Malayalam (India)"
 msgstr ""
 
 msgid "&Back"
-msgstr ""
+msgstr "&Назад"
 
 msgid "Cannot write file: $1."
 msgstr ""
@@ -1265,13 +1270,13 @@ msgid "Classes per Module"
 msgstr ""
 
 msgid "&Search"
-msgstr ""
+msgstr "&Поиск"
 
 msgid "Add a new command"
-msgstr ""
+msgstr "Добавить новую команду"
 
 msgid "Add class"
-msgstr ""
+msgstr "Добавить класс"
 
 msgid "Loading metrics..."
 msgstr ""
@@ -1373,7 +1378,7 @@ msgid "F_code"
 msgstr "F_code"
 
 msgid "Read-only project: cannot compile."
-msgstr ""
+msgstr "Проект только для чтения: невозможно компилировать."
 
 msgid "Value \"$1\" of attribute \"type\" is invalid."
 msgstr ""
@@ -1426,7 +1431,7 @@ msgid "Malay"
 msgstr ""
 
 msgid "Exiting will stop the debugger."
-msgstr ""
+msgstr "Выход приведёт к остановке отладчика."
 
 msgid "Add Make"
 msgstr ""
@@ -1440,13 +1445,13 @@ msgid "Background Workbench C Compilation Failed"
 msgstr ""
 
 msgid "Step In&to"
-msgstr ""
+msgstr "Войти &внутрь"
 
 msgid "Windows"
 msgstr ""
 
 msgid "No file name is selected."
-msgstr ""
+msgstr "Не выбрано имя файла."
 
 msgid "Search for: "
 msgstr ""
@@ -1458,7 +1463,7 @@ msgid "Open a dynamic library definition"
 msgstr ""
 
 msgid "Finnish"
-msgstr ""
+msgstr "Финский"
 
 msgid "Absolute path to use as base for relative paths."
 msgstr ""
@@ -1506,7 +1511,7 @@ msgid "Spanish (Venezuela)"
 msgstr "Испанский (Венесуэла)"
 
 msgid "$1 of class $2"
-msgstr ""
+msgstr "$1 класса $2"
 
 msgid "Move Midpoint"
 msgstr ""
@@ -1527,7 +1532,7 @@ msgid "Current version and all its descendant versions"
 msgstr ""
 
 msgid "Old Verbatim Strings"
-msgstr ""
+msgstr "Старые дословные строки"
 
 msgid "No metric is selected."
 msgstr ""
@@ -1542,7 +1547,7 @@ msgid "Dead Code Removal Completed"
 msgstr ""
 
 msgid "Export diagram to PNG"
-msgstr ""
+msgstr "Экспортировать диаграмму в PNG"
 
 msgid "suppliers"
 msgstr ""
@@ -1577,13 +1582,13 @@ msgid ""
 msgstr ""
 
 msgid "Compile current project"
-msgstr ""
+msgstr "Компилировать текущий проект"
 
 msgid "Erase Midpoint"
 msgstr ""
 
 msgid "Step out of a routine"
-msgstr ""
+msgstr "Выйти наружу"
 
 msgid "Setswana/Tswana"
 msgstr ""
@@ -1682,10 +1687,10 @@ msgid "Backup"
 msgstr ""
 
 msgid "Action:"
-msgstr ""
+msgstr "Действие:"
 
 msgid "Is this an abstract target that cannot be used to compile?"
-msgstr ""
+msgstr "Это абстрактное задание, которое нельзя использовать для компиляции?"
 
 msgid "Specify the file the compiler uses to generate the exported functions."
 msgstr ""
@@ -1706,7 +1711,7 @@ msgid "Frisian (Netherlands)"
 msgstr ""
 
 msgid "Redo last action"
-msgstr ""
+msgstr "Повторить последнее действие"
 
 msgid "Report <<"
 msgstr ""
@@ -1752,7 +1757,7 @@ msgid "Group \"$1\" (ID = \"$2\") is invalid."
 msgstr ""
 
 msgid "Check VAPE"
-msgstr ""
+msgstr "Проверять VAPE"
 
 msgid "Put Handle Left"
 msgstr ""
@@ -1803,7 +1808,7 @@ msgid "&Remove"
 msgstr ""
 
 msgid "Debug"
-msgstr ""
+msgstr "Отладка"
 
 msgid "Save Cop&y As..."
 msgstr "Сохранить &копию как..."
@@ -1842,7 +1847,7 @@ msgid "Cluster name "
 msgstr "Имя кластера"
 
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 msgid ""
 "Target `$1' does not exist or is not compilable.\n"
@@ -1850,7 +1855,7 @@ msgid ""
 msgstr ""
 
 msgid "&About $1..."
-msgstr ""
+msgstr "&О $1..."
 
 msgid "In&variants"
 msgstr ""
@@ -1936,7 +1941,7 @@ msgid "English (South Africa)"
 msgstr "Английский (Южная Африка)"
 
 msgid "Evaluate check assertions?"
-msgstr ""
+msgstr "Вычислять утверждения проверок?"
 
 msgid "Compare"
 msgstr ""
@@ -1969,7 +1974,7 @@ msgid "Operator in value criterion is missing."
 msgstr ""
 
 msgid "Configuration file"
-msgstr ""
+msgstr "Файл конфигурации"
 
 msgid ""
 "Once an execution of an instrumented system has generated the proper file,\n"
@@ -2042,7 +2047,7 @@ msgid "Exceptions"
 msgstr ""
 
 msgid "Delete command"
-msgstr ""
+msgstr "Удалить команду"
 
 msgid "Use Cluster Name as Namespace"
 msgstr ""
@@ -2113,7 +2118,7 @@ msgid "Yakut"
 msgstr "Якутский"
 
 msgid "Restore Assertion Checking"
-msgstr ""
+msgstr "Восстановить проверку утверждений"
 
 msgid "Old Syntax"
 msgstr "Старый синтаксис"
@@ -2122,7 +2127,7 @@ msgid "&Raise All"
 msgstr ""
 
 msgid "&Clusters"
-msgstr ""
+msgstr "&Кластеры"
 
 msgid " (located in $1)"
 msgstr ""
@@ -2149,7 +2154,7 @@ msgid "Standard (C/byte code)"
 msgstr ""
 
 msgid "Tree/Flat View"
-msgstr ""
+msgstr "Иерархическое/плоское представление"
 
 msgid "&Object"
 msgstr "&Объект"
@@ -2158,7 +2163,7 @@ msgid "Prefix"
 msgstr ""
 
 msgid "Remove group"
-msgstr ""
+msgstr "Удалить группу"
 
 msgid "Inuktitut (Canada, Latin)"
 msgstr ""
@@ -2191,7 +2196,7 @@ msgid "Include Cluster '$1'"
 msgstr ""
 
 msgid "Add all ->"
-msgstr ""
+msgstr "Добавить все ->"
 
 msgid "Crop diagram"
 msgstr ""
@@ -2206,7 +2211,7 @@ msgid "Turkmen (Turkmenistan)"
 msgstr "Туркменский (Туркменистан)"
 
 msgid "No metric is selected"
-msgstr ""
+msgstr "Метрика не выбрана"
 
 msgid "Select a class which is fully compiled to have information about it."
 msgstr ""
@@ -2230,7 +2235,7 @@ msgid "You can choose the appearance of your application."
 msgstr ""
 
 msgid "Are simplified address expressions enabled?"
-msgstr ""
+msgstr "Разрешены упрощённые адресные выражения?"
 
 msgid ""
 "File $1 already exists,\n"
@@ -2250,7 +2255,7 @@ msgid "Enter the name of the new folder: "
 msgstr ""
 
 msgid "Renames only occurances of the class name in compiled classes."
-msgstr ""
+msgstr "Переименовывает только вхождения имени класса в скомпилированных классах."
 
 msgid "Locals"
 msgstr ""
@@ -2268,7 +2273,7 @@ msgid "Metric archive calculation finished."
 msgstr ""
 
 msgid "External Command"
-msgstr ""
+msgstr "Внешняя команда"
 
 msgid "Tibetan (PRC)"
 msgstr ""
@@ -2304,7 +2309,7 @@ msgid ""
 msgstr ""
 
 msgid "Set to U&ppercase\tCtrl+U"
-msgstr ""
+msgstr "Перевести в &верхний регистр\tCtrl+U"
 
 msgid "Do not ask me again and always remove selected metric"
 msgstr ""
@@ -2313,7 +2318,7 @@ msgid "Extracting $1 of class $2..."
 msgstr ""
 
 msgid "Renaming Unknown Class"
-msgstr ""
+msgstr "Переименование неизвестного класса"
 
 msgid "Belarusian (Belarus)"
 msgstr "Белорусский (Белорусия)"
@@ -2346,7 +2351,7 @@ msgid "$1 from $2"
 msgstr ""
 
 msgid "The following environment variables are not set:\n"
-msgstr ""
+msgstr "Не заданы следующие переменные окружения:\n"
 
 msgid "Should this library use options from the application instead of from the library?"
 msgstr ""
@@ -2400,7 +2405,7 @@ msgid "Exception message from debugger"
 msgstr ""
 
 msgid "Criterion"
-msgstr ""
+msgstr "Критерий"
 
 msgid "Marathi"
 msgstr ""
@@ -2474,7 +2479,7 @@ msgid ""
 msgstr ""
 
 msgid "Load From..."
-msgstr ""
+msgstr "Загрузить из..."
 
 msgid "&Ancestor Versions"
 msgstr ""
@@ -2504,7 +2509,7 @@ msgid "French (Monaco)"
 msgstr "Французский (Монако)"
 
 msgid "Save call stack to a text file"
-msgstr ""
+msgstr "Сохранить стек вызовов в текстовом файле"
 
 msgid "Link Context"
 msgstr ""
@@ -2564,7 +2569,7 @@ msgid "Luxembourgish"
 msgstr "Люксембургский"
 
 msgid "Chec&k Export Clauses"
-msgstr ""
+msgstr "Проверять предложения &экспорта"
 
 msgid "English (Belize)"
 msgstr "Английский (Белиз)"
@@ -2580,7 +2585,7 @@ msgid "Albanian (Albania)"
 msgstr "Албанский (Албания)"
 
 msgid "Set maximum call stack depth"
-msgstr ""
+msgstr "Установить максимальную глубину стека вызовов"
 
 msgid "assigners"
 msgstr ""
@@ -2699,7 +2704,7 @@ msgid "Creating new project, please wait..."
 msgstr ""
 
 msgid "Target"
-msgstr ""
+msgstr "Задание"
 
 msgid "Bosnian"
 msgstr "Боснийский"
@@ -2708,10 +2713,10 @@ msgid "Archive Comparison"
 msgstr ""
 
 msgid "New Name:"
-msgstr ""
+msgstr "Новое имя:"
 
 msgid "Evaluate precondition assertions of suppliers?"
-msgstr ""
+msgstr "Вычислять предусловия поставщика?"
 
 msgid "Version"
 msgstr "Версия"
@@ -2720,7 +2725,7 @@ msgid "Read Only"
 msgstr "Только для чтения"
 
 msgid "F&avorites"
-msgstr ""
+msgstr "&Избранное"
 
 msgid "Remaining: "
 msgstr ""
@@ -2765,7 +2770,7 @@ msgid "Root cluster: "
 msgstr ""
 
 msgid "&Debug"
-msgstr ""
+msgstr "&Отладка"
 
 msgid "Cursor position (line:column)"
 msgstr ""
@@ -2823,7 +2828,7 @@ msgid "Toggle visibility of assigner command name"
 msgstr ""
 
 msgid "&Embed in \"if...\"\tCtrl+I"
-msgstr ""
+msgstr "Поместить под \"&if...\"\tCtrl+I"
 
 msgid "The class $1 is not writable."
 msgstr ""
@@ -2865,10 +2870,10 @@ msgid "Pr&operties"
 msgstr ""
 
 msgid "Print the currently edited text"
-msgstr ""
+msgstr "Печатать редактируемый текст"
 
 msgid "&Export Diagram to PNG"
-msgstr ""
+msgstr "&Экспорт диаграммы в PNG"
 
 msgid "Are you sure you want to remove the reference to $1?"
 msgstr ""
@@ -2955,7 +2960,7 @@ msgid "&Guided Tour"
 msgstr ""
 
 msgid "Compile"
-msgstr ""
+msgstr "Компилировать"
 
 msgid "Use wildcards"
 msgstr ""
@@ -2979,7 +2984,7 @@ msgid "Assignment on Formal/Expanded"
 msgstr ""
 
 msgid "Create a new class"
-msgstr ""
+msgstr "Создать новый класс"
 
 msgid "Switch to low quality"
 msgstr ""
@@ -3009,7 +3014,7 @@ msgid "Are you sure you want to remove $1 and any children of it?"
 msgstr ""
 
 msgid "Project location"
-msgstr ""
+msgstr "Расположение проекта"
 
 msgid "Select &All\tCtrl+A"
 msgstr ""
@@ -3053,7 +3058,7 @@ msgid "basic"
 msgstr ""
 
 msgid "No breakpoints"
-msgstr ""
+msgstr "Нет точек останова"
 
 msgid ""
 "In linear metric, make sure that every variable metric doesn't involve recursive metric.\n"
@@ -3084,7 +3089,7 @@ msgid ""
 msgstr ""
 
 msgid "Project Name and Project location"
-msgstr ""
+msgstr "Имя проекта и расположение проекта"
 
 msgid ""
 "Select a feature to pull up.\n"
@@ -3095,7 +3100,7 @@ msgid "Note: Metric is not saved."
 msgstr ""
 
 msgid "Disable or restore Assertion checking handling during debugging"
-msgstr ""
+msgstr "Запретить или восстановить проверку утверждений во время отладки"
 
 msgid "System not running"
 msgstr ""
@@ -3243,7 +3248,7 @@ msgid "Project documentation"
 msgstr ""
 
 msgid "Czech (Czech Republic)"
-msgstr ""
+msgstr "Чешский (Республика Чехия)"
 
 msgid "Russian"
 msgstr "Русский"
@@ -3258,7 +3263,7 @@ msgid "Status"
 msgstr "Состояние"
 
 msgid "&Edit"
-msgstr "&Редактировать"
+msgstr "&Правка"
 
 msgid "Metric named \"$1\" already exists in your metrics."
 msgstr ""
@@ -3353,7 +3358,7 @@ msgid "Recursive Functions"
 msgstr "Рекурсивные функции"
 
 msgid "Step into a routine"
-msgstr ""
+msgstr "Войти внутрь"
 
 msgid "Open Original File"
 msgstr ""
@@ -3374,7 +3379,7 @@ msgid "In Class"
 msgstr ""
 
 msgid "Match case?"
-msgstr ""
+msgstr "Учитывать регистр?"
 
 msgid "Overrides"
 msgstr ""
@@ -3392,10 +3397,10 @@ msgid "Include all classes of cluster"
 msgstr ""
 
 msgid "Name of the target."
-msgstr ""
+msgstr "Имя задания."
 
 msgid "Step Out"
-msgstr ""
+msgstr "Выйти наружу"
 
 msgid "Dutch"
 msgstr "Голландский"
@@ -3484,7 +3489,7 @@ msgid "Domain item type \"$1\" is invalid."
 msgstr ""
 
 msgid "Disable assertion checking"
-msgstr ""
+msgstr "Запретить проверку утверждений"
 
 msgid "Press ESC to wipe out"
 msgstr ""
@@ -3537,7 +3542,7 @@ msgid "group item"
 msgstr ""
 
 msgid "Recompile project"
-msgstr ""
+msgstr "Перекомпилироват проект"
 
 msgid "Compilation Progress for "
 msgstr ""
@@ -3579,7 +3584,7 @@ msgid "Azeri"
 msgstr ""
 
 msgid "Keep Assertions"
-msgstr ""
+msgstr "Сохранить утверждения"
 
 msgid ""
 "Please drop a class, a cluster or a link\n"
@@ -3641,7 +3646,7 @@ msgid "Te&xt"
 msgstr ""
 
 msgid "Location of the configuration file."
-msgstr ""
+msgstr "Расположение файла конфигурации."
 
 msgid "Replace with: "
 msgstr "Заменить на: "
@@ -3660,7 +3665,7 @@ msgid "Please select a sub node."
 msgstr ""
 
 msgid "Compiled Classes"
-msgstr ""
+msgstr "Откопилированные классы"
 
 msgid "Remove detailed result?"
 msgstr ""
@@ -3795,13 +3800,13 @@ msgid "Search backwards"
 msgstr ""
 
 msgid "Organize Favorites"
-msgstr ""
+msgstr "Упорядочить избранное"
 
 msgid "VALUE: "
 msgstr ""
 
 msgid "Metric"
-msgstr ""
+msgstr "Метрика"
 
 msgid "New Fea&ture..."
 msgstr ""
@@ -3810,7 +3815,7 @@ msgid "Edit the properties of the selected feature"
 msgstr ""
 
 msgid "Welsh (United Kingdom)"
-msgstr ""
+msgstr "Валлийский (Великобритания)"
 
 msgid "Click Back if you can correct the problem or Click Abort."
 msgstr ""
@@ -3848,7 +3853,7 @@ msgid "Spanish (Paraguay)"
 msgstr "Испанский (Парагвай)"
 
 msgid "Change"
-msgstr ""
+msgstr "Изменить"
 
 msgid "Create a new dynamic library definition"
 msgstr ""
@@ -3857,7 +3862,7 @@ msgid "Select Recalculatable"
 msgstr ""
 
 msgid "Start"
-msgstr ""
+msgstr "Запустить"
 
 msgid "Pick and drop metrics or items like group/class/feature here"
 msgstr ""
@@ -3884,7 +3889,7 @@ msgid "Bulgarian"
 msgstr "Болгарский"
 
 msgid "Expand selected level(s)"
-msgstr ""
+msgstr "Раскрыть выделенный(-е) уровень(-ни)"
 
 msgid "OK"
 msgstr ""
@@ -3944,19 +3949,19 @@ msgid "E&dit Condition"
 msgstr "Изм&енить условие"
 
 msgid "Compile All Classes?"
-msgstr ""
+msgstr "Компилировать все классы?"
 
 msgid "Rename"
 msgstr "Переименовать"
 
 msgid "Project is not readable. Check permissions."
-msgstr ""
+msgstr "Проект не читается. Проверьте права доступа."
 
 msgid "Discover unreferenced externally added classes and recompile."
 msgstr ""
 
 msgid "Visible Classes"
-msgstr ""
+msgstr "Видимые классы"
 
 msgid "Show ancestor classes?"
 msgstr ""
@@ -4021,7 +4026,7 @@ msgid ""
 msgstr ""
 
 msgid "Compile project"
-msgstr ""
+msgstr "Компилировать проект"
 
 msgid "(Windows only)"
 msgstr "(только Windows)"
@@ -4033,7 +4038,7 @@ msgid "Spanish (Costa Rica)"
 msgstr "Испанский (Коста-Рика)"
 
 msgid "&Organize Favorites..."
-msgstr ""
+msgstr "&Упорядочить избранное..."
 
 msgid "Coefficient for denominator metric is zero. A non-zero real numer is expected."
 msgstr ""
@@ -4051,12 +4056,14 @@ msgid "Name of the system."
 msgstr "Имя системы."
 
 msgid "File location"
-msgstr ""
+msgstr "Расположение файла"
 
 msgid ""
 "It is not possible to exit EiffelStudio\n"
 "while the project is being compiled."
 msgstr ""
+"Нельзя выйти из EiffelStudio\n"
+"пока компилируется проект."
 
 msgid " enabled"
 msgstr ""
@@ -4091,7 +4098,7 @@ msgid "German (Luxembourg)"
 msgstr "Немецкий (Люксембург)"
 
 msgid "&Unindent Selection\tShift+Tab"
-msgstr ""
+msgstr "У&меньшить отступ выделения\tShift+Tab"
 
 msgid "Compilation Type"
 msgstr ""
@@ -4124,7 +4131,7 @@ msgid "Operator"
 msgstr ""
 
 msgid "Ensure"
-msgstr ""
+msgstr "Постусловие"
 
 msgid "Project &Settings..."
 msgstr ""
@@ -4344,7 +4351,7 @@ msgid "Luxembourgish (Luxembourg)"
 msgstr "Люксембургский (Люксембург)"
 
 msgid "Arabic"
-msgstr ""
+msgstr "Арабский"
 
 msgid "Slovak (Slovakia)"
 msgstr "Словацкий (Словакия)"
@@ -4429,7 +4436,7 @@ msgid ""
 msgstr ""
 
 msgid "New Window"
-msgstr ""
+msgstr "Новое окно"
 
 msgid "Corsican (France)"
 msgstr ""
@@ -4495,13 +4502,13 @@ msgid "Item [$1] is attached to \"$2\""
 msgstr ""
 
 msgid "Hide cluster legend"
-msgstr ""
+msgstr "Скрыть обозначения кластера"
 
 msgid "Dead Code Removal"
 msgstr ""
 
 msgid "Invalid tag."
-msgstr ""
+msgstr "Неверный тег."
 
 msgid "external features"
 msgstr ""
@@ -4534,19 +4541,19 @@ msgid "&Add..."
 msgstr "&Добавить..."
 
 msgid "Rollback?"
-msgstr ""
+msgstr "Откатить назад?"
 
 msgid "Whole word"
 msgstr "Слово целиком"
 
 msgid "Text not editable."
-msgstr ""
+msgstr "Неизменяемый текст."
 
 msgid "The class name is not valid."
 msgstr "Имя класса не допустимо."
 
 msgid "Description of the target."
-msgstr ""
+msgstr "Описание задания."
 
 msgid "Attribute \"type\" is missing ."
 msgstr ""
@@ -4555,6 +4562,8 @@ msgid ""
 "Some files have not been saved.\n"
 "Do you want to save them before exiting?"
 msgstr ""
+"Некоторые файлы не были сохранены.\n"
+"Хотите сохранить их перед выходом?"
 
 msgid "Quechua"
 msgstr ""
@@ -4584,7 +4593,7 @@ msgid "Forward"
 msgstr ""
 
 msgid "Set to &Lowercase\tCtrl+Shift+U"
-msgstr ""
+msgstr "Перевести в &нижний регистр\tCtrl+Shift+U"
 
 msgid "Hide supplier links"
 msgstr ""
@@ -4632,7 +4641,7 @@ msgid "Full name of the assembly as found in the GAC."
 msgstr ""
 
 msgid "Set as default"
-msgstr ""
+msgstr "Установить по умолчанию"
 
 msgid "Copy of "
 msgstr ""
@@ -4655,9 +4664,13 @@ msgid ""
 "Project name: \t$1\n"
 "Location:     \t$2\n"
 msgstr ""
+"Указаны следующие установки:\n"
+"\n"
+"Имя проекта: \t$1\n"
+"Расположение:     \t$2\n"
 
 msgid "Execute the application one line at a time"
-msgstr ""
+msgstr "Выполнять приложение по шагам"
 
 msgid "Metric name is missing."
 msgstr "Пропущено имя метрики."
@@ -4667,11 +4680,16 @@ msgid ""
 "$1\n"
 "Predefined metrics not loaded."
 msgstr ""
+"Призагрузке предопределённых метрик:\n"
+"$1\n"
+"Предопределённые метрики не загружены."
 
 msgid ""
 "Cannot create project directory in: $1\n"
 "You may try again after fixing the permissions."
 msgstr ""
+"Невозможно создать каталог проекта в: $1\n"
+"Вы можете попытаться позже после исправления прав доступа."
 
 msgid "On object"
 msgstr ""
@@ -4728,13 +4746,16 @@ msgid "Move selected row up"
 msgstr ""
 
 msgid "Project Name Error"
-msgstr ""
+msgstr "Ошибка имени проекта"
 
 msgid ""
 "Incompatible version for project compiled in: $1.\n"
 "$2 version is $3.\n"
 "Project was compiled with version $4."
 msgstr ""
+"Несовместимая версия для проекта скомпилированного в $1.\n"
+"$2 версии $3.\n"
+"Проект был скомпилирован версией $4."
 
 msgid "default"
 msgstr ""
@@ -4761,7 +4782,7 @@ msgid "No description available for this preference."
 msgstr ""
 
 msgid "Restore Default"
-msgstr ""
+msgstr "Восстановить умолчание"
 
 msgid "Use existing profile: "
 msgstr ""
@@ -4779,7 +4800,7 @@ msgid "Include Class '$1'"
 msgstr ""
 
 msgid "<= compiler version <= "
-msgstr ""
+msgstr "<= версия компилятора <= "
 
 msgid "Yoruba"
 msgstr ""
@@ -4815,7 +4836,7 @@ msgid "Inlining Size"
 msgstr ""
 
 msgid "Evaluate postcondition assertions?"
-msgstr ""
+msgstr "Вычислять постусловия?"
 
 msgid "Generate Eiffel-friendly names"
 msgstr ""
@@ -4850,7 +4871,7 @@ msgid "Click Finish to generate this project."
 msgstr ""
 
 msgid "Configuration Loading Error"
-msgstr ""
+msgstr "Ошибка при загрузке конфигурации"
 
 msgid "Precompiling $1 library: "
 msgstr ""
@@ -4966,7 +4987,7 @@ msgid "creations"
 msgstr ""
 
 msgid "Re&do\tCtrl+Y"
-msgstr ""
+msgstr "По&вторить\tCtrl+Y"
 
 msgid "Domain is missing."
 msgstr ""
@@ -5014,7 +5035,7 @@ msgid "Divehi"
 msgstr ""
 
 msgid "Reload metrics"
-msgstr ""
+msgstr "Перезагрузить метрики"
 
 msgid "Profiler used to produce the above record: "
 msgstr ""
@@ -5032,13 +5053,13 @@ msgid "Spanish"
 msgstr "Испанский"
 
 msgid "Assertions"
-msgstr ""
+msgstr "Утверждения"
 
 msgid "Filter"
 msgstr "Фильтр"
 
 msgid "Discard Assertions"
-msgstr ""
+msgstr "Отбросить утвеждения"
 
 msgid "Norwegian (Bokmål, Norway)"
 msgstr ""
@@ -5047,7 +5068,7 @@ msgid "Value retriever is missing."
 msgstr ""
 
 msgid "Use the old format for verbatim strings?"
-msgstr ""
+msgstr "Использовать старый формат дословных строк?"
 
 msgid "Chinese (Hong Kong SAR, PRC)"
 msgstr ""
@@ -5077,7 +5098,7 @@ msgid "Add a library"
 msgstr "Добавить библиотеку"
 
 msgid "St&art"
-msgstr ""
+msgstr "&Запустить"
 
 msgid "Replace Name in Strings"
 msgstr ""
@@ -5277,13 +5298,13 @@ msgid "Arguments"
 msgstr "Аргументы"
 
 msgid "New name"
-msgstr ""
+msgstr "Новое имя"
 
 msgid "Preparing precompilations ..."
 msgstr ""
 
 msgid "Match case"
-msgstr ""
+msgstr "Учитывать регистр"
 
 msgid "Evaluation"
 msgstr ""
@@ -5340,7 +5361,7 @@ msgid "Save As..."
 msgstr "Сохранить как..."
 
 msgid "System Info"
-msgstr ""
+msgstr "Системная информация"
 
 msgid "Clusters to Go:"
 msgstr ""
@@ -5369,7 +5390,7 @@ msgid "Go forth"
 msgstr "Вперёд"
 
 msgid "Redo Refactoring"
-msgstr ""
+msgstr "Повторить рефакторинг"
 
 msgid "Latvian"
 msgstr "Латвийский"
@@ -5381,7 +5402,7 @@ msgid "Delete Client Link '$1'"
 msgstr ""
 
 msgid "Cannot change to directory "
-msgstr ""
+msgstr "Невозможно перейти в каталог"
 
 msgid "Edit command"
 msgstr ""
@@ -5416,7 +5437,7 @@ msgid "Environment"
 msgstr ""
 
 msgid "Metric name is empty."
-msgstr ""
+msgstr "Имя метрики пусто."
 
 msgid "Text finished loading"
 msgstr ""
@@ -5493,7 +5514,7 @@ msgid "Show physics settings dialog"
 msgstr ""
 
 msgid "&Interface"
-msgstr ""
+msgstr "&Интерфейс"
 
 msgid "Basque"
 msgstr ""
@@ -5584,7 +5605,7 @@ msgid ""
 msgstr ""
 
 msgid "Edit Project"
-msgstr ""
+msgstr "Редактировать проект"
 
 msgid "Turn on physics"
 msgstr ""
@@ -5593,13 +5614,13 @@ msgid "Dependency"
 msgstr "Зависимость"
 
 msgid "Print"
-msgstr ""
+msgstr "Печать"
 
 msgid "Yes"
 msgstr "Да"
 
 msgid "Stack information"
-msgstr ""
+msgstr "Информация о стеке"
 
 msgid "Line Generation"
 msgstr ""
@@ -5621,7 +5642,7 @@ msgid "Are warnings enabled?"
 msgstr "Предупреждения разрешены?"
 
 msgid "Start application and stop at breakpoints"
-msgstr ""
+msgstr "Запустить приложение и остановиться на точке останова"
 
 msgid "File rule $1"
 msgstr ""
@@ -5630,7 +5651,7 @@ msgid "Name of the current project"
 msgstr "Имя текущего проекта"
 
 msgid "(no_class)"
-msgstr ""
+msgstr "(класс не выбран)"
 
 msgid "Creat&ions"
 msgstr ""
@@ -5648,7 +5669,7 @@ msgid "Parents:"
 msgstr ""
 
 msgid "Danish (Denmark)"
-msgstr ""
+msgstr "Датский (Дания)"
 
 msgid "Use current environment value"
 msgstr ""
@@ -5660,7 +5681,7 @@ msgid "Restrictors"
 msgstr ""
 
 msgid "Try again?"
-msgstr ""
+msgstr "Попробовать ещё?"
 
 msgid "Ex&ported"
 msgstr ""
@@ -5683,7 +5704,7 @@ msgid "Type input data here"
 msgstr ""
 
 msgid "&Compile"
-msgstr ""
+msgstr "&Компилировать"
 
 msgid "&Creators"
 msgstr ""
@@ -5701,7 +5722,7 @@ msgid "&Reset Current View"
 msgstr ""
 
 msgid "Alias:"
-msgstr ""
+msgstr "Псевдоним:"
 
 msgid ""
 "The .NET Assembly filename that you have chosen is not valid.\n"
@@ -5734,7 +5755,7 @@ msgid "Select clusters to generate documentation for"
 msgstr ""
 
 msgid "Tajik"
-msgstr ""
+msgstr "Таджицкий"
 
 msgid "Remove selected expressions"
 msgstr "Удалить выбранные выражения"
@@ -5743,7 +5764,7 @@ msgid "Select a Run-time information record to generate the Execution profile"
 msgstr ""
 
 msgid "Step Into"
-msgstr ""
+msgstr "Войти внутрь"
 
 msgid "Spanish (Uruguay)"
 msgstr "Испанский (Уругвай)"
@@ -5761,7 +5782,7 @@ msgid "Metric of type \"$1\" doesn't exist or that metric is invalid."
 msgstr ""
 
 msgid "Classes to Go:"
-msgstr ""
+msgstr "Классы для обработки:"
 
 msgid "Cluster:"
 msgstr "Кластер:"
@@ -5788,13 +5809,13 @@ msgid "New Project"
 msgstr "Новый проект"
 
 msgid "Root Class"
-msgstr ""
+msgstr "Корневой класс"
 
 msgid "Restore assertion checking"
-msgstr ""
+msgstr "Восстановить проверку утверждений"
 
 msgid "Breakpoints"
-msgstr ""
+msgstr "Точки останова"
 
 msgid "Externals"
 msgstr ""
@@ -5809,10 +5830,10 @@ msgid "Analyzing metric archive(s)..."
 msgstr ""
 
 msgid "Warn about usage of old verbatim strings?"
-msgstr ""
+msgstr "Предупреждать об использовании старых дословных строк?"
 
 msgid "Show class location?"
-msgstr ""
+msgstr "Показывать расположение класса?"
 
 msgid "Feat&ure Views"
 msgstr ""
@@ -5849,7 +5870,7 @@ msgid_plural "in $1 classes"
 msgstr[0] ""
 
 msgid "Only compiled classes"
-msgstr ""
+msgstr "Только откомпилированные классы"
 
 msgid "Indonesian"
 msgstr "Индонезийский"
@@ -5882,7 +5903,7 @@ msgid "(no_feature)"
 msgstr ""
 
 msgid "&Enable This Breakpoint"
-msgstr ""
+msgstr "&Разрешить эту точку останова"
 
 msgid "Serbian (Serbia and Montenegro, Latin)"
 msgstr ""
@@ -5923,7 +5944,7 @@ msgid ""
 msgstr ""
 
 msgid "English (Zimbabwe)"
-msgstr ""
+msgstr "Английский (Зимбабве)"
 
 msgid "Setup criterion domain properties"
 msgstr ""
@@ -5932,7 +5953,7 @@ msgid "Pro&filer..."
 msgstr ""
 
 msgid "New Context"
-msgstr ""
+msgstr "Новый контекст"
 
 msgid "interface view"
 msgstr ""
@@ -5971,7 +5992,7 @@ msgid "Click Finish to generate and compile this project."
 msgstr ""
 
 msgid "&Windows"
-msgstr ""
+msgstr "&Окна"
 
 msgid "Minimize All"
 msgstr ""
@@ -6019,7 +6040,7 @@ msgid "Total Progress: "
 msgstr ""
 
 msgid "Croatian"
-msgstr ""
+msgstr "Хорватский"
 
 msgid "Path"
 msgstr "Путь"
@@ -6034,7 +6055,7 @@ msgid "Renaming of classes in this group."
 msgstr "Переименование классов в этой группе."
 
 msgid "Arabic (Tunisia)"
-msgstr ""
+msgstr "Арабский (Тунис)"
 
 msgid "Dynamic-Link Library"
 msgstr ""
@@ -6043,7 +6064,7 @@ msgid "Thai (Thailand)"
 msgstr ""
 
 msgid "Available libraries:"
-msgstr ""
+msgstr "Доступные библиотеки:"
 
 msgid "Tool&bars"
 msgstr ""
@@ -6058,7 +6079,7 @@ msgid "Choose Feature(s) to Delete"
 msgstr ""
 
 msgid "Edit"
-msgstr "Редактировать"
+msgstr "Правка"
 
 msgid "Tree View"
 msgstr ""
@@ -6070,7 +6091,7 @@ msgid "Paste"
 msgstr "Вставить"
 
 msgid "Target "
-msgstr ""
+msgstr "Задание"
 
 msgid "Arabic (U.A.E.)"
 msgstr "Арабский (ОАЭ)"
@@ -6088,7 +6109,7 @@ msgid "No value tester is specified."
 msgstr ""
 
 msgid "Text was saved"
-msgstr ""
+msgstr "Текст был сохранён"
 
 msgid "implementers"
 msgstr ""
@@ -6115,10 +6136,10 @@ msgid "New Favorite Class..."
 msgstr ""
 
 msgid "Show Alias Name"
-msgstr ""
+msgstr "Показать имя псевдонима"
 
 msgid "Command name: "
-msgstr ""
+msgstr "Имя команды: "
 
 msgid "New Wizard Application Wizard"
 msgstr ""
@@ -6134,7 +6155,7 @@ msgid ""
 msgstr ""
 
 msgid "Open user defined metric file in external editor"
-msgstr ""
+msgstr "Открыть файл метрики, определённой пользователем, во внешнем редакторе"
 
 msgid "Show unchanged features from class ANY?"
 msgstr ""
@@ -6185,7 +6206,7 @@ msgid "Number of States"
 msgstr ""
 
 msgid "Properties"
-msgstr ""
+msgstr "Установки"
 
 msgid "Libraries to precompile:"
 msgstr ""
@@ -6203,7 +6224,7 @@ msgid "Put Two Handles Left"
 msgstr ""
 
 msgid "System is being compiled"
-msgstr ""
+msgstr "Система компилируется"
 
 msgid "Clone selected metric to a new metric"
 msgstr ""
@@ -6233,16 +6254,16 @@ msgid "Slovenian"
 msgstr "Словенский"
 
 msgid "Toggle visibility of feature alias name"
-msgstr ""
+msgstr "Переключение отображения имени псевдонима"
 
 msgid "Show only:"
-msgstr ""
+msgstr "Показать только:"
 
 msgid "Viewpoints: "
 msgstr ""
 
 msgid "Current value"
-msgstr ""
+msgstr "Текущее значение"
 
 msgid "Open the Eiffel Assembly Cache browser tool"
 msgstr ""
@@ -6254,7 +6275,7 @@ msgid "You can create an executable file (.exe) or  dynamic-link library (.dll)"
 msgstr ""
 
 msgid "Version information."
-msgstr ""
+msgstr "Информация о версии."
 
 msgid "Resynchronizing Breakpoints"
 msgstr ""
@@ -6270,6 +6291,12 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"Указаны следующие установки:\n"
+"\n"
+"Имя проекта: \t$1\n"
+"Расположение:     \t$2\n"
+"\n"
+"\n"
 
 msgid "Tamazight"
 msgstr ""
@@ -6281,7 +6308,7 @@ msgid "Tajik (Tajikistan)"
 msgstr "Таджикский (Таджикистан)"
 
 msgid "Evaluate loop assertions?"
-msgstr ""
+msgstr "Вычислять утверждения цикла?"
 
 msgid "<- Remove"
 msgstr ""
@@ -6290,7 +6317,7 @@ msgid "Thai"
 msgstr ""
 
 msgid "General"
-msgstr ""
+msgstr "Общие"
 
 msgid "Should the generated executable use a shared library of the runtime?"
 msgstr ""
@@ -6340,7 +6367,7 @@ msgid "Load"
 msgstr "Загрузить"
 
 msgid "Require"
-msgstr ""
+msgstr "Предусловие"
 
 msgid "Urdu (Pakistan)"
 msgstr ""
@@ -6349,7 +6376,7 @@ msgid "Add and-term"
 msgstr ""
 
 msgid "Library Root"
-msgstr ""
+msgstr "Корень библиотеки"
 
 msgid "Hide clusters"
 msgstr "Скрыть кластеры"
@@ -6377,7 +6404,7 @@ msgid ""
 msgstr ""
 
 msgid "Obsolete Classes"
-msgstr ""
+msgstr "Устаревшие классы"
 
 msgid "Command error output:\n"
 msgstr ""
@@ -6419,7 +6446,7 @@ msgid "Save C Compilation output to file"
 msgstr ""
 
 msgid "&Out of Routine"
-msgstr ""
+msgstr "В&ыйти наружу"
 
 msgid "English (United Kingdom)"
 msgstr "Английский (Великобритания)"
@@ -6428,7 +6455,7 @@ msgid "Apply Application Optimizations"
 msgstr ""
 
 msgid "Cancel"
-msgstr ""
+msgstr "Отменить"
 
 msgid "Raise Windows"
 msgstr ""
@@ -6461,7 +6488,7 @@ msgid "Objects tool: right"
 msgstr ""
 
 msgid "homonyms"
-msgstr ""
+msgstr "омонимы"
 
 msgid "About DialogBox"
 msgstr ""
@@ -6502,7 +6529,7 @@ msgid ""
 msgstr ""
 
 msgid "&Indent Selection\tTab"
-msgstr ""
+msgstr "У&величить отступ выделения\tTab"
 
 msgid "Sanskrit"
 msgstr "Санскрит"
@@ -6511,7 +6538,7 @@ msgid "View"
 msgstr "Вид"
 
 msgid "Loop"
-msgstr ""
+msgstr "Цикл"
 
 msgid "Raise all windows"
 msgstr ""
@@ -6523,7 +6550,7 @@ msgid "Uighur (PRC)"
 msgstr ""
 
 msgid "English (United States)"
-msgstr ""
+msgstr "Английский (США)"
 
 msgid "Dropped references"
 msgstr ""
@@ -6538,10 +6565,10 @@ msgid "Remove Condition"
 msgstr "Убрать условие"
 
 msgid "This command will stop the debugger."
-msgstr ""
+msgstr "Это действие остановит отладчик."
 
 msgid "&Print"
-msgstr ""
+msgstr "&Печать"
 
 msgid "Remove all scopes"
 msgstr ""
@@ -6553,10 +6580,10 @@ msgid "Should the generated binary be IL verifiable?"
 msgstr ""
 
 msgid "Address Expression"
-msgstr ""
+msgstr "Адресное выражение"
 
 msgid "Calculated time"
-msgstr ""
+msgstr "Вычесленное время"
 
 msgid "Watch"
 msgstr ""
@@ -6651,22 +6678,22 @@ msgid "Select/deselect predefined metrics"
 msgstr ""
 
 msgid "Application is running (ignoring breakpoints)"
-msgstr ""
+msgstr "Приложение выполняется (игнорируя точки останова)"
 
 msgid "Application is not running"
-msgstr ""
+msgstr "Приложение не запущено"
 
 msgid "Supplier Precondition"
-msgstr ""
+msgstr "Предусловие поставщика"
 
 msgid "Start With Arguments"
-msgstr ""
+msgstr "Запустить с аргументами"
 
 msgid "Help Tool"
 msgstr ""
 
 msgid "Evaluate metric again to get up-to-date result"
-msgstr ""
+msgstr "Вычислить метрику заново, чтобы получить последний результат"
 
 msgid "Generate a wizard with "
 msgstr ""
@@ -6693,7 +6720,7 @@ msgid "UUID is missing."
 msgstr ""
 
 msgid "Show clusters"
-msgstr ""
+msgstr "Показать кластеры"
 
 msgid "Enable all breakpoints"
 msgstr "Разрешить все точки останова"
@@ -6728,7 +6755,7 @@ msgid "Use regular expression"
 msgstr "Использовать регулярное выражение"
 
 msgid "Criterion definition:"
-msgstr ""
+msgstr "Определение критерия:"
 
 msgid "Complete &Word"
 msgstr ""
@@ -6737,10 +6764,10 @@ msgid "Add feature"
 msgstr ""
 
 msgid "Disable Assertion Checking"
-msgstr ""
+msgstr "Запретить проверку утверждений"
 
 msgid "(no_cluster)"
-msgstr ""
+msgstr "(кластер не выбран)"
 
 msgid "Dynamic runtime"
 msgstr ""
@@ -6763,7 +6790,7 @@ msgid "Amharic (Ethiopia)"
 msgstr ""
 
 msgid "&Run to This Point"
-msgstr ""
+msgstr "Выполнить до этой &точки"
 
 msgid "Portuguese"
 msgstr "Португальский"
@@ -6795,7 +6822,7 @@ msgid "Galician (Spain)"
 msgstr ""
 
 msgid "Tibetan"
-msgstr ""
+msgstr "Тибетский"
 
 msgid "Arabic (Lebanon)"
 msgstr ""
@@ -6813,13 +6840,13 @@ msgid "Exception object"
 msgstr ""
 
 msgid "E&mbed in \"Debug...\"\tCtrl+D"
-msgstr ""
+msgstr "Заключить в \"&debug...\"\tCtrl+D"
 
 msgid "Pause application at current point"
-msgstr ""
+msgstr "Приостановить приложение в текущей точке"
 
 msgid "&Step-by-Step"
-msgstr ""
+msgstr "По &шагам"
 
 msgid "Are you sure you want to remove $1?"
 msgstr "Вы действительно хотите удалить $1?"
@@ -6843,13 +6870,13 @@ msgid "&Debugging Tools"
 msgstr "Средства &отладки"
 
 msgid "External Editor"
-msgstr ""
+msgstr "Внешний редактор"
 
 msgid "Bosnian (Bosnia and Herzegovina, Cyrillic)"
-msgstr ""
+msgstr "Боснийский (Босния и Герцеговина, кириллица)"
 
 msgid "Replace with..."
-msgstr ""
+msgstr "Заменить на..."
 
 msgid "File Selection"
 msgstr ""
@@ -6876,7 +6903,7 @@ msgid "Irish (Ireland)"
 msgstr "Ирландский (Ирландия)"
 
 msgid "Class text has syntax error"
-msgstr ""
+msgstr "Текст класса содержит синтаксическую ошибку"
 
 msgid "Backup Found"
 msgstr ""
@@ -6900,7 +6927,7 @@ msgid "&Assignees"
 msgstr ""
 
 msgid "&Recent Projects"
-msgstr ""
+msgstr "&Недавние проекты"
 
 msgid "Filipino"
 msgstr "Филипинский"
@@ -6909,7 +6936,7 @@ msgid "Class Relations"
 msgstr ""
 
 msgid "Show dependency on self?"
-msgstr ""
+msgstr "Показывать зависимость на себя?"
 
 msgid "Kinyarwanda (Rwanda)"
 msgstr ""
@@ -6927,7 +6954,7 @@ msgid "Command terminated"
 msgstr ""
 
 msgid "Public Key"
-msgstr ""
+msgstr "Общедоступный ключ"
 
 msgid "Do not ask again, and always terminate running external command."
 msgstr ""
@@ -6936,7 +6963,7 @@ msgid "&Ignore Breakpoints"
 msgstr "&Игнорировать точки останова"
 
 msgid "Resources"
-msgstr ""
+msgstr "Ресурсы"
 
 msgid "..."
 msgstr ""

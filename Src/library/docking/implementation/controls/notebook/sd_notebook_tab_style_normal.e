@@ -329,60 +329,16 @@ feature {NONE} -- Implementation
 			-- Draw pixmap and text when unselected.
 		require
 			not_void: a_pixmap /= Void
-		local
-			l_font: EV_FONT
-		do
-			a_pixmap.set_foreground_color (internal_shared.tab_text_color)
-			l_font := a_pixmap.font
-			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
-			a_pixmap.set_font (l_font)
-			if is_top_side_tab then
-				-- Draw pixmap
-				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height + 1, pixmap)
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, gap_height + start_y_position_text, text)
-			else
-				-- Draw pixmap
-				a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position, pixmap)
-				-- Draw text
-				a_pixmap.draw_text_top_left (a_start_x + start_x_text_internal, start_y_position_text, text)
-			end
-
-			draw_close_button (a_pixmap, internal_shared.icons.close)
+		deferred
 		end
 
 	draw_pixmap_text_selected (a_pixmap: EV_DRAWABLE; a_start_x, a_width: INTEGER) is
 			-- Draw pixmap and text when selected.
 		require
 			not_void: a_pixmap /= Void
-		local
-			l_font: EV_FONT
-		do
-			if a_pixmap.height > 0 then
-				-- Draw text
-				a_pixmap.set_foreground_color (internal_shared.tab_text_color)
-				if a_width - start_x_text_internal >= 0 then
-					l_font := a_pixmap.font
-					l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-					a_pixmap.set_font (l_font)
-					if is_top_side_tab then
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height - 1, text, a_width - start_x_text_internal)
-					else
-						a_pixmap.draw_ellipsed_text_top_left (a_start_x + start_x_text_internal, start_y_position_text + gap_height, text, a_width - start_x_text_internal)
-					end
-				end
-				-- Draw pixmap
-				if is_draw_pixmap then
-					if is_top_side_tab then
-						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + gap_height, pixmap)
-					else
-						a_pixmap.draw_pixmap (a_start_x + start_x_pixmap_internal, start_y_position + 1, pixmap)
-					end
-				end
-
-				draw_close_button (a_pixmap, internal_shared.icons.close)
-			end
+		deferred
 		end
-
+		
 	draw_close_button (a_drawable: EV_DRAWABLE; a_close_pixmap: EV_PIXMAP)
 			-- Draw close button if possible
 		require

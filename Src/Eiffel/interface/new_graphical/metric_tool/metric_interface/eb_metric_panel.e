@@ -217,11 +217,15 @@ feature -- Actions
 
 	on_process_gui (a_item: QL_ITEM) is
 			-- Action to be performed to process gui events
+		local
+			l_message: STRING_GENERAL
 		do
 			ev_application.process_events
 			if not metric_manager.is_exit_requested then
 				if a_item /= Void then
-					display_status_message (metric_names.e_evaluating.as_string_32 + a_item.path)
+					l_message := metric_names.e_evaluating.twin
+					l_message.append (a_item.path.as_string_32)
+					display_status_message (l_message)
 				end
 			else
 				metric_manager.terminate_evaluation
@@ -276,7 +280,7 @@ feature -- Pick and drop
 
 feature{NONE} -- Implementation
 
-	display_status_message (a_msg: STRING) is
+	display_status_message (a_msg: STRING_GENERAL) is
 			-- Display `a_msg' in message bar.
 		require
 			a_msg_attached: a_msg /= Void

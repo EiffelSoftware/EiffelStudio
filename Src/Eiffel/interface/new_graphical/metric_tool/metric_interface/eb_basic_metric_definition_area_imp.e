@@ -35,18 +35,24 @@ feature {NONE}-- Initialization
 			create combination_grid_container
 			create combination_toolbar_area
 			create criterion_definition_empty_area
+			create quick_domain_item_tool_bar
+			create add_current_target_item_btn
+			create add_input_domain_item_btn
+			create add_delayed_domain_item_btn
+			create clear_domain_btn
+			create l_ev_tool_bar_separator_1
 			create indent_and_toolbar
 			create indent_and_btn
 			create indent_or_toolbar
 			create indent_or_btn
-			create l_ev_tool_bar_1
-			create l_ev_tool_bar_separator_1
+			create l_ev_tool_bar_2
+			create l_ev_tool_bar_separator_2
 			create up_toolbar
 			create up_btn
 			create down_toolbar
 			create down_btn
-			create l_ev_tool_bar_3
-			create l_ev_tool_bar_separator_2
+			create l_ev_tool_bar_4
+			create l_ev_tool_bar_separator_3
 			create remove_criterion_toolbar
 			create remove_criterion_btn
 			create remove_all_criterion_toolbar
@@ -67,18 +73,24 @@ feature {NONE}-- Initialization
 			combination_area.extend (combination_grid_container)
 			combination_area.extend (combination_toolbar_area)
 			combination_toolbar_area.extend (criterion_definition_empty_area)
+			combination_toolbar_area.extend (quick_domain_item_tool_bar)
+			quick_domain_item_tool_bar.extend (add_current_target_item_btn)
+			quick_domain_item_tool_bar.extend (add_input_domain_item_btn)
+			quick_domain_item_tool_bar.extend (add_delayed_domain_item_btn)
+			quick_domain_item_tool_bar.extend (clear_domain_btn)
+			quick_domain_item_tool_bar.extend (l_ev_tool_bar_separator_1)
 			combination_toolbar_area.extend (indent_and_toolbar)
 			indent_and_toolbar.extend (indent_and_btn)
 			combination_toolbar_area.extend (indent_or_toolbar)
 			indent_or_toolbar.extend (indent_or_btn)
-			combination_toolbar_area.extend (l_ev_tool_bar_1)
-			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_1)
+			combination_toolbar_area.extend (l_ev_tool_bar_2)
+			l_ev_tool_bar_2.extend (l_ev_tool_bar_separator_2)
 			combination_toolbar_area.extend (up_toolbar)
 			up_toolbar.extend (up_btn)
 			combination_toolbar_area.extend (down_toolbar)
 			down_toolbar.extend (down_btn)
-			combination_toolbar_area.extend (l_ev_tool_bar_3)
-			l_ev_tool_bar_3.extend (l_ev_tool_bar_separator_2)
+			combination_toolbar_area.extend (l_ev_tool_bar_4)
+			l_ev_tool_bar_4.extend (l_ev_tool_bar_separator_3)
 			combination_toolbar_area.extend (remove_criterion_toolbar)
 			remove_criterion_toolbar.extend (remove_criterion_btn)
 			combination_toolbar_area.extend (remove_all_criterion_toolbar)
@@ -113,12 +125,13 @@ feature {NONE}-- Initialization
 			criterion_lbl.align_text_left
 			combination_grid_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			combination_grid_container.set_border_width (1)
+			combination_toolbar_area.disable_item_expand (quick_domain_item_tool_bar)
 			combination_toolbar_area.disable_item_expand (indent_and_toolbar)
 			combination_toolbar_area.disable_item_expand (indent_or_toolbar)
-			combination_toolbar_area.disable_item_expand (l_ev_tool_bar_1)
+			combination_toolbar_area.disable_item_expand (l_ev_tool_bar_2)
 			combination_toolbar_area.disable_item_expand (up_toolbar)
 			combination_toolbar_area.disable_item_expand (down_toolbar)
-			combination_toolbar_area.disable_item_expand (l_ev_tool_bar_3)
+			combination_toolbar_area.disable_item_expand (l_ev_tool_bar_4)
 			combination_toolbar_area.disable_item_expand (remove_criterion_toolbar)
 			combination_toolbar_area.disable_item_expand (remove_all_criterion_toolbar)
 			indent_and_toolbar.disable_vertical_button_style
@@ -147,10 +160,12 @@ feature -- Access
 
 	expression_text: EV_RICH_TEXT
 	lbl_empty_area, criterion_definition_empty_area, expression_lbl_empty_area: EV_CELL
-	indent_and_toolbar,
-	indent_or_toolbar, up_toolbar, down_toolbar, remove_criterion_toolbar, remove_all_criterion_toolbar: EV_TOOL_BAR
-	indent_and_btn,
-	indent_or_btn, up_btn, down_btn, remove_criterion_btn, remove_all_criterion_btn: EV_TOOL_BAR_BUTTON
+	quick_domain_item_tool_bar,
+	indent_and_toolbar, indent_or_toolbar, up_toolbar, down_toolbar, remove_criterion_toolbar,
+	remove_all_criterion_toolbar: EV_TOOL_BAR
+	add_current_target_item_btn, add_input_domain_item_btn,
+	add_delayed_domain_item_btn, clear_domain_btn, indent_and_btn, indent_or_btn, up_btn,
+	down_btn, remove_criterion_btn, remove_all_criterion_btn: EV_TOOL_BAR_BUTTON
 	combination_grid_container,
 	combination_toolbar_area: EV_HORIZONTAL_BOX
 	main_area, definition_area, combination_area: EV_VERTICAL_BOX
@@ -159,10 +174,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
-	l_ev_tool_bar_1, l_ev_tool_bar_3: EV_TOOL_BAR
-	l_ev_horizontal_box_1,
-	l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
+	l_ev_tool_bar_2,
+	l_ev_tool_bar_4: EV_TOOL_BAR
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
 
 feature {NONE} -- Implementation
 

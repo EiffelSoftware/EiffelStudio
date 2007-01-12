@@ -398,11 +398,11 @@ feature{NONE} -- Actions
 	on_input_scope_added is
 			-- Action to be performed when an input scope is added
 		local
-			l_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM
+			l_delayed_item: like new_input_domain_item
 			l_domain: like domain
 		do
 			l_domain := domain
-			create l_delayed_item.make ("")
+			l_delayed_item := new_input_domain_item
 			if not domain_has (l_domain, l_delayed_item) then
 				domain_change_actions.block
 				on_remove_all_scopes
@@ -415,11 +415,11 @@ feature{NONE} -- Actions
 	on_application_scope_added is
 			-- Action to be performed when current application target is added
 		local
-			l_delayed_item: EB_METRIC_TARGET_DOMAIN_ITEM
+			l_delayed_item: like new_current_application_target_domain_item
 			l_domain: like domain
 		do
 			l_domain := domain
-			create l_delayed_item.make ("")
+			l_delayed_item := new_current_application_target_domain_item
 			if not domain_has (l_domain, l_delayed_item) then
 				insert_domain_item (l_delayed_item)
 				on_domain_change
@@ -429,11 +429,11 @@ feature{NONE} -- Actions
 	on_delayed_scope_added is
 			-- Action to be performed when delayed domain is added
 		local
-			l_delayed_item: EB_METRIC_DELAYED_DOMAIN_ITEM
+			l_delayed_item: like new_delayed_domain_item
 			l_domain: like domain
 		do
 			l_domain := domain
-			create l_delayed_item.make (n_delayed_domain_id)
+			l_delayed_item := new_delayed_domain_item
 			if not domain_has (l_domain, l_delayed_item) then
 				domain_change_actions.block
 				on_remove_all_scopes

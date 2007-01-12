@@ -26,6 +26,8 @@ inherit
 
 	EB_DOMAIN_ITEM_UTILITY
 
+	EB_METRIC_XML_CONSTANTS
+
 feature -- Metric menu
 
 	metric_menu: EV_MENU is
@@ -511,6 +513,32 @@ feature -- Grid Support
 			create Result.make_with_grid (a_grid)
 			Result.pick_start_actions.extend (agent on_pick_start_from_metric_grid_domain_item (?, Result))
 			Result.pick_end_actions.extend (agent on_pick_end_from_metric_grid_domain_item)
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Domain item
+
+	new_current_application_target_domain_item: EB_METRIC_DOMAIN_ITEM is
+			-- New current application target domain item
+		do
+			create {EB_METRIC_TARGET_DOMAIN_ITEM}Result.make ("")
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_input_domain_item: EB_METRIC_DOMAIN_ITEM is
+			-- New input domain item
+		do
+			create {EB_METRIC_DELAYED_DOMAIN_ITEM}Result.make ("")
+		ensure
+			result_attached: Result /= Void
+		end
+
+	new_delayed_domain_item: EB_METRIC_DOMAIN_ITEM is
+			-- New delayed domain item
+		do
+			create {EB_METRIC_DELAYED_DOMAIN_ITEM}Result.make (n_delayed_domain_id)
 		ensure
 			result_attached: Result /= Void
 		end

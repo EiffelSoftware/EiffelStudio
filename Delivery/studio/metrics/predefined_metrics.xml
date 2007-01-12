@@ -502,6 +502,35 @@
 			</or_criterion>
 		</criterion>
 	</basic_metric>		
+	<basic_metric name="callee_is" unit="feature" uuid="1C29E8E0-71A2-40D5-8B21-CFD40C341302">
+		<description></description>
+		<criterion>
+			<caller_criterion name="callee_is" unit="feature" negation="False" only_current_version="False">
+				<domain>
+					<domain_item type="delayed" id="delayed"></domain_item>
+				</domain>
+			</caller_criterion>
+		</criterion>
+	</basic_metric>
+	<basic_metric name="Non-used features" unit="feature" uuid="F378B9EA-B8BE-421E-8882-2DC3C75D3724">
+		<description>Number of non-used features</description>
+		<criterion>
+			<and_criterion name="and" unit="feature" negation="False">				
+				<normal_criterion name="is_immediate" unit="feature" negation="False"></normal_criterion>
+				<value_criterion name="value_of_metric_is" unit="feature" metric_name="callee_is" negation="False">
+					<domain>
+						<domain_item type="target" id=""></domain_item>
+					</domain>
+					<tester relation="or">
+						<tester_item name="=">
+							<constant_value value="0"></constant_value>
+						</tester_item>
+					</tester>
+				</value_criterion>
+			</and_criterion>
+		</criterion>
+	</basic_metric>
+	
 </metric>
 
 

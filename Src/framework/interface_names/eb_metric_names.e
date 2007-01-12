@@ -250,6 +250,7 @@ feature -- Tooltip
 	f_rearrange_unit: STRING_GENERAL is do Result := locale.translate ("Or you can pick a metric unit and drop it on another metric to rearrange their order.") end
 	f_show_to_do_message: STRING_GENERAL is do Result := locale.translate ("Display a message about how to deal with the metric definition error") end
 	f_import_metrics: STRING_GENERAL is do Result := locale.translate ("Import metrics from file") end
+	f_clear_defined_domain: STRING_GENERAL is do Result := locale.translate ("Clear defined domain") end
 
 	l_target_unit: STRING_GENERAL is do Result := locale.translate("Target") end
 	l_group_unit: STRING_GENERAL is do Result := locale.translate("Group") end

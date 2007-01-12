@@ -40,10 +40,10 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		local
-			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+			l_grid_support: like new_grid_support
 		do
 			create grid
-			create l_grid_support.make_with_grid (grid)
+			l_grid_support := new_grid_support (grid)
 			grid_area.extend (grid)
 			grid.set_column_count_to (2)
 			grid.column (1).set_title (metric_names.l_operator)

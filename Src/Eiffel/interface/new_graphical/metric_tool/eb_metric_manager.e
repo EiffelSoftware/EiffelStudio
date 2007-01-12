@@ -785,15 +785,17 @@ feature -- Metric management
 			l_folder: DIRECTORY
 		do
 			if not l_retried then
-				create l_folder.make (userdefined_metrics_path)
-				if not l_folder.exists then
-					l_folder.create_dir
-				end
-				clear_last_error
-				archive_history.clear_last_error
-				archive_history.store_archive (archive_history_file)
-				if archive_history.has_error then
-					last_error := archive_history.last_error
+				if archive_history.count > 0 then
+					create l_folder.make (userdefined_metrics_path)
+					if not l_folder.exists then
+						l_folder.create_dir
+					end
+					clear_last_error
+					archive_history.clear_last_error
+					archive_history.store_archive (archive_history_file)
+					if archive_history.has_error then
+						last_error := archive_history.last_error
+					end
 				end
 			end
 		rescue

@@ -124,41 +124,6 @@ feature -- Pick and drop support for grid items
 			end
 		end
 
-	on_pick_start_from_metric_grid_domain_item (a_grid_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
-			-- Action to be performed when pick starts from `a_grid_item'.
-		require
-			a_grid_support_attached: a_grid_support /= Void
-		local
-			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
-			l_grid: EV_GRID
-			l_stone: STONE
-		do
-			l_item ?= a_grid_item
-			if l_item /= Void and then l_item.is_parented and then not ev_application.ctrl_pressed then
-				l_stone ?= l_item.on_pick
-				if l_stone /= Void then
-					a_grid_support.set_last_pebble (l_stone)
-					a_grid_support.set_last_picked_item (l_item)
-					grid.remove_selection
-					l_grid ?= a_grid_item.parent
-					l_grid.set_accept_cursor (l_stone.stone_cursor)
-					l_grid.set_deny_cursor (l_stone.x_stone_cursor)
-					check a_grid_support.last_picked_item /= Void end
-				end
-			end
-		end
-
-	on_pick_end_from_metric_grid_domain_item (a_grid_item: EV_GRID_ITEM) is
-			-- Action to be performed when pick ends from `a_grid_item'.
-		local
-			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
-		do
-			l_item ?= a_grid_item
-			if l_item /= Void then
-				l_item.on_pick_ends
-			end
-		end
-
 feature -- Setting
 
 	synchronize_scroll_behavior_with_editor is
@@ -248,9 +213,7 @@ feature -- Setting
 		do
 			Precursor
 			pick_start_actions.extend (agent on_pick_start_from_grid_editor_token_item (?, Current))
-			pick_start_actions.extend (agent on_pick_start_from_metric_grid_domain_item (?, Current))
 			pick_end_actions.extend (agent on_pick_ended_from_grid_editor_token_item)
-			pick_end_actions.extend (agent on_pick_end_from_metric_grid_domain_item)
 		end
 
 feature{NONE} -- Actions

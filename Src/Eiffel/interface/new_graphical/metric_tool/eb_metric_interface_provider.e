@@ -501,6 +501,20 @@ feature -- Color
 			result_attached: Result /= Void
 		end
 
+feature -- Grid Support
+
+	new_grid_support (a_grid: ES_GRID): EB_EDITOR_TOKEN_GRID_SUPPORT is
+			-- New grid support for `a_grid'.
+		require
+			a_grid_attached: a_grid /= Void
+		do
+			create Result.make_with_grid (a_grid)
+			Result.pick_start_actions.extend (agent on_pick_start_from_metric_grid_domain_item (?, Result))
+			Result.pick_end_actions.extend (agent on_pick_end_from_metric_grid_domain_item)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature{NONE} -- Implementation
 
 	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING_GENERAL; a_window: EV_WINDOW) is
@@ -555,6 +569,41 @@ feature{NONE} -- Implementation
 		do
 			if a_grid_item.is_parented and then button = {EV_POINTER_CONSTANTS}.left then
 				a_grid_item.activate
+			end
+		end
+
+	on_pick_start_from_metric_grid_domain_item (a_grid_item: EV_GRID_ITEM; a_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT) is
+			-- Action to be performed when pick starts from `a_grid_item'.
+		require
+			a_grid_support_attached: a_grid_support /= Void
+		local
+			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
+			l_grid: EV_GRID
+			l_stone: STONE
+		do
+			l_item ?= a_grid_item
+			if l_item /= Void and then l_item.is_parented and then not ev_application.ctrl_pressed then
+				l_stone ?= l_item.on_pick
+				if l_stone /= Void then
+					a_grid_support.set_last_pebble (l_stone)
+					a_grid_support.set_last_picked_item (l_item)
+					a_grid_support.grid.remove_selection
+					l_grid ?= a_grid_item.parent
+					l_grid.set_accept_cursor (l_stone.stone_cursor)
+					l_grid.set_deny_cursor (l_stone.x_stone_cursor)
+					check a_grid_support.last_picked_item /= Void end
+				end
+			end
+		end
+
+	on_pick_end_from_metric_grid_domain_item (a_grid_item: EV_GRID_ITEM) is
+			-- Action to be performed when pick ends from `a_grid_item'.
+		local
+			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
+		do
+			l_item ?= a_grid_item
+			if l_item /= Void then
+				l_item.on_pick_ends
 			end
 		end
 

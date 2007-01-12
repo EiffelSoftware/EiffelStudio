@@ -842,7 +842,7 @@ feature{NONE} -- Implementation
 	initialize_grid is
 			-- Initialize `grid'.
 		local
-			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+			l_grid_support: like new_grid_support
 		do
 			grid.enable_selection_on_single_button_click
 			grid.set_focused_selection_color (preferences.editor_data.selection_background_color)
@@ -853,7 +853,7 @@ feature{NONE} -- Implementation
 			grid.item_drop_actions.extend (agent on_drop_on_item)
 			grid.set_item_veto_pebble_function (agent is_item_droppable)
 			grid.key_press_actions.extend (agent on_key_pressed)
-			create l_grid_support.make_with_grid (grid)
+			l_grid_support := new_grid_support (grid)
 			l_grid_support.enable_grid_item_pnd_support
 			grid.enable_row_separators
 			grid.enable_column_separators

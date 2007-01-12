@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 			l_path_sort_info: EVS_GRID_TWO_WAY_SORTING_INFO [EB_METRIC_RESULT_ROW]
 			l_text: EV_TEXT_FIELD
 			l_font: EV_FONT
-			l_grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+			l_grid_support: like new_grid_support
 		do
 				-- Setup `input_grid'.			
 			create input_grid
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 			input_grid.set_focused_selection_color (editor_preferences.selection_background_color)
 			input_grid_area.extend (input_grid)
 			input_grid.enable_selection_on_single_button_click
-			create l_grid_support.make_with_grid (input_grid)
+			l_grid_support := new_grid_support (input_grid)
 			l_grid_support.enable_grid_item_pnd_support
 
 				-- Setup sortable `result_grid'.

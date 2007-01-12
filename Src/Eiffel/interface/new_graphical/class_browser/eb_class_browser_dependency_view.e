@@ -830,6 +830,7 @@ feature{NONE} -- Grid binding
 				-- Bind retrieved rows in grid.
 			l_grid_row := a_row_node.data.grid_row
 			bind_row_level (l_grid_row, a_row_node, l_level_index, False)
+			a_row_node.data.refresh_row
 
 				-- Highlight selected rows (if any)
 			if l_grid_row.is_selected then

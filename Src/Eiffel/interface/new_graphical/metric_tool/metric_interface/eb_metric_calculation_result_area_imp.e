@@ -46,7 +46,6 @@ feature {NONE}-- Initialization
 			create l_ev_tool_bar_1
 			create l_ev_tool_bar_separator_1
 			create ratio_btn_toolbar
-			create show_percentage_btn
 			create l_ev_tool_bar_3
 			create send_to_history_btn
 			create information_bar_empty_area
@@ -86,7 +85,6 @@ feature {NONE}-- Initialization
 			metric_area.extend (l_ev_tool_bar_1)
 			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_1)
 			metric_area.extend (ratio_btn_toolbar)
-			ratio_btn_toolbar.extend (show_percentage_btn)
 			metric_area.extend (l_ev_tool_bar_3)
 			l_ev_tool_bar_3.extend (send_to_history_btn)
 			metric_area.extend (information_bar_empty_area)
@@ -206,7 +204,7 @@ feature -- Access
 
 	information_bar_empty_area: EV_CELL
 	ratio_btn_toolbar, tool_bar: EV_TOOL_BAR
-	show_percentage_btn, filter_invisible_item_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	filter_invisible_item_btn: EV_TOOL_BAR_TOGGLE_BUTTON
 	send_to_history_btn: EV_TOOL_BAR_BUTTON
 	type_pixmap,
 	unit_pixmap, update_warning_pixmap: EV_PIXMAP

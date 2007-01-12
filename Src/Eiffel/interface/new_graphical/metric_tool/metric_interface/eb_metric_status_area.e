@@ -75,9 +75,12 @@ feature{NONE} -- Actions
 	on_open_to_do_dialog (a_force: BOOLEAN) is
 			-- Action to be performed to open a dialog to display help information about how to solve current metric definition error
 			-- If `a_force' is True, display `to_do_dialog', otherwise, don't display `to_do_dialog' if it is hidden.
+		local
+			l_str: STRING_32
 		do
 			if error = Void then
-				to_do_dialog.load_text ("", "", "")
+				create l_str.make (0)
+				to_do_dialog.load_text (l_str, l_str.twin, l_str.twin)
 			else
 				to_do_dialog.load_text (error.message, error.location, error.to_do)
 			end

@@ -31,20 +31,16 @@ feature {NONE} -- Initialization
 			create flat_grid.make (Current)
 			create archive_change_actions
 			create calculator
+			create keep_result_btn.make (preferences.metric_tool_data.keep_archive_detailed_result_preference)
+			create group_btn.make (preferences.metric_tool_data.tree_view_for_history_preference)
 			create grid_support.make_with_grid (tree_grid.grid)
 			grid_support.synchronize_color_or_font_change_with_editor
 			grid_support.color_or_font_change_actions.extend (agent on_background_color_preference_change)
 			set_grid_refresh_level (grid_rebind_level)
 			on_hide_old_item_change_from_outside_agent := agent on_hide_old_item_change_from_outside
 			on_item_age_change_from_outside_agent := agent on_item_age_change_from_outside
-			on_keep_result_selection_change_from_outside_agent := agent on_keep_result_selection_change_from_outside
-			on_display_tree_view_changed_from_outside_agent := agent on_display_tree_view_changed_from_outside
-
 			preferences.metric_tool_data.hide_old_item_preference.change_actions.extend (on_hide_old_item_change_from_outside_agent)
 			preferences.metric_tool_data.old_item_day_preference.change_actions.extend (on_item_age_change_from_outside_agent)
-			preferences.metric_tool_data.tree_view_for_history_preference.change_actions.extend (on_display_tree_view_changed_from_outside_agent)
-			preferences.metric_tool_data.keep_archive_detailed_result_preference.change_actions.extend (on_keep_result_selection_change_from_outside_agent)
-
 			set_metric_tool (a_tool)
 			tree_grid.selection_change_actions.extend (agent on_selection_changes)
 			flat_grid.selection_change_actions.extend (agent on_selection_changes)
@@ -60,7 +56,11 @@ feature {NONE} -- Initialization
 			default_create
 			tree_grid_area.extend (tree_grid.widget)
 			flat_grid_area.extend (flat_grid.widget)
-			switch_grid
+			if group_btn.is_selected then
+				flat_grid_area.hide
+			else
+				tree_grid_area.hide
+			end
 			age_text.set_text (preferences.metric_tool_data.old_archive_item_age.out)
 			age_text.change_actions.extend (agent on_item_age_change)
 			hide_old_btn.select_actions.extend (agent on_hide_old_item_change)
@@ -99,12 +99,6 @@ feature {NONE} -- Initialization
 
 			keep_result_btn.set_pixmap (pixmaps.icon_pixmaps.metric_run_and_show_details_icon)
 			keep_result_btn.set_tooltip (metric_names.f_keep_archive_detailed_result)
-			if preferences.metric_tool_data.is_archive_detailed_result_kept then
-				keep_result_btn.enable_select
-			else
-				keep_result_btn.disable_select
-			end
-			keep_result_btn.select_actions.extend (agent on_keep_result_selection_change)
 
 			remove_detailed_result_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
 			remove_detailed_result_btn.set_tooltip (metric_names.f_remove_detailed_result)
@@ -125,6 +119,9 @@ feature {NONE} -- Initialization
 			deselect_recalculatable_btn.set_text (metric_names.t_deselect_recalculatable_history)
 			deselect_recalculatable_btn.set_tooltip (metric_names.f_deselect_recalculatable_history)
 			deselect_recalculatable_btn.select_actions.extend (agent on_deselect_all_recalculatable_history_items)
+
+			keep_detailed_result_tool_bar.extend (keep_result_btn)
+			group_tool_bar.extend (group_btn)
 		end
 
 feature -- Access
@@ -169,9 +166,6 @@ feature{NONE} -- Status report
 
 	is_original_starter: BOOLEAN
 			-- Is this panel the original panel in which metric hitory recalculation starts?
-
---	is_selection_changed: BOOLEAN
---			-- Is selection status changed?
 
 	should_archive_be_shown (a_archive_node: EB_METRIC_ARCHIVE_NODE; a_time: DATE_TIME): BOOLEAN is
 			-- Should `a_archive_node' be displayed?
@@ -472,27 +466,6 @@ feature -- Actions
 			end
 		end
 
-	on_keep_result_selection_change is
-			-- Action to be performed when selection status of `keep_result_btn' changes
-		do
-			preferences.metric_tool_data.keep_archive_detailed_result_preference.set_value (keep_result_btn.is_selected)
-		end
-
-	on_keep_result_selection_change_from_outside is
-			-- Action to be performed when selection status of `keep_result_btn' changes from outside
-		local
-			l_selected: BOOLEAN
-		do
-			l_selected := preferences.metric_tool_data.is_archive_detailed_result_kept
-			if l_selected /= keep_result_btn.is_selected then
-				if l_selected then
-					keep_result_btn.enable_select
-				else
-					keep_result_btn.disable_select
-				end
-			end
-		end
-
 	on_remove_detailed_result is
 			-- Action to be performed to remove detailed result
 		do
@@ -645,12 +618,12 @@ feature{NONE} -- Recycle
 			-- To be called when the button has became useless.
 		do
 			grid_support.desynchronize_color_or_font_change_with_editor
-			preferences.metric_tool_data.tree_view_for_history_preference.change_actions.prune_all (on_display_tree_view_changed_from_outside_agent)
 			preferences.metric_tool_data.hide_old_item_preference.change_actions.prune_all (on_hide_old_item_change_from_outside_agent)
 			preferences.metric_tool_data.old_item_day_preference.change_actions.prune_all (on_item_age_change_from_outside_agent)
-			preferences.metric_tool_data.keep_archive_detailed_result_preference.change_actions.prune_all (on_keep_result_selection_change_from_outside_agent)
 			uninstall_agents (metric_tool)
 			uninstall_metric_history_agent
+			group_btn.recycle
+			keep_result_btn.recycle
 		end
 
 feature{NONE} -- Implementation
@@ -769,12 +742,6 @@ feature{NONE} -- Implementation
 	on_item_age_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent of `on_item_age_change_from_outside'
 
-	on_keep_result_selection_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_keep_result_selection_change_from_outside'		
-
-	on_display_tree_view_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_display_tree_view_changed_from_outside'
-
 	grid_refresh_level: INTEGER
 			-- Grid refresh level
 
@@ -805,32 +772,21 @@ feature{NONE} -- Implementation
 	grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 			-- Grid support (used in odd/even row background preference change synchronization)
 
+	keep_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+			-- Keep result button
+
+	group_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+			-- Show tree view button
+
 feature{NONE} -- Actions
 
 	on_display_tree_view_changed is
 			-- Action to be performed when selection status of `group_btn' changes
 			-- When `group_btn' is selected, tree view is displayed, otherwise, flat view is displayed.
 		do
-			preferences.metric_tool_data.tree_view_for_history_preference.set_value (group_btn.is_selected)
 			set_grid_refresh_level (grid_switch_level)
 			set_is_up_to_date (False)
 			update_ui
-		end
-
-	on_display_tree_view_changed_from_outside is
-			-- Action to be performed when selection status of `group_btn' changes from outside (i.e. preference changes from preference window)
-			-- When `group_btn' is selected, tree view is displayed, otherwise, flat view is displayed.
-		local
-			l_selected: BOOLEAN
-		do
-			l_selected := preferences.metric_tool_data.is_tree_view_for_history
-			if l_selected /= group_btn.is_selected then
-				if l_selected then
-					group_btn.enable_select
-				else
-					group_btn.disable_select
-				end
-			end
 		end
 
 invariant
@@ -839,11 +795,11 @@ invariant
 	flat_grid_attached: flat_grid /= Void
 	calculator_attached: calculator /= Void
 	grid_support_attached: grid_support /= Void
+	keep_result_btn_attached: keep_result_btn /= Void
+	group_btn_attached: group_btn /= Void
 	archive_change_actions_attached: archive_change_actions /= Void
 	on_item_age_change_from_outside_agent_attached: on_item_age_change_from_outside_agent /= Void
 	on_hide_old_item_change_from_outside_agent_attached: on_hide_old_item_change_from_outside_agent /= Void
-	on_display_tree_view_changed_from_outside_agent_attached: on_display_tree_view_changed_from_outside_agent /= Void
-	on_keep_result_selection_change_from_outside_agent_attached: on_keep_result_selection_change_from_outside_agent /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

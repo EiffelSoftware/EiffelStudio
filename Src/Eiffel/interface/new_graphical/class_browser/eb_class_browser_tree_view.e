@@ -93,12 +93,10 @@ feature -- Access
 			-- Toggle button to indicate if syntactical supplier/clients are displayed
 		do
 			if syntactical_button_internal = Void then
-				create syntactical_button_internal.make (
-					pixmaps.icon_pixmaps.class_overriden_normal_icon,
-					interface_names.h_show_syntactical_classes,
-					preferences.class_browser_data.syntactical_class_preference,
-					agent on_refresh_for_flat_view
-				)
+				create syntactical_button_internal.make (preferences.class_browser_data.syntactical_class_preference)
+				syntactical_button_internal.set_pixmap (pixmaps.icon_pixmaps.class_overriden_normal_icon)
+				syntactical_button_internal.set_tooltip (interface_names.h_show_syntactical_classes)
+				syntactical_button_internal.select_actions.extend (agent on_refresh_for_flat_view)
 			end
 			Result := syntactical_button_internal
 		ensure
@@ -109,12 +107,10 @@ feature -- Access
 			-- Toggle button to indicate if normal referenced supplier/clients are displayed
 		do
 			if normal_referenced_button_internal = Void then
-				create normal_referenced_button_internal.make (
-					pixmaps.icon_pixmaps.diagram_supplier_link_icon,
-					interface_names.h_show_normal_referenced_classes,
-					preferences.class_browser_data.normal_referenced_class_preference,
-					agent on_refresh_for_flat_view
-				)
+				create normal_referenced_button_internal.make (preferences.class_browser_data.normal_referenced_class_preference)
+				normal_referenced_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_supplier_link_icon)
+				normal_referenced_button_internal.set_tooltip (interface_names.h_show_normal_referenced_classes)
+				normal_referenced_button_internal.select_actions.extend (agent on_refresh_for_flat_view)
 			end
 			Result := normal_referenced_button_internal
 		ensure
@@ -679,12 +675,10 @@ feature{NONE} -- Implementation
 			-- Toggle button to turn on/off item path display
 		do
 			if display_path_button_internal = Void then
-				create display_path_button_internal.make (
-					pixmaps.icon_pixmaps.metric_unit_group_icon,
-					interface_names.h_show_item_location,
-					preferences.class_browser_data.show_item_path_preference,
-					agent on_show_path_changed
-				)
+				create display_path_button_internal.make (preferences.class_browser_data.show_item_path_preference)
+				display_path_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
+				display_path_button_internal.set_tooltip (interface_names.h_show_item_location)
+				display_path_button_internal.select_actions.extend (agent on_show_path_changed)
 			end
 			Result := display_path_button_internal
 		ensure

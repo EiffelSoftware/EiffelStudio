@@ -172,6 +172,12 @@ feature -- Access
 	icons: EDITOR_ICONS
 			-- Editor icons
 
+	is_offset_valid: BOOLEAN is
+			-- If viewport offset vaild?
+		do
+			Result := editor_viewport.y_offset >= 0
+		end
+
 feature -- Status Setting
 
 	set_cursors (a_cursors: like cursors) is
@@ -1528,7 +1534,7 @@ feature {NONE} -- Implementation
 
 
 invariant
-	offset_view: editor_viewport.y_offset >= 0
+	offset_view: is_offset_valid
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

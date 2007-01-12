@@ -10,12 +10,11 @@ class
 	EB_SHOW_TOOLBAR_COMMAND
 
 inherit
-	EB_SHOW_WIDGET_COMMAND
+	EB_TARGET_COMMAND
 		rename
 			make as command_make
 		redefine
-			enable_visible,
-			disable_visible
+			target
 		end
 
 	EB_MENUABLE_COMMAND
@@ -35,12 +34,27 @@ feature {NONE} -- Initialization
 		do
 			menu_name := a_menu_name
 			name := a_menu_name
-			content := a_target
+			target := a_target
 		ensure
-			set: content = a_target
+			set: target = a_target
 		end
 
+feature -- Access
+
+	is_visible: BOOLEAN
+			-- Is current target visible?
+
 feature -- Status setting
+
+	execute is
+			-- toggle between show and hide.
+		do
+			if is_visible then
+				disable_visible
+			else
+				enable_visible
+			end
+		end
 
 	enable_visible is
 			-- Set `is_visible' to True.
@@ -50,7 +64,7 @@ feature -- Status setting
 		do
 			if not is_visible then
 				is_visible := True
-				content.show
+				target.show
 
 				menu_items := managed_menu_items
 				if menu_items /= Void then
@@ -96,7 +110,7 @@ feature -- Status setting
 					end
 				end
 				is_visible := False
-				content.hide
+				target.hide
 			end
 		end
 
@@ -133,7 +147,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	content: SD_TOOL_BAR_CONTENT;
+	target: SD_TOOL_BAR_CONTENT;
 			-- Tool bar content managed.
 
 indexing

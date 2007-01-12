@@ -160,13 +160,15 @@ feature {NONE} -- Implementation
 				check
 					non_void_referenced_assembly: l_ref_ass /= Void
 				end
-				ca := cache_writer.consumed_assembly_from_path (l_ref_ass.location)
-				if not assembly_mapping.has (l_ref_ass.full_name) then
-					last_index := last_index + 1
-					assembly_ids.extend (ca)
-					assembly_mapping.put (last_index, l_ref_ass.full_name)
-						-- add also referenced assemblies of assembly referenced.
-					build_referenced_assemblies (l_ref_ass, a_loader)
+				if l_ref_ass /= Void then
+					ca := cache_writer.consumed_assembly_from_path (l_ref_ass.location)
+					if not assembly_mapping.has (l_ref_ass.full_name) then
+						last_index := last_index + 1
+						assembly_ids.extend (ca)
+						assembly_mapping.put (last_index, l_ref_ass.full_name)
+							-- add also referenced assemblies of assembly referenced.
+						build_referenced_assemblies (l_ref_ass, a_loader)
+					end
 				end
 				i := i + 1
 			end

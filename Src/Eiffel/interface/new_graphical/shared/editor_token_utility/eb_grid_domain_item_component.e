@@ -39,7 +39,7 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	domain_item: EB_METRIC_DOMAIN_ITEM
+	domain_item: EB_DOMAIN_ITEM
 			-- Domain item which will be displayed here
 
 	required_width: INTEGER is

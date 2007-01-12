@@ -26,16 +26,21 @@ feature {NONE} -- Initialization
 
 	make (a_tool: like metric_tool) is
 			-- Initialize `metric_tool' with `a_too'.
+		local
+			l_grid: ES_GRID
 		do
+			create l_grid
 			create tree_grid.make (Current)
 			create flat_grid.make (Current)
 			create archive_change_actions
 			create calculator
 			create keep_result_btn.make (preferences.metric_tool_data.keep_archive_detailed_result_preference)
 			create group_btn.make (preferences.metric_tool_data.tree_view_for_history_preference)
-			create grid_support.make_with_grid (tree_grid.grid)
+
+			grid_support := new_grid_support (l_grid)
 			grid_support.synchronize_color_or_font_change_with_editor
 			grid_support.color_or_font_change_actions.extend (agent on_background_color_preference_change)
+
 			set_grid_refresh_level (grid_rebind_level)
 			on_hide_old_item_change_from_outside_agent := agent on_hide_old_item_change_from_outside
 			on_item_age_change_from_outside_agent := agent on_item_age_change_from_outside
@@ -769,7 +774,7 @@ feature{NONE} -- Implementation
 					  a_level = grid_switch_level
 		end
 
-	grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+	grid_support: like new_grid_support
 			-- Grid support (used in odd/even row background preference change synchronization)
 
 	keep_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON

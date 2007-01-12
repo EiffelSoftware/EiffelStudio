@@ -55,7 +55,7 @@ feature{NONE} -- Initialization
 	make is
 			-- Initialize `scope' with `a_scope'
 		local
-			l_grid_supprot: EB_EDITOR_TOKEN_GRID_SUPPORT
+			l_grid_supprot: like new_grid_support
 		do
 			create change_actions
 			default_create
@@ -76,7 +76,7 @@ feature{NONE} -- Initialization
 			key_press_string_actions.extend (agent on_key_string_pressed)
 			set_focused_selection_color (preferences.editor_data.selection_background_color)
 			enable_selection_on_single_button_click
-			create l_grid_supprot.make_with_grid (Current)
+			l_grid_supprot := new_grid_support (Current)
 			l_grid_supprot.enable_grid_item_pnd_support
 		ensure then
 			tree_enabled: is_tree_enabled

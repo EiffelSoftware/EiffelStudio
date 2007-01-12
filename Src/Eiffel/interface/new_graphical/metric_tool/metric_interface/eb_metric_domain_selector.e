@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 			grid.set_minimum_width (100)
 			grid.enable_multiple_row_selection
 
-			create grid_support.make_with_grid (grid)
+			grid_support := new_grid_support (grid)
 			grid_support.enable_ctrl_right_click_to_open_new_window
 			grid_support.enable_grid_item_pnd_support
 
@@ -222,7 +222,7 @@ feature -- Access
 	address_manager: EB_ADDRESS_MANAGER
 			-- Address manager
 
-	grid_support: EB_EDITOR_TOKEN_GRID_SUPPORT
+	grid_support: like new_grid_support
 			-- Grid support
 
 feature -- Element change

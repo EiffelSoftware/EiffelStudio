@@ -52,6 +52,8 @@ feature -- Access
 			l_path_style: like item_path_style
 			l_class: QL_CLASS
 			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
+			l_plain_text_style: like plain_text_style
+			l_text: LIST [EDITOR_TOKEN]
 		do
 			if grid_item_internal = Void then
 				create grid_item_internal
@@ -61,7 +63,9 @@ feature -- Access
 							-- For folder row
 					l_class ?= item
 					check l_class /= Void end
-					grid_item_internal.set_text_with_tokens (path_grid_item_text (l_class, False, True, False))
+					l_text := path_grid_item_text (l_class, False, True, False)
+					l_text.append (child_count)
+					grid_item_internal.set_text_with_tokens (l_text)
 					grid_item_internal.set_image (grid_item_internal.text)
 					grid_item_internal.set_pixmap (pixmap_from_group_path (l_class.class_c.group, l_class.class_i.path))
 				else
@@ -80,7 +84,9 @@ feature -- Access
 						l_path_style.path_printer.set_feature_style (feature_name_style)
 					end
 					l_path_style.set_item (item)
-					grid_item_internal.set_text_with_tokens (l_path_style.text)
+					l_text := l_path_style.text
+					l_text.append (child_count)
+					grid_item_internal.set_text_with_tokens (l_text)
 					grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (item))
 					grid_item_internal.set_image (grid_item_internal.text)
 
@@ -287,6 +293,18 @@ feature -- Grid binding
 			set_grid_row (a_row)
 		end
 
+	refresh_row is
+			-- Refresh current row.
+		require
+			is_binded: is_binded_to_grid
+		local
+			l_column: INTEGER
+		do
+			l_column := grid_item.column.index
+			grid_item_internal := Void
+			bind_row (grid_row, l_column)
+		end
+
 feature{NONE} -- Implementation
 
 	class_style: EB_CLASS_EDITOR_TOKEN_STYLE is
@@ -417,6 +435,30 @@ feature{NONE} -- Implementation
 			Result.enable_parent
 			Result.enable_indirect_parent
 			Result.disable_target
+		ensure
+			result_attached: Result /= Void
+		end
+
+	child_count: LIST [EDITOR_TOKEN] is
+			-- Editor tokens representing a children number of `row_node'
+		local
+			l_str: STRING
+			l_count: INTEGER
+			l_plain_text_style: like plain_text_style
+		do
+			create l_str.make (8)
+			l_count := row_node.children.count
+			if l_count > 0 then
+				l_str.append (ti_space)
+				l_str.append (ti_l_parenthesis)
+				l_str.append (l_count.out)
+				l_str.append (ti_r_parenthesis)
+				l_plain_text_style := plain_text_style
+				l_plain_text_style.set_source_text (l_str)
+				Result := l_plain_text_style.text
+			else
+				create {LINKED_LIST [EDITOR_TOKEN]} Result.make
+			end
 		ensure
 			result_attached: Result /= Void
 		end

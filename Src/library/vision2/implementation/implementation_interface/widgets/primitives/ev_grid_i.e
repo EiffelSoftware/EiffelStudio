@@ -1095,6 +1095,9 @@ feature -- Status setting
 		do
 			a_col_i := columns @ (a_column)
 			if not a_col_i.is_show_requested then
+				if a_col_i.is_locked then
+					a_col_i.locked_column.widget.show
+				end
 				a_col_i.set_is_show_requested (True)
 				displayed_column_count := displayed_column_count + 1
 
@@ -1118,6 +1121,9 @@ feature -- Status setting
 		do
 			a_col_i := columns @ (a_column)
 			if a_col_i.is_show_requested then
+				if a_col_i.is_locked then
+   					a_col_i.locked_column.widget.hide
+				end
 				a_col_i.set_is_show_requested (False)
 				displayed_column_count := displayed_column_count - 1
 
@@ -2654,6 +2660,7 @@ feature -- Removal
 				end
 				i := i + 1
 			end
+			locked_indexes.wipe_out
 			from
 				i := 1
 			until

@@ -754,6 +754,9 @@ feature -- Status setting
 			parented: parent /= Void
 		do
 			if is_show_requested then
+				if is_locked then
+					locked_row.widget.hide
+				end
 				is_show_requested := False
 				if parent_i /= Void then
 					parent_i.adjust_non_displayed_row_count (1)
@@ -773,7 +776,13 @@ feature -- Status setting
 			parented: parent /= Void
 		do
 			if not is_show_requested then
+				if is_locked then
+					locked_row.widget.show
+				end
 				is_show_requested := True
+				if is_locked then
+					locked_row.widget.show
+				end
 				if parent_i /= Void then
 					parent_i.adjust_non_displayed_row_count (-1)
 					parent_i.set_vertical_computation_required (index)

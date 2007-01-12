@@ -156,6 +156,24 @@ feature {NONE} -- Initialization
 			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
 			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
 
+			add_current_target_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
+			add_current_target_item_btn.set_tooltip (metric_names.f_application_scope)
+			add_current_target_item_btn.select_actions.extend (agent on_add_domain_item (agent new_current_application_target_domain_item))
+
+			add_input_domain_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
+			add_input_domain_item_btn.set_tooltip (metric_names.f_delayed_scope)
+			add_input_domain_item_btn.select_actions.extend (agent on_add_domain_item (agent new_input_domain_item))
+
+			add_delayed_domain_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_delayed_icon)
+			add_delayed_domain_item_btn.set_tooltip (metric_names.f_use_delayed_scope)
+			add_delayed_domain_item_btn.select_actions.extend (agent on_add_domain_item (agent new_delayed_domain_item))
+
+			clear_domain_btn.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
+			clear_domain_btn.set_tooltip (metric_names.f_clear_defined_domain)
+			clear_domain_btn.select_actions.extend (agent on_clear_defined_domain)
+
+			combination_grid.item_select_actions.extend (agent on_grid_item_selected)
+			quick_domain_item_tool_bar.disable_sensitive
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
 			ctrl_up_shortcut_attached: move_row_up_shortcut /= Void
@@ -350,10 +368,52 @@ feature{NONE} -- Actions
 			on_definition_change
 		end
 
+	on_grid_item_selected (a_item: EV_GRID_ITEM) is
+			-- Agent to be performed when `a_item' in `combination_grid' is selected
+		do
+			current_selected_grid_domain_item ?= a_item
+			if current_selected_grid_domain_item /= Void then
+				quick_domain_item_tool_bar.enable_sensitive
+			else
+				quick_domain_item_tool_bar.disable_sensitive
+			end
+		end
+
+	on_add_domain_item (a_domain_item_retrieval_agent: FUNCTION [ANY, TUPLE, EB_METRIC_DOMAIN_ITEM]) is
+			-- Action to be performed to add domain item retrieved from `a_domain_item_retrieval_agent'
+			-- into current selected domain grid item
+		require
+			a_domain_item_retrieval_agent_attached: a_domain_item_retrieval_agent /= Void
+		local
+			l_domain: EB_METRIC_DOMAIN
+		do
+			if current_selected_grid_domain_item /= Void and then current_selected_grid_domain_item.is_parented then
+				create l_domain.make
+				l_domain.extend (a_domain_item_retrieval_agent.item ([]))
+				current_selected_grid_domain_item.set_domain (l_domain)
+				on_change
+			end
+		end
+
+	on_clear_defined_domain is
+			-- Action to be performed to clear currently defined domain in `current_selected_grid_domain_item'.
+		local
+			l_domain: EB_METRIC_DOMAIN
+		do
+			if current_selected_grid_domain_item /= Void and then current_selected_grid_domain_item.is_parented then
+				create l_domain.make
+				current_selected_grid_domain_item.set_domain (l_domain)
+				on_change
+			end
+		end
+
 feature{NONE} -- Implementation/Access
 
 	combination_grid: EB_METRIC_CRITERION_GRID
 			-- Criterion combination grid
+
+	current_selected_grid_domain_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
+			-- Current selected grid domain item
 
 feature -- Key shortcuts
 

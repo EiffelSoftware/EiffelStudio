@@ -12,8 +12,6 @@ deferred class
 inherit
 	EV_GTK_WIDGET_IMP
 		redefine
-			width,
-			height,
 			show,
 			screen_x,
 			screen_y,
@@ -29,26 +27,6 @@ feature {NONE} -- Implementation
 			-- Parent of `Current', always Void as windows cannot be parented
 		do
 			-- Return Void
-		end
-
-	width: INTEGER is
-			-- Horizontal size measured in pixels.
-		do
-			if default_width /= -1 then
-				Result := default_width
-			else
-				Result := Precursor
-			end
-		end
-
-	height: INTEGER is
-			-- Vertical size measured in pixels.
-		do
-			if default_height /= -1 then
-				Result := default_height
-			else
-				Result := Precursor
-			end
 		end
 
 	set_blocking_window (a_window: EV_WINDOW) is
@@ -109,23 +87,9 @@ feature {NONE} -- Implementation
 	set_size (a_width, a_height: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
-		local
-			l_width, l_height: INTEGER
 		do
-			default_width := a_width
-			default_height := a_height
-				-- Both resizes are needed otherwise the original position gets reset on show.
-
-			l_width := minimum_width.max (a_width)
-			l_height := minimum_height.max (a_height)
-
-			{EV_GTK_EXTERNALS}.gdk_window_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), l_width, l_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, l_width, l_height)
+			{EV_GTK_EXTERNALS}.gtk_window_resize (c_object, a_width, a_height)
 		end
-
-	default_width, default_height: INTEGER
-			-- Default width and height for the window if set, -1 otherwise.
-			-- (see. `gtk_window_set_default_size' for more information)
 
 	x_position: INTEGER is
 			-- X coordinate of `Current'

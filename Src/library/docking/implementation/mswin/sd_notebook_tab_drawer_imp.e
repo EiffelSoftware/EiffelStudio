@@ -96,7 +96,7 @@ feature -- Commands
 			l_bitmap := l_bitmap_dc.bitmap
 
 			l_brush := internal_background_brush
-			create l_wel_rect.make (0, 0, a_width, buffer_pixmap.height)
+			create l_wel_rect.make (0, 0, a_width, buffer_pixmap.height + 1)
 
 			if theme_data /= default_pointer then
 				draw_xp_selected_tab (l_bitmap_dc, l_bitmap, a_tab_info, l_wel_rect, l_brush)

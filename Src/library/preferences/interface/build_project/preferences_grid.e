@@ -437,6 +437,11 @@ feature {NONE} -- Events
 
 feature {NONE} -- Implementation
 
+	build_preference_name_to_display (a_pref: PREFERENCE): STRING_32 is
+		do
+			Result := a_pref.name
+		end
+
 	build_structured is
 			-- Fill with preferences structured hierarchically.
 		local
@@ -1124,7 +1129,7 @@ feature {NONE} -- Filtering
 		require
 			in_flat_mode: not grid.is_tree_enabled
 		local
-			l_match_text: STRING
+			l_match_text: STRING_32
 
 			l_preference: PREFERENCE
 			l_prefs: LIST [PREFERENCE]
@@ -1147,7 +1152,7 @@ feature {NONE} -- Filtering
 						l_prefs.after
 					loop
 						l_preference := l_prefs.item
-						if l_match_text = Void or else l_preference.name.has_substring (l_match_text) then
+						if l_match_text = Void or else build_preference_name_to_display (l_preference).has_substring (l_match_text) then
 							matches.extend (l_preference)
 						end
 						l_prefs.forth

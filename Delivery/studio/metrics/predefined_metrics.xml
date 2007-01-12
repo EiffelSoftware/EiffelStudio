@@ -502,7 +502,6 @@
 			</or_criterion>
 		</criterion>
 	</basic_metric>		
-	<ratio_metric numerator="" denominator_coefficient="5" name="r1" denominator="" numerator_uuid="414CA4A7-FC9E-4211-AA58-0F78DF64A1FF" denominator_uuid="E4FE2ABD-FB05-41A9-B02E-611664D04AD2" numerator_coefficient="3" uuid="D4EC8167-67D2-407D-94D1-F2BFCF9E228A" unit="ratio"></ratio_metric>
 </metric>
 
 

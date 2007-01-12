@@ -91,9 +91,6 @@ feature {NONE} -- Initialization
 
 			initialize_client_area
 
-			default_height := -1
-			default_width := -1
-
 			l_gtk_marshal.signal_connect (l_c_object, app_imp.set_focus_event_string, agent (l_gtk_marshal).on_set_focus_event_intermediary (internal_id, ?), l_gtk_marshal.set_focus_event_translate_agent, True)
 				-- Used to propagate focus events between internal gtk widgets.
 
@@ -415,8 +412,6 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 				--| `default_width' and `default_height' are not useful anymore.
 			a_x_pos := x_position
 			a_y_pos := y_position
-			default_width := -1
-			default_height := -1
 			positioned_by_user := False
 			Precursor (a_x_pos, a_y_pos, a_width, a_height)
 			if a_x_pos  /= previous_x_position or a_y_pos /= previous_y_position then

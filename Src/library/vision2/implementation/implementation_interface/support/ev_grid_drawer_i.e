@@ -75,8 +75,7 @@ feature -- Basic operations
 					invalid_x_end := invalid_x_end.min (grid.virtual_width)
 
 					column_offsets := grid.column_offsets
-						-- Retriece the offsets of all columns from `grid'.
-
+						-- Retrieve the offsets of all columns from `grid'.
 
 						-- Calculate the columns that must be displayed.
 					from
@@ -146,7 +145,7 @@ feature -- Basic operations
 
 			vertical_buffer_offset := grid.viewport_y_offset
 
-			if not grid.header.is_empty then
+			if grid.row_count > 0 then
 
 					-- Calculate the rows that must be displayed.
 					-- Compute the virtual positions of the invalidated area.
@@ -160,9 +159,6 @@ feature -- Basic operations
 						-- Limit the positions chacked to the virtual height if the area is intersected.
 					invalid_y_start := invalid_y_start.max (0)
 					invalid_y_end := invalid_y_end.min (grid.virtual_height)
-
-
-
 
 					if not grid.uses_row_offsets then
 							-- If row heights are fixed we can calculate instead of searching.
@@ -1262,8 +1258,17 @@ feature -- Basic operations
 					end
 					else
 							-- In this situation, the grid is completely empty, so we simply fill the background color.
-						drawable.set_foreground_color (grid.background_color)
-						drawable.fill_rectangle (an_x, a_y, a_width, a_height)
+						if grid.fill_background_actions_internal /= Void and then not grid.fill_background_actions_internal.is_empty then
+							if item_buffer_pixmap.width < a_width or item_buffer_pixmap.height < a_height then
+							   item_buffer_pixmap.set_size (a_width, a_height)
+							end
+							grid.fill_background_actions_internal.call ([item_buffer_pixmap, internal_client_x, internal_client_y, a_width, a_height])
+							temp_rectangle.move_and_resize (0, 0, a_width, a_height)
+							drawable.draw_sub_pixmap (an_x, a_y, item_buffer_pixmap, temp_rectangle)
+						else
+							drawable.set_foreground_color (grid.background_color)
+							drawable.fill_rectangle (an_x, a_y, a_width, a_height)
+						end
 					end
 					if not grid.is_column_resize_immediate and grid.is_header_item_resizing and grid.is_resizing_divider_enabled then
 							-- Put the resizing line back on the redrawn area so that it can be correctly erased

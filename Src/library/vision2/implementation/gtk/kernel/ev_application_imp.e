@@ -147,7 +147,7 @@ feature {EV_ANY_I} -- Implementation
 						{EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
 					when GDK_MOTION_NOTIFY then
 						debug ("GDK_EVENT")
-							print ("GDK_MOTION_NOTIFY")
+							print ("GDK_MOTION_NOTIFY%N")
 						end
 						user_events_processed_from_underlying_toolkit := True
 							-- Set up storage to avoid server roundtrips.

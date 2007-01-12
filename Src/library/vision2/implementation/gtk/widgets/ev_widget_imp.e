@@ -473,9 +473,6 @@ feature {NONE} -- Implementation
 	last_width, last_height: NATURAL_16
 			-- Dimenions during last "size-allocate".
 
-	in_resize_event: BOOLEAN
-			-- Is `interface.resize_actions' being executed?
-
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	interface: EV_WIDGET;

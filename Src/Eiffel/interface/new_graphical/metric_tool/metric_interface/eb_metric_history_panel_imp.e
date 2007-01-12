@@ -27,14 +27,16 @@ feature {NONE}-- Initialization
 			
 				-- Create all widgets.
 			create toolbar_area
-			create l_ev_tool_bar_1
+			create first_tool_bar
 			create run_btn
 			create stop_btn
-			create keep_result_btn
+			create keep_detailed_result_tool_bar
+			create middle_tool_bar
 			create remove_detailed_result_btn
 			create l_ev_tool_bar_separator_1
 			create remove_btn
-			create group_btn
+			create group_tool_bar
+			create last_tool_bar
 			create l_ev_tool_bar_separator_2
 			create l_ev_cell_1
 			create hide_old_btn
@@ -54,15 +56,17 @@ feature {NONE}-- Initialization
 			
 				-- Build widget structure.
 			extend (toolbar_area)
-			toolbar_area.extend (l_ev_tool_bar_1)
-			l_ev_tool_bar_1.extend (run_btn)
-			l_ev_tool_bar_1.extend (stop_btn)
-			l_ev_tool_bar_1.extend (keep_result_btn)
-			l_ev_tool_bar_1.extend (remove_detailed_result_btn)
-			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_1)
-			l_ev_tool_bar_1.extend (remove_btn)
-			l_ev_tool_bar_1.extend (group_btn)
-			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_2)
+			toolbar_area.extend (first_tool_bar)
+			first_tool_bar.extend (run_btn)
+			first_tool_bar.extend (stop_btn)
+			toolbar_area.extend (keep_detailed_result_tool_bar)
+			toolbar_area.extend (middle_tool_bar)
+			middle_tool_bar.extend (remove_detailed_result_btn)
+			middle_tool_bar.extend (l_ev_tool_bar_separator_1)
+			middle_tool_bar.extend (remove_btn)
+			toolbar_area.extend (group_tool_bar)
+			toolbar_area.extend (last_tool_bar)
+			last_tool_bar.extend (l_ev_tool_bar_separator_2)
 			toolbar_area.extend (l_ev_cell_1)
 			toolbar_area.extend (hide_old_btn)
 			toolbar_area.extend (old_item_area)
@@ -92,10 +96,15 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			toolbar_area.disable_item_expand (l_ev_tool_bar_1)
+			toolbar_area.disable_item_expand (first_tool_bar)
+			toolbar_area.disable_item_expand (keep_detailed_result_tool_bar)
+			toolbar_area.disable_item_expand (middle_tool_bar)
+			toolbar_area.disable_item_expand (group_tool_bar)
+			toolbar_area.disable_item_expand (last_tool_bar)
 			toolbar_area.disable_item_expand (l_ev_cell_1)
 			toolbar_area.disable_item_expand (hide_old_btn)
 			toolbar_area.disable_item_expand (old_item_area)
+			toolbar_area.disable_item_expand (selector_toolbar)
 			toolbar_area.disable_item_expand (l_ev_cell_2)
 			l_ev_cell_1.set_minimum_width (10)
 			old_item_area.disable_item_expand (age_text)
@@ -119,10 +128,10 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	first_tool_bar, keep_detailed_result_tool_bar, middle_tool_bar, group_tool_bar, last_tool_bar,
 	selector_toolbar: EV_TOOL_BAR
-	keep_result_btn, group_btn: EV_TOOL_BAR_TOGGLE_BUTTON
-	run_btn, stop_btn, remove_detailed_result_btn,
-	remove_btn, select_all_btn, deselect_all_btn, select_recalculatable_btn, deselect_recalculatable_btn: EV_TOOL_BAR_BUTTON
+	run_btn, stop_btn, remove_detailed_result_btn, remove_btn, select_all_btn,
+	deselect_all_btn, select_recalculatable_btn, deselect_recalculatable_btn: EV_TOOL_BAR_BUTTON
 	toolbar_area,
 	old_item_area, flat_grid_area, tree_grid_area: EV_HORIZONTAL_BOX
 	hide_old_btn: EV_CHECK_BUTTON
@@ -134,7 +143,6 @@ feature {NONE} -- Implementation
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
 	l_ev_cell_1,
 	l_ev_cell_2: EV_CELL
-	l_ev_tool_bar_1: EV_TOOL_BAR
 
 feature {NONE} -- Implementation
 

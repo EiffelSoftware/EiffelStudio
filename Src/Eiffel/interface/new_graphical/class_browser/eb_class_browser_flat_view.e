@@ -280,12 +280,10 @@ feature -- Access
 			-- Checkbox to indicate whether or not unchanged features from ANY is displayed
 		do
 			if show_feature_from_any_button_internal = Void then
-				create show_feature_from_any_button_internal.make (
-					pixmaps.icon_pixmaps.command_show_features_of_any_icon,
-					interface_names.h_show_feature_from_any,
-					preferences.class_browser_data.show_feature_from_any_preference,
-					agent on_show_feature_from_any_changed
-				)
+				create show_feature_from_any_button_internal.make (preferences.class_browser_data.show_feature_from_any_preference)
+				show_feature_from_any_button_internal.set_pixmap (pixmaps.icon_pixmaps.command_show_features_of_any_icon)
+				show_feature_from_any_button_internal.set_tooltip (interface_names.h_show_feature_from_any)
+				show_feature_from_any_button_internal.select_actions.extend (agent on_show_feature_from_any_changed)
 			end
 			Result := show_feature_from_any_button_internal
 		ensure

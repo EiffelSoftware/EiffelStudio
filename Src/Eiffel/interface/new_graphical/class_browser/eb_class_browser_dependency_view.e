@@ -83,12 +83,10 @@ feature -- Access
 			-- Toggle button to indicate if syntactical supplier/clients are displayed
 		do
 			if syntactical_button_internal = Void then
-				create syntactical_button_internal.make (
-					pixmaps.icon_pixmaps.class_overriden_normal_icon,
-					interface_names.h_show_syntactical_classes,
-					preferences.class_browser_data.syntactical_class_preference,
-					agent on_retrieve_data
-				)
+				create syntactical_button_internal.make (preferences.class_browser_data.syntactical_class_preference)
+				syntactical_button_internal.set_pixmap (pixmaps.icon_pixmaps.class_overriden_normal_icon)
+				syntactical_button_internal.set_tooltip (interface_names.h_show_syntactical_classes)
+				syntactical_button_internal.select_actions.extend (agent on_retrieve_data)
 			end
 			Result := syntactical_button_internal
 		ensure
@@ -99,12 +97,10 @@ feature -- Access
 			-- Toggle button to indicate if inheritance are displayed
 		do
 			if inheritance_button_internal = Void then
-				create inheritance_button_internal.make (
-					pixmaps.icon_pixmaps.diagram_inheritance_link_icon,
-					interface_names.h_show_ancestor_classes,
-					preferences.class_browser_data.inheritance_class_preference,
-					agent on_retrieve_data
-				)
+				create inheritance_button_internal.make (preferences.class_browser_data.inheritance_class_preference)
+				inheritance_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_inheritance_link_icon)
+				inheritance_button_internal.set_tooltip (interface_names.h_show_ancestor_classes)
+				inheritance_button_internal.select_actions.extend (agent on_retrieve_data)
 			end
 			Result := inheritance_button_internal
 		ensure
@@ -115,12 +111,10 @@ feature -- Access
 			-- Toggle button to indicate if normal referenced supplier/clients are displayed
 		do
 			if normal_referenced_button_internal = Void then
-				create normal_referenced_button_internal.make (
-					pixmaps.icon_pixmaps.diagram_supplier_link_icon,
-					interface_names.h_show_normal_referenced_classes,
-					preferences.class_browser_data.normal_referenced_class_preference,
-					agent on_retrieve_data
-				)
+				create normal_referenced_button_internal.make (preferences.class_browser_data.normal_referenced_class_preference)
+				normal_referenced_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_supplier_link_icon)
+				normal_referenced_button_internal.set_tooltip (interface_names.h_show_normal_referenced_classes)
+				normal_referenced_button_internal.select_actions.extend (agent on_retrieve_data)
 			end
 			Result := normal_referenced_button_internal
 		ensure
@@ -1097,12 +1091,10 @@ feature{NONE} -- Implementation
 			-- In this case, we can choose not to show self dependency.
 		do
 			if show_self_dependency_button_internal = Void then
-				create show_self_dependency_button_internal.make (
-					pixmaps.icon_pixmaps.metric_unit_group_icon,
-					interface_names.h_show_dependency_on_self,
-					preferences.class_browser_data.show_self_dependency_preference,
-					agent on_show_self_dependency_changed
-				)
+				create show_self_dependency_button_internal.make (preferences.class_browser_data.show_self_dependency_preference)
+				show_self_dependency_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
+				show_self_dependency_button_internal.set_tooltip (interface_names.h_show_dependency_on_self)
+				show_self_dependency_button_internal.select_actions.extend (agent on_show_self_dependency_changed)
 			end
 			Result := show_self_dependency_button_internal
 		ensure
@@ -1127,12 +1119,10 @@ feature{NONE} -- Implementation
 			--		 +- ARRAY
 		do
 			if categorize_folder_button_internal = Void then
-				create categorize_folder_button_internal.make (
-					pixmaps.icon_pixmaps.diagram_fill_cluster_icon,
-					interface_names.h_categorize_folder,
-					preferences.class_browser_data.categorized_folder_preference,
-					agent on_categorized_folder_changed
-				)
+				create categorize_folder_button_internal.make (preferences.class_browser_data.categorized_folder_preference)
+				categorize_folder_button_internal.set_pixmap (pixmaps.icon_pixmaps.diagram_fill_cluster_icon)
+				categorize_folder_button_internal.set_tooltip (interface_names.h_categorize_folder)
+				categorize_folder_button_internal.select_actions.extend (agent on_categorized_folder_changed)
 			end
 			Result := categorize_folder_button_internal
 		ensure

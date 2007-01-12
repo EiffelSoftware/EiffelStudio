@@ -86,11 +86,11 @@ feature -- Basic operations
 			l_text: STRING_GENERAL
 		do
 			if a_error = Void then
-				error_message_txt.set_text ("")
+				error_message_txt.set_text (create{STRING_32}.make (0))
 			else
 				l_text := a_error.twin
 				if a_location /= Void then
-					l_text.append ("%N")
+					l_text.append (metric_names.new_line_separator)
 					l_text.append (metric_names.t_location)
 					l_text.append (metric_names.colon)
 					l_text.append (a_location)

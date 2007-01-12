@@ -24,36 +24,41 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_pixmap: EV_PIXMAP; a_tooltip: STRING_GENERAL; a_preference: BOOLEAN_PREFERENCE; a_change_action: like change_action) is
-			-- Initialize Current.
-			-- `a_pixmap' is to be displayed in this toggle button, `a_tooltip' is the tooltip to be displayed.
-			-- `a_preference' is the preference associated with Current and `a_change_action' is the action to be performed when selection status
-			-- of Current changes
+	make (a_preference: BOOLEAN_PREFERENCE) is
+			-- Initialize `preference' with `a_preference'.
 		require
-			a_pixmap_attached: a_pixmap /= Void
-			a_tooltip_attached: a_tooltip /= Void
 			a_preference_attached: a_preference /= Void
-			a_change_action_attached: a_change_action /= Void
 		do
-			change_action := a_change_action
-			preference := a_preference
-			on_change_from_outside_agent := agent on_change_from_outside
-			preference.change_actions.extend (on_change_from_outside_agent)
 			default_create
-			set_pixmap (a_pixmap)
-			set_tooltip (a_tooltip)
-			if preference.value then
-				enable_select
-			else
-				disable_select
-			end
-			select_actions.extend (agent on_change)
+			preference := a_preference
+			create synchronizer
+			button_status_change_agent := agent notify_synchronizer (Current)
+			preference_status_change_agent := agent notify_synchronizer (preference)
+
+			synchronizer.register_host (
+				preference,
+				[
+					agent (a_syn: EB_VALUE_SYNCHRONIZER [BOOLEAN]) do preference.change_actions.extend (preference_status_change_agent) end,
+					agent (a_syn: EB_VALUE_SYNCHRONIZER [BOOLEAN]) do preference.change_actions.prune_all (preference_status_change_agent) end,
+					agent: BOOLEAN do Result := preference.value end,
+					agent preference.set_value
+				],
+				True
+			)
+
+			synchronizer.register_host (
+				Current,
+				[
+					agent (a_syn: EB_VALUE_SYNCHRONIZER [BOOLEAN]) do select_actions.extend (button_status_change_agent) end,
+					agent (a_syn: EB_VALUE_SYNCHRONIZER [BOOLEAN]) do select_actions.prune_all (button_status_change_agent) end,
+					agent: BOOLEAN do Result := is_selected end,
+					agent set_selection_status
+				],
+				False
+			)
 		end
 
 feature -- Access
-
-	change_action: PROCEDURE [ANY, TUPLE]
-			-- Action to be performed when selection status of current changes
 
 	preference: BOOLEAN_PREFERENCE
 			-- Boolean preference associated with Current
@@ -61,40 +66,51 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	synchronizer: EB_VALUE_SYNCHRONIZER [BOOLEAN]
+			-- Synchronizer used to synchroize selection status of Current toggle button and its associated `preference'
+
+	button_status_change_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent to be performed when selection status of Current toggle button changes
+
+	preference_status_change_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent to be performed when value of `preference' changes
+
+	set_selection_status (b: BOOLEAN) is
+			-- Set selection status of Current toggle button with `b'.
+			-- `b' is True means enable selection of Current,
+			-- `b' is False means disable selection of Current.
+		do
+			if b then
+				enable_select
+			else
+				disable_select
+			end
+		ensure
+			selection_status_set: (b implies is_selected) and then (not b implies not is_selected)
+		end
+
+	notify_synchronizer (a_value_host: ANY)	is
+			-- Notify `synchronizer' that value from `a_value_host' changes
+		require
+			a_value_host_valid: a_value_host = Current or else a_value_host = preference
+		do
+			synchronizer.on_value_change_from (a_value_host)
+		ensure
+			value_synchronized: synchronizer.is_value_synchronized
+		end
+
+feature{NONE} -- Recycle
+
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
-			preference.change_actions.prune_all (on_change_from_outside_agent)
+			synchronizer.wipe_out_hosts
 		end
-
-	on_change_from_outside is
-			-- Action to be performed when `preference' changes
-		local
-			l_selected: BOOLEAN
-		do
-			l_selected := preference.value
-			if l_selected /= is_selected then
-				if l_selected then
-					enable_select
-				else
-					disable_select
-				end
-			end
-		end
-
-	on_change is
-			-- Action to be performed when selection status of Current changes
-		do
-			preference.set_value (is_selected)
-			change_action.call ([])
-		end
-
-	on_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent for `on_change_from_outside'
 
 invariant
-	change_action_attached: change_action /= Void
 	preference_attached: preference /= Void
-	on_change_from_outside_agent_attached: on_change_from_outside_agent /= Void
+	synchronizer_attached: synchronizer /= Void
+	button_status_change_agent_attached: button_status_change_agent /= Void
+	preference_status_change_agent_attached: preference_status_change_agent /= Void
 
 end

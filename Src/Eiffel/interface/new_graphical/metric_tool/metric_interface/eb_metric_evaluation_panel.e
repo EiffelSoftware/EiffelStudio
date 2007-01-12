@@ -80,11 +80,11 @@ feature{NONE} -- Initialization
 		do
 			metric_tool := a_tool
 			on_stop_metric_evaluation_agent := agent on_stop_metric_evaluation
-			on_show_percentage_btn_change_from_outside_agent := agent on_show_percentage_btn_change_from_outside
-			on_filter_result_change_from_outside_agent := agent on_filter_result_change_from_outside
-			on_auto_go_to_result_change_from_outside_agent := agent on_auto_go_to_result_change_from_outside
 			on_unit_order_change_agent := agent on_unit_order_change
-			on_keep_detailed_result_changed_from_outside_agent := agent on_keep_detailed_result_changed_from_outside
+			create detailed_result_btn.make (preferences.metric_tool_data.keep_metric_detailed_result_preference)
+			create filter_result_btn.make (preferences.metric_tool_data.filter_invisible_result_preference)
+			create auto_go_to_result_btn.make (preferences.metric_tool_data.automatic_go_to_result_panel_preference)
+			create show_percent_btn.make (preferences.metric_tool_data.display_percentage_for_ratio_preference)
 			install_agents (metric_tool)
 			install_metric_history_agent
 			on_process_gui_agent := agent on_process_gui
@@ -154,7 +154,6 @@ feature {NONE} -- Initialization
 
 			detailed_result_btn.set_pixmap (pixmaps.icon_pixmaps.metric_run_and_show_details_icon)
 			detailed_result_btn.set_tooltip (metric_names.f_keep_metric_detailed_result)
-			detailed_result_btn.select_actions.extend (agent on_keep_result_change)
 
 			go_to_definition_btn.select_actions.extend (agent on_go_to_definition_button_pressed)
 			go_to_definition_btn.remove_text
@@ -184,11 +183,10 @@ feature {NONE} -- Initialization
 
 			show_percent_btn.set_text ("%%")
 			show_percent_btn.set_tooltip (metric_names.f_display_in_percentage)
-			show_percent_btn.select_actions.extend (agent on_show_percentage_btn_change)
+			show_percent_btn.select_actions.extend (agent refresh_metric_text)
 
 			auto_go_to_result_btn.set_pixmap (pixmaps.icon_pixmaps.context_link_icon)
 			auto_go_to_result_btn.set_tooltip (metric_names.f_auto_go_to_result)
-			auto_go_to_result_btn.select_actions.extend (agent on_auto_go_to_result_change)
 
 				-- Delete following in Docking EiffelStudio.
 			toolbar_empty_area.drop_actions.extend (agent drop_cluster)
@@ -205,15 +203,12 @@ feature {NONE} -- Initialization
 			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			metric_value_text.set_font (l_font)
 
-			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.extend (on_show_percentage_btn_change_from_outside_agent)
-			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.extend (on_filter_result_change_from_outside_agent)
-			preferences.metric_tool_data.automatic_go_to_result_panel_preference.change_actions.extend (on_auto_go_to_result_change_from_outside_agent)
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
-			preferences.metric_tool_data.keep_metric_detailed_result_preference.change_actions.extend (on_keep_detailed_result_changed_from_outside_agent)
-			on_show_percentage_btn_change_from_outside
-			on_filter_result_change_from_outside
-			on_auto_go_to_result_change_from_outside
-			on_quick_metric_button_pressed
+
+			option_tool_bar.extend (detailed_result_btn)
+			option_tool_bar.extend (filter_result_btn)
+			synchronize_tool_bar.extend (auto_go_to_result_btn)
+			percentage_tool_bar.extend (show_percent_btn)
 			percentage_tool_bar.wipe_out
 			send_to_history_btn.disable_sensitive
 		end
@@ -532,82 +527,6 @@ feature -- Actions
 			update_ui
 		end
 
-	on_show_percentage_btn_change is
-			-- Action to be performed when selection status of `show_percentage_btn' changes
-		local
-			l_selected: BOOLEAN
-		do
-			l_selected := show_percent_btn.is_selected
-			refresh_metric_text (l_selected)
-			if preferences.metric_tool_data.is_percentage_for_ratio_displayed  /= l_selected then
-				preferences.metric_tool_data.display_percentage_for_ratio_preference.set_value (l_selected)
-			end
-		end
-
-	on_show_percentage_btn_change_from_outside is
-			-- Action to be performed when show percentage for ratio metric value is changed in preference setting window			
-		local
-			l_btn: like show_percent_btn
-		do
-			l_btn := show_percent_btn
-			if preferences.metric_tool_data.is_percentage_for_ratio_displayed then
-				l_btn.enable_select
-			else
-				l_btn.disable_select
-			end
-			if l_btn.is_sensitive then
-				refresh_metric_text (l_btn.is_selected)
-			end
-		end
-
-	on_keep_result_change is
-			-- Action to be performed when selection status of `filter_result_btn' changes
-		local
-			l_selected: BOOLEAN
-		do
-			l_selected := filter_result_btn.is_selected
-			if preferences.metric_tool_data.is_invisible_result_filtered  /= l_selected then
-				preferences.metric_tool_data.filter_invisible_result_preference.set_value (l_selected)
-			end
-		end
-
-	on_filter_result_change_from_outside is
-			-- Action to be performed when selection status of `filter_result_btn' changes from preferences setting window
-		local
-			l_btn: like filter_result_btn
-		do
-			l_btn := filter_result_btn
-			if preferences.metric_tool_data.is_invisible_result_filtered then
-				l_btn.enable_select
-			else
-				l_btn.disable_select
-			end
-		end
-
-	on_auto_go_to_result_change is
-			-- Action to be performed when selection status of `auto_go_to_result_btn' changes
-		local
-			l_selected: BOOLEAN
-		do
-			l_selected := auto_go_to_result_btn.is_selected
-			if preferences.metric_tool_data.should_go_to_result_panel_automatically  /= l_selected then
-				preferences.metric_tool_data.automatic_go_to_result_panel_preference.set_value (l_selected)
-			end
-		end
-
-	on_auto_go_to_result_change_from_outside is
-			-- Action to be performed when selection status of `auto_go_to_result_btn' changes from preferences setting window
-		local
-			l_btn: like auto_go_to_result_btn
-		do
-			l_btn := auto_go_to_result_btn
-			if preferences.metric_tool_data.should_go_to_result_panel_automatically then
-				l_btn.enable_select
-			else
-				l_btn.disable_select
-			end
-		end
-
 	on_send_metric_to_history is
 			-- Action to be performed to send last calculated metric to history
 		do
@@ -689,15 +608,14 @@ feature {NONE} -- Implementation
 	on_process_gui_agent: PROCEDURE [ANY, TUPLE [a_item: QL_ITEM]]
 			-- Agent of `process_gui'
 
-	refresh_metric_text (a_percentage: BOOLEAN) is
-			-- Refresh text displayed in metric value text field.
-			-- If `a_percentage' is True, display text in percentage.
+	refresh_metric_text is
+			-- Refresh text displayed in metric value text field.			
 		local
 			l_double: DOUBLE_REF
 		do
 			l_double ?= metric_value_text.data
 			if l_double /= Void then
-				metric_value_text.set_text (metric_value (l_double, a_percentage))
+				metric_value_text.set_text (metric_value (l_double, show_percent_btn.is_selected))
 			end
 		end
 
@@ -772,15 +690,6 @@ feature {NONE} -- Implementation
 	uuid_internal: like uuid
 			-- Implementation of `uuid'		
 
-	on_show_percentage_btn_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_show_precentage_btn_change_from_outside'
-
-	on_filter_result_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_filter_result_change_from_outside'
-
-	on_auto_go_to_result_change_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_auto_to_result_change_from_outside'
-
 	on_metric_sent_to_history (a_archive: EB_METRIC_ARCHIVE_NODE; a_panel: ANY) is
 			-- Action to be performed when metric calculation information contained in `a_archive' has been sent to history
 		do
@@ -795,37 +704,22 @@ feature {NONE} -- Implementation
 			preferences.metric_tool_data.keep_metric_detailed_result_preference.set_value (detailed_result_btn.is_selected)
 		end
 
-	on_keep_detailed_result_changed_from_outside is
-			-- Action to be performed when selection status of `detailed_result_btn' changes from outside
-		local
-			l_selected: BOOLEAN
-		do
-			l_selected := preferences.metric_tool_data.is_metric_detailed_result_kept
-			if l_selected /= detailed_result_btn.is_selected then
-				if l_selected then
-					detailed_result_btn.enable_select
-				else
-					detailed_result_btn.disable_select
-				end
-			end
-		end
-
-	on_keep_detailed_result_changed_from_outside_agent: PROCEDURE [ANY, TUPLE]
-			-- Agent of `on_filter_result_changed_from_outside'
+	detailed_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+	filter_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+	auto_go_to_result_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+	show_percent_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
 
 feature {NONE} -- Recycle
 
 	internal_recycle is
 			-- To be called when the button has became useless.
 		do
-			preferences.metric_tool_data.display_percentage_for_ratio_preference.change_actions.prune_all (on_show_percentage_btn_change_from_outside_agent)
-			preferences.metric_tool_data.filter_invisible_result_preference.change_actions.prune_all (on_filter_result_change_from_outside_agent)
-			preferences.metric_tool_data.automatic_go_to_result_panel_preference.change_actions.prune_all (on_auto_go_to_result_change_from_outside_agent)
 			preferences.metric_tool_data.unit_order_preference.change_actions.prune_all (on_unit_order_change_agent)
-			preferences.metric_tool_data.keep_metric_detailed_result_preference.change_actions.prune_all (on_keep_detailed_result_changed_from_outside_agent)
-			on_show_percentage_btn_change_from_outside
-			on_filter_result_change_from_outside
-			on_auto_go_to_result_change_from_outside
+
+			detailed_result_btn.recycle
+			filter_result_btn.recycle
+			auto_go_to_result_btn.recycle
+			show_percent_btn.recycle
 			uninstall_agents (metric_tool)
 			uninstall_metric_history_agent
 		end
@@ -1029,9 +923,6 @@ feature-- UI Update
 						l_metric := current_selected_metric
 						if l_metric /= Void and then l_metric.is_ratio then
 							if show_percent_btn.data = Void then
-								if not show_percent_btn.is_selected then
-									show_percent_btn.enable_select
-								end
 								show_percent_btn.set_data (True)
 							end
 							if percentage_tool_bar.is_empty then
@@ -1072,12 +963,12 @@ invariant
 	metric_tool_attached: metric_tool /= Void
 	domain_generator_internal_attached: domain_generator_internal /= Void
 	on_stop_metric_evaluation_agent_attached: on_stop_metric_evaluation_agent /= Void
-	on_filter_result_change_from_outside_agent_attached: on_filter_result_change_from_outside_agent /= Void
-	on_auto_go_to_result_change_from_outside_agent_attached: on_auto_go_to_result_change_from_outside_agent /= Void
-	on_unit_order_change_agent_attached: on_unit_order_change_agent /= Void
-	on_show_percentage_btn_change_from_outside_agent_attached: on_show_percentage_btn_change_from_outside_agent /= Void
 	on_process_gui_agent_attached: on_process_gui_agent /= Void
-	on_keep_detailed_result_changed_from_outside_agent_attached: on_keep_detailed_result_changed_from_outside_agent /= Void
+	on_unit_order_change_agent_attached: on_unit_order_change_agent /= Void
+	detailed_result_btn_attached: detailed_result_btn /= Void
+	filter_result_btn_attached: filter_result_btn /= Void
+	auto_go_to_result_btn_attached: auto_go_to_result_btn /= Void
+	show_percent_btn_attached: show_percent_btn /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -18,7 +18,8 @@ inherit
 			changed,
 			update_click_list,
 			has_focus,
-			set_focus
+			set_focus,
+			is_offset_valid
 		end
 
 create
@@ -36,6 +37,9 @@ feature -- Query
 
 	content: SD_CONTENT;
 			-- Content related.
+
+	is_offset_valid: BOOLEAN is True
+			-- Redefine for not break invariant.
 
 feature -- Stone
 

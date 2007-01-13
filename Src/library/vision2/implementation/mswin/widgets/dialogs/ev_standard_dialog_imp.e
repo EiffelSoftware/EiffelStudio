@@ -69,6 +69,9 @@ feature -- Status report
 feature -- Deferred
 
 	activate (a_parent: WEL_COMPOSITE_WINDOW) is
+		require
+			a_parent_not_void: a_parent /= Void
+			a_parent_exists: a_parent.exists
 		deferred
 		end
 

@@ -54,6 +54,8 @@ feature -- Status setting
 
 	set_title (a_title: STRING_GENERAL) is
 			-- Set the title of the dialog.
+		require
+			a_title_not_void: a_title /= Void
 		deferred
 		end
 

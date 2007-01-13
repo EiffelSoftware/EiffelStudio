@@ -66,9 +66,15 @@ typedef struct tag_wel_globals
 	/* Address of the Eiffel routine `dialog_procedure' 
 	 * (class WEL_DISPATCHER) */
 	
+	EIF_DLGPROC wel_stddlgproc_cx;
+	/* Address of the Eiffel routine used for dispatch. */
+	
 	EIF_OBJ dispatcher_cx;
 	/* Address of the Eiffel object WEL_DISPATCHER created 
 	 * for each application */
+
+	EIF_OBJECT stddlg_dispatcher_cx;
+	/* Address of Eiffel object used to interact with `wel_stddlgproc_cx'. */
 
 /* enumfont.c */
 
@@ -111,7 +117,9 @@ extern wel_global_context_t * wel_thr_context(void);
 
 #define wel_wndproc	(wel_globals->wel_wndproc_cx)
 #define wel_dlgproc	(wel_globals->wel_dlgproc_cx)
+#define wel_stddlgproc	(wel_globals->wel_stddlgproc_cx)
 #define dispatcher	(wel_globals->dispatcher_cx)
+#define stddlg_dispatcher	(wel_globals->stddlg_dispatcher_cx)
 
 /* enumfont.c */
 
@@ -140,7 +148,9 @@ extern wel_global_context_t * wel_thr_context(void);
 
 	extern EIF_WNDPROC wel_wndproc;
 	extern EIF_DLGPROC wel_dlgproc;
+	extern EIF_DLGPROC wel_stddlgproc;
 	extern EIF_OBJ dispatcher;
+	extern EIF_OBJ stddlg_dispatcher;
 
 /* enumfont.c */
 

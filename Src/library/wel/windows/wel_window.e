@@ -759,7 +759,7 @@ feature -- Element change
 			else
 				create a_wel_string.make_empty (0)
 			end
-			cwin_set_window_text (item, a_wel_string.item)
+			{WEL_API}.set_window_text (item, a_wel_string.item)
 		ensure
 			text_set_when_not_void: a_text /= Void implies text.is_equal (a_text)
 			text_set_when_void: a_text = Void implies text.count = 0
@@ -2195,6 +2195,8 @@ feature {NONE} -- Externals
 
 	cwin_set_window_text (hwnd, str: POINTER) is
 			-- SDK SetWindowText
+		obsolete
+			"Use {WEL_API}.set_window_text instead."
 		external
 			"C [macro %"wel.h%"] (HWND, LPCTSTR)"
 		alias

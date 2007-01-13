@@ -29,12 +29,19 @@ inherit
 			set_maximum_page as set_maximum_range,
 			set_parent as wel_set_parent
 		redefine
-			wel_make
+			activate
 		end
 
 	WEL_CAPABILITIES_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
+	WEL_STANDARD_DIALOG_DISPATCHER
+		rename
+			standard_dialog_procedure as print_dialog_procedure
 		undefine
 			copy, is_equal
 		end
@@ -51,18 +58,14 @@ feature {NONE} -- Initialization
 			wel_make
 		end
 
-	wel_make is
-			-- Make and setup the structure.
-		do
-			Precursor {WEL_PRINT_DIALOG}
-			enable_page_numbers
-			set_maximum_range (1)
-		end
-
 	initialize is
 			-- Initialize `Current'
 			--| Currently no need to do anything here.
 		do
+			enable_page_numbers
+			set_maximum_range (1)
+			add_flag (pd_enableprinthook)
+			cwel_print_dlg_set_lpfnprinthook (item, wel_standard_dialog_procedure)
 			set_is_initialized (True)
 		end
 
@@ -85,7 +88,10 @@ feature -- Access
 	title: STRING_32 is
 			-- Title of `Current'.
 		do
-			Result := "Print"
+			Result := internal_title
+			if Result = Void then
+				Result := "Print"
+			end
 		end
 
 feature -- Element change
@@ -93,8 +99,9 @@ feature -- Element change
 	set_title (new_title: STRING_GENERAL) is
 			-- Assign `new_title' to `title'.
 		do
-			--| FIXME IS it possible in windows to change
-			--| the title of this dialog?
+			internal_title := new_title.twin
+		ensure then
+			title_set: title.is_equal (new_title)
 		end
 
 	destroy is
@@ -245,6 +252,35 @@ feature -- Status_report
 		do
 			--| FIXME Appears to be no easy way to find this from
 			--| the dialog.
+		end
+
+feature {NONE} -- Implementation
+
+	internal_title: STRING_32
+			-- Storage for `title'.
+
+	activate (a_parent: WEL_COMPOSITE_WINDOW) is
+			-- Activate current dialog
+		do
+			begin_activate
+			Precursor {WEL_PRINT_DIALOG} (a_parent)
+			end_activate
+		end
+
+	print_dialog_procedure (hdlg: POINTER; msg: INTEGER_32; wparam, lparam: POINTER): POINTER is
+			-- Hook for handling messages of the font dialog.
+		local
+			l_str: WEL_STRING
+		do
+			inspect msg
+			when {WEL_WM_CONSTANTS}.wm_initdialog then
+					-- Initialize the title of dialog properly.
+				if internal_title /= Void then
+					create l_str.make (internal_title)
+					{WEL_API}.set_window_text (hdlg, l_str.item)
+				end
+			else
+			end
 		end
 
 indexing

@@ -493,6 +493,13 @@ feature {NONE} -- Externals
 			"C [macro <printdlg.h>]"
 		end
 
+	cwel_print_dlg_set_lpfnprinthook (ptr: POINTER; value: POINTER) is
+		external
+			"C inline use <windows.h>"
+		alias
+			"((LPPRINTDLG) $ptr)->lpfnPrintHook = (LPPRINTHOOKPROC) $value;"
+		end
+
 	cwel_print_dlg_get_flags (ptr: POINTER): INTEGER is
 		external
 			"C [macro <printdlg.h>]"
@@ -526,6 +533,13 @@ feature {NONE} -- Externals
 	cwel_print_dlg_get_hdc (ptr: POINTER): POINTER is
 		external
 			"C [macro <printdlg.h>] (PRINTDLG *): EIF_POINTER"
+		end
+
+	cwel_print_dlg_get_lpfnprinthook (ptr: POINTER): POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) ((LPPRINTDLG) $ptr)->lpfnPrintHook;"
 		end
 
 	cwin_print_dlg (ptr: POINTER): BOOLEAN is

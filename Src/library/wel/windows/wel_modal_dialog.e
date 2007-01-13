@@ -72,8 +72,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-
 feature {NONE} -- Externals
 
 	cwin_dialog_box (hinst, name, hparent, dlgprc: POINTER): INTEGER is

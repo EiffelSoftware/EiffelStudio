@@ -222,6 +222,13 @@ feature {NONE} -- Externals
 			"C [macro <chooseco.h>]"
 		end
 
+	cwel_choose_color_set_lpfnhook (ptr: POINTER; value: POINTER) is
+		external
+			"C inline use <windows.h>"
+		alias
+			"((LPCHOOSECOLOR) $ptr)->lpfnHook = (LPCCHOOKPROC) $value;"
+		end
+
 	cwel_choose_color_get_rgbresult (ptr: POINTER): INTEGER is
 		external
 			"C [macro <chooseco.h>]"
@@ -235,6 +242,13 @@ feature {NONE} -- Externals
 	cwel_choose_color_get_flags (ptr: POINTER): INTEGER is
 		external
 			"C [macro <chooseco.h>]"
+		end
+
+	cwel_choose_color_get_lpfnhook (ptr: POINTER): POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) ((LPCHOOSECOLOR) $ptr)->lpfnHook;"
 		end
 
 	cwin_choose_color (ptr: POINTER): BOOLEAN is
@@ -256,8 +270,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_CHOOSE_COLOR_DIALOG
-
+end

@@ -40,9 +40,15 @@ rt_public int debug_mode = 0;	/* Assume not in debug mode */
 	
 	EIF_DLGPROC wel_dlgproc = NULL;
 	/* Address of the Eiffel routine `dialog_procedure' (class WEL_DISPATCHER) */
+
+	EIF_DLGPROC wel_stddlgproc = NULL;
+	/* Address of the Eiffel routine to use for dispatch. */
 	
 	EIF_OBJECT dispatcher = NULL;
 	/* Address of the Eiffel object WEL_DISPATCHER created for each application */
+
+	EIF_OBJECT stddlg_dispatcher = NULL;
+	/* Address of Eiffel object used to interact with `wel_stddlgproc'. */
 #endif
 
 LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -126,6 +132,33 @@ INT_PTR CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 		return FALSE;
 }
 
+UINT_PTR CALLBACK cwel_standard_dialog_procedure (HWND hdlg, UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	/*
+	 * Receive dialog messages for standard dialogs and call the Eiffel routine `wel_stddlgproc'
+	 * of the `stddlg_dispatcher' Eiffel object. Since `stddlg_dispatcher' is an adopted
+	 * object we need to call `eif_access' to use it. Note that for EIF_IL_DLL mode
+	 * we do not need `stddlg_dispatcher'.
+	 */
+
+	WGTCX
+
+#ifdef EIF_IL_DLL
+	if (wel_stddlgproc){
+		return (UINT_PTR) ((wel_stddlgproc)
+			((EIF_POINTER) hdlg, (EIF_INTEGER) msg, (EIF_POINTER) wparam, (EIF_POINTER) lparam));
+#else
+	if ((stddlg_dispatcher) && (wel_stddlgproc)){
+		return (UINT_PTR) ((wel_stddlgproc) (
+			(EIF_OBJECT) eif_access (stddlg_dispatcher),
+			(EIF_POINTER) hdlg, (EIF_INTEGER) msg, (EIF_POINTER) wparam, (EIF_POINTER) lparam));
+
+#endif
+	} else {
+		return 0;
+	}
+}
+
 #ifdef EIF_THREADS
 void wel_set_window_procedure_address( EIF_POINTER _addr_)
 {
@@ -137,6 +170,12 @@ void wel_set_dialog_procedure_address( EIF_POINTER _addr_)
 {
 	WGTCX
 	wel_dlgproc = (EIF_DLGPROC) _addr_;
+}
+
+void wel_set_standard_dialog_procedure_address( EIF_POINTER _addr_)
+{
+	WGTCX
+	wel_stddlgproc = (EIF_DLGPROC) _addr_;
 }
 
 void wel_set_dispatcher_object(EIF_OBJECT _addr_)
@@ -161,6 +200,18 @@ EIF_POINTER wel_dispatcher_pointer()
 {
 	WGTCX
 	return (EIF_POINTER) dispatcher;
+}
+
+void wel_set_stddlg_dispatcher_object(EIF_OBJECT _addr_)
+{
+	WGTCX
+	stddlg_dispatcher = (EIF_OBJECT) eif_adopt (_addr_);	
+}
+
+void wel_release_stddlg_dispatcher_object()
+{
+	WGTCX
+	eif_wean (stddlg_dispatcher);
 }
 
 #endif

@@ -38,6 +38,14 @@ feature -- Windows
 			"SetForegroundWindow ((HWND)$hwnd)"
 		end
 
+	frozen set_window_text (hwnd, str: POINTER)
+			-- SDK SetWindowText
+		external
+			"C inline use <windows.h>"
+		alias
+			"SetWindowText ((HWND)$hwnd, (LPCTSTR)$str)"
+		end
+
 feature -- Menus
 
 	frozen set_menu (hwnd, hmenu: POINTER): INTEGER is

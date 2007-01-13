@@ -93,7 +93,7 @@ feature -- Access
 
 	flags: INTEGER is
 			-- Dialog box creation flags.
-			-- Can be a combination of the values defined in 
+			-- Can be a combination of the values defined in
 			-- class WEL_CF_CONSTANTS.
 		do
 			Result := cwel_choose_font_get_flags (item)
@@ -275,6 +275,13 @@ feature {NONE} -- Externals
 			"C [macro <choosefo.h>]"
 		end
 
+	cwel_choose_font_set_lpfnhook (ptr: POINTER; value: POINTER) is
+		external
+			"C inline use <windows.h>"
+		alias
+			"((LPCHOOSEFONT) $ptr)->lpfnHook = (LPCFHOOKPROC) $value;"
+		end
+
 	cwel_choose_font_get_flags (ptr: POINTER): INTEGER is
 		external
 			"C [macro <choosefo.h>]"
@@ -303,6 +310,13 @@ feature {NONE} -- Externals
 	cwel_choose_font_get_nsizemax (ptr: POINTER): INTEGER is
 		external
 			"C [macro <choosefo.h>]"
+		end
+
+	cwel_choose_font_get_lpfnhook (ptr: POINTER): POINTER is
+		external
+			"C inline use <windows.h>"
+		alias
+			"return ((LPCHOOSEFONT) $ptr)->lpfnHook;"
 		end
 
 	cwin_choose_font (ptr: POINTER): BOOLEAN is

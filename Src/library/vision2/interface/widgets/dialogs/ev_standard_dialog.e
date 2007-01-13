@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			set_title (a_title)
 		ensure
 				-- On some platform we cannot change the title.
-			title_assigned: title.is_equal (a_title) or True
+			title_assigned: title.is_equal (a_title)
 			cloned: title /= a_title
 		end
 
@@ -107,7 +107,7 @@ feature -- Status setting
 		do
 			implementation.set_title (a_title)
 		ensure
-			assigned: title.is_equal (a_title) or title.is_equal (old title)
+			assigned: title.is_equal (a_title)
 			cloned: title /= a_title
 		end
 

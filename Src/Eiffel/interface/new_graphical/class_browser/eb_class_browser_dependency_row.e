@@ -52,7 +52,6 @@ feature -- Access
 			l_path_style: like item_path_style
 			l_class: QL_CLASS
 			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
-			l_plain_text_style: like plain_text_style
 			l_text: LIST [EDITOR_TOKEN]
 		do
 			if grid_item_internal = Void then

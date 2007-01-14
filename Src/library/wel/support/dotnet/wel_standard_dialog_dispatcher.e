@@ -47,7 +47,7 @@ feature {NONE} -- Externals
 	wel_standard_dialog_procedure: POINTER is
 			-- Address of the C routine wrapping `standard_dialog_procedure'.
 		external
-			"C inline use %"wel.h%""
+			"C inline use %"disptchr.h%""
 		alias
 			"return (EIF_POINTER) cwel_standard_dialog_procedure;"
 		end

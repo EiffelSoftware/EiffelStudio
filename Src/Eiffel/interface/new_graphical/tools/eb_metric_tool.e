@@ -386,15 +386,18 @@ feature{NONE} -- Actions
 			l_selected_index: INTEGER
 			l_notebook: EV_NOTEBOOK
 			l_panel: EB_METRIC_PANEL
+			i: INTEGER
+			l_notebook_count: INTEGER
 		do
 			from
 				l_notebook := metric_notebook
 				l_selected_index := l_notebook.selected_item_index
-				l_notebook.start
+				i := 1
+				l_notebook_count := l_notebook.count
 			until
-				l_notebook.after
+				i > l_notebook_count
 			loop
-				l_panel ?= l_notebook.item
+				l_panel ?= l_notebook @ i
 				check l_panel /= Void end
 				if is_shown and then l_notebook.index = l_selected_index then
 					l_panel.set_is_selected (True)
@@ -402,7 +405,7 @@ feature{NONE} -- Actions
 				else
 					l_panel.set_is_selected (False)
 				end
-				l_notebook.forth
+				i := i + 1
 			end
 		end
 

@@ -22,6 +22,7 @@ feature {NONE} -- Implementation
 			-- Set time interval which this timer will be triggered with `interval'.
 			-- Unit of `interval' is milliseconds.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable			
 			interval_positive: interval > 0
 		do
 			sleep_time := interval

@@ -20,6 +20,7 @@ feature {NONE}
 
 	make (prc_launcher: PROCESS_IMP) is
 		require
+			thread_capable: {PLATFORM}.is_thread_capable			
 			process_launcher_not_null: prc_launcher /= Void
 		do
 			process_launcher := prc_launcher

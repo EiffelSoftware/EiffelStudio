@@ -14,11 +14,23 @@ inherit
 		redefine
 			is_folder_item,
 			is_valid,
-			string_representation
+			string_representation,
+			make
 		end
 
 create
 	make
+
+feature{NONE} -- Initialization
+
+	make (a_id: STRING) is
+			-- Initialize `id' with `a_id'.
+		do
+			Precursor (a_id)
+			is_recursive_internal := True
+		ensure then
+			is_recursive_internal_set: is_recursive_internal
+		end
 
 feature -- Status report
 
@@ -32,6 +44,14 @@ feature -- Status report
 			Result := folder_internal /= Void
 		end
 
+	is_recursive: BOOLEAN is
+			-- Is search for classes in current folder recursive?
+		do
+			Result := is_recursive_internal
+		ensure
+			good_result: Result = is_recursive_internal
+		end
+
 feature -- Access
 
 	domain (a_scope: QL_SCOPE): QL_DOMAIN is
@@ -41,7 +61,7 @@ feature -- Access
 			l_folder: EB_FOLDER
 		do
 			l_folder := folder_internal
-			create l_class_domain_generator.make (create{QL_CLASS_PATH_IN_CRI}.make (l_folder.path), True)
+			create l_class_domain_generator.make (create{QL_CLASS_PATH_IN_CRI}.make_with_flag (l_folder.path, is_recursive), True)
 			Result := query_group_item_from_conf_group (l_folder.cluster).wrapped_domain.new_domain (l_class_domain_generator)
 		end
 
@@ -91,6 +111,24 @@ feature -- Access
 			Result := interface_names.l_folder_domain_item
 		end
 
+feature -- Setting
+
+	enable_search_for_class_recursive is
+			-- Enable that search for classes in current folder is recursive.
+		do
+			is_recursive_internal := True
+		ensure
+			recursive_search_enabled: is_recursive
+		end
+
+	disable_search_for_class_recursive is
+			-- Disable that search for classes in current folder is recursive.
+		do
+			is_recursive_internal := False
+		ensure
+			recursive_search_disabled: not is_recursive
+		end
+
 feature{NONE} -- Implemenation
 
 	update is
@@ -115,6 +153,9 @@ feature{NONE} -- Implemenation
 
 	folder_internal: EB_FOLDER;
 			-- Folder represented by `id'
+
+	is_recursive_internal: BOOLEAN
+			-- Implementation of `is_recursive'
 
 	query_language_item_internal: like query_language_item;
 			-- Implementation of `query_language_item'

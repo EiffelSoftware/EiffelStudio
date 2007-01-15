@@ -58,6 +58,7 @@ feature -- Access
 				l_tool_bar.extend (normal_referenced_button)
 				l_tool_bar.extend (syntactical_button)
 				l_tool_bar.extend (inheritance_button)
+				l_tool_bar.extend (recursive_button)
 				l_tool_bar.extend (show_tooltip_button)
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
@@ -117,6 +118,20 @@ feature -- Access
 				normal_referenced_button_internal.select_actions.extend (agent on_retrieve_data)
 			end
 			Result := normal_referenced_button_internal
+		ensure
+			result_attached: Result /= Void
+		end
+
+	recursive_button: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON is
+			-- Toggle button to indicate if class search is recursive for folder
+		do
+			if recursive_button_internal = Void then
+				create recursive_button_internal.make (preferences.class_browser_data.folder_search_recursive_preference)
+				recursive_button_internal.set_pixmap (pixmaps.icon_pixmaps.debugger_object_expand_icon)
+				recursive_button_internal.set_tooltip (interface_names.h_search_for_class_recursively)
+				recursive_button_internal.select_actions.extend (agent on_retrieve_data)
+			end
+			Result := recursive_button_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -708,7 +723,7 @@ feature{NONE} -- Grid binding
 			l_rows: DS_LIST [EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]]
 			l_grid_row: EV_GRID_ROW
 			l_starting_column: INTEGER
-			l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
+			l_row, l_dependency_row: EB_CLASS_BROWSER_DEPENDENCY_ROW
 			l_grid_has_been_binded_for_current_data: BOOLEAN
 			l_post_row_bind_action: PROCEDURE [ANY, TUPLE [EV_GRID_ROW]]
 		do
@@ -722,15 +737,18 @@ feature{NONE} -- Grid binding
 					l_rows.after
 				loop
 					if l_rows.item_for_iteration.data.should_current_row_be_displayed then
-							-- Bind row.
 						a_base_row.insert_subrow (a_base_row.subrow_count + 1)
 						l_grid_row := a_base_row.subrow (a_base_row.subrow_count)
 						l_starting_column := level_starting_column_index.i_th (a_level_index)
-						l_rows.item_for_iteration.data.bind_row (l_grid_row, l_starting_column)
 							-- Bind subrows.
 						if a_recursive and then not l_rows.item_for_iteration.children.is_empty then
 							bind_row_level (l_grid_row, l_rows.item_for_iteration, a_level_index + 1, a_recursive)
 						end
+							-- Bind row.
+						l_row := l_rows.item_for_iteration.data
+						l_row.set_row_count (l_grid_row.subrow_count)
+						l_row.bind_row (l_grid_row, l_starting_column)
+
 							-- Expand rows.
 						if l_grid_has_been_binded_for_current_data then
 							l_dependency_row ?= a_base_row.data
@@ -830,6 +848,7 @@ feature{NONE} -- Grid binding
 				-- Bind retrieved rows in grid.
 			l_grid_row := a_row_node.data.grid_row
 			bind_row_level (l_grid_row, a_row_node, l_level_index, False)
+			a_row_node.data.set_row_count (l_grid_row.subrow_count - 1)
 			a_row_node.data.refresh_row
 
 				-- Highlight selected rows (if any)
@@ -1630,6 +1649,9 @@ feature{NONE} -- Implementation
 
 	normal_referenced_button_internal: like normal_referenced_button
 			-- Implementation of `normal_referenced_button'
+
+	recursive_button_internal: like recursive_button
+			-- Implementation of `recursive_button'
 
 feature{NONE} -- Initialization
 

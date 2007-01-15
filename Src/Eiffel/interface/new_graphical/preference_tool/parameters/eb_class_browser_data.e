@@ -126,6 +126,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := normal_referenced_class_preference.value
 		end
 
+	is_folder_search_recursive: BOOLEAN is
+			-- Should search for classes in a folder be recursive?
+		do
+			Result := folder_search_recursive_preference.value
+		end
+		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	odd_row_background_color_preference: COLOR_PREFERENCE
@@ -144,6 +150,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	syntactical_class_preference: BOOLEAN_PREFERENCE
 	inheritance_class_preference: BOOLEAN_PREFERENCE
 	normal_referenced_class_preference: BOOLEAN_PREFERENCE
+	folder_search_recursive_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -163,6 +170,7 @@ feature {NONE} -- Preference Strings
 	syntactical_class_string: STRING is "tools.class_browser.syntactical_classes"
 	inheritance_class_string: STRING is "tools.class_browser.inheritance_classes"
 	normal_referenced_class_string: STRING is "tools.class_browser.normal_referenced_classes"
+	folder_search_recursive_string: STRING is "tools.class_browser.folder_search_recursive"
 
 feature {NONE} -- Implementation
 
@@ -193,6 +201,7 @@ feature {NONE} -- Implementation
 			syntactical_class_preference := l_manager.new_boolean_preference_value (l_manager, syntactical_class_string, False)
 			inheritance_class_preference := l_manager.new_boolean_preference_value (l_manager, inheritance_class_string, False)
 			normal_referenced_class_preference := l_manager.new_boolean_preference_value (l_manager, normal_referenced_class_string, True)
+			folder_search_recursive_preference := l_manager.new_boolean_preference_value (l_manager, folder_search_recursive_string, True)
 		end
 
 	preferences: PREFERENCES

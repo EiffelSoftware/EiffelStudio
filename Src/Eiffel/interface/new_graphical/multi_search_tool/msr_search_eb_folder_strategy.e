@@ -83,9 +83,9 @@ feature -- Search
 				end
 			else
 				if l_class_cri = Void then
-					create {QL_CLASS_PATH_IS_CRI}l_class_cri.make (folder.path)
+					create {QL_CLASS_PATH_IN_CRI}l_class_cri.make_with_flag (folder.path, False)
 				else
-					l_class_cri := l_class_cri and create {QL_CLASS_PATH_IS_CRI}.make (folder.path)
+					l_class_cri := l_class_cri and create {QL_CLASS_PATH_IN_CRI}.make_with_flag (folder.path, False)
 				end
 			end
 			create l_class_domain_generator

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"PO-Revision-Date: 2007-01-10 00:23-0800\n"
+"PO-Revision-Date: 2007-01-14 21:36-0800\n"
 
 msgid "&Remove Current Item"
 msgstr "删除当前对象(&R)"
@@ -31,8 +31,9 @@ msgstr "新方法"
 msgid "Input domain:"
 msgstr "输入域: "
 
+#, fuzzy
 msgid "metric value"
-msgstr "度量值"
+msgstr "度量名称"
 
 msgid "NEW_NAME"
 msgstr "NEW_NAME"
@@ -154,8 +155,9 @@ msgstr "断言"
 msgid "Czech"
 msgstr "捷克语"
 
+#, fuzzy
 msgid "Retrieve normally referenced client classes"
-msgstr "获取普通使用者类"
+msgstr "显示普通语法级别上被引用的类？"
 
 msgid "Information cannot be retrieved."
 msgstr "无可用信息。"
@@ -204,8 +206,9 @@ msgstr "在规则前可以使用\"非\"来获得相反的布尔值"
 msgid "Show labels"
 msgstr "显示标签"
 
+#, fuzzy
 msgid "Remove all value retriever"
-msgstr "删除所有取值项"
+msgstr "删除类或类簇"
 
 msgid "Zoom in"
 msgstr "放大"
@@ -250,7 +253,7 @@ msgid "Remove and-term"
 msgstr "删除\"与\"关系"
 
 msgid "Add new constant value retriever"
-msgstr "增加新的常量取值"
+msgstr "添加新常量取值器"
 
 msgid "&Descendant Versions"
 msgstr "子类中的版本(&D)"
@@ -358,8 +361,9 @@ msgstr "天的档案。"
 msgid "User-defined metrics backup finished."
 msgstr "完成用户定义度量备份。"
 
+#, fuzzy
 msgid "Retrieve only syntactially referenced supplier classes"
-msgstr "获取语法级别上的被引用类"
+msgstr "只显示语法级别上被引用的类？"
 
 msgid "Generation Error"
 msgstr "生成时错误"
@@ -414,8 +418,9 @@ msgstr "语法分析错误: "
 msgid "creators"
 msgstr "实例化者"
 
+#, fuzzy
 msgid "value tester"
-msgstr "数值测试项"
+msgstr "类簇"
 
 msgid "Undo not possible."
 msgstr "无法撤消操作。"
@@ -468,6 +473,7 @@ msgstr "格陵兰语 (格陵兰)"
 msgid "Extracting $1 of feature `$2'..."
 msgstr "提取方法$2的$1..."
 
+#, fuzzy
 msgid "folder item"
 msgstr "文件夹"
 
@@ -635,8 +641,9 @@ msgstr "普通度量"
 msgid "Literal Value"
 msgstr "值"
 
+#, fuzzy
 msgid "Value \"$1\" of \"normal\" attribute is invalid. A boolean value is expected."
-msgstr "属性\"normal\"的值\"$1\"非法。应为布尔值。"
+msgstr "属性\"negation\"的值非法。应为布尔值。"
 
 msgid "Evaluate invariant assertions?"
 msgstr "检查不变量吗？"
@@ -762,8 +769,9 @@ msgstr "将后面的对象添加到对象树中"
 msgid "Ratio"
 msgstr "比例"
 
+#, fuzzy
 msgid "Remove selected value retriever"
-msgstr "删除选中的取值项"
+msgstr "删除选中表达式"
 
 msgid "Obsolete Features"
 msgstr "过期方法"
@@ -837,8 +845,9 @@ msgstr ""
 "欢迎使用\n"
 "新建Vision2程序向导"
 
+#, fuzzy
 msgid "Retrieve normally referenced supplier classes"
-msgstr "显示普通被引用的类"
+msgstr "显示普通语法级别上被引用的类？"
 
 msgid "E&xport XMI..."
 msgstr "输出XML(&X)..."
@@ -1187,14 +1196,16 @@ msgstr "全部替换"
 msgid "Old Name"
 msgstr "旧名称"
 
+#, fuzzy
 msgid "Setup feature domain"
-msgstr "设置方法域"
+msgstr "默认方法视图格式编号"
 
 msgid "Run"
 msgstr "运行"
 
+#, fuzzy
 msgid "Only syntactically referenced supplier/client class attribute \"$1\" is invalid. A boolean value is expected."
-msgstr "属性\"only_syntactical\"的值\"$1\"非法，期望一个布尔值。"
+msgstr "属性\"negation\"的值非法。应为布尔值。"
 
 msgid "Copyright"
 msgstr "版权"
@@ -1643,14 +1654,16 @@ msgstr "跳出方法"
 msgid "Setswana/Tswana"
 msgstr "茨瓦纳语"
 
+#, fuzzy
 msgid "Match any"
-msgstr "匹配以下任意一项"
+msgstr "区分大小写"
 
 msgid "Inuktitut"
 msgstr "以伊努克语"
 
+#, fuzzy
 msgid "Retrieve indirect client classes"
-msgstr "获取间接使用者类"
+msgstr "使用者中的方法"
 
 msgid "Select the formats to use"
 msgstr "选择使用格式"
@@ -1730,8 +1743,9 @@ msgstr "意大利语 (意大利)"
 msgid "Number of classes generated per .NET module during incremental compilation. Increasing this value will slow down the incremental recompilation, but speed up the time to load the assembly while debugging in workbench mode."
 msgstr "增量编译时在.NET模块中类的数量。增加该量会使增量编译的效率降低，但会提高工作模式时调试过程中程序集的加载速度。"
 
+#, fuzzy
 msgid "Add new value evaluator"
-msgstr "增加新求值器"
+msgstr "添加新变量"
 
 msgid "expanded"
 msgstr "展开"
@@ -1998,8 +2012,9 @@ msgstr "西班牙语 (厄瓜多尔)"
 msgid "Groups"
 msgstr "集合"
 
+#, fuzzy
 msgid "Retrieve only syntactially referenced client classes"
-msgstr "只显示语法级别上被引用的类"
+msgstr "只显示语法级别上被引用的类？"
 
 msgid "Library Readonly"
 msgstr "库只读"
@@ -2016,8 +2031,9 @@ msgstr "比较"
 msgid "Galician"
 msgstr "加利西亚语"
 
+#, fuzzy
 msgid "domain"
-msgstr "域"
+msgstr "罗马尼亚语"
 
 msgid "Call Stack"
 msgstr "调用栈"
@@ -2037,8 +2053,9 @@ msgstr "取消选择行的注释"
 msgid "Execution Profile Error"
 msgstr "评测运行错误"
 
+#, fuzzy
 msgid "Operator in value criterion is missing."
-msgstr "在value criterion中的缺少操作符。"
+msgstr "数量度量丢失。"
 
 msgid "Configuration file"
 msgstr "配置文件"
@@ -2208,8 +2225,9 @@ msgstr "类簇(&C)"
 msgid " (located in $1)"
 msgstr " (位置$1)"
 
+#, fuzzy
 msgid "Value tester is missing."
-msgstr "缺少数值测试项。"
+msgstr "分项度量名称丢失。"
 
 msgid "Save Backup"
 msgstr "保存为备份"
@@ -2424,8 +2442,9 @@ msgstr "取消选择可重计算的历史记录"
 msgid "Metrics definition file:"
 msgstr "度量定义文件: "
 
+#, fuzzy
 msgid "To do information"
-msgstr "可采取措施"
+msgstr "栈信息"
 
 msgid "&Homonyms"
 msgstr "同命方法(H)"
@@ -2543,8 +2562,9 @@ msgstr "预编译进程"
 msgid "Clusters"
 msgstr "类簇"
 
+#, fuzzy
 msgid "Base value of a value tester is missing."
-msgstr "缺少数值测试器中的基值。"
+msgstr "子项度量系数丢失。"
 
 msgid "Execution Profile Generation"
 msgstr "评测生成结果"
@@ -2758,8 +2778,9 @@ msgstr "程序集键"
 msgid "German (Germany)"
 msgstr "德语 (德国)"
 
+#, fuzzy
 msgid "Select metric value testers:"
-msgstr "设定度量数值测试器："
+msgstr "选择度量: "
 
 msgid "Metric Definition"
 msgstr "度量定义"
@@ -2783,8 +2804,9 @@ msgstr ""
 "可以选择创建.exe或者.dll文件\n"
 "选择根类名和初始化方法名。"
 
+#, fuzzy
 msgid "Relation for value tester is missing."
-msgstr "缺少数值测试器中的关系项。"
+msgstr "子项度量系数丢失。"
 
 msgid "Metric name cannot be empty"
 msgstr "度量名不能为空"
@@ -2940,8 +2962,9 @@ msgstr "乌克兰语"
 msgid "Should unused code be removed?"
 msgstr "清除冗余代码吗？"
 
+#, fuzzy
 msgid "Make sure that referenced metric exists and is valid."
-msgstr "请确认被引用的度量是存在的并且是合法的。"
+msgstr "请确定所有被线性度量引用的子项度量的已定义。"
 
 msgid "Toggle visibility of assigner command name"
 msgstr "切换赋值名称的可见性"
@@ -3046,6 +3069,7 @@ msgstr "移除类\"$1\""
 msgid "Cluster charts"
 msgstr "类簇表"
 
+#, fuzzy
 msgid ""
 "Ratio metric is of the form:\n"
 "\n"
@@ -3056,7 +3080,7 @@ msgid ""
 msgstr ""
 "比例度量形式为:\n"
 "\n"
-"\t(系数 * 数量度量) / (系数 * 分母度量)\n"
+"\t数量度量 / 分母度量\n"
 "\n"
 "数量度量和分母度量可为任何合法的度量。\n"
 "\n"
@@ -3149,7 +3173,7 @@ msgid "Divehi (Maldives)"
 msgstr "迪维希语 (马尔代夫)"
 
 msgid "Operator \"$1\" is invalid. One of the following operators is expected: \"=\", \"/=\", \"<\", \"<=\", \">\", \">=\""
-msgstr "增加新的常量值"
+msgstr "操作符\"$1\"非法。合法的操作符为\"=\", \"/=\", \"<\", \"<=\", \">\", \">=\"。"
 
 msgid "Switch to decimal format"
 msgstr "切换到十进制格式"
@@ -3188,6 +3212,7 @@ msgstr "普通"
 msgid "No breakpoints"
 msgstr "无断点"
 
+#, fuzzy
 msgid ""
 "In linear metric, make sure that every variable metric doesn't involve recursive metric.\n"
 "In ratio metric, make sure that numerator metric or denominator metric doesn't involve recursive metric."
@@ -3239,8 +3264,9 @@ msgstr "调试中禁止或恢复断言"
 msgid "System not running"
 msgstr "系统处于非运行状态"
 
+#, fuzzy
 msgid "Setup client classes"
-msgstr "设置使用者类"
+msgstr "使用者中的方法"
 
 msgid "Conditions for this external."
 msgstr "外部方法集的条件。"
@@ -3436,8 +3462,9 @@ msgstr ""
 msgid "Telugu"
 msgstr "泰卢固语"
 
+#, fuzzy
 msgid "Retrieve indirect supplier classes"
-msgstr "获取间接被使用者类"
+msgstr "被使用者中的方法"
 
 msgid "Mongolian"
 msgstr "蒙古语"
@@ -3547,8 +3574,9 @@ msgstr "荷兰语"
 msgid "Add, remove or edit external commands"
 msgstr "添加，删除或编辑外部命令"
 
+#, fuzzy
 msgid "Retrieve supplier classes"
-msgstr "获取被使用者类"
+msgstr "被使用者中的方法"
 
 msgid "Text in text criterion is empty."
 msgstr "文本规则中的文本为空。"
@@ -3592,8 +3620,9 @@ msgstr "停止程序"
 msgid "Use Optimized Precompile"
 msgstr "使用已优化的预编译"
 
+#, fuzzy
 msgid "Base value \"$1\" of a value tester is invalid. A real number is expected."
-msgstr "数值测试器中的基值\"$1\"非法，正确值应是一个实数。"
+msgstr "属性\"value\"为\"$1\"的值非法。应为实数。"
 
 msgid ""
 "File has been changed by another tool/editor\n"
@@ -3680,7 +3709,7 @@ msgid ""
 msgstr "完成创建.NET程序向导"
 
 msgid "group item"
-msgstr "组"
+msgstr ""
 
 msgid "Recompile project"
 msgstr "重新编辑项目"
@@ -3738,8 +3767,9 @@ msgstr ""
 msgid "Import Metrics"
 msgstr "导入度量"
 
+#, fuzzy
 msgid "Setup metric value retriever"
-msgstr "设置度量数值取值器"
+msgstr "显示度量计算"
 
 msgid "Hide labels"
 msgstr "隐藏标签"
@@ -3780,8 +3810,9 @@ msgstr "在文件夹中将类分类吗？"
 msgid "OLD_NAME"
 msgstr "OLD_NAME"
 
+#, fuzzy
 msgid "Setup domain"
-msgstr "设置域"
+msgstr "选择输入度量: "
 
 msgid "linear"
 msgstr "线性"
@@ -3890,8 +3921,9 @@ msgstr "关闭窗口将停止调试。"
 msgid "Zoom"
 msgstr "缩放"
 
+#, fuzzy
 msgid "Too many value retrievers nodes. Only one is expected."
-msgstr "数值取值器太多，最多只能为一个。"
+msgstr "\"域\"的数量太多。只需要1个。"
 
 msgid "History Tool"
 msgstr "历史记录工具"
@@ -3941,8 +3973,9 @@ msgstr "关闭$1"
 msgid "Filter value \"$1\" is invalid."
 msgstr "过滤值\"$1\"非法"
 
+#, fuzzy
 msgid "Base value"
-msgstr "基值"
+msgstr "巴斯克语 (巴斯克)"
 
 msgid "Show/Hide information about breakpoints"
 msgstr "显示/隐藏断点信息"
@@ -4015,8 +4048,9 @@ msgstr "选择重新计算"
 msgid "Start"
 msgstr "开始"
 
+#, fuzzy
 msgid "Pick and drop metrics or items like group/class/feature here"
-msgstr "拾起度量/集合/类/方法等, 释放到这里"
+msgstr "拾起集合/类/方法等, 释放到这里"
 
 msgid "Renaming"
 msgstr "重命名"
@@ -4299,8 +4333,9 @@ msgstr "阿尔巴尼亚语"
 msgid "Make sure that numerator and denominator metric referenced by ratio metric are defined."
 msgstr "请确定比例度量所引用的数量度量和分母度量已经被定义。"
 
+#, fuzzy
 msgid "Operator"
-msgstr "操作符"
+msgstr "实例化者"
 
 msgid "Ensure"
 msgstr "后继条件"
@@ -4308,8 +4343,9 @@ msgstr "后继条件"
 msgid "Project &Settings..."
 msgstr "项目设置(&S)..."
 
+#, fuzzy
 msgid "Value \"$1\" of attribute \"indirect\" is invalid. A boolean value is expected."
-msgstr "属性\"indirect\"的值\"$1\"非法。应为布尔值。"
+msgstr "属性\"negation\"的值非法。应为布尔值。"
 
 msgid "Telugu (India)"
 msgstr "泰卢固语 (印度)"
@@ -4794,8 +4830,9 @@ msgstr "变量"
 msgid "English"
 msgstr "英语"
 
+#, fuzzy
 msgid "class item"
-msgstr "类"
+msgstr "类视图(&S)"
 
 msgid "Calling Convention"
 msgstr "调用约定"
@@ -4862,8 +4899,9 @@ msgstr ""
 msgid "Execute the application one line at a time"
 msgstr "运行一行程序"
 
+#, fuzzy
 msgid "Metric name is missing."
-msgstr "缺少度量名称。"
+msgstr "单元名称丢失。"
 
 msgid ""
 "When loading predefined metrics:\n"
@@ -4910,6 +4948,7 @@ msgstr "用于包含或者排除子文件夹或文件的正则表达式。"
 msgid "Add Client-Supplier Relation Between '$1' and '$2'"
 msgstr "在\"$1\"和\"$2\"之间添加使用关系"
 
+#, fuzzy
 msgid "target item"
 msgstr "目标"
 
@@ -4920,7 +4959,7 @@ msgid "Add L&ibrary..."
 msgstr "添加库(&I)"
 
 msgid "Add new metric value retriever"
-msgstr "增加新的度量取值"
+msgstr ""
 
 msgid "Attribute \"regular_expression\" is missing."
 msgstr "属性\"regular_expression\"丢失。"
@@ -5083,8 +5122,9 @@ msgstr "域未定义。在关系规则中至少定义一个域。"
 msgid "Warn about renamings of unknown classes?"
 msgstr "对未知类重命名时发出警告？"
 
+#, fuzzy
 msgid "Too many \"value_tester\" sections. Only one is expected."
-msgstr "\"value_tester\"节太多，最多只能指定一个。"
+msgstr "\"域\"的数量太多。只需要1个。"
 
 msgid "Append"
 msgstr "增加"
@@ -5187,8 +5227,9 @@ msgstr "实例化"
 msgid "Re&do\tCtrl+Y"
 msgstr "重复上一次操作(&D)\tCtrl+Y"
 
+#, fuzzy
 msgid "Domain is missing."
-msgstr "缺少域。"
+msgstr "域项id丢失。"
 
 msgid "Root class name"
 msgstr "根类名"
@@ -5263,8 +5304,9 @@ msgstr "忽略断言"
 msgid "Norwegian (Bokmål, Norway)"
 msgstr "挪威语  (挪威，伯克梅尔)"
 
+#, fuzzy
 msgid "Value retriever is missing."
-msgstr "缺少数值取值器。"
+msgstr "分项度量名称丢失。"
 
 msgid "Use the old format for verbatim strings?"
 msgstr "使用原义字符串的格式吗？"
@@ -5290,8 +5332,9 @@ msgstr "选择类簇查看其可用的视图"
 msgid "EXPRESSION: "
 msgstr "表达式:"
 
+#, fuzzy
 msgid "Setup value criterion"
-msgstr "设置度量值规则"
+msgstr "可用规则列表"
 
 msgid "Add a library"
 msgstr "添加库"
@@ -5359,8 +5402,9 @@ msgstr "非法标签/标签位置\"$1\"。"
 msgid "Import metrics from file"
 msgstr "从文件中导入度量"
 
+#, fuzzy
 msgid "Match all"
-msgstr "匹配以下所有"
+msgstr "区分大小写"
 
 msgid "Show inheritance links"
 msgstr "显示继承关系"
@@ -5492,8 +5536,9 @@ msgstr "塞索托语"
 msgid "descendants"
 msgstr "子类"
 
+#, fuzzy
 msgid "error message"
-msgstr "错误信息"
+msgstr "错误信息: "
 
 msgid "Copy"
 msgstr "复制"
@@ -5525,8 +5570,9 @@ msgstr "清除用户设置"
 msgid "Remove Handles"
 msgstr "移除柄"
 
+#, fuzzy
 msgid "Setup supplier classes"
-msgstr "设置被使用者类"
+msgstr "被使用的类"
 
 msgid "Call stack"
 msgstr "调用栈"
@@ -5632,8 +5678,9 @@ msgstr ""
 "欢迎使用\n"
 "创建向导程序向导"
 
+#, fuzzy
 msgid "Make sure that at least one value tester is specified."
-msgstr "请确认至少指定了一个数值测试项。"
+msgstr "在域规则中请确保至少存在一个域项。"
 
 msgid "Punjabi"
 msgstr "旁遮普语"
@@ -5659,8 +5706,9 @@ msgstr "完成文本载入"
 msgid "Arabic (Oman)"
 msgstr "阿拉伯语 (阿曼)"
 
+#, fuzzy
 msgid "Use delayed domain"
-msgstr "使用未绑定项"
+msgstr "使用默认do语句"
 
 msgid "Uzbek"
 msgstr "乌兹别克语"
@@ -6119,8 +6167,9 @@ msgstr "程序状态未知"
 msgid "&Undo\tCtrl+Z"
 msgstr "撤消(&U)\tCtrl+Z"
 
+#, fuzzy
 msgid "Retrieve client classes"
-msgstr "获取使用者类"
+msgstr "使用者中的方法"
 
 msgid "Select a File"
 msgstr "选择文件"
@@ -6241,7 +6290,7 @@ msgid "Metric List:"
 msgstr "度量列表: "
 
 msgid "delayed item"
-msgstr "未绑定项"
+msgstr ""
 
 msgid "Configuration Loading Message"
 msgstr "配置加载信息"
@@ -6341,8 +6390,9 @@ msgstr "Include"
 msgid "Compilation mode"
 msgstr "编译模式"
 
+#, fuzzy
 msgid "No value tester is specified."
-msgstr "未指定数值测试器。"
+msgstr "没有选中文件名"
 
 msgid "Text was saved"
 msgstr "文本已经保存"
@@ -6597,8 +6647,9 @@ msgstr "程序集的区域性。"
 msgid "Raise all unsaved windows"
 msgstr "最大化所有未保存的窗口"
 
+#, fuzzy
 msgid "constant value"
-msgstr "常量值"
+msgstr "契约视图"
 
 msgid "Make sure unit of every variable metric is same as that of the linear metric."
 msgstr "请确定所有子项度量中的单元与线性度量中的一致。"
@@ -6624,6 +6675,7 @@ msgstr "库根"
 msgid "Hide clusters"
 msgstr "隐藏类簇"
 
+#, fuzzy
 msgid "feature item"
 msgstr "方法"
 
@@ -7237,4 +7289,3171 @@ msgid ""
 msgstr ""
 "发生内部错误。\n"
 "向导将被终止。\n"
+
+msgid "Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)."
+msgstr "监测栈溢出: 暂停执行的栈深度, 并询问是否继续运行。(只适用于经典Eiffel)"
+
+msgid "Debugger"
+msgstr "调试器"
+
+msgid "Critical stack depth"
+msgstr "栈临界深度"
+
+msgid "Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."
+msgstr "为DEBUG_OUTPUT类型的实例显示DEBUG_OUTPUT.debug_output方法。"
+
+msgid "Debug output evaluation"
+msgstr "显示DEBUG_OUTPUT.debug_output"
+
+msgid "Default number of displayed characters of a STRING (increasing this value might slow down debugging)."
+msgstr "显示STRING中字符的默认数量。(增加该值可能降低高度的效率)"
+
+msgid "Default displayed string size"
+msgstr "默认字符串可视长度"
+
+msgid "Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."
+msgstr "展开结点的默认数量。(增加该值可能降低高度的效率)"
+
+msgid "Default expanded view size"
+msgstr "默认展开大小"
+
+msgid "Default number of call stack elements shown in Call Stack tool (-1 to show all of them)."
+msgstr "调用栈中结点的数量(-1表示显示全部)"
+
+msgid "Default maximum stack depth"
+msgstr "默认栈深度"
+
+msgid "Delay (in milliseconds) before clearing the stacks and objects grid.  By tuning this value, you can reduce the potential flickering of the related grid."
+msgstr "清除栈和对象列表前的延迟时间(毫秒)。调整该值可减少列表刷新时的闪烁。"
+
+msgid "Delay before cleaning objects grid"
+msgstr "清除对象表格的延迟"
+
+msgid "Should the info about the agent object be displayed?"
+msgstr "显示代理对象信息吗？"
+
+msgid "Display agent details"
+msgstr "显示代理细节"
+
+msgid "Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."
+msgstr "启动的.NET调试器: `EiffelStudio Dbg'使用EiffelStudio的调试器; `cordbg'使用.NET Framework SDK的命令行调试器; `DebugCLR'使用.NET Framework SDK的图形界面调试器。"
+
+msgid "Dotnet debugger"
+msgstr ".NET调试器"
+
+msgid "Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."
+msgstr "扩展显示模式的背景色 (默认值为白色,改变颜色可以更好的查看行尾空白字符)"
+
+msgid "Expanded display background color"
+msgstr "展开区域背景色"
+
+msgid "Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging). e.g: might display ARRAY [STRING] if True but will just display ARRAY if False."
+msgstr "如果启用,则显示对象的基类,否则只显示基类(禁用将提高调试的效率)。例如: 真则显示ARRAY [STRING], 假则显示ARRAY。"
+
+msgid "Generating type evaluation"
+msgstr "正在生成类型计算"
+
+msgid "Number of instructions that will be executed before interrupting the execution."
+msgstr "中断执行前执行指令的条数。"
+
+msgid "Interrupt every N instructions"
+msgstr "每N个指令中断程序"
+
+msgid "Close the eiffel debugger daemon (classic) after each debug session (recommended)"
+msgstr "每次调试会话后关闭Eiffel调试器的精灵程序(推荐)"
+
+msgid "Classic debugger"
+msgstr "经典调试器"
+
+msgid "Close dbg daemon on end of debugging"
+msgstr "调试结束时关闭调试精灵进程"
+
+msgid "Timeout used to start the Eiffel debugger daemon (classic only). Leave it to 0 to use the default environment value."
+msgstr "启动的Eiffel调试精灵程序的时限(只适用于经典调试器)。设置为0使用环境默认值。"
+
+msgid "Timeout"
+msgstr "时限"
+
+msgid "Path to the Eiffel debugger daemon (classic). Leave it empty to use the default environment value."
+msgstr "Eiffel调试精灵程序(经典)的路径。设置为空使用默认环境值。"
+
+msgid "Debugger location"
+msgstr "调试器位置"
+
+msgid "Do not show the dialog that asks if a compilation should be started before running the debug if there where changes in classes."
+msgstr "如果有类被修改，在调试前不显示询问是否编译的对话框。"
+
+msgid "Always compile before debug"
+msgstr "调试前总是编译"
+
+msgid "Should we always try to debug non-Eiffel code in case it calls back into some Eiffel code?"
+msgstr "总是调试非Eiffel代码来防止Eiffel代码的回调吗？"
+
+msgid "Dotnet"
+msgstr ".NET"
+
+msgid "Keep stepping info dotnet feature"
+msgstr "保持.NET方法调试信息"
+
+msgid "Disk location of last saved stack path information."
+msgstr "上次保存调用栈的位置。"
+
+msgid "Last saved stack path"
+msgstr "上次保存栈的路径"
+
+msgid "Items/tools shown in navigation layout when in debug mode."
+msgstr "调试状态下各工具的布局。"
+
+msgid "Left debug layout"
+msgstr "调试左部局"
+
+msgid "Position of main horizontal splitter bar."
+msgstr "主分栏条的位置。"
+
+msgid "Main splitter position"
+msgstr "主窗口分割位置"
+
+msgid "Maximum evaluation duration before cancelling evaluation. (this is only applicable for a .NET system)"
+msgstr "最大计算时间。(只适用于.NET系统)"
+
+msgid "Max evaluation duration"
+msgstr "最大计算时间"
+
+msgid "Largest number of items displayed in list data."
+msgstr "列表中最大的编号。"
+
+msgid "Max slice"
+msgstr "最大值"
+
+msgid "Smallest number of items displayed in list data."
+msgstr "列表中最小的编号。"
+
+msgid "Min slice"
+msgstr "最小值"
+
+msgid "Default number of watch tools."
+msgstr "观察工具默认个数。"
+
+msgid "Number of watch tools"
+msgstr "观察工具个数"
+
+msgid "Debug toolbar items and layout information."
+msgstr "调试工具栏的元素和布局信息。"
+
+msgid "Project toolbar layout"
+msgstr "项目工具栏部局"
+
+msgid "Proportion of the local/arguments part of the `Objects' tab in the Debugging tool."
+msgstr "局部变量/参数部分和`对象'标签在调试工具中的所占的比例。"
+
+msgid "Proportion"
+msgstr "比例"
+
+msgid "Items/tools shown on editor side when in debug mode."
+msgstr "调试模式下编辑器一侧显示的工具"
+
+msgid "Right debug layout"
+msgstr "右调试器布局"
+
+msgid "Highlight background color"
+msgstr "选中区域的背景色"
+
+msgid "Row highlight background color"
+msgstr "焦点行背景色"
+
+msgid "Unsensitive foreground color"
+msgstr "非选中区域的前景色"
+
+msgid "Row unsensitive foreground color"
+msgstr "非焦点行前景色"
+
+msgid "Select call stack entry on double click?"
+msgstr "双击选择整个调用栈吗？"
+
+msgid "Select call stack level on double click"
+msgstr "双击选择整个调用栈"
+
+msgid "Enable/Disable the layout management for the stack values (keep value expanded or not, and highlight difference)."
+msgstr "激活/禁用栈值的布局管理(是否展开值, 高亮改变值)。"
+
+msgid "Stack grid layout managed"
+msgstr "记录栈格布局"
+
+msgid "Enable/Disable the layout management for the debugged values (keep value expanded or not, and highlight difference)."
+msgstr "激活/禁用调试的布局管理(是否展开值, 高亮改变值)。"
+
+msgid "Debugged grid layout managed"
+msgstr "保持调试格布局"
+
+msgid "Enable/Disable the layout management for the watches expressions (keep value expanded or not, and highlight difference)."
+msgstr "激活/禁用查看的布局管理(是否展开值, 高亮改变值)。"
+
+msgid "Watches grids layout managed"
+msgstr "记录观察格布局"
+
+msgid ""
+"Configuration of the stack objects grid.\n"
+" This should be a list of 5 sequences: nature_id;is_shown;is_auto_resized;width;header_name; \n"
+"The position in the list indicate the column.\n"
+"The nature_id are: 1:name; 2:value; 3:type; 4:address; 5:context..."
+msgstr ""
+"栈对象表格的配置。\n"
+"应为5个元素的序列:nature_id;is_shown;is_auto_resized;width;header_name; \n"
+"位置与列位置相对应。\n"
+"nature_id为: 1:名称; 2:值; 3:类型; 4:地址; 5:上下文..."
+
+msgid "Grid column layout stack objects"
+msgstr "栈对象表格列布局"
+
+msgid ""
+"Configuration of the debugged objects grid.\n"
+"Check grid_column_layout_stack_objects for full description."
+msgstr ""
+"调试对象表格的配置。\n"
+"具体说明见grid_column_layout_stack_objects。"
+
+msgid "Grid column layout debugged objects"
+msgstr "调试对象表格列布局"
+
+msgid ""
+"Configuration of the watches objects grid. \n"
+"Check grid_column_layout_stack_objects for full description."
+msgstr ""
+"观察对象表格的配置。\n"
+"具体说明见grid_column_layout_stack_objects。"
+
+msgid "Grid column layout watches"
+msgstr "观察表格列布局"
+
+msgid "Location of main objects tool's items <<'Current object', 'Stack information', 'Argument(s)', 'Local(s)', 'Result', 'Dropped references'>>. The left grid is represented by '1' and the right grid by '2'"
+msgstr "对象工具列位置<<'当前对象', '栈信息', '参数', '局部变量', 'Result', '释放的引用'>>。'1'表示右表格, '2'表示左表格。"
+
+msgid "Objects tool layout"
+msgstr "对象工具布局"
+
+msgid "Should text be shown alongside preselected toolbar items?"
+msgstr "在准备选中的工具栏按钮上显示文本吗？"
+
+msgid "Show text in project toolbar"
+msgstr "项目工具栏中显示文本"
+
+msgid "Should text be shown alongside all toolbar items?"
+msgstr "在全部工具栏按钮上都显示文本吗？"
+
+msgid "Show all text in project toolbar"
+msgstr "项目工具栏中显示所有文本"
+
+msgid "Layout of watch tools."
+msgstr "观察工具的布局。"
+
+msgid "Watch tools layout"
+msgstr "观察工具布局"
+
+msgid "Background Color for Diagram Tool"
+msgstr "图形工具的背景填充色"
+
+msgid "Tools"
+msgstr "工具"
+
+msgid "Diagram tool"
+msgstr "图工具"
+
+msgid "Diagram background color"
+msgstr "图背景色"
+
+msgid "Font for class names in BON class figures."
+msgstr "BON图中类名的字体。"
+
+msgid "Bon"
+msgstr "BON"
+
+msgid "Bon class name font"
+msgstr "BON类字体"
+
+msgid "Color for class names in BON class figures."
+msgstr "BON图中类名的字体颜色。"
+
+msgid "Bon class name color"
+msgstr "BON类字体颜色"
+
+msgid "Color for BON class figures."
+msgstr "BON图中类的填充色。"
+
+msgid "Bon class fill color"
+msgstr "BON类填充色"
+
+msgid "Color for uncompiled BON class figures."
+msgstr "BON图中未编译类的字体颜色。"
+
+msgid "Bon class uncompiled fill color"
+msgstr "BON未编译类填充色"
+
+msgid "Font for generics in BON class figures."
+msgstr "BON图中类中泛型的字体。"
+
+msgid "Bon class generics font"
+msgstr "Bon类泛型字体"
+
+msgid "Color for generics in BON class figures."
+msgstr "BON图中类中泛型的字体颜色。"
+
+msgid "Bon class generics color"
+msgstr "BON类泛型字体颜色"
+
+msgid "Font for feature names on BON client supplier links."
+msgstr "BON图中使用关系标签中方法名的字体。"
+
+msgid "Bon client label font"
+msgstr "BON使用者标签字体"
+
+msgid "Color for feature names on BON client supplier links."
+msgstr "BON图中使用关系中方法名的字体颜色。"
+
+msgid "Bon client label color"
+msgstr "BON使用者标签字体颜色"
+
+msgid "Color for BON client supplier links."
+msgstr "BON图中使用关系的填充色。"
+
+msgid "Bon client color"
+msgstr "BON使用者颜色"
+
+msgid "Line width for BON client supplier links."
+msgstr "BON图中使用关系的线宽。"
+
+msgid "Bon client line width"
+msgstr "BON使用者线条宽度"
+
+msgid "Color for BON cluster line."
+msgstr "BON图中类簇线条的填充色。"
+
+msgid "Bon cluster line color"
+msgstr "BON类簇线条填充色"
+
+msgid "Iconified BON Cluster fill color."
+msgstr "BON图中类簇图标的填充色。"
+
+msgid "Bon cluster iconified fill color"
+msgstr "BON类簇图标填充色"
+
+msgid "BON cluster name area fill color."
+msgstr "BON图中类簇名区域填充色。"
+
+msgid "Bon cluster name area color"
+msgstr "BON类簇名区域填充色"
+
+msgid "BON cluster name color."
+msgstr "BON图中类簇的字体颜色。"
+
+msgid "Bon cluster name color"
+msgstr "BON类簇名的字体颜色"
+
+msgid "BON cluster name font."
+msgstr "BON图中类簇的字体。"
+
+msgid "Bon cluster name font"
+msgstr "BON类簇名字体"
+
+msgid "Color for BON inheritance links."
+msgstr "BON图中继承关系填充色。"
+
+msgid "Bon inheritance color"
+msgstr "BON继承关系填充色"
+
+msgid "Line width for BON inheritance links."
+msgstr "BON图中继承关系的线宽。"
+
+msgid "Bon inheritance line width"
+msgstr "BON继承关系线宽"
+
+msgid "Font for class names in UML class figures."
+msgstr "UML图中类名的字体。"
+
+msgid "Uml"
+msgstr "UML"
+
+msgid "Uml class name font"
+msgstr "UML类名字体"
+
+msgid "Font for names of deferred classes in UML class figures."
+msgstr "UML图中抽象类名的字体。"
+
+msgid "Uml class deferred font"
+msgstr "UML抽象类字体"
+
+msgid "Font for class properties in UML class figures."
+msgstr "UML图中类属性的字体。"
+
+msgid "Uml class properties font"
+msgstr "UML类属性字体"
+
+msgid "Color for class properties in UML class figures."
+msgstr "UML图中类属性的字体颜色。"
+
+msgid "Uml class properties color"
+msgstr "UML类属性字体颜色"
+
+msgid "Color for class names in UML class figures."
+msgstr "UML图中类名的字体颜色。"
+
+msgid "Uml class name color"
+msgstr "UML类名字体颜色"
+
+msgid "Color for UML class figures."
+msgstr "UML图中类的填充色。"
+
+msgid "Uml class fill color"
+msgstr "UML类填充色"
+
+msgid "Font for generics in UML class figures."
+msgstr "UML图中类中泛型的字体。"
+
+msgid "Uml generics font"
+msgstr "UML泛型字体"
+
+msgid "Color for generics in UML class figures."
+msgstr "UML图中类中泛型的字体颜色。"
+
+msgid "Uml generics color"
+msgstr "UML泛型字体颜色"
+
+msgid "Font for class features in UML class figures."
+msgstr "UML图中类方法的字体。"
+
+msgid "Uml class features font"
+msgstr "UML类方法字体"
+
+msgid "Color for class features in UML class figures."
+msgstr "UML图中类方法的字体颜色。"
+
+msgid "Uml class features color"
+msgstr "UML类方法字体颜色"
+
+msgid "Font for class feature sections in UML class figures."
+msgstr "UML图中类方法体的字体。"
+
+msgid "Uml class feature section font"
+msgstr "UML类方法体字体"
+
+msgid "Color for class feature sections in UML class figures."
+msgstr "UML图中类方法体的字体颜色。"
+
+msgid "Uml class feature section color"
+msgstr "UML类方法体字体颜色"
+
+msgid "Line width for UML client supplier links."
+msgstr "UML图中使用关系的线宽。"
+
+msgid "Uml client line width"
+msgstr "UML类使用者线条宽度"
+
+msgid "Color for UML client supplier links."
+msgstr "UML图中使用关系的填充色。"
+
+msgid "Uml client color"
+msgstr "UML使用者填充色"
+
+msgid "Color for feature names on UML client supplier links."
+msgstr "UML图中使用关系中方法名的字体颜色。"
+
+msgid "Uml client label color"
+msgstr "UML使用者标签填充色"
+
+msgid "Font for feature names on UML client supplier links."
+msgstr "UML图中使用关系中方法名的字体。"
+
+msgid "Uml client label font"
+msgstr "UML使用者标签字体"
+
+msgid "Color for UML cluster line."
+msgstr "UML图中类簇线条的填充色。"
+
+msgid "Uml cluster line color"
+msgstr "UML类簇线条填充色"
+
+msgid "Iconified UML Cluster fill color."
+msgstr "UML图中类簇图标的填充色。"
+
+msgid "Uml cluster iconified fill color"
+msgstr "UML类簇图标填充色"
+
+msgid "UML cluster name area fill color."
+msgstr "UML图中类簇名区域填充色。"
+
+msgid "Uml cluster name area color"
+msgstr "UML类簇名区域填充色"
+
+msgid "UML cluster name color."
+msgstr "UML图中类簇的字体颜色。"
+
+msgid "Uml cluster name color"
+msgstr "UML类簇名字体颜色"
+
+msgid "UML cluster name font."
+msgstr "UML图中类簇的字体。"
+
+msgid "Uml cluster name font"
+msgstr "UML类簇名字体"
+
+msgid "Line width for UML inheritance links."
+msgstr "UML图中继承关系的线宽。"
+
+msgid "Uml inheritance line width"
+msgstr "UML隐藏继承关系"
+
+msgid "Color for UML inheritance links."
+msgstr "UML图中继承关系填充色。"
+
+msgid "Uml inheritance color"
+msgstr "UML继承关系填充色"
+
+msgid "Show ancestors of a class up to a level of preference value."
+msgstr "显示比当前选项值多一层的父类层数。"
+
+msgid "Ancestor depth"
+msgstr "父类深度"
+
+msgid "Speed for scrolling when dragging figures from diagram near the edge of the diagram tool (a valid value is between 0 and 100)."
+msgstr "当拖动图元素到图的边缘时的滚动速度。(范围为0到100)"
+
+msgid "Autoscroll speed"
+msgstr "自动滚动速度"
+
+msgid "Show clients of a class up to a level of preference value."
+msgstr "显示比该值大1层的使用者。"
+
+msgid "Client depth"
+msgstr "使用者深度"
+
+msgid "Show descendants of a class down to a level of preference value."
+msgstr "显示比该值小1层的子类。"
+
+msgid "Descendant depth"
+msgstr "子类深度"
+
+msgid "The visible toolbar items for the Diagram Tool toolbar."
+msgstr "图中可见的工具栏元素。"
+
+msgid "Diagram toolbar layout"
+msgstr "图工具栏布局"
+
+msgid "Names of classes that should not appear in generated diagrams."
+msgstr "生成图上隐藏的类的名称。"
+
+msgid "Excluded class figures"
+msgstr "被排除的类图形"
+
+msgid "Show ALL classes in the diagram (ignore the following list)?"
+msgstr "在图中显示所有类吗？(忽略下面的列表)"
+
+msgid "Ignore excluded class figures"
+msgstr "忽略被排除的类图形"
+
+msgid "Show subclusters of a cluster down to a level of preference value."
+msgstr "显示比该值小1层的子类簇。"
+
+msgid "Subcluster depth"
+msgstr "子类簇深度"
+
+msgid "Show superclusters of a cluster up to a level of preference value."
+msgstr "显示比该值大1层的父类簇。"
+
+msgid "Supercluster depth"
+msgstr "父类簇深度"
+
+msgid "Show suppliers of a class up to a level of preference value."
+msgstr "显示比该值大1层的被使用者。"
+
+msgid "Supplier depth"
+msgstr "被使用者深度"
+
+msgid "Show all callers (as opposed to local callers) in `callers' form."
+msgstr "以\"调用者\"方式显示所有调用者(与本地调用者相对)。"
+
+msgid "Context tool"
+msgstr "上下文工具"
+
+msgid "Indexing items that need not be included in formatted texts."
+msgstr "需要在格式化过的文本中显示的Indexing项。"
+
+msgid "Excluded indexing items"
+msgstr "排除的indexing项"
+
+msgid "Class format that is selected by default."
+msgstr "默认选择的类格式。"
+
+msgid "Default class formatter index"
+msgstr "默认类格式编号"
+
+msgid "Feature format that is selected by default."
+msgstr "默认选择的方法格式。"
+
+msgid "Default feature formatter index"
+msgstr "默认方法视图格式编号"
+
+msgid "Number of cached formatted text in history."
+msgstr "历史记录中缓存的格式化文本的数量。"
+
+msgid "Formatters history size"
+msgstr "视图格式化历史长度"
+
+msgid "Default dependency formatter that should be popped up automatically."
+msgstr "默认自动弹出的依赖关系视图。"
+
+msgid "Default dependency formatter index"
+msgstr "默认依赖视图格式编号"
+
+msgid "Show Detailed Result when computation done."
+msgstr "当计算完毕时显示详细的结果。"
+
+msgid "Metric tool"
+msgstr "度量工具"
+
+msgid "Automatic go to result panel"
+msgstr "自动跳转到结果面板"
+
+msgid "Is percentage for ratio metric displayed?"
+msgstr "比例量中显示百分比吗？"
+
+msgid "Display percentage for ratio"
+msgstr "比例度量显示百分比"
+
+msgid "Is invisible result item filtered?"
+msgstr "过滤隐藏的结果项吗？"
+
+msgid "Filter invisible result"
+msgstr "过滤隐藏的结果项"
+
+msgid "Should old archive items be hidden?"
+msgstr "隐藏旧档案项吗？"
+
+msgid "Hide old archive"
+msgstr "隐藏旧档案项"
+
+msgid "Is detailed result kept when recalculation metric archive history?"
+msgstr "重新计算档案历史时保持详细结果？"
+
+msgid "Keep detailed result"
+msgstr "保持详细结果"
+
+msgid "Age in days for an archive item to be considered old"
+msgstr "以天计算的旧文档年龄"
+
+msgid "Old archive age in days"
+msgstr "以天计算的旧文档年龄"
+
+msgid "Is tree view used to display metric history?"
+msgstr "显示树状度量历史记录吗？"
+
+msgid "Tree view for metric history"
+msgstr "树状度量历史记录"
+
+msgid "List of metric units in order"
+msgstr "排序的度量单元列表"
+
+msgid "Unit order"
+msgstr "单元顺序"
+
+#, fuzzy
+msgid "Keep metric detailed result?"
+msgstr "保持详细结果"
+
+#, fuzzy
+msgid "Keep metric detailed result"
+msgstr "保持详细结果"
+
+msgid "Should classes be categorized in physical folders where they locates?"
+msgstr "按所在的文件夹将类分类吗？"
+
+msgid "Class browser"
+msgstr "类浏览器"
+
+msgid "Classes categorized folder"
+msgstr "类按目录分类"
+
+msgid "Should referenced classes in dependency view be expanded by default?"
+msgstr "依赖关系视图中默认扩展被引用的类吗？"
+
+msgid "Expand referenced class"
+msgstr "展开被引用类"
+
+msgid "Should referencer classes in dependency view be expanded by default?"
+msgstr "依赖关系视图中默认扩展引用的类吗？"
+
+msgid "Expand referencer class"
+msgstr "展开引用类"
+
+msgid "Should inheritance classes be displayed?"
+msgstr "显示继承类吗？"
+
+msgid "Inheritance classes"
+msgstr "显示继承类"
+
+msgid "Is item path shown?"
+msgstr "显示项路径吗？"
+
+msgid "Show item path"
+msgstr "显示项路径"
+
+msgid "Is dependency on self shown?"
+msgstr "显示自我依赖关系吗？"
+
+msgid "Show self dependency"
+msgstr "显示自我依赖关系"
+
+msgid "Should syntactical referenced classes be displayed?"
+msgstr "显示词法级别上引用的类？"
+
+msgid "Syntactical classes"
+msgstr "词法级别的类"
+
+#, fuzzy
+msgid "Will normal referenced supplier/client classes be shown"
+msgstr "显示普通语法级别上被引用的类？"
+
+#, fuzzy
+msgid "Normal referenced classes"
+msgstr "显示普通语法级别上被引用的类？"
+
+msgid "Display confirmation dialog on exit."
+msgstr "退出时显示确认对话框。"
+
+msgid "Interface"
+msgstr "界面"
+
+msgid "Dialogs"
+msgstr "对话框"
+
+msgid "Confirm on exit"
+msgstr "退出时确认"
+
+msgid "Display confirmation dialog on replacing all."
+msgstr "全部替换时显示确认对话框。"
+
+msgid "Confirm replace all"
+msgstr "确认全部替换"
+
+msgid "Display confirmation dialog for C compilation on finalize operation."
+msgstr "发布时进行C编译显示确认对话框。"
+
+msgid "Confirm finalize"
+msgstr "确认发布"
+
+msgid "Display confirmation dialog for C compilation on freeze operation."
+msgstr "凝固时进行C编译显示确认对话框。"
+
+msgid "Confirm freeze"
+msgstr "确认凝固"
+
+msgid "Display confirmation dialog on compilation when some files have not been saved."
+msgstr "有文件尚未保存时编译显示确认对话框。"
+
+msgid "Confirm save before compile"
+msgstr "确认编译前保存"
+
+msgid "Display confirmation dialog for assertions on finalize operation."
+msgstr "发布时对断言处理显示确定对话框。"
+
+msgid "Confirm finalize assertions"
+msgstr "确认发布断言"
+
+msgid "Display confirmation dialog on clearing breakpoints."
+msgstr "清除断点时显示确定对话框。"
+
+msgid "Confirm clear breakpoints"
+msgstr "确认清除断点"
+
+msgid "Display confirmation dialog when starting the application without stopping at breakpoints."
+msgstr "忽略断点运行时显示确定对话框。"
+
+msgid "Confirm ignore all breakpoints"
+msgstr "确认忽略所有断点"
+
+msgid "Display confirmation dialog before converting an old project."
+msgstr "在转换旧版本项目时显示确定对话框。"
+
+msgid "Confirm convert project"
+msgstr "确认转换项目"
+
+msgid "Display confirmation dialog before building a needed precompile."
+msgstr "需要进行预编译时显示确定对话框。"
+
+msgid "Confirm build precompile"
+msgstr "确认预编译"
+
+msgid "Display dialog that warns that text is being loaded and is not editable or clickable."
+msgstr "显示正在载入文本时不能编译或点击警告对话框。"
+
+msgid "Acknowledge not loaded"
+msgstr "提示还未完成载入"
+
+msgid "Display confirmation dialog for finalizing a .NET precompiled library."
+msgstr "发布.NET预编译时显示确定对话框。"
+
+msgid "Confirm finalize precompile"
+msgstr "确认发布预编译"
+
+msgid "Display confirmation dialog for terminating the C compilation of a freeze."
+msgstr "终止凝固C编译时显示确定对话框。"
+
+msgid "Confirm on terminate freezing"
+msgstr "确认终止凝固"
+
+msgid "Display confirmation dialog for terminating the C compilationa of a finalize."
+msgstr "终止发布C编译时显示确定对话框。"
+
+msgid "Confirm on terminate finalizing"
+msgstr "确认终止发布"
+
+msgid "Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."
+msgstr "退出EiffelStudio时正在进行C编译，显示确定对话框。"
+
+msgid "Confirm on terminate process"
+msgstr "确认终止进程"
+
+msgid "Display confirmation dialog for terminating an external command."
+msgstr "结束外部命令时显示确定对话框。"
+
+msgid "Confirm on terminate external command"
+msgstr "确认终止外部命令"
+
+msgid "Display New/Open project dialog at startup."
+msgstr "开始时显示新建/打开项目对话框。"
+
+msgid "Show starting dialog"
+msgstr "显示开始对话框"
+
+msgid "Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective."
+msgstr "当改变需要重新启动EiffelStudio才很生效的资源时显示警告对话框。"
+
+msgid "Confirm resource change needs restart"
+msgstr "确认变更资源需要重新启用"
+
+msgid "Display dialog that warns that homonym format can take a long time."
+msgstr "显示警告查询同名方法需要相当长时间的对话框。"
+
+msgid "Generate homonyms"
+msgstr "生成同名方法"
+
+msgid "Display dialog when an application is running and a compilation is launched."
+msgstr "当程序正在运行时开始新的编译，显示警告对话框。"
+
+msgid "Stop execution when compiling"
+msgstr "编译时停止执行"
+
+msgid "Display dialog before killing a debugged application."
+msgstr "当中断调试时显示提示对话框。"
+
+msgid "Confirm kill"
+msgstr "确认终止"
+
+msgid "Display dialog before killing a debugged application and restarting a new one."
+msgstr "当中断调试并重新开始时显示提示对话框。"
+
+msgid "Confirm kill and restart"
+msgstr "确认终止并重新开始"
+
+msgid "Display dialog before removing a metric."
+msgstr "删除度量时显示提示对话框。"
+
+msgid "Confirm remove metric"
+msgstr "确认删除度量"
+
+msgid "Display dialog before saving a metric."
+msgstr "保存度量时显示提示对话框。"
+
+msgid "Confirm save metric"
+msgstr "确认保存度量"
+
+msgid "Display dialog when editing the same class in two development windows."
+msgstr "同一类在两个窗口中编辑时显示提示对话框。"
+
+msgid "Already editing class"
+msgstr "正在被编译的类"
+
+msgid "Display dialog while running an external command."
+msgstr "运行外部命令时显示提示对话框。"
+
+msgid "Executing command"
+msgstr "正在运行命令"
+
+msgid "File open and save dialogs each remember their last selected directory."
+msgstr "打开和保存文件对话框都记录上次选择的文件夹。"
+
+msgid "File open and save dialogs remember last directory"
+msgstr "打开和保存文件对话框记录上次文件夹"
+
+msgid "Directory of last project opened."
+msgstr "最近打开的项目位置。"
+
+msgid "Last opened project directory"
+msgstr "上次打开的项目文件夹"
+
+msgid "Directory of last dynamic lib library opened."
+msgstr "最近打开的动态链接库位置。"
+
+msgid "Last opened dynamic lib directory"
+msgstr "上次打开的动态运行库文件夹"
+
+msgid "Directory of last file opened."
+msgstr "最近打开的文件位置。"
+
+msgid "Last opened file directory"
+msgstr "上次打开文件的文件夹"
+
+msgid "Directory of last metric browse archive opened."
+msgstr "最近打开的度量档案的位置。"
+
+msgid "Last opened metric browse archive directory"
+msgstr "上次打开的度量档案文件夹"
+
+msgid "Directory of last dynamic lib saved."
+msgstr "最近保存的动态链接库的位置。"
+
+msgid "Last saved dynamic lib directory"
+msgstr "上次保存的动态运行库文件夹"
+
+msgid "Directory of last call stack saved."
+msgstr "最近保存调用栈的位置。"
+
+msgid "Last saved call stack directory"
+msgstr "上次保存调用栈的文件夹"
+
+msgid "Directory of last debugger exception saved."
+msgstr "最近保存调试常的位置。"
+
+msgid "Last saved debugger exception directory"
+msgstr "上次保存调试异常的文件夹"
+
+msgid "Directory of last diagram postscript file saved."
+msgstr "最近保存图的postscript文件的位置。"
+
+msgid "Last saved diagram postscript directory"
+msgstr "上次保存图postscript的文件夹"
+
+msgid "Directory of last exception saved."
+msgstr "最近异常保存的位置。"
+
+msgid "Last saved exception directory"
+msgstr "上次保存异常的文件夹"
+
+msgid "Directory of last save file as saved."
+msgstr "最近保存文件的位置。"
+
+msgid "Last saved save file as directory"
+msgstr "上次另存为文件夹"
+
+msgid "Directory of last profile result saved."
+msgstr "最近评测结果的位置。"
+
+msgid "Last saved profile result directory"
+msgstr "上次评测结果文件夹"
+
+msgid "Directory of last imported metric definition directory."
+msgstr "上一次导入度量定义的文件夹。"
+
+msgid "Last imported metric definition directory"
+msgstr "上次保存度量的文件夹"
+
+msgid "Width of the project settings dialog."
+msgstr "项目设置对话框宽度。"
+
+msgid "Project settings width"
+msgstr "项目设置对话框宽度"
+
+msgid "Height of the project settings dialog."
+msgstr "项目设置对话框高度。"
+
+msgid "Project settings height"
+msgstr "项目设置对话框高度"
+
+msgid "Screen x position of the project settings dialog."
+msgstr "项目设置对话框在屏幕上的x坐标。"
+
+msgid "Project settings position x"
+msgstr "项目设置对话框x坐标"
+
+msgid "Screen y position of the project settings dialog."
+msgstr "项目设置对话框在屏幕上的y坐标。"
+
+msgid "Project settings position y"
+msgstr "项目设置对话框y坐标"
+
+msgid "Position of the split area."
+msgstr "Split area的位置。"
+
+msgid "Project settings split position"
+msgstr "项目设置对话框分割位置"
+
+msgid "Width of the starting dialog."
+msgstr "开始对话框的宽度。"
+
+msgid "Starting dialog width"
+msgstr "开始对话框宽"
+
+msgid "Height of the starting dialog."
+msgstr "开始对话框的高度。"
+
+msgid "Starting dialog height"
+msgstr "开始对话框高"
+
+msgid "Width of the open project dialog."
+msgstr "打开项目对话框的宽度。"
+
+msgid "Open project dialog width"
+msgstr "打开项目对话框宽度"
+
+msgid "Height of the open project dialog."
+msgstr "打开项目对话框的高度。"
+
+msgid "Open project dialog height"
+msgstr "打开项目对话框高度"
+
+msgid "Should the C output panel be shown when a C compilation is launched?"
+msgstr "C编译开始时，显示C输出对话框吗？"
+
+msgid "Development window"
+msgstr "主开发窗口"
+
+msgid "C output panel prompted"
+msgstr "提示C输出面板"
+
+msgid "The speed, in milliseconds, in which the auto-hide tools will reveal or hide themselves completely. Use '0' to disable animation effect."
+msgstr "显示或隐藏工具的速度(毫秒)。\"0\"表示不使用动画。"
+
+msgid "Auto hide animation speed"
+msgstr "自动隐藏动画速度"
+
+msgid "Should all applicable docking feedback indicators be shown when dragging a tool or a editor tab?"
+msgstr "当拖拽工具或者编辑器标签时显示停靠反馈标记吗？"
+
+msgid "Show all applicable docking indicators"
+msgstr "显示所有停靠标识"
+
+msgid "Allow class name completion in the address combo boxes?"
+msgstr "在地址下拉框中自动完成类名吗？"
+
+msgid "Class completion"
+msgstr "类自动完成"
+
+msgid "Receivers of control-right-click."
+msgstr "Control-right-click的接受者。"
+
+msgid "Ctrl right click receiver"
+msgstr "Ctrl加鼠标右键的接收者"
+
+msgid "Docked tools track main window?"
+msgstr "停靠的工具保持在主窗口内吗？"
+
+msgid "Dock tracking"
+msgstr "跟踪停靠"
+
+msgid "Display editor on left?"
+msgstr "在左边显示编辑器吗？"
+
+msgid "Editor left side"
+msgstr "编译器左侧"
+
+msgid "Is EiffelStudio Debug menu allowed?"
+msgstr "允许EiffelStudio调试菜单吗？"
+
+msgid "Estudio dbg menu allowed"
+msgstr "允许EiffelStudio调试菜单"
+
+msgid "When estudio_dbg_menu_enabled_preference is True, is EiffelStudio Debug menu shown by accelerator?"
+msgstr "当estudio_dbg_menu_enabled_preference为真时，使用快捷键显示调试菜单吗？"
+
+msgid "Estudio dbg menu accelerator allowed"
+msgstr "允许EiffelStudio调试菜单快捷键"
+
+msgid "Should EiffelStudio Debug menu be shown"
+msgstr "显示EiffelStudio调试菜单吗？"
+
+msgid "Estudio dbg menu enabled"
+msgstr "使用EiffelStudio调试菜单"
+
+msgid "Automatically expand the feature tree."
+msgstr "自动展开方法树。"
+
+msgid "Expand feature tree"
+msgstr "展开方法树"
+
+msgid "Display signature ?"
+msgstr "显示签名？"
+
+msgid "Features tool"
+msgstr "方法工具"
+
+msgid "Is signature enabled"
+msgstr "显示签名"
+
+msgid "Display alias name ?"
+msgstr "显示别名？"
+
+msgid "Is alias enabled"
+msgstr "显示别名"
+
+msgid "Display assigner command ?"
+msgstr "显示器赋值方法？"
+
+msgid "Is assigner enabled"
+msgstr "启用赋值者"
+
+msgid "Order used to sort feature clauses in formatted texts."
+msgstr "在格式化过的文本中方法分类的顺序。"
+
+msgid "Feature clause order"
+msgstr "方法分类顺序"
+
+msgid "Disable graphical output."
+msgstr "禁用彩色文本输出。"
+
+msgid "Graphical output disabled"
+msgstr "禁用图形化输入"
+
+msgid "Is window maximized?"
+msgstr "最大化窗口？"
+
+msgid "Is maximized"
+msgstr "最大化窗口"
+
+msgid "Directory of last browsed cluster."
+msgstr "上次浏览类簇的位置。"
+
+msgid "Last browsed cluster directory"
+msgstr "上次浏览的类簇文件夹"
+
+msgid "Items/tools information for navigation panel."
+msgstr "导航面板中工具或控件的信息。"
+
+msgid "Left panel layout"
+msgstr "左面板部局"
+
+msgid "Show only one tool (Features, Clusters, Search, Windows) at a time."
+msgstr "每次只显示一个工具(方法，类簇，查找，窗口)。"
+
+msgid "Left panel use explorer style"
+msgstr "左面板使用浏览器样式"
+
+msgid "Maximum number of items displayed in the history combo boxes."
+msgstr "历史记录下拉框中显示的最大条数。"
+
+msgid "Maximum history size"
+msgstr "最大历史记录长度"
+
+msgid "Color for progress bar."
+msgstr "进度条的填充色。"
+
+msgid "Progress bar color"
+msgstr "进度条颜色"
+
+msgid "Should size of completion list be remembered between completions in the editor?"
+msgstr "自动记录编辑器中自动完成列表的大小？"
+
+msgid "Remember completion list size"
+msgstr "记录自动完成列表大小"
+
+msgid "Items/tools information for editor panel."
+msgstr "编辑器面板中工具或控件的信息。"
+
+msgid "Right panel layout"
+msgstr "右面板布局"
+
+msgid "Should address toolbar be shown?"
+msgstr "显示地址工具栏？"
+
+msgid "Show address toolbar"
+msgstr "显示地址工具栏"
+
+msgid "Should project toolbar be shown?"
+msgstr "显示项目工具栏？"
+
+msgid "Show project toolbar"
+msgstr "显示项目工具栏"
+
+msgid "Should refactoring toolbar be shown?"
+msgstr "显示重构工具栏？"
+
+msgid "Show refactoring toolbar"
+msgstr "显示重构工具栏"
+
+msgid "Should selective text of toolbar items in general toolbar?"
+msgstr "常用工具栏中的显示文本吗？"
+
+msgid "Show text in refactoring toolbar"
+msgstr "显示重构工具栏文本"
+
+msgid "Is text of toolbar items displayed?"
+msgstr "在工具栏中显示文本吗？"
+
+msgid "Show all text in refactoring toolbar"
+msgstr "显示重构工具栏所有文本"
+
+msgid "Items shown in refactoring toolbar."
+msgstr "重构工具栏中的元素。"
+
+msgid "Refactoring toolbar layout"
+msgstr "重构工具栏布局"
+
+msgid "Should general toolbar be shown?"
+msgstr "显示常用工具栏吗？"
+
+msgid "Show general toolbar"
+msgstr "显示常用工具栏"
+
+msgid "Show text in general toolbar"
+msgstr "显示常用工具栏文本"
+
+msgid "Show all text in general toolbar"
+msgstr "显示常用工具栏所有文本"
+
+msgid "Items shown in general toolbar."
+msgstr "常用工具栏中的元素。"
+
+msgid "General toolbar layout"
+msgstr "常用工具栏布局"
+
+msgid "Link the context tool with other components by default?"
+msgstr "默认联结上下文工具和其它组件吗？"
+
+msgid "Unified stone"
+msgstr "统一Stone"
+
+msgid "Use animated icons in the status bar?"
+msgstr "在状态栏中使用动画图标吗？"
+
+msgid "Use animated icons"
+msgstr "使用动画图标"
+
+msgid "Width of navigation panel"
+msgstr "导航面板的宽度。"
+
+msgid "Window left panel width"
+msgstr "窗口左面板宽"
+
+msgid "Width of development window."
+msgstr "主窗口的宽度。"
+
+msgid "Width"
+msgstr "宽"
+
+msgid "Height of development window."
+msgstr "主窗口的高度。"
+
+msgid "Height"
+msgstr "高"
+
+msgid "Screen x position of development window."
+msgstr "主窗口在屏幕上的x坐标。"
+
+msgid "X position"
+msgstr "x坐标"
+
+msgid "Screen y position of development window."
+msgstr "主窗口在屏幕上的y坐标。"
+
+msgid "Y position"
+msgstr "y坐标"
+
+msgid "Height of completion list.  Used if 'remember_completion_list_size' is set to True."
+msgstr "自动完成列表的高度。\"remember_completion_list_size\"为真时被使用。"
+
+msgid "Completion list height"
+msgstr "自动完成列表高"
+
+msgid "Width of completion list.  Used if 'remember_completion_list_size' is set to True."
+msgstr "自动完成列表的宽度。\"remember_completion_list_size\"为真时被使用。"
+
+msgid "Completion list width"
+msgstr "自动完成列表宽"
+
+msgid "List of recently opened projects."
+msgstr "最近打开项目列表。"
+
+msgid "Recent projects"
+msgstr "最近的项目"
+
+msgid "Last opened projects"
+msgstr "最近打开的项目"
+
+msgid "Number of recent projects to keep in the list."
+msgstr "在列表中保存最近打开项目的条数。"
+
+msgid "Keep n projects"
+msgstr "保存项目个数"
+
+msgid "Are brackets and parentheses closed automatically?"
+msgstr "自动完成括号和中括号吗？"
+
+msgid "Eiffel"
+msgstr "Eiffel"
+
+msgid "Auto-complete brackets and parentheses"
+msgstr "自动完成中括号和括号"
+
+msgid "Are quotes closed automatically?"
+msgstr "自动完成引号吗？"
+
+msgid "Auto-complete quotes"
+msgstr "自动完成引号"
+
+msgid "Should completion window appear automatically after typing a `.'?"
+msgstr "自动完成列表在输入\".\"号后显示吗？"
+
+msgid "Auto auto-complete"
+msgstr "自动激活自动完成"
+
+msgid "Should completion automatically complete words when a single best match is available?"
+msgstr "当只有一个自动完成选择时，自动完成当前代码吗？"
+
+msgid "Auto complete words"
+msgstr "自动完成单词"
+
+msgid "Should trailing blanks be auto-removed when saving?"
+msgstr "保存时自动清除空字符吗？"
+
+msgid "Auto remove trailing blank when saving"
+msgstr "保存自动清理每行多余的空字符"
+
+msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."
+msgstr "当用户按下 编辑器->Eiffel->快捷键->自定义插入1 时插入的字符串。"
+
+msgid "Customized string 1"
+msgstr "用户定义字符串1"
+
+msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 2."
+msgstr "当用户按下 编辑器->Eiffel->快捷键->自定义插入2 时插入的字符串。"
+
+msgid "Customized string 2"
+msgstr "用户定义字符串2"
+
+msgid "User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3."
+msgstr "当用户按下 编辑器->Eiffel->快捷键->自定义插入3 时插入的字符串。"
+
+msgid "Customized string 3"
+msgstr "用户定义字符串3"
+
+msgid "Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."
+msgstr "在自动完成列表中隐藏不匹配的选择项吗？如果显示所有选择项，在输入过程中，最相近的一项将被选中。"
+
+msgid "Filter completion list"
+msgstr "过滤自动完成列表"
+
+msgid "Does completion change the first character of onces and constants with an upper case character?"
+msgstr "自动完成时将Once方法和或常量第一个字符改为大写吗？"
+
+msgid "Once and constant in upper"
+msgstr "大写once方法和常量"
+
+msgid "Do features of class ANY appear in the feature call complete window?"
+msgstr "在自动完成列表中显示ANY中的方法吗？"
+
+msgid "Show ANY features"
+msgstr "显示ANY方法"
+
+msgid "Does completion list show feature signatures?"
+msgstr "自动完成列表中显示方法签名吗？"
+
+msgid "Show completion signature"
+msgstr "自动完成列表显示签名"
+
+msgid "Does completion list show query return type?"
+msgstr "自动完成列表中显示返回类型吗？"
+
+msgid "Show completion type"
+msgstr "自动完成列表显示型别"
+
+msgid "Does completion list show disambiguated name?"
+msgstr "自动完成列表中显示非模糊名字吗？"
+
+msgid "Show completion disambiguated name"
+msgstr "自动完成列表显示非模糊名"
+
+msgid "Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."
+msgstr "自动完成关键字吗？自动完成的关键字可以在Eiffel->Eiffel->Autocomplete中修改。"
+
+msgid "Syntax complete enabled"
+msgstr "启用词法完成"
+
+msgid "Format to use when saving class text. True means using Windows text format, False means using Unix text format."
+msgstr "文本保存的格式。真表示用Windows文本格式，假表示用Unix的文本格式。"
+
+msgid "Text mode is windows"
+msgstr "Windows文本格式"
+
+msgid "Command to open an external editor."
+msgstr "打开外部编辑器的命令。"
+
+msgid "Is underscore `_' used as a word separator?"
+msgstr "\"_\"用于词与词的分割符吗？"
+
+msgid "Underscore is separator"
+msgstr "下划线用于分割符"
+
+msgid "Color for breakable marks and breakpoints."
+msgstr "可设置断点处标记的位置和断点的颜色。"
+
+msgid "Colors"
+msgstr "颜色"
+
+msgid "Breakpoint background color"
+msgstr "断点背景色"
+
+msgid "Foreground color for assertion tags."
+msgstr "断言标签的前景色。"
+
+msgid "Assertion tag text color"
+msgstr "断言标签字体颜色"
+
+msgid "Background color for assertion tags."
+msgstr "indexing标签的背景色。"
+
+msgid "Assertion tag background color"
+msgstr "断言标签背景色"
+
+msgid "Foreground color for indexing tags."
+msgstr "indexing标签的前景色。"
+
+msgid "Indexing tag text color"
+msgstr "Indexing标签字体颜色"
+
+msgid "Background color for indexing tags."
+msgstr "indexing标签的背景色。"
+
+msgid "Indexing tag background color"
+msgstr "Indexing标签背景色"
+
+msgid "Foreground color for reserved words."
+msgstr "保留字的前景色。"
+
+msgid "Reserved text color"
+msgstr "保留字字体颜色"
+
+msgid "Background color for reserved words."
+msgstr "保留字的背景色。"
+
+msgid "Reserved background color"
+msgstr "保留字背景色"
+
+msgid "Foreground color for generics."
+msgstr "泛型的前景色。"
+
+msgid "Generic text color"
+msgstr "泛型字体颜色"
+
+msgid "Background color for generics."
+msgstr "泛型的背景色。"
+
+msgid "Generic background color"
+msgstr "泛型背景色"
+
+msgid "Foreground color for locals."
+msgstr "局部变量的前景色。"
+
+msgid "Local text color"
+msgstr "局部变量字体颜色"
+
+msgid "Background color for locals."
+msgstr "局部变量的背景色。"
+
+msgid "Local background color"
+msgstr "局部变量背景色"
+
+msgid "Foreground color for classes."
+msgstr "类名的前景色。"
+
+msgid "Class text color"
+msgstr "类名字体颜色"
+
+msgid "Background color for classes."
+msgstr "类名的背景色。"
+
+msgid "Class background color"
+msgstr "类名背景色"
+
+msgid "Foreground color for features."
+msgstr "方法名的前景色。"
+
+msgid "Feature text color"
+msgstr "方法名字体颜色"
+
+msgid "Background color for features."
+msgstr "方法名的背景色。"
+
+msgid "Feature background color"
+msgstr "方法名背景色"
+
+msgid "Foreground color for clusters."
+msgstr "类簇名的前景色。"
+
+msgid "Cluster text color"
+msgstr "类簇字体颜色"
+
+msgid "Background color for clusters."
+msgstr "类簇名的背景色。"
+
+msgid "Cluster background color"
+msgstr "类簇背景色"
+
+msgid "Foreground color for errors."
+msgstr "错误的前景色。"
+
+msgid "Error text color"
+msgstr "错误字体颜色"
+
+msgid "Background color for errors."
+msgstr "错误的背景色。"
+
+msgid "Error background color"
+msgstr "错误背景色"
+
+msgid "Foreground color for object addresses."
+msgstr "对象地址的前景色。"
+
+msgid "Object text color"
+msgstr "对象字体颜色"
+
+msgid "Background color for object addresses."
+msgstr "对象地址的背景色。"
+
+msgid "Object background color"
+msgstr "对象背景色"
+
+msgid "Background color for target text."
+msgstr "目标文本的背景色。"
+
+msgid "Target text color"
+msgstr "目标文本的字体颜色"
+
+msgid "Target text background color"
+msgstr "目标文本背景色"
+
+msgid "Autocomplete indexing?"
+msgstr "自动完成indexing？"
+
+msgid "Autocomplete"
+msgstr "自动完成"
+
+msgid "Class structure keywords"
+msgstr "类结构关键字"
+
+msgid "Indexing"
+msgstr "编号"
+
+msgid "Autocomplete indexing"
+msgstr "自动完成indexing"
+
+msgid "Use default autocomplete?"
+msgstr "使用默认的自动完成功能？"
+
+msgid "Use default indexing"
+msgstr "使用默认indexing语句"
+
+msgid "Customized autocomplete (Space after keyword was typed)"
+msgstr "自定义自动完成功能(输入关键字后插入空格)"
+
+msgid "Custom indexing space"
+msgstr "自定义indexing区域大小"
+
+msgid "Customized autocomplete (Return after keyword was typed)"
+msgstr "自定义自动完成功能(输入关键字后插入换行)"
+
+msgid "Custom indexing return"
+msgstr "自定义indexing返回值"
+
+msgid "Customized autocomplete (Space, other cases)"
+msgstr "自定义自动完成功能(空格，其它)"
+
+msgid "Custom indexing space later"
+msgstr "自定义延后indexing空间"
+
+msgid "Customized autocomplete (Return, other cases)"
+msgstr "自定义自动完成功能(换行，其它)"
+
+msgid "Custom indexing return later"
+msgstr "自定义延后indexing返回值"
+
+msgid "Autocomplete class?"
+msgstr "自动完成类？"
+
+msgid "Autocomplete class"
+msgstr "自动完成class"
+
+msgid "Use default class"
+msgstr "使用默认class"
+
+msgid "Custom class space"
+msgstr "自定义class语句空间"
+
+msgid "Custom class return"
+msgstr "自定义class返回值"
+
+msgid "Custom class space later"
+msgstr "自定义延后class空间"
+
+msgid "Custom class return later"
+msgstr "自定义延后class返回值"
+
+msgid "Autocomplete inherit?"
+msgstr "自动完成inherit语句？"
+
+msgid "Inherit"
+msgstr "继承"
+
+msgid "Autocomplete inherit"
+msgstr "自动完成inherit语句"
+
+msgid "Use default inherit"
+msgstr "使用默认inherit"
+
+msgid "Custom inherit space"
+msgstr "自定义inherit语句空间"
+
+msgid "Custom inherit return"
+msgstr "自定义inherit返回值"
+
+msgid "Custom inherit space later"
+msgstr "自定义延后inherit空间"
+
+msgid "Custom inherit return later"
+msgstr "自定义延后inherit返回值"
+
+msgid "Autocomplete creation?"
+msgstr "自动完成creation语句？"
+
+msgid "Creation"
+msgstr "创建"
+
+msgid "Autocomplete creation"
+msgstr "自动完成creation语句"
+
+msgid "Use default creation"
+msgstr "使用默认creation"
+
+msgid "Custom creation space"
+msgstr "自定义creation空间"
+
+msgid "Custom creation return"
+msgstr "自定义creation返回值"
+
+msgid "Custom creation space later"
+msgstr "自定义延后creation空间"
+
+msgid "Custom creation return later"
+msgstr "自定义延后creation返回值"
+
+msgid "Autocomplete feature?"
+msgstr "自动完成方法？"
+
+msgid "Autocomplete feature"
+msgstr "自动完成feature语句"
+
+msgid "Use default feature"
+msgstr "使用默认feature语句"
+
+msgid "Custom feature space"
+msgstr "自定义feature语句空间"
+
+msgid "Custom feature return"
+msgstr "自定义feature语句返回值"
+
+msgid "Custom feature space later"
+msgstr "自定义延后feature空间"
+
+msgid "Custom feature return later"
+msgstr "自定义延后feature返回值"
+
+msgid "Autocomplete is?"
+msgstr "自动完成is语句？"
+
+msgid "Feature structure keywords"
+msgstr "方法结构关键字"
+
+msgid "Is"
+msgstr "Is"
+
+msgid "Autocomplete is"
+msgstr "自动完成is语句"
+
+msgid "Use default is"
+msgstr "使用默认is语句"
+
+msgid "Custom is space"
+msgstr "自定义is语句空间"
+
+msgid "Custom is return"
+msgstr "自定义is返回值"
+
+msgid "Custom is space later"
+msgstr "自定义延后is语句空间"
+
+msgid "Custom is return later"
+msgstr "自定义延后is语句返回值"
+
+msgid "Autocomplete require?"
+msgstr "自动完成require语句？"
+
+msgid "Autocomplete require"
+msgstr "自动完成require语句"
+
+msgid "Use default require"
+msgstr "使用默认require语句"
+
+msgid "Custom require space"
+msgstr "自定义require语句空间"
+
+msgid "Custom require return"
+msgstr "自定义require返回值"
+
+msgid "Custom require space later"
+msgstr "自定义延后require语句空间"
+
+msgid "Custom require return later"
+msgstr "自定义延后require语句返回值"
+
+msgid "Autocomplete require else?"
+msgstr "自动完成require else语句？"
+
+msgid "Require else"
+msgstr "Require else"
+
+msgid "Autocomplete require else"
+msgstr "自动完成require else语句"
+
+msgid "Use default require else"
+msgstr "使用默认require else语句"
+
+msgid "Custom require else space"
+msgstr "自定义require else语句空间"
+
+msgid "Custom require else return"
+msgstr "自定义require else语句返回值"
+
+msgid "Custom require else space later"
+msgstr "自定义延后require else空间"
+
+msgid "Custom require else return later"
+msgstr "自定义延后require else返回值"
+
+msgid "Autocomplete local?"
+msgstr "自动完成local语句？"
+
+msgid "Autocomplete local"
+msgstr "自动完成local语句"
+
+msgid "Use default local"
+msgstr "使用默认local语句"
+
+msgid "Custom local space"
+msgstr "自定义local语句空间"
+
+msgid "Custom local return"
+msgstr "自定义local返回值"
+
+msgid "Custom local space later"
+msgstr "自定义延后local空间"
+
+msgid "Custom local return later"
+msgstr "自定义延后local返回值"
+
+msgid "Autocomplete do?"
+msgstr "自动完成do语句？"
+
+msgid "Do"
+msgstr "Do"
+
+msgid "Autocomplete do"
+msgstr "自动完成do语句"
+
+msgid "Use default do"
+msgstr "使用默认do语句"
+
+msgid "Custom do space"
+msgstr "自定义do语句空间"
+
+msgid "Custom do return"
+msgstr "自定义do返回值"
+
+msgid "Custom do space later"
+msgstr "自定义延后do语句空间"
+
+msgid "Custom do return later"
+msgstr "自定义延后do返回值"
+
+msgid "Autocomplete once?"
+msgstr "自动完成once语句？"
+
+msgid "Once"
+msgstr "Once"
+
+msgid "Autocomplete once"
+msgstr "自动完成once语句"
+
+msgid "Use default once"
+msgstr "使用默认once语句"
+
+msgid "Custom once space"
+msgstr "自定义once语句空间"
+
+msgid "Custom once return"
+msgstr "自定义once返回值"
+
+msgid "Custom once space later"
+msgstr "自定义once语句空间"
+
+msgid "Custom once return later"
+msgstr "自定义延后once返回值"
+
+msgid "Autocomplete deferred?"
+msgstr "自动完成deferred语句？"
+
+msgid "Deferred"
+msgstr "Deferred"
+
+msgid "Autocomplete deferred"
+msgstr "自动完成deferred语句"
+
+msgid "Use default deferred"
+msgstr "使用默认deferred语句"
+
+msgid "Custom deferred space"
+msgstr "自定义deferred语句空间"
+
+msgid "Custom deferred return"
+msgstr "自定义deferred语句返回值"
+
+msgid "Custom deferred space later"
+msgstr "自定义延后deferred空间"
+
+msgid "Custom deferred return later"
+msgstr "自定义延后deferred语句返回值"
+
+msgid "Autocomplete external?"
+msgstr "自动完成external语句？"
+
+msgid "External"
+msgstr "外部"
+
+msgid "Autocomplete external"
+msgstr "自动完成external语句"
+
+msgid "Use default external"
+msgstr "使用默认external语句"
+
+msgid "Custom external space"
+msgstr "自定义external语句空间"
+
+msgid "Custom external return"
+msgstr "自定义external语句返回值"
+
+msgid "Custom external space later"
+msgstr "自定义延后deferred空间"
+
+msgid "Custom external return later"
+msgstr "自定义延后external语句返回值"
+
+msgid "Autocomplete rescue?"
+msgstr "自动完成rescue语句？"
+
+msgid "Rescue"
+msgstr "Rescue"
+
+msgid "Autocomplete rescue"
+msgstr "自动完成rescue语句"
+
+msgid "Use default rescue"
+msgstr "使用默认rescue语句"
+
+msgid "Custom rescue space"
+msgstr "自定义rescue语句空间"
+
+msgid "Custom rescue return"
+msgstr "自定义rescue返回值"
+
+msgid "Custom rescue space later"
+msgstr "自定义延后rescue空间"
+
+msgid "Custom rescue return later"
+msgstr "自定义延后rescue返回值"
+
+msgid "Autocomplete ensure?"
+msgstr "自动完成ensure语句？"
+
+msgid "Autocomplete ensure"
+msgstr "自动完成ensure语句"
+
+msgid "Use default ensure"
+msgstr "使用默认once语句"
+
+msgid "Custom ensure space"
+msgstr "自定义ensure语句空间"
+
+msgid "Custom ensure return"
+msgstr "自定义ensure语句返回值"
+
+msgid "Custom ensure space later"
+msgstr "自定义延后ensure空间"
+
+msgid "Custom ensure return later"
+msgstr "自定义延后ensure返回值"
+
+msgid "Autocomplete ensure then?"
+msgstr "自动完成ensure then语句？"
+
+msgid "Ensure then"
+msgstr "Ensure then"
+
+msgid "Autocomplete ensure then"
+msgstr "自动完成ensure then语句"
+
+msgid "Use default ensure then"
+msgstr "使用默认ensure then语句"
+
+msgid "Custom ensure then space"
+msgstr "自定义ensure then语句空间"
+
+msgid "Custom ensure then return"
+msgstr "自定义ensure then语句返回值"
+
+msgid "Custom ensure then space later"
+msgstr "自定义延后ensure then空间"
+
+msgid "Custom ensure then return later"
+msgstr "自定义延后ensure then返回值"
+
+msgid "Autocomplete alias?"
+msgstr "自动完成alias语句？"
+
+msgid "Autocomplete alias"
+msgstr "自动完成alias语句"
+
+msgid "Use default alias"
+msgstr "使用默认alias语句"
+
+msgid "Custom alias space"
+msgstr "自定义alias语句空间"
+
+msgid "Custom alias return"
+msgstr "自定义alias返回值"
+
+msgid "Custom alias space later"
+msgstr "自定义延后alias空间"
+
+msgid "Custom alias return later"
+msgstr "自定义延后alias返回值"
+
+msgid "Autocomplete if?"
+msgstr "自动完成if语句？"
+
+msgid "Control structure keywords"
+msgstr "控制结构关键字"
+
+msgid "If"
+msgstr "If"
+
+msgid "Autocomplete if"
+msgstr "自动完成if语句"
+
+msgid "Use default if"
+msgstr "使用默认if语句"
+
+msgid "Custom if space"
+msgstr "自定义if语句空间"
+
+msgid "Custom if return"
+msgstr "自定义if返回值"
+
+msgid "Custom if space later"
+msgstr "自定义延后if语句空间"
+
+msgid "Custom if return later"
+msgstr "自定义延后if语句返回值"
+
+msgid "Autocomplete then?"
+msgstr "自动完成then语句？"
+
+msgid "Then"
+msgstr "Then"
+
+msgid "Autocomplete then"
+msgstr "自动完成then语句"
+
+msgid "Use default then"
+msgstr "使用默认then语句"
+
+msgid "Custom then space"
+msgstr "自定义then语句空间"
+
+msgid "Custom then return"
+msgstr "自定义then返回值"
+
+msgid "Custom then space later"
+msgstr "自定义延后then空间"
+
+msgid "Custom then return later"
+msgstr "自定义延后then返回值"
+
+msgid "Autocomplete else if?"
+msgstr "自动完成else if语句？"
+
+msgid "Elseif"
+msgstr "Elseif"
+
+msgid "Autocomplete elseif"
+msgstr "自动完成else if语句"
+
+msgid "Use default elseif"
+msgstr "使用默认else if语句"
+
+msgid "Custom elseif space"
+msgstr "自定义elseif语句空间"
+
+msgid "Custom elseif return"
+msgstr "自定义elseif返回值"
+
+msgid "Custom elseif space later"
+msgstr "自定义延后elseif空间"
+
+msgid "Custom elseif return later"
+msgstr "自定义延后elseif返回值"
+
+msgid "Autocomplete else?"
+msgstr "自动完成else语句？"
+
+msgid "Else"
+msgstr "Else"
+
+msgid "Autocomplete else"
+msgstr "自动完成else语句"
+
+msgid "Use default else"
+msgstr "使用默认once语句"
+
+msgid "Custom else space"
+msgstr "自定义else语句空间"
+
+msgid "Custom else return"
+msgstr "自定义else返回值"
+
+msgid "Custom else space later"
+msgstr "自定义延后else空间"
+
+msgid "Custom else return later"
+msgstr "自定义延后else返回值"
+
+msgid "Autocomplete inspect?"
+msgstr "自动完成inspect语句？"
+
+msgid "Inspect"
+msgstr "Inspect"
+
+msgid "Autocomplete inspect"
+msgstr "自动完成inspect语句"
+
+msgid "Use default inspect"
+msgstr "使用默认inspect语句"
+
+msgid "Custom inspect space"
+msgstr "自定义inspect语句空间"
+
+msgid "Custom inspect return"
+msgstr "自定义inspect返回值"
+
+msgid "Custom inspect space later"
+msgstr "自定义延后inspect空间"
+
+msgid "Custom inspect return later"
+msgstr "自定义延后inspect返回值"
+
+msgid "Autocomplete when?"
+msgstr "自动完成when语句？"
+
+msgid "When"
+msgstr "When"
+
+msgid "Autocomplete when"
+msgstr "自动完成when语句"
+
+msgid "Use default when"
+msgstr "使用默认when语句"
+
+msgid "Custom when space"
+msgstr "自定义when语句空间"
+
+msgid "Custom when return"
+msgstr "自定义when返回值"
+
+msgid "Custom when space later"
+msgstr "自定义延后when空间"
+
+msgid "Custom when return later"
+msgstr "自定义延后when返回值"
+
+msgid "Autocomplete from?"
+msgstr "自动完成from语句？"
+
+msgid "From"
+msgstr "From"
+
+msgid "Autocomplete from"
+msgstr "自动完成from语句"
+
+msgid "Use default from"
+msgstr "使用默认from语句"
+
+msgid "Custom from space"
+msgstr "自定义from语句空间"
+
+msgid "Custom from return"
+msgstr "自定义from返回值"
+
+msgid "Custom from space later"
+msgstr "自定义延后from语句空间"
+
+msgid "Custom from return later"
+msgstr "自定义延后from返回值"
+
+msgid "Autocomplete variant?"
+msgstr "自动完成variant语句？"
+
+msgid "Variant"
+msgstr "Variant"
+
+msgid "Autocomplete variant"
+msgstr "自动完成variant语句"
+
+msgid "Use default variant"
+msgstr "使用默认variant语句"
+
+msgid "Custom variant space"
+msgstr "自定义variant语句空间"
+
+msgid "Custom variant return"
+msgstr "自定义variant返回值"
+
+msgid "Custom variant space later"
+msgstr "自定义延后variant空间"
+
+msgid "Custom variant return later"
+msgstr "自定义延后variant返回值"
+
+msgid "Until"
+msgstr "Until"
+
+msgid "Autocomplete until"
+msgstr "自动完成until语句"
+
+msgid "Use default until"
+msgstr "使用默认until语句"
+
+msgid "Custom until space"
+msgstr "自定义until语句空间"
+
+msgid "Custom until return"
+msgstr "自定义until返回值"
+
+msgid "Custom until space later"
+msgstr "自定义延后until空间"
+
+msgid "Custom until return later"
+msgstr "自定义延后until返回值"
+
+msgid "Autocomplete loop"
+msgstr "自动完成loop语句"
+
+msgid "Use default loop"
+msgstr "使用默认loop语句"
+
+msgid "Custom loop space"
+msgstr "自定义loop语句空间"
+
+msgid "Custom loop return"
+msgstr "自定义loop返回值"
+
+msgid "Custom loop space later"
+msgstr "自定义延后loop语句空间"
+
+msgid "Custom loop return later"
+msgstr "自定义延后loop返回值"
+
+msgid "Autocomplete debug?"
+msgstr "自动完成debug语句？"
+
+msgid "Autocomplete debug"
+msgstr "自动完成debug语句"
+
+msgid "Use default debug"
+msgstr "使用默认debug语句"
+
+msgid "Custom debug space"
+msgstr "自定义debug语句空间"
+
+msgid "Custom debug return"
+msgstr "自定义debug返回值"
+
+msgid "Custom debug space later"
+msgstr "自定义延后debug空间"
+
+msgid "Custom debug return later"
+msgstr "自定义延后debug返回值"
+
+msgid "Autocomplete check?"
+msgstr "自动完成check语句？"
+
+msgid "Autocomplete check"
+msgstr "自动完成check语句"
+
+msgid "Use default check"
+msgstr "使用默认check语句"
+
+msgid "Custom check space"
+msgstr "自定义check语句空间"
+
+msgid "Custom check return"
+msgstr "自定义check返回值"
+
+msgid "Custom check space later"
+msgstr "自定义延后check空间"
+
+msgid "Custom check return later"
+msgstr "自定义延后check返回值"
+
+msgid "Autocomplete rename?"
+msgstr "自动完成rename语句？"
+
+msgid "Inherit clauses keywords"
+msgstr "Inherit语句关键字"
+
+msgid "Autocomplete rename"
+msgstr "自动完成rename语句"
+
+msgid "Use default rename"
+msgstr "使用默认rename语句"
+
+msgid "Custom rename space"
+msgstr "自定义rename语句空间"
+
+msgid "Custom rename return"
+msgstr "自定义rename语句返回值"
+
+msgid "Custom rename space later"
+msgstr "自定义延后rename空间"
+
+msgid "Custom rename return later"
+msgstr "自定义延后rename返回值"
+
+msgid "Autocomplete redefine?"
+msgstr "自动完成redefine语句？"
+
+msgid "Redefine"
+msgstr "Redefine"
+
+msgid "Autocomplete redefine"
+msgstr "自动完成redefine语句"
+
+msgid "Use default redefine"
+msgstr "使用默认redefine语句"
+
+msgid "Custom redefine space"
+msgstr "自定义redefine语句空间"
+
+msgid "Custom redefine return"
+msgstr "自定义redefine返回值"
+
+msgid "Custom redefine space later"
+msgstr "自定义延后redefine空间"
+
+msgid "Custom redefine return later"
+msgstr "自定义延后redefine返回值"
+
+msgid "Autocomplete undefine?"
+msgstr "自动完成undefine语句？"
+
+msgid "Undefine"
+msgstr "Undefine"
+
+msgid "Autocomplete undefine"
+msgstr "自动完成undefine语句"
+
+msgid "Use default undefine"
+msgstr "使用默认undefine语句"
+
+msgid "Custom undefine space"
+msgstr "自定义undefine语句空间"
+
+msgid "Custom undefine return"
+msgstr "自定义undefine返回值"
+
+msgid "Custom undefine space later"
+msgstr "自定义延后undefine空间"
+
+msgid "Custom undefine return later"
+msgstr "自定义延后undefine返回值"
+
+msgid "Autocomplete select?"
+msgstr "自动完成select语句？"
+
+msgid "Select"
+msgstr "Select"
+
+msgid "Autocomplete select"
+msgstr "自动完成select语句"
+
+msgid "Use default select"
+msgstr "使用默认select语句"
+
+msgid "Custom select space"
+msgstr "自定义select语句空间"
+
+msgid "Custom select return"
+msgstr "自定义select语句返回值"
+
+msgid "Custom select space later"
+msgstr "自定义延后select空间"
+
+msgid "Custom select return later"
+msgstr "自定义延后select返回值"
+
+msgid "Autocomplete export?"
+msgstr "自动完成export语句？"
+
+msgid "Export"
+msgstr "Export"
+
+msgid "Autocomplete export"
+msgstr "自动完成export语句"
+
+msgid "Use default export"
+msgstr "使用默认export语句"
+
+msgid "Custom export space"
+msgstr "自定义export语句空间"
+
+msgid "Custom export return"
+msgstr "自定义export返回值"
+
+msgid "Custom export space later"
+msgstr "自定义延后export空间"
+
+msgid "Custom export return later"
+msgstr "自定义延后export返回值"
+
+msgid "Autocomplete Precursor?"
+msgstr "自动完成Precursor语句？"
+
+msgid "Other keywords"
+msgstr "其它关键字"
+
+msgid "Precursor"
+msgstr "Precursor"
+
+msgid "Autocomplete precursor"
+msgstr "自动完成Precursor语句"
+
+msgid "Use default precursor"
+msgstr "使用默认precursor语句"
+
+msgid "Custom precursor space"
+msgstr "自定义precursor语句空间"
+
+msgid "Custom precursor return"
+msgstr "自定义precursor返回值"
+
+msgid "Custom precursor space later"
+msgstr "自定义延后precursor空间"
+
+msgid "Custom precursor return later"
+msgstr "自定义延后precursor返回值"
+
+msgid "Autocomplete create?"
+msgstr "自动完成create语句？"
+
+msgid "Autocomplete create"
+msgstr "自动完成create语句"
+
+msgid "Use default create"
+msgstr "使用默认create语句"
+
+msgid "Custom create space"
+msgstr "自定义create语句空间"
+
+msgid "Custom create return"
+msgstr "自定义create返回值"
+
+msgid "Custom create space later"
+msgstr "自定义延后create空间"
+
+msgid "Custom create return later"
+msgstr "自定义延后create返回值"
+
+msgid "Autocomplete obsolete?"
+msgstr "自动完成obsolete语句？"
+
+msgid "Obsolete"
+msgstr "Obsolete"
+
+msgid "Autocomplete obsolete"
+msgstr "自动完成obsolete语句"
+
+msgid "Use default obsolete"
+msgstr "使用默认obsolete语句"
+
+msgid "Custom obsolete space"
+msgstr "自定义obsolete语句空间"
+
+msgid "Custom obsolete return"
+msgstr "自定义obsolete语句返回值"
+
+msgid "Custom obsolete space later"
+msgstr "自定义延后obsolete语句空间"
+
+msgid "Custom obsolete return later"
+msgstr "自定义延后obsolete语句返回值"
+
+msgid "Autocomplete invariant?"
+msgstr "自动完成invariant语句？"
+
+msgid "Autocomplete invariant"
+msgstr "自动完成invariant语句"
+
+msgid "Use default invariant"
+msgstr "使用默认invariant语句"
+
+msgid "Custom invariant space"
+msgstr "自定义invariant语句空间"
+
+msgid "Custom invariant return"
+msgstr "自定义invariant语句返回值"
+
+msgid "Custom invariant space later"
+msgstr "自定义延后invariant空间"
+
+msgid "Custom invariant return later"
+msgstr "自定义延后invariant返回值"
+
+msgid "Autocomplete end?"
+msgstr "自动完成end语句？"
+
+msgid "End"
+msgstr "End"
+
+msgid "Autocomplete end"
+msgstr "自动完成end语句"
+
+msgid "Use default end"
+msgstr "使用默认end语句"
+
+msgid "Custom end space"
+msgstr "自定义end语句空间"
+
+msgid "Custom end return"
+msgstr "自定义end返回值"
+
+msgid "Custom end space later"
+msgstr "自定义延后end空间"
+
+msgid "Custom end return later"
+msgstr "自定义延后end返回值"
+
+msgid "String to be inserted."
+msgstr "插入的字符串。"
+
+msgid "Keyboard shortcuts"
+msgstr "快捷键"
+
+msgid "Toggle filter button in completion list."
+msgstr "在自动完成列表中切换过滤选项。"
+
+msgid "Toggle filter"
+msgstr "使用过滤器"
+
+msgid "Toggle show type in completion list."
+msgstr "在自动完成列表中切换显示型别选项。"
+
+msgid "Toggle show type"
+msgstr "显示型别"
+
+msgid "Key"
+msgstr "键"
+
+msgid "Toggle show signature"
+msgstr "显示签名"
+
+msgid "Toggle show disambiguated name"
+msgstr "显示非模糊名"
+
+msgid "Toggle remember size"
+msgstr "记录大小"
+
+msgid "Trigger feature completion."
+msgstr "自动完成方法名"
+
+msgid "Trigger class completion"
+msgstr "自动完成类名"
+
+msgid "Class autocomplete"
+msgstr "类自动完成"
+
+msgid "Trigger collapsing of all tree nodes."
+msgstr "闭合树中所有的结点。"
+
+msgid "Collapse all levels"
+msgstr "闭合所有层"
+
+msgid "Trigger collapsing of current tree node."
+msgstr "闭合树中当前结点。"
+
+msgid "Collapse tree node"
+msgstr "闭合树结点"
+
+msgid "Trigger insertion of customized string #1."
+msgstr "接入自定义字符串#1。"
+
+msgid "Customized insertion 1"
+msgstr "自定义插入1"
+
+msgid "Trigger insertion of customized string #2."
+msgstr "接入自定义字符串#2。"
+
+msgid "Customized insertion 2"
+msgstr "自定义插入2"
+
+msgid "Trigger insertion of customized string #3."
+msgstr "接入自定义字符串#3。"
+
+msgid "Customized insertion 3"
+msgstr "自定义插入3"
+
+msgid "Trigger expansion of all tree nodes."
+msgstr "展开树中所有结点。"
+
+msgid "Expand all levels"
+msgstr "展开所有层"
+
+msgid "Trigger expansion of current tree node."
+msgstr "展开树中当前结点。"
+
+msgid "Expand tree node"
+msgstr "展开树状结点"
+
+msgid "Trigger backward search."
+msgstr "向后搜索"
+
+msgid "Search backward"
+msgstr "查找上一个"
+
+msgid "Trigger forward search."
+msgstr "向前搜索"
+
+msgid "Search forward"
+msgstr "查找下一个"
+
+msgid "Trigger search on current selection and goes to previous result."
+msgstr "向前搜索当前选定的文本"
+
+msgid "Search selection forward"
+msgstr "查找下一个选区"
+
+msgid "Trigger search on current selection and goes to next result."
+msgstr "向后搜索当前选定的文本"
+
+msgid "Search selection backward"
+msgstr "查找上一个选中文本"
+
+msgid "Trigger quick search bar."
+msgstr "显示快速搜索栏。"
+
+msgid "Show quick search bar"
+msgstr "显示快速搜索栏"
+
+msgid "Trigger display of search panel focused on replace."
+msgstr "显示搜索面板并将焦点移到是替换文本框中。"
+
+msgid "Show search and replace panel"
+msgstr "显示查找替换面板"
+
+msgid "Trigger display of search panel."
+msgstr "显示搜索面板"
+
+msgid "Show search panel"
+msgstr "显示查找面板"
+
+msgid "Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"
+msgstr "本文没有在当前编辑器中被修改，而是在外部编辑器中被修改时重新载入文本吗？"
+
+msgid "Automatic update"
+msgstr "自动更新"
+
+msgid "Does text cursor blink?"
+msgstr "文本中的光标需要闪烁吗？"
+
+msgid "Blinking cursor"
+msgstr "闪烁光标"
+
+msgid "All-purpose editor font."
+msgstr "通用编辑器字体。"
+
+msgid "Editor font"
+msgstr "编辑器字体"
+
+msgid "Editor header font."
+msgstr "编辑器头部字体。"
+
+msgid "Header font"
+msgstr "编辑器头部字体"
+
+msgid "Keyword editor font"
+msgstr "编辑器关键字字体。"
+
+msgid "Keyword font"
+msgstr "关键字字体"
+
+msgid "Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."
+msgstr "编辑器左边缘宽度。提示:该宽度不是断点区域的宽度，而编辑器左侧空白区域宽度。"
+
+msgid "Left margin width"
+msgstr "左边缘宽度"
+
+msgid "Number of lines that will stay visible when you perform a page down or a page up operation."
+msgstr "向上翻页或向下翻页时保持可见的行数。"
+
+msgid "Scrolling common line count"
+msgstr "滚动普通行数"
+
+msgid "Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"
+msgstr "鼠标滚轮每次滚动翻一页吗？(如果该值为真，滚轮滚动值将被覆盖)"
+
+msgid "Mouse wheel scroll full page"
+msgstr "鼠标滚轮滚动整页"
+
+msgid "Number of lines scrolled using the mouse wheel."
+msgstr "鼠标滚轮滚动值。"
+
+msgid "Mouse wheel scroll size"
+msgstr "鼠标滚轮步长"
+
+msgid "Does a quadruple click select the entire document?"
+msgstr "连续点击四次选择整个文档吗？"
+
+msgid "Quadruple click enabled"
+msgstr "使用四连击"
+
+msgid "Automatically remove trailing white space from lines?"
+msgstr "自动清理每行多余的空字符吗？"
+
+msgid "Remove trailing white space"
+msgstr "清除多余空格"
+
+msgid "Should editor perform auto-indenting?"
+msgstr "启动编辑器自动缩进功能？"
+
+msgid "Smart identation"
+msgstr "智能缩进"
+
+msgid "Number of spaces that a tabulation character represents."
+msgstr "一个制表符所占的空格数。"
+
+msgid "Tab step"
+msgstr "制表符长度"
+
+msgid "Should tab character be used for auto-indentation?"
+msgstr "使用制表符进行自动缩进吗？"
+
+msgid "Use tab for indentation"
+msgstr "使用制表符缩进"
+
+msgid "Background color of line number margin."
+msgstr "行号区域的背景色。"
+
+msgid "Margin background color"
+msgstr "边缘背景色"
+
+msgid "Color of separator between line number margin and editor."
+msgstr "编辑器与行号区域之间分割线的颜色。"
+
+msgid "Margin separator color"
+msgstr "边缘分割线颜色"
+
+msgid "Color of line number text."
+msgstr "行号字体颜色。"
+
+msgid "Line number text color"
+msgstr "行号字体颜色"
+
+msgid "Background color used to highlight line with cursor in it."
+msgstr "选中文本中光标的背景色。"
+
+msgid "Cursor line highlight color"
+msgstr "光标焦点状态颜色"
+
+msgid "Background color used to highlight lines."
+msgstr "选中文本的背景色。"
+
+msgid "Highlight color"
+msgstr "选中区域字体颜色"
+
+msgid "Color for normal text."
+msgstr "普通文本字体颜色。"
+
+msgid "Normal text color"
+msgstr "普通字体颜色"
+
+msgid "Background color for normal text."
+msgstr "普通文本背景色。"
+
+msgid "Normal background color"
+msgstr "普通背景色"
+
+msgid "Color of selected text."
+msgstr "选中文本的字体颜色。"
+
+msgid "Selection text color"
+msgstr "选中字体颜色"
+
+msgid "Background color of selected text."
+msgstr "选中文本的背景色。"
+
+msgid "Selection background color"
+msgstr "选中区域背景色"
+
+msgid "Background color of selected text when not focused."
+msgstr "非焦点时选中文本的背景色。"
+
+msgid "Focus out selection background color"
+msgstr "非焦点选中区域背景色"
+
+msgid "Color of string text."
+msgstr "字符串文本的字体颜色。"
+
+msgid "String text color"
+msgstr "字符串字体颜色"
+
+msgid "Background color of string text."
+msgstr "字符串文本的背景色。"
+
+msgid "String background color"
+msgstr "字符串背景色"
+
+msgid "Color of keyword text."
+msgstr "关键字文本的字体颜色。"
+
+msgid "Keyword text color"
+msgstr "关键字字体颜色"
+
+msgid "Background color of keyword text."
+msgstr "关键字文本的背景色。"
+
+msgid "Keyword background color"
+msgstr "关键字背景色"
+
+msgid "Color of space characters."
+msgstr "空字符字体颜色。"
+
+msgid "Spaces text color"
+msgstr "空字符字体颜色"
+
+msgid "Background color of space characters."
+msgstr "空字符背景色。"
+
+msgid "Spaces background color"
+msgstr "空白字符背景色"
+
+msgid "Color of comments text."
+msgstr "注释文本的字体颜色。"
+
+msgid "Comments text color"
+msgstr "注释文本字体颜色"
+
+msgid "Background color of coments text."
+msgstr "注释文本的背景色。"
+
+msgid "Comments background color"
+msgstr "注释背景色"
+
+msgid "Color of operator text."
+msgstr "操作符的字体颜色。"
+
+msgid "Operator text color"
+msgstr "操作符字体颜色"
+
+msgid "Background color of operator text."
+msgstr "操作符的背景色。"
+
+msgid "Operator background color"
+msgstr "操作符背景色"
+
+msgid "Color of number text."
+msgstr "数字的字体颜色。"
+
+msgid "Number text color"
+msgstr "数字字体颜色"
+
+msgid "Background color of number text."
+msgstr "数字的背景色。"
+
+msgid "Number background color"
+msgstr "数字背景色"
+
+msgid "Indicates if editor line drawing is first buffered and then drawn, or just drawn directly to the screen.  If set to True, content will not flicker, but drawing performance will be reduced."
+msgstr "编辑器显示文本时是否使用双重缓冲。如果使用，则可以避免闪烁，但是性能会下降。"
+
+msgid "Use buffered line"
+msgstr "使用缓冲行"
+
+msgid "Indicates if editor displays the line numbers by default."
+msgstr "编辑器默认显示行号吗？"
+
+msgid "Show line numbers"
+msgstr "显示行号"
+
+msgid "Indicates if editor should go to the beginning on the first non-whitespace character, on a line, when the HOME key is pressed."
+msgstr "当按下Home键时, 编辑器中的光标移动到当前行第一个非空字符前吗？"
+
+msgid "Smart home"
+msgstr "智能home键"
+
+msgid "Place new editor tab at left side of editor's area?"
+msgstr "新编辑标签放在左边吗？"
+
+msgid "New tab at left"
+msgstr "左侧新制表符"
+
+msgid "First external command."
+msgstr "第1个外部命令。"
+
+msgid "External commands"
+msgstr "外部命令"
+
+msgid "External command 0"
+msgstr "外部命令0"
+
+msgid "Second external command."
+msgstr "第2个外部命令。"
+
+msgid "External command 1"
+msgstr "外部命令1"
+
+msgid "Third external command."
+msgstr "第3个外部命令。"
+
+msgid "External command 2"
+msgstr "外部命令2"
+
+msgid "Forth external command."
+msgstr "第4个外部命令。"
+
+msgid "External command 3"
+msgstr "外部命令3"
+
+msgid "Fifth external command."
+msgstr "第5个外部命令。"
+
+msgid "External command 4"
+msgstr "外部命令4"
+
+msgid "Sixth external command."
+msgstr "第6个外部命令。"
+
+msgid "External command 5"
+msgstr "外部命令5"
+
+msgid "Seventh external command."
+msgstr "第7个外部命令。"
+
+msgid "External command 6"
+msgstr "外部命令6"
+
+msgid "Eighth external command."
+msgstr "第8个外部命令。"
+
+msgid "External command 7"
+msgstr "外部命令7"
+
+msgid "Ninth external command."
+msgstr "第9个外部命令。"
+
+msgid "External command 8"
+msgstr "外部命令8"
+
+msgid "Tenth external command."
+msgstr "第10个外部命令。"
+
+msgid "External command 9"
+msgstr "外部命令9"
+
+msgid "First external command shortcut."
+msgstr "第1个外部命令的快捷键。"
+
+msgid "Shortcut 0"
+msgstr "快捷键0"
+
+msgid "Second external command shortcut."
+msgstr "第2个外部命令的快捷键。"
+
+msgid "Shortcut 1"
+msgstr "快捷键1"
+
+msgid "Third external command shortcut."
+msgstr "第3个外部命令的快捷键。"
+
+msgid "Shortcut 2"
+msgstr "快捷键2"
+
+msgid "Forth external command shortcut."
+msgstr "第4个外部命令的快捷键。"
+
+msgid "Shortcut 3"
+msgstr "快捷键3"
+
+msgid "Fifth external command shortcut."
+msgstr "第5个外部命令的快捷键。"
+
+msgid "Shortcut 4"
+msgstr "快捷键4"
+
+msgid "Sixth external command shortcut."
+msgstr "第6个外部命令的快捷键。"
+
+msgid "Shortcut 5"
+msgstr "快捷键5"
+
+msgid "Seventh external command shortcut."
+msgstr "第7个外部命令的快捷键。"
+
+msgid "Shortcut 6"
+msgstr "快捷键6"
+
+msgid "Eighth external command shortcut."
+msgstr "第8个外部命令的快捷键。"
+
+msgid "Shortcut 7"
+msgstr "快捷键7"
+
+msgid "Ninth external command shortcut."
+msgstr "第9个外部命令的快捷键。"
+
+msgid "Shortcut 8"
+msgstr "快捷键8"
+
+msgid "Tenth external command shortcut."
+msgstr "第10个外部命令的快捷键。"
+
+msgid "Shortcut 9"
+msgstr "快捷键9"
+
+msgid "Command to read Adobe Acrobat files."
+msgstr "打开Adobe Acrobat文件的命令。"
+
+msgid "Acrobat reader"
+msgstr "Acrobat阅读器"
+
+msgid "Internet browser."
+msgstr "Internet浏览器。"
+
+msgid "Internet browser"
+msgstr "Internet浏览器"
+
+msgid "Height of dynamic library window."
+msgstr "动态运行库窗口的高度。"
+
+msgid "Dynamic library window width"
+msgstr "动态运行库窗口宽度"
+
+msgid "Width of dynamic library window."
+msgstr "动态运行库窗口的宽度。"
+
+msgid "Dynamic library window height"
+msgstr "动态运行库窗口高度"
+
+msgid "Height of preferences window."
+msgstr "选项窗口的高度。"
+
+msgid "Preference window width"
+msgstr "选项窗口宽度"
+
+msgid "Width of preferences window."
+msgstr "选项窗口的宽度。"
+
+msgid "Preference window height"
+msgstr "选项窗口高度"
+
+msgid "Show hidden preferences in preference window?"
+msgstr "在选项窗口中显示隐藏选项吗？"
+
+msgid "Show hidden preferences"
+msgstr "显示隐藏选项"
+
+msgid "Locale current system uses. (Restart to take effect)"
+msgstr "当前系统使用的区域语言。(需要重新启动)"
+
+msgid "Locale"
+msgstr "区域语言"
+
+msgid "Initial status of incremental search."
+msgstr "增量搜索的初始值。"
+
+msgid "Search tool"
+msgstr "查找工具"
+
+msgid "Init incremental"
+msgstr "增量搜索初始值"
+
+msgid "Initial status of match case."
+msgstr "匹配大小写的初始值。"
+
+msgid "Init match case"
+msgstr "匹配大小写初始值"
+
+msgid "Initial status of using regular_expression."
+msgstr "使用正则表达式的初始值。"
+
+msgid "Init use regular expression"
+msgstr "使用正则表达式初始值"
+
+msgid "Initial status of whole word."
+msgstr "字匹配的初始值。"
+
+msgid "Init whole word"
+msgstr "匹配单词初始值"
+
+msgid "Initial status of search backwards."
+msgstr "向退搜索的初始值。"
+
+msgid "Init search backwards"
+msgstr "查找上一个初始值"
+
+msgid "Initial search scope."
+msgstr "搜索范围的初始值。"
+
+msgid "Init scope"
+msgstr "搜索范围初始值"
+
+msgid "Initial status of only compiled classes."
+msgstr "搜索已编译的类的初始值。"
+
+msgid "Init only compiled classes"
+msgstr "已编译的类初始值"
+
+msgid "Initial status of searching subclusters."
+msgstr "递归搜索的初始值。"
+
+msgid "Init subclusters"
+msgstr "子类簇初始值"
+
+msgid "Background color of none result keyword field."
+msgstr "none, result关键字的背景色。"
+
+msgid "None result keyword field background color"
+msgstr "none, result关键字背景色"
+
+msgid "Show unchanged features in class ANY by default?"
+msgstr "默认显示ANY类中未改变的方法吗？"
+
+msgid "Show unchanged feature from any"
+msgstr "显示ANY中未变化的方法"
+
+msgid "Show tooltip?"
+msgstr "显示信息提示？"
+
+msgid "Show tooltip"
+msgstr "显示信息提示"
+
+msgid "Backgroud color of odd rows in class browser."
+msgstr "类浏览器中单数行的背景色。"
+
+msgid "Odd row background color"
+msgstr "奇数行背景色"
+
+msgid "Backgroud color of even rows in class browser."
+msgstr "类浏览器中双数行的背景色。"
+
+msgid "Even row background color"
+msgstr "双数行背景色"
+
+msgid "Default name for a renamed feature."
+msgstr "被重命名的默认方法名。"
+
+msgid "Refactoring"
+msgstr "重构"
+
+msgid "Feature rename"
+msgstr "方法重命名"
+
+msgid "New feature name"
+msgstr "新方法名"
+
+msgid "Should occurrences of the feature name in comments be changed?"
+msgstr "改变注释中出现的方法名？"
+
+msgid "Update comments"
+msgstr "更新注释"
+
+msgid "Should occurrences of the feature name in strings be changed?"
+msgstr "改变字符串中出现的方法名？"
+
+msgid "Update strings"
+msgstr "更新字符串"
+
+msgid "Should file be renamed to a new name?"
+msgstr "文件被重命名成新文件名吗？"
+
+msgid "Class rename"
+msgstr "类重命名"
+
+msgid "File rename"
+msgstr "文件重命名 "
+
+msgid "Old name of class"
+msgstr "旧类名"
+
+msgid "Old class name"
+msgstr "旧类名"
+
+msgid "New name of class"
+msgstr "新类名"
+
+msgid "New class name"
+msgstr "新类名"
+
+msgid "Should all classes be processed?"
+msgstr "处理所有的类吗？"
+
+msgid "All classes"
+msgstr "所有类"
+
+msgid "Should occurrences of the class name in comments be changed?"
+msgstr "改变注释中出现类吗？"
+
+msgid "Should occurrences of the class name in strings be changed?"
+msgstr "改变字符串中出现类吗？"
+
+msgid "Command used to launch a console."
+msgstr "打开终端的命令"
+
+msgid "Console shell command"
+msgstr "终端命令"
+
+msgid "Command used to launch  an external editor."
+msgstr "打开外部编辑器命令"
+
+msgid "External editor command"
+msgstr "外部编辑器命令"
+
+msgid "Command to open a file in external browser."
+msgstr "在外部编辑器中打开文件的命令。"
+
+msgid "File browser command"
+msgstr "浏览文件命令"
+
+msgid "Microsoft .NET application"
+msgstr "Microsoft .NET应用程序"
+
+msgid "Graphics application, multi-platform, with EiffelVision 2"
+msgstr "使用EiffelVision 2库的多操作系统图形界面应用程序"
+
+msgid "Graphics application, Windows only, with WEL"
+msgstr "使用WEL库的Windows平台图形界面应用程序"
+
+msgid "Wizard application, based on EiffelWizard"
+msgstr "使用EiffelWizard库的向导应用程序"
 

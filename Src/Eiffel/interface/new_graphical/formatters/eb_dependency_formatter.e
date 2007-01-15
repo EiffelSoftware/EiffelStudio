@@ -274,11 +274,28 @@ feature {NONE} -- Implementation
 			associated_stone_valid: is_stone_valid (associated_stone)
 		local
 			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
+			l_domain_item: EB_DOMAIN_ITEM
+			l_folder_item: EB_FOLDER_DOMAIN_ITEM
+			l_criterion: QL_CLASS_CRITERION
 		do
-			create l_domain_generator.make (class_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_compiled, []), True)
+			l_criterion := class_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_compiled, [])
+			l_domain_item := domain_item_from_stone (final_stone_from_stone (associated_stone))
+			if l_domain_item.is_folder_item then
+				l_folder_item ?= l_domain_item
+				if browser.recursive_button.is_selected then
+					l_folder_item.enable_search_for_class_recursive
+				else
+					l_folder_item.disable_search_for_class_recursive
+				end
+			elseif l_domain_item.is_group_item then
+				if not browser.recursive_button.is_selected then
+					l_criterion := l_criterion and create {QL_CLASS_PATH_IN_CRI}.make_with_flag ("", False)
+				end
+			end
+			create l_domain_generator.make (l_criterion, True)
 			l_domain_generator.enable_optimization
 			l_domain_generator.disable_distinct_item
-			Result ?= domain_item_from_stone (final_stone_from_stone (associated_stone)).domain_without_scope.new_domain (l_domain_generator)
+			Result ?= l_domain_item.domain_without_scope.new_domain (l_domain_generator)
 		ensure
 			result_attached: Result /= Void
 		end

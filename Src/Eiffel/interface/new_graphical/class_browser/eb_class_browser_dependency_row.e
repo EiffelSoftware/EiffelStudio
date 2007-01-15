@@ -36,6 +36,10 @@ feature{NONE} -- Initialization
 			set_row_type (a_row_type)
 			set_browser (a_browser)
 			set_should_current_row_be_displayed (True)
+			create grid_item_internal
+			create image.make (20)
+			create {LINKED_LIST [EDITOR_TOKEN]}base_text.make
+			generate_base_text_and_image
 		end
 
 feature -- Access
@@ -46,59 +50,22 @@ feature -- Access
 	row_node: EB_TREE_NODE [EB_CLASS_BROWSER_DEPENDENCY_ROW]
 			-- Row node where current belongs
 
+	base_text: LIST [EDITOR_TOKEN]
+			-- Base text of Current row
+
+	image: STRING
+			-- Image of current row used in grid search
+
 	grid_item: EB_GRID_COMPILER_ITEM is
 			-- Grid item to be displayed
 		local
-			l_path_style: like item_path_style
-			l_class: QL_CLASS
-			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
 			l_text: LIST [EDITOR_TOKEN]
 		do
-			if grid_item_internal = Void then
-				create grid_item_internal
-				inspect
-					row_type
-				when folder_row_type then
-							-- For folder row
-					l_class ?= item
-					check l_class /= Void end
-					l_text := path_grid_item_text (l_class, False, True, False)
-					l_text.append (child_count)
-					grid_item_internal.set_text_with_tokens (l_text)
-					grid_item_internal.set_image (grid_item_internal.text)
-					grid_item_internal.set_pixmap (pixmap_from_group_path (l_class.class_c.group, l_class.class_i.path))
-				else
-						-- For rows other than folder row
-					l_path_style := item_path_style
-					if should_path_be_displayed then
-						l_path_style.enable_indirect_parent
-						l_path_style.enable_parent
-					else
-						l_path_style.disable_indirect_parent
-						l_path_style.disable_parent
-					end
-					if item.is_invariant_feature then
-						l_path_style.path_printer.set_feature_style (feature_with_written_class_style)
-					elseif item.is_real_feature then
-						l_path_style.path_printer.set_feature_style (feature_name_style)
-					end
-					l_path_style.set_item (item)
-					l_text := l_path_style.text
-					l_text.append (child_count)
-					grid_item_internal.set_text_with_tokens (l_text)
-					grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (item))
-					grid_item_internal.set_image (grid_item_internal.text)
-
-							-- For referencer class row, we setup a tooltip to display path of that class.
-					if row_type = referencer_class_row_type then
-						l_class ?= item
-						check l_class /= Void end
-						l_tooltip := new_general_tooltip (grid_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
-						l_tooltip.before_display_actions.extend (agent setup_general_tooltip (agent path_tooltip_text (l_class), l_tooltip))
-						grid_item_internal.set_general_tooltip (l_tooltip)
-					end
-
-				end
+			if not is_up_to_date then
+				set_is_up_to_date (True)
+				l_text := base_text.twin
+				l_text.append (child_count)
+				grid_item_internal.set_text_with_tokens (l_text)
 			end
 			Result := grid_item_internal
 		ensure
@@ -164,6 +131,9 @@ feature -- Access
 	row_type: INTEGER
 			-- Type of current row
 			-- Row type indicates
+
+	row_count: INTEGER
+			-- Row count which should be displayed after row text
 
 feature -- Status report
 
@@ -292,6 +262,7 @@ feature -- Grid binding
 			set_grid_row (a_row)
 		end
 
+
 	refresh_row is
 			-- Refresh current row.
 		require
@@ -300,8 +271,20 @@ feature -- Grid binding
 			l_column: INTEGER
 		do
 			l_column := grid_item.column.index
-			grid_item_internal := Void
 			bind_row (grid_row, l_column)
+		end
+
+	set_row_count (a_row_count: INTEGER) is
+			-- Set `row_count' with `a_row_count'.
+		do
+			if row_count /= a_row_count then
+				set_is_up_to_date (False)
+				row_count := a_row_count
+			end
+		ensure
+			row_count_set: row_count = a_row_count
+			is_up_to_date_set: ((a_row_count /= old row_count) implies not is_up_to_date) and then
+							   ((a_row_count = old row_count) implies (is_up_to_date = old is_up_to_date))
 		end
 
 feature{NONE} -- Implementation
@@ -446,7 +429,7 @@ feature{NONE} -- Implementation
 			l_plain_text_style: like plain_text_style
 		do
 			create l_str.make (8)
-			l_count := row_node.children.count
+			l_count := row_count
 			if l_count > 0 then
 				l_str.append (ti_space)
 				l_str.append (ti_l_parenthesis)
@@ -462,10 +445,86 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+	generate_base_text_and_image is
+			-- Generate `base_text' and `image'.
+		local
+			l_path_style: like item_path_style
+			l_class: QL_CLASS
+			l_text: like base_text
+			l_image: STRING
+			l_tooltip: EB_EDITOR_TOKEN_TOOLTIP
+			l_grid_item_internal: like grid_item_internal
+		do
+			l_grid_item_internal := grid_item_internal
+			inspect
+				row_type
+			when folder_row_type then
+						-- For folder row
+				l_class ?= item
+				check l_class /= Void end
+				base_text.append (path_grid_item_text (l_class, False, True, False))
+				l_grid_item_internal.set_pixmap (pixmap_from_group_path (l_class.class_c.group, l_class.class_i.path))
+			else
+					-- For rows other than folder row
+				l_path_style := item_path_style
+				if should_path_be_displayed then
+					l_path_style.enable_indirect_parent
+					l_path_style.enable_parent
+				else
+					l_path_style.disable_indirect_parent
+					l_path_style.disable_parent
+				end
+				if item.is_invariant_feature then
+					l_path_style.path_printer.set_feature_style (feature_with_written_class_style)
+				elseif item.is_real_feature then
+					l_path_style.path_printer.set_feature_style (feature_name_style)
+				end
+				l_path_style.set_item (item)
+				base_text.append (l_path_style.text)
+				grid_item_internal.set_pixmap (pixmap_for_query_lanaguage_item (item))
+
+						-- For referencer class row, we setup a tooltip to display path of that class.
+				if row_type = referencer_class_row_type then
+					l_class ?= item
+					check l_class /= Void end
+					l_tooltip := new_general_tooltip (l_grid_item_internal, agent: BOOLEAN do Result := browser.should_tooltip_be_displayed end)
+					l_tooltip.before_display_actions.extend (agent setup_general_tooltip (agent path_tooltip_text (l_class), l_tooltip))
+					l_grid_item_internal.set_general_tooltip (l_tooltip)
+				end
+			end
+
+				-- Setup image for grid search.
+			from
+				l_text := base_text
+				l_image := image
+				l_text.start
+			until
+				l_text.after
+			loop
+				l_image.append (l_text.item.image)
+				l_text.forth
+			end
+			l_grid_item_internal.set_image (l_image)
+		end
+
+	is_up_to_date: BOOLEAN
+			-- Is status of Current row up-to-date?
+
+	set_is_up_to_date (b: BOOLEAN) is
+			-- Set `is_up_to_date' with `b'.
+		do
+			is_up_to_date := b
+		ensure
+			is_up_to_date_set: is_up_to_date = b
+		end
+
 invariant
 	item_attached: item /= Void
 	row_node_attached: row_node /= Void
 	row_type_valid: is_row_type_valid (row_type)
+	image_attached: image /= Void
+	grid_item_internal_attached: grid_item_internal /= Void
+	base_text_attached: base_text /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

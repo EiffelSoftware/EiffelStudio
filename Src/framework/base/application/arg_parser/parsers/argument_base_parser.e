@@ -1298,7 +1298,7 @@ feature {NONE} -- Usage
 	copyright: STRING is
 			-- Copyright information
 		once
-			Result := "Copyright Eiffel Software 1985-2006. All Rights Reserved."
+			Result := "Copyright Eiffel Software 1985-2007. All Rights Reserved."
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -1700,7 +1700,7 @@ invariant
 	max_display_width_positive: max_display_width > 0
 
 indexing
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

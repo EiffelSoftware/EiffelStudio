@@ -23,14 +23,28 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_flag
 
 feature{NONE} -- Initialization
 
 	make (a_name: STRING) is
 			-- Initialize `name' with `a_name'.
+			-- Set `is_recursive' to True by default.
 		do
 			make_with_setting (a_name, True, True)
+			is_recursive := True
+		ensure
+			is_recursive_set: is_recursive
+		end
+
+	make_with_flag (a_name: STRING; a_recursive: BOOLEAN) is
+			-- Initialize `name' with `a_name' and `is_recursive' with `a_recursive'.
+		do
+			make (a_name)
+			is_recursive := a_recursive
+		ensure
+			is_recursive_set: is_recursive = a_recursive
 		end
 
 feature -- Evaluate
@@ -41,7 +55,11 @@ feature -- Evaluate
 			if name.is_empty then
 				Result := True
 			else
-				Result := a_item.conf_class.path.substring (1, name.count).is_equal (name)
+				if is_recursive then
+					Result := a_item.conf_class.path.substring (1, name.count).is_equal (name)
+				else
+					Result := a_item.conf_class.path.is_equal (name)
+				end
 			end
 		end
 
@@ -52,6 +70,9 @@ feature -- Status report
 		do
 			Result := False
 		end
+
+	is_recursive: BOOLEAN;
+			--Is path search recursive?
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

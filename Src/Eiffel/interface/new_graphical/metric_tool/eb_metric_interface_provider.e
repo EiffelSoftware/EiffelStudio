@@ -391,6 +391,9 @@ feature -- Domain item
 				elseif l_domain_item.is_target_item then
 					create {EB_METRIC_TARGET_DOMAIN_ITEM} Result.make (l_domain_item.id)
 				end
+				if l_domain_item.library_target_uuid /= Void then
+					Result.set_library_target_uuid (l_domain_item.library_target_uuid)
+				end
 			end
 		end
 

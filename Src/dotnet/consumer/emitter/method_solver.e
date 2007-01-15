@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 	suffix_table: HASHTABLE is
 			--
 		once
-			create Result.make (100, {STRING_COMPARER}.invariant_culture_ignore_case)
+			create Result.make (100)
 		ensure
 			result_attached: Result /= Void
 		end

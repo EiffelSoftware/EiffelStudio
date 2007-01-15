@@ -3,7 +3,7 @@ indexing
 		Interface of a multi-platform process launcher(on Win32, .Net and Unix/Linux)
 		Instance of this class is not guaranteed to be thread safe.
 		Usage:
-			1. Use `PROCESS_FACTORY' to get new PROCESS object.
+			1. Use {PROCESS_FACTORY} to get new PROCESS object.
 			2. Invoke IO redirection features to redirect io to certain devices. By default,
 			   IO of launched process is not redirected.
 			3. Invoke `launch' to launch process.
@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			-- Apply Void to `args' if no argument is necessary.
 		require
 			a_exec_name_not_void: a_exec_name /= Void
+			thread_capable: {PLATFORM}.is_thread_capable
 		deferred
 		ensure
 			command_line_not_void: command_line /= Void
@@ -42,6 +43,7 @@ feature {NONE} -- Initialization
 		require
 			command_line_not_void: cmd_line /= Void
 			command_line_not_empty: not cmd_line.is_empty
+			thread_capable: {PLATFORM}.is_thread_capable
 		deferred
 		ensure
 			command_line_not_void: command_line /= Void
@@ -248,6 +250,7 @@ feature -- Control
 	launch is
 			-- Launch process.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			process_not_running: not is_running
 			input_redirection_valid: is_input_redirection_valid (input_direction)
 			output_redirection_valid: is_output_redirection_valid (output_direction)
@@ -261,6 +264,7 @@ feature -- Control
 			-- `terminate' executes asynchronously. After calling `terminate', call `wait_to_exit' or `wait_to_exit_with_timeout'
 			-- to wait for process to exit.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			process_launched: launched
 			process_not_terminated: not force_terminated
 		deferred
@@ -274,6 +278,7 @@ feature -- Control
 			-- Note: on Unix, this feature can terminate whole process tree only when `is_launched_in_new_process_group' is set to True
 			-- before new process is launched.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			process_launched: launched
 			process_not_terminated: not force_terminated
 		deferred
@@ -283,6 +288,7 @@ feature -- Control
 			-- Wait until process has exited.
 			-- Note: child processes of launched process are not guaranteed to have exited after `wait_for_exit' returns.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			process_launched: launched
 		deferred
 		ensure
@@ -295,6 +301,7 @@ feature -- Control
 			-- Note: child processes of launched process are not guaranteed to have exited even `wait_for_exit_with_timeout' returns
 			-- with True.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			process_launched: launched
 			a_timeout_positive: a_timeout > 0
 		deferred
@@ -305,6 +312,7 @@ feature -- Interprocess data transmission
 	put_string (s: STRING) is
 			-- Send `s' into launched process as its input data.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			input_redirect_to_stream: input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream
 			process_running : is_running
 			string_not_void: s /= Void

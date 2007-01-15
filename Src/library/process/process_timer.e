@@ -11,6 +11,7 @@ feature {PROCESS} -- Control
 	start is
 			-- Start timer.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			process_launcher_not_void: process_launcher /= Void
 			timer_destroyed: destroyed
 		deferred
@@ -19,6 +20,7 @@ feature {PROCESS} -- Control
 	destroy is
 			-- Destroy timer.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			process_launcher_not_void: process_launcher /= Void
 		deferred
 		end
@@ -31,6 +33,7 @@ feature {PROCESS} -- Control
 			-- redirection has finished. So waiting for timer means wait for a safe status which indicats
 			-- all needed work has finished.
 		require
+			thread_capable: {PLATFORM}.is_thread_capable
 			process_launcher_not_void: process_launcher /= Void
 			a_timeout_not_negative: a_timeout >= 0
 			timer_started: has_started

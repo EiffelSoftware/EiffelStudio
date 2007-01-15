@@ -343,9 +343,9 @@ feature {NONE} -- Private status
 
 feature {NONE} -- Private Constants
 
-	from_string: INTEGER is unique
+	from_string: INTEGER is 1
 
-	from_text: INTEGER is unique;
+	from_text: INTEGER is 2;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -11,62 +11,62 @@ class
 
 feature{NONE} -- Element constants
 
-	t_none,
-	t_description,
-	t_metric,
-	t_basic_metric,
-	t_linear_metric,
-	t_ratio_metric,
-	t_scope_ratio_metric,
-	t_variable_metric,
-	t_criterion,
-	t_normal_criterion,
-	t_domain_criterion,
-	t_text_criterion,
-	t_path_criterion,
-	t_caller_criterion,
-	t_client_criterion,
-	t_and_criterion,
-	t_or_criterion,
-	t_value_criterion,
-	t_text,
-	t_path,
-	t_domain,
-	t_domain_item,
-	t_metric_archive,
-	t_tester,
-	t_tester_item,
-	t_constant_value,
-	t_metric_value: INTEGER is unique
+	t_none: INTEGER is 1
+	t_description: INTEGER is 2
+	t_metric: INTEGER is 3
+	t_basic_metric: INTEGER is 4
+	t_linear_metric: INTEGER is 5
+	t_ratio_metric: INTEGER is 6
+	t_scope_ratio_metric: INTEGER is 7
+	t_variable_metric: INTEGER is 8
+	t_criterion: INTEGER is 9
+	t_normal_criterion: INTEGER is 10
+	t_domain_criterion: INTEGER is 11
+	t_text_criterion: INTEGER is 12
+	t_path_criterion: INTEGER is 13
+	t_caller_criterion: INTEGER is 14
+	t_client_criterion: INTEGER is 15
+	t_and_criterion: INTEGER is 16
+	t_or_criterion: INTEGER is 17
+	t_value_criterion: INTEGER is 18
+	t_text: INTEGER is 19
+	t_path: INTEGER is 20
+	t_domain: INTEGER is 21
+	t_domain_item: INTEGER is 22
+	t_metric_archive: INTEGER is 23
+	t_tester: INTEGER is 24
+	t_tester_item: INTEGER is 25
+	t_constant_value: INTEGER is 26
+	t_metric_value: INTEGER is 27
 
 feature{NONE} -- Attribute constants
 
-	at_name,
-	at_unit,
-	at_numerator,
-	at_denominator,
-	at_denominator_scope,
-	at_negation,
-	at_case_sensitive,
-	at_regular_expression,
-	at_only_current_version,
-	at_id,
-	at_type,
-	at_coefficient,
-	at_time,
-	at_value,
-	at_uuid,
-	at_numerator_uuid,
-	at_denominator_uuid,
-	at_library_target_uuid,
-	at_filter,
-	at_numerator_coefficient,
-	at_denominator_coefficient,
-	at_normal,
-	at_only_syntactical,
-	at_indirect,
-	at_metric_name,
-	at_relation: INTEGER is unique
+	at_name: INTEGER is 1000
+	at_unit: INTEGER is 1001
+	at_numerator: INTEGER is 1002
+	at_denominator: INTEGER is 1003
+	at_denominator_scope: INTEGER is 1004
+	at_negation: INTEGER is 1005
+	at_case_sensitive: INTEGER is 1006
+	at_regular_expression: INTEGER is 1007
+	at_only_current_version: INTEGER is 1008
+	at_id: INTEGER is 1009
+	at_type: INTEGER is 1010
+	at_coefficient: INTEGER is 1011
+	at_time: INTEGER is 1012
+	at_value: INTEGER is 1013
+	at_uuid: INTEGER is 1014
+	at_numerator_uuid: INTEGER is 1015
+	at_denominator_uuid: INTEGER is 1016
+	at_library_target_uuid: INTEGER is 1017
+	at_filter: INTEGER is 1018
+	at_numerator_coefficient: INTEGER is 1019
+	at_denominator_coefficient: INTEGER is 1020
+	at_normal: INTEGER is 1021
+	at_only_syntactical: INTEGER is 1022
+	at_indirect: INTEGER is 1023
+	at_metric_name: INTEGER is 1024
+	at_relation: INTEGER is 1025
 
 feature{NONE} -- Text
 

@@ -166,18 +166,18 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false,
-	c_is_assembly,
-	c_is_cluster,
-	c_is_compiled,
-	c_is_library,
-	c_is_override,
-	c_true,
-	c_name_is,
-	c_is_class_set,
-	c_is_valid,
-	c_is_used_in_library,
-	c_value_of_metric_is: INTEGER is unique
+	c_false: INTEGER is 1
+	c_is_assembly: INTEGER is 2
+	c_is_cluster: INTEGER is 3
+	c_is_compiled: INTEGER is 4
+	c_is_library: INTEGER is 5
+	c_is_override: INTEGER is 6
+	c_true: INTEGER is 7
+	c_name_is: INTEGER is 8
+	c_is_class_set: INTEGER is 9
+	c_is_valid: INTEGER is 10
+	c_is_used_in_library: INTEGER is 11
+	c_value_of_metric_is: INTEGER is 12
 
 feature{NONE} -- Implementation
 

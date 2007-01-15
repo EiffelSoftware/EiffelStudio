@@ -508,7 +508,8 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 	pick_n_drop_status: INTEGER
 			-- Step of the pick n drop where the editor is.
 
-	pnd_pick, no_pnd: INTEGER is unique
+	pnd_pick: INTEGER is 1
+	no_pnd: INTEGER is 2
 
 feature {NONE} -- Text Loading
 

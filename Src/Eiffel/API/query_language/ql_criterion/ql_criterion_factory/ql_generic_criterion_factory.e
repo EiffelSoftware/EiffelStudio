@@ -173,18 +173,18 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false,
-	c_has_constraint,
-	c_has_creation_constraint,
-	c_is_compiled,
-	c_is_expanded,
-	c_is_reference,
-	c_is_visible,
-	c_true,
-	c_name_is,
-	c_text_contain,
-	c_contain_ast,
-	c_value_of_metric_is: INTEGER is unique;
+	c_false: INTEGER is 1
+	c_has_constraint: INTEGER is 2
+	c_has_creation_constraint: INTEGER is 3
+	c_is_compiled: INTEGER is 4
+	c_is_expanded: INTEGER is 5
+	c_is_reference: INTEGER is 6
+	c_is_visible: INTEGER is 7
+	c_true: INTEGER is 8
+	c_name_is: INTEGER is 9
+	c_text_contain: INTEGER is 10
+	c_contain_ast: INTEGER is 11
+	c_value_of_metric_is: INTEGER is 12
 
 feature{NONE} -- Implementation
 

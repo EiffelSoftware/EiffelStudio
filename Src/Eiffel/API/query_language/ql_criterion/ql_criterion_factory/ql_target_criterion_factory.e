@@ -96,11 +96,11 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false,
-	c_true,
-	c_name_is,
-	c_is_compiled,
-	c_value_of_metric_is: INTEGER is unique;
+	c_false: INTEGER is 1
+	c_true: INTEGER is 2
+	c_name_is: INTEGER is 3
+	c_is_compiled: INTEGER is 4
+	c_value_of_metric_is: INTEGER is 5
 
 feature{NONE} -- Implementation
 

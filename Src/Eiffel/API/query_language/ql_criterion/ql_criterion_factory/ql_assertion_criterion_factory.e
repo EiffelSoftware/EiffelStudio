@@ -233,24 +233,24 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false,
-	c_has_expression,
-	c_has_tag,
-	c_is_compiled,
-	c_is_ensure,
-	c_is_ensure_then,
-	c_is_immediate,
-	c_is_invariant,
-	c_is_postcondition,
-	c_is_precondition,
-	c_is_require,
-	c_is_require_else,
-	c_is_visible,
-	c_true,
-	c_name_is,
-	c_text_contain,
-	c_contain_ast,
-	c_value_of_metric_is: INTEGER is unique
+	c_false: INTEGER is 1
+	c_has_expression: INTEGER is 2
+	c_has_tag: INTEGER is 3
+	c_is_compiled: INTEGER is 4
+	c_is_ensure: INTEGER is 5
+	c_is_ensure_then: INTEGER is 6
+	c_is_immediate: INTEGER is 7
+	c_is_invariant: INTEGER is 8
+	c_is_postcondition: INTEGER is 9
+	c_is_precondition: INTEGER is 10
+	c_is_require: INTEGER is 11
+	c_is_require_else: INTEGER is 12
+	c_is_visible: INTEGER is 13
+	c_true: INTEGER is 14
+	c_name_is: INTEGER is 15
+	c_text_contain: INTEGER is 16
+	c_contain_ast: INTEGER is 17
+	c_value_of_metric_is: INTEGER is 18
 
 feature{NONE} -- Implementation
 

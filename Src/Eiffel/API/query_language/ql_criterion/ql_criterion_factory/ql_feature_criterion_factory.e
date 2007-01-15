@@ -584,56 +584,56 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false,
-	c_has_argument,
-	c_has_assertion,
-	c_has_assigner,
-	c_has_comment,
-	c_has_indexing,
-	c_has_local,
-	c_has_postcondition,
-	c_has_precondition,
-	c_has_rescue,
-	c_is_attribute,
-	c_is_compiled,
-	c_is_constant,
-	c_is_creator,
-	c_is_deferred,
-	c_is_exported,
-	c_is_external,
-	c_is_feature,
-	c_is_frozen,
-	c_is_function,
-	c_is_hidden,
-	c_is_immediate,
-	c_is_infix,
-	c_is_invariant_feature,
-	c_is_obsolete,
-	c_is_once,
-	c_is_origin,
-	c_is_prefix,
-	c_is_procedure,
-	c_is_unique,
-	c_is_query,
-	c_is_command,
-	c_is_visible,
-	c_is_from_any,
-	c_true,
-	c_name_is,
-	c_text_contain,
-	c_ancestor_is,
-	c_descendant_is,
-	c_implementors_of,
-	c_is_exported_to,
-	c_callee_is,
-	c_caller_is,
-	c_assignee_is,
-	c_assigner_is,
-	c_createe_is,
-	c_creator_is,
-	c_return_type_is,
-	c_contain_ast,
-	c_value_of_metric_is: INTEGER is unique
+	c_false: INTEGER is 1
+	c_has_argument: INTEGER is 2
+	c_has_assertion: INTEGER is 3
+	c_has_assigner: INTEGER is 4
+	c_has_comment: INTEGER is 5
+	c_has_indexing: INTEGER is 6
+	c_has_local: INTEGER is 7
+	c_has_postcondition: INTEGER is 8
+	c_has_precondition: INTEGER is 9
+	c_has_rescue: INTEGER is 10
+	c_is_attribute: INTEGER is 11
+	c_is_compiled: INTEGER is 12
+	c_is_constant: INTEGER is 13
+	c_is_creator: INTEGER is 14
+	c_is_deferred: INTEGER is 15
+	c_is_exported: INTEGER is 16
+	c_is_external: INTEGER is 17
+	c_is_feature: INTEGER is 18
+	c_is_frozen: INTEGER is 19
+	c_is_function: INTEGER is 20
+	c_is_hidden: INTEGER is 21
+	c_is_immediate: INTEGER is 22
+	c_is_infix: INTEGER is 23
+	c_is_invariant_feature: INTEGER is 24
+	c_is_obsolete: INTEGER is 25
+	c_is_once: INTEGER is 26
+	c_is_origin: INTEGER is 27
+	c_is_prefix: INTEGER is 28
+	c_is_procedure: INTEGER is 29
+	c_is_unique: INTEGER is 30
+	c_is_query: INTEGER is 31
+	c_is_command: INTEGER is 32
+	c_is_visible: INTEGER is 33
+	c_is_from_any: INTEGER is 34
+	c_true: INTEGER is 35
+	c_name_is: INTEGER is 36
+	c_text_contain: INTEGER is 37
+	c_ancestor_is: INTEGER is 38
+	c_descendant_is: INTEGER is 39
+	c_implementors_of: INTEGER is 40
+	c_is_exported_to: INTEGER is 41
+	c_callee_is: INTEGER is 42
+	c_caller_is: INTEGER is 43
+	c_assignee_is: INTEGER is 44
+	c_assigner_is: INTEGER is 45
+	c_createe_is: INTEGER is 46
+	c_creator_is: INTEGER is 47
+	c_return_type_is: INTEGER is 48
+	c_contain_ast: INTEGER is 49
+	c_value_of_metric_is: INTEGER is 50
 
 feature{NONE} -- Implementation
 

@@ -102,20 +102,20 @@ feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 
 feature {NONE} -- Constants
 
-	icon_degree_minus_3_value,
-	icon_degree_minus_2_value,
-	icon_degree_minus_1_value,
-	icon_degree_0_value,
-	icon_degree_1_value,
-	icon_degree_2_value,
-	icon_degree_3_value,
-	icon_degree_4_value,
-	icon_degree_5_value,
-	icon_degree_6_value,
-	icon_open_project_value,
-	icon_wizard_ace_project_value,
-	icon_wizard_project_value,
-	icon_wizard_blank_project_value: INTEGER is unique;
+	icon_degree_minus_3_value: INTEGER is 1
+	icon_degree_minus_2_value: INTEGER is 2
+	icon_degree_minus_1_value: INTEGER is 3
+	icon_degree_0_value: INTEGER is 4
+	icon_degree_1_value: INTEGER is 5
+	icon_degree_2_value: INTEGER is 6
+	icon_degree_3_value: INTEGER is 7
+	icon_degree_4_value: INTEGER is 8
+	icon_degree_5_value: INTEGER is 9
+	icon_degree_6_value: INTEGER is 10
+	icon_open_project_value: INTEGER is 11
+	icon_wizard_ace_project_value: INTEGER is 12
+	icon_wizard_project_value: INTEGER is 13
+	icon_wizard_blank_project_value: INTEGER is 14;
 		-- Constants used for pixmap lookup.
 
 indexing

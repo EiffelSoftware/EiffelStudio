@@ -229,12 +229,12 @@ feature {NONE} -- Implementation
 	error_value: INTEGER
 			-- Error value
 
-	ok_value,
-	corrupt_value,
-	invalid_precompilation_value,
-	incompatible_value,
-	interrupt_value,
-	cannot_store_value: INTEGER is unique
+	ok_value: INTEGER is 1
+	corrupt_value: INTEGER is 2
+	invalid_precompilation_value: INTEGER is 3
+	incompatible_value: INTEGER is 4
+	interrupt_value: INTEGER is 5
+	cannot_store_value: INTEGER is 6
 			-- Error values
 
 	retrieved_object: ANY is

@@ -464,243 +464,243 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-			icon_add_exported_feature_color_value,
-			icon_attribute_symbol_value,
-			icon_auto_slice_limits_color_value,
-			icon_back_color_value,
-			icon_bkpt_info_color_value,
-			icon_center_diagram_color_value,
-			icon_check_exports_color_value,
-			icon_class_header_color_value,
-			icon_class_symbol_color_value,
-			icon_class_symbol_gray_value,
-			icon_cluster_symbol_color_value,
-			icon_cmd_history_color_value,
-			icon_color_color_value,
-			icon_compilation_error_value,
-			icon_compiled_value,
-			icon_compile_color_value,
-			icon_compiling_1_value,
-			icon_compiling_2_value,
-			icon_compiling_3_value,
-			icon_compiling_4_value,
-			icon_context_tool_color_value,
-			icon_copy_color_value,
-			icon_crop_color_value,
-			icon_cut_color_value,
-			icon_deferred_class_symbol_color_value,
-			icon_deferred_feature_value,
-			icon_light_deferred_class_color_value,
-			icon_delete_measure_color_value,
-			icon_delete_small_color_value,
-			icon_delete_view_color_value,
-			icon_development_window_color_value,
-			icon_dialog_window_value,
-			icon_disable_bkpt_color_value,
-			icon_display_labels_color_value,
-			icon_dotnet_import_color_value,
-			icon_dynamiclib_window_value,
-			icon_edit_exported_feature_color_value,
-			icon_editing_value,
-			icon_enable_bkpt_color_value,
-			icon_exec_quit_color_value,
-			icon_exec_step_color_value,
-			icon_exec_stop_color_value,
-			icon_expanded_object_value,
-			icon_export_to_png_color_value,
-			icon_stopped_value,
-			icon_external_feature_value,
-			icon_external_symbol_value,
-			icon_favorites_color_value,
-			icon_favorites_folder_color_value,
-			icon_feature_color_value,
-			icon_feature_clause_any_value,
-			icon_feature_clause_none_value,
-			icon_feature_clause_some_value,
-			icon_features_color_value,
-			icon_fill_cluster_color_value,
-			icon_finalize_color_value,
-			icon_del_bkpt_color_value,
-			icon_format_ancestors_color_value,
-			icon_format_attributes_color_value,
-			icon_format_clickable_color_value,
-			icon_format_clients_color_value,
-			icon_format_contract_color_value,
-			icon_format_deferreds_color_value,
-			icon_format_descendants_color_value,
-			icon_format_exporteds_color_value,
-			icon_format_externals_color_value,
-			icon_format_feature_ancestors_color_value,
-			icon_format_feature_callers_color_value,
-			icon_format_feature_descendants_color_value,
-			icon_format_feature_homonyms_color_value,
-			icon_format_feature_implementers_color_value,
-			icon_format_flat_color_value,
-			icon_format_interface_color_value,
-			icon_format_onces_color_value,
-			icon_format_routines_color_value,
-			icon_format_suppliers_color_value,
-			icon_format_text_color_value,
-			icon_forth_color_value,
-			icon_freeze_color_value,
-			icon_green_arrow_value,
-			icon_green_tick_value,
-			icon_help_tool_color_value,
-			icon_immediate_value_value,
-			icon_inherit_color_value,
-			icon_straight_arrows_color_value,
-			icon_minimize_all_color_value,
-			icon_new_agg_supplier_color_value,
-			icon_new_class_color_value,
-			icon_new_cluster_color_value,
-			icon_new_context_window_color_value,
-			icon_new_development_tool_color_value,
-			icon_new_dynamic_lib_color_value,
-			icon_new_editor_color_value,
-			icon_new_feature_color_value,
-			icon_new_inherit_color_value,
-			icon_new_measure_color_value,
-			icon_new_metric_color_value,
-			icon_new_supplier_color_value,
-			icon_no_stop_color_value,
-			icon_exe_up_to_date_value,
-			icon_object_symbol_value,
-			icon_once_symbol_value,
-			icon_open_file_color_value,
-			icon_paste_color_value,
-			icon_preference_window_value,
-			icon_open_exception_dialog_value,
-			icon_print_color_value,
-			icon_profiler_window_value,
-			icon_progress_dialog_color_value,
-			icon_quick_compile_color_value,
-			icon_restore_all_color_value,
-			icon_restore_all_unsaved_color_value,
-			icon_light_class_color_value,
-			icon_light_class_gray_value,
-			icon_light_cluster_color_value,
-			icon_recycle_bin_color_value,
-			icon_red_cross_value,
-			icon_redo_color_value,
-			icon_remove_exported_feature_color_value,
-			icon_reset_diagram_color_value,
-			icon_restore_view_color_value,
-			icon_run_color_value,
-			icon_debug_run_color_value,
-			icon_debugger_exception_value,
-			icon_running_1_value,
-			icon_running_2_value,
-			icon_running_3_value,
-			icon_save_color_value,
-			icon_save_measure_color_value,
-			icon_search_color_value,
-			icon_select_depth_color_value,
-			icon_select_metrics_color_value,
-			icon_send_stone_down_color_value,
-			icon_set_arguments_color_value,
-			icon_shell_color_value,
-			icon_sorter_color_value,
-			icon_static_external_symbol_value,
-			icon_static_object_symbol_value,
-			icon_step_into_color_value,
-			icon_step_out_color_value,
-			icon_super_cluster_color_value,
-			icon_supplier_color_value,
-			icon_system_color_value,
-			icon_system_info_color_value,
-			icon_toggle_clusters_color_value,
-			icon_toolbar_separator_value,
-			icon_undo_color_value,
-			icon_unify_stone_color_value,
-			icon_view_measure_minus_color_value,
-			icon_view_measure_plus_color_value,
-			icon_void_pointer_value,
-			icon_windows_color_value,
-			icon_word_wrap_color_value,
-			icon_zoom_in_color_value,
-			icon_zoom_out_color_value,
-			icon_anchor_color_value,
-			icon_display_cluster_color_value,
-			icon_display_legend_color_value,
-			icon_fit_to_screen_color_value,
-			icon_remove_anchor_color_value,
-			icon_toggle_force_color_value,
-			icon_toggle_quality_color_value,
-			icon_uml_color_value,
-			icon_pin_open_color_value,
-			icon_pin_closed_color_value,
-			icon_arrow_empty_value,
-			icon_force_settings_color_value,
-			icon_deferred_obsolete_feature_value,
-			icon_attribute_obsolete_symbol_value,
-			icon_attribute_frozen_symbol_value,
-			icon_once_obsolete_symbol_value,
-			icon_once_frozen_symbol_value,
-			icon_external_obsolete_feature_value,
-			icon_external_frozen_feature_value,
-			icon_obsolete_feature_value,
-			icon_frozen_feature_value,
-			icon_format_assigners_color_value,
-			icon_format_creator_callers_color_value,
-			icon_preference_root_value,
-			icon_preference_folder_value,
-			icon_other_feature_value,
-			icon_reset_view_color_value,
-			icon_format_creators_color_value,
-			icon_format_invariants_color_value,
-			icon_input_to_process_color_value,
-			icon_add_new_external_cmd_color_value,
-			icon_save_all_color_value,
-			icon_new_tab_color_value,
-			icon_quick_search_next_color_value,
-			icon_quick_search_previous_color_value,
-			icon_quick_search_close_color_value,
-			icon_trash_can_color_value,
-			icon_read_only_assembly_symbol_color_value,
-			icon_read_only_library_symbol_color_value,
-			icon_read_only_override_symbol_color_value,
-			icon_folder_symbol_color_value,
-			icon_override_folder_symbol_color_value,
-			icon_library_symbol_color_value,
-			icon_override_symbol_color_value,
-			icon_ascending_sort_color_value,
-			icon_descending_sort_color_value,
-			icon_expandable_right_arrow_color_value,
-			icon_assembly_namespace_symbol_color_value,
-			icon_overriden_class_color_value,
-			icon_overriden_light_class_color_value,
-			icon_overriden_grey_class_color_value,
-			icon_overriden_light_grey_class_color_value,
-			icon_overriden_deferred_class_color_value,
-			icon_overriden_deferred_light_class_color_value,
-			icon_clusters_symbol_color_value,
-			icon_overrides_symbol_color_value,
-			icon_libraries_symbol_color_value,
-			icon_assemblies_symbol_color_value,
-			icon_overrider_class_color_value,
-			icon_overrider_light_class_color_value,
-			icon_overrider_grey_class_color_value,
-			icon_overrider_light_grey_class_color_value,
-			icon_overrider_deferred_class_color_value,
-			icon_overrider_deferred_light_class_color_value,
-			Icon_output_view_icon_value,
-			Icon_error_output_view_icon_value,
-			Icon_warning_output_view_icon_value,
-			Icon_diagram_tool_icon_value,
-			Icon_bottom_reached_icon_value,
-			Icon_first_result_reached_icon_value,
-			Icon_expand_all_value,
-			Icon_collapse_all_value,
-			icon_assigner_value,
-			icon_frozen_assigner_value,
-			icon_obsolete_assigner_value,
-			icon_deferred_assigner_value,
-			icon_deferred_obsolete_assigner_value,
-			icon_invisible_value,
-			icon_external_command_icon_value,
-			icon_normal_callee_icon_value,
-			icon_creator_callee_icon_value,
-			icon_assigner_callee_icon_value: INTEGER is unique;
+			icon_add_exported_feature_color_value: INTEGER is 1
+			icon_attribute_symbol_value: INTEGER is 2
+			icon_auto_slice_limits_color_value: INTEGER is 3
+			icon_back_color_value: INTEGER is 4
+			icon_bkpt_info_color_value: INTEGER is 5
+			icon_center_diagram_color_value: INTEGER is 6
+			icon_check_exports_color_value: INTEGER is 7
+			icon_class_header_color_value: INTEGER is 8
+			icon_class_symbol_color_value: INTEGER is 9
+			icon_class_symbol_gray_value: INTEGER is 10
+			icon_cluster_symbol_color_value: INTEGER is 11
+			icon_cmd_history_color_value: INTEGER is 12
+			icon_color_color_value: INTEGER is 13
+			icon_compilation_error_value: INTEGER is 14
+			icon_compiled_value: INTEGER is 15
+			icon_compile_color_value: INTEGER is 16
+			icon_compiling_1_value: INTEGER is 17
+			icon_compiling_2_value: INTEGER is 18
+			icon_compiling_3_value: INTEGER is 19
+			icon_compiling_4_value: INTEGER is 20
+			icon_context_tool_color_value: INTEGER is 21
+			icon_copy_color_value: INTEGER is 22
+			icon_crop_color_value: INTEGER is 23
+			icon_cut_color_value: INTEGER is 24
+			icon_deferred_class_symbol_color_value: INTEGER is 25
+			icon_deferred_feature_value: INTEGER is 26
+			icon_light_deferred_class_color_value: INTEGER is 27
+			icon_delete_measure_color_value: INTEGER is 28
+			icon_delete_small_color_value: INTEGER is 29
+			icon_delete_view_color_value: INTEGER is 30
+			icon_development_window_color_value: INTEGER is 31
+			icon_dialog_window_value: INTEGER is 32
+			icon_disable_bkpt_color_value: INTEGER is 33
+			icon_display_labels_color_value: INTEGER is 34
+			icon_dotnet_import_color_value: INTEGER is 35
+			icon_dynamiclib_window_value: INTEGER is 36
+			icon_edit_exported_feature_color_value: INTEGER is 37
+			icon_editing_value: INTEGER is 38
+			icon_enable_bkpt_color_value: INTEGER is 39
+			icon_exec_quit_color_value: INTEGER is 40
+			icon_exec_step_color_value: INTEGER is 41
+			icon_exec_stop_color_value: INTEGER is 42
+			icon_expanded_object_value: INTEGER is 43
+			icon_export_to_png_color_value: INTEGER is 44
+			icon_stopped_value: INTEGER is 45
+			icon_external_feature_value: INTEGER is 46
+			icon_external_symbol_value: INTEGER is 47
+			icon_favorites_color_value: INTEGER is 48
+			icon_favorites_folder_color_value: INTEGER is 49
+			icon_feature_color_value: INTEGER is 50
+			icon_feature_clause_any_value: INTEGER is 51
+			icon_feature_clause_none_value: INTEGER is 52
+			icon_feature_clause_some_value: INTEGER is 53
+			icon_features_color_value: INTEGER is 54
+			icon_fill_cluster_color_value: INTEGER is 55
+			icon_finalize_color_value: INTEGER is 56
+			icon_del_bkpt_color_value: INTEGER is 57
+			icon_format_ancestors_color_value: INTEGER is 58
+			icon_format_attributes_color_value: INTEGER is 59
+			icon_format_clickable_color_value: INTEGER is 60
+			icon_format_clients_color_value: INTEGER is 61
+			icon_format_contract_color_value: INTEGER is 62
+			icon_format_deferreds_color_value: INTEGER is 63
+			icon_format_descendants_color_value: INTEGER is 64
+			icon_format_exporteds_color_value: INTEGER is 65
+			icon_format_externals_color_value: INTEGER is 66
+			icon_format_feature_ancestors_color_value: INTEGER is 67
+			icon_format_feature_callers_color_value: INTEGER is 68
+			icon_format_feature_descendants_color_value: INTEGER is 69
+			icon_format_feature_homonyms_color_value: INTEGER is 70
+			icon_format_feature_implementers_color_value: INTEGER is 71
+			icon_format_flat_color_value: INTEGER is 72
+			icon_format_interface_color_value: INTEGER is 73
+			icon_format_onces_color_value: INTEGER is 74
+			icon_format_routines_color_value: INTEGER is 75
+			icon_format_suppliers_color_value: INTEGER is 76
+			icon_format_text_color_value: INTEGER is 77
+			icon_forth_color_value: INTEGER is 78
+			icon_freeze_color_value: INTEGER is 79
+			icon_green_arrow_value: INTEGER is 80
+			icon_green_tick_value: INTEGER is 81
+			icon_help_tool_color_value: INTEGER is 82
+			icon_immediate_value_value: INTEGER is 83
+			icon_inherit_color_value: INTEGER is 84
+			icon_straight_arrows_color_value: INTEGER is 85
+			icon_minimize_all_color_value: INTEGER is 86
+			icon_new_agg_supplier_color_value: INTEGER is 87
+			icon_new_class_color_value: INTEGER is 88
+			icon_new_cluster_color_value: INTEGER is 89
+			icon_new_context_window_color_value: INTEGER is 90
+			icon_new_development_tool_color_value: INTEGER is 91
+			icon_new_dynamic_lib_color_value: INTEGER is 92
+			icon_new_editor_color_value: INTEGER is 93
+			icon_new_feature_color_value: INTEGER is 94
+			icon_new_inherit_color_value: INTEGER is 95
+			icon_new_measure_color_value: INTEGER is 96
+			icon_new_metric_color_value: INTEGER is 97
+			icon_new_supplier_color_value: INTEGER is 98
+			icon_no_stop_color_value: INTEGER is 99
+			icon_exe_up_to_date_value: INTEGER is 100
+			icon_object_symbol_value: INTEGER is 101
+			icon_once_symbol_value: INTEGER is 102
+			icon_open_file_color_value: INTEGER is 103
+			icon_paste_color_value: INTEGER is 104
+			icon_preference_window_value: INTEGER is 105
+			icon_open_exception_dialog_value: INTEGER is 106
+			icon_print_color_value: INTEGER is 107
+			icon_profiler_window_value: INTEGER is 108
+			icon_progress_dialog_color_value: INTEGER is 109
+			icon_quick_compile_color_value: INTEGER is 110
+			icon_restore_all_color_value: INTEGER is 111
+			icon_restore_all_unsaved_color_value: INTEGER is 112
+			icon_light_class_color_value: INTEGER is 113
+			icon_light_class_gray_value: INTEGER is 114
+			icon_light_cluster_color_value: INTEGER is 115
+			icon_recycle_bin_color_value: INTEGER is 116
+			icon_red_cross_value: INTEGER is 117
+			icon_redo_color_value: INTEGER is 118
+			icon_remove_exported_feature_color_value: INTEGER is 119
+			icon_reset_diagram_color_value: INTEGER is 120
+			icon_restore_view_color_value: INTEGER is 121
+			icon_run_color_value: INTEGER is 122
+			icon_debug_run_color_value: INTEGER is 123
+			icon_debugger_exception_value: INTEGER is 124
+			icon_running_1_value: INTEGER is 125
+			icon_running_2_value: INTEGER is 126
+			icon_running_3_value: INTEGER is 127
+			icon_save_color_value: INTEGER is 128
+			icon_save_measure_color_value: INTEGER is 129
+			icon_search_color_value: INTEGER is 130
+			icon_select_depth_color_value: INTEGER is 131
+			icon_select_metrics_color_value: INTEGER is 132
+			icon_send_stone_down_color_value: INTEGER is 133
+			icon_set_arguments_color_value: INTEGER is 134
+			icon_shell_color_value: INTEGER is 135
+			icon_sorter_color_value: INTEGER is 136
+			icon_static_external_symbol_value: INTEGER is 137
+			icon_static_object_symbol_value: INTEGER is 138
+			icon_step_into_color_value: INTEGER is 139
+			icon_step_out_color_value: INTEGER is 140
+			icon_super_cluster_color_value: INTEGER is 141
+			icon_supplier_color_value: INTEGER is 142
+			icon_system_color_value: INTEGER is 143
+			icon_system_info_color_value: INTEGER is 144
+			icon_toggle_clusters_color_value: INTEGER is 145
+			icon_toolbar_separator_value: INTEGER is 146
+			icon_undo_color_value: INTEGER is 147
+			icon_unify_stone_color_value: INTEGER is 148
+			icon_view_measure_minus_color_value: INTEGER is 149
+			icon_view_measure_plus_color_value: INTEGER is 150
+			icon_void_pointer_value: INTEGER is 151
+			icon_windows_color_value: INTEGER is 152
+			icon_word_wrap_color_value: INTEGER is 153
+			icon_zoom_in_color_value: INTEGER is 154
+			icon_zoom_out_color_value: INTEGER is 155
+			icon_anchor_color_value: INTEGER is 156
+			icon_display_cluster_color_value: INTEGER is 157
+			icon_display_legend_color_value: INTEGER is 158
+			icon_fit_to_screen_color_value: INTEGER is 159
+			icon_remove_anchor_color_value: INTEGER is 160
+			icon_toggle_force_color_value: INTEGER is 161
+			icon_toggle_quality_color_value: INTEGER is 162
+			icon_uml_color_value: INTEGER is 163
+			icon_pin_open_color_value: INTEGER is 164
+			icon_pin_closed_color_value: INTEGER is 165
+			icon_arrow_empty_value: INTEGER is 166
+			icon_force_settings_color_value: INTEGER is 167
+			icon_deferred_obsolete_feature_value: INTEGER is 168
+			icon_attribute_obsolete_symbol_value: INTEGER is 169
+			icon_attribute_frozen_symbol_value: INTEGER is 170
+			icon_once_obsolete_symbol_value: INTEGER is 171
+			icon_once_frozen_symbol_value: INTEGER is 172
+			icon_external_obsolete_feature_value: INTEGER is 173
+			icon_external_frozen_feature_value: INTEGER is 174
+			icon_obsolete_feature_value: INTEGER is 175
+			icon_frozen_feature_value: INTEGER is 176
+			icon_format_assigners_color_value: INTEGER is 177
+			icon_format_creator_callers_color_value: INTEGER is 178
+			icon_preference_root_value: INTEGER is 179
+			icon_preference_folder_value: INTEGER is 180
+			icon_other_feature_value: INTEGER is 181
+			icon_reset_view_color_value: INTEGER is 182
+			icon_format_creators_color_value: INTEGER is 183
+			icon_format_invariants_color_value: INTEGER is 184
+			icon_input_to_process_color_value: INTEGER is 185
+			icon_add_new_external_cmd_color_value: INTEGER is 186
+			icon_save_all_color_value: INTEGER is 187
+			icon_new_tab_color_value: INTEGER is 188
+			icon_quick_search_next_color_value: INTEGER is 189
+			icon_quick_search_previous_color_value: INTEGER is 190
+			icon_quick_search_close_color_value: INTEGER is 191
+			icon_trash_can_color_value: INTEGER is 192
+			icon_read_only_assembly_symbol_color_value: INTEGER is 193
+			icon_read_only_library_symbol_color_value: INTEGER is 194
+			icon_read_only_override_symbol_color_value: INTEGER is 195
+			icon_folder_symbol_color_value: INTEGER is 196
+			icon_override_folder_symbol_color_value: INTEGER is 197
+			icon_library_symbol_color_value: INTEGER is 198
+			icon_override_symbol_color_value: INTEGER is 199
+			icon_ascending_sort_color_value: INTEGER is 200
+			icon_descending_sort_color_value: INTEGER is 201
+			icon_expandable_right_arrow_color_value: INTEGER is 202
+			icon_assembly_namespace_symbol_color_value: INTEGER is 203
+			icon_overriden_class_color_value: INTEGER is 204
+			icon_overriden_light_class_color_value: INTEGER is 205
+			icon_overriden_grey_class_color_value: INTEGER is 206
+			icon_overriden_light_grey_class_color_value: INTEGER is 207
+			icon_overriden_deferred_class_color_value: INTEGER is 208
+			icon_overriden_deferred_light_class_color_value: INTEGER is 209
+			icon_clusters_symbol_color_value: INTEGER is 210
+			icon_overrides_symbol_color_value: INTEGER is 211
+			icon_libraries_symbol_color_value: INTEGER is 212
+			icon_assemblies_symbol_color_value: INTEGER is 213
+			icon_overrider_class_color_value: INTEGER is 214
+			icon_overrider_light_class_color_value: INTEGER is 215
+			icon_overrider_grey_class_color_value: INTEGER is 216
+			icon_overrider_light_grey_class_color_value: INTEGER is 217
+			icon_overrider_deferred_class_color_value: INTEGER is 218
+			icon_overrider_deferred_light_class_color_value: INTEGER is 219
+			Icon_output_view_icon_value: INTEGER is 220
+			Icon_error_output_view_icon_value: INTEGER is 221
+			Icon_warning_output_view_icon_value: INTEGER is 222
+			Icon_diagram_tool_icon_value: INTEGER is 223
+			Icon_bottom_reached_icon_value: INTEGER is 224
+			Icon_first_result_reached_icon_value: INTEGER is 225
+			Icon_expand_all_value: INTEGER is 226
+			Icon_collapse_all_value: INTEGER is 227
+			icon_assigner_value: INTEGER is 228
+			icon_frozen_assigner_value: INTEGER is 229
+			icon_obsolete_assigner_value: INTEGER is 230
+			icon_deferred_assigner_value: INTEGER is 231
+			icon_deferred_obsolete_assigner_value: INTEGER is 232
+			icon_invisible_value: INTEGER is 233
+			icon_external_command_icon_value: INTEGER is 234
+			icon_normal_callee_icon_value: INTEGER is 235
+			icon_creator_callee_icon_value: INTEGER is 236
+			icon_assigner_callee_icon_value: INTEGER is 237
 
 feature {NONE} -- Configuration pixmaps
 

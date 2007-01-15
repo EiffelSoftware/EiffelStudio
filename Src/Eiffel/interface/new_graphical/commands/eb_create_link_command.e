@@ -62,7 +62,9 @@ feature -- Status report
 	selected_type: INTEGER
 			-- Currently selected type of new links
 
-	inheritance, supplier, aggregate: INTEGER is unique
+	inheritance: INTEGER is 1
+	supplier: INTEGER is 2
+	aggregate: INTEGER is 3
 			-- Possible values for `selected_type'.
 
 feature -- Status setting

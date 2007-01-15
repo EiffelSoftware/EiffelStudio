@@ -432,7 +432,10 @@ feature {EB_DIAGRAM_TOOL} -- Implementation
 	selected_implementation: INTEGER
 		-- Implementation used for `Current', set in creation procedure.
 
-	adds_clients, adds_suppliers, adds_descendents, adds_ancestors: INTEGER is unique;
+	adds_clients: INTEGER is 1
+	adds_suppliers: INTEGER is 2
+	adds_descendents: INTEGER is 3
+	adds_ancestors: INTEGER is 4;
 		-- Constants used to define the behavior of `Current'.
 
 indexing

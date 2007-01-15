@@ -13,22 +13,22 @@ inherit
 
 feature -- Constants
 
-	cf_Chart: INTEGER is unique
+	cf_Chart: INTEGER is 1
 			-- Chart format. Textual descriptions of ancestors, constraints, etc.
 
-	cf_Diagram: INTEGER is unique
+	cf_Diagram: INTEGER is 2
 			-- Diagram format. Graphical view.
 
-	cf_Clickable: INTEGER is unique
+	cf_Clickable: INTEGER is 3
 			-- Clickable format.
 
-	cf_Flat: INTEGER is unique
+	cf_Flat: INTEGER is 4
 			-- Flat format.
 
-	cf_Short: INTEGER is unique
+	cf_Short: INTEGER is 5
 			-- Short format.
 
-	cf_Flatshort: INTEGER is unique
+	cf_Flatshort: INTEGER is 6
 			-- Flat/short format.
 
 feature -- Access

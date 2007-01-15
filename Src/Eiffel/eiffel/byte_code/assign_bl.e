@@ -121,13 +121,13 @@ feature
 				and not context.has_invariant
 		end
 
-	No_simple_op: INTEGER is Unique
+	No_simple_op: INTEGER is 1
 			-- There is no simple operation assignment.
 
-	Left_simple_op: INTEGER is Unique
+	Left_simple_op: INTEGER is 2
 			-- The left part of the source is affected by a simple operation.
 
-	Right_simple_op: INTEGER is Unique
+	Right_simple_op: INTEGER is 3
 			-- The right part of the source is affected by a simple operation.
 
 	analyze_simple_assignment is
@@ -347,19 +347,19 @@ feature
 			end
 		end
 
-	Simple_assignment: INTEGER is unique
+	Simple_assignment: INTEGER is 4
 			-- Simple assignment wanted
 
-	Metamorphose_assignment: INTEGER is unique
+	Metamorphose_assignment: INTEGER is 5
 			-- Metamorphose of source is necessary
 
-	Unmetamorphose_assignment: INTEGER is unique
+	Unmetamorphose_assignment: INTEGER is 6
 			-- Metamorphose of source is necessary
 
-	Clone_assignment: INTEGER is unique
+	Clone_assignment: INTEGER is 7
 			-- Clone of source is needed
 
-	Copy_assignment: INTEGER is unique
+	Copy_assignment: INTEGER is 8
 			-- Copy source into target, raise exception if source is Void
 
 	source_print_register is

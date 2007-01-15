@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class EWB_DOCUMENTATION 
+class EWB_DOCUMENTATION
 
 inherit
 	EWB_FILTER_SYSTEM
@@ -61,7 +61,7 @@ feature -- Access
 
 	name: STRING is
 		do
-			inspect 
+			inspect
 				format_type
 			when flat_type then
 				Result := flat_doc_cmd_name
@@ -76,7 +76,7 @@ feature -- Access
 
 	help_message: STRING is
 		do
-			inspect 
+			inspect
 				format_type
 			when flat_type then
 				Result := flat_doc_help
@@ -91,7 +91,7 @@ feature -- Access
 
 	abbreviation: CHARACTER is
 		do
-			inspect 
+			inspect
 				format_type
 			when flat_type then
 				Result := flat_doc_abb
@@ -122,7 +122,7 @@ feature -- Execution
 		local
 			cmd: E_GENERATE_DOCUMENTATION
 		do
-			inspect 
+			inspect
 				format_type
 			when flat_type then
 				create cmd.make_flat (filter_name, degree_output)
@@ -153,7 +153,10 @@ feature {NONE} -- Implementation
 	format_type: INTEGER;
 			-- Format type
 
-	flat_short_type, short_type, flat_type, text_type: INTEGER is unique;
+	flat_short_type: INTEGER is 1
+	short_type: INTEGER is 2
+	flat_type: INTEGER is 3
+	text_type: INTEGER is 4;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

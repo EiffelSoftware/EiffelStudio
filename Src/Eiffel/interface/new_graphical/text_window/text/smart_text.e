@@ -98,7 +98,9 @@ feature -- Status report
 	click_tool_status: INTEGER
 			-- `click_tool' status after initialization.
 
-	no_error, syntax_error, class_name_changed: INTEGER is unique
+	no_error: INTEGER is 1
+	syntax_error: INTEGER is 2
+	class_name_changed: INTEGER is 3
 			-- `click_tool_status' possible values.
 
 	current_feature_containing : TUPLE [feat_as:FEATURE_AS; name: FEATURE_NAME] is

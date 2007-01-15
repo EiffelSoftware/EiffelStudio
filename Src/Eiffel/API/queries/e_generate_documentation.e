@@ -145,7 +145,10 @@ feature {NONE} -- Implementation
 	format_type: INTEGER;
 			-- Format type
 
-	flat_short_type, short_type, flat_type, text_type: INTEGER is unique
+	flat_short_type: INTEGER is 1
+	short_type: INTEGER is 2
+	flat_type: INTEGER is 3
+	text_type: INTEGER is 4
 
 	error_window: OUTPUT_WINDOW;
 			-- Output window used to display erros during the

@@ -855,19 +855,13 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Constants
 
-	String_token: INTEGER is unique
-
-	Number_token: INTEGER is unique
-
-	Real_token: INTEGER is unique
-
-	Index_token: INTEGER is unique
-
-	Newline_token: INTEGER is unique
-
-	Whitespace_token: INTEGER is unique
-
-	Error_token: INTEGER is unique;
+	String_token: INTEGER is 1
+	Number_token: INTEGER is 2
+	Real_token: INTEGER is 3
+	Index_token: INTEGER is 4
+	Newline_token: INTEGER is 5
+	Whitespace_token: INTEGER is 6
+	Error_token: INTEGER is 7;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

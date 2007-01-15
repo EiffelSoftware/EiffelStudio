@@ -8,34 +8,34 @@ class
 
 feature -- Access
 
-	Hc_root: INTEGER is unique
+	Hc_root: INTEGER is 1
 			-- Base URL id for the root of the documentation
 
-	Hc_libraries: INTEGER is unique
+	Hc_libraries: INTEGER is 2
 			-- Base URL id for the root of the libraries documentation
 
-	Hc_guided_tour: INTEGER is unique
+	Hc_guided_tour: INTEGER is 3
 			-- Base URL id for the root of the eiffelstudio guided tour
 
-	Hc_eiffelstudio: INTEGER is unique
+	Hc_eiffelstudio: INTEGER is 4
 			-- Base URL id for the root of the eiffelstudio documentation
-	
-	Hc_reference: INTEGER is unique
+
+	Hc_reference: INTEGER is 5
 			-- Base URL id for the root of the eiffelstudio reference
-	
-	Hc_how_to_s: INTEGER is unique
+
+	Hc_how_to_s: INTEGER is 6
 			-- Base URL id for the root of the eiffelstudio how to's
-	
-	Hc_profile_window: INTEGER is unique
+
+	Hc_profile_window: INTEGER is 7
 			-- Base URL id for all profiler related help
 
-	Hc_development_window: INTEGER is unique
+	Hc_development_window: INTEGER is 8
 			-- Base URL id for generic development window help
-		
-	Hc_dynamic_lib_window: INTEGER is unique
+
+	Hc_dynamic_lib_window: INTEGER is 9
 			-- Base URL id for dynamic library window help
 
-	Hc_editor_window: INTEGER is unique
+	Hc_editor_window: INTEGER is 10
 			-- Base URL id for editor window help
 
 	Root_index: STRING is "index.html"
@@ -122,7 +122,7 @@ feature {NONE} -- Implementation
 			end
 			Result := Result and then a_base.item (i) = '/'
 		end
-			
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -631,13 +631,13 @@ feature {NONE}-- Implementation
 			end
 		end
 
-	assertion_part: INTEGER is unique
+	assertion_part: INTEGER is 1
 
-	instruction_part: INTEGER is unique
+	instruction_part: INTEGER is 2
 
-	local_part: INTEGER is unique
+	local_part: INTEGER is 3
 
-	no_interesting_part: INTEGER is unique
+	no_interesting_part: INTEGER is 4
 
 	find_expression_start is
 			-- find where to begin the analysis (set current_token/line)

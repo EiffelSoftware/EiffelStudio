@@ -153,16 +153,16 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false,
-	c_is_compiled,
-	c_is_used,
-	c_is_visible,
-	c_true,
-	c_name_is,
-	c_text_contain,
-	c_is_immediate,
-	c_contain_ast,
-	c_value_of_metric_is: INTEGER is unique
+	c_false: INTEGER is 1
+	c_is_compiled: INTEGER is 2
+	c_is_used: INTEGER is 3
+	c_is_visible: INTEGER is 4
+	c_true: INTEGER is 5
+	c_name_is: INTEGER is 6
+	c_text_contain: INTEGER is 7
+	c_is_immediate: INTEGER is 8
+	c_contain_ast: INTEGER is 9
+	c_value_of_metric_is: INTEGER is 10
 
 feature{NONE} -- Implementation
 

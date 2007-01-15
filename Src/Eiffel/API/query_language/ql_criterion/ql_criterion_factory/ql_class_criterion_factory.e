@@ -548,51 +548,51 @@ feature{NONE} -- New criterion
 
 feature -- Criterion index
 
-	c_false,
-	c_has_bottom_indexing,
-	c_has_indexing,
-	c_has_invariant,
-	c_has_top_indexing,
-	c_is_compiled,
-	c_is_deferred,
-	c_is_effective,
-	c_is_enum,
-	c_is_expanded,
-	c_is_external,
-	c_is_frozen,
-	c_is_generic,
-	c_is_obsolete,
-	c_is_precompiled,
-	c_true,
-	c_name_is,
-	c_top_indexing_has_tag,
-	c_bottom_indexing_has_tag,
-	c_indexing_has_tag,
-	c_top_indexing_contain,
-	c_bottom_indexing_contain,
-	c_indexing_contain,
-	c_path_in,
-	c_path_is,
-	c_text_contain,
-	c_ancestor_is,
-	c_proper_ancestor_is,
-	c_parent_is,
-	c_indirect_parent_is,
-	c_descendant_is,
-	c_proper_descendant_is,
-	c_heir_is,
-	c_indirect_heir_is,
-	c_supplier_is,
-	c_client_is,
-	c_is_valid,
-	c_is_always_compiled,
-	c_is_partial,
-	c_is_read_only,
-	c_is_overriden,
-	c_is_overrider,
-	c_is_visible,
-	c_contain_ast,
-	c_value_of_metric_is: INTEGER is unique;
+	c_false: INTEGER is 1
+	c_has_bottom_indexing: INTEGER is 2
+	c_has_indexing: INTEGER is 3
+	c_has_invariant: INTEGER is 4
+	c_has_top_indexing: INTEGER is 5
+	c_is_compiled: INTEGER is 6
+	c_is_deferred: INTEGER is 7
+	c_is_effective: INTEGER is 8
+	c_is_enum: INTEGER is 9
+	c_is_expanded: INTEGER is 10
+	c_is_external: INTEGER is 11
+	c_is_frozen: INTEGER is 12
+	c_is_generic: INTEGER is 13
+	c_is_obsolete: INTEGER is 14
+	c_is_precompiled: INTEGER is 15
+	c_true: INTEGER is 16
+	c_name_is: INTEGER is 17
+	c_top_indexing_has_tag: INTEGER is 18
+	c_bottom_indexing_has_tag: INTEGER is 19
+	c_indexing_has_tag: INTEGER is 20
+	c_top_indexing_contain: INTEGER is 21
+	c_bottom_indexing_contain: INTEGER is 22
+	c_indexing_contain: INTEGER is 23
+	c_path_in: INTEGER is 24
+	c_path_is: INTEGER is 25
+	c_text_contain: INTEGER is 26
+	c_ancestor_is: INTEGER is 27
+	c_proper_ancestor_is: INTEGER is 28
+	c_parent_is: INTEGER is 29
+	c_indirect_parent_is: INTEGER is 30
+	c_descendant_is: INTEGER is 31
+	c_proper_descendant_is: INTEGER is 32
+	c_heir_is: INTEGER is 33
+	c_indirect_heir_is: INTEGER is 34
+	c_supplier_is: INTEGER is 35
+	c_client_is: INTEGER is 36
+	c_is_valid: INTEGER is 37
+	c_is_always_compiled: INTEGER is 38
+	c_is_partial: INTEGER is 39
+	c_is_read_only: INTEGER is 40
+	c_is_overriden: INTEGER is 41
+	c_is_overrider: INTEGER is 42
+	c_is_visible: INTEGER is 43
+	c_contain_ast: INTEGER is 44
+	c_value_of_metric_is: INTEGER is 45
 
 feature{NONE} -- Implementation/Evaluate agent
 

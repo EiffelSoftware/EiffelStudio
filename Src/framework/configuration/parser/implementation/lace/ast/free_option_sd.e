@@ -74,57 +74,57 @@ feature -- Properties
 			Result := override_cluster = code
 		end
 
-	address_expression,
-	arguments,
-	array_optimization,
-	check_generic_creation_constraint,
-	check_vape,
-	company,
-	console_application,
-	copyright,
-	dead_code,
-	description,
-	document,
-	dynamic_runtime,
-	exception_stack_managed,
-	force_recompile,
-	full_type_checking,
-	metadata_cache_path,
-	msil_assembly_compatibility,
-	msil_classes_per_module,
-	msil_clr_version,
-	msil_culture,
-	msil_full_name,
-	msil_generation,
-	msil_generation_type,
-	msil_key_file_name,
-	msil_use_optimized_precompile,
-	namespace,
-	il_verifiable,
-	cls_compliant,
-	dotnet_naming_convention,
-	inlining,
-	inlining_size,
-	ise_gc_runtime,
-	java_generation,
-	line_generation,
-	multithreaded,
-	old_verbatim_strings,
-	old_verbatim_strings_warning,
-	override_cluster,
-	profile,
-	product,
-	external_runtime,
-	server_file_size,
-	shared_library_definition,
-	syntax_warning,
-	title,
-	trademark,
-	use_cluster_name_as_namespace,
-	use_all_cluster_name_as_namespace,
-	version,
-	working_directory,
-	free_option_count: INTEGER is unique
+	address_expression: INTEGER is 1
+	arguments: INTEGER is 2
+	array_optimization: INTEGER is 3
+	check_generic_creation_constraint: INTEGER is 4
+	check_vape: INTEGER is 5
+	company: INTEGER is 6
+	console_application: INTEGER is 7
+	copyright: INTEGER is 8
+	dead_code: INTEGER is 9
+	description: INTEGER is 10
+	document: INTEGER is 11
+	dynamic_runtime: INTEGER is 12
+	exception_stack_managed: INTEGER is 13
+	force_recompile: INTEGER is 14
+	full_type_checking: INTEGER is 15
+	metadata_cache_path: INTEGER is 16
+	msil_assembly_compatibility: INTEGER is 17
+	msil_classes_per_module: INTEGER is 18
+	msil_clr_version: INTEGER is 19
+	msil_culture: INTEGER is 20
+	msil_full_name: INTEGER is 21
+	msil_generation: INTEGER is 22
+	msil_generation_type: INTEGER is 23
+	msil_key_file_name: INTEGER is 24
+	msil_use_optimized_precompile: INTEGER is 25
+	namespace: INTEGER is 26
+	il_verifiable: INTEGER is 27
+	cls_compliant: INTEGER is 28
+	dotnet_naming_convention: INTEGER is 29
+	inlining: INTEGER is 30
+	inlining_size: INTEGER is 31
+	ise_gc_runtime: INTEGER is 32
+	java_generation: INTEGER is 33
+	line_generation: INTEGER is 34
+	multithreaded: INTEGER is 35
+	old_verbatim_strings: INTEGER is 36
+	old_verbatim_strings_warning: INTEGER is 37
+	override_cluster: INTEGER is 38
+	profile: INTEGER is 39
+	product: INTEGER is 40
+	external_runtime: INTEGER is 41
+	server_file_size: INTEGER is 42
+	shared_library_definition: INTEGER is 43
+	syntax_warning: INTEGER is 44
+	title: INTEGER is 45
+	trademark: INTEGER is 46
+	use_cluster_name_as_namespace: INTEGER is 47
+	use_all_cluster_name_as_namespace: INTEGER is 48
+	version: INTEGER is 49
+	working_directory: INTEGER is 50
+	free_option_count: INTEGER is 51
 
 feature -- Access
 

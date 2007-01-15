@@ -2061,107 +2061,107 @@ feature {NONE} -- Implementation state transitions
 feature {NONE} -- Implementation constants
 
 		-- Tag states
-	t_none,
-	t_system,
-	t_description,
-	t_target,
-	t_root,
-	t_version,
-	t_file_rule,
-	t_option,
-	t_setting,
-	t_external_include,
-	t_external_object,
-	t_external_library,
-	t_external_resource,
-	t_external_make,
-	t_pre_compile_action,
-	t_post_compile_action,
-	t_variable,
-	t_precompile,
-	t_library,
-	t_assembly,
-	t_cluster,
-	t_override,
-	t_exclude,
-	t_include,
-	t_debug,
-	t_assertions,
-	t_warning,
-	t_condition,
-	t_platform,
-	t_build,
-	t_multithreaded,
-	t_dotnet,
-	t_dynamic_runtime,
-	t_version_condition,
-	t_custom,
-	t_renaming,
-	t_class_option,
-	t_uses,
-	t_visible,
-	t_overrides,
-	t_mapping: INTEGER is unique
+	t_none: INTEGER is 1
+	t_system: INTEGER is 2
+	t_description: INTEGER is 3
+	t_target: INTEGER is 4
+	t_root: INTEGER is 5
+	t_version: INTEGER is 6
+	t_file_rule: INTEGER is 7
+	t_option: INTEGER is 8
+	t_setting: INTEGER is 9
+	t_external_include: INTEGER is 10
+	t_external_object: INTEGER is 11
+	t_external_library: INTEGER is 12
+	t_external_resource: INTEGER is 13
+	t_external_make: INTEGER is 14
+	t_pre_compile_action: INTEGER is 15
+	t_post_compile_action: INTEGER is 16
+	t_variable: INTEGER is 17
+	t_precompile: INTEGER is 18
+	t_library: INTEGER is 19
+	t_assembly: INTEGER is 20
+	t_cluster: INTEGER is 21
+	t_override: INTEGER is 22
+	t_exclude: INTEGER is 23
+	t_include: INTEGER is 24
+	t_debug: INTEGER is 25
+	t_assertions: INTEGER is 26
+	t_warning: INTEGER is 27
+	t_condition: INTEGER is 28
+	t_platform: INTEGER is 29
+	t_build: INTEGER is 30
+	t_multithreaded: INTEGER is 31
+	t_dotnet: INTEGER is 32
+	t_dynamic_runtime: INTEGER is 33
+	t_version_condition: INTEGER is 34
+	t_custom: INTEGER is 35
+	t_renaming: INTEGER is 36
+	t_class_option: INTEGER is 37
+	t_uses: INTEGER is 38
+	t_visible: INTEGER is 39
+	t_overrides: INTEGER is 40
+	t_mapping: INTEGER is 41
 
 		-- Attribute states
-	at_abstract,
-	at_name,
-	at_uuid,
-	at_library_target,
-	at_eifgen,
-	at_extends,
-	at_cluster,
-	at_class,
-	at_all_classes,
-	at_feature,
-	at_class_rename,
-	at_feature_rename,
-	at_major,
-	at_minor,
-	at_release,
-	at_build,
-	at_product,
-	at_company,
-	at_copyright,
-	at_trademark,
-	at_trace,
-	at_profile,
-	at_optimize,
-	at_debug,
-	at_namespace,
-	at_location,
-	at_command,
-	at_value,
-	at_excluded_value,
-	at_readonly,
-	at_prefix,
-	at_target,
-	at_assembly_name,
-	at_assembly_version,
-	at_assembly_culture,
-	at_assembly_key,
-	at_recursive,
-	at_enabled,
-	at_precondition,
-	at_postcondition,
-	at_check,
-	at_invariant,
-	at_loop,
-	at_supplier_precondition,
-	at_platform,
-	at_min,
-	at_max,
-	at_old_name,
-	at_new_name,
-	at_group,
-	at_succeed,
-	at_working_directory,
-	at_type,
-	at_eifgens_location,
-	at_warning,
-	at_hidden,
-	at_msil_application_optimize,
-	at_use_application_options: INTEGER is unique
+	at_abstract: INTEGER is 1000
+	at_name: INTEGER is 1001
+	at_uuid: INTEGER is 1002
+	at_library_target: INTEGER is 1003
+	at_eifgen: INTEGER is 1004
+	at_extends: INTEGER is 1005
+	at_cluster: INTEGER is 1006
+	at_class: INTEGER is 1007
+	at_all_classes: INTEGER is 1008
+	at_feature: INTEGER is 1009
+	at_class_rename: INTEGER is 1010
+	at_feature_rename: INTEGER is 1011
+	at_major: INTEGER is 1012
+	at_minor: INTEGER is 1013
+	at_release: INTEGER is 1014
+	at_build: INTEGER is 1015
+	at_product: INTEGER is 1016
+	at_company: INTEGER is 1017
+	at_copyright: INTEGER is 1018
+	at_trademark: INTEGER is 1019
+	at_trace: INTEGER is 1020
+	at_profile: INTEGER is 1021
+	at_optimize: INTEGER is 1022
+	at_debug: INTEGER is 1023
+	at_namespace: INTEGER is 1024
+	at_location: INTEGER is 1025
+	at_command: INTEGER is 1026
+	at_value: INTEGER is 1027
+	at_excluded_value: INTEGER is 1028
+	at_readonly: INTEGER is 1029
+	at_prefix: INTEGER is 1030
+	at_target: INTEGER is 1031
+	at_assembly_name: INTEGER is 1032
+	at_assembly_version: INTEGER is 1033
+	at_assembly_culture: INTEGER is 1034
+	at_assembly_key: INTEGER is 1035
+	at_recursive: INTEGER is 1036
+	at_enabled: INTEGER is 1037
+	at_precondition: INTEGER is 1038
+	at_postcondition: INTEGER is 1039
+	at_check: INTEGER is 1040
+	at_invariant: INTEGER is 1041
+	at_loop: INTEGER is 1042
+	at_supplier_precondition: INTEGER is 1043
+	at_platform: INTEGER is 1044
+	at_min: INTEGER is 1045
+	at_max: INTEGER is 1046
+	at_old_name: INTEGER is 1047
+	at_new_name: INTEGER is 1048
+	at_group: INTEGER is 1049
+	at_succeed: INTEGER is 1050
+	at_working_directory: INTEGER is 1051
+	at_type: INTEGER is 1052
+	at_eifgens_location: INTEGER is 1053
+	at_warning: INTEGER is 1054
+	at_hidden: INTEGER is 1055
+	at_msil_application_optimize: INTEGER is 1056
+	at_use_application_options: INTEGER is 1057
 
 feature -- Assertions
 

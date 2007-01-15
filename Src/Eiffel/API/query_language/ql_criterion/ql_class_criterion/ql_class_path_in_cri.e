@@ -51,14 +51,17 @@ feature -- Evaluate
 
 	is_satisfied_by (a_item: QL_CLASS): BOOLEAN is
 			-- Evaluate `a_item'.
+		local
+			l_path: STRING
 		do
+			l_path := a_item.conf_class.path
 			if name.is_empty then
-				Result := True
+				Result := l_path /= Void and then l_path.is_empty
 			else
 				if is_recursive then
-					Result := a_item.conf_class.path.substring (1, name.count).is_equal (name)
+					Result := l_path.substring (1, name.count).is_equal (name)
 				else
-					Result := a_item.conf_class.path.is_equal (name)
+					Result := l_path.is_equal (name)
 				end
 			end
 		end

@@ -405,12 +405,12 @@ feature{NONE} -- New criterion
 			result_attached: Result /= Void
 		end
 
-	new_path_is_criterion (a_path: STRING): QL_CLASS_PATH_IS_CRI is
+	new_path_is_criterion (a_path: STRING): QL_CLASS_PATH_IN_CRI is
 			-- New {QL_CLASS_PATH_IS_CRI} criterion.
 		require
 			a_path_attached: a_path /= Void
 		do
-			create Result.make (a_path)
+			create Result.make_with_flag (a_path, False)
 		ensure
 			result_attached: Result /= Void
 		end

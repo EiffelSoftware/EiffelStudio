@@ -1202,6 +1202,8 @@ feature -- Label texts
 	l_feature_domain_item: STRING_GENERAL is do Result := locale.translate ("feature item") end
 	l_delayed_domain_item: STRING_GENERAL is do Result := locale.translate ("delayed item") end
 
+	h_search_for_class_recursively: STRING_GENERAL is do Result := locale.translate ("Search folder for classes recursively?") end
+
 feature -- Label text, no translation (for the editor)
 
 	le_version_from_message: STRING is " (version from)"

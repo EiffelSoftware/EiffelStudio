@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Help message
 
-	real_help_message: STRING is
+	real_help_message: STRING_32 is
 		once
 			Result := total_sec_help;
 		end;

@@ -24,7 +24,7 @@ feature -- Properties
 			Result := quick_melt_cmd_name
 		end;
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		do
 			Result := quick_melt_help
 		end;

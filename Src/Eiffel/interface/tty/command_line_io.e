@@ -5,7 +5,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision $"
 
-class COMMAND_LINE_IO 
+class COMMAND_LINE_IO
+
+inherit
+	SHARED_NAMES
 
 feature -- Properties
 
@@ -24,18 +27,17 @@ feature -- Input/output
 		local
 			str: STRING
 		do
-			io.error.put_string ("%N%
-				%Press <Return> to resume compilation or <Q> to quit%N")
+			localized_print_error (("%N").as_string_32 + ewb_names.err_press_return_to_resume + ("%N").as_string_32)
 			wait_for_return
 			str := io.last_string.as_lower
 			Result := ((str.count >= 1) and then (str.item (1) = 'q'))
 		end
 
-	confirmed (message: STRING): BOOLEAN is
+	confirmed (message: STRING_GENERAL): BOOLEAN is
 		local
 			c: CHARACTER
 		do
-			io.put_string (message)
+			localized_print (message)
 			io.put_string (" [y/n]? ")
 			io.read_character
 			c := io.last_character
@@ -102,7 +104,7 @@ feature -- Input/output
 	get_class_name is
 		do
 			if not more_arguments then
-				io.put_string ("--> Class name: ")
+				localized_print (ewb_names.arrow_class_name)
 				get_name
 			end
 			get_last_input
@@ -115,7 +117,7 @@ feature -- Input/output
 	get_feature_name is
 		do
 			if not more_arguments then
-				io.put_string ("--> Feature name: ")
+				localized_print (ewb_names.arrow_feature_name)
 				get_name
 			end
 			get_last_input
@@ -128,13 +130,13 @@ feature -- Input/output
 	get_filter_name is
 		do
 			if not more_arguments then
-				io.put_string ("--> Filter name: ")
+				localized_print (ewb_names.arrow_filter_name)
 				get_name
 			end
 			get_last_input
 		end
 
-	get_option_value (an_option: STRING; value: BOOLEAN) is
+	get_option_value (an_option: STRING_GENERAL; value: BOOLEAN) is
 			-- Get a valid from `an_option' of either
 			-- true or false.
 			-- Set `last_input' to "False" or "True"
@@ -145,7 +147,7 @@ feature -- Input/output
 		do
 			if not more_arguments then
 				io.put_string ("--> ")
-				io.put_string (an_option)
+				localized_print (an_option)
 				io.put_string (" [")
 				if value then
 					io.put_string ("yes")
@@ -173,7 +175,7 @@ feature -- Input/output
 	get_prof_file_name is
 		do
 			if not more_arguments then
-				io.put_string ("--> Profile information file name (default: `profinfo'): ")
+				localized_print (ewb_names.arrow_profile_infomation_file_name)
 				get_name
 			end
 			get_last_input
@@ -183,14 +185,14 @@ feature -- Input/output
 		do
 			if not more_arguments then
 				from
-					io.put_string ("--> Compile type (default: `workbench'): ")
+					localized_print (ewb_names.arrow_compile_type)
 					get_name
 					get_last_input
 				until
 					last_input.is_empty or else last_input.is_equal ("workbench") or else
 					last_input.is_equal ("final")
 				loop
-					io.put_string ("--> Compile type (default: `workbench'): ")
+					localized_print (ewb_names.arrow_compile_type)
 					get_name
 					get_last_input
 				end
@@ -202,7 +204,7 @@ feature -- Input/output
 	get_profiler is
 		do
 			if not more_arguments then
-				io.put_string ("--> Used profiler (default: `eiffel'): ")
+				localized_print (ewb_names.arrow_used_profiler)
 				get_name
 			end
 			get_last_input
@@ -221,8 +223,7 @@ feature -- Input/output
 		local
 			not_first: BOOLEAN
 		do
-			io.error.put_string ("%
-				%Too many arguments. The following arguments will be ignored:%N")
+			localized_print_error (ewb_names.err_too_many_arguments)
 			from
 			until
 				not more_arguments

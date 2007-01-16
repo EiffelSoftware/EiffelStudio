@@ -74,7 +74,7 @@ feature -- Access
 			end
 		end;
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		do
 			inspect
 				format_type
@@ -112,7 +112,7 @@ feature -- Execution
 			command_line_io.get_filter_name;
 			filter_name := command_line_io.last_input;
 			if format_type /= text_type then
-				command_line_io.get_option_value ("Include parents", False);
+				command_line_io.get_option_value (ewb_names.include_parents, False);
 			end;
 			do_parents := command_line_io.last_input.to_boolean;
 			check_arguments_and_execute

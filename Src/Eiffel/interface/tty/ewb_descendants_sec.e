@@ -20,7 +20,7 @@ inherit
 
 feature {NONE} -- Help message
 
-	real_help_message: STRING is
+	real_help_message: STRING_32 is
 		once
 			Result := Descendants_time_help;
 		end;

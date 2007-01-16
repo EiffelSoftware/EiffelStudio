@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Representation of a menu for the batch compiler%
 		%invoked by the -loop. It is an array of ewb_cmd%
 		%which can be executed."
@@ -151,7 +151,7 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	print_one_help (opt: STRING; txt: STRING; abb: CHARACTER) is
+	print_one_help (opt: STRING; txt: STRING_GENERAL; abb: CHARACTER) is
 			-- Display the help information for option `opt'
 			-- with help text `txt' and abbreviation `abb'.
 		local
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 				i := i + 1;
 			end;
 			io.put_string (": ");
-			io.put_string (txt);
+			localized_print (txt);
 			io.put_string (".%N")
 		end;
 

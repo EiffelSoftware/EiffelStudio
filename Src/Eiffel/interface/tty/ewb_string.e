@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Description of a menu entry string for%
 		%command line option for ec -loop."
 	legal: "See notice at end of class."
@@ -8,7 +8,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class EWB_STRING 
+class EWB_STRING
 
 inherit
 
@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (n, h: STRING; c: CHARACTER; s: EWB_MENU) is
+	make (n: STRING; h: STRING_GENERAL c: CHARACTER; s: EWB_MENU) is
 		do
 			name := n;
 			int_help_message := h;
@@ -32,7 +32,7 @@ feature -- Properties
 
 	name: STRING;
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		do
 			Result := int_help_message;
 		end;
@@ -49,7 +49,7 @@ feature {NONE} -- Execution
 
 feature {NONE} -- Attributes
 
-	int_help_message: STRING;
+	int_help_message: STRING_GENERAL;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

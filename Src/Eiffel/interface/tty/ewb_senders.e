@@ -28,7 +28,7 @@ feature -- Access
 			Result := callers_cmd_name
 		end
 
-	help_message: STRING is
+	help_message: STRING_32 is
 			-- Help message for current command
 		do
 			Result := callers_help
@@ -114,13 +114,13 @@ feature {NONE} -- Implementation
 			feature_name := command_line_io.last_input
 			command_line_io.get_filter_name
 			filter_name := command_line_io.last_input
-			command_line_io.get_option_value ("All senders", preferences.feature_tool_data.show_all_callers)
+			command_line_io.get_option_value (ewb_names.all_senders, preferences.feature_tool_data.show_all_callers)
 			to_show_all_callers := command_line_io.last_input.to_boolean
-			command_line_io.get_option_value ("Only assigners", False)
+			command_line_io.get_option_value (ewb_names.only_assigners, False)
 			if command_line_io.last_input.to_boolean then
 				set_assigners_only
 			else
-				command_line_io.get_option_value ("Only creators", False)
+				command_line_io.get_option_value (ewb_names.only_creators, False)
 				if command_line_io.last_input.to_boolean then
 					set_creators_only
 				else

@@ -42,7 +42,7 @@ feature -- Properties
 			Result := finalize_cmd_name
 		end;
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		do
 			Result := finalize_help
 		end;
@@ -60,13 +60,12 @@ feature {NONE} -- Execution
 			answer: STRING
 		do
 			if Eiffel_project.is_read_only then
-				io.error.put_string ("Read-only project: cannot compile.%N")
+				localized_print_error (ewb_names.read_only_project_cannot_compile)
 			elseif
 				command_line_io.confirmed
-						("Finalizing implies some C compilation and linking.%
-							%%NDo you want to do it now")
+						(ewb_names.finalizing_implies_some_c_compilation)
 			then
-				io.put_string ("--> Keep assertions (y/n): ");
+				localized_print (ewb_names.arrow_keep_assertions.as_string_32 + ewb_names.yes_or_no + ": ")
 				command_line_io.wait_for_return;
 				answer := io.last_string;
 				answer.to_lower;
@@ -83,7 +82,7 @@ feature {NONE} -- Execution
 			-- Execute Current batch command.
 		do
 			if Eiffel_project.is_read_only then
-				io.error.put_string ("Read-only project: cannot compile.%N")
+				localized_print_error (ewb_names.read_only_project_cannot_compile)
 			else
 				init;
 				if Eiffel_ace.file_name /= Void then

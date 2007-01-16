@@ -32,13 +32,13 @@ feature {NONE} -- Execution
 				else
 					if not not_first then
 						from
-							io.put_string ("--> Operator index followed by operator ('and' or 'or'): ");
+							localized_print (ewb_names.arrow_operator_index_followed_by)
 							command_line_io.get_name;
 							command_arguments := command_line_io.command_arguments;
 						until
 							command_arguments.argument_count = 2
 						loop
-							io.put_string ("--> Please enter an operator index followed by an operator ('and' or 'or'): ");
+							localized_print (ewb_names.arrow_please_enter_an_operator_index)
 							command_line_io.get_name;
 							command_arguments := command_line_io.command_arguments;
 						end;
@@ -48,16 +48,16 @@ feature {NONE} -- Execution
 				end;
 					-- Check index
 				if not index_str.is_integer then
-					io.put_string ("Index must be an integer.%N");
-					io.put_string ("--> Operator index: ");
+					localized_print (ewb_names.index_must_be_an_integer)
+					localized_print (ewb_names.arrow_operator_index)
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 					index_str := command_arguments.item (1);
 				end;
 					-- Check operator
 				if not (new_operator.is_equal ("and") or else new_operator.is_equal ("or")) then
-					io.put_string ("Operator must be 'and' or 'or'.%N");
-					io.put_string ("--> New operator: ");
+					localized_print (ewb_names.operator_must_be);
+					localized_print (ewb_names.arrow_new_operator);
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 					new_operator := command_arguments.item (1);
@@ -75,10 +75,10 @@ feature {NONE} -- Execution
 				if not subquery_operators.off and then subquery_operators.item /= Void then
 					subquery_operators.item.change_operator (new_operator);
 				else
-					io.put_string ("There is no items available at this index.%N")
+					localized_print (ewb_names.arrow_new_operator)
 				end
 			else
-				io.put_string ("Index must be valid.%N");
+				localized_print (ewb_names.index_must_be_valid);
 			end;
 		end;
 
@@ -89,7 +89,7 @@ feature -- Porperties
 			Result := change_operator_cmd_name;
 		end;
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		once
 			Result := change_operator_help;
 		end;

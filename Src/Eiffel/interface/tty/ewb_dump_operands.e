@@ -40,7 +40,7 @@ feature {NONE} -- Properties
 			gs: LINEAR [FORMAL_DEC_AS]
 			gts: ARRAY [STRING]
 			types: LINEAR [TYPE_A]
-			names: LINEAR [STRING]
+			l_names: LINEAR [STRING]
 			i: INTEGER
 			s: STRING
 		do
@@ -65,15 +65,15 @@ feature {NONE} -- Properties
 
 			if e_feature.arguments /= Void and  e_feature.arguments.argument_names /= Void then
 				types := e_feature.arguments.linear_representation
-				names := e_feature.arguments.argument_names.linear_representation
+				l_names := e_feature.arguments.argument_names.linear_representation
 
 				from
 					types.start
-					names.start
+					l_names.start
 				until
 					types.after
 				loop
-					print (names.item + ": ")
+					print (l_names.item + ": ")
 					if types.item /= Void then
 						s := types.item.dump
 					else
@@ -93,7 +93,7 @@ feature {NONE} -- Properties
 						s.replace_substring ("", 1, s.index_of (']', 1) + 1)
 					end
 					types.forth
-					names.forth
+					l_names.forth
 					print (s+ "%N")
 				end
 			end

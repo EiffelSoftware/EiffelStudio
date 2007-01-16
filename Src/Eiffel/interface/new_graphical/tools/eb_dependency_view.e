@@ -12,7 +12,9 @@ class
 inherit
 	EB_TOOL
 		redefine
-			pixmap
+			pixmap,
+			show,
+			close
 		end
 
 	WIDGET_OWNER
@@ -347,6 +349,20 @@ feature -- Status setting
 		do
 			token_writer.set_context_group (viewpoints.current_viewpoint)
 			refresh
+		end
+
+	show is
+			-- Redefine
+		do
+			Precursor {EB_TOOL}
+			on_select
+		end
+
+	close is
+			-- Redefine
+		do
+			Precursor {EB_TOOL}
+			on_deselect
 		end
 
 feature -- Memory management

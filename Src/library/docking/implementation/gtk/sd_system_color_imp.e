@@ -92,6 +92,17 @@ feature -- Access
 			Result := (create {EV_STOCK_COLORS}).black
 		end
 
+feature -- Font
+
+	tool_bar_font: EV_FONT is
+			-- Redefine.
+		local
+			l_drawing_area: EV_DRAWING_AREA
+		once
+			create l_drawing_area
+			Result := l_drawing_area.font
+		end
+
 feature -- HoT zone factory
 
 	hot_zone_factory: SD_HOT_ZONE_OLD_FACTORY is

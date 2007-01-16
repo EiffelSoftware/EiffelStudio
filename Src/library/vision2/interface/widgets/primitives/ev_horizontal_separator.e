@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"[
 			Scored horizontal line.
@@ -9,7 +9,7 @@ indexing
 			---------------
 		]"
 	status: "See notice at end of class."
-	keywords: "seperator, horizontal, line, score"
+	keywords: "separator, horizontal, line, score"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 
 	text: STRING_32 is
 			-- Text displayed in textable.
-			-- For seperators, it must always be empty.
+			-- For separators, it must always be empty.
 		do
 			Result := ""
 		end

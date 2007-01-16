@@ -126,25 +126,59 @@ feature -- Command
 			l_image: WEL_GDIP_BITMAP
 		do
 			create Result.make_with_size (a_rect.width, a_rect.height)
-			l_imp ?= Result.implementation
+			Result.draw_pixel_buffer (interface, a_rect)
+		end
+
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dest_rect: EV_RECTANGLE) is
+			-- Draw `a_pixel_buffer' at `a_rect'.
+		local
+			l_imp: EV_PIXEL_BUFFER_IMP
+			l_temp_pixmap: EV_PIXMAP
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_dest_rect, l_src_rect: WEL_RECT
+			l_image: WEL_GDIP_BITMAP
+		do
+			l_imp ?= a_pixel_buffer.implementation
 			check not_void: l_imp /= Void end
 
 			if is_gdi_plus_installed then
-				l_image := l_imp.gdip_bitmap
-				create l_graphics.make_from_image (l_image)
-				create l_dest_rect.make (0, 0, a_rect.width, a_rect.height)
-				create l_src_rect.make (a_rect.x, a_rect.y, a_rect.right, a_rect.bottom)
-				l_graphics.draw_image_with_src_rect_dest_rect (gdip_bitmap, l_dest_rect, l_src_rect)
+				create l_graphics.make_from_image (gdip_bitmap)
+				create l_src_rect.make (0, 0, a_dest_rect.width, a_dest_rect.height)
+				create l_dest_rect.make (a_dest_rect.x, a_dest_rect.y, a_dest_rect.right, a_dest_rect.bottom)
+				l_graphics.draw_image_with_src_rect_dest_rect (l_imp.gdip_bitmap, l_src_rect, l_dest_rect)
 
 				l_dest_rect.dispose
 				l_src_rect.dispose
 				l_graphics.destroy_item
 				-- In GDI+, alpha data issue is automatically handled, so we don't need to set mask.			
 			else
-				l_temp_pixmap := pixmap.sub_pixmap (a_rect)
-				l_imp.pixmap.set_size (width, height)
-				l_imp.pixmap.draw_pixmap (0, 0, l_temp_pixmap)
+				pixmap.draw_pixmap (a_dest_rect.x, a_dest_rect.y, l_imp.pixmap)
+			end
+		end
 
+	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
+			-- Draw `a_text' with `a_font' at `a_rect'.
+		local
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_font_imp: EV_FONT_IMP
+			l_font: WEL_GDIP_FONT
+
+			l_font_family: WEL_GDIP_FONT_FAMILY
+			l_log_font: WEL_LOG_FONT
+		do
+			if is_gdi_plus_installed then
+				create l_graphics.make_from_image (gdip_bitmap)
+
+				-- FIXIT: We can't query font name now.
+				-- EV_FONT.name and WEL_LOG_FONT.name all return "".
+				check only_roman_supported_currently: a_font.family = {EV_FONT_CONSTANTS}.family_roman end
+				create l_font_family.make_with_name ("Times New Roman")
+
+				create l_font.make (l_font_family, a_font.height_in_points)
+				l_graphics.draw_string (a_text, a_text.count, l_font, a_point.x, a_point.y)
+			else
+				pixmap.set_font (a_font)
+				pixmap.draw_text_top_left (a_point.x, a_point.y, a_text)
 			end
 		end
 
@@ -167,7 +201,6 @@ feature -- Command
 				--| FIXME IEK Implement me
 			end
 		end
-
 
 feature -- Query
 

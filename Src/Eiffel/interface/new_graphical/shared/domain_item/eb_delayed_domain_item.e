@@ -16,11 +16,6 @@ inherit
 			is_real_delayed_item
 		end
 
---	EB_CONSTANTS
---		undefine
---			is_equal
---		end
-
 create
 	make
 

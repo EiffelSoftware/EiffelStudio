@@ -49,10 +49,10 @@ feature -- Basic Operations
 			cmd := preferences.misc_data.internet_browser_preference.string_value
 			if cmd.is_empty then
 				last_show_successful := False
-				last_error_message := warning_messages.w_No_internet_browser_selected
+				last_error_message := Warning_messages.w_help_topic_could_not_be_displayed
 			elseif cmd.substring_index ("$url", 1) <= 0 then
 				last_show_successful := False
-				last_error_message := Warning_messages.w_No_url_to_replace
+				last_error_message := Warning_messages.w_help_topic_could_not_be_displayed
 			else
 				cmd.append_character (' ')
 				root := eiffel_layout.docs_path.twin
@@ -67,9 +67,10 @@ feature -- Basic Operations
 					cmd.replace_substring_all ("$url", url)
 					(create {EXECUTION_ENVIRONMENT}).launch (cmd)
 					last_show_successful := True
+					last_error_message := Void
 				else
 					last_show_successful := False
-					last_error_message := Warning_messages.w_Page_not_exist
+					last_error_message := Warning_messages.w_help_topic_could_not_be_displayed
 				end
 			end
 		end

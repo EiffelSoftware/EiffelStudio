@@ -69,9 +69,9 @@ feature -- Output
 			-- `a_str' is taken as a UCS-4 string.
 		do
 			if is_windows then
-				io.put_string (encoding_utf32.convert_to (system_encoding, a_str).as_string_8)
+				io.put_string (encoding_utf16.convert_to (system_encoding, a_str).as_string_8)
 			else
-				io.put_string (encoding_utf32.convert_to (encoding_utf8, a_str).as_string_8)
+				io.put_string (encoding_utf16.convert_to (encoding_utf8, a_str).as_string_8)
 			end
 		end
 
@@ -80,9 +80,9 @@ feature -- Output
 			-- `a_str' is taken as a UCS-4 string.
 		do
 			if is_windows then
-				io.error.put_string (encoding_utf32.convert_to (system_encoding, a_str).as_string_8)
+				io.error.put_string (encoding_utf16.convert_to (system_encoding, a_str).as_string_8)
 			else
-				io.error.put_string (encoding_utf32.convert_to (encoding_utf8, a_str).as_string_8)
+				io.error.put_string (encoding_utf16.convert_to (encoding_utf8, a_str).as_string_8)
 			end
 		end
 
@@ -104,10 +104,10 @@ feature {NONE} -- Implementation
 			create Result.make (system_locale.info.code_page)
 		end
 
-	encoding_utf32: ENCODING is
-			-- UTF-32 encoding.
+	encoding_utf16: ENCODING is
+			-- UTF-16 encoding.
 		once
-			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf32)
+			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf16)
 		end
 
 	encoding_utf8: ENCODING is

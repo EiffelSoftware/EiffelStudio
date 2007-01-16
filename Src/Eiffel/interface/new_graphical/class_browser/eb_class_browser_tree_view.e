@@ -36,8 +36,10 @@ feature{NONE} -- Initialization
 		do
 			make (a_dev_window, a_drop_actions)
 			is_tree_view_enabled := a_tree_view_enabled
+			setup_sorting_for_location
 		ensure
 			is_tree_view_enabled_set: is_tree_view_enabled = a_tree_view_enabled
+			grid_sorting_setting_correct: is_sorting_setting_valid
 		end
 
 feature -- Status report
@@ -247,9 +249,12 @@ feature -- Actions
 			-- Action to be performed when selection status of `display_path_button' changes
 		do
 			is_up_to_date := False
+			setup_sorting_for_location
 			if data /= Void then
 				bind_grid
 			end
+		ensure
+			grid_sorting_setting_correct: is_sorting_setting_valid
 		end
 
 	on_refresh_for_flat_view is
@@ -277,16 +282,11 @@ feature -- Notification
 		do
 			if not is_up_to_date then
 				if data /= Void then
-					if is_flat_view_enabled and then display_path_button.is_selected then
-						set_sort_info (2, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_CLASS_BROWSER_TREE_ROW]}.make (agent path_name_tester, ascending_order))
-					else
-						remove_sort_info (2)
-					end
 					text.hide
 					component_widget.show
 					fill_rows
 					if last_sorted_column_internal = 0 then
-						last_sorted_column_internal := 1
+						last_sorted_column_internal := class_name_column_index
 					end
 					disable_auto_sort_order_change
 					enable_force_multi_column_sorting
@@ -679,6 +679,7 @@ feature{NONE} -- Implementation
 				display_path_button_internal.set_pixmap (pixmaps.icon_pixmaps.metric_unit_group_icon)
 				display_path_button_internal.set_tooltip (interface_names.h_show_item_location)
 				display_path_button_internal.select_actions.extend (agent on_show_path_changed)
+				on_show_path_changed
 			end
 			Result := display_path_button_internal
 		ensure
@@ -703,6 +704,35 @@ feature{NONE} -- Implementation
 			Precursor {EB_CLASS_BROWSER_GRID_VIEW}
 		end
 
+	is_sorting_setting_valid: BOOLEAN is
+			-- Is setting for grid sorting valid?
+			-- The criterion is: the class name column is sortable, and if the location column is displayed
+			-- and then current view is in flat mode, the location column is sortable
+		do
+			Result := is_column_sortable (class_name_column_index)
+			if Result then
+				if is_flat_view_enabled and then display_path_button.is_selected then
+					Result := is_column_sortable (location_column_index)
+				else
+					Result := not is_column_sortable (location_column_index)
+				end
+			end
+		end
+
+	setup_sorting_for_location is
+			-- Set sorting information for location column.
+		do
+			if is_flat_view_enabled and then display_path_button.is_selected then
+				if not is_column_sortable (location_column_index) then
+					set_sort_info (location_column_index, create {EVS_GRID_TWO_WAY_SORTING_INFO [EB_CLASS_BROWSER_TREE_ROW]}.make (agent path_name_tester, ascending_order))
+				end
+			elseif is_column_sortable (location_column_index) then
+				remove_sort_info (location_column_index)
+			end
+		ensure
+			sorting_setting_correct: is_sorting_setting_valid
+		end
+
 feature{NONE} -- Initialization
 
 	build_grid is
@@ -711,8 +741,8 @@ feature{NONE} -- Initialization
 			create grid
 			grid.set_column_count_to (2)
 			grid.enable_selection_on_single_button_click
-			grid.header.i_th (1).set_text (interface_names.l_class_browser_classes)
-			grid.header.i_th (2).set_text (interface_names.l_location)
+			grid.header.i_th (class_name_column_index).set_text (interface_names.l_class_browser_classes)
+			grid.header.i_th (location_column_index).set_text (interface_names.l_location)
 			grid.enable_single_row_selection
 			grid.enable_tree
 			grid.set_row_height (default_row_height)
@@ -742,7 +772,7 @@ feature{NONE} -- Initialization
 			create l_class_sort_info.make (agent class_name_tester, ascending_order)
 			set_sort_action (agent sort_agent)
 			l_class_sort_info.enable_auto_indicator
-			set_sort_info (1, l_class_sort_info)
+			set_sort_info (class_name_column_index, l_class_sort_info)
 
 				-- Prepare search facilities
 			create quick_search_bar.make (development_window)
@@ -757,6 +787,12 @@ feature{NONE} -- Initialization
 
 	control_tool_bar_internal: like control_tool_bar;
 			-- Implementation of `control_tool_bar'
+
+	class_name_column_index: INTEGER is 1
+			-- Index of class name column
+
+	location_column_index: INTEGER is 2;
+			-- Index of location column
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

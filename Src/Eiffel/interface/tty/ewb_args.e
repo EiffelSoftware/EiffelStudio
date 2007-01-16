@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Records arguments for application execution."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -30,22 +30,17 @@ feature {NONE} -- Execution
 			args := arguments;
 				-- Display previous value
 			if args.is_empty then
-				io.put_string ("No previous value%N")
+				localized_print (ewb_names.no_previous_value)
 			else
-				io.put_string ("Previous value: `");
-				io.put_string (args);
-				io.put_string ("'%N");
+				localized_print (ewb_names.previous_value (args));
 			end;
 				-- Get the arguments
-			io.put_string ("--> Arguments: ");
+			localized_print (ewb_names.arrow_arguments);
 			command_line_io.wait_for_return;
 			new_args := io.last_string.twin
 			if new_args.is_empty then
 				if not args.is_empty then
-					io.put_string ("No value entered. Do you want to: %N%
-								%D: delete the previous value%N%
-								%K: keep the previous value (default)%N%
-								%Option: ");
+					localized_print (ewb_names.no_value_entered);
 					io.read_line;
 					cmd := io.last_string;
 					if cmd.count = 1 and then cmd.item (1).lower = 'd' then

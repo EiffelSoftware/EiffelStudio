@@ -24,7 +24,7 @@ feature -- Properties
 			Result := precompile_cmd_name
 		end;
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		do
 			Result := precompile_help
 		end;
@@ -46,10 +46,7 @@ feature {NONE} -- Execution
 					process_finish_freezing (False)
 				end
 			else
-				io.error.put_string ("There is already a project compiled in %"");
-				io.error.put_string (Eiffel_project.name);
-				io.error.put_string ("%" %N%
-					%It needs to be deleted before a precompilation.%N");
+				localized_print_error (ewb_names.there_is_already_project_compiled_in (eiffel_project.name))
 			end
 		end;
 

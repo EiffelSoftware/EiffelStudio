@@ -198,7 +198,7 @@ feature {DOCUMENTATION} -- Basic operations
 
 			minimum_pixmap := projector.world_as_pixmap (border)
 			if projector.is_world_too_large then
-				create wd.make_with_text (Warning_messages.W_cannot_generate_png+"%N"+cluster.name)
+				create wd.make_with_text (Warning_messages.W_cannot_generate_png.as_string_32+"%N"+cluster.name)
 				create minimum_pixmap.make_with_size (1, 1)
 			end
 			minimum_pixmap.save_to_named_file (png_format, png_file)

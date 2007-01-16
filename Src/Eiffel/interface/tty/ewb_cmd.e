@@ -26,6 +26,8 @@ inherit
 
 	SHARED_WORKBENCH
 
+	SHARED_NAMES
+
 	EXCEPTIONS
 		rename
 			die as lic_die,
@@ -41,7 +43,7 @@ feature -- Properties
 		deferred
 		end
 
-	help_message: STRING is
+	help_message: STRING_GENERAL is
 		deferred
 		end
 

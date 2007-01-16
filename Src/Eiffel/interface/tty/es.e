@@ -51,6 +51,8 @@ inherit
 
 	EIFFEL_LAYOUT
 
+	SHARED_NAMES
+
 create
 	make
 
@@ -182,8 +184,8 @@ feature -- Initialization
 					retry
 				end
 			else
-				io.error.put_string ("ISE Eiffel 5: Session aborted%N")
-				io.error.put_string ("Exception tag: ")
+				localized_print_error (ewb_names.session_aborted)
+				localized_print_error (ewb_names.exception_tag)
 				temp := original_tag_name
 				if output_window /= Void and then not output_window.is_closed then
 					output_window.close
@@ -258,7 +260,7 @@ feature -- Properties
 	has_no_library_conversion: BOOLEAN
 			-- Should we not convert clusters into libraries?
 
-	help_messages: HASH_TABLE [STRING, STRING] is
+	help_messages: HASH_TABLE [STRING_GENERAL, STRING] is
 			-- Help message table
 		once
 			create Result.make (35)
@@ -323,13 +325,13 @@ feature -- Setting
 		do
 			create output_window.make (filename)
 			if output_window.exists then
-				io.error.put_string ("File %"" + filename + "%" exists.%NPlease delete it first.%N")
+				localized_print_error (ewb_names.file_exists (filename))
 				file_error := True
 			else
 				output_window.open_file
 				if not output_window.exists then
-					io.error.put_string ("Cannot create file: ")
-					io.error.put_string (filename)
+					localized_print_error (ewb_names.cannot_create_file)
+					localized_print_error (filename)
 					io.error.put_new_line
 					file_error := True
 				end
@@ -341,16 +343,16 @@ feature -- Output
 	print_option_error is
 			-- Print the correct usage of ewb.
 		do
-			io.put_string (argument (0))
-			io.put_string (": incorrect options%N");
+			localized_print (argument (0))
+			localized_print (ewb_names.incorrect_options);
 			print_usage
 		end
 
 	print_usage is
 			-- Print the usage of command line options.
 		do
-			io.put_string ("Usage:%N%T")
-			io.put_string (argument (0))
+			localized_print (ewb_names.usage)
+			localized_print (argument (0))
 			io.put_string (" [-help | -version | -batch | -clean | -use_settings | ")
 			add_usage_special_cmds
 			io.put_string ("-loop | -quick_melt | -melt | ")
@@ -380,7 +382,7 @@ feature -- Output
 	print_version is
 			-- Print Version Number
 		do
-			io.put_string ("ISE " + Workbench_name + " version " + Version_number + "%N")
+			localized_print ("ISE " + Workbench_name + " version " + Version_number + "%N")
 		end
 
 	print_help is
@@ -392,8 +394,8 @@ feature -- Output
 			cmd_name: STRING
 		do
 			print_usage
-			io.put_string ("%NOptions:%N");
-			io.put_string ("%Tdefault (no option): quick melt the system.%N%N")
+			localized_print (ewb_names.options);
+			localized_print (ewb_names.default_quick_melt_the_system)
 
 			create command_list.make
 			keys := help_messages.current_keys
@@ -417,12 +419,12 @@ feature -- Output
 			end
 		end
 
-	print_one_help (opt: STRING; txt: STRING) is
+	print_one_help (opt: STRING; txt: STRING_GENERAL) is
 		do
 			io.put_string ("%T-")
 			io.put_string (opt)
 			io.put_string (": ")
-			io.put_string (txt)
+			localized_print (txt)
 			io.put_string (".%N")
 		end
 

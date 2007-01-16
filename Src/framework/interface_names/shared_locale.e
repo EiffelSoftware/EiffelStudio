@@ -11,6 +11,9 @@ indexing
 class
 	SHARED_LOCALE
 
+inherit
+	PLATFORM
+
 feature -- Access
 
 	locale: I18N_LOCALE is
@@ -53,6 +56,36 @@ feature -- Status change
 			end
 		end
 
+	set_system_locale is
+			-- Set `locale' `system_locale'
+		do
+			locale_internal.put (system_locale)
+		end
+
+feature -- Output
+
+	localized_print (a_str: STRING_GENERAL) is
+			-- Print `a_str' as localized encoding.
+			-- `a_str' is taken as a UCS-4 string.
+		do
+			if is_windows then
+				io.put_string (encoding_utf32.convert_to (system_encoding, a_str).as_string_8)
+			else
+				io.put_string (encoding_utf32.convert_to (encoding_utf8, a_str).as_string_8)
+			end
+		end
+
+	localized_print_error (a_str: STRING_GENERAL) is
+			-- Print an error, `a_str', as localized encoding.
+			-- `a_str' is taken as a UCS-4 string.
+		do
+			if is_windows then
+				io.error.put_string (encoding_utf32.convert_to (system_encoding, a_str).as_string_8)
+			else
+				io.error.put_string (encoding_utf32.convert_to (encoding_utf8, a_str).as_string_8)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	locale_internal: CELL [I18N_LOCALE] is
@@ -63,6 +96,24 @@ feature {NONE} -- Implementation
 	system_locale: I18N_LOCALE
 		once
 			Result := locale_manager.get_system_locale
+		end
+
+	system_encoding: ENCODING is
+			-- System encoding.
+		once
+			create Result.make (system_locale.info.code_page)
+		end
+
+	encoding_utf32: ENCODING is
+			-- UTF-32 encoding.
+		once
+			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf32)
+		end
+
+	encoding_utf8: ENCODING is
+			-- UTF-8 encoding.
+		once
+			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf8)
 		end
 
 feature -- String

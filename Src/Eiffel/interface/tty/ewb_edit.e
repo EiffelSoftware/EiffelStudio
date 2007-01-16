@@ -12,6 +12,8 @@ class EWB_EDIT
 inherit
 	EB_SHARED_PREFERENCES
 
+	SHARED_NAMES
+
 feature -- Element change
 
 	edit (a_file: STRING) is
@@ -34,7 +36,7 @@ feature -- Element change
 				create cmd_exec;
 				cmd_exec.execute (cmd)
 			else
-				io.error.put_string ("The resource EDITOR is not set%N");
+				localized_print_error (ewb_names.the_resource_editor_is_not_set)
 			end;
 		end;
 

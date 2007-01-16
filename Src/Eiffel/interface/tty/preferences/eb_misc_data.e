@@ -12,6 +12,8 @@ class
 inherit
 	SHARED_LOCALE
 
+	SHARED_FLAGS
+
 create
 	make
 
@@ -199,46 +201,50 @@ feature {NONE} -- Implementation
 			l_str: STRING
 			l_added_pre: HASH_TABLE [STRING, STRING]
 		do
-			l_select_lang := locale_id_preference.selected_value
-			if l_select_lang = Void then
-				l_select_lang := "en_US"
-			end
-			l_available_locales := locale_manager.available_locales
-			create l_id.make_from_string (l_select_lang)
-			if not locale_manager.has_translations (l_id) then
-				create l_id.make_from_string ("en_US")
-			end
-			create l_added_pre.make (100)
-			create l_available_lang.make (20)
-			from
-				l_available_locales.start
-			until
-				l_available_locales.after
-			loop
-				if locale_manager.has_translations (l_available_locales.item) then
-					check
-						name_of_locale_id_is_string_8: l_available_locales.item.name.is_valid_as_string_8
-					end
-					l_str := l_available_locales.item.name.as_string_8
-					if not l_added_pre.has (l_str) then
-						if not l_added_pre.is_empty then
-							l_available_lang.extend (';')
-						end
-						l_added_pre.force (l_str, l_str)
-						if l_available_locales.item.is_equal (l_id) then
-								-- Set this item selected.
-							set_locale_with_id (l_str)
-							l_str := "[" + l_str + "]"
-						end
-						l_available_lang.append (l_str)
-					end
+			if is_gui then
+				l_select_lang := locale_id_preference.selected_value
+				if l_select_lang = Void then
+					l_select_lang := "en_US"
 				end
-				l_available_locales.forth
+				l_available_locales := locale_manager.available_locales
+				create l_id.make_from_string (l_select_lang)
+				if not locale_manager.has_translations (l_id) then
+					create l_id.make_from_string ("en_US")
+				end
+				create l_added_pre.make (100)
+				create l_available_lang.make (20)
+				from
+					l_available_locales.start
+				until
+					l_available_locales.after
+				loop
+					if locale_manager.has_translations (l_available_locales.item) then
+						check
+							name_of_locale_id_is_string_8: l_available_locales.item.name.is_valid_as_string_8
+						end
+						l_str := l_available_locales.item.name.as_string_8
+						if not l_added_pre.has (l_str) then
+							if not l_added_pre.is_empty then
+								l_available_lang.extend (';')
+							end
+							l_added_pre.force (l_str, l_str)
+							if l_available_locales.item.is_equal (l_id) then
+									-- Set this item selected.
+								set_locale_with_id (l_str)
+								l_str := "[" + l_str + "]"
+							end
+							l_available_lang.append (l_str)
+						end
+					end
+					l_available_locales.forth
+				end
+				if l_available_lang.is_empty then
+					l_available_lang := "en_US"
+				end
+				locale_id_preference.set_value_from_string (l_available_lang)
+			else
+				set_system_locale
 			end
-			if l_available_lang.is_empty then
-				l_available_lang := "en_US"
-			end
-			locale_id_preference.set_value_from_string (l_available_lang)
 		end
 
 invariant

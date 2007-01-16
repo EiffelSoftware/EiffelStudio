@@ -31,7 +31,7 @@ feature -- Creation
 
 feature {NONE} -- Help message
 
-	real_help_message: STRING is
+	real_help_message: STRING_32 is
 		once
 			Result := number_of_calls_help;
 		end;

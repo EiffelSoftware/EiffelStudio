@@ -103,9 +103,7 @@ feature {NONE} -- Implementation
 			if not command_line_io.abort then
 				e_feature := e_class.feature_with_name (feature_name);
 				if e_feature = Void then
-					io.error.put_string (feature_name);
-					io.error.put_string (" is not a feature of ");
-					io.error.put_string (class_name);
+					localized_print_error (ewb_names.feature_is_not_of_class (feature_name, class_name))
 					io.error.put_new_line
 				else
 					process_feature (e_feature, e_class)

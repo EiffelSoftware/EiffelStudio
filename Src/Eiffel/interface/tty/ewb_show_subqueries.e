@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 			i: INTEGER;
 		do
 			from
-				io.put_string ("All subqueries:%N");
+				localized_print (ewb_names.all_subqueries)
 				subqueries.start;
 				i := 1;
 			until
@@ -30,17 +30,7 @@ feature {NONE} -- Implementation
 				io.put_character ('[');
 				io.put_integer (i);
 				io.put_string ("] ");
-				io.put_string (subqueries.item.column);
-				io.put_character (' ');
-				io.put_string (subqueries.item.operator);
-				io.put_character (' ');
-				io.put_string (subqueries.item.value);
-				io.put_string (" is ");
-				if subqueries.item.is_active then
-					io.put_string ("active");
-				else
-					io.put_string ("inactive");
-				end;
+				localized_print (ewb_names.one_subqueries_is (subqueries.item.column, subqueries.item.operator, subqueries.item.value, subqueries.item.is_active))
 				io.put_character ('%N');
 				i := i + 1;
 				subqueries.forth;
@@ -50,7 +40,7 @@ feature {NONE} -- Implementation
 	show_active_total_query is
 		do
 			from
-				io.put_string ("%NThe total active query:%N");
+				localized_print (ewb_names.the_total_active_query);
 				subqueries.start;
 				subquery_operators.start;
 			until
@@ -84,7 +74,7 @@ feature -- Properties
 			Result := show_subqueries_cmd_name;
 		end;
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		once
 			Result := show_subqueries_help;
 		end;

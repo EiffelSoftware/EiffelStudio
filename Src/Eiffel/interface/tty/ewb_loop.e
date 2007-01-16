@@ -285,21 +285,21 @@ feature -- Update
 		do
 			s := yank_window.stored_output
 			if s.is_empty then
-				io.error.put_string ("There is no output to save.%N")
+				localized_print_error (ewb_names.thers_is_no_output_to_save)
 			else
 				from
 				until
 					done
 				loop
 					if not command_line_io.more_arguments then
-						io.put_string ("--> File name: ")
+						localized_print (ewb_names.arrow_file_name)
 						command_line_io.get_name
 					end
 					command_line_io.get_last_input
 					if not command_line_io.last_input.is_empty then
 						create file_w.make (command_line_io.last_input)
 						if file_w.exists then
-							io.put_string ("File already exists.%N")
+							localized_print (ewb_names.file_already_exists)
 						else
 							file_w.open_file
 							if file_w.exists then
@@ -307,8 +307,8 @@ feature -- Update
 								file_w.close
 								done := True
 							else
-								io.error.put_string ("Cannot create file: ")
-								io.error.put_string (file_w.name)
+								localized_print_error (ewb_names.can_not_create_file)
+								localized_print_error (file_w.name)
 								io.error.put_new_line
 							end
 						end
@@ -330,7 +330,7 @@ feature -- Update
 			until
 				done
 			loop
-				io.put_string ("Command => ")
+				localized_print (ewb_names.command_arrow)
 				command_line_io.get_name
 				command_line_io.get_last_input
 				rq := command_line_io.last_input
@@ -404,9 +404,7 @@ feature -- Update
 							process_request (option)
 						end
 					else
-						io.put_string ("Unknown menu ")
-						io.put_string (menu)
-						io.put_string (".%N")
+						localized_print (ewb_names.unknow_menu (menu))
 					end
 				end
 			else
@@ -445,9 +443,7 @@ feature -- Update
 						end
 						display_commands
 					else
-						io.put_string ("Unknown option ")
-						io.put_string (req)
-						io.put_string (".%N")
+						localized_print (ewb_names.unknow_option (req))
 					end
 				end
 			end
@@ -457,9 +453,7 @@ feature -- Output
 
 	display_header is
 		do
-			io.put_string ("==== ISE " + Workbench_name + " - Interactive Batch Version (v")
-			io.put_string (Version_number)
-			io.put_string (") ====%N%N")
+			localized_print (ewb_names.ise_batch_version (Workbench_name, Version_number))
 		end
 
 	display_commands is

@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		local
 			ewb_profile_switch: EWB_PROFILE_SWITCH
 			i: INTEGER

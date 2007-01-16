@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Displays class flat in output_window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision $"
 
-class EWB_FLAT 
+class EWB_FLAT
 
 inherit
 	EWB_COMPILED_CLASS
@@ -16,7 +16,7 @@ inherit
 		redefine
 			name, help_message, abbreviation
 		end
-	
+
 	EB_SHARED_PREFERENCES
 
 create
@@ -44,7 +44,7 @@ feature -- Properties
 			Result := flat_cmd_name
 		end
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		do
 			Result := flat_help
 		end

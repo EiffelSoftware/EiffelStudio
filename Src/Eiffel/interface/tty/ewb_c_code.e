@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Starts the C compilation in W_code or F_code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -32,7 +32,7 @@ feature {NONE} -- Implementation
 			-- Execute Current batch command.
 		do
 			if not workbench_mode and then Eiffel_project.is_read_only then
-				io.error.put_string ("Read-only project: no C code to compile in F_code.%N")
+				localized_print_error (ewb_names.read_only_project_no_c_code_to_compile)
 			else
 				Eiffel_project.call_finish_freezing_and_wait (workbench_mode)
 			end

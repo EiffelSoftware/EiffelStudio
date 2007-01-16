@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Displays short of a class in output_window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class EWB_SHORT 
+class EWB_SHORT
 
 inherit
 	EWB_COMPILED_CLASS
@@ -16,7 +16,7 @@ inherit
 		redefine
 			help_message, name, abbreviation
 		end;
-		
+
 	EB_SHARED_PREFERENCES
 
 create
@@ -50,7 +50,7 @@ feature -- Properties
 			Result := short_abb
 		end;
 
-	help_message: STRING is
+	help_message: STRING_32 is
 		do
 			Result := short_help
 		end;

@@ -11,6 +11,8 @@ class
 inherit
 	PROJECT_LOADER
 
+	SHARED_NAMES
+
 feature -- Access
 
 	should_stop_on_prompt: BOOLEAN
@@ -58,7 +60,7 @@ feature {NONE} -- Error reporting
 		do
 			--|FIXME: `out' could cause information loss.
 			-- encoding of the argument should have been localized.
-			io.put_string (warning_messages.w_cannot_read_file (a_file_name).out)
+			localized_print (warning_messages.w_cannot_read_file (a_file_name))
 			io.put_new_line
 			set_has_error
 		end
@@ -69,7 +71,7 @@ feature {NONE} -- Error reporting
 		do
 			--|FIXME: `out' could cause information loss.
 			-- encoding of the argument should have been localized.
-			io.put_string (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name).out)
+			localized_print (warning_messages.w_cannot_read_ace_file_from_epr (a_epr_name, a_file_name))
 			io.put_new_line
 			set_has_error
 		end
@@ -106,7 +108,7 @@ feature {NONE} -- Error reporting
 		do
 			--|FIXME: `out' could cause information loss.
 			-- encoding of the argument should have been localized.
-			io.put_string (warning_messages.w_cannot_save_file (a_file_name).out)
+			localized_print (warning_messages.w_cannot_save_file (a_file_name))
 			io.put_new_line
 			set_has_error
 		end
@@ -117,7 +119,7 @@ feature {NONE} -- Error reporting
 		do
 			--|FIXME: `out' could cause information loss.
 			-- encoding of the argument should have been localized.
-			io.put_string (warning_messages.w_cannot_convert_file (a_file_name).out)
+			localized_print (warning_messages.w_cannot_convert_file (a_file_name))
 			io.put_new_line
 			set_has_error
 		end
@@ -127,7 +129,7 @@ feature {NONE} -- Error reporting
 		do
 			--|FIXME: `out' could cause information loss.
 			-- encoding of the argument should have been localized.
-			io.put_string (warning_messages.w_cannot_create_project_directory (a_dir_name).out)
+			localized_print (warning_messages.w_cannot_create_project_directory (a_dir_name))
 			io.put_new_line
 			set_has_error
 		end
@@ -136,7 +138,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		do
-			io.put_string (a_msg)
+			localized_print (a_msg)
 			io.put_new_line
 			set_has_error
 		end
@@ -147,15 +149,15 @@ feature {NONE} -- Error reporting
 		local
 			l_answered: BOOLEAN
 		do
-			io.put_string (Warning_messages.w_project_incompatible_version (config_file_name, version_number,
-					Eiffel_project.incompatible_version_number).out)
+			localized_print (Warning_messages.w_project_incompatible_version (config_file_name, version_number,
+					Eiffel_project.incompatible_version_number))
 			io.put_new_line
 			if not should_stop_on_prompt then
 				from
 				until
 					l_answered
 				loop
-					io.put_string ("Do you want to update to new version of compiler? [y|n] ")
+					localized_print (ewb_names.want_to_update_new_compiler.as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if not io.last_string.is_empty then
 						if io.last_string.item (1).as_lower = 'y' then
@@ -175,7 +177,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		do
-			io.put_string (a_msg)
+			localized_print (a_msg)
 			io.put_new_line
 			set_has_error
 		end
@@ -183,7 +185,7 @@ feature {NONE} -- Error reporting
 	report_project_retrieval_interrupted (a_msg: STRING) is
 			-- Report an error when project retrieval was stopped.
 		do
-			io.put_string (a_msg)
+			localized_print (a_msg)
 			io.put_new_line
 			set_has_error
 		end
@@ -192,7 +194,7 @@ feature {NONE} -- Error reporting
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		do
-			io.put_string (a_msg)
+			localized_print (a_msg)
 			io.put_new_line
 			set_has_error
 		end
@@ -207,7 +209,7 @@ feature {NONE} -- Error reporting
 		do
 			--|FIXME: `out' could cause information loss.
 			-- encoding of the argument should have been localized.
-			io.put_string (warning_messages.w_project_build_precompile_error.out)
+			localized_print (warning_messages.w_project_build_precompile_error)
 			io.put_new_line
 			set_has_error
 		end
@@ -224,9 +226,7 @@ feature {NONE} -- User interaction
 			l_answered: BOOLEAN
 		do
 			if should_stop_on_prompt then
-				io.put_string ("Batch/Stop mode: saving new configuration format as '")
-				io.put_string (a_file_name)
-				io.put_string ("'.")
+				localized_print (ewb_names.batch_mode (a_file_name))
 				io.put_new_line
 				create l_file_name.make_from_string (a_dir_name)
 				l_file_name.set_file_name (a_file_name)
@@ -236,9 +236,7 @@ feature {NONE} -- User interaction
 				until
 					l_answered
 				loop
-					io.put_string ("Save new configuration format as '")
-					io.put_string (a_file_name)
-					io.put_string ("'? [y|n] ")
+					io.put_string (ewb_names.save_new_configuration_as (a_file_name).as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
 						create l_file_name.make_from_string (a_dir_name)
@@ -251,7 +249,7 @@ feature {NONE} -- User interaction
 						until
 							l_answered
 						loop
-							io.put_string ("Enter name for configuration file: ")
+							localized_print (ewb_names.enter_name_for_configuration_file)
 							io.read_line
 							if not io.last_string.is_empty then
 								create l_file_name.make_from_string (a_dir_name)
@@ -282,7 +280,7 @@ feature {NONE} -- User interaction
 			end
 			if l_need_choice then
 				if a_targets.is_empty then
-					io.put_string ("This project contains no compilable target.")
+					localized_print (ewb_names.project_contains_no_compilable_target)
 					io.put_new_line
 					set_has_error
 					l_need_choice := False
@@ -290,9 +288,9 @@ feature {NONE} -- User interaction
 			end
 			if l_need_choice then
 				if a_target = Void then
-					io.put_string ("This project has more than one target: ")
+					localized_print (ewb_names.has_more_than_one_target)
 				else
-					io.put_string ("Target `" + a_target + "' does not exist or is not a compilable target.%NChoose among the following target(s): ")
+					localized_print (ewb_names.target_does_not_exist (a_target))
 				end
 				io.put_new_line
 				from
@@ -307,13 +305,13 @@ feature {NONE} -- User interaction
 				end
 
 				if should_stop_on_prompt then
-					io.put_string ("You cannot choose a target because of the -stop/-batch option.")
+					localized_print (ewb_names.can_not_choose_a_target)
 					io.put_new_line
 					set_has_error
 				else
 					from
 						io.put_new_line
-						io.put_string ("Select the target you want: ")
+						localized_print (ewb_names.select_the_target_you_want)
 					until
 						l_answered
 					loop
@@ -322,7 +320,7 @@ feature {NONE} -- User interaction
 							l_answered := True
 							target_name := io.last_string.twin
 						else
-							io.put_string ("Invalid target, select the target you want: ")
+							localized_print (ewb_names.invalid_target)
 						end
 					end
 				end
@@ -336,19 +334,14 @@ feature {NONE} -- User interaction
 			l_answered: BOOLEAN
 		do
 			if should_stop_on_prompt then
-				io.put_string ("You cannot choose the name of the project location")
-				io.put_new_line
-				io.put_string ("because of the -stop/-batch option.")
-				io.put_new_line
+				localized_print (ewb_names.cannot_choose_name_because_of)
 				set_has_error
 			else
 				from
 				until
 					l_answered
 				loop
-					io.put_string ("Create new project in '")
-					io.put_string (a_project_path)
-					io.put_string ("'? [y|n] ")
+					localized_print (ewb_names.create_new_project_in (a_project_path).as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
 						project_location := a_project_path.twin
@@ -359,7 +352,7 @@ feature {NONE} -- User interaction
 						until
 							l_answered
 						loop
-							io.put_string ("Enter location for new project: ")
+							localized_print (ewb_names.enter_location_for_new_project)
 							io.read_line
 							if not io.last_string.is_empty then
 								project_location := io.last_string.twin
@@ -377,17 +370,14 @@ feature {NONE} -- User interaction
 			l_answered: BOOLEAN
 		do
 			if should_stop_on_prompt then
-				io.put_string ("Precompile will automatically be built")
-				io.put_new_line
-				io.put_string ("because of the -stop/-batch option.")
-				io.put_new_line
+				localized_print (ewb_names.precompile_will_automtically_be_built)
 				is_user_wants_precompile := True
 			else
 				from
 				until
 					l_answered
 				loop
-					io.put_string (warning_messages.w_project_build_precompile.out + " [y|n] ")
+					localized_print (warning_messages.w_project_build_precompile.as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.item (1).as_lower = 'y' then
 						is_user_wants_precompile := True
@@ -405,18 +395,14 @@ feature {NONE} -- User interaction
 			l_answered: BOOLEAN
 		do
 			if should_stop_on_prompt then
-				io.put_string ("New environment value for "+a_key+" will be used")
-				io.put_new_line
-				io.put_string ("because of the -stop/-batch option.")
-				io.put_new_line
+				localized_print (ewb_names.new_enviroment_value_for (a_key))
 				is_update_environment := True
 			else
 				from
 				until
 					l_answered
 				loop
-					io.put_string (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val))
-					io.put_string (" [y|n] ")
+					localized_print (warning_messages.w_environment_changed (a_key, a_old_val, a_new_val).as_string_32 + ewb_names.yes_or_no)
 					io.read_line
 					if io.last_string.is_empty then
 					elseif io.last_string.item (1).as_lower = 'y' then

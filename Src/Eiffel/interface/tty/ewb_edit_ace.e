@@ -1,13 +1,13 @@
 indexing
 
-	description: 
+	description:
 		"Edit Ace file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-class EWB_EDIT_ACE 
+class EWB_EDIT_ACE
 
 inherit
 
@@ -27,7 +27,7 @@ feature {NONE} -- Execution
 		do
 			lace_name := Eiffel_ace.file_name
 			if lace_name = Void then
-				io.error.put_string ("You must select an Ace file first%N");
+				localized_print_error (ewb_names.you_must_select_an_ace_file_first)
 			else
 				edit (lace_name);
 			end;

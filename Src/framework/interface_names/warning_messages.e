@@ -905,37 +905,39 @@ feature -- Warning messages
 			end
 		end
 
-	w_cannot_generate_png: STRING is "Could not generate PNG file.%NInsufficient video memory."
+	w_cannot_generate_png: STRING_GENERAL is do Result := locale.translate ("Could not generate PNG file.%NInsufficient video memory.") end
 
-	w_does_not_have_enclosing_cluster: STRING is "This cluster does not have an enclosing cluster."
+	w_does_not_have_enclosing_cluster: STRING_GENERAL is do Result := locale.translate ("This cluster does not have an enclosing cluster.") end
 
-	w_No_internet_browser_selected: STRING is "No browser was given in the preferences"
+	w_Freeze_warning: STRING_GENERAL is
+		do
+			Result := locale.translate (
+				"Freezing implies some C compilation and linking.%N%
+				% - Click Yes to compile the Eiffel system (including C compilation)%N%
+				% - Click No  to compile the Eiffel system (no C compilation)%N%
+				% - Click Cancel to abort%N%
+				%%N")
+		end
 
-	w_No_url_to_replace: STRING is "There is no $url part in the browser preference.%N%
-									%Please fix your preferences."
+	w_Finalize_warning: STRING_GENERAL is
+		do
+			Result := locale.translate (
+				"Finalizing implies some C compilation and linking.%N%
+				% - Click Yes to compile the C code after finalizing the system%N%
+				% - Click No  to skip the C compilation (no executable will be generated)%N%
+				% - Click Cancel to abort%N%
+				%%N")
+		end
 
-	w_Page_not_exist: STRING is "The requested page does not exist.%N%
-								%Please check your ISE Eiffel installation."
-
-	w_Freeze_warning: STRING is
-		"Freezing implies some C compilation and linking.%N%
-		% - Click Yes to compile the Eiffel system (including C compilation)%N%
-		% - Click No  to compile the Eiffel system (no C compilation)%N%
-		% - Click Cancel to abort%N%
-		%%N"
-
-	w_Finalize_warning: STRING is
-		"Finalizing implies some C compilation and linking.%N%
-		% - Click Yes to compile the C code after finalizing the system%N%
-		% - Click No  to skip the C compilation (no executable will be generated)%N%
-		% - Click Cancel to abort%N%
-		%%N"
-
-	w_Load_configuration: STRING is	"An error occurred while loading the %
-									%configuration for your profiler.%N%
-									%Please check with your system %
-									%administrator whether your profiler is %
-									%supported.%N"
+	w_Load_configuration: STRING_GENERAL is
+		do
+			Result := locale.translate (
+				"An error occurred while loading the %
+				%configuration for your profiler.%N%
+				%Please check with your system %
+				%administrator whether your profiler is %
+				%supported.%N")
+		end
 
 	w_Ignoring_all_stop_points: STRING is "Application will ignore all breakpoints."
 

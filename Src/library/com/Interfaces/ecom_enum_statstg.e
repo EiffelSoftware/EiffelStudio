@@ -175,7 +175,7 @@ feature {NONE} -- Externals
 		external
 			"C inline use <windows.h>"
 		alias
-			"((IEnumSTATSTG*)$a_item)->lpVtbl->Skip ((IEnumSTATSTG*)$a_item, (ULONG*)$n)"
+			"((IEnumSTATSTG*)$a_item)->lpVtbl->Skip ((IEnumSTATSTG*)$a_item, (ULONG)$n)"
 		end
 
 	c_reset (a_item: POINTER) is

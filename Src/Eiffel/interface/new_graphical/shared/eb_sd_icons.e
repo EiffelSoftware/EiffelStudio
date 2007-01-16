@@ -84,35 +84,40 @@ feature -- Implementation
 			Result := pixmap_from_constant (icon_toolbar_separator_value)
 		end
 
-	hide_tab_indicator (a_hide_number: INTEGER): EV_PIXMAP is
+	hide_tab_indicator_buffer (a_hide_number: INTEGER): EV_PIXEL_BUFFER is
 			-- Hide tab indicator.
 		local
-			l_colors: EV_STOCK_COLORS
 			l_font: EV_FONT
-			l_orignal: EV_PIXMAP
+			l_orignal: EV_PIXEL_BUFFER
+			l_orignal_rect: EV_RECTANGLE
+			l_point: EV_COORDINATE
 		do
-			l_orignal := mini_pixmaps.toolbar_expand_icon
-			Result := l_orignal.sub_pixmap (create {EV_RECTANGLE}.make (0, 0, l_orignal.width, l_orignal.height))
-
-			create l_colors
-			Result.set_background_color (l_colors.default_background_color)
+			l_orignal := mini_pixmaps.toolbar_expand_icon_buffer
 
 			if a_hide_number < 10 then
-				Result.set_size (18, Result.height)
+				create Result.make_with_size (18, 16)
 			elseif a_hide_number < 100 then
-				Result.set_size (21, Result.height)
+				create Result.make_with_size (21, 16)
+			else
+				create Result.make_with_size (24, 16)
 			end
+
+			create l_orignal_rect.make (0, 0, l_orignal.width, l_orignal.height)
+			Result.draw_pixel_buffer (l_orignal, l_orignal_rect)
 
 			create l_font
 			l_font.set_height_in_points (7)
 			l_font.set_family ({EV_FONT_CONSTANTS}.family_roman)
-			Result.set_font (l_font)
 
 			if a_hide_number < 10 then
-				Result.draw_text_top_left (Result.width - 7, 2, a_hide_number.out)
+				create l_point.make (Result.width - 8, 2)
 			elseif a_hide_number < 100 then
-				Result.draw_text_top_left (Result.width - 11, 2, a_hide_number.out)
+				create l_point.make (Result.width - 12, 2)
+			else
+				create l_point.make (Result.width - 16, 2)
 			end
+
+			Result.draw_text (a_hide_number.out, l_font, l_point)
 		end
 
 	tool_bar_indicator: EV_PIXMAP is

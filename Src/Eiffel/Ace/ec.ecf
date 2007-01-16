@@ -162,7 +162,7 @@
 		<cluster name="documentation" location="$EIFFEL_SRC\Eiffel\case\documentation\" recursive="true"/>
 		<cluster name="flat_short_b" location="$EIFFEL_SRC\Eiffel\flat_short\bench\"/>
 		<cluster name="interface" location="$EIFFEL_SRC\Eiffel\interface\">
-			<cluster name="interface_shared" location="$|shared\"/>
+			<cluster name="interface_shared" location="$|shared\" recursive="true"/>
 			<cluster name="tty" location="$|tty\" recursive="true"/>
 		</cluster>
 		<cluster name="switch" location="$EIFFEL_SRC\Eiffel\switch\">

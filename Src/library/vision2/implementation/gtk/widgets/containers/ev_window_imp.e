@@ -112,6 +112,7 @@ feature {NONE} -- Initialization
 				-- Need to set decorations after window is realized.
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_c_object), default_wm_decorations)
 			internal_is_border_enabled := True
+			configure_event_pending := True
 			user_can_resize := True
 			set_is_initialized (True)
 		end
@@ -412,7 +413,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 				--| `default_width' and `default_height' are not useful anymore.
 			a_x_pos := x_position
 			a_y_pos := y_position
-			positioned_by_user := False
+			configure_event_pending := False
 			Precursor (a_x_pos, a_y_pos, a_width, a_height)
 			if a_x_pos  /= previous_x_position or a_y_pos /= previous_y_position then
 				previous_x_position := a_x_pos

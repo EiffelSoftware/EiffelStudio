@@ -125,24 +125,33 @@ feature -- Access
 		require
 			is_com_interface_member: is_com_interface_member
 		local
+			l_type: SYSTEM_TYPE
 			l_name: SYSTEM_STRING
 			l_count, i: INTEGER
 			l_stop: BOOLEAN
 		do
-			l_name := internal_method.declaring_type.name
+			l_type := internal_method.declaring_type
+			l_name := l_type.name
 			Result ?= suffix_table.item (l_name)
 			if Result = Void then
-				l_count := l_name.length - 1
-				from i := l_count until i < 0 or l_stop loop
-					if l_name.chars (i).is_digit then
-						i := i - 1
-					else
-						l_stop := True
-						i := i + 1
+				if l_type.get_interfaces.count > 0 then
+						-- Only version if a COM interface inherits another interface.
+						-- There is no need to check if the inherited interfaces are COM interfaces, becasue they should be. If not
+						-- then the COM binary will no load.
+					l_count := l_name.length - 1
+					from i := l_count until i < 0 or l_stop loop
+						if l_name.chars (i).is_digit then
+							i := i - 1
+						else
+							l_stop := True
+							i := i + 1
+						end
 					end
-				end
-				if i <= l_count then
-					create Result.make_from_cil ({SYSTEM_STRING}.concat_string_string ("_", l_name.substring (i)))
+					if i <= l_count then
+						create Result.make_from_cil ({SYSTEM_STRING}.concat_string_string ("_", l_name.substring (i)))
+					else
+						create Result.make_empty
+					end
 				else
 					create Result.make_empty
 				end

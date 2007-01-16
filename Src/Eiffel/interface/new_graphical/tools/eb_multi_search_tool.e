@@ -211,7 +211,7 @@ feature -- Access
 	editor: EB_EDITOR is
 			-- current_editor
 		do
-			Result := develop_window.ui.current_editor
+			Result := develop_window.editors_manager.current_editor
 		end
 
 	bottom_reached_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -1103,7 +1103,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if not editor.is_empty then
 				currently_searched := a_word
-				class_stone ?= develop_window.ui.current_editor.stone
+				class_stone ?= develop_window.editors_manager.current_editor.stone
 				if class_stone /= Void then
 					class_i := class_stone.class_i
 					file_name:= class_i.file_name
@@ -1166,7 +1166,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		do
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
 			currently_searched := keyword_field.text
-			class_stone ?= develop_window.ui.current_editor.stone
+			class_stone ?= develop_window.editors_manager.current_editor.stone
 			if class_stone /= Void then
 				class_i := class_stone.class_i
 				file_name := class_i.file_name
@@ -1217,7 +1217,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					-- search is possible but the search box is not shown
 					-- default options
 				currently_searched := keyword_field.text
-				class_stone ?= develop_window.ui.current_editor.stone
+				class_stone ?= develop_window.editors_manager.current_editor.stone
 				if class_stone /= Void then
 					class_i := class_stone.class_i
 					file_name := class_i.file_name

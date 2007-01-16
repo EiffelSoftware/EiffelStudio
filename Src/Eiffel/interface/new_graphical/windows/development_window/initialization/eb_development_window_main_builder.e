@@ -59,7 +59,6 @@ feature -- Command
 			l_accel: EV_ACCELERATOR
 			l_toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 			l_new_tab_cmd: EB_NEW_TAB_EDITOR_COMMAND
---			l_open_cmd: EB_OPEN_FILE_COMMAND
 			l_save_cmd: EB_SAVE_FILE_COMMAND
 			l_save_as_cmd: EB_SAVE_FILE_AS_COMMAND
 			l_save_all_cmd: EB_SAVE_ALL_FILE_COMMAND
@@ -90,7 +89,6 @@ feature -- Command
 			l_show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
-			l_editors: ARRAYED_LIST [EB_EDITOR]
 		do
 			-- Directly call a un-redefine init_commands in EB_DEVELOPMENT_WINDOW
 			-- Non-docking Eiffel Studio was call Precursor
@@ -103,11 +101,6 @@ feature -- Command
 			create l_new_tab_cmd.make (develop_window)
 			develop_window.commands.set_new_tab_cmd (l_new_tab_cmd)
 			develop_window.commands.toolbarable_commands.extend (develop_window.commands.new_tab_cmd)
-
--- Larry temp comment, remove it later
---			create l_open_cmd.make (develop_window)
---			develop_window.set_open_cmd (l_open_cmd)
---			develop_window.commands.toolbarable_commands.extend (develop_window.open_cmd)
 
 			create l_save_cmd.make (develop_window)
 			develop_window.set_save_cmd (l_save_cmd)
@@ -248,9 +241,6 @@ feature -- Command
 			develop_window.commands.toggle_feature_alias_cmd.disable_sensitive
 			develop_window.commands.toggle_feature_signature_cmd.disable_sensitive
 			develop_window.commands.toggle_feature_assigner_cmd.disable_sensitive
-
-			create l_editors.make (5)
-			develop_window.ui.set_editors (l_editors)
 		end
 
 	set_up_accelerators is

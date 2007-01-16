@@ -77,8 +77,10 @@ feature -- Access
 	current_editor: EB_SMART_EDITOR is
 			-- Current editor
 		do
-			if editors_internal.is_empty then
-			else
+			if editors_internal.has (last_focused_editor) then
+				Result := last_focused_editor
+			elseif not editors_internal.is_empty then
+				-- We return a random editor
 				if editors_internal.off then
 					editors_internal.start
 				end
@@ -90,27 +92,17 @@ feature -- Access
 			-- Editor that has `a_stone', or editing the same path file.
 		local
 			l_editors: ARRAYED_LIST [like current_editor]
-			l_file_stone1, l_file_stone2: FILED_STONE
+			l_fake_editor: EB_FAKE_SMART_EDITOR
 		do
 			if a_stone /= Void then
-				l_editors := editors
-				from
-					l_editors.start
-				until
-					l_editors.after or Result /= Void
-				loop
-					if l_editors.item.stone /= Void and then a_stone.is_equal (l_editors.item.stone) then
-						Result := l_editors.item
-					else
-						l_file_stone1 ?= a_stone
-						l_file_stone2 ?= l_editors.item.stone
-						if l_file_stone1 /= Void and l_file_stone2 /= Void then
-							if l_file_stone1.file_name.is_equal (l_file_stone2.file_name) then
-								Result := l_editors.item
-							end
-						end
+				Result := editor_with_stone_internal (editors, a_stone)
+				if Result = Void then
+					Result := editor_with_stone_internal (fake_editors, a_stone)
+					l_fake_editor ?= Result
+					if l_fake_editor /= Void then
+						init_editor
+						change_fake_to_real (last_created_editor, l_fake_editor, l_fake_editor.content)
 					end
-					l_editors.forth
 				end
 			end
 		end
@@ -155,6 +147,9 @@ feature -- Access
 			-- Number of editors under management.
 		do
 			Result := editors_internal.count
+			if fake_editors /= Void then
+				Result := Result + fake_editors.count
+			end
 		end
 
 	development_window: EB_DEVELOPMENT_WINDOW
@@ -535,9 +530,7 @@ feature -- Element change
 			if not a_open_classes.is_empty or not a_open_clusters.is_empty then
 				is_opening_editors := True
 
-
 				create l_editor_numbers.make (a_open_classes.count + a_open_clusters.count)
-
 				create fake_editors.make (5)
 					-- Restore open classese.
 				from
@@ -599,7 +592,6 @@ feature -- Element change
 
 	fake_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 			-- Fake editors which is for fast opening Eiffel Studio.
-			-- It should be cleaned by call `show_editors_possible'.
 
 	show_editors_possible is
 			-- Show editors which are possible to show.
@@ -610,7 +602,6 @@ feature -- Element change
 				from
 					l_snapshot := fake_editors
 					l_snapshot.start
-					fake_editors := Void -- Then on_focus can execute.
 				until
 					l_snapshot.after
 				loop
@@ -620,8 +611,6 @@ feature -- Element change
 					l_snapshot.forth
 				end
 			end
-		ensure
-			cleaned: fake_editors = Void
 		end
 
 feature -- Basic operations
@@ -758,7 +747,7 @@ feature {NONE}-- Implementation
 			l_fake_editor: EB_FAKE_SMART_EDITOR
 			l_editor: EB_SMART_EDITOR
 		do
-			if not is_opening_editors and fake_editors = Void then
+			if not is_opening_editors then
 				l_fake_editor ?= a_editor
 				if l_fake_editor /= Void then
 					check not_has: not has_editor_with_long_title (l_fake_editor.content.long_title) end
@@ -770,9 +759,7 @@ feature {NONE}-- Implementation
 				end
 
 				if not editors_internal.is_empty and then not editors_internal.off then
-					if last_focused_editor /= editors_internal.item then
-						last_focused_editor := current_editor
-					end
+					last_focused_editor := a_editor
 				else
 					last_focused_editor := Void
 				end
@@ -913,10 +900,9 @@ feature {NONE}-- Implementation
 			last_created_editor.set_docking_content (Result)
 
 			Result.focus_in_actions.extend (agent on_focus (last_created_editor))
-
 			Result.close_request_actions.extend (agent Result.close)
-			docking_manager.contents.extend (Result)
 
+			docking_manager.contents.extend (Result)
 			Result.set_type ({SD_ENUMERATION}.editor)
 		end
 
@@ -937,6 +923,11 @@ feature {NONE}-- Implementation
 
 			a_editor.set_docking_content (a_content)
 			a_editor.set_stone (a_fake_editor.stone)
+
+			fake_editors.start
+			fake_editors.prune (a_fake_editor)
+		ensure
+			not_has: not fake_editors.has (a_fake_editor)
 		end
 
 	build_class_name (a_path: STRING): STRING is
@@ -996,6 +987,33 @@ feature {NONE}-- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+	editor_with_stone_internal (a_editors: ARRAYED_LIST [EB_SMART_EDITOR]; a_stone: STONE): EB_SMART_EDITOR is
+			-- Quey a editor which from `a_editors' has `a_stone'.
+		require
+			not_void: a_editors /= Void
+		local
+			l_file_stone1, l_file_stone2: FILED_STONE
+		do
+			from
+				a_editors.start
+			until
+				a_editors.after or Result /= Void
+			loop
+				if a_editors.item.stone /= Void and then a_stone.is_equal (a_editors.item.stone) then
+					Result := a_editors.item
+				else
+					l_file_stone1 ?= a_stone
+					l_file_stone2 ?= a_editors.item.stone
+					if l_file_stone1 /= Void and l_file_stone2 /= Void then
+						if l_file_stone1.file_name.is_equal (l_file_stone2.file_name) then
+							Result := a_editors.item
+						end
+					end
+				end
+				a_editors.forth
+			end
 		end
 
 indexing

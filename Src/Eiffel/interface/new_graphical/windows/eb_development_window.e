@@ -1003,7 +1003,7 @@ feature -- Multiple editor management
 					local
 						l_editor: EB_EDITOR
 					do
-						l_editor := ui.current_editor
+						l_editor := editors_manager.current_editor
 						if
 							l_editor /= Void and then
 							not l_editor.is_empty and then
@@ -1141,7 +1141,6 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 				managed_main_formatters.wipe_out
 				managed_main_formatters := Void
 				commands.toolbarable_commands.wipe_out
-				ui.editors.wipe_out
 
 				if editors_manager /= Void then
 					editors_manager.recycle
@@ -1699,7 +1698,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		local
 			l_editor: EB_EDITOR
 		do
-			l_editor := ui.current_editor
+			l_editor := editors_manager.current_editor
 			if l_editor /= Void and then not l_editor.is_empty then
 				l_editor.select_all
 			end
@@ -1710,7 +1709,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 		local
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
-			cv_ced ?= ui.current_editor
+			cv_ced ?= editors_manager.current_editor
 			if cv_ced /= Void then
 				cv_ced.search
 			end
@@ -1722,7 +1721,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			ed: EB_EDITOR
 			l_dialog: EB_GOTO_DIALOG
 		do
-			ed ?= ui.current_editor
+			ed ?= editors_manager.current_editor
 			if ed /= Void then
 				create l_dialog.make (ed)
 				ui.set_goto_dialog (l_dialog)
@@ -1742,7 +1741,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
 			if tools.search_tool.currently_searched /= Void then
-				cv_ced ?= ui.current_editor
+				cv_ced ?= editors_manager.current_editor
 				if cv_ced /= Void then
 					cv_ced.find_next
 				end
@@ -1757,7 +1756,7 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 			cv_ced: EB_CLICKABLE_EDITOR
 		do
 			if tools.search_tool.currently_searched /= Void then
-				cv_ced ?= ui.current_editor
+				cv_ced ?= editors_manager.current_editor
 				if cv_ced /= Void then
 					cv_ced.find_previous
 				end
@@ -1791,20 +1790,20 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 	cut_selection is
 			-- Cut the selection in the current editor.
 		do
-			ui.current_editor.cut_selection
+			editors_manager.current_editor.cut_selection
 		end
 
 	copy_selection is
 			-- Cut the selection in the current editor.
 		do
-			ui.current_editor.copy_selection
+			editors_manager.current_editor.copy_selection
 		end
 
 	toggle_formatting_marks is
 			-- Show/Hide formatting marks in the editor and update related menu item.
 		do
-			ui.current_editor.toggle_view_invisible_symbols
-			if ui.current_editor.view_invisible_symbols then
+			editors_manager.current_editor.toggle_view_invisible_symbols
+			if editors_manager.current_editor.view_invisible_symbols then
 				formatting_marks_command_menu_item.set_text (Interface_names.m_hide_formatting_marks)
 			else
 				formatting_marks_command_menu_item.set_text(Interface_names.m_show_formatting_marks)

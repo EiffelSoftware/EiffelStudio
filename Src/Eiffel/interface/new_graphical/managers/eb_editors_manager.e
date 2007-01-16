@@ -96,7 +96,7 @@ feature -- Access
 		do
 			if a_stone /= Void then
 				Result := editor_with_stone_internal (editors, a_stone)
-				if Result = Void then
+				if Result = Void and then fake_editors /= Void then
 					Result := editor_with_stone_internal (fake_editors, a_stone)
 					l_fake_editor ?= Result
 					if l_fake_editor /= Void then
@@ -605,7 +605,7 @@ feature -- Element change
 				until
 					l_snapshot.after
 				loop
-					if l_snapshot.item.docking_content.user_widget.is_displayed then
+					if l_snapshot.item /= Void and then l_snapshot.item.docking_content.user_widget.is_displayed then
 						on_focus (l_snapshot.item)
 					end
 					l_snapshot.forth

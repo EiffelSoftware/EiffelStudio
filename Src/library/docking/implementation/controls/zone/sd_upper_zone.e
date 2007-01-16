@@ -241,9 +241,6 @@ feature -- Command
 			internal_notebook.set_show_minimized (is_minimized)
 		end
 
-	parent_spliter_position: ARRAYED_LIST [INTEGER]
-			-- Parent spliter position.
-
 feature -- Query
 
 	spliter_size (a_spliter: EV_SPLIT_AREA; a_zone_size: INTEGER): INTEGER is

@@ -73,6 +73,7 @@ feature -- Command
 		do
 			create l_env
 			l_env.application.pointer_button_press_actions.prune (application_right_click_agent)
+			contents.wipe_out
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT, SD_TOOL_BAR_CONTENT} -- Internal functions.

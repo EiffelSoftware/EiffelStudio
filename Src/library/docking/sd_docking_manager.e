@@ -219,6 +219,7 @@ feature -- Command
 		do
 			agents.destroy
 			tool_bar_manager.destroy
+			contents.wipe_out
 		end
 
 feature -- Contract support

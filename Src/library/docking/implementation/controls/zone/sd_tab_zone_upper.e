@@ -27,6 +27,9 @@ inherit
 		end
 
 	SD_UPPER_ZONE
+		redefine
+			show_notebook_contents
+		end
 
 create
 	make
@@ -65,6 +68,17 @@ feature -- Command
 			-- Redefine.
 		do
 			 internal_notebook.set_show_maximized (a_max)
+		end
+
+	show_notebook_contents (a_is_show: BOOLEAN) is
+			-- Redefine
+		do
+			Precursor {SD_UPPER_ZONE}(a_is_show)
+			if a_is_show then
+				internal_notebook.enable_widget_expand
+			else
+				internal_notebook.disable_widget_expand
+			end
 		end
 
 feature {NONE} -- Implementation

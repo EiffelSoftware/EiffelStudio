@@ -7954,6 +7954,11 @@ feature
 			"C (GtkWindow*, gint, gint) | <gtk/gtk.h>"
 		end
 
+	frozen gtk_window_get_default_size (a_window: POINTER; a_width: POINTER; a_height: POINTER) is
+		external
+			"C (GtkWindow*, EIF_INTEGER_32*, EIF_INTEGER_32*) | <gtk/gtk.h>"
+		end
+
 	frozen gtk_window_set_focus (a_window: POINTER; a_focus: POINTER) is
 		external
 			"C (GtkWindow*, GtkWidget*) | <gtk/gtk.h>"

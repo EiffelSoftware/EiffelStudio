@@ -28,6 +28,8 @@ inherit
 			extend_widget as extend_cell,
 			has_widget as has_cell,
 			prune_widget as prune
+		redefine
+			show_notebook_contents
 		end
 
 create
@@ -147,6 +149,17 @@ feature -- Redefine
 			-- Set title bar non-focuse color.
 		do
 			internal_notebook.set_focus_color (False)
+		end
+
+	show_notebook_contents (a_is_show: BOOLEAN) is
+			-- Redefine
+		do
+			Precursor {SD_UPPER_ZONE}(a_is_show)
+			if a_is_show then
+				internal_notebook.enable_widget_expand
+			else
+				internal_notebook.disable_widget_expand
+			end
 		end
 
 feature -- Command

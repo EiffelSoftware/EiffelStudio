@@ -289,6 +289,18 @@ feature -- Command
 			set: contents.i_th (a_index) = a_content
 		end
 
+	disable_widget_expand is
+			-- Disable client programmers' widget expand
+		do
+			disable_item_expand (internal_border_box)
+		end
+
+	enable_widget_expand is
+			-- Enable client programmers' widget expand
+		do
+			enable_item_expand (internal_border_box)
+		end
+
 feature -- Query
 
 	contents: ARRAYED_LIST [SD_CONTENT] is

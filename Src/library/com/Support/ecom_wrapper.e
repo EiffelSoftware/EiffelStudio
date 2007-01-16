@@ -10,7 +10,7 @@ deferred class
 
 inherit
 	DISPOSABLE
-	
+
 	PLATFORM
 		export
 			{NONE} all
@@ -54,9 +54,6 @@ feature {NONE} -- Implementation
 		ensure then
 			item_null: item = default_pointer
 		end
-
-invariant
-	valid_item: item /= default_pointer
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

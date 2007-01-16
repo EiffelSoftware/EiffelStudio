@@ -43,6 +43,7 @@ feature {NONE}  -- Initlization
 				l_window.accelerators.extend (l_acc)
 			end
 
+			-- We must set another accelerator, otherwise shift+ctrl+tab will not invoke actions.
 			create l_acc.make_with_key_combination (l_key, True, False, True)
 			l_acc.actions.extend (agent on_zone_navigation (True))
 			if l_window /= Void then
@@ -183,7 +184,9 @@ feature -- Commands
 			until
 				l_zones.after
 			loop
-				l_zones.item.recover_to_normal_state
+				if l_zones.item /= Void then
+					l_zones.item.recover_to_normal_state
+				end
 				l_zones.forth
 			end
 		end
@@ -207,13 +210,13 @@ feature -- Commands
 			end
 		end
 
-	on_zone_navigation (is_shift_pressed: BOOLEAN) is
+	on_zone_navigation (a_shift_pressed: BOOLEAN) is
 			-- User request to show zone navigation.
 		local
 			l_dialog: SD_ZONE_NAVIGATION_DIALOG
 			l_x, l_y: INTEGER
 		do
-			create l_dialog.make (is_shift_pressed, internal_docking_manager)
+			create l_dialog.make (a_shift_pressed, internal_docking_manager)
 			l_x := internal_docking_manager.main_window.screen_x + internal_docking_manager.main_window.width // 2 - l_dialog.width // 2
 			l_y := internal_docking_manager.main_window.screen_y + internal_docking_manager.main_window.height // 2 - l_dialog.height // 2
 			l_dialog.set_position (l_x, l_y)

@@ -208,6 +208,7 @@ feature {NONE} -- Implementation agents.
 			-- Handle `internal_label_box' tab key press.
 		local
 			l_label: SD_CONTENT_LABEL
+			l_text: STRING
 		do
 			inspect
 				a_key.code
@@ -220,9 +221,16 @@ feature {NONE} -- Implementation agents.
 			when {EV_KEY_CONSTANTS}.Key_escape then
 				destroy
 			else
-				internal_text_box.set_text (a_key.out)
-				internal_text_box.set_focus
-				internal_text_box.set_caret_position (internal_text_box.text.count + 1)
+				if a_key.is_alpha or a_key.is_number or a_key.is_numpad then
+					l_text := a_key.out
+					if a_key.is_numpad then
+						-- Remomve "NumPad " from string
+						l_text.remove_substring (1, 7)
+					end
+					internal_text_box.set_text (l_text)
+					internal_text_box.set_focus
+					internal_text_box.set_caret_position (internal_text_box.text.count + 1)
+				end
 			end
 
 		end

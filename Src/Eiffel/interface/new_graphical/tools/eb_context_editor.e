@@ -1401,7 +1401,7 @@ feature {EB_DIAGRAM_TOOL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- To
 			is_link_aggregate := False
 		end
 
-feature {EB_CONTEXT_TOOL, EB_DEVELOPMENT_WINDOW_TOOLS} -- Context tool
+feature {EB_DEVELOPMENT_WINDOW_TOOLS} -- Context tool
 
 	on_select is
 			-- Current became selected in notebook.

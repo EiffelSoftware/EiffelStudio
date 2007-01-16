@@ -1,12 +1,12 @@
 indexing
-	description: "Objects that represent the seperator in SD_AUTO_HIDE_PANEL. A sign type."
+	description: "Objects that represent the separator in SD_AUTO_HIDE_PANEL. A sign type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_AUTO_HIDE_SEPERATOR
+	SD_AUTO_HIDE_SEPARATOR
 
 inherit
 	EV_CELL

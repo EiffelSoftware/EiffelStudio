@@ -130,6 +130,18 @@ feature -- Command
 			l_managed_pointer.put_natural_32 (rgba, byte_pos)
 		end
 
+	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
+			-- Draw `a_text' using `a_font' at `a_point'.
+		do
+			check not_implemented: False end
+		end
+
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+			-- Draw `a_pixle_buffer' to current at `a_rect'.
+		do
+			check not_implemented: False end
+		end
+
 feature -- Query
 
 	width: INTEGER is

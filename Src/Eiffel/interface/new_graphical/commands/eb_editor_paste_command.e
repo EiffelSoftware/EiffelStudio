@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 	editor: EB_EDITOR is
 			-- Editor corresponding to Current
 		do
-			Result := target.ui.current_editor
+			Result := target.editors_manager.current_editor
 		end
 
 	description: STRING_GENERAL is

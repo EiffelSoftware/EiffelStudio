@@ -535,7 +535,7 @@ feature {NONE} -- Event handling
 			ce: EB_EDITOR
 			l_text: STRING
 		do
-			ce := Eb_debugger_manager.debugging_window.ui.current_editor
+			ce := Eb_debugger_manager.debugging_window.editors_manager.current_editor
 			if ce /= Void and then ce.has_selection then
 				l_text := ce.string_selection
 				if l_text.has ('%N') then

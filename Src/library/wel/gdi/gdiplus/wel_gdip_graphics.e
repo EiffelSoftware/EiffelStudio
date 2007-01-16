@@ -102,6 +102,45 @@ feature -- Command
 			end
 		end
 
+	draw_string (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_x, a_y: REAL) is
+			-- Draw `a_length' characters of `a_string' with `a_font' at `a_x',`a_y' position.
+		require
+			not_void: a_string /= Void
+			valid: a_length >= 0
+			not_void: a_font /= Void
+			valid: a_x >= 0 and a_y >= 0
+		local
+			l_rect_f: WEL_GDIP_RECT_F
+			l_format: WEL_GDIP_STRING_FORMAT
+			l_brush: WEL_GDIP_BRUSH
+			l_color: WEL_GDIP_COLOR
+			l_system_color: WEL_SYSTEM_COLORS
+			l_wel_color_ref: WEL_COLOR_REF
+		do
+			create l_rect_f.make_with_size (a_x, a_y, 0, 0)
+			create l_format.make
+			create l_system_color
+			l_wel_color_ref := l_system_color.system_color_btntext
+			create l_color.make_from_argb (255, l_wel_color_ref.red, l_wel_color_ref.green, l_wel_color_ref.blue)
+			create l_brush.make_solid (l_color)
+			draw_string_with_length_font_rect_format_brush (a_string, a_length, a_font, l_rect_f, l_format, l_brush)
+		end
+
+	draw_string_with_length_font_rect_format_brush (a_string: STRING_GENERAL; a_length: INTEGER; a_font: WEL_GDIP_FONT; a_rect_f: WEL_GDIP_RECT_F; a_format: WEL_GDIP_STRING_FORMAT; a_brush: WEL_GDIP_BRUSH) is
+			-- Draw string with arguments.
+		require
+			not_void: a_string /= Void
+			valid: a_length >= 0
+			not_void: a_font /= Void
+			not_void: a_rect_f /= Void
+		local
+			l_result: INTEGER
+			l_wel_string: WEL_STRING
+		do
+			create l_wel_string.make (a_string)
+			c_gdip_draw_string (gdi_plus_handle, item, l_wel_string.item, a_length, a_font.item, a_rect_f.item, a_format.item, a_brush.item, $l_result)
+		end
+
 feature -- Destroy
 
 	destroy_item is
@@ -145,7 +184,7 @@ feature {NONE} -- C externals
 		end
 
 	c_gdip_get_image_graphics_context (a_gdiplus_handle: POINTER; a_image: POINTER; a_result_status: TYPED_POINTER [INTEGER]): POINTER is
-			-- Get `a_result_graphics' from `a_image'
+			-- Get gdi+ graphics from `a_image'
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 		external
@@ -257,6 +296,36 @@ feature {NONE} -- C externals
 								(GDIPCONST GpImageAttributes*) $a_image_attributes,
 								(DrawImageAbort) $a_abort_callback,
 								(VOID *) $a_callback_data);
+				}
+			}
+			]"
+		end
+
+	c_gdip_draw_string (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_wchar_string: POINTER; a_length: INTEGER; a_font: POINTER; a_gp_rect_f: POINTER; a_gp_string_format: POINTER; a_gp_brush: POINTER; a_result_status: TYPED_POINTER [INTEGER]) is
+			-- Draw `a_wchar_string' on `a_graphics'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipDrawString = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+
+				if (!GdipDrawString) {
+					GdipDrawString = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawString");
+				}
+				if (GdipDrawString) {
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GDIPCONST WCHAR *, INT, GDIPCONST GpFont *, GDIPCONST RectF *, GDIPCONST GpStringFormat *, GDIPCONST GpBrush *)) GdipDrawString)
+								((GpGraphics *) $a_graphics,
+								(GDIPCONST WCHAR *) $a_wchar_string,
+								(INT) $a_length,
+								(GDIPCONST GpFont *) $a_font,
+								(GDIPCONST RectF *) $a_gp_rect_f,
+								(GDIPCONST GpStringFormat *) $a_gp_string_format,
+								(GDIPCONST GpBrush *) $a_gp_brush);
 				}
 			}
 			]"

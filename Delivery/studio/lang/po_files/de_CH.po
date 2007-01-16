@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2007-01-02 16:22-0800\n"
+"PO-Revision-Date: 2007-01-15 18:01-0800\n"
 "Last-Translator: Eiffel Software\n"
 "Language-Team: Eiffel Software\n"
 "MIME-Version: 1.0\n"
@@ -93,7 +93,7 @@ msgid "Variables"
 msgstr "Variablen"
 
 msgid "Spanish (El Salvador)"
-msgstr ""
+msgstr "Spanisch (El Salvador)"
 
 msgid "Metric Definition"
 msgstr "Metrikdefinition"
@@ -162,7 +162,7 @@ msgid "Update"
 msgstr "Aktualisieren"
 
 msgid "French"
-msgstr ""
+msgstr "Französisch"
 
 msgid "Assamese (India)"
 msgstr ""
@@ -198,7 +198,7 @@ msgid "Serbian (Serbia and Montenegro, Latin)"
 msgstr ""
 
 msgid "Note: Metric is not saved."
-msgstr ""
+msgstr "Hinweis: Metrik ist nicht gespeichert."
 
 msgid "E&xit"
 msgstr "B&eenden"
@@ -373,7 +373,7 @@ msgid "Environment"
 msgstr "Umgebung"
 
 msgid "Arabic (Libya)"
-msgstr ""
+msgstr "Arabisch (Lybien)"
 
 #, fuzzy
 msgid "Select Recalculatable"
@@ -504,14 +504,13 @@ msgid "Pause application at current point"
 msgstr "Anwendung am aktuellen Punkt pausieren"
 
 msgid "Spanish (Puerto Rico)"
-msgstr ""
+msgstr "Spanisch (Puerto Rico)"
 
 msgid "Dynamic Runtime"
 msgstr "Dynamische Laufzeitumgebung"
 
-#, fuzzy
 msgid "Hungarian"
-msgstr "Invarianten"
+msgstr "Ungarisch"
 
 msgid "Kannada"
 msgstr ""
@@ -535,13 +534,13 @@ msgid "or And-term $1"
 msgstr ""
 
 msgid "Bulgarian"
-msgstr ""
+msgstr "Bulgarisch"
 
 msgid "once routines and constants"
 msgstr ""
 
 msgid "Afrikaans (South Africa)"
-msgstr ""
+msgstr "Afrikaans (Südafrika)"
 
 msgid "Add a new command"
 msgstr "Neuer Befehl hinzufügen"
@@ -568,10 +567,10 @@ msgid "Use current environment value"
 msgstr "Benutze aktuelle Umgebungsvariablen"
 
 msgid "Arabic (Syria)"
-msgstr ""
+msgstr "Arabisch (Syrien)"
 
 msgid "English (Zimbabwe)"
-msgstr ""
+msgstr "Englisch (Zimbabwe)"
 
 msgid "Referenced metric(s): $1 not selected."
 msgstr ""
@@ -595,7 +594,7 @@ msgid "Command line:"
 msgstr "Kommandozeile:"
 
 msgid "French (Luxembourg)"
-msgstr ""
+msgstr "Französisch (Luxemburg)"
 
 msgid "Root Class"
 msgstr "Hauptklasse"
@@ -618,9 +617,8 @@ msgstr ""
 msgid "Open"
 msgstr "Öffnen"
 
-#, fuzzy
 msgid "Metric History"
-msgstr "Metrikliste:"
+msgstr "Metrikverlauf"
 
 msgid "Toggle visibility of feature alias name"
 msgstr "Sichtbarkeit von Aliasnamen von Featuren umschalten"
@@ -632,7 +630,7 @@ msgid "Set maximum call stack depth"
 msgstr "Maximale Aufruf-Stack-Tiefe angeben"
 
 msgid "German (Luxembourg)"
-msgstr ""
+msgstr "Deutsch (Luxemburg)"
 
 msgid "Clean archive?"
 msgstr ""
@@ -650,7 +648,7 @@ msgid "Dummy"
 msgstr "Dummy"
 
 msgid "Spanish (Ecuador)"
-msgstr ""
+msgstr "Spanisch (Ecuador)"
 
 msgid "Do not ask again, and always terminate freezing when needed."
 msgstr "Nicht nochmals fragen und das Einfrieren immer abbrechen wenn nötig."
@@ -668,7 +666,7 @@ msgid "Exiting will stop the debugger."
 msgstr "Beenden wird den Debugger stoppen."
 
 msgid "Hungarian (Hungary)"
-msgstr ""
+msgstr "Ungarisch (Ungarn)"
 
 msgid "Select input domain:"
 msgstr ""
@@ -677,10 +675,10 @@ msgid "Malay (Brunei Darussalam)"
 msgstr ""
 
 msgid "Danish (Denmark)"
-msgstr ""
+msgstr "Dänisch (Dänemark)"
 
 msgid "Slovak (Slovakia)"
-msgstr ""
+msgstr "Slovakisch (Slovakei)"
 
 msgid "All Classes"
 msgstr "Alle Klassen"
@@ -689,7 +687,7 @@ msgid "Invalid tag."
 msgstr "Ungültige Marke."
 
 msgid "Dutch (Netherlands)"
-msgstr ""
+msgstr "holländisch (Niederlande)"
 
 msgid "Remove right angles"
 msgstr "Rechte Winkel entfernen"
@@ -747,7 +745,7 @@ msgid "Renames occurances of the class name in any class. (Slow)"
 msgstr "Klassennamen in allen Klassen umbenennen. (Langsam)"
 
 msgid "German (Switzerland)"
-msgstr ""
+msgstr "Deutsch (Schweiz)"
 
 msgid "Command name: "
 msgstr "Befehlname:"
@@ -774,7 +772,7 @@ msgid "Discover unreferenced externally added classes and recompile."
 msgstr "Finde nicht referenzierte Klassen welche neu hinzugefügt wurden und kompiliere neu."
 
 msgid "Russian (Russia)"
-msgstr ""
+msgstr "Russisch (Russland)"
 
 msgid "Step into a routine"
 msgstr "In Routine eintreten"
@@ -789,6 +787,8 @@ msgid ""
 "Are you sure you want to redo the refactoring?\n"
 " If classes have been modified since the undo of the refactoring this can lead to corrupt classes and lost information!"
 msgstr ""
+"Soll das Refactoring wirklich wiederholt werden?\n"
+"Falls sich seit dem Rückgängig machen des Refactorings Klassen geändert haben kann dies zu korrupten Klassen und verlorenen Informationen führen."
 
 msgid "Collapse all selected level(s)"
 msgstr "Alle gewählten Level(s) zuklappen"
@@ -823,7 +823,7 @@ msgid "Vietnamese"
 msgstr "Umbenennen"
 
 msgid "Renames only occurances of the class name in compiled classes."
-msgstr ""
+msgstr "Nur Klassennamen die in kompilierten Klassen vorkommen werden umbenannt."
 
 msgid "Find &Previous"
 msgstr "&Vorherige finden"
@@ -834,9 +834,8 @@ msgstr ""
 msgid "Location of the external."
 msgstr "Ort des externen Objekts."
 
-#, fuzzy
 msgid "Croatian"
-msgstr "&Erzeugte"
+msgstr "Koratisch"
 
 msgid ""
 "Add a new variable : double click or [enter]\n"
@@ -879,7 +878,7 @@ msgid "Keep grid layout"
 msgstr "Gitterlayout beibehalten"
 
 msgid "Unit \"$1\" of variable metric is different from unit \"$2\" of linear metric."
-msgstr ""
+msgstr "Einheit \"$1\" der Variablenmetrik ist unterschiedlich zur Einheit \"$2\" der linearen Metrik."
 
 msgid "Reverse Engineering Project"
 msgstr ""
@@ -888,13 +887,13 @@ msgid "&Back"
 msgstr "Zurück"
 
 msgid "Arabic (Morocco)"
-msgstr ""
+msgstr "Arabisch (Marokko)"
 
 msgid "Should names of folders in recursive clusters be used as namespaces?"
 msgstr "Sollen die Namen von Ordnern in rekursiven Clustern als Namespaces verwendet werden?"
 
 msgid "Should names follow the .NET naming convention?"
-msgstr ""
+msgstr "Sollen Namen der .NET Namenskonvention folgen?"
 
 msgid "Restore Default"
 msgstr "Standard wiederherstellen"
@@ -909,7 +908,7 @@ msgid "Set to U&ppercase\tCtrl+U"
 msgstr "Alles &Grossbuchstaben\tCtrl+U"
 
 msgid "Invalid tag/tag position \"$1\"."
-msgstr ""
+msgstr "Ungültiger Tag/Tagposition \"$1\"."
 
 msgid "Public key token that identifies the asssembly."
 msgstr ""
@@ -936,10 +935,10 @@ msgid "default"
 msgstr ""
 
 msgid "Irish"
-msgstr ""
+msgstr "Irisch"
 
 msgid "Rollback?"
-msgstr ""
+msgstr "Zurückrollen?"
 
 msgid "Description:"
 msgstr "Beschreibung:"
@@ -1023,7 +1022,7 @@ msgid "Watch Tool"
 msgstr "Beobachtungswerkzeug"
 
 msgid "English (Canada)"
-msgstr ""
+msgstr "Englisch (Kanada)"
 
 msgid "<- Remove"
 msgstr "<- Entfernen"
@@ -1056,7 +1055,7 @@ msgid "$1 from $2"
 msgstr "$1 von $2"
 
 msgid "Clusters to Go:"
-msgstr ""
+msgstr "Verbleibende Clusters:"
 
 msgid "Greenlandic (Greenland)"
 msgstr ""
@@ -1093,7 +1092,7 @@ msgid "Tajik"
 msgstr ""
 
 msgid "Turkish"
-msgstr ""
+msgstr "Türkisch"
 
 msgid "Add an assembly"
 msgstr "Füge ein Assembly hinzu"
@@ -1120,7 +1119,7 @@ msgid "interface view"
 msgstr "Schnittstellenansicht"
 
 msgid "Display limit reached"
-msgstr ""
+msgstr "Anzeigelimit erreicht"
 
 msgid "Edit Object content"
 msgstr "Objektinhalt bearbeiten"
@@ -1186,7 +1185,7 @@ msgid "Error message :"
 msgstr "Fehlernachricht :"
 
 msgid "Indonesian"
-msgstr ""
+msgstr "Indonesisch"
 
 msgid "Alias:"
 msgstr "Alias:"
@@ -1195,13 +1194,13 @@ msgid "Select the Compilation mode."
 msgstr "Kompilierungstyp wählen."
 
 msgid "Select a metric archive file"
-msgstr ""
+msgstr "Metrikarchivdatei wählen"
 
 msgid "Georgian"
-msgstr ""
+msgstr "Georgisch"
 
 msgid "Bottom reached."
-msgstr ""
+msgstr "Ende erreicht."
 
 msgid "Backup user-defined metrics"
 msgstr "Sicherheitskopie benutzerdefinierter Metriken erstellen"
@@ -1283,7 +1282,7 @@ msgid "Metric is valid."
 msgstr "Metrik ist gültig."
 
 msgid "&Comment\tCtrl+K"
-msgstr "&Auskommentieren\tCtrl+K"
+msgstr "&Kommentieren\tCtrl+K"
 
 msgid "No result available."
 msgstr "Keine Resultate vorhanden."
@@ -1316,7 +1315,7 @@ msgid "Command is running"
 msgstr "Befehl läuft"
 
 msgid "English (Singapore)"
-msgstr ""
+msgstr "Englisch (Singapur)"
 
 msgid "&Guided Tour"
 msgstr ""
@@ -1346,7 +1345,7 @@ msgid "Dead Code Removal"
 msgstr "Entfernung von unbenötigtem Code"
 
 msgid "English (New Zealand)"
-msgstr ""
+msgstr "Englisch (Neuseeland)"
 
 msgid "Details"
 msgstr "Details"
@@ -1382,10 +1381,10 @@ msgid "Local"
 msgstr "Lokale Variable"
 
 msgid "Russian"
-msgstr ""
+msgstr "Russisch"
 
 msgid "Arabic (Yemen)"
-msgstr ""
+msgstr "Arabisch (Jemen)"
 
 msgid "Set Center Class"
 msgstr ""
@@ -1444,7 +1443,7 @@ msgid "Edit an expression"
 msgstr "Ausdruck bearbeiten"
 
 msgid "French (France)"
-msgstr ""
+msgstr "Französisch (Frankreich)"
 
 msgid "Use Optimized Precompile"
 msgstr "Benutze optimiertes Precompile"
@@ -1480,7 +1479,7 @@ msgid "E&xternals"
 msgstr "E&xterne Objekte"
 
 msgid "English (Trinidad and Tobago)"
-msgstr ""
+msgstr "Englisch (Trinidad und Tobago)"
 
 msgid "Punjabi (India)"
 msgstr ""
@@ -1498,7 +1497,7 @@ msgid "Compare"
 msgstr "Vergleiche"
 
 msgid "Greek (Greece)"
-msgstr ""
+msgstr "Griechisch (Griechenland)"
 
 msgid "Back"
 msgstr "Zurück"
@@ -1528,7 +1527,7 @@ msgid "Building flat view ..."
 msgstr "Flache Ansicht wird erstellt..."
 
 msgid "Multithreaded"
-msgstr ""
+msgstr "Nebenläufig (Multithreaded)"
 
 msgid "Browse..."
 msgstr "Durchsuchen..."
@@ -1636,7 +1635,7 @@ msgid "Unknown class name"
 msgstr "Unbekannter Klassenname"
 
 msgid " Location: $1"
-msgstr ""
+msgstr " Pfad: $1"
 
 msgid "Czech"
 msgstr ""
@@ -1724,7 +1723,7 @@ msgid "Coefficient of variable metric is missing."
 msgstr ""
 
 msgid "Korean (Korea)"
-msgstr ""
+msgstr "Koreanisch (Korea)"
 
 msgid "user set"
 msgstr "benutzerdefiniert"
@@ -1822,7 +1821,7 @@ msgid "Run-time information record"
 msgstr ""
 
 msgid "Italian (Italy)"
-msgstr ""
+msgstr "Italienisch (Italien)"
 
 msgid "Icelandic (Iceland)"
 msgstr ""
@@ -1982,7 +1981,7 @@ msgid "Toggle visibility of client link labels"
 msgstr "Schalte die Sichtbarkeit der Beschriftungen der Client-Verknüpfungen um"
 
 msgid "Norwegian"
-msgstr ""
+msgstr "Norwegisch"
 
 msgid "Evaluate check assertions?"
 msgstr "'check' auswerten?"
@@ -2092,7 +2091,7 @@ msgid "Resource"
 msgstr "Ressource"
 
 msgid "Generate a multithreaded application?"
-msgstr ""
+msgstr "Eine nebenläufige Anwendung erstellen? (multithreaded)"
 
 msgid "Criterion name is missing."
 msgstr "Name des Kriteriums fehlt."
@@ -2122,7 +2121,7 @@ msgid "Feature `$1' (ID = \"$2\") is invalid."
 msgstr "Feature `$1' (ID = \"$2\") ist ungültig."
 
 msgid "Completed: "
-msgstr ""
+msgstr "Abgeschlossen:"
 
 msgid "Select a target/group/folder/class to show information about it."
 msgstr "Wähle ein Ziel/Gruppe/Verzeichnis/Klasse um Informationen darüber anzuzeigen."
@@ -2140,7 +2139,7 @@ msgid "From $1"
 msgstr "Von $1"
 
 msgid "Step completed"
-msgstr ""
+msgstr "Schritt abgeschlossen"
 
 msgid "Visible Classes"
 msgstr "Sichtbare Klassen"
@@ -2152,7 +2151,7 @@ msgid "Precompile"
 msgstr "Vorkompilieren"
 
 msgid "Are you sure you want to remove $1 and any children of it?"
-msgstr ""
+msgstr "Soll $1 und alle Kinder davon aus der Konfiguration entfernt werden?"
 
 msgid "C&ontract"
 msgstr "C&ontract"
@@ -2237,6 +2236,9 @@ msgid ""
 "$1\n"
 "Predefined metrics not loaded."
 msgstr ""
+"Während dem laden der vordefinierten Metriken:\n"
+"$1\n"
+"Die vordefinierten Metriken wurden nicht geladen."
 
 msgid "Add first breakpoints in feature"
 msgstr "Ersten Haltepunkt im Feature hinzufügen"
@@ -2326,7 +2328,7 @@ msgid "Minimize All"
 msgstr "Alle minimieren"
 
 msgid "False"
-msgstr ""
+msgstr "Falsch"
 
 msgid "Choose New Slice Limits for Special Objects"
 msgstr ""
@@ -2365,7 +2367,7 @@ msgid "Variable metric is missng. At least one variable metric should be defined
 msgstr ""
 
 msgid "Edit Object Content"
-msgstr ""
+msgstr "Objektinhalt bearbeiten"
 
 msgid "Line Generation"
 msgstr ""
@@ -2437,13 +2439,13 @@ msgid "External Command"
 msgstr "Externer Befehl"
 
 msgid "Spanish (Dominican Republic)"
-msgstr ""
+msgstr "Spanisch (Dominikanische Republik)"
 
 msgid "Arabic (Oman)"
 msgstr ""
 
 msgid "Unnamed Debugs"
-msgstr ""
+msgstr "Unbenannte 'Debug'-Klauseln"
 
 msgid "Bashkir (Russia)"
 msgstr ""
@@ -2464,7 +2466,7 @@ msgid "Add scope"
 msgstr "Bereich hinzufügen"
 
 msgid "French (Belgium)"
-msgstr ""
+msgstr "Französisch (Belgien)"
 
 msgid "variable metric"
 msgstr ""
@@ -2536,7 +2538,7 @@ msgid "Remove Class/Cluster"
 msgstr "Klasse/Cluster entfernen"
 
 msgid "Indent selected row using an \"OR\" criterion"
-msgstr ""
+msgstr "Selektierte Zeile mit einem \"ODER\" Kriterium einrücken"
 
 msgid "Switch to decimal format"
 msgstr "Zum Dezimalformat wechseln"
@@ -2652,7 +2654,7 @@ msgid "Additional details"
 msgstr "Zusätzliche Details"
 
 msgid "Show stop points"
-msgstr ""
+msgstr "Haltepunkte anzeigen"
 
 msgid "Top-level"
 msgstr ""
@@ -2675,9 +2677,8 @@ msgstr ""
 msgid "Hide Assigner Command Name"
 msgstr ""
 
-#, fuzzy
 msgid "Find: "
-msgstr "Finde"
+msgstr "Finde:"
 
 msgid "Polish (Poland)"
 msgstr ""
@@ -2780,7 +2781,7 @@ msgid "Metadata Cache Path"
 msgstr ""
 
 msgid "Italian (Switzerland)"
-msgstr ""
+msgstr "Italienisch (Schweiz)"
 
 msgid "Punjabi"
 msgstr ""
@@ -2828,7 +2829,7 @@ msgid "Uzbek (Uzbekistan, Latin)"
 msgstr ""
 
 msgid "English (India)"
-msgstr ""
+msgstr "Englisch (Indien)"
 
 msgid "Start With Arguments"
 msgstr "Mit Argumenten starten"
@@ -2874,11 +2875,10 @@ msgid "Referenced metric(s): $1 not found."
 msgstr "Referenzierte Metrik(en): $1 nicht gefunden."
 
 msgid "Arabic"
-msgstr ""
+msgstr "Arabisch"
 
-#, fuzzy
 msgid "Select All"
-msgstr "Klasse wählen"
+msgstr "Alle wählen"
 
 msgid "Show cluster legend"
 msgstr "Cluster Legende anzeigen"
@@ -2907,7 +2907,7 @@ msgid "O&nce/Constants"
 msgstr ""
 
 msgid "&Embed in \"if...\"\tCtrl+I"
-msgstr ""
+msgstr "&In \"if...\" einbetten\tCtrl+I"
 
 msgid "$1 of feature $2 of class"
 msgstr "$1 des Features $2 der Klasse $3"
@@ -2984,7 +2984,7 @@ msgid "Sami (Northern, Sweden)"
 msgstr ""
 
 msgid "Click `Finish' to generate the documentation."
-msgstr ""
+msgstr "`Beenden' drücken um die Dokumentation zu generieren."
 
 msgid "Exceptions"
 msgstr "Ausnahmen"
@@ -3042,7 +3042,7 @@ msgid "Romansh (Switzerland)"
 msgstr ""
 
 msgid "Go to W_code directory of this system, or right click to open W_code in specified file browser"
-msgstr ""
+msgstr "Zum W_code Verzeichnis dieses Systems wechseln, oder Rechtsklick um das W_code Verzeichnis in einem externen Dateibrowser zu öffnen."
 
 msgid "External Commands"
 msgstr "Externe Befehle"
@@ -3170,7 +3170,7 @@ msgid "Match case?"
 msgstr "Gross-/Kleinschreibung beachten?"
 
 msgid "Finalized mode"
-msgstr ""
+msgstr "Optimierter Modus"
 
 msgid "VALUE: "
 msgstr "WERT:"
@@ -3198,7 +3198,7 @@ msgid "is invalid"
 msgstr "ist ungültig"
 
 msgid "Criterion \"$1\" of unit \"$2\" doesn't exits."
-msgstr ""
+msgstr "Kriterium \"$1\" der Einheit \"$2\" existiert nicht."
 
 msgid "Export diagram to PNG"
 msgstr "Diagramm zu PNG exportieren"
@@ -3216,7 +3216,7 @@ msgid "Remove Handles"
 msgstr ""
 
 msgid "General"
-msgstr "Generell"
+msgstr "Allgemein"
 
 msgid "Error "
 msgstr "Fehler"
@@ -3339,7 +3339,7 @@ msgid "Only current version"
 msgstr "Nur aktuelle Version"
 
 msgid "Uncomment selected lines"
-msgstr "Selektierte Linien unkommentieren"
+msgstr "Kommentierung der selektierten Linien entfernen"
 
 msgid "Execution Profile"
 msgstr "Ausführungsprofil"
@@ -3525,13 +3525,11 @@ msgstr "Basiscluster:"
 msgid "Import"
 msgstr "Importieren"
 
-#, fuzzy
 msgid "Danish"
-msgstr "Beenden"
+msgstr "Dänisch"
 
-#, fuzzy
 msgid "Display history in tree view?"
-msgstr "Signatur anzeigen?"
+msgstr "Verlauf in Baumansicht anzeigen?"
 
 msgid ".NET Naming Convention"
 msgstr ".NET Namenskonvention"
@@ -3581,7 +3579,7 @@ msgid ""
 msgstr ""
 
 msgid " days old."
-msgstr ""
+msgstr " Tage alt."
 
 msgid "No"
 msgstr "Nein"
@@ -3778,7 +3776,7 @@ msgid "Metrics"
 msgstr "Metriken"
 
 msgid "Evaluate postcondition assertions?"
-msgstr ""
+msgstr "Nachbedingungen auswerten?"
 
 msgid "De&scendants"
 msgstr "&Nachfahren"
@@ -3923,10 +3921,10 @@ msgid "Search backwards"
 msgstr "Rückwärts suchen"
 
 msgid "U&ncomment\tCtrl+Shift+K"
-msgstr "U&nkommentieren\tCtrl+Shift+K"
+msgstr "Komme&ntierung entfernenn\tCtrl+Shift+K"
 
 msgid "Select a class which is fully compiled to have information about it."
-msgstr ""
+msgstr "Klasse wählen die kompiliert ist um deren Informationen anzuzeigen."
 
 msgid "Hebrew (Israel)"
 msgstr ""
@@ -4201,7 +4199,7 @@ msgid "Add Include"
 msgstr ""
 
 msgid "Compilation mode"
-msgstr ""
+msgstr "Kompilierungsmethode"
 
 msgid "Display name of all called features during execution?"
 msgstr "Sollen Namen der aufgerufenen Features während der Ausführung angezeigt werden?"
@@ -4255,7 +4253,7 @@ msgid "Albanian (Albania)"
 msgstr ""
 
 msgid "English (South Africa)"
-msgstr ""
+msgstr "Englisch (Südamerika)"
 
 msgid "&Object"
 msgstr "&Objekt"
@@ -4273,7 +4271,7 @@ msgid "Select the destination folder "
 msgstr "Zielordner wählen"
 
 msgid "German (Austria)"
-msgstr ""
+msgstr "Deutsch (Österreich)"
 
 msgid "Analyzing metric archive(s)..."
 msgstr "Metrikarchiv wird analysiert..."
@@ -4298,7 +4296,7 @@ msgid "Yakut"
 msgstr "auto"
 
 msgid "Portuguese (Portugal)"
-msgstr ""
+msgstr "Portugiesisch (Portugal)"
 
 msgid "Abort"
 msgstr "Abbrechen"
@@ -4403,7 +4401,7 @@ msgid "Show supplier links"
 msgstr ""
 
 msgid "Greek"
-msgstr ""
+msgstr "Griechisch"
 
 msgid "Move to Folder..."
 msgstr "Zum Ordner verschieben..."
@@ -4445,11 +4443,10 @@ msgid "UUID \"$1\" is invalid."
 msgstr "UUID \"$1\" is ungültig."
 
 msgid "Arabic (Iraq)"
-msgstr ""
+msgstr "Arabisch (Irak)"
 
-#, fuzzy
 msgid "English"
-msgstr "Beenden"
+msgstr "Englisch"
 
 msgid "Conditions for this task to be executed."
 msgstr ""
@@ -4458,7 +4455,7 @@ msgid "Deselect Recalculatable"
 msgstr ""
 
 msgid "Previous value"
-msgstr ""
+msgstr "Vorheriger Wert"
 
 msgid "Include Library '$1'"
 msgstr "Bibliothek '$1' einbinden"
@@ -4482,7 +4479,7 @@ msgid "Select Depths"
 msgstr "Tiefe wählen"
 
 msgid "Location of the configuration file."
-msgstr ""
+msgstr "Pfad der Konfigurationsdatei."
 
 msgid "Command has exited with code $1"
 msgstr "Befehl beendet mit Code $1"
@@ -4503,10 +4500,10 @@ msgid "Make sure that at lease one variable metric is listed in a linear metric 
 msgstr "Sicherstellen dass in der Definition einer linearen Metrik mindestens eine Variablenmetrik aufgelistet ist."
 
 msgid "Swedish (Sweden)"
-msgstr ""
+msgstr "Schwedisch (Schweden)"
 
 msgid "Classes to Go:"
-msgstr ""
+msgstr "Verbleibende Klassen:"
 
 msgid "Denominator metric \"$1\" is not defined."
 msgstr ""
@@ -4569,7 +4566,7 @@ msgid "In Class"
 msgstr "In Klasse"
 
 msgid "Chinese (Taiwan)"
-msgstr ""
+msgstr "Chinesisch (Taiwan)"
 
 msgid "$1 preferences"
 msgstr "$1 Einstellungen"
@@ -4686,7 +4683,7 @@ msgid "Redo"
 msgstr "Wiederherstellen"
 
 msgid "Warn about usage of old syntax?"
-msgstr ""
+msgstr "Beim gebrauch alter Syntax warnen?"
 
 msgid "Product"
 msgstr "Produkt"
@@ -4713,7 +4710,7 @@ msgid "Read Only"
 msgstr ""
 
 msgid "True"
-msgstr ""
+msgstr "Wahr"
 
 msgid "Generation Type"
 msgstr ""
@@ -4778,7 +4775,7 @@ msgid "Grid column layout"
 msgstr ""
 
 msgid "Swedish (Finland)"
-msgstr ""
+msgstr "Schwedisch (Finnland)"
 
 msgid ""
 "\n"
@@ -4812,9 +4809,8 @@ msgstr "Speichern"
 msgid "Explorer bar item"
 msgstr ""
 
-#, fuzzy
 msgid "Finnish"
-msgstr "Beenden"
+msgstr "Finnisch"
 
 msgid "&Enable All Breakpoints"
 msgstr "Alle Haltepunkte &einschalten"
@@ -4869,7 +4865,7 @@ msgid "No description available for this preference."
 msgstr "Für diese Einstellung gibt es keine Beschreibung."
 
 msgid "French (Canada)"
-msgstr ""
+msgstr "Französisch (Kanada)"
 
 msgid "Add Library"
 msgstr "Bibliothek hinzufügen"
@@ -4923,7 +4919,7 @@ msgid "Groups"
 msgstr "Gruppen"
 
 msgid "Portuguese"
-msgstr ""
+msgstr "Portugiesisch"
 
 msgid "Evaluate precondition assertions?"
 msgstr "Vorbedingungen auswerten?"
@@ -4971,7 +4967,7 @@ msgid "elements."
 msgstr "Elemente"
 
 msgid "Arabic (Algeria)"
-msgstr ""
+msgstr "Arabisch (Algerien)"
 
 msgid "Collapse All"
 msgstr "Alles zuklappen"
@@ -5017,7 +5013,7 @@ msgid "Background C Compilation in Progress"
 msgstr "C-Kompilation läuft im Hintergrund"
 
 msgid "Persian (Iran)"
-msgstr ""
+msgstr "Persisch (Iran)"
 
 msgid "EIFGENs location"
 msgstr ""
@@ -5129,7 +5125,7 @@ msgid "Location of this group."
 msgstr "Ort dieser Gruppe."
 
 msgid "Threads"
-msgstr ""
+msgstr "Threads"
 
 msgid "Sanskrit (India)"
 msgstr ""
@@ -5186,7 +5182,7 @@ msgid "Arabic (Kuwait)"
 msgstr ""
 
 msgid "&Unindent Selection\tShift+Tab"
-msgstr ""
+msgstr "Einrückung der Selektion &enfernen\tShift+Tab"
 
 msgid "&Freeze..."
 msgstr "Ein&frieren..."
@@ -5204,7 +5200,7 @@ msgid "&Interface"
 msgstr "&Schnittstelle"
 
 msgid "Show class location?"
-msgstr ""
+msgstr "Klassenpfad anzeigen?"
 
 msgid "On object"
 msgstr ""
@@ -5338,7 +5334,7 @@ msgid "Rename"
 msgstr "Umbenennen"
 
 msgid "Precompilation &Wizard..."
-msgstr ""
+msgstr "Erstellung einer &vorkompilierten Bibliothek"
 
 #, fuzzy
 msgid "Double click to go to result panel"
@@ -5348,10 +5344,10 @@ msgid "Index"
 msgstr "Index"
 
 msgid "Remove selected expressions"
-msgstr ""
+msgstr "Gewählten Ausdruck entfernen"
 
 msgid "Absolute path to use as base for relative paths."
-msgstr ""
+msgstr "Absoluten Pfad welcher als Basis für relative Pfade verwendet wird."
 
 msgid "Add &Precompile"
 msgstr "&Precompile hinzufügen"
@@ -5369,7 +5365,7 @@ msgid "Organize Favorites"
 msgstr "Favoriten Organisieren"
 
 msgid "Serbian"
-msgstr ""
+msgstr "Serbisch"
 
 msgid "Mi&nimize"
 msgstr "Mi&nimieren"
@@ -5397,7 +5393,7 @@ msgstr ""
 "$1"
 
 msgid "Japanese"
-msgstr ""
+msgstr "Japanisch"
 
 #, fuzzy
 msgid "Sanskrit"
@@ -5490,9 +5486,8 @@ msgstr ""
 msgid "Tibetan (PRC)"
 msgstr ""
 
-#, fuzzy
 msgid "German"
-msgstr "Generell"
+msgstr "Deutsch"
 
 msgid "Add current application target scope"
 msgstr ""
@@ -5594,7 +5589,7 @@ msgid "Spanish (United States)"
 msgstr ""
 
 msgid "Previous"
-msgstr ""
+msgstr "Vorherige"
 
 #, fuzzy
 msgid "Stop metric recalculation"
@@ -5743,7 +5738,7 @@ msgid "Step In&to"
 msgstr "In Routine eintreten"
 
 msgid "Fit to screen"
-msgstr ""
+msgstr "Dem Bildschirm anpassen"
 
 msgid "&Run to This Point"
 msgstr "Zu diesem Punkt &fortschreiten"
@@ -5815,7 +5810,7 @@ msgid "Find P&revious Selection"
 msgstr "&Vorherige Selektion finden"
 
 msgid "Difference"
-msgstr ""
+msgstr "Unterschied"
 
 msgid "Arabic (Tunisia)"
 msgstr ""
@@ -5844,7 +5839,7 @@ msgid ""
 msgstr ""
 
 msgid "Append"
-msgstr ""
+msgstr "Anfügen"
 
 msgid "Maximum index displayed"
 msgstr ""
@@ -5934,9 +5929,8 @@ msgstr "Werkzeuge neu synchronisieren"
 msgid "Target to cluster or class"
 msgstr ""
 
-#, fuzzy
 msgid "Spanish"
-msgstr "Beenden"
+msgstr "Spanisch"
 
 msgid "Alphabetical cluster list"
 msgstr "Alphabetische Clusterliste"
@@ -6345,9 +6339,8 @@ msgstr ""
 msgid "Proportion of the local/arguments part of the `Objects' tab in the Debugging tool."
 msgstr ""
 
-#, fuzzy
 msgid "Proportion"
-msgstr "Eigenschaften"
+msgstr "Proportion"
 
 msgid "Items/tools shown on editor side when in debug mode."
 msgstr ""
@@ -6453,13 +6446,11 @@ msgstr "Beobachtungswerkzeug"
 msgid "Background Color for Diagram Tool"
 msgstr "Hintergrundfarbe für Diagrammwerkzeug"
 
-#, fuzzy
 msgid "Tools"
-msgstr "&Werkzeuge"
+msgstr "Werkzeuge"
 
-#, fuzzy
 msgid "Diagram tool"
-msgstr "Diagramm"
+msgstr "Diagrammwerkzeug"
 
 #, fuzzy
 msgid "Diagram background color"
@@ -6958,23 +6949,20 @@ msgstr "Schnittstelle"
 msgid "Dialogs"
 msgstr "Dialoge"
 
-#, fuzzy
 msgid "Confirm on exit"
-msgstr "Bestätigung"
+msgstr "Programmende bestätigen"
 
 msgid "Display confirmation dialog on replacing all."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm replace all"
-msgstr "Alle ersetzen"
+msgstr "\"Alle ersetzen\" bestätigen"
 
 msgid "Display confirmation dialog for C compilation on finalize operation."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm finalize"
-msgstr "Konfigurationsdatei"
+msgstr "Erstellung der optimierten Version bestätigen"
 
 msgid "Display confirmation dialog for C compilation on freeze operation."
 msgstr ""
@@ -6991,37 +6979,32 @@ msgstr ""
 msgid "Display confirmation dialog for assertions on finalize operation."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm finalize assertions"
-msgstr "Bestätigung"
+msgstr ""
 
 msgid "Display confirmation dialog on clearing breakpoints."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm clear breakpoints"
-msgstr "Alle Haltepunkte aktivieren"
+msgstr "Löschen aller Haltepunkte bestätigen"
 
 msgid "Display confirmation dialog when starting the application without stopping at breakpoints."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm ignore all breakpoints"
-msgstr "Alle Haltepunkte entferenen"
+msgstr "Ignorieren aller Haltepunkte bestätigen"
 
 msgid "Display confirmation dialog before converting an old project."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm convert project"
-msgstr "Aktuelles Projekt kompilieren"
+msgstr "Konvertierung des Projekts bestätigen"
 
 msgid "Display confirmation dialog before building a needed precompile."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm build precompile"
-msgstr " (vorkompiliert)"
+msgstr "Erstellen einer vorkompilierten Bibliothek bestätigen"
 
 msgid "Display dialog that warns that text is being loaded and is not editable or clickable."
 msgstr ""
@@ -7032,9 +7015,8 @@ msgstr ""
 msgid "Display confirmation dialog for finalizing a .NET precompiled library."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm finalize precompile"
-msgstr "Precompile hinzufügen"
+msgstr ""
 
 msgid "Display confirmation dialog for terminating the C compilation of a freeze."
 msgstr ""
@@ -7051,23 +7033,20 @@ msgstr ""
 msgid "Display confirmation dialog for terminating an ongoing C compilation while exiting EiffelStudio."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm on terminate process"
-msgstr "Befehl beendet"
+msgstr "Beenden eines laufenden Prozesses bestätigen"
 
 msgid "Display confirmation dialog for terminating an external command."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm on terminate external command"
-msgstr "Externe Befehle hinzufügen, entfernen oder bearbeiten"
+msgstr "Beenden eines externen Befehls bestätigen"
 
 msgid "Display New/Open project dialog at startup."
 msgstr ""
 
-#, fuzzy
 msgid "Show starting dialog"
-msgstr "Zeige Dialog für Physikeigenschaften"
+msgstr "Startdialog anzeigen"
 
 msgid "Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective."
 msgstr ""
@@ -7078,9 +7057,8 @@ msgstr ""
 msgid "Display dialog that warns that homonym format can take a long time."
 msgstr ""
 
-#, fuzzy
 msgid "Generate homonyms"
-msgstr "homonyme"
+msgstr "Homonyme erstellen"
 
 msgid "Display dialog when an application is running and a compilation is launched."
 msgstr ""
@@ -7091,9 +7069,8 @@ msgstr ""
 msgid "Display dialog before killing a debugged application."
 msgstr ""
 
-#, fuzzy
 msgid "Confirm kill"
-msgstr "Bestätigung"
+msgstr ""
 
 msgid "Display dialog before killing a debugged application and restarting a new one."
 msgstr ""
@@ -7216,30 +7193,26 @@ msgstr ""
 msgid "Width of the project settings dialog."
 msgstr "Breite des Dialogs 'Projekteinstellungen'"
 
-#, fuzzy
 msgid "Project settings width"
-msgstr "Projekteinstellungen"
+msgstr "Breite der Projekteinstellungen"
 
 msgid "Height of the project settings dialog."
 msgstr "Höhe des Dialogs 'Projekteinstellungen'."
 
-#, fuzzy
 msgid "Project settings height"
-msgstr "Projekteinstellungen"
+msgstr "Höhe der Projekteinstellungen"
 
 msgid "Screen x position of the project settings dialog."
 msgstr "X Position des Dialogs 'Projekteinstellungen'."
 
-#, fuzzy
 msgid "Project settings position x"
-msgstr "Projekteinstellungen"
+msgstr "X-Position der Projekteinstellungen"
 
 msgid "Screen y position of the project settings dialog."
 msgstr "Y Position des Dialogs 'Projekteinstellungen'."
 
-#, fuzzy
 msgid "Project settings position y"
-msgstr "Projekteinstellungen"
+msgstr "Y-Position der Projekteinstellungen"
 
 msgid "Position of the split area."
 msgstr ""
@@ -7299,9 +7272,8 @@ msgstr ""
 msgid "Allow class name completion in the address combo boxes?"
 msgstr "Klassennamen in der Adressliste vervollständigen?"
 
-#, fuzzy
 msgid "Class completion"
-msgstr "Klassenoptionen"
+msgstr "Klassenvervollständigung"
 
 msgid "Receivers of control-right-click."
 msgstr "Empfänger des Control-Rechtsklick."
@@ -7342,16 +7314,14 @@ msgstr ""
 msgid "Automatically expand the feature tree."
 msgstr "Feature-Baum automatisch aufklappen."
 
-#, fuzzy
 msgid "Expand feature tree"
-msgstr "Feature-Baum automatisch aufklappen."
+msgstr "Feature-Baum aufklappen."
 
 msgid "Display signature ?"
 msgstr "Signatur anzeigen?"
 
-#, fuzzy
 msgid "Features tool"
-msgstr "Feature "
+msgstr "Features-Werkzeug"
 
 #, fuzzy
 msgid "Is signature enabled"
@@ -7386,9 +7356,8 @@ msgstr ""
 msgid "Is window maximized?"
 msgstr "Ist das Fenster maximiert?"
 
-#, fuzzy
 msgid "Is maximized"
-msgstr "Ist das Fenster maximiert?"
+msgstr "Ist maximiert"
 
 msgid "Directory of last browsed cluster."
 msgstr "Verzeichnis des zuletzt durchsuchten Clusters."
@@ -7504,9 +7473,8 @@ msgstr ""
 msgid "Use animated icons in the status bar?"
 msgstr "Sollen animierte Symbole in der Statusleiste verwendet werden?"
 
-#, fuzzy
 msgid "Use animated icons"
-msgstr "Sollen animierte Symbole in der Statusleiste verwendet werden?"
+msgstr "Animierte Symbole benutzen"
 
 msgid "Width of navigation panel"
 msgstr "Breite der Navigation."
@@ -7643,9 +7611,8 @@ msgstr ""
 msgid "Do features of class ANY appear in the feature call complete window?"
 msgstr "Sollen Features von ANY im Vervolständigungsfenster angezeigt werden?"
 
-#, fuzzy
 msgid "Show ANY features"
-msgstr "Signatur anzeigen"
+msgstr "Features von ANY anzeigen"
 
 msgid "Does completion list show feature signatures?"
 msgstr "Soll Vervollständigung Feature Signaturen anzeigen?"
@@ -7687,20 +7654,17 @@ msgstr "Befehl um externen Editor zu öffnen."
 msgid "Is underscore `_' used as a word separator?"
 msgstr "Wird Unterstrich `_' zum trennen von Worten verwendet?"
 
-#, fuzzy
 msgid "Underscore is separator"
-msgstr "Wird Unterstrich `_' zum trennen von Worten verwendet?"
+msgstr "Unterstrich `_' wird zum trennen von Worten verwendet"
 
 msgid "Color for breakable marks and breakpoints."
 msgstr "Farbe für Haltepunkte und markierung haltbarer Stellen."
 
-#, fuzzy
 msgid "Colors"
-msgstr "Schliessen"
+msgstr "Farben"
 
-#, fuzzy
 msgid "Breakpoint background color"
-msgstr "Hintergrundfarbe für Hervorhebungen"
+msgstr "Hintergrundfarbe für Haltepunkte"
 
 msgid "Foreground color for assertion tags."
 msgstr "Farbe für Tags bei Zusicherungen."
@@ -7851,7 +7815,6 @@ msgstr "Hintergrundfarbe für Hervorhebungen"
 msgid "Autocomplete indexing?"
 msgstr "Autovervollständigung für 'indexing'?"
 
-#, fuzzy
 msgid "Autocomplete"
 msgstr "Autovervollständigung"
 
@@ -8822,9 +8785,8 @@ msgstr ""
 msgid "Autocomplete obsolete?"
 msgstr "Autovervollständigung für 'obsolete'?"
 
-#, fuzzy
 msgid "Obsolete"
-msgstr "Veraltete Klassen"
+msgstr "Veraltet"
 
 #, fuzzy
 msgid "Autocomplete obsolete"
@@ -9037,7 +8999,7 @@ msgid "Blinking cursor"
 msgstr ""
 
 msgid "All-purpose editor font."
-msgstr "Generelle Schrift im Editor."
+msgstr "Normale Schrift im Editor."
 
 msgid "Editor font"
 msgstr "Schrift für Editor"
@@ -9108,7 +9070,7 @@ msgid "Should tab character be used for auto-indentation?"
 msgstr "Soll Tabulator beim automatischen Einrücken verwendet werden?"
 
 msgid "Use tab for indentation"
-msgstr ""
+msgstr "Tabulator für Einrückung verwenden"
 
 msgid "Background color of line number margin."
 msgstr "Hintergrundfarbe der Zeilennummern."

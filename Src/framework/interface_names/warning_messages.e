@@ -1122,7 +1122,7 @@ feature -- Warning messages
 									%Would you like to create a finalized version?"
 
 	w_Replace_all: STRING is "This operation cannot be undone %N%
-									%to files not loaded to the editor.%N%
+									%to files not loaded in the editor.%N%
 									%Would you like to continue replacing all?"
 
 	w_No_system_defined: STRING is "No system was defined.%N"
@@ -1137,7 +1137,9 @@ feature -- Warning messages
 	w_cannot_save_when_c_compilation_running: STRING is "Please save output after c compilation has exited."
 	w_cannot_clear_when_external_running: STRING is "Please clear this window after external command has exited."
 	w_cannot_save_when_external_running: STRING is "Please save output after external command has exited."
-	w_external_command_running_in_development_window: STRING is "An external command is running, close this window will terminate it.%NContinue?";
+	w_external_command_running_in_development_window: STRING is "An external command is running, closing this window will terminate it.%NContinue?";
+
+	w_help_topic_could_not_be_displayed: STRING is "Help topic could not be displayed, please check your Eiffel installation";
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

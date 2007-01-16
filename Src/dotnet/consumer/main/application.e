@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			l_parser.execute (agent start (l_parser))
 			if not l_parser.successful then
 					-- Finish process with an invalid parameter error code.
-				io.read_line;
 				(create {EXCEPTIONS}).die (0x57)
 			end
 		end
@@ -175,7 +174,7 @@ feature {NONE} -- Output
 			l_count: INTEGER
 			i: INTEGER
 		do
-			l_assemblies := a_manager.cache_reader.consumed_assemblies
+			l_assemblies := a_manager.cache_reader.assemblies
 			l_is_empty := l_assemblies.is_empty
 			if not l_is_empty then
 				l_is_empty := l_assemblies.for_all (agent (a_item: CONSUMED_ASSEMBLY): BOOLEAN

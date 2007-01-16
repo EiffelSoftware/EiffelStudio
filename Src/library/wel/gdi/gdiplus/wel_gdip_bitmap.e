@@ -1,5 +1,5 @@
 indexing
-	description: "Btimap functions in Gdi+."
+	description: "Bitmap functions in Gdi+."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

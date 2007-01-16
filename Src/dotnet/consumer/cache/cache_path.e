@@ -53,20 +53,18 @@ feature -- Access
 			valid_result: not Result.is_empty
 		end
 
-feature {CACHE_READER} -- Access
-
-	relative_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING is
-			-- Path to folder containing `a_assembly' types relative to `Eac_path'
+	absolute_info_path: STRING is
+			-- Absolute path to EAC assemblies file info
 		require
-			non_void_assembly: a_assembly /= Void
-		do
-			create Result.make (a_assembly.folder_name.count + relative_executing_env_path.count + 1)
+			non_void_clr_version: clr_version /= Void
+		once
+			create Result.make (eiffel_assembly_cache_path.count + eac_info_file_name.count + 1)
+			Result.append (eiffel_assembly_cache_path)
 			Result.append (relative_executing_env_path)
-			Result.append (a_assembly.folder_name)
-			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+			Result.append (eac_info_file_name)
 		ensure
-			non_void_path: Result /= Void
-			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+			non_void_result: Result /= Void
+			valid_result: not Result.is_empty
 		end
 
 	absolute_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING is
@@ -104,23 +102,6 @@ feature {CACHE_READER} -- Access
 			non_void_path: Result /= Void
 		end
 
-	relative_type_path (a_assembly: CONSUMED_ASSEMBLY): STRING is
-			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
-			-- Always return a value even if `a_type' in not in EAC
-		require
-			a_assembly_not_void: a_assembly /= Void
-		local
-			l_path: STRING
-		do
-			l_path := relative_assembly_path_from_consumed_assembly (a_assembly)
-			create Result.make (l_path.count + classes_file_name.count)
-			Result.append (l_path)
-			Result.append (classes_file_name)
-		ensure
-			non_void_path: Result /= Void
-			ends_with_xml_extension: Result.substring_index (".xml", Result.count - 4) = Result.count - 3
-		end
-
 	absolute_type_path (a_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
 			-- Always return a value even if `a_type' in not in EAC
@@ -137,7 +118,72 @@ feature {CACHE_READER} -- Access
 			Result.append (relative_path)
 		ensure
 			non_void_path: Result /= Void
-			ends_with_xml_extension: Result.substring_index (".xml", Result.count - 4) = Result.count - 3
+		end
+
+	absolute_type_mapping_path (a_assembly: CONSUMED_ASSEMBLY): STRING is
+			-- Path to file, describing `a_assembly' .NET type name to class mappings
+			-- Always return a value even if `a_assembly' in not in EAC
+		require
+			a_assembly_not_void: a_assembly /= Void
+			clr_version_not_void: clr_version /= Void
+			not_clr_version_empty: not clr_version.is_empty
+		local
+			relative_path: STRING
+		do
+			relative_path := relative_type_mapping_path (a_assembly)
+			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
+			Result.append (eiffel_assembly_cache_path)
+			Result.append (relative_path)
+		ensure
+			non_void_path: Result /= Void
+		end
+
+feature {CACHE_READER} -- Access
+
+	relative_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING is
+			-- Path to folder containing `a_assembly' types relative to `Eac_path'
+		require
+			non_void_assembly: a_assembly /= Void
+		do
+			create Result.make (a_assembly.folder_name.count + relative_executing_env_path.count + 1)
+			Result.append (relative_executing_env_path)
+			Result.append (a_assembly.folder_name)
+			Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+		ensure
+			non_void_path: Result /= Void
+			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+
+	relative_type_path (a_assembly: CONSUMED_ASSEMBLY): STRING is
+			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
+			-- Always return a value even if `a_type' in not in EAC
+		require
+			a_assembly_not_void: a_assembly /= Void
+		local
+			l_path: STRING
+		do
+			l_path := relative_assembly_path_from_consumed_assembly (a_assembly)
+			create Result.make (l_path.count + classes_file_name.count)
+			Result.append (l_path)
+			Result.append (classes_file_name)
+		ensure
+			non_void_path: Result /= Void
+		end
+
+	relative_type_mapping_path (a_assembly: CONSUMED_ASSEMBLY): STRING is
+			-- Path to file, describing `a_assembly' .NET type name to class mappings, relative to `Eac_path'
+			-- Always return a value even if `a_assembly' in not in EAC
+		require
+			a_assembly_not_void: a_assembly /= Void
+		local
+			l_path: STRING
+		do
+			l_path := relative_assembly_path_from_consumed_assembly (a_assembly)
+			create Result.make (l_path.count + assembly_types_file_name.count)
+			Result.append (l_path)
+			Result.append (assembly_types_file_name)
+		ensure
+			non_void_path: Result /= Void
 		end
 
 	eac_info_file_name: STRING is "eac.info"
@@ -196,20 +242,6 @@ feature {CACHE_READER} -- Access
 			end
 			retried := True
 			retry
-		end
-
-	absolute_info_path: STRING is
-			-- Absolute path to EAC assemblies file info
-		require
-			non_void_clr_version: clr_version /= Void
-		once
-			create Result.make (eiffel_assembly_cache_path.count + eac_info_file_name.count + 1)
-			Result.append (eiffel_assembly_cache_path)
-			Result.append (relative_executing_env_path)
-			Result.append (eac_info_file_name)
-		ensure
-			non_void_result: Result /= Void
-			valid_result: not Result.is_empty
 		end
 
 	eac_path: STRING is "dotnet\assemblies"

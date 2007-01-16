@@ -16,7 +16,9 @@ inherit
 			screen_x,
 			screen_y,
 			x_position,
-			y_position
+			y_position,
+			width,
+			height
 		end
 
 	EV_GTK_KEY_CONVERSION
@@ -89,6 +91,7 @@ feature {NONE} -- Implementation
 			-- Set the vertical size to `a_height'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_resize (c_object, a_width, a_height)
+			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, a_width, a_height)
 		end
 
 	x_position: INTEGER is
@@ -101,6 +104,28 @@ feature {NONE} -- Implementation
 			-- Y coordinate of `Current'
 		do
 			Result := screen_y
+		end
+
+	width: INTEGER
+			-- Width of `Current'.
+		local
+			l_result: INTEGER_32
+		do
+			if configure_event_pending then
+				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, $l_result, default_pointer)
+			end
+			Result := l_result.max (Precursor)
+		end
+
+	height: INTEGER
+			-- Height of `Current'.
+		local
+			l_result: INTEGER_32
+		do
+			if configure_event_pending then
+				{EV_GTK_EXTERNALS}.gtk_window_get_default_size (c_object, default_pointer, $l_result)
+			end
+			Result := l_result.max (Precursor)
 		end
 
 	set_x_position (a_x: INTEGER) is
@@ -120,11 +145,11 @@ feature {NONE} -- Implementation
 			-- Set vertical offset to parent to `a_y'.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_move (c_object, a_x, a_y)
-			positioned_by_user := True
+			configure_event_pending := True
 		end
 
-	positioned_by_user: BOOLEAN
-		-- Has `Current' been positioned by the user?
+	configure_event_pending: BOOLEAN
+		-- Has `Current' experienced a configure event?
 
 	screen_x: INTEGER is
 			-- Horizontal position of the window on screen,

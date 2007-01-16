@@ -600,7 +600,7 @@ feature -- Element change
 		do
 			if fake_editors /= Void then
 				from
-					l_snapshot := fake_editors
+					l_snapshot := fake_editors.twin
 					l_snapshot.start
 				until
 					l_snapshot.after

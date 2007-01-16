@@ -28,6 +28,15 @@ create
 
 feature -- Access
 
+	assemblies: ARRAY [CONSUMED_ASSEMBLY] is
+			-- Returns all assemblies registered in EAC.
+			-- Note: Unconsumed assemblies will be returned also.
+		do
+			if is_initialized then
+				Result := info.assemblies.twin
+			end
+		end
+
 	consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY] is
 			-- Returns all completed consumed assemblies
 		local

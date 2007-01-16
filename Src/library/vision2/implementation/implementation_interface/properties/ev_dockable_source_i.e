@@ -483,7 +483,7 @@ feature -- Basic operations
 					else
 
 					-- Now handle the insertion/removal of separators.
-					-- The dockable mechanism allows tool bar seperators to be inserted
+					-- The dockable mechanism allows tool bar separators to be inserted
 					-- or deleted by a user. Activated by completing a dock on the same button that
 					-- it was originally started on.
 					-- If the pointer is moved to the right then if there is a separator to the right,

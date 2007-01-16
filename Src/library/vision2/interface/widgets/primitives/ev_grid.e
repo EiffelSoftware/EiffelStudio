@@ -181,7 +181,7 @@ indexing
 		The selection colors may be modified via `set_focused_selection_color' and
 		`set_non_focused_selection_color'.
 
-		Seperators between items may be enabled on the grid via `enable_column_separators'
+		Separators between items may be enabled on the grid via `enable_column_separators'
 		and `enable_row_separators' which ensure a single line is drawn between each row
 		and column in `separator_color'. Use `set_separator_color' to modify this color.
 

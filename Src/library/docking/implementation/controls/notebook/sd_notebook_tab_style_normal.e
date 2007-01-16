@@ -182,7 +182,7 @@ feature -- Properties
 feature -- Size issues
 
 	start_x_separator_before_internal: INTEGER is
-			-- Start x position where should draw seperator before.
+			-- Start x position where should draw separator before.
 		do
 			Result := 0
 		end
@@ -246,7 +246,7 @@ feature -- Size issues
 		end
 
 	start_x_separator_after_internal: INTEGER is
-			-- Start x position where should draw seperator after.
+			-- Start x position where should draw separator after.
 		do
 			if is_selected then
 				if is_enough_space then

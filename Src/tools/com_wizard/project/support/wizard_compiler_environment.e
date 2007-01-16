@@ -28,7 +28,7 @@ feature -- Access
 	Common_c_compiler_options: STRING is
 			-- C compiler options to compile Proxy/Stub.
 		once
-			Result := "/MT /W0 /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /D %"_WIN32_WINNT=0x0500%" /YX /c /I..\include /I..\..\common\include /I"
+			Result := "/MT /W0 /Ox /D %"REGISTER_PROXY_DLL%" /D %"WIN32%" /D %"_WIN32_DCOM%" /D %"_WIN32_WINNT=0x0500%" /c /I..\include /I..\..\common\include /I"
 			Result.append (eiffel_layout.Eiffel_installation_dir_name)
 			Result.append ("\studio\spec\windows\include /I")
 			Result.append (eiffel_layout.Eiffel_installation_dir_name)

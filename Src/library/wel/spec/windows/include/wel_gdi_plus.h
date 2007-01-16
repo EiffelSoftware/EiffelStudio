@@ -25,8 +25,16 @@ typedef void GpImage;
 typedef void GpGraphics;
 typedef void GpPen;
 typedef void GpImageAttributes;
+typedef void GpFont;
+typedef void GpFontFamily;
+typedef void GpFontCollection;
+typedef void GpStringFormat;
+typedef void GpBrush;
+typedef void GpSolidFill;
+
 
 typedef INT PixelFormat;
+typedef unsigned short UINT16;
 
 #define  WINGDIPAPI __stdcall
 
@@ -37,6 +45,10 @@ typedef INT PixelFormat;
 typedef struct {
 	int X, Y, Width, Height;
 } GpRect;
+
+typedef struct {
+	float X, Y, Width, Height;
+} RectF;
 
 typedef struct {   
 	unsigned int Width;
@@ -76,7 +88,7 @@ typedef enum Status
     PropertyNotSupported = 20
 } GpStatus;
 
-typedef enum Unit
+typedef enum
 {
     UnitWorld, 
     UnitDisplay,
@@ -85,7 +97,7 @@ typedef enum Unit
     UnitInch,      
     UnitDocument,   
     UnitMillimeter  
-} GpUnit;
+} GpUnit, Unit;
 
 typedef enum ColorAdjustTypeEnum
 {

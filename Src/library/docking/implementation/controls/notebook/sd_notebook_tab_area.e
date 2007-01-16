@@ -42,6 +42,7 @@ feature {NONE}  -- Initlization
 
 			create internal_tool_bar.make
 			create internal_auto_hide_indicator.make
+			internal_auto_hide_indicator.set_tooltip (internal_shared.tooltip_notebook_hidden_tab_indicator)
 
 			create tab_box.make
 			extend_horizontal_box (tab_box)
@@ -51,7 +52,7 @@ feature {NONE}  -- Initlization
 			disable_item_expand (internal_tool_bar)
 			internal_tool_bar.hide
 			internal_tool_bar.extend (internal_auto_hide_indicator)
-			internal_auto_hide_indicator.set_pixmap (internal_shared.icons.hide_tab_indicator (0))
+			internal_auto_hide_indicator.set_pixel_buffer (internal_shared.icons.hide_tab_indicator_buffer (0))
 			internal_tool_bar.compute_minmum_size
 			internal_auto_hide_indicator.select_actions.extend (agent on_tab_hide_indicator_selected)
 
@@ -344,7 +345,7 @@ feature {NONE}  -- Implementation functions
 		do
 			l_tabs := all_tabs
 			if internal_tabs_not_shown.count > 0 then
-				internal_auto_hide_indicator.set_pixmap (internal_shared.icons.hide_tab_indicator (internal_tabs_not_shown.count))
+				internal_auto_hide_indicator.set_pixel_buffer (internal_shared.icons.hide_tab_indicator_buffer (internal_tabs_not_shown.count))
 				internal_tool_bar.compute_minmum_size
 				internal_tool_bar.show
 				if l_tabs.count - 1 = internal_tabs_not_shown.count then

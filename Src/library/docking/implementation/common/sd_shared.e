@@ -123,10 +123,10 @@ feature -- Access
 	tool_bar_font: EV_FONT is
 			-- Tool bar font
 		local
-			l_drawing_area: EV_DRAWING_AREA
+			l_color: SD_SYSTEM_COLOR
 		once
-			create l_drawing_area
-			Result := l_drawing_area.font
+			create {SD_SYSTEM_COLOR_IMP} l_color.make
+			Result := l_color.tool_bar_font
 		end
 
 	notebook_tab_drawer: SD_NOTEBOOK_TAB_DRAWER_I is
@@ -521,6 +521,12 @@ feature -- Constants
 			-- Tooltip for tool bar close button.
 		once
 			Result := "Close"
+		end
+
+	Tooltip_notebook_hidden_tab_indicator: STRING_GENERAL is
+			-- Tooltip for notebook hidden tab indicator.
+		once
+			Result := "Show List"
 		end
 
 feature {NONE} -- Implementation

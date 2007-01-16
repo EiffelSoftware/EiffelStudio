@@ -26,6 +26,7 @@ feature {NONE} -- Initlization
 			name := generating_type
 			create select_actions
 			create pointer_button_press_actions
+			create internal_shared
 		end
 
 feature -- Properties
@@ -86,19 +87,14 @@ feature -- Query
 
 	width: INTEGER is
 			-- Redefine
-		local
-			l_shared: SD_SHARED
 		do
 			Result := {SD_TOOL_BAR}.padding_width
 			if text /= Void then
 				if tool_bar /= Void then
-					create l_shared
-					Result := Result + {SD_TOOL_BAR}.padding_width + l_shared.tool_bar_font.string_width (text)
+					Result := Result + {SD_TOOL_BAR}.padding_width + internal_shared.tool_bar_font.string_width (text)
 				end
 			end
-			if pixmap /= Void then
-				Result := Result + pixmap.width
-			end
+			Result := Result + icon_width
 			Result := Result + {SD_TOOL_BAR}.padding_width
 		end
 
@@ -144,10 +140,14 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 		require
 			has_parent: tool_bar /= Void
 		do
-			create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + {SD_TOOL_BAR}.border_width)
-			if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
-				Result.set_x (Result.x + 1)
-				Result.set_y (Result.y + 1)
+			if tool_bar /= Void then
+				create Result.make_with_position (tool_bar.item_x (Current) + {SD_TOOL_BAR}.padding_width,  tool_bar.item_y (Current) + {SD_TOOL_BAR}.border_width)
+				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
+					Result.set_x (Result.x + 1)
+					Result.set_y (Result.y + 1)
+				end
+			else
+				create Result
 			end
 		ensure
 			not_void: Result /= Void
@@ -162,11 +162,11 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 		do
 			l_left := tool_bar.item_x (Current)
 			if pixmap /= Void then
-				l_left := l_left + {SD_TOOL_BAR}.padding_width + pixmap.width + {SD_TOOL_BAR}.padding_width
+				l_left := l_left + {SD_TOOL_BAR}.padding_width + icon_width + {SD_TOOL_BAR}.padding_width
 			else
 				l_left := l_left + {SD_TOOL_BAR}.padding_width
 			end
-			l_width := tool_bar.font.string_width (text)
+			l_width := internal_shared.tool_bar_font.string_width (text)
 			l_top := tool_bar.item_y (Current) + {SD_TOOL_BAR}.border_width
 			l_height := tool_bar.row_height - 2 * {SD_TOOL_BAR}.border_width
 
@@ -296,11 +296,25 @@ feature{SD_TOOL_BAR} -- Implementation
 			end
 		end
 
+	icon_width: INTEGER is
+			-- Width of icons which is `pixel_buffer' or `pixmap'.
+		do
+			if pixel_buffer /= Void then
+				Result := Result + pixel_buffer.width
+			elseif pixmap /= Void then
+				Result := Result + pixmap.width
+			end
+		end
+
 	internal_sensitive_before: BOOLEAN
 			-- Before pick and drop is Current sensitive?
 
+	internal_shared: SD_SHARED
+			-- All singletons.
+
 invariant
 	not_void: select_actions /= Void
+	not_void: internal_shared /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

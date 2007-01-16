@@ -64,6 +64,16 @@ feature -- Command
 			is_locked := False
 		end
 
+	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_rect: EV_RECTANGLE) is
+			-- Draw `a_pixel_buffer' at `a_rect'.
+		deferred
+		end
+
+	draw_text (a_text: STRING_GENERAL; a_font: EV_FONT; a_point: EV_COORDINATE) is
+			-- Draw `a_text' with `a_font' at `a_rect'.
+		deferred
+		end
+
 feature -- Query
 
 	is_locked: BOOLEAN

@@ -110,11 +110,21 @@ feature -- Command
 		local
 			l_item: SD_MIDDLE_CONTAINER
 			l_is_all_minimized: BOOLEAN
+			l_zone_upper: SD_UPPER_ZONE
 		do
 			if readable then
 				l_item ?= item
+				l_zone_upper ?= item
 				if l_item /= Void then
 					l_is_all_minimized := update_middle_container_imp (l_item)
+					if l_is_all_minimized then
+						-- All zone are minimized, we should do nothing.
+					end
+				elseif l_zone_upper /= Void then
+					-- If there is only one minimized zone, we should restore it.
+					if l_zone_upper.is_minimized then
+						l_zone_upper.on_minimize
+					end
 				end
 			end
 		end

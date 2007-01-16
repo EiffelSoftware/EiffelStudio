@@ -11,6 +11,9 @@ class
 
 inherit
 	SD_ZONE_NAVIGATION_DIALOG_IMP
+		redefine
+			show
+		end
 
 create
 	make
@@ -170,6 +173,8 @@ feature {NONE} -- Initialization
 					focus_label (l_last_label)
 				end
 			end
+
+			init_focued_lable := selected_label
 
 			set_all_items_wrap
 
@@ -342,6 +347,15 @@ feature {NONE} -- Initialization
 			Result := l_a_column.width
 		end
 
+feature -- Command
+
+	show is
+			-- Redefine
+		do
+			Precursor {SD_ZONE_NAVIGATION_DIALOG_IMP}
+			focus_label (init_focued_lable)
+		end
+
 feature {NONE} -- Agents
 
 	on_key_release (a_key: EV_KEY) is
@@ -417,6 +431,9 @@ feature {NONE} -- Implementation query
 
 feature {NONE} -- Implementation command
 
+	init_focued_lable: SD_TOOL_BAR_TOGGLE_BUTTON
+			-- The first focused label setted by `add_all_content_label'
+
 	focus_label (a_label: SD_TOOL_BAR_TOGGLE_BUTTON) is
 			-- Enable a_label's focus color.
 		require
@@ -428,7 +445,24 @@ feature {NONE} -- Implementation command
 			l_left_in, l_right_in: BOOLEAN
 			l_is_selected_label_in_files: BOOLEAN
 			l_maximum_scroll_position: REAL
+			l_all_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_toggle: SD_TOOL_BAR_TOGGLE_BUTTON
 		do
+			from
+				-- Although toggle button will disable other buttons in the same tool bar,
+				-- but it can't diable buttoons in other tool bars.
+				l_all_items := all_items
+				l_all_items.start
+			until
+				l_all_items.after
+			loop
+				l_toggle ?= l_all_items.item
+				if l_toggle /= Void then
+					l_toggle.disable_select
+				end
+				l_all_items.forth
+			end
+
 			a_label.enable_select
 			set_text_info (a_label)
 

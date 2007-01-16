@@ -948,11 +948,12 @@ feature {NONE} -- Implementation for open config.
 					l_state.content.hide
 				end
 				if a_config_data.is_minimized then
-					l_parent ?= l_state.zone.parent
+					-- l_state.zone will be void. We should query zone indirectly.
+					l_parent ?= l_state.content.state.zone.parent
 					if l_parent /= Void and l_parent.is_minimized then
 						-- Maybe parent not full now, Current is the first child of parent, parent will fill another child immediately.
 --						check full: l_parent.full end
-						l_parent.disable_item_expand (l_state.zone)
+						l_parent.disable_item_expand (l_state.content.state.zone)
 					end
 				end
 			else	-- If it's a split_area

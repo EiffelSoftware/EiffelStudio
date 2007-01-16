@@ -80,7 +80,7 @@ feature -- Access
 	item_type_name: STRING_GENERAL is
 			-- Name of type of current item
 		do
-			Result := interface_names.l_target_domain_item
+			Result := names.l_target_domain_item
 		end
 
 feature{NONE} -- Implemenation
@@ -91,7 +91,7 @@ feature{NONE} -- Implemenation
 			if not is_up_to_date then
 				query_language_target := Void
 				if id.is_empty then
-					string_representation_internal := interface_names.l_application_target.twin
+					string_representation_internal := names.l_application_target.twin
 				else
 					conf_target := target_of_id (id)
 					if conf_target /= Void then
@@ -101,7 +101,7 @@ feature{NONE} -- Implemenation
 						if last_target_name /= Void and then not last_target_name.is_empty then
 							string_representation_internal := last_target_name.twin
 						else
-							string_representation_internal := interface_names.l_invalid_item
+							string_representation_internal := names.l_invalid_item
 						end
 					end
 				end

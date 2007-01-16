@@ -23,12 +23,6 @@ inherit
 
 	SHARED_NAMES
 
-	EB_CLUSTER_MANAGER_OBSERVER
-		redefine
-			on_project_loaded,
-			on_project_unloaded
-		end
-
 	EB_METRIC_ACTION_SEQUENCES
 
 	EB_METRIC_FILE_LOADER
@@ -45,7 +39,6 @@ feature{NONE} -- Initialization
 		do
 			create {LINKED_LIST [EB_METRIC]} metrics.make
 			create metrics_validity.make (100)
-			manager.add_observer (Current)
 		end
 
 feature -- Setting

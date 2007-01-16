@@ -16,10 +16,10 @@ inherit
 			is_real_delayed_item
 		end
 
-	EB_CONSTANTS
-		undefine
-			is_equal
-		end
+--	EB_CONSTANTS
+--		undefine
+--			is_equal
+--		end
 
 create
 	make
@@ -68,7 +68,7 @@ feature -- Access
 	string_representation: STRING is
 			-- Text of current item
 		do
-			Result := interface_names.l_delayed_item
+			Result := names.l_delayed_item
 		end
 
 	sorting_order_index: INTEGER is
@@ -80,7 +80,7 @@ feature -- Access
 	item_type_name: STRING_GENERAL is
 			-- Name of type of current item
 		do
-			Result := interface_names.l_delayed_domain_item
+			Result := names.l_delayed_domain_item
 		end
 
 feature{NONE} -- Implemenation

@@ -108,7 +108,7 @@ feature -- Access
 	item_type_name: STRING_GENERAL is
 			-- Name of type of current item
 		do
-			Result := interface_names.l_folder_domain_item
+			Result := names.l_folder_domain_item
 		end
 
 feature -- Setting
@@ -144,7 +144,7 @@ feature{NONE} -- Implemenation
 					if last_folder_name /= Void and then not last_folder_name.is_empty then
 						string_representation_internal := last_folder_name.twin
 					else
-						string_representation_internal := interface_names.l_invalid_item
+						string_representation_internal := names.l_invalid_item
 					end
 				end
 				update_last_compilation_count

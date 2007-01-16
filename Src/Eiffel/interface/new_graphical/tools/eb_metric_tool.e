@@ -31,6 +31,8 @@ inherit
 
 	EB_METRIC_ACTION_SEQUENCES
 
+	SHARED_EIFFEL_PROJECT
+
 create
 	make
 
@@ -51,6 +53,11 @@ feature -- Initialization
 			create metric_archive_panel.make (Current)
 			create detail_result_panel.make (Current)
 			create metric_history_panel.make (Current)
+
+			notify_project_loaded_agent := agent notify_project_loaded
+			notify_project_unloaded_agent := agent notify_project_unloaded
+			eiffel_project.manager.load_agents.extend (notify_project_loaded_agent)
+			eiffel_project.manager.close_agents.extend (notify_project_unloaded_agent)
 
 			metric_notebook.extend (metric_evaluation_panel)
 			metric_notebook.extend (new_metric_panel)
@@ -321,6 +328,8 @@ feature {NONE} -- Memory management
 			detail_result_panel := Void
 			develop_window := Void
 			uninstall_agents (metric_manager)
+			eiffel_project.manager.load_agents.prune_all (notify_project_loaded_agent)
+			eiffel_project.manager.close_agents.prune_all (notify_project_unloaded_agent)
 		end
 
 feature -- Status report
@@ -532,9 +541,34 @@ feature{NONE} -- Implementation
 		send_metric_value_in_history_actions_internal: like send_metric_value_in_history_actions;
 			-- Implementation of `send_metric_value_in_history_actions'
 
+		notify_project_loaded is
+				-- Notify `metric_manager' that project has been loaded.
+			do
+				if not metric_manager.is_project_loaded then
+					metric_manager.on_project_loaded
+				end
+			end
+
+		notify_project_unloaded is
+				-- Notify `metric_manager' that project has been unloaded.
+			do
+				if metric_manager.is_project_loaded then
+					metric_manager.on_project_unloaded
+				end
+			end
+
+		notify_project_loaded_agent: PROCEDURE [ANY, TUPLE]
+				-- Agent of `notify_project_loaded'
+
+		notify_project_unloaded_agent: PROCEDURE [ANY, TUPLE]
+				-- Agent of `notify_project_unloaded'
+
 invariant
 	feedback_dialog_attached: feedback_dialog /= Void
 	not_feedback_dialog_is_destroyed: not feedback_dialog.is_destroyed
+	notify_project_loaded_agent_attached: notify_project_loaded_agent /= Void
+	notify_project_unloaded_agent_attached: notify_project_unloaded_agent /= Void
+
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -25,7 +25,7 @@ inherit
 			is_equal
 		end
 
-	EB_CONSTANTS
+	SHARED_NAMES
 		undefine
 			is_equal
 		end
@@ -36,21 +36,6 @@ inherit
 		end
 
 	SHARED_WORKBENCH
-		undefine
-			is_equal
-		end
-
-	EB_SHARED_WRITER
-		undefine
-			is_equal
-		end
-
-	EB_SHARED_EDITOR_TOKEN_UTILITY
-		undefine
-			is_equal
-		end
-
-	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		undefine
 			is_equal
 		end
@@ -112,11 +97,6 @@ feature -- Status report
 		do
 		end
 
-	is_wrapper_item: BOOLEAN is
-			-- Is current a wrapper item?
-		do
-		end
-
 	is_valid: BOOLEAN is
 			-- Does current represent a valid domain item?
 		do
@@ -158,8 +138,6 @@ feature -- Comparison
 				(is_delayed_item and then other.is_delayed_item)
 			then
 				Result := text_of_id.is_equal (other.text_of_id)
-			elseif (is_wrapper_item and then other.is_wrapper_item) then
-				Result := query_language_item.is_equal (other.query_language_item)
 			end
 		end
 

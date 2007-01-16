@@ -167,8 +167,8 @@ feature -- Status setting
 	maximize is
 			-- Display at maximum size.
 		do
-			is_maximized := False
-			is_minimized := True
+			is_maximized := True
+			is_minimized := False
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_maximize (c_object)
 		end
 

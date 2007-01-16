@@ -195,6 +195,7 @@ feature -- Command
 			l_tool_bars: DS_ARRAYED_LIST [SD_TOOL_BAR_ZONE]
 			l_helper: SD_POSITION_HELPER
 			l_indicator_size: INTEGER
+			l_temp_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
 		do
 			create l_all_hiden_items.make (1)
 			-- Prepare all hiden items in Current row.
@@ -204,7 +205,16 @@ feature -- Command
 			until
 				l_tool_bars.after
 			loop
-				l_all_hiden_items.append (l_tool_bars.item_for_iteration.assistant.hide_tool_bar_items)
+				-- We can't just call `append' to insert items, because we want to reverse items order.
+				from
+					l_temp_items := l_tool_bars.item_for_iteration.assistant.hide_tool_bar_items
+					l_temp_items.finish
+				until
+					l_temp_items.before
+				loop
+					l_all_hiden_items.extend (l_temp_items.item)
+					l_temp_items.back
+				end
 				l_tool_bars.forth
 			end
 

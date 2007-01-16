@@ -48,14 +48,14 @@ feature -- Initialization
 			create feedback_dialog
 			feedback_dialog.set_buttons (<<>>)
 
+			notify_project_loaded_agent := agent notify_project_loaded
+			notify_project_unloaded_agent := agent notify_project_unloaded
+
 			create metric_evaluation_panel.make (Current)
 			create new_metric_panel.make (Current)
 			create metric_archive_panel.make (Current)
 			create detail_result_panel.make (Current)
 			create metric_history_panel.make (Current)
-
-			notify_project_loaded_agent := agent notify_project_loaded
-			notify_project_unloaded_agent := agent notify_project_unloaded
 			eiffel_project.manager.load_agents.extend (notify_project_loaded_agent)
 			eiffel_project.manager.close_agents.extend (notify_project_unloaded_agent)
 

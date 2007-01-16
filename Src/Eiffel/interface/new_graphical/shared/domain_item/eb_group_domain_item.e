@@ -93,7 +93,7 @@ feature -- Access
 	item_type_name: STRING_GENERAL is
 			-- Name of type of current item
 		do
-			Result := interface_names.l_group_domain_item
+			Result := names.l_group_domain_item
 		end
 
 feature{NONE} -- Implemenation
@@ -110,7 +110,7 @@ feature{NONE} -- Implemenation
 					if last_group_name /= Void and then not last_group_name.is_empty then
 						string_representation_internal := last_group_name.twin
 					else
-						string_representation_internal := interface_names.l_invalid_item
+						string_representation_internal := names.l_invalid_item
 					end
 					ql_group_internal := Void
 				end

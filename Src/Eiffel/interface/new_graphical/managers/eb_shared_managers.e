@@ -16,6 +16,8 @@ inherit
 
 	PROJECT_CONTEXT
 
+	EB_SHARED_METRIC_MANAGER
+
 feature -- Status report
 
 	process_manager: EB_PROCESS_MANAGER is
@@ -83,14 +85,6 @@ feature -- Status report
 			-- same Favorites.
 		once
 			create Result
-		end
-
-	metric_manager: EB_METRIC_MANAGER is
-			-- Metric manager
-		once
-			create Result.make
-		ensure
-			result_attached: Result /= Void
 		end
 
 feature {NONE} -- Implementation

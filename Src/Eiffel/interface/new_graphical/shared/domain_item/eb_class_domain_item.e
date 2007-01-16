@@ -80,7 +80,7 @@ feature -- Access
 	item_type_name: STRING_GENERAL is
 			-- Name of type of current item
 		do
-			Result := interface_names.l_class_domain_item
+			Result := names.l_class_domain_item
 		end
 
 feature{NONE} -- Implemenation
@@ -97,7 +97,7 @@ feature{NONE} -- Implemenation
 					if last_class_name /= Void and then not last_class_name.is_empty then
 						string_representation_internal := last_class_name.twin
 					else
-						string_representation_internal := interface_names.l_invalid_item
+						string_representation_internal := names.l_invalid_item
 					end
 					query_class_item := Void
 				end

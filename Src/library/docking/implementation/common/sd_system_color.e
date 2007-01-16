@@ -65,6 +65,15 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+feature -- Font
+
+	tool_bar_font: EV_FONT is
+			-- Redefine
+		deferred
+		ensure
+			not_void: Result /= Void
+		end
+
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

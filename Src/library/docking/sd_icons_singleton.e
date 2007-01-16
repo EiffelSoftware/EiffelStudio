@@ -84,11 +84,19 @@ feature -- Icons
 			not_void: Result /= Void
 		end
 
-	hide_tab_indicator (a_hide_number: INTEGER): EV_PIXMAP is
+	hide_tab_indicator_buffer (a_hide_number: INTEGER): EV_PIXEL_BUFFER is
 			-- Hide tab indicator.
+		require
+			vaild: a_hide_number >= 0 and a_hide_number < 1000
 		deferred
 		ensure
 			not_void: Result /= Void
+		end
+
+	hide_tab_indicator (a_hide_number: INTEGER): EV_PIXMAP is
+			-- Hide tab indicator.
+		obsolete "Use hide_tab_indicator_buffer instead"
+		do
 		end
 
 	tool_bar_indicator: EV_PIXMAP is

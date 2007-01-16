@@ -38,6 +38,8 @@ feature{NONE} -- Initlization
 			init_theme
 			create l_env
 			l_env.application.theme_changed_actions.extend (agent init_theme)
+
+			create internal_shared
 		end
 
 	init_theme is
@@ -95,7 +97,7 @@ feature -- Redefine
 			-- Redefine
 		local
 			l_imp: WEL_WINDOW
-			l_shared_font: WEL_SHARED_FONTS
+			l_font_imp: EV_FONT_IMP
 			l_wel_bitmap: WEL_BITMAP
 			l_color_imp: EV_COLOR_IMP
 			l_brush: WEL_BRUSH
@@ -111,8 +113,9 @@ feature -- Redefine
 
 			-- We must select font to draw.
 			-- See MSDN "Using Windows XP Visual Styles" section about drawThemeText.
-			create l_shared_font
-			internal_buffered_dc.select_font (l_shared_font.menu_font)
+			l_font_imp ?= internal_shared.tool_bar_font.implementation
+			check not_void: l_font_imp /= Void end
+			internal_buffered_dc.select_font (l_font_imp.wel_font)
 
 			create l_wel_bitmap.make_compatible (internal_client_dc, tool_bar.width, tool_bar.height)
 			internal_buffered_dc.select_bitmap (l_wel_bitmap)
@@ -121,7 +124,6 @@ feature -- Redefine
 			l_color_imp ?= tool_bar.background_color.implementation
 			check not_void: l_color_imp /= Void end
 			internal_buffered_dc.set_background_color (l_color_imp)
-
 
 			-- If we draw background like this, when non-32bits color depth, color will broken.
 --			create l_background_pixmap.make_with_size (tool_bar.width, tool_bar.height)
@@ -218,6 +220,9 @@ feature -- Redefine
 
 feature {NONE} -- Implementation
 
+	internal_shared: SD_SHARED
+			-- All singletons.
+
 	theme_data: POINTER
 			-- Theme data.
 
@@ -251,6 +256,63 @@ feature {NONE} -- Implementation
 			exist: a_dc_to_draw.exists
 			not_void: a_arguments /= Void
 		local
+			l_button: SD_TOOL_BAR_BUTTON
+		do
+			l_button ?= a_arguments.item
+			if l_button /= Void and then (l_button.pixmap /= Void or l_button.pixel_buffer /= Void) and l_button.tool_bar /= Void then
+				if is_use_gdip (a_arguments) then
+					draw_pixel_buffer (a_dc_to_draw, a_arguments)
+				else
+					draw_pixmap_real (a_dc_to_draw, a_arguments)
+				end
+			end
+		end
+
+	is_use_gdip (a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS): BOOLEAN is
+			-- If using gdi+ to draw icons?
+		local
+			l_button: SD_TOOL_BAR_BUTTON
+		do
+			l_button ?= a_arguments.item
+			if l_button /= Void then
+				Result := l_button.pixel_buffer /= Void and (create {WEL_GDIP_STARTER}).is_gdi_plus_installed
+			end
+		end
+
+	draw_pixel_buffer (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
+			-- Draw icons when using gdi+.
+		require
+			use_gdip: is_use_gdip (a_arguments)
+		local
+			l_coordinate: EV_COORDINATE
+			l_button: SD_TOOL_BAR_BUTTON
+
+			l_graphics: WEL_GDIP_GRAPHICS
+			l_buffer_imp: EV_PIXEL_BUFFER_IMP
+			l_dest_rect, l_src_rect: WEL_RECT
+		do
+			l_button ?= a_arguments.item
+			if l_button /= Void and then l_button.pixel_buffer /= Void and l_button.tool_bar /= Void then
+				if not a_arguments.item.is_sensitive then
+					arguments := a_arguments
+					dc_to_draw := a_dc_to_draw
+					pixmap_coordinate := l_button.pixmap_position
+					desaturation_pixel_buffer (l_button.pixel_buffer)
+				else
+					create l_graphics.make_from_dc (a_dc_to_draw)
+					l_buffer_imp ?= l_button.pixel_buffer.implementation
+					l_coordinate := l_button.pixmap_position
+					create l_dest_rect.make (l_coordinate.x, l_coordinate.y, l_coordinate.x + l_buffer_imp.width, l_coordinate.y + l_buffer_imp.height)
+					create l_src_rect.make (0, 0, l_buffer_imp.width, l_buffer_imp.height)
+					l_graphics.draw_image_with_src_rect_dest_rect (l_buffer_imp.gdip_bitmap, l_dest_rect, l_src_rect)
+					l_graphics.dispose
+				end
+			end
+		end
+
+	draw_pixmap_real (a_dc_to_draw: WEL_DC; a_arguments: SD_TOOL_BAR_DRAWER_ARGUMENTS) is
+			-- Draw icons when using gdi.
+		local
 			l_pixmap_state: EV_PIXMAP_IMP_STATE
 			l_wel_bitmap, l_mask_bitmap: WEL_BITMAP
 			l_coordinate: EV_COORDINATE
@@ -271,11 +333,7 @@ feature {NONE} -- Implementation
 					arguments := a_arguments
 					dc_to_draw := a_dc_to_draw
 					pixmap_coordinate := l_button.pixmap_position
-					if l_button.pixel_buffer /= Void and (create {WEL_GDIP_STARTER}).is_gdi_plus_installed then
-						desaturation_pixel_buffer (l_button.pixel_buffer)
-					else
-						desaturation (l_grey_pixmap, 1)
-					end
+					desaturation (l_grey_pixmap, 1)
 
 					l_pixmap_state ?= l_grey_pixmap.implementation
 				else
@@ -292,8 +350,6 @@ feature {NONE} -- Implementation
 
 				if a_arguments.item.is_sensitive then
 					theme_drawer.draw_bitmap_on_dc (a_dc_to_draw, l_wel_bitmap, l_mask_bitmap, l_coordinate.x, l_coordinate.y, True)
-				else
-					-- It already drawn by GDI+.
 				end
 
 				l_wel_bitmap.decrement_reference
@@ -591,6 +647,7 @@ feature {NONE} -- Implementation
 
 invariant
 	not_void: theme_drawer /= Void
+	not_void: internal_shared /= Void
 
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."

@@ -277,7 +277,7 @@ feature -- Command
 			until
 				tab_groups.after
 			loop
-				-- Remove stub seperator by group
+				-- Remove stub separator by group
 				update_one_tab_group (tab_groups.item)
 				tab_groups_max_size.extend (tab_group_max_size (tab_groups.item))
 				tab_groups.forth
@@ -288,7 +288,7 @@ feature -- Command
 	set_background_color (a_color: EV_COLOR) is
 			-- Redefine
 		local
-			l_spacer: SD_AUTO_HIDE_SEPERATOR
+			l_spacer: SD_AUTO_HIDE_SEPARATOR
 		do
 			from
 				start
@@ -343,7 +343,7 @@ feature {NONE} -- Implementation functions.
 		require
 			a_tab_group_not_void: a_tab_group /= Void
 		local
-			l_seperator: SD_AUTO_HIDE_SEPERATOR
+			l_separator: SD_AUTO_HIDE_SEPARATOR
 		do
 			from
 				a_tab_group.start
@@ -357,11 +357,11 @@ feature {NONE} -- Implementation functions.
 				search (a_tab_group.item)
 				check found: not after end
 				if a_tab_group.index /= a_tab_group.count then
-					-- Remove seperator
+					-- Remove separator
 					forth
-					l_seperator ?= item
-					if l_seperator /= Void then
-						prune_all (l_seperator)
+					l_separator ?= item
+					if l_separator /= Void then
+						prune_all (l_separator)
 					end
 				end
 				a_tab_group.forth
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation functions.
 		require
 			a_stub_not_void: a_stub /= Void
 		local
-			l_spacer: SD_AUTO_HIDE_SEPERATOR
+			l_spacer: SD_AUTO_HIDE_SEPARATOR
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 			l_helper: SD_COLOR_HELPER
 		do
@@ -472,7 +472,7 @@ feature {NONE} -- Implementation functions.
 			a_stub_not_void: a_stub /= Void
 			has: has (a_stub)
 		local
-			l_seperator: SD_AUTO_HIDE_SEPERATOR
+			l_separator: SD_AUTO_HIDE_SEPARATOR
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 
@@ -499,8 +499,8 @@ feature {NONE} -- Implementation functions.
 			end
 			if l_tab_group.count = 0 then
 				check a_spacer_or_a_tab_behind: not after end
-				l_seperator ?= item
-				if l_seperator /= Void then
+				l_separator ?= item
+				if l_separator /= Void then
 					remove
 				end
 			end
@@ -556,7 +556,7 @@ feature {NONE} -- Impelementation attributes.
 			-- All singletons
 
 	internal_tab_group: ARRAYED_LIST [SD_TAB_STUB] is
-			-- Tab group which stay together without seperator. This is used for type signature.
+			-- Tab group which stay together without separator. This is used for type signature.
 		require
 			False
 		do

@@ -808,8 +808,6 @@ end;
 				if feature_i.is_origin then
 						-- An old feature from a previous compilation was
 						-- an origin. Keep the current routine id.
-						-- Make sure an attribute has a negative routine id
-						-- otherwise a positive one
 					new_rout_id_set := feature_i.rout_id_set;
 					check
 						rout_id_set_exists: new_rout_id_set /= Void;

@@ -70,6 +70,38 @@ feature -- Settings
 			if l_attributes /= Void then
 				generate_custom_attributes (a_feature_token, l_attributes)
 			end
+			if cil_generator.current_class_type.implementation_id /= cil_generator.current_class_type.static_type_id then
+				if not a_feature.is_attribute and not a_feature.is_type_feature then
+					if cil_generator.is_implementation_generated then
+						l_attributes := a_feature.class_custom_attributes
+					else
+						l_attributes := a_feature.interface_custom_attributes
+					end
+				else
+					feature_as := a_feature.body
+					if feature_as /= Void then
+						if cil_generator.is_implementation_generated then
+							attributes := feature_as.class_custom_attributes
+						else
+							attributes := feature_as.interface_custom_attributes
+						end
+						if attributes /= Void then
+								-- Initialize data structures needed to perform a `type_check'
+								-- and to create a `byte_node' for every creation expression
+								-- that represent the custom attribute
+							l_class_c := cil_generator.current_class_type.associated_class
+							Inst_context.set_group (l_class_c.group)
+							context.initialize (l_class_c, l_class_c.actual_type, l_class_c.feature_table)
+							feature_checker.init (context)
+							feature_checker.custom_attributes_type_check_and_code (a_feature, attributes)
+							l_attributes ?= feature_checker.last_byte_node
+						end
+					end
+				end
+				if l_attributes /= Void then
+					generate_custom_attributes (a_feature_token, l_attributes)
+				end
+			end
 		end
 
 feature {CIL_CODE_GENERATOR} -- Generation

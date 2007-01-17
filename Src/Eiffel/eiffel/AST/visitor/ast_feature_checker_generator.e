@@ -3559,14 +3559,32 @@ feature -- Implementation
 				l_byte_code.set_start_line_number (l_as.start_location.line)
 				l_byte_code.set_has_loop (has_loop)
 			end
-			l_custom_attributes := l_as.custom_attributes
 				-- For the moment, there is no point in checking custom attributes in non-dotnet mode.
 				-- This fixes eweasel test#incr207.
-			if l_custom_attributes /= Void and system.il_generation then
-				l_custom_attributes.process (Current)
-				if is_byte_node_enabled then
-					l_list ?= last_byte_node
-					l_byte_code.set_custom_attributes (l_list)
+			if system.il_generation then
+				l_custom_attributes := l_as.custom_attributes
+				if l_custom_attributes /= Void then
+					l_custom_attributes.process (Current)
+					if is_byte_node_enabled then
+						l_list ?= last_byte_node
+						l_byte_code.set_custom_attributes (l_list)
+					end
+				end
+				l_custom_attributes := l_as.class_custom_attributes
+				if l_custom_attributes /= Void then
+					l_custom_attributes.process (Current)
+					if is_byte_node_enabled then
+						l_list ?= last_byte_node
+						l_byte_code.set_class_custom_attributes (l_list)
+					end
+				end
+				l_custom_attributes := l_as.interface_custom_attributes
+				if l_custom_attributes /= Void then
+					l_custom_attributes.process (Current)
+					if is_byte_node_enabled then
+						l_list ?= last_byte_node
+						l_byte_code.set_interface_custom_attributes (l_list)
+					end
 				end
 			end
 			l_property_name := l_as.property_name

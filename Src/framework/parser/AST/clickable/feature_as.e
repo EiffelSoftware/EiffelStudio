@@ -312,6 +312,22 @@ feature -- Access
 			end
 		end
 
+	class_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Class custom attributes of current class if any.
+		do
+			if indexes /= Void then
+				Result := indexes.class_custom_attributes
+			end
+		end
+
+	interface_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
+			-- Interface custom attributes of current class if any.
+		do
+			if indexes /= Void then
+				Result := indexes.interface_custom_attributes
+			end
+		end
+
 	property_name: STRING is
 			-- Name of the associated property (if any).
 		do

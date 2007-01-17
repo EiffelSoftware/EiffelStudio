@@ -268,7 +268,7 @@ feature -- Status
 	has_hit_count_condition: BOOLEAN is
 			-- Is `Current' has a condition on `hit_count' ?
 		do
-			Result := hits_count_condition = Void or else hits_count_condition.mode /= hits_count_condition_always
+			Result := hits_count_condition /= Void and then hits_count_condition.mode /= hits_count_condition_always
 		end
 
 feature -- Query

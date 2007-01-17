@@ -167,20 +167,18 @@ feature -- Basic operations
 				menu.extend (item)
 			end
 
-				--| Hit count
 			if bp /= Void then
 				menu.extend (create {EV_MENU_SEPARATOR})
+
+					--| Hit count
 				create cmi.make_with_text (Interface_names.m_Hit_count)
 				cmi.select_actions.extend (agent edit_hit_count_breakpoint (bp))
 				if bp.has_hit_count_condition then
 					cmi.enable_select
 				end
 				menu.extend (cmi)
-			end
 
-				--| When hits breakpoint
-			if bp /= Void then
-				menu.extend (create {EV_MENU_SEPARATOR})
+					--| When hits breakpoint
 				create cmi.make_with_text (Interface_names.m_When_hits)
 				cmi.select_actions.extend (agent edit_when_hits_breakpoint (bp))
 				if bp.has_message then

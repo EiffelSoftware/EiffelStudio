@@ -143,6 +143,12 @@ feature -- Access
 	custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Custom attributes if any.
 
+	interface_custom_attributes: BYTE_LIST [BYTE_NODE]
+			-- Interface custom attributes if any.
+
+	class_custom_attributes: BYTE_LIST [BYTE_NODE]
+			-- Class custom attributes if any.
+
 	property_custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Property custom attributes (if any)
 
@@ -263,6 +269,22 @@ feature -- Settings
 			custom_attributes := cas
 		ensure
 			custom_attributes_set: custom_attributes = cas
+		end
+
+	set_class_custom_attributes (cas: like class_custom_attributes) is
+			-- Assign `cas' to `class_custom_attributes'.
+		do
+			class_custom_attributes := cas
+		ensure
+			class_custom_attributes_set: class_custom_attributes = cas
+		end
+
+	set_interface_custom_attributes (cas: like interface_custom_attributes) is
+			-- Assign `cas' to `interface_custom_attributes'.
+		do
+			interface_custom_attributes := cas
+		ensure
+			interface_custom_attributes_set: interface_custom_attributes = cas
 		end
 
 	set_property_custom_attributes (cas: like property_custom_attributes) is

@@ -118,6 +118,16 @@ feature -- Status report
 	is_debug_info_enabled: BOOLEAN
 			-- Are we generating debug information?
 
+	is_implementation_generated: BOOLEAN
+			-- Is implementation of a class type being generated rather than interface?
+		require
+			not_current_class_type_is_single: not current_class_type.is_generated_as_single_type
+		do
+			Result := current_class_type.implementation_id = current_type_id
+		ensure
+			definition: Result = (current_class_type.implementation_id = current_type_id)
+		end
+
 feature {IL_MODULE} -- Access
 
 	is_single_inheritance_implementation: BOOLEAN is

@@ -1350,6 +1350,32 @@ feature -- IL code generation
 			end
 		end
 
+	class_custom_attributes: BYTE_LIST [BYTE_NODE] is
+			-- Class custom attributes of Current if any.
+		local
+			byte_code: BYTE_CODE
+		do
+			if not is_attribute and then not is_external then
+				if Byte_server.has (body_index) then
+					byte_code := Byte_server.item (body_index)
+					Result := byte_code.class_custom_attributes
+				end
+			end
+		end
+
+	interface_custom_attributes: BYTE_LIST [BYTE_NODE] is
+			-- Interface custom attributes of Current if any.
+		local
+			byte_code: BYTE_CODE
+		do
+			if not is_attribute and then not is_external then
+				if Byte_server.has (body_index) then
+					byte_code := Byte_server.item (body_index)
+					Result := byte_code.interface_custom_attributes
+				end
+			end
+		end
+
 	property_custom_attributes: BYTE_LIST [BYTE_NODE] is
 			-- Custom attributes of Current if any.
 		do

@@ -408,7 +408,7 @@ feature{NONE} -- Actions
 			loop
 				l_panel ?= l_notebook @ i
 				check l_panel /= Void end
-				if is_shown and then l_notebook.index = l_selected_index then
+				if is_shown and then i = l_selected_index then
 					l_panel.set_is_selected (True)
 					l_panel.on_select
 				else

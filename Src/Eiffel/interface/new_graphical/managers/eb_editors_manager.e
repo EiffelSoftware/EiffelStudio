@@ -91,7 +91,6 @@ feature -- Access
 	editor_with_stone (a_stone: STONE) : like current_editor is
 			-- Editor that has `a_stone', or editing the same path file.
 		local
-			l_editors: ARRAYED_LIST [like current_editor]
 			l_fake_editor: EB_FAKE_SMART_EDITOR
 		do
 			if a_stone /= Void then

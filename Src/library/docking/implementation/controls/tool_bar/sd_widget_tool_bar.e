@@ -354,6 +354,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: SD_TOOL_BAR_WIDGET_ITEM
 			l_items: ARRAYED_LIST [SD_TOOL_BAR_ITEM]
+			l_item_x, l_item_y: INTEGER
 		do
 			from
 				l_items := items
@@ -363,7 +364,11 @@ feature {NONE} -- Implementation
 			loop
 				l_item ?= l_items.item
 				if l_item /= Void and then l_item.has_rectangle (create {EV_RECTANGLE}.make (a_x, a_y, a_width, a_height)) then
-					set_item_position (l_item.widget, item_x (l_item), item_y (l_item))
+					l_item_x := item_x (l_item)
+					l_item_y := item_y (l_item)
+					if l_item_x /= l_item.widget.x_position or else l_item_y /= l_item.widget.y_position then
+						set_item_position (l_item.widget, l_item_x, l_item_y)
+					end
 				end
 				l_items.forth
 			end

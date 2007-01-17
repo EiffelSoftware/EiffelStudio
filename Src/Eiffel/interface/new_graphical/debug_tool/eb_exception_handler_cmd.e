@@ -114,7 +114,7 @@ feature -- Handler dialog by code
 	build_handler_by_code_dialog is
 		local
 			vb: EV_VERTICAL_BOX
-			glab: EV_GRID_LABEL_ITEM
+			gclab: EV_GRID_CHECKABLE_LABEL_ITEM
 			g_row: EV_GRID_ROW
 			bt: EV_BUTTON
 			except_meanings: EXCEPTION_CODE_MEANING
@@ -159,9 +159,11 @@ feature -- Handler dialog by code
 			loop
 				g_row := grid.row (c)
 				g_row.set_data (c)
-				create glab.make_with_text (c.out + ": " + except_meanings.exception_code_meaning (c))
-				glab.set_pixmap (pixmap_for_role (app_excep_handler.exception_role_for_code (c)))
-				g_row.set_item (1, glab)
+				create gclab.make_with_text (c.out + ": " + except_meanings.exception_code_meaning (c))
+				gclab.checked_changed_actions.extend (agent activate_grid_label)
+
+				refresh_grid_label (c, gclab)
+				g_row.set_item (1, gclab)
 				c := c + 1
 			end
 			grid.enable_last_column_use_all_width
@@ -242,31 +244,49 @@ feature -- Handler dialog by code
 
 	double_clicked_on_grid_cell (ax, ay, abut: INTEGER; gi: EV_GRID_ITEM) is
 		local
-			glab: EV_GRID_LABEL_ITEM
+			glab: EV_GRID_CHECKABLE_LABEL_ITEM
+		do
+			if abut = 1 and then gi /= Void and then gi.is_parented then
+				glab ?= gi
+				if glab /= Void then
+					activate_grid_label (glab)
+				end
+			end
+		end
+
+	activate_grid_label (gi: EV_GRID_CHECKABLE_LABEL_ITEM) is
+		local
 			g_row: EV_GRID_ROW
 			ir: INTEGER_REF
 			ecode: INTEGER
 			app_excep_handler: DBG_EXCEPTION_HANDLER
 		do
-			app_excep_handler := Debugger_manager.exceptions_handler
-			if abut = 1 and then gi /= Void and then gi.is_parented then
-				glab ?= gi
-				if glab /= Void then
-					g_row := gi.row
-					ir ?= g_row.data
-					if ir /= Void then
-						ecode := ir.item
-						inspect
-							app_excep_handler.exception_role_for_code (ecode)
-						when {DBG_EXCEPTION_HANDLER}.role_continue then
-							app_excep_handler.catch_exception_by_code (ecode)
-						else
-							app_excep_handler.ignore_exception_by_code (ecode)
-						end
-						glab.set_pixmap (pixmap_for_role (app_excep_handler.exception_role_for_code (ecode)))
-					end
+			g_row := gi.row
+			ir ?= g_row.data
+			if ir /= Void then
+				app_excep_handler := Debugger_manager.exceptions_handler
+				ecode := ir.item
+				inspect
+					app_excep_handler.exception_role_for_code (ecode)
+				when {DBG_EXCEPTION_HANDLER}.role_continue then
+					app_excep_handler.catch_exception_by_code (ecode)
+				else
+					app_excep_handler.ignore_exception_by_code (ecode)
 				end
+				refresh_grid_label (ecode, gi)
 			end
+		end
+
+	refresh_grid_label (ecode: INTEGER; gi: EV_GRID_CHECKABLE_LABEL_ITEM) is
+		local
+			r: INTEGER
+		do
+			r := Debugger_manager.exceptions_handler.exception_role_for_code (ecode)
+			gi.set_pixmap (pixmap_for_role (r))
+
+			gi.checked_changed_actions.block
+			gi.set_is_checked (r = {DBG_EXCEPTION_HANDLER}.role_continue)
+			gi.checked_changed_actions.resume
 		end
 
 indexing

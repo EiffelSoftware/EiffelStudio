@@ -105,8 +105,6 @@ feature -- Update
 
 	exception_class_name: STRING is
 			-- Exception class name
-		require
-			exception_occurred: exception_occurred
 		do
 			Result := Eifnet_debugger.exception_class_name
 		end

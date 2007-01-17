@@ -249,7 +249,6 @@ feature -- Bridge to Debugger
 			Result := status.exception_occurred
 		end
 
-
 feature -- Execution
 
 	run_with_env_string (args, cwd: STRING; env: STRING_GENERAL) is
@@ -1044,8 +1043,6 @@ feature {NONE} -- Events on notification
 			-- In case of conditional breakpoint, do we really stop on it ?
 		local
 			l_bp: BREAKPOINT
-			expr: EB_EXPRESSION
-			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			if Eifnet_debugger.last_control_mode_is_stepping then
 				debug ("debugger_trace")
@@ -1054,25 +1051,7 @@ feature {NONE} -- Events on notification
 				Result := True
 			else
 				l_bp := Eifnet_debugger.current_breakpoint
-				if l_bp /= Void and then l_bp.has_condition then
-					debug ("debugger_trace")
-						print ("CONDITIONAL BP %N")
-					end
-					expr := l_bp.condition
-					if expr /= Void then
-						expr.evaluate
-						evaluator := expr.expression_evaluator
-						if evaluator.error_occurred then
-							Result := True
-						else
-							Result := evaluator.final_result_is_true_boolean_value
-						end
-					else
-						Result := True
-					end
-				else
-					Result := True
-				end
+				Result := debugger_manager.process_breakpoint (l_bp)
 			end
 		end
 

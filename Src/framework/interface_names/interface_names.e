@@ -158,6 +158,7 @@ feature -- Button texts
 	b_No: STRING_GENERAL is								do Result := locale.translate("No")	end
 	b_Ok: STRING_GENERAL is								do Result := locale.translate("OK")	end
 	b_Cancel: STRING_GENERAL is							do Result := locale.translate("Cancel")	end
+	b_Reset: STRING_GENERAL is							do Result := locale.translate("Reset") end
 	b_overwrite: STRING_GENERAL is						do Result := locale.translate("Overwrite") end
 	b_append: STRING_GENERAL is							do Result := locale.translate("Append") end
 
@@ -214,6 +215,11 @@ feature -- Accelerator, focus label and menu name
 	m_auto_expressions: STRING_GENERAL is		do Result := locale.translate("Auto expressions")	end
 	l_all_classes: STRING_GENERAL is			do Result := locale.translate("All Classes")	end
 	m_Breakpoints_tool: STRING_GENERAL is		do Result := locale.translate("Breakpoints")	end
+	m_Breakpoint_index: STRING_GENERAL is		do Result := locale.translate("Breakpoint index:")	end
+	m_Break_always: STRING_GENERAL is						do Result := locale.translate("Break always")	end
+	m_Break_when_hit_count_equal: STRING_GENERAL is			do Result := locale.translate("Break when the hit count is equal to")	end
+	m_Break_when_hit_count_multiple_of: STRING_GENERAL is	do Result := locale.translate("Break when the hit count is a multiple of")	end
+	m_Break_when_hit_count_greater: STRING_GENERAL is		do Result := locale.translate("Break when the hit count is greater than or equal to")	end
 
 	l_class_tree_assemblies: STRING_GENERAL is	do Result := locale.translate("Assemblies")	end
 	l_class_tree_clusters: STRING_GENERAL is	do Result := locale.translate("Clusters")	end
@@ -546,6 +552,7 @@ feature -- Menu mnenomics
 				     locale.translate("Restrictors"), locale.translate("Main Editor Views")>>
 		end
 	m_History: STRING_GENERAL is				do Result := locale.translate("&Go to")	end
+	m_Hit_count: STRING_GENERAL is				do Result := locale.translate("Hit count")	end
 	m_Maximize: STRING_GENERAL is				do Result := locale.translate("Ma&ximize")	end
 	m_Minimize: STRING_GENERAL is				do Result := locale.translate("Mi&nimize")	end
 	m_Minimize_all: STRING_GENERAL is			do Result := locale.translate("&Minimize All")	end
@@ -577,6 +584,8 @@ feature -- Menu mnenomics
 	m_Tools: STRING_GENERAL is					do Result := locale.translate("&Tools")	end
 	m_Unify_stone: STRING_GENERAL is			do Result := locale.translate("Lin&k Context Tool")	end
 	m_View: STRING_GENERAL is					do Result := locale.translate("&View")	end
+
+	m_When_hits: STRING_GENERAL is				do Result := locale.translate("When hits ...")	end
 	m_Window: STRING_GENERAL is					do Result := locale.translate("&Window")	end
 	m_Refactoring: STRING_GENERAL is			do Result := locale.translate("&Refactoring")	end
 
@@ -611,6 +620,7 @@ feature -- Label texts
 	l_text: STRING_GENERAL is		do Result := locale.translate("Text")	end
 	l_contract: STRING_GENERAL is		do Result := locale.translate("Contract")	end
 	l_flat_contracts:  STRING_GENERAL is		do Result := locale.translate("Flat contracts")	end
+	l_Continue_execution: STRING_GENERAL is			do Result := locale.translate("Continue execution")	end
 	l_Choose_folder: STRING_GENERAL is			do Result := locale.translate("Select the destination folder ")	end
 	l_one_target_among: STRING_GENERAL is			do Result := locale.translate("Choose one target among: ")	end
 	l_class: STRING_GENERAL is					do Result := locale.translate ("Class") end
@@ -651,6 +661,7 @@ feature -- Label texts
 	l_creators: STRING_GENERAL is				do Result := locale.translate("creators")	end
 	l_Current_context: STRING_GENERAL is		do Result := locale.translate("Current feature")	end
 	l_Current_editor: STRING_GENERAL is			do Result := locale.translate("Current editor")	end
+	l_Current_hit_count: STRING_GENERAL is		do Result := locale.translate("Current hit count:")	end
 	l_Current_object: STRING_GENERAL is			do Result := locale.translate("Current object")	end
 	l_Custom: STRING_GENERAL is 				do Result := locale.translate("Custom")	end
 	l_debugger_exception_message: STRING_GENERAL is do Result := locale.translate("Debugger :: Exception message")	end
@@ -822,6 +833,22 @@ feature -- Label texts
 	l_Possible_overflow: STRING_GENERAL is		do Result := locale.translate("Possible stack overflow")	end
 	l_precompile: STRING_GENERAL is				do Result := locale.translate("Precompile")	end
 	l_preferences_delayed_resources: STRING_GENERAL is do Result := locale.translate ("The changes you have made to the following resources%Nwill be taken into account after you restart.%N%N") end
+	l_Print_message: STRING_GENERAL is			do Result := locale.translate("Print a message:")	end
+	l_Print_message_help: STRING_GENERAL is
+		do
+			Result := locale.translate ("[
+					You can include the value of an expression in the message by
+					placing it in curly braces, suce as "The value of x i {x}.".
+					To insert a curly brace, use "\{". To insert a backslash, use "\\".
+					
+					The following special keywords will be replaced with their current values:
+						$ADDRESS - current object address
+						$CALLSTACK - current call stack
+						$CLASS - current class name
+						$FEATURE - current feature name
+						$THREADID - current thread id
+					]")
+		end
 	l_procedure: STRING_GENERAL is			do Result := locale.translate("Procedure")	end
 	l_Profiler_used: STRING_GENERAL is			do Result := locale.translate("Profiler used to produce the above record: ")	end
 	l_profile_no: STRING_GENERAL is			do Result := locale.translate("profile #")	end
@@ -934,6 +961,7 @@ feature -- Label texts
 	l_user_set: STRING_GENERAL is				do Result := locale.translate ("user set") end
 	l_use_inherited: STRING_GENERAL is do Result := locale.translate ("Use inherited value.")	end
 	l_Value: STRING_GENERAL is					do Result := locale.translate("Value")	end
+	l_When_breakpoint_is_hit: STRING_GENERAL is	do Result := locale.translate("When the breakpoint is hit:")	end
 	l_Whole_project: STRING_GENERAL is			do Result := locale.translate("Whole project")	end
 	l_Whole_word: STRING_GENERAL is				do Result := locale.translate("Whole word")	end
 	l_Windows_only: STRING_GENERAL is			do Result := locale.translate("(Windows only)")	end

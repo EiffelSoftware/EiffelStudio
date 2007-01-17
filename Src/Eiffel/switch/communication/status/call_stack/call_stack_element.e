@@ -67,6 +67,26 @@ feature -- Properties
 
 feature -- Output
 
+	to_string: STRING is
+			-- String representation.
+		do
+			create Result.make_empty
+			if object_address /= Void then
+				Result.append ("[0x" + object_address + "] ")
+			end
+
+			if class_name /= Void then
+				Result.append ("{" + class_name + "}")
+			end
+			if routine_name /= Void then
+				if not Result.is_empty then
+					Result.append_character ('.')
+				end
+				Result.append (routine_name)
+			end
+			Result.append (" @" + break_index.out)
+		end
+
 	display_object_address: like object_address is
 		deferred
 		end

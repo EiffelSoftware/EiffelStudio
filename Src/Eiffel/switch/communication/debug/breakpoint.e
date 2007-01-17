@@ -80,8 +80,11 @@ feature -- Output
 				Result.append_string ("???")
 			end
 			Result.append_string (" [" + breakable_line_number.out + "] ")
-			if condition /= Void then
-				Result.append_string (" (*) ")
+			if has_condition then
+				Result.append_string ("(C)")
+			end
+			if has_message then
+				Result.append_string ("(M)")
 			end
 			if wih_details then
 				if is_corrupted then
@@ -118,8 +121,67 @@ feature -- Properties
 			-- See the private constants at the end of the class to see the
 			-- different possible values taken.
 
+	hits_count: INTEGER
+			-- Number of times Current is reached (and satisfied condition if any).
+
+	hits_count_condition: TUPLE [mode:INTEGER; value:INTEGER]
+			--| mode: 0x0 always
+			--| mode: 0x2 equal
+			--| mode: 0x4 multiple of
+			--| mode: 0x8 greater or equal
+
 	condition: EB_EXPRESSION
 			-- Condition to stop.
+
+	message: STRING
+			-- Message to be print when Current is reached.
+			-- If Void, no message is printed.
+			--| You can include value of expression in the message
+			--| by placing it in curly braces , such as "value of x is {x}."
+			--| to insert a curly braces, use "\{" to insert a backslash use "\\"
+			--| Special keywords:
+			--|   $ADDRESS
+			--|   $CALLSTACK - Current call stack
+			--|	  $FEATURE - Current feature name
+			--|	  $THEADID - Current thread id
+
+	continue_execution: BOOLEAN
+			-- Continue execution when Current is reached ?
+			-- Default: stop.
+
+feature -- Change
+
+	set_continue_execution (b: BOOLEAN) is
+			-- Set `continue_execution' to `b'
+		do
+			continue_execution := b
+		end
+
+	set_message (s: STRING) is
+			-- Set `message' to `s'
+		do
+			message := s
+		end
+
+	increase_hits_count is
+			-- Increase hits_count by one
+		do
+			hits_count := hits_count + 1
+		end
+
+	reset_hits_count is
+		do
+			hits_count := 0
+		end
+
+	set_hits_count_condition (m,v: INTEGER) is
+			-- Set `hits_count_condition'
+		do
+			hits_count_condition := [m, v]
+			if m = 0 then
+				hits_count_condition.value := 0
+			end
+		end
 
 feature -- Status
 
@@ -127,6 +189,12 @@ feature -- Status
 			-- Is `Current' a conditional breakpoint?
 		do
 			Result := condition /= Void
+		end
+
+	has_message: BOOLEAN is
+			-- Is `Current' a tracepoint?
+		do
+			Result := message /= Void
 		end
 
 feature -- Query
@@ -251,6 +319,14 @@ feature -- Access
 			when Application_breakpoint_not_set then
 				io.put_string ("not set%N")
 			end
+		end
+
+feature -- application status access
+
+	is_set_for_application: BOOLEAN is
+			-- Is the breakpoint set for the application?
+		do
+			Result := (application_status = Application_breakpoint_set)
 		end
 
 feature -- Setting
@@ -425,14 +501,6 @@ feature {DEBUG_INFO} -- Saving protocol.
 			end
 		end
 
-feature {EWB_REQUEST, APPLICATION_EXECUTION} -- application status access
-
-	is_set_for_application: BOOLEAN is
-			-- Is the breakpoint set for the application?
-		do
-			Result := (application_status = Application_breakpoint_set)
-		end
-
 feature {NONE} -- Implementation
 
 	expression: STRING_32
@@ -442,6 +510,11 @@ feature -- Public constants
 	Breakpoint_do_nothing: INTEGER is 0 -- default value
 	Breakpoint_to_remove: INTEGER is 1
 	Breakpoint_to_add: INTEGER is 2
+
+	Hits_count_condition_always: INTEGER is 0
+	Hits_count_condition_equal: INTEGER is 1
+	Hits_count_condition_multiple: INTEGER is 2
+	Hits_count_condition_greater: INTEGER is 3
 
 feature {NONE} -- Private constants
 	Bench_breakpoint_set, Application_breakpoint_set 			: INTEGER is 0

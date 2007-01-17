@@ -291,7 +291,9 @@ feature -- Events
 			-- Show tool.
 		do
 			Precursor {EB_TOOL}
-			grid.set_focus
+			if grid.is_displayed then
+				grid.set_focus
+			end
 		end
 
 feature -- Memory management
@@ -542,7 +544,7 @@ feature {NONE} -- Impl bp
 		local
 			bp_list: LIST [INTEGER]
 			sorted_bp_list: SORTED_TWO_WAY_LIST [INTEGER]
-			s: STRING
+			s, t: STRING
 			ir, sr: INTEGER
 			subrow: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -613,6 +615,37 @@ feature {NONE} -- Impl bp
 						else
 							create lab.make_with_text (interface_names.l_space_error)
 						end
+						debug ("breakpoint")
+							t := bp.routine.associated_class.name_in_upper + "." + bp.routine.name + "#" + bp.breakable_line_number.out
+							if debugger_manager.application_is_executing then
+								if bp.is_set_for_application then
+									t.append_string ("Application: set")
+								else
+									t.append_string ("Application: not set")
+								end
+							end
+							if bp.hits_count > 0 then
+								t.append_character ('%N')
+								t.append_string (Interface_names.l_current_hit_count)
+								t.append_integer (bp.hits_count)
+							end
+							if bp.has_condition then
+								t.append_character ('%N')
+								t.append_string_general (interface_names.l_condition)
+								t.append_string (": " + bp.condition.expression)
+							end
+							if bp.has_message then
+								t.append_character ('%N')
+								t.append_string_general (interface_names.l_print_message)
+								t.append_string (bp.message)
+							end
+							if bp.continue_execution then
+								t.append_character ('%N')
+								t.append_string_general (interface_names.l_continue_execution)
+							end
+							lab.set_tooltip (t)
+						end
+
 						lab.pointer_button_release_actions.force_extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?))
 						subrow.subrow (ir).set_item (2, lab)
 

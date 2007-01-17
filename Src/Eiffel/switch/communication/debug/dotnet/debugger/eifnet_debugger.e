@@ -1015,33 +1015,8 @@ feature {NONE} -- Callback actions
 	execution_stopped_on_exception_callback: BOOLEAN is
 		require
 			exception_occurred: exception_occurred
-		local
-			cln: STRING
-			l_icd_exception: ICOR_DEBUG_VALUE
-			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do
-			if
-				Debugger_manager.exceptions_handler.exception_handling_enabled
-			then
-				l_icd_exception := new_active_exception_value_from_thread
---| Check if we should not use directly the `exception_class_name' feature
---				cln := exception_class_name
-				if l_icd_exception /= Void and then l_icd_exception.item /= default_pointer then
-					l_icd_exception.add_ref
-					create l_exception_info.make (l_icd_exception)
-					cln := l_exception_info.value_class_name
-					l_exception_info.icd_prepared_value.clean_on_dispose
-					l_exception_info.clean
-					l_icd_exception.clean_on_dispose
-				end
-				if cln /= Void then
-					Result := Debugger_manager.exceptions_handler.exception_catched_by_name (cln)
-				else
-					Result := True
-				end
-			else
-				Result := True
-			end
+			Result := debugger_manager.process_exception
 			if not Result then
 				call_do_continue_on_cb
 			end
@@ -1587,9 +1562,28 @@ feature -- Exception
 			-- Exception's class name.
 		require
 			exception_occurred: exception_occurred
+		local
+			l_icd_exception: ICOR_DEBUG_VALUE
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 		do
-			if not exception_info_retrieved then
-				get_exception_info
+--| Note: get_exception_info retrieve more than just the exception_class_name
+--|		  since this value is used for exception handling
+--|       we optimize this by retrieving only the class name.			
+--			if not exception_info_retrieved then
+--				get_exception_info
+--			end
+			if
+				not exception_info_retrieved
+			then
+				l_icd_exception := new_active_exception_value_from_thread
+				if l_icd_exception /= Void and then l_icd_exception.item /= default_pointer then
+					l_icd_exception.add_ref
+					create l_exception_info.make (l_icd_exception)
+					exception_info_class_name := l_exception_info.value_class_name
+					l_exception_info.icd_prepared_value.clean_on_dispose
+					l_exception_info.clean
+					l_icd_exception.clean_on_dispose
+				end
 			end
 			Result := exception_info_class_name
 		end

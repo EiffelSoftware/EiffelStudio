@@ -75,7 +75,7 @@ feature -- Access
 				end
 				exceptions_handling.forth
 			end
-			if exception_handler.exception_handling_enabled then
+			if exception_handler.enabled then
 				handling_checkbox.enable_select
 			else
 				handling_checkbox.disable_select

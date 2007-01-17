@@ -46,7 +46,17 @@ inherit
 			is_equal
 		end
 
+create
+	make
+
 feature {NONE} -- Initialization
+
+	make is
+			-- Properly initialize current.
+		do
+			initialize_checker
+			default_create
+		end
 
 	user_initialization is
 			-- called by `initialize'.
@@ -64,7 +74,6 @@ feature {NONE} -- Initialization
 			notebook.item_tab (generation_options_outter_box).set_pixmap (settings_png)
 			notebook.item_tab (output_box).set_pixmap (output_png)
 
-			initialize_checker
 			close_request_actions.extend (agent on_exit)
 			com_project_box.hide
 			destination_folder_box.setup ("Generate files into:", "destination_key", "Browse for destination folder", agent destination_folder_validity)

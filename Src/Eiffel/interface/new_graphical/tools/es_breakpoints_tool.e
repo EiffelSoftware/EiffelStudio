@@ -626,7 +626,7 @@ feature {NONE} -- Impl bp
 							end
 							if bp.hits_count > 0 then
 								t.append_character ('%N')
-								t.append_string (Interface_names.l_current_hit_count)
+								t.append_string_general (Interface_names.l_current_hit_count)
 								t.append_integer (bp.hits_count)
 							end
 							if bp.has_condition then

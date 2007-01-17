@@ -108,22 +108,6 @@ feature -- Output
 
 feature -- Properties
 
-	bench_status: INTEGER
-			-- Current status within $EiffelGraphicalCompiler$.
-			--
-			-- See the private constants at the end of the class to see the
-			-- different possible values taken.
-
-	application_status: INTEGER
-			-- Last status sent to the application, this is the current
-			-- status of this breakpoint from the application point of view
-			--
-			-- See the private constants at the end of the class to see the
-			-- different possible values taken.
-
-	hits_count: INTEGER
-			-- Number of times Current is reached (and satisfied condition if any).
-
 	hits_count_condition: TUPLE [mode:INTEGER; value:INTEGER]
 			--| mode: 0x0 always
 			--| mode: 0x2 equal
@@ -132,6 +116,18 @@ feature -- Properties
 
 	condition: EB_EXPRESSION
 			-- Condition to stop.
+
+	condition_as_is_true: BOOLEAN is
+			-- Condition is a "Is True" condition.
+		do
+			Result := condition_type = Condition_is_type_is_true
+		end
+
+	condition_as_has_changed: BOOLEAN is
+			-- Condition is a "Has Changed" condition.
+		do
+			Result := condition_type = Condition_is_type_has_changed
+		end
 
 	message: STRING
 			-- Message to be print when Current is reached.
@@ -148,6 +144,61 @@ feature -- Properties
 	continue_execution: BOOLEAN
 			-- Continue execution when Current is reached ?
 			-- Default: stop.
+
+feature -- Access
+
+	condition_respected: BOOLEAN is
+			-- Is condition respected ?
+		require
+			condition.expression_evaluator /= Void
+		local
+			eval: DBG_EXPRESSION_EVALUATOR
+			ncv: like last_condition_value
+		do
+			Result := True
+			eval := condition.expression_evaluator
+			if not eval.error_occurred then
+				inspect condition_type
+				when Condition_is_type_is_true then
+					Result := eval.final_result_is_true_boolean_value
+				when Condition_is_type_has_changed then
+					ncv := eval.final_result_value
+					Result := last_condition_value = Void or ncv = Void
+						or else (not ncv.same_as (last_condition_value))
+					last_condition_value:= ncv
+				else
+				end
+			end
+		end
+
+feature {NONE} -- Internal properties
+
+	condition_type: INTEGER
+			-- Type of condition
+			--| default: condition_is_true_type
+
+feature -- Status and live properties
+
+	bench_status: INTEGER
+			-- Current status within $EiffelGraphicalCompiler$.
+			--
+			-- See the private constants at the end of the class to see the
+			-- different possible values taken.
+
+	application_status: INTEGER
+			-- Last status sent to the application, this is the current
+			-- status of this breakpoint from the application point of view
+			--
+			-- See the private constants at the end of the class to see the
+			-- different possible values taken.
+
+	hits_count: INTEGER
+			-- Number of times Current is reached (and satisfied condition if any).
+
+feature {NONE} -- Internal value
+
+	last_condition_value: DUMP_VALUE
+			-- Last condition's value			
 
 feature -- Change
 
@@ -177,10 +228,27 @@ feature -- Change
 	set_hits_count_condition (m,v: INTEGER) is
 			-- Set `hits_count_condition'
 		do
-			hits_count_condition := [m, v]
-			if m = 0 then
-				hits_count_condition.value := 0
+			if m /= 0 then
+				hits_count_condition := [m, v]
 			end
+		end
+
+	set_condition_as_is_true is
+			-- Set `condition_type' as `Condition_is_type_is_true'
+		do
+			condition_type := Condition_is_type_is_true
+		end
+
+	set_condition_as_has_changed is
+			-- Set `condition_type' as `Condition_is_type_has_changed'
+		do
+			condition_type := Condition_is_type_has_changed
+		end
+
+	reset_session_data is
+		do
+			reset_hits_count
+			last_condition_value := Void
 		end
 
 feature -- Status
@@ -195,6 +263,12 @@ feature -- Status
 			-- Is `Current' a tracepoint?
 		do
 			Result := message /= Void
+		end
+
+	has_hit_count_condition: BOOLEAN is
+			-- Is `Current' has a condition on `hit_count' ?
+		do
+			Result := hits_count_condition = Void or else hits_count_condition.mode /= hits_count_condition_always
 		end
 
 feature -- Query
@@ -431,7 +505,7 @@ feature -- Setting
 						body_index := routine.body_index -- update the body_index as well
 						if condition /= Void then
 							condition.recycle
-							if not condition.is_condition (routine) then
+							if condition_as_is_true and not condition.is_boolean_expression (routine) then
 								condition := Void
 							end
 						end
@@ -465,7 +539,8 @@ feature -- Condition change
 	set_condition (expr: EB_EXPRESSION) is
 			-- Set `Current's condition.
 		require
-			valid_expression: expr /= Void and then not expr.syntax_error_occurred and then expr.is_condition (routine)
+			valid_expression: expr /= Void and then not expr.syntax_error_occurred
+				and then (condition_as_is_true implies expr.is_boolean_expression (routine))
 		do
 			condition := expr
 		end
@@ -487,6 +562,7 @@ feature {DEBUG_INFO} -- Saving protocol.
 			else
 				expression := Void
 			end
+			last_condition_value := Void
 		end
 
 	reload is
@@ -494,7 +570,10 @@ feature {DEBUG_INFO} -- Saving protocol.
 		do
 			if expression /= Void then
 				create condition.make_for_context (expression)
-				if condition.syntax_error_occurred or else not condition.is_condition (routine) then
+				if
+					condition.syntax_error_occurred
+					or else (condition_as_is_true and not condition.is_boolean_expression (routine) )
+				then
 					condition := Void
 				end
 				expression := Void
@@ -507,16 +586,20 @@ feature {NONE} -- Implementation
 			-- String representation of the condition, if any, during save and load operations.
 
 feature -- Public constants
-	Breakpoint_do_nothing: INTEGER is 0 -- default value
+	Breakpoint_do_nothing: INTEGER is 0 --| Default
 	Breakpoint_to_remove: INTEGER is 1
 	Breakpoint_to_add: INTEGER is 2
 
-	Hits_count_condition_always: INTEGER is 0
+	Hits_count_condition_always: INTEGER is 0 --| Default
 	Hits_count_condition_equal: INTEGER is 1
 	Hits_count_condition_multiple: INTEGER is 2
 	Hits_count_condition_greater: INTEGER is 3
 
 feature {NONE} -- Private constants
+
+	Condition_is_type_is_true: INTEGER is 0 --| Default
+	Condition_is_type_has_changed: INTEGER is 1
+
 	Bench_breakpoint_set, Application_breakpoint_set 			: INTEGER is 0
 	Bench_breakpoint_not_set, Application_breakpoint_not_set	: INTEGER is 1
 	Bench_breakpoint_disabled									: INTEGER is 2;

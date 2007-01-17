@@ -740,7 +740,7 @@ feature -- Label texts
 	l_file_changed_by_other_tool: STRING_GENERAL is do Result := locale.translate ("File has been changed by another tool/editor%NDo you want to load the changes?") end
 	l_finalize: STRING_GENERAL is				do Result := locale.translate("Finalize")	end
 	l_Finalized_mode: STRING_GENERAL is 		do Result := locale.translate("Finalized mode")	end
-	l_finish_to_generate: STRING_GENERAL is 		do Result := locale.translate("Click `Finish' to generate the documentation.")	end
+	l_finish_to_generate: STRING_GENERAL is 	do Result := locale.translate("Click `Finish' to generate the documentation.")	end
 	l_first_chance: STRING_GENERAL is 			do Result := locale.translate ("First chance") end
 	l_Flat: STRING_GENERAL is					do Result := locale.translate("flat view")	end
 	l_Flat_view: STRING_GENERAL is				do Result := locale.translate ("Flat View") end
@@ -753,6 +753,7 @@ feature -- Label texts
 	l_Generate_creation: STRING_GENERAL is		do Result := locale.translate("Generate creation procedure")	end
 	l_grid_column_layout: STRING_GENERAL is		do Result := locale.translate ("Grid column layout") end
 			-- Preferece name prefix. For "debugger.grid_column_layout_XX".
+	l_Has_changed: STRING_GENERAL is			do Result := locale.translate("Has Changed")	end
 	l_Homonyms: STRING_GENERAL is				do Result := locale.translate("homonyms")	end
 	l_Homonym_confirmation: STRING_GENERAL is	do Result := locale.translate("Extracting the homonyms%Nmay take a long time.")	end
 	l_Identification: STRING_GENERAL is			do Result := locale.translate("Identification")	end
@@ -763,6 +764,7 @@ feature -- Label texts
 	l_Index: STRING_GENERAL is					do Result := locale.translate("Index:")	end
 	l_indexing_clause_error: STRING_GENERAL is			do Result := locale.translate("Indexing clause has syntax error")	end
 	l_invariants: STRING_GENERAL is				do Result := locale.translate("invariants")	end
+	l_Is_true: STRING_GENERAL is				do Result := locale.translate("Is True")	end
 	l_Language_type: STRING_GENERAL is			do Result := locale.translate("Language type")	end
 	l_Library: STRING_GENERAL is				do Result := locale.translate("library")	end
 	l_line: STRING_GENERAL is 					do Result := locale.translate ("Line") end

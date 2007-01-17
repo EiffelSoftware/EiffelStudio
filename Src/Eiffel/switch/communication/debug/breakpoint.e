@@ -228,7 +228,9 @@ feature -- Change
 	set_hits_count_condition (m,v: INTEGER) is
 			-- Set `hits_count_condition'
 		do
-			if m /= 0 then
+			if m = 0 then
+				hits_count_condition := Void
+			else
 				hits_count_condition := [m, v]
 			end
 		end

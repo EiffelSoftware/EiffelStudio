@@ -4,7 +4,7 @@
 
 [
   uuid(3A1E9458-D7EE-3E85-AE85-7A51F270639D),
-  version(5.7)
+  version(6.0)
 ]
 library EiffelSoftware_MetadataConsumer
 {
@@ -51,7 +51,7 @@ library EiffelSoftware_MetadataConsumer
     };
 
     [
-      uuid(E1FFE1AC-0705-465B-9BC4-8428F0B0F96D),
+      uuid(E1FFE1AC-C5BD-492B-924A-8DBC9D2112F5),
       version(1.0)
     ]
     coclass EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER {

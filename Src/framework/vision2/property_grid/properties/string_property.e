@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	STRING_PROPERTY [G->STRING_GENERAL]
+	STRING_PROPERTY [G -> STRING_GENERAL]
 
 inherit
 	TEXT_PROPERTY [G]
@@ -23,40 +23,23 @@ feature -- Update
 		local
 			l_value, l_a_value: like value
 		do
-			Result := True
-			if a_value /= Void then
-				l_a_value ?= a_value.as_string_32
-			end
-			if value /= Void then
-				l_value ?= value.as_string_32
-			end
-			if not equal (l_value, l_a_value) then
-				if l_a_value /= Void then
-					l_a_value ?= l_a_value.as_string_8
-				end
+			l_a_value := adapted_value (a_value)
+			if not equal (value, l_a_value) then
 				Result := validate_value_actions.for_all (agent {FUNCTION [ANY, TUPLE [like value], BOOLEAN]}.item ([l_a_value]))
+			else
+				Result := True
 			end
 		end
 
 	set_value (a_value: like value) is
 			-- Set `data' to `a_value' and propagate the change if it the new value is different from the old.
 		local
-			l_changed: BOOLEAN
 			l_value, l_a_value: like value
 			l_val: like displayed_value
 		do
-			if a_value /= Void then
-				l_a_value ?= a_value.as_string_32
-			end
-			if value /= Void then
-				l_value ?= value.as_string_32
-			end
-			l_changed := not equal (l_value, l_a_value)
-			if a_value /= Void then
-				l_a_value ?= a_value.as_string_8
-			end
-			value := a_value
-			if l_changed then
+			l_a_value := adapted_value (a_value)
+			if not equal (value, l_a_value) then
+				value := l_a_value
 				change_value_actions.call ([l_a_value])
 			end
 			l_val := displayed_value
@@ -81,10 +64,30 @@ feature {NONE} -- Implementation
 				-- default implementation is to just do an assignement attempt
 			l_string := a_string.twin
 			l_string.replace_substring_all ("%%N", "%N")
-			Result ?= l_string.to_string_32
-			if Result = Void then
-				Result ?= l_string.to_string_8
+			Result := adapted_value (l_string)
+		end
+
+	adapted_value (s: STRING_GENERAL): G is
+			-- Adapt `s' to the type of formal generic parameter G.
+		require
+			valid_type: s /= Void implies (s.same_type ("") or s.same_type (("").as_string_32))
+		do
+			if s = Void then
+				Result := Void
+			else
+				Result ?= s
+				if Result = Void then
+						-- Try if `G' is instantiated as a STRING_32
+					Result ?= s.as_string_32
+					if Result = Void then
+							-- It was not valid as a STRING_32, so it must be STRING_8
+						Result ?= s.as_string_8
+						check Result_not_void: Result /= Void end
+					end
+				end
 			end
+		ensure
+			adapted: s /= Void implies Result /= Void
 		end
 
 end

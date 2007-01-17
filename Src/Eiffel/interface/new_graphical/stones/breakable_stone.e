@@ -227,8 +227,7 @@ feature -- operation on conditions
 			create vb
 			vb.set_padding (Layout_constants.Default_padding_size)
 			vb.set_border_width (Layout_constants.Small_border_size)
-			create hb
-			hb.set_padding (Layout_constants.Small_padding_size)
+
 			create okb.make_with_text (Interface_names.b_Ok)
 			create cancelb.make_with_text (Interface_names.b_Cancel)
 			create removeb.make_with_text (Interface_names.b_Remove)
@@ -251,6 +250,26 @@ feature -- operation on conditions
 			end
 
 				-- Layout all widgets
+
+			create vb2
+			vb2.set_padding (Layout_constants.Small_padding_size)
+			vb2.set_border_width (Layout_constants.Small_border_size)
+			fr.extend (vb2)
+			vb2.extend (tf)
+			create hb
+			hb.set_padding (Layout_constants.Small_padding_size)
+			hb.extend (create {EV_CELL})
+			hb.extend (rb_is_true)
+			hb.extend (rb_has_changed)
+			vb2.extend (hb)
+			vb2.disable_item_expand (hb)
+			vb.extend (fr)
+			vb.disable_item_expand (fr)
+			vb.extend (lab)
+
+				--| Buttons
+			create hb
+			hb.set_padding (Layout_constants.Small_padding_size)
 			hb.extend (create {EV_CELL})
 			hb.extend (okb)
 			hb.disable_item_expand (okb)
@@ -260,16 +279,9 @@ feature -- operation on conditions
 			end
 			hb.extend (cancelb)
 			hb.disable_item_expand (cancelb)
-			create vb2
-			vb2.set_padding (Layout_constants.Small_padding_size)
-			fr.extend (vb2)
-			vb2.extend (tf)
-			vb2.extend (rb_is_true)
-			vb2.extend (rb_has_changed)
-			vb.extend (fr)
-			vb.disable_item_expand (fr)
-			vb.extend (lab)
 			vb.extend (hb)
+
+				--| Dialog
 			d.extend (vb)
 			d.set_maximum_height (d.minimum_height)
 
@@ -310,7 +322,6 @@ feature -- operation on conditions
 			bpm: BREAKPOINTS_MANAGER
 			bp: BREAKPOINT
 		do
-			a_output.hide
 			create expr.make_for_context (a_input.text)
 			if not expr.syntax_error_occurred then
 				bpm := Debugger_manager

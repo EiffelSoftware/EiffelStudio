@@ -448,7 +448,7 @@ feature -- Breakpoints management
 			if not s.is_empty then
 				fe := bp.routine
 				create exp.make_for_context (s)
-				if (fe /= Void and then not exp.is_condition (fe)) or else exp.error_occurred then
+				if (fe /= Void and then not exp.is_boolean_expression (fe)) or else exp.error_occurred then
 					io.put_string (" => This is not a valid condition. %N")
 				else
 					bp.set_condition (exp)

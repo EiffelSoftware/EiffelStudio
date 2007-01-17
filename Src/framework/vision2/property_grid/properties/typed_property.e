@@ -114,20 +114,18 @@ feature -- Update
 	is_valid_value (a_value: like value): BOOLEAN is
 			-- Is `a_value' a correct value for `data'?
 		do
-			Result := True
 			if not equal (value, a_value) then
 				Result := validate_value_actions.for_all (agent {FUNCTION [ANY, TUPLE [like value], BOOLEAN]}.item ([a_value]))
+			else
+				Result := True
 			end
 		end
 
 	set_value (a_value: like value) is
 			-- Set `data' to `a_value' and propagate the change if it the new value is different from the old.
-		local
-			l_changed: BOOLEAN
 		do
-			l_changed := not equal (value, a_value)
-			value := a_value
-			if l_changed then
+			if not equal (value, a_value) then
+				value := a_value
 				change_value_actions.call ([a_value])
 			end
 		end

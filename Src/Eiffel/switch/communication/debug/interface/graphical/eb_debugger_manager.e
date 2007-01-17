@@ -916,7 +916,6 @@ feature -- Status setting
 			threads_tool.content.close
 
 				-- Free and recycle tools
-			reset_tools
 			raised := False
 
 			enable_debugging_commands
@@ -1196,8 +1195,10 @@ feature -- Debugging events
 			if was_executing then
 					-- Modify the debugging window display.
 				window_manager.quick_refresh_all_margins
-
 				disable_debugging_commands (False)
+
+					--| Clean and reset debugging tools
+				reset_tools
 
 					-- Make all debugging tools disappear.
 				if debugging_window.destroyed then

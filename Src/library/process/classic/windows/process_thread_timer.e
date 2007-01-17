@@ -101,7 +101,13 @@ feature {NONE} -- Implementation
 		external
 			"C inline"
 		alias
-			"return (EIF_POINTER) (*(EIF_THR_TYPE *) $a_thread_id);"
+			"[
+			#ifdef EIF_THREADS
+			return (EIF_POINTER) (*(EIF_THR_TYPE *) $a_thread_id);
+			#else
+			return NULL;
+			#endif
+			]"
 		end
 
 feature{NONE} -- Implementation

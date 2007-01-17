@@ -1196,8 +1196,8 @@ feature -- Access
 			end
 		end
 
-	is_condition (f: FEATURE_I): BOOLEAN is
-			-- Is `Current' a condition (boolean query) in the context of `f'?
+	is_boolean_expression (f: FEATURE_I): BOOLEAN is
+			-- Is `Current' a boolean query in the context of `f'?
 		local
 			old_context_feature: like context_feature
 			old_context_class: like context_class

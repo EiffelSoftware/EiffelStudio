@@ -132,24 +132,23 @@ feature -- Basic operations
 				item.disable_sensitive
 			end
 			menu.extend (item)
-				-- "Disable"
-			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
-			item.select_actions.extend (agent bpm.disable_breakpoint (routine, index))
-			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
 
-			if bp /= Void and then bp.is_disabled then
-				item.disable_sensitive
-			end
-			menu.extend (item)
+			if bp /= Void then
+					-- "Disable"
+				create item.make_with_text (Interface_names.m_Disable_this_bkpt)
+				item.select_actions.extend (agent bpm.disable_breakpoint (routine, index))
+				item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+				if bp.is_disabled then
+					item.disable_sensitive
+				end
+				menu.extend (item)
 
-				-- "Remove"
-			create item.make_with_text (Interface_names.m_Remove_this_bkpt)
-			item.select_actions.extend (agent bpm.remove_breakpoint (routine, index))
-			item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
-			if bp = Void then
-				item.disable_sensitive
+					-- "Remove"
+				create item.make_with_text (Interface_names.m_Remove_this_bkpt)
+				item.select_actions.extend (agent bpm.remove_breakpoint (routine, index))
+				item.select_actions.extend (agent debugger_manager.notify_breakpoints_changes)
+				menu.extend (item)
 			end
-			menu.extend (item)
 
 				--| Conditional breakpoint
 			menu.extend (create {EV_MENU_SEPARATOR})
@@ -224,10 +223,13 @@ feature -- operation on conditions
 			vb.set_border_width (Layout_constants.Small_border_size)
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
-			create okb.make_with_text (Interface_names.B_ok)
-			create cancelb.make_with_text (Interface_names.B_cancel)
+			create okb.make_with_text (Interface_names.b_Ok)
+			create cancelb.make_with_text (Interface_names.b_Cancel)
+			create removeb.make_with_text (Interface_names.b_Remove)
+
 			Layout_constants.set_default_width_for_button (okb)
 			Layout_constants.set_default_width_for_button (cancelb)
+			Layout_constants.set_default_width_for_button (removeb)
 			create tf.make
 			create lab
 
@@ -289,7 +291,7 @@ feature -- operation on conditions
 			create expr.make_for_context (a_input.text)
 			if not expr.syntax_error_occurred then
 				bpm := Debugger_manager
-				if expr.is_condition (f) then
+				if expr.is_boolean_expression (f) then
 					if not bpm.is_breakpoint_set (f, pos) then
 						bpm.enable_breakpoint (f, pos)
 					end

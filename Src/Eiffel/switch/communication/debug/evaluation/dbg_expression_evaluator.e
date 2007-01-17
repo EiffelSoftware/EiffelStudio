@@ -308,8 +308,8 @@ feature -- Access
 			Result := error /= 0
 		end
 
-	is_condition (f: FEATURE_I): BOOLEAN is
-			-- is feature `f' a condition ?
+	is_boolean_expression (f: FEATURE_I): BOOLEAN is
+			-- is feature `f' a boolean expression ?
 		require
 			valid_f: f /= Void
 			no_error: not dbg_expression.syntax_error

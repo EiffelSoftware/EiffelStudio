@@ -46,7 +46,10 @@ feature {NONE} -- Initialization
 			contents.extend (zones.place_holder_content)
 			zones.place_holder_content.set_top ({SD_ENUMERATION}.top)
 			internal_shared.set_show_all_feedback_indicator (True)
-			set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
+
+			if {PLATFORM}.is_windows then
+				set_main_area_background_color ((create {EV_STOCK_COLORS}).grey)
+			end
 
 			create {SD_DEPENDENCY_CHECKER_IMP} l_checker
 			l_checker.check_dependency (main_window)
@@ -214,8 +217,8 @@ feature -- Command
 			set: query.inner_container_main.background_color.is_equal (a_color)
 		end
 
-	destory is
-			-- Destory all underline objects.
+	destroy is
+			-- Destroy all underline objects.
 		do
 			agents.destroy
 			tool_bar_manager.destroy
@@ -225,7 +228,7 @@ feature -- Command
 feature -- Contract support
 
 	file_exist (a_file_name: STRING_GENERAL): BOOLEAN is
-			-- If `a_file_name' exist?
+			-- Does `a_file_name' exist?
 		local
 			l_file: RAW_FILE
 		do
@@ -234,7 +237,7 @@ feature -- Contract support
 		end
 
 	window_valid (a_window: EV_WINDOW): BOOLEAN is
-			-- If `a_widnow' already managed?
+			-- Is `a_window' already managed?
 		local
 			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
 		do
@@ -255,7 +258,7 @@ feature -- Contract support
 		end
 
 	container_valid (a_container: EV_CONTAINER; a_window: EV_WINDOW): BOOLEAN is
-			-- If `a_container' is `a_window' or `a_container' in `a_window'?
+			-- Is `a_container' in `a_window' or `a_container' in `a_window'?
 		do
 			Result := a_window.has_recursive (a_container) or a_container = a_window
 		end

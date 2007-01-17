@@ -107,6 +107,7 @@ feature -- Basic operations
 		local
 			menu: EV_MENU
 			item: EV_MENU_ITEM
+			cmi: EV_CHECK_MENU_ITEM
 			conv_dev: EB_DEVELOPMENT_WINDOW
 			bpm: BREAKPOINTS_MANAGER
 			bp: BREAKPOINT
@@ -169,17 +170,23 @@ feature -- Basic operations
 				--| Hit count
 			if bp /= Void then
 				menu.extend (create {EV_MENU_SEPARATOR})
-				create item.make_with_text (Interface_names.m_Hit_count)
-				item.select_actions.extend (agent edit_hit_count_breakpoint (bp))
-				menu.extend (item)
+				create cmi.make_with_text (Interface_names.m_Hit_count)
+				cmi.select_actions.extend (agent edit_hit_count_breakpoint (bp))
+				if bp.has_hit_count_condition then
+					cmi.enable_select
+				end
+				menu.extend (cmi)
 			end
 
 				--| When hits breakpoint
 			if bp /= Void then
 				menu.extend (create {EV_MENU_SEPARATOR})
-				create item.make_with_text (Interface_names.m_When_hits)
-				item.select_actions.extend (agent edit_when_hits_breakpoint (bp))
-				menu.extend (item)
+				create cmi.make_with_text (Interface_names.m_When_hits)
+				cmi.select_actions.extend (agent edit_when_hits_breakpoint (bp))
+				if bp.has_message then
+					cmi.enable_select
+				end
+				menu.extend (cmi)
 			end
 
 				--| Run to this point
@@ -209,8 +216,9 @@ feature -- operation on conditions
 			l_provider: EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER
 			lab: EV_LABEL
 			fr: EV_FRAME
-			vb: EV_VERTICAL_BOX
+			vb, vb2: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
+			rb_is_true, rb_has_changed: EV_RADIO_BUTTON
 			bp: BREAKPOINT
 		do
 				-- Create all widgets.
@@ -231,6 +239,8 @@ feature -- operation on conditions
 			Layout_constants.set_default_width_for_button (cancelb)
 			Layout_constants.set_default_width_for_button (removeb)
 			create tf.make
+			create rb_is_true.make_with_text (Interface_names.l_Is_true)
+			create rb_has_changed.make_with_text (Interface_names.l_Has_changed)
 			create lab
 
 				-- Code completion
@@ -240,10 +250,6 @@ feature -- operation on conditions
 
 			if Debugger_manager.is_breakpoint_set (f, pos) then
 				bp := Debugger_manager.breakpoint (f, pos)
-			end
-			if bp /= Void and then bp.has_condition then
-					-- Update widgets.
-				tf.set_text (bp.condition.expression)
 			end
 
 				-- Layout all widgets
@@ -256,15 +262,31 @@ feature -- operation on conditions
 			end
 			hb.extend (cancelb)
 			hb.disable_item_expand (cancelb)
-			fr.extend (tf)
+			create vb2
+			vb2.set_padding (Layout_constants.Small_padding_size)
+			fr.extend (vb2)
+			vb2.extend (tf)
+			vb2.extend (rb_is_true)
+			vb2.extend (rb_has_changed)
 			vb.extend (fr)
+			vb.disable_item_expand (fr)
 			vb.extend (lab)
 			vb.extend (hb)
 			d.extend (vb)
 			d.set_maximum_height (d.minimum_height)
 
+			if bp /= Void and then bp.has_condition then
+					-- Update widgets.
+				tf.set_text (bp.condition.expression)
+				if bp.condition_as_has_changed then
+					rb_has_changed.enable_select
+				else
+					rb_is_true.enable_select
+				end
+			end
+
 				-- Set up actions
-			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf, lab))
+			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, rb_is_true, rb_has_changed, tf, lab))
 			if bp /= Void then
 				removeb.select_actions.extend (agent remove_condition_from_breakpoint (f, pos))
 				removeb.select_actions.extend (agent d.destroy)
@@ -282,24 +304,44 @@ feature -- operation on conditions
 			Debugger_manager.notify_breakpoints_changes
 		end
 
-	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG; a_input, a_output: EV_TEXTABLE) is
+	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG; a_rb_is_true, a_rb_has_changed: EV_SELECTABLE;
+			a_input: EV_TEXTABLE; a_output: EV_LABEL) is
 			-- Attempt to create a conditional breakpoint.
 		local
 			expr: EB_EXPRESSION
 			bpm: BREAKPOINTS_MANAGER
+			bp: BREAKPOINT
 		do
+			a_output.hide
 			create expr.make_for_context (a_input.text)
 			if not expr.syntax_error_occurred then
 				bpm := Debugger_manager
-				if expr.is_boolean_expression (f) then
+				if a_rb_is_true.is_selected then
+					if expr.is_boolean_expression (f) then
+						if not bpm.is_breakpoint_set (f, pos) then
+							bpm.enable_breakpoint (f, pos)
+						end
+						bp := bpm.breakpoint (f, pos)
+						check bp /= Void end
+						bp.set_condition_as_is_true
+						bp.set_condition (expr)
+						Debugger_manager.notify_breakpoints_changes
+						d.destroy
+					else
+						a_output.set_text (Warning_messages.w_not_a_condition (a_input.text))
+					end
+				elseif a_rb_has_changed.is_selected then
 					if not bpm.is_breakpoint_set (f, pos) then
 						bpm.enable_breakpoint (f, pos)
 					end
-					bpm.set_condition (f, pos, expr)
+					bp := bpm.breakpoint (f, pos)
+					check bp /= Void end
+					bp.set_condition_as_has_changed
+					bp.set_condition (expr)
 					Debugger_manager.notify_breakpoints_changes
 					d.destroy
 				else
-					a_output.set_text (Warning_messages.w_not_a_condition (a_input.text))
+					check should_not_occur: False end
 				end
 			else
 				a_output.set_text (Warning_messages.w_syntax_error_in_expression (a_input.text))
@@ -496,12 +538,14 @@ feature -- operation on message
 			end
 			tf.set_text (hcc.value.out)
 
+
 			create li.make_with_text (Interface_names.m_Break_always)
 			combo.extend (li)
 			li.select_actions.extend (agent tf.hide)
 			li.set_data ({BREAKPOINT}.Hits_count_condition_always)
 			if hcc.mode = {BREAKPOINT}.Hits_count_condition_always then
 				li.enable_select
+				tf.hide
 			end
 
 			create li.make_with_text (Interface_names.m_Break_when_hit_count_equal)

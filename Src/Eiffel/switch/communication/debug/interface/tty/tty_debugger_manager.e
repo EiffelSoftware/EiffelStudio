@@ -184,7 +184,7 @@ feature -- Interaction
 		once
 			ag_is_stopped := agent safe_application_is_stopped
 			ag_is_executing := agent application_is_executing
-			
+
 			create Result.make ("--< Debugger execution menu >--")
 			Result.enter_actions.extend (agent do inside_debugger_menu := True end)
 			Result.quit_actions.extend (agent do inside_debugger_menu := False end)
@@ -449,7 +449,7 @@ feature -- Breakpoints management
 				fe := bp.routine
 				create exp.make_for_context (s)
 				if (fe /= Void and then not exp.is_boolean_expression (fe)) or else exp.error_occurred then
-					io.put_string (" => This is not a valid condition. %N")
+					io.put_string (" => This is not a valid boolean condition. %N")
 				else
 					bp.set_condition (exp)
 					io.put_string (" => New condition applied. %N")

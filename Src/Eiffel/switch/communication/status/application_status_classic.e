@@ -136,6 +136,11 @@ feature -- Values
 			Result.append (Precursor {APPLICATION_STATUS})
 		end
 
+	exception_class_name: STRING is
+		do
+			--| For now, exception are not object on classic Eiffel system
+		end
+
 	current_call_stack: EIFFEL_CALL_STACK_CLASSIC
 
 	refresh_current_thread_id is
@@ -148,7 +153,7 @@ feature -- Threads related access
 
 	thread_name (id: like current_thread_id): STRING is
 		do
-			
+
 		end
 
 	thread_priority (id: like current_thread_id): INTEGER is

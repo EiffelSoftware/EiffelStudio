@@ -201,13 +201,20 @@ feature -- Values
 		end
 
 	exception_code: INTEGER
-			-- Exception code if any
+			-- Exception code (if any).
 
 	exception_tag: STRING_32
-			-- Exception tag if any
+			-- Exception tag (if any).
 
 	exception_message: STRING_32 is
-			-- Exception message if any
+			-- Exception message (if any).
+		require
+			exception_occurred: exception_occurred
+		deferred
+		end
+
+	exception_class_name: STRING is
+			-- Exception class name (if any).
 		require
 			exception_occurred: exception_occurred
 		deferred

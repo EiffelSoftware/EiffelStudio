@@ -42,6 +42,7 @@ feature {NONE} -- Initialization
 		end
 
 	set_default_parameters is
+			-- Set hard coded default parameters values
 		do
 			set_slices (0, 50)
 			set_displayed_string_size (60)
@@ -176,7 +177,152 @@ feature -- Debug info access
 					%Cause: Unable to open " + debug_info_filename + " for writing")
 		end
 
-feature -- Breakpoints change
+feature -- Breakpoints management
+
+	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
+			-- Process `bp'
+			-- and return True in `a_stopped_execution' if application has to stop.
+		local
+			expr: EB_EXPRESSION
+			evaluator: DBG_EXPRESSION_EVALUATOR
+			bp_reached: BOOLEAN
+		do
+			bp_reached := True
+			if bp.has_condition then
+				expr := bp.condition
+				check expr /= Void end
+				expr.evaluate
+				evaluator := expr.expression_evaluator
+				if evaluator.error_occurred then
+					bp_reached := True
+					debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.expression + "%".")
+				else
+					bp_reached := evaluator.final_result_is_true_boolean_value
+				end
+			end
+
+			if bp_reached then
+				bp.increase_hits_count
+
+				if bp_reached and bp.hits_count_condition /= Void then
+					inspect bp.hits_count_condition.mode
+					when {BREAKPOINT}.hits_count_condition_always then
+					when {BREAKPOINT}.hits_count_condition_equal then
+						bp_reached := bp.hits_count = bp.hits_count_condition.value
+					when {BREAKPOINT}.hits_count_condition_multiple then
+						bp_reached := bp.hits_count \\ bp.hits_count_condition.value = 0
+					when {BREAKPOINT}.hits_count_condition_greater then
+						bp_reached := bp.hits_count >= bp.hits_count_condition.value
+					else
+					end
+				end
+
+				if bp_reached and bp.has_message then
+					debugger_message (computed_breakpoint_message (bp.message))
+				end
+			end
+			Result := bp_reached and not bp.continue_execution
+		end
+
+	computed_breakpoint_message (m: STRING): STRING is
+			-- Computed message from breakpoint message `m'.
+		require
+			m_not_void: m /= Void
+		local
+			cse: CALL_STACK_ELEMENT
+			expr: EB_EXPRESSION
+			i: INTEGER
+			c: CHARACTER
+			s: STRING
+			v: STRING
+			is_escaped,
+			in_expression,
+			in_keyword: BOOLEAN
+			retried: BOOLEAN
+		do
+			if not retried then
+				from
+					i := 1
+					create s.make (m.count)
+					create v.make_empty
+				until
+					i > m.count
+				loop
+					is_escaped := False
+					c := m.item (i)
+					if c = '\' and i < m.count then
+						inspect m.item (i + 1)
+						when '{', '$', '\' then
+							i := i + 1
+							c := m.item (i)
+							is_escaped := True
+						else
+							-- keep c as '\'
+						end
+					end
+					if in_keyword then
+						if not c.is_alpha or i = m.count then
+							in_keyword := False
+							if cse = Void then
+								cse := application_status.current_call_stack_element
+							end
+							if cse /= Void then
+								if v.is_case_insensitive_equal ("THREADID") then
+									s.append (cse.thread_id.out)
+								elseif v.is_case_insensitive_equal ("CALLSTACK") then
+									s.append (cse.to_string)
+								elseif v.is_case_insensitive_equal ("CLASS") and then cse.class_name /= Void then
+									s.append (cse.class_name)
+								elseif v.is_case_insensitive_equal ("FEATURE") and then cse.routine_name /= Void then
+									s.append (cse.routine_name)
+								elseif v.is_case_insensitive_equal ("ADDRESS") and then cse.object_address /= Void then
+									s.append (cse.object_address)
+								else
+									s.append ("$" + v.as_upper)
+								end
+							end
+							s.append_character (c)
+						else
+							v.append_character (c)
+						end
+					elseif in_expression then
+						if c = '}' then
+							in_expression := False
+							create expr.make_for_context (v)
+							expr.evaluate
+							if not expr.error_occurred then
+								s.append (expr.expression_evaluator.final_result_value.output_for_debugger)
+							end
+						else
+							v.append_character (c)
+						end
+					else
+						if c = '$' and not is_escaped then
+							if i > 1 and then m.item (i - 1) /= '\' then
+								in_keyword := True
+								v.wipe_out
+							end
+						elseif c = '{'  and not is_escaped then
+							if i > 1 and then m.item (i - 1) /= '\' then
+								in_expression := True
+								v.wipe_out
+							end
+						else
+							s.append_character (c)
+						end
+					end
+					i := i + 1
+				end
+				Result := s
+			else
+				Result := m
+			end
+		ensure
+			Result_not_void: Result /= Void
+		rescue
+			retried := True
+			retry
+		end
 
 	clear_debugging_information	is
 		do
@@ -257,6 +403,32 @@ feature -- Parameters
 
 
 feature -- Exception handling
+
+	process_exception: BOOLEAN is
+			-- Exception catched ?
+		require
+			application_is_executing and then application_status.exception_occurred
+		local
+			l_code: INTEGER
+			l_name: STRING
+		do
+			Result := True
+			if exceptions_handler.enabled then
+				if exceptions_handler.handling_mode_is_by_code then
+					l_code := application_status.exception_code
+					Result := exceptions_handler.exception_catched_by_code (l_code)
+					if not Result then
+						debugger_message ("Ignoring exception code: " + l_code.out)
+					end
+				elseif exceptions_handler.handling_mode_is_by_name then
+					l_name := application_status.exception_class_name
+					Result := exceptions_handler.exception_catched_by_name (l_name)
+					if not Result then
+						debugger_message ("Ignoring exception class name: " + l_name.out)
+					end
+				end
+			end
+		end
 
 	exceptions_handler: DBG_EXCEPTION_HANDLER is
 			-- Exception handler used during debugging.
@@ -605,9 +777,20 @@ feature -- Debugging events
 		end
 
 	on_application_before_launching is
+		local
+			bl: BREAK_LIST
 		do
 			debugging_operation_id := 0
 			compute_class_c_data
+			from
+				bl := debug_info.breakpoints
+				bl.start
+			until
+				bl.after
+			loop
+				bl.item_for_iteration.reset_hits_count
+				bl.forth
+			end
 		end
 
 	on_application_launched is

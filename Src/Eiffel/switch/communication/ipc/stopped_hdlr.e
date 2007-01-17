@@ -60,10 +60,8 @@ feature -- Execution
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
 			bp: BREAKPOINT
-			expr: EB_EXPRESSION
 			need_to_stop: BOOLEAN
 			need_to_resend_bp: BOOLEAN
-			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			check
 				application_is_executing: debugger_manager.application_is_executing
@@ -182,7 +180,7 @@ feature -- Execution
 					inspect
 						stopping_reason
 					when Pg_raise, Pg_viol then
-						need_to_stop := execution_stopped_on_exception (exception_code)
+						need_to_stop := execution_stopped_on_exception
 						need_to_resend_bp := False
 					when Pg_break then
 							--| debuggee stopped on a Breakpoint
@@ -197,25 +195,14 @@ feature -- Execution
 
 						if Debugger_manager.debug_info.is_breakpoint_set (cse.routine, cse.break_index) then
 							bp := Debugger_manager.debug_info.breakpoint (cse.routine, cse.break_index)
-							expr := bp.condition
-							if expr /= Void then
-									--| if the breakpoint is conditional, tests the condition.
-								expr.evaluate
-								evaluator := expr.expression_evaluator
-								if evaluator.error_occurred then
-									need_to_stop := evaluator.error_occurred
-										--| Fixme: find a better way to tell the user the cond bp stopped on eval failure.
-									Debugger_manager.debugger_message ("Conditional breakpoint failed to evaluate %"" + expr.expression + "%".")
-								else
-									need_to_stop := evaluator.final_result_is_true_boolean_value
-								end
-								need_to_resend_bp := need_to_stop
-							end
+							need_to_stop := debugger_manager.process_breakpoint (bp)
+							need_to_resend_bp := need_to_stop
 						else
 							need_to_stop := False
 							need_to_resend_bp := True
 						end
 					else
+						--| Nothing
 					end
 					if need_to_stop then
 							--| Now that we know the debuggee will be really stopped
@@ -269,9 +256,14 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	execution_stopped_on_exception (excep_code: INTEGER): BOOLEAN is
+	execution_stopped_on_exception: BOOLEAN is
+		local
+			excep_code: INTEGER
 		do
-			Result := Debugger_manager.exceptions_handler.exception_catched_by_code (excep_code)
+			if debugger_manager.exceptions_handler.enabled then
+				excep_code := Debugger_manager.application_status.exception_code
+				Result := Debugger_manager.exceptions_handler.exception_catched_by_code (excep_code)
+			end
 			debug ("debugger_trace")
 				if Result then
 					print ("Catch exception: " + excep_code.out + "%N")

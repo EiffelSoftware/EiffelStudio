@@ -105,6 +105,7 @@ feature {NONE} -- Initialization
 			dynamic_type := Eiffel_system.type_of_dynamic_id (type + 1)
 			if dynamic_type /= Void then
 				dynamic_class := dynamic_type.associated_class
+				class_name := dynamic_class.name_in_upper
 			end
 			written_class := Eiffel_system.class_of_dynamic_id (origin + 1)
 			object_address := addr

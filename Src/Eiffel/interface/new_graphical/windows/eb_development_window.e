@@ -1542,7 +1542,7 @@ feature {NONE} -- Recycle
 			end
 
 			agents.manager.remove_observer (agents)
-			docking_manager.destory
+			docking_manager.destroy
 		end
 
 	recycle_command is

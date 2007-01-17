@@ -113,7 +113,7 @@ feature -- Access
 		ensure
 			non_void_ce_function_writer: Result /= Void
 		end
-		
+
 	ce_function_writer: WIZARD_WRITER_C_FUNCTION is
 			-- Writer for generated C to Eiffel conversion function.
 		require
@@ -180,7 +180,7 @@ feature -- Access
 
 	need_generate_ec: BOOLEAN
 			-- Do we need to generate body of EC function?
-	
+
 	need_generate_free_memory: BOOLEAN
 			-- Do we need to generate function to free memory?
 
@@ -211,19 +211,19 @@ feature -- Access
 	ec_function_return_type: STRING
 			-- Return type Eiffel to C conversion function.
 
-	c_type: STRING 
+	c_type: STRING
 			-- C type name.
 
 	c_post_type: STRING
 			-- Only used for C arrays to specify array dimensions
 			-- Otherwise is_empty
 
-	eiffel_type: STRING 
+	eiffel_type: STRING
 			-- Eiffel class name.
-	
+
 	c_definition_header_file_name: STRING
 			-- Name of C header file, in which data type is defined
-	
+
 	c_declaration_header_file_name: STRING
 			-- Name of C header file in which data type is declared if any
 			-- Note: this is only initialized for interfaces.
@@ -650,7 +650,7 @@ feature -- Processing
 			create a_generator
 			a_generator.process (an_automation_descriptor, Current)
 		end
-		
+
 	process_array_data_type (an_array_descriptor: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR) is
 			-- Process Array
 		local
@@ -706,13 +706,13 @@ feature -- Implementation
 		once
 			create Result.put (new_ec_mapper)
 		end
-		
+
 	Current_ce_mapper_cell: CELL [WIZARD_WRITER_MAPPER_CLASS] is
 			-- Cell for `current_ce_mapper'
 		once
 			create Result.put (new_ce_mapper)
 		end
-		
+
 	new_ec_mapper: WIZARD_WRITER_MAPPER_CLASS is
 			-- Instantiate new `current_ec_mapper'.
 		do
@@ -722,7 +722,7 @@ feature -- Implementation
 			non_void_mapper: Result /= Void
 			valid_mapper: Result.is_ec
 		end
-	
+
 	new_ce_mapper: WIZARD_WRITER_MAPPER_CLASS is
 			-- Instantiate new `current_ce_mapper'.
 		do
@@ -732,19 +732,19 @@ feature -- Implementation
 			non_void_mapper: Result /= Void
 			valid_mapper: not Result.is_ec
 		end
-	
+
 	create_ec_mapper is
 			-- Instantiate new `current_ec_mapper'.
 		do
 			Current_ec_mapper_cell.replace (new_ec_mapper)
 		end
-	
+
 	create_ce_mapper is
 			-- Instantiate new `current_ec_mapper'.
 		do
 			Current_ce_mapper_cell.replace (new_ce_mapper)
 		end
-	
+
 	Max_mapper_functions: INTEGER is 100
 			-- Maximum number of functions in mapper classes
 
@@ -760,46 +760,46 @@ invariant
 							and not is_coclass_pointer_pointer
 							and not is_structure and not is_structure_pointer and not is_enumeration)
 
-	structure: is_structure implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	structure: is_structure implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_interface and not is_interface_pointer and not is_structure_pointer and not is_enumeration)
 
-	structure_pointer: is_structure_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	structure_pointer: is_structure_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_interface and not is_interface_pointer and not is_structure and not is_enumeration)
 
-	interface: is_interface implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	interface: is_interface implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface_pointer and not is_enumeration)
 
-	interface_pointer: is_interface_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	interface_pointer: is_interface_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
 
-	interface_pointer_pointer: is_interface_pointer_pointer implies (not is_basic_type and not is_array_basic_type and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer and not is_coclass_pointer_pointer and 
+	interface_pointer_pointer: is_interface_pointer_pointer implies (not is_basic_type and not is_array_basic_type and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer and not is_coclass_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
 
-	coclass: is_coclass implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_interface and not is_coclass_pointer and not is_interface_pointer_pointer and 
+	coclass: is_coclass implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_interface and not is_coclass_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface_pointer and not is_enumeration)
 
-	coclass_pointer: is_coclass_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and 
-							not is_coclass and not is_interface_pointer and not is_interface_pointer_pointer and 
+	coclass_pointer: is_coclass_pointer implies (not is_basic_type and not is_array_basic_type and not is_coclass_pointer_pointer and
+							not is_coclass and not is_interface_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
 
-	coclass_pointer_pointer: is_coclass_pointer_pointer implies (not is_basic_type and not is_array_basic_type and 
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer and not is_interface_pointer_pointer and 
+	coclass_pointer_pointer: is_coclass_pointer_pointer implies (not is_basic_type and not is_array_basic_type and
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer and not is_interface_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_enumeration)
-						
+
 	enumeration: is_enumeration implies (not is_basic_type and not is_basic_type_ref and not is_array_basic_type and
-							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and 
-							not is_coclass_pointer_pointer and 
+							not is_coclass and not is_coclass_pointer and not is_interface_pointer_pointer and
+							not is_coclass_pointer_pointer and
 							not is_structure and not is_structure_pointer and not is_interface and not is_interface_pointer)
 
 	valid_ec_mapper: ec_mapper /= Void implies ec_mapper.is_ec
 
-	valid_ce_mapper: ce_mapper /= Void implies not ec_mapper.is_ec
+	valid_ce_mapper: ce_mapper /= Void implies not ce_mapper.is_ec
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

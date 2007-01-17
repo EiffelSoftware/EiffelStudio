@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 			-- Initialize instance.
 		do
 			create generated_coclasses.make (10)
+			finished := True
 		end
 
 feature -- Initialization

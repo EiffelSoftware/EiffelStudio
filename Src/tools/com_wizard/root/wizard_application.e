@@ -155,7 +155,7 @@ feature {NONE} -- Initialization
 			-- then launch the application.
 		do
 			default_create
-			create main_window
+			create main_window.make
 			main_window.show
 			launch
 		end

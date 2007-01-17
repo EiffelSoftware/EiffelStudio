@@ -69,7 +69,7 @@ feature -- Access
 	active_border_color: EV_COLOR is
 			-- Active border color
 		do
-			Result := dark_color
+			Result := active_color--dark_color
 		end
 
 	focused_title_text_color: EV_COLOR is
@@ -84,12 +84,10 @@ feature -- Access
 	button_text_color: EV_COLOR is
 			-- Button text color
 		local
---			l_grid: EV_GRID
+			l_grid: EV_GRID
 		do
---			create l_grid
---			Result := l_grid.non_focused_selection_text_color
-			-- FIXIT: non_focused_selection_text_color and focused_selection_text_color are the same?
-			Result := (create {EV_STOCK_COLORS}).black
+			create l_grid
+			Result := l_grid.foreground_color
 		end
 
 feature -- Font

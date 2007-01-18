@@ -53,7 +53,6 @@ feature -- Command
 			else
 				cur_wid.set_pointer_style (old_cur)
 				old_cur := Void
-				cur_wid.disable_capture
 				cur_wid := Void
 			end
 			develop_window.update_viewpoints
@@ -70,11 +69,7 @@ feature {NONE} -- Implementation functions
 				--| Do nothing.
 			else
 				if old_cur = Void then
-
 					old_cur := cur_wid.pointer_style
-				end
-				if cur_wid.is_displayed then
-					cur_wid.enable_capture
 				end
 				create l_pixmaps
 				cur_wid.set_pointer_style (l_pixmaps.Wait_cursor)

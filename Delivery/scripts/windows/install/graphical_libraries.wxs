@@ -119,6 +119,7 @@
 								<File Id="richedit_demo.e" Name="RICHED~1.E" LongName="richedit_demo.e" />
 								<File Id="file.txt" Name="file.txt" />
 								<File Id="richedit.rc" Name="richedit.rc" />
+								<File Id="hello_world_rtf" Name="HELLO_~1.RTF" LongName="hello_world.rtf" />
 							</Component>
 						</Directory>
 						<Directory Id="pizza" Name="pizza">
@@ -376,10 +377,9 @@
 						</Directory>
 						<Directory Id="tutorial" Name="tutorial">
 							<Component Id="weltutor.hlp" Guid="DA97E887-0DEF-4962-8F92-FB4A0EAA0C65">
-								<File Id="weltutor.hlp" Name="weltutor.hlp" KeyPath="yes" />
-							</Component>
-							<Component Id="drawing.drw" Guid="C43BC2DE-10BC-4D23-B7E9-2311A3447901">
-								<File Id="drawing.drw" Name="drawing.drw" KeyPath="yes" />
+								<File Id="weltutor.hlp" Name="weltutor.hlp" />
+								<File Id="drawing.drw" Name="drawing.drw" />
+								<File Id="readme_txt" Name="readme.txt" />
 							</Component>
 							<Directory Id="step8" Name="step8">
 								<Component Id="app_ids.e" Guid="E43ACAA7-4886-4128-A44C-5A49CC7E63C3">
@@ -733,6 +733,7 @@
 						<Component Id="Readme" Guid="D08C2C3D-B29F-461F-B693-48AC7E485259">
 							<File Id="Readme" Name="Readme" KeyPath="yes" />
 							<File Id="version_history.txt" Name="VERSIO~1.TXT" LongName="version_history.txt" />
+							<File Id="vision_ecf" Name="vision.ecf" />
 						</Component>
 						<Directory Id="tools" Name="tools">
 							<Component Id="popup_com.e" Guid="F754C2D6-2FFE-4711-A87A-016729DC9D90">
@@ -2330,25 +2331,27 @@
 						<Directory Id="support46" Name="support">
 							<Directory Id="dotnet3" Name="dotnet">
 								<Component Id="dotnet3" Guid="A931A94F-9B5D-4353-9414-7E80ADD49233">
-									<File Id="wel_disk_space_callback_e" Name="WEL_DI~3.E" LongName="wel_disk_space_callback.e" KeyPath="yes" />
+									<File Id="wel_disk_space_callback_e" Name="WEL_DI~2.E" LongName="wel_disk_space_callback.e" />
 									<File Id="wel_dispatcher_e" Name="WEL_DI~1.E" LongName="wel_dispatcher.e" />
 									<File Id="wel_font_family_enumerator_e" Name="WEL_FO~1.E" LongName="wel_font_family_enumerator.e" />
 									<File Id="wel_identified_e" Name="WEL_ID~1.E" LongName="wel_identified.e" />
 									<File Id="wel_main_arguments_e" Name="WEL_MA~1.E" LongName="wel_main_arguments.e" />
 									<File Id="wel_object_id_manager_e" Name="WEL_OB~1.E" LongName="wel_object_id_manager.e" />
+									<File Id="wel_standard_dialog_dispatcher_e" Name="WEL_ST~1.E" LongName="wel_standard_dialog_dispatcher.e" />
 									<File Id="wel_window_enumerator_e" Name="WEL_WI~1.E" LongName="wel_window_enumerator.e" />
 									<File Id="wel_winform_container_e" Name="WEL_WI~2.E" LongName="wel_winform_container.e" />
 								</Component>
 							</Directory>
 							<Directory Id="classic" Name="classic">
 								<Component Id="wel_main_arguments.e" Guid="B65814AD-096E-44EB-A6E0-2637F2B17E85">
-									<File Id="wel_disk_space_callback.e" Name="WEL_DI~2.E" LongName="wel_disk_space_callback.e" />
-									<File Id="wel_dispatcher.e" Name="WEL_DI~3.E" LongName="wel_dispatcher.e" />
-									<File Id="wel_font_family_enumerator.e" Name="WEL_FO~5.E" LongName="wel_font_family_enumerator.e" />
-									<File Id="wel_identified.e" Name="WEL_ID~1.E" LongName="wel_identified.e" />
-									<File Id="wel_main_arguments.e" Name="WEL_MA~1.E" LongName="wel_main_arguments.e" KeyPath="yes" />
-									<File Id="wel_object_id_manager.e" Name="WEL_OB~1.E" LongName="wel_object_id_manager.e" />
-									<File Id="wel_window_enumerator.e" Name="WEL_WI~B.E" LongName="wel_window_enumerator.e" />
+									<File Id="wel_disk_space_callback_e2" Name="WEL_DI~2.E" LongName="wel_disk_space_callback.e" />
+									<File Id="wel_dispatcher_e2" Name="WEL_DI~1.E" LongName="wel_dispatcher.e" />
+									<File Id="wel_font_family_enumerator_e2" Name="WEL_FO~1.E" LongName="wel_font_family_enumerator.e" />
+									<File Id="wel_identified_e2" Name="WEL_ID~1.E" LongName="wel_identified.e" />
+									<File Id="wel_main_arguments_e2" Name="WEL_MA~1.E" LongName="wel_main_arguments.e" />
+									<File Id="wel_object_id_manager_e2" Name="WEL_OB~1.E" LongName="wel_object_id_manager.e" />
+									<File Id="wel_standard_dialog_dispatcher_e2" Name="WEL_ST~1.E" LongName="wel_standard_dialog_dispatcher.e" />
+									<File Id="wel_window_enumerator_e2" Name="WEL_WI~1.E" LongName="wel_window_enumerator.e" />
 								</Component>
 							</Directory>
 							<Component Id="wel_system_parameters_info.e" Guid="BC44338C-CBE7-4DF8-A3C6-8BAFA5824038">
@@ -2871,21 +2874,27 @@
 						<Directory Id="gdi" Name="gdi">
 							<Directory Id="gdiplus" Name="gdiplus">
 								<Component Id="gdiplus" Guid="C9D16072-011B-4ff7-9250-0D618A16D173">
-									<File Id="wel_gdip_any_e" Name="WEL_GD~4.E" LongName="wel_gdip_any.e" />
+									<File Id="wel_gdip_any_e" Name="WEE5A1~1.E" LongName="wel_gdip_any.e" />
 									<File Id="wel_gdip_bitmap_e" Name="WEDC2C~1.E" LongName="wel_gdip_bitmap.e" />
 									<File Id="wel_gdip_bitmap_data_e" Name="WE7297~1.E" LongName="wel_gdip_bitmap_data.e" />
+									<File Id="wel_gdip_brush_e" Name="WEL_GD~3.E" LongName="wel_gdip_brush.e" />
 									<File Id="wel_gdip_color_e" Name="WE75CD~1.E" LongName="wel_gdip_color.e" />
 									<File Id="wel_gdip_color_adjust_type_e" Name="WE1F83~1.E" LongName="wel_gdip_color_adjust_type.e" />
 									<File Id="wel_gdip_color_matrix_flag_e" Name="WE72E8~1.E" LongName="wel_gdip_color_matrix_flag.e" />
+									<File Id="wel_gdip_font_e" Name="WE1553~1.E" LongName="wel_gdip_font.e" />
+									<File Id="wel_gdip_font_family_e" Name="WE5D67~1.E" LongName="wel_gdip_font_family.e" />
+									<File Id="wel_gdip_font_style_e" Name="WED6E0~1.E" LongName="wel_gdip_font_style.e" />
 									<File Id="wel_gdip_graphics_e" Name="WEAB43~1.E" LongName="wel_gdip_graphics.e" />
-									<File Id="wel_gdip_image_e" Name="WEL_GD~1.E" LongName="wel_gdip_image.e" />
+									<File Id="wel_gdip_image_e" Name="WEL_GD~2.E" LongName="wel_gdip_image.e" />
 									<File Id="wel_gdip_image_attributes_e" Name="WECE8B~1.E" LongName="wel_gdip_image_attributes.e" />
 									<File Id="wel_gdip_image_lock_mode_e" Name="WEC949~1.E" LongName="wel_gdip_image_lock_mode.e" />
-									<File Id="wel_gdip_pen_e" Name="WEL_GD~2.E" LongName="wel_gdip_pen.e" />
+									<File Id="wel_gdip_pen_e" Name="WEL_GD~1.E" LongName="wel_gdip_pen.e" />
 									<File Id="wel_gdip_pixel_format_e" Name="WEBCEA~1.E" LongName="wel_gdip_pixel_format.e" />
 									<File Id="wel_gdip_rect_e" Name="WE0D27~1.E" LongName="wel_gdip_rect.e" />
-									<File Id="wel_gdip_starter_e" Name="WEL_GD~3.E" LongName="wel_gdip_starter.e" />
+									<File Id="wel_gdip_rect_f_e" Name="WEB0FD~1.E" LongName="wel_gdip_rect_f.e" />
+									<File Id="wel_gdip_starter_e" Name="WEL_GD~4.E" LongName="wel_gdip_starter.e" />
 									<File Id="wel_gdip_statues_e" Name="WE8F95~1.E" LongName="wel_gdip_statues.e" />
+									<File Id="wel_gdip_string_format_e" Name="WE1C14~1.E" LongName="wel_gdip_string_format.e" />
 									<File Id="wel_gdip_unit_e" Name="WE2159~1.E" LongName="wel_gdip_unit.e" />
 								</Component>
 							</Directory>

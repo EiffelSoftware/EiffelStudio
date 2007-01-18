@@ -297,7 +297,7 @@ feature -- Feedback indicators
 		once
 			create Result
 			create l_file_name.make_from_string (pixmap_path)
-			l_file_name.set_file_name ("center_up_light.png")
+			l_file_name.set_file_name ("center_down_light.png")
 			Result.set_with_named_file (l_file_name)
 		end
 

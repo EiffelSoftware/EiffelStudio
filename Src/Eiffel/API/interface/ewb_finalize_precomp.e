@@ -4,7 +4,7 @@ indexing
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	EWB_FINALIZE_PRECOMP
@@ -20,7 +20,7 @@ inherit
 			process_finish_freezing
 		select
 			save_project_again
-		end;
+		end
 
 	EWB_FINALIZE
 		rename
@@ -32,7 +32,7 @@ inherit
 			name, help_message, abbreviation,
 			execute, loop_action, perform_compilation,
 			process_finish_freezing
-		end;
+		end
 
 	SHARED_ERROR_HANDLER
 
@@ -46,24 +46,24 @@ feature -- Initialization
 			-- and project `proj'.
 		do
 			make_finalize (keep)
-		end;
+		end
 
 feature -- Properties
 
 	name: STRING is
 		do
 			Result := finalized_precompile_cmd_name
-		end;
+		end
 
 	help_message: STRING_32 is
 		do
 			Result := finalize_precompile_help
-		end;
+		end
 
 	abbreviation: CHARACTER is
 		do
 			Result := finalize_precompile_abb
-		end;
+		end
 
 feature {NONE} -- Execution
 
@@ -73,47 +73,40 @@ feature {NONE} -- Execution
 			answer: STRING
 		do
 			if not Eiffel_project.is_new then
-				io.error.put_string ("The project %"");
-				io.error.put_string (Eiffel_project.name);
-				io.error.put_string ("%" already exists.%N%
-					%It needs to be deleted before a precompilation.%N");
+				localized_print_error (ewb_names.there_is_already_project_compiled_in (eiffel_project.name))
 			elseif
 				command_line_io.confirmed
-						("Finalizing implies some C compilation and linking.%
-							%%NDo you want to do it now")
+						(ewb_names.finalizing_implies_some_c_compilation)
 			then
-				io.put_string ("--> Keep assertions (y/n): ");
-				command_line_io.wait_for_return;
-				answer := io.last_string;
-				answer.to_lower;
+				localized_print (ewb_names.arrow_keep_assertions.as_string_32 + ewb_names.yes_or_no + ": ")
+				command_line_io.wait_for_return
+				answer := io.last_string
+				answer.to_lower
 				if answer.is_equal ("y") or else answer.is_equal ("yes") then
 					keep_assertions := True
 				else
-					keep_assertions := False;
-				end;
+					keep_assertions := False
+				end
 				execute
 			end
-		end;
+		end
 
 	execute is
 			-- Execute Current batch command.
 		do
 			print_header;
-			if Eiffel_project.is_new then
+			if Eiffel_project.is_new and then Eiffel_project.able_to_compile then
 				if Eiffel_ace.file_name /= Void then
-					compile;
+					compile
 					if Eiffel_project.successful then
-						print_tail;
-						process_finish_freezing (True);
+						print_tail
+						process_finish_freezing (True)
 					end
-				end;
+				end
 			else
-				io.error.put_string ("The project %"");
-				io.error.put_string (Eiffel_project.name);
-				io.error.put_string ("%" already exists.%N%
-					%It needs to be deleted before a precompilation.%N");
+				localized_print_error (ewb_names.there_is_already_project_compiled_in (eiffel_project.name))
 			end
-		end;
+		end
 
 	perform_compilation is
 		do

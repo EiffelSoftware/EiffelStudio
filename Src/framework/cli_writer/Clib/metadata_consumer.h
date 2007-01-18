@@ -3,8 +3,8 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 6.00.0366 */
-/* at Mon Oct 23 10:58:19 2006
+ /* File created by MIDL compiler version 6.00.0365 */
+/* at Wed Jan 17 15:51:27 2007
  */
 /* Compiler settings for metadata_consumer.idl:
     Oicf, W1, Zp8, env=Win64 (32b run)
@@ -401,7 +401,7 @@ EXTERN_C const CLSID CLSID_EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MAN
 
 #ifdef __cplusplus
 
-class DECLSPEC_UUID("E1FFE1AC-0705-465B-9BC4-8428F0B0F96D")
+class DECLSPEC_UUID("E1FFE1AC-C5BD-492B-924A-8DBC9D2112F5")
 EiffelSoftware_MetadataConsumer_Interop_COM_CACHE_MANAGER;
 #endif
 #endif /* __EiffelSoftware_MetadataConsumer_LIBRARY_DEFINED__ */

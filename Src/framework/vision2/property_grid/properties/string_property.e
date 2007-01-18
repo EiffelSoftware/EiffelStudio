@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	adapted_value (s: STRING_GENERAL): G is
 			-- Adapt `s' to the type of formal generic parameter G.
 		require
-			valid_type: s /= Void implies (s.same_type ("") or s.same_type (("").as_string_32))
+			valid_type: s /= Void implies (s.conforms_to ("") or s.conforms_to (("").as_string_32))
 		do
 			if s = Void then
 				Result := Void

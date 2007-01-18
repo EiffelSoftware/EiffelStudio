@@ -737,13 +737,19 @@ feature -- Element change
 			-- Change the parent of the current window.
 		require
 			exists: exists
+		local
+			l_previous_hwnd: POINTER
 		do
 			if a_parent /= Void then
 				parent := a_parent
-				cwin_set_parent (item, a_parent.item)
+				l_previous_hwnd := {WEL_API}.set_parent (item, a_parent.item)
 			else
 				parent := Void
-				cwin_set_parent (item, default_pointer)
+				l_previous_hwnd := {WEL_API}.set_parent (item, default_pointer)
+			end
+			if l_previous_hwnd = default_pointer and a_parent /= Void then
+				l_previous_hwnd := recursive_set_parent (a_parent)
+				check successful: l_previous_hwnd /= default_pointer end
 			end
 		end
 
@@ -1726,6 +1732,39 @@ feature {WEL_WINDOW} -- Implementation
 		do
 		end
 
+	recursive_set_parent (a_parent: WEL_WINDOW): POINTER is
+			-- Helper function for `set_parent'. It is needed because Windows
+			-- will report an error even if it is valid to set the parent. The
+			-- cause is that Windows doesn't like deeply nested window.
+			-- To circumvent the issue we trick Windows by removing the parent
+			-- from the tree, adding the child to the parent, and then adding
+			-- back the parent to the tree (for the first parenting operation
+			-- we assume that no failure can occur thus the checks).
+			-- If it works we are done, otherwise we repeat the same operation
+			-- recursively on the parent as it often does not work at the first level
+			-- until we reached no parent.
+		require
+			a_parent_not_void: a_parent /= Void
+		local
+			l_parent_of_parent: WEL_WINDOW
+		do
+			l_parent_of_parent := a_parent.parent
+			if l_parent_of_parent /= Void then
+					-- Remove parenting information from `a_parent'.
+				Result := {WEL_API}.set_parent (a_parent.item, default_pointer)
+				check no_failure: Result /= default_pointer end
+					-- Add `Current' as child of `a_parent'. It should not fail
+					-- since we are only one level deep.
+				Result := {WEL_API}.set_parent (item, a_parent.item)
+				check no_failure_2: Result /= default_pointer end
+					-- Now rebuild the parenting information of `a_parent'
+				Result := {WEL_API}.set_parent (a_parent.item, l_parent_of_parent.item)
+				if Result = default_pointer then
+					Result := a_parent.recursive_set_parent (l_parent_of_parent)
+				end
+			end
+		end
+
 feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 
 	window_process_message, process_message (hwnd: POINTER; msg: INTEGER;
@@ -2058,6 +2097,8 @@ feature {NONE} -- Externals
 	cwin_set_parent (hwmd_child, hwmd_parent: POINTER) is
 			-- Change the parent of the given child and return handle to
 			-- previous parent, or NULL otherwise.
+		obsolete
+			"Use {WEL_API}.set_parent"
 		external
 			"C [macro <winuser.h>] (HWND, HWND)"
 		alias

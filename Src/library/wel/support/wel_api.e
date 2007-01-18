@@ -46,6 +46,17 @@ feature -- Windows
 			"SetWindowText ((HWND)$hwnd, (LPCTSTR)$str)"
 		end
 
+	frozen set_parent (hwnd_child, hwnd_parent: POINTER): POINTER is
+			-- Change the parent of the given child and return handle to
+			-- previous parent, or NULL otherwise.
+		obsolete
+			"Use {WEL_API}.set_parent"
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_POINTER) SetParent ((HWND) $hwnd_child, (HWND) $hwnd_parent);"
+		end
+
 feature -- Menus
 
 	frozen set_menu (hwnd, hmenu: POINTER): INTEGER is

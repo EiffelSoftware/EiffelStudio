@@ -71,6 +71,7 @@ feature -- Execution
 						source_feat := target_feat
 					end;
 
+					l_match_list := match_list_server.item (written_in_class.class_id)
 						-- We only display one name in a feature_as.
 					if f_ast.feature_names.count > 1 then
 						f_ast := replace_name_from_feature (f_ast.deep_twin, f_ast.feature_names.first, source_feat)
@@ -81,9 +82,9 @@ feature -- Execution
 						if not l_deep_twined then
 							f_ast := f_ast.deep_twin
 						end
-						f_ast := normal_to_deferred_feature_as (f_ast)
+						f_ast := normal_to_deferred_feature_as (f_ast, l_match_list)
 					end
-					l_match_list := match_list_server.item (written_in_class.class_id)
+
 					if l_match_list /= Void then
 						feature_comments := f_ast.comment (l_match_list)
 					end

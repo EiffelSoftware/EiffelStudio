@@ -43,17 +43,21 @@
 					<Directory Id="lang" Name="lang">
 						<Directory Id="mo_files" Name="mo_files">
 							<Component Id="mo_files" Guid="6666eeac-4455-4d01-85b1-9d8b3ca11b69">
+								<File Id="de_CH_mo" Name="de_CH.mo" />
 								<File Id="en_mo" Name="en.mo" />
 								<File Id="fr_mo" Name="fr.mo" />
-								<File Id="zh_cn_mo" Name="zh_CN.mo" />
+								<File Id="ru_RU_mo" Name="ru_RU.mo" />
+								<File Id="zh_CN_mo" Name="zh_CN.mo" />
 							</Component>
 						</Directory>
 						<Directory Id="po_files" Name="po_files">
 							<Component Id="po_files" Guid="6a7ed8b9-8091-4fa1-abd4-bc1def60c5b8">
+								<File Id="de_CH_po" Name="de_CH.po" />
 								<File Id="en_po" Name="en.po" />
 								<File Id="estudio_pot" Name="estudio.pot" />
 								<File Id="fr_po" Name="fr.po" />
-								<File Id="zh_cn_po" Name="zh_CN.po" />
+								<File Id="ru_RU_po" Name="ru_RU.po" />
+								<File Id="zh_CN_po" Name="zh_CN.po" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -312,24 +316,45 @@
 					<Directory Id="bitmaps" Name="bitmaps">
 						<Directory Id="png" Name="png">
 							<Component Id="png" Guid="4D7056EF-5B56-496D-B220-A0908F975A18">
+								<File Id="matrix_10x10_ini" Name="10x10.ini" />
 								<File Id="matrix_10x10_png" Name="10x10.png" />
+								<File Id="matrix_12x12_ini" Name="12x12.ini" />
 								<File Id="matrix_12x12_png" Name="12x12.png" />
+								<File Id="matrix_16x16_ini" Name="16x16.ini" />
 								<File Id="matrix_16x16_png" Name="16x16.png" />
-								<File Id="activation.png" Name="ACTIVA~1.PNG" LongName="activation.png" />
-								<File Id="bm_About.png" Name="bm_About.png" />
-								<File Id="bm_wizard_blue.png" Name="BM_WIZ~1.PNG" LongName="bm_wizard_blue.png" />
-								<File Id="bm_wizard_profiler_icon.png" Name="BM_WIZ~2.PNG" LongName="bm_wizard_profiler_icon.png" />
-								<File Id="borland_logo.png" Name="BORLAN~1.PNG" LongName="borland_logo.png" />
-								<File Id="cursors.png" Name="cursors.png" />
-								<File Id="icon_matrix_8.png" Name="ICON_M~4.PNG" LongName="icon_matrix_8.png" />
-								<File Id="icon_matrix_12.png" Name="ICON_M~1.PNG" LongName="icon_matrix_12.png" />
-								<File Id="icon_matrix_16.png" Name="ICON_M~2.PNG" LongName="icon_matrix_16.png" />
-								<File Id="icon_matrix_32.png" Name="ICON_M~3.PNG" LongName="icon_matrix_32.png" />
-								<File Id="logo.png" Name="logo.png" />
-								<File Id="splash.png" Name="splash.png" />
+								<File Id="activation_png" Name="ACTIVA~1.PNG" LongName="activation.png" />
+								<File Id="bm_About_png" Name="bm_About.png" />
+								<File Id="bm_wizard_blue_png" Name="BM_WIZ~2.PNG" LongName="bm_wizard_blue.png" />
+								<File Id="bm_wizard_profiler_icon_png" Name="BM_WIZ~1.PNG" LongName="bm_wizard_profiler_icon.png" />
+								<File Id="borland_logo_png" Name="BORLAN~1.PNG" LongName="borland_logo.png" />
+								<File Id="center_png" Name="center.png" />
+								<File Id="center_center_light_png" Name="CENTER~3.PNG" LongName="center_center_light.png" />
+								<File Id="center_down_light_png" Name="CENTER~1.PNG" LongName="center_down_light.png" />
+								<File Id="center_left_png" Name="CENTER~2.PNG" LongName="center_left.png" />
+								<File Id="center_right_png" Name="CEC8E8~1.PNG" LongName="center_right.png" />
+								<File Id="center_up_light_png" Name="CENTER~4.PNG" LongName="center_up_light.png" />
+								<File Id="cursors_ini" Name="cursors.ini" />
+								<File Id="cursors_png" Name="cursors.png" />
+								<File Id="down_png" Name="down.png" />
+								<File Id="down_light_png" Name="DOWN_L~1.PNG" LongName="down_light.png" />
 								<File Id="floating_tool_bar_icon_png" Name="FLOATI~1.PNG" LongName="floating_tool_bar_icon.png" />
-								<File Id="docking_icon_matrix_8_16_png" Name="SMART_~1.PNG" LongName="smart_docking_icon_matrix_8_16.png" />
-								<File Id="docking_icon_matrix_8_16_h_png" Name="SMART_~2.PNG" LongName="smart_docking_icon_matrix_8_16_horizontal.png" />
+								<File Id="icon_matrix_8_png" Name="ICON_M~1.PNG" LongName="icon_matrix_8.png" />
+								<File Id="icon_matrix_12_png" Name="ICON_M~2.PNG" LongName="icon_matrix_12.png" />
+								<File Id="icon_matrix_16_png" Name="ICON_M~4.PNG" LongName="icon_matrix_16.png" />
+								<File Id="icon_matrix_32_png" Name="ICON_M~3.PNG" LongName="icon_matrix_32.png" />
+								<File Id="left_png" Name="left.png" />
+								<File Id="left_light_png" Name="LEFT_L~1.PNG" LongName="left_light.png" />
+								<File Id="logo_png" Name="logo.png" />
+								<File Id="right_png" Name="right.png" />
+								<File Id="right_light_png" Name="RIGHT_~1.PNG" LongName="right_light.png" />
+								<File Id="smart_docking_icon_matrix_8_16_png" Name="SMART_~2.PNG" LongName="smart_docking_icon_matrix_8_16.png" />
+								<File Id="smart_docking_icon_matrix_8_16_horizontal_png" Name="SMART_~3.PNG" LongName="smart_docking_icon_matrix_8_16_horizontal.png" />
+								<File Id="smart_docking_icon_matrix_16_8_png" Name="SMART_~1.PNG" LongName="smart_docking_icon_matrix_16_8.png" />
+								<File Id="splash_png" Name="splash.png" />
+								<File Id="tool_bar_title_bar_png" Name="TOOL_B~2.PNG" LongName="tool_bar_title_bar.png" />
+								<File Id="tool_bar_title_bar_close_png" Name="TOOL_B~1.PNG" LongName="tool_bar_title_bar_close.png" />
+								<File Id="up_png" Name="up.png" />
+								<File Id="up_light_png" Name="up_light.png" />
 							</Component>
 						</Directory>
 					</Directory>
@@ -808,6 +833,7 @@
 									<File Id="eif_traverse.h" Name="EIF_TR~1.H" LongName="eif_traverse.h" />
 									<File Id="eif_types.h" Name="EIF_TY~1.H" LongName="eif_types.h" />
 									<File Id="eif_umain.h" Name="EIF_UM~1.H" LongName="eif_umain.h" />
+									<File Id="eif_vmsdef_h" Name="EIF_VM~1.H" LongName="eif_vmsdef.h" />
 									<File Id="eif_vmsdirent.h" Name="EIF_VM~1.H" LongName="eif_vmsdirent.h" />
 								</Component>
 							</Directory>

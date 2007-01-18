@@ -9,6 +9,11 @@ inherit
 
 feature
 
+	frozen gtk_widget_size_allocate (a_widget: POINTER; a_allocation: POINTER)
+		external
+			"C (GtkWidget*, GtkAllocation*) | <gtk/gtk.h>"
+		end
+
 	frozen g_module_supported: BOOLEAN
 		external
 			"C signature (): gboolean use <gmodule.h>"

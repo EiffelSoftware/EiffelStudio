@@ -1751,7 +1751,7 @@ feature {WEL_WINDOW} -- Implementation
 			l_parent_of_parent := a_parent.parent
 			if l_parent_of_parent /= Void then
 					-- Remove parenting information from `a_parent'.
-				Result := {WEL_API}.set_parent (a_parent.item, default_pointer)
+				Result := {WEL_API}.set_parent (a_parent.item, set_parent_window.item)
 				check no_failure: Result /= default_pointer end
 					-- Add `Current' as child of `a_parent'. It should not fail
 					-- since we are only one level deep.
@@ -1763,6 +1763,19 @@ feature {WEL_WINDOW} -- Implementation
 					Result := a_parent.recursive_set_parent (l_parent_of_parent)
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	set_parent_window: WEL_WINDOW is
+			-- Window used by `recursive_set_parent' to temporary store a window in it.
+			-- Before we were using no window, but then the windows would briefly flash
+			-- on screen which is not very nice.
+		once
+			create {WEL_FRAME_WINDOW} Result.make_top ("Window used for fixing bug in SetParent")
+		ensure
+			set_parent_window_not_void: Result /= Void
+			set_parent_window_not_destroyed: Result.exists
 		end
 
 feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation

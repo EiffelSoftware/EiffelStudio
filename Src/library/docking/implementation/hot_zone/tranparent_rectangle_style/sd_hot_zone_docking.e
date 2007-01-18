@@ -232,10 +232,10 @@ feature {NONE} -- Implementation attributes.
 	internal_zone: SD_DOCKING_ZONE
 			-- Dokcing zone `Current' belong to.
 
-	pixmap_center_width: INTEGER is 27
+	pixmap_center_width: INTEGER is 26
 			-- Width and height of the area in center figure area.
 
-	pixmap_corner_width: INTEGER is 30
+	pixmap_corner_width: INTEGER is 40
 			-- Width and height of the area in four corner figure areas.
 
 	internal_rectangle: EV_RECTANGLE

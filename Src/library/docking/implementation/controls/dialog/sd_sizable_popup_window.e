@@ -93,9 +93,12 @@ feature {NONE} -- Implementation
 			l_size: INTEGER
 		do
 			l_size := (screen_x + width) - a_screen_x
-			if l_size > 0 then
+			if l_size > 0 and l_size >= minimum_width then
 				set_x_position (a_screen_x)
 				set_width (l_size)
+			else
+				set_x_position (screen_x + (width - minimum_width))
+				set_width (minimum_width)
 			end
 		end
 
@@ -107,6 +110,8 @@ feature {NONE} -- Implementation
 			l_size := a_screen_x - screen_x
 			if l_size > 0 then
 				set_width (l_size)
+			else
+				set_width (minimum_width)
 			end
 		end
 
@@ -116,9 +121,12 @@ feature {NONE} -- Implementation
 			l_size: INTEGER
 		do
 			l_size := (screen_y + height) - a_screen_y
-			if l_size > 0 then
+			if l_size > 0 and l_size >= minimum_height then
 				set_y_position (a_screen_y)
 				set_height (l_size)
+			else
+				set_y_position (screen_y + (height - minimum_height))
+				set_height (minimum_height)
 			end
 		end
 
@@ -130,6 +138,8 @@ feature {NONE} -- Implementation
 			l_size := a_screen_y - screen_y
 			if l_size > 0 then
 				set_height (l_size)
+			else
+				set_height (minimum_height)
 			end
 		end
 

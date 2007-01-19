@@ -257,18 +257,13 @@ feature -- Execution
 feature {NONE} -- Implementation
 
 	execution_stopped_on_exception: BOOLEAN is
-		local
-			excep_code: INTEGER
 		do
-			if debugger_manager.exceptions_handler.enabled then
-				excep_code := Debugger_manager.application_status.exception_code
-				Result := Debugger_manager.exceptions_handler.exception_catched_by_code (excep_code)
-			end
+			Result := Debugger_manager.process_exception
 			debug ("debugger_trace")
 				if Result then
-					print ("Catch exception: " + excep_code.out + "%N")
+					print ("Catch exception: " + debugger_manager.application_status.exception_code.out + "%N")
 				else
-					print ("Ignore exception: " + excep_code.out + "%N")
+					print ("Ignore exception: " + debugger_manager.application_status.exception_code.out + "%N")
 				end
 			end
 		end

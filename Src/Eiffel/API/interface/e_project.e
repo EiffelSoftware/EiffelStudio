@@ -30,6 +30,11 @@ inherit
 
 	COMPILER_EXPORTER
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 feature -- Initialization
 
 	make (a_project_location: PROJECT_DIRECTORY) is
@@ -565,6 +570,7 @@ feature -- Update
 		local
 			path: STRING
 			l_cmd: STRING
+			l_processors: INTEGER
 		do
 			if workbench_mode then
 				path := project_directory.workbench_path
@@ -576,6 +582,11 @@ feature -- Update
 			if comp_system.il_generation and (not eiffel_layout.platform.is_windows_64_bits or Comp_system.force_32bits) then
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
+			end
+			l_processors := preferences.compiler_data.maximum_processor_usage
+			if l_processors > 0 then
+				l_cmd.append (" -nproc ")
+				l_cmd.append_integer (l_processors)
 			end
 			invoke_finish_freezing (path, l_cmd, True, workbench_mode)
 		end
@@ -588,6 +599,7 @@ feature -- Update
 		local
 			path: STRING
 			l_cmd: STRING
+			l_processors: INTEGER
 		do
 			if workbench_mode then
 				path := project_directory.workbench_path
@@ -599,6 +611,11 @@ feature -- Update
 			if comp_system.il_generation and (not eiffel_layout.platform.is_windows_64_bits or Comp_system.force_32bits) then
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
+			end
+			l_processors := preferences.compiler_data.maximum_processor_usage
+			if l_processors > 0 then
+				l_cmd.append (" -nproc ")
+				l_cmd.append_integer (l_processors)
 			end
 			l_cmd.append (" -nologo")
 			invoke_finish_freezing (path, l_cmd, False, workbench_mode)

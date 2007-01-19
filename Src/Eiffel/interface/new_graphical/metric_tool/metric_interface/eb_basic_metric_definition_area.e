@@ -121,21 +121,19 @@ feature {NONE} -- Initialization
 			expression_lbl.set_text (metric_names.t_expression)
 			create l_text
 			expression_text.set_background_color (l_text.background_color)
-			combination_grid.add_key_action (agent on_move (True), move_up_key_index)
-			combination_grid.add_key_action (agent on_move (False), move_down_key_index)
-			combination_grid.add_key_action (agent on_remove_criterion, del_key_index)
-			combination_grid.add_key_action (agent on_indent (True), and_criterion_key_index)
-			combination_grid.add_key_action (agent on_indent (False), or_criterion_key_index)
+
+				-- Register key shortcuts.
 			create del_key_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_delete), False, False, False)
 			create move_row_up_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_subtract), True, False, False)
 			create move_row_down_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_add), True, False, False)
 			create and_indent_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_6), True, False, False)
 			create or_indent_shortcut.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_numpad_3), True, False, False)
-			combination_grid.add_key_shortcut (del_key_index, del_key_shortcut)
-			combination_grid.add_key_shortcut (move_up_key_index, move_row_up_shortcut)
-			combination_grid.add_key_shortcut (move_down_key_index, move_row_down_shortcut)
-			combination_grid.add_key_shortcut (and_criterion_key_index, and_indent_shortcut)
-			combination_grid.add_key_shortcut (or_criterion_key_index, or_indent_shortcut)
+			combination_grid.register_shortcut (move_row_up_shortcut, agent on_move (True))
+			combination_grid.register_shortcut (move_row_down_shortcut, agent on_move (False))
+			combination_grid.register_shortcut (del_key_shortcut, agent on_remove_criterion)
+			combination_grid.register_shortcut (and_indent_shortcut, agent on_indent (True))
+			combination_grid.register_shortcut (or_indent_shortcut, agent on_indent (False))
+
 			up_btn.set_tooltip (metric_names.f_move_row_up.as_string_32 + " (" + move_row_up_shortcut.out + ")")
 			down_btn.set_tooltip (metric_names.f_move_row_down.as_string_32 + " (" + move_row_down_shortcut.out + ")")
 			remove_criterion_btn.set_tooltip (metric_names.f_del_row.as_string_32 + " (" + del_key_shortcut.out + ")")
@@ -416,21 +414,6 @@ feature{NONE} -- Implementation/Access
 			-- Current selected grid domain item
 
 feature -- Key shortcuts
-
-	del_key_index: INTEGER is 1
-			-- Key index to delete a criterion
-
-	move_up_key_index: INTEGER is 2
-			-- Key index for move a criterion up
-
-	move_down_key_index: INTEGER is 3
-			-- Key index for move a criterion down
-
-	and_criterion_key_index: INTEGER is 4
-			-- Key index for and criterion
-
-	or_criterion_key_index: INTEGER is 5
-			-- Key index for or criterion
 
 	del_key_shortcut: ES_KEY_SHORTCUT
 			-- Del key

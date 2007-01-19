@@ -121,10 +121,8 @@ feature {NONE} -- Initialization
 			metric_grid.set_item_pebble_function (agent item_pebble_function)
 			metric_grid.enable_single_row_selection
 			metric_grid.row_select_actions.extend (agent on_row_selected)
-			metric_grid.add_key_action (agent on_move_unit (True, False), move_unit_up_key_index)
-			metric_grid.add_key_action (agent on_move_unit (False, True), move_unit_down_key_index)
-			metric_grid.add_key_shortcut (move_unit_up_key_index, move_unit_up_key_shortcut)
-			metric_grid.add_key_shortcut (move_unit_down_key_index, move_unit_down_key_shortcut)
+			metric_grid.register_shortcut (move_unit_up_key_shortcut, agent on_move_unit (True, False))
+			metric_grid.register_shortcut (move_unit_down_key_shortcut, agent on_move_unit (False, True))
 			metric_grid.item_drop_actions.extend (agent on_drop_unit)
 			metric_grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
 
@@ -1086,12 +1084,6 @@ feature {NONE} -- Implementation
 		end
 
 feature{NONE} -- Key shortcuts
-
-	move_unit_up_key_index: INTEGER is 128
-			-- Key shortcut index for moving unit up
-
-	move_unit_down_key_index: INTEGER is 129
-			-- Key shortcut index for moving unit down
 
 	move_unit_up_key_shortcut: ES_KEY_SHORTCUT
 			-- Key shortcut for moving unit up

@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			last_column_use_all_width_enabled := True
 
 			cleaning_delay := 500
-			set_selected_rows_function (agent selected_rows)
+			set_selected_rows_function (agent selected_rows_in_grid)
 		end
 
 	color_separator: EV_COLOR is
@@ -162,25 +162,25 @@ feature -- Change
 				if expand_selected_rows_agent = Void then
 					set_expand_selected_rows_agent (agent expand_rows (False))
 				end
-				default_expand_rows_shortcuts.do_all (agent add_key_shortcut (expand_node_action_index, ?))
+				default_expand_rows_shortcuts.do_all (agent register_shortcut (?, expand_selected_rows_agent))
 			end
 			if a_expand_recursive then
 				if expand_selected_rows_recursive_agent = Void then
 					set_expand_selected_rows_recursive_agent (agent expand_rows (True))
 				end
-				default_expand_rows_recursive_shortcuts.do_all (agent add_key_shortcut (expand_node_recursive_action_index, ?))
+				default_expand_rows_recursive_shortcuts.do_all (agent register_shortcut (?, expand_selected_rows_recursive_agent))
 			end
 			if a_collapse then
 				if collapse_selected_rows_agent = Void then
 					set_collapse_selected_rows_agent (agent collapse_rows (False))
 				end
-				default_collapse_rows_shortcuts.do_all (agent add_key_shortcut (collapse_node_action_index, ?))
+				default_collapse_rows_shortcuts.do_all (agent register_shortcut (?, collapse_selected_rows_agent))
 			end
 			if a_collapse_recursive then
 				if collapse_selected_rows_recursive_agent = Void then
 					set_collapse_selected_rows_recursive_agent (agent collapse_rows (True))
 				end
-				default_collapse_rows_recursive_shortcuts.do_all (agent add_key_shortcut (collapse_node_recursive_action_index, ?))
+				default_collapse_rows_recursive_shortcuts.do_all (agent register_shortcut (?, collapse_selected_rows_recursive_agent))
 			end
 		end
 
@@ -190,7 +190,7 @@ feature {NONE} -- Grid Events
 			-- Action to be performed when `k' is pressed in Current.
 		local
 			l_ev_application: like ev_application
-			l_agent: PROCEDURE [ANY, TUPLE]
+			l_shortcut: ES_KEY_SHORTCUT
 		do
 			l_ev_application := ev_application
 			if
@@ -215,9 +215,14 @@ feature {NONE} -- Grid Events
 					end
 				end
 			end
-			l_agent := key_action_with_shortcut (create {ES_KEY_SHORTCUT}.make_with_key_combination (k, l_ev_application.ctrl_pressed, l_ev_application.alt_pressed, l_ev_application.shift_pressed))
-			if l_agent /= Void then
-				l_agent.call ([])
+			create l_shortcut.make_with_key_combination (
+					k,
+					l_ev_application.ctrl_pressed,
+					l_ev_application.alt_pressed,
+					l_ev_application.shift_pressed
+				)
+			if is_shortcut_registered (l_shortcut) then
+				call_shortcut_actions (l_shortcut)
 			end
 		end
 
@@ -897,13 +902,27 @@ feature {NONE} -- Tree view behavior
 			-- If `a_recursive' is True, collapse those rows recursively.
 		local
 			l_rows: LIST [EV_GRID_ROW]
+			l_parent_row: EV_GRID_ROW
 		do
 			l_rows := selected_rows_function.item ([])
 			if l_rows /= Void and then not l_rows.is_empty then
-				if a_recursive then
-					remove_unnecessary_rows (l_rows)
+				if l_rows.count = 1 and then (not l_rows.first.is_expandable or else not l_rows.first.is_expanded) then
+					l_parent_row := l_rows.first.parent_row
+					if l_parent_row /= Void then
+						l_rows.first.disable_select
+						if l_parent_row.is_selectable then
+							l_parent_row.enable_select
+						end
+						if l_parent_row.is_displayed then
+							l_parent_row.ensure_visible
+						end
+					end
+				else
+					if a_recursive then
+						remove_unnecessary_rows (l_rows)
+					end
+					l_rows.do_all (agent collapse_row (?, a_recursive))
 				end
-				l_rows.do_all (agent collapse_row (?, a_recursive))
 			end
 		end
 
@@ -952,6 +971,35 @@ feature {NONE} -- Tree view behavior
 					a_rows.forth
 				end
 			end
+		end
+
+	selected_rows_in_grid: LIST [EV_GRID_ROW] is
+			-- Selected rows in Current
+			-- If `is_single_row_selection_enabled' is True, return selected rows.
+			-- If `is_single_item_selection_enabled' is True, return a list of rows in which some items are selected.
+		local
+			l_selected_items: like selected_items
+			l_grid_row: EV_GRID_ROW
+		do
+			if is_single_row_selection_enabled then
+				Result := selected_rows
+			else
+				l_selected_items := selected_items
+				create {LINKED_LIST [EV_GRID_ROW]} Result.make
+				from
+					l_selected_items.start
+				until
+					l_selected_items.after
+				loop
+					l_grid_row := l_selected_items.item.row
+					if Result.has (l_grid_row) then
+						Result.extend (l_grid_row)
+					end
+					l_selected_items.forth
+				end
+			end
+		ensure
+			result_attached: Result /= Void
 		end
 
 invariant

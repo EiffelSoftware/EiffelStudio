@@ -67,7 +67,7 @@ feature -- Access
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
 
 				l_tool_bar.extend (show_tooltip_button)
-				
+
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)
@@ -1726,12 +1726,11 @@ feature{NONE} -- Initialization
 			create quick_search_bar.make (development_window)
 			quick_search_bar.attach_tool (Current)
 			enable_search
-			grid.add_key_action (agent on_collapse_one_level_partly, collapse_one_level_partly_index)
-			grid.add_key_shortcut (collapse_one_level_partly_index, create{ES_KEY_SHORTCUT}.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_left), True, False, False))
+			grid.register_shortcut (
+				create{ES_KEY_SHORTCUT}.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_left), True, False, False),
+				agent on_collapse_one_level_partly
+			)
 		end
-
-	collapse_one_level_partly_index: INTEGER is 65530;
-			-- Key shortcut index for collapse one level partly
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

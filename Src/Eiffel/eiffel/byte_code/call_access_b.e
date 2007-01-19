@@ -287,10 +287,16 @@ feature -- Byte code generation
 			basic_type_not_void: basic_type /= Void
 			buf_not_void: buf /= Void
 		do
-			generate_end (gen_reg, class_type)
-
-				-- Now generate the parameters of the call, if needed.
-			basic_type.end_of_metamorphose (basic_register, meta_reg, buf)
+			if
+				not type.is_void and then
+				real_type (type).is_expanded and then
+				class_type.base_class.feature_of_rout_id (routine_id).type.is_reference
+			then
+					-- Result of a basic type is expected.
+				buffer.put_character ('*')
+				basic_type.generate_access_cast (buf)
+			end
+			generate_end (basic_register, class_type)
 		end
 
 feature {NONE} -- Debug

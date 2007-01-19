@@ -20,7 +20,8 @@ create
 
 feature -- Initialization
 
-	make (mapped_path: BOOLEAN; a_force_32bit: BOOLEAN) is
+	make (mapped_path: BOOLEAN; a_force_32bit: BOOLEAN; a_processor_count: NATURAL_8) is
+			-- Initialize
 		local
 			error: BOOLEAN
 			error_msg: STRING
@@ -32,6 +33,7 @@ feature -- Initialization
 			create dependent_directories.make (55)
 
 			eiffel_dir := short_path (eiffel_layout.eiffel_installation_dir_name)
+			processor_count := a_processor_count
 
 			uses_precompiled := False
 
@@ -68,6 +70,8 @@ feature -- Initialization
 				create status_box.make (error_msg, True, False, True, mapped_path)
 				(create {EXCEPTIONS}).die (-1)
 			end
+		ensure
+			processor_count_set: processor_count = a_processor_count
 		end
 
 	launch_quick_compilation is
@@ -139,6 +143,9 @@ feature -- Access
 	is_il_code: BOOLEAN
 			-- Is Makefile.SH generated for IL C code generation.
 
+	processor_count: NATURAL_8
+			-- Number of processors to utilize
+
 feature -- Execution
 
 	read_options is
@@ -176,6 +183,10 @@ feature -- Execution
 				-- Launch distributed make.
 			eiffel_make := eiffel_layout.Emake_command_name.twin
 
+			if processor_count > 0 then
+				eiffel_make.append (" -cpu ")
+				eiffel_make.append_integer (processor_count)
+			end
 			eiffel_make.append (" -target %"")
 			eiffel_make.append (env.current_working_directory)
 			eiffel_make.append ("%" -make %"")

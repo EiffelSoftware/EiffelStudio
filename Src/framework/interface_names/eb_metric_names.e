@@ -160,6 +160,7 @@ feature -- Titles
 	l_error_message: STRING_GENERAL is do Result := locale.translate ("error message") end
 	l_setup_metric_value_retriever: STRING_GENERAL is do Result := locale.translate ("Setup metric value retriever") end
 	t_add_new_metric_value_retriever: STRING_GENERAL is do Result := locale.translate ("Add new metric value retriever") end
+	t_use_external_delayed: STRING_GENERAL is do Result := locale.translate ("Use external delayed domain") end
 
 feature -- Titles for editor token
 
@@ -251,6 +252,7 @@ feature -- Tooltip
 	f_show_to_do_message: STRING_GENERAL is do Result := locale.translate ("Display a message about how to deal with the metric definition error") end
 	f_import_metrics: STRING_GENERAL is do Result := locale.translate ("Import metrics from file") end
 	f_clear_defined_domain: STRING_GENERAL is do Result := locale.translate ("Clear defined domain") end
+	f_check_warning: STRING_GENERAL is do Result := locale.translate ("Check defined warnings when archive is recalculated?") end
 
 	l_target_unit: STRING_GENERAL is do Result := locale.translate("Target") end
 	l_group_unit: STRING_GENERAL is do Result := locale.translate("Group") end
@@ -1023,6 +1025,14 @@ feature -- Error/warning message
 	err_domain_missing: STRING_GENERAL is do Result := locale.translate ("Domain is missing.") end
 	err_value_tester_missing: STRING_GENERAL is do Result := locale.translate ("Value tester is missing.") end
 	err_value_retriever_missing: STRING_GENERAL is do Result := locale.translate ("Value retriever is missing.") end
+	err_use_external_delayed_invalid (a_value: STRING_GENERAL; a_attribute_name: STRING_GENERAL): STRING_GENERAL is
+		require
+			a_value_attached: a_value /= Void
+		do
+			Result := locale.format_string ("Value %"$1%" of attribute %"$2%" is invalid. A boolean is expected.", [a_value, a_attribute_name])
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- To do messages
 

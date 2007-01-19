@@ -129,21 +129,6 @@ feature -- Byte code generation
 			value.print_register
 		end
 
-	end_of_metamorphose (reg, value: REGISTRABLE; buffer: GENERATION_BUFFER) is
-			-- After the metamorphosis, we need to put back the new value computed
-			-- in `reg' into `value' otherwise the metamorphosis has no effect.
-		require
-			valid_reg: reg /= Void
-			valid_value: value /= Void
-			valid_file: buffer /= Void
-		do
---			value.print_register
---			buffer.put_string (" = ")
---			buffer.put_character ('*')
---			generate_access_cast (buffer)
---			reg.print_register
-		end
-
 feature -- C code generation
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is

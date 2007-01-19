@@ -124,6 +124,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := keep_metric_detailed_result_preference.value
 		end
 
+	should_warning_be_checked: BOOLEAN is
+			-- Should defined metric archive warning be checked when metric archive is recalculated?
+		do
+			Result := check_warning_preference.value
+		end
+
 feature -- Setting
 
 	set_unit_order (a_unit_list: LIST [QL_METRIC_UNIT]) is
@@ -168,6 +174,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	old_item_day_preference: INTEGER_PREFERENCE
 	keep_archive_detailed_result_preference: BOOLEAN_PREFERENCE
 	keep_metric_detailed_result_preference: BOOLEAN_PREFERENCE
+	check_warning_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -184,6 +191,7 @@ feature {NONE} -- Preference Strings
 	old_item_day_string: STRING is "tools.metric_tool.old_archive_age_in_days"
 	keep_archive_detailed_result_string: STRING is "tools.metric_tool.keep_archive_detailed_result"
 	keep_metric_detailed_result_string: STRING is "tools.metric_tool.keep_metric_detailed_result"
+	check_warning_string: STRING is "tools.metric_tool.check_defined_warning"
 
 feature {NONE} -- Implementation
 
@@ -211,6 +219,7 @@ feature {NONE} -- Implementation
 			old_item_day_preference := l_manager.new_integer_preference_value (l_manager, old_item_day_string, 30)
 			keep_archive_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_archive_detailed_result_string, False)
 			keep_metric_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_metric_detailed_result_string, True)
+			check_warning_preference := l_manager.new_boolean_preference_value (l_manager, check_warning_string, False)
 		end
 
 	preferences: PREFERENCES

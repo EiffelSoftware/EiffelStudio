@@ -69,6 +69,20 @@ feature -- Access
 			Result := has_option (x86_switch)
 		end
 
+	max_processors: NATURAL_8 is
+			-- Maximum number of processors to utilize
+		require
+			successful: successful
+			has_max_processors: has_max_processors
+		local
+			l_value: ARGUMENT_NATURAL_OPTION
+		once
+			l_value ?= option_of_name (nproc_switch)
+			Result := l_value.natural_8_value
+		ensure
+			result_positive: Result > 0
+		end
+
 feature -- Query
 
 	has_location: BOOLEAN is
@@ -79,6 +93,13 @@ feature -- Query
 			Result := has_option (location_switch)
 		end
 
+	has_max_processors: BOOLEAN is
+			-- Indicates if user specified a number of processors
+		require
+			successful: successful
+		once
+			Result := has_option (nproc_switch)
+		end
 
 feature {NONE} -- Usage
 
@@ -100,9 +121,12 @@ feature {NONE} -- Usage
 			create Result.make (4)
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (location_switch, "Alternative location to compile C code in.", True, False, "directory", "Location to compile C code in", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (generate_only_switch, "Informs tool to only generate a Makefile.", True, False))
+			Result.extend (create {ARGUMENT_NATURAL_SWITCH}.make_with_range (nproc_switch, "Maximum number of processors to use", True, False, "n", "Number of processors", False, 1, {NATURAL_16}.max_value))
 			Result.extend (create {ARGUMENT_SWITCH}.make (x86_switch, "Generate 32bit lib DLLs for .NET projects.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (silent_switch, "Supresses confirmation dialog", True, True))
-			Result.extend (create {ARGUMENT_SWITCH}.make (library_switch, "Does nothing, for UNIX compatibility only", True, True))
+
+				-- For development purposes only.
+			Result.extend (create {ARGUMENT_SWITCH}.make_hidden (library_switch, "Does nothing, for UNIX compatibility only", True, True))
 		end
 
 feature {NONE} -- Switches
@@ -111,6 +135,7 @@ feature {NONE} -- Switches
 	generate_only_switch: STRING is "generate_only"
 	silent_switch: STRING is "silent"
 	library_switch: STRING is "library"
+	nproc_switch: STRING is "nproc";
 	x86_switch: STRING is "x86";
 			-- Argument switches
 

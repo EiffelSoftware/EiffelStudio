@@ -4,8 +4,6 @@ indexing
 class FINISH_FREEZING
 
 inherit
-	ARGUMENTS
-
 	EXECUTION_ENVIRONMENT
 		rename
 			command_line as non_used_command_line
@@ -49,6 +47,7 @@ feature -- Initialization
 			unc_mapper: UNC_PATH_MAPPER
 			mapped_path: BOOLEAN
 			l_exception: EXCEPTIONS
+			l_processors: NATURAL_8
 			gen_only: BOOLEAN
 		do
 			if not retried then
@@ -78,8 +77,13 @@ feature -- Initialization
 					change_working_directory (location)
 				end
 
-				set_option_sign ('-')
-				create translator.make (mapped_path, a_parser.force_32bit_code_generation)
+				if a_parser.has_max_processors then
+					l_processors := a_parser.max_processors
+				else
+						-- Use default
+					l_processors := 0
+				end
+				create translator.make (mapped_path, a_parser.force_32bit_code_generation, l_processors)
 
 				translator.translate
 				if not gen_only and translator.has_makefile_sh then
@@ -118,7 +122,7 @@ feature -- Initialization
 								io.default_output.flush
 							end
 						else
-							if index_of_word_option ("silent") /= 0 and translator.is_il_code and not c_error then
+							if a_parser.silent and translator.is_il_code and not c_error then
 									-- For eweasel processing
 								io.put_string ("C compilation completed%N")
 								io.default_output.flush

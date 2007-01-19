@@ -13,6 +13,8 @@ inherit
 		redefine
 			make,
 			make_hidden,
+			create_option,
+			create_value_option,
 			value_validator
 		end
 
@@ -119,6 +121,20 @@ feature -- Element change
 		ensure
 			min_set: min = a_min
 			max_set: max = a_max
+		end
+
+feature {ARGUMENT_BASE_PARSER} -- Factory Functions
+
+	create_option: ARGUMENT_INTEGER_OPTION is
+			-- Creates a new argument option for switch
+		do
+			create Result.make_with_value (name, min.out, Current)
+		end
+
+	create_value_option (a_value: STRING): ARGUMENT_INTEGER_OPTION is
+			-- Creates a new argument option given a value `a_value'
+		do
+			create Result.make_with_value (name, a_value, Current)
 		end
 
 invariant

@@ -217,6 +217,15 @@ feature {NONE} -- Implementation functions.
 			create internal_rectangle_top.make (internal_rectangle_left.left + pixmap_corner_width - 2, internal_rectangle_left.top - pixmap_corner_width + 1, pixmap_corner_width, pixmap_corner_width)
 			create internal_rectangle_bottom.make (internal_rectangle_left.left + pixmap_corner_width - 2, internal_rectangle_left.top + pixmap_corner_width - 2, pixmap_corner_width, pixmap_corner_width)
 			create internal_rectangle_center.make (internal_rectangle_left.right, internal_rectangle_top.bottom, internal_rectangle_right.left - internal_rectangle_left.right, internal_rectangle_bottom.top - internal_rectangle_top.bottom)
+
+			-- It's not a square, we should adjust it.
+			internal_rectangle_top.grow_bottom (-6)
+			internal_rectangle_center.set_y (internal_rectangle_center.top - 6)
+			internal_rectangle_center.grow_bottom (-3)
+			internal_rectangle_bottom.set_y (internal_rectangle_bottom.top - 9)
+			internal_rectangle_bottom.grow_bottom (-10)
+			internal_rectangle_right.grow_right (-2)
+
 			internal_rectangle_title_area := internal_zone.title_area
 		ensure
 			set: a_rect = internal_rectangle
@@ -232,10 +241,10 @@ feature {NONE} -- Implementation attributes.
 	internal_zone: SD_DOCKING_ZONE
 			-- Dokcing zone `Current' belong to.
 
-	pixmap_center_width: INTEGER is 26
+	pixmap_center_width: INTEGER is 34
 			-- Width and height of the area in center figure area.
 
-	pixmap_corner_width: INTEGER is 40
+	pixmap_corner_width: INTEGER is 36
 			-- Width and height of the area in four corner figure areas.
 
 	internal_rectangle: EV_RECTANGLE

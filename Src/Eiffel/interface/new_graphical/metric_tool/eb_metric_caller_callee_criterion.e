@@ -36,17 +36,19 @@ feature -- Access
 			-- QL_CRITERION representing current criterion
 		local
 			l_criterion_factory: QL_CRITERION_FACTORY
+			l_domain: like domain
 		do
 			l_criterion_factory := criterion_factory_table.item (a_scope)
 			from
-				domain.start
-				Result := l_criterion_factory.criterion_with_name (name, [domain.item.domain (a_scope), only_current_version])
-				domain.forth
+				l_domain := domain.actual_domain
+				l_domain.start
+				Result := l_criterion_factory.criterion_with_name (name, [l_domain.item.domain (a_scope), only_current_version])
+				l_domain.forth
 			until
-				domain.after
+				l_domain.after
 			loop
-				Result := Result or l_criterion_factory.criterion_with_name (name, [domain.item.domain (a_scope), only_current_version])
-				domain.forth
+				Result := Result or l_criterion_factory.criterion_with_name (name, [l_domain.item.domain (a_scope), only_current_version])
+				l_domain.forth
 			end
 			if is_negation_used then
 				Result := not Result

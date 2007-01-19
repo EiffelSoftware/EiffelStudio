@@ -12,8 +12,8 @@ class
 inherit
 	EB_METRIC_VALUE_RETRIEVER
 		redefine
-			value,
-			is_retrievable
+			is_retrievable,
+			process
 		end
 
 	EB_METRIC_SHARED
@@ -32,14 +32,20 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	value: DOUBLE
+	value (a_ql_domain: QL_DOMAIN): DOUBLE is
 			-- Retrieved value
+		do
+			Result := value_internal
+		end
 
 	visitable_name: STRING_GENERAL is
 			-- Name of current visitable item
 		do
 			Result := metric_names.l_constant_value
 		end
+
+	value_internal: DOUBLE
+			-- Value
 
 feature -- Status report
 
@@ -51,9 +57,9 @@ feature -- Setting
 	set_value (a_value: like value) is
 			-- Set `value' with `a_value'.
 		do
-			value := a_value
+			value_internal := a_value
 		ensure
-			value_set: value = a_value
+			value_set: value_internal = a_value
 		end
 
 feature -- Process

@@ -16,8 +16,7 @@ inherit
 		redefine
 			process,
 			is_or_criterion,
-			new_criterion,
-			has_delayed_input_domain
+			new_criterion
 		end
 
 create
@@ -63,14 +62,7 @@ feature -- Status report
 
 	is_or_criterion: BOOLEAN is True;
 			-- Is current an "or" criterion?	
-
-	has_delayed_input_domain: BOOLEAN is
-			-- Does current domain contain reference to a delayed domain which represents an delayed input domain?
-			-- An delayed input domain should be replaced by actual input domain before metric calculation.
-		do
-			Result := operands.there_exists (agent delayed_input_domain_in_operand)
-		end
-
+			
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

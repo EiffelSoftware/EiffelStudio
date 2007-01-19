@@ -259,10 +259,6 @@ feature -- Status report
 			-- Should tooltip of metric contain "go to definition" message?
 			-- Default: True
 
-	is_key_from_metric_grid: BOOLEAN;
-			-- Is key stroke from `metrc_grid'?
-			-- False indicates that key stroke is from `cached_key_field'.
-
 feature{NONE} -- Actions
 
 	on_tree_view_checkbox_selected is

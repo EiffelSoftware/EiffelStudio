@@ -17,27 +17,26 @@ feature{NONE} -- Element constants
 	t_basic_metric: INTEGER is 4
 	t_linear_metric: INTEGER is 5
 	t_ratio_metric: INTEGER is 6
-	t_scope_ratio_metric: INTEGER is 7
-	t_variable_metric: INTEGER is 8
-	t_criterion: INTEGER is 9
-	t_normal_criterion: INTEGER is 10
-	t_domain_criterion: INTEGER is 11
-	t_text_criterion: INTEGER is 12
-	t_path_criterion: INTEGER is 13
-	t_caller_criterion: INTEGER is 14
-	t_client_criterion: INTEGER is 15
-	t_and_criterion: INTEGER is 16
-	t_or_criterion: INTEGER is 17
-	t_value_criterion: INTEGER is 18
-	t_text: INTEGER is 19
-	t_path: INTEGER is 20
-	t_domain: INTEGER is 21
-	t_domain_item: INTEGER is 22
-	t_metric_archive: INTEGER is 23
-	t_tester: INTEGER is 24
-	t_tester_item: INTEGER is 25
-	t_constant_value: INTEGER is 26
-	t_metric_value: INTEGER is 27
+	t_variable_metric: INTEGER is 7
+	t_criterion: INTEGER is 8
+	t_normal_criterion: INTEGER is 9
+	t_domain_criterion: INTEGER is 10
+	t_text_criterion: INTEGER is 11
+	t_path_criterion: INTEGER is 12
+	t_caller_criterion: INTEGER is 13
+	t_client_criterion: INTEGER is 14
+	t_and_criterion: INTEGER is 15
+	t_or_criterion: INTEGER is 16
+	t_value_criterion: INTEGER is 17
+	t_text: INTEGER is 18
+	t_path: INTEGER is 19
+	t_domain: INTEGER is 20
+	t_domain_item: INTEGER is 21
+	t_metric_archive: INTEGER is 22
+	t_tester: INTEGER is 23
+	t_tester_item: INTEGER is 24
+	t_constant_value: INTEGER is 25
+	t_metric_value: INTEGER is 26
 
 feature{NONE} -- Attribute constants
 
@@ -67,6 +66,7 @@ feature{NONE} -- Attribute constants
 	at_indirect: INTEGER is 1023
 	at_metric_name: INTEGER is 1024
 	at_relation: INTEGER is 1025
+	at_use_external_delayed: INTEGER is 1026
 
 feature{NONE} -- Text
 
@@ -130,7 +130,8 @@ feature{NONE} -- Text
 	n_tester_item: STRING is "tester_item"
 	n_constant_value: STRING is "constant_value"
 	n_relation: STRING is "relation"
-	n_metric_name: STRING is "metric_name";
+	n_metric_name: STRING is "metric_name"
+	n_use_external_delayed: STRING is "use_external_delayed";
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

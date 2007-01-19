@@ -93,7 +93,6 @@ feature{NONE} -- Process
 			if (not has_error) and then (not is_metric_validity_checked (a_basic_metric.name)) then
 				metric_stack.extend (a_basic_metric)
 				location_stack.extend (a_basic_metric.visitable_name)
-				last_metric := a_basic_metric
 				if not has_error then
 					check_metric_name (a_basic_metric.name)
 				end
@@ -132,7 +131,6 @@ feature{NONE} -- Process
 			if (not has_error) and then (not is_metric_validity_checked (a_linear_metric.name)) then
 				metric_stack.extend (a_linear_metric)
 				location_stack.extend (a_linear_metric.visitable_name)
-				last_metric := a_linear_metric
 				if not has_error then
 					check_metric_name (a_linear_metric.name)
 				end
@@ -204,7 +202,6 @@ feature{NONE} -- Process
 			if (not has_error) and then (not is_metric_validity_checked (a_ratio_metric.name)) then
 				metric_stack.extend (a_ratio_metric)
 				location_stack.extend (a_ratio_metric.visitable_name)
-				last_metric := a_ratio_metric
 				if not has_error then
 					check_metric_name (a_ratio_metric.name)
 				end
@@ -260,14 +257,16 @@ feature{NONE} -- Process
 	process_criterion (a_criterion: EB_METRIC_CRITERION) is
 			-- Process `a_criterion'.
 			-- A criterion is valid if it is registered.
+		local
+			l_last_metric: EB_METRIC
 		do
 			if not has_error then
 				last_criterion := a_criterion
 				location_stack.extend (a_criterion.visitable_name)
-				check last_metric /= Void end
-				if a_criterion.scope /= last_metric.unit.scope then
+				l_last_metric := last_metric
+				if a_criterion.scope /= l_last_metric.unit.scope then
 					create_last_error_with_to_do (
-						metric_names.err_basic_metric_unit_not_correct (a_criterion.scope.name,	last_metric.unit.name),
+						metric_names.err_basic_metric_unit_not_correct (a_criterion.scope.name,	l_last_metric.unit.name),
 						metric_names.unit_in_basic_metric_not_same_to_do
 					)
 				end
@@ -294,7 +293,6 @@ feature{NONE} -- Process
 			if not has_error then
 				location_stack.extend (a_criterion.visitable_name)
 				if a_criterion.domain.is_empty then
-					check last_metric /= Void end
 					create_last_error_with_to_do (
 						metric_names.err_domain_item_not_exist,
 						metric_names.domain_item_not_exists_to_do
@@ -337,7 +335,6 @@ feature{NONE} -- Process
 			if not has_error then
 				location_stack.extend (a_criterion.visitable_name)
 				if a_criterion.text.is_empty then
-					check last_metric /= Void end
 					create_last_error_with_to_do (
 						metric_names.err_text_in_text_criterion_empty,
 						metric_names.text_in_text_criterion_empty_to_do
@@ -521,15 +518,22 @@ feature{NONE} -- Process
 		do
 		end
 
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+		end
+
 	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
 			-- Process `a_item'.
 		local
 			l_item: TUPLE [value_retriever: EB_METRIC_VALUE_RETRIEVER; operator_name: INTEGER]
 			l_testers: LIST [TUPLE [value_retriever: EB_METRIC_VALUE_RETRIEVER; operator_name: INTEGER]]
+			l_cursor: CURSOR
 		do
 			if not has_error then
 				location_stack.extend (a_item.visitable_name)
 				l_testers := a_item.criteria
+				l_cursor := l_testers.cursor
 				from
 					l_testers.start
 				until
@@ -539,6 +543,7 @@ feature{NONE} -- Process
 					l_item.value_retriever.process (Current)
 					l_testers.forth
 				end
+				l_testers.go_to (l_cursor)
 				location_stack.remove
 			end
 		end
@@ -674,8 +679,15 @@ feature{NONE} -- Implementation
 			last_error.set_to_do (a_to_do)
 		end
 
-	last_metric: EB_METRIC
+	last_metric: EB_METRIC is
 			-- Last metric been checked
+		require
+			metric_stack_not_empty: not metric_stack.is_empty
+		do
+			Result := metric_stack.item
+		ensure
+			result_attached: Result /= Void
+		end
 
 	last_criterion: EB_METRIC_CRITERION
 			-- Last analyzed criterion

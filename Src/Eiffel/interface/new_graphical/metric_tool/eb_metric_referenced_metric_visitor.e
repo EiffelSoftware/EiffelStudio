@@ -1,5 +1,5 @@
 indexing
-	description: "Criterion that uses a domain as argument"
+	description: "Visitor used to find referenced metrics"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,92 +7,96 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_METRIC_DOMAIN_CRITERION
+	EB_METRIC_REFERENCED_METRIC_VISITOR
 
 inherit
-	EB_METRIC_CRITERION
+	EB_METRIC_ITERATOR
 		redefine
-			process,
-			is_domain_criterion,
-			make
+			process_linear_metric,
+			process_ratio_metric,
+			process_value_criterion,
+			process_metric_value_retriever
 		end
-
-	QL_SHARED
 
 create
 	make
 
 feature{NONE} -- Initialization
 
-	make (a_scope: like scope; a_name: STRING) is
-			-- Initialize `scope' with `a_scope' and `name' with `a_name'.
+	make is
+			-- Initialize.
 		do
-			Precursor (a_scope, a_name)
-			create domain.make
-		ensure then
-			domain_attached: domain /= Void
+			create {LINKED_LIST [STRING]} referenced_metric_name.make
+			referenced_metric_name.compare_objects
+		end
+
+feature -- Referenced metric searching
+
+	search_referenced_metric (a_item: EB_METRIC_VISITABLE) is
+			-- Search `a_item' for referenced metrics and
+			-- store names of found referenced metrics in `referenced_metric_names'.
+		require
+			a_item_attached: a_item /= Void
+		do
+			referenced_metric_name.wipe_out
 		end
 
 feature -- Access
 
-	domain: EB_METRIC_DOMAIN
-			-- Domain used in current criterion
-
-	new_criterion (a_scope: QL_SCOPE): QL_CRITERION is
-			-- QL_CRITERION representing current criterion
-		local
-			l_criterion_factory: QL_CRITERION_FACTORY
-			l_domain: like domain
-		do
-			l_criterion_factory := criterion_factory_table.item (a_scope)
-			l_domain := domain.actual_domain
-			from
-				l_domain.start
-				Result := l_criterion_factory.criterion_with_name (name, [l_domain.item.domain (scope)])
-				l_domain.forth
-			until
-				l_domain.after
-			loop
-				Result := Result or l_criterion_factory.criterion_with_name (name, [l_domain.item.domain (scope)])
-				l_domain.forth
-			end
-			if is_negation_used then
-				Result := not Result
-			end
-		end
-
-feature -- Status report
-
-	is_parameter_valid: BOOLEAN is
-			-- Is parameters of current criterion valid?
-			-- Parameter for current is `domain'.
-		do
-			Result := domain.is_valid
-		end
-
-	is_domain_criterion: BOOLEAN is True
-			-- Is current a domain criterion?
-
-feature -- Setting
-
-	set_domain (a_domain: like domain) is
-			-- Set `domain' with `a_domain'.
-		require
-			a_domain_attached: a_domain /= Void
-		do
-			domain := a_domain.twin
-		end
+	referenced_metric_name: LIST [STRING]
+			-- List of found referenced metric name
 
 feature -- Process
 
-	process (a_visitor: EB_METRIC_VISITOR) is
-			-- Process current using `a_visitor'.
+	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
+			-- Process `a_linear_metric'.
+		local
+			l_var_metrics: LIST [STRING]
 		do
-			a_visitor.process_domain_criterion (Current)
+			l_var_metrics := a_linear_metric.variable_metric
+			from
+				l_var_metrics.start
+			until
+				l_var_metrics.after
+			loop
+				insert_referenced_metric (l_var_metrics.item)
+				l_var_metrics.forth
+			end
+		end
+
+	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
+			-- Process `a_ratio_metric'.
+		do
+			insert_referenced_metric (a_ratio_metric.numerator_metric_name)
+			insert_referenced_metric (a_ratio_metric.denominator_metric_name)
+		end
+
+	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
+			-- Process `a_criterion'.
+		do
+			insert_referenced_metric (a_criterion.metric_name)
+			a_criterion.value_tester.process (Current)
+		end
+
+	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+			insert_referenced_metric (a_item.metric_name)
+		end
+
+	insert_referenced_metric (a_metric_name: STRING) is
+			-- Insert `a_metric_name' into `referenced_metric_name'
+			-- if `a_metric_name' is not contained in `reference_metric_name'.
+		require
+			a_metric_name_attached: a_metric_name /= Void
+		do
+			if not referenced_metric_name.has (a_metric_name) then
+				referenced_metric_name.extend (a_metric_name)
+			end
 		end
 
 invariant
-	domain_attached: domain /= Void
+	referenced_metric_name_attached: referenced_metric_name /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"
@@ -125,6 +129,5 @@ indexing
                          Website http://www.eiffel.com
                          Customer support http://support.eiffel.com
                 ]"
-
 
 end

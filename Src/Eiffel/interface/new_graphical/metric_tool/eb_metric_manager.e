@@ -88,7 +88,7 @@ feature -- Validation
 			l_validity_table: like metrics_validity
 		do
 			create l_validator.make (Current)
-			l_validator.check_metric_validity (metric_with_name (a_name), False)
+			l_validator.check_metric_validity (metric_with_name_internal (a_name), False)
 			l_error_table := l_validator.error_table
 			l_validity_table := metrics_validity
 			from
@@ -344,6 +344,20 @@ feature -- Access
 				end
 			end
 			l_metrics.go_to (l_cursor)
+		end
+
+	new_metric_with_name (a_metric: EB_METRIC): EB_METRIC is
+			-- New instance of the metric whose name is `a_name'
+		require
+
+		local
+			l_factory: EB_LOAD_METRIC_DEFINITION_FACTORY
+			l_callback: EB_METRIC_LOAD_DEFINITION_CALLBACKS
+		do
+			create l_factory
+			create l_callback.make_with_factory (l_factory)
+			l_callback.set_is_for_whole_file (False)
+			Result := a_metric.new_instance (l_callback)
 		end
 
 	ordered_metrics (a_order: INTEGER; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT] is
@@ -624,7 +638,7 @@ feature -- Metric management
 					if not metrics.item.is_predefined then
 						l_xml_generator.set_indent (1)
 						l_xml_generator.clear_text
-						l_xml_generator.process_metric (metrics.item)
+						l_xml_generator.append_text (metrics.item)
 						l_file.put_string (l_xml_generator.text)
 					end
 					metrics.forth
@@ -673,11 +687,13 @@ feature -- Metric management
 		require
 			a_name_attached: a_name /= Void
 			metric_exists:has_metric (a_name)
-			metric_not_predefined: not metric_with_name (a_name).is_predefined
 		local
 			l_metrics: like metrics
 			done: BOOLEAN
 		do
+			check
+				metric_not_predefined: not metric_with_name_internal (a_name).is_predefined
+			end
 			l_metrics := metrics
 			from
 				l_metrics.start
@@ -703,12 +719,14 @@ feature -- Metric management
 			a_name_attached: a_name /= Void
 			metric_exists:has_metric (a_name)
 			a_metric_attached: a_metric /= Void
-			metric_not_predefined: not metric_with_name (a_name).is_predefined
 			no_name_crash: not is_metric_name_equal (a_name, a_metric.name) implies not has_metric (a_metric.name)
 		local
 			l_renamer: EB_METRIC_RENAME_VISITOR
 			l_should_rename: BOOLEAN
 		do
+			check
+				metric_not_predefined: not metric_with_name_internal (a_name).is_predefined
+			end
 			remove_metric (a_name)
 				-- Metric name changes.			
 			l_should_rename := not is_metric_name_equal (a_name, a_metric.name)
@@ -1092,6 +1110,31 @@ feature{NONE} -- Implementation
 			Result.append (l_largest_index.out)
 		ensure
 			result_attached: Result /= Void
+		end
+
+	metric_with_name_internal (a_name: STRING): EB_METRIC is
+			-- Metric whose name is `a_name'
+			-- Void if no metric whose name is `a_name' in `metrics'.
+		require
+			a_name_attached: a_name /= Void
+		local
+			l_metrics: like metrics
+			l_cursor: CURSOR
+		do
+			l_metrics := metrics
+			l_cursor := l_metrics.cursor
+			from
+				l_metrics.start
+			until
+				l_metrics.after or Result /= Void
+			loop
+				if is_metric_name_equal (l_metrics.item.name, a_name) then
+					Result := l_metrics.item
+				else
+					l_metrics.forth
+				end
+			end
+			l_metrics.go_to (l_cursor)
 		end
 
 invariant

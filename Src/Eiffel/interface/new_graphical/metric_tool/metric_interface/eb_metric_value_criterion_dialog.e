@@ -10,7 +10,7 @@ class
 	EB_METRIC_VALUE_CRITERION_DIALOG
 
 inherit
-	EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE [STRING, EB_METRIC_VALUE_TESTER]]
+	EB_METRIC_GRID_DOMAIN_ITEM_DIALOG [TUPLE [STRING, BOOLEAN, EB_METRIC_VALUE_TESTER]]
 		redefine
 			initialize,
 			on_ok,
@@ -59,6 +59,7 @@ feature{NONE} -- Initialization
 		do
 			create value_tester
 			create metric_setter
+			create use_external_delayed_domain_checkbox.make_with_text (metric_names.t_use_external_delayed)
 			Precursor
 
 			create l_ver
@@ -76,11 +77,11 @@ feature{NONE} -- Initialization
 			create l_domain_selector_area
 			create l_input_domain_lbl.make_with_text (metric_names.l_select_input_domain)
 			create l_domain_cell
+			l_domain_cell.extend (use_external_delayed_domain_checkbox)
 			if is_value_tester_area_shown then
 				l_domain_cell.set_minimum_height (25)
-			else
-				l_domain_cell.set_minimum_height (5)
 			end
+			domain_selector.set_minimum_width (203)
 			l_input_domain_lbl.align_text_left
 			l_domain_selector_area.set_padding (3)
 			l_domain_selector_area.extend (l_domain_cell)
@@ -132,6 +133,9 @@ feature -- Access
 	metric_setter: EB_METRIC_SETTER
 			-- Metric setter
 
+	use_external_delayed_domain_checkbox: EV_CHECK_BUTTON
+			-- Check box to setup if external delayed domain is used
+
 feature -- Status report
 
 	is_value_tester_area_shown: BOOLEAN
@@ -145,16 +149,27 @@ feature{NONE} -- Actions
 			l_value: like value
 			l_metric_name: STRING
 			l_tester: EB_METRIC_VALUE_TESTER
+			l_use_external_delayed: BOOLEAN_REF
 		do
 			l_value := value
 			if l_value = Void then
-				l_value := ["", create {EB_METRIC_VALUE_TESTER}.make]
+				l_value := ["", False, create {EB_METRIC_VALUE_TESTER}.make]
 			end
 			l_metric_name ?= l_value.item (1)
 			if l_metric_name = Void then
 				l_metric_name := ""
 			end
-			l_tester ?= l_value.item (2)
+			l_use_external_delayed ?= l_value.item (2)
+			if l_use_external_delayed /= Void then
+				if l_use_external_delayed.item then
+					use_external_delayed_domain_checkbox.enable_select
+				else
+					use_external_delayed_domain_checkbox.disable_select
+				end
+			else
+				use_external_delayed_domain_checkbox.disable_select
+			end
+			l_tester ?= l_value.item (3)
 			if l_tester = Void then
 				create l_tester.make
 			end
@@ -166,7 +181,7 @@ feature{NONE} -- Actions
 			-- Ok was pressed.
 		do
 			Precursor
-			set_value ([metric_setter.metric_name, value_tester.criterion])
+			set_value ([metric_setter.metric_name, use_external_delayed_domain_checkbox.is_selected, value_tester.criterion])
 			ok_actions.call ([])
 		end
 
@@ -180,6 +195,7 @@ feature{NONE} -- Actions
 invariant
 	value_tester_attached: value_tester /= Void
 	metric_setter_attached: metric_setter /= Void
+	use_external_delayed_domain_checkbox_attached: use_external_delayed_domain_checkbox /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

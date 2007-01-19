@@ -43,31 +43,37 @@ feature -- Properties management
 			-- Load porperties from `a_criterion' into current manager
 		do
 			Precursor (a_criterion)
-			property_item.set_value ([a_criterion.metric_name, a_criterion.value_tester])
+			property_item.set_value ([a_criterion.metric_name, a_criterion.should_delayed_domain_from_parent_be_used, a_criterion.value_tester])
 		end
 
 	store_properties (a_criterion: like criterion_type) is
 			-- Store properties in current manager into `a_criterion'.
 		local
-			l_value: TUPLE [STRING, EB_METRIC_VALUE_TESTER]
+			l_value: TUPLE [STRING, BOOLEAN, EB_METRIC_VALUE_TESTER]
 			l_tester: EB_METRIC_VALUE_TESTER
 			l_metric_name: STRING
+			l_use_external: BOOLEAN_REF
 		do
 			Precursor (a_criterion)
 			l_value := property_item.value
 			if l_value = Void then
-				l_value := ["", create {EB_METRIC_VALUE_TESTER}.make]
+				l_value := ["", False, create {EB_METRIC_VALUE_TESTER}.make]
 			end
 			l_metric_name ?= l_value.item (1)
 			if l_metric_name = Void then
 				l_metric_name := ""
 			end
-			l_tester ?= l_value.item (2)
+			l_use_external ?= l_value.item (2)
+			if l_use_external = Void then
+				l_use_external := False
+			end
+			l_tester ?= l_value.item (3)
 			if l_tester = Void then
 				create l_tester.make
 			end
 			a_criterion.set_metric_name (l_metric_name)
 			a_criterion.set_value_tester (l_tester)
+			a_criterion.set_should_delayed_domain_from_parent_be_used (l_use_external.item)
 		end
 
 feature{NONE} -- Implementation

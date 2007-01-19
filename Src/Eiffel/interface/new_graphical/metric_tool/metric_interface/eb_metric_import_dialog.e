@@ -50,11 +50,19 @@ inherit
 			default_create
 		end
 
-	EB_METRIC_VISITOR
+	EB_METRIC_ITERATOR
 		undefine
 			is_equal,
 			copy,
 			default_create
+		redefine
+			process_domain_item,
+			process_application_target_domain_item,
+			process_group_domain_item,
+			process_folder_domain_item,
+			process_class_domain_item,
+			process_feature_domain_item,
+			process_delayed_domain_item
 		end
 
 create
@@ -1063,91 +1071,6 @@ feature{NONE} -- Order testers
 
 feature{NONE} -- Process
 
-	process_basic_metric (a_basic_metric: EB_METRIC_BASIC) is
-			-- Process `a_basic_metric'.
-		do
-			if a_basic_metric.criteria /= Void then
-				a_basic_metric.criteria.process (Current)
-			end
-		end
-
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
-			-- Process `a_linear_metric'.
-		do
-		end
-
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
-			-- Process `a_ratio_metric'.
-		do
-		end
-
-	process_criterion (a_criterion: EB_METRIC_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_list (a_criterion.domain)
-		end
-
-	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_domain_criterion (a_criterion)
-		end
-
-	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_domain_criterion (a_criterion)
-		end
-
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_domain_criterion (a_criterion)
-		end
-
-	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_list (a_criterion.operands)
-		end
-
-	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_nary_criterion (a_criterion)
-		end
-
-	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_nary_criterion (a_criterion)
-		end
-
-	process_domain (a_domain: EB_METRIC_DOMAIN) is
-			-- Process `a_domain'.
-		do
-		end
-
 	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
 			-- Process `a_item'.
 		local
@@ -1199,27 +1122,6 @@ feature{NONE} -- Process
 			-- Process `a_item'.
 		do
 			process_domain_item (a_item)
-		end
-
-	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
-			-- Process `a_item'.
-		do
-			a_item.input_domain.process (Current)
 		end
 
 invariant

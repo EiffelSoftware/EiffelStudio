@@ -31,6 +31,7 @@ feature {NONE}-- Initialization
 			create run_btn
 			create stop_btn
 			create keep_detailed_result_tool_bar
+			create warning_tool_bar
 			create middle_tool_bar
 			create remove_detailed_result_btn
 			create l_ev_tool_bar_separator_1
@@ -60,6 +61,7 @@ feature {NONE}-- Initialization
 			first_tool_bar.extend (run_btn)
 			first_tool_bar.extend (stop_btn)
 			toolbar_area.extend (keep_detailed_result_tool_bar)
+			toolbar_area.extend (warning_tool_bar)
 			toolbar_area.extend (middle_tool_bar)
 			middle_tool_bar.extend (remove_detailed_result_btn)
 			middle_tool_bar.extend (l_ev_tool_bar_separator_1)
@@ -98,6 +100,7 @@ feature {NONE}-- Initialization
 			create color_constant_retrieval_functions.make (10)
 			toolbar_area.disable_item_expand (first_tool_bar)
 			toolbar_area.disable_item_expand (keep_detailed_result_tool_bar)
+			toolbar_area.disable_item_expand (warning_tool_bar)
 			toolbar_area.disable_item_expand (middle_tool_bar)
 			toolbar_area.disable_item_expand (group_tool_bar)
 			toolbar_area.disable_item_expand (last_tool_bar)
@@ -128,10 +131,10 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	first_tool_bar, keep_detailed_result_tool_bar, middle_tool_bar, group_tool_bar, last_tool_bar,
-	selector_toolbar: EV_TOOL_BAR
-	run_btn, stop_btn, remove_detailed_result_btn, remove_btn, select_all_btn,
-	deselect_all_btn, select_recalculatable_btn, deselect_recalculatable_btn: EV_TOOL_BAR_BUTTON
+	first_tool_bar, keep_detailed_result_tool_bar, warning_tool_bar, middle_tool_bar,
+	group_tool_bar, last_tool_bar, selector_toolbar: EV_TOOL_BAR
+	run_btn, stop_btn, remove_detailed_result_btn,
+	remove_btn, select_all_btn, deselect_all_btn, select_recalculatable_btn, deselect_recalculatable_btn: EV_TOOL_BAR_BUTTON
 	toolbar_area,
 	old_item_area, flat_grid_area, tree_grid_area: EV_HORIZONTAL_BOX
 	hide_old_btn: EV_CHECK_BUTTON

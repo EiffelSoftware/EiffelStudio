@@ -41,6 +41,7 @@ feature{NONE} -- Initialization
 			set_is_up_to_date (True)
 			set_is_value_valid (True)
 			set_is_result_filtered (a_filtered)
+			set_value_tester (create {EB_METRIC_VALUE_TESTER}.make)
 		end
 
 feature -- Access
@@ -99,6 +100,9 @@ feature -- Access
 		do
 			Result := metric_names.visitable_name (metric_names.l_metric_archive_node, metric_name)
 		end
+
+	value_tester: EB_METRIC_VALUE_TESTER
+			-- Value tester used to support archive value warning
 
 feature -- Status report
 
@@ -266,6 +270,14 @@ feature -- Setting
 			is_result_filtered_set: is_result_filtered = b
 		end
 
+	set_value_tester (a_value_tester: like value_tester) is
+			-- Set `value_tester' with `a_value_tester'.
+		do
+			value_tester := a_value_tester
+		ensure
+			value_tester_set: value_tester = a_value_tester
+		end
+
 	merge (a_archive: like Current) is
 			-- Update Current with information from `a_archive'.
 		require
@@ -303,6 +315,7 @@ invariant
 	calculated_time_attached: calculated_time /= Void
 	input_domain_attached: input_domain /= Void
 	uuid_attached: uuid /= Void
+	value_tester_attached: value_tester /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

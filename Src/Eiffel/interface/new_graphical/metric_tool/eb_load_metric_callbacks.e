@@ -35,10 +35,17 @@ feature -- Access
 	current_attributes: HASH_TABLE [STRING, INTEGER]
 			-- The values of the current attributes	
 
+	first_parsed_node: EB_METRIC_VISITABLE
+			-- Last parsed node
+
 feature -- Status report
 
 	has_error: BOOLEAN
 			-- Does parsing contain error?
+
+	is_for_whole_file: BOOLEAN
+			-- Should the input be considered as a whole XML file instead of just an XML element?
+			-- Default: True
 
 feature -- Setting
 
@@ -48,6 +55,29 @@ feature -- Setting
 			last_error := Void
 		ensure
 			last_error_is_cleared: last_error = Void and then not has_error
+		end
+
+	set_first_parsed_node (a_node: like first_parsed_node) is
+			-- Set `first_parsed_node' with `a_node'.
+		do
+			if a_node = Void then
+				first_parsed_node := Void
+			elseif first_parsed_node = Void then
+				first_parsed_node := a_node
+			end
+		ensure
+			first_parsed_node_set:
+				(a_node = Void implies first_parsed_node = Void) and then
+				((a_node /= Void and then old first_parsed_node = Void) implies first_parsed_node = a_node) and then
+				((a_node /= Void and then old first_parsed_node /= Void) implies first_parsed_node = old first_parsed_node)
+		end
+
+	set_is_for_whole_file (b: BOOLEAN) is
+			-- Set `is_for_whole_file' with `b'.
+		do
+			is_for_whole_file := b
+		ensure
+			is_for_whole_file_set: is_for_whole_file = b
 		end
 
 feature -- Callbacks
@@ -66,9 +96,15 @@ feature -- Callbacks
 		do
 			if not has_error then
 				if current_tag.is_empty then
-					current_tag.extend (t_none)
+					if is_for_whole_file then
+						current_tag.extend (t_none)
+						l_trans := state_transitions_tag.item (current_tag.item)
+					else
+						l_trans := element_index_table
+					end
+				else
+					l_trans := state_transitions_tag.item (current_tag.item)
 				end
-				l_trans := state_transitions_tag.item (current_tag.item)
 				if l_trans /= Void then
 					l_tag := l_trans.item (a_local_part)
 				end
@@ -150,6 +186,15 @@ feature{NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
+
+	element_index_table: HASH_TABLE [INTEGER, STRING] is
+			-- Table of indexes of supported elements indexed by element name.
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+--	all_transition_tag:
 
 	domain_item_type_table: HASH_TABLE [FUNCTION [ANY, TUPLE[STRING], EB_METRIC_DOMAIN_ITEM], STRING] is
 			-- Domain item type

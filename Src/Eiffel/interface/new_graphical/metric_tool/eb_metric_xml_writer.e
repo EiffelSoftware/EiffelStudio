@@ -33,12 +33,12 @@ feature{NONE} -- Initialization
 
 feature -- Xml generation
 
-	process_metric (a_metric: EB_METRIC) is
-			-- Process `a_metric' to see if it is valid.
+	append_text (a_item: EB_METRIC_VISITABLE) is
+			-- Append XML representation of `a_item' to `text'.
 		require
-			a_metric_attached: a_metric /= Void
+			a_item_attached: a_item /= Void
 		do
-			a_metric.process (Current)
+			a_item.process (Current)
 		end
 
 	clear_text is
@@ -273,7 +273,9 @@ feature{NONE} -- Process
 		do
 			l_attr_tbl := criterion_identifier_table (a_criterion)
 			l_attr_tbl.put (a_criterion.metric_name, n_metric_name)
-
+			if a_criterion.should_delayed_domain_from_parent_be_used then
+				l_attr_tbl.put (a_criterion.should_delayed_domain_from_parent_be_used.out, n_use_external_delayed)
+			end
 			append_indent
 			append_start_tag (n_value_criterion, l_attr_tbl)
 			append_new_line
@@ -462,13 +464,18 @@ feature{NONE} -- Process
 			append_new_line
 		end
 
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+		end
+
 	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
 			-- Process `a_item'.
 		local
 			l_attr: HASH_TABLE [STRING, STRING]
 		do
 			create l_attr.make (1)
-			l_attr.put (a_item.value.out, n_value)
+			l_attr.put (a_item.value_internal.out, n_value)
 			append_indent
 			append_start_tag (n_constant_value, l_attr)
 			append_end_tag (n_constant_value)
@@ -482,6 +489,9 @@ feature{NONE} -- Process
 		do
 			create l_attr.make (1)
 			l_attr.put (a_item.metric_name, n_metric_name)
+			if a_item.is_external_delayed_domain_used then
+				l_attr.put (a_item.is_external_delayed_domain_used.out, n_use_external_delayed)
+			end
 			append_indent
 			append_start_tag (n_metric_value, l_attr)
 			append_new_line

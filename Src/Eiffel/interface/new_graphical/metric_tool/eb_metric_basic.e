@@ -18,8 +18,6 @@ inherit
 
 	QL_SHARED
 
-	EB_METRIC_VISITOR
-
 create
 	make
 
@@ -41,33 +39,26 @@ feature -- Status report
 			Result := criteria = Void
 		end
 
-feature -- Access
-
-	direct_referenced_metrics: LIST [STRING] is
-			-- Name of metrics which are directly referenced by Current
-		do
-			create {LINKED_LIST [STRING]} referenced_metrics.make
-			criteria.process (Current)
-			Result := referenced_metrics
-		end
-
 feature -- Metric calculation
 
 	value (a_scope: EB_METRIC_DOMAIN): QL_QUANTITY_DOMAIN is
 			-- Value of current metric calculated over `a_scope'
 		local
-			l_cri: like evaluated_criteria
 			l_dummy_domain: QL_DOMAIN
 			l_metric: QL_METRIC
 			l_has_delayed_input_domain: BOOLEAN
-			l_metric_cri: like criteria
+			l_helper: EB_METRIC_COMPONENT_HELPER
+			l_cri: QL_CRITERION
 		do
 			create {QL_TARGET_DOMAIN} l_dummy_domain.make
 			last_result_domain := Void
 			internal_value := 0.0
-			l_metric := metric
-			l_has_delayed_input_domain := criteria /= Void and then criteria.has_delayed_input_domain
 
+			create l_helper
+			l_helper.prepare_for_calculation (Current)
+			l_has_delayed_input_domain := l_helper.component_has_delayed_input_domain_item (Current)
+
+			l_metric := metric
 			if not l_has_delayed_input_domain or else criteria = Void then
 				l_cri := evaluated_criteria (criteria)
 				if l_cri /= Void then
@@ -86,10 +77,10 @@ feature -- Metric calculation
 					a_scope.forth
 				end
 			else
-				l_metric_cri := criteria.twin
-				l_metric_cri.replace_delayed_input_domain (a_scope)
-				l_metric.set_criterion (evaluated_criteria (l_metric_cri))
+				l_helper.replace_delayed_input_domain (Current, a_scope)
+				l_metric.set_criterion (evaluated_criteria (criteria))
 				calculate_domain (l_metric, current_application_target_domain)
+				l_helper.replace_delayed_input_domain (Current, Void)
 			end
 			create Result.make
 			Result.extend (create{QL_QUANTITY}.make_with_value (internal_value))
@@ -182,148 +173,6 @@ feature{NONE} -- Implementation
 			Result.extend (create{QL_TARGET}.make (universe.target))
 		ensure
 			result_attached: Result /= Void
-		end
-
-feature{NONE} -- Visitor/Referenced metrics checking
-
-	referenced_metrics: LIST [STRING]
-			-- List of directed referenced metrics by current
-
-	process_basic_metric (a_basic_metric: EB_METRIC_BASIC) is
-			-- Process `a_basic_metric'.
-		do
-		end
-
-	process_linear_metric (a_linear_metric: EB_METRIC_LINEAR) is
-			-- Process `a_linear_metric'.
-		do
-		end
-
-	process_ratio_metric (a_ratio_metric: EB_METRIC_RATIO) is
-			-- Process `a_ratio_metric'.
-		do
-		end
-
-	process_criterion (a_criterion: EB_METRIC_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_domain_criterion (a_criterion: EB_METRIC_DOMAIN_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_caller_callee_criterion (a_criterion: EB_METRIC_CALLER_CALLEE_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_supplier_client_criterion (a_criterion: EB_METRIC_SUPPLIER_CLIENT_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_text_criterion (a_criterion: EB_METRIC_TEXT_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_path_criterion (a_criterion: EB_METRIC_PATH_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_normal_criterion (a_criterion: EB_METRIC_NORMAL_CRITERION) is
-			-- Process `a_criterion'.
-		do
-		end
-
-	process_value_criterion (a_criterion: EB_METRIC_VALUE_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			check referenced_metrics /= Void end
-			referenced_metrics.extend (a_criterion.metric_name)
-		end
-
-	process_nary_criterion (a_criterion: EB_METRIC_NARY_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_list (a_criterion.operands)
-		end
-
-	process_and_criterion (a_criterion: EB_METRIC_AND_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_nary_criterion (a_criterion)
-		end
-
-	process_or_criterion (a_criterion: EB_METRIC_OR_CRITERION) is
-			-- Process `a_criterion'.
-		do
-			process_nary_criterion (a_criterion)
-		end
-
-	process_domain (a_domain: EB_METRIC_DOMAIN) is
-			-- Process `a_domain'.
-		do
-		end
-
-	process_domain_item (a_item: EB_METRIC_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_application_target_domain_item (a_item: EB_METRIC_TARGET_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_group_domain_item (a_item: EB_METRIC_GROUP_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_folder_domain_item (a_item: EB_METRIC_FOLDER_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_class_domain_item (a_item: EB_METRIC_CLASS_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_feature_domain_item (a_item: EB_METRIC_FEATURE_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
-			-- Process `a_item'.
-		do
-		end
-
-	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is
-			-- Process `a_item'.
-		do
-			check referenced_metrics /= Void end
-			referenced_metrics.extend (a_item.metric_name)
 		end
 
 indexing

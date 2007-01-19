@@ -40,7 +40,7 @@ inherit
 			has as has_untitled_dialog
 		export
 			{NONE} all
-			{ANY} set_position, set_size
+			{ANY} set_position, set_size, screen_x, screen_y
 		select
 			implementation,
 			show_allow_to_back

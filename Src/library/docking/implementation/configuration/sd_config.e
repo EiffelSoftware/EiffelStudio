@@ -334,9 +334,9 @@ feature {NONE} -- Implementation for save config.
 				if l_inner_containers.item.readable then
 					create l_data
 					save_inner_container_data (l_inner_containers.item.item, l_data)
-					l_data.set_screen_x (l_inner_containers.item.screen_x)
-					l_data.set_screen_y (l_inner_containers.item.screen_y)
 					if l_inner_containers.item.parent_floating_zone /= Void then
+						l_data.set_screen_x (l_inner_containers.item.parent_floating_zone.screen_x)
+						l_data.set_screen_y (l_inner_containers.item.parent_floating_zone.screen_y)
 						l_data.set_width (l_inner_containers.item.parent_floating_zone.width)
 						l_data.set_height (l_inner_containers.item.parent_floating_zone.height)
 					end

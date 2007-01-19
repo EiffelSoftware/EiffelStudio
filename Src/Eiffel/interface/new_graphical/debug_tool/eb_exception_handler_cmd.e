@@ -137,7 +137,7 @@ feature -- Handler dialog by code
 			create cb_ignore_external.make_with_text ("Ignore external exceptions")
 			cb_ignore_external.select_actions.extend (agent handle_ignore_external_changed)
 			vb.extend (cb_ignore_external)
-			create cb_handle_exception.make_with_text ("Enable exception handling")
+			create cb_handle_exception.make_with_text ("Filter exceptions")
 			cb_handle_exception.select_actions.extend (agent handle_exception_changed)
 			vb.extend (cb_handle_exception)
 
@@ -229,6 +229,7 @@ feature -- Handler dialog by code
 		require
 			grid /= Void
 		do
+			grid.remove_selection
 			grid.disable_sensitive
 			grid.set_background_color ((create {EV_STOCK_COLORS}).Color_read_only)
 			grid.set_foreground_color ((create {EV_STOCK_COLORS}).Color_3d_shadow)

@@ -516,8 +516,8 @@
 		<description>Number of non-used features</description>
 		<criterion>
 			<and_criterion name="and" unit="feature" negation="False">				
-				<normal_criterion name="is_immediate" unit="feature" negation="False"></normal_criterion>
-				<value_criterion name="value_of_metric_is" unit="feature" metric_name="callee_is" negation="False">
+				<normal_criterion name="is_origin" unit="feature" negation="False"></normal_criterion>
+				<value_criterion name="value_of_metric_is" unit="feature" metric_name="callee_is" negation="False" use_external_delayed="True">
 					<domain>
 						<domain_item type="target" id=""></domain_item>
 					</domain>

@@ -106,7 +106,7 @@ feature -- Status report
 	case_sensitive_flags: BOOLEAN
 			-- Indicates if flags are case-sensitive
 
-feature {ARGUMENT_LITE_PARSER} -- Factory Functions
+feature {ARGUMENT_BASE_PARSER} -- Factory Functions
 
 	create_option: ARGUMENT_FLAG_OPTION is
 			-- Creates a new argument option for switch

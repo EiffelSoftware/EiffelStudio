@@ -923,12 +923,16 @@ feature {NONE} -- Implementation
 		local
 			cur_pos: INTEGER
 			l_int: INTEGER
+			l_fld: INTEGER
 		do
 			cur_pos := a_cursor.y_in_lines
 			if cur_pos < first_line_displayed then
 				set_first_line_displayed (cur_pos, False)
 			elseif cur_pos >= (first_line_displayed + number_of_lines_displayed) then
-				set_first_line_displayed (cur_pos - number_of_lines_displayed + 1, False)
+				l_fld := cur_pos - number_of_lines_displayed + 1
+				if l_fld <= text_displayed.number_of_lines.max (1) then
+					set_first_line_displayed (l_fld, False)
+				end
 			end
 			cur_pos := x_position_of_cursor (a_cursor)
 			l_int := offset + editor_viewport.width - 30
@@ -1180,7 +1184,7 @@ feature {NONE} -- Implementation
 							-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
 							-- the line to the edge of the viewport in the background color.
 						if view_invisible_symbols then
-							l_start_clear := font.string_width (once "¶")
+							l_start_clear := font.string_width (once "Â¶")
 						else
 							l_start_clear := 0
 						end

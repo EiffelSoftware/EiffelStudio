@@ -314,7 +314,6 @@ feature -- Status report
 			a_status_attached: a_status /= Void
 		local
 			l_cursor: CURSOR
-			l_column_sort_info: like column_sort_info
 		do
 			l_cursor := a_status.cursor
 			Result := True

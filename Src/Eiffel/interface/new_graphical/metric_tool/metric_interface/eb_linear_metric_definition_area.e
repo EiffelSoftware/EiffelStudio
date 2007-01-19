@@ -92,12 +92,9 @@ feature {NONE} -- Initialization
 			metric_grid.key_press_string_actions.extend (agent on_key_string_pressed)
 			metric_grid.set_item_veto_pebble_function (agent item_veto_pebble_function)
 			metric_grid.item_drop_actions.extend (agent on_item_drop)
-			metric_grid.add_key_action (agent on_up, move_up_key_index)
-			metric_grid.add_key_action (agent on_down, move_down_key_index)
-			metric_grid.add_key_action (agent on_remove_metric, del_key_index)
-			metric_grid.add_key_shortcut (del_key_index, del_key_shortcut)
-			metric_grid.add_key_shortcut (move_up_key_index, move_up_shortcut)
-			metric_grid.add_key_shortcut (move_down_key_index, move_down_shortcut)
+			metric_grid.register_shortcut (move_up_shortcut, agent on_up)
+			metric_grid.register_shortcut (move_down_shortcut, agent on_down)
+			metric_grid.register_shortcut (del_key_shortcut, agent on_remove_metric)
 			grid_area.extend (metric_grid)
 
 			up_btn.remove_text
@@ -653,15 +650,6 @@ feature{NONE} -- Implementation
 		end
 
 feature -- Key shortcuts
-
-	del_key_index: INTEGER is 1
-			-- Key index to delete a criterion
-
-	move_up_key_index: INTEGER is 2
-			-- Key index for move a criterion up
-
-	move_down_key_index: INTEGER is 3
-			-- Key index for move a criterion down
 
 	del_key_shortcut: ES_KEY_SHORTCUT
 			-- Del key

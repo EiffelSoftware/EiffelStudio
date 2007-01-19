@@ -55,20 +55,28 @@ feature -- Setting
 			-- `a_collapse_recursive' indicates if collapsing a node recursively should be enabled.
 		do
 			if a_expand then
-				set_expand_selected_rows_agent (agent expand_selected_item (False))
-				default_expand_rows_shortcuts.do_all (agent add_key_shortcut (expand_node_action_index, ?))
+				if expand_selected_rows_agent = Void then
+					set_expand_selected_rows_agent (agent expand_selected_item (False))
+				end
+				default_expand_rows_shortcuts.do_all (agent register_shortcut (?, expand_selected_rows_agent))
 			end
 			if a_expand_recursive then
-				set_expand_selected_rows_recursive_agent (agent expand_selected_item (True))
-				default_expand_rows_recursive_shortcuts.do_all (agent add_key_shortcut (expand_node_recursive_action_index, ?))
+				if expand_selected_rows_recursive_agent = Void then
+					set_expand_selected_rows_recursive_agent (agent expand_selected_item (True))
+				end
+				default_expand_rows_recursive_shortcuts.do_all (agent register_shortcut (?, expand_selected_rows_recursive_agent))
 			end
 			if a_collapse then
-				set_collapse_selected_rows_agent (agent collapse_selected_item (False))
-				default_collapse_rows_shortcuts.do_all (agent add_key_shortcut (collapse_node_action_index, ?))
+				if collapse_selected_rows_agent = Void then
+					set_collapse_selected_rows_agent (agent collapse_selected_item (False))
+				end
+				default_collapse_rows_shortcuts.do_all (agent register_shortcut (?, collapse_selected_rows_agent))
 			end
 			if a_collapse_recursive then
-				set_collapse_selected_rows_recursive_agent (agent collapse_selected_item (True))
-				default_collapse_rows_recursive_shortcuts.do_all (agent add_key_shortcut (collapse_node_recursive_action_index, ?))
+				if collapse_selected_rows_recursive_agent = Void then
+					set_collapse_selected_rows_recursive_agent (agent collapse_selected_item (True))
+				end
+				default_collapse_rows_recursive_shortcuts.do_all (agent register_shortcut (?, collapse_selected_rows_recursive_agent))
 			end
 		end
 
@@ -78,12 +86,17 @@ feature {NONE} -- Actions
 			-- Action to be performed when `a_key' is presses in Current
 		local
 			l_ev_application: like ev_application
-			l_agent: PROCEDURE [ANY, TUPLE]
+			l_shortcut: ES_KEY_SHORTCUT
 		do
 			l_ev_application := ev_application
-			l_agent := key_action_with_shortcut (create {ES_KEY_SHORTCUT}.make_with_key_combination (a_key, l_ev_application.ctrl_pressed, l_ev_application.alt_pressed, l_ev_application.shift_pressed))
-			if l_agent /= Void then
-				l_agent.call ([])
+			create l_shortcut.make_with_key_combination (
+					a_key,
+					l_ev_application.ctrl_pressed,
+					l_ev_application.alt_pressed,
+					l_ev_application.shift_pressed
+			)
+			if is_shortcut_registered (l_shortcut) then
+				call_shortcut_actions (l_shortcut)
 			end
 		end
 

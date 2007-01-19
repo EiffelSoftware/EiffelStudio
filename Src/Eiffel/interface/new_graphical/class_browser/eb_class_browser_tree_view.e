@@ -778,12 +778,11 @@ feature{NONE} -- Initialization
 			create quick_search_bar.make (development_window)
 			quick_search_bar.attach_tool (Current)
 			enable_search
-			grid.add_key_action (agent on_collapse_one_level_partly, collapse_one_level_partly_index)
-			grid.add_key_shortcut (collapse_one_level_partly_index, create{ES_KEY_SHORTCUT}.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_left), True, False, False))
+			grid.register_shortcut (
+				create{ES_KEY_SHORTCUT}.make_with_key_combination (create{EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_left), True, False, False),
+				agent on_collapse_one_level_partly
+			)
 		end
-
-	collapse_one_level_partly_index: INTEGER is 65530
-			-- Key shortcut index for collapse one level partly
 
 	control_tool_bar_internal: like control_tool_bar;
 			-- Implementation of `control_tool_bar'

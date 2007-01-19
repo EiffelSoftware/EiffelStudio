@@ -21,7 +21,7 @@ feature -- Update
 	is_valid_value (a_value: like value): BOOLEAN is
 			-- Is `a_value' a correct value for `data'?
 		local
-			l_value, l_a_value: like value
+			l_a_value: like value
 		do
 			l_a_value := adapted_value (a_value)
 			if not equal (value, l_a_value) then
@@ -34,7 +34,7 @@ feature -- Update
 	set_value (a_value: like value) is
 			-- Set `data' to `a_value' and propagate the change if it the new value is different from the old.
 		local
-			l_value, l_a_value: like value
+			l_a_value: like value
 			l_val: like displayed_value
 		do
 			l_a_value := adapted_value (a_value)

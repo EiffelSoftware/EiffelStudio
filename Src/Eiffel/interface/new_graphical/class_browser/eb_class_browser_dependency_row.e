@@ -64,7 +64,7 @@ feature -- Access
 			if not is_up_to_date then
 				set_is_up_to_date (True)
 				l_text := base_text.twin
-				l_text.append (child_count)
+				l_text.append (number_tokens)
 				grid_item_internal.set_text_with_tokens (l_text)
 			end
 			Result := grid_item_internal
@@ -421,23 +421,23 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
-	child_count: LIST [EDITOR_TOKEN] is
+	number_tokens: LIST [EDITOR_TOKEN] is
 			-- Editor tokens representing a children number of `row_node'
 		local
 			l_str: STRING
 			l_count: INTEGER
-			l_plain_text_style: like plain_text_style
+			l_writer: like token_writer
 		do
 			create l_str.make (8)
 			l_count := row_count
 			if l_count > 0 then
-				l_str.append (ti_space)
-				l_str.append (ti_l_parenthesis)
-				l_str.append (l_count.out)
-				l_str.append (ti_r_parenthesis)
-				l_plain_text_style := plain_text_style
-				l_plain_text_style.set_source_text (l_str)
-				Result := l_plain_text_style.text
+				l_writer := token_writer
+				l_writer.new_line
+				l_writer.add (ti_space)
+				l_writer.add (ti_l_parenthesis)
+				l_writer.process_number_text (l_count.out)
+				l_writer.add (ti_r_parenthesis)
+				Result := l_writer.last_line.content
 			else
 				create {LINKED_LIST [EDITOR_TOKEN]} Result.make
 			end

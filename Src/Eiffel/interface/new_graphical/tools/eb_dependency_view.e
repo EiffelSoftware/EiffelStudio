@@ -14,7 +14,9 @@ inherit
 		redefine
 			pixmap,
 			show,
-			close
+			close,
+			build_mini_toolbar,
+			mini_toolbar
 		end
 
 	WIDGET_OWNER
@@ -24,6 +26,13 @@ inherit
 	EB_SHARED_PREFERENCES
 
 	EB_VIEWPOINT_AREA
+
+	EB_HISTORY_OWNER
+		rename
+			set_stone as drop_stone
+		redefine
+			internal_recycle
+		end
 
 create
 	make
@@ -62,16 +71,24 @@ feature {NONE} -- Initialization
 			fill_in
 		end
 
-	saved_formatters: like managed_formatters
-			-- Formmatters needed by tool by not in Current stome context.
+	build_mini_toolbar is
+			-- Redefine
+		do
+			create history_toolbar
+			history_toolbar.extend (history_manager.back_command.new_mini_toolbar_item)
+			history_toolbar.extend (history_manager.forth_command.new_mini_toolbar_item)
 
-	shared_browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW
-			-- Browser used to display dependency information
+			create mini_toolbar
+			mini_toolbar.extend (address_manager.header_info)
+			mini_toolbar.extend (history_toolbar)
+		end
 
 	build_interface is
 			-- Redefine
 		do
 			make_with_tool (develop_window)
+			create history_manager.make (Current)
+			create address_manager.make (Current, True)
 		end
 
 feature -- Access
@@ -120,6 +137,22 @@ feature -- Access
 				Result := formatter_container.item
 			end
 		end
+
+	window: EV_WINDOW is
+			-- Window dialogs can refer to.
+		local
+			conv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			conv_dev ?= develop_window
+			if conv_dev /= Void then
+				Result := conv_dev.window
+			else
+				create Result
+			end
+		end
+
+	address_manager: EB_ADDRESS_MANAGER
+			-- Manager for the header info.
 
 feature -- Status report
 
@@ -208,6 +241,7 @@ feature -- Status setting
 				end
 			end
 			internal_stone := l_stone
+			history_manager.extend (stone)
 		end
 
 	launch_stone (st: STONE) is
@@ -371,6 +405,7 @@ feature -- Memory management
 			-- Remove all references to `Current' and its descendants.
 		do
 			develop_window := Void
+			Precursor {EB_HISTORY_OWNER}
 		end
 
 feature {NONE} -- Implementation
@@ -504,8 +539,20 @@ feature {NONE} -- Implementation
 	outer_container: EV_CELL
 			-- Container to hold `formatter_container' and `editor_frame' (if current formatter is an editor formatter)
 
-	editor_frame: EV_FRAME;
+	editor_frame: EV_FRAME
 			-- Frame as borer of an editor if current formatter is and editor formatter
+
+	saved_formatters: like managed_formatters
+			-- Formmatters needed by tool by not in Current stome context.
+
+	shared_browser: EB_CLASS_BROWSER_DEPENDENCY_VIEW
+			-- Browser used to display dependency information
+
+	history_toolbar: EV_TOOL_BAR
+			-- Toolbar containing the history commands.
+
+	mini_toolbar: EV_HORIZONTAL_BOX;
+			-- Mini tool bar.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

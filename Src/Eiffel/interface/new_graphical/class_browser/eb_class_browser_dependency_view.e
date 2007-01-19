@@ -53,13 +53,21 @@ feature -- Access
 				create control_tool_bar
 				create l_tool_bar
 				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+
 				l_tool_bar.extend (show_self_dependency_button)
 				l_tool_bar.extend (categorize_folder_button)
+				l_tool_bar.extend (recursive_button)
+
+				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+
 				l_tool_bar.extend (normal_referenced_button)
 				l_tool_bar.extend (syntactical_button)
 				l_tool_bar.extend (inheritance_button)
-				l_tool_bar.extend (recursive_button)
+
+				l_tool_bar.extend (create{EV_TOOL_BAR_SEPARATOR})
+
 				l_tool_bar.extend (show_tooltip_button)
+				
 				control_tool_bar.set_padding (2)
 				control_tool_bar.extend (l_tool_bar)
 				control_tool_bar.disable_item_expand (l_tool_bar)

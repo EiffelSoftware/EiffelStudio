@@ -18,13 +18,32 @@ feature -- Initialization
 
 feature -- Code pages
 
-	code_page: STRING
+	code_page: STRING is
+			-- Take `oem_code_page' as default.
+		do
+			Result := oem_code_page
+		end
+
+	ansi_code_page: STRING
+	oem_code_page: STRING
+	mac_code_page: STRING
+			-- On windows platform, these values are different.
 
 feature {I18N_HOST_LOCALE} -- Code pages setting
 
-	set_code_page (a_value: STRING) is
+	set_ansi_code_page (a_value: STRING) is
 		do
-			code_page := a_value
+			ansi_code_page := a_value
+		end
+
+	set_oem_code_page (a_value: STRING) is
+		do
+			oem_code_page := a_value
+		end
+
+	set_mac_code_page (a_value: STRING) is
+		do
+			mac_code_page := a_value
 		end
 
 indexing

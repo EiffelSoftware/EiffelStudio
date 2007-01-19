@@ -730,7 +730,7 @@ feature -- Status Setting
 				display_first := current_object.display
 				display_first_attributes := current_object.display_attributes
 				display_first_onces := current_object.display_onces
-				current_object.recycle
+				current_object.reset
 				current_object := Void
 			end
 			from

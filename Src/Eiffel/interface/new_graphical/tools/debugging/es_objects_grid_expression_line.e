@@ -25,7 +25,7 @@ inherit
 		redefine
 			set_expression_text,
 			expression,
-			recycle,
+			reset,
 			refresh
 		end
 
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 
 feature -- Recycling
 
-	recycle is
+	reset is
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do
@@ -76,7 +76,7 @@ feature -- Recycling
 			internal_associated_dump_value := Void
 			expression_evaluator := Void
 			if expression /= Void then
-				expression.recycle
+				expression.reset
 			end
 			evaluation_requested := False
 			refresh_requested := False

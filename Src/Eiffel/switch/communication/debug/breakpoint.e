@@ -412,6 +412,7 @@ feature -- Setting
 		do
 			bench_status := Bench_breakpoint_not_set
 			condition := Void
+			reset_session_data
 		ensure
 			breakpoint_is_removed: bench_status = Bench_breakpoint_not_set
 		end
@@ -506,7 +507,7 @@ feature -- Setting
 							-- we update it as well in case of)
 						body_index := routine.body_index -- update the body_index as well
 						if condition /= Void then
-							condition.recycle
+							condition.reset
 							if condition_as_is_true and not condition.is_boolean_expression (routine) then
 								condition := Void
 							end
@@ -541,6 +542,8 @@ feature -- Condition change
 	set_condition (expr: EB_EXPRESSION) is
 			-- Set `Current's condition.
 		require
+			valid_breakable_line_number: breakable_line_number > 0
+							and breakable_line_number <= routine.number_of_breakpoint_slots
 			valid_expression: expr /= Void and then not expr.syntax_error_occurred
 				and then (condition_as_is_true implies expr.is_boolean_expression (routine))
 		do
@@ -558,6 +561,7 @@ feature {DEBUG_INFO} -- Saving protocol.
 	prepare_for_save is
 			-- To be used before storing breakpoints: we store the condition as the string only.
 		do
+			reset_session_data
 			if condition /= Void then
 				expression := condition.expression
 				condition := Void

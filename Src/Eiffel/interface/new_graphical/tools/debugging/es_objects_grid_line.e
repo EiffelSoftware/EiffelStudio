@@ -108,7 +108,7 @@ feature -- Recycling
 			end
 		end
 
-	recycle is
+	reset is
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do

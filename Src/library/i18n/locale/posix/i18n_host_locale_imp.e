@@ -183,8 +183,13 @@ feature -- Informations
  				-- fill `a_code_page_info' with the availiable informations
  			require
  				a_code_page_info_exists: a_code_page_info /= Void
+ 			local
+ 				l_str: STRING_8
  			do
- 				a_code_page_info.set_code_page (get_code_page.as_string_8)
+ 				l_str := get_code_page.as_string_8
+				a_code_page_info.set_ansi_code_page (l_str)
+				a_code_page_info.set_oem_code_page (l_str)
+				a_code_page_info.set_mac_code_page (l_str)
  			end
 
 feature {NONE} -- Date and time formatting

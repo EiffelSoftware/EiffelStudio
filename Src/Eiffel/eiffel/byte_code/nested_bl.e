@@ -76,7 +76,7 @@ feature
 					and
 					local_type.c_type.same_class_type (r.c_type)
 					and
-					(r = No_register implies not target.type.is_basic)
+					(r = No_register implies not real_type (target.type).is_basic)
 					and
 					(r = No_register implies context.propagate_no_register)
 					and

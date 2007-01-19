@@ -748,6 +748,8 @@ feature -- Element change
 				l_previous_hwnd := {WEL_API}.set_parent (item, default_pointer)
 			end
 			if l_previous_hwnd = default_pointer and a_parent /= Void then
+					-- Most of the time the `recursive_set_parent' workaround
+					-- will work, but not all the time :-(.
 				l_previous_hwnd := recursive_set_parent (a_parent)
 				check successful: l_previous_hwnd /= default_pointer end
 			end
@@ -1747,6 +1749,8 @@ feature {WEL_WINDOW} -- Implementation
 			a_parent_not_void: a_parent /= Void
 		local
 			l_parent_of_parent: WEL_WINDOW
+			l_previous_child_parent: POINTER
+			l_failure: BOOLEAN
 		do
 			l_parent_of_parent := a_parent.parent
 			if l_parent_of_parent /= Void then
@@ -1755,12 +1759,22 @@ feature {WEL_WINDOW} -- Implementation
 				check no_failure: Result /= default_pointer end
 					-- Add `Current' as child of `a_parent'. It should not fail
 					-- since we are only one level deep.
-				Result := {WEL_API}.set_parent (item, a_parent.item)
-				check no_failure_2: Result /= default_pointer end
-					-- Now rebuild the parenting information of `a_parent'
+				l_previous_child_parent := {WEL_API}.set_parent (item, a_parent.item)
+				l_failure := l_previous_child_parent = default_pointer
+					-- Now rebuild the parenting information of `a_parent' (failure or not it is the same)
 				Result := {WEL_API}.set_parent (a_parent.item, l_parent_of_parent.item)
-				if Result = default_pointer then
+				if l_failure then
+						-- We are in the same state as we came on entry.
+					Result := default_pointer
+				elseif Result = default_pointer then
 					Result := a_parent.recursive_set_parent (l_parent_of_parent)
+					if Result = default_pointer then
+							-- We have to reconstruct the tree as it was originally.
+						check has_parent: l_previous_child_parent /= default_pointer end
+						Result := {WEL_API}.set_parent (item, l_previous_child_parent)
+						Result := {WEL_API}.set_parent (a_parent.item, l_parent_of_parent.item)
+						Result := default_pointer
+					end
 				end
 			end
 		end

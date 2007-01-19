@@ -136,6 +136,8 @@ feature -- Type checking
 			-- Type check `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		local
+			rout_as: ROUTINE_AS
 		do
 			type_a_checker.init_for_checking (a_feature, context.current_class, context.supplier_ids, error_handler)
 			a_feature.record_suppliers (context.supplier_ids)
@@ -148,6 +150,13 @@ feature -- Type checking
 			a_feature.body.process (Current)
 			is_byte_node_enabled := False
 			process_inherited_assertions (a_feature, False)
+
+			if a_feature.real_body /= Void then
+				rout_as ?= a_feature.real_body.content
+				if rout_as /= Void then
+					rout_as.set_number_of_breakpoint_slots (break_point_slot_count)
+				end
+			end
 		end
 
 
@@ -2294,8 +2303,6 @@ feature -- Implementation
 				l_byte_code.set_once_manifest_string_count (l_as.once_manifest_string_count)
 				last_byte_node := l_byte_code
 			end
-
-			l_as.set_number_of_breakpoint_slots (break_point_slot_count)
 		end
 
 	process_constant_as (l_as: CONSTANT_AS) is

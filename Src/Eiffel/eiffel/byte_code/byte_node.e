@@ -115,14 +115,18 @@ feature -- Eiffel source line information
 			-- to the end of the feature.
 		local
 			l_buffer: like buffer
+			lnr: INTEGER
 		do
 			if not context.final_mode or else System.exception_stack_managed then
 				if context.current_feature /= Void and context.current_feature.supports_step_in then
+					lnr := context.get_next_breakpoint_slot
+					check
+						lnr > 0
+					end
 					l_buffer := buffer
-					l_buffer.put_string("RTHOOK(")
-					l_buffer.put_integer(
-						context.current_feature.number_of_breakpoint_slots)
-					l_buffer.put_string(");")
+					l_buffer.put_string ("RTHOOK(")
+					l_buffer.put_integer (lnr)
+					l_buffer.put_string (");")
 					l_buffer.put_new_line
 				end
 			end
@@ -175,9 +179,15 @@ feature -- Eiffel source line information
 
 	generate_melted_end_debugger_hook (ba: BYTE_ARRAY) is
 			-- Record the breakable point corresponding to the end of the feature.
+		local
+			lnr: INTEGER
 		do
 			if context.current_feature /= Void and then context.current_feature.supports_step_in then
-				ba.generate_melted_debugger_hook (context.current_feature.number_of_breakpoint_slots)
+				lnr := context.get_next_breakpoint_slot
+				check
+					valid_line: lnr > 0
+				end
+				ba.generate_melted_debugger_hook (lnr)
 			end
 		end
 

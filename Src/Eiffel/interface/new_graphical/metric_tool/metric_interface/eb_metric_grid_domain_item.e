@@ -279,21 +279,8 @@ feature{NONE} -- Implementation
 
 	ellipsis: EV_PIXMAP is
 			-- Icon for ellipsis
-		local
-			l_mask: EV_BITMAP
-		once
-				-- Draw a drop down triangle.
-			create Result.make_with_size (8, 2)
-			Result.fill_rectangle (0, 0, 2, 2)
-			Result.fill_rectangle (3, 0, 2, 2)
-			Result.fill_rectangle (6, 0, 2, 2)
-
-			create l_mask.make_with_size (8, 2)
-			l_mask.fill_rectangle (0, 0, 2, 2)
-			l_mask.fill_rectangle (3, 0, 2, 2)
-			l_mask.fill_rectangle (6, 0, 2, 2)
-
-			Result.set_mask (l_mask)
+		do
+			Result := ellipsis_pixmap
 		ensure
 			Result_set: Result /= Void
 		end

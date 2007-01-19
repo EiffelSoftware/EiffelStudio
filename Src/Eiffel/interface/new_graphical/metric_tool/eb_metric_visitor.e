@@ -216,7 +216,14 @@ feature -- Process
 		deferred
 		end
 
-feature{NONE} -- Implementation
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		require
+			a_item_attached: a_item /= Void
+		deferred
+		end
+
+feature -- Utility
 
 	safe_process_item (a_item: EB_METRIC_VISITABLE) is
 			-- Safe process `a_item'.

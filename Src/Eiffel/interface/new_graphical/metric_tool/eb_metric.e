@@ -96,7 +96,12 @@ feature -- Access
 
 	direct_referenced_metrics: LIST [STRING] is
 			-- Name of metrics which are directly referenced by Current
-		deferred
+		local
+			l_reference_visitor: EB_METRIC_REFERENCED_METRIC_VISITOR
+		do
+			create l_reference_visitor.make
+			l_reference_visitor.search_referenced_metric (Current)
+			Result := l_reference_visitor.referenced_metric_name.twin
 		ensure
 			result_attached: Result /= Void
 		end
@@ -230,6 +235,8 @@ feature -- Setting
 		ensure
 			uuid_set: uuid = a_uuid
 		end
+
+feature{NONE} -- Referenced metric 
 
 invariant
 	name_attached: name /= Void

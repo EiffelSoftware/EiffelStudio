@@ -34,6 +34,7 @@ feature{NONE} -- Initialization
 			create current_domain.make
 			create current_tag.make
 			create current_attributes.make (4)
+			set_is_for_whole_file (True)
 		ensure
 			factory_set: factory = a_factory
 			archive_attached: archive /= Void
@@ -297,6 +298,7 @@ feature{NONE} -- Implementation
 				-- => domain
 			create l_trans.make (1)
 			l_trans.force (t_domain, n_domain)
+			l_trans.force (t_tester, n_tester)
 			Result.force (l_trans, t_metric)
 
 				-- domain
@@ -304,6 +306,26 @@ feature{NONE} -- Implementation
 			create l_trans.make (1)
 			l_trans.force (t_domain_item, n_domain_item)
 			Result.force (l_trans, t_domain)
+
+				-- tester
+				-- => tester_item
+			create l_trans.make (1)
+			l_trans.force (t_tester_item, n_tester_item)
+			Result.force (l_trans, t_tester)
+
+				-- tester_item
+				-- => constant_value
+				-- => metric_value
+			create l_trans.make (2)
+			l_trans.force (t_constant_value, n_constant_value)
+			l_trans.force (t_metric_value, n_metric_value)
+			Result.force (l_trans, t_tester_item)
+
+				-- metric_value
+				-- => domain
+			create l_trans.make (1)
+			l_trans.force (t_domain, n_domain)
+			Result.force (l_trans, t_metric_value)
 		end
 
 	tag_attributes: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
@@ -337,6 +359,46 @@ feature{NONE} -- Implementation
 			l_attr.force (at_type, n_type)
 			l_attr.force (at_library_target_uuid, n_library_target_uuid)
 			Result.force (l_attr, t_domain_item)
+
+				-- Tester
+			create l_attr.make (1)
+			l_attr.force (at_relation, n_relation)
+			Result.force (l_attr, t_tester)
+
+				-- tester_item
+				-- * name
+				-- * value
+			create l_attr.make (2)
+			l_attr.force (at_name, n_name)
+			l_attr.force (at_value, n_value)
+			Result.force (l_attr, t_tester_item)
+
+				-- constant_value
+				-- * value
+			create l_attr.make (1)
+			l_attr.force (at_value, n_value)
+			Result.force (l_attr, t_constant_value)
+
+				-- metric_value
+				-- * name
+				-- * use_external_delayed
+			create l_attr.make (2)
+			l_attr.force (at_metric_name, n_metric_name)
+			l_attr.force (at_use_external_delayed, n_use_external_delayed)
+			Result.force (l_attr, t_metric_value)
+		end
+
+	element_index_table: HASH_TABLE [INTEGER, STRING] is
+			-- Table of indexes of supported elements indexed by element name.
+		once
+			create Result.make (1)
+			Result.put (t_metric_archive, n_metric_archive)
+			Result.put (t_domain, n_domain)
+			Result.put (t_domain_item, n_domain_item)
+			Result.put (t_tester, n_tester)
+			Result.put (t_tester_item, n_tester_item)
+			Result.put (t_constant_value, n_constant_value)
+			Result.put (t_metric_value, n_metric_value)
 		end
 
 	metric_type_id_from_name (a_type_name: STRING): INTEGER is

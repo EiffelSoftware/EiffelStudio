@@ -45,6 +45,21 @@ feature -- Access
 			Result := metric_names.l_domain
 		end
 
+	actual_domain: like Current is
+			-- Actual domain
+		do
+			if has_delayed_input_domain_item and then external_domain /= Void then
+				Result := external_domain
+			else
+				Result := Current
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+	external_domain: like Current
+			-- External domain
+
 feature -- Status report
 
 	is_valid: BOOLEAN is
@@ -113,6 +128,16 @@ feature -- Status report
 			else
 				Result := b_domain_item /= Void and then a_domain_item.is_equal (b_domain_item)
 			end
+		end
+
+feature -- Setting
+
+	set_external_domain (a_domain: like external_domain) is
+			-- Set `external_domain' with `a_domain'.
+		do
+			external_domain := a_domain
+		ensure
+			external_domain_set: external_domain = a_domain
 		end
 
 feature -- Process

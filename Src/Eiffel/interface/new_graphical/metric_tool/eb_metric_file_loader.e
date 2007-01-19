@@ -23,7 +23,6 @@ feature -- Basic operations
 			a_callback_not_void: a_callback /= Void
 		local
 			l_file: KL_TEXT_INPUT_FILE
-			l_test_file: PLAIN_TEXT_FILE
 			l_parser: XM_PARSER
 			l_ns_cb: XM_NAMESPACE_RESOLVER
 		do
@@ -32,7 +31,6 @@ feature -- Basic operations
 			l_parser.set_callbacks (l_ns_cb)
 
 			create l_file.make (a_file)
-			create l_test_file.make (a_file)
 			l_file.open_read
 			if l_file.exists and then l_file.is_open_read then
 				l_parser.parse_from_stream (l_file)
@@ -46,6 +44,21 @@ feature -- Basic operations
 				end
 				create Result.make (metric_names.err_file_not_readable (a_file))
 			end
+		end
+
+	parse_from_string (a_xml: STRING; a_callback: XM_CALLBACKS) is
+			-- Parse XML stored in `a_xml' using `a_callback'.
+		require
+			a_xml_attached: a_xml /= Void
+			a_callback_attached: a_callback /= Void
+		local
+			l_parser: XM_PARSER
+			l_ns_cb: XM_NAMESPACE_RESOLVER
+		do
+			create {XM_EIFFEL_PARSER} l_parser.make
+			create l_ns_cb.set_next (a_callback)
+			l_parser.set_callbacks (l_ns_cb)
+			l_parser.parse_from_string (a_xml)
 		end
 
 indexing

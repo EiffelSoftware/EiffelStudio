@@ -41,6 +41,7 @@ feature{NONE} -- Initialization
 			create domain_receiver_stack.make
 			create tester_receiver_stack.make
 			create value_retriever_stack.make
+			set_is_for_whole_file (True)
 		ensure
 			factory_set: factory = a_factory
 			current_criterion_attached: current_criterion /= Void
@@ -74,45 +75,66 @@ feature{NONE} -- Callbacks
 					current_tag.item
 				when t_basic_metric then
 					process_basic_metric
+					set_first_parsed_node (current_basic_metric)
 				when t_linear_metric then
 					process_linear_metric
+					set_first_parsed_node (current_linear_metric)
 				when t_ratio_metric then
 					process_ratio_metric
+					set_first_parsed_node (current_ratio_metric)
 				when t_criterion then
 					process_criterion
 				when t_normal_criterion then
 					process_normal_criterion
+					set_first_parsed_node (current_normal_criterion)
 				when t_domain_criterion then
 					process_domain_criterion
+					set_first_parsed_node (current_domain)
 				when t_caller_criterion then
 					process_caller_callee_criterion
+					set_first_parsed_node (current_caller_criterion)
 				when t_client_criterion then
 					process_supplier_client_criterion
+					set_first_parsed_node (current_supplier_client_criterion)
 				when t_value_criterion then
 					process_value_criterion
+					set_first_parsed_node (current_value_criterion)
 				when t_text_criterion then
 					process_text_criterion
+					set_first_parsed_node (current_text_criterion)
 				when t_path_criterion then
 					process_path_criterion
+					set_first_parsed_node (current_path_criterion)
 				when t_and_criterion then
 					process_and_criterion
+					set_first_parsed_node (last_criterion)
 				when t_or_criterion then
 					process_or_criterion
+					set_first_parsed_node (last_criterion)
 				when t_variable_metric then
 					process_variable_metric
 				when t_domain then
 					process_domain
+					set_first_parsed_node (current_domain)
 				when t_domain_item then
 					process_domain_item
+					set_first_parsed_node (current_domain_item)
 				when t_tester then
 					process_tester
+					set_first_parsed_node (current_tester)
 				when t_tester_item then
 					process_tester_item
 				when t_constant_value then
 					process_constant_value
+					set_first_parsed_node (current_constant_value_retriever)
 				when t_metric_value then
 					process_metric_value
+					set_first_parsed_node (current_metric_value_retriever)
+				when t_description then
+				when t_text then
+				when t_path then
 				else
+					set_first_parsed_node (Void)
 				end
 				current_attributes.clear_all
 			end
@@ -151,8 +173,6 @@ feature{NONE} -- Callbacks
 				when t_linear_metric then
 					process_linear_metric_end
 				when t_ratio_metric then
-					process_metric
-				when t_scope_ratio_metric then
 					process_metric
 				when t_and_criterion then
 					if not current_criterion_stack.is_empty then
@@ -440,7 +460,6 @@ feature{NONE} -- Process
 				last_criterion := current_domain_criterion
 				setup_criterion (current_domain_criterion, l_id.negation)
 				register_criterion (current_domain_criterion)
-				create current_domain.make
 				domain_receiver_stack.extend ([agent current_domain_criterion.set_domain, False])
 			end
 		end
@@ -553,7 +572,6 @@ feature{NONE} -- Process
 					end
 					register_criterion (current_caller_criterion)
 					domain_receiver_stack.extend ([agent current_caller_criterion.set_domain, False])
-					create current_domain.make
 				end
 			end
 		end
@@ -618,7 +636,6 @@ feature{NONE} -- Process
 					last_criterion := current_supplier_client_criterion
 					setup_criterion (current_supplier_client_criterion, l_id.negation)
 					register_criterion (current_supplier_client_criterion)
-					create current_domain.make
 					domain_receiver_stack.extend ([agent current_supplier_client_criterion.set_domain, False])
 				end
 			end
@@ -630,6 +647,8 @@ feature{NONE} -- Process
 		local
 			l_id: TUPLE [name: STRING; scope: QL_SCOPE; negation: BOOLEAN]
 			l_metric_name: STRING
+			l_use_external_delayed: STRING
+			l_boolean_set: BOOLEAN
 		do
 			if not has_error then
 				l_id := current_criterion_identifier
@@ -643,12 +662,22 @@ feature{NONE} -- Process
 					)
 				end
 				if not has_error then
+					l_use_external_delayed := current_attributes.item (at_use_external_delayed)
+					l_boolean_set := test_ommitable_boolean_attribute (
+						l_use_external_delayed,
+						agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed),
+						metric_names.criterion_location (current_basic_metric.name, l_id.name)
+					)
+				end
+				if not has_error then
 					current_value_criterion := factory.new_value_criterion (l_id.name, l_id.scope)
+					if l_boolean_set then
+						current_value_criterion.set_should_delayed_domain_from_parent_be_used (last_tested_boolean)
+					end
 					last_criterion := current_value_criterion
 					setup_criterion (current_value_criterion, l_id.negation)
 					current_value_criterion.set_metric_name (l_metric_name)
 					register_criterion (current_value_criterion)
-					create current_domain.make
 					create current_tester.make
 					domain_receiver_stack.extend ([agent current_value_criterion.set_domain, False])
 					tester_receiver_stack.extend ([agent current_value_criterion.set_value_tester, False])
@@ -731,6 +760,7 @@ feature{NONE} -- Process
 						metric_names.criterion_location (current_basic_metric.name, last_criterion.name)
 					)
 				end
+				create current_domain.make
 			end
 		end
 
@@ -784,6 +814,7 @@ feature{NONE} -- Process
 									l_domain_item.set_library_target_uuid (l_library_target_uuid)
 								end
 								current_domain.extend (l_domain_item)
+								current_domain_item := l_domain_item
 							end
 						end
 					end
@@ -929,6 +960,8 @@ feature{NONE} -- Process
 		local
 			l_metric_name: STRING
 			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
+			l_use_external: STRING
+			l_boolean_set: BOOLEAN
 		do
 			if not has_error then
 				check not value_retriever_stack.is_empty end
@@ -949,11 +982,21 @@ feature{NONE} -- Process
 						)
 					end
 					if not has_error then
+						l_use_external := current_attributes.item (at_use_external_delayed)
+						l_boolean_set := test_ommitable_boolean_attribute (
+							l_use_external,
+							agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed),
+							metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
+						)
+					end
+					if not has_error then
 						create current_metric_value_retriever
 						current_metric_value_retriever.set_metric_name (l_metric_name)
+						if l_boolean_set then
+							current_metric_value_retriever.set_is_external_delayed_domain_used (last_tested_boolean)
+						end
 						current_value_retriever := current_metric_value_retriever
 						current_tester_item.put (current_metric_value_retriever, 1)
-						create current_domain.make
 						domain_receiver_stack.extend ([agent current_metric_value_retriever.set_input_domain, False])
 					end
 				end
@@ -1055,8 +1098,11 @@ feature{NONE} -- Implementation
 	current_constant_value_retriever: EB_METRIC_CONSTANT_VALUE_RETRIEVER
 			-- Current constant value retriever
 
-	current_tester_item: TUPLE [EB_METRIC_VALUE_RETRIEVER, INTEGER]
+	current_tester_item: TUPLE [value_retriever: EB_METRIC_VALUE_RETRIEVER; operator: INTEGER]
 			-- Current value tester item
+
+	current_domain_item: EB_METRIC_DOMAIN_ITEM
+			-- Current domain item
 
 	last_criterion: EB_METRIC_CRITERION
 			-- Last processed criterion
@@ -1121,12 +1167,6 @@ feature{NONE} -- Implementation/XML structure
 			create l_trans.make (1)
 			l_trans.force (t_description, n_description)
 			Result.force (l_trans, t_ratio_metric)
-
-				-- scope_ratio_metric
-				-- => description
-			create l_trans.make (1)
-			l_trans.force (t_description, n_description)
-			Result.force (l_trans, t_scope_ratio_metric)
 
 				-- criterion
 				-- => normal_criterion
@@ -1307,18 +1347,6 @@ feature{NONE} -- Implementation/XML structure
 			l_attr.force (at_denominator_coefficient, n_denominator_coefficient)
 			Result.force (l_attr, t_ratio_metric)
 
-				-- scope_ratio_metric
-				-- * name
-				-- * unit
-				-- * numerator
-				-- * denominator_scope
-			create l_attr.make (4)
-			l_attr.force (at_name, n_name)
-			l_attr.force (at_unit, n_unit)
-			l_attr.force (at_numerator, n_numerator)
-			l_attr.force (at_denominator_scope, n_denominator_scope)
-			Result.force (l_attr, t_scope_ratio_metric)
-
 				-- normal_criterion
 				-- * name
 				-- * unit
@@ -1388,16 +1416,18 @@ feature{NONE} -- Implementation/XML structure
 			l_attr.force (at_only_syntactical, n_only_syntactical)
 			Result.force (l_attr, t_client_criterion)
 
-				-- value_client
+				-- value_criterion
 				-- * name
 				-- * unit
 				-- * negation
 				-- * metric_name
+				-- * use_external_delayed
 			create l_attr.make (4)
 			l_attr.force (at_name, n_name)
 			l_attr.force (at_unit, n_unit)
 			l_attr.force (at_negation, n_negation)
 			l_attr.force (at_metric_name, n_metric_name)
+			l_attr.force (at_use_external_delayed, n_use_external_delayed)
 			Result.force (l_attr, t_value_criterion)
 
 				-- and_criterion
@@ -1458,9 +1488,42 @@ feature{NONE} -- Implementation/XML structure
 
 				-- metric_value
 				-- * name
-			create l_attr.make (1)
+				-- * use_external_delayed
+			create l_attr.make (2)
 			l_attr.force (at_metric_name, n_metric_name)
+			l_attr.force (at_use_external_delayed, n_use_external_delayed)
 			Result.force (l_attr, t_metric_value)
+		end
+
+	element_index_table: HASH_TABLE [INTEGER, STRING] is
+			-- Table of indexes of supported elements indexed by element name.
+		once
+			create Result.make (20)
+			Result.put (t_description, n_description)
+			Result.put (t_metric, n_metric)
+			Result.put (t_basic_metric, n_basic_metric)
+			Result.put (t_linear_metric, n_linear_metric)
+			Result.put (t_ratio_metric, n_ratio_metric)
+			Result.put (t_variable_metric, n_variable_metric)
+			Result.put (t_criterion, n_criterion)
+			Result.put (t_normal_criterion, n_normal_criterion)
+			Result.put (t_domain_criterion, n_domain_criterion)
+			Result.put (t_text_criterion, n_text_criterion)
+			Result.put (t_path_criterion, n_path_criterion)
+			Result.put (t_caller_criterion, n_caller_criterion)
+			Result.put (t_client_criterion, n_client_criterion)
+			Result.put (t_and_criterion, n_and_criterion)
+			Result.put (t_or_criterion, n_or_criterion)
+			Result.put (t_value_criterion, n_value_criterion)
+			Result.put (t_text, n_text)
+			Result.put (t_path, n_path)
+			Result.put (t_domain, n_domain)
+			Result.put (t_domain_item, n_domain_item)
+			Result.put (t_metric_archive, n_metric_archive)
+			Result.put (t_tester, n_tester)
+			Result.put (t_tester_item, n_tester_item)
+			Result.put (t_constant_value, n_constant_value)
+			Result.put (t_metric_value, n_metric_value)
 		end
 
 feature{NONE} -- Implementation

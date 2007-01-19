@@ -95,7 +95,7 @@ feature -- Access
 			l_metric_value_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM
 			l_criteria: LINKED_LIST [TUPLE [EB_METRIC_VALUE_RETRIEVER, INTEGER]]
 			l_metric_value_retriever: EB_METRIC_METRIC_VALUE_RETRIEVER
-			l_value: TUPLE [metric_name: STRING; tester: EB_METRIC_VALUE_TESTER]
+			l_value: TUPLE [metric_name: STRING; external_delayed: BOOLEAN; tester: EB_METRIC_VALUE_TESTER]
 			l_metric_name: STRING
 		do
 			create Result.make
@@ -122,6 +122,7 @@ feature -- Access
 						l_metric_name := l_value.metric_name
 					end
 					create l_metric_value_retriever.make (l_metric_name, l_metric_value_item.domain)
+					l_metric_value_retriever.set_is_external_delayed_domain_used (l_value.external_delayed)
 					l_criteria.extend ([l_metric_value_retriever, operator_interface_name_table.item (l_choice_item.text)])
 				end
 				l_index := l_index + 1
@@ -305,7 +306,7 @@ feature {NONE} -- Implementation
 		local
 			l_value_item: EV_GRID_EDITABLE_ITEM
 		do
-			create l_value_item.make_with_text (a_constant_value_retriever.value.out)
+			create l_value_item.make_with_text (a_constant_value_retriever.value_internal.out)
 			l_value_item.deactivate_actions.extend (agent on_value_text_change (l_value_item))
 			l_value_item.pointer_button_press_actions.extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, l_value_item))
 			Result := l_value_item
@@ -325,7 +326,7 @@ feature {NONE} -- Implementation
 			l_value_item.dialog_ok_actions.extend (agent resize_grid (l_value_item))
 			l_value_item.set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
 			l_value_item.set_dialog_function (agent metric_value_retriever_dialog)
-			l_value_item.set_value ([a_metric_value_retriever.metric_name, create {EB_METRIC_VALUE_TESTER}.make])
+			l_value_item.set_value ([a_metric_value_retriever.metric_name, False, create {EB_METRIC_VALUE_TESTER}.make])
 			Result := l_value_item
 		ensure
 			result_attached: Result /= Void

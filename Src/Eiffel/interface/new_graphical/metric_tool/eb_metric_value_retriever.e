@@ -14,10 +14,11 @@ inherit
 
 feature -- Access
 
-	value: DOUBLE is
+	value (a_ql_domain: QL_DOMAIN): DOUBLE is
 			-- Retrieved value
 		require
 			value_retrievable: is_retrievable
+			a_ql_domain_attached: a_ql_domain /= Void
 		deferred
 		end
 
@@ -26,6 +27,14 @@ feature -- Status report
 	is_retrievable: BOOLEAN is
 			-- Is `value' retrievable?
 		deferred
+		end
+
+feature -- Process
+
+	process (a_visitor: EB_METRIC_VISITOR) is
+			-- Process current using `a_visitor'.
+		do
+			a_visitor.process_value_retriever (Current)
 		end
 
 indexing

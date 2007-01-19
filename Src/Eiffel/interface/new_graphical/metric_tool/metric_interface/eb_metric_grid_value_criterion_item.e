@@ -16,7 +16,7 @@ class
 	EB_METRIC_GRID_VALUE_CRITERION_ITEM
 
 inherit
-	EB_METRIC_GRID_DOMAIN_ITEM [TUPLE [STRING, EB_METRIC_VALUE_TESTER]]
+	EB_METRIC_GRID_DOMAIN_ITEM [TUPLE [STRING, BOOLEAN, EB_METRIC_VALUE_TESTER]]
 		redefine
 			make,
 			prepare_components,
@@ -38,7 +38,7 @@ feature{NONE} -- Initialization
 	make (a_domain: EB_METRIC_DOMAIN) is
 			-- Initialize.
 		do
-			value := ["", create {EB_METRIC_VALUE_TESTER}.make]
+			value := ["", False, create {EB_METRIC_VALUE_TESTER}.make]
 			Precursor (a_domain)
 		end
 
@@ -68,7 +68,7 @@ feature -- Drop
 			if l_metric /= Void then
 				l_value := value
 				if l_value = Void then
-					l_value := [l_metric.name, create {EB_METRIC_VALUE_TESTER}.make]
+					l_value := [l_metric.name, False, create {EB_METRIC_VALUE_TESTER}.make]
 				else
 					l_value.put (l_metric.name, 1)
 				end
@@ -97,7 +97,7 @@ feature{NONE} -- Implementation
 			if l_metric_name = Void then
 				l_metric_name := ""
 			end
-			l_tester ?= l_value.item (2)
+			l_tester ?= l_value.item (3)
 			if l_tester = Void then
 				create l_tester.make
 			end

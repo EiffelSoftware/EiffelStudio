@@ -12,7 +12,8 @@ class
 inherit
 	EB_METRIC_VALUE_RETRIEVER
 		redefine
-			default_create
+			default_create,
+			process
 		end
 
 	EB_METRIC_SHARED
@@ -55,10 +56,42 @@ feature -- Access
 	input_domain: EB_METRIC_DOMAIN
 			-- Input domain
 
-	value: DOUBLE is
-			-- Retrieved value
+	value (a_ql_domain: QL_DOMAIN): DOUBLE is
+			-- Retrieved value			
+		local
+			l_metric: EB_METRIC
+			l_domain: like input_domain
+			l_helper: EB_METRIC_COMPONENT_HELPER
 		do
-			Result := metric_manager.metric_with_name (metric_name).value (input_domain).first.value
+			l_domain := input_domain.actual_domain
+			if not has_metric_status_checked then
+				check_metric_status
+				if not metric_has_delayed_domain_item then
+						-- If metric doesn't rely on any domain item, we just calculate it once and
+						-- store it value in `metric_value'.
+					set_metric_value (metric_manager.metric_with_name (metric_name).value_item (l_domain))
+				end
+			end
+			if metric_has_delayed_domain_item then
+					-- If metric relies on delayed domain item, we have to calculate it everytime.				
+				l_metric := metric_manager.metric_with_name (metric_name)
+
+					-- Replace delayed domain with actual domain.
+				l_helper.replace_real_delayed_domain_item (l_domain, a_ql_domain)
+				if is_external_delayed_domain_used then
+					l_helper.replace_real_delayed_domain_item (l_metric, a_ql_domain)
+				end
+
+				Result := l_metric.value_item (l_domain)
+
+					-- Restore original delayed domain.
+				l_helper.replace_real_delayed_domain_item (l_domain, Void)
+				if is_external_delayed_domain_used then
+					l_helper.replace_real_delayed_domain_item (l_metric, a_ql_domain)
+				end
+			else
+				Result := metric_value
+			end
 		end
 
 	visitable_name: STRING_GENERAL is
@@ -75,7 +108,34 @@ feature -- Status report
 			Result := metric_manager.is_metric_calculatable (metric_name) and then input_domain.is_valid
 		end
 
+	has_metric_status_checked: BOOLEAN
+			-- Has status of metric whose name is `metric_name' checked?
+			-- Note: We check if the metric doesn't have any delayed domain item in it,
+			-- so we only need to calculated it once and reuse the value later on.
+
+	metric_has_delayed_domain_item: BOOLEAN
+			-- Does metric has delayed item in it?
+
+	is_external_delayed_domain_used: BOOLEAN
+			-- Is external delayed domain used?
+
 feature -- Setting
+
+	set_has_metric_status_checked (b: BOOLEAN) is
+			-- Set `has_metric_status_check' with `b'.
+		do
+			has_metric_status_checked := b
+		ensure
+			has_metric_status_checked_set: has_metric_status_checked = b
+		end
+
+	set_metric_has_delayed_domain_item (b: BOOLEAN) is
+			-- Set `metric_has_delayed_domain_item' with `b'.
+		do
+			metric_has_delayed_domain_item := b
+		ensure
+			metric_has_delayed_domain_item_set: metric_has_delayed_domain_item = b
+		end
 
 	set_metric_name (a_name: like metric_name) is
 			-- Set `metric_name' with `a_name'.
@@ -97,6 +157,22 @@ feature -- Setting
 			input_domain_set: input_domain = a_domain
 		end
 
+	set_is_external_delayed_domain_used (b: BOOLEAN) is
+			-- Set `is_external_delayed_domain_used' with `b'.
+		do
+			is_external_delayed_domain_used := b
+		ensure
+			is_external_delayed_domain_used_set: is_external_delayed_domain_used = b
+		end
+
+	set_metric_value (a_value: DOUBLE) is
+			-- Set `metric_value' with `a_value'.
+		do
+			metric_value := a_value
+		ensure
+			metric_value_set: metric_value = a_value
+		end
+
 feature -- Process
 
 	process (a_visitor: EB_METRIC_VISITOR) is
@@ -104,6 +180,33 @@ feature -- Process
 		do
 			a_visitor.process_metric_value_retriever (Current)
 		end
+
+feature{NONE} -- Implementation
+
+	check_metric_status is
+			-- Check status of metric whose name is `metric_name'
+			-- to know if that metric doesn't rely on any delayed domain item.
+		require
+			value_retrieval: is_retrievable
+		local
+			l_visitor: EB_METRIC_COMPONENT_HELPER
+		do
+			create l_visitor
+			set_metric_has_delayed_domain_item (
+				l_visitor.component_has_delayed_domain_item (
+					metric_manager.metric_with_name (metric_name)
+				) or
+				l_visitor.component_has_delayed_domain_item (input_domain.actual_domain)
+			)
+			set_has_metric_status_checked (True)
+		ensure
+			metric_status_checked: has_metric_status_checked
+		end
+
+	metric_value: DOUBLE
+			-- Metric value
+			-- Note: If metric whose name is `metric_name' doesn't rely on any delayed domain item,
+			-- we just calculate it once and reuse the value. The calculated value is stored here.			
 
 invariant
 	metric_name_attached: metric_name /= Void

@@ -129,11 +129,11 @@ feature -- Status report
 			Result := is_name_valid and then is_parameter_valid
 		end
 
-	has_delayed_input_domain: BOOLEAN is
-			-- Does current domain contain reference to a delayed domain which represents an delayed input domain?
-			-- An delayed input domain should be replaced by actual input domain before metric calculation.
-		do
-		end
+--	has_delayed_input_domain: BOOLEAN is
+--			-- Does current domain contain reference to a delayed domain which represents an delayed input domain?
+--			-- An delayed input domain should be replaced by actual input domain before metric calculation.
+--		do
+--		end
 
 feature -- Setting
 
@@ -163,14 +163,6 @@ feature -- Setting
 			is_negation_used := b
 		ensure
 			is_negation_used_set: is_negation_used = b
-		end
-
-	replace_delayed_input_domain (a_domain: EB_METRIC_DOMAIN) is
-			-- Replace delayed input domain contained in Current by `a_domain'.
-		require
-			a_domain_attached: a_domain /= Void
-			a_domain_not_contain_delayed_input_domain: not a_domain.has_delayed_input_domain_item
-		do
 		end
 
 feature -- Process

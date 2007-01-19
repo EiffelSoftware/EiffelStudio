@@ -546,6 +546,29 @@ feature -- Domain item
 			result_attached: Result /= Void
 		end
 
+feature -- Pixmap
+
+	ellipsis_pixmap: EV_PIXMAP is
+			-- Icon for ellipsis
+		local
+			l_mask: EV_BITMAP
+		once
+				-- Draw a drop down triangle.
+			create Result.make_with_size (8, 2)
+			Result.fill_rectangle (0, 0, 2, 2)
+			Result.fill_rectangle (3, 0, 2, 2)
+			Result.fill_rectangle (6, 0, 2, 2)
+
+			create l_mask.make_with_size (8, 2)
+			l_mask.fill_rectangle (0, 0, 2, 2)
+			l_mask.fill_rectangle (3, 0, 2, 2)
+			l_mask.fill_rectangle (6, 0, 2, 2)
+
+			Result.set_mask (l_mask)
+		ensure
+			Result_set: Result /= Void
+		end
+
 feature{NONE} -- Implementation
 
 	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING_GENERAL; a_window: EV_WINDOW) is

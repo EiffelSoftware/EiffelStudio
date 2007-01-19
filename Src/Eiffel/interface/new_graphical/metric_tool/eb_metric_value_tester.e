@@ -32,13 +32,15 @@ feature{NONE} -- Initialization
 
 feature -- Testing
 
-	is_satisfied_by (a_value: DOUBLE): BOOLEAN is
+	is_satisfied_by (a_value: DOUBLE; a_ql_domain: QL_DOMAIN): BOOLEAN is
 			-- Is Current tester satisfied by `a_value'?
+		require
+			a_ql_domain_attached: a_ql_domain /= Void
 		do
 			if is_anded then
-				Result := criteria.for_all (agent is_criterion_satisfied (?, a_value))
+				Result := criteria.for_all (agent is_criterion_satisfied (?, a_value, a_ql_domain))
 			else
-				Result := criteria.there_exists (agent is_criterion_satisfied (?, a_value))
+				Result := criteria.there_exists (agent is_criterion_satisfied (?, a_value, a_ql_domain))
 			end
 		end
 
@@ -47,7 +49,7 @@ feature -- Access
 	criteria: LIST [TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]] is
 			-- Criteria set in Current tester
 		do
-			Result := criteria_internal.twin
+			Result := criteria_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -170,12 +172,13 @@ feature{NONE} -- Implementation
 	criteria_internal: like criteria
 			-- Implementation of `criteria'
 
-	is_criterion_satisfied (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]; a_value: DOUBLE): BOOLEAN is
+	is_criterion_satisfied (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]; a_value: DOUBLE; a_ql_domain: QL_DOMAIN): BOOLEAN is
 			-- Is `a_agent' satisfied by `a_crterion' and `a_value'?
 		require
 			a_criterion_attached: a_criterion /= Void
+			a_ql_domain_attached: a_ql_domain /= Void
 		do
-			Result := tester_table.item (a_criterion.a_criterion_type).item ([a_value, a_criterion.a_value_retriever.value])
+			Result := tester_table.item (a_criterion.a_criterion_type).item ([a_value, a_criterion.a_value_retriever.value (a_ql_domain)])
 		end
 
 invariant

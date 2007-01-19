@@ -76,14 +76,6 @@ feature -- Access
 	denominator_metric_uuid: UUID
 			-- UUID of denominator metric
 
-	direct_referenced_metrics: LIST [STRING] is
-			-- Name of metrics which are directly referenced by Current
-		do
-			create {LINKED_LIST [STRING]} Result.make
-			Result.extend (numerator_metric_name)
-			Result.extend (denominator_metric_name)
-		end
-
 	numerator_coefficient: DOUBLE
 			-- Coefficient for numerator metric
 

@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			create calculator
 			create keep_result_btn.make (preferences.metric_tool_data.keep_archive_detailed_result_preference)
 			create group_btn.make (preferences.metric_tool_data.tree_view_for_history_preference)
+			create check_warning_btn.make (preferences.metric_tool_data.check_warning_preference)
 
 			grid_support := new_grid_support (l_grid)
 			grid_support.synchronize_color_or_font_change_with_editor
@@ -125,8 +126,12 @@ feature {NONE} -- Initialization
 			deselect_recalculatable_btn.set_tooltip (metric_names.f_deselect_recalculatable_history)
 			deselect_recalculatable_btn.select_actions.extend (agent on_deselect_all_recalculatable_history_items)
 
+			check_warning_btn.set_pixmap (pixmaps.icon_pixmaps.metric_unit_assertion_icon)
+			check_warning_btn.set_tooltip (metric_names.f_check_warning)
+
 			keep_detailed_result_tool_bar.extend (keep_result_btn)
 			group_tool_bar.extend (group_btn)
+--			warning_tool_bar.extend (check_warning_btn)
 		end
 
 feature -- Access
@@ -783,6 +788,9 @@ feature{NONE} -- Implementation
 	group_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
 			-- Show tree view button
 
+	check_warning_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+			-- Check warning button
+
 feature{NONE} -- Actions
 
 	on_display_tree_view_changed is
@@ -802,6 +810,7 @@ invariant
 	grid_support_attached: grid_support /= Void
 	keep_result_btn_attached: keep_result_btn /= Void
 	group_btn_attached: group_btn /= Void
+	check_warning_btn_attached: check_warning_btn /= Void
 	archive_change_actions_attached: archive_change_actions /= Void
 	on_item_age_change_from_outside_agent_attached: on_item_age_change_from_outside_agent /= Void
 	on_hide_old_item_change_from_outside_agent_attached: on_hide_old_item_change_from_outside_agent /= Void

@@ -317,6 +317,11 @@ feature{NONE} -- Process
 		do
 		end
 
+	process_value_retriever (a_item: EB_METRIC_VALUE_RETRIEVER) is
+			-- Process `a_item'.
+		do
+		end
+
 	process_value_tester (a_item: EB_METRIC_VALUE_TESTER) is
 			-- Process `a_item'.
 		local
@@ -352,7 +357,7 @@ feature{NONE} -- Process
 	process_constant_value_retriever (a_item: EB_METRIC_CONSTANT_VALUE_RETRIEVER) is
 			-- Process `a_item'.
 		do
-			output.put_double (a_item.value)
+			output.put_double (a_item.value_internal)
 		end
 
 	process_metric_value_retriever (a_item: EB_METRIC_METRIC_VALUE_RETRIEVER) is

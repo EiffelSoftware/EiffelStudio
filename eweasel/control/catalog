@@ -1016,6 +1016,7 @@ test	anchor-on-feature-with-formal	exec262 tcf fail execution
 test	generating-type-of-type-parameter exec263 tcf pass execution
 test	agent-on-attribute-with-open-target exec264 tcf pass execution
 test	generator-on-typed-pointer	exec265 tcf pass execution
+test	feature-call-on-basic-generic	exec266 tcf pass execution generic basic
 
 -- Compiler termination (exception trace, panic, etc.)
 

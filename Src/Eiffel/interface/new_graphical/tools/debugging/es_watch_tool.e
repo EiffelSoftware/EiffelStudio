@@ -424,7 +424,7 @@ feature {NONE} -- Memory management
 				witems.after
 			loop
 				witem := witems.item
-				witem.recycle
+				witem.reset
 				check witem.expression /= Void	end
 				if not witem.expression.is_still_valid then
 					witems.remove

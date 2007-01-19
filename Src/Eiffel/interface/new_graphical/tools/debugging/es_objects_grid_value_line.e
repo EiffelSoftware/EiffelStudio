@@ -18,7 +18,7 @@ inherit
 		redefine
 			object,
 			reset_special_attributes_values,
-			recycle,
+			reset,
 			get_items_stone_properties
 		end
 
@@ -53,7 +53,7 @@ feature {NONE}
 
 feature -- Recycling
 
-	recycle is
+	reset is
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do

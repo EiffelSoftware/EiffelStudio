@@ -17,7 +17,7 @@ inherit
 			set_data as set_object_address
 		redefine
 			object_address,
-			recycle
+			reset
 		end
 
 create
@@ -58,7 +58,7 @@ feature {NONE}
 
 feature -- Recycling
 
-	recycle is
+	reset is
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do

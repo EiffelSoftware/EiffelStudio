@@ -13,11 +13,10 @@ class
 	EB_EXPRESSION
 
 inherit
-	ANY
 
-	EB_CONSTANTS
-		export
-			{NONE} all
+	SHARED_NAMES
+		rename
+			names as interface_names
 		end
 
 	COMPILER_EXPORTER
@@ -90,7 +89,7 @@ feature {NONE} -- Initialization
 
 feature -- Recycling
 
-	recycle is
+	reset is
 			-- Recycle data
 			-- in order to free special data (for instance dotnet references)
 		do

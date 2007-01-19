@@ -24,6 +24,11 @@ inherit
 			make as make_dbg
 		end
 
+	COMPILER_PREFERENCES
+		rename
+			make as make_compiler
+		end
+
 create
 	make
 
@@ -41,6 +46,7 @@ feature {NONE} -- Initialization
 			if dbg_mode then
 				make_dbg (a_preferences)
 			end
+			make_compiler (a_preferences)
 			preferences := a_preferences
 		end
 

@@ -124,8 +124,8 @@ feature -- Event handling
 		do
 			create Result
 			if not {EV_GTK_EXTERNALS}.gtk_is_window (c_object) then
-				l_app_imp := app_implementation
 					-- Window resize events are connected separately
+				l_app_imp := app_implementation
 				l_app_imp.gtk_marshal.signal_connect (c_object, l_app_imp.size_allocate_event_string, agent (l_app_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), l_app_imp.gtk_marshal.size_allocate_translate_agent, False)
 			end
 		end

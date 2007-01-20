@@ -77,6 +77,7 @@ feature {NONE} -- Initialization
 				-- Initialize the Graphical Context
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
 			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg_color)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_background (gc, bg_color)
 			init_default_values
 			clear
 		end

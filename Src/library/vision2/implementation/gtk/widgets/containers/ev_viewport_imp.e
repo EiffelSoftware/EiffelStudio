@@ -29,7 +29,9 @@ inherit
 			on_removed_item,
 			minimum_width,
 			minimum_height,
-			needs_event_box
+			needs_event_box,
+			gtk_insert_i_th,
+			gtk_container_remove
 		end
 
 create
@@ -114,6 +116,7 @@ feature -- Element change
 		end
 
 	set_offset (a_x, a_y: INTEGER)
+			-- Set viewport offset to `a_x', `a_y'.
 		local
 			l_null: POINTER
 			l_x_offset_changed, l_y_offset_changed: BOOLEAN
@@ -176,6 +179,32 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER) is
+			-- Move `a_child' to `a_position' in `a_container'.
+		local
+			l_requisition: POINTER
+			l_parent_box: POINTER
+		do
+				-- We add a parent box to `a_child' and control its size via this as
+				-- GtkViewport updates the childs requisition upon allocation which
+				-- affects the minimum size of the `a_child'.
+			l_parent_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
+			{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (l_parent_box, False)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (l_parent_box)
+			{EV_GTK_EXTERNALS}.gtk_container_add (l_parent_box, a_child)
+			{EV_GTK_EXTERNALS}.gtk_container_add (a_container, l_parent_box)
+		end
+
+	gtk_container_remove (a_container, a_child: POINTER)
+			-- Remove `a_child' from `a_container'.
+		local
+			l_parent_box: POINTER
+		do
+			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (a_child)
+			{EV_GTK_EXTERNALS}.gtk_container_remove (l_parent_box, a_child)
+			{EV_GTK_EXTERNALS}.gtk_container_remove (a_container, l_parent_box)
+		end
+
 	container_widget: POINTER
 			-- Pointer to the event box
 
@@ -191,20 +220,28 @@ feature {NONE} -- Implementation
 		local
 			item_width, item_height: INTEGER
 			w_imp: EV_WIDGET_IMP
+			l_parent_box: POINTER
+			l_allocation: POINTER
 		do
-			if a_width > 0 then
+			w_imp ?= item.implementation
+			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
+			l_allocation := {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (w_imp.c_object)
+			if a_width > -1 then
 				item_width := a_width
 			else
-				item_width := -1
+				item_width := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width (l_allocation).max (w_imp.minimum_width)
 			end
 
-			if a_height > 0 then
+			if a_height > -1 then
 				item_height := a_height
 			else
-				item_height := -1
+				item_height := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height (l_allocation).max (w_imp.minimum_height)
 			end
-			w_imp ?= item.implementation
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (w_imp.c_object, item_width, item_height)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, item_width, item_height)
+			{EV_GTK_EXTERNALS}.set_gtk_allocation_struct_width (l_allocation, item_width)
+			{EV_GTK_EXTERNALS}.set_gtk_allocation_struct_height (l_allocation, item_height)
+			{EV_GTK_EXTERNALS}.gtk_widget_size_allocate (w_imp.c_object, l_allocation)
 		end
 
 	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is

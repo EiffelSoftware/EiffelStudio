@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision Split Area, GTK+ implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ indexing
 
 class
 	EV_HORIZONTAL_SPLIT_AREA_IMP
-	
+
 inherit
 	EV_HORIZONTAL_SPLIT_AREA_I
 		undefine
@@ -31,7 +31,7 @@ feature -- initialization
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
 		do
-			base_make (an_interface)	
+			base_make (an_interface)
 			container_widget := {EV_GTK_EXTERNALS}.gtk_hpaned_new
 			set_c_object (container_widget)
 		end

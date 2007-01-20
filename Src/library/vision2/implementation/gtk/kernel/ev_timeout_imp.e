@@ -32,8 +32,6 @@ feature -- Initialization
 
 	make (an_interface: like interface) is
 			-- Call base make only.
-		local
-			l_null: POINTER
 		do
 			base_make (an_interface)
 		end

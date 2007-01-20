@@ -169,7 +169,7 @@ feature -- Implementation
 			a_combo: EV_COMBO_BOX_IMP
 		do
 			a_combo ?= eif_id_object (a_object_id)
-			if a_combo /= Void and then not a_combo.is_destroyed then
+			if a_combo /= Void and then a_combo.parent_imp /= Void and then not a_combo.is_destroyed then
 				inspect
 					a_event_id
 				when 1 then

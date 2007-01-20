@@ -220,8 +220,6 @@ feature {NONE} -- Implementation
 
 	background_color_pointer: POINTER is
 			-- Pointer to bg color for `a_widget'.
-		local
-			a_widget, a_style: POINTER
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_base (
 				{EV_GTK_EXTERNALS}.gtk_rc_get_style (visual_widget)

@@ -695,30 +695,23 @@ feature{NONE} -- Grid binding
 
 	should_level_be_expanded (a_level_index: INTEGER): BOOLEAN is
 			-- Should level indexed by `a_level_index' be expanded by default?
+		local
+			l_expansion_table: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], INTEGER]
 		do
-			inspect
-				a_level_index
-			when 1 then
-				Result := True
-			when 2 then
-				if categorize_folder_button.is_selected then
-					Result := True
-				else
-					Result := preferences.class_browser_data.should_referenced_class_be_expanded
-				end
-			when 3 then
-				if categorize_folder_button.is_selected then
-					Result := preferences.class_browser_data.should_referenced_class_be_expanded
-				else
-					Result := preferences.class_browser_data.should_referencer_class_be_expanded
-				end
-			when 4 then
-				if categorize_folder_button.is_selected then
-					Result := preferences.class_browser_data.should_referencer_class_be_expanded
-				else
-					Result := False
-				end
+			create l_expansion_table.make (4)
+			l_expansion_table.put (agent: BOOLEAN do Result := True end, 1)
+
+			if categorize_folder_button.is_selected then
+				l_expansion_table.put (agent (preferences.class_browser_data).should_categorized_folder_level_be_expanded, 2)
+				l_expansion_table.put (agent (preferences.class_browser_data).should_referenced_class_be_expanded, 3)
+				l_expansion_table.put (agent (preferences.class_browser_data).should_referencer_class_be_expanded, 4)
 			else
+				l_expansion_table.put (agent (preferences.class_browser_data).should_referenced_class_be_expanded, 2)
+				l_expansion_table.put (agent (preferences.class_browser_data).should_referencer_class_be_expanded, 3)
+				l_expansion_table.put (agent: BOOLEAN do Result := False end, 4)
+			end
+			if l_expansion_table.has (a_level_index) then
+				Result := l_expansion_table.item (a_level_index).item ([])
 			end
 		end
 

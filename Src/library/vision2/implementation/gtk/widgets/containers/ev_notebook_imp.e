@@ -349,10 +349,13 @@ feature {EV_ANY_I} -- Implementation
 	selected_item_index_internal: INTEGER
 			-- Index `selected_item'
 
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
+	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_notebook_reorder_child (a_container, a_child, a_position)
+			{EV_GTK_EXTERNALS}.gtk_container_add (a_container, a_child)
+			if a_position < count then
+				{EV_GTK_EXTERNALS}.gtk_notebook_reorder_child (a_container, a_child, a_position)
+			end
 		end
 
 feature {EV_ANY_I, EV_ANY} -- Implementation

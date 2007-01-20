@@ -73,11 +73,11 @@ feature -- Element change
 			if not interface.is_empty then
 				w ?= interface.item.implementation
 				on_removed_item (w)
-				{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, w.c_object)
+				gtk_container_remove (container_widget, w.c_object)
 			end
 			if v /= Void then
 				w ?= v.implementation
-				{EV_GTK_EXTERNALS}.gtk_container_add (container_widget, w.c_object)
+				gtk_insert_i_th (container_widget, w.c_object, 1)
 				on_new_item (w)
 			end
 		end
@@ -429,6 +429,20 @@ feature {EV_WIDGET_IMP} -- Implementation
 				-- on removal from parent of Current.
 				internal_set_background_pixmap (background_pixmap)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	gtk_insert_i_th (a_container, a_widget: POINTER; i: INTEGER)
+			-- Insert `a_widget' in to `a_container' at position `i'.
+		do
+			{EV_GTK_EXTERNALS}.gtk_container_add (a_container, a_widget)
+		end
+
+	gtk_container_remove (a_container, a_child: POINTER)
+			-- Remove `a_child' from `a_container'.
+		do
+			{EV_GTK_EXTERNALS}.gtk_container_remove (a_container, a_child)
 		end
 
 feature {NONE} -- Externals

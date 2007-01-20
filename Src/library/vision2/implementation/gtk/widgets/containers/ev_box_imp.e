@@ -121,10 +121,13 @@ feature {EV_ANY_I} -- Implementation
 			Result := True
 		end
 
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
+	gtk_insert_i_th (a_container, a_widget: POINTER; i: INTEGER)
+			-- Insert `a_widget' in to `a_container' at position `i'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_container, a_child, a_position)
+			{EV_GTK_EXTERNALS}.gtk_container_add (a_container, a_widget)
+			if i < count then
+				{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_container, a_widget, i)
+			end
 		end
 
 feature {EV_ANY_I, EV_ANY} -- Implementation

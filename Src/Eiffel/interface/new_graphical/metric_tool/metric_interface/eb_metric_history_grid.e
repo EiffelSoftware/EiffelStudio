@@ -36,8 +36,14 @@ feature{NONE} -- Initialization
 
 feature -- Access
 
-	archive: DS_ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE]
+	archive: DS_ARRAYED_LIST [EB_METRIC_ARCHIVE_NODE] is
 			-- Archive to be displayed in Current grid
+		do
+			if archive_internal = Void then
+				create archive_internal.make (10)
+			end
+			Result := archive_internal
+		end
 
 	widget: EV_WIDGET is
 			-- Widget of current grid
@@ -156,12 +162,9 @@ feature -- Grid binding
 			-- Bind `a_archive' in Current grid.
 		require
 			a_archive_attached: a_archive /= Void
-		local
-			l_archive: like archive
 		do
-			create l_archive.make (a_archive.count)
-			a_archive.archive.do_all (agent l_archive.force_last)
-			archive := l_archive
+			archive.wipe_out
+			a_archive.archive.do_all (agent archive.force_last)
 			disable_auto_sort_order_change
 			enable_force_multi_column_sorting
 			selected_archives_internal := a_selected_archive_nodes
@@ -860,6 +863,9 @@ feature{NONE} -- Implementation
 			grid.enable_single_row_selection
 			grid.set_separator_color ((create {EV_STOCK_COLORS}).grey)
 		end
+
+	archive_internal: like archive
+			-- Implementation of `archive'
 
 invariant
 	last_selected_nodes_attached: last_selected_nodes /= Void

@@ -9,6 +9,20 @@ inherit
 
 feature
 
+	frozen set_gtk_allocation_struct_width (a_c_struct: POINTER; a_width: INTEGER)
+		external
+			"C [struct <gtk/gtk.h>] (GtkAllocation, gint)"
+		alias
+			"width"
+		end
+
+	frozen set_gtk_allocation_struct_height (a_c_struct: POINTER; a_height: INTEGER)
+		external
+			"C [struct <gtk/gtk.h>] (GtkAllocation, gint)"
+		alias
+			"height"
+		end
+
 	frozen gtk_widget_size_allocate (a_widget: POINTER; a_allocation: POINTER)
 		external
 			"C (GtkWidget*, GtkAllocation*) | <gtk/gtk.h>"

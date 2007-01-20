@@ -546,6 +546,20 @@ feature -- Externals
 			"calloc (sizeof(GtkStockItem), 1)"
 		end
 
+	frozen c_gtk_allocation_struct_allocate: POINTER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"calloc (sizeof(GtkAllocation), 1)"
+		end
+
+	frozen c_gtk_requisition_struct_allocate: POINTER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"calloc (sizeof(GtkRequisition), 1)"
+		end
+
 	frozen g_signal_handler_disconnect (a_instance: POINTER; handler_id: INTEGER) is
 		external
 			"C inline use <gtk/gtk.h>"

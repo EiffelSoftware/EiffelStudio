@@ -38,11 +38,13 @@ feature {NONE} -- Constants
 		do
 			create shared_eiffel
 			l_options := shared_eiffel.eiffel_ace.lace.user_options.target
+
 			if l_options /= Void and then (l_options.working_directory /= Void and then not l_options.working_directory.is_empty) then
 					-- If it contains some environment variables, they are translated.			
 				Result := (create {ENV_INTERP}).interpreted_string (l_options.working_directory)
 			else
-				Result := shared_eiffel.Eiffel_project.project_location.location
+					--| Default working directory
+				Result := shared_eiffel.Eiffel_project.lace.directory_name
 			end
 			Result := Result.twin
 			Result.right_adjust

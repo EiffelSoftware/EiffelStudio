@@ -78,19 +78,22 @@ feature -- Status
 feature -- Access
 
 	file_name: STRING
-			-- Full path to the universe/system description
+			-- Full path to the universe/system description.
+
+	directory_name: STRING
+			-- Full path to the universe/system description parent directory.
 
 	target_name: STRING
-			-- Target to use. (optional, if only one target)
+			-- Target to use. (optional, if only one target).
 
 	project_path: STRING
-			-- Project path to use. (optional)
+			-- Project path to use. (optional).
 
 	date: INTEGER
-			-- Time stamp of file named `file_name'
+			-- Time stamp of file named `file_name'.
 
 	successful: BOOLEAN
-			-- Is the last compilation successful?
+			-- Is the last compilation successful?.
 
 	has_changed: BOOLEAN
 			-- Did configuraiton change?
@@ -191,11 +194,13 @@ feature -- Status setting
 
 	set_file_name (s: STRING) is
 			-- Assign `s' to `file_name'.
-			-- if s is relative, the file_name will be absolut.
+			-- if s is relative, the file_name will be absolute.
+			-- Assign parent directory of file_name
 		require
 			s_not_void: s /= Void
 		do
 			file_name := file_system.absolute_pathname (s)
+			directory_name := file_system.absolute_parent_directory (file_name)
 		end
 
 	set_target_name (s: STRING) is

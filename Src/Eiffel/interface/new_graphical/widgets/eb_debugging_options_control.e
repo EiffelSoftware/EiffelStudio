@@ -54,6 +54,11 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	KL_SHARED_FILE_SYSTEM
+		undefine
+			default_create, is_equal, copy
+		end
+
 create
 	make
 
@@ -1199,6 +1204,11 @@ feature {NONE} -- Implementation
 	default_working_directory: STRING is
 		do
 			Result := Eiffel_system.lace.directory_name
+			if not file_system.directory_exists (Result) then
+					--| If lace.directory_name does not exist,
+					--| let's use the project's location
+				Result := eiffel_system.project_location.location
+			end
 		end
 
 	stock_colors: EV_STOCK_COLORS is

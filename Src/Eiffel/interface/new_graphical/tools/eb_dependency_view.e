@@ -389,7 +389,9 @@ feature -- Status setting
 			-- Redefine
 		do
 			Precursor {EB_TOOL}
-			on_select
+			if not visible then
+				on_select
+			end
 		end
 
 	close is

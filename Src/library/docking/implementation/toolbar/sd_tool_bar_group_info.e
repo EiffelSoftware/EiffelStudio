@@ -51,6 +51,7 @@ feature -- Query
 			l_maximum_index: INTEGER
 		do
 			l_maximum_index := maximum_width_group_index
+			go_group_i_th (l_maximum_index)
 			if not has_sub_info then
 			-- This function is calculate inlclude sub level
 			-- But it's not calculate "sub sub" level, so we pass True here

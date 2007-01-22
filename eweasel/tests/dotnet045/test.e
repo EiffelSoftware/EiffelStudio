@@ -4,8 +4,8 @@ class
 inherit
 	IVERSION_2
 		rename
-			apply_2 as iversion_apply,
-			apply as iversion_2_apply
+			apply as iversion_apply,
+			apply_2 as iversion_2_apply
 		end
 
 create

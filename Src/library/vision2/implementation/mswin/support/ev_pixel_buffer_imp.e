@@ -118,12 +118,6 @@ feature -- Command
 
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER is
 			-- Create a new sub pixel buffer object.
-		local
-			l_imp: EV_PIXEL_BUFFER_IMP
-			l_temp_pixmap: EV_PIXMAP
-			l_graphics: WEL_GDIP_GRAPHICS
-			l_dest_rect, l_src_rect: WEL_RECT
-			l_image: WEL_GDIP_BITMAP
 		do
 			create Result.make_with_size (a_rect.width, a_rect.height)
 			Result.draw_pixel_buffer (interface, a_rect)
@@ -133,10 +127,8 @@ feature -- Command
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		local
 			l_imp: EV_PIXEL_BUFFER_IMP
-			l_temp_pixmap: EV_PIXMAP
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_dest_rect, l_src_rect: WEL_RECT
-			l_image: WEL_GDIP_BITMAP
 		do
 			l_imp ?= a_pixel_buffer.implementation
 			check not_void: l_imp /= Void end
@@ -160,11 +152,8 @@ feature -- Command
 			-- Draw `a_text' with `a_font' at `a_rect'.
 		local
 			l_graphics: WEL_GDIP_GRAPHICS
-			l_font_imp: EV_FONT_IMP
 			l_font: WEL_GDIP_FONT
-
 			l_font_family: WEL_GDIP_FONT_FAMILY
-			l_log_font: WEL_LOG_FONT
 		do
 			if is_gdi_plus_installed then
 				create l_graphics.make_from_image (gdip_bitmap)

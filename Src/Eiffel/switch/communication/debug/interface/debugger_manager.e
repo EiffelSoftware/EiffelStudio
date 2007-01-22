@@ -218,17 +218,19 @@ feature -- Breakpoints management
 				end
 
 				if bp_reached and bp.has_message then
-					debugger_message (computed_breakpoint_message (bp.message))
+					debugger_message (computed_breakpoint_message (bp))
 				end
 			end
 			Result := bp_reached and not bp.continue_execution
 		end
 
-	computed_breakpoint_message (m: STRING): STRING is
-			-- Computed message from breakpoint message `m'.
+	computed_breakpoint_message (bp: BREAKPOINT): STRING is
+			-- Computed message from breakpoint message `bp.message'.
 		require
-			m_not_void: m /= Void
+			bp_not_void: bp /= Void
+			bp_message_not_void: bp.message /= Void
 		local
+			m: STRING
 			cse: CALL_STACK_ELEMENT
 			expr: EB_EXPRESSION
 			i: INTEGER
@@ -241,6 +243,7 @@ feature -- Breakpoints management
 			retried: BOOLEAN
 		do
 			if not retried then
+				m := bp.message
 				from
 					i := 1
 					create s.make (m.count)
@@ -277,6 +280,8 @@ feature -- Breakpoints management
 									s.append (cse.routine_name)
 								elseif v.is_case_insensitive_equal ("ADDRESS") and then cse.object_address /= Void then
 									s.append (cse.object_address)
+								elseif v.is_case_insensitive_equal ("HITCOUNT") then
+									s.append_integer (bp.hits_count)
 								else
 									s.append ("$" + v.as_upper)
 								end

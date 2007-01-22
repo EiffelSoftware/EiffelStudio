@@ -27,6 +27,7 @@ inherit
 			on_application_before_stopped,
 			on_application_just_stopped,
 			on_application_quit,
+			process_breakpoint,
 			implementation,
 			set_maximum_stack_depth,
 			notify_breakpoints_changes,
@@ -991,6 +992,14 @@ feature -- Status setting
 		end
 
 feature -- Debugging events
+
+	process_breakpoint (bp: BREAKPOINT): BOOLEAN is
+		do
+			Result := Precursor {DEBUGGER_MANAGER} (bp)
+			if debugging_window /= Void then
+				debugging_window.tools.breakpoints_tool.refresh
+			end
+		end
 
 	resume_application is
 			-- Quickly relaunch the application.

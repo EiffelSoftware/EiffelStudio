@@ -1,0 +1,9 @@
+test_name convert-to-possible-actual-type
+test_description This test violates the 'Conversion Principle' which should be reported by a VYCQ error.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+copy_raw	a.e $CLUSTER a.e
+compile_melted
+compile_result validity_error TEST VYCQ(2)
+test_end

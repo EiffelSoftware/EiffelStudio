@@ -49,7 +49,7 @@ feature -- Element Change
 		do
 			create l_visitor
 			delayed_input_domain_internal := a_domain
-			l_visitor.callback_agents.force (agent replace_delayed_input_domain_internal, l_visitor.domain_index)
+			l_visitor.extend_action (agent replace_delayed_input_domain_internal)
 			a_item.process (l_visitor)
 			delayed_input_domain_internal := Void
 		end
@@ -63,7 +63,7 @@ feature -- Element Change
 		do
 			create l_visitor
 			ql_domain_internal := a_ql_domain
-			l_visitor.callback_agents.force (agent replace_real_delayed_domain_item_internal, l_visitor.delayed_domain_item_index)
+			l_visitor.extend_action (agent replace_real_delayed_domain_item_internal)
 			a_item.process (l_visitor)
 			ql_domain_internal := Void
 		end
@@ -77,8 +77,7 @@ feature -- Element Change
 			l_visitor: EB_METRIC_ITERATOR
 		do
 			create l_visitor
-			l_visitor.callback_agents.force (agent on_clean_metric_value_retriever, l_visitor.metric_value_retriever_index)
-			l_visitor.callback_agents.force (agent on_clean_value_criterion, l_visitor.value_criterion_index)
+			l_visitor.append_actions (<<agent on_clean_metric_value_retriever, agent on_clean_value_criterion>>)
 			a_metric.process (l_visitor)
 		end
 
@@ -130,7 +129,7 @@ feature{NONE} -- Implementation
 			has_delayed_domain_item := False
 			has_delayed_input_domain_internal := False
 			has_real_delayed_input_domain_internal := False
-			l_visitor.callback_agents.force (agent on_delayed_domain_item_process, l_visitor.delayed_domain_item_index)
+			l_visitor.extend_action (agent on_delayed_domain_item_process)
 			a_item.process (l_visitor)
 		end
 

@@ -24,7 +24,7 @@ feature {EB_PREFERENCES} -- Initialization
 			preferences_not_void: preferences /= Void
 		end
 
-feature {EB_SHARED_PREFERENCES} -- Value
+feature {EB_SHARED_PREFERENCES, COMPILER_PREFERENCES} -- Value
 
 	maximum_processor_usage: INTEGER is
 			-- Maximum number of processors to utilize for compilation

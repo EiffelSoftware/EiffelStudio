@@ -33,6 +33,8 @@ inherit
 		end
 
 	EB_FORMATTED_TEXT
+		rename
+			text as text_from_formatted_text
 		export
 			{NONE} All
 		undefine
@@ -650,6 +652,12 @@ feature {NONE} -- Implementation
 			-- Resumes cursor on drop from pick and drop
 		do
 			resume_cursor_blinking
+		end
+
+	text_from_formatted_text: STRING_32 is
+			-- Temperary implementation
+		do
+			Result := text
 		end
 
 feature {NONE} -- Memory management

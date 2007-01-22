@@ -395,7 +395,7 @@ feature -- Notification
 	update_view is
 			-- Update current view according to change in `model'.
 		local
-			l_msg: STRING
+			l_msg: STRING_32
 			l_resize_table: HASH_TABLE [TUPLE [min_width: INTEGER; max_width: INTEGER], INTEGER]
 			l_cluster_stone: CLUSTER_STONE
 		do

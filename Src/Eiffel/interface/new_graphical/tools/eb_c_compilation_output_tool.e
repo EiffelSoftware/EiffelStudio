@@ -471,7 +471,7 @@ feature{NONE}	-- Implementation
 			wd.show_modal_to_window (develop_window.window)
 		end
 
-	show_warning_dialog (msg: STRING; a_window: EV_WINDOW) is
+	show_warning_dialog (msg: STRING_GENERAL; a_window: EV_WINDOW) is
 			-- Show a warning dialog containing message `msg' in `a_window'.
 		require
 			msg_not_void: msg /= Void

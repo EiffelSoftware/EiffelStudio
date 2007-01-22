@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			aok: BOOLEAN
 			wd: EB_WARNING_DIALOG
 			qd: EB_QUESTION_DIALOG
-			warning_message: STRING
+			warning_message: STRING_GENERAL
 			file: RAW_FILE -- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 		do
 			if not fn.is_empty then

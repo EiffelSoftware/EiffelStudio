@@ -279,7 +279,7 @@ feature -- Update
 	save_to_disk is
 			-- Save last output to file.
 		local
-			s: STRING
+			s: STRING_32
 			file_w: FILE_WINDOW
 			done: BOOLEAN
 		do
@@ -303,7 +303,7 @@ feature -- Update
 						else
 							file_w.open_file
 							if file_w.exists then
-								file_w.put_string (s)
+								save_string_32_in_file (file_w, s)
 								file_w.close
 								done := True
 							else

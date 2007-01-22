@@ -328,13 +328,13 @@ feature -- Element change
 
 feature {NONE} -- Text formatter
 
-	add (s: STRING) is
+	add (s: STRING_GENERAL) is
 			-- Add basic text.
 		do
 			process_basic_text (s)
 		end
 
-	add_string (s: STRING) is
+	add_string (s: STRING_GENERAL) is
 			-- Add string text.
 		do
 			process_string_text (s, Void)
@@ -346,7 +346,7 @@ feature {NONE} -- Text formatter
 			process_new_line
 		end
 
-	process_basic_text (text: STRING) is
+	process_basic_text (text: STRING_GENERAL) is
 			-- Process default basic text `t'.
 		do
 			from
@@ -361,7 +361,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_quoted_text (text: STRING) is
+	process_quoted_text (text: STRING_GENERAL) is
 			-- Process the quoted `text' within a comment.
 		do
 			from
@@ -376,7 +376,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_comment_text (text: STRING; url: STRING) is
+	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL) is
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		do
@@ -392,7 +392,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_class_name_text (text: STRING; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
 			-- Process class name of `a_class'.
 		do
 			from
@@ -407,7 +407,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_cluster_name_text (text: STRING; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
 			-- Process cluster name of `a_cluster'.
 		do
 			from
@@ -422,7 +422,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
 			-- Process target name text `text'.
 		do
 			from
@@ -437,7 +437,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_feature_name_text (text: STRING; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process feature name text `text'.
 		do
 			from
@@ -452,7 +452,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_feature_text (text: STRING; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
 			-- Process feature text `text'.
 		do
 			from
@@ -572,7 +572,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_filter_item (text: STRING; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
 			-- Process filter text `t'.
 		do
 			from
@@ -587,7 +587,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_symbol_text (text: STRING) is
+	process_symbol_text (text: STRING_GENERAL) is
 			-- Process symbol text.
 		do
 			from
@@ -602,7 +602,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_keyword_text (text: STRING; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
@@ -618,7 +618,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_operator_text (text: STRING; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
 			-- Process operator text.
 			-- `a_feature' can be void.
 		do
@@ -634,7 +634,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_address_text (a_address, a_name: STRING; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process address text.
 		do
 			from
@@ -649,7 +649,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_error_text (text: STRING; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
 			-- Process error text.
 		do
 			from
@@ -664,7 +664,7 @@ feature {NONE} -- Text formatter
 			end
 		end
 
-	process_cl_syntax (text: STRING; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
 			-- Process class syntax text.
 		do
 			from

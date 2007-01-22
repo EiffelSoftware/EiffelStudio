@@ -79,9 +79,9 @@ feature {NONE} -- Implementation
 			-- Explains that an error occurred while loading the
 			-- profiler specific configuration file.
 		do
-			output_window.put_string (ewb_names.an_error_occurred_while_loading_profiler.out);
+			output_window.put_string (ewb_names.an_error_occurred_while_loading_profiler);
 			output_window.put_new_line;
-			output_window.put_string (ewb_names.please_check_with_your_system_administator.out);
+			output_window.put_string (ewb_names.please_check_with_your_system_administator);
 			output_window.put_new_line;
 		end
 

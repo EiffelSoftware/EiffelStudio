@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			es_class: ES_CLASS
 			wd: EB_WARNING_DIALOG
 			referenced_classes: STRING
-			msg: STRING
+			msg: STRING_GENERAL
 			l_ss: LIST [CLASS_C]
 			l_item: CLASS_C
 		do

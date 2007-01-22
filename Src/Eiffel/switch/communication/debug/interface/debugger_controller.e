@@ -395,16 +395,16 @@ feature {NONE} -- Callbacks
 		do
 		end
 
-	warning (msg: STRING) is
+	warning (msg: STRING_GENERAL) is
 		do
 			manager.debugger_warning_message (msg)
 		end
 
-	if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE]) is
+	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
 		do
 		end
 
-	discardable_if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE];
+	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
 			a_button_count: INTEGER; a_pref_string: STRING) is
 		do
 		end

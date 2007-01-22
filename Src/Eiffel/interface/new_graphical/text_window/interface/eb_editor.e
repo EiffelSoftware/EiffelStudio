@@ -24,7 +24,8 @@ inherit
 			load_text,
 			initialize_editor_context,
 			reference_window,
-			internal_recycle
+			internal_recycle,
+			show_warning_message
 		end
 
 	EB_SHARED_MANAGERS
@@ -103,7 +104,7 @@ feature -- Warning messages display
 	display_not_editable_warning_message is
 				-- display warning message : text is not editable...
 		local
-			wm: STRING
+			wm: STRING_32
 			w: EB_TEXT_LOADING_WARNING_DIALOG
 		do
 			if text_displayed /= Void then
@@ -119,6 +120,17 @@ feature -- Warning messages display
 					w.show_modal_to_window (reference_window)
 				end
 			end
+		end
+
+	show_warning_message (a_message: STRING_GENERAL) is
+			-- show `a_message' in a dialog window		
+		local
+			wd: EB_WARNING_DIALOG
+		do
+			create wd.make_with_text (a_message)
+			wd.pointer_button_release_actions.force_extend (agent wd.destroy)
+			wd.key_press_actions.force_extend (agent wd.destroy)
+			wd.show_modal_to_window (reference_window)
 		end
 
 feature -- Access

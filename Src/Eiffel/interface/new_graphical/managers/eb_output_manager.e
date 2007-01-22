@@ -34,43 +34,43 @@ feature -- Basic Operations / Generic purpose
 
 feature {NONE} -- Text formatter
 
-	process_basic_text (text: STRING) is
+	process_basic_text (text: STRING_GENERAL) is
 			-- Process default basic text `t'.
 		do
 		end
 
-	process_quoted_text (text: STRING) is
+	process_quoted_text (text: STRING_GENERAL) is
 			-- Process the quoted `text' within a comment.
 		do
 		end
 
-	process_comment_text (text: STRING; url: STRING) is
+	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL) is
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		do
 		end
 
-	process_class_name_text (text: STRING; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
 			-- Process class name of `a_class'.
 		do
 		end
 
-	process_cluster_name_text (text: STRING; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
 			-- Process cluster name of `a_cluster'.
 		do
 		end
 
-	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
 			-- Process target name text `text'.
 		do
 		end
 
-	process_feature_name_text (text: STRING; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process feature name text `text'.
 		do
 		end
 
-	process_feature_text (text: STRING; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
 			-- Process feature text `text'.
 		do
 		end
@@ -110,39 +110,39 @@ feature {NONE} -- Text formatter
 		do
 		end
 
-	process_filter_item (text: STRING; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
 			-- Process filter text `t'.
 		do
 		end
 
-	process_symbol_text (text: STRING) is
+	process_symbol_text (text: STRING_GENERAL) is
 			-- Process symbol text.
 		do
 		end
 
-	process_keyword_text (text: STRING; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
 		end
 
-	process_operator_text (text: STRING; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
 			-- Process operator text.
 			-- `a_feature' can be void.
 		do
 		end
 
-	process_address_text (a_address, a_name: STRING; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process address text.
 		do
 		end
 
-	process_error_text (text: STRING; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
 			-- Process error text.
 		do
 		end
 
-	process_cl_syntax (text: STRING; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
 			-- Process class syntax text.
 		do
 		end

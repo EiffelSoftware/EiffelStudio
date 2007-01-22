@@ -17,7 +17,7 @@ feature -- Properties
 		deferred
 		end
 
-	text: STRING is
+	text: STRING_32 is
 			-- Text of window
 		deferred
 		ensure

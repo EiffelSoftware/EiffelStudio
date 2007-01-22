@@ -382,7 +382,7 @@ feature{NONE} -- Update
 	update_view is
 			-- Update current view according to change in `model'.
 		local
-			l_msg: STRING
+			l_msg: STRING_32
 		do
 			if not is_up_to_date then
 				if data /= Void then

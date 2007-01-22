@@ -27,7 +27,7 @@ feature -- Initalization
 
 feature -- Properties
 
-	stored_output: STRING
+	stored_output: STRING_32
 
 feature -- Element change
 
@@ -38,7 +38,7 @@ feature -- Element change
 
 feature -- Output
 
-	put_string (s: STRING) is
+	put_string (s: STRING_GENERAL) is
 		do
 			error_window.put_string (s);
 			stored_output.append (s)

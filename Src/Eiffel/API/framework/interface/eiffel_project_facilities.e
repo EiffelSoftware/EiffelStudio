@@ -48,7 +48,7 @@ feature -- Access
 
 feature -- Helper		
 
-	group_name_presentation (sep: STRING; a_name: STRING; a_group: CONF_GROUP): STRING is
+	group_name_presentation (sep: STRING_32; a_name: STRING_32; a_group: CONF_GROUP): STRING_32 is
 			-- Name presentation of `a_group' + `sep' + `a_name'. i.e. "a.a_name"
 		require
 			sep_not_void: sep /= Void
@@ -105,7 +105,7 @@ feature -- Helper
 			group_name_presentation_not_void: Result /= Void
 		end
 
-	path_representation (sep: STRING; a_name: STRING; a_group: CONF_GROUP; dotdot_path: BOOLEAN): STRING is
+	path_representation (sep: STRING_32; a_name: STRING_32; a_group: CONF_GROUP; dotdot_path: BOOLEAN): STRING_32 is
 			-- Path representation
 			-- If dotdot, we do ../../ instead of name/name/
 		require
@@ -115,7 +115,7 @@ feature -- Helper
 			dotdot_implies_a_name_dotdot: dotdot_path implies (a_name.is_empty or a_name.has_substring (".."))
 		local
 			l_cluster: CONF_CLUSTER
-			l_name: STRING
+			l_name: STRING_32
 		do
 			if a_group.is_cluster then
 				l_cluster ?= a_group

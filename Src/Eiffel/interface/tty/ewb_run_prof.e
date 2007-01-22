@@ -47,9 +47,9 @@ feature {NONE} -- Execute
 				executer.execute;
 				last_output := executer.last_output
 			else
-				st.add_string (ewb_names.no_active_queries.out);
+				st.add_string (ewb_names.no_active_queries);
 				st.add_new_line;
-				st.add_string (ewb_names.you_should_first_manipulate_the_subqueries.out)
+				st.add_string (ewb_names.you_should_first_manipulate_the_subqueries)
 				st.add_new_line;
 			end;
 			output_window.put_string (st.stored_output);
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 	print_active_query (st: TEXT_FORMATTER) is
 		do
 			from
-				st.add_string (ewb_names.query.out);
+				st.add_string (ewb_names.query);
 				st.add_new_line;
 				st.add_string ("======");
 				st.add_new_line;

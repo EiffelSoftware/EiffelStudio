@@ -668,7 +668,7 @@ feature -- Graphical interface
 			Result := internal_reference_window
 		end
 
-	show_warning_message (a_message: STRING) is
+	show_warning_message (a_message: STRING_GENERAL) is
 			-- show `a_message' in a dialog window		
 		local
 			wd: EV_WARNING_DIALOG

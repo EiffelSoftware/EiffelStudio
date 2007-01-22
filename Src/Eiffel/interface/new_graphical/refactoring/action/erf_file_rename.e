@@ -33,7 +33,7 @@ feature -- Status
 	is_error: BOOLEAN
 			-- Was there an error during the file rename.
 
-	error_message: STRING
+	error_message: STRING_GENERAL
 			-- Error message for the last error.
 
 feature -- Basic operations

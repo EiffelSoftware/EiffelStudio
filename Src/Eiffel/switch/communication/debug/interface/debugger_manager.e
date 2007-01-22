@@ -90,7 +90,7 @@ feature -- Application execution
 
 feature -- Output helpers
 
-	debugger_message (m: STRING) is
+	debugger_message (m: STRING_GENERAL) is
 		require
 			m /= Void
 		do
@@ -98,13 +98,13 @@ feature -- Output helpers
 			debugger_status_message (m)
 		end
 
-	debugger_output_message (msg: STRING) is
+	debugger_output_message (msg: STRING_GENERAL) is
 		require
 			msg /= Void
 		do
 		end
 
-	debugger_warning_message (msg: STRING) is
+	debugger_warning_message (msg: STRING_GENERAL) is
 		require
 			msg /= Void
 		do

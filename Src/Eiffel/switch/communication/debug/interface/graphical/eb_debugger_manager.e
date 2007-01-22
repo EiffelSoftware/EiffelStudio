@@ -476,14 +476,14 @@ feature -- Status report
 
 feature -- Output
 
-	debugger_output_message (m: STRING) is
+	debugger_output_message (m: STRING_GENERAL) is
 		do
 			check output_manager /= Void end
 			output_manager.add_string (m)
 			output_manager.add_new_line
 		end
 
-	debugger_warning_message (m: STRING) is
+	debugger_warning_message (m: STRING_GENERAL) is
 		local
 			w_dlg: EV_WARNING_DIALOG
 		do
@@ -498,7 +498,7 @@ feature -- Output
 			end
 		end
 
-	debugger_status_message (m: STRING) is
+	debugger_status_message (m: STRING_GENERAL) is
 		do
 			window_manager.display_message (m)
 		end
@@ -1066,7 +1066,7 @@ feature -- Debugging events
 			-- Application was just stopped (by a breakpoint, ...).
 		local
 			st: CALL_STACK_STONE
-			cd: EV_CONFIRMATION_DIALOG
+			cd: EB_CONFIRMATION_DIALOG
 		do
 			Precursor
 			debug ("debugger_trace_synchro")

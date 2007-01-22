@@ -60,9 +60,9 @@ feature -- Visit
 				l_actions := actions
 				l_cursor := actions.new_cursor
 				from
-					l_cursor.start
+					l_cursor.finish
 				until
-					l_cursor.after or done
+					l_cursor.before or done
 				loop
 					l_action := l_cursor.item
 					if l_action.valid_operands (l_args) then
@@ -70,7 +70,7 @@ feature -- Visit
 						l_action.call (l_args)
 						done := True
 					end
-					l_cursor.forth
+					l_cursor.back
 				end
 				if not done then
 					cache.put (catch_all_agent, l_dynamic_type)

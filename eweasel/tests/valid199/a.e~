@@ -1,3 +1,0 @@
-class A[G]
-end
-

@@ -23,6 +23,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	maximum_processor_usage: NATURAL_8 = 0
+			-- Maximum number of processors to utilitize in C/C++ compilation
+		do
+			Result := compiler_data.maximum_processor_usage
+		end
+
+feature {NONE} -- Implementation
+
 	compiler_data: EB_COMPILER_DATA
 			-- Preference data for compiler.		
 

@@ -62,7 +62,7 @@ feature -- Status settings
 			else
 				create a_wel_string.make_empty (0)
 			end
-			cwin_set_window_text (edit_item, a_wel_string.item)
+			{WEL_API}.set_window_text (edit_item, a_wel_string.item)
 		end
 
 	set_limit_text (limit: INTEGER) is

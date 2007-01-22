@@ -194,7 +194,7 @@ feature -- Labels
 
 feature -- Tooltip
 
-	f_quick_metric_definition: STRING_GENERAL is do Result := locale.translate ("Define quick metric") end
+	f_quick_metric_definition: STRING_GENERAL is do Result := locale.translate ("Define quick metric (or drop a basic metric here as a template)") end
 	f_run: STRING_GENERAL is do Result := locale.translate ("Run selected metric") end
 	f_go_to_definition: STRING_GENERAL is do Result := locale.translate ("Go to definition") end
 	f_stop: STRING_GENERAL is do Result := locale.translate ("Stop metric evaluation") end
@@ -1349,6 +1349,7 @@ feature -- Utilities
 			a_location_attached: a_location /= Void
 		do
 			Result := coloned_string (t_location, True)
+			Result.append (space_separator)
 			Result.append (a_location)
 		ensure
 			result_attached: Result /= Void

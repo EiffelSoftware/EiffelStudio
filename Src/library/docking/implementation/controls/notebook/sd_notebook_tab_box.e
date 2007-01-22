@@ -302,7 +302,6 @@ feature {NONE} -- Agents
 		require
 			entered: pointer_entered = True
 		local
-			l_x: INTEGER
 			l_found: BOOLEAN
 		do
 			pointer_entered := False

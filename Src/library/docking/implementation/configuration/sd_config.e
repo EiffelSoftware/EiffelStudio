@@ -180,7 +180,6 @@ feature -- Save/Open inner container data.
 			l_reader: SED_MEDIUM_READER_WRITER
 			l_data: SD_INNER_CONTAINER_DATA
 			l_split_area: EV_SPLIT_AREA
-			l_temp_split_area: SD_HORIZONTAL_SPLIT_AREA
 		do
 			internal_docking_manager.property.set_is_opening_config (True)
 

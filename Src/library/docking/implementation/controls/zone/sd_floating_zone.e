@@ -55,9 +55,6 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		require
 			a_floating_state_not_void: a_floating_state /= Void
-		local
-			l_acceler_test: EV_ACCELERATOR
-			l_test_key: EV_KEY
 		do
 			internal_floating_state := a_floating_state
 			internal_docking_manager := a_floating_state.docking_manager

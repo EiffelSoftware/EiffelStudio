@@ -44,6 +44,7 @@ feature -- Access
 			create l_str.make (message.count + 64)
 			l_str.append (message)
 			if location /= Void then
+				l_str.append (metric_names.space_separator)
 				l_str.append (metric_names.location_string (location))
 			end
 			Result := l_str

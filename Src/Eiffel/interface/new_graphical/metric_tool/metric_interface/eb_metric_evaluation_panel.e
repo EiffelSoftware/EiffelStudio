@@ -163,9 +163,10 @@ feature {NONE} -- Initialization
 
 			quick_metric_btn.set_pixmap (pixmaps.icon_pixmaps.metric_quick_icon)
 
-			quick_metric_btn.select_actions.extend (agent on_quick_metric_button_pressed)
+			quick_metric_btn.select_actions.extend (agent on_quick_metric_button_pressed (Void))
 			quick_metric_btn.disable_select
 			quick_metric_btn.set_tooltip (metric_names.f_quick_metric_definition)
+			quick_metric_btn.drop_actions.extend (agent on_create_quick_metric)
 
 			send_to_history_btn.set_pixmap (pixmaps.icon_pixmaps.metric_send_to_archive_icon)
 			send_to_history_btn.set_tooltip (metric_names.f_send_to_history)
@@ -492,7 +493,7 @@ feature -- Actions
 			metric_definer.load_metric (Void, False)
 		end
 
-	on_quick_metric_button_pressed is
+	on_quick_metric_button_pressed (a_metric: EB_METRIC_BASIC) is
 			-- Action to be performed when "Quick metric" button is pressed
 		do
 			if quick_metric_btn.is_selected then
@@ -501,6 +502,15 @@ feature -- Actions
 					unit_combo.retrieve_item_by_data (class_unit, False).enable_select
 					on_unit_selection_change
 					is_quick_metric_initialized := True
+				end
+				if a_metric /= Void and then a_metric.unit.scope /= Void and then a_metric.criteria /= Void then
+					unit_combo.select_actions.block
+					unit_combo.retrieve_item_by_data (a_metric.unit, False).enable_select
+					unit_combo.select_actions.resume
+					metric_definer.set_uuid (uuid)
+					metric_definer.set_unit (a_metric.unit)
+					metric_definer.set_mode (metric_definer.new_mode)
+					metric_definer.load_criterion (a_metric.identical_new_instance.criteria)
 				end
 				on_metric_selected (quick_metric (Void, False))
 				metric_definition_area.show
@@ -545,6 +555,22 @@ feature -- Actions
 			-- Action to be performed when a metric with `a_old_name' has been renamed to `a_new_name'.
 		do
 		end
+
+	on_create_quick_metric (a_pebble: ANY) is
+			-- Action to be performed when a pebble is dropped on `quick_metric_btn'.
+			-- If the pebble is a metric, then prompt quick metric definer and use that metric as a template.
+		local
+			l_metric: EB_METRIC_BASIC
+		do
+			l_metric ?= a_pebble
+			if l_metric /= Void and then l_metric.unit.scope /= Void then
+				quick_metric_btn.select_actions.block
+				quick_metric_btn.enable_select
+				on_quick_metric_button_pressed (l_metric)
+				quick_metric_btn.select_actions.resume
+			end
+		end
+
 
 feature {NONE} -- Implementation
 

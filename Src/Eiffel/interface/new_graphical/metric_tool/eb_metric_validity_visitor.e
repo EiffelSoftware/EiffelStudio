@@ -90,30 +90,34 @@ feature{NONE} -- Process
 			l_scope: QL_SCOPE
 			l_criteria: EB_METRIC_CRITERION
 		do
-			if (not has_error) and then (not is_metric_validity_checked (a_basic_metric.name)) then
-				metric_stack.extend (a_basic_metric)
-				location_stack.extend (a_basic_metric.visitable_name)
-				if not has_error then
-					check_metric_name (a_basic_metric.name)
-				end
-				if not has_error then
-					detect_recursive (a_basic_metric)
+			if not has_error then
+				if is_metric_validity_checked (a_basic_metric.name) then
+					raise_error_of_metric (a_basic_metric.name)
+				else
+					metric_stack.extend (a_basic_metric)
+					location_stack.extend (a_basic_metric.visitable_name)
 					if not has_error then
-						l_scope := a_basic_metric.unit.scope
-						l_criteria := a_basic_metric.criteria
-						if l_criteria /= Void then
-							if not has_error then
-									-- Check validity of criteria.
+						check_metric_name (a_basic_metric.name)
+					end
+					if not has_error then
+						detect_recursive (a_basic_metric)
+						if not has_error then
+							l_scope := a_basic_metric.unit.scope
+							l_criteria := a_basic_metric.criteria
+							if l_criteria /= Void then
 								if not has_error then
-									l_criteria.process (Current)
+										-- Check validity of criteria.
+									if not has_error then
+										l_criteria.process (Current)
+									end
 								end
 							end
 						end
 					end
+					register_error_for_current_metric
+					metric_stack.remove
+					location_stack.remove
 				end
-				register_error_for_current_metric
-				metric_stack.remove
-				location_stack.remove
 			end
 		end
 
@@ -128,63 +132,67 @@ feature{NONE} -- Process
 			l_sub_metrics: LIST [STRING]
 			l_sub_metric: EB_METRIC
 		do
-			if (not has_error) and then (not is_metric_validity_checked (a_linear_metric.name)) then
-				metric_stack.extend (a_linear_metric)
-				location_stack.extend (a_linear_metric.visitable_name)
-				if not has_error then
-					check_metric_name (a_linear_metric.name)
-				end
-				if not has_error then
-					detect_recursive (a_linear_metric)
+			if not has_error then
+				if is_metric_validity_checked (a_linear_metric.name) then
+					raise_error_of_metric (a_linear_metric.name)
+				else
+					metric_stack.extend (a_linear_metric)
+					location_stack.extend (a_linear_metric.visitable_name)
 					if not has_error then
-							-- Check sub metrics' validity.
-						l_sub_metrics := a_linear_metric.variable_metric
-						if l_sub_metrics.is_empty then
-							create_last_error_with_to_do (
-								metric_names.err_variable_metric_missing,
-								metric_names.variable_metric_missing_to_do
-							)
-						else
-								-- Check unit of every sub metric.
-							from
-								l_sub_metrics.start
-							until
-								l_sub_metrics.after or has_error
-							loop
-								if not metric_manager.has_metric (l_sub_metrics.item) then
-									create_last_error_with_to_do (
-										metric_names.err_variable_metric_not_defined,
-										metric_names.variable_metric_not_defined_to_do
-									)
-								else
-									l_sub_metric := metric_manager.metric_with_name (l_sub_metrics.item)
-									if l_sub_metric.unit /= a_linear_metric.unit then
-										create_last_error_with_to_do (
-											metric_names.err_variable_metric_unit_not_correct (l_sub_metric.unit.name, a_linear_metric.unit.name),
-											metric_names.variable_metric_unit_not_correct_to_do
-										)
-									end
-								end
-								l_sub_metrics.forth
-							end
-								-- Check validity of every sub metric.
-							if not has_error then
+						check_metric_name (a_linear_metric.name)
+					end
+					if not has_error then
+						detect_recursive (a_linear_metric)
+						if not has_error then
+								-- Check sub metrics' validity.
+							l_sub_metrics := a_linear_metric.variable_metric
+							if l_sub_metrics.is_empty then
+								create_last_error_with_to_do (
+									metric_names.err_variable_metric_missing,
+									metric_names.variable_metric_missing_to_do
+								)
+							else
+									-- Check unit of every sub metric.
 								from
 									l_sub_metrics.start
 								until
 									l_sub_metrics.after or has_error
 								loop
-									l_sub_metric := metric_manager.metric_with_name (l_sub_metrics.item)
-									l_sub_metric.process (Current)
+									if not metric_manager.has_metric (l_sub_metrics.item) then
+										create_last_error_with_to_do (
+											metric_names.err_variable_metric_not_defined,
+											metric_names.variable_metric_not_defined_to_do
+										)
+									else
+										l_sub_metric := metric_manager.metric_with_name (l_sub_metrics.item)
+										if l_sub_metric.unit /= a_linear_metric.unit then
+											create_last_error_with_to_do (
+												metric_names.err_variable_metric_unit_not_correct (l_sub_metric.unit.name, a_linear_metric.unit.name),
+												metric_names.variable_metric_unit_not_correct_to_do
+											)
+										end
+									end
 									l_sub_metrics.forth
+								end
+									-- Check validity of every sub metric.
+								if not has_error then
+									from
+										l_sub_metrics.start
+									until
+										l_sub_metrics.after or has_error
+									loop
+										l_sub_metric := metric_manager.metric_with_name (l_sub_metrics.item)
+										l_sub_metric.process (Current)
+										l_sub_metrics.forth
+									end
 								end
 							end
 						end
 					end
+					register_error_for_current_metric
+					metric_stack.remove
+					location_stack.remove
 				end
-				register_error_for_current_metric
-				metric_stack.remove
-				location_stack.remove
 			end
 		end
 
@@ -199,58 +207,62 @@ feature{NONE} -- Process
 			l_num_metric: EB_METRIC
 			l_den_metric: EB_METRIC
 		do
-			if (not has_error) and then (not is_metric_validity_checked (a_ratio_metric.name)) then
-				metric_stack.extend (a_ratio_metric)
-				location_stack.extend (a_ratio_metric.visitable_name)
-				if not has_error then
-					check_metric_name (a_ratio_metric.name)
-				end
-				if not has_error then
-					detect_recursive (a_ratio_metric)
+			if not has_error then
+				if is_metric_validity_checked (a_ratio_metric.name) then
+					raise_error_of_metric (a_ratio_metric.name)
+				else
+					metric_stack.extend (a_ratio_metric)
+					location_stack.extend (a_ratio_metric.visitable_name)
+					if not has_error then
+						check_metric_name (a_ratio_metric.name)
+					end
+					if not has_error then
+						detect_recursive (a_ratio_metric)
 
-						-- Check the existance of numerator metric.
-					if not has_error then
-						if not metric_manager.has_metric (a_ratio_metric.numerator_metric_name) then
-							create_last_error_with_to_do (
-								metric_names.err_numerator_metric_not_defined (a_ratio_metric.numerator_metric_name),
-								metric_names.numerator_denominator_metric_not_defined_to_do
-							)
-						else
-							l_num_metric := metric_manager.metric_with_name (a_ratio_metric.numerator_metric_name)
+							-- Check the existance of numerator metric.
+						if not has_error then
+							if not metric_manager.has_metric (a_ratio_metric.numerator_metric_name) then
+								create_last_error_with_to_do (
+									metric_names.err_numerator_metric_not_defined (a_ratio_metric.numerator_metric_name),
+									metric_names.numerator_denominator_metric_not_defined_to_do
+								)
+							else
+								l_num_metric := metric_manager.metric_with_name (a_ratio_metric.numerator_metric_name)
+							end
 						end
-					end
-						-- Check the existance of denominator metric.
-					if not has_error then
-						if not metric_manager.has_metric (a_ratio_metric.denominator_metric_name) then
-							create_last_error_with_to_do (
-								metric_names.err_denominator_metric_not_defined (a_ratio_metric.denominator_metric_name),
-								metric_names.numerator_denominator_metric_not_defined_to_do
-							)
-						else
-							l_den_metric := metric_manager.metric_with_name (a_ratio_metric.denominator_metric_name)
+							-- Check the existance of denominator metric.
+						if not has_error then
+							if not metric_manager.has_metric (a_ratio_metric.denominator_metric_name) then
+								create_last_error_with_to_do (
+									metric_names.err_denominator_metric_not_defined (a_ratio_metric.denominator_metric_name),
+									metric_names.numerator_denominator_metric_not_defined_to_do
+								)
+							else
+								l_den_metric := metric_manager.metric_with_name (a_ratio_metric.denominator_metric_name)
+							end
 						end
-					end
-						-- Check validity of numerator and denominator metric.
-					if not has_error then
-						l_num_metric.process (Current)
-					end
-					if not has_error then
-						l_den_metric.process (Current)
-					end
+							-- Check validity of numerator and denominator metric.
+						if not has_error then
+							l_num_metric.process (Current)
+						end
+						if not has_error then
+							l_den_metric.process (Current)
+						end
 
-						-- Check denominator coefficient
-					if not has_error then
-						if a_ratio_metric.denominator_coefficient = 0 then
-							create_last_error_with_to_do (
-								metric_names.err_denominator_coefficient_is_zero,
-								metric_names.make_sure_denominator_coefficient_non_zero_to_do
-							)
+							-- Check denominator coefficient
+						if not has_error then
+							if a_ratio_metric.denominator_coefficient = 0 then
+								create_last_error_with_to_do (
+									metric_names.err_denominator_coefficient_is_zero,
+									metric_names.make_sure_denominator_coefficient_non_zero_to_do
+								)
+							end
 						end
 					end
+					register_error_for_current_metric
+					metric_stack.remove
+					location_stack.remove
 				end
-				register_error_for_current_metric
-				metric_stack.remove
-				location_stack.remove
 			end
 		end
 
@@ -800,6 +812,7 @@ feature{NONE} -- Implementation
 					l_loc_list.forth
 				end
 				if last_error.location /= Void then
+					l_last_error_loc.append (metric_names.location_connector)
 					l_last_error_loc.append (last_error.location)
 				end
 			end
@@ -839,6 +852,23 @@ feature{NONE} -- Implementation
 			last_domain_item_error_retriever := a_retriever
 		ensure
 			last_domain_item_error_retriever_set: last_domain_item_error_retriever = a_retriever
+		end
+
+	raise_error_of_metric (a_metric_name: STRING) is
+			-- Raise error of metric named `a_metric_name' if any.
+		require
+			a_metric_name_attached: a_metric_name /= Void
+			metric_validity_checked: is_metric_validity_checked (a_metric_name)
+		local
+			l_error: like last_error
+		do
+			l_error := metric_manager.metric_validity (a_metric_name)
+			if l_error /= Void then
+				create_last_error_with_to_do (l_error.message, l_error.to_do)
+				if l_error.location /= Void then
+					last_error.set_location (l_error.location.twin)
+				end
+			end
 		end
 
 invariant

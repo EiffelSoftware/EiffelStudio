@@ -232,6 +232,8 @@ feature -- Basic operations
 		do
 			metric_manager.store_userdefined_metrics
 			display_error_message
+			check_metric_validation
+			metric_loaded_actions.call ([])
 		end
 
 	display_error_message is

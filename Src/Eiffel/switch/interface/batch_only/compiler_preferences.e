@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	maximum_processor_usage: NATURAL_8 = 0
+	maximum_processor_usage: INTEGER = 0
 			-- Maximum number of processors to utilitize in C/C++ compilation		
 
 ;indexing

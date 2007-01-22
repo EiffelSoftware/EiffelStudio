@@ -172,15 +172,17 @@ feature -- Zones managements
 			set: a_zone.width = a_width and a_zone.height =  a_height
 		end
 
-	disable_all_zones_focus_color is
-			-- Disable all zones focus color.
+	disable_all_zones_focus_color (a_except: SD_ZONE) is
+			-- Disable all zones focus color except `a_except'.
 		do
 			from
 				zones.start
 			until
 				zones.after
 			loop
-				zones.item.on_focus_out
+				if a_except /= zones.item then
+					zones.item.on_focus_out
+				end
 				zones.forth
 			end
 		end

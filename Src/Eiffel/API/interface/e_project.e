@@ -583,7 +583,7 @@ feature -- Update
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
-			l_processors := preferences.compiler_data.maximum_processor_usage
+			l_processors := preferences.maximum_processor_usage
 			if l_processors > 0 then
 				l_cmd.append (" -nproc ")
 				l_cmd.append_integer (l_processors)
@@ -612,7 +612,7 @@ feature -- Update
 					-- Force 32bit compilation
 				l_cmd.append (" -x86")
 			end
-			l_processors := preferences.compiler_data.maximum_processor_usage
+			l_processors := preferences.maximum_processor_usage
 			if l_processors > 0 then
 				l_cmd.append (" -nproc ")
 				l_cmd.append_integer (l_processors)

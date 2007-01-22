@@ -346,10 +346,11 @@ feature -- Access
 			l_metrics.go_to (l_cursor)
 		end
 
-	new_metric_with_name (a_metric: EB_METRIC): EB_METRIC is
+	new_metric_with_name (a_name: STRING): EB_METRIC is
 			-- New instance of the metric whose name is `a_name'
 		require
-
+			a_name_attached: a_name /= Void
+			metric_exists: has_metric (a_name)
 		local
 			l_factory: EB_LOAD_METRIC_DEFINITION_FACTORY
 			l_callback: EB_METRIC_LOAD_DEFINITION_CALLBACKS
@@ -357,7 +358,7 @@ feature -- Access
 			create l_factory
 			create l_callback.make_with_factory (l_factory)
 			l_callback.set_is_for_whole_file (False)
-			Result := a_metric.new_instance (l_callback)
+			Result := metric_with_name_internal (a_name).new_instance (l_callback)
 		end
 
 	ordered_metrics (a_order: INTEGER; a_flat: BOOLEAN): HASH_TABLE [LIST [EB_METRIC], QL_METRIC_UNIT] is

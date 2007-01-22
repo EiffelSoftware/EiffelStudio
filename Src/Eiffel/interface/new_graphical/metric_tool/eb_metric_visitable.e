@@ -38,6 +38,17 @@ feature -- Access
 			end
 		end
 
+	identical_new_instance: like Current is
+			-- Identical new instance of Current.
+			-- Void if error occurs.
+		local
+			l_callback: EB_METRIC_LOAD_DEFINITION_CALLBACKS
+		do
+			create l_callback.make_with_factory (create{EB_LOAD_METRIC_DEFINITION_FACTORY})
+			l_callback.set_is_for_whole_file (False)
+			Result := new_instance (l_callback)
+		end
+
 feature -- Process
 
 	append_xml (a_xml_writer: EB_METRIC_XML_WRITER) is

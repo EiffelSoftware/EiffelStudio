@@ -11,7 +11,7 @@ test_description Checks the .override IL statment is correctly placed on the gen
 
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
-copy_raw VersionedComInterfaces.dll $CLUSTER VersionedComInterfaces.dll
+copy_bin VersionedComInterfaces.dll $CLUSTER VersionedComInterfaces.dll
 
 compile_melted
 compile_result ok

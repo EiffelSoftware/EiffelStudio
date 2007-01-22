@@ -171,10 +171,10 @@ feature {NONE} -- Implementation functions
 			elseif internal_right_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y)	then
 				l_changed := internal_right_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
-			elseif internal_top_hot_zone.area_managed.has_x_y (a_screen_x - a_offset_x, a_screen_y - a_offset_y)  then
+			elseif internal_top_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y - a_offset_y) then
 				l_changed := internal_top_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
-			elseif internal_bottom_hot_zone.area_managed.has_x_y (a_screen_x - a_offset_x, a_screen_y - a_offset_y) then
+			elseif internal_bottom_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y - a_offset_y) then
 				l_changed := internal_bottom_hot_zone.on_pointer_motion (a_screen_x, a_screen_y)
 				Result := True
 			end

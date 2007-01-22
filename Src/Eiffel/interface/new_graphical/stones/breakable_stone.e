@@ -498,6 +498,7 @@ feature -- operation on message
 
 			create combo
 			create tf
+			combo.disable_edit
 			combo.set_minimum_width_in_characters (20)
 			tf.set_minimum_width_in_characters (5)
 			create hb

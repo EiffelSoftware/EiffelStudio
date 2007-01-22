@@ -662,6 +662,7 @@ feature -- Label texts
 	l_Current_context: STRING_GENERAL is		do Result := locale.translate("Current feature")	end
 	l_Current_editor: STRING_GENERAL is			do Result := locale.translate("Current editor")	end
 	l_Current_hit_count: STRING_GENERAL is		do Result := locale.translate("Current hit count:")	end
+	l_Current_hit_count_short: STRING_GENERAL is		do Result := locale.translate("hits: ")	end
 	l_Current_object: STRING_GENERAL is			do Result := locale.translate("Current object")	end
 	l_Custom: STRING_GENERAL is 				do Result := locale.translate("Custom")	end
 	l_debugger_exception_message: STRING_GENERAL is do Result := locale.translate("Debugger :: Exception message")	end
@@ -844,6 +845,7 @@ feature -- Label texts
 					To insert a curly brace, use "\{". To insert a backslash, use "\\".
 					
 					The following special keywords will be replaced with their current values:
+						$HITCOUNT - breakpoint's hit count
 						$ADDRESS - current object address
 						$CALLSTACK - current call stack
 						$CLASS - current class name
@@ -1210,6 +1212,11 @@ feature -- Label texts
 			a_offset_not_void: a_offset /= Void
 		do
 			Result := locale.format_string (locale.translate ("offset $1"), [a_offset])
+		end
+
+	l_hit_count_is (a_hit_count: INTEGER): STRING_GENERAL is
+		do
+			Result := locale.format_string (locale.translate_plural ("$1 hit", "$1 hits", a_hit_count), [a_hit_count])
 		end
 
 	l_info_cannot_be_retrieved: STRING_GENERAL is do Result := locale.translate("Information cannot be retrieved.")	end

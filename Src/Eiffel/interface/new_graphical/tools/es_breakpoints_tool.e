@@ -74,13 +74,15 @@ feature {NONE} -- Initialization
 			grid.enable_tree
 			grid.enable_single_row_selection
 			grid.enable_border
+			grid.enable_partial_dynamic_content
+			grid.set_dynamic_content_function (agent computed_grid_item)
 
 			grid.set_column_count_to (3)
 			grid.column (1).set_title (interface_names.l_data)
-			grid.column (2).set_title (interface_names.l_details)
-			grid.column (3).set_title (interface_names.l_condition)
+			grid.column (2).set_title (interface_names.l_status)
+			grid.column (3).set_title (interface_names.l_details)
 
-			grid.pointer_double_press_actions.force_extend (agent on_row_double_clicked)
+--			grid.pointer_double_press_actions.force_extend (agent on_row_double_clicked)
 			grid.set_auto_resizing_column (1, True)
 			grid.set_auto_resizing_column (2, True)
 			grid.set_auto_resizing_column (3, True)
@@ -247,19 +249,31 @@ feature -- Events
 			end
 		end
 
-	on_row_double_clicked is
-		local
---			row: EV_GRID_ROW
-		do
---			row := grid.single_selected_row
---			if row /= Void then
---			end
-		end
+--	on_row_double_clicked is
+--		do
+--		end
 
 	refresh is
 			-- Class has changed in `development_window'.
+		local
+			r: INTEGER
+			bp: BREAKPOINT
 		do
-			update
+			if grid.row_count = 0 then
+				update
+			else
+				from
+					r := grid.row_count
+				until
+					r = 0
+				loop
+					bp ?= grid.row (r).data
+					if bp /= Void then
+						grid.row (r).clear
+					end
+					r := r - 1
+				end
+			end
 		end
 
 	synchronize	is
@@ -544,7 +558,7 @@ feature {NONE} -- Impl bp
 		local
 			bp_list: LIST [INTEGER]
 			sorted_bp_list: SORTED_TWO_WAY_LIST [INTEGER]
-			s, t: STRING
+			s: STRING
 			ir, sr: INTEGER
 			subrow: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
@@ -586,7 +600,6 @@ feature {NONE} -- Impl bp
 					bp_list.after
 				loop
 					i := bp_list.item
-
 					if bpm.is_breakpoint_set (f, i) then
 						bp := bpm.breakpoint (f, i)
 						if not first_bp then
@@ -594,83 +607,23 @@ feature {NONE} -- Impl bp
 						else
 							first_bp := False
 						end
-						create lab.make_with_text (interface_names.l_offset_is (i.out))
-						create fs.make (f)
-						lab.set_data (fs)
-						subrow.subrow (ir).set_item (1, lab)
-						if bp.is_enabled then
-							create lab.make_with_text (interface_names.l_space_enabled)
-							if bp.has_condition then
-								lab.set_pixmap (breakable_icons.bp_enabled_conditional_icon)
-							else
-								lab.set_pixmap (breakable_icons.bp_enabled_icon)
-							end
-						elseif bp.is_disabled then
-							create lab.make_with_text (interface_names.l_space_disabled)
-							if bp.has_condition then
-								lab.set_pixmap (breakable_icons.bp_disabled_conditional_icon)
-							else
-								lab.set_pixmap (breakable_icons.bp_disabled_icon)
-							end
-						else
-							create lab.make_with_text (interface_names.l_space_error)
-						end
-						debug ("breakpoint")
-							t := bp.routine.associated_class.name_in_upper + "." + bp.routine.name + "#" + bp.breakable_line_number.out
-							if debugger_manager.application_is_executing then
-								if bp.is_set_for_application then
-									t.append_string ("Application: set")
-								else
-									t.append_string ("Application: not set")
-								end
-							end
-							if bp.hits_count > 0 then
-								t.append_character ('%N')
-								t.append_string_general (Interface_names.l_current_hit_count)
-								t.append_integer (bp.hits_count)
-							end
-							if bp.has_condition then
-								t.append_character ('%N')
-								t.append_string_general (interface_names.l_condition)
-								t.append_string (": " + bp.condition.expression)
-							end
-							if bp.has_message then
-								t.append_character ('%N')
-								t.append_string_general (interface_names.l_print_message)
-								t.append_string (bp.message)
-							end
-							if bp.continue_execution then
-								t.append_character ('%N')
-								t.append_string_general (interface_names.l_continue_execution)
-							end
-							lab.set_tooltip (t)
-						end
-
-						lab.pointer_button_release_actions.force_extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?))
-						subrow.subrow (ir).set_item (2, lab)
-
 						s.append_string (i.out)
+						subrow.subrow (ir).set_data (bp)
+
 						if bp.has_condition then
 							if bp.is_disabled then
 								s.append_string (Disabled_conditional_bp_symbol)
 							else
 								s.append_string (Conditional_bp_symbol)
 							end
-							create lab.make_with_text (bp.condition.expression)
-							lab.set_tooltip (lab.text)
-							lab.set_font (condition_font)
-							subrow.subrow (ir).set_item (3, lab)
-						else
-							if bp.is_disabled then
-								s.append_string (Disabled_bp_symbol)
-							else
-								subrow.subrow (ir).set_item (3, create {EV_GRID_ITEM})
-							end
+						elseif bp.is_disabled then
+							s.append_string (Disabled_bp_symbol)
 						end
 					else
 						create lab.make_with_text (interface_names.l_error_with_line (f.name, i.out))
 						subrow.subrow (ir).set_item (2, lab)
 					end
+
 					ir := ir + 1
 					bp_list.forth
 				end
@@ -679,6 +632,108 @@ feature {NONE} -- Impl bp
 				lab.pointer_button_release_actions.force_extend (agent on_feature_item_right_clicked (f, subrow, ?,?,?))
 				subrow.set_item (3, create {EV_GRID_ITEM})
 				subrow.ensure_expandable
+			end
+		end
+
+	computed_grid_item (c, r: INTEGER): EV_GRID_ITEM is
+			-- Computed grid item corresponding to `c,r'.
+		local
+			row: EV_GRID_ROW
+		do
+			row := grid.row (r)
+			compute_bp_row (row)
+			Result := row.item (c)
+		end
+
+	compute_bp_row (a_row: EV_GRID_ROW) is
+			-- Compute `a_row' 's grid items
+		require
+			a_row_not_void: a_row /= Void
+		local
+			f: E_FEATURE
+			s: STRING_GENERAL
+			t: STRING
+			lab: EV_GRID_LABEL_ITEM
+			i: INTEGER
+			fs: FEATURE_STONE
+			bp: BREAKPOINT
+		do
+			bp ?= a_row.data
+			if bp /= Void then
+				f := bp.routine
+				i := bp.breakable_line_number
+
+				create lab.make_with_text (interface_names.l_offset_is (i.out))
+				create fs.make (f)
+				lab.set_data (fs)
+				a_row.set_item (1, lab)
+				if bp.is_enabled then
+					s := interface_names.l_space_enabled.twin
+					if bp.hits_count > 0 then
+						s.append (" (")
+						s.append (interface_names.l_hit_count_is (bp.hits_count))
+						s.append (")")
+					end
+					create lab.make_with_text (s)
+					if bp.has_condition then
+						lab.set_pixmap (breakable_icons.bp_enabled_conditional_icon)
+					else
+						lab.set_pixmap (breakable_icons.bp_enabled_icon)
+					end
+				elseif bp.is_disabled then
+					create lab.make_with_text (interface_names.l_space_disabled)
+					if bp.has_condition then
+						lab.set_pixmap (breakable_icons.bp_disabled_conditional_icon)
+					else
+						lab.set_pixmap (breakable_icons.bp_disabled_icon)
+					end
+				else
+					create lab.make_with_text (interface_names.l_space_error)
+				end
+				debug ("breakpoint")
+					t := bp.routine.associated_class.name_in_upper + "." + bp.routine.name + "#" + bp.breakable_line_number.out
+					if debugger_manager.application_is_executing then
+						if bp.is_set_for_application then
+							t.append_string ("Application: set")
+						else
+							t.append_string ("Application: not set")
+						end
+					end
+					if bp.hits_count > 0 then
+						t.append_character ('%N')
+						t.append_string_general (Interface_names.l_current_hit_count)
+						t.append_integer (bp.hits_count)
+					end
+					if bp.has_condition then
+						t.append_character ('%N')
+						t.append_string_general (interface_names.l_condition)
+						t.append_string (": " + bp.condition.expression)
+					end
+					if bp.has_message then
+						t.append_character ('%N')
+						t.append_string_general (interface_names.l_print_message)
+						t.append_string (bp.message)
+					end
+					if bp.continue_execution then
+						t.append_character ('%N')
+						t.append_string_general (interface_names.l_continue_execution)
+					end
+					lab.set_tooltip (t)
+				end
+
+				lab.pointer_button_release_actions.force_extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?))
+				a_row.set_item (2, lab)
+
+				if bp.has_condition then
+					create lab.make_with_text (bp.condition.expression)
+					lab.set_tooltip (lab.text)
+					lab.set_font (condition_font)
+					a_row.set_item (3, lab)
+				else
+					if not bp.is_disabled then
+						a_row.set_item (3, create {EV_GRID_ITEM})
+					end
+				end
 			end
 		end
 

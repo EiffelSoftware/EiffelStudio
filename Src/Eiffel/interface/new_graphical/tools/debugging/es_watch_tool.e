@@ -534,21 +534,25 @@ feature {NONE} -- Event handling
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			ce: EB_EDITOR
 			l_text: STRING
+			debwin: EB_DEVELOPMENT_WINDOW
 		do
-			ce := Eb_debugger_manager.debugging_window.editors_manager.current_editor
-			if ce /= Void and then ce.has_selection then
-				l_text := ce.string_selection
-				if l_text.has ('%N') then
-					l_text := Void
+			debwin := Eb_debugger_manager.debugging_window
+			if debwin /= Void then
+				ce := debwin.editors_manager.current_editor
+				if ce /= Void and then ce.has_selection then
+					l_text := ce.string_selection
+					if l_text.has ('%N') then
+						l_text := Void
+					end
 				end
+				if l_text /= Void and then not l_text.is_empty then
+					create dlg.make_with_expression_text (l_text)
+				else
+					create dlg.make_new_expression
+				end
+				dlg.set_callback (agent add_expression_with_dialog (dlg))
+				dlg.show_modal_to_window (debwin.window)
 			end
-			if l_text /= Void and then not l_text.is_empty then
-				create dlg.make_with_expression_text (l_text)
-			else
-				create dlg.make_new_expression
-			end
-			dlg.set_callback (agent add_expression_with_dialog (dlg))
-			dlg.show_modal_to_window (Eb_debugger_manager.debugging_window.window)
 		end
 
 	toggle_auto_expressions (is_auto: BOOLEAN) is

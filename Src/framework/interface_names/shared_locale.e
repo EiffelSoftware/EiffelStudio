@@ -116,6 +116,23 @@ feature {NONE} -- Implementation
 			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf8)
 		end
 
+feature -- File saving
+
+	save_string_32_in_file (a_file: FILE; a_str: STRING_32) is
+			-- Save `a_str' in `a_file', according to current locale.
+			-- `a_str' should be UTF-16 string.
+		require
+			a_file_open: a_file.is_open_write
+			a_file_exist: a_file.exists
+			a_str_not_void: a_str /= Void
+		do
+			if is_windows then
+				a_file.put_string (encoding_utf16.convert_to (system_encoding, a_str).as_string_8)
+			else
+				a_file.put_string (encoding_utf16.convert_to (encoding_utf8, a_str).as_string_8)
+			end
+		end
+
 feature -- String
 
 	first_character_as_upper (a_s: STRING_GENERAL): STRING_GENERAL is

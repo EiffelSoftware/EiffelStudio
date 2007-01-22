@@ -288,13 +288,9 @@ feature {NONE} -- Error reporting
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
 			l_ev: EV_ERROR_DIALOG
-			l_msg: STRING
 		do
 			l_ev := new_error_dialog
-			create l_msg.make_from_string (warning_messages.w_unable_to_load_ace_file (a_file_name))
-			l_msg.append ("%NFor the following reasons:%N")
-			l_msg.append_string (a_conf_error.text)
-			l_ev.set_text (l_msg)
+			l_ev.set_text (warning_messages.w_unable_to_load_ace_file (a_file_name, a_conf_error.text))
 			l_ev.show_modal_to_window (parent_window)
 			set_has_error
 		end
@@ -304,13 +300,9 @@ feature {NONE} -- Error reporting
 			-- be properly interpreted. The details of the error are stored in `a_conf_error'.
 		local
 			l_ev: EV_ERROR_DIALOG
-			l_msg: STRING
 		do
 			l_ev := new_error_dialog
-			create l_msg.make_from_string (warning_messages.w_unable_to_load_config_file (a_file_name))
-			l_msg.append ("%NFor the following reasons:%N")
-			l_msg.append_string (a_conf_error.text)
-			l_ev.set_text (l_msg)
+			l_ev.set_text (warning_messages.w_unable_to_load_config_file (a_file_name, a_conf_error.text))
 			l_ev.show_modal_to_window (parent_window)
 			set_has_error
 		end

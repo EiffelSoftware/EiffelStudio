@@ -42,6 +42,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+
 create
 	make,
 	make_from_filename
@@ -91,9 +93,9 @@ feature {NONE} -- Initialization
 			-- Get preferred file separator from `format_table'.
 		do
 			if format_table.has_key (f_File_separator) then
-				file_separator := format_table.found_item.item1 @ 1
-				if file_separator /= '/' and file_separator /= '\' then
-					file_separator := operating_environment.directory_separator
+				file_separator := format_table.found_item.item1
+				if not file_separator.is_equal ("/") and then not file_separator.is_equal ("\") then
+					file_separator := os_separator
 				end
 			end
 		end
@@ -139,20 +141,20 @@ feature -- Access
 			Result := image.count
 		end
 
-	image: STRING;
+	image: STRING_32;
 			-- Filtered output text
 
 	file_name: FILE_NAME;
 			-- File name for output of Current filter
 
-	base_path: STRING
+	base_path: STRING_32
 			-- For relative path names: zero or more "../".
 
 	file_suffix: STRING
 			-- Suffix of the file name where the filtered output text is stored;
 			-- Void if it has not been specified in the filter specification
 
-	file_separator: CHARACTER
+	file_separator: STRING_32
 			-- Preferred file separator.
 
 	class_suffix: STRING
@@ -192,7 +194,7 @@ feature -- Status setting
 			set: file_name = f
 		end
 
-	set_keyword (a_keyword, a_substitute: STRING) is
+	set_keyword (a_keyword, a_substitute: STRING_32) is
 			-- Add/change a keyword replacement. This means that
 			-- in the .FIL file, every instance of "$`a_keyword'$"
 			-- will be replaced with `a_substitute'.
@@ -208,21 +210,21 @@ feature -- Status setting
 			end
 		end
 
-	set_base_path (s: STRING) is
+	set_base_path (s: STRING_32) is
 			-- Set `base_path' to `s'.
 		require
 			s_not_void: s /= Void
 		local
-			sep: CHARACTER
-			p: STRING
+			sep: STRING_32
+			p: STRING_32
 		do
 			base_path := s
 			sep := file_separator
-			if sep = '%U' then
-				sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
+			if sep.is_equal ("%U") then
+				sep := os_separator
 			end
 			if not base_path.is_empty then
-				p := base_path + sep.out
+				p := base_path + sep
 			else
 				p := base_path
 			end
@@ -255,25 +257,28 @@ feature -- Status report
 
 feature -- Text processing
 
-	escaped_text (str: STRING): STRING is
+	escaped_text (str: STRING_GENERAL): STRING_GENERAL is
 			-- New string where characters of `str' are escaped.
 		require
 			str_not_void: str /= Void
+		local
+			l_str: STRING_32
 		do
-			create Result.make (str.count)
-			escaped_text_in_buffer (str, Result)
+			create l_str.make (str.count)
+			escaped_text_in_buffer (str.as_string_32, l_str)
+			Result := l_str
 		ensure
 			escaped_text_not_void: Result /= Void
 		end
 
-	escaped_text_in_buffer (str, buffer: STRING) is
+	escaped_text_in_buffer (str, buffer: STRING_32) is
 			-- Escape characters in `str'.
 		require
 			str_not_void: str /= Void
 			buffer_not_void: buffer /= Void
 		local
 			i, str_count: INTEGER;
-			char: CHARACTER
+			char: CHARACTER_32
 		do
 			if escape_characters.is_empty then
 				buffer.append (str)
@@ -297,14 +302,14 @@ feature -- Text processing
 
 feature -- Text processing
 
-	process_symbol_text (text: STRING) is
+	process_symbol_text (text: STRING_GENERAL) is
 			-- Process symbol text.
 		local
-			format: CELL2 [STRING, STRING];
-			text_image: STRING
+			format: CELL2 [STRING_32, STRING_32];
+			text_image: STRING_32
 		do
 			if not skipping then
-				text_image := text.as_lower
+				text_image := string_general_as_lower (text)
 				if format_table.has_key (text_image) then
 					format := format_table.found_item
 				elseif format_table.has_key (f_Symbol) then
@@ -322,15 +327,15 @@ feature -- Text processing
 			end
 		end;
 
-	process_keyword_text (text: STRING; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
 			-- Process keyword text.
 		local
-			format: CELL2 [STRING, STRING];
-			text_image: STRING
+			format: CELL2 [STRING_32, STRING_32];
+			text_image: STRING_32
 			l_feature_generated: BOOLEAN
 		do
 			if not skipping then
-				text_image := text.as_lower
+				text_image := string_general_as_lower (text)
 				if format_table.has_key (text_image) then
 					format := format_table.found_item
 				elseif a_feature /= Void and then format_table.has_key (f_Keyword_features) then
@@ -365,18 +370,18 @@ feature -- Text processing
 			end
 		end
 
-	process_operator_text (text: STRING; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
 			-- Process operator text.
 		local
-			format: CELL2 [STRING, STRING]
-			text_image: STRING
+			format: CELL2 [STRING_32, STRING_32]
+			text_image: STRING_32
 			operator_generated: BOOLEAN
 			l_group: CONF_GROUP
 		do
 			if not skipping then
 				operator_generated := doc_universe.is_feature_generated (a_feature)
 				l_group := doc_universe.found_group
-				text_image := text.as_lower
+				text_image := string_general_as_lower (text)
 				if format_table.has_key (text_image) then
 					format := format_table.found_item
 				elseif is_keyword (text) then
@@ -411,10 +416,10 @@ feature -- Text processing
 			end
 		end
 
-	process_basic_text (text: STRING) is
+	process_basic_text (text: STRING_GENERAL) is
 			-- Check first if a format has been specified for `text'.
 		local
-			format: CELL2 [STRING, STRING]
+			format: CELL2 [STRING_32, STRING_32]
 		do
 			if not skipping then
 				if format_table.has_key (f_Basic) then
@@ -432,11 +437,11 @@ feature -- Text processing
 			end
 		end;
 
-	process_comment_text (text: STRING; url: STRING) is
+	process_comment_text (text: STRING_GENERAL; url: STRING_GENERAL) is
 			-- Process the quoted text within a comment.
 		local
-			format: CELL2 [STRING, STRING]
-			s: STRING
+			format: CELL2 [STRING_32, STRING_32]
+			s: STRING_32
 		do
 			if not skipping then
 				s := escaped_text (text)
@@ -462,10 +467,10 @@ feature -- Text processing
 			end
 		end
 
-	process_quoted_text (text: STRING) is
+	process_quoted_text (text: STRING_GENERAL) is
 			-- Process the quoted `text' within a comment.
 		local
-			format: CELL2 [STRING, STRING];
+			format: CELL2 [STRING_32, STRING_32];
 		do
 			if not skipping then
 				if format_table.has_key (f_Quoted) then
@@ -481,12 +486,12 @@ feature -- Text processing
 			end
 		end
 
-	process_cluster_name_text (text: STRING; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CONF_GROUP; a_quote: BOOLEAN) is
 		local
-			format: CELL2 [STRING, STRING]
+			format: CELL2 [STRING_32, STRING_32]
 			cluster_generated: BOOLEAN
-			path_pre: STRING
-			l_string: STRING
+			path_pre: STRING_32
+			l_string: STRING_32
 		do
 			if a_quote then
 				l_string := text_quoted (text)
@@ -498,8 +503,8 @@ feature -- Text processing
 				if cluster_generated then
 					if format_table.has_key (f_Cluster_name) then
 						format := format_table.found_item
-						path_pre := path_representation (file_separator.out, a_cluster.name, a_cluster, False)
-						set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + "index") + "." + file_suffix)
+						path_pre := path_representation (file_separator, a_cluster.name, a_cluster, False)
+						set_keyword (kw_File, relative_to_base (path_pre + file_separator + "index") + "." + file_suffix)
 					end
 				else
 					if format_table.has_key (f_Non_generated_Cluster) then
@@ -521,13 +526,13 @@ feature -- Text processing
 			end
 		end
 
-	process_class_name_text (text: STRING; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
 		local
-			format: CELL2 [STRING, STRING]
+			format: CELL2 [STRING_32, STRING_32]
 			class_generated: BOOLEAN
 			l_group: CONF_GROUP
-			path_pre: STRING
-			l_string: STRING
+			path_pre: STRING_32
+			l_string: STRING_32
 		do
 			if a_quote then
 				l_string := text_quoted (text)
@@ -540,9 +545,9 @@ feature -- Text processing
 					if format_table.has_key (f_Class_name) then
 						l_group := doc_universe.found_group
 						format := format_table.found_item
-						path_pre := path_representation (file_separator.out, l_group.name, l_group, False)
+						path_pre := path_representation (file_separator, l_group.name, l_group, False)
 						set_keyword (kw_File,
-							relative_to_base (path_pre + file_separator.out + a_class.name.as_lower +
+							relative_to_base (path_pre + file_separator + a_class.name.as_lower +
 								class_suffix
 							)
 						)
@@ -568,7 +573,7 @@ feature -- Text processing
 			end
 		end
 
-	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
 			-- Process target name text `text'.
 		do
 			process_basic_text (text)
@@ -576,7 +581,7 @@ feature -- Text processing
 
 	process_new_line is
 		local
-			format: CELL2 [STRING, STRING]
+			format: CELL2 [STRING_32, STRING_32]
 		do
 			if not skipping then
 				if format_table.has_key (f_New_line) then
@@ -594,9 +599,9 @@ feature -- Text processing
 
 	process_indentation (a_indent_depth: INTEGER) is
 		local
-			format: CELL2 [STRING, STRING];
+			format: CELL2 [STRING_32, STRING_32];
 			i: INTEGER
-			str: STRING
+			str: STRING_32
 		do
 			if not skipping then
 				if format_table.has_key (f_Tab) then
@@ -620,11 +625,11 @@ feature -- Text processing
 			end
 		end;
 
-	process_filter_item (text: STRING; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
 			-- Mark appearing before or after major syntactic constructs.
 		local
-			construct: STRING
-			format: CELL2 [STRING, STRING]
+			construct: STRING_32
+			format: CELL2 [STRING_32, STRING_32]
 		do
 			construct := text
 			if skipping then
@@ -665,11 +670,11 @@ feature -- Text processing
 			end
 		end;
 
-	process_feature_dec_item (a_feature_name: STRING; is_before: BOOLEAN) is
+	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN) is
 			-- Process a feature start or after.
 		local
-			construct: STRING
-			format: CELL2 [STRING, STRING]
+			construct: STRING_32
+			format: CELL2 [STRING_32, STRING_32]
 		do
 			construct := f_Feature_declaration
 			if skipping then
@@ -714,11 +719,11 @@ feature -- Text processing
 			end
 		end;
 
-	process_tooltip_item (a_tooltip: STRING; is_before: BOOLEAN) is
+	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN) is
 			-- Process a tooltip start or after.
 		local
-			construct: STRING
-			format: CELL2 [STRING, STRING]
+			construct: STRING_32
+			format: CELL2 [STRING_32, STRING_32]
 		do
 			construct := f_Tooltip
 			if skipping then
@@ -756,7 +761,7 @@ feature -- Text processing
 			end
 		end;
 
-	print_escaped_text (str: STRING) is
+	print_escaped_text (str: STRING_GENERAL) is
 			-- Append `str' to `image' with escape characters
 			-- substitutions if required.
 		require
@@ -765,19 +770,19 @@ feature -- Text processing
 			escaped_text_in_buffer (str, image)
 		end
 
-	process_cl_syntax (text: STRING; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
 			-- Process class syntax text.
 		do
 			process_basic_text (text)
 		end;
 
-	process_ace_syntax (text: STRING; a_error: ERROR) is
+	process_ace_syntax (text: STRING_GENERAL; a_error: ERROR) is
 			-- Process Ace syntax text.
 		do
 			process_basic_text (text)
 		end;
 
-	process_address_text (a_address, a_name: STRING; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process address text.
 		do
 			process_basic_text (a_address)
@@ -788,7 +793,7 @@ feature -- Text processing
 		do
 		end;
 
-	process_feature_name_text (text: STRING; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process feature name text `t'.
 		do
 			process_basic_text (text)
@@ -803,10 +808,10 @@ feature -- Text processing
 		local
 			real_feature: E_FEATURE
 			written_class: CLASS_C
-			feat_suffix: STRING
+			feat_suffix: STRING_32
 			l_class_i : CLASS_I
-			path_pre: STRING
-			l_name: STRING
+			path_pre: STRING_32
+			l_name: STRING_32
 		do
 			written_class := f.written_class
 
@@ -822,8 +827,8 @@ feature -- Text processing
 
 			feat_suffix := escaped_text (feat_suffix)
 			l_class_i := f.written_class.lace_class
-			path_pre := path_representation (file_separator.out, a_group.name, a_group, False)
-			set_keyword (kw_File, relative_to_base (path_pre + file_separator.out + l_class_i.name.as_lower + feat_suffix))
+			path_pre := path_representation (file_separator, a_group.name, a_group, False)
+			set_keyword (kw_File, relative_to_base (path_pre + file_separator + l_class_i.name.as_lower + feat_suffix))
 			if real_feature = Void then
 				l_name := f.name
 			else
@@ -832,12 +837,12 @@ feature -- Text processing
 			set_keyword (kw_Feature, escaped_text (l_name))
 		end
 
-	process_feature_text (text: STRING; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
 			-- Process feature text `text'.
 		local
-			format: CELL2 [STRING, STRING]
+			format: CELL2 [STRING_32, STRING_32]
 			feature_generated: BOOLEAN
-			l_string: STRING
+			l_string: STRING_32
 		do
 			if a_quote then
 				l_string := text_quoted (text)
@@ -875,7 +880,7 @@ feature -- Text processing
 	process_breakpoint_index (a_feature: E_FEATURE; a_index: INTEGER; a_cond: BOOLEAN) is
 			-- Process breakpoint index `text'.
 		local
-			str: STRING
+			str: STRING_32
 		do
 			str := a_index.out
 			if a_cond then
@@ -890,7 +895,7 @@ feature -- Text processing
 		do
 		end;
 
-	process_error_text (text: STRING; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
 			-- Process error text.
 		do
 			process_basic_text (text)
@@ -901,10 +906,10 @@ feature -- Text processing
 		do
 		end;
 
-	process_character_text (text: STRING) is
+	process_character_text (text: STRING_GENERAL) is
 			-- Process the character `text'.
 		local
-			format: CELL2 [STRING, STRING];
+			format: CELL2 [STRING_32, STRING_32];
 		do
 			if not skipping then
 				if format_table.has_key (f_Character) then
@@ -920,10 +925,10 @@ feature -- Text processing
 			end
 		end
 
-	process_generic_text (text: STRING) is
+	process_generic_text (text: STRING_GENERAL) is
 			-- Process a dot.
 		local
-			format: CELL2 [STRING, STRING];
+			format: CELL2 [STRING_32, STRING_32];
 		do
 			if not skipping then
 				if format_table.has_key (f_Generic) then
@@ -939,10 +944,10 @@ feature -- Text processing
 			end
 		end
 
-	process_indexing_tag_text (text: STRING) is
+	process_indexing_tag_text (text: STRING_GENERAL) is
 			-- Process tag in indexing clause.
 		local
-			format: CELL2 [STRING, STRING];
+			format: CELL2 [STRING_32, STRING_32];
 		do
 			if not skipping then
 				if format_table.has_key (f_Indexing_tag) then
@@ -958,10 +963,10 @@ feature -- Text processing
 			end
 		end
 
-	process_local_text (text: STRING) is
+	process_local_text (text: STRING_GENERAL) is
 			-- Process local symbol `text'.
 		local
-			format: CELL2 [STRING, STRING];
+			format: CELL2 [STRING_32, STRING_32];
 		do
 			if not skipping then
 				if format_table.has_key (f_Local_symbol) then
@@ -977,10 +982,10 @@ feature -- Text processing
 			end
 		end
 
-	process_number_text (text: STRING) is
+	process_number_text (text: STRING_GENERAL) is
 			-- Process manifest number constant `text'.
 		local
-			format: CELL2 [STRING, STRING];
+			format: CELL2 [STRING_32, STRING_32];
 		do
 			if not skipping then
 				if format_table.has_key (f_Number) then
@@ -996,10 +1001,10 @@ feature -- Text processing
 			end
 		end
 
-	process_assertion_tag_text (text: STRING) is
+	process_assertion_tag_text (text: STRING_GENERAL) is
 			-- Process assertion tag `text'.
 		local
-			format: CELL2 [STRING, STRING]
+			format: CELL2 [STRING_32, STRING_32]
 		do
 			if not skipping then
 				if format_table.has_key (f_Assertion_tag) then
@@ -1015,11 +1020,11 @@ feature -- Text processing
 			end
 		end
 
-	process_multiple_spaces (s: STRING) is
+	process_multiple_spaces (s: STRING_32) is
 			-- Process sequences of 2 or more spaces.
 		local
-			format: CELL2 [STRING, STRING]
-			rep: STRING
+			format: CELL2 [STRING_32, STRING_32]
+			rep: STRING_32
 			i: INTEGER
 			replacing: BOOLEAN
 		do
@@ -1058,11 +1063,11 @@ feature -- Text processing
 			end
 		end
 
-	process_string_text (text: STRING; link: STRING) is
+	process_string_text (text: STRING_GENERAL; link: STRING_GENERAL) is
 			-- Process literal string `text'.
 		local
-			format: CELL2 [STRING, STRING]
-			s: STRING
+			format: CELL2 [STRING_32, STRING_32]
+			s: STRING_32
 		do
 			if not skipping then
 				s := escaped_text (text)
@@ -1089,10 +1094,10 @@ feature -- Text processing
 			end
 		end
 
-	process_reserved_word_text (text: STRING) is
+	process_reserved_word_text (text: STRING_GENERAL) is
 			-- Process literal string `text'.
 		local
-			format: CELL2 [STRING, STRING];
+			format: CELL2 [STRING_32, STRING_32];
 		do
 			if not skipping then
 				if format_table.has_key (f_Reserved_word) then
@@ -1108,18 +1113,18 @@ feature -- Text processing
 			end
 		end
 
-	process_menu_text (text, link: STRING) is
+	process_menu_text (text, link: STRING_GENERAL) is
 			-- Process literal string `text'.
 		local
-			format: CELL2 [STRING, STRING]
-			format_item: STRING
+			format: CELL2 [STRING_32, STRING_32]
+			format_item: STRING_32
 		do
 			if not skipping then
 				format_item := f_Menu_item.twin
 				if link = Void then
 					format_item.append ("_disabled")
 				else
-					set_keyword (kw_File, link + "." + file_suffix)
+					set_keyword (kw_File, link.as_string_32 + "." + file_suffix)
 				end
 
 				if format_table.has_key (format_item) then
@@ -1133,11 +1138,11 @@ feature -- Text processing
 			end
 		end
 
-	process_class_menu_text (text, link: STRING) is
+	process_class_menu_text (text, link: STRING_GENERAL) is
 			-- Process literal string `text'.
 		local
-			format: CELL2 [STRING, STRING]
-			format_item: STRING
+			format: CELL2 [STRING_32, STRING_32]
+			format_item: STRING_32
 		do
 			if not skipping then
 				format_item := f_Menu_item.twin
@@ -1145,7 +1150,7 @@ feature -- Text processing
 				if link = Void then
 					format_item.append ("_disabled")
 				else
-					set_keyword (kw_File, link + "." + file_suffix)
+					set_keyword (kw_File, link.as_string_32 + "." + file_suffix)
 				end
 
 				if format_table.has_key (format_item) then
@@ -1161,16 +1166,16 @@ feature -- Text processing
 
 feature {NONE} -- Implementation
 
-	keyword_table: HASH_TABLE [STRING, STRING]
+	keyword_table: HASH_TABLE [STRING_32, STRING_32]
 			-- Pairs of [substitute, keyword].
 
-	image_append (s: STRING) is
+	image_append (s: STRING_32) is
 			-- Append `s' to `image' after replacing keywords
 			-- from `keyword_table'. The default keyword ("$") is not recognized anymore.
 		local
 			i: INTEGER
-			kw: STRING
-			l_c: CHARACTER
+			kw: STRING_32
+			l_c: CHARACTER_32
 			l_state: INTEGER
 		do
 			from
@@ -1208,15 +1213,21 @@ feature {NONE} -- Implementation
 			Result := ('$').code
 		end
 
-	relative_to_base (rel_filename: STRING): STRING is
+	os_separator: STRING_32 is
+		once
+			create Result.make (1)
+			Result.append_character (operating_environment.directory_separator)
+		end
+
+	relative_to_base (rel_filename: STRING_32): STRING_32 is
 		do
 			create Result.make_from_string (base_path)
 			if not base_path.is_empty then
-				Result.append_character (operating_environment.directory_separator)
+				Result.append (os_separator)
 			end
 			Result.append (rel_filename)
-			if file_separator /= '%U' then
-				Result.replace_substring_all (operating_environment.directory_separator.out, file_separator.out)
+			if file_separator.is_equal ("%U") then
+				Result.replace_substring_all (os_separator, file_separator)
 			end
 		end
 

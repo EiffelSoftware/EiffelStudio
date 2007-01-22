@@ -67,27 +67,27 @@ feature
 			Precursor
 		end
 
-	warning (msg: STRING) is
+	warning (msg: STRING_GENERAL) is
 		local
-			wd: EV_WARNING_DIALOG
+			wd: EB_WARNING_DIALOG
 		do
 			create wd.make_with_text (msg)
 			wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			Precursor {DEBUGGER_CONTROLLER} (msg)
 		end
 
-	if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE]) is
+	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
 		local
-			dlg: EV_CONFIRMATION_DIALOG
+			dlg: EB_CONFIRMATION_DIALOG
 		do
 			create dlg.make_with_text_and_actions (msg, <<a_action>>)
 			dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
-	discardable_if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE];
+	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
 			a_button_count: INTEGER; a_pref_string: STRING) is
 		local
-			dlg: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			dlg: EB_DISCARDABLE_CONFIRMATION_DIALOG
 		do
 			create dlg.make_initialized (a_button_count,
 							a_pref_string,

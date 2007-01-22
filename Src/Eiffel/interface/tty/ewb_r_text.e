@@ -54,7 +54,7 @@ feature {NONE} -- Implementation
 				output_window.put_new_line
 
 				if l_error then
-					output_window.put_string (ewb_names.cannot_open (e_class.file_name).out)
+					output_window.put_string (ewb_names.cannot_open (e_class.file_name))
 					output_window.put_new_line;
 				end
 			end

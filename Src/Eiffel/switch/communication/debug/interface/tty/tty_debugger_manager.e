@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Output helpers
 
-	debugger_output_message (msg: STRING) is
+	debugger_output_message (msg: STRING_GENERAL) is
 		do
 			tty_output.add_string (msg)
 			tty_output.add_new_line

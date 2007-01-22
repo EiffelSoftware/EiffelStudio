@@ -43,7 +43,7 @@ feature -- Project file/directory warnings
 
 	w_Cannot_compile: STRING_GENERAL is do Result := locale.translate ("Read-only project: cannot compile.") end
 
-	w_Project_corrupted (dir_name: STRING): STRING_GENERAL is
+	w_Project_corrupted (dir_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void
 		do
@@ -61,7 +61,7 @@ feature -- Project file/directory warnings
 
 	w_project_constains_no_compilable_target: STRING_GENERAL is do Result := locale.translate ("This project contains no compilable target.%NPlease open a different project.") end
 
-	w_Project_incompatible (dir_name: STRING; comp_version, incomp_version: STRING): STRING_GENERAL is
+	w_Project_incompatible (dir_name: STRING_GENERAL; comp_version, incomp_version: STRING_GENERAL): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void
 			valid_version: comp_version /= Void and then incomp_version /= Void
@@ -75,7 +75,7 @@ feature -- Project file/directory warnings
 			end
 		end
 
-	w_Project_incompatible_version (dir_name: STRING; comp_version, incomp_version: STRING): STRING_GENERAL is
+	w_Project_incompatible_version (dir_name: STRING_GENERAL; comp_version, incomp_version: STRING_GENERAL): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void and then not dir_name.is_empty
 			valid_comp_version: comp_version /= Void and then not comp_version.is_empty
@@ -90,14 +90,11 @@ feature -- Project file/directory warnings
 
 	w_project_build_precompile_error: STRING_GENERAL is do Result := locale.translate ("Could not generate needed precompile.") end
 
-	w_Project_interrupted (dir_name: STRING): STRING is
+	w_Project_interrupted (dir_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("Retrieving project in: ")
-			Result.append (dir_name)
-			Result.append ("%Nwas interrupted. Cannot continue.")
+			Result := locale.format_string (locale.translate ("Retrieving project in: $1%Nwas interrupted. Cannot continue."), [dir_name])
 		end
 
 	w_no_compilable_target: STRING_GENERAL is do Result := locale.translate ("Cannot compile project: no valid target found.") end
@@ -111,28 +108,28 @@ feature -- Project file/directory warnings
 
 feature -- File warnings
 
-	w_Cannot_create_file (file_name: STRING): STRING_GENERAL is
+	w_Cannot_create_file (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
 			Result := locale.format_string (locale.translate ("Cannot create file:%N$1."), [file_name])
 		end
 
-	w_Cannot_create_directory (file_name: STRING): STRING_GENERAL is
+	w_Cannot_create_directory (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
 			Result := locale.format_string (locale.translate ("Cannot create directory:%N$1."), [file_name])
 		end
 
-	w_Cannot_read_file (file_name: STRING): STRING_GENERAL is
+	w_Cannot_read_file (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
 			Result := locale.format_string (locale.translate ("File: '$1' cannot be read."), [file_name])
 		end
 
-	w_cannot_read_ace_file_from_epr (epr_name, file_name: STRING): STRING_GENERAL is
+	w_cannot_read_ace_file_from_epr (epr_name, file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			epr_name_not_void: epr_name /= Void
 		do
@@ -141,18 +138,6 @@ feature -- File warnings
 			else
 				Result := locale.format_string (locale.translate ("Ace file: '$1'%Nreferenced from configuration file: '$2' cannot be read.%NSelect a 5.6 or older version of an Eiffel project."), [file_name, epr_name])
 			end
-		end
-
-	w_Cannot_read_file_retry (file_name: STRING): STRING is
-		require
-			file_name_not_void: file_name /= Void
-		local
-			l_str: STRING_32
-		do
-			l_str := w_Cannot_read_file (file_name).as_string_32
-			l_str.append (" ")
-			l_str.append_string_general (locale.translate ("Try again?"))
-			Result := l_str
 		end
 
 	w_file_not_exist (f_name: STRING): STRING is
@@ -166,446 +151,389 @@ feature -- File warnings
 			Result.append ("%Ndoes not exist.")
 		end
 
-	w_File_does_not_exist_execution_impossible (a_file_name: STRING): STRING_GENERAL is
+	w_File_does_not_exist_execution_impossible (a_file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_file_name_not_void: a_file_name /= Void
 		do
 			Result := locale.format_string (locale.translate ("$1 does not exist.%NExecution impossible.%N"), [a_file_name])
 		end
 
-	w_Directory_not_exist (dir_name: STRING): STRING is
+	w_Directory_not_exist (dir_name: STRING_GENERAL): STRING_GENERAL is
 			-- Error message when a directory does not exist.
 		require
 			dir_name_not_void: dir_name /= Void
 		do
-			create Result.make (128)
-			Result.append ("Directory ")
-			Result.append (dir_name)
-			Result.append ("%Ndoes not exist.")
+			Result := locale.format_string (locale.translate ("Directory $1%Ndoes not exist."), [dir_name])
 		end
 
-	w_Not_a_plain_file (file_name: STRING): STRING is
+	w_Not_a_plain_file (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			create Result.make (30)
-			Result.append (file_name)
-			Result.append ("%Nis not a plain file.")
+			Result := locale.format_string (locale.translate ("$1%Nis not a plain file."), [file_name])
 		end
 
-	w_Not_creatable (file_name: STRING): STRING is
+	w_Not_creatable (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("File: ")
-			Result.append (file_name)
-			Result.append (" cannot be created.%NPlease check permissions.")
+			Result := locale.format_string (locale.translate ("File: $1 cannot be created.%NPlease check permissions."), [file_name])
 		end
 
-	w_Not_writable (file_name: STRING): STRING is
+	w_Not_writable (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("File: ")
-			Result.append (file_name)
-			Result.append ("%Nis not writable.%NPlease check permissions.")
+			Result := locale.format_string (locale.translate ("%Nis not writable.%NPlease check permissions."), [file_name])
 		end
 
-	w_Still_referenced (a_class_name: STRING; referenced_classes: STRING): STRING is
+	w_Still_referenced (a_class_name: STRING_GENERAL; referenced_classes: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_class_name_not_void: a_class_name /= Void
 			referenced_classes_not_void: referenced_classes /= Void
 		do
-			create Result.make (30)
-			Result.append ("Can't delete class " + a_class_name)
-			Result.append (" because it is referenced by%N")
-			Result.append (referenced_classes)
-			Result.append ("%N%NIf this is not the case recompile the system and try again.")
+			Result := locale.format_string (locale.translate ("Can't delete class $1 because it is referenced by%N$2%N%NIf this is not the case recompile the system and try again."), [a_class_name, referenced_classes])
 		end
 
-	w_File_modified_by_another_editor: STRING is "This file has been modified by another editor."
-
-	w_File_exists (file_name: STRING): STRING is
+	w_File_exists (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("File: ")
-			Result.append (file_name)
-			Result.append (" already exists.%NDo you wish to overwrite it?")
+			Result := locale.format_string (locale.translate ("File: $1 already exists.%NDo you wish to overwrite it?"), [file_name])
 		end
 
-	w_File_exists_edit_it (file_name: STRING): STRING is
-		require
-			file_name_not_void: file_name /= Void
-		do
-			create Result.make (30)
-			Result.append ("File: ")
-			Result.append (file_name)
-			Result.append (" already exists.%NDo you wish to edit it?")
-		end
-
-	w_Not_a_directory (dir_name: STRING): STRING is
+	w_Not_a_directory (dir_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			dir_name_not_void: dir_name /= Void
 		do
-			create Result.make (30)
-			Result.append (dir_name)
-			Result.append ("%Nis not a directory.")
+			Result := locale.format_string (locale.translate ("$1%Nis not a directory."), [dir_name])
 		end
 
-	w_Not_a_file (file_name: STRING): STRING is
+	w_Not_a_file (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
 		do
-			create Result.make (file_name.count + 18)
-			Result.append ("'")
-			Result.append (file_name)
-			Result.append ("' is not a file.")
+			Result := locale.format_string (locale.translate ("'$1' is not a file."), [file_name])
 		end
 
-	w_Not_a_file_retry (file_name: STRING): STRING is
+	w_Not_a_file_retry (file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			file_name_not_void: file_name /= Void
+		local
+			l_str: STRING_32
 		do
-			Result := w_Not_a_file (file_name)
-			Result.append (". Try again?")
+			l_str := w_Not_a_file (file_name).as_string_32
+			l_str.append (locale.translate (" Try again?"))
+			Result := l_str
 		end
 
-	w_Cannot_open_any_file: STRING is "Only files representing known%N%
-									%classes can be opened."
-			-- An attempt was made to open a file that does not correspond to a class in the universe.
-
-	w_Not_rename_swp (a_file_name, a_new_name: STRING): STRING is
+	w_Not_rename_swp (a_file_name, a_new_name: STRING_GENERAL): STRING_GENERAL is
 			-- Cannot rename the swp file into the original file during a save operation.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_new_name_not_void: a_new_name /= Void
 		do
-			Result := "Could not rename "+a_file_name+" into "+a_new_name+"."
+			Result := locale.format_string (locale.translate ("Could not rename $1 into $2."), [a_file_name, a_new_name])
 		end
 
-	w_Not_rename (a_file_name, a_new_name: STRING): STRING is
+	w_Not_rename (a_file_name, a_new_name: STRING_GENERAL): STRING_GENERAL is
 			-- Cannot rename `a_file_name' into the `a_new_name'.
 		require
 			a_file_name_not_void: a_file_name /= Void
 			a_new_name_not_void: a_new_name /= Void
 		do
-			Result := "Could not rename "+a_file_name+" into "+a_new_name+"."
+			Result := locale.format_string (locale.translate ("Could not rename $1 into $2."), [a_file_name, a_new_name])
 		end
 
 feature -- Project settings warnings
 
-	w_cluster_with_name_exists: STRING is "A cluster with this name already exists. Please use another name."
-
-	w_cluster_name_not_valid: STRING is "Cluster name is not valid."
-
-	w_cluster_path_not_valid: STRING is "Cluster path is not valid."
+	w_cluster_path_not_valid: STRING_GENERAL is do Result := locale.translate ("Cluster path is not valid.") end
 
 feature -- Debug warnings
 
-	w_Compile_before_debug: STRING is "Do you want to compile before debugging?"
+	w_Compile_before_debug: STRING_GENERAL is do Result := locale.translate ("Do you want to compile before debugging?") end
 
-	w_Cannot_debug: STRING is "Current version of system has not been successfully compiled.%N%
-						%Cannot use debugging facilities."
+	w_Cannot_debug: STRING_GENERAL is do Result := locale.translate ("Current version of system has not been successfully compiled.%N%
+						%Cannot use debugging facilities.") end
 
-	w_Debug_not_compiled: STRING is
+	w_Debug_not_compiled: STRING_GENERAL is
 			-- The user tries to launch an application that is not fully compiled.
-		"The last compilation was not complete.%N%
-		%Running the last compiled application in these conditions%N%
-		%may lead to inconsistent information, or to an unexpected behavior."
+		do
+			Result := locale.translate (
+				"The last compilation was not complete.%N%
+				%Running the last compiled application in these conditions%N%
+				%may lead to inconsistent information, or to an unexpected behavior.")
+		end
 
-	w_Removed_class_debug: STRING is
+	w_Removed_class_debug: STRING_GENERAL is
 			-- The user tries to launch an application from which classes were removed.
-		"Classes were manually removed since last compilation.%N%
-		%Running the last compiled application in these conditions%N%
-		%may lead to inconsistent information, or to an unexpected behavior."
+		do
+			Result := locale.translate (
+				"Classes were manually removed since last compilation.%N%
+				%Running the last compiled application in these conditions%N%
+				%may lead to inconsistent information, or to an unexpected behavior.")
+		end
 
-	w_Invalid_working_directory (wd: STRING): STRING is
+	w_Invalid_working_directory (wd: STRING_GENERAL): STRING_GENERAL is
 			-- Message when working directory is incorrect.
 		require
 			wd_not_void: wd /= Void
 		do
-			Result := "Could not launch system in %"" + wd + "%"."
+			Result := locale.format_string (locale.translate ("Could not launch system in %"$1%"."), [wd])
 		end
 
-	w_Not_a_condition (expr: STRING_GENERAL): STRING_32 is
+	w_Not_a_condition (expr: STRING_GENERAL): STRING_GENERAL is
 			-- Message when an expression is not a condition.
 		require
 			expr_not_void: expr /= Void
 		do
-			create Result.make_empty
-			Result.append_character ('%'')
-			Result.append (expr)
-			Result.append_string ("%' is not a condition.")
+			Result := locale.format_string (locale.translate ("%'$1%' is not a condition."), [expr])
 		end
 
-	w_Invalid_address (addr: STRING): STRING is
+	w_Invalid_address (addr: STRING_GENERAL): STRING_GENERAL is
 			-- Message when an address does not correspond to an object.
 		require
 			addr_not_void: addr /= Void
 		do
 			if addr.is_empty then
-				Result := "Please enter a valid address."
+				Result := locale.translate ("Please enter a valid address.")
 			else
-				Result := "%'" + addr + "%' is not a valid address.%N%
-					%Addresses only make sense while an application is stopped."
+				Result := locale.format_string (locale.translate ("%'$1%' is not a valid address.%N%
+					%Addresses only make sense while an application is stopped."), [addr])
 			end
 		end
 
-	w_Overflow_detected: STRING is	"Possible stack overflow detected.%N%
+	w_Overflow_detected: STRING_GENERAL is	do Result := locale.translate ("Possible stack overflow detected.%N%
 									%The application was paused to let you%N%
-									%examine its current status."
+									%examine its current status.") end
 
-	w_Syntax_error_in_expression (expr: STRING_GENERAL): STRING_32 is
+	w_Syntax_error_in_expression (expr: STRING_GENERAL): STRING_GENERAL is
 			-- Message when an expression has an invalid syntax.
 		require
 			expr_not_void: expr /= Void
 		do
-			create Result.make (expr.count + 44)
-			Result.append_character ('%'')
-			Result.append_string (expr)
-			Result.append_character ('%'')
-			Result.append_string (" is an invalid or not supported syntax.")
+			Result := locale.format_string (locale.translate ("%'$1%' is an invalid or not supported syntax."), [expr])
 		end
 
 feature -- Cluster tree warnings
 
-	w_Cannot_move_class: STRING is
+	w_Cannot_move_class: STRING_GENERAL is
 			-- A class involved in a move operation could not be moved.
-		"Source file cannot be moved.%N%
-		%Please make sure that:%N%
-		%the source file exists,%N%
-		%the source file is not being edited,%N%
-		%the destination directory can be written in."
+		do
+			Result := locale.translate (
+				"Source file cannot be moved.%N%
+				%Please make sure that:%N%
+				%the source file exists,%N%
+				%the source file is not being edited,%N%
+				%the destination directory can be written in.")
+		end
 
-	w_Cannot_delete_read_only_class (class_name: STRING): STRING is
+	w_Cannot_delete_read_only_class (class_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			class_name_not_void: class_name /= Void
 		do
-			create Result.make (100)
-			Result.append ("Cannot delete class ")
-			Result.append (class_name.as_upper)
-			Result.append ("%Nbecause it is either precompiled%N%
-							%or in a library cluster.")
+			Result := locale.format_string (
+				locale.translate (
+					"Cannot delete class $1%Nbecause it is either precompiled%Nor in a library cluster."),
+					[string_general_as_upper (class_name)]
+				)
 		end
 
-	w_Cannot_delete_library_cluster (cluster_name: STRING): STRING is
+	w_Cannot_delete_library_cluster (cluster_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			cluster_name_not_void: cluster_name /= Void
 		do
-			create Result.make (100)
-			Result.append ("Cannot delete cluster ")
-			Result.append (cluster_name.as_upper)
-			Result.append ("%Nbecause it is read only.")
+			Result := locale.format_string (
+				locale.translate (
+					"Cannot delete cluster $1%Nbecause it is read only."),
+					[string_general_as_upper (cluster_name)]
+				)
 		end
 
-	w_Cannot_delete_none_empty_cluster (cluster_name: STRING): STRING is
+	w_Cannot_delete_none_empty_cluster (cluster_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			cluster_name_not_void: cluster_name /= Void
 		do
-			create Result.make (100)
-			Result.append ("Cannot delete cluster ")
-			Result.append (cluster_name.as_upper)
-			Result.append ("%Nbecause cluster is not empty")
+			Result := locale.format_string (
+				locale.translate (
+					"Cannot delete cluster $1%Nbecause cluster is not empty"),
+					[string_general_as_upper (cluster_name)]
+				)
 		end
 
-	w_Cannot_add_to_library_cluster (cluster_name: STRING): STRING is
+	w_Cannot_add_to_library_cluster (cluster_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			cluster_name_not_void: cluster_name /= Void
 		do
-			create Result.make (100)
-			Result.append ("Cannot add a cluster to cluster%N")
-			Result.append (cluster_name.as_upper)
-			Result.append ("%Nbecause it is read only.")
+			Result := locale.format_string (
+				locale.translate (
+					"Cannot add a cluster to cluster%N$1%Nbecause it is read only."),
+					[string_general_as_upper (cluster_name)]
+				)
 		end
 
-	w_Cannot_find_class (class_name: STRING): STRING is
+	w_Cannot_find_class (class_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			class_name_not_void: class_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("Cannot find class ")
-			Result.append (class_name.as_upper)
-			Result.append (".")
+			Result := locale.format_string (locale.translate ("Cannot find class $1."), [string_general_as_upper (class_name)])
 		end
 
-	w_Cannot_find_cluster (cluster_name: STRING): STRING is
+	w_Cannot_find_cluster (cluster_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			cluster_name_not_void: cluster_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("Cannot find cluster ")
-			Result.append (cluster_name.as_upper)
-			Result.append (".")
+			Result := locale.format_string (locale.translate ("Cannot find cluster $1."), [string_general_as_upper (cluster_name)])
 		end
 
-	w_Choose_class_or_cluster: STRING is
+	w_Choose_class_or_cluster: STRING_GENERAL is
 			-- No class/cluster stone was selected in the development window.
-		"Please first select in the editor the class or cluster%Nthat you want to locate."
+		do Result := locale.translate ("Please first select in the editor the class or cluster%Nthat you want to locate.") end
 
-	w_Class_already_in_cluster (base_name: STRING): STRING is
+	w_Class_already_in_cluster (base_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			base_name_not_void: base_name /= Void
 		do
-			create Result.make (30)
-			Result.append ("Class with file name ")
-			Result.append (base_name)
-			Result.append (" already exists.")
+			Result := locale.format_string (locale.translate ("Class with file name $1 already exists."), [base_name])
 		end
 
-	w_Class_already_exists (class_name: STRING): STRING is
+	w_Class_already_exists (class_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			class_name_not_void: class_name /= Void
 		do
-			create Result.make (100)
-			Result.append ("Class with name: '")
-			Result.append (class_name)
-			Result.append ("' already exists.%NPlease select a different class name.")
+			Result := locale.format_string (locale.translate ("Class with name: '$1' already exists.%NPlease select a different class name."), [class_name])
 		end
 
-	w_Class_already_exists_info (class_name: STRING): STRING is
+	w_Invalid_class_name (class_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			class_name_not_void: class_name /= Void
+		local
+			l_str: STRING_32
 		do
-			create Result.make (100)
-			Result.append ("Class with name: '")
-			Result.append (class_name)
-			Result.append ("' already exists.%NDo you want to proceed?")
-		end
-
-	w_Enter_path: STRING is "Please enter a folder%Nto receive the new cluster."
-
-	w_Invalid_class_name (class_name: STRING): STRING is
-		require
-			class_name_not_void: class_name /= Void
-		do
-			create Result.make (100)
 			if class_name.is_empty then
-				Result.append ("An empty class name is not valid.%N")
+				l_str := locale.translate ("An empty class name is not valid.%N")
 			else
-				Result.append ("'")
-				Result.append (class_name)
-				Result.append ("' is not a valid class name.%N")
+				l_str := locale.format_string (locale.translate ("'$1' is not a valid class name.%N"), [class_name])
 			end
-			Result.append ("Class names may only include%N%
+			l_str.append (
+				locale.translate (
+						"Class names may only include%N%
 						%alphanumeric characters and underscores,%N%
 						%have to start with an alphabetic character%N%
 						%and cannot be a reserved word.%N%
 						%Please select a different class name.")
+			)
+			Result := l_str
 		end
 
-	w_Invalid_cluster_name (cluster_name: STRING): STRING is
+	w_Invalid_cluster_name (cluster_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			cluster_name_not_void: cluster_name /= Void
+		local
+			l_str: STRING_32
 		do
-			create Result.make (100)
 			if cluster_name.is_empty then
-				Result.append ("An empty cluster name is not valid.%N")
+				l_str := locale.translate ("An empty cluster name is not valid.%N")
 			else
-				Result.append ("'")
-				Result.append (cluster_name)
-				Result.append ("' is not a valid cluster name.%N")
+				l_str := locale.format_string (locale.translate ("'$1' is not a valid cluster name.%N"), [cluster_name])
 			end
-			Result.append ("Cluster names may only include %N%
+			l_str.append (
+				locale.translate (
+						"Cluster names may only include %N%
 						%alphanumeric characters and underscores,%N%
 						%have to start with an alphabetic character%N%
 						%and cannot be a reserved word.%N%
 						%Please select a different cluster name.")
+			)
+			Result := l_str
 		end
 
-	w_Invalid_feature_name (feature_name: STRING): STRING is
+	w_Invalid_feature_name (feature_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			feature_name_not_void: feature_name /= Void
+		local
+			l_str: STRING_32
 		do
-			create Result.make (100)
 			if feature_name.is_empty then
-				Result.append ("An empty feature name is not valid.%N")
+				l_str := locale.translate ("An empty feature name is not valid.%N")
 			else
-				Result.append ("'")
-				Result.append (feature_name)
-				Result.append ("' is not a valid feature name.%N")
+				l_str := locale.format_string (locale.translate ("'$1' is not a valid feature name.%N"), [feature_name])
 			end
-			Result.append ("Feature names may only include %N%
+			l_str.append (
+				locale.translate (
+						"Feature names may only include %N%
 						%alphanumeric characters and underscores,%N%
 						%have to start with an alphabetic character%N%
 						%and cannot be a reserved word.%N%
 						%Please select a different feature name.")
+			)
+			Result := l_str
 		end
 
-	w_Clear_breakpoints: STRING is "Forget all breakpoints?"
+	w_Clear_breakpoints: STRING_GENERAL is do Result := locale.translate ("Forget all breakpoints?") end
 
-	w_Cluster_path_already_exists (path: STRING): STRING is
+	w_Cluster_path_already_exists (path: STRING_GENERAL): STRING_GENERAL is
 		require
 			path_not_void: path /= Void
 		do
-			create Result.make (70);
-			Result.append ("Cluster with path ");
-			Result.append (path.as_upper);
-			Result.append (" already exists in the universe.")
+			Result := locale.format_string (locale.translate ("Cluster with path $1 already exists in the universe."), [string_general_as_upper (path)])
 		end;
 
-	w_Cluster_name_already_exists (name: STRING): STRING is
+	w_Cluster_name_already_exists (name: STRING_GENERAL): STRING_GENERAL is
 		require
 			name_not_void: name /= Void
 		do
-			create Result.make (70);
-			Result.append ("Cluster with name ");
-			Result.append (name.as_upper);
-			Result.append (" already exists in the universe.")
+			Result := locale.format_string (locale.translate ("Cluster with name $1 already exists in the universe."), [string_general_as_upper (name)])
 		end;
 
-	w_Confirm_delete_class (class_name: STRING): STRING is
+	w_Confirm_delete_class (class_name: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := "Class " + class_name + " will be permanently%N%
+			Result := locale.format_string (locale.translate ("Class $1 will be permanently%N%
 						%removed from the system and from the disk.%N%N%
-						%Are you sure this is what you want?"
+						%Are you sure this is what you want?"), [class_name])
 		end
 
-	w_Confirm_delete_cluster (cluster_name: STRING): STRING is
+	w_Confirm_delete_cluster (cluster_name: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := "Cluster " + cluster_name + " will be permanently%N%
+			Result := locale.format_string (locale.translate ("Cluster $1 will be permanently%N%
 						%removed from the system.%N%N%
-						%Are you sure this is what you want?"
+						%Are you sure this is what you want?"), [cluster_name])
 		end
 
-	w_Confirm_delete_cluster_debug (cluster_name: STRING): STRING is
+	w_Confirm_delete_cluster_debug (cluster_name: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := "Stop debug and remove cluster " + cluster_name + " permanently%N%
+			Result := locale.format_string (locale.translate ("Stop debug and remove cluster $1 permanently%N%
 						%from the system.%N%N%
-						%Are you sure this is what you want?"
+						%Are you sure this is what you want?"), [cluster_name])
 		end
 
-	w_Cannot_delete_need_recompile: STRING is "Compiled configuration is not up to date, please recompile."
+	w_Cannot_delete_need_recompile: STRING_GENERAL is do Result := locale.translate ("Compiled configuration is not up to date, please recompile.") end
 
-
-	w_Could_not_locate (cl_name: STRING): STRING is
+	w_Could_not_locate (cl_name: STRING_GENERAL): STRING_GENERAL is
 			-- Class/cluster could not be found in the cluster tree.
 		do
-			Result := "Could not locate " + cl_name + ".%NPlease make sure system is correctly compiled."
+			Result := locale.format_string (locale.translate ("Could not locate $1.%NPlease make sure system is correctly compiled."), [cl_name])
 		end
 
-	w_Unsufficient_compilation (degree: INTEGER): STRING is
+	w_Unsufficient_compilation (degree: INTEGER): STRING_GENERAL is
 			-- The last or current compilation of the project did not
 			-- go through degree `degree', so that a command cannot be executed.
 		require
 			valid_degree: degree >= -5 and degree <= 6
 		do
-			Result := "Command cannot be executed unless compilation%N%
-						%goes through degree " + degree.out + "."
+			Result := locale.format_string (locale.translate ("Command cannot be executed unless compilation%N%
+						%goes through degree $1."), [degree.out])
 		end
 
-	w_Project_not_compiled: STRING is
-			"Command cannot be executed because the project%N%
+	w_Project_not_compiled: STRING_GENERAL is
+			do Result := locale.translate ("Command cannot be executed because the project%N%
 			%has never been compiled.%N%
-			%Please compile the project before calling this command."
+			%Please compile the project before calling this command.") end
 
-	w_Feature_is_not_compiled: STRING is
-			"An error occurred on breakpoints because a feature%N%
+	w_Feature_is_not_compiled: STRING_GENERAL is
+			do Result := locale.translate ("An error occurred on breakpoints because a feature%N%
 			%was not correctly compiled.%N%N%
-			%Recompiling the project completely will solve the problem."
+			%Recompiling the project completely will solve the problem.") end
 
 	w_Formatter_failed: STRING is
 			-- A formatter crashed, most probably because the last compilation was not successful
@@ -614,162 +542,160 @@ feature -- Cluster tree warnings
 		%Please make sure that the system is not being compiled %
 		%and that the last compilation was successful."
 
-	w_Files_not_saved_before_compiling: STRING is
-			"Some files have not been saved.%N%
-			%Do you want to save them before compiling?%N"
+	w_Files_not_saved_before_compiling: STRING_GENERAL is
+			do Result := locale.translate ("Some files have not been saved.%N%
+			%Do you want to save them before compiling?%N") end
 
-	w_Degree_needed (n: INTEGER): STRING is
+	w_Degree_needed (n: INTEGER): STRING_GENERAL is
 			-- A command needs a certain degree during a compilation.
 		require
 			valid_degree: n >= -5 and n <= 6
 		do
-			Result := "Command cannot be executed until degree " + n.out + " completed.%N%
-						%Please wait until then before calling this command."
+			Result := locale.format_string (locale.translate ("Command cannot be executed until degree $1 completed.%N%
+						%Please wait until then before calling this command."), [n.out])
 		end
 
 feature -- Backup warnings
 
-	w_Crashed: STRING is
+	w_Crashed: STRING_GENERAL is
 		once
-			Result := "An unexpected error occurred.%N"+
-					WorkBench_name+" will now make an attempt to create%N%
-						%a backup of the edited files."
+			Result := locale.format_string (locale.translate (
+					"An unexpected error occurred.%N$1 will now make an attempt to create%N%
+						%a backup of the edited files."), [workbench_name])
 		end
 
-	w_Backup_succeeded: STRING is "Backup was successful.%N%
-								%Class files were saved with a .swp extension."
+	w_Backup_succeeded: STRING_GENERAL is do Result := locale.translate ("Backup was successful.%N%
+								%Class files were saved with a .swp extension.") end
 
-	w_Backup_partial (i: INTEGER): STRING is
+	w_Backup_partial (i: INTEGER): STRING_GENERAL is
 			-- `i' files could not be saved during a backup.
 		do
-			Result := i.out
-			if i = 1 then
-				Result.append ("file")
-			else
-				Result.append (" files")
-			end
-			Result.append (" could not be backed up.%N%
-					%Other class files were saved with a .swp extension.")
+			Result := locale.format_string (locale.translate_plural (
+				"$1 file could not be backed up.%N%
+					%Other class files were saved with a .swp extension.",
+				"$1 files could not be backed up.%N%
+					%Other class files were saved with a .swp extension.",
+				i), [i])
 		end
 
-	w_Backup_failed: STRING is "Backup failed for some files.%N%
-								%The state of the system was too damaged."
+	w_Backup_failed: STRING_GENERAL is do Result := locale.translate ("Backup failed for some files.%N%
+								%The state of the system was too damaged.") end
 
-	w_Found_backup: STRING is "A backed up version of the file was found.%N%
+	w_Found_backup: STRING_GENERAL is do Result := locale.translate ("A backed up version of the file was found.%N%
 							%Do you want to open the original file or the backup file?%N%
 							%If you choose the original file, the backup file will be%N%
 							%deleted. If choose the backup file, then the original file%N%
 							%will be overwritten with the contents of the backup file%N%
-							%when you save.%N"
+							%when you save.%N") end
 
-	w_Save_backup: STRING is "You are about to overwrite the original file with%N%
+	w_Save_backup: STRING_GENERAL is do Result := locale.translate ("You are about to overwrite the original file with%N%
 					%the backup file. Previous content will be lost%N%
-					%and the backup file deleted."
+					%and the backup file deleted.") end
 
 feature -- Dynamic library warnings
 
-	w_Save_invalid_definition: STRING is
+	w_Save_invalid_definition: STRING_GENERAL is
 			-- The user tries to save an invalid definition file.
-		"There are problems in this library definition.%N%
+		do Result := locale.translate ("There are problems in this library definition.%N%
 		%Call 'Check' to have more information.%N%
-		%Save anyway?"
+		%Save anyway?") end
 
-	w_Invalid_feature_exportation: STRING is
+	w_Invalid_feature_exportation: STRING_GENERAL is
 			-- A feature export is invalid.
-		"This feature export clause contains errors.%N%
-		%Try editing it to have more information."
+		do Result := locale.translate ("This feature export clause contains errors.%N%
+		%Try editing it to have more information.") end
 
-	w_Conflicting_exports: STRING is
+	w_Conflicting_exports: STRING_GENERAL is
 			-- Some feature exportation clauses have conflicts.
-		"Some feature export clauses are conflicting.%N%
+		do Result := locale.translate ("Some feature export clauses are conflicting.%N%
 		%Please make sure that export clauses do not share%N%
-		%either their indices or their exported names."
+		%either their indices or their exported names.") end
 
-	w_No_errors_found: STRING is
+	w_No_errors_found: STRING_GENERAL is
 			-- The export feature definitions seem ok.
-		"No errors were found."
+		do Result := locale.translate ("No errors were found.") end
 
-	w_Not_a_compiled_class (cl_name: STRING): STRING is
+	w_Not_a_compiled_class (cl_name: STRING_GENERAL): STRING_GENERAL is
 			-- The `cl_name' does not represent a valid class.
 		do
 			if cl_name /= Void then
-				Result := "%"" + cl_name + "%"%N%
-				%is not a compiled class."
+				Result := locale.format_string (locale.translate ("%"$1%"%N%
+				%is not a compiled class."), [cl_name])
 			else
-				Result := "Please specify a class name."
+				Result := locale.translate ("Please specify a class name.")
 			end
 		end
 
-	w_Not_a_compiled_class_line (cl_name: STRING): STRING is
+	w_Not_a_compiled_class_line (cl_name: STRING_GENERAL): STRING_GENERAL is
 			-- The `cl_name' does not represent a valid class.
 		do
 			if cl_name /= Void then
-				Result := "%"" + cl_name + "%" %
-				%is not a compiled class."
+				Result := locale.format_string (locale.translate ("%"$1%" %
+				%is not a compiled class."), [cl_name])
 			else
-				Result := "Please specify a class name."
+				Result := locale.translate ("Please specify a class name.")
 			end
 		end
 
-	w_Class_cannot_export: STRING is "This class cannot export features.%N%
+	w_Class_cannot_export: STRING_GENERAL is do Result := locale.translate ("This class cannot export features.%N%
 				%Please make sure that it is neither deferred nor generic%N%
-				%and that the system is correctly compiled."
+				%and that the system is correctly compiled.") end
 
-	w_No_exported_feature (f_name, cl_name: STRING): STRING is
+	w_No_exported_feature (f_name, cl_name: STRING_GENERAL): STRING_GENERAL is
 			-- `f_name' cannot be found in class `cl_name'.
 		require
 			f_not_void_implies_c_not_void: f_name /= Void implies cl_name /= Void
 		do
 			if f_name = Void then
-				Result := "Please enter a feature name."
+				Result := locale.translate ("Please enter a feature name.")
 			else
-				Result := "Class %"" + cl_name + "%"%N%
-					%has no feature named %"" + f_name + "%"."
+				Result := locale.format_string (locale.translate ("Class %"$1%"%N%
+					%has no feature named %"$2%"."), [cl_name, f_name])
 			end
 		end
 
-	w_Feature_cannot_be_exported: STRING is "This feature cannot be exported.%N%
+	w_Feature_cannot_be_exported: STRING_GENERAL is do Result := locale.translate ("This feature cannot be exported.%N%
 				%Deferred features, external ones,%N%
-				%and attributes cannot be exported."
+				%and attributes cannot be exported.") end
 
-	w_No_valid_creation_routine: STRING is
-			"No valid creation routine%N%
+	w_No_valid_creation_routine: STRING_GENERAL is
+			do Result := locale.translate ("No valid creation routine%N%
 			%could be found for this class.%N%
 			%Please make sure the chosen class%N%
-			%has a creation routine taking no argument."
+			%has a creation routine taking no argument.") end
 
-	w_Invalid_parameters: STRING is
-			-- The chosen export parameters are invalid.
-		"These parameters are invalid."
+	w_Invalid_parameters: STRING_GENERAL is
+			-- The chosen export parameters are invalid.		
+		do Result := locale.translate ("These parameters are invalid.") end
 
-	w_Invalid_index: STRING is
+	w_Invalid_index: STRING_GENERAL is
 			-- The chosen index is not valid.
-		"Index is out of range.%N%
-		%Indices should be positive integers."
+		do Result := locale.translate ("Index is out of range.%N%
+		%Indices should be positive integers.") end
 
-	w_Invalid_alias: STRING is
+	w_Invalid_alias: STRING_GENERAL is
 			-- The chosen parameters are not valid.
-		"Alias is invalid.%N%
-		%Please check that it is a valid C identifier."
+		do Result := locale.translate ("Alias is invalid.%N%
+		%Please check that it is a valid C identifier.") end
 
-	w_Cannot_load_library (fn: STRING): STRING is
+	w_Cannot_load_library (fn: STRING_GENERAL): STRING_GENERAL is
 			-- The library located in file `fn' cannot be read.
 		do
-			Result := "The file " + fn + "%N%
+			Result := locale.format_string (locale.translate ("The file $1%N%
 					%either cannot be read or does not represent%N%
-					%a valid dynamic library definition."
+					%a valid dynamic library definition."), [fn])
 		end
 
-	w_Cannot_save_library (fn: STRING): STRING is
+	w_Cannot_save_library (fn: STRING_GENERAL): STRING_GENERAL is
 			-- The library cannot be written in file `fn'.
 		do
-			Result := "Could not save the library definition to%N" + fn + "."
+			Result := locale.format_string (locale.translate ("Could not save the library definition to%N$1."), [fn])
 		end
 
-	w_Error_parsing_the_library_file: STRING is
+	w_Error_parsing_the_library_file: STRING_GENERAL is
 			-- An error occurred while parsing a .def file.
-		"This file seems to be corrupted.%N%
-		%Not all items inside could be loaded."
+		do Result := locale.translate ("This file seems to be corrupted.%N%
+		%Not all items inside could be loaded.") end
 
 	w_Unsaved_changes: STRING_GENERAL is
 			-- The user tries to exit the dialog although some modifications were not saved.
@@ -779,69 +705,76 @@ feature -- Dynamic library warnings
 
 feature -- Ace/Project settings warnings
 
-	w_Could_not_parse_ace: STRING is "An error occurred while parsing the configuration file.%N%
-									%Please try using the project settings tool."
+	w_Could_not_parse_ace: STRING_GENERAL is do Result := locale.translate ("An error occurred while parsing the configuration file.%N%
+									%Please try using the project settings tool.") end
 
 feature -- Profiler messages
 
-	w_Profiler_Bad_query: STRING is
+	w_Profiler_Bad_query: STRING_GENERAL is
 			-- Message displayed when detecting a bad query
 		do
-			create Result.make (0)
-			Result.append ("Please enter a correct query, for example:%N")
-			Result.append ("%Tfeaturename = WORD.t*%N")
-			Result.append ("%Tfeaturename < WORD.mak?%N")
-			Result.append ("%Tcalls > 2%N")
-			Result.append ("%Tself <= 3.4%N")
-			Result.append ("%Tdescendants in 23 - 34%N")
-			Result.append ("%Ttotal >= 12.3%N")
-			Result.append ("%Tpercentage /= 2%N")
-			Result.append ("%Tcalls > avg%N")
-			Result.append ("%Tself <= max%N")
-			Result.append ("%Ttotal > min%N")
-			Result.append ("%N")
-			Result.append ("You can also combine subqueries with 'and' and 'or', for example:%N")
-			Result.append ("%Tcalls > 2 and self <= 3.4 or percentage in 2.3 - 3.5")
+			Result := locale.translate (
+			"Please enter a correct query, for example:%N%
+			%%Tfeaturename = WORD.t*%N%
+			%%Tfeaturename < WORD.mak?%N%
+			%%Tcalls > 2%N%
+			%%Tself <= 3.4%N%
+			%%Tdescendants in 23 - 34%N%
+			%%Ttotal >= 12.3%N%
+			%%Tpercentage /= 2%N%
+			%%Tcalls > avg%N%
+			%%Tself <= max%N%
+			%%Ttotal > min%N%
+			%%N%
+			%You can also combine subqueries with 'and' and 'or', for example:%N%
+			%%Tcalls > 2 and self <= 3.4 or percentage in 2.3 - 3.5"
+			)
 		end
 
-	w_Profiler_select_one_output_switch: STRING is "Select at least one output switch."
+	w_Profiler_select_one_output_switch: STRING_GENERAL is do Result := locale.translate ("Select at least one output switch.") end
 
-	w_Profiler_select_one_language: STRING is "Select at least one language."
+	w_Profiler_select_one_language: STRING_GENERAL is do Result := locale.translate ("Select at least one language.") end
 
 feature -- Project creation, retrieval, ...
 
-	w_Fill_in_location_field: STRING is "Please fill in the 'Location' field."
+	w_Fill_in_location_field: STRING_GENERAL is do Result := locale.translate ("Please fill in the 'Location' field.") end
 
-	w_Fill_in_project_name_field: STRING is "Please fill in the 'System Name' field."
+	w_Fill_in_project_name_field: STRING_GENERAL is do Result := locale.translate ("Please fill in the 'System Name' field.") end
 
-	w_Unable_to_load_ace_file (an_ace_name: STRING): STRING is
+	w_Unable_to_load_ace_file (an_ace_name, a_reason: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := "Unable to load the ace file `" + an_ace_name + "'."
+			Result := locale.format_string (locale.translate ("Unable to load the ace file `$1'.%NFor the following reasons:%N$2"), [an_ace_name, a_reason])
 		end
 
-	w_Unable_to_load_config_file (an_ace_name: STRING): STRING is
+	w_Unable_to_load_config_file (an_ace_name, a_reason: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := "Unable to load the project file `" + an_ace_name + "'."
+			Result := locale.format_string (locale.translate ("Unable to load the project file `$1'.%NFor the following reasons:%N$2"), [an_ace_name, a_reason])
 		end
 
-	w_Invalid_directory_or_cannot_be_created (a_directory_name: STRING): STRING is
+	w_Invalid_directory_or_cannot_be_created (a_directory_name: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := "'" + a_directory_name + "' is not a valid directory and/or cannot be created%N%
-				%Please choose a valid and writable directory."
+			Result := locale.format_string (locale.translate (
+				"'$1' is not a valid directory and/or cannot be created%N%
+				%Please choose a valid and writable directory."),
+					[a_directory_name])
 		end
 
-	w_Environment_changed (a_key, a_old_val, a_new_val: STRING): STRING is
+	w_Environment_changed (a_key, a_old_val, a_new_val: STRING_GENERAL): STRING_GENERAL is
 		local
-			l_new: STRING
+			l_new: STRING_GENERAL
 		do
 			if a_new_val = Void then
-				l_new := "<unset>"
+				l_new := locale.translate ("<unset>")
 			else
 				l_new := a_new_val
 			end
-			Result := "Environment variable '"+a_key+"' has changed%N%N%
-				%Old value: "+a_old_val+"%NNew value: "+l_new+"%N%N%
-				%Should the new value be used?"
+			Result :=
+				locale.format_string (locale.translate (
+					"Environment variable '$1' has changed%N%N%
+					%Old value: $2%NNew value: $3%N%N%
+					%Should the new value be used?"),
+					[a_key, a_old_val, l_new]
+					)
 		end
 
 feature -- Refactoring
@@ -852,8 +785,8 @@ feature -- Refactoring
 
 feature -- Warning messages
 
-	w_Assertion_warning: STRING is
-		"By default assertions enabled in the configuration file are kept%N%
+	w_Assertion_warning: STRING_GENERAL is
+		do Result := locale.translate ("By default assertions enabled in the configuration file are kept%N%
 		%in final mode.%N%
 		%%N%
 		%Keeping assertion checking inhibits any optimization%N%
@@ -862,46 +795,44 @@ feature -- Warning messages
 		%that is not optimal in speed and size.%N%
 		%%N%
 		%Are you sure you want to keep the assertions in your%N%
-		%finalized executable?"
+		%finalized executable?") end
 
-	w_Backup_file_not_editable: STRING is "Backup file cannot be modified.%NTo edit it, save it first."
+	w_Cannot_move_favorite_to_a_child: STRING_GENERAL is
+		do Result := locale.translate ("Moving a folder to one of its children%N%
+		%is not possible.") end
 
-	w_Cannot_move_favorite_to_a_child: STRING is
-		"Moving a folder to one of its children%N%
-		%is not possible."
+	w_Cannot_move_feature_alone: STRING_GENERAL is
+		do Result := locale.translate ("Moving a feature favorite is not supported by the favorite manager.") end
 
-	w_Cannot_move_feature_alone: STRING is
-		"Moving a feature favorite is not supported by the favorite manager."
+	w_Class_not_modifiable: STRING_GENERAL is do Result := locale.translate ("The text of this class cannot be modified.") end
 
-	w_Class_not_modifiable: STRING is "The text of this class cannot be modified."
+	w_could_not_modify_class: STRING_GENERAL is do Result := locale.translate ("The text of this class could not be modified.") end
 
-	w_could_not_modify_class: STRING is "The text of this class could not be modified."
+	w_Could_not_save_all: STRING_GENERAL is do Result := locale.translate ("Some files could not be saved.%N%
+									%Exit was cancelled.") end
 
-	w_Could_not_save_all: STRING is "Some files could not be saved.%N%
-									%Exit was cancelled."
-
-	w_cannot_save_file (a_file_name: STRING): STRING is
+	w_cannot_save_file (a_file_name: STRING_GENERAL): STRING_GENERAL is
 		do
 			if a_file_name /= Void then
-				Result := "Could not save file into '" + a_file_name + "'"
+				Result := locale.format_string (locale.translate ("Could not save file into '$1'"), [a_file_name])
 			else
-				Result := "Could not save file to specified location."
+				Result := locale.translate ("Could not save file to specified location.")
 			end
 		end
 
-	w_cannot_convert_file (a_file_name: STRING): STRING is
+	w_cannot_convert_file (a_file_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			a_file_name_not_void: a_file_name /= Void
 		do
-			Result := "Could not convert file '" + a_file_name + "' into new configuration format."
+			Result := locale.format_string (locale.translate ("Could not convert file '$1' into new configuration format."), [a_file_name])
 		end
 
-	w_cannot_save_png_file (a_file_name: STRING): STRING is
+	w_cannot_save_png_file (a_file_name: STRING_GENERAL): STRING_GENERAL is
 		do
 			if a_file_name /= Void then
-				Result := "Could not save diagram to " + a_file_name
+				Result := locale.format_string (locale.translate ("Could not save diagram to $1"), [a_file_name])
 			else
-				Result := "Could not save diagram to specified location."
+				Result := locale.translate ("Could not save diagram to specified location.")
 			end
 		end
 
@@ -939,82 +870,76 @@ feature -- Warning messages
 				%supported.%N")
 		end
 
-	w_Ignoring_all_stop_points: STRING is "Application will ignore all breakpoints."
+	w_Ignoring_all_stop_points: STRING_GENERAL is do Result := locale.translate ("Application will ignore all breakpoints.") end
 
-	w_Unknown_cluster_name: STRING is "No cluster in the system has this name.";
-	w_no_cluster_selected_for_class_creation: STRING is "No cluster was selected. Please select a cluster to create a class.";
-	w_read_only_cluster: STRING is "Selected cluster is read only. Please select a writable cluster for class creation."
+	w_Unknown_cluster_name: STRING_GENERAL is do Result := locale.translate ("No cluster in the system has this name.") end;
+	w_no_cluster_selected_for_class_creation: STRING_GENERAL is do Result := locale.translate ("No cluster was selected. Please select a cluster to create a class.") end;
+	w_read_only_cluster: STRING_GENERAL is do Result := locale.translate ("Selected cluster is read only. Please select a writable cluster for class creation.") end
 
-	w_Invalid_folder_name: STRING is "Invalid folder name"
+	w_Invalid_folder_name: STRING_GENERAL is do Result := locale.translate ("Invalid folder name") end
 
-	w_Invalid_cluster: STRING is
+	w_Folder_name_cannot_contain: STRING_GENERAL is do Result := locale.translate ("%N A favorite folder name cannot contain any ot the following characters: %N ( ) * ") end
+
+	w_Invalid_cluster: STRING_GENERAL is
 			-- One of the clusters involved in a move operation was invalid.
-		"One of the clusters is invalid.%N%N%
+		do Result := locale.translate ("One of the clusters is invalid.%N%N%
 		%Please check that none is precompiled or a library,%N%
-		%and that the corresponding directories have sufficient rights."
+		%and that the corresponding directories have sufficient rights.") end
 
-	w_Makefile_more_recent (make_file: STRING): STRING is
+	w_Makefile_more_recent (make_file: STRING_GENERAL): STRING_GENERAL is
 		require
 			make_file_not_void: make_file /= Void
 		do
-			create Result.make (30)
-			Result.append (make_file)
-			Result.append (" is more recent than the system.%N")
-			Result.append ("Do you want to compile the generated C code?")
+			Result := locale.format_string (locale.translate (
+						"$1 is more recent than the system.%N%
+						%Do you want to compile the generated C code?"), [make_file])
 		end
 
-	w_Makefile_does_not_exist (make_file: STRING): STRING is
+	w_Makefile_does_not_exist (make_file: STRING_GENERAL): STRING_GENERAL is
 		require
 			make_file_not_void: make_file /= Void
 		do
-			create Result.make (30)
-			Result.append (make_file)
-			Result.append (" does not exist.%N")
-			Result.append ("Cannot invoke C compilation.")
+			Result := locale.format_string (locale.translate (
+						"$1 does not exist.%N%
+						%Cannot invoke C compilation."), [make_file])
 		end
 
-	w_MakefileSH_more_recent: STRING is "The Makefile.SH is more recent than the system."
+	w_MakefileSH_more_recent: STRING_GENERAL is do Result := locale.translate ("The Makefile.SH is more recent than the system.") end
 
-	w_Must_compile_first: STRING is "You must compile a project first."
+	w_Must_compile_first: STRING_GENERAL is do Result := locale.translate ("You must compile a project first.") end
 
-	w_Must_finalize_first: STRING is "You must finalize your project first."
+	w_Must_finalize_first: STRING_GENERAL is do Result := locale.translate ("You must finalize your project first.") end
 
-	w_No_class_matches: STRING is "No class in any cluster matches this name."
+	w_No_class_matches: STRING_GENERAL is do Result := locale.translate ("No class in any cluster matches this name.") end
 
-	w_No_cluster_matches: STRING is "No cluster in the system matches this name."
+	w_No_cluster_matches: STRING_GENERAL is do Result := locale.translate ("No cluster in the system matches this name.") end
 
-	w_No_feature_matches: STRING is "No feature in this class matches this name."
+	w_No_feature_matches: STRING_GENERAL is do Result := locale.translate ("No feature in this class matches this name.") end
 
-	w_No_feature_to_display: STRING is "No features in this file"
+	w_No_feature_to_display: STRING_GENERAL is do Result := locale.translate ("No features in this file") end
 
 	w_No_such_feature_in_this_class (feature_name, class_name: STRING): STRING is
 		do
-			Result := "No feature named " + feature_name + " could be found in class " + class_name + "."
+			Result := locale.format_string (locale.translate ("No feature named $1 could be found in class $2."), [feature_name, class_name])
 		end
 
-	w_No_system_generated: STRING is "No system was generated.%N%
-						%Please make sure the C compilation ended correctly."
+	w_No_system_generated: STRING_GENERAL is do Result := locale.translate ("No system was generated.%N%
+						%Please make sure the C compilation ended correctly.") end
 
-	w_No_system: STRING is "No system was defined.%NCannot launch the application."
+	w_No_system: STRING_GENERAL is do Result := locale.translate ("No system was defined.%NCannot launch the application.") end
 
-	w_Not_an_integer: STRING is "Please enter an integer value."
+	w_Not_an_integer: STRING_GENERAL is do Result := locale.translate ("Please enter an integer value.") end
 
-	w_Not_a_positive_integer: STRING is "Please enter a positive integer value."
+	w_Not_a_positive_integer: STRING_GENERAL is do Result := locale.translate ("Please enter a positive integer value.") end
 
-	w_Select_class_cluster_to_remove: STRING is "Please select a class or a cluster %N%
+	w_Select_class_cluster_to_remove: STRING_GENERAL is do Result := locale.translate ("Please select a class or a cluster %N%
 										%before calling this command.%N%
-										%It will then be removed."
+										%It will then be removed.") end
 
 	w_Specify_a_class: STRING_GENERAL is do Result := locale.translate ("Please specify a compiled class (or * for all classes).") end
 
 	w_Exiting_stops_compilation: STRING_GENERAL is do Result := locale.translate ("It is not possible to exit EiffelStudio%N%
 																					%while the project is being compiled.") end
-
-	w_Exiting_stops_c_compilation: STRING is "It is not possible to exit EiffelStudio%N%
-											%while c compilation is running."
-
-	w_Exiting_stops_external: STRING is "It is not possible to exit EiffelStudio%N%
-											%while an external command is running."
 
 	w_Save_before_closing: STRING_GENERAL is do Result := locale.translate ("Do you want to save your changes%N%
 																			%before closing the window?") end
@@ -1025,7 +950,7 @@ feature -- Warning messages
 
 	w_Closing_stops_debugger: STRING_GENERAL is do Result := locale.translate ("Closing the window will stop the debugger.") end
 
-	w_Unexisting_system: STRING is "System doesn't exist."
+	w_Unexisting_system: STRING_GENERAL is do Result := locale.translate ("System doesn't exist.") end
 
 	w_File_changed (class_name: STRING_GENERAL): STRING_GENERAL is
 		do
@@ -1036,110 +961,91 @@ feature -- Warning messages
 			end
 		end
 
-	w_Select_object_to_remove: STRING is "Please select a top-level item%N%
-										%different from the current object%N%
-										%(i.e. the first one) in the object tree%N%
-										%to have it removed."
+	w_Text_not_editable: STRING_GENERAL is do Result := locale.translate ("Current text is not editable.") end
 
-	w_Text_not_editable: STRING is "Current text is not editable."
-
-	w_Class_header_syntax_error (class_name: STRING): STRING is
+	w_Class_syntax_error_before_generation (class_name: STRING_GENERAL): STRING_GENERAL is
 		require
 			class_name_not_void: class_name /= Void
 		do
-			Result := "Syntax error in class "
-			Result.append (class_name)
+			Result := locale.format_string (locale.translate ( "Class $1 has syntax error.%N%
+					%Code generation cancelled."), [class_name])
 		end
 
-	w_Class_syntax_error_before_generation (class_name: STRING): STRING is
-		require
-			class_name_not_void: class_name /= Void
+	w_Class_modified_outside_diagram: STRING_GENERAL is do Result := locale.translate ("Class was modified outside the diagram.%N%
+												%Previous commands are not undoable any longer.") end
+
+	w_Class_syntax_error: STRING_GENERAL is do Result := locale.translate ("Current class text has a syntax error.%NCode generation was cancelled.") end
+
+	w_New_feature_syntax_error: STRING_GENERAL is do Result := locale.translate ("New feature has syntax error.%NCode generation cancelled.") end
+
+	w_Class_name_changed: STRING_GENERAL is do Result := locale.translate ("Class name has changed since last compilation.%NCurrent text will not be clickable.%N%
+						%Recompile to make it clickable again.") end
+
+	w_Unable_to_execute_wizard (wizard_file: STRING_GENERAL): STRING_GENERAL is
 		do
-			Result := "Class " + class_name + " has syntax error.%N"
-			Result.append ("Code generation cancelled.")
-		end
-
-	w_Class_modified_outside_diagram: STRING is "Class was modified outside the diagram.%N%
-												%Previous commands are not undoable any longer."
-
-	w_Inheritance_from_any: STRING is "Cannot remove inheritance from ANY."
-
-	w_Class_syntax_error: STRING is "Current class text has a syntax error.%NCode generation was cancelled."
-
-	w_New_feature_syntax_error: STRING is "New feature has syntax error.%NCode generation cancelled."
-
-	w_Wrong_class_name: STRING is "Syntax error in name or generics"
-
-	w_Class_name_changed: STRING is "Class name has changed since last compilation.%NCurrent text will not be clickable.%N%
-						%Recompile to make it clickable again."
-
-	w_Unable_to_execute_wizard (wizard_file: STRING): STRING is
-		do
-			Result :=
+			Result := locale.format_string (locale.translate (
 				"Unable to execute the wizard.%N%
-				%Check that `"+wizard_file+"' exists and is executable.%N"
+				%Check that `$1' exists and is executable.%N"),
+				[wizard_file])
 		end
 
-	w_short_internal_error (a_code: STRING): STRING is
+	w_short_internal_error (a_code: STRING_GENERAL): STRING_GENERAL is
 			-- Short internal error using `a_code'.
 		require
 			a_code_not_void: a_code /= Void
 		do
-			Result := "Internal error ("
-			Result.append (a_code)
-			Result.append ("): Submit bug at http://support.eiffel.com")
+			Result := locale.format_string (locale.translate (
+					"Internal error ($1): Submit bug at http://support.eiffel.com"),
+					[a_code])
 		end
 
-	w_Internal_error: STRING is
-		"An internal error occurred.%N%N%
+	w_Internal_error: STRING_GENERAL is
+		do Result := locale.translate ("An internal error occurred.%N%N%
 		%1 - Check that you have enough space to compile.%N%
 		%2 - If this happens even after relaunching the environment%N%
 		%     delete your EIFGEN and recompile from scratch.%N%N%
 		%Follow the instructions at http://support.eiffel.com/submit.html in%N%
-		%order to submit a bug report at http://support.eiffel.com"
+		%order to submit a bug report at http://support.eiffel.com") end
 
-	w_Class_already_edited: STRING is "This class is already being edited%N%
+	w_Class_already_edited: STRING_GENERAL is do Result := locale.translate ("This class is already being edited%N%
 										%in another editor.%N%
 										%Editing a class in several editors%N%
-										%may cause loss of data."
-	w_Invalid_options: STRING is "The selected options are invalid.%N%
-								%Please select different ones."
+										%may cause loss of data.") end
+	w_Invalid_options: STRING_GENERAL is do Result := locale.translate ("The selected options are invalid.%N%
+								%Please select different ones.") end
 
-	w_Index_already_taken: STRING is "This index is already used.%N%
-									%Please select another one."
+	w_Index_already_taken: STRING_GENERAL is do Result := locale.translate ("This index is already used.%N%
+									%Please select another one.") end
 
-	w_Command_needs_class: STRING is "This command requires a class name.%N%
-									%It cannot be executed."
+	w_Command_needs_class: STRING_GENERAL is do Result := locale.translate ("This command requires a class name.%N%
+									%It cannot be executed.") end
 
-	w_Command_needs_file: STRING is "This command requires a file name.%N%
-									%It cannot be executed."
+	w_Command_needs_file: STRING_GENERAL is do Result := locale.translate ("This command requires a file name.%N%
+									%It cannot be executed.") end
 
-	w_Command_needs_directory: STRING is "This command requires a directory.%N%
-									%It cannot be executed."
+	w_Command_needs_directory: STRING_GENERAL is do Result := locale.translate ("This command requires a directory.%N%
+									%It cannot be executed.") end
 
-	w_Finalize_precompile: STRING is    ".NET precompiled libraries can be finalized to create%N%
+	w_Finalize_precompile: STRING_GENERAL is    do Result := locale.translate (".NET precompiled libraries can be finalized to create%N%
 									%an optimized version as well as a workbench version.%N%
-									%Would you like to create a finalized version?"
+									%Would you like to create a finalized version?") end
 
-	w_Replace_all: STRING is "This operation cannot be undone %N%
+	w_Replace_all: STRING_GENERAL is do Result := locale.translate ("This operation cannot be undone %N%
 									%to files not loaded in the editor.%N%
-									%Would you like to continue replacing all?"
+									%Would you like to continue replacing all?") end
 
-	w_No_system_defined: STRING is "No system was defined.%N"
+	w_No_system_defined: STRING_GENERAL is do Result := locale.translate ("No system was defined.%N") end
 
-	w_Finalizing_running: STRING is "Finalizing is in progress, start Eiffel compilation%N%
-								    %may terminate current finalizing.%NContinue?"
+	w_Finalizing_running: STRING_GENERAL is do Result := locale.translate ("Finalizing is in progress, start Eiffel compilation%N%
+								    %may terminate current finalizing.%NContinue?") end
 
-	w_Freezing_running: STRING is "Freezing is in progress, start Eiffel compilation%N%
-								  %may terminate current freezing.%NContinue?"
+	w_Freezing_running: STRING_GENERAL is do Result := locale.translate ("Freezing is in progress, start Eiffel compilation%N%
+								  %may terminate current freezing.%NContinue?") end
 
-	w_cannot_clear_when_c_compilation_running: STRING is "Please clear this window after c compilation has exited."
-	w_cannot_save_when_c_compilation_running: STRING is "Please save output after c compilation has exited."
-	w_cannot_clear_when_external_running: STRING is "Please clear this window after external command has exited."
-	w_cannot_save_when_external_running: STRING is "Please save output after external command has exited."
-	w_external_command_running_in_development_window: STRING is "An external command is running, closing this window will terminate it.%NContinue?";
-
-	w_help_topic_could_not_be_displayed: STRING is "Help topic could not be displayed, please check your Eiffel installation";
+	w_cannot_clear_when_c_compilation_running: STRING_GENERAL is do Result := locale.translate ("Please clear this window after c compilation has exited.") end
+	w_cannot_save_when_c_compilation_running: STRING_GENERAL is do Result := locale.translate ("Please save output after c compilation has exited.") end
+	w_cannot_save_when_external_running: STRING_GENERAL is do Result := locale.translate ("Please save output after external command has exited.") end
+	w_external_command_running_in_development_window: STRING_GENERAL is do Result := locale.translate ("An external command is running, closing this window will terminate it.%NContinue?") end;
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

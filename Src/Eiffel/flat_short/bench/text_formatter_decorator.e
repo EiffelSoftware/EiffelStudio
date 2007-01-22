@@ -644,7 +644,7 @@ feature -- Output
 			text_formatter.add_space
 		end
 
-	put_manifest_string (s: STRING) is
+	put_manifest_string (s: STRING_GENERAL) is
 			-- Append `s' to `text_formatter'.
 		require
 			s_exists: s /= Void
@@ -661,20 +661,20 @@ feature -- Output
 		do
 		end
 
-	put_quoted_string_item (s: STRING) is
+	put_quoted_string_item (s: STRING_32) is
 			-- Append `s' as string text to `text_formatter'. Emit tabs if needed.
 		require
 			s_not_void: s /= Void
 		local
-			new: STRING
+			new: STRING_32
 		do
-			new := eiffel_string (s)
+			new := eiffel_string_32 (s)
 			new.precede ('"')
 			new.extend ('"')
 			put_string_item (new)
 		end
 
-	put_string_item (s: STRING) is
+	put_string_item (s: STRING_32) is
 			-- Append `s' as string text to `text_formatter'. Emit tabs if needed.
 			-- If `in_indexing_clause', we seperate string.
 		require
@@ -722,7 +722,7 @@ feature -- Output
 			end
 		end
 
-	put_comment_text (c: STRING) is
+	put_comment_text (c: STRING_GENERAL) is
 			-- Separate `c'
 			-- and append it to `text_formatter'.
 			-- We do not use it if not necessary, as it slow.
@@ -740,7 +740,7 @@ feature -- Output
 
 feature -- Text formatter decorator
 
-	process_basic_text (text: STRING) is
+	process_basic_text (text: STRING_GENERAL) is
 			-- Process default basic text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -750,7 +750,7 @@ feature -- Text formatter decorator
 			text_formatter.process_basic_text (text)
 		end
 
-	process_character_text (text: STRING) is
+	process_character_text (text: STRING_GENERAL) is
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -760,7 +760,7 @@ feature -- Text formatter decorator
 			text_formatter.process_character_text (text)
 		end
 
-	process_generic_text (text: STRING) is
+	process_generic_text (text: STRING_GENERAL) is
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -770,7 +770,7 @@ feature -- Text formatter decorator
 			text_formatter.process_generic_text (text)
 		end
 
-	process_indexing_tag_text (text: STRING) is
+	process_indexing_tag_text (text: STRING_GENERAL) is
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -780,7 +780,7 @@ feature -- Text formatter decorator
 			text_formatter.process_indexing_tag_text (text)
 		end
 
-	process_local_text (text: STRING) is
+	process_local_text (text: STRING_GENERAL) is
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -790,7 +790,7 @@ feature -- Text formatter decorator
 			text_formatter.process_local_text (text)
 		end
 
-	process_number_text (text: STRING) is
+	process_number_text (text: STRING_GENERAL) is
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -800,7 +800,7 @@ feature -- Text formatter decorator
 			text_formatter.process_number_text (text)
 		end
 
-	process_quoted_text (text: STRING) is
+	process_quoted_text (text: STRING_GENERAL) is
 			-- Process the quoted `text' within a comment.
 		do
 			if not tabs_emitted then
@@ -809,7 +809,7 @@ feature -- Text formatter decorator
 			text_formatter.process_quoted_text (text)
 		end
 
-	process_assertion_tag_text (text: STRING) is
+	process_assertion_tag_text (text: STRING_GENERAL) is
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -819,7 +819,7 @@ feature -- Text formatter decorator
 			text_formatter.process_assertion_tag_text (text)
 		end
 
-	process_string_text (text: STRING; link: STRING) is
+	process_string_text (text, link: STRING_GENERAL) is
 			-- Process string text `text'.
 			-- possible `link', can be void.
 		do
@@ -830,7 +830,7 @@ feature -- Text formatter decorator
 			text_formatter.process_string_text (text, link)
 		end
 
-	process_reserved_word_text (text: STRING) is
+	process_reserved_word_text (text: STRING_GENERAL) is
 			-- Process string text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -840,7 +840,7 @@ feature -- Text formatter decorator
 			text_formatter.process_reserved_word_text (text)
 		end
 
-	process_comment_text (text: STRING; url: STRING) is
+	process_comment_text (text, url: STRING_GENERAL) is
 			-- Process comment text.
 			-- `url' is possible url, which can be void if none.
 		do
@@ -851,7 +851,7 @@ feature -- Text formatter decorator
 			text_formatter.process_comment_text (text, url)
 		end
 
-	process_difference_text_item (text: STRING) is
+	process_difference_text_item (text: STRING_GENERAL) is
 			-- Process difference text text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -861,7 +861,7 @@ feature -- Text formatter decorator
 			text_formatter.process_difference_text_item (text)
 		end
 
-	process_class_name_text (text: STRING; a_class: CLASS_I; a_quote: BOOLEAN) is
+	process_class_name_text (text: STRING_GENERAL; a_class: CLASS_I; a_quote: BOOLEAN) is
 			-- Process class name of `a_class'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -871,7 +871,7 @@ feature -- Text formatter decorator
 			text_formatter.process_class_name_text (text, a_class, a_quote)
 		end
 
-	process_cluster_name_text (text: STRING; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
+	process_cluster_name_text (text: STRING_GENERAL; a_cluster: CLUSTER_I; a_quote: BOOLEAN) is
 			-- Process cluster name of `a_cluster'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -881,7 +881,7 @@ feature -- Text formatter decorator
 			text_formatter.process_cluster_name_text (text, a_cluster, a_quote)
 		end
 
-	process_target_name_text (text: STRING; a_target: CONF_TARGET) is
+	process_target_name_text (text: STRING_GENERAL; a_target: CONF_TARGET) is
 			-- Process target name text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -891,7 +891,7 @@ feature -- Text formatter decorator
 			text_formatter.process_target_name_text (text, a_target)
 		end
 
-	process_feature_name_text (text: STRING; a_class: CLASS_C) is
+	process_feature_name_text (text: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process feature name text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -901,7 +901,7 @@ feature -- Text formatter decorator
 			text_formatter.process_feature_name_text (text, a_class)
 		end
 
-	process_feature_error (text: STRING; a_feature: E_FEATURE; a_line: INTEGER) is
+	process_feature_error (text: STRING_GENERAL; a_feature: E_FEATURE; a_line: INTEGER) is
 			-- Process error feature text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -911,7 +911,7 @@ feature -- Text formatter decorator
 			text_formatter.process_feature_error (text, a_feature, a_line)
 		end
 
-	process_feature_text (text: STRING; a_feature: E_FEATURE; a_quote: BOOLEAN) is
+	process_feature_text (text: STRING_GENERAL; a_feature: E_FEATURE; a_quote: BOOLEAN) is
 			-- Process feature text `text'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -991,7 +991,7 @@ feature -- Text formatter decorator
 			text_formatter.process_before_class (a_class)
 		end
 
-	process_filter_item (text: STRING; is_before: BOOLEAN) is
+	process_filter_item (text: STRING_GENERAL; is_before: BOOLEAN) is
 			-- Process filter text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1001,7 +1001,7 @@ feature -- Text formatter decorator
 			text_formatter.process_filter_item (text, is_before)
 		end
 
-	process_tooltip_item (a_tooltip: STRING; is_before: BOOLEAN) is
+	process_tooltip_item (a_tooltip: STRING_GENERAL; is_before: BOOLEAN) is
 			-- Process tooltip text `t'.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1011,7 +1011,7 @@ feature -- Text formatter decorator
 			text_formatter.process_tooltip_item (a_tooltip, is_before)
 		end
 
-	process_feature_dec_item (a_feature_name: STRING; is_before: BOOLEAN) is
+	process_feature_dec_item (a_feature_name: STRING_GENERAL; is_before: BOOLEAN) is
 			-- Process feature dec.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1021,7 +1021,7 @@ feature -- Text formatter decorator
 			text_formatter.process_feature_dec_item (a_feature_name, is_before)
 		end
 
-	process_symbol_text (text: STRING) is
+	process_symbol_text (text: STRING_GENERAL) is
 			-- Process symbol text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1031,7 +1031,7 @@ feature -- Text formatter decorator
 			text_formatter.process_symbol_text (text)
 		end
 
-	process_keyword_text (text: STRING; a_feature: E_FEATURE) is
+	process_keyword_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
 			-- Process keyword text.
 			-- `a_feature' is possible feature.
 		do
@@ -1042,7 +1042,7 @@ feature -- Text formatter decorator
 			text_formatter.process_keyword_text (text, a_feature)
 		end
 
-	process_operator_text (text: STRING; a_feature: E_FEATURE) is
+	process_operator_text (text: STRING_GENERAL; a_feature: E_FEATURE) is
 			-- Process operator text.
 			-- `a_feature' can be void.
 		do
@@ -1053,7 +1053,7 @@ feature -- Text formatter decorator
 			text_formatter.process_operator_text (text, a_feature)
 		end
 
-	process_address_text (a_address, a_name: STRING; a_class: CLASS_C) is
+	process_address_text (a_address, a_name: STRING_GENERAL; a_class: CLASS_C) is
 			-- Process address text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1063,7 +1063,7 @@ feature -- Text formatter decorator
 			text_formatter.process_address_text (a_address, a_name, a_class)
 		end
 
-	process_error_text (text: STRING; a_error: ERROR) is
+	process_error_text (text: STRING_GENERAL; a_error: ERROR) is
 			-- Process error text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1073,7 +1073,7 @@ feature -- Text formatter decorator
 			text_formatter.process_error_text (text, a_error)
 		end
 
-	process_cl_syntax (text: STRING; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
+	process_cl_syntax (text: STRING_GENERAL; a_syntax_message: SYNTAX_MESSAGE; a_class: CLASS_C) is
 			-- Process class syntax text.
 		do
 			if not without_tabs and then not tabs_emitted then
@@ -1103,7 +1103,7 @@ feature -- Text formatter decorator
 			text_formatter.process_call_stack_item (level_number, display)
 		end
 
-	process_menu_text (text, link: STRING) is
+	process_menu_text (text, link: STRING_GENERAL) is
 			-- Process menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do
@@ -1114,7 +1114,7 @@ feature -- Text formatter decorator
 			text_formatter.process_menu_text (text, link)
 		end
 
-	process_class_menu_text (text, link: STRING) is
+	process_class_menu_text (text, link: STRING_GENERAL) is
 			-- Process class menu item. This is only useful for generation to
 			-- formats that support hyperlinking.
 		do

@@ -134,7 +134,7 @@ feature {NONE} -- Error reporting
 			set_has_error
 		end
 
-	report_cannot_open_project (a_msg: STRING) is
+	report_cannot_open_project (a_msg: STRING_GENERAL) is
 			-- Report an error when project cannot be read/write for some reasons
 			-- and possibly propose user to upgrade
 		do

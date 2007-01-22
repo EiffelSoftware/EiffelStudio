@@ -32,7 +32,7 @@ feature {NONE} -- Execution
 				output_window.put_string (text)
 				output_window.put_new_line
 			else
-				output_window.put_string (Warning_messages.w_Cannot_read_file (Eiffel_ace.file_name).out)
+				output_window.put_string (Warning_messages.w_Cannot_read_file (Eiffel_ace.file_name))
 				output_window.put_new_line
 			end
 		end

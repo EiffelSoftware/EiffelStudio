@@ -116,7 +116,7 @@ feature -- Formatting
 	format is
 			-- Refresh `widget'.
 		local
-			l_msg: STRING
+			l_msg: STRING_32
 		do
 			if
 				displayed and then

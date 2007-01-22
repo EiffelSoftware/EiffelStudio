@@ -8,13 +8,20 @@ msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
-"PO-Revision-Date: 2007-01-16 17:08+0800\n"
+"PO-Revision-Date: 2007-01-22 15:09+0800\n"
 
 msgid "Filipino (Philippines)"
 msgstr "菲律宾语 (菲律宾共和国)"
 
 msgid "Chart"
 msgstr "图表"
+
+msgid ""
+"Class $1 has syntax error.\n"
+"Code generation cancelled."
+msgstr ""
+"类$1有词法错误。\n"
+"代码生成已取消。"
 
 msgid "Basque (Basque)"
 msgstr "巴斯克语 (巴斯克)"
@@ -98,12 +105,15 @@ msgstr "依赖关系"
 msgid "Polish"
 msgstr "波兰语"
 
+msgid "Please save output after c compilation has exited."
+msgstr "请在C编译退出后保存输出。"
+
 #, fuzzy
 msgid "Base value of a value tester is missing."
 msgstr "子项度量系数丢失。"
 
-msgid "Bengali"
-msgstr "孟加拉语"
+msgid "No help available for this element"
+msgstr "该对象没有帮助信息"
 
 msgid "Variables"
 msgstr "变量"
@@ -160,8 +170,18 @@ msgstr "取消"
 msgid "Too many crierion section specified. Only one criterion section is expected."
 msgstr "\"criterion\"节过多。只需一个。"
 
+msgid "Cannot find cluster $1."
+msgstr "找不到类簇$1。"
+
 msgid "Retrieve supplier classes"
 msgstr "查询被使用类"
+
+msgid ""
+"This feature export clause contains errors.\n"
+"Try editing it to have more information."
+msgstr ""
+"该方法export语句有错误。\n"
+"请尝试编辑获得更多的信息。"
 
 msgid "Root cluster, class, feature of the system."
 msgstr "从系统中的根类簇、根类和根方法。"
@@ -201,8 +221,8 @@ msgstr "生成动态运行库(&D)..."
 msgid "Feature is not written in selected class."
 msgstr "选择的类中没有方法体。"
 
-msgid "Culture"
-msgstr "区域性"
+msgid "Do you want to compile before debugging?"
+msgstr "调试进行编译吗？"
 
 msgid "flat view"
 msgstr "平面视图"
@@ -282,6 +302,9 @@ msgstr "输入域非法"
 msgid "Displayed buttons"
 msgstr "显示的按钮"
 
+msgid "Old name"
+msgstr "旧名称"
+
 msgid "Kazakh (Kazakhstan)"
 msgstr "哈萨克语 (哈萨克斯坦)"
 
@@ -296,6 +319,14 @@ msgstr "$1不是$2的方法"
 
 msgid "Choose one target among: "
 msgstr "选择一个目标:"
+
+msgid ""
+"This operation cannot be undone \n"
+"to files not loaded in the editor.\n"
+"Would you like to continue replacing all?"
+msgstr ""
+"对于未载入编辑器的文件，该操作不能被撤消。\n"
+"需要继续替换全部吗？"
 
 msgid "Show/Hide information about breakpoints"
 msgstr "显示/隐藏断点信息"
@@ -352,6 +383,9 @@ msgstr "法语 (瑞士)"
 msgid "Sesotho sa Leboa/Northern Sotho"
 msgstr "塞索托语"
 
+msgid "Cluster path is not valid."
+msgstr "类簇路径不正确。"
+
 msgid "Cu&t\tCtrl+X"
 msgstr "剪切(&T)\tCtrl+X"
 
@@ -388,11 +422,17 @@ msgstr "根"
 msgid "ERROR OCCURRED: \n"
 msgstr "发生错误: \n"
 
+msgid "Hide figure"
+msgstr "隐藏图象"
+
 msgid "show the suppliers of a class"
 msgstr "显示一个类使用的类"
 
 msgid "Are you sure you want to quit $1?"
 msgstr "你确定要退出$1吗？"
+
+msgid "An empty class name is not valid.\n"
+msgstr "空类名不合法。\n"
 
 msgid ""
 "Are you sure you want to undo the refactoring?\n"
@@ -426,6 +466,9 @@ msgstr "预编辑向导"
 
 msgid "Tamazight (Algeria, Latin)"
 msgstr "塔马塞特语 (拉丁文，阿尔及利亚)"
+
+msgid "Workbench mode"
+msgstr "工作模式"
 
 msgid "basic text view"
 msgstr "普通文本视图"
@@ -535,6 +578,14 @@ msgstr "计算"
 msgid "Find P&revious Selection"
 msgstr "查找上一处选中文本(&R)"
 
+msgid ""
+"An unexpected error occurred.\n"
+"$1 will now make an attempt to create\n"
+"a backup of the edited files."
+msgstr ""
+"未知错误发生。\n"
+"$1将尝试备份已编辑的文件。"
+
 msgid "Creation routine .NET name"
 msgstr "初始化方法的.NET名称"
 
@@ -625,8 +676,8 @@ msgstr "父类"
 msgid "Remove all"
 msgstr "全部删除"
 
-msgid "&Window"
-msgstr "窗口(&W)"
+msgid "Continue execution"
+msgstr "继续执行"
 
 msgid ""
 "When loading user-defined metrics:\n"
@@ -689,6 +740,17 @@ msgstr "暂停程序"
 msgid "Spanish (Puerto Rico)"
 msgstr "西班牙语 (波多黎各)"
 
+msgid ""
+"One of the clusters is invalid.\n"
+"\n"
+"Please check that none is precompiled or a library,\n"
+"and that the corresponding directories have sufficient rights."
+msgstr ""
+"其中一个类簇非法。\n"
+"\n"
+"请检查确保没有他们不预编辑或者库，\n"
+"并且确保相应的目录正确。"
+
 msgid "Dynamic Runtime"
 msgstr "动态运行时"
 
@@ -701,6 +763,20 @@ msgstr "卡纳达语"
 msgid "Close $1"
 msgstr "关闭$1"
 
+msgid ""
+"The wizard can not be completed because its installation is not complete.\n"
+"The COM component \"ISE.VS.VisionSupport\" is missing or not registered.\n"
+"\n"
+"Contact http://support.eiffel.com for more details.\n"
+"\n"
+"Click Abort to finish the wizard."
+msgstr ""
+"不能完成向导，因为安装未完全。\n"
+"COM组件\"ISE.VS.VisionSupport\"丢失或者未注册。\n"
+"需要了解更多请联系http://support.eiffel.com\n"
+"\n"
+"点击退出完成向导。"
+
 msgid "Condition"
 msgstr "条件"
 
@@ -709,6 +785,14 @@ msgstr "抽象"
 
 msgid "Rename Feature/Class"
 msgstr "重命名方法/类"
+
+msgid ""
+"Finalizing is in progress, start Eiffel compilation\n"
+"may terminate current finalizing.\n"
+"Continue?"
+msgstr ""
+"正在发布，开始Eiffel编辑将终止发布。\n"
+"继续吗？"
 
 msgid " disabled"
 msgstr " 已禁用"
@@ -754,6 +838,9 @@ msgstr "--> 已使用的评估 (默认值: `eiffel'):"
 
 msgid "Enforce unique class names"
 msgstr "强制禁用重名类"
+
+msgid "Cluster with name $1 already exists in the universe."
+msgstr "已存在名为$1的类簇。"
 
 msgid "Use current environment value"
 msgstr "使用当前环境值"
@@ -838,6 +925,15 @@ msgstr "最大化所有未保存的窗口"
 
 msgid "Set maximum call stack depth"
 msgstr "设置栈最大深度"
+
+msgid ""
+"This class cannot export features.\n"
+"Please make sure that it is neither deferred nor generic\n"
+"and that the system is correctly compiled."
+msgstr ""
+"该类不能输出方法。\n"
+"请确保它不是抽象类也不是泛型\n"
+"同时系统已经成功编译。"
 
 msgid "Command => "
 msgstr "命令 =>"
@@ -932,6 +1028,16 @@ msgstr "选择文件"
 msgid "&Edit..."
 msgstr "编辑(&E)..."
 
+msgid ""
+"Class $1 will be permanently\n"
+"removed from the system and from the disk.\n"
+"\n"
+"Are you sure this is what you want?"
+msgstr ""
+"类$1将被从系统中和文件系统内永久删除。\n"
+"\n"
+"您确认这个操作吗？"
+
 msgid "Cluster"
 msgstr "类簇"
 
@@ -953,8 +1059,8 @@ msgstr "编辑条件"
 msgid "Please specify a compiled class (or * for all classes)."
 msgstr "请指定一个类(或者用*号表示所有类)"
 
-msgid "Maximum displayed string size"
-msgstr "最大字符串可视长度"
+msgid "&Compile"
+msgstr "编译(&C)"
 
 msgid "Expand All"
 msgstr "全部展开"
@@ -1178,9 +1284,6 @@ msgstr "保持表格布局"
 msgid "Unit \"$1\" of variable metric is different from unit \"$2\" of linear metric."
 msgstr "子项度量单元\"$1\"与线性度量\"$2\"不一致。"
 
-msgid "No value tester is specified."
-msgstr "未指定任何值过滤"
-
 msgid "Reverse Engineering Project"
 msgstr "取消工程项目"
 
@@ -1214,6 +1317,9 @@ msgstr "生成的程序集被标记为CLS相兼容吗？"
 
 msgid "Set to U&ppercase\tCtrl+U"
 msgstr "转换为大写(&P)\tCtrl+U"
+
+msgid "Current hit count:"
+msgstr "当前到达计数:"
 
 msgid "Invalid tag/tag position \"$1\"."
 msgstr "非法标签/标签位置\"$1\"。"
@@ -1249,8 +1355,8 @@ msgstr " 输出该方法和其子类版本运行时所用的时间。"
 msgid "E&xport XMI..."
 msgstr "输出XML(&X)..."
 
-msgid "Windows"
-msgstr "窗口"
+msgid "default"
+msgstr "默认值"
 
 msgid "Irish"
 msgstr "爱尔兰语"
@@ -1300,6 +1406,16 @@ msgstr "新建WEL程序向导"
 msgid "Maximal number of instructions in a feature for the feature to be inlined."
 msgstr "作为内联方法最大的指令条数。"
 
+msgid ""
+"No valid creation routine\n"
+"could be found for this class.\n"
+"Please make sure the chosen class\n"
+"has a creation routine taking no argument."
+msgstr ""
+"该类中没有合法的构造函数\n"
+"请确认选择的类有没有参数的\n"
+"构造函数"
+
 msgid "Disable Breakpoints"
 msgstr "禁用断点"
 
@@ -1320,6 +1436,16 @@ msgstr "平台"
 
 msgid "Exception message from debugger"
 msgstr "调试程序的异常信息"
+
+msgid ""
+"Stop debug and remove cluster $1 permanently\n"
+"from the system.\n"
+"\n"
+"Are you sure this is what you want?"
+msgstr ""
+"停止调试并永久从系统中删除类簇$1。\n"
+"\n"
+"您确定该操作吗？"
 
 msgid "Metric definition error wizard"
 msgstr "度量错误向导"
@@ -1357,8 +1483,8 @@ msgstr "的"
 msgid "Watch Tool"
 msgstr "观察"
 
-msgid "Select metric:"
-msgstr "选择度量: "
+msgid "When hits ..."
+msgstr "当运行达到 ..."
 
 msgid "<- Remove"
 msgstr "<- 删除"
@@ -1394,6 +1520,13 @@ msgstr "巴斯克语"
 msgid "(Double click to go to definition)"
 msgstr "(双击跳转到定义)"
 
+msgid ""
+"$1\n"
+"is not a plain file."
+msgstr ""
+"$1\n"
+"不纯文本文件。"
+
 msgid "Finalize"
 msgstr "发布"
 
@@ -1426,6 +1559,9 @@ msgstr "验证"
 msgid "Pick and drop items like group/class/feature here"
 msgstr "拾起集合/类/方法等, 释放到这里"
 
+msgid "Tibetan (Bhutan)"
+msgstr "西藏语 (不丹)"
+
 msgid "Reload metrics"
 msgstr "重新载入度量吗？"
 
@@ -1447,6 +1583,15 @@ msgstr "请确定所有被线性度量引用的子项度量的已定义。"
 
 msgid "&Alter size New"
 msgstr "调整新的大小(&A)"
+
+msgid ""
+"There are problems in this library definition.\n"
+"Call 'Check' to have more information.\n"
+"Save anyway?"
+msgstr ""
+"该库定义中有些问题。\n"
+"调用'Check'获得更多信息。\n"
+"无论如何都保存吗？"
 
 msgid "Add an assembly"
 msgstr "添加程序集"
@@ -1487,14 +1632,11 @@ msgstr "显示已经达到限制"
 msgid "Lin&k Context Tool"
 msgstr "关联上下文工具(&K)"
 
-msgid "French (France)"
-msgstr "法语 (法国)"
-
 msgid "Default precompiles"
 msgstr "默认预编译"
 
-msgid "Open a dynamic library definition"
-msgstr "打开一个动态运行库的定义"
+msgid "reactivate subquery"
+msgstr "重新激活子查询"
 
 msgid "Kazakh"
 msgstr "哈萨克语"
@@ -1532,6 +1674,16 @@ msgstr "操作符"
 msgid "Target: $1"
 msgstr "目标: $1"
 
+msgid ""
+"Cluster $1 will be permanently\n"
+"removed from the system.\n"
+"\n"
+"Are you sure this is what you want?"
+msgstr ""
+"类簇$1将被从系统中永久删除。\n"
+"\n"
+"您确认这个操作吗？"
+
 msgid "auto"
 msgstr "自动"
 
@@ -1549,6 +1701,15 @@ msgstr ""
 "并在右侧列表中增加需要预编译的库。\n"
 "\n"
 "如果不需要预编译任何库，点击退出。"
+
+msgid ""
+"\n"
+" A favorite folder name cannot contain any ot the following characters: \n"
+" ( ) * "
+msgstr ""
+"\n"
+" 收藏夹名称不能包含任何如下字符:\n"
+" ( ) *"
 
 msgid "Deselect recalculatable history items"
 msgstr "取消选择可重计算的历史记录"
@@ -1570,6 +1731,15 @@ msgstr "编译类的文本"
 
 msgid "ratio"
 msgstr "比例"
+
+msgid ""
+"Class name has changed since last compilation.\n"
+"Current text will not be clickable.\n"
+"Recompile to make it clickable again."
+msgstr ""
+"上次编译后类名已经被改变。\n"
+"当前文本将不能点击。\n"
+"重新编译让其再次能被点击。"
 
 msgid "&Indexing clauses"
 msgstr "Indexing语句(&I)"
@@ -1595,8 +1765,19 @@ msgstr "显示查询列表"
 msgid "Alias:"
 msgstr "别名:"
 
-msgid "reactivate subquery"
-msgstr "重新激活子查询"
+msgid ""
+"This index is already used.\n"
+"Please select another one."
+msgstr ""
+"编号已经被使用。\n"
+"请选择其它编号。"
+
+msgid ""
+"Backup failed for some files.\n"
+"The state of the system was too damaged."
+msgstr ""
+"某些文件备份失败。\n"
+"系统已经严重损坏。"
 
 msgid "Minimize All"
 msgstr "全部最小化"
@@ -1622,6 +1803,9 @@ msgstr "添加目标"
 msgid "Sami (Lule, Norway)"
 msgstr "萨米 (挪威，卢乐)"
 
+msgid "Moving a feature favorite is not supported by the favorite manager."
+msgstr "收藏管理器不支持收藏方法的移动。"
+
 msgid "Type:"
 msgstr "类型: "
 
@@ -1642,6 +1826,13 @@ msgstr "指定目标"
 
 msgid "Minimize all windows"
 msgstr "最小化全部窗口"
+
+msgid ""
+"Cannot delete cluster $1\n"
+"because it is read only."
+msgstr ""
+"无法删除类簇$1\n"
+"原因为只读。"
 
 msgid "Total Time"
 msgstr "时间总计"
@@ -1756,6 +1947,9 @@ msgstr "查看(&V)"
 msgid "Feature version setting:"
 msgstr "方法属性设置:"
 
+msgid "Compiled configuration is not up to date, please recompile."
+msgstr "已经编译的配置信息未更新，新重新编译。"
+
 msgid "show a filtered form (troff, ...) of the class text"
 msgstr "显示类被过滤的格式(troff, ...)"
 
@@ -1806,6 +2000,9 @@ msgstr "删除当前视图"
 msgid "Toggle visibility of assigner command name"
 msgstr "切换赋值名称的可见性"
 
+msgid "Forget all breakpoints?"
+msgstr "删除所有断点？"
+
 msgid "English (New Zealand)"
 msgstr "英语 (新西兰)"
 
@@ -1815,11 +2012,17 @@ msgstr "显示格式标记(&S)"
 msgid "Feature in client class"
 msgstr "使用者中的方法"
 
+msgid "Please enter a positive integer value."
+msgstr "请输入一个正整数。"
+
 msgid "System name: "
 msgstr "系统名称:"
 
 msgid ".NET Namespace"
 msgstr ".NET命名空间"
+
+msgid "Bengali"
+msgstr "孟加拉语"
 
 msgid "Backup Found"
 msgstr "发现原有备份"
@@ -1827,8 +2030,13 @@ msgstr "发现原有备份"
 msgid "German (Liechtenstein)"
 msgstr "德语 (列支敦士登)"
 
-msgid "default"
-msgstr "默认值"
+msgid "French (France)"
+msgstr "法语 (法国)"
+
+msgid ""
+"Command cannot be executed unless compilation\n"
+"goes through degree $1."
+msgstr "编译通过度$1时才能运行命令。"
 
 msgid "Executable is up-to-date"
 msgstr "可执行文件已经为最新"
@@ -1848,8 +2056,8 @@ msgstr "局部变量"
 msgid "Russian"
 msgstr "俄语"
 
-msgid "Arabic (Yemen)"
-msgstr "阿拉伯语 (也门)"
+msgid "Break when the hit count is a multiple of"
+msgstr "当运行到达计数达到该数倍数时停止: "
 
 msgid "Unit name \"$1\" is invalid."
 msgstr "单元名称\"$1\"非法"
@@ -1857,8 +2065,18 @@ msgstr "单元名称\"$1\"非法"
 msgid "Operator must be 'and' or 'or'.\n"
 msgstr "操作符必须为'and'或'or'。\n"
 
+msgid ""
+"Some files have not been saved.\n"
+"Do you want to save them before compiling?\n"
+msgstr ""
+"部分文件没有保存。\n"
+"编译前保存吗？\n"
+
 msgid "Current metric has been modified, save it?"
 msgstr "当前度量已被修改, 需要保存吗？"
+
+msgid "Is True"
+msgstr "是"
 
 msgid "descendant versions"
 msgstr "子类中的版本"
@@ -1981,6 +2199,13 @@ msgstr "选中文本不是正确的文件名或者文件不存在"
 msgid "Sami (Skolt, Finland)"
 msgstr "萨米语 (芬兰，斯高特)"
 
+msgid ""
+"This command requires a directory.\n"
+"It cannot be executed."
+msgstr ""
+"该命令需要文件夹名。\n"
+"无法继续执行。"
+
 msgid "Are you sure you want to remove the reference to $1?"
 msgstr "你确定要删除$1的引用吗？"
 
@@ -2047,6 +2272,9 @@ msgstr "函数"
 msgid "Multithreaded"
 msgstr "多线程"
 
+msgid "Internal error ($1): Submit bug at http://support.eiffel.com"
+msgstr "内部错误 ($1): 请在http://support.eiffel.com提交错误报告。"
+
 msgid ""
 "Incompatible version for project compiled in: $1.\n"
 "$2 version is $3.\n"
@@ -2069,14 +2297,45 @@ msgstr "属性\"regular_expression\"丢失。"
 msgid "Set which values are shown in special objects"
 msgstr "设置特殊对象中显示的值"
 
+msgid "Click Finish to generate and compile this project."
+msgstr "点击\"完成\"生成并编译项目。"
+
 msgid "value tester"
 msgstr "值过滤器"
+
+msgid ""
+"No system was generated.\n"
+"Please make sure the C compilation ended correctly."
+msgstr ""
+"未生成任何系统。\n"
+"请确定C编译正确完成。"
 
 msgid "&Crop Diagram"
 msgstr "剪切图(&C)"
 
-msgid "< Back "
-msgstr "< 后退"
+msgid ""
+"No system was defined.\n"
+"Cannot launch the application."
+msgstr ""
+"未定义任何系统。\n"
+"无法启动程序。"
+
+msgid ""
+"The creation routine name that you have specified does not conform\n"
+"the lace specification.\n"
+"\n"
+"A valid creation routine name is not empty and only contains letters,\n"
+"digits, and underscores. The first character must\n"
+"be a letter.\n"
+"\n"
+"Click Back and choose a valid creation routine name."
+msgstr ""
+"指定的初始化方法名与指定的Lace不一致。\n"
+"\n"
+"合法的初始化方法名为非空并且只包含字母、\n"
+"数字和下划线。第一个字母必须为字母。\n"
+"\n"
+"点击后退选择合法的初始化方法名。"
 
 msgid "Toggle between UML and BON view"
 msgstr "在UML和BON视图之间切换"
@@ -2174,8 +2433,8 @@ msgstr ""
 "欢迎使用\n"
 "新建.NET程序向导"
 
-msgid "Thai (Thailand)"
-msgstr "泰国语 (泰国)"
+msgid "Please choose a folder."
+msgstr "请选择一个文件夹。"
 
 msgid "Most recent CLR Version"
 msgstr "最新CLR版本"
@@ -2227,6 +2486,9 @@ msgstr "包含类簇\"$1\""
 
 msgid "$1 of feature `$2' of class $3"
 msgstr "类$3中方法$2的$1"
+
+msgid "Close"
+msgstr "关闭"
 
 msgid "Compile W&orkbench C Code"
 msgstr "编译工作版C代码(&O)"
@@ -2292,6 +2554,9 @@ msgstr "删除当前选中对象"
 msgid "System is being compiled"
 msgstr "系统正在编译"
 
+msgid "Application will ignore all breakpoints."
+msgstr "程序将忽略所有断点。"
+
 msgid "Turn on physics"
 msgstr "激活物理属性"
 
@@ -2307,6 +2572,14 @@ msgstr "增量编译时在.NET模块中类的数量。增加该量会使增量�
 msgid "Add a library"
 msgstr "添加库"
 
+msgid ""
+"\n"
+"is not writable.\n"
+"Please check permissions."
+msgstr ""
+"\n"
+"不可写。请检查权限。"
+
 msgid "Pr&operties"
 msgstr "属性(&O)"
 
@@ -2315,6 +2588,9 @@ msgstr "中文"
 
 msgid "Domain item type \"$1\" is invalid."
 msgstr "域项类型\"$1\"非法。"
+
+msgid "Current text is not editable."
+msgstr "非编辑文本。"
 
 msgid "linear metric"
 msgstr "线性度量"
@@ -2333,9 +2609,6 @@ msgstr "白俄罗斯语 (白俄罗斯)"
 
 msgid "Add new variable"
 msgstr "添加新变量"
-
-msgid "Initial match reached."
-msgstr "已经到达首处匹配"
 
 msgid "$1 match"
 msgid_plural "$1 matches"
@@ -2427,14 +2700,17 @@ msgstr ""
 "选择运行时生成的信息记录和评测生成器来生成评测结果。\n"
 "评测结果将会保存在\"profinfo.pfi\"中。"
 
-msgid "Lower Sorbian"
-msgstr "低地文德语"
+msgid "Only compiled classes"
+msgstr "已编译的类"
 
 msgid "Make sure every (recursive) criterion in basic metric is of the same unit with that basic metric."
 msgstr "请确保在普通度量中, 所有规则(包括递归的)与该度量的单元一致。"
 
 msgid "Nepali"
 msgstr "尼泊尔语"
+
+msgid "'$1' is not a valid class name.\n"
+msgstr "'$1'不是一个合法的类名。\n"
 
 msgid ""
 "No version information about project found in:\n"
@@ -2494,6 +2770,19 @@ msgstr "前缀"
 msgid "Put Handle Right"
 msgstr "将柄放在右边"
 
+msgid "Please fill in the 'System Name' field."
+msgstr "请填写'系统名称'。"
+
+msgid "\"$1\" is not a compiled class."
+msgstr "\"$1\"不是已编译的类。"
+
+msgid ""
+"This command requires a class name.\n"
+"It cannot be executed."
+msgstr ""
+"该命令需要一个类名。\n"
+"不能继续执行。"
+
 msgid "Overflow &Prevention..."
 msgstr "溢出保护(&P)..."
 
@@ -2510,8 +2799,8 @@ msgstr "关联工具"
 msgid "Executable"
 msgstr "可执行程序"
 
-msgid "Tibetan (Bhutan)"
-msgstr "西藏语 (不丹)"
+msgid "start the graphical environment"
+msgstr "启动图形环境"
 
 msgid "Original metric name"
 msgstr "原度量名"
@@ -2524,6 +2813,22 @@ msgstr "马来语 (马来西亚)"
 
 msgid "First chance"
 msgstr "第一次机会"
+
+msgid ""
+"Directory $1\n"
+"does not exist."
+msgstr ""
+"文件夹$1\n"
+"不存在。"
+
+msgid ""
+"This feature cannot be exported.\n"
+"Deferred features, external ones,\n"
+"and attributes cannot be exported."
+msgstr ""
+"该方法不能输出。\n"
+"抽象方法，外部方法，\n"
+"属性都不能输出。"
 
 msgid ""
 "Using this wizard you can create a Wizard application\n"
@@ -2653,6 +2958,12 @@ msgstr "被使用者"
 msgid "Assembly Culture"
 msgstr "程序集区域性"
 
+msgid "Archive comparison result:"
+msgstr "档案比较结果: "
+
+msgid "Break when the hit count is equal to"
+msgstr "当运行达到次为该数时暂定: "
+
 msgid "Once routines"
 msgstr "Once方法"
 
@@ -2686,8 +2997,8 @@ msgstr "忽略断点运行程序"
 msgid "Choose a Class"
 msgstr "选择一个类"
 
-msgid "Ignore"
-msgstr "忽略"
+msgid "You must finalize your project first."
+msgstr "您必须先发布您的项目。"
 
 msgid "Serbian (Bosnia and Herzegovina, Latin)"
 msgstr "塞尔维亚语 (拉丁语，波斯尼亚和黑塞哥维那)"
@@ -2728,11 +3039,31 @@ msgstr "断点信息(&K)"
 msgid "Root class name: "
 msgstr "根类名:"
 
+msgid "An empty cluster name is not valid.\n"
+msgstr "空类簇名不正确。\n"
+
+msgid "Culture"
+msgstr "区域性"
+
 msgid "Standard (C/byte code)"
 msgstr "标准(C/字节码)"
 
 msgid "Remove"
 msgstr "删除"
+
+msgid ""
+"A backed up version of the file was found.\n"
+"Do you want to open the original file or the backup file?\n"
+"If you choose the original file, the backup file will be\n"
+"deleted. If choose the backup file, then the original file\n"
+"will be overwritten with the contents of the backup file\n"
+"when you save.\n"
+msgstr ""
+"发现该文件的备份。\n"
+"您需要打开原始版本还是备份版本？\n"
+"如果您选择原始版本，备份版本将会被删除。\n"
+"如果您选择备份版本，原始版本将被会覆盖为\n"
+"备份版本的内容。\n"
 
 msgid "metric"
 msgstr "度量"
@@ -2831,6 +3162,14 @@ msgstr ""
 "\n"
 "继续请点击\"继续\"。"
 
+msgid ""
+"Cannot delete class $1\n"
+"because it is either precompiled\n"
+"or in a library cluster."
+msgstr ""
+"未能删除类$1\n"
+"因为它为预编译或者库。"
+
 msgid "System running"
 msgstr "系统正在运行"
 
@@ -2886,6 +3225,9 @@ msgstr "忽略断言"
 msgid "Generate short form of all classes in system"
 msgstr "生成系统中所有类的接口视图"
 
+msgid "Chinese (Singapore)"
+msgstr "中文 (新加坡)"
+
 msgid "Completed: "
 msgstr "已完成: "
 
@@ -2903,8 +3245,11 @@ msgstr "编辑项目"
 msgid "Precompilation Wizard Error"
 msgstr "预编辑向导错误"
 
-msgid "Archive comparison result:"
-msgstr "档案比较结果: "
+msgid "Move [$1] to \"$2\""
+msgstr "移动[$1]到\"$2\""
+
+msgid "Corsican"
+msgstr "科西嘉语"
 
 msgid "Action:"
 msgstr "行为:"
@@ -2929,6 +3274,21 @@ msgstr "设置使用者"
 
 msgid "Precompile"
 msgstr "预编译"
+
+msgid ""
+"Environment variable '$1' has changed\n"
+"\n"
+"Old value: $2\n"
+"New value: $3\n"
+"\n"
+"Should the new value be used?"
+msgstr ""
+"环境变量'$1'已经被改变\n"
+"\n"
+"旧值: $2\n"
+"新值: $3\n"
+"\n"
+"使用新值吗？"
 
 msgid "Are you sure you want to remove $1 and any children of it?"
 msgstr "你确定要$1和它的子结点吗？"
@@ -2957,9 +3317,6 @@ msgstr "系统处于非运行状态"
 msgid "Flat contracts"
 msgstr "接口视图"
 
-msgid "Try again?"
-msgstr "重试吗？"
-
 msgid "Shared Library Definition"
 msgstr "共享的运行库定义"
 
@@ -2969,8 +3326,8 @@ msgstr "该类簇没有可用的视图"
 msgid "Azeri (Azerbaijan, Latin)"
 msgstr "阿塞拜疆语 (拉丁语，阿塞拜疆)"
 
-msgid "Finalized mode"
-msgstr "发布模式"
+msgid "Options"
+msgstr "选项"
 
 msgid "Launch Without Stopping"
 msgstr "忽略断点运行"
@@ -2979,11 +3336,11 @@ msgid "The feature name is not valid."
 msgstr "方法命不正确。"
 
 msgid ""
-"Welcome to the\n"
-"Precompilation Wizard"
+"An external command is running, closing this window will terminate it.\n"
+"Continue?"
 msgstr ""
-"欢迎使用\n"
-"预编译向导"
+"外部命令正在运行，关闭窗口将终止其运行。\n"
+"继续吗？"
 
 msgid "debug the system"
 msgstr "调试该系统"
@@ -3032,8 +3389,28 @@ msgstr "库目标UUID \"$1\"非法。"
 msgid "Kinyarwanda (Rwanda)"
 msgstr "金亚旺达语 (卢旺达)"
 
+msgid ""
+"This class is already being edited\n"
+"in another editor.\n"
+"Editing a class in several editors\n"
+"may cause loss of data."
+msgstr ""
+"该正在被另一个编辑器编辑。\n"
+"在多个编辑器内同时编辑一个类\n"
+"可能导致信息丢失。"
+
 msgid "Root feature: "
 msgstr "根方法:"
+
+msgid ""
+"$1 does not exist.\n"
+"Cannot invoke C compilation."
+msgstr ""
+"$1不存在。\n"
+"不能开始C编译。"
+
+msgid "No system was defined.\n"
+msgstr "未定义任何系统。\n"
 
 msgid "Metric name cannot be empty"
 msgstr "度量名不能为空"
@@ -3046,6 +3423,9 @@ msgstr "输入域"
 
 msgid "interface view"
 msgstr "接口视图"
+
+msgid "Thai (Thailand)"
+msgstr "泰国语 (泰国)"
 
 msgid "reset all values to their defaults"
 msgstr "重新设置所有值为默认值"
@@ -3060,6 +3440,13 @@ msgstr ""
 
 msgid "Save new configuration format as '$1'?"
 msgstr "保存新配置格式为'$1'？"
+
+msgid ""
+"Current class text has a syntax error.\n"
+"Code generation was cancelled."
+msgstr ""
+"当前类有词法错误。\n"
+"代码生成已被取消。"
 
 msgid ""
 "The .NET Assembly filename that you have chosen is not valid.\n"
@@ -3126,9 +3513,6 @@ msgstr "使用继承的值"
 msgid "Remove metric "
 msgstr "删除度量"
 
-msgid "Original value is \"$1=$2\""
-msgstr "原值为 \"$1=$2\""
-
 msgid "Zoom"
 msgstr "缩放"
 
@@ -3153,11 +3537,17 @@ msgstr "向下"
 msgid "Inuktitut"
 msgstr "以伊努克语"
 
+msgid "Expand selected level(s)"
+msgstr "展开选中层"
+
 msgid "Undo (Ctrl+Z)"
 msgstr "取消上次操作 (Ctrl+Z)"
 
 msgid "Top-level"
 msgstr "顶层"
+
+msgid "No class in any cluster matches this name."
+msgstr "该类不存在于任何类簇中。"
 
 msgid "New Vision2 Application Wizard"
 msgstr "新建Vision2程序向导"
@@ -3182,6 +3572,12 @@ msgstr "过滤输入域可见的结果"
 
 msgid "Filter: "
 msgstr "过滤:"
+
+msgid "Selected cluster is read only. Please select a writable cluster for class creation."
+msgstr "选中的类簇为只读。创建新类请选择可写的类簇。"
+
+msgid "The text of this class cannot be modified."
+msgstr "不能编辑该类文本。"
 
 msgid ""
 "Some files have not been saved.\n"
@@ -3244,6 +3640,13 @@ msgstr "古叙利亚语 (叙利亚)"
 msgid "Make sure coefficient for denominator metric is a non-zero real number."
 msgstr "请确保分母度量的系数为非零实数。"
 
+msgid ""
+"Could not save the library definition to\n"
+"$1."
+msgstr ""
+"未能将库定义保存到\n"
+"$1。"
+
 msgid " (REQUIRES RESTART)"
 msgstr " (需要重新启动)"
 
@@ -3255,6 +3658,15 @@ msgstr "$1 $2 $3 被禁用"
 
 msgid "Type of the task."
 msgstr "任务类型"
+
+msgid ""
+"Unable to load the ace file `$1'.\n"
+"For the following reasons:\n"
+"$2"
+msgstr ""
+"无法载入Ace文件`$1'。\n"
+"原因如下: \n"
+"$2"
 
 msgid "Warn about renamings of unknown classes?"
 msgstr "对未知类重命名时发出警告？"
@@ -3338,6 +3750,18 @@ msgstr "ISE Eiffel: 会话已经退出\n"
 msgid "Add scope"
 msgstr "添加范围"
 
+msgid ""
+"Cluster names may only include \n"
+"alphanumeric characters and underscores,\n"
+"have to start with an alphabetic character\n"
+"and cannot be a reserved word.\n"
+"Please select a different cluster name."
+msgstr ""
+"类簇名只能包含\n"
+"字符、数字和下划线，\n"
+"首字符为字母，不能为关键字。\n"
+"请重新选择类名。"
+
 msgid "Libraries to precompile:"
 msgstr "进行预编译的库:"
 
@@ -3373,6 +3797,15 @@ msgstr "希伯来语"
 
 msgid "&Help"
 msgstr "帮助(&H)"
+
+msgid ""
+"Cannot add a cluster to cluster\n"
+"$1\n"
+"because it is read only."
+msgstr ""
+"无法在类簇中添加类簇\n"
+"$1\n"
+"原因为只读。"
 
 msgid "Hindi (India)"
 msgstr "印地语 (印度)"
@@ -3440,6 +3873,9 @@ msgstr "类簇选项"
 msgid "Build"
 msgstr "编译版本"
 
+msgid "Please enter a feature name."
+msgstr "请输入方法名。"
+
 msgid "&Windows"
 msgstr "窗口(&W)"
 
@@ -3463,9 +3899,6 @@ msgstr "确定(O)"
 
 msgid "Show UML"
 msgstr "查看UML"
-
-msgid "Please choose a folder."
-msgstr "请选择一个文件夹。"
 
 msgid "And-term 1"
 msgstr "\"与\""
@@ -3494,6 +3927,9 @@ msgstr "重新编译重写类"
 
 msgid "Value"
 msgstr "值"
+
+msgid "No feature in this class matches this name."
+msgstr "该类中无任何方法名与该名称匹配。"
 
 msgid "already exists."
 msgstr "已经存在。"
@@ -3534,6 +3970,11 @@ msgstr "显示以状态间隔的断点"
 msgid "feature formats and information"
 msgstr "方法视图和相关信息"
 
+msgid ""
+"Please first select in the editor the class or cluster\n"
+"that you want to locate."
+msgstr "请首先在编辑器中选择需要定位的类或者类簇。"
+
 msgid "Add L&ibrary..."
 msgstr "添加库(&I)"
 
@@ -3542,6 +3983,9 @@ msgstr "参数"
 
 msgid "Interrupted because Eiffel complication starts"
 msgstr "被Eiffel编辑中断"
+
+msgid "Invalid folder name"
+msgstr "非法的文件夹名称。"
 
 msgid "Frame application"
 msgstr "框架程序"
@@ -3573,8 +4017,8 @@ msgstr "选择文件夹"
 msgid "Whole word"
 msgstr "匹配单词"
 
-msgid "&Compile"
-msgstr "编译(&C)"
+msgid "Value \"$1\" of attribute \"value\" is invalid. A real number is expected."
+msgstr "属性\"value\"为\"$1\"的值非法。应为实数。"
 
 msgid "&Close"
 msgstr "关闭(&C)"
@@ -3584,6 +4028,9 @@ msgstr "(无类)"
 
 msgid "Call&ees"
 msgstr "被调用者(&E)"
+
+msgid "No feature named $1 could be found in class $2."
+msgstr "类$2中未找到名为$1的方法名。"
 
 msgid "Add Pre Compilation Task"
 msgstr "添加预编译任务"
@@ -3671,8 +4118,8 @@ msgstr "缩写"
 msgid "overwrite any existing old project"
 msgstr "覆盖所有已存在的旧项目"
 
-msgid "Creation Routine Name Error"
-msgstr "初始化方法名称错误"
+msgid " Try again?"
+msgstr " 重试吗？"
 
 msgid "Hausa (Nigeria, Latin)"
 msgstr "豪萨语 (拉丁语，尼日利亚)"
@@ -3719,6 +4166,13 @@ msgstr "附加信息缓冲路径"
 msgid "show the classes implementing a feature"
 msgstr "显示实现某个方法的类"
 
+msgid ""
+"New feature has syntax error.\n"
+"Code generation cancelled."
+msgstr ""
+"新方法有词法错误。\n"
+"代码生成已被取消。"
+
 msgid "change the boolean operator"
 msgstr "更改布尔操作符"
 
@@ -3727,6 +4181,15 @@ msgstr "意大利语 (瑞士)"
 
 msgid "Punjabi"
 msgstr "旁遮普语"
+
+msgid ""
+"Some feature export clauses are conflicting.\n"
+"Please make sure that export clauses do not share\n"
+"either their indices or their exported names."
+msgstr ""
+"某些方法的export语句有冲突。\n"
+"请确保export语句的共享编号和\n"
+"输出名称。"
 
 msgid "Send to external editor"
 msgstr "输出到外部编辑器"
@@ -3737,8 +4200,8 @@ msgstr "切换到平面视图"
 msgid "Japanese (Japan)"
 msgstr "日本 (日语)"
 
-msgid "Supplier group"
-msgstr "被使用的类的集合"
+msgid "Sami (Inari, Finland)"
+msgstr "萨米语 (芬兰，伊纳里)"
 
 msgid "&New"
 msgstr "新建(&N)"
@@ -3794,8 +4257,8 @@ msgstr "已完成"
 msgid "Start With Arguments"
 msgstr "使用参数运行"
 
-msgid "Move [$1] to \"$2\""
-msgstr "移动[$1]到\"$2\""
+msgid "Break always"
+msgstr "总是暂停"
 
 msgid "wrap"
 msgstr "换行"
@@ -3808,6 +4271,24 @@ msgstr "文件(&F)"
 
 msgid "Open Objects tool menu"
 msgstr "弹出对象工具菜单"
+
+msgid ""
+"An internal error occurred.\n"
+"\n"
+"1 - Check that you have enough space to compile.\n"
+"2 - If this happens even after relaunching the environment\n"
+"     delete your EIFGEN and recompile from scratch.\n"
+"\n"
+"Follow the instructions at http://support.eiffel.com/submit.html in\n"
+"order to submit a bug report at http://support.eiffel.com"
+msgstr ""
+"内部错误。\n"
+"\n"
+"1 - 请检查您是否有足够的磁盘空间来编译。\n"
+"2 - 如果删除EIFGENs并重新编译后仍然出现该问题。\n"
+"\n"
+"请按照 http://support.eiffel.com/submit.html的步骤在\n"
+"http://support.eiffel.com提交错误报告。"
 
 msgid "Evaluate metric: "
 msgstr "计算度量: "
@@ -3822,6 +4303,18 @@ msgid ""
 "Completing the New Wizard \n"
 "Application Wizard"
 msgstr "完成创建向导程序向导"
+
+msgid "You must compile a project first."
+msgstr "您必需先编译项目。"
+
+msgid ""
+".NET precompiled libraries can be finalized to create\n"
+"an optimized version as well as a workbench version.\n"
+"Would you like to create a finalized version?"
+msgstr ""
+".NET预编译库除了可以创建工作版本，也可以\n"
+"用发布的方式创建优化版本。\n"
+"您需要创建发布版本吗？"
 
 msgid "Gujarati"
 msgstr "古吉拉特语"
@@ -3838,8 +4331,8 @@ msgstr "调试选项"
 msgid "Yi"
 msgstr "彝语"
 
-msgid "type"
-msgstr "类型"
+msgid "Check defined warnings when archive is recalculated?"
+msgstr ""
 
 msgid "Referenced metric(s): $1 not found."
 msgstr "引用度量: 未找到$1。"
@@ -3868,9 +4361,6 @@ msgstr "阿尔萨斯语"
 msgid "Setup domain"
 msgstr "设置域"
 
-msgid "Only compiled classes"
-msgstr "已编译的类"
-
 msgid "Bye"
 msgstr "再见"
 
@@ -3880,11 +4370,14 @@ msgstr "将图输出到PNG格式文件(&E)"
 msgid "Turkmen"
 msgstr "土库曼语"
 
-msgid "Old name"
-msgstr "旧名称"
+msgid "Minimum index displayed"
+msgstr "最小编号"
 
 msgid "O&nce/Constants"
 msgstr "Once方法/常量"
+
+msgid "Please enter a valid address."
+msgstr "请输入合法的地址。"
 
 msgid "&Embed in \"if...\"\tCtrl+I"
 msgstr "在\"if...\"中嵌入\tCtrl+I"
@@ -3977,6 +4470,14 @@ msgid "Folder \"$1\" (ID = \"$2\") is invalid."
 msgstr "文件夹\"$1\" (ID = \"$2\")非法。"
 
 msgid ""
+"Freezing is in progress, start Eiffel compilation\n"
+"may terminate current freezing.\n"
+"Continue?"
+msgstr ""
+"正在凝固系统，开始Eiffel编译将终止当前凝固。\n"
+"继续吗？"
+
+msgid ""
 "Please drop this button on the diagram.\n"
 "Use right click for both\n"
 "pick and drop actions."
@@ -3994,8 +4495,15 @@ msgstr ""
 "选择类或者方法重命名。\n"
 "使用拾起和释放方法或者将光标定位到编辑器中的方法或者类。"
 
-msgid "Workbench mode"
-msgstr "工作模式"
+msgid "< Back "
+msgstr "< 后退"
+
+msgid ""
+"Unable to execute the wizard.\n"
+"Check that `$1' exists and is executable.\n"
+msgstr ""
+"未能执行向导。\n"
+"检查`$1'是否存在并且可执行。\n"
 
 msgid "Sami (Northern, Sweden)"
 msgstr "萨米语 (北瑞典)"
@@ -4039,8 +4547,29 @@ msgstr "选择新配置文件名称"
 msgid "$1  in cluster $2  located in $3"
 msgstr "类$1,在类簇$2中,位于$3"
 
-msgid "Replace"
-msgstr "替换"
+msgid ""
+"Class with name: '$1' already exists.\n"
+"Please select a different class name."
+msgstr ""
+"名为'$1'的类已经存在。\n"
+"请选择不同的类名。"
+
+msgid ""
+"This command requires a file name.\n"
+"It cannot be executed."
+msgstr ""
+"该命令需要一个文件名。\n"
+"无法继续执行。"
+
+msgid ""
+"Current version of system has not been successfully compiled.\n"
+"Cannot use debugging facilities."
+msgstr ""
+"当前系统版本未成功编译。\n"
+"无法使用调试工具。"
+
+msgid "--> Subquery: "
+msgstr "--> 子查询:"
 
 msgid "English (Australia)"
 msgstr "英语 (澳大利亚)"
@@ -4098,6 +4627,13 @@ msgstr "项目正在编译，不能退出EiffelStudio。"
 msgid "Line Generation"
 msgstr "生成行"
 
+msgid ""
+"$1 is more recent than the system.\n"
+"Do you want to compile the generated C code?"
+msgstr ""
+"$1比当前系统新。\n"
+"需要编译生成的C代码吗？"
+
 msgid "Remove selected scope(s)"
 msgstr "删除选中范围"
 
@@ -4132,8 +4668,8 @@ msgstr "在发布版本中生成异常跟踪吗？"
 msgid "&Hide Formatting Marks"
 msgstr "隐藏编辑标记(&H)"
 
-msgid "Hide figure"
-msgstr "隐藏图象"
+msgid "Error on expression : \"$1\""
+msgstr "表达式错误: \"$1\""
 
 msgid "Send last calculated metric value to history"
 msgstr "将最后一次计算写入历史记录"
@@ -4141,8 +4677,23 @@ msgstr "将最后一次计算写入历史记录"
 msgid "Several classes have the same name:\n"
 msgstr "重命的类:\n"
 
+msgid ""
+"The file $1\n"
+"either cannot be read or does not represent\n"
+"a valid dynamic library definition."
+msgstr ""
+"文件$1\n"
+"不或读或者不是一个合法的动态运行库定义。"
+
 msgid "Project icon"
 msgstr "项目图标"
+
+msgid ""
+"File: $1 cannot be created.\n"
+"Please check permissions."
+msgstr ""
+"文件: $1 不能被创建。\n"
+"请检查权限。"
 
 msgid "Show only:"
 msgstr "只显示:"
@@ -4184,6 +4735,13 @@ msgstr ""
 msgid "Retrieve normally referenced supplier classes"
 msgstr "查询普通被引用的被使用类"
 
+msgid ""
+"'$1' is not a valid directory and/or cannot be created\n"
+"Please choose a valid and writable directory."
+msgstr ""
+"'$1'不是一个合法的文件夹，或者无法创建\n"
+"请选择一个合法的可写文件夹。"
+
 msgid "All senders"
 msgstr "所有发送者"
 
@@ -4192,6 +4750,13 @@ msgstr "未知选项$1.\n"
 
 msgid "Compile project"
 msgstr "编译项目"
+
+msgid ""
+"Could not locate $1.\n"
+"Please make sure system is correctly compiled."
+msgstr ""
+"无法定位$1。\n"
+"请确保该系统被正确编译。"
 
 msgid "launch the compilation without user request"
 msgstr "无用户要求时开始编译"
@@ -4204,6 +4769,13 @@ msgstr "重构工具栏"
 
 msgid "Creation procedure:"
 msgstr "初始化方法:"
+
+msgid ""
+"Welcome to the\n"
+"Precompilation Wizard"
+msgstr ""
+"欢迎使用\n"
+"预编译向导"
 
 msgid "Spanish (Nicaragua)"
 msgstr "西班牙语 (尼加拉瓜)"
@@ -4232,6 +4804,9 @@ msgstr "可用的库:"
 msgid "Match case?"
 msgstr "区分大小写？"
 
+msgid "Finalized mode"
+msgstr "发布模式"
+
 msgid "VALUE: "
 msgstr "值:"
 
@@ -4243,6 +4818,9 @@ msgstr "切换使用关系的可见性"
 
 msgid "&New Class..."
 msgstr "新建类(&N)..."
+
+msgid "Could not rename $1 into $2."
+msgstr "未能重将$1重命名为$2"
 
 msgid ""
 "\n"
@@ -4256,6 +4834,9 @@ msgstr "您可以选择向导状态的数量。"
 
 msgid "Khmer"
 msgstr "高棉语"
+
+msgid "Could not save diagram to $1"
+msgstr "未能将图保存为$1"
 
 msgid "Cluster hierarchy"
 msgstr "类簇结构"
@@ -4285,6 +4866,13 @@ msgstr "重设当前视图"
 msgid "You can create an executable file (.exe) or  dynamic-link library (.dll)"
 msgstr "可以创建可执行文件(.exe)或者动态链接库(.dll)"
 
+msgid ""
+"$1\n"
+"is not a directory."
+msgstr ""
+"$1\n"
+"不是一个文件夹。"
+
 msgid "Background C Compilation Terminated"
 msgstr "后台C编译终止"
 
@@ -4293,6 +4881,13 @@ msgstr "移除柄"
 
 msgid "General"
 msgstr "常用"
+
+msgid ""
+"File: $1 already exists.\n"
+"Do you wish to overwrite it?"
+msgstr ""
+"文件: $1已经存在。\n"
+"要覆盖吗？"
 
 msgid "Error "
 msgstr "错误"
@@ -4348,19 +4943,8 @@ msgstr "显示普通语法级别上被引用的类？"
 msgid "Too many \"domain\" section specified. Only one is expected."
 msgstr "\"域\"的数量太多。只需要1个。"
 
-msgid ""
-"The wizard can not be completed because its installation is not complete.\n"
-"The COM component \"ISE.VS.VisionSupport\" is missing or not registered.\n"
-"\n"
-"Contact http://support.eiffel.com for more details.\n"
-"\n"
-"Click Abort to finish the wizard."
-msgstr ""
-"不能完成向导，因为安装未完全。\n"
-"COM组件\"ISE.VS.VisionSupport\"丢失或者未注册。\n"
-"需要了解更多请联系http://support.eiffel.com\n"
-"\n"
-"点击退出完成向导。"
+msgid "Hit count"
+msgstr "运行到达次数"
 
 msgid ""
 "Please drop a class, a cluster or a midpoint\n"
@@ -4400,6 +4984,9 @@ msgstr "分组"
 
 msgid "UUID is missing."
 msgstr "UUID丢失。"
+
+msgid "Select at least one language."
+msgstr "选择至少一种语言。"
 
 msgid "Create a new expression"
 msgstr "创建新表达式"
@@ -4478,6 +5065,15 @@ msgstr "添加预编译"
 
 msgid "Uncomment selected lines"
 msgstr "取消选择行的注释"
+
+msgid ""
+"Classes were manually removed since last compilation.\n"
+"Running the last compiled application in these conditions\n"
+"may lead to inconsistent information, or to an unexpected behavior."
+msgstr ""
+"上次编译后一些类被手动删除。\n"
+"在该情况下运行上次编译的程序可能导致信息前后不一致，\n"
+"或者无法估计的结果。"
 
 msgid "Execution Profile"
 msgstr "评测运行"
@@ -4702,6 +5298,13 @@ msgstr ""
 "位于$1的项目\n"
 "被破坏。不能继续。"
 
+msgid ""
+"An error occurred while parsing the configuration file.\n"
+"Please try using the project settings tool."
+msgstr ""
+"分析配置文件时出错。\n"
+"请尝试使用项目设置工具修改。"
+
 msgid "Dialog application"
 msgstr "对话框程序"
 
@@ -4760,8 +5363,14 @@ msgstr "天的档案。"
 msgid "No"
 msgstr "否"
 
-msgid "start the graphical environment"
-msgstr "启动图形环境"
+msgid "Telugu"
+msgstr "泰卢固语"
+
+msgid "These parameters are invalid."
+msgstr "参数不正确。"
+
+msgid "Windows"
+msgstr "窗口"
 
 msgid "English (United States)"
 msgstr "英语 (美国)"
@@ -4829,8 +5438,8 @@ msgstr "深度:"
 msgid "No file name is selected."
 msgstr "没有选中文件名"
 
-msgid "Total Progress: "
-msgstr "总进度: "
+msgid "Open a dynamic library definition"
+msgstr "打开一个动态运行库的定义"
 
 msgid "&Ancestor Versions"
 msgstr "父类中的版本(&A)"
@@ -4880,6 +5489,9 @@ msgstr "删除项目"
 msgid "Use existing profile: "
 msgstr "查看现有的评测"
 
+msgid "The text of this class could not be modified."
+msgstr "无法编辑该类的文本。"
+
 msgid "Coefficient"
 msgstr "系数"
 
@@ -4897,6 +5509,9 @@ msgstr "葡萄牙语 (巴西)"
 
 msgid "Put Right Angles"
 msgstr "使用直角"
+
+msgid "Class with file name $1 already exists."
+msgstr "文件名为$1的类已经存在。"
 
 msgid ".NET Application type and Project settings"
 msgstr ".NET程序类型和项目设置"
@@ -5028,6 +5643,9 @@ msgstr "方法"
 msgid "De&scendants"
 msgstr "子类(&S)"
 
+msgid "Breakpoint index:"
+msgstr "断点编号: "
+
 msgid "Edit the properties of the selected feature"
 msgstr "编辑被选中方法的属性"
 
@@ -5063,14 +5681,21 @@ msgid ""
 "or dropped on this button via right clicking."
 msgstr "必须选中一个类或者用右键在该按钮上放下一个类。"
 
+msgid "The Makefile.SH is more recent than the system."
+msgstr "Makefile.SH比当前系统的新。"
+
+msgid ""
+"Index is out of range.\n"
+"Indices should be positive integers."
+msgstr ""
+"编号超出范围。\n"
+"编号应该为正整数。"
+
 msgid "Old Name"
 msgstr "旧名称"
 
 msgid "Arabic (Qatar)"
 msgstr "阿拉伯语 (卡塔尔)"
-
-msgid "Help"
-msgstr "帮助"
 
 msgid "Hide clusters"
 msgstr "隐藏类簇"
@@ -5088,6 +5713,42 @@ msgstr ""
 
 msgid "Item [$1] is attached to \"$2\""
 msgstr "[$1]被附加到\"$2\""
+
+msgid ""
+"Alias is invalid.\n"
+"Please check that it is a valid C identifier."
+msgstr ""
+"别名非法。\n"
+"请检查确保其为合法的C标识符。"
+
+msgid "Creation Routine Name Error"
+msgstr "初始化方法名称错误"
+
+msgid "'$1' is an invalid or not supported syntax."
+msgstr "'$1'词法不正确或者不支持。"
+
+msgid ""
+"You can include the value of an expression in the message by\n"
+"placing it in curly braces, suce as \"The value of x i {x}.\".\n"
+"To insert a curly brace, use \"\\{\". To insert a backslash, use \"\\\\\".\n"
+"\n"
+"The following special keywords will be replaced with their current values:\n"
+"\t$ADDRESS - current object address\n"
+"\t$CALLSTACK - current call stack\n"
+"\t$CLASS - current class name\n"
+"\t$FEATURE - current feature name\n"
+"\t$THREADID - current thread id"
+msgstr ""
+"您可以在信息中包含用大括号表示的表达式的值，\n"
+"如\"The value of x i {x}.\".\n"
+"插入大括号使用\"\\{\"。插入反斜线使用\"\\\\\"。\n"
+"\n"
+"以下特殊的关键字将被替换为它们当前值:\n"
+"\t$ADDRESS - 当前对象的地址\n"
+"\t$CALLSTACK - 当前调用栈\n"
+"\t$CLASS - 当前类名\n"
+"\t$FEATURE - 当前方法名\n"
+"\t$THREADID - 当前线程编号"
 
 msgid "OLD_NAME"
 msgstr "OLD_NAME"
@@ -5123,12 +5784,22 @@ msgid "Select working directory"
 msgstr "选择工作文件夹"
 
 msgid ""
+"'$1' is not a valid address.\n"
+"Addresses only make sense while an application is stopped."
+msgstr ""
+"'$1'不是合法的地址。\n"
+"当程序暂停时地址才有意义。"
+
+msgid ""
 "Completing the New .NET\n"
 "Application Wizard"
 msgstr "完成创建.NET程序向导"
 
 msgid "System properties"
 msgstr "系统属性"
+
+msgid "Cluster with path $1 already exists in the universe."
+msgstr "路径为$1的类簇已经存在。"
 
 msgid "Zoom out"
 msgstr "缩小"
@@ -5175,6 +5846,13 @@ msgstr "循环"
 msgid "OK"
 msgstr "确定"
 
+msgid ""
+"Some files could not be saved.\n"
+"Exit was cancelled."
+msgstr ""
+"部分文件未能保存。\n"
+"已经取消退出。"
+
 msgid "Variable"
 msgstr "变量"
 
@@ -5219,6 +5897,9 @@ msgstr "取消注释(&N)\tCtrl+Shift+K"
 
 msgid "Select a class which is fully compiled to have information about it."
 msgstr "选择一个完成编译的类并查看其相关信息。"
+
+msgid "Please enter an integer value."
+msgstr "请输入整数值。"
 
 msgid "Unable to retrieve the list of installed wizard."
 msgstr "未能获取已安装向导列表。"
@@ -5278,14 +5959,26 @@ msgstr "斯瓦希里语 (肯尼亚)"
 msgid "Output"
 msgstr "输出"
 
+msgid "type"
+msgstr "类型"
+
 msgid "Georgian (Georgia)"
 msgstr "格鲁吉亚语 (格鲁吉亚)"
+
+msgid ""
+"Possible stack overflow detected.\n"
+"The application was paused to let you\n"
+"examine its current status."
+msgstr ""
+"检查到可能的栈溢出。\n"
+"程序已经暂停\n"
+"您可以检查当前的状态。"
 
 msgid "Sami (Lule, Sweden)"
 msgstr "萨米语 (瑞典，卢乐)"
 
-msgid "Diagram"
-msgstr "图"
+msgid "Initial match reached."
+msgstr "已经到达首处匹配"
 
 msgid "Eiffel Configuration Files (*.ecf)"
 msgstr "Eiffel配置文件 (*.ecf)"
@@ -5318,6 +6011,17 @@ msgstr ""
 "请将一个类释放到该按钮上。\n"
 "点击右键拾起或者释放。"
 
+msgid ""
+"The directory you have chosen doesn't exist and\n"
+"the Wizard cannot create it.\n"
+"\n"
+"Click Back and choose another directory."
+msgstr ""
+"选择的文件夹不存在，\n"
+"向导创建失败。\n"
+"\n"
+"点击后退选择另一个文件夹。"
+
 msgid "(no_cluster)"
 msgstr "(无类簇)"
 
@@ -5341,6 +6045,9 @@ msgstr "发布模式编译中应用任何可以应用的程序优化吗？"
 
 msgid "implementers"
 msgstr "实现者"
+
+msgid "Please save output after external command has exited."
+msgstr "请在外部命令退出后将输出保存到文件"
 
 msgid "OBJECT NAME: "
 msgstr "对象名称:"
@@ -5385,6 +6092,9 @@ msgstr "Mapudungun (智利)"
 msgid "&Delete Current View"
 msgstr "删除当前视图(&D)"
 
+msgid "Arabic (Yemen)"
+msgstr "阿拉伯语 (也门)"
+
 msgid "Launching..."
 msgstr "正在启动..."
 
@@ -5399,6 +6109,9 @@ msgstr "当前目标是一个不能被编译的抽象目标吗？"
 
 msgid "Select the view you want to use"
 msgstr "选择使用的视图"
+
+msgid "Cannot find class $1."
+msgstr "找不到类$1。"
 
 msgid ""
 "$1: File does not exist!\n"
@@ -5438,6 +6151,9 @@ msgstr "版权"
 msgid "Turkish"
 msgstr "土耳其语"
 
+msgid "Total Progress: "
+msgstr "总进度: "
+
 msgid "Set"
 msgstr "设置"
 
@@ -5452,6 +6168,9 @@ msgstr "没有选中任何度量"
 
 msgid "Automatically generate a backup during recompilation?"
 msgstr "重新编译时自动生成备份吗？"
+
+msgid "System doesn't exist."
+msgstr "系统不存在。"
 
 msgid "Undo last action"
 msgstr "取消上次操作"
@@ -5489,9 +6208,6 @@ msgstr "可点击视图"
 msgid "Frisian (Netherlands)"
 msgstr "弗里西语 (荷兰)"
 
-msgid "Sami (Inari, Finland)"
-msgstr "萨米语 (芬兰，伊纳里)"
-
 msgid "Generating: "
 msgstr "正在生成:"
 
@@ -5506,23 +6222,6 @@ msgstr "如何(&H)..."
 
 msgid "Copy call stack to clipboard"
 msgstr "复制调用栈到剪切板"
-
-msgid ""
-"The creation routine name that you have specified does not conform\n"
-"the lace specification.\n"
-"\n"
-"A valid creation routine name is not empty and only contains letters,\n"
-"digits, and underscores. The first character must\n"
-"be a letter.\n"
-"\n"
-"Click Back and choose a valid creation routine name."
-msgstr ""
-"指定的初始化方法名与指定的Lace不一致。\n"
-"\n"
-"合法的初始化方法名为非空并且只包含字母、\n"
-"数字和下划线。第一个字母必须为字母。\n"
-"\n"
-"点击后退选择合法的初始化方法名。"
 
 msgid "Switch to high quality"
 msgstr "切换到高质量模式"
@@ -5551,6 +6250,12 @@ msgstr "使用原义字符串的格式吗？"
 msgid "Coefficient \"$1\" for denominator metric is invalid. A real number is expected."
 msgstr "子项度量的系数\"$1\"非法。应为实数。"
 
+msgid "Choose an icon for you project."
+msgstr "为项目选择图标。"
+
+msgid "Please fill in the 'Location' field."
+msgstr "请填写'Location'。"
+
 msgid "Edit"
 msgstr "编辑"
 
@@ -5565,6 +6270,16 @@ msgstr "  (已预编译)"
 
 msgid "Step Out"
 msgstr "移出"
+
+msgid ""
+"An error occurred on breakpoints because a feature\n"
+"was not correctly compiled.\n"
+"\n"
+"Recompiling the project completely will solve the problem."
+msgstr ""
+"在断点处发生错误，因为某一个方法未被正确编译。\n"
+"\n"
+"重新完整的编译该项目以解决该问题。"
 
 msgid "Report >>"
 msgstr "结果报告集"
@@ -5600,11 +6315,14 @@ msgstr "项目工具栏(&P)"
 msgid "Should the generated executable use a shared library of the runtime?"
 msgstr "生成的可执行文件使用与运行时共享的库吗？"
 
+msgid "An empty feature name is not valid.\n"
+msgstr "方法名不能为空。\n"
+
 msgid "Setup criterion domain properties"
 msgstr "设置规则域属性"
 
-msgid "No help available for this element"
-msgstr "该对象没有帮助信息"
+msgid "Original value is \"$1=$2\""
+msgstr "原值为 \"$1=$2\""
 
 msgid "Setswana/Tswana (South Africa)"
 msgstr "茨瓦纳语 (南非)"
@@ -5636,6 +6354,17 @@ msgstr "正则表达式"
 msgid "&Search"
 msgstr "查找(&S)"
 
+msgid ""
+"Feature names may only include \n"
+"alphanumeric characters and underscores,\n"
+"have to start with an alphabetic character\n"
+"and cannot be a reserved word.\n"
+"Please select a different feature name."
+msgstr ""
+"方法名只能包括字母、数字和下划线，\n"
+"首字符必须为字母，同时不能为关键字。\n"
+"请重新选择方法名。"
+
 msgid "feature item"
 msgstr "方法项"
 
@@ -5658,6 +6387,13 @@ msgstr "选择项目名称和生成位置文件夹。"
 
 msgid "&Object"
 msgstr "对象(&O)"
+
+msgid ""
+"Retrieving project in: $1\n"
+"was interrupted. Cannot continue."
+msgstr ""
+"位于$1的项目\n"
+"被破坏。不能继续。"
 
 msgid "Generate flat/short form of all classes in system"
 msgstr "生成系统中所有类的平面/接口视图"
@@ -5790,8 +6526,8 @@ msgstr "属性\"$1\"的值非法。应为布尔值。"
 msgid "Invalid Names Error"
 msgstr "名称非法错误"
 
-msgid "Error on expression : \"$1\""
-msgstr "表达式错误: \"$1\""
+msgid "When the breakpoint is hit:"
+msgstr "当运行至断点:"
 
 msgid "Irish (Ireland)"
 msgstr "爱尔兰语 (爱尔兰)"
@@ -5807,6 +6543,9 @@ msgstr "类选项"
 
 msgid "Spanish (Dominican Republic)"
 msgstr "西班牙语 (多米尼加共和国)"
+
+msgid "'$1' is not a file."
+msgstr "'$1'不是一个文件。"
 
 msgid ""
 "Class $1 has been modified.\n"
@@ -5851,6 +6590,13 @@ msgstr "点击\"完成\"生成项目。"
 
 msgid "go back to main menu"
 msgstr "回到主菜单"
+
+msgid ""
+"This file seems to be corrupted.\n"
+"Not all items inside could be loaded."
+msgstr ""
+"该文件似乎已经被破坏。\n"
+"部分节点未被加载。"
 
 msgid "Select an existing metric archive file"
 msgstr "选择已有的度量档案文件"
@@ -5911,11 +6657,18 @@ msgstr ""
 "在加载评估配置时发生错误。\n"
 "请与系统管理员联系确认是否支持您的评估。\n"
 
-msgid "English"
-msgstr "英语"
+msgid "Add new task"
+msgstr "添加任务"
 
 msgid "Conditions for this task to be executed."
 msgstr "任务执行的条件。"
+
+msgid ""
+"Cannot delete cluster $1\n"
+"because cluster is not empty"
+msgstr ""
+"无法删除类簇$1\n"
+"原因为非空。"
 
 msgid "No previous value\n"
 msgstr "前一个值不存在\n"
@@ -5952,6 +6705,9 @@ msgstr "配置文件位置"
 
 msgid "Command has exited with code $1"
 msgstr "命令已经退出, 退出代码为$1"
+
+msgid "Select at least one output switch."
+msgstr "选择至少一个输出格式。"
 
 msgid "No active queries"
 msgstr "无激活的子查询"
@@ -6016,14 +6772,33 @@ msgstr "后台C编译失败"
 msgid "Invalid target, select the target you want: "
 msgstr "目标非法，选择需要的目标:"
 
-msgid "Telugu"
-msgstr "泰卢固语"
+msgid "Lower Sorbian"
+msgstr "低地文德语"
 
 msgid "Reference value"
 msgstr "引用值"
 
 msgid "&Creators"
 msgstr "创建者(&C)"
+
+msgid ""
+"By default assertions enabled in the configuration file are kept\n"
+"in final mode.\n"
+"\n"
+"Keeping assertion checking inhibits any optimization\n"
+"specified in the configuration (inlining, array optimization,\n"
+"dead-code removal) and will produce a final executable\n"
+"that is not optimal in speed and size.\n"
+"\n"
+"Are you sure you want to keep the assertions in your\n"
+"finalized executable?"
+msgstr ""
+"在发布版本中，默认为保持断言。\n"
+"\n"
+"保持断言将使配置中的优化失效(内联函数，数组优化，\n"
+"删除不可达代码)，生成一个在效率和大小上未被优化的版本。\n"
+"\n"
+"你确定要在发布版中保持断言吗？"
 
 msgid "Luxembourgish"
 msgstr "卢森堡语"
@@ -6088,8 +6863,8 @@ msgstr "项目名称错误"
 msgid "specify the Ace file (obsolete)"
 msgstr "指定Ace文件 (已过时)"
 
-msgid "--> Subquery: "
-msgstr "--> 子查询:"
+msgid "No value tester is specified."
+msgstr "未指定任何值过滤"
 
 msgid "Generate profiling information?"
 msgstr "生成评测信息？"
@@ -6121,8 +6896,8 @@ msgstr "添加，删除或编辑外部命令"
 msgid "Upper Sorbian"
 msgstr "上索布语"
 
-msgid "Pause"
-msgstr "停止"
+msgid "Diagram"
+msgstr "图"
 
 msgid "Amharic (Ethiopia)"
 msgstr "阿姆哈拉语 (埃塞俄比亚)"
@@ -6144,6 +6919,9 @@ msgstr "后台C编译成功"
 
 msgid "Add and-term"
 msgstr "添加\"与\"关系"
+
+msgid "Could not save file into '$1'"
+msgstr "未能将文件保存为'$1'"
 
 msgid "&Homonyms"
 msgstr "同命方法(H)"
@@ -6229,6 +7007,12 @@ msgstr "删除图中的元素"
 msgid "Profiler used to produce the above record: "
 msgstr "产生上面记录的评测:"
 
+msgid "'$1' is not a condition."
+msgstr "'$1'不是合法的条件。"
+
+msgid "Please clear this window after c compilation has exited."
+msgstr "请在C编译退出后清除窗口。"
+
 msgid "Check the validity of the library definition"
 msgstr "检查类定义正确性"
 
@@ -6300,11 +7084,14 @@ msgstr "删除当前对象(&R)"
 msgid "Pre Compilation"
 msgstr "编译前任务"
 
+msgid "Hausa"
+msgstr "豪撒语"
+
 msgid "Project location"
 msgstr "项目位置"
 
-msgid "Chinese (Singapore)"
-msgstr "中文 (新加坡)"
+msgid "Tasks"
+msgstr "任务"
 
 msgid ""
 "Finalizing implies some C compilation and linking.\n"
@@ -6321,6 +7108,12 @@ msgstr ""
 
 msgid "create documents from the system"
 msgstr "生成该系统文档"
+
+msgid "No cluster was selected. Please select a cluster to create a class."
+msgstr "未选中类簇。请选择一个类簇创建新类。"
+
+msgid "The class name is not valid."
+msgstr "类名不正确。"
 
 msgid "Generate Eiffel-friendly names"
 msgstr "生成Eiffel惯例的名称"
@@ -6352,9 +7145,6 @@ msgstr "鞑靼语"
 msgid "Remove selected value retriever"
 msgstr "删除选中的值查询"
 
-msgid "Add new task"
-msgstr "添加任务"
-
 msgid "Features from ANY"
 msgstr "ANY类中的方法"
 
@@ -6364,11 +7154,8 @@ msgstr "当对标准泛型或者扩展型别尝试赋值时发出警告(VJRV)？
 msgid "No text labels"
 msgstr "无文本标签"
 
-msgid "Click Finish to generate and compile this project."
-msgstr "点击\"完成\"生成并编译项目。"
-
-msgid "Callers from client class"
-msgstr "使用者中的调用方法"
+msgid "Could not save file to specified location."
+msgstr "未能将文件保存到指定路径。"
 
 msgid "Mohawk (Canada)"
 msgstr "莫霍克语 (加拿大)"
@@ -6410,6 +7197,9 @@ msgstr "已经存在名为\"$1\"的度量。"
 msgid "Reset user settings"
 msgstr "清除用户设置"
 
+msgid "No errors were found."
+msgstr "未发现任何错误。"
+
 msgid "Click Back if you can correct the problem or Click Abort."
 msgstr "如果你能解决该问题请点击后退，如果不能请点击退出。"
 
@@ -6433,6 +7223,9 @@ msgstr "Makefile"
 
 msgid "Assamese"
 msgstr "阿萨姆语"
+
+msgid "Break when the hit count is greater than or equal to"
+msgstr "当运行到达计数大于或等于该值时暂停: "
 
 msgid "Arguments"
 msgstr "参数"
@@ -6458,8 +7251,8 @@ msgstr "添加(&A)..."
 msgid "Current value"
 msgstr "当前值"
 
-msgid "The class name is not valid."
-msgstr "类名不正确。"
+msgid "Select metric:"
+msgstr "选择度量: "
 
 msgid "Output Name"
 msgstr "输出名称"
@@ -6498,6 +7291,13 @@ msgstr "后台工作版C编译启动"
 
 msgid "Show physics settings dialog"
 msgstr "显示物理属性设置对话框"
+
+msgid ""
+"Command cannot be executed until degree $1 completed.\n"
+"Please wait until then before calling this command."
+msgstr ""
+"度$1完成后命令才能被执行。\n"
+"请等待到该时刻再执行命令。"
 
 msgid "do not convert clusters into libraries"
 msgstr "类簇不转换为库"
@@ -6545,6 +7345,9 @@ msgstr "局部变量没有被使用时发出警告？"
 
 msgid "New Ed&itor Window"
 msgstr "新编辑器窗口(I)"
+
+msgid "'$1' is not a valid feature name.\n"
+msgstr "'$1'不是一个合法的方法名。\n"
 
 msgid "Add Library"
 msgstr "添加库"
@@ -6610,6 +7413,9 @@ msgstr "C方法"
 msgid "Open project"
 msgstr "打开项目"
 
+msgid "'$1' is not a valid cluster name.\n"
+msgstr "'$1'不是一个合法的类簇名。\n"
+
 msgid "Add new metric value retriever"
 msgstr "添加新度量值查寻"
 
@@ -6618,6 +7424,9 @@ msgstr "方法(&R)"
 
 msgid "Text finished loading"
 msgstr "完成文本载入"
+
+msgid "English"
+msgstr "英语"
 
 msgid "&Descendant Versions"
 msgstr "子类中的版本(&D)"
@@ -6634,6 +7443,13 @@ msgid ""
 msgstr ""
 "文件已经被修改。\n"
 "要保存吗？"
+
+msgid ""
+"Class \"$1\"\n"
+"has no feature named \"$2\"."
+msgstr ""
+"类\"$2\"\n"
+"不存在名为\"$2\"的方法。"
 
 msgid ""
 "You can generate the Execution Profile from a Run-time Information Record\n"
@@ -6670,13 +7486,8 @@ msgstr "对象工具: 左"
 msgid "F_code"
 msgstr "F_code"
 
-#, fuzzy
-msgid ""
-"In linear metric, make sure that every variable metric doesn't involve recursive metric.\n"
-"In ratio metric, make sure that numerator metric or denominator metric doesn't involve recursive metric."
-msgstr ""
-"请确定, 在线性度量中, 所有子项度量不会发生递归调用;\n"
-"在比例度量中, 数量度量和分母度量不会发生递归调用。"
+msgid "Could not save diagram to specified location."
+msgstr "未能将图保存到指定位置。"
 
 msgid "Setup feature domain"
 msgstr "设置方法域"
@@ -6741,8 +7552,8 @@ msgstr "蒙古语 (中国)"
 msgid "Runtime Information Record Error"
 msgstr "运行信息错误记录"
 
-msgid "Bashkir"
-msgstr "巴什基尔语"
+msgid "Supplier group"
+msgstr "被使用的类的集合"
 
 msgid "Metric with name"
 msgstr "命名度量"
@@ -6759,11 +7570,27 @@ msgstr "动态方法计算"
 msgid "new_value"
 msgstr "新值"
 
+msgid ""
+"Source file cannot be moved.\n"
+"Please make sure that:\n"
+"the source file exists,\n"
+"the source file is not being edited,\n"
+"the destination directory can be written in."
+msgstr ""
+"源文件无法被删除。\n"
+"请确保:\n"
+"源文件存在，\n"
+"源文件未正在被编辑，\n"
+"目标文件夹可写。"
+
 msgid "Finalize..."
 msgstr "发布..."
 
 msgid "Show clusters"
 msgstr "显示类簇"
+
+msgid "Could not convert file '$1' into new configuration format."
+msgstr "未能将文件'$1'转换为新的配置文件格式。"
 
 msgid "Too many crieria is specified in \"criterion\" section. Only one is expected."
 msgstr "\"criterion\"节中规则过多。只需一个。"
@@ -6821,6 +7648,14 @@ msgstr "项目不可读。请检查权限。"
 msgid "&Interface"
 msgstr "接口视图(&I)"
 
+msgid ""
+"You are about to overwrite the original file with\n"
+"the backup file. Previous content will be lost\n"
+"and the backup file deleted."
+msgstr ""
+"您正使用备份文件覆盖原始文件。\n"
+"之前的内容将丢失，备份文件将被删除。"
+
 msgid "Show class location?"
 msgstr "显示类的位置？"
 
@@ -6865,6 +7700,10 @@ msgstr "隐藏"
 msgid "Hide cluster legend"
 msgstr "隐藏类簇图例"
 
+#, fuzzy
+msgid "Use external delayed domain"
+msgstr "使用延迟域"
+
 msgid "Zulu/isiZulu (South Africa)"
 msgstr "祖鲁语 (南非)"
 
@@ -6874,8 +7713,13 @@ msgstr "重复上次操作"
 msgid "Select Class"
 msgstr "选择类"
 
-msgid "Corsican"
-msgstr "科西嘉语"
+#, fuzzy
+msgid ""
+"In linear metric, make sure that every variable metric doesn't involve recursive metric.\n"
+"In ratio metric, make sure that numerator metric or denominator metric doesn't involve recursive metric."
+msgstr ""
+"请确定, 在线性度量中, 所有子项度量不会发生递归调用;\n"
+"在比例度量中, 数量度量和分母度量不会发生递归调用。"
 
 msgid "Metric archive in specified file is not valid, it must be cleaned"
 msgstr "在指定文件中的度量档案非法, 必须清除"
@@ -6898,6 +7742,9 @@ msgstr "创建默认的方法分类"
 msgid "Warn about usage of obsolete features?"
 msgstr "使用过期方法时发出警告？"
 
+msgid "Bashkir"
+msgstr "巴什基尔语"
+
 msgid "Show Alias Name"
 msgstr "显示别名"
 
@@ -6915,6 +7762,19 @@ msgstr "--> 文件名: "
 
 msgid "Address:"
 msgstr "地址:"
+
+msgid ""
+"$1 file could not be backed up.\n"
+"Other class files were saved with a .swp extension."
+msgid_plural ""
+"$1 files could not be backed up.\n"
+"Other class files were saved with a .swp extension."
+msgstr[0] ""
+"$1个文件不能备份。\n"
+"其它文件已被保存为后缀为.swp的文件。"
+msgstr[1] ""
+"$1个文件不能备份。\n"
+"其它文件已被保存为后缀为.swp的文件。"
 
 msgid "Feat&ure Views"
 msgstr "方法视图"
@@ -6976,6 +7836,15 @@ msgstr "添加预编译"
 
 msgid "Current editor"
 msgstr "当前编辑器"
+
+msgid ""
+"The last compilation was not complete.\n"
+"Running the last compiled application in these conditions\n"
+"may lead to inconsistent information, or to an unexpected behavior."
+msgstr ""
+"上次编辑未完成。\n"
+"在该状态下运行前一个编译的程序可能导致信息前后不一致，\n"
+"或者无法估计的结果。"
 
 msgid "Retrieve only syntactially referenced client classes"
 msgstr "只查询语法级别上被引用的使用类"
@@ -7063,6 +7932,17 @@ msgstr ""
 msgid "go back to parent menu"
 msgstr "返回上一级菜单"
 
+msgid "Please specify a class name."
+msgstr "请指定类名。"
+
+msgid ""
+"Command cannot be executed because the project\n"
+"has never been compiled.\n"
+"Please compile the project before calling this command."
+msgstr ""
+"命令未法被执行，因为该项目未被编译。\n"
+"请先编译再运行该命令。"
+
 msgid "Compile All Classes?"
 msgstr "编译所有类？"
 
@@ -7115,6 +7995,9 @@ msgstr "打开新上下文窗口"
 msgid "New Context"
 msgstr "新上下文窗口"
 
+msgid "Maximum displayed string size"
+msgstr "最大字符串可视长度"
+
 msgid "Force inheritance on child elements."
 msgstr "在子结点强制属性继承。"
 
@@ -7123,6 +8006,13 @@ msgstr "在文件夹中将类分类吗？"
 
 msgid "The configuration file you have selected is already listed."
 msgstr "已选择的配置文件已经在列表中。"
+
+msgid ""
+"The selected options are invalid.\n"
+"Please select different ones."
+msgstr ""
+"选中的选项非法。\n"
+"请从其余的选项中选择。"
 
 msgid "--> Please enter an operator index followed by an operator ('and' or 'or'): "
 msgstr "--> 请输入操作符('and'或者'or')前的编号"
@@ -7187,6 +8077,9 @@ msgstr "保存为EiffelCase格式"
 msgid "External Edition"
 msgstr "外部编译器"
 
+msgid "Could not launch system in \"$1\"."
+msgstr "未能在\"$1\"处运行系统。"
+
 msgid "Metric"
 msgstr "度量"
 
@@ -7227,11 +8120,21 @@ msgstr "地址栏"
 msgid "show the callers of a feature"
 msgstr "显示方法的调用者"
 
-msgid "Minimum index displayed"
-msgstr "最小编号"
+msgid "Help"
+msgstr "帮助"
 
 msgid "Calculated time"
 msgstr "计算时间"
+
+msgid ""
+"Backup was successful.\n"
+"Class files were saved with a .swp extension."
+msgstr ""
+"备份成功。\n"
+"类被保存为以.swp为后缀的文件。"
+
+msgid "Replace"
+msgstr "替换"
 
 msgid "show list of commands"
 msgstr "显示命令列表"
@@ -7337,6 +8240,15 @@ msgstr "将类簇命作为命名空间吗？"
 msgid "Remove detailed result?"
 msgstr "删除详细结果？"
 
+msgid ""
+"Unable to load the project file `$1'.\n"
+"For the following reasons:\n"
+"$2"
+msgstr ""
+"无法载入项目文件`$1'。\n"
+"原因如下:\n"
+"$2"
+
 msgid "This will discard the modifications."
 msgstr "该行为将忽略更改。"
 
@@ -7355,8 +8267,8 @@ msgstr "泰卢固语 (印度)"
 msgid "clickable view"
 msgstr "可点击视图"
 
-msgid "Tasks"
-msgstr "任务"
+msgid "&Window"
+msgstr "窗口(&W)"
 
 msgid "New Wizard Application Wizard"
 msgstr "创建向导程序向导"
@@ -7369,6 +8281,9 @@ msgstr "新类"
 
 msgid "Quechua (Bolivia)"
 msgstr "奇楚亚语 (玻利维亚)"
+
+msgid "Ignore"
+msgstr "忽略"
 
 msgid "Mapudungun"
 msgstr "Mapudungun"
@@ -7556,6 +8471,9 @@ msgstr "在定义中复制度量名称\"$1\"。"
 msgid "Obsolete Features"
 msgstr "过期方法"
 
+msgid "No cluster in the system matches this name."
+msgstr "系统中不存在匹配该名称的类簇。"
+
 msgid "All breakpoints together"
 msgstr "所有断点"
 
@@ -7602,11 +8520,21 @@ msgstr "最大显示编号"
 msgid "Old Verbatim Strings"
 msgstr "旧原义字符串"
 
+msgid ""
+"Can't delete class $1 because it is referenced by\n"
+"$2\n"
+"\n"
+"If this is not the case recompile the system and try again."
+msgstr ""
+"无法删除类$1因为它被$2引用\n"
+"\n"
+"如果实际上它未被$2引用请尝试重新编译系统。"
+
 msgid "Root Feature"
 msgstr "根方法"
 
-msgid "Expand selected level(s)"
-msgstr "展开选中层"
+msgid "Print a message:"
+msgstr "打印信息: "
 
 msgid "Parents:"
 msgstr "父类:"
@@ -7629,11 +8557,14 @@ msgstr "西班牙语 (危地马拉)"
 msgid "Chinese (Macao SAR)"
 msgstr "中文 (澳门特别行政区)"
 
-msgid "Deselect all history items"
-msgstr "取消所有历史记录的选择"
+msgid "Pause"
+msgstr "停止"
 
 msgid "Spanish (Uruguay)"
 msgstr "西班牙语 (乌拉圭)"
+
+msgid "<unset>"
+msgstr "<未设置>"
 
 msgid "for the next objects you will add in the object tree."
 msgstr "将后面的对象添加到对象树中"
@@ -7644,11 +8575,45 @@ msgstr "备份用户定义度量"
 msgid "Stop the application?"
 msgstr "停止当前程序？"
 
+msgid "No cluster in the system has this name."
+msgstr "系统中不存在该名称的类簇。"
+
 msgid "Current version and all its descendant versions"
 msgstr "当前版本以及所有子类中的版本"
 
 msgid "Command line:"
 msgstr "命令行: "
+
+msgid ""
+"Please enter a correct query, for example:\n"
+"\tfeaturename = WORD.t*\n"
+"\tfeaturename < WORD.mak?\n"
+"\tcalls > 2\n"
+"\tself <= 3.4\n"
+"\tdescendants in 23 - 34\n"
+"\ttotal >= 12.3\n"
+"\tpercentage /= 2\n"
+"\tcalls > avg\n"
+"\tself <= max\n"
+"\ttotal > min\n"
+"\n"
+"You can also combine subqueries with 'and' and 'or', for example:\n"
+"\tcalls > 2 and self <= 3.4 or percentage in 2.3 - 3.5"
+msgstr ""
+"请输入正确的查询，例如:\n"
+"\tfeaturename = WORD.t*\n"
+"\tfeaturename < WORD.mak?\n"
+"\tcalls > 2\n"
+"\tself <= 3.4\n"
+"\tdescendants in 23 - 34\n"
+"\ttotal >= 12.3\n"
+"\tpercentage /= 2\n"
+"\tcalls > avg\n"
+"\tself <= max\n"
+"\ttotal > min\n"
+"\n"
+"您也可以同时使用'and'和'or'，例如:\n"
+"\tcalls > 2 and self <= 3.4 or percentage in 2.3 - 3.5"
 
 msgid "Catalan (Catalan)"
 msgstr "加泰隆尼亚语 (加泰隆尼亚)"
@@ -7734,8 +8699,8 @@ msgstr "切换到低质量模式"
 msgid "Unit:"
 msgstr "单元: "
 
-msgid "Hausa"
-msgstr "豪撒语"
+msgid "Has Changed"
+msgstr "已更改"
 
 msgid "Trademark"
 msgstr "商标"
@@ -7749,11 +8714,24 @@ msgstr "Vision2程序外观"
 msgid "IL Verifiable"
 msgstr "IL验证"
 
-msgid "Choose an icon for you project."
-msgstr "为项目选择图标。"
+msgid ""
+"Class names may only include\n"
+"alphanumeric characters and underscores,\n"
+"have to start with an alphabetic character\n"
+"and cannot be a reserved word.\n"
+"Please select a different class name."
+msgstr ""
+"类名只能包括字母、数字和下划线，\n"
+"首字符必须为字母，同时不能为关键字。\n"
+"请重新选择类名。"
 
 msgid "Config and cluster details"
 msgstr "详细配置和类簇"
+
+msgid ""
+"Moving a folder to one of its children\n"
+"is not possible."
+msgstr "无法将文件夹移动到它的子文件夹中。"
 
 msgid "Paste"
 msgstr "粘贴"
@@ -7771,8 +8749,8 @@ msgstr "命令的执行文件夹。"
 msgid "Reset"
 msgstr "重设"
 
-msgid "Options"
-msgstr "选项"
+msgid "Callers from client class"
+msgstr "使用者中的调用方法"
 
 msgid "Clone selected metric to a new metric"
 msgstr "新建与选中的度量相同的度量"
@@ -7800,6 +8778,13 @@ msgstr "集合类型"
 
 msgid "Zoom Out"
 msgstr "缩小"
+
+msgid ""
+"\"$1\"\n"
+"is not a compiled class."
+msgstr ""
+"\"$1\"\n"
+"不是已编译的类"
 
 msgid "St&art"
 msgstr "运行(&A)"
@@ -7847,11 +8832,8 @@ msgstr "别名"
 msgid "Cannot create file: "
 msgstr "文件未能创建:"
 
-msgid "Close"
-msgstr "关闭"
-
-msgid "Value \"$1\" of attribute \"value\" is invalid. A real number is expected."
-msgstr "属性\"value\"为\"$1\"的值非法。应为实数。"
+msgid "Deselect all history items"
+msgstr "取消所有历史记录的选择"
 
 msgid "Set to &Lowercase\tCtrl+Shift+U"
 msgstr "转换为小写(&L)\tCtrl+Shift+U"
@@ -7920,15 +8902,11 @@ msgid "numerator metric"
 msgstr "数量度量"
 
 msgid ""
-"The directory you have chosen doesn't exist and\n"
-"the Wizard cannot create it.\n"
-"\n"
-"Click Back and choose another directory."
+"Class was modified outside the diagram.\n"
+"Previous commands are not undoable any longer."
 msgstr ""
-"选择的文件夹不存在，\n"
-"向导创建失败。\n"
-"\n"
-"点击后退选择另一个文件夹。"
+"类在该图外已经被修改。\n"
+"之前的命令已经无法撤消。"
 
 msgid "Read-only project: cannot compile.\n"
 msgstr "只读项目: 不能编译。\n"
@@ -7936,8 +8914,19 @@ msgstr "只读项目: 不能编译。\n"
 msgid "&Tools"
 msgstr "工具(T)"
 
+msgid ""
+"Please select a class or a cluster \n"
+"before calling this command.\n"
+"It will then be removed."
+msgstr ""
+"在执行该命令前请选择一个和一个类簇。\n"
+"之后它将被删除。"
+
 msgid "show the output switches"
 msgstr "显示切换输出"
+
+msgid "No features in this file"
+msgstr "该文件中无方法"
 
 msgid ""
 "Linear metric is of the form:\n"
@@ -7976,6 +8965,15 @@ msgstr "不要再询问"
 
 msgid "Spanish (Costa Rica)"
 msgstr "西班牙语 (哥斯达黎加)"
+
+msgid "The maximum number of processors to use during compilation. Used '0' to use all available processors."
+msgstr "编译过程中使用处理器的最大数量。'0'使用所有可用的处理器。"
+
+msgid "Compiler"
+msgstr "编译器"
+
+msgid "Maximum processors usage"
+msgstr "最大处理器数量"
 
 msgid "Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)."
 msgstr "监测栈溢出: 暂停执行的栈深度, 并询问是否继续运行。(只适用于经典Eiffel)"
@@ -8646,6 +9644,12 @@ msgstr "保持详细结果？"
 
 msgid "Keep metric detailed result"
 msgstr "保持详细结果"
+
+msgid "Check defined value warning when metric archive is recalculated?"
+msgstr ""
+
+msgid "Check defined warning"
+msgstr "检查已定义的警告"
 
 msgid "Should classes be categorized in physical folders where they locates?"
 msgstr "按所在的文件夹将类分类吗？"

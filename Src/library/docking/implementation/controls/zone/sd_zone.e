@@ -209,7 +209,7 @@ feature {SD_DOCKING_MANAGER, SD_DOCKING_MANAGER_AGENTS, SD_CONTENT, SD_STATE, SD
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			internal_docking_manager.zones.disable_all_zones_focus_color
+			internal_docking_manager.zones.disable_all_zones_focus_color (Current)
 			l_multi_dock_area := internal_docking_manager.query.inner_container (Current)
 			if not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.set_title_focus (True)

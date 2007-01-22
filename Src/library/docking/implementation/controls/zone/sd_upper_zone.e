@@ -38,7 +38,6 @@ feature -- Command
 			l_parent_parent: EV_CONTAINER
 			l_other: EV_WIDGET
 			l_new_parent: EV_SPLIT_AREA
-			l_temp_split_position: INTEGER
 			l_box: EV_BOX
 			l_first: BOOLEAN
 		do

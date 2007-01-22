@@ -73,7 +73,6 @@ feature -- Query
 		local
 			l_group_count: INTEGER
 			l_group_info: SD_TOOL_BAR_GROUP_INFO
-			l_one_group: DS_HASH_TABLE [INTEGER, INTEGER]
 			l_stop: BOOLEAN
 		do
 			from

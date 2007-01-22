@@ -876,6 +876,7 @@ feature{NONE} -- Implementation
 		local
 			l_dependency_tool: EB_DEPENDENCY_VIEW
 			l_show_cmd: EB_SHOW_TOOL_COMMAND
+			l_accel: EV_ACCELERATOR
 		do
 			create l_dependency_tool.make (develop_window)
 			develop_window.tools.set_dependency_tool (l_dependency_tool)
@@ -887,7 +888,9 @@ feature{NONE} -- Implementation
 			develop_window.commands.show_tool_commands.force (l_show_cmd, l_dependency_tool)
 			develop_window.commands.toolbarable_commands.extend (l_show_cmd)
 
-			-- Accelerator not assigned. Key_d was already assigned to diagram tool.
+			create l_accel.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_y), True, True, False)
+			l_accel.actions.extend (agent l_show_cmd.execute)
+			l_show_cmd.set_accelerator (l_accel)
 		end
 
 	build_metric_tool is

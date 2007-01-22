@@ -920,6 +920,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			fill_show_menu_for_tool (Result, develop_window.tools.properties_tool)
 			fill_show_menu_for_tool (Result, develop_window.tools.diagram_tool)
 			fill_show_menu_for_tool (Result, develop_window.tools.metric_tool)
+			fill_show_menu_for_tool (Result, develop_window.tools.dependency_tool)
 			Result.extend (create {EV_MENU_SEPARATOR})
 			fill_show_menu_for_tool (Result, develop_window.tools.windows_tool)
 			fill_show_menu_for_tool (Result, develop_window.tools.favorites_tool)

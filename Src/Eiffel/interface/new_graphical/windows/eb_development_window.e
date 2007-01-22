@@ -1644,11 +1644,13 @@ feature {EB_DEVELOPMENT_WINDOW_MENU_BUILDER, EB_DEVELOPMENT_WINDOW_PART,
 					-- We only do that for the clickable view
 				l_classc_stone ?= stone
 				if l_classc_stone /= Void then
-					l_feature := editors_manager.current_editor.text_displayed.current_feature_containing
-					if l_feature /= Void then
-						set_editing_location_by_feature (l_feature.name)
-					else
-						set_editing_location_by_feature (Void)
+					if editors_manager.current_editor.text_displayed /= Void then
+						l_feature := editors_manager.current_editor.text_displayed.current_feature_containing
+						if l_feature /= Void then
+							set_editing_location_by_feature (l_feature.name)
+						else
+							set_editing_location_by_feature (Void)
+						end
 					end
 				end
 			end

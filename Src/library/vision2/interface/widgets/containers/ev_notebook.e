@@ -204,16 +204,16 @@ feature -- Status setting
 
 feature -- Constants
 
-	Tab_left: INTEGER is unique
+	Tab_left: INTEGER is 1
 			-- Value used to position tab at left.
 
-	Tab_right: INTEGER is unique
+	Tab_right: INTEGER is 2
 			-- Value used to position tab at right.
 
-	Tab_top: INTEGER is unique
+	Tab_top: INTEGER is 3
 			-- Value used to position tab at top.
 
-	Tab_bottom: INTEGER is unique
+	Tab_bottom: INTEGER is 4
 			-- Value used to position tab at bottom.
 
 feature -- Element change

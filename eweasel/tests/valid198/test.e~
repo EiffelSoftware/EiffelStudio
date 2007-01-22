@@ -1,0 +1,10 @@
+class TEST
+create
+	make
+feature
+	make
+		local
+			l_b: B[STRING]
+		do
+		end
+end

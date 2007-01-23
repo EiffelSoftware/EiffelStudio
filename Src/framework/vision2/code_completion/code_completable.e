@@ -2,12 +2,20 @@ indexing
 	description: "Object that is able to auto complete code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: "$Author$"
-	date: "$Date$"
-	revision: "$Revision$"
+	author: "$Author: manus $"
+	date: "$Date: 2006-08-07 12:21:32 -0700 (Mon, 07 Aug 2006) $"
+	revision: "$Revision: 62302 $"
 
 deferred class
 	CODE_COMPLETABLE
+
+inherit
+	ANY
+
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 
@@ -470,15 +478,6 @@ feature {NONE} -- Timer
 
 	completion_timeout: EV_TIMEOUT
 			-- Timeout for showing completion list
-
-	ev_application: EV_APPLICATION is
-			-- The application
-		local
-			l_env: EV_ENVIRONMENT
-		once
-			create l_env
-			Result := l_env.application
-		end
 
 	default_timer_interval: INTEGER is 1500
 

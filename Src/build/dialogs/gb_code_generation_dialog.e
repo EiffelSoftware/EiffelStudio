@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			a_components_not_void: a_components /= Void
 		do
 			object_name := an_object_name
-			make_default (components)
+			make_default (a_components)
 		ensure
 			object_name_set: object_name = an_object_name
 			components_set: components = a_components

@@ -1586,7 +1586,7 @@ if DOTNET test dotnet-value-type-initialization	dotnet021	tcf pass dotnet
 if DOTNET test custom-attribute-type-change	dotnet022	tcf pass dotnet incrementality
 if DOTNET test deferred-inherited-from-external	dotnet023	tcf pass dotnet
 if DOTNET test renamed-feature-from-interface	dotnet024	tcf pass dotnet
-if DOTNET test property-name-clash	dotnet025	tcf pass dotnet
+if DOTNET test property-name-clash	dotnet025	tcf pass dotnet property
 if DOTNET test enum-inspect-validity	dotnet026	tcf pass dotnet
 if DOTNET test property-assigner-generation	dotnet027	tcf pass dotnet
 if DOTNET test field-assigner-generation	dotnet028	tcf pass dotnet
@@ -1602,11 +1602,11 @@ if DOTNET test overload-with-argument-type	dotnet037	tcf pass dotnet
 if DOTNET test compatible-single-and-interface	dotnet038	tcf pass dotnet
 if DOTNET test versioned-interface_implementation	dotnet039	tcf pass dotnet
 if DOTNET test renamed-frozen-interface-implementation-for-single	dotnet040	tcf pass dotnet
-if DOTNET test deferred-property-generation	dotnet041	tcf pass dotnet
+if DOTNET test deferred-property-generation	dotnet041	tcf pass dotnet property
 if DOTNET test merged-typed-pointer-argument	dotnet042	tcf pass dotnet
 if DOTNET test correct-bound-property-assigner dotnet043	tcf pass dotnet
 if DOTNET test valid-dotnet-basic-typeof dotnet044	tcf pass dotnet
 if DOTNET test correct-override-on-multi-versioned-members dotnet045	tcf pass dotnet
-if DOTNET test function-property-call-correction dotnet046	tcf pass dotnet
-if DOTNET test deferred-property-missing-assigner-implementation dotnet047	tcf pass dotnet
-if DOTNET test deferred-property-missing-assigner-implementation-renamed dotnet048	tcf pass dotnet
+if DOTNET test function-property-call-correction dotnet046	tcf pass dotnet property
+if DOTNET test deferred-property-missing-assigner-implementation dotnet047	tcf pass dotnet property
+if DOTNET test deferred-property-missing-assigner-implementation-renamed dotnet048	tcf pass dotnet property

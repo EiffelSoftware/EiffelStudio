@@ -99,14 +99,14 @@ feature -- Status setting
 	enable_pre_ecma_mapping is
 			-- Set `is_pre_ecma_mapping_disabled' to False.
 		obsolete
-			"Use an instance of ECMA_INTERNAL instead."
+			"Use an instance of INTERNAL instead."
 		do
 		end
 
 	disable_pre_ecma_mapping is
 			-- Set `is_pre_ecma_mapping_disabled' to True.
 		obsolete
-			"Use an instance of INTERNAL instead."
+			"Use an instance of ECMA_INTERNAL instead."
 		do
 		end
 

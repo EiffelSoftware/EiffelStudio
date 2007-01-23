@@ -339,14 +339,20 @@ feature -- Access
 
 	is_debuggable: BOOLEAN is
 			-- Is feature debuggable?
+		local
+			cl: CLASS_C
 		do
-			Result := (body_index /= 0) and then
+			if
+				(body_index /= 0) and then
 				(not is_external) and then
 				(not is_attribute) and then
 				(not is_constant) and then
 				(not is_deferred) and then
-				(not is_unique) and then
-				written_class.is_debuggable
+				(not is_unique)
+			then
+				cl := written_class
+				Result := cl /= Void and then cl.is_debuggable
+			end
 		ensure
 			debuggable_if: Result implies
 				(body_index /= 0) and then
@@ -355,7 +361,7 @@ feature -- Access
 				(not is_constant) and then
 				(not is_deferred) and then
 				(not is_unique) and then
-				written_class.is_debuggable
+				(written_class /= Void and then written_class.is_debuggable)
 		end;
 
 	text (a_text_formatter: TEXT_FORMATTER): BOOLEAN is

@@ -69,27 +69,6 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	pointer_to_string_32 (a_w_string: POINTER; a_count: INTEGER_32): STRING_32
-		local
-			i: INTEGER_32
-			l_managed_pointer: MANAGED_POINTER
-			l_size: INTEGER_32
-		do
-			create l_managed_pointer.share_from_pointer (a_w_string, a_count)
-			l_size := a_count // 4
-			create Result.make (l_size)
-			from
-				i := 0
-			until
-				i >= l_size
-			loop
-				if i * 4 <= a_count then
-					Result.append_code (l_managed_pointer.read_natural_32 (i * 4))
-				end
-				i := i + 1
-			end
-		end
-
 	c_iconv (a_from_codeset, a_to_codeset: POINTER; a_str: POINTER; a_size: INTEGER; a_out_count: TYPED_POINTER [INTEGER]): POINTER is
 		external
 			"C inline use <iconv.h>"

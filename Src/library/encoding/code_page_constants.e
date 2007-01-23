@@ -17,7 +17,16 @@ feature -- Access
 	utf16: STRING is "UTF-16"
 
 	utf32: STRING is "UCS-4";
-		-- UCS-4 and UTF-32 are functionally identical since ISO 10646.
+		-- UCS-4 and UTF-32 are functionally identical since ISO 10646..
+
+feature -- Little/Big endian
+
+	utf16_le: STRING is "UTF-16LE"
+	utf32_le: STRING is "UCS-4LE"
+
+	utf16_be: STRING is "UTF-16BE"
+	utf32_be: STRING is "UCS-4BE";
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

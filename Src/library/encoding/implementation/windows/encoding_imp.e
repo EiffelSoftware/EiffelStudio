@@ -18,33 +18,80 @@ feature -- String encoding convertion
 	convert_to (a_from_code_page: STRING; a_from_string: STRING_GENERAL; a_to_code_page: STRING): STRING_GENERAL is
 			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
 		local
-			a_string_32: STRING_32
+			l_pointer, l_o_pointer: POINTER
+			l_m_t_w: BOOLEAN
+			l_count: INTEGER
+			l_code_page: STRING
+			l_from_code_page, l_to_code_page: STRING
+			l_string_32: STRING_32
+			l_from_be, l_to_be: BOOLEAN
 		do
-			if a_from_code_page.is_equal (utf16) then
-				if a_to_code_page.is_equal (utf32) then
-					Result := utf16_to_utf32 (a_from_string)
-				elseif a_to_code_page.is_equal (utf16) then
-					Result := a_from_string.twin
-				else
-					Result := wide_char_to_multi_byte (code_pages.item (a_to_code_page), a_from_string.as_string_32)
+			l_from_code_page := code_pages.item (a_from_code_page)
+			l_to_code_page := code_pages.item (a_to_code_page)
+
+			l_from_be := big_endian_codepage.has (a_from_code_page)
+			l_to_be := big_endian_codepage.has (a_to_code_page)
+
+			if two_byte_codesets.has (a_from_code_page) then
+				l_string_32 := a_from_string.as_string_32
+				if l_from_be = is_little_endian then
+					l_string_32 := string_32_switch_endian (l_string_32)
 				end
-			elseif a_from_code_page.is_equal (utf32) then
-				if a_to_code_page.is_equal (utf16) then
-					Result := utf32_to_utf16 (a_from_string)
-				elseif a_to_code_page.is_equal (utf32) then
-					Result := a_from_string.twin
+				if four_byte_codesets.has (a_to_code_page) then
+					l_string_32 := utf16_to_utf32 (l_string_32)
+					if l_to_be = is_little_endian then
+						Result := string_32_switch_endian (l_string_32)
+					else
+						Result := l_string_32
+					end
+				elseif two_byte_codesets.has (a_to_code_page) then
+					if l_to_be = is_little_endian then
+						Result := string_32_switch_endian (l_string_32)
+					else
+						Result := l_string_32
+					end
 				else
-					Result := utf32_to_utf16 (a_from_string)
-					Result := wide_char_to_multi_byte (code_pages.item (a_to_code_page), Result)
+					Result := wide_char_to_multi_byte (l_to_code_page, l_string_32)
+				end
+			elseif four_byte_codesets.has (a_from_code_page) then
+				l_string_32 := a_from_string.as_string_32
+				if l_from_be = is_little_endian then
+					l_string_32 := string_32_switch_endian (l_string_32)
+				end
+				if two_byte_codesets.has (a_to_code_page) then
+					l_string_32 := utf32_to_utf16 (l_string_32)
+					if l_to_be = is_little_endian then
+						Result := string_32_switch_endian (l_string_32)
+					else
+						Result := l_string_32
+					end
+				elseif four_byte_codesets.has (a_to_code_page) then
+					if l_to_be = is_little_endian then
+						Result := string_32_switch_endian (l_string_32)
+					else
+						Result := l_string_32.twin
+					end
+				else
+					Result := utf32_to_utf16 (l_string_32)
+					Result := wide_char_to_multi_byte (l_to_code_page, Result)
 				end
 			else
-				a_string_32 := multi_byte_to_wide_char (code_pages.item (a_from_code_page), a_from_string.as_string_8)
-				if a_to_code_page.is_equal (utf16) then
-					Result := a_string_32
-				elseif a_to_code_page.is_equal (utf32) then
-					Result := utf16_to_utf32 (a_string_32)
+				l_string_32 := multi_byte_to_wide_char (l_from_code_page, a_from_string.as_string_8)
+				if two_byte_codesets.has (a_to_code_page) then
+					if l_to_be = is_little_endian then
+						Result := string_32_switch_endian (l_string_32)
+					else
+						Result := l_string_32
+					end
+				elseif four_byte_codesets.has (a_to_code_page) then
+					l_string_32 := utf16_to_utf32 (l_string_32)
+					if l_to_be = is_little_endian then
+						Result := string_32_switch_endian (l_string_32)
+					else
+						Result := l_string_32
+					end
 				else
-					Result := wide_char_to_multi_byte (code_pages.item (a_to_code_page), a_string_32)
+					Result := wide_char_to_multi_byte (l_to_code_page, l_string_32)
 				end
 			end
 		end

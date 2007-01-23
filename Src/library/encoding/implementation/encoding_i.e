@@ -226,6 +226,63 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	pointer_to_string_32 (a_w_string: POINTER; a_count: INTEGER_32): STRING_32
+		local
+			i: INTEGER_32
+			l_managed_pointer: MANAGED_POINTER
+			l_size: INTEGER_32
+		do
+			create l_managed_pointer.share_from_pointer (a_w_string, a_count)
+			l_size := a_count // 4
+			create Result.make (l_size)
+			from
+				i := 0
+			until
+				i >= l_size
+			loop
+				if i * 4 <= a_count then
+					Result.append_code (l_managed_pointer.read_natural_32 (i * 4))
+				end
+				i := i + 1
+			end
+		end
+
+feature {NONE} -- Endian
+
+	string_32_switch_endian (a_str: STRING_32): STRING_32 is
+			-- Switch endian of `a_str'
+		require
+			a_str /= Void
+		local
+			l_code: NATURAL_32
+			i, l_count: INTEGER
+		do
+			l_count := a_str.count
+			create Result.make (l_count)
+			from
+				i := 1
+			until
+				i > l_count
+			loop
+				l_code := a_str.code (i)
+				Result.append_code (l_code & 0xFF |<< 24 & 0xFF000000 +
+									l_code & 0xFF00 |<< 8 +
+									l_code & 0xFF0000 |>> 8 +
+									l_code & 0xFF000000 |>> 24 & 0xFF)
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	is_little_endian: BOOLEAN is
+			-- Is this system little endian?
+		local
+			l_p: PLATFORM
+		once
+			Result := (create {PLATFORM}).is_little_endian
+		end
+
 indexing
 	library:   "EiffelBase: Library of reusable components for Eiffel."
 	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"

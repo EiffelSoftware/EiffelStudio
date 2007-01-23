@@ -57,6 +57,13 @@ inherit
 			default_create
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 feature -- Initialization
 
 	default_create is
@@ -1362,12 +1369,6 @@ feature {MARGIN} -- Implementation
 
 	in_resize: BOOLEAN
 			-- Are we a call to on_resize that was not triggered by the function itself.
-
-	ev_application: EV_APPLICATION is
-			-- Current application.
-		once
-			Result := (create {EV_ENVIRONMENT}).application
-		end
 
 	update_scroll_agent: PROCEDURE [like Current, TUPLE]
 			-- Agent for scrollbar display updates.

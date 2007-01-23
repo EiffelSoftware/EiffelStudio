@@ -1261,9 +1261,11 @@ feature {EV_ANY_I} -- Implementation
 
 	move_to_foreground is
 			-- Move `Current' to foreground.
+		local
+			l_result: BOOLEAN
 		do
 			override_movement := False
-			cwin_set_window_pos (wel_item, Hwnd_top, 0, 0, 0, 0,
+			l_result := {WEL_API}.set_window_pos (wel_item, Hwnd_top, 0, 0, 0, 0,
 				Swp_nosize + Swp_nomove)
 		end
 

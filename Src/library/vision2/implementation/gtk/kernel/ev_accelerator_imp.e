@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
-feature {EV_TITLED_WINDOW_IMP} -- Implementation
+feature {EV_GTK_WINDOW_IMP} -- Implementation
 
 	modifier_mask: INTEGER is
 			-- The mask consisting of alt, shift and control keys.
@@ -59,35 +59,35 @@ feature {EV_WINDOW_IMP} -- Implementation
 		require
 			a_window_imp_not_void: a_window_imp /= Void
 		local
-			a_cs: EV_GTK_C_STRING
-			a_keymap_array: POINTER
-			n_keys: INTEGER
-			a_success: BOOLEAN
+--			a_cs: EV_GTK_C_STRING
+--			a_keymap_array: POINTER
+--			n_keys: INTEGER
+--			a_success: BOOLEAN
 		do
-			a_cs := "activate"
+--			a_cs := "activate"
 
-			internal_gdk_key_code := key_code_to_gtk (key.code)
-			if shift_required and then not key.is_function and then not key.is_arrow then
-					-- We need to get the key val for the uppercase symbol
-				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, internal_gdk_key_code, $a_keymap_array, $n_keys)
-				if a_success then
-					{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
-					internal_gdk_key_code := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
-					{EV_GTK_EXTERNALS}.g_free (a_keymap_array)
-				end
-			end
+--			internal_gdk_key_code := key_code_to_gtk (key.code)
+--			if shift_required and then not key.is_function and then not key.is_arrow then
+--					-- We need to get the key val for the uppercase symbol
+--				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, internal_gdk_key_code, $a_keymap_array, $n_keys)
+--				if a_success then
+--					{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
+--					internal_gdk_key_code := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
+--					{EV_GTK_EXTERNALS}.g_free (a_keymap_array)
+--				end
+--			end
 
-			if internal_gdk_key_code > 0 then
-					-- If internal_gdk_key_code is 0 then the key mapping doesn't exist so we do nothing
-				{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
-					a_window_imp.accel_box,
-					a_cs.item,
-					a_window_imp.accel_group,
-					internal_gdk_key_code,
-					modifier_mask,
-					0
-				)
-			end
+--			if internal_gdk_key_code > 0 then
+--					-- If internal_gdk_key_code is 0 then the key mapping doesn't exist so we do nothing
+--				{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
+--					a_window_imp.accel_box,
+--					a_cs.item,
+--					a_window_imp.accel_group,
+--					internal_gdk_key_code,
+--					modifier_mask,
+--					0
+--				)
+--			end
 		end
 
 	remove_accel (a_window_imp: EV_WINDOW_IMP) is
@@ -95,12 +95,12 @@ feature {EV_WINDOW_IMP} -- Implementation
 		require
 			a_window_imp_not_void: a_window_imp /= Void
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
-				a_window_imp.accel_box,
-				a_window_imp.accel_group,
-				internal_gdk_key_code,
-				modifier_mask
-			)
+--			{EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
+--				a_window_imp.accel_box,
+--				a_window_imp.accel_group,
+--				internal_gdk_key_code,
+--				modifier_mask
+--			)
 		end
 
 feature -- Access

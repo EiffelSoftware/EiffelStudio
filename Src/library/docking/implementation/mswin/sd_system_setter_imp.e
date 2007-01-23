@@ -32,7 +32,6 @@ feature -- Command
 	after_disable_capture is
 			-- Redefine
 		local
-			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
 		do
 			l_app_imp ?= ev_application.implementation

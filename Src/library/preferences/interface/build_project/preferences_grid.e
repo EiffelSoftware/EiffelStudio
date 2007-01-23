@@ -25,6 +25,13 @@ inherit
 			make
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		undefine
+			copy, default_create
+		end
+
 create
 	make, make_with_hidden
 
@@ -362,7 +369,7 @@ feature {NONE} -- Events
 			-- Description text area was key pressed
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_tab then
-				if application.shift_pressed then
+				if ev_application.shift_pressed then
 					grid.set_focus
 				else
 					restore_button.set_focus
@@ -1316,12 +1323,6 @@ feature {NONE} -- Private attributes
 			-- List of booleans for each column indicating if it has been user resizedat all.
 		once
 			Result := <<False, False, False, False>>
-		end
-
-	application: EV_APPLICATION is
-			-- Application
-		once
-			Result := (create {EV_ENVIRONMENT}).application
 		end
 
 invariant

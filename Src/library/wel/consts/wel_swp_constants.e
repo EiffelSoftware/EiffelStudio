@@ -37,8 +37,14 @@ feature -- Access
 	Swp_nosendchanging: INTEGER is 1024
 			-- Don't send WM_WINDOWPOSCHANGING.
 
-	Swp_noreposition: INTEGER is 512;
+	Swp_noreposition: INTEGER is 512
 			-- Same as `Swp_noownerzborder'.
+
+	swp_asyncwindowpos: INTEGER is 0x4000;
+			-- If the calling thread and the thread that owns the window are attached
+			-- to different input queues, the system posts the request to the thread--
+			-- that owns the window. This prevents the calling thread from blocking
+			-- its execution while other threads process the request.
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		do
 			create {PROPERTY}l_client
 			l_client.my_property := "Hello World"
-			print (l_client)
+			print (l_client.my_property)
 			print ("%N")
 		end
 

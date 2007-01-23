@@ -45,6 +45,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -618,12 +623,9 @@ feature -- Observer management
 
 	on_new_tab_command is
 			-- Handle EB_NEW_TAB_EDITOR_COMMAND.
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			if class_address.is_displayed and class_address.is_sensitive then
-				create l_env
-				l_env.application.do_once_on_idle (agent class_address.set_focus)
+				ev_application.do_once_on_idle (agent class_address.set_focus)
 			end
 		end
 

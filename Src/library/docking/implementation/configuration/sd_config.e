@@ -287,7 +287,7 @@ feature -- Save/Open inner container data.
 
 					l_split ?= l_parent
 					if l_split /= Void then
-						l_split_position := l_split.split_position / l_split.maximum_split_position
+						l_split_position := l_split.split_position / l_split.maximum_split_position.max (1)
 					end
 					l_parent.prune (l_place_holder_zone)
 

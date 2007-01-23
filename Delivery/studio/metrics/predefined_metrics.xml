@@ -512,8 +512,8 @@
 			</caller_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Non-used features" unit="feature" uuid="F378B9EA-B8BE-421E-8882-2DC3C75D3724">
-		<description>Number of non-used features</description>
+	<basic_metric name="Unused features" unit="feature" uuid="F378B9EA-B8BE-421E-8882-2DC3C75D3724">
+		<description>Number of unused features</description>
 		<criterion>
 			<and_criterion name="and" unit="feature" negation="False">				
 				<normal_criterion name="is_origin" unit="feature" negation="False"></normal_criterion>

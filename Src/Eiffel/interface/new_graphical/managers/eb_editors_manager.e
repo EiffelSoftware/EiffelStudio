@@ -779,7 +779,7 @@ feature {NONE}-- Implementation
 			l_editor := editor_with_stone (a_stone)
 			if l_editor /= Void then
 				l_editor.docking_content.set_focus
-				if l_editor.editor_drawing_area.is_displayed then
+				if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed then
 					l_editor.editor_drawing_area.set_focus
 				end
 			else

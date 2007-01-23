@@ -66,23 +66,43 @@ feature -- Output
 
 	localized_print (a_str: STRING_GENERAL) is
 			-- Print `a_str' as localized encoding.
-			-- `a_str' is taken as a UCS-4 string.
+			-- `a_str' is taken as a UTF-16 string.
+		local
+			l_string: STRING_GENERAL
 		do
 			if is_windows then
-				io.put_string (encoding_utf16.convert_to (system_encoding, a_str).as_string_8)
+				l_string := encoding_utf16.convert_to (system_encoding, a_str)
 			else
-				io.put_string (encoding_utf16.convert_to (encoding_utf8, a_str).as_string_8)
+				l_string := encoding_utf16.convert_to (encoding_utf8, a_str)
+			end
+			if l_string /= Void then
+				check
+					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
+				end
+				io.put_string (l_string.as_string_8)
+			else
+				io.put_string (a_str.as_string_8)
 			end
 		end
 
 	localized_print_error (a_str: STRING_GENERAL) is
 			-- Print an error, `a_str', as localized encoding.
-			-- `a_str' is taken as a UCS-4 string.
+			-- `a_str' is taken as a UTF-16 string.
+		local
+			l_string: STRING_GENERAL
 		do
 			if is_windows then
-				io.error.put_string (encoding_utf16.convert_to (system_encoding, a_str).as_string_8)
+				l_string := encoding_utf16.convert_to (system_encoding, a_str)
 			else
-				io.error.put_string (encoding_utf16.convert_to (encoding_utf8, a_str).as_string_8)
+				l_string := encoding_utf16.convert_to (encoding_utf8, a_str)
+			end
+			if l_string /= Void then
+				check
+					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
+				end
+				io.error.put_string (l_string.as_string_8)
+			else
+				io.error.put_string (a_str.as_string_8)
 			end
 		end
 
@@ -125,11 +145,21 @@ feature -- File saving
 			a_file_open: a_file.is_open_write
 			a_file_exist: a_file.exists
 			a_str_not_void: a_str /= Void
+		local
+			l_string: STRING_GENERAL
 		do
 			if is_windows then
-				a_file.put_string (encoding_utf16.convert_to (system_encoding, a_str).as_string_8)
+				l_string := encoding_utf16.convert_to (system_encoding, a_str)
 			else
-				a_file.put_string (encoding_utf16.convert_to (encoding_utf8, a_str).as_string_8)
+				l_string := encoding_utf16.convert_to (encoding_utf8, a_str)
+			end
+			if l_string /= Void then
+				check
+					l_string_is_valid_as_string_8: l_string.is_valid_as_string_8
+				end
+				a_file.put_string (l_string.as_string_8)
+			else
+				a_file.put_string (a_str.as_string_8)
 			end
 		end
 

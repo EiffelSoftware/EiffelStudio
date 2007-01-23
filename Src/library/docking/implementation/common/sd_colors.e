@@ -8,6 +8,14 @@ indexing
 class
 	SD_COLORS
 
+inherit
+	ANY
+
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -15,11 +23,8 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Creation method
-		local
-			l_env: EV_ENVIRONMENT
 		do
-			create l_env
-			l_env.application.theme_changed_actions.put_front (agent init_colors)
+			ev_application.theme_changed_actions.put_front (agent init_colors)
 			init_colors
 
 			create internal_shared

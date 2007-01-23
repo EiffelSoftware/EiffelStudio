@@ -8,6 +8,14 @@ indexing
 class
 	SD_TOOL_BAR_DOCKER_MEDIATOR
 
+inherit
+	ANY
+	
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -44,15 +52,12 @@ feature {NONE} -- Initialization
 
 	init_key_actions is
 			-- Initialize key actions.
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			internal_key_press_actions := agent on_key_press
 			internal_key_release_actions := agent on_key_release
 
-			create l_env
-			l_env.application.key_press_actions.extend (internal_key_press_actions)
-			l_env.application.key_release_actions.extend (internal_key_release_actions)
+			ev_application.key_press_actions.extend (internal_key_press_actions)
+			ev_application.key_release_actions.extend (internal_key_release_actions)
 		end
 
 feature -- Command
@@ -236,12 +241,9 @@ feature {NONE} -- Implementation functions
 
 	clean is
 			-- Clean global key press/release actions.
-		local
-			l_env: EV_ENVIRONMENT
 		do
-			create l_env
-			l_env.application.key_press_actions.prune_all (internal_key_press_actions)
-			l_env.application.key_release_actions.prune_all (internal_key_release_actions)
+			ev_application.key_press_actions.prune_all (internal_key_press_actions)
+			ev_application.key_release_actions.prune_all (internal_key_release_actions)
 		end
 
 	cancel_tracing_pointer is
@@ -373,11 +375,8 @@ feature {NONE} -- Implementation attributes.
 
 	internal_dockable: BOOLEAN is
 			-- If `caller' dockable?
-		local
-			l_env: EV_ENVIRONMENT
 		do
-			create l_env
-			Result := not l_env.application.ctrl_pressed
+			Result := not ev_application.ctrl_pressed
 		end
 
 	internal_key_press_actions, internal_key_release_actions: PROCEDURE [SD_TOOL_BAR_DOCKER_MEDIATOR, TUPLE [EV_WIDGET, EV_KEY]]

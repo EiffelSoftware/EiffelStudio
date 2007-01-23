@@ -15,6 +15,13 @@ inherit
 			{ANY} show
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make,
 	make_for_menu
@@ -35,7 +42,7 @@ feature {NONE}  -- Initlization
 			create l_shared
 			internal_vertical_box.set_border_width (l_shared.border_width)
 			internal_vertical_box.set_background_color (l_shared.border_color)
-			
+
 			extend (internal_vertical_box)
 
 			init_grouping (a_hidden_items)
@@ -186,14 +193,11 @@ feature {NONE} -- Implementation
 
 	on_focus_out is
 			-- Handle focus out actions.
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			if is_displayed then
 				-- FIXIT: can't destroy directly?
 --				destroy
-				create l_env
-				l_env.application.do_once_on_idle (agent destroy)
+				ev_application.do_once_on_idle (agent destroy)
 			end
 		end
 

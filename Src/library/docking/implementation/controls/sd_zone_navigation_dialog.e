@@ -15,6 +15,13 @@ inherit
 			show
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -360,8 +367,6 @@ feature {NONE} -- Agents
 
 	on_key_release (a_key: EV_KEY) is
 			-- Handle key release.
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			inspect
 				a_key.code
@@ -370,8 +375,7 @@ feature {NONE} -- Agents
 					select_label_and_destroy (selected_label)
 				else
 					destroy
-					create l_env
-					l_env.application.do_once_on_idle (agent (internal_docking_manager.main_window).set_focus)
+					ev_application.do_once_on_idle (agent (internal_docking_manager.main_window).set_focus)
 				end
 			when {EV_KEY_CONSTANTS}.key_shift then
 				is_shift_pressed := False

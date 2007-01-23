@@ -8,6 +8,14 @@ indexing
 class
 	SD_TOOL_BAR_MANAGER
 
+inherit
+	ANY
+	
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -33,13 +41,9 @@ feature {NONE} -- Initialization
 
 	init_right_click_menu is
 			-- Initialize right click menu.
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			application_right_click_agent := agent on_menu_area_click
-			create l_env
-			l_env.application.pointer_button_press_actions.extend (application_right_click_agent)
-
+			ev_application.pointer_button_press_actions.extend (application_right_click_agent)
 		end
 
 feature -- Query
@@ -68,11 +72,8 @@ feature -- Command
 
 	destroy is
 			-- Release hooks.
-		local
-			l_env: EV_ENVIRONMENT
 		do
-			create l_env
-			l_env.application.pointer_button_press_actions.prune (application_right_click_agent)
+			ev_application.pointer_button_press_actions.prune (application_right_click_agent)
 			contents.wipe_out
 		end
 

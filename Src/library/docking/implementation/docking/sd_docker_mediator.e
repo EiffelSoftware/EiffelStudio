@@ -8,6 +8,14 @@ indexing
 class
 	SD_DOCKER_MEDIATOR
 
+inherit
+	ANY
+
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -19,7 +27,6 @@ feature -- Initlization
 			a_caller_not_void: a_caller /= Void
 		local
 			l_screen: SD_SCREEN
-			l_env: EV_ENVIRONMENT
 			l_factory: SD_HOT_ZONE_FACTORY_FACTORY
 		do
 			debug ("docking")
@@ -39,9 +46,8 @@ feature -- Initlization
 			create cancel_actions
 			internal_key_press_function := agent on_key_press
 			internal_key_release_function := agent on_key_release
-			create l_env
-			l_env.application.key_press_actions.extend (internal_key_press_function)
-			l_env.application.key_release_actions.extend (internal_key_release_function)
+			ev_application.key_press_actions.extend (internal_key_press_function)
+			ev_application.key_release_actions.extend (internal_key_release_function)
 
 			is_dockable := True
 			setter.before_enable_capture
@@ -216,16 +222,13 @@ feature {NONE} -- Implementation functions
 
 	clear_up is
 			-- Clear up all resources.
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			is_tracing := False
 			clear_all_indicator
 			internal_shared.feedback.clear
 
-			create l_env
-			l_env.application.key_press_actions.prune_all (internal_key_press_function)
-			l_env.application.key_release_actions.prune_all (internal_key_release_function)
+			ev_application.key_press_actions.prune_all (internal_key_press_function)
+			ev_application.key_release_actions.prune_all (internal_key_release_function)
 
 			setter.after_disable_capture
 		end

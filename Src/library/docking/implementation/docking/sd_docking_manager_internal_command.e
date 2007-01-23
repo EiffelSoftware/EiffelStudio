@@ -8,6 +8,14 @@ indexing
 class
 	SD_DOCKING_MANAGER_COMMAND
 
+inherit
+	ANY
+
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -29,7 +37,7 @@ feature {NONE}  -- Initlization
 			create internal_shared
 			-- Initialize zone navigation accelerator key.
 			create l_key.make_with_code (internal_shared.zone_navigation_accelerator_key)
-			
+
 			-- This is tempory fix for "Ctrl + Tab" accelerator not work not Linux
 			create l_plat
 			if l_plat.is_unix then
@@ -69,22 +77,16 @@ feature -- Commands
 			-- Lock window update.
 		require
 			a_zone_not_void_when_not_main_window: not a_main_window implies a_zone /= Void
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			if lock_call_time = 0 then
-				create l_env
-				if l_env.application.locked_window /= Void then
-					-- We should ignore these lock window update calls.
+				if ev_application.locked_window /= Void then
+						-- We should ignore these lock window update calls.
 					ignore_update := True
 				else
 					lock_update_internal (a_zone, a_main_window)
 				end
 			else
-				-- If we do it like this, it'll cause more whole Windows desktop flickers.
---				if not ignore_update then
---					lock_update_internal (a_zone, a_main_window)
---				end
+				-- Nothing to be done, since we have already locked it, or it was already locked.
 			end
 			lock_call_time := lock_call_time + 1
 
@@ -99,10 +101,6 @@ feature -- Commands
 					unlock_update_internal
 				end
 				ignore_update := False
-			else
---				if not ignore_update then
---					unlock_update_internal
---				end
 			end
 		end
 

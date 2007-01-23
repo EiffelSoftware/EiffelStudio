@@ -376,8 +376,11 @@ feature -- Text operator
 
 	add_char (c: CHARACTER_32) is
 			-- Add `c'.
+		local
+			l_s: STRING_32
 		do
-			process_character_text (c.out)
+			create l_s.make_filled (c, 1)
+			process_character_text (l_s)
 		end
 
 	add_new_line is

@@ -38,6 +38,11 @@ inherit
 
 	SHARED_EDITOR_DATA
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -473,14 +478,6 @@ feature {NONE} -- Private Constants
 
 	internal_tabulation_size: INTEGER
 		-- Size of tabulation
-
-feature {NONE} -- Implementation
-
-	ev_application: EV_APPLICATION is
-			-- Current application
-		once
-			Result := (create {EV_ENVIRONMENT}).application
-		end
 
 feature -- Memory management
 

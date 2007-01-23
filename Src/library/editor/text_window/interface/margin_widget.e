@@ -33,6 +33,13 @@ inherit
 			is_equal
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
 create
 	make_with_panel
 
@@ -397,12 +404,6 @@ feature {TEXT_PANEL} -- Display functions
  			ev_application.sleep (50)
  			margin_area.set_background_color (editor_preferences.margin_background_color)
  		end
-
-	ev_application: EV_APPLICATION is
-			-- Current application.
-		once
-			Result := (create {EV_ENVIRONMENT}).application
-		end
 
 	on_paint: BOOLEAN
 

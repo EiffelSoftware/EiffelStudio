@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 			-- Set `code_page' with `a_code_page'
 			-- `a_code_page' should be valid, either it is from CODE_PAGE_CONSTANTS
 			-- or dynamically from i18n library.
-			-- Other names of code page are not guarenteed valid for all platforms,
+			-- Other names of code page/character set are not guarenteed valid for all platforms,
 			-- though they would work on certain platforms.
 		require
 			a_code_page_not_void: a_code_page /= Void
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	code_page: STRING
-			-- Code page name
+			-- Code page/Character set name
 
 feature -- Conversion
 
@@ -41,11 +41,12 @@ feature -- Conversion
 		do
 			if a_to_encoding.is_valid and then is_valid then
 				Result := encoding_i.convert_to (code_page, a_string, a_to_encoding.code_page)
+				last_conversion_successful := encoding_i.last_conversion_successful
 			else
-				Result := a_string
+				last_conversion_successful := False
 			end
 		ensure
-			convert_to_not_void: Result /= Void
+			last_conversion_successful_implies_not_void: last_conversion_successful implies Result /= Void
 		end
 
 feature -- Status report
@@ -55,6 +56,9 @@ feature -- Status report
 		do
 			Result := encoding_i.is_code_page_valid (code_page)
 		end
+
+	last_conversion_successful: BOOLEAN
+			-- Was last conversion successful?
 
 feature {NONE} -- Implementation
 

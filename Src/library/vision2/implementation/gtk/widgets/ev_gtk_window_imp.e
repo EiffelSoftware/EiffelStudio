@@ -276,20 +276,51 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			a_key_press: BOOLEAN
 			a_cs: EV_GTK_C_STRING
 			l_app_imp: like app_implementation
+			l_accel_list: EV_ACCELERATOR_LIST
+			l_window_imp: EV_WINDOW_IMP
 			a_focus_widget: EV_WIDGET_IMP
 			l_block_events: BOOLEAN
 			l_tab_controlable: EV_TAB_CONTROLABLE_I
 			l_char: CHARACTER_32
 			l_any: ANY
+			l_accel: EV_ACCELERATOR
+			l_accel_imp: EV_ACCELERATOR_IMP
+			i: INTEGER
+			l_exit: BOOLEAN
 		do
 			l_app_imp := app_implementation
-
 				-- Perform translation on key values from gdk.
 			keyval := {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (a_key_event)
 			if keyval > 0 and then valid_gtk_code (keyval) then
 				create a_key.make_with_code (key_code_from_gtk (keyval))
 			end
 			if {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (a_key_event) = {EV_GTK_EXTERNALS}.gdk_key_press_enum then
+				l_window_imp ?= Current
+					-- Call accelerators if present.
+				if a_key /= Void and then l_window_imp /= Void then
+					l_accel_list := l_window_imp.accelerators_internal
+					if l_accel_list /= Void then
+						from
+							i := 1
+							l_exit := False
+						until
+							i > l_accel_list.count or else l_exit
+						loop
+							l_accel := l_accel_list @ i
+							if l_accel /= Void then
+								l_accel_imp ?= l_accel.implementation
+								if
+									l_accel_imp.modifier_mask & l_app_imp.keyboard_modifier_mask = l_accel_imp.modifier_mask and then
+									l_accel_imp.key.code = a_key.code
+								then
+									l_app_imp.do_once_on_idle (agent (l_accel.actions).call (Void))
+									l_exit := True
+								end
+							end
+							i := i + 1
+						end
+					end
+				end
 				a_key_press := True
 				create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gdk_event_key_struct_string (a_key_event))
 				a_key_string := a_cs.string
@@ -317,6 +348,11 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 			end
 
 			a_focus_widget ?= l_app_imp.eif_object_from_gtk_object ({EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object))
+			l_any := Current
+			if a_focus_widget = Void then
+					-- If the focus widget is not available then set it to the current window.
+				a_focus_widget ?= l_any
+			end
 			if a_focus_widget /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
 				if a_key /= Void then
 					if a_focus_widget.default_key_processing_handler /= Void then
@@ -347,7 +383,6 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP}
 							l_app_imp.key_release_actions_internal.call ([a_focus_widget.interface, a_key])
 						end
 					end
-					l_any := Current
 					if a_focus_widget /= l_any then
 						on_key_event (a_key, a_key_string, a_key_press)
 					end

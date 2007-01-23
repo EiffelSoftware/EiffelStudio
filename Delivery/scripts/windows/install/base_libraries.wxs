@@ -605,6 +605,7 @@
 								<File Id="c_string.e" Name="c_string.e" />
 								<File Id="countable_sequence.e" Name="COUNTA~2.E" LongName="countable_sequence.e" />
 								<File Id="debug_output.e" Name="DEBUG_~1.E" LongName="debug_output.e" />
+								<File Id="ecma_internal.e" Name="ECMA_I~1.E" LongName="ecma_internal.e" />
 								<File Id="fibonacci.e" Name="FIBONA~1.E" LongName="fibonacci.e" />
 								<File Id="file_comparer_e" Name="FILE_C~1.E" LongName="file_comparer.e" />
 								<File Id="format_double.e" Name="FORMAT~1.E" LongName="format_double.e" />

@@ -310,6 +310,13 @@ test	character-encoded-too-large	valid191 tcf pass validity
 test	creation-procedure-restriction	valid192 tcf pass validity
 test	inspect-on-different-unique	valid193 tcf pass validity unique inspect
 test	excessive-unique-constants	valid194 tcf pass validity unique
+test	convert-to-current-type				valid195 tcf fail validity vycq convert
+test	convert-to-possible-actual-type		valid196 tcf fail validity vycq convert
+test	convert-to-base-class				valid197 tcf fail validity vycq convert
+test	convert-to-base-class-inherited		valid198 tcf pass validity vycq convert
+test	convert-to-base-class-inherited2	valid199 tcf pass validity vycq convert
+test	convert-to-base-class-inherited3	valid200 tcf pass validity vycq convert
+
 
 -- Incrementality tests
 
@@ -1017,6 +1024,7 @@ test	generating-type-of-type-parameter exec263 tcf pass execution
 test	agent-on-attribute-with-open-target exec264 tcf pass execution
 test	generator-on-typed-pointer	exec265 tcf pass execution
 test	feature-call-on-basic-generic	exec266 tcf pass execution generic basic
+test	expanded-formal-attached-to-reference	exec267 tcf pass execution generic basic
 
 -- Compiler termination (exception trace, panic, etc.)
 
@@ -1560,6 +1568,28 @@ test	roundtrip-test rdtp001 tcf pass fixed
 test	roundtrip-number-denoted-character rdtp002 tcf pass fixed
 
 test	supplier-preconditions assert001 tcf pass execution
+
+-- Multi Constraint Tests
+-- test	multi-constraint-basics				multicon001 tcf pass multiconstraint
+-- test	multi-constraint-creation			multicon002 tcf pass multiconstraint
+-- test	multi-constraint-renaming			multicon003 tcf pass multiconstraint
+-- test	multi-constraint-inheritance		multicon004 tcf pass multiconstraint
+-- test	multi-constraint-assertions			multicon005 tcf pass multiconstraint
+-- test	multi-constraint-tuple				multicon006 tcf pass multiconstraint
+-- test	multi-constraint-anchor				multicon007 tcf pass multiconstraint
+-- test	multi-constraint-root				multicon008 tcf pass multiconstraint
+-- test	multi-constraint-agents				multicon009 tcf pass multiconstraint
+-- test	multi-constraint-inline-agents		multicon010 tcf pass multiconstraint
+
+-- test	multi-constraint-vtgc				multicon013 tcf pass multiconstraint
+-- test	multi-constraint-vtmc				multicon014 tcf pass multiconstraint
+-- test	multi-constraint-vtgd				multicon015 tcf pass multiconstraint
+-- test	multi-constraint-vtgd-create		multicon020 tcf pass multiconstraint
+-- test	multi-constraint-add-gen-constraint	multicon021 tcf pass multiconstraint
+-- test	multi-constraint-renaming1			multicon022 tcf pass multiconstraint
+-- test	multi-constraint-renaming2			multicon023 tcf pass multiconstraint
+-- test	multi-constraint-check-constraints	multicon024 tcf pass multiconstraint
+-- test	multi-constraint-actual-type		multicon025 tcf pass multiconstraint
 
 -- .NET specific test
 if DOTNET test expanded-object-conversion	dotnet001	tcf pass dotnet

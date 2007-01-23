@@ -63,15 +63,13 @@ feature {NONE} -- Basic operation
 	on_size (size_type, a_width, a_height: INTEGER) is
 		do
 			Precursor {EV_BOX_IMP} (size_type, a_width, a_height)
-			set_children_width (a_width, True)
+			set_children_width (client_width + 2 * border_width, True)
 		end
 
-	ev_apply_new_size (a_x_position, a_y_position,
-				a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	ev_apply_new_size (a_x_position, a_y_position, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 		do
-			ev_move_and_resize
-				(a_x_position, a_y_position, a_width, a_height, repaint)
-			set_children_width (a_width, False)
+			ev_move_and_resize (a_x_position, a_y_position, a_width, a_height, repaint)
+			set_children_width (client_width + 2 * border_width, False)
 		end
 
 	set_children_width (a_width: INTEGER; originator: BOOLEAN) is
@@ -342,7 +340,7 @@ feature {NONE} -- Implementation for automatic size compute
 					childvisible_nb := nb_visi
 					compute_childexpand_nb
 					ev_set_minimum_size (wvalue + total_spacing +
-						2 * border_width, hvalue + 2 * border_width) 
+						2 * border_width, hvalue + 2 * border_width)
 				end
 				if lchild.valid_cursor (cur) then
 					lchild.go_to (cur)

@@ -725,7 +725,6 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 
 	application_imp: EV_APPLICATION_IMP is
 			-- `Result' is implementation of application from environment.
-		local
 		once
 			Result ?= environment.application.implementation
 		ensure

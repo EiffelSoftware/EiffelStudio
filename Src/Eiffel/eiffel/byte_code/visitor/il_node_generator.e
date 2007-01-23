@@ -3208,15 +3208,15 @@ feature {NONE} -- Implementation: Inspect
 			an_interval.il_load_value
 			if an_interval.is_signed then
 				if is_included then
-					il_generator.branch_on_condition ({MD_OPCODES}.bgt_un, label)
-				else
-					il_generator.branch_on_condition ({MD_OPCODES}.bge_un, label)
-				end
-			else
-				if is_included then
 					il_generator.branch_on_condition ({MD_OPCODES}.bgt, label)
 				else
 					il_generator.branch_on_condition ({MD_OPCODES}.bge, label)
+				end
+			else
+				if is_included then
+					il_generator.branch_on_condition ({MD_OPCODES}.bgt_un, label)
+				else
+					il_generator.branch_on_condition ({MD_OPCODES}.bge_un, label)
 				end
 			end
 		end

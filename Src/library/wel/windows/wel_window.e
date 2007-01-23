@@ -711,6 +711,7 @@ feature -- Status setting
 		local
 			Hwnd_const: POINTER
 			Swp_const: INTEGER
+			l_success: BOOLEAN
 		do
 			if flag_set (new_ex_style, Ws_ex_topmost) then
 				-- The new style specify "Top most",
@@ -728,7 +729,7 @@ feature -- Status setting
 				end
 			end
 			Swp_const := Swp_const | Swp_nomove | Swp_nosize | Swp_framechanged | swp_noactivate
-			cwin_set_window_pos (item, Hwnd_const, 0, 0, 0, 0, Swp_const)
+			l_success := {WEL_API}.set_window_pos (item, Hwnd_const, 0, 0, 0, 0, Swp_const)
 		end
 
 feature -- Element change
@@ -751,7 +752,6 @@ feature -- Element change
 					-- Most of the time the `recursive_set_parent' workaround
 					-- will work, but not all the time :-(.
 				l_previous_hwnd := recursive_set_parent (a_parent)
-				check successful: l_previous_hwnd /= default_pointer end
 			end
 		end
 
@@ -934,7 +934,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint)
+			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, 0)
 		end
 
 	move (a_x, a_y: INTEGER) is
@@ -942,9 +942,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0,
-				Swp_nosize + Swp_nozorder + Swp_noactivate)
+			move_and_resize_internal (a_x, a_y, 0, 0, True, Swp_nosize)
 		end
 
 	resize (a_width, a_height: INTEGER) is
@@ -952,9 +950,7 @@ feature -- Basic operations
 		require
 			exists: exists
 		do
-			cwin_set_window_pos (item, default_pointer,
-				0, 0, a_width, a_height,
-				Swp_nomove + Swp_nozorder + Swp_noactivate)
+			move_and_resize_internal (0, 0, a_width, a_height, True, Swp_nomove)
 		end
 
 	set_z_order (z_order: POINTER) is
@@ -963,8 +959,10 @@ feature -- Basic operations
 		require
 			exists: exists
 			valid_hwnd_constant: valid_hwnd_constant (z_order)
+		local
+			l_success: BOOLEAN
 		do
-			cwin_set_window_pos (item, z_order,
+			l_success := {WEL_API}.set_window_pos (item, z_order,
 				0, 0, 0, 0, Swp_nosize + Swp_nomove +
 				Swp_noactivate)
 		end
@@ -991,8 +989,10 @@ feature -- Basic operations
 			a_window_not_void: a_window /= Void
 			a_window_not_current: a_window /= Current
 			a_window_exists: a_window.exists
+		local
+			l_success: BOOLEAN
 		do
-			cwin_set_window_pos (item, a_window.item, 0, 0, 0, 0,
+			l_success := {WEL_API}.set_window_pos (item, a_window.item, 0, 0, 0, 0,
 				Swp_nosize + Swp_nomove + Swp_noactivate)
 		end
 
@@ -1311,6 +1311,30 @@ feature -- Removal
 		end
 
 feature {NONE} -- Messages
+
+	on_window_pos_changed (window_pos: WEL_WINDOW_POS) is
+			-- Wm_windowpschanged message.
+			-- This message is sent to a window whose size,
+			-- position, or place in the Z order has changed as a
+			-- result of a call to `move' or `resize'.
+		require
+			exists: exists
+			window_pos_not_void: window_pos /= Void
+		do
+		end
+
+	on_window_pos_changing (window_pos: WEL_WINDOW_POS) is
+			-- Wm_windowposchanging
+			-- This message is sent to a window whose size,
+			-- position or place in the Z order is about to change
+			-- as a result of a call to `move', `resize'.
+			-- `window_pos' can be changed to override the default
+			-- values.
+		require
+			exists: exists
+			window_pos_not_void: window_pos /= Void
+		do
+		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Wm_size message
@@ -1721,6 +1745,28 @@ feature {WEL_WINDOW} -- Implementation
 			end
 		end
 
+	on_wm_window_pos_changed (lparam: POINTER) is
+			-- Wm_windowposchanged message
+		require
+			exists: exists
+		local
+			wp: WEL_WINDOW_POS
+		do
+			create wp.make_by_pointer (lparam)
+			on_window_pos_changed (wp)
+		end
+
+	on_wm_window_pos_changing (lparam: POINTER) is
+			-- Wm_windowposchanging message
+		require
+			exists: exists
+		local
+			wp: WEL_WINDOW_POS
+		do
+			create wp.make_by_pointer (lparam)
+			on_window_pos_changing (wp)
+		end
+
 	on_wm_dropfiles (wparam: POINTER) is
 			-- Wm_dropfile message
 		require
@@ -1808,15 +1854,25 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 					y_position_from_lparam (lparam))
 			when Wm_setcursor then
 				on_set_cursor (cwin_lo_word (lparam))
+			when Wm_windowposchanging then
+				on_wm_window_pos_changing (lparam)
+			when Wm_windowposchanged then
+				on_wm_window_pos_changed (lparam)
+			when Wm_move then
+					-- Set `internal_wm_size_called' for fixing
+					-- `move_and_resize_internal', `move' and `resize' by sending
+					-- a  WM_SIZE message when Windows failed to do so.
+				internal_wm_size_called := True
+				on_move (x_position_from_lparam (lparam), y_position_from_lparam (lparam))
 			when Wm_size then
-					-- Set `internal_wm_size_called' for optimizing `move_and_resize_internal'
-					-- by removing the need to send an additional WM_SIZE message when not needed.
+					-- Set `internal_wm_size_called' for fixing
+					-- `move_and_resize_internal', `move' and `resize' by sending
+					-- a  WM_SIZE message when Windows failed to do so.
 				internal_wm_size_called := True
 				on_size (wparam.to_integer_32,
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
-			when Wm_move then
-				on_move (x_position_from_lparam (lparam), y_position_from_lparam (lparam))
+			when Wm_nccalcsize then
 			when Wm_lbuttondown then
 				on_left_button_down (wparam.to_integer_32,
 					x_position_from_lparam (lparam),
@@ -2057,9 +2113,9 @@ feature {NONE} -- Removal
 			Result := cwin_track_mouse_event (info.item)
 		end
 
-feature {NONE} -- Windows bug workaround
+feature {WEL_WINDOW} -- Windows bug workaround
 
-	frozen move_and_resize_internal (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+	frozen move_and_resize_internal (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN; a_flags: INTEGER) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 			-- This wrapper around `cwin_move_window' is required to solve an issue with
@@ -2073,29 +2129,50 @@ feature {NONE} -- Windows bug workaround
 			exists: exists
 		local
 			l_diff: BOOLEAN
+			l_flags: INTEGER
 		do
 				-- Reset `internal_wm_size_called'. It is set to True in `process_message'
 				-- when receiving a WM_SIZE message.
 			internal_wm_size_called := False
 
+				-- Compute `SetWindowPos' flags.
+			l_flags := a_flags | Swp_nozorder | Swp_noactivate
+			if not repaint then
+				l_flags := l_flags | swp_noredraw
+			end
+
 				-- Find out if a size change was requested.
-			l_diff := a_width /= width or a_height /= height
+			l_diff := ((l_flags & swp_nosize) = 0) and then (a_width /= width or a_height /= height)
 
-				-- Perform call to `MoveWindow'.
-			cwin_move_window (item, a_x, a_y, a_width, a_height, repaint)
+				 -- Perform call to `SetWindowPos'.
+			if
+				not  {WEL_API}.set_window_pos (item, default_pointer, a_x, a_y,  a_width, a_height, l_flags)
+			then
+					-- An error occurred, what can we do then?
+				do_nothing
+			end
 
-			if not internal_wm_size_called and l_diff then
+			if l_diff and then not internal_wm_size_called then
 					-- Bug showed up as we should had receive a WM_SIZE message but did not and
 					-- the previous size was different from the requested size, thus we are sending
 					-- the WM message ourself to `item'.
 					-- Thanks to `l_diff' we are able to catch cases where a WM_SIZE message
 					-- was not sent because it did not need to.
+					-- Ideally, we should hook to the WM_WINDOWPOSCHANGED in Vision2 to better bypass
+					-- this limitation.
+				if parent /= Void then
+					parent.invalidate
+				end
+				invalidate
 				{WEL_API}.post_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
+				if (l_flags & swp_nomove) = 0 then
+					{WEL_API}.post_message (item, wm_move, to_wparam (0), cwin_make_long (a_x, a_y))
+				end
 			end
 		end
 
 	internal_wm_size_called: BOOLEAN
-			-- Was `WM_SIZE' message received just after a call to `MoveWindow'?
+			-- Was `WM_SIZE' message received just after a call to `MoveWindow'/`SetWindowPos'?
 			-- See comments on `move_and_resize_internal' for more details.
 
 feature {NONE} -- Constants
@@ -2363,6 +2440,57 @@ feature {NONE} -- Externals
 			"ValidateRgn"
 		end
 
+	cwin_send_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
+			-- SDK SendMessage (with the result)
+		obsolete
+			"Use {WEL_API}.send_message_result instead"
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_POINTER"
+		alias
+			"SendMessage"
+		end
+
+	cwin_send_message_result_integer (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): INTEGER is
+			-- SDK SendMessage (with the result)
+		obsolete
+			"Use {WEL_API}.send_message_result_integer instead"
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM): EIF_INTEGER"
+		alias
+			"SendMessage"
+		end
+
+	cwin_send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
+			-- SDK SendMessage (without the result)
+		obsolete
+			"Use {WEL_API}.send_message instead"
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
+		alias
+			"SendMessage"
+		end
+
+	cwin_post_message_result (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): BOOLEAN is
+			-- SDK PostMessage (with the result)
+		obsolete
+			"Use {WEL_API}.post_message_result instead"
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, %
+				%WPARAM, LPARAM): EIF_BOOLEAN"
+		alias
+			"PostMessage"
+		end
+
+	cwin_post_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
+			-- SDK PostMessage (without the result)
+		obsolete
+			"Use {WEL_API}.post_message instead"
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
+		alias
+			"PostMessage"
+		end
+
 	cwin_bring_window_to_top (hwnd: POINTER): BOOLEAN is
 			-- SDK BringWindowToTop, Return True is case of Success
 		external
@@ -2374,6 +2502,8 @@ feature {NONE} -- Externals
 	cwin_move_window (hwnd: POINTER; a_x, a_y, a_w, a_h: INTEGER;
 				repaint: BOOLEAN) is
 			-- SDK MoveWindow
+		obsolete
+			"Use {WEL_API}.move_window (x, y, w, h, b).do_nothing instead"
 		external
 			"C [macro %"wel.h%"] (HWND, int, int, int, int, BOOL)"
 		alias
@@ -2383,9 +2513,10 @@ feature {NONE} -- Externals
 	cwin_set_window_pos (hwnd, hwnd_after: POINTER; a_x, a_y, a_w, a_h,
 				flags: INTEGER) is
 			-- SDK SetWindowPos
+		obsolete
+			"Use {WEL_API}.set_window_pos (hwnd, hwnd_after, a_x, a_y, a_w, a_h, flags).do_nothing instead."
 		external
-			"C [macro %"wel.h%"] (HWND, HWND, int, int, int, %
-				%int, int)"
+			"C [macro %"wel.h%"] (HWND, HWND, int, int, int, int, UINT)"
 		alias
 			"SetWindowPos"
 		end

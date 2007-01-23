@@ -2049,12 +2049,18 @@ end
 			-- Find an associated property setter in `class_type'.
 		require
 			class_type_attached: class_type /= Void
+		local
+			f: FEATURE_I
 		do
 			if type.is_void then
-				Result := class_type.associated_class.feature_of_rout_id (rout_id_set.first)
+				f := Current
 			elseif assigner_name_id /= 0 then
-				Result := class_type.associated_class.feature_of_rout_id
-					(written_class.feature_table.item_id (assigner_name_id).rout_id_set.first)
+				f := written_class.feature_table.item_id (assigner_name_id)
+			else
+				f := ancestor_property_setter_in (class_type.associated_class)
+			end
+			if f /= Void then
+				Result := class_type.associated_class.feature_of_rout_id (f.rout_id_set.first)
 			end
 		ensure
 			result_attached: (type.is_void or else assigner_name_id /= 0) implies Result /= Void

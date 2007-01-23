@@ -14,7 +14,6 @@ inherit
 			minimal_width,
 			minimal_height,
 			move_and_resize,
-			move,
 			process_message,
 			on_getdlgcode,
 			on_wm_destroy,
@@ -383,14 +382,6 @@ feature -- Basic operations
 			end
 		end
 
-	move (a_x, a_y: INTEGER) is
-			-- Move the window to `a_x', `a_y' position.
-		do
-			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0,
-				Swp_nosize + Swp_nozorder + Swp_noactivate)
-		end
-
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
@@ -406,7 +397,7 @@ feature -- Basic operations
 			else
 				create point.make (a_x, a_y)
 				point.client_to_screen (parent)
-				move_and_resize_internal (point.x, point.y, a_width, a_height, repaint)
+				Precursor {WEL_WINDOW} (point.x, point.y, a_width, a_height, repaint)
 			end
 		end
 
@@ -589,30 +580,6 @@ feature {NONE}-- Messages
 		require
 			exists: exists
 			min_max_info_not_void: min_max_info /= Void
-		do
-		end
-
-	on_window_pos_changed (window_pos: WEL_WINDOW_POS) is
-			-- Wm_windowpschanged message.
-			-- This message is sent to a window whose size,
-			-- position, or place in the Z order has changed as a
-			-- result of a call to `move' or `resize'.
-		require
-			exists: exists
-			window_pos_not_void: window_pos /= Void
-		do
-		end
-
-	on_window_pos_changing (window_pos: WEL_WINDOW_POS) is
-			-- Wm_windowposchanging
-			-- This message is sent to a window whose size,
-			-- position or place in the Z order is about to change
-			-- as a result of a call to `move', `resize'.
-			-- `window_pos' can be changed to override the default
-			-- values.
-		require
-			exists: exists
-			window_pos_not_void: window_pos /= Void
 		do
 		end
 
@@ -852,28 +819,6 @@ feature {NONE} -- Implementation
 			on_get_min_max_info (mmi)
 		end
 
-	on_wm_window_pos_changed (lparam: POINTER) is
-			-- Wm_windowposchanged message
-		require
-			exists: exists
-		local
-			wp: WEL_WINDOW_POS
-		do
-			create wp.make_by_pointer (lparam)
-			on_window_pos_changed (wp)
-		end
-
-	on_wm_window_pos_changing (lparam: POINTER) is
-			-- Wm_windowposchanging message
-		require
-			exists: exists
-		local
-			wp: WEL_WINDOW_POS
-		do
-			create wp.make_by_pointer (lparam)
-			on_window_pos_changing (wp)
-		end
-
 	on_wm_ctlcolor (wparam, lparam: POINTER) is
 			-- Common routine for Wm_ctlcolor messages.
 		require
@@ -1013,10 +958,6 @@ feature {WEL_DISPATCHER}
 				on_wm_draw_item (wparam, lparam)
 			when Wm_getminmaxinfo then
 				on_wm_get_min_max_info (lparam)
-			when Wm_windowposchanged then
-				on_wm_window_pos_changed (lparam)
-			when Wm_windowposchanging then
-				on_wm_window_pos_changing (lparam)
 			when Wm_paletteischanging then
 				on_palette_is_changing (window_of_item (wparam))
 			when Wm_palettechanged then

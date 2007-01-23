@@ -14,7 +14,6 @@ inherit
 			make_child as make
 		redefine
 			move_and_resize,
-			move,
 			minimal_width,
 			minimal_height,
 			maximal_width,
@@ -125,15 +124,7 @@ feature -- Basic operations
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
-			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint)
-		end
-
-	move (a_x, a_y: INTEGER) is
-			-- Move the window to `a_x', `a_y' position.
-		do
-			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0,
-				Swp_nosize | Swp_nozorder | Swp_noactivate)
+			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, 0)
 		end
 
 feature {NONE} -- Implementation

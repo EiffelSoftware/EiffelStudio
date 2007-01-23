@@ -108,8 +108,6 @@ inherit
 			default_ex_style,
 			hide_current_selection,
 			on_tcn_selchange,
-			wel_move_and_resize,
-			wel_resize,
 			on_wm_theme_changed,
 			on_erase_background
 		end
@@ -631,24 +629,6 @@ feature {NONE} -- WEL Implementation
 		do
 			process_tab_key (virtual_key)
 			Precursor {EV_WIDGET_LIST_IMP} (virtual_key, key_data)
-		end
-
-	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-			repaint: BOOLEAN) is
-			-- Move the window to `a_x', `a_y' position and
-			-- resize it with `a_width', `a_height'.
-		do
-			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint)
-		end
-
-	wel_resize (a_width, a_height: INTEGER) is
-			-- Resize the window with `a_width', `a_height'.
-		local
-			a_default_pointer: POINTER
-		do
-			cwin_set_window_pos (wel_item, a_default_pointer,
-				0, 0, a_width, a_height,
-				Swp_nomove + Swp_nozorder + Swp_noactivate)
 		end
 
 feature {NONE} -- Feature that should be directly implemented by externals

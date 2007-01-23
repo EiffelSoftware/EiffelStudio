@@ -32,10 +32,11 @@ feature -- String encoding convertion
 			l_from_be := big_endian_codepage.has (a_from_code_page)
 			l_to_be := big_endian_codepage.has (a_to_code_page)
 
+			last_conversion_successful := True
 			if two_byte_codesets.has (a_from_code_page) then
 				l_string_32 := a_from_string.as_string_32
 				if l_from_be = is_little_endian then
-					l_string_32 := string_32_switch_endian (l_string_32)
+					l_string_32 := string_16_switch_endian (l_string_32)
 				end
 				if four_byte_codesets.has (a_to_code_page) then
 					l_string_32 := utf16_to_utf32 (l_string_32)
@@ -46,7 +47,7 @@ feature -- String encoding convertion
 					end
 				elseif two_byte_codesets.has (a_to_code_page) then
 					if l_to_be = is_little_endian then
-						Result := string_32_switch_endian (l_string_32)
+						Result := string_16_switch_endian (l_string_32)
 					else
 						Result := l_string_32
 					end
@@ -61,7 +62,7 @@ feature -- String encoding convertion
 				if two_byte_codesets.has (a_to_code_page) then
 					l_string_32 := utf32_to_utf16 (l_string_32)
 					if l_to_be = is_little_endian then
-						Result := string_32_switch_endian (l_string_32)
+						Result := string_16_switch_endian (l_string_32)
 					else
 						Result := l_string_32
 					end
@@ -79,7 +80,7 @@ feature -- String encoding convertion
 				l_string_32 := multi_byte_to_wide_char (l_from_code_page, a_from_string.as_string_8)
 				if two_byte_codesets.has (a_to_code_page) then
 					if l_to_be = is_little_endian then
-						Result := string_32_switch_endian (l_string_32)
+						Result := string_16_switch_endian (l_string_32)
 					else
 						Result := l_string_32
 					end
@@ -102,7 +103,7 @@ feature -- String encoding convertion
 			l_pointer: POINTER
 			l_count: INTEGER
 		do
-			l_pointer := cwin_wide_char_to_multi_byte (a_code_page.to_integer, wide_string_to_pointer (a_string), $l_count)
+			l_pointer := cwin_wide_char_to_multi_byte (a_code_page.to_integer, wide_string_to_pointer (a_string), $l_count, $last_conversion_successful)
 			Result := pointer_to_multi_byte (l_pointer, l_count - 1)
 			l_pointer.memory_free
 		end
@@ -113,7 +114,7 @@ feature -- String encoding convertion
 			l_pointer: POINTER
 			l_count: INTEGER
 		do
-			l_pointer := cwin_multi_byte_to_wide_char (a_code_page.to_integer, multi_byte_to_pointer (a_string), $l_count)
+			l_pointer := cwin_multi_byte_to_wide_char (a_code_page.to_integer, multi_byte_to_pointer (a_string), $l_count, $last_conversion_successful)
 			Result := pointer_to_wide_string (l_pointer, (l_count - 1) * 2)
 			l_pointer.memory_free
 		end
@@ -130,28 +131,48 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_count_to_buffer: TYPED_POINTER [INTEGER]): POINTER is
+	cwin_wide_char_to_multi_byte (cpid: INTEGER; a_wide_string: POINTER; a_count_to_buffer: TYPED_POINTER [INTEGER]; a_b: TYPED_POINTER [BOOLEAN]): POINTER is
 		external
 			"C inline use <windows.h>"
 		alias
 			"[
 				LPSTR temp;
+				DWORD dw;
 			    *$a_count_to_buffer = WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, NULL, 0, NULL, NULL);
+			    
 			    temp = malloc ((sizeof (LPSTR) * *$a_count_to_buffer));
+			    if (temp == NULL){
+			    	*$a_b = 0;
+			    	return;
+			    }
+			    			    	
 				WideCharToMultiByte ($cpid, 0, $a_wide_string, -1, temp, *$a_count_to_buffer, NULL, NULL);
+				dw = GetLastError();
+				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER)
+					*$a_b = 0;
 				return (EIF_POINTER) temp;
 			]"
 		end
 
-	cwin_multi_byte_to_wide_char (cpid: INTEGER; a_multi_byte: POINTER; a_count_to_buffer: TYPED_POINTER [INTEGER]): POINTER is
+	cwin_multi_byte_to_wide_char (cpid: INTEGER; a_multi_byte: POINTER; a_count_to_buffer: TYPED_POINTER [INTEGER]; a_b: TYPED_POINTER [BOOLEAN]): POINTER is
 		external
 			"C inline use <windows.h>"
 		alias
 			"[
 				LPWSTR temp;
+				DWORD dw;
 			    *$a_count_to_buffer = MultiByteToWideChar ($cpid, 0, $a_multi_byte, -1, NULL, 0);
+			    
 			    temp = malloc ((sizeof (LPWSTR) * *$a_count_to_buffer));
+			    if (temp == NULL){
+			    	*$a_b = 0;
+			    	return;
+			    }
+			    
 				MultiByteToWideChar ($cpid,	0, $a_multi_byte, -1, temp, *$a_count_to_buffer);
+				dw = GetLastError();
+				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER || dw == ERROR_NO_UNICODE_TRANSLATION)
+					*$a_b = 0;
 				return (EIF_POINTER) temp;
 			]"
 		end

@@ -326,21 +326,23 @@ feature -- Access
 		local
 			l_feat_i: FEATURE_I
 			l_feat: E_FEATURE
+			cl: CLASS_C
+			first_rout_id: INTEGER
 		do
-			Result := not is_corrupted and routine /= Void
-				and then routine.associated_class /= Void
-				and then routine.is_debuggable
-				and then same_feature (routine, routine.associated_class.feature_with_rout_id (routine.rout_id_set.first))
-			if Result then
-				if routine.is_inline_agent then
-					l_feat_i := routine.associated_class.eiffel_class_c.inline_agent_of_rout_id (routine.rout_id_set.first)
-					if l_feat_i /= Void then
-						l_feat := l_feat_i.api_feature (routine.written_in)
+			if not is_corrupted and routine /= Void then
+				cl := routine.associated_class
+				if cl /= Void and then routine.is_debuggable then
+					first_rout_id := routine.rout_id_set.first
+					if routine.is_inline_agent then
+						l_feat_i := cl.eiffel_class_c.inline_agent_of_rout_id (first_rout_id)
+						if l_feat_i /= Void then
+							l_feat := l_feat_i.api_feature (routine.written_in)
+						end
+					else
+						l_feat := cl.feature_with_rout_id (first_rout_id)
 					end
-				else
-					l_feat := routine.associated_class.feature_with_rout_id (routine.rout_id_set.first)
+					Result := l_feat /= Void and then same_feature (routine, l_feat)
 				end
-				Result := same_feature (routine, l_feat)
 			end
 		end
 

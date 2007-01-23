@@ -98,32 +98,6 @@ feature {EV_ANY_I} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.gtk_fixed_child_struct_y (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
 		end
 
-	width_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER is
-			-- Width of `a_widget_imp' within `Current'.
-		local
-			l_requisition: POINTER
-			l_parent_box: POINTER
-		do
-			l_requisition := {EV_GTK_EXTERNALS}.c_gtk_requisition_struct_allocate
-			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (a_widget_imp.c_object)
-			{EV_GTK_EXTERNALS}.gtk_widget_size_request (l_parent_box, l_requisition)
-			Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (l_requisition)
-			l_requisition.memory_free
-		end
-
-	height_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER is
-			-- Height of `a_widget_imp' within `Current'.
-		local
-			l_requisition: POINTER
-			l_parent_box: POINTER
-		do
-			l_requisition := {EV_GTK_EXTERNALS}.c_gtk_requisition_struct_allocate
-			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (a_widget_imp.c_object)
-			{EV_GTK_EXTERNALS}.gtk_widget_size_request (l_parent_box, l_requisition)
-			Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (l_requisition)
-			l_requisition.memory_free
-		end
-
 	gtk_insert_i_th (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		local

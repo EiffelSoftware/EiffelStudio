@@ -24,7 +24,7 @@ feature -- String encoding convertion
 			a_from_string_not_void: a_from_string /= Void
 		deferred
 		ensure
-			convert_to_not_void: Result /= Void
+			success_implies_not_void: last_conversion_successful implies Result /= Void
 		end
 
 feature -- Status report
@@ -33,6 +33,9 @@ feature -- Status report
 			-- Is `a_code_page' valid?
 		deferred
 		end
+
+	last_conversion_successful: BOOLEAN
+			-- Was last conversion successful?
 
 feature {NONE} -- Status report
 

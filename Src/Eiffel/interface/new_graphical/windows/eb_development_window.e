@@ -561,12 +561,6 @@ feature -- Resource Update
 			end
 		end
 
-	update_splitters is
-			-- Refresh the position of the splitter on screen according to
-			-- our internal values.
-		do
-		end
-
 	register is
 			-- Register to preferences we want notification of.
 		do

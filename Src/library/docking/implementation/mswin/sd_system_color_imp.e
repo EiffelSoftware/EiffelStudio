@@ -19,6 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -28,11 +33,9 @@ feature {NONE} -- Implementation
 			-- Creation metod
 		local
 			l_err: WEL_ERROR
-			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
 		do
-			create l_env
-			l_app_imp ?= l_env.application.implementation
+			l_app_imp ?= ev_application.implementation
 			check not_void: l_app_imp /= Void end
 			theme_drawer := l_app_imp.theme_drawer
 

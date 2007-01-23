@@ -8,6 +8,14 @@ indexing
 class
 	SD_DOCKING_MANAGER_AGENTS
 
+inherit
+	ANY
+
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -17,8 +25,6 @@ feature {NONE}  -- Initlization
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			internal_docking_manager := a_docking_manager
 			internal_docking_manager.main_window.focus_out_actions.extend (agent on_main_window_focus_out)
@@ -27,11 +33,10 @@ feature {NONE}  -- Initlization
 			pick_actions_handler := agent on_pick_actions
 			drop_actions_handler := agent on_drop_actions
 			theme_changed_handler := agent on_theme_changed
-			create l_env
-			l_env.application.pnd_motion_actions.extend (pnd_motion_actions_handler)
-			l_env.application.pick_actions.extend (pick_actions_handler)
-			l_env.application.drop_actions.extend (drop_actions_handler)
-			l_env.application.theme_changed_actions.extend (theme_changed_handler)
+			ev_application.pnd_motion_actions.extend (pnd_motion_actions_handler)
+			ev_application.pick_actions.extend (pick_actions_handler)
+			ev_application.drop_actions.extend (drop_actions_handler)
+			ev_application.theme_changed_actions.extend (theme_changed_handler)
 		ensure
 			set: internal_docking_manager = a_docking_manager
 		end
@@ -40,18 +45,15 @@ feature -- Command
 
 	init_actions is
 			-- Initlialize actions.
-		local
-			l_app: EV_ENVIRONMENT
 		do
 			internal_docking_manager.contents.add_actions.extend (agent on_added_content)
 			internal_docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
 			internal_docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
 			internal_docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
-			create l_app
 			widget_pointer_press_handler := agent on_widget_pointer_press
 			widget_pointer_press_for_upper_zone_handler := agent on_widget_pointer_press_for_upper_zone
-			l_app.application.pointer_button_press_actions.extend (widget_pointer_press_handler)
-			l_app.application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
+			ev_application.pointer_button_press_actions.extend (widget_pointer_press_handler)
+			ev_application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
 			internal_docking_manager.main_window.focus_out_actions.extend (agent on_top_level_window_focus_out)
 			internal_docking_manager.main_window.focus_in_actions.extend (agent on_top_level_window_focus_in)
 
@@ -258,11 +260,9 @@ feature  -- Agents
 		local
 			l_widget: EV_WIDGET
 			l_screen_x, l_screen_y: INTEGER
-			l_env: EV_ENVIRONMENT
 			l_focused: EV_WIDGET
 		do
-			create l_env
-			l_focused := l_env.application.focused_widget
+			l_focused := ev_application.focused_widget
 			if l_focused /= Void then
 				l_screen_x := a_x + l_focused.screen_x
 				l_screen_y := a_y + l_focused.screen_y
@@ -339,16 +339,13 @@ feature -- Destory
 
 	destroy is
 			-- Destory all underline objects
-		local
-			l_env: EV_ENVIRONMENT
 		do
-			create l_env
-			l_env.application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
-			l_env.application.pick_actions.prune_all (pick_actions_handler)
-			l_env.application.drop_actions.prune_all (drop_actions_handler)
-			l_env.application.theme_changed_actions.prune_all (theme_changed_handler)
-			l_env.application.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
-			l_env.application.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
+			ev_application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
+			ev_application.pick_actions.prune_all (pick_actions_handler)
+			ev_application.drop_actions.prune_all (drop_actions_handler)
+			ev_application.theme_changed_actions.prune_all (theme_changed_handler)
+			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
+			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
 			focused_tab_stub := Void
 		end
 

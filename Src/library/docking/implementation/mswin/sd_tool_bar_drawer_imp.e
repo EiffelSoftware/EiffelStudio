@@ -25,6 +25,11 @@ inherit
 			on_wm_theme_changed
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -32,12 +37,9 @@ feature{NONE} -- Initlization
 
 	make is
 			-- Creation method
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			init_theme
-			create l_env
-			l_env.application.theme_changed_actions.extend (agent init_theme)
+			ev_application.theme_changed_actions.extend (agent init_theme)
 
 			create internal_shared
 		end
@@ -45,13 +47,11 @@ feature{NONE} -- Initlization
 	init_theme is
 			-- Initialize theme drawer.
 		local
-			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
 			l_tool_bar: EV_TOOL_BAR
 			l_wel_tool_bar: WEL_TOOL_BAR
 		do
-			create l_env
-			l_app_imp ?= l_env.application.implementation
+			l_app_imp ?= ev_application.implementation
 			check not_void: l_app_imp /= Void end
 			l_app_imp.update_theme_drawer
 			theme_drawer := l_app_imp.theme_drawer
@@ -207,11 +207,9 @@ feature -- Redefine
 	on_wm_theme_changed is
 			-- Redefine
 		local
-			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
 		do
-			create l_env
-			l_app_imp ?= l_env.application.implementation
+			l_app_imp ?= ev_application.implementation
 			l_app_imp.theme_drawer.close_theme_data (theme_data)
 			debug ("docking")
 				print ("%N SD_TOOL_BAR_DRAWER_IMP on_wm_theme_change")

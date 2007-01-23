@@ -13,16 +13,19 @@ inherit
 
 	EV_ANY_HANDLER
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 feature -- Command
 
 	before_enable_capture is
 			-- Redefine
 		local
-			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
 		do
-			create l_env
-			l_app_imp ?= l_env.application.implementation
+			l_app_imp ?= ev_application.implementation
 			l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_normal)
 		end
 
@@ -32,8 +35,7 @@ feature -- Command
 			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
 		do
-			create l_env
-			l_app_imp ?= l_env.application.implementation
+			l_app_imp ?= ev_application.implementation
 			l_app_imp.set_capture_type ({EV_APPLICATION_IMP}.capture_heavy)
 		end
 

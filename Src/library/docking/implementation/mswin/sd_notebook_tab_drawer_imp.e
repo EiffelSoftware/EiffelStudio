@@ -31,6 +31,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -38,25 +43,20 @@ feature{NONE} -- Initlization
 
 	make is
 			-- Creation method
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			Precursor {SD_NOTEBOOK_TAB_DRAWER_I}
 			init_theme
-			create l_env
-			l_env.application.theme_changed_actions.extend (agent init_theme)
+			ev_application.theme_changed_actions.extend (agent init_theme)
 		end
 
 	init_theme is
 			-- Initialize theme drawer.
 		local
-			l_env: EV_ENVIRONMENT
 			l_app_imp: EV_APPLICATION_IMP
 			l_tool_bar: EV_TOOL_BAR
 			l_wel_tool_bar: WEL_TOOL_BAR
 		do
-			create l_env
-			l_app_imp ?= l_env.application.implementation
+			l_app_imp ?= ev_application.implementation
 			check not_void: l_app_imp /= Void end
 			l_app_imp.update_theme_drawer
 			theme_drawer := l_app_imp.theme_drawer

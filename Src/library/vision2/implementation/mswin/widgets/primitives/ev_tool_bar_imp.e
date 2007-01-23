@@ -605,7 +605,7 @@ feature -- Basic operation
 				-- Flag `is_in_reset_button' to `True', preventing resizing occurring.
 			is_in_reset_button := True
 
-			if application_imp.locked_window = Void then
+			if is_displayed and then application_imp.locked_window = Void then
 				locked_in_here := True
 				lock_window_update
 			end

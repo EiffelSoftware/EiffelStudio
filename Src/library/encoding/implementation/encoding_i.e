@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Endian
 
 	string_32_switch_endian (a_str: STRING_32): STRING_32 is
-			-- Switch endian of `a_str'
+			-- Switch endian of `a_str' for both high and low bits.
 		require
 			a_str /= Void
 		local
@@ -272,6 +272,31 @@ feature {NONE} -- Endian
 									l_code & 0xFF00 |<< 8 +
 									l_code & 0xFF0000 |>> 8 +
 									l_code & 0xFF000000 |>> 24 & 0xFF)
+				i := i + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	string_16_switch_endian (a_str: STRING_32): STRING_32 is
+			-- Switch endian of `a_str' for low bits.
+			-- High bits are cleaned.
+		require
+			a_str /= Void
+		local
+			l_code: NATURAL_32
+			i, l_count: INTEGER
+		do
+			l_count := a_str.count
+			create Result.make (l_count)
+			from
+				i := 1
+			until
+				i > l_count
+			loop
+				l_code := a_str.code (i)
+				Result.append_code (l_code & 0xFF |<< 8 & 0xFF00 +
+									l_code & 0xFF00 |>> 8 & 0xFF)
 				i := i + 1
 			end
 		ensure

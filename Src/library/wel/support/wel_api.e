@@ -63,6 +63,14 @@ feature -- Windows
 			"return EIF_TEST(MoveWindow((HWND) $hwnd, (int) $a_x, (int) $a_y, (int) $a_w, (int) $a_h, (BOOL) $repaint));"
 		end
 
+	frozen set_window_pos (hwnd, hwnd_after: POINTER; a_x, a_y, a_w, a_h, flags: INTEGER): BOOLEAN is
+			-- SDK SetWindowPos
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST(SetWindowPos((HWND) $hwnd, (HWND) $hwnd_after, (int) $a_x, (int) $a_y, (int) $a_w, (int) $a_h, (UINT) $flags));"
+		end
+
 feature -- Menus
 
 	frozen set_menu (hwnd, hmenu: POINTER): INTEGER is

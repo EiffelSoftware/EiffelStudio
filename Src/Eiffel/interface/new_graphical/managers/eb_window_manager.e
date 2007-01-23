@@ -180,10 +180,6 @@ feature -- Basic operations
 				-- Show the window
 			a_window.show
 			a_window.give_focus
-
-				-- Update the splitters (can't be done before window is visible
-				-- otherwise it does not work).
-			a_window.update_splitters
 		end
 
 	create_dynamic_lib_window is

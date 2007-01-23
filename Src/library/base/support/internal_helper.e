@@ -10,9 +10,12 @@ class
 
 feature -- Status report
 
-	is_pre_ecma_mapping_disabled: BOOLEAN
+	is_pre_ecma_mapping_disabled: BOOLEAN is
 			-- Are we mapping old names to new ECMA names?
-			-- False means. mapping STRING to STRING_8, INTEGER to INTEGER_32,...
+			-- False means mapping STRING to STRING_8, INTEGER to INTEGER_32,...
+		do
+			Result := False
+		end
 
 	is_valid_type_string (s: STRING): BOOLEAN is
 			-- Is `s' a valid string representation for a TYPE.
@@ -95,18 +98,16 @@ feature -- Status setting
 
 	enable_pre_ecma_mapping is
 			-- Set `is_pre_ecma_mapping_disabled' to False.
+		obsolete
+			"Use an instance of ECMA_INTERNAL instead."
 		do
-			is_pre_ecma_mapping_disabled := False
-		ensure
-			is_pre_ecma_mapping_disabled_set: not is_pre_ecma_mapping_disabled
 		end
 
 	disable_pre_ecma_mapping is
 			-- Set `is_pre_ecma_mapping_disabled' to True.
+		obsolete
+			"Use an instance of INTERNAL instead."
 		do
-			is_pre_ecma_mapping_disabled := True
-		ensure
-			is_pre_ecma_mapping_disabled_set: is_pre_ecma_mapping_disabled
 		end
 
 feature {NONE} -- Implementation: status report

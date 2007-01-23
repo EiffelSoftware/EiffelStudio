@@ -20,7 +20,6 @@ inherit
 			destroy,
 			parent,
 			move_and_resize,
-			move,
 			move_absolute,
 			make,
 			set_parent
@@ -53,15 +52,7 @@ feature -- Basic operations
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
-			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint)
-		end
-
-	move (a_x, a_y: INTEGER) is
-			-- Move the window to `a_x', `a_y' position.
-		do
-			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0,
-				Swp_nosize + Swp_nozorder + Swp_noactivate)
+			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, 0)
 		end
 
 	move_absolute (a_x, a_y: INTEGER) is
@@ -96,7 +87,7 @@ feature -- Element change
 				cwin_set_parent (item, default_pointer)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_window_make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING_GENERAL;

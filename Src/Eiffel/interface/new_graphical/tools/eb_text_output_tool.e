@@ -9,6 +9,14 @@ indexing
 class
 	EB_TEXT_OUTPUT_TOOL
 
+inherit
+	ANY
+
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 feature -- Accelerator
 
 	is_accelerator_matched (a_key: EV_KEY; a_accelerator: EV_ACCELERATOR): BOOLEAN is
@@ -38,12 +46,6 @@ feature -- Access
 			Result := internal_output_text
 		ensure
 			result_attached: Result /= Void
-		end
-
-	ev_application: EV_APPLICATION is
-			-- Current application.
-		once
-			Result := (create {EV_ENVIRONMENT}).application
 		end
 
 feature -- Actions

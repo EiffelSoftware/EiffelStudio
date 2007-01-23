@@ -432,14 +432,9 @@ feature -- Element change
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
-		local
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
 		do
-			create env
-			app_imp ?= env.application.implementation
 			if starting then
-				if not interface.drop_actions.accepts_pebble (app_imp.pick_and_drop_source.pebble) then
+				if not interface.drop_actions.accepts_pebble (application_imp.pick_and_drop_source.pebble) then
 					enabled_before := is_sensitive
 					disable_sensitive_internal
 				end

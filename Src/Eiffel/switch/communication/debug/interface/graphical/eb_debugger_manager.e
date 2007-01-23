@@ -489,7 +489,7 @@ feature -- Output
 			w_dlg: EV_WARNING_DIALOG
 		do
 			Precursor {DEBUGGER_MANAGER} (m)
-			if (create {EV_ENVIRONMENT}).application /= Void then
+			if ev_application /= Void then
 				create w_dlg.make_with_text (m)
 				if window_manager.last_focused_development_window /= Void then
 					w_dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
@@ -679,13 +679,17 @@ feature -- Status setting
 			i: INTEGER
 			l_watch_tool: ES_WATCH_TOOL
 			nwt: INTEGER
+			l_unlock: BOOLEAN
 		do
 			disable_debugging_commands (False)
 			initialize_debugging_window
 			check
 				debugging_window_set: debugging_window /= Void
 			end
-			debugging_window.window.lock_update
+			if ev_application.locked_window = Void then
+				l_unlock := True
+				debugging_window.window.lock_update
+			end
 			debugging_window.save_tools_docking_layout
 
 			debug ("DEBUGGER_INTERFACE")
@@ -789,7 +793,9 @@ feature -- Status setting
 
 			raised := True
 			update_all_debugging_tools_menu
-			debugging_window.window.unlock_update
+			if l_unlock then
+				debugging_window.window.unlock_update
+			end
 		ensure
 			raised
 		end
@@ -869,8 +875,10 @@ feature -- Status setting
 		local
 			i: INTEGER
 			split: EV_SPLIT_AREA
+			l_unlock: BOOLEAN
 		do
-			if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+			if ev_application.locked_window = Void then
+				l_unlock := True
 				debugging_window.window.lock_update
 			end
 
@@ -921,9 +929,10 @@ feature -- Status setting
 
 			enable_debugging_commands
 			update_all_debugging_tools_menu
-			debugging_window.window.unlock_update
-
 			debugging_window.restore_tools_docking_layout
+			if l_unlock then
+				debugging_window.window.unlock_update
+			end
 		ensure
 			not raised
 		end

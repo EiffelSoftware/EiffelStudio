@@ -11,7 +11,6 @@ class
 inherit
 	WEL_COMPOSITE_WINDOW
 		redefine
-			move,
 			move_and_resize
 		end
 
@@ -84,15 +83,7 @@ feature -- Basic operations
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
-			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint)
-		end
-
-	move (a_x, a_y: INTEGER) is
-			-- Move the window to `a_x', `a_y'.
-		do
-			cwin_set_window_pos (item, default_pointer,
-				a_x, a_y, 0, 0,
-				Swp_nosize + Swp_nozorder + Swp_noactivate)
+			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint, 0)
 		end
 
 	arrange_icons is

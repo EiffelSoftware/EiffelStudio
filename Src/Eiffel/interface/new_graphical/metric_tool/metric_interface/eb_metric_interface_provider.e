@@ -473,8 +473,18 @@ feature -- Domain dialog
 	value_criterion_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
 			-- Dialog to setup value criterion
 		once
-			create Result.make (True)
+			create Result.make (True, True, True)
 			Result.set_width (600)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	value_tester_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
+			-- Dialog to setup value tester for archive node
+		once
+			create Result.make (True, False, True)
+			Result.set_width (300)
+			Result.value_tester.set_metric_value_retriever_dialog_function (agent archive_metric_value_retriever_dialog)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -482,8 +492,18 @@ feature -- Domain dialog
 	metric_value_retriever_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
 			-- Dialog to setup metric value retriever
 		once
-			create Result.make (False)
+			create Result.make (False, True, False)
 			Result.set_title (metric_names.l_setup_metric_value_retriever)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	archive_metric_value_retriever_dialog: EB_METRIC_VALUE_CRITERION_DIALOG is
+			-- Dialog to setup metric value retriever
+		once
+			create Result.make (False, True, False)
+			Result.set_title (metric_names.l_setup_metric_value_retriever)
+			Result.domain_selector.setup_delayed_domain_item_buttons (True, True, False)
 		ensure
 			result_attached: Result /= Void
 		end

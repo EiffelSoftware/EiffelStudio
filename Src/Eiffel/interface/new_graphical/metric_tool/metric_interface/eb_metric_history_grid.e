@@ -100,9 +100,6 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	metric_history_panel: EB_METRIC_HISTORY_PANEL
-			-- Metric history panel to which current grid belongs
-
 	input_domain_change_actions: ACTION_SEQUENCE [TUPLE] is
 			-- Actions to be performed when input domain of a archive item changes
 		do
@@ -110,24 +107,6 @@ feature -- Access
 				create input_domain_change_actions_internal
 			end
 			Result := input_domain_change_actions_internal
-		ensure
-			result_attached: Result /= Void
-		end
-
-	on_selection_changes (a_item: EV_GRID_CHECKABLE_LABEL_ITEM) is
-			-- On selection of rows changes
-		do
-			selection_change_actions.call ([])
-		end
-
-	checkbox_item_index: INTEGER is
-			-- Item index of checkbox grid item
-		deferred
-		end
-
-	sorting_order_preference: STRING_PREFERENCE is
-			-- Sort order preference
-		deferred
 		ensure
 			result_attached: Result /= Void
 		end
@@ -264,6 +243,12 @@ feature -- Actions
 			end
 		end
 
+	on_selection_changes (a_item: EV_GRID_CHECKABLE_LABEL_ITEM) is
+			-- On selection of rows changes
+		do
+			selection_change_actions.call ([])
+		end
+
 feature{NONE} -- Grid item generation
 
 	metric_name_item (a_archive_node: EB_METRIC_ARCHIVE_NODE; a_checked: BOOLEAN; a_name_required: BOOLEAN): EV_GRID_CHECKABLE_LABEL_ITEM is
@@ -368,10 +353,30 @@ feature{NONE} -- Grid item generation
 
 	filter_result_item (a_archive_node: EB_METRIC_ARCHIVE_NODE): EV_GRID_CHECKABLE_LABEL_ITEM is
 			-- Filter result item
+		require
+			a_archive_node_attached: a_archive_node /= Void
 		do
 			create Result
 			Result.checked_changed_actions.extend (agent on_filter_change (?, a_archive_node))
 			update_filter_result_item (Result, a_archive_node)
+		ensure
+			result_attached: Result /= Void
+		end
+
+	value_tester_item (a_archive_node: EB_METRIC_ARCHIVE_NODE): EB_METRIC_GRID_VALUE_CRITERION_ITEM is
+			-- Value tester item.
+		require
+			a_archive_node_attached: a_archive_node /= Void
+
+		do
+			create Result.make (create{EB_METRIC_DOMAIN}.make, True)
+			Result.set_value (["", False, a_archive_node.value_tester])
+			Result.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Result))
+			Result.set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
+			Result.dialog_ok_actions.extend (agent Result.redraw)
+			Result.dialog_ok_actions.extend (agent resize_grid (Result))
+			Result.change_actions.extend (agent set_value_criterion (Result, a_archive_node))
+			Result.set_dialog_function (agent value_tester_dialog)
 		ensure
 			result_attached: Result /= Void
 		end
@@ -509,6 +514,17 @@ feature{NONE} -- Item updator
 			a_item.checked_changed_actions.resume
 		end
 
+	update_value_tester_item (a_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update status of `a_item' using information from `a_archive_node'.
+		require
+			a_item_attached: a_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			a_item.change_actions.block
+			a_item.set_value (["", False, a_archive_node.value_tester])
+			a_item.change_actions.resume
+		end
+
 feature{NONE} -- Implementation/Sorting
 
 	metric_name_tester (a_archive_node, b_archive_node: EB_METRIC_ARCHIVE_NODE; a_order: INTEGER): BOOLEAN is
@@ -516,36 +532,11 @@ feature{NONE} -- Implementation/Sorting
 		require
 			a_archive_node_attached: a_archive_node /= Void
 			b_archive_node_attached: b_archive_node /= Void
-		local
-			l_a_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM
-			l_b_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM
-			l_a_in_grid: BOOLEAN
-			l_b_in_grid: BOOLEAN
 		do
-			if a_order = topology_order then
-				l_a_in_grid := row_archive_table.has (a_archive_node)
-				l_b_in_grid := row_archive_table.has (b_archive_node)
-				if l_a_in_grid and then l_b_in_grid then
-					l_a_checkbox ?= row_archive_table.item (a_archive_node).item (1)
-					l_b_checkbox ?= row_archive_table.item (b_archive_node).item (1)
-					check
-						l_a_checkbox /= Void
-						l_b_checkbox /= Void
-					end
-					if l_a_checkbox.is_checked /= l_b_checkbox.is_checked then
-						Result := l_a_checkbox.is_checked and then not l_b_checkbox.is_checked
-					else
-						Result := a_archive_node.metric_name <= b_archive_node.metric_name
-					end
-				elseif l_a_in_grid and then not l_b_in_grid then
-					Result := True
-				end
+			if a_order = ascending_order then
+				Result := a_archive_node.metric_name <= b_archive_node.metric_name
 			else
-				if a_order = ascending_order then
-					Result := a_archive_node.metric_name <= b_archive_node.metric_name
-				else
-					Result := a_archive_node.metric_name > b_archive_node.metric_name
-				end
+				Result := a_archive_node.metric_name > b_archive_node.metric_name
 			end
 		end
 
@@ -672,7 +663,17 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-feature{NONE} -- Implementation
+feature{NONE} -- Implementation/Status report
+
+	is_archive_recalculatable (a_archive_node: EB_METRIC_ARCHIVE_NODE): BOOLEAN is
+			-- Is `a_archive_node' recalculatable?
+		require
+			a_archive_node_attached: a_archive_node /= Void
+		do
+			Result := a_archive_node.is_recalculatable
+		end
+
+feature{NONE} -- Implementation/Data
 
 	last_selected_nodes: LINKED_LIST [UUID] is
 			-- List of UUIDs of archive nodes selected the last time
@@ -691,14 +692,6 @@ feature{NONE} -- Implementation
 	selection_change_actions_internal: like selection_change_actions
 			-- Implementation of `selection_change_actions'
 
-	is_archive_recalculatable (a_archive_node: EB_METRIC_ARCHIVE_NODE): BOOLEAN is
-			-- Is `a_archive_node' recalculatable?
-		require
-			a_archive_node_attached: a_archive_node /= Void
-		do
-			Result := a_archive_node.is_recalculatable
-		end
-
 	normal_color: EV_COLOR is
 			-- Normal color for text
 		do
@@ -715,16 +708,10 @@ feature{NONE} -- Implementation
 		do
 		end
 
-	on_go_to_result (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_agent: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE]]) is
-			-- Action to be performed to go invoke `a_agent' to show detailed result stored in `a_archive_node'
-		require
-			a_archive_node_attached: a_archive_node /= Void
-			a_archive_node_has_detailed_result: a_archive_node.has_detailed_result
-			a_agent_attached: a_agent /= Void
+	warning_row_background_color: EV_COLOR is
+			-- Background color for rows in which warning checking failed
 		do
-			if button = {EV_POINTER_CONSTANTS}.left then
-				a_agent.call ([a_archive_node])
-			end
+			Result := preferences.metric_tool_data.warning_background_color
 		end
 
 	row_archive_table: HASH_TABLE [EV_GRID_ROW, EB_METRIC_ARCHIVE_NODE]
@@ -732,6 +719,51 @@ feature{NONE} -- Implementation
 
 	input_domain_change_actions_internal: like input_domain_change_actions
 			-- Implementation of `input_domain_change_actions'
+
+	selected_archives_internal: like selected_archives
+			-- Implenetation of `selected_archives'
+
+	metric_history_panel: EB_METRIC_HISTORY_PANEL
+			-- Metric history panel to which current grid belongs
+
+	checkbox_item_index: INTEGER is
+			-- Item index of checkbox grid item
+		deferred
+		end
+
+	sorting_order_preference: STRING_PREFERENCE is
+			-- Sort order preference
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature{NONE} -- Implementation/Operations
+
+	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_ARCHIVE_NODE]) is
+			-- Action to be performed when sort `a_column_list' using `a_comparator'.
+		require
+			a_column_list_attached: a_column_list /= Void
+		local
+			l_sorter: DS_QUICK_SORTER [EB_METRIC_ARCHIVE_NODE]
+		do
+			create l_sorter.make (a_comparator)
+			l_sorter.sort (archive)
+			bind_grid (selected_archives_internal)
+		end
+
+	bind_grid (a_selected_nodes: like selected_archives) is
+			-- Bind `archive' in `grid'.
+			-- If `a_selected_nodes' is Void, use values from `selected_archives', otherwise, use `a_selected_nodes'.
+		deferred
+		end
+
+	update_row (a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Update the row that contains `a_archive_node'.
+		require
+			a_archive_node_attached: a_archive_node /= Void
+		deferred
+		end
 
 	go_to_result_panel (a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Action to be performed to go to result panel to show detailed result stored in `a_archive_node'
@@ -754,22 +786,6 @@ feature{NONE} -- Implementation
 				a_archive_node.set_is_value_valid (False)
 				a_archive_node.set_detailed_result (Void)
 				input_domain_change_actions.call ([])
-			end
-		end
-
-	selected_archives_internal: like selected_archives
-
-	on_drop_on_item (a_item: EV_GRID_ITEM; a_pebble: ANY) is
-			-- Action to be performed when `a_pebble' is dropped on `a_item'.
-		local
-			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
-			l_archive_node: EB_METRIC_ARCHIVE_NODE
-		do
-			l_item ?= a_item
-			if l_item /= Void then
-				l_archive_node ?= a_item.row.data
-				check l_archive_node /= Void end
-				l_item.add_pebble (a_pebble, agent set_input_domain_back_to_archive_node (l_item, l_archive_node))
 			end
 		end
 
@@ -806,30 +822,7 @@ feature{NONE} -- Implementation
 			selection_change_actions.resume
 		end
 
-	sort_agent (a_column_list: LIST [INTEGER]; a_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_ARCHIVE_NODE]) is
-			-- Action to be performed when sort `a_column_list' using `a_comparator'.
-		require
-			a_column_list_attached: a_column_list /= Void
-		local
-			l_sorter: DS_QUICK_SORTER [EB_METRIC_ARCHIVE_NODE]
-		do
-			create l_sorter.make (a_comparator)
-			l_sorter.sort (archive)
-			bind_grid (selected_archives_internal)
-		end
-
-	bind_grid (a_selected_nodes: like selected_archives) is
-			-- Bind `archive' in `grid'.
-			-- If `a_selected_nodes' is Void, use values from `selected_archives', otherwise, use `a_selected_nodes'.
-		deferred
-		end
-
-	update_row (a_archive_node: EB_METRIC_ARCHIVE_NODE) is
-			-- Update the row that contains `a_archive_node'.
-		require
-			a_archive_node_attached: a_archive_node /= Void
-		deferred
-		end
+feature{NONE} -- Implementation/Actions
 
 	on_filter_change (a_item: EV_GRID_CHECKABLE_LABEL_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
 			-- Action to be performed when check status of `a_item' changes
@@ -838,6 +831,32 @@ feature{NONE} -- Implementation
 			a_archive_node_attached: a_archive_node /= Void
 		do
 			a_archive_node.set_is_result_filtered (a_item.is_checked)
+		end
+
+	on_go_to_result (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER; a_archive_node: EB_METRIC_ARCHIVE_NODE; a_agent: PROCEDURE [ANY, TUPLE [EB_METRIC_ARCHIVE_NODE]]) is
+			-- Action to be performed to go invoke `a_agent' to show detailed result stored in `a_archive_node'
+		require
+			a_archive_node_attached: a_archive_node /= Void
+			a_archive_node_has_detailed_result: a_archive_node.has_detailed_result
+			a_agent_attached: a_agent /= Void
+		do
+			if button = {EV_POINTER_CONSTANTS}.left then
+				a_agent.call ([a_archive_node])
+			end
+		end
+
+	on_drop_on_item (a_item: EV_GRID_ITEM; a_pebble: ANY) is
+			-- Action to be performed when `a_pebble' is dropped on `a_item'.
+		local
+			l_item: EB_METRIC_GRID_DOMAIN_ITEM [ANY]
+			l_archive_node: EB_METRIC_ARCHIVE_NODE
+		do
+			l_item ?= a_item
+			if l_item /= Void then
+				l_archive_node ?= a_item.row.data
+				check l_archive_node /= Void end
+				l_item.add_pebble (a_pebble, agent set_input_domain_back_to_archive_node (l_item, l_archive_node))
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -864,8 +883,47 @@ feature{NONE} -- Implementation
 			grid.set_separator_color ((create {EV_STOCK_COLORS}).grey)
 		end
 
+	set_value_criterion (a_grid_item: EB_METRIC_GRID_VALUE_CRITERION_ITEM; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Set `value_tester' from `a_grid_item' into `a_archive_node'.
+		require
+			a_grid_item_attached: a_grid_item /= Void
+			a_archive_node_attached: a_archive_node /= Void
+		local
+			l_value_tester: EB_METRIC_VALUE_TESTER
+		do
+			l_value_tester ?= a_grid_item.value.item (3)
+			if l_value_tester = Void then
+				create l_value_tester.make
+			end
+			a_archive_node.set_value_tester (l_value_tester)
+		end
+
 	archive_internal: like archive
 			-- Implementation of `archive'
+
+	resize_grid (a_item: EV_GRID_ITEM) is
+			-- Resize grid according to required width of `a_item'.
+		require
+			a_item_attached: a_item /= Void
+		do
+			if a_item.is_parented and then a_item.parent = grid then
+				a_item.column.resize_to_content
+			end
+		end
+
+	set_row_background_color (a_grid_row: EV_GRID_ROW; a_archive_node: EB_METRIC_ARCHIVE_NODE) is
+			-- Set background color for `a_grid_row' which contains `a_archive_node'.
+		do
+			if newly_changed_archives.has (a_archive_node) then
+				if a_archive_node.is_last_warning_check_successful then
+					a_grid_row.set_background_color (newly_changed_row_background_color)
+				else
+					a_grid_row.set_background_color (warning_row_background_color)
+				end
+			else
+				a_grid_row.set_background_color (normal_row_background_color)
+			end
+		end
 
 invariant
 	last_selected_nodes_attached: last_selected_nodes /= Void

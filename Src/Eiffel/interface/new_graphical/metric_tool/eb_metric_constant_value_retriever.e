@@ -38,6 +38,12 @@ feature -- Access
 			Result := value_internal
 		end
 
+	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE is
+			-- Retrieved value
+		do
+			Result := value_internal
+		end
+
 	visitable_name: STRING_GENERAL is
 			-- Name of current visitable item
 		do

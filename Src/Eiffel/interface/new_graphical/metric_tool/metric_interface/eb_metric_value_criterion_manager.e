@@ -27,7 +27,7 @@ feature -- Access
 			-- Grid item used to display properties
 		do
 			if property_item_internal = Void then
-				create property_item_internal.make (create {EB_METRIC_DOMAIN}.make)
+				create property_item_internal.make (create {EB_METRIC_DOMAIN}.make, False)
 				property_item_internal.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, property_item_internal))
 				property_item_internal.dialog_ok_actions.extend (agent grid.resize_column (2, 0))
 				property_item_internal.dialog_ok_actions.extend (agent change_actions.call ([]))

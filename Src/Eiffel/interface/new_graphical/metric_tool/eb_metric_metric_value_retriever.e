@@ -94,6 +94,25 @@ feature -- Access
 			end
 		end
 
+	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE is
+			-- Retrieved value.
+			-- This is used in metric archive warning checking.
+			-- `a_domain' is the input domain used to calculate metric archive node.
+		local
+			l_helper: EB_METRIC_COMPONENT_HELPER
+			l_metric: EB_METRIC
+		do
+			create l_helper
+			l_metric := metric_manager.metric_with_name (metric_name)
+			l_helper.prepare_for_calculation (l_metric)
+			if input_domain.has_delayed_input_domain_item then
+				Result := l_metric.value_item (a_domain)
+			else
+				Result := l_metric.value_item (input_domain)
+			end
+
+		end
+
 	visitable_name: STRING_GENERAL is
 			-- Name of current visitable item
 		do

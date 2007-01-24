@@ -31,6 +31,7 @@ feature{NONE} -- Initialization
 		require
 			a_factory_attached: a_factory /= Void
 		do
+			initialize
 			factory := a_factory
 			create {LINKED_LIST [EB_METRIC_CRITERION]} current_criterion.make
 			create current_tag.make
@@ -131,13 +132,19 @@ feature{NONE} -- Callbacks
 					process_metric_value
 					set_first_parsed_node (current_metric_value_retriever)
 				when t_description then
+					extend_location_section (Void)
 				when t_text then
+					extend_location_section (Void)
 				when t_path then
+					extend_location_section (Void)
 				else
 					set_first_parsed_node (Void)
+					extend_location_section (Void)
 				end
 				current_attributes.clear_all
 			end
+		ensure then
+			location_stored: (not has_error) implies (location_stack.count = old location_stack.count + 1)
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
@@ -147,7 +154,7 @@ feature{NONE} -- Callbacks
 				inspect
 					current_tag.item
 				when t_description then
-					process_description
+					process_description_finish
 				when t_domain_criterion then
 					remove_domain_receiver_from_stack
 				when t_caller_criterion then
@@ -157,23 +164,22 @@ feature{NONE} -- Callbacks
 				when t_value_criterion then
 					remove_receiver_from_stack (
 						tester_receiver_stack,
-						metric_names.err_value_tester_missing,
-						metric_names.criterion_location (current_basic_metric.name, last_criterion.name)
+						metric_names.err_value_tester_missing
 					)
 					remove_domain_receiver_from_stack
 				when t_text then
-					process_text
+					process_text_finish
 				when t_path then
-					process_path
+					process_path_finish
 				when t_criterion then
 					check current_criterion.count = 1 end
 					current_basic_metric.set_criteria (current_criterion.first)
 				when t_basic_metric then
-					process_metric
+					process_metric_finish
 				when t_linear_metric then
-					process_linear_metric_end
+					process_metric_finish
 				when t_ratio_metric then
-					process_metric
+					process_metric_finish
 				when t_and_criterion then
 					if not current_criterion_stack.is_empty then
 						current_criterion_stack.remove
@@ -189,8 +195,7 @@ feature{NONE} -- Callbacks
 					current_tester_item := Void
 					remove_receiver_from_stack (
 						value_retriever_stack,
-						metric_names.err_value_retriever_missing,
-						metric_names.criterion_location (current_basic_metric.name, last_criterion.name)
+						metric_names.err_value_retriever_missing
 					)
 				when t_metric_value then
 					process_value_retriever_finish
@@ -203,7 +208,11 @@ feature{NONE} -- Callbacks
 				end
 				create current_content.make_empty
 				current_tag.remove
+				element_stack.remove
+				remove_location_section
 			end
+		ensure then
+			location_removed: (not has_error) implies location_stack.count = (old location_stack.count - 1)
 		end
 
 	on_content (a_content: STRING) is
@@ -225,7 +234,7 @@ feature{NONE} -- Callbacks
 
 feature{NONE} -- Process
 
-	process_metric is
+	process_metric_finish is
 			-- Process "metric" definition list node.
 		local
 			l_metrics: like metrics
@@ -235,7 +244,7 @@ feature{NONE} -- Process
 				l_metrics := metrics
 				l_cur_metric := current_metric
 				if l_metrics.has (l_cur_metric.name) then
-					set_parse_error_message (metric_names.err_duplicated_metric_name (l_cur_metric.name), Void)
+					create_last_error (metric_names.err_duplicated_metric_name (l_cur_metric.name))
 				else
 					l_metrics.put (l_cur_metric, l_cur_metric.name)
 				end
@@ -297,31 +306,19 @@ feature{NONE} -- Process
 				l_den_coefficient_str := current_attributes.item (at_denominator_coefficient)
 				l_den_uuid_str := current_attributes.item (at_denominator_uuid)
 				if l_num = Void then
-					set_parse_error_message (
-						metric_names.err_numerator_metric_missing,
-						metric_names.ratio_metric_location_section (l_id.name)
-					)
+					create_last_error (metric_names.err_numerator_metric_missing)
 				end
 				if not has_error and then l_den = Void then
-					set_parse_error_message (
-						metric_names.err_denominator_metric_missing,
-						metric_names.ratio_metric_location_section (l_id.name)
-					)
+					create_last_error (metric_names.err_denominator_metric_missing)
 				end
 				if not has_error then
-					check_uuid_validity (
-						l_num_uuid_str,
-						metric_names.numerator_location (l_id.name, l_num)
-					)
+					check_uuid_validity (l_num_uuid_str)
 					if not has_error then
 						l_num_uuid := last_valid_uuid
 					end
 				end
 				if not has_error then
-					check_uuid_validity (
-						l_den_uuid_str,
-						metric_names.denominator_location (l_id.name, l_den)
-					)
+					check_uuid_validity (l_den_uuid_str)
 					if not has_error then
 						l_den_uuid := last_valid_uuid
 					end
@@ -329,15 +326,13 @@ feature{NONE} -- Process
 				if not has_error then
 					l_num_coefficient := coefficient_for_ratio_metric (
 						l_num_coefficient_str,
-						agent metric_names.err_numerator_coefficient_invalid,
-						metric_names.numerator_location (l_id.name, l_num)
+						agent metric_names.err_numerator_coefficient_invalid
 					)
 				end
 				if not has_error then
 					l_den_coefficient := coefficient_for_ratio_metric (
 						l_den_coefficient_str,
-						agent metric_names.err_denominator_coefficient_invalid,
-						metric_names.denominator_location (l_id.name, l_den)
+						agent metric_names.err_denominator_coefficient_invalid
 					)
 				end
 				if not has_error then
@@ -351,14 +346,6 @@ feature{NONE} -- Process
 					)
 					current_metric := current_ratio_metric
 				end
-			end
-		end
-
-	process_linear_metric_end is
-			-- Process when linear metric node ends
-		do
-			if not has_error then
-				process_metric
 			end
 		end
 
@@ -377,22 +364,18 @@ feature{NONE} -- Process
 				l_metric := current_attributes.item (at_name)
 				l_uuid_str := current_attributes.item (at_uuid)
 				if l_metric = Void then
-					set_parse_error_message (
-						metric_names.err_variable_metric_name_missing,
-						metric_names.linear_metric_location_section (current_linear_metric.name)
-					)
+					create_last_error (metric_names.err_variable_metric_name_missing)
+					extend_location_section (Void)
+				else
+					extend_location_section (l_metric)
 				end
 				if not has_error then
 					if l_coefficient = Void then
-						set_parse_error_message (
-							metric_names.err_coefficient_missing,
-							metric_names.variable_metric_location (current_linear_metric.name, l_metric)
-						)
+						create_last_error (metric_names.err_coefficient_missing)
 					else
 						test_non_void_double_attribute (
 							l_coefficient,
-							agent metric_names.err_coefficient_invalid,
-							metric_names.variable_metric_location (current_linear_metric.name, l_metric)
+							agent metric_names.err_coefficient_invalid
 						)
 						if not has_error then
 							l_coefficient_value := last_tested_double
@@ -407,10 +390,7 @@ feature{NONE} -- Process
 					current_linear_metric.variable_metric.extend (l_metric)
 				end
 				if not has_error then
-					check_uuid_validity (
-						l_uuid_str,
-						metric_names.variable_metric_location (current_linear_metric.name, l_metric)
-					)
+					check_uuid_validity (l_uuid_str)
 					if not has_error then
 						current_linear_metric.variable_metric_uuid.extend (last_valid_uuid)
 					end
@@ -422,11 +402,9 @@ feature{NONE} -- Process
 			-- Process "criterion" definition list node.		
 		do
 			if not has_error then
+				extend_location_section (Void)
 				if not current_criterion.is_empty then
-					set_parse_error_message (
-						metric_names.err_too_many_criterion_section,
-						metric_names.basic_metric_location_section (current_metric.name)
-					)
+					create_last_error (metric_names.err_too_many_criterion_section)
 				end
 			end
 		end
@@ -485,8 +463,7 @@ feature{NONE} -- Process
 				l_case_sensitive := current_attributes.item (at_case_sensitive)
 				l_boolean_set := test_ommitable_boolean_attribute (
 					l_case_sensitive,
-					agent metric_names.err_case_sensitive_attr_invalid,
-					metric_names.criterion_location (current_basic_metric.name, l_id.name)
+					agent metric_names.err_case_sensitive_attr_invalid
 				)
 				if not has_error and then l_boolean_set then
 					l_case_sensitive_value := last_tested_boolean
@@ -498,8 +475,7 @@ feature{NONE} -- Process
 					l_regular_expression := current_attributes.item (at_regular_expression)
 					l_boolean_set := test_ommitable_boolean_attribute (
 						l_regular_expression,
-						agent metric_names.err_regular_expression_attr_invalid,
-						metric_names.criterion_location (current_basic_metric.name, l_id.name)
+						agent metric_names.err_regular_expression_attr_invalid
 					)
 					if not has_error and then l_boolean_set then
 						l_regular_expression_value := last_tested_boolean
@@ -555,8 +531,7 @@ feature{NONE} -- Process
 				l_only_current_vertion := current_attributes.item (at_only_current_version)
 				l_boolean_set := test_ommitable_boolean_attribute (
 					l_only_current_vertion,
-					agent metric_names.err_only_current_version_attr_invalid,
-					metric_names.criterion_location (current_basic_metric.name, l_id.name)
+					agent metric_names.err_only_current_version_attr_invalid
 				)
 				if not has_error then
 					if l_boolean_set then
@@ -600,8 +575,7 @@ feature{NONE} -- Process
 				l_normal_value := True
 				l_boolean_set := test_ommitable_boolean_attribute (
 					l_normal,
-					agent metric_names.err_normal_referenced_class_attr_invalid,
-					metric_names.criterion_location (current_basic_metric.name, l_id.name)
+					agent metric_names.err_normal_referenced_class_attr_invalid
 				)
 				if not has_error and then l_boolean_set then
 					l_normal_value := last_tested_boolean
@@ -610,8 +584,7 @@ feature{NONE} -- Process
 					l_syntactical_value := False
 					l_boolean_set := test_ommitable_boolean_attribute (
 						l_syntactical,
-						agent metric_names.err_only_syntactically_referenced_class_attr_invalid,
-						metric_names.criterion_location (current_basic_metric.name, l_id.name)
+						agent metric_names.err_only_syntactically_referenced_class_attr_invalid
 					)
 					if not has_error and then l_boolean_set then
 						l_syntactical_value := last_tested_boolean
@@ -621,8 +594,7 @@ feature{NONE} -- Process
 					l_indirect_value := False
 					l_boolean_set := test_ommitable_boolean_attribute (
 						l_indirect,
-						agent metric_names.err_indirect_referenced_class_attr_invalid,
-						metric_names.criterion_location (current_basic_metric.name, l_id.name)
+						agent metric_names.err_indirect_referenced_class_attr_invalid
 					)
 					if not has_error and then l_boolean_set then
 						l_indirect_value := last_tested_boolean
@@ -656,17 +628,13 @@ feature{NONE} -- Process
 			if not has_error then
 				l_metric_name := current_attributes.item (at_metric_name)
 				if l_metric_name = Void then
-					set_parse_error_message (
-						metric_names.err_metric_name_missing,
-						metric_names.criterion_location (current_basic_metric.name, l_id.name)
-					)
+					create_last_error (metric_names.err_metric_name_missing)
 				end
 				if not has_error then
 					l_use_external_delayed := current_attributes.item (at_use_external_delayed)
 					l_boolean_set := test_ommitable_boolean_attribute (
 						l_use_external_delayed,
-						agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed),
-						metric_names.criterion_location (current_basic_metric.name, l_id.name)
+						agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed)
 					)
 				end
 				if not has_error then
@@ -678,7 +646,6 @@ feature{NONE} -- Process
 					setup_criterion (current_value_criterion, l_id.negation)
 					current_value_criterion.set_metric_name (l_metric_name)
 					register_criterion (current_value_criterion)
-					create current_tester.make
 					domain_receiver_stack.extend ([agent current_value_criterion.set_domain, False])
 					tester_receiver_stack.extend ([agent current_value_criterion.set_value_tester, False])
 				end
@@ -719,325 +686,199 @@ feature{NONE} -- Process
 			end
 		end
 
-	process_text is
+	process_text_finish is
 			-- Process "text" definition list node.
 		do
 			if not has_error then
 				if current_tag.item /= t_text then
-					set_parse_error_message (metric_names.err_invalid_tag, Void)
+					create_last_error (metric_names.err_invalid_tag)
 				else
 					current_text_criterion.set_text (current_content)
 				end
 			end
 		end
 
-	process_path is
+	process_path_finish is
 			-- Process "path" definition list node.		
 		do
 			if not has_error then
 				if current_tag.item /= t_path then
-					set_parse_error_message (metric_names.err_invalid_tag, Void)
+					create_last_error (metric_names.err_invalid_tag)
 				else
 					current_path_criterion.set_path (current_content)
 				end
 			end
 		end
 
-	process_domain is
-			-- Process "domain" definition list node.		
-		require
-			current_basic_metric_attached: current_basic_metric /= Void
-			last_criterion_attached: last_criterion /= Void
-		local
-			l_domain_receiver: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]
-		do
-			if not has_error then
-				check not domain_receiver_stack.is_empty end
-				l_domain_receiver := domain_receiver_stack.item
-				if l_domain_receiver.is_called then
-					set_parse_error_message (
-						metric_names.err_too_many_domain,
-						metric_names.criterion_location (current_basic_metric.name, last_criterion.name)
-					)
-				end
-				create current_domain.make
-			end
-		end
-
-	process_domain_item is
-			-- Process "domain_item" definition list node.		
-		local
-			l_id: STRING
-			l_type: STRING
-			l_library_target_uuid: STRING
-			l_domain_item: EB_METRIC_DOMAIN_ITEM
-		do
-			if not has_error then
-				l_id := current_attributes.item (at_id)
-				l_type := current_attributes.item (at_type)
-				l_library_target_uuid := current_attributes.item (at_library_target_uuid)
-				if l_id = Void then
-					check
-						current_metric /= Void
-						last_criterion /= Void
-					end
-					set_parse_error_message (
-						metric_names.err_domain_item_id_is_missing,
-						metric_names.criterion_location (current_metric.name, last_criterion.name)
-					)
-				end
-				if not has_error then
-					if l_type = Void then
-						set_parse_error_message (
-							metric_names.err_domain_item_type_is_missing,
-							metric_names.criterion_location (current_metric.name, last_criterion.name)
-						)
-					else
-						l_type.to_lower
-						if not is_domain_item_type_valid (l_type) then
-							set_parse_error_message (
-								metric_names.err_domain_item_type_invalid (l_type),
-								metric_names.criterion_location (current_metric.name, last_criterion.name)
-							)
-						else
-							if l_library_target_uuid /= Void then
-								if not shared_uuid.is_valid_uuid (l_library_target_uuid) then
-									set_parse_error_message (
-										metric_names.err_library_target_uuid_invalid (l_library_target_uuid),
-										metric_names.criterion_location (current_metric.name, last_criterion.name)
-									)
-								end
-							end
-							if not has_error then
-								l_domain_item := domain_item_type_table.item (l_type).item ([l_id])
-								if l_library_target_uuid /= Void then
-									l_domain_item.set_library_target_uuid (l_library_target_uuid)
-								end
-								current_domain.extend (l_domain_item)
-								current_domain_item := l_domain_item
-							end
-						end
-					end
-				end
-			end
-		end
-
-	process_description is
+	process_description_finish is
 			-- Process "description" definition list node.		
 		do
 			if not has_error then
 				if current_metric /= Void then
 					current_metric.set_description (current_content.twin)
 				else
-					set_parse_error_message (metric_names.err_invalid_description_tag, Void)
+					create_last_error (metric_names.err_invalid_description_tag)
 				end
 			end
 		end
 
-	process_tester is
-			-- Process tester.
-		require
-			current_basic_metric_attached: current_basic_metric /= Void
-			current_tester_attached: current_tester /= Void
-			current_value_criterion_attached: current_value_criterion /= Void
-		local
-			l_relation_str: STRING
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
-		do
-			if not has_error then
-				check not tester_receiver_stack.is_empty end
-				l_item := tester_receiver_stack.item
-				if l_item.is_called then
-					set_parse_error_message (
-						metric_names.err_too_many_tester,
-						metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-					)
-				else
-					l_relation_str := current_attributes.item (at_relation)
-					if l_relation_str = Void then
-						set_parse_error_message (
-							metric_names.err_tester_relation_missing,
-							metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-						)
-					else
-						if l_relation_str.is_case_insensitive_equal (query_language_names.ql_cri_and) then
-							current_tester.enable_anded
-						elseif l_relation_str.is_case_insensitive_equal (query_language_names.ql_cri_or) then
-							current_tester.enable_ored
-						else
-							set_parse_error_message (
-								metric_names.err_tester_relation_invalid (l_relation_str),
-								metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-							)
-						end
-					end
-				end
-			end
-		end
+--	process_tester is
+--			-- Process tester.
+--		local
+--			l_relation_str: STRING
+--			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
+--		do
+--			if not has_error then
+--				extend_location_section (Void)
+--				check not tester_receiver_stack.is_empty end
+--				l_item := tester_receiver_stack.item
+--				if l_item.is_called then
+--					create_last_error (metric_names.err_too_many_tester)
+--				else
+--					l_relation_str := current_attributes.item (at_relation)
+--					if l_relation_str = Void then
+--						create_last_error (metric_names.err_tester_relation_missing)
+--					else
+--						if l_relation_str.is_case_insensitive_equal (query_language_names.ql_cri_and) then
+--							current_tester.enable_anded
+--						elseif l_relation_str.is_case_insensitive_equal (query_language_names.ql_cri_or) then
+--							current_tester.enable_ored
+--						else
+--							create_last_error (metric_names.err_tester_relation_invalid (l_relation_str))
+--						end
+--					end
+--				end
+--			end
+--		end
 
-	process_tester_item is
-			-- Process tester item.
-		require
-			current_basic_metric_attached: current_basic_metric /= Void
-			current_tester_attached: current_tester /= Void
-			current_value_criterion_attached: current_value_criterion /= Void
-		local
-			l_operator_name: STRING
-			l_operator_name_set: like operator_name_set
-			l_operator_id: INTEGER
-		do
-			if not has_error then
-				l_operator_name := current_attributes.item (at_name)
-				if l_operator_name = Void then
-					set_parse_error_message (
-						metric_names.err_operator_missing,
-						metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-					)
-				else
-					l_operator_name_set := operator_name_set
-					if not l_operator_name_set.has (l_operator_name) then
-						set_parse_error_message (
-							metric_names.err_operator_invalid (l_operator_name),
-							metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-						)
-					else
-						l_operator_id := operator_name_table.item (l_operator_name)
-					end
-					if not has_error then
-						current_tester_item := [Void, l_operator_id]
-						value_retriever_stack.extend ([agent set_current_tester_item, False])
-					end
-				end
-			end
-		end
+--	process_tester_item is
+--			-- Process tester item.
+--		require
+--			current_tester_attached: current_tester /= Void
+--		local
+--			l_operator_name: STRING
+--			l_operator_name_set: like operator_name_set
+--			l_operator_id: INTEGER
+--		do
+--			if not has_error then
+--				l_operator_name := current_attributes.item (at_name)
+--				if l_operator_name = Void then
+--					create_last_error (metric_names.err_operator_missing)
+--					extend_location_section (Void)
+--				else
+--					extend_location_section (l_operator_name)
+--					l_operator_name_set := operator_name_set
+--					if not l_operator_name_set.has (l_operator_name) then
+--						create_last_error (metric_names.err_operator_invalid (l_operator_name))
+--					else
+--						l_operator_id := operator_name_table.item (l_operator_name)
+--					end
+--					if not has_error then
+--						current_tester_item := [Void, l_operator_id]
+--						value_retriever_stack.extend ([agent set_current_tester_item, False])
+--					end
+--				end
+--			end
+--		end
 
-	process_constant_value is
-			-- Process "constant_value" node.
-		require
-			current_basic_metric_attached: current_basic_metric /= Void
-			current_tester_attached: current_tester /= Void
-			current_value_criterion_attached: current_value_criterion /= Void
-			current_tester_item_attached: current_tester_item /= Void
-		local
-			l_base_value: STRING
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
-		do
-			if not has_error then
-				check not value_retriever_stack.is_empty end
-				l_item := value_retriever_stack.item
-				if l_item.is_called then
-						-- We already processed a "constant_value" node or a "metric_value" node,
-						-- only one should presents in a "tester_item" node, so report an error here.
-					set_parse_error_message (
-						metric_names.err_too_many_value_retriever,
-						metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-					)
-				else
-					l_base_value := current_attributes.item (at_value)
-					if l_base_value /= Void then
-						test_non_void_double_attribute (
-							l_base_value,
-							agent metric_names.err_base_value_invalid,
-							metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-						)
-					else
-						set_parse_error_message (
-							metric_names.err_base_value_missing,
-							metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-						)
-					end
-					if not has_error then
-						create current_constant_value_retriever.make (last_tested_double)
-						current_value_retriever := current_constant_value_retriever
-						current_tester_item.put (current_constant_value_retriever, 1)
-					end
-				end
-			end
-		end
+--	process_constant_value is
+--			-- Process "constant_value" node.
+--		local
+--			l_base_value: STRING
+--			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
+--		do
+--			if not has_error then
+--				extend_location_section (Void)
+--				check not value_retriever_stack.is_empty end
+--				l_item := value_retriever_stack.item
+--				if l_item.is_called then
+--						-- We already processed a "constant_value" node or a "metric_value" node,
+--						-- only one should presents in a "tester_item" node, so report an error here.
+--					create_last_error (metric_names.err_too_many_value_retriever)
+--				else
+--					l_base_value := current_attributes.item (at_value)
+--					if l_base_value /= Void then
+--						test_non_void_double_attribute (
+--							l_base_value,
+--							agent metric_names.err_base_value_invalid
+--						)
+--					else
+--						create_last_error (metric_names.err_base_value_missing)
+--					end
+--					if not has_error then
+--						create current_constant_value_retriever.make (last_tested_double)
+--						current_value_retriever := current_constant_value_retriever
+--						current_tester_item.put (current_constant_value_retriever, 1)
+--					end
+--				end
+--			end
+--		end
 
-	process_metric_value is
-			-- Process "metric_value" node.
-		local
-			l_metric_name: STRING
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
-			l_use_external: STRING
-			l_boolean_set: BOOLEAN
-		do
-			if not has_error then
-				check not value_retriever_stack.is_empty end
-				l_item := value_retriever_stack.item
-				if l_item.is_called then
-						-- We already processed a "constant_value" node or a "metric_value" node,
-						-- only one should presents in a "tester_item" node, so report an error here.
-					set_parse_error_message (
-						metric_names.err_too_many_value_retriever,
-						metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-					)
-				else
-					l_metric_name := current_attributes.item (at_metric_name)
-					if l_metric_name = Void then
-						set_parse_error_message (
-							metric_names.err_metric_name_missing,
-							metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-						)
-					end
-					if not has_error then
-						l_use_external := current_attributes.item (at_use_external_delayed)
-						l_boolean_set := test_ommitable_boolean_attribute (
-							l_use_external,
-							agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed),
-							metric_names.criterion_location (current_basic_metric.name, current_value_criterion.name)
-						)
-					end
-					if not has_error then
-						create current_metric_value_retriever
-						current_metric_value_retriever.set_metric_name (l_metric_name)
-						if l_boolean_set then
-							current_metric_value_retriever.set_is_external_delayed_domain_used (last_tested_boolean)
-						end
-						current_value_retriever := current_metric_value_retriever
-						current_tester_item.put (current_metric_value_retriever, 1)
-						domain_receiver_stack.extend ([agent current_metric_value_retriever.set_input_domain, False])
-					end
-				end
-			end
-		end
+--	process_metric_value is
+--			-- Process "metric_value" node.
+--		local
+--			l_metric_name: STRING
+--			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
+--			l_use_external: STRING
+--			l_boolean_set: BOOLEAN
+--		do
+--			if not has_error then
+--				extend_location_section (Void)
+--				check not value_retriever_stack.is_empty end
+--				l_item := value_retriever_stack.item
+--				if l_item.is_called then
+--						-- We already processed a "constant_value" node or a "metric_value" node,
+--						-- only one should presents in a "tester_item" node, so report an error here.
+--					create_last_error (metric_names.err_too_many_value_retriever)
+--				else
+--					l_metric_name := current_attributes.item (at_metric_name)
+--					if l_metric_name = Void then
+--						create_last_error (metric_names.err_metric_name_missing)
+--					end
+--					if not has_error then
+--						l_use_external := current_attributes.item (at_use_external_delayed)
+--						l_boolean_set := test_ommitable_boolean_attribute (
+--							l_use_external,
+--							agent metric_names.err_use_external_delayed_invalid (?, n_use_external_delayed)
+--						)
+--					end
+--					if not has_error then
+--						create current_metric_value_retriever
+--						current_metric_value_retriever.set_metric_name (l_metric_name)
+--						if l_boolean_set then
+--							current_metric_value_retriever.set_is_external_delayed_domain_used (last_tested_boolean)
+--						end
+--						current_value_retriever := current_metric_value_retriever
+--						current_tester_item.put (current_metric_value_retriever, 1)
+--						domain_receiver_stack.extend ([agent current_metric_value_retriever.set_input_domain, False])
+--					end
+--				end
+--			end
+--		end
 
-	process_domain_finish is
-			-- Process when a domain node has been parsed.				
-		local
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]
-		do
-			check not domain_receiver_stack.is_empty end
-			l_item := domain_receiver_stack.item
-			check l_item.setter /= Void end
-			l_item.setter.call ([current_domain])
-			l_item.is_called := True
-		end
+--	process_tester_finish is
+--			-- Process when a tester node has been parsed.
+--		local
+--			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
+--		do
+--			check not tester_receiver_stack.is_empty end
+--			l_item := tester_receiver_stack.item
+--			check l_item.setter /= Void end
+--			l_item.setter.call ([current_tester])
+--			l_item.is_called := True
+--		end
 
-	process_tester_finish is
-			-- Process when a tester node has been parsed.
-		local
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]
-		do
-			check not tester_receiver_stack.is_empty end
-			l_item := tester_receiver_stack.item
-			check l_item.setter /= Void end
-			l_item.setter.call ([current_tester])
-			l_item.is_called := True
-		end
-
-	process_value_retriever_finish is
-			-- Process when a value retriever has been parsed.
-		local
-			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
-		do
-			check not value_retriever_stack.is_empty end
-			l_item := value_retriever_stack.item
-			check l_item.setter /= Void end
-			l_item.setter.call ([current_value_retriever])
-			l_item.is_called := True
-		end
+--	process_value_retriever_finish is
+--			-- Process when a value retriever has been parsed.
+--		local
+--			l_item: TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]
+--		do
+--			check not value_retriever_stack.is_empty end
+--			l_item := value_retriever_stack.item
+--			check l_item.setter /= Void end
+--			l_item.setter.call ([current_value_retriever])
+--			l_item.is_called := True
+--		end
 
 feature{NONE} -- Implementation
 
@@ -1080,47 +921,21 @@ feature{NONE} -- Implementation
 	current_criterion: LIST [EB_METRIC_CRITERION]
 			-- Current criterion list
 
-	current_domain: EB_METRIC_DOMAIN
-			-- Current domain
-
-	current_tester: EB_METRIC_VALUE_TESTER
-			-- Current value tester
-
 	current_criterion_stack: LINKED_STACK [EB_METRIC_NARY_CRITERION]
 			-- Current stack for "and" and "or" criterion
-
-	current_value_retriever: EB_METRIC_VALUE_RETRIEVER
-			-- Current value retriever
-
-	current_metric_value_retriever: EB_METRIC_METRIC_VALUE_RETRIEVER
-			-- Current metric value retriever
-
-	current_constant_value_retriever: EB_METRIC_CONSTANT_VALUE_RETRIEVER
-			-- Current constant value retriever
-
-	current_tester_item: TUPLE [value_retriever: EB_METRIC_VALUE_RETRIEVER; operator: INTEGER]
-			-- Current value tester item
-
-	current_domain_item: EB_METRIC_DOMAIN_ITEM
-			-- Current domain item
 
 	last_criterion: EB_METRIC_CRITERION
 			-- Last processed criterion
 
-	domain_receiver_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_DOMAIN]]; is_called: BOOLEAN]]
-			-- Domain receiver stack
-			-- `setter' is the setter procedure to set last parsed domain,
-			-- `is_called' is a flag to indicate if a domain exists. It's used to detect if a needed domain is missing.
+--	tester_receiver_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]]
+--			-- Tester receiver stack
+--			-- `setter' is the setter procedure to set last parsed tester.
+--			-- `is_called' is a flag to indicate if a tester exists. It's used to detect if a needed tester is missing.
 
-	tester_receiver_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_TESTER]]; is_called: BOOLEAN]]
-			-- Tester receiver stack
-			-- `setter' is the setter procedure to set last parsed tester.
-			-- `is_called' is a flag to indicate if a tester exists. It's used to detect if a needed tester is missing.
-
-	value_retriever_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]]
-			-- Value retriever stack
-			-- `setter' is the setter procedure to set last parsed value retriever.
-			-- `is_called' is a flag to indicate if a value retirever exists. It's used to detect if a needed value retriever is missing.	
+--	value_retriever_stack: LINKED_STACK [TUPLE [setter: PROCEDURE [ANY, TUPLE [EB_METRIC_VALUE_RETRIEVER]]; is_called: BOOLEAN]]
+--			-- Value retriever stack
+--			-- `setter' is the setter procedure to set last parsed value retriever.
+--			-- `is_called' is a flag to indicate if a value retirever exists. It's used to detect if a needed value retriever is missing.	
 
 feature{NONE} -- Implementation/XML structure
 
@@ -1542,29 +1357,22 @@ feature{NONE} -- Implementation
 			l_uuid_str := current_attributes.item (at_uuid)
 			if not has_error then
 				if l_name = Void then
-					set_parse_error_message (metric_names.err_metric_name_missing_in_metric_definition, Void)
+					extend_location_section (Void)
+					create_last_error (metric_names.err_metric_name_missing_in_metric_definition)
 				else
+					extend_location_section (l_name)
 					check_metric_name (l_name)
 				end
 			end
 			if not has_error then
 				if l_unit = Void then
-					set_parse_error_message (
-						metric_names.err_unit_name_missing,
-						metric_names.metric_location_section (l_name, metric_type_name (a_metric_type_id))
-					)
+					create_last_error (metric_names.err_unit_name_missing)
 				elseif not is_unit_valid (l_unit.as_lower) then
-					set_parse_error_message (
-						metric_names.err_unit_name_invalid (l_unit),
-						metric_names.metric_location_section (l_name, metric_type_name (a_metric_type_id))
-					)
+					create_last_error (metric_names.err_unit_name_invalid (l_unit))
 				end
 			end
 			if not has_error then
-				check_uuid_validity (
-					l_uuid_str,
-					metric_names.metric_location_section (l_name, metric_type_name (a_metric_type_id))
-				)
+				check_uuid_validity (l_uuid_str)
 				if not has_error then
 					Result := [l_name, l_unit, last_valid_uuid]
 				end
@@ -1587,32 +1395,22 @@ feature{NONE} -- Implementation
 			l_scope := current_attributes.item (at_unit)
 			l_negation := current_attributes.item (at_negation)
 			if l_name = Void then
-				set_parse_error_message (
-					metric_names.err_criterion_name_missing,
-					metric_names.basic_metric_location_section (current_metric.name)
-				)
+				extend_location_section (Void)
+				create_last_error (metric_names.err_criterion_name_missing)
 			end
 			if not has_error then
+				extend_location_section (l_name)
 				if l_scope = Void then
-					set_parse_error_message (
-						metric_names.err_unit_name_missing,
-						metric_names.criterion_location (current_metric.name, l_name)
-					)
+					create_last_error (metric_names.err_unit_name_missing)
 				else
 					l_ql_scope := scope_table.item (l_scope)
 					if l_ql_scope = Void then
-						set_parse_error_message (
-							metric_names.err_unit_name_invalid (l_scope),
-							metric_names.criterion_location (current_metric.name, l_name)
-						)
+						create_last_error (metric_names.err_unit_name_invalid (l_scope))
 					end
 				end
 				if not has_error then
 					if current_metric.unit.scope /= l_ql_scope then
-						set_parse_error_message (
-							metric_names.err_basic_metric_unit_not_correct (l_ql_scope.name, current_metric.unit.name),
-							metric_names.criterion_location (current_metric.name, l_name)
-						)
+						create_last_error (metric_names.err_basic_metric_unit_not_correct (l_ql_scope.name, current_metric.unit.name))
 					end
 				end
 			end
@@ -1620,8 +1418,7 @@ feature{NONE} -- Implementation
 				if l_negation /= Void then
 					test_non_void_boolean_attribute (
 						l_negation,
-						metric_names.err_negation_attr_invalid (l_negation),
-						metric_names.criterion_location (current_metric.name, l_name)
+						metric_names.err_negation_attr_invalid (l_negation)
 					)
 					if not has_error then
 						l_negation_used := last_tested_boolean
@@ -1654,10 +1451,7 @@ feature{NONE} -- Implementation
 				l_parent.operands.extend (a_criterion)
 			else
 				if not current_criterion.is_empty then
-					set_parse_error_message (
-						metric_names.err_too_many_criteria,
-						metric_names.basic_metric_location_section (current_metric.name)
-					)
+					create_last_error (metric_names.err_too_many_criteria)
 				else
 					current_criterion.extend (a_criterion)
 				end
@@ -1672,141 +1466,28 @@ feature{NONE} -- Implementation
 			-- Check if `a_name' is a valid metric name.
 		do
 			if a_name = Void or else a_name.is_empty then
-				set_parse_error_message (metric_names.err_metric_name_empty, Void)
+				create_last_error (metric_names.err_metric_name_empty)
 			else
 				if not metric_manager.is_metric_name_valid (a_name) then
-					set_parse_error_message (metric_names.err_metric_name_invalid (a_name), Void)
+					create_last_error (metric_names.err_metric_name_invalid (a_name))
 				end
 			end
 		end
 
-	test_ommitable_boolean_attribute (a_boolean_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]; a_location: STRING_GENERAL): BOOLEAN is
-			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean' and return True
-			-- If `a_boolean_str' represents an invalid boolean value, fire an error with error message returned by `a_error_message' and `a_locatioin' and return True.
-			-- If `a_boolean_str' is Void, do not set `last_tested_boolean' and return False.			
-		require
-			a_error_message_agent_attached: a_error_message_agent /= Void
-			a_location_attached: a_location /= Void
-		do
-			if a_boolean_str /= Void then
-				test_non_void_boolean_attribute (a_boolean_str, a_error_message_agent.item ([a_boolean_str]), a_location)
-				Result := True
-			end
-		end
-
-	test_boolean_attribute (a_boolean_str: STRING; a_missing_error_message: STRING_GENERAL; a_invalid_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]; a_location: STRING_GENERAL) is
-			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean'.
-			-- Otherwise if `a_boolean_str' is Void, fire an error with error message returned by `a_missing_error_message_agent' and location information given by `a_localtion',
-			-- if `a_boolean_str' is non-Void but is not a valid boolean, fire an error with error message given by `a_invalid_error_message' and location information given by `a_localtion'.
-		require
-			a_missing_error_message_attached: a_missing_error_message /= Void
-			a_error_message_agent_attached: a_invalid_error_message_agent /= Void
-			a_location_attached: a_location /= Void
-		do
-			if a_boolean_str = Void then
-				set_parse_error_message (a_missing_error_message, a_location)
-			else
-				test_non_void_boolean_attribute (a_boolean_str, a_invalid_error_message_agent.item ([a_boolean_str]), a_location)
-			end
-		end
-
-	test_non_void_boolean_attribute (a_boolean_str: STRING; a_error_message: STRING_GENERAL; a_location: STRING_GENERAL) is
-			-- Test if `a_boolean_str' represents a valid boolean value. If so, store the boolean value in `last_tested_boolean'.
-			-- Otherwise fire an error with error message given by `a_error_message' and location information given by `a_localtion'.
-		require
-			a_boolean_str_attached: a_boolean_str /= Void
-			a_error_message_attached: a_error_message /= Void
-			a_location_attached: a_location /= Void
-		do
-			if a_boolean_str.is_boolean then
-				last_tested_boolean := a_boolean_str.to_boolean
-			else
-				set_parse_error_message (a_error_message, a_location)
-			end
-		ensure
-			last_tested_boolean_set: a_boolean_str.is_boolean implies last_tested_boolean = a_boolean_str.to_boolean
-		end
-
-	last_tested_boolean: BOOLEAN
-			-- Last boolean value successfully tested by `test_non_void_boolean_attribute'
-
-	test_non_void_double_attribute (a_double_str: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]; a_location: STRING_GENERAL) is
-			-- Test if `a_double_str' represents a valid double value. If so, store the boolean value in `last_tested_double'.
-			-- Otherwise fire an error with error message given by `a_error_message_agent' and location information given by `a_localtion'.
-		require
-			a_double_str_attached: a_double_str /= Void
-			a_error_message_agent_attached: a_error_message_agent /= Void
-			a_location_attached: a_location /= Void
-		do
-			if a_double_str.is_double then
-				last_tested_double := a_double_str.to_double
-			else
-				set_parse_error_message (a_error_message_agent.item ([a_double_str]), a_location)
-			end
-		ensure
-			last_tested_double_set: a_double_str.is_double implies last_tested_double = a_double_str.to_double
-		end
-
-	last_tested_double: DOUBLE
-			-- Last double value successfully tested by `test_non_void_double_attribute'
-
-	coefficient_for_ratio_metric (a_value: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]; a_location: STRING_GENERAL): DOUBLE is
+	coefficient_for_ratio_metric (a_value: STRING; a_error_message_agent: FUNCTION [ANY, TUPLE [STRING_GENERAL], STRING_GENERAL]): DOUBLE is
 			-- Coefficient from `a_value' for ratio metric.
-			-- If `a_value' doesn't represent a valid double, file an error with error message retrieved by `a_error_message_agent'
-			-- and location information given `a_location'.
+			-- If `a_value' doesn't represent a valid double, file an error with error message retrieved by `a_error_message_agent'.
 		require
 			a_error_message_agent_attached: a_error_message_agent /= Void
-			a_location_attached: a_location /= Void
 		do
 			if a_value /= Void then
-				test_non_void_double_attribute (a_value, a_error_message_agent, a_location)
+				test_non_void_double_attribute (a_value, a_error_message_agent)
 				if not has_error then
 					Result := last_tested_double
 				end
 			else
 				Result := 1
 			end
-		end
-
-	remove_receiver_from_stack (a_stack: STACK [TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]];  a_error_message: STRING_GENERAL; a_location: STRING_GENERAL) is
-			-- Test if last registered receiver from `a_stack' has receivered data
-			-- If so, remove that receiver from `a_stack'. If not, fire an error `a_error_message' with location `a_location'.
-		require
-			a_stack_attached: a_stack /= Void
-			not_a_stack_is_empty: not a_stack.is_empty
-			a_error_message_attached: a_error_message /= Void
-			a_location_attached: a_location /= Void
-		local
-			l_item: TUPLE [a_setter: PROCEDURE [ANY, TUPLE [ANY]]; is_called: BOOLEAN]
-		do
-			l_item := a_stack.item
-			if l_item.is_called then
-				a_stack.remove
-			else
-				set_parse_error_message (
-					a_error_message,
-					a_location
-				)
-			end
-		end
-
-	remove_domain_receiver_from_stack is
-			-- Test if last registered domain receiver from `domain_receiver_stack' has receivered a
-			-- domain. If so, remove that domain receiver. If not, file an error.
-		do
-			remove_receiver_from_stack (
-				domain_receiver_stack,
-				metric_names.err_domain_missing,
-				metric_names.criterion_location (current_basic_metric.name, last_criterion.name)
-			)
-		end
-
-	set_current_tester_item (a_item: EB_METRIC_VALUE_RETRIEVER) is
-			-- Set `a_item' into `current_tester_item'.
-		require
-			current_tester_item_attached: current_tester_item /= Void
-		do
-			current_tester_item.put (a_item, 1)
 		end
 
 	is_unit_valid (a_unit: STRING): BOOLEAN is
@@ -1824,8 +1505,6 @@ invariant
 	current_attributes_attached: current_attributes /= Void
 	metrics_attached: metrics /= Void
 	domain_receiver_stack_attached: domain_receiver_stack /= Void
-	tester_receiver_stack_attached: tester_receiver_stack /= Void
-	value_retriever_stack_attached: value_retriever_stack /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

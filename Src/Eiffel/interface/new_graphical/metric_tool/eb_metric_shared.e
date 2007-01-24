@@ -24,6 +24,14 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	archive_validity_checker: EB_METRIC_ARCHIVE_VALIDITY_CHECKER is
+			-- Metric archiv evalidity checker
+		once
+			create Result.make (metric_manager)
+		ensure
+			result_attached: Result /= Void
+		end
+
 	criterion_factory: EB_METRIC_CRITERION_FACTORY is
 			-- Criterion factory
 		once

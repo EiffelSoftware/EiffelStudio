@@ -34,10 +34,11 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_value_tester_area_shown: BOOLEAN) is
+	make (a_value_tester_area_shown: BOOLEAN; a_metric_selector_area_shown: BOOLEAN; a_use_external_shown: BOOLEAN) is
 			-- Initialize.
 		do
 			is_value_tester_area_shown := a_value_tester_area_shown
+			is_metric_area_shown := a_metric_selector_area_shown
 			default_create
 		end
 
@@ -73,7 +74,9 @@ feature{NONE} -- Initialization
 			l_hor.extend (metric_setter)
 			l_hor.disable_item_expand (metric_setter)
 
-
+			if not is_metric_area_shown then
+				l_hor.hide
+			end
 			create l_domain_selector_area
 			create l_input_domain_lbl.make_with_text (metric_names.l_select_input_domain)
 			create l_domain_cell
@@ -107,9 +110,16 @@ feature{NONE} -- Initialization
 
 			l_ver.set_padding (15)
 			l_hor.set_padding (5)
-			l_split_area.extend (l_domain_selector_area)
+			if is_metric_area_shown then
+				l_split_area.extend (l_domain_selector_area)
+			end
 			if is_value_tester_area_shown then
 				l_split_area.extend (l_tester_selector_area)
+			end
+			if is_use_external_shown then
+				use_external_delayed_domain_checkbox.show
+			else
+				use_external_delayed_domain_checkbox.hide
 			end
 			l_ver.extend (l_hor)
 			l_ver.disable_item_expand (l_hor)
@@ -140,6 +150,12 @@ feature -- Status report
 
 	is_value_tester_area_shown: BOOLEAN
 			-- Is value tester area shown?
+
+	is_metric_area_shown: BOOLEAN
+			-- Is metric area shown?
+
+	is_use_external_shown: BOOLEAN
+			--
 
 feature{NONE} -- Actions
 

@@ -64,22 +64,9 @@ feature -- Status report
 
 	is_valid: BOOLEAN is
 			-- Is current domain valid?
-		local
-			l_cursor: CURSOR
 		do
-			if not is_empty then
-				Result := True
-				l_cursor := cursor
-				from
-					start
-				until
-					after or not Result
-				loop
-					Result := item /= Void and then item.is_valid
-					forth
-				end
-				go_to (l_cursor)
-			end
+			metric_validity_checker.check_validity (Current)
+			Result := not metric_validity_checker.has_error
 		end
 
 	has_delayed_domain_item: BOOLEAN is

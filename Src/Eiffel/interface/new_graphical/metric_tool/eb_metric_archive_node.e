@@ -42,6 +42,7 @@ feature{NONE} -- Initialization
 			set_is_value_valid (True)
 			set_is_result_filtered (a_filtered)
 			set_value_tester (create {EB_METRIC_VALUE_TESTER}.make)
+			set_is_last_warning_check_successful (True)
 		end
 
 feature -- Access
@@ -164,6 +165,10 @@ feature -- Status report
 	is_result_filtered: BOOLEAN
 			-- Should result be filtered if they are not visible?
 
+	is_last_warning_check_successful: BOOLEAN
+			-- Is last warning check successful?
+			-- Default: True
+
 feature -- Setting
 
 	set_metric_name (a_name: STRING) is
@@ -276,6 +281,14 @@ feature -- Setting
 			value_tester := a_value_tester
 		ensure
 			value_tester_set: value_tester = a_value_tester
+		end
+
+	set_is_last_warning_check_successful (b: BOOLEAN) is
+			-- Set `is_last_warning_check_successful' with `b'.
+		do
+			is_last_warning_check_successful := b
+		ensure
+			is_last_warning_check_successful_set: is_last_warning_check_successful = b
 		end
 
 	merge (a_archive: like Current) is

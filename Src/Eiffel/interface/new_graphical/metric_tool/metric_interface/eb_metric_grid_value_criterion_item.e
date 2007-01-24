@@ -17,8 +17,9 @@ class
 
 inherit
 	EB_METRIC_GRID_DOMAIN_ITEM [TUPLE [STRING, BOOLEAN, EB_METRIC_VALUE_TESTER]]
+		rename
+			make as old_make
 		redefine
-			make,
 			prepare_components,
 			is_pebble_droppable,
 			drop_pebble
@@ -35,11 +36,13 @@ create
 
 feature{NONE} -- Initialization
 
-	make (a_domain: EB_METRIC_DOMAIN) is
+	make (a_domain: EB_METRIC_DOMAIN; a_for_archive: BOOLEAN) is
 			-- Initialize.
+			-- `a_for_archive' indicates whether current item is for archive node.
 		do
+			is_for_archive := a_for_archive
 			value := ["", False, create {EB_METRIC_VALUE_TESTER}.make]
-			Precursor (a_domain)
+			old_make (a_domain)
 		end
 
 feature -- Status report
@@ -55,6 +58,9 @@ feature -- Status report
 				Result := l_metric /= Void
 			end
 		end
+
+	is_for_archive: BOOLEAN
+			-- Is Current item for archive node?
 
 feature -- Drop
 
@@ -106,27 +112,30 @@ feature{NONE} -- Implementation
 			editor_token_output.wipe_out
 			expression_generator.generate_output (l_tester)
 			l_tokens.append (editor_token_output.generated_output)
-
-				-- Prepare metric part
-			l_writer.new_line
-			if not l_tokens.is_empty then
-				l_writer.add (ti_space)
-				l_writer.add (ti_comma)
-			end
-			if metric_manager.is_metric_calculatable (l_metric_name) then
-				l_writer.add (ti_double_quote + l_metric_name + ti_double_quote)
+			if is_for_archive then
+				append_new_item (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
 			else
-				l_writer.add_error (create {SYNTAX_ERROR}.init, ti_double_quote + l_metric_name + ti_double_quote)
-			end
-			if not domain.is_empty then
-				l_writer.add (ti_comma)
-			end
-			l_tokens.append (l_writer.last_line.content)
-			append_new_item (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
+					-- Prepare metric part
+				l_writer.new_line
+				if not l_tokens.is_empty then
+					l_writer.add (ti_space)
+					l_writer.add (ti_comma)
+				end
+				if metric_manager.is_metric_calculatable (l_metric_name) then
+					l_writer.add (ti_double_quote + l_metric_name + ti_double_quote)
+				else
+					l_writer.add_error (create {SYNTAX_ERROR}.init, ti_double_quote + l_metric_name + ti_double_quote)
+				end
+				if not domain.is_empty then
+					l_writer.add (ti_comma)
+				end
+				l_tokens.append (l_writer.last_line.content)
+				append_new_item (create {EB_GRID_EDITOR_TOKEN_COMPONENT}.make (l_tokens, 2))
 
-				-- Prepare input domain part.
-			if not domain.is_empty then
-				components_for_domain.do_all (agent append_new_item)
+					-- Prepare input domain part.
+				if not domain.is_empty then
+					components_for_domain.do_all (agent append_new_item)
+				end
 			end
 		end
 

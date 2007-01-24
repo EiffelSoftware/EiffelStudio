@@ -75,21 +75,7 @@ inherit
 			copy
 		end
 
-create
-	default_create,
-	make
-
 feature {NONE} -- Initialization
-
-	make (is_delayed_scope_enabled: BOOLEAN) is
-			-- Initialize.
-			-- If `is_delayed_scope_enabled' is False, disable delayed scope selection.
-		do
-			default_create
-			if not is_delayed_scope_enabled then
-				disable_delayed_domain
-			end
-		end
 
 	user_initialization is
 			-- Called by `initialize'.
@@ -237,18 +223,27 @@ feature -- Element change
 			on_drop (new_stone)
 		end
 
-	disable_delayed_domain is
-			-- Disable delayed domain selection.
+	setup_delayed_domain_item_buttons (a_cur_app: BOOLEAN; a_delayed_input: BOOLEAN; a_delayed_item: BOOLEAN) is
+			-- Setup sensitive/insensitive status of delayed itme buttons'.
 		do
-			domain_type_toolbar.hide
-			separator_toolbar.hide
-		end
-
-	enable_delayed_domain is
-			-- Enable delayed domain selection.
-		do
-			domain_type_toolbar.show
-			separator_toolbar.show
+			domain_type_toolbar.wipe_out
+			if (not a_cur_app) and then (not a_delayed_input) and then (not a_delayed_item) then
+					-- If all delayed buttons are disabled, we hide their associated tool bar.
+				domain_type_toolbar.hide
+				separator_toolbar.hide
+			else
+				domain_type_toolbar.show
+				separator_toolbar.show
+				if a_cur_app then
+					domain_type_toolbar.extend (add_application_scope_btn)
+				end
+				if a_delayed_input then
+					domain_type_toolbar.extend (add_input_scope_btn)
+				end
+				if a_delayed_item then
+					domain_type_toolbar.extend (add_delayed_scope_btn)
+				end
+			end
 		end
 
 	set_domain (a_domain: EB_METRIC_DOMAIN) is

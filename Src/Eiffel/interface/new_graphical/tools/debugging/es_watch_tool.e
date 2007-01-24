@@ -357,11 +357,6 @@ feature -- Status setting
 			can_refresh := False
 		end
 
-	refresh is
-			-- Class has changed in `development_window'.
-		do
-		end
-
 	prepare_for_debug is
 			-- Remove obsolete expressions from `Current'.
 		local
@@ -1170,6 +1165,14 @@ feature -- Access
 		end
 
 feature -- Update
+
+	refresh is
+			-- Refresh current grid
+			--| Could be optimized to refresh only grid's content display ..
+		do
+			record_grid_layout
+			update
+		end
 
 	update is
 			-- Display current execution status.

@@ -4688,7 +4688,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			if item_coordinates /= Void then
 				pointed_row_i := row_internal (item_coordinates.y)
 				current_subrow_indent := item_cell_indent (item_coordinates.x, item_coordinates.y) --item_indent (pointed_item)
-				current_item_x_position := (column_offsets @ (item_coordinates.x)) - (internal_client_x - viewport_x_offset)
+				current_item_x_position := column (item_coordinates.x).virtual_x_position - (internal_client_x - viewport_x_offset)
 				node_x_position_click_edge := current_subrow_indent + current_item_x_position
 				if pointed_row_i.subrow_count /= 0 or pointed_row_i.is_ensured_expandable then
 						-- We only include the dimensions of the node pixmap for our calculations if

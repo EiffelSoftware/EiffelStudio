@@ -14,12 +14,12 @@ feature -- Status Report
 		ensure
 			message_if_failed: not Result implies (last_error_message /= Void and then not last_error_message.is_empty)
 		end
-	
-	last_error_message: STRING is
+
+	last_error_message: STRING_GENERAL is
 			-- Last error message, if any
 		deferred
 		end
-			
+
 feature -- Basic Operations
 
 	show (a_help_context: EB_HELP_CONTEXT) is

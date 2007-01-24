@@ -377,11 +377,41 @@ feature -- Properties
 			Result := Eiffel_project.workbench.system.il_generation
 		end
 
+feature -- Parameters context
+
+--| This code may be used later to enhance display of string ...
+--	previous_parameters: ARRAY [INTEGER]
+--
+--	push_parameters (a_slice_min, a_slice_max, a_disp_str_size: INTEGER) is
+--		require
+--			previous_parameters = Void
+--				or else (previous_parameters[1] = 0 and previous_parameters[2] = 0 and previous_parameters[3] = 0)
+--		do
+--			if previous_parameters = Void then
+--				create previous_parameters.make (1,3)
+--			end
+--			previous_parameters[1] := min_slice
+--			previous_parameters[2] := max_slice
+--			previous_parameters[3] := displayed_string_size
+--		end
+--
+--	restore_parameters is
+--		require
+--			previous_parameters /= Void
+--				and then (previous_parameters[1] > 0 and previous_parameters[2] > 0 and previous_parameters[3] /= 0)
+--		do
+--			min_slice := previous_parameters[1]
+--			max_slice := previous_parameters[2]
+--			displayed_string_size := previous_parameters[3]
+--			previous_parameters[1] := 0
+--			previous_parameters[2] := 0
+--			previous_parameters[3] := 0
+--		end
+
 feature -- Parameters
 
 	min_slice: INTEGER
 			-- Minimum bound asked for special objects.			
-
 
 	max_slice: INTEGER
 			-- Maximum bound asked for special objects.			
@@ -405,7 +435,6 @@ feature -- Parameters
 	max_evaluation_duration: INTEGER
 			-- Maximum number of seconds to wait before cancelling an evaluation.
 			-- A negative value means no cancellation will be done.
-
 
 feature -- Exception handling
 
@@ -702,6 +731,16 @@ feature -- Change
 			max_slice := j
 		end
 
+	set_displayed_string_size (i: like displayed_string_size) is
+			-- Set `displayed_string_size' to `i'.
+		require
+			positive_i_or_all_string: i > 0 or i = -1
+		do
+			displayed_string_size := i
+		ensure
+			set: displayed_string_size = i
+		end
+
 	set_interrupt_number (a_nbr: like interrupt_number) is
 			-- Set `interrupt_number' to `a_nbr'.
 		require
@@ -722,16 +761,6 @@ feature -- Change
 			if application_is_executing then
 				application.update_critical_stack_depth (d)
 			end
-		end
-
-	set_displayed_string_size (i: like displayed_string_size) is
-			-- Set `displayed_string_size' to `i'.
-		require
-			positive_i_or_all_string: i > 0 or i = -1
-		do
-			displayed_string_size := i
-		ensure
-			set: displayed_string_size = i
 		end
 
 	set_maximum_stack_depth (nb: INTEGER) is
@@ -836,6 +865,9 @@ feature -- Debugging events
 			app_is_executing: safe_application_is_stopped
 		do
 			incremente_debugging_operation_id
+			debugger_status_message (debugger_names.t_Paused)
+			debugger_output_message (debugger_names.t_Paused)
+
 			if has_stopped_action then
 				stopped_actions.call (Void)
 			end
@@ -858,21 +890,11 @@ feature -- Debugging events
 		do
 			incremente_debugging_operation_id
 			if application.execution_mode = {EXEC_MODES}.No_stop_points then
---<<<<<<< .mine
---				debugger_status_message (Interface_names.e_Running_no_stop_points)
---				debugger_output_message (Interface_names.ee_Running_no_stop_points)
---=======
 				debugger_status_message (debugger_names.t_Running_no_stop_points)
 				debugger_output_message (debugger_names.t_Running_no_stop_points)
--->>>>>>> .r65512
 			else
---<<<<<<< .mine
---				debugger_status_message (Interface_names.e_Running)
---				debugger_output_message (Interface_names.ee_Running)
---=======
 				debugger_status_message (debugger_names.t_Running)
 				debugger_output_message (debugger_names.t_Running)
--->>>>>>> .r65512
 			end
 
 				--| Observers
@@ -889,7 +911,6 @@ feature -- Debugging events
 
 			if application_is_executing then
 				debugger_status_message (debugger_names.t_not_running)
-				display_system_info
 
 					--| Observers
 				observers.do_all (agent {DEBUGGER_OBSERVER}.on_application_quit)

@@ -1,5 +1,5 @@
 indexing
-	description: "Temprary class for interface names used in framework."
+	description: "Temporary class for interface names used in framework."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""

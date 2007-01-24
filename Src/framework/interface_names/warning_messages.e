@@ -1047,6 +1047,8 @@ feature -- Warning messages
 	w_cannot_save_when_external_running: STRING_GENERAL is do Result := locale.translate ("Please save output after external command has exited.") end
 	w_external_command_running_in_development_window: STRING_GENERAL is do Result := locale.translate ("An external command is running, closing this window will terminate it.%NContinue?") end;
 
+	w_help_topic_could_not_be_displayed: STRING_GENERAL is do Result := locale.translate ("Help Topic could not be displayed, please check Eiffel Installation") end
+
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

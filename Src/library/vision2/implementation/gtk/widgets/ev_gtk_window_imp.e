@@ -223,8 +223,8 @@ feature {NONE} -- Implementation
 						-- This is a hack in case parent window was minimized and restored
 						-- by the modal dialog, when closed the window managed would restore the
 						-- focus to the previously focused window which may or may not be `l_window_imp',
-						-- this leads to odd behavior when closing the modal dialog so we always present the window.
-					{EV_GTK_EXTERNALS}.gtk_window_present (l_window_imp.c_object)
+						-- this leads to odd behavior when closing the modal dialog so we always raise the window.
+					{EV_GTK_EXTERNALS}.gdk_window_raise ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (l_window_imp.c_object))
 				end
 			end
 		end

@@ -208,10 +208,10 @@ feature {NONE} -- Initialization
 			resize_actions.force_extend (agent update_scroll_bar)
 
 				-- We attempt to set the height relative to the number
-				-- of items displayed, but with a maximum of 400.
-				-- We add 50 as a rough estimate for the items above and below
+				-- of items displayed, but with a maximum of 600.
+				-- We add 75 as a rough estimate for the items above and below
 				-- the window, and the windows client area to coordinate difference.
-			set_minimum_size (600, (main_vertical_box.minimum_height + 50).min (400))
+			set_minimum_size (600, (main_vertical_box.minimum_height + 75).min (600))
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 
 				-- Handle re-sizing
@@ -366,6 +366,7 @@ feature {NONE} -- Implementation
 				create info.make_with_details (an_action_sequence.names @ counter, action_sequences_list.item, an_action_sequence.types @ counter, temp_event_string)
 					-- Adjust event names that have been renamed in Vision2 interface
 				renamed_action_sequence_name := modified_action_sequence_name (object.type, info)
+				check_button.set_text (renamed_action_sequence_name)
 				feature_name := feature_name_of_object_event (info)
 					-- Display text before the check button.
 
@@ -388,37 +389,31 @@ feature {NONE} -- Implementation
 					minimum_label_width := start_label.minimum_width
 				end
 
-				if feature_name = Void then
-						-- Build empty interface.
-					create label.make_with_text (renamed_action_sequence_name)
-					label.set_background_color (text_background_color)
-					label.align_text_left
-					horizontal_box.extend (label)
-					label.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, building_counter))
-				else
 						-- Build interface with feature name included and displayed.
-					check_button.enable_select
-					create frame.make_with_text (renamed_action_sequence_name)
-					frame.set_background_color (text_background_color)
-					frame.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, building_counter))
-					horizontal_box.extend (frame)
-					horizontal_box.disable_item_expand (frame)
-					create cell
-					cell.set_background_color (text_background_color)
-					horizontal_box.extend (cell)
-					horizontal_box.set_background_color (text_background_color)
-					create label.make_with_text ("Feature name : ")
-					label.set_background_color (text_background_color)
-					create horizontal_box2
-					horizontal_box2.set_background_color (text_background_color)
-					horizontal_box2.extend (label)
-					horizontal_box2.disable_item_expand (label)
-					horizontal_box2.extend (text_field)
+
+				create frame
+				frame.set_background_color (text_background_color)
+				frame.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, building_counter))
+				vertical_box.extend (frame)
+				vertical_box.disable_item_expand (frame)
+				create cell
+				cell.set_background_color (text_background_color)
+				create label.make_with_text ("Feature name : ")
+				label.set_background_color (text_background_color)
+				create horizontal_box2
+				horizontal_box2.set_border_width (2)
+				horizontal_box2.set_background_color (text_background_color)
+				horizontal_box2.extend (label)
+				horizontal_box2.disable_item_expand (label)
+				horizontal_box2.extend (text_field)
+				frame.extend (horizontal_box2)
+				if feature_name = Void then
+					frame.hide
+					check_button.disable_select
+				else
 					text_field.set_text (feature_name)
-					frame.extend (horizontal_box2)
+					check_button.enable_select
 				end
-
-
 
 					-- Connect an event to `check_button'.
 				check_button.select_actions.extend (agent check_button_selected (building_counter))
@@ -544,46 +539,13 @@ feature {NONE} -- Implementation
 			lock_update
 			current_check_button := all_check_buttons @ index
 			current_text_field := all_text_fields @ index
-			if (current_check_button).is_selected then
-				vertical_box ?= current_check_button.parent
-				horizontal_box ?= vertical_box.parent
-				horizontal_box.prune (horizontal_box @ 3)
-				create frame.make_with_text (all_names @ index)
-				frame.set_background_color (text_background_color)
-				horizontal_box.extend (frame)
-				horizontal_box.disable_item_expand (frame)
-				create cell
-				cell.set_background_color (text_background_color)
-				horizontal_box.extend (cell)
-				create label.make_with_text ("Feature name : ")
-				label.set_background_color (text_background_color)
-				create horizontal_box
-				horizontal_box.set_background_color (text_background_color)
-				horizontal_box.extend (label)
-				horizontal_box.disable_item_expand (label)
+			vertical_box ?= current_check_button.parent
+			frame ?= vertical_box.i_th (3)
+			if current_check_button.is_selected then
 				current_text_field.set_text (current_text_field.text.as_lower)
-				horizontal_box.extend (current_text_field)
-				frame.extend (horizontal_box)
-				frame.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, index))
+				frame.show
 			else
-				vertical_box ?= current_check_button.parent
-				horizontal_box ?= vertical_box.parent
-				horizontal_box.prune (horizontal_box @ 3)
-				horizontal_box.prune (horizontal_box @ 3)
-
-				create label.make_with_text (all_names @ index)
-				label.set_background_color (text_background_color)
-				label.align_text_left
-				horizontal_box.extend (label)
-				label.pointer_button_press_actions.force_extend (agent toggle_i_th_check_button (?, ?, ?, index))
-					-- Need to unparent the previous text field, as this object
-					-- is retained. This enables us to keep the previous name
-					-- as the text is not lost.
-				horizontal_box ?= current_text_field.parent
-				check
-					parent_was_a_horizontal_box: horizontal_box /= Void
-				end
-				horizontal_box.prune (current_text_field)
+				frame.hide
 			end
 			update_scroll_bar
 			unlock_update

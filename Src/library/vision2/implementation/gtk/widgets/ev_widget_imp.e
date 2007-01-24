@@ -22,8 +22,6 @@ inherit
 			initialize,
 			call_button_event_actions,
 			destroy,
-			minimum_width,
-			minimum_height,
 			x_position,
 			y_position
 		end
@@ -53,9 +51,6 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to GTK signals.
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
-				-- Reset the initial internal sizes, once set they should not be reset to -1
-			internal_minimum_width := -1
-			internal_minimum_height := -1
 			set_is_initialized (True)
 		end
 
@@ -104,15 +99,15 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_APPLICATION_IMP} 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Gtk_Widget."size-allocate" happened.
 		do
-			if last_width /= a_width or else last_height /= a_height then
-				last_width := a_width.to_natural_16
-				last_height := a_height.to_natural_16
+			if a_width /= previous_width or else a_height /= previous_height then
+				previous_width := a_width.to_integer_16
+				previous_height := a_height.to_integer_16
 				if resize_actions_internal /= Void then
 					resize_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (a_x, a_y, a_width, a_height))
 				end
-				if parent_imp /= Void then
-					parent_imp.child_has_resized (Current)
-				end
+			end
+			if parent_imp /= Void then
+				parent_imp.child_has_resized (Current)
 			end
 		end
 
@@ -262,13 +257,13 @@ feature -- Element change
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
-			internal_set_minimum_size (a_minimum_width, internal_minimum_height)
+			internal_set_minimum_size (a_minimum_width, minimum_height)
 		end
 
 	set_minimum_height (a_minimum_height: INTEGER) is
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			internal_set_minimum_size (internal_minimum_width, a_minimum_height)
+			internal_set_minimum_size (minimum_width, a_minimum_height)
 		end
 
 	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
@@ -308,34 +303,7 @@ feature -- Measurement
 			end
 		end
 
-	minimum_width: INTEGER is
-			-- Minimum width that the widget may occupy.
-		do
-			if internal_minimum_width /= -1 then
-				Result := internal_minimum_width
-			else
-				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
-			end
-		end
-
-	minimum_height: INTEGER is
-			-- Minimum width that the widget may occupy.
-		do
-			if internal_minimum_height /= -1 then
-				Result := internal_minimum_height
-			else
-				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
-			end
-		end
-
 feature {EV_ANY_I} -- Implementation
-
-	reset_minimum_size is
-			-- Reset all values to defaults.
-			-- Called by EV_FIXED and EV_VIEWPORT implementations.
-		do
-			internal_set_minimum_size (internal_minimum_width, internal_minimum_height)
-		end
 
 	refresh_now is
 			-- Flush any pending redraws due for `Current'.
@@ -351,14 +319,6 @@ feature {EV_ANY_I} -- Implementation
 				{EV_GTK_EXTERNALS}.gdk_flush
 			end
 		end
-
-feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
-
-	internal_minimum_width: INTEGER
-			-- Minimum width for the widget.
-
-	internal_minimum_height: INTEGER
-			-- Minimum height for the widget.
 
 feature {EV_CONTAINER_IMP} -- Implementation
 
@@ -401,13 +361,7 @@ feature {NONE} -- Implementation
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
 			-- Abstracted implementation for minimum size setting.
 		do
-			if a_minimum_width /= -1 then
-				internal_minimum_width := a_minimum_width
-			end
-			if a_minimum_height /= -1 then
-				internal_minimum_height := a_minimum_height
-			end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
 		end
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
@@ -470,8 +424,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	last_width, last_height: NATURAL_16
-			-- Dimenions during last "size-allocate".
+feature {NONE} -- Implementation
+
+	previous_width, previous_height: INTEGER_16
+			-- Dimensions during last "size-allocate".
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 

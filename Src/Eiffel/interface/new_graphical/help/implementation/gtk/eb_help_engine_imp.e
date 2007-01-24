@@ -33,7 +33,7 @@ feature -- Status Report
 	last_show_successful: BOOLEAN
 			-- Was last call to `show' successful?
 
-	last_error_message: STRING
+	last_error_message: STRING_GENERAL
 			-- Last error message, if any
 
 feature -- Basic Operations

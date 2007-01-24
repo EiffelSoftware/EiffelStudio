@@ -477,7 +477,7 @@ feature -- Status setting
 	set_focus is
 			-- Give the focus to the editor area.
 		do
-			if not editor_drawing_area.is_destroyed and then editor_drawing_area.is_displayed and then editor_drawing_area.is_sensitive then
+			if is_initialized and then not editor_drawing_area.is_destroyed and then editor_drawing_area.is_displayed and then editor_drawing_area.is_sensitive then
 				if reference_window /= Void then
 					if reference_window.has_focus then
 						editor_drawing_area.set_focus
@@ -504,8 +504,9 @@ feature -- Basic Operations
 			-- Update display without waiting for next idle
 		do
 			refresh
-			margin.refresh_now
+			margin.margin_area.flush
 			editor_drawing_area.flush
+			in_scroll := False
 		end
 
 	clear_window is

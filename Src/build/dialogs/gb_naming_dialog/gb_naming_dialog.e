@@ -37,8 +37,6 @@ feature {NONE} -- Initialization
 			ok_button.select_actions.extend (agent validate)
 			cancel_button.select_actions.extend (agent cancelled_action)
 			show_actions.extend (agent name_field.set_focus)
-				-- We must never return a void, name.
-			name := ""
 			set_icon_pixmap (Icon_build_window @ 1)
 		end
 
@@ -50,6 +48,8 @@ feature {NONE} -- Initialization
 				and prompt /= Void and an_invalid_message /= Void
 			validation_agent_not_void: a_validation_agent /= Void
 		do
+				-- We must never return a void, name.
+			name := ""
 			default_create
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 			set_title (a_title)

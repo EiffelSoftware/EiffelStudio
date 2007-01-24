@@ -63,16 +63,18 @@ feature -- Status setting
 			-- Set `a_widget.height' to `a_height'.
 		local
 			w_imp: EV_WIDGET_IMP
+			l_c_object: POINTER
 			l_parent_box: POINTER
 			l_allocation: POINTER
 		do
 			w_imp ?= a_widget.implementation
-			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (w_imp.c_object)
+			l_c_object := w_imp.c_object
+			l_parent_box := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (l_c_object)
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (l_parent_box, a_width, a_height)
-			l_allocation := {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (w_imp.c_object)
+			l_allocation := {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (l_c_object)
 			{EV_GTK_EXTERNALS}.set_gtk_allocation_struct_width (l_allocation, a_width)
 			{EV_GTK_EXTERNALS}.set_gtk_allocation_struct_height (l_allocation, a_height)
-			{EV_GTK_EXTERNALS}.gtk_widget_size_allocate (w_imp.c_object, l_allocation)
+			{EV_GTK_EXTERNALS}.gtk_widget_queue_resize (l_c_object)
 		end
 
 feature {EV_ANY_I} -- Implementation

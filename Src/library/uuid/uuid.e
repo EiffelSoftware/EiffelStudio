@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-frozen class
+class
 	UUID
 
 inherit

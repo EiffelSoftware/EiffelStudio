@@ -420,7 +420,7 @@ feature {NONE} -- Initialization
 
 			create h_box
 
-			create label.make_with_text ("Zoom ")
+			create label.make_with_text (interface_names.l_zoom)
 			h_box.extend (label)
 			h_box.disable_item_expand (label)
 
@@ -454,7 +454,7 @@ feature {NONE} -- Initialization
 
 			create view_menu
 
-			create view_label.make_with_text ("View ")
+			create view_label.make_with_text (interface_names.l_view)
 			view_menu.extend (view_label)
 			view_menu.disable_item_expand (view_label)
 
@@ -1049,7 +1049,7 @@ feature -- Element change
 
 			if not cancelled then
 				develop_window.status_bar.reset
-				develop_window.status_bar.display_message ("Constructing Diagram for " + a_group.name)
+				develop_window.status_bar.display_message (interface_names.l_constructing_diagram_for (a_group.name))
 
 				graph.wipe_out
 

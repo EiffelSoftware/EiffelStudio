@@ -263,8 +263,6 @@ feature{NONE} -- Implementation
 	show_compilation_error_dialog is
 			-- Dialog box showed when c compilation generates any error
 		local
-			str: STRING
-
 			dlg: EB_CONFIRMATION_DIALOG
 			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 			maps: EV_STOCK_PIXMAPS
@@ -274,18 +272,8 @@ feature{NONE} -- Implementation
 			create actions.make (1, 2)
 			actions.put (agent do_not_open_console, 1)
 			actions.put (agent open_console, 2)
-			str := "C-compilation produced errors.%N"
-
-			str.append ("Run your Makefile utility program from the directory `")
-			str.append (working_directory)
-			str.append ("`%Nto see what went wrong.%N%NClick OK to terminate.")
-			if platform_constants.is_windows then
-				str.append ("%NClick Cancel to open a command line console.%N")
-			else
-				str.append ("%NClick Cancel to open a command line console.%N")
-			end
-			create dlg.make_with_text_and_actions (str, actions)
-			dlg.set_title ("Finish Freezing Status")
+			create dlg.make_with_text_and_actions (interface_names.l_c_compilation_produced_errors (working_directory), actions)
+			dlg.set_title (interface_names.t_finish_freezing_status)
 			create maps
 			dlg.set_icon_pixmap (maps.warning_pixmap)
 			dlg.set_pixmap (maps.warning_pixmap)
@@ -295,23 +283,13 @@ feature{NONE} -- Implementation
 	show_compiler_launch_fail_dialog (win: EV_WINDOW) is
 			-- Dialog box showed when c compiler launch failed
 		local
-			str: STRING
-
 			dlg: EB_WARNING_DIALOG
 			--actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 			maps: EV_STOCK_PIXMAPS
 		do
 				-- C compilation launch failed.
-			str := "C-compilation manager launch failed.%NCheck if finish_freezing"
-			if platform_constants.is_windows then
-				str.append (".exe")
-			else
-					-- No action				
-			end
-			str.append (" exists and works correctly.")
-
-			create dlg.make_with_text (str)
-			dlg.set_title ("finish_freezing Launch Error")
+			create dlg.make_with_text (interface_names.l_c_compilation_manager_launch_failed (platform_constants.is_windows))
+			dlg.set_title (interface_names.t_finish_freezing_launch_error)
 			create maps
 			dlg.set_icon_pixmap (maps.warning_pixmap)
 			dlg.set_pixmap (maps.warning_pixmap)

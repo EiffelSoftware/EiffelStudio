@@ -381,7 +381,7 @@ feature {NONE} -- Implementation (adding relations)
 		do
 			create class_file.make (a_stone.class_i.file_name)
 			if not class_file.exists then
-				create l_error_window.make_with_text ("Class is not editable.%N" +
+				create l_error_window.make_with_text (interface_names.l_class_is_not_editable.as_string_32 +
 					 warning_messages.w_file_not_exist (a_stone.class_i.file_name))
 				l_error_window.show_modal_to_window (world.context_editor.develop_window.window)
 			elseif class_file.is_writable and then not a_stone.class_i.group.is_readonly then
@@ -390,8 +390,7 @@ feature {NONE} -- Implementation (adding relations)
 						add_inheritance_relation (a_stone.source)
 					else
 						create dial.make_with_text_and_actions (
-							"An inheritance cycle was created.%N%
-								%Do you still want to add this link?",
+							interface_names.l_inheritance_cycle_was_created,
 								<<agent add_inheritance_relation (a_stone.source)>>)
 						dial.show_modal_to_window (world.context_editor.develop_window.window)
 					end
@@ -401,7 +400,7 @@ feature {NONE} -- Implementation (adding relations)
 					add_client_relation (a_stone.source, True)
 				end
 			else
-				create l_error_window.make_with_text ("Class is not editable")
+				create l_error_window.make_with_text (interface_names.l_class_is_not_editable)
 				l_error_window.show_modal_to_window (world.context_editor.develop_window.window)
 			end
 		end

@@ -161,6 +161,7 @@ feature -- Titles
 	l_setup_metric_value_retriever: STRING_GENERAL is do Result := locale.translate ("Setup metric value retriever") end
 	t_add_new_metric_value_retriever: STRING_GENERAL is do Result := locale.translate ("Add new metric value retriever") end
 	t_use_external_delayed: STRING_GENERAL is do Result := locale.translate ("Use external delayed domain") end
+	t_warning: STRING_GENERAL is do Result := locale.translate ("Warning") end
 
 feature -- Titles for editor token
 
@@ -1034,6 +1035,9 @@ feature -- Error/warning message
 			result_attached: Result /= Void
 		end
 
+	err_delayed_domain_item_appear: STRING_GENERAL is do Result := locale.translate ("Delayed domain item appears.") end
+	err_input_domain_item_appear: STRING_GENERAL is do Result := locale.translate ("Input domain item appears.") end
+
 feature -- To do messages
 
 	variable_metric_missing_to_do: STRING_GENERAL is
@@ -1119,6 +1123,9 @@ feature -- To do messages
 			Result := locale.translate ("Make sure that referenced metric exists and is valid.")
 		end
 
+	delayed_domain_item_appear_to_do: STRING_GENERAL is do Result := locale.translate ("Remove delayed domain item.") end
+	input_domain_item_appear_to_do: STRING_GENERAL is do Result := locale.translate ("Remove input domain item.") end
+
 feature -- Separator
 
 	new_line_separator: STRING_GENERAL is
@@ -1175,6 +1182,20 @@ feature -- Separator
 			result_attached: Result /= Void
 		end
 
+	left_arrow: STRING_GENERAL is
+		do
+			Result := "<"
+		ensure
+			result_attached: Result /= Void
+		end
+
+	right_arrow: STRING_GENERAL is
+		do
+			Result := ">"
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Utilities
 
 	concatenated_string (a_str_list: LINEAR [STRING_GENERAL]; a_separator: STRING_GENERAL): STRING_GENERAL is
@@ -1225,124 +1246,6 @@ feature -- Utilities
 			result_attached: Result /= Void
 		end
 
-	location (a_location_section_array: ARRAY [STRING_GENERAL]): STRING_GENERAL is
-			-- Location which is comprised of several location sections specified in `a_location_section_array'
-			-- For example, if a_location_section_array' is <<basic metric "Classes", "criterion "is_effective">>,
-			-- the result will be: in location basic metric "Classes" : criterion "is_effective".
-		require
-			a_location_section_array_valid:
-				a_location_section_array /= Void and then not a_location_section_array.is_empty
-		do
-			Result := concatenated_string (a_location_section_array.linear_representation, location_connector)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	metric_location_section (a_metric_name, a_metric_type_name: STRING_GENERAL): STRING_GENERAL is
-			-- Location section of `a_metric_name' whose metric type is `a_metric_type_name'
-		require
-			a_metric_name_attached: a_metric_name /= Void
-			a_metric_type_name_attached: a_metric_type_name /= Void
-		do
-			Result := location_section (a_metric_name, a_metric_type_name)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	linear_metric_location_section (a_metric_name: STRING_GENERAL): STRING_GENERAL is
-			-- Linear metric location section
-		require
-			a_metric_name_attached: a_metric_name /= Void
-		do
-			Result := metric_location_section (a_metric_name, l_linear_metric)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	basic_metric_location_section (a_metric_name: STRING_GENERAL): STRING_GENERAL is
-			-- Basic metric location section
-		require
-			a_metric_name_attached: a_metric_name /= Void
-		do
-			Result := metric_location_section (a_metric_name, l_basic_metric)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	ratio_metric_location_section (a_metric_name: STRING_GENERAL): STRING_GENERAL is
-			-- Ratio metric location section
-		require
-			a_metric_name_attached: a_metric_name /= Void
-		do
-			Result := metric_location_section (a_metric_name, l_ratio_metric)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	criterion_location_section (a_criterion_name: STRING_GENERAL): STRING_GENERAL is
-			-- Criterion location section
-		require
-			a_criterion_name_attached: a_criterion_name /= Void
-		do
-			Result := location_section (a_criterion_name, l_criterion)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	variable_metric_location (a_linear_metric_name, a_variable_metric_name: STRING_GENERAL): STRING_GENERAL is
-			-- Variable metric location
-		require
-			a_variable_metric_name_attached: a_variable_metric_name /= Void
-			a_linear_metric_name_attached: a_linear_metric_name /= Void
-		do
-			Result := location (<<location_section (a_linear_metric_name, l_linear_metric), location_section (a_variable_metric_name, l_variable_metric)>>)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	criterion_location (a_basic_metric_name, a_criterion_name: STRING_GENERAL): STRING_GENERAL is
-			-- Criterion location
-		require
-			a_basic_metric_name_attached: a_basic_metric_name /= Void
-			a_criterion_name_attached: a_criterion_name /= Void
-		do
-			Result := location (<<basic_metric_location_section (a_basic_metric_name), criterion_location_section (a_criterion_name)>>)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	numerator_location (a_ratio_metric_name, a_numerator_name: STRING_GENERAL): STRING_GENERAL is
-			-- Numerator metric local
-		require
-			a_numerator_name_attached: a_numerator_name /= Void
-			a_ratio_metric_name_attached: a_ratio_metric_name /= Void
-		do
-			Result := location (<<ratio_metric_location_section (a_ratio_metric_name), location_section (a_numerator_name, l_numerator_metric)>>)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	denominator_location (a_ratio_metric_name, a_denominator_name: STRING_GENERAL): STRING_GENERAL is
-			-- Denominator metric local
-		require
-			a_denominator_name_attached: a_denominator_name /= Void
-			a_ratio_metric_name_attached: a_ratio_metric_name /= Void
-		do
-			Result := location (<<ratio_metric_location_section (a_ratio_metric_name), location_section (a_denominator_name, l_denominator_metric)>>)
-		ensure
-			result_attached: Result /= Void
-		end
-
-	archive_location (a_archive_metric_name: STRING_GENERAL): STRING_GENERAL is
-			-- Metric archive location
-		require
-			a_archive_metric_name_attached: a_archive_metric_name /= Void
-		do
-			Result := location_section (a_archive_metric_name, l_metric_archive_node)
-		ensure
-			result_attached: Result /= Void
-		end
-
 	location_string (a_location: STRING_GENERAL): STRING_GENERAL is
 			-- Location string
 		require
@@ -1387,6 +1290,25 @@ feature -- Utilities
 			result_attached: Result /= Void
 		end
 
+	xml_location (a_element_type: STRING_GENERAL; a_element_name: STRING_GENERAL): STRING_GENERAL is
+			-- Xml location. `a_element_type' is the element name type. `a_element_name' is for better information.
+			-- For example, if `a_element_type' is "basic_metric" and `a_element_name' is Void, Result would be "<basic_metric>",
+			-- if `a_element_name' is "Classes", result would be "<basic_metric(Classes)>"
+		require
+			a_element_type_attached: a_element_type /= Void
+			not_a_element_is_empty: not a_element_type.is_empty
+		do
+			Result := left_arrow.twin
+			Result.append (a_element_type)
+			if a_element_name /= Void then
+				Result.append (left_parenthesis)
+				Result.append (a_element_name)
+				Result.append (right_parenthesis)
+			end
+			Result.append (right_arrow)
+		ensure
+			result_attached: Result /= Void
+		end
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -21,6 +21,13 @@ feature -- cmd specific
 
 	slices_cmd: ES_OBJECTS_GRID_SLICES_CMD
 
+feature -- Refresh
+
+	refresh is
+			-- Refresh related grid
+		deferred
+		end
+
 feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
 	objects_grid_item (add: STRING): ES_OBJECTS_GRID_LINE is

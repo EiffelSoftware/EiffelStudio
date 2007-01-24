@@ -86,6 +86,8 @@ feature {NONE} -- Initialization
 			-- Make current object
 		do
 			default_create
+			parent_grid := g
+
 			display := False
 			display_attributes := True
 			display_onces := False
@@ -93,7 +95,6 @@ feature {NONE} -- Initialization
 			set_object_spec_slices (debugger_manager.min_slice, debugger_manager.max_slice)
 
 			create compute_grid_row_completed_action
-			parent_grid := g
 		end
 
 feature -- Recycling
@@ -467,7 +468,7 @@ feature -- Properties change
 			end
 		end
 
-feature -- Graphical changes
+feature -- Graphical computation
 
 	compute_grid_display_done: BOOLEAN
 			-- is `compute_grid_display' called and done ?

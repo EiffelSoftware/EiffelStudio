@@ -29,11 +29,13 @@ feature{NONE} -- Initialization
 		require
 			a_factory_attached: a_factory /= Void
 		do
+			initialize
 			factory := a_factory
 			create {LINKED_LIST [EB_METRIC_ARCHIVE_NODE]}archive.make
 			create current_domain.make
 			create current_tag.make
 			create current_attributes.make (4)
+			create domain_receiver_stack.make
 			set_is_for_whole_file (True)
 		ensure
 			factory_set: factory = a_factory
@@ -72,10 +74,21 @@ feature{NONE} -- Callbacks
 					process_domain
 				when t_domain_item then
 					process_domain_item
+				when t_tester then
+					process_tester
+				when t_tester_item then
+					process_tester_item
+				when t_constant_value then
+					process_constant_value
+				when t_metric_value then
+					process_metric_value
 				else
+					extend_location_section (Void)
 				end
 				current_attributes.clear_all
 			end
+		ensure then
+			location_stored: (not has_error) implies (location_stack.count = old location_stack.count + 1)
 		end
 
 	on_end_tag (a_namespace: STRING; a_prefix: STRING; a_local_part: STRING) is
@@ -87,10 +100,30 @@ feature{NONE} -- Callbacks
 				when t_metric then
 					current_archive_node.set_input_domain (current_domain)
 					archive.extend (current_archive_node)
+					remove_domain_receiver_from_stack
+				when t_domain then
+					process_domain_finish
+				when t_tester then
+					process_tester_finish
+				when t_tester_item then
+					current_tester.insert_criterion (current_tester_item)
+					current_tester_item := Void
+					remove_receiver_from_stack (
+						value_retriever_stack,
+						metric_names.err_value_retriever_missing
+					)
+				when t_metric_value then
+					process_value_retriever_finish
+					remove_domain_receiver_from_stack
+				when t_constant_value then
+					process_value_retriever_finish
 				else
 				end
 				current_tag.remove
+				remove_location_section
 			end
+		ensure then
+			location_removed: (not has_error) implies (location_stack.count = old location_stack.count - 1)
 		end
 
 	on_content (a_content: STRING) is
@@ -114,58 +147,43 @@ feature{NONE} -- Process
 			l_filter: STRING
 			l_filter_value: BOOLEAN
 		do
-			l_name := current_attributes.item (at_name)
 			if not has_error then
+				l_name := current_attributes.item (at_name)
 				if l_name = Void then
-					set_parse_error_message (metric_names.err_metric_name_missing_in_archive_node, Void)
+					create_last_error (metric_names.err_metric_name_missing_in_archive_node)
+					extend_location_section (Void)
+				else
+					extend_location_section (l_name)
 				end
 			end
 			if not has_error then
 				l_type_str := current_attributes.item (at_type)
 				if l_type_str = Void then
-					set_parse_error_message (
-						metric_names.err_metric_type_missing,
-						metric_names.archive_location (l_name)
-					)
+					create_last_error (metric_names.err_metric_type_missing)
 				else
 					l_type := metric_type_id_from_name (l_type_str)
 					if l_type = 0 then
-						set_parse_error_message (
-							metric_names.err_metric_type_invalid (l_type_str),
-							metric_names.archive_location (l_name)
-						)
+						create_last_error (metric_names.err_metric_type_invalid (l_type_str))
 					end
 				end
 			end
 			if not has_error then
 				l_time := current_attributes.item (at_time)
 				if l_time = Void then
-					set_parse_error_message (
-						metric_names.err_archive_time_missing,
-						metric_names.archive_location (l_name)
-					)
+					create_last_error (metric_names.err_archive_time_missing)
 				else
 					create l_date.make_now
 					if not l_date.date_time_valid (l_time, l_date.default_format_string) then
-						set_parse_error_message (
-							metric_names.err_archive_time_invalid (l_time),
-							metric_names.archive_location (l_name)
-						)
+						create_last_error (metric_names.err_archive_time_invalid (l_time))
 					end
 				end
 			end
 			if not has_error then
 				l_value := current_attributes.item (at_value)
 				if l_value = Void then
-					set_parse_error_message (
-						metric_names.err_archive_value_missing,
-						metric_names.archive_location (l_name)
-					)
+					create_last_error (metric_names.err_archive_value_missing)
 				elseif not l_value.is_real then
-					set_parse_error_message (
-						metric_names.err_archive_value_invalid (l_value),
-						metric_names.archive_location (l_name)
-					)
+					create_last_error (metric_names.err_archive_value_invalid (l_value))
 				end
 			end
 			if not has_error then
@@ -174,19 +192,13 @@ feature{NONE} -- Process
 					if l_filter.is_boolean then
 						l_filter_value := l_filter.to_boolean
 					else
-						set_parse_error_message (
-							metric_names.err_filter_invalid (l_filter),
-							metric_names.archive_location (l_name)
-						)
+						create_last_error (metric_names.err_filter_invalid (l_filter))
 					end
 				end
 			end
 			if not has_error then
 				l_uuid_str := current_attributes.item (at_uuid)
-				check_uuid_validity (
-					l_uuid_str,
-					metric_names.archive_location (l_name)
-				)
+				check_uuid_validity (l_uuid_str)
 				if not has_error then
 					l_uuid := last_valid_uuid
 				end
@@ -199,71 +211,10 @@ feature{NONE} -- Process
 					l_value.to_double,
 					create {EB_METRIC_DOMAIN}.make,
 					l_uuid_str,
-					l_filter_value)
-				create current_domain.make
-			end
-		end
-
-	process_domain is
-			-- Process "domain" definition list node.		
-		do
-			if not current_domain.is_empty then
-				set_parse_error_message (
-					metric_names.err_too_many_domain,
-					metric_names.archive_location (current_archive_node.metric_name)
+					l_filter_value
 				)
-			end
-		end
-
-	process_domain_item is
-			-- Process "domain_item" definition list node.		
-		local
-			l_id: STRING
-			l_type: STRING
-			l_library_target_uuid: STRING
-			l_domain_item: EB_METRIC_DOMAIN_ITEM
-		do
-			check current_archive_node /= Void end
-			l_id := current_attributes.item (at_id)
-			l_type := current_attributes.item (at_type)
-			l_library_target_uuid := current_attributes.item (at_library_target_uuid)
-			if l_id = Void then
-				set_parse_error_message (
-					metric_names.err_domain_item_id_is_missing,
-					metric_names.archive_location (current_archive_node.metric_name)
-				)
-			end
-			if not has_error then
-				if l_type = Void then
-					set_parse_error_message (
-						metric_names.err_domain_item_type_is_missing,
-						metric_names.archive_location (current_archive_node.metric_name)
-					)
-				else
-					l_type.to_lower
-					if not is_domain_item_type_valid (l_type) then
-						set_parse_error_message (
-							metric_names.err_domain_item_type_invalid (l_type),
-							metric_names.archive_location (current_archive_node.metric_name)
-						)
-					else
-						if l_library_target_uuid /= Void then
-							if not shared_uuid.is_valid_uuid (l_library_target_uuid) then
-								set_parse_error_message (
-									metric_names.err_library_target_uuid_invalid (l_library_target_uuid),
-									metric_names.archive_location (current_archive_node.metric_name)
-								)
-							end
-						end
-						if not has_error then
-							l_domain_item := domain_item_type_table.item (l_type).item ([l_id])
-							if l_library_target_uuid /= Void then
-								l_domain_item.set_library_target_uuid (l_library_target_uuid)
-							end
-							current_domain.extend (l_domain_item)
-						end
-					end
-				end
+					domain_receiver_stack.extend ([agent current_archive_node.set_input_domain, False])
+					tester_receiver_stack.extend ([agent current_archive_node.set_value_tester, False])
 			end
 		end
 
@@ -271,9 +222,6 @@ feature{NONE} -- Implementation
 
 	current_archive_node: EB_METRIC_ARCHIVE_NODE
 			-- Current archive node
-
-	current_domain: EB_METRIC_DOMAIN
-			-- Current domain
 
 	state_transitions_tag: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is
 			-- Mapping of possible tag state transitions from `current_tag' with the tag name to the new state.
@@ -423,6 +371,7 @@ invariant
 	factory_attached: factory /= Void
 	archive_attached: archive /= Void
 	current_domain_attached: current_domain /= Void
+	domain_receiver_stack_attached: domain_receiver_stack /= Void
 
 indexing
         copyright:	"Copyright (c) 1984-2006, Eiffel Software"

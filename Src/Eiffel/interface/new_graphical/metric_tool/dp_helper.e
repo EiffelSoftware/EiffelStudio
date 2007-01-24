@@ -1,5 +1,5 @@
 indexing
-	description: "Shared metric manager"
+	description: "Design pattern componentization helper"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,16 +7,14 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_SHARED_METRIC_MANAGER
+	DP_HELPER
 
 feature -- Access
 
-	metric_manager: EB_METRIC_MANAGER is
-			-- Metric manager
-		once
-			create Result.make
-		ensure
-			result_attached: Result /= Void
+	eif_gen_typecode_str (obj: POINTER): STRING is
+			-- Code name for generic parameter `pos' in `obj'.
+		external
+			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_gen_conf.h%""
 		end
 
 indexing
@@ -49,6 +47,6 @@ indexing
 			 Telephone 805-685-1006, Fax 805-685-6869
 			 Website http://www.eiffel.com
 			 Customer support http://support.eiffel.com
-		]"
+		]"		
 
 end

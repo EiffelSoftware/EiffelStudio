@@ -34,11 +34,13 @@ feature -- Basic operation
 			a_mode_valid: is_mode_valid (a_mode)
 			a_uuid_attached: a_uuid /= Void
 		do
+			is_editor_initialized := True
 			set_unit (a_unit)
 			set_mode (a_mode)
 			set_uuid (a_uuid)
 			load_metric (a_metric, a_mode = readonly_mode)
 		ensure
+			initialized: is_editor_initialized
 			unit_set: unit = a_unit
 			mode_set: mode = a_mode
 		end
@@ -329,6 +331,9 @@ feature -- Status report
 
 	is_loading_metric: BOOLEAN
 			-- Is loading metric?
+
+	is_editor_initialized: BOOLEAN
+			-- Is Current metric editor initialized?
 
 feature{NONE} -- Implementation
 

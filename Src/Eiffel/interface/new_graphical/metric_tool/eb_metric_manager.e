@@ -96,7 +96,7 @@ feature -- Validation
 			until
 				l_error_table.after
 			loop
-				l_validity_table.force (l_error_table.item_for_iteration, l_error_table.key_for_iteration)
+				set_metric_validity (l_error_table.key_for_iteration, l_error_table.item_for_iteration)
 				l_error_table.forth
 			end
 		end
@@ -182,17 +182,17 @@ feature -- Status report
 			Result := l_file.exists
 		end
 
-	is_last_predefined_metric_load_successful: BOOLEAN is
-			-- Is last predefined metric loading successful?
-		do
-			Result := last_predefined_metric_load_error = Void
-		end
+--	is_last_predefined_metric_load_successful: BOOLEAN is
+--			-- Is last predefined metric loading successful?
+--		do
+--			Result := last_predefined_metric_load_error = Void
+--		end
 
-	is_last_userdefined_metric_load_successful: BOOLEAN is
-			-- Is last userdefined metric loading successful?
-		do
-			Result := last_userdefined_metric_load_error = Void
-		end
+--	is_last_userdefined_metric_load_successful: BOOLEAN is
+--			-- Is last userdefined metric loading successful?
+--		do
+--			Result := last_userdefined_metric_load_error = Void
+--		end
 
 	is_metric_name_equal (a_metric_name, b_metric_name: STRING): BOOLEAN is
 			-- Are `a_metric_name' and `b_metric_name' equal?
@@ -296,30 +296,6 @@ feature -- Access
 
 	metrics: LIST [EB_METRIC]
 			-- List of registered metrics
-
-	metrics_with_unit (a_unit: QL_METRIC_UNIT): LIST [EB_METRIC] is
-			-- List of registered metrics whose unit is `a_unit'
-		local
-			l_metrics: like metrics
-			l_cursor: CURSOR
-		do
-			l_metrics := metrics.twin
-			l_cursor := l_metrics.cursor
-			from
-				l_metrics.start
-			until
-				l_metrics.after
-			loop
-				if l_metrics.item.unit /= a_unit then
-					l_metrics.remove
-				else
-					l_metrics.forth
-				end
-			end
-			l_metrics.go_to (l_cursor)
-		ensure
-			result_attached: Result /= Void
-		end
 
 	metric_with_name (a_name: STRING): EB_METRIC is
 			-- Metric whose name is `a_name'
@@ -485,13 +461,13 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	last_predefined_metric_load_error: EB_METRIC_ERROR
-			-- Error information when load predefined metric definition the last time
-			-- Void if no error occurred.
+--	last_predefined_metric_load_error: EB_METRIC_ERROR
+--			-- Error information when load predefined metric definition the last time
+--			-- Void if no error occurred.
 
-	last_userdefined_metric_load_error: EB_METRIC_ERROR
-			-- Error information when load userdefined metric definition the last time
-			-- Void if no error occurred.			
+--	last_userdefined_metric_load_error: EB_METRIC_ERROR
+--			-- Error information when load userdefined metric definition the last time
+--			-- Void if no error occurred.			
 
 	metrics_from_file (a_file_name: STRING): LIST [EB_METRIC] is
 			-- Metrics defined in file named `a_file_name'
@@ -530,62 +506,39 @@ feature -- Metric management
 	load_metrics is
 			-- Load predefined and user-defined metrics.
 		local
-			l_file: RAW_FILE
-			l_error: like last_error
 			l_final_error: STRING_GENERAL
+			l_err_loading_predefined: EB_METRIC_ERROR
+			l_err_loading_userdefined: EB_METRIC_ERROR
 		do
 			if workbench.system_defined and then workbench.is_already_compiled then
 				clear_last_error
 				metrics.wipe_out
 				metrics_validity.wipe_out
 					-- Load predefined metrics.
-				create l_file.make (eiffel_layout.predefined_metrics_file)
-				if not l_file.exists then
-					create l_error.make (metric_names.err_file_not_readable (eiffel_layout.predefined_metrics_file))
-				else
-					load_metric_definitions (eiffel_layout.predefined_metrics_file, True)
-					if last_error /= Void then
-						l_error := last_error
-					end
-				end
-				if last_error /= Void then
-					last_predefined_metric_load_error := last_error
-				else
-					last_predefined_metric_load_error := Void
-				end
+				load_metric_definitions (eiffel_layout.predefined_metrics_file, True)
+				l_err_loading_predefined := last_error
 
 					-- Load user-defined metrics.
-				create l_file.make (userdefined_metrics_file)
-				if l_file.exists then
-					if l_file.is_readable  then
-						load_metric_definitions (userdefined_metrics_file, False)
+				clear_last_error
+				load_metric_definitions (userdefined_metrics_file, False)
+				l_err_loading_userdefined := last_error
+
+					-- Setup final error message.
+				if l_err_loading_predefined /= Void then
+					l_final_error :=  metric_names.err_loading_predefined_metrics (l_err_loading_predefined.message_with_location.twin).twin
+				end
+				if l_err_loading_userdefined /= Void then
+					if l_final_error /= Void then
+						l_final_error.append ("%N")
+						l_final_error.append (metric_names.err_loading_userdefined_metrics (l_err_loading_userdefined.message_with_location.twin))
 					else
-						create l_error.make (metric_names.err_file_not_readable (userdefined_metrics_file))
+						l_final_error := metric_names.err_loading_userdefined_metrics (l_err_loading_userdefined.message_with_location.twin)
 					end
-				else
-					last_userdefined_metric_load_error := Void
 				end
-				if not has_error and then l_error /= Void then
-					last_error := l_error
-				end
-				if last_error /= Void then
-					last_userdefined_metric_load_error := last_error
-				else
-					last_userdefined_metric_load_error := Void
-				end
-				if not is_last_predefined_metric_load_successful or not is_last_userdefined_metric_load_successful then
-					if not is_last_predefined_metric_load_successful then
-						l_final_error := metric_names.err_loading_predefined_metrics (last_predefined_metric_load_error.message_with_location)
-					end
-					if not is_last_userdefined_metric_load_successful then
-						if l_final_error = Void then
-							l_final_error := metric_names.err_loading_userdefined_metrics (last_userdefined_metric_load_error.message_with_location)
-						else
-							l_final_error.append (metric_names.err_loading_userdefined_metrics (last_userdefined_metric_load_error.message_with_location))
-						end
-					end
+				if l_final_error /= Void then
 					create last_error.make (l_final_error)
 				end
+
 				is_metric_loaded := True
 				metric_loaded_actions.call ([])
 			end
@@ -600,17 +553,25 @@ feature -- Metric management
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
 			l_loaded_metrics: like metrics
+			l_file: RAW_FILE
 		do
-			l_loaded_metrics := metrics_from_file (a_file_name)
-			if not has_error then
-					-- Check metric name crash.
-					-- If some metric in `loaded_metrics' has the same name as a metric in `metrics',
-					-- no metric will be registered in `metrics'. All metrics in `l_loaded_metrics' will be ignored.
-				check_name_crash (l_loaded_metrics)
+			create l_file.make (a_file_name)
+			if l_file.exists then
+				if l_file.is_readable then
+					l_loaded_metrics := metrics_from_file (a_file_name)
+					if not has_error then
+							-- Check metric name crash.
+							-- If some metric in `loaded_metrics' has the same name as a metric in `metrics',
+							-- no metric will be registered in `metrics'. All metrics in `l_loaded_metrics' will be ignored.
+						check_name_crash (l_loaded_metrics)
 
-					-- Registered metrics in `l_loaded_metrics' into `metrics'
-				if not has_error then
-					l_loaded_metrics.do_all (agent register_metric (?, a_predefined))
+							-- Registered metrics in `l_loaded_metrics' into `metrics'
+						if not has_error then
+							l_loaded_metrics.do_all (agent register_metric (?, a_predefined))
+						end
+					end
+				else
+					create last_error.make (metric_names.err_file_not_readable (a_file_name))
 				end
 			end
 		end

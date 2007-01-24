@@ -129,7 +129,7 @@ feature {NONE} -- Initialization
 
 				-- Setup domain selector.
 			create domain_selector
-			domain_selector.disable_delayed_domain
+			domain_selector.setup_delayed_domain_item_buttons (True, False, False)
 			metric_domain_selector_area.extend (domain_selector)
 			domain_selector.domain_change_actions.extend (agent on_domain_change)
 			metric_selector.metric_selected_actions.extend (agent on_metric_selected)
@@ -488,9 +488,7 @@ feature -- Actions
 			metric_definer.set_mode (metric_definer.new_mode)
 			l_unit ?= unit_combo.selected_item.data
 			check l_unit /= Void end
-			metric_definer.set_unit (l_unit)
-			metric_definer.set_uuid (uuid)
-			metric_definer.load_metric (Void, False)
+			metric_definer.initialize_editor (Void, metric_definer.edit_mode, l_unit, uuid)
 		end
 
 	on_quick_metric_button_pressed (a_metric: EB_METRIC_BASIC) is
@@ -945,7 +943,13 @@ feature-- UI Update
 						metric_selection_area.enable_sensitive
 						metric_definition_area.enable_sensitive
 						stop_metric_btn.disable_sensitive
-
+						if metric_definer.is_editor_initialized then
+							metric_definer.change_actions.block
+							metric_definer.change_actions_internal.block
+							metric_definer.load_metric (metric_definer.metric, False)
+							metric_definer.change_actions_internal.resume
+							metric_definer.change_actions.resume
+						end
 						l_metric := current_selected_metric
 						if l_metric /= Void and then l_metric.is_ratio then
 							if show_percent_btn.data = Void then

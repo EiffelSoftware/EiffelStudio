@@ -108,7 +108,8 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 				-- Setup domain selector.
-			create domain_selector.make (False)
+			create domain_selector
+			domain_selector.setup_delayed_domain_item_buttons (True, False, False)
 				-- Setup metric selector.
 			create metric_selector.make (True)
 			metric_selector.double_click_actions.extend (agent on_pointer_double_click_on_metric_item)
@@ -713,7 +714,7 @@ feature {NONE} -- Implementation
 	calculator: EB_METRIC_ARCHIVE_CALCULATOR
 			-- Archive calculator	
 
-	archive_calculatation_task (a_metric_names: LIST [STRING]; a_input_domain: EB_METRIC_DOMAIN): LIST [TUPLE [EB_METRIC, EB_METRIC_DOMAIN, BOOLEAN, BOOLEAN]] is
+	archive_calculatation_task (a_metric_names: LIST [STRING]; a_input_domain: EB_METRIC_DOMAIN): LIST [TUPLE [EB_METRIC, EB_METRIC_DOMAIN, BOOLEAN, BOOLEAN, EB_METRIC_VALUE_TESTER]] is
 			-- Archive calculation task from `a_metric_names' and `a_input_domain'
 		require
 			a_metric_names_attached: a_metric_names /= Void
@@ -721,13 +722,13 @@ feature {NONE} -- Implementation
 			a_input_domain_attached: a_input_domain /= Void
 			a_input_domain_valid: a_input_domain.is_valid
 		do
-			create {LINKED_LIST [TUPLE [EB_METRIC, EB_METRIC_DOMAIN, BOOLEAN, BOOLEAN]]} Result.make
+			create {LINKED_LIST [TUPLE [EB_METRIC, EB_METRIC_DOMAIN, BOOLEAN, BOOLEAN, EB_METRIC_VALUE_TESTER]]} Result.make
 			from
 				a_metric_names.start
 			until
 				a_metric_names.after
 			loop
-				Result.extend ([metric_manager.metric_with_name (a_metric_names.item), a_input_domain, False, False])
+				Result.extend ([metric_manager.metric_with_name (a_metric_names.item), a_input_domain, False, False, Void])
 				a_metric_names.forth
 			end
 		ensure

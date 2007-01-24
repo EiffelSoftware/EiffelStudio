@@ -413,6 +413,7 @@ feature{NONE} -- Process
 			append_new_line
 			indent
 			a_item.input_domain.process (Current)
+			a_item.value_tester.process (Current)
 			exdent
 			append_indent
 			append_end_tag (n_metric)

@@ -38,13 +38,28 @@ feature{NONE} -- Initialization
 			metric_manager_set: metric_manager = a_manager
 		end
 
+feature -- Access
+
+	delayed_validity_function: FUNCTION [ANY, TUPLE [a_delayed_domain_item: EB_METRIC_DELAYED_DOMAIN_ITEM], EB_METRIC_ERROR]
+			-- Function used to check validity of `a_delayed_domain_item'.
+			-- If `a_delayed_domain_item' is invalid, error information is returned from this function, otherwise,
+			-- Void is returned.
+			-- If this function is Void, validity of a delayed domain item is not checkes thus it's always valid.
+
 feature -- Setting
+
+	set_delayed_validity_function (a_function: like delayed_validity_function) is
+			-- Set `delayed_validity_function' with `a_function'.
+		do
+			delayed_validity_function := a_function
+		ensure
+			delayed_validity_function_set: delayed_validity_function = a_function
+		end
 
 	remove_error is
 			-- Set `has_error' to False, set `last_error' to Void.
 		do
-			has_error := False
-			last_error := Void
+			set_last_error (Void)
 		ensure
 			has_error_set: not has_error
 			last_error_set: last_error = Void
@@ -72,10 +87,23 @@ feature -- Validate
 			reset
 			current_metric := a_metric
 			if (not a_force) and then is_metric_validity_checked (a_metric.name) then
-				last_error := metric_manager.metric_validity (a_metric.name)
+				set_last_error (metric_manager.metric_validity (a_metric.name))
 				error_table.force (last_error, a_metric.name)
 			else
 				a_metric.process (Current)
+			end
+		end
+
+	check_validity (a_item: EB_METRIC_VISITABLE) is
+			-- Check validity for `a_item' and store result in `last_error'.
+			-- `last_error' is Void means `a_item' is valid, or it contains detailed error information.
+		require
+			a_item_attached: a_item /= Void
+		do
+			reset
+			a_item.process (Current)
+			if has_error then
+				set_last_error (error_for_current_level)
 			end
 		end
 
@@ -521,8 +549,15 @@ feature{NONE} -- Process
 
 	process_delayed_domain_item (a_item: EB_METRIC_DELAYED_DOMAIN_ITEM) is
 			-- Process `a_item'.
+		local
+			l_error: EB_METRIC_ERROR
 		do
-			-- Nothing to be done here.
+			if delayed_validity_function /= Void then
+				l_error := delayed_validity_function.item ([a_item])
+				if l_error /= Void then
+					create_last_error_with_to_do (l_error.message, l_error.to_do)
+				end
+			end
 		end
 
 	process_metric_archive_node (a_item: EB_METRIC_ARCHIVE_NODE) is
@@ -609,8 +644,11 @@ feature -- Access
 
 feature -- Status report
 
-	has_error: BOOLEAN
+	has_error: BOOLEAN is
 			-- Has error?
+		do
+			Result := last_error /= Void
+		end
 
 feature{NONE} -- Status report
 
@@ -674,7 +712,6 @@ feature{NONE} -- Implementation
 			a_msg_attached: a_msg /= Void
 			not_a_msg_is_empty: not a_msg.is_empty
 		do
-			has_error := True
 			create last_error.make (a_msg)
 			store_location_stack
 		ensure
@@ -862,13 +899,25 @@ feature{NONE} -- Implementation
 		local
 			l_error: like last_error
 		do
-			l_error := metric_manager.metric_validity (a_metric_name)
+			if metric_manager.is_metric_validity_checked (a_metric_name) then
+				l_error := metric_manager.metric_validity (a_metric_name)
+			elseif error_table.has (a_metric_name) then
+				l_error := error_table.item (a_metric_name)
+			end
 			if l_error /= Void then
 				create_last_error_with_to_do (l_error.message, l_error.to_do)
 				if l_error.location /= Void then
 					last_error.set_location (l_error.location.twin)
 				end
 			end
+		end
+
+	set_last_error (a_error: like last_error) is
+			-- Set `last_error' with `a_error'.
+		do
+			last_error := a_error
+		ensure
+			last_error_set: last_error = a_error
 		end
 
 invariant

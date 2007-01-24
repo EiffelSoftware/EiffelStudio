@@ -269,6 +269,8 @@ feature{NONE} -- Implementation
 				l_items.forth
 				i := i + 1
 			end
+			l_width := l_width + left_border + right_border + border_line_width * 2
+			l_height := l_height + top_border + bottom_border + border_line_width * 2
 			Result := [l_width, l_height]
 		ensure
 			result_attached: Result /= Void

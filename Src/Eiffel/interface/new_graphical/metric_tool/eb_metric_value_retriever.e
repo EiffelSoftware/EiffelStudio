@@ -22,6 +22,14 @@ feature -- Access
 		deferred
 		end
 
+	value_with_domain (a_domain: EB_METRIC_DOMAIN): DOUBLE is
+			-- Retrieved value
+		require
+			value_retrievable: is_retrievable
+			a_domain_attached: a_domain /= Void
+		deferred
+		end
+
 feature -- Status report
 
 	is_retrievable: BOOLEAN is

@@ -44,6 +44,20 @@ feature -- Testing
 			end
 		end
 
+	is_satisfied_by_domain (a_value: DOUBLE; a_domain: EB_METRIC_DOMAIN): BOOLEAN is
+			-- Is Current tester satisfied by `a_value'?
+			-- This is used to check warnings in metric archive node.
+			-- `a_domain' is the input domain used to calculate that archive node.
+		require
+			a_domain_attached: a_domain /= Void
+		do
+			if is_anded then
+				Result := criteria.for_all (agent is_criterion_satisfied_with_domain (?, a_value, a_domain))
+			else
+				Result := criteria.there_exists (agent is_criterion_satisfied_with_domain (?, a_value, a_domain))
+			end
+		end
+
 feature -- Access
 
 	criteria: LIST [TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]] is
@@ -179,6 +193,15 @@ feature{NONE} -- Implementation
 			a_ql_domain_attached: a_ql_domain /= Void
 		do
 			Result := tester_table.item (a_criterion.a_criterion_type).item ([a_value, a_criterion.a_value_retriever.value (a_ql_domain)])
+		end
+
+	is_criterion_satisfied_with_domain (a_criterion: TUPLE [a_value_retriever: EB_METRIC_VALUE_RETRIEVER; a_criterion_type: INTEGER]; a_value: DOUBLE; a_domain: EB_METRIC_DOMAIN): BOOLEAN is
+			-- Is `a_agent' satisfied by `a_crterion' and `a_value'?
+		require
+			a_criterion_attached: a_criterion /= Void
+			a_domain_attached: a_domain /= Void
+		do
+			Result := tester_table.item (a_criterion.a_criterion_type).item ([a_value, a_criterion.a_value_retriever.value_with_domain (a_domain)])
 		end
 
 invariant

@@ -209,16 +209,16 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			l_status_bar := context_editor.develop_window.status_bar
 			l_status_bar.reset_progress_bar_with_range (0 |..| nb_of_items)
 
-			l_status_bar.display_message ("Exploring ancestors of " + center_class.name)
+			l_status_bar.display_message (names.l_exploring_ancestor_of (center_class.name))
 			explore_ancestors (center_class.class_i, ancestor_depth, True)
 
-			l_status_bar.display_message ("Exploring descendants of " + center_class.name)
+			l_status_bar.display_message (names.l_exploring_descendants_of (center_class.name))
 			explore_descendants (center_class.class_i, descendant_depth, True)
 
-			l_status_bar.display_message ("Exploring clients of " + center_class.name)
+			l_status_bar.display_message (names.l_exploring_clinets_of (center_class.name))
 			explore_clients (center_class, client_depth, True)
 
-			l_status_bar.display_message ("Exploring suppliers of " + center_class.name)
+			l_status_bar.display_message (names.l_exploring_suppliers_of (center_class.name))
 			explore_suppliers (center_class, supplier_depth, True)
 		end
 

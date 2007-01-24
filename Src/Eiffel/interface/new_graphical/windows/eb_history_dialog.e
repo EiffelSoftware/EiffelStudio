@@ -178,7 +178,7 @@ feature -- Basic operations
 				action_list.remove
 				action_list.back
 			end
-			if action_list.first.text.out.is_equal (history_discarded_string) then
+			if action_list.first.text.is_equal (history_discarded_string) then
 				offset := 1
 			end
 			action_list.go_i_th (undo_list.index + offset)
@@ -251,7 +251,7 @@ feature -- Basic operations
 				action_list.remove
 				action_list.back
 			end
-			if action_list.first.text.out.is_equal (history_discarded_string) then
+			if action_list.first.text.is_equal (history_discarded_string) then
 				offset := 1
 			end
 			action_list.go_i_th (undo_list.index + offset)
@@ -280,7 +280,7 @@ feature -- Basic operations
 			if undo_list.off then
 				undo_exhausted_actions.call (Void)
 			end
-			if action_list.first.text.out.is_equal (history_discarded_string) then
+			if action_list.first.text.is_equal (history_discarded_string) then
 				offset := 1
 			end
 			action_list.go_i_th (undo_list.index + offset)
@@ -302,7 +302,7 @@ feature -- Basic operations
 		do
 			is_redo_undoing := True
 			Precursor
-			if action_list.first.text.out.is_equal (history_discarded_string) then
+			if action_list.first.text.is_equal (history_discarded_string) then
 				offset := 1
 			end
 			action_list.go_i_th (undo_list.index + offset)
@@ -353,14 +353,14 @@ feature {NONE} -- Events
 			to_undo, to_redo: INTEGER
 			offset: INTEGER
 		do
-			if not action_list.selected_item.text.out.is_equal (history_discarded_string) then
+			if not action_list.selected_item.text.is_equal (history_discarded_string) then
 				if user_selected then
 					if previously_selected_item /= Void then
 				 		to_undo := action_list.index_of (previously_selected_item, 1) -
 							action_list.index_of (action_list.selected_item, 1)
 						to_redo := - to_undo
 					else
-						if action_list.first.text.out.is_equal (history_discarded_string) then
+						if action_list.first.text.is_equal (history_discarded_string) then
 							offset := 1
 						end
 				 		to_undo := - (action_list.index_of (action_list.selected_item, 1) - offset)
@@ -396,9 +396,9 @@ feature {NONE} -- Events
 			hide
 		end
 
-	history_discarded_string: STRING is
+	history_discarded_string: STRING_GENERAL is
 		once
-			Result := "--- History discarded ---"
+			Result := interface_names.l_history_discarded_string
 		end
 
 

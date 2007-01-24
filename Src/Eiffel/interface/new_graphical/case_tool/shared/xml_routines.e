@@ -20,6 +20,9 @@ inherit
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
+	SHARED_NAMES
+		export {NONE} all end
+
 create {SHARED_XML_ROUTINES}
 	make, default_create
 
@@ -78,10 +81,10 @@ feature {SHARED_XML_ROUTINES} -- Processing
 					Result := int_str.to_integer
 					valid_tags_read
 				else
-					display_warning_message ("Value of element " + a_name + " is not valid.")
+					display_warning_message (warnings.w_value_of_element_is_not_valid (a_name))
 				end
 			else
-				display_warning_message ("Element " + a_name + " expected but not found.")
+				display_warning_message (warnings.w_element_expected_not_found (a_name))
 			end
 		end
 
@@ -98,10 +101,10 @@ feature {SHARED_XML_ROUTINES} -- Processing
 					Result := bool_str.to_boolean
 					valid_tags_read
 				else
-					display_warning_message ("Value of element " + a_name + " is not valid.")
+					display_warning_message (warnings.w_value_of_element_is_not_valid (a_name))
 				end
 			else
-				display_warning_message ("Element " + a_name + " expected but not found.")
+				display_warning_message (warnings.w_element_expected_not_found (a_name))
 			end
 		end
 
@@ -118,10 +121,10 @@ feature {SHARED_XML_ROUTINES} -- Processing
 					Result := double_str.to_double
 					valid_tags_read
 				else
-					display_warning_message ("Value of element " + a_name + " is not valid.")
+					display_warning_message (warnings.w_value_of_element_is_not_valid (a_name))
 				end
 			else
-				display_warning_message ("Element " + a_name + " expected but not found.")
+				display_warning_message (warnings.w_element_expected_not_found (a_name))
 			end
 		end
 
@@ -135,7 +138,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 				Result := e.text
 				valid_tags_read
 			else
-				display_warning_message ("Element " + a_name + " expected but not found.")
+				display_warning_message (warnings.w_element_expected_not_found (a_name))
 			end
 		end
 
@@ -165,10 +168,10 @@ feature {SHARED_XML_ROUTINES} -- Processing
 					create Result.make_with_8_bit_rgb (r, g, b)
 					valid_tags_read
 				else
-					display_warning_message ("Value of element " + a_name + " is not valid.")
+					display_warning_message (warnings.w_value_of_element_is_not_valid (a_name))
 				end
 			else
-				display_warning_message ("Retrieve default color.")
+				display_warning_message (warnings.w_retrieve_default_color)
 					-- Default color
 				create Result.make_with_8_bit_rgb (255, 255, 0)
 			end
@@ -225,12 +228,12 @@ feature -- Saving
 					l_output_file.flush
 					l_output_file.close
 				else
-					display_error_message ("Unable to write file: " + a_file_name)
+					display_error_message (warnings.w_unable_to_write_file (a_file_name))
 				end
 			end
 		rescue
 			retried := True
-			display_error_message ("Unable to write file: " + a_file_name)
+			display_error_message (warnings.w_unable_to_write_file (a_file_name))
 			retry
 		end
 
@@ -260,11 +263,11 @@ feature -- Deserialization
 				if l_parser.is_correct then
 					Result := l_tree_pipe.document
 				else
-					display_error_message ("File " + a_file_path + " is corrupted")
+					display_error_message (warnings.w_file_is_corrupted (a_file_path))
 					Result := Void
 				end
 			else
-				display_error_message ("File " + a_file_path + " cannot not be open")
+				display_error_message (warnings.w_file_can_not_be_open (a_file_path))
 			end
 		end
 
@@ -290,7 +293,7 @@ feature {SHARED_XML_ROUTINES} -- Walk around
 
 feature {SHARED_XML_ROUTINES} -- Error management
 
-	display_warning_message (a_warning_msg: STRING) is
+	display_warning_message (a_warning_msg: STRING_GENERAL) is
 			-- Display `a_warning_msg' in a warning popup window.
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty
@@ -302,19 +305,19 @@ feature {SHARED_XML_ROUTINES} -- Error management
 			--l_warning_window.show_modal_to_window (relative_window)
 		end
 
-	display_error_message (an_error_msg: STRING) is
+	display_error_message (an_error_msg: STRING_GENERAL) is
 			-- Display `an_error_msg' in an error popup window.
 		require
 			valid_error_message: an_error_msg /= Void and then not an_error_msg.is_empty
 		local
-			l_error_window: EV_ERROR_DIALOG
+			l_error_window: EB_ERROR_DIALOG
 		do
 			create l_error_window.make_with_text (an_error_msg)
 			l_error_window.show
 			--l_warning_window.show_modal_to_window (relative_window)
 		end
 
-	display_warning_message_relative (a_warning_msg: STRING; a_parent_window: EV_WINDOW) is
+	display_warning_message_relative (a_warning_msg: STRING_GENERAL; a_parent_window: EV_WINDOW) is
 			-- Display `a_warning_msg' in a warning popup window.
 		require
 			valid_error_message: a_warning_msg /= Void and then not a_warning_msg.is_empty

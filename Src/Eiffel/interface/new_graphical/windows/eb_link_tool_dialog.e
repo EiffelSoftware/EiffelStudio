@@ -54,13 +54,13 @@ feature {NONE} -- Initialization
 
 			create ok_button.make_with_text_and_action (Interface_names.b_ok, agent ok_action)
 			create cancel_button.make_with_text_and_action (Interface_names.b_cancel, agent cancel_action)
-			create cb_nothing.make_with_text ("Do nothing")
+			create cb_nothing.make_with_text (interface_names.b_do_nothing)
 			cb_nothing.hide
-			create cb_left.make_with_text_and_action ("Put handle left", agent apply_action)
-			create cb_right.make_with_text_and_action ("Put handle right", agent apply_action)
-			create cb2_left.make_with_text_and_action ("Put two handles left", agent apply_action)
-			create cb2_right.make_with_text_and_action ("Put two handles right", agent apply_action)
-			create cb_reset.make_with_text_and_action ("Remove handles", agent apply_action)
+			create cb_left.make_with_text_and_action (interface_names.b_put_handle_left, agent apply_action)
+			create cb_right.make_with_text_and_action (interface_names.b_put_handle_right, agent apply_action)
+			create cb2_left.make_with_text_and_action (interface_names.b_put_two_handle_left, agent apply_action)
+			create cb2_right.make_with_text_and_action (interface_names.b_put_two_handle_right, agent apply_action)
+			create cb_reset.make_with_text_and_action (interface_names.b_Remove_handles, agent apply_action)
 			create main_vb
 			main_vb.set_padding (Layout_constants.Small_padding_size)
 			main_vb.set_border_width (Layout_constants.Default_border_size)
@@ -146,7 +146,7 @@ feature {EB_LINK_TOOL_COMMAND} -- Status setting
 			create vb
 			vb.set_padding (Layout_constants.Small_padding_size)
 			vb.set_border_width (Layout_constants.Default_border_size)
-			create frame_list.make_with_text ("Feature list")
+			create frame_list.make_with_text (interface_names.l_feature_list)
 			frame_list.extend (vb)
 			vb.extend (feature_list)
 			main_vb.finish

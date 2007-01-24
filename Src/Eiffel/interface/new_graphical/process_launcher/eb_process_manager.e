@@ -153,78 +153,19 @@ feature -- Execution
 			a_window_not_void: a_window /= Void
 		local
 			cd: EB_DISCARDABLE_CONFIRMATION_DIALOG
-			l_output: STRING
-			l_output2: STRING
-			l_discard_msg: STRING
-			l_cnt: INTEGER
-			l_and_str: STRING
-			l_link_verb: STRING
-			l_sub_str: STRING
-			l_comma_str: STRING
-
+			l_output, l_discard_msg: STRING_GENERAL
 		do
 			if is_process_running then
-				l_cnt := 0
-				if is_c_compilation_running then
-					l_cnt := l_cnt + 1
+				if is_c_compilation_running and is_external_command_running then
+					l_output := interface_names.l_c_compilation_and_external_command_running
+					l_discard_msg := interface_names.l_discard_cancel_c_compilation_and_external_command
+				elseif is_c_compilation_running then
+					l_output := interface_names.l_c_compilation_running
+					l_discard_msg := interface_names.l_discard_cancel_c_compilation
+				elseif is_external_command_running then
+					l_output := interface_names.l_external_command_running
+					l_discard_msg := interface_names.l_discard_terminate_external_command_when_exit
 				end
-				if is_external_command_running then
-					l_cnt := l_cnt + 1
-				end
-				if l_cnt = 2 then
-					l_and_str := once "and "
-					l_link_verb := once "are "
-					l_sub_str := once "They need "
-					l_comma_str := once ", "
-				else
-					l_and_str := ""
-					l_link_verb := once "is "
-					l_sub_str := once "It needs "
-					l_comma_str := once ""
-				end
-
-				create l_output.make (100)
-				if is_c_compilation_running then
-					l_output.append (once "a C Compilation ")
-				end
-				l_output.append (l_and_str)
-				if is_external_command_running then
-					l_output.append (once "an external command ")
-				end
-				l_output.append (l_link_verb)
-				l_output.append (once "currently running.%N")
-				l_output.append (l_sub_str)
-				l_output.append (once "to be terminated before EiffelStudio can exit.%N%N")
-
-				create l_output2.make (100)
-				if is_c_compilation_running then
-					l_output2.append ("cancel C compilation")
-				end
-				l_output2.append (l_comma_str)
-				if is_external_command_running then
-					l_output2.append ("terminate external command")
-				end
-				l_output2.append (once " and exit?%N")
-
-				create l_discard_msg.make (100)
-				l_discard_msg.append (once "Do not ask again, and always ")
-				if is_c_compilation_running then
-					l_discard_msg.append (once "cancel C Compilation")
-				end
-				l_discard_msg.append (l_comma_str)
-
-				if is_external_command_running then
-					l_discard_msg.append (once "terminate external command")
-				end
-				l_discard_msg.append (" when exiting.")
-
-				if l_output.item (1).is_lower then
-					l_output.put (l_output.item (1).as_upper, 1)
-				end
-				if l_output2.item (1).is_lower then
-					l_output2.put (l_output2.item (1).as_upper, 1)
-				end
-				l_output.append (l_output2)
 
 				create cd.make_initialized (
 					2, preferences.dialog_data.confirm_on_terminate_process_string,

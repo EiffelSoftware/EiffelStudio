@@ -35,6 +35,11 @@ inherit
 			default_create
 		end
 
+	SHARED_NAMES
+		undefine
+			default_create
+		end
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -375,25 +380,25 @@ feature {EB_DIAGRAM_TOOL} -- Synchronization
 				nr_of_items := 1 + nodes.count + clusters.count + links.count + 1 + 1
 				l_status_bar.reset_progress_bar_with_range (0 |..| nr_of_items)
 				l_status_bar.display_progress_value (0)
-				l_status_bar.display_message ("Synchronizing diagram tool: Removing unneeded items")
+				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_removing_unneeded_items)
 				remove_unneeded_items
 
 				l_status_bar.display_progress_value (1)
-				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing clusters")
+				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_clusters)
 				synchronize_clusters (l_progress_bar)
 
-				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing classes")
+				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_classes)
 				synchronize_classes (l_progress_bar)
 
-				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing links")
+				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_links)
 				synchronize_links (l_progress_bar)
 
 				l_status_bar.display_progress_value (nr_of_items - 1)
-				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing class relations")
+				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_class_relations)
 				add_classes_relations
 
 				l_status_bar.display_progress_value (nr_of_items)
-				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing cluster relations")
+				l_status_bar.display_message (names.l_synchronizing_diagram_tool.as_string_32 + names.l_synchronizing_clusters_relations)
 				add_clusters_relations
 
 				l_status_bar.reset

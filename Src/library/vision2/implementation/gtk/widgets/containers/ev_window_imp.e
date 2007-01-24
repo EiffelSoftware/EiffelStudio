@@ -408,18 +408,18 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
 			-- GdkEventConfigure event occurred.
 		local
-			a_x_pos, a_y_pos: INTEGER
+			l_x_pos, l_y_pos: INTEGER
 		do
 				--| `default_width' and `default_height' are not useful anymore.
-			a_x_pos := x_position
-			a_y_pos := y_position
+			l_x_pos := x_position
+			l_y_pos := y_position
 			configure_event_pending := False
-			Precursor (a_x_pos, a_y_pos, a_width, a_height)
-			if a_x_pos  /= previous_x_position or a_y_pos /= previous_y_position then
-				previous_x_position := a_x_pos
-				previous_y_position := a_y_pos
+			Precursor (l_x_pos, l_y_pos, a_width, a_height)
+			if l_x_pos  /= previous_x_position or else l_y_pos /= previous_y_position then
+				previous_x_position := l_x_pos
+				previous_y_position := l_y_pos
 				if move_actions_internal /= Void then
-					move_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (previous_x_position, previous_y_position, a_width, a_height))
+					move_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (l_x_pos, l_y_pos, a_width, a_height))
 				end
 			end
 		end

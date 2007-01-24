@@ -173,10 +173,13 @@ feature -- Implementation
 			has_text, has_pixmap: BOOLEAN
 			i, a_style: INTEGER
 			pix_height: INTEGER
+			l_minimum_width, l_minimum_height: INTEGER
 		do
 			if parent_imp /= Void then
 				from
 					i := 1
+					l_minimum_width := minimum_width
+					l_minimum_height := minimum_height
 				until
 					i > interface.count
 				loop
@@ -197,13 +200,13 @@ feature -- Implementation
 					else
 						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
 					end
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, l_minimum_width, l_minimum_height)
 				elseif has_text then
 					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, l_minimum_width, l_minimum_height)
 				else -- has_pixmap
 					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
-					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, pix_height + (pix_height // 2))
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, l_minimum_width, pix_height + (pix_height // 2))
 						-- Set height to be large enough to display pixmap in button.
 				end
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)

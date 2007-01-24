@@ -29,6 +29,7 @@ inherit
 			on_application_quit,
 			process_breakpoint,
 			implementation,
+			set_default_parameters,
 			set_maximum_stack_depth,
 			notify_breakpoints_changes,
 			add_idle_action, remove_idle_action, new_timer,
@@ -69,8 +70,7 @@ feature {NONE} -- Initialization
 					--| When compiling in batch mode with the graphical "ec"
 				create debug_run_cmd.make
 
-					--| Preferences settings
-				maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
+					--| Graphical Preferences settings
 				objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
 				debug_splitter_position := preferences.debug_tool_data.main_splitter_position
 
@@ -86,24 +86,32 @@ feature {NONE} -- Initialization
 				dump_value_factory.set_debug_output_evaluation_enabled (pbool.value)
 				pbool.typed_change_actions.extend (agent dump_value_factory.set_debug_output_evaluation_enabled)
 
-				set_displayed_string_size (preferences.misc_data.default_displayed_string_size)
-
-				if preferences.debug_tool_data /= Void then
-					set_max_evaluation_duration (preferences.debugger_data.max_evaluation_duration)
-					preferences.debugger_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
-				end
-				check
-					displayed_string_size: displayed_string_size = preferences.misc_data.default_displayed_string_size
-					max_evaluation_duration_set: preferences.debugger_data /= Void implies
-								max_evaluation_duration = preferences.debugger_data.max_evaluation_duration
-				end
-
 					--| End of settings
 				init_commands
 				create watch_tool_list.make
 			end
 
 			create {DEBUGGER_TEXT_FORMATTER_OUTPUT} text_formatter_visitor.make
+		end
+
+	set_default_parameters
+			-- Set hard coded default parameters values
+			-- (export status {NONE})
+		do
+			Precursor {DEBUGGER_MANAGER}
+			if preferences.debugger_data /= Void then
+				set_slices (preferences.debugger_data.min_slice, preferences.debugger_data.max_slice)
+				set_displayed_string_size (preferences.debugger_data.default_displayed_string_size)
+				set_maximum_stack_depth (preferences.debugger_data.default_maximum_stack_depth)
+
+				set_max_evaluation_duration (preferences.debugger_data.max_evaluation_duration)
+				preferences.debugger_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
+			end
+			check
+				displayed_string_size: displayed_string_size = preferences.debugger_data.default_displayed_string_size
+				max_evaluation_duration_set: preferences.debugger_data /= Void implies
+						max_evaluation_duration = preferences.debugger_data.max_evaluation_duration
+			end
 		end
 
 feature -- Settings
@@ -174,6 +182,14 @@ feature -- Output visitor
 	text_formatter_visitor: DEBUGGER_TEXT_FORMATTER_VISITOR
 
 feature -- tools management
+
+	refresh_objects_grids is
+			-- Refresh objects grids
+			-- most likely due to display parameters changes
+		do
+			objects_tool.refresh
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.refresh)
+		end
 
 	new_toolbar: ARRAYED_SET [SD_TOOL_BAR_ITEM] is
 			-- Toolbar containing all debugging commands.
@@ -1035,7 +1051,6 @@ feature -- Debugging events
 			-- Application is about to be launched.
 		do
 			Precursor
-			set_default_parameters
 		end
 
 	on_application_launched is

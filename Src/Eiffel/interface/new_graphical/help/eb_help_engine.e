@@ -30,15 +30,15 @@ feature -- Status Report
 			message_if_failed: not Result implies (last_error_message /= Void and then not last_error_message.is_empty)
 			bridge_ok: Result = implementation.last_show_successful
 		end
-	
-	last_error_message: STRING is
+
+	last_error_message: STRING_GENERAL is
 			-- Last error message, if any
 		do
 			Result := implementation.last_error_message
 		ensure
 			bridge_ok: equal (Result, implementation.last_error_message)
 		end
-			
+
 feature -- Basic Operations
 
 	show (a_help_context: EB_HELP_CONTEXT) is

@@ -97,6 +97,8 @@ feature {NONE} -- Initialization
 				if not file_separator.is_equal ("/") and then not file_separator.is_equal ("\") then
 					file_separator := os_separator
 				end
+			else
+				file_separator := os_separator
 			end
 		end
 
@@ -220,7 +222,7 @@ feature -- Status setting
 		do
 			base_path := s
 			sep := file_separator
-			if sep.is_equal ("%U") then
+			if sep /= Void and then sep.is_equal ("%U") then
 				sep := os_separator
 			end
 			if not base_path.is_empty then

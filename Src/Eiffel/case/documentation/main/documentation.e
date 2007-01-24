@@ -636,8 +636,8 @@ feature -- Access
 				Result.append_character (operating_environment.directory_separator)
 			end
 			Result.append (rel_filename)
-			if filter.file_separator.is_equal ("%U") then
-				Result.replace_substring_all (operating_environment.directory_separator.out, filter.file_separator.out)
+			if filter.file_separator /= Void and then filter.file_separator.is_equal ("%U") then
+				Result.replace_substring_all (operating_environment.directory_separator.out, filter.file_separator.as_string_8)
 			end
 		end
 
@@ -660,8 +660,13 @@ feature {EB_DIAGRAM_HTML_GENERATOR, DOCUMENTATION_ROUTINES} -- Access
 			a_cluster_not_void: a_cluster /= Void
 		local
 			l_string: STRING
+			l_sep: STRING_32
 		do
-			l_string := path_representation (filter.file_separator.out, "..", a_cluster, True)
+			l_sep := filter.file_separator
+			if l_sep = Void then
+				l_sep := operating_environment.directory_separator.out
+			end
+			l_string := path_representation (l_sep, "..", a_cluster, True)
 			create Result.make_from_string (l_string)
 		end
 

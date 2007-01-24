@@ -94,18 +94,6 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, a_width, a_height)
 		end
 
-	x_position: INTEGER is
-			-- X coordinate of `Current'
-		do
-			Result := screen_x
-		end
-
-	y_position: INTEGER is
-			-- Y coordinate of `Current'
-		do
-			Result := screen_y
-		end
-
 	width: INTEGER
 			-- Width of `Current'.
 		local
@@ -151,7 +139,7 @@ feature {NONE} -- Implementation
 	configure_event_pending: BOOLEAN
 		-- Has `Current' experienced a configure event?
 
-	screen_x: INTEGER is
+	x_position, screen_x: INTEGER is
 			-- Horizontal position of the window on screen,
 		local
 			temp_y: INTEGER
@@ -159,7 +147,7 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $Result, $temp_y)
 		end
 
-	screen_y: INTEGER is
+	y_position, screen_y: INTEGER is
 			-- Vertical position of the window on screen,
 		local
 			temp_x: INTEGER

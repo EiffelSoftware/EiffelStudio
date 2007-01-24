@@ -94,19 +94,6 @@ feature {NONE} -- Initialization
 			l_gtk_marshal.signal_connect (l_c_object, app_imp.set_focus_event_string, agent (l_gtk_marshal).on_set_focus_event_intermediary (internal_id, ?), l_gtk_marshal.set_focus_event_translate_agent, True)
 				-- Used to propagate focus events between internal gtk widgets.
 
-			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
-			if {EV_GTK_EXTERNALS}.gtk_maj_ver > 1 then
-					-- This is performed in EV_ACCELERATOR_IMP for gtk 1.2 implementation.
-				l_gtk_marshal.signal_connect (
-					accel_group,
-					app_imp.accel_activate_string,
-					agent (l_gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
-					Void,
-					False
-				)
-			end
-			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (l_c_object, accel_group)
-
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (l_c_object, 1, 1)
 			Precursor {EV_CELL_IMP}
 				-- Need to set decorations after window is realized.
@@ -294,8 +281,6 @@ feature {NONE} -- Accelerators
 		do
 			if an_accel /= Void then
 				acc_imp ?= an_accel.implementation
-				acc_imp.add_accel (Current)
-
 				if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
 						-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
 					a_property := once "gtk-menu-bar-accel"
@@ -309,13 +294,8 @@ feature {NONE} -- Accelerators
 
 	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
 			-- Disconnect key combination `an_accel' from this window.
-		local
-			acc_imp: EV_ACCELERATOR_IMP
 		do
-			if an_accel /= Void then
-				acc_imp ?= an_accel.implementation
-				acc_imp.remove_accel (Current)
-			end
+			-- No implementation needed
 		end
 
 feature {EV_ANY_IMP} -- Implementation
@@ -383,8 +363,6 @@ feature {NONE} -- Implementation
 			container_widget := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 
-
-
 			bar_imp ?= upper_bar.implementation
 
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
@@ -395,12 +373,6 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
 
 			app_implementation.window_oids.extend (internal_id)
-
-				-- Initialize accelerators box.
-			accel_box := {EV_GTK_EXTERNALS}.gtk_menu_item_new
-			{EV_GTK_EXTERNALS}.gtk_container_add (accel_box, {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (accel_box, 0, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, accel_box, False, False, 0)
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
@@ -533,12 +505,6 @@ feature {EV_MENU_BAR_IMP, EV_ACCELERATOR_IMP, EV_APPLICATION_IMP} -- Implementat
 			end
 			Precursor {EV_CELL_IMP} (a_has_focus)
 		end
-
-	accel_group: POINTER
-			-- Pointer to GtkAccelGroup struct.
-
-	accel_box: POINTER
-			-- Pointer to the on screen zero size accelerator widget
 
 feature {EV_ACCELERATOR_IMP} -- Implementation
 

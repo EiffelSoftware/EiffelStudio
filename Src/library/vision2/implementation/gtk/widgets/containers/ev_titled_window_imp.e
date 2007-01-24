@@ -80,31 +80,6 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implemen
 			end
 		end
 
-	call_accelerators (a_v2_key_value, accel_mods: INTEGER) is
-			-- Call the accelerator matching v2 key `a_v2_key_value' with a control mask of `accel_mods'
-		local
-			acc: EV_ACCELERATOR
-			acc_imp: EV_ACCELERATOR_IMP
-			i: INTEGER
-		do
-			from
-				i := 1
-			until
-				i > accelerators_internal.count
-			loop
-				acc ?= accelerators_internal.i_th (i)
-				if acc /= Void then
-					acc_imp ?= acc.implementation
-					if acc_imp.key.code = a_v2_key_value and then acc_imp.modifier_mask = accel_mods then
-						if acc_imp.actions /= Void then
-							acc_imp.actions.call (Void)
-						end
-					end
-				end
-				i := i + 1
-			end
-		end
-
 feature -- Access
 
 	icon_name: STRING_32 is

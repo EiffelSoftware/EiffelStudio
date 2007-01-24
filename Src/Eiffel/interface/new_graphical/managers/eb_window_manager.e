@@ -177,8 +177,10 @@ feature -- Basic operations
 			notify_observers (a_window, Notify_added_window)
 			last_created_window := a_window
 
-				-- Show the window
-			a_window.show
+				-- Show the window if not already shown
+			if not a_window.is_visible then
+				a_window.show
+			end
 			a_window.give_focus
 		end
 

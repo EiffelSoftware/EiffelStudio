@@ -18,10 +18,11 @@ inherit
 		end
 
 	EB_TOOL
+		rename
+			make as make_tool
 		redefine
 			menu_name,
 			pixmap,
-			make,
 			mini_toolbar,
 			build_mini_toolbar,
 			build_docking_content,
@@ -60,13 +61,7 @@ feature {NONE} -- Initialization
 			a_debugger_not_void: a_debugger /= Void
 		do
 			set_debugger_manager (a_debugger)
-			make (a_manager)
-		end
 
-	make (a_manager: EB_DEVELOPMENT_WINDOW) is
-			-- Initialize `Current'.
-		do
-			debugger_manager.set_slices (preferences.debugger_data.min_slice, preferences.debugger_data.max_slice)
 			display_first_attributes := True
 			display_first_onces := False
 			display_first_special := True
@@ -79,8 +74,7 @@ feature {NONE} -- Initialization
 
 			create objects_grids_positions.make (Position_current, Position_objects)
 
-			Precursor {EB_TOOL}(a_manager)
-
+			make_tool (a_manager)
 		end
 
 feature {NONE} -- Internal properties
@@ -671,6 +665,14 @@ feature -- Change
 			can_refresh := False
 		end
 
+	refresh is
+			-- Refresh current grid
+			--| Could be optimized to refresh only grid's content display ..
+		do
+			record_grids_layout
+			update
+		end
+
 	update is
 			-- Display current execution status.
 		local
@@ -722,8 +724,6 @@ feature -- Status Setting
 			g: like objects_grid
 		do
 			reset_update_on_idle
-			preferences.debugger_data.min_slice_preference.set_value (debugger_manager.min_slice)
-			preferences.debugger_data.max_slice_preference.set_value (debugger_manager.max_slice)
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug
 			if current_object /= Void then

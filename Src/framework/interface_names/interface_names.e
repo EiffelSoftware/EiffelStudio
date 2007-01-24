@@ -142,6 +142,7 @@ feature -- Button texts
 	b_run: STRING_GENERAL is							do Result := locale.translate("Run")	end
 	b_run_and_close: STRING_GENERAL is					do Result := locale.translate("Run & Close")	end
 	b_Run_finalized: STRING_GENERAL is					do Result := locale.translate("Run Finalized")	end
+	b_Run_workbench: STRING_GENERAL is					do Result := locale.translate("Run Workbench")	end
 	b_Toggle_stone_management: STRING_GENERAL is 		do Result := locale.translate("Link Context")	end
 	b_Raise_all: STRING_GENERAL is						do Result := locale.translate("Raise Windows")	end
 	b_Remove_class_cluster: STRING_GENERAL is			do Result := locale.translate("Remove Class/Cluster")	end
@@ -446,6 +447,8 @@ feature -- Accelerator, focus label and menu name
 	f_Retarget_diagram: STRING_GENERAL is		do Result := locale.translate("Target to cluster or class")	end
 	f_Run_finalized: STRING_GENERAL is			do Result := locale.translate("Run finalized system")	end
 	m_Run_finalized: STRING_GENERAL is			do Result := locale.translate("&Run Finalized System")	end
+	f_Run_workbench: STRING_GENERAL is			do Result := locale.translate("Run workbench system")	end
+	m_Run_workbench: STRING_GENERAL is			do Result := locale.translate("&Run Workbench System")	end
 	f_Save: STRING_GENERAL is					do Result := locale.translate("Save")	end
 	m_Save_new: STRING_GENERAL is				do Result := locale.translate("&Save")	end
 	m_Save_As: STRING_GENERAL is				do Result := locale.translate("S&ave As...")	end
@@ -860,6 +863,7 @@ feature -- Label texts
 	l_Put_text_right_text: STRING_GENERAL is 	do Result := locale.translate("Show selective text on the right of buttons")	end
 	l_Show_all_text: STRING_GENERAL is			do Result := locale.translate("Show text labels")	end
 	l_Query: STRING_GENERAL is					do Result := locale.translate("Query")	end
+	l_refresh_tools: STRING_GENERAL is			do Result := locale.translate("Refresh tools")	end
 	l_remove_project: STRING_GENERAL is			do Result := locale.translate("Remove Project")	end
 	l_Remove_object: STRING_GENERAL is			do Result := locale.translate("Remove")	end
 	l_Remove_object_desc: STRING_GENERAL is		do Result := locale.translate("Remove an object from the tree")	end

@@ -56,6 +56,14 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := generating_type_evaluation_enabled_preference.value
 		end
 
+	default_displayed_string_size: INTEGER is
+			-- Default size of string to be retrieved from the application
+			-- when debugging (for instance size of `string_value' in ABSTRACT_REFERENCE_VALUE)
+			-- (Default value is 50)
+		do
+			Result := default_displayed_string_size_preference.value
+		end
+
 	min_slice: INTEGER is
 			-- From which attribute number should special objects be displayed?
 		do
@@ -118,6 +126,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	classic_debugger_location_preference: STRING_PREFERENCE
 	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
 	generating_type_evaluation_enabled_preference: BOOLEAN_PREFERENCE
+	default_displayed_string_size_preference: INTEGER_PREFERENCE
 	min_slice_preference: INTEGER_PREFERENCE
 	max_slice_preference: INTEGER_PREFERENCE
 	max_evaluation_duration_preference: INTEGER_PREFERENCE
@@ -134,6 +143,7 @@ feature {NONE} -- Preference Strings
 	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_N_instructions"
 	debug_output_evaluation_enabled_string: STRING is "debugger.debug_output_evaluation"
 	generating_type_evaluation_enabled_string: STRING is "debugger.generating_type_evaluation"
+	default_displayed_string_size_string: STRING is "debugger.default_displayed_string_size"
 	min_slice_string: STRING is "debugger.min_slice"
 	max_slice_string: STRING is "debugger.max_slice"
 	max_evaluation_duration_preference_string: STRING is "debugger.max_evaluation_duration"
@@ -152,6 +162,7 @@ feature {NONE} -- Implementation
 			interrupt_every_n_instructions_preference := l_manager.new_integer_preference_value (l_manager, interrupt_every_n_instructions_string, 1)
 			debug_output_evaluation_enabled_preference := l_manager.new_boolean_preference_value (l_manager, debug_output_evaluation_enabled_string, True)
 			generating_type_evaluation_enabled_preference := l_manager.new_boolean_preference_value (l_manager, generating_type_evaluation_enabled_string, True)
+			default_displayed_string_size_preference := l_manager.new_integer_preference_value (l_manager, default_displayed_string_size_string, 50)
 			min_slice_preference := l_manager.new_integer_preference_value (l_manager, min_slice_string, 0)
 			max_slice_preference := l_manager.new_integer_preference_value (l_manager, max_slice_string, 50)
 			max_evaluation_duration_preference := l_manager.new_integer_preference_value (l_manager, max_evaluation_duration_preference_string, 5)
@@ -177,6 +188,7 @@ invariant
 	interrupt_every_n_instructions_preference_not_void: interrupt_every_n_instructions_preference /= Void
 	debug_output_evaluation_enabled_preference_not_void: debug_output_evaluation_enabled_preference /= Void
 	generating_type_evaluation_enabled_preference_not_void: generating_type_evaluation_enabled_preference /= Void
+	default_displayed_string_size_preference_not_void: default_displayed_string_size_preference /= Void
 	min_slice_preference_not_void: min_slice_preference /= Void
 	max_slice_preference_not_void: max_slice_preference /= Void
 

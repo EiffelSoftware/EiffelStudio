@@ -33,7 +33,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_DEBUGGER_MANAGER
+	EB_SHARED_DEBUGGER_MANAGER
 
 create
 	make
@@ -66,7 +66,7 @@ feature -- Access
 		do
 			--| No big pixmap is required for this command.
 		end
-		
+
 	mini_pixmap: EV_PIXMAP is
 			-- Pixmap representing the command for mini toolbars.
 		do
@@ -78,8 +78,6 @@ feature -- Access
 		do
 			Result := description
 		end
-
-feature -- Measurement
 
 feature -- Status report
 
@@ -111,9 +109,22 @@ feature -- Execution
 		do
 			if for_tool then
 				get_slice_limits_on_global
+
 				debugger_manager.set_slices (slice_min, slice_max)
+				debugger_manager.set_displayed_string_size (displayed_string_size)
+				if set_as_default_requested then
+					set_as_default_requested := False
+					preferences.debugger_data.min_slice_preference.set_value (debugger_manager.min_slice)
+					preferences.debugger_data.max_slice_preference.set_value (debugger_manager.max_slice)
+					preferences.debugger_data.default_displayed_string_size_preference.set_value (debugger_manager.displayed_string_size)
+				end
+
 				debug ("debugger_interface")
 					io.put_string ("Messages are displayed%N")
+				end
+				if refresh_tools_requested then
+					refresh_tools_requested := False
+					eb_debugger_manager.refresh_objects_grids
 				end
 			end
 		end
@@ -178,13 +189,24 @@ feature -- Obsolete
 
 feature -- Inapplicable
 
-feature {EB_PRETTY_PRINT_DIALOG}
+feature {EB_PRETTY_PRINT_DIALOG} -- Properties
 
 	slice_min: INTEGER
 			-- Minimum index of displayed attributes in special objects.
 
 	slice_max: INTEGER
 			-- Maximum index of displayed attributes in special objects.
+
+	displayed_string_size: INTEGER
+			-- Size of string to be retrieved from the application
+			-- when debugging
+
+	refresh_tools_requested: BOOLEAN
+			-- Tool's refreshing is requested.
+
+	set_as_default_requested: BOOLEAN
+			-- Set values as default ?
+			-- (i.e: in preferences)
 
 feature {NONE} -- Implementation
 
@@ -218,11 +240,11 @@ feature {NONE} -- Implementation
 			dial: EV_DIALOG
 			label: EV_LABEL
 			cb_disp_str_limit: EV_CHECK_BUTTON
+			cb_refresh, cb_set_as_default: EV_CHECK_BUTTON
 			tf_disp_str_size: EV_TEXT_FIELD
 			tf_minf: EV_TEXT_FIELD
 			tf_maxf: EV_TEXT_FIELD
-			okb: EV_BUTTON
-			cancelb: EV_BUTTON
+			resetb, okb, cancelb: EV_BUTTON
 			maincont: EV_VERTICAL_BOX
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
@@ -279,18 +301,16 @@ feature {NONE} -- Implementation
 
 					--| Set Value
 				if debugger_manager.displayed_string_size = -1 then
-					tf_disp_str_size.set_text (preferences.misc_data.default_displayed_string_size.out)
-					tf_disp_str_size.disable_sensitive
+					tf_disp_str_size.set_text (preferences.debugger_data.default_displayed_string_size.out)
 					cb_disp_str_limit.enable_select
 				else
 					tf_disp_str_size.set_text (debugger_manager.displayed_string_size.out)
-					tf_disp_str_size.enable_sensitive
 					cb_disp_str_limit.disable_select
 				end
+				on_cb_disp_str_limit_cb (cb_disp_str_limit, tf_disp_str_size)
 				cb_disp_str_limit.select_actions.extend (agent on_cb_disp_str_limit_cb (cb_disp_str_limit, tf_disp_str_size))
 
-				slice_min := debugger_manager.min_slice
-				slice_max := debugger_manager.max_slice
+				get_current_values
 			else
 				if obj /= Void then
 						-- A special value is available, that's an easy one!
@@ -307,21 +327,36 @@ feature {NONE} -- Implementation
 				end
 			end
 
+			if def then
+				create cb_set_as_default.make_with_text (interface_names.l_set_as_default)
+				cb_set_as_default.disable_select
+
+				create cb_refresh.make_with_text (interface_names.l_refresh_tools)
+				cb_refresh.enable_select
+			end
+
 				--| Text field for min/max box
-			create tf_minf.make_with_text (slice_min.out)
-			create tf_maxf.make_with_text (slice_max.out)
+			create tf_minf
+			create tf_maxf
 
 			tf_minf.return_actions.extend (agent tf_maxf.set_focus)
 			tf_minf.return_actions.extend (agent tf_maxf.select_all)
-			tf_maxf.return_actions.extend (agent check_and_get_limits_from_fields (cb_disp_str_limit, tf_disp_str_size, tf_minf, tf_maxf, dial))
+			tf_maxf.return_actions.extend (agent check_and_get_limits_from_fields (cb_set_as_default, cb_disp_str_limit, tf_disp_str_size, tf_minf, tf_maxf, cb_refresh, dial))
 
 			if tf_disp_str_size /= Void then
 				tf_disp_str_size.return_actions.extend (agent tf_minf.set_focus)
 			end
 
+				--| Set values
+			update_fields (cb_disp_str_limit, tf_disp_str_size, tf_minf, tf_maxf)
+
 				--| Buttons.
+			create resetb.make_with_text (Interface_names.l_restore_defaults)
+			resetb.select_actions.extend (agent restore_default_values)
+			resetb.select_actions.extend (agent update_fields (cb_disp_str_limit, tf_disp_str_size, tf_minf, tf_maxf))
+
 			create okb.make_with_text (Interface_names.b_Ok)
-			okb.select_actions.extend (agent check_and_get_limits_from_fields (cb_disp_str_limit, tf_disp_str_size, tf_minf, tf_maxf, dial))
+			okb.select_actions.extend (agent check_and_get_limits_from_fields (cb_set_as_default, cb_disp_str_limit, tf_disp_str_size, tf_minf, tf_maxf, cb_refresh, dial))
 
 			create cancelb.make_with_text (Interface_names.b_Cancel)
 			cancelb.select_actions.extend (agent dial.destroy)
@@ -353,9 +388,28 @@ feature {NONE} -- Implementation
 				--| Separator
 			maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
+				--| Refresh current tool ?
+			if cb_set_as_default /= Void or cb_refresh /= Void then
+				if cb_set_as_default /= Void then
+					create hbox
+					hbox.set_padding (Layout_constants.Default_padding_size)
+					extend_no_expand (hbox, cb_set_as_default)
+					extend_no_expand (maincont, hbox)
+				end
+				if cb_refresh /= Void then
+					create hbox
+					hbox.set_padding (Layout_constants.Default_padding_size)
+					extend_no_expand (hbox, cb_refresh)
+					extend_no_expand (maincont, hbox)
+				end
+				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
+			end
+
 				--| Buttons box
 			create hbox
 			hbox.set_padding (Layout_constants.Default_padding_size)
+			hbox.extend (create {EV_CELL})
+			extend_button (hbox, resetb)
 			hbox.extend (create {EV_CELL})
 			extend_button (hbox, okb)
 			extend_button (hbox, cancelb)
@@ -442,7 +496,7 @@ feature {ES_OBJECTS_GRID_LINE} -- Dropping action
 
 feature {NONE} -- Implementation
 
-	internal_set_limits (lower, upper: INTEGER) is
+	internal_set_limits (lower, upper: INTEGER; disp_str_size: INTEGER) is
 			-- Change limits to `lower, upper' values.
 		local
 			nmin, nmax: INTEGER
@@ -455,10 +509,51 @@ feature {NONE} -- Implementation
 
 			slice_min := nmin
 			slice_max := nmax
+
+			if disp_str_size = -1 or disp_str_size > 0 then
+				displayed_string_size := disp_str_size
+			end
+
 			get_effective := True
 		end
 
-	check_and_get_limits_from_fields (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD; tf_minf: EV_TEXT_FIELD; tf_maxf: EV_TEXT_FIELD; dial: EV_DIALOG) is
+	get_current_values is
+			-- Get current values
+		do
+			slice_min := debugger_manager.min_slice
+			slice_max := debugger_manager.max_slice
+			displayed_string_size := debugger_manager.displayed_string_size
+		end
+
+	restore_default_values	is
+			-- Restore default values
+		do
+			slice_min := preferences.debugger_data.min_slice
+			slice_max := preferences.debugger_data.max_slice
+			displayed_string_size := preferences.debugger_data.default_displayed_string_size
+		end
+
+	update_fields (cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD;
+				tf_minf: EV_TEXT_FIELD; tf_maxf: EV_TEXT_FIELD) is
+			--
+		do
+			if tf_disp_str_size /= Void then
+				if displayed_string_size = -1 then
+					tf_disp_str_size.set_text (preferences.debugger_data.default_displayed_string_size.out)
+					cb_disp_str_limit.enable_select
+				else
+					tf_disp_str_size.set_text (displayed_string_size.out)
+					cb_disp_str_limit.disable_select
+				end
+			end
+			tf_minf.set_text (slice_min.out)
+			tf_maxf.set_text (slice_max.out)
+		end
+
+	check_and_get_limits_from_fields (cb_set_as_default, cb_disp_str_limit: EV_CHECK_BUTTON; tf_disp_str_size: EV_TEXT_FIELD;
+				tf_minf: EV_TEXT_FIELD; tf_maxf: EV_TEXT_FIELD;
+				cb_refresh: EV_CHECK_BUTTON;
+				dial: EV_DIALOG) is
 			-- Set `slice_min' and `slice_max' according to the values entered
 			-- in `tf_minf' and `tf_maxf'.
 		require
@@ -508,10 +603,9 @@ feature {NONE} -- Implementation
 				ok := False
 			end
 			if ok then
-				if disp_size = -1 or disp_size > 0 then
-					debugger_manager.set_displayed_string_size (disp_size) --str1.to_integer)
-				end
-				internal_set_limits (str2.to_integer, str3.to_integer)
+				set_as_default_requested := cb_set_as_default /= Void and then cb_set_as_default.is_selected
+				refresh_tools_requested := cb_refresh /= Void and then cb_refresh.is_selected
+				internal_set_limits (str2.to_integer, str3.to_integer, disp_size)
 				dial.destroy
 			end
 		end
@@ -548,4 +642,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SET_SLICE_SIZE_CMD
+end -- class ES_OBJECTS_GRID_SLICES_CMD

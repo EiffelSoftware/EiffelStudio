@@ -89,14 +89,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := show_hidden_preferences_preference.value
 		end
 
-	default_displayed_string_size: INTEGER is
-			-- Default size of string to be retrieved from the application
-			-- when debugging (for instance size of `string_value' in ABSTRACT_REFERENCE_VALUE)
-			-- (Default value is 50)
-		do
-			Result := default_displayed_string_size_preference.value
-		end
-
 	console_shell_command: STRING is
 			-- Shell to open a console
 		do
@@ -126,7 +118,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	preference_window_width_preference: INTEGER_PREFERENCE
 	preference_window_height_preference: INTEGER_PREFERENCE
 	editor_left_side_preference: BOOLEAN_PREFERENCE
-	default_displayed_string_size_preference: INTEGER_PREFERENCE
 	show_hidden_preferences_preference: BOOLEAN_PREFERENCE
 	console_shell_command_preference: STRING_PREFERENCE
 	file_browser_command_preference: STRING_PREFERENCE
@@ -143,7 +134,6 @@ feature {NONE} -- Preference Strings
 	dyn_lib_window_height_string: STRING is "general.dynamic_library_window_height"
 	preference_window_width_string: STRING is "general.preference_window_width"
 	preference_window_height_string: STRING is "general.preference_window_height"
-	default_displayed_string_size_string: STRING is "debugger.default_displayed_string_size"
 	show_hidden_preferences_string: STRING is "general.show_hidden_preferences"
 	console_shell_command_string: STRING is "general.console_shell_command"
 	file_browser_command_string: STRING is "general.file_browser_command"
@@ -168,7 +158,6 @@ feature {NONE} -- Implementation
 			dyn_lib_window_width_preference := l_manager.new_integer_preference_value (l_manager, dyn_lib_window_width_string, 400)
 			preference_window_height_preference := l_manager.new_integer_preference_value (l_manager, preference_window_height_string, 200)
 			preference_window_width_preference := l_manager.new_integer_preference_value (l_manager, preference_window_width_string, 400)
-			default_displayed_string_size_preference := l_manager.new_integer_preference_value (l_manager, default_displayed_string_size_string, 50)
 			show_hidden_preferences_preference := l_manager.new_boolean_preference_value (l_manager, show_hidden_preferences_string, False)
 			if l_platform.is_windows then
 				console_shell_command_preference := l_manager.new_string_preference_value (l_manager, console_shell_command_string, "cmd")
@@ -257,7 +246,6 @@ invariant
 	preference_window_width_preference_not_void: preference_window_width_preference /= Void
 	preference_window_height_preference_not_void: preference_window_height_preference /= Void
 	editor_left_side_preference_not_void: editor_left_side_preference /= Void
-	default_displayed_string_size_preference_not_void: default_displayed_string_size_preference /= Void
 	console_shell_command_preference_not_void: console_shell_command_preference /= Void
 	locale_id_preference_not_void: locale_id_preference /= Void
 

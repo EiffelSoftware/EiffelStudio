@@ -101,7 +101,7 @@ feature -- Validity
 					Error_handler.insert_error (special_error)
 				else
 						-- Check it is indeed called `pointer_item'.
-					l_attr ?= feature_table.item_id (pointer_item_id)
+					l_attr ?= feature_table.item_id (pointer_item_name_id)
 					if l_attr = Void then
 						create special_error.make (typed_pointer_case_3, Current)
 						Error_handler.insert_error (special_error)

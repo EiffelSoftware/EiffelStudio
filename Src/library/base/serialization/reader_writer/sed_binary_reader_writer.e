@@ -152,25 +152,33 @@ feature -- Access
 	read_real_32: REAL is
 			-- Read next real_32
 		local
-			l_val32: NATURAL_32
+			l_pos: INTEGER_32
 		do
-			check
-				correct_size: real_32_bytes = natural_32_bytes
+			check_buffer (real_32_bytes)
+			l_pos := buffer_position
+			if is_little_endian_storable then
+				Result := buffer.read_real_32_le (l_pos)
+			else
+				Result := buffer.read_real_32_be (l_pos)
 			end
-			l_val32 := read_natural_32;
-			($Result).memory_copy ($l_val32, natural_32_bytes)
+			l_pos := l_pos + real_32_bytes
+			buffer_position := l_pos
 		end
 
 	read_real_64: DOUBLE is
 			-- Read next real_64
 		local
-			l_val64: NATURAL_64
+			l_pos: INTEGER_32
 		do
-			check
-				correct_size: real_64_bytes = natural_64_bytes
+			check_buffer (real_64_bytes)
+			l_pos := buffer_position
+			if is_little_endian_storable then
+				Result := buffer.read_real_64_le (l_pos)
+			else
+				Result := buffer.read_real_64_be (l_pos)
 			end
-			l_val64 := read_natural_64;
-			($Result).memory_copy ($l_val64, natural_64_bytes)
+			l_pos := l_pos + real_64_bytes
+			buffer_position := l_pos
 		end
 
 	read_pointer: POINTER is
@@ -311,25 +319,33 @@ feature -- Element change
 	write_real_32 (v: REAL) is
 			-- Write `v'.
 		local
-			l_val32: NATURAL_32
+			l_pos: INTEGER
 		do
-			check
-				correct_size: real_32_bytes = natural_32_bytes
+			check_buffer (real_32_bytes)
+			l_pos := buffer_position
+			if is_little_endian_storable then
+				buffer.put_real_32_le (v, l_pos)
+			else
+				buffer.put_real_32_be (v, l_pos)
 			end
-			($l_val32).memory_copy ($v, natural_32_bytes)
-			write_natural_32 (l_val32)
+			l_pos := l_pos + real_32_bytes
+			buffer_position := l_pos
 		end
 
 	write_real_64 (v: DOUBLE) is
 			-- Write `v'.
 		local
-			l_val64: NATURAL_64
+			l_pos: INTEGER
 		do
-			check
-				correct_size: real_64_bytes = natural_64_bytes
+			check_buffer (real_64_bytes)
+			l_pos := buffer_position
+			if is_little_endian_storable then
+				buffer.put_real_64_le (v, l_pos)
+			else
+				buffer.put_real_64_be (v, l_pos)
 			end
-			($l_val64).memory_copy ($v, natural_64_bytes)
-			write_natural_64 (l_val64)
+			l_pos := l_pos + real_64_bytes
+			buffer_position := l_pos
 		end
 
 	write_pointer (v: POINTER) is

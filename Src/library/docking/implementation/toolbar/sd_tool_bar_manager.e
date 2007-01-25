@@ -10,7 +10,7 @@ class
 
 inherit
 	ANY
-	
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -165,6 +165,7 @@ feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTA
 
 			l_container := tool_bar_container (a_direction)
 			l_container.extend (l_tool_bar_row)
+			internal_docking_manager.command.resize (True)
 		end
 
 feature {SD_DOCKING_MANAGER_AGENTS, SD_CONFIG_MEDIATOR, SD_TOOL_BAR_ZONE_ASSISTANT,

@@ -130,7 +130,10 @@ feature  -- Agents
 				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
 			end
 			internal_docking_manager.command.remove_auto_hide_zones (False)
+
+			-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone.
 			internal_docking_manager.fixed_area.set_minimum_size (0, 0)
+
 			if a_width > 0 then
 				internal_docking_manager.internal_viewport.set_item_width (internal_docking_manager.internal_viewport.width)
 				internal_docking_manager.fixed_area.set_item_width (internal_docking_manager.query.inner_container_main , internal_docking_manager.fixed_area.width)

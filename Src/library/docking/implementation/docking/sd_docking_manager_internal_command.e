@@ -177,7 +177,7 @@ feature -- Commands
 			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
 			from
-				l_zones := internal_docking_manager.zones.zones
+				l_zones := internal_docking_manager.zones.zones.twin
 				l_zones.start
 			until
 				l_zones.after

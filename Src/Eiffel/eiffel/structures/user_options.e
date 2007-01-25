@@ -58,6 +58,14 @@ feature -- Access
 	target_name: STRING
 			-- Name of last chosen target.
 
+	target_names: LIST [STRING] is
+			-- List of available target names
+		do
+			create {ARRAYED_LIST [STRING]}Result.make_from_array (targets.current_keys)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {USER_OPTIONS, USER_OPTIONS_FACTORY} -- Implementation: Access
 
 	targets: HASH_TABLE [TARGET_USER_OPTIONS, STRING]

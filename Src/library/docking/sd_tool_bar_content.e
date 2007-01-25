@@ -167,11 +167,10 @@ feature -- Command
 	close is
 			-- Close Current
 		do
-			if zone /= Void then
-				zone.destroy
-				if zone.is_floating then
-					zone.floating_tool_bar.destroy
-				end
+			destroy_container
+			if manager /= Void then
+				manager.contents.start
+				manager.contents.prune (Current)
 			end
 		end
 
@@ -181,6 +180,12 @@ feature -- Command
 			valid: a_direction = {SD_ENUMERATION}.top or a_direction = {SD_ENUMERATION}.bottom
 			added: is_added
 		do
+			if zone /= Void then
+				-- Use this function to set all SD_TOOL_BAR_ITEM wrap states.
+				zone.change_direction (True)
+			end
+			destroy_container
+
 			manager.set_top (Current, a_direction)
 		end
 
@@ -558,6 +563,18 @@ feature {SD_TOOL_BAR_ZONE, SD_FLOATING_TOOL_BAR_ZONE, SD_TOOL_BAR_ZONE_ASSISTANT
 		end
 
 feature {NONE} -- Implementation
+
+	destroy_container is
+			-- Destroy related containers.
+		do
+			if zone /= Void then
+				zone.destroy_parent_containers
+				if zone.is_floating then
+					zone.floating_tool_bar.destroy
+				end
+				zone.destroy
+			end
+		end
 
 	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE;
 			-- Actions to perfrom when close requested.

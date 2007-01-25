@@ -97,7 +97,6 @@ feature -- Redefine
 			-- Redefine
 		local
 			l_imp: WEL_WINDOW
-			l_font_imp: EV_FONT_IMP
 			l_wel_bitmap: WEL_BITMAP
 			l_color_imp: EV_COLOR_IMP
 			l_brush: WEL_BRUSH

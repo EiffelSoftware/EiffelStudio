@@ -21,50 +21,12 @@
 						<Component Id="component0" Guid="5894b047-d59e-4027-8a56-231ad2e24672" >
 							<File Id="file0" LongName="build.eant" Name="BUILD~1.EAN" />
 							<File Id="file1" Name="forum.txt" />
-							<File Id="file2" Name="gexslt.ecf" />
 							<File Id="file3" Name="gobo.ecf" />
 							<File Id="file4" Name="History.txt" />
 							<File Id="file5" Name="License.txt" />
 							<File Id="file6" Name="Readme.txt" />
 							<File Id="file7" LongName="Release_notes.txt" Name="RELEAS~1.TXT" />
 						</Component>
-						<Directory Id="directory0" LongName=".svn" Name="SVN~1">
-							<Component Id="component1" Guid="89f94f16-54de-4164-a08a-0381110f8849" >
-								<File Id="file8" LongName="dir-prop-base" Name="DIR-PR~2" />
-								<File Id="file9" LongName="dir-props" Name="DIR-PR~1" />
-								<File Id="file10" LongName="dir-wcprops" Name="DIR-WC~1" />
-								<File Id="file11" LongName="empty-file" Name="EMPTY-~1" />
-								<File Id="file12" Name="entries" />
-								<File Id="file13" Name="format" />
-								<File Id="file14" Name="README.txt" />
-							</Component>
-							<Directory Id="directory1" LongName="prop-base" Name="PROP-B~1">
-								<Component Id="component2" Guid="33436551-0308-42dd-aa35-cc4a47131f8a" >
-									<File Id="file15" LongName="gobo.ecf.svn-base" Name="GOBOEC~1.SVN" />
-								</Component>
-							</Directory>
-							<Directory Id="directory2" Name="props">
-								<Component Id="component3" Guid="28bb8333-ff72-42ae-b75d-976b83df0869" >
-									<File Id="file16" LongName="gobo.ecf.svn-work" Name="GOBOEC~1.SVN" />
-								</Component>
-							</Directory>
-							<Directory Id="directory3" LongName="text-base" Name="TEXT-B~1">
-								<Component Id="component4" Guid="ff1a027e-206f-4e46-924b-0a25d7173456" >
-									<File Id="file17" LongName="gobo.ecf.svn-base" Name="GOBOEC~1.SVN" />
-								</Component>
-							</Directory>
-							<Directory Id="directory4" Name="tmp">
-								<Directory Id="directory5" LongName="prop-base" Name="PROP-B~1" />
-								<Directory Id="directory6" Name="props" />
-								<Directory Id="directory7" LongName="text-base" Name="TEXT-B~1" />
-								<Directory Id="directory8" Name="wcprops" />
-							</Directory>
-							<Directory Id="directory9" Name="wcprops">
-								<Component Id="component5" Guid="89f72c97-d444-4297-87bb-d14989b1a146" >
-									<File Id="file18" LongName="gobo.ecf.svn-work" Name="GOBOEC~1.SVN" />
-								</Component>
-							</Directory>
-						</Directory>
 						<Directory Id="directory10" Name="bin">
 							<Component Id="component6" Guid="ab5c9679-c6f9-4e18-bf28-81dd748ddcb2" >
 								<File Id="file19" Name="geant.exe" />

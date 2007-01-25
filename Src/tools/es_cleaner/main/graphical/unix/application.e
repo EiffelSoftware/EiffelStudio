@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 
 			create l_app
 			l_window := create_main_window
+			main_window := l_window
 			l_site ?= l_window
 			if l_site /= Void then
 				l_site.set_site (Current)
@@ -40,6 +41,10 @@ feature {NONE} -- Initialization
 				l_site.set_site (Void)
 			end
 		end
+
+feature {NONE} -- Access
+
+	main_window: EV_WINDOW
 
 feature {NONE} -- Factory functions
 
@@ -69,6 +74,15 @@ feature {NONE} -- Factory functions
 		do
 			create Result.make (Current)
 		end
+
+	create_error_displayer: ERROR_DISPLAYER
+			-- Create a new error displayer
+		do
+			create Result.make (main_window)
+		end
+
+invariant
+	main_window_attached: main_window /= Void
 
 ;indexing
 	copyright:	"Copyright (c) 1984-2007, Eiffel Software"

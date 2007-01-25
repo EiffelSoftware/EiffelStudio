@@ -77,13 +77,13 @@
 
 	<target name="extract_gobo" depend="init">
 		<echo message="Extracting Gobo"/>
-		<copy file="${EIFFEL_SRC}\..\free_add_ons\gobo\gobo_34_win.tgz" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" if="${is_windows}" />
-		<copy file="${EIFFEL_SRC}/../free_add_ons/gobo/gobo_34_unix.tgz" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" unless="${is_windows}" />
+		<copy file="${EIFFEL_SRC}\..\free_add_ons\gobo\gobo_35_win.tbz2" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" if="${is_windows}" />
+		<copy file="${EIFFEL_SRC}/../free_add_ons/gobo/gobo_35_unix.tbz2" to_file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" unless="${is_windows}" />
 
-		<available resource="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" variable="tmp_available"/>
-		<exec executable="tar xzvf gobo.tgz" dir="${ISE_LIBRARY}${path_separator}library"
+		<available resource="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" variable="tmp_available"/>
+		<exec executable="bzip2 -dc gobo.tbz2 | tar xf -" dir="${ISE_LIBRARY}${path_separator}library"
 			accept_errors="true" exit_code_variable="return_code" if="$tmp_available" />
-		<delete file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tgz" if="$tmp_available" />
+		<delete file="${ISE_LIBRARY}${path_separator}library${path_separator}gobo.tbz2" if="$tmp_available" />
 	</target>
 
 	<target name="compile_eiffel_framework" depend="init" if="${is_windows}" >

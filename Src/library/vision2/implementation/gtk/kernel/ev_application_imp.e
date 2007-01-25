@@ -747,7 +747,7 @@ feature -- Basic operation
 				{EV_GTK_EXTERNALS}.object_unref (tooltips)
 				set_is_destroyed (True)
 					-- This will exit our main loop
-				interface.destroy_actions.call (Void)
+				destroy_actions.call (Void)
 			end
 		end
 

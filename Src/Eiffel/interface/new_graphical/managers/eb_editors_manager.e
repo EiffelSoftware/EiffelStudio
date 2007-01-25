@@ -610,6 +610,7 @@ feature -- Element change
 					l_snapshot.forth
 				end
 			end
+			synchronize_with_docking_manager
 		end
 
 feature -- Basic operations
@@ -779,7 +780,7 @@ feature {NONE}-- Implementation
 			l_editor := editor_with_stone (a_stone)
 			if l_editor /= Void then
 				l_editor.docking_content.set_focus
-				if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed then
+				if l_editor.editor_drawing_area /= Void and then l_editor.editor_drawing_area.is_displayed and l_editor.editor_drawing_area.is_sensitive then
 					l_editor.editor_drawing_area.set_focus
 				end
 			else
@@ -1012,6 +1013,66 @@ feature {NONE}-- Implementation
 					end
 				end
 				a_editors.forth
+			end
+		end
+
+	synchronize_with_docking_manager is
+			-- Becaues sometimes the editors datas we saved will not synchronized with docking editors datas,
+			-- we want to make sure it's synchronized here.
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				l_contents := docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				if l_contents.item.type = {SD_ENUMERATION}.editor then
+					if not l_contents.item.is_visible then
+						-- This editor is not exists in saved docking layout, we should remove it.
+						remove_editor_of_content (l_contents.item)
+					end
+				end
+				l_contents.forth
+			end
+		end
+
+	remove_editor_of_content (a_content: SD_CONTENT) is
+			-- Editor which relate with `a_content'.
+		local
+			l_editors: like editors
+			l_editor: EB_SMART_EDITOR
+			l_found: BOOLEAN
+		do
+			from
+				l_editors := editors
+				l_editors.start
+			until
+				l_editors.after or l_found
+			loop
+				if l_editors.item.docking_content = a_content then
+					editors_internal.start
+					editors_internal.prune (l_editors.item)
+					l_found := True
+				end
+				l_editors.forth
+			end
+			if not l_found then
+				from
+					fake_editors.start
+				until
+					fake_editors.after or l_found
+				loop
+					if fake_editors.item.docking_content = a_content then
+						l_editor := fake_editors.item
+						fake_editors.start
+						fake_editors.prune (l_editor)
+						l_found := True
+					else
+						fake_editors.forth
+					end
+				end
 			end
 		end
 

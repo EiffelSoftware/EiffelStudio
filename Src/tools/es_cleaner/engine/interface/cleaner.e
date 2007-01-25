@@ -25,6 +25,14 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
+	error_handler: MULTI_ERROR_MANAGER is
+			-- Access to error manager
+		do
+			Result := package.error_handler
+		ensure
+			result_attached: Result /= Void
+		end
+
 	path_provider: PATH_PROVIDER is
 			-- Access to Eiffel related paths
 		do
@@ -88,7 +96,7 @@ feature -- Basic operation
 							end (?, l_options))
 					end
 				else
---Report error
+					error_handler.add_error (create {ESC_C03}.make_with_context ([a_config.project_location]), False)
 				end
 			end
 		end
@@ -107,7 +115,7 @@ feature -- Basic operations
 					l_file.delete
 				end
 			else
---Report error
+				error_handler.add_error (create {ESC_C01}.make_with_context ([a_file]), False)
 			end
 		rescue
 			retried := True

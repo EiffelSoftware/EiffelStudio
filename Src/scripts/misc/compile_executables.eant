@@ -123,6 +123,9 @@
 		<set name="system_target" value="bench" />
 		<set name="system_ecf" value="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace${path_separator}ec.ecf" />
 		<set name="system_dir" value="${compile_dir}" />
+		<copy file="ec.rc" to_file="${compile_dir}${path_separator}ec.rc" dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" if="${is_windows}" />
+		<copy file="ec.ico" to_file="${compile_dir}${path_separator}ec.ico" dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" if="${is_windows}" />
+		<copy file="ec.exe.manifest" to_file="${compile_dir}${path_separator}ec.exe.manifest" dir="${EIFFEL_SRC}${path_separator}Eiffel${path_separator}Ace" if="${is_windows}" />
 	</target>
 	<target name="clean_ec" depend="init_ec">
 		<echo message="Cleaning : $system in $system_dir"/>

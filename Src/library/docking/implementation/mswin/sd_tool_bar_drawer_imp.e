@@ -111,12 +111,6 @@ feature -- Redefine
 
 			create {WEL_MEMORY_DC} internal_buffered_dc.make_by_dc (internal_client_dc)
 
-			-- We must select font to draw.
-			-- See MSDN "Using Windows XP Visual Styles" section about drawThemeText.
-			l_font_imp ?= internal_shared.tool_bar_font.implementation
-			check not_void: l_font_imp /= Void end
-			internal_buffered_dc.select_font (l_font_imp.wel_font)
-
 			create l_wel_bitmap.make_compatible (internal_client_dc, tool_bar.width, tool_bar.height)
 			internal_buffered_dc.select_bitmap (l_wel_bitmap)
 			l_wel_bitmap.dispose
@@ -174,7 +168,6 @@ feature -- Redefine
 			draw_button_background (internal_buffered_dc, l_rect, a_arguments.item.state, part_constants_by_type (a_arguments.item))
 			draw_pixmap (internal_buffered_dc, a_arguments)
 			draw_text (internal_buffered_dc, a_arguments)
-
 		end
 
 	draw_button_background (a_dc: WEL_DC; a_rect: WEL_RECT; a_state: INTEGER; a_part_constant: INTEGER) is
@@ -378,15 +371,29 @@ feature {NONE} -- Implementation
 			l_text_flags: INTEGER
 			l_forground_color: EV_COLOR_IMP
 			l_button: SD_TOOL_BAR_BUTTON
+			l_font_button: SD_TOOL_BAR_FONT_BUTTON
+			l_font_imp: EV_FONT_IMP
 		do
 			l_button ?= a_arguments.item
-			if l_button /= Void and then l_button.text /= Void then
+			l_font_button ?= a_arguments.item
+
+			if l_button /= Void and then l_button.text /= Void and l_button.tool_bar /= Void then
 				l_text_flags := {WEL_DT_CONSTANTS}.dt_left | {WEL_DT_CONSTANTS}.dt_vcenter | {WEL_DT_CONSTANTS}.dt_singleline
-
 				l_text_vision_rect := l_button.text_rectangle
-
 				create l_text_rect.make (l_text_vision_rect.x, l_text_vision_rect.y, l_text_vision_rect.right, l_text_vision_rect.bottom)
 
+				if l_font_button /= Void and then l_font_button.font /= Void then
+					l_font_imp ?= l_font_button.font.implementation
+					check not_void: l_font_imp /= Void end
+					internal_buffered_dc.select_font (l_font_imp.wel_font)
+				else
+					-- We must select font to draw.
+					-- See MSDN "Using Windows XP Visual Styles" section about drawThemeText.
+					l_font_imp ?= internal_shared.tool_bar_font.implementation
+					check not_void: l_font_imp /= Void end
+					internal_buffered_dc.select_font (l_font_imp.wel_font)
+
+				end
 				l_forground_color ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
 				check not_void: l_forground_color /= Void end
 				theme_drawer.draw_text (theme_data, a_dc_to_draw, part_constants_by_type (a_arguments.item), to_mswin_state (a_arguments.item.state), l_button.text, l_text_flags, a_arguments.item.is_sensitive, l_text_rect, l_forground_color)

@@ -13,24 +13,11 @@ expanded class TYPED_POINTER [G]
 inherit
 	POINTER_REF
 		rename
-			item as pointer_item
-		export
-			{NONE} pointer_item
+			item as to_pointer
 		end
-
-create
-	default_create
 
 convert
 	to_pointer: {POINTER}
-
-feature -- Conversion
-
-	to_pointer: POINTER is
-			-- Convert to POINTER instance.
-		do
-			-- Built-in
-		end
 
 indexing
 
@@ -39,7 +26,6 @@ indexing
 			]"
 
 	status: "[
---| Copyright (c) 1993-2006 University of Southern California and contributors.
 			For ISE customers the original versions are an ISE product
 			covered by the ISE Eiffel license and support agreements.
 			]"

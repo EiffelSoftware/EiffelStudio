@@ -382,9 +382,7 @@ feature {EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 		local
 			l_x_pos, l_y_pos: INTEGER
 		do
-				--| `default_width' and `default_height' are not useful anymore.
-			l_x_pos := x_position
-			l_y_pos := y_position
+			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $l_x_pos, $l_y_pos)
 			configure_event_pending := False
 			Precursor (l_x_pos, l_y_pos, a_width, a_height)
 			if l_x_pos  /= previous_x_position or else l_y_pos /= previous_y_position then

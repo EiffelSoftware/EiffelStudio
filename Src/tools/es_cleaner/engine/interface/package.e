@@ -72,6 +72,32 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	error_handler: MULTI_ERROR_MANAGER is
+			-- Access to global error manager
+		do
+			Result := internal_error_handler
+			if Result = Void then
+				Result := create_error_mananger
+				internal_error_handler := Result
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {NONE} -- Access
+
+	error_displayer: I_ERROR_DISPLAYER is
+			-- Access to error display used to report errors and warnings
+		do
+			Result := internal_error_displayer
+			if Result = Void then
+				Result := create_error_displayer
+				internal_error_displayer := Result
+			end
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature -- Basic operations
 
 	clean_environment (a_config: I_CLEANING_CONFIG) is
@@ -83,8 +109,10 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if not retried then
+				reset_errors
 				cleaner.clean_environment (a_config)
 			end
+			show_errors ("Cleaning Error")
 		rescue
 			retried := True
 			retry
@@ -99,8 +127,10 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if not retried then
+				reset_errors
 				cleaner.clean_project (a_config)
 			end
+			show_errors ("Cleaning Error")
 		rescue
 			retried := True
 			retry
@@ -115,8 +145,10 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if not retried then
+				reset_errors
 				backup_manager.backup (a_config)
 			end
+			show_errors ("Backup Error")
 		rescue
 			retried := True
 			retry
@@ -128,16 +160,35 @@ feature -- Basic operations
 			a_config_attached: a_config /= Void
 			a_config_can_restore: a_config.can_any_processing_occur
 		local
-			l_manager: like create_backup_manager
 			retried: BOOLEAN
 		do
 			if not retried then
-				l_manager := create_backup_manager
-				l_manager.restore (a_config)
+				reset_errors
+				backup_manager.restore (a_config)
 			end
+			show_errors ("Restore Error")
 		rescue
 			retried := True
 			retry
+		end
+
+feature {NONE} -- Error reporting
+
+	reset_errors is
+			-- Removes any previous errors from the error handler, for the next operation
+		do
+			error_handler.reset
+		end
+
+	show_errors (a_category: STRING) is
+			-- Shows any errors or warnings from a performed operation
+		require
+			a_category_attached: a_category /= Void
+			not_a_category_is_empty: not a_category.is_empty
+		do
+			if not error_handler.successful or else error_handler.has_warnings then
+				error_displayer.show (a_category, error_handler)
+			end
 		end
 
 feature -- Status report
@@ -196,6 +247,21 @@ feature {NONE} -- Factory functions
 			result_attached: Result /= Void
 		end
 
+	create_error_mananger: MULTI_ERROR_MANAGER is
+			-- Create a new error manager
+		do
+			create Result.make
+		ensure
+			result_attached: Result /= Void
+		end
+
+	create_error_displayer: I_ERROR_DISPLAYER
+			-- Create a new error displayer
+		deferred
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature {NONE} -- Internal implementation cache
 
 	internal_eiffel_layout: EIFFEL_LAYOUT
@@ -212,6 +278,14 @@ feature {NONE} -- Internal implementation cache
 
 	internal_backup_manager: like backup_manager
 			-- Cache version of `backup_manager'
+			-- Note: Do not use directly!
+
+	internal_error_handler: like error_handler
+			-- Cache version of `error_handler'
+			-- Note: Do not use directly!
+
+	internal_error_displayer: like error_displayer
+			-- Cache version of `error_displayer'
 			-- Note: Do not use directly!
 
 invariant

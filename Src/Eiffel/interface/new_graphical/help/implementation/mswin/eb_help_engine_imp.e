@@ -14,7 +14,10 @@ inherit
 			{NONE} all
 		end
 
-	EB_CONSTANTS
+	SHARED_NAMES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -53,7 +56,7 @@ feature -- Basic Operations
 			hh_handler.show (Url_prefix + a_help_context.url)
 			internal_show_successful := hh_handler.last_show_successful
 			if not internal_show_successful then
-				internal_error_message := Warning_messages.w_help_topic_could_not_be_displayed
+				internal_error_message := Warnings.w_help_topic_could_not_be_displayed
 			end
 		end
 

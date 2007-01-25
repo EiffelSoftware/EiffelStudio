@@ -55,6 +55,7 @@ feature -- Interface
 					Result.extend (temp)
 					i := i + 1
 				end
+				file.close
 			else
 				create {I18N_DUMMY_DICTIONARY} Result.make (0)
 			end
@@ -76,6 +77,7 @@ feature -- Interface
 				else
 					create Result.make_with_language (create {I18N_LANGUAGE_ID}.make (file.locale))
 				end
+				file.close
 			end
 		end
 

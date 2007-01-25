@@ -127,8 +127,8 @@ feature -- Command
 			direction_changed: is_vertical = not a_horizontal
 		end
 
-	float (a_screen_x, a_screen_y: INTEGER) is
-			-- Float to `a_screen_x' and `a_screen_y'.
+	destroy_parent_containers is
+			-- Destroy related parent containers
 		local
 			l_row: SD_TOOL_BAR_ROW
 		do
@@ -144,6 +144,12 @@ feature -- Command
 					end
 				end
 			end
+		end
+
+	float (a_screen_x, a_screen_y: INTEGER; a_visible: BOOLEAN) is
+			-- Float to `a_screen_x' and `a_screen_y'.
+		do
+			destroy_parent_containers
 
 			if is_vertical then
 				change_direction (True)
@@ -164,7 +170,9 @@ feature -- Command
 			if assistant.last_state.floating_group_info /= Void then
 				floating_tool_bar.assistant.position_groups (assistant.last_state.floating_group_info)
 			end
-			floating_tool_bar.show
+			if a_visible then
+				floating_tool_bar.show
+			end
 
 			docking_manager.tool_bar_manager.floating_tool_bars.extend (floating_tool_bar)
 

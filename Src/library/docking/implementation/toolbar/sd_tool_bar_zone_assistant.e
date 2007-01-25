@@ -305,7 +305,7 @@ feature -- Command
 			is_docking: not zone.is_floating
 		do
 			record_docking_state
-			zone.float (last_state.screen_x, last_state.screen_y)
+			zone.float (last_state.screen_x, last_state.screen_y, True)
 			if last_state.floating_group_info /= Void then
 				zone.floating_tool_bar.assistant.position_groups (last_state.floating_group_info)
 			end

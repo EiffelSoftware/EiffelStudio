@@ -113,7 +113,7 @@ feature -- Redefine.
 		do
 			content.set_visible (True)
 			internal_docking_manager.command.lock_update (Void, True)
-			create l_floating_state.make (a_x, a_y, internal_docking_manager)
+			create l_floating_state.make (a_x, a_y, internal_docking_manager, True)
 			create l_docking_state.make (internal_content, direction, 0)
 			l_docking_state.dock_at_top_level (l_floating_state.inner_container)
 			change_state (l_docking_state)

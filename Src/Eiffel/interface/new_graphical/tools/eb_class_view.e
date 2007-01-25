@@ -17,7 +17,8 @@ inherit
 			mini_toolbar,
 			build_mini_toolbar,
 			build_docking_content,
-			show
+			show,
+			force_last_stone
 		end
 
 	EB_CONSTANTS
@@ -220,57 +221,70 @@ feature -- Status setting
 
 	set_stone (new_stone: STONE) is
 			-- Send a stone to class formatters.
+		do
+			set_last_stone (new_stone)
+			if widget.is_displayed then
+				force_last_stone
+			end
+		end
+
+	force_last_stone is
+			-- Force that `last_stone' is displayed in formatters in Current view
 		local
 			cst: CLASSC_STONE
 			ist: CLASSI_STONE
 			fst: FEATURE_STONE
 			type_changed: BOOLEAN
+			new_stone: like last_stone
 		do
-			fst ?= new_stone
-				-- If `new_stone' is a feature stone, take the associated class.
-			if fst /= Void and then fst.e_feature /= Void then
-				create cst.make (fst.e_feature.associated_class)
-			else
-				cst ?= new_stone
-				ist ?= new_stone
-			end
-
-			if cst /= Void then
-				type_changed := (cst.e_class.is_true_external and not is_stone_external) or
-					(not cst.e_class.is_true_external and is_stone_external)
-			elseif ist /= Void then
-				type_changed := (ist.class_i.is_external_class and not is_stone_external) or
-					(not ist.class_i.is_external_class and is_stone_external)
-			end
-
-			if type_changed then
-				-- Toggle stone flag.
-            	is_stone_external := not is_stone_external
-            end
-
-            	-- Update formatters.
-            if is_stone_external and cst /= Void then
-				enable_dotnet_formatters (True)
-			else
-				enable_dotnet_formatters (False)
-			end
-			if cst /= Void then
-				update_viewpoints (cst.e_class)
-			end
-			if cst = Void or else stone = Void or else not stone.same_as (cst) then
-					-- Set the stones.
-				from
-					managed_formatters.start
-				until
-					managed_formatters.after
-				loop
-					managed_formatters.item.set_stone (cst)
-					managed_formatters.forth
+			if not is_last_stone_processed then
+				new_stone := last_stone
+				fst ?= new_stone
+					-- If `new_stone' is a feature stone, take the associated class.
+				if fst /= Void and then fst.e_feature /= Void then
+					create cst.make (fst.e_feature.associated_class)
+				else
+					cst ?= new_stone
+					ist ?= new_stone
 				end
-			end
-			stone := cst
 
-			history_manager.extend (stone)
+				if cst /= Void then
+					type_changed := (cst.e_class.is_true_external and not is_stone_external) or
+						(not cst.e_class.is_true_external and is_stone_external)
+				elseif ist /= Void then
+					type_changed := (ist.class_i.is_external_class and not is_stone_external) or
+						(not ist.class_i.is_external_class and is_stone_external)
+				end
+
+				if type_changed then
+					-- Toggle stone flag.
+	            	is_stone_external := not is_stone_external
+	            end
+
+	            	-- Update formatters.
+	            if is_stone_external and cst /= Void then
+					enable_dotnet_formatters (True)
+				else
+					enable_dotnet_formatters (False)
+				end
+				if cst /= Void then
+					update_viewpoints (cst.e_class)
+				end
+				if cst = Void or else stone = Void or else not stone.same_as (cst) then
+						-- Set the stones.
+					from
+						managed_formatters.start
+					until
+						managed_formatters.after
+					loop
+						managed_formatters.item.set_stone (cst)
+						managed_formatters.forth
+					end
+				end
+				stone := cst
+				history_manager.extend (stone)
+				Precursor
+			end
 		end
 
 	launch_stone (st: CLASSI_STONE) is

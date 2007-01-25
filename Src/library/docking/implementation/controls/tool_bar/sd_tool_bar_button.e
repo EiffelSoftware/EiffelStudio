@@ -91,11 +91,19 @@ feature -- Query
 			Result := {SD_TOOL_BAR}.padding_width
 			if text /= Void then
 				if tool_bar /= Void then
-					Result := Result + {SD_TOOL_BAR}.padding_width + internal_shared.tool_bar_font.string_width (text)
+					Result := Result + {SD_TOOL_BAR}.padding_width + text_width
 				end
 			end
 			Result := Result + icon_width
 			Result := Result + {SD_TOOL_BAR}.padding_width
+		end
+
+	text_width: INTEGER is
+			-- Width of text
+		do
+			if text /= Void then
+				Result := internal_shared.tool_bar_font.string_width (text)
+			end
 		end
 
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -166,7 +174,7 @@ feature {SD_TOOL_BAR, SD_TOOL_BAR_DRAWER, SD_TOOL_BAR_DRAWER_IMP} -- Internal is
 			else
 				l_left := l_left + {SD_TOOL_BAR}.padding_width
 			end
-			l_width := internal_shared.tool_bar_font.string_width (text)
+			l_width := text_width
 			l_top := tool_bar.item_y (Current) + {SD_TOOL_BAR}.border_width
 			l_height := tool_bar.row_height - 2 * {SD_TOOL_BAR}.border_width
 
@@ -245,7 +253,7 @@ feature {SD_TOOL_BAR} -- Agents
 	on_pointer_release (a_relative_x, a_relative_y: INTEGER) is
 			-- Redefine
 		do
-			if has_position (a_relative_x, a_relative_y) then
+			if tool_bar /= Void and has_position (a_relative_x, a_relative_y) then
 				if state = {SD_TOOL_BAR_ITEM_STATE}.pressed then
 					state := {SD_TOOL_BAR_ITEM_STATE}.hot
 					is_need_redraw := True

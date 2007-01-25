@@ -2061,8 +2061,12 @@ rt_public void eif_panic(char *msg)
 			reclaim ();
 			exit (2);
 			break;
-		default:
+		case 2:
+			done = 3;
 			print_err_msg(stderr, "\n%s: FINAL PANIC: Cannot reclaim Eiffel objects -- Giving up...\n", egc_system_name);
+			exit (2);
+		default:
+				/* Yet another panic was raised, we can only exit now. */
 			exit (2);
 			break;
 	}

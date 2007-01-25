@@ -971,11 +971,7 @@ feature -- Window management
 
 	docking_config_editors_file: FILE_NAME is
 			-- Docking config file name.
-		local
-			l_shared: SHARED_WORKBENCH
 		do
-			create l_shared
-			l_shared.universe
 			create Result.make_from_string (project_location.location)
 			Result.set_file_name ("layout.wb")
 		end

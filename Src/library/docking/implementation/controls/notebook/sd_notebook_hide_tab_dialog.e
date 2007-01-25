@@ -426,8 +426,6 @@ feature {NONE} -- Implementation functions.
 		require
 			a_label_not_void: a_label /= Void
 			has: internal_tool_bar.has (a_label)
-		local
-			l_index: INTEGER
 		do
 			from
 				items_and_tabs.start

@@ -14,11 +14,12 @@
 		<setting name="inlining_size" value="0"/>
 		<setting name="multithreaded" value="True"/>
 		<external_object location="htmlhelp.lib"/>
-		<library name="base" location="$EIFFEL_SRC\library\base\base.ecf" />
-		<library name="com" location="$EIFFEL_SRC\library\com\com.ecf" readonly="false" use_application_options="true" />
+		<library name="base" location="$EIFFEL_SRC\library\base\base.ecf"/>
+		<library name="com" location="$EIFFEL_SRC\library\com\com.ecf" readonly="false" use_application_options="true"/>
 		<library name="configuration_parser" location="$EIFFEL_SRC\framework\configuration\configuration_parser.ecf"/>
 		<library name="date_time" location="$EIFFEL_SRC\library\time\time.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
+		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="vision2" location="$EIFFEL_SRC\library\vision2\vision2.ecf"/>
 		<library name="vision2_extension" location="$EIFFEL_SRC\library\vision2_extension\vision2_extension.ecf"/>

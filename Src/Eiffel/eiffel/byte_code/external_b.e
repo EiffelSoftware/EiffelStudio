@@ -11,7 +11,7 @@ inherit
 			precursor_type as static_class_type,
 			set_precursor_type as set_static_class_type
 		redefine
-			same, is_external, set_parameters, parameters, enlarged,
+			same, is_external, set_parameters, parameters, enlarged, enlarged_on,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
@@ -198,8 +198,15 @@ feature -- Status report
 		end;
 
 	enlarged: CALL_ACCESS_B is
-			-- Enlarges the tree to get more attributes and returns the
+			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
+		do
+				-- Fallback to default implementation.
+			Result := enlarged_on (context_type)
+		end
+
+	enlarged_on (a_type_i: TYPE_I): CALL_ACCESS_B is
+			-- Enlarged byte node evaluated in the context of `a_type_i'.
 		local
 			external_bl: EXTERNAL_BL
 			c: CL_TYPE_I
@@ -207,7 +214,7 @@ feature -- Status report
 		do
 			if not is_static_call and then not context.is_written_context then
 					-- Ensure the feature is not redeclared into attribute or internal routine.
-				c ?= real_type (context_type)
+				c ?= real_type (a_type_i)
 				if c /= Void then
 					f := c.base_class.feature_of_rout_id (routine_id)
 					if f.is_external then

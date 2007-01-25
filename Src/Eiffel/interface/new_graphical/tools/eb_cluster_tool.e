@@ -141,7 +141,9 @@ feature -- Command
 			-- Show tool.
 		do
 			Precursor {EB_TOOL}
-			widget.set_focus
+			if widget.is_displayed then
+				widget.set_focus
+			end
 		end
 
 feature -- Status setting

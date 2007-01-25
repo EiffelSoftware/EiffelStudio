@@ -39,6 +39,14 @@ feature {NONE} -- Access
 			result_attached: Result /= Void
 		end
 
+	error_handler: MULTI_ERROR_MANAGER is
+			-- Access to error manager
+		do
+			Result := package.error_handler
+		ensure
+			result_attached: Result /= Void
+		end
+
 	backup_preferences_time_stamp: INTEGER is
 			-- Backup timestamp for preferences
 		require
@@ -184,10 +192,10 @@ feature {NONE} -- Basic operations
 			not_a_file_is_empty: not a_file.is_empty
 		do
 			if not copy_file (a_file, backup_file_name (a_file)) then
--- Report error
+				error_handler.add_error (create {ESC_B01}.make_with_context ([a_file]), False)
 			end
 		ensure
-			--backup_created: (create {RAW_FILE}.make (a_file)).exists and successful implies (create {RAW_FILE}.make (backup_file_name (a_file))).exists
+			backup_created: (create {RAW_FILE}.make (a_file)).exists and error_handler.successful implies (create {RAW_FILE}.make (backup_file_name (a_file))).exists
 		end
 
 	restore_file (a_file: STRING) is
@@ -198,10 +206,10 @@ feature {NONE} -- Basic operations
 			backup_file_exists: does_backup_file_exist (a_file)
 		do
 			if not copy_file (backup_file_name (a_file), a_file) then
--- Report error
+				error_handler.add_error (create {ESC_R01}.make_with_context ([a_file]), False)
 			end
 		ensure
-			--backup_restored: does_backup_file_exist (a_file) and successful implies (create {RAW_FILE}.make (backup_file_name (a_file))).exists
+			backup_restored: does_backup_file_exist (a_file) and error_handler.successful implies (create {RAW_FILE}.make (backup_file_name (a_file))).exists
 		end
 
 	copy_file (a_src_file, a_dest_file: STRING): BOOLEAN is

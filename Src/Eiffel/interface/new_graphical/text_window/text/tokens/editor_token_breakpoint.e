@@ -86,7 +86,6 @@ feature -- Miscellaneous
 	display (d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 		local
 			a_background_color: like background_color
-			h: INTEGER
 		do
 			width := 14
  				-- Change drawing style here.
@@ -100,14 +99,8 @@ feature -- Miscellaneous
  			if pebble /= Void then
 					-- The breakable marks are always displayed on the beginning of the line.
 				device.draw_pixmap (1, d_y, pixmap)
-				if device.font /= Void then
-					h := device.font.height
-					device.font.set_height (h // 3)
-				end
-
-				device.draw_text_top_left (2, d_y, pebble.index.out)
-				if device.font /= Void then
-					device.font.set_height (h)
+				debug ("breakpoint")
+					device.draw_text_top_left (2, d_y, pebble.index.out)
 				end
 			end
 		end

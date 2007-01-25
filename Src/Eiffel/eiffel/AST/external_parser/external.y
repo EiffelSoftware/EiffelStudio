@@ -32,7 +32,7 @@ create
 %token	TE_JAVA_LANGUAGE, TE_DEFERRED, TE_OPERATOR, TE_INTEGER
 %token	TE_SET_FIELD, TE_SET_PROPERTY, TE_SIGNATURE, TE_STATIC, TE_CREATOR
 %token	TE_STATIC_FIELD, TE_SET_STATIC_FIELD, TE_STRUCT, TE_TYPE
-%token	TE_SIGNED, TE_UNSIGNED, TE_USE, TE_ID, TE_INCLUDE_ID
+%token	TE_CONST, TE_SIGNED, TE_UNSIGNED, TE_USE, TE_ID, TE_INCLUDE_ID
 
 %type <EXTERNAL_EXTENSION_AS>	External_declaration C_specification CPP_specification
 								DLL_specification DLLwin_specification IL_specification
@@ -289,13 +289,13 @@ Type_identifier:
 		Identifier Pointer_opt Address_opt
 			{
 					-- False because no `struct' keyword.
-					-- Void because no `signed', `unsigned' keyword.
+					-- Void because no `const', `signed', `unsigned' keyword.
 				$$ := new_external_type_as ($1, Void, False, $2, $3)
 			}
 	|	TE_STRUCT Identifier Pointer_opt Address_opt
 			{
 					-- True because `struct' keyword.
-					-- Void because no `signed', `unsigned' keyword.
+					-- Void because no `const', `signed', `unsigned' keyword.
 				$$ := new_external_type_as ($2, Void, True, $3, $4)
 			}
 	|	TE_SIGNED Identifier Pointer_opt Address_opt
@@ -307,6 +307,26 @@ Type_identifier:
 			{
 					-- False because no `struct' keyword.
 				$$ := new_external_type_as ($2, unsigned_prefix, False, $3, $4)
+			}
+	|	TE_CONST Identifier Pointer_opt Address_opt
+			{
+					-- False because no `struct' keyword.
+				$$ := new_external_type_as ($2, const_prefix, False, $3, $4)
+			}
+	|	TE_CONST TE_STRUCT Identifier Pointer_opt Address_opt
+			{
+					-- True because `struct' keyword.
+				$$ := new_external_type_as ($3, const_prefix, True, $4, $5)
+			}
+	|	TE_CONST TE_SIGNED Identifier Pointer_opt Address_opt
+			{
+					-- False because no `struct' keyword.
+				$$ := new_external_type_as ($3, const_signed_prefix, False, $4, $5)
+			}
+	|	TE_CONST TE_UNSIGNED Identifier Pointer_opt Address_opt
+			{
+					-- False because no `struct' keyword.
+				$$ := new_external_type_as ($3, const_unsigned_prefix, False, $4, $5)
 			}
 	;
 
@@ -395,6 +415,9 @@ Identifier:	TE_ID
 
 feature {NONE} -- Constants
 
+	const_prefix: STRING is "const "
+	const_signed_prefix: STRING is "const signed "
+	const_unsigned_prefix: STRING is "const unsigned "
 	signed_prefix: STRING is "signed "
 	unsigned_prefix: STRING is "unsigned ";
 			-- Available prefix to C/C++ basic types.

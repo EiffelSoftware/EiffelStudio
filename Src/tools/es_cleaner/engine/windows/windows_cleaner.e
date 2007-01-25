@@ -50,7 +50,10 @@ feature {NONE} -- Basic operations
 						end (?, l_reg, l_key))
 				end
 			else
---Report error
+				if l_path = Void then
+					l_path := "Unable to retrieve path"
+				end
+				error_handler.add_error (create {ESC_C02}.make_with_context ([l_path]), False)
 			end
 
 			check l_reg_attached: l_reg /= Void end

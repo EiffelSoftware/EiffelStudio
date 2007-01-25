@@ -176,6 +176,17 @@ feature -- Command
 			l_config.save_tools_config (a_file)
 		end
 
+	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
+			-- Save tools config
+		require
+			not_void: a_file /= Void
+		local
+			l_config: SD_CONFIG_MEDIATOR
+		do
+			create l_config.make (Current)
+			l_config.save_tools_config_with_name (a_file, a_name)
+		end
+
 	open_config (a_file: STRING_GENERAL): BOOLEAN is
 			-- Open a docking config from a_named_file.
 		require

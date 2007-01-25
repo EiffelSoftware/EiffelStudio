@@ -623,6 +623,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			l_new_menu_item: EB_COMMAND_MENU_ITEM
 			l_new_basic_item: EV_MENU_ITEM
 			l_managed_main_formatters: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
+
 		do
 			create l_view_menu.make_with_text (develop_window.Interface_names.m_View)
 			develop_window.menus.set_view_menu (l_view_menu)
@@ -666,6 +667,25 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				--add_recyclable (new_basic_item)
 				l_managed_main_formatters.forth
 			end
+
+				-- Separator --------------------------------------
+			develop_window.menus.view_menu.extend (create {EV_MENU_SEPARATOR})
+
+			l_new_menu_item := develop_window.commands.reset_layout_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.set_default_layout_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.open_layout_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
+
+			l_new_menu_item := develop_window.commands.save_layout_as_command.new_menu_item
+			develop_window.menus.view_menu.extend (l_new_menu_item)
+			develop_window.add_recyclable (l_new_menu_item)
 		end
 
 	build_favorites_menu is

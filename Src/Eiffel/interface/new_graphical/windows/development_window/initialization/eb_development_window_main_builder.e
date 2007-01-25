@@ -89,6 +89,11 @@ feature -- Command
 			l_show_tool_commands: HASH_TABLE [EB_SHOW_TOOL_COMMAND, EB_TOOL]
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
+
+			l_reset_command: EB_RESET_LAYOUT_COMMAND
+			l_set_default_layout_command: EB_SET_DEFAULT_LAYOUT_COMMAND
+			l_save_layout_as_command: EB_SAVE_LAYOUT_AS_COMMAND
+			l_open_layout_command: EB_OPEN_LAYOUT_COMMAND
 		do
 			-- Directly call a un-redefine init_commands in EB_DEVELOPMENT_WINDOW
 			-- Non-docking Eiffel Studio was call Precursor
@@ -241,6 +246,18 @@ feature -- Command
 			develop_window.commands.toggle_feature_alias_cmd.disable_sensitive
 			develop_window.commands.toggle_feature_signature_cmd.disable_sensitive
 			develop_window.commands.toggle_feature_assigner_cmd.disable_sensitive
+
+			create l_reset_command.make (develop_window)
+			develop_window.commands.set_reset_layout_command (l_reset_command)
+
+			create l_set_default_layout_command.make (develop_window)
+			develop_window.commands.set_set_default_layout_command (l_set_default_layout_command)
+
+			create l_save_layout_as_command.make (develop_window)
+			develop_window.commands.set_save_layout_as_command (l_save_layout_as_command)
+
+			create l_open_layout_command.make (develop_window)
+			develop_window.commands.set_open_layout_command (l_open_layout_command)
 		end
 
 	set_up_accelerators is

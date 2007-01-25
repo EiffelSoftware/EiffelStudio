@@ -122,6 +122,18 @@ feature -- Query
 			Result.enable_sensitive
 		end
 
+	reset_layout_command: EB_RESET_LAYOUT_COMMAND
+			-- Reset tools layout command
+
+	set_default_layout_command: EB_SET_DEFAULT_LAYOUT_COMMAND
+			-- Set Current layout as default layout command.
+
+	save_layout_as_command: EB_SAVE_LAYOUT_AS_COMMAND
+			-- Save layout as command.
+
+	open_layout_command: EB_OPEN_LAYOUT_COMMAND
+			-- Open layout command.
+
 feature -- Commands
 
 	toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
@@ -362,6 +374,38 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			show_refactoring_toolbar_command := a_cmd
 		ensure
 			set: show_refactoring_toolbar_command = a_cmd
+		end
+
+	set_reset_layout_command (a_cmd: like reset_layout_command) is
+			-- Set `reset_layout_command'
+		do
+			reset_layout_command := a_cmd
+		ensure
+			set: reset_layout_command = a_cmd
+		end
+
+	set_set_default_layout_command (a_cmd: like set_default_layout_command) is
+			-- Set `set_default_layout_command'
+		do
+			set_default_layout_command := a_cmd
+		ensure
+			set: set_default_layout_command = a_cmd
+		end
+
+	set_open_layout_command (a_cmd: like open_layout_command) is
+			-- Set `open_layout_command'
+		do
+			open_layout_command := a_cmd
+		ensure
+			set: open_layout_command = a_cmd
+		end
+
+	set_save_layout_as_command (a_cmd: like save_layout_as_command) is
+			-- Set `save_layout_as_command'
+		do
+			save_layout_as_command := a_cmd
+		ensure
+			set: save_layout_as_command = a_cmd
 		end
 
 feature -- Recycle

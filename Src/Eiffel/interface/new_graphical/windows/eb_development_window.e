@@ -106,6 +106,7 @@ inherit
 		export
 			{EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_PART, EB_DIAGRAM_TOOL}
 				 has_case, has_metrics, has_dll_generation, has_profiler, has_documentation_generation, has_xmi_generation
+			{EB_DEBUGGER_MANAGER} Docking_standard_layout_path, standard_tools_debug_layout_name
 			{NONE} All
 		end
 
@@ -821,7 +822,14 @@ feature -- Window management
 		local
 			l_tool: EB_TOOL
 			l_tool_bar_content: SD_TOOL_BAR_CONTENT
+			l_no_locked_window: BOOLEAN
 		do
+			l_no_locked_window := ((create {EV_ENVIRONMENT}).application.locked_window = Void)
+			if l_no_locked_window then
+				window.lock_update
+			end
+			close_all_tools
+
 			-- Right bottom tools
 			l_tool := tools.output_tool
 			l_tool.content.set_top ({SD_ENUMERATION}.bottom)
@@ -871,6 +879,9 @@ feature -- Window management
 			check not_void: l_tool_bar_content /= Void end
 			l_tool_bar_content.set_top ({SD_ENUMERATION}.top)
 
+			if l_no_locked_window then
+				window.unlock_update
+			end
 		end
 
 	restore_tools_docking_layout is
@@ -913,10 +924,10 @@ feature -- Window management
 		do
 			if not retried then
 				l_fn := docking_standard_layout_path.twin
-				l_fn.set_file_name ("standard_layout.wb")
+				l_fn.set_file_name (standard_tools_layout_name)
 				create l_file.make (l_fn )
 				if l_file.exists then
-					l_result := docking_manager.open_config (l_fn)
+					l_result := docking_manager.open_tools_config (l_fn)
 					check l_result end
 				else
 					internal_construct_standard_layout_by_code
@@ -927,6 +938,25 @@ feature -- Window management
 		rescue
 			retried := True
 			retry
+		end
+
+	close_all_tools is
+			-- Close all tools.
+		local
+			l_tools: ARRAYED_LIST [SD_CONTENT]
+		do
+			from
+				l_tools := docking_manager.contents
+				l_tools.start
+			until
+				l_tools.after
+			loop
+				if l_tools.item.type = {SD_ENUMERATION}.tool then
+					l_tools.item.hide
+				end
+
+				l_tools.forth
+			end
 		end
 
 	docking_config_tools_file: FILE_NAME is
@@ -941,7 +971,11 @@ feature -- Window management
 
 	docking_config_editors_file: FILE_NAME is
 			-- Docking config file name.
+		local
+			l_shared: SHARED_WORKBENCH
 		do
+			create l_shared
+			l_shared.universe
 			create Result.make_from_string (project_location.location)
 			Result.set_file_name ("layout.wb")
 		end

@@ -844,43 +844,18 @@ feature -- Status setting
 	restore_standard_debug_docking_layout is
 			-- Restore standard debug docking layout.
 		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_result: BOOLEAN
+			l_file: RAW_FILE
+			l_fn: FILE_NAME
 		do
-			if debugging_window.tools.features_relation_tool.content.is_visible and debugging_window.tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				-- But it is possible that is auto hide state.
-				objects_tool.content.set_relative (debugging_window.tools.features_relation_tool.content, {SD_ENUMERATION}.bottom)
-			else
-				objects_tool.content.set_top ({SD_ENUMERATION}.bottom)
+			l_fn := debugging_window.docking_standard_layout_path.twin
+			l_fn.set_file_name (debugging_window.standard_tools_debug_layout_name)
+			create l_file.make (l_fn)
+			if l_file.exists then
+				l_result := debugging_window.docking_manager.open_tools_config (l_fn)
 			end
-
-			from
-				watch_tool_list.start
-			until
-				watch_tool_list.after
-			loop
-				watch_tool_list.item.content.set_tab_with (objects_tool.content, False)
-				watch_tool_list.forth
-			end
-
-			if debugging_window.tools.features_tool.content.is_visible and debugging_window.tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				call_stack_tool.content.set_relative (debugging_window.tools.features_tool.content, {SD_ENUMERATION}.bottom)
-			elseif debugging_window.tools.cluster_tool.content.is_visible and debugging_window.tools.cluster_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
-				call_stack_tool.content.set_relative (debugging_window.tools.cluster_tool.content, {SD_ENUMERATION}.bottom)
-			else
-				call_stack_tool.content.set_top ({SD_ENUMERATION}.left)
-			end
-
-			-- Minimize all editors
-			from
-				l_contents := debugging_window.docking_manager.contents
-				l_contents.start
-			until
-				l_contents.after
-			loop
-				if l_contents.item.type = {SD_ENUMERATION}.editor then
-					l_contents.item.minimize
-				end
-				l_contents.forth
+			if not l_result then
+				restore_standard_debug_docking_layout_by_code
 			end
 		end
 
@@ -1686,6 +1661,49 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			debugging_window_set: debugging_window /= Void
+		end
+
+	restore_standard_debug_docking_layout_by_code is
+			-- Restore standard debug docking layout.
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			if debugging_window.tools.features_relation_tool.content.is_visible and debugging_window.tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				-- But it is possible that is auto hide state.
+				objects_tool.content.set_relative (debugging_window.tools.features_relation_tool.content, {SD_ENUMERATION}.bottom)
+			else
+				objects_tool.content.set_top ({SD_ENUMERATION}.bottom)
+			end
+
+			from
+				watch_tool_list.start
+			until
+				watch_tool_list.after
+			loop
+				watch_tool_list.item.content.set_tab_with (objects_tool.content, False)
+				watch_tool_list.forth
+			end
+
+			if debugging_window.tools.features_tool.content.is_visible and debugging_window.tools.features_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				call_stack_tool.content.set_relative (debugging_window.tools.features_tool.content, {SD_ENUMERATION}.bottom)
+			elseif debugging_window.tools.cluster_tool.content.is_visible and debugging_window.tools.cluster_tool.content.state_value /= {SD_ENUMERATION}.auto_hide then
+				call_stack_tool.content.set_relative (debugging_window.tools.cluster_tool.content, {SD_ENUMERATION}.bottom)
+			else
+				call_stack_tool.content.set_top ({SD_ENUMERATION}.left)
+			end
+
+			-- Minimize all editors
+			from
+				l_contents := debugging_window.docking_manager.contents
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				if l_contents.item.type = {SD_ENUMERATION}.editor then
+					l_contents.item.minimize
+				end
+				l_contents.forth
+			end
 		end
 
 feature {NONE} -- MSIL system implementation

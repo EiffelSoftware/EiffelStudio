@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_screen_x, a_screen_y: INTEGER; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_screen_x, a_screen_y: INTEGER; a_docking_manager: SD_DOCKING_MANAGER; a_visible: BOOLEAN) is
 			-- Creation method.
 		require
 			a_docking_manager_not_void: a_docking_manager /= Void
@@ -34,7 +34,9 @@ feature {NONE} -- Initlization
 			create internal_shared
 			internal_docking_manager := a_docking_manager
 			create internal_zone.make (Current)
-			internal_zone.show
+			if a_visible then
+				internal_zone.show
+			end
 			internal_zone.set_position (a_screen_x, a_screen_y)
 			internal_docking_manager.command.add_inner_container (internal_zone.inner_container)
 		ensure

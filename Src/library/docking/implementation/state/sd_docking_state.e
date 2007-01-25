@@ -239,7 +239,7 @@ stick (a_direction: INTEGER) is
 				l_orignal_multi_dock_area.parent_floating_zone.set_position (a_x, a_y)
 			else
 				internal_docking_manager.command.lock_update (zone, False)
-				create l_floating_state.make (a_x, a_y, internal_docking_manager)
+				create l_floating_state.make (a_x, a_y, internal_docking_manager, True)
 				l_floating_state.set_size (last_floating_width, last_floating_height)
 				dock_at_top_level (l_floating_state.inner_container)
 				l_floating_state.update_title_bar
@@ -348,7 +348,7 @@ stick (a_direction: INTEGER) is
 			end
 			docking_manager.command.resize (False)
 		end
-		
+
 	set_user_widget (a_widget: EV_WIDGET) is
 			-- Redefine
 		do

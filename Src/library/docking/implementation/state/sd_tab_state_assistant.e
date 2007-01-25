@@ -36,7 +36,7 @@ feature {SD_TAB_STATE}  -- Implementation functions.
 			l_parent: EV_CONTAINER
 		do
 			internal_docking_manager.command.lock_update (state.zone, False)
-			create l_floating_state.make (a_x, a_y, internal_docking_manager)
+			create l_floating_state.make (a_x, a_y, internal_docking_manager, True)
 			l_floating_state.set_size (state.last_floating_width, state.last_floating_height)
 
 			if state.zone.is_drag_title_bar then

@@ -298,7 +298,7 @@ feature {NONE} -- Implementation functions
 				-- But on Gtk, we need first disable_capture then enable capture,
 				-- because it's off-screen widget, it'll not have capture when it show again.
 				caller.tool_bar.disable_capture
-				caller.float (a_screen_x - offset_x, a_screen_y - offset_y)
+				caller.float (a_screen_x - offset_x, a_screen_y - offset_y, True)
 				caller.tool_bar.enable_capture
 
 				docking_manager.command.unlock_update

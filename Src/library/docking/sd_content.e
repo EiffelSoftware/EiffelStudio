@@ -74,6 +74,7 @@ feature -- Access
 
 	unique_title: like internal_unique_title is
 			-- Client programmer's widget's unique_title.
+			-- Using for save/open docking layouts, normally it should not be changed after set.
 		do
 			Result := internal_unique_title
 		ensure
@@ -481,6 +482,7 @@ feature -- Command
 	show is
 			-- Show zone which has `Current'.
 		do
+			docking_manager.command.recover_normal_state
 			state.show
 			is_visible := True
 		end

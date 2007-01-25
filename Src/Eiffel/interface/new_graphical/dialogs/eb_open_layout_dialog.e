@@ -120,8 +120,6 @@ feature {NONE} -- Implementation functions
 	on_ok is
 			-- On `ok' button pressed.
 		local
-			l_str: STRING_GENERAL
-			l_fn: FILE_NAME
 			l_item: EV_LIST_ITEM
 			l_env: EV_ENVIRONMENT
 		do

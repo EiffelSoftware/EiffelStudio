@@ -49,7 +49,8 @@ feature -- Validity
 		local
 			skelet: SKELETON
 			special_error: SPECIAL_ERROR
-			l_feat: PROCEDURE_I
+			l_proc: PROCEDURE_I
+			l_feat: FEATURE_I
 			l_attr: ATTRIBUTE_I
 		do
 				-- First, no generics
@@ -58,29 +59,40 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 
-				-- Check for `item' attribute
-			skelet := types.first.skeleton
-			if
-				skelet.count /= 1 or else
-				not skelet.first.type_i.same_as (actual_type.type_i)
-			then
-				create special_error.make (basic_case_2, Current)
+				-- Check for `item' query.
+			l_feat := feature_table.item_id ({PREDEFINED_NAMES}.item_name_id)
+			if l_feat = Void or else not l_feat.has_return_value then
+				create special_error.make (basic_case_3, Current)
 				Error_handler.insert_error (special_error)
 			else
-					-- Check it is indeed called `item'.
-				l_attr ?= feature_table.item_id (names_heap.item_name_id)
-				if l_attr = Void then
-					create special_error.make (basic_case_3, Current)
-					Error_handler.insert_error (special_error)
+				l_attr ?= l_feat
+				if l_attr /= Void then
+						-- We are compiling for Eiffel Software implementation
+					skelet := types.first.skeleton
+					if
+						skelet.count /= 1 or else
+						not skelet.first.type_i.same_as (actual_type.type_i)
+					then
+						create special_error.make (basic_case_2, Current)
+						Error_handler.insert_error (special_error)
+					else
+					end
+				else
+					if l_feat.is_external then
+						-- To allow compilation of FreeELKS.
+					else
+						create special_error.make (basic_case_3, Current)
+						Error_handler.insert_error (special_error)
+					end
 				end
 			end
 
 				-- Check for a procedure `set_item'.
-			l_feat ?= feature_table.item_id (Names_heap.set_item_name_id)
+			l_proc ?= feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 			if
-				l_feat = Void or else
-				l_feat.argument_count /= 1 or else
-				not l_feat.arguments.i_th (1).same_as (actual_type)
+				l_proc = Void or else
+				l_proc.argument_count /= 1 or else
+				not l_proc.arguments.i_th (1).same_as (actual_type)
 			then
 				create special_error.make (basic_case_4, Current)
 				Error_handler.insert_error (special_error)

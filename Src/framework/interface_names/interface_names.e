@@ -518,6 +518,10 @@ feature -- Accelerator, focus label and menu name
 	f_hide: STRING_GENERAL is do Result := locale.translate ("Hide ") end
 	f_switch_to_tree_view: STRING_GENERAL is do Result := locale.translate ("Switch to Tree View") end
 	f_switch_to_flat_view: STRING_GENERAL is do Result := locale.translate ("Switch to Flat View") end
+	m_reset_layout: STRING_GENERAL is do Result := locale.translate ("Reset Tools layout") end
+	m_set_default_layout: STRING_GENERAL is do Result := locale.translate ("Set Current Layout As Default") end
+	m_save_layout_as: STRING_GENERAL is do Result := locale.translate ("Save Layout As...") end
+	m_open_layout: STRING_GENERAL is do Result := locale.translate ("Open Layout") end
 
 feature -- Toggles
 
@@ -1354,6 +1358,12 @@ feature -- Label texts
 	l_delayed_domain_item: STRING_GENERAL is do Result := locale.translate ("delayed item") end
 
 	h_search_for_class_recursively: STRING_GENERAL is do Result := locale.translate ("Search folder for classes recursively?") end
+	l_save_layout_name: STRING_GENERAL is do Result := locale.translate ("Enter or select a name to save the current layout as.") end
+	l_layout_name: STRING_GENERAL is do Result := locale.translate ("Name:") end
+	l_existing_layout_names: STRING_GENERAL is do Result := locale.translate ("Existing Layouts:") end
+	l_overwrite_layout: STRING_GENERAL is do Result := locale.translate ("A layout with the name '") end
+	l_overwrite_layout_2: STRING_GENERAL is do Result := locale.translate ("' already exists. Do you want to overwrite?") end
+	l_open_layout_error: STRING_GENERAL is do Result := locale.translate ("Open layout error. Opening default layout instead.") end
 
 feature -- Label text, no translation (for the editor)
 
@@ -1629,6 +1639,10 @@ feature -- Title part
 		do
 			Result := locale.format_string (locale.translate ("Edit $1"), [a_name])
 		end
+
+	t_Save_layout_as: STRING_GENERAL is 				do Result := locale.translate ("Save Layout As...") end
+	t_Open_layout: STRING_GENERAL is					do Result := locale.translate ("Open Layout") end
+	t_Overwite_layout: STRING_GENERAL is				do Result := locale.translate ("Overwrite Layout") end
 
 feature -- Titles translation needless (Title Original) for preference strings.
 

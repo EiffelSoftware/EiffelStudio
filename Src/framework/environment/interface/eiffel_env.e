@@ -399,6 +399,26 @@ feature -- Access: file name
 			end
 		end
 
+	Standard_tools_layout_name: STRING is
+			-- Standard tools layout name
+		once
+			if not is_workbench then
+				Result := "standard_layout.wb"
+			else
+				Result := "standard_layout_wb.wb"
+			end
+		end
+
+	Standard_tools_debug_layout_name: STRING is
+			-- Standard tools debug layout name
+		once
+			if not is_workbench then
+				Result := "standard_debug_layout.wb"
+			else
+				Result := "standard_debug_layout_wb.wb"
+			end
+		end
+
 	Runtime_lib_path: DIRECTORY_NAME is
 			-- Library path for the runtime.
 		require

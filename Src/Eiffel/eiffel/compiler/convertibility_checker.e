@@ -466,7 +466,7 @@ feature {NONE} -- Implementation: checking
 			a_feat_tbl.search_id (a_convert_feat.feature_name.internal_name.name_id)
 			if a_feat_tbl.found then
 				l_feat := a_feat_tbl.found_item
-				if l_feat.is_routine and (not l_feat.is_once or not l_feat.is_external) then
+				if not l_feat.is_once or not l_feat.is_external then
 					if a_convert_feat.is_creation_procedure then
 							-- Check it is listed as part of creation procedures of current class.
 						if
@@ -492,9 +492,9 @@ feature {NONE} -- Implementation: checking
 							end
 						end
 					else
-						if not l_feat.is_function or l_feat.argument_count /= 0 then
+						if not l_feat.has_return_value or l_feat.argument_count /= 0 then
 								-- Not a function without argument
-							create l_vncp.make ("Not a function without argument.")
+							create l_vncp.make ("Not a query without argument.")
 							l_vncp.set_class (a_class)
 							l_vncp.set_location (a_convert_feat.feature_name.start_location)
 							Error_handler.insert_error (l_vncp)
@@ -546,7 +546,7 @@ feature {NONE} -- Implementation: checking
 			l_feat := a_feat_tbl.item_id (a_convert_feat.feature_name.internal_name.name_id)
 				-- FIXME: Manu 04/28/2003: we do not do yet apply convertibility to check
 				-- for conversion type validity, only conformance
-			if l_feat.is_function then
+			if l_feat.has_return_value then
 				if not l_feat.type.conform_to (a_type) then
 					create l_vncp.make ("Return type does not conform to SOURCE.")
 					l_vncp.set_class (a_class)
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation: status report
 		require
 			a_feat_not_void: a_feat /= Void
 		do
-			if a_feat.is_function then
+			if a_feat.has_return_value then
 				Result := a_feat.argument_count = 0
 			else
 				Result := (a_feat.is_routine and (not a_feat.is_once or not a_feat.is_external))

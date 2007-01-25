@@ -16,7 +16,8 @@ inherit
 			show,
 			close,
 			build_mini_toolbar,
-			mini_toolbar
+			mini_toolbar,
+			force_last_stone
 		end
 
 	WIDGET_OWNER
@@ -183,65 +184,11 @@ feature -- Status setting
 
 	set_stone (new_stone: STONE) is
 			-- Send a stone to class formatters.
-		local
-			cst: CLASSC_STONE
-			ist: CLASSI_STONE
-			fst: FEATURE_STONE
-			type_changed: BOOLEAN
-			cluster_stone: CLUSTER_STONE
-			target_stone: TARGET_STONE
-			l_stone: STONE
 		do
-			fst ?= new_stone
-			cst ?= new_stone
-			ist ?= new_stone
-			cluster_stone ?= new_stone
-			target_stone ?= new_stone
-				-- If `new_stone' is a feature stone, take the associated class.
-			if fst /= Void and then fst.e_feature /= Void then
-				create cst.make (fst.e_feature.associated_class)
-				l_stone := cst
-			elseif cst /= Void or else ist /= Void then
-				if cst /= Void then
-					type_changed := (cst.e_class.is_true_external and not is_stone_external) or
-						(not cst.e_class.is_true_external and is_stone_external)
-				elseif ist /= Void then
-					type_changed := (ist.class_i.is_external_class and not is_stone_external) or
-						(not ist.class_i.is_external_class and is_stone_external)
-				end
-
-				if type_changed then
-					-- Toggle stone flag.
-	            	is_stone_external := not is_stone_external
-	            end
-
-	            	-- Update formatters.
-	            if is_stone_external and cst /= Void then
-					enable_dotnet_formatters (True)
-				else
-					enable_dotnet_formatters (False)
-				end
-				if cst /= Void then
-					update_viewpoints (cst.e_class)
-				end
-				l_stone := cst
-			elseif target_stone /= Void or else cluster_stone /= Void then
-				l_stone := new_stone
+			set_last_stone (new_stone)
+			if widget.is_displayed then
+				force_last_stone
 			end
-
-			if l_stone = Void or else internal_stone = Void or else not is_stone_equal (l_stone, internal_stone) then
-					-- Set the stones.
-				from
-					managed_formatters.start
-				until
-					managed_formatters.after
-				loop
-					managed_formatters.item.set_stone (l_stone)
-					managed_formatters.forth
-				end
-			end
-			internal_stone := l_stone
-			history_manager.extend (stone)
 		end
 
 	launch_stone (st: STONE) is
@@ -553,8 +500,76 @@ feature {NONE} -- Implementation
 	history_toolbar: EV_TOOL_BAR
 			-- Toolbar containing the history commands.
 
-	mini_toolbar: EV_HORIZONTAL_BOX;
+	mini_toolbar: EV_HORIZONTAL_BOX
 			-- Mini tool bar.
+
+	force_last_stone is
+			-- Force `last_stone' to be displayed in formatters of Current tool.
+		local
+			new_stone: like last_stone
+			cst: CLASSC_STONE
+			ist: CLASSI_STONE
+			fst: FEATURE_STONE
+			type_changed: BOOLEAN
+			cluster_stone: CLUSTER_STONE
+			target_stone: TARGET_STONE
+			l_stone: STONE
+		do
+			if not is_last_stone_processed then
+				new_stone := last_stone
+				fst ?= new_stone
+				cst ?= new_stone
+				ist ?= new_stone
+				cluster_stone ?= new_stone
+				target_stone ?= new_stone
+					-- If `new_stone' is a feature stone, take the associated class.
+				if fst /= Void and then fst.e_feature /= Void then
+					create cst.make (fst.e_feature.associated_class)
+					l_stone := cst
+				elseif cst /= Void or else ist /= Void then
+					if cst /= Void then
+						type_changed := (cst.e_class.is_true_external and not is_stone_external) or
+							(not cst.e_class.is_true_external and is_stone_external)
+					elseif ist /= Void then
+						type_changed := (ist.class_i.is_external_class and not is_stone_external) or
+							(not ist.class_i.is_external_class and is_stone_external)
+					end
+
+					if type_changed then
+						-- Toggle stone flag.
+		            	is_stone_external := not is_stone_external
+		            end
+
+		            	-- Update formatters.
+		            if is_stone_external and cst /= Void then
+						enable_dotnet_formatters (True)
+					else
+						enable_dotnet_formatters (False)
+					end
+					if cst /= Void then
+						update_viewpoints (cst.e_class)
+					end
+					l_stone := cst
+				elseif target_stone /= Void or else cluster_stone /= Void then
+					l_stone := new_stone
+				end
+
+				if l_stone = Void or else internal_stone = Void or else not is_stone_equal (l_stone, internal_stone) then
+						-- Set the stones.
+					from
+						managed_formatters.start
+					until
+						managed_formatters.after
+					loop
+						managed_formatters.item.set_stone (l_stone)
+						managed_formatters.forth
+					end
+				end
+				internal_stone := l_stone
+				history_manager.extend (stone)
+				Precursor
+			end
+		end
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

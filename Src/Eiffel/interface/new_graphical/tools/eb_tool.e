@@ -102,6 +102,34 @@ feature -- Change
 			develop_window := m
 		end
 
+	set_last_stone (a_stone: like last_stone) is
+			-- Set `last_stone' with `a_stone'.
+		do
+			last_stone := a_stone
+			set_is_last_stone_processed (False)
+		ensure
+			last_stone_set: last_stone = a_stone
+			last_stone_not_processed: not is_last_stone_processed
+		end
+
+	set_is_last_stone_processed (b: BOOLEAN) is
+			-- Set `is_last_stone_processed' with `b'.
+		do
+			is_last_stone_processed := b
+		ensure
+			is_last_stone_processed_set: is_last_stone_processed = b
+		end
+
+	force_last_stone is
+			-- Force that `last_stone' is displayed in formatters in Current view
+		do
+			if not is_last_stone_processed then
+				set_is_last_stone_processed (True)
+			end
+		ensure
+			last_stone_processed: is_last_stone_processed
+		end
+
 feature -- Access
 
 	widget: EV_WIDGET is
@@ -161,6 +189,13 @@ feature -- Access
 	develop_window: EB_DEVELOPMENT_WINDOW
 			-- Development window.
 
+	last_stone: STONE
+			-- Last stone set into Current view
+			-- This is used as optimization.
+			-- When a stone is set into current view through `set_stone', we store it here,
+			-- until Current view is displayed on the screen, the stone is used to update related formatters
+			-- by invoking `force_last_stone'.
+
 feature -- Status report
 
 	shown: BOOLEAN is
@@ -170,6 +205,10 @@ feature -- Status report
 				Result := content.is_visible
 			end
 		end
+
+	is_last_stone_processed: BOOLEAN
+			-- Is `last_stone' processed?
+			-- i.e., has `last_stone' been displayed in formatters of Current tool?
 
 feature -- Status setting
 
@@ -187,6 +226,7 @@ feature -- Status setting
 				content.show
 			end
 			content.set_focus
+			force_last_stone
 		end
 
 	has_focus: BOOLEAN is

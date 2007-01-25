@@ -17,7 +17,8 @@ inherit
 			mini_toolbar,
 			build_mini_toolbar,
 			build_docking_content,
-			show
+			show,
+			force_last_stone
 		end
 
 	EB_CONSTANTS
@@ -231,59 +232,73 @@ feature -- Status setting
 
 	set_stone (new_stone: STONE) is
 			-- Send a stone to feature formatters.
+		do
+			set_last_stone (new_stone)
+			if widget.is_displayed then
+				force_last_stone
+			end
+		end
+
+	force_last_stone is
+			-- Force that `last_stone' is displayed in formatters in Current view
 		local
 			fst: FEATURE_STONE
 			type_changed: BOOLEAN
+			new_stone: like last_stone
 		do
-			fst ?= new_stone
-			if fst /= Void then
-				type_changed := (fst.e_class.is_true_external and not is_stone_external) or
-					(not fst.e_class.is_true_external and is_stone_external)
+			if not is_last_stone_processed then
+				new_stone := last_stone
+				fst ?= new_stone
+				if fst /= Void then
+					type_changed := (fst.e_class.is_true_external and not is_stone_external) or
+						(not fst.e_class.is_true_external and is_stone_external)
 
-			end
-
-				-- Toggle stone flag.
-			if type_changed then
-				is_stone_external := not is_stone_external
-			end
-
-				-- Update formatters.
-            if is_stone_external then
-				enable_dotnet_formatters (True)
-			else
-				enable_dotnet_formatters (False)
-			end
-			if fst /= Void then
-				update_viewpoints (fst.e_class)
-			end
-			if fst = Void then
-				managed_formatters.first.enable_sensitive
-				from
-					managed_formatters.start
-				until
-					managed_formatters.after
-				loop
-					managed_formatters.item.set_stone (fst)
-					managed_formatters.forth
 				end
-				internal_stone := Void
-				history_manager.extend (new_stone)
-			elseif
-				internal_stone = Void or else
-				(internal_stone /= Void and then not same_feature (internal_stone.e_feature, fst.e_feature))
-			then
-				from
-					managed_formatters.start
-				until
-					managed_formatters.after
-				loop
-					managed_formatters.item.set_stone (fst)
-					managed_formatters.forth
+
+					-- Toggle stone flag.
+				if type_changed then
+					is_stone_external := not is_stone_external
 				end
-				internal_stone := fst
-				history_manager.extend (new_stone)
+
+					-- Update formatters.
+	            if is_stone_external then
+					enable_dotnet_formatters (True)
+				else
+					enable_dotnet_formatters (False)
+				end
+				if fst /= Void then
+					update_viewpoints (fst.e_class)
+				end
+				if fst = Void then
+					managed_formatters.first.enable_sensitive
+					from
+						managed_formatters.start
+					until
+						managed_formatters.after
+					loop
+						managed_formatters.item.set_stone (fst)
+						managed_formatters.forth
+					end
+					internal_stone := Void
+					history_manager.extend (new_stone)
+				elseif
+					internal_stone = Void or else
+					(internal_stone /= Void and then not same_feature (internal_stone.e_feature, fst.e_feature))
+				then
+					from
+						managed_formatters.start
+					until
+						managed_formatters.after
+					loop
+						managed_formatters.item.set_stone (fst)
+						managed_formatters.forth
+					end
+					internal_stone := fst
+					history_manager.extend (new_stone)
+				end
+				flat_formatter.show_debugged_line
+				Precursor
 			end
-			flat_formatter.show_debugged_line
 		end
 
 	drop_stone (st: CLASSI_STONE) is

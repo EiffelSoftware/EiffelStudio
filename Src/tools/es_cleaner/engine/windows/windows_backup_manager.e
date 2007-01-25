@@ -93,7 +93,14 @@ feature  -- Basic operations
 					storable_utils.independent_store (l_table, l_writer, True)
 				end
 			else
---Report error
+				if l_file = Void then
+					if l_path = Void then
+						l_path := "Unable to retrieve path"
+					end
+					error_handler.add_error (create {ESC_B02}.make_with_context ([l_path]), False)
+				else
+					error_handler.add_error (create {ESC_B03}.make_with_context ([l_file.name]), False)
+				end
 			end
 
 				-- Release allocated resources
@@ -130,11 +137,11 @@ feature  -- Basic operations
 				l_table ?= storable_utils.retrieved (l_reader, False)
 				if l_table /= Void then
 					create l_reg
-					l_key := l_reg.open_key_with_access (l_path, {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+					l_key := l_reg.open_key_with_access (l_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
 					if l_key = default_pointer then
 							-- Need to recreate key
 						l_reg.create_new_key (l_path)
-						l_key := l_reg.open_key_with_access (l_path, {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+						l_key := l_reg.open_key_with_access (l_path, {WEL_REGISTRY_ACCESS_MODE}.key_read)
 					end
 					if l_key /= default_pointer then
 						l_table.current_keys.do_all (agent (a_item: STRING; a_reg: WEL_REGISTRY; a_key: POINTER; a_table: HASH_TABLE [STRING, STRING])
@@ -149,10 +156,13 @@ feature  -- Basic operations
 							end (?, l_reg, l_key, l_table))
 					end
 				else
--- Report error
+					error_handler.add_error (create {ESC_R03}.make_with_context ([l_file]), False)
 				end
 			else
---Report error
+				if l_path = Void then
+					l_path := "Unable to retrieve path"
+				end
+				error_handler.add_error (create {ESC_R02}.make_with_context ([l_path]), False)
 			end
 
 				-- Release allocated resources

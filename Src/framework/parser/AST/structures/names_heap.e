@@ -76,6 +76,12 @@ feature -- Access
 
 feature -- Status report
 
+	has (i: INTEGER): BOOLEAN is
+			-- Is there an entry for ID `i'?
+		do
+			Result := valid_index (i) and then area.item (i) /= Void
+		end
+
 	valid_index (i: INTEGER): BOOLEAN is
 			-- Is `i' within bounds?
 		do
@@ -321,9 +327,9 @@ feature {NONE} -- Implementation: access
 			put ("set_rout_disp_final") check found_item = set_rout_disp_final_name_id end
 			put ("to_pointer") check found_item = to_pointer_name_id end
 			put ("NONE") check found_item = none_class_name_id end
-			put ("Precursor") check found_item = precursor_id end
-			put ("pointer_item") check found_item = pointer_item_id end
-			put ("fast_item") check found_item = fast_item_id end
+			put ("Precursor") check found_item = precursor_name_id end
+			put ("fast_item") check found_item = fast_item_name_id end
+			put ("pointer_item") check found_item = pointer_item_name_id end
 		end
 
 invariant

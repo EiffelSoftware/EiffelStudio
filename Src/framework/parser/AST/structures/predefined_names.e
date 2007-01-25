@@ -176,9 +176,9 @@ feature -- Constants
 	set_rout_disp_final_name_id: INTEGER is 163
 	to_pointer_name_id: INTEGER is 164
 	none_class_name_id: INTEGER is 165
-	precursor_id: INTEGER is 166
-	pointer_item_id: INTEGER is 167
-	fast_item_id: INTEGER is 168
+	precursor_name_id: INTEGER is 166
+	fast_item_name_id: INTEGER is 167
+	pointer_item_name_id: INTEGER is 168
 
 feature -- Classification
 

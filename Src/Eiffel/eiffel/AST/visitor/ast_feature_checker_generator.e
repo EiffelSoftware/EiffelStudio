@@ -2142,7 +2142,7 @@ feature -- Implementation
 				-- the current class type (e.g. like Current).
 			l_feature_i.instantiate (context.current_class_type)
 
-			create l_precursor_id.initialize_from_id (precursor_id)
+			create l_precursor_id.initialize_from_id (precursor_name_id)
 			l_precursor_id.set_position (l_as.precursor_keyword.line, l_as.precursor_keyword.column,
 				l_as.precursor_keyword.position, l_as.precursor_keyword.location_count)
 			process_call (context.current_class_type, l_parent_type, l_precursor_id, l_feature_i,

@@ -89,6 +89,9 @@ N		[0-9]
 [cC][+][+]	{
 				last_token := TE_CPP_LANGUAGE
 			}
+"const" {
+				last_token := TE_CONST
+			}
 [cC][rR][eE][aA][tT][oO][rR]	{
 				last_token := TE_CREATOR
 			}

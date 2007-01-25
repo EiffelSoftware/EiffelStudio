@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.4"
+	generator: "geyacc version 3.5"
 
 class EXTERNAL_TOKENS
 
@@ -95,6 +95,8 @@ feature -- Access
 				Result := "TE_STRUCT"
 			when TE_TYPE then
 				Result := "TE_TYPE"
+			when TE_CONST then
+				Result := "TE_CONST"
 			when TE_SIGNED then
 				Result := "TE_SIGNED"
 			when TE_UNSIGNED then
@@ -148,10 +150,11 @@ feature -- Token codes
 	TE_SET_STATIC_FIELD: INTEGER is 291
 	TE_STRUCT: INTEGER is 292
 	TE_TYPE: INTEGER is 293
-	TE_SIGNED: INTEGER is 294
-	TE_UNSIGNED: INTEGER is 295
-	TE_USE: INTEGER is 296
-	TE_ID: INTEGER is 297
-	TE_INCLUDE_ID: INTEGER is 298
+	TE_CONST: INTEGER is 294
+	TE_SIGNED: INTEGER is 295
+	TE_UNSIGNED: INTEGER is 296
+	TE_USE: INTEGER is 297
+	TE_ID: INTEGER is 298
+	TE_INCLUDE_ID: INTEGER is 299
 
 end

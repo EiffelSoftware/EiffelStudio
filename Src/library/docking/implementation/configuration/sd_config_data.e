@@ -18,9 +18,24 @@ feature {NONE} -- Initlization
 			create internal_inner_container_datas.make (1)
 			create internal_auto_hide_zones_data.make
 			create tool_bar_datas.make (1)
+			name := ""
 		end
 
 feature -- Properties
+
+	name: STRING_GENERAL
+			-- Name of this layout.
+
+	set_name (a_name: like name) is
+			-- Set `name'
+		require
+			not_void: a_name /= Void
+		do
+			name := a_name
+		ensure
+			set: name = a_name
+		end
+
 	inner_container_datas: like internal_inner_container_datas is
 			--
 		do
@@ -52,7 +67,6 @@ feature {NONE}  -- Implementation
 
 	internal_auto_hide_zones_data: SD_AUTO_HIDE_PANEL_DATA;
 
---	internal_inner_container_void: BOOLEAN
 indexing
 	library:	"SmartDocking: Library of reusable components for Eiffel."
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

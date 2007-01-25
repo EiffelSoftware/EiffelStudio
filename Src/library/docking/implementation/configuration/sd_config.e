@@ -26,10 +26,11 @@ feature {NONE} -- Initlization
 
 feature -- Save/Open inner container data.
 
-	save_config (a_file: STRING_GENERAL) is
-			-- Save all docking library datas to `a_file'.
+	save_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
+			-- Save all docking library datas to `a_file' with `a_name'
 		require
 			a_file_not_void: a_file /= Void
+			a_file_not_void: a_name /= Void
 		local
 			l_file: RAW_FILE
 			l_config_data: SD_CONFIG_DATA
@@ -51,6 +52,8 @@ feature -- Save/Open inner container data.
 
 			save_tool_bar_datas (l_config_data.tool_bar_datas)
 
+			l_config_data.set_name (a_name)
+
 			create l_writer.make (l_file)
 			create l_facility
 			l_facility.independent_store (l_config_data, l_writer, True)
@@ -59,6 +62,14 @@ feature -- Save/Open inner container data.
 			top_container := Void
 		ensure
 			cleared: top_container = Void
+		end
+
+	save_config (a_file: STRING_GENERAL) is
+			-- Save all docking library datas to `a_file'.
+		require
+			a_file_not_void: a_file /= Void
+		do
+			save_config_with_name (a_file, "")
 		end
 
 	open_config (a_file: STRING_GENERAL): BOOLEAN is
@@ -91,7 +102,6 @@ feature -- Save/Open inner container data.
 
 				clear_up_floating_zones
 				clean_up_tool_bars
-
 				set_all_visible
 
 				check not internal_docking_manager.query.inner_container_main.full end
@@ -218,7 +228,17 @@ feature -- Save/Open inner container data.
 	save_tools_config (a_file: STRING_GENERAL) is
 			-- Save tools config, except all editors.
 		require
+			not_void: a_file /= Void
+		do
+			save_tools_config_with_name (a_file, "")
+		end
+
+	save_tools_config_with_name (a_file: STRING_GENERAL; a_name: STRING_GENERAL) is
+			-- Save tools config to `a_file' with `a_name'
+		require
 			not_called: top_container = Void
+			a_file_not_void: a_file /= Void
+			a_name_not_void: a_name /= Void
 		local
 			l_container: EV_CONTAINER
 		do
@@ -236,7 +256,7 @@ feature -- Save/Open inner container data.
 				check place_holder_visible: internal_docking_manager.zones.place_holder_content.is_visible end
 			end
 
-			save_config (a_file)
+			save_config_with_name (a_file, a_name)
 
 			top_container := Void
 		ensure
@@ -694,7 +714,7 @@ feature {NONE} -- Implementation for open config.
 					end
 					l_multi_dock_area := internal_docking_manager.query.inner_container_main
 				else
-					create l_floating_state.make (l_datas.item.screen_x, l_datas.item.screen_y, internal_docking_manager)
+					create l_floating_state.make (l_datas.item.screen_x, l_datas.item.screen_y, internal_docking_manager, l_datas.item.is_visible)
 					l_floating_state.set_last_floating_height (l_datas.item.height)
 					l_floating_state.set_last_floating_width (l_datas.item.width)
 					l_floating_state.set_size (l_datas.item.width, l_datas.item.height)
@@ -728,6 +748,15 @@ feature {NONE} -- Implementation for open config.
 				internal_docking_manager.inner_containers.prune (l_floating_zones.item.inner_container)
 				l_floating_zones.forth
 			end
+		end
+
+	clean_up_tool_bar_containers is
+			-- Wipe out all tool bar containers.
+		do
+			internal_docking_manager.tool_bar_container.top.wipe_out
+			internal_docking_manager.tool_bar_container.bottom.wipe_out
+			internal_docking_manager.tool_bar_container.left.wipe_out
+			internal_docking_manager.tool_bar_container.right.wipe_out
 		end
 
 	clear_up_containers is
@@ -785,10 +814,8 @@ feature {NONE} -- Implementation for open config.
 			end
 
 			-- Remove tool bar containers
-			internal_docking_manager.tool_bar_container.top.wipe_out
-			internal_docking_manager.tool_bar_container.bottom.wipe_out
-			internal_docking_manager.tool_bar_container.left.wipe_out
-			internal_docking_manager.tool_bar_container.right.wipe_out
+			clean_up_tool_bar_containers
+
 			-- Remove floating tool bar containers.
 			l_floating_tool_bars := internal_docking_manager.tool_bar_manager.floating_tool_bars
 			from
@@ -1129,13 +1156,11 @@ feature {NONE} -- Implementation for open config.
 				l_content := internal_docking_manager.tool_bar_manager.content_by_title (a_tool_bar_datas.item.title)
 				create l_tool_bar.make (False, internal_docking_manager, False)
 				l_tool_bar.extend (l_content)
-				l_tool_bar.float (a_tool_bar_datas.item.screen_x, a_tool_bar_datas.item.screen_y)
+				l_tool_bar.float (a_tool_bar_datas.item.screen_x, a_tool_bar_datas.item.screen_y, a_tool_bar_datas.item.is_visible)
+				l_content.set_visible (a_tool_bar_datas.item.is_visible)
 				l_tool_bar.assistant.set_last_state (a_tool_bar_datas.item.last_state)
 				if a_tool_bar_datas.item.last_state.floating_group_info /= Void then
 					l_tool_bar.floating_tool_bar.assistant.position_groups (a_tool_bar_datas.item.last_state.floating_group_info)
-				end
-				if not a_tool_bar_datas.item.is_visible then
-					l_tool_bar.content.hide
 				end
 				a_tool_bar_datas.forth
 			end

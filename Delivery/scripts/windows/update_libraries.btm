@@ -6,9 +6,9 @@ co %DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 
 remtrace gobo
 cdd %EIFFEL_SRC\library
-copy %EIFFEL_SRC\free_add_ons\gobo\gobo_34_win.tgz .
-tar xfz gobo_34_win.tgz
-fullrf gobo_34_win.tgz
+copy %EIFFEL_SRC\free_add_ons\gobo\gobo_35_win.tbz2 .
+tar xfj gobo_35_win.tbz2
+fullrf gobo_35_win.tbz2
 
 cdd %EIFFEL_SRC
 remtrace Compile the Eiffel libraries C code

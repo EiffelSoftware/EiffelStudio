@@ -227,14 +227,13 @@ iff not defined NO_COMPILE then
 	endiff
 
 	remtrace Extracting Gobo
-	copy %INSTALL_DIR\free_add_ons\gobo\gobo_34_win.tgz %INSTALL_DIR\library
+	copy %INSTALL_DIR\free_add_ons\gobo\gobo_35_win.tbz2 %INSTALL_DIR\library
 	cdd %INSTALL_DIR\library
-	tar xfz gobo_34_win.tgz
-	fullrf gobo_34_win.tgz
+	tar xfj gobo_35_win.tbz2
+	fullrf gobo_35_win.tbz2
 	cdd %INSTALL_DIR\free_add_ons
-	fullrf gobo\gobo_34_unix.tgz
-	fullrf gobo\gobo_34_win.tgz
-	fullrf gobo\gobo_33_ise.tgz
+	fullrf gobo\gobo_35_unix.tbz2
+	fullrf gobo\gobo_35_win.tbz2
 
 	cdd %INIT_DIR
 

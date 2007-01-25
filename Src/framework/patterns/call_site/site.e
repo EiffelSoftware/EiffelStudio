@@ -16,8 +16,19 @@ feature -- Initialization
 			-- Sites `site' with `a_site'.
 		require
 			is_valid_site: is_valid_site (a_site)
+		local
+			l_entities: like siteable_entities
 		do
 			site := a_site
+			l_entities := siteable_entities
+			if not l_entities.is_empty then
+				l_entities.do_all (agent (a_item: like Current)
+					do
+						if a_item.is_valid_site (site) then
+							a_item.set_site (site)
+						end
+					end)
+			end
 		ensure
 			site_set: site = a_site
 		end
@@ -26,6 +37,16 @@ feature -- Access
 
 	site: G
 			-- Access to sited object instance (Void if unsited)
+
+feature {NONE} -- Access
+
+	siteable_entities: ARRAYED_LIST [SITE [G]] is
+			-- List of siteable entities to automatically site when `Current' is sited
+		do
+			create Result.make (0)
+		ensure
+			result_attached: Result /= Void
+		end
 
 feature -- Query
 

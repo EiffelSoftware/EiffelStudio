@@ -24,8 +24,8 @@ compile_result 	ok
 c_compile_work
 c_compile_result ok
 
-execute_work	NONE exec_output1
+execute_work	NONE exec_output2
 execute_result 	ok
-compare		exec_output1 output1
+compare		exec_output2 output1
 
 test_end

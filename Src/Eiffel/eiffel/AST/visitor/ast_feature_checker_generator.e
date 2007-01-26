@@ -154,7 +154,14 @@ feature -- Type checking
 			if a_feature.real_body /= Void then
 				rout_as ?= a_feature.real_body.content
 				if rout_as /= Void then
-					rout_as.set_number_of_breakpoint_slots (break_point_slot_count)
+					if break_point_slot_count > 0 then
+							--| FIXME(jfiat:2007/01/26):
+							--| It occurs `break_point_slot_count' = 0 at this point
+							--| but just before we set rout_as.number_of_breakpoint_slots
+							--| had been set to non zero value
+							--| Check why we have this kind of issue.
+						rout_as.set_number_of_breakpoint_slots (break_point_slot_count)
+					end
 				end
 			end
 		end
@@ -2303,6 +2310,7 @@ feature -- Implementation
 				l_byte_code.set_once_manifest_string_count (l_as.once_manifest_string_count)
 				last_byte_node := l_byte_code
 			end
+			l_as.set_number_of_breakpoint_slots (break_point_slot_count)
 		end
 
 	process_constant_as (l_as: CONSTANT_AS) is

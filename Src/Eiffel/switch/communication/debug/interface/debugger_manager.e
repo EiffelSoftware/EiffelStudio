@@ -315,6 +315,18 @@ feature -- Breakpoints management
 								v.wipe_out
 							end
 						else
+							if c = '%%' and not is_escaped and i < m.count then
+								inspect m.item (i + 1)
+								when 'N' then
+									i := i + 1
+									c := '%N'
+								when 'T' then
+									i := i + 1
+									c := '%T'
+								else
+									-- keep c as '\'
+								end
+							end
 							s.append_character (c)
 						end
 					end

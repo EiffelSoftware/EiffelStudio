@@ -1004,13 +1004,82 @@ feature {BREAKPOINTS_MANAGER, FAILURE_HDLR}
 			until
 				breakpoints.after
 			loop
-				breakpoints.item_for_iteration.synchronize
+				synchronize_breakpoint (breakpoints.item_for_iteration)
 				breakpoints.forth
 			end
 
 				-- Remove useless breakpoints (the synchronization
 				-- may have removed some breakpoints)
 			update
+		end
+
+	synchronize_breakpoint (bp: BREAKPOINT) is
+			-- Resychronize the breakpoint after a recompilation.
+		require
+			bp_not_void: bp /= Void
+		local
+			invalid_breakpoint: BOOLEAN
+			nb_bps: INTEGER
+			l_routine: E_FEATURE
+			l_body_index: INTEGER
+			l_breakable_line_number: INTEGER
+			l_condition: EB_EXPRESSION
+		do
+			if not invalid_breakpoint then
+					-- update the feature
+				l_breakable_line_number := bp.breakable_line_number
+				bp.update_routine_version
+				l_routine := bp.routine
+
+				if l_routine /= Void and then l_routine.is_debuggable and then l_routine.written_class /= Void then
+					nb_bps := l_routine.number_of_breakpoint_slots
+					if
+						nb_bps = 0 --| more likely a bug in compiler data
+						or else l_breakable_line_number <= nb_bps
+					then
+							-- The line of the breakpoint still exists.
+							-- Update `real_body_id' since it may have changed
+							-- during recompilation (`body_index' is not supposed to change but
+							-- we update it as well in case of)
+
+						l_body_index := l_routine.body_index -- update the body_index as well
+						l_condition := bp.condition
+						if l_condition /= Void then
+							l_condition.reset
+							if bp.condition_as_is_true and not l_condition.is_boolean_expression (l_routine) then
+								bp.remove_condition
+								l_condition := Void
+							end
+						end
+					elseif
+						l_breakable_line_number > nb_bps
+						and then not is_breakpoint_set (l_routine, nb_bps)
+					then
+						check nb_bps > 0 end
+						bp.set_breakable_line_number (nb_bps)
+					else
+							-- set the breakpoint to be removed: the line does no longer exist
+						bp.discard
+						bp.set_is_corrupted (True)
+					end
+				else
+						-- The breakpoint is now invalid since its feature has been removed
+						-- or is no longer debuggable.
+					bp.discard
+					bp.set_is_corrupted (True)
+				end
+			else
+					-- This is an invalid breakpoint. Discard it.
+				bp.discard
+				bp.set_is_corrupted (True)
+			end
+		ensure
+			bp.is_set implies bp.routine /= Void
+		rescue
+				-- The synchronization of the breakpoint has failed.
+				-- We declare the breakpoint as "invalid".
+			invalid_breakpoint := True
+			retry
 		end
 
 	feature_bp_list (list: LINKED_LIST [E_FEATURE]): FIXED_LIST [CELL2 [E_FEATURE, LIST [INTEGER]]] is

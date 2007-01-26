@@ -90,6 +90,7 @@ feature{NONE} -- Initialization
 			create l_ev_save_toolbar
 			create open_editor_btn
 			create message_label
+			create project_dir_btn
 
 			message_label.align_text_left
 			l_ev_h_area_1.extend (message_label)
@@ -104,6 +105,7 @@ feature{NONE} -- Initialization
 			l_ev_save_toolbar.extend (save_output_btn)
 			l_ev_save_toolbar.extend (clear_output_btn)
 			l_ev_tool_bar_1.extend (l_ev_tool_bar_separator_1)
+			l_ev_tool_bar_1.extend (project_dir_btn)
 			l_ev_tool_bar_1.extend (w_code_btn)
 			l_ev_tool_bar_1.extend (f_code_btn)
 			l_ev_vertical_box_1.extend (l_ev_h_area_1)
@@ -113,20 +115,31 @@ feature{NONE} -- Initialization
 			open_editor_btn.set_tooltip (interface_names.e_open_selection_in_editor)
 			open_editor_btn.set_pixmap (pixmaps.icon_pixmaps.command_send_to_external_editor_icon)
 			open_editor_btn.select_actions.extend (agent on_open_selected_text_in_external_editor)
+
 			save_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_save_icon)
 			save_output_btn.set_tooltip (interface_names.e_save_c_compilation_output)
 			save_output_btn.select_actions.extend (agent on_save_output_to_file)
+
 			w_code_btn.set_text (interface_names.e_w_code)
 			w_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			w_code_btn.select_actions.extend (agent on_go_to_w_code)
 			w_code_btn.set_tooltip (interface_names.e_go_to_w_code_dir)
 			w_code_btn.pointer_button_press_actions.extend (agent on_open_w_code_in_file_browser)
+			w_code_btn.drop_actions.extend (agent on_pebble_drop)
+
 			f_code_btn.set_text (interface_names.e_f_code)
 			f_code_btn.set_pixmap (pixmaps.icon_pixmaps.general_open_icon)
 			f_code_btn.select_actions.extend (agent on_go_to_f_code)
 			f_code_btn.pointer_button_press_actions.extend (agent on_open_f_code_in_file_browser)
-
 			f_code_btn.set_tooltip (interface_names.e_go_to_f_code_dir)
+			f_code_btn.drop_actions.extend (agent on_pebble_drop)
+
+			project_dir_btn.set_text (interface_names.e_open_project)
+			project_dir_btn.set_pixmap (pixmaps.icon_pixmaps.document_eiffel_project_icon)
+			project_dir_btn.select_actions.extend (agent on_go_to_project_dir)
+			project_dir_btn.pointer_button_press_actions.extend (agent on_open_project_dir_in_file_browser)
+			project_dir_btn.set_tooltip (interface_names.e_go_to_project_dir)
+			project_dir_btn.drop_actions.extend (agent on_pebble_drop)
 
 			clear_output_btn.set_pixmap (pixmaps.icon_pixmaps.general_reset_icon)
 			clear_output_btn.set_tooltip (f_clear_output)
@@ -137,7 +150,9 @@ feature{NONE} -- Initialization
 			output_text.drop_actions.extend (agent drop_cluster)
 			output_text.drop_actions.extend (agent drop_breakable)
 			output_text.change_actions.extend (agent on_text_change)
+
 			on_text_change
+
 			output_text.set_foreground_color (preferences.editor_data.normal_text_color)
 			output_text.set_background_color (preferences.editor_data.normal_background_color)
 			output_text.set_font (preferences.editor_data.font)
@@ -354,7 +369,7 @@ feature -- Action
 	on_open_w_code_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Action to be performed when open W_code in file browser
 		do
-			if button = 3 then
+			if button = {EV_POINTER_CONSTANTS}.right then
 				open_dir_in_file_browser (project_location.workbench_path)
 			end
 		end
@@ -362,8 +377,50 @@ feature -- Action
 	on_open_f_code_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Action to be performed when open F_code in file browser
 		do
-			if button = 3 then
+			if button = {EV_POINTER_CONSTANTS}.right then
 				open_dir_in_file_browser (project_location.final_path)
+			end
+		end
+
+	on_go_to_project_dir is
+			-- Go to project directory of current Eiffel system.
+		do
+			go_to_dir (project_location.path)
+		end
+
+
+	on_open_project_dir_in_file_browser (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+			-- Action to be performed when open project in file browser
+		do
+			if button = {EV_POINTER_CONSTANTS}.right then
+				open_dir_in_file_browser (project_location.path)
+			end
+		end
+
+	on_pebble_drop (a_pebble: ANY) is
+			-- Action to be performed when `a_pebble' is dropped on `w_code_btn', `f_code_btn' or `project_dir_btn'.
+		local
+			l_class_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+			l_path: STRING
+			l_class_path: FILE_NAME
+		do
+			l_class_stone ?= a_pebble
+			if l_class_stone /= Void then
+				l_path := l_class_stone.class_i.group.location.build_path (l_class_stone.class_i.path, "")
+			else
+				l_cluster_stone ?= a_pebble
+				if l_cluster_stone /= Void then
+					if not l_cluster_stone.path.is_empty then
+							-- For a folder
+						l_path := l_cluster_stone.group.location.build_path (l_cluster_stone.path, "")
+					else
+						l_path := l_cluster_stone.group.location.evaluated_path
+					end
+				end
+			end
+			if l_path /= Void then
+				open_dir_in_file_browser (l_path)
 			end
 		end
 
@@ -612,6 +669,9 @@ feature{NONE} -- Implementation
 
 	f_code_btn: EV_TOOL_BAR_BUTTON
 			-- Button to go to F_code directory
+
+	project_dir_btn: EV_TOOL_BAR_BUTTON
+			-- Button to open directory of current project
 
 	save_file_dlg: EV_FILE_SAVE_DIALOG
 			-- File dialog to let user choose a file.

@@ -33,8 +33,9 @@ feature -- Access
 feature -- Conversion
 
 	convert_to (a_to_encoding: ENCODING; a_string: STRING_GENERAL): STRING_GENERAL is
-			-- Convert `a_str' from current encoding to `a_to_encoding'.
-			-- If either current or `a_to_encoding' is not `is_valid', original string is returned.
+			-- Convert `a_string' from current encoding to `a_to_encoding'.
+			-- If either current or `a_to_encoding' is not `is_valid', or an error accurres,
+			-- result can be void.
 		require
 			a_to_encoding_not_void: a_to_encoding /= Void
 			a_string_not_void: a_string /= Void

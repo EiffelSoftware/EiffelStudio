@@ -918,7 +918,7 @@ feature{NONE} -- Implementation
 	build_dependency_tool is
 			-- Build dependency tool.
 		local
-			l_dependency_tool: EB_DEPENDENCY_VIEW
+			l_dependency_tool: EB_DEPENDENCY_TOOL
 			l_show_cmd: EB_SHOW_TOOL_COMMAND
 			l_accel: EV_ACCELERATOR
 		do

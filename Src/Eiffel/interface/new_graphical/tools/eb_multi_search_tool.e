@@ -210,8 +210,9 @@ feature -- Access
 
 	editor: EB_EDITOR is
 			-- current_editor
+			-- Result is not only class text editors used by end user, but also maybe is the EB_SMART_EDITOR in Feature Relation Tool or Class Tool...
 		do
-			Result := develop_window.editors_manager.current_editor
+			Result := develop_window.ui.current_editor
 		end
 
 	bottom_reached_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -1103,7 +1104,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if not editor.is_empty then
 				currently_searched := a_word
-				class_stone ?= develop_window.editors_manager.current_editor.stone
+				class_stone ?= editor.stone
 				if class_stone /= Void then
 					class_i := class_stone.class_i
 					file_name:= class_i.file_name
@@ -1166,7 +1167,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 		do
 			develop_window.window.set_pointer_style (default_pixmaps.wait_cursor)
 			currently_searched := keyword_field.text
-			class_stone ?= develop_window.editors_manager.current_editor.stone
+			class_stone ?= editor.stone
 			if class_stone /= Void then
 				class_i := class_stone.class_i
 				file_name := class_i.file_name
@@ -1217,7 +1218,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					-- search is possible but the search box is not shown
 					-- default options
 				currently_searched := keyword_field.text
-				class_stone ?= develop_window.editors_manager.current_editor.stone
+				class_stone ?= editor.stone
 				if class_stone /= Void then
 					class_i := class_stone.class_i
 					file_name := class_i.file_name
@@ -1729,9 +1730,9 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 				end
 				if not is_current_editor_searched and then
 					l_stone /= develop_window.stone and then
-					develop_window.editors_manager.current_editor /= Void
+					editor /= Void
 				then
-					develop_window.editors_manager.current_editor.set_focus
+					editor.set_focus
 				end
 			end
 		end
@@ -2001,7 +2002,7 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 	is_main_editor: BOOLEAN is
 			-- Is `editor' main editor?
 		do
-			Result := (develop_window.editors_manager.current_editor = editor)
+			Result := (editor = develop_window.editors_manager.current_editor)
 		end
 
 	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE) is

@@ -569,7 +569,7 @@ rt_private void interpret(int flag, int where)
 		init_registers(MTC);		/* Initialize the registers */
 		caller_assertion_level = WASC(icur_dtype) & CK_SUP_REQUIRE;	/* Set the caller assertion level */
 
-		/* Expanded clone of arguments (if any) */
+		/* Expanded clone of arguments (if any). Reading BC_CLONE_ARG until we get BC_NO_CLONE_ARG. */
 		while (*IC++ != BC_NO_CLONE_ARG) {
 			EIF_REFERENCE ref;
 

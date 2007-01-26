@@ -25,8 +25,10 @@ feature -- Query
 	goto_dialog: EB_GOTO_DIALOG
 			-- The goto dialog for line number access
 
-	current_editor_index: INTEGER
-			-- Index in `editors' of the editor that has the focus.
+	current_editor: EB_CLICKABLE_EDITOR
+			-- Current smart editor.
+			-- Different from EB_EDITORS_MANAEGER.current_editor
+			-- Result is not only class text editors used by end users, but also maybe is the EB_SMART_EDITOR in Feature Relation Tool or Class Tool...
 
 	save_backup_dialog: EB_CONFIRMATION_DIALOG is
 			-- Save backup_dialog
@@ -41,6 +43,14 @@ feature -- Query
 		end
 
 feature -- Settings
+
+	set_current_editor (a_editor: like current_editor) is
+			-- Set `current_editor'
+		do
+			current_editor := a_editor
+		ensure
+			set: current_editor = a_editor
+		end
 
 	set_editors_widget (a_widget: like editors_widget) is
 			-- Set `editors_widget'

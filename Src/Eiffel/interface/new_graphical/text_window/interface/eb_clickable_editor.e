@@ -20,6 +20,7 @@ inherit
 		redefine
 			make,
 			reset, on_text_loaded,
+			gain_focus,
 			on_mouse_button_down,
 			on_click_in_text, handle_extended_key,
 			handle_extended_ctrled_key,
@@ -643,6 +644,15 @@ feature {NONE} -- Implementation
 					io.error.put_string ("%N Editor Warning : Unable to scroll to Breakpoint number "+ bp_number.out + "%N")
 					io.error.put_string ("                   There are only " + bp_count.out + " in currently displayed class.%N")
 				end
+			end
+		end
+		
+	gain_focus is
+			-- Update the editor as it has just gained the focus.
+		do
+			Precursor {EB_CUSTOM_WIDGETTED_EDITOR}
+			if dev_window /= Void then
+				dev_window.ui.set_current_editor (Current)
 			end
 		end
 

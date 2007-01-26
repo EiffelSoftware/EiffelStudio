@@ -13,7 +13,7 @@ inherit
 		redefine
 			c_code_directory, launch_c_compilation,
 			confirm_and_compile,
-			menu_name, pixmap, tooltip,
+			menu_name, pixmap, pixel_buffer, tooltip,
 			finalization_error, perform_compilation,
 			name,
 			make, description, tooltext
@@ -137,6 +137,12 @@ feature {NONE} -- Implementation
 			-- Pixmaps representing the command.
 		do
 			Result := pixmaps.icon_pixmaps.project_finalize_icon
+		end
+
+	pixel_buffer: EV_PIXEL_BUFFER is
+			-- Pixel buffer representing the command
+		do
+			Result := pixmaps.icon_pixmaps.project_finalize_icon_buffer
 		end
 
 	tooltip: STRING_GENERAL is

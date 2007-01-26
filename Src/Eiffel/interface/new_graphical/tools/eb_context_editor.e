@@ -1372,7 +1372,7 @@ feature {EB_DIAGRAM_TOOL, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- To
 	launch_stone (a_stone: STONE) is
 			-- Launch stone.
 		do
-			set_stone (a_stone)
+			develop_window.tools.set_stone (a_stone)
 		end
 
 	is_link_client, is_link_inheritance, is_link_aggregate: BOOLEAN

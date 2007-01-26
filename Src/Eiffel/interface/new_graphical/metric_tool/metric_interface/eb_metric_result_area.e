@@ -122,10 +122,10 @@ feature {NONE} -- Initialization
 			dummy_text.set_background_color (l_text.background_color)
 			dummy_area.show
 
-				-- Delete following in docking EiffelStudio.			
-			dummy_text.drop_actions.extend (agent drop_cluster)
-			dummy_text.drop_actions.extend (agent drop_class)
-			dummy_text.drop_actions.extend (agent drop_feature)
+				-- Delete following in docking EiffelStudio.
+			append_drop_actions (
+				<<dummy_text>>
+			)
 		end
 
 feature -- Access

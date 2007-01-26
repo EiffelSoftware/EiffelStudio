@@ -589,6 +589,17 @@ feature -- Pixmap
 			Result_set: Result /= Void
 		end
 
+feature{NONE} -- Font
+
+	bold_font: EV_FONT is
+			-- Bold font
+		once
+			create Result
+			Result.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
+		ensure
+			result_attached: Result /= Void
+		end
+
 feature{NONE} -- Implementation
 
 	on_key_pressed_on_non_editable_text_field (a_key: EV_KEY; a_text: EV_TEXT_COMPONENT; a_msg: STRING_GENERAL; a_window: EV_WINDOW) is

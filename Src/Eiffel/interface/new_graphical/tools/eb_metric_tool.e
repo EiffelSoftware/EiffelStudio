@@ -565,6 +565,23 @@ feature{NONE} -- Implementation
 		notify_project_unloaded_agent: PROCEDURE [ANY, TUPLE]
 				-- Agent of `notify_project_unloaded'
 
+feature{EB_METRIC_EVALUATION_PANEL} -- Title change
+
+	set_title (a_result: STRING_GENERAL) is
+			-- Set title of Current tool.
+			-- If `a_result' is not Void, display it on title.
+		local
+			l_name: STRING_32
+		do
+			l_name := interface_names.t_metric_tool.as_string_32
+			if a_result /= Void then
+				l_name.append (ti_l_parenthesis.as_string_32)
+				l_name.append (a_result.as_string_32)
+				l_name.append (ti_r_parenthesis.as_string_32)
+			end
+			content.set_short_title (l_name)
+		end
+
 invariant
 	feedback_dialog_attached: feedback_dialog /= Void
 	not_feedback_dialog_is_destroyed: not feedback_dialog.is_destroyed

@@ -127,14 +127,11 @@ feature {NONE} -- Initialization
 			keep_detailed_result_tool_bar.extend (keep_result_btn)
 			group_tool_bar.extend (group_btn)
 			warning_tool_bar.extend (check_warning_btn)
-
---			if group_btn.is_selected then
---				flat_grid_area.hide
---				tree_grid_area.show
---			else
---				flat_grid_area.show
---				tree_grid_area.hide
---			end
+			append_drop_actions (
+				<<toolbar_cell,
+				  tree_grid.grid,
+				  flat_grid.grid>>
+			)
 			switch_grid
 		end
 

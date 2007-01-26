@@ -26,7 +26,7 @@ feature {NONE}-- Initialization
 			Precursor {EV_VERTICAL_BOX}
 			
 				-- Create all widgets.
-			create l_ev_vertical_box_1
+			create main_panel_area
 			create toolbar_area
 			create control_toolbar
 			create run_metric_btn
@@ -48,17 +48,17 @@ feature {NONE}-- Initialization
 			create l_ev_tool_bar_7
 			create send_to_history_btn
 			create toolbar_empty_area
-			create l_ev_horizontal_split_area_1
+			create slip_area
 			create metric_source_domain_area
 			create choose_input_domain_lbl
 			create metric_domain_selector_area
 			create main_area
-			create l_ev_cell_1
+			create main_area_cell
 			create metric_selection_area
 			create l_ev_horizontal_box_1
 			create choose_metric_lbl
-			create l_ev_cell_2
-			create l_ev_horizontal_split_area_2
+			create choose_metric_lbl_cell
+			create l_ev_horizontal_split_area_1
 			create grid_wrapper
 			create grid_wrapper_empty_area
 			create metric_definition_area
@@ -73,8 +73,8 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_2
 			
 				-- Build widget structure.
-			extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (toolbar_area)
+			extend (main_panel_area)
+			main_panel_area.extend (toolbar_area)
 			toolbar_area.extend (control_toolbar)
 			control_toolbar.extend (run_metric_btn)
 			control_toolbar.extend (stop_metric_btn)
@@ -95,19 +95,19 @@ feature {NONE}-- Initialization
 			toolbar_area.extend (l_ev_tool_bar_7)
 			l_ev_tool_bar_7.extend (send_to_history_btn)
 			toolbar_area.extend (toolbar_empty_area)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
-			l_ev_horizontal_split_area_1.extend (metric_source_domain_area)
+			main_panel_area.extend (slip_area)
+			slip_area.extend (metric_source_domain_area)
 			metric_source_domain_area.extend (choose_input_domain_lbl)
 			metric_source_domain_area.extend (metric_domain_selector_area)
-			l_ev_horizontal_split_area_1.extend (main_area)
-			main_area.extend (l_ev_cell_1)
+			slip_area.extend (main_area)
+			main_area.extend (main_area_cell)
 			main_area.extend (metric_selection_area)
 			metric_selection_area.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (choose_metric_lbl)
-			l_ev_horizontal_box_1.extend (l_ev_cell_2)
-			metric_selection_area.extend (l_ev_horizontal_split_area_2)
-			l_ev_horizontal_split_area_2.extend (grid_wrapper)
-			l_ev_horizontal_split_area_2.extend (grid_wrapper_empty_area)
+			l_ev_horizontal_box_1.extend (choose_metric_lbl_cell)
+			metric_selection_area.extend (l_ev_horizontal_split_area_1)
+			l_ev_horizontal_split_area_1.extend (grid_wrapper)
+			l_ev_horizontal_split_area_1.extend (grid_wrapper_empty_area)
 			main_area.extend (metric_definition_area)
 			metric_definition_area.extend (quick_metric_empty_area)
 			metric_definition_area.extend (unit_area)
@@ -132,8 +132,8 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			l_ev_vertical_box_1.set_padding (3)
-			l_ev_vertical_box_1.disable_item_expand (toolbar_area)
+			main_panel_area.set_padding (3)
+			main_panel_area.disable_item_expand (toolbar_area)
 			toolbar_area.disable_item_expand (control_toolbar)
 			toolbar_area.disable_item_expand (option_tool_bar)
 			toolbar_area.disable_item_expand (l_ev_tool_bar_1)
@@ -153,8 +153,8 @@ feature {NONE}-- Initialization
 			metric_value_text.set_minimum_height (18)
 			percentage_tool_bar.disable_vertical_button_style
 			synchronize_tool_bar.disable_vertical_button_style
-			l_ev_horizontal_split_area_1.disable_item_expand (metric_source_domain_area)
-			l_ev_horizontal_split_area_1.enable_item_expand (main_area)
+			slip_area.disable_item_expand (metric_source_domain_area)
+			slip_area.enable_item_expand (main_area)
 			metric_source_domain_area.set_minimum_width (200)
 			metric_source_domain_area.set_minimum_height (0)
 			metric_source_domain_area.set_padding (3)
@@ -164,15 +164,15 @@ feature {NONE}-- Initialization
 			metric_domain_selector_area.set_minimum_height (0)
 			main_area.set_minimum_width (0)
 			main_area.set_minimum_height (0)
-			main_area.disable_item_expand (l_ev_cell_1)
-			l_ev_cell_1.set_minimum_width (10)
+			main_area.disable_item_expand (main_area_cell)
+			main_area_cell.set_minimum_width (10)
 			metric_selection_area.set_minimum_width (200)
 			metric_selection_area.set_padding (3)
 			metric_selection_area.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.disable_item_expand (choose_metric_lbl)
 			choose_metric_lbl.set_text ("Choose metric:")
-			l_ev_horizontal_split_area_2.disable_item_expand (grid_wrapper)
-			l_ev_horizontal_split_area_2.enable_item_expand (grid_wrapper_empty_area)
+			l_ev_horizontal_split_area_1.disable_item_expand (grid_wrapper)
+			l_ev_horizontal_split_area_1.enable_item_expand (grid_wrapper_empty_area)
 			grid_wrapper.set_minimum_width (0)
 			grid_wrapper_empty_area.set_minimum_width (20)
 			metric_definition_area.set_padding (3)
@@ -208,15 +208,17 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	unit_combo: EV_COMBO_BOX
-	toolbar_empty_area, grid_wrapper_empty_area, metric_definition_empty_area: EV_CELL
-	control_toolbar,
-	option_tool_bar, quick_metric_toolbar, percentage_tool_bar, synchronize_tool_bar: EV_TOOL_BAR
+	toolbar_empty_area, main_area_cell, choose_metric_lbl_cell, grid_wrapper_empty_area,
+	metric_definition_empty_area: EV_CELL
+	control_toolbar, option_tool_bar, quick_metric_toolbar,
+	percentage_tool_bar, synchronize_tool_bar: EV_TOOL_BAR
 	quick_metric_btn: EV_TOOL_BAR_TOGGLE_BUTTON
-	run_metric_btn,
-	stop_metric_btn, send_to_history_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
-	toolbar_area, value_area,
-	main_area, grid_wrapper, quick_metric_empty_area, unit_area: EV_HORIZONTAL_BOX
-	metric_source_domain_area,
+	run_metric_btn, stop_metric_btn,
+	send_to_history_btn, go_to_definition_btn: EV_TOOL_BAR_BUTTON
+	slip_area: EV_HORIZONTAL_SPLIT_AREA
+	toolbar_area, value_area, main_area,
+	grid_wrapper, quick_metric_empty_area, unit_area: EV_HORIZONTAL_BOX
+	main_panel_area, metric_source_domain_area,
 	metric_domain_selector_area, metric_selection_area, metric_definition_area, criterion_area: EV_VERTICAL_BOX
 	metric_value_lbl,
 	choose_input_domain_lbl, choose_metric_lbl, unit_lbl: EV_LABEL
@@ -225,14 +227,11 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
-	l_ev_cell_1,
-	l_ev_cell_2: EV_CELL
-	l_ev_tool_bar_1, l_ev_tool_bar_3, l_ev_tool_bar_5, l_ev_tool_bar_7,
-	l_ev_tool_bar_8: EV_TOOL_BAR
-	l_ev_horizontal_split_area_1, l_ev_horizontal_split_area_2: EV_HORIZONTAL_SPLIT_AREA
+	l_ev_tool_bar_1,
+	l_ev_tool_bar_3, l_ev_tool_bar_5, l_ev_tool_bar_7, l_ev_tool_bar_8: EV_TOOL_BAR
+	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
 	l_ev_horizontal_box_1,
 	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

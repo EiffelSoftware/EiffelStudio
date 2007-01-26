@@ -134,7 +134,7 @@ feature{NONE} -- Implementation
 				a_metric.disable_fill_domain
 			end
 			internal_value := internal_value + a_metric.value (a_domain).first.value
-			if is_fill_domain_enabled then
+			if is_fill_domain_enabled and then a_metric.unit.scope /= Void then
 				check
 					a_metric.last_domain /= Void
 				end

@@ -74,13 +74,13 @@ feature {NONE} -- Initialization
 			metric_tool := a_tool
 			install_agents (metric_tool)
 			on_unit_order_change_agent := agent on_unit_order_change
-			default_create
 			create basic_metric_definition_area.make (metric_tool, Current, new_mode, class_unit)
 			create linear_metric_definition_area.make (metric_tool, Current, new_mode, class_unit)
 			create ratio_metric_definition_area.make (metric_tool, Current, new_mode, ratio_unit)
 			basic_metric_definition_area.change_actions.extend (agent on_metric_changed)
 			linear_metric_definition_area.change_actions.extend (agent on_metric_changed)
 			ratio_metric_definition_area.change_actions.extend (agent on_metric_changed)
+			default_create
 			create metric_editor_table.make (3)
 			metric_editor_table.put (basic_metric_definition_area, basic_metric_type)
 			metric_editor_table.put (linear_metric_definition_area, linear_metric_type)
@@ -154,17 +154,18 @@ feature {NONE} -- Initialization
 			import_btn.set_tooltip (metric_names.f_import_metrics)
 			import_btn.select_actions.extend (agent on_import_metrics)
 
-				-- Delete following in docking EiffelStudio.
-			no_metric_area.drop_actions.extend (agent drop_cluster)
-			no_metric_area.drop_actions.extend (agent drop_class)
-			no_metric_area.drop_actions.extend (agent drop_feature)
-			toolbar_area.drop_actions.extend (agent drop_cluster)
-			toolbar_area.drop_actions.extend (agent drop_class)
-			toolbar_area.drop_actions.extend (agent drop_feature)
-			metric_definition_area.drop_actions.extend (agent drop_cluster)
-			metric_definition_area.drop_actions.extend (agent drop_class)
-			metric_definition_area.drop_actions.extend (agent drop_feature)
-
+			append_drop_actions (
+				<<
+					no_metric_area,
+					toolbar_area,
+					metric_definition_area,
+					definer_area_cell,
+					definer_cell,
+					definer_area,
+					basic_metric_definition_area.criterion_definition_empty_area,
+					basic_metric_definition_area.expression_lbl_empty_area
+				>>
+			)
 			select_metric_lbl.set_text (metric_names.t_select_metric)
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
 		end

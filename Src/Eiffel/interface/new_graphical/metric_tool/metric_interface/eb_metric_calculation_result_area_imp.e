@@ -52,17 +52,19 @@ feature {NONE}-- Initialization
 			create update_warning_area
 			create update_warning_pixmap
 			create update_warning_lbl
+			create empty_cell
 			create input_area
+			create l_ev_horizontal_box_1
 			create input_lbl
+			create input_cell
 			create input_grid_area
 			create result_grid_holder
-			create l_ev_horizontal_box_1
+			create l_ev_horizontal_box_2
 			create result_lable
-			create l_ev_cell_7
+			create result_cell
 			create tool_bar
-			create filter_invisible_item_btn
 			create result_grid_area
-			create l_ev_cell_8
+			create l_ev_cell_7
 			
 				-- Build widget structure.
 			extend (l_ev_cell_1)
@@ -91,17 +93,19 @@ feature {NONE}-- Initialization
 			metric_area.extend (update_warning_area)
 			update_warning_area.extend (update_warning_pixmap)
 			update_warning_area.extend (update_warning_lbl)
+			metric_area.extend (empty_cell)
 			extend (input_area)
-			input_area.extend (input_lbl)
+			input_area.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (input_lbl)
+			l_ev_horizontal_box_1.extend (input_cell)
 			input_area.extend (input_grid_area)
 			extend (result_grid_holder)
-			result_grid_holder.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (result_lable)
-			l_ev_horizontal_box_1.extend (l_ev_cell_7)
-			l_ev_horizontal_box_1.extend (tool_bar)
-			tool_bar.extend (filter_invisible_item_btn)
+			result_grid_holder.extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (result_lable)
+			l_ev_horizontal_box_2.extend (result_cell)
+			l_ev_horizontal_box_2.extend (tool_bar)
 			result_grid_holder.extend (result_grid_area)
-			extend (l_ev_cell_8)
+			extend (l_ev_cell_7)
 			
 			create string_constant_set_procedures.make (10)
 			create string_constant_retrieval_functions.make (10)
@@ -169,25 +173,28 @@ feature {NONE}-- Initialization
 			update_warning_pixmap.set_minimum_width (16)
 			update_warning_pixmap.set_minimum_height (16)
 			input_area.set_padding (3)
+			input_area.disable_item_expand (l_ev_horizontal_box_1)
+			input_area.disable_item_expand (input_grid_area)
+			l_ev_horizontal_box_1.disable_item_expand (input_lbl)
 			input_lbl.set_text ("Source domain:")
 			input_lbl.align_text_left
 			input_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			input_grid_area.set_border_width (1)
 			result_grid_holder.set_padding (3)
-			result_grid_holder.disable_item_expand (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.disable_item_expand (result_lable)
-			l_ev_horizontal_box_1.disable_item_expand (tool_bar)
+			result_grid_holder.disable_item_expand (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.disable_item_expand (result_lable)
+			l_ev_horizontal_box_2.disable_item_expand (tool_bar)
 			result_lable.set_text ("Result:")
 			result_lable.align_text_left
 			result_grid_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			result_grid_area.set_border_width (1)
-			l_ev_cell_8.set_minimum_width (15)
+			l_ev_cell_7.set_minimum_width (15)
 			set_padding (5)
 			set_border_width (5)
 			disable_item_expand (l_ev_cell_1)
 			disable_item_expand (metric_area)
 			disable_item_expand (input_area)
-			disable_item_expand (l_ev_cell_8)
+			disable_item_expand (l_ev_cell_7)
 			
 			set_all_attributes_using_constants
 			
@@ -202,27 +209,27 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	information_bar_empty_area: EV_CELL
-	ratio_btn_toolbar, tool_bar: EV_TOOL_BAR
-	filter_invisible_item_btn: EV_TOOL_BAR_TOGGLE_BUTTON
+	information_bar_empty_area, empty_cell, input_cell, result_cell: EV_CELL
+	ratio_btn_toolbar,
+	tool_bar: EV_TOOL_BAR
 	send_to_history_btn: EV_TOOL_BAR_BUTTON
-	type_pixmap,
-	unit_pixmap, update_warning_pixmap: EV_PIXMAP
-	metric_area, update_warning_area: EV_HORIZONTAL_BOX
-	input_area,
-	input_grid_area, result_grid_holder, result_grid_area: EV_VERTICAL_BOX
-	metric_lbl, type_lbl, type_name_text,
-	unit_lbl, unit_name_text, value_lbl, update_warning_lbl, input_lbl, result_lable: EV_LABEL
-	metric_name_text,
-	value_text: EV_TEXT_FIELD
+	type_pixmap, unit_pixmap, update_warning_pixmap: EV_PIXMAP
+	metric_area,
+	update_warning_area: EV_HORIZONTAL_BOX
+	input_area, input_grid_area, result_grid_holder, result_grid_area: EV_VERTICAL_BOX
+	metric_lbl,
+	type_lbl, type_name_text, unit_lbl, unit_name_text, value_lbl, update_warning_lbl,
+	input_lbl, result_lable: EV_LABEL
+	metric_name_text, value_text: EV_TEXT_FIELD
 
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5,
-	l_ev_cell_6, l_ev_cell_7, l_ev_cell_8: EV_CELL
+	l_ev_cell_6, l_ev_cell_7: EV_CELL
 	l_ev_tool_bar_1, l_ev_tool_bar_3: EV_TOOL_BAR
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 
 feature {NONE} -- Implementation
 

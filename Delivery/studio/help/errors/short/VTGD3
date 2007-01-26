@@ -1,0 +1,13 @@
+You are trying to perform a generic derivation of an expanded base class
+with at least one actual generic type parameter which is not `generic-creation-ready'.
+
+`Generic-creation-readiness' states that each actual type parameter either meets his
+creation constraint and in case it is itself expanded is recursively `generic-creation-ready'.
+
+As an expanded type is automatically initialized one has to ensure, that all
+creation constraints are met.
+Consider GENERATOR[G create default_create end]
+This generator can create objects of type G. However, it's perfectly valid to
+use a type such as GENERATOR[COMPARABLE] as long as one does not try to create
+an object of this type directly. For expanded base classes this is not the case,
+as they are auto initialized.

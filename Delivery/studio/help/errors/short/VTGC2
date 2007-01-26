@@ -1,0 +1,9 @@
+An error occured in the renaming clause of a formal generic.
+Hint: The renaming for formal generics is analogous to the
+renaming occuring during inheritance.
+What to do:
+In the case of a multi-constraint generic (like in  'G -> {A,B}')
+one has to ensure that for every used feature there are no ambiguities.
+In order to achieve that goal you can use a renaming clause.
+
+For example: G -> {A rename f as g end, B}

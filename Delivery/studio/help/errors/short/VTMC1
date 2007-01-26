@@ -1,0 +1,7 @@
+Error: Cannot call feature. Feature not found.
+       No constraining type has a feature with that name.
+
+What to do: Make sure that the name of the feature is correct:
+       - Correct the feature name to feature which is available.
+       - Ensure that the feature name occurs in exactly one
+         constraining type.

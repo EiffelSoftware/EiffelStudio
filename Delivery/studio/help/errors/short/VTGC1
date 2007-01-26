@@ -1,0 +1,2 @@
+A constraint cannot be expressed by an anchord type (like).
+You have written something like EXAMPLE[G -> like name_of_feature] which is not allowed.

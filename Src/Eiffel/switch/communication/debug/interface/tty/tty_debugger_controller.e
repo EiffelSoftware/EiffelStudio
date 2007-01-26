@@ -32,11 +32,11 @@ feature
 			Precursor
 		end
 
-	if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE]) is
+	if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE]) is
 		local
 			is_yes: BOOLEAN
 		do
-			io.put_string (msg + " [y/n] ?")
+			localized_print (msg.as_string_32 + " [y/n] ?")
 			io.read_line
 			is_yes := io.last_string.is_empty or else io.last_string.item (1).is_equal ('y')
 			if is_yes then
@@ -44,7 +44,7 @@ feature
 			end
 		end
 
-	discardable_if_confirmed_do (msg: STRING; a_action: PROCEDURE [ANY, TUPLE];
+	discardable_if_confirmed_do (msg: STRING_GENERAL; a_action: PROCEDURE [ANY, TUPLE];
 			a_button_count: INTEGER; a_pref_string: STRING) is
 		local
 			bp: BOOLEAN_PREFERENCE
@@ -61,9 +61,9 @@ feature
 		do
 			Precursor {DEBUGGER_CONTROLLER} (b)
 			if b then
-				io.put_string ("Debugger environment started%N")
+				localized_print (debugger_names.m_debugger_environment_started)
 			else
-				io.put_string ("Debugger environment closed%N")
+				localized_print (debugger_names.m_debugger_environment_closed)
 			end
 		end
 

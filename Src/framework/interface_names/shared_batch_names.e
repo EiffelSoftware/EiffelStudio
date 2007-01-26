@@ -20,12 +20,6 @@ feature -- Names
 			create Result
 		end
 
-	locale_names: LOCALE_NAMES
-			-- Names for locales.
-		once
-			create Result
-		end
-
 	ewb_names: EWB_NAMES
 			-- Names used in tty.
 		once

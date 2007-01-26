@@ -24,6 +24,8 @@ inherit
 			clear_debugging_information
 		end
 
+	SHARED_BENCH_NAMES
+
 create
 	make
 
@@ -993,11 +995,6 @@ feature -- Debuggee Objects management
 		end
 
 feature {APPLICATION_EXECUTION} -- specific implementation
-
-	debugger_names: DEBUGGER_NAMES is
-		once
-			create Result
-		end
 
 	implementation: DEBUGGER_MANAGER_IMP;
 

@@ -111,7 +111,7 @@ feature -- output
 				if on_select_proc /= Void then
 					create arr.make (1, bl.count)
 				end
-				io.put_string ("*** " + bl.count.out + " Breakpoints *** %N")
+				localized_print (debugger_names.m_n_breakpoints (bl.count.out))
 				bl.start
 			until
 				bl.after
@@ -124,15 +124,15 @@ feature -- output
 				else
 					io.put_string (" - ")
 				end
-				io.put_string (b.string_representation (True) + "%N")
+				localized_print (b.string_representation (True) + "%N")
 				bl.forth
 				i := i + 1
 			end
 			if on_select_proc /= Void then
 				from
-					io.put_string (" [0] Cancel %N")
+					localized_print (debugger_names.m_zero_cancel)
 					if a_proc_message /= Void then
-						io.put_string (" -> " + a_proc_message + ": ")
+						localized_print (" -> " + a_proc_message + ": ")
 					end
 					i := 1
 					b := Void
@@ -185,42 +185,42 @@ feature -- Interaction
 			ag_is_stopped := agent safe_application_is_stopped
 			ag_is_executing := agent application_is_executing
 
-			create Result.make ("--< Debugger execution menu >--")
+			create Result.make (debugger_names.t_debugger_excetion_menu)
 			Result.enter_actions.extend (agent do inside_debugger_menu := True end)
 			Result.quit_actions.extend (agent do inside_debugger_menu := False end)
 
-			Result.add_conditional_entry ("N", "Step next",
+			Result.add_conditional_entry ("N", debugger_names.c_step_next,
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.step_by_step, Result),
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("I", "Step into",
+			Result.add_conditional_entry ("I", debugger_names.c_step_into,
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.step_into, Result),
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("O", "Step out",
+			Result.add_conditional_entry ("O", debugger_names.c_step_out,
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.out_of_routine, Result),
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("C", "Run to next stop point",
+			Result.add_conditional_entry ("C", debugger_names.c_run_to_next_stop_point,
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.user_stop_points, Result),
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("G", "Run without stop point",
+			Result.add_conditional_entry ("G", debugger_names.c_run_without_stop_point,
 						agent tty_controller_do_if_stopped ({EXEC_MODES}.no_stop_points, Result),
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("K", "Kill application", agent controller.debug_kill,
+			Result.add_conditional_entry ("K", debugger_names.c_kill_application, agent controller.debug_kill,
 						ag_is_executing)
-			Result.add_conditional_entry ("P", "Pause application", agent controller.debug_interrupt,
+			Result.add_conditional_entry ("P", debugger_names.c_pause_application, agent controller.debug_interrupt,
 						ag_is_executing)
 			Result.add_separator (" --- ")
-			Result.add_conditional_entry ("B", "Breakpoints control", agent raise_debugger_menu_breakpoints,
+			Result.add_conditional_entry ("B", debugger_names.c_breakpoints_controls, agent raise_debugger_menu_breakpoints,
 						ag_is_stopped)
-			Result.add_conditional_entry ("D", "Display information", agent raise_debugger_menu_display,
+			Result.add_conditional_entry ("D", debugger_names.c_display_information, agent raise_debugger_menu_display,
 						ag_is_stopped)
 
-			Result.add_conditional_entry ("Q", "Quit", agent Result.quit, agent :BOOLEAN do Result := not application_is_executing end)
-			Result.add_entry ("H", "Help", agent Result.request_menu_display)
+			Result.add_conditional_entry ("Q", debugger_names.e_quit, agent Result.quit, agent :BOOLEAN do Result := not application_is_executing end)
+			Result.add_entry ("H", debugger_names.e_help, agent Result.request_menu_display)
 		end
 
 	tty_controller_do_if_stopped (a_exec_mode: INTEGER; a_menu: TTY_MENU) is
@@ -249,27 +249,27 @@ feature -- Interaction
 
 	dbg_display_menu: TTY_MENU is
 		do
-			create Result.make ("--< Debugger menu :: Display >--")
-			Result.add_entry ("L", "locals", agent display_locals)
-			Result.add_entry ("A", "arguments", agent display_arguments)
-			Result.add_entry ("C", "callstack", agent display_callstack)
-			Result.add_entry ("S", "status", agent display_application_status)
+			create Result.make (debugger_names.t_debugger_menu_display)
+			Result.add_entry ("L", debugger_names.e_locales, agent display_locals)
+			Result.add_entry ("A", debugger_names.e_arguments, agent display_arguments)
+			Result.add_entry ("C", debugger_names.e_callstack, agent display_callstack)
+			Result.add_entry ("S", debugger_names.e_status, agent display_application_status)
 			if safe_application_is_stopped and then application_status.exception_occurred then
-				Result.add_entry ("X", "exception", agent display_exception)
+				Result.add_entry ("X", debugger_names.e_exception, agent display_exception)
 			end
-			Result.add_entry ("E", "Expression evaluation", agent
+			Result.add_entry ("E", debugger_names.e_expression_evaluation, agent
 					local
 						x: EB_EXPRESSION
 					do
-						io.put_string (" --> Expression: ")
+						localized_print (debugger_names.m_expression)
 						io.read_line
 						create x.make_for_context (io.last_string.twin)
 						x.evaluate
 						if x.error_occurred then
 							if x.expression_evaluator.short_text_from_error_messages /= Void then
-								io.put_string (x.expression_evaluator.short_text_from_error_messages)
+								localized_print (x.expression_evaluator.short_text_from_error_messages)
 							else
-								io.put_string ("Error occurred...")
+								localized_print (debugger_names.m_error_occurred)
 							end
 						else
 							tty_output.add_string (x.expression + " => " + x.expression_evaluator.final_result_value.output_for_debugger + "%N")
@@ -278,20 +278,20 @@ feature -- Interaction
 					end
 				)
 			Result.add_entry (Void, Void, Void)
-			Result.add_entry ("H", "Help", agent Result.request_menu_display)
-			Result.add_quit_entry ("..", "Back to parent menu")
+			Result.add_entry ("H", debugger_names.e_help, agent Result.request_menu_display)
+			Result.add_quit_entry ("..", debugger_names.e_back_to_parent_menu)
 		end
 
 	dbg_breakpoints_menu: TTY_MENU is
 		do
-			create Result.make ("--< Debugger menu :: Breakpoints >--")
+			create Result.make (debugger_names.t_debugger_menu_breakpoints)
 
-			Result.add_entry ("A", "Add breakpoint", agent add_breakpoint)
-			Result.add_entry ("M", "Modify existing breakpoint", agent display_breakpoints (agent modify_breakpoint, "Modify breakpoint"))
-			Result.add_entry ("L", "list breakpoints", agent display_breakpoints (Void, Void))
+			Result.add_entry ("A", debugger_names.e_add_breakpoint, agent add_breakpoint)
+			Result.add_entry ("M", debugger_names.e_modify_exsiting_breakpoint, agent display_breakpoints (agent modify_breakpoint, "Modify breakpoint"))
+			Result.add_entry ("L", debugger_names.e_list_breakpoints, agent display_breakpoints (Void, Void))
 			Result.add_entry (Void, Void, Void)
-			Result.add_entry ("H", "Help", agent Result.request_menu_display)
-			Result.add_quit_entry ("..", "Back to parent menu")
+			Result.add_entry ("H", debugger_names.e_help, agent Result.request_menu_display)
+			Result.add_quit_entry ("..", debugger_names.e_back_to_parent_menu)
 		end
 
 feature -- Breakpoints management
@@ -306,10 +306,10 @@ feature -- Breakpoints management
 			curr_fe, fe: E_FEATURE
 			l_added: BOOLEAN
 		do
-			io.put_string (" -> class name: ")
+			localized_print (debugger_names.m_class_name)
 			curr_cc := current_debugging_class_c
 			if curr_cc /= Void then
-				io.put_string ("[" + curr_cc.name_in_upper + "] ")
+				localized_print ("[" + curr_cc.name_in_upper + "] ")
 			end
 			io.read_line
 			s := io.last_string
@@ -332,7 +332,7 @@ feature -- Breakpoints management
 					if ci_lst /= Void and then not ci_lst.is_empty then
 						cc := ci_lst.first.compiled_class
 					else
-						io.put_string (" => Could not find class {" + s + "}. %N")
+						localized_print (debugger_names.m_could_not_find_class (s))
 					end
 				else
 					cc := curr_cc
@@ -340,7 +340,7 @@ feature -- Breakpoints management
 			end
 
 			if cc /= Void then
-				io.put_string (" -> feature name: (*=all feature)")
+				localized_print (debugger_names.m_feature_name)
 				if cc = curr_cc then
 					curr_fe := current_debugging_feature
 					if curr_fe /= Void then
@@ -359,20 +359,20 @@ feature -- Breakpoints management
 					if s.item (1) = '*' then
 						debug_info.enable_breakpoints_in_class (cc)
 						l_added := True
-						io.put_string (" => Added breakpoints in class {" + cc.name_in_upper + "}. %N")
+						localized_print (debugger_names.m_added_breakpoints_in_class (cc.name_in_upper))
 					else
 						fe := cc.feature_with_name (s)
 						if fe = Void then
-							io.put_string (" => Could not find feature {" + cc.name_in_upper + "}." + s + " %N")
+							localized_print (debugger_names.m_could_not_find_feature (cc.name_in_upper, s))
 						end
 					end
 				end
 				if fe /= Void then
-					io.put_string (" -> break index: ")
+					localized_print (debugger_names.m_break_index)
 					if fe = curr_fe then
 						curr_bi := current_debugging_breakable_index
 						if curr_bi > 0 then
-							io.put_string ("[" + curr_bi.out + "] ")
+							localized_print ("[" + curr_bi.out + "] ")
 						end
 					end
 					io.read_line
@@ -391,42 +391,42 @@ feature -- Breakpoints management
 					if i > 0 then
 						debug_info.enable_breakpoint (fe, i)
 						l_added := True
-						io.put_string (" => Added breakpoint {" + cc.name_in_upper + "}." + fe.name + "@" + i.out +" %N")
+						localized_print (debugger_names.m_added_breakpoint_detailed (cc.name_in_upper, fe.name, i.out))
 					end
 				end
 			end
 			if not l_added then
-				io.put_string (" => No breakpoint addition%N")
+				localized_print (debugger_names.m_no_breakpoint_addition)
 			end
 		end
 
 	modify_breakpoint (bp: BREAKPOINT) is
 		local
 			m: TTY_MENU
-			s: STRING
+			s: STRING_32
 		do
-			create m.make ("*** Modify breakpoint " + bp.string_representation (False) + " ***")
+			create m.make (debugger_names.m_modify_breakpoint (bp.string_representation (False)))
 			if not bp.is_enabled then
-				m.add_entry ("E", "Enable breakpoint", agent bp.enable)
+				m.add_entry ("E", debugger_names.e_enable_breakpoint, agent bp.enable)
 			end
 			if not bp.is_disabled then
-				m.add_entry ("D", "Disable breakpoint", agent bp.disable)
+				m.add_entry ("D", debugger_names.e_disable_breakpoint, agent bp.disable)
 			end
-			m.add_entry ("R", "Remove breakpoint", agent bp.discard)
+			m.add_entry ("R", debugger_names.e_remove_breakpoint, agent bp.discard)
 			if bp.has_condition then
-				s := bp.condition.expression.as_string_8
+				s := bp.condition.expression
 				if s.count > 22 then
 					s.keep_head (20)
 					s.append ("..")
 				end
-				m.add_separator ("--( condition: %"" + s + "%")--")
-				m.add_entry ("I", "Edit condition", agent edit_breakpoint_condition (bp))
-				m.add_entry ("R", "Remove condition", agent bp.remove_condition)
+				m.add_separator (debugger_names.m_condition_sep (s))
+				m.add_entry ("I", debugger_names.e_edit_condition, agent edit_breakpoint_condition (bp))
+				m.add_entry ("R", debugger_names.e_remove_condition, agent bp.remove_condition)
 			else
-				m.add_entry ("C", "Add condition", agent edit_breakpoint_condition (bp))
+				m.add_entry ("C", debugger_names.e_add_condition, agent edit_breakpoint_condition (bp))
 			end
 			m.add_separator (Void)
-			m.add_quit_entry ("..", "Back to previous menu")
+			m.add_quit_entry ("..", debugger_names.e_back_to_previous_menu)
 			m.execute (True)
 		end
 
@@ -437,10 +437,10 @@ feature -- Breakpoints management
 			fe: E_FEATURE
 		do
 			if bp.has_condition then
-				s := bp.condition.expression.as_string_8
-				io.put_string (" -> Current condition: %"" + s + "%" %N")
+				s := bp.condition.expression
+				localized_print (debugger_names.m_current_condition (s))
 			end
-			io.put_string (" -> Enter new condition (empty to cancel) :")
+			localized_print (debugger_names.m_edit_new_condition)
 			io.read_line
 			s := io.last_string.twin
 			s.left_adjust
@@ -449,10 +449,10 @@ feature -- Breakpoints management
 				fe := bp.routine
 				create exp.make_for_context (s)
 				if (fe /= Void and then not exp.is_boolean_expression (fe)) or else exp.error_occurred then
-					io.put_string (" => This is not a valid boolean condition. %N")
+					localized_print (debugger_names.m_not_a_valid_boolean_condition)
 				else
 					bp.set_condition (exp)
-					io.put_string (" => New condition applied. %N")
+					localized_print (debugger_names.m_new_condition_applied)
 				end
 			end
 		end

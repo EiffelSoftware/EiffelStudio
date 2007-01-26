@@ -48,6 +48,9 @@ feature -- Settings
 			-- Set `current_editor'
 		do
 			current_editor := a_editor
+
+			-- We should call command_controller set_current_editor to update cut and copy menu/toolbar items states.
+			develop_window.command_controller.set_current_editor (a_editor)
 		ensure
 			set: current_editor = a_editor
 		end

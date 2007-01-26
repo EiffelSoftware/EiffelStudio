@@ -106,7 +106,8 @@ feature -- Status report
 			-- Is current domain item up-to-date?
 			-- An item can become old when new Eiffel compilation occurs.
 		do
-			Result := workbench.compilation_counter = last_compilation_count
+			Result := (last_compilation_status = workbench.successful) and then
+					  (workbench.compilation_counter = last_compilation_count)
 		end
 
 	is_sorting_order_index_valid (a_index: INTEGER): BOOLEAN is
@@ -279,6 +280,7 @@ feature{NONE} -- Implementation
 			-- Set `last_compilation_count' with `a_count'.
 		do
 			last_compilation_count := workbench.compilation_counter
+			last_compilation_status := workbench.successful
 		ensure
 			last_compilation_count_set: last_compilation_count = workbench.compilation_counter
 		end
@@ -292,6 +294,9 @@ feature{NONE} -- Implementation
 
 	string_representation_internal: like string_representation;
 			-- Implementation of `string_representation'
+
+	last_compilation_status: BOOLEAN
+			-- Status (successful or failed) of last recorded compilation
 
 invariant
 	id_attached: id /= Void

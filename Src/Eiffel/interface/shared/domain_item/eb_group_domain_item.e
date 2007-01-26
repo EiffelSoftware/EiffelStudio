@@ -103,10 +103,11 @@ feature{NONE} -- Implemenation
 		do
 			if not is_up_to_date then
 				conf_group := group_of_id (id)
-				if conf_group /= Void then
+				if conf_group /= Void and then conf_group.is_valid then
 					ql_group_internal := query_group_item_from_conf_group (conf_group)
 					string_representation_internal := conf_group.name
 				else
+					conf_group := Void
 					if last_group_name /= Void and then not last_group_name.is_empty then
 						string_representation_internal := last_group_name.twin
 					else

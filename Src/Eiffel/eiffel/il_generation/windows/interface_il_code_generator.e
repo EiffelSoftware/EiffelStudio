@@ -328,10 +328,12 @@ feature -- IL Generation
 				else
 					feat := current_select_tbl.item (rout_id)
 						-- Generate code for current class only.
-					if
-						feat /= Void and then
-						not feat.is_deferred and then not feat.is_il_external
-					then
+					if feat /= Void and then feat.is_il_external then
+						if implemented_feature_processor /= Void and then inh_feat.is_deferred then
+								-- Implementation of the feature has to be generated.
+							inherited_feature_processor.call ([feat, inh_feat, class_type])
+						end
+					elseif feat /= Void and then not feat.is_deferred then
 						if feat.written_in = l_class_id or else feat.is_attribute then
 							local_feature_processor.call ([feat, inh_feat, class_type, False])
 							mark_as_treated (feat)

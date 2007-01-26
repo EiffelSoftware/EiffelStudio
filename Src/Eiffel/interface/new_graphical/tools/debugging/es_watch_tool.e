@@ -533,7 +533,7 @@ feature {NONE} -- Event handling
 		do
 			debwin := Eb_debugger_manager.debugging_window
 			if debwin /= Void then
-				ce := debwin.editors_manager.current_editor
+				ce := debwin.ui.current_editor
 				if ce /= Void and then ce.has_selection then
 					l_text := ce.string_selection
 					if l_text.has ('%N') then

@@ -1,0 +1,21 @@
+VTGC, ECMA Eiffel, chapter 8.12.9
+
+    Generic Constraint rule
+
+    A Constraint part appearing in the Formal_generics  part
+    of a class C is  valid if and only if it  satisfies  the
+    following conditions for every Single_constraint listing
+    a type T in its Constraining_types:
+
+        1 `T' involves no anchored type.
+
+		2 If a  Renaming  clause `rename rename_list end' is
+          present, a class  definition of the form class NEW
+		  inherit  BT rename  rename_list  end  (preceded by
+          deferred if the base classof T is deferred), where
+          BT is the base class of T, would be valid.
+
+        3 Every  name listed  in the  Constraint_creators is
+          the generically  constrained name of a procedure p
+          of one of the corresponding constraining types.
+

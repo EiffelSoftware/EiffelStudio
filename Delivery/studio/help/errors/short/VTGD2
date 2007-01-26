@@ -1,0 +1,7 @@
+You are trying to do a generic derivation with a type parameter which does
+not conform to the corresponding constraint.
+
+Solution: Make sure that in a generic derivation of base class
+`EXAMPLE[G->COMPARABLE]' the actual type parameter conforms to the constraint.
+As an example: `EXAMPLE[INTEGER]' is valid because `INTEGER' conforms to
+`COMPARABLE'.

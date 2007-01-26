@@ -1,0 +1,23 @@
+VTGD, ECMA Eiffel, chapter 8.12.11
+
+    Generic Derivation rule
+
+    Let C be a generic class. A Class_type CT having C as base
+    class  is valid if and only  if it satisfies the following
+    conditions for every actual generic parameter T	and  every
+    Single_constraint U appearing  in  the  constraint for the
+    corresponding formal generic parameter G:
+
+	    1 The number of Type components in CT’s Actual_generic
+          list  is  the same  as the  number of Formal_generic
+          parameters in the  Formal_generic_list of C’s decla-
+          ration.
+
+        2 T conforms to the type obtained by applying to U the
+          generic substitution of CT.
+
+        3 If C is expanded, CT is generic-creation-ready.
+
+        4 If G is a self-initializing formal parameter and T
+          is attached, then T is a self-initializing type.
+

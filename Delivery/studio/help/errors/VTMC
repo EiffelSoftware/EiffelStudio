@@ -1,0 +1,18 @@
+VTMC, ECMA Eiffel, chapter 8.12.22
+
+    Multiple Constraints rule
+
+    A feature  of name fname  is applicable  in a class C to a
+    target x whose type is a Formal_generic_name G constrained
+    by two or more types CONST1, CONST2,..., if and only if it
+    satisfies the following conditions:
+
+
+        1 At  least one of the CONST_i has a feature available
+          to C whose  generically  constrained name for G in C
+          is fname.
+
+        2 If this is the case for  two or more of the CONST_i,
+          all the corresponding features are the same.
+
+

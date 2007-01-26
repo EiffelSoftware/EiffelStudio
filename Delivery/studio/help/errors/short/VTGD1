@@ -1,0 +1,7 @@
+You are trying to do a generic derivation of a generic class type
+but the number of actual generic parameters is not the
+same. For example HASH_TABLE[G,H] needs two type parameters:
+    - HASH_TABLE[INTEGER] is not ok. Add another type parameter.
+	- HASH_TABLE[INTEGER,STRING] fits: 2 type parameters
+      are specified as in the base class.
+

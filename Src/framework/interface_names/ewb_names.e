@@ -68,6 +68,7 @@ feature -- Access
 	only_assigners: STRING_GENERAL is							do Result := locale.translate ("Only assigners") end
 	all_subqueries: STRING_GENERAL is							do Result := locale.translate ("All subqueries:%N") end
 	the_total_active_query: STRING_GENERAL is					do Result := locale.translate ("%NThe total active query:%N") end
+	entry_disabled: STRING_GENERAL is							do Result := locale.translate ("  -> Entry disabled %N") end
 
 	no_value_entered: STRING_GENERAL is
 			do Result := locale.translate ("No value entered. Do you want to: %N%

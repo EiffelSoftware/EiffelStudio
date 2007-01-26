@@ -32,6 +32,12 @@ feature -- Names
 			create Result
 		end
 
+	locale_names: LOCALE_NAMES
+			-- Names for locales.
+		once
+			create Result
+		end
+
 	debugger_names: DEBUGGER_NAMES
 			-- Names for debugger.
 		once

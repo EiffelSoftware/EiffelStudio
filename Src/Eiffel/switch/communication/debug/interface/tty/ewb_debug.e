@@ -25,6 +25,8 @@ inherit
 
 	SHARED_DEBUGGER_MANAGER
 
+	SHARED_BENCH_NAMES
+
 feature {NONE} -- Implementation
 
 	loop_action is
@@ -35,19 +37,19 @@ feature {NONE} -- Implementation
 
 	dbg_main_menu: TTY_MENU is
 		once
-			create Result.make ("--< Debugger main menu >--")
+			create Result.make (debugger_names.t_debugger_main_menu)
 
-			Result.add_entry ("A", "Set arguments", agent get_arguments)
-			Result.add_entry ("E", "Set environment", agent get_environment_variables)
-			Result.add_entry ("D", "Set working directory", agent get_working_directory)
-			Result.add_entry ("I", "Display parameters", agent display_params)
+			Result.add_entry ("A", debugger_names.e_set_arguments, agent get_arguments)
+			Result.add_entry ("E", debugger_names.e_set_environment, agent get_environment_variables)
+			Result.add_entry ("D", debugger_names.e_set_working_directory, agent get_working_directory)
+			Result.add_entry ("I", debugger_names.e_display_parameters, agent display_params)
 			Result.add_separator (" --- ")
-			Result.add_entry ("R", "Start and stop at breakpoints", agent start_debugger ({EXEC_MODES}.user_stop_points))
-			Result.add_entry ("L", "Start without stopping at breakpoints", agent start_debugger ({EXEC_MODES}.no_stop_points))
-			Result.add_entry ("S", "Step into", agent start_debugger ({EXEC_MODES}.step_into))
+			Result.add_entry ("R", debugger_names.e_start_and_stop_at_breakpoints, agent start_debugger ({EXEC_MODES}.user_stop_points))
+			Result.add_entry ("L", debugger_names.e_start_without_stopping_at_breakpoints, agent start_debugger ({EXEC_MODES}.no_stop_points))
+			Result.add_entry ("S", debugger_names.c_step_into, agent start_debugger ({EXEC_MODES}.step_into))
 			Result.add_separator (" --- ")
-			Result.add_entry ("H", "Help", agent Result.execute)
-			Result.add_conditional_entry ("Q", "Quit", agent Result.quit, agent :BOOLEAN do Result := not debugger_manager.application_is_executing end)
+			Result.add_entry ("H", debugger_names.e_help, agent Result.execute)
+			Result.add_conditional_entry ("Q", debugger_names.e_quit, agent Result.quit, agent :BOOLEAN do Result := not debugger_manager.application_is_executing end)
 		end
 
 	param_args: STRING
@@ -59,7 +61,7 @@ feature {NONE} -- Implementation
 		local
 			dbg: TTY_DEBUGGER_MANAGER
 		do
-			io.put_string ("WARNING: the console based debugger is experimental!!%N")
+			localized_print (debugger_names.m_experimental_warning)
 			dbg ?= debugger_manager
 			if dbg = Void then
 				create dbg.make
@@ -73,15 +75,15 @@ feature {NONE} -- Implementation
 
 	display_params is
 		do
-			io.put_string ("*** Parameters ***%N");
-			io.put_string ("--> Arguments: ");
+			localized_print (debugger_names.m_parameters);
+			localized_print (debugger_names.m_arguments);
 			if param_args /= Void then
-				io.put_string (param_args)
+				localized_print (param_args)
 			else
-				io.put_string ("<None>")
+				localized_print (debugger_names.m_none)
 			end
 			io.put_new_line
-			io.put_string ("--> Environment variables: ");
+			localized_print (debugger_names.m_environment_variables);
 			if param_env_variables /= Void then
 				from
 					param_env_variables.start
@@ -89,20 +91,20 @@ feature {NONE} -- Implementation
 					param_env_variables.after
 				loop
 					io.put_string ("%N%T")
-					io.put_string (param_env_variables.key_for_iteration)
+					localized_print (param_env_variables.key_for_iteration)
 					io.put_string ("=")
-					io.put_string (param_env_variables.item_for_iteration)
+					localized_print (param_env_variables.item_for_iteration)
 					param_env_variables.forth
 				end
 			else
-				io.put_string ("<None>")
+				localized_print (debugger_names.m_none)
 			end
 			io.put_new_line
-			io.put_string ("--> Working directory: ");
+			localized_print (debugger_names.m_working_directory);
 			if param_working_directory /= Void then
-				io.put_string (param_working_directory)
+				localized_print (param_working_directory)
 			else
-				io.put_string ("<None>")
+				localized_print (debugger_names.m_none)
 			end
 			io.put_new_line
 			io.put_new_line
@@ -110,9 +112,9 @@ feature {NONE} -- Implementation
 
 	get_arguments is
 		do
-			io.put_string ("--> Arguments: ");
+			localized_print (debugger_names.m_arguments);
 			if param_args /= Void and then not param_args.is_empty then
-				io.put_string ("[" + param_args + "] ");
+				localized_print ("[" + param_args + "] ");
 			end
 
 			if not command_line_io.more_arguments then
@@ -123,7 +125,7 @@ feature {NONE} -- Implementation
 				(param_args /= Void and then not param_args.is_empty)
 				and command_line_io.last_input.is_empty
 			then
-				if command_line_io.confirmed ("--> Remove current value") then
+				if command_line_io.confirmed (debugger_names.m_remove_current_value) then
 					param_args := ""
 				end
 			else
@@ -138,9 +140,9 @@ feature {NONE} -- Implementation
 
 	get_working_directory is
 		do
-			io.put_string ("--> Working directory: ");
+			localized_print (debugger_names.m_working_directory);
 			if param_working_directory /= Void and then not param_working_directory.is_empty then
-				io.put_string ("[" + param_working_directory + "] ");
+				localized_print ("[" + param_working_directory + "] ");
 			end
 			if not command_line_io.more_arguments then
 				command_line_io.get_name;

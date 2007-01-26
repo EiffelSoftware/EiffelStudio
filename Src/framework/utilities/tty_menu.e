@@ -9,12 +9,15 @@ indexing
 class
 	TTY_MENU
 
+inherit
+	SHARED_BATCH_NAMES
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_title: STRING) is
+	make (a_title: STRING_GENERAL) is
 			-- Initialization
 		require
 			a_title /= Void
@@ -28,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	title: STRING
+	title: STRING_GENERAL
 			-- Title of Current menu.
 
 	enter_actions: ACTION_SEQUENCE [TUPLE]
@@ -39,7 +42,7 @@ feature -- Properties
 
 feature -- Change
 
-	set_title (s: STRING) is
+	set_title (s: STRING_GENERAL) is
 			-- Set menu's title
 		require
 			s /= Void
@@ -47,13 +50,13 @@ feature -- Change
 			title := s.twin
 		end
 
-	add_entry (a_abr: STRING; a_text: STRING; a_action: like action_from) is
+	add_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from) is
 			-- Add a new entry
 		do
 			add_conditional_entry (a_abr, a_text, a_action, Void)
 		end
 
-	add_conditional_entry (a_abr: STRING; a_text: STRING; a_action: like action_from; a_cond: FUNCTION [ANY, TUPLE, BOOLEAN]) is
+	add_conditional_entry (a_abr: STRING; a_text: STRING_GENERAL; a_action: like action_from; a_cond: FUNCTION [ANY, TUPLE, BOOLEAN]) is
 			-- Add a new entry with condition
 			-- the entry will be display only if the `a_cond' is satisfied.
 		local
@@ -67,13 +70,13 @@ feature -- Change
 			entries.force ([last_entry_index, l_abr, a_text, a_action, a_cond])
 		end
 
-	add_quit_entry (a_abr, a_text: STRING) is
+	add_quit_entry (a_abr: STRING; a_text: STRING_GENERAL) is
 			-- Add a quit entry
 		do
 			add_entry (a_abr, a_text, agent quit)
 		end
 
-	add_separator (a_text: STRING) is
+	add_separator (a_text: STRING_GENERAL) is
 			-- Add a new entry as a separator
 		do
 			entries.force ([0, Void, a_text, Void, Void])
@@ -111,7 +114,7 @@ feature -- Access
 						if entry_enabled (e) then
 							e.action.call (Void)
 						else
-							io.put_string ("  -> Entry disabled %N")
+							localized_print (ewb_names.entry_disabled)
 						end
 					end
 					menu_shown := False
@@ -157,7 +160,7 @@ feature {NONE} -- Implementation
 			Result := a_entry.cond = Void or else a_entry.cond.item (Void)
 		end
 
-	entry (a_index: INTEGER; a_abr: STRING): TUPLE [index:INTEGER; abrev: STRING; text: STRING; action: PROCEDURE [ANY, TUPLE]; cond: FUNCTION [ANY, TUPLE, BOOLEAN]] is
+	entry (a_index: INTEGER; a_abr: STRING): TUPLE [index:INTEGER; abrev: STRING; text: STRING_GENERAL; action: PROCEDURE [ANY, TUPLE]; cond: FUNCTION [ANY, TUPLE, BOOLEAN]] is
 			-- Entry indexed by `a_index'.
 		local
 			lst: like entries
@@ -243,9 +246,9 @@ feature {NONE} -- Answers implementation
 			-- Display menu
 		local
 			item: like entry
-			l_title: STRING
+			l_title: STRING_32
 		do
-			io.put_string (title)
+			localized_print (title)
 			io.put_new_line
 
 			from
@@ -262,13 +265,13 @@ feature {NONE} -- Answers implementation
 						else
 							io.put_string ("  (")
 							if item.abrev /= Void and then not item.abrev.is_empty then
-								io.put_string (item.abrev)
+								localized_print (item.abrev)
 							else
-								io.put_integer (item.index)
+								localized_print (item.index.out)
 							end
 							io.put_string (") ")
 						end
-						io.put_string (l_title)
+						localized_print (l_title)
 						io.put_new_line
 					end
 				end

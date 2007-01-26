@@ -36,6 +36,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_BENCH_NAMES
+		export
+			{NONE} all
+		end
+
 create {DEBUGGER_MANAGER}
 	make
 
@@ -105,7 +110,7 @@ feature -- Debug Operation
 				Eiffel_system.system.il_generation and then
 				Eiffel_system.system.msil_generation_type.is_equal ("dll")
 			then
-				warning ("No debugging for DLL system")
+				warning (debugger_names.m_no_debugging_for_dll_system)
 			elseif (not manager.application_is_executing) then
 					--| Application is not running |--
 				if
@@ -305,7 +310,7 @@ feature -- Start Operation
 				Eiffel_system.system.il_generation and then
 				Eiffel_system.system.msil_generation_type.is_equal ("dll")
 			then
-				warning ("No debugging for DLL system")
+				warning (debugger_names.m_no_debugging_for_dll_system)
 			else
 				check
 					System_defined: Eiffel_system.Workbench.system_defined
@@ -354,7 +359,7 @@ feature -- Start Operation
 				Eiffel_system.system.il_generation and then
 				Eiffel_system.system.msil_generation_type.is_equal ("dll")
 			then
-				warning ("No debugging for DLL system")
+				warning (debugger_names.m_no_debugging_for_dll_system)
 			else
 				check
 					System_defined: Eiffel_system.Workbench.system_defined
@@ -453,9 +458,9 @@ feature {NONE} -- debugging
 				app_exec.run (l_cmd_line_arg, working_dir, environment_vars)
 				if manager.application_is_executing then
 					if app_exec.execution_mode = {EXEC_MODES}.No_stop_points then
-						manager.debugger_status_message ("System is running (ignoring breakpoints)")
+						manager.debugger_status_message (debugger_names.m_system_is_running_ignoring_breakpoints)
 					else
-						manager.debugger_message ("System is running")
+						manager.debugger_message (debugger_names.m_system_is_running)
 					end
 					app_exec.on_application_launched
 				else

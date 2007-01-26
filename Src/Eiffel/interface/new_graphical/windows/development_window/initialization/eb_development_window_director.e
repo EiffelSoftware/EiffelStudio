@@ -23,13 +23,20 @@ feature -- Command
 
 	construct is
 			-- Create a new development window.
+		local
+			l_x, l_y: INTEGER
 		do
 			internal_construct
+			l_x := develop_window.window.x_position
+			l_y := develop_window.window.y_position
+			develop_window.window.set_position ({INTEGER_16}.min_value, {INTEGER_16}.min_value)
+			develop_window.window.show_actions.block
 			develop_window.window.show
 			develop_window.restore_tools_docking_layout
 			develop_window.window.unlock_update
 			develop_window.window.hide
-
+			develop_window.window.set_position (l_x, l_y)
+			develop_window.window.show_actions.resume
 		end
 
 	construct_as_context_tool is

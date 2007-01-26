@@ -349,15 +349,14 @@ feature {NONE} -- Implementation
 			l_ext: IL_EXTENSION_I
 			l_type: INTEGER
 		do
-			Result := new_feat.feature_name_id /= inh_feat.feature_name_id
+			Result :=
+				new_feat.feature_name_id /= inh_feat.feature_name_id or else
+				not new_feat.is_deferred and then new_feat.is_il_external and then
+					(inh_feat.is_il_external implies
+					(inh_feat.written_in /= new_feat.written_in or else inh_feat.written_feature_id /= new_feat.written_feature_id))
 			if Result then
 				l_ext ?= new_feat.extension
 				if l_ext /= Void then
-					check
-							-- If `new_feat' is an IL external, the inherited version
-							-- should be one as well.
-						inh_feat_is_il: l_ext /= Void implies inh_feat.is_il_external
-					end
 					l_type := l_ext.type
 					Result := l_type /= {SHARED_IL_CONSTANTS}.Creator_type and
 						l_type /= {SHARED_IL_CONSTANTS}.Static_type and

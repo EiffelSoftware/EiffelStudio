@@ -88,20 +88,27 @@
 		<root class="EMITTER" feature="make"/>
 		<setting name="line_generation" value="false"/>
 	</target>
-	<target name="consumer_10" extends="consumer_library">
+	<target name="consumer_1x" extends="consumer_library">
 		<root class="EMITTER" feature="make"/>
 		<setting name="line_generation" value="false"/>
-		<setting name="msil_clr_version" value="v1.0.3705"/>
 		<override name="cache_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\cache\dotnet1x\"/>
 		<override name="emitter_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\emitter\dotnet1x\"/>
 		<override name="helpers_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\helpers\dotnet1x\"/>
 		<override name="notifier_dotnet1x" location="$EIFFEL_SRC\dotnet\consumer\support\notifier\dotnet1x\"/>
+	</target>
+	<target name="consumer_10" extends="consumer_1x">
+		<setting name="msil_clr_version" value="v1.0.3705"/>
+	</target>
+	<target name="consumer_11" extends="consumer_1x">
+		<setting name="msil_clr_version" value="v1.1.4322"/>
 	</target>
 	<target name="debug_20" extends="consumer_20">
 		<setting name="line_generation" value="true"/>
 	</target>
 	<target name="debug_10" extends="consumer_10">
 		<setting name="line_generation" value="true"/>
-		<setting name="msil_clr_version" value="v1.0.3705"/>
+	</target>
+	<target name="debug_11" extends="consumer_11">
+		<setting name="line_generation" value="true"/>
 	</target>
 </system>

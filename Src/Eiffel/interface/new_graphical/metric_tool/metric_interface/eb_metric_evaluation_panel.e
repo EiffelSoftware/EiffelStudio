@@ -109,7 +109,6 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			l_text: EV_TEXT
-			l_font: EV_FONT
 		do
 			unit_lbl.set_text (metric_names.l_unit_colon)
 
@@ -190,22 +189,19 @@ feature {NONE} -- Initialization
 			auto_go_to_result_btn.set_tooltip (metric_names.f_auto_go_to_result)
 
 				-- Delete following in Docking EiffelStudio.
-			toolbar_empty_area.drop_actions.extend (agent drop_cluster)
-			toolbar_empty_area.drop_actions.extend (agent drop_class)
-			toolbar_empty_area.drop_actions.extend (agent drop_feature)
-			grid_wrapper_empty_area.drop_actions.extend (agent drop_cluster)
-			grid_wrapper_empty_area.drop_actions.extend (agent drop_class)
-			grid_wrapper_empty_area.drop_actions.extend (agent drop_feature)
-			metric_definition_empty_area.drop_actions.extend (agent drop_cluster)
-			metric_definition_empty_area.drop_actions.extend (agent drop_class)
-			metric_definition_empty_area.drop_actions.extend (agent drop_feature)
-
-			create l_font
-			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
-			metric_value_text.set_font (l_font)
-
+			append_drop_actions (
+				<<
+					toolbar_empty_area,
+					grid_wrapper_empty_area,
+					metric_definition_empty_area,
+					main_area_cell,
+					choose_metric_lbl_cell,
+					metric_definer.criterion_definition_empty_area,
+					metric_definer.expression_lbl_empty_area
+				>>
+			)
+			metric_value_text.set_font (bold_font)
 			preferences.metric_tool_data.unit_order_preference.change_actions.extend (on_unit_order_change_agent)
-
 			option_tool_bar.extend (detailed_result_btn)
 			option_tool_bar.extend (filter_result_btn)
 			synchronize_tool_bar.extend (auto_go_to_result_btn)
@@ -369,6 +365,7 @@ feature -- Actions
 			l_metric_basic: EB_METRIC_BASIC
 			l_metric: like current_selected_metric
 			l_input_domain: EB_METRIC_DOMAIN
+			l_value_string: STRING_32
 		do
 			if not l_retried then
 				set_is_last_evaluation_successful (False)
@@ -411,6 +408,11 @@ feature -- Actions
 				metric_value_text.set_data (l_value)
 				l_value_text := metric_value (l_value, show_percent_btn.is_sensitive and then show_percent_btn.is_selected)
 				metric_value_text.set_text (l_value_text)
+					-- Setup metric tool title.
+				create l_value_string.make (10)
+				l_value_string.append_double (l_value)
+				metric_tool.set_title (l_value_string)
+
 				if l_metric.is_fill_domain_enabled then
 					metric_tool.register_metric_result_for_display (l_metric, l_input_domain, l_value, l_metric.last_result_domain, last_calculation_time, False, is_result_filtered_for_last_metric)
 				else
@@ -426,6 +428,7 @@ feature -- Actions
 			l_retried := True
 			display_status
 			metric_value_text.set_text (metric_names.e_undefined_value)
+			metric_tool.set_title (Void)
 			setup_evaluation_environment (False)
 			metric_manager.on_metric_evaluation_stops (Current)
 			retry

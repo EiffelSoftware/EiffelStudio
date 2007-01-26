@@ -51,7 +51,7 @@ feature {NONE}-- Initialization
 			create deselect_all_btn
 			create select_recalculatable_btn
 			create deselect_recalculatable_btn
-			create l_ev_cell_2
+			create toolbar_cell
 			create flat_grid_area
 			create tree_grid_area
 			
@@ -81,7 +81,7 @@ feature {NONE}-- Initialization
 			selector_toolbar.extend (deselect_all_btn)
 			selector_toolbar.extend (select_recalculatable_btn)
 			selector_toolbar.extend (deselect_recalculatable_btn)
-			toolbar_area.extend (l_ev_cell_2)
+			toolbar_area.extend (toolbar_cell)
 			extend (flat_grid_area)
 			extend (tree_grid_area)
 			
@@ -108,7 +108,6 @@ feature {NONE}-- Initialization
 			toolbar_area.disable_item_expand (hide_old_btn)
 			toolbar_area.disable_item_expand (old_item_area)
 			toolbar_area.disable_item_expand (selector_toolbar)
-			toolbar_area.disable_item_expand (l_ev_cell_2)
 			l_ev_cell_1.set_minimum_width (10)
 			old_item_area.disable_item_expand (age_text)
 			age_text.set_minimum_width (30)
@@ -131,6 +130,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
+	toolbar_cell: EV_CELL
 	first_tool_bar, keep_detailed_result_tool_bar, warning_tool_bar, middle_tool_bar,
 	group_tool_bar, last_tool_bar, selector_toolbar: EV_TOOL_BAR
 	run_btn, stop_btn, remove_detailed_result_btn,
@@ -144,8 +144,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2, l_ev_tool_bar_separator_3: EV_TOOL_BAR_SEPARATOR
-	l_ev_cell_1,
-	l_ev_cell_2: EV_CELL
+	l_ev_cell_1: EV_CELL
 
 feature {NONE} -- Implementation
 

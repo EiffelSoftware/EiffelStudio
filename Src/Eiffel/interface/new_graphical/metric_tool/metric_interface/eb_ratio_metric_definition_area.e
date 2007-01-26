@@ -97,12 +97,11 @@ feature {NONE} -- Initialization
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
 
 				-- Delete following in docking EiffelStudio.
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
-			ratio_definition_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			ratio_definition_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			ratio_definition_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
+			metric_panel.append_drop_actions (
+				<<expression_lbl_empty_area,
+				  ratio_definition_empty_area
+				>>
+			)
 		end
 
 feature -- Status report

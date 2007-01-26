@@ -65,8 +65,10 @@ feature -- Status report
 	is_valid: BOOLEAN is
 			-- Is current domain valid?
 		do
-			metric_validity_checker.check_validity (Current)
-			Result := not metric_validity_checker.has_error
+			if not is_empty then
+				metric_validity_checker.check_validity (Current)
+				Result := not metric_validity_checker.has_error
+			end
 		end
 
 	has_delayed_domain_item: BOOLEAN is

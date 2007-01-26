@@ -101,6 +101,9 @@ feature {NONE} -- Initialization
 			a_panel_attached: a_panel /= Void
 		do
 			create show_percentage_btn.make (preferences.metric_tool_data.display_percentage_for_ratio_preference)
+			create maximize_result_btn
+			maximize_result_preference_change_agent := agent on_maximize_result_preference_change
+			preferences.metric_tool_data.metric_information_in_result_panel_preference.change_actions.extend (maximize_result_preference_change_agent)
 			set_metric_tool (a_tool)
 			metric_panel := a_panel
 			create content.make (2)
@@ -128,6 +131,7 @@ feature {NONE} -- Initialization
 			l_text: EV_TEXT_FIELD
 			l_font: EV_FONT
 			l_grid_support: like new_grid_support
+			l_maximized: BOOLEAN
 		do
 				-- Setup `input_grid'.			
 			create input_grid
@@ -186,16 +190,16 @@ feature {NONE} -- Initialization
 			grid_wrapper.enable_copy
 
 				-- Delete following in docking EiffelStudio.
-			result_grid.drop_actions.extend (agent metric_panel.drop_cluster)
-			result_grid.drop_actions.extend (agent metric_panel.drop_class)
-			result_grid.drop_actions.extend (agent metric_panel.drop_feature)
-			information_bar_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			information_bar_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			information_bar_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
-			input_grid.drop_actions.extend (agent metric_panel.drop_cluster)
-			input_grid.drop_actions.extend (agent metric_panel.drop_class)
-			input_grid.drop_actions.extend (agent metric_panel.drop_feature)
-
+			metric_panel.append_drop_actions (
+				<<
+					result_grid,
+					information_bar_empty_area,
+					input_grid,
+					input_cell,
+					empty_cell,
+					result_cell
+				>>
+				)
 			create l_text
 			metric_name_text.set_background_color (l_text.background_color)
 			metric_name_text.pointer_double_press_actions.extend (agent on_pointer_double_click_on_metric_name_text)
@@ -208,10 +212,6 @@ feature {NONE} -- Initialization
 			update_warning_lbl.set_tooltip (metric_names.f_run_metric_again)
 			update_warning_pixmap.copy (pixmaps.icon_pixmaps.general_warning_icon)
 			update_warning_pixmap.set_tooltip (metric_names.f_run_metric_again)
-			filter_invisible_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_filter_icon)
-			filter_invisible_item_btn.set_tooltip (metric_names.f_filter_result)
-			filter_invisible_item_btn.select_actions.extend (agent on_filter_result)
-			tool_bar.hide
 
 			send_to_history_btn.set_pixmap (pixmaps.icon_pixmaps.metric_send_to_archive_icon)
 			send_to_history_btn.set_tooltip (metric_names.f_send_to_history)
@@ -220,10 +220,17 @@ feature {NONE} -- Initialization
 			show_percentage_btn.set_text ("%%")
 			show_percentage_btn.set_tooltip (metric_names.f_display_in_percentage)
 			show_percentage_btn.select_actions.extend (agent on_show_percentage_changes)
+
 			ratio_btn_toolbar.extend (show_percentage_btn)
 			create l_font
 			l_font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			value_text.set_font (l_font)
+
+			maximize_result_btn.select_actions.extend (agent on_maximize_result_area)
+			tool_bar.extend (maximize_result_btn)
+			l_maximized := preferences.metric_tool_data.metric_information_in_result_panel_preference.value
+			is_maximize_set := not l_maximized
+			set_maximize_status (l_maximized)
 		ensure then
 			input_grid_attached: input_grid /= Void
 			editor_token_grid_support_attached: editor_token_grid_support /= Void
@@ -428,7 +435,7 @@ feature{NONE} -- Implementation/Sorting
 			end
 		end
 
-feature{NONE} -- Implementation
+feature{NONE} -- Implementation/Data
 
 	item_function (x, y: INTEGER): EV_GRID_ITEM is
 			-- Grid item at position (`x', `y').
@@ -623,6 +630,24 @@ feature{NONE} -- Implementation
 			end
 		end
 
+	invisible_items: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
+			-- List of invisible result rows
+
+	last_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]
+			-- Last comparator
+
+	show_percentage_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
+			-- Button to indicate if percentage should be displayed for ratio metric result
+
+	maximize_result_btn: EV_TOOL_BAR_BUTTON
+			-- Button to maximize/restore result grid
+
+	maximize_result_preference_change_agent: PROCEDURE [ANY, TUPLE]
+			-- Agent of `on_maximize_result_preference_change'
+
+
+feature{NONE}	-- Implementation
+
 	ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN) is
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
@@ -692,6 +717,13 @@ feature{NONE} -- Implementation
 			end
 		end
 
+feature{NONE} -- Implementation/Status report
+
+	is_maximize_set: BOOLEAN
+			-- Should detailed metric result grid should be displayed in maximized status?
+			-- If True, only metric result grid is displayed.
+			-- If False, metric information, metric input domain will be also displayed.
+
 	is_first_display: BOOLEAN
 			-- Is first display metric result?
 
@@ -720,20 +752,6 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	on_filter_result is
-			-- Action to be performed when `filter_invisible_items_btn' is pressed.
-		do
-			if filter_invisible_item_btn.is_selected then
-				remove_invisible_items_from_domain
-			else
-				restore_invisible_items_to_domain
-			end
-			if last_comparator /= Void then
-				sort_domain (last_comparator)
-			end
-			refresh_grid
-		end
-
 	on_show_percentage_changes is
 			-- Action to be performed when selection status of `show_percentage_btn' changes
 		local
@@ -750,8 +768,27 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	invisible_items: DS_LINKED_LIST [EB_METRIC_RESULT_ROW]
-			-- List of invisible result rows
+	on_maximize_result_area is
+			-- Action to be performed to maximize/restore metric result grid.
+		do
+			set_maximize_status (not is_maximize_set)
+		end
+
+	on_send_metric_to_history is
+			-- Action to be performed to send last calculated metric value in history
+		do
+			metric_panel.on_send_metric_to_history
+		end
+
+	on_maximize_result_preference_change is
+			-- Action to be performed when maximize result grid preference change from outside.
+		do
+			if preferences.metric_tool_data.metric_information_in_result_panel_preference.value /= is_maximize_set then
+				set_maximize_status (preferences.metric_tool_data.metric_information_in_result_panel_preference.value)
+			end
+		end
+
+feature{NONE} -- Implementation
 
 	remove_invisible_items_from_domain is
 			-- Remove invisible items from `domain' and store them in `invisible_items'.
@@ -794,16 +831,27 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	last_comparator: AGENT_LIST_COMPARATOR [EB_METRIC_RESULT_ROW]
-			-- Last comparator
-
-	on_send_metric_to_history is
-			-- Action to be performed to send last calculated metric value in history
+	set_maximize_status (b: BOOLEAN) is
+			-- Set `is_maximize_set' with `b'.
 		do
-			metric_panel.on_send_metric_to_history
+			if is_maximize_set /= b then
+				is_maximize_set := b
+				if is_maximize_set then
+					maximize_result_btn.set_pixmap (pixmaps.mini_pixmaps.toolbar_restore_icon)
+					metric_area.hide
+					input_area.hide
+				else
+					maximize_result_btn.set_pixmap (pixmaps.mini_pixmaps.toolbar_maximize_icon)
+					metric_area.show
+					input_area.show
+				end
+				if preferences.metric_tool_data.metric_information_in_result_panel_preference.value /= is_maximize_set then
+					preferences.metric_tool_data.metric_information_in_result_panel_preference.set_value (is_maximize_set)
+				end
+			end
+		ensure
+			maximize_status_set: is_maximize_set = b
 		end
-
-	show_percentage_btn: EB_PREFERENCED_TOOL_BAR_TOGGLE_BUTTON
 
 feature {NONE} -- Recycle
 
@@ -816,6 +864,7 @@ feature {NONE} -- Recycle
 			quick_search_bar := Void
 			editor_token_grid_support.desynchronize_color_or_font_change_with_editor
 			editor_token_grid_support.desynchronize_scroll_behavior_with_editor
+			preferences.metric_tool_data.metric_information_in_result_panel_preference.change_actions.prune_all (maximize_result_preference_change_agent)
 			show_percentage_btn.recycle
 		end
 
@@ -828,6 +877,8 @@ invariant
 	metric_panel_attached: metric_panel /= Void
 	invisible_items_attached: invisible_items /= Void
 	show_percentage_btn_attached: show_percentage_btn /= Void
+	maximize_result_btn_attached: maximize_result_btn /= Void
+	maximize_result_preference_change_agent_attached: maximize_result_preference_change_agent /= Void
 
 indexing
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

@@ -275,7 +275,7 @@
    <EV_WIDGET>
    </EV_WIDGET>
    <EV_BOX>
-    <Is_item_expanded>00000000000</Is_item_expanded>
+    <Is_item_expanded>00000000001</Is_item_expanded>
    </EV_BOX>
    <EV_PIXMAPABLE>
    </EV_PIXMAPABLE>
@@ -673,6 +673,7 @@
    <item type="EV_CELL">
     <Internal_properties>
      <id>334</id>
+     <name>toolbar_cell</name>
      <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
@@ -1560,7 +1561,7 @@
    </EV_WIDGET>
    <EV_BOX>
     <Padding>3</Padding>
-    <Is_item_expanded>00000000000000000000</Is_item_expanded>
+    <Is_item_expanded>000000000000000000001</Is_item_expanded>
    </EV_BOX>
    <EV_PIXMAPABLE>
    </EV_PIXMAPABLE>
@@ -1920,7 +1921,7 @@
    <item type="EV_TOOL_BAR">
     <Internal_properties>
      <id>340</id>
-     <Expanded>1</Expanded>
+     <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
     </EV_COLORIZABLE>
@@ -1970,7 +1971,7 @@
     <Internal_properties>
      <id>230</id>
      <name>update_warning_area</name>
-     <Expanded>1</Expanded>
+     <Expanded>0</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
     </EV_COLORIZABLE>
@@ -2029,6 +2030,23 @@
      </EV_TEXT_ALIGNABLE>
     </item>
    </item>
+   <item type="EV_CELL">
+    <Internal_properties>
+     <id>402</id>
+     <name>empty_cell</name>
+     <Expanded>0</Expanded>
+    </Internal_properties>
+    <EV_COLORIZABLE>
+    </EV_COLORIZABLE>
+    <EV_SENSITIVE>
+    </EV_SENSITIVE>
+    <EV_WIDGET>
+    </EV_WIDGET>
+    <EV_PIXMAPABLE>
+    </EV_PIXMAPABLE>
+    <EV_CONTAINER>
+    </EV_CONTAINER>
+   </item>
   </item>
   <item type="EV_VERTICAL_BOX">
    <Internal_properties>
@@ -2044,34 +2062,70 @@
    </EV_WIDGET>
    <EV_BOX>
     <Padding>3</Padding>
-    <Is_item_expanded>11</Is_item_expanded>
+    <Is_item_expanded>00</Is_item_expanded>
    </EV_BOX>
    <EV_PIXMAPABLE>
    </EV_PIXMAPABLE>
    <EV_CONTAINER>
    </EV_CONTAINER>
-   <item type="EV_LABEL">
+   <item type="EV_HORIZONTAL_BOX">
     <Internal_properties>
-     <id>186</id>
-     <name>input_lbl</name>
-     <Expanded>0</Expanded>
+     <id>403</id>
+     <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
     </EV_COLORIZABLE>
-    <EV_FONTABLE>
-    </EV_FONTABLE>
     <EV_SENSITIVE>
     </EV_SENSITIVE>
-    <EV_TEXTABLE>
-     <Text>Source domain:</Text>
-    </EV_TEXTABLE>
-    <EV_TOOLTIPABLE>
-    </EV_TOOLTIPABLE>
     <EV_WIDGET>
     </EV_WIDGET>
-    <EV_TEXT_ALIGNABLE>
-     <Text_alignment>Left</Text_alignment>
-    </EV_TEXT_ALIGNABLE>
+    <EV_BOX>
+     <Is_item_expanded>01</Is_item_expanded>
+    </EV_BOX>
+    <EV_PIXMAPABLE>
+    </EV_PIXMAPABLE>
+    <EV_CONTAINER>
+    </EV_CONTAINER>
+    <item type="EV_LABEL">
+     <Internal_properties>
+      <id>186</id>
+      <name>input_lbl</name>
+      <Expanded>0</Expanded>
+     </Internal_properties>
+     <EV_COLORIZABLE>
+     </EV_COLORIZABLE>
+     <EV_FONTABLE>
+     </EV_FONTABLE>
+     <EV_SENSITIVE>
+     </EV_SENSITIVE>
+     <EV_TEXTABLE>
+      <Text>Source domain:</Text>
+     </EV_TEXTABLE>
+     <EV_TOOLTIPABLE>
+     </EV_TOOLTIPABLE>
+     <EV_WIDGET>
+     </EV_WIDGET>
+     <EV_TEXT_ALIGNABLE>
+      <Text_alignment>Left</Text_alignment>
+     </EV_TEXT_ALIGNABLE>
+    </item>
+    <item type="EV_CELL">
+     <Internal_properties>
+      <id>404</id>
+      <name>input_cell</name>
+      <Expanded>0</Expanded>
+     </Internal_properties>
+     <EV_COLORIZABLE>
+     </EV_COLORIZABLE>
+     <EV_SENSITIVE>
+     </EV_SENSITIVE>
+     <EV_WIDGET>
+     </EV_WIDGET>
+     <EV_PIXMAPABLE>
+     </EV_PIXMAPABLE>
+     <EV_CONTAINER>
+     </EV_CONTAINER>
+    </item>
    </item>
    <item type="EV_VERTICAL_BOX">
     <Internal_properties>
@@ -2159,6 +2213,7 @@
     <item type="EV_CELL">
      <Internal_properties>
       <id>234</id>
+      <name>result_cell</name>
       <Expanded>0</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
@@ -2188,23 +2243,6 @@
      </EV_WIDGET>
      <EV_TOOL_BAR>
      </EV_TOOL_BAR>
-     <item type="EV_TOOL_BAR_TOGGLE_BUTTON">
-      <Internal_properties>
-       <id>236</id>
-       <name>filter_invisible_item_btn</name>
-       <Expanded>0</Expanded>
-      </Internal_properties>
-      <EV_DESELECTABLE>
-      </EV_DESELECTABLE>
-      <EV_SENSITIVE>
-      </EV_SENSITIVE>
-      <EV_TEXTABLE>
-      </EV_TEXTABLE>
-      <EV_TOOLTIPABLE>
-      </EV_TOOLTIPABLE>
-      <EV_PIXMAPABLE>
-      </EV_PIXMAPABLE>
-     </item>
     </item>
    </item>
    <item type="EV_VERTICAL_BOX">
@@ -2695,6 +2733,7 @@
   <item type="EV_VERTICAL_BOX">
    <Internal_properties>
     <id>253</id>
+    <name>main_panel_area</name>
     <Expanded>1</Expanded>
    </Internal_properties>
    <EV_COLORIZABLE>
@@ -2882,7 +2921,7 @@
      <Internal_properties>
       <id>108</id>
       <name>value_area</name>
-      <Expanded>0</Expanded>
+      <Expanded>1</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
      </EV_COLORIZABLE>
@@ -3057,6 +3096,7 @@
    <item type="EV_HORIZONTAL_SPLIT_AREA">
     <Internal_properties>
      <id>254</id>
+     <name>slip_area</name>
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
@@ -3162,6 +3202,7 @@
      <item type="EV_CELL">
       <Internal_properties>
        <id>255</id>
+       <name>main_area_cell</name>
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
@@ -3240,6 +3281,7 @@
        <item type="EV_CELL">
         <Internal_properties>
          <id>118</id>
+         <name>choose_metric_lbl_cell</name>
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
@@ -4672,6 +4714,7 @@
    <item type="EV_HORIZONTAL_BOX">
     <Internal_properties>
      <id>248</id>
+     <name>definer_area</name>
      <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
@@ -4690,6 +4733,7 @@
     <item type="EV_CELL">
      <Internal_properties>
       <id>249</id>
+      <name>definer_cell</name>
       <Expanded>0</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
@@ -4727,6 +4771,7 @@
      <item type="EV_CELL">
       <Internal_properties>
        <id>368</id>
+       <name>definer_area_cell</name>
        <Expanded>0</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
@@ -4746,7 +4791,7 @@
       <Internal_properties>
        <id>244</id>
        <name>metric_definition_area</name>
-       <Expanded>0</Expanded>
+       <Expanded>1</Expanded>
       </Internal_properties>
       <EV_COLORIZABLE>
       </EV_COLORIZABLE>
@@ -6315,7 +6360,7 @@
     <Internal_properties>
      <id>142</id>
      <name>archive_definition_frame</name>
-     <Expanded>0</Expanded>
+     <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
     </EV_COLORIZABLE>
@@ -6689,6 +6734,7 @@
        <item type="EV_CELL">
         <Internal_properties>
          <id>258</id>
+         <name>empty_cell2</name>
          <Expanded>0</Expanded>
         </Internal_properties>
         <EV_COLORIZABLE>
@@ -6791,7 +6837,7 @@
    <item type="EV_HORIZONTAL_BOX">
     <Internal_properties>
      <id>260</id>
-     <Expanded>0</Expanded>
+     <Expanded>1</Expanded>
     </Internal_properties>
     <EV_COLORIZABLE>
     </EV_COLORIZABLE>
@@ -6809,6 +6855,7 @@
     <item type="EV_CELL">
      <Internal_properties>
       <id>261</id>
+      <name>empty_cell</name>
       <Expanded>0</Expanded>
      </Internal_properties>
      <EV_COLORIZABLE>
@@ -6863,7 +6910,7 @@
       <EV_BOX>
        <Padding>6</Padding>
        <Border>10</Border>
-       <Is_item_expanded>0000</Is_item_expanded>
+       <Is_item_expanded>00001</Is_item_expanded>
       </EV_BOX>
       <EV_PIXMAPABLE>
       </EV_PIXMAPABLE>
@@ -6873,7 +6920,7 @@
        <Internal_properties>
         <id>169</id>
         <name>comparison_toolbar_area</name>
-        <Expanded>1</Expanded>
+        <Expanded>0</Expanded>
        </Internal_properties>
        <EV_COLORIZABLE>
        </EV_COLORIZABLE>
@@ -6882,7 +6929,7 @@
        <EV_WIDGET>
        </EV_WIDGET>
        <EV_BOX>
-        <Is_item_expanded>0</Is_item_expanded>
+        <Is_item_expanded>01</Is_item_expanded>
        </EV_BOX>
        <EV_PIXMAPABLE>
        </EV_PIXMAPABLE>
@@ -6920,6 +6967,23 @@
          <EV_PIXMAPABLE>
          </EV_PIXMAPABLE>
         </item>
+       </item>
+       <item type="EV_CELL">
+        <Internal_properties>
+         <id>400</id>
+         <name>comparison_toolbar_cell</name>
+         <Expanded>0</Expanded>
+        </Internal_properties>
+        <EV_COLORIZABLE>
+        </EV_COLORIZABLE>
+        <EV_SENSITIVE>
+        </EV_SENSITIVE>
+        <EV_WIDGET>
+        </EV_WIDGET>
+        <EV_PIXMAPABLE>
+        </EV_PIXMAPABLE>
+        <EV_CONTAINER>
+        </EV_CONTAINER>
        </item>
       </item>
       <item type="EV_VERTICAL_BOX">
@@ -7229,6 +7293,23 @@
          </EV_PIXMAPABLE>
         </item>
        </item>
+      </item>
+      <item type="EV_CELL">
+       <Internal_properties>
+        <id>401</id>
+        <name>comparison_area_cell</name>
+        <Expanded>0</Expanded>
+       </Internal_properties>
+       <EV_COLORIZABLE>
+       </EV_COLORIZABLE>
+       <EV_SENSITIVE>
+       </EV_SENSITIVE>
+       <EV_WIDGET>
+       </EV_WIDGET>
+       <EV_PIXMAPABLE>
+       </EV_PIXMAPABLE>
+       <EV_CONTAINER>
+       </EV_CONTAINER>
       </item>
      </item>
     </item>

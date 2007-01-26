@@ -120,9 +120,18 @@ feature -- Status report
 			-- Can `a_pebble' be dropped on `a_item'?
 		local
 			l_item: EB_METRIC_GRID_DOMAIN_ITEM  [ANY]
+			l_feature_stone: FEATURE_STONE
+			l_class_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
 		do
 			l_item ?= a_item
 			Result := l_item /= Void and then l_item.is_pebble_droppable (a_pebble)
+			if not Result then
+				l_feature_stone ?= a_pebble
+				l_class_stone ?= a_pebble
+				l_cluster_stone ?= a_pebble
+				Result := l_feature_stone /= Void or else l_class_stone /= Void or else l_cluster_stone /= Void
+			end
 		end
 
 feature -- Setting
@@ -416,6 +425,7 @@ feature{NONE} -- Item updator
 			if a_archive_node.is_value_valid then
 				a_item.set_text (a_archive_node.value.out)
 				a_item.align_text_left
+				a_item.set_font (bold_font)
 			else
 				a_item.set_text (metric_names.t_short_line)
 				a_item.align_text_center
@@ -856,6 +866,8 @@ feature{NONE} -- Implementation/Actions
 				l_archive_node ?= a_item.row.data
 				check l_archive_node /= Void end
 				l_item.add_pebble (a_pebble, agent set_input_domain_back_to_archive_node (l_item, l_archive_node))
+			else
+				metric_history_panel.drop_pebble (a_pebble)
 			end
 		end
 

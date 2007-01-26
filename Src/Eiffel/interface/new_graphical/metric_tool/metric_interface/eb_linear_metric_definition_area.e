@@ -123,15 +123,12 @@ feature {NONE} -- Initialization
 			metric_definition_lbl.set_text (metric_names.t_metric_definition.as_string_32 + ":")
 
 				-- Delete following in docking EiffelStudio.
-			linear_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			linear_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			linear_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
-			linear_definition_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			linear_definition_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			linear_definition_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
+			metric_panel.append_drop_actions (
+				<<linear_lbl_empty_area,
+				  linear_definition_empty_area,
+				  expression_lbl_empty_area
+				>>
+			)
 		ensure then
 			del_key_shortcut_attached: del_key_shortcut /= Void
 			ctrl_up_shortcut_attached: move_up_shortcut /= Void

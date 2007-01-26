@@ -143,17 +143,12 @@ feature {NONE} -- Initialization
 			criterion_lbl.set_text (metric_names.t_metric_criterion_definition)
 			attach_non_editable_warning_to_text (metric_names.t_text_not_editable, expression_text, metric_tool_window)
 
-				-- Delete following in docking EiffelStudio.
-			criterion_definition_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			criterion_definition_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			criterion_definition_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
-			lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_cluster)
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_class)
-			expression_lbl_empty_area.drop_actions.extend (agent metric_panel.drop_feature)
-
+			metric_panel.append_drop_actions (
+				<<criterion_definition_empty_area,
+				  lbl_empty_area,
+				  expression_lbl_empty_area
+				>>
+			)
 			add_current_target_item_btn.set_pixmap (pixmaps.icon_pixmaps.metric_domain_application_icon)
 			add_current_target_item_btn.set_tooltip (metric_names.f_application_scope)
 			add_current_target_item_btn.select_actions.extend (agent on_add_domain_item (agent new_current_application_target_domain_item))

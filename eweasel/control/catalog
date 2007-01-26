@@ -1643,3 +1643,4 @@ if DOTNET test correct-override-on-multi-versioned-members dotnet045	tcf pass do
 if DOTNET test function-property-call-correction dotnet046	tcf pass dotnet property
 if DOTNET test deferred-property-missing-assigner-implementation dotnet047	tcf pass dotnet property
 if DOTNET test deferred-property-missing-assigner-implementation-renamed dotnet048	tcf pass dotnet property
+if DOTNET test effecting-from-inherited-external	dotnet049	tcf pass dotnet

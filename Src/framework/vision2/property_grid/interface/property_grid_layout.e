@@ -7,7 +7,7 @@ class
 	PROPERTY_GRID_LAYOUT
 
 inherit
-	SHARED_NAMES
+	SHARED_BENCH_NAMES
 
 feature {NONE} -- Button constants
 

@@ -14,7 +14,7 @@ class
 
 inherit
 
-	SHARED_NAMES
+	SHARED_BENCH_NAMES
 		rename
 			names as interface_names
 		end

@@ -8,7 +8,7 @@ indexing
 class COMMAND_LINE_IO
 
 inherit
-	SHARED_NAMES
+	SHARED_BATCH_NAMES
 
 feature -- Properties
 

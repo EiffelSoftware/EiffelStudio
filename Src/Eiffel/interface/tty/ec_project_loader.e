@@ -11,7 +11,7 @@ class
 inherit
 	PROJECT_LOADER
 
-	SHARED_NAMES
+	SHARED_BATCH_NAMES
 
 feature -- Access
 

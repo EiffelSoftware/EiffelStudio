@@ -9,7 +9,7 @@ class
 	CLASS_FORMAT_CONSTANTS
 
 inherit
-	SHARED_NAMES
+	SHARED_BATCH_NAMES
 
 feature -- Constants
 

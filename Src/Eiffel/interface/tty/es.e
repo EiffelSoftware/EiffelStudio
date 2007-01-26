@@ -51,7 +51,7 @@ inherit
 
 	EIFFEL_LAYOUT
 
-	SHARED_NAMES
+	SHARED_BATCH_NAMES
 
 create
 	make

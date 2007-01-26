@@ -74,7 +74,7 @@ inherit
 			default_create
 		end
 
-	SHARED_NAMES
+	SHARED_BENCH_NAMES
 		undefine
 			copy,
 			default_create

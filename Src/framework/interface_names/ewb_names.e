@@ -156,6 +156,15 @@ feature -- Access
 			end
 		end
 
+feature -- Documentation
+
+	l_Flat: STRING_GENERAL is					do Result := locale.translate("flat view")	end
+	l_chart: STRING_GENERAL is					do Result := locale.translate("Chart") end
+	l_relations: STRING_GENERAL is				do Result := locale.translate("Relations")	end
+	l_text: STRING_GENERAL is					do Result := locale.translate("Text")	end
+	l_contract: STRING_GENERAL is				do Result := locale.translate("Contract")	end
+	l_Flatshort: STRING_GENERAL is				do Result := locale.translate("interface view")	end
+
 feature -- Errors
 
 	err_press_return_to_resume: STRING_GENERAL is 					do Result := locale.translate ("Press <Return> to resume compilation or <Q> to quit") end

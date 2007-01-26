@@ -14,7 +14,7 @@ inherit
 			initialize
 		end
 
-	SHARED_NAMES
+	SHARED_BENCH_NAMES
 		undefine
 			default_create,
 			copy

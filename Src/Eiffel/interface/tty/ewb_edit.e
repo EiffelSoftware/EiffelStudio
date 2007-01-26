@@ -12,7 +12,7 @@ class EWB_EDIT
 inherit
 	EB_SHARED_PREFERENCES
 
-	SHARED_NAMES
+	SHARED_BATCH_NAMES
 
 feature -- Element change
 

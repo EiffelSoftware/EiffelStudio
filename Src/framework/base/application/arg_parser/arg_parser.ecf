@@ -9,7 +9,7 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>		
+		<library name="text" location="../../text/text.ecf"/>
 		<cluster name="arg_parser" location="." recursive="true"/>
-    <cluster name="text" location="../../text"/>
 	</target>
 </system>

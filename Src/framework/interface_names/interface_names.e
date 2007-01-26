@@ -1789,8 +1789,10 @@ feature -- Description texts
 	e_save_c_compilation_output: STRING_GENERAL is do Result := locale.translate("Save C Compilation output to file")	end
 	e_go_to_w_code_dir: STRING_GENERAL is do Result := locale.translate("Go to W_code directory of this system, or right click to open W_code in specified file browser")	end
 	e_go_to_f_code_dir: STRING_GENERAL is do Result := locale.translate("Go to F_code directory of this system, or right click to open F_code in specified file browser")	end
+	e_go_to_project_dir: STRING_GENERAL is do Result := locale.translate ("Go to project directory of this system, or right click to open that directory in specified file browser") end
 	e_f_code: STRING_GENERAL is do Result := locale.translate("F_code")	end
 	e_w_code: STRING_GENERAL is do Result := locale.translate("W_code")	end
+	e_open_project: STRING_GENERAL is do Result := locale.translate ("Project") end
 	e_no_text_is_selected: STRING_GENERAL is do Result := locale.translate("No file name is selected.")	end
 	e_selected_text_is_not_file: STRING_GENERAL is do Result := locale.translate("Selected text is not a correct file name.")	end
 	e_external_editor_not_defined: STRING_GENERAL is do Result := locale.translate("External editor not defined")	end

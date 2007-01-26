@@ -1252,6 +1252,7 @@ feature -- Parent checking
 				l_area := parents.area
 				nb := parents.count
 				l_old_is_single := is_single
+				has_external_main_parent := False
 			until
 				i = nb
 			loop

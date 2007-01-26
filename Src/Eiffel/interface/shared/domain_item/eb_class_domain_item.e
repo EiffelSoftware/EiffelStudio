@@ -90,10 +90,11 @@ feature{NONE} -- Implemenation
 		do
 			if not is_up_to_date then
 				conf_class := class_of_id (id)
-				if conf_class /= Void then
+				if conf_class /= Void and then conf_class.is_valid then
 					query_class_item := query_class_item_from_conf_class (conf_class)
 					string_representation_internal := query_class_item.name
 				else
+					conf_class := Void
 					if last_class_name /= Void and then not last_class_name.is_empty then
 						string_representation_internal := last_class_name.twin
 					else

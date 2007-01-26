@@ -1,5 +1,5 @@
 indexing
-	description: "Temporary class for interface names used in framework."
+	description: "interface names used in batch compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: ""
@@ -7,30 +7,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	SHARED_NAMES
+	SHARED_BATCH_NAMES
 
 inherit
 	SHARED_LOCALE
 
 feature -- Names
-
-	names: INTERFACE_NAMES is
-			-- Names used in interface
-		once
-			create Result
-		end
-
-	metric_names: EB_METRIC_NAMES is
-			-- Names used in metric tools
-		once
-			create Result
-		end
-
-	external_output_names: EB_EXTERNAL_OUTPUT_NAMES
-			-- Names for external output tools.
-		once
-			create Result
-		end
 
 	warnings: WARNING_MESSAGES
 			-- Warning messages.

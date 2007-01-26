@@ -1,42 +1,41 @@
 indexing
-	description	: "Warning dialog"
+	description: "interface names used in bench compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	EB_QUESTION_DIALOG
+	SHARED_BENCH_NAMES
 
 inherit
-	EV_QUESTION_DIALOG
-		redefine
-			initialize
+	SHARED_BATCH_NAMES
+
+feature -- Names
+
+	names: INTERFACE_NAMES is
+			-- Names used in interface
+		once
+			create Result
 		end
 
-	SHARED_BENCH_NAMES
-		undefine
-			default_create,
-			copy
+	metric_names: EB_METRIC_NAMES is
+			-- Names used in metric tools
+		once
+			create Result
 		end
 
-create
-	default_create,
-	make_with_text,
-	make_with_text_and_actions
+	external_output_names: EB_EXTERNAL_OUTPUT_NAMES
+			-- Names for external output tools.
+		once
+			create Result
+		end
 
-feature {NONE} -- Initialization
-
-	initialize is
-			-- Initialize `Current'.
-		do
-			Precursor {EV_QUESTION_DIALOG}
-			set_title (names.t_question)
-			set_pixmap (Default_pixmaps.Question_pixmap)
-			set_icon_pixmap (Default_pixmaps.Question_pixmap)
-			set_buttons (<<names.b_yes, names.b_no, names.b_cancel>>)
-			set_default_push_button(button (names.b_yes))
-			set_default_cancel_button(button (names.b_cancel))
+	debugger_names: DEBUGGER_NAMES
+			-- Names for debugger.
+		once
+			create Result
 		end
 
 indexing
@@ -71,5 +70,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_QUESTION_DIALOG
-
+end

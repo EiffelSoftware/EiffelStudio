@@ -20,7 +20,7 @@ inherit
 	XM_CALLBACKS_FILTER_FACTORY
 		export {NONE} all end
 
-	SHARED_NAMES
+	SHARED_BENCH_NAMES
 		export {NONE} all end
 
 create {SHARED_XML_ROUTINES}

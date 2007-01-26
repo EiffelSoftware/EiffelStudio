@@ -77,17 +77,17 @@ feature -- Status report
 			inspect
 				type
 			when cf_Chart then
-				Result := names.l_chart
+				Result := ewb_names.l_chart
 			when cf_Diagram then
-				Result := names.l_relations
+				Result := ewb_names.l_relations
 			when cf_Clickable then
-				Result := names.l_text
+				Result := ewb_names.l_text
 			when cf_Flat then
-				Result := names.l_flat
+				Result := ewb_names.l_flat
 			when cf_Short then
-				Result := names.l_contract
+				Result := ewb_names.l_contract
 			when cf_Flatshort then
-				Result := names.l_flatshort
+				Result := ewb_names.l_flatshort
 			end
 		end
 

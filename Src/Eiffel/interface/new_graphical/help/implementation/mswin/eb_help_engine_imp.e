@@ -14,7 +14,7 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_NAMES
+	SHARED_BENCH_NAMES
 		export
 			{NONE} all
 		end

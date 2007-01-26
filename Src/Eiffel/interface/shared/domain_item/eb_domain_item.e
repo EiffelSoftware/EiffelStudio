@@ -25,7 +25,7 @@ inherit
 			is_equal
 		end
 
-	SHARED_NAMES
+	SHARED_BENCH_NAMES
 		undefine
 			is_equal
 		end

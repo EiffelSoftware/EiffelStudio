@@ -70,6 +70,30 @@ feature -- Access
 			end
 		end
 
+feature {DEBUG_INFO} -- Change
+
+	set_is_corrupted (b: like is_corrupted) is
+			-- Set `is_corrupted' to `b'
+		do
+			is_corrupted := b
+		end
+
+	set_breakable_line_number (i: like breakable_line_number) is
+			-- Set `breakable_line_number' to `i'
+		require
+			i_positive: i > 0
+		do
+			breakable_line_number := i
+		end
+
+	update_routine_version is
+			-- Set `routine' to the updated_version of `routine'
+		require
+			routine_not_void: routine /= Void
+		do
+			routine := routine.updated_version
+		end
+
 feature -- Properties
 
 	routine: E_FEATURE

@@ -364,41 +364,6 @@ feature -- Access
 			Result := (bench_status = Bench_breakpoint_set)
 		end
 
-	trace is
-			-- Display the status of this breakpoint.
-			-- Note: Should only be called in Debug mode.
-		do
-			io.put_string ("BREAKPOINT: trace%N")
-
-			io.put_string ("%T")
-			if routine /= Void then
-				io.put_string (routine.name)
-			else
-				io.put_string ("unknown_routine(routine=Void)")
-			end
-			io.put_string (" @")
-			io.put_integer (breakable_line_number)
-			io.put_new_line
-
-			io.put_string ("%Tbench status: ")
-			inspect bench_status
-			when Bench_breakpoint_set then
-				io.put_string ("set & enabled%N")
-			when Bench_breakpoint_disabled then
-				io.put_string ("set & disabled%N")
-			when Bench_breakpoint_not_set then
-				io.put_string ("not set%N")
-			end
-
-			io.put_string ("%Tapplication status: ")
-			inspect application_status
-			when Application_breakpoint_set then
-				io.put_string ("set%N")
-			when Application_breakpoint_not_set then
-				io.put_string ("not set%N")
-			end
-		end
-
 feature -- application status access
 
 	is_set_for_application: BOOLEAN is
@@ -490,53 +455,6 @@ feature -- Setting
 						end
 				end
 			end
-		end
-
-	synchronize is
-			-- Resychronize the breakpoint after a recompilation.
-		local
-			invalid_breakpoint: BOOLEAN
-		do
-			if not invalid_breakpoint then
-					-- update the feature
-				check routine_not_void: routine /= Void end
-				routine := routine.updated_version
-				if routine /= Void and then routine.is_debuggable and then routine.written_class /= Void then
-					if not (breakable_line_number > routine.number_of_breakpoint_slots) then
-							-- The line of the breakpoint still exists.
-							-- Update `real_body_id' since it may have changed
-							-- during recompilation (`body_index' is not supposed to change but
-							-- we update it as well in case of)
-						body_index := routine.body_index -- update the body_index as well
-						if condition /= Void then
-							condition.reset
-							if condition_as_is_true and not condition.is_boolean_expression (routine) then
-								condition := Void
-							end
-						end
-					else
-							-- set the breakpoint to be removed: the line does no longer exist
-						discard
-						is_corrupted := True
-					end
-				else
-						-- The breakpoint is now invalid since its feature has been removed
-						-- or is no longer debuggable.
-					discard
-					is_corrupted := True
-				end
-			else
-					-- This is an invalid breakpoint. Discard it.
-				discard
-				is_corrupted := True
-			end
-		ensure
-			is_set implies routine /= Void
-		rescue
-				-- The synchronization of the breakpoint has failed.
-				-- We declare the breakpoint as "invalid".
-			invalid_breakpoint := True
-			retry
 		end
 
 feature -- Condition change

@@ -15,9 +15,7 @@ inherit
 			is_valid_object_address,
 			can_not_launch_system_message,
 			recycle,
-			make_with_debugger,
-			is_classic_system,
-			is_dotnet_system
+			make_with_debugger
 		end
 
 	SHARED_EIFNET_DEBUGGER
@@ -62,10 +60,6 @@ inherit
 
 create {DEBUGGER_MANAGER}
 	make_with_debugger
-
-feature
-	is_classic_system: BOOLEAN is False
-	is_dotnet_system: BOOLEAN is True
 
 feature {APPLICATION_EXECUTION} -- Initialization
 

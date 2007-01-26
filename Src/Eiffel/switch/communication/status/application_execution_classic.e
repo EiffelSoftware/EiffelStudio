@@ -16,9 +16,7 @@ inherit
 			update_critical_stack_depth,
 			can_not_launch_system_message,
 			recycle,
-			make_with_debugger,
-			is_classic_system,
-			is_dotnet_system
+			make_with_debugger
 		end
 
 	OBJECT_ADDR
@@ -43,10 +41,6 @@ inherit
 
 create {DEBUGGER_MANAGER}
 	make_with_debugger
-
-feature
-	is_classic_system: BOOLEAN is True
-	is_dotnet_system: BOOLEAN is False
 
 feature {NONE} -- Initialization
 

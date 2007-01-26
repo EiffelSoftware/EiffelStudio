@@ -197,7 +197,6 @@ feature -- Basic Operations / Information message
 			l_error: BOOLEAN
 		do
 				-- Build the text
-			clear_general
 			start_processing (true)
 			if Debugger_manager.application_is_executing then
 				Eb_debugger_manager.text_formatter_visitor.append_status (Debugger_manager.application_status, Current)

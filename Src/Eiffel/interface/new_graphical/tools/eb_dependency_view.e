@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_DEPENDENCY_VIEW
+	EB_DEPENDENCY_TOOL
 
 inherit
 	EB_TOOL

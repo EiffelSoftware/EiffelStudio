@@ -189,7 +189,7 @@ feature -- Query
 			-- Features relation tool
 			-- This tool was orignal belong to context_tool
 
-	dependency_tool: EB_DEPENDENCY_VIEW
+	dependency_tool: EB_DEPENDENCY_TOOL
 			-- Dependency tool
 
 	metric_tool: EB_METRIC_TOOL

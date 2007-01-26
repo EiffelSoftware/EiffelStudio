@@ -353,7 +353,7 @@ feature -- Status setting
 			if develop_window.unified_stone then
 				develop_window.set_stone (st)
 			else
-				set_stone (st)
+				develop_window.tools.set_stone (st)
 			end
 			if content.is_visible then
 				set_focus

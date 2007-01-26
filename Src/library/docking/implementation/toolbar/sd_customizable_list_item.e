@@ -24,13 +24,13 @@ feature -- Initialization
 		require
 			v_non_void: v /= Void
 		local
-			command: SD_TOOL_BAR_BUTTON
+			l_sep: SD_TOOL_BAR_SEPARATOR
 		do
 			make_with_text (v.description)
 			set_pixmap (v.pixmap)
 			data := v
-			command ?= v
-			if command /= Void then
+			l_sep ?= v
+			if l_sep = Void then
 				is_separator := False
 			else
 				is_separator := True

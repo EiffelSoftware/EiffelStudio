@@ -191,8 +191,8 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		do
-			integer_buffer.put_integer_8_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 1)
+			socket_buffer.put_integer_8_be (i, 0)
+			put_managed_pointer (socket_buffer, 0, integer_8_bytes)
 		end
 		
 	put_integer_16 (i: INTEGER_16) is
@@ -202,8 +202,8 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		do
-			integer_buffer.put_integer_16_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 2)
+			socket_buffer.put_integer_16_be (i, 0)
+			put_managed_pointer (socket_buffer, 0, integer_16_bytes)
 		end
 		
 	put_integer_64 (i: INTEGER_64) is
@@ -213,8 +213,8 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		do
-			integer_buffer.put_integer_64_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 8)			
+			socket_buffer.put_integer_64_be (i, 0)
+			put_managed_pointer (socket_buffer, 0, integer_64_bytes)
 		end
 		
 	put_natural_8 (i: NATURAL_8) is
@@ -224,8 +224,8 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		do
-			integer_buffer.put_natural_8_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 1)			
+			socket_buffer.put_natural_8_be (i, 0)
+			put_managed_pointer (socket_buffer, 0, natural_8_bytes)
 		end
 		
 	put_natural_16 (i: NATURAL_16) is
@@ -235,8 +235,8 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		do
-			integer_buffer.put_natural_16_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 2)			
+			socket_buffer.put_natural_16_be (i, 0)
+			put_managed_pointer (socket_buffer, 0, natural_16_bytes)
 		end
 		
 	put_natural, put_natural_32 (i: NATURAL_32) is
@@ -246,8 +246,8 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		do
-			integer_buffer.put_natural_32_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 4)			
+			socket_buffer.put_natural_32_be (i, 0)
+			put_managed_pointer (socket_buffer, 0, natural_32_bytes)
 		end
 		
 	put_natural_64 (i: NATURAL_64) is
@@ -257,8 +257,8 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_peer: peer_address /= Void
 		do
-			integer_buffer.put_natural_64_be (i, 0)
-			put_managed_pointer (integer_buffer, 0, 8)			
+			socket_buffer.put_natural_64_be (i, 0)
+			put_managed_pointer (socket_buffer, 0, natural_64_bytes)
 		end
 		
 

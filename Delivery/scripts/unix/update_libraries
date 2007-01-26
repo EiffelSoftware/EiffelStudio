@@ -6,7 +6,7 @@ co $DEFAULT_ORIGO_SVN/free_add_ons free_add_ons
 
 remtrace gobo
 cd $EIFFEL_SRC/library
-gunzip -c $EIFFEL_SRC/free_add_ons/gobo/gobo_34_unix.tgz | tar -xf -
+bunzip2 -c $EIFFEL_SRC/free_add_ons/gobo/gobo_35_unix.tbz2 | tar -xf -
 
 remtrace Compiling additional libraries
 cd vision2/Clib

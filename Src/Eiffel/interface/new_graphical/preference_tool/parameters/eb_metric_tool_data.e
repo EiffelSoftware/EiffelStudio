@@ -136,6 +136,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := warning_background_color_preference.value
 		end
 
+	is_metric_information_displayed_in_result_panel: BOOLEAN is
+			-- is_metric information displayed in result panel?
+		do
+			Result := metric_information_in_result_panel_preference.value
+		end
+
 feature -- Setting
 
 	set_unit_order (a_unit_list: LIST [QL_METRIC_UNIT]) is
@@ -182,6 +188,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	keep_metric_detailed_result_preference: BOOLEAN_PREFERENCE
 	check_warning_preference: BOOLEAN_PREFERENCE
 	warning_background_color_preference: COLOR_PREFERENCE
+	metric_information_in_result_panel_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -200,6 +207,7 @@ feature {NONE} -- Preference Strings
 	keep_metric_detailed_result_string: STRING is "tools.metric_tool.keep_metric_detailed_result"
 	check_warning_string: STRING is "tools.metric_tool.check_defined_warning"
 	warning_background_color_string: STRING is "tools.metric_tool.warning_background_color"
+	metric_information_in_result_panel_string: STRING is "tools.metric_tool.metric_information_in_result_panel"
 
 feature {NONE} -- Implementation
 
@@ -229,6 +237,7 @@ feature {NONE} -- Implementation
 			keep_metric_detailed_result_preference := l_manager.new_boolean_preference_value (l_manager, keep_metric_detailed_result_string, True)
 			check_warning_preference := l_manager.new_boolean_preference_value (l_manager, check_warning_string, False)
 			warning_background_color_preference := l_manager.new_color_preference_value (l_manager, warning_background_color_string, create{EV_COLOR}.make_with_8_bit_rgb (253, 196, 181))
+			metric_information_in_result_panel_preference := l_manager.new_boolean_preference_value (l_manager, metric_information_in_result_panel_string, True)
 		end
 
 	preferences: PREFERENCES

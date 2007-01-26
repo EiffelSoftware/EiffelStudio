@@ -403,7 +403,6 @@ feature -- Action
 			l_class_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
 			l_path: STRING
-			l_class_path: FILE_NAME
 		do
 			l_class_stone ?= a_pebble
 			if l_class_stone /= Void then

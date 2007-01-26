@@ -158,7 +158,9 @@ feature {NONE} -- Implementation
 			l_loader: CONF_LOAD
 			l_ignored_targets: SEARCH_TABLE [STRING]
 		do
-			l_ignored_targets := ignores.item (a_file.string.as_lower)
+			if ignores /= Void then
+				l_ignored_targets := ignores.item (a_file.string.as_lower)
+			end
 				-- if the file is not listed in the excludes or explicitely lists exlucded targets
 				-- after this, ignores.found_item is set
 			if l_ignored_targets = Void or else not l_ignored_targets.is_empty  then

@@ -1080,7 +1080,6 @@ feature -- Debugging events
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_just_stopped : start%N")
 			end
-			Window_manager.display_message (Interface_names.E_paused)
 			stop_cmd.disable_sensitive
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
@@ -1104,7 +1103,6 @@ feature -- Debugging events
 					if call_stack_tool.widget.is_displayed then
 						debugging_window.tools.features_relation_tool.show
 					end
-
 				end
 			end
 			window_manager.quick_refresh_all_margins
@@ -1122,7 +1120,6 @@ feature -- Debugging events
 				-- Update Watch tool
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.request_update)
 
-			debugger_output_message ("Application stopped")
 			debugging_window.window.raise
 
 			if application_status.reason_is_overflow then
@@ -1721,16 +1718,6 @@ feature {NONE} -- MSIL system implementation
 			-- DLL type constant for MSIL system
 
 feature {NONE} -- specific implementation
-
-	text_running: STRING_GENERAL is
-		do
-			Result := interface_names.e_running
-		end
-
-	text_running_no_stop_points: STRING_GENERAL is
-		do
-			Result := interface_names.e_Running_no_stop_points
-		end
 
 	implementation: EB_DEBUGGER_MANAGER_IMP;
 

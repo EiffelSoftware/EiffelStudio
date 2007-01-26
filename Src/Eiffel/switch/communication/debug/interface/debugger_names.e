@@ -14,6 +14,13 @@ inherit
 
 feature -- Names
 
+	t_Application_launched: STRING_GENERAL is
+			once Result := locale.translate ("Application launched") end
+	t_Application_exited: STRING_GENERAL is
+			once Result := locale.translate ("Application exited") end
+	t_space_Application_ignoring_breakpoints: STRING_GENERAL is
+			once Result := locale.translate (" (ignoring breakpoints)") end
+
 	t_Not_running: STRING_GENERAL is
 			once Result := locale.translate ("Application is not running") end
 	t_Running: STRING_GENERAL is

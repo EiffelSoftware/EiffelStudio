@@ -61,20 +61,6 @@ feature -- Recylcing
 			end
 		end
 
-feature -- execution mode
-
-	is_classic_system: BOOLEAN is
-			-- Is this application a classic system ?
-		do
-			Result := debugger_manager.is_classic_project
-		end
-
-	is_dotnet_system: BOOLEAN is
-			-- Is this application a dotnet system ?
-		do
-			Result := debugger_manager.is_dotnet_project
-		end
-
 feature -- Execution event callbacks
 
 	on_application_before_launching is
@@ -157,12 +143,6 @@ feature -- Properties
 			Result := status.is_stopped
 		ensure
 			yes_implies_status_is_stop: Result implies status.is_stopped
-		end
-
-	is_ignoring_stop_points: BOOLEAN is
-			-- Is the application ignoring all stop points?
-		do
-			Result := execution_mode = {EXEC_MODES}.No_stop_points
 		end
 
 	exists: BOOLEAN is

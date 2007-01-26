@@ -352,6 +352,7 @@ feature -- Command
 
 			setup_focus_editor_accelerators
 			build_close_content_accelerator
+			setup_class_address_accelerators
 		end
 
 	build_formatters is
@@ -1253,6 +1254,16 @@ feature{NONE} -- Implementation
 		do
 			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_escape), False, False, False)
 			l_acc.actions.extend (agent develop_window.set_focus_to_main_editor)
+			develop_window.window.accelerators.extend (l_acc)
+		end
+
+	setup_class_address_accelerators is
+			-- Setup accelerators for focus class combo box.
+		local
+			l_acc: EV_ACCELERATOR
+		do
+			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_f6), False, False, False)
+			l_acc.actions.extend (agent ((develop_window.address_manager).class_address).set_focus)
 			develop_window.window.accelerators.extend (l_acc)
 		end
 

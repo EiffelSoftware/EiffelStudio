@@ -642,7 +642,7 @@ feature -- Memory management
 			parent := Void
 		end
 
-feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR} -- Vision2 Controls
+feature {EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_DIRECTOR, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Vision2 Controls
 
 	cluster_address: EV_COMBO_BOX
 			-- Cluster part of the address.

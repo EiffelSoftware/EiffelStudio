@@ -91,35 +91,36 @@ feature -- Save/Open inner container data.
 				l_reader.set_for_reading
 				create l_facility
 				l_config_data ?=  l_facility.retrieved (l_reader, True)
-				check l_config_data /= Void end
-				internal_docking_manager.command.lock_update (Void, True)
-				l_called := True
+				if l_config_data /= Void then
+					internal_docking_manager.command.lock_update (Void, True)
+					l_called := True
 
-				-- First we clear all areas.
-				clean_up_mini_tool_bar
+					-- First we clear all areas.
+					clean_up_mini_tool_bar
 
-				clear_up_containers
+					clear_up_containers
 
-				clear_up_floating_zones
-				clean_up_tool_bars
-				set_all_visible
+					clear_up_floating_zones
+					clean_up_tool_bars
+					set_all_visible
 
-				check not internal_docking_manager.query.inner_container_main.full end
-				open_all_inner_containers_data (l_config_data)
+					check not internal_docking_manager.query.inner_container_main.full end
+					open_all_inner_containers_data (l_config_data)
 
-				-- Restore auto hide zone.
-				open_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
+					-- Restore auto hide zone.
+					open_auto_hide_panel_data (l_config_data.auto_hide_panels_datas)
 
-				open_tool_bar_datas (l_config_data.tool_bar_datas)
+					open_tool_bar_datas (l_config_data.tool_bar_datas)
 
-				l_file.close
+					l_file.close
 
-				internal_docking_manager.command.resize (True)
-				internal_docking_manager.command.remove_empty_split_area
-				internal_docking_manager.command.update_title_bar
-				internal_docking_manager.command.remove_auto_hide_zones (False)
-				internal_docking_manager.command.unlock_update
-				Result := True
+					internal_docking_manager.command.resize (True)
+					internal_docking_manager.command.remove_empty_split_area
+					internal_docking_manager.command.update_title_bar
+					internal_docking_manager.command.remove_auto_hide_zones (False)
+					internal_docking_manager.command.unlock_update
+					Result := True
+				end
 			end
 			internal_docking_manager.property.set_is_opening_config (False)
 		rescue

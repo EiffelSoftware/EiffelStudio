@@ -620,7 +620,7 @@ feature -- Access: Little-endian format
 			check
 				correct_size: real_32_bytes = natural_32_bytes
 			end
-			Result := read_natural_32_le (pos)
+			l_nat32 := read_natural_32_le (pos)
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
@@ -635,7 +635,7 @@ feature -- Access: Little-endian format
 			check
 				correct_size: real_64_bytes = natural_64_bytes
 			end
-			Result := read_natural_64_le (pos)
+			l_nat64 := read_natural_64_le (pos)
 			($Result).memory_copy ($l_nat64, natural_64_bytes)
 		end
 
@@ -889,7 +889,7 @@ feature -- Access: Big-endian format
 			check
 				correct_size: real_32_bytes = natural_32_bytes
 			end
-			Result := read_natural_32_be (pos)
+			l_nat32 := read_natural_32_be (pos)
 			($Result).memory_copy ($l_nat32, natural_32_bytes)
 		end
 
@@ -904,7 +904,7 @@ feature -- Access: Big-endian format
 			check
 				correct_size: real_64_bytes = natural_64_bytes
 			end
-			Result := read_natural_64_be (pos)
+			l_nat64 := read_natural_64_be (pos)
 			($Result).memory_copy ($l_nat64, natural_64_bytes)
 		end
 

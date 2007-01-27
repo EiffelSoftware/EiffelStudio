@@ -11,6 +11,7 @@ feature
 			l_type: INTEGER
 			l_name: STRING
 		do
+			test (g)
 			if g /= Void then
 				print (g.generating_type)
 				print ("%N")
@@ -47,9 +48,18 @@ feature
 				print (": ")
 				print (l_int.type_name_of_type (l_int.field_static_type_of_type (1, l_type)))
 				print ("%N")
-
 			end
 		end
+
+	test (g: G) is
+			-- Test for cloning of arguments.
+		do
+			if g /= Void then
+				print (g.generating_type)
+				print ("%N")
+			end
+		end
+
 
 	f: LINKED_LIST [G]
 

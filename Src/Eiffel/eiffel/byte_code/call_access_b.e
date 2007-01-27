@@ -290,6 +290,7 @@ feature -- Byte code generation
 			if
 				not type.is_void and then
 				real_type (type).is_expanded and then
+				not real_type (type).is_bit and then
 				class_type.base_class.feature_of_rout_id (routine_id).type.is_reference
 			then
 					-- Result of a basic type is expected.

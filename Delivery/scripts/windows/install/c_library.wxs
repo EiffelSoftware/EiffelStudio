@@ -7,7 +7,6 @@
 				<Directory Id="C_library" Name="C_LIBR~1" LongName="C_library">
 					<Directory Id="zlib" Name="zlib">
 						<Component Id="turboc.ln32" Guid="CC08FDF1-277D-4582-82D9-E19C987EEFC6">
-							<File Id="turboc.ln32" Name="turboc.$ln" KeyPath="yes" />
 							<File Id="trees.c" Name="trees.c" />
 							<File Id="inftrees.c" Name="inftrees.c" />
 							<File Id="minigzip.c" Name="minigzip.c" />
@@ -34,7 +33,6 @@
 							<File Id="compress.c" Name="compress.c" />
 							<File Id="algorithm.txt" Name="ALGORI~1.TXT" LongName="algorithm.txt" />
 							<File Id="zutil.h" Name="zutil.h" />
-							<File Id="zlib.BAK" Name="zlib.BAK" />
 							<File Id="crc32.h" Name="crc32.h" />
 							<File Id="zdll.exp" Name="zdll.exp" />
 							<File Id="deflate.c" Name="deflate.c" />
@@ -317,7 +315,6 @@
 							<File Id="pngnow.png" Name="pngnow.png" />
 							<File Id="pngerror.c" Name="pngerror.c" />
 							<File Id="Install" Name="Install" />
-							<File Id="turboc.ln" Name="turboc.$ln" />
 							<File Id="pnggccrd.c" Name="pnggccrd.c" />
 							<File Id="pngbar.png" Name="pngbar.png" />
 							<File Id="pngwrite.c" Name="pngwrite.c" />
@@ -336,7 +333,6 @@
 							<File Id="Announce" Name="Announce" />
 							<File Id="pngget.c" Name="pngget.c" />
 							<File Id="pngbar.jpg" Name="pngbar.jpg" />
-							<File Id="libpng.LST" Name="libpng.LST" />
 							<File Id="Changes" Name="Changes" />
 						</Component>
 						<Directory Id="scripts" Name="scripts">

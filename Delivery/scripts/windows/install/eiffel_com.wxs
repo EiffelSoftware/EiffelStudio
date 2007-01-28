@@ -109,16 +109,18 @@
 									</Directory>
 								</Directory>
 							</Directory>
-							<Directory Id="bcb" Name="bcb">
-								<Directory Id="lib1" Name="lib">
-									<Component Id="lib1" Guid="7E9EAEAA-4DDB-41B8-8FB8-A0EDB00F8FBD">
-										<File Id="com_runtime.lib1" Name="COM_RU~2.LIB" LongName="com_runtime.lib" KeyPath="yes" />
-										<File Id="com.lib2" Name="com.lib" />
-										<File Id="mtcom_runtime.lib" Name="MTCOM_~1.LIB" LongName="mtcom_runtime.lib" />
-										<File Id="mtcom.lib2" Name="mtcom.lib" />
-									</Component>
+							<?if $(var.IsWin64)="no" ?>
+								<Directory Id="bcb" Name="bcb">
+									<Directory Id="lib1" Name="lib">
+										<Component Id="lib1" Guid="7E9EAEAA-4DDB-41B8-8FB8-A0EDB00F8FBD">
+											<File Id="com_runtime.lib1" Name="COM_RU~2.LIB" LongName="com_runtime.lib" KeyPath="yes" />
+											<File Id="com.lib2" Name="com.lib" />
+											<File Id="mtcom_runtime.lib" Name="MTCOM_~1.LIB" LongName="mtcom_runtime.lib" />
+											<File Id="mtcom.lib2" Name="mtcom.lib" />
+										</Component>
+									</Directory>
 								</Directory>
-							</Directory>
+							<?endif?>
 							<Directory Id="msc" Name="msc">
 								<Directory Id="lib" Name="lib">
 									<Component Id="lib" Guid="A32F2CE4-CFBE-4794-9972-00285C58CCEF">

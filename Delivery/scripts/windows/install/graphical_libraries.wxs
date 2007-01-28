@@ -2292,17 +2292,19 @@
 									</Component>
 								</Directory>
 							</Directory>
-							<Directory Id="bcb" Name="bcb">
-								<Directory Id="lib38" Name="lib">
-									<Component Id="zlib.lib" Guid="14E39CE1-0A3F-443B-AD07-07CEA488CEE1">
-										<File Id="zlib.lib" Name="zlib.lib" KeyPath="yes" />
-										<File Id="vision2.lib" Name="vision2.lib" />
-										<File Id="ilvision2.lib92" Name="ILVISI~2.LIB" LongName="ilvision2.lib" />
-										<File Id="mtvision2.lib92" Name="MTVISI~1.LIB" LongName="mtvision2.lib" />
-										<File Id="libpng.lib116" Name="libpng.lib" />
-									</Component>
+							<?if $(var.IsWin64)="no" ?>
+								<Directory Id="bcb" Name="bcb">
+									<Directory Id="lib38" Name="lib">
+										<Component Id="zlib.lib" Guid="14E39CE1-0A3F-443B-AD07-07CEA488CEE1">
+											<File Id="zlib.lib" Name="zlib.lib" KeyPath="yes" />
+											<File Id="vision2.lib" Name="vision2.lib" />
+											<File Id="ilvision2.lib92" Name="ILVISI~2.LIB" LongName="ilvision2.lib" />
+											<File Id="mtvision2.lib92" Name="MTVISI~1.LIB" LongName="mtvision2.lib" />
+											<File Id="libpng.lib116" Name="libpng.lib" />
+										</Component>
+									</Directory>
 								</Directory>
-							</Directory>
+							<?endif?>
 						</Directory>
 					</Directory>
 					<Directory Id="wel" Name="wel">
@@ -2979,20 +2981,22 @@
 									</Component>
 								</Directory>
 							</Directory>
-							<Directory Id="bcb42" Name="bcb">
-								<Directory Id="dll" Name="dll">
-									<Component Id="wel_hook.dll" Guid="93D36CD8-7F2E-4404-AC7D-4D238EB68338">
-										<File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
-									</Component>
+							<?if $(var.IsWin64)="no" ?>
+								<Directory Id="bcb42" Name="bcb">
+									<Directory Id="dll" Name="dll">
+										<Component Id="wel_hook.dll" Guid="93D36CD8-7F2E-4404-AC7D-4D238EB68338">
+											<File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
+										</Component>
+									</Directory>
+									<Directory Id="lib49" Name="lib">
+										<Component Id="ilwel.lib133" Guid="3F28C1AF-1E90-4C29-A09A-E336C91D59EA">
+											<File Id="ilwel.lib133" Name="ilwel.lib" KeyPath="yes" />
+											<File Id="mtwel.lib134" Name="mtwel.lib" />
+											<File Id="wel.lib139" Name="wel.lib" />
+										</Component>
+									</Directory>
 								</Directory>
-								<Directory Id="lib49" Name="lib">
-									<Component Id="ilwel.lib133" Guid="3F28C1AF-1E90-4C29-A09A-E336C91D59EA">
-										<File Id="ilwel.lib133" Name="ilwel.lib" KeyPath="yes" />
-										<File Id="mtwel.lib134" Name="mtwel.lib" />
-										<File Id="wel.lib139" Name="wel.lib" />
-									</Component>
-								</Directory>
-							</Directory>
+							<?endif?>
 							<Directory Id="windows44" Name="windows">
 								<Directory Id="include47" Name="include">
 									<Component Id="wsize.h" Guid="F6BF60F8-1F88-4621-AF14-C0993030069F">
